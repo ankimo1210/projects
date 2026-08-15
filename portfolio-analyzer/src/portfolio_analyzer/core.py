@@ -6,7 +6,7 @@ import json
 from collections import defaultdict
 from dataclasses import dataclass, replace
 from datetime import UTC, date, datetime
-from decimal import Decimal
+from decimal import ROUND_CEILING, Decimal
 from pathlib import Path
 from typing import Any
 
@@ -119,6 +119,7 @@ class Exposure:
     group: str
     weight: Decimal
     mapped: bool
+    theme: str | None = None
 
 
 @dataclass(frozen=True)
@@ -163,10 +164,17 @@ class FactorRisk:
     frequency: str
     estimated_at: str
     window_start: str
+    dates: tuple[str, ...] = ()
+    series: tuple[tuple[Decimal, ...], ...] = ()
 
     @property
     def periods_per_year(self) -> Decimal:
         return PERIODS_PER_YEAR.get(self.frequency, Decimal("1"))
+
+    def column(self, factor: str) -> tuple[Decimal, ...]:
+        """Return one factor's realised series."""
+        index = self.factors.index(factor)
+        return tuple(row[index] for row in self.series)
 
     def matvec(self, vector: dict[str, Decimal]) -> dict[str, Decimal]:
         """Return the covariance matrix applied to a factor-indexed vector."""
@@ -328,6 +336,7 @@ def load_analysis_reference(path: Path) -> AnalysisReference:
                     group=str(exposure["group"]),
                     weight=_decimal(exposure["weight"], "exposure.weight"),
                     mapped=bool(exposure.get("mapped", True)),
+                    theme=str(exposure["theme"]) if exposure.get("theme") else None,
                 )
                 for exposure in row.get("exposures", [])
             ),
@@ -406,6 +415,19 @@ def load_factor_risk(path: Path) -> FactorRisk:
         tuple(_decimal(value, "factor_risk.covariance") for value in row)
         for row in block["covariance"]
     )
+    history = raw.get("factor_series", {})
+    dates: tuple[str, ...] = ()
+    series: tuple[tuple[Decimal, ...], ...] = ()
+    if history:
+        if tuple(str(factor) for factor in history["factors"]) != factors:
+            raise ValueError("factor_series columns do not match factor_risk factors")
+        dates = tuple(str(stamp) for stamp in history["dates"])
+        series = tuple(
+            tuple(_decimal(value, "factor_series.values") for value in row)
+            for row in history["values"]
+        )
+        if len(dates) != len(series):
+            raise ValueError("factor_series dates and values disagree in length")
     risk = FactorRisk(
         factors=factors,
         covariance=covariance,
@@ -413,6 +435,8 @@ def load_factor_risk(path: Path) -> FactorRisk:
         frequency=str(block.get("frequency", "weekly")),
         estimated_at=str(raw.get("manifest", {}).get("generated_at", "")),
         window_start=str(raw.get("manifest", {}).get("estimation_window_start", "")),
+        dates=dates,
+        series=series,
     )
     issues = validate_factor_risk(risk)
     if issues:
@@ -476,6 +500,72 @@ def most_plausible_shock(
     shocks = {factor: -target_loss * applied[factor] / scale for factor in risk.factors}
     distance = target_loss / scale.sqrt()
     return shocks, distance
+
+
+def replay_returns(exposures: dict[str, Decimal], risk: FactorRisk, total: Decimal) -> list[Decimal]:
+    """Return the portfolio return the current holdings would have had each period.
+
+    This is a replay, not a track record: past factor moves are applied to
+    today's exposures, so it says nothing about what the portfolio actually
+    earned.
+    """
+    if not risk.series or total <= 0:
+        return []
+    return [
+        sum(
+            (
+                exposures.get(factor, Decimal()) * row[index]
+                for index, factor in enumerate(risk.factors)
+            ),
+            Decimal(),
+        )
+        / total
+        for row in risk.series
+    ]
+
+
+def expected_shortfall(returns: list[Decimal], level: Decimal = Decimal("0.975")) -> Decimal | None:
+    """Return the mean of the worst losses beyond ``level``, as a positive number."""
+    if not returns:
+        return None
+    # Decimal's // truncates toward zero, so ask for the ceiling explicitly.
+    exact = Decimal(len(returns)) * (Decimal("1") - level)
+    tail_size = int(exact.to_integral_value(rounding=ROUND_CEILING))
+    if tail_size < 1:
+        return None
+    tail = sorted(returns)[:tail_size]
+    return -sum(tail, Decimal()) / Decimal(len(tail))
+
+
+def maximum_drawdown(returns: list[Decimal]) -> Decimal | None:
+    """Return the deepest peak-to-trough fall of the compounded replay."""
+    if not returns:
+        return None
+    level = Decimal("1")
+    peak = Decimal("1")
+    worst = Decimal()
+    for period in returns:
+        level *= Decimal("1") + period
+        peak = max(peak, level)
+        worst = max(worst, (peak - level) / peak)
+    return worst
+
+
+def correlation(left: tuple[Decimal, ...], right: tuple[Decimal, ...]) -> Decimal | None:
+    """Return Pearson correlation, or None when either series does not vary."""
+    count = len(left)
+    if count < 2 or count != len(right):
+        return None
+    left_mean = sum(left, Decimal()) / count
+    right_mean = sum(right, Decimal()) / count
+    covariance = sum(
+        ((a - left_mean) * (b - right_mean) for a, b in zip(left, right, strict=True)), Decimal()
+    )
+    left_spread = sum(((a - left_mean) ** 2 for a in left), Decimal())
+    right_spread = sum(((b - right_mean) ** 2 for b in right), Decimal())
+    if left_spread <= 0 or right_spread <= 0:
+        return None
+    return covariance / (left_spread * right_spread).sqrt()
 
 
 def apply_proposal(portfolio: Portfolio, path: Path) -> ProposalResult:
@@ -921,6 +1011,7 @@ def _analysis_rows(
     valuations: list[dict[str, Any]] = []
     issuers: list[dict[str, Any]] = []
     event_calendar: list[dict[str, Any]] = []
+    themes: list[dict[str, Any]] = []
     summary_metrics: dict[str, dict[str, float | None]] = {}
 
     for scope, positions in _scopes(portfolio):
@@ -930,6 +1021,8 @@ def _analysis_rows(
 
         exposure_values: defaultdict[tuple[str, str, bool], Decimal] = defaultdict(Decimal)
         issuer_values: defaultdict[str, Decimal] = defaultdict(Decimal)
+        theme_values: defaultdict[str, Decimal] = defaultdict(Decimal)
+        theme_members: defaultdict[str, set[str]] = defaultdict(set)
         equity_total = Decimal()
         by_symbol: defaultdict[str, Decimal] = defaultdict(Decimal)
         position_names: dict[str, str] = {}
@@ -959,6 +1052,9 @@ def _analysis_rows(
                 )
             for exposure in issuer_exposures:
                 issuer_values[exposure.category] += position.market_value_jpy * exposure.weight
+                if exposure.theme:
+                    theme_values[exposure.theme] += position.market_value_jpy * exposure.weight
+                    theme_members[exposure.theme].add(exposure.category)
             residual = Decimal("1") - assigned
             if residual > Decimal("0.0001"):
                 exposure_values[("other", "未分類・残差", False)] += (
@@ -1024,6 +1120,18 @@ def _analysis_rows(
                     "known_issuer_weight": (
                         _float(value / issuer_known_total) if issuer_known_total else None
                     ),
+                }
+            )
+
+        for theme, value in sorted(theme_values.items(), key=lambda item: item[1], reverse=True):
+            themes.append(
+                {
+                    "scope": scope,
+                    "theme": theme,
+                    "market_value_jpy": _float(value),
+                    "portfolio_weight": _float(value / total),
+                    "issuer_count": len(theme_members[theme]),
+                    "issuers": "、".join(sorted(theme_members[theme])),
                 }
             )
 
@@ -1217,6 +1325,9 @@ def _analysis_rows(
             ),
             "sector_effective_count": _float(Decimal("1") / sector_hhi) if sector_hhi else None,
             "max_sector_ratio": _float(max_sector_value / total),
+            "largest_theme_ratio": (
+                _float(max(theme_values.values()) / total) if theme_values else None
+            ),
             "issuer_coverage_ratio": (
                 _float(issuer_known_total / equity_total) if equity_total else None
             ),
@@ -1241,6 +1352,7 @@ def _analysis_rows(
             "factor_loadings": factor_loadings,
             "valuation_detail": valuations,
             "issuer_exposure": issuers,
+            "theme_exposure": themes,
             "event_calendar": event_calendar,
         },
         summary_metrics,
@@ -1575,7 +1687,49 @@ def _reverse_stress_rows(
                 )
         if distances:
             metrics[scope]["nearest_limit_distance_sigma"] = _float(min(distances))
+
+        replayed = replay_returns(exposures, risk, total)
+        shortfall = expected_shortfall(replayed)
+        metrics[scope].update(
+            {
+                "replayed_expected_shortfall": _float(shortfall),
+                "replayed_worst_period": _float(-min(replayed)) if replayed else None,
+                "replayed_max_drawdown": _float(maximum_drawdown(replayed)),
+            }
+        )
     return rows, metrics
+
+
+HEDGE_MONITOR_WINDOW = 26
+
+
+def _correlation_monitor_rows(risk: FactorRisk) -> list[dict[str, Any]]:
+    """Track whether Japanese bonds still move against equities.
+
+    Bond returns move opposite to yields, so the usual stock-bond correlation
+    is the negative of the equity/yield correlation. A negative reading means
+    bonds cushion equity falls; a positive one means they fall together, which
+    is what removes the diversification a bond sleeve is held for.
+    """
+    if len(risk.series) < HEDGE_MONITOR_WINDOW or "日本金利" not in risk.factors:
+        return []
+    equity = risk.column("株式全体")
+    yields = risk.column("日本金利")
+    rows: list[dict[str, Any]] = []
+    for end in range(HEDGE_MONITOR_WINDOW, len(risk.series) + 1):
+        window = slice(end - HEDGE_MONITOR_WINDOW, end)
+        measured = correlation(equity[window], yields[window])
+        if measured is None:
+            continue
+        stock_bond = -measured
+        rows.append(
+            {
+                "date": risk.dates[end - 1],
+                "stock_bond_correlation": _float(stock_bond),
+                "regime": "債券がヘッジとして機能" if stock_bond < 0 else "株債同時安（ヘッジ失効）",
+            }
+        )
+    return rows
 
 
 def _portfolio_datasets(
@@ -1595,8 +1749,13 @@ def _portfolio_datasets(
             portfolio, analysis_reference, factor_risk
         )
         datasets["reverse_stress"] = reverse_rows
+        monitor = _correlation_monitor_rows(factor_risk)
+        if monitor:
+            datasets["correlation_monitor"] = monitor
         for row in datasets["summary"]:
             row.update(reverse_metrics.get(row["scope"], {}))
+            if monitor:
+                row["stock_bond_correlation"] = monitor[-1]["stock_bond_correlation"]
     datasets["policy_checks"] = _evaluate_policy(
         datasets["summary"], analysis_reference.policy_limits
     )
@@ -2665,8 +2824,43 @@ def _extend_analysis_manifest(
                 },
             ]
         )
+        manifest["cards"].extend(
+            [
+                {
+                    "id": "replayed_shortfall",
+                    "description": (
+                        "過去3年の週次ファクター変化を現在の保有に当て直したときの、"
+                        "下位2.5%の平均損失。実績ではなく再現。"
+                    ),
+                    "dataset": "summary",
+                    "sourceId": "factor_risk",
+                    "metrics": [
+                        {
+                            "label": "参考ES(97.5%)",
+                            "field": "replayed_expected_shortfall",
+                            "format": "percent",
+                        }
+                    ],
+                },
+                {
+                    "id": "replayed_drawdown",
+                    "description": "同じ再現での最大ドローダウン。",
+                    "dataset": "summary",
+                    "sourceId": "factor_risk",
+                    "metrics": [
+                        {
+                            "label": "参考最大DD",
+                            "field": "replayed_max_drawdown",
+                            "format": "percent",
+                        }
+                    ],
+                },
+            ]
+        )
         metric_block = next(block for block in manifest["blocks"] if block["id"] == "metrics")
-        metric_block["cardIds"].extend(["factor_volatility", "limit_distance"])
+        metric_block["cardIds"].extend(
+            ["factor_volatility", "limit_distance", "replayed_shortfall", "replayed_drawdown"]
+        )
         manifest["tables"].append(
             {
                 "id": "reverse_stress",
@@ -2693,6 +2887,79 @@ def _extend_analysis_manifest(
                     },
                     {"field": "loss_share", "label": "損失シェア", "format": "percent"},
                 ],
+            }
+        )
+
+    if artifact["snapshot"]["datasets"].get("theme_exposure"):
+        manifest["cards"].append(
+            {
+                "id": "largest_theme",
+                "description": (
+                    "同じ材料で動く銘柄群の合計。発行体を開示している部分だけの集計なので下限値。"
+                ),
+                "dataset": "summary",
+                "sourceId": analysis_source_id,
+                "metrics": [
+                    {
+                        "label": "最大テーマ比率",
+                        "field": "largest_theme_ratio",
+                        "format": "percent",
+                    }
+                ],
+            }
+        )
+        next(block for block in manifest["blocks"] if block["id"] == "metrics")["cardIds"].append(
+            "largest_theme"
+        )
+        manifest["tables"].append(
+            {
+                "id": "theme_exposure",
+                "title": "テーマ別の合算エクスポージャー",
+                "subtitle": (
+                    "商品をまたいで同じ材料に賭けている合計額。"
+                    "発行体を開示している部分だけの集計なので下限値"
+                ),
+                "dataset": "theme_exposure",
+                "sourceId": analysis_source_id,
+                "defaultSort": {"field": "market_value_jpy", "direction": "desc"},
+                "density": "compact",
+                "layout": "full",
+                "columns": [
+                    {"field": "theme", "label": "テーマ", "type": "text"},
+                    {"field": "market_value_jpy", "label": "評価額", "format": "currency"},
+                    {"field": "portfolio_weight", "label": "総資産比", "format": "percent"},
+                    {"field": "issuer_count", "label": "銘柄数", "format": "number"},
+                    {"field": "issuers", "label": "内訳", "type": "text"},
+                ],
+            }
+        )
+
+    if artifact["snapshot"]["datasets"].get("correlation_monitor"):
+        manifest["charts"].append(
+            {
+                "id": "correlation_monitor",
+                "title": "株債相関の推移（26週ローリング）",
+                "subtitle": "負なら日本国債が株式のヘッジとして機能、正なら株債同時安",
+                "intent": "trend",
+                "question": "債券保有はいまヘッジとして効いているか",
+                "rationale": "符号の反転そのものが論点なので、時系列を折れ線で見る。",
+                "comparisonContext": {"grain": "週", "unit": "相関係数"},
+                "type": "line",
+                "dataset": "correlation_monitor",
+                "sourceId": "factor_risk",
+                "encodings": {
+                    "x": {"field": "date", "type": "temporal", "label": "週"},
+                    "y": {
+                        "field": "stock_bond_correlation",
+                        "type": "quantitative",
+                        "label": "株債相関",
+                        "format": "number",
+                    },
+                    "tooltip": [{"field": "regime", "type": "nominal", "label": "判定"}],
+                },
+                "valueFormat": "number",
+                "layout": "full",
+                "palette": {"kind": "sequential", "name": "blue"},
             }
         )
 
@@ -2799,6 +3066,43 @@ def _extend_analysis_manifest(
             "tableId": "sensitivity_details",
             "layout": "full",
         },
+        *(
+            [
+                {
+                    "id": "theme_exposure_block",
+                    "type": "table",
+                    "tableId": "theme_exposure",
+                    "layout": "full",
+                }
+            ]
+            if artifact["snapshot"]["datasets"].get("theme_exposure")
+            else []
+        ),
+        *(
+            [
+                {
+                    "id": "correlation_monitor_block",
+                    "type": "chart",
+                    "chartId": "correlation_monitor",
+                    "layout": "full",
+                },
+                {
+                    "id": "correlation_monitor_note",
+                    "type": "markdown",
+                    "body": (
+                        "## 債券はいまヘッジとして効いているか\n\n"
+                        "株債相関は日本国債リターンと株式全体の26週ローリング相関で、"
+                        "金利ファクターの符号を反転して求めています。"
+                        "**負なら債券が株安を和らげ、正なら両方まとめて下がります。**"
+                        "インフレや金融政策が主因の下落では正に転びやすく、"
+                        "そのとき債券保有は分散になりません。"
+                    ),
+                    "sourceId": "factor_risk",
+                },
+            ]
+            if artifact["snapshot"]["datasets"].get("correlation_monitor")
+            else []
+        ),
         *(
             [
                 {
