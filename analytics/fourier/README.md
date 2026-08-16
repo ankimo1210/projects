@@ -29,8 +29,16 @@ Jupyter Notebook ベースのフーリエ解析教科書プロジェクト。
 | `07_time_frequency_stft_wavelets_intro` | STFT・スペクトログラム・窓幅のトレードオフ・wavelet 入口 |
 | `08_pde_spectral_methods` | 熱/波動方程式・モード分離・スペクトル微分・スペクトル法 |
 | `09_applications_signal_image_finance_ml` | 音・画像 2D FFT・圧縮・金融時系列の探索的解析と限界・ML 接続 |
+| `10_exercise_solutions` | 00–09 章 演習 40 問の解答 |
+| `11_capstone_three_lenses` | 1 つの信号を級数・変換・DFT の 3 視点で解く総合章 |
 
-重点実装は **01・02・03・06・08**。00・04・05・07・09 は実内容に加え「今後の拡張(TODO)」を明記している。
+全 12 章。04・05・07・09 にあった「今後の拡張(TODO)」は 2026-08-16 にすべて実装するか
+範囲外と明記するかで決着させ、同時に全章へ演習を入れた(計 40 問)。
+解答は 10 章、3 視点キャップストーンは 11 章にある。
+
+外部依存を増やさない方針は保っている。wavelet は `pywt` を入れず Morlet CWT を自前で書き、
+メルフィルタバンクも `librosa` を使わず 15 行で実装した。
+実写真だけは合成テスト画像で代替し、その旨を 09 章に明記している。
 
 共通関数は `src/fourier_book/` にまとまっている:
 
@@ -83,7 +91,7 @@ uv run jupyter lab analytics/fourier/notebooks/
 cd ~/projects/analytics/fourier
 export PYTHONPATH=$PWD/src
 python tools/build_notebooks.py                       # regenerate .ipynb from source
-for nb in notebooks/0*.ipynb; do
+for nb in notebooks/*.ipynb; do
   jupyter nbconvert --to notebook --execute --inplace "$nb"
 done
 ```
@@ -126,10 +134,13 @@ DFT の Parseval、畳み込み定理、スペクトル微分 vs 解析微分、
 - [`analytics/linear_algebra`](../linear_algebra/) — 内積・正射影・固有値分解。本書の「関数版の線形代数」の土台。
 - [`analytics/differential_equation`](../differential_equation/) — 微分方程式。本書 08 章のスペクトル法と時間領域解法は表裏一体。
 
-## 今後追加すべき内容
+## 2026-08-16 に決着させた「今後追加すべき内容」
 
-- 04 章: Plancherel の数値検証、変換性質(微分/平行移動/スケーリング)の表、SymPy による解析変換、δ・定数の超関数変換
-- 05 章: δ 関数と Green 関数の入口、理想フィルタのリンギングと実用フィルタ(Butterworth)、特徴抽出デモ
-- 07 章: 連続 wavelet 変換(スカログラム)、定 Q 変換、窓の再構成(COLA)
-- 09 章: 実画像/音声(WAV・メルスペクトログラム)、Fourier features の回帰デモ、ウェルチ法とサロゲート検定
-- 全体: 演習解答ノート(姉妹本の `08_exercise_solutions` 相当)、2D フーリエの理論、キャップストーン(1 つの信号を級数・変換・DFT の 3 視点で)
+| 旧 TODO | 決着 |
+|---|---|
+| 04 章: Plancherel の数値検証、変換性質の表、SymPy 解析変換、δ・定数の超関数変換 | 実装。SymPy は `fourier_transform` が矩形関数で `zoo` 比較エラーを出すため、定義式の積分に置き換えてある |
+| 05 章: δ と Green 関数、理想フィルタのリンギングと Butterworth、特徴抽出デモ | 実装 |
+| 07 章: 連続 wavelet 変換(スカログラム)、定 Q 変換、窓の再構成(COLA) | 実装。Morlet CWT は `pywt` を足さず自前 |
+| 09 章: 実画像/音声(WAV・メルスペクトログラム)、Fourier features 回帰、Welch とサロゲート検定 | メルスペクトログラム・Fourier features・Welch+位相ランダム化サロゲートは実装。**実写真と実音声ファイルは範囲外**(外部データ依存ゼロの方針を優先し、合成テスト画像・合成音で代替) |
+| 全体: 演習解答ノート、キャップストーン | 10 章・11 章として実装 |
+| 全体: 2D フーリエの理論 | **範囲外**。09 章の 2D FFT 実験は残し、理論(分離可能性・回転不変性)は扱わない |
