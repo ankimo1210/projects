@@ -2,6 +2,13 @@ import type { LabKind } from "../content/chapters";
 import { applicationMetrics, drawApplicationLab } from "./application-labs";
 import { memoizedDiagnostics } from "./diagnostics-cache.mjs";
 import { normalCdf } from "./numerical-functions.mjs";
+import {
+  callValueDelta,
+  fractionalGaussianCovariance,
+  symmetricStable,
+  toeplitzCholesky,
+  vasicekZeroYield,
+} from "./stochastic-models.mjs";
 
 export type ExtendedSettings = {
   seed: number;
@@ -324,13 +331,6 @@ function drawPoissonJumps(
   label(context, "Poisson 理論", right.x + right.w - 14, right.y + 18, colors.teal, "right");
 }
 
-function symmetricStable(random: () => number, alpha: number) {
-  const angle = Math.PI * (random() - 0.5);
-  const exponential = -Math.log(Math.max(random(), 1e-12));
-  return Math.sin(alpha * angle) / Math.cos(angle) ** (1 / alpha) *
-    (Math.cos((1 - alpha) * angle) / exponential) ** ((1 - alpha) / alpha);
-}
-
 function drawLevyTails(
   context: CanvasRenderingContext2D,
   area: Rect,
@@ -475,21 +475,8 @@ function drawColoredNoise(
 function fractionalGaussianPath(settings: ExtendedSettings) {
   const steps = 96;
   const hurst = clamp(settings.rho, 0.1, 0.9);
-  const covariance = Array.from({ length: steps }, (_, lag) =>
-    0.5 * ((lag + 1) ** (2 * hurst) - 2 * lag ** (2 * hurst) + Math.abs(lag - 1) ** (2 * hurst))
-  );
-  const cholesky = Array.from({ length: steps }, () => Array.from({ length: steps }, () => 0));
-  for (let row = 0; row < steps; row += 1) {
-    for (let column = 0; column <= row; column += 1) {
-      let sum = covariance[row - column];
-      for (let inner = 0; inner < column; inner += 1) {
-        sum -= cholesky[row][inner] * cholesky[column][inner];
-      }
-      cholesky[row][column] = row === column
-        ? Math.sqrt(Math.max(sum, 1e-12))
-        : sum / cholesky[column][column];
-    }
-  }
+  const covariance = fractionalGaussianCovariance(steps, hurst);
+  const cholesky = toeplitzCholesky(covariance, steps);
   const random = mulberry32(settings.seed + 373);
   const normals = Array.from({ length: steps }, () => normal(random));
   const dt = settings.horizon / steps;
@@ -1150,17 +1137,6 @@ function drawMartingale(
   label(context, `V₀=${format(replication.replicationPrice, 2)}`, right.x + right.w - 14, right.y + 18, colors.coral, "right");
 }
 
-function callValueDelta(spot: number, strike: number, rate: number, sigma: number, tau: number) {
-  if (tau <= 1e-9) return { value: Math.max(spot - strike, 0), delta: spot > strike ? 1 : 0 };
-  const vol = sigma * Math.sqrt(tau);
-  const d1 = (Math.log(spot / strike) + (rate + 0.5 * sigma ** 2) * tau) / vol;
-  const d2 = d1 - vol;
-  return {
-    value: spot * normalCdf(d1) - strike * Math.exp(-rate * tau) * normalCdf(d2),
-    delta: normalCdf(d1),
-  };
-}
-
 function hedgeOnce(settings: ExtendedSettings, steps: number, seed: number, keepPath = false) {
   const random = mulberry32(seed);
   const dt = settings.horizon / steps;
@@ -1335,11 +1311,10 @@ function drawShortRate(
 
   const zeroYield: Point[] = Array.from({ length: 101 }, (_, index) => {
     const maturity = 0.05 + (index / 100) * 9.95;
-    const bondLoading = (1 - Math.exp(-settings.kappa * maturity)) / settings.kappa;
-    const logA = (settings.theta - settings.sigma ** 2 / (2 * settings.kappa ** 2)) *
-      (bondLoading - maturity) - settings.sigma ** 2 * bondLoading ** 2 / (4 * settings.kappa);
-    const logBondPrice = logA - bondLoading * settings.x0;
-    return [maturity, -logBondPrice / maturity];
+    return [
+      maturity,
+      vasicekZeroYield(settings.kappa, settings.theta, settings.sigma, settings.x0, maturity),
+    ];
   });
   rounded(context, right, 16, colors.paper);
   chart(context, right, [{ points: zeroYield, color: colors.amber, width: 2.5 }], {

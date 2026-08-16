@@ -61,7 +61,10 @@ npm run typecheck
 npm test
 ```
 
-`npm test` は production build とレンダリング回帰テストを実行します。
+`npm test` は production build のあと、レンダリング回帰テストと数値回帰テストを実行します
+(計 12 本)。数値側は `app/stochastic-models.mjs` に切り出した純関数
+(Feynman–Kac の閉形式・後退方程式・Black–Scholes・α-stable・fGn 共分散・Vasicek 債券価格)を、
+独立した求積や解析式と突き合わせている。
 
 ## 設計原則
 

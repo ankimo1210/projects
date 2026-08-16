@@ -2,6 +2,12 @@ function clamp(value, low, high) {
   return Math.min(Math.max(value, low), high);
 }
 
+export function normalPdf(x, mean, sd) {
+  const safeSd = Math.max(sd, 1e-6);
+  const z = (x - mean) / safeSd;
+  return Math.exp(-0.5 * z * z) / (safeSd * Math.sqrt(2 * Math.PI));
+}
+
 export function normalCdf(value) {
   const sign = value < 0 ? -1 : 1;
   const x = Math.abs(value) / Math.sqrt(2);
