@@ -1,0 +1,310 @@
+# 日本の上場企業ユニバース（キュレーション版 / curated snapshot）
+#
+# 目的: ネットワーク非接続の環境でも 4象限マップを企業レベルで再現できるようにするための
+#       検証済みサブセット。TOPIX 500 相当の主要銘柄を東証33業種の全業種にまたがって収録。
+#
+# 完全な上場全銘柄（約3,900社）/ TOPIX 500 を使う場合は J-Quants の `/listed/info` から
+# code・企業名・Sector33Code を取得して差し替える:
+#     python -m labor_ai_quadrant build --universe jquants
+# （要 JQUANTS_MAIL_ADDRESS / JQUANTS_PASSWORD と外部ネットワーク。providers/jquants.py 参照）
+#
+# 列の意味:
+#   code            証券コード（4桁）
+#   name            銘柄名
+#   sector33        東証33業種名（sector_labor_shortage.toml の name と一致すること）
+#   labor_intensity 労働集約度の業種平均からの乖離。low / mid / high。
+#                   high = 人月・人海戦術型で従業員1人当たり売上が小さい
+#                   low  = 装置・知財型で人数が業績を規定しない
+#   knowledge_tilt  社内労働のホワイトカラー（=LLMが効く）比率の業種平均からの乖離。
+#                   low / mid / high
+#
+# basis: analyst-assigned tilts. 銘柄コードと33業種は JPX の業種別分類に基づくが、
+#        再編・非上場化により変動するため、実運用では J-Quants で検証すること
+#        （`python -m labor_ai_quadrant verify-universe`）。
+
+# NOTE: トップレベル配列を先に、[meta] を末尾に置いている（TOML のテーブル解釈のため）。
+
+company = [
+  # 水産・農林業
+  { code = "1332", name = "ニッスイ",                     sector33 = "水産・農林業",   labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "1333", name = "マルハニチロ",                 sector33 = "水産・農林業",   labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "1379", name = "ホクト",                       sector33 = "水産・農林業",   labor_intensity = "high", knowledge_tilt = "low" },
+
+  # 鉱業
+  { code = "1605", name = "INPEX",                        sector33 = "鉱業",           labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "1662", name = "石油資源開発",                 sector33 = "鉱業",           labor_intensity = "low",  knowledge_tilt = "high" },
+
+  # 建設業
+  { code = "1721", name = "コムシスホールディングス",     sector33 = "建設業",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "1801", name = "大成建設",                     sector33 = "建設業",         labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "1802", name = "大林組",                       sector33 = "建設業",         labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "1803", name = "清水建設",                     sector33 = "建設業",         labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "1812", name = "鹿島建設",                     sector33 = "建設業",         labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "1925", name = "大和ハウス工業",               sector33 = "建設業",         labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "1928", name = "積水ハウス",                   sector33 = "建設業",         labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "1951", name = "エクシオグループ",             sector33 = "建設業",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "1963", name = "日揮ホールディングス",         sector33 = "建設業",         labor_intensity = "mid",  knowledge_tilt = "high" },
+
+  # 食料品
+  { code = "2269", name = "明治ホールディングス",         sector33 = "食料品",         labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "2282", name = "日本ハム",                     sector33 = "食料品",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "2502", name = "アサヒグループホールディングス", sector33 = "食料品",       labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "2503", name = "キリンホールディングス",       sector33 = "食料品",         labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "2801", name = "キッコーマン",                 sector33 = "食料品",         labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "2802", name = "味の素",                       sector33 = "食料品",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "2871", name = "ニチレイ",                     sector33 = "食料品",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "2914", name = "日本たばこ産業",               sector33 = "食料品",         labor_intensity = "low",  knowledge_tilt = "mid" },
+
+  # 繊維製品
+  { code = "3401", name = "帝人",                         sector33 = "繊維製品",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "3402", name = "東レ",                         sector33 = "繊維製品",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "3591", name = "ワコールホールディングス",     sector33 = "繊維製品",       labor_intensity = "high", knowledge_tilt = "mid" },
+
+  # パルプ・紙
+  { code = "3861", name = "王子ホールディングス",         sector33 = "パルプ・紙",     labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "3863", name = "日本製紙",                     sector33 = "パルプ・紙",     labor_intensity = "low",  knowledge_tilt = "mid" },
+
+  # 化学
+  { code = "4004", name = "レゾナック・ホールディングス", sector33 = "化学",           labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4021", name = "日産化学",                     sector33 = "化学",           labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4042", name = "東ソー",                       sector33 = "化学",           labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "4063", name = "信越化学工業",                 sector33 = "化学",           labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "4183", name = "三井化学",                     sector33 = "化学",           labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "4188", name = "三菱ケミカルグループ",         sector33 = "化学",           labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "4452", name = "花王",                         sector33 = "化学",           labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "4901", name = "富士フイルムホールディングス", sector33 = "化学",           labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "4911", name = "資生堂",                       sector33 = "化学",           labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "8113", name = "ユニ・チャーム",               sector33 = "化学",           labor_intensity = "low",  knowledge_tilt = "mid" },
+
+  # 医薬品
+  { code = "4502", name = "武田薬品工業",                 sector33 = "医薬品",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4503", name = "アステラス製薬",               sector33 = "医薬品",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4507", name = "塩野義製薬",                   sector33 = "医薬品",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4519", name = "中外製薬",                     sector33 = "医薬品",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4523", name = "エーザイ",                     sector33 = "医薬品",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4528", name = "小野薬品工業",                 sector33 = "医薬品",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4568", name = "第一三共",                     sector33 = "医薬品",         labor_intensity = "low",  knowledge_tilt = "high" },
+
+  # 石油・石炭製品
+  { code = "5019", name = "出光興産",                     sector33 = "石油・石炭製品", labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "5020", name = "ENEOSホールディングス",        sector33 = "石油・石炭製品", labor_intensity = "low",  knowledge_tilt = "mid" },
+
+  # ゴム製品
+  { code = "5101", name = "横浜ゴム",                     sector33 = "ゴム製品",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "5108", name = "ブリヂストン",                 sector33 = "ゴム製品",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+
+  # ガラス・土石製品
+  { code = "5201", name = "AGC",                          sector33 = "ガラス・土石製品", labor_intensity = "low", knowledge_tilt = "high" },
+  { code = "5214", name = "日本電気硝子",                 sector33 = "ガラス・土石製品", labor_intensity = "low", knowledge_tilt = "mid" },
+  { code = "5332", name = "TOTO",                         sector33 = "ガラス・土石製品", labor_intensity = "mid", knowledge_tilt = "mid" },
+  { code = "5333", name = "日本碍子",                     sector33 = "ガラス・土石製品", labor_intensity = "low", knowledge_tilt = "high" },
+
+  # 鉄鋼
+  { code = "5401", name = "日本製鉄",                     sector33 = "鉄鋼",           labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "5406", name = "神戸製鋼所",                   sector33 = "鉄鋼",           labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "5411", name = "JFEホールディングス",          sector33 = "鉄鋼",           labor_intensity = "low",  knowledge_tilt = "mid" },
+
+  # 非鉄金属
+  { code = "5713", name = "住友金属鉱山",                 sector33 = "非鉄金属",       labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "5714", name = "DOWAホールディングス",         sector33 = "非鉄金属",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "5801", name = "古河電気工業",                 sector33 = "非鉄金属",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "5802", name = "住友電気工業",                 sector33 = "非鉄金属",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+
+  # 金属製品
+  { code = "5938", name = "LIXIL",                        sector33 = "金属製品",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "5947", name = "リンナイ",                     sector33 = "金属製品",       labor_intensity = "low",  knowledge_tilt = "mid" },
+
+  # 機械
+  { code = "6103", name = "オークマ",                     sector33 = "機械",           labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6146", name = "ディスコ",                     sector33 = "機械",           labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "6273", name = "SMC",                          sector33 = "機械",           labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "6301", name = "コマツ",                       sector33 = "機械",           labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "6305", name = "日立建機",                     sector33 = "機械",           labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6326", name = "クボタ",                       sector33 = "機械",           labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6367", name = "ダイキン工業",                 sector33 = "機械",           labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6383", name = "ダイフク",                     sector33 = "機械",           labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "6417", name = "SANKYO",                       sector33 = "機械",           labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "7011", name = "三菱重工業",                   sector33 = "機械",           labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "7013", name = "IHI",                          sector33 = "機械",           labor_intensity = "mid",  knowledge_tilt = "high" },
+
+  # 電気機器
+  { code = "6448", name = "ブラザー工業",                 sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6479", name = "ミネベアミツミ",               sector33 = "電気機器",       labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "6501", name = "日立製作所",                   sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "6503", name = "三菱電機",                     sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "6504", name = "富士電機",                     sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6594", name = "ニデック",                     sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6645", name = "オムロン",                     sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "6701", name = "日本電気",                     sector33 = "電気機器",       labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "6702", name = "富士通",                       sector33 = "電気機器",       labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "6723", name = "ルネサスエレクトロニクス",     sector33 = "電気機器",       labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "6752", name = "パナソニックホールディングス", sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6758", name = "ソニーグループ",               sector33 = "電気機器",       labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "6762", name = "TDK",                          sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6857", name = "アドバンテスト",               sector33 = "電気機器",       labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "6861", name = "キーエンス",                   sector33 = "電気機器",       labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "6920", name = "レーザーテック",               sector33 = "電気機器",       labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "6954", name = "ファナック",                   sector33 = "電気機器",       labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "6963", name = "ローム",                       sector33 = "電気機器",       labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "6971", name = "京セラ",                       sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6981", name = "村田製作所",                   sector33 = "電気機器",       labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "7751", name = "キヤノン",                     sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+
+  # 輸送用機器
+  { code = "6201", name = "豊田自動織機",                 sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "6902", name = "デンソー",                     sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "7012", name = "川崎重工業",                   sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "7201", name = "日産自動車",                   sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7202", name = "いすゞ自動車",                 sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7203", name = "トヨタ自動車",                 sector33 = "輸送用機器",     labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "7205", name = "日野自動車",                   sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7259", name = "アイシン",                     sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7261", name = "マツダ",                       sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7267", name = "本田技研工業",                 sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7269", name = "スズキ",                       sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7270", name = "SUBARU",                       sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7272", name = "ヤマハ発動機",                 sector33 = "輸送用機器",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+
+  # 精密機器
+  { code = "4543", name = "テルモ",                       sector33 = "精密機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  # JPX 33業種は 電気機器（2026-08-17 に J-Quants /v2/equities/master と照合）。
+  { code = "6849", name = "日本光電工業",                 sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "7733", name = "オリンパス",                   sector33 = "精密機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "7741", name = "HOYA",                         sector33 = "精密機器",       labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "7762", name = "シチズン時計",                 sector33 = "精密機器",       labor_intensity = "mid",  knowledge_tilt = "mid" },
+
+  # その他製品
+  { code = "7832", name = "バンダイナムコホールディングス", sector33 = "その他製品",   labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "7911", name = "TOPPANホールディングス",       sector33 = "その他製品",     labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "7912", name = "大日本印刷",                   sector33 = "その他製品",     labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "7936", name = "アシックス",                   sector33 = "その他製品",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7951", name = "ヤマハ",                       sector33 = "その他製品",     labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "7974", name = "任天堂",                       sector33 = "その他製品",     labor_intensity = "low",  knowledge_tilt = "high" },
+
+  # 電気・ガス業
+  { code = "9501", name = "東京電力ホールディングス",     sector33 = "電気・ガス業",   labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "9502", name = "中部電力",                     sector33 = "電気・ガス業",   labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "9503", name = "関西電力",                     sector33 = "電気・ガス業",   labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "9506", name = "東北電力",                     sector33 = "電気・ガス業",   labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "9531", name = "東京瓦斯",                     sector33 = "電気・ガス業",   labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "9532", name = "大阪瓦斯",                     sector33 = "電気・ガス業",   labor_intensity = "mid",  knowledge_tilt = "mid" },
+
+  # 陸運業
+  { code = "9001", name = "東武鉄道",                     sector33 = "陸運業",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "9005", name = "東急",                         sector33 = "陸運業",         labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "9007", name = "小田急電鉄",                   sector33 = "陸運業",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "9020", name = "東日本旅客鉄道",               sector33 = "陸運業",         labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "9021", name = "西日本旅客鉄道",               sector33 = "陸運業",         labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "9022", name = "東海旅客鉄道",                 sector33 = "陸運業",         labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "9064", name = "ヤマトホールディングス",       sector33 = "陸運業",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "9143", name = "SGホールディングス",           sector33 = "陸運業",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "9147", name = "NIPPON EXPRESSホールディングス", sector33 = "陸運業",       labor_intensity = "high", knowledge_tilt = "mid" },
+
+  # 海運業
+  { code = "9101", name = "日本郵船",                     sector33 = "海運業",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "9104", name = "商船三井",                     sector33 = "海運業",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "9107", name = "川崎汽船",                     sector33 = "海運業",         labor_intensity = "low",  knowledge_tilt = "high" },
+
+  # 空運業
+  { code = "9201", name = "日本航空",                     sector33 = "空運業",         labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "9202", name = "ANAホールディングス",          sector33 = "空運業",         labor_intensity = "high", knowledge_tilt = "mid" },
+
+  # 倉庫・運輸関連業
+  { code = "9301", name = "三菱倉庫",                     sector33 = "倉庫・運輸関連業", labor_intensity = "mid", knowledge_tilt = "mid" },
+  { code = "9364", name = "上組",                         sector33 = "倉庫・運輸関連業", labor_intensity = "high", knowledge_tilt = "low" },
+
+  # 情報・通信業
+  { code = "2327", name = "日鉄ソリューションズ",         sector33 = "情報・通信業",   labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "3626", name = "TIS",                          sector33 = "情報・通信業",   labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "3659", name = "ネクソン",                     sector33 = "情報・通信業",   labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4307", name = "野村総合研究所",               sector33 = "情報・通信業",   labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "4478", name = "freee",                        sector33 = "情報・通信業",   labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "4684", name = "オービック",                   sector33 = "情報・通信業",   labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "4689", name = "LINEヤフー",                   sector33 = "情報・通信業",   labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4704", name = "トレンドマイクロ",             sector33 = "情報・通信業",   labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "4816", name = "東映アニメーション",           sector33 = "情報・通信業",   labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "9432", name = "日本電信電話",                 sector33 = "情報・通信業",   labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "9433", name = "KDDI",                         sector33 = "情報・通信業",   labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "9434", name = "ソフトバンク",                 sector33 = "情報・通信業",   labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "9613", name = "NTTデータグループ",            sector33 = "情報・通信業",   labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "9719", name = "SCSK",                         sector33 = "情報・通信業",   labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "9984", name = "ソフトバンクグループ",         sector33 = "情報・通信業",   labor_intensity = "low",  knowledge_tilt = "high" },
+
+  # 卸売業
+  { code = "3038", name = "神戸物産",                     sector33 = "卸売業",         labor_intensity = "low",  knowledge_tilt = "mid" },
+  { code = "7459", name = "メディパルホールディングス",   sector33 = "卸売業",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "8001", name = "伊藤忠商事",                   sector33 = "卸売業",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "8002", name = "丸紅",                         sector33 = "卸売業",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "8015", name = "豊田通商",                     sector33 = "卸売業",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "8031", name = "三井物産",                     sector33 = "卸売業",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "8053", name = "住友商事",                     sector33 = "卸売業",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "8058", name = "三菱商事",                     sector33 = "卸売業",         labor_intensity = "low",  knowledge_tilt = "high" },
+
+  # 小売業
+  { code = "3092", name = "ZOZO",                         sector33 = "小売業",         labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "3141", name = "ウエルシアホールディングス",   sector33 = "小売業",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "3382", name = "セブン&アイ・ホールディングス", sector33 = "小売業",        labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "3549", name = "クスリのアオキホールディングス", sector33 = "小売業",       labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "7453", name = "良品計画",                     sector33 = "小売業",         labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "7532", name = "パン・パシフィック・インターナショナルホールディングス", sector33 = "小売業", labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "8267", name = "イオン",                       sector33 = "小売業",         labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "9843", name = "ニトリホールディングス",       sector33 = "小売業",         labor_intensity = "mid",  knowledge_tilt = "mid" },
+  { code = "9983", name = "ファーストリテイリング",       sector33 = "小売業",         labor_intensity = "mid",  knowledge_tilt = "mid" },
+
+  # 銀行業
+  { code = "7182", name = "ゆうちょ銀行",                 sector33 = "銀行業",         labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "8306", name = "三菱UFJフィナンシャル・グループ", sector33 = "銀行業",      labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "8308", name = "りそなホールディングス",       sector33 = "銀行業",         labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "8309", name = "三井住友トラストグループ",     sector33 = "銀行業",         labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "8316", name = "三井住友フィナンシャルグループ", sector33 = "銀行業",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "8331", name = "千葉銀行",                     sector33 = "銀行業",         labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "8411", name = "みずほフィナンシャルグループ", sector33 = "銀行業",         labor_intensity = "high", knowledge_tilt = "high" },
+
+  # 証券、商品先物取引業
+  { code = "8601", name = "大和証券グループ本社",         sector33 = "証券、商品先物取引業", labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "8604", name = "野村ホールディングス",         sector33 = "証券、商品先物取引業", labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "8628", name = "松井証券",                     sector33 = "証券、商品先物取引業", labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "8698", name = "マネックスグループ",           sector33 = "証券、商品先物取引業", labor_intensity = "low",  knowledge_tilt = "high" },
+
+  # 保険業
+  { code = "8630", name = "SOMPOホールディングス",        sector33 = "保険業",         labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "8725", name = "MS&ADインシュアランスグループホールディングス", sector33 = "保険業", labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "8750", name = "第一生命ホールディングス",     sector33 = "保険業",         labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "8766", name = "東京海上ホールディングス",     sector33 = "保険業",         labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "8795", name = "T&Dホールディングス",          sector33 = "保険業",         labor_intensity = "high", knowledge_tilt = "mid" },
+
+  # その他金融業
+  { code = "8570", name = "イオンフィナンシャルサービス", sector33 = "その他金融業",   labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "8591", name = "オリックス",                   sector33 = "その他金融業",   labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "8593", name = "三菱HCキャピタル",             sector33 = "その他金融業",   labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "8697", name = "日本取引所グループ",           sector33 = "その他金融業",   labor_intensity = "low",  knowledge_tilt = "high" },
+
+  # 不動産業
+  { code = "3231", name = "野村不動産ホールディングス",   sector33 = "不動産業",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "3289", name = "東急不動産ホールディングス",   sector33 = "不動産業",       labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "8801", name = "三井不動産",                   sector33 = "不動産業",       labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "8802", name = "三菱地所",                     sector33 = "不動産業",       labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "8830", name = "住友不動産",                   sector33 = "不動産業",       labor_intensity = "low",  knowledge_tilt = "high" },
+
+  # サービス業
+  { code = "2124", name = "JACリクルートメント",          sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "2175", name = "エス・エム・エス",             sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "2181", name = "パーソルホールディングス",     sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "2331", name = "綜合警備保障",                 sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "2371", name = "カカクコム",                   sector33 = "サービス業",     labor_intensity = "low",  knowledge_tilt = "high" },
+  { code = "4324", name = "電通グループ",                 sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "4661", name = "オリエンタルランド",           sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "4751", name = "サイバーエージェント",         sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "6098", name = "リクルートホールディングス",   sector33 = "サービス業",     labor_intensity = "mid",  knowledge_tilt = "high" },
+  { code = "6178", name = "日本郵政",                     sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "mid" },
+  { code = "6532", name = "ベイカレント",                 sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "6544", name = "ジャパンエレベーターサービスホールディングス", sector33 = "サービス業", labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "9735", name = "セコム",                       sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "low" },
+  { code = "9744", name = "メイテック",                   sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "high" },
+  { code = "9787", name = "イオンディライト",             sector33 = "サービス業",     labor_intensity = "high", knowledge_tilt = "low" },
+]
+
+[meta]
+vintage = "2026-06"
+basis = "curated subset of TSE-listed companies; sector33 per JPX classification"
+coverage = "主要銘柄。上場全銘柄・TOPIX500 は J-Quants ローダで置換可能"

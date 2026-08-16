@@ -1,0 +1,23 @@
+[project]
+name = "labor-ai-quadrant"
+version = "0.1.0"
+description = "Labour-shortage severity x AI substitutability quadrant framework for TSE-listed companies"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "plotly>=5.24",
+]
+
+[project.scripts]
+labor-ai-quadrant = "labor_ai_quadrant.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/labor_ai_quadrant"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]

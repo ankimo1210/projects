@@ -38,6 +38,7 @@ members = [
     "optimal_execution",
     "rough_volatility",
     "jp_llm_lab",
+    "labor_ai_quadrant",
     "market_nn",
     "portfolio-analyzer",
 ]
