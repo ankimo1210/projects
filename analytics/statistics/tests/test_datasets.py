@@ -62,3 +62,27 @@ def test_samplers_registry_is_callable_and_deterministic():
         b = fn(64, np.random.default_rng(0))
         assert a.shape == (64,), name
         np.testing.assert_array_equal(a, b)
+
+
+def test_capstone_dataset_matches_the_sibling_books_byte_for_byte():
+    """The cross-book capstone only works if all five books generate the
+    same numbers. Reproduced here rather than imported: analytics books do
+    not depend on each other."""
+    x, y = datasets.make_capstone_dataset(seed=0)
+    assert x.shape == y.shape == (40,)
+    assert np.all(np.diff(x) >= 0), "x must be sorted"
+    # Pinned from the shared generator (la_book/datasets.py), measured against
+    # all four sibling books rather than copied from the plan, whose constants
+    # were off in the fourth decimal.
+    assert abs(x[0] - (-2.98356900)) < 1e-6, x[0]
+    assert abs(x[-1] - 2.98325961) < 1e-6, x[-1]
+    # f(x) = sin(1.5 x) + 0.3 x with noise 0.35.
+    f = np.sin(1.5 * x) + 0.3 * x
+    assert abs((y - f).std(ddof=1) - 0.35) < 0.08
+
+
+def test_capstone_dataset_is_deterministic():
+    a = datasets.make_capstone_dataset(seed=0)
+    b = datasets.make_capstone_dataset(seed=0)
+    np.testing.assert_array_equal(a[0], b[0])
+    np.testing.assert_array_equal(a[1], b[1])
