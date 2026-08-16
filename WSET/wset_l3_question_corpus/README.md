@@ -18,8 +18,14 @@ WSET Level 3向け学習素材の構造、出題範囲、品質を調査した�
 
 ## セットアップ
 
+このディレクトリは **root の uv workspace のメンバーではありません**（自前の
+`pyproject.toml` / `uv.lock` を持つ独立プロジェクト）。root で
+`uv sync --all-packages` を実行しても依存（`rapidfuzz` など）は入らないので、
+ここで個別に sync します。root からの一括 `pytest` にも含まれません
+（含めようとすると `ModuleNotFoundError: No module named 'rapidfuzz'` になります）。
+
 ```bash
-cd /Users/ankimo1210/Documents/projects/WSET/wset_l3_question_corpus
+cd ~/projects/WSET/wset_l3_question_corpus
 uv sync --extra dev
 ```
 
