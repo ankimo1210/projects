@@ -53,7 +53,9 @@ cp quantkit/.env.example quantkit/.env  # キーを記入
 
 無料 API キー(任意、用途別):
 - `FRED_API_KEY` — 米/日マクロ・金利(<https://fred.stlouisfed.org/>)
-- `JQUANTS_REFRESH_TOKEN` — 日本株 OHLCV / `ESTAT_APP_ID` — 日本マクロ(無料登録)
+- `ESTAT_APP_ID` — 日本マクロ(無料登録)
+- `JQUANTS_REFRESH_TOKEN` — **現在は使えない**。J-Quants は V2 へ移行しリフレッシュトークン方式ごと
+  廃止された(下の「ソース可用性」を参照)
 - `SEC_USER_AGENT` — SEC EDGAR ファンダ取得用の連絡先(SEC の規約で必須、キーは不要)
 - `BLS_API_KEY`(任意)/ `BEA_API_KEY` / `CENSUS_API_KEY` — 米政府統計 / `EDINET_API_KEY` — JP 開示
 - `COINGECKO_API_KEY` — CoinGecko は無料 **demo キー**必須化(無ければ 401)
@@ -163,7 +165,7 @@ V.strategy_report(                                         # 単一 HTML(plotly.
 | 種別 | 主 | 補助 |
 |---|---|---|
 | 株価 OHLCV(米/グローバル) | Stooq → ★yfinance(自動フォールバック) | |
-| 株価 OHLCV(日本) | J-Quants(要 refresh token) | |
+| 株価 OHLCV(日本) | **J-Quants は現在動作しない**(v1 廃止、下記参照) | yfinance(`.T` サフィックス)で暫定代替 |
 | crypto | ★Binance(full OHLCV, 無キー) | CoinGecko(価格のみ, 要 demo キー) |
 | 米マクロ・金利 | FRED/ALFRED、★US Treasury | BLS(任意キー)/ BEA・Census(要キー) |
 | 日マクロ | e-Stat(要 app id)、FRED(JP系列) | BoJ / MoF(無キー CSV) |
@@ -194,7 +196,14 @@ QUANTKIT_LIVE=1 uv run pytest quantkit/tests/test_live.py -q   # 実 API スモ�
   `price_panel` の union 日付・欠損 NaN で扱う。
 - **ソース可用性は変わる**(ライブで判明): CoinGecko は無料 API が demo キー必須化(401)、Stooq は
   JS ウォール。無キー crypto は Binance(full OHLCV)を推奨。
-- **鍵が要るソースはライブ未検証**: J-Quants/e-Stat/FRED/BEA/Census/EDINET は実 API 契約に実装し
+- **J-Quants コネクタは壊れている**(2026-08-16 実測): J-Quants が V2 へ移行し
+  `api.jquants.com/v1` は全エンドポイントが **HTTP 410 Gone**(本文に移行告知)。
+  `data/connectors/jquants.py` は認証(`token/auth_refresh`)・パス・レスポンスキー・フィールド名が
+  すべて v1 のまま。テストは `normalize()` をオフライン検証するだけで **HTTP を叩かないので緑のまま
+  壊れている**。V2 は `x-api-key` ヘッダ認証、`/v2/equities/master`・`/v2/equities/bars/daily`・
+  `/v2/fins/summary`、トップキーは `data`、ページングは `pagination_key` に統一。
+  **移植元として `stock/src/stockkit/data/providers/jquants_provider.py` が既に V2 対応済み**。
+- **鍵が要るソースはライブ未検証**: e-Stat/FRED/BEA/Census/EDINET は実 API 契約に実装し
   **オフライン fixture でパーサのみ検証**(鍵を入れた実取得は要確認)。EDINET は書類 discovery まで
   (XBRL からの財務数値抽出は次段)。BoJ/MoF の CSV 書式は変わり得る(URL/列はパラメータ化)。
 - 取引コスト・税・スリッページは**仮定**であり config 化(`configs/`)。
