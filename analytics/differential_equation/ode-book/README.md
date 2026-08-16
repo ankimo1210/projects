@@ -26,7 +26,8 @@ ODE を「状態が時間とともにどう変わるかを記述する言語」�
 | `06_numerical_methods` | Euler/Heun/RK4・誤差と収束次数・安定性・stiff・`solve_ivp` |
 | `07_applications_physics_biology_finance` | 物理(共振)・生物(SIR)・金融(OU/Vasicek)・ML(Neural ODE)・制御 |
 | `09_boundary_value_sde_control` | 発展: 境界値問題/射撃法・固有値問題・SDE(Euler-Maruyama)・LQR/極配置・ODE 学習 |
-| `08_exercise_solutions` | 付録: 全章 Exercises の解答(数式 + 数値検証) |
+| `10_capstone_three_lenses` | キャップストーン: 1 つの減衰振動を解析(固有値)・数値(RK4)・幾何(相図)の 3 レンズで解く |
+| `08_exercise_solutions` | 付録: 00–07 章 Exercises の解答(数式 + 数値検証) |
 
 共通関数は `src/ode_book/` にまとめている
 (`calculus.py` / `solvers.py` / `systems.py` / `plotting.py` / `widgets.py` /
