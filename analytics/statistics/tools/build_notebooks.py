@@ -46,6 +46,7 @@ NOTEBOOKS = [
     ("build_nb09", "09_regression_inference"),
     ("build_nb10", "10_glm"),
     ("build_nb11", "11_frequentist_vs_bayes"),
+    ("build_nb12", "12_capstone_three_lenses"),
 ]
 
 
