@@ -38,6 +38,7 @@
 | [`market_nn/`](market_nn/) | LOB予測論文の一次資料・公式コード差分を追跡する構造再現スイート | Python / PyTorch |
 | [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
 | [`labor_ai_quadrant/`](labor_ai_quadrant/) | 人手不足の深刻度 × AI代替可能性の4象限フレームワーク（東証33業種・個別銘柄、オフライン HTML レポート） | Python / Plotly |
+| [`small_ma_search/`](small_ma_search/) | 個人による小型M&A（事業承継型買収）の調査・実行計画。工程・資金スタック・案件の読み方をまとめた単一 HTML | Markdown / HTML |
 | [`notebooks/`](notebooks/) | 単発の分析ノートブック置き場（債券、ETF、不動産シミュ等） | Jupyter |
 | [`kaggle/`](kaggle/) | Kaggle コンペの実験（house_prices / titanic）。env 管理なしの単発スクリプト | Python |
 | [`csharp_calc/`](csharp_calc/) | WinForms 四則演算電卓サンプル（エンジンは UI 非依存・ユニットテスト付き） | C# / .NET 9 |
