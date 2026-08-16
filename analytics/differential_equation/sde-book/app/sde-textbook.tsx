@@ -10,7 +10,8 @@ import {
 import { chapters, glossary, type LabKind } from "../content/chapters";
 import { memoizedDiagnostics } from "./diagnostics-cache.mjs";
 import { drawExtendedLab, extendedMetrics } from "./extended-labs";
-import { normalCdf } from "./numerical-functions.mjs";
+import { normalPdf } from "./numerical-functions.mjs";
+import { backwardValue, feynmanKacExact, terminalPayoff } from "./stochastic-models.mjs";
 
 type Settings = {
   seed: number;
@@ -151,12 +152,6 @@ function normal(random: () => number) {
   const u = Math.max(random(), Number.EPSILON);
   const v = random();
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-}
-
-function normalPdf(x: number, mean: number, sd: number) {
-  const safeSd = Math.max(sd, 1e-6);
-  const z = (x - mean) / safeSd;
-  return Math.exp(-0.5 * z * z) / (safeSd * Math.sqrt(2 * Math.PI));
 }
 
 function lognormalPdf(x: number, logMean: number, logSd: number) {
@@ -1758,24 +1753,6 @@ function drawGenerator(
   drawLabel(context, "一歩の標本平均 / Δt", right.x + 120, right.y + 18, colors.amber);
 }
 
-function terminalPayoff(choice: number, value: number, strike: number) {
-  if (choice === 1) return value > strike ? 1 : 0;
-  if (choice === 2) return value * value;
-  return Math.max(value - strike, 0);
-}
-
-function backwardValue(settings: Settings, choice: number, time: number, state: number) {
-  const tau = Math.max(settings.horizon - time, 0);
-  if (tau < 1e-8) return terminalPayoff(choice, state, settings.strike);
-  const mean = state + settings.mu * tau;
-  const sd = settings.sigma * Math.sqrt(tau);
-  if (choice === 1) return normalCdf((mean - settings.strike) / sd);
-  if (choice === 2) return mean * mean + sd * sd;
-  const distance = mean - settings.strike;
-  const d = distance / sd;
-  return distance * normalCdf(d) + sd * normalPdf(d, 0, 1);
-}
-
 function backwardDiagnostics(settings: Settings) {
   const choice = clamp(Math.round(settings.functionChoice), 0, 2);
   const selectedTime = settings.time * settings.horizon;
@@ -1909,14 +1886,6 @@ function drawFokkerPlanck(
   );
   drawLabel(context, "経験密度", chart.x + 54, chart.y + 18, colors.violet);
   drawLabel(context, "解析密度", chart.x + 126, chart.y + 18, colors.teal);
-}
-
-function feynmanKacExact(settings: Settings) {
-  const variance = settings.sigma ** 2 * settings.horizon;
-  const mean = settings.x0 + settings.mu * settings.horizon;
-  return Math.exp(-settings.rate * settings.horizon) /
-    Math.sqrt(1 + 2 * variance) *
-    Math.exp(-(mean * mean) / (1 + 2 * variance));
 }
 
 function feynmanKacDiagnostics(settings: Settings) {
