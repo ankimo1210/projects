@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from collections import defaultdict
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from datetime import UTC, date, datetime
 from decimal import ROUND_CEILING, Decimal
 from pathlib import Path
@@ -125,6 +125,9 @@ class Exposure:
     mapped: bool
     theme: str | None = None
     chain_role: str | None = None
+    # Unlike the single-label axes above, a business mix splits one issuer's value
+    # across several lines, so it carries shares rather than one name.
+    business_mix: dict[str, Decimal] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -345,6 +348,10 @@ def load_analysis_reference(path: Path) -> AnalysisReference:
                     chain_role=(
                         str(exposure["chain_role"]) if exposure.get("chain_role") else None
                     ),
+                    business_mix={
+                        str(line): _decimal(share, f"business_mix.{line}")
+                        for line, share in exposure.get("business_mix", {}).items()
+                    },
                 )
                 for exposure in row.get("exposures", [])
             ),
@@ -763,6 +770,24 @@ def validate_analysis_reference(reference: AnalysisReference) -> list[str]:
                 "aggregation tags are only read on issuer exposures: "
                 f"{instrument.symbol} ({', '.join(misplaced_tags)})"
             )
+        for exposure in instrument.exposures:
+            if not exposure.business_mix:
+                continue
+            if exposure.group != "issuer":
+                issues.append(
+                    f"business mix outside the issuer layer: {instrument.symbol}/{exposure.category}"
+                )
+            if any(share <= 0 for share in exposure.business_mix.values()):
+                issues.append(
+                    f"non-positive business mix share: {instrument.symbol}/{exposure.category}"
+                )
+            # A partial mix would silently shrink the issuer, so require the whole of it.
+            mix_total = sum(exposure.business_mix.values(), Decimal())
+            if not Decimal("0.99") <= mix_total <= Decimal("1.01"):
+                issues.append(
+                    "business mix must cover the whole issuer: "
+                    f"{instrument.symbol}/{exposure.category} ({mix_total:.4f})"
+                )
         exposure_keys = [(exposure.group, exposure.category) for exposure in instrument.exposures]
         if len(exposure_keys) != len(set(exposure_keys)):
             issues.append(f"duplicate exposure category: {instrument.symbol}")
@@ -1032,6 +1057,7 @@ def _analysis_rows(
     issuers: list[dict[str, Any]] = []
     event_calendar: list[dict[str, Any]] = []
     axis_rows: dict[str, list[dict[str, Any]]] = {axis: [] for axis in EXPOSURE_AXES}
+    business_lines: list[dict[str, Any]] = []
     summary_metrics: dict[str, dict[str, float | None]] = {}
 
     for scope, positions in _scopes(portfolio):
@@ -1047,6 +1073,9 @@ def _analysis_rows(
         axis_members: dict[str, defaultdict[str, set[str]]] = {
             axis: defaultdict(set) for axis in EXPOSURE_AXES
         }
+        line_values: defaultdict[str, Decimal] = defaultdict(Decimal)
+        line_members: defaultdict[str, set[str]] = defaultdict(set)
+        mixed_issuer_total = Decimal()
         equity_total = Decimal()
         by_symbol: defaultdict[str, Decimal] = defaultdict(Decimal)
         position_names: dict[str, str] = {}
@@ -1081,6 +1110,12 @@ def _analysis_rows(
                     if label:
                         axis_values[axis][label] += position.market_value_jpy * exposure.weight
                         axis_members[axis][label].add(exposure.category)
+                issuer_value = position.market_value_jpy * exposure.weight
+                if exposure.business_mix:
+                    mixed_issuer_total += issuer_value
+                    for line, share in exposure.business_mix.items():
+                        line_values[line] += issuer_value * share
+                        line_members[line].add(exposure.category)
             residual = Decimal("1") - assigned
             if residual > Decimal("0.0001"):
                 exposure_values[("other", "未分類・残差", False)] += (
@@ -1166,6 +1201,21 @@ def _analysis_rows(
                         "issuers": "、".join(sorted(axis_members[axis][label])),
                     }
                 )
+
+        for line, value in sorted(line_values.items(), key=lambda item: item[1], reverse=True):
+            business_lines.append(
+                {
+                    "scope": scope,
+                    "business_line": line,
+                    "market_value_jpy": _float(value),
+                    "portfolio_weight": _float(value / total),
+                    "mixed_issuer_weight": (
+                        _float(value / mixed_issuer_total) if mixed_issuer_total else None
+                    ),
+                    "issuer_count": len(line_members[line]),
+                    "issuers": "、".join(sorted(line_members[line])),
+                }
+            )
 
         pe_value = Decimal()
         fresh_pe_value = Decimal()
@@ -1366,6 +1416,12 @@ def _analysis_rows(
             "issuer_coverage_ratio": (
                 _float(issuer_known_total / equity_total) if equity_total else None
             ),
+            "largest_business_line_ratio": (
+                _float(max(line_values.values()) / total) if line_values else None
+            ),
+            "business_mix_coverage_ratio": (
+                _float(mixed_issuer_total / issuer_known_total) if issuer_known_total else None
+            ),
             "worst_compound_drawdown": (
                 _float(max(-min(compound_impact_ratios), Decimal()))
                 if compound_impact_ratios
@@ -1388,6 +1444,7 @@ def _analysis_rows(
             "valuation_detail": valuations,
             "issuer_exposure": issuers,
             **{f"{axis}_exposure": axis_rows[axis] for axis in EXPOSURE_AXES},
+            "business_line_exposure": business_lines,
             "event_calendar": event_calendar,
         },
         summary_metrics,
@@ -1818,9 +1875,9 @@ def _proposal_comparison_rows(
         ("暫定ルール超過", "policy_breach_count", "件"),
     ]
     comparison: list[dict[str, Any]] = []
-    for label, field, unit in metric_specs:
-        before_value = before_summary.get(field)
-        after_value = after_summary.get(field)
+    for label, metric, unit in metric_specs:
+        before_value = before_summary.get(metric)
+        after_value = after_summary.get(metric)
         if before_value is None or after_value is None:
             continue
         change = after_value - before_value
@@ -3067,6 +3124,101 @@ def _extend_analysis_manifest(
             }
         )
 
+    if artifact["snapshot"]["datasets"].get("business_line_exposure"):
+        manifest["cards"].append(
+            {
+                "id": "largest_business_line",
+                "description": (
+                    "発行体をさらに開示セグメントまで割ったときの最大事業。"
+                    "銘柄分散していても、実際に賭けている事業は1つに寄りうる。"
+                ),
+                "dataset": "summary",
+                "sourceId": analysis_source_id,
+                "metrics": [
+                    {
+                        "label": "最大事業比率",
+                        "field": "largest_business_line_ratio",
+                        "format": "percent",
+                    },
+                    {
+                        "label": "事業内訳のカバー率",
+                        "field": "business_mix_coverage_ratio",
+                        "format": "percent",
+                    },
+                ],
+            }
+        )
+        next(block for block in manifest["blocks"] if block["id"] == "metrics")["cardIds"].append(
+            "largest_business_line"
+        )
+        manifest["charts"].append(
+            {
+                "id": "business_line_exposure",
+                "title": "事業別エクスポージャー（開示セグメントベース）",
+                "subtitle": (
+                    "発行体の評価額を各社の開示セグメント売上構成で按分。"
+                    "内訳を登録した発行体だけの集計なので下限値"
+                ),
+                "intent": "comparison",
+                "question": "銘柄ではなく事業で見たとき、いちばん大きい賭けはどれか",
+                "rationale": "事業名が長く本数も少ないため、横棒で厚みの差を直接比べる。",
+                "comparisonContext": {
+                    "denominator": "選択範囲の総資産",
+                    "grain": "事業",
+                    "unit": "JPY",
+                },
+                "type": "horizontalBar",
+                "dataset": "business_line_exposure",
+                "sourceId": analysis_source_id,
+                "encodings": {
+                    "x": {"field": "business_line", "type": "nominal", "label": "事業"},
+                    "y": {
+                        "field": "market_value_jpy",
+                        "type": "quantitative",
+                        "label": "按分後評価額",
+                        "format": "currency",
+                    },
+                    "tooltip": [
+                        {
+                            "field": "portfolio_weight",
+                            "type": "quantitative",
+                            "label": "総資産比",
+                            "format": "percent",
+                        },
+                        {"field": "issuers", "type": "nominal", "label": "発行体"},
+                    ],
+                },
+                "valueFormat": "currency",
+                "unit": "JPY",
+                "layout": "full",
+                "palette": {"kind": "sequential", "name": "blue"},
+                "settings": {"sort": "descending", "showValues": True},
+            }
+        )
+        manifest["tables"].append(
+            {
+                "id": "business_line_exposure",
+                "title": "事業別エクスポージャー",
+                "subtitle": "各社の開示セグメント売上構成で按分した内訳。売上構成であって価値構成ではない",
+                "dataset": "business_line_exposure",
+                "sourceId": analysis_source_id,
+                "defaultSort": {"field": "market_value_jpy", "direction": "desc"},
+                "density": "compact",
+                "layout": "full",
+                "columns": [
+                    {"field": "business_line", "label": "事業", "type": "text"},
+                    {"field": "market_value_jpy", "label": "按分後評価額", "format": "currency"},
+                    {"field": "portfolio_weight", "label": "総資産比", "format": "percent"},
+                    {
+                        "field": "mixed_issuer_weight",
+                        "label": "内訳登録分内シェア",
+                        "format": "percent",
+                    },
+                    {"field": "issuers", "label": "発行体", "type": "text"},
+                ],
+            }
+        )
+
     if artifact["snapshot"]["datasets"].get("correlation_monitor"):
         manifest["charts"].append(
             {
@@ -3243,6 +3395,42 @@ def _extend_analysis_manifest(
                 },
             ]
             if artifact["snapshot"]["datasets"].get("chain_role_exposure")
+            else []
+        ),
+        *(
+            [
+                {
+                    "id": "business_line_exposure_block",
+                    "type": "chart",
+                    "chartId": "business_line_exposure",
+                    "layout": "full",
+                },
+                {
+                    "id": "business_line_exposure_table_block",
+                    "type": "table",
+                    "tableId": "business_line_exposure",
+                    "layout": "full",
+                },
+                {
+                    "id": "business_line_note",
+                    "type": "markdown",
+                    "body": (
+                        "## 事業別に割るときの前提\n\n"
+                        "発行体の評価額を、各社が開示している**セグメント売上構成**で按分しています。"
+                        "**売上構成であって価値構成ではありません。**株価は将来利益の期待値なので、"
+                        "成長率と利益率が事業ごとに違えば、市場が織り込む価値配分は売上比とずれます。"
+                        "このズレは開示からは測れないため、**近似として読んでください**。\n\n"
+                        "セグメントの定義は会社の都合で変わります（アドバンテストは FY2026 Q1 に"
+                        "「半導体・部品テストシステム／メカトロニクス関連」から"
+                        "「テストシステム／サービス他」へ変更）。時系列で追うときは切れ目に注意してください。\n\n"
+                        "「事業内訳のカバー率」は、発行体を確認できている金額のうち"
+                        "セグメント内訳まで登録できている割合です。ここが100%未満である限り、"
+                        "表示される事業比率はすべて下限値です。"
+                    ),
+                    "sourceId": analysis_source_id,
+                },
+            ]
+            if artifact["snapshot"]["datasets"].get("business_line_exposure")
             else []
         ),
         *(
