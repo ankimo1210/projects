@@ -63,9 +63,16 @@ uv run --no-sync python -m labor_ai_quadrant sectors
 # 右上象限（AI解放）の銘柄ランキング
 uv run --no-sync python -m labor_ai_quadrant top --level company -n 25
 
-# オフラインHTMLレポート（4象限マップ + ランキング + 感応度）
+# オフラインHTMLレポート（4象限マップ + ランキング）
 uv run --no-sync python -m labor_ai_quadrant build --out reports/quadrant.html
 ```
+
+レポートは2種類ある。既定の `static` で足りることがほとんど。
+
+| `--format` | サイズ | 中身 |
+|---|---|---|
+| `static`（既定） | 約30KB | 手書きインラインSVGの象限マップ + 象限別一覧 + 銘柄ランキング。依存ライブラリを積まないので単体で共有できる |
+| `interactive` | 約5MB | Plotly 版。ホバー・ズーム、感応度チャート、財務データを渡したときの P/L 列 |
 
 Python から:
 
@@ -172,7 +179,8 @@ labor_ai_quadrant/
 │   ├── axes.py              # 2軸のスコアリング
 │   ├── quadrant.py          # 象限割り当て・脱出ポテンシャル
 │   ├── company.py           # 企業展開 + P/L換算
-│   ├── report.py            # オフラインHTMLレポート
+│   ├── report.py            # Plotly 版レポート（interactive）
+│   ├── report_static.py     # インラインSVG版レポート（static, 既定）
 │   ├── cli.py               # python -m labor_ai_quadrant
 │   └── providers/jquants.py # 上場全銘柄取得（要ネットワーク、stdlibのみ）
 ├── tests/
