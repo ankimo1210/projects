@@ -33,8 +33,10 @@
 cd ~/projects
 uv sync --all-packages        # = make install
 
-# 環境変数（JQUANTS_API_KEY など）
-cp market-viz/.env.example market-viz/.env   # 値を記入
+# 環境変数（任意）
+# データ取得は yfinance / ccxt の公開エンドポイントのみで、API キーは要らない。
+# 任意の Next.js フロントエンドだけが NEXT_PUBLIC_API_URL を参照する。
+cp market-viz/.env.example market-viz/.env   # 上書きしたい場合のみ
 
 # Streamlit アプリ起動
 uv run --no-sync streamlit run market-viz/app/main.py
