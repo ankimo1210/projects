@@ -216,7 +216,10 @@ def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[
     if with_pnl:
         rows = rows[rankable(rows)]
         rows = rows.sort_values("op_margin_uplift_pp", ascending=False, na_position="last")
-        caption = f"営業利益率の押上げ幅（pp）順・財務が揃い営業利益が正の{len(rows)}社から"
+        caption = (
+            f"営業利益率の押上げ幅（pp）順・押上げ余地を定義できる{len(rows)}社から"
+            "（営業利益が0以下、人件費が売上を超える単体は除外）"
+        )
     else:
         caption = "脱出ポテンシャル（2軸の幾何平均）順"
     rows = rows.head(n)
