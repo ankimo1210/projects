@@ -18,6 +18,25 @@ from .reference import ReferenceData, load_reference
 DEFAULT_OUT = Path("reports/labor_ai_quadrant.html")
 
 
+def _align_sector_names(universe: pd.DataFrame, ref: ReferenceData) -> pd.DataFrame:
+    """Restate J-Quants' 33-sector labels in the reference table's spelling.
+
+    Matching on the name alone loses six sectors — J-Quants writes 情報･通信業 /
+    ガラス･土石製品 / 倉庫･運輸関連業 / 石油･石炭製品 / 電気･ガス業 with a
+    half-width middle dot and 証券･商品先物取引業 with a middle dot where JPX's
+    own name has a comma. Those would be dropped as "unknown sectors", taking
+    the top-right quadrant's leading sector (情報・通信業) with them. The
+    four-digit sector code is stable on both sides, so join on that.
+    """
+    if "sector33_code" not in universe.columns:
+        return universe
+    by_code = pd.Series(ref.shortage.index.to_numpy(), index=ref.shortage["code"].astype(str))
+    mapped = universe["sector33_code"].map(by_code)
+    universe = universe.copy()
+    universe["sector33"] = mapped.fillna(universe["sector33"])
+    return universe
+
+
 def _resolve_reference(args: argparse.Namespace) -> ReferenceData:
     ref = load_reference()
     if args.universe == "curated":
@@ -26,6 +45,7 @@ def _resolve_reference(args: argparse.Namespace) -> ReferenceData:
     from .providers.jquants import fetch_listed_universe
 
     universe = fetch_listed_universe(scale=args.scale)
+    universe = _align_sector_names(universe, ref)
     known = set(ref.shortage.index)
     unknown = sorted(set(universe["sector33"]) - known)
     if unknown:
@@ -112,31 +132,39 @@ def cmd_fetch_financials(args: argparse.Namespace) -> int:
     """
     from .company import estimate_labor_cost
     from .providers.edinet import build_financials
-    from .providers.jquants import fetch_statements
+    from .providers.jquants import fetch_summaries
 
     ref = _resolve_reference(args)
     codes = list(ref.universe.index)
     print(f"対象 {len(codes)} 銘柄", file=sys.stderr)
 
-    print("EDINET から従業員数・平均年間給与を取得中…", file=sys.stderr)
+    print("EDINET から従業員数・平均年間給与・単体P/Lを取得中…", file=sys.stderr)
     edinet = build_financials(lookback_days=args.lookback_days, codes=set(codes))
 
-    print("J-Quants から売上高・営業利益を取得中…", file=sys.stderr)
+    print("J-Quants から連結の売上高・営業利益を取得中…", file=sys.stderr)
     try:
-        statements = fetch_statements(codes)
+        summaries = fetch_summaries(codes)
     except Exception as exc:
-        print(f"J-Quants の取得に失敗したため EDINET の値を使います: {exc}", file=sys.stderr)
-        statements = pd.DataFrame(index=pd.Index([], name="code"))
+        print(f"J-Quants の取得に失敗しました（連結の参考列は空になります）: {exc}", file=sys.stderr)
+        summaries = pd.DataFrame(index=pd.Index([], name="code"))
 
     merged = edinet.copy()
+    # J-Quants は決算短信＝**連結**、EDINET から取っているのは提出会社＝**単体**。
+    # 人件費は平均年間給与が単体でしか開示されないため単体でしか組めないので、
+    # 比率の分母も単体で揃える。連結の値は別列に置いて混ざらないようにする
+    # （NTT は単体従業員 2,606人 / 連結 344,196人。連結営業利益で割ると押上げ余地が
+    #   一桁以上小さく出る）。
     for column in ("revenue", "operating_profit"):
-        if column in statements.columns:
-            # J-Quants は連結ベースで揃っているので、取れたものはそちらを優先する。
-            merged[column] = statements[column].reindex(merged.index).fillna(merged.get(column))
+        if column in summaries.columns:
+            merged[f"{column}_consolidated"] = summaries[column].reindex(merged.index)
 
     merged["labor_cost"] = estimate_labor_cost(
         merged["employees"], merged["average_salary"], args.benefits_multiplier
     )
+    # 単体が企業グループのどれだけを覆っているか。純粋持株会社では数%になり、
+    # 単体で組んだ人件費率も押上げ余地もグループの実態を表さない。
+    if "employees_consolidated" in merged.columns:
+        merged["parent_employee_share"] = merged["employees"] / merged["employees_consolidated"]
 
     required = ["revenue", "operating_profit", "labor_cost", "employees"]
     complete = merged.dropna(subset=required)
@@ -144,6 +172,14 @@ def cmd_fetch_financials(args: argparse.Namespace) -> int:
         f"{len(complete)}/{len(merged)} 銘柄で4項目すべてが揃いました",
         file=sys.stderr,
     )
+    share = merged.get("parent_employee_share")
+    if share is not None:
+        thin = int((share < 0.2).sum())
+        print(
+            f"単体従業員が連結の2割未満（純粋持株会社など）: {len(merged)} 銘柄中 {thin} 銘柄。"
+            "この銘柄群では単体ベースの人件費率・押上げ余地がグループ実態を表しません。",
+            file=sys.stderr,
+        )
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     merged.reset_index().to_csv(args.out, index=False)
@@ -156,7 +192,9 @@ def cmd_verify_universe(args: argparse.Namespace) -> int:
     from .providers.jquants import fetch_listed_universe
 
     ref = load_reference()
-    live = fetch_listed_universe(scale="all")
+    # 表記揺れ（半角中黒など）を先に吸収しないと、実際には一致している数十件が
+    # 業種不一致として並び、本当の再分類が埋もれる。
+    live = _align_sector_names(fetch_listed_universe(scale="all"), ref)
 
     curated = ref.universe
     missing = sorted(set(curated.index) - set(live.index))
