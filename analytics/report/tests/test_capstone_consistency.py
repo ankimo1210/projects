@@ -1,11 +1,12 @@
 """Cross-book numerical consistency for the capstone (the report tree can import
-all four books, so it is the natural home for this check).
+all five books, so it is the natural home for this check).
 
 The capstone teaches that one regression problem has many faces. This test pins
-that down: the four books (linear algebra, NN, Bayesian, machine learning)
-generate IDENTICAL data, and ridge (linear algebra) == Bayesian posterior mean
-== gradient-descent-with-weight-decay (NN) == scikit-learn Ridge (ML) on the
-shared features.
+that down: the five books (linear algebra, NN, Bayesian, machine learning,
+statistics) generate IDENTICAL data, and ridge (linear algebra) == Bayesian
+posterior mean == gradient-descent-with-weight-decay (NN) == scikit-learn Ridge
+(ML) on the shared features, with least squares (statistics) as the lambda -> 0
+end of the same family.
 """
 
 import numpy as np
@@ -16,6 +17,8 @@ from la_book.datasets import make_capstone_dataset as la_data
 from ml_textbook.datasets import make_capstone_dataset as ml_data
 from nn_textbook.datasets import make_capstone_dataset as nn_data
 from sklearn.linear_model import Ridge
+from stats_textbook.datasets import make_capstone_dataset as st_data
+from stats_textbook.regression import ols as st_ols
 
 
 def _features(x, degree: int = 5):
@@ -28,8 +31,8 @@ def _features(x, degree: int = 5):
     return Xs
 
 
-def test_four_books_share_identical_data():
-    books = [la_data(seed=0), nn_data(seed=0), by_data(seed=0), ml_data(seed=0)]
+def test_five_books_share_identical_data():
+    books = [la_data(seed=0), nn_data(seed=0), by_data(seed=0), ml_data(seed=0), st_data(seed=0)]
     ref = books[0]
     for other in books[1:]:
         for ref_arr, other_arr in zip(ref, other, strict=True):
@@ -59,3 +62,25 @@ def test_four_lenses_agree():
     np.testing.assert_allclose(w_la, w_bayes, atol=1e-8)
     np.testing.assert_allclose(w_la, w_gd, atol=1e-4)
     np.testing.assert_allclose(w_la, w_ml, atol=1e-8)
+
+
+def test_the_frequentist_lens_is_ridge_at_zero_penalty():
+    """statistics' capstone lens joins the other four at the limit.
+
+    Least squares is what ridge becomes when the prior stops pulling, so
+    the fifth book's answer has to be the lambda -> 0 end of the same
+    family. Measured agreement: 3.4e-09 at lambda = 1e-10.
+    """
+    x, y = st_data(seed=0)
+    phi = _features(x, degree=5)
+    np.testing.assert_allclose(st_ols(phi, y).params, la_ridge(phi, y, 1e-10), atol=1e-7)
+
+
+def test_shrinkage_is_visible_in_the_coefficient_norms():
+    """The capstone's headline: a prior costs 7.40 of norm and buys stability."""
+    x, y = st_data(seed=0)
+    phi = _features(x, degree=5)
+    norm_ols = float(np.linalg.norm(st_ols(phi, y).params))
+    norm_ridge = float(np.linalg.norm(la_ridge(phi, y, 1.0)))
+    assert 7.0 < norm_ols < 8.0, norm_ols
+    assert 1.5 < norm_ridge < 2.0, norm_ridge
