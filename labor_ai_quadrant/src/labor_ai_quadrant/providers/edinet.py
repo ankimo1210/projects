@@ -56,6 +56,10 @@ ELEMENT_MAP = {
 #: 単体を表す ContextRef の接頭辞。連結（Consolidated）より優先する。
 NON_CONSOLIDATED_HINT = "NonConsolidatedMember"
 
+#: これだけ連続で日次取得に失敗したらスイープを打ち切る。キー不正やエンドポイント
+#: 廃止は全日で同じように失敗するので、最後まで回しても空の結果が返るだけになる。
+MAX_CONSECUTIVE_DAY_FAILURES = 5
+
 
 class EdinetError(RuntimeError):
     """Raised when the EDINET API is unreachable or returns an unusable payload."""
@@ -86,7 +90,26 @@ def _get(url: str, api_key: str) -> bytes:
         with urllib.request.urlopen(req, timeout=60) as resp:
             return resp.read()
     except urllib.error.URLError as exc:
-        raise EdinetError(f"GET {url} failed: {exc}") from exc
+        raise _fail(url, exc) from exc
+
+
+def _fail(url: str, exc: urllib.error.URLError) -> EdinetError:
+    """Carry EDINET's own error body into the exception.
+
+    A bare status code cannot distinguish a bad subscription key from a date
+    outside the retention window; EDINET says which in the response body.
+    """
+    if isinstance(exc, urllib.error.HTTPError):
+        try:
+            body = exc.read().decode("utf-8", errors="replace").strip()
+        except Exception:  # body already consumed, or not readable
+            body = ""
+        detail = f"HTTP {exc.code} {exc.reason}"
+        if body:
+            detail = f"{detail}: {body[:500]}"
+    else:
+        detail = str(getattr(exc, "reason", exc))
+    return EdinetError(f"GET {url} failed: {detail}")
 
 
 def normalise_sec_code(sec_code: str | None) -> str | None:
@@ -107,7 +130,15 @@ def list_annual_reports(day: date, api_key: str | None = None) -> list[AnnualRep
 
     results = payload.get("results")
     if results is None:
-        raise EdinetError(f"documents.json returned no results block: {payload.get('metadata')}")
+        # EDINET answers auth and quota failures with HTTP 200 and an error body,
+        # so the transport layer never sees them. The reason is in StatusCode /
+        # message; reporting only the absent results block hides it entirely.
+        status = payload.get("StatusCode")
+        message = payload.get("message") or payload.get("metadata")
+        raise EdinetError(
+            f"documents.json for {day.isoformat()} returned no results "
+            f"(StatusCode={status}): {message}"
+        )
 
     reports: list[AnnualReport] = []
     for row in results:
@@ -198,15 +229,26 @@ def build_financials(
 
     records: dict[str, dict[str, float | None]] = {}
     names: dict[str, str] = {}
+    consecutive_failures = 0
 
     for offset in range(lookback_days):
         day = today - timedelta(days=offset)
         try:
             reports = list_annual_reports(day, key)
         except EdinetError as exc:  # a single bad day must not sink the sweep
+            consecutive_failures += 1
+            if consecutive_failures >= MAX_CONSECUTIVE_DAY_FAILURES:
+                # A rejected key or a dead endpoint fails every day alike. Without
+                # this the sweep skips all 400 days and reports an empty result,
+                # which reads like "no filings" rather than "never authenticated".
+                raise EdinetError(
+                    f"{consecutive_failures} consecutive days failed; aborting the sweep. "
+                    f"Last error: {exc}"
+                ) from exc
             if progress:
                 print(f"  {day}: skipped ({exc})")
             continue
+        consecutive_failures = 0
 
         for report in reports:
             if codes is not None and report.code not in codes:
