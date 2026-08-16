@@ -185,6 +185,7 @@ testpaths = [
     "jp_llm_lab/tests",
     "shortest_path/tests",
     "market_nn/tests",
+    "labor_ai_quadrant/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
