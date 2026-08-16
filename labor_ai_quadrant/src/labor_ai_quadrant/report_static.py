@@ -1,0 +1,495 @@
+"""Static HTML report — self-contained, ~30 KB, no plotting library.
+
+:mod:`report` renders the interactive Plotly version (~5 MB, inline bundle).
+This one hand-authors the quadrant map as inline SVG: small enough to share as
+a single file, and the marks inherit the page's theme tokens directly instead
+of needing a JS relayout. Both read the same frames, so the two reports cannot
+drift apart.
+
+Colour follows the workspace data-viz method. The quadrant is carried by
+*position*, so only the two cells that carry the argument are tinted — top
+right (escape) and bottom right (constrained) — and the other two stay hollow.
+The two accents were validated for CVD separation and surface contrast in both
+themes before being written down here.
+"""
+
+from __future__ import annotations
+
+import html
+from pathlib import Path
+
+import pandas as pd
+
+from .axes import sector_frame
+from .company import company_frame
+from .config import Config
+from .quadrant import thresholds, top_right
+from .reference import ReferenceData, load_reference
+
+Q_CLASS = {"AI解放": "escape", "人手依存": "bound", "AI増益": "margin", "低感応": "flat"}
+
+# --- SVG geometry ------------------------------------------------------------
+W, H = 720, 560
+L, R, T, B = 96, 686, 34, 486
+
+
+def px(v: float) -> float:
+    return L + (v / 100.0) * (R - L)
+
+
+def py(v: float) -> float:
+    return B - (v / 100.0) * (B - T)
+
+
+#: Candidate label placements as (text-anchor, dx, dy) in SVG units, in
+#: preference order — the first entries are the conventional ones.
+LABEL_SLOTS: tuple[tuple[str, float, float], ...] = (
+    ("middle", 0.0, -14.0),
+    ("middle", 0.0, 20.0),
+    ("end", -13.0, 4.5),
+    ("start", 13.0, 4.5),
+    ("end", -13.0, -11.0),
+    ("start", 13.0, -11.0),
+    ("end", -13.0, 19.0),
+    ("start", 13.0, 19.0),
+    ("end", -32.0, -12.0),
+    ("start", 32.0, -12.0),
+    ("middle", 0.0, -28.0),
+)
+
+#: Only the key quadrant is captioned inside the map. The other three corners
+#: are where the data is densest, and the quadrant cards below name them anyway.
+CORNER_BOXES: tuple[tuple[float, float, float], ...] = ((R - 12 - 30, T + 22, 34.0),)
+
+#: Roughly half an average CJK glyph's advance at the label font size.
+CHAR_HALF_WIDTH = 6.4
+
+
+def _label_targets(sectors: pd.DataFrame) -> set[str]:
+    """The leading few plus each axis extreme.
+
+    The quadrant cards below carry full membership, so the map stays readable
+    rather than exhaustive — and the extremes are what make the framework's
+    point (the most labour-short sectors are the ones AI cannot help).
+    """
+    keep = set(top_right(sectors, 6).index)
+    keep |= set(sectors.nlargest(3, "shortage_score").index)
+    keep |= set(sectors.nlargest(3, "ai_score").index)
+    return keep
+
+
+def _place_labels(sectors: pd.DataFrame) -> dict[str, tuple[str, float, float]]:
+    """Choose a slot per labelled point, least-penalty first.
+
+    Scoring rather than first-fit matters: with first-fit, a point whose every
+    slot collides falls back to a fixed slot that may be the worst of them.
+    """
+    keep = _label_targets(sectors)
+    # Two obstacle classes with different clearances: text needs a full line of
+    # vertical room from other text, but only needs to clear a marker's radius.
+    label_boxes: list[tuple[float, float, float]] = []
+    point_boxes = [
+        (px(r["shortage_score"]), py(r["ai_score"]), 8.0) for _, r in sectors.iterrows()
+    ]
+    chosen: dict[str, tuple[str, float, float]] = {}
+
+    def penalty(anchor: str, ax: float, ay: float, half: float) -> float:
+        left = ax - half if anchor == "middle" else (ax - 2 * half if anchor == "end" else ax)
+        score = 0.0
+        if left < L - 90 or left + 2 * half > R + 6 or ay < T + 12 or ay > B + 4:
+            score += 100.0
+        score += 20.0 * sum(
+            abs(ay - y) < 24 and abs(ax - x) < half + hw for x, y, hw in CORNER_BOXES
+        )
+        score += 10.0 * sum(
+            abs(ay - y) < 15 and abs(ax - x) < half + hw for x, y, hw in label_boxes
+        )
+        score += 4.0 * sum(
+            abs(ay - y) < 9 and abs(ax - x) < half + hw for x, y, hw in point_boxes
+        )
+        return score
+
+    for name in sectors.sort_values("escape_potential", ascending=False).index:
+        if name not in keep:
+            continue
+        row = sectors.loc[name]
+        cx, cy = px(row["shortage_score"]), py(row["ai_score"])
+        half = len(str(name)) * CHAR_HALF_WIDTH
+        best_index = min(
+            range(len(LABEL_SLOTS)),
+            key=lambda i: (
+                penalty(LABEL_SLOTS[i][0], cx + LABEL_SLOTS[i][1], cy + LABEL_SLOTS[i][2], half),
+                i,  # slot order breaks ties toward the conventional placements
+            ),
+        )
+        anchor, dx, dy = LABEL_SLOTS[best_index]
+        chosen[name] = (anchor, dx, dy)
+        label_boxes.append((cx + dx, cy + dy, half))
+    return chosen
+
+
+def _svg(sectors: pd.DataFrame, x_cut: float, y_cut: float) -> str:
+    parts: list[str] = [
+        f'<svg viewBox="0 0 {W} {H}" role="img" '
+        f'aria-label="東証33業種を人手不足の深刻度とAI代替可能性で並べた4象限マップ" class="map">'
+    ]
+
+    for i in range(0, 101, 10):  # graph-paper reference grid
+        parts.append(
+            f'<line class="grid" x1="{px(i):.1f}" y1="{T}" x2="{px(i):.1f}" y2="{B}"/>'
+            f'<line class="grid" x1="{L}" y1="{py(i):.1f}" x2="{R}" y2="{py(i):.1f}"/>'
+        )
+
+    parts.append(
+        f'<rect class="wash" x="{px(x_cut):.1f}" y="{T}" '
+        f'width="{R - px(x_cut):.1f}" height="{py(y_cut) - T:.1f}"/>'
+        f'<line class="cut" x1="{px(x_cut):.1f}" y1="{T}" x2="{px(x_cut):.1f}" y2="{B}"/>'
+        f'<line class="cut" x1="{L}" y1="{py(y_cut):.1f}" x2="{R}" y2="{py(y_cut):.1f}"/>'
+        f'<rect class="frame" x="{L}" y="{T}" width="{R - L}" height="{B - T}"/>'
+        f'<text class="axis" x="{(L + R) / 2:.0f}" y="{B + 40}" text-anchor="middle">'
+        f"人手不足の深刻度 →</text>"
+        f'<text class="axis" x="{L - 62}" y="{(T + B) / 2:.0f}" text-anchor="middle" '
+        f'transform="rotate(-90 {L - 62} {(T + B) / 2:.0f})">AI代替可能性 →</text>'
+        f'<text class="corner" x="{R - 12}" y="{T + 22}" text-anchor="end">AI解放</text>'
+    )
+    for v in (0, 50, 100):
+        parts.append(
+            f'<text class="tick" x="{px(v):.1f}" y="{B + 18}" text-anchor="middle">{v}</text>'
+            f'<text class="tick" x="{L - 12}" y="{py(v) + 4:.1f}" text-anchor="end">{v}</text>'
+        )
+
+    labels = _place_labels(sectors)
+    for name, row in sectors.iterrows():
+        cx, cy = px(row["shortage_score"]), py(row["ai_score"])
+        cls = Q_CLASS[row["quadrant"]]
+        tip = (
+            f"{name}｜人手不足 {row['shortage_score']:.0f} / "
+            f"AI代替 {row['ai_score']:.0f}（労働の{row['ai_substitutable_share_pct']:.0f}%）"
+        )
+        parts.append(
+            f'<g class="pt pt--{cls}"><circle cx="{cx:.1f}" cy="{cy:.1f}" r="6.5"/>'
+            f"<title>{html.escape(tip)}</title></g>"
+        )
+        if name in labels:
+            anchor, dx, dy = labels[name]
+            parts.append(
+                f'<text class="lbl lbl--{cls}" x="{cx + dx:.1f}" y="{cy + dy:.1f}" '
+                f'text-anchor="{anchor}">{html.escape(str(name))}</text>'
+            )
+
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def _quadrant_card(sectors: pd.DataFrame, name: str, blurb: str, key: bool = False) -> str:
+    members = sectors[sectors["quadrant"] == name].sort_values("escape_potential", ascending=False)
+    chips = "".join(
+        f'<li><span class="chip-name">{html.escape(str(i))}</span>'
+        f'<span class="chip-num">{r.shortage_score:.0f}'
+        f'<span class="sep">/</span>{r.ai_score:.0f}</span></li>'
+        for i, r in members.iterrows()
+    )
+    return (
+        f'<article class="cell cell--{Q_CLASS[name]}{" is-key" if key else ""}">'
+        f'<header><h3>{html.escape(name)}</h3>'
+        f'<span class="count">{len(members)}業種</span></header>'
+        f'<p>{blurb}</p><ul class="chips">{chips}</ul></article>'
+    )
+
+
+def _company_rows(companies: pd.DataFrame, n: int) -> str:
+    return "".join(
+        f'<tr><td class="code">{html.escape(str(code))}</td>'
+        f"<td>{html.escape(r['name'])}</td>"
+        f'<td class="sec">{html.escape(r["sector33"])}</td>'
+        f'<td class="num">{r.shortage_score:.0f}</td>'
+        f'<td class="num">{r.ai_score:.0f}</td>'
+        f'<td class="num strong">{r.escape_potential:.0f}</td></tr>'
+        for code, r in top_right(companies, n).iterrows()
+    )
+
+
+CSS = """
+:root{
+  color-scheme: light;
+  --ground:#f6f7f6; --panel:#fdfdfc; --sunk:#eef0ef;
+  --ink:#141a1c; --ink-2:#4d585d; --ink-3:#7d878c;
+  --rule:#dde1df; --grid:#e9ecea;
+  --ai:#35569a; --ai-wash:rgba(53,86,154,.07); --ai-line:rgba(53,86,154,.30);
+  --clay:#a5523f;
+  --shadow:0 1px 2px rgba(20,26,28,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#14181a; --panel:#1b2023; --sunk:#20262a;
+    --ink:#eaefee; --ink-2:#a6b1b5; --ink-3:#7d878c;
+    --rule:#2a3134; --grid:#232a2d;
+    --ai:#6d93de; --ai-wash:rgba(109,147,222,.11); --ai-line:rgba(109,147,222,.34);
+    --clay:#d3714f;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#14181a; --panel:#1b2023; --sunk:#20262a;
+  --ink:#eaefee; --ink-2:#a6b1b5; --ink-3:#7d878c;
+  --rule:#2a3134; --grid:#232a2d;
+  --ai:#6d93de; --ai-wash:rgba(109,147,222,.11); --ai-line:rgba(109,147,222,.34);
+  --clay:#d3714f;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  font-size:16px; line-height:1.78; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:56px 24px 96px; display:flex; flex-direction:column; gap:56px;}
+.col{max-width:64ch;}
+
+.eyebrow{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 14px;
+}
+h1{
+  font-size:clamp(2rem,4.6vw,3rem); line-height:1.16; letter-spacing:-.022em;
+  font-weight:680; margin:0 0 18px; text-wrap:balance;
+}
+h1 .x{color:var(--ink-3); font-weight:400; padding:0 .12em;}
+.standfirst{font-size:1.09rem; color:var(--ink-2); margin:0;}
+.standfirst b{color:var(--ink); font-weight:640;}
+h2{font-size:1.32rem; letter-spacing:-.012em; font-weight:660; margin:0 0 6px; text-wrap:balance;}
+h2 + .sub{color:var(--ink-2); margin:0 0 22px;}
+p{margin:0 0 18px;}
+.col p:last-child{margin-bottom:0;}
+
+figure{margin:0; display:flex; flex-direction:column; gap:14px;}
+.map-frame{
+  background:var(--panel); border:1px solid var(--rule); border-radius:4px;
+  padding:20px 12px 8px; overflow-x:auto; box-shadow:var(--shadow);
+}
+.map{width:100%; min-width:660px; height:auto; display:block;}
+.grid{stroke:var(--grid); stroke-width:1;}
+.frame{fill:none; stroke:var(--rule); stroke-width:1;}
+.wash{fill:var(--ai-wash);}
+.cut{stroke:var(--ai-line); stroke-width:1.5; stroke-dasharray:5 4;}
+.axis{fill:var(--ink-2); font-size:14px;}
+.tick,.corner{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; fill:var(--ink-3); font-size:12px;}
+.corner{font-size:12.5px; letter-spacing:.12em; fill:var(--ai);}
+.pt circle{fill:var(--panel); stroke:var(--ink-3); stroke-width:1.6;}
+.pt--escape circle{fill:var(--ai); stroke:var(--panel); stroke-width:2;}
+.pt--bound circle{fill:var(--clay); stroke:var(--panel); stroke-width:2;}
+.lbl{font-size:12.5px; fill:var(--ink-2);}
+.lbl--escape{fill:var(--ai); font-weight:620;}
+.lbl--bound{fill:var(--clay); font-weight:620;}
+figcaption{color:var(--ink-3); font-size:.86rem; line-height:1.6; max-width:72ch;}
+.key{font-size:.8em; letter-spacing:-.05em;}
+.key--escape{color:var(--ai);}
+.key--bound{color:var(--clay);}
+
+.cells{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media (max-width:720px){ .cells{grid-template-columns:1fr;} }
+.cell{
+  background:var(--panel); border:1px solid var(--rule); border-radius:4px;
+  padding:18px 20px 20px; box-shadow:var(--shadow);
+}
+.cell.is-key{border-color:var(--ai-line); background:linear-gradient(var(--ai-wash),var(--ai-wash)),var(--panel);}
+.cell header{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:6px;}
+.cell h3{font-size:1.02rem; margin:0; letter-spacing:.01em;}
+.cell--escape h3{color:var(--ai);}
+.cell--bound h3{color:var(--clay);}
+.count{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.72rem; color:var(--ink-3);}
+.cell p{font-size:.92rem; color:var(--ink-2); margin:0 0 14px; line-height:1.65;}
+.chips{list-style:none; margin:0; padding:0; display:flex; flex-direction:column;}
+.chips li{
+  display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  padding:5px 0; border-top:1px solid var(--rule); font-size:.9rem;
+}
+.chips li:first-child{border-top:none;}
+.chip-name{color:var(--ink);}
+.chip-num{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.8rem;
+  color:var(--ink-3); font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+.sep{padding:0 .35em; opacity:.55;}
+
+.table-frame{
+  background:var(--panel); border:1px solid var(--rule); border-radius:4px;
+  overflow-x:auto; box-shadow:var(--shadow);
+}
+table{width:100%; border-collapse:collapse; font-size:.9rem; min-width:600px;}
+th,td{text-align:left; padding:9px 16px; border-bottom:1px solid var(--rule); white-space:nowrap;}
+thead th{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.7rem; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:500; background:var(--sunk);
+}
+tbody tr:last-child td{border-bottom:none;}
+td.code,td.num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-variant-numeric:tabular-nums;}
+td.code{color:var(--ink-3);}
+td.num{text-align:right; color:var(--ink-2);}
+td.num.strong{color:var(--ai); font-weight:640;}
+td.sec{color:var(--ink-3);}
+
+.method{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;}
+.note{background:var(--panel); border:1px solid var(--rule); border-radius:4px; padding:16px 18px; box-shadow:var(--shadow);}
+.note h4{margin:0 0 6px; font-size:.94rem;}
+.note p{margin:0; font-size:.88rem; color:var(--ink-2); line-height:1.62;}
+.note code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82em;
+  background:var(--sunk); padding:.1em .35em; border-radius:3px; color:var(--ink);
+}
+.limits{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:11px;}
+.limits li{padding-left:16px; position:relative; color:var(--ink-2); font-size:.94rem; line-height:1.65;}
+.limits li::before{content:""; position:absolute; left:0; top:.72em; width:6px; height:1px; background:var(--ink-3);}
+.limits b{color:var(--ink); font-weight:620;}
+footer{border-top:1px solid var(--rule); padding-top:20px; color:var(--ink-3); font-size:.84rem;}
+footer code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+"""
+
+TOP_COMPANIES = 24
+
+
+def render(
+    cfg: Config | None = None,
+    ref: ReferenceData | None = None,
+    *,
+    fragment: bool = False,
+) -> str:
+    """Return the report HTML.
+
+    ``fragment=True`` omits the document skeleton and returns ``<title>`` +
+    ``<style>`` + content, which is the shape a hosted artifact page expects.
+    """
+    cfg = cfg or Config()
+    cfg.validate()
+    ref = ref or load_reference()
+
+    sectors = sector_frame(cfg, ref)
+    companies = company_frame(cfg, ref)
+    x_cut, y_cut = thresholds(sectors["shortage_score"], sectors["ai_score"], cfg)
+
+    cells = "".join([
+        _quadrant_card(sectors, "AI増益", "人手不足ではないが、労働のAI代替余地は大きい。成長ではなくマージンの話。"),
+        _quadrant_card(sectors, "AI解放", "人手不足が深刻で、かつその労働をAIで置き換えられる。制約解除の期待値が最大。", key=True),
+        _quadrant_card(sectors, "低感応", "どちらも低い。この枠組みでは論点にならない。"),
+        _quadrant_card(sectors, "人手依存", "人手不足は深刻だがAIでは解けない。賃上げ・自動化設備・価格転嫁・M&Aの世界。"),
+    ])
+
+    top_n = min(TOP_COMPANIES, int((companies["quadrant"] == "AI解放").sum()))
+    content = f"""<title>人手不足×AI 4象限マップ</title>
+<style>{CSS}</style>
+<div class="wrap">
+
+<header class="col">
+  <p class="eyebrow">東証33業種 / 上場{len(companies)}銘柄</p>
+  <h1>人手不足の深刻度<span class="x">×</span>AI代替可能性</h1>
+  <p class="standfirst">日本の上場企業を2軸で並べる。<b>右上に入る企業だけが、人手不足という供給制約を賃上げ以外の手段で外せる。</b>
+  そしてこの2軸は、日本では負の相関を持ちやすい — だから右上は狭く、そこに入ることが情報になる。</p>
+</header>
+
+<figure>
+  <div class="map-frame">{_svg(sectors, x_cut, y_cut)}</div>
+  <figcaption>点は東証33業種。境界はユニバースの中央値（人手不足 {x_cut:.0f} / AI代替 {y_cut:.0f}）。
+  <span class="key key--escape">■</span> 右上＝AI解放、<span class="key key--bound">■</span> 右下＝人手依存、
+  白抜きはその他の2象限。ホバーで各業種の数値が出る。</figcaption>
+</figure>
+
+<section class="col">
+  <h2>なぜ右上が狭いのか</h2>
+  <p>人手不足が最も深刻な労働 — 建設・運転・介護・保安 — は身体労働で、生成AIの射程外にある。
+  逆に生成AIが最も得意な労働 — 事務・審査・コーディング — は、有効求人倍率で見れば長く1倍を下回っている。
+  <b>建設業は人手不足 {sectors.loc["建設業", "shortage_score"]:.0f} / AI代替 {sectors.loc["建設業", "ai_score"]:.0f}、
+  陸運業は {sectors.loc["陸運業", "shortage_score"]:.0f} / {sectors.loc["陸運業", "ai_score"]:.0f}。</b>
+  どちらもAIでは救われない側にはっきり分離される。
+  一方 <b>銀行業は {sectors.loc["銀行業", "shortage_score"]:.0f} / {sectors.loc["銀行業", "ai_score"]:.0f}</b> —
+  人手不足ではないがAI余地は最大級で、これはコストの話であって成長の話ではない。</p>
+  <p>「人手不足だからAI」という素朴な議論の大半は、実際には右下か左上に落ちる。
+  2軸を掛け合わせて初めて、その区別がつく。</p>
+</section>
+
+<section>
+  <h2>4象限</h2>
+  <p class="sub">配置はマップの象限と同じ。数字は 人手不足 / AI代替。</p>
+  <div class="cells">{cells}</div>
+</section>
+
+<section>
+  <h2>右上に入った銘柄</h2>
+  <p class="sub">脱出ポテンシャル（2軸の幾何平均）順・上位{top_n}。ユニバース{len(companies)}銘柄中。</p>
+  <div class="table-frame">
+    <table>
+      <thead><tr><th>コード</th><th>銘柄</th><th>業種</th><th class="num">人手不足</th>
+      <th class="num">AI代替</th><th class="num">脱出</th></tr></thead>
+      <tbody>{_company_rows(companies, top_n)}</tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>軸の作り方</h2>
+  <div class="method">
+    <div class="note"><h4>X軸 — 人手不足の深刻度</h4>
+      <p>欠員率・有効求人倍率・TDB正社員不足割合・55歳以上比率・離職率・所定外労働時間の6指標を
+      33業種横断で z 化し、±2.5σ でクリップして重み付き合成。出典は雇用動向調査・一般職業紹介状況・
+      労働力調査・毎月勤労統計・帝国データバンク調査。</p></div>
+    <div class="note"><h4>Y軸 — AI代替可能性</h4>
+      <p>業種の職業構成比（15区分）と職業別AI代替ポテンシャルの内積に、規制ドラッグを掛ける。
+      生成AI成分と物理自動化（ロボ・自動運転）成分は<b>分離して保持</b>し、
+      <code>robotics_weight</code> で「何をAIと呼ぶか」を明示的に振れるようにしてある。</p></div>
+    <div class="note"><h4>P/L への換算</h4>
+      <p>人件費データを与えると、象限上の位置が営業利益への感応度になる：
+      <code>人件費 × AI代替可能な労働の割合 × 実現率 ÷ 営業利益</code>。
+      実現率の既定は {cfg.realization_rate:.2f} — 技術的な代替可能性と、実際に人件費が減ることのギャップ。</p></div>
+  </div>
+</section>
+
+<section class="col">
+  <h2>この地図が言っていないこと</h2>
+  <ul class="limits">
+    <li><b>両軸とも相対値。</b>33業種内での順位を0-100に正規化したもので、絶対水準ではない。</li>
+    <li><b>AI代替ポテンシャルは analyst 設定値。</b>Eloundou et al. (2023) と Felten et al. (2021) を
+    方向性のアンカーにしているが、米国SOCから日本標準職業分類への正式なクロスウォークは当てていない。
+    個々の数値の精度ではなく、職業間の順序に意味がある。</li>
+    <li><b>需要側の効果を織り込んでいない。</b>SIerはAIで自社の人月が減ると同時にAI案件で売上が増える。
+    この枠組みは前者だけを測る。</li>
+    <li><b>省力化が顧客に移転する分を引いていない。</b>受託型（SI・人材・警備）では、
+    AIによる省力化が利益ではなく単価下落として出る可能性が高い。</li>
+    <li><b>バリュエーションでも競争優位でもない。</b>制約に対する感応度の地図であって、投資判断ではない。</li>
+  </ul>
+</section>
+
+<footer>
+  再現コード・参照テーブル（出典と時点つき）は <code>labor_ai_quadrant/</code> に。
+  既定設定は <code>robotics_weight={cfg.robotics_weight}</code> /
+  <code>realization_rate={cfg.realization_rate}</code>、参照データ時点 {ref.vintages["sector_labor_shortage"]}。
+</footer>
+
+</div>
+"""
+    if fragment:
+        return content
+
+    head, rest = content.split('<div class="wrap">', 1)
+    return (
+        '<!doctype html>\n<html lang="ja"><head><meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        f'{head}</head>\n<body>\n<div class="wrap">{rest}</body></html>\n'
+    )
+
+
+def build_static_report(
+    out_path: str | Path,
+    cfg: Config | None = None,
+    ref: ReferenceData | None = None,
+    *,
+    fragment: bool = False,
+) -> Path:
+    """Render the static report and return the path written."""
+    out = Path(out_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(render(cfg, ref, fragment=fragment), encoding="utf-8")
+    return out

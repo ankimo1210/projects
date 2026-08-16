@@ -82,14 +82,25 @@ def cmd_top(args: argparse.Namespace) -> int:
 
 
 def cmd_build(args: argparse.Namespace) -> int:
-    from .report import build_report
-
     ref = _resolve_reference(args)
     cfg = _config_from_args(args)
-    financials = load_financials(args.financials) if args.financials else None
 
-    out = build_report(args.out, cfg=cfg, financials=financials, ref=ref)
-    print(f"レポートを書き出しました: {out}")
+    if args.format == "static":
+        from .report_static import build_static_report
+
+        if args.financials:
+            print(
+                "注意: --financials は interactive レポートのみ対応です。無視します。",
+                file=sys.stderr,
+            )
+        out = build_static_report(args.out, cfg=cfg, ref=ref, fragment=args.fragment)
+    else:
+        from .report import build_report
+
+        financials = load_financials(args.financials) if args.financials else None
+        out = build_report(args.out, cfg=cfg, financials=financials, ref=ref)
+
+    print(f"レポートを書き出しました: {out} ({out.stat().st_size / 1024:.0f} KB)")
     return 0
 
 
@@ -159,8 +170,13 @@ def build_parser() -> argparse.ArgumentParser:
     p_build = sub.add_parser("build", help="オフラインHTMLレポートを生成")
     add_common(p_build)
     p_build.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    p_build.add_argument("--format", choices=("static", "interactive"), default="static",
+                         help="static: 自己完結SVG 約30KB（既定） / interactive: Plotly 約5MB")
+    p_build.add_argument("--fragment", action="store_true",
+                         help="--format static で <html>/<head> を出さず本文断片のみ出力（埋め込み用）")
     p_build.add_argument("--financials", type=Path, default=None,
-                         help="code/revenue/operating_profit/labor_cost/employees を持つ CSV/Parquet/JSON")
+                         help="code/revenue/operating_profit/labor_cost/employees を持つ CSV/Parquet/JSON"
+                              "（--format interactive のみ）")
     p_build.set_defaults(func=cmd_build)
 
     p_verify = sub.add_parser("verify-universe", help="キュレーション済みユニバースを J-Quants で検証")
