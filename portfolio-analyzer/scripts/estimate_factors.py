@@ -31,6 +31,25 @@ PRICE_PROXIES = {
     "1343.T": "J-REIT index ETF — real-estate excess",
     "JPY=X": "USD/JPY — a positive return means a weaker yen",
 }
+# The information-technology factor splits along the value chain. Both legs are
+# equal-weighted baskets of issuers the portfolio actually holds, measured as an
+# excess over the sector proxy so that they stack on top of 情報技術 the same way
+# 情報技術 stacks on top of the market leg.
+EQUIPMENT_BASKET = {
+    "6857.T": "Advantest",
+    "8035.T": "Tokyo Electron",
+    "ASML": "ASML",
+    "AMAT": "Applied Materials",
+    "LRCX": "Lam Research",
+    "KLAC": "KLA",
+}
+PLATFORM_BASKET = {
+    "AAPL": "Apple",
+    "MSFT": "Microsoft",
+    "GOOGL": "Alphabet",
+    "AMZN": "Amazon",
+    "META": "Meta Platforms",
+}
 YIELD_PROXIES = {"^TNX": "US 10-year Treasury yield (percent)"}
 MOF_JGB_CSV = "https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv"
 JGB_TENOR = "10年"
@@ -57,6 +76,13 @@ EPISODES = [
         "start": "2024-07-31",
         "end": "2024-08-05",
         "note": "日銀利上げと米雇用統計を挟んだ数営業日の急落",
+    },
+    {
+        "id": "ai_capex_digestion_2024",
+        "label": "2024 AI capex 消化局面",
+        "start": "2024-07-10",
+        "end": "2024-10-31",
+        "note": "SMHの高値から、株式全体がほぼ元の水準に戻るまで。市場が無事なまま半導体だけが調整した局面",
     },
     {
         "id": "inflation_rate_shock_2022",
@@ -114,13 +140,20 @@ def parse_jgb_csv(text: str, tenor: str = JGB_TENOR):
     return series[series.index.notna()].dropna().sort_index()
 
 
+def basket_return(returns, members: dict[str, str]):
+    """Return the equal-weighted return of a basket, in each member's own currency."""
+    return returns[list(members)].mean(axis=1)
+
+
 def build_factor_frame(prices, yields):
     """Map proxy levels to the model's factor returns.
 
     Equity legs stay in local currency so that the currency factor is not
     double counted against instruments that already carry a 外貨対円 loading.
     Sector and real-estate factors are excess returns over their market leg,
-    matching how the reference data treats them as additional shocks.
+    matching how the reference data treats them as additional shocks. The two
+    value-chain legs are excess over the sector proxy, so an equipment holding
+    carries 株式全体 + 情報技術 + IT装置 rather than replacing 情報技術.
     """
     import pandas as pd
 
@@ -128,6 +161,8 @@ def build_factor_frame(prices, yields):
     frame = pd.DataFrame(index=prices.index)
     frame["株式全体"] = 0.5 * returns["1306.T"] + 0.5 * returns["SPY"]
     frame["情報技術"] = returns["SMH"] - returns["SPY"]
+    frame["IT装置"] = basket_return(returns, EQUIPMENT_BASKET) - returns["SMH"]
+    frame["IT需要側"] = basket_return(returns, PLATFORM_BASKET) - returns["SMH"]
     frame["エネルギー"] = returns["XLE"] - returns["SPY"]
     frame["不動産"] = returns["1343.T"] - returns["1306.T"]
     frame["外貨対円"] = returns["JPY=X"]
@@ -297,6 +332,12 @@ def estimate_covariance(weekly_factors) -> dict[str, Any]:
     }
 
 
+def mean_move(moves: dict[str, float], members: dict[str, str]) -> float:
+    """Return the equal-weighted move of a basket, ignoring members without history."""
+    values = [moves[symbol] for symbol in members if moves.get(symbol) == moves.get(symbol)]
+    return sum(values) / len(values) if values else float("nan")
+
+
 def measure_episodes(daily_prices, daily_yields) -> list[dict[str, Any]]:
     import pandas as pd
 
@@ -313,9 +354,13 @@ def measure_episodes(daily_prices, daily_yields) -> list[dict[str, Any]]:
         first_yields = yield_window.loc[:start].iloc[-1]
         last_yields = yield_window.iloc[-1]
         moves = (last_prices / first_prices - 1).to_dict()
+        equipment = mean_move(moves, EQUIPMENT_BASKET)
+        platform = mean_move(moves, PLATFORM_BASKET)
         shocks = {
             "株式全体": 0.5 * moves["1306.T"] + 0.5 * moves["SPY"],
             "情報技術": moves["SMH"] - moves["SPY"],
+            "IT装置": equipment - moves["SMH"],
+            "IT需要側": platform - moves["SMH"],
             "エネルギー": moves["XLE"] - moves["SPY"],
             "不動産": moves["1343.T"] - moves["1306.T"],
             "外貨対円": moves["JPY=X"],
@@ -362,7 +407,13 @@ def main() -> int:
     args = parse_args()
     import pandas as pd
 
-    symbols = [*PRICE_PROXIES, *BETA_TARGETS, *YIELD_PROXIES]
+    symbols = [
+        *PRICE_PROXIES,
+        *EQUIPMENT_BASKET,
+        *PLATFORM_BASKET,
+        *BETA_TARGETS,
+        *YIELD_PROXIES,
+    ]
     symbols = list(dict.fromkeys(symbols))
     print(f"downloading {len(symbols)} series from yfinance ...", file=sys.stderr)
     levels = download_prices(symbols, args.start, args.end)
@@ -374,7 +425,8 @@ def main() -> int:
         for row in rows:
             print(f"  data quality: dropped {symbol} {row['date']} ({row['price']})", file=sys.stderr)
 
-    daily_prices = levels[list(PRICE_PROXIES)]
+    factor_symbols = list(dict.fromkeys([*PRICE_PROXIES, *EQUIPMENT_BASKET, *PLATFORM_BASKET]))
+    daily_prices = levels[factor_symbols]
     daily_yields = pd.DataFrame({"^TNX": levels["^TNX"]})
     daily_yields["jgb_10y"] = jgb.reindex(daily_yields.index, method="ffill")
     daily_yields = daily_yields.dropna()
@@ -397,9 +449,13 @@ def main() -> int:
             "jgb_tenor": JGB_TENOR,
             "price_proxies": PRICE_PROXIES,
             "yield_proxies": YIELD_PROXIES,
+            "equipment_basket": EQUIPMENT_BASKET,
+            "platform_basket": PLATFORM_BASKET,
             "factor_construction": {
                 "株式全体": "0.5 * r(1306.T) + 0.5 * r(SPY)、現地通貨ベース",
                 "情報技術": "r(SMH) - r(SPY)、市場に対する超過",
+                "IT装置": "r(装置バスケット等加重) - r(SMH)、情報技術に対する超過",
+                "IT需要側": "r(プラットフォームバスケット等加重) - r(SMH)、情報技術に対する超過",
                 "エネルギー": "r(XLE) - r(SPY)、市場に対する超過",
                 "不動産": "r(1343.T) - r(1306.T)、日本株に対する超過",
                 "外貨対円": "r(USD/JPY)、正なら円安",
@@ -410,6 +466,8 @@ def main() -> int:
                 "yfinanceの調整済み終値を使用。配当・分割の扱いは提供元依存",
                 "エピソードは開始日直前の終値から終了日終値までの累積変化",
                 "共分散は週次（W-FRI）で、相関の時間変化は捉えない",
+                "IT装置・IT需要側は等加重バスケットで、保有比率とは一致しない。"
+                "バスケットは日米混在のため現地通貨ベースで平均する",
             ],
         },
         "data_quality": {

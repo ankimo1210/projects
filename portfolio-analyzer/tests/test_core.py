@@ -325,7 +325,7 @@ def test_private_risk_model_exposes_compound_and_lookthrough_risk() -> None:
     assert impacts["円10%上昇（外貨バスケット）"] == pytest.approx(-0.05323, rel=1e-4)
     assert summary["worst_compound_drawdown"] == pytest.approx(0.17661, rel=1e-4)
     # Replayed history is worse than every hand-set compound scenario.
-    assert summary["worst_historical_drawdown"] == pytest.approx(0.23459, rel=1e-4)
+    assert summary["worst_historical_drawdown"] == pytest.approx(0.24099, rel=1e-4)
     assert summary["worst_historical_drawdown"] > summary["worst_compound_drawdown"]
     assert issuers["Advantest"] == pytest.approx(0.16588, rel=1e-4)
     smh_market_loading = next(
@@ -394,10 +394,13 @@ def test_replayed_history_is_tracked_separately_from_hand_set_scenarios() -> Non
 
     assert kinds["株式全体 -10%"] == "単一"
     assert kinds["A1 複合: スタグフレーション型（株安＋金利上昇）"] == "複合"
-    assert len(measured) == 4
+    assert len(measured) == 5
     # 2022 was an inflation regime: the energy sleeve carried the portfolio up.
     assert measured["実測 2022 インフレ・金利ショック"] > 0
     assert measured["実測 2020-03 コロナ・ショック"] < -0.2
+    # 2024 is the case the value-chain split exists for: the market barely moved
+    # (株式全体 -2.60%) yet the equipment tilt still cost double digits.
+    assert measured["実測 2024 AI capex 消化局面"] < -0.1
 
 
 def test_historical_scenarios_do_not_feed_the_compound_drawdown_metric() -> None:
@@ -705,6 +708,43 @@ def test_axis_tags_outside_the_issuer_layer_are_rejected() -> None:
     issues = validate_analysis_reference(invalid)
 
     assert any("chain_role" in issue and "JP_EQ" in issue for issue in issues)
+
+
+@PRIVATE_ANALYSIS_ONLY
+def test_value_chain_factors_nest_inside_the_sector_factor() -> None:
+    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    smh = reference.instruments["SMH"].factor_loadings
+    qqq = reference.instruments["QQQ"].factor_loadings
+
+    # A holding keeps its full sector loading and carries the chain leg on top,
+    # so an equipment shock is expressible with the sector factor left at zero.
+    assert smh["情報技術"] > Decimal("0.99")
+    assert Decimal("0.1") < smh["IT装置"] < smh["情報技術"]
+    assert "IT需要側" not in smh
+    assert qqq["IT需要側"] > Decimal("0.2")
+    assert "IT装置" not in qqq
+
+
+@PRIVATE_ANALYSIS_ONLY
+def test_equipment_only_shock_is_invisible_to_the_sector_factor_alone() -> None:
+    portfolio = load_portfolio(PRIVATE_DATA)
+    reference = load_analysis_reference(PRIVATE_REFERENCE)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-16T00:00:00+00:00",
+    )
+    impacts = {
+        row["scenario"]: row["impact_ratio"]
+        for row in artifact["snapshot"]["datasets"]["factor_sensitivity"]
+        if row["scope"] == "すべて"
+    }
+    digestion = impacts["B1 複合: capex消化（AI需要は継続、装置だけ調整）"]
+
+    # B1 moves nothing but 装置. A single-IT model would score this scenario at
+    # exactly zero, which is the blind spot the split was added to remove.
+    assert digestion < -0.02
+    assert impacts["B3 複合: capex再加速（見立てが当たる側）"] > 0
 
 
 @PRIVATE_ANALYSIS_ONLY

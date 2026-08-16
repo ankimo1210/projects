@@ -101,6 +101,9 @@ def test_build_factor_frame_uses_excess_returns_over_the_market_leg() -> None:
             "XLE": [100.0, 105.0],
             "1343.T": [100.0, 99.0],
             "JPY=X": [150.0, 145.5],
+            # Equipment falls harder than the sector, platforms fall less.
+            **{symbol: [100.0, 75.0] for symbol in estimate_factors.EQUIPMENT_BASKET},
+            **{symbol: [100.0, 95.0] for symbol in estimate_factors.PLATFORM_BASKET},
         },
         index=index,
     )
@@ -111,6 +114,10 @@ def test_build_factor_frame_uses_excess_returns_over_the_market_leg() -> None:
 
     assert row["株式全体"] == pytest.approx(0.5 * -0.10 + 0.5 * -0.05)
     assert row["情報技術"] == pytest.approx(-0.15 - -0.05)
+    # The value-chain legs nest inside 情報技術: they are excess over the sector,
+    # so an equipment holding carries 株式全体 + 情報技術 + IT装置, not IT装置 alone.
+    assert row["IT装置"] == pytest.approx(-0.25 - -0.15)
+    assert row["IT需要側"] == pytest.approx(-0.05 - -0.15)
     assert row["エネルギー"] == pytest.approx(0.05 - -0.05)
     assert row["不動産"] == pytest.approx(-0.01 - -0.10)
     assert row["外貨対円"] == pytest.approx(-0.03)
