@@ -62,19 +62,23 @@ python tools/build_calculus_notebook.py ode      # 00 章 (ODE 版)
 python tools/build_calculus_notebook.py pde      # 00 章 (PDE 版)
 python tools/build_ode_notebook.py all           # ODE 01..07
 python tools/build_pde_notebook.py all           # PDE 01..07
+python tools/build_ode_advanced_notebook.py      # ODE 09
+python tools/build_pde_advanced_notebook.py      # PDE 09
+python tools/build_ode_capstone_notebook.py      # ODE 10
+python tools/build_capstone_notebook.py          # PDE 10
+python tools/build_exercise_solutions_notebook.py  # ODE/PDE 08
 # 生成後に: jupyter nbconvert --to notebook --execute --inplace <nb> で出力を埋め込む
 ```
 
-## workspace への登録(任意)
+## workspace への登録
 
-uv workspace(リポジトリルート `~/projects`)に取り込む場合、ルート `pyproject.toml` に追記:
+ODE / PDE は既にルート `pyproject.toml` の `[tool.uv.workspace] members` と
+`[tool.pytest.ini_options] testpaths` に登録済み。追記は不要で、リポジトリルートから
 
-```toml
-# [tool.uv.workspace] members
-"analytics/differential_equation/ode-book",
-"analytics/differential_equation/pde-book",
-
-# [tool.pytest.ini_options] testpaths
-"analytics/differential_equation/ode-book/tests",
-"analytics/differential_equation/pde-book/tests",
+```bash
+uv run --no-sync pytest analytics/differential_equation/ode-book/tests
+uv run --no-sync pytest analytics/differential_equation/pde-book/tests
 ```
+
+がそのまま動く。SDE は別ツールチェーン(npm)なので workspace の外にあり、
+`make sde-check` から回る。
