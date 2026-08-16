@@ -49,8 +49,8 @@ The root `conftest.py` imports same-named packages explicitly so that a
 full-workspace `pytest` run does not break them via namespace packages
 (pytest 9 behavior); keep it when touching test config.
 
-`make lint` and the full-workspace `pytest` are green as of 2026-08-16
-(2977 passed, 45 skipped), so a red
+`make lint` and the full-workspace `pytest` are green as of 2026-08-17
+(3050 passed, 45 skipped, 203.9s), so a red
 result means the change under test broke something — diagnose it rather than
 assuming it predates you. Every member declares what it imports, including
 indirect (`health` declares `scipy` for `pandas.corr(method="spearman")`) and
@@ -59,16 +59,20 @@ dev tooling its own CI invokes; the shared `.venv` hides omissions that
 `docs/decisions/0002-workspace-green-and-declared-dependencies.md`.
 
 **That green is not full coverage.** `make test` runs only the `testpaths`
-list in the root `pyproject.toml`, and three suites are missing from it —
-`deep_hedge_price/tests` (206), `analytics/fourier/tests` (47), and
-`johnhull/report/tests` (10). All 263 run green when invoked directly, but
-never under `make test`. Do not read "workspace green" as "every project
-verified"; run the suite you actually touched. Adding them back is not
-symmetric: `analytics/fourier` only needs the `testpaths` line (its import
-name `fourier_book` differs from its directory), while `deep_hedge_price`
-has dir name == package name and so needs a matching `import` in the root
-`conftest.py` as well — `testpaths` alone makes it fail with
+list in the root `pyproject.toml`, and two suites are still missing from it —
+`deep_hedge_price/tests` (206) and `johnhull/report/tests` (10). Both run
+green when invoked directly, but never under `make test`. Do not read
+"workspace green" as "every project verified"; run the suite you actually
+touched. `analytics/fourier/tests` (47) was in this list until 2026-08-16 and
+needed only the `testpaths` line, because its import name `fourier_book`
+differs from its directory; `deep_hedge_price` has dir name == package name
+and so needs a matching `import` in the root `conftest.py` as well —
+`testpaths` alone makes it fail with
 `ModuleNotFoundError: No module named 'deep_hedge_price.config'`.
+
+`make test` also runs `sde-check` (typecheck + lint + build + 12 node tests
+for `analytics/differential_equation/sde-book`), skipping it with a printed
+notice when `npm` is not on PATH.
 
 `WSET/wset_l3_question_corpus` is a standalone uv project, not a member —
 `uv sync --all-packages` does not install its `rapidfuzz`, so collecting it
