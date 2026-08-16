@@ -101,7 +101,8 @@
           "category": "Sample Technology",
           "weight": 0.25,
           "theme": "サンプルテーマ",
-          "chain_role": "製造装置"
+          "chain_role": "製造装置",
+          "business_mix": {"検査装置": 0.7, "受託製造": 0.3}
         },
         {"group": "issuer", "category": "Sample Industrials", "weight": 0.2, "chain_role": "需要側"}
       ],

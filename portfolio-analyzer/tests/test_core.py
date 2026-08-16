@@ -697,6 +697,62 @@ def test_chain_role_is_a_second_axis_that_does_not_borrow_from_theme() -> None:
     assert sum(row["known_issuer_weight"] for row in roles.values()) == pytest.approx(1.0)
 
 
+def test_business_mix_splits_one_issuer_across_several_lines() -> None:
+    portfolio = load_portfolio(EXAMPLE_DATA)
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    artifact = build_artifact(
+        portfolio,
+        analysis_reference=reference,
+        generated_at="2026-08-16T00:00:00+00:00",
+    )
+    datasets = artifact["snapshot"]["datasets"]
+    summary = next(row for row in datasets["summary"] if row["scope"] == "すべて")
+    lines = {
+        row["business_line"]: row
+        for row in datasets["business_line_exposure"]
+        if row["scope"] == "すべて"
+    }
+    issuers = {
+        row["issuer"]: row["market_value_jpy"]
+        for row in datasets["issuer_exposure"]
+        if row["scope"] == "すべて"
+    }
+
+    # Sample Technology is 0.7/0.3 across two lines; the split must conserve value.
+    assert set(lines) == {"検査装置", "受託製造"}
+    assert lines["検査装置"]["market_value_jpy"] + lines["受託製造"]["market_value_jpy"] == (
+        pytest.approx(issuers["Sample Technology"])
+    )
+    assert lines["検査装置"]["market_value_jpy"] == pytest.approx(
+        issuers["Sample Technology"] * 0.7
+    )
+    assert summary["largest_business_line_ratio"] == pytest.approx(
+        lines["検査装置"]["portfolio_weight"]
+    )
+    # Only one of the two issuers carries a mix, so coverage must be partial.
+    assert 0 < summary["business_mix_coverage_ratio"] < 1
+
+
+def test_business_mix_must_account_for_the_whole_issuer() -> None:
+    reference = load_analysis_reference(EXAMPLE_REFERENCE)
+    instrument = reference.instruments["JP_EQ"]
+    issuer = next(
+        exposure
+        for exposure in instrument.exposures
+        if exposure.category == "Sample Technology"
+    )
+    others = tuple(exposure for exposure in instrument.exposures if exposure is not issuer)
+    short = replace(issuer, business_mix={"検査装置": Decimal("0.4")})
+    invalid = replace(
+        reference,
+        instruments={**reference.instruments, "JP_EQ": replace(instrument, exposures=(short, *others))},
+    )
+
+    issues = validate_analysis_reference(invalid)
+
+    assert any("business mix" in issue and "JP_EQ" in issue for issue in issues)
+
+
 def test_axis_tags_outside_the_issuer_layer_are_rejected() -> None:
     reference = load_analysis_reference(EXAMPLE_REFERENCE)
     instrument = reference.instruments["JP_EQ"]
