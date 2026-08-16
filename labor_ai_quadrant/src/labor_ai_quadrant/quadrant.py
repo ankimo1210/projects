@@ -63,6 +63,29 @@ def top_right(df: pd.DataFrame, n: int | None = None) -> pd.DataFrame:
     return out if n is None else out.head(n)
 
 
+def rankable(df: pd.DataFrame) -> pd.Series:
+    """Rows whose parent-company P/L can carry a ranking.
+
+    Two exclusions, neither of them a tuning knob:
+
+    * **営業利益が0以下** — the uplift is undefined there (``op_uplift_pct`` is
+      already NaN), and leaving the row in the table reads as "loss-making yet
+      top-ranked".
+    * **人件費が売上を上回る** — impossible for a going concern, so it is
+      evidence that the 提出会社 figures do not describe an operating business.
+      It happens to pure holding companies, whose parent books the group's head
+      office payroll against a fraction of the group's revenue.
+
+    Both rows stay in the exported data; they are only kept out of the ranking.
+    """
+    if "op_uplift_pct" not in df.columns:
+        return pd.Series(True, index=df.index)
+    keep = df["op_uplift_pct"].notna()
+    if "labor_cost_ratio" in df.columns:
+        keep &= ~(df["labor_cost_ratio"] > 1.0)
+    return keep
+
+
 def quadrant_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Counts and mean coordinates per quadrant — a sanity check on the split."""
     grouped = df.groupby("quadrant", observed=True).agg(

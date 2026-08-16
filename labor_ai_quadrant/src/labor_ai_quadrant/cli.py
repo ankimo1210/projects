@@ -14,8 +14,13 @@ from .company import company_frame, load_financials
 from .config import SCENARIOS, Config
 from .quadrant import quadrant_summary, top_right
 from .reference import ReferenceData, load_reference
+from .report_static import TOP_COMPANIES as STATIC_TOP_COMPANIES
 
 DEFAULT_OUT = Path("reports/labor_ai_quadrant.html")
+
+#: これを超えたら J-Quants の財務は日付一括で取る。提出日1日あたり約280件返るので、
+#: 銘柄数がこの規模を超えると1銘柄1リクエストより速く、レート制限にも当たりにくい。
+BULK_SUMMARY_THRESHOLD = 400
 
 
 def _align_sector_names(universe: pd.DataFrame, ref: ReferenceData) -> pd.DataFrame:
@@ -108,12 +113,11 @@ def cmd_build(args: argparse.Namespace) -> int:
     if args.format == "static":
         from .report_static import build_static_report
 
-        if args.financials:
-            print(
-                "注意: --financials は interactive レポートのみ対応です。無視します。",
-                file=sys.stderr,
-            )
-        out = build_static_report(args.out, cfg=cfg, ref=ref, fragment=args.fragment)
+        financials = load_financials(args.financials) if args.financials else None
+        out = build_static_report(
+            args.out, cfg=cfg, ref=ref, fragment=args.fragment,
+            financials=financials, top_companies=args.top,
+        )
     else:
         from .report import build_report
 
@@ -132,7 +136,7 @@ def cmd_fetch_financials(args: argparse.Namespace) -> int:
     """
     from .company import estimate_labor_cost
     from .providers.edinet import build_financials
-    from .providers.jquants import fetch_summaries
+    from .providers.jquants import fetch_summaries, fetch_summaries_by_date
 
     ref = _resolve_reference(args)
     codes = list(ref.universe.index)
@@ -143,7 +147,14 @@ def cmd_fetch_financials(args: argparse.Namespace) -> int:
 
     print("J-Quants から連結の売上高・営業利益を取得中…", file=sys.stderr)
     try:
-        summaries = fetch_summaries(codes)
+        # 銘柄ごとに引くと1銘柄1リクエストで、J-Quants は50件ほど連続で叩くと
+        # 429 を返す。日付一括は提出日1日あたり1リクエストで全上場企業が返るので、
+        # ユニバースが大きいほど有利になる（TOPIX 全体で 1,642 → 400 リクエスト）。
+        summaries = (
+            fetch_summaries_by_date(lookback_days=args.lookback_days)
+            if len(codes) > BULK_SUMMARY_THRESHOLD
+            else fetch_summaries(codes)
+        )
     except Exception as exc:
         print(f"J-Quants の取得に失敗しました（連結の参考列は空になります）: {exc}", file=sys.stderr)
         summaries = pd.DataFrame(index=pd.Index([], name="code"))
@@ -239,8 +250,11 @@ def build_parser() -> argparse.ArgumentParser:
         if universe:
             p.add_argument("--universe", choices=("curated", "jquants"), default="curated",
                            help="銘柄ユニバース。jquants は要ネットワーク+認証")
-            p.add_argument("--scale", choices=("topix100", "topix500", "topix1000", "all"),
-                           default="topix500", help="--universe jquants のときの範囲")
+            p.add_argument("--scale",
+                           choices=("topix100", "topix500", "topix1000", "topix", "all"),
+                           default="topix500",
+                           help="--universe jquants のときの範囲。topix = TOPIX 全構成銘柄、"
+                                "all = 規模区分の無い銘柄も含む上場全銘柄")
 
     p_sectors = sub.add_parser("sectors", help="33業種のスコア一覧を表示")
     add_common(p_sectors, universe=False)
@@ -260,8 +274,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_build.add_argument("--fragment", action="store_true",
                          help="--format static で <html>/<head> を出さず本文断片のみ出力（埋め込み用）")
     p_build.add_argument("--financials", type=Path, default=None,
-                         help="code/revenue/operating_profit/labor_cost/employees を持つ CSV/Parquet/JSON"
-                              "（--format interactive のみ）")
+                         help="code/revenue/operating_profit/labor_cost/employees を持つ CSV/Parquet/JSON")
+    p_build.add_argument("--top", type=int, default=STATIC_TOP_COMPANIES,
+                         help=f"static レポートの銘柄表に載せる件数 (default: {STATIC_TOP_COMPANIES})")
     p_build.set_defaults(func=cmd_build)
 
     p_fin = sub.add_parser(

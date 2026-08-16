@@ -117,6 +117,19 @@ def _pnl_layer(companies: pd.DataFrame, financials: pd.DataFrame, cfg: Config) -
     out["expected_labor_savings"] = savings
     # 営業利益に対する感応度。人件費率が高く、かつAI代替余地が大きいほど大きい。
     out["op_uplift_pct"] = _safe_div(savings, fin["operating_profit"]) * 100.0
+    # 同じ削減額を売上で割ったもの＝営業利益率が何ポイント上がるか。
+    #
+    # op_uplift_pct は営業利益で割るので、利益が薄い会社ほど分母の小ささだけで跳ねる
+    # （TOPIX 全体では上位が単体営業利益 1億円未満の小型株で埋まり、900% のような値が出る）。
+    # こちらは 人件費率 × AI代替割合 × 実現率 が上限で、分母は必ず利益より大きい。
+    # 順位付けにはこちらを使い、op_uplift_pct は「それが利益に対してどれだけか」を
+    # 読むための列として残す。
+    out["op_margin_uplift_pp"] = _safe_div(savings, fin["revenue"]) * 100.0
+    # 提出会社が企業グループのどれだけを覆っているか。純粋持株会社では数%になり、
+    # 単体で組んだ人件費率は 100% を超えることさえある（人件費が単体売上を上回る）。
+    # 数字そのものは正しくても、読む側がグループの話と取り違えないための目盛り。
+    if "parent_employee_share" in financials.columns:
+        out["parent_employee_share"] = fin["parent_employee_share"]
     return out
 
 

@@ -23,7 +23,7 @@ import pandas as pd
 from .axes import sector_frame
 from .company import company_frame
 from .config import Config
-from .quadrant import thresholds, top_right
+from .quadrant import rankable, thresholds, top_right
 from .reference import ReferenceData, load_reference
 
 Q_CLASS = {"AI解放": "escape", "人手依存": "bound", "AI増益": "margin", "低感応": "flat"}
@@ -197,16 +197,60 @@ def _quadrant_card(sectors: pd.DataFrame, name: str, blurb: str, key: bool = Fal
     )
 
 
-def _company_rows(companies: pd.DataFrame, n: int) -> str:
-    return "".join(
-        f'<tr><td class="code">{html.escape(str(code))}</td>'
-        f"<td>{html.escape(r['name'])}</td>"
-        f'<td class="sec">{html.escape(r["sector33"])}</td>'
-        f'<td class="num">{r.shortage_score:.0f}</td>'
-        f'<td class="num">{r.ai_score:.0f}</td>'
-        f'<td class="num strong">{r.escape_potential:.0f}</td></tr>'
-        for code, r in top_right(companies, n).iterrows()
-    )
+def _num(value: float, fmt: str = "{:.0f}") -> str:
+    """Missing stays visibly missing. Nothing here is ever zero-filled."""
+    return "—" if pd.isna(value) else fmt.format(value)
+
+
+def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[str, str, str]:
+    """Header, rows and a caption for the top-right company table.
+
+    With financials the ranking switches to the P/L translation. Company scores
+    come from the sector plus a 3×3 tilt, so every company in a sector shares an
+    escape potential — cutting that ordering at N returns an arbitrary slice of
+    the leading sector. 人件費 and 営業利益 sit next to the uplift because it is a
+    ratio: a thin parent-company operating profit lifts it on the denominator
+    alone.
+    """
+    rows = top_right(companies)
+    if with_pnl:
+        rows = rows[rankable(rows)]
+        rows = rows.sort_values("op_margin_uplift_pp", ascending=False, na_position="last")
+        caption = f"営業利益率の押上げ幅（pp）順・財務が揃い営業利益が正の{len(rows)}社から"
+    else:
+        caption = "脱出ポテンシャル（2軸の幾何平均）順"
+    rows = rows.head(n)
+
+    head = ('<th>コード</th><th>銘柄</th><th>業種</th><th class="num">人手不足</th>'
+            '<th class="num">AI代替</th><th class="num">脱出</th>')
+    if with_pnl:
+        head += ('<th class="num">人件費率</th><th class="num">利益率押上げ(pp)</th>'
+                 '<th class="num">営業利益押上げ余地%</th>'
+                 '<th class="num">人件費(億)</th><th class="num">営業利益(億)</th>'
+                 '<th class="num">単体/連結</th>')
+
+    body = []
+    for code, r in rows.iterrows():
+        cells = (
+            f'<td class="code">{html.escape(str(code))}</td>'
+            f"<td>{html.escape(r['name'])}</td>"
+            f'<td class="sec">{html.escape(r["sector33"])}</td>'
+            f'<td class="num">{r.shortage_score:.0f}</td>'
+            f'<td class="num">{r.ai_score:.0f}</td>'
+            f'<td class="num{"" if with_pnl else " strong"}">{r.escape_potential:.0f}</td>'
+        )
+        if with_pnl:
+            cells += (
+                f'<td class="num">{_num(r.labor_cost_ratio * 100, "{:.1f}%")}</td>'
+                f'<td class="num strong">{_num(r.op_margin_uplift_pp, "{:.1f}")}</td>'
+                f'<td class="num">{_num(r.op_uplift_pct, "{:,.0f}")}</td>'
+                f'<td class="num">{_num(r.labor_cost / 1e8, "{:,.0f}")}</td>'
+                f'<td class="num">{_num(r.operating_profit / 1e8, "{:,.0f}")}</td>'
+                f'<td class="num">'
+                f'{_num(getattr(r, "parent_employee_share", float("nan")) * 100, "{:.0f}%")}</td>'
+            )
+        body.append(f"<tr>{cells}</tr>")
+    return head, "".join(body), caption
 
 
 CSS = """
@@ -358,18 +402,24 @@ def render(
     ref: ReferenceData | None = None,
     *,
     fragment: bool = False,
+    financials: pd.DataFrame | None = None,
+    top_companies: int = TOP_COMPANIES,
 ) -> str:
     """Return the report HTML.
 
     ``fragment=True`` omits the document skeleton and returns ``<title>`` +
     ``<style>`` + content, which is the shape a hosted artifact page expects.
+
+    ``financials`` adds the P/L translation to the company table and ranks by
+    it. This report stays self-contained and small enough to attach to an
+    email, which the Plotly version (about 5 MB) is not.
     """
     cfg = cfg or Config()
     cfg.validate()
     ref = ref or load_reference()
 
     sectors = sector_frame(cfg, ref)
-    companies = company_frame(cfg, ref)
+    companies = company_frame(cfg, ref, financials)
     x_cut, y_cut = thresholds(sectors["shortage_score"], sectors["ai_score"], cfg)
 
     cells = "".join([
@@ -379,7 +429,9 @@ def render(
         _quadrant_card(sectors, "人手依存", "人手不足は深刻だがAIでは解けない。賃上げ・自動化設備・価格転嫁・M&Aの世界。"),
     ])
 
-    top_n = min(TOP_COMPANIES, int((companies["quadrant"] == "AI解放").sum()))
+    with_pnl = financials is not None and "op_uplift_pct" in companies.columns
+    top_n = min(top_companies, int((companies["quadrant"] == "AI解放").sum()))
+    company_head, company_body, company_caption = _company_table(companies, top_n, with_pnl=with_pnl)
     content = f"""<title>人手不足×AI 4象限マップ</title>
 <style>{CSS}</style>
 <div class="wrap">
@@ -419,12 +471,11 @@ def render(
 
 <section>
   <h2>右上に入った銘柄</h2>
-  <p class="sub">脱出ポテンシャル（2軸の幾何平均）順・上位{top_n}。ユニバース{len(companies)}銘柄中。</p>
+  <p class="sub">{company_caption}・上位{top_n}。ユニバース{len(companies)}銘柄中。</p>
   <div class="table-frame">
     <table>
-      <thead><tr><th>コード</th><th>銘柄</th><th>業種</th><th class="num">人手不足</th>
-      <th class="num">AI代替</th><th class="num">脱出</th></tr></thead>
-      <tbody>{_company_rows(companies, top_n)}</tbody>
+      <thead><tr>{company_head}</tr></thead>
+      <tbody>{company_body}</tbody>
     </table>
   </div>
 </section>
@@ -487,9 +538,14 @@ def build_static_report(
     ref: ReferenceData | None = None,
     *,
     fragment: bool = False,
+    financials: pd.DataFrame | None = None,
+    top_companies: int = TOP_COMPANIES,
 ) -> Path:
     """Render the static report and return the path written."""
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(render(cfg, ref, fragment=fragment), encoding="utf-8")
+    out.write_text(
+        render(cfg, ref, fragment=fragment, financials=financials, top_companies=top_companies),
+        encoding="utf-8",
+    )
     return out
