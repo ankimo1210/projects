@@ -1,0 +1,1290 @@
+<meta charset="utf-8">
+<title>スモールM&A 24ヶ月計画</title>
+
+<style>
+  :root {
+    --ground: #EFF2F0;
+    --surface: #FAFCFA;
+    --surface-2: #E6ECE8;
+    --ink: #151C20;
+    --ink-2: #4C585D;
+    --ink-3: #77858A;
+    --rule: #CAD3CE;
+    --rule-strong: #9DA9A4;
+    --indigo: #1F4E6B;
+    --indigo-soft: #E1EAF1;
+    --seal: #A93B2A;
+    --seal-soft: #F3E3DF;
+    --moss: #3D6B4A;
+    --moss-soft: #DFEBE1;
+
+    --font-display: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", "Songti SC", serif;
+    --font-body: "Hiragino Sans", "Yu Gothic Medium", "Yu Gothic", "Noto Sans JP", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+    --step-0: 1rem;
+    --step-1: 1.1rem;
+    --step-2: 1.35rem;
+    --step-3: 1.75rem;
+    --step-4: 2.4rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0F1416;
+      --surface: #161D20;
+      --surface-2: #1E2629;
+      --ink: #E6ECE9;
+      --ink-2: #A2AEAB;
+      --ink-3: #7A8785;
+      --rule: #2B3538;
+      --rule-strong: #44514F;
+      --indigo: #7FB2CE;
+      --indigo-soft: #16303E;
+      --seal: #E08472;
+      --seal-soft: #3A211C;
+      --moss: #8CBF95;
+      --moss-soft: #1C2E22;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0F1416;
+    --surface: #161D20;
+    --surface-2: #1E2629;
+    --ink: #E6ECE9;
+    --ink-2: #A2AEAB;
+    --ink-3: #7A8785;
+    --rule: #2B3538;
+    --rule-strong: #44514F;
+    --indigo: #7FB2CE;
+    --indigo-soft: #16303E;
+    --seal: #E08472;
+    --seal-soft: #3A211C;
+    --moss: #8CBF95;
+    --moss-soft: #1C2E22;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    line-height: 1.75;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(1.75rem, 4vw, 4rem) clamp(1rem, 4vw, 2.5rem) 5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 1000px) {
+    .shell {
+      grid-template-columns: 200px minmax(0, 1fr);
+      column-gap: 3.5rem;
+      align-items: start;
+    }
+    .rail { position: sticky; top: 2rem; }
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead { grid-column: 1 / -1; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 0.9rem;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, var(--step-4));
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+
+  .standfirst {
+    max-width: 62ch;
+    color: var(--ink-2);
+    font-size: var(--step-1);
+    line-height: 1.85;
+    margin: 0 0 2rem;
+  }
+
+  .premise {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .premise > div {
+    background: var(--surface);
+    padding: 1rem 1.15rem 1.15rem;
+  }
+
+  .premise dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 0.4rem;
+  }
+
+  .premise dd {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .premise .qualifier {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--ink-3);
+    line-height: 1.6;
+    margin-top: 0.3rem;
+  }
+
+  /* ---------- rail ---------- */
+
+  .rail { font-size: 0.86rem; }
+
+  .rail h2 {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 500;
+    margin: 0 0 0.85rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .rail ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .rail a {
+    display: grid;
+    grid-template-columns: 2.1rem 1fr;
+    gap: 0.2rem;
+    align-items: baseline;
+    color: var(--ink-2);
+    text-decoration: none;
+    padding: 0.32rem 0.4rem;
+    border-radius: 3px;
+    line-height: 1.45;
+  }
+
+  .rail a:hover { background: var(--surface); color: var(--ink); }
+  .rail a:focus-visible { outline: 2px solid var(--indigo); outline-offset: 1px; }
+  .rail .code { font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-3); }
+
+  .rail .note {
+    margin-top: 1.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--ink-3);
+  }
+
+  /* ---------- main ---------- */
+
+  main { min-width: 0; }
+
+  section + section { margin-top: 3.25rem; }
+
+  h2.head {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 0.5rem;
+    text-wrap: balance;
+  }
+
+  .head-note {
+    color: var(--ink-2);
+    max-width: 66ch;
+    margin: 0 0 1.6rem;
+  }
+
+  h3 {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    margin: 2rem 0 0.7rem;
+    text-wrap: balance;
+  }
+
+  p { max-width: 68ch; }
+
+  a { color: var(--indigo); text-underline-offset: 2px; }
+
+  /* ---------- phases ---------- */
+
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1.5rem clamp(1rem, 3vw, 1.9rem) 1.7rem;
+  }
+
+  .phase + .phase { margin-top: 1rem; }
+
+  .phase-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.1rem;
+  }
+
+  .phase-code {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--surface);
+    background: var(--indigo);
+    padding: 0.18rem 0.5rem;
+    border-radius: 2px;
+  }
+
+  .phase-title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .phase-when {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .phase-aim {
+    color: var(--ink-2);
+    margin: 0 0 1.1rem;
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 1.3rem 0 0.55rem;
+  }
+
+  /* ---------- checklist ---------- */
+
+  ul.tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; }
+
+  ul.tasks li { display: grid; grid-template-columns: 1.35rem 1fr; align-items: start; gap: 0.15rem; }
+
+  ul.tasks label { display: contents; cursor: pointer; }
+
+  ul.tasks input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 0.95rem;
+    height: 0.95rem;
+    margin: 0.38rem 0 0;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    background: transparent;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+  }
+
+  ul.tasks input::after {
+    content: "";
+    width: 0.5rem;
+    height: 0.28rem;
+    border-left: 1.6px solid var(--surface);
+    border-bottom: 1.6px solid var(--surface);
+    transform: rotate(-45deg) translate(0.5px, -1px) scale(0);
+  }
+
+  ul.tasks input:checked { background: var(--indigo); border-color: var(--indigo); }
+  ul.tasks input:checked::after { transform: rotate(-45deg) translate(0.5px, -1px) scale(1); }
+  ul.tasks input:focus-visible { outline: 2px solid var(--indigo); outline-offset: 2px; }
+  ul.tasks input:checked + span { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--rule-strong); }
+  ul.tasks span { line-height: 1.65; }
+
+  /* ---------- gate & trap callouts ---------- */
+
+  .gate, .trap {
+    margin-top: 1.3rem;
+    padding: 0.85rem 1.05rem;
+    border-radius: 3px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .gate { background: var(--moss-soft); border-left: 3px solid var(--moss); }
+  .trap { background: var(--seal-soft); border-left: 3px solid var(--seal); }
+
+  .gate strong, .trap strong {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+
+  .gate strong { color: var(--moss); }
+  .trap strong { color: var(--seal); }
+  .gate p, .trap p { margin: 0; max-width: none; }
+
+  /* ---------- tables ---------- */
+
+  .scroller { overflow-x: auto; margin: 1.1rem 0; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 0.92rem; }
+
+  th, td { text-align: left; padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.6; }
+
+  thead th {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 500;
+    background: var(--surface-2);
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tfoot td { font-weight: 600; background: var(--surface-2); font-variant-numeric: tabular-nums; }
+  .sub { color: var(--ink-3); font-size: 0.86rem; }
+
+  /* ---------- misc ---------- */
+
+  .constraints { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1.2rem; }
+
+  .constraint {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: 2px solid var(--seal);
+    border-radius: 3px;
+    padding: 1.1rem 1.2rem 1.25rem;
+  }
+
+  .constraint h4 { font-family: var(--font-body); font-size: 1rem; font-weight: 600; margin: 0 0 0.45rem; }
+  .constraint p { margin: 0; font-size: 0.92rem; color: var(--ink-2); line-height: 1.7; }
+
+  ol.plain { padding-left: 1.2rem; max-width: 68ch; }
+  ol.plain li { margin-bottom: 0.5rem; line-height: 1.75; }
+  ul.plain { padding-left: 1.2rem; max-width: 68ch; }
+  ul.plain li { margin-bottom: 0.4rem; line-height: 1.75; }
+
+  .footnote {
+    margin-top: 3.5rem;
+    padding-top: 1.3rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.84rem;
+    line-height: 1.8;
+    color: var(--ink-3);
+    max-width: 72ch;
+  }
+
+  .footnote h2 {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--ink-3);
+    margin: 0 0 0.7rem;
+  }
+
+  .footnote ul { padding-left: 1.1rem; margin: 0.5rem 0 0; }
+  .footnote li { margin-bottom: 0.3rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="shell">
+
+  <header class="masthead">
+    <p class="eyebrow">個人による事業承継型M&A / 実行計画</p>
+    <h1>スモールM&A 24ヶ月計画</h1>
+    <p class="standfirst">
+      在職しながら案件を探し、クロージングと同時に専業の経営者になる。その前提でソーシングからPMIまでを
+      工程・通過条件・資金構成に分解した実行計画。案件を見つけることより、<strong>自分が経営できる領域を先に決めること</strong>と
+      <strong>小型案件特有の踏み抜きを潰すこと</strong>に重心を置いている。
+    </p>
+
+    <dl class="premise">
+      <div>
+        <dt>自己資金</dt>
+        <dd>2,000–5,000万円<span class="qualifier">全額を対価に入れない。手元を残す設計にする</span></dd>
+      </div>
+      <div>
+        <dt>探索体制</dt>
+        <dd>在職しながら<span class="qualifier">クロージング1–2ヶ月前に退職が現実解</span></dd>
+      </div>
+      <div>
+        <dt>対象領域</dt>
+        <dd>未定<span class="qualifier">P1の探索テーゼ策定がこの計画の本体</span></dd>
+      </div>
+      <div>
+        <dt>射程レンジ</dt>
+        <dd>買収総額 6,000万–1.5億円<span class="qualifier">EBITDA 1,500–4,000万円 / 従業員 5–30名</span></dd>
+      </div>
+    </dl>
+  </header>
+
+  <nav class="rail" aria-label="工程一覧">
+    <h2>工程</h2>
+    <ol>
+      <li><a href="#p0"><span class="code">P0</span><span>土台づくり</span></a></li>
+      <li><a href="#p1"><span class="code">P1</span><span>探索テーゼ</span></a></li>
+      <li><a href="#p2"><span class="code">P2</span><span>ソーシング</span></a></li>
+      <li><a href="#p3"><span class="code">P3</span><span>初期審査</span></a></li>
+      <li><a href="#p4"><span class="code">P4</span><span>面談・LOI</span></a></li>
+      <li><a href="#p5"><span class="code">P5</span><span>デューデリ</span></a></li>
+      <li><a href="#p6"><span class="code">P6</span><span>資金調達</span></a></li>
+      <li><a href="#p7"><span class="code">P7</span><span>クロージング</span></a></li>
+      <li><a href="#p8"><span class="code">P8</span><span>最初の100日</span></a></li>
+    </ol>
+    <div class="note">
+      <p style="margin:0 0 0.6rem"><a href="#reading">案件の読み方</a></p>
+      <p style="margin:0 0 0.6rem"><a href="#money">資金スタックの組み方</a></p>
+      <p style="margin:0 0 0.6rem"><a href="#constraints">在職ゆえの3制約</a></p>
+      <p style="margin:0 0 0.6rem"><a href="#support">使える公的制度</a></p>
+      <p style="margin:0"><a href="#next">今週やること</a></p>
+    </div>
+  </nav>
+
+  <main>
+
+    <section id="money">
+      <h2 class="head">資金スタックをどう組むか</h2>
+      <p class="head-note">
+        買収総額1億円のケースで組んだ例。自己資金3,000万円を「対価」「専門家費用」「運転資金」「生活費」の4つに割り、
+        対価に入れるのはその一部にとどめる。最も多い失敗は、自己資金を対価に全部つぎ込んでクロージング後の運転資金が尽きることです。
+      </p>
+
+      <h3>買収対価 1億円の内訳</h3>
+      <div class="scroller">
+        <table>
+          <thead>
+            <tr><th>資金源</th><th>金額</th><th>比率</th><th>性質と注意点</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>自己資金</td>
+              <td class="num">3,000万円</td>
+              <td class="num">30%</td>
+              <td>金融機関が最も見る数字。総額の2〜3割が事実上の下限</td>
+            </tr>
+            <tr>
+              <td>日本政策金融公庫<br><span class="sub">事業承継・集約・活性化支援資金</span></td>
+              <td class="num">5,000万円</td>
+              <td class="num">50%</td>
+              <td>国民生活事業の融資限度は7,200万円で、通常の融資枠とは<strong>別枠</strong>。返済は設備20年／運転10年以内、据置最長5年</td>
+            </tr>
+            <tr>
+              <td>セラーファイナンス<br><span class="sub">売主への分割払い・アーンアウト</span></td>
+              <td class="num">2,000万円</td>
+              <td class="num">20%</td>
+              <td>価格差を埋めると同時に、売主を引継ぎ期間中つなぎ留める装置になる</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr><td>合計</td><td class="num">1億円</td><td class="num">100%</td><td></td></tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <h3>対価とは別に必要な手元資金</h3>
+      <div class="scroller">
+        <table>
+          <thead>
+            <tr><th>用途</th><th>目安</th><th>備考</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DD・専門家費用</td>
+              <td class="num">200–500万円</td>
+              <td>事業承継・M&A補助金（専門家活用枠・買い手支援類型）で補助率2/3の対象。<strong>不成約でも発生する</strong>ので、複数案件ぶんを見込む</td>
+            </tr>
+            <tr>
+              <td>クロージング後の運転資金</td>
+              <td class="num">500–1,000万円</td>
+              <td>入金サイトのズレ、想定外の未払、離職の穴埋め。ここが薄いと初年度で詰む</td>
+            </tr>
+            <tr>
+              <td>生活防衛資金</td>
+              <td class="num">12–18ヶ月分</td>
+              <td>買収資金と口座レベルで分離する。退職後、役員報酬を最初から高く取れる保証はない</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="trap">
+        <strong>価格の相場観</strong>
+        <p>小型案件の実務は「年買法（時価純資産＋正常営業利益×2〜5年）」が事実上の基準で、EV/EBITDA でいえば3〜5倍のレンジに落ちることが多い。売主の希望価格はこれを上回って出てくるのが通常なので、<strong>自分の上限価格を先に出し、それを超えたら降りる</strong>という運用を最初から決めておく。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="head">工程</h2>
+      <p class="head-note">
+        在職しながらだと全体で12〜24ヶ月。工程が長いのはP2のソーシングで、ここは案件数を浴びる期間になる。
+        各工程には「次に進んでよい条件（ゲート）」を置いて、勢いで前に進まないようにする。
+      </p>
+
+      <article class="phase" id="p0">
+        <div class="phase-head">
+          <span class="phase-code">P0</span>
+          <h3 class="phase-title" style="margin:0">土台づくり</h3>
+          <span class="phase-when">1–2ヶ月 / 在職中</span>
+        </div>
+        <p class="phase-aim">案件を見る前に、自分側の制約を確定させる。ここを飛ばすと、良い案件に出会ってから足元が崩れる。</p>
+
+        <p class="label">やること</p>
+        <ul class="tasks">
+          <li><label><input type="checkbox"><span>勤務先の副業規定と競業避止義務を確認する。買収先が勤務先と競合すると、契約直前で全部止まる</span></label></li>
+          <li><label><input type="checkbox"><span>生活防衛資金と買収資金を別口座に分ける。金額を紙で確定させる</span></label></li>
+          <li><label><input type="checkbox"><span>自分の借入・カード・信用情報を整理する。融資審査で見られる</span></label></li>
+          <li><label><input type="checkbox"><span>相談先を確保する — 事業承継・引継ぎ支援センター（公的・原則無料）、M&A支援機関登録制度の登録業者、M&A経験のある税理士</span></label></li>
+          <li><label><input type="checkbox"><span>家族に話を通す。個人保証を求められる可能性がある以上、これは事務ではなく前提条件</span></label></li>
+        </ul>
+
+        <div class="gate">
+          <strong>次に進む条件</strong>
+          <p>「どういう条件が揃ったら退職するか」を1枚に書けている。金額・時期・案件の性質の3つで定義する。</p>
+        </div>
+      </article>
+
+      <article class="phase" id="p1">
+        <div class="phase-head">
+          <span class="phase-code">P1</span>
+          <h3 class="phase-title" style="margin:0">探索テーゼの策定</h3>
+          <span class="phase-when">1ヶ月</span>
+        </div>
+        <p class="phase-aim">領域が未定なら、ここがこの計画の中心。案件を見てから考えるのではなく、見る前に基準を数値で固定する。基準がないと、いい話に見えるものを片っ端から追いかけて時間だけが溶ける。</p>
+
+        <p class="label">やること</p>
+        <ul class="tasks">
+          <li><label><input type="checkbox"><span>自分の比較優位を棚卸しする — 財務モデリング、不動産の目利き、データ分析。「自分が入って何が良くなるか」を一文で言えるか</span></label></li>
+          <li><label><input type="checkbox"><span>除外リストを先に作る — 許認可が重い業種、夜間・休日対応が必須の労働集約、単一顧客依存、大型設備の更新が近い装置産業</span></label></li>
+          <li><label><input type="checkbox"><span>スクリーニング基準を数値化する（下表）</span></label></li>
+          <li><label><input type="checkbox"><span>「社長が抜けても回るか」の判定軸を決める — 営業が属人か、価格決定を誰がしているか、有資格者は誰か</span></label></li>
+        </ul>
+
+        <p class="label">スクリーニング基準の例</p>
+        <div class="scroller">
+          <table>
+            <thead><tr><th>項目</th><th>基準</th><th>理由</th></tr></thead>
+            <tbody>
+              <tr><td>正常収益力EBITDA</td><td class="num">1,500万円以上</td><td>返済原資と自分の役員報酬が両立する下限</td></tr>
+              <tr><td>営業利益率</td><td class="num">8%以上</td><td>これを下回ると改善余地ではなく構造問題の可能性</td></tr>
+              <tr><td>上位1社の売上比率</td><td class="num">30%未満</td><td>顧客集中は小型M&Aで最も多い事故原因</td></tr>
+              <tr><td>従業員数</td><td class="num">5–30名</td><td>1人では属人、30名超は初回の統率が難しい</td></tr>
+              <tr><td>所在地</td><td>通勤圏または移住可能圏</td><td>初年度は毎日現場にいる必要がある</td></tr>
+              <tr><td>有利子負債／EBITDA</td><td class="num">3倍以下</td><td>買収借入を上乗せする余地を残す</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="gate">
+          <strong>次に進む条件</strong>
+          <p>A4一枚の投資テーゼができている。ノンネームシートを見て、30分以内にYes/Noを出せる状態。</p>
+        </div>
+      </article>
+
+      <article class="phase" id="p2">
+        <div class="phase-head">
+          <span class="phase-code">P2</span>
+          <h3 class="phase-title" style="margin:0">ソーシング</h3>
+          <span class="phase-when">3–12ヶ月 / 在職中の主戦場</span>
+        </div>
+        <p class="phase-aim">母集団を作る。100件見て10件詳しく当たり、3件で面談し、1件が成約する — くらいの歩留まりを前提に置く。</p>
+
+        <div class="trap">
+          <strong>チャネルは価格帯で分かれる</strong>
+          <p>個人向けM&Aプラットフォームの中心は数百万〜数千万円のマイクロ案件で、<strong>この計画の射程（6,000万〜1.5億円）はその上のレンジ</strong>にあたる。プラットフォームだけを見ていても、狙う規模の案件にはあまり当たりません。<strong>プラットフォームで相場観と目を作り、実際の成約は仲介・金融機関・支援センターから取る</strong>という二段構えで設計する。</p>
+        </div>
+
+        <p class="label">価格帯別チャネルマップ</p>
+        <div class="scroller">
+          <table>
+            <thead><tr><th>買収総額</th><th>主なチャネル</th><th>競合の状況</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="num">〜3,000万円</td>
+                <td>M&Aプラットフォーム</td>
+                <td>個人の買い手が多数。1案件に数十件の打診が付くこともある</td>
+              </tr>
+              <tr>
+                <td class="num">3,000万〜1億円</td>
+                <td>プラットフォーム上位／事業承継・引継ぎ支援センター／地域金融機関</td>
+                <td><strong>射程の下半分。</strong>個人と小規模事業会社が競合</td>
+              </tr>
+              <tr>
+                <td class="num">1億〜3億円</td>
+                <td>M&A仲介・FA／地銀・信金／士業ネットワーク</td>
+                <td><strong>射程の上半分。</strong>仲介が扱う下限帯。事業会社との競合になる</td>
+              </tr>
+              <tr>
+                <td class="num">3億円〜</td>
+                <td>仲介大手・FA</td>
+                <td>個人単独では資金面で届きにくい</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="label">主要プラットフォーム（買い手側の費用）</p>
+        <div class="scroller">
+          <table>
+            <thead><tr><th>サービス</th><th>規模</th><th>買い手費用</th><th>案件の傾向</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>TRANBI</strong></td>
+                <td class="num">会員20万人超<br>案件3,500件以上</td>
+                <td>成約手数料なし。無料会員でも打診可、案件により月額プラン（980円〜）</td>
+                <td>スモール〜マイクロ全般。件数が多く相場観を作るのに向く</td>
+              </tr>
+              <tr>
+                <td><strong>BATONZ</strong></td>
+                <td class="num">累計会員30万人超</td>
+                <td>成約報酬型。譲渡金額の約2%（最低35〜150万円）</td>
+                <td>スモールM&Aで最大級の母数。業種・地域とも幅広い</td>
+              </tr>
+              <tr>
+                <td><strong>M&Aクラウド</strong></td>
+                <td>—</td>
+                <td>成約報酬型。レーマン方式（最低100万円）</td>
+                <td>IT・スタートアップ・成長企業寄り</td>
+              </tr>
+              <tr>
+                <td><strong>スピードM&A</strong></td>
+                <td>—</td>
+                <td>成約報酬型。レーマン方式（最低20万円）</td>
+                <td>小規模。Web・飲食・小売</td>
+              </tr>
+              <tr>
+                <td><strong>M&Aナビ</strong></td>
+                <td>—</td>
+                <td>成約報酬型。レーマン方式（最低20万円）</td>
+                <td>ライトな案件</td>
+              </tr>
+              <tr>
+                <td><strong>ラッコM&A</strong></td>
+                <td>—</td>
+                <td>譲渡価額の5%（最低5万円）</td>
+                <td>Web・EC・メディア・アプリに特化</td>
+              </tr>
+              <tr>
+                <td><strong>M&Aサクシード</strong></td>
+                <td>—</td>
+                <td>成約時のアドバイザリー手数料（担当者による）</td>
+                <td>中堅企業・法人買収寄り</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="sub" style="max-width:68ch">費用体系は改定されるため、登録前に各社の料金ページで最新版を確認すること。上表の比較の一部はTRANBI自身が公開している記事に基づくため、TRANBIに有利な見せ方になっている可能性がある。</p>
+
+        <p class="label">射程レンジの本命チャネル</p>
+        <div class="scroller">
+          <table>
+            <thead><tr><th>チャネル</th><th>費用</th><th>案件の質</th><th>在職との相性</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>事業承継・引継ぎ支援センター</strong><br><span class="sub">各都道府県・公的機関</span></td>
+                <td>相談は原則無料</td>
+                <td>売主の本気度が高く、公的機関のフィルタが効いている</td>
+                <td>平日日中の面談が必要。ただし相談自体は早く始められる</td>
+              </tr>
+              <tr>
+                <td><strong>M&A仲介・FA</strong><br><span class="sub">M&A支援機関登録制度の登録業者</span></td>
+                <td>レーマン方式。最低手数料は数百万円が通例</td>
+                <td>資料が整理された状態で出てくる</td>
+                <td>買い手登録して条件を預けておけば、案件は向こうから来る</td>
+              </tr>
+              <tr>
+                <td><strong>地銀・信金のM&A部門</strong></td>
+                <td>紹介次第</td>
+                <td>1億円前後の承継案件の主要な供給源</td>
+                <td>融資の相談と同時に接点を作れるので効率がよい</td>
+              </tr>
+              <tr>
+                <td><strong>税理士・会計士ネットワーク</strong></td>
+                <td>紹介次第</td>
+                <td>顧問先の承継。数字が見えている</td>
+                <td>関係構築に時間がかかる。早めに種を蒔く</td>
+              </tr>
+              <tr>
+                <td><strong>直接アプローチ</strong><br><span class="sub">リスト作成＋DM</span></td>
+                <td>工数のみ</td>
+                <td>競合が存在しない</td>
+                <td>在職だと工数が重い。テーゼが固まってから</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="label">公的な承継マッチング：後継者人材バンク</p>
+        <p>各都道府県の事業承継・引継ぎ支援センターが運営する、後継者不在の小規模事業者と創業希望者をつなぐ制度。<strong>会社員など「現在事業を営んでいない個人」が対象</strong>で、まさに在職者向けの入口にあたる。ただし登録には、原則としてセンター指定の創業スクール等の受講と、承継が成立した場合にその県内に本拠を置くというコミットメントが求められる（要件は県ごとに異なる）。対象は小規模事業が中心で射程レンジより小さめだが、<strong>センターとの関係を作る経路として価値がある</strong>。</p>
+
+        <p class="label">実務の流れ</p>
+        <ol class="plain">
+          <li>ノンネームシート（社名が伏せられた概要）で一次スクリーニング</li>
+          <li>秘密保持契約（NDA）を締結</li>
+          <li>企業概要書（IM）と直近3期の決算書を入手</li>
+          <li>初期質問リストを投げる — 売却理由、社長の役割、上位顧客、借入と保証、係争の有無</li>
+        </ol>
+
+        <div class="gate">
+          <strong>次に進む条件</strong>
+          <p>決算書3期分と、売却理由についての売主本人の説明が取れている。売却理由が曖昧なまま先に進まない。</p>
+        </div>
+      </article>
+
+      <article class="phase" id="p3">
+        <div class="phase-head">
+          <span class="phase-code">P3</span>
+          <h3 class="phase-title" style="margin:0">初期審査</h3>
+          <span class="phase-when">案件ごと 1–2週間</span>
+        </div>
+        <p class="phase-aim">決算書の数字をそのまま信じない。オーナー企業のP/Lは、税負担を下げる方向に最適化されているのが普通で、実力値とはズレている。</p>
+
+        <p class="label">正常収益力EBITDAの再構築</p>
+        <ul class="plain">
+          <li><strong>役員報酬</strong> — オーナーとその家族の報酬を、後任（＝自分）の市場水準に置き換える</li>
+          <li><strong>私的経費</strong> — 車両、交際費、保険、家族への給与</li>
+          <li><strong>オーナー所有不動産の賃料</strong> — 相場より高い／低い賃料を市場水準に補正。買収後に賃貸借をどうするかは別途交渉項目</li>
+          <li><strong>一過性の損益</strong> — 補助金収入、固定資産売却損益、特需</li>
+          <li><strong>非事業用資産</strong> — 遊休不動産、投資有価証券、役員貸付金。価格から切り出す</li>
+        </ul>
+
+        <div class="trap">
+          <strong>即撤退のレッドフラグ</strong>
+          <p>①社長が営業のすべてを握っていて引継ぎ先がない ②上位1社で売上の半分 ③社会保険の未加入または未払残業が常態 ④株主名簿と実態が一致しない（名義株） ⑤売却理由の説明が変わる。ひとつでも該当したら、値引きで解決しようとせず降りる。</p>
+        </div>
+
+        <div class="gate">
+          <strong>次に進む条件</strong>
+          <p>再構築後のEBITDAから出した自分の上限価格が、売主の希望価格と20%以内で重なっている。</p>
+        </div>
+      </article>
+
+      <article class="phase" id="p4">
+        <div class="phase-head">
+          <span class="phase-code">P4</span>
+          <h3 class="phase-title" style="margin:0">トップ面談と意向表明</h3>
+          <span class="phase-when">1ヶ月</span>
+        </div>
+        <p class="phase-aim">小型M&Aの売主は、価格と同じかそれ以上に「誰に渡すか」を見ている。従業員と取引先を任せられる相手かどうかが判断材料になる。</p>
+
+        <p class="label">やること</p>
+        <ul class="tasks">
+          <li><label><input type="checkbox"><span>在職中であることを隠さない。同時に「クロージングで退職し、専業で入る」と明言する。ここを曖昧にすると本気度を疑われる</span></label></li>
+          <li><label><input type="checkbox"><span>面談は平日日中になる。有給の残数から逆算して、同時に進める案件数を決める</span></label></li>
+          <li><label><input type="checkbox"><span>意向表明書（LOI）に盛る — 価格レンジ、スキーム、独占交渉権、DD期間、クロージング条件、想定時期</span></label></li>
+          <li><label><input type="checkbox"><span>買収後の体制を書面で示す。自分が社長に入るのか、売主に何ヶ月残ってもらうのか</span></label></li>
+        </ul>
+
+        <p class="label">スキームの選択</p>
+        <div class="scroller">
+          <table>
+            <thead><tr><th></th><th>株式譲渡</th><th>事業譲渡</th></tr></thead>
+            <tbody>
+              <tr><td>簿外債務</td><td>そのまま引き継ぐ</td><td>切り離せる</td></tr>
+              <tr><td>許認可</td><td>原則そのまま承継</td><td>取り直しが必要</td></tr>
+              <tr><td>従業員</td><td>雇用契約は継続</td><td>個別に再契約</td></tr>
+              <tr><td>契約・取引</td><td>継続（CoC条項に注意）</td><td>個別に巻き直し</td></tr>
+              <tr><td>手続</td><td>軽い</td><td>重い</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="sub" style="max-width:68ch">小型では手続の軽さから株式譲渡が主流。ただし簿外債務を丸ごと引き継ぐため、DDの精度がそのまま自分のリスクになる。</p>
+
+        <div class="gate">
+          <strong>次に進む条件</strong>
+          <p>基本合意（独占交渉権付き）を締結。DD費用を投じてよいのは、独占交渉権を得てからです。</p>
+        </div>
+      </article>
+
+      <article class="phase" id="p5">
+        <div class="phase-head">
+          <span class="phase-code">P5</span>
+          <h3 class="phase-title" style="margin:0">デューデリジェンス</h3>
+          <span class="phase-when">1–2ヶ月</span>
+        </div>
+        <p class="phase-aim">大型案件のDDを縮小するのではなく、小型で実際に事故が起きる場所に費用を集中させる。</p>
+
+        <p class="label">小型案件で最も効く5点</p>
+        <ol class="plain">
+          <li><strong>労務</strong> — 未払残業、社会保険の未加入と遡及リスク、労働時間の実態。中小では最頻の簿外債務</li>
+          <li><strong>簿外・偶発債務</strong> — 他社への保証債務、係争、リース、退職金債務</li>
+          <li><strong>株式の実在</strong> — 株主名簿、名義株、相続で分散した少数株主。全株取得できないと後で必ず揉める</li>
+          <li><strong>許認可</strong> — 承継の可否、有資格者が誰か、その人が残るか</li>
+          <li><strong>契約</strong> — 主要顧客・仕入先とのチェンジオブコントロール条項。オーナー交代で解除できる契約がないか</li>
+        </ol>
+
+        <div class="gate">
+          <strong>次に進む条件</strong>
+          <p>発見事項を「価格から引く」「表明保証と補償で手当てする」「クロージング条件にする」「降りる」の4つに全部仕分けできている。</p>
+        </div>
+      </article>
+
+      <article class="phase" id="p6">
+        <div class="phase-head">
+          <span class="phase-code">P6</span>
+          <h3 class="phase-title" style="margin:0">資金調達の確定</h3>
+          <span class="phase-when">P5と並行</span>
+        </div>
+        <p class="phase-aim">融資の内諾はDDと同時に走らせる。契約後に調達で詰まると独占交渉権を空費する。</p>
+
+        <p class="label">やること</p>
+        <ul class="tasks">
+          <li><label><input type="checkbox"><span>日本政策金融公庫に事前相談する。事業承継・集約・活性化支援資金は国民生活事業で融資限度7,200万円、通常枠とは別枠</span></label></li>
+          <li><label><input type="checkbox"><span>信用保証協会の事業承継特別保証を検討する。経営者保証を不要にできる制度で、資産超過・EBITDA有利子負債倍率10倍以内・法人と個人の分離・返済緩和中の借入がないこと等が要件（適用対象や期間の要件は年度で変わるため要確認）</span></label></li>
+          <li><label><input type="checkbox"><span>個人保証をどう扱うかを条件交渉の議題に乗せる。「求められたら受ける」ではなく、外す努力を先にする</span></label></li>
+          <li><label><input type="checkbox"><span>売主の既存借入と、売主個人の保証をクロージングでどう解除するかを詰める</span></label></li>
+        </ul>
+
+        <div class="trap">
+          <strong>在職中の最大の難所</strong>
+          <p>融資は「その事業に専念する人」に出る。在職のまま借りようとすると審査で止まりやすい。対策は、退職を前提とした事業計画を出し、<strong>融資実行とクロージングと退職の順序を金融機関と事前にすり合わせておく</strong>こと。順序を詰めないまま退職すると、無職の状態で審査に臨むことになる。</p>
+        </div>
+
+        <div class="gate">
+          <strong>次に進む条件</strong>
+          <p>融資の内諾が取れ、資金の着金日とクロージング日が線でつながっている。</p>
+        </div>
+      </article>
+
+      <article class="phase" id="p7">
+        <div class="phase-head">
+          <span class="phase-code">P7</span>
+          <h3 class="phase-title" style="margin:0">契約とクロージング</h3>
+          <span class="phase-when">1ヶ月</span>
+        </div>
+        <p class="phase-aim">株式譲渡契約（SPA）で、DDの発見事項を法的に手当てする。</p>
+
+        <p class="label">SPAで落とさない条項</p>
+        <ul class="plain">
+          <li>表明保証の範囲と、補償の上限・期間・下限額</li>
+          <li>価格調整（純資産または運転資本ベース）</li>
+          <li>キーマン条項 — 売主と主要従業員の引継ぎ期間中の残留義務</li>
+          <li>売主の競業避止 — 期間と地理的範囲</li>
+          <li>クロージング条件 — 融資実行、主要取引先の同意、株式の全株集約</li>
+        </ul>
+
+        <p class="label">同時に動かすこと</p>
+        <ul class="tasks">
+          <li><label><input type="checkbox"><span>退職手続き。クロージングの1–2ヶ月前が現実的なライン</span></label></li>
+          <li><label><input type="checkbox"><span>許認可の名義変更、銀行口座、会計システム、代表者印の切替</span></label></li>
+          <li><label><input type="checkbox"><span>売主の個人保証解除と、既存借入の借換または承継</span></label></li>
+        </ul>
+
+        <div class="gate">
+          <strong>次に進む条件</strong>
+          <p>クロージング当日の段取り（着金 → 株券・株主名簿の書換 → 登記 → 従業員への発表）が時系列で書けている。</p>
+        </div>
+      </article>
+
+      <article class="phase" id="p8">
+        <div class="phase-head">
+          <span class="phase-code">P8</span>
+          <h3 class="phase-title" style="margin:0">最初の100日</h3>
+          <span class="phase-when">クロージング後</span>
+        </div>
+        <p class="phase-aim">買収の成否はここで決まる。改善案を持ち込む前に、辞められないことが先。</p>
+
+        <p class="label">Day 1</p>
+        <ul class="plain">
+          <li>従業員説明 — 雇用条件は変えないと明言する。ここでの動揺がそのまま離職になる</li>
+          <li>主要取引先への挨拶。売主に同行してもらう</li>
+          <li>資金繰り表を自分の手に移す。週次で自分が見る</li>
+        </ul>
+
+        <p class="label">最初の3ヶ月</p>
+        <ul class="plain">
+          <li>キーマンの処遇を最優先で確定させる。給与でも役職でもいいが、放置しない</li>
+          <li>「当面は変えない」と先に宣言し、観察に徹する。なぜその手順なのかには理由があることが多い</li>
+          <li>売主の引継ぎ期間（3–12ヶ月）の役割・出社頻度・報酬を、契約どおりに運用する</li>
+          <li>改善に着手するのは、現場の全工程を自分で一度回してから</li>
+        </ul>
+
+        <div class="trap">
+          <strong>買った直後に最も多い事故</strong>
+          <p>キーマンの離職と、それに続く主要顧客の離脱。買収前のDDで「この人が辞めたら何%の売上が消えるか」を数字にしておき、その人の残留を契約と処遇の両方で押さえる。</p>
+        </div>
+      </article>
+    </section>
+
+    <section id="reading">
+      <h2 class="head">案件の読み方</h2>
+      <p class="head-note">
+        小型M&Aで最も診断価値が高い情報は、決算書ではなく<strong>売却理由</strong>です。理由が分かれば、数字のどこに歪みがあるか、
+        何がDDの重点になるか、そもそも買ってよい案件かがほぼ決まる。ここでは売却理由の類型、チャネルによる売り手の質の差、
+        業種ごとの急所を整理します。
+      </p>
+
+      <h3>売却理由の類型</h3>
+      <div class="scroller">
+        <table>
+          <thead><tr><th>類型</th><th>実際に起きていること</th><th>買い手にとっての意味</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>後継者不在</strong><br><span class="sub">健全</span></td>
+              <td>社長が高齢。子がいない、または継ぐ意思がない</td>
+              <td>最も素直な類型。数字も正常なことが多い。ただし<strong>「なぜ従業員が継がなかったのか」は必ず聞く</strong>——承継方法の最多は内部昇格（36.1%）で、それが起きなかったのには理由がある</td>
+            </tr>
+            <tr>
+              <td><strong>健康上の理由</strong><br><span class="sub">健全だが急ぐ</span></td>
+              <td>社長の病気・体力の限界</td>
+              <td>本物ならクリーン。売主の交渉力が下がるので価格は付きやすいが、<strong>引継ぎ期間を十分に取れないリスク</strong>が最大の代償</td>
+            </tr>
+            <tr>
+              <td><strong>相続・株式分散の整理</strong><br><span class="sub">健全</span></td>
+              <td>先代の相続で株が分散し、意思決定が回らない</td>
+              <td>全株を集約できるかが全て。少数株主が一人でも残ると後で必ず揉める</td>
+            </tr>
+            <tr>
+              <td><strong>選択と集中</strong><br><span class="sub">要注意</span></td>
+              <td>事業会社がノンコア事業を切り出す（カーブアウト）</td>
+              <td><strong>スタンドアロン問題</strong>——親会社の経理・人事・システム・仕入条件・与信が付いてこない。単独で立つコストを必ず積み直す</td>
+            </tr>
+            <tr>
+              <td><strong>創業者のEXIT</strong><br><span class="sub">要注意</span></td>
+              <td>連続起業家が売却益を目的に売る。Web・EC系に多い</td>
+              <td>売却に向けて数字を作っている可能性。<strong>アーンアウトを必須</strong>にして、売却後の実績にリスクを寄せる</td>
+            </tr>
+            <tr>
+              <td><strong>業績悪化・資金繰り</strong><br><span class="sub">再生型</span></td>
+              <td>赤字が続き、借入の返済が重い</td>
+              <td>安いが難易度は最高。再生の経験がないなら手を出さない。初回の案件としては非推奨</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="trap">
+        <strong>語られない売却理由</strong>
+        <p>表向きの理由が「後継者不在」でも、実際の引き金が別にあることがある。次のいずれかが背後にあると、買った瞬間に価値が消えます。<strong>①大口顧客の契約終了が既に決まっている ②キーマンが辞めた／辞めることが決まっている ③大型の設備更新期が迫っている ④業法改正や規制でこの先が読めない ⑤未払残業の請求が来ている ⑥賃借物件の立ち退き・更新拒絶</strong>。いずれも決算書には出ません。時期を特定する質問（「いつ」を聞く）でしか掘れない。</p>
+      </div>
+
+      <h3>チャネルによって売り手の質が構造的に違う</h3>
+      <p>
+        これは案件を探す前に知っておくべき事実です。2021年版中小企業白書によれば、<strong>どの支援機関を経由するかで売り手の経営状況が大きく偏ります</strong>。
+      </p>
+      <div class="scroller">
+        <table>
+          <thead><tr><th>チャネル</th><th>売り手の経営状況</th><th>主な売却動機</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>事業引継ぎ支援センター<br><span class="sub">現・事業承継・引継ぎ支援センター</span></td>
+              <td><strong>赤字傾向 56.3%</strong></td>
+              <td>後継者不在、従業員の雇用維持</td>
+            </tr>
+            <tr>
+              <td>M&A仲介業者</td>
+              <td><strong>黒字傾向 47.9%</strong></td>
+              <td>売却による利益の確保、事業の成長・発展も一定程度</td>
+            </tr>
+            <tr>
+              <td>金融機関</td>
+              <td>—</td>
+              <td>後継者不在、従業員の雇用維持の割合が高い</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="max-width:68ch">出典は2021年版中小企業白書。公式ページへの直接アクセスが制限されていたため、数値は検索インデックス経由で取得しています。実際に使う前に白書本文で確認してください。</p>
+
+      <div class="gate">
+        <strong>この差の読み方</strong>
+        <p>「公的機関だから優良案件」ではありません。<strong>支援センター経由は赤字傾向が過半</strong>で、安く買える代わりに再生の難度を引き受けることになる。逆に仲介経由は黒字案件の比率が高いが、そのぶん競合も価格も上がる。<strong>どちらが良いかではなく、自分がどちらの難度を引き受けられるかで選ぶ。</strong></p>
+      </div>
+
+      <h3>価格ではないところで勝つ</h3>
+      <p>
+        白書はもう一つ重要なことを示しています。中小企業の経営者は、<strong>企業の存続と雇用維持のためなら譲渡価格の引き下げに応じる場合も少なくない</strong>。
+        中小M&Aの交渉で価格は必ずしも最優先ではなく、従業員の雇用維持、買い手の社風や経営方針も重視される。
+      </p>
+      <p>
+        これが<strong>個人買い手が事業会社に競り勝てる唯一の経路</strong>です。資金力では勝てない。勝てるのは次の3点で、いずれも先方の不安に直接答えるものです。
+      </p>
+      <ul class="plain">
+        <li><strong>自分が現場に入る</strong> — 事業会社の買収は往々にして遠隔管理になる。売主が最も恐れるのはそこ</li>
+        <li><strong>雇用条件を変えない</strong> — 明言し、契約に落とす</li>
+        <li><strong>屋号・取引先との関係を残す</strong> — 売主にとっては自分の人生の証明でもある</li>
+      </ul>
+
+      <h3>売却理由を裏取りする質問</h3>
+      <p>抽象的に「なぜ売るのか」と聞いても表向きの答えしか返りません。<strong>時期と数を特定する質問</strong>に落とすこと。</p>
+      <ol class="plain">
+        <li>従業員への承継を検討したか。しなかったのはなぜか</li>
+        <li>過去に売りに出したことはあるか。成約しなかったのはなぜか</li>
+        <li>上位3社との契約はいつ更新か。直近で条件が変わった取引先はあるか</li>
+        <li>直近2年の退職者は何人か。役職と担当は</li>
+        <li>主要設備の取得年月と、次の更新時期はいつか</li>
+        <li>直近3年で税務調査は入ったか。指摘事項は何だったか</li>
+        <li>社長個人の保証と、個人資産の担保提供の状況は</li>
+        <li>賃借物件の契約期間と更新条件は</li>
+      </ol>
+
+      <h3>業種別の急所</h3>
+      <div class="scroller">
+        <table>
+          <thead><tr><th>業種</th><th>後継者不在率</th><th>買い手の急所</th><th>個人との相性</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>建設・工事</strong></td>
+              <td class="num">57.3%</td>
+              <td>建設業許可の承継、監理技術者などの有資格者、経営事項審査の点数、未成工事支出金の実態</td>
+              <td>案件は最も多い。資格者が残るかが全て</td>
+            </tr>
+            <tr>
+              <td><strong>製造</strong></td>
+              <td class="num">42.4%</td>
+              <td>設備の更新期（大型capexが隠れた債務になる）、技能の属人性、単一顧客依存</td>
+              <td>設備投資の余力を見誤ると詰む</td>
+            </tr>
+            <tr>
+              <td><strong>BtoBストック</strong><br><span class="sub">ビルメン・清掃・警備・設備管理</span></td>
+              <td>—</td>
+              <td>労働集約で人手確保が生命線。ただし解約率が低く収益が読める</td>
+              <td><strong>相性が良い</strong>。数字で管理でき、需要が景気に鈍感</td>
+            </tr>
+            <tr>
+              <td><strong>不動産管理</strong></td>
+              <td>—</td>
+              <td>管理受託契約の継続性、オーナーとの属人的関係、宅建業免許</td>
+              <td><strong>既存の専門性が直結する</strong>領域</td>
+            </tr>
+            <tr>
+              <td><strong>運輸・物流</strong></td>
+              <td>—</td>
+              <td>ドライバーの確保と高齢化、労働時間規制、車両の更新、荷主依存</td>
+              <td>人の確保が全て。難度は高い</td>
+            </tr>
+            <tr>
+              <td><strong>調剤・医療周辺</strong></td>
+              <td>—</td>
+              <td>有資格者の確保、公定価格の改定リスク、門前の医療機関への依存</td>
+              <td>制度変更が収益を直撃する</td>
+            </tr>
+            <tr>
+              <td><strong>飲食・小売</strong></td>
+              <td>—</td>
+              <td>賃貸借契約の残存期間と更新条件、立地への依存、属人的な味・接客</td>
+              <td>相性は良くない。属人性が高く再現しにくい</td>
+            </tr>
+            <tr>
+              <td><strong>IT受託</strong></td>
+              <td>—</td>
+              <td>人材が唯一の資産。主要エンジニアの離職で価値がゼロになる</td>
+              <td>リテンション設計を契約に組み込めるなら</td>
+            </tr>
+            <tr>
+              <td><strong>Web・EC</strong></td>
+              <td>—</td>
+              <td>検索順位・プラットフォーム依存、数字を作りやすい構造</td>
+              <td>安いが、価格の理由が外部要因にあることが多い</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="max-width:68ch">不在率は帝国データバンク2025年調査の業種別数値。「—」は今回確認できていない項目で、無いという意味ではありません。</p>
+
+      <h3>価格帯によって「何を買っているか」が変わる</h3>
+      <div class="scroller">
+        <table>
+          <thead><tr><th>価格帯</th><th>実質的に買っているもの</th><th>社長が抜けたときに残るもの</th></tr></thead>
+          <tbody>
+            <tr><td class="num">〜1,000万円</td><td>社長個人の技能と人脈</td><td><strong>ほぼ何も残らない</strong></td></tr>
+            <tr><td class="num">1,000万〜3,000万円</td><td>小規模法人。社長は現場のプレイヤー</td><td>顧客リストと設備。運営は自分が入る前提</td></tr>
+            <tr><td class="num">3,000万〜1億円</td><td>組織化の入口。役割分担が始まっている</td><td>番頭がいれば回る。いなければ止まる</td></tr>
+            <tr><td class="num">1億〜3億円</td><td><strong>組織そのもの</strong>。管理体制と反復する収益</td><td>回る。ここが承継案件の本命帯</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>射程レンジ（6,000万〜1.5億円）は、ちょうど<strong>「社長個人を買う」から「組織を買う」へ切り替わる境目</strong>にあたります。同じ価格でも中身がまったく違うので、番頭の有無は価格以上に重要な変数です。</p>
+
+      <div class="trap">
+        <strong>「なぜ安いのか」を必ず言語化する</strong>
+        <p>価格は市場が付けた評価です。安い案件には必ず理由がある。判断すべきは<strong>それが自分で解ける理由か、解けない理由か</strong>の一点。<br>
+        <strong>解ける</strong>——価格改定を何年もしていない／営業が紙とFAXで回っている／管理会計がなく採算の悪い仕事を取っている／採用をしたことがない。<br>
+        <strong>解けない</strong>——顧客が構造的に減っている／規制や技術で業界の先が消えつつある／立地が死んでいる／キーマンが辞めることが確定している。<br>
+        解ける理由が2つ以上あって、解けない理由が0のときだけ進む。</p>
+      </div>
+    </section>
+
+    <section id="constraints">
+      <h2 class="head">在職ゆえの3つの制約</h2>
+      <p class="head-note">
+        在職しながらの探索は、資金と生活のリスクを下げる代わりに、次の3つを構造的に抱え込みます。
+        どれも工程の設計で緩和できますが、無視すると終盤で顕在化します。
+      </p>
+
+      <div class="constraints">
+        <div class="constraint">
+          <h4>融資が通りにくい</h4>
+          <p>金融機関はその事業に専念する人に貸す。退職前提の事業計画を用意し、融資実行・クロージング・退職の順序を事前にすり合わせておく。</p>
+        </div>
+        <div class="constraint">
+          <h4>平日日中に動けない</h4>
+          <p>売主との面談、支援センター、金融機関、士業はいずれも平日日中。有給の残数が、同時進行できる案件数の実質的な上限になる。</p>
+        </div>
+        <div class="constraint">
+          <h4>競業避止義務</h4>
+          <p>買収先が勤務先と競合する領域だと、契約直前で全部が止まる。P1のテーゼを作る段階で、就業規則を読んで除外領域を確定させておく。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="support">
+      <h2 class="head">使える公的制度</h2>
+      <p class="head-note">
+        金額・要件・公募期間は年度ごとに変わります。以下は2026年8月時点で確認した内容で、実際の申請時は必ず公募要領と窓口で確認してください。
+      </p>
+
+      <div class="scroller">
+        <table>
+          <thead><tr><th>制度</th><th>内容</th><th>使いどころ</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>事業承継・M&A補助金</strong><br><span class="sub">専門家活用枠・買い手支援類型<br>（旧 事業承継・引継ぎ補助金）</span></td>
+              <td>補助率2/3。補助上限は600〜800万円で、DD費用の申請により加算あり。仲介手数料・FA費用・DD費用が対象。直近の15次公募は2026年6〜7月に申請受付</td>
+              <td>P5のDD費用。次回公募の時期を先に押さえ、そこから逆算してDDの開始時期を組む</td>
+            </tr>
+            <tr>
+              <td><strong>日本政策金融公庫</strong><br><span class="sub">事業承継・集約・活性化支援資金</span></td>
+              <td>国民生活事業の融資限度7,200万円で通常枠とは別枠。返済期間は設備20年以内・運転10年以内、据置最長5年</td>
+              <td>P6の主力。据置期間をPMIの立ち上がりに合わせて使う</td>
+            </tr>
+            <tr>
+              <td><strong>事業承継特別保証</strong><br><span class="sub">信用保証協会</span></td>
+              <td>一定要件下で経営者保証を不要とする保証制度。資産超過、EBITDA有利子負債倍率10倍以内、法人と個人の分離、返済緩和中の借入がないこと等が要件。事業承継・引継ぎ支援センター等の確認を受けると保証料率が軽減</td>
+              <td>個人保証をどう外すかの交渉材料。対象期間の要件は改定されるため窓口で最新版を確認</td>
+            </tr>
+            <tr>
+              <td><strong>事業承継・引継ぎ支援センター</strong></td>
+              <td>各都道府県に設置された公的機関。相談は原則無料</td>
+              <td>P0の相談先かつP2のソーシング経路。在職中でも早期に接点を作っておく</td>
+            </tr>
+            <tr>
+              <td><strong>M&A支援機関登録制度</strong></td>
+              <td>中小企業庁への登録制度。補助金の対象となる仲介・FAは登録業者であることが要件</td>
+              <td>P2で業者を選ぶときの足切り基準に使う</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="next">
+      <h2 class="head">今週やること</h2>
+      <p class="head-note">
+        領域が未定でも、着手できることは全部P0とP1にあります。案件を探す前に手を動かすのはこの4つ。
+      </p>
+      <ul class="tasks">
+        <li><label><input type="checkbox"><span>就業規則を読み、副業規定と競業避止義務の条文を書き出す（除外領域がここで決まる）</span></label></li>
+        <li><label><input type="checkbox"><span>生活防衛資金・買収対価・専門家費用・運転資金の4分割を数字で置く</span></label></li>
+        <li><label><input type="checkbox"><span>M&Aプラットフォーム3つに登録し、案件を100件流し読みする。テーゼの解像度はこれで一気に上がる</span></label></li>
+        <li><label><input type="checkbox"><span>地元の事業承継・引継ぎ支援センターに相談を予約する</span></label></li>
+      </ul>
+    </section>
+
+    <div class="footnote">
+      <h2>注記</h2>
+      <p style="max-width:none;margin:0 0 0.8rem">
+        本ページは公開情報を整理した一般的な内容であり、個別の投資・税務・法務助言ではありません。
+        補助金・融資・保証の金額および要件は年度ごとに改定されるため、実行時には必ず一次情報と窓口で確認してください。
+        金額の記載はいずれも目安であり、案件・地域・審査により変動します。
+      </p>
+      <p style="max-width:none;margin:0 0 0.4rem">出典（2026年8月時点で確認）</p>
+      <ul>
+        <li><a href="https://shoukei-mahojokin.go.jp/">事業承継・M&A補助金 公式サイト</a></li>
+        <li><a href="https://hojyokin-portal.jp/columns/jigyoshokei_experts_buyer">事業承継・M&A補助金 専門家活用枠・買い手支援類型の解説（補助金ポータル）</a></li>
+        <li><a href="https://japan-finance.jp/jfc/1627/">日本政策金融公庫の事業承継・M&A融資の解説</a></li>
+        <li><a href="https://www.chusho.meti.go.jp/kinyu/hosyoukaijo/index.html">事業承継時の経営者保証解除に向けた総合的な対策（中小企業庁）</a></li>
+        <li><a href="https://www.zenshinhoren.or.jp/model-case/shokei/">事業承継をお考えの方（全国信用保証協会連合会）</a></li>
+        <li><a href="https://www.tranbi.com/ma-column/detail/?id=224">M&Aプラットフォーム比較大全（TRANBI、2026年1月）</a> — 提供元が比較対象の一社である点に留意</li>
+        <li><a href="https://yurumalab.com/2026/02/19/tranbi-review-2026/">TRANBIの料金体系の検証（ゆるM&Aラボ、2026年2月）</a></li>
+        <li><a href="https://www.3192shoukei.jp/support/bank.php">後継者人材バンク（埼玉県事業承継･引継ぎ支援センター）</a> — 登録要件の一例</li>
+        <li><a href="https://www.chusho.meti.go.jp/pamflet/hakusyo/2021/chusho/b2_3_2.html">2021年版 中小企業白書 第2節 M&Aを通じた経営資源の有効活用（中小企業庁）</a> — チャネル別の売り手の経営状況・売却動機。直接アクセスは403のため数値は検索インデックス経由</li>
+        <li><a href="https://www.tdb.co.jp/report/economic/20251121-successor25y/">全国「後継者不在率」動向調査（2025年・帝国データバンク）</a> — 業種別不在率、承継方法の内訳</li>
+      </ul>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Checkbox state survives a reload where storage is available; falls back to
+  // in-session only when the sandbox blocks it.
+  (function () {
+    var KEY = 'small-ma-roadmap-progress';
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('ul.tasks input[type="checkbox"]'));
+    var store = null;
+    try { store = window.localStorage; store.getItem(KEY); } catch (e) { store = null; }
+
+    boxes.forEach(function (box, i) { box.id = 'task-' + i; });
+
+    if (store) {
+      var saved = (store.getItem(KEY) || '').split(',');
+      boxes.forEach(function (box, i) { if (saved[i] === '1') box.checked = true; });
+    }
+
+    document.addEventListener('change', function (ev) {
+      if (!store || !ev.target.matches('ul.tasks input[type="checkbox"]')) return;
+      try {
+        store.setItem(KEY, boxes.map(function (b) { return b.checked ? '1' : '0'; }).join(','));
+      } catch (e) { /* storage full or blocked — keep the in-page state */ }
+    });
+  })();
+</script>
