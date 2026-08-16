@@ -18,6 +18,7 @@ __all__ = [
     "disease_test_counts",
     "exponential_sample",
     "heavy_tailed_sample",
+    "make_capstone_dataset",
     "normal_sample",
 ]
 
@@ -85,3 +86,22 @@ SAMPLERS: dict[str, Callable[[int, np.random.Generator], np.ndarray]] = {
     "exponential": lambda n, rng: rng.exponential(1.0, n) - 1.0,
     "cauchy": lambda n, rng: rng.standard_cauchy(n),
 }
+
+
+def make_capstone_dataset(n: int = 40, x_range=(-3.0, 3.0), noise: float = 0.35, seed: int = 0):
+    """Shared 1-D regression data for the cross-book capstone (three lenses).
+
+    The SAME generator is defined identically in all five analytics books so
+    each can solve the same problem from its own lens without importing the
+    others. True curve f(x) = sin(1.5 x) + 0.3 x, with Gaussian noise. Returns
+    (x, y) as float64 arrays sorted by x.
+
+    Do not "improve" this function. Any change to the draw order produces
+    different numbers and breaks analytics/report's cross-book consistency
+    test, which is the only thing making the capstone's claim checkable.
+    """
+    rng = np.random.default_rng(seed)
+    x = np.sort(rng.uniform(x_range[0], x_range[1], n))
+    f = np.sin(1.5 * x) + 0.3 * x
+    y = f + noise * rng.standard_normal(n)
+    return x, y
