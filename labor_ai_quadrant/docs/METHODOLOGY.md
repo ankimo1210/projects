@@ -197,7 +197,7 @@ AI代替可能な人件費 = 人件費 × (ai_substitutable_share_pct / 100)
 | `sector_labor_shortage.toml` | e-Stat（雇用動向調査・毎月勤労統計・労働力調査）、一般職業紹介状況、TDB調査 | 四半期 |
 | `occupation_ai_exposure.toml` | 文献の更新時のみ | 年次 |
 | `sector_occupation_mix.toml` | 国勢調査（5年ごと） | 5年 |
-| `universe_jp.toml` | J-Quants `/listed/info`（`verify-universe` で差分検出） | 年1回（10月の定期入替後） |
+| `universe_jp.toml` | J-Quants `/v2/equities/master`（`verify-universe` で差分検出。旧 `/v1/listed/info` は 2026-08 時点で廃止済み） | 年1回（10月の定期入替後） |
 
 `load_reference()` は読み込み時に構造を検証し、壊れていれば具体的なメッセージで
 `ValueError` を投げる。手編集される表なので、静かに間違った値が通るより落ちるほうがよい。

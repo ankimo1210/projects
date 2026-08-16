@@ -157,10 +157,27 @@ CSV / Parquet / JSON。
 **同順位を解くのは財務データ**（人件費率・一人当たり売上）であり、それが入って初めて
 「AIで営業利益が何%押し上がるか」で並べ替えられる。
 
+> **現状これは動かない（2026-08-16 実測）。** J-Quants が V2 へ移行し、`api.jquants.com/v1` は
+> 全エンドポイントが **HTTP 410 Gone** を返す。`providers/jquants.py` は認証・パス・レスポンス
+> キー・フィールド名がすべて v1 のままなので、キーを入れても動かず**書き直しが必要**。
+> EDINET 側は現行仕様のままでエンドポイントの生存も確認済みだが、キーが無いため未検証。
+>
+> | | V1（現コード） | V2 |
+> |---|---|---|
+> | 認証 | `token/auth_user` → `token/auth_refresh` | `x-api-key` ヘッダ（両方廃止） |
+> | 銘柄一覧 | `/v1/listed/info` | `/v2/equities/master` |
+> | 財務 | `/v1/fins/statements` | `/v2/fins/summary` |
+> | トップキー | `info` / `statements` | `data` |
+> | ページング | 未実装 | `pagination_key`（必須） |
+> | 企業名 / 33業種 / 規模区分 | `CompanyName` / `Sector33CodeName` / `ScaleCategory` | `CoName` / `S33Nm` / `ScaleCat` |
+>
+> 移植の参考になる V2 実装がワークスペース内にある:
+> `stock/src/stockkit/data/providers/jquants_provider.py`。
+
 必要なのは J-Quants と EDINET への到達性と認証情報だけ:
 
 ```bash
-export JQUANTS_MAIL_ADDRESS=... JQUANTS_PASSWORD=...   # 上場銘柄一覧 + 売上/営業利益
+export JQUANTS_API_KEY=...                            # V2。上場銘柄一覧 + 売上/営業利益
 export EDINET_API_KEY=...                             # 有報の従業員数・平均年間給与
 
 # 1. ユニバースの検証（コード・33業種を JPX と突き合わせ）
@@ -177,8 +194,9 @@ uv run --no-sync python -m labor_ai_quadrant build \
     --out reports/quadrant.html
 ```
 
-`ScaleCategory` から TOPIX 500 = Core30 + Large70 + Mid400 を厳密に再現する
-（`--scale all` で上場全銘柄）。
+規模区分（V1 `ScaleCategory` / V2 `ScaleCat`）から TOPIX 500 = Core30 + Large70 + Mid400 を
+厳密に再現する（`--scale all` で上場全銘柄）。V2 で区分の**値**が同じ文字列のままかは未確認で、
+キーが入り次第まず確かめること。
 
 ### 人件費の推計
 
