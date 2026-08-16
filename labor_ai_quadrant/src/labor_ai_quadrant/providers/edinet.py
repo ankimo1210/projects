@@ -13,6 +13,11 @@ bundle: same facts, one order of magnitude less parsing, and no namespace
 handling. Only the standard library is used, so no production dependency is
 added.
 
+An element ID alone does not identify a value. One filing repeats the same
+element for five fiscal years and again for each reportable segment, so the
+period and the consolidation scope have to come from the context ID — see
+:data:`CURRENT_CONTEXTS`.
+
 Credentials::
 
     EDINET_API_KEY   (EDINET API v2 subscription key, sent as Ocp-Apim-Subscription-Key)
@@ -43,18 +48,53 @@ API_ROOT = "https://api.edinet-fsa.go.jp/api/v2"
 ANNUAL_REPORT_ORDINANCE = "010"
 ANNUAL_REPORT_FORM = "030000"
 
-#: EDINET CSV の要素ID → こちらの列名。ContextRef で連結/単体が分かれるため、
-#: 「提出会社」（単体）の値を優先し、無ければ最初に見つかった値を使う。
-ELEMENT_MAP = {
-    "jpcrp_cor:NumberOfEmployees": "employees",
-    "jpcrp_cor:AverageAnnualSalaryInformationAboutReportingCompanyInformationAboutEmployees": "average_salary",
-    "jpcrp_cor:AverageAgeYearsInformationAboutReportingCompanyInformationAboutEmployees": "average_age",
-    "jppfs_cor:NetSales": "revenue",
-    "jppfs_cor:OperatingIncome": "operating_profit",
+#: 当期の値を指すコンテキストID。**完全一致で判定する。**
+#:
+#: EDINET は同じ要素IDを5期分（四期前〜当期）並べ、さらにセグメント別の内訳を
+#: 軸メンバー付きのコンテキストで並べる。要素IDだけで拾うと最初にヒットする
+#: 四期前の値（トヨタの従業員数なら 73,133 ではなく 70,710）や、セグメント単位の
+#: 内訳（同 343,952）を掴む。接頭辞一致でも軸メンバー付きを弾けないので完全一致。
+CURRENT_CONTEXTS: dict[str, tuple[str, ...]] = {
+    "non_consolidated": (
+        "CurrentYearInstant_NonConsolidatedMember",
+        "CurrentYearDuration_NonConsolidatedMember",
+    ),
+    "consolidated": ("CurrentYearInstant", "CurrentYearDuration"),
 }
 
-#: 単体を表す ContextRef の接頭辞。連結（Consolidated）より優先する。
-NON_CONSOLIDATED_HINT = "NonConsolidatedMember"
+#: 提出会社（単体）ベースの項目。候補は上から順に試す。
+#:
+#: 平均年間給与は単体でしか開示されないため、人件費に掛ける従業員数・比率の分母に
+#: なる売上・営業利益もすべて単体で揃える。連結の営業利益と単体の人件費を割ると、
+#: 海外子会社を持つ会社ほど押上げ余地が過小に出る（NTT は単体 2,606人 / 連結
+#: 344,196人）。売上は業種によって表示科目が変わるので候補を並べる（売上高が無い
+#: 持株会社・サービス業は営業収益）。
+NON_CONSOLIDATED_FIELDS: dict[str, tuple[str, ...]] = {
+    "employees": ("jpcrp_cor:NumberOfEmployees",),
+    "average_salary": (
+        "jpcrp_cor:AverageAnnualSalaryInformationAboutReportingCompanyInformationAboutEmployees",
+    ),
+    "average_age": (
+        "jpcrp_cor:AverageAgeYearsInformationAboutReportingCompanyInformationAboutEmployees",
+    ),
+    "revenue": (
+        # 主要な経営指標等（提出会社）→ 単体損益計算書 の順。表示科目は
+        # 売上高 / 営業収益 / 売上収益 のいずれかで、業種と適用基準で変わる。
+        "jpcrp_cor:NetSalesSummaryOfBusinessResults",
+        "jpcrp_cor:OperatingRevenue1SummaryOfBusinessResults",
+        "jpcrp_cor:RevenueKeyFinancialData",
+        "jppfs_cor:NetSales",
+        "jppfs_cor:OperatingRevenue1",
+        "jppfs_cor:Revenue",
+    ),
+    "operating_profit": ("jppfs_cor:OperatingIncome",),
+}
+
+#: 連結ベースの項目。人件費の推計には使わない（平均年収が単体しか無いため）が、
+#: 単体の値がグループ全体のどれだけを覆っているかを読む手掛かりとして残す。
+CONSOLIDATED_FIELDS: dict[str, tuple[str, ...]] = {
+    "employees_consolidated": ("jpcrp_cor:NumberOfEmployees",),
+}
 
 #: これだけ連続で日次取得に失敗したらスイープを打ち切る。キー不正やエンドポイント
 #: 廃止は全日で同じように失敗するので、最後まで回しても空の結果が返るだけになる。
@@ -173,15 +213,27 @@ def _decode_csv(blob: bytes) -> list[dict[str, str]]:
     return rows
 
 
-def _pick(rows: list[dict[str, str]], element_id: str) -> str | None:
-    """Value for an element, preferring the parent-company (non-consolidated) context."""
-    matches = [r for r in rows if r.get("要素ID") == element_id]
-    if not matches:
-        return None
-    for row in matches:
-        if NON_CONSOLIDATED_HINT in (row.get("コンテキストID") or ""):
+def _pick(rows: list[dict[str, str]], element_id: str, scope: str = "non_consolidated") -> str | None:
+    """Current-period value for an element in the requested scope.
+
+    Returns ``None`` rather than falling back to the other scope: silently
+    swapping consolidated for non-consolidated is how a headcount and an average
+    salary end up describing different companies.
+    """
+    contexts = CURRENT_CONTEXTS[scope]
+    for row in rows:
+        if row.get("要素ID") == element_id and row.get("コンテキストID") in contexts:
             return row.get("値")
-    return matches[0].get("値")
+    return None
+
+
+def _pick_first(rows: list[dict[str, str]], element_ids: tuple[str, ...], scope: str) -> str | None:
+    """First element in ``element_ids`` that this filing actually reports."""
+    for element_id in element_ids:
+        value = _pick(rows, element_id, scope)
+        if value not in (None, ""):
+            return value
+    return None
 
 
 def _to_number(raw: str | None) -> float | None:
@@ -200,10 +252,22 @@ def fetch_company_facts(doc_id: str, api_key: str | None = None) -> dict[str, fl
     """Pull the labour and P/L facts out of one filing."""
     key = _api_key(api_key)
     rows = _decode_csv(_get(f"{API_ROOT}/documents/{doc_id}?type=5", key))
-    return {
-        column: _to_number(_pick(rows, element_id))
-        for element_id, column in ELEMENT_MAP.items()
+    return extract_company_facts(rows)
+
+
+def extract_company_facts(rows: list[dict[str, str]]) -> dict[str, float | None]:
+    """Reduce one filing's CSV rows to the scored facts (no network)."""
+    facts: dict[str, float | None] = {
+        column: _to_number(_pick_first(rows, element_ids, "non_consolidated"))
+        for column, element_ids in NON_CONSOLIDATED_FIELDS.items()
     }
+    facts.update(
+        {
+            column: _to_number(_pick_first(rows, element_ids, "consolidated"))
+            for column, element_ids in CONSOLIDATED_FIELDS.items()
+        }
+    )
+    return facts
 
 
 def build_financials(

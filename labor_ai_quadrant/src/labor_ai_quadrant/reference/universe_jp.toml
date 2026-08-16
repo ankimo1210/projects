@@ -167,7 +167,8 @@ company = [
 
   # 精密機器
   { code = "4543", name = "テルモ",                       sector33 = "精密機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
-  { code = "6849", name = "日本光電工業",                 sector33 = "精密機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
+  # JPX 33業種は 電気機器（2026-08-17 に J-Quants /v2/equities/master と照合）。
+  { code = "6849", name = "日本光電工業",                 sector33 = "電気機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
   { code = "7733", name = "オリンパス",                   sector33 = "精密機器",       labor_intensity = "mid",  knowledge_tilt = "high" },
   { code = "7741", name = "HOYA",                         sector33 = "精密機器",       labor_intensity = "low",  knowledge_tilt = "high" },
   { code = "7762", name = "シチズン時計",                 sector33 = "精密機器",       labor_intensity = "mid",  knowledge_tilt = "mid" },

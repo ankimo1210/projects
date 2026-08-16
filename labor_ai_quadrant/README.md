@@ -157,28 +157,35 @@ CSV / Parquet / JSON。
 **同順位を解くのは財務データ**（人件費率・一人当たり売上）であり、それが入って初めて
 「AIで営業利益が何%押し上がるか」で並べ替えられる。
 
-> **現状これは動かない（2026-08-16 実測）。** J-Quants が V2 へ移行し、`api.jquants.com/v1` は
-> 全エンドポイントが **HTTP 410 Gone** を返す。`providers/jquants.py` は認証・パス・レスポンス
-> キー・フィールド名がすべて v1 のままなので、キーを入れても動かず**書き直しが必要**。
-> EDINET 側は現行仕様のままでエンドポイントの生存も確認済みだが、キーが無いため未検証。
+> **2026-08-17 に TOPIX 500 の全 493 銘柄で実走済み。** J-Quants は V2 へ移植した
+> （`api.jquants.com/v1` は全エンドポイントが HTTP 410 Gone）。EDINET は API v2 のまま。
 >
-> | | V1（現コード） | V2 |
+> | | V1（廃止） | V2（現コード） |
 > |---|---|---|
-> | 認証 | `token/auth_user` → `token/auth_refresh` | `x-api-key` ヘッダ（両方廃止） |
+> | 認証 | `token/auth_user` → `token/auth_refresh` | `x-api-key` ヘッダ |
 > | 銘柄一覧 | `/v1/listed/info` | `/v2/equities/master` |
 > | 財務 | `/v1/fins/statements` | `/v2/fins/summary` |
 > | トップキー | `info` / `statements` | `data` |
-> | ページング | 未実装 | `pagination_key`（必須） |
 > | 企業名 / 33業種 / 規模区分 | `CompanyName` / `Sector33CodeName` / `ScaleCategory` | `CoName` / `S33Nm` / `ScaleCat` |
+> | 売上 / 営業利益 | `NetSales` / `OperatingProfit` | `Sales` / `OP` |
 >
-> 移植の参考になる V2 実装がワークスペース内にある:
-> `stock/src/stockkit/data/providers/jquants_provider.py`。
+> 実測メモ:
+> - **規模区分の値は変わっていない**（`TOPIX Core30` / `Large70` / `Mid400`）。
+>   TOPIX 500 は 493 銘柄（31 + 68 + 394）。
+> - `pagination_key` は `equities/master`（4,446行）でも返らなかったが、返れば追う実装にしてある。
+> - **33業種名は表記が揺れる。** `情報･通信業` `ガラス･土石製品` `倉庫･運輸関連業`
+>   `石油･石炭製品` `電気･ガス業` は半角中黒、`証券･商品先物取引業` は JPX 正式名の
+>   読点が中黒。名前で結合すると**この6業種が丸ごと落ちる**ので、`S33`（4桁コード）で
+>   結合している。
+> - `/v2/fins/details` は有料プラン。`/v2/fins/summary` は無料プランで取れる。
 
 必要なのは J-Quants と EDINET への到達性と認証情報だけ:
 
 ```bash
-export JQUANTS_API_KEY=...                            # V2。上場銘柄一覧 + 売上/営業利益
-export EDINET_API_KEY=...                             # 有報の従業員数・平均年間給与
+export JQUANTS_API_KEY=...                            # V2。上場銘柄一覧 + 連結の売上/営業利益
+                                                      # （V1 の refresh token と同じ文字列。
+                                                      #   JQUANTS_REFRESH_TOKEN でも読む）
+export EDINET_API_KEY=...                             # 有報の従業員数・平均年間給与・単体P/L
 
 # 1. ユニバースの検証（コード・33業種を JPX と突き合わせ）
 uv run --no-sync python -m labor_ai_quadrant verify-universe
@@ -194,9 +201,14 @@ uv run --no-sync python -m labor_ai_quadrant build \
     --out reports/quadrant.html
 ```
 
-規模区分（V1 `ScaleCategory` / V2 `ScaleCat`）から TOPIX 500 = Core30 + Large70 + Mid400 を
-厳密に再現する（`--scale all` で上場全銘柄）。V2 で区分の**値**が同じ文字列のままかは未確認で、
-キーが入り次第まず確かめること。
+規模区分 `ScaleCat` から TOPIX 500 = Core30 + Large70 + Mid400 を厳密に再現する
+（`--scale all` で上場全銘柄）。
+
+`fetch-financials` は EDINET へ約900リクエスト（提出日400日分＋有報の実体）を投げるので
+10分前後かかる。**J-Quants は 50件ほど連続で引くと HTTP 429 を返す**（トークンバケット式で、
+バーストは通るがその後絞られる）。プロバイダ側で最大4回まで待って再試行するため、
+493銘柄では連結列の取得だけでさらに時間がかかる。押上げ余地の計算は EDINET の単体値
+だけで完結しているので、連結列が欠けてもレポートは成立する。
 
 ### 人件費の推計
 
@@ -208,9 +220,25 @@ uv run --no-sync python -m labor_ai_quadrant build \
 ```
 
 係数1.25は、社会保険料の事業主負担（給与の約15%）に賞与引当と退職給付費用を足した水準。
-`--benefits-multiplier` で振れる。**スコープを揃えるのが重要**で、連結従業員数に単体の
-平均年収を掛けると海外従業員の賃金を日本と同水準とみなすことになり過大推計になるため、
-EDINET ローダは既定で提出会社（単体）の値を揃えて返す。
+`--benefits-multiplier` で振れる。
+
+**すべて提出会社（単体）で揃える。** 平均年間給与は単体でしか開示されないので、人件費は
+単体でしか組めない。したがって人件費率・押上げ余地の分母（売上高・営業利益）も単体を使い、
+J-Quants の連結値は `revenue_consolidated` / `operating_profit_consolidated` として
+別列に置く。連結の営業利益を単体の人件費で割ると、海外子会社を持つ会社ほど押上げ余地が
+過小に出る。
+
+> **既知の偏り:** 純粋持株会社では単体が実質「空箱」になる（NTT は単体2,606人 /
+> 連結344,196人、三菱UFJ FG は3,637人 / 161,576人）。単体で揃えたこと自体は正しくても、
+> その比率はグループの実態ではない。`fetch-financials` は `parent_employee_share`
+> （単体従業員 ÷ 連結従業員）を出力し、2割未満の銘柄数を標準エラーに報告する。
+> **持株会社の押上げ余地は構造的に低く出る**ものとして読むこと。
+
+EDINET の要素IDは表示科目が業種で変わるため候補を順に試す。売上は
+`NetSalesSummaryOfBusinessResults`（売上高）→ `OperatingRevenue1…`（営業収益）→
+`RevenueKeyFinancialData`（売上収益）→ 単体P/Lの各科目。営業利益は
+`jppfs_cor:OperatingIncome` のみで、銀行など営業利益を出さない業種は欠損のまま落とす
+（経常利益で代用すると別の指標を混ぜることになる）。
 
 ### ネットワークが無い環境では
 
