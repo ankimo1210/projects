@@ -62,7 +62,7 @@
          </TestableReference>
       </Testables>
       <StoreKitConfigurationFileReference
-         identifier = "../WSET/Configuration.storekit">
+         identifier = "../../../WSET/Configuration.storekit">
       </StoreKitConfigurationFileReference>
    </TestAction>
    <LaunchAction
@@ -86,7 +86,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <StoreKitConfigurationFileReference
-         identifier = "../WSET/Configuration.storekit">
+         identifier = "../../../WSET/Configuration.storekit">
       </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction

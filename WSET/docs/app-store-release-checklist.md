@@ -12,21 +12,34 @@
 
 自動検証は2026-07-21に完了（Python 58件、iOS単体117件、UI 28件。うち`StoreKitConfigurationTests` 9件、`R6UITests` 9件。すべて成功）。以下はStoreKit実取引または実機Sandboxでの最終確認待ち。
 
-`StoreKitTest`による実取引自動化は、Xcode 26.6・iOS 26.5 Simulatorで`SKInternalErrorDomain Code=3`が発生するため未完了。実機Sandboxテストで代替する。
+`StoreKitTest`による実取引自動化は、Xcode 26.6・iOS 26.5 Simulatorでは`SKInternalErrorDomain Code=3`が発生して利用できない。2026-07-30に実機（iPhone 16 Pro / iOS 26.5.2、USB接続）で再検証し、原因を切り分けた。
 
-2026-07-29の再検証で、原因が`SKTestSession`単体ではなくSimulatorのStoreKitテスト基盤全体であることを確認した。`xcodebuild test`経路では、schemeの`StoreKitConfigurationFileReference`が適用されない。
-
-- `SKTestSession`は生成できるが、`resetToDefaultState`・`clearTransactions`・`disableDialogs`がすべて`SKInternalErrorDomain Code=3`（`Error saving configuration file`）で失敗する。schemeのTestActionからStoreKit参照を外しても同じ。
-- Paywallが読み込む価格は`Configuration.storekit`の値（¥1,500）ではなく既定スタブの`$9.99`になる。価格だけを`¥4,321`へ変えた複製設定を指すschemeで実行しても`$9.99`のままで、設定ファイルが一切読まれていない。
-- その状態で購入すると、StoreKitのテストシートではなくSpringBoardの「Apple Accountにサインイン」ダイアログが出る。実App Storeへ流れており、Simulatorでは購入の成功・キャンセル・保留・復元を検証できない。
+- 実機では`SKTestSession`が完全に動作する。`resetToDefaultState`・`clearTransactions`・`disableDialogs`・`buyProduct`・`approveAskToBuyTransaction`・`refundTransaction`・`setSimulatedError(forAPI:)`のすべてが成功する。`Code=3`はSimulator固有の制約だった。
+- schemeの`StoreKitConfigurationFileReference`のパスが`../WSET/Configuration.storekit`で、実体を指していなかった。`../../../WSET/Configuration.storekit`へ修正すると、実機では`SKTestSession`なしでも`¥1,500`／`JPY`／storefront`JPN`が適用される。修正前は既定スタブの`$9.99`／`USD`／`USA`が返っており、これが前回「設定ファイルが読まれない」と記録した現象の原因。
+- Simulatorはパス修正後も`$9.99`のままで設定ファイルを読まない。購入フローの検証はSimulatorでは不可能で、実機が必要。
 - `xcrun simctl`にStoreKit設定を注入するサブコマンドはなく、CLIからの回避手段はない。
 
-したがって上記4項目はSimulatorでは消化できず、実機での確認が必要。Xcode GUIからのRun（LaunchAction）経路は未検証で、GUIなら設定が適用される可能性は残る。
+実機検証は`DeviceStoreKitFlowTests`（10件）と`DeviceEntitlementPersistenceTests`（3件）として自動化した。いずれもSimulatorでは`XCTSkip`するため、`make test-unit`は緑のまま（130件中13件スキップ）。実機での実行は次のコマンド。
 
-- [ ] StoreKit Configurationで成功、キャンセル、保留、復元を確認
+```sh
+xcodebuild test -project WSET.xcodeproj -scheme WSET \
+  -destination 'platform=iOS,id=<device-udid>' \
+  -only-testing:WSETTests/DeviceStoreKitFlowTests \
+  -only-testing:WSETTests/DeviceEntitlementPersistenceTests \
+  -allowProvisioningUpdates -parallel-testing-enabled NO
+```
+
+`DeviceEntitlementPersistenceTests`は実機のKeychainとディスク上のSwiftDataストアを使うため、モック版（`StoreKitConfigurationTests`）では検証できないハードウェア依存部分を補完する。
+
+残存リスク（意図的に受容）:
+
+- オフライン確認は、実機Keychainへの永続と「StoreKitに到達できないときにキャッシュ済み権利を維持する」経路で検証しており、実際に機内モードで電波を落とした起動は未実測。アプリから見た失敗経路は同一なため差分はないと判断した。
+- 返金・取消後の権利失効はApple Sandboxではテスターから返金を発行できないため、実機の`SKTestSession.refundTransaction`（`testRefundedPurchaseRevokesProAccess`・`testRefundedPurchaseIsNotRestorable`）と単体テスト`testRevocationUpdateClearsVerifiedRightAndCache`で代替検証している。
+
+- [x] StoreKit Configurationで成功、キャンセル、保留、復元を確認（実機`DeviceStoreKitFlowTests`で自動化、2026-07-30に13件成功）
 - [ ] Sandboxで購入、返金・取消後の権利、再インストール後の復元を確認
-- [ ] オフライン起動時に検証済み買い切り権利が保持されることを確認
-- [ ] 無料ユーザーの進捗を購入後も保持することを確認
+- [x] オフライン起動時に検証済み買い切り権利が保持されることを確認（実機Keychain永続＋StoreKit到達不能時のフォールバックで確認）
+- [x] 無料ユーザーの進捗を購入後も保持することを確認（実機・ディスク永続・実購入で確認）
 - [x] WSET非提携、独自教材、自己採点である旨をストア説明へ記載
 - [x] プライバシーポリシーの運営者名・連絡先・保持期間を確定し、GitHub Pagesへ公開
 - [x] App Privacy回答とアプリ内表示を一致させ、App Store Connectで公開
