@@ -7,9 +7,9 @@ Run from anywhere with the package importable:
 Each notebook follows the book's fixed shape (Big Picture -> Problem -> Intuition
 -> Visualization -> Definition -> Computation -> Invariant -> Failure Mode ->
 Application -> Exercises -> Advanced Notes) with Basic / Applied / Advanced
-layers. Heavily implemented: 01, 02, 04, 05, 06. Lighter (real content + TODO):
-00, 03, 07, 08. The generated .ipynb files are then executed in place so they
-carry outputs (the book builds with execute_notebooks: off).
+layers. 00 stays a short map of the book; every other chapter is fully worked.
+The generated .ipynb files are then executed in place so they carry outputs
+(the book builds with execute_notebooks: off).
 """
 
 from __future__ import annotations
@@ -756,14 +756,110 @@ plt.tight_layout()
 """
         ),
         md(
+            r"""
+## 10b. ヘヴィサイドの展開定理 — 手計算と `scipy.signal.residue` を突き合わせる (Applied)
+
+単純極 $p$ の係数は「その極を掛けて代入する」だけで取れます(cover-up 法):
+
+$$
+r = \lim_{s\to p}(s-p)F(s).
+$$
+
+$m$ 重極なら、掛けたあとに微分してから代入します。これがヘヴィサイドの展開定理です:
+
+$$
+r_j = \frac{1}{(m-j)!}\,\lim_{s\to p}\frac{d^{\,m-j}}{ds^{\,m-j}}\Big[(s-p)^m F(s)\Big],
+\qquad j=1,\dots,m .
+$$
+
+$F(s)=\dfrac{s+3}{(s+1)(s+2)^2}$ で手を動かすと、$s=-1$ で $r=2$、
+$s=-2$(2 重)で $\frac{d}{ds}\frac{s+3}{s+1}\big|_{-2}=-2$ と $\frac{s+3}{s+1}\big|_{-2}=-1$ なので
+
+$$
+F(s)=\frac{2}{s+1}-\frac{2}{s+2}-\frac{1}{(s+2)^2},
+\qquad f(t)=2e^{-t}-2e^{-2t}-t\,e^{-2t}.
+$$
+
+これを `systems.partial_fraction_numeric`(中身は `scipy.signal.residue`)と突き合わせます。
+"""
+        ),
+        code(
+            r"""
+# Heaviside cover-up by hand vs scipy.signal.residue, on a repeated pole.
+from scipy import signal
+
+num, den = [1.0, 3.0], [1.0, 5.0, 8.0, 4.0]        # (s+3) / ((s+1)(s+2)^2)
+r, p, k = systems.partial_fraction_numeric(num, den)
+print("scipy residues:", np.round(r, 6), " poles:", np.round(p, 6), " direct:", k)
+print("by hand       : [ 2. -2. -1.]  at poles [-1. -2. -2.]")
+
+# invres reassembles the pieces -- a round trip is the cleanest check of the split.
+b_back, a_back = signal.invres(r, p, k)
+print("round trip num:", np.round(b_back, 10), " den:", np.round(a_back, 10))
+
+tt = np.linspace(0.05, 8, 300)                     # Talbot divides by t, so start past 0
+f_hand = 2 * np.exp(-tt) - 2 * np.exp(-2 * tt) - tt * np.exp(-2 * tt)
+f_num = transforms.inverse_laplace_talbot(lambda S: (S + 3) / ((S + 1) * (S + 2) ** 2), tt)
+print("max |hand - numeric inverse| =", float(np.max(np.abs(f_hand - f_num))))
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(tt, f_hand, "k", lw=2, label="hand expansion: 2e^-t - 2e^-2t - t e^-2t")
+ax.plot(tt[::8], f_num[::8], "o", ms=4, color=plotting.ACCENT, label="numerical inverse (Talbot)")
+ax.set_xlabel("t"); ax.set_ylabel("f(t)"); ax.legend(); ax.grid(alpha=0.25)
+ax.set_title("repeated pole: the t e^{-2t} term is what the derivative formula buys")
+plt.tight_layout()
+"""
+        ),
+        md(
+            r"""
+重根が $t\,e^{-2t}$ を生むところが要点です。単純極だけを見る cover-up 法では
+この項が落ち、$t$ が大きいところで合わなくなります。
+
+## 10c. むだ時間 $e^{-as}$ — 時間シフト則と、数値逆変換の限界 (Applied)
+
+$$
+\mathcal{L}\{f(t-a)\,u(t-a)\} = e^{-as}F(s) \qquad (a>0)
+$$
+
+なので、像に $e^{-as}$ が掛かっていたら **時間軸を $a$ だけ右へずらす** だけです。
+輸送遅れ・通信遅延・測定の遅れなど、「入力が効き始めるまでに $a$ 秒かかる」系はすべてこの形。
+
+一方これは数値逆変換にとって難しい入力です。$a$ で不連続に立ち上がるため、
+有限個の点から復元する近似は、その段差をなまします。
+"""
+        ),
+        code(
+            r"""
+# Dead time: e^{-as}F(s) is a pure shift in t. Exact answer is free; the
+# numerical inverter has to earn it, and visibly smears the jump.
+a = 2.0
+t2 = np.linspace(0.05, 8, 200)
+exact = np.where(t2 >= a, np.exp(-(t2 - a)), 0.0)
+# Talbot is unusable here: its contour reaches deep into Re(s) < 0, where e^{-as} overflows.
+approx = transforms.inverse_laplace_stehfest(lambda S: np.exp(-a * S) / (S + 1), t2)
+
+err = np.abs(approx - exact)
+print("max error overall               :", float(err.max()))
+print("max error away from the jump    :", float(err[np.abs(t2 - a) > 1.0].max()))
+
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(t2, exact, "k", lw=2, label="exact: e^{-(t-a)} u(t-a)")
+ax.plot(t2, approx, "--", lw=2, color=plotting.ACCENT, label="Gaver-Stehfest")
+ax.axvline(a, color="#d62728", ls=":", lw=1.2, label=f"dead time a = {a}")
+ax.set_xlabel("t"); ax.set_ylabel("f(t)"); ax.legend(); ax.grid(alpha=0.25)
+ax.set_title("the shift theorem is exact; numerical inversion rounds the corner")
+plt.tight_layout()
+"""
+        ),
+        md(
             """
-## 11. Exercises / Advanced & TODO
+## 11. Exercises / Advanced Notes
 
 - **演習**: $\\dfrac{2s+1}{s^2+s}$、$\\dfrac{1}{(s+2)^3}$、$\\dfrac{s}{s^2+4}$ を逆変換せよ。
-- **Advanced**: 留数(residue)による逆変換 $f(t)=\\sum \\operatorname{Res}[F(s)e^{st}]$ をまとめよ。
-
-> **TODO(今後の拡張)**: ヘヴィサイドの展開定理の手計算、`scipy.signal.residue` による数値部分分数、
-> むだ時間 $e^{-as}$ を含む像の逆変換(時間シフト)を追加。
+- **Advanced**: 留数(residue)による逆変換 $f(t)=\\sum \\operatorname{Res}[F(s)e^{st}]$ をまとめ、
+  §10b の重根の公式が留数の定義そのものであることを確かめよ。
+- **Advanced**: むだ時間 $e^{-as}$ は有理関数ではないので、極・零点の言葉で直接扱えない。
+  制御では Padé 近似 $e^{-as}\\approx\\frac{1-as/2}{1+as/2}$ で有理化する(07 章の位相余裕に効く)。
 """
         ),
     ]
@@ -1467,16 +1563,149 @@ plt.tight_layout()
 """
         ),
         md(
+            r"""
+## 6d. 実装できる PID — 微分にフィルタを付ける (Applied)
+
+教科書の PID $K(s)=K_p+\dfrac{K_i}{s}+K_d s$ は、そのままでは **実装できません**。
+分子の次数が分母より高い(プロパーでない)ため、物理的に実現できず、
+何より $K_d s$ の周波数応答は $|K_d\omega|$ で **高周波を無限に増幅** します。
+測定ノイズはたいてい高周波なので、これは致命的です。
+
+実務では微分に 1 次のローパスを噛ませます:
+
+$$
+K(s) = K_p + \frac{K_i}{s} + \frac{K_d N s}{s + N}.
+$$
+
+$N$ が微分の効く上限周波数。$N\to\infty$ で理想の微分に戻り、同時にノイズ増幅も戻ってきます。
+"""
+        ),
+        code(
+            r"""
+# Filtered derivative: N is the knob between "ideal D" and "quiet D".
+def filtered_pid(kp, ki, kd, N):
+    # kp + ki/s + kd*N*s/(s+N), put over the common denominator s(s+N).
+    num = np.polyadd(np.polyadd(np.polymul([kp], [1.0, N, 0.0]),
+                                np.polymul([ki], [1.0, N])),
+                     np.polymul([kd * N, 0.0], [1.0, 0.0]))
+    return systems.tf(num, [1.0, N, 0.0])
+
+kp, ki, kd = 2.0, 1.0, 0.5
+w = np.logspace(-1, 3, 400)
+fig, (axm, axn) = plt.subplots(1, 2, figsize=(11.5, 4.4))
+for N, color in [(5.0, "#1f77b4"), (50.0, "#2ca02c"), (500.0, "#d62728")]:
+    _, mag, _ = systems.bode(filtered_pid(kp, ki, kd, N), w=w)
+    axm.semilogx(w, mag, color=color, label=f"N = {N:.0f}")
+axm.semilogx(w, 20 * np.log10(kd * w), "k--", lw=1, label="ideal K_d s")
+axm.set_xlabel("w [rad/s]"); axm.set_ylabel("|K(jw)| [dB]"); axm.grid(alpha=0.25, which="both")
+axm.legend(fontsize=8); axm.set_title("larger N -> closer to the ideal derivative")
+
+# What that costs on a noisy measurement.
+tt = np.linspace(0, 6, 1201)
+rng = np.random.default_rng(0)
+u = np.sin(2 * tt) + 0.02 * rng.standard_normal(tt.size)
+for N, color in [(5.0, "#1f77b4"), (500.0, "#d62728")]:
+    y = systems.forced_response(filtered_pid(kp, ki, kd, N), u, tt)
+    axn.plot(tt, y, color=color, lw=1.1, label=f"N = {N:.0f}, peak |y| = {np.abs(y).max():.2f}")
+axn.set_xlabel("t"); axn.set_ylabel("controller output"); axn.grid(alpha=0.25)
+axn.legend(fontsize=8); axn.set_title("2% measurement noise, amplified by the D term")
+plt.tight_layout()
+"""
+        ),
+        md(
+            r"""
+$N$ を 5 から 500 に上げると、正弦波の追従は変わらないのに出力のピークだけが跳ね上がります。
+**微分ゲインの上限 $N$ は、ノイズ増幅の上限そのもの** です。
+
+## 6e. 状態空間表現 — 同じ系のもう一つの書き方 (Advanced)
+
+伝達関数 $G(s)=\dfrac{b(s)}{a(s)}$ は、1 階の連立系
+
+$$
+\dot{\mathbf{x}} = A\mathbf{x} + B u, \qquad y = C\mathbf{x} + D u
+$$
+
+に書き直せます($\mathbf{x}$ は内部状態)。両者は同じ系の別表現で、
+**$A$ の固有値 = 伝達関数の極**。ODE 書 03 章の $\dot{\mathbf{x}}=A\mathbf{x}$ と、
+本書の極が同じものだったことがここで分かります。
+"""
+        ),
+        code(
+            r"""
+# Same system, two descriptions: eig(A) must reproduce the poles.
+from scipy import signal
+
+plant = systems.tf([1.0], [2.0, 1.0])                      # 1/(2s+1)
+closed = systems.feedback(systems.series(plant, systems.pid(kp=2.0, ki=3.0)))
+A, B, C, D = signal.tf2ss(closed.num, closed.den)
+print("A =\n", np.round(A, 4))
+print("eig(A) :", np.round(np.linalg.eigvals(A), 6))
+print("poles  :", np.round(closed.poles, 6))
+
+tt = np.linspace(0, 12, 400)
+y_tf = systems.step_response(closed, tt)
+_, y_ss = signal.step((A, B, C, D), T=tt)
+print("max |transfer function - state space| =", float(np.max(np.abs(y_tf - y_ss))))
+"""
+        ),
+        md(
+            r"""
+状態空間が要るのは、**多入力多出力**、**内部状態の推定(オブザーバ)**、
+**最適制御(LQR)** に進むときです。ODE 書 09 章の `lqr` / `place_poles` はこの表現の上に立っています。
+
+## 6f. 離散化 — コントローラを計算機に載せる (Advanced)
+
+実装はサンプル周期 $T$ ごとに走る計算機の上です。連続の $K(s)$ を離散の $K(z)$ に直す必要があり、
+その写像が 11 章の $z=e^{sT}$ です。閉ループ極も同じ規則で移ります:
+
+$$
+s\ \text{平面の極}\ p \ \longrightarrow\ z\ \text{平面の極}\ e^{pT}.
+$$
+
+$T$ を大きくすると極は原点へ寄って一見「速く」見えますが、
+サンプル間の情報が捨てられるぶん実際の応答は荒くなります。
+"""
+        ),
+        code(
+            r"""
+# Zero-order hold: discrete poles land exactly on exp(p T).
+for T in (0.05, 0.5, 1.5):
+    num_d, den_d, _ = signal.cont2discrete((closed.num, closed.den), T, method="zoh")
+    # trim the leading zero cont2discrete leaves in the numerator (it is a no-op
+    # coefficient, but scipy warns about the conditioning if it is kept)
+    dz = signal.TransferFunction(np.trim_zeros(np.squeeze(num_d), "f"), den_d, dt=T)
+    print(f"T = {T:4.2f}:  |z| = {np.round(np.abs(dz.poles), 4)}"
+          f"   |exp(pT)| = {np.round(np.abs(np.exp(closed.poles * T)), 4)}"
+          f"   stable = {discrete.is_stable_discrete(dz)}")
+
+fig, ax = plt.subplots(figsize=(7, 4.2))
+ax.plot(tt, y_tf, "k", lw=2, label="continuous")
+for T, color in [(0.5, "#2ca02c"), (1.5, "#d62728")]:
+    num_d, den_d, _ = signal.cont2discrete((closed.num, closed.den), T, method="zoh")
+    dz = signal.TransferFunction(np.trim_zeros(np.squeeze(num_d), "f"), den_d, dt=T)
+    k_idx, y_d = discrete.discrete_step_response(dz, n=int(12 / T))
+    ax.step(np.asarray(k_idx).ravel() * T, np.asarray(y_d).ravel(), where="post",
+            color=color, lw=1.4, label=f"sampled, T = {T}")
+ax.axhline(1.0, color="gray", ls=":", lw=1)
+ax.set_xlabel("t"); ax.set_ylabel("output"); ax.legend(fontsize=8); ax.grid(alpha=0.25)
+ax.set_title("the same loop, sampled: coarse T costs fidelity, not stability here")
+plt.tight_layout()
+"""
+        ),
+        md(
             """
-## 7〜11. Application / Exercises / Advanced & TODO
+## 7〜11. Application / Exercises / Advanced Notes
 
 - **応用**: アンチエイリアスフィルタ、サスペンション、サーボ位置決め、温度制御。
 - **演習(Basic)**: RC で時定数を半分にするには $R,C$ をどうする?
 - **演習(Applied)**: `systems.feedback` で $G=1/(s(s+1))$ の閉ループ極を $K$ について追え。
 - **Advanced**: PI 制御が定常偏差を消す理由(§6c)を、最終値定理 $\\lim_{s\\to0}sE(s)$ から示せ。
+- **Advanced**: §6d の $N$ を上げていくと、閉ループの位相余裕(§6b)はどう動くか。
+  ノイズ増幅と安定余裕のどちらが先に問題になるかを、対象プラント次第で論じよ。
+- **Advanced**: §6f の離散化を `method="bilinear"` に替えると極の写り方がどう変わるか(11 章 §7d)。
 
-> **TODO(今後の拡張)**: フィルタ付き微分の実装可能 PID、状態空間表現、離散化($z$ 変換)を追加
-> (根軌跡=§5b、安定余裕/Nyquist=§6b、PI=§6c で実装済み)。
+> 根軌跡は §5b、安定余裕/Nyquist は §6b、PI は §6c、フィルタ付き微分・状態空間・離散化は
+> §6d〜§6f で実装済み。むだ時間の Padé 近似だけは 03 章 §10c の Advanced に置いてある。
 """
         ),
     ]
@@ -1591,11 +1820,180 @@ plt.tight_layout()
 """
         ),
         md(
-            """
-## 4. 信号処理 / 待ち行列の入口
+            r"""
+## 4. 信号処理 / 待ち行列
 
-- **信号処理**: フィルタは畳み込み = $s$ での積(05 章)。連続系は $s$、離散系は $z$ 変換へ拡張。
-- **待ち行列**: M/M/1 などの待ち時間分布は **ラプラス-スティルチェス変換** で解析される(本書では入口のみ)。
+- **信号処理**: フィルタは畳み込み = $s$ での積(05 章)。連続系は $s$、離散系は $z$ 変換へ拡張(11 章)。
+- **待ち行列**: 待ち時間分布は **ラプラス–スティルチェス変換(LST)** で扱います。以下で M/M/1 を実測します。
+
+## 4b. ラプラス–スティルチェス変換と M/M/1 の待ち時間 (Applied)
+
+分布関数 $F_X$ に対する LST は
+
+$$
+\tilde{F}_X(s) = \int_{[0,\infty)} e^{-sx}\,dF_X(x) = \mathbb{E}\!\left[e^{-sX}\right].
+$$
+
+密度がある部分では通常のラプラス変換と一致し、**質量点も同じ式で拾える** のが違いです。
+待ち時間は「まったく待たない確率」という質量点を $0$ に持つので、この形が要ります。
+
+到着率 $\lambda$、サービス率 $\mu$、利用率 $\rho=\lambda/\mu<1$ の M/M/1(FCFS)では、
+待ち時間 $W$ は確率 $1-\rho$ で $0$、残りが率 $\mu-\lambda$ の指数分布になり
+
+$$
+\mathbb{E}\!\left[e^{-sW}\right] = (1-\rho) + \rho\,\frac{\mu-\lambda}{s+\mu-\lambda},
+\qquad \mathbb{E}[W] = \frac{\rho}{\mu-\lambda}.
+$$
+
+Lindley の再帰 $W_{k+1}=\max(0,\,W_k+S_k-A_{k+1})$ で待ち行列を回し、
+シミュレーションの $\mathbb{E}[e^{-sW}]$ と突き合わせます。
+"""
+        ),
+        code(
+            r"""
+# M/M/1 by Lindley's recursion; the LST is just a sample mean of exp(-sW).
+lam, mu = 0.7, 1.0
+rho = lam / mu
+rng = np.random.default_rng(0)
+n = 200_000
+inter = rng.exponential(1 / lam, n)      # interarrival times
+serve = rng.exponential(1 / mu, n)       # service times
+
+W = np.zeros(n)
+for k in range(1, n):
+    W[k] = max(0.0, W[k - 1] + serve[k - 1] - inter[k])
+W = W[n // 10:]                          # discard the burn-in
+
+print(f"P(W = 0) : simulated {np.mean(W == 0):.4f}   theory {1 - rho:.4f}")
+print(f"E[W]     : simulated {W.mean():.4f}   theory {rho / (mu - lam):.4f}")
+print("\n   s     E[e^-sW] simulated      theory")
+for sv in (0.2, 0.5, 1.0, 2.0):
+    theory = (1 - rho) + rho * (mu - lam) / (sv + mu - lam)
+    print(f"{sv:5.1f}   {np.mean(np.exp(-sv * W)):18.5f} {theory:11.5f}")
+"""
+        ),
+        code(
+            r"""
+# The mass at 0 is what forces the Stieltjes form: the CDF jumps there.
+fig, (axh, axl) = plt.subplots(1, 2, figsize=(11.5, 4.2))
+axh.hist(W[W > 0], bins=60, density=True, alpha=0.55, color=plotting.ACCENT,
+         label=f"simulated W | W > 0")
+wg = np.linspace(0, np.quantile(W[W > 0], 0.995), 300)
+axh.plot(wg, (mu - lam) * np.exp(-(mu - lam) * wg), "k", lw=2,
+         label="exponential(mu - lam)")
+axh.set_xlabel("waiting time"); axh.set_ylabel("density"); axh.legend(fontsize=8)
+axh.set_title(f"P(W = 0) = {np.mean(W == 0):.3f} sits outside this histogram")
+
+sv = np.linspace(0.05, 3.0, 60)
+axl.plot(sv, [np.mean(np.exp(-x * W)) for x in sv], "o", ms=3.5, color=plotting.ACCENT,
+         label="simulated E[e^-sW]")
+axl.plot(sv, (1 - rho) + rho * (mu - lam) / (sv + mu - lam), "k", lw=2, label="LST formula")
+axl.axhline(1 - rho, color="#d62728", ls=":", lw=1.2, label=f"s -> inf limit = 1 - rho = {1 - rho:.2f}")
+axl.set_xlabel("s"); axl.set_ylabel("E[e^-sW]"); axl.legend(fontsize=8); axl.grid(alpha=0.25)
+axl.set_title("the LST does not decay to 0: that residue IS the atom at 0")
+plt.tight_layout()
+"""
+        ),
+        md(
+            r"""
+$s\to\infty$ で LST が $0$ ではなく $1-\rho$ に落ち着くところが、通常のラプラス変換との違いです。
+**密度だけなら $0$ に減衰するはずの量が残る = 原点に質量がある**。これを一つの式で扱えるのが LST の値打ちです。
+
+## 4c. 期間構造 — 債券価格は現金流の LST (Applied)
+
+割引率が一定 $r$ なら、時点 $T_i$ の現金 $c_i$ の現在価値は $c_i e^{-rT_i}$。合計すると
+
+$$
+P(r) = \sum_i c_i e^{-rT_i} = \int_{[0,\infty)} e^{-rT}\,dC(T)
+$$
+
+で、これは現金流の測度 $C$ の LST そのもの(離散配当は質量点)。
+すると 2 節の「MGF を微分するとモーメントが出る」がそのまま使えて、
+
+$$
+-\frac{1}{P}\frac{dP}{dr} = \frac{\sum_i T_i\,c_i e^{-rT_i}}{\sum_i c_i e^{-rT_i}}
+$$
+
+は **割引現金流を重みにした平均回収時間** — 金融でいう **デュレーション** です。
+「変換の微分 = 1 次モーメント」が、そのまま金利感応度の指標になっています。
+"""
+        ),
+        code(
+            r"""
+# Duration two ways: as a weighted mean time, and as -dP/dr / P.
+coupon, face, r0 = 3.0, 100.0, 0.04
+times = np.arange(1.0, 11.0)
+cash = np.full(times.size, coupon)
+cash[-1] += face
+
+def price(r):
+    return float(np.sum(cash * np.exp(-r * times)))
+
+weights = cash * np.exp(-r0 * times) / price(r0)
+eps = 1e-6
+print("price P(r)                    :", round(price(r0), 6))
+print("duration as weighted mean time:", round(float(np.sum(times * weights)), 6))
+print("duration as -(dP/dr)/P        :", round(-(price(r0 + eps) - price(r0 - eps)) / (2 * eps) / price(r0), 6))
+
+fig, (axw, axp) = plt.subplots(1, 2, figsize=(11.5, 4.0))
+axw.bar(times, weights, width=0.5, color=plotting.ACCENT)
+axw.axvline(float(np.sum(times * weights)), color="#d62728", ls="--", label="duration")
+axw.set_xlabel("T (years)"); axw.set_ylabel("weight c e^{-rT} / P"); axw.legend(fontsize=8)
+axw.set_title("the cash-flow measure, discounted")
+rr = np.linspace(0.0, 0.15, 200)
+axp.plot(rr, [price(x) for x in rr], color=plotting.ACCENT)
+axp.plot(r0, price(r0), "o", color="#d62728")
+axp.set_xlabel("discount rate r"); axp.set_ylabel("price"); axp.grid(alpha=0.25)
+axp.set_title("price is the transform, evaluated at s = r")
+plt.tight_layout()
+"""
+        ),
+        md(
+            r"""
+金利が期間ごとに違う(期間構造 $r(T)$)場合も形は変わりません。$e^{-rT}$ を割引因子
+$D(T)=\exp\!\big(-\int_0^T f(u)\,du\big)$ に替えるだけで、価格は同じ「重み付き和」です。
+変わるのは重みであって、構造ではありません。
+
+## 4d. 特性関数との対応 — 虚軸に乗せるとフーリエになる (Advanced)
+
+密度 $f_X$ のラプラス変換 $F(s)=\mathbb{E}[e^{-sX}]$ に $s=-iu$ を代入すると
+
+$$
+F(-iu) = \mathbb{E}\!\left[e^{iuX}\right] = \varphi_X(u)
+$$
+
+で、確率論の **特性関数** になります。01 章で見た「$s=\sigma+i\omega$ の虚軸がフーリエ」が、
+確率の言葉ではそのまま「ラプラス変換の虚軸が特性関数」。
+指数分布 $\mathrm{Exp}(\lambda)$ なら $F(s)=\lambda/(s+\lambda)$ なので $\varphi(u)=\lambda/(\lambda-iu)$ です。
+"""
+        ),
+        code(
+            r"""
+# phi(u) = F(-i u): check the analytic continuation numerically.
+from scipy import integrate
+
+lam_e = 1.5
+print("   u        quadrature              lam/(lam - i u)")
+for uu in (0.5, 1.0, 2.0):
+    re, _ = integrate.quad(lambda x: np.cos(uu * x) * lam_e * np.exp(-lam_e * x), 0, 60)
+    im, _ = integrate.quad(lambda x: np.sin(uu * x) * lam_e * np.exp(-lam_e * x), 0, 60)
+    print(f"{uu:5.1f}   {re + 1j * im:>22.6f}   {lam_e / (lam_e - 1j * uu):>18.6f}")
+
+uu = np.linspace(-8, 8, 400)
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.plot(uu, (lam_e / (lam_e - 1j * uu)).real, color=plotting.ACCENT, label="Re phi(u)")
+ax.plot(uu, (lam_e / (lam_e - 1j * uu)).imag, color="#d62728", label="Im phi(u)")
+ax.set_xlabel("u"); ax.set_ylabel("characteristic function"); ax.legend(); ax.grid(alpha=0.25)
+ax.set_title("Exp(1.5): the Laplace transform read along the imaginary axis")
+plt.tight_layout()
+"""
+        ),
+        md(
+            r"""
+> **本書の範囲外**: SDE の生成作用素($\mathcal{L}u = b u' + \tfrac{1}{2}\sigma^2 u''$)と
+> レゾルベント $(\alpha-\mathcal{L})^{-1}=\int_0^\infty e^{-\alpha t}P_t\,dt$ の関係は、
+> 見た目のとおり「ラプラス変換の作用素版」ですが、確率過程論の準備が要ります。
+> 本書では踏み込まず、[`../differential_equation/sde-book`](../differential_equation/sde-book/) に譲ります。
 """
         ),
         md(
@@ -1608,14 +2006,14 @@ plt.tight_layout()
         ),
         md(
             """
-## 6. Exercises / Advanced & TODO
+## 6. Exercises / Advanced Notes
 
 - **Basic**: 一定キャッシュフロー $c$ の永久債 $PV=c/r$ を積分で確かめよ。
 - **Applied**: ガンマ分布 $f_X=\\frac{\\lambda^k x^{k-1}e^{-\\lambda x}}{(k-1)!}$ のラプラス変換 $\\big(\\frac{\\lambda}{s+\\lambda}\\big)^k$ を導け。
 - **Advanced**: 合成分布(独立和)のラプラス変換が積になることを、畳み込み定理(05 章)から説明せよ。
 
-> **TODO(今後の拡張)**: ラプラス-スティルチェス変換と M/M/1 待ち時間、複利・債券価格の期間構造、
-> 特性関数(フーリエ)との対応、SDE の生成作用素との関係を追加。
+> ラプラス–スティルチェス変換と M/M/1 は §4b、債券価格と期間構造は §4c、
+> 特性関数との対応は §4d に実装済み。SDE の生成作用素だけは範囲外(§4d 末尾)。
 """
         ),
     ]
@@ -1948,20 +2346,200 @@ plt.tight_layout()
 | 安定 ⇔ 極が左半面 | 安定 ⇔ 極が単位円内 |
 | 虚軸 = フーリエ変換 | 単位円 = 離散時間フーリエ(DTFT) |
 
-橋は $z=e^{sT}$。サンプリング定理・エイリアシングは続編へ。
+橋は $z=e^{sT}$。以下でサンプリング定理・DTFT/DFT・双一次変換まで見ます。
+"""
+        ),
+        md(
+            r"""
+## 7b. サンプリング定理とエイリアシング
+
+$z=e^{sT}$ は $s$ と $s+i\frac{2\pi}{T}k$ を **同じ $z$ に写します**。
+つまり周波数は $2\pi/T$ を法としてしか区別できません。これがエイリアシングで、
+区別が付く上限 $f_s/2$ が **ナイキスト周波数**、区別が付く条件が **サンプリング定理** です。
+
+サンプリング周波数 $f_s$ で標本化された正弦波 $f$ は、見かけ上
+
+$$
+f_{\text{alias}} = \big|\,f - f_s\,\mathrm{round}(f/f_s)\,\big|
+$$
+
+の正弦波と区別が付きません。
+"""
+        ),
+        code(
+            r"""
+# Three different sinusoids, one sample set: aliasing made visible.
+fs = 10.0
+dt_s = 1.0 / fs
+k = np.arange(0, 21)
+t_fine = np.linspace(0, 2.0, 2000)
+
+fig, ax = plt.subplots(figsize=(8, 4.4))
+for f_hz, color, ls in [(2.0, "#1f77b4", "-"), (8.0, "#2ca02c", "--"), (12.0, "#d62728", ":")]:
+    alias = abs(f_hz - fs * round(f_hz / fs))
+    ax.plot(t_fine, np.sin(2 * np.pi * f_hz * t_fine), ls, color=color, lw=1.2,
+            alpha=0.8, label=f"{f_hz:.0f} Hz  -> alias {alias:.0f} Hz")
+ax.plot(k * dt_s, np.sin(2 * np.pi * 2.0 * k * dt_s), "ko", ms=6, zorder=5,
+        label=f"samples at fs = {fs:.0f} Hz")
+ax.set_xlim(0, 1.0); ax.set_xlabel("t [s]"); ax.set_ylabel("x(t)")
+ax.legend(fontsize=8, loc="upper right"); ax.grid(alpha=0.25)
+ax.set_title("2, 8 and 12 Hz produce identical samples at fs = 10 Hz")
+plt.tight_layout()
+
+print("Nyquist frequency =", fs / 2, "Hz")
+for f_hz in (2.0, 8.0, 12.0, 23.0):
+    print(f"  {f_hz:5.1f} Hz looks like {abs(f_hz - fs * round(f_hz / fs)):5.1f} Hz")
+"""
+        ),
+        md(
+            r"""
+2 Hz・8 Hz・12 Hz が同じ点列を出します。**標本からは元の周波数を復元できない** ——
+だから標本化の前にアンチエイリアスフィルタで $f_s/2$ 以上を落とす、という実務が要ります。
+
+## 7c. DTFT と DFT — 単位円上の z 変換
+
+$X(z)$ を単位円 $z=e^{i\omega}$ の上で読むと **離散時間フーリエ変換(DTFT)**:
+
+$$
+X(e^{i\omega}) = \sum_k x[k]\,e^{-i\omega k}.
+$$
+
+さらに $\omega$ を $N$ 等分点 $\omega_n = 2\pi n/N$ だけ拾うと **DFT**(= `np.fft.fft`)。
+つまり DFT は DTFT の標本、DTFT は z 変換の単位円への制限で、3 つは同じものの別の切り口です。
+"""
+        ),
+        code(
+            r"""
+# The unit circle is where the z-transform becomes a Fourier transform.
+seq = discrete.geometric_sequence(0.8, 64)                 # x[k] = 0.8^k
+
+w_grid = np.linspace(-np.pi, np.pi, 401)
+X_dtft = discrete.numeric_ztransform(seq, np.exp(1j * w_grid))
+closed = 1.0 / (1.0 - 0.8 * np.exp(-1j * w_grid))          # sum of the infinite series
+print("DTFT vs closed form, max err  :", float(np.max(np.abs(X_dtft - closed))))
+
+w_dft = 2 * np.pi * np.arange(seq.size) / seq.size
+print("np.fft.fft vs z on the circle :",
+      float(np.max(np.abs(np.fft.fft(seq) - discrete.numeric_ztransform(seq, np.exp(1j * w_dft))))))
+
+fig, ax = plt.subplots(figsize=(7.5, 4.2))
+ax.plot(w_grid, np.abs(X_dtft), color=plotting.ACCENT, lw=2, label="|X(e^{i w})| (DTFT)")
+w_c = np.where(w_dft > np.pi, w_dft - 2 * np.pi, w_dft)
+ax.plot(w_c, np.abs(np.fft.fft(seq)), "o", ms=3.5, color="#d62728", label="DFT samples (N = 64)")
+ax.set_xlabel("w [rad/sample]"); ax.set_ylabel("magnitude"); ax.legend(fontsize=8); ax.grid(alpha=0.25)
+ax.set_title("the DFT is the DTFT sampled; the DTFT is the z-transform on |z| = 1")
+plt.tight_layout()
+"""
+        ),
+        md(
+            r"""
+残差が $3.1\times10^{-6}$ 残るのは、$0.8^k$ を 64 項で打ち切っているからです。
+捨てた尾の絶対値は $\sum_{k\ge 64}0.8^k = 0.8^{64}/(1-0.8)\approx 3.14\times10^{-6}$ —
+実測値と一致します。**閉形式との差は打ち切り誤差そのもの** で、実装のバグではありません。
+
+## 7d. 双一次変換 — 連続の設計を離散に載せる
+
+$z=e^{sT}$ は超越関数なので、有理な $K(s)$ を有理な $K(z)$ に直せません。
+そこで 1 次のパデ近似にあたる **双一次(Tustin)変換**
+
+$$
+s \;\longleftarrow\; \frac{2}{T}\,\frac{z-1}{z+1}
+$$
+
+を使います。これは左半面を単位円の内側に **正確に** 写すので、**安定性が保存** されます。
+代償が **周波数ワーピング** で、連続の $\omega_a$ は離散の
+
+$$
+\omega_d = \frac{2}{T}\arctan\!\Big(\frac{\omega_a T}{2}\Big)
+$$
+
+に移ります。低周波ではほぼ一致し、$f_s/2$ に近づくほど圧縮されます。
+"""
+        ),
+        code(
+            r"""
+# Bilinear transform: exact stability mapping, warped frequency axis.
+from scipy import signal
+
+T_s = 0.1
+wc = 5.0
+b_z, a_z = signal.bilinear([wc], [1.0, wc], fs=1 / T_s)     # lowpass wc/(s+wc)
+print("H(z) numerator:", np.round(b_z, 6), " denominator:", np.round(a_z, 6))
+
+print("\n analog w   ->  digital w    warp")
+for w_a in (1.0, 5.0, 15.0, 30.0):
+    w_d = 2 / T_s * np.arctan(w_a * T_s / 2)
+    print(f"{w_a:8.1f}   ->  {w_d:8.4f}   {100 * (w_d - w_a) / w_a:+6.1f}%")
+
+w_a = np.logspace(-1, np.log10(np.pi / T_s), 400)
+fig, ax = plt.subplots(figsize=(7.5, 4.2))
+ax.semilogx(w_a, 20 * np.log10(np.abs(wc / (1j * w_a + wc))), "k", lw=2, label="analog wc/(s+wc)")
+w_dig, h_dig = signal.freqz(b_z, a_z, worN=w_a * T_s)
+ax.semilogx(w_a, 20 * np.log10(np.abs(h_dig)), color=plotting.ACCENT, lw=2,
+            label="bilinear H(z), T = 0.1 s")
+ax.axvline(np.pi / T_s, color="#d62728", ls=":", lw=1.2, label="Nyquist")
+ax.set_xlabel("w [rad/s]"); ax.set_ylabel("magnitude [dB]"); ax.legend(fontsize=8)
+ax.grid(alpha=0.25, which="both")
+ax.set_title("bilinear squeezes the infinite analog axis into one Nyquist band")
+plt.tight_layout()
+"""
+        ),
+        md(
+            r"""
+高周波が押し込められるので、離散側の減衰はナイキストで急に落ち込みます。
+狙いの遮断周波数を合わせたいときは、あらかじめ $\omega_a \to \frac{2}{T}\tan(\omega_d T/2)$ と
+**プリワープ** してから変換します。
+
+最後に、07 章 §6c で作った PI コントローラを Tustin で離散化し、
+サンプル周期の粗さがステップ応答にどう出るかを見ます。
+"""
+        ),
+        code(
+            r"""
+# Discretizing the chapter-07 PI controller, closing the loop in z.
+plant = systems.tf([1.0], [2.0, 1.0])
+ctrl = systems.pid(kp=2.0, ki=3.0)
+closed_c = systems.feedback(systems.series(plant, ctrl))
+tt = np.linspace(0, 12, 601)
+y_c = systems.step_response(closed_c, tt)
+
+fig, ax = plt.subplots(figsize=(7.5, 4.2))
+ax.plot(tt, y_c, "k", lw=2, label=f"continuous, overshoot {y_c.max():.3f}")
+for T_c, color in [(0.05, "#2ca02c"), (0.4, "#d62728")]:
+    cn, cd, _ = signal.cont2discrete((ctrl.num, ctrl.den), T_c, method="bilinear")
+    pn, pd, _ = signal.cont2discrete((plant.num, plant.den), T_c, method="zoh")
+    ol_num = np.trim_zeros(np.polymul(np.squeeze(cn), np.squeeze(pn)), "f")
+    ol_den = np.polymul(np.squeeze(cd), np.squeeze(pd))
+    cl = signal.TransferFunction(
+        ol_num, np.polyadd(ol_den, np.pad(ol_num, (ol_den.size - ol_num.size, 0))), dt=T_c
+    )
+    k_idx, y_d = discrete.discrete_step_response(cl, n=int(12 / T_c))
+    ax.step(np.asarray(k_idx).ravel() * T_c, np.asarray(y_d).ravel(), where="post",
+            color=color, lw=1.4,
+            label=f"T = {T_c}, overshoot {np.max(y_d):.3f}, stable={discrete.is_stable_discrete(cl)}")
+ax.axhline(1.0, color="gray", ls=":", lw=1)
+ax.set_xlabel("t [s]"); ax.set_ylabel("output"); ax.legend(fontsize=8); ax.grid(alpha=0.25)
+ax.set_title("the same PI loop, sampled: coarse T adds overshoot")
+plt.tight_layout()
 """
         ),
         md(
             """
-## 8. Exercises / TODO
+サンプル周期を粗くすると行き過ぎ量が増えます。連続で設計した余裕が、
+離散化で目減りしているためです(実務では「連続で設計 → 十分速く標本化 → 離散で検証」の順で扱う)。
+
+## 8. Exercises / Advanced Notes
 
 - **Basic**: $x[k]=2^{-k}$ の z 変換を求め、収束域 $|z|>1/2$ を述べよ。
 - **Applied**: 差分方程式 $y[k]-0.8\\,y[k-1]=x[k]$ の伝達関数 $H(z)=1/(1-0.8z^{-1})$ を作り、
   `discrete` でステップ応答を描け。
-- **Advanced**: 双一次変換 $s=\\frac{2}{T}\\frac{z-1}{z+1}$ による連続→離散の離散化をまとめよ。
+- **Advanced**: 双一次変換 $s=\\frac{2}{T}\\frac{z-1}{z+1}$ が左半面を単位円内へ写すことを、
+  $s=\\sigma+i\\omega$ を代入して $|z|<1 \\iff \\sigma<0$ の形で示せ。
+- **Advanced**: §7d のプリワープ $\\omega_a=\\frac{2}{T}\\tan(\\omega_d T/2)$ を実装し、
+  狙った遮断周波数が離散側で正確に出ることを確かめよ。
 
-> **TODO(今後の拡張)**: サンプリング定理・エイリアシング、DTFT/DFT、双一次変換によるフィルタ設計、
-> 連続コントローラの離散化を追加。
+> サンプリング定理・エイリアシングは §7b、DTFT/DFT は §7c、双一次変換とコントローラ離散化は
+> §7d に実装済み。
 """
         ),
     ]
