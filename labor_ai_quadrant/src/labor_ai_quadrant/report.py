@@ -18,7 +18,7 @@ import plotly.io as pio
 from .axes import sector_frame
 from .company import company_frame
 from .config import Q_ESCAPE, QUADRANT_MEANING, QUADRANT_ORDER, SCENARIOS, Config
-from .quadrant import quadrant_summary, thresholds, top_right
+from .quadrant import quadrant_summary, rankable, thresholds, top_right
 from .reference import load_reference
 
 # --- theme -------------------------------------------------------------------
@@ -468,21 +468,27 @@ def build_report(
     ranked_by = "脱出ポテンシャル順"
     if financials is not None and "op_uplift_pct" in companies.columns:
         # 生の人件費と営業利益も並べる。押上げ余地は営業利益で割った比率なので、
-        # 単体営業利益が薄い会社（商社・持株会社）が分母の小ささだけで上位に来る。
+        # 単体営業利益が薄い会社（商社・持株会社・小型株）が分母の小ささだけで上位に来る。
         # 分子と分母を横に置けば、それが実額なのか比率の罠なのかを読者が判別できる。
         pnl_cols = {
             "labor_cost_ratio": "人件費率",
+            "op_margin_uplift_pp": "営業利益率押上げ(pp)",
             "op_uplift_pct": "営業利益押上げ余地(%)",
             "labor_cost": "人件費(単体)",
             "operating_profit": "営業利益(単体)",
         }
+        if "parent_employee_share" in companies.columns:
+            pnl_cols["parent_employee_share"] = "単体/連結 従業員"
         # 企業スコアは業種スコア + 3値×3値の補正で決まるので、同じ業種の銘柄は
         # 脱出ポテンシャルが完全に並ぶ。財務があるのにその順で切ると、上位20件は
         # 最上位業種から実質ランダムに選ばれた20社になる。同順位を解くのは P/L 換算。
+        # 並べ替えは分母が売上の pp のほうを使う（比率の暴れに順位を支配させない）。
+        # 押上げ余地が定義できない行（営業利益0以下・人件費>売上）は母集団から外す。
+        top_companies = top_companies[rankable(top_companies)]
         top_companies = top_companies.sort_values(
-            "op_uplift_pct", ascending=False, na_position="last"
+            "op_margin_uplift_pp", ascending=False, na_position="last"
         )
-        ranked_by = "営業利益押上げ余地順"
+        ranked_by = "営業利益率の押上げ幅（pp）順"
     top_companies = top_companies.head(25)
 
     tables = "".join([

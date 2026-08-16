@@ -24,6 +24,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import date, timedelta
 from typing import Any
 
 import pandas as pd
@@ -33,10 +34,20 @@ API_ROOT = "https://api.jquants.com/v2"
 #: ScaleCat の組み合わせでインデックスを再現する。
 #: TOPIX 500 = Core30 + Large70 + Mid400（JPXの定義どおり）。
 #: 値の文字列は v1 の ScaleCategory から変わっていない（2026-08-16 実測）。
+#: ``topix`` は TOPIX の全構成銘柄。規模区分が付いていない銘柄（``ScaleCat`` が
+#: ``"-"``。スタンダード・グロース・ETF・REIT など）は TOPIX に入らないので、
+#: 5区分すべてを取ることが「TOPIX 全体」になる。``all`` はそれらも含む上場全銘柄。
 SCALE_SETS: dict[str, tuple[str, ...]] = {
     "topix100": ("TOPIX Core30", "TOPIX Large70"),
     "topix500": ("TOPIX Core30", "TOPIX Large70", "TOPIX Mid400"),
     "topix1000": ("TOPIX Core30", "TOPIX Large70", "TOPIX Mid400", "TOPIX Small 1"),
+    "topix": (
+        "TOPIX Core30",
+        "TOPIX Large70",
+        "TOPIX Mid400",
+        "TOPIX Small 1",
+        "TOPIX Small 2",
+    ),
     "all": (),  # no filter
 }
 
@@ -181,6 +192,72 @@ SUMMARY_FIELDS = {
 }
 
 
+def _latest_annual(rows: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
+    """Latest FY disclosure per code, reduced to the columns we score on."""
+    latest: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        if row.get("CurPerType") != "FY":
+            continue
+        code = normalise_code(row.get("Code", ""))
+        seen = latest.get(code)
+        if seen is None or row.get("DiscDate", "") > seen.get("DiscDate", ""):
+            latest[code] = row
+
+    records: dict[str, dict[str, float]] = {}
+    for code, row in latest.items():
+        parsed: dict[str, float] = {}
+        for field, column in SUMMARY_FIELDS.items():
+            raw = row.get(field)
+            if raw not in (None, ""):
+                try:
+                    parsed[column] = float(raw)
+                except (TypeError, ValueError):
+                    pass
+        if parsed:
+            records[code] = parsed
+    return records
+
+
+def fetch_summaries_by_date(
+    lookback_days: int = 400,
+    today: date | None = None,
+    api_key: str | None = None,
+    progress: bool = True,
+) -> pd.DataFrame:
+    """Latest annual revenue / operating profit for **every** listed company.
+
+    ``/fins/summary`` also answers ``?date=``, returning every disclosure filed
+    that day (~280 rows). Sweeping a year of dates therefore costs ~400 requests
+    no matter how large the universe, where the per-code loop costs one request
+    per name — and J-Quants starts refusing after about fifty in a row. Past
+    roughly 400 names the sweep is both faster and gentler on the API.
+
+    The free plan serves data on a delay (as of 2026-08-17 it covered
+    2024-05-25 ~ 2026-05-25, about twelve weeks behind). Dates outside that
+    window answer HTTP 400 rather than an empty result, so the recent end of
+    the sweep is skipped — which is harmless, because every filer discloses one
+    annual result somewhere in the year that remains covered.
+    """
+    key = _api_key(api_key)
+    today = today or date.today()
+    rows: list[dict[str, Any]] = []
+
+    for offset in range(lookback_days):
+        day = today - timedelta(days=offset)
+        try:
+            rows.extend(_get_rows("fins/summary", key, {"date": day.isoformat()}))
+        except JQuantsError as exc:  # a single bad day must not sink the sweep
+            if progress:
+                print(f"  {day}: skipped ({exc})")
+            continue
+        if progress and offset % 50 == 0:
+            print(f"  {day} まで {len(rows)} 件の開示を取得")
+
+    df = pd.DataFrame.from_dict(_latest_annual(rows), orient="index")
+    df.index.name = "code"
+    return df
+
+
 def fetch_summaries(codes: list[str], api_key: str | None = None, progress: bool = True) -> pd.DataFrame:
     """Latest annual revenue / operating profit per code, from ``/fins/summary``.
 
@@ -188,6 +265,9 @@ def fetch_summaries(codes: list[str], api_key: str | None = None, progress: bool
     that consolidates. J-Quants carries no headcount or personnel-cost field, so
     this covers only the denominator of the uplift ratio. Pair it with
     :mod:`labor_ai_quadrant.providers.edinet` for employees and average salary.
+
+    One request per code. For a universe of more than a few hundred names use
+    :func:`fetch_summaries_by_date`, which costs the same regardless of size.
     """
     key = _api_key(api_key)
     records: dict[str, dict[str, float]] = {}
@@ -200,22 +280,7 @@ def fetch_summaries(codes: list[str], api_key: str | None = None, progress: bool
                 print(f"  {code}: skipped ({exc})")
             continue
 
-        annual = [r for r in rows if r.get("CurPerType") == "FY"]
-        if not annual:
-            continue
-        latest = max(annual, key=lambda r: r.get("DiscDate", ""))
-
-        parsed: dict[str, float] = {}
-        for field, column in SUMMARY_FIELDS.items():
-            raw = latest.get(field)
-            if raw not in (None, ""):
-                try:
-                    parsed[column] = float(raw)
-                except (TypeError, ValueError):
-                    pass
-        if parsed:
-            records[code] = parsed
-
+        records.update(_latest_annual(rows))
         if progress and i % 50 == 0:
             print(f"  {i}/{len(codes)} 銘柄を処理（取得 {len(records)} 件）")
 

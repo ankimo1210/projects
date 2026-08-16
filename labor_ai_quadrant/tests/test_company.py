@@ -124,3 +124,73 @@ def test_load_financials_rejects_unknown_format(tmp_path):
     path.write_text("nope", encoding="utf-8")
     with pytest.raises(ValueError, match="unsupported financials format"):
         load_financials(path)
+
+
+def test_margin_uplift_is_not_hostage_to_a_thin_operating_profit():
+    """営業利益で割る比率は、利益が薄い会社を分母の小ささだけで首位にする。
+
+    TOPIX 全体では上位が単体営業利益 1億円未満の小型株で埋まり、900% のような値が出た。
+    売上で割る pp 版は 人件費率 × AI代替割合 × 実現率 が上限なので、その暴れ方をしない。
+    """
+    import pandas as pd
+    from labor_ai_quadrant.company import company_frame
+    from labor_ai_quadrant.reference import load_reference
+
+    ref = load_reference()
+    codes = ref.universe.index[:2]
+    thin, fat = codes[0], codes[1]
+    financials = pd.DataFrame(
+        {
+            "revenue": [10_000.0, 10_000.0],
+            "operating_profit": [1.0, 2_000.0],  # 同じ売上・人件費で利益だけ違う
+            "labor_cost": [3_000.0, 3_000.0],
+            "employees": [100.0, 100.0],
+        },
+        index=pd.Index([thin, fat], name="code"),
+    )
+    df = company_frame(ref=ref, financials=financials)
+
+    # 利益の薄い会社は op_uplift_pct では桁違いに上に来る…
+    assert df.loc[thin, "op_uplift_pct"] > 100 * df.loc[fat, "op_uplift_pct"]
+    # …が、売上あたりの押上げ幅は同じ（人件費も売上も同じなので当然）。
+    assert df.loc[thin, "op_margin_uplift_pp"] == pytest.approx(df.loc[fat, "op_margin_uplift_pp"])
+
+
+def test_margin_uplift_is_bounded_by_the_labour_cost_ratio():
+    import pandas as pd
+    from labor_ai_quadrant.company import company_frame
+    from labor_ai_quadrant.reference import load_reference
+
+    ref = load_reference()
+    code = ref.universe.index[0]
+    financials = pd.DataFrame(
+        {"revenue": [1_000.0], "operating_profit": [100.0],
+         "labor_cost": [400.0], "employees": [10.0]},
+        index=pd.Index([code], name="code"),
+    )
+    df = company_frame(ref=ref, financials=financials)
+    # 人件費率 40% を超える押上げは、定義上あり得ない。
+    assert 0 < df.loc[code, "op_margin_uplift_pp"] <= 40.0
+
+
+def test_rankable_excludes_rows_the_parent_pnl_cannot_carry():
+    """順位付けから外すのは、値が無い行と、値が論理的にあり得ない行の2つだけ。"""
+    import pandas as pd
+    from labor_ai_quadrant.quadrant import rankable
+
+    df = pd.DataFrame(
+        {
+            "op_uplift_pct": [12.0, float("nan"), 40.0],
+            "labor_cost_ratio": [0.30, 0.30, 1.33],
+        },
+        index=["ok", "loss_making", "holding_shell"],
+    )
+    assert rankable(df).tolist() == [True, False, False]
+
+
+def test_rankable_is_a_no_op_without_a_pnl_layer():
+    import pandas as pd
+    from labor_ai_quadrant.quadrant import rankable
+
+    df = pd.DataFrame({"escape_potential": [50.0, 60.0]}, index=["a", "b"])
+    assert rankable(df).all()

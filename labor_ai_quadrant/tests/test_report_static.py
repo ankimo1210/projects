@@ -125,3 +125,51 @@ def test_cli_build_defaults_to_the_static_format(tmp_path):
     out = tmp_path / "r.html"
     assert main(["build", "--out", str(out)]) == 0
     assert out.stat().st_size < 200_000
+
+
+def _financials_for(codes, **overrides):
+    """A financials frame covering ``codes``; overrides replace one row."""
+    import pandas as pd
+
+    frame = pd.DataFrame(
+        {
+            "revenue": 100_000.0,
+            "operating_profit": 10_000.0,
+            "labor_cost": 30_000.0,
+            "employees": 1_000.0,
+        },
+        index=pd.Index(list(codes), name="code"),
+    )
+    for code, row in overrides.items():
+        for column, value in row.items():
+            frame.loc[code, column] = value
+    return frame
+
+
+def test_static_report_carries_the_pnl_columns_when_financials_are_given():
+    """静的版が --financials を黙って捨てていた（interactive 限定だった）。"""
+    from labor_ai_quadrant.company import company_frame
+    from labor_ai_quadrant.reference import load_reference
+
+    codes = load_reference().universe.index
+    doc = render(financials=_financials_for(codes))
+    assert "営業利益率の押上げ幅（pp）順" in doc
+    assert "営業利益押上げ余地%" in doc
+    assert "人件費率" in doc
+    assert company_frame(Config()).shape[0] > 0  # ユニバースが空でないことの確認
+
+    plain = render()
+    assert "脱出ポテンシャル" in plain
+    assert "営業利益押上げ余地%" not in plain
+
+
+def test_static_report_shows_missing_pnl_as_a_dash_not_zero():
+    """0埋めすると「人件費ゼロの会社」が上位に来る。欠損は欠損のまま出す。"""
+    from labor_ai_quadrant.reference import load_reference
+
+    codes = load_reference().universe.index
+    financials = _financials_for(codes)
+    financials["revenue"] = float("nan")  # 人件費率が全社 NaN になる
+    doc = render(financials=financials)
+    assert "—" in doc
+    assert "nan" not in doc.lower()
