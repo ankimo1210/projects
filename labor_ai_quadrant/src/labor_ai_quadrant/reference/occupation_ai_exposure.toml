@@ -1,0 +1,48 @@
+# 職業大分類別 AI代替ポテンシャル（参照スナップショット / reference snapshot）
+#
+# 分類は日本標準職業分類の大分類をベースに、AI感応度が大きく異なる
+# 「専門的・技術的職業従事者」だけを5つに細分した15区分。
+#
+# 2つの成分に分けて保持する。混同すると framework が壊れるため分離している。
+#
+#   llm_potential   … 生成AI/LLM（+ 文書・画像・音声理解）で代替・大幅省力化できる
+#                     タスクの割合の目安。0-100。
+#                     アンカー: Eloundou et al. (2023) "GPTs are GPTs" の職業別 exposure
+#                     （事務・専門職が高く、身体労働が低い）、および
+#                     Felten, Raj & Seamans (2021) AI Occupational Exposure (AIOE)。
+#
+#   phys_potential  … ロボティクス・自動運転・自動化設備で代替できるタスクの割合の目安。
+#                     0-100。LLM では動かないが「人手不足の解消」には効くので別軸で持つ。
+#                     アンカー: 製造ラインの自動化率、倉庫AGV/AMR、自動運転レベル4の
+#                     実装状況。建設の現場施工は現時点で自動化が難しいため低い。
+#
+# 合成は config の robotics_weight で制御する（既定 0.35）:
+#   ai_potential = llm_potential * (1 - robotics_weight) + phys_potential * robotics_weight
+#
+# basis: analyst-assigned, anchored to the literature above. 個別の数値は
+#        「順序と大小関係」に意味がある。絶対水準の精度は主張しない。
+
+# NOTE: トップレベル配列を先に、[meta] を末尾に置いている（TOML のテーブル解釈のため）。
+
+occupation = [
+  { key = "mgmt",         name = "管理的職業従事者",           llm_potential = 45, phys_potential =  5, note = "意思決定は残るが、資料作成・モニタリングは代替可" },
+  { key = "it_eng",       name = "情報処理・通信技術者",       llm_potential = 75, phys_potential =  5, note = "コーディング・テスト・保守で最大の省力化余地" },
+  { key = "other_eng",    name = "その他の技術者",             llm_potential = 55, phys_potential = 15, note = "設計・解析・図面作成。現場立会は残る" },
+  { key = "health_prof",  name = "保健医療従事者",             llm_potential = 30, phys_potential = 10, note = "読影・記録は代替可、処置・看護は不可。規制も重い" },
+  { key = "biz_prof",     name = "教育・法務・経営・金融専門", llm_potential = 65, phys_potential =  5, note = "調査・審査・与信・監査など文書集約タスク" },
+  { key = "other_prof",   name = "その他の専門的職業",         llm_potential = 45, phys_potential = 10, note = "デザイン・編集・研究補助など" },
+  { key = "clerical",     name = "事務従事者",                 llm_potential = 80, phys_potential = 20, note = "framework 上いちばん代替可能性が高い区分" },
+  { key = "sales",        name = "販売従事者",                 llm_potential = 50, phys_potential = 25, note = "内勤営業・見積は代替可、対面接客・店頭は残る" },
+  { key = "service",      name = "サービス職業従事者",         llm_potential = 25, phys_potential = 20, note = "介護・調理・接客。人手不足は深刻だがAI代替は難しい" },
+  { key = "security",     name = "保安職業従事者",             llm_potential = 20, phys_potential = 45, note = "画像監視・遠隔警備で置換が進む領域" },
+  { key = "agri",         name = "農林漁業従事者",             llm_potential = 10, phys_potential = 40, note = "スマート農業・自動収穫" },
+  { key = "production",   name = "生産工程従事者",             llm_potential = 15, phys_potential = 60, note = "既に自動化が進んだ領域。追加余地は検査・段取り" },
+  { key = "transport",    name = "輸送・機械運転従事者",       llm_potential = 10, phys_potential = 55, note = "自動運転・配車最適化。実装時期の不確実性が大きい" },
+  { key = "construction", name = "建設・採掘従事者",           llm_potential = 10, phys_potential = 25, note = "人手不足は最大級だがAIでは解けない典型" },
+  { key = "manual",       name = "運搬・清掃・包装等従事者",   llm_potential = 10, phys_potential = 55, note = "倉庫内AMR・自動仕分けの効果が大きい" },
+]
+
+[meta]
+vintage = "2026-06"
+basis = "analyst-assigned, anchored to Eloundou et al. (2023) and Felten et al. (2021)"
+scale = "0-100"
