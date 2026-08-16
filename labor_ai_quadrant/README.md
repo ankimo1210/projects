@@ -150,18 +150,55 @@ CSV / Parquet / JSON。
 
 ---
 
-## ユニバース
+## 完全版（TOPIX 500 × 財務）の作り方
 
-既定は `reference/universe_jp.toml` のキュレーション済み **211銘柄**（東証33業種を網羅、
-オフラインで完結）。上場全銘柄や TOPIX 500 を厳密に使う場合は J-Quants に切り替える:
+**既定のオフライン版には決定的な限界がある。** 企業スコアは業種スコア + 3値×3値の補正で
+決まるため、1業種あたり最大9通りの位置しか取れず、銘柄ランキングに同順位が大量に出る。
+**同順位を解くのは財務データ**（人件費率・一人当たり売上）であり、それが入って初めて
+「AIで営業利益が何%押し上がるか」で並べ替えられる。
+
+必要なのは J-Quants と EDINET への到達性と認証情報だけ:
 
 ```bash
-export JQUANTS_MAIL_ADDRESS=... JQUANTS_PASSWORD=...
-uv run --no-sync python -m labor_ai_quadrant build --universe jquants --scale topix500
-uv run --no-sync python -m labor_ai_quadrant verify-universe   # キュレーション版の検証
+export JQUANTS_MAIL_ADDRESS=... JQUANTS_PASSWORD=...   # 上場銘柄一覧 + 売上/営業利益
+export EDINET_API_KEY=...                             # 有報の従業員数・平均年間給与
+
+# 1. ユニバースの検証（コード・33業種を JPX と突き合わせ）
+uv run --no-sync python -m labor_ai_quadrant verify-universe
+
+# 2. 財務・従業員データを取得して CSV に保存（EDINET の提出日を1年分さかのぼる）
+uv run --no-sync python -m labor_ai_quadrant fetch-financials \
+    --universe jquants --scale topix500 --out _data/financials.csv
+
+# 3. TOPIX 500 × 財務込みでレポートを生成
+uv run --no-sync python -m labor_ai_quadrant build \
+    --universe jquants --scale topix500 \
+    --format interactive --financials _data/financials.csv \
+    --out reports/quadrant.html
 ```
 
-`ScaleCategory` から TOPIX 500 = Core30 + Large70 + Mid400 を厳密に再現する。
+`ScaleCategory` から TOPIX 500 = Core30 + Large70 + Mid400 を厳密に再現する
+（`--scale all` で上場全銘柄）。
+
+### 人件費の推計
+
+多くの日本企業は損益計算書で人件費を単独開示しない（販管費に埋まる）。一方で有価証券
+報告書は従業員数と平均年間給与を必ず載せるので、その積を使う:
+
+```
+人件費 ≈ 従業員数 × 平均年間給与 × 福利厚生係数（既定 1.25）
+```
+
+係数1.25は、社会保険料の事業主負担（給与の約15%）に賞与引当と退職給付費用を足した水準。
+`--benefits-multiplier` で振れる。**スコープを揃えるのが重要**で、連結従業員数に単体の
+平均年収を掛けると海外従業員の賃金を日本と同水準とみなすことになり過大推計になるため、
+EDINET ローダは既定で提出会社（単体）の値を揃えて返す。
+
+### ネットワークが無い環境では
+
+既定は `reference/universe_jp.toml` のキュレーション済み **211銘柄**（東証33業種を網羅）で、
+外部アクセス無しで完結する。業種マップとしては欠落が無い一方、上のとおり銘柄レベルの
+分離は弱い。
 
 ---
 
@@ -182,7 +219,9 @@ labor_ai_quadrant/
 │   ├── report.py            # Plotly 版レポート（interactive）
 │   ├── report_static.py     # インラインSVG版レポート（static, 既定）
 │   ├── cli.py               # python -m labor_ai_quadrant
-│   └── providers/jquants.py # 上場全銘柄取得（要ネットワーク、stdlibのみ）
+│   └── providers/          # 外部データ（要ネットワーク、stdlibのみ）
+│       ├── jquants.py      # 上場全銘柄 + 33業種 + 売上/営業利益
+│       └── edinet.py       # 有報の従業員数・平均年間給与・平均年齢
 ├── tests/
 └── docs/METHODOLOGY.md      # 定義・出典・限界（読むこと）
 ```

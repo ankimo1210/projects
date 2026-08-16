@@ -120,3 +120,55 @@ def fetch_listed_universe(scale: str = "topix500", token: str | None = None) -> 
     out["labor_intensity"] = "mid"
     out["knowledge_tilt"] = "mid"
     return out.drop_duplicates(subset=["code"]).set_index("code")
+
+
+#: /fins/statements の項目名 → こちらの列名。連結を優先し、単体しか無ければそちらを使う。
+STATEMENT_FIELDS = {
+    "NetSales": "revenue",
+    "OperatingProfit": "operating_profit",
+}
+
+
+def fetch_statements(codes: list[str], token: str | None = None, progress: bool = True) -> pd.DataFrame:
+    """Latest annual revenue / operating profit per code, from ``/fins/statements``.
+
+    J-Quants carries no headcount or personnel-cost field, so this covers only
+    the denominator of the uplift ratio. Pair it with
+    :mod:`labor_ai_quadrant.providers.edinet` for employees and average salary.
+    """
+    token = token or get_id_token()
+    records: dict[str, dict[str, float]] = {}
+
+    for i, code in enumerate(codes, 1):
+        try:
+            payload = _get_json(f"{API_ROOT}/fins/statements?code={code}", token)
+        except JQuantsError as exc:
+            if progress:
+                print(f"  {code}: skipped ({exc})")
+            continue
+
+        rows = [
+            r for r in payload.get("statements", [])
+            if r.get("TypeOfCurrentPeriod") == "FY"
+        ]
+        if not rows:
+            continue
+        latest = max(rows, key=lambda r: r.get("DisclosedDate", ""))
+
+        parsed: dict[str, float] = {}
+        for field, column in STATEMENT_FIELDS.items():
+            raw = latest.get(field) or latest.get(f"NonConsolidated{field}")
+            if raw not in (None, ""):
+                try:
+                    parsed[column] = float(raw)
+                except (TypeError, ValueError):
+                    pass
+        if parsed:
+            records[code] = parsed
+
+        if progress and i % 50 == 0:
+            print(f"  {i}/{len(codes)} 銘柄を処理（取得 {len(records)} 件）")
+
+    df = pd.DataFrame.from_dict(records, orient="index")
+    df.index.name = "code"
+    return df
