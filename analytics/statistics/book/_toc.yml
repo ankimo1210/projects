@@ -16,3 +16,4 @@ chapters:
   - file: notebooks/10_glm
   - file: notebooks/11_frequentist_vs_bayes
   - file: notebooks/12_capstone_three_lenses
+  - file: notebooks/13_exercise_solutions
