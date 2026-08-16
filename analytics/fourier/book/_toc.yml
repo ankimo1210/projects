@@ -13,3 +13,5 @@ chapters:
   - file: notebooks/07_time_frequency_stft_wavelets_intro
   - file: notebooks/08_pde_spectral_methods
   - file: notebooks/09_applications_signal_image_finance_ml
+  - file: notebooks/10_exercise_solutions
+  - file: notebooks/11_capstone_three_lenses
