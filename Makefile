@@ -63,6 +63,11 @@ fmt-fix:
 
 test:
 	uv run --no-sync pytest
+	@if command -v npm >/dev/null 2>&1; then \
+		$(MAKE) --no-print-directory sde-check; \
+	else \
+		echo "SKIP sde-check: npm is not on PATH"; \
+	fi
 
 report:
 	cd analytics/report && PYTHONPATH=. uv run --no-sync python -m report_builder.build
