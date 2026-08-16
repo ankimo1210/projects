@@ -176,6 +176,7 @@ testpaths = [
     "analytics/machine_learning/tests",
     "analytics/statistics/tests",
     "analytics/quant_research/tests",
+    "analytics/fourier/tests",
     "quantkit/tests",
     "optimal_execution/tests",
     "portfolio-analyzer/tests",

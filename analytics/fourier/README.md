@@ -46,16 +46,15 @@ Jupyter Notebook ベースのフーリエ解析教科書プロジェクト。
 
 ### この workspace 内で使う場合(推奨)
 
-リポジトリルート(`~/projects`)の uv workspace を使う。**fourier をルート `pyproject.toml` の
-`[tool.uv.workspace].members` に `"analytics/fourier"` として追加** したうえで:
+リポジトリルート(`~/projects`)の uv workspace のメンバー(`"analytics/fourier"`)なので:
 
 ```bash
 cd ~/projects
 make install          # = uv sync --all-packages
 ```
 
-> まだ members に未登録でも、`tests/conftest.py` が `src/` を `sys.path` に追加するため
-> テストと Notebook はそのまま動く(下記)。
+> `tests/conftest.py` が `src/` を `sys.path` に追加するため、workspace を sync していなくても
+> テストと Notebook は動く(下記)。
 
 ### 単体で使う場合
 
