@@ -15,3 +15,4 @@ chapters:
   - file: notebooks/09_regression_inference
   - file: notebooks/10_glm
   - file: notebooks/11_frequentist_vs_bayes
+  - file: notebooks/12_capstone_three_lenses
