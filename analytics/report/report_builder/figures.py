@@ -64,6 +64,14 @@ BOOKS: dict[str, BookMeta] = {
         book_index="../../machine_learning/book/_build/html/index.html",
         nav="ML",
     ),
+    "statistics": BookMeta(
+        key="statistics",
+        title="統計的推測の風景",
+        subtitle="不確実性を測り、判断する言語",
+        accent="#be123c",
+        book_index="../../statistics/book/_build/html/index.html",
+        nav="統計",
+    ),
 }
 
 # Textbooks without portal figure builders yet: shown as landing cards + book
@@ -93,7 +101,33 @@ LINK_BOOKS: list[BookMeta] = [
         "../../differential_equation/pde-book/book/_build/html/index.html",
         nav="PDE",
     ),
+    # The SDE book is deliberately absent. It is a server-rendered Next.js app
+    # (`vinext build` emits dist/client + dist/server, no index.html), so there
+    # is no file for an offline portal to link to. Linking a URL would break the
+    # self-contained guarantee test_render_site_is_offline_and_complete enforces.
+    BookMeta(
+        "quant_research",
+        "Quant Research / Data Science",
+        "座学 44 週の実践教科書",
+        "#065f46",
+        "../../quant_research/book/_build/html/index.html",
+        nav="Quant",
+    ),
 ]
+
+
+def _st_coverage_intervals():
+    from stats_textbook import plotting as stp
+
+    return stp.coverage_intervals(n_intervals=100, n=12, truth=0.0, seed=0)
+
+
+def _st_clt_convergence():
+    from stats_textbook import plotting as stp
+
+    return stp.clt_convergence(
+        ["normal", "uniform", "exponential", "cauchy"], ns=[1, 2, 5, 15, 50, 200], n_reps=3000
+    )
 
 
 @dataclass(frozen=True)
@@ -661,6 +695,27 @@ FIGURES: list[FigureSpec] = [
         _ml_threshold_explorer,
         is_new=True,
         tags=("slider", "classification"),
+    ),
+    # statistics
+    FigureSpec(
+        "st_coverage_intervals",
+        "statistics",
+        "95% 信頼区間を 100 本引く",
+        "「95%」は区間ではなく手続きの性質である。100 本引いて数えると、"
+        "そのうち何本が真値を含んだかが見える。",
+        _st_coverage_intervals,
+        is_new=True,
+        tags=("inference", "simulation"),
+    ),
+    FigureSpec(
+        "st_clt_convergence",
+        "statistics",
+        "中心極限定理が効く分布、効かない分布",
+        "標本平均を sqrt(n) で標準化すると正規分布に寄る。"
+        "分散が存在しないコーシー分布だけは、いくら n を増やしても寄らない。",
+        _st_clt_convergence,
+        is_new=True,
+        tags=("slider", "limit-theorem"),
     ),
 ]
 
