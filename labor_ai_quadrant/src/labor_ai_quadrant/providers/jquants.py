@@ -17,6 +17,7 @@ from __future__ import annotations
 import json
 import os
 import urllib.error
+import urllib.parse
 import urllib.request
 from typing import Any
 
@@ -38,6 +39,39 @@ class JQuantsError(RuntimeError):
     """Raised when authentication or the listed-info call fails."""
 
 
+#: これらのクエリパラメータは資格情報そのもの。例外メッセージはログに残るので伏せる。
+SECRET_QUERY_PARAMS = frozenset({"refreshtoken"})
+
+
+def _redact(url: str) -> str:
+    """Blank out credential query parameters, keeping the rest of the URL diagnosable."""
+    split = urllib.parse.urlsplit(url)
+    if not split.query:
+        return url
+    pairs = urllib.parse.parse_qsl(split.query, keep_blank_values=True)
+    safe = [(k, "<redacted>" if k.lower() in SECRET_QUERY_PARAMS else v) for k, v in pairs]
+    return urllib.parse.urlunsplit(split._replace(query=urllib.parse.urlencode(safe)))
+
+
+def _fail(verb: str, url: str, exc: urllib.error.URLError) -> JQuantsError:
+    """Carry the API's own error body into the exception.
+
+    A bare ``HTTP Error 410: Gone`` says nothing about which of the many
+    preconditions failed; J-Quants explains itself in the response body.
+    """
+    if isinstance(exc, urllib.error.HTTPError):
+        try:
+            body = exc.read().decode("utf-8", errors="replace").strip()
+        except Exception:  # body already consumed, or not readable
+            body = ""
+        detail = f"HTTP {exc.code} {exc.reason}"
+        if body:
+            detail = f"{detail}: {body[:500]}"
+    else:
+        detail = str(getattr(exc, "reason", exc))
+    return JQuantsError(f"{verb} {_redact(url)} failed: {detail}")
+
+
 def _post_json(url: str, payload: dict[str, Any]) -> dict[str, Any]:
     body = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
@@ -45,7 +79,7 @@ def _post_json(url: str, payload: dict[str, Any]) -> dict[str, Any]:
         with urllib.request.urlopen(req, timeout=30) as resp:
             return json.load(resp)
     except urllib.error.URLError as exc:  # network blocked, DNS, TLS, HTTP error
-        raise JQuantsError(f"POST {url} failed: {exc}") from exc
+        raise _fail("POST", url, exc) from exc
 
 
 def _get_json(url: str, token: str) -> dict[str, Any]:
@@ -54,7 +88,7 @@ def _get_json(url: str, token: str) -> dict[str, Any]:
         with urllib.request.urlopen(req, timeout=30) as resp:
             return json.load(resp)
     except urllib.error.URLError as exc:
-        raise JQuantsError(f"GET {url} failed: {exc}") from exc
+        raise _fail("GET", url, exc) from exc
 
 
 def get_id_token(mail: str | None = None, password: str | None = None) -> str:
