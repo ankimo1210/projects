@@ -40,18 +40,23 @@
 | `08_hypothesis_testing` | 検定の構造・p 値の誤解・検出力・多重比較・p-hacking | 6.4 s | ✅ |
 | `09_regression_inference` | 回帰係数の分布・残差診断・頑健標準誤差・多重共線性 | 4.4 s | ✅ |
 | `10_glm` | 指数型分布族から GLM へ・IRLS 自前実装・過分散 | 3.4 s | ✅ |
-| `11_frequentist_vs_bayes` | 同じデータを両流儀で解いて比べる橋渡し章 | — | 予定 |
+| `11_frequentist_vs_bayes` | 同じデータを両流儀で解いて比べる橋渡し章 | 19.7 s | ✅ |
 
 ### 付録
 
-| Notebook | 内容 | 状態 |
-|---|---|---|
-| `12_capstone_three_lenses` | 頻度論／ベイズ／機械学習の 3 視点で同一データを解く | 予定 |
-| `13_exercise_solutions` | 01–11 章 演習の解答 | 予定 |
+| Notebook | 内容 | 実行時間 | 状態 |
+|---|---|---|---|
+| `12_capstone_three_lenses` | 頻度論／ベイズ／機械学習の 3 視点で同一データを解く | 3.1 s | ✅ |
+| `13_exercise_solutions` | 01–12 章 演習 54 問の解答 | 53.9 s | ✅ |
 
-実測値(NB00–10 の 11 章): **266 セル・インタラクティブ図 19 点・
-核心コールアウト 11・実社会コールアウト 11・全章の再実行が合計 52.7 秒**
-(全 14 章の予算 300 秒に対し、残り 3 章に 247 秒)。
+実測値(全 14 章): **455 セル・インタラクティブ図 26 点・
+核心コールアウト 13・実社会コールアウト 13・演習 54 問とその解答**。
+再実行は NB00–10 が 52.7 秒、NB11–13 が 76.7 秒で、
+**予算 300 秒に対して合計 129.4 秒**。
+
+NB13 単体は 53.9 秒で、計画時の目安 30 秒を超えている。
+被覆率とブートストラップの反復が支配的で、
+3 章合計の枠(247 秒)には収まっているので削っていない。
 
 ## 共通コード
 
@@ -68,7 +73,8 @@
 | `testing` | t 検定・検出力(非心 t)・Bonferroni/BH・FDP |
 | `regression` | OLS 推測・頑健 SE(HC0–HC3)・F 検定・VIF・レバレッジ |
 | `glm` | IRLS 自前実装・逸脱度・過分散 |
-| `plotting/` | Plotly 図の純関数。`core`(共通スライダー)・`probability`(01–05)・`inference`(06–08)・`regression`(09–10) |
+| `bridge` | 11 章のベイズ側。共役ベータ二項・信用区間・ベイズ因子(`bayes_textbook` は import しない) |
+| `plotting/` | Plotly 図の純関数。`core`(共通スライダー)・`probability`(01–05)・`inference`(06–08)・`regression`(09–10)・`bridge`(11–12) |
 | `widgets` | `plotting` の薄い ipywidgets ラッパ。ライブカーネル用 |
 
 `regression` と `glm` は **numpy だけで書いてある**。`statsmodels` は
@@ -158,18 +164,23 @@ cd ~/projects
 uv run --no-sync pytest analytics/statistics/tests -q
 ```
 
-NB00–10 完了時点で **142 passed**。内訳:
+全 14 章完成時点で **164 passed**。内訳:
 
 | ファイル | 本数 | | ファイル | 本数 |
 |---|---:|---|---|---:|
 | `test_smoke` | 1 | | `test_estimation` | 11 |
 | `test_nbkit` | 14 | | `test_intervals` | 10 |
-| `test_datasets` | 8 | | `test_testing` | 13 |
+| `test_datasets` | 10 | | `test_testing` | 13 |
 | `test_distributions` | 8 | | `test_regression` | 12 |
 | `test_processes` | 10 | | `test_glm` | 11 |
 | `test_simulation` | 7 | | `test_plotting_inference` | 10 |
 | `test_plotting` | 14 | | `test_plotting_regression` | 8 |
-| `test_widgets` | 5 | | | |
+| `test_widgets` | 5 | | `test_bridge` | 10 |
+| | | | `test_plotting_bridge` | 10 |
+
+ポータル側の横断テスト(`analytics/report/tests`)も本書を含む。
+5 書が同一データを生成すること、最小二乗が $\lambda \to 0$ のリッジと一致すること、
+係数ノルムに縮小が見えること(7.40 対 1.75)を検査している。
 
 テストの方針:
 

@@ -21,7 +21,7 @@
 | [`laplace/`](laplace/) | ラプラス変換の風景 — 時間・複素周波数・システムの言語 | 12 |
 | [`differential_equation/`](differential_equation/) | 微分方程式 — ODE / PDE の2分冊 + SDE インタラクティブ教科書（経路・分布、基本過程、生成作用素、後退方程式、Feynman–Kac、初到達を数値実験で学ぶ） | 21 (ODE 10 / PDE 11) + SDE 47章 |
 | [`machine_learning/`](machine_learning/) | 機械学習の実践 — 正しく定式化し、検証し、解釈する | 14 |
-| [`statistics/`](statistics/) | 統計的推測の風景 — 不確実性を測り、判断する言語（確率論 + 頻度論。ベイズは `bayesian/` と対） | 11 |
+| [`statistics/`](statistics/) | 統計的推測の風景 — 不確実性を測り、判断する言語（確率論 + 頻度論 + ベイズへの橋渡し。演習 54 問の解答つき） | 14 |
 | [`quant_research/`](quant_research/) | Quant Research / Data Science — 原典60週を座学44週へ再定義した実践教科書（Stage 1–2E / B1–B11を実装） | 66 |
 
 > Notebook 数は時点の目安(各教材は随時加筆)。
@@ -30,7 +30,7 @@
 
 | ディレクトリ | 内容 |
 |---|---|
-| [`report/`](report/) | **統合インタラクティブ HTML ポータル**。線形代数・NN・ベイズ・ラプラス・機械学習の代表可視化をギャラリーに束ね、フーリエ・微分方程式(ODE/PDE)へもカード+教科書リンクで導線化。横断キャップストーン付き・オフライン自己完結。`make report` で生成。**`statistics/` は未統合** |
+| [`report/`](report/) | **統合インタラクティブ HTML ポータル**。線形代数・NN・ベイズ・ラプラス・機械学習・統計の代表可視化をギャラリーに束ね、フーリエ・微分方程式(ODE/PDE)・Quant Research へもカード+教科書リンクで導線化。横断キャップストーンは 5 書の数値一致をテストで保証。オフライン自己完結。`make report` で生成。**SDE 本だけは静的 index.html を持たない(Next.js のサーバレンダリング)ため導線に載せていない** |
 
 ## ビルド
 
