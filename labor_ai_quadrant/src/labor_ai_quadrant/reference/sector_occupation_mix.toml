@@ -1,0 +1,58 @@
+# 東証33業種 × 職業大分類 の就業者構成比（%）
+#
+# 出典 (source): 総務省「国勢調査」産業（大分類）×職業（大分類）クロス集計 および
+#                「労働力調査」産業別就業者の職業構成を、東証33業種へ analyst が
+#                読み替えたもの。行の合計は必ずしも100にならない（読み替え誤差）ため、
+#                コード側で行ごとに正規化してから使う。
+#
+# この表が AI代替可能性軸の実質的なエンジンである:
+#   sector_ai_potential = Σ_o ( share[sector][o] × ai_potential[o] ) × regulation_multiplier[sector]
+#
+# regulation_drag: 規制・免許・説明責任によって AI 実装が遅れる度合い。
+#   実効の掛け目は (1 - regulation_drag)。0.00-0.20 のレンジに収めている。
+#   医薬品・金融・電力・航空・医療は監督官庁の検証要求が重く、同じ職種構成でも
+#   実装が遅れるという観察に基づく。
+
+# NOTE: トップレベル配列を先に、[meta] を末尾に置いている（TOML のテーブル解釈のため）。
+
+# 行 = 東証33業種。値は職業大分類の構成比(%)。
+sector = [
+  { code = "0050", name = "水産・農林業",         regulation_drag = 0.05, mgmt =  5, it_eng =  1, other_eng =  4, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 10, sales =  5, service =  2, security = 0, agri = 45, production = 15, transport =  5, construction =  0, manual =  5 },
+  { code = "1050", name = "鉱業",                 regulation_drag = 0.08, mgmt =  6, it_eng =  1, other_eng = 15, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 12, sales =  3, service =  1, security = 1, agri =  0, production = 20, transport =  8, construction = 25, manual =  5 },
+  { code = "2050", name = "建設業",               regulation_drag = 0.10, mgmt =  7, it_eng =  1, other_eng = 16, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 13, sales =  4, service =  1, security = 2, agri =  0, production =  5, transport =  5, construction = 38, manual =  5 },
+  { code = "3050", name = "食料品",               regulation_drag = 0.08, mgmt =  4, it_eng =  1, other_eng =  6, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 10, sales =  8, service =  2, security = 0, agri =  1, production = 50, transport =  5, construction =  0, manual = 10 },
+  { code = "3100", name = "繊維製品",             regulation_drag = 0.03, mgmt =  4, it_eng =  1, other_eng =  5, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 11, sales = 10, service =  2, security = 0, agri =  0, production = 50, transport =  4, construction =  0, manual = 10 },
+  { code = "3150", name = "パルプ・紙",           regulation_drag = 0.03, mgmt =  4, it_eng =  1, other_eng =  8, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 11, sales =  6, service =  1, security = 0, agri =  1, production = 50, transport =  6, construction =  0, manual =  9 },
+  { code = "3200", name = "化学",                 regulation_drag = 0.08, mgmt =  5, it_eng =  2, other_eng = 16, health_prof = 0, biz_prof =  1, other_prof = 3, clerical = 12, sales =  7, service =  1, security = 0, agri =  0, production = 42, transport =  4, construction =  0, manual =  7 },
+  { code = "3250", name = "医薬品",               regulation_drag = 0.18, mgmt =  6, it_eng =  3, other_eng = 20, health_prof = 6, biz_prof =  2, other_prof = 4, clerical = 14, sales = 18, service =  1, security = 0, agri =  0, production = 22, transport =  2, construction =  0, manual =  2 },
+  { code = "3300", name = "石油・石炭製品",       regulation_drag = 0.12, mgmt =  5, it_eng =  2, other_eng = 16, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 13, sales =  6, service =  1, security = 1, agri =  0, production = 40, transport =  8, construction =  0, manual =  5 },
+  { code = "3350", name = "ゴム製品",             regulation_drag = 0.03, mgmt =  4, it_eng =  1, other_eng = 10, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 11, sales =  6, service =  1, security = 0, agri =  0, production = 52, transport =  4, construction =  0, manual =  8 },
+  { code = "3400", name = "ガラス・土石製品",     regulation_drag = 0.03, mgmt =  4, it_eng =  1, other_eng = 11, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 11, sales =  6, service =  1, security = 0, agri =  0, production = 50, transport =  5, construction =  0, manual =  8 },
+  { code = "3450", name = "鉄鋼",                 regulation_drag = 0.05, mgmt =  4, it_eng =  1, other_eng = 12, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 10, sales =  5, service =  1, security = 0, agri =  0, production = 52, transport =  5, construction =  0, manual =  7 },
+  { code = "3500", name = "非鉄金属",             regulation_drag = 0.05, mgmt =  4, it_eng =  1, other_eng = 12, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 10, sales =  5, service =  1, security = 0, agri =  0, production = 52, transport =  5, construction =  0, manual =  7 },
+  { code = "3550", name = "金属製品",             regulation_drag = 0.03, mgmt =  4, it_eng =  1, other_eng =  9, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 10, sales =  6, service =  1, security = 0, agri =  0, production = 55, transport =  4, construction =  0, manual =  7 },
+  { code = "3600", name = "機械",                 regulation_drag = 0.05, mgmt =  5, it_eng =  2, other_eng = 18, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 12, sales =  7, service =  1, security = 0, agri =  0, production = 42, transport =  3, construction =  0, manual =  7 },
+  { code = "3650", name = "電気機器",             regulation_drag = 0.05, mgmt =  5, it_eng =  4, other_eng = 20, health_prof = 0, biz_prof =  1, other_prof = 3, clerical = 12, sales =  7, service =  1, security = 0, agri =  0, production = 38, transport =  2, construction =  0, manual =  7 },
+  { code = "3700", name = "輸送用機器",           regulation_drag = 0.08, mgmt =  5, it_eng =  2, other_eng = 17, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 11, sales =  5, service =  1, security = 0, agri =  0, production = 45, transport =  4, construction =  0, manual =  7 },
+  { code = "3750", name = "精密機器",             regulation_drag = 0.10, mgmt =  5, it_eng =  3, other_eng = 19, health_prof = 1, biz_prof =  1, other_prof = 3, clerical = 12, sales =  8, service =  1, security = 0, agri =  0, production = 38, transport =  2, construction =  0, manual =  7 },
+  { code = "3800", name = "その他製品",           regulation_drag = 0.03, mgmt =  5, it_eng =  2, other_eng = 10, health_prof = 0, biz_prof =  1, other_prof = 3, clerical = 12, sales =  9, service =  2, security = 0, agri =  0, production = 46, transport =  3, construction =  0, manual =  7 },
+  { code = "4050", name = "電気・ガス業",         regulation_drag = 0.18, mgmt =  7, it_eng =  3, other_eng = 30, health_prof = 0, biz_prof =  1, other_prof = 3, clerical = 17, sales =  4, service =  2, security = 1, agri =  0, production = 22, transport =  5, construction =  3, manual =  2 },
+  { code = "5050", name = "陸運業",               regulation_drag = 0.15, mgmt =  5, it_eng =  1, other_eng =  4, health_prof = 0, biz_prof =  1, other_prof = 1, clerical = 12, sales =  2, service =  3, security = 1, agri =  0, production =  3, transport = 55, construction =  0, manual = 12 },
+  { code = "5100", name = "海運業",               regulation_drag = 0.12, mgmt =  8, it_eng =  2, other_eng = 12, health_prof = 0, biz_prof =  2, other_prof = 2, clerical = 20, sales =  4, service =  3, security = 1, agri =  0, production = 10, transport = 30, construction =  0, manual =  6 },
+  { code = "5150", name = "空運業",               regulation_drag = 0.18, mgmt =  7, it_eng =  3, other_eng = 12, health_prof = 0, biz_prof =  1, other_prof = 2, clerical = 18, sales =  5, service = 25, security = 3, agri =  0, production =  8, transport = 10, construction =  0, manual =  6 },
+  { code = "5200", name = "倉庫・運輸関連業",     regulation_drag = 0.08, mgmt =  5, it_eng =  2, other_eng =  4, health_prof = 0, biz_prof =  1, other_prof = 1, clerical = 18, sales =  4, service =  3, security = 1, agri =  0, production =  5, transport = 22, construction =  0, manual = 34 },
+  { code = "5250", name = "情報・通信業",         regulation_drag = 0.03, mgmt =  8, it_eng = 45, other_eng =  8, health_prof = 0, biz_prof =  3, other_prof = 4, clerical = 18, sales =  8, service =  2, security = 0, agri =  0, production =  3, transport =  1, construction =  0, manual =  2 },
+  { code = "6050", name = "卸売業",               regulation_drag = 0.03, mgmt =  7, it_eng =  2, other_eng =  6, health_prof = 0, biz_prof =  2, other_prof = 3, clerical = 22, sales = 40, service =  2, security = 0, agri =  0, production =  5, transport =  6, construction =  0, manual =  5 },
+  { code = "6100", name = "小売業",               regulation_drag = 0.03, mgmt =  5, it_eng =  1, other_eng =  2, health_prof = 1, biz_prof =  1, other_prof = 2, clerical = 10, sales = 52, service = 15, security = 0, agri =  0, production =  5, transport =  3, construction =  0, manual =  3 },
+  { code = "7050", name = "銀行業",               regulation_drag = 0.15, mgmt = 10, it_eng =  4, other_eng =  1, health_prof = 0, biz_prof = 10, other_prof = 3, clerical = 60, sales = 10, service =  1, security = 0, agri =  0, production =  0, transport =  0, construction =  0, manual =  1 },
+  { code = "7100", name = "証券、商品先物取引業", regulation_drag = 0.15, mgmt = 10, it_eng =  4, other_eng =  1, health_prof = 0, biz_prof = 15, other_prof = 3, clerical = 45, sales = 20, service =  1, security = 0, agri =  0, production =  0, transport =  0, construction =  0, manual =  1 },
+  { code = "7150", name = "保険業",               regulation_drag = 0.15, mgmt =  9, it_eng =  3, other_eng =  2, health_prof = 1, biz_prof = 10, other_prof = 4, clerical = 40, sales = 29, service =  1, security = 0, agri =  0, production =  0, transport =  0, construction =  0, manual =  1 },
+  { code = "7200", name = "その他金融業",         regulation_drag = 0.12, mgmt = 10, it_eng =  3, other_eng =  4, health_prof = 0, biz_prof =  8, other_prof = 4, clerical = 45, sales = 22, service =  2, security = 0, agri =  0, production =  1, transport =  0, construction =  0, manual =  1 },
+  { code = "8050", name = "不動産業",             regulation_drag = 0.08, mgmt =  9, it_eng =  2, other_eng =  6, health_prof = 0, biz_prof =  3, other_prof = 4, clerical = 25, sales = 35, service =  8, security = 2, agri =  0, production =  2, transport =  1, construction =  1, manual =  2 },
+  { code = "9050", name = "サービス業",           regulation_drag = 0.08, mgmt =  7, it_eng =  4, other_eng =  5, health_prof = 3, biz_prof =  4, other_prof = 8, clerical = 20, sales = 10, service = 25, security = 6, agri =  0, production =  3, transport =  2, construction =  1, manual =  2 },
+]
+
+[meta]
+vintage = "2026-06"
+basis = "analyst-mapped from 国勢調査 産業×職業 cross-tabulation"
+occupation_keys = ["mgmt", "it_eng", "other_eng", "health_prof", "biz_prof", "other_prof", "clerical", "sales", "service", "security", "agri", "production", "transport", "construction", "manual"]
