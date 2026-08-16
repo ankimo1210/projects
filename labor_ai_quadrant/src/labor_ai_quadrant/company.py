@@ -130,6 +130,32 @@ def _safe_div(numerator: pd.Series, denominator: pd.Series) -> pd.Series:
     return numerator / denom
 
 
+#: 法定福利費・賞与・退職給付を上乗せする係数。平均年間給与は現金給与のみなので、
+#: 会計上の人件費に直すには社会保険料の事業主負担などを足す必要がある。
+#: 健保・厚年・雇用・労災の事業主負担がおおむね給与の15%、これに賞与引当と
+#: 退職給付費用を加えて 1.25 を既定とした。感応度を見たい場合は引数で振ること。
+DEFAULT_BENEFITS_MULTIPLIER = 1.25
+
+
+def estimate_labor_cost(
+    employees: pd.Series,
+    average_salary: pd.Series,
+    benefits_multiplier: float = DEFAULT_BENEFITS_MULTIPLIER,
+) -> pd.Series:
+    """人件費 ≈ 従業員数 × 平均年間給与 × 福利厚生係数。
+
+    多くの日本企業は損益計算書で人件費を単独開示しない（販管費に埋まる）一方、
+    有価証券報告書は従業員数と平均年間給与を必ず載せる。したがってこの積が
+    実務上いちばん入手しやすい人件費の推計になる。
+
+    **スコープを揃えるのは呼び出し側の責任。** 従業員数・平均年間給与・売上高・
+    営業利益がすべて単体なら単体の人件費率が出る。連結従業員数に単体の平均年収を
+    掛けると、海外従業員の賃金水準を日本と同じとみなすことになり過大推計になる。
+    ``providers.edinet`` は既定で提出会社（単体）の値を揃えて返す。
+    """
+    return employees * average_salary * benefits_multiplier
+
+
 def load_financials(path: str | Path) -> pd.DataFrame:
     """Read a user-supplied financial table, indexed by securities code.
 

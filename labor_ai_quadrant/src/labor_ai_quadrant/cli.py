@@ -104,6 +104,53 @@ def cmd_build(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_fetch_financials(args: argparse.Namespace) -> int:
+    """Assemble the company-level financial table from J-Quants + EDINET.
+
+    Written to disk rather than used inline: the EDINET sweep walks a year of
+    filing calendar and is far too slow to repeat on every report build.
+    """
+    from .company import estimate_labor_cost
+    from .providers.edinet import build_financials
+    from .providers.jquants import fetch_statements
+
+    ref = _resolve_reference(args)
+    codes = list(ref.universe.index)
+    print(f"対象 {len(codes)} 銘柄", file=sys.stderr)
+
+    print("EDINET から従業員数・平均年間給与を取得中…", file=sys.stderr)
+    edinet = build_financials(lookback_days=args.lookback_days, codes=set(codes))
+
+    print("J-Quants から売上高・営業利益を取得中…", file=sys.stderr)
+    try:
+        statements = fetch_statements(codes)
+    except Exception as exc:
+        print(f"J-Quants の取得に失敗したため EDINET の値を使います: {exc}", file=sys.stderr)
+        statements = pd.DataFrame(index=pd.Index([], name="code"))
+
+    merged = edinet.copy()
+    for column in ("revenue", "operating_profit"):
+        if column in statements.columns:
+            # J-Quants は連結ベースで揃っているので、取れたものはそちらを優先する。
+            merged[column] = statements[column].reindex(merged.index).fillna(merged.get(column))
+
+    merged["labor_cost"] = estimate_labor_cost(
+        merged["employees"], merged["average_salary"], args.benefits_multiplier
+    )
+
+    required = ["revenue", "operating_profit", "labor_cost", "employees"]
+    complete = merged.dropna(subset=required)
+    print(
+        f"{len(complete)}/{len(merged)} 銘柄で4項目すべてが揃いました",
+        file=sys.stderr,
+    )
+
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    merged.reset_index().to_csv(args.out, index=False)
+    print(f"財務データを書き出しました: {args.out}")
+    return 0
+
+
 def cmd_verify_universe(args: argparse.Namespace) -> int:
     """Check the curated universe against J-Quants (codes, names, sector33)."""
     from .providers.jquants import fetch_listed_universe
@@ -178,6 +225,18 @@ def build_parser() -> argparse.ArgumentParser:
                          help="code/revenue/operating_profit/labor_cost/employees を持つ CSV/Parquet/JSON"
                               "（--format interactive のみ）")
     p_build.set_defaults(func=cmd_build)
+
+    p_fin = sub.add_parser(
+        "fetch-financials",
+        help="J-Quants + EDINET から財務・従業員データを取得して CSV に保存（要ネットワーク）",
+    )
+    add_common(p_fin)
+    p_fin.add_argument("--out", type=Path, default=Path("_data/financials.csv"))
+    p_fin.add_argument("--lookback-days", type=int, default=400,
+                       help="EDINET の提出日を何日分さかのぼるか（既定400日＝決算期を問わず1周分）")
+    p_fin.add_argument("--benefits-multiplier", type=float, default=1.25,
+                       help="平均年間給与から会計上の人件費に直す係数（法定福利費・賞与引当等）")
+    p_fin.set_defaults(func=cmd_fetch_financials)
 
     p_verify = sub.add_parser("verify-universe", help="キュレーション済みユニバースを J-Quants で検証")
     p_verify.set_defaults(func=cmd_verify_universe)
