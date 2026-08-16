@@ -5,6 +5,12 @@
 submodules, so the split stays an implementation detail.
 """
 
+from .bridge import (
+    capstone_three_lenses,
+    interval_comparison,
+    posterior_slider,
+    prior_influence,
+)
 from .core import apply_defaults, curve_slider, frame_slider
 from .inference import (
     bootstrap_distribution,
@@ -34,11 +40,13 @@ from .regression import (
 __all__ = [
     "apply_defaults",
     "bootstrap_distribution",
+    "capstone_three_lenses",
     "clt_convergence",
     "coefficient_sampling",
     "coverage_intervals",
     "curve_slider",
     "frame_slider",
+    "interval_comparison",
     "irls_convergence",
     "joint_marginal_heatmap",
     "likelihood_curve",
@@ -47,8 +55,10 @@ __all__ = [
     "mle_sampling_distribution",
     "phacking_demo",
     "poisson_limit_slider",
+    "posterior_slider",
     "power_curves",
     "ppv_slider",
+    "prior_influence",
     "random_walk_paths",
     "relation_graph",
     "residual_catalogue",
