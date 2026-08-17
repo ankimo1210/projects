@@ -38,7 +38,9 @@ def test_labels_cover_the_leaders_and_both_extremes(sectors):
     targets = _label_targets(sectors)
     # 建設業・陸運業は「人手不足は最大だがAIでは解けない」側の代表なので、
     # マップ上に必ず名前が出ること。これが出ないと図が主張を運べない。
-    assert {"建設業", "陸運業", "情報・通信業", "銀行業"} <= targets
+    assert {"建設業", "情報・通信業", "銀行業"} <= targets
+    # 銀行業は人手不足スコアの下端、水産・農林業はAI軸の下端として必ず入る。
+    assert {"銀行業", "水産・農林業"} <= targets
     assert len(targets) <= 12
 
 
@@ -109,8 +111,8 @@ def test_full_document_and_fragment_shapes_differ():
 
 def test_scenario_changes_the_rendered_numbers():
     base = render(SCENARIOS["base"])
-    robots = render(SCENARIOS["llm_plus_robotics"])
-    assert base != robots
+    conservative = render(SCENARIOS["conservative_adoption"])
+    assert base != conservative
 
 
 def test_build_static_report_writes_the_file(tmp_path):

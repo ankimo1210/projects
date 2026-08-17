@@ -30,10 +30,6 @@ class Config:
 
     Attributes
     ----------
-    robotics_weight:
-        AI代替ポテンシャルを合成する際の、ロボティクス/自動運転成分の重み。
-        0.0 = 生成AI(LLM)のみで評価する保守シナリオ。
-        1.0 = 物理自動化のみ。既定 0.35 は「LLMが主、物理自動化は一部で実装済み」の想定。
     realization_rate:
         AI代替可能とされた労働のうち、実際に人員・人件費の削減または増員回避として
         実現する割合。技術的可能性と経営実装のギャップ。既定 0.30。
@@ -47,7 +43,6 @@ class Config:
         threshold_method="fixed" のときの境界値。
     """
 
-    robotics_weight: float = 0.35
     realization_rate: float = 0.30
     tilt_points: float = 8.0
     threshold_method: str = "median"
@@ -58,8 +53,6 @@ class Config:
         return replace(self, **kwargs)
 
     def validate(self) -> None:
-        if not 0.0 <= self.robotics_weight <= 1.0:
-            raise ValueError(f"robotics_weight must be in [0, 1], got {self.robotics_weight}")
         if not 0.0 <= self.realization_rate <= 1.0:
             raise ValueError(f"realization_rate must be in [0, 1], got {self.realization_rate}")
         if self.tilt_points < 0:
@@ -71,8 +64,8 @@ class Config:
 # Sensitivity scenarios shipped with the report.
 SCENARIOS: dict[str, Config] = {
     "base": Config(),
-    "llm_only": Config(robotics_weight=0.0),
-    "llm_plus_robotics": Config(robotics_weight=0.60),
     "aggressive_adoption": Config(realization_rate=0.50),
     "conservative_adoption": Config(realization_rate=0.15),
+    "absolute_threshold": Config(threshold_method="fixed"),
+    "flat_company_tilt": Config(tilt_points=0.0),
 }

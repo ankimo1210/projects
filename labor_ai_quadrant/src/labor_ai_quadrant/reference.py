@@ -22,10 +22,12 @@ MIX_FILE = REFERENCE_DIR / "sector_occupation_mix.toml"
 UNIVERSE_FILE = REFERENCE_DIR / "universe_jp.toml"
 
 #: 人手不足指標。すべて「高いほど不足が深刻」の向きに揃っている。
+#: ``employment_di_shortage`` は短観の雇用人員判断DIの符号を反転した値
+#: （DI は「過剰」-「不足」なので、そのままだと向きが逆になる）。
 SHORTAGE_INDICATORS = (
     "vacancy_rate_pct",
+    "employment_di_shortage",
     "job_openings_ratio",
-    "tdb_shortage_pct",
     "age55_share_pct",
     "separation_rate_pct",
     "overtime_hours_month",
@@ -82,11 +84,10 @@ def _load_shortage() -> tuple[pd.DataFrame, pd.Series, str]:
 def _load_occupations() -> tuple[pd.DataFrame, str]:
     raw = _read_toml(OCCUPATION_FILE)
     df = pd.DataFrame(raw["occupation"]).set_index("key")
-    for col in ("llm_potential", "phys_potential"):
-        if col not in df.columns:
-            raise ValueError(f"{OCCUPATION_FILE.name}: missing column {col}")
-        if not df[col].between(0, 100).all():
-            raise ValueError(f"{OCCUPATION_FILE.name}: {col} must be within 0-100")
+    if "ai_potential" not in df.columns:
+        raise ValueError(f"{OCCUPATION_FILE.name}: missing column ai_potential")
+    if not df["ai_potential"].between(0, 100).all():
+        raise ValueError(f"{OCCUPATION_FILE.name}: ai_potential must be within 0-100")
     return df, raw["meta"]["vintage"]
 
 

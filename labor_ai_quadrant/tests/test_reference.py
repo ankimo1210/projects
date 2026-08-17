@@ -31,7 +31,7 @@ def test_occupation_mix_rows_are_normalised(ref):
 
 def test_occupation_table_covers_every_mix_column(ref):
     assert set(ref.mix.columns) == set(ref.occupations.index)
-    assert len(ref.occupations) == 15
+    assert len(ref.occupations) == 18
 
 
 def test_shortage_weights_sum_to_one(ref):

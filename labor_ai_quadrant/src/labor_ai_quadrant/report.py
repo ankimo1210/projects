@@ -8,6 +8,7 @@ rather than a categorical colour per quadrant.
 
 from __future__ import annotations
 
+import dataclasses
 import html
 from pathlib import Path
 
@@ -17,7 +18,7 @@ import plotly.io as pio
 
 from .axes import sector_frame
 from .company import company_frame
-from .config import Q_ESCAPE, QUADRANT_MEANING, QUADRANT_ORDER, SCENARIOS, Config
+from .config import Q_ESCAPE, QUADRANT_MEANING, QUADRANT_ORDER, Config
 from .quadrant import quadrant_summary, rankable, thresholds, top_right
 from .reference import load_reference
 
@@ -247,23 +248,38 @@ def _scatter_figure(
     return fig
 
 
-def _sensitivity_figure(ref, base_cfg: Config) -> go.Figure:
-    """How the top-right ranking moves between the LLM-only and LLM+robotics views."""
-    t = THEME["light"]
-    llm_only = sector_frame(SCENARIOS["llm_only"], ref)["escape_potential"]
-    with_robots = sector_frame(SCENARIOS["llm_plus_robotics"], ref)["escape_potential"]
-    base = sector_frame(base_cfg, ref)["escape_potential"]
+def leave_one_out(ref, cfg: Config) -> pd.DataFrame:
+    """脱出ポテンシャルが、人手不足6指標のどれを外しても残るかを測る。
 
-    order = base.sort_values(ascending=True).index[-14:]
+    重み配分そのものが analyst 判断なので、「どれか1本を落としても順位が生きるか」
+    を見るのが、この枠組みで唯一意味のある感応度になる（AI軸側は ILO の公表スコアで
+    固定されており、振るパラメータが無い）。
+    """
+    base = sector_frame(cfg, ref)["escape_potential"]
+    runs = {}
+    for indicator in ref.shortage_weights.index:
+        weights = ref.shortage_weights.drop(indicator)
+        trimmed = dataclasses.replace(ref, shortage_weights=weights / weights.sum())
+        runs[indicator] = sector_frame(cfg, trimmed)["escape_potential"]
+    grid = pd.DataFrame(runs)
+    return pd.DataFrame({"base": base, "low": grid.min(axis=1), "high": grid.max(axis=1),
+                         "worst_when_dropping": grid.idxmin(axis=1)})
+
+
+def _sensitivity_figure(ref, base_cfg: Config) -> go.Figure:
+    """Leave-one-out range of escape potential over the six shortage indicators."""
+    t = THEME["light"]
+    loo = leave_one_out(ref, base_cfg)
+    order = loo["base"].sort_values(ascending=True).index[-14:]
     fig = go.Figure()
 
     for name in order:
         fig.add_trace(
             go.Scatter(
-                x=[llm_only[name], with_robots[name]],
+                x=[loo.loc[name, "low"], loo.loc[name, "high"]],
                 y=[name, name],
                 mode="lines",
-                line={"color": t["axis"], "width": 2},
+                line={"color": t["axis"], "width": 4},
                 hoverinfo="skip",
                 showlegend=False,
             )
@@ -271,21 +287,23 @@ def _sensitivity_figure(ref, base_cfg: Config) -> go.Figure:
 
     fig.add_trace(
         go.Scatter(
-            x=llm_only[order], y=list(order), mode="markers", name="生成AIのみ",
-            marker={"size": 10, "color": t["accent"], "line": {"width": 2, "color": t["ring"]}},
-            hovertemplate="%{y}<br>生成AIのみ: %{x:.0f}<extra></extra>",
+            x=loo.loc[order, "low"], y=list(order), mode="markers", name="6指標のどれかを外したときの最小",
+            marker={"size": 9, "color": t["accent_alt"], "line": {"width": 2, "color": t["ring"]}},
+            customdata=loo.loc[order, "worst_when_dropping"],
+            hovertemplate="%{y}<br>最小 %{x:.0f}（%{customdata} を外したとき）<extra></extra>",
         )
     )
     fig.add_trace(
         go.Scatter(
-            x=with_robots[order], y=list(order), mode="markers", name="生成AI+ロボ/自動運転",
-            marker={"size": 10, "color": t["accent_alt"], "line": {"width": 2, "color": t["ring"]}},
-            hovertemplate="%{y}<br>生成AI+ロボ/自動運転: %{x:.0f}<extra></extra>",
+            x=loo.loc[order, "base"], y=list(order), mode="markers", name="6指標すべて（既定）",
+            marker={"size": 12, "color": t["accent"], "line": {"width": 2, "color": t["ring"]}},
+            hovertemplate="%{y}<br>既定 %{x:.0f}<extra></extra>",
         )
     )
 
     fig.update_layout(
-        title={"text": "感応度: 何を「AI」と呼ぶかで順位はどう動くか（脱出ポテンシャル）", "font": {"size": 16, "color": t["text"]}},
+        title={"text": "感応度: 人手不足6指標のどれか1本を外しても順位は残るか（脱出ポテンシャル）",
+               "font": {"size": 16, "color": t["text"]}},
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font={"family": FONT, "color": t["secondary"], "size": 12},
@@ -536,7 +554,7 @@ def build_report(
 領域を特定する。右上に入る企業だけが、人手不足という供給制約を賃上げ以外の手段で外せる。</p>
 <p class="meta">ユニバース {len(companies)} 銘柄 / 東証33業種 ・
 象限境界: 人手不足 {x_cut:.0f} / AI代替 {y_cut:.0f}（{'中央値分割' if cfg.threshold_method == 'median' else '固定しきい値'}） ・
-robotics_weight={cfg.robotics_weight} / realization_rate={cfg.realization_rate} ・
+realization_rate={cfg.realization_rate} ・
 データ時点 {html.escape(vintages)}</p>
 
 <h2>4つの象限が意味すること</h2>

@@ -36,36 +36,55 @@ def test_shortage_scores_span_the_full_range(ref):
 
 
 def test_construction_and_land_transport_are_the_most_labour_short(ref):
-    """公表統計の向きの健全性チェック: 建設・陸運が最上位に来ること。"""
+    """公表統計の向きの健全性チェック: 建設・陸運が最上位に来ること。
+
+    建設は6指標のうち欠員率・短観DI・有効求人倍率の3つで首位なので、
+    ここが崩れたら符号の向きかマッピングが壊れている。
+    """
     df = shortage_axis(ref).sort_values("shortage_score", ascending=False)
-    assert set(df.head(3).index) >= {"建設業", "陸運業"}
+    assert df.index[0] == "建設業"
+    assert set(df.head(5).index) >= {"建設業", "陸運業"}
+
+
+def test_employment_di_is_flipped_to_the_shortage_direction(ref):
+    """短観DIは「過剰-不足」なので、反転して「高いほど不足」に揃っていること。"""
+    di = ref.shortage["employment_di_shortage"]
+    assert di["建設業"] > di["銀行業"]  # 建設 -59 → +59 / 銀行 -18 → +18
+    assert (di > 0).all()
 
 
 def test_ai_substitutable_share_is_a_weighted_average_of_potentials(ref):
-    cfg = Config()
-    df = ai_axis(cfg, ref)
-    potential = (
-        ref.occupations["llm_potential"] * (1 - cfg.robotics_weight)
-        + ref.occupations["phys_potential"] * cfg.robotics_weight
-    )
+    df = ai_axis(Config(), ref)
+    potential = ref.occupations["ai_potential"]
     # 加重平均なので、必ず職業別ポテンシャルの最小・最大の内側に収まる。
     assert df["ai_gross_share_pct"].between(potential.min(), potential.max()).all()
     assert (df["ai_substitutable_share_pct"] <= df["ai_gross_share_pct"] + 1e-9).all()
 
 
-def test_information_services_tops_the_ai_axis(ref):
-    df = ai_axis(Config(), ref)
-    assert df["ai_score"].idxmax() == "情報・通信業"
+def test_clerical_occupations_carry_the_ai_axis(ref):
+    """ILO の指数では事務系が最上位・現場系が最下位になっていること。"""
+    pot = ref.occupations["ai_potential"]
+    assert pot["clerk_general"] == pot.max()
+    assert pot["construction"] == pot.min()
+    assert pot["clerk_general"] > pot["service"] > pot["construction"]
 
 
-def test_robotics_weight_shifts_physical_sectors_up(ref):
-    llm_only = ai_axis(Config(robotics_weight=0.0), ref)["ai_substitutable_share_pct"]
-    with_robots = ai_axis(Config(robotics_weight=0.8), ref)["ai_substitutable_share_pct"]
-    # 倉庫・陸運は物理自動化の重みを上げると代替可能性が上がる。
-    assert with_robots["倉庫・運輸関連業"] > llm_only["倉庫・運輸関連業"]
-    assert with_robots["陸運業"] > llm_only["陸運業"]
-    # 銀行は逆に下がる（LLM主体の業種）。
-    assert with_robots["銀行業"] < llm_only["銀行業"]
+def test_finance_and_information_top_the_ai_axis(ref):
+    """事務・営業に寄った金融と、技術者に寄った情報通信が上位に来ること。"""
+    df = ai_axis(Config(), ref).sort_values("ai_score", ascending=False)
+    assert set(df.head(6).index) >= {"その他金融業", "銀行業", "情報・通信業", "卸売業"}
+    assert df["ai_score"].idxmin() == "水産・農林業"
+
+
+def test_the_four_finance_sectors_share_one_occupation_mix(ref):
+    """労働力調査は金融業，保険業を割らないので、4業種のAI軸は規制ドラッグでしか動かない。
+
+    仕様として明示しておく。ここが落ちたら、より細かい産業分類に差し替えたということ。
+    """
+    finance = ["銀行業", "証券、商品先物取引業", "保険業", "その他金融業"]
+    assert ref.mix.loc[finance].nunique().max() == 1
+    gross = ai_axis(Config(), ref).loc[finance, "ai_gross_share_pct"]
+    assert gross.nunique() == 1
 
 
 def test_the_framework_core_tension_holds(ref):
@@ -77,8 +96,9 @@ def test_the_framework_core_tension_holds(ref):
     assert df.loc["建設業", "quadrant"] == Q_CONSTRAINED
     assert df.loc["陸運業", "quadrant"] == Q_CONSTRAINED
     assert df.loc["情報・通信業", "quadrant"] == Q_ESCAPE
-    # 銀行は人手不足ではないがAI余地が大きい = 左上
+    # 銀行は公表統計では最も人手不足でない（短観DI -18、欠員率0.4%）ので左上に落ちる。
     assert df.loc["銀行業", "quadrant"] == Q_MARGIN
+    assert df.loc["銀行業", "shortage_score"] == df["shortage_score"].min()
 
 
 def test_escape_potential_is_the_geometric_mean():

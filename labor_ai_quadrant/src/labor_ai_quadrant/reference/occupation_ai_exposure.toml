@@ -1,48 +1,41 @@
-# 職業大分類別 AI代替ポテンシャル（参照スナップショット / reference snapshot）
+# 職業別 生成AI代替ポテンシャル（公表データから機械的に生成 / generated, do not hand-edit）
 #
-# 分類は日本標準職業分類の大分類をベースに、AI感応度が大きく異なる
-# 「専門的・技術的職業従事者」だけを5つに細分した15区分。
+# 出典: Gmyrek et al. (2025) ILO Working Paper 140, Final_Scores_ISCO08 https://github.com/pgmyrek/2025_GenAI_scores_ISCO08
 #
-# 2つの成分に分けて保持する。混同すると framework が壊れるため分離している。
+# ai_potential は ILO WP140 の occupation-level GenAI exposure score（0-1）を
+# 100倍したもの。ILO の指数は「その職業のタスクのうち生成AIに晒されている割合」という
+# 単一の数値であり、物理的自動化（ロボティクス・自動運転）は測っていない。
+# したがってこの軸は『生成AIで代替しうる労働の割合』であって、
+# 『自動化全般で代替しうる労働の割合』ではない。倉庫AMRや自動運転はこの軸の外にある。
 #
-#   llm_potential   … 生成AI/LLM（+ 文書・画像・音声理解）で代替・大幅省力化できる
-#                     タスクの割合の目安。0-100。
-#                     アンカー: Eloundou et al. (2023) "GPTs are GPTs" の職業別 exposure
-#                     （事務・専門職が高く、身体労働が低い）、および
-#                     Felten, Raj & Seamans (2021) AI Occupational Exposure (AIOE)。
-#
-#   phys_potential  … ロボティクス・自動運転・自動化設備で代替できるタスクの割合の目安。
-#                     0-100。LLM では動かないが「人手不足の解消」には効くので別軸で持つ。
-#                     アンカー: 製造ラインの自動化率、倉庫AGV/AMR、自動運転レベル4の
-#                     実装状況。建設の現場施工は現時点で自動化が難しいため低い。
-#
-# 合成は config の robotics_weight で制御する（既定 0.35）:
-#   ai_potential = llm_potential * (1 - robotics_weight) + phys_potential * robotics_weight
-#
-# basis: analyst-assigned, anchored to the literature above. 個別の数値は
-#        「順序と大小関係」に意味がある。絶対水準の精度は主張しない。
+# 職業区分は労働力調査「職業（平成21年12月改定）」に合わせた18区分。
+# ISCO-08 の該当グループに属する4桁職業のスコアを単純平均している
+# （ISCO 4桁ごとの日本国内就業者数が無いため、加重平均はできない）。
 
 # NOTE: トップレベル配列を先に、[meta] を末尾に置いている（TOML のテーブル解釈のため）。
 
 occupation = [
-  { key = "mgmt",         name = "管理的職業従事者",           llm_potential = 45, phys_potential =  5, note = "意思決定は残るが、資料作成・モニタリングは代替可" },
-  { key = "it_eng",       name = "情報処理・通信技術者",       llm_potential = 75, phys_potential =  5, note = "コーディング・テスト・保守で最大の省力化余地" },
-  { key = "other_eng",    name = "その他の技術者",             llm_potential = 55, phys_potential = 15, note = "設計・解析・図面作成。現場立会は残る" },
-  { key = "health_prof",  name = "保健医療従事者",             llm_potential = 30, phys_potential = 10, note = "読影・記録は代替可、処置・看護は不可。規制も重い" },
-  { key = "biz_prof",     name = "教育・法務・経営・金融専門", llm_potential = 65, phys_potential =  5, note = "調査・審査・与信・監査など文書集約タスク" },
-  { key = "other_prof",   name = "その他の専門的職業",         llm_potential = 45, phys_potential = 10, note = "デザイン・編集・研究補助など" },
-  { key = "clerical",     name = "事務従事者",                 llm_potential = 80, phys_potential = 20, note = "framework 上いちばん代替可能性が高い区分" },
-  { key = "sales",        name = "販売従事者",                 llm_potential = 50, phys_potential = 25, note = "内勤営業・見積は代替可、対面接客・店頭は残る" },
-  { key = "service",      name = "サービス職業従事者",         llm_potential = 25, phys_potential = 20, note = "介護・調理・接客。人手不足は深刻だがAI代替は難しい" },
-  { key = "security",     name = "保安職業従事者",             llm_potential = 20, phys_potential = 45, note = "画像監視・遠隔警備で置換が進む領域" },
-  { key = "agri",         name = "農林漁業従事者",             llm_potential = 10, phys_potential = 40, note = "スマート農業・自動収穫" },
-  { key = "production",   name = "生産工程従事者",             llm_potential = 15, phys_potential = 60, note = "既に自動化が進んだ領域。追加余地は検査・段取り" },
-  { key = "transport",    name = "輸送・機械運転従事者",       llm_potential = 10, phys_potential = 55, note = "自動運転・配車最適化。実装時期の不確実性が大きい" },
-  { key = "construction", name = "建設・採掘従事者",           llm_potential = 10, phys_potential = 25, note = "人手不足は最大級だがAIでは解けない典型" },
-  { key = "manual",       name = "運搬・清掃・包装等従事者",   llm_potential = 10, phys_potential = 55, note = "倉庫内AMR・自動仕分けの効果が大きい" },
+  { key = "mgmt", lfs_code = "001", name = "管理的職業従事者",                 ai_potential = 36.1, isco = "11 12 13 14" },
+  { key = "tech", lfs_code = "003", name = "技術者",                           ai_potential = 37.7, isco = "21 25 31 35" },
+  { key = "health_prof", lfs_code = "004", name = "保健医療従事者",                   ai_potential = 25.3, isco = "22 32" },
+  { key = "teacher", lfs_code = "005", name = "教員",                             ai_potential = 33.3, isco = "23" },
+  { key = "other_prof", lfs_code = "006", name = "その他の専門的・技術的職業従事者", ai_potential = 41.2, isco = "24 26 33 34 除く 243 3321 3322 3324 3334" },
+  { key = "clerk_general", lfs_code = "008", name = "一般事務従事者",                   ai_potential = 55.4, isco = "41 44" },
+  { key = "clerk_accounting", lfs_code = "009", name = "会計事務従事者",                   ai_potential = 53.3, isco = "43" },
+  { key = "clerk_other", lfs_code = "010", name = "その他の事務従事者",               ai_potential = 52.0, isco = "42" },
+  { key = "sales_retail", lfs_code = "012", name = "商品販売従事者",                   ai_potential = 34.0, isco = "52 除く 5244" },
+  { key = "sales_broker", lfs_code = "013", name = "販売類似職業従事者",               ai_potential = 44.0, isco = "3321 3324 3334" },
+  { key = "sales_field", lfs_code = "014", name = "営業職業従事者",                   ai_potential = 51.5, isco = "243 3322 5244" },
+  { key = "service", lfs_code = "015", name = "サービス職業従事者",               ai_potential = 21.6, isco = "51 53" },
+  { key = "security", lfs_code = "021", name = "保安職業従事者",                   ai_potential = 17.2, isco = "54" },
+  { key = "agri", lfs_code = "022", name = "農林漁業従事者",                   ai_potential = 15.0, isco = "6 92" },
+  { key = "production", lfs_code = "023", name = "生産工程従事者",                   ai_potential = 18.6, isco = "72 73 74 75 81 82 除く 811" },
+  { key = "transport", lfs_code = "031", name = "輸送・機械運転従事者",             ai_potential = 19.0, isco = "83" },
+  { key = "construction", lfs_code = "032", name = "建設・採掘従事者",                 ai_potential = 14.0, isco = "71 811" },
+  { key = "manual", lfs_code = "033", name = "運搬・清掃・包装等従事者",         ai_potential = 15.9, isco = "91 93 94 95 96" },
 ]
 
 [meta]
-vintage = "2026-06"
-basis = "analyst-assigned, anchored to Eloundou et al. (2023) and Felten et al. (2021)"
+vintage = "2025-05"
+basis = "ILO WP140 (Gmyrek et al. 2025) occupation-level GenAI exposure, ISCO-08"
 scale = "0-100"
