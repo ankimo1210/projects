@@ -66,8 +66,6 @@ def _resolve_reference(args: argparse.Namespace) -> ReferenceData:
 def _config_from_args(args: argparse.Namespace) -> Config:
     cfg = SCENARIOS.get(getattr(args, "scenario", "base"), Config())
     overrides: dict[str, float | str] = {}
-    if getattr(args, "robotics_weight", None) is not None:
-        overrides["robotics_weight"] = args.robotics_weight
     if getattr(args, "realization_rate", None) is not None:
         overrides["realization_rate"] = args.realization_rate
     if getattr(args, "threshold", None) is not None:
@@ -241,8 +239,6 @@ def build_parser() -> argparse.ArgumentParser:
     def add_common(p: argparse.ArgumentParser, *, universe: bool = True) -> None:
         p.add_argument("--scenario", choices=sorted(SCENARIOS), default="base",
                        help="感応度シナリオのプリセット (default: base)")
-        p.add_argument("--robotics-weight", type=float, default=None,
-                       help="AI代替ポテンシャルにおけるロボ/自動運転成分の重み 0-1")
         p.add_argument("--realization-rate", type=float, default=None,
                        help="AI代替可能な労働が実際に削減される割合 0-1")
         p.add_argument("--threshold", choices=("median", "fixed"), default=None,

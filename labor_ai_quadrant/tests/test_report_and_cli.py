@@ -9,8 +9,6 @@ from labor_ai_quadrant.report import build_report
 
 
 def test_config_rejects_out_of_range_values():
-    with pytest.raises(ValueError, match="robotics_weight"):
-        Config(robotics_weight=1.5).validate()
     with pytest.raises(ValueError, match="realization_rate"):
         Config(realization_rate=-0.1).validate()
     with pytest.raises(ValueError, match="threshold_method"):
@@ -48,8 +46,8 @@ def test_report_contains_the_framework_landmarks(tmp_path):
 
 
 def test_report_honours_the_scenario(tmp_path):
-    doc = build_report(tmp_path / "r.html", cfg=SCENARIOS["llm_only"]).read_text(encoding="utf-8")
-    assert "robotics_weight=0.0" in doc
+    doc = build_report(tmp_path / "r.html", cfg=SCENARIOS["conservative_adoption"]).read_text(encoding="utf-8")
+    assert "realization_rate=0.15" in doc
 
 
 def test_cli_sectors_runs(capsys):
@@ -75,8 +73,8 @@ def test_cli_build_writes_the_report(tmp_path, capsys):
 
 
 def test_cli_scenario_flag_is_applied(capsys):
-    assert main(["sectors", "--scenario", "llm_only"]) == 0
-    llm_only = capsys.readouterr().out
-    assert main(["sectors", "--scenario", "llm_plus_robotics"]) == 0
-    with_robots = capsys.readouterr().out
-    assert llm_only != with_robots
+    assert main(["sectors", "--scenario", "base"]) == 0
+    base = capsys.readouterr().out
+    assert main(["sectors", "--scenario", "absolute_threshold"]) == 0
+    fixed = capsys.readouterr().out
+    assert base != fixed

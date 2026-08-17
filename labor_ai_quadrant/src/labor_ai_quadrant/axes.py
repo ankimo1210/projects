@@ -3,9 +3,11 @@
 Axis X — 人手不足深刻度 (labour shortage severity)
     公表労働統計の6指標を業種横断で z 化し、重み付き合成する。
 
-Axis Y — AI代替可能性 (AI substitutability)
-    業種の職業構成比と職業別 AI 代替ポテンシャルの内積。「その業種の労働の
-    何%が現行AIで代替しうるか」という解釈可能な水準を持つ。
+Axis Y — 生成AI代替可能性 (generative-AI substitutability)
+    業種の職業構成比 (労働力調査 産業×職業) と職業別 AI 代替ポテンシャル
+    (ILO WP140 の GenAI exposure) の内積。「その業種の労働の何%が生成AIに
+    晒されているか」という解釈可能な水準を持つ。物理的自動化 (ロボティクス・
+    自動運転) は ILO の指数が測っていないので、この軸の外にある。
 
 両軸とも、4象限マップ用には 33業種内の min-max で 0-100 に相対化した
 ``*_score`` を使う。P/L への換算には相対化前の生の水準を使うこと
@@ -69,10 +71,7 @@ def ai_axis(cfg: Config | None = None, ref: ReferenceData | None = None) -> pd.D
     cfg.validate()
     ref = ref or load_reference()
 
-    potential = (
-        ref.occupations["llm_potential"] * (1.0 - cfg.robotics_weight)
-        + ref.occupations["phys_potential"] * cfg.robotics_weight
-    )
+    potential = ref.occupations["ai_potential"]
 
     # 内積: 業種ごとの職業構成比 (行和1) × 職業別ポテンシャル(0-100)
     gross = ref.mix.mul(potential, axis=1).sum(axis=1)

@@ -72,9 +72,12 @@ def _label_targets(sectors: pd.DataFrame) -> set[str]:
     rather than exhaustive — and the extremes are what make the framework's
     point (the most labour-short sectors are the ones AI cannot help).
     """
-    keep = set(top_right(sectors, 6).index)
-    keep |= set(sectors.nlargest(3, "shortage_score").index)
-    keep |= set(sectors.nlargest(3, "ai_score").index)
+    keep = set(top_right(sectors, 5).index)
+    keep |= set(sectors.nlargest(2, "shortage_score").index)
+    keep |= set(sectors.nlargest(2, "ai_score").index)
+    # 両軸の下端も入れる。「人手不足でない側」を見せないと、右上の意味が伝わらない。
+    keep.add(sectors["shortage_score"].idxmin())
+    keep.add(sectors["ai_score"].idxmin())
     return keep
 
 
@@ -487,13 +490,15 @@ def render(
   <h2>軸の作り方</h2>
   <div class="method">
     <div class="note"><h4>X軸 — 人手不足の深刻度</h4>
-      <p>欠員率・有効求人倍率・TDB正社員不足割合・55歳以上比率・離職率・所定外労働時間の6指標を
-      33業種横断で z 化し、±2.5σ でクリップして重み付き合成。出典は雇用動向調査・一般職業紹介状況・
-      労働力調査・毎月勤労統計・帝国データバンク調査。</p></div>
-    <div class="note"><h4>Y軸 — AI代替可能性</h4>
-      <p>業種の職業構成比（15区分）と職業別AI代替ポテンシャルの内積に、規制ドラッグを掛ける。
-      生成AI成分と物理自動化（ロボ・自動運転）成分は<b>分離して保持</b>し、
-      <code>robotics_weight</code> で「何をAIと呼ぶか」を明示的に振れるようにしてある。</p></div>
+      <p>欠員率(0.30)・短観 雇用人員判断DI(0.30)・有効求人倍率(0.20)・55歳以上比率(0.10)・
+      離職率(0.05)・所定外労働時間(0.05) の6指標を33業種横断で z 化し、±2.5σ でクリップして
+      重み付き合成。出典は雇用動向調査・日銀短観・一般職業紹介状況・労働力調査・毎月勤労統計。
+      有効求人倍率はハローワーク経由しか映さないので重みを 0.20 に抑えている。</p></div>
+    <div class="note"><h4>Y軸 — 生成AI代替可能性</h4>
+      <p>業種の職業構成比（労働力調査 産業×職業、18区分）と、職業別の生成AI exposure
+      （ILO Working Paper 140, Gmyrek et al. 2025）の内積に、規制ドラッグを掛ける。
+      ILO の指数は単一の数値で<b>物理的自動化を測っていない</b>ので、この軸は生成AIの話に限られる。
+      倉庫AMR・自動運転はこの地図の外にある。</p></div>
     <div class="note"><h4>P/L への換算</h4>
       <p>人件費データを与えると、象限上の位置が営業利益への感応度になる：
       <code>人件費 × AI代替可能な労働の割合 × 実現率 ÷ 営業利益</code>。
@@ -505,9 +510,11 @@ def render(
   <h2>この地図が言っていないこと</h2>
   <ul class="limits">
     <li><b>両軸とも相対値。</b>33業種内での順位を0-100に正規化したもので、絶対水準ではない。</li>
-    <li><b>AI代替ポテンシャルは analyst 設定値。</b>Eloundou et al. (2023) と Felten et al. (2021) を
-    方向性のアンカーにしているが、米国SOCから日本標準職業分類への正式なクロスウォークは当てていない。
-    個々の数値の精度ではなく、職業間の順序に意味がある。</li>
+    <li><b>ISCO と日本標準職業分類の対応は analyst が当てている。</b>ILO のスコア自体は公表値だが、
+    ISCO-08 のどのグループを日本の職業区分に対応させるかは判断であり、
+    グループ内は（日本の職業別就業者数が ISCO 粒度で無いため）単純平均している。</li>
+    <li><b>物理的自動化が入っていない。</b>ILO の指数は生成AIの exposure のみ。
+    陸運・倉庫の人手不足は自動運転やAMRで解ける可能性があるが、この軸には映らない。</li>
     <li><b>需要側の効果を織り込んでいない。</b>SIerはAIで自社の人月が減ると同時にAI案件で売上が増える。
     この枠組みは前者だけを測る。</li>
     <li><b>省力化が顧客に移転する分を引いていない。</b>受託型（SI・人材・警備）では、
@@ -518,8 +525,7 @@ def render(
 
 <footer>
   再現コード・参照テーブル（出典と時点つき）は <code>labor_ai_quadrant/</code> に。
-  既定設定は <code>robotics_weight={cfg.robotics_weight}</code> /
-  <code>realization_rate={cfg.realization_rate}</code>、参照データ時点 {ref.vintages["sector_labor_shortage"]}。
+  既定設定は <code>realization_rate={cfg.realization_rate}</code>、参照データ時点 {ref.vintages["sector_labor_shortage"]}。
 </footer>
 
 </div>
