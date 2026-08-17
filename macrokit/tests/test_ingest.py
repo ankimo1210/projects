@@ -17,12 +17,14 @@ class FakeAdapter:
     def __init__(self, payload: bytes):
         self.payload = payload
         self.fetch_count = 0
+        self.parse_count = 0
 
     def fetch_raw(self, indicator, start):
         self.fetch_count += 1
         return self.payload, "https://example.invalid/fred", 200
 
     def parse(self, indicator, raw, *, ingested_at):
+        self.parse_count += 1
         from macrokit.sources.alfred import AlfredAdapter
 
         return AlfredAdapter(api_key="dummy").parse(indicator, raw, ingested_at=ingested_at)
@@ -70,8 +72,12 @@ def test_a_second_unchanged_ingest_inserts_nothing_new(tmp_path):
     assert second.changed is False
     assert second.rows_inserted == 0
     assert second.skipped_reason == "content unchanged"
-    # The payload must NOT be parsed again when nothing changed.
+    # Fetched twice, but parsed only once: the second ingest short-circuits on
+    # the unchanged content hash before reaching the parser. Asserting
+    # rows_inserted == 0 alone cannot show this -- INSERT OR IGNORE would also
+    # report 0 if the parse ran and every row collided on the primary key.
     assert adapter.fetch_count == 2
+    assert adapter.parse_count == 1
 
 
 def test_point_in_time_query_works_after_ingest(tmp_path):
