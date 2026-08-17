@@ -38,6 +38,7 @@ members = [
     "optimal_execution",
     "rough_volatility",
     "jp_llm_lab",
+    "labor_ai_quadrant",
     "market_nn",
     "portfolio-analyzer",
     "macrokit",
@@ -185,6 +186,7 @@ testpaths = [
     "jp_llm_lab/tests",
     "shortest_path/tests",
     "market_nn/tests",
+    "labor_ai_quadrant/tests",
     "macrokit/tests",
 ]
 python_files = ["test_*.py"]

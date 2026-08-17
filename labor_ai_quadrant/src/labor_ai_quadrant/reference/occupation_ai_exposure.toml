@@ -1,0 +1,41 @@
+# 職業別 生成AI代替ポテンシャル（公表データから機械的に生成 / generated, do not hand-edit）
+#
+# 出典: Gmyrek et al. (2025) ILO Working Paper 140, Final_Scores_ISCO08 https://github.com/pgmyrek/2025_GenAI_scores_ISCO08
+#
+# ai_potential は ILO WP140 の occupation-level GenAI exposure score（0-1）を
+# 100倍したもの。ILO の指数は「その職業のタスクのうち生成AIに晒されている割合」という
+# 単一の数値であり、物理的自動化（ロボティクス・自動運転）は測っていない。
+# したがってこの軸は『生成AIで代替しうる労働の割合』であって、
+# 『自動化全般で代替しうる労働の割合』ではない。倉庫AMRや自動運転はこの軸の外にある。
+#
+# 職業区分は労働力調査「職業（平成21年12月改定）」に合わせた18区分。
+# ISCO-08 の該当グループに属する4桁職業のスコアを単純平均している
+# （ISCO 4桁ごとの日本国内就業者数が無いため、加重平均はできない）。
+
+# NOTE: トップレベル配列を先に、[meta] を末尾に置いている（TOML のテーブル解釈のため）。
+
+occupation = [
+  { key = "mgmt", lfs_code = "001", name = "管理的職業従事者",                 ai_potential = 36.1, isco = "11 12 13 14" },
+  { key = "tech", lfs_code = "003", name = "技術者",                           ai_potential = 37.7, isco = "21 25 31 35" },
+  { key = "health_prof", lfs_code = "004", name = "保健医療従事者",                   ai_potential = 25.3, isco = "22 32" },
+  { key = "teacher", lfs_code = "005", name = "教員",                             ai_potential = 33.3, isco = "23" },
+  { key = "other_prof", lfs_code = "006", name = "その他の専門的・技術的職業従事者", ai_potential = 41.2, isco = "24 26 33 34 除く 243 3321 3322 3324 3334" },
+  { key = "clerk_general", lfs_code = "008", name = "一般事務従事者",                   ai_potential = 55.4, isco = "41 44" },
+  { key = "clerk_accounting", lfs_code = "009", name = "会計事務従事者",                   ai_potential = 53.3, isco = "43" },
+  { key = "clerk_other", lfs_code = "010", name = "その他の事務従事者",               ai_potential = 52.0, isco = "42" },
+  { key = "sales_retail", lfs_code = "012", name = "商品販売従事者",                   ai_potential = 34.0, isco = "52 除く 5244" },
+  { key = "sales_broker", lfs_code = "013", name = "販売類似職業従事者",               ai_potential = 44.0, isco = "3321 3324 3334" },
+  { key = "sales_field", lfs_code = "014", name = "営業職業従事者",                   ai_potential = 51.5, isco = "243 3322 5244" },
+  { key = "service", lfs_code = "015", name = "サービス職業従事者",               ai_potential = 21.6, isco = "51 53" },
+  { key = "security", lfs_code = "021", name = "保安職業従事者",                   ai_potential = 17.2, isco = "54" },
+  { key = "agri", lfs_code = "022", name = "農林漁業従事者",                   ai_potential = 15.0, isco = "6 92" },
+  { key = "production", lfs_code = "023", name = "生産工程従事者",                   ai_potential = 18.6, isco = "72 73 74 75 81 82 除く 811" },
+  { key = "transport", lfs_code = "031", name = "輸送・機械運転従事者",             ai_potential = 19.0, isco = "83" },
+  { key = "construction", lfs_code = "032", name = "建設・採掘従事者",                 ai_potential = 14.0, isco = "71 811" },
+  { key = "manual", lfs_code = "033", name = "運搬・清掃・包装等従事者",         ai_potential = 15.9, isco = "91 93 94 95 96" },
+]
+
+[meta]
+vintage = "2025-05"
+basis = "ILO WP140 (Gmyrek et al. 2025) occupation-level GenAI exposure, ISCO-08"
+scale = "0-100"
