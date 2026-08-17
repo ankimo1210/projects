@@ -3,15 +3,23 @@
 Axis X — 人手不足深刻度 (labour shortage severity)
     公表労働統計の6指標を業種横断で z 化し、重み付き合成する。
 
-Axis Y — 生成AI代替可能性 (generative-AI substitutability)
-    業種の職業構成比 (労働力調査 産業×職業) と職業別 AI 代替ポテンシャル
-    (ILO WP140 の GenAI exposure) の内積。「その業種の労働の何%が生成AIに
-    晒されているか」という解釈可能な水準を持つ。物理的自動化 (ロボティクス・
-    自動運転) は ILO の指数が測っていないので、この軸の外にある。
+Axis Y — 生成AI曝露度 (generative-AI exposure)
+    業種の職業構成比 (労働力調査 産業×職業) と職業別 AI 曝露スコア
+    (ILO WP140 の task-level automation potential の職業平均) の内積。
+    ``ai_exposure_pct`` は「その業種の労働のうち、生成AIが担いうるタスクに
+    晒されている割合(%)」と読む。
+
+    **これは「AIで置き換えられる従業員の割合」ではない。** ILO のスコアは
+    タスク単位の自動化ポテンシャルの平均で、置換が起きたかどうかは測っていない。
+    「Not Exposed」に分類された231職業でも 0.09〜0.36 の値を持つ（＝この指数は
+    曝露の有無ではなく程度の連続量）。曝露が労働時間の解放に等しいという仮定は
+    このコードのどこでも検証されていない。P/L 換算はその仮定の上に立つ
+    シナリオであって、推定値ではない。物理的自動化 (ロボティクス・自動運転) は
+    ILO の指数が測っていないので、この軸の外にある。
 
 両軸とも、4象限マップ用には 33業種内の min-max で 0-100 に相対化した
 ``*_score`` を使う。P/L への換算には相対化前の生の水準を使うこと
-(``ai_substitutable_share_pct``)。混同すると桁が壊れる。
+(``ai_exposure_pct``)。混同すると桁が壊れる。
 """
 
 from __future__ import annotations
@@ -61,10 +69,11 @@ def shortage_axis(ref: ReferenceData | None = None) -> pd.DataFrame:
 
 
 def ai_axis(cfg: Config | None = None, ref: ReferenceData | None = None) -> pd.DataFrame:
-    """AI代替可能性。
+    """AI曝露度。
 
-    ``ai_substitutable_share_pct`` は「業種の労働のうちAIで代替しうる割合(%)」
-    という解釈を持つ水準値。``ai_score`` はそれを33業種内で 0-100 に相対化した
+    ``ai_exposure_pct`` は「業種の労働のうち、生成AIが担いうるタスクに晒されて
+    いる割合(%)」という解釈を持つ水準値。置換された人員の割合ではない
+    （モジュール docstring）。``ai_score`` はそれを33業種内で 0-100 に相対化した
     象限マップ用の指標。
     """
     cfg = cfg or Config()
@@ -79,27 +88,34 @@ def ai_axis(cfg: Config | None = None, ref: ReferenceData | None = None) -> pd.D
 
     out = pd.DataFrame(
         {
-            "ai_gross_share_pct": gross,
+            "ai_exposure_gross_pct": gross,
             "regulation_drag": ref.regulation_drag,
-            "ai_substitutable_share_pct": effective,
+            "ai_exposure_pct": effective,
             "ai_score": rescale_0_100(effective),
         }
     )
-    out["top_ai_occupation"] = _top_contributor(ref.mix, potential)
+    out["top_ai_occupation"] = _top_contributor(ref.mix, potential, ref.occupations.get("name"))
     return out
 
 
-def _top_contributor(mix: pd.DataFrame, potential: pd.Series) -> pd.Series:
-    """For each sector, the occupation contributing the most AI-substitutable labour."""
+def _top_contributor(
+    mix: pd.DataFrame, potential: pd.Series, names: pd.Series | None = None
+) -> pd.Series:
+    """For each sector, the occupation contributing the most AI-exposed labour.
+
+    人が読む列なので日本語の職業名を返す。内部キー（``clerk_general`` 等）を
+    そのままレポートに出していたのがレビュー F-11 の指摘。
+    """
     contribution = mix.mul(potential, axis=1)
-    return contribution.idxmax(axis=1)
+    top = contribution.idxmax(axis=1)
+    return top if names is None else top.map(names).fillna(top)
 
 
 def sector_frame(cfg: Config | None = None, ref: ReferenceData | None = None) -> pd.DataFrame:
     """Both axes joined at sector level, with quadrant assignment.
 
     Columns of interest: ``shortage_score``, ``ai_score`` (0-100 relative,
-    used for the quadrant map), ``ai_substitutable_share_pct`` (raw level,
+    used for the quadrant map), ``ai_exposure_pct`` (raw level,
     used for P/L translation) and ``escape_potential``.
     """
     cfg = cfg or Config()
@@ -126,8 +142,9 @@ def relief_columns(cfg: Config, ref: ReferenceData) -> pd.DataFrame:
 
     * ``vacancy_rate_pct``     欠員率。埋まっていない求人 ÷ 常用労働者数。
       「本来の人員に対して何%足りないか」＝ 供給制約で取り逃している労働。
-    * ``ai_freed_labor_pct``   AI が空ける労働。代替可能割合 × 実現率。
-      人を増やさずに増員したのと同じ効果を持つ労働量。
+    * ``ai_capacity_release_pct``   AI が空けうる労働。曝露度 × 実現率。
+      人を増やさずに増員したのと同じ効果を持つ労働量として読む。**曝露が
+      そのまま労働時間の解放になるという仮定を置いた上限**で、実測ではない。
     * ``closable_gap_pct``     上の2つの小さいほう。空いた労働は、足りていない
       ぶんを超えては「不足の緩和」にならない（超えた部分は需要側の話になる）。
     * ``gap_coverage_x``       空く労働 ÷ 欠員。既定設定では全33業種で 1 を超える
@@ -135,13 +152,13 @@ def relief_columns(cfg: Config, ref: ReferenceData) -> pd.DataFrame:
       AI 軸は「そもそも埋められるのか」という関門として働く。この倍率が、
       関門にどれだけ余裕があるかを示す。
     """
-    ai_share = ai_axis(cfg, ref)["ai_substitutable_share_pct"]
+    ai_share = ai_axis(cfg, ref)["ai_exposure_pct"]
     gap = ref.shortage["vacancy_rate_pct"].astype(float)
     freed = ai_share * cfg.realization_rate
     return pd.DataFrame(
         {
             "vacancy_rate_pct": gap,
-            "ai_freed_labor_pct": freed,
+            "ai_capacity_release_pct": freed,
             "closable_gap_pct": pd.concat([freed, gap], axis=1).min(axis=1),
             "gap_coverage_x": freed / gap.where(gap > 0),
         }

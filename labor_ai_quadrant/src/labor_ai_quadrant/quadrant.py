@@ -22,16 +22,41 @@ def thresholds(shortage: pd.Series, ai: pd.Series, cfg: Config) -> tuple[float, 
     return float(shortage.median()), float(ai.median())
 
 
-def assign_quadrants(shortage: pd.Series, ai: pd.Series, cfg: Config | None = None) -> pd.Series:
+def project_cut(raw_cut: float, raw: pd.Series) -> float:
+    """Express ``raw_cut`` on the 0-100 rescale that :func:`axes.rescale_0_100` gives ``raw``.
+
+    The quadrant boundary is defined once, on the 33業種 distribution. Companies
+    live on the same map, but their ``*_score`` columns are min-max rescaled over
+    the *company* universe, so the sector median lands at a different number on
+    that axis. Projecting the cut keeps one boundary across both levels instead of
+    letting each population re-draw the gridlines around its own middle.
+    """
+    lo, hi = float(raw.min()), float(raw.max())
+    if np.isclose(hi, lo):
+        return 50.0
+    return (raw_cut - lo) / (hi - lo) * 100.0
+
+
+def assign_quadrants(
+    shortage: pd.Series,
+    ai: pd.Series,
+    cfg: Config | None = None,
+    cuts: tuple[float, float] | None = None,
+) -> pd.Series:
     """Label each row with one of the four quadrants.
 
     Boundary handling: a value exactly on the cut point counts as the *lower*
     side, so an entity must strictly exceed the threshold to be called
     high-shortage or high-AI. With a median split on an even-sized universe
     this keeps the top-right cell from being inflated by ties.
+
+    ``cuts`` overrides the boundary with explicit values *in the same units as
+    the passed series*. :func:`company.company_frame` uses it to inherit the
+    sector-level boundary rather than splitting the company universe at its own
+    median — see :func:`project_cut`.
     """
     cfg = cfg or Config()
-    x_cut, y_cut = thresholds(shortage, ai, cfg)
+    x_cut, y_cut = cuts if cuts is not None else thresholds(shortage, ai, cfg)
 
     high_shortage = shortage > x_cut
     high_ai = ai > y_cut
