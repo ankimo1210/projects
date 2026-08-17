@@ -7,6 +7,12 @@ consistent with everything else this package fetches.
 The file is cp932 (Shift-JIS), not UTF-8, and covers 1955 through the following
 year. Rows look like `2026/1/1,元日`; substitute holidays appear under the name
 `休日` and count as holidays too, so every dated row is taken.
+
+KNOWN LIMITATION: this CSV is the *only* holiday source here, and it does not
+include the 年末年始 administrative closure (12/29-1/3, per the law on
+government office holidays) or bank holidays (12/31-1/3). Callers that count
+business days (see `release.nth_business_day`) will overcount in January and
+December by up to two days until a proper business-day calendar exists.
 """
 
 from __future__ import annotations
