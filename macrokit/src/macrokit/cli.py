@@ -8,7 +8,7 @@ import click
 
 from .catalog import load_catalog
 from .ingest import default_catalog_root
-from .status import compute_status, load_validated
+from .status import STATUS_ORDER, compute_status, load_validated
 from .store import connect
 
 
@@ -56,9 +56,4 @@ def status_command(ctx: click.Context) -> None:
         click.echo(f"{name:<28} {state}")
 
     click.echo("")
-    click.echo(
-        "  ".join(
-            f"{state}={counts.get(state, 0)}"
-            for state in ("declared", "fetching", "parsed", "validated")
-        )
-    )
+    click.echo("  ".join(f"{state}={counts.get(state, 0)}" for state in STATUS_ORDER))

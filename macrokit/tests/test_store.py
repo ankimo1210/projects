@@ -41,6 +41,15 @@ def test_period_end_is_derived_from_frequency(start, freq, expected):
     assert period_end_for(start, freq) == expected
 
 
+@pytest.mark.parametrize("bad_month", [2, 3, 5, 6, 8, 9, 11, 12])
+def test_period_end_for_rejects_a_quarter_start_that_is_not_a_real_quarter_start(bad_month):
+    # Months 2/3/5/6/8/9 would silently return a plausible but wrong period
+    # end; 11/12 would overflow past December with a confusing
+    # calendar.IllegalMonthError. Both must fail clearly instead.
+    with pytest.raises(ValueError, match="not a quarter start"):
+        period_end_for(date(2024, bad_month, 1), "Q")
+
+
 def test_round_trips_an_observation(tmp_path):
     con = connect(tmp_path / "t.duckdb")
     assert insert_observations(con, [_obs()]) == 1

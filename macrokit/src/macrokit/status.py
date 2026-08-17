@@ -47,7 +47,7 @@ def _has_snapshot(data_root: Path, indicator: str) -> bool:
             # it is safe: only the last line can be partial. snapshot.last_sha
             # does the same for the same reason.
             continue
-        if record["indicator"] == indicator:
+        if record.get("indicator") == indicator:
             return True
     return False
 
