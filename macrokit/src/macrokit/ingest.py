@@ -42,7 +42,7 @@ def ingest_one(
     indicator: Indicator,
     *,
     con: duckdb.DuckDBPyConnection,
-    data_root: Path,
+    raw_root: Path,
     adapter,
     start: date,
     now: datetime,
@@ -51,7 +51,7 @@ def ingest_one(
 
     suffix = "json" if content.lstrip()[:1] in (b"{", b"[") else "csv"
     result = save_snapshot(
-        data_root,
+        raw_root,
         adapter.source,
         indicator.name,
         content,

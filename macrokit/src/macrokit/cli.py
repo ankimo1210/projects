@@ -51,7 +51,7 @@ def status_command(ctx: click.Context) -> None:
 
     counts: dict[str, int] = {}
     for name, indicator in sorted(ctx.obj["catalog"].items()):
-        state = compute_status(indicator, con=con, data_root=raw_root, validated=validated)
+        state = compute_status(indicator, con=con, raw_root=raw_root, validated=validated)
         counts[state] = counts.get(state, 0) + 1
         click.echo(f"{name:<28} {state}")
 

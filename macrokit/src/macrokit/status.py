@@ -56,7 +56,7 @@ def compute_status(
     indicator: Indicator,
     *,
     con: duckdb.DuckDBPyConnection,
-    data_root: Path,
+    raw_root: Path,
     validated: set[str],
 ) -> str:
     if indicator.name in validated:
@@ -66,6 +66,6 @@ def compute_status(
     ).fetchone()[0]
     if rows:
         return "parsed"
-    if _has_snapshot(data_root, indicator.name):
+    if _has_snapshot(raw_root, indicator.name):
         return "fetching"
     return "declared"
