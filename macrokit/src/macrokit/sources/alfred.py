@@ -29,6 +29,19 @@ FAR_FUTURE = "9999-12-31"
 _UNSET = object()
 
 
+def _redact(url: httpx.URL) -> str:
+    """``url`` with the ``api_key`` query parameter removed.
+
+    Shared by ``_request`` and ``fetch_raw`` so their redaction can never drift
+    apart: both must scrub the same key the same way, or one of them leaks it.
+    """
+    return str(url.copy_remove_param("api_key"))
+
+
+class AlfredRequestError(RuntimeError):
+    """A FRED/ALFRED HTTP request failed. Safe to print: never carries the key."""
+
+
 class AlfredAdapter:
     source = "alfred"
 
@@ -54,10 +67,32 @@ class AlfredAdapter:
             if self._client is None:
                 client.close()
 
-    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=20))
+    # reraise=True: without it, tenacity wraps the final failure in RetryError
+    # instead of propagating AlfredRequestError, which would both hide the
+    # status code from a plain str(exc) and defeat the redaction below (the
+    # exhausted-retries exception has to actually be ours for it to be safe).
+    @retry(
+        reraise=True,
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=2, max=20),
+    )
     def _request(self, client: httpx.Client, path: str, params: dict) -> httpx.Response:
         response = client.get(f"{BASE}/{path}", params=params)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            # httpx's own message embeds the full request URL, api_key and all,
+            # and that survives on __cause__ through tenacity's retry wrapping --
+            # a printed traceback would put the key on the terminal, in cron
+            # logs, and in CI logs. Re-raise with a redacted URL instead of
+            # letting the original propagate. We cannot chain the original as
+            # __cause__ either: its own str() re-embeds the raw URL, so any
+            # traceback that prints the chain leaks the key right back. `from
+            # None` suppresses that implicit chain in the default traceback
+            # output.
+            raise AlfredRequestError(
+                f"FRED request failed: {exc.response.status_code} {_redact(exc.request.url)}"
+            ) from None
         return response
 
     def probe(self, indicator: Indicator) -> str | None:
@@ -94,8 +129,7 @@ class AlfredAdapter:
         # preserves the rest of the request window (file_type, observation_start,
         # realtime_start/end) for provenance, and it cannot leak the key even if
         # api_key's position in the query string ever changes.
-        url = str(response.url.copy_remove_param("api_key"))
-        return response.content, url, response.status_code
+        return response.content, _redact(response.url), response.status_code
 
     def parse(
         self, indicator: Indicator, raw: bytes, *, ingested_at: datetime

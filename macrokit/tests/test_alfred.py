@@ -7,7 +7,7 @@ import httpx
 import pytest
 
 from macrokit.catalog import Indicator
-from macrokit.sources.alfred import AlfredAdapter
+from macrokit.sources.alfred import AlfredAdapter, AlfredRequestError
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -122,6 +122,25 @@ def test_fetch_raw_strips_only_the_key_and_keeps_the_request_window():
     assert "observation_start=2024-01-01" in url
     assert "realtime_start=1776-07-04" in url
     assert "realtime_end=9999-12-31" in url
+
+
+def test_http_error_does_not_leak_the_api_key():
+    # A 400 from FRED makes httpx build an error message that embeds the full
+    # request URL, api_key included. _request must redact it before the
+    # exception's string form can reach a traceback, cron log, or CI log.
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(400, json={"error_message": "Bad Request"})
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    adapter = AlfredAdapter(api_key="not-a-real-key", client=client)
+
+    with pytest.raises(AlfredRequestError) as excinfo:
+        adapter.fetch_raw(INDICATOR, date(2024, 1, 1))
+
+    message = str(excinfo.value)
+    assert "api_key" not in message
+    assert "not-a-real-key" not in message
+    assert "400" in message
 
 
 @pytest.mark.live
