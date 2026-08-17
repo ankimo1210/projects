@@ -97,13 +97,28 @@ def _check_chain_references(catalog: dict[str, Indicator]) -> None:
 
 
 def _check_no_cycles(catalog: dict[str, Indicator]) -> None:
-    """Depth-first search over downstream edges, tracking the active path."""
+    """Depth-first search over the merged chain graph, tracking the active path.
+
+    `chain.upstream` and `chain.downstream` can describe the same edge from
+    either end -- `a.chain.upstream = [b]` means exactly the same edge as
+    `b.chain.downstream = [a]` (b -> a) -- so both directions are normalised
+    into one edge set before the search runs. Otherwise a cycle declared
+    purely through `upstream` would have no downstream edge at all and load
+    without error.
+    """
+    edges: dict[str, list[str]] = {
+        name: list(indicator.chain.downstream) for name, indicator in catalog.items()
+    }
+    for name, indicator in catalog.items():
+        for source in indicator.chain.upstream:
+            edges[source].append(name)
+
     WHITE, GREY, BLACK = 0, 1, 2
     colour = dict.fromkeys(catalog, WHITE)
 
     def visit(name: str, path: list[str]) -> None:
         colour[name] = GREY
-        for target in catalog[name].chain.downstream:
+        for target in edges[name]:
             if colour[target] == GREY:
                 raise CatalogError(f"cycle in chain graph: {' -> '.join([*path, name, target])}")
             if colour[target] == WHITE:
