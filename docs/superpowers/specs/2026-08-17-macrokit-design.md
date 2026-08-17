@@ -211,11 +211,13 @@ CREATE TABLE components (
 ### 4.4 raw スナップショット層
 
 ```
-data/raw/{source}/{indicator}/{ingested_date}/{filename}
+data/raw/{source}/{indicator}/{ingested_date}/{sha256[:12]}-{filename}
 data/raw/manifest.jsonl
 ```
 
-immutable、上書きしない。**内容ハッシュで重複排除**する。
+immutable、上書きしない。**内容ハッシュで重複排除**する。ファイル名の先頭 12 桁が
+その内容の SHA-256 なのは、同じ日に 2 回改定があっても互いを上書きしないため
+（`{ingested_date}/{filename}` だけだと 2 本目の revision が 1 本目を消してしまう）。
 
 ```jsonl
 {"ingested_at":"2026-08-17T08:31:02+09:00","source":"estat",
@@ -332,7 +334,7 @@ e-Stat の既知の罠は最初からフィクスチャに入れる — 欠損�
 
 | Phase | 内容 | 到達状態 |
 |---|---|---|
-| 1. 骨格 | パッケージ・DuckDB スキーマ・カタログローダ・PIT 関数。米 `core PCE` 1 本を `validated` まで貫通 | 1 系列だけ緑 |
+| 1. 骨格 | パッケージ・DuckDB スキーマ・カタログローダ・PIT 関数。米 `core PCE` 1 本を `parsed` まで貫通 | 1 系列だけ `parsed`（`validated` は Phase 5） |
 | 2. カタログ記述 | 50 系列を YAML に書き切る（付録 A） | 全系列 `declared` |
 | 3. raw 取得 ★最優先 | 全系列の `fetch_raw()` を通す。パースは書かない。ハッシュ重複排除と manifest | 全系列 `fetching` / **vintage 蓄積開始** |
 | 4. パース | ソース単位で `parse()` 実装。順序は alfred → treasury → mof/boj → estat → cabinet/meti（素直な順） | 順次 `parsed` |
@@ -341,6 +343,11 @@ e-Stat の既知の罠は最初からフィクスチャに入れる — 欠損�
 
 Phase 3 時点でパースは 1 行も無くてよい。生ファイルさえ貯まっていれば、パースは後から
 遡って適用できる。
+
+Phase 1 の到達状態が `validated` ではなく `parsed` なのは、`data/validated.json` を
+書く処理がまだ存在しないため。`validated` は本当の検証実行（FRED 経由の日本ミラー等、
+他ソースとの相互突合）を意味し、日本側のソースが 1 本も無い Phase 1 時点では原理的に
+成立しない。相互検証は Phase 5 で日本側ソースが揃ってから行う。
 
 ## 8. workspace 統合
 
@@ -353,6 +360,14 @@ Phase 3 時点でパースは 1 行も無くてよい。生ファイルさえ貯
 3 番目は、ディレクトリ名とパッケージ名が一致するため必須。これが無いと全体 pytest で
 namespace パッケージ化して壊れる（`AGENTS.md` に記録済みの pytest 9 問題。
 `deep_hedge_price` が踏んだのと同じ罠。症状は `(unknown location)`）。
+
+**カタログの探索は editable install が前提**（決定）。`ingest.default_catalog_root()`
+はソースツリー上の位置（`src/macrokit/` の 2 つ上）からカタログを解決するため、
+通常の wheel インストールでは存在しないパスを返してしまう。カタログは手書きデータで
+約 50 本の YAML が並ぶ想定であり、見つけやすさ・diff しやすさを wheel パッケージング
+より優先し、このワークスペースが全メンバーを editable でインストールする前提に乗る。
+`default_catalog_root()` は解決先が存在しない場合に明示的なエラーを送出し、editable
+install が前提であることを伝える。
 
 `macrokit/data/` は `.gitignore` と `.agentignore` の両方に追加する。
 

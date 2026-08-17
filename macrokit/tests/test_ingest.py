@@ -38,6 +38,23 @@ def test_the_production_catalog_loads_and_contains_core_pce():
     assert catalog["us_core_pce"].source_ref["series_id"] == "PCEPILFE"
 
 
+def test_default_catalog_root_explains_the_editable_install_assumption(tmp_path, monkeypatch):
+    # default_catalog_root() resolves the catalog via the source layout
+    # (two directories above this module), which only exists next to an
+    # editable install. A regular wheel install would silently get a path
+    # with no catalog in it; this makes that loud instead, with a message
+    # pointing at the actual cause. Simulate "not editable" by pointing the
+    # module's __file__ at a source layout with no catalog/ sibling.
+    import macrokit.ingest as ingest_module
+
+    fake_module_file = tmp_path / "src" / "macrokit" / "ingest.py"
+    fake_module_file.parent.mkdir(parents=True)
+    monkeypatch.setattr(ingest_module, "__file__", str(fake_module_file))
+
+    with pytest.raises(RuntimeError, match="editable install"):
+        ingest_module.default_catalog_root()
+
+
 def test_ingest_stores_a_snapshot_and_inserts_rows(tmp_path):
     catalog = load_catalog(default_catalog_root())
     adapter = FakeAdapter((FIXTURES / "alfred_pcepilfe.json").read_bytes())
