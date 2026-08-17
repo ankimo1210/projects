@@ -1,0 +1,21 @@
+- name: jp_scheduled_earnings
+  country: JP
+  block: labor
+  title_ja: 所定内給与（一般労働者・共通事業所）
+  source: estat
+  source_ref:
+    stats_id: "0003084821"
+  freq: M
+  unit: yen
+  sa: nsa
+  release_lag_days: 35
+  release_rule:
+    kind: nth_business_day
+    n: 5
+    time: "08:30"
+    tz: Asia/Tokyo
+    calendar: jp
+  vintage: snapshot
+  chain: {}
+  caveats:
+    - サンプル入替で断層が出る。前年比は「共通事業所」ベースを使う
