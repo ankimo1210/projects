@@ -7,6 +7,18 @@ their calendar directly, including future dates.
 
 Every rule is relative to the month AFTER the period ends, which is how monthly
 Japanese statistics are published.
+
+KNOWN LIMITATION -- business-day count in January and December is unreliable.
+``nth_business_day``'s only holiday source is the Cabinet Office's 国民の祝日
+CSV (see ``holidays.py``), which does not include the 年末年始 administrative
+closure (12/29-1/3, per the law on government office holidays) or bank
+holidays (12/31-1/3). Neither of those counts as a public holiday, so this
+module cannot subtract them, and ``nth_business_day`` overcounts business days
+in January and December by up to two. This matters here because the Bank of
+Japan's 消費活動指数 publishes on the 5th business day -- exactly the rule this
+module's tests exercise. Do not read a passing test for a January/December
+date as validated Bank of Japan behaviour; a proper business-day calendar is
+future work.
 """
 
 from __future__ import annotations
@@ -19,7 +31,15 @@ from .catalog import ReleaseRule
 
 
 def nth_business_day(year: int, month: int, n: int, holidays: set[date]) -> date:
-    """The nth business day of a month (1-indexed), skipping weekends and holidays."""
+    """The nth business day of a month (1-indexed), skipping weekends and holidays.
+
+    ``holidays`` is expected to be the Cabinet Office's 国民の祝日 set (see
+    ``holidays.py``), which excludes the 年末年始 administrative closure
+    (12/29-1/3) and bank holidays (12/31-1/3). Neither is a public holiday, so
+    this function cannot know to skip them: results for January and December
+    overcount business days by up to two and should not be treated as
+    reliable until a proper business-day calendar exists.
+    """
     if n < 1:
         raise ValueError(f"n must be >= 1, got {n}")
     days_in_month = calendar.monthrange(year, month)[1]

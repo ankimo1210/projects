@@ -37,6 +37,11 @@ def test_load_holidays_refuses_to_fetch_when_told_not_to(tmp_path):
 
 
 def test_nth_business_day_skips_weekends_and_holidays():
+    # CAVEAT (see nth_business_day's docstring): this fixture's holiday set is
+    # only the Cabinet Office CSV, which excludes the 年末年始 closure and bank
+    # holidays. This January result happens to match the fixture as given,
+    # but it is not validated Bank of Japan behaviour -- do not read a passing
+    # assertion here as proof the real January business-day count is right.
     holidays = parse_holiday_csv((FIXTURES / "syukujitsu_sample.csv").read_bytes())
     # 2026-01: 1(Thu) is 元日, 2(Fri) and 5(Mon) are business days,
     # 3-4 weekend, so business days run 2, 5, 6, 7, 8, ...
@@ -51,6 +56,10 @@ def test_nth_business_day_raises_when_the_month_is_too_short():
 
 
 def test_resolve_release_for_nth_business_day_returns_an_aware_datetime():
+    # CAVEAT: n=5 in January is exactly the Bank of Japan 消費活動指数 rule this
+    # module was built for, but the fixture's holiday set has the same
+    # 年末年始/bank-holiday gap noted on nth_business_day -- this test checks the
+    # arithmetic and the timezone, not that the real BOJ date is reproduced.
     holidays = parse_holiday_csv((FIXTURES / "syukujitsu_sample.csv").read_bytes())
     rule = ReleaseRule(kind="nth_business_day", n=5, time="14:00", tz="Asia/Tokyo", calendar="jp")
     # Period ending 2025-12-31 is published in the month after the period ends.
