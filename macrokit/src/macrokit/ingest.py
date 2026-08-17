@@ -26,8 +26,24 @@ ADAPTERS: dict[str, type] = {"alfred": AlfredAdapter}
 
 
 def default_catalog_root() -> Path:
-    """The catalog shipped with the package (``macrokit/catalog``)."""
-    return Path(__file__).resolve().parents[2] / "catalog"
+    """The catalog shipped with the package (``macrokit/catalog``).
+
+    Resolved via the source layout (``parents[2]`` above ``src/macrokit/``),
+    which only exists next to an editable install -- a regular wheel install
+    would not have it. That is accepted deliberately: the catalog is
+    hand-edited data, about 50 YAML files that need to be easy to find and
+    diff, and this workspace installs every member editable, so wheel
+    packaging is not a real constraint here. See macrokit/README.md.
+    """
+    root = Path(__file__).resolve().parents[2] / "catalog"
+    if not root.is_dir():
+        raise RuntimeError(
+            f"catalog directory not found at {root}. macrokit expects an editable "
+            "install (the catalog lives in the source tree, not the installed "
+            "package) -- run `uv sync` from the workspace root rather than "
+            "installing a built wheel."
+        )
+    return root
 
 
 @dataclass(frozen=True)
