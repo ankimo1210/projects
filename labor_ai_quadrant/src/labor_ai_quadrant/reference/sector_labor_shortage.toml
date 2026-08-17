@@ -1,0 +1,82 @@
+# 東証33業種別 人手不足指標（公表統計から機械的に生成 / generated, do not hand-edit）
+#
+# tools/build_reference.py が出力する。すべて「高いほど人手不足が深刻」の向き。
+#
+# 出典 (sources):
+#   厚生労働省「雇用動向調査」令和7年上半期 図表 (表7 産業別未充足求人の状況 / 表4-2 産業、就業形態別入職率・離職率) https://www.mhlw.go.jp/toukei/itiran/roudou/koyou/doukou/26-1/dl/zuhyo.xlsx
+#   日本銀行「全国企業短期経済観測調査」2026年6月調査 雇用人員判断DI (項目コード608) https://www.stat-search.boj.or.jp/info/co.zip
+#   厚生労働省「一般職業紹介状況」長期時系列表21 職業別労働市場関係指標 (有効求人・有効求職、パート含む常用、2025年計) https://www.e-stat.go.jp/stat-search/file-download?&statInfId=000040478179&fileKind=0
+#   総務省「労働力調査」基本集計 年次 2025年 年齢階級，産業別就業者数 (e-Stat 0003007108)
+#   厚生労働省「毎月勤労統計調査」全国調査 実数 2025年 一般労働者・事業所規模5人以上 所定外労働時間 https://www.e-stat.go.jp/stat-search/file-download?&statInfId=000032189776&fileKind=1
+#
+# 指標の定義:
+#   vacancy_rate_pct        欠員率 = 未充足求人数 ÷ 常用労働者数（2025年6月末日現在。全産業 2.6%）
+#   employment_di_shortage  短観 雇用人員判断DI の符号反転（DIは「過剰」-「不足」なので
+#                           不足が深刻なほど負。反転して「高いほど不足」に揃えている。全産業 +37）
+#   job_openings_ratio      職業別有効求人倍率をその業種の職業構成比で加重平均した値
+#                           （Σ有効求人 ÷ Σ有効求職。2025年平均、パート含む常用）
+#   age55_share_pct         就業者に占める55歳以上比率（2025年平均）
+#   separation_rate_pct     離職率（令和7年上半期）
+#   overtime_hours_month    所定外労働時間（2025年平均、一般労働者、事業所規模5人以上、時間/月）
+#
+# 粒度の但し書き（公表区分がそこまで割れていないため同値になる組）:
+#   欠員率・離職率・所定外労働時間 … 製造業16業種はすべて「製造業」の値。
+#     陸運/海運/空運/倉庫運輸は「運輸業，郵便業」、銀行/証券/保険/その他金融は「金融業，保険業」、
+#     卸売/小売は「卸売業，小売業」の値。水産・農林業は調査対象外なので産業計を当てている。
+#   短観DI … 医薬品は化学、ゴム製品とその他製品はその他製造業。水産・農林業は全産業。
+#   サービス業 … 学術研究/宿泊飲食/生活関連娯楽/教育/サービス業(他) を労働者数で加重平均。
+
+# NOTE: TOML はテーブルヘッダ以降のキーをそのテーブルに属させるため、
+#       トップレベルの配列 (sector) を先に、[meta] / [weights] を末尾に置いている。
+
+sector = [
+  { code = "0050", name = "水産・農林業",         vacancy_rate_pct = 2.60, employment_di_shortage = 37.0, job_openings_ratio = 1.050, age55_share_pct = 63.6, separation_rate_pct = 8.10, overtime_hours_month = 14.40 },
+  { code = "1050", name = "鉱業",                 vacancy_rate_pct = 1.10, employment_di_shortage = 29.0, job_openings_ratio = 1.962, age55_share_pct = 32.8, separation_rate_pct = 5.60, overtime_hours_month = 15.70 },
+  { code = "2050", name = "建設業",               vacancy_rate_pct = 3.50, employment_di_shortage = 59.0, job_openings_ratio = 3.236, age55_share_pct = 36.6, separation_rate_pct = 5.00, overtime_hours_month = 16.70 },
+  { code = "3050", name = "食料品",               vacancy_rate_pct = 2.00, employment_di_shortage = 27.0, job_openings_ratio = 1.361, age55_share_pct = 32.7, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3100", name = "繊維製品",             vacancy_rate_pct = 2.00, employment_di_shortage = 17.0, job_openings_ratio = 1.428, age55_share_pct = 42.9, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3150", name = "パルプ・紙",           vacancy_rate_pct = 2.00, employment_di_shortage = 28.0, job_openings_ratio = 1.385, age55_share_pct = 30.4, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3200", name = "化学",                 vacancy_rate_pct = 2.00, employment_di_shortage = 21.0, job_openings_ratio = 1.394, age55_share_pct = 24.2, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3250", name = "医薬品",               vacancy_rate_pct = 2.00, employment_di_shortage = 21.0, job_openings_ratio = 1.413, age55_share_pct = 21.4, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3300", name = "石油・石炭製品",       vacancy_rate_pct = 2.00, employment_di_shortage = 33.0, job_openings_ratio = 1.489, age55_share_pct = 28.4, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3350", name = "ゴム製品",             vacancy_rate_pct = 2.00, employment_di_shortage = 24.0, job_openings_ratio = 1.412, age55_share_pct = 28.4, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3400", name = "ガラス・土石製品",     vacancy_rate_pct = 2.00, employment_di_shortage = 30.0, job_openings_ratio = 1.450, age55_share_pct = 35.5, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3450", name = "鉄鋼",                 vacancy_rate_pct = 2.00, employment_di_shortage = 29.0, job_openings_ratio = 1.372, age55_share_pct = 22.2, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3500", name = "非鉄金属",             vacancy_rate_pct = 2.00, employment_di_shortage = 33.0, job_openings_ratio = 1.433, age55_share_pct = 28.4, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3550", name = "金属製品",             vacancy_rate_pct = 2.00, employment_di_shortage = 38.0, job_openings_ratio = 1.410, age55_share_pct = 31.9, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3600", name = "機械",                 vacancy_rate_pct = 2.00, employment_di_shortage = 31.0, job_openings_ratio = 1.437, age55_share_pct = 26.9, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3650", name = "電気機器",             vacancy_rate_pct = 2.00, employment_di_shortage = 20.0, job_openings_ratio = 1.466, age55_share_pct = 27.5, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3700", name = "輸送用機器",           vacancy_rate_pct = 2.00, employment_di_shortage = 29.0, job_openings_ratio = 1.461, age55_share_pct = 20.8, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3750", name = "精密機器",             vacancy_rate_pct = 2.00, employment_di_shortage = 27.0, job_openings_ratio = 1.405, age55_share_pct = 25.6, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "3800", name = "その他製品",           vacancy_rate_pct = 2.00, employment_di_shortage = 24.0, job_openings_ratio = 1.406, age55_share_pct = 30.9, separation_rate_pct = 5.00, overtime_hours_month = 15.80 },
+  { code = "4050", name = "電気・ガス業",         vacancy_rate_pct = 0.30, employment_di_shortage = 22.0, job_openings_ratio = 1.598, age55_share_pct = 27.3, separation_rate_pct = 6.60, overtime_hours_month = 19.00 },
+  { code = "5050", name = "陸運業",               vacancy_rate_pct = 4.10, employment_di_shortage = 57.0, job_openings_ratio = 1.525, age55_share_pct = 37.9, separation_rate_pct = 5.00, overtime_hours_month = 24.30 },
+  { code = "5100", name = "海運業",               vacancy_rate_pct = 4.10, employment_di_shortage = 57.0, job_openings_ratio = 1.603, age55_share_pct = 36.5, separation_rate_pct = 5.00, overtime_hours_month = 24.30 },
+  { code = "5150", name = "空運業",               vacancy_rate_pct = 4.10, employment_di_shortage = 57.0, job_openings_ratio = 1.826, age55_share_pct = 36.5, separation_rate_pct = 5.00, overtime_hours_month = 24.30 },
+  { code = "5200", name = "倉庫・運輸関連業",     vacancy_rate_pct = 4.10, employment_di_shortage = 57.0, job_openings_ratio = 1.095, age55_share_pct = 30.0, separation_rate_pct = 5.00, overtime_hours_month = 24.30 },
+  { code = "5250", name = "情報・通信業",         vacancy_rate_pct = 1.80, employment_di_shortage = 32.0, job_openings_ratio = 1.631, age55_share_pct = 16.9, separation_rate_pct = 6.00, overtime_hours_month = 17.00 },
+  { code = "6050", name = "卸売業",               vacancy_rate_pct = 2.00, employment_di_shortage = 32.0, job_openings_ratio = 1.390, age55_share_pct = 32.0, separation_rate_pct = 7.20, overtime_hours_month = 12.20 },
+  { code = "6100", name = "小売業",               vacancy_rate_pct = 2.00, employment_di_shortage = 43.0, job_openings_ratio = 1.539, age55_share_pct = 31.8, separation_rate_pct = 7.20, overtime_hours_month = 12.20 },
+  { code = "7050", name = "銀行業",               vacancy_rate_pct = 0.40, employment_di_shortage = 18.0, job_openings_ratio = 1.217, age55_share_pct = 28.7, separation_rate_pct = 4.10, overtime_hours_month = 16.20 },
+  { code = "7100", name = "証券、商品先物取引業", vacancy_rate_pct = 0.40, employment_di_shortage = 35.0, job_openings_ratio = 1.217, age55_share_pct = 28.7, separation_rate_pct = 4.10, overtime_hours_month = 16.20 },
+  { code = "7150", name = "保険業",               vacancy_rate_pct = 0.40, employment_di_shortage = 36.0, job_openings_ratio = 1.217, age55_share_pct = 28.7, separation_rate_pct = 4.10, overtime_hours_month = 16.20 },
+  { code = "7200", name = "その他金融業",         vacancy_rate_pct = 0.40, employment_di_shortage = 21.0, job_openings_ratio = 1.217, age55_share_pct = 28.7, separation_rate_pct = 4.10, overtime_hours_month = 16.20 },
+  { code = "8050", name = "不動産業",             vacancy_rate_pct = 3.30, employment_di_shortage = 25.0, job_openings_ratio = 1.622, age55_share_pct = 52.6, separation_rate_pct = 7.40, overtime_hours_month = 14.80 },
+  { code = "9050", name = "サービス業",           vacancy_rate_pct = 2.46, employment_di_shortage = 47.5, job_openings_ratio = 1.712, age55_share_pct = 34.2, separation_rate_pct = 11.13, overtime_hours_month = 14.53 },
+]
+
+[meta]
+vintage = "2026-08"
+basis = "published statistics, mechanically mapped to the 33 TSE sectors"
+overall_anchor = { vacancy_rate_pct = 2.6, vacancy_asof = "2025-06-30", employment_di_shortage = 37.0, employment_di_asof = "2026-06", job_openings_ratio_incl_parttime = 1.116, job_openings_ratio_regular_excl_parttime = 1.386, job_openings_ratio_regular_incl_newgrad = 1.649, job_openings_comparable_basis = "regular_excl_parttime", job_openings_asof = "2025" }
+
+# 合成スコアの重み。欠員率と短観DIが「いま採れていない」ことの最も直接的な測度なので重い。
+# 有効求人倍率はハローワーク経由の求人・求職しか映さない（大卒総合職・中途エージェント経由が
+# 抜ける）ため 0.20 に抑えている。年齢構成・離職率・残業時間は不足の帰結ないし将来圧力。
+[weights]
+vacancy_rate_pct = 0.30
+employment_di_shortage = 0.30
+job_openings_ratio = 0.20
+age55_share_pct = 0.10
+separation_rate_pct = 0.05
+overtime_hours_month = 0.05

@@ -34,6 +34,7 @@ members = [
     "jhrmbs",
     "jp-llm-lab",
     "la-book",
+    "labor-ai-quadrant",
     "laplace-book",
     "line-backup-exporter",
     "lob-paper-reproductions",
@@ -2983,6 +2984,35 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8.0" }]
+
+[[package]]
+name = "labor-ai-quadrant"
+version = "0.1.0"
+source = { editable = "labor_ai_quadrant" }
+dependencies = [
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "plotly" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "openpyxl" },
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "numpy", specifier = ">=1.26" },
+    { name = "pandas", specifier = ">=2.2" },
+    { name = "plotly", specifier = ">=5.24" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "openpyxl", specifier = ">=3.1" },
+    { name = "pytest", specifier = ">=8.0" },
+]
 
 [[package]]
 name = "laplace-book"
