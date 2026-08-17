@@ -40,6 +40,7 @@ members = [
     "jp_llm_lab",
     "market_nn",
     "portfolio-analyzer",
+    "macrokit",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -184,6 +185,7 @@ testpaths = [
     "jp_llm_lab/tests",
     "shortest_path/tests",
     "market_nn/tests",
+    "macrokit/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

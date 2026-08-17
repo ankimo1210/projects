@@ -4,6 +4,7 @@ _logs/
 _archive/
 tmp/
 test_app/
+macrokit/data/
 
 # Scratch is intentionally excluded unless explicitly requested
 _scratch/
