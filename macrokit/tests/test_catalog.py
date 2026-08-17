@@ -84,6 +84,46 @@ def test_rejects_a_cycle_in_the_chain_graph(tmp_path):
         load_catalog(tmp_path)
 
 
+def test_diamond_shaped_chain_is_not_a_cycle(tmp_path):
+    # a -> b -> d and a -> c -> d: d is reached twice via two different
+    # paths. That is convergence, not a cycle, and must load cleanly.
+    (tmp_path / "jp").mkdir()
+    (tmp_path / "jp" / "a.yaml").write_text(
+        "- {name: a, country: JP, block: prices, title_ja: A, source: estat,\n"
+        "   source_ref: {stats_id: '1'}, freq: M, unit: u, sa: nsa,\n"
+        "   release_lag_days: 1, vintage: snapshot, chain: {downstream: [b, c]}}\n"
+        "- {name: b, country: JP, block: prices, title_ja: B, source: estat,\n"
+        "   source_ref: {stats_id: '2'}, freq: M, unit: u, sa: nsa,\n"
+        "   release_lag_days: 1, vintage: snapshot, chain: {downstream: [d]}}\n"
+        "- {name: c, country: JP, block: prices, title_ja: C, source: estat,\n"
+        "   source_ref: {stats_id: '3'}, freq: M, unit: u, sa: nsa,\n"
+        "   release_lag_days: 1, vintage: snapshot, chain: {downstream: [d]}}\n"
+        "- {name: d, country: JP, block: prices, title_ja: D, source: estat,\n"
+        "   source_ref: {stats_id: '4'}, freq: M, unit: u, sa: nsa,\n"
+        "   release_lag_days: 1, vintage: snapshot}\n",
+        encoding="utf-8",
+    )
+    catalog = load_catalog(tmp_path)
+    assert set(catalog) == {"a", "b", "c", "d"}
+
+
+def test_rejects_a_cycle_declared_only_through_upstream(tmp_path):
+    # No downstream edge exists anywhere here; the cycle is only visible if
+    # upstream declarations are normalised into the same edge set.
+    (tmp_path / "jp").mkdir()
+    (tmp_path / "jp" / "a.yaml").write_text(
+        "- {name: a, country: JP, block: prices, title_ja: A, source: estat,\n"
+        "   source_ref: {stats_id: '1'}, freq: M, unit: u, sa: nsa,\n"
+        "   release_lag_days: 1, vintage: snapshot, chain: {upstream: [b]}}\n"
+        "- {name: b, country: JP, block: prices, title_ja: B, source: estat,\n"
+        "   source_ref: {stats_id: '2'}, freq: M, unit: u, sa: nsa,\n"
+        "   release_lag_days: 1, vintage: snapshot, chain: {upstream: [a]}}\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(CatalogError, match=r"cycle in chain graph"):
+        load_catalog(tmp_path)
+
+
 def test_rejects_an_unknown_field_so_typos_do_not_pass_silently(tmp_path):
     (tmp_path / "us").mkdir()
     (tmp_path / "us" / "a.yaml").write_text(
