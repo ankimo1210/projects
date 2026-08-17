@@ -1,8 +1,10 @@
 from datetime import UTC, date, datetime
 from pathlib import Path
 
+import pytest
+
 from macrokit.catalog import load_catalog
-from macrokit.ingest import default_catalog_root, ingest_one
+from macrokit.ingest import _sniff_suffix, default_catalog_root, ingest_one
 from macrokit.pit import as_of, latest
 from macrokit.store import connect
 
@@ -99,3 +101,22 @@ def test_point_in_time_query_works_after_ingest(tmp_path):
     # The whole point of the platform: the value you would have seen in April
     # 2024 differs from today's value for the same month.
     assert early.loc[date(2024, 1, 1)] != current.loc[date(2024, 1, 1)]
+
+
+@pytest.mark.parametrize(
+    ("content", "expected"),
+    [
+        (b"", "bin"),  # empty payload: neither format, don't guess
+        (b"\xef\xbb\xbf", "bin"),  # BOM with nothing after it is still empty
+        (b'\xef\xbb\xbf{"a": 1}', "json"),  # BOM-prefixed JSON
+        (b"\xef\xbb\xbfdate,value\n2024-01-01,1", "csv"),  # BOM-prefixed CSV
+        (b'{"a": 1}', "json"),
+        (b"date,value\n2024-01-01,1", "csv"),
+    ],
+)
+def test_sniff_suffix_strips_a_bom_before_guessing(content, expected):
+    # bytes.lstrip() does not strip a UTF-8 BOM, and Japanese ministry CSVs
+    # commonly carry one -- without stripping it first, both an empty
+    # payload and a BOM-prefixed payload (even a JSON one) were
+    # misclassified as "csv".
+    assert _sniff_suffix(content) == expected

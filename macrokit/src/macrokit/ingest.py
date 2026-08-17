@@ -38,6 +38,20 @@ class IngestReport:
     skipped_reason: str | None = None
 
 
+def _sniff_suffix(content: bytes) -> str:
+    """Guess a snapshot's file extension from its leading byte.
+
+    Strips a UTF-8 BOM before sniffing: ``bytes.lstrip()`` does not strip one,
+    so a BOM-prefixed payload (common in Japanese ministry CSVs) would
+    otherwise be misclassified as ``json``. Empty content gets a neutral
+    ``bin`` suffix rather than being guessed as either format.
+    """
+    stripped = content.removeprefix(b"\xef\xbb\xbf").lstrip()
+    if not stripped:
+        return "bin"
+    return "json" if stripped[:1] in (b"{", b"[") else "csv"
+
+
 def ingest_one(
     indicator: Indicator,
     *,
@@ -49,7 +63,7 @@ def ingest_one(
 ) -> IngestReport:
     content, url, status = adapter.fetch_raw(indicator, start)
 
-    suffix = "json" if content.lstrip()[:1] in (b"{", b"[") else "csv"
+    suffix = _sniff_suffix(content)
     result = save_snapshot(
         raw_root,
         adapter.source,

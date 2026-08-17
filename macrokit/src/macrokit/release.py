@@ -61,6 +61,13 @@ def resolve_release(rule: ReleaseRule, period_end: date, holidays: set[date]) ->
     Returns ``None`` for ``kind="manual"``: the schedule is not expressible as a
     rule and must be supplied by hand.
     """
+    if rule.calendar != "jp":
+        raise ValueError(
+            f"resolve_release only knows the 'jp' calendar (nth_business_day skips "
+            f"Japanese holidays); got calendar={rule.calendar!r}. US release dates "
+            "come from FRED's releases/dates endpoint instead, not this function."
+        )
+
     if rule.kind == "manual":
         return None
 

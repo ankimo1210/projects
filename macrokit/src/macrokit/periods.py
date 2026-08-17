@@ -21,6 +21,12 @@ def period_end_for(period_start: date, freq: str) -> date:
             day=calendar.monthrange(period_start.year, period_start.month)[1]
         )
     if freq == "Q":
+        if period_start.month not in (1, 4, 7, 10):
+            raise ValueError(
+                f"period_end_for: {period_start} is not a quarter start (month must be "
+                "1, 4, 7 or 10). Months 2/3/5/6/8/9 would silently return a plausible "
+                "but wrong period end; 11/12 overflow past December."
+            )
         end_month = period_start.month + 2
         return date(
             period_start.year, end_month, calendar.monthrange(period_start.year, end_month)[1]

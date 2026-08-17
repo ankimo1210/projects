@@ -58,8 +58,8 @@ def last_sha(root: Path, source: str, indicator: str) -> str | None:
             # truncated final line. Only the last line can ever be broken
             # this way, so skipping it is both safe and complete.
             continue
-        if record["source"] == source and record["indicator"] == indicator:
-            newest = record["sha256"]
+        if record.get("source") == source and record.get("indicator") == indicator:
+            newest = record.get("sha256")
     return newest
 
 

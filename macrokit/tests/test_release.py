@@ -76,3 +76,13 @@ def test_resolve_release_for_nth_weekday():
 def test_resolve_release_returns_none_for_manual_rules():
     rule = ReleaseRule(kind="manual", tz="Asia/Tokyo", calendar="jp")
     assert resolve_release(rule, date(2026, 1, 31), set()) is None
+
+
+def test_resolve_release_rejects_the_us_calendar():
+    # calendar="us" is a valid ReleaseRule value, but resolve_release only
+    # knows how to apply Japanese holiday logic. Silently applying it to a
+    # US-marked rule would be wrong, not just unimplemented -- US release
+    # dates come from FRED's releases endpoint instead.
+    rule = ReleaseRule(kind="fixed_day", day=19, time="08:30", tz="America/New_York", calendar="us")
+    with pytest.raises(ValueError, match="only knows the 'jp' calendar"):
+        resolve_release(rule, date(2026, 1, 31), set())
