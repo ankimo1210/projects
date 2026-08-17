@@ -2,7 +2,7 @@ import json
 from datetime import UTC, date, datetime
 from pathlib import Path
 
-from macrokit.catalog import load_catalog
+from macrokit.catalog import Indicator, load_catalog
 from macrokit.ingest import default_catalog_root, ingest_one
 from macrokit.status import compute_status, load_validated
 from macrokit.store import connect
@@ -68,6 +68,39 @@ def test_status_is_fetching_when_snapshots_exist_but_no_rows_do(tmp_path):
         catalog["us_core_pce"], con=con, data_root=tmp_path / "raw", validated=set()
     )
     assert got == "fetching"
+
+
+def test_a_fully_ingested_indicator_does_not_make_a_different_indicator_parsed(tmp_path):
+    # If compute_status's row-count query ever drops its `WHERE indicator = ?`
+    # condition, one indicator having rows would make every other indicator
+    # in the catalog look "parsed" too, even one with no snapshot and no rows
+    # of its own.
+    catalog = load_catalog(default_catalog_root())
+    con = connect(tmp_path / "t.duckdb")
+    ingest_one(
+        catalog["us_core_pce"],
+        con=con,
+        data_root=tmp_path / "raw",
+        adapter=FakeAdapter(),
+        start=date(2024, 1, 1),
+        now=datetime(2026, 8, 17, tzinfo=UTC),
+    )
+
+    other = Indicator(
+        name="us_headline_cpi",
+        country="US",
+        block="prices",
+        title_ja="ヘッドライン CPI",
+        source="alfred",
+        source_ref={"series_id": "CPIAUCSL"},
+        freq="M",
+        unit="index_1982_84_100",
+        sa="sa",
+        release_lag_days=15,
+        vintage="alfred",
+    )
+    got = compute_status(other, con=con, data_root=tmp_path / "raw", validated=set())
+    assert got == "declared"
 
 
 def test_validated_is_read_from_the_marker_file(tmp_path):

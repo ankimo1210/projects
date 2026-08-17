@@ -46,7 +46,16 @@ ORDER BY release_date
 """
 
 
+def _is_naive(dt: datetime) -> bool:
+    return dt.tzinfo is None or dt.tzinfo.utcoffset(dt) is None
+
+
 def _to_series(frame: pd.DataFrame) -> pd.Series:
+    # `as_of` and `latest` both build their result by routing their SQL output
+    # through this function, which is what guarantees their dtypes -- and
+    # therefore pd.testing.assert_series_equal -- line up (see
+    # test_as_of_today_equals_latest). A future query that bypasses
+    # _to_series would silently break that equality.
     if frame.empty:
         return pd.Series(dtype="float64", name="value")
     series = frame.set_index("period_start")["value"]
@@ -64,6 +73,13 @@ def _to_series(frame: pd.DataFrame) -> pd.Series:
 
 def as_of(con: duckdb.DuckDBPyConnection, indicator: str, when: datetime) -> pd.Series:
     """Values visible at ``when``, indexed by period_start. Never forward-filled."""
+    if _is_naive(when):
+        raise ValueError(
+            f"as_of: 'when' must be a timezone-aware datetime, got a naive one ({when!r}). "
+            "DuckDB interprets a naive datetime in the session's local timezone, so the "
+            "same query would return different rows on a machine in Tokyo versus one in "
+            "UTC. Pass a datetime with tzinfo set, e.g. datetime(..., tzinfo=UTC)."
+        )
     return _to_series(con.execute(_AS_OF_SQL, [indicator, when]).df())
 
 
