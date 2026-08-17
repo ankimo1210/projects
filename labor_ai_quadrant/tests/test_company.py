@@ -78,14 +78,38 @@ def _fake_financials(codes: list[str]) -> pd.DataFrame:
     )
 
 
-def test_pnl_layer_computes_uplift(ref):
+def test_pnl_layer_translates_relief_into_recovered_revenue(ref):
+    """経路は AI → 人手不足の緩和 → 取り逃していた売上の回復 → 利益増。"""
     codes = list(ref.universe.index[:5])
     df = company_frame(Config(realization_rate=0.5), ref, financials=_fake_financials(codes))
     scored = df.loc[codes]
-    expected = 300.0 * (scored["ai_substitutable_share_pct"] / 100.0) * 0.5 / 100.0 * 100.0
-    assert np.allclose(scored["op_uplift_pct"], expected)
+
+    # 限界利益率 = (営業利益 + 人件費) / 売上。人を増やさないので人件費は固定費。
+    assert np.allclose(scored["contribution_margin"], (100.0 + 300.0) / 1000.0)
+    closable = scored["closable_gap_pct"] / 100.0
+    assert np.allclose(scored["recovered_revenue"], 1000.0 * closable)
+    assert np.allclose(scored["expected_profit_gain"], 1000.0 * closable * 0.4)
+    # 押上げ幅(pp) は 埋められる欠員 × 限界利益率 で、企業規模には依存しない。
+    assert np.allclose(scored["op_margin_uplift_pp"], closable * 0.4 * 100.0)
+    assert np.allclose(scored["op_uplift_pct"], 1000.0 * closable * 0.4 / 100.0 * 100.0)
     assert np.allclose(scored["labor_cost_ratio"], 0.3)
     assert np.allclose(scored["revenue_per_employee"], 0.2)
+
+
+def test_closable_gap_is_capped_by_the_vacancy_rate(ref):
+    """空いた労働は、足りていないぶんを超えては不足の緩和にならない。"""
+    df = company_frame(Config(realization_rate=1.0), ref)
+    assert (df["closable_gap_pct"] <= df["vacancy_rate_pct"] + 1e-9).all()
+    assert (df["closable_gap_pct"] <= df["ai_freed_labor_pct"] + 1e-9).all()
+    # 実現率 1.0 でも、AI代替割合(20-45%)は欠員率(0.3-4.1%)より大きいので上限は欠員率側。
+    assert np.allclose(df["closable_gap_pct"], df["vacancy_rate_pct"])
+
+
+def test_freed_labor_binds_when_ai_substitution_is_small(ref):
+    """逆に代替割合が小さければ、欠員を埋めきれない側が上限になる。"""
+    df = company_frame(Config(realization_rate=0.001), ref)
+    assert np.allclose(df["closable_gap_pct"], df["ai_freed_labor_pct"])
+    assert (df["closable_gap_pct"] < df["vacancy_rate_pct"]).all()
 
 
 def test_companies_without_financials_get_nan_not_an_error(ref):
@@ -152,11 +176,14 @@ def test_margin_uplift_is_not_hostage_to_a_thin_operating_profit():
 
     # 利益の薄い会社は op_uplift_pct では桁違いに上に来る…
     assert df.loc[thin, "op_uplift_pct"] > 100 * df.loc[fat, "op_uplift_pct"]
-    # …が、売上あたりの押上げ幅は同じ（人件費も売上も同じなので当然）。
-    assert df.loc[thin, "op_margin_uplift_pp"] == pytest.approx(df.loc[fat, "op_margin_uplift_pp"])
+    # …が pp 版では逆に下に来る。限界利益率 (営業利益+人件費)/売上 が薄いから。
+    assert df.loc[thin, "op_margin_uplift_pp"] < df.loc[fat, "op_margin_uplift_pp"]
+    assert df.loc[thin, "contribution_margin"] == pytest.approx(3_001.0 / 10_000.0)
+    assert df.loc[fat, "contribution_margin"] == pytest.approx(5_000.0 / 10_000.0)
 
 
-def test_margin_uplift_is_bounded_by_the_labour_cost_ratio():
+def test_margin_uplift_is_bounded_by_the_vacancy_rate():
+    """押上げ幅(pp) = 埋められる欠員 × 限界利益率。限界利益率は1以下なので欠員率が天井。"""
     import pandas as pd
     from labor_ai_quadrant.company import company_frame
     from labor_ai_quadrant.reference import load_reference
@@ -169,8 +196,59 @@ def test_margin_uplift_is_bounded_by_the_labour_cost_ratio():
         index=pd.Index([code], name="code"),
     )
     df = company_frame(ref=ref, financials=financials)
-    # 人件費率 40% を超える押上げは、定義上あり得ない。
-    assert 0 < df.loc[code, "op_margin_uplift_pp"] <= 40.0
+    assert 0 < df.loc[code, "op_margin_uplift_pp"] <= df.loc[code, "vacancy_rate_pct"]
+
+
+def test_contribution_margin_rejects_values_that_cannot_be_one():
+    """人件費が売上を超える持株会社では限界利益率が1を超える。桁を壊すより落とす。"""
+    import pandas as pd
+    from labor_ai_quadrant.company import company_frame
+    from labor_ai_quadrant.reference import load_reference
+
+    ref = load_reference()
+    holding, loss = ref.universe.index[0], ref.universe.index[1]
+    financials = pd.DataFrame(
+        {
+            "revenue": [100.0, 1_000.0],
+            "operating_profit": [10.0, -900.0],   # 持株会社 / 人件費を食い潰した赤字
+            "labor_cost": [400.0, 100.0],
+            "employees": [50.0, 50.0],
+        },
+        index=pd.Index([holding, loss], name="code"),
+    )
+    df = company_frame(ref=ref, financials=financials)
+    assert df.loc[[holding, loss], "contribution_margin"].isna().all()
+    assert df.loc[[holding, loss], "op_margin_uplift_pp"].isna().all()
+
+
+def test_thin_parent_scope_is_flagged():
+    """単体従業員が連結の20%未満なら、単体基準のP/Lは事業の実態を表さない。"""
+    import pandas as pd
+    from labor_ai_quadrant.company import (
+        PARENT_SCOPE_FLAG,
+        PARENT_SCOPE_FLAG_THRESHOLD,
+        company_frame,
+    )
+    from labor_ai_quadrant.reference import load_reference
+
+    ref = load_reference()
+    box, real, unknown = ref.universe.index[0], ref.universe.index[1], ref.universe.index[2]
+    financials = pd.DataFrame(
+        {
+            "revenue": [1_000.0] * 3,
+            "operating_profit": [100.0] * 3,
+            "labor_cost": [300.0] * 3,
+            "employees": [100.0] * 3,
+            "parent_employee_share": [0.02, 0.65, float("nan")],
+        },
+        index=pd.Index([box, real, unknown], name="code"),
+    )
+    df = company_frame(ref=ref, financials=financials)
+    assert PARENT_SCOPE_FLAG_THRESHOLD == 0.20
+    assert df.loc[box, "parent_scope_flag"] == PARENT_SCOPE_FLAG
+    assert df.loc[real, "parent_scope_flag"] == ""
+    # 比率が分からない行に ※ を立てると「空箱と判明した」ように読めるので立てない。
+    assert df.loc[unknown, "parent_scope_flag"] == ""
 
 
 def test_rankable_excludes_rows_the_parent_pnl_cannot_carry():

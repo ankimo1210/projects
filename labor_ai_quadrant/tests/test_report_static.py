@@ -157,7 +157,10 @@ def test_static_report_carries_the_pnl_columns_when_financials_are_given():
     doc = render(financials=_financials_for(codes))
     assert "営業利益率の押上げ幅（pp）順" in doc
     assert "営業利益押上げ余地%" in doc
-    assert "人件費率" in doc
+    # 押上げは「売上回復 × 限界利益率」なので、欠員率と限界利益率が並んでいること。
+    assert "欠員率" in doc
+    assert "限界利益率" in doc
+    assert "回復売上(億)" in doc
     assert company_frame(Config()).shape[0] > 0  # ユニバースが空でないことの確認
 
     plain = render()

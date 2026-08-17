@@ -489,14 +489,19 @@ def build_report(
         # 単体営業利益が薄い会社（商社・持株会社・小型株）が分母の小ささだけで上位に来る。
         # 分子と分母を横に置けば、それが実額なのか比率の罠なのかを読者が判別できる。
         pnl_cols = {
-            "labor_cost_ratio": "人件費率",
+            "vacancy_rate_pct": "欠員率",
+            "closable_gap_pct": "埋められる欠員",
+            "contribution_margin": "限界利益率",
             "op_margin_uplift_pp": "営業利益率押上げ(pp)",
             "op_uplift_pct": "営業利益押上げ余地(%)",
-            "labor_cost": "人件費(単体)",
+            "recovered_revenue": "回復売上(単体)",
             "operating_profit": "営業利益(単体)",
         }
         if "parent_employee_share" in companies.columns:
             pnl_cols["parent_employee_share"] = "単体/連結 従業員"
+        # 単体が空箱の持株会社では限界利益率が実態より高く出る。社名に ※ を付けて示す。
+        if "parent_scope_flag" in top_companies.columns:
+            top_companies["name"] = top_companies["name"] + top_companies["parent_scope_flag"].fillna("")
         # 企業スコアは業種スコア + 3値×3値の補正で決まるので、同じ業種の銘柄は
         # 脱出ポテンシャルが完全に並ぶ。財務があるのにその順で切ると、上位20件は
         # 最上位業種から実質ランダムに選ばれた20社になる。同順位を解くのは P/L 換算。

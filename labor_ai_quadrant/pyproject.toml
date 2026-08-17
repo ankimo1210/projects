@@ -20,4 +20,7 @@ build-backend = "hatchling.build"
 packages = ["src/labor_ai_quadrant"]
 
 [dependency-groups]
-dev = ["pytest>=8.0"]
+# openpyxl は tools/build_reference.py が公表統計の .xlsx を読むのに要る。
+# 共有 .venv には他メンバー経由で入っているが、宣言しないと
+# `uv sync --package labor-ai-quadrant` で落ちる。
+dev = ["pytest>=8.0", "openpyxl>=3.1"]
