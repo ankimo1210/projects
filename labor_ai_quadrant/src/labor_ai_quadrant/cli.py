@@ -10,7 +10,7 @@ from pathlib import Path
 import pandas as pd
 
 from .axes import sector_frame
-from .company import company_frame, load_financials
+from .company import DEFAULT_BENEFITS_MULTIPLIER, company_frame, load_financials
 from .config import SCENARIOS, Config
 from .quadrant import quadrant_summary, top_right
 from .reference import ReferenceData, load_reference
@@ -84,7 +84,7 @@ def cmd_sectors(args: argparse.Namespace) -> int:
     ref = load_reference()
     cfg = _config_from_args(args)
     df = sector_frame(cfg, ref)
-    _show(df, ["shortage_score", "ai_score", "ai_substitutable_share_pct", "escape_potential", "quadrant"])
+    _show(df, ["shortage_score", "ai_score", "ai_exposure_pct", "escape_potential", "quadrant"])
     print("\n--- 象限別サマリー ---")
     print(quadrant_summary(df).to_string())
     return 0
@@ -240,7 +240,7 @@ def build_parser() -> argparse.ArgumentParser:
         p.add_argument("--scenario", choices=sorted(SCENARIOS), default="base",
                        help="感応度シナリオのプリセット (default: base)")
         p.add_argument("--realization-rate", type=float, default=None,
-                       help="AI代替可能な労働が実際に削減される割合 0-1")
+                       help="AI曝露のうち実際に労働時間の解放として実現する割合 0-1")
         p.add_argument("--threshold", choices=("median", "fixed"), default=None,
                        help="象限境界の決め方 (default: median)")
         if universe:
@@ -283,8 +283,9 @@ def build_parser() -> argparse.ArgumentParser:
     p_fin.add_argument("--out", type=Path, default=Path("_data/financials.csv"))
     p_fin.add_argument("--lookback-days", type=int, default=400,
                        help="EDINET の提出日を何日分さかのぼるか（既定400日＝決算期を問わず1周分）")
-    p_fin.add_argument("--benefits-multiplier", type=float, default=1.25,
-                       help="平均年間給与から会計上の人件費に直す係数（法定福利費・賞与引当等）")
+    p_fin.add_argument("--benefits-multiplier", type=float, default=DEFAULT_BENEFITS_MULTIPLIER,
+                       help="平均年間給与から会計上の人件費に直す係数（法定福利費＋退職給付。"
+                            "有報の平均年間給与は賞与を含むので賞与は上乗せしない）")
     p_fin.set_defaults(func=cmd_fetch_financials)
 
     p_verify = sub.add_parser("verify-universe", help="キュレーション済みユニバースを J-Quants で検証")

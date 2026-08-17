@@ -57,8 +57,8 @@ def test_ai_substitutable_share_is_a_weighted_average_of_potentials(ref):
     df = ai_axis(Config(), ref)
     potential = ref.occupations["ai_potential"]
     # 加重平均なので、必ず職業別ポテンシャルの最小・最大の内側に収まる。
-    assert df["ai_gross_share_pct"].between(potential.min(), potential.max()).all()
-    assert (df["ai_substitutable_share_pct"] <= df["ai_gross_share_pct"] + 1e-9).all()
+    assert df["ai_exposure_gross_pct"].between(potential.min(), potential.max()).all()
+    assert (df["ai_exposure_pct"] <= df["ai_exposure_gross_pct"] + 1e-9).all()
 
 
 def test_clerical_occupations_carry_the_ai_axis(ref):
@@ -83,7 +83,7 @@ def test_the_four_finance_sectors_share_one_occupation_mix(ref):
     """
     finance = ["銀行業", "証券、商品先物取引業", "保険業", "その他金融業"]
     assert ref.mix.loc[finance].nunique().max() == 1
-    gross = ai_axis(Config(), ref).loc[finance, "ai_gross_share_pct"]
+    gross = ai_axis(Config(), ref).loc[finance, "ai_exposure_gross_pct"]
     assert gross.nunique() == 1
 
 

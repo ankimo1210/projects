@@ -21,7 +21,12 @@ from pathlib import Path
 import pandas as pd
 
 from .axes import sector_frame
-from .company import company_frame
+from .company import (
+    PARENT_SCOPE_CONFIRMED,
+    PARENT_SCOPE_THIN,
+    PARENT_SCOPE_UNKNOWN,
+    company_frame,
+)
 from .config import Config
 from .quadrant import rankable, thresholds, top_right
 from .reference import ReferenceData, load_reference
@@ -167,7 +172,7 @@ def _svg(sectors: pd.DataFrame, x_cut: float, y_cut: float) -> str:
         cls = Q_CLASS[row["quadrant"]]
         tip = (
             f"{name}｜人手不足 {row['shortage_score']:.0f} / "
-            f"AI代替 {row['ai_score']:.0f}（労働の{row['ai_substitutable_share_pct']:.0f}%）"
+            f"AI代替 {row['ai_score']:.0f}（労働の{row['ai_exposure_pct']:.0f}%）"
         )
         parts.append(
             f'<g class="pt pt--{cls}"><circle cx="{cx:.1f}" cy="{cy:.1f}" r="6.5"/>'
@@ -205,8 +210,8 @@ def _num(value: float, fmt: str = "{:.0f}") -> str:
     return "—" if pd.isna(value) else fmt.format(value)
 
 
-def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[str, str, str]:
-    """Header, rows and a caption for the top-right company table.
+def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[str, str, str, int]:
+    """Header, rows, a caption and the number of rows shown, for the top-right table.
 
     With financials the ranking switches to the P/L translation. Company scores
     come from the sector plus a 3×3 tilt, so every company in a sector shares an
@@ -214,21 +219,32 @@ def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[
     the leading sector. 人件費 and 営業利益 sit next to the uplift because it is a
     ratio: a thin parent-company operating profit lifts it on the denominator
     alone.
+
+    順位表は **単体スコープが確認できた会社だけ**で作る。「※が付いていない」は
+    「単体が事業を映していると確認できた」ではなく、連結従業員が取れなかった
+    判定不能を含んでしまう。3群の件数はキャプションに出す。
     """
     rows = top_right(companies)
     if with_pnl:
         rows = rows[rankable(rows)]
+        scope = rows.get("parent_scope", pd.Series(PARENT_SCOPE_CONFIRMED, index=rows.index))
+        counts = {k: int((scope == k).sum()) for k in
+                  (PARENT_SCOPE_CONFIRMED, PARENT_SCOPE_UNKNOWN, PARENT_SCOPE_THIN)}
+        rows = rows[scope == PARENT_SCOPE_CONFIRMED]
         rows = rows.sort_values("op_margin_uplift_pp", ascending=False, na_position="last")
-        flagged = (rows.get("parent_scope_flag", pd.Series("", index=rows.index)) == "※").sum()
         caption = (
-            f"営業利益率の押上げ幅（pp）順・押上げ余地を定義できる{len(rows)}社から"
-            "（営業利益が0以下、人件費が売上を超える単体は除外）。"
-            f"※ = 単体従業員が連結の20%未満（{flagged}社）。持株会社の単体は本社機能の"
-            "空箱なので限界利益率が実態より高く出る"
+            f"営業利益率の押上げ幅（pp）順。押上げ余地を定義できるのは"
+            f"{sum(counts.values())}社（営業利益が0以下、人件費が売上を超える単体は除外）で、"
+            f"その内訳は 単体スコープ確認済み{counts[PARENT_SCOPE_CONFIRMED]}社 / "
+            f"判定不能{counts[PARENT_SCOPE_UNKNOWN]}社 / "
+            f"※単体従業員が連結の20%未満{counts[PARENT_SCOPE_THIN]}社。"
+            f"本表は確認済み{counts[PARENT_SCOPE_CONFIRMED]}社から。"
+            "持株会社の単体は本社機能の空箱なので限界利益率が実態より高く出る"
         )
     else:
         caption = "脱出ポテンシャル（2軸の幾何平均）順"
     rows = rows.head(n)
+    shown = len(rows)
 
     head = ('<th>コード</th><th>銘柄</th><th>業種</th><th class="num">人手不足</th>'
             '<th class="num">AI代替</th><th class="num">脱出</th>')
@@ -262,7 +278,7 @@ def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[
                 f'{_num(getattr(r, "parent_employee_share", float("nan")) * 100, "{:.0f}%")}</td>'
             )
         body.append(f"<tr>{cells}</tr>")
-    return head, "".join(body), caption
+    return head, "".join(body), caption, shown
 
 
 CSS = """
@@ -443,7 +459,9 @@ def render(
 
     with_pnl = financials is not None and "op_uplift_pct" in companies.columns
     top_n = min(top_companies, int((companies["quadrant"] == "AI解放").sum()))
-    company_head, company_body, company_caption = _company_table(companies, top_n, with_pnl=with_pnl)
+    company_head, company_body, company_caption, shown = _company_table(
+        companies, top_n, with_pnl=with_pnl
+    )
     content = f"""<title>人手不足×AI 4象限マップ</title>
 <style>{CSS}</style>
 <div class="wrap">
@@ -457,7 +475,8 @@ def render(
 
 <figure>
   <div class="map-frame">{_svg(sectors, x_cut, y_cut)}</div>
-  <figcaption>点は東証33業種。境界はユニバースの中央値（人手不足 {x_cut:.0f} / AI代替 {y_cut:.0f}）。
+  <figcaption>点は東証33業種。境界は33業種の中央値（人手不足 {x_cut:.0f} / AI代替 {y_cut:.0f}）。
+  企業の象限もこの同じ境界を投影して当てている。
   <span class="key key--escape">■</span> 右上＝AI解放、<span class="key key--bound">■</span> 右下＝人手依存、
   白抜きはその他の2象限。ホバーで各業種の数値が出る。</figcaption>
 </figure>
@@ -483,7 +502,7 @@ def render(
 
 <section>
   <h2>右上に入った銘柄</h2>
-  <p class="sub">{company_caption}・上位{top_n}。ユニバース{len(companies)}銘柄中。</p>
+  <p class="sub">{company_caption}・上位{shown}。ユニバース{len(companies)}銘柄中。</p>
   <div class="table-frame">
     <table>
       <thead><tr>{company_head}</tr></thead>
@@ -500,28 +519,34 @@ def render(
       離職率(0.05)・所定外労働時間(0.05) の6指標を33業種横断で z 化し、±2.5σ でクリップして
       重み付き合成。出典は雇用動向調査・日銀短観・一般職業紹介状況・労働力調査・毎月勤労統計。
       有効求人倍率はハローワーク経由しか映さないので重みを 0.20 に抑えている。</p></div>
-    <div class="note"><h4>Y軸 — 生成AI代替可能性</h4>
+    <div class="note"><h4>Y軸 — 生成AI曝露度</h4>
       <p>業種の職業構成比（労働力調査 産業×職業、18区分）と、職業別の生成AI exposure
       （ILO Working Paper 140, Gmyrek et al. 2025）の内積に、規制ドラッグを掛ける。
-      ILO の指数は単一の数値で<b>物理的自動化を測っていない</b>ので、この軸は生成AIの話に限られる。
+      ILO のスコアは<b>タスク単位の自動化ポテンシャルの職業平均</b>で、
+      「置き換えられた従業員の割合」ではない。「Not Exposed」に分類された231職業でも
+      0.09〜0.36 の値を持つ連続量である。
+      また単一の数値で<b>物理的自動化を測っていない</b>ので、この軸は生成AIの話に限られる。
       倉庫AMR・自動運転はこの地図の外にある。</p></div>
     <div class="note"><h4>P/L への換算 — 人減らしではなく売上回復</h4>
       <p>経路は <b>AI → 人手不足の緩和 → 取り逃していた売上の回復 → 利益増</b>。
       人が採れずに需要を取り逃している業種では、AIが空けた労働は「増員できたのと同じこと」として
-      まず売上に効く。<code>埋められる欠員 = min(AI代替割合 × 実現率, 欠員率)</code>、
+      まず売上に効く。<code>埋められる欠員 = min(AI曝露度 × 実現率, 欠員率)</code>、
       <code>利益増 = 売上 × 埋められる欠員 × 限界利益率</code>、
       <code>限界利益率 = (営業利益 + 人件費) ÷ 売上</code>。
       人を増やさない前提なので人件費は固定費として扱い、限界利益率の分子に入る。
       実現率の既定は {cfg.realization_rate:.2f}。既定設定では全33業種で
       「空く労働 &gt; 欠員」なので、効く量を決めるのは欠員率で、AI軸は
-      <b>そもそも埋められるのかという関門</b>として働く。</p></div>
+      <b>そもそも埋められるのかという関門</b>として働く。
+      これは推定ではなく<b>シナリオ</b>で、曝露が労働時間の解放に等しいという仮定の上に立つ。
+      導入コストは引いていない。</p></div>
   </div>
 </section>
 
 <section class="col">
   <h2>この地図が言っていないこと</h2>
   <ul class="limits">
-    <li><b>両軸とも相対値。</b>33業種内での順位を0-100に正規化したもので、絶対水準ではない。</li>
+    <li><b>両軸とも相対値。</b>33業種内での順位を0-100に正規化したもので、絶対水準ではない。
+    象限の境界は33業種の中央値で一度だけ決め、企業にはそれを投影して当てている。</li>
     <li><b>ISCO と日本標準職業分類の対応は analyst が当てている。</b>ILO のスコア自体は公表値だが、
     ISCO-08 のどのグループを日本の職業区分に対応させるかは判断であり、
     グループ内は（日本の職業別就業者数が ISCO 粒度で無いため）単純平均している。</li>
@@ -533,8 +558,9 @@ def render(
     <li><b>限界利益率は控えめに出る。</b>人件費以外の費用をすべて変動費として扱っているため、
     減価償却や地代のような固定費まで変動費に数えている。実際の増分利益はこれより大きい。</li>
     <li><b>単体基準の限界利益率は持株会社で壊れる。</b>単体売上が管理報酬だけの空箱では
-    (営業利益+人件費)÷売上 が0.9近くまで上がる。表では ※ で示し、単体従業員が連結の20%未満を
-    その基準にしている。</li>
+    (営業利益+人件費)÷売上 が0.9近くまで上がる。単体従業員が連結の20%未満を ※、
+    連結従業員が取れず判定できないものを † とし、順位表は<b>確認済みだけ</b>で作っている。
+    「※が付いていない」は「確認できた」ではない。</li>
     <li><b>AI案件による売上増（需要側）は入っていない。</b>SIerや半導体はAIそのものが商売になるが、
     この枠組みは供給制約側だけを測る。</li>
     <li><b>省力化が顧客に移転する分を引いていない。</b>受託型（SI・人材・警備）では、

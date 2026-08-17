@@ -531,9 +531,16 @@ def write_shortage(short: pd.DataFrame) -> None:
         "[meta]",
         'vintage = "2026-08"',
         'basis = "published statistics, mechanically mapped to the 33 TSE sectors"',
+        # 有効求人倍率は基準が3通りあり、業種別の値と比較できるのは「常用（除パート）」。
+        # 1.12 は「パート含む・新規学卒除く」の全体値で、業種別の水準とは揃わない。
+        # 揃わない数字を anchor として1つだけ置くと、業種別が異常に見える。3つ並べる。
         "overall_anchor = { vacancy_rate_pct = 2.6, vacancy_asof = \"2025-06-30\", "
         "employment_di_shortage = 37.0, employment_di_asof = \"2026-06\", "
-        "job_openings_ratio = 1.12, job_openings_asof = \"2025\" }",
+        "job_openings_ratio_incl_parttime = 1.116, "
+        "job_openings_ratio_regular_excl_parttime = 1.386, "
+        "job_openings_ratio_regular_incl_newgrad = 1.649, "
+        "job_openings_comparable_basis = \"regular_excl_parttime\", "
+        "job_openings_asof = \"2025\" }",
         "",
         "# 合成スコアの重み。欠員率と短観DIが「いま採れていない」ことの最も直接的な測度なので重い。",
         "# 有効求人倍率はハローワーク経由の求人・求職しか映さない（大卒総合職・中途エージェント経由が",

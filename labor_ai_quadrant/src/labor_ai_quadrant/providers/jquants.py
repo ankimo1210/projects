@@ -53,7 +53,25 @@ SCALE_SETS: dict[str, tuple[str, ...]] = {
 
 
 class JQuantsError(RuntimeError):
-    """Raised when authentication or a data call fails."""
+    """Raised when authentication or a data call fails.
+
+    ``status`` carries the HTTP status when there was one, so callers can tell a
+    date outside the plan's coverage (400/404) from a bad key (401/403). Without
+    it a sweep cannot distinguish "this one day has no data" from "every request
+    is being refused", and 400 skipped days look the same as 400 empty days.
+    """
+
+    def __init__(self, message: str, status: int | None = None) -> None:
+        super().__init__(message)
+        self.status = status
+
+
+#: 401/403 は鍵・契約の問題なので、翌日を試しても直らない。即座に落とす。
+FATAL_STATUSES = frozenset({401, 403})
+#: 400/404 は「その日付は配信範囲外」。無料プランでは直近12週が必ずこれになる。
+OUT_OF_RANGE_STATUSES = frozenset({400, 404})
+#: 範囲外でもない失敗が続いたら、配信側かこちらが壊れている。EDINET 側と同じ閾値。
+MAX_CONSECUTIVE_FAILURES = 5
 
 
 def _api_key(explicit: str | None = None) -> str:
@@ -79,7 +97,9 @@ def _fail(url: str, exc: urllib.error.URLError) -> JQuantsError:
     endpoint the subscription does not cover; J-Quants explains itself in the
     response body.
     """
+    status = None
     if isinstance(exc, urllib.error.HTTPError):
+        status = exc.code
         try:
             body = exc.read().decode("utf-8", errors="replace").strip()
         except Exception:  # body already consumed, or not readable
@@ -89,7 +109,7 @@ def _fail(url: str, exc: urllib.error.URLError) -> JQuantsError:
             detail = f"{detail}: {body[:500]}"
     else:
         detail = str(getattr(exc, "reason", exc))
-    return JQuantsError(f"GET {url} failed: {detail}")
+    return JQuantsError(f"GET {url} failed: {detail}", status=status)
 
 
 #: HTTP 429 に当たったときの待ち時間（秒）。J-Quants の制限はトークンバケット的で、
@@ -242,19 +262,49 @@ def fetch_summaries_by_date(
     today = today or date.today()
     rows: list[dict[str, Any]] = []
 
+    consecutive = 0
+    skipped_out_of_range = 0
+
     for offset in range(lookback_days):
         day = today - timedelta(days=offset)
         try:
             rows.extend(_get_rows("fins/summary", key, {"date": day.isoformat()}))
-        except JQuantsError as exc:  # a single bad day must not sink the sweep
+        except JQuantsError as exc:
+            # 鍵・契約の問題は翌日を試しても直らない。400日かけて空を返すのが最悪。
+            if exc.status in FATAL_STATUSES:
+                raise JQuantsError(
+                    f"認証または契約の問題で中断しました（{day} で HTTP {exc.status}）: {exc}",
+                    status=exc.status,
+                ) from exc
+            if exc.status in OUT_OF_RANGE_STATUSES:
+                skipped_out_of_range += 1
+                consecutive = 0
+                if progress:
+                    print(f"  {day}: 配信範囲外 (HTTP {exc.status})")
+                continue
+            consecutive += 1
+            if consecutive >= MAX_CONSECUTIVE_FAILURES:
+                raise JQuantsError(
+                    f"{MAX_CONSECUTIVE_FAILURES}日連続で取得に失敗したため中断しました: {exc}",
+                    status=exc.status,
+                ) from exc
             if progress:
                 print(f"  {day}: skipped ({exc})")
             continue
+        consecutive = 0
         if progress and offset % 50 == 0:
             print(f"  {day} まで {len(rows)} 件の開示を取得")
 
     df = pd.DataFrame.from_dict(_latest_annual(rows), orient="index")
     df.index.name = "code"
+    # data contract: 空のまま正常終了させない。空の財務で作った成果物は、
+    # 「その業種に押上げ余地が無い」のと見分けがつかない。
+    if df.empty:
+        raise JQuantsError(
+            f"{lookback_days}日を走査して開示が0件でした"
+            f"（配信範囲外として飛ばした日: {skipped_out_of_range}）。"
+            "取得範囲か認証を確認してください。"
+        )
     return df
 
 
@@ -272,13 +322,26 @@ def fetch_summaries(codes: list[str], api_key: str | None = None, progress: bool
     key = _api_key(api_key)
     records: dict[str, dict[str, float]] = {}
 
+    consecutive = 0
     for i, code in enumerate(codes, 1):
         try:
             rows = _get_rows("fins/summary", key, {"code": code})
         except JQuantsError as exc:
+            if exc.status in FATAL_STATUSES:
+                raise JQuantsError(
+                    f"認証または契約の問題で中断しました（{code} で HTTP {exc.status}）: {exc}",
+                    status=exc.status,
+                ) from exc
+            consecutive += 1
+            if consecutive >= MAX_CONSECUTIVE_FAILURES:
+                raise JQuantsError(
+                    f"{MAX_CONSECUTIVE_FAILURES}銘柄連続で取得に失敗したため中断しました: {exc}",
+                    status=exc.status,
+                ) from exc
             if progress:
                 print(f"  {code}: skipped ({exc})")
             continue
+        consecutive = 0
 
         records.update(_latest_annual(rows))
         if progress and i % 50 == 0:

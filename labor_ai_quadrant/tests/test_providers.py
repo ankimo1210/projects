@@ -282,3 +282,56 @@ def test_missing_inputs_propagate_as_nan_not_zero():
     employees = pd.Series([1000.0, float("nan")])
     salary = pd.Series([float("nan"), 6_000_000.0])
     assert estimate_labor_cost(employees, salary).isna().all()
+
+
+def test_a_bad_key_stops_the_sweep_instead_of_returning_an_empty_frame(monkeypatch):
+    """401/403 は翌日を試しても直らない。400日かけて空を返すのが最悪の挙動。"""
+    import datetime as _dt
+
+    from labor_ai_quadrant.providers import jquants
+
+    monkeypatch.setenv("JQUANTS_API_KEY", "bad")
+    calls: list[str] = []
+
+    def _refuse(path, key, params=None):
+        calls.append(params["date"])
+        raise jquants.JQuantsError("GET ... failed: HTTP 403 Forbidden", status=403)
+
+    monkeypatch.setattr(jquants, "_get_rows", _refuse)
+    with pytest.raises(jquants.JQuantsError, match="認証または契約の問題"):
+        jquants.fetch_summaries_by_date(lookback_days=400, today=_dt.date(2026, 8, 17), progress=False)
+    assert len(calls) == 1
+
+
+def test_out_of_range_dates_are_skipped_but_a_dry_sweep_still_fails(monkeypatch):
+    """400/404 は「配信範囲外」。飛ばしてよいが、全日飛んだら成果物を作らせない。"""
+    import datetime as _dt
+
+    from labor_ai_quadrant.providers import jquants
+
+    monkeypatch.setenv("JQUANTS_API_KEY", "ok")
+
+    def _out_of_range(path, key, params=None):
+        raise jquants.JQuantsError("GET ... failed: HTTP 400 Bad Request", status=400)
+
+    monkeypatch.setattr(jquants, "_get_rows", _out_of_range)
+    with pytest.raises(jquants.JQuantsError, match="開示が0件"):
+        jquants.fetch_summaries_by_date(lookback_days=5, today=_dt.date(2026, 8, 17), progress=False)
+
+
+def test_five_consecutive_unclassified_failures_stop_the_sweep(monkeypatch):
+    import datetime as _dt
+
+    from labor_ai_quadrant.providers import jquants
+
+    monkeypatch.setenv("JQUANTS_API_KEY", "ok")
+    seen: list[str] = []
+
+    def _broken(path, key, params=None):
+        seen.append(params["date"])
+        raise jquants.JQuantsError("GET ... failed: HTTP 500 Server Error", status=500)
+
+    monkeypatch.setattr(jquants, "_get_rows", _broken)
+    with pytest.raises(jquants.JQuantsError, match="連続で取得に失敗"):
+        jquants.fetch_summaries_by_date(lookback_days=400, today=_dt.date(2026, 8, 17), progress=False)
+    assert len(seen) == jquants.MAX_CONSECUTIVE_FAILURES

@@ -17,7 +17,7 @@ import plotly.graph_objects as go
 import plotly.io as pio
 
 from .axes import sector_frame
-from .company import company_frame
+from .company import PARENT_SCOPE_CONFIRMED, company_frame, company_quadrant_cuts
 from .config import Q_ESCAPE, QUADRANT_MEANING, QUADRANT_ORDER, Config
 from .quadrant import quadrant_summary, rankable, thresholds, top_right
 from .reference import load_reference
@@ -193,9 +193,12 @@ def _scatter_figure(
     cfg: Config,
     marker_size: int,
     label_top_n: int,
+    cuts: tuple[float, float] | None = None,
 ) -> go.Figure:
     t = THEME["light"]
-    x_cut, y_cut = thresholds(df["shortage_score"], df["ai_score"], cfg)
+    # 罫線は象限の割り当てと同じ境界で引く。企業チャートで df の中央値を取り直すと、
+    # 罫線と色分けが食い違う（企業は業種の境界を投影して受け継いでいる)。
+    x_cut, y_cut = cuts if cuts is not None else thresholds(df["shortage_score"], df["ai_score"], cfg)
 
     # label_top_n <= 0 disables direct labels: on the company chart many names
     # land on identical coordinates, where stacked labels are unreadable and the
@@ -207,7 +210,7 @@ def _scatter_figure(
         f"<b>{html.escape(str(row[label_col]))}</b><br>"
         f"人手不足深刻度: {row['shortage_score']:.0f}<br>"
         f"AI代替可能性: {row['ai_score']:.0f}<br>"
-        f"AI代替可能な労働の割合: {row['ai_substitutable_share_pct']:.0f}%<br>"
+        f"AI曝露度（労働のうちAIが担いうるタスクに晒されている割合）: {row['ai_exposure_pct']:.0f}%<br>"
         f"脱出ポテンシャル: {row['escape_potential']:.0f}<br>"
         f"象限: {row['quadrant']}"
         for _, row in df.iterrows()
@@ -462,7 +465,10 @@ def build_report(
     companies = company_frame(cfg, ref, financials)
 
     fig_sector = _scatter_figure(sectors, "__label__", "東証33業種の4象限マップ", cfg, 13, 12)
-    fig_company = _scatter_figure(companies, "name", "個別銘柄の4象限マップ", cfg, 9, 0)
+    fig_company = _scatter_figure(
+        companies, "name", "個別銘柄の4象限マップ", cfg, 9, 0,
+        cuts=company_quadrant_cuts(sectors, companies, cfg),
+    )
     fig_sens = _sensitivity_figure(ref, cfg)
 
     div_sector = pio.to_html(fig_sector, full_html=False, include_plotlyjs="inline",
@@ -499,7 +505,8 @@ def build_report(
         }
         if "parent_employee_share" in companies.columns:
             pnl_cols["parent_employee_share"] = "単体/連結 従業員"
-        # 単体が空箱の持株会社では限界利益率が実態より高く出る。社名に ※ を付けて示す。
+        # 単体が空箱の持株会社では限界利益率が実態より高く出る。
+        # ※ = 単体従業員が連結の20%未満、† = 連結従業員が取れず判定不能。
         if "parent_scope_flag" in top_companies.columns:
             top_companies["name"] = top_companies["name"] + top_companies["parent_scope_flag"].fillna("")
         # 企業スコアは業種スコア + 3値×3値の補正で決まるので、同じ業種の銘柄は
@@ -508,10 +515,17 @@ def build_report(
         # 並べ替えは分母が売上の pp のほうを使う（比率の暴れに順位を支配させない）。
         # 押上げ余地が定義できない行（営業利益0以下・人件費>売上）は母集団から外す。
         top_companies = top_companies[rankable(top_companies)]
+        # 「※でない」は「確認済み」ではない。判定不能（†）を確認済みに混ぜると、
+        # 連結従業員が取れなかっただけの会社が「単体が事業を映している」側に入る。
+        # 順位表は確認済みだけで作り、他の2群は件数で示す。
+        if "parent_scope" in top_companies.columns:
+            top_companies = top_companies[top_companies["parent_scope"] == PARENT_SCOPE_CONFIRMED]
+            ranked_by = "営業利益率の押上げ幅（pp）順・単体スコープ確認済みのみ"
+        else:
+            ranked_by = "営業利益率の押上げ幅（pp）順"
         top_companies = top_companies.sort_values(
             "op_margin_uplift_pp", ascending=False, na_position="last"
         )
-        ranked_by = "営業利益率の押上げ幅（pp）順"
     top_companies = top_companies.head(25)
 
     tables = "".join([
@@ -524,8 +538,8 @@ def build_report(
         _table(
             top_sectors,
             {"__index__": "業種", "shortage_score": "人手不足深刻度", "ai_score": "AI代替可能性",
-             "ai_substitutable_share_pct": "AI代替可能な労働(%)", "escape_potential": "脱出ポテンシャル",
-             "top_ai_occupation": "主な代替対象職種"},
+             "ai_exposure_pct": "AI曝露度(%)", "escape_potential": "脱出ポテンシャル",
+             "top_ai_occupation": "主な曝露職種"},
             "右上象限（AI解放）に入った業種 — 脱出ポテンシャル順",
         ),
         _table(
@@ -588,11 +602,14 @@ AIが最も得意な労働（事務・審査・コーディング）は必ずし
 <ul>
 <li>両軸とも <b>33業種内の相対順位</b>（0-100に正規化）であり、絶対水準ではない。
 「右上に入る」＝「日本の上場企業の中で相対的に条件が良い」という意味。</li>
-<li>P/L への換算（営業利益押上げ余地）だけは相対値ではなく、
-<code>人件費 × AI代替可能な労働の割合 × 実現率</code> という水準ベースで計算している。</li>
-<li>人手不足指標は公表統計に基づく業種配賦値、AI代替ポテンシャルは文献アンカー付きの
-analyst 設定値。個々のセルの精度ではなく、業種間の順序に意味がある。詳細と限界は
-<code>docs/METHODOLOGY.md</code>。</li>
+<li>P/L への換算（営業利益押上げ余地）だけは相対値ではなく水準ベース。経路は
+<b>AI → 人手不足の緩和 → 取り逃していた売上の回復 → 利益増</b>で、
+<code>min(AI曝露度 × 実現率, 欠員率) × 限界利益率</code>。人減らしの計算ではない。</li>
+<li>人手不足指標は公表統計（短観・毎月勤労統計・職業安定業務統計・労働力調査）に基づく
+業種配賦値。AI曝露度は ILO WP140 のタスク別自動化ポテンシャルを職業構成比で加重した
+もので、<b>置き換えられた人員の割合ではない</b>。analyst 判断が入るのは指標の重みと
+規制ドラッグ、そして実現率。個々のセルの精度ではなく、業種間の順序に意味がある。
+詳細と限界は <code>docs/METHODOLOGY.md</code>。</li>
 </ul>
 </main>
 <script>{js}</script>

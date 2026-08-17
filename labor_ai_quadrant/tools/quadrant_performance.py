@@ -11,6 +11,7 @@ ChatGPT 公開を起点に、象限ごとの等ウェイト指数を作る。
 * ユニバースは現在の TOPIX 構成銘柄。期間中に上場廃止された銘柄が居ないので
   生存バイアスで上振れする。
 * 起点に株価が無い銘柄（期間中の新規上場）は指数から外している。
+* as-of は**最終完了月**（前月）。当月の月足は月末値ではないので使わない。
 
     uv run python labor_ai_quadrant/tools/quadrant_performance.py
 """
@@ -35,6 +36,18 @@ BASE = pd.Period("2022-11", freq="M")
 #: 起点の1か月前から取る（起点の月末値が欠けている銘柄を見分けるため）。
 CHART = ("https://query1.finance.yahoo.com/v8/finance/chart/{code}.T"
          "?period1=1664582400&period2=1893456000&interval=1mo")
+
+
+def last_complete_month(today: pd.Timestamp | None = None) -> pd.Period:
+    """The most recent month whose month-end close is final.
+
+    Yahoo の月足は当月分も返すが、その値は「今日までの終値」で月末値ではない。
+    月足の最後の1本をそのまま as-of にすると、月中の水準を月末値として
+    「2026年8月末時点」と書いてしまう（実際に一度やった）。月 M の足が確定するのは
+    M+1 に入ってからなので、前月を as-of にする。
+    """
+    now = pd.Period(today or pd.Timestamp.today(), freq="M")
+    return now - 1
 
 
 def _one(code: str) -> tuple[str, dict[str, float] | None]:
@@ -63,20 +76,44 @@ def _one(code: str) -> tuple[str, dict[str, float] | None]:
     return code, None
 
 
-def fetch_prices(codes: list[str]) -> pd.DataFrame:
-    """Monthly adjusted closes, cached on disk so a rerun costs nothing."""
-    cached: dict[str, dict[str, float]] = json.loads(CACHE.read_text()) if CACHE.exists() else {}
-    todo = [c for c in codes if c not in cached]
+def _read_cache() -> tuple[dict[str, dict[str, float]], pd.Period | None]:
+    """Cached series plus the month they were fetched in (``None`` if unknown)."""
+    if not CACHE.exists():
+        return {}, None
+    payload = json.loads(CACHE.read_text())
+    if "prices" in payload and "fetched" in payload:
+        return payload["prices"], pd.Period(payload["fetched"], freq="M")
+    # 旧形式（コード→系列のフラットな dict）。取得月はファイルの mtime で代用する。
+    mtime = pd.Timestamp(CACHE.stat().st_mtime, unit="s", tz="Asia/Tokyo")
+    return payload, pd.Period(mtime.tz_localize(None), freq="M")
+
+
+def fetch_prices(codes: list[str], as_of: pd.Period | None = None) -> pd.DataFrame:
+    """Monthly adjusted closes up to ``as_of``, cached on disk.
+
+    キャッシュは as-of 月より後に取得したものだけを新しいと見なす。as-of 月の
+    最中に取った足は月中の値なので、そのまま使うと月末値ではないものが混じる。
+    それより古いキャッシュは全銘柄を取り直す（月に一度）。個別銘柄の欠落だけを
+    追加していた旧実装は、一度キャッシュに入った銘柄を二度と更新しなかった。
+    """
+    as_of = as_of or last_complete_month()
+    cached, fetched = _read_cache()
+    stale = fetched is None or fetched <= as_of
+    todo = [c for c in codes if c not in cached] if not stale else list(codes)
     if todo:
-        print(f"fetching {len(todo)} tickers from Yahoo Finance ...", flush=True)
+        why = "cache older than as-of" if stale else "not cached"
+        print(f"fetching {len(todo)} tickers from Yahoo Finance ({why}) ...", flush=True)
         with ThreadPoolExecutor(max_workers=6) as pool:
             for code, series in pool.map(_one, todo):
                 if series:
                     cached[code] = series
-        CACHE.write_text(json.dumps(cached))
+        CACHE.write_text(
+            json.dumps({"fetched": str(pd.Timestamp.today().date()), "prices": cached})
+        )
     frame = pd.DataFrame({c: cached[c] for c in codes if c in cached}).sort_index()
     frame.index = pd.PeriodIndex(frame.index, freq="M")
-    return frame
+    # 当月の未確定な足を落とす。これが as-of の定義そのもの。
+    return frame.loc[frame.index <= as_of]
 
 
 #: 月次調整後終値として成立しない変化率。これを超えたら配信側の壊れたデータと判断する。
@@ -120,15 +157,17 @@ def performance(scored: pd.DataFrame, prices: pd.DataFrame) -> tuple[pd.DataFram
 
 def main() -> None:
     scored = pd.read_csv(DATA / "topix_scored.csv", dtype={"code": str}).set_index("code")
-    prices = sanitize(fetch_prices(scored.index.tolist()))
+    as_of = last_complete_month()
+    prices = sanitize(fetch_prices(scored.index.tolist(), as_of))
     index, returns = performance(scored, prices)
 
     index.to_csv(DATA / "quadrant_index.csv")
     returns.to_csv(DATA / "quadrant_returns.csv")
 
     asof = index.index[-1]
+    assert asof == str(as_of), f"as-of mismatch: {asof} != {as_of}"
     print(f"universe {len(scored)}  priced {prices.shape[1]}  in the index {len(returns)}")
-    print(f"\n=== 等ウェイト指数 (2022-11 = 100, {asof} 時点) ===")
+    print(f"\n=== 等ウェイト指数 (2022-11 = 100, {asof}月末 時点) ===")
     summary = pd.DataFrame(
         {
             "n": returns.groupby("quadrant").size(),
@@ -145,7 +184,7 @@ def main() -> None:
         median=("total_return_pct", "median"),
         mean=("total_return_pct", "mean"),
     )
-    print(f"\n=== 業種別 中央値リターン ({asof} 時点) ===")
+    print(f"\n=== 業種別 中央値リターン ({asof}月末 時点) ===")
     print(by_sector.sort_values("median", ascending=False).round(1).to_string())
 
 

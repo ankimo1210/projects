@@ -28,7 +28,7 @@ def test_every_universe_member_is_scored(ref, companies):
 def test_scores_stay_within_bounds(companies):
     assert companies["shortage_score"].between(0, 100).all()
     assert companies["ai_score"].between(0, 100).all()
-    assert companies["ai_substitutable_share_pct"].between(0, 100).all()
+    assert companies["ai_exposure_pct"].between(0, 100).all()
 
 
 def test_tilts_do_not_collapse_onto_the_ceiling(ref):
@@ -88,7 +88,7 @@ def test_pnl_layer_translates_relief_into_recovered_revenue(ref):
     assert np.allclose(scored["contribution_margin"], (100.0 + 300.0) / 1000.0)
     closable = scored["closable_gap_pct"] / 100.0
     assert np.allclose(scored["recovered_revenue"], 1000.0 * closable)
-    assert np.allclose(scored["expected_profit_gain"], 1000.0 * closable * 0.4)
+    assert np.allclose(scored["scenario_profit_gain"], 1000.0 * closable * 0.4)
     # 押上げ幅(pp) は 埋められる欠員 × 限界利益率 で、企業規模には依存しない。
     assert np.allclose(scored["op_margin_uplift_pp"], closable * 0.4 * 100.0)
     assert np.allclose(scored["op_uplift_pct"], 1000.0 * closable * 0.4 / 100.0 * 100.0)
@@ -100,7 +100,7 @@ def test_closable_gap_is_capped_by_the_vacancy_rate(ref):
     """空いた労働は、足りていないぶんを超えては不足の緩和にならない。"""
     df = company_frame(Config(realization_rate=1.0), ref)
     assert (df["closable_gap_pct"] <= df["vacancy_rate_pct"] + 1e-9).all()
-    assert (df["closable_gap_pct"] <= df["ai_freed_labor_pct"] + 1e-9).all()
+    assert (df["closable_gap_pct"] <= df["ai_capacity_release_pct"] + 1e-9).all()
     # 実現率 1.0 でも、AI代替割合(20-45%)は欠員率(0.3-4.1%)より大きいので上限は欠員率側。
     assert np.allclose(df["closable_gap_pct"], df["vacancy_rate_pct"])
 
@@ -108,7 +108,7 @@ def test_closable_gap_is_capped_by_the_vacancy_rate(ref):
 def test_freed_labor_binds_when_ai_substitution_is_small(ref):
     """逆に代替割合が小さければ、欠員を埋めきれない側が上限になる。"""
     df = company_frame(Config(realization_rate=0.001), ref)
-    assert np.allclose(df["closable_gap_pct"], df["ai_freed_labor_pct"])
+    assert np.allclose(df["closable_gap_pct"], df["ai_capacity_release_pct"])
     assert (df["closable_gap_pct"] < df["vacancy_rate_pct"]).all()
 
 
@@ -221,12 +221,21 @@ def test_contribution_margin_rejects_values_that_cannot_be_one():
     assert df.loc[[holding, loss], "op_margin_uplift_pp"].isna().all()
 
 
-def test_thin_parent_scope_is_flagged():
-    """単体従業員が連結の20%未満なら、単体基準のP/Lは事業の実態を表さない。"""
+def test_parent_scope_separates_confirmed_from_unknown():
+    """単体スコープは3値。「※でない」を「確認済み」と読ませてはいけない。
+
+    単体従業員が連結の20%未満なら単体基準のP/Lは事業の実態を表さない（※）。
+    連結従業員が取れない行は空箱かどうか分からないだけで、確認済みでもない（†）。
+    2値にすると、判定不能が確認済みに混ざって母集団が水増しされる。
+    """
     import pandas as pd
     from labor_ai_quadrant.company import (
+        PARENT_SCOPE_CONFIRMED,
         PARENT_SCOPE_FLAG,
         PARENT_SCOPE_FLAG_THRESHOLD,
+        PARENT_SCOPE_THIN,
+        PARENT_SCOPE_UNKNOWN,
+        PARENT_SCOPE_UNKNOWN_FLAG,
         company_frame,
     )
     from labor_ai_quadrant.reference import load_reference
@@ -245,10 +254,13 @@ def test_thin_parent_scope_is_flagged():
     )
     df = company_frame(ref=ref, financials=financials)
     assert PARENT_SCOPE_FLAG_THRESHOLD == 0.20
+    assert df.loc[box, "parent_scope"] == PARENT_SCOPE_THIN
+    assert df.loc[real, "parent_scope"] == PARENT_SCOPE_CONFIRMED
+    assert df.loc[unknown, "parent_scope"] == PARENT_SCOPE_UNKNOWN
     assert df.loc[box, "parent_scope_flag"] == PARENT_SCOPE_FLAG
     assert df.loc[real, "parent_scope_flag"] == ""
-    # 比率が分からない行に ※ を立てると「空箱と判明した」ように読めるので立てない。
-    assert df.loc[unknown, "parent_scope_flag"] == ""
+    # 判定不能に ※ を立てると「空箱と判明した」ように読めるので別の記号にする。
+    assert df.loc[unknown, "parent_scope_flag"] == PARENT_SCOPE_UNKNOWN_FLAG
 
 
 def test_rankable_excludes_rows_the_parent_pnl_cannot_carry():
@@ -272,3 +284,71 @@ def test_rankable_is_a_no_op_without_a_pnl_layer():
 
     df = pd.DataFrame({"escape_potential": [50.0, 60.0]}, index=["a", "b"])
     assert rankable(df).all()
+
+
+def test_company_quadrants_inherit_the_sector_boundary():
+    """企業の象限は、業種の象限と一致する（企業内の傾きを0にしたとき）。
+
+    象限の境界は33業種の分布で一度だけ決める。企業スコアは業種スコアの単調な
+    アフィン変換なので、傾きが無ければ「業種で右上」と「その業種の企業が右上」は
+    同じ主張になっていなければならない。
+
+    旧実装は企業ユニバースの中央値で切り直していた。33業種の中央値と企業の中央値が
+    最大業種のスコア上でちょうど一致していたため、strict `>` の同値処理だけで
+    右上の企業数が半分になり、業種の地図と企業の地図が食い違っていた。
+    """
+    from labor_ai_quadrant.axes import sector_frame
+    from labor_ai_quadrant.company import company_frame
+    from labor_ai_quadrant.config import Config
+    from labor_ai_quadrant.reference import load_reference
+
+    ref = load_reference()
+    cfg = Config(tilt_points=0.0)
+    sectors = sector_frame(cfg, ref)
+    companies = company_frame(cfg, ref)
+
+    expected = companies["sector33"].map(sectors["quadrant"])
+    mismatched = companies.index[companies["quadrant"] != expected]
+    assert list(mismatched) == []
+
+
+def test_benefits_multiplier_does_not_double_count_the_bonus():
+    """有報の平均年間給与は賞与を含むので、上乗せは法定福利費と退職給付だけ。
+
+    旧既定 1.25 は「平均年間給与は現金給与のみ」という誤った前提で賞与を足していた。
+    人件費は限界利益率の分子に入るので、過大な係数は押上げ余地を上振れさせる。
+    """
+    from labor_ai_quadrant.company import DEFAULT_BENEFITS_MULTIPLIER
+
+    assert DEFAULT_BENEFITS_MULTIPLIER == 1.18
+
+
+def test_recovery_assumptions_are_neutral_by_default_and_bite_when_set(ref):
+    """売上回復の経路に置いた4つの仮定は、既定では何も割り引かない。
+
+    既定 1/1/1/0 のときだけ `op_margin_uplift_pp == 埋められる欠員 × 限界利益率` に
+    なる。値を入れれば必ず下がる — 上限側の仮定であることをテストで固定する。
+    """
+    import numpy as np
+    from labor_ai_quadrant.company import company_frame
+    from labor_ai_quadrant.config import SCENARIOS, Config
+
+    codes = list(ref.universe.index[:5])
+    fin = _fake_financials(codes)
+
+    base = company_frame(Config(), ref, financials=fin).loc[codes]
+    closable = base["closable_gap_pct"] / 100.0
+    assert np.allclose(base["op_margin_uplift_pp"], closable * 0.4 * 100.0)
+
+    tempered = company_frame(SCENARIOS["tempered_recovery"], ref, financials=fin).loc[codes]
+    assert (tempered["op_margin_uplift_pp"] < base["op_margin_uplift_pp"]).all()
+    assert (tempered["recovered_revenue"] < base["recovered_revenue"]).all()
+
+
+def test_recovery_assumptions_are_range_checked():
+    from labor_ai_quadrant.config import Config
+
+    with pytest.raises(ValueError, match="demand_capture_rate must be in"):
+        Config(demand_capture_rate=1.5).validate()
+    with pytest.raises(ValueError, match="implementation_cost_pct_of_revenue must be in"):
+        Config(implementation_cost_pct_of_revenue=-1.0).validate()
