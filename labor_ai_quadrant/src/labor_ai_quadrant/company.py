@@ -9,7 +9,8 @@
 の幅でスコアを動かす。企業内差分が業種間差分を上書きしないよう幅は小さく取る。
 
 財務データ（人件費・営業利益・売上・従業員数）を渡すと、象限上の位置を
-「営業利益が何%押し上がりうるか」に翻訳する。渡さなければ象限マップだけを返す。
+「取り逃していた売上がどれだけ戻り、営業利益率が何ポイント上がりうるか」に
+翻訳する（:func:`_pnl_layer`）。渡さなければ象限マップだけを返す。
 """
 
 from __future__ import annotations
@@ -86,14 +87,56 @@ def company_frame(
     joined["escape_potential"] = escape_potential(joined["shortage_score"], joined["ai_score"])
     joined["quadrant"] = assign_quadrants(joined["shortage_score"], joined["ai_score"], cfg)
 
+    # 欠員率は業種の値。AIが空ける労働は企業ごとの（傾き後の）代替割合から出すので、
+    # 埋められる欠員も企業ごとに決まる。単位はすべて「従業員数に対する%」。
+    joined["vacancy_rate_pct"] = joined["sector33"].map(ref.shortage["vacancy_rate_pct"]).astype(float)
+    joined["ai_freed_labor_pct"] = joined["ai_substitutable_share_pct"] * cfg.realization_rate
+    joined["closable_gap_pct"] = joined[["ai_freed_labor_pct", "vacancy_rate_pct"]].min(axis=1)
+    joined["gap_coverage_x"] = joined["ai_freed_labor_pct"] / joined["vacancy_rate_pct"].where(
+        joined["vacancy_rate_pct"] > 0
+    )
+
     if financials is not None:
         joined = joined.join(_pnl_layer(joined, financials, cfg))
 
     return joined.sort_values("escape_potential", ascending=False)
 
 
+#: 単体（提出会社）の従業員がグループのこれ未満しか覆っていないとき、単体基準の
+#: P/L 換算は事業の実態を表さない。純粋持株会社が典型で、単体は本社機能の空箱。
+#: 該当行には ``parent_scope_flag`` に ※ を立て、人が読む表では社名の後ろに出す。
+PARENT_SCOPE_FLAG_THRESHOLD = 0.20
+PARENT_SCOPE_FLAG = "※"
+
+
 def _pnl_layer(companies: pd.DataFrame, financials: pd.DataFrame, cfg: Config) -> pd.DataFrame:
-    """Translate the AI-substitutable share into an operating-profit sensitivity."""
+    """人手不足の緩和を「売上の回復」として P/L に翻訳する。
+
+    経路は **AI → 人手不足の緩和 → 取り逃していた売上の回復 → 利益増**。
+    人員削減ではない。深刻な人手不足の業種では、そもそも人が採れずに需要を
+    取り逃しているので、AI が空けた労働力は「増員できたのと同じこと」として
+    まず売上に効く。日本の雇用慣行の下では、これが AI の効き方の主筋になる。
+
+    ::
+
+        埋められる欠員 = min( 代替可能割合 × 実現率 , 欠員率 )   … 従業員数比 %
+        回復売上       = 売上 × 埋められる欠員
+        限界利益率     = (営業利益 + 人件費) ÷ 売上
+        利益増         = 回復売上 × 限界利益率
+
+    人を増やさない前提なので **人件費は固定費**として扱う。したがって回復売上が
+    負担するのは人件費以外の費用だけで、限界利益率の分子に人件費が入る。
+    非人件費のうち減価償却や地代のような固定費まで変動費として扱っているため、
+    この限界利益率は下振れ側に寄っている（＝利益増は控えめに出る）。
+
+    ``op_margin_uplift_pp`` は ``埋められる欠員 × 限界利益率`` に等しく、企業の
+    規模には依存しない。効くのは 業種の欠員率・業種のAI代替割合・その企業の
+    限界利益率の3つだけ。
+
+    比較のため、前版の経路（AI → 人件費削減 → 利益増）も ``cost_cut_*`` として
+    併記する。どちらが実態かはこの計算では決まらないので、両方出して読み手に
+    渡すのが正しい。
+    """
     missing = [c for c in FINANCIAL_COLUMNS if c not in financials.columns]
     if missing:
         raise ValueError(f"financials is missing required columns {missing}")
@@ -102,9 +145,7 @@ def _pnl_layer(companies: pd.DataFrame, financials: pd.DataFrame, cfg: Config) -
     fin.index = fin.index.astype(str)
     fin = fin.reindex(companies.index)
 
-    share = companies["ai_substitutable_share_pct"] / 100.0
-    addressable = fin["labor_cost"] * share
-    savings = addressable * cfg.realization_rate
+    closable = companies["closable_gap_pct"] / 100.0
 
     out = pd.DataFrame(index=companies.index)
     out["revenue"] = fin["revenue"]
@@ -113,23 +154,32 @@ def _pnl_layer(companies: pd.DataFrame, financials: pd.DataFrame, cfg: Config) -
     out["employees"] = fin["employees"]
     out["labor_cost_ratio"] = _safe_div(fin["labor_cost"], fin["revenue"])
     out["revenue_per_employee"] = _safe_div(fin["revenue"], fin["employees"])
-    out["ai_addressable_labor_cost"] = addressable
-    out["expected_labor_savings"] = savings
-    # 営業利益に対する感応度。人件費率が高く、かつAI代替余地が大きいほど大きい。
-    out["op_uplift_pct"] = _safe_div(savings, fin["operating_profit"]) * 100.0
-    # 同じ削減額を売上で割ったもの＝営業利益率が何ポイント上がるか。
-    #
-    # op_uplift_pct は営業利益で割るので、利益が薄い会社ほど分母の小ささだけで跳ねる
-    # （TOPIX 全体では上位が単体営業利益 1億円未満の小型株で埋まり、900% のような値が出る）。
-    # こちらは 人件費率 × AI代替割合 × 実現率 が上限で、分母は必ず利益より大きい。
-    # 順位付けにはこちらを使い、op_uplift_pct は「それが利益に対してどれだけか」を
-    # 読むための列として残す。
-    out["op_margin_uplift_pp"] = _safe_div(savings, fin["revenue"]) * 100.0
-    # 提出会社が企業グループのどれだけを覆っているか。純粋持株会社では数%になり、
-    # 単体で組んだ人件費率は 100% を超えることさえある（人件費が単体売上を上回る）。
-    # 数字そのものは正しくても、読む側がグループの話と取り違えないための目盛り。
+
+    # 限界利益率 = 1 - 変動費率。人件費を固定費、それ以外の費用を変動費とみなす。
+    # 0 以下（営業赤字が人件費を食い潰している）と 1 超（人件費が売上を超える
+    # 持株会社）は限界利益率として成立しないので NaN にする。桁を壊すより落とす。
+    margin = _safe_div(fin["operating_profit"] + fin["labor_cost"], fin["revenue"])
+    out["contribution_margin"] = margin.where((margin > 0) & (margin <= 1.0))
+
+    out["recovered_revenue"] = fin["revenue"] * closable
+    out["expected_profit_gain"] = out["recovered_revenue"] * out["contribution_margin"]
+    # 営業利益率が何ポイント上がるか。= 埋められる欠員 × 限界利益率。
+    out["op_margin_uplift_pp"] = closable * out["contribution_margin"] * 100.0
+    # それが今の営業利益の何%か。利益が薄い会社では分母の小ささで跳ねるので、
+    # 順位付けには使わない（`rankable()` が営業利益0以下を除くのは分母の話）。
+    out["op_uplift_pct"] = _safe_div(out["expected_profit_gain"], fin["operating_profit"]) * 100.0
+
+    # 前版の経路（人件費削減）。同じ実現率で、比較用に併記する。
+    share = companies["ai_substitutable_share_pct"] / 100.0
+    out["cost_cut_savings"] = fin["labor_cost"] * share * cfg.realization_rate
+    out["cost_cut_margin_pp"] = _safe_div(out["cost_cut_savings"], fin["revenue"]) * 100.0
+
     if "parent_employee_share" in financials.columns:
         out["parent_employee_share"] = fin["parent_employee_share"]
+        below = fin["parent_employee_share"] < PARENT_SCOPE_FLAG_THRESHOLD
+        out["parent_scope_flag"] = pd.Series(
+            [PARENT_SCOPE_FLAG if b else "" for b in below.fillna(False)], index=out.index
+        )
     return out
 
 

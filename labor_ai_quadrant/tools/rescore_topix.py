@@ -31,12 +31,18 @@ PASSTHROUGH_COLUMNS = [
     "employees_consolidated", "revenue_consolidated", "operating_profit_consolidated",
 ]
 OUT_COLUMNS = [
-    "code", "name", "filer_name", "sector33", "scale_category", "quadrant",
+    "code", "name", "parent_scope_flag", "filer_name", "sector33", "scale_category", "quadrant",
     "shortage_score", "ai_score", "ai_substitutable_share_pct", "escape_potential",
+    # 人手不足の緩和量（すべて従業員数に対する%）
+    "vacancy_rate_pct", "ai_freed_labor_pct", "closable_gap_pct", "gap_coverage_x",
     "employees", "average_salary", "average_age", "labor_cost", "revenue",
     "operating_profit", "labor_cost_ratio", "revenue_per_employee",
-    "ai_addressable_labor_cost", "expected_labor_savings", "op_margin_uplift_pp",
-    "op_uplift_pct", "employees_consolidated", "revenue_consolidated",
+    # 売上回復の経路（本線）
+    "contribution_margin", "recovered_revenue", "expected_profit_gain",
+    "op_margin_uplift_pp", "op_uplift_pct",
+    # 人件費削減の経路（比較用・前版のロジック）
+    "cost_cut_savings", "cost_cut_margin_pp",
+    "employees_consolidated", "revenue_consolidated",
     "operating_profit_consolidated", "parent_employee_share",
 ]
 

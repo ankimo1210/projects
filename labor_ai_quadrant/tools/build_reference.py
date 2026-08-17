@@ -17,6 +17,7 @@ download URL of each original). Outputs are the three TOML files under
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -34,6 +35,14 @@ SOURCES = {
     "tankan": (
         "日本銀行「全国企業短期経済観測調査」2026年6月調査 雇用人員判断DI (項目コード608) "
         "https://www.stat-search.boj.or.jp/info/co.zip"
+    ),
+    # 業種コード(4桁)の正本。データ側の CSV にコード名が入らないので、
+    # SECTORS の tankan マッピングをレビューするにはこの表が要る。
+    # BOJ の解説ページは項目位置がずれていて信用できないため、この表を直読みする。
+    "tankan_code": (
+        "日本銀行 時系列統計データ検索サイト 短観 コード表 (shift_jis) "
+        "https://www.stat-search.boj.or.jp/info/tankan_code.html "
+        "→ _data/sources/boj_tankan_code.html"
     ),
     "job_openings": (
         "厚生労働省「一般職業紹介状況」長期時系列表21 職業別労働市場関係指標 "
@@ -616,6 +625,38 @@ def write_mix(counts: pd.DataFrame) -> None:
     (OUT / "sector_occupation_mix.toml").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def tankan_code_names() -> dict[str, str]:
+    """短観の業種コード → 業種名。コード表 (shift_jis) を直読みする。
+
+    データ側の CSV は 4桁コードしか持たないので、``SECTORS`` の ``tankan`` が
+    本当に意図した業種を指しているかは、この表と突き合わせないと確かめられない。
+    """
+    html = (SRC / "boj_tankan_code.html").read_bytes().decode("shift_jis", errors="replace")
+    out: dict[str, str] = {}
+    for row in re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.S):
+        cells = [
+            re.sub(r"<[^>]+>", "", c).replace("&nbsp;", " ").strip()
+            for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row, re.S)
+        ]
+        for code in (c for c in cells if re.fullmatch(r"\d{4}", c)):
+            rest = [c for c in cells if c != code and c and not re.fullmatch(r"\d+", c)]
+            if rest:
+                out.setdefault(code, rest[0])
+    return out
+
+
+def verify_tankan_mapping() -> list[str]:
+    """SECTORS の短観コードを名前に開いて返す。未知のコードがあれば落とす。"""
+    names = tankan_code_names()
+    unknown = sorted({c for s in SECTORS for c in s["tankan"] if c not in names})
+    if unknown:
+        raise ValueError(f"短観コード表に無いコード: {unknown}")
+    return [
+        f"  {s['name']:<14} {'+'.join(s['tankan']):<11} {' + '.join(names[c] for c in s['tankan'])}"
+        for s in SECTORS
+    ]
+
+
 def main() -> None:
     counts = build_mix_counts()
     pot = load_ilo_potentials()
@@ -631,6 +672,9 @@ def main() -> None:
     imputed = counts.attrs["imputed_share"].sort_values(ascending=False)
     print("\n=== 職業構成のうち丸め残差を大分類の形で埋めた割合 (上位) ===")
     print((imputed[imputed > 0.02] * 100).round(1).to_string())
+
+    print("\n=== 短観の業種マッピング（コード表と突合）===")
+    print("\n".join(verify_tankan_mapping()))
 
     print("\n=== shortage indicators ===")
     print(short.drop(columns=["name"]).to_string())

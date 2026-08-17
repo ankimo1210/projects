@@ -114,4 +114,35 @@ def sector_frame(cfg: Config | None = None, ref: ReferenceData | None = None) ->
     df.index.name = "sector33"
     df["escape_potential"] = escape_potential(df["shortage_score"], df["ai_score"])
     df["quadrant"] = assign_quadrants(df["shortage_score"], df["ai_score"], cfg)
+    df = df.join(relief_columns(cfg, ref))
     return df.sort_values("escape_potential", ascending=False)
+
+
+def relief_columns(cfg: Config, ref: ReferenceData) -> pd.DataFrame:
+    """人手不足の緩和量を、従業員数に対する比率(%)で出す。
+
+    P/L 換算の起点になる3つの量（`docs/METHODOLOGY.md` の「6. P/L への換算」）。
+    どれも「常用労働者数に対する%」で揃えてあるので直接比較・比較可能。
+
+    * ``vacancy_rate_pct``     欠員率。埋まっていない求人 ÷ 常用労働者数。
+      「本来の人員に対して何%足りないか」＝ 供給制約で取り逃している労働。
+    * ``ai_freed_labor_pct``   AI が空ける労働。代替可能割合 × 実現率。
+      人を増やさずに増員したのと同じ効果を持つ労働量。
+    * ``closable_gap_pct``     上の2つの小さいほう。空いた労働は、足りていない
+      ぶんを超えては「不足の緩和」にならない（超えた部分は需要側の話になる）。
+    * ``gap_coverage_x``       空く労働 ÷ 欠員。既定設定では全33業種で 1 を超える
+      ＝ AI 側が上限になることはない。だから P/L に効く量は欠員率で決まり、
+      AI 軸は「そもそも埋められるのか」という関門として働く。この倍率が、
+      関門にどれだけ余裕があるかを示す。
+    """
+    ai_share = ai_axis(cfg, ref)["ai_substitutable_share_pct"]
+    gap = ref.shortage["vacancy_rate_pct"].astype(float)
+    freed = ai_share * cfg.realization_rate
+    return pd.DataFrame(
+        {
+            "vacancy_rate_pct": gap,
+            "ai_freed_labor_pct": freed,
+            "closable_gap_pct": pd.concat([freed, gap], axis=1).min(axis=1),
+            "gap_coverage_x": freed / gap.where(gap > 0),
+        }
+    )

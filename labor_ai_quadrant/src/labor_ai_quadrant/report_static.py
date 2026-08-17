@@ -219,9 +219,12 @@ def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[
     if with_pnl:
         rows = rows[rankable(rows)]
         rows = rows.sort_values("op_margin_uplift_pp", ascending=False, na_position="last")
+        flagged = (rows.get("parent_scope_flag", pd.Series("", index=rows.index)) == "※").sum()
         caption = (
             f"営業利益率の押上げ幅（pp）順・押上げ余地を定義できる{len(rows)}社から"
-            "（営業利益が0以下、人件費が売上を超える単体は除外）"
+            "（営業利益が0以下、人件費が売上を超える単体は除外）。"
+            f"※ = 単体従業員が連結の20%未満（{flagged}社）。持株会社の単体は本社機能の"
+            "空箱なので限界利益率が実態より高く出る"
         )
     else:
         caption = "脱出ポテンシャル（2軸の幾何平均）順"
@@ -230,16 +233,18 @@ def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[
     head = ('<th>コード</th><th>銘柄</th><th>業種</th><th class="num">人手不足</th>'
             '<th class="num">AI代替</th><th class="num">脱出</th>')
     if with_pnl:
-        head += ('<th class="num">人件費率</th><th class="num">利益率押上げ(pp)</th>'
+        head += ('<th class="num">欠員率</th><th class="num">限界利益率</th>'
+                 '<th class="num">利益率押上げ(pp)</th>'
                  '<th class="num">営業利益押上げ余地%</th>'
-                 '<th class="num">人件費(億)</th><th class="num">営業利益(億)</th>'
+                 '<th class="num">回復売上(億)</th><th class="num">営業利益(億)</th>'
                  '<th class="num">単体/連結</th>')
 
     body = []
     for code, r in rows.iterrows():
+        flag = getattr(r, "parent_scope_flag", "") or ""
         cells = (
             f'<td class="code">{html.escape(str(code))}</td>'
-            f"<td>{html.escape(r['name'])}</td>"
+            f"<td>{html.escape(r['name'])}{html.escape(flag)}</td>"
             f'<td class="sec">{html.escape(r["sector33"])}</td>'
             f'<td class="num">{r.shortage_score:.0f}</td>'
             f'<td class="num">{r.ai_score:.0f}</td>'
@@ -247,10 +252,11 @@ def _company_table(companies: pd.DataFrame, n: int, *, with_pnl: bool) -> tuple[
         )
         if with_pnl:
             cells += (
-                f'<td class="num">{_num(r.labor_cost_ratio * 100, "{:.1f}%")}</td>'
-                f'<td class="num strong">{_num(r.op_margin_uplift_pp, "{:.1f}")}</td>'
+                f'<td class="num">{_num(r.vacancy_rate_pct, "{:.1f}%")}</td>'
+                f'<td class="num">{_num(r.contribution_margin * 100, "{:.0f}%")}</td>'
+                f'<td class="num strong">{_num(r.op_margin_uplift_pp, "{:.2f}")}</td>'
                 f'<td class="num">{_num(r.op_uplift_pct, "{:,.0f}")}</td>'
-                f'<td class="num">{_num(r.labor_cost / 1e8, "{:,.0f}")}</td>'
+                f'<td class="num">{_num(r.recovered_revenue / 1e8, "{:,.0f}")}</td>'
                 f'<td class="num">{_num(r.operating_profit / 1e8, "{:,.0f}")}</td>'
                 f'<td class="num">'
                 f'{_num(getattr(r, "parent_employee_share", float("nan")) * 100, "{:.0f}%")}</td>'
@@ -499,10 +505,16 @@ def render(
       （ILO Working Paper 140, Gmyrek et al. 2025）の内積に、規制ドラッグを掛ける。
       ILO の指数は単一の数値で<b>物理的自動化を測っていない</b>ので、この軸は生成AIの話に限られる。
       倉庫AMR・自動運転はこの地図の外にある。</p></div>
-    <div class="note"><h4>P/L への換算</h4>
-      <p>人件費データを与えると、象限上の位置が営業利益への感応度になる：
-      <code>人件費 × AI代替可能な労働の割合 × 実現率 ÷ 営業利益</code>。
-      実現率の既定は {cfg.realization_rate:.2f} — 技術的な代替可能性と、実際に人件費が減ることのギャップ。</p></div>
+    <div class="note"><h4>P/L への換算 — 人減らしではなく売上回復</h4>
+      <p>経路は <b>AI → 人手不足の緩和 → 取り逃していた売上の回復 → 利益増</b>。
+      人が採れずに需要を取り逃している業種では、AIが空けた労働は「増員できたのと同じこと」として
+      まず売上に効く。<code>埋められる欠員 = min(AI代替割合 × 実現率, 欠員率)</code>、
+      <code>利益増 = 売上 × 埋められる欠員 × 限界利益率</code>、
+      <code>限界利益率 = (営業利益 + 人件費) ÷ 売上</code>。
+      人を増やさない前提なので人件費は固定費として扱い、限界利益率の分子に入る。
+      実現率の既定は {cfg.realization_rate:.2f}。既定設定では全33業種で
+      「空く労働 &gt; 欠員」なので、効く量を決めるのは欠員率で、AI軸は
+      <b>そもそも埋められるのかという関門</b>として働く。</p></div>
   </div>
 </section>
 
@@ -515,10 +527,18 @@ def render(
     グループ内は（日本の職業別就業者数が ISCO 粒度で無いため）単純平均している。</li>
     <li><b>物理的自動化が入っていない。</b>ILO の指数は生成AIの exposure のみ。
     陸運・倉庫の人手不足は自動運転やAMRで解ける可能性があるが、この軸には映らない。</li>
-    <li><b>需要側の効果を織り込んでいない。</b>SIerはAIで自社の人月が減ると同時にAI案件で売上が増える。
-    この枠組みは前者だけを測る。</li>
+    <li><b>回復する売上には需要があると仮定している。</b>「人がいれば取れたはずの需要」が
+    今も残っている前提。欠員率は募集中の求人しか映さないので、諦めて募集をやめた分は入らない
+    （＝過小側）。一方で需要が消えていれば回復しない（＝過大側）。両側に振れる。</li>
+    <li><b>限界利益率は控えめに出る。</b>人件費以外の費用をすべて変動費として扱っているため、
+    減価償却や地代のような固定費まで変動費に数えている。実際の増分利益はこれより大きい。</li>
+    <li><b>単体基準の限界利益率は持株会社で壊れる。</b>単体売上が管理報酬だけの空箱では
+    (営業利益+人件費)÷売上 が0.9近くまで上がる。表では ※ で示し、単体従業員が連結の20%未満を
+    その基準にしている。</li>
+    <li><b>AI案件による売上増（需要側）は入っていない。</b>SIerや半導体はAIそのものが商売になるが、
+    この枠組みは供給制約側だけを測る。</li>
     <li><b>省力化が顧客に移転する分を引いていない。</b>受託型（SI・人材・警備）では、
-    AIによる省力化が利益ではなく単価下落として出る可能性が高い。</li>
+    余力が利益ではなく単価下落として出る可能性が高い。</li>
     <li><b>バリュエーションでも競争優位でもない。</b>制約に対する感応度の地図であって、投資判断ではない。</li>
   </ul>
 </section>
