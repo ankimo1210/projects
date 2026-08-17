@@ -44,7 +44,7 @@ def test_ingest_stores_a_snapshot_and_inserts_rows(tmp_path):
     report = ingest_one(
         catalog["us_core_pce"],
         con=con,
-        data_root=tmp_path / "raw",
+        raw_root=tmp_path / "raw",
         adapter=adapter,
         start=date(2024, 1, 1),
         now=datetime(2026, 8, 17, tzinfo=UTC),
@@ -61,7 +61,7 @@ def test_a_second_unchanged_ingest_inserts_nothing_new(tmp_path):
     con = connect(tmp_path / "db" / "macrokit.duckdb")
     kwargs = dict(
         con=con,
-        data_root=tmp_path / "raw",
+        raw_root=tmp_path / "raw",
         adapter=adapter,
         start=date(2024, 1, 1),
     )
@@ -87,7 +87,7 @@ def test_point_in_time_query_works_after_ingest(tmp_path):
     ingest_one(
         catalog["us_core_pce"],
         con=con,
-        data_root=tmp_path / "raw",
+        raw_root=tmp_path / "raw",
         adapter=adapter,
         start=date(2024, 1, 1),
         now=datetime(2026, 8, 17, tzinfo=UTC),

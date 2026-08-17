@@ -26,7 +26,7 @@ def test_an_indicator_with_no_snapshot_is_only_declared(tmp_path):
     catalog = load_catalog(default_catalog_root())
     con = connect(tmp_path / "t.duckdb")
     got = compute_status(
-        catalog["us_core_pce"], con=con, data_root=tmp_path / "raw", validated=set()
+        catalog["us_core_pce"], con=con, raw_root=tmp_path / "raw", validated=set()
     )
     assert got == "declared"
 
@@ -37,13 +37,13 @@ def test_status_reaches_parsed_after_a_successful_ingest(tmp_path):
     ingest_one(
         catalog["us_core_pce"],
         con=con,
-        data_root=tmp_path / "raw",
+        raw_root=tmp_path / "raw",
         adapter=FakeAdapter(),
         start=date(2024, 1, 1),
         now=datetime(2026, 8, 17, tzinfo=UTC),
     )
     got = compute_status(
-        catalog["us_core_pce"], con=con, data_root=tmp_path / "raw", validated=set()
+        catalog["us_core_pce"], con=con, raw_root=tmp_path / "raw", validated=set()
     )
     assert got == "parsed"
 
@@ -65,7 +65,7 @@ def test_status_is_fetching_when_snapshots_exist_but_no_rows_do(tmp_path):
         http_status=200,
     )
     got = compute_status(
-        catalog["us_core_pce"], con=con, data_root=tmp_path / "raw", validated=set()
+        catalog["us_core_pce"], con=con, raw_root=tmp_path / "raw", validated=set()
     )
     assert got == "fetching"
 
@@ -80,7 +80,7 @@ def test_a_fully_ingested_indicator_does_not_make_a_different_indicator_parsed(t
     ingest_one(
         catalog["us_core_pce"],
         con=con,
-        data_root=tmp_path / "raw",
+        raw_root=tmp_path / "raw",
         adapter=FakeAdapter(),
         start=date(2024, 1, 1),
         now=datetime(2026, 8, 17, tzinfo=UTC),
@@ -99,7 +99,7 @@ def test_a_fully_ingested_indicator_does_not_make_a_different_indicator_parsed(t
         release_lag_days=15,
         vintage="alfred",
     )
-    got = compute_status(other, con=con, data_root=tmp_path / "raw", validated=set())
+    got = compute_status(other, con=con, raw_root=tmp_path / "raw", validated=set())
     assert got == "declared"
 
 
@@ -145,6 +145,6 @@ def test_status_survives_a_truncated_final_manifest_line(tmp_path):
     )
 
     got = compute_status(
-        catalog["us_core_pce"], con=con, data_root=tmp_path / "raw", validated=set()
+        catalog["us_core_pce"], con=con, raw_root=tmp_path / "raw", validated=set()
     )
     assert got == "fetching"
