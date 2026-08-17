@@ -9,9 +9,15 @@ Deduplication is not just a disk optimisation. Because a stored file appears
 only when the bytes changed, the set of stored dates IS the set of revision
 dates -- RevisionShock detection falls out of the storage layer for free.
 
+Every stored file's name carries the hash of its own bytes, so a path's
+content is determined by its name. That is what makes the ``exists()`` guard
+in ``save_snapshot`` a genuine no-op safety net rather than a data-losing
+one: a file already at a content-addressed path necessarily holds that same
+content, even when two different revisions land on the same calendar day.
+
 Layout::
 
-    {root}/{source}/{indicator}/{ingested_date}/{filename}
+    {root}/{source}/{indicator}/{ingested_date}/{sha256[:12]}-{filename}
     {root}/manifest.jsonl
 """
 
@@ -45,7 +51,13 @@ def last_sha(root: Path, source: str, indicator: str) -> str | None:
     for line in manifest.read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
-        record = json.loads(line)
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            # The manifest is append-only; an interrupted write can leave a
+            # truncated final line. Only the last line can ever be broken
+            # this way, so skipping it is both safe and complete.
+            continue
         if record["source"] == source and record["indicator"] == indicator:
             newest = record["sha256"]
     return newest
@@ -74,7 +86,7 @@ def save_snapshot(
     if changed:
         directory = root / source / indicator / ingested_at.date().isoformat()
         directory.mkdir(parents=True, exist_ok=True)
-        target = directory / filename
+        target = directory / f"{digest[:12]}-{filename}"
         if not target.exists():
             target.write_bytes(content)
 

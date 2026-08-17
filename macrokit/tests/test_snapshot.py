@@ -1,3 +1,4 @@
+import hashlib
 import json
 from datetime import UTC, datetime
 
@@ -32,7 +33,7 @@ def test_identical_content_on_a_later_day_is_not_stored_again(tmp_path):
     second = _save(tmp_path, b'{"a": 1}', day=18)
     assert second.changed is False
     assert second.path is None
-    stored = list(tmp_path.rglob("payload.json"))
+    stored = list(tmp_path.rglob("*payload.json"))
     assert len(stored) == 1
 
 
@@ -41,7 +42,7 @@ def test_changed_content_is_stored_alongside_the_original(tmp_path):
     _save(tmp_path, b'{"a": 1}', day=17)
     second = _save(tmp_path, b'{"a": 2}', day=18)
     assert second.changed is True
-    stored = sorted(p.parent.name for p in tmp_path.rglob("payload.json"))
+    stored = sorted(p.parent.name for p in tmp_path.rglob("*payload.json"))
     assert stored == ["2026-08-17", "2026-08-18"]
 
 
@@ -72,3 +73,32 @@ def test_stored_snapshots_are_never_overwritten(tmp_path):
     assert first.path is not None
     _save(tmp_path, b"different", day=17)
     assert first.path.read_bytes() == b"original"
+
+
+def test_two_revisions_on_the_same_day_are_both_stored(tmp_path):
+    # Regression for the critical same-day-double-revision data loss: before
+    # content-addressed filenames, a second revision on the same calendar day
+    # reported changed=True but its bytes were never written, because the
+    # exists() guard blocked the write to the (non-content-addressed) path
+    # the first revision already occupied.
+    first = _save(tmp_path, b"first", day=17)
+    second = _save(tmp_path, b"second", day=17)
+    assert first.changed is True
+    assert second.changed is True
+    assert first.path is not None
+    assert second.path is not None
+    assert first.path != second.path
+    assert first.path.read_bytes() == b"first"
+    assert second.path.read_bytes() == b"second"
+    assert hashlib.sha256(first.path.read_bytes()).hexdigest() == first.sha256
+    assert hashlib.sha256(second.path.read_bytes()).hexdigest() == second.sha256
+
+
+def test_last_sha_survives_a_truncated_final_manifest_line(tmp_path):
+    # The manifest is append-only; an interrupted process can leave a
+    # truncated final line. That must not break last_sha for every source and
+    # indicator on every subsequent call.
+    saved = _save(tmp_path, b'{"a": 1}', day=17)
+    with manifest_path(tmp_path).open("a", encoding="utf-8") as handle:
+        handle.write('{"ingested_at": "2026-08-18T09:00:00+00:00", "sour')
+    assert last_sha(tmp_path, "estat", "jp_cpi_core") == saved.sha256
