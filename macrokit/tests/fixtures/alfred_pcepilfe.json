@@ -1,0 +1,76 @@
+{
+    "realtime_start": "2024-04-01",
+    "realtime_end": "2024-12-31",
+    "observation_start": "2024-01-01",
+    "observation_end": "2024-02-01",
+    "units": "lin",
+    "output_type": 1,
+    "file_type": "json",
+    "order_by": "observation_date",
+    "sort_order": "asc",
+    "count": 10,
+    "offset": 0,
+    "limit": 100000,
+    "observations": [
+        {
+            "realtime_start": "2024-04-01",
+            "realtime_end": "2024-04-25",
+            "date": "2024-01-01",
+            "value": "120.849"
+        },
+        {
+            "realtime_start": "2024-04-26",
+            "realtime_end": "2024-05-30",
+            "date": "2024-01-01",
+            "value": "120.909"
+        },
+        {
+            "realtime_start": "2024-05-31",
+            "realtime_end": "2024-06-27",
+            "date": "2024-01-01",
+            "value": "120.878"
+        },
+        {
+            "realtime_start": "2024-06-28",
+            "realtime_end": "2024-09-26",
+            "date": "2024-01-01",
+            "value": "120.913"
+        },
+        {
+            "realtime_start": "2024-09-27",
+            "realtime_end": "2024-12-31",
+            "date": "2024-01-01",
+            "value": "121.128"
+        },
+        {
+            "realtime_start": "2024-04-01",
+            "realtime_end": "2024-04-25",
+            "date": "2024-02-01",
+            "value": "121.165"
+        },
+        {
+            "realtime_start": "2024-04-26",
+            "realtime_end": "2024-05-30",
+            "date": "2024-02-01",
+            "value": "121.231"
+        },
+        {
+            "realtime_start": "2024-05-31",
+            "realtime_end": "2024-06-27",
+            "date": "2024-02-01",
+            "value": "121.201"
+        },
+        {
+            "realtime_start": "2024-06-28",
+            "realtime_end": "2024-09-26",
+            "date": "2024-02-01",
+            "value": "121.224"
+        },
+        {
+            "realtime_start": "2024-09-27",
+            "realtime_end": "2024-12-31",
+            "date": "2024-02-01",
+            "value": "121.418"
+        }
+    ]
+}
