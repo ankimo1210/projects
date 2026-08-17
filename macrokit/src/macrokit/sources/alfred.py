@@ -90,8 +90,11 @@ class AlfredAdapter:
                 "realtime_end": FAR_FUTURE,
             },
         )
-        # Strip the key before the URL is recorded anywhere.
-        url = str(response.url).split("&api_key=")[0]
+        # Redact by removing the parameter, not by cutting the string: this
+        # preserves the rest of the request window (file_type, observation_start,
+        # realtime_start/end) for provenance, and it cannot leak the key even if
+        # api_key's position in the query string ever changes.
+        url = str(response.url.copy_remove_param("api_key"))
         return response.content, url, response.status_code
 
     def parse(

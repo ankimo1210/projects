@@ -3,6 +3,7 @@ import os
 from datetime import UTC, date, datetime
 from pathlib import Path
 
+import httpx
 import pytest
 
 from macrokit.catalog import Indicator
@@ -97,6 +98,30 @@ def test_missing_api_key_fails_with_a_clear_message():
     adapter = AlfredAdapter(api_key=None)
     with pytest.raises(RuntimeError, match="FRED_API_KEY is not set"):
         adapter.fetch_raw(INDICATOR, date(2024, 1, 1))
+
+
+def test_fetch_raw_strips_only_the_key_and_keeps_the_request_window():
+    captured = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        captured["url"] = str(request.url)
+        return httpx.Response(200, json={"observations": []})
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    adapter = AlfredAdapter(api_key="not-a-real-key", client=client)
+    _raw, url, status = adapter.fetch_raw(INDICATOR, date(2024, 1, 1))
+
+    assert status == 200
+    # the request really did carry the key ...
+    assert "api_key=not-a-real-key" in captured["url"]
+    # ... but the recorded URL must not, in any form
+    assert "api_key" not in url
+    assert "not-a-real-key" not in url
+    # ... and must still say what was asked for
+    assert "series_id=PCEPILFE" in url
+    assert "observation_start=2024-01-01" in url
+    assert "realtime_start=1776-07-04" in url
+    assert "realtime_end=9999-12-31" in url
 
 
 @pytest.mark.live
