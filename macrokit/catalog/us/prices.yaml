@@ -1,0 +1,16 @@
+- name: us_core_pce
+  country: US
+  block: prices
+  title_ja: コア PCE デフレーター（食品・エネルギー除く、2017=100）
+  source: alfred
+  source_ref:
+    series_id: PCEPILFE
+  freq: M
+  unit: index_2017_100
+  sa: sa
+  release_lag_days: 30
+  vintage: alfred
+  chain: {}
+  caveats:
+    - Fed の公式ターゲットはヘッドライン PCE の 2%。コアは基調を見るための指標
+    - BEA 原統計だが FRED 経由で取得する。直接 API と違い vintage が付くため
