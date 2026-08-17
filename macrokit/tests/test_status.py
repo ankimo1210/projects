@@ -76,3 +76,42 @@ def test_validated_is_read_from_the_marker_file(tmp_path):
     )
     assert load_validated(tmp_path) == {"us_core_pce"}
     assert load_validated(tmp_path / "missing") == set()
+
+
+def test_status_survives_a_truncated_final_manifest_line(tmp_path):
+    # The manifest is append-only and appends are not atomic, so an
+    # interrupted process can leave one truncated line behind; a later,
+    # separate run then appends a complete record after it. last_sha
+    # already tolerates this (Task 6); _has_snapshot must too, since it
+    # reads the same file.
+    #
+    # The truncated fragment is written BEFORE the valid entry, not after:
+    # _has_snapshot returns on its first match, so a truncated line
+    # appended after an already-matching line is never reached and the
+    # test would pass vacuously against the unprotected implementation
+    # (verified: it does). Placing it first forces the scan to step over
+    # the bad line to reach the match.
+    from macrokit.snapshot import manifest_path, save_snapshot
+
+    catalog = load_catalog(default_catalog_root())
+    con = connect(tmp_path / "t.duckdb")
+
+    manifest = manifest_path(tmp_path / "raw")
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    with manifest.open("a", encoding="utf-8") as handle:
+        handle.write('{"ingested_at": "2026-08-18T09:00:00+00:00", "sour\n')
+
+    save_snapshot(
+        tmp_path / "raw",
+        "alfred",
+        "us_core_pce",
+        b"{}",
+        ingested_at=datetime(2026, 8, 17, tzinfo=UTC),
+        url="https://example.invalid",
+        http_status=200,
+    )
+
+    got = compute_status(
+        catalog["us_core_pce"], con=con, data_root=tmp_path / "raw", validated=set()
+    )
+    assert got == "fetching"

@@ -37,7 +37,17 @@ def _has_snapshot(data_root: Path, indicator: str) -> bool:
     if not manifest.exists():
         return False
     for line in manifest.read_text(encoding="utf-8").splitlines():
-        if line.strip() and json.loads(line)["indicator"] == indicator:
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            # The manifest is append-only and appends are not atomic, so an
+            # interrupted process can leave one truncated final line. Skipping
+            # it is safe: only the last line can be partial. snapshot.last_sha
+            # does the same for the same reason.
+            continue
+        if record["indicator"] == indicator:
             return True
     return False
 
