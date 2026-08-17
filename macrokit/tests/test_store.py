@@ -82,3 +82,18 @@ def test_allows_an_actual_release_date_before_ingestion(tmp_path):
     # ALFRED legitimately reports release dates years before we fetched them.
     con = connect(tmp_path / "t.duckdb")
     assert insert_observations(con, [_obs(release_date=datetime(2020, 1, 1, tzinfo=UTC))]) == 1
+
+
+def test_rejects_a_naive_release_date(tmp_path):
+    # A naive release_date would be stored after DuckDB reinterprets it in the
+    # local session timezone, silently host-dependent -- exactly what a
+    # point-in-time platform cannot tolerate.
+    con = connect(tmp_path / "t.duckdb")
+    with pytest.raises(ValueError, match="release_date must be a timezone-aware"):
+        insert_observations(con, [_obs(release_date=datetime(2024, 4, 1))])
+
+
+def test_rejects_a_naive_ingested_at(tmp_path):
+    con = connect(tmp_path / "t.duckdb")
+    with pytest.raises(ValueError, match="ingested_at must be a timezone-aware"):
+        insert_observations(con, [_obs(ingested_at=datetime(2026, 8, 17))])

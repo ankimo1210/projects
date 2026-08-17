@@ -134,6 +134,16 @@ class AlfredAdapter:
     def parse(
         self, indicator: Indicator, raw: bytes, *, ingested_at: datetime
     ) -> list[Observation]:
+        """Turn one ``series/observations`` payload into one row per vintage.
+
+        ``vintage_seq`` (assigned below) means "which release this is, 1 = first"
+        only because ``fetch_raw`` currently requests the entire realtime window
+        (``realtime_start=1776-07-04`` .. ``9999-12-31``). If a future caller
+        narrows that window -- a natural optimisation once incremental fetching
+        arrives -- ``seq=1`` would silently start meaning "first release inside
+        the requested window" instead of "first release ever", with no error to
+        signal the change.
+        """
         payload = json.loads(raw)
         parsed = []
         for item in payload.get("observations", []):
@@ -142,6 +152,14 @@ class AlfredAdapter:
             parsed.append(
                 (
                     date.fromisoformat(item["date"]),
+                    # ALFRED's realtime_start is a date with no time of day, so we
+                    # map it to 00:00 UTC. US releases are typically ~8:30 ET
+                    # (13:30 UTC), so this makes a vintage look knowable up to
+                    # ~13.5 hours before it actually was -- in ET terms, from the
+                    # evening before. Defensible for now (it never makes a
+                    # revision *disappear*, only shifts as_of's granularity to
+                    # the day), but the true publication time-of-day is not
+                    # preserved anywhere in this table.
                     datetime.fromisoformat(item["realtime_start"]).replace(tzinfo=UTC),
                     float(item["value"]),
                 )

@@ -77,7 +77,24 @@ def connect(db_path: Path) -> duckdb.DuckDBPyConnection:
     return con
 
 
+def _is_naive(dt: datetime) -> bool:
+    return dt.tzinfo is None or dt.tzinfo.utcoffset(dt) is None
+
+
+def _reject_naive(row: Observation, field: str, value: datetime) -> None:
+    if _is_naive(value):
+        raise ValueError(
+            f"{row.indicator} {row.period_start}: {field} must be a timezone-aware "
+            f"datetime, got a naive one ({value!r}). A naive value would be stored "
+            "after DuckDB reinterprets it in the local session timezone, and later "
+            "comparisons against aware datetimes (e.g. in pit.as_of) would raise a "
+            "confusing TypeError instead of failing here with a clear message."
+        )
+
+
 def _validate(row: Observation) -> None:
+    _reject_naive(row, "release_date", row.release_date)
+    _reject_naive(row, "ingested_at", row.ingested_at)
     if row.vintage_kind not in VINTAGE_KINDS:
         raise ValueError(f"unknown vintage_kind: {row.vintage_kind}")
     if row.vintage_kind == "snapshot" and row.release_date > row.ingested_at:
