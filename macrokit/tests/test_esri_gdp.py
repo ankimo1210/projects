@@ -107,14 +107,17 @@ def _event(period_start: date, kind: str) -> ReleaseEvent:
 @pytest.mark.skipif(
     not os.environ.get("MACROKIT_LIVE"), reason="live network test; set MACROKIT_LIVE=1 to run"
 )
-def test_the_same_quarter_reads_differently_across_two_releases():
-    """2026 Q1 is +2.1 in its own 2nd preliminary and +1.9 one release later."""
+def test_the_same_quarter_reads_differently_across_three_releases():
+    """2026 Q1 reads +2.1, then +1.8, then +1.9 across three consecutive releases."""
     adapter = esri_gdp.EsriGdpAdapter()
     kwargs = {"series_label": "年率換算の実質季節調整系列(前期比)", "stem_prefix": "nritu"}
+    column = "国内総生産(支出側)"
 
-    own = adapter.fetch_release(_event(date(2026, 1, 1), "2nd_prelim"), **kwargs)[0]
+    first = adapter.fetch_release(_event(date(2026, 1, 1), "1st_prelim"), **kwargs)[0]
+    second = adapter.fetch_release(_event(date(2026, 1, 1), "2nd_prelim"), **kwargs)[0]
     later = adapter.fetch_release(_event(date(2026, 4, 1), "1st_prelim"), **kwargs)[0]
 
-    assert esri_gdp.parse_nritu_csv(own, column="国内総生産(支出側)")[date(2026, 1, 1)] == 2.1
-    assert esri_gdp.parse_nritu_csv(later, column="国内総生産(支出側)")[date(2026, 1, 1)] == 1.9
-    assert esri_gdp.parse_nritu_csv(later, column="国内総生産(支出側)")[date(2026, 4, 1)] == 1.1
+    assert esri_gdp.parse_nritu_csv(first, column=column)[date(2026, 1, 1)] == 2.1
+    assert esri_gdp.parse_nritu_csv(second, column=column)[date(2026, 1, 1)] == 1.8
+    assert esri_gdp.parse_nritu_csv(later, column=column)[date(2026, 1, 1)] == 1.9
+    assert esri_gdp.parse_nritu_csv(later, column=column)[date(2026, 4, 1)] == 1.1
