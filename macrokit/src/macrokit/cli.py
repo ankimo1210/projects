@@ -233,16 +233,12 @@ def gdp_expectations_command(ctx: click.Context, methods: str) -> None:
 @click.option(
     "--out", type=click.Path(path_type=Path), required=True, help="CSV path to write the panel to."
 )
-@click.option(
-    "--include-revised", is_flag=True, default=False,
-    help="Include off-cycle 2nd_prelim_revised releases.",
-)
 @click.pass_context
-def gdp_panel_command(ctx: click.Context, out: Path, include_revised: bool) -> None:
+def gdp_panel_command(ctx: click.Context, out: Path) -> None:
     """Export the release/rate-move event panel to CSV."""
     data_root: Path = ctx.obj["data_root"]
     con = connect(data_root / "macrokit.duckdb")
-    frame = event_panel(con, indicator=GDP_INDICATOR, include_revised=include_revised)
+    frame = event_panel(con, indicator=GDP_INDICATOR)
     if frame.empty:
         click.echo("no events")
         return
