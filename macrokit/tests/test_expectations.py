@@ -67,6 +67,26 @@ def test_previous_business_day_uses_market_rates_not_a_holiday_calendar(con, ins
     assert expectations.previous_business_day(con, date(2026, 8, 17)) == date(2026, 8, 14)
 
 
+def test_random_walk_crosses_the_year_boundary_into_the_prior_q4(
+    con, insert_obs, insert_rates, make_event
+):
+    # 2025 Q4's own 1st preliminary, published well before the 2026 Q1 event
+    # this test forecasts -- exercises _previous_quarter's month-underflow
+    # branch (period_start.month - 3 < 1), which every real Q1 release hits
+    # and which no other test in this module reaches.
+    q4_release = datetime(2026, 2, 16, 8, 50, tzinfo=JST)
+    insert_obs(date(2025, 10, 1), q4_release, 0.9, 1)
+
+    q1_release = datetime(2026, 5, 18, 8, 50, tzinfo=JST)
+    insert_rates(date(2026, 5, 15), date(2026, 5, 18))
+
+    event = make_event(date(2026, 1, 1), "1st_prelim", q1_release)
+    result = expectations.random_walk(con, event)
+
+    assert result.expected == 0.9
+    assert result.as_of == date(2026, 5, 15)
+
+
 def test_no_expectation_reads_a_vintage_released_at_or_after_its_event(
     con, insert_obs, insert_rates, make_event
 ):
