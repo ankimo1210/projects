@@ -1410,8 +1410,53 @@ git commit -m "Rebuild Japanese GDP vintages from each release's own table"
 
 **Files:**
 - Create: `macrokit/src/macrokit/expectations.py`
+- Create: `macrokit/tests/conftest.py`
 - Create: `macrokit/tests/test_expectations.py`
 - Modify: `macrokit/src/macrokit/store.py`
+
+**Shared test builders live in `macrokit/tests/conftest.py` as factory fixtures.**
+Task 7 needs the same builders, and pytest auto-discovers a conftest regardless
+of which directory the run was started from. The alternatives both fail here: a
+plain `helpers.py` is not importable under this workspace's
+`--import-mode=importlib`, and pinning it with a `pythonpath` entry only works
+when pytest picks up `macrokit/pyproject.toml` — a run from the repo root uses
+the root config and the import breaks. Ten workspace members already use
+`tests/conftest.py`; follow them.
+
+```python
+# macrokit/tests/conftest.py
+@pytest.fixture
+def con(tmp_path):
+    return store.connect(tmp_path / "t.duckdb")
+
+
+@pytest.fixture
+def insert_obs(con):
+    """Insert one GDP observation vintage."""
+    def _insert(period_start, release_date, value, seq):
+        store.insert_observations(con, [store.Observation(...)])
+    return _insert
+
+
+@pytest.fixture
+def insert_rates(con):
+    """Insert a 10y rate row for each given date."""
+    def _insert(*days):
+        store.insert_rates(con, [store.RateObservation(...) for d in days])
+    return _insert
+
+
+@pytest.fixture
+def make_event():
+    """Build a ReleaseEvent for one period and kind."""
+    def _make(period_start, kind, release_date):
+        return store.ReleaseEvent(...)
+    return _make
+```
+
+Tests then request the fixtures they need instead of importing anything. The
+test bodies below are written against `_obs` / `_rates` / `_event`; rename the
+calls to the fixture names when transcribing.
 
 **Interfaces:**
 - Consumes: `pit.as_of`, `store.ReleaseEvent`, `observations` rows (Tasks 3–4).
@@ -1421,7 +1466,7 @@ git commit -m "Rebuild Japanese GDP vintages from each release's own table"
   - `expectations.previous_business_day(con, when: date) -> date | None`
   - `expectations.prior_vintage(con, event) -> Expectation | None`
   - `expectations.random_walk(con, event) -> Expectation | None`
-  - `expectations.compute(con, events, *, methods, ingested_at) -> list[Expectation]`
+  - `expectations.compute(con, events, *, methods) -> list[Expectation]` — each row's `ingested_at` is taken from its event, not passed in separately
 
 **Context:** This is where the leak rule bites. `random_walk`'s expectation for a release at `T` is the previous quarter's value **as it stood before `T`**. For the 2026-08-17 release the measured values are: 2026 Q1 read **+2.1** at its own first preliminary (2026-05-18), **+1.8** at its second preliminary (2026-06-08), and **+1.9** in the 2026-08-17 release itself.
 
@@ -1823,7 +1868,7 @@ Tenor columns are `NULL` before that tenor existed (25y before 2004-03-22, 40y b
 
 - [ ] **Step 1: Write the failing tests**
 
-`macrokit/tests/test_panel.py` — reuse the `_obs`/`_event`/`_rates` helpers from `test_expectations.py` by importing them, or copy them; the fixture data is:
+`macrokit/tests/test_panel.py` — request the factory fixtures from `macrokit/tests/conftest.py` (created in Task 5); do not import from another test module. The fixture data is:
 
 ```python
 def test_the_panel_pairs_a_release_with_that_days_move(con):
