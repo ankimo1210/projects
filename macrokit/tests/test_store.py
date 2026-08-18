@@ -3,7 +3,13 @@ from datetime import UTC, date, datetime
 import pytest
 
 from macrokit.periods import period_end_for
-from macrokit.store import Observation, connect, insert_observations
+from macrokit.store import (
+    Observation,
+    RateObservation,
+    connect,
+    insert_observations,
+    insert_rates,
+)
 
 
 def _obs(**kw) -> Observation:
@@ -23,6 +29,19 @@ def _obs(**kw) -> Observation:
         vintage_kind="actual",
     )
     return Observation(**{**base, **kw})
+
+
+def _rate(**kw) -> RateObservation:
+    base = dict(
+        curve="jgb",
+        obs_date=date(2026, 7, 31),
+        tenor_y=10.0,
+        yield_pct=2.801,
+        source="mof_jgb",
+        source_url="https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv",
+        ingested_at=datetime(2026, 8, 17, tzinfo=UTC),
+    )
+    return RateObservation(**{**base, **kw})
 
 
 @pytest.mark.parametrize(
@@ -106,3 +125,32 @@ def test_rejects_a_naive_ingested_at(tmp_path):
     con = connect(tmp_path / "t.duckdb")
     with pytest.raises(ValueError, match="ingested_at must be a timezone-aware"):
         insert_observations(con, [_obs(ingested_at=datetime(2026, 8, 17))])
+
+
+def test_round_trips_a_rate_observation(tmp_path):
+    con = connect(tmp_path / "t.duckdb")
+    assert insert_rates(con, [_rate()]) == 1
+    got = con.execute(
+        "SELECT curve, obs_date, tenor_y, yield_pct FROM market_rates"
+    ).fetchall()
+    assert got == [("jgb", date(2026, 7, 31), 10.0, 2.801)]
+
+
+def test_inserting_the_same_rate_twice_does_not_duplicate(tmp_path):
+    # Re-ingesting an unchanged curve must be idempotent, otherwise a daily
+    # cron run would multiply every row it has already seen.
+    con = connect(tmp_path / "t.duckdb")
+    assert insert_rates(con, [_rate()]) == 1
+    # Same (curve, obs_date, tenor_y) but a different value: INSERT OR IGNORE
+    # must drop it silently rather than overwrite the original.
+    assert insert_rates(con, [_rate(yield_pct=9.999)]) == 0
+    got = con.execute("SELECT count(*) FROM market_rates").fetchone()[0]
+    assert got == 1
+    stored = con.execute("SELECT yield_pct FROM market_rates").fetchone()[0]
+    assert stored == 2.801
+
+
+def test_rejects_a_naive_ingested_at_for_rates(tmp_path):
+    con = connect(tmp_path / "t.duckdb")
+    with pytest.raises(ValueError, match="ingested_at must be timezone-aware"):
+        insert_rates(con, [_rate(ingested_at=datetime(2026, 8, 17))])
