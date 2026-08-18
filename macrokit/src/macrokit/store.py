@@ -169,6 +169,47 @@ def insert_observations(con: duckdb.DuckDBPyConnection, rows: list[Observation])
     return after - before
 
 
+def recompute_vintage_seq(con: duckdb.DuckDBPyConnection, indicator: str) -> None:
+    """Renumber ``vintage_seq`` for one indicator to mean 公表順 (1st published = 1,
+    2nd = 2, ...), by publication order (``release_date``) within each period.
+
+    A window function over the whole table, not a per-row counter maintained at
+    insert time: `sources/esri_gdp.py` used to hard-code ``vintage_seq`` from
+    ``release_kind`` alone (1st_prelim -> 1, everything else -> 2), which is
+    wrong for every period below the release actually being ingested -- each
+    ESRI table carries the series back to 1994, so a single 2nd_prelim fetch
+    stamped ``vintage_seq=2`` onto ~19 rows most of which were already at
+    vintage 3, 4, 5... A window recompute is order-independent (safe to re-run
+    after a partial backfill) and self-correcting (a later out-of-order insert
+    fixes every affected row, not just the one just inserted), where an
+    insert-time counter would depend on ingesting oldest-first and silently
+    drift on a partial re-run.
+
+    Scoped to ``indicator`` so it cannot touch ALFRED-sourced rows, which
+    already get a correct per-period sequence from `sources/alfred.py` (each
+    realtime-window fetch returns every vintage for a period in one response,
+    counted in order there).
+    """
+    con.execute(
+        """
+        UPDATE observations
+        SET vintage_seq = sub.rn
+        FROM (
+            SELECT period_start, release_date,
+                   row_number() OVER (
+                       PARTITION BY period_start ORDER BY release_date
+                   ) AS rn
+            FROM observations
+            WHERE indicator = ?
+        ) AS sub
+        WHERE observations.indicator = ?
+          AND observations.period_start = sub.period_start
+          AND observations.release_date = sub.release_date
+        """,
+        [indicator, indicator],
+    )
+
+
 @dataclass(frozen=True)
 class RateObservation:
     curve: str

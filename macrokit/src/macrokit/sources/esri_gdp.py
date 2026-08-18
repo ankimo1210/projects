@@ -227,6 +227,12 @@ class EsriGdpAdapter:
                 period_start=period_start,
                 period_end=_quarter_end(period_start),
                 release_date=event.release_date,
+                # Placeholder, not the real 公表順: every ESRI table carries the
+                # series back to 1994, so this one release's kind says nothing
+                # about how many times *older* periods have already been
+                # published. `store.recompute_vintage_seq` overwrites this with
+                # a per-period row_number() over release_date immediately after
+                # `cli.py`'s `gdp vintages` command finishes ingesting.
                 vintage_seq=1 if event.release_kind == "1st_prelim" else 2,
                 value=value,
                 unit="percent_saar",
