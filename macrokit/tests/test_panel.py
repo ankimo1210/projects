@@ -1,3 +1,4 @@
+import math
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
@@ -77,6 +78,32 @@ def _seed_2026_q2(con):
     store.insert_expectations(con, expectations.compute(con, [event]))
 
 
+def _seed_uniform_surprises(con, count):
+    """`count` 1st_prelim releases, oldest first, whose random_walk surprise is
+    exactly its 0-indexed position: expected is pinned to 0.0 so surprise ==
+    actual == i. This gives `_expanding_z` a surprise series with a
+    hand-computable prior standard deviation, unlike a single seeded event
+    (whose std() is always NaN and so proves nothing about the expanding,
+    strictly-prior computation).
+
+    Also seeds one JGB session per release plus one earlier base session, so
+    every row has a d1_bp move and survives event_panel's any-tenor-present
+    filter.
+    """
+    store.insert_rates(con, [_rate(date(1999, 12, 1), 10.0, 2.0)])
+    for i in range(count):
+        year, quarter = divmod(i, 4)
+        period_start = date(2000 + year, quarter * 3 + 1, 1)
+        release_date = datetime(2000 + year, quarter * 3 + 1, 15, 8, 50, tzinfo=JST)
+        event = _event(period_start, "1st_prelim", release_date)
+        store.insert_releases(con, [event])
+        store.insert_observations(con, [_observation(period_start, release_date, float(i), 1)])
+        store.insert_rates(con, [_rate(release_date.date(), 10.0, 2.0 + 0.01 * i)])
+        store.insert_expectations(con, [
+            _expectation(period_start, "1st_prelim", "random_walk", 0.0, release_date.date())
+        ])
+
+
 def _seed_future_release(con):
     """A scheduled 2027 release with an actual and an expectation but no market_rates."""
     release_date = datetime(2027, 2, 15, 8, 50, tzinfo=JST)
@@ -102,10 +129,25 @@ def test_the_panel_pairs_a_release_with_that_days_move(con):
     assert row["d1_bp_2y"] == pytest.approx(4.0, abs=0.1)
 
 
-def test_surprise_z_is_null_until_twenty_prior_surprises_exist(con):
-    _seed_2026_q2(con)
+def test_surprise_z_divides_by_the_std_of_strictly_prior_surprises(con):
+    # A single seeded event cannot pin this behaviour: std() over one value is
+    # NaN under ddof=1, so `surprise_z.isna().all()` would hold for the
+    # correct expanding/strictly-prior computation, for a full-sample sigma
+    # (exactly the look-ahead spec section 6.2 forbids), and for a stub that
+    # always returns NaN. Seed 21 releases instead so min_periods=20 is
+    # satisfied for the 21st, and pin its value.
+    _seed_uniform_surprises(con, 21)
     frame = panel.event_panel(con, indicator="jp_real_gdp_qoq_saar", tenors=(10.0,))
-    assert frame["surprise_z"].isna().all()
+    assert len(frame) == 21
+
+    # The first 20 releases (surprises 0..19) have fewer than 20 strictly
+    # prior surprises each, so all of them stay null.
+    assert frame["surprise_z"].iloc[:20].isna().all()
+
+    # The 21st release's z divides its surprise (20.0) by the sample std
+    # (ddof=1) of the 20 *prior* surprises 0..19 -- not the current one.
+    prior_sigma = math.sqrt(35.0)  # std(range(20), ddof=1) == sqrt(665 / 19)
+    assert frame["surprise_z"].iloc[20] == pytest.approx(20.0 / prior_sigma)
 
 
 def test_a_tenor_that_did_not_exist_yet_is_null_not_zero(con):
