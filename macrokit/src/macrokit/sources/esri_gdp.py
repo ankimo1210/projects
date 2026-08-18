@@ -97,7 +97,7 @@ def select_series_url(
     matches = [
         href
         for href, label in parser.links
-        if series_label in label and href.rsplit("/", 1)[-1].startswith(stem_prefix)
+        if series_label in label and _stem_matches(href, stem_prefix)
     ]
     if not matches:
         raise EsriGdpError(
@@ -110,6 +110,22 @@ def select_series_url(
             f"{matches}. Refusing to guess which is the headline series."
         )
     return urljoin(menu_url_, matches[0])
+
+
+def _stem_matches(href: str, stem_prefix: str) -> bool:
+    """True when the basename carries ``stem_prefix`` as a whole token.
+
+    The stem does not always sit at position 0. Older releases prefix the file
+    with a migration date -- ``20120227_nritu_jk0911.csv`` -- so a
+    ``startswith`` test rejects the very file it is meant to select, and
+    rejects the ``knritu`` reference series along with it, leaving nothing.
+
+    Requiring a boundary before the stem keeps ``knritu`` out for free: in
+    ``20120227_knritu_jk0911.csv`` the stem is preceded by ``k``, which is not
+    a boundary.
+    """
+    basename = href.rsplit("/", 1)[-1]
+    return re.search(rf"(?:^|[_-]){re.escape(stem_prefix)}[_-]", basename) is not None
 
 
 def parse_nritu_csv(content: bytes, *, column: str) -> dict[date, float]:

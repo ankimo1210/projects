@@ -43,6 +43,23 @@ def test_the_reference_series_with_the_same_label_is_not_selected():
     assert "knritu" not in url
 
 
+def test_the_older_date_stamped_naming_still_resolves():
+    """2009-2015 releases prefix the file with a migration date: 20120227_nritu_jk0911.csv.
+
+    A basename `startswith("nritu")` test rejects both this and its knritu
+    sibling, making the whole pre-2016 archive unreachable.
+    """
+    html = (FIXTURES / "esri_gdemenuja_2009.html").read_bytes()
+    url = esri_gdp.select_series_url(
+        html,
+        "https://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2009/qe091/gdemenuja.html",
+        series_label="年率換算の実質季節調整系列(前期比)",
+        stem_prefix="nritu",
+    )
+    assert url.endswith("/jp/sna/content/20120227_nritu_jk0911.csv")
+    assert "knritu" not in url
+
+
 def test_a_relative_href_is_resolved_against_the_menu_url():
     html = (FIXTURES / "esri_gdemenuja.html").read_bytes()
     url = esri_gdp.select_series_url(
@@ -121,3 +138,20 @@ def test_the_same_quarter_reads_differently_across_three_releases():
     assert esri_gdp.parse_nritu_csv(second, column=column)[date(2026, 1, 1)] == 1.8
     assert esri_gdp.parse_nritu_csv(later, column=column)[date(2026, 1, 1)] == 1.9
     assert esri_gdp.parse_nritu_csv(later, column=column)[date(2026, 4, 1)] == 1.1
+
+
+@pytest.mark.live
+@pytest.mark.skipif(
+    not os.environ.get("MACROKIT_LIVE"), reason="live network test; set MACROKIT_LIVE=1 to run"
+)
+def test_a_2009_era_release_still_resolves():
+    """The oldest release in the calendar must be reachable, not just recent ones."""
+    adapter = esri_gdp.EsriGdpAdapter()
+    content, url, _ = adapter.fetch_release(
+        _event(date(2008, 10, 1), "1st_prelim"),
+        series_label="年率換算の実質季節調整系列(前期比)",
+        stem_prefix="nritu",
+    )
+    assert "knritu" not in url
+    series = esri_gdp.parse_nritu_csv(content, column="国内総生産(支出側)")
+    assert date(2008, 10, 1) in series
