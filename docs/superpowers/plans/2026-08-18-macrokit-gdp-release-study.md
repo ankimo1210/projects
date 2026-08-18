@@ -1302,18 +1302,27 @@ This is the measurement the whole design rests on. Append to `macrokit/tests/tes
 
 ```python
 @pytest.mark.live
-def test_the_same_quarter_reads_differently_across_two_releases():
-    """2026 Q1 is +2.1 in its own 2nd preliminary and +1.9 one release later."""
+@pytest.mark.skipif(not os.environ.get("MACROKIT_LIVE"), reason="live archive fetch")
+def test_the_same_quarter_reads_differently_across_three_releases():
+    """2026 Q1 reads +2.1, then +1.8, then +1.9 across three consecutive releases."""
     adapter = esri_gdp.EsriGdpAdapter()
     kwargs = {"series_label": "年率換算の実質季節調整系列(前期比)", "stem_prefix": "nritu"}
+    column = "国内総生産(支出側)"
 
-    own = adapter.fetch_release(_event(date(2026, 1, 1), "2nd_prelim"), **kwargs)[0]
+    first = adapter.fetch_release(_event(date(2026, 1, 1), "1st_prelim"), **kwargs)[0]
+    second = adapter.fetch_release(_event(date(2026, 1, 1), "2nd_prelim"), **kwargs)[0]
     later = adapter.fetch_release(_event(date(2026, 4, 1), "1st_prelim"), **kwargs)[0]
 
-    assert esri_gdp.parse_nritu_csv(own, column="国内総生産(支出側)")[date(2026, 1, 1)] == 2.1
-    assert esri_gdp.parse_nritu_csv(later, column="国内総生産(支出側)")[date(2026, 1, 1)] == 1.9
-    assert esri_gdp.parse_nritu_csv(later, column="国内総生産(支出側)")[date(2026, 4, 1)] == 1.1
+    assert esri_gdp.parse_nritu_csv(first, column=column)[date(2026, 1, 1)] == 2.1
+    assert esri_gdp.parse_nritu_csv(second, column=column)[date(2026, 1, 1)] == 1.8
+    assert esri_gdp.parse_nritu_csv(later, column=column)[date(2026, 1, 1)] == 1.9
+    assert esri_gdp.parse_nritu_csv(later, column=column)[date(2026, 4, 1)] == 1.1
 ```
+
+**The middle value is the one that matters.** `+1.8` is what the market could
+see on the eve of 2026-08-17; `+2.1` is stale and `+1.9` is same-day. Getting
+the directory naming backwards is easy — `qe261` is the **first** preliminary,
+not the second; the second lives in `qe261_2`.
 
 Add a small `_event(period_start, kind)` helper in the test module that builds a `ReleaseEvent` with an arbitrary tz-aware `release_date`; `fetch_release` reads only `period_start` and `release_kind`.
 
@@ -1344,7 +1353,9 @@ git commit -m "Rebuild Japanese GDP vintages from each release's own table"
   - `expectations.random_walk(con, event) -> Expectation | None`
   - `expectations.compute(con, events, *, methods, ingested_at) -> list[Expectation]`
 
-**Context:** This is where the leak rule bites. `random_walk`'s expectation for a release at `T` is the previous quarter's value **as it stood before `T`** — measured at +2.1 for 2026 Q1, versus the +1.9 that the 2026-08-17 release itself published. Reading the release's own table would put same-day information into the expectation.
+**Context:** This is where the leak rule bites. `random_walk`'s expectation for a release at `T` is the previous quarter's value **as it stood before `T`**. For the 2026-08-17 release the measured values are: 2026 Q1 read **+2.1** at its own first preliminary (2026-05-18), **+1.8** at its second preliminary (2026-06-08), and **+1.9** in the 2026-08-17 release itself.
+
+Only **+1.8** is admissible. `+1.9` is same-day information; `+2.1` is stale and was already superseded. Both mistakes are real and they fail in opposite directions, which is why `pit.as_of()` — not "the previous row" and not "the oldest vintage" — is the only correct lookup.
 
 Business days come from `market_rates`, not from a holiday calendar: the Phase 1 calendar is missing the year-end government and bank holidays (`known-limitations.md` §2), so `market_rates` row presence is the more reliable definition.
 
@@ -1396,16 +1407,19 @@ def _rates(con, *days):
 
 
 def test_random_walk_takes_the_prior_quarter_as_it_stood_before_the_release(con):
+    may = datetime(2026, 5, 18, 8, 50, tzinfo=JST)
     june = datetime(2026, 6, 8, 8, 50, tzinfo=JST)
     august = datetime(2026, 8, 17, 8, 50, tzinfo=JST)
-    _obs(con, date(2026, 1, 1), june, 2.1, 2)      # the value knowable on 8/14
+    _obs(con, date(2026, 1, 1), may, 2.1, 1)       # superseded in June
+    _obs(con, date(2026, 1, 1), june, 1.8, 2)      # the value knowable on 8/14
     _obs(con, date(2026, 1, 1), august, 1.9, 1)    # revised ON the release day
     _obs(con, date(2026, 4, 1), august, 1.1, 1)
     _rates(con, date(2026, 8, 14), date(2026, 8, 17))
 
     result = expectations.random_walk(con, _event(date(2026, 4, 1), "1st_prelim", august))
 
-    assert result.expected == 2.1
+    # Not 1.9 (same-day) and not 2.1 (stale) -- the two failure directions.
+    assert result.expected == 1.8
     assert result.as_of == date(2026, 8, 14)
 
 
@@ -1420,13 +1434,13 @@ def test_random_walk_has_no_expectation_for_the_oldest_release(con):
 def test_prior_vintage_anchors_the_second_preliminary_on_the_first(con):
     may = datetime(2026, 5, 18, 8, 50, tzinfo=JST)
     june = datetime(2026, 6, 8, 8, 50, tzinfo=JST)
-    _obs(con, date(2026, 1, 1), may, 2.4, 1)
-    _obs(con, date(2026, 1, 1), june, 2.1, 2)
+    _obs(con, date(2026, 1, 1), may, 2.1, 1)   # 1st preliminary
+    _obs(con, date(2026, 1, 1), june, 1.8, 2)  # 2nd preliminary revised it down
     _rates(con, date(2026, 6, 5), date(2026, 6, 8))
 
     result = expectations.prior_vintage(con, _event(date(2026, 1, 1), "2nd_prelim", june))
 
-    assert result.expected == 2.4
+    assert result.expected == 2.1
     assert result.method == "prior_vintage"
 
 
@@ -1476,7 +1490,7 @@ Add `EXPECTATION_METHODS = frozenset({"prior_vintage", "random_walk", "ar_model"
 
 Every method here obeys one rule: an expectation for a release at ``T`` may only
 read vintages whose ``release_date`` is strictly before ``T``. The measured cost
-of breaking it: 2026 Q1 stood at +2.1 before the 2026-08-17 release and at +1.9
+of breaking it: 2026 Q1 stood at +1.8 before the 2026-08-17 release and at +1.9
 after it, because that release revised the quarter it was not reporting on.
 
 Business days come from ``market_rates`` rather than the holiday calendar, which
@@ -1584,7 +1598,7 @@ The spec makes this an acceptance criterion. Append:
 def test_no_expectation_reads_a_vintage_released_at_or_after_its_event(con):
     august = datetime(2026, 8, 17, 8, 50, tzinfo=JST)
     june = datetime(2026, 6, 8, 8, 50, tzinfo=JST)
-    _obs(con, date(2026, 1, 1), june, 2.1, 2)
+    _obs(con, date(2026, 1, 1), june, 1.8, 2)
     _obs(con, date(2026, 1, 1), august, 1.9, 1)
     _obs(con, date(2026, 4, 1), august, 1.1, 1)
     _rates(con, date(2026, 8, 14), date(2026, 8, 17))
@@ -1751,8 +1765,8 @@ def test_the_panel_pairs_a_release_with_that_days_move(con):
 
     assert row["release_date"].date() == date(2026, 8, 17)
     assert row["actual"] == 1.1
-    assert row["expected"] == 2.1
-    assert row["surprise"] == pytest.approx(-1.0)
+    assert row["expected"] == 1.8
+    assert row["surprise"] == pytest.approx(-0.7)
     assert row["d1_bp_10y"] == pytest.approx(5.2, abs=0.1)
     assert row["d1_bp_2y"] == pytest.approx(4.0, abs=0.1)
 
@@ -1789,7 +1803,7 @@ def test_a_release_with_no_rate_row_is_dropped_and_counted(con):
     assert (frame["release_date"].dt.year == 2027).sum() == 0
 ```
 
-`_seed_2026_q2` inserts: the 2026 Q2 first-preliminary release event at 2026-08-17 08:50 JST; observations giving `actual = 1.1` for 2026 Q2 and the two 2026 Q1 vintages (2.1 then 1.9); `market_rates` for 2026-08-14 (2y 1.657, 10y 2.878) and 2026-08-17 (2y 1.697, 10y 2.930); and the expectations produced by `expectations.compute`.
+`_seed_2026_q2` inserts: the 2026 Q2 first-preliminary release event at 2026-08-17 08:50 JST; observations giving `actual = 1.1` for 2026 Q2 and the three 2026 Q1 vintages (2.1 at 2026-05-18, **1.8** at 2026-06-08, 1.9 at 2026-08-17); `market_rates` for 2026-08-14 (2y 1.657, 10y 2.878) and 2026-08-17 (2y 1.697, 10y 2.930); and the expectations produced by `expectations.compute`.
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
@@ -1978,7 +1992,7 @@ Verify the 2026 Q2 first-preliminary row:
 | `release_date` | 2026-08-17 08:50+09:00 | ESRI XML |
 | `actual` | 1.1 | measured in `nritu-jk2621.csv` |
 | `d1_bp_10y` | +5 ± 1 | 8/14 close 2.878% → 8/17 2.930% |
-| `expected` (`random_walk`) | 2.1 | 2026 Q1 as published in qe261, **not** the 1.9 that this release published |
+| `expected` (`random_walk`) | 1.8 | 2026 Q1 as it stood on the eve of the release (qe261_2, the second preliminary) — **not** the 1.9 this release published, and **not** the 2.1 that qe261 had already superseded |
 
 If `d1_bp_10y` is null, the MoF feed had not yet published 8/17 — see Task 1 Step 7.
 
