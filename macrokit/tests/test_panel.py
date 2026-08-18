@@ -157,7 +157,10 @@ def test_a_tenor_that_did_not_exist_yet_is_null_not_zero(con):
     assert frame["d1_bp_10y"].notna().all()
 
 
-def test_a_release_with_no_rate_row_is_dropped_and_counted(con):
+def test_a_release_with_no_rate_row_is_dropped_from_the_panel(con):
+    # Drops the row silently -- spec section 7's "record the exclusion
+    # reason" is not implemented, so this only verifies the drop itself, not
+    # a count of exclusions or why.
     _seed_2026_q2(con)
     _seed_future_release(con)  # a scheduled 2027 release, no market_rates
     frame = panel.event_panel(con, indicator="jp_real_gdp_qoq_saar", tenors=(10.0,))
