@@ -232,8 +232,16 @@ def gdp_expectations_command(ctx: click.Context, methods: str) -> None:
         rows = compute_expectations(con, events, methods=method_names)
     except ValueError as exc:
         raise click.ClickException(str(exc)) from exc
+    # `insert_expectations` uses INSERT OR REPLACE, so its return value counts
+    # only rows whose key was new. Reporting that alone would print "0 inserted"
+    # after a repair re-run that had in fact corrected every stale value -- which
+    # reads as "nothing happened". Report both halves.
     inserted = insert_expectations(con, rows)
-    click.echo(f"expectations: {len(events)} events, {len(rows)} computed, {inserted} inserted")
+    updated = len(rows) - inserted
+    click.echo(
+        f"expectations: {len(events)} events, {len(rows)} computed, "
+        f"{inserted} new, {updated} updated"
+    )
 
 
 @gdp_group.command("panel")
