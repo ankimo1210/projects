@@ -317,18 +317,23 @@ def test_round_trips_an_expectation(tmp_path):
     ]
 
 
-def test_inserting_the_same_expectation_twice_does_not_duplicate(tmp_path):
-    # Re-running the computation must be idempotent, otherwise a repeated
-    # `compute` pass would multiply every row it has already seen.
+def test_inserting_the_same_expectation_key_twice_lets_the_second_value_win(tmp_path):
+    # Expectations are derived, not observed: a `gdp vintages` backfill is a
+    # long, unresumable loop, so an interruption can leave `gdp expectations`
+    # computing a stale value from an incomplete vintage history. A later,
+    # more complete recomputation must be able to overwrite that stale value
+    # -- INSERT OR REPLACE, unlike insert_observations/insert_rates/
+    # insert_releases, which record observed facts and stay IGNORE.
     con = connect(tmp_path / "t.duckdb")
     assert insert_expectations(con, [_expectation()]) == 1
     # Same (indicator, period_start, release_kind, method) but a different
-    # expected value: INSERT OR IGNORE must drop it, not overwrite the original.
+    # expected value: the second insert must overwrite the first, not be
+    # dropped, and the row count must not grow.
     assert insert_expectations(con, [_expectation(expected=9.999)]) == 0
     got = con.execute("SELECT count(*) FROM expectations").fetchone()[0]
     assert got == 1
     stored = con.execute("SELECT expected FROM expectations").fetchone()[0]
-    assert stored == 1.8
+    assert stored == 9.999
 
 
 def test_rejects_a_naive_ingested_at_for_expectations(tmp_path):

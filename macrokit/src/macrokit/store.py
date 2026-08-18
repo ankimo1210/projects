@@ -293,7 +293,19 @@ class Expectation:
 
 
 def insert_expectations(con: duckdb.DuckDBPyConnection, rows: list[Expectation]) -> int:
-    """Insert expectation rows, ignoring rows whose key is already present."""
+    """Insert expectation rows; a row whose key is already present is overwritten.
+
+    REPLACE, not IGNORE, unlike every other `insert_*` in this module.
+    Expectations are derived, not observed: `gdp vintages` is a long,
+    unresumable backfill, so an interruption can leave `gdp expectations`
+    computing a stale value from whatever vintages happened to exist at that
+    moment (e.g. a random_walk anchored to a quarter-old vintage because the
+    newest one had not been fetched yet). A later, more complete recomputation
+    must be able to win over that stale value. `insert_observations`,
+    `insert_rates` and `insert_releases` record observed facts, where IGNORE
+    is correct and must not change: a later fetch has no more authority over
+    what already happened than an earlier one did.
+    """
     if not rows:
         return 0
     for row in rows:
@@ -305,7 +317,7 @@ def insert_expectations(con: duckdb.DuckDBPyConnection, rows: list[Expectation])
             raise ValueError(f"unknown method: {row.method}")
     before = con.execute("SELECT count(*) FROM expectations").fetchone()[0]
     con.executemany(
-        "INSERT OR IGNORE INTO expectations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT OR REPLACE INTO expectations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         [astuple(row) for row in rows],
     )
     after = con.execute("SELECT count(*) FROM expectations").fetchone()[0]
