@@ -2123,6 +2123,20 @@ git commit -m "Assemble the release/rate-move panel and expose it on the CLI"
 
 ## Task 8: ESP forecast consensus
 
+> **DROPPED 2026-08-18, with the user's approval.** Its three unknowns were
+> resolved by measurement before asking, and the answers removed the case for
+> building it. The free archive at `/esp-forecast-top/forecast` lists 2026
+> surveys only and has no pagination, so ESP could cover ~8 of the panel's 140
+> events. No PDF parsing was needed after all — the figures and the response
+> deadline sit in the listing page's HTML — and no new dependency was needed
+> either way. Separately, the premise below is wrong: the admissible ESP value
+> for the 2026-08-17 release is the **August** survey (+1.67%, response deadline
+> 2026-08-04), not the July survey (+0.80%), so the print **missed** ESP by
+> 0.57pp rather than beating it, and Step 4's sign-flip test asserts the wrong
+> thing. See spec §2.1 and §11-1/§11-2, both corrected. The text below is left
+> as written for the record.
+
+
 **Files:**
 - Create: `macrokit/src/macrokit/sources/esp.py`
 - Create: `macrokit/tests/test_esp.py`
