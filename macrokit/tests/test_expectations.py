@@ -1,6 +1,8 @@
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
+import pytest
+
 from macrokit import expectations
 
 JST = ZoneInfo("Asia/Tokyo")
@@ -101,3 +103,59 @@ def test_no_expectation_reads_a_vintage_released_at_or_after_its_event(
     for row in expectations.compute(con, [event]):
         assert row.as_of < august.date()
         assert row.expected != 1.9  # the value that release itself published
+
+
+def test_ar_model_forecasts_a_constant_series_as_that_constant(
+    con, insert_obs, insert_rates, make_event
+):
+    august = datetime(2026, 8, 17, 8, 50, tzinfo=JST)
+    earlier = datetime(2026, 6, 8, 8, 50, tzinfo=JST)
+    start = date(2010, 1, 1)
+    for i in range(20):
+        month = (i % 4) * 3 + 1
+        insert_obs(date(start.year + i // 4, month, 1), earlier, 2.0, 2)
+    insert_rates(date(2026, 8, 14), date(2026, 8, 17))
+
+    result = expectations.ar_model(con, make_event(date(2026, 4, 1), "1st_prelim", august))
+
+    assert result is not None
+    assert result.expected == pytest.approx(2.0, abs=1e-6)
+    assert result.as_of == date(2026, 8, 14)
+
+
+def test_ar_model_declines_when_the_history_is_shorter_than_p_plus_eight(
+    con, insert_obs, insert_rates, make_event
+):
+    august = datetime(2026, 8, 17, 8, 50, tzinfo=JST)
+    earlier = datetime(2026, 6, 8, 8, 50, tzinfo=JST)
+    for i in range(11):
+        month = (i % 4) * 3 + 1
+        insert_obs(date(2020 + i // 4, month, 1), earlier, float(i), 2)
+    insert_rates(date(2026, 8, 14), date(2026, 8, 17))
+
+    event = make_event(date(2026, 4, 1), "1st_prelim", august)
+    assert expectations.ar_model(con, event) is None
+
+
+def test_ar_order_is_pinned_at_four():
+    assert expectations.AR_ORDER == 4
+    assert expectations.AR_MIN_OBSERVATIONS == 12
+
+
+def test_compute_includes_ar_model_alongside_random_walk_when_history_allows(
+    con, insert_obs, insert_rates, make_event
+):
+    august = datetime(2026, 8, 17, 8, 50, tzinfo=JST)
+    earlier = datetime(2026, 6, 8, 8, 50, tzinfo=JST)
+    start = date(2010, 1, 1)
+    for i in range(20):
+        month = (i % 4) * 3 + 1
+        insert_obs(date(start.year + i // 4, month, 1), earlier, 2.0, 2)
+    insert_obs(date(2026, 1, 1), earlier, 1.9, 1)  # prior quarter, for random_walk
+    insert_rates(date(2026, 8, 14), date(2026, 8, 17))
+
+    event = make_event(date(2026, 4, 1), "1st_prelim", august)
+    rows = expectations.compute(con, [event])
+
+    methods = {row.method for row in rows}
+    assert methods == {"random_walk", "ar_model"}
