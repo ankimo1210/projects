@@ -60,6 +60,42 @@ def test_the_older_date_stamped_naming_still_resolves():
     assert "knritu" not in url
 
 
+def test_a_fullwidth_parenthesis_label_still_matches_the_series():
+    """The 2009 archive (qe091/qe092/qe093, both preliminary rounds) prints the
+    label with full-width parentheses -- '（前期比）（CSV形式：14KB）' -- while
+    the catalog's series_label is configured with half-width parentheses. A
+    raw containment test therefore misses on every 2009 page and those six
+    releases are silently skipped. NFKC-normalising both sides of the
+    containment test equates the two widths without weakening it to
+    equality: the '（CSV形式：14KB）' suffix must still be tolerated by `in`.
+    """
+    html = (FIXTURES / "esri_gdemenuja_2009_fullwidth.html").read_bytes()
+    url = esri_gdp.select_series_url(
+        html,
+        "https://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2009/qe092/gdemenuja.html",
+        series_label="年率換算の実質季節調整系列(前期比)",
+        stem_prefix="nritu",
+    )
+    assert url.endswith("/jp/sna/content/20120227_nritu_jk0921.csv")
+
+
+def test_the_reference_series_is_not_selected_when_the_label_is_fullwidth():
+    """Regression guard for the NFKC fix above: both `nritu` and `knritu` carry
+    the identical full-width label on the real 2009 pages, so normalising the
+    label comparison must not also weaken `_stem_matches`'s token-boundary
+    check. If it did, both links would match and `select_series_url` would
+    raise -- but this test catches the wrong-series risk before that.
+    """
+    html = (FIXTURES / "esri_gdemenuja_2009_fullwidth.html").read_bytes()
+    url = esri_gdp.select_series_url(
+        html,
+        "https://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2009/qe092/gdemenuja.html",
+        series_label="年率換算の実質季節調整系列(前期比)",
+        stem_prefix="nritu",
+    )
+    assert "knritu" not in url
+
+
 def test_a_relative_href_is_resolved_against_the_menu_url():
     html = (FIXTURES / "esri_gdemenuja.html").read_bytes()
     url = esri_gdp.select_series_url(
@@ -166,3 +202,24 @@ def test_a_2009_era_release_still_resolves():
     assert "knritu" not in url
     series = esri_gdp.parse_nritu_csv(content, column="国内総生産(支出側)")
     assert date(2008, 10, 1) in series
+
+
+@pytest.mark.live
+@pytest.mark.skipif(
+    not os.environ.get("MACROKIT_LIVE"), reason="live network test; set MACROKIT_LIVE=1 to run"
+)
+def test_a_2009_q2_release_with_fullwidth_parentheses_resolves():
+    """qe092 (2009 Q2, 1st preliminary) is one of the six releases a live
+    backfill silently skipped: the real page prints the series label with
+    full-width parentheses, which a half-width containment test never
+    matches.
+    """
+    adapter = esri_gdp.EsriGdpAdapter()
+    content, url, _ = adapter.fetch_release(
+        _event(date(2009, 4, 1), "1st_prelim"),
+        series_label="年率換算の実質季節調整系列(前期比)",
+        stem_prefix="nritu",
+    )
+    assert "knritu" not in url
+    series = esri_gdp.parse_nritu_csv(content, column="国内総生産(支出側)")
+    assert date(2009, 4, 1) in series
