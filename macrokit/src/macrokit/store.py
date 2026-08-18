@@ -73,9 +73,23 @@ CREATE TABLE IF NOT EXISTS releases (
   ingested_at   TIMESTAMPTZ NOT NULL,
   PRIMARY KEY (indicator, period_start, release_kind)
 );
+
+CREATE TABLE IF NOT EXISTS expectations (
+  indicator     VARCHAR NOT NULL,
+  period_start  DATE    NOT NULL,
+  release_kind  VARCHAR NOT NULL,
+  method        VARCHAR NOT NULL,
+  expected      DOUBLE  NOT NULL,
+  as_of         DATE    NOT NULL,
+  source        VARCHAR NOT NULL,
+  source_url    VARCHAR NOT NULL,
+  ingested_at   TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (indicator, period_start, release_kind, method)
+);
 """
 
 RELEASE_KINDS = frozenset({"1st_prelim", "2nd_prelim", "2nd_prelim_revised"})
+EXPECTATION_METHODS = frozenset({"prior_vintage", "random_walk", "ar_model", "esp"})
 
 
 @dataclass(frozen=True)
@@ -209,4 +223,37 @@ def insert_releases(con: duckdb.DuckDBPyConnection, rows: list[ReleaseEvent]) ->
         [astuple(row) for row in rows],
     )
     after = con.execute("SELECT count(*) FROM releases").fetchone()[0]
+    return after - before
+
+
+@dataclass(frozen=True)
+class Expectation:
+    indicator: str
+    period_start: date
+    release_kind: str
+    method: str
+    expected: float
+    as_of: date
+    source: str
+    source_url: str
+    ingested_at: datetime
+
+
+def insert_expectations(con: duckdb.DuckDBPyConnection, rows: list[Expectation]) -> int:
+    """Insert expectation rows, ignoring rows whose key is already present."""
+    if not rows:
+        return 0
+    for row in rows:
+        if _is_naive(row.ingested_at):
+            raise ValueError(
+                f"insert_expectations: ingested_at must be timezone-aware, got {row.ingested_at!r}"
+            )
+        if row.method not in EXPECTATION_METHODS:
+            raise ValueError(f"unknown method: {row.method}")
+    before = con.execute("SELECT count(*) FROM expectations").fetchone()[0]
+    con.executemany(
+        "INSERT OR IGNORE INTO expectations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [astuple(row) for row in rows],
+    )
+    after = con.execute("SELECT count(*) FROM expectations").fetchone()[0]
     return after - before

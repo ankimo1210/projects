@@ -5,10 +5,12 @@ import pytest
 
 from macrokit.periods import period_end_for
 from macrokit.store import (
+    Expectation,
     Observation,
     RateObservation,
     ReleaseEvent,
     connect,
+    insert_expectations,
     insert_observations,
     insert_rates,
     insert_releases,
@@ -45,6 +47,21 @@ def _rate(**kw) -> RateObservation:
         ingested_at=datetime(2026, 8, 17, tzinfo=UTC),
     )
     return RateObservation(**{**base, **kw})
+
+
+def _expectation(**kw) -> Expectation:
+    base = dict(
+        indicator="jp_real_gdp_qoq_saar",
+        period_start=date(2026, 4, 1),
+        release_kind="1st_prelim",
+        method="random_walk",
+        expected=1.8,
+        as_of=date(2026, 8, 14),
+        source="macrokit",
+        source_url="computed://macrokit/expectations",
+        ingested_at=datetime(2026, 8, 18, tzinfo=UTC),
+    )
+    return Expectation(**{**base, **kw})
 
 
 def _release(**kw) -> ReleaseEvent:
@@ -209,3 +226,40 @@ def test_rejects_an_unknown_release_kind(tmp_path):
     con = connect(tmp_path / "t.duckdb")
     with pytest.raises(ValueError, match="unknown release_kind: flash"):
         insert_releases(con, [_release(release_kind="flash")])
+
+
+def test_round_trips_an_expectation(tmp_path):
+    con = connect(tmp_path / "t.duckdb")
+    assert insert_expectations(con, [_expectation()]) == 1
+    got = con.execute(
+        "SELECT indicator, period_start, release_kind, method, expected, as_of FROM expectations"
+    ).fetchall()
+    assert got == [
+        ("jp_real_gdp_qoq_saar", date(2026, 4, 1), "1st_prelim", "random_walk", 1.8, date(2026, 8, 14))
+    ]
+
+
+def test_inserting_the_same_expectation_twice_does_not_duplicate(tmp_path):
+    # Re-running the computation must be idempotent, otherwise a repeated
+    # `compute` pass would multiply every row it has already seen.
+    con = connect(tmp_path / "t.duckdb")
+    assert insert_expectations(con, [_expectation()]) == 1
+    # Same (indicator, period_start, release_kind, method) but a different
+    # expected value: INSERT OR IGNORE must drop it, not overwrite the original.
+    assert insert_expectations(con, [_expectation(expected=9.999)]) == 0
+    got = con.execute("SELECT count(*) FROM expectations").fetchone()[0]
+    assert got == 1
+    stored = con.execute("SELECT expected FROM expectations").fetchone()[0]
+    assert stored == 1.8
+
+
+def test_rejects_a_naive_ingested_at_for_expectations(tmp_path):
+    con = connect(tmp_path / "t.duckdb")
+    with pytest.raises(ValueError, match="ingested_at must be timezone-aware"):
+        insert_expectations(con, [_expectation(ingested_at=datetime(2026, 8, 18))])
+
+
+def test_rejects_an_unknown_expectation_method(tmp_path):
+    con = connect(tmp_path / "t.duckdb")
+    with pytest.raises(ValueError, match="unknown method: guessed"):
+        insert_expectations(con, [_expectation(method="guessed")])
