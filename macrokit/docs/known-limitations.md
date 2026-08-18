@@ -108,6 +108,18 @@ docstring に明記済みだが、ストア側に密度の検証は無い。
 - ワークスペース root の pytest には `-m "not live"` の既定が無い。
   `FRED_API_KEY` を export した状態で `make test` を回すと実 API を叩く。
   ワークスペース全体の方針に関わるため未変更。
+- **`store.connect()` はセッションのタイムゾーンを `Asia/Tokyo` に固定する
+  （`SET TimeZone='Asia/Tokyo'`）。** DuckDB は保存した `TIMESTAMPTZ`
+  （`release_date`、`ingested_at`）をセッションタイムゾーンで描画するが、
+  `panel.py`（`release_date.date()`）と `expectations.py`（前営業日の判定）は
+  その値から「どの東京の暦日か」を決める。固定していなければホストのローカル
+  タイムゾーンに依存し、`TZ=UTC` のホストでは 08:50 JST の公表が前日 23:50 UTC
+  （日曜）と解釈されて取引セッションが見つからず、パネル行数が変わり、
+  `expectations.as_of` の 過半数が 1 営業日早くずれる（§6.1 の「知り得ない未来」
+  エラーの逆、「知り得たはずの改定を静かに握りつぶす」バグ）——何も例外を
+  出さずに、である。開発ホストがたまたま JST なので、この固定を外しても
+  ローカルでは再現しない。回帰確認は `tests/test_store.py` のタイムゾーン
+  テストが別プロセス＋`TZ=UTC` で行っている。
 
 ## 8. 小さいもの
 

@@ -1,3 +1,6 @@
+import os
+import subprocess
+import sys
 from datetime import UTC, date, datetime
 from zoneinfo import ZoneInfo
 
@@ -102,6 +105,39 @@ def test_period_end_for_rejects_a_quarter_start_that_is_not_a_real_quarter_start
     # calendar.IllegalMonthError. Both must fail clearly instead.
     with pytest.raises(ValueError, match="not a quarter start"):
         period_end_for(date(2024, bad_month, 1), "Q")
+
+
+def test_connect_pins_the_session_timezone_to_tokyo_regardless_of_the_host(tmp_path):
+    """`connect()` must issue ``SET TimeZone='Asia/Tokyo'`` -- panel.py and
+    expectations.py decide which Tokyo calendar day a release falls on from
+    the rendered TIMESTAMPTZ, so the session zone cannot be left to whatever
+    the host happens to be.
+
+    Runs in a fresh subprocess with ``TZ=UTC`` rather than mutating this
+    process's timezone: DuckDB resolves its *default* session timezone once,
+    from the OS, the first time any connection is opened in a process, and
+    does not re-resolve it afterwards. By the time this test runs, earlier
+    tests in this same pytest process have already opened connections and
+    cached that default -- so `monkeypatch` + `time.tzset()` here would
+    change nothing and the test would pass even with the fix reverted. A
+    subprocess with its own environment is unaffected by that caching and
+    reliably exercises the code path this test is meant to cover.
+    """
+    db_path = tmp_path / "tz.duckdb"
+    script = (
+        "from pathlib import Path\n"
+        "from macrokit.store import connect\n"
+        f"con = connect(Path({str(db_path)!r}))\n"
+        "print(con.execute(\"SELECT current_setting('TimeZone')\").fetchone()[0])\n"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        env={**os.environ, "TZ": "UTC"},
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert result.stdout.strip() == "Asia/Tokyo"
 
 
 def test_round_trips_an_observation(tmp_path):

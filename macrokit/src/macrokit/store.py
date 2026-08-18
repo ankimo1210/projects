@@ -110,9 +110,21 @@ class Observation:
 
 
 def connect(db_path: Path) -> duckdb.DuckDBPyConnection:
-    """Open (creating if needed) the database and ensure the schema exists."""
+    """Open (creating if needed) the database and ensure the schema exists.
+
+    Pins the session timezone to Asia/Tokyo. DuckDB renders a stored
+    TIMESTAMPTZ (``release_date``, ``ingested_at``) in whatever the session
+    timezone happens to be, and this pipeline decides *which Tokyo calendar
+    day* a release falls on from that rendered value (`panel.py`'s
+    ``release_date.date()``, `expectations.py`'s business-day lookups). Left
+    unset, the session timezone defaults to the OS's local zone, so the same
+    database would silently assign releases to different -- sometimes wrong
+    -- Tokyo days depending on the host's TZ. Pinning it here makes every
+    caller's view of "the day" agree, regardless of where `connect` runs.
+    """
     db_path.parent.mkdir(parents=True, exist_ok=True)
     con = duckdb.connect(str(db_path))
+    con.execute("SET TimeZone='Asia/Tokyo'")
     con.execute(SCHEMA_SQL)
     return con
 
