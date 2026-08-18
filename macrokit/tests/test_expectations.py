@@ -159,3 +159,8 @@ def test_compute_includes_ar_model_alongside_random_walk_when_history_allows(
 
     methods = {row.method for row in rows}
     assert methods == {"random_walk", "ar_model"}
+
+
+def test_compute_rejects_an_unknown_method_name(con):
+    with pytest.raises(ValueError, match=r"unknown expectation method.*bogus"):
+        expectations.compute(con, [], methods=("bogus",))
