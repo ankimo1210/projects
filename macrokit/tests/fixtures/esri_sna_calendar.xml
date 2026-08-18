@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<e-stat>
+<os_code id="00100409" name="国民経済計算" count_number="3">
+<update_year>2026</update_year><update_month>8</update_month><update_day>17</update_day>
+<class_1 name="四半期別ＧＤＰ速報">
+<class_2 name="平成20年10-12月期">
+<class_3 name="1次速報"><class_4 name=""><class_5 name="">
+<release_year>2009</release_year><release_month>2</release_month><release_day>16</release_day>
+<release_hour>8</release_hour><release_minute>50</release_minute>
+</class_5></class_4></class_3>
+<class_3 name="2次速報"><class_4 name=""><class_5 name="">
+<release_year>2009</release_year><release_month>3</release_month><release_day>12</release_day>
+<release_hour>8</release_hour><release_minute>50</release_minute>
+</class_5></class_4></class_3>
+</class_2>
+<class_2 name="2020年1-3月期">
+<class_3 name="2次速報（改定値）"><class_4 name=""><class_5 name="">
+<release_year>2020</release_year><release_month>8</release_month><release_day>3</release_day>
+<release_hour>8</release_hour><release_minute>50</release_minute>
+</class_5></class_4></class_3>
+</class_2>
+<class_2 name="2026年4-6月期">
+<class_3 name="1次速報"><class_4 name=""><class_5 name="">
+<release_year>2026</release_year><release_month>8</release_month><release_day>17</release_day>
+<release_hour>8</release_hour><release_minute>50</release_minute>
+</class_5></class_4></class_3>
+</class_2>
+<class_2 name="2026年10-12月期">
+<class_3 name="2次速報"><class_4 name=""><class_5 name="">
+<release_year>2027</release_year><release_month>3</release_month><release_day>9</release_day>
+<release_hour>8</release_hour><release_minute>50</release_minute>
+</class_5></class_4></class_3>
+</class_2>
+</class_1>
+<class_1 name="民間企業資本ストック速報">
+<class_2 name="平成20年1-3月期">
+<class_3 name=""><class_4 name=""><class_5 name="">
+<release_year>2008</release_year><release_month>6</release_month><release_day>10</release_day>
+<release_hour>8</release_hour><release_minute>50</release_minute>
+</class_5></class_4></class_3>
+</class_2>
+</class_1>
+</os_code>
+</e-stat>
