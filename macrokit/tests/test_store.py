@@ -1,4 +1,5 @@
 from datetime import UTC, date, datetime
+from zoneinfo import ZoneInfo
 
 import pytest
 
@@ -6,9 +7,11 @@ from macrokit.periods import period_end_for
 from macrokit.store import (
     Observation,
     RateObservation,
+    ReleaseEvent,
     connect,
     insert_observations,
     insert_rates,
+    insert_releases,
 )
 
 
@@ -42,6 +45,21 @@ def _rate(**kw) -> RateObservation:
         ingested_at=datetime(2026, 8, 17, tzinfo=UTC),
     )
     return RateObservation(**{**base, **kw})
+
+
+def _release(**kw) -> ReleaseEvent:
+    base = dict(
+        indicator="jp_real_gdp_qoq_saar",
+        period_start=date(2026, 4, 1),
+        period_end=date(2026, 6, 30),
+        release_kind="1st_prelim",
+        release_date=datetime(2026, 8, 17, 8, 50, tzinfo=ZoneInfo("Asia/Tokyo")),
+        scheduled=False,
+        source="esri_calendar",
+        source_url="https://www.esri.cao.go.jp/jp/sna/e-stat_sna.xml",
+        ingested_at=datetime(2026, 8, 18, tzinfo=UTC),
+    )
+    return ReleaseEvent(**{**base, **kw})
 
 
 @pytest.mark.parametrize(
@@ -154,3 +172,40 @@ def test_rejects_a_naive_ingested_at_for_rates(tmp_path):
     con = connect(tmp_path / "t.duckdb")
     with pytest.raises(ValueError, match="ingested_at must be timezone-aware"):
         insert_rates(con, [_rate(ingested_at=datetime(2026, 8, 17))])
+
+
+def test_round_trips_a_release_event(tmp_path):
+    con = connect(tmp_path / "t.duckdb")
+    assert insert_releases(con, [_release()]) == 1
+    got = con.execute(
+        "SELECT indicator, period_start, release_kind, scheduled FROM releases"
+    ).fetchall()
+    assert got == [("jp_real_gdp_qoq_saar", date(2026, 4, 1), "1st_prelim", False)]
+
+
+def test_inserting_the_same_release_twice_does_not_duplicate(tmp_path):
+    # Re-ingesting an unchanged calendar fetch must be idempotent, otherwise a
+    # daily cron run would multiply every row it has already seen.
+    con = connect(tmp_path / "t.duckdb")
+    assert insert_releases(con, [_release()]) == 1
+    # Same (indicator, period_start, release_kind) but a different release_date:
+    # INSERT OR IGNORE must drop it silently rather than overwrite the original.
+    assert insert_releases(con, [_release(release_date=datetime(2026, 8, 18, 8, 50, tzinfo=UTC))]) == 0
+    got = con.execute("SELECT count(*) FROM releases").fetchone()[0]
+    assert got == 1
+    stored = con.execute("SELECT release_date FROM releases").fetchone()[0]
+    assert stored == datetime(2026, 8, 17, 8, 50, tzinfo=ZoneInfo("Asia/Tokyo"))
+
+
+def test_rejects_a_naive_release_date_for_releases(tmp_path):
+    # release_date is the platform-wide invariant: a naive value would be
+    # stored after DuckDB reinterprets it in the local session timezone.
+    con = connect(tmp_path / "t.duckdb")
+    with pytest.raises(ValueError, match="release_date must be timezone-aware"):
+        insert_releases(con, [_release(release_date=datetime(2026, 8, 17, 8, 50))])
+
+
+def test_rejects_an_unknown_release_kind(tmp_path):
+    con = connect(tmp_path / "t.duckdb")
+    with pytest.raises(ValueError, match="unknown release_kind: flash"):
+        insert_releases(con, [_release(release_kind="flash")])

@@ -60,7 +60,22 @@ CREATE TABLE IF NOT EXISTS market_rates (
   ingested_at TIMESTAMPTZ NOT NULL,
   PRIMARY KEY (curve, obs_date, tenor_y)
 );
+
+CREATE TABLE IF NOT EXISTS releases (
+  indicator     VARCHAR     NOT NULL,
+  period_start  DATE        NOT NULL,
+  period_end    DATE        NOT NULL,
+  release_kind  VARCHAR     NOT NULL,
+  release_date  TIMESTAMPTZ NOT NULL,
+  scheduled     BOOLEAN     NOT NULL,
+  source        VARCHAR     NOT NULL,
+  source_url    VARCHAR     NOT NULL,
+  ingested_at   TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (indicator, period_start, release_kind)
+);
 """
+
+RELEASE_KINDS = frozenset({"1st_prelim", "2nd_prelim", "2nd_prelim_revised"})
 
 
 @dataclass(frozen=True)
@@ -157,4 +172,41 @@ def insert_rates(con: duckdb.DuckDBPyConnection, rows: list[RateObservation]) ->
         ],
     )
     after = con.execute("SELECT count(*) FROM market_rates").fetchone()[0]
+    return after - before
+
+
+@dataclass(frozen=True)
+class ReleaseEvent:
+    indicator: str
+    period_start: date
+    period_end: date
+    release_kind: str
+    release_date: datetime
+    scheduled: bool
+    source: str
+    source_url: str
+    ingested_at: datetime
+
+
+def insert_releases(con: duckdb.DuckDBPyConnection, rows: list[ReleaseEvent]) -> int:
+    """Insert release events, ignoring rows whose key is already present."""
+    if not rows:
+        return 0
+    for row in rows:
+        if _is_naive(row.release_date):
+            raise ValueError(
+                f"insert_releases: release_date must be timezone-aware, got {row.release_date!r}"
+            )
+        if _is_naive(row.ingested_at):
+            raise ValueError(
+                f"insert_releases: ingested_at must be timezone-aware, got {row.ingested_at!r}"
+            )
+        if row.release_kind not in RELEASE_KINDS:
+            raise ValueError(f"unknown release_kind: {row.release_kind}")
+    before = con.execute("SELECT count(*) FROM releases").fetchone()[0]
+    con.executemany(
+        "INSERT OR IGNORE INTO releases VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [astuple(row) for row in rows],
+    )
+    after = con.execute("SELECT count(*) FROM releases").fetchone()[0]
     return after - before
