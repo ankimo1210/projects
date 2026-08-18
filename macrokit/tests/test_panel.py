@@ -77,18 +77,6 @@ def _seed_2026_q2(con):
     store.insert_expectations(con, expectations.compute(con, [event]))
 
 
-def _seed_revised_event(con):
-    """An off-cycle 2nd_prelim_revised for 2026 Q1, with its own rate row and expectation."""
-    revised = datetime(2026, 8, 20, 8, 50, tzinfo=JST)
-    event = _event(date(2026, 1, 1), "2nd_prelim_revised", revised)
-    store.insert_releases(con, [event])
-    store.insert_observations(con, [_observation(date(2026, 1, 1), revised, 2.0, 3)])
-    store.insert_rates(con, [_rate(date(2026, 8, 19), 10.0, 2.90), _rate(date(2026, 8, 20), 10.0, 2.92)])
-    store.insert_expectations(con, [
-        _expectation(date(2026, 1, 1), "2nd_prelim_revised", "random_walk", 1.8, date(2026, 8, 19))
-    ])
-
-
 def _seed_future_release(con):
     """A scheduled 2027 release with an actual and an expectation but no market_rates."""
     release_date = datetime(2027, 2, 15, 8, 50, tzinfo=JST)
@@ -125,19 +113,6 @@ def test_a_tenor_that_did_not_exist_yet_is_null_not_zero(con):
     frame = panel.event_panel(con, indicator="jp_real_gdp_qoq_saar", tenors=(10.0, 40.0))
     assert frame["d1_bp_40y"].isna().all()
     assert frame["d1_bp_10y"].notna().all()
-
-
-def test_the_off_cycle_revision_is_excluded_by_default(con):
-    _seed_2026_q2(con)
-    _seed_revised_event(con)  # a 2nd_prelim_revised event with rates and expectations
-
-    default = panel.event_panel(con, indicator="jp_real_gdp_qoq_saar", tenors=(10.0,))
-    opted_in = panel.event_panel(
-        con, indicator="jp_real_gdp_qoq_saar", tenors=(10.0,), include_revised=True
-    )
-
-    assert "2nd_prelim_revised" not in set(default["release_kind"])
-    assert "2nd_prelim_revised" in set(opted_in["release_kind"])
 
 
 def test_a_release_with_no_rate_row_is_dropped_and_counted(con):

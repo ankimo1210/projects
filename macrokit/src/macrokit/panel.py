@@ -24,12 +24,16 @@ def event_panel(
     *,
     indicator: str,
     tenors: tuple[float, ...] = DEFAULT_TENORS,
-    include_revised: bool = False,
     z_min_observations: int = 20,
 ) -> pd.DataFrame:
-    kinds = ("1st_prelim", "2nd_prelim", "2nd_prelim_revised") if include_revised else (
-        "1st_prelim", "2nd_prelim"
-    )
+    # 2nd_prelim_revised is deliberately excluded, not merely un-widened: the
+    # CLI's `gdp vintages` never records a revised release's release_date in
+    # `observations` (it has no derivable menu URL -- see
+    # sources/esri_gdp.menu_url), so this JOIN has nothing to match a
+    # 2nd_prelim_revised row against. There used to be an `include_revised`
+    # flag here; it was removed because "include" implies a real choice, and
+    # on live data it returned the identical rows as leaving it off.
+    kinds = ("1st_prelim", "2nd_prelim")
     frame = con.execute(
         """
         SELECT r.release_date, r.period_start, r.period_end, r.release_kind,

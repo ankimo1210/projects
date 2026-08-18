@@ -139,3 +139,12 @@ docstring に明記済みだが、ストア側に密度の検証は無い。
   追記専用ファイルでは末尾行しか壊れ得ないので、有効行 → 末尾に truncated 行 →
   別指標を照会、という順序の方が物理的に忠実（現行でも無防備な実装に対しては
   実際に落ちるので、テストとしては有効）。
+- `2nd_prelim_revised` は `releases` テーブルには載るが `observations` には
+  絶対に載らない。`gdp vintages` が `esri_gdp.menu_url` の窓（1st_prelim /
+  2nd_prelim の `qe{YY}{Q}[_2]` パターン）しか知らず、`2nd_prelim_revised` は
+  取得元 URL を導出できないため意図的に除外している（`cli.py` の
+  `exclude_kinds`）。以前 `panel.event_panel` にあった `include_revised` フラグは
+  この理由で常に無意味だった（本番データで `include_revised=True` としても行数・
+  内容が変わらず、revised 種別の JOIN が 0 件だったことを確認して削除した）。
+  改定履歴の取り込みを実装する場合は menu URL をハードコードするか手作業で
+  解決する仕組みが要る（未実装、意図的にスコープ外）。
