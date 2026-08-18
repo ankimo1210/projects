@@ -49,6 +49,17 @@ CREATE TABLE IF NOT EXISTS components (
   value          DOUBLE,
   PRIMARY KEY (indicator, component_code, period_start, release_date)
 );
+
+CREATE TABLE IF NOT EXISTS market_rates (
+  curve       VARCHAR NOT NULL,
+  obs_date    DATE    NOT NULL,
+  tenor_y     DOUBLE  NOT NULL,
+  yield_pct   DOUBLE  NOT NULL,
+  source      VARCHAR NOT NULL,
+  source_url  VARCHAR NOT NULL,
+  ingested_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (curve, obs_date, tenor_y)
+);
 """
 
 
@@ -114,4 +125,36 @@ def insert_observations(con: duckdb.DuckDBPyConnection, rows: list[Observation])
         [astuple(row) for row in rows],
     )
     after = con.execute("SELECT count(*) FROM observations").fetchone()[0]
+    return after - before
+
+
+@dataclass(frozen=True)
+class RateObservation:
+    curve: str
+    obs_date: date
+    tenor_y: float
+    yield_pct: float
+    source: str
+    source_url: str
+    ingested_at: datetime
+
+
+def insert_rates(con: duckdb.DuckDBPyConnection, rows: list[RateObservation]) -> int:
+    """Insert rate observations, ignoring rows whose key is already present."""
+    if not rows:
+        return 0
+    for row in rows:
+        if _is_naive(row.ingested_at):
+            raise ValueError(
+                f"insert_rates: ingested_at must be timezone-aware, got {row.ingested_at!r}"
+            )
+    before = con.execute("SELECT count(*) FROM market_rates").fetchone()[0]
+    con.executemany(
+        "INSERT OR IGNORE INTO market_rates VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [
+            (r.curve, r.obs_date, r.tenor_y, r.yield_pct, r.source, r.source_url, r.ingested_at)
+            for r in rows
+        ],
+    )
+    after = con.execute("SELECT count(*) FROM market_rates").fetchone()[0]
     return after - before
