@@ -39,21 +39,25 @@ CAVEAT コメントを置いてあるが、値は未修正のまま。
 ように**どの休日体系を使うか**を選ぶフィールドであるべきで、上記と一緒に設計し
 直すのが安い。
 
-## 3. 公表規則が「期末の翌月」固定
+## 3. 公表規則が「期末の翌月」固定 → 解消済み
 
-`release._month_after` が固定なので、以下が**原理的に表現できない**。
+`ReleaseRule.month_offset`（既定 1）を追加し、`release._month_after` を
+`_publication_month(period_end, month_offset)` に置き換えた。期末の翌々月に
+公表される法人企業統計のような系列も `month_offset: 2` で表現できる。
 
-| 系列 | 実際の公表 |
-|---|---|
-| JP 実質 GDP 1 次速報 | 期末の約 1.5 か月後（翌々月） |
-| 法人企業統計 | 約 2 か月後 |
-| 日銀短観 | 期初月 |
+`release_lag_days` も `int | None = None` にして任意化した。`Indicator` には
+model_validator を追加し、`release_rule` と `release_lag_days` の少なくとも
+一方は必須（両方 None なら公表タイミングを何も表現できないため拒否）とした。
+既存の US エントリ（`release_lag_days` のみを持つ）はそのまま検証を通る。
 
-`ReleaseRule` に月オフセット相当のフィールドが無い。加えて `release_lag_days` は
-カタログの必須フィールドなのに**コード中に読み手が 1 つも無い**（公表タイミングの
-表現が 2 つあり、片方が死んでいる）。
+JP 実質 GDP の 148 個の実測公表日時は Plan 2 の後続タスクが e-Stat の XML から
+取り込むため、`jp_real_gdp_qoq_saar` の `release_rule` は `kind: manual`（
+`resolve_release` は常に `None` を返す）とし、`month_offset: 2` は目安として
+だけ添えてある。
 
-Plan 2 は JP 15 群を手書きする工程なので、**書き始める前に**スキーマを決めること。
+残っている開いた項目は §2 の `ReleaseRule.calendar` のみ：現状は `jp` を
+受理し他を全拒否するだけで、`{jp_gov, jp_bank, us}` のように**どの休日体系を
+使うか**を選ぶフィールドにはなっていない。
 
 ## 4. `vintage_seq` の意味は取得窓に依存する
 
