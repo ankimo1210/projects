@@ -36,10 +36,6 @@ packages = ["src/macrokit"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers --import-mode=importlib"
-# `--import-mode=importlib` deliberately does not prepend the tests directory
-# to sys.path (unlike the default "prepend" mode), so a bare `from helpers
-# import ...` needs this to resolve `tests/helpers.py` as a plain module.
-pythonpath = ["tests"]
 markers = [
     "live: hits a real external API; requires network and API keys",
 ]
