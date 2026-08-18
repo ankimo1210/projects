@@ -17,6 +17,7 @@ from __future__ import annotations
 import csv
 import io
 import re
+import unicodedata
 from datetime import date, datetime
 from html.parser import HTMLParser
 from urllib.parse import urljoin
@@ -90,14 +91,25 @@ def select_series_url(
     Both eras publish two links carrying the identical label -- ``nritu`` and
     ``knritu``. The ``k`` variant is a reference series with different numbers, so
     matching on the label alone silently loads the wrong data.
+
+    The catalog's ``series_label`` is configured with half-width parentheses,
+    but the 2009 archive (qe091/qe092/qe093, both preliminary rounds) prints
+    the same label with full-width ones -- ``（前期比）`` instead of
+    ``(前期比)``. A raw containment test misses on every one of those six
+    pages, silently skipping the release rather than raising. NFKC-normalising
+    both sides equates the two widths while keeping this a containment test,
+    not equality: the page label always carries a trailing
+    ``（CSV形式：…KB）`` size suffix that equality would reject.
     """
     parser = _LinkCollector()
     parser.feed(menu_html.decode("utf-8", errors="replace"))
 
+    normalised_label = unicodedata.normalize("NFKC", series_label)
     matches = [
         href
         for href, label in parser.links
-        if series_label in label and _stem_matches(href, stem_prefix)
+        if normalised_label in unicodedata.normalize("NFKC", label)
+        and _stem_matches(href, stem_prefix)
     ]
     if not matches:
         raise EsriGdpError(
