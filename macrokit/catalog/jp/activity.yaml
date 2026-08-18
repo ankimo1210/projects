@@ -1,0 +1,21 @@
+- name: jp_real_gdp_qoq_saar
+  country: JP
+  block: activity
+  title_ja: 実質GDP 前期比年率（季節調整済、1次・2次速報）
+  source: esri_gdp
+  source_ref:
+    series_label: 年率換算の実質季節調整系列(前期比)
+    stem_prefix: nritu
+    column: 国内総生産(支出側)
+  freq: Q
+  unit: percent_saar
+  sa: sa
+  release_rule:
+    kind: manual
+    time: "08:50"
+    month_offset: 2
+  vintage: snapshot
+  caveats:
+    - 公表日は内閣府の e-stat_sna.xml から実測値を取り込む。month_offset は目安で、resolve_release は manual なので None を返す
+    - メニューページに同じラベルのリンクが2本ある。語幹が knritu のものは参考系列なので選んではならない
+    - 各リリースの表はその時点の全期間を含む。1回の取り込みで1994年以降の系列が1つの vintage として入る

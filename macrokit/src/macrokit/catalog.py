@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 
 class CatalogError(Exception):
@@ -39,6 +39,15 @@ class ReleaseRule(BaseModel):
     time: str = "00:00"
     tz: str = "Asia/Tokyo"
     calendar: Literal["jp", "us"] = "jp"
+    month_offset: int = Field(
+        default=1,
+        ge=1,
+        description=(
+            "Months between the end of the reference period and the publication "
+            "month. 1 = the month after (most monthly statistics); 2 = Japan's "
+            "quarterly GDP first preliminary and 法人企業統計."
+        ),
+    )
 
 
 class Chain(BaseModel):
@@ -62,11 +71,20 @@ class Indicator(BaseModel):
     freq: Literal["D", "W", "M", "Q", "A"]
     unit: str
     sa: Literal["sa", "nsa"]
-    release_lag_days: int
+    release_lag_days: int | None = None
     release_rule: ReleaseRule | None = None
     vintage: Literal["alfred", "snapshot", "none"]
     chain: Chain = Field(default_factory=Chain)
     caveats: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _require_a_schedule_hint(self) -> Indicator:
+        if self.release_lag_days is None and self.release_rule is None:
+            raise ValueError(
+                f"{self.name}: set release_rule (preferred) or release_lag_days. "
+                "Neither is set, so nothing describes when this indicator publishes."
+            )
+        return self
 
 
 def load_catalog(root: Path) -> dict[str, Indicator]:

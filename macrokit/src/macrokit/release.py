@@ -5,8 +5,9 @@ Japanese agencies publish on regular rules ("5th business day", "the 19th",
 US indicators do not use this at all -- FRED's releases/dates endpoint gives
 their calendar directly, including future dates.
 
-Every rule is relative to the month AFTER the period ends, which is how monthly
-Japanese statistics are published.
+Every rule is relative to ``rule.month_offset`` months after the period ends
+(default 1, the month after, which is how most monthly Japanese statistics are
+published; 2 covers Japan's quarterly GDP first preliminary and 法人企業統計).
 
 KNOWN LIMITATION -- business-day count in January and December is unreliable.
 ``nth_business_day``'s only holiday source is the Cabinet Office's 国民の祝日
@@ -24,7 +25,7 @@ future work.
 from __future__ import annotations
 
 import calendar
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 from .catalog import ReleaseRule
@@ -70,9 +71,10 @@ def nth_weekday(year: int, month: int, n: int, weekday: int) -> date:
     raise ValueError(f"month {year}-{month:02d} has no {n}th weekday {weekday}")
 
 
-def _month_after(period_end: date) -> tuple[int, int]:
-    first_of_next = (period_end.replace(day=1) + timedelta(days=32)).replace(day=1)
-    return first_of_next.year, first_of_next.month
+def _publication_month(period_end: date, month_offset: int) -> tuple[int, int]:
+    """The (year, month) ``month_offset`` months after the month ``period_end`` falls in."""
+    zero_based = period_end.month - 1 + month_offset
+    return period_end.year + zero_based // 12, zero_based % 12 + 1
 
 
 def resolve_release(rule: ReleaseRule, period_end: date, holidays: set[date]) -> datetime | None:
@@ -91,7 +93,7 @@ def resolve_release(rule: ReleaseRule, period_end: date, holidays: set[date]) ->
     if rule.kind == "manual":
         return None
 
-    year, month = _month_after(period_end)
+    year, month = _publication_month(period_end, rule.month_offset)
     if rule.kind == "nth_business_day":
         if rule.n is None:
             raise ValueError("nth_business_day requires n")

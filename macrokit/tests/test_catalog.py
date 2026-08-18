@@ -1,8 +1,9 @@
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
-from macrokit.catalog import CatalogError, Indicator, load_catalog
+from macrokit.catalog import CatalogError, Indicator, ReleaseRule, load_catalog
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -134,3 +135,31 @@ def test_rejects_an_unknown_field_so_typos_do_not_pass_silently(tmp_path):
     )
     with pytest.raises(CatalogError, match="viantge"):
         load_catalog(tmp_path)
+
+
+def test_release_lag_days_is_optional_now_that_release_rule_carries_the_schedule():
+    indicator = Indicator(
+        name="x", country="JP", block="activity", title_ja="x", source="s",
+        source_ref={}, freq="Q", unit="u", sa="sa", vintage="snapshot",
+        release_rule=ReleaseRule(kind="manual"),
+    )
+    assert indicator.release_lag_days is None
+
+
+def test_an_indicator_must_carry_at_least_one_schedule_hint():
+    with pytest.raises(ValidationError):
+        Indicator(
+            name="x", country="JP", block="activity", title_ja="x", source="s",
+            source_ref={}, freq="Q", unit="u", sa="sa", vintage="snapshot",
+        )
+
+
+def test_the_jp_gdp_entry_loads_from_the_shipped_catalog():
+    catalog = load_catalog(Path(__file__).parents[1] / "catalog")
+    entry = catalog["jp_real_gdp_qoq_saar"]
+    assert entry.country == "JP"
+    assert entry.freq == "Q"
+    assert entry.unit == "percent_saar"
+    assert entry.release_rule is not None
+    assert entry.release_rule.kind == "manual"
+    assert entry.release_rule.time == "08:50"

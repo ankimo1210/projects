@@ -3,6 +3,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import pytest
+from pydantic import ValidationError
 
 from macrokit.catalog import ReleaseRule
 from macrokit.holidays import load_holidays, parse_holiday_csv
@@ -95,3 +96,24 @@ def test_resolve_release_rejects_the_us_calendar():
     rule = ReleaseRule(kind="fixed_day", day=19, time="08:30", tz="America/New_York", calendar="us")
     with pytest.raises(ValueError, match="only knows the 'jp' calendar"):
         resolve_release(rule, date(2026, 1, 31), set())
+
+
+def test_month_offset_two_expresses_a_two_month_publication_lag():
+    """法人企業統計 publishes about two months after the quarter ends."""
+    rule = ReleaseRule(kind="fixed_day", day=1, month_offset=2)
+    assert resolve_release(rule, date(2026, 6, 30), holidays=set()).date() == date(2026, 8, 1)
+
+
+def test_month_offset_defaults_to_one_so_existing_rules_are_unchanged():
+    rule = ReleaseRule(kind="fixed_day", day=10)
+    assert resolve_release(rule, date(2026, 6, 30), holidays=set()).date() == date(2026, 7, 10)
+
+
+def test_month_offset_rolls_over_the_year_boundary():
+    rule = ReleaseRule(kind="fixed_day", day=15, month_offset=2)
+    assert resolve_release(rule, date(2026, 12, 31), holidays=set()).date() == date(2027, 2, 15)
+
+
+def test_month_offset_must_be_positive():
+    with pytest.raises(ValidationError):
+        ReleaseRule(kind="fixed_day", day=1, month_offset=0)
