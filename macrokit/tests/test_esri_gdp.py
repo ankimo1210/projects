@@ -92,6 +92,17 @@ def test_the_column_is_chosen_by_header_text_not_position():
     assert capex[date(2026, 4, 1)] == -4.6
 
 
+def test_a_header_cell_wrapped_across_two_lines_still_matches():
+    """Some releases wrap a header inside one CSV cell -- '国内総生産\\n(支出側)' --
+    instead of publishing it on a single line. The configured column name has
+    no embedded newline, so an exact match must normalise both sides first.
+    """
+    content = (FIXTURES / "esri_nritu_newline_header.csv").read_bytes()
+    series = esri_gdp.parse_nritu_csv(content, column="国内総生産(支出側)")
+    assert series[date(1994, 1, 1)] == 2.5
+    assert series[date(1994, 4, 1)] == -3.0
+
+
 def test_an_unknown_column_names_the_ones_that_exist():
     content = (FIXTURES / "esri_nritu_jk.csv").read_bytes()
     with pytest.raises(esri_gdp.EsriGdpError, match="国内総生産"):

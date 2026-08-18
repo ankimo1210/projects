@@ -101,8 +101,8 @@ def select_series_url(
     ]
     if not matches:
         raise EsriGdpError(
-            f"{menu_url_}: no link labelled {series_label!r} with a basename starting "
-            f"{stem_prefix!r}. The page layout or the file naming changed."
+            f"{menu_url_}: no link labelled {series_label!r} with a basename carrying "
+            f"{stem_prefix!r} as a token. The page layout or the file naming changed."
         )
     if len(matches) > 1:
         raise EsriGdpError(
@@ -128,19 +128,34 @@ def _stem_matches(href: str, stem_prefix: str) -> bool:
     return re.search(rf"(?:^|[_-]){re.escape(stem_prefix)}[_-]", basename) is not None
 
 
+def _normalise_header(cell: str) -> str:
+    """Strip every whitespace character from a header cell, including embedded
+    newlines and full-width spaces (``　``).
+
+    Some releases wrap a header across two physical lines inside one CSV cell
+    -- ``国内総生産\\n(支出側)`` for ``国内総生産(支出側)`` -- so an exact match
+    against the single-line column name configured in the catalog would
+    otherwise miss it. Whitespace is removed entirely rather than collapsed to
+    a single space: the wrapped cell has no space where it breaks, so
+    collapsing to `` `` would still not equal the unbroken name.
+    """
+    return re.sub(r"\s+", "", cell)
+
+
 def parse_nritu_csv(content: bytes, *, column: str) -> dict[date, float]:
     """Map each reference period's start date to the annualised QoQ percent change."""
     reader = list(csv.reader(io.StringIO(content.decode("cp932"))))
+    target = _normalise_header(column)
 
     header_index = next(
-        (i for i, row in enumerate(reader) if column in [c.strip() for c in row]), None
+        (i for i, row in enumerate(reader) if target in [_normalise_header(c) for c in row]), None
     )
     if header_index is None:
         available = sorted(
             {c.strip() for row in reader[:8] for c in row if c.strip() and "," not in c}
         )
         raise EsriGdpError(f"column {column!r} not found; header cells seen: {available}")
-    col = [c.strip() for c in reader[header_index]].index(column)
+    col = [_normalise_header(c) for c in reader[header_index]].index(target)
 
     series: dict[date, float] = {}
     year: int | None = None
