@@ -25,6 +25,7 @@ from .store import (
     insert_observations,
     insert_rates,
     insert_releases,
+    recompute_vintage_seq,
 )
 
 GDP_INDICATOR = "jp_real_gdp_qoq_saar"
@@ -199,6 +200,12 @@ def gdp_vintages_command(ctx: click.Context) -> None:
             inserted += insert_observations(con, rows)
         if i < len(events) - 1:
             time.sleep(VINTAGE_THROTTLE_SECONDS)
+
+    # Recompute rather than trust what `adapter.parse` stamped on each row:
+    # a window function over the whole indicator is order-independent and
+    # safe to re-run even after a partial backfill, so it cannot be skipped
+    # here without silently reintroducing the bug it fixes.
+    recompute_vintage_seq(con, GDP_INDICATOR)
 
     click.echo(
         f"vintages: {len(events)} releases, {parsed} rows parsed, "

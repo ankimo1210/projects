@@ -17,6 +17,7 @@ from macrokit.store import (
     insert_observations,
     insert_rates,
     insert_releases,
+    recompute_vintage_seq,
 )
 
 
@@ -156,6 +157,47 @@ def test_inserting_the_same_vintage_twice_does_not_duplicate(tmp_path):
     insert_observations(con, [_obs()])
     insert_observations(con, [_obs()])
     assert con.execute("SELECT count(*) FROM observations").fetchone()[0] == 1
+
+
+def test_recompute_vintage_seq_numbers_by_release_date_regardless_of_insertion_order(tmp_path):
+    # Three vintages of the same period, inserted 2nd/1st/3rd -- a per-row
+    # counter maintained at insert time would depend on ingesting
+    # oldest-first; a window recompute must not.
+    con = connect(tmp_path / "t.duckdb")
+    period = date(1994, 1, 1)
+    second = _obs(
+        indicator="jp_real_gdp_qoq_saar", period_start=period, period_end=date(1994, 3, 31),
+        release_date=datetime(1994, 6, 8, tzinfo=UTC), vintage_seq=99, value=2.1,
+    )
+    first = _obs(
+        indicator="jp_real_gdp_qoq_saar", period_start=period, period_end=date(1994, 3, 31),
+        release_date=datetime(1994, 5, 18, tzinfo=UTC), vintage_seq=99, value=1.8,
+    )
+    third = _obs(
+        indicator="jp_real_gdp_qoq_saar", period_start=period, period_end=date(1994, 3, 31),
+        release_date=datetime(2026, 8, 17, tzinfo=UTC), vintage_seq=99, value=1.9,
+    )
+    insert_observations(con, [second, first, third])
+
+    recompute_vintage_seq(con, "jp_real_gdp_qoq_saar")
+
+    got = con.execute(
+        "SELECT release_date, vintage_seq FROM observations "
+        "WHERE indicator = 'jp_real_gdp_qoq_saar' ORDER BY release_date"
+    ).fetchall()
+    assert [seq for _, seq in got] == [1, 2, 3]
+
+
+def test_recompute_vintage_seq_does_not_touch_other_indicators(tmp_path):
+    # Scoped to one indicator so it cannot renumber ALFRED-sourced rows, which
+    # already get a correct per-period sequence from sources/alfred.py.
+    con = connect(tmp_path / "t.duckdb")
+    insert_observations(con, [_obs(vintage_seq=7)])  # indicator="us_core_pce"
+
+    recompute_vintage_seq(con, "jp_real_gdp_qoq_saar")
+
+    stored = con.execute("SELECT vintage_seq FROM observations WHERE indicator = 'us_core_pce'").fetchone()[0]
+    assert stored == 7
 
 
 def test_rejects_an_unknown_vintage_kind(tmp_path):
