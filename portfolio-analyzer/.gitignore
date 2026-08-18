@@ -1,3 +1,4 @@
 data/*.private.json
 data/*.private.md
+data/*.private.html
 dist/
