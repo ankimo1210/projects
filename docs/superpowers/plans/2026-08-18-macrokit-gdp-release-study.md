@@ -913,6 +913,7 @@ git commit -m "Record the observed GDP publication timestamps from ESRI's feed"
 - Create: `macrokit/src/macrokit/sources/esri_gdp.py`
 - Create: `macrokit/tests/test_esri_gdp.py`
 - Create: `macrokit/tests/fixtures/esri_gdemenuja.html`
+- Create: `macrokit/tests/fixtures/esri_gdemenuja_2009.html`
 - Create: `macrokit/tests/fixtures/esri_nritu_jk.csv`
 
 **Interfaces:**
@@ -954,9 +955,26 @@ The **data CSV URL is not stable and must never be constructed**:
 ```html
 <html><body>
 <a href="tables/gaku-jk2621.csv">実質季節調整系列（CSV形式：42KB）</a>
-<a href="tables/nritu-jk2621.csv">年率換算の実質季節調整系列(前期比)（CSV形式：17KB）</a>
+<a href="tables/nritu-jk2621.csv"><img src="csv.gif" alt="CSV">年率換算の実質季節調整系列(前期比)（CSV形式：17KB）</a>
 <a href="tables/nritu-mk2621.csv">年率換算の名目季節調整系列(前期比)（CSV形式：17KB）</a>
 <a href="tables/knritu-jk2621.csv">年率換算の実質季節調整系列(前期比)（CSV形式：7KB）</a>
+</body></html>
+```
+
+The `<img>` inside the anchor is real — the live pages nest one before the
+closing tag — so the fixture keeps it to prove `_LinkCollector` is not confused
+by it.
+
+Second fixture, `macrokit/tests/fixtures/esri_gdemenuja_2009.html`, reproducing
+the **older naming convention**. This is the era a `startswith` test silently
+excludes, so it needs its own fixture:
+
+```html
+<html><body>
+<a href="/jp/sna/content/20120227_gaku_jk0911.csv">実質季節調整系列（CSV形式：31KB）</a>
+<a href="/jp/sna/content/20120227_nritu_jk0911.csv">年率換算の実質季節調整系列(前期比)（CSV形式：8KB）</a>
+<a href="/jp/sna/content/20120227_nritu_mk0911.csv">年率換算の名目季節調整系列(前期比)（CSV形式：8KB）</a>
+<a href="/jp/sna/content/20120227_knritu_jk0911.csv">年率換算の実質季節調整系列(前期比)（CSV形式：7KB）</a>
 </body></html>
 ```
 
@@ -1023,6 +1041,23 @@ def test_the_reference_series_with_the_same_label_is_not_selected():
         stem_prefix="nritu",
     )
     assert url.endswith("/tables/nritu-jk2621.csv")
+    assert "knritu" not in url
+
+
+def test_the_older_date_stamped_naming_still_resolves():
+    """2009-2015 releases prefix the file with a migration date: 20120227_nritu_jk0911.csv.
+
+    A basename `startswith("nritu")` test rejects both this and its knritu
+    sibling, making the whole pre-2016 archive unreachable.
+    """
+    html = (FIXTURES / "esri_gdemenuja_2009.html").read_bytes()
+    url = esri_gdp.select_series_url(
+        html,
+        "https://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2009/qe091/gdemenuja.html",
+        series_label="年率換算の実質季節調整系列(前期比)",
+        stem_prefix="nritu",
+    )
+    assert url.endswith("/jp/sna/content/20120227_nritu_jk0911.csv")
     assert "knritu" not in url
 
 
@@ -1174,7 +1209,7 @@ def select_series_url(
     matches = [
         href
         for href, label in parser.links
-        if series_label in label and href.rsplit("/", 1)[-1].startswith(stem_prefix)
+        if series_label in label and _stem_matches(href, stem_prefix)
     ]
     if not matches:
         raise EsriGdpError(
@@ -1187,6 +1222,22 @@ def select_series_url(
             f"{matches}. Refusing to guess which is the headline series."
         )
     return urljoin(menu_url_, matches[0])
+
+
+def _stem_matches(href: str, stem_prefix: str) -> bool:
+    """True when the basename carries ``stem_prefix`` as a whole token.
+
+    The stem does not always sit at position 0. Older releases prefix the file
+    with a migration date -- ``20120227_nritu_jk0911.csv`` -- so a
+    ``startswith`` test rejects the very file it is meant to select, and
+    rejects the ``knritu`` reference series along with it, leaving nothing.
+
+    Requiring a boundary before the stem keeps ``knritu`` out for free: in
+    ``20120227_knritu_jk0911.csv`` the stem is preceded by ``k``, which is not
+    a boundary.
+    """
+    basename = href.rsplit("/", 1)[-1]
+    return re.search(rf"(?:^|[_-]){re.escape(stem_prefix)}[_-]", basename) is not None
 
 
 def parse_nritu_csv(content: bytes, *, column: str) -> dict[date, float]:
@@ -1323,6 +1374,25 @@ def test_the_same_quarter_reads_differently_across_three_releases():
 see on the eve of 2026-08-17; `+2.1` is stale and `+1.9` is same-day. Getting
 the directory naming backwards is easy — `qe261` is the **first** preliminary,
 not the second; the second lives in `qe261_2`.
+
+Add a second live test covering the old naming era, because the modern-era test
+above passes even when the pre-2016 archive is entirely unreachable:
+
+```python
+@pytest.mark.live
+@pytest.mark.skipif(not os.environ.get("MACROKIT_LIVE"), reason="live archive fetch")
+def test_a_2009_era_release_still_resolves():
+    """The oldest release in the calendar must be reachable, not just recent ones."""
+    adapter = esri_gdp.EsriGdpAdapter()
+    content, url, _ = adapter.fetch_release(
+        _event(date(2008, 10, 1), "1st_prelim"),
+        series_label="年率換算の実質季節調整系列(前期比)",
+        stem_prefix="nritu",
+    )
+    assert "knritu" not in url
+    series = esri_gdp.parse_nritu_csv(content, column="国内総生産(支出側)")
+    assert date(2008, 10, 1) in series
+```
 
 Add a small `_event(period_start, kind)` helper in the test module that builds a `ReleaseEvent` with an arbitrary tz-aware `release_date`; `fetch_release` reads only `period_start` and `release_kind`.
 
