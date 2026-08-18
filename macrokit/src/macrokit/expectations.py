@@ -14,6 +14,7 @@ from __future__ import annotations
 from datetime import date, datetime, timedelta
 
 import duckdb
+import numpy as np
 
 from . import pit
 from .store import Expectation, ReleaseEvent
@@ -81,12 +82,45 @@ def prior_vintage(con: duckdb.DuckDBPyConnection, event: ReleaseEvent) -> Expect
 
 METHODS = {"random_walk": random_walk, "prior_vintage": prior_vintage}
 
+AR_ORDER = 4
+AR_MIN_OBSERVATIONS = AR_ORDER + 8
+
+
+def ar_model(con: duckdb.DuckDBPyConnection, event: ReleaseEvent) -> Expectation | None:
+    """One-step-ahead AR(4) forecast fitted by OLS on everything knowable at as_of.
+
+    The order is fixed rather than selected: choosing p from the data would let
+    the selection see information the forecast is not allowed to use, and the
+    resulting surprise would be smaller than any trader could have achieved.
+    """
+    series, as_of_date = _knowable_before(con, event)
+    if series is None:
+        return None
+    history = series.sort_index()
+    history = history[history.index < event.period_start]
+    if len(history) < AR_MIN_OBSERVATIONS:
+        return None
+
+    values = history.to_numpy(dtype=float)
+    rows = len(values) - AR_ORDER
+    design = np.column_stack(
+        [np.ones(rows)] + [values[AR_ORDER - lag : len(values) - lag] for lag in range(1, AR_ORDER + 1)]
+    )
+    target = values[AR_ORDER:]
+    coefficients, *_ = np.linalg.lstsq(design, target, rcond=None)
+
+    latest = np.concatenate([[1.0], values[-1 : -AR_ORDER - 1 : -1]])
+    return _expectation(event, "ar_model", float(latest @ coefficients), as_of_date)
+
+
+METHODS["ar_model"] = ar_model
+
 
 def compute(
     con: duckdb.DuckDBPyConnection,
     events: list[ReleaseEvent],
     *,
-    methods: tuple[str, ...] = ("random_walk", "prior_vintage"),
+    methods: tuple[str, ...] = ("random_walk", "prior_vintage", "ar_model"),
 ) -> list[Expectation]:
     rows: list[Expectation] = []
     for event in events:
