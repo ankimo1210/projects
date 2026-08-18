@@ -122,6 +122,12 @@ def compute(
     *,
     methods: tuple[str, ...] = ("random_walk", "prior_vintage", "ar_model"),
 ) -> list[Expectation]:
+    unknown = [method for method in methods if method not in METHODS]
+    if unknown:
+        raise ValueError(
+            f"unknown expectation method(s): {', '.join(unknown)}; "
+            f"valid methods: {', '.join(sorted(METHODS))}"
+        )
     rows: list[Expectation] = []
     for event in events:
         for method in methods:
