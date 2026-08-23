@@ -2,19 +2,37 @@
 
 ## 現在の状態（2026-08-23）
 
-App Reviewは2026-07-29に完了し、`eligible for distribution`（配信可能）になっている。
-リリース方法を手動にしているため、**App Store Connectで「このバージョンをリリース」を
-実行するまで公開されない**。2026-08-23時点でiTunes Search / Lookup APIとも
-`6792630743`は0件で、まだ公開されていない。
+**2026-08-23にリリース済み。** バージョン1.0は`READY_FOR_SALE`。App Review自体は
+2026-07-29に完了していたが、リリース方法が手動のため約3週間`PENDING_DEVELOPER_RELEASE`で
+止まっていた。App Store Connect APIからリリース要求を送って解消した
+（version id `ac7ecb81-d346-4971-9101-a18b62ffe228`）。
 
-公開までに残っているのは、下の未チェック項目（Sandbox実取引の確認、価格スケジュールの
-再確認）と、App Store Connect上での手動リリース操作。
+ストア掲載への反映は最大24時間かかるため、`READY_FOR_SALE`になった直後は
+iTunes Lookup APIが0件を返す。
+
+### 価格の実態
+
+アプリ本体は**無料**で、¥1,500／¥5,000は**IAP `pro_lifetime`の価格**。
+リリース時点でIAPは`APPROVED`だが、価格スケジュールが入っておらず¥5,000一本だった。
+当初の「発売価格¥1,500」を復活させるため、リリース直前に次のスケジュールを適用した。
+
+| 期間 | 価格 | proceeds |
+| ---- | ---- | -------- |
+| 〜2026-09-21 16:00 JST | ¥1,500 | ¥1,275 |
+| 2026-09-21 16:00 JST〜 | ¥5,000 | ¥4,250 |
+
+境界はApple内部では米西部時間の0時で保持されるため、JSTでは同日16:00に切り替わる。
+proceedsが85%なのはSmall Business Programの手数料15%が効いているため。
+
+`inAppPurchasePriceSchedules`は区間の隙間も重なりも許さない。前の価格の`endDate`と
+次の価格の`startDate`は**同じ日付**にする（`endDate`は排他）。1日ずらすと
+`ENTITY_ERROR.INVALID_INTERVAL`で弾かれる。
 
 - [x] App Store Connectへ`CruNote for WSET`を日本語・iOSアプリとして登録（Apple ID: `6792630743`、Bundle ID: `com.ankimo.WSET`、SKU: `crunote-wset-ios`）
 - [x] 四択1100問と記述式10問をReleaseパックへ収録
 - [x] `pro_lifetime`をNon-ConsumableとしてApp Store Connectへ登録（Apple ID: `6792636673`）
 - [x] 発売価格¥1,500、通常価格¥5,000（2026-08-17開始）をApp Store Connectで確定し、アプリへ直書きしない
-- [ ] **価格スケジュールの再確認（2026-08-23）**: 未リリースのまま発売記念価格の期間（〜2026-08-17）が終了したため、現在の設定では公開初日から通常価格¥5,000になる。リリース前にApp Store Connectで価格を見直す
+- [x] **価格スケジュールの再確認（2026-08-23）**: リリース直前の実測で、IAPは¥5,000一本でスケジュールが無い状態だった。¥1,500（〜2026-09-21）→¥5,000へ再設定して公開した
 - [x] App Store Connectの有料アプリ契約へ署名
 - [x] 売上受取用の銀行口座をApp Store Connectへ登録し、「有効」を確認
 - [x] App Store ConnectでW-8BENと外国人ステータス証明を提出し、両方「有効」を確認
@@ -57,4 +75,5 @@ xcodebuild test -project WSET.xcodeproj -scheme WSET \
 - [x] 地図素材が自作図・参照のみの独自要約であること、利用条件とWSET非提携表記を確認
 - [x] Small Business Programの対象条件を確認し、関連アカウントなし・基準額以内として申請。2026-08-15にAppleが承認し、手数料率は15%（メール `Welcome to the App Store Small Business Program.`）
 - [x] 日本語スクリーンショット、説明文、サポートURLを用意
-- [ ] App Store Connectで「このバージョンをリリース」を実行し、日本のApp Storeでの配信開始を確認
+- [x] App Store Connectで「このバージョンをリリース」を実行（2026-08-23、API経由。`PENDING_DEVELOPER_RELEASE`→`READY_FOR_SALE`）
+- [ ] 日本のApp Store製品ページで、説明・スクリーンショット・サポートURL・IAP価格¥1,500の表示を確認（反映まで最大24時間）
