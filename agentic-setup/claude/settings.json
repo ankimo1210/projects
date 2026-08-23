@@ -1,0 +1,53 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [
+      "Read(**/*.csv)",
+      "Read(**/*.parquet)",
+      "Read(**/*.geojson)",
+      "Read(**/*.duckdb)",
+      "Read(**/*.duckdb.wal)",
+      "Read(**/uv.lock)",
+      "Read(**/package-lock.json)",
+      "Read(**/pnpm-lock.yaml)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ],
+    "defaultMode": "auto"
+  },
+  "enableWorkflows": true,
+  "statusLine": {
+    "type": "command",
+    "command": "bash /home/kazumasa/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": false,
+    "superpowers@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": false,
+    "document-skills@anthropic-agent-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    }
+  },
+  "effortLevel": "xhigh",
+  "autoCompactEnabled": true,
+  "autoCompactWindow": 500000,
+  "precomputeCompactionEnabled": true,
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "verbose": true,
+  "remoteControlAtStartup": true,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true
+}
