@@ -1,0 +1,36 @@
+model = "gpt-5.6-sol"
+model_reasoning_effort = "xhigh"
+approvals_reviewer = "user"
+plan_mode_reasoning_effort = "max"
+[projects."/home/kazumasa/projects"]
+trust_level = "trusted"
+
+[projects."/home/kazumasa"]
+trust_level = "trusted"
+
+[projects."/mnt/c/Users/Kazumasa"]
+trust_level = "trusted"
+
+[projects."/home/kazumasa/re_invest_os"]
+trust_level = "trusted"
+
+[tui]
+status_line = [
+    "model-with-reasoning",
+    "project-name",
+    "git-branch",
+    "context-used",
+    "total-input-tokens",
+    "context-window-size",
+]
+status_line_use_colors = true
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+"gpt-5.6-sol" = 4
+
+[notice.model_migrations]
+"gpt-5.4" = "gpt-5.5"
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"

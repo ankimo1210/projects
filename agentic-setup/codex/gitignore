@@ -1,0 +1,7 @@
+# Ignore all Codex runtime state by default.
+*
+
+# Track only durable, reviewed configuration.
+!.gitignore
+!AGENTS.md
+!config.toml

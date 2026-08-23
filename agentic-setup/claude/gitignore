@@ -1,0 +1,8 @@
+# Whitelist approach: ignore everything, track only explicit config files.
+# Never track credentials, sessions, caches, or other machine state.
+*
+!.gitignore
+!CLAUDE.md
+!keybindings.json
+!settings.json
+!statusline-command.sh
