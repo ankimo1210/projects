@@ -1,8 +1,12 @@
 # agentic-setup
 
-ローカルの AI エージェント CLI（Claude Code / Codex CLI）の設定を、この
-リポジトリに退避したもの。マシン再構築時の復元元であり、設定変更の履歴を
-git で追うための場所。
+ローカルの AI エージェント CLI（Claude Code / Codex CLI）の設定と、それを
+動かすワークステーション側の設定を、このリポジトリに退避したもの。マシン
+再構築時の復元元であり、設定変更の履歴を git で追うための場所。
+
+**複数マシンで使っている。** `claude/` `codex/` `AGENTS.md` は WSL/Windows 機
+から取ったもので、パスが `/home/kazumasa/` や `/mnt/c/Users/Kazumasa/` に
+なっている。`macos/` は Mac 固有。復元先のマシンを確かめてから使うこと。
 
 **これはバックアップであって、動作中の設定そのものではない。**
 実際に使われているのは `~/.claude/` と `~/.codex/`。ここを編集しても
@@ -22,6 +26,7 @@ git で追うための場所。
 | `claude/skills/hull-derivatives/` | `~/.claude/skills/hull-derivatives/` | 自作スキル：デリバティブ参照（自分で書いた要約ノート） |
 | `codex/config.toml` | `~/.codex/config.toml` | モデル・reasoning effort・trust level・MCP |
 | `codex/gitignore` | `~/.codex/.gitignore` | 同上 |
+| `macos/` | `~/.config/karabiner/` ほか | Mac 固有のワークステーション設定（[`macos/README.md`](macos/README.md)） |
 
 ### 注意：`gitignore` のファイル名
 

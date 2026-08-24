@@ -1,0 +1,41 @@
+{
+  "title": "Caps Lock: Terminal と Citrix では Control、他は Command",
+  "rules": [
+    {
+      "description": "Terminal.app / Citrix では Caps Lock を左 Control にする",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "caps_lock",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "left_control" }],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.apple\\.Terminal$",
+                "^com\\.citrix\\.receiver\\.icaviewer\\.mac$",
+                "^com\\.citrix\\.receiver\\.nomas$"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "それ以外のアプリでは Caps Lock を右 Command にする（現状維持）",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "caps_lock",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "right_command" }]
+        }
+      ]
+    }
+  ]
+}
