@@ -26,7 +26,8 @@
 | `claude/skills/hull-derivatives/` | `~/.claude/skills/hull-derivatives/` | 自作スキル：デリバティブ参照（自分で書いた要約ノート） |
 | `codex/config.toml` | `~/.codex/config.toml` | モデル・reasoning effort・trust level・MCP |
 | `codex/gitignore` | `~/.codex/.gitignore` | 同上 |
-| `macos/` | `~/.config/karabiner/` ほか | Mac 固有のワークステーション設定（[`macos/README.md`](macos/README.md)） |
+| `macos/` | `~/.claude/`・`~/.codex/`・`~/.config/karabiner/` | **Mac 固有**の設定一式（[`macos/README.md`](macos/README.md)） |
+| `compaction-and-context.md` | — | Claude Code の `/compact` と コンテキスト管理の調査ノート（マシン非依存） |
 
 ### 注意：`gitignore` のファイル名
 
