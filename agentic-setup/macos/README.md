@@ -1,8 +1,22 @@
 # macOS のワークステーション設定
 
-この Mac（Apple Silicon / macOS 26）固有の、エージェント CLI 以外の環境設定。
-親ディレクトリの `agentic-setup/README.md` と同じくバックアップであって、
-動作中の設定そのものではない。
+この Mac（Apple Silicon / macOS 26）固有の設定。親ディレクトリの
+`agentic-setup/README.md` と同じくバックアップであって、動作中の設定
+そのものではない。
+
+**親ディレクトリの `claude/` `codex/` は WSL 機のもの。** この Mac の
+エージェント CLI 設定は同名ファイルでも中身が違うので、上書きせずここに
+分けてある。
+
+| パス | 実体の位置 | 備考 |
+| --- | --- | --- |
+| `claude/settings.json` | `~/.claude/settings.json` | statusLine のパスが Mac 用。`swift-lsp` プラグイン、`modelSettings` の opus-5 xhigh を含む |
+| `codex/config.toml` | `~/.codex/config.toml` | ollama プロファイル、marketplaces、computer-use の notify を含み WSL 版とはほぼ別物 |
+| `karabiner/*.json` | `~/.config/karabiner/assets/complex_modifications/` | 下記「Karabiner-Elements」参照 |
+
+`claude/statusline-command.sh` はマシン固有のパスを含まないため親ディレクトリの
+ものをそのまま使える。`settings.json` の `statusLine.command` だけが
+`/Users/ankimo1210/...` を直書きしているので、復元時はそこを書き換える。
 
 ## Karabiner-Elements：アプリ別の修飾キー
 

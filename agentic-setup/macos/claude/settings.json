@@ -1,0 +1,25 @@
+{
+  "enableWorkflows": true,
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "xhigh"
+    }
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "auto",
+  "remoteControlAtStartup": true,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/ankimo1210/.claude/statusline-command.sh"
+  },
+  "autoCompactEnabled": true,
+  "autoCompactWindow": 500000,
+  "precomputeCompactionEnabled": true,
+  "cleanupPeriodDays": 365
+}
