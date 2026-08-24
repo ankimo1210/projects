@@ -16,6 +16,7 @@ git で追うための場所。
 | `claude/settings.json` | `~/.claude/settings.json` | 権限・プラグイン・statusLine・effort 等 |
 | `claude/keybindings.json` | `~/.claude/keybindings.json` | キーバインド |
 | `claude/statusline-command.sh` | `~/.claude/statusline-command.sh` | ステータスライン生成スクリプト |
+| `claude/project-settings.local.json` | `~/projects/.claude/settings.local.json` | このワークスペース固有の permission allow 蓄積（**下記の注意**） |
 | `claude/gitignore` | `~/.claude/.gitignore` | ホワイトリスト方式の除外設定（**下記の注意**） |
 | `claude/skills/repo-survey/` | `~/.claude/skills/repo-survey/` | 自作スキル：リポジトリ概観 |
 | `claude/skills/hull-derivatives/` | `~/.claude/skills/hull-derivatives/` | 自作スキル：デリバティブ参照（自分で書いた要約ノート） |
@@ -28,6 +29,18 @@ git で追うための場所。
 **ここでドットを外しているのは意図的**で、`.gitignore` のまま置くと中身の
 `*`（全部無視）がこのリポジトリで発動して、同じディレクトリのファイルが
 まるごと追跡対象から外れてしまう。復元時にドットを付け直すこと。
+
+### 注意：`project-settings.local.json` のファイル名
+
+実体は `~/projects/.claude/settings.local.json`。Claude Code の規約では
+`*.local.json` は「マシンローカルの個人上書き」であり、このリポジトリの
+ルート `.gitignore` でも意図的に除外されている。
+
+ただし中身は許可ドメインなどの**積み上げた設定**で、失うと許可ダイアログを
+一から踏み直すことになるため、バックアップとしてここに置く。`.claude/` 配下
+ではなく `agentic-setup/claude/` に、頭に `project-` を付けた別名で置くこと
+で、ルートの除外ルール（`.claude/settings.local.json`）に一致させずに追跡
+している。**実体の除外設定はそのまま**で、二重管理になっている点に注意。
 
 ## シンボリックリンクの連鎖
 
@@ -70,6 +83,9 @@ cp claude/statusline-command.sh  ~/.claude/statusline-command.sh
 cp claude/gitignore              ~/.claude/.gitignore
 cp -r claude/skills/*            ~/.claude/skills/
 
+# このワークスペース固有の permission（リポジトリのルートで実行）
+cp claude/project-settings.local.json ~/projects/.claude/settings.local.json
+
 # Codex CLI
 mkdir -p ~/.codex
 cp codex/config.toml             ~/.codex/config.toml
@@ -104,4 +120,6 @@ ln -sf ../.codex/AGENTS.md                    ~/.claude/CLAUDE.md
 diff -u ~/projects/agentic-setup/claude/settings.json ~/.claude/settings.json
 diff -u ~/projects/agentic-setup/codex/config.toml    ~/.codex/config.toml
 diff -u ~/projects/agentic-setup/AGENTS.md            ~/.claude/CLAUDE.md
+diff -u ~/projects/agentic-setup/claude/project-settings.local.json \
+        ~/projects/.claude/settings.local.json
 ```
