@@ -25,6 +25,29 @@ uv run --no-sync python monster_gate/scripts/build_art.py
 | `tile.stairs` | `yukai/stairs.png` | `Isometric/stairsSpiral_N.png` | 2x 書き出し |
 | `tile.door.ns` / `.ew` | `yukai/door.ns.png` / `door.ew.png` | `stoneWallArchway_N` / `_E` | 通路の向きで描画側が選ぶ |
 
+## 城ごとのタイル（`public/art/<城 id>/`）
+
+パックはグレー〜茶の石セット 1 種しかないので、残り 5 城は**同じ形状をグラデーション
+マップに通して**作っている。元画像の輝度でその城のランプ（色の階段）から色を引くので、
+Kenney の陰影と 2:1 のシルエットはそのまま、色だけが変わる（`scripts/build_art.py`
+の `THEMES`）。
+
+| 城 | ランプ | 床 / アクセント床 | 壁天面 | 追加処理 |
+|---|---|---|---|---|
+| ゆかい（既定・接頭辞なし） | 素材のまま | `stone` / `dirt` | `stone` | — |
+| `light` | 白→金 | `stoneTile` / `stoneUneven` | `stoneTile` | — |
+| `vague` | 苔緑→灰緑 | `stoneUneven` / `stoneMissingTiles` | `stoneUneven` | — |
+| `cold` | 紺→白 | `stone` / `stoneUneven` | `stone` | `tile.ice` は専用の高彩度シアンランプ＋白の被膜 |
+| `cruel` | 紫 | `planks` / `planksBroken` | `stone` | 板の隙間に黄緑の酸を発光合成 |
+| `tight` | 黒 | `stoneUneven` / `stoneMissingTiles` | `stoneUneven` | 割れ目に赤を発光合成 |
+
+- ID は `<城 id>.tile.floor` のように城 id を接頭辞にする。**無ければ接頭辞なしの既定セット
+  （＝ゆかいの石）にフォールバック**するので、城の絵は 1 つずつ足せる。
+- アクセント床（12 マスに 1 枚）は `planksBroken` のように穴が開いた素材があるため、
+  必ず無地の床を下に敷いてから重ねる。敷かないと穴から背景の黒が抜けて落とし穴に見える。
+- `thumb.<城 id>` は同じタイルで 3×3 の部屋の隅を組んだサムネイル（拠点の城選択用、
+  200px 幅・中心アンカー）。色見本ではなく実物のタイルなので、絵と本編がずれない。
+
 ## キャラ（`public/art/chars/`）
 
 `scripts/build_chars.py` が**コードで描いている**（生成 AI ではない）。スタイルガイドの
@@ -83,5 +106,8 @@ uv run --no-sync python monster_gate/scripts/build_cards.py
 
 ## まだ無いもの
 
-ゆかい以外の 5 城のタイル、攻撃／被弾ポーズ、ポートレート。manifest に無い ID は
-絵文字で描画されるので、1 枚ずつ足していける。
+床に置くプロップ（樽・柱・骨）、松明の照明、攻撃／被弾ポーズ、ポートレート。
+manifest に無い ID は絵文字で描画されるので、1 枚ずつ足していける。
+
+プロップだけは絵が無いのではなく**置き場所が無い**。歩ける床に置くと通り抜けてしまうので、
+engine 側に通行不可のマス（`FloorMap.props`）が要る。Phase 4 では見送った。

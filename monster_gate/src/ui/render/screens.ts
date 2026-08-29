@@ -2,7 +2,7 @@
 
 import { CLASSES, DUNGEON_LIST, type DungeonDef } from "../../engine/dungeon-def";
 import { shopList, STORAGE_CAP, type SaveV1 } from "../../game/meta";
-import type { ArtBank } from "./art";
+import { drawSprite, type ArtBank } from "./art";
 import { drawCard, drawCardBack, type CardOpts } from "./card-face";
 import { ruleTags } from "./hud";
 import { H, W } from "./layout";
@@ -78,14 +78,36 @@ export function drawBase(c: CanvasRenderingContext2D, bank: ArtBank, s: SaveV1, 
     else drawCard(c, bank, s.storage[j]!, x, y, 44);
   }
 
-  // ---- dungeon picker
-  const dy = GRID.y + 180;
+  // ---- dungeon picker: the six castles as their own tiles, so the palette is
+  // the label rather than the name
+  const dy = GRID.y + 172;
   text(c, `[ ${def.name} ${"★".repeat(def.stars)} ]`, hx, dy, "#fc6", 20);
   text(c, `BET ${def.bet} / WIN ${def.win} / ${def.floors.length}F / 手札 ${def.handSize}`, hx, dy + 30, "#ddd", 15);
   text(c, def.desc, hx, dy + 52, "#aaa", 13);
   const tags = ruleTags(def.rules);
   if (tags.length) text(c, tags.join("  "), hx, dy + 72, "#8cf", 13);
-  DUNGEON_LIST.forEach((d, i) => text(c, `${i === b.dungeonIdx ? "●" : "○"}${d.name}`, hx + (i % 3) * 130, dy + 98 + Math.floor(i / 3) * 20, i === b.dungeonIdx ? "#fff" : "#666", 13));
+  const tw = 124;
+  const th = 82;
+  DUNGEON_LIST.forEach((d, i) => {
+    const x = hx + (i % 3) * (tw + 10);
+    const y = dy + 96 + Math.floor(i / 3) * (th + 30);
+    const on = i === b.dungeonIdx;
+    c.fillStyle = "#0d0f16";
+    c.fillRect(x, y, tw, th);
+    c.save();
+    c.beginPath();
+    c.rect(x, y, tw, th);
+    c.clip();
+    // dimmed rather than baked dark: telling the palettes apart is the point
+    if (!drawSprite(c, bank, `thumb.${d.id}`, x + tw / 2, y + th / 2, { scale: (tw / 200) * 1.02, alpha: on ? 1 : 0.62 })) {
+      text(c, d.name, x + tw / 2, y + th / 2 - 8, "#556", 14, "center");
+    }
+    c.restore();
+    c.strokeStyle = on ? "#ffd85a" : "#2a2e3c";
+    c.lineWidth = on ? 2 : 1;
+    c.strokeRect(x + 0.5, y + 0.5, tw - 1, th - 1);
+    text(c, `${d.name} ${"★".repeat(d.stars)}`, x + tw / 2, y + th + 4, on ? "#fff" : "#6d7383", 12, "center");
+  });
 
   // ---- shop, under the grid; the whole row plus its price footers must fit in H
   const sy = GRID.y + GRID.rows * CELL_H + 22;
