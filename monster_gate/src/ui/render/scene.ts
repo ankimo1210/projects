@@ -9,6 +9,7 @@ import { ANIM_MS, Camera, FLOOR_H, isoX, isoY, S, TH, TW, WALL_H } from "./iso";
 import { MAP_H, MAP_W, MAP_X, MAP_Y, UI_FONT } from "./layout";
 import { clamp } from "./text";
 import { block, emojiBillboard, flat, inset, tileColor } from "./tiles";
+import { drawWeather } from "./weather";
 
 const FLOAT_MS = 700;
 const FLASH_MS = 150;
@@ -43,7 +44,12 @@ export class SceneRenderer {
   private faceRight = new Map<string, boolean>();
 
   /** New run or new floor: nothing to slide from, camera snaps. */
-  reset(): void {
+  /** `theme` is the castle id; tiles fall back to the unprefixed set when a
+   * castle has no art of its own. */
+  private theme = "";
+
+  reset(theme = ""): void {
+    this.theme = theme;
     this.cam.reset();
     this.animFrom.clear();
     this.flash.clear();
@@ -248,21 +254,21 @@ export class SceneRenderer {
         const dim = { dim: !seen };
         const grain = (mx * 7 + my * 13) % 12;
         if (tile.kind === "wall") {
-          if (!drawSprite(c, bank, "tile.wall", X, Y, dim)) block(c, X, Y, FLOOR_H + WALL_H, seen ? "#5a5a6c" : "#2c2c36");
+          if (!this.tile(c, bank, "tile.wall", X, Y, dim)) block(c, X, Y, FLOOR_H + WALL_H, seen ? "#5a5a6c" : "#2c2c36");
         } else {
           const ground = tile.kind === "ice" ? "tile.ice" : grain === 0 ? "tile.floor.b" : "tile.floor";
-          const drewGround = drawSprite(c, bank, ground, X, Y, dim) || drawSprite(c, bank, "tile.floor", X, Y, dim);
+          const drewGround = this.tile(c, bank, ground, X, Y, dim) || this.tile(c, bank, "tile.floor", X, Y, dim);
           if (!drewGround) block(c, X, Y, FLOOR_H, tileColor(tile.kind, tile.lit, seen), 1 + ((grain % 3) - 1) * 0.04, 0.72);
           const top = Y - FLOOR_H;
           if (tile.kind === "stairsDown") {
-            if (!drawSprite(c, bank, "tile.stairs", X, Y, dim)) {
+            if (!this.tile(c, bank, "tile.stairs", X, Y, dim)) {
               inset(c, X, top, "#101828");
               flat(c, X, top, "▼", 15 * S, seen ? "#ffd85a" : "#8a7a45");
             }
           } else if (tile.kind === "door") {
             // an archway across the passage: walls to the east and west mean it runs north-south
             const ew = mx > 0 && mx + 1 < map.width && map.tiles[i - 1]!.kind === "wall" && map.tiles[i + 1]!.kind === "wall";
-            if (!drawSprite(c, bank, ew ? "tile.door.ew" : "tile.door.ns", X, Y, dim)) inset(c, X, top, seen ? "#a7743a" : "#553c22");
+            if (!this.tile(c, bank, ew ? "tile.door.ew" : "tile.door.ns", X, Y, dim)) inset(c, X, top, seen ? "#a7743a" : "#553c22");
           } else if (tile.kind === "ice") {
             if (!drewGround) flat(c, X, top - 1, "❄", 12 * S, seen ? "#eaffff" : "#6d8f9c");
           } else if (tile.kind === "altar") {
@@ -308,6 +314,12 @@ export class SceneRenderer {
     }
 
     c.restore();
+    drawWeather(c, this.theme, t);
+  }
+
+  /** Castle-specific tile first, then the shared set. */
+  private tile(c: CanvasRenderingContext2D, bank: ArtBank, id: string, X: number, Y: number, dim: { dim: boolean }): boolean {
+    return (this.theme !== "" && drawSprite(c, bank, `${this.theme}.${id}`, X, Y, dim)) || drawSprite(c, bank, id, X, Y, dim);
   }
 
   /** Scenery standing upright on a tile, with its own shadow. */

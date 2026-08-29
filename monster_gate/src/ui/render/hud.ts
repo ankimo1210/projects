@@ -157,6 +157,25 @@ export function drawOverlay(c: CanvasRenderingContext2D, bank: ArtBank, s: Dunge
   }
 }
 
+/** Castle name card, shown for a moment on entering a floor 1. */
+export function drawCastleCard(c: CanvasRenderingContext2D, def: DungeonDef, alpha: number): void {
+  const w = 460;
+  const h = 132;
+  const x = (W - w) / 2;
+  const y = MAP_Y + MAP_H * 0.3;
+  c.save();
+  c.globalAlpha = alpha;
+  c.fillStyle = "rgba(4,6,10,0.86)";
+  c.fillRect(x, y, w, h);
+  c.strokeStyle = "#fc6";
+  c.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+  text(c, def.name, W / 2, y + 22, "#fff", 34, "center");
+  text(c, "★".repeat(def.stars), W / 2, y + 66, "#fc6", 20, "center");
+  const tags = ruleTags(def.rules);
+  text(c, tags.length ? tags.join("  ") : `${def.floors.length}F  BET ${def.bet}`, W / 2, y + 98, "#8cf", 15, "center");
+  c.restore();
+}
+
 export function drawHelp(c: CanvasRenderingContext2D): void {
   const w = 760;
   const h = 330;

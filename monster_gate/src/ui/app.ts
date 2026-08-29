@@ -9,12 +9,15 @@ import { tileAt, type Action, type CardId, type ClassId, type Dir, type DungeonS
 import { buyCard, canStart, finishRun, loadSave, persist, sellCard, shopList, startRun, type SaveV1, type Store } from "../game/meta";
 import { describe } from "./log";
 import { ArtBank } from "./render/art";
-import { drawCardBar, drawHelp, drawLog, drawMinimap, drawOverlay, drawPendingCard, drawTopBar, ruleTags } from "./render/hud";
+import { drawCardBar, drawCastleCard, drawHelp, drawLog, drawMinimap, drawOverlay, drawPendingCard, drawTopBar, ruleTags } from "./render/hud";
 import { H, MAP_X, MAP_Y, W } from "./render/layout";
 import { SceneRenderer } from "./render/scene";
 import { drawBase, drawResult, drawTitle, GRID, type BaseUi } from "./render/screens";
 
 type Screen = "title" | "base" | "dungeon" | "result";
+
+/** How long the castle name card stays up. */
+const CARD_MS = 1700;
 
 export class App {
   private screen: Screen = "title";
@@ -29,6 +32,7 @@ export class App {
   private result: { text: string[] } | null = null;
   private overlayClosed = false;
   private helpOpen = false;
+  private titleUntil = 0;
   private scene = new SceneRenderer();
 
   constructor(
@@ -136,12 +140,13 @@ export class App {
     this.persist();
     const seed = (Date.now() ^ Math.floor(Math.random() * 0xffffffff)) >>> 0;
     this.run = createRun(seed, def, r.hand, this.save.cls);
-    this.scene.reset();
+    this.scene.reset(def.id);
     this.log = [`${def.name}に挑む（BET ${def.bet}）${ruleTags(def.rules).join(" ")}`, "移動 矢印/qezc  カード 1-0  階段/祭壇 Enter  ヘルプ ?"];
     this.pendingCard = null;
     this.discardMode = false;
     this.overlayClosed = false;
     this.helpOpen = false;
+    this.titleUntil = this.now() + CARD_MS;
     this.screen = "dungeon";
   }
 
@@ -255,7 +260,9 @@ export class App {
 
   /** True while something on screen is still moving; the host loop idles otherwise. */
   get busy(): boolean {
-    return this.screen === "dungeon" && !!this.run && this.scene.busy(this.now(), this.run);
+    if (this.screen !== "dungeon" || !this.run) return false;
+    // the particle layer and the castle card both animate on their own
+    return this.titleUntil > this.now() || this.scene.busy(this.now(), this.run);
   }
 
   // ---- drawing -------------------------------------------------------------
@@ -294,6 +301,8 @@ export class App {
     const ov = this.overlay;
     if (ov) drawOverlay(c, this.art, s, ov);
     if (this.helpOpen) drawHelp(c);
+    const left = this.titleUntil - this.now();
+    if (left > 0) drawCastleCard(c, this.def, Math.min(1, left / 420, (CARD_MS - left) / 160));
   }
 
   // ---- debug hooks ---------------------------------------------------------

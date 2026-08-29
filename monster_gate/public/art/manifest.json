@@ -10,7 +10,7 @@
     "tile.floor.b": {
       "src": "yukai/floor.b.png",
       "ax": 96.0,
-      "ay": 58.0,
+      "ay": 65.0,
       "scale": 0.5
     },
     "tile.wall": {
@@ -258,6 +258,228 @@
       "ax": 128,
       "ay": 128,
       "scale": 1.0
+    },
+    "light.tile.floor": {
+      "src": "light/floor.png",
+      "ax": 96.0,
+      "ay": 65.0,
+      "scale": 0.5
+    },
+    "light.tile.floor.b": {
+      "src": "light/floor.b.png",
+      "ax": 96.0,
+      "ay": 68.0,
+      "scale": 0.5
+    },
+    "light.tile.wall": {
+      "src": "light/wall.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "light.tile.stairs": {
+      "src": "light/stairs.png",
+      "ax": 96.0,
+      "ay": 116.0,
+      "scale": 0.5
+    },
+    "light.tile.door.ns": {
+      "src": "light/door.ns.png",
+      "ax": 96.0,
+      "ay": 132.0,
+      "scale": 0.5
+    },
+    "light.tile.door.ew": {
+      "src": "light/door.ew.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "vague.tile.floor": {
+      "src": "vague/floor.png",
+      "ax": 96.0,
+      "ay": 68.0,
+      "scale": 0.5
+    },
+    "vague.tile.floor.b": {
+      "src": "vague/floor.b.png",
+      "ax": 96.0,
+      "ay": 68.0,
+      "scale": 0.5
+    },
+    "vague.tile.wall": {
+      "src": "vague/wall.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "vague.tile.stairs": {
+      "src": "vague/stairs.png",
+      "ax": 96.0,
+      "ay": 116.0,
+      "scale": 0.5
+    },
+    "vague.tile.door.ns": {
+      "src": "vague/door.ns.png",
+      "ax": 96.0,
+      "ay": 132.0,
+      "scale": 0.5
+    },
+    "vague.tile.door.ew": {
+      "src": "vague/door.ew.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "cold.tile.floor": {
+      "src": "cold/floor.png",
+      "ax": 96.0,
+      "ay": 65.0,
+      "scale": 0.5
+    },
+    "cold.tile.floor.b": {
+      "src": "cold/floor.b.png",
+      "ax": 96.0,
+      "ay": 68.0,
+      "scale": 0.5
+    },
+    "cold.tile.wall": {
+      "src": "cold/wall.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "cold.tile.stairs": {
+      "src": "cold/stairs.png",
+      "ax": 96.0,
+      "ay": 116.0,
+      "scale": 0.5
+    },
+    "cold.tile.door.ns": {
+      "src": "cold/door.ns.png",
+      "ax": 96.0,
+      "ay": 132.0,
+      "scale": 0.5
+    },
+    "cold.tile.door.ew": {
+      "src": "cold/door.ew.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "cold.tile.ice": {
+      "src": "cold/ice.png",
+      "ax": 96.0,
+      "ay": 65.0,
+      "scale": 0.5
+    },
+    "cruel.tile.floor": {
+      "src": "cruel/floor.png",
+      "ax": 96.0,
+      "ay": 56.0,
+      "scale": 0.5
+    },
+    "cruel.tile.floor.b": {
+      "src": "cruel/floor.b.png",
+      "ax": 96.0,
+      "ay": 56.0,
+      "scale": 0.5
+    },
+    "cruel.tile.wall": {
+      "src": "cruel/wall.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "cruel.tile.stairs": {
+      "src": "cruel/stairs.png",
+      "ax": 96.0,
+      "ay": 116.0,
+      "scale": 0.5
+    },
+    "cruel.tile.door.ns": {
+      "src": "cruel/door.ns.png",
+      "ax": 96.0,
+      "ay": 132.0,
+      "scale": 0.5
+    },
+    "cruel.tile.door.ew": {
+      "src": "cruel/door.ew.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "tight.tile.floor": {
+      "src": "tight/floor.png",
+      "ax": 96.0,
+      "ay": 68.0,
+      "scale": 0.5
+    },
+    "tight.tile.floor.b": {
+      "src": "tight/floor.b.png",
+      "ax": 96.0,
+      "ay": 68.0,
+      "scale": 0.5
+    },
+    "tight.tile.wall": {
+      "src": "tight/wall.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "tight.tile.stairs": {
+      "src": "tight/stairs.png",
+      "ax": 96.0,
+      "ay": 116.0,
+      "scale": 0.5
+    },
+    "tight.tile.door.ns": {
+      "src": "tight/door.ns.png",
+      "ax": 96.0,
+      "ay": 132.0,
+      "scale": 0.5
+    },
+    "tight.tile.door.ew": {
+      "src": "tight/door.ew.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "thumb.yukai": {
+      "src": "yukai/thumb.png",
+      "ax": 200.0,
+      "ay": 130.5,
+      "scale": 0.5
+    },
+    "thumb.light": {
+      "src": "light/thumb.png",
+      "ax": 200.0,
+      "ay": 130.5,
+      "scale": 0.5
+    },
+    "thumb.vague": {
+      "src": "vague/thumb.png",
+      "ax": 200.0,
+      "ay": 130.5,
+      "scale": 0.5
+    },
+    "thumb.cold": {
+      "src": "cold/thumb.png",
+      "ax": 200.0,
+      "ay": 130.5,
+      "scale": 0.5
+    },
+    "thumb.cruel": {
+      "src": "cruel/thumb.png",
+      "ax": 200.0,
+      "ay": 130.0,
+      "scale": 0.5
+    },
+    "thumb.tight": {
+      "src": "tight/thumb.png",
+      "ax": 200.0,
+      "ay": 130.5,
+      "scale": 0.5
     }
   }
 }
