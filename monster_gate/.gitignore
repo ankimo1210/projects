@@ -1,0 +1,6 @@
+node_modules/
+dist/
+
+# Upstream asset packs: re-downloadable, see assets/SOURCES.md
+assets/src/**/*.zip
+assets/src/kenney/

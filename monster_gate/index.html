@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Monster Gate</title>
+    <style>
+      html, body { margin: 0; background: #111; color: #ddd; font-family: ui-monospace, monospace; }
+      #app { display: flex; justify-content: center; padding: 8px; }
+      /* logical size is set by main.ts; shrink to fit narrow windows, keep the ratio */
+      canvas { display: block; max-width: 100%; height: auto; background: #000; }
+    </style>
+  </head>
+  <body>
+    <div id="app"><canvas id="game"></canvas></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
