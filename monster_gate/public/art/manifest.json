@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "sprites": {
+    "tile.floor": {
+      "src": "yukai/floor.png",
+      "ax": 96.0,
+      "ay": 65.0,
+      "scale": 0.5
+    },
+    "tile.floor.b": {
+      "src": "yukai/floor.b.png",
+      "ax": 96.0,
+      "ay": 58.0,
+      "scale": 0.5
+    },
+    "tile.wall": {
+      "src": "yukai/wall.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "tile.stairs": {
+      "src": "yukai/stairs.png",
+      "ax": 96.0,
+      "ay": 116.0,
+      "scale": 0.5
+    },
+    "tile.door.ns": {
+      "src": "yukai/door.ns.png",
+      "ax": 96.0,
+      "ay": 132.0,
+      "scale": 0.5
+    },
+    "tile.door.ew": {
+      "src": "yukai/door.ew.png",
+      "ax": 96.0,
+      "ay": 168.0,
+      "scale": 0.5
+    },
+    "class.warrior": {
+      "src": "chars/class-warrior.png",
+      "ax": 168,
+      "ay": 430,
+      "scale": 0.21
+    },
+    "class.mage": {
+      "src": "chars/class-mage.png",
+      "ax": 144,
+      "ay": 440,
+      "scale": 0.21
+    },
+    "class.gambler": {
+      "src": "chars/class-gambler.png",
+      "ax": 146,
+      "ay": 426,
+      "scale": 0.21
+    },
+    "enemy.puunya_g": {
+      "src": "chars/enemy-puunya_g.png",
+      "ax": 168,
+      "ay": 238,
+      "scale": 0.21
+    },
+    "enemy.puunya_y": {
+      "src": "chars/enemy-puunya_y.png",
+      "ax": 168,
+      "ay": 264,
+      "scale": 0.21
+    },
+    "enemy.killerbee": {
+      "src": "chars/enemy-killerbee.png",
+      "ax": 154,
+      "ay": 326,
+      "scale": 0.21
+    },
+    "enemy.skeleton": {
+      "src": "chars/enemy-skeleton.png",
+      "ax": 104,
+      "ay": 356,
+      "scale": 0.21
+    },
+    "enemy.kemunpa": {
+      "src": "chars/enemy-kemunpa.png",
+      "ax": 212,
+      "ay": 308,
+      "scale": 0.21
+    },
+    "enemy.goblin": {
+      "src": "chars/enemy-goblin.png",
+      "ax": 168,
+      "ay": 364,
+      "scale": 0.21
+    },
+    "enemy.mage": {
+      "src": "chars/enemy-mage.png",
+      "ax": 176,
+      "ay": 404,
+      "scale": 0.21
+    },
+    "enemy.dragon": {
+      "src": "chars/enemy-dragon.png",
+      "ax": 220,
+      "ay": 440,
+      "scale": 0.21
+    },
+    "card.potion20": {
+      "src": "cards/potion.png",
+      "ax": 75,
+      "ay": 91,
+      "scale": 1.0
+    },
+    "card.potion40": {
+      "src": "cards/potion.png",
+      "ax": 75,
+      "ay": 91,
+      "scale": 1.0
+    },
+    "card.potion80": {
+      "src": "cards/potion.png",
+      "ax": 75,
+      "ay": 91,
+      "scale": 1.0
+    },
+    "card.regen": {
+      "src": "cards/regen.png",
+      "ax": 99,
+      "ay": 106,
+      "scale": 1.0
+    },
+    "card.fire": {
+      "src": "cards/fire.png",
+      "ax": 81,
+      "ay": 97,
+      "scale": 1.0
+    },
+    "card.multiFire": {
+      "src": "cards/multi_fire.png",
+      "ax": 117,
+      "ay": 93,
+      "scale": 1.0
+    },
+    "card.meteor": {
+      "src": "cards/meteor.png",
+      "ax": 89,
+      "ay": 103,
+      "scale": 1.0
+    },
+    "card.thunder": {
+      "src": "cards/thunder.png",
+      "ax": 55,
+      "ay": 103,
+      "scale": 1.0
+    },
+    "card.multiThunder": {
+      "src": "cards/multi_thunder.png",
+      "ax": 111,
+      "ay": 95,
+      "scale": 1.0
+    },
+    "card.sleep": {
+      "src": "cards/sleep.png",
+      "ax": 125,
+      "ay": 127,
+      "scale": 1.0
+    },
+    "card.panic": {
+      "src": "cards/panic.png",
+      "ax": 87,
+      "ay": 83,
+      "scale": 1.0
+    },
+    "card.multiPanic": {
+      "src": "cards/multi_panic.png",
+      "ax": 115,
+      "ay": 105,
+      "scale": 1.0
+    },
+    "card.bright": {
+      "src": "cards/bright.png",
+      "ax": 91,
+      "ay": 115,
+      "scale": 1.0
+    },
+    "card.search": {
+      "src": "cards/search.png",
+      "ax": 119,
+      "ay": 91,
+      "scale": 1.0
+    },
+    "card.map": {
+      "src": "cards/cardmap.png",
+      "ax": 105,
+      "ay": 83,
+      "scale": 1.0
+    },
+    "card.warp": {
+      "src": "cards/warp.png",
+      "ax": 117,
+      "ay": 84,
+      "scale": 1.0
+    },
+    "card.escape": {
+      "src": "cards/escape.png",
+      "ax": 77,
+      "ay": 105,
+      "scale": 1.0
+    },
+    "card.haste": {
+      "src": "cards/haste.png",
+      "ax": 128,
+      "ay": 113,
+      "scale": 1.0
+    },
+    "card.bronzeSword": {
+      "src": "cards/bronze_sword.png",
+      "ax": 59,
+      "ay": 95,
+      "scale": 1.0
+    },
+    "card.longSword": {
+      "src": "cards/long_sword.png",
+      "ax": 59,
+      "ay": 121,
+      "scale": 1.0
+    },
+    "card.powerShield": {
+      "src": "cards/power_shield.png",
+      "ax": 101,
+      "ay": 109,
+      "scale": 1.0
+    },
+    "card.powerUp": {
+      "src": "cards/power_up.png",
+      "ax": 101,
+      "ay": 117,
+      "scale": 1.0
+    },
+    "card.pocket2": {
+      "src": "cards/pocket.png",
+      "ax": 101,
+      "ay": 101,
+      "scale": 1.0
+    },
+    "card.reviveRing": {
+      "src": "cards/revive_ring.png",
+      "ax": 91,
+      "ay": 115,
+      "scale": 1.0
+    },
+    "card.summonGoblin": {
+      "src": "cards/summon_goblin.png",
+      "ax": 128,
+      "ay": 79,
+      "scale": 1.0
+    },
+    "card.summonDragon": {
+      "src": "cards/summon_dragon.png",
+      "ax": 128,
+      "ay": 128,
+      "scale": 1.0
+    }
+  }
+}

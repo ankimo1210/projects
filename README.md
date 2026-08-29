@@ -17,6 +17,7 @@
 | [`health/`](health/) | Google Health API の本人データを OAuth 取得 → DuckDB 保存 → 閲覧するローカル専用ダッシュボード | Python / Streamlit / DuckDB / Plotly |
 | [`akinator/`](akinator/) | Wikidata をエンティティ源とするローカル・アキネーター風推測ゲーム（確率的候補更新エンジン） | Python / FastAPI |
 | [`pokemon/`](pokemon/) | Quokka Wilds: オリジナル 3D モンスター収集ゲーム | Vite / React Three Fiber |
+| [`monster_gate/`](monster_gate/) | コナミ『モンスターゲート』風ローグライク（使い切りカード 10 枚 + MP 経済 + 1 ダンジョン、Canvas 2D） | TypeScript / pnpm / Vite |
 | [`b737-ops-sim/`](b737-ops-sim/) | ローカル専用 Boeing 737-800 運航手順トレーナー（FlightGear/mock バックエンド、3D コックピット、ATC・チェックリスト・デブリーフ。認定訓練装置ではない） | TypeScript / pnpm / React / Babylon.js / Fastify |
 | [`eagle/`](eagle/) | Apollo 11 月着陸船の降下シミュレータ（Luminary099 の実 AGC コードを yaAGC で実行、Rust ランタイム + Web DSKY・6DoF・エンジニアボード） | Rust / TypeScript / yaAGC |
 | [`EitanQuest/`](EitanQuest/) | えいたんクエスト: iPhone 向け英単語 4 択クイズアプリ（オフライン完結 MVP） | Swift / SwiftUI / SwiftData |
@@ -93,7 +94,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 - 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
   - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `jp_llm_lab`, `labor_ai_quadrant`, `macrokit`, `market_nn`, `portfolio-analyzer`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
-  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`rates_volatility_model` / `notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` / `interactive-email-demo` は依存なし（前者は `PYTHONPATH=shortest_path/src` で実行）
+  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` / `monster_gate` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`rates_volatility_model` / `notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` / `interactive-email-demo` は依存なし（前者は `PYTHONPATH=shortest_path/src` で実行）
   - `WSET/wset_l3_question_corpus` は**ワークスペース外の独立 uv プロジェクト**（自前の `pyproject.toml` / `uv.lock`）。root の `uv sync --all-packages` では依存が入らないので、そのディレクトリで個別に sync する（詳細は同 README）
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 
@@ -132,7 +133,7 @@ make help                # 横断ターゲット一覧
 
 | ツール | 必要なプロジェクト | 入れ方 |
 |---|---|---|
-| Node.js 20+ | `gto/web`（Next.js）, `pokemon`（Vite）, `b737-ops-sim` / `ts-rosetta`（pnpm）, `eagle/client`（Vite） | WSL/Linux: nvm or apt ／ macOS: `brew install node` ／ Windows: `winget install OpenJS.NodeJS` |
+| Node.js 20+ | `gto/web`（Next.js）, `pokemon`（Vite）, `b737-ops-sim` / `ts-rosetta` / `monster_gate`（pnpm）, `eagle/client`（Vite） | WSL/Linux: nvm or apt ／ macOS: `brew install node` ／ Windows: `winget install OpenJS.NodeJS` |
 | Rust (cargo) | `gto`（Rust エンジン、maturin でビルド）, `eagle/runtime`（yaAGC ブリッジ） | 全環境 `rustup`（<https://rustup.rs>） |
 | .NET 9 SDK | `csharp_calc`, `CsharpApp` | macOS: `brew install dotnet` ／ Windows: `winget install Microsoft.DotNet.SDK.9` ／ WSL: 公式 apt リポジトリ |
 | NVIDIA CUDA | `nbody-gpu`（CuPy）, `gto` の GPU 機能（preview） | NVIDIA GPU + ドライバ必須。**macOS 非対応** |
