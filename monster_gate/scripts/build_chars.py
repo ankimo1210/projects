@@ -20,16 +20,12 @@ from __future__ import annotations
 import os
 
 from paint import (
-    BLACK,
     BONE,
     DRAGON,
     EYE,
-    GOLD,
     GREEN,
     LEATHER,
     PURPLE,
-    RED,
-    SKIN,
     SKIN_G,
     STEEL,
     WHITE,
@@ -39,7 +35,6 @@ from paint import (
     darker,
     ell,
     export,
-    eyes,
     lighter,
     merge_manifest,
     poly,
