@@ -98,7 +98,10 @@ function playerPhase(state: DungeonState, action: Action, events: Event[]): Phas
     case "attack": {
       const target = add(state.player.pos, DIRS[action.dir]!);
       const e = enemyAt(state.enemies, target);
-      if (!e) return { state, consumedTurn: true }; // swing at air
+      if (!e) {
+        events.push({ t: "miss" }); // swing at air; the turn is spent either way
+        return { state, consumedTurn: true };
+      }
       return { state: playerMelee(state, e, events), consumedTurn: true };
     }
     case "useCard":

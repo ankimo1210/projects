@@ -169,6 +169,7 @@ export type Action =
 export type Event =
   | { t: "moved"; from: Vec; to: Vec }
   | { t: "blocked"; reason: string }
+  | { t: "miss" }
   | { t: "attack"; by: "player" | number; target: "player" | number; dmg: number; crit: boolean; ranged: boolean }
   | { t: "died"; enemyId: number; kind: EnemyKind }
   | { t: "grow"; level: number; atk: number; def: number; hp: number }

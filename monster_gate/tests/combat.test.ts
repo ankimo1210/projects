@@ -60,6 +60,22 @@ describe("combat", () => {
     expect(events.some((e) => e.t === "grow")).toBe(true);
   });
 
+  it("swinging at empty air spends the turn and reports the whiff", () => {
+    const s0 = makeState({ pos: { x: 2, y: 2 }, enemies: [{ kind: "puunya_g", pos: { x: 5, y: 5 } }] });
+    const { state, events } = step(s0, { type: "attack", dir: 2 });
+    expect(events.some((e) => e.t === "miss")).toBe(true);
+    expect(events.some((e) => e.t === "attack" && e.by === "player")).toBe(false);
+    expect(state.player.pos).toEqual({ x: 2, y: 2 }); // a swing never moves you
+    expect(state.turn).toBe(s0.turn + 1); // ...but it still costs the turn
+  });
+
+  it("attacking an occupied tile hits instead of whiffing", () => {
+    const s0 = makeState({ pos: { x: 2, y: 2 }, enemies: [{ kind: "puunya_g", pos: { x: 3, y: 2 } }] });
+    const { events } = step(s0, { type: "attack", dir: 2 });
+    expect(events.some((e) => e.t === "miss")).toBe(false);
+    expect(events.some((e) => e.t === "attack" && e.by === "player")).toBe(true);
+  });
+
   it("weapon bonus is applied to melee", () => {
     const base = makeState({ pos: { x: 2, y: 2 }, enemies: [{ kind: "dragon", pos: { x: 3, y: 2 } }] });
     const armed = { ...base, player: { ...base.player, equipment: { ...base.player.equipment, weaponBonus: 4 } } };

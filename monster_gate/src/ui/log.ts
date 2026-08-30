@@ -95,6 +95,9 @@ export function describe(events: Event[], before: DungeonState, after: DungeonSt
       case "escaped":
         out.push(`脱出した。WIN ${e.win}`);
         break;
+      case "miss":
+        out.push("空振りした");
+        break;
       case "blocked":
         if (e.reason === "no target") out.push("対象がいない");
         else if (e.reason === "not on stairs") out.push("階段の上でしか使えない");

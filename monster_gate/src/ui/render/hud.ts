@@ -107,7 +107,33 @@ export function drawCardBar(c: CanvasRenderingContext2D, bank: ArtBank, s: Dunge
     : pendingCard !== null
       ? "方向キーで発動  Esc: 取消"
       : "1-0 使用   d 捨てる   Enter 階段/祭壇   ? ヘルプ";
-  text(c, hint, hintX, y + CARDBAR_H / 2 - 8, discardMode ? "#ff9c9c" : pendingCard !== null ? "#ffd85a" : "#8a8a95", 14);
+  text(c, hint, hintX, y + CARDBAR_H / 2 - 18, discardMode ? "#ff9c9c" : pendingCard !== null ? "#ffd85a" : "#8a8a95", 14);
+}
+
+/** The attack button. Kept as data so the click handler can hit-test the same rect. */
+export const ATTACK_BTN = { x: W - 150, y: H - CARDBAR_H + 14, w: 132, h: 60 };
+
+const ARROW = ["↑", "↗", "→", "↘", "↓", "↙", "←", "↖"];
+
+/** A real button, because "walk into the monster" is not obvious and the
+ * original had a dedicated attack. Pressed state is drawn while it animates. */
+export function drawAttackButton(c: CanvasRenderingContext2D, dir: number, pressed: boolean): void {
+  const { x, y, w, h } = ATTACK_BTN;
+  c.save();
+  c.fillStyle = pressed ? "#8a2b24" : "#5d1f1a";
+  roundRect(c, x, y + (pressed ? 2 : 0), w, h - (pressed ? 2 : 0), 8);
+  c.fill();
+  c.strokeStyle = pressed ? "#ffb0a0" : "#a8443a";
+  c.lineWidth = 2;
+  c.stroke();
+  text(c, `こうげき ${ARROW[dir] ?? ""}`, x + w / 2, y + 12 + (pressed ? 2 : 0), "#ffd9d2", 17, "center");
+  text(c, "Space / A", x + w / 2, y + 36 + (pressed ? 2 : 0), "#c98a80", 12, "center");
+  c.restore();
+}
+
+function roundRect(c: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {
+  c.beginPath();
+  c.roundRect(x, y, w, h, r);
 }
 
 /** The card being aimed, blown up over the map so its effect is readable. */
@@ -187,8 +213,9 @@ export function drawHelp(c: CanvasRenderingContext2D): void {
   c.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
   text(c, "操作", x + 20, y + 16, "#ffd85a", 20);
   const lines = [
-    "移動・攻撃   矢印 / q e z c（斜め） / テンキー",
-    "待機         .  または Space",
+    "移動         矢印 / q e z c（斜め） / テンキー（敵に歩き込んでも攻撃）",
+    "攻撃         Space または A（向いている方向。空振りでもターンを使う）",
+    "待機         .",
     "カード使用   1 - 0 （方向が要るカードは続けて方向キー）",
     "カードを捨てる  d → 番号   （MPが戻る）",
     "階段・祭壇   Enter （▼ の上で降りる / 👑 でクリア）",

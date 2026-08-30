@@ -9,7 +9,7 @@ import { tileAt, type Action, type CardId, type ClassId, type Dir, type DungeonS
 import { buyCard, canStart, finishRun, loadSave, persist, sellCard, shopList, startRun, type SaveV1, type Store } from "../game/meta";
 import { describe } from "./log";
 import { ArtBank } from "./render/art";
-import { drawCardBar, drawCastleCard, drawHelp, drawLog, drawMinimap, drawOverlay, drawPendingCard, drawTopBar, ruleTags } from "./render/hud";
+import { ATTACK_BTN, drawAttackButton, drawCardBar, drawCastleCard, drawHelp, drawLog, drawMinimap, drawOverlay, drawPendingCard, drawTopBar, ruleTags } from "./render/hud";
 import { H, MAP_X, MAP_Y, W } from "./render/layout";
 import { SceneRenderer } from "./render/scene";
 import { drawBase, drawResult, drawTitle, GRID, type BaseUi } from "./render/screens";
@@ -33,6 +33,7 @@ export class App {
   private overlayClosed = false;
   private helpOpen = false;
   private titleUntil = 0;
+  private attackedUntil = 0;
   private scene = new SceneRenderer();
 
   constructor(
@@ -147,6 +148,7 @@ export class App {
     this.overlayClosed = false;
     this.helpOpen = false;
     this.titleUntil = this.now() + CARD_MS;
+    this.attackedUntil = 0;
     this.screen = "dungeon";
   }
 
@@ -215,10 +217,29 @@ export class App {
       this.act({ type: "move", dir });
       return;
     }
-    if (k === "." || k === " ") this.act({ type: "wait" });
+    if (k === " " || k === "a") this.attack();
+    else if (k === ".") this.act({ type: "wait" });
     else if (k === "Enter" || k === ">") {
       if (this.run.map.altar) this.act({ type: "takeAltar" });
       else this.act({ type: "descend" });
+    }
+  }
+
+  /** Swing where the player is looking. Hitting nothing still costs the turn,
+   * the way the original's whiff did. */
+  private attack(): void {
+    if (!this.run) return;
+    this.attackedUntil = this.now() + 220;
+    this.act({ type: "attack", dir: this.scene.playerDir });
+  }
+
+  /** Canvas click in logical units. Only the attack button is clickable so far. */
+  click(x: number, y: number): void {
+    if (this.screen !== "dungeon" || !this.run || this.helpOpen || this.overlay) return;
+    const b = ATTACK_BTN;
+    if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) {
+      this.attack();
+      this.draw();
     }
   }
 
@@ -296,6 +317,7 @@ export class App {
     drawTopBar(c, s, this.def);
     drawLog(c, this.log);
     drawCardBar(c, this.art, s, this.pendingCard, this.discardMode);
+    drawAttackButton(c, this.scene.playerDir, this.attackedUntil > this.now());
     const pending = this.pendingCard === null ? undefined : s.player.hand[this.pendingCard];
     if (pending) drawPendingCard(c, this.art, pending);
     const ov = this.overlay;
