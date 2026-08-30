@@ -3,105 +3,87 @@
   "sprites": {
     "tile.floor": {
       "src": "yukai/floor.png",
-      "ax": 96.0,
-      "ay": 65.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tile.floor.b": {
       "src": "yukai/floor.b.png",
-      "ax": 96.0,
-      "ay": 65.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tile.wall": {
       "src": "yukai/wall.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tile.stairs": {
       "src": "yukai/stairs.png",
-      "ax": 96.0,
-      "ay": 116.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tile.door.ns": {
       "src": "yukai/door.ns.png",
-      "ax": 96.0,
-      "ay": 132.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tile.door.ew": {
       "src": "yukai/door.ew.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
-    },
-    "class.warrior": {
-      "src": "chars/class-warrior.png",
-      "ax": 168,
-      "ay": 430,
-      "scale": 0.21
-    },
-    "class.mage": {
-      "src": "chars/class-mage.png",
-      "ax": 144,
-      "ay": 440,
-      "scale": 0.21
-    },
-    "class.gambler": {
-      "src": "chars/class-gambler.png",
-      "ax": 146,
-      "ay": 426,
-      "scale": 0.21
     },
     "enemy.puunya_g": {
       "src": "chars/enemy-puunya_g.png",
       "ax": 168,
       "ay": 238,
-      "scale": 0.21
+      "scale": 0.15
     },
     "enemy.puunya_y": {
       "src": "chars/enemy-puunya_y.png",
       "ax": 168,
       "ay": 264,
-      "scale": 0.21
+      "scale": 0.15
     },
     "enemy.killerbee": {
       "src": "chars/enemy-killerbee.png",
       "ax": 154,
       "ay": 326,
-      "scale": 0.21
+      "scale": 0.15
     },
     "enemy.skeleton": {
       "src": "chars/enemy-skeleton.png",
       "ax": 104,
       "ay": 356,
-      "scale": 0.21
+      "scale": 0.15
     },
     "enemy.kemunpa": {
       "src": "chars/enemy-kemunpa.png",
       "ax": 212,
       "ay": 308,
-      "scale": 0.21
+      "scale": 0.15
     },
     "enemy.goblin": {
       "src": "chars/enemy-goblin.png",
       "ax": 168,
       "ay": 364,
-      "scale": 0.21
+      "scale": 0.15
     },
     "enemy.mage": {
       "src": "chars/enemy-mage.png",
       "ax": 176,
       "ay": 404,
-      "scale": 0.21
+      "scale": 0.15
     },
     "enemy.dragon": {
       "src": "chars/enemy-dragon.png",
       "ax": 220,
       "ay": 440,
-      "scale": 0.21
+      "scale": 0.15
     },
     "card.potion20": {
       "src": "cards/potion.png",
@@ -261,225 +243,387 @@
     },
     "light.tile.floor": {
       "src": "light/floor.png",
-      "ax": 96.0,
-      "ay": 65.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "light.tile.floor.b": {
       "src": "light/floor.b.png",
-      "ax": 96.0,
-      "ay": 68.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "light.tile.wall": {
       "src": "light/wall.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "light.tile.stairs": {
       "src": "light/stairs.png",
-      "ax": 96.0,
-      "ay": 116.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "light.tile.door.ns": {
       "src": "light/door.ns.png",
-      "ax": 96.0,
-      "ay": 132.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "light.tile.door.ew": {
       "src": "light/door.ew.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "vague.tile.floor": {
       "src": "vague/floor.png",
-      "ax": 96.0,
-      "ay": 68.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "vague.tile.floor.b": {
       "src": "vague/floor.b.png",
-      "ax": 96.0,
-      "ay": 68.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "vague.tile.wall": {
       "src": "vague/wall.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "vague.tile.stairs": {
       "src": "vague/stairs.png",
-      "ax": 96.0,
-      "ay": 116.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "vague.tile.door.ns": {
       "src": "vague/door.ns.png",
-      "ax": 96.0,
-      "ay": 132.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "vague.tile.door.ew": {
       "src": "vague/door.ew.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cold.tile.floor": {
       "src": "cold/floor.png",
-      "ax": 96.0,
-      "ay": 65.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cold.tile.floor.b": {
       "src": "cold/floor.b.png",
-      "ax": 96.0,
-      "ay": 68.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cold.tile.wall": {
       "src": "cold/wall.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cold.tile.stairs": {
       "src": "cold/stairs.png",
-      "ax": 96.0,
-      "ay": 116.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cold.tile.door.ns": {
       "src": "cold/door.ns.png",
-      "ax": 96.0,
-      "ay": 132.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cold.tile.door.ew": {
       "src": "cold/door.ew.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cold.tile.ice": {
       "src": "cold/ice.png",
-      "ax": 96.0,
-      "ay": 65.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cruel.tile.floor": {
       "src": "cruel/floor.png",
-      "ax": 96.0,
-      "ay": 56.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cruel.tile.floor.b": {
       "src": "cruel/floor.b.png",
-      "ax": 96.0,
-      "ay": 56.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cruel.tile.wall": {
       "src": "cruel/wall.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cruel.tile.stairs": {
       "src": "cruel/stairs.png",
-      "ax": 96.0,
-      "ay": 116.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cruel.tile.door.ns": {
       "src": "cruel/door.ns.png",
-      "ax": 96.0,
-      "ay": 132.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "cruel.tile.door.ew": {
       "src": "cruel/door.ew.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tight.tile.floor": {
       "src": "tight/floor.png",
-      "ax": 96.0,
-      "ay": 68.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tight.tile.floor.b": {
       "src": "tight/floor.b.png",
-      "ax": 96.0,
-      "ay": 68.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tight.tile.wall": {
       "src": "tight/wall.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tight.tile.stairs": {
       "src": "tight/stairs.png",
-      "ax": 96.0,
-      "ay": 116.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tight.tile.door.ns": {
       "src": "tight/door.ns.png",
-      "ax": 96.0,
-      "ay": 132.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "tight.tile.door.ew": {
       "src": "tight/door.ew.png",
-      "ax": 96.0,
-      "ay": 168.0,
+      "ax": 48.0,
+      "ay": 48.0,
       "scale": 0.5
     },
     "thumb.yukai": {
       "src": "yukai/thumb.png",
-      "ax": 200.0,
-      "ay": 130.5,
+      "ax": 240.0,
+      "ay": 192.0,
       "scale": 0.5
     },
     "thumb.light": {
       "src": "light/thumb.png",
-      "ax": 200.0,
-      "ay": 130.5,
+      "ax": 240.0,
+      "ay": 192.0,
       "scale": 0.5
     },
     "thumb.vague": {
       "src": "vague/thumb.png",
-      "ax": 200.0,
-      "ay": 130.5,
+      "ax": 240.0,
+      "ay": 192.0,
       "scale": 0.5
     },
     "thumb.cold": {
       "src": "cold/thumb.png",
-      "ax": 200.0,
-      "ay": 130.5,
+      "ax": 240.0,
+      "ay": 192.0,
       "scale": 0.5
     },
     "thumb.cruel": {
       "src": "cruel/thumb.png",
-      "ax": 200.0,
-      "ay": 130.0,
+      "ax": 240.0,
+      "ay": 192.0,
       "scale": 0.5
     },
     "thumb.tight": {
       "src": "tight/thumb.png",
-      "ax": 200.0,
-      "ay": 130.5,
+      "ax": 240.0,
+      "ay": 192.0,
       "scale": 0.5
+    },
+    "class.warrior.f": {
+      "src": "chars/class-warrior-f.png",
+      "ax": 168,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.warrior.f.w": {
+      "src": "chars/class-warrior-fw.png",
+      "ax": 168,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.warrior.f.a": {
+      "src": "chars/class-warrior-fa.png",
+      "ax": 168,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.warrior.b": {
+      "src": "chars/class-warrior-b.png",
+      "ax": 142,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.warrior.b.w": {
+      "src": "chars/class-warrior-bw.png",
+      "ax": 142,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.warrior.b.a": {
+      "src": "chars/class-warrior-ba.png",
+      "ax": 256,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.warrior.s": {
+      "src": "chars/class-warrior-s.png",
+      "ax": 124,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.warrior.s.w": {
+      "src": "chars/class-warrior-sw.png",
+      "ax": 124,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.warrior.s.a": {
+      "src": "chars/class-warrior-sa.png",
+      "ax": 256,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.mage.f": {
+      "src": "chars/class-mage-f.png",
+      "ax": 134,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.mage.f.w": {
+      "src": "chars/class-mage-fw.png",
+      "ax": 134,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.mage.f.a": {
+      "src": "chars/class-mage-fa.png",
+      "ax": 134,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.mage.b": {
+      "src": "chars/class-mage-b.png",
+      "ax": 148,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.mage.b.w": {
+      "src": "chars/class-mage-bw.png",
+      "ax": 148,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.mage.b.a": {
+      "src": "chars/class-mage-ba.png",
+      "ax": 256,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.mage.s": {
+      "src": "chars/class-mage-s.png",
+      "ax": 124,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.mage.s.w": {
+      "src": "chars/class-mage-sw.png",
+      "ax": 124,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.mage.s.a": {
+      "src": "chars/class-mage-sa.png",
+      "ax": 256,
+      "ay": 440,
+      "scale": 0.175
+    },
+    "class.gambler.f": {
+      "src": "chars/class-gambler-f.png",
+      "ax": 138,
+      "ay": 408,
+      "scale": 0.175
+    },
+    "class.gambler.f.w": {
+      "src": "chars/class-gambler-fw.png",
+      "ax": 138,
+      "ay": 420,
+      "scale": 0.175
+    },
+    "class.gambler.f.a": {
+      "src": "chars/class-gambler-fa.png",
+      "ax": 134,
+      "ay": 408,
+      "scale": 0.175
+    },
+    "class.gambler.b": {
+      "src": "chars/class-gambler-b.png",
+      "ax": 138,
+      "ay": 408,
+      "scale": 0.175
+    },
+    "class.gambler.b.w": {
+      "src": "chars/class-gambler-bw.png",
+      "ax": 138,
+      "ay": 420,
+      "scale": 0.175
+    },
+    "class.gambler.b.a": {
+      "src": "chars/class-gambler-ba.png",
+      "ax": 256,
+      "ay": 408,
+      "scale": 0.175
+    },
+    "class.gambler.s": {
+      "src": "chars/class-gambler-s.png",
+      "ax": 138,
+      "ay": 408,
+      "scale": 0.175
+    },
+    "class.gambler.s.w": {
+      "src": "chars/class-gambler-sw.png",
+      "ax": 138,
+      "ay": 420,
+      "scale": 0.175
+    },
+    "class.gambler.s.a": {
+      "src": "chars/class-gambler-sa.png",
+      "ax": 222,
+      "ay": 408,
+      "scale": 0.175
     }
   }
 }

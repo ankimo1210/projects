@@ -1,70 +1,51 @@
-// Code-drawn ground: a tile is a box with two side faces for height and a lit top
-// face. Used wherever the art bank has no sprite for the tile.
+// Code-drawn ground, used wherever the art bank has no sprite for a tile.
+// Top-down: a tile is a square. Walls get a lighter top lip and a dark base so a
+// wall still reads as solid mass rather than as a differently coloured floor.
 
-import { TH, TW } from "./iso";
-import { clamp } from "./text";
+import { TS } from "./grid";
 import { EMOJI_FONT, UI_FONT } from "./layout";
+import { clamp } from "./text";
 
 /**
- * `tint` shades the whole block, `edge` the outline (< 1 draws grout, > 1 a
- * highlight). Everything goes through `shade`, which only understands #rrggbb —
- * never hand it a colour this function has already converted.
+ * `tint` shades the whole tile, `edge` the grout line (< 1 darker, > 1 lighter).
+ * Everything goes through `shade`, which only understands #rrggbb — never hand
+ * it a colour this function has already converted.
  */
-export function block(c: CanvasRenderingContext2D, X: number, Y: number, h: number, top: string, tint = 1, edge = 1.22): void {
-  const hw = TW / 2;
-  const hh = TH / 2;
-  const ty = Y - h;
-  c.fillStyle = shade(top, tint * 0.48);
-  c.beginPath();
-  c.moveTo(X - hw, Y);
-  c.lineTo(X, Y + hh);
-  c.lineTo(X, ty + hh);
-  c.lineTo(X - hw, ty);
-  c.closePath();
-  c.fill();
-  c.fillStyle = shade(top, tint * 0.7);
-  c.beginPath();
-  c.moveTo(X, Y + hh);
-  c.lineTo(X + hw, Y);
-  c.lineTo(X + hw, ty);
-  c.lineTo(X, ty + hh);
-  c.closePath();
-  c.fill();
+export function square(c: CanvasRenderingContext2D, X: number, Y: number, top: string, tint = 1, edge = 0.72): void {
+  const h = TS / 2;
   c.fillStyle = shade(top, tint);
-  c.beginPath();
-  c.moveTo(X, ty - hh);
-  c.lineTo(X + hw, ty);
-  c.lineTo(X, ty + hh);
-  c.lineTo(X - hw, ty);
-  c.closePath();
-  c.fill();
+  c.fillRect(X - h, Y - h, TS, TS);
   c.strokeStyle = shade(top, tint * edge);
   c.lineWidth = 1;
-  c.stroke();
+  c.strokeRect(X - h + 0.5, Y - h + 0.5, TS - 1, TS - 1);
 }
 
-/** Smaller diamond sunk into a tile's top face. */
-export function inset(c: CanvasRenderingContext2D, X: number, topY: number, color: string): void {
-  const hw = TW / 2 - 7;
-  const hh = TH / 2 - 3.5;
+/** A wall cell: solid block with a lit top edge and a shaded bottom. */
+export function wallBlock(c: CanvasRenderingContext2D, X: number, Y: number, top: string, tint = 1): void {
+  const h = TS / 2;
+  c.fillStyle = shade(top, tint);
+  c.fillRect(X - h, Y - h, TS, TS);
+  c.fillStyle = shade(top, tint * 1.35);
+  c.fillRect(X - h, Y - h, TS, 3);
+  c.fillStyle = shade(top, tint * 0.55);
+  c.fillRect(X - h, Y + h - 4, TS, 4);
+}
+
+/** Smaller square sunk into a tile, for doors, stairs and altars. */
+export function inset(c: CanvasRenderingContext2D, X: number, Y: number, color: string): void {
+  const h = TS / 2 - 6;
   c.fillStyle = color;
-  c.beginPath();
-  c.moveTo(X, topY - hh);
-  c.lineTo(X + hw, topY);
-  c.lineTo(X, topY + hh);
-  c.lineTo(X - hw, topY);
-  c.closePath();
-  c.fill();
+  c.fillRect(X - h, Y - h, h * 2, h * 2);
 }
 
 /** Glyph lying flat on a tile. */
-export function flat(c: CanvasRenderingContext2D, X: number, topY: number, glyph: string, size: number, color: string): void {
+export function flat(c: CanvasRenderingContext2D, X: number, Y: number, glyph: string, size: number, color: string): void {
   c.save();
   c.textAlign = "center";
   c.textBaseline = "middle";
   c.font = `${size}px ${UI_FONT}`;
   c.fillStyle = color;
-  c.fillText(glyph, X, topY);
+  c.fillText(glyph, X, Y);
   c.restore();
 }
 
@@ -90,7 +71,7 @@ export function tileColor(kind: string, lit: boolean, seen: boolean): string {
   return lit ? "#3c3c3a" : "#2a2a28";
 }
 
-/** Multiply a #rrggbb colour, for the darker side faces of a block. #rrggbb only. */
+/** Multiply a #rrggbb colour, for the darker faces of a block. #rrggbb only. */
 export function shade(hex: string, f: number): string {
   const n = Number.parseInt(hex.slice(1), 16);
   const ch = (sh: number) => clamp(Math.round(((n >> sh) & 255) * f), 0, 255);

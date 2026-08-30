@@ -21,6 +21,13 @@ const app = new App(ctx, window.localStorage, () => performance.now(), art);
 if (import.meta.env.DEV) (window as unknown as { app: App }).app = app;
 app.draw();
 
+canvas.addEventListener("pointerdown", (ev) => {
+  // the backing store is scaled by dpr and the element by CSS, so go through
+  // the rect rather than assuming either
+  const r = canvas.getBoundingClientRect();
+  app.click(((ev.clientX - r.left) / r.width) * W, ((ev.clientY - r.top) / r.height) * H);
+});
+
 window.addEventListener("keydown", (ev) => {
   if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
   const handled = ev.key.length === 1 || ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Enter", "Escape", "Tab"].includes(ev.key);

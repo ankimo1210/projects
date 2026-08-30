@@ -13,56 +13,64 @@ uv run --no-sync python monster_gate/scripts/build_art.py
 
 | 置き場所 | 出典 | ライセンス | 備考 |
 |---|---|---|---|
-| `assets/src/kenney/miniature-dungeon/` | Kenney "Isometric Miniature Dungeon"（Dungeon Pack 2.3, 2019-02-15）https://kenney.nl/assets/isometric-miniature-dungeon | CC0 1.0 | 288 タイル（4 方位）＋ 8 方向キャラ。256×512 の共通キャンバス、真の 2:1 等角、地面菱形は 256×128 で中心 (128, 448)。zip 14.2MB は git 管理外（`assets/src/**/*.zip`） |
+| `assets/src/kenney/miniature-dungeon/` | Kenney "Isometric Miniature Dungeon" https://kenney.nl/assets/isometric-miniature-dungeon | CC0 1.0 | **現在は未使用**。等角投影をやめて真上からの視点にした（2026-08-30）ため、このパックの絵は 1 枚も使っていない。プロップ用に再検討する余地はあるが、そのときも真上から見た絵が要る。zip は git 管理外 |
 
-## 生成スプライト（`public/art/`）
+いま `public/art/` の中身は**すべてコードで描いている**。手で編集しない:
 
-| ID | ファイル | 元 | 加工 |
-|---|---|---|---|
-| `tile.floor` | `yukai/floor.png` | `Isometric/stone_N.png` | 2x 書き出し＋余白トリム |
-| `tile.floor.b` | `yukai/floor.b.png` | `Isometric/dirt_N.png` | 同上。12 マスに 1 枚の割合で混ぜる |
-| `tile.wall` | `yukai/wall.png` | `stoneWallCorner_E` + `stoneWallCorner_W` + `stone`(-92px) | パックに 1 マス丸ごとの壁が無いため、辺に載る 2 つのコーナー壁で四方を閉じ、床タイルで天面を塞いだ合成 |
-| `tile.stairs` | `yukai/stairs.png` | `Isometric/stairsSpiral_N.png` | 2x 書き出し |
-| `tile.door.ns` / `.ew` | `yukai/door.ns.png` / `door.ew.png` | `stoneWallArchway_N` / `_E` | 通路の向きで描画側が選ぶ |
+```bash
+# リポジトリルートから（workspace の venv に Pillow がある）
+uv run --no-sync python monster_gate/scripts/build_art.py     # タイル（6 城）
+uv run --no-sync python monster_gate/scripts/build_heroes.py  # プレイヤー 3 職
+uv run --no-sync python monster_gate/scripts/build_chars.py   # モンスター 8 体
+uv run --no-sync python monster_gate/scripts/build_cards.py   # カードイラスト 24 種
+```
 
 ## 城ごとのタイル（`public/art/<城 id>/`）
 
-パックはグレー〜茶の石セット 1 種しかないので、残り 5 城は**同じ形状をグラデーション
-マップに通して**作っている。元画像の輝度でその城のランプ（色の階段）から色を引くので、
-Kenney の陰影と 2:1 のシルエットはそのまま、色だけが変わる（`scripts/build_art.py`
-の `THEMES`）。
+真上から見た 48×48 の正方タイル。6 城とも**同じ形を、城ごとのランプ**
+（輝度 0..1 → 色）で塗り分けている（`scripts/build_art.py` の `THEMES`）。
 
-| 城 | ランプ | 床 / アクセント床 | 壁天面 | 追加処理 |
-|---|---|---|---|---|
-| ゆかい（既定・接頭辞なし） | 素材のまま | `stone` / `dirt` | `stone` | — |
-| `light` | 白→金 | `stoneTile` / `stoneUneven` | `stoneTile` | — |
-| `vague` | 苔緑→灰緑 | `stoneUneven` / `stoneMissingTiles` | `stoneUneven` | — |
-| `cold` | 紺→白 | `stone` / `stoneUneven` | `stone` | `tile.ice` は専用の高彩度シアンランプ＋白の被膜 |
-| `cruel` | 紫 | `planks` / `planksBroken` | `stone` | 板の隙間に黄緑の酸を発光合成 |
-| `tight` | 黒 | `stoneUneven` / `stoneMissingTiles` | `stoneUneven` | 割れ目に赤を発光合成 |
+| 城 | ランプ | 目地に混ぜる色 | 氷 |
+|---|---|---|---|
+| ゆかい（既定・接頭辞なし） | 灰×茶 | — | — |
+| `light` | 白→金 | — | — |
+| `vague` | 苔緑→灰緑 | — | — |
+| `cold` | 紺→白 | — | 専用の高彩度シアンランプ |
+| `cruel` | 紫 | 黄緑（酸） | — |
+| `tight` | 黒 | 赤（溶岩） | — |
 
-- ID は `<城 id>.tile.floor` のように城 id を接頭辞にする。**無ければ接頭辞なしの既定セット
-  （＝ゆかいの石）にフォールバック**するので、城の絵は 1 つずつ足せる。
-- アクセント床（12 マスに 1 枚）は `planksBroken` のように穴が開いた素材があるため、
-  必ず無地の床を下に敷いてから重ねる。敷かないと穴から背景の黒が抜けて落とし穴に見える。
-- `thumb.<城 id>` は同じタイルで 3×3 の部屋の隅を組んだサムネイル（拠点の城選択用、
-  200px 幅・中心アンカー）。色見本ではなく実物のタイルなので、絵と本編がずれない。
+- 床は **1 マス 1 枚の石畳**、壁はレンガ。**壁は床よりはっきり暗くする** — 真上からは
+  高さで区別できないので、明度差だけが手掛かりになる。
+- 色付きの城でも**目地に混ぜるのは 34% まで**。原液を敷くと床が蛍光色の格子になる。
+  原液はアクセント床の亀裂にだけ使う。
+- ID は `<城 id>.tile.floor` のように城 id を接頭辞にする。無ければ接頭辞なしの既定セット
+  （＝ゆかいの石）にフォールバックするので、城の絵は 1 つずつ足せる。
+- `thumb.<城 id>` は同じタイルで組んだ 5×4 の部屋（拠点の城選択用、中心アンカー）。
 
-## キャラ（`public/art/chars/`）
+## プレイヤー 3 職（`public/art/chars/class-*.png`）
+
+`scripts/build_heroes.py` が **3 向き × 3 ポーズ = 9 枚 × 3 職 = 27 枚**を描く。
+真上から見ると背中が見えるので横向き 1 枚では足りない。8 方向は 48px では
+見分けがつかないので作っていない。
+
+| 職 | 見た目 |
+|---|---|
+| `class.warrior` | 赤い前立ての兜・赤いサーコート・丸盾・幅広の剣（原作の初期職） |
+| `class.mage` | とんがり帽子と紫のローブ・白ひげ・金の宝珠の杖 |
+| `class.gambler` | つば広の黒帽と外套・骨のダガー |
+
+ポーズは 無印=立ち / `.w`=踏み出し / `.a`=振り。振りでは武器を**横に薙ぐ**——
+真上から見て刃をカメラ方向に突き出すと、ただの灰色の板にしか見えないため。
+
+## モンスター（`public/art/chars/enemy-*.png`）
 
 `scripts/build_chars.py` が**コードで描いている**（生成 AI ではない）。スタイルガイドの
 「面塗り＋太い輪郭線＋影 1 段・光源は右上」はプログラムで再現できる種類の絵なので、
-図形を組んで 512×512 に描き、接地点 (256, 440)・`scale` 0.21 で書き出している。
-
-```bash
-uv run --no-sync python monster_gate/scripts/build_chars.py
-```
+図形を組んで 512×512 に描き、接地点 (256, 440)・`scale` 0.15 で書き出している。
+モンスターは横向き 1 枚のまま（描画側が左右反転する）。
 
 | ID | 見た目 |
 |---|---|
-| `class.warrior` | 赤い上衣・鉄兜に赤い前立て・丸盾・短剣 |
-| `class.mage` | とんがり帽子と紫のローブ・白ひげ・金の宝珠の杖 |
-| `class.gambler` | 黒いつば広帽と外套・金貨・サイコロ |
 | `enemy.puunya_g` / `_y` | 緑と黄のスライム（黄は一回り大きく吊り目） |
 | `enemy.killerbee` | 縞の腹・複眼・羽・針 |
 | `enemy.skeleton` | 頭骨と肋骨・錆びた剣 |

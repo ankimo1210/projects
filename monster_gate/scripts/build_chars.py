@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Draw the cast (3 classes, 8 monsters) into public/art/chars/.
+"""Draw the monsters into public/art/chars/. The three playable classes have
+their own facings and poses and live in build_heroes.py.
 
 Run from the repo root (the workspace venv has Pillow):
 
@@ -49,7 +50,7 @@ OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
 
 CANVAS = 512
 ANCHOR = (256, 440)
-SCALE = 0.21  # canvas px -> on-screen px; ~78px tall on a 96px tile
+SCALE = 0.15  # canvas px -> on-screen px; ~57px tall on a 48px tile
 
 
 # ---- the cast --------------------------------------------------------------
@@ -63,49 +64,10 @@ def eyes(p, cx, cy, r=15, gap=44, pupil=EYE):
         p.flat(ell(cx + dx - r + 3, cy - r + 4, cx + dx + r - 6, cy + r - 2), pupil)
 
 
-def warrior(p):
-    p.part(rr(214, 352, 254, 442, 18), LEATHER)  # boots
-    p.part(rr(266, 352, 306, 442, 18), LEATHER)
-    p.part(rr(196, 244, 322, 372, 46), RED)  # tunic
-    p.flat(rr(196, 330, 322, 350, 8), LEATHER)  # belt
-    p.part(rr(300, 240, 350, 300, 22), STEEL)  # far pauldron
-    p.part(poly((330, 268), (392, 128), (410, 140), (350, 282)), STEEL)  # sword
-    p.part(ell(160, 74, 352, 266), SKIN)  # head
-    eyes(p, 232, 178)
-    p.part(poly((156, 168), (356, 168), (346, 118), (256, 68), (166, 118)), STEEL)  # helm
-    p.part(poly((250, 74), (272, 74), (286, 18), (240, 32)), RED)  # plume
-    p.part(rr(168, 246, 214, 300, 20), STEEL)  # near pauldron
-    p.part(ell(96, 236, 226, 366), STEEL)  # shield
-    p.flat(ell(140, 280, 182, 322), RED)
 
 
-def mage(p):
-    p.part(poly((176, 300), (336, 300), (368, 442), (144, 442)), PURPLE)  # robe
-    p.flat(rr(150, 420, 362, 442, 10), GOLD)  # hem
-    p.part(rr(292, 264, 340, 356, 22), PURPLE)  # far sleeve
-    p.part(ell(168, 100, 344, 276), SKIN)  # head
-    eyes(p, 236, 196)
-    p.part(ell(186, 216, 326, 300), BONE)  # beard
-    p.part(poly((150, 132), (362, 132), (196, 6)), PURPLE)  # hat
-    p.flat(poly((152, 132), (360, 132), (350, 108), (166, 108)), GOLD)
-    p.part(rr(146, 120, 168, 442, 11), WOOD)  # staff
-    p.part(ell(120, 84, 196, 160), GOLD)  # orb
-    p.part(rr(172, 264, 216, 356, 20), PURPLE)  # near sleeve
 
 
-def gambler(p):
-    p.part(poly((180, 286), (332, 286), (356, 442), (156, 442)), BLACK)  # cloak
-    p.part(ell(168, 106, 344, 282), SKIN)  # head
-    eyes(p, 232, 200, r=13)
-    p.flat(poly((206, 172), (262, 186), (258, 196), (204, 186)), EYE)  # brow, sly
-    p.part(ell(124, 96, 388, 168), BLACK)  # hat brim
-    p.part(rr(184, 22, 328, 116, 26), BLACK)  # hat crown
-    p.flat(rr(184, 96, 328, 116, 6), GOLD)  # hat band
-    p.part(rr(168, 296, 214, 372, 20), BLACK)  # arm
-    p.part(ell(118, 330, 202, 414), GOLD)  # coin
-    p.part(rr(300, 330, 372, 402, 12), WHITE)  # die
-    for dx, dy in ((22, 22), (52, 52), (22, 52), (52, 22)):
-        p.flat(ell(300 + dx - 7, 330 + dy - 7, 300 + dx + 7, 330 + dy + 7), EYE)
 
 
 def slime(p, body, big=False, angry=False):
@@ -217,9 +179,6 @@ def dragon(p):
 
 
 CAST = {
-    "class.warrior": warrior,
-    "class.mage": mage,
-    "class.gambler": gambler,
     "enemy.puunya_g": lambda p: slime(p, GREEN),
     "enemy.puunya_y": lambda p: slime(p, YELLOW, big=True, angry=True),
     "enemy.killerbee": killerbee,
