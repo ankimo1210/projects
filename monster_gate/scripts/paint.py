@@ -92,13 +92,13 @@ class Painter:
             ring = Image.new("L", mask.size, 0)
             ring.paste(grown, box)
             self.im.paste(INK, (0, 0), ring)
-        self.im.paste(fill + (255,), (0, 0), mask)
+        self.im.paste((*fill, 255), (0, 0), mask)
         if shade:
             lit = Image.new("L", mask.size, 0)
             lit.paste(mask, (self.light[0] * SS, self.light[1] * SS))
             # everything in the shape that the shifted copy does not cover
             shadow = Image.composite(mask, Image.new("L", mask.size, 0), Image.eval(lit, lambda v: 255 - v))
-            self.im.paste(darker(fill) + (255,), (0, 0), shadow)
+            self.im.paste((*darker(fill), 255), (0, 0), shadow)
 
     def flat(self, shape, fill):
         """Detail with no rim and no shading (eyes, stripes, trim)."""
