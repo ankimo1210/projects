@@ -135,6 +135,12 @@ def bootstrap_zero_curve(instruments):
     for maturity, annual_coupon, price in sorted(instruments):
         coupon = annual_coupon / 2.0
         cf_times = np.arange(maturity, 0.0, -0.5)[::-1]  # ..., maturity
+        if coupon != 0.0 and cf_times[:-1].size and not times:
+            raise ValueError(
+                "bootstrap_zero_curve: the shortest instrument must be zero-coupon; "
+                f"the {maturity}y bond pays a coupon at {cf_times[0]:.4f} with no "
+                "earlier maturity to discount it"
+            )
         if coupon != 0.0 and cf_times[:-1].size and times and cf_times[-2] > times[-1] + 1e-9:
             raise ValueError(
                 f"bootstrap_zero_curve: coupon date {cf_times[-2]:.4f} of the "

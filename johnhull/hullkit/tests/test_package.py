@@ -23,7 +23,5 @@ def test_hullkit_import_graph_is_torch_free():
     # imports torch makes this fail even though hullkit is clean. Checking it
     # here only tested which project pytest happened to collect first.
     code = "import hullkit, sys; assert 'torch' not in sys.modules, sorted(sys.modules)"
-    proc = subprocess.run(
-        [sys.executable, "-c", code], capture_output=True, text=True, check=False
-    )
+    proc = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=False)
     assert proc.returncode == 0, proc.stderr

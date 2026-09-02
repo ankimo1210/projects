@@ -43,7 +43,7 @@ Canonical reference acceptance is recomputed from the committed arrays by
 | 24 | 10 | PASS | NO |
 | 25 | 9 | PASS | NO |
 | 26 | 11 | PASS | NO |
-| 27 | 13 | PASS | NO |
+| 27 | 14 | PASS | NO |
 
 ## Numerical evidence
 
@@ -78,14 +78,18 @@ Canonical reference acceptance is recomputed from the committed arrays by
   `1.4888912714624325` and `1.1974973083142517`; the floor payoff decomposition and the
   redemption-only principal check are exact, and raw vs floor-adjusted BEI differ by
   `2.785788824835045e-4`.
-- vol 27: FHS constant-volatility identity, EVT VaR/ES identity, Euler normal
-  additivity, and simulated Euler ES additivity are all `0.0`; marginal-VaR
-  finite-difference agreement is `1.027118008182688e-9`; GPD parameter recovery is
-  `4.567805084324694e-2`; the clustered Christoffersen p-value is
-  `1.6575957546647315e-3` and matches its recomputation to `1.5178830414797062e-18`;
-  the delta-gamma-vega P&L residual `0.11443482486811263` is far below the delta-only
-  residual `16.597194327066063`, leaving an unexplained share of
-  `2.6301205095678685e-5`.
+- vol 27: FHS constant-volatility identity, EVT VaR/ES identity, and Euler normal
+  additivity are all `0.0`; simulated Euler ES additivity is
+  `1.4210854715202004e-14`; marginal-VaR finite-difference agreement is
+  `3.1713464233488086e-10`; GPD parameter recovery is `4.567805084324694e-2`; the
+  clustered Christoffersen p-value is `1.6575957546647315e-3` and matches its
+  recomputation to `1.5178830414797062e-18`; the delta-gamma-vega P&L residual
+  `0.11443482486811263` is far below the delta-only residual `16.597194327066063`,
+  leaving an unexplained share of `2.6301205095678685e-5`. The capstone book holds a
+  short commodity sleeve correlated `0.55` with the long equity book, so its component
+  VaR is negative (`-5.31`) and its limit utilization is below zero: a risk-reducing
+  position consumes no limit. Limit measures are the *signed* component VaRs; taking
+  their absolute value would let a diversifier breach its limit.
 
 ## Fresh validation record
 
@@ -148,7 +152,7 @@ rather than an error — so each fix turns a quietly wrong number into a raise.
 | Boundary-value regressions | `pytest johnhull/hullkit/tests/test_var_backtest.py test_tail_risk.py test_bsm.py` — 102 passed (40 + 43 + 19), 25 of them new | PASS |
 | hullkit + portal tests | `uv run --no-sync --package hullkit pytest -q --confcutdir=johnhull johnhull/hullkit/tests johnhull/report/tests` — 784 passed | PASS |
 | Deep pricing tests | `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests` — 206 passed | PASS |
-| vol 27 acceptance | `frontier_acceptance.evaluate_acceptance(27, ...)` — 13/13 PASS (was 11; added `christoffersen_pvalue_matches_recomputation` and `cross_asset_factor_mapping`) | PASS |
+| vol 27 acceptance | `frontier_acceptance.evaluate_acceptance(27, ...)` — 14/14 PASS (was 11; added `christoffersen_pvalue_matches_recomputation`, `cross_asset_factor_mapping`, and `kupiec_size_flags_match_recomputation`) | PASS |
 | Reference rebuild | `make hull-artifacts-check` — vol 19–27 semantic match and second-build byte identity | PASS |
 | Notebook execution | `make hull-notebooks-check` — vol 18–27 artifact-only execution | PASS |
 | Portal | `make hull-report` — 12 themes / 78 figures | PASS |

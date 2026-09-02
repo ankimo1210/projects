@@ -77,7 +77,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import japanize_matplotlib
-import seaborn as sns
 import plotly.graph_objects as go  # Treemap / Sankey のみ使用
 import ipywidgets as widgets
 from IPython.display import display
@@ -2238,9 +2237,18 @@ for model in model_names_all:
     rmse_matrix.append(row)
 
 fig_heat, ax_heat = plt.subplots(figsize=(8, 6))
-sns.heatmap(np.array(rmse_matrix), xticklabels=pattern_labels, yticklabels=model_names_all,
-            annot=True, fmt=".1f", cmap="RdYlGn_r", vmin=0, ax=ax_heat,
-            annot_kws={"size": 10})
+rmse_grid = np.array(rmse_matrix)
+heat_im = ax_heat.imshow(rmse_grid, cmap="RdYlGn_r", vmin=0, aspect="auto")
+ax_heat.set_xticks(range(len(pattern_labels)), pattern_labels)
+ax_heat.set_yticks(range(len(model_names_all)), model_names_all)
+# Annotate each cell; flip the label to white on the dark (high-RMSE) end.
+_heat_mid = 0.6 * float(rmse_grid.max()) if rmse_grid.size else 0.0
+for _i in range(rmse_grid.shape[0]):
+    for _j in range(rmse_grid.shape[1]):
+        _value = float(rmse_grid[_i, _j])
+        ax_heat.text(_j, _i, f"{_value:.1f}", ha="center", va="center", fontsize=10,
+                     color="white" if _value > _heat_mid else "black")
+fig_heat.colorbar(heat_im, ax=ax_heat, label="RMSE (bps)")
 ax_heat.set_xlabel("カーブパターン"); ax_heat.set_ylabel("モデル")
 ax_heat.set_title("全モデル × 全カーブパターン: フィット誤差 RMSE（bps）\n（赤=大, 緑=小, 0=完全フィット）",
                   fontsize=9)

@@ -1160,9 +1160,46 @@ def _chi2_sf_df1(statistic: float) -> float:
     return float(math.erfc(math.sqrt(statistic / 2.0)))
 
 
+def _binary_exceedances_np(exceedances: np.ndarray) -> np.ndarray:
+    """Return `exceedances` as a 0/1 int array, raising ValueError otherwise.
+
+    Mirrors `hullkit.var_backtest._validate_binary_exceedances`. Without it an
+    `astype(int)` cast would truncate a probability series to all-zeros or a
+    count series to arbitrary states, and the independence statistic would come
+    back 0.0 -- a silent pass in the direction of acceptance.
+    """
+    exc = np.asarray(exceedances, dtype=float)
+    if exc.ndim != 1:
+        raise ValueError(f"exceedances must be one-dimensional, got shape {exc.shape}")
+    if not np.all(np.isfinite(exc)):
+        raise ValueError("exceedances must be a binary 0/1 series, got non-finite values")
+    bad = ~np.isin(exc, (0.0, 1.0))
+    if np.any(bad):
+        raise ValueError(
+            "exceedances must be a binary 0/1 series, got non-binary values "
+            f"{np.unique(exc[bad]).tolist()}"
+        )
+    return exc.astype(int)
+
+
+def _kupiec_pvalue_np(n_exceedances: int, n_obs: int, p: float) -> float:
+    """Kupiec (1995) proportion-of-failures p-value recomputed without scipy.
+
+    `LR_pof = -2 ln[ (1-p)^(n-x) p^x / (1-pi)^(n-x) pi^x ]`, pi = x/n, compared
+    against chi2(1). Mirrors `hullkit.var_backtest.kupiec_pof` so the gate can
+    re-derive each replication's verdict from its committed exceedance count.
+    """
+    n = float(n_obs)
+    x = float(n_exceedances)
+    pi_hat = x / n
+    log_num = _xlogy_np(n - x, 1.0 - p) + _xlogy_np(x, p)
+    log_den = _xlogy_np(n - x, 1.0 - pi_hat) + _xlogy_np(x, pi_hat)
+    return _chi2_sf_df1(-2.0 * (log_num - log_den))
+
+
 def _lr_independence_np(exceedances: np.ndarray) -> float:
     """Christoffersen (1998) independence LR statistic recomputed in NumPy."""
-    exc = np.asarray(exceedances, dtype=int)
+    exc = _binary_exceedances_np(exceedances)
     if exc.size < 2 or np.unique(exc).size == 1:
         return 0.0
     prev, curr = exc[:-1], exc[1:]
@@ -1191,10 +1228,31 @@ def _volume27(
     alpha = float(metrics.get("alpha", 0.99))
     p = 1.0 - alpha
 
-    # 1. Kupiec size calibration recomputed from the committed rejection flags.
+    # 1. Kupiec size calibration recomputed from the committed exceedance counts.
+    #    The stored reject flags are `kupiec_pof`'s output, so they are re-derived
+    #    here from their input rather than trusted; a mismatch fails the gate.
     reject_flags = np.asarray(arrays["kupiec_size_reject_flags"], dtype=float)
+    exceedance_counts = np.asarray(arrays["kupiec_size_exceedance_counts"], dtype=float)
+    kupiec_observations = int(metrics["kupiec_size_observations"])
+    if exceedance_counts.shape != reject_flags.shape:
+        raise ValueError("kupiec size counts and reject flags must have equal length")
+    recomputed_flags = np.array(
+        [
+            1.0 if _kupiec_pvalue_np(int(count), kupiec_observations, p) < 0.05 else 0.0
+            for count in exceedance_counts
+        ]
+    )
+    flag_mismatch = float(np.max(np.abs(recomputed_flags - reject_flags)))
+    _add(
+        checks,
+        "kupiec_size_flags_match_recomputation",
+        flag_mismatch,
+        "every stored reject flag equals Kupiec's own verdict recomputed from the "
+        "committed per-replication exceedance count",
+        flag_mismatch == 0.0,
+    )
     n_replications = int(reject_flags.size)
-    rejection_rate = float(reject_flags.mean())
+    rejection_rate = float(recomputed_flags.mean())
     binomial_se = math.sqrt(0.05 * 0.95 / n_replications)
     size_zscore = abs(rejection_rate - 0.05) / binomial_se
     _add(

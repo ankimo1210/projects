@@ -24,6 +24,7 @@ make hull-report            # オフラインポータル生成（johnhull/repor
 make hull-book              # Jupyter Book
 make hull-artifacts-check   # reference artifact の semantic 一致 + byte 再現
 make hull-notebooks-check   # vol 18-27 notebook の artifact-only 実行
+make hull-core-notebooks-check  # vol 01-17 + 旧 2 冊 (bsm/ir_models) の実行
 make hull-release-check     # release 契約（scripts/verify_release.py）
 ```
 

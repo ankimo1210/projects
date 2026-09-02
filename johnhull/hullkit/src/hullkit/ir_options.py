@@ -7,7 +7,21 @@ from scipy.stats import norm
 
 
 def _black(forward, strike, sigma, T, df, kind_call):
-    """Black-76 forward-price option value: df * [F N(d1) - K N(d2)] (call)."""
+    """Black-76 forward-price option value: df * [F N(d1) - K N(d2)] (call).
+
+    Black's model is lognormal in the forward, so both the forward and the
+    strike must be strictly positive. Post-LIBOR curves do quote negative
+    forward rates; price those with a normal (Bachelier) model instead --
+    `hullkit.rfr_options` has one.
+    """
+    if not (forward > 0.0 and strike > 0.0):
+        raise ValueError(
+            "Black's model needs a positive forward and strike (it is lognormal), "
+            f"got forward={forward}, strike={strike}; use a normal/Bachelier model "
+            "for negative rates"
+        )
+    if sigma <= 0.0 or T <= 0.0:
+        raise ValueError(f"Black's model needs sigma > 0 and T > 0, got sigma={sigma}, T={T}")
     d1 = (math.log(forward / strike) + 0.5 * sigma**2 * T) / (sigma * math.sqrt(T))
     d2 = d1 - sigma * math.sqrt(T)
     if kind_call:

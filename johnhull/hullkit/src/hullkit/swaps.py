@@ -12,9 +12,15 @@ from . import rates
 
 
 def discount(t, curve):
-    """Discount factor P(0, t) from a (times, zeros) curve tuple."""
-    times, zeros = curve
-    return math.exp(-rates.zero_interp(t, times, zeros) * t)
+    """Discount factor P(0, t) from a (times, zeros) curve tuple.
+
+    Thin alias for :func:`hullkit.rates.discount_factor`, kept because every
+    swap formula in this module reads better as ``discount(t, curve)``. It
+    delegates rather than reimplementing, so a malformed curve (unsorted
+    pillars, a non-finite quote, a negative maturity) raises here too instead
+    of producing a plausible-looking factor.
+    """
+    return rates.discount_factor(t, curve)
 
 
 def swap_rate(pay_times, curve):

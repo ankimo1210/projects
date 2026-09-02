@@ -2,6 +2,12 @@
   "acceptance": {
     "checks": [
       {
+        "criterion": "every stored reject flag equals Kupiec's own verdict recomputed from the committed per-replication exceedance count",
+        "name": "kupiec_size_flags_match_recomputation",
+        "observed": 0.0,
+        "passed": true
+      },
+      {
         "criterion": "iid rejection rate within z < 3 of nominal 5% (binomial SE, 400 replications)",
         "name": "kupiec_size_calibration",
         "observed": 0.0,
@@ -52,13 +58,13 @@
       {
         "criterion": "analytic vs central-difference marginals, relative error <= 1e-6",
         "name": "marginal_fd_consistency",
-        "observed": 1.027118008182688e-09,
+        "observed": 3.1713464233488086e-10,
         "passed": true
       },
       {
         "criterion": "sum(ES components) == total historical ES and matches committed array, <= 1e-12",
         "name": "euler_es_additivity_sim",
-        "observed": 0.0,
+        "observed": 1.4210854715202004e-14,
         "passed": true
       },
       {
@@ -303,6 +309,13 @@
         ],
         "unit": "exceedance indicator"
       },
+      "kupiec_size_exceedance_counts": {
+        "dtype": "float64",
+        "shape": [
+          400
+        ],
+        "unit": "exceedance count"
+      },
       "kupiec_size_names": {
         "dtype": "<U23",
         "shape": [
@@ -492,7 +505,7 @@
     }
   },
   "companions": {
-    "risk_desk_scenarios.npz": "aa6c470c4834ebc7449868a0b590c47a74766f490292c003e018a85734a578ac"
+    "risk_desk_scenarios.npz": "1c682aedb10160aac37be32378bec6462bca147bcdc77798dff005b0109eaf41"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -501,7 +514,7 @@
     "Synthetic results are not evidence of market forecasting power."
   ],
   "metrics": {
-    "alloc_normal_var": 77.52904630663974,
+    "alloc_normal_var": 68.80580395559257,
     "alpha": 0.99,
     "christoffersen_ind_lr_clustered": 9.894654433330203,
     "christoffersen_ind_lr_iid": 0.008064537982836129,
@@ -509,10 +522,10 @@
     "christoffersen_ind_pvalue_iid": 0.9284439448072724,
     "clustered_basel_zone": "yellow",
     "cross_asset_position_sum_error": 0.0,
-    "desk_report_es": 89.2145706813487,
-    "desk_report_var": 77.52904630663974,
+    "desk_report_es": 78.20437885340155,
+    "desk_report_var": 68.80580395559257,
     "euler_additivity_error": 0.0,
-    "euler_es_additivity_error": 0.0,
+    "euler_es_additivity_error": 1.4210854715202004e-14,
     "evt_alpha": 0.999,
     "evt_es": 20.753067047383286,
     "evt_es_identity_error": 0.0,
@@ -527,6 +540,7 @@
     "gpd_xi_hat": 0.24567805084324695,
     "gpd_xi_true": 0.2,
     "hs_violation_rate": 0.0145,
+    "kupiec_size_observations": 500,
     "kupiec_size_rejection_rate": 0.05,
     "kupiec_size_zscore": 0.0,
     "swap_base_value": 2603.6188101399357,
@@ -546,7 +560,7 @@
     "taylor_full_pnl": -4350.9346606674835,
     "taylor_full_pnl_half": -2177.963148804027,
     "taylor_unexplained_share": 2.6301205095678685e-05,
-    "total_historical_es": 89.2145706813487
+    "total_historical_es": 78.20437885340155
   },
   "schema_version": 1,
   "seed": 20260745,

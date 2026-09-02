@@ -1,5 +1,7 @@
 """Tests for hullkit.rates against Hull 11e Ch.4 tables."""
 
+import math
+
 import numpy as np
 import pytest
 from hullkit import rates
@@ -98,3 +100,19 @@ def test_new_curve_helpers_reject_invalid_inputs():
         rates.forward_discount(2.0, 1.0, ([1.0, 2.0], [0.02, 0.03]))
     with pytest.raises(ValueError, match="bump"):
         rates.instantaneous_forward(1.0, ([1.0], [0.02]), bump=0.0)
+
+
+def test_bootstrap_rejects_a_coupon_bond_as_the_first_instrument():
+    """The first instrument must be a zero: nothing earlier prices its coupons.
+
+    With an empty curve `zero_interp` calls `np.interp` on empty arrays, which
+    raises a bare `ValueError: array of sample points is empty` that points at
+    NumPy rather than at the bootstrap's own precondition.
+    """
+    with pytest.raises(ValueError, match="zero-coupon"):
+        rates.bootstrap_zero_curve([(1.0, 6.0, 99.0)])
+
+    # A zero-coupon first instrument still bootstraps.
+    times, zeros = rates.bootstrap_zero_curve([(0.5, 0.0, 98.0), (1.0, 6.0, 99.0)])
+    assert times == [0.5, 1.0]
+    assert all(math.isfinite(rate) for rate in zeros)
