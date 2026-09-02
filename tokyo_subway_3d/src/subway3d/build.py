@@ -39,7 +39,7 @@ def build_line(spec: LineSpec, page: tuple, ways: list[dict], stops: list[dict],
     cd, ce = C.rail_profile(ch, [*markers, *chain])
 
     graph = A.Graph(ways, spec.osm_name)
-    poly = A.track(graph, stops, spec.stations[0][0], spec.stations[-1][0])
+    poly = A.track(graph, stops, [name for name, _ in spec.stations])
     cum = A.cumulative(poly)
     anchors = [A.anchor(poly, stops, graph, name) for name, _ in spec.stations]
     anchors_align = [a[1] for a in anchors]

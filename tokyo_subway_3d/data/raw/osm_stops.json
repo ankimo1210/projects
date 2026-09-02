@@ -2,11 +2,57 @@
   "version": 0.6,
   "generator": "Overpass API 0.7.62.11 87bfad18",
   "osm3s": {
-    "timestamp_osm_base": "2026-09-02T01:23:51Z",
+    "timestamp_osm_base": "2026-09-02T08:47:18Z",
     "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
   },
   "elements": [
 
+{
+  "type": "node",
+  "id": 31300436,
+  "lat": 35.6407437,
+  "lon": 139.8036145,
+  "tags": {
+    "maxspeed": "100",
+    "name": "東雲",
+    "name:en": "Shinonome",
+    "name:es": "Shinonome",
+    "name:ja": "東雲",
+    "name:ja-Hira": "しののめ",
+    "name:ja_rm": "Shinonome",
+    "operator": "東京臨海高速鉄道",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "R02",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 251465504,
+  "lat": 35.6722878,
+  "lon": 139.7950674,
+  "tags": {
+    "name": "門前仲町",
+    "name:en": "Monzen-nakacho",
+    "name:es": "Monzen-nakacho",
+    "name:ja": "門前仲町",
+    "name:ja-Hira": "もんぜんなかちょう",
+    "name:ja_rm": "Monzen Nakachō",
+    "name:ko": "몬젠나카초 역",
+    "name:ru": "Мондзен-Накатё",
+    "name:zh": "門前仲町站",
+    "operator": "東京地下鉄",
+    "platforms": "2",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "T12",
+    "station": "subway",
+    "subway": "yes",
+    "wikidata": "Q80576",
+    "wikipedia": "ja:門前仲町駅"
+  }
+},
 {
   "type": "node",
   "id": 264440562,
@@ -113,6 +159,36 @@
 },
 {
   "type": "node",
+  "id": 712804323,
+  "lat": 35.7089843,
+  "lon": 139.7965559,
+  "tags": {
+    "name": "浅草",
+    "name:en": "Asakusa",
+    "name:it": "Asakusa",
+    "name:ja": "浅草",
+    "name:ja-Hira": "あさくさ",
+    "name:ja-Latn": "Asakusa",
+    "name:ko": "아사쿠사",
+    "name:ru": "Асакуса",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "note": "浅草線",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "A18",
+    "subway": "yes",
+    "train": "yes",
+    "wheelchair": "yes",
+    "wikidata": "Q800405",
+    "wikipedia": "ja:浅草駅"
+  }
+},
+{
+  "type": "node",
   "id": 789405355,
   "lat": 35.7066386,
   "lon": 139.7599627,
@@ -161,6 +237,60 @@
     "subway": "yes",
     "wikidata": "Q80573",
     "wikipedia": "ja:神楽坂駅"
+  }
+},
+{
+  "type": "node",
+  "id": 1180276047,
+  "lat": 35.6883604,
+  "lon": 139.8061256,
+  "tags": {
+    "colour": "lightgreen",
+    "name": "菊川",
+    "name:en": "Kikukawa",
+    "name:es": "Kikukawa",
+    "name:ja": "菊川",
+    "name:ja-Hira": "きくかわ",
+    "name:ja_rm": "Kikukawa",
+    "name:ko": "기쿠카와 역",
+    "name:ru": "Кикукава",
+    "name:zh": "菊川站 (東京都)",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "S12",
+    "subway": "yes",
+    "wikidata": "Q1043756",
+    "wikipedia": "ja:菊川駅 (東京都)"
+  }
+},
+{
+  "type": "node",
+  "id": 1456006005,
+  "lat": 35.7173365,
+  "lon": 139.7581767,
+  "tags": {
+    "alt_name:ko": "도다이마에",
+    "name": "東大前",
+    "name:en": "Todaimae",
+    "name:es": "Todaimae",
+    "name:ja": "東大前",
+    "name:ja-Hira": "とうだいまえ",
+    "name:ja_rm": "Tōdai Mae",
+    "name:ko": "동대앞",
+    "network": "東京メトロ",
+    "operator": "東京地下鉄",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "N12",
+    "station": "subway",
+    "subway": "yes",
+    "wikidata": "Q1073411",
+    "wikipedia": "ja:東大前駅"
   }
 },
 {
@@ -419,6 +549,30 @@
 },
 {
   "type": "node",
+  "id": 1923761823,
+  "lat": 35.6694160,
+  "lon": 139.8065455,
+  "tags": {
+    "name": "木場",
+    "name:en": "Kiba",
+    "name:ja": "木場",
+    "name:ja-Hira": "きば",
+    "name:ja_rm": "Kiba",
+    "name:ko": "기바",
+    "name:ru": "Киба",
+    "operator": "東京地下鉄",
+    "platforms": "2",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "T13",
+    "station": "subway",
+    "subway": "yes",
+    "wikidata": "Q126770",
+    "wikipedia": "ja:木場駅"
+  }
+},
+{
+  "type": "node",
   "id": 1923768928,
   "lat": 35.6846087,
   "lon": 139.7664613,
@@ -657,6 +811,33 @@
 },
 {
   "type": "node",
+  "id": 1926189622,
+  "lat": 35.7108378,
+  "lon": 139.7978404,
+  "tags": {
+    "colour": "orange",
+    "name": "浅草",
+    "name:en": "Asakusa",
+    "name:es": "Asakusa",
+    "name:fr": "Asakusa",
+    "name:ja": "浅草",
+    "name:ja-Hira": "あさくさ",
+    "name:ja_rm": "Asakusa",
+    "name:ko": "아사쿠사 역",
+    "name:ru": "Асакуса",
+    "name:zh": "浅草",
+    "note": "銀座線",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "G19",
+    "subway": "yes",
+    "wikidata": "Q800405",
+    "wikipedia": "ja:浅草駅"
+  }
+},
+{
+  "type": "node",
   "id": 1926189623,
   "lat": 35.6730057,
   "lon": 139.7413433,
@@ -829,6 +1010,31 @@
     "subway": "yes",
     "wikidata": "Q80433",
     "wikipedia": "ja:新御茶ノ水駅"
+  }
+},
+{
+  "type": "node",
+  "id": 1926239464,
+  "lat": 35.7173532,
+  "lon": 139.7657220,
+  "tags": {
+    "colour": "green",
+    "name": "根津",
+    "name:en": "Nezu",
+    "name:es": "Nezu",
+    "name:fr": "Nezu",
+    "name:ja-Hira": "ねづ",
+    "name:ja-Latn": "Nezu",
+    "name:ko": "네즈",
+    "name:ru": "Нэдзу",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "C14",
+    "subway": "yes",
+    "train": "yes",
+    "wikidata": "Q390655",
+    "wikipedia": "ja:根津駅"
   }
 },
 {
@@ -1534,6 +1740,56 @@
 },
 {
   "type": "node",
+  "id": 1926417058,
+  "lat": 35.6550129,
+  "lon": 139.7961589,
+  "tags": {
+    "name": "豊洲",
+    "name:en": "Toyosu",
+    "name:es": "Toyosu",
+    "name:ja": "豊洲",
+    "name:ja-Hira": "とよす",
+    "name:ja_rm": "Toyosu",
+    "name:ko": "도요스",
+    "name:ru": "Тоёсу",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "Y22",
+    "subway": "yes",
+    "wheelchair": "no",
+    "wikidata": "Q1141968",
+    "wikipedia": "ja:豊洲駅"
+  }
+},
+{
+  "type": "node",
+  "id": 1926700041,
+  "lat": 35.7171896,
+  "lon": 139.7369396,
+  "tags": {
+    "name": "茗荷谷",
+    "name:en": "Myogadani",
+    "name:es": "Myogadani",
+    "name:ja": "茗荷谷",
+    "name:ja-Hira": "みょうがだに",
+    "name:ja-Latn": "Myōgatani",
+    "name:ko": "묘가다니",
+    "name:ru": "Мёгадани",
+    "operator": "東京地下鉄",
+    "platforms": "2",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "M23",
+    "station": "subway",
+    "subway": "yes",
+    "wheelchair": "yes",
+    "wikidata": "Q1078367",
+    "wikipedia": "ja:茗荷谷駅"
+  }
+},
+{
+  "type": "node",
   "id": 1926703932,
   "lat": 35.6849516,
   "lon": 139.7730743,
@@ -1963,6 +2219,51 @@
 },
 {
   "type": "node",
+  "id": 1947633318,
+  "lat": 35.6968610,
+  "lon": 139.7974842,
+  "tags": {
+    "colour": "violet",
+    "name": "両国",
+    "name:en": "Ryogoku",
+    "name:ja": "両国",
+    "name:ja-Hira": "りょうごく",
+    "name:ja_rm": "Ryōgoku",
+    "name:ko": "료고쿠",
+    "name:ru": "Рёгоку",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "E12",
+    "subway": "yes",
+    "wikidata": "Q801389",
+    "wikipedia": "ja:両国駅"
+  }
+},
+{
+  "type": "node",
+  "id": 1947633320,
+  "lat": 35.6879426,
+  "lon": 139.7970454,
+  "tags": {
+    "name": "森下",
+    "name:en": "Morishita",
+    "name:es": "Morishita",
+    "name:ja": "森下",
+    "name:ja-Hira": "もりした",
+    "name:ja_rm": "Morishita",
+    "name:ru": "Морисита",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
   "id": 1947633322,
   "lat": 35.6825678,
   "lon": 139.7856731,
@@ -2008,6 +2309,26 @@
     "ref": "E18",
     "subway": "yes",
     "wheelchair": "limited"
+  }
+},
+{
+  "type": "node",
+  "id": 1950765321,
+  "lat": 35.6407163,
+  "lon": 139.8036324,
+  "tags": {
+    "maxspeed": "100",
+    "name": "東雲",
+    "name:en": "Shinonome",
+    "name:es": "Shinonome",
+    "name:ja": "東雲",
+    "name:ja-Hira": "しののめ",
+    "name:ja_rm": "Shinonome",
+    "operator": "東京臨海高速鉄道",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "R02",
+    "subway": "yes"
   }
 },
 {
@@ -2247,6 +2568,24 @@
     "subway": "yes",
     "wikidata": "Q246191",
     "wikipedia": "ja:勝どき駅"
+  }
+},
+{
+  "type": "node",
+  "id": 2389061878,
+  "lat": 35.6880621,
+  "lon": 139.7983197,
+  "tags": {
+    "name": "森下",
+    "name:en": "Morishita",
+    "name:es": "Morishita",
+    "name:ja": "森下",
+    "name:ja-Hira": "もりした",
+    "name:ja_rm": "Morishita",
+    "name:ru": "Морисита",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
   }
 },
 {
@@ -2568,6 +2907,35 @@
 },
 {
   "type": "node",
+  "id": 2546879669,
+  "lat": 35.7085782,
+  "lon": 139.8043538,
+  "tags": {
+    "name": "本所吾妻橋",
+    "name:en": "Honjo-azumabashi",
+    "name:ja": "本所吾妻橋",
+    "name:ja-Hira": "ほんじょあずまばし",
+    "name:ja_rm": "Honjo Azumabashi",
+    "name:ko": "혼조아즈마바시",
+    "name:ru": "Хондзё Адзумабаси",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "A19",
+    "subway": "yes",
+    "toilets:wheelchair": "yes",
+    "wheelchair": "yes",
+    "wheelchair:description": "A0A5出口エレベーターあり",
+    "wikidata": "Q910813",
+    "wikipedia": "en:Honjo-azumabashi Station"
+  }
+},
+{
+  "type": "node",
   "id": 2593233094,
   "lat": 35.6721112,
   "lon": 139.7639439,
@@ -2613,6 +2981,25 @@
     "subway": "yes",
     "wikidata": "Q602372",
     "wikipedia": "ja:銀座駅"
+  }
+},
+{
+  "type": "node",
+  "id": 2727194420,
+  "lat": 35.6825466,
+  "lon": 139.7987304,
+  "tags": {
+    "name": "清澄白河",
+    "name:en": "Kiyosumi-shirakawa",
+    "name:es": "Kiyosumi-shirakawa",
+    "name:ja": "清澄白河",
+    "name:ja-Hira": "きよすみしらかわ",
+    "name:ja_rm": "Kiyosumi Shirakawa",
+    "name:ru": "Киёсуми-Сиракава",
+    "operator": "東京地下鉄;東京都交通局",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
   }
 },
 {
@@ -2791,6 +3178,30 @@
     "ref": "M12",
     "station": "subway",
     "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 3653340568,
+  "lat": 35.6723099,
+  "lon": 139.7950785,
+  "tags": {
+    "name": "門前仲町",
+    "name:en": "Monzen-nakacho",
+    "name:es": "Monzen-nakacho",
+    "name:ja": "門前仲町",
+    "name:ja-Hira": "もんぜんなかちょう",
+    "name:ja_rm": "Monzen Nakachō",
+    "name:ko": "몬젠나카초 역",
+    "name:ru": "Мондзен-Накатё",
+    "name:zh": "門前仲町站",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "T12",
+    "subway": "yes",
+    "wikidata": "Q80576",
+    "wikipedia": "ja:門前仲町駅"
   }
 },
 {
@@ -3193,6 +3604,21 @@
 },
 {
   "type": "node",
+  "id": 5406699405,
+  "lat": 35.7173083,
+  "lon": 139.7581322,
+  "tags": {
+    "name": "東大前",
+    "name:en": "Todaimae",
+    "name:es": "Todaimae",
+    "name:ja": "東大前",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
   "id": 5408225235,
   "lat": 35.7058028,
   "lon": 139.7211910,
@@ -3468,6 +3894,79 @@
 },
 {
   "type": "node",
+  "id": 5594511143,
+  "lat": 35.6879977,
+  "lon": 139.7970443,
+  "tags": {
+    "name": "森下",
+    "name:en": "Morishita",
+    "name:es": "Morishita",
+    "name:ja": "森下",
+    "name:ja-Hira": "もりした",
+    "name:ja_rm": "Morishita",
+    "name:ko": "모리시타",
+    "name:ru": "Морисита",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "E13",
+    "station": "subway",
+    "subway": "yes",
+    "wikidata": "Q112723",
+    "wikipedia": "ja:森下駅 (東京都)"
+  }
+},
+{
+  "type": "node",
+  "id": 5594511144,
+  "lat": 35.6820504,
+  "lon": 139.7987644,
+  "tags": {
+    "name": "清澄白河",
+    "name:en": "Kiyosumi-shirakawa",
+    "name:es": "Kiyosumi-shirakawa",
+    "name:ja": "清澄白河",
+    "name:ja-Hira": "きよすみしらかわ",
+    "name:ja_rm": "Kiyosumi Shirakawa",
+    "name:ko": "기요스미시라카와",
+    "name:ru": "Киёсуми-Сиракава",
+    "network": "都営地下鉄;東京メトロ",
+    "operator": "東京地下鉄;東京都交通局",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "E14;Z11",
+    "station": "subway",
+    "subway": "yes",
+    "wheelchair": "yes",
+    "wikidata": "Q80542",
+    "wikipedia": "ja:清澄白河駅"
+  }
+},
+{
+  "type": "node",
+  "id": 5594511145,
+  "lat": 35.6821208,
+  "lon": 139.7992375,
+  "tags": {
+    "name": "清澄白河",
+    "name:en": "Kiyosumi-shirakawa",
+    "name:es": "Kiyosumi-shirakawa",
+    "name:ja": "清澄白河",
+    "name:ja-Hira": "きよすみしらかわ",
+    "name:ja_rm": "Kiyosumi Shirakawa",
+    "name:ru": "Киёсуми-Сиракава",
+    "operator": "東京地下鉄;東京都交通局",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
   "id": 6178454119,
   "lat": 35.6863228,
   "lon": 139.7821612,
@@ -3569,6 +4068,54 @@
     "wheelchair": "yes",
     "wikidata": "Q602384",
     "wikipedia": "ja:赤坂見附駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6184114157,
+  "lat": 35.6693203,
+  "lon": 139.8065416,
+  "tags": {
+    "name": "木場",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 6184114158,
+  "lat": 35.6694504,
+  "lon": 139.8065417,
+  "tags": {
+    "name": "木場",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 6184171497,
+  "lat": 35.6722765,
+  "lon": 139.7950555,
+  "tags": {
+    "name": "門前仲町",
+    "name:en": "Monzen-nakacho",
+    "name:es": "Monzen-nakacho",
+    "name:ja": "門前仲町",
+    "name:ja-Hira": "もんぜんなかちょう",
+    "name:ja_rm": "Monzen Nakachō",
+    "name:ko": "몬젠나카초 역",
+    "name:ru": "Мондзен-Накатё",
+    "name:zh": "門前仲町站",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "T12",
+    "subway": "yes",
+    "wikidata": "Q80576",
+    "wikipedia": "ja:門前仲町駅"
   }
 },
 {
@@ -5191,6 +5738,31 @@
 },
 {
   "type": "node",
+  "id": 6211575889,
+  "lat": 35.6407300,
+  "lon": 139.8036235,
+  "tags": {
+    "maxspeed": "100",
+    "name": "東雲",
+    "name:en": "Shinonome",
+    "name:es": "Shinonome",
+    "name:ja": "東雲",
+    "name:ja-Hira": "しののめ",
+    "name:ja_rm": "Shinonome",
+    "name:ko": "시노노메",
+    "name:ru": "Синономе",
+    "operator": "東京臨海高速鉄道",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "R02",
+    "station": "subway",
+    "subway": "yes",
+    "wikidata": "Q849094",
+    "wikipedia": "ja:東雲駅 (東京都)"
+  }
+},
+{
+  "type": "node",
   "id": 6223840230,
   "lat": 35.6855806,
   "lon": 139.7294234,
@@ -5203,6 +5775,46 @@
     "public_transport": "stop_position",
     "railway": "stop",
     "ref": "N08",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 6224865805,
+  "lat": 35.7171817,
+  "lon": 139.7369206,
+  "tags": {
+    "name": "茗荷谷",
+    "name:en": "Myogadani",
+    "name:es": "Myogadani",
+    "name:ja": "茗荷谷",
+    "name:ja-Hira": "みょうがだに",
+    "name:ja-Latn": "Myōgatani",
+    "name:ru": "Мёгадани",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 6224865808,
+  "lat": 35.7171974,
+  "lon": 139.7369586,
+  "tags": {
+    "name": "茗荷谷",
+    "name:en": "Myogadani",
+    "name:es": "Myogadani",
+    "name:ja": "茗荷谷",
+    "name:ja-Hira": "みょうがだに",
+    "name:ja-Latn": "Myōgatani",
+    "name:ko": "묘가다니",
+    "name:ru": "Мёгадани",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "M23",
     "subway": "yes"
   }
 },
@@ -5519,6 +6131,62 @@
 },
 {
   "type": "node",
+  "id": 6237151013,
+  "lat": 35.7108423,
+  "lon": 139.7978163,
+  "tags": {
+    "colour": "orange",
+    "name": "浅草",
+    "name:en": "Asakusa",
+    "name:es": "Asakusa",
+    "name:fr": "Asakusa",
+    "name:ja": "浅草",
+    "name:ja-Hira": "あさくさ",
+    "name:ja_rm": "Asakusa",
+    "name:ko": "아사쿠사 역",
+    "name:ru": "Асакуса",
+    "name:zh": "浅草",
+    "note": "銀座線",
+    "operator": "東京地下鉄",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "G19",
+    "station": "subway",
+    "subway": "yes",
+    "transport": "subway",
+    "wikidata": "Q800405",
+    "wikipedia": "ja:浅草駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6237151014,
+  "lat": 35.7108521,
+  "lon": 139.7978001,
+  "tags": {
+    "colour": "orange",
+    "name": "浅草",
+    "name:en": "Asakusa",
+    "name:es": "Asakusa",
+    "name:fr": "Asakusa",
+    "name:ja": "浅草",
+    "name:ja-Hira": "あさくさ",
+    "name:ja_rm": "Asakusa",
+    "name:ko": "아사쿠사 역",
+    "name:ru": "Асакуса",
+    "name:zh": "浅草",
+    "note": "銀座線",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "G19",
+    "subway": "yes",
+    "wikidata": "Q800405",
+    "wikipedia": "ja:浅草駅"
+  }
+},
+{
+  "type": "node",
   "id": 6238851056,
   "lat": 35.6956140,
   "lon": 139.7753176,
@@ -5803,6 +6471,63 @@
     "name:en": "Mitsukoshimae",
     "network": "東京メトロ半蔵門線",
     "note": "Hanzomon Line station, ginza line has a station of the same name.",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 6243002390,
+  "lat": 35.6825526,
+  "lon": 139.7988284,
+  "tags": {
+    "name": "清澄白河",
+    "name:en": "Kiyosumi-shirakawa",
+    "name:es": "Kiyosumi-shirakawa",
+    "name:ja": "清澄白河",
+    "name:ja-Hira": "きよすみしらかわ",
+    "name:ja_rm": "Kiyosumi Shirakawa",
+    "name:ru": "Киёсуми-Сиракава",
+    "operator": "東京都交通局",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 6243002393,
+  "lat": 35.6825381,
+  "lon": 139.7986345,
+  "tags": {
+    "name": "清澄白河",
+    "name:en": "Kiyosumi-shirakawa",
+    "name:es": "Kiyosumi-shirakawa",
+    "name:ja": "清澄白河",
+    "name:ja-Hira": "きよすみしらかわ",
+    "name:ja_rm": "Kiyosumi Shirakawa",
+    "name:ru": "Киёсуми-Сиракава",
+    "operator": "東京地下鉄;東京都交通局",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 6243051705,
+  "lat": 35.6820273,
+  "lon": 139.7992411,
+  "tags": {
+    "name": "清澄白河",
+    "name:en": "Kiyosumi-shirakawa",
+    "name:es": "Kiyosumi-shirakawa",
+    "name:ja": "清澄白河",
+    "name:ja-Hira": "きよすみしらかわ",
+    "name:ja_rm": "Kiyosumi Shirakawa",
+    "name:ru": "Киёсуми-Сиракава",
+    "operator": "東京地下鉄;東京都交通局",
     "public_transport": "stop_position",
     "railway": "stop",
     "subway": "yes"
@@ -6212,6 +6937,98 @@
     "wheelchair": "yes",
     "wikidata": "Q602372",
     "wikipedia": "ja:銀座駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6274211194,
+  "lat": 35.6549298,
+  "lon": 139.7961740,
+  "tags": {
+    "name": "豊洲",
+    "name:en": "Toyosu",
+    "name:es": "Toyosu",
+    "name:ja": "豊洲",
+    "name:ja-Hira": "とよす",
+    "name:ja_rm": "Toyosu",
+    "name:ko": "도요스",
+    "name:ru": "Тоёсу",
+    "operator": "東京地下鉄",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "Y22",
+    "station": "subway",
+    "subway": "yes",
+    "wheelchair": "no",
+    "wikidata": "Q1141968",
+    "wikipedia": "ja:豊洲駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6274211196,
+  "lat": 35.6549242,
+  "lon": 139.7959601,
+  "tags": {
+    "name": "豊洲",
+    "name:en": "Toyosu",
+    "name:es": "Toyosu",
+    "name:ja": "豊洲",
+    "name:ja-Hira": "とよす",
+    "name:ja_rm": "Toyosu",
+    "name:ru": "Тоёсу",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "Y22",
+    "subway": "yes",
+    "wikidata": "Q1141968",
+    "wikipedia": "ja:豊洲駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6274211198,
+  "lat": 35.6550808,
+  "lon": 139.7962500,
+  "tags": {
+    "name": "豊洲",
+    "name:en": "Toyosu",
+    "name:es": "Toyosu",
+    "name:ja": "豊洲",
+    "name:ja-Hira": "とよす",
+    "name:ja_rm": "Toyosu",
+    "name:ru": "Тоёсу",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "Y22",
+    "subway": "yes",
+    "wheelchair": "yes",
+    "wikidata": "Q1141968",
+    "wikipedia": "ja:豊洲駅"
+  }
+},
+{
+  "type": "node",
+  "id": 6274211200,
+  "lat": 35.6550061,
+  "lon": 139.7961298,
+  "tags": {
+    "name": "豊洲",
+    "name:en": "Toyosu",
+    "name:es": "Toyosu",
+    "name:ja": "豊洲",
+    "name:ja-Hira": "とよす",
+    "name:ja_rm": "Toyosu",
+    "name:ru": "Тоёсу",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "Y22",
+    "subway": "yes",
+    "wikidata": "Q1141968",
+    "wikipedia": "ja:豊洲駅"
   }
 },
 {
@@ -7567,6 +8384,21 @@
 },
 {
   "type": "node",
+  "id": 7278012683,
+  "lat": 35.7173319,
+  "lon": 139.7582360,
+  "tags": {
+    "name": "東大前",
+    "name:en": "Todaimae",
+    "name:es": "Todaimae",
+    "name:ja": "東大前",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
   "id": 7761741825,
   "lat": 35.7009492,
   "lon": 139.7359264,
@@ -7730,6 +8562,33 @@
     "wheelchair": "yes",
     "wikidata": "Q246173",
     "wikipedia": "ja:若松河田駅"
+  }
+},
+{
+  "type": "node",
+  "id": 7777176885,
+  "lat": 35.7173914,
+  "lon": 139.7657175,
+  "tags": {
+    "colour": "green",
+    "name": "根津",
+    "name:en": "Nezu",
+    "name:es": "Nezu",
+    "name:fr": "Nezu",
+    "name:ja-Hira": "ねづ",
+    "name:ja-Latn": "Nezu",
+    "name:ko": "네즈",
+    "name:ru": "Нэдзу",
+    "operator": "東京地下鉄",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "C14",
+    "station": "subway",
+    "subway": "yes",
+    "train": "yes",
+    "transport": "subway",
+    "wikidata": "Q390655",
+    "wikipedia": "ja:根津駅"
   }
 },
 {
@@ -8504,6 +9363,66 @@
 },
 {
   "type": "node",
+  "id": 7791605885,
+  "lat": 35.7085609,
+  "lon": 139.8043487,
+  "tags": {
+    "name": "本所吾妻橋",
+    "name:en": "Honjo-azumabashi",
+    "name:ja": "本所吾妻橋",
+    "name:ja-Hira": "ほんじょあずまばし",
+    "name:ja_rm": "Honjo Azumabashi",
+    "name:ko": "혼조아즈마바시",
+    "name:ru": "Хондзё Адзумабаси",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "A19",
+    "station": "subway",
+    "subway": "yes",
+    "toilets:wheelchair": "yes",
+    "wheelchair": "yes",
+    "wheelchair:description": "A0A5出口エレベーターあり",
+    "wikidata": "Q910813",
+    "wikipedia": "en:Honjo-azumabashi Station"
+  }
+},
+{
+  "type": "node",
+  "id": 7791605886,
+  "lat": 35.7089590,
+  "lon": 139.7965668,
+  "tags": {
+    "name": "浅草",
+    "name:en": "Asakusa",
+    "name:it": "Asakusa",
+    "name:ja": "浅草",
+    "name:ja-Hira": "あさくさ",
+    "name:ja-Latn": "Asakusa",
+    "name:ko": "아사쿠사",
+    "name:ru": "Асакуса",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "note": "浅草線",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "A18",
+    "station": "subway",
+    "subway": "yes",
+    "wheelchair": "yes",
+    "wikidata": "Q800405",
+    "wikipedia": "ja:浅草駅"
+  }
+},
+{
+  "type": "node",
   "id": 7791605893,
   "lat": 35.6635758,
   "lon": 139.7319706,
@@ -8558,6 +9477,63 @@
     "wheelchair": "limited",
     "wikidata": "Q246180",
     "wikipedia": "ja:築地市場駅"
+  }
+},
+{
+  "type": "node",
+  "id": 7791605895,
+  "lat": 35.6726188,
+  "lon": 139.7950012,
+  "tags": {
+    "colour": "violet",
+    "name": "門前仲町",
+    "name:en": "Monzen-nakacho",
+    "name:es": "Monzen-nakacho",
+    "name:ja": "門前仲町",
+    "name:ja-Hira": "もんぜんなかちょう",
+    "name:ja_rm": "Monzen Nakachō",
+    "name:ko": "몬젠나카초",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "platforms": "2",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "E15",
+    "station": "subway",
+    "subway": "yes",
+    "wikidata": "Q80576",
+    "wikipedia": "ja:門前仲町駅"
+  }
+},
+{
+  "type": "node",
+  "id": 7791605896,
+  "lat": 35.6968538,
+  "lon": 139.7974284,
+  "tags": {
+    "colour": "violet",
+    "name": "両国",
+    "name:en": "Ryogoku",
+    "name:ja": "両国",
+    "name:ja-Hira": "りょうごく",
+    "name:ja_rm": "Ryōgoku",
+    "name:ko": "료고쿠",
+    "name:ru": "Рёгоку",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "E12",
+    "station": "subway",
+    "subway": "yes",
+    "wikidata": "Q801389",
+    "wikipedia": "ja:両国駅"
   }
 },
 {
@@ -8739,6 +9715,39 @@
 },
 {
   "type": "node",
+  "id": 7791605928,
+  "lat": 35.6884156,
+  "lon": 139.8061230,
+  "tags": {
+    "colour": "lightgreen",
+    "name": "菊川",
+    "name:en": "Kikukawa",
+    "name:es": "Kikukawa",
+    "name:ja": "菊川",
+    "name:ja-Hira": "きくかわ",
+    "name:ja_rm": "Kikukawa",
+    "name:ko": "기쿠카와",
+    "name:ru": "Кикукава",
+    "name:zh": "菊川站 (東京都)",
+    "network": "都営地下鉄",
+    "network:en": "Toei Subway",
+    "network:ja": "都営地下鉄",
+    "network:wikidata": "Q247782",
+    "operator": "東京都交通局",
+    "operator:en": "Tokyo Metropolitan Bureau of Transportation",
+    "operator:ja": "東京都交通局",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "station",
+    "railway": "station",
+    "ref": "S12",
+    "station": "subway",
+    "subway": "yes",
+    "wikidata": "Q1043756",
+    "wikipedia": "ja:菊川駅 (東京都)"
+  }
+},
+{
+  "type": "node",
   "id": 7868599298,
   "lat": 35.6818798,
   "lon": 139.7758621,
@@ -8867,6 +9876,65 @@
     "subway": "yes",
     "wikidata": "Q112348",
     "wikipedia": "ja:蔵前駅"
+  }
+},
+{
+  "type": "node",
+  "id": 7868599445,
+  "lat": 35.7085422,
+  "lon": 139.8043606,
+  "tags": {
+    "name": "本所吾妻橋",
+    "name:en": "Honjo-azumabashi",
+    "name:ja": "本所吾妻橋",
+    "name:ja-Hira": "ほんじょあずまばし",
+    "name:ja_rm": "Honjo Azumabashi",
+    "name:ko": "혼조아즈마바시",
+    "name:ru": "Хондзё Адзумабаси",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "A19",
+    "subway": "yes",
+    "toilets:wheelchair": "yes",
+    "wheelchair": "yes",
+    "wheelchair:description": "A0A5出口エレベーターあり",
+    "wikidata": "Q910813",
+    "wikipedia": "en:Honjo-azumabashi Station"
+  }
+},
+{
+  "type": "node",
+  "id": 7868599459,
+  "lat": 35.7089564,
+  "lon": 139.7966050,
+  "tags": {
+    "name": "浅草",
+    "name:en": "Asakusa",
+    "name:it": "Asakusa",
+    "name:ja": "浅草",
+    "name:ja-Hira": "あさくさ",
+    "name:ja-Latn": "Asakusa",
+    "name:ko": "아사쿠사",
+    "name:ru": "Асакуса",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "note": "浅草線",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "A18",
+    "subway": "yes",
+    "train": "yes",
+    "wheelchair": "yes",
+    "wikidata": "Q800405",
+    "wikipedia": "ja:浅草駅"
   }
 },
 {
@@ -9399,6 +10467,31 @@
 },
 {
   "type": "node",
+  "id": 7923786646,
+  "lat": 35.7173784,
+  "lon": 139.7657546,
+  "tags": {
+    "colour": "green",
+    "name": "根津",
+    "name:en": "Nezu",
+    "name:es": "Nezu",
+    "name:fr": "Nezu",
+    "name:ja-Hira": "ねづ",
+    "name:ja-Latn": "Nezu",
+    "name:ko": "네즈",
+    "name:ru": "Нэдзу",
+    "operator": "東京地下鉄",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "C14",
+    "subway": "yes",
+    "train": "yes",
+    "wikidata": "Q390655",
+    "wikipedia": "ja:根津駅"
+  }
+},
+{
+  "type": "node",
   "id": 7924411277,
   "lat": 35.6745316,
   "lon": 139.7455674,
@@ -9421,6 +10514,51 @@
     "subway": "yes",
     "wikidata": "Q1192508",
     "wikipedia": "ja:国会議事堂前駅"
+  }
+},
+{
+  "type": "node",
+  "id": 7928517940,
+  "lat": 35.6880566,
+  "lon": 139.7981813,
+  "tags": {
+    "name": "森下",
+    "name:en": "Morishita",
+    "name:es": "Morishita",
+    "name:ja": "森下",
+    "name:ja-Hira": "もりした",
+    "name:ja_rm": "Morishita",
+    "name:ru": "Морисита",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 7928517941,
+  "lat": 35.6968465,
+  "lon": 139.7973726,
+  "tags": {
+    "colour": "violet",
+    "name": "両国",
+    "name:en": "Ryogoku",
+    "name:ja": "両国",
+    "name:ja-Hira": "りょうごく",
+    "name:ja_rm": "Ryōgoku",
+    "name:ko": "료고쿠",
+    "name:ru": "Рёгоку",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "E12",
+    "subway": "yes",
+    "wikidata": "Q801389",
+    "wikipedia": "ja:両国駅"
   }
 },
 {
@@ -9474,6 +10612,34 @@
     "subway": "yes",
     "wikidata": "Q1326723",
     "wikipedia": "ja:六本木駅"
+  }
+},
+{
+  "type": "node",
+  "id": 7951605899,
+  "lat": 35.6725911,
+  "lon": 139.7950674,
+  "tags": {
+    "colour": "violet",
+    "name": "門前仲町",
+    "name:en": "Monzen-nakacho",
+    "name:es": "Monzen-nakacho",
+    "name:ja": "門前仲町",
+    "name:ja-Hira": "もんぜんなかちょう",
+    "name:ja_rm": "Monzen Nakachō",
+    "name:ko": "몬젠나카초",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "platforms": "2",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "E15",
+    "subway": "yes",
+    "wikidata": "Q80576",
+    "wikipedia": "ja:門前仲町駅"
   }
 },
 {
@@ -9936,6 +11102,53 @@
     "subway": "yes",
     "wikidata": "Q602410",
     "wikipedia": "ja:青山一丁目駅"
+  }
+},
+{
+  "type": "node",
+  "id": 8310611461,
+  "lat": 35.6880527,
+  "lon": 139.7970431,
+  "tags": {
+    "name": "森下",
+    "name:en": "Morishita",
+    "name:es": "Morishita",
+    "name:ja": "森下",
+    "name:ja-Hira": "もりした",
+    "name:ja_rm": "Morishita",
+    "name:ru": "Морисита",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "subway": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 8310611467,
+  "lat": 35.6884574,
+  "lon": 139.8061199,
+  "tags": {
+    "colour": "lightgreen",
+    "name": "菊川",
+    "name:en": "Kikukawa",
+    "name:es": "Kikukawa",
+    "name:ja": "菊川",
+    "name:ja-Hira": "きくかわ",
+    "name:ja_rm": "Kikukawa",
+    "name:ko": "기쿠카와 역",
+    "name:ru": "Кикукава",
+    "name:zh": "菊川站 (東京都)",
+    "network": "都営地下鉄",
+    "network:en": "Toei subway",
+    "operator": "東京都交通局",
+    "operator:en": "Toei",
+    "operator:wikidata": "Q1377135",
+    "public_transport": "stop_position",
+    "railway": "stop",
+    "ref": "S12",
+    "subway": "yes",
+    "wikidata": "Q1043756",
+    "wikipedia": "ja:菊川駅 (東京都)"
   }
 },
 {

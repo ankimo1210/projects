@@ -22,6 +22,18 @@ body.underground #deck{display:block} body.underground #map{display:none}
 .panel{position:absolute;top:16px;left:16px;width:330px;max-height:calc(100% - 32px);overflow:auto;
   background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-card);
   padding:14px 16px;box-shadow:0 6px 24px rgba(20,20,19,.25);z-index:2}
+.panel.collapsed{width:auto;max-height:none;overflow:hidden;padding:8px 12px}
+.panel.collapsed>*:not(.head){display:none!important}
+.head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.head button{border:1px solid var(--rule);background:var(--surface-2);border-radius:6px;font:12px var(--mono);
+  color:var(--ink-2);cursor:pointer;padding:2px 8px}
+.pad{position:absolute;right:16px;bottom:44px;display:none;grid-template-columns:repeat(3,44px);grid-auto-rows:44px;gap:6px;z-index:2;user-select:none}
+body.underground .pad{display:grid}
+.pad button{border:1px solid rgba(250,249,245,.25);background:rgba(20,20,19,.75);color:var(--surface);border-radius:8px;
+  font:500 15px var(--sans);cursor:pointer;touch-action:none}
+.pad button:active,.pad button.on{background:var(--accent)}
+.pad .col2{grid-column:2}
+.pad .up{margin-left:14px}
 h1{font-size:15px;margin:0 0 2px;letter-spacing:.01em}
 .sub{font-size:12px;color:var(--ink-3);margin:0 0 10px}
 .mode{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:0 0 10px}
@@ -49,8 +61,8 @@ body.underground .hud{display:block}
 <div id="map"></div>
 <div id="deck"></div>
 <div class="labels" id="labels"></div>
-<div class="panel">
-  <h1>東京の地下鉄 都心部</h1>
+<div class="panel" id="panel">
+  <div class="head"><h1>東京の地下鉄 都心部</h1><button id="fold" title="パネルをたたむ">−</button></div>
   <p class="sub">実測の軌条面標高で描いた地下3D（深さは地表からの値）</p>
   <div class="mode"><button id="m-surface" class="on">地上から</button><button id="m-under">地下から</button></div>
   <div class="lines" id="lines"></div>
@@ -58,8 +70,13 @@ body.underground .hud{display:block}
   <div class="row ug"><span>地表</span><select id="tile"><option value="photo" selected>航空写真</option><option value="pale">淡色地図</option></select>
     <span>濃さ</span><input id="op" type="range" min="0" max="100" value="28"></div>
   <div class="row"><span>深さの誇張</span><input id="ve" type="range" min="1" max="6" step="0.5" value="3"><span id="vev">3×</span></div>
-  <div class="keys ug">ドラッグ <b>見回す</b>　<b>↑↓</b> 前後　<b>←→</b> 向き　ホイール <b>前進/後退</b>　<b>Q</b>/<b>E</b> 上昇/下降　<b>Shift</b> 高速</div>
+  <div class="keys ug">マウスは地上と同じ：<b>左ドラッグ</b> 移動　<b>右ドラッグ</b>/<b>Ctrl+ドラッグ</b> 見回す　<b>ホイール</b> 前進/後退<br>キー：<b>矢印</b>/<b>WASD</b> 移動　<b>Shift+矢印</b> 回転/上下を向く　<b>Q</b>/<b>E</b> 上昇/下降　<b>R</b> 水平に戻す</div>
   <p class="src" id="src"></p>
+</div>
+<div class="pad" id="pad">
+  <button data-k="turnl" title="左を向く">↺</button><button data-k="w" title="前進">▲</button><button data-k="turnr" title="右を向く">↻</button>
+  <button data-k="a" title="左へ">◀</button><button data-k="s" title="後退">▼</button><button data-k="d" title="右へ">▶</button>
+  <button data-k="q" title="上昇">上</button><button data-k="r" title="水平に戻す">水平</button><button data-k="e" title="下降">下</button>
 </div>
 <div class="hud" id="hud"></div>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -78,6 +95,7 @@ const map=new maplibregl.Map({container:'map',
   style:{version:8,sources:{gsi:{type:'raster',tiles:['https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png'],
     tileSize:256,attribution:'地理院タイル'}},layers:[{id:'gsi',type:'raster',source:'gsi'}]},
   center:[139.755,35.680],zoom:13.9,pitch:62,bearing:8,maxPitch:85});
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-right');
 let overlay=null;
 
 function lineLayers(ln, under){
@@ -136,7 +154,7 @@ let viewState={longitude:139.7668,latitude:35.6822,position:[0,0,-55],bearing:35
 function undergroundLayers(){
   return [
     // 淡色地図は真下から見ると巨大な鏡文字になる。写真は文字が無いので天井として素直に読める。
-    new deck.TileLayer({id:'ceil-'+TILE,data:TILES[TILE],minZoom:10,maxZoom:17,tileSize:256,opacity:OP,
+    new deck.TileLayer({id:'ceil-'+TILE,onTileError:()=>{},data:TILES[TILE],minZoom:10,maxZoom:17,tileSize:256,opacity:OP,
       renderSubLayers:p=>{const {west,south,east,north}=p.tile.bbox;
         return new deck.BitmapLayer(p,{data:null,image:p.data,bounds:[west,south,east,north],
           parameters:{depthWriteEnabled:false}});}}),
@@ -147,17 +165,21 @@ function htmlLabels(){
   const box=document.getElementById('labels'); if(!deckgl||mode!=='underground'){box.innerHTML='';return;}
   let vp; try{vp=deckgl.getViewports()[0];}catch(e){return;}  // asserts before the first render
   if(!vp)return;
-  const cam=viewState, cosLat=Math.cos(cam.latitude*Math.PI/180);
+  // 距離は実際のカメラ位置（アンカー＋歩いた分）から測る。全駅を出し、遠いほど小さく薄く、近い順に手前へ。
+  const cam=viewState, cosLat=Math.cos(cam.latitude*Math.PI/180), [px,py]=cam.position;
   const fwd=[Math.sin(cam.bearing*Math.PI/180),Math.cos(cam.bearing*Math.PI/180)];
-  const out=[];
+  const items=[];
   for(const ln of model.lines){ if(!visible[ln.key])continue;
     for(const s of ln.stations){
-      const dx=(s.coord[0]-cam.longitude)*111320*cosLat, dy=(s.coord[1]-cam.latitude)*110540;
-      const dist=Math.hypot(dx,dy); if(dist>1800||dx*fwd[0]+dy*fwd[1]<=0)continue;   // behind or far
+      const dx=(s.coord[0]-cam.longitude)*111320*cosLat-px, dy=(s.coord[1]-cam.latitude)*110540-py;
+      const dist=Math.hypot(dx,dy); if(dx*fwd[0]+dy*fwd[1]<=0)continue;   // behind the camera
       const [x,y]=vp.project([s.coord[0],s.coord[1],-s.depth_m*VE+2]);
       if(x<-50||y<-50||x>innerWidth+50||y>innerHeight+50)continue;
-      out.push(`<div style="left:${x}px;top:${y-10}px;border-color:${ln.colour};opacity:${dist>1200?0.5:1}">${s.name} −${s.depth_m}m</div>`);
+      items.push({dist,x,y,ln,s});
     }}
+  items.sort((a,b)=>b.dist-a.dist);
+  const out=items.map(({dist,x,y,ln,s})=>{const fs=Math.max(9,Math.min(14,14*500/dist)).toFixed(1), op=Math.max(0.35,Math.min(1,2500/dist)).toFixed(2);
+    return `<div style="left:${x}px;top:${y-10}px;border-color:${ln.colour};font-size:${fs}px;opacity:${op}">${s.name} −${s.depth_m}m</div>`;});
   box.innerHTML=out.join('');
 }
 function hud(){htmlLabels();const v=viewState;document.getElementById('hud').textContent=
@@ -165,14 +187,51 @@ function hud(){htmlLabels();const v=viewState;document.getElementById('hud').tex
 function initUnderground(){
   if(deckgl)return;
   deckgl=new deck.Deck({parent:document.getElementById('deck'),
-    views:new deck.FirstPersonView({id:'fp',fovy:60,near:1,far:30000,controller:{keyboard:true,inertia:200}}),
+    views:new deck.FirstPersonView({id:'fp',fovy:60,near:1,far:30000,controller:false}),
     initialViewState:viewState,parameters:{clearColor:[0.078,0.078,0.075,1]},
     onViewStateChange:({viewState:v})=>{viewState=v;hud();return v;},
     onLoad:()=>hud(),getTooltip:tooltip,layers:undergroundLayers()});
-  addEventListener('keydown',e=>{if(mode!=='underground')return;const d=e.key==='q'?8:e.key==='e'?-8:0;if(!d)return;
-    viewState={...viewState,position:[viewState.position[0],viewState.position[1],viewState.position[2]+d]};
-    deckgl.setProps({viewState});hud();});
+  initControls();
   hud();
+}
+// deck の FirstPersonController は矢印で回転・ドラッグに慣性が付いて歩きにくい。地上（MapLibre）と
+// 同じ流儀にする：左ドラッグ＝移動（地図をつかむ）、右ドラッグ/Ctrl+ドラッグ＝見回す、ホイール＝前進/後退、
+// 矢印＝移動、Shift+矢印＝回転/ピッチ。符号は MapLibre を実測して合わせた（右ドラッグ右→方位＋、上→ピッチ＋、
+// 左ドラッグ下→前進、右→カメラは左へ）。
+const keys={};
+function apply(){deckgl.setProps({viewState});hud();}
+function move(f,r,u){const b=viewState.bearing*Math.PI/180,[x,y,z]=viewState.position;
+  viewState={...viewState,position:[x+f*Math.sin(b)+r*Math.cos(b),y+f*Math.cos(b)-r*Math.sin(b),Math.min(40,z+u)]};apply();}
+function turn(dbearing,dpitch){viewState={...viewState,bearing:((viewState.bearing+dbearing)%360+360)%360,
+  pitch:Math.max(-85,Math.min(85,viewState.pitch+dpitch))};apply();}
+function initControls(){
+  const el=document.getElementById('deck'); let drag=null; const PAN=0.6, ROT=0.3;
+  el.addEventListener('contextmenu',e=>e.preventDefault());
+  el.addEventListener('pointerdown',e=>{if(e.button!==0&&e.button!==2)return;
+    drag={x:e.clientX,y:e.clientY,rot:e.button===2||e.ctrlKey||e.metaKey};el.setPointerCapture(e.pointerId);});
+  el.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.x=e.clientX;drag.y=e.clientY;
+    if(drag.rot)turn(dx*ROT,-dy*ROT); else move(dy*PAN,-dx*PAN,0);});
+  el.addEventListener('pointerup',()=>drag=null); el.addEventListener('pointercancel',()=>drag=null);
+  el.addEventListener('wheel',e=>{e.preventDefault();const d=-Math.sign(e.deltaY)*12,pt=viewState.pitch*Math.PI/180;
+    move(d*Math.cos(pt),0,d*Math.sin(pt));},{passive:false});
+  addEventListener('keydown',e=>{if(mode!=='underground'||e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
+    const k=e.key.toLowerCase(); keys[k]=true; keys.shift=e.shiftKey; if(k==='r'){viewState={...viewState,pitch:0};apply();}
+    if(k.startsWith('arrow')||k===' ')e.preventDefault();});
+  addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;keys.shift=e.shiftKey;});
+  addEventListener('blur',()=>{for(const k in keys)keys[k]=false;});
+  document.querySelectorAll('#pad button').forEach(b=>{const k=b.dataset.k;
+    const on=e=>{e.preventDefault();if(k==='r'){viewState={...viewState,pitch:0};apply();return;}keys[k]=true;b.classList.add('on');};
+    const off=()=>{keys[k]=false;b.classList.remove('on');};
+    b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointerleave',off);b.addEventListener('pointercancel',off);});
+  (function tick(){
+    if(mode==='underground'&&deckgl){const sp=2.5; let f=0,r=0,u=0,t=0,pt=0; const sh=keys.shift;
+      if(keys.w||(keys.arrowup&&!sh))f+=sp; if(keys.s||(keys.arrowdown&&!sh))f-=sp;
+      if(keys.a||(keys.arrowleft&&!sh))r-=sp; if(keys.d||(keys.arrowright&&!sh))r+=sp;
+      if(sh&&keys.arrowleft)t-=1.6; if(sh&&keys.arrowright)t+=1.6; if(sh&&keys.arrowup)pt+=1; if(sh&&keys.arrowdown)pt-=1;
+      if(keys.turnl)t-=1.6; if(keys.turnr)t+=1.6;
+      if(keys.q||keys[' '])u+=sp*0.6; if(keys.e)u-=sp*0.6;
+      if(f||r||u)move(f,r,u); if(t||pt)turn(t,pt);}
+    requestAnimationFrame(tick);})();
 }
 function jumpTo(ln,st){
   // 駅の 140m 東・線路面の 5m 上に立ち、駅の方を向く
@@ -186,6 +245,14 @@ function refresh(){
   hud();
 }
 function setMode(m){
+  if(m===mode)return;
+  // カメラを引き継ぐ：地上の中心/方位 → 地下の立ち位置、地下の立ち位置 → 地上の中心
+  if(m==='underground'){const c=map.getCenter();
+    viewState={...viewState,longitude:c.lng,latitude:c.lat,position:[0,0,Math.min(viewState.position[2],-30)],bearing:map.getBearing(),pitch:5};
+    if(deckgl)deckgl.setProps({viewState});}
+  else if(deckgl){const cosLat=Math.cos(viewState.latitude*Math.PI/180);
+    map.jumpTo({center:[viewState.longitude+viewState.position[0]/(111320*cosLat),viewState.latitude+viewState.position[1]/110540],
+      bearing:viewState.bearing});}
   mode=m;document.body.classList.toggle('underground',m==='underground');
   document.getElementById('m-surface').classList.toggle('on',m==='surface');
   document.getElementById('m-under').classList.toggle('on',m==='underground');
@@ -204,6 +271,8 @@ fetch('../data/out/model.json').then(r=>r.json()).then(m=>{
   jump.onchange=()=>{if(!jump.value)return;const [k,i]=jump.value.split(':');const ln=m.lines.find(l=>l.key===k);jumpTo(ln,ln.stations[+i]);};
   overlay=new deck.MapboxOverlay({interleaved:false,layers:surfaceLayers(),getTooltip:tooltip});
   map.addControl(overlay);
+  document.getElementById('fold').onclick=()=>{const p=document.getElementById('panel');p.classList.toggle('collapsed');
+    document.getElementById('fold').textContent=p.classList.contains('collapsed')?'+':'−';};
   document.getElementById('m-surface').onclick=()=>setMode('surface');
   document.getElementById('m-under').onclick=()=>setMode('underground');
   document.getElementById('tile').onchange=e=>{TILE=e.target.value;refresh();};

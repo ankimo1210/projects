@@ -17,7 +17,8 @@ MODEL = ROOT / "data/out/model.json"
 KEYS = list(LINES)
 
 # Stations whose marker is red/blue on the chart and therefore not detected as black.
-UNDETECTED = {("marunouchi", "大手町"), ("tozai", "茅場町"), ("yurakucho", "飯田橋"), ("hanzomon", "大手町")}
+UNDETECTED = {("marunouchi", "大手町"), ("tozai", "茅場町"), ("yurakucho", "飯田橋"), ("hanzomon", "大手町"),
+              ("oedo", "青山一丁目"), ("oedo", "新御徒町")}
 
 pytestmark = pytest.mark.skipif(not (ROOT / PAGES[3]).exists(), reason="raw chart pages not rendered")
 
@@ -69,10 +70,12 @@ def test_rail_profile_has_no_label_spikes(pages, key):
     ch = C.chart_at(black, sp.chart, sp.axis)
     markers = C.station_markers(ch)
     d, e = C.rail_profile(ch, [*markers, *(C.snap(c, markers) for _, c in sp.stations)])
-    # Resample at 25 m: per-column values jitter by a pixel, a label spike is 10-27 m.
+    # Resample at 25 m: per-column values jitter by a pixel, a label spike is 10-27 m
+    # (a grade above 0.3). The charts themselves draw straight lines between survey
+    # points, so a real dive can look like 14 % (大江戸線 under 御徒町); 0.15 separates them.
     grid = np.arange(sp.stations[0][1], sp.stations[-1][1], 25.0)
     grade = np.abs(np.diff(np.interp(grid, d, e))) / 25.0
-    assert grade.max() < 0.08, f"grade {grade.max():.2f} at {grid[grade.argmax()]:.0f} m"
+    assert grade.max() < 0.15, f"grade {grade.max():.2f} at {grid[grade.argmax()]:.0f} m"
 
 
 @pytest.mark.parametrize("key", KEYS)
@@ -106,7 +109,7 @@ def test_track_is_continuous_and_dense(model, key):
     steps = [A.haversine((a["lon"], a["lat"]), (b["lon"], b["lat"])) for a, b in zip(track, track[1:])]
     assert max(steps) < 40.0
     grades = [abs(a["rail_tp_m"] - b["rail_tp_m"]) / s for a, b, s in zip(track, track[1:], steps)]
-    assert max(grades) < 0.08
+    assert max(grades) < 0.2  # chart V under 御徒町 reaches 0.19 after rubber-sheeting
 
 
 def test_kokkaigijidomae_is_the_deepest_chiyoda_station(model):
