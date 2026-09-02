@@ -3,7 +3,9 @@
 Chart chainages are read off the printed station labels and then snapped to the
 detected station markers (▼); the eye-read value only has to land within ~150 m.
 Stations drawn with a red or blue marker are not detected and keep the eye-read
-value (that is 大手町 on 丸ノ内線/半蔵門線, 茅場町 on 東西線, 飯田橋 on 有楽町線).
+value (that is 大手町 on 丸ノ内線/半蔵門線, 茅場町 on 東西線, 飯田橋 on 有楽町線,
+青山一丁目 and 新御徒町 on 大江戸線). The alignment visits the stations in this order,
+which is what keeps the 大江戸線 section on the eastern arc of its loop.
 """
 from __future__ import annotations
 
@@ -12,7 +14,7 @@ from dataclasses import dataclass
 PAGES = {3: "data/raw/page-03.png", 4: "data/raw/page-04.png", 5: "data/raw/page-05.png"}
 
 # Overpass bbox used for data/raw/osm_*.json (south, west, north, east).
-BBOX = (35.640, 139.715, 35.712, 139.795)
+BBOX = (35.640, 139.715, 35.718, 139.810)
 
 
 @dataclass(frozen=True)
@@ -60,6 +62,11 @@ LINES: dict[str, LineSpec] = {
         LineSpec("namboku", "南北線", "東京メトロ南北線", 4, 3, 22000, 30, -35,
                  (("麻布十番", 3838), ("六本木一丁目", 5008), ("溜池山王", 5598), ("永田町", 6219),
                   ("四ツ谷", 7711), ("市ケ谷", 8700), ("飯田橋", 9880))),
+        LineSpec("oedo", "大江戸線", "都営地下鉄大江戸線", 5, 0, 24000, 20, -40,
+                 (("青山一丁目", 3160), ("六本木", 4341), ("麻布十番", 5523), ("赤羽橋", 6566), ("大門", 7442),
+                  ("汐留", 8072), ("築地市場", 8683), ("勝どき", 10080), ("月島", 11252), ("門前仲町", 12335),
+                  ("清澄白河", 13546), ("森下", 14407), ("両国", 15189), ("蔵前", 16410), ("新御徒町", 17300),
+                  ("上野御徒町", 18359), ("本郷三丁目", 19432), ("春日", 20249), ("飯田橋", 21037))),
         LineSpec("mita", "三田線", "都営地下鉄三田線", 5, 2, 10000, 25, -25,
                  (("三田", 250), ("芝公園", 788), ("御成門", 1481), ("内幸町", 2544), ("日比谷", 3471),
                   ("大手町", 4366), ("神保町", 5769), ("水道橋", 6775))),

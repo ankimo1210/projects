@@ -72,19 +72,31 @@ def stop_nodes(stops: list[dict], graph: Graph, name: str) -> list[int]:
     return [e["id"] for e in stops if norm_name(e["tags"].get("name")) == norm_name(name) and e["id"] in graph.xy]
 
 
-def track(graph: Graph, stops: list[dict], first: str, last: str) -> list[tuple[float, float]]:
-    """One track's centreline from station `first` to station `last`, as (lon, lat) vertices."""
-    starts, goals = stop_nodes(stops, graph, first), set(stop_nodes(stops, graph, last))
-    if not starts or not goals:
-        raise RuntimeError(f"no stop node on the line for {first!r} or {last!r}")
+def track(graph: Graph, stops: list[dict], names: list[str]) -> list[tuple[float, float]]:
+    """One track's centreline visiting the stations in `names`, as (lon, lat) vertices.
+
+    Hopping station to station (rather than first to last) keeps a loop line such as
+    大江戸線 on the intended arc, and puts every station node on the path.
+    """
+    cands = [stop_nodes(stops, graph, n) for n in names]
+    for n, c in zip(names, cands):
+        if not c:
+            raise RuntimeError(f"no stop node on the line for {n!r}")
+    # First hop: try every start node, keep the shortest; later hops continue from the end.
     best = None
-    for s in starts:  # either track may be the shorter one; keep the shortest path
-        p = graph.shortest(s, goals)
+    for s in cands[0]:
+        p = graph.shortest(s, set(cands[1]))
         if p and (best is None or len(p) < len(best)):
             best = p
     if best is None:
-        raise RuntimeError(f"no path from {first!r} to {last!r}")
-    return [graph.xy[n] for n in best]
+        raise RuntimeError(f"no path from {names[0]!r} to {names[1]!r}")
+    path = best
+    for goal_name, goals in zip(names[2:], cands[2:]):
+        hop = graph.shortest(path[-1], set(goals))
+        if hop is None:
+            raise RuntimeError(f"no path to {goal_name!r}")
+        path = path + hop[1:]
+    return [graph.xy[n] for n in path]
 
 
 def project(polyline, pt: tuple[float, float]) -> tuple[int, float]:
