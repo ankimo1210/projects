@@ -40,6 +40,7 @@
 | [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
 | [`labor_ai_quadrant/`](labor_ai_quadrant/) | 人手不足の深刻度 × AI代替可能性の4象限フレームワーク（東証33業種・個別銘柄、オフライン HTML レポート） | Python / Plotly |
 | [`macrokit/`](macrokit/) | カタログ駆動のポイントインタイム・マクロ指標ストア（ALFRED ヴィンテージ取込、公表スケジュール解決、任意日時点の再現） | Python / DuckDB |
+| [`tokyo_subway_3d/`](tokyo_subway_3d/) | 中央防災会議の浸水縦断図を画素トレースし、東京の地下鉄9路線を実測の軌条面標高で3D化（地上/地下の2視点ビューア） | Python / deck.gl / MapLibre |
 | [`small_ma_search/`](small_ma_search/) | 個人による小型M&A（事業承継型買収）の調査・実行計画。工程・資金スタック・案件の読み方をまとめた単一 HTML | Markdown / HTML |
 | [`interactive-email-demo/`](interactive-email-demo/) | メール本文内で指標を切り替える週次レポートの検証サンプル（AMP for Email + HTML/テキストのフォールバック）。標準ライブラリのみ | Python (stdlib) / AMP for Email |
 | [`notebooks/`](notebooks/) | 単発の分析ノートブック置き場（債券、ETF、不動産シミュ等） | Jupyter |

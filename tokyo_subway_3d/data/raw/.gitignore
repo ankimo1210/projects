@@ -1,0 +1,2 @@
+# 300dpi renders of the public PDF (13 MB); regenerate with pdftoppm, see README.
+*.png
