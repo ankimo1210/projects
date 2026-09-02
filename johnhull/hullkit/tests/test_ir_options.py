@@ -100,3 +100,18 @@ def test_wrapper_reference_values():
 def test_convexity_adjustment_coefficient_pin():
     # pin the 0.5 y^2 sigma^2 T coefficient (was only checked for sign + T-linearity)
     assert ir_options.convexity_adjustment(0.05, 0.20, 1.0, 30.0) == pytest.approx(0.0015, abs=1e-9)
+
+
+def test_black_rejects_non_positive_forward_and_strike():
+    """Black-76 is lognormal: a non-positive forward or strike has no price.
+
+    Post-LIBOR curves routinely carry negative forwards, so this is reachable
+    from real data rather than a contrived input. `math.log` would otherwise
+    surface it as a bare `ValueError: math domain error` that names neither
+    the argument nor the model's assumption.
+    """
+    for forward, strike in ((-0.001, 0.01), (0.0, 0.01), (0.01, -0.005), (0.01, 0.0)):
+        with pytest.raises(ValueError, match="positive"):
+            ir_options.caplet_black(100.0, 0.25, forward, strike, 0.2, 0.5, 0.99)
+        with pytest.raises(ValueError, match="positive"):
+            ir_options.swaption_black(100.0, 3.5, forward, strike, 0.2, 1.0)

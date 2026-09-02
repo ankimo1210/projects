@@ -4,7 +4,7 @@ import math
 
 import numpy as np
 import pytest
-from hullkit import swaps
+from hullkit import rates, swaps
 
 # upward-sloping test curve (continuous zeros)
 CURVE = ([0.5, 1.0, 1.5, 2.0, 3.0], [0.020, 0.024, 0.027, 0.029, 0.032])
@@ -75,3 +75,23 @@ def test_receive_fixed_loses_value_when_rates_rise():
 
 def test_discount_basic():
     assert swaps.discount(1.0, ([1.0], [0.05])) == pytest.approx(np.exp(-0.05), abs=1e-12)
+
+
+def test_discount_rejects_a_malformed_curve_like_rates_discount_factor():
+    """`swaps.discount` must not be a validation-free copy of `rates.discount_factor`.
+
+    Both compute P(0,t) = exp(-z(t) t) from a (times, zeros) curve. The rates
+    version validates the curve; the swaps one used to skip that, so an
+    unsorted or non-finite curve produced a plausible-looking discount factor
+    and every swap value built on it was quietly wrong.
+    """
+    good = ([0.5, 1.0, 2.0], [0.02, 0.025, 0.03])
+    assert swaps.discount(1.0, good) == pytest.approx(rates.discount_factor(1.0, good), abs=1e-15)
+
+    for bad in (
+        ([1.0, 0.5, 2.0], [0.02, 0.025, 0.03]),  # unsorted pillars
+        ([0.5, 1.0, 2.0], [0.02, float("nan"), 0.03]),  # missing quote
+        ([-0.5, 1.0], [0.02, 0.03]),  # negative maturity
+    ):
+        with pytest.raises(ValueError):
+            swaps.discount(1.0, bad)

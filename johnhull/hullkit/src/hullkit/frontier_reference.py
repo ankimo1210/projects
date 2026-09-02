@@ -2069,9 +2069,15 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
     kupiec_obs = 500
     rng_kupiec = np.random.default_rng(seed + 1)
     reject_flags = np.empty(n_replications, dtype=float)
+    # The per-replication exceedance COUNT is committed alongside the verdict:
+    # the flag is the output of `kupiec_pof`, so without its input the size
+    # study could not be recomputed by `frontier_acceptance.py` and the
+    # "recompute from committed arrays" rule would hold only in name.
+    exceedance_counts = np.empty(n_replications, dtype=float)
     for i in range(n_replications):
         exceedances = (rng_kupiec.random(kupiec_obs) < p).astype(int)
         x = int(exceedances.sum())
+        exceedance_counts[i] = float(x)
         _, pvalue = var_backtest.kupiec_pof(x, kupiec_obs, alpha=alpha)
         reject_flags[i] = 1.0 if pvalue < 0.05 else 0.0
     kupiec_rate = float(reject_flags.mean())
@@ -2162,11 +2168,15 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
     alloc_vols = np.asarray([0.18, 0.25, 0.30, 0.22, 0.28])
     alloc_corr = np.asarray(
         [
-            [1.00, 0.30, 0.20, 0.10, -0.10],
+            # The short commodity sleeve co-moves strongly with the long equity
+            # book (rho = 0.55), so holding it short *reduces* portfolio risk:
+            # its component VaR is negative and the desk's limit convention has
+            # to keep that sign. Positive definite (smallest eigenvalue 0.33).
+            [1.00, 0.30, 0.20, 0.10, 0.55],
             [0.30, 1.00, 0.25, 0.15, -0.05],
             [0.20, 0.25, 1.00, 0.35, 0.10],
             [0.10, 0.15, 0.35, 1.00, 0.20],
-            [-0.10, -0.05, 0.10, 0.20, 1.00],
+            [0.55, -0.05, 0.10, 0.20, 1.00],
         ]
     )
     alloc_marginal_var = risk_allocation.marginal_var_normal(
@@ -2307,7 +2317,11 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
     taylor_attribution = pnl_explain.pnl_attribution(taylor_full, taylor_dgv["total"])
 
     limit_names = np.asarray(["equity", "rates", "credit", "fx", "commodity"])
-    limit_measure = np.abs(alloc_component_var)
+    # Component VaR is signed: a diversifying position contributes a negative
+    # amount to total VaR, and the components still sum to it exactly. Taking
+    # the absolute value here would charge a risk-reducing sleeve the same
+    # limit as one adding the same risk, and could breach it.
+    limit_measure = alloc_component_var
     limit_value = np.asarray([12.0, 9.0, 11.0, 6.0, 5.0])
     limit_result = pnl_explain.limit_utilization(limit_measure, limit_value)
     limit_utilization_ratio = limit_result["utilization"]
@@ -2330,6 +2344,7 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
         "kupiec_size_names": np.asarray(["observed rejection rate", "nominal 5% size"]),
         "kupiec_size_values": np.asarray([kupiec_rate, 0.05]),
         "kupiec_size_reject_flags": reject_flags,
+        "kupiec_size_exceedance_counts": exceedance_counts,
         "traffic_light_x": traffic_x.astype(float),
         "traffic_light_cumulative_prob": traffic_cumulative,
         "traffic_light_multiplier": traffic_multiplier,
@@ -2383,6 +2398,7 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
     metrics: dict[str, Scalar] = {
         "alpha": alpha,
         "kupiec_size_rejection_rate": kupiec_rate,
+        "kupiec_size_observations": kupiec_obs,
         "kupiec_size_zscore": kupiec_zscore,
         "christoffersen_ind_lr_iid": float(lr_ind_iid),
         "christoffersen_ind_lr_clustered": float(lr_ind_clustered),

@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from hullkit import frontier_reference
+from hullkit import frontier_reference, var_backtest
 
 
 @pytest.fixture(scope="module")
@@ -679,3 +679,65 @@ def test_volume27_reference_is_deterministic() -> None:
     assert set(first.arrays) == set(second.arrays)
     for name, values in first.arrays.items():
         np.testing.assert_array_equal(values, second.arrays[name])
+
+
+def test_volume27_diversifying_position_does_not_consume_limit(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """A risk-reducing sleeve must show negative component VaR and negative utilization.
+
+    Component VaR carries a sign: it is the position's Euler contribution to
+    total VaR, so a hedge that lowers portfolio risk contributes a negative
+    amount and the components still sum to the total. Feeding the *absolute*
+    component into limit utilization erases that sign, and a position that
+    reduces desk risk would report the same limit usage as one that adds the
+    same amount -- a diversifier could then breach its limit.
+    """
+    arrays = references[27].arrays
+    component_var = arrays["alloc_component_var"]
+    limit_measure = arrays["limit_measure"]
+
+    assert np.any(component_var < 0.0), (
+        "the capstone book must contain a genuine diversifier, otherwise the "
+        "signed-limit convention is never exercised"
+    )
+    np.testing.assert_allclose(limit_measure, component_var, atol=0.0, rtol=0.0)
+
+    hedge = int(np.argmin(component_var))
+    assert arrays["limit_utilization_ratio"][hedge] < 0.0
+    assert limit_measure[hedge] <= arrays["limit_value"][hedge]
+
+    # The Euler identity must survive the sign convention.
+    assert float(component_var.sum()) == pytest.approx(
+        references[27].metrics["alloc_normal_var"], abs=1e-12
+    )
+
+
+def test_volume27_kupiec_size_study_is_recomputable_from_committed_counts(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """The size study must commit its inputs, not just its verdicts.
+
+    The gate's rule is that acceptance is recomputed from committed arrays
+    rather than trusted as a stored flag. Committing only the per-replication
+    reject flags broke that rule structurally: the flags are the *output* of
+    `kupiec_pof`, so nothing downstream could check the test was applied
+    correctly. Committing each replication's exceedance count makes the whole
+    study reproducible.
+    """
+    arrays = references[27].arrays
+    counts = arrays["kupiec_size_exceedance_counts"]
+    flags = arrays["kupiec_size_reject_flags"]
+    observations = int(references[27].metrics["kupiec_size_observations"])
+
+    assert counts.shape == flags.shape
+    assert np.all(counts >= 0.0) and np.all(counts <= observations)
+
+    alpha = float(references[27].metrics["alpha"])
+    recomputed = np.array(
+        [
+            1.0 if var_backtest.kupiec_pof(int(count), observations, alpha=alpha)[1] < 0.05 else 0.0
+            for count in counts
+        ]
+    )
+    np.testing.assert_array_equal(recomputed, flags)

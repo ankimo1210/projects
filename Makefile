@@ -10,7 +10,7 @@
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;
 # `rates_volatility_model/`, `notebooks/` have no managed env.
 
-.PHONY: help install sync lint fmt fmt-fix test clean tree report books sde-check hull-report hull-book hull-artifacts-check hull-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
+.PHONY: help install sync lint fmt fmt-fix test clean tree report books sde-check hull-report hull-book hull-artifacts-check hull-notebooks-check hull-core-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
 
 help:
 	@echo "Workspace targets (run from repo root):"
@@ -29,6 +29,7 @@ help:
 	@echo "  make hull-book   - build the johnhull Jupyter Book (johnhull/book/_build/)"
 	@echo "  make hull-artifacts-check - rebuild vol 19-27 in /tmp and compare references"
 	@echo "  make hull-notebooks-check - fresh-execute vol 18-27 in /tmp"
+	@echo "  make hull-core-notebooks-check - fresh-execute vol 01-17 + the 2 legacy notebooks"
 	@echo "  make hull-paper-corpus-check - verify PDF sources, page profiles, and corpus tests"
 	@echo "  make hull-paper-corpus-gold-check - verify selected pages and reviewed assertions"
 	@echo "  make hull-paper-corpus-v2-check - verify v2 schemas, conversion, and determinism"
@@ -103,6 +104,9 @@ hull-notebooks-check:
 hull-artifacts-check:
 	uv run --no-sync --package hullkit python johnhull/scripts/verify_frontier_artifacts.py
 
+hull-core-notebooks-check:
+	uv run --no-sync --package hullkit python johnhull/scripts/verify_core_notebooks.py
+
 hull-paper-corpus-check:
 	uv run --no-sync python johnhull/scripts/build_paper_corpus_release.py --check --corpus-root johnhull/references/processed
 	uv run --no-sync pytest -q -s johnhull/tests/paper_corpus
@@ -132,6 +136,7 @@ hull-release:
 	uv run --no-sync ruff format --check deep_hedge_price/src deep_hedge_price/tests deep_hedge_price/scripts deep_hedge_price/notebooks/02_neural_pricing_surrogate.ipynb johnhull/hullkit/src johnhull/hullkit/tests johnhull/scripts johnhull/report/report_builder johnhull/report/tests
 	$(MAKE) hull-artifacts-check
 	$(MAKE) hull-notebooks-check
+	$(MAKE) hull-core-notebooks-check
 	$(MAKE) hull-paper-corpus-v2-check
 	$(MAKE) hull-report
 	$(MAKE) hull-book

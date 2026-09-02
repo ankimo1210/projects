@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from johnhull.scripts.frontier_acceptance import evaluate_acceptance
+from johnhull.scripts.frontier_acceptance import _lr_independence_np, evaluate_acceptance
 from johnhull.scripts.verify_release import (
     _check_notebook,
     _check_npz_schema,
@@ -154,3 +154,23 @@ def test_reference_units_are_semantic_not_substring_guesses():
     assert vol25["premium_sensitivity"]["unit"] == "synthetic monetary units"
     assert vol25["ppa_volume_risk"]["unit"] == "synthetic monetary units"
     assert vol25["basis_rmse"]["unit"] == "weather payoff units"
+
+
+def test_acceptance_independence_lr_rejects_non_binary_exceedance_series():
+    """The gate's own LR must not accept counts or probabilities as 0/1 flags.
+
+    `hullkit.var_backtest` already refuses them; an unguarded `dtype=int` cast
+    here would truncate a probability series to all-zeros and report the
+    degenerate "perfectly independent" statistic 0.0 -- a silent pass in the
+    direction of acceptance.
+    """
+    binary = np.array([0, 1, 0, 0, 1, 1, 0, 1, 0, 0])
+    assert _lr_independence_np(binary) >= 0.0
+
+    for bad in (
+        np.array([0.2, 0.9, 0.4, 0.7, 0.1]),  # exceedance probabilities
+        np.array([0, 3, 1, 2, 0]),  # per-window exceedance counts
+        np.array([0.0, 1.0, np.nan, 1.0]),  # a missing day
+    ):
+        with pytest.raises(ValueError, match="binary"):
+            _lr_independence_np(bad)

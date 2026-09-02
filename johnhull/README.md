@@ -29,6 +29,7 @@ Run release checks from the workspace root:
 ```bash
 make hull-artifacts-check  # rebuild vol. 19–27 in /tmp and compare references
 make hull-notebooks-check  # fresh execution in /tmp
+make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
 make hull-report           # offline portal: 12 themes / 78 figures
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract

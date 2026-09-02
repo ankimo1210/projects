@@ -316,6 +316,7 @@ UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
         "kupiec_size_names": "label",
         "kupiec_size_values": "rejection probability",
         "kupiec_size_reject_flags": "rejection indicator",
+        "kupiec_size_exceedance_counts": "exceedance count",
         "traffic_light_x": "exceedance count",
         "traffic_light_cumulative_prob": "binomial cumulative probability",
         "traffic_light_multiplier": "capital multiplier",
