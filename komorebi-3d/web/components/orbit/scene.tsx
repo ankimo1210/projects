@@ -11,7 +11,7 @@ import {
 } from '@react-three/drei';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
-import { collections } from './types';
+import { collections, type Collection } from './types';
 
 import {
   cameraPosition,
@@ -25,6 +25,11 @@ import {
   type SceneProps as Props,
 } from './render-contract';
 
+/** Drop a cached load so a collection that failed to download can be retried. */
+export function clearAsset(collection: Collection) {
+  useGLTF.clear(collections[collection].asset);
+}
+
 function Sculpture({
   collection,
   wireframe,
@@ -36,6 +41,8 @@ function Sculpture({
 }) {
   const comparisonMode = !!comparison;
   const { scene } = useGLTF(collections[collection].asset);
+  // Cloning the graph is expensive on the 655-mesh cafe, so it must not depend
+  // on wireframe: that switch only flips a flag on the materials below.
   const prepared = useMemo(() => {
     const object = scene.clone(true);
     const materials: THREE.Material[] = [];
@@ -54,8 +61,6 @@ function Sculpture({
         : [mesh.material];
       const copies = originals.map((material) => {
         const copy = material.clone();
-        if ('wireframe' in copy)
-          (copy as THREE.MeshStandardMaterial).wireframe = wireframe;
         if (copy instanceof THREE.MeshStandardMaterial)
           copy.envMapIntensity = comparisonMode
             ? 1
@@ -80,7 +85,23 @@ function Sculpture({
         modelExtent(collection, comparisonMode) /
         Math.max(size.x, size.y, size.z),
     };
-  }, [scene, collection, wireframe, comparisonMode]);
+  }, [scene, collection, comparisonMode]);
+
+  // Reached through the mounted group, not through the memo, so that flipping
+  // the flag stays a plain scene-graph mutation.
+  const root = useRef<THREE.Group>(null);
+  useEffect(() => {
+    root.current?.traverse((child) => {
+      const mesh = child as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      const applied = Array.isArray(mesh.material)
+        ? mesh.material
+        : [mesh.material];
+      for (const material of applied)
+        if ('wireframe' in material)
+          (material as THREE.MeshStandardMaterial).wireframe = wireframe;
+    });
+  }, [prepared, wireframe]);
 
   useEffect(() => {
     onGeometry(prepared.meshes, prepared.triangles);
@@ -89,7 +110,7 @@ function Sculpture({
   }, [prepared, onGeometry, onReady]);
 
   return (
-    <group scale={prepared.scale}>
+    <group ref={root} scale={prepared.scale}>
       <primitive object={prepared.object} />
     </group>
   );
@@ -149,6 +170,8 @@ function World(props: Props) {
     const metric = telemetry.current;
     metric.frames++;
     const elapsed = clock.elapsedTime - metric.start;
+    // useFrame runs before the render that resets gl.info, so `calls` is the
+    // previous frame's count. The panel labels it as such.
     if (elapsed >= 1 && metric.meshes) {
       props.onStats({
         meshes: metric.meshes,
