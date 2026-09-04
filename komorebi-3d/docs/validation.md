@@ -1,6 +1,37 @@
 # 検証記録 — 2026-09-04
 
-## ORBIT Web
+## ボラティリティーサーフェスViewer
+
+`/volatility` にPlotly / Three.js / Babylon.jsの3種類を追加。
+[操作とデータ仕様](volatility-surface.md)を参照。
+
+- `npm run lint`、`npm run typecheck`、本番ビルドが成功。
+- `npm test`: Node 7件とPlaywright 16件がすべて成功。ブラウザテストは1.8分。
+  うちViewer専用はデータ処理5件・ブラウザ6件。
+- 模擬データの既知のATM値、CSVの単位・並び替え・重複・欠損・不正数値、
+  書出しと再読込で数値を保持することを確認。
+- 3種類で実際にWebGLを描画。各画面からの回転が全Canvasの表示を変え、
+  ドラッグで選択点が変わらないこと、視点リセット、ワイヤー表示を確認。
+- Plotlyで上限までズームした後、さらにズームしても実際のカメラ距離と共通状態が22で一致。
+  ネイティブのホバーとクリック、キーボードの満期・K/F選択、2D断面の更新を3種類で確認。
+- CSVの実際のPlotly z配列を入力値と照合。不正なアップロード後も直前の格子を保持し、
+  ダウンロードしたCSVの内容が一致することを確認。
+- 390×844で表示・操作・横はみ出しを確認。初めからWebGLが利用できないケースと、
+  描画中のコンテキスト消失でも、数値・断面・スライダーが使えることを確認。
+- `python3 -m unittest discover -s tests -v`: 既存5件成功。Python 4ファイルの構文チェック成功。
+- `web/outputs/volatility-comparison.png`、`volatility-mobile.png`に実描画の画像を保存。
+
+環境はLinux Chromium / SwiftShader。スマホは画面幅のエミュレーションで、iPhone/Safari実機は未検証。
+金融データの妥当性・無裁定性や実機の描画速度を検証するものではない。
+大きなJSチャンクのビルド警告は残る。各描画ツールは遅延読み込みする。
+Webサイトは未公開。Gitへの反映状況はコミット履歴を参照。
+
+## エンジン比較の追加
+
+Three.js / Babylon.js比較画面とBabylon版サイトを実装しました。
+最新の検証と計測は[エンジン比較の記録](engine-comparison-validation.md)を参照してください。
+
+## ORBIT Web（初版）
 
 - Blenderで金属彫刻を生成し、Cyclesの画像とブラウザの実際の3D描画を目視確認。
   `orbit-core.glb`は357,792 bytes、8メッシュ、4材質。

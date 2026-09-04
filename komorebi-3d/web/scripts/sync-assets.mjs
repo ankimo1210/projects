@@ -1,4 +1,5 @@
-import { access, copyFile, mkdir } from 'node:fs/promises';
+import { access, copyFile, mkdir, writeFile } from 'node:fs/promises';
+import { createStudioHdr } from './studio.mjs';
 
 const assets = [
   ['export/orbit-core.glb', 'orbit-core.glb'],
@@ -18,3 +19,7 @@ await Promise.all(
   ),
 );
 console.log(`Synced ${assets.length} local Blender assets.`);
+await writeFile(
+  new URL('comparison-studio.hdr', destination),
+  createStudioHdr(),
+);
