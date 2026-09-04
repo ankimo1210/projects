@@ -27,8 +27,7 @@
 - 確定値・推定値・残高調整の区別
 - 数量×価格×為替、口座残高と明細合計の自動照合
 
-> このアプリは分析補助であり、投資助言や売買推奨ではありません。価格・為替・分類は入力時点の
-> スナップショットです。
+> 価格・為替・分類は入力時点のスナップショットです。
 
 ## すぐに見る
 
@@ -146,8 +145,9 @@ A系が「AI需要そのものが崩れる」型なのに対し、B系は**見�
 こちらはショック幅を**測定値**で埋めているため、`worst_compound_drawdown` とは分けて
 `worst_historical_drawdown` に集計します。方針の閾値はどちらの指標にも設定できます。
 
-推定は `scripts/estimate_factors.py` が担当します。ネットワークを使う唯一の手動ツールで、
-結果を `data/factor_estimates.json` に書き出します。ダッシュボードのビルドはこの
+推定は `scripts/estimate_factors.py` が担当します。ネットワークを使う手動ツールは
+これと `scripts/reprice_snapshot.py` の2本だけで、結果を
+`data/factor_estimates.json` に書き出します。ダッシュボードのビルドはこの
 スナップショットだけを読み、オフラインのままです。
 
 ```bash
@@ -165,6 +165,18 @@ uv run --package portfolio-analyzer python portfolio-analyzer/scripts/estimate_f
 除外した日付と価格を `data_quality` に必ず残します。利回り系列は水準が正当に倍半分
 動くため検査対象外です。加えて、調整済み終値の不連続が残す異常リターンを
 MAD ベースの外れ値判定（z>8）で回帰から除き、除外日を `dropped_outliers` に記録します。
+
+> 既知の欠陥（2026-08-31 に実測）: 共分散側の MAD 判定は**本物の相場変動を消すことがある**。
+> ファクターごとに z を見て、1本でも超えたらその週を全ファクターから落とす作りなので、
+> 週次変化の散らばりが極端に小さい金利ファクターが実質的な足切りになる。日本金利の
+> MAD スケールは 4.8bp で、z>8 は**週 39bp 超**を意味する。2025-04-04 の週（10年 JGB が
+> 1.551% → 1.176%、財務省の公表値で −37.5bp）は z=8.09 で除外され、同じ週の
+> `株式全体` −9.55%（3年窓で最大の下げ、z=6.33 で単独なら残る）も道連れになった。
+> 判定は窓の端に敏感で、2週ずらしただけで z=7.97→8.09 と閾値をまたぐ。結果として
+> `株式全体` 年率ボラは 13.60%→12.36%、ポートフォリオのファクター年率ボラは
+> 17.23%→15.96% に下振れし、リバース・ストレスの距離は 5.02σ→5.42σ と**実態より安全側**に出る。
+> 直すなら、判定を価格系列側の欠陥検出に寄せる（z を上げる・金利系を対象外にする・
+> 週ごと一括ではなくファクター単位で落とす）。未修正。
 
 > 既知の制約: `株式全体` ファクターの実測系列は 0.5×1306.T + 0.5×SPY の等ウェイト
 > ブレンドですが、個々のβは国内株なら1306.T、米国ETFならSPYという別々の代理に対して
@@ -319,6 +331,31 @@ uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dash
 
 基本配分と簡易ストレスだけを生成する場合は `--no-analysis-reference` を付けます。
 
+### 時価で洗い替える
+
+`portfolio.private.json` は口座画面を転記した日の記録なので、日が経つと古くなります。
+`scripts/reprice_snapshot.py` は**元ファイルを書き換えず**、数量を持つ明細の価格だけを
+直近終値へ差し替えた別スナップショットを書き出します。
+
+```bash
+uv run --package portfolio-analyzer python portfolio-analyzer/scripts/reprice_snapshot.py
+uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dashboard.py \
+  --input portfolio-analyzer/data/portfolio-<基準日>.private.json
+```
+
+読むときの前提が3つあります。
+
+1. **洗い替えた明細は全て `estimated` になります。** 口座画面で確認した値ではなく
+   終値×数量なので、定義どおりの区分です。「確定値比率」カードはこの分だけ落ちますが、
+   評価額の精度が落ちたわけではありません
+2. **時価の無いものは据え置きです。** 円現金（相場では動かないので `exact` のまま）、
+   DC口座の残高、残高調整はいずれも元の日付の値のままで、理由は `source_note` に残ります
+3. **市場ごとに基準日がずれます。** 日本株は当日終値でも、米国株は前営業日までしか
+   取れません。銘柄ごとの実際の値付け日は `price_as_of` と `repricing.quotes` に入ります
+
+口座損益は取得原価が未入力のため再計算できないので、洗い替えた口座では `null` に落とします
+（古い損益額を残すと、新しい評価額と組み合わせて誤った逆算元本が出るため）。
+
 ## リバランス案を記録する
 
 [`docs/rebalancing-note-template.md`](docs/rebalancing-note-template.md) を使い、判断理由、
@@ -361,6 +398,8 @@ portfolio-analyzer/
 ├── data/
 │   ├── portfolio.example.json   # 架空サンプル（Git管理）
 │   ├── portfolio.private.json   # 個人データ（Git対象外）
+│   ├── portfolio-<基準日>.private.json  # 時価で洗い替えた版
+│   ├── factor_estimates.json    # 実測β・共分散（Git管理）
 │   ├── analysis_reference.example.json
 │   ├── analysis_reference.private.json
 │   ├── rebalancing-proposal.example.json
@@ -368,7 +407,11 @@ portfolio-analyzer/
 │   └── rebalancing-note.private.md
 ├── docs/
 │   └── rebalancing-note-template.md
-├── scripts/build_dashboard.py
+├── scripts/
+│   ├── build_dashboard.py       # オフライン。上のJSONだけを読む
+│   ├── estimate_factors.py      # 要ネットワーク。β・共分散・実測エピソード
+│   ├── reprice_snapshot.py      # 要ネットワーク。保有明細を直近終値で洗い替え
+│   └── horizon3_model.py
 ├── src/portfolio_analyzer/core.py
 ├── tests/test_core.py
 └── dist/                        # 生成物（Git対象外）
