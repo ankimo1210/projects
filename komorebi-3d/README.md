@@ -15,9 +15,15 @@
 - Blender 5.2.1で制作・画像確認した喫茶店シーンを引き継いでいます。
 - `.blend`、自己完結した`.glb`、プレビュー画像、再生成用Pythonがあります。
 - Unreal Engine 5.8向けのプロジェクト定義と初回インポート用スクリプトがあります。
-- **Unreal Editorでのインポート・表示は未検証です。** 作成時の環境では
-  標準インストール先、Epicのインストール情報、Windowsの登録情報に
-  Unreal Engineが見つかりませんでした。
+- **Unreal Editorでのインポートは検証済みです**(2026-09-05、UE 5.8.2)。
+  655メッシュ・30マテリアルが取り込まれ、シーン寸法700cmはGLBの実測値と
+  一致します。`Saved/komorebi_import.json`に記録が残ります。
+- **照明はまだBlenderの見た目に合っていません。** 空が黒く描画され、
+  `SkyAtmosphere`が夕暮れの空を出しません。設定自体は正しく保存されており
+  (`atmosphere_sun_light: true`、`transform_mode: PLANET_TOP_AT_ABSOLUTE_WORLD_ORIGIN`)、
+  太陽光量を3.0→8.0 luxに上げても変わらないため、原因は未特定です。
+  RectLightの絶対光量もBlenderのAREAライトのワット数から換算できないため
+  未整合です(移せるのは750/950/1100の比だけ)。詳細は`docs/validation.md`。
 - この段階はシーン制作とエディタでの鑑賞用です。歩行・ドア操作などの
   ゲームロジックはまだ実装していません。
 
