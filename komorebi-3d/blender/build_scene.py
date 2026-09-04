@@ -186,6 +186,38 @@ def point(name, loc, power, color, radius=0.15):
     obj.location = loc
 
 
+def enable_gpu(scene):
+    """Enable the first Cycles GPU backend this machine has; fall back to CPU.
+
+    Blender only exposes the backends its build and platform support, so the
+    unsupported ones raise on assignment: CUDA/OptiX on the Windows RTX box,
+    METAL on Apple silicon, HIP/oneAPI elsewhere.
+    """
+    scene.cycles.device = "CPU"
+    try:
+        prefs = bpy.context.preferences.addons["cycles"].preferences
+    except Exception as exc:
+        print("Cycles preferences unavailable:", exc)
+        return "CPU"
+    for backend in ("OPTIX", "CUDA", "METAL", "HIP", "ONEAPI"):
+        try:
+            prefs.compute_device_type = backend
+            if hasattr(prefs, "refresh_devices"):
+                prefs.refresh_devices()
+            else:
+                prefs.get_devices()
+        except Exception:
+            continue
+        usable = [device for device in prefs.devices if device.type == backend]
+        if not usable:
+            continue
+        for device in prefs.devices:
+            device.use = device.type == backend
+        scene.cycles.device = "GPU"
+        return backend + ": " + ", ".join(device.name for device in usable)
+    return "CPU"
+
+
 # A cropped city block, with a raised sidewalk and rain-darkened road.
 cube("Floating concrete city block", (0, 0, 0.01), (7, 6.2, 0.44), stone, 0.15)
 cube("Wet road", (0, -2.23, 0.242), (6.85, 1.58, 0.09), asphalt, 0.02)
@@ -537,19 +569,7 @@ scene.cycles.samples = 64
 scene.cycles.use_denoising = True
 scene.cycles.max_bounces = 8
 scene.cycles.transparent_max_bounces = 8
-device = "CPU"
-try:
-    prefs = bpy.context.preferences.addons["cycles"].preferences
-    prefs.compute_device_type = "CUDA"
-    prefs.get_devices()
-    usable = [d for d in prefs.devices if d.type == "CUDA"]
-    if usable:
-        for d in prefs.devices:
-            d.use = d.type == "CUDA"
-        scene.cycles.device = "GPU"
-        device = ", ".join(d.name for d in usable)
-except Exception as exc:
-    print("GPU unavailable, CPU fallback:", exc)
+device = enable_gpu(scene)
 print("RENDER_DEVICE:", device, flush=True)
 scene.render.resolution_x = 1400
 scene.render.resolution_y = 1400

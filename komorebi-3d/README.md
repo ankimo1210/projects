@@ -26,7 +26,8 @@
 ### Webブラウザ — ORBIT
 
 ```bash
-cd /home/kazumasa/projects/komorebi-3d/web
+cd komorebi-3d/web        # リポジトリルートから
+npm ci
 npm run dev -- --host 0.0.0.0 --port 3100
 ```
 
@@ -34,19 +35,21 @@ npm run dev -- --host 0.0.0.0 --port 3100
 セットアップ・機能・検証方法は[web/README.md](web/README.md)を参照してください。
 未公開のローカル版です。外出先からのアクセス用URLは、承認後に発行します。
 
+`assets/`はGit管理外の生成物です。未生成のPCでは起動時に不足ファイルと
+再生成コマンドを表示して停止します。下の「再生成・検証」を先に実行してください。
+
 ### Blender
 
-`assets/blender/komorebi.blend`をBlenderで開きます。
+`assets/blender/komorebi.blend`をBlenderで開きます（未生成なら下記で再生成）。
 `assets/previews/komorebi.png`はBlender/Cyclesによるレンダリングです。
 
 ### Unreal Engine（Windows）
 
 1. [Epic公式手順](https://dev.epicgames.com/documentation/unreal-engine/install-unreal-engine)
    に従い、Epic Games LauncherからUnreal Engine 5.8をインストールします。
-2. この環境には、次のWindows用作業コピーを用意しています。
-
-   `C:\Users\Kazumasa\Documents\Unreal Projects\Komorebi3D`
-
+2. Windows機には作業コピーを1つ用意済みです（作成時のパスは
+   `C:\Users\<ユーザー名>\Documents\Unreal Projects\Komorebi3D`）。
+   別のPCで作る場合は下の`prepare_unreal.py`で新規に用意します。
 3. そのフォルダーの`Open.cmd`をダブルクリックします。初回はGLBをインポートし、
    照明と確認用カメラを追加して`Komorebi_Dusk`マップを保存する設計です。
    初回処理が成功した場合だけ、マップを開く通常のエディタを起動します。
@@ -87,11 +90,12 @@ komorebi-3d/
 生成バイナリはこのリポジトリではGit管理外です。ソースを別PCへ移す場合は
 Blenderで再生成するか、これらのデータを別途コピーします。
 
-別の作業コピーを作る場合（リポジトリルートのWSLで実行）:
+別の作業コピーを作る場合（リポジトリルートで実行。保存先はUnrealを動かす
+Windows機から見えるパス。WSLからなら`/mnt/c/...`）:
 
 ```bash
 python3 komorebi-3d/scripts/prepare_unreal.py \
-  --destination '/mnt/c/Users/Kazumasa/Documents/Unreal Projects/Komorebi3D-v2'
+  --destination '/mnt/c/Users/<ユーザー名>/Documents/Unreal Projects/Komorebi3D-v2'
 ```
 
 保存先が既に存在する場合は停止します。コピー後の自動同期は行いません。
@@ -103,7 +107,16 @@ Blender付属のPythonを使います。追加のpip依存関係やuvワーク�
 実行するとソース側の`assets/`内の生成物を更新するため、手編集した`.blend`は
 別名で保存します。
 
+`build_scene.py`が喫茶店、`build_orbit_core.py`がWeb用の金属彫刻を作ります。
+GPUはOptiX/CUDA/Metalなど利用できるものを自動で選び、無ければCPUに落ちます
+（`RENDER_DEVICE:`行に出力）。
+
 ```bash
+# macOS
+'/Applications/Blender.app/Contents/MacOS/Blender' \
+  --background --factory-startup --python komorebi-3d/blender/build_scene.py
+
+# WSL からWindows版Blenderを使う場合
 '/mnt/c/Program Files/Blender Foundation/Blender 5.2/blender.exe' \
   --background --factory-startup --python \
   "$(wslpath -w "$PWD/komorebi-3d/blender/build_scene.py")"

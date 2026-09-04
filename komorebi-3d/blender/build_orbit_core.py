@@ -26,6 +26,38 @@ def material(name, color, metal=0, roughness=0.3, emission=0):
     return result
 
 
+def enable_gpu(scene):
+    """Enable the first Cycles GPU backend this machine has; fall back to CPU.
+
+    Blender only exposes the backends its build and platform support, so the
+    unsupported ones raise on assignment: CUDA/OptiX on the Windows RTX box,
+    METAL on Apple silicon, HIP/oneAPI elsewhere.
+    """
+    scene.cycles.device = "CPU"
+    try:
+        prefs = bpy.context.preferences.addons["cycles"].preferences
+    except Exception as exc:
+        print("Cycles preferences unavailable:", exc)
+        return "CPU"
+    for backend in ("OPTIX", "CUDA", "METAL", "HIP", "ONEAPI"):
+        try:
+            prefs.compute_device_type = backend
+            if hasattr(prefs, "refresh_devices"):
+                prefs.refresh_devices()
+            else:
+                prefs.get_devices()
+        except Exception:
+            continue
+        usable = [device for device in prefs.devices if device.type == backend]
+        if not usable:
+            continue
+        for device in prefs.devices:
+            device.use = device.type == backend
+        scene.cycles.device = "GPU"
+        return backend + ": " + ", ".join(device.name for device in usable)
+    return "CPU"
+
+
 chrome = material("Liquid titanium", (0.47, 0.52, 0.49), 1, 0.19)
 dark = material("Obsidian center", (0.013, 0.027, 0.019), 0.7, 0.22)
 lime = material("Ion green", (0.57, 1.0, 0.16), 0.2, 0.22, 2.2)
@@ -115,16 +147,7 @@ scene.camera = camera
 scene.render.engine = "CYCLES"
 scene.cycles.samples = 48
 scene.cycles.use_denoising = True
-try:
-    prefs = bpy.context.preferences.addons["cycles"].preferences
-    prefs.compute_device_type = "CUDA"
-    prefs.get_devices()
-    if any(device.type == "CUDA" for device in prefs.devices):
-        for device in prefs.devices:
-            device.use = device.type == "CUDA"
-        scene.cycles.device = "GPU"
-except Exception as error:
-    print("GPU fallback:", error)
+print("RENDER_DEVICE:", enable_gpu(scene), flush=True)
 scene.render.resolution_x = 1200
 scene.render.resolution_y = 1100
 scene.render.resolution_percentage = 100
