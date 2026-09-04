@@ -90,3 +90,38 @@ Pythonスクリプトは公式APIを参照して作成しましたが、UE実機
 5. マップを再度開き、配置が保存されていることを確認する。
 
 Python初回処理の成功記録はインポートと保存のみを示し、目視確認は別に行います。
+
+## 2026-09-04 追記 — macOSでの修正と再検証
+
+レビューで見つけた点を修正しました（Web: 起動時の欠損アセット案内、ワイヤーフレーム
+切替のシーン再クローン回避、読み込み失敗GLBのキャッシュ解除、draw callsの表記、
+未使用UI部品と依存の削除。Blender: GPUバックエンドの自動判定。ドキュメント: 環境固有
+パスの一般化）。エンジン比較・ボラティリティ版の追加と同時期の作業のため、
+そちらへrebaseして統合しています（`scene.tsx`の型import、`components/ui/tabs.tsx`の
+保持、lint対象の統一）。
+
+検証環境: macOS (Apple Silicon)、Node 22.23.2、Playwrightは同梱Chromiumではなく
+インストール済みGoogle Chromeを`PLAYWRIGHT_CHROMIUM_EXECUTABLE`で指定。
+
+| 対象 | 結果 |
+|---|---|
+| `npm run typecheck` / `npm run lint` | 成功。lint対象を`components`全体へ拡大した状態で0件 |
+| `npm run build` | 成功。依存8件（recharts等）削除、Babylon/plotly追加後の状態で通過 |
+| `node --test tests/*.test.ts` | 7件成功 |
+| Playwright | 16件中14件成功。失敗2件は下記のとおり資産の代替が原因 |
+| 復帰の回帰テスト | `clearAsset`を外すと失敗、戻すと成功することを確認 |
+| `python3 -m unittest discover -s tests` | 5件成功 |
+| Python構文 | `blender/`・`scripts/`・`unreal/`の全スクリプトで通過 |
+
+**このMacに`assets/`が無いため、ビルドとブラウザ検証には三角形1枚の使い捨てGLBと
+単色PNGを一時的に置いて実行し、検証後に削除しました。** これは配線（読み込み・切替・
+失敗時の復帰・計測・操作）の確認であり、実際の造形・見た目の確認ではありません。
+失敗2件は実資産の実測値を直書きした判定（`15,344`三角形、メッシュ数100超）のためで、
+実資産があるPCでの再実行が必要です。
+
+`tests/comparison.spec.ts`のベンチマークは、Git管理外の`outputs/`が存在しない環境
+（新規cloneを含む）で`writeFile`がENOENTになるため、書き込み前に作成するよう直しました。
+
+Blenderが未導入のため`build_scene.py`・`build_orbit_core.py`は未実行です。GPU自動判定
+（OptiX/CUDA/Metal/HIP/oneAPI）は構文確認のみで、実機での選択結果は未検証です。
+Unreal Engineの状況は上記から変わらず未検証のままです。
