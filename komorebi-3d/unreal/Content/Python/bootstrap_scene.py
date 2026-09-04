@@ -22,19 +22,28 @@ def require(condition, message):
 
 
 def inspect_bounds(actors):
-    """Measure imported mesh bounds in Unreal centimetres, without helper actors."""
+    """Measure imported mesh bounds in Unreal centimetres, without helper actors.
+
+    Select by actor class, not by "has a StaticMeshComponent". A glTF camera
+    arrives as a CameraActor, and an Unreal CameraActor carries an editor-only
+    mesh for its viewport gizmo, so the component test lets it through. Its
+    bounds are a fixed 1000 cm half-extent that has nothing to do with the
+    scene: the cafe measures 700 x 443 x 620 cm, but the camera sitting at
+    y=1150 pushed the reported span to 2460 cm and tripped the unit check
+    below. Measured on the first real import, 2026-09-05.
+    """
     minimum = [float("inf")] * 3
     maximum = [float("-inf")] * 3
     count = 0
     for actor in actors:
-        if not actor.get_components_by_class(unreal.StaticMeshComponent):
+        if not isinstance(actor, unreal.StaticMeshActor):
             continue
         origin, extent = actor.get_actor_bounds(False)
         for i, axis in enumerate(("x", "y", "z")):
             minimum[i] = min(minimum[i], getattr(origin, axis) - getattr(extent, axis))
             maximum[i] = max(maximum[i], getattr(origin, axis) + getattr(extent, axis))
         count += 1
-    require(count > 0, "Interchange created no actors containing static meshes")
+    require(count > 0, "Interchange created no static mesh actors")
     span = max(high - low for high, low in zip(maximum, minimum, strict=True))
     require(200 < span < 2000, f"Unexpected scene size: {span:.1f} cm; inspect import units")
     center = unreal.Vector(*[(low + high) / 2 for low, high in zip(minimum, maximum, strict=True)])
@@ -89,7 +98,15 @@ def main():
         return actor
 
     spawn(unreal.SkyAtmosphere, "Komorebi atmosphere", unreal.Vector())
-    sun = spawn(unreal.DirectionalLight, "Komorebi dusk sun", center, unreal.Rotator(-25, -40, 0))
+    # unreal.Rotator takes (roll, pitch, yaw), not (pitch, yaw, roll). The old
+    # call read as pitch=-25, yaw=-40 but measured as pitch=-40, yaw=0,
+    # roll=-25, so the sun never pointed where this script asked it to.
+    sun = spawn(
+        unreal.DirectionalLight,
+        "Komorebi dusk sun",
+        center,
+        unreal.Rotator(roll=0.0, pitch=-25.0, yaw=-40.0),
+    )
     sun.light_component.set_mobility(unreal.ComponentMobility.MOVABLE)
     sun.light_component.set_intensity(3.0)
     sun.light_component.set_light_color(unreal.LinearColor(1.0, 0.68, 0.4, 1.0))
@@ -98,15 +115,31 @@ def main():
     sky.light_component.set_mobility(unreal.ComponentMobility.MOVABLE)
     sky.light_component.set_editor_property("real_time_capture", True)
 
-    # glTF does not carry Blender AREA lights. Add an Unreal-native fill light.
-    fill_position = center + unreal.Vector(span * 0.45, -span * 0.6, span * 0.9)
-    fill_rotation = unreal.MathLibrary.find_look_at_rotation(fill_position, center)
-    fill = spawn(unreal.RectLight, "Komorebi soft fill", fill_position, fill_rotation)
-    fill.light_component.set_mobility(unreal.ComponentMobility.MOVABLE)
-    fill.light_component.set_intensity(2500.0)
-    fill.light_component.set_editor_property("source_width", span * 0.6)
-    fill.light_component.set_editor_property("source_height", span * 0.6)
-    fill.light_component.set_light_color(unreal.LinearColor(0.65, 0.78, 1.0, 1.0))
+    # glTF carries no Blender AREA light, so all three of the studio lights have
+    # to be rebuilt here. Positions and colours come from `blender/build_scene.py`
+    # (Blender metres map to Unreal centimetres on the same axes) and are written
+    # as a fraction of `span` so the rig follows the model if it is rescaled.
+    #
+    # The intensities are NOT converted from Blender: a Cycles AREA light is
+    # specified in watts and an Unreal RectLight in candelas, and no fixed factor
+    # relates them. Only the 750 / 950 / 1100 W ratio carries over; the absolute
+    # level is still unmatched and needs a visual pass against
+    # `assets/previews/komorebi.png`.
+    studio_lights = (
+        # (label, offset as fraction of span, colour, intensity, size cm)
+        ("Komorebi soft fill", (0.14, -0.43, 1.14), (0.64, 0.79, 1.0), 2500.0, 700.0),
+        ("Komorebi golden key", (-0.71, -0.14, 0.71), (1.0, 0.59, 0.30), 3170.0, 400.0),
+        ("Komorebi cool rim", (0.43, 0.71, 0.86), (0.33, 0.62, 1.0), 3670.0, 500.0),
+    )
+    for label, offset, colour, intensity, size in studio_lights:
+        position = center + unreal.Vector(*[span * axis for axis in offset])
+        rotation = unreal.MathLibrary.find_look_at_rotation(position, center)
+        light = spawn(unreal.RectLight, label, position, rotation)
+        light.light_component.set_mobility(unreal.ComponentMobility.MOVABLE)
+        light.light_component.set_intensity(intensity)
+        light.light_component.set_editor_property("source_width", size)
+        light.light_component.set_editor_property("source_height", size)
+        light.light_component.set_light_color(unreal.LinearColor(*colour, 1.0))
 
     camera_position = center + unreal.Vector(span * 1.0, -span * 1.45, span * 0.9)
     camera_rotation = unreal.MathLibrary.find_look_at_rotation(camera_position, center)

@@ -124,4 +124,76 @@ Python初回処理の成功記録はインポートと保存のみを示し、�
 
 Blenderが未導入のため`build_scene.py`・`build_orbit_core.py`は未実行です。GPU自動判定
 （OptiX/CUDA/Metal/HIP/oneAPI）は構文確認のみで、実機での選択結果は未検証です。
-Unreal Engineの状況は上記から変わらず未検証のままです。
+Unreal Engineの状況はこの時点では未検証のままです（翌日の次節で検証しました）。
+## Unreal Engine への取り込み — 2026-09-05
+
+UE 5.8.2 を導入し、`unreal/Content/Python/bootstrap_scene.py` を実データで
+初めて走らせた。**取り込みは通り、照明は合っていない。**
+
+### 通ったこと
+
+| | 実測値 |
+|---|---|
+| エンジン | 5.8.2-56702186+++UE5+Release-5.8 |
+| メッシュアクタ | 655（GLB のメッシュ数と一致） |
+| シーン寸法 | 700.0 cm（GLB から独立に測った 700.0 cm と一致） |
+| 生成アセット | `.uasset` 686 個 + `Komorebi_Dusk.umap` |
+| Interchange / Python のエラー | 0 件 |
+
+形状は完全に移った。ティール色の波板屋根、煙突、看板、日よけ、格子窓、街灯、
+フェストゥーン電球、鉢植え、ベンチ、自転車、タイル舗装まで
+`assets/previews/komorebi.png` と一致する。
+
+### 初回実行で出たバグ 2 件（いずれも修正済み）
+
+**1. カメラのバウンディングボックスで寸法ガードが誤爆した。**
+
+```
+RuntimeError: Unexpected scene size: 2460.0 cm; inspect import units
+```
+
+`inspect_bounds` は「StaticMeshComponent を持つアクタ」で絞っていたが、glTF の
+カメラは `CameraActor` として取り込まれ、UE の `CameraActor` は**ビューポート
+表示用のエディタ専用メッシュを持つ**ため通過してしまう。その bounds は固定の
+半径 1000 cm で、原点が `(840, 1150, 800)` にあった。
+
+$$\text{span}_Y = (1150 + 1000) - (-310) = 2460\ \text{cm}$$
+
+エラーメッセージは "inspect import units" と単位を疑わせるが、**単位の問題では
+なかった**。GLB は 700 × 443 × 620 cm で、ガードの 200〜2000 cm に収まっている。
+`isinstance(actor, unreal.StaticMeshActor)` に変えて解決。
+
+**2. 太陽の向きが最初から意図どおりに設定されていなかった。**
+
+```
+入力:   unreal.Rotator(-25, -40, 0)       # 意図: pitch=-25, yaw=-40
+実測:   {pitch: -40, yaw: 0, roll: -25}
+```
+
+`unreal.Rotator()` の引数順は **`(roll, pitch, yaw)`**。キーワード指定に変更した。
+
+### 合っていないこと
+
+**空が黒い。** `SkyAtmosphere` が夕暮れの空を一切描画しない。Blender 版は
+青灰色のグラデーション背景を持つ。**原因は未特定。** 以下は実測で否定済み。
+
+- 光量ではない — 太陽を 3.0 → 8.0 lux にしても変化なし
+- 設定漏れではない — 保存されたマップを読み出して確認した値:
+  `atmosphere_sun_light: true` / `atmosphere_sun_light_index: 0` /
+  `affects_world: true` / `transform_mode: PLANET_TOP_AT_ABSOLUTE_WORLD_ORIGIN` /
+  `location: (0,0,0)` / `visible: true`
+
+**RectLight の絶対光量が Blender と対応しない。** Cycles の AREA ライトはワット、
+UE の RectLight はカンデラで、両者を結ぶ固定の換算係数は無い。
+`build_scene.py` の 3 灯（Large dusk softbox 750W / Low golden sun 950W /
+Cool rim light 1100W）から**移せるのは比だけ**で、絶対値は目視で合わせる必要が
+ある。現状の 2500 / 3170 / 3670 は根拠のない初期値。
+
+Blender の World 背景 `(0.13, 0.21, 0.32)` × 0.30 と、400m の Studio ground
+背景板も GLB には含まれない。UE 側で作り直す対象。
+
+### 検証方法
+
+WSL から Windows の UE を起動し、ウィンドウを `PrintWindow` で直接取得した。
+画面キャプチャ（`CopyFromScreen`）は壁紙しか写らない — UE のウィンドウは
+`IsWindowVisible` が true でも別の仮想デスクトップに置かれることがあるため。
