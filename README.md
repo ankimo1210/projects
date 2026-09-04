@@ -17,6 +17,7 @@
 | [`health/`](health/) | Google Health API の本人データを OAuth 取得 → DuckDB 保存 → 閲覧するローカル専用ダッシュボード | Python / Streamlit / DuckDB / Plotly |
 | [`akinator/`](akinator/) | Wikidata をエンティティ源とするローカル・アキネーター風推測ゲーム（確率的候補更新エンジン） | Python / FastAPI |
 | [`pokemon/`](pokemon/) | Quokka Wilds: オリジナル 3D モンスター収集ゲーム | Vite / React Three Fiber |
+| [`komorebi-3d/`](komorebi-3d/) | 喫茶店ジオラマの3D制作とUnreal Engineへの移行実験（Blender描画確認済み、UE実機確認待ち） | Blender / Unreal Engine / Python |
 | [`monster_gate/`](monster_gate/) | コナミ『モンスターゲート』風ローグライク（使い切りカード 10 枚 + MP 経済 + 1 ダンジョン、Canvas 2D） | TypeScript / pnpm / Vite |
 | [`b737-ops-sim/`](b737-ops-sim/) | ローカル専用 Boeing 737-800 運航手順トレーナー（FlightGear/mock バックエンド、3D コックピット、ATC・チェックリスト・デブリーフ。認定訓練装置ではない） | TypeScript / pnpm / React / Babylon.js / Fastify |
 | [`eagle/`](eagle/) | Apollo 11 月着陸船の降下シミュレータ（Luminary099 の実 AGC コードを yaAGC で実行、Rust ランタイム + Web DSKY・6DoF・エンジニアボード） | Rust / TypeScript / yaAGC |
