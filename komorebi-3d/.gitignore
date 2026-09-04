@@ -1,0 +1,13 @@
+/assets/blender/
+/assets/export/
+/assets/previews/
+/unreal/SourceAssets/
+**/Binaries/
+**/DerivedDataCache/
+**/Intermediate/
+**/Saved/
+**/*.uasset
+**/*.umap
+**/*.blend1
+__pycache__/
+.ruff_cache/
