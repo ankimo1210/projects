@@ -139,7 +139,10 @@ test('mobile layout fits and touch controls remain usable', async ({
 test('a failed 3D download leaves a usable preview and clear status', async ({
   page,
 }) => {
-  await page.route('**/orbit-core.glb', (route) => route.abort());
+  let offline = true;
+  await page.route('**/orbit-core.glb', (route) =>
+    offline ? route.abort() : route.continue(),
+  );
   await page.goto('/');
   await expect(page.locator('.scene-index')).toContainText('PREVIEW MODE');
   await expect(page.locator('.scene-fallback')).not.toHaveClass(/is-hidden/);
@@ -153,4 +156,10 @@ test('a failed 3D download leaves a usable preview and clear status', async ({
   await page.getByRole('button', { name: 'Komorebi caféを表示' }).click();
   await expect(page.locator('.scene-index')).toContainText('LIVE 3D');
   await expect(page.locator('.model-name')).toHaveText('Komorebi café');
+  // A cached rejection must not keep the recovered collection in preview mode.
+  offline = false;
+  await page.locator('.workspace-link').filter({ hasText: 'RESEARCH' }).click();
+  await page.getByRole('button', { name: 'Orbital coreを表示' }).click();
+  await expect(page.locator('.scene-index')).toContainText('LIVE 3D');
+  await expect(page.locator('.model-name')).toHaveText('Orbital core');
 });

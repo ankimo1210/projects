@@ -121,6 +121,10 @@ export default function OrbitExperience({
 
   function selectCollection(next: Collection) {
     if (next !== collection) {
+      // A failed download stays cached as a rejection, so the collection we are
+      // leaving would never retry. Same chunk as the lazy import above.
+      if (failed)
+        void import('./scene').then((module) => module.clearAsset(collection));
       setReady(false);
       setFailed(false);
       setStats(null);
@@ -531,7 +535,7 @@ export default function OrbitExperience({
                   </div>
                   <div>
                     <dt>
-                      Draw calls <small>現在のシーン描画命令</small>
+                      Draw calls <small>直前フレームの描画命令</small>
                     </dt>
                     <dd>{stats?.calls.toLocaleString() ?? '—'}</dd>
                   </div>
