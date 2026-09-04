@@ -145,6 +145,11 @@ def basket_return(returns, members: dict[str, str]):
     return returns[list(members)].mean(axis=1)
 
 
+# Yield differences, not returns. See estimate_covariance for why they are
+# exempt from the adjusted-close outlier screen.
+RATE_FACTORS = ("日本金利", "海外金利")
+
+
 def build_factor_frame(prices, yields):
     """Map proxy levels to the model's factor returns.
 
@@ -309,9 +314,26 @@ def series_payload(weekly_factors) -> dict[str, Any]:
 
 
 def estimate_covariance(weekly_factors) -> dict[str, Any]:
+    """Weekly covariance, screening only the factors the screen was built for.
+
+    ``robust_outlier_mask`` detects the discontinuity an adjusted-close series
+    leaves behind, so it applies to the price-derived factors. The rate factors
+    are yield differences off the MoF and ^TNX series, which carry no such
+    artifact, and their dispersion is two orders of magnitude tighter: the JP
+    rate's MAD scale is about 4.8bp, which puts z > 8 at a 39bp week. Rates
+    travel that far on their own, and screening them cost real observations —
+    the week of 2025-04-04 (10y JGB 1.551% -> 1.176%) scored z = 8.09 and took
+    the window's largest equity drawdown down with it, because a flag on any
+    one factor drops the whole row.
+
+    Rows are still dropped whole rather than per factor, so that every entry of
+    the matrix is estimated from the same weeks; pairwise deletion can leave a
+    covariance matrix that is not positive semi-definite.
+    """
     clean = weekly_factors.dropna()
+    screened = [factor for factor in clean.columns if factor not in RATE_FACTORS]
     dropped = None
-    for factor in clean.columns:
+    for factor in screened:
         flags = robust_outlier_mask(clean[factor])
         dropped = flags if dropped is None else (dropped | flags)
     dropped_dates = [stamp.date().isoformat() for stamp in clean.index[dropped]]
@@ -323,6 +345,7 @@ def estimate_covariance(weekly_factors) -> dict[str, Any]:
         "factors": factors,
         "observations": len(clean),
         "dropped_outliers": dropped_dates,
+        "outlier_screened_factors": screened,
         "frequency": "weekly",
         "covariance": [[round(float(covariance.loc[a, b]), 12) for b in factors] for a in factors],
         "correlation": [[round(float(correlation.loc[a, b]), 4) for b in factors] for a in factors],

@@ -136,3 +136,84 @@ def test_estimate_betas_recovers_a_known_beta() -> None:
     assert betas["TGT"]["observations"] > 52
     assert betas["TGT"]["beta"] == pytest.approx(2.0, rel=0.05)
     assert betas["TGT"]["correlation"] == pytest.approx(1.0, rel=0.01)
+
+
+def _covariance_frame(jp_rate_shock: float, equity_shock: float) -> pd.DataFrame:
+    """A calm three-year weekly history with one eventful week at the end.
+
+    Rate factors are yield differences, not returns, so their dispersion is
+    two orders of magnitude tighter than an equity return's. That gap is the
+    whole point of these tests.
+    """
+    index = pd.bdate_range("2023-01-06", periods=140, freq="W-FRI")
+    calm_equity = [0.01, -0.012, 0.008, -0.006] * 35
+    calm_rate = [0.0002, -0.00025, 0.0003, -0.00015] * 35
+    frame = pd.DataFrame(
+        {
+            factor: calm_equity
+            for factor in (
+                "株式全体",
+                "情報技術",
+                "IT装置",
+                "IT需要側",
+                "エネルギー",
+                "不動産",
+                "外貨対円",
+            )
+        },
+        index=index,
+    )
+    frame["日本金利"] = calm_rate
+    frame["海外金利"] = calm_rate
+    frame.iloc[-1, frame.columns.get_loc("日本金利")] = jp_rate_shock
+    frame.iloc[-1, frame.columns.get_loc("株式全体")] = equity_shock
+    return frame
+
+
+def test_estimate_covariance_keeps_a_real_rate_move() -> None:
+    """A 37.5bp week is a market move, not a bad print.
+
+    2025-04-04 was exactly this: the 10y JGB fell 1.551% -> 1.176% on the
+    MOF's own published series. The MAD scale of a rate factor is a few
+    basis points, so z > 8 lands inside the range rates actually travel.
+    """
+    frame = _covariance_frame(jp_rate_shock=-0.00375, equity_shock=-0.0955)
+
+    result = estimate_factors.estimate_covariance(frame)
+
+    assert result["dropped_outliers"] == []
+    assert result["observations"] == len(frame)
+
+
+def test_estimate_covariance_does_not_take_the_equity_week_down_with_the_rate() -> None:
+    """The largest equity drawdown in the window must survive the screen."""
+    frame = _covariance_frame(jp_rate_shock=-0.00375, equity_shock=-0.0955)
+
+    screened = estimate_factors.estimate_covariance(frame)
+    unshocked = estimate_factors.estimate_covariance(
+        _covariance_frame(jp_rate_shock=0.0002, equity_shock=-0.0955)
+    )
+
+    # Whether the rate moved that week must not change the equity volatility.
+    assert screened["annualized_volatility"]["株式全体"] == pytest.approx(
+        unshocked["annualized_volatility"]["株式全体"]
+    )
+
+
+def test_estimate_covariance_still_drops_an_adjustment_discontinuity() -> None:
+    """The screen exists for adjusted-close artifacts; it must keep catching them."""
+    frame = _covariance_frame(jp_rate_shock=0.0002, equity_shock=2.5)
+
+    result = estimate_factors.estimate_covariance(frame)
+
+    assert result["dropped_outliers"] == [frame.index[-1].date().isoformat()]
+
+
+def test_estimate_covariance_records_which_factors_were_screened() -> None:
+    frame = _covariance_frame(jp_rate_shock=0.0002, equity_shock=-0.01)
+
+    result = estimate_factors.estimate_covariance(frame)
+
+    assert "日本金利" not in result["outlier_screened_factors"]
+    assert "海外金利" not in result["outlier_screened_factors"]
+    assert "株式全体" in result["outlier_screened_factors"]
