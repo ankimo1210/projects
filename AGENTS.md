@@ -97,8 +97,26 @@ See `docs/decisions/0001-workspace-docs-and-knowledge-layers.md`.
 | `<project>/README.md` + `<project>/docs/` | Source of truth for that project |
 | `docs/decisions/` | Workspace-level ADRs (load-bearing "why" only) |
 | `docs/superpowers/` | Skill-generated plans/specs (generated artifacts) |
+| `docs/templates/` | Reusable output formats (see HTML reports below) |
 | `_docs/` | Ephemeral worklogs/handoffs — not curated, do not rely on |
 | git log | The what/when history |
 
 Write an ADR only when a future reader cannot reconstruct the "why"
 from the diff or log.
+
+## HTML reports & Artifacts
+
+Any HTML report or published Artifact in this workspace uses
+**`docs/templates/claude-report/`** unless the user asks for something else.
+`tokens.css` is the source of truth; `skeleton.html` is the skeleton;
+`README.md` covers usage and the traps.
+
+- Paste `tokens.css` into the page's `<style>` block — an Artifact must be
+  self-contained, and the CSP admits no external stylesheet but Google Fonts.
+- Take every color from a `var(--...)` token; never write a raw hex in the page.
+  Chart series are `--series-1` / `--series-2`, validated on both surfaces.
+- Render the page and look at it before publishing. A color validator does not
+  catch collided labels or overflow.
+
+Changing the palette or the type pairing means editing `tokens.css`, not the
+individual report — that is the point of the file.

@@ -1,0 +1,115 @@
+<!-- ============================================================
+     claude-report skeleton — copy this file, then paste the whole
+     contents of tokens.css into the <style> block below.
+
+     Artifacts are published without <!doctype>/<html>/<head>/<body>
+     (the host wraps the file), so this skeleton starts at <title>.
+     For a standalone .html on disk, wrap it yourself.
+     ============================================================ -->
+<title>Two To Four Words</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;700&family=Zen+Old+Mincho:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* >>> paste docs/templates/claude-report/tokens.css here <<< */
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">
+    <span>対象</span><span>データの時点</span><span>n = 0,000</span><b>プロジェクト名</b>
+  </div>
+  <h1>見出し<span class="sub">何を、どう測ったかの一行</span></h1>
+  <p class="lede">結論を先に置く。<strong>効いた数字</strong>はここで太字にする。</p>
+
+  <!-- 3–4 枚。読者が最初に持ち帰る数字だけ -->
+  <div class="strip">
+    <div><span class="k">指標名</span><span class="v a">−1.15<small style="font-size:19px">%/年</small></span><span class="n">条件と含意</span></div>
+    <div><span class="k">指標名</span><span class="v b">−0.27</span><span class="n">条件と含意</span></div>
+  </div>
+</header>
+
+<!-- 章番号は「本当に順序が意味を持つとき」だけ使う。
+     観測 → 交絡 → 統制 → 分解 → 検定 → 限界 のような論証の鎖なら適切。 -->
+<section>
+  <div class="head"><span class="step">01</span><h2>節の見出し</h2></div>
+  <div class="col">
+    <p>本文。<em>強調</em>は下線ハイライト、<code>path/to/file.md</code> は等幅。</p>
+  </div>
+
+  <figure>
+    <p class="figtitle">図が答える問い</p>
+    <p class="figsub">軸と単位</p>
+    <div class="legend">
+      <span><i style="background:var(--series-1)"></i>系列1</span>
+      <span><i class="sq" style="background:var(--series-2)"></i>系列2</span>
+    </div>
+    <div class="scroll"><svg id="fig1" viewBox="0 0 760 360" role="img" aria-label="図の内容を一文で"></svg></div>
+    <figcaption><b>Fig 1</b>図から読み取れること。n が薄い箇所はここで断る。</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <caption>表の見出し</caption>
+    <thead><tr><th>区分</th><th>n</th><th>値</th></tr></thead>
+    <tbody><tr><td>行</td><td class="num">0</td><td class="num">0.0</td></tr></tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="lab">読み方の注意</span>
+    <p>この数字が何を意味しないか。</p>
+  </div>
+</section>
+
+<!-- 節と節のあいだの飾り。使うなら全節で一貫させる -->
+<svg class="burst" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
+
+<section>
+  <div class="head"><span class="step">02</span><h2>最後は必ず「使えない範囲」で閉じる</h2></div>
+  <ul>
+    <li><strong>何が測れていないか。</strong>脱落の非無作為性、時点の少なさ、n の薄い層。</li>
+  </ul>
+</section>
+
+<footer>
+  データ: /absolute/path/to/source<br>
+  抽出条件: フィルタをそのまま書く<br>
+  推定: モデル式と信頼区間の定義<br>
+  作成 YYYY-MM-DD
+</footer>
+</div>
+
+<div id="tip" role="status"></div>
+
+<script>
+/* ---- SVG helpers (使い回す) --------------------------------
+   色は必ず var(--...) で渡すこと。CSS 変数は presentation attribute
+   では解決されないので、el() が style 経由に振り分けている。
+   これによりテーマ切り替えに図が追従する。 */
+const SVGNS="http://www.w3.org/2000/svg";
+const CSSATTR=new Set(["fill","stroke","font-family"]);
+const el=(t,a={})=>{const e=document.createElementNS(SVGNS,t);
+  for(const k in a){const v=String(a[k]);
+    if(CSSATTR.has(k)&&v.indexOf("var(")>=0)e.style.setProperty(k,v);else e.setAttribute(k,a[k]);}
+  return e;};
+const fmt=n=>n.toLocaleString("en-US");
+const pct=v=>(v>0?"+":"")+v.toFixed(1)+"%";
+
+/* ---- hover tooltip (図には原則すべて付ける) ---- */
+const tip=document.getElementById("tip");
+function bind(node,text){
+  node.addEventListener("pointerenter",()=>{tip.textContent=text;tip.style.opacity=1;});
+  node.addEventListener("pointermove",e=>{
+    const w=tip.offsetWidth,h=tip.offsetHeight;
+    let x=e.clientX+14,y=e.clientY-h-12;
+    if(x+w>innerWidth-8)x=e.clientX-w-14;
+    if(y<8)y=e.clientY+18;
+    tip.style.left=x+"px";tip.style.top=y+"px";
+  });
+  node.addEventListener("pointerleave",()=>{tip.style.opacity=0;});
+  node.classList.add("hit");
+}
+
+/* ---- 図の描画はここから ---- */
+</script>
