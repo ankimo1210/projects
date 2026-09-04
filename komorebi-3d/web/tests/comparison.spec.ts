@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 
 const views = '.engine-view[data-ready="true"]';
 
@@ -89,6 +89,8 @@ test('benchmark renders only one engine at a time and reports matching buffer si
   expect(dimensions[0]).toMatch(/\d+ × \d+/);
   expect(dimensions[0]).toBe(dimensions[1]);
   await expect(page.locator(views)).toHaveCount(2);
+  // page.screenshot creates its directory; writeFile does not.
+  await mkdir('outputs', { recursive: true });
   await writeFile(
     'outputs/engine-comparison-measurement.json',
     JSON.stringify(
