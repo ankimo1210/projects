@@ -3,6 +3,8 @@
 Blenderで制作した金属の彫刻と喫茶店を、ブラウザで回して鑑賞する3D Webサイト。
 React / TypeScriptで共通UIを作り、Three.js（React Three Fiber / Drei）とBabylon.jsの2つの描画エンジンで同じ作品を表示します。
 アプリの土台はSitesのVinextテンプレート、操作パネルはshadcnのBase UI版です。
+テンプレート同梱のUI部品のうち、実際に使うbutton / sheet / slider / switch / tabsだけを
+残しています。追加が必要なら`npx shadcn add <部品>`で取得します。
 
 ## 起動
 
@@ -107,9 +109,7 @@ npm test
 PLAYWRIGHT_CHROMIUM_EXECUTABLE=/path/to/chrome npm test
 ```
 
-`lint`はアプリ・使用するUI部品・設定・テスト・スクリプトを対象にします。
-未使用の生成済みshadcn部品には初期テンプレートのlint違反があるため対象に含めていません。
-TypeScriptの型チェックはそれらも含みます。
+`lint`と型チェックはアプリ・UI部品・設定・テスト・スクリプトの全体を対象にします。
 
 本番プレビューを起動したまま再ビルドすると、古いアセット一覧が残る場合があります。
 再ビルド時は3101番ポートのプレビューを停止し、完了後に再起動してください。
@@ -117,8 +117,9 @@ TypeScriptの型チェックはそれらも含みます。
 Playwrightは本番ビルドをローカルの3101番ポートで起動し、
 実際のWebGL描画、2エンジンの同期操作・順次計測、ドラッグ、ワイヤーフレーム、設定コピー、
 作品切り替え、計測値、モバイル操作、読み込み失敗時のフォールバックを確認します。
-この環境での描画はLinux Chromium + SwiftShaderです。スマホ幅はエミュレーションで、
-iPhone実機のFPSは未計測です。FPSは端末やバックグラウンド状態に左右されます。
+描画はSwiftShader（ソフトウェアWebGL）です。macOSでは
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE`にGoogle Chromeを指定すれば追加DLなしで動きます。
+スマホ幅はエミュレーションで、iPhone実機のFPSは未計測です。FPSは端末やバックグラウンド状態に左右されます。
 描画品質・影・ガラスはBlender/Cyclesの静止画と完全には一致しません。
 
 ## ファイル
@@ -136,6 +137,7 @@ iPhone実機のFPSは未計測です。FPSは端末やバックグラウンド�
 - `components/volatility/*-surface.tsx`: 各ツールの描画と入力の変換
 - `components/volatility/viewer.tsx`, `slices.tsx`: 共通の操作画面と2D断面
 - `tests/volatility*.ts`: データ、描画、CSV、視点同期、フォールバックの検証
+- `components/ui/`: 使用中のshadcn部品のみ（button / sheet / slider / switch / tabs）
 - `app/globals.css`: デスクトップ・モバイルのレイアウト
 - `tests/orbit.spec.ts`: ブラウザでの動作検証
 - `outputs/`: 確認用スクリーンショット（Git管理外）
