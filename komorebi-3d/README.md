@@ -7,6 +7,11 @@
 
 - `web/`に、3Dを操作できるWebサイト「ORBIT」を追加しました。
   金属の彫刻と喫茶店を切り替え、回転・ワイヤーフレーム・描画計測を試せます。
+- 比較ページ `/compare` で同じ作品をThree.js / Babylon.jsで並べて比較できます。
+  同期回転と、片方ずつのFPS計測に対応。Babylon版のサイトは `/babylon` です。
+- `/volatility` にボラティリティーサーフェスViewerを追加しました。
+  Plotly / Three.js / Babylon.jsで同じ模擬データやCSVを表示し、視点・選択点・断面を連動させます。
+  [操作とデータ仕様](docs/volatility-surface.md)を参照してください。
 - Blender 5.2.1で制作・画像確認した喫茶店シーンを引き継いでいます。
 - `.blend`、自己完結した`.glb`、プレビュー画像、再生成用Pythonがあります。
 - Unreal Engine 5.8向けのプロジェクト定義と初回インポート用スクリプトがあります。

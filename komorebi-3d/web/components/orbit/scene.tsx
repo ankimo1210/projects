@@ -11,32 +11,30 @@ import {
 } from '@react-three/drei';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
-import {
-  collections,
-  type Collection,
-  type Panel,
-  type SceneStats,
-} from './types';
+import { collections } from './types';
 
-type Props = {
-  collection: Collection;
-  playing: boolean;
-  speed: number;
-  wireframe: boolean;
-  resetKey: number;
-  onReady: () => void;
-  onStats: (stats: SceneStats) => void;
-  onPanel: (panel: Panel) => void;
-};
+import {
+  cameraPosition,
+  exposure,
+  fieldOfView,
+  initialYaw,
+  modelExtent,
+  nodes,
+  rendererInfo,
+  studioUrl,
+  type SceneProps as Props,
+} from './render-contract';
 
 function Sculpture({
   collection,
   wireframe,
   onReady,
   onGeometry,
-}: Pick<Props, 'collection' | 'wireframe' | 'onReady'> & {
+  comparison,
+}: Pick<Props, 'collection' | 'wireframe' | 'onReady' | 'comparison'> & {
   onGeometry: (meshes: number, triangles: number) => void;
 }) {
+  const comparisonMode = !!comparison;
   const { scene } = useGLTF(collections[collection].asset);
   const prepared = useMemo(() => {
     const object = scene.clone(true);
@@ -59,7 +57,11 @@ function Sculpture({
         if ('wireframe' in copy)
           (copy as THREE.MeshStandardMaterial).wireframe = wireframe;
         if (copy instanceof THREE.MeshStandardMaterial)
-          copy.envMapIntensity = collection === 'core' ? 1.6 : 0.65;
+          copy.envMapIntensity = comparisonMode
+            ? 1
+            : collection === 'core'
+              ? 1.6
+              : 0.65;
         materials.push(copy);
         return copy;
       });
@@ -75,9 +77,10 @@ function Sculpture({
       meshes,
       triangles,
       scale:
-        (collection === 'core' ? 5.2 : 5) / Math.max(size.x, size.y, size.z),
+        modelExtent(collection, comparisonMode) /
+        Math.max(size.x, size.y, size.z),
     };
-  }, [scene, collection, wireframe]);
+  }, [scene, collection, wireframe, comparisonMode]);
 
   useEffect(() => {
     onGeometry(prepared.meshes, prepared.triangles);
@@ -92,19 +95,17 @@ function Sculpture({
   );
 }
 
-const nodes: {
-  panel: Panel;
-  position: [number, number, number];
-  number: string;
-}[] = [
-  { panel: 'code', position: [-2.4, 0.85, 0.1], number: '01' },
-  { panel: 'data', position: [2.5, 0.4, 0.1], number: '02' },
-  { panel: 'research', position: [0.8, -1.85, 0.9], number: '03' },
-];
-
 function World(props: Props) {
   const viewportWidth = useThree((state) => state.viewport.width);
   const camera = useThree((state) => state.camera);
+  const size = useThree((state) => state.size);
+  const gl = useThree((state) => state.gl);
+  const gpu = useMemo(() => rendererInfo(gl.domElement), [gl]);
+  const distance = Math.hypot(...cameraPosition(props.collection));
+  const width = props.comparison
+    ? (2 * Math.tan((fieldOfView * Math.PI) / 360) * distance * size.width) /
+      size.height
+    : viewportWidth;
   const sculpture = useRef<THREE.Group>(null);
   const controls = useRef<OrbitControlsType>(null);
   const telemetry = useRef({ start: 0, frames: 0, meshes: 0, triangles: 0 });
@@ -117,21 +118,34 @@ function World(props: Props) {
   );
 
   useEffect(() => {
-    camera.position.set(0, props.collection === 'cafe' ? 2.8 : 1.25, 7.8);
+    camera.position.set(...cameraPosition(props.collection));
+    camera.lookAt(0, 0, 0);
     controls.current?.target.set(0, 0, 0);
     controls.current?.update();
     if (sculpture.current)
-      sculpture.current.rotation.set(
-        0,
-        props.collection === 'cafe' ? -0.5 : 0,
-        0,
-      );
+      sculpture.current.rotation.set(0, initialYaw(props.collection), 0);
   }, [props.resetKey, props.collection, camera]);
 
   useFrame(({ gl, clock }, delta) => {
-    if (sculpture.current && props.playing)
+    if (gl.getContext().isContextLost()) return;
+    if (sculpture.current && props.comparison) {
+      sculpture.current.rotation.set(
+        props.comparison.pitch,
+        initialYaw(props.collection) + props.comparison.yaw,
+        0,
+        'YXZ',
+      );
+    }
+    if (sculpture.current && props.playing && !props.comparison)
       sculpture.current.rotation.y +=
         Math.min(delta, 0.05) * props.speed * 0.12;
+    if (telemetry.current.meshes)
+      props.onFrame?.({
+        timestamp: performance.now(),
+        width: gl.domElement.width,
+        height: gl.domElement.height,
+        renderer: gpu,
+      });
     const metric = telemetry.current;
     metric.frames++;
     const elapsed = clock.elapsedTime - metric.start;
@@ -149,50 +163,61 @@ function World(props: Props) {
 
   return (
     <>
-      <ambientLight intensity={props.collection === 'cafe' ? 0.65 : 0.5} />
-      <directionalLight
-        position={[4, 6, 4]}
-        intensity={props.collection === 'cafe' ? 2.1 : 2.4}
-        color={props.collection === 'cafe' ? '#ffe4b9' : '#efffed'}
-      />
-      <directionalLight position={[-4, 2, -3]} intensity={2} color="#b9d5cc" />
-      <Environment resolution={128} frames={1}>
-        <Lightformer
-          intensity={5}
-          position={[0, 5, -3]}
-          rotation={[Math.PI / 2, 0, 0]}
-          scale={[10, 2, 1]}
-        />
-        <Lightformer
-          intensity={4}
-          position={[-4, 1, 3]}
-          rotation={[0, Math.PI / 2, 0]}
-          scale={[2, 7, 1]}
-        />
-        <Lightformer
-          intensity={3}
-          position={[4, 3, 2]}
-          rotation={[0, -Math.PI / 2, 0]}
-          scale={[3, 6, 1]}
-        />
-        <Lightformer
-          intensity={1.5}
-          color="#caff65"
-          position={[0, -4, 1]}
-          rotation={[-Math.PI / 2, 0, 0]}
-          scale={[8, 3, 1]}
-        />
-      </Environment>
-      <group scale={Math.min(1, viewportWidth / 7.5)}>
+      {props.comparison ? (
+        <Environment files={studioUrl} />
+      ) : (
+        <>
+          <ambientLight intensity={props.collection === 'cafe' ? 0.65 : 0.5} />
+          <directionalLight
+            position={[4, 6, 4]}
+            intensity={props.collection === 'cafe' ? 2.1 : 2.4}
+            color={props.collection === 'cafe' ? '#ffe4b9' : '#efffed'}
+          />
+          <directionalLight
+            position={[-4, 2, -3]}
+            intensity={2}
+            color="#b9d5cc"
+          />
+          <Environment resolution={128} frames={1}>
+            <Lightformer
+              intensity={5}
+              position={[0, 5, -3]}
+              rotation={[Math.PI / 2, 0, 0]}
+              scale={[10, 2, 1]}
+            />
+            <Lightformer
+              intensity={4}
+              position={[-4, 1, 3]}
+              rotation={[0, Math.PI / 2, 0]}
+              scale={[2, 7, 1]}
+            />
+            <Lightformer
+              intensity={3}
+              position={[4, 3, 2]}
+              rotation={[0, -Math.PI / 2, 0]}
+              scale={[3, 6, 1]}
+            />
+            <Lightformer
+              intensity={1.5}
+              color="#caff65"
+              position={[0, -4, 1]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={[8, 3, 1]}
+            />
+          </Environment>
+        </>
+      )}
+      <group scale={Math.min(1, width / 7.5)}>
         <group ref={sculpture}>
           <Sculpture
             collection={props.collection}
             wireframe={props.wireframe}
+            comparison={props.comparison}
             onReady={props.onReady}
             onGeometry={onGeometry}
           />
         </group>
-        {props.collection === 'core' && (
+        {props.collection === 'core' && !props.comparison && (
           <>
             <mesh rotation={[Math.PI / 2.6, 0.15, 0.05]}>
               <torusGeometry args={[2.65, 0.004, 5, 180]} />
@@ -229,26 +254,38 @@ function World(props: Props) {
           </>
         )}
       </group>
-      <OrbitControls
-        ref={controls}
-        makeDefault
-        enablePan={false}
-        enableZoom={false}
-        enableDamping
-        dampingFactor={0.07}
-        rotateSpeed={0.55}
-        minPolarAngle={0.35}
-        maxPolarAngle={Math.PI * 0.8}
-      />
+      {!props.comparison && (
+        <OrbitControls
+          ref={controls}
+          makeDefault
+          enablePan={false}
+          enableZoom={false}
+          enableDamping
+          dampingFactor={0.07}
+          rotateSpeed={0.55}
+          minPolarAngle={0.35}
+          maxPolarAngle={Math.PI * 0.8}
+        />
+      )}
     </>
   );
+}
+
+function ContextObserver({ onError }: Pick<Props, 'onError'>) {
+  const gl = useThree((state) => state.gl);
+  useEffect(() => {
+    const lost = () => onError?.();
+    gl.domElement.addEventListener('webglcontextlost', lost);
+    return () => gl.domElement.removeEventListener('webglcontextlost', lost);
+  }, [gl, onError]);
+  return null;
 }
 
 export default function OrbitScene(props: Props) {
   return (
     <Canvas
-      camera={{ position: [0, 1.25, 7.8], fov: 43 }}
-      dpr={[1, 1.5]}
+      camera={{ position: cameraPosition(props.collection), fov: fieldOfView }}
+      dpr={props.comparison ? 1 : [1, 1.5]}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       fallback={
         <p className="webgl-note">
@@ -257,9 +294,10 @@ export default function OrbitScene(props: Props) {
       }
       onCreated={({ gl }) => {
         gl.setClearColor(0x000000, 0);
-        gl.toneMappingExposure = 1.2;
+        gl.toneMappingExposure = exposure;
       }}
     >
+      <ContextObserver onError={props.onError} />
       <Suspense fallback={null}>
         <World {...props} />
       </Suspense>

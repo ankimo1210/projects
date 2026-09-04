@@ -1,15 +1,11 @@
 'use client';
 
 import {
-  Component,
-  Suspense,
-  lazy,
   useCallback,
   useEffect,
   useRef,
   useState,
   useSyncExternalStore,
-  type ReactNode,
 } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -48,29 +44,13 @@ import {
   type SceneStats,
 } from './types';
 
-const OrbitScene = lazy(() => import('./scene'));
-const subscribeHydration = () => () => {};
+import SceneRenderer from './renderer';
+import type { RendererName } from './render-contract';
 const subscribeMotion = (notify: () => void) => {
   const media = window.matchMedia('(prefers-reduced-motion: reduce)');
   media.addEventListener('change', notify);
   return () => media.removeEventListener('change', notify);
 };
-
-class SceneBoundary extends Component<
-  { children: ReactNode; onError: () => void },
-  { failed: boolean }
-> {
-  state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  componentDidCatch() {
-    this.props.onError();
-  }
-  render() {
-    return this.state.failed ? null : this.props.children;
-  }
-}
 
 const panels = {
   code: {
@@ -94,12 +74,11 @@ const panels = {
   },
 } as const;
 
-export default function OrbitExperience() {
-  const mounted = useSyncExternalStore(
-    subscribeHydration,
-    () => true,
-    () => false,
-  );
+export default function OrbitExperience({
+  engine = 'three',
+}: {
+  engine?: RendererName;
+}) {
   const reducedMotion = useSyncExternalStore(
     subscribeMotion,
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -192,6 +171,8 @@ export default function OrbitExperience() {
           <button onClick={() => openPanel('research')}>
             Collection <span>02</span>
           </button>
+          <Link href="/compare">Compare ↗</Link>
+          <Link href="/volatility">Volatility ↗</Link>
         </nav>
         <div className="header-note">
           <span className="live-dot" />A space for possibility
@@ -232,6 +213,7 @@ export default function OrbitExperience() {
 
         <div
           className="scene-stage"
+          data-engine={engine}
           id="explore"
           aria-label={`${current.title} のインタラクティブ3Dビュー`}
         >
@@ -252,28 +234,28 @@ export default function OrbitExperience() {
               }
             />
           </div>
-          {mounted && (
-            <SceneBoundary key={collection} onError={failedCallback}>
-              <Suspense fallback={null}>
-                <OrbitScene
-                  collection={collection}
-                  playing={playing}
-                  speed={speed}
-                  wireframe={wireframe}
-                  resetKey={resetKey}
-                  onReady={readyCallback}
-                  onStats={statsCallback}
-                  onPanel={openPanel}
-                />
-              </Suspense>
-            </SceneBoundary>
-          )}
+          <SceneRenderer
+            engine={engine}
+            onError={failedCallback}
+            collection={collection}
+            playing={playing}
+            speed={speed}
+            wireframe={wireframe}
+            resetKey={resetKey}
+            onReady={readyCallback}
+            onStats={statsCallback}
+            onPanel={openPanel}
+          />
+
           <div className="scene-index">
             <span className="live-dot" />
             <span>
               {failed ? 'PREVIEW MODE' : ready ? 'LIVE 3D' : 'LOADING 3D'}
               <br />
-              <small>{current.kind}</small>
+              <small>
+                {current.kind} ·{' '}
+                {engine === 'three' ? 'THREE.JS' : 'BABYLON.JS'}
+              </small>
             </span>
           </div>
           {failed && (
