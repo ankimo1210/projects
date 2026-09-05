@@ -1,0 +1,530 @@
+{
+  "advanced": {
+    "description": "natural-cubic zero knots, curvature penalty, spread/liquidity weights, IRLS Huber outliers",
+    "holdout": {
+      "by_instrument_type": {
+        "bond": {
+          "mae": 0.5481568912774445,
+          "n": 15,
+          "rmse": 0.7968325470341148,
+          "unit": "price_points"
+        },
+        "ois_swap": {
+          "mae": 62.96553968351391,
+          "n": 12,
+          "rmse": 71.51722226733894,
+          "unit": "bp"
+        }
+      },
+      "n": 27,
+      "normalized_mae": 33.48547351824537,
+      "normalized_mae_unit": "dimensionless_spread_units",
+      "segments": {
+        "by_maturity_convention": {
+          "fractional_maturity": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.5481568912774445,
+                "n": 15,
+                "rmse": 0.7968325470341148,
+                "unit": "price_points"
+              }
+            },
+            "n": 15,
+            "normalized_mae": 9.901420586030534,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 19.166682783895705,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "regular_half_year_grid": {
+            "by_instrument_type": {
+              "ois_swap": {
+                "mae": 62.96553968351391,
+                "n": 12,
+                "rmse": 71.51722226733894,
+                "unit": "bp"
+              }
+            },
+            "n": 12,
+            "normalized_mae": 62.9655396835139,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 73.64070446699957,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          }
+        },
+        "by_tenor": {
+          "long_T_ge_15": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.2700460214719292,
+                "n": 7,
+                "rmse": 0.33833462416280335,
+                "unit": "price_points"
+              }
+            },
+            "n": 7,
+            "normalized_mae": 4.856087001597422,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 7.154652135856891,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "medium_2_lt_T_lt_15": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.8371784545656998,
+                "n": 6,
+                "rmse": 1.1439306547503054,
+                "unit": "price_points"
+              },
+              "ois_swap": {
+                "mae": 48.821985032458365,
+                "n": 8,
+                "rmse": 59.232964903537486,
+                "unit": "bp"
+              }
+            },
+            "n": 14,
+            "normalized_mae": 35.07409248625363,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 49.01463434063238,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "short_T_le_2": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.6544802457319818,
+                "n": 2,
+                "rmse": 0.6600664124073609,
+                "unit": "price_points"
+              },
+              "ois_swap": {
+                "mae": 91.252648985625,
+                "n": 4,
+                "rmse": 91.25267656337797,
+                "unit": "bp"
+              }
+            },
+            "n": 6,
+            "normalized_mae": 63.17964686231534,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 81.4849960976234,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          }
+        }
+      },
+      "weighted_normalized_rmse": 56.62934155996412,
+      "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+    },
+    "numerical_guardrails_passed": true,
+    "optimizer_success": true,
+    "train": {
+      "by_instrument_type": {
+        "bond": {
+          "mae": 0.47651481743992136,
+          "n": 33,
+          "rmse": 1.280475290516212,
+          "unit": "price_points"
+        },
+        "deposit": {
+          "mae": 1.9569771788153123,
+          "n": 19,
+          "rmse": 4.7636110952512,
+          "unit": "bp"
+        },
+        "ois_swap": {
+          "mae": 10.91813005327827,
+          "n": 57,
+          "rmse": 38.61415025353755,
+          "unit": "bp"
+        }
+      },
+      "n": 109,
+      "normalized_mae": 8.844269516060267,
+      "normalized_mae_unit": "dimensionless_spread_units",
+      "segments": {
+        "by_maturity_convention": {
+          "fractional_maturity": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.47651481743992136,
+                "n": 33,
+                "rmse": 1.280475290516212,
+                "unit": "price_points"
+              },
+              "deposit": {
+                "mae": 1.579371358013404,
+                "n": 11,
+                "rmse": 4.33323860916511,
+                "unit": "bp"
+              },
+              "ois_swap": {
+                "mae": 4.241975833417111,
+                "n": 4,
+                "rmse": 7.790910118726403,
+                "unit": "bp"
+              }
+            },
+            "n": 48,
+            "normalized_mae": 7.121976729040013,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 24.734150988285027,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "regular_half_year_grid": {
+            "by_instrument_type": {
+              "deposit": {
+                "mae": 2.476185182417937,
+                "n": 8,
+                "rmse": 5.298600020119176,
+                "unit": "bp"
+              },
+              "ois_swap": {
+                "mae": 11.421990749116848,
+                "n": 53,
+                "rmse": 39.98754642617837,
+                "unit": "bp"
+              }
+            },
+            "n": 61,
+            "normalized_mae": 10.19951629928932,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 41.07022569796375,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          }
+        },
+        "by_tenor": {
+          "long_T_ge_15": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.24909588887563436,
+                "n": 18,
+                "rmse": 0.3605915550571485,
+                "unit": "price_points"
+              },
+              "ois_swap": {
+                "mae": 2.2814001669158674,
+                "n": 13,
+                "rmse": 2.562716723295483,
+                "unit": "bp"
+              }
+            },
+            "n": 31,
+            "normalized_mae": 3.6805069853596035,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 6.4057497592984785,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "medium_2_lt_T_lt_15": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.7494175317170658,
+                "n": 15,
+                "rmse": 1.8577205951583329,
+                "unit": "price_points"
+              },
+              "ois_swap": {
+                "mae": 17.889706362706498,
+                "n": 32,
+                "rmse": 51.435429783137735,
+                "unit": "bp"
+              }
+            },
+            "n": 47,
+            "normalized_mae": 16.89981630246467,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 50.14367464315587,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "short_T_le_2": {
+            "by_instrument_type": {
+              "deposit": {
+                "mae": 1.9569771788153123,
+                "n": 19,
+                "rmse": 4.7636110952512,
+                "unit": "bp"
+              },
+              "ois_swap": {
+                "mae": 1.6837172716955973,
+                "n": 12,
+                "rmse": 4.52134276213935,
+                "unit": "bp"
+              }
+            },
+            "n": 31,
+            "normalized_mae": 1.7947836931800547,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 4.898550615378716,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          }
+        }
+      },
+      "weighted_normalized_rmse": 35.44539810863835,
+      "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+    }
+  },
+  "baseline": {
+    "description": "spread/liquidity-weighted half-year median standalone yields with PCHIP",
+    "holdout": {
+      "by_instrument_type": {
+        "bond": {
+          "mae": 0.3455100312813168,
+          "n": 15,
+          "rmse": 0.4430795738164569,
+          "unit": "price_points"
+        },
+        "ois_swap": {
+          "mae": 32.014670467431216,
+          "n": 12,
+          "rmse": 52.44839826932088,
+          "unit": "bp"
+        }
+      },
+      "n": 27,
+      "normalized_mae": 17.727020688662563,
+      "normalized_mae_unit": "dimensionless_spread_units",
+      "segments": {
+        "by_maturity_convention": {
+          "fractional_maturity": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.3455100312813168,
+                "n": 15,
+                "rmse": 0.4430795738164569,
+                "unit": "price_points"
+              }
+            },
+            "n": 15,
+            "normalized_mae": 6.296900865647637,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 9.232154916130739,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "regular_half_year_grid": {
+            "by_instrument_type": {
+              "ois_swap": {
+                "mae": 32.014670467431216,
+                "n": 12,
+                "rmse": 52.44839826932088,
+                "unit": "bp"
+              }
+            },
+            "n": 12,
+            "normalized_mae": 32.014670467431216,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 55.208633502558754,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          }
+        },
+        "by_tenor": {
+          "long_T_ge_15": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.2715804019547079,
+                "n": 7,
+                "rmse": 0.3821702030265551,
+                "unit": "price_points"
+              }
+            },
+            "n": 7,
+            "normalized_mae": 4.939324192717982,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 7.936203472268842,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "medium_2_lt_T_lt_15": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.46482759428802706,
+                "n": 6,
+                "rmse": 0.544503287326083,
+                "unit": "price_points"
+              },
+              "ois_swap": {
+                "mae": 26.931295163141005,
+                "n": 8,
+                "rmse": 56.89123889481279,
+                "unit": "bp"
+              }
+            },
+            "n": 14,
+            "normalized_mae": 19.373548044263664,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 47.884353926474915,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "short_T_le_2": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.2463110449043171,
+                "n": 2,
+                "rmse": 0.26787236044207985,
+                "unit": "price_points"
+              },
+              "ois_swap": {
+                "mae": 42.181421076011645,
+                "n": 4,
+                "rmse": 42.18148073596499,
+                "unit": "bp"
+              }
+            },
+            "n": 6,
+            "normalized_mae": 28.804102770862002,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 37.61468787185125,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          }
+        }
+      },
+      "weighted_normalized_rmse": 41.82457420441001,
+      "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+    },
+    "numerical_guardrails_passed": true,
+    "train": {
+      "by_instrument_type": {
+        "bond": {
+          "mae": 0.5045406090440957,
+          "n": 33,
+          "rmse": 1.3215010454249774,
+          "unit": "price_points"
+        },
+        "deposit": {
+          "mae": 7.5798610303012905,
+          "n": 19,
+          "rmse": 10.656140631243769,
+          "unit": "bp"
+        },
+        "ois_swap": {
+          "mae": 16.484449276635303,
+          "n": 57,
+          "rmse": 42.16099949508091,
+          "unit": "bp"
+        }
+      },
+      "n": 109,
+      "normalized_mae": 12.742218185952643,
+      "normalized_mae_unit": "dimensionless_spread_units",
+      "segments": {
+        "by_maturity_convention": {
+          "fractional_maturity": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.5045406090440957,
+                "n": 33,
+                "rmse": 1.3215010454249774,
+                "unit": "price_points"
+              },
+              "deposit": {
+                "mae": 10.09864603869884,
+                "n": 11,
+                "rmse": 13.261494891535033,
+                "unit": "bp"
+              },
+              "ois_swap": {
+                "mae": 61.50703967987748,
+                "n": 4,
+                "rmse": 61.89762126326469,
+                "unit": "bp"
+              }
+            },
+            "n": 48,
+            "normalized_mae": 14.086520085560485,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 34.265877408465514,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "regular_half_year_grid": {
+            "by_instrument_type": {
+              "deposit": {
+                "mae": 4.116531643754658,
+                "n": 8,
+                "rmse": 5.2793656764299675,
+                "unit": "bp"
+              },
+              "ois_swap": {
+                "mae": 13.086517925447213,
+                "n": 53,
+                "rmse": 40.28087260816299,
+                "unit": "bp"
+              }
+            },
+            "n": 61,
+            "normalized_mae": 11.68440685511368,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 41.258591895170056,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          }
+        },
+        "by_tenor": {
+          "long_T_ge_15": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.2847471571358342,
+                "n": 18,
+                "rmse": 0.36370592908257765,
+                "unit": "price_points"
+              },
+              "ois_swap": {
+                "mae": 0.7762267865697058,
+                "n": 13,
+                "rmse": 0.8813661750915359,
+                "unit": "bp"
+              }
+            },
+            "n": 31,
+            "normalized_mae": 3.328292676460678,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 5.453975029112994,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "medium_2_lt_T_lt_15": {
+            "by_instrument_type": {
+              "bond": {
+                "mae": 0.7682927513340094,
+                "n": 15,
+                "rmse": 1.9191833224865968,
+                "unit": "price_points"
+              },
+              "ois_swap": {
+                "mae": 19.26502781157974,
+                "n": 32,
+                "rmse": 51.60372143220487,
+                "unit": "bp"
+              }
+            },
+            "n": 47,
+            "normalized_mae": 17.727655964552113,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 50.50542586316218,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          },
+          "short_T_le_2": {
+            "by_instrument_type": {
+              "deposit": {
+                "mae": 7.5798610303012905,
+                "n": 19,
+                "rmse": 10.656140631243769,
+                "unit": "bp"
+              },
+              "ois_swap": {
+                "mae": 26.08681421435454,
+                "n": 12,
+                "rmse": 36.62425708796832,
+                "unit": "bp"
+              }
+            },
+            "n": 31,
+            "normalized_mae": 14.597576740793794,
+            "normalized_mae_unit": "dimensionless_spread_units",
+            "weighted_normalized_rmse": 26.001926929441122,
+            "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+          }
+        }
+      },
+      "weighted_normalized_rmse": 38.61126595730424,
+      "weighted_normalized_rmse_unit": "dimensionless_spread_units"
+    }
+  },
+  "holdout_method": "deterministic 0.5Y maturity buckets where bucket_index mod 5 equals 3; whole buckets held together",
+  "selected_model": "baseline",
+  "selection_rationale": "Advanced model did not clear both the numerical guardrails and the predeclared 2% holdout-improvement hurdle; baseline retained."
+}

@@ -1,0 +1,45 @@
+{
+  "all_cli_charts_visually_inspected": true,
+  "cli_charts": [
+    "curve.png",
+    "forward_rate.png",
+    "repricing.png",
+    "model_comparison.png",
+    "sensitivity.png"
+  ],
+  "all_research_charts_visually_inspected": true,
+  "research_charts": [
+    "factor_comparison.png",
+    "synthetic_diagnostics.png",
+    "public_diagnostics.png"
+  ],
+  "html_rendered_and_visually_inspected": true,
+  "reports": [
+    "research_report.html",
+    "feedback_review.html"
+  ],
+  "screenshots_inspected": {
+    "main": [
+      "top.png",
+      "section-4.png",
+      "section-5.png",
+      "section-8.png",
+      "mobile-top.png"
+    ],
+    "feedback": [
+      "top.png",
+      "section-4.png",
+      "section-6.png",
+      "mobile-top.png"
+    ]
+  },
+  "all_nine_sections_captured": true,
+  "network_transport_used": false,
+  "findings": [
+    "Axes retain declared units and all visible residuals, including extreme observations.",
+    "Original and candidate curves miss the independently generated long-end hump.",
+    "Reduced smoothing adds public mid-tenor forward undulations; these cannot be labeled truth or error without a known curve.",
+    "Endpoint regression under long-end illiquidity is displayed together with its numeric RMSE.",
+    "Both reports render nine bilingual roles and embedded figures with no page overflow on desktop or mobile."
+  ]
+}

@@ -1,0 +1,522 @@
+{
+  "benchmark_version": "1.0.0",
+  "candidate_path": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/results/astra",
+  "category_scores": {
+    "completion_integrity": 5.0,
+    "data_quality_handling": 7.857,
+    "hidden_scenario_robustness": 12.695,
+    "numerical_correctness": 26.515,
+    "quantitative_model_quality": 12.147,
+    "report_completeness": 1.889,
+    "software_engineering_reproducibility": 14.0
+  },
+  "efficiency_metrics": {
+    "capability_score_per_dollar": null,
+    "capability_score_per_minute": 1.5412109372494744,
+    "corrective_iterations": 6,
+    "credits_consumed": null,
+    "estimated_usd_cost": null,
+    "evaluator_duration_seconds": 37.111,
+    "failed_test_run_count": 0,
+    "human_interventions": 2,
+    "model": "astra",
+    "quota_percentage_consumed": null,
+    "reasoning_effort": "xhigh",
+    "test_run_count": 2,
+    "wall_clock_duration_seconds": 3118.444
+  },
+  "evaluator_wall_time_seconds": 37.111,
+  "failed_test_identifiers": [
+    "math.hidden_instrument_repricing",
+    "quant.model_comparison",
+    "data.unit_handling",
+    "data.missing_handling",
+    "data.bid_ask_inversions",
+    "integrity.anti_cheating_scan",
+    "report.sections"
+  ],
+  "hidden_tests": {
+    "details": [
+      {
+        "detail": "quantcurve\n",
+        "id": "software.import",
+        "passed": true
+      },
+      {
+        "detail": "----------------------------------------------------------------------\nRan 7 tests in 0.005s\n\nOK\n",
+        "id": "software.candidate_tests",
+        "passed": true
+      },
+      {
+        "detail": "{\"grid_rows\": 721, \"holdout_improvement\": 0.09713806675183534, \"selected_model\": \"advanced\", \"usable_instruments\": 131, \"validation_passed\": true}\n",
+        "id": "software.cli",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.curve",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.cleaning",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.repricing",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.risk",
+        "passed": true
+      },
+      {
+        "detail": "cleaning, repricing, and risk tables contain finite usable values",
+        "id": "outputs.numeric_tables",
+        "passed": true
+      },
+      {
+        "detail": "all curve values finite",
+        "id": "math.finite_outputs",
+        "passed": true
+      },
+      {
+        "detail": "all discount factors strictly positive",
+        "id": "math.positive_discount_factors",
+        "passed": true
+      },
+      {
+        "detail": "rows=721, range=0.0833333-30",
+        "id": "math.grid_coverage",
+        "passed": true
+      },
+      {
+        "detail": "ordered=True, max zero-rate jump=0.000509395",
+        "id": "math.interpolation_behavior",
+        "passed": true
+      },
+      {
+        "detail": "30Y finite and economically bounded",
+        "id": "math.extrapolation_behavior",
+        "passed": true
+      },
+      {
+        "detail": "max abs error=1.6e-12",
+        "id": "math.zero_discount_consistency",
+        "passed": true
+      },
+      {
+        "detail": "RMSE=1.83e-05",
+        "id": "math.forward_discount_consistency",
+        "passed": true
+      },
+      {
+        "detail": "normalized RMSE=5.683",
+        "id": "math.hidden_instrument_repricing",
+        "passed": false
+      },
+      {
+        "detail": "/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-ntbzgap2/main_output/diagnostics/model_comparison.json",
+        "id": "quant.model_comparison",
+        "passed": false
+      },
+      {
+        "detail": "/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-ntbzgap2/main_output/diagnostics/sensitivity.json",
+        "id": "quant.sensitivity_analysis",
+        "passed": true
+      },
+      {
+        "detail": "n=131, median relative error=0.003518",
+        "id": "math.dv01_finite_difference",
+        "passed": true
+      },
+      {
+        "detail": "median relative error=2.758e-08",
+        "id": "math.key_rate_consistency",
+        "passed": true
+      },
+      {
+        "detail": "first=6 artifacts, repeat=6",
+        "id": "software.deterministic",
+        "passed": true
+      },
+      {
+        "detail": "front-end negative curve recovered with positive discount factors",
+        "id": "math.negative_rate_handling",
+        "passed": true
+      },
+      {
+        "detail": "10/10 scenarios produced valid curves",
+        "id": "math.numerical_stability",
+        "passed": true
+      },
+      {
+        "detail": "sparse long-end scenario remained bounded",
+        "id": "math.sparse_curve_behavior",
+        "passed": true
+      },
+      {
+        "detail": "rate=0.429",
+        "id": "data.unit_handling",
+        "passed": false
+      },
+      {
+        "detail": "rate=1.000",
+        "id": "data.duplicate_handling",
+        "passed": true
+      },
+      {
+        "detail": "rate=0.000",
+        "id": "data.missing_handling",
+        "passed": false
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.extreme_outliers",
+        "passed": true
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.moderate_outliers",
+        "passed": true
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.stale_observations",
+        "passed": true
+      },
+      {
+        "detail": "handled=0.250",
+        "id": "data.bid_ask_inversions",
+        "passed": false
+      },
+      {
+        "detail": "retained=1.000",
+        "id": "data.valid_observation_retention",
+        "passed": true
+      },
+      {
+        "detail": "retained=1.000",
+        "id": "data.unusual_valid_retention",
+        "passed": true
+      },
+      {
+        "detail": "Python sources contain no /Users/ dependency",
+        "id": "software.no_personal_paths",
+        "passed": true
+      },
+      {
+        "detail": "30 suspicious findings; warnings require manual review",
+        "id": "integrity.anti_cheating_scan",
+        "passed": false
+      },
+      {
+        "detail": "/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-ntbzgap2/main_output/reports/research_report.html",
+        "id": "report.exists",
+        "passed": true
+      },
+      {
+        "detail": "2/9 required section concepts found",
+        "id": "report.sections",
+        "passed": false
+      },
+      {
+        "detail": "5 non-empty chart files",
+        "id": "report.charts",
+        "passed": true
+      },
+      {
+        "detail": "missing=[]",
+        "id": "integrity.summary_schema",
+        "passed": true
+      },
+      {
+        "detail": "README=True, MODEL_RISKS=True",
+        "id": "integrity.documentation",
+        "passed": true
+      },
+      {
+        "detail": "fresh workflow output completeness",
+        "id": "integrity.required_outputs",
+        "passed": true
+      }
+    ],
+    "failed": [
+      "math.hidden_instrument_repricing",
+      "quant.model_comparison",
+      "data.unit_handling",
+      "data.missing_handling",
+      "data.bid_ask_inversions",
+      "integrity.anti_cheating_scan",
+      "report.sections"
+    ],
+    "passed": [
+      "software.import",
+      "software.candidate_tests",
+      "software.cli",
+      "outputs.curve",
+      "outputs.cleaning",
+      "outputs.repricing",
+      "outputs.risk",
+      "outputs.numeric_tables",
+      "math.finite_outputs",
+      "math.positive_discount_factors",
+      "math.grid_coverage",
+      "math.interpolation_behavior",
+      "math.extrapolation_behavior",
+      "math.zero_discount_consistency",
+      "math.forward_discount_consistency",
+      "quant.sensitivity_analysis",
+      "math.dv01_finite_difference",
+      "math.key_rate_consistency",
+      "software.deterministic",
+      "math.negative_rate_handling",
+      "math.numerical_stability",
+      "math.sparse_curve_behavior",
+      "data.duplicate_handling",
+      "data.extreme_outliers",
+      "data.moderate_outliers",
+      "data.stale_observations",
+      "data.valid_observation_retention",
+      "data.unusual_valid_retention",
+      "software.no_personal_paths",
+      "report.exists",
+      "report.charts",
+      "integrity.summary_schema",
+      "integrity.documentation",
+      "integrity.required_outputs"
+    ]
+  },
+  "quantitative_diagnostics": {
+    "bid_ask_normalized_pricing_rmse": 17.70823432623931,
+    "data_quality": {
+      "bad_observation_handling_rate": 1.0,
+      "duplicate_handling_rate": 1.0,
+      "missing_handling_rate": 0.0,
+      "unit_normalization_rate": 0.42857142857142855,
+      "unusual_valid_retention_rate": 1.0,
+      "valid_retention_rate": 1.0
+    },
+    "discount_factor_rmse_x1e4": 67.90858650369316,
+    "dv01_median_relative_error": 0.0035184202286431434,
+    "forward_rate_rmse_bps": 30.81117374220975,
+    "forward_roughness": 7.487975694515203e-06,
+    "hidden_instrument_normalized_rmse": 5.682622565481904,
+    "hidden_scenarios": {
+      "s01": {
+        "bid_ask_normalized_pricing_rmse": 10.169177288032738,
+        "discount_factor_rmse_x1e4": 67.2795110386069,
+        "forward_rate_rmse_bps": 25.394484359270397,
+        "forward_roughness": 1.3392011144700561e-05,
+        "hidden_instrument_normalized_rmse": 4.526905567107158,
+        "long_end_zero_rmse_bps": 5.0246801423416585,
+        "short_end_zero_rmse_bps": 2.8414990386676884,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 3.61795612160355,
+        "zero_curvature_rms": 0.01001952446143129,
+        "zero_rate_rmse_bps": 3.82629953834024
+      },
+      "s02": {
+        "bid_ask_normalized_pricing_rmse": 11.730560536579837,
+        "discount_factor_rmse_x1e4": 56.94993259001416,
+        "forward_rate_rmse_bps": 35.309453132421105,
+        "forward_roughness": 1.8509597914275483e-05,
+        "hidden_instrument_normalized_rmse": 4.498519911895742,
+        "long_end_zero_rmse_bps": 8.896623078564087,
+        "short_end_zero_rmse_bps": 4.199848121185632,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 6.081489764670126,
+        "zero_curvature_rms": 0.015467941370360037,
+        "zero_rate_rmse_bps": 6.749090310076436
+      },
+      "s03": {
+        "bid_ask_normalized_pricing_rmse": 9.699762981576214,
+        "discount_factor_rmse_x1e4": 28.438511652702353,
+        "forward_rate_rmse_bps": 26.370259702919437,
+        "forward_roughness": 1.4394655616581083e-05,
+        "hidden_instrument_normalized_rmse": 2.424213004094835,
+        "long_end_zero_rmse_bps": 2.4895381197724435,
+        "short_end_zero_rmse_bps": 3.477718589705556,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 3.468627788510876,
+        "zero_curvature_rms": 0.013159830818140445,
+        "zero_rate_rmse_bps": 2.7295534772260543
+      },
+      "s04": {
+        "bid_ask_normalized_pricing_rmse": 15.391724299671788,
+        "discount_factor_rmse_x1e4": 114.6677786170816,
+        "forward_rate_rmse_bps": 39.17293246745188,
+        "forward_roughness": 8.901176268402316e-06,
+        "hidden_instrument_normalized_rmse": 8.06856419442192,
+        "long_end_zero_rmse_bps": 11.493678907576246,
+        "short_end_zero_rmse_bps": 1.8825368032129701,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 6.581605175699937,
+        "zero_curvature_rms": 0.006691963248777046,
+        "zero_rate_rmse_bps": 8.339226729131664
+      },
+      "s05": {
+        "bid_ask_normalized_pricing_rmse": 25.644482738896166,
+        "discount_factor_rmse_x1e4": 147.6704085890401,
+        "forward_rate_rmse_bps": 41.50062881212481,
+        "forward_roughness": 3.0428424582539773e-06,
+        "hidden_instrument_normalized_rmse": 10.845385085850422,
+        "long_end_zero_rmse_bps": 12.951745862617761,
+        "short_end_zero_rmse_bps": 5.3898334971960615,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 8.022484514312383,
+        "zero_curvature_rms": 0.002849713100733826,
+        "zero_rate_rmse_bps": 9.56873622048852
+      },
+      "s06": {
+        "bid_ask_normalized_pricing_rmse": 11.817345220849917,
+        "discount_factor_rmse_x1e4": 69.49811904829038,
+        "forward_rate_rmse_bps": 31.030273810643113,
+        "forward_roughness": 1.0502549389157553e-05,
+        "hidden_instrument_normalized_rmse": 4.903179081983223,
+        "long_end_zero_rmse_bps": 6.702948657742555,
+        "short_end_zero_rmse_bps": 2.2201603226276743,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 4.383640681720484,
+        "zero_curvature_rms": 0.007948337667465747,
+        "zero_rate_rmse_bps": 5.111698076513254
+      },
+      "s07": {
+        "bid_ask_normalized_pricing_rmse": 10.62223830076009,
+        "discount_factor_rmse_x1e4": 51.41636357602896,
+        "forward_rate_rmse_bps": 27.803216822203428,
+        "forward_roughness": 6.540914829306704e-06,
+        "hidden_instrument_normalized_rmse": 3.7051439846318313,
+        "long_end_zero_rmse_bps": 4.544395306586996,
+        "short_end_zero_rmse_bps": 1.3654445364598249,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 3.2701777739761657,
+        "zero_curvature_rms": 0.0048724301738814575,
+        "zero_rate_rmse_bps": 3.7133059863966293
+      },
+      "s08": {
+        "bid_ask_normalized_pricing_rmse": 19.195332957751297,
+        "discount_factor_rmse_x1e4": 147.93833311720098,
+        "forward_rate_rmse_bps": 45.67887171521505,
+        "forward_roughness": 1.13859047268961e-05,
+        "hidden_instrument_normalized_rmse": 10.554483820417335,
+        "long_end_zero_rmse_bps": 15.14044139570604,
+        "short_end_zero_rmse_bps": 2.3729178848352652,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 8.5259782704592,
+        "zero_curvature_rms": 0.008590704130931808,
+        "zero_rate_rmse_bps": 10.896860462567398
+      },
+      "s09": {
+        "bid_ask_normalized_pricing_rmse": 21.413428917898713,
+        "discount_factor_rmse_x1e4": 174.3756544630658,
+        "forward_rate_rmse_bps": 48.660037110534375,
+        "forward_roughness": 8.477914335260337e-06,
+        "hidden_instrument_normalized_rmse": 12.204145277294247,
+        "long_end_zero_rmse_bps": 16.008838454110386,
+        "short_end_zero_rmse_bps": 1.7741526629466668,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 8.892437888130361,
+        "zero_curvature_rms": 0.006399486117227134,
+        "zero_rate_rmse_bps": 11.4924826416413
+      },
+      "s10": {
+        "bid_ask_normalized_pricing_rmse": 13.874950370483486,
+        "discount_factor_rmse_x1e4": 34.44053189561064,
+        "forward_rate_rmse_bps": 31.78685263423368,
+        "forward_roughness": 6.386813192290337e-06,
+        "hidden_instrument_normalized_rmse": 3.3126255572702865,
+        "long_end_zero_rmse_bps": 3.0029680913907013,
+        "short_end_zero_rmse_bps": 2.1929639646930648,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 3.6142390817836003,
+        "zero_curvature_rms": 0.00474900309983437,
+        "zero_rate_rmse_bps": 3.5179254181285136
+      }
+    },
+    "key_rate_sum_median_relative_error": 2.758366651621596e-08,
+    "long_end_zero_rmse_bps": 6.202384077280304,
+    "risk_instruments_checked": 131,
+    "short_end_zero_rmse_bps": 1.5775567873537935,
+    "weighted_zero_rate_rmse_bps": 4.3581658796858544,
+    "zero_curvature_rms": 0.0056374324296837985,
+    "zero_rate_rmse_bps": 5.021386877731334
+  },
+  "total_score": 80.103,
+  "warnings": [
+    "anti-cheating review: logs/test_run_1.json: reference to another result directory",
+    "anti-cheating review: logs/test_run_2.json: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Extension Rules/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Extension Scripts/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Extension State/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/History: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Local Storage/leveldb/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Service Worker/Database/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Session Storage/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Sessions/Session_13433047897463767: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Sessions/Tabs_13433047897487204: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Site Characteristics Database/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Sync Data/LevelDB/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/shared_proto_db/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/Default/shared_proto_db/metadata/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-AVLGxX/segmentation_platform/ukm_db: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Extension Rules/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Extension Scripts/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Extension State/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/History: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Local Storage/leveldb/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Service Worker/Database/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Session Storage/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Sessions/Session_13433047273068786: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Sessions/Tabs_13433047273083993: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Site Characteristics Database/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Sync Data/LevelDB/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/shared_proto_db/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/Default/shared_proto_db/metadata/LOG: reference to another result directory",
+    "anti-cheating review: tmp/chrome-qa-H9AtUj/segmentation_platform/ukm_db: reference to another result directory"
+  ]
+}Summary
+Total: 80.103/100
+  numerical_correctness: 26.515
+  quantitative_model_quality: 12.147
+  hidden_scenario_robustness: 12.695
+  software_engineering_reproducibility: 14.000
+  data_quality_handling: 7.857
+  report_completeness: 1.889
+  completion_integrity: 5.000
+Hidden checks: 34 passed, 7 failed
+Failed: math.hidden_instrument_repricing, quant.model_comparison, data.unit_handling, data.missing_handling, data.bid_ask_inversions, integrity.anti_cheating_scan, report.sections
+Warnings:
+  - anti-cheating review: logs/test_run_1.json: reference to another result directory
+  - anti-cheating review: logs/test_run_2.json: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Extension Rules/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Extension Scripts/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Extension State/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/History: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Local Storage/leveldb/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Service Worker/Database/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Session Storage/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Sessions/Session_13433047897463767: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Sessions/Tabs_13433047897487204: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Site Characteristics Database/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/Sync Data/LevelDB/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/shared_proto_db/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/Default/shared_proto_db/metadata/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-AVLGxX/segmentation_platform/ukm_db: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Extension Rules/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Extension Scripts/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Extension State/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/History: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Local Storage/leveldb/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Service Worker/Database/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Session Storage/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Sessions/Session_13433047273068786: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Sessions/Tabs_13433047273083993: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Site Characteristics Database/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/Sync Data/LevelDB/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/shared_proto_db/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/Default/shared_proto_db/metadata/LOG: reference to another result directory
+  - anti-cheating review: tmp/chrome-qa-H9AtUj/segmentation_platform/ukm_db: reference to another result directory
+

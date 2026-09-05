@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-o",
+    "cache_dir=/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/audit/tmp/pytest-cache",
+    "--basetemp=/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/audit/tmp/final-tests"
+  ],
+  "cwd": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/submission",
+  "start_epoch_seconds": 1788596433.94102,
+  "end_epoch_seconds": 1788596442.285711,
+  "returncode": 0,
+  "stdout": "..............................................                           [100%]\n46 passed in 7.84s\n",
+  "stderr": "",
+  "wall_seconds": 8.344691038131714
+}

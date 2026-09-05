@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+    "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/audit/finalize.py"
+  ],
+  "cwd": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/submission",
+  "start_epoch_seconds": 1788597449.754173,
+  "end_epoch_seconds": 1788597449.983456,
+  "returncode": 0,
+  "stdout": "{\n  \"status\": \"FINALIZED\",\n  \"submission\": \"/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/submission\",\n  \"finish_time_utc\": \"2026-09-05T08:37:29.951134Z\",\n  \"additional_work_seconds\": 2584.951133966446,\n  \"tests_passed\": 46,\n  \"failed_test_runs\": 0,\n  \"original_tracked_files_unchanged\": 79,\n  \"numerical_improvement_adopted\": false,\n  \"final_source_sha256\": \"1339af68d4e8684117867bcdb49f27a3b25d446eb8f0c8833c5493f6b5bfaffe\"\n}\n",
+  "stderr": "",
+  "wall_seconds": 0.22928285598754883
+}

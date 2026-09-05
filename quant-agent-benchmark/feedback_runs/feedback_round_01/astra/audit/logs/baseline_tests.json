@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "cwd": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/audit/baseline_workspace",
+  "start_epoch_seconds": 1788595384.571331,
+  "end_epoch_seconds": 1788595399.592454,
+  "returncode": 0,
+  "stdout": ".............................................                            [100%]\n45 passed in 14.54s\n",
+  "stderr": "",
+  "wall_seconds": 15.021122932434082
+}

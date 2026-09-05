@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "charts_inspected": {
+    "curve.png": {
+      "sha256": "058eec26399fd5c3cae10208578cb75fff06e4f624f5eb7cacd438557e13af25",
+      "inspection": "Viewed rendered PNG; labels, units, legends and full data extent checked."
+    },
+    "forward_rate.png": {
+      "sha256": "fe6d74a13c71b9ab403286af3311bf9cf21b3f9ff293cab894167d7df385c041",
+      "inspection": "Viewed rendered PNG; labels, units, legends and full data extent checked."
+    },
+    "repricing.png": {
+      "sha256": "5f683164504e6b7cb82ca0facd3191dda39c15a1826dee7d39c42e47b33433a5",
+      "inspection": "Viewed rendered PNG; labels, units, legends and full data extent checked."
+    },
+    "model_comparison.png": {
+      "sha256": "b2bba3f39c348edd0ecf50405f2179043f899376e4e2b8c7a5890754bc6cccdb",
+      "inspection": "Viewed rendered PNG; labels, units, legends and full data extent checked."
+    },
+    "sensitivity.png": {
+      "sha256": "99ba3b66dfa2cf0b90d01f712a14c6cb9a24a09dae0081aeea692a6a6096f0ee",
+      "inspection": "Viewed rendered PNG; labels, units, legends and full data extent checked."
+    }
+  },
+  "html_inspection": "Rendered in a fresh local headless Chromium profile. Visually reviewed executive summary, model comparison, sensitivity, validation, limitations and mobile layout; all five embedded images decoded. Re-rendered after shortening table headers.",
+  "material_findings": [
+    "Systematic long-bond residuals remain visible; disclosed in executive summary and MODEL_RISKS.md.",
+    "Smoothing moves long-end zero rates by about 12 bp; sensitivity results and limitations retained.",
+    "80 of 131 usable observations have reduced Huber weights; explicitly not classified as 80 confirmed bad records."
+  ],
+  "html_sha256": "db79465e6878580e0c5bd8ff88cec28c4541401ce111063d9fe93afb584abfd2",
+  "browser": "Chrome/152.0.7977.82",
+  "node": "v22.23.2"
+}

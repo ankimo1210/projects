@@ -1,0 +1,2857 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "コーディングエージェント性能評価",
+    "description": "7モデルの最終スコア・数値精度・実行時間・トークン・再現性・評価上の限界を統合。",
+    "generatedAt": "2026-09-05T07:31:57.432990+00:00",
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# コーディングエージェント性能評価\n\n量的リサーチ・ベンチマーク最終レポート · 2026年9月5日更新 · 時刻は日本標準時（JST）\n\n対象：Astra / Sol / Opus / Fable / Terra / Luna / Sonnet。各1回の完了済み提出物を同じ採点定義で比較。時間は本実行ターンの壁時計、トークンはキャッシュを含む処理量。",
+        "layout": "full"
+      },
+      {
+        "id": "executive-summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\n- **Fableが94.473点で首位、Opusが93.431点、追加されたLunaが91.021点で続く。** Terraは82.835点、Sonnetは75.050点。GPT側でもLunaはAstra・Solを10点以上上回り、モデルファミリー単位の優劣という結論にはできない。\n- **最短・最少処理量はTerra。精度とのバランスではLunaも有力。** Terraは18.3分・3.70Mトークン、Lunaは33.0分・11.23M、Sonnetは63.0分・39.17M。Fableは55.9分・10.79M、Opusは124.2分・59.40M。時間・トークンは採点には混ぜていない。\n- **全7モデルが10/10の隠しシナリオを完走し、自作pytestは計403件合格。ただし精度は異なる。** Fableは隠しゼロ金利RMSEで9/10最小、Opusは主データで最小。Lunaの主データRMSEは2.649bp、Sonnetは6.859bpで、とくに短期20.906bp・フォワード70.857bpが課題だった。\n- **単一実行と採点上の留保を維持する。** キャッシュ読取を除くとTerra 0.154M、Luna 0.338M、Sonnet 0.662Mで、処理総量や料金とは別の尺度。主カーブ誤差の重複配点、JSONキー、言語判定、支払規約の影響があり、普遍的な能力順位や原因別の寄与は未確定。",
+        "layout": "full"
+      },
+      {
+        "id": "headline-strip",
+        "type": "metric-strip",
+        "cardIds": [
+          "score-kpi",
+          "time-kpi",
+          "tokens-kpi"
+        ]
+      },
+      {
+        "id": "overall",
+        "type": "markdown",
+        "body": "## 1. Fable・Opusが上位を維持、Lunaが3位に加わる\n\n生の自動採点はFable 94.473、Opus 93.431、Luna 91.021、Terra 82.835、Sol 80.438、Astra 80.103、Sonnet 75.050点。FableとOpusの差は1.042点、OpusとLunaの差は2.410点。形式依存の減点もあるため、微差から安定した順位までは判断できない。\n\n採点は100点満点の7カテゴリ。時間・トークンは得点に混ぜず別軸で示す。リスク表の任意列の衝突を避ける互換処理だけを適用し、計算式・配点・閾値は変更していない。誤検知を手作業で加点補正した値ではない。カテゴリ達成率は満点を分母にした比率で、濃いほど高いが、総合点への寄与は配点で異なる。",
+        "layout": "full",
+        "sourceId": "scores"
+      },
+      {
+        "id": "score-ranking-block",
+        "type": "chart",
+        "chartId": "score-ranking",
+        "layout": "full"
+      },
+      {
+        "id": "category-scores-block",
+        "type": "table",
+        "tableId": "category-scores",
+        "layout": "full"
+      },
+      {
+        "id": "category-scores-block-added",
+        "type": "table",
+        "tableId": "category-scores-added",
+        "layout": "full"
+      },
+      {
+        "id": "category-matrix-block",
+        "type": "chart",
+        "chartId": "category-matrix",
+        "layout": "full"
+      },
+      {
+        "id": "gap",
+        "type": "markdown",
+        "body": "## 2. Lunaの追加で、GPT側を一括りにはできなくなった\n\nLunaはSolより10.583点、Astraより10.918点高い。完遂点はTerraのみ4/5（サマリーのキー不足）、他6モデルは5/5で、Terraも本実行と10シナリオは完了している。FableとAstraの総得点差14.370点のうち、数値精度・モデル品質・頑健性で10.687点を占める。残りにはレポート点差3.111点とデータ品質差0.572点がある。\n\nFableとSolは、同じ中核3カテゴリで15.035点の差がある一方、ソフトウェアではSolが1点上回るため、総差は14.035点になる。したがって、追加テストの件数だけを増やすより、価格付け規約・カーブ表現・ホールドアウト設計の再検証が優先される。\n\nただし「数値精度」と「モデル品質」は独立した2つの証拠ではない。採点器のモデル品質20点は、主データのゼロRMSE 7点・重み付きゼロRMSE 3点・フォワードRMSE 4点・非公開商品RMSE 4点の計18点と、モデル比較JSON・感度分析JSONの形式チェック各1点で構成される。つまり中核3カテゴリの実態は「主カーブ精度（数値精度30＋モデル品質18）」と「隠しシナリオ精度（頑健性15）」の2本で、Solのモデル品質10.218/20を「モデル選択の進め方が劣る」と読むことはできない。\n\n追加組では、Fableとの中核3カテゴリ（65点）の差はLuna 4.271点、Terra 11.209点、Sonnet 20.071点。Lunaは主カーブ精度を改善し、Sonnetは同じClaude系の上位2モデルから大きく離れた。ファミリー名より、今回の実装・検証設計ごとに比較する必要がある。",
+        "layout": "full",
+        "sourceId": "scores"
+      },
+      {
+        "id": "score-gaps-block",
+        "type": "table",
+        "tableId": "score-gaps",
+        "layout": "full"
+      },
+      {
+        "id": "precision",
+        "type": "markdown",
+        "body": "## 3. Lunaは主カーブ精度を改善。Sonnetは短期・フォワードが課題\n\n主データのゼロ金利RMSEはOpus 1.112bp、Fable 1.150bp、Luna 2.649bp。Astra 5.021bp、Sol 5.587bp、Terra 5.655bp、Sonnet 6.859bpと続く。小さいほど正解カーブに近く、1bpは0.01パーセントポイント。LunaはAstra・Solより改善したが、Opus・Fableと同水準ではない。\n\n年限別では、Solの2年以下20.223bp、Astraの15年以上6.202bpという既存の特徴が残る。Terraは長期7.399bp、Sonnetは短期20.906bp。フォワードRMSEはOpus 12.713bp・Fable 14.679bpに対しLuna 29.277bp・Terra 29.600bp、Sonnet 70.857bpだった。どの年限・指標を重視するかで選択は変わる。\n\n7モデルを並べると、内部ホールドアウトで単純な基準モデルを採用した2つ（Sol：バケット集約、Sonnet：区分線形ゼロ）が短期誤差の上位2つ（20.223bp・20.906bp）で、スプラインやフォワード表現の高度モデルを採用した5つは短期1.6〜4.0bp（最大はTerra 3.956bp）に収まった。1回ずつの観測での相関であり、基準モデルの選択が原因だと断定はできないが、次回の対照実験で最初に固定すべき要因である。",
+        "layout": "full",
+        "sourceId": "precision"
+      },
+      {
+        "id": "zero-error-chart-block",
+        "type": "chart",
+        "chartId": "zero-error-chart",
+        "layout": "full"
+      },
+      {
+        "id": "accuracy-detail-block",
+        "type": "table",
+        "tableId": "accuracy-detail",
+        "layout": "full"
+      },
+      {
+        "id": "accuracy-detail-block-added",
+        "type": "table",
+        "tableId": "accuracy-detail-added",
+        "layout": "full"
+      },
+      {
+        "id": "risk-readout",
+        "type": "markdown",
+        "body": "### DV01は全7モデルで合格。価格誤差とは別に読む\n\nDV01有限差分とキーレート合計の整合性チェックは全モデルが合格した。ただし照合商品数は119〜136件と異なるため、相対誤差だけでリスク計算の優劣を順位付けしない。\n\n非公開商品の価格誤差チェック（正規化RMSE < 3）はOpus・Fable・Lunaが合格、Astra・Sol・Terra・Sonnetが不合格。Lunaは2.922で閾値に近い。別の半スプレッド正規化指標は、Fable 5.141、Opus 5.427、Luna 8.928、Terra 17.058、Astra 17.708、Sol 63.615、Sonnet 67.252だった。\n\n**指標名を訂正した。** 旧版の「公開クォート再現」は、実際には非公開商品の真値との誤差を半スプレッド（下限付き）で割ったRMSE。元の数値は変更していない。この値から「公開入力を再現できていない」とは結論できない。Sonnetでは別途、出力フォワードと割引係数の離散微分との照合も不合格だった。区分線形カーブの微分方式の違いが影響し得るため、数理的な誤実装と即断しない。",
+        "layout": "full",
+        "sourceId": "precision"
+      },
+      {
+        "id": "risk-detail-block",
+        "type": "table",
+        "tableId": "risk-detail",
+        "layout": "full"
+      },
+      {
+        "id": "scenarios",
+        "type": "markdown",
+        "body": "## 4. 隠しシナリオでも精度差は残る\n\n全モデルが10/10で有効なカーブを返したが、これは全ケースで精度が十分だったという意味ではない。Fableのゼロ金利RMSEは9/10シナリオで最小、残るs10ではOpusが最小だった。これら10条件は同一実装に対するストレス検証であり、独立した10回のモデル実行ではない。\n\nまた、ゼロ金利だけでは見えない弱点がある。Opusはs09のフォワードRMSEが70.314bpまで増え、同条件のFableは18.952bpだった。本データでのOpusの高精度を、すべてのストレス条件へ一般化しないことが重要である。\n\n追加組のゼロRMSEは、Lunaが10条件で1.896〜3.330bpと比較的狭い範囲、Terraはs08で10.815bp、Sonnetはs04で10.795bpまで増えた。追加後もFableの9/10、Opusの1/10という最小誤差の分担は変わらない。図の濃色は誤差の大きさであり、前の達成率図とは良否の向きが逆。",
+        "layout": "full",
+        "sourceId": "precision"
+      },
+      {
+        "id": "scenario-matrix-block",
+        "type": "chart",
+        "chartId": "scenario-matrix",
+        "layout": "full"
+      },
+      {
+        "id": "scenario-forward-block",
+        "type": "table",
+        "tableId": "scenario-forward",
+        "layout": "full"
+      },
+      {
+        "id": "scenario-forward-block-added",
+        "type": "table",
+        "tableId": "scenario-forward-added",
+        "layout": "full"
+      },
+      {
+        "id": "time",
+        "type": "markdown",
+        "body": "## 5. 最短はTerra、Lunaも33分。Opusの再開待ちは分離\n\n作業ターンの合計はTerra 18.3分、Luna 33.0分、Sol 34.6分、Astra 52.0分、Fable 55.9分、Sonnet 63.0分、Opus 124.2分。今回、TerraはSolより約47%短い時間で高い得点、LunaはFableより約41%短い時間で91.021点だった。ただし精度の水準は同じではなく、計算機の競合・ツール待ち・自動要約を含むため、純粋なモデル推論速度でもない。\n\nOpusは途中で止まった後に再開している。69.8818分＋54.3365分が作業合計で、再開待ち78.3329分を含む開始から終了までは202.5513分。以前の69.9分という値は途中時点であり、最終値を使用する。FableはOpusより作業時間が55.0%短く、総合点も高かったという今回の観測は変わらない。",
+        "layout": "full"
+      },
+      {
+        "id": "execution-time-block",
+        "type": "chart",
+        "chartId": "execution-time",
+        "layout": "full"
+      },
+      {
+        "id": "time-detail-block",
+        "type": "table",
+        "tableId": "time-detail",
+        "layout": "full"
+      },
+      {
+        "id": "selected-turns-block",
+        "type": "table",
+        "tableId": "selected-turns",
+        "layout": "full"
+      },
+      {
+        "id": "tokens",
+        "type": "markdown",
+        "body": "## 6. Terraが最少処理量。総量の大半はキャッシュ読取\n\n本実行の総量はTerra 3.70M、Astra 3.80M、Sol 8.98M、Fable 10.79M、Luna 11.23M、Sonnet 39.17M、Opus 59.40M。各モデルの総量の約90%〜98%はキャッシュ読取で、これを除くとTerra 153,751、Astra 215,612、Sol 229,299、Luna 338,288、Sonnet 661,554、Fable 1,051,441、Opus 1,285,431トークンとなる。\n\nOpusはFableの総量の約5.50倍だが、キャッシュ読取を除く量では1.22倍。Sonnetも総量はFableの3.63倍ながら、読取を除く量は約0.63倍に逆転する。どちらも「生成した文章量」「消費料金」や「推論の深さ」とは読み替えられない。モデルファミリーごとの一律な倍率は示さない。\n\n通常入力・キャッシュ読み込み・キャッシュ作成・通常出力・推論出力を排他的に足す。推論を出力総量へもう一度加えることはしない。API事業者間でトークナイザやキャッシュ計測が異なり、課金額・エネルギー・割当消費率は未測定。図は入力と出力の構成、下表はキャッシュを分けた正確な値を示す。",
+        "layout": "full",
+        "sourceId": "usage"
+      },
+      {
+        "id": "token-volume-block",
+        "type": "chart",
+        "chartId": "token-volume",
+        "layout": "full"
+      },
+      {
+        "id": "input-token-detail-block",
+        "type": "table",
+        "tableId": "input-token-detail",
+        "layout": "full"
+      },
+      {
+        "id": "input-token-detail-block-added",
+        "type": "table",
+        "tableId": "input-token-detail-added",
+        "layout": "full"
+      },
+      {
+        "id": "output",
+        "type": "markdown",
+        "body": "### 出力だけを分けると、作業の進め方の違いが見える\n\nOpusは275回のAPI応答と415.6k出力トークン、Fableは41回と277.3k。Astraは40回と83.2k、Solは72回と74.0kだった。Fableは比較的少ない応答回数で多くの出力を返し、Opusは多くの応答を重ねた。ただし、これは記録された応答の粒度であり、ツール呼出し数や内部の思考ステップ数ではない。\n\n以下の推論量はログに明示された数値だけを使う。推論本文は収録しない。出力/APIもシステム間の応答境界に依存する観測指標で、単独の品質指標ではない。\n\n追加組はTerraが48回・47.5k出力、Lunaが83回・76.8k、Sonnetが139回・281.6k。SonnetはFableに近い出力総量でも約3.4倍のAPI応答に分かれ、推論出力の比率は60.3%。この観測が多い検討や良い検証を意味するとは限らず、今回の得点差とも単純な比例関係はない。",
+        "layout": "full",
+        "sourceId": "usage"
+      },
+      {
+        "id": "output-volume-block",
+        "type": "chart",
+        "chartId": "output-volume",
+        "layout": "full"
+      },
+      {
+        "id": "work-patterns-block",
+        "type": "table",
+        "tableId": "work-patterns",
+        "layout": "full"
+      },
+      {
+        "id": "work-patterns-block-added",
+        "type": "table",
+        "tableId": "work-patterns-added",
+        "layout": "full"
+      },
+      {
+        "id": "sessions-block",
+        "type": "table",
+        "tableId": "sessions",
+        "layout": "full"
+      },
+      {
+        "id": "scope-note",
+        "type": "markdown",
+        "body": "Astraでは準備・モデル名確認・終了後表示、Solではそれらに加えて出力先確認と修正依頼のターンを本実行から除外している。したがって作業時間は「完全な引き渡し対応時間」ではない。除外が採点対象を変えていないことは更新時刻で確認した：Solの本実行ターン終了（10:56:32）以降に変更されたファイルは自己申告の `benchmark_summary.json`（11:30:37）だけで、採点対象のコード・カーブ・診断出力は10:54:21のまま不変である。Solの実際の成果物は `output/sol` にあり、`results/sol` が空であることを未完遂と誤判定していない。\n\n追加組ではTerra T2、Luna T1、Sonnet T3を採用。TerraのT1（指示・出力先確認）とT3（終了後の出力先に関する依頼）は除外した。Terraの実体は `Documents/terra`（ベンチマーク外）で、採点のための移動はしていない。Sonnet T1/T2にはAPI応答も終了マーカーもなく、時間は未測定（ゼロではない）。両ターンの記録済みトークンは0で、採用したT3の量と全セッション量は一致する。全セッション値は回復時点のスナップショットで、後続会話が増えれば変わる。",
+        "layout": "full"
+      },
+      {
+        "id": "profiles-heading",
+        "type": "markdown",
+        "body": "## 7. 手法の違いは確認できるが、因果関係は追加検証が必要\n\n以下は実装レビューと候補の自己申告を、観測された精度差と照合したもの。原因ごとの寄与を測る変更実験は未実施である。「この設計だから何点失った」とはまだ言えない。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-astra",
+        "type": "markdown",
+        "body": "### Astra — 少ない処理量で一式を実装、長期の誤差が課題\n\nゼロ金利をlog1p年限上の自然3次スプラインで表す高度モデルと、Nelson–Siegel基準モデルを比較。重み付きHuber損失と年限グループの検証で平滑化を選び、高度モデルを採用した。キャッシュを含む処理総量は既存4モデルでは最少で、7モデルではTerraに次いで少ない。\n\n長期の誤差が目立つ一方、日本語のレポート本文にも必要な内容が見られる。長期の平滑化・価格付け規約が誤差に寄与した可能性と、英語キーワード判定による減点は分けて検証する必要がある。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-sol",
+        "type": "markdown",
+        "body": "### Sol — ソフトウェア満点、短期カーブの選択が再検証点\n\n基準モデルは商品ごとの一定利回りを0.5年の満期バケットで集約し、PCHIP補間と平滑化を用いる。高度なゼロ金利スプラインも試したが、ホールドアウトで基準モデルが有利だったため基準モデルを採用した。\n\n短期の細かな年限構造をバケット集約が弱めた可能性はある。ただし、高度モデルを選び直せば改善するとは限らない。共通の価格付け規約の下で、バケット幅と検証分割を1つずつ変える実験が必要である。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-opus",
+        "type": "markdown",
+        "body": "### Opus — 高い主データ精度と多い検証、長い作業時間\n\n瞬間フォワード金利の3次スプラインに、年限依存の曲率ペナルティ、HuberからTukeyへ移るロバスト反復、商品種別ごとの残差スケールを組み合わせた。年限ブロック検証に安定性条件も加えて高度モデルを選んだ。\n\n主データのゼロ・フォワード誤差は今回最小だが、再開を含む時間とトークンは最大。自作テストの範囲も広い一方、s09のフォワード誤差は例外的に大きい。追加の反復量が常に追加の汎化精度へ結びついたとは言えない。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-fable",
+        "type": "markdown",
+        "body": "### Fable — 高いストレス精度と比較的少ない応答回数\n\n瞬間フォワード金利の3次Bスプラインを積分して価格付けし、年限依存のペナルティとグループ化した交差検証を用いた。ロバスト処理では、年限上で一貫した観測群を単純に外れ値として消さない工夫がある。\n\n総合点と隠しシナリオの精度は今回良好だった。ただし、感度分析のJSON構造や自己パスの静的チェックで不合格が残る。少ないAPI応答回数を、少ない内部作業や常に優れた効率と同一視しない。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-terra",
+        "type": "markdown",
+        "body": "### Terra — 最短・最少処理量だが、長期精度と形式チェックに課題\n\n線形log-DF基準モデルと自然3次log-DFスプラインを比較。スプレッド・流動性の重み、Huber反復、年限バケットを丸ごと抜く検証で高度モデルを選択した。18.3分・3.70Mトークンで82.835点は、今回の時間制約下の候補になるが、長期ゼロRMSE7.399bp・非公開商品RMSE6.321は精度面の留保。\n\n完遂4/5は未完走ではなく、サマリーに採点器が求める `failed_test_runs` がないことによる。実際には `failed_test_suite_runs` を記録している。感度JSONは2つのトップレベルキーしかなく形式判定が不合格。単位処理・bid/ask反転のチェックも不合格で、形式と処理判断を切り分けて見直す必要がある。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-luna",
+        "type": "markdown",
+        "body": "### Luna — 33分で91点。改善の余地はフォワードと提出形式\n\n堅牢なdeposit/OISブートストラップを基準とし、連続複利ゼロ金利の区分線形グリッドに曲率ペナルティと4回のロバスト反復を加えた高度モデルを採用した。年限群をまとめてホールドアウトし、「高度モデルの誤差が基準の5%増以内」という許容条件も使う。これは最小誤差だけで選ぶ規則とは異なるため、モデル選択方針の感度を調べる余地がある。\n\nゼロRMSE2.649bp、非公開商品RMSE2.922で、Astra・Solより高精度。ただしフォワードRMSE29.277bpはOpus・Fableより大きい。`model_selected` と `selected_model` のキー不一致、レポートの8/9概念認識で失点している。これらは数値誤差とは別の修正候補で、今回は点数を補正していない。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-sonnet",
+        "type": "markdown",
+        "body": "### Sonnet — 基準モデルを選択。短期精度と検証対象の偏りを再点検\n\n商品種別ごとに残差スケールを調整した区分線形ゼロ金利モデルと、累積log-DFの自然3次スプライン＋曲率ペナルティ＋Tukey反復を比較。内部ホールドアウトは基準2.1026、高度2.2159のため基準モデルを採用した。しかし非公開評価では短期ゼロRMSE20.906bp、フォワード70.857bpで、75.050点だった。\n\n検証分割ではdepositをすべて学習に残し、OISのホールドアウト候補を局所的な滑らかさで選別する。難しい年限を検証から外す選択が未見条件への代表性を弱めた可能性はあるが、原因寄与は未測定。基準モデルの解析的フォワードと採点器の離散微分との照合差もあり、共通の微分規約で確認する必要がある。\n\n自作49テストは合格し、ソフトウェア15/15、完遂5/5。低得点は未完遂とは異なる。追加の提出済みカーブを直接採点しても主要誤差は隔離再実行と一致しており、今回の低精度を単に再採点環境のせいとは説明できない。",
+        "layout": "full"
+      },
+      {
+        "id": "model-metadata-notes",
+        "type": "markdown",
+        "body": "### 実行モデルと自己申告の修正回数\n\nモデルID・推論設定はログの記録値。修正回数は自己申告で、共通定義の測定ではない。\n\n- Fable · `claude-fable-5-1` · xhigh · 修正8回（自己申告） · 提出先：results/fable\n- Opus · `claude-opus-5` · xhigh · 修正27回（自己申告） · 提出先：results/opus\n- Luna · `gpt-5.6-luna` · xhigh · 修正5回（自己申告） · 提出先：output/luna\n- Terra · `gpt-5.6-terra` · xhigh · 修正3回（自己申告） · 提出先：Documents/terra（ベンチマーク外）\n- Sol · `gpt-5.6-sol` · xhigh · 修正6回（自己申告） · 提出先：output/sol\n- Astra · `gpt-6-astra` · xhigh · 修正6回（自己申告） · 提出先：results/astra\n- Sonnet · `claude-sonnet-5` · xhigh · 修正6回（自己申告） · 提出先：output/sonnet",
+        "layout": "full",
+        "sourceId": "profiles"
+      },
+      {
+        "id": "test-heading",
+        "type": "markdown",
+        "body": "## 8. 全7モデルの自作pytestは合格。件数は性能点ではない\n\n全pytestの検証結果はAstra45、Sol20、Opus204、Fable60、Terra13、Luna12、Sonnet49件、合計403件が合格。追加3モデルは今回、既存4モデルと同じ数値ライブラリの隔離コピーで再実行した。既存4モデルは候補・採点器のハッシュが前回と完全一致したため、その検証済み結果を継承している。候補が自分で書いた異なるテスト群であり、件数が多いほど未見データに強いとは限らない。\n\n元の採点器のunittest探索ではAstra・Sol・Fableは各7件のみが対象だった。下表は全pytestと41件の採点チェックを分離している。SolとLunaは採点チェック38/41で最多だが、チェックの件数と連続値の数値得点は同じ尺度ではない。",
+        "layout": "full"
+      },
+      {
+        "id": "test-results-block",
+        "type": "table",
+        "tableId": "test-results",
+        "layout": "full"
+      },
+      {
+        "id": "integrity",
+        "type": "markdown",
+        "body": "### 検証環境と保全\n\nPython 3.12.11 / NumPy 2.5.2 / pandas 2.3.3 / SciPy 1.18.1 / Matplotlib 3.11.1で再検証した。旧共有環境で発生したAstra・Fableの数値警告によるテスト失敗は、記録された版をそろえると解消。4モデルの自動採点は旧環境と小数第3位まで一致した。\n\n公開入力12ファイル、評価側108ファイルのマニフェストは採点前後で一致。検証対象の候補コード・成果物ハッシュも不変だった。互換処理4テスト、使用量回復8テスト、実行後にも適用できる評価側12テストを既存の最終確認で通過している。実行前専用の「resultsが空」という検査は、提出後の検証対象から明示的に除外した。\n\n今回の追加採点はTerra・Luna・Sonnetの3件、ハッシュ一致で継承した既存採点は4件。全7ログの使用量は新規に再読込した。Sonnetでは312個のusage付きブロックを139個のAPI応答に一意化し、重複173個を除外。Codexは累積値と応答単位値を照合し、Terraで記録されたカウンタのリセットも回復処理で扱った。追加3モデルも候補・公開入力・評価側の採点前後の保全検査を通過している。",
+        "layout": "full",
+        "sourceId": "qa"
+      },
+      {
+        "id": "rubric",
+        "type": "markdown",
+        "body": "## 9. 採点の弱点を、候補モデルの弱点と混同しない\n\n最終スコアは追跡可能な生得点として保持する。ただし下記の仕様依存・誤検知があるため、人が内容を再審査する前に補正点や真の順位を計算することは避けた。とくにAstraの日本語レポート点差は、数値精度の差とは別の論点である。また、既存4モデルに加えてLuna・Sonnetも落とした欠損クォートのチェック（各1.0点、Terraは合格）と、「モデル品質」の18/20点が数値精度と同じ誤差であることは、順位ではなくカテゴリの読み方に影響する。",
+        "layout": "full",
+        "sourceId": "limits"
+      },
+      {
+        "id": "rubric-limitations-notes",
+        "type": "markdown",
+        "body": "### 解釈に影響する採点上の論点\n\n数値誤差、形式違反、誤検知を分けて評価する。\n\n- 優先：1 · 論点：端数期間の支払規則 · 対象：全モデル · 確認した事実：公開文書の満期・元本償還規則と、生成器のround(T×頻度)による支払時点が一部整合しない。 · 解釈への影響：価格誤差の一部が規約選択に依存する可能性。寄与は未推定。\n- 優先：2 · 論点：「モデル品質」の中身 · 対象：採点器 · 確認した事実：モデル品質20点のうち18点は数値精度と同じ主カーブのRMSE（ゼロ7・重み付き3・フォワード4・非公開商品4）。形式チェックは2点。 · 解釈への影響：数値精度とモデル品質は同じ誤差の二重採点で、独立した証拠ではない。カテゴリ名からモデル選択の質を読み取らない。\n- 優先：3 · 論点：英語キーワードによる章判定 · 対象：Astra · 確認した事実：日本語見出しがあるが2/9概念しか認識されず、レポート1.889/5。 · 解釈への影響：満点との3.111点差を内容不足だけで説明できない。自動で満点には補正しない。\n- 優先：4 · 論点：欠損クォートの採点規則 · 対象：既存4モデル＋Luna・Sonnet（Terraは合格） · 確認した事実：採点器は欠損クォート4件をaction=excludeにした場合だけ合格とする。既存4モデルはbid/ask中値で復元して採用し0/4で不合格だった。追加後もLuna・Sonnetは0/4、Terraは除外処理で4/4合格。 · 解釈への影響：既存4モデルの共通失点は中値復元か除外かという規則の選択を反映する。中値復元にも除外にも前提があるため、一律の実装ミスと断定せず次回は仕様で固定する。\n- 優先：5 · 論点：自分の出力パスの静的スキャン · 対象：Astra / Opus / Fable · 確認した事実：Astra30件、Opus1件、Fable1件はいずれも各自のパス。 · 解釈への影響：これらの警告は他モデル出力の閲覧証拠ではない。完全な隔離の証明でもない。\n- 優先：6 · 論点：比較結果のキー名 · 対象：Astra / Opus / Luna / Sonnet · 確認した事実：model_selected と、採点器の selected_model が不一致。 · 解釈への影響：情報の存在とスキーマ準拠が混ざる。事前にスキーマ固定が必要。\n- 優先：7 · 論点：感度分析のJSON構造 · 対象：Fable / Terra · 確認した事実：checksリストに結果があるが、トップレベル3キー以上という判定で不合格。 · 解釈への影響：チェック不合格だけで感度分析の欠落とは判断できない。\n- 優先：8 · 論点：個人環境への絶対パス · 対象：Opus · 確認した事実：tests/test_cli.py に公開入力への固定絶対パスがある。 · 解釈への影響：移植性の課題。許可された公開入力への参照を情報漏洩と混同しない。\n- 優先：9 · 論点：リスク表の任意列結合 · 対象：採点器 · 確認した事実：任意メタデータ列が正解表と衝突して停止。別ラッパーで必須列に限定。 · 解釈への影響：実行互換性を回復。元の配点・計算式・閾値は保持。\n- 優先：10 · 論点：追加モデルの提出形式 · 対象：Terra / Luna · 確認した事実：Terraはfailed_test_suite_runsを記録するがfailed_test_runsがなく完遂点を1点失う。Lunaは章の英語キーワード8/9で4.556/5。 · 解釈への影響：タスク未完了・内容不足と形式適合を区別する。\n- 優先：11 · 論点：静的スキャンの対象パス · 対象：採点器 · 確認した事実：他結果参照の検索対象名がAstra・Sol・Opus・Fableの4つに固定されている。 · 解釈への影響：追加3モデルの警告ゼロを完全なアクセス隔離の証明にしない。今回の点数は元の判定を維持。\n- 優先：12 · 論点：フォワードの微分規約 · 対象：Sonnet · 確認した事実：区分線形ゼロから解析的に出力したforwardと、採点器の格子上の離散微分のRMSEが0.00237。 · 解釈への影響：整合性チェック不合格を、真値とのフォワードRMSE70.857bpとは分けて読む。\n- 優先：13 · 論点：隔離プリフライトの記録 · 対象：全モデル · 確認した事実：READMEが要求する `verify_isolation.py` の付与パス一覧は、7実行の監査ファイルのどこにも保存されていない。Terraの提出先はベンチマーク外の `Documents/terra` で、`results/<model>` を前提とした付与形式にも当てはまらない。 · 解釈への影響：静的スキャン（4名固定）と合わせ、他モデル出力への非アクセスは今回いずれのモデルについても証明されていない。点数には影響しないが、次回は付与一覧を成果物として保存する。\n",
+        "layout": "full",
+        "sourceId": "limits"
+      },
+      {
+        "id": "schedules",
+        "type": "markdown",
+        "body": "### 支払規則の違いは、有力な仮説だが未検証\n\n公開文書では満期年を正とし、債券元本を満期に返す。一方、生成器・採点器は `round(T × frequency)` から支払列を作るため、端数満期では最後の支払時点が満期Tと一致しない場合がある。\n\nAstraは端数期間を日数比例で扱い、Solは満期までの通常クーポンと満期元本を分け、Opusは満期から逆算した支払列を用い、Fableは観測への適合から規則を選んだ。これらの差が価格誤差に寄与した可能性はあるが、Opus・Fableだけが「明確に記載された正しい仕様を実装した」とは言えない。まず共通規約を定め、規約だけを入れ替える対照実験が必要である。\n\n追加3モデルも同じ未修正の採点規約で評価した。この更新では7実装を共通規約へ書き換える対照実験は行っていない。とくにSonnetのフォワード微分方式・ホールドアウト候補の選別は、支払規約と別々に検証すべき論点である。",
+        "layout": "full"
+      },
+      {
+        "id": "next-steps",
+        "type": "markdown",
+        "body": "## 10. 次回は採点器を固定し、同じ条件で反復する\n\n1. **仕様と採点スキーマを先に固定する。** 端数期間、元本償還日、欠損クォートの扱い（除外かbid/ask中値復元か）、比較JSON、感度JSON、レポートの言語非依存判定を明文化する。「モデル品質」は主カーブ精度と分離し、検証設計そのものを採点する項目に改める。自己パスの誤検知を修正し、新旧ルーブリックを別バージョンで保存する。\n2. **共通の運用条件で複数回走らせる。** 入力・依存関係・プロンプト・ツール権限・推論設定・時間上限・中断時の扱いを統一する。乱数を変えた反復で中央値とばらつきを報告し、今回の単発結果と混ぜない。\n3. **原因を切り分ける小さな実験を行う。** 支払規約だけを統一し、次にSolのバケット幅、Astraの長期平滑化、両者の検証分割を1要因ずつ比較する。追加組ではSonnetの微分規約と検証対象の選別、Terraの長期誤差、Lunaのモデル選択許容幅を別々に検証する。改善幅を測るまでは原因別の失点を断定しない。\n4. **目的別に選ぶ。** 精度重視ではFable（隠しシナリオで9/10最小）とOpus（主データで最小誤差）を再検証し、どの精度を優先するかを先に決める。時間・処理量制約ではTerra、90点台と33分の両立ではLunaを追加候補とし、必要な精度の下限を別途設定する。処理量は総量とキャッシュ読取を除いた値を両方比較し、料金の意思決定には実請求データを追加する。\n\nこれらは次回への提案であり、このレポート作成で候補実装の修正や追加のモデル実行は行っていない。",
+        "layout": "full"
+      },
+      {
+        "id": "open-questions",
+        "type": "markdown",
+        "body": "## 判断前に残る問い\n\n- どの精度水準なら実務用途として許容できるか。短期、長期、価格再現、DV01のどれを必須条件にするか。\n- 「速さ」は作業ターン時間か、途中停止と引き渡し対応を含む完了までの時間か。\n- キャッシュ割引と実際の契約条件を含む請求額はいくらか。現時点では未測定で、ゼロではない。\n- 採点器の形式依存を除き、複数実行で比較したとき、今回の1点前後の順位差は残るか。",
+        "layout": "full"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## 前提と利用上の注意\n\n本レポートの評価は **「留保付きで共有可能」**。対象7モデルはそれぞれ1回の実行で、信頼区間や統計的有意差は推定していない。モデルID・推論設定はログや候補記録の値であり、モデルファミリー全体の性能を表さない。合成データのベンチマークであり、実市場での運用成績も示していない。\n\n時間は壁時計、トークンはキャッシュの反復入力を含むログ上の処理量（キャッシュ読取を除いた値も併記）。API応答数・自作テスト件数・自己申告の修正回数は定義が異なるため、それだけで「仕事の上手さ」を判定しない。数値精度に差があることと、その原因が特定できたことは別である。\n\n図表のデータ出典から、参照ファイルと計算定義を確認できる。このHTMLは最終確認済みデータの固定スナップショットで、ライブ更新や外部接続は行わない。",
+        "layout": "full"
+      }
+    ],
+    "cards": [
+      {
+        "id": "score-kpi",
+        "dataset": "headlines",
+        "sourceId": "scores",
+        "description": "今回の単一実行における自動採点。",
+        "metrics": [
+          {
+            "label": "Fable · 最高得点 /100",
+            "field": "best_score",
+            "format": "number"
+          },
+          {
+            "label": "Opusとの差（点）",
+            "field": "score_lead",
+            "format": "number",
+            "signed": true
+          }
+        ]
+      },
+      {
+        "id": "time-kpi",
+        "dataset": "headlines",
+        "sourceId": "usage",
+        "description": "選択した本実行ターンの壁時計時間。",
+        "metrics": [
+          {
+            "label": "Terra · 最短作業時間（分）",
+            "field": "fastest_min",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "tokens-kpi",
+        "dataset": "headlines",
+        "sourceId": "usage",
+        "description": "キャッシュ入力を含む処理総量。料金換算なし。",
+        "metrics": [
+          {
+            "label": "Terra · 最少処理トークン",
+            "field": "fewest_tokens",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "score-ranking",
+        "title": "モデル別総合得点",
+        "subtitle": "100点満点・各1実行。点数は高いほど良い。",
+        "type": "bar",
+        "dataset": "ranking",
+        "sourceId": "scores",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "score",
+            "type": "quantitative",
+            "label": "点"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "number",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "orientation": "horizontal"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "点"
+      },
+      {
+        "id": "category-matrix",
+        "title": "カテゴリ別の満点に対する達成率",
+        "subtitle": "各セル=得点÷カテゴリ満点。濃いほど達成率が高い。総合点への寄与は配点で異なる。",
+        "type": "heatmap",
+        "dataset": "category-attainment",
+        "sourceId": "scores",
+        "encodings": {
+          "x": {
+            "field": "category",
+            "type": "nominal",
+            "label": "カテゴリ"
+          },
+          "y": {
+            "fields": [
+              "Fable",
+              "Opus",
+              "Luna",
+              "Terra",
+              "Sol",
+              "Astra",
+              "Sonnet"
+            ],
+            "type": "quantitative",
+            "label": "カテゴリ別の満点に対する達成率"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "percent",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "showDescription": true
+      },
+      {
+        "id": "zero-error-chart",
+        "title": "本データのゼロ金利RMSE",
+        "subtitle": "単位bp。小さいほど良い。1bpは0.01パーセントポイント。",
+        "type": "bar",
+        "dataset": "zero-errors",
+        "sourceId": "precision",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "zero_rmse",
+            "type": "quantitative",
+            "label": "bp"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "number",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "orientation": "horizontal"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "bp"
+      },
+      {
+        "id": "scenario-matrix",
+        "title": "隠し10シナリオのゼロ金利RMSE",
+        "subtitle": "単位bp。行=モデル、列=隠しシナリオs01〜s10。濃いほど誤差が大きい（前の達成率図とは良否の向きが逆）。",
+        "type": "heatmap",
+        "dataset": "scenario-zero",
+        "sourceId": "precision",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "fields": [
+              "s01",
+              "s02",
+              "s03",
+              "s04",
+              "s05",
+              "s06",
+              "s07",
+              "s08",
+              "s09",
+              "s10"
+            ],
+            "type": "quantitative",
+            "label": "bp"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "number",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "bp",
+        "showDescription": true
+      },
+      {
+        "id": "execution-time",
+        "title": "本実行・再開の作業時間",
+        "subtitle": "単位分。準備・後続依頼・ターン間の待機を除外。ツールと要約待ちは含む。",
+        "type": "bar",
+        "dataset": "work-time",
+        "sourceId": "usage",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "minutes",
+            "type": "quantitative",
+            "label": "分"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "number",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "orientation": "horizontal"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "分"
+      },
+      {
+        "id": "token-volume",
+        "title": "本実行の入力・出力トークン",
+        "subtitle": "M=100万トークン。入力内のキャッシュ詳細は下表。総量の比較は料金の比較ではない。",
+        "type": "horizontalStackedBar",
+        "dataset": "token-composition",
+        "sourceId": "usage",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "tokens",
+            "type": "quantitative",
+            "label": "tokens"
+          },
+          "color": {
+            "field": "part",
+            "type": "nominal"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "compact",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "groupMode": "stacked"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "tokens",
+        "legend": {
+          "position": "bottom",
+          "sort": "spec"
+        }
+      },
+      {
+        "id": "output-volume",
+        "title": "通常出力と推論出力",
+        "subtitle": "k=千トークン。2区分の和が出力総量。推論は出力に含まれる。",
+        "type": "horizontalStackedBar",
+        "dataset": "output-composition",
+        "sourceId": "usage",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "tokens",
+            "type": "quantitative",
+            "label": "tokens"
+          },
+          "color": {
+            "field": "part",
+            "type": "nominal"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "compact",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "groupMode": "stacked"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "tokens",
+        "legend": {
+          "position": "bottom",
+          "sort": "spec"
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "category-scores",
+        "title": "カテゴリ別得点 — 既存4モデル",
+        "subtitle": "行は指標、列はモデル。追加3モデルは直後の同一定義の表で比較。",
+        "dataset": "category-scores",
+        "sourceId": "scores",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "カテゴリ",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "category-scores-added",
+        "title": "カテゴリ別得点 — 追加3モデル",
+        "subtitle": "直前の既存4モデルと同じ指標・単位・採点条件。",
+        "dataset": "category-scores",
+        "sourceId": "scores",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "カテゴリ",
+            "type": "text"
+          },
+          {
+            "field": "Terra",
+            "label": "Terra",
+            "type": "text"
+          },
+          {
+            "field": "Luna",
+            "label": "Luna",
+            "type": "text"
+          },
+          {
+            "field": "Sonnet",
+            "label": "Sonnet",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "score-gaps",
+        "title": "Fableとのカテゴリ別得点差",
+        "subtitle": "単位は点。正の値はFableが上回り、負の値は比較相手が上回る。列=比較相手（既存4モデルと追加3モデルを1表にまとめた）。",
+        "dataset": "score-gaps",
+        "sourceId": "scores",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "category",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "category",
+            "label": "カテゴリ /満点",
+            "type": "text"
+          },
+          {
+            "field": "vs_astra",
+            "label": "Fable − Astra",
+            "type": "text"
+          },
+          {
+            "field": "vs_sol",
+            "label": "Fable − Sol",
+            "type": "text"
+          },
+          {
+            "field": "vs_terra",
+            "label": "Fable − Terra",
+            "type": "text"
+          },
+          {
+            "field": "vs_luna",
+            "label": "Fable − Luna",
+            "type": "text"
+          },
+          {
+            "field": "vs_sonnet",
+            "label": "Fable − Sonnet",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "accuracy-detail",
+        "title": "本データの精度診断 — 既存4モデル",
+        "subtitle": "行は指標、列はモデル。追加3モデルは直後の同一定義の表で比較。",
+        "dataset": "accuracy-detail",
+        "sourceId": "precision",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "指標",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "accuracy-detail-added",
+        "title": "本データの精度診断 — 追加3モデル",
+        "subtitle": "直前の既存4モデルと同じ指標・単位・採点条件。",
+        "dataset": "accuracy-detail",
+        "sourceId": "precision",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "指標",
+            "type": "text"
+          },
+          {
+            "field": "Terra",
+            "label": "Terra",
+            "type": "text"
+          },
+          {
+            "field": "Luna",
+            "label": "Luna",
+            "type": "text"
+          },
+          {
+            "field": "Sonnet",
+            "label": "Sonnet",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "risk-detail",
+        "title": "非公開商品の価格誤差とDV01の照合",
+        "subtitle": "価格誤差は非公開商品の真値と比較し、半スプレッド（下限付き）で正規化。公開クォートの再現誤差ではない。",
+        "dataset": "risk-detail",
+        "sourceId": "precision",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "model",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル",
+            "type": "text"
+          },
+          {
+            "field": "bidask",
+            "label": "非公開価格誤差（半幅比）",
+            "type": "text"
+          },
+          {
+            "field": "n",
+            "label": "照合商品数",
+            "type": "number"
+          },
+          {
+            "field": "dv01",
+            "label": "DV01相対誤差",
+            "type": "text"
+          },
+          {
+            "field": "key",
+            "label": "キーレート合計相対誤差",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "scenario-forward",
+        "title": "隠し10シナリオのフォワード金利RMSE — 既存4モデル",
+        "subtitle": "単位bp、小さいほど良い。「最小」は7モデル全体で判定。",
+        "dataset": "scenario-forward",
+        "sourceId": "precision",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "scenario",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "scenario",
+            "label": "シナリオ",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          },
+          {
+            "field": "lowest",
+            "label": "7モデル中の最小",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "scenario-forward-added",
+        "title": "隠し10シナリオのフォワード金利RMSE — 追加3モデル",
+        "subtitle": "直前の既存4モデルと同じ指標・単位・採点条件。",
+        "dataset": "scenario-forward",
+        "sourceId": "precision",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "scenario",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "scenario",
+            "label": "シナリオ",
+            "type": "text"
+          },
+          {
+            "field": "Terra",
+            "label": "Terra",
+            "type": "text"
+          },
+          {
+            "field": "Luna",
+            "label": "Luna",
+            "type": "text"
+          },
+          {
+            "field": "Sonnet",
+            "label": "Sonnet",
+            "type": "text"
+          },
+          {
+            "field": "lowest",
+            "label": "7モデル中の最小",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "time-detail",
+        "title": "ログ計測と自己申告の時間",
+        "subtitle": "比較の基準はログ作業時間。自己申告の時間は境界が異なるため別列。",
+        "dataset": "time-detail",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "model",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル",
+            "type": "text"
+          },
+          {
+            "field": "work",
+            "label": "作業合計（分）",
+            "type": "text"
+          },
+          {
+            "field": "idle",
+            "label": "再開待ち（分）",
+            "type": "text"
+          },
+          {
+            "field": "span",
+            "label": "開始→終了（分）",
+            "type": "text"
+          },
+          {
+            "field": "reported",
+            "label": "自己申告（分）",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "selected-turns",
+        "title": "本実行に含めたターン",
+        "subtitle": "2026年9月5日・JST、秒まで表示（ログはミリ秒まで保持）。API=そのターンの一意なAPI応答数。",
+        "dataset": "selected-turns",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "start",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル・ターン",
+            "type": "text"
+          },
+          {
+            "field": "start",
+            "label": "開始",
+            "type": "text"
+          },
+          {
+            "field": "end",
+            "label": "終了",
+            "type": "text"
+          },
+          {
+            "field": "minutes",
+            "label": "分",
+            "type": "text"
+          },
+          {
+            "field": "api",
+            "label": "API",
+            "type": "number"
+          },
+          {
+            "field": "tokens",
+            "label": "トークン",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "input-token-detail",
+        "title": "入力・出力の排他的な内訳 — 既存4モデル",
+        "subtitle": "行は指標、列はモデル。追加3モデルは直後の同一定義の表で比較。",
+        "dataset": "input-token-detail",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "指標",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "input-token-detail-added",
+        "title": "入力・出力の排他的な内訳 — 追加3モデル",
+        "subtitle": "直前の既存4モデルと同じ指標・単位・採点条件。",
+        "dataset": "input-token-detail",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "指標",
+            "type": "text"
+          },
+          {
+            "field": "Terra",
+            "label": "Terra",
+            "type": "text"
+          },
+          {
+            "field": "Luna",
+            "label": "Luna",
+            "type": "text"
+          },
+          {
+            "field": "Sonnet",
+            "label": "Sonnet",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "work-patterns",
+        "title": "本実行の応答粒度と出力構成 — 既存4モデル",
+        "subtitle": "行は指標、列はモデル。追加3モデルは直後の同一定義の表で比較。",
+        "dataset": "work-patterns",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "指標",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "work-patterns-added",
+        "title": "本実行の応答粒度と出力構成 — 追加3モデル",
+        "subtitle": "直前の既存4モデルと同じ指標・単位・採点条件。",
+        "dataset": "work-patterns",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "指標",
+            "type": "text"
+          },
+          {
+            "field": "Terra",
+            "label": "Terra",
+            "type": "text"
+          },
+          {
+            "field": "Luna",
+            "label": "Luna",
+            "type": "text"
+          },
+          {
+            "field": "Sonnet",
+            "label": "Sonnet",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "sessions",
+        "title": "セッション名と集計範囲",
+        "subtitle": "本実行以外の準備・確認・後続依頼を含むと、AstraとSolの総量が増える。",
+        "dataset": "sessions",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "model",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル",
+            "type": "text"
+          },
+          {
+            "field": "session",
+            "label": "セッション名",
+            "type": "text"
+          },
+          {
+            "field": "turns",
+            "label": "全ターン数",
+            "type": "number"
+          },
+          {
+            "field": "selected",
+            "label": "本実行ターン",
+            "type": "text"
+          },
+          {
+            "field": "total",
+            "label": "全セッショントークン",
+            "type": "text"
+          },
+          {
+            "field": "excluded",
+            "label": "本実行以外",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "test-results",
+        "title": "再実行テストと採点チェック",
+        "subtitle": "pytest、採点チェック、隠しシナリオは別々の評価単位。",
+        "dataset": "test-results",
+        "sourceId": "qa",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "model",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル",
+            "type": "text"
+          },
+          {
+            "field": "pytest",
+            "label": "pytest合格",
+            "type": "number"
+          },
+          {
+            "field": "pytest_fail",
+            "label": "pytest失敗",
+            "type": "number"
+          },
+          {
+            "field": "checks",
+            "label": "採点チェック合格",
+            "type": "text"
+          },
+          {
+            "field": "fails",
+            "label": "採点チェック不合格",
+            "type": "number"
+          },
+          {
+            "field": "valid",
+            "label": "有効シナリオ",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "scores",
+        "label": "最終自動採点・カテゴリ別集計",
+        "path": "evaluations/combined_summary.json",
+        "query": {
+          "engine": "SQLite (in-memory)",
+          "description": "ユーザー提示スクリプトを基にした最終再採点。リスク表の任意列の衝突のみ互換処理し、手動加点はしていない。 レポートの数値は、記載の元ファイルを読み込んだSQLite一時テーブルで独立に集計・照合。元ログの回復は記載のPython処理による。",
+          "executed_at": "2026-09-05T07:31:57.432990+00:00",
+          "tables_used": [
+            "evaluations/combined_summary.json",
+            "evaluations/fable.json",
+            "evaluations/opus.json",
+            "evaluations/sol.json",
+            "evaluations/astra.json",
+            "evaluator/scoring.py",
+            "main.raw_evaluations",
+            "main.raw_user_turns",
+            "main.raw_pytest",
+            "evaluations/performance-report/update_report_seven.py",
+            "evaluations/performance-report/report_queries.sql",
+            "analysis/final-review-20260905/expanded-7-models/terra_score.json",
+            "analysis/final-review-20260905/expanded-7-models/luna_score.json",
+            "analysis/final-review-20260905/expanded-7-models/sonnet_score.json"
+          ],
+          "filters": [
+            "2026年9月5日に完了した7モデル各1実行。提出物の自動再採点と選択した本実行ターンを比較。"
+          ],
+          "metric_definitions": [
+            "総得点は7カテゴリの和、満点100。表示は小数第3位。配点・閾値は元のまま。",
+            "数値30、モデル品質20、頑健性15、ソフトウェア15、データ品質10、レポート5、完遂5。",
+            "カテゴリ達成率=カテゴリ得点/カテゴリ満点。グラフでは0〜1、表示は%。",
+            "Fableとの差=Fableのカテゴリ得点−比較モデルの同カテゴリ得点。",
+            "モデル品質20点=主カーブのゼロRMSE 7＋重み付きゼロRMSE 3＋フォワードRMSE 4＋非公開商品RMSE 4＋比較JSON 1＋感度JSON 1（scoring.py）。",
+            "データ品質のmissing_handlingは欠損クォート4件をaction=excludeにした比率≥0.9で合格。中値復元（correct/downweight）は不合格扱い。"
+          ],
+          "language": "sql",
+          "sql": "SELECT e.model, json_extract(e.document, '$.total_score') AS score,\n       c.key AS category, CAST(c.value AS REAL) AS category_score,\n       CASE c.key WHEN 'numerical_correctness' THEN 30\n         WHEN 'quantitative_model_quality' THEN 20\n         WHEN 'hidden_scenario_robustness' THEN 15\n         WHEN 'software_engineering_reproducibility' THEN 15\n         WHEN 'data_quality_handling' THEN 10 ELSE 5 END AS category_maximum,\n       CAST(c.value AS REAL) / CASE c.key WHEN 'numerical_correctness' THEN 30\n         WHEN 'quantitative_model_quality' THEN 20\n         WHEN 'hidden_scenario_robustness' THEN 15\n         WHEN 'software_engineering_reproducibility' THEN 15\n         WHEN 'data_quality_handling' THEN 10 ELSE 5 END AS attainment\nFROM main.raw_evaluations e, json_each(e.document, '$.category_scores') c\nORDER BY score DESC, category;"
+        }
+      },
+      {
+        "id": "precision",
+        "label": "正解カーブ・非公開商品・隠しシナリオ診断",
+        "path": "evaluations/fable.json",
+        "query": {
+          "engine": "SQLite (in-memory)",
+          "description": "最終評価JSONから診断値を抽出。主診断と隠し10シナリオの平均を混同しない。 レポートの数値は、記載の元ファイルを読み込んだSQLite一時テーブルで独立に集計・照合。元ログの回復は記載のPython処理による。",
+          "executed_at": "2026-09-05T07:31:57.432990+00:00",
+          "tables_used": [
+            "evaluations/fable.json",
+            "evaluations/opus.json",
+            "evaluations/sol.json",
+            "evaluations/astra.json",
+            "evaluator/scoring.py",
+            "main.raw_evaluations",
+            "main.raw_user_turns",
+            "main.raw_pytest",
+            "evaluations/performance-report/update_report_seven.py",
+            "evaluations/performance-report/report_queries.sql",
+            "analysis/final-review-20260905/expanded-7-models/terra_score.json",
+            "analysis/final-review-20260905/expanded-7-models/luna_score.json",
+            "analysis/final-review-20260905/expanded-7-models/sonnet_score.json",
+            "analysis/final-review-20260905/expanded-7-models/candidate_review.json"
+          ],
+          "filters": [
+            "2026年9月5日に完了した7モデル各1実行。提出物の自動再採点と選択した本実行ターンを比較。"
+          ],
+          "metric_definitions": [
+            "ゼロ金利RMSE=1e4×sqrt(mean((推定ゼロ金利−正解)^2))、単位bp。1bp=0.01%。",
+            "重み付きゼロRMSEは重み1/sqrt(0.15+満期年)。フォワードは推定z(T)×Tの数値微分で比較。",
+            "短期は満期2年以下、長期は15年以上。主診断は本データ、s01〜s10は別の隠しシナリオ。",
+            "非公開商品RMSEは金利誤差をbp、債券価格誤差を0.1価格単位に換算してプール。単一のbpではない。",
+            "DV01相対誤差は照合できた各モデルの対象商品集合の中央値。対象数は異なる。",
+            "隠しシナリオのフォワードRMSEは各シナリオの正解フォワードとの比較、単位bp。",
+            "非公開価格誤差=非公開holdout_instrumentsのtrue_quoteとの誤差 / max(|ask−bid|/2, 金利0.002または債券0.02) のRMSE。無次元。公開観測クォートの再現ではない。"
+          ],
+          "language": "sql",
+          "sql": "WITH diagnostic_rows AS (\n  SELECT model, 'main' AS scope, json_extract(document, '$.quantitative_diagnostics') AS metrics\n  FROM main.raw_evaluations\n  UNION ALL\n  SELECT e.model, s.key, s.value\n  FROM main.raw_evaluations e, json_each(e.document, '$.quantitative_diagnostics.hidden_scenarios') s\n)\nSELECT model, scope, metrics,\n       json_extract(metrics, '$.zero_rate_rmse_bps') AS zero_rmse_bps,\n       json_extract(metrics, '$.forward_rate_rmse_bps') AS forward_rmse_bps,\n       100.0 * json_extract(metrics, '$.dv01_median_relative_error') AS dv01_relative_error_percent,\n       RANK() OVER (PARTITION BY scope ORDER BY json_extract(metrics, '$.zero_rate_rmse_bps')) AS zero_error_rank\nFROM diagnostic_rows ORDER BY scope, zero_error_rank;"
+        }
+      },
+      {
+        "id": "usage",
+        "label": "監査済み作業時間・トークン・ターン集計",
+        "path": "analysis/final-review-20260905/expanded-7-models/runtime_tokens.csv",
+        "query": {
+          "engine": "SQLite (in-memory)",
+          "description": "集計済みログを利用。過去の未完了Opus集計を使わず再開分を含める。思考本文・会話本文は収録しない。 レポートの数値は、記載の元ファイルを読み込んだSQLite一時テーブルで独立に集計・照合。元ログの回復は記載のPython処理による。",
+          "executed_at": "2026-09-05T07:31:57.432990+00:00",
+          "tables_used": [
+            "analysis/final-review-20260905/expanded-7-models/runtime_tokens.csv",
+            "analysis/final-review-20260905/expanded-7-models/user_turns.csv",
+            "analysis/final-review-20260905/expanded-7-models/usage_audit.json",
+            "analysis/session-tokens-20260905/recover_tokens.py",
+            "analysis/final-review-20260905/recheck_final.py",
+            "main.raw_evaluations",
+            "main.raw_user_turns",
+            "main.raw_pytest",
+            "evaluations/performance-report/update_report_seven.py",
+            "evaluations/performance-report/report_queries.sql",
+            "analysis/final-review-20260905/expand_seven.py"
+          ],
+          "filters": [
+            "2026年9月5日に完了した7モデル各1実行。提出物の自動再採点と選択した本実行ターンを比較。"
+          ],
+          "metric_definitions": [
+            "作業時間=選択した本実行/再開ユーザーターンの開始〜終了の和（分）。ツール・自動要約待ちを含む。",
+            "Astra T4、Sol T2、Opus T1+T2、Fable T1、Terra T2、Luna T1、Sonnet T3。準備・確認・出力先対応・終了後依頼・ターン間待機は除外。",
+            "経過時間=最初の作業開始〜最後の作業終了。Opusのみ再開待ち78.332933分を含む。",
+            "総トークン=未キャッシュ入力+キャッシュ読み込み+キャッシュ作成+通常出力+推論出力。",
+            "推論は出力の内数。セッション総量は本実行以外のユーザーターンも含む。",
+            "キャッシュ読取を除く=未キャッシュ入力+キャッシュ作成+出力総量。総トークンとは異なる処理量の尺度であり料金の代理ではない。",
+            "Codexはresponse_idで重複排除したusageを累積カウンタと照合。Claudeはmessage.idで一意化しrequestIdも照合。",
+            "出力/API=本実行出力総量/一意な本実行API応答数。キャッシュ読取比率=キャッシュ読取/入力総量。異種トークナイザの単純比較には限界。"
+          ],
+          "language": "sql",
+          "sql": "SELECT model,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(minutes AS REAL) ELSE 0 END) AS work_minutes,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(api_responses AS INTEGER) ELSE 0 END) AS work_api_responses,\n SUM(CAST(api_responses AS INTEGER)) AS session_api_responses,\n SUM(CAST(total_tokens AS INTEGER)) AS session_total_tokens,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(uncached_input AS INTEGER) ELSE 0 END) AS uncached_input,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(cache_read_input AS INTEGER) ELSE 0 END) AS cache_read_input,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(cache_creation_input AS INTEGER) ELSE 0 END) AS cache_creation_input,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(uncached_input AS INTEGER) + CAST(cache_read_input AS INTEGER) + CAST(cache_creation_input AS INTEGER) ELSE 0 END) AS input_total,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(output_nonreasoning AS INTEGER) ELSE 0 END) AS output_nonreasoning,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(output_reasoning AS INTEGER) ELSE 0 END) AS output_reasoning,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(output_nonreasoning AS INTEGER) + CAST(output_reasoning AS INTEGER) ELSE 0 END) AS output_total,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(uncached_input AS INTEGER) + CAST(cache_read_input AS INTEGER) + CAST(cache_creation_input AS INTEGER) + CAST(output_nonreasoning AS INTEGER) + CAST(output_reasoning AS INTEGER) ELSE 0 END) AS total_tokens,\n 1.0 * SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(output_total AS INTEGER) ELSE 0 END) /\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(api_responses AS INTEGER) ELSE 0 END) AS output_per_api\nFROM main.raw_user_turns GROUP BY model ORDER BY total_tokens;"
+        }
+      },
+      {
+        "id": "qa",
+        "label": "再評価の環境・テスト・入力保全監査",
+        "path": "analysis/final-review-20260905/expanded-7-models/evaluation_audit.json",
+        "query": {
+          "engine": "SQLite (in-memory)",
+          "description": "記録された数値ライブラリに合わせた隔離環境で再確認。旧環境との得点一致も既存監査で確認。 レポートの数値は、記載の元ファイルを読み込んだSQLite一時テーブルで独立に集計・照合。元ログの回復は記載のPython処理による。 追加3モデルは同じ隔離環境で採点・全pytestを実行。既存4モデルは候補と採点器の完全なハッシュ一致を条件に検証済み値を継承。",
+          "executed_at": "2026-09-05T07:31:57.432990+00:00",
+          "tables_used": [
+            "analysis/final-review-20260905/expanded-7-models/evaluation_audit.json",
+            "analysis/final-review-20260905/expanded-7-models/pytest_verification.json",
+            "evaluations/methodology.json",
+            "evaluations/README.md",
+            "evaluations/combined_summary.json",
+            "evaluations/fable.json",
+            "evaluations/opus.json",
+            "evaluations/sol.json",
+            "evaluations/astra.json",
+            "main.raw_evaluations",
+            "main.raw_user_turns",
+            "main.raw_pytest",
+            "evaluations/performance-report/update_report_seven.py",
+            "evaluations/performance-report/report_queries.sql",
+            "analysis/final-review-20260905/expanded-7-models/terra_score.json",
+            "analysis/final-review-20260905/expanded-7-models/luna_score.json",
+            "analysis/final-review-20260905/expanded-7-models/sonnet_score.json",
+            "analysis/final-review-20260905/expand_seven.py",
+            "analysis/final-review-20260905/expanded-7-models/usage_audit.json"
+          ],
+          "filters": [
+            "2026年9月5日に完了した7モデル各1実行。提出物の自動再採点と選択した本実行ターンを比較。"
+          ],
+          "metric_definitions": [
+            "pytestは各候補の全テストを隔離コピーで実行。候補が書いたテストであり、モデル間で同一テスト集ではない。",
+            "採点チェック41件と隠しシナリオ10件、pytest件数は別の母集団。",
+            "マニフェストは公開入力12、評価側108ファイル。検証対象候補ハッシュは採点前後で一致。"
+          ],
+          "language": "sql",
+          "sql": "WITH pytest_counts AS (\n SELECT p.model, CAST(trim(substr(json_extract(p.document, '$.stdout'),\n   instr(json_extract(p.document, '$.stdout'), ' passed') - 3, 3)) AS INTEGER) AS pytest_passed,\n   json_extract(p.document, '$.returncode') AS pytest_exit_code\n FROM main.raw_pytest p\n)\nSELECT e.model, p.pytest_passed, p.pytest_exit_code,\n SUM(CASE WHEN json_extract(c.value, '$.passed') = 1 THEN 1 ELSE 0 END) AS hidden_passed,\n COUNT(*) AS hidden_checks,\n (SELECT COUNT(*) FROM json_each(e.document, '$.quantitative_diagnostics.hidden_scenarios') s WHERE json_extract(s.value, '$.valid') = 1) AS valid_scenarios\nFROM main.raw_evaluations e JOIN pytest_counts p ON p.model = e.model,\n json_each(e.document, '$.hidden_tests.details') c\nGROUP BY e.model ORDER BY e.model;"
+        }
+      },
+      {
+        "id": "limits",
+        "label": "採点器の限界・仕様の確認記録",
+        "path": "evaluations/README.md",
+        "query": {
+          "engine": "local-file",
+          "description": "日本語章見出し・自己パスの静的スキャン・JSON形式依存・端数期間の支払規則の比較。",
+          "executed_at": "2026-09-05T07:31:57.432990+00:00",
+          "tables_used": [
+            "evaluations/README.md",
+            "evaluations/methodology.json",
+            "evaluator/scoring.py",
+            "input/market_data/CONVENTIONS.md",
+            "tools/generate_benchmark.py",
+            "analysis/final-review-20260905/expanded-7-models/candidate_review.json",
+            "analysis/final-review-20260905/expanded-7-models/terra_score.json",
+            "analysis/final-review-20260905/expanded-7-models/luna_score.json",
+            "analysis/final-review-20260905/expanded-7-models/sonnet_score.json"
+          ],
+          "filters": [
+            "2026年9月5日に完了した7モデル各1実行。提出物の自動再採点と選択した本実行ターンを比較。"
+          ],
+          "metric_definitions": [
+            "警告ヒットと実際の禁止行為を区別する。生得点を保持し、仮想的な補正スコアは計算しない。"
+          ]
+        }
+      },
+      {
+        "id": "profiles",
+        "label": "候補の実装と自己申告",
+        "path": "results/fable/benchmark_summary.json",
+        "query": {
+          "engine": "local-file",
+          "description": "前段のコードレビューで確認した手法の要約。得点差の因果的な説明は仮説として扱う。 Terraの実体はベンチマーク外のDocuments/terra。移動せず読取確認し、対象ハッシュとレビュー抜粋を監査記録に保存。",
+          "executed_at": "2026-09-05T07:31:57.432990+00:00",
+          "tables_used": [
+            "results/fable/benchmark_summary.json",
+            "results/opus/benchmark_summary.json",
+            "output/sol/benchmark_summary.json",
+            "results/astra/benchmark_summary.json",
+            "results/fable/README.md",
+            "results/opus/README.md",
+            "output/sol/README.md",
+            "results/astra/README.md",
+            "results/fable",
+            "results/opus",
+            "output/sol",
+            "results/astra",
+            "output/luna/README.md",
+            "output/luna/outputs/diagnostics/model_comparison.json",
+            "output/sonnet/README.md",
+            "output/sonnet/outputs/diagnostics/model_comparison.json",
+            "analysis/final-review-20260905/expanded-7-models/candidate_review.json",
+            "analysis/final-review-20260905/expanded-7-models/runtime_tokens.csv",
+            "analysis/final-review-20260905/expanded-7-models/combined_summary.json"
+          ],
+          "filters": [
+            "2026年9月5日に完了した7モデル各1実行。提出物の自動再採点と選択した本実行ターンを比較。"
+          ],
+          "metric_definitions": [
+            "修正反復回数は候補の自己申告で、共通のログ分類で検証した回数ではない。",
+            "実装上の設計と観測誤差は区別する。アブレーション未実施のため原因ごとの寄与は未推定。"
+          ]
+        }
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-09-05T07:31:57.432990+00:00",
+    "status": "ready",
+    "datasets": {
+      "headlines": [
+        {
+          "best_score": 94.473,
+          "score_lead": 1.042,
+          "fastest_min": 18.303766666666668,
+          "fewest_tokens": 3701783
+        }
+      ],
+      "ranking": [
+        {
+          "model": "Fable",
+          "score": 94.473,
+          "rank": 1,
+          "core_score": 62.044,
+          "max_score": 100,
+          "candidate": "results/fable"
+        },
+        {
+          "model": "Opus",
+          "score": 93.431,
+          "rank": 2,
+          "core_score": 61.689,
+          "max_score": 100,
+          "candidate": "results/opus"
+        },
+        {
+          "model": "Luna",
+          "score": 91.021,
+          "rank": 3,
+          "core_score": 57.772999999999996,
+          "max_score": 100,
+          "candidate": "output/luna"
+        },
+        {
+          "model": "Terra",
+          "score": 82.835,
+          "rank": 4,
+          "core_score": 50.835,
+          "max_score": 100,
+          "candidate": "Documents/terra（ベンチマーク外）"
+        },
+        {
+          "model": "Sol",
+          "score": 80.438,
+          "rank": 5,
+          "core_score": 47.009,
+          "max_score": 100,
+          "candidate": "output/sol"
+        },
+        {
+          "model": "Astra",
+          "score": 80.103,
+          "rank": 6,
+          "core_score": 51.357,
+          "max_score": 100,
+          "candidate": "results/astra"
+        },
+        {
+          "model": "Sonnet",
+          "score": 75.05,
+          "rank": 7,
+          "core_score": 41.973,
+          "max_score": 100,
+          "candidate": "output/sonnet"
+        }
+      ],
+      "category-scores": [
+        {
+          "metric": "1. 数値精度 /30",
+          "Fable": "29.384",
+          "Opus": "29.388",
+          "Sol": "24.567",
+          "Astra": "26.515",
+          "Luna": "28.319",
+          "Terra": "26.098",
+          "Sonnet": "22.667"
+        },
+        {
+          "metric": "2. モデル品質 /20",
+          "Fable": "17.909",
+          "Opus": "18.000",
+          "Sol": "10.218",
+          "Astra": "12.147",
+          "Luna": "15.275",
+          "Terra": "11.428",
+          "Sonnet": "6.539"
+        },
+        {
+          "metric": "3. 頑健性 /15",
+          "Fable": "14.751",
+          "Opus": "14.301",
+          "Sol": "12.224",
+          "Astra": "12.695",
+          "Luna": "14.179",
+          "Terra": "13.309",
+          "Sonnet": "12.767"
+        },
+        {
+          "metric": "4. ソフトウェア /15",
+          "Fable": "14.000",
+          "Opus": "13.000",
+          "Sol": "15.000",
+          "Astra": "14.000",
+          "Luna": "15.000",
+          "Terra": "15.000",
+          "Sonnet": "15.000"
+        },
+        {
+          "metric": "5. データ品質 /10",
+          "Fable": "8.429",
+          "Opus": "8.742",
+          "Sol": "8.429",
+          "Astra": "7.857",
+          "Luna": "8.692",
+          "Terra": "8.000",
+          "Sonnet": "8.077"
+        },
+        {
+          "metric": "6. レポート /5",
+          "Fable": "5.000",
+          "Opus": "5.000",
+          "Sol": "5.000",
+          "Astra": "1.889",
+          "Luna": "4.556",
+          "Terra": "5.000",
+          "Sonnet": "5.000"
+        },
+        {
+          "metric": "7. 完遂 /5",
+          "Fable": "5.000",
+          "Opus": "5.000",
+          "Sol": "5.000",
+          "Astra": "5.000",
+          "Luna": "5.000",
+          "Terra": "4.000",
+          "Sonnet": "5.000"
+        },
+        {
+          "metric": "8. 総合 /100",
+          "Fable": "94.473",
+          "Opus": "93.431",
+          "Sol": "80.438",
+          "Astra": "80.103",
+          "Luna": "91.021",
+          "Terra": "82.835",
+          "Sonnet": "75.050"
+        }
+      ],
+      "category-attainment": [
+        {
+          "category": "数値精度 /30",
+          "maximum": 30,
+          "Fable": 0.9794666666666667,
+          "Opus": 0.9796,
+          "Luna": 0.9439666666666666,
+          "Terra": 0.8699333333333333,
+          "Sol": 0.8189,
+          "Astra": 0.8838333333333334,
+          "Sonnet": 0.7555666666666667
+        },
+        {
+          "category": "モデル品質 /20",
+          "maximum": 20,
+          "Fable": 0.89545,
+          "Opus": 0.9,
+          "Luna": 0.76375,
+          "Terra": 0.5714,
+          "Sol": 0.5109,
+          "Astra": 0.6073500000000001,
+          "Sonnet": 0.32694999999999996
+        },
+        {
+          "category": "頑健性 /15",
+          "maximum": 15,
+          "Fable": 0.9833999999999999,
+          "Opus": 0.9534,
+          "Luna": 0.9452666666666667,
+          "Terra": 0.8872666666666666,
+          "Sol": 0.8149333333333334,
+          "Astra": 0.8463333333333334,
+          "Sonnet": 0.8511333333333333
+        },
+        {
+          "category": "ソフトウェア /15",
+          "maximum": 15,
+          "Fable": 0.9333333333333333,
+          "Opus": 0.8666666666666667,
+          "Luna": 1.0,
+          "Terra": 1.0,
+          "Sol": 1.0,
+          "Astra": 0.9333333333333333,
+          "Sonnet": 1.0
+        },
+        {
+          "category": "データ品質 /10",
+          "maximum": 10,
+          "Fable": 0.8429,
+          "Opus": 0.8742000000000001,
+          "Luna": 0.8692,
+          "Terra": 0.8,
+          "Sol": 0.8429,
+          "Astra": 0.7857000000000001,
+          "Sonnet": 0.8077
+        },
+        {
+          "category": "レポート /5",
+          "maximum": 5,
+          "Fable": 1.0,
+          "Opus": 1.0,
+          "Luna": 0.9112,
+          "Terra": 1.0,
+          "Sol": 1.0,
+          "Astra": 0.3778,
+          "Sonnet": 1.0
+        },
+        {
+          "category": "完遂 /5",
+          "maximum": 5,
+          "Fable": 1.0,
+          "Opus": 1.0,
+          "Luna": 1.0,
+          "Terra": 0.8,
+          "Sol": 1.0,
+          "Astra": 1.0,
+          "Sonnet": 1.0
+        }
+      ],
+      "score-gaps": [
+        {
+          "category": "1. 数値精度 /30",
+          "vs_astra": "2.869",
+          "vs_sol": "4.817",
+          "vs_terra": "3.286",
+          "vs_luna": "1.065",
+          "vs_sonnet": "6.717"
+        },
+        {
+          "category": "2. モデル品質 /20",
+          "vs_astra": "5.762",
+          "vs_sol": "7.691",
+          "vs_terra": "6.481",
+          "vs_luna": "2.634",
+          "vs_sonnet": "11.370"
+        },
+        {
+          "category": "3. 頑健性 /15",
+          "vs_astra": "2.056",
+          "vs_sol": "2.527",
+          "vs_terra": "1.442",
+          "vs_luna": "0.572",
+          "vs_sonnet": "1.984"
+        },
+        {
+          "category": "4. ソフトウェア /15",
+          "vs_astra": "0.000",
+          "vs_sol": "-1.000",
+          "vs_terra": "-1.000",
+          "vs_luna": "-1.000",
+          "vs_sonnet": "-1.000"
+        },
+        {
+          "category": "5. データ品質 /10",
+          "vs_astra": "0.572",
+          "vs_sol": "0.000",
+          "vs_terra": "0.429",
+          "vs_luna": "-0.263",
+          "vs_sonnet": "0.352"
+        },
+        {
+          "category": "6. レポート /5",
+          "vs_astra": "3.111",
+          "vs_sol": "0.000",
+          "vs_terra": "0.000",
+          "vs_luna": "0.444",
+          "vs_sonnet": "0.000"
+        },
+        {
+          "category": "7. 完遂 /5",
+          "vs_astra": "0.000",
+          "vs_sol": "0.000",
+          "vs_terra": "1.000",
+          "vs_luna": "0.000",
+          "vs_sonnet": "0.000"
+        }
+      ],
+      "zero-errors": [
+        {
+          "model": "Opus",
+          "zero_rmse": 1.1117536247948616,
+          "forward_rmse": 12.713422577786643,
+          "short_rmse": 1.9813840464115229,
+          "long_rmse": 1.0322935093952197
+        },
+        {
+          "model": "Fable",
+          "zero_rmse": 1.1498187371108728,
+          "forward_rmse": 14.678653618490909,
+          "short_rmse": 1.5673442094749535,
+          "long_rmse": 1.2353354466608741
+        },
+        {
+          "model": "Luna",
+          "zero_rmse": 2.649017312804545,
+          "forward_rmse": 29.27731348166434,
+          "short_rmse": 2.501574384705551,
+          "long_rmse": 3.3491310278725503
+        },
+        {
+          "model": "Astra",
+          "zero_rmse": 5.021386877731334,
+          "forward_rmse": 30.81117374220975,
+          "short_rmse": 1.5775567873537935,
+          "long_rmse": 6.202384077280304
+        },
+        {
+          "model": "Sol",
+          "zero_rmse": 5.586990874744827,
+          "forward_rmse": 33.06190445118328,
+          "short_rmse": 20.222692184117665,
+          "long_rmse": 1.2755121005539547
+        },
+        {
+          "model": "Terra",
+          "zero_rmse": 5.655311484986522,
+          "forward_rmse": 29.600042734865003,
+          "short_rmse": 3.955606521914632,
+          "long_rmse": 7.3987059749855195
+        },
+        {
+          "model": "Sonnet",
+          "zero_rmse": 6.859198202168316,
+          "forward_rmse": 70.85653371842142,
+          "short_rmse": 20.905859939264758,
+          "long_rmse": 3.255180067566456
+        }
+      ],
+      "accuracy-detail": [
+        {
+          "metric": "1. ゼロ金利RMSE（bp）",
+          "Fable": "1.150",
+          "Opus": "1.112",
+          "Sol": "5.587",
+          "Astra": "5.021",
+          "Luna": "2.649",
+          "Terra": "5.655",
+          "Sonnet": "6.859"
+        },
+        {
+          "metric": "2. 重み付きゼロRMSE（bp）",
+          "Fable": "1.473",
+          "Opus": "1.541",
+          "Sol": "9.229",
+          "Astra": "4.358",
+          "Luna": "2.599",
+          "Terra": "4.912",
+          "Sonnet": "9.355"
+        },
+        {
+          "metric": "3. フォワードRMSE（bp）",
+          "Fable": "14.679",
+          "Opus": "12.713",
+          "Sol": "33.062",
+          "Astra": "30.811",
+          "Luna": "29.277",
+          "Terra": "29.600",
+          "Sonnet": "70.857"
+        },
+        {
+          "metric": "4. 短期 ≤2Y ゼロRMSE（bp）",
+          "Fable": "1.567",
+          "Opus": "1.981",
+          "Sol": "20.223",
+          "Astra": "1.578",
+          "Luna": "2.502",
+          "Terra": "3.956",
+          "Sonnet": "20.906"
+        },
+        {
+          "metric": "5. 長期 ≥15Y ゼロRMSE（bp）",
+          "Fable": "1.235",
+          "Opus": "1.032",
+          "Sol": "1.276",
+          "Astra": "6.202",
+          "Luna": "3.349",
+          "Terra": "7.399",
+          "Sonnet": "3.255"
+        },
+        {
+          "metric": "6. 非公開商品RMSE（正規化）",
+          "Fable": "1.293",
+          "Opus": "1.287",
+          "Sol": "12.755",
+          "Astra": "5.683",
+          "Luna": "2.922",
+          "Terra": "6.321",
+          "Sonnet": "13.712"
+        }
+      ],
+      "risk-detail": [
+        {
+          "model": "Fable",
+          "bidask": "5.141",
+          "n": 123,
+          "dv01": "0.1344%",
+          "key": "4.324e-08"
+        },
+        {
+          "model": "Opus",
+          "bidask": "5.427",
+          "n": 119,
+          "dv01": "0.1780%",
+          "key": "5.316e-08"
+        },
+        {
+          "model": "Luna",
+          "bidask": "8.928",
+          "n": 128,
+          "dv01": "0.3067%",
+          "key": "3.246e-08"
+        },
+        {
+          "model": "Terra",
+          "bidask": "17.058",
+          "n": 129,
+          "dv01": "0.3722%",
+          "key": "1.766e-08"
+        },
+        {
+          "model": "Sol",
+          "bidask": "63.615",
+          "n": 136,
+          "dv01": "0.2946%",
+          "key": "2.758e-08"
+        },
+        {
+          "model": "Astra",
+          "bidask": "17.708",
+          "n": 131,
+          "dv01": "0.3518%",
+          "key": "2.758e-08"
+        },
+        {
+          "model": "Sonnet",
+          "bidask": "67.252",
+          "n": 131,
+          "dv01": "0.2793%",
+          "key": "2.757e-08"
+        }
+      ],
+      "scenario-zero": [
+        {
+          "model": "Fable",
+          "valid_scenarios": 10,
+          "s01": 0.8835318381101958,
+          "s02": 2.3672481179951386,
+          "s03": 1.2134220471478772,
+          "s04": 1.5205653151484058,
+          "s05": 1.3858247315208356,
+          "s06": 2.072451583970044,
+          "s07": 0.8593383166663168,
+          "s08": 1.1730560151575835,
+          "s09": 1.7634449387728959,
+          "s10": 1.8026146612379272
+        },
+        {
+          "model": "Opus",
+          "valid_scenarios": 10,
+          "s01": 1.5005229098040496,
+          "s02": 3.5920151893287797,
+          "s03": 1.8747816323443758,
+          "s04": 2.7219564841117267,
+          "s05": 1.9822792596211034,
+          "s06": 3.357410734915922,
+          "s07": 1.0638330206829958,
+          "s08": 1.4910736910443274,
+          "s09": 2.1912428005272564,
+          "s10": 1.0147851610165284
+        },
+        {
+          "model": "Luna",
+          "valid_scenarios": 10,
+          "s01": 1.895902248377006,
+          "s02": 3.329717363116392,
+          "s03": 2.3040512211633324,
+          "s04": 3.0208594634782857,
+          "s05": 2.344535783282124,
+          "s06": 2.8416213850320067,
+          "s07": 2.8874890817637544,
+          "s08": 2.0193075527053326,
+          "s09": 2.3303099725133958,
+          "s10": 3.0075222570460647
+        },
+        {
+          "model": "Terra",
+          "valid_scenarios": 10,
+          "s01": 3.5070137982819523,
+          "s02": 5.625988090301685,
+          "s03": 3.1080796193848146,
+          "s04": 7.109702080918563,
+          "s05": 3.684850586640724,
+          "s06": 4.015335688236996,
+          "s07": 3.028232908562815,
+          "s08": 10.815371912425606,
+          "s09": 7.079040322036021,
+          "s10": 3.9262650103730814
+        },
+        {
+          "model": "Sol",
+          "valid_scenarios": 10,
+          "s01": 4.769844424897903,
+          "s02": 10.103508125846483,
+          "s03": 7.449138419636771,
+          "s04": 6.470988886951299,
+          "s05": 4.868072944699606,
+          "s06": 8.100028977587769,
+          "s07": 5.079291445868165,
+          "s08": 6.082452284851852,
+          "s09": 5.896084109339161,
+          "s10": 5.675073201528795
+        },
+        {
+          "model": "Astra",
+          "valid_scenarios": 10,
+          "s01": 3.82629953834024,
+          "s02": 6.749090310076436,
+          "s03": 2.7295534772260543,
+          "s04": 8.339226729131664,
+          "s05": 9.56873622048852,
+          "s06": 5.111698076513254,
+          "s07": 3.7133059863966293,
+          "s08": 10.896860462567398,
+          "s09": 11.4924826416413,
+          "s10": 3.5179254181285136
+        },
+        {
+          "model": "Sonnet",
+          "valid_scenarios": 10,
+          "s01": 4.685837827787124,
+          "s02": 10.2789841298236,
+          "s03": 2.1731058118488056,
+          "s04": 10.795470709678526,
+          "s05": 2.400565101831708,
+          "s06": 2.5966320944620573,
+          "s07": 4.367317113286018,
+          "s08": 2.0180636912043597,
+          "s09": 10.473623500089976,
+          "s10": 8.54723879027785
+        }
+      ],
+      "scenario-forward": [
+        {
+          "scenario": "s01",
+          "Fable": "8.945",
+          "Opus": "15.232",
+          "Luna": "23.238",
+          "Terra": "23.102",
+          "Sol": "42.531",
+          "Astra": "25.394",
+          "Sonnet": "24.142",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s02",
+          "Fable": "20.478",
+          "Opus": "28.925",
+          "Luna": "31.726",
+          "Terra": "30.568",
+          "Sol": "59.187",
+          "Astra": "35.309",
+          "Sonnet": "96.038",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s03",
+          "Fable": "11.691",
+          "Opus": "19.756",
+          "Luna": "23.431",
+          "Terra": "24.393",
+          "Sol": "54.028",
+          "Astra": "26.370",
+          "Sonnet": "19.874",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s04",
+          "Fable": "19.860",
+          "Opus": "26.135",
+          "Luna": "28.113",
+          "Terra": "34.143",
+          "Sol": "38.521",
+          "Astra": "39.173",
+          "Sonnet": "50.903",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s05",
+          "Fable": "17.381",
+          "Opus": "21.861",
+          "Luna": "23.898",
+          "Terra": "26.163",
+          "Sol": "40.095",
+          "Astra": "41.501",
+          "Sonnet": "18.620",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s06",
+          "Fable": "21.643",
+          "Opus": "29.877",
+          "Luna": "25.723",
+          "Terra": "27.248",
+          "Sol": "50.488",
+          "Astra": "31.030",
+          "Sonnet": "22.593",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s07",
+          "Fable": "12.126",
+          "Opus": "13.086",
+          "Luna": "35.140",
+          "Terra": "24.897",
+          "Sol": "54.951",
+          "Astra": "27.803",
+          "Sonnet": "26.846",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s08",
+          "Fable": "14.710",
+          "Opus": "18.370",
+          "Luna": "25.851",
+          "Terra": "42.984",
+          "Sol": "61.329",
+          "Astra": "45.679",
+          "Sonnet": "21.758",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s09",
+          "Fable": "18.952",
+          "Opus": "70.314",
+          "Luna": "22.568",
+          "Terra": "35.386",
+          "Sol": "47.369",
+          "Astra": "48.660",
+          "Sonnet": "62.167",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s10",
+          "Fable": "16.135",
+          "Opus": "12.382",
+          "Luna": "31.313",
+          "Terra": "30.718",
+          "Sol": "41.083",
+          "Astra": "31.787",
+          "Sonnet": "50.528",
+          "lowest": "Opus"
+        }
+      ],
+      "work-time": [
+        {
+          "model": "Terra",
+          "minutes": 18.303766666666668,
+          "span_minutes": 18.303766666666668,
+          "idle_minutes": 0,
+          "work_turns": "[2]"
+        },
+        {
+          "model": "Luna",
+          "minutes": 32.99281666666666,
+          "span_minutes": 32.99281666666666,
+          "idle_minutes": 0,
+          "work_turns": "[1]"
+        },
+        {
+          "model": "Sol",
+          "minutes": 34.596250000000005,
+          "span_minutes": 34.596250000000005,
+          "idle_minutes": 0,
+          "work_turns": "[2]"
+        },
+        {
+          "model": "Astra",
+          "minutes": 51.974066666666666,
+          "span_minutes": 51.974066666666666,
+          "idle_minutes": 0,
+          "work_turns": "[4]"
+        },
+        {
+          "model": "Fable",
+          "minutes": 55.940000000000005,
+          "span_minutes": 55.940000000000005,
+          "idle_minutes": 0,
+          "work_turns": "[1]"
+        },
+        {
+          "model": "Sonnet",
+          "minutes": 62.96783333333334,
+          "span_minutes": 62.96783333333334,
+          "idle_minutes": 0,
+          "work_turns": "[3]"
+        },
+        {
+          "model": "Opus",
+          "minutes": 124.21831666666668,
+          "span_minutes": 202.55125,
+          "idle_minutes": 78.33293333333333,
+          "work_turns": "[1, 2]"
+        }
+      ],
+      "time-detail": [
+        {
+          "model": "Fable",
+          "work": "55.94",
+          "idle": "0.00",
+          "span": "55.94",
+          "reported": "55.50"
+        },
+        {
+          "model": "Opus",
+          "work": "124.22",
+          "idle": "78.33",
+          "span": "202.55",
+          "reported": "200.68"
+        },
+        {
+          "model": "Luna",
+          "work": "32.99",
+          "idle": "0.00",
+          "span": "32.99",
+          "reported": "31.73"
+        },
+        {
+          "model": "Terra",
+          "work": "18.30",
+          "idle": "0.00",
+          "span": "18.30",
+          "reported": "19.07"
+        },
+        {
+          "model": "Sol",
+          "work": "34.60",
+          "idle": "0.00",
+          "span": "34.60",
+          "reported": "32.47"
+        },
+        {
+          "model": "Astra",
+          "work": "51.97",
+          "idle": "0.00",
+          "span": "51.97",
+          "reported": "53.20"
+        },
+        {
+          "model": "Sonnet",
+          "work": "62.97",
+          "idle": "0.00",
+          "span": "62.97",
+          "reported": "62.27"
+        }
+      ],
+      "selected-turns": [
+        {
+          "start_sort": "2026-09-05T10:23:54.514+09:00",
+          "model": "Astra T4",
+          "start": "10:23:54",
+          "end": "11:15:52",
+          "minutes": "51.97",
+          "api": 40,
+          "tokens": "3,797,692"
+        },
+        {
+          "start_sort": "2026-09-05T10:21:56.779+09:00",
+          "model": "Sol T2",
+          "start": "10:21:56",
+          "end": "10:56:32",
+          "minutes": "34.60",
+          "api": 72,
+          "tokens": "8,975,027"
+        },
+        {
+          "start_sort": "2026-09-05T10:22:15.164+09:00",
+          "model": "Opus T1",
+          "start": "10:22:15",
+          "end": "11:32:08",
+          "minutes": "69.88",
+          "api": 114,
+          "tokens": "29,457,223"
+        },
+        {
+          "start_sort": "2026-09-05T12:50:28.048+09:00",
+          "model": "Opus T2",
+          "start": "12:50:28",
+          "end": "13:44:48",
+          "minutes": "54.34",
+          "api": 161,
+          "tokens": "29,944,582"
+        },
+        {
+          "start_sort": "2026-09-05T10:22:09.611+09:00",
+          "model": "Fable T1",
+          "start": "10:22:09",
+          "end": "11:18:06",
+          "minutes": "55.94",
+          "api": 41,
+          "tokens": "10,790,902"
+        },
+        {
+          "start_sort": "2026-09-05T14:23:39.791+09:00",
+          "model": "Terra T2",
+          "start": "14:23:39",
+          "end": "14:41:58",
+          "minutes": "18.30",
+          "api": 48,
+          "tokens": "3,701,783"
+        },
+        {
+          "start_sort": "2026-09-05T14:23:01.179+09:00",
+          "model": "Luna T1",
+          "start": "14:23:01",
+          "end": "14:56:00",
+          "minutes": "32.99",
+          "api": 83,
+          "tokens": "11,232,752"
+        },
+        {
+          "start_sort": "2026-09-05T14:26:13.619+09:00",
+          "model": "Sonnet T3",
+          "start": "14:26:13",
+          "end": "15:29:11",
+          "minutes": "62.97",
+          "api": 139,
+          "tokens": "39,169,741"
+        }
+      ],
+      "token-composition": [
+        {
+          "model": "Terra",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 3654329,
+          "work_total": 3701783,
+          "session_total": 4016934
+        },
+        {
+          "model": "Terra",
+          "part": "出力（推論含む）",
+          "tokens": 47454,
+          "work_total": 3701783,
+          "session_total": 4016934
+        },
+        {
+          "model": "Astra",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 3714472,
+          "work_total": 3797692,
+          "session_total": 4446365
+        },
+        {
+          "model": "Astra",
+          "part": "出力（推論含む）",
+          "tokens": 83220,
+          "work_total": 3797692,
+          "session_total": 4446365
+        },
+        {
+          "model": "Sol",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 8901026,
+          "work_total": 8975027,
+          "session_total": 10349887
+        },
+        {
+          "model": "Sol",
+          "part": "出力（推論含む）",
+          "tokens": 74001,
+          "work_total": 8975027,
+          "session_total": 10349887
+        },
+        {
+          "model": "Fable",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 10513644,
+          "work_total": 10790902,
+          "session_total": 10790902
+        },
+        {
+          "model": "Fable",
+          "part": "出力（推論含む）",
+          "tokens": 277258,
+          "work_total": 10790902,
+          "session_total": 10790902
+        },
+        {
+          "model": "Luna",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 11155977,
+          "work_total": 11232752,
+          "session_total": 11232752
+        },
+        {
+          "model": "Luna",
+          "part": "出力（推論含む）",
+          "tokens": 76775,
+          "work_total": 11232752,
+          "session_total": 11232752
+        },
+        {
+          "model": "Sonnet",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 38888111,
+          "work_total": 39169741,
+          "session_total": 39169741
+        },
+        {
+          "model": "Sonnet",
+          "part": "出力（推論含む）",
+          "tokens": 281630,
+          "work_total": 39169741,
+          "session_total": 39169741
+        },
+        {
+          "model": "Opus",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 58986233,
+          "work_total": 59401805,
+          "session_total": 59401805
+        },
+        {
+          "model": "Opus",
+          "part": "出力（推論含む）",
+          "tokens": 415572,
+          "work_total": 59401805,
+          "session_total": 59401805
+        }
+      ],
+      "input-token-detail": [
+        {
+          "metric": "1. 通常入力",
+          "Fable": "1,222",
+          "Opus": "550",
+          "Sol": "155,298",
+          "Astra": "132,392",
+          "Luna": "261,513",
+          "Terra": "106,297",
+          "Sonnet": "278"
+        },
+        {
+          "metric": "2. キャッシュ読取",
+          "Fable": "9,739,461",
+          "Opus": "58,116,374",
+          "Sol": "8,745,728",
+          "Astra": "3,582,080",
+          "Luna": "10,894,464",
+          "Terra": "3,548,032",
+          "Sonnet": "38,508,187"
+        },
+        {
+          "metric": "3. キャッシュ作成",
+          "Fable": "772,961",
+          "Opus": "869,309",
+          "Sol": "0",
+          "Astra": "0",
+          "Luna": "0",
+          "Terra": "0",
+          "Sonnet": "379,646"
+        },
+        {
+          "metric": "4. 出力総量（推論含む）",
+          "Fable": "277,258",
+          "Opus": "415,572",
+          "Sol": "74,001",
+          "Astra": "83,220",
+          "Luna": "76,775",
+          "Terra": "47,454",
+          "Sonnet": "281,630"
+        },
+        {
+          "metric": "5. 本実行総量",
+          "Fable": "10,790,902",
+          "Opus": "59,401,805",
+          "Sol": "8,975,027",
+          "Astra": "3,797,692",
+          "Luna": "11,232,752",
+          "Terra": "3,701,783",
+          "Sonnet": "39,169,741"
+        },
+        {
+          "metric": "6. キャッシュ読取を除く総量",
+          "Fable": "1,051,441",
+          "Opus": "1,285,431",
+          "Sol": "229,299",
+          "Astra": "215,612",
+          "Luna": "338,288",
+          "Terra": "153,751",
+          "Sonnet": "661,554"
+        }
+      ],
+      "output-composition": [
+        {
+          "model": "Terra",
+          "part": "通常出力",
+          "tokens": 29183,
+          "output_total": 47454,
+          "api_responses": 48
+        },
+        {
+          "model": "Terra",
+          "part": "推論出力",
+          "tokens": 18271,
+          "output_total": 47454,
+          "api_responses": 48
+        },
+        {
+          "model": "Sol",
+          "part": "通常出力",
+          "tokens": 49419,
+          "output_total": 74001,
+          "api_responses": 72
+        },
+        {
+          "model": "Sol",
+          "part": "推論出力",
+          "tokens": 24582,
+          "output_total": 74001,
+          "api_responses": 72
+        },
+        {
+          "model": "Luna",
+          "part": "通常出力",
+          "tokens": 46415,
+          "output_total": 76775,
+          "api_responses": 83
+        },
+        {
+          "model": "Luna",
+          "part": "推論出力",
+          "tokens": 30360,
+          "output_total": 76775,
+          "api_responses": 83
+        },
+        {
+          "model": "Astra",
+          "part": "通常出力",
+          "tokens": 49539,
+          "output_total": 83220,
+          "api_responses": 40
+        },
+        {
+          "model": "Astra",
+          "part": "推論出力",
+          "tokens": 33681,
+          "output_total": 83220,
+          "api_responses": 40
+        },
+        {
+          "model": "Fable",
+          "part": "通常出力",
+          "tokens": 158104,
+          "output_total": 277258,
+          "api_responses": 41
+        },
+        {
+          "model": "Fable",
+          "part": "推論出力",
+          "tokens": 119154,
+          "output_total": 277258,
+          "api_responses": 41
+        },
+        {
+          "model": "Sonnet",
+          "part": "通常出力",
+          "tokens": 111805,
+          "output_total": 281630,
+          "api_responses": 139
+        },
+        {
+          "model": "Sonnet",
+          "part": "推論出力",
+          "tokens": 169825,
+          "output_total": 281630,
+          "api_responses": 139
+        },
+        {
+          "model": "Opus",
+          "part": "通常出力",
+          "tokens": 266815,
+          "output_total": 415572,
+          "api_responses": 275
+        },
+        {
+          "model": "Opus",
+          "part": "推論出力",
+          "tokens": 148757,
+          "output_total": 415572,
+          "api_responses": 275
+        }
+      ],
+      "work-patterns": [
+        {
+          "metric": "1. API応答数",
+          "Fable": "41",
+          "Opus": "275",
+          "Sol": "72",
+          "Astra": "40",
+          "Luna": "83",
+          "Terra": "48",
+          "Sonnet": "139"
+        },
+        {
+          "metric": "2. 通常出力",
+          "Fable": "158,104",
+          "Opus": "266,815",
+          "Sol": "49,419",
+          "Astra": "49,539",
+          "Luna": "46,415",
+          "Terra": "29,183",
+          "Sonnet": "111,805"
+        },
+        {
+          "metric": "3. 推論出力",
+          "Fable": "119,154",
+          "Opus": "148,757",
+          "Sol": "24,582",
+          "Astra": "33,681",
+          "Luna": "30,360",
+          "Terra": "18,271",
+          "Sonnet": "169,825"
+        },
+        {
+          "metric": "4. 推論比率",
+          "Fable": "43.0%",
+          "Opus": "35.8%",
+          "Sol": "33.2%",
+          "Astra": "40.5%",
+          "Luna": "39.5%",
+          "Terra": "38.5%",
+          "Sonnet": "60.3%"
+        },
+        {
+          "metric": "5. 出力/API",
+          "Fable": "6,762",
+          "Opus": "1,511",
+          "Sol": "1,028",
+          "Astra": "2,080",
+          "Luna": "925",
+          "Terra": "989",
+          "Sonnet": "2,026"
+        },
+        {
+          "metric": "6. 入力キャッシュ読取比率",
+          "Fable": "92.6%",
+          "Opus": "98.5%",
+          "Sol": "98.3%",
+          "Astra": "96.4%",
+          "Luna": "97.7%",
+          "Terra": "97.1%",
+          "Sonnet": "99.0%"
+        }
+      ],
+      "sessions": [
+        {
+          "model": "Fable",
+          "session": "model-test-fable",
+          "turns": 1,
+          "selected": "[1]",
+          "total": "10,790,902",
+          "excluded": "0"
+        },
+        {
+          "model": "Opus",
+          "session": "model-test-opus",
+          "turns": 2,
+          "selected": "[1, 2]",
+          "total": "59,401,805",
+          "excluded": "0"
+        },
+        {
+          "model": "Luna",
+          "session": "Model Test Luna",
+          "turns": 1,
+          "selected": "[1]",
+          "total": "11,232,752",
+          "excluded": "0"
+        },
+        {
+          "model": "Terra",
+          "session": "Model Test Terra",
+          "turns": 3,
+          "selected": "[2]",
+          "total": "4,016,934",
+          "excluded": "315,151"
+        },
+        {
+          "model": "Sol",
+          "session": "Model Test Sol",
+          "turns": 6,
+          "selected": "[2]",
+          "total": "10,349,887",
+          "excluded": "1,374,860"
+        },
+        {
+          "model": "Astra",
+          "session": "Model Test Astra",
+          "turns": 5,
+          "selected": "[4]",
+          "total": "4,446,365",
+          "excluded": "648,673"
+        },
+        {
+          "model": "Sonnet",
+          "session": "model-test-sonnet",
+          "turns": 3,
+          "selected": "[3]",
+          "total": "39,169,741",
+          "excluded": "0"
+        }
+      ],
+      "test-results": [
+        {
+          "model": "Fable",
+          "pytest": 60,
+          "pytest_fail": 0,
+          "checks": "36 / 41",
+          "fails": 5,
+          "valid": "10 / 10"
+        },
+        {
+          "model": "Opus",
+          "pytest": 204,
+          "pytest_fail": 0,
+          "checks": "37 / 41",
+          "fails": 4,
+          "valid": "10 / 10"
+        },
+        {
+          "model": "Luna",
+          "pytest": 12,
+          "pytest_fail": 0,
+          "checks": "38 / 41",
+          "fails": 3,
+          "valid": "10 / 10"
+        },
+        {
+          "model": "Terra",
+          "pytest": 13,
+          "pytest_fail": 0,
+          "checks": "36 / 41",
+          "fails": 5,
+          "valid": "10 / 10"
+        },
+        {
+          "model": "Sol",
+          "pytest": 20,
+          "pytest_fail": 0,
+          "checks": "38 / 41",
+          "fails": 3,
+          "valid": "10 / 10"
+        },
+        {
+          "model": "Astra",
+          "pytest": 45,
+          "pytest_fail": 0,
+          "checks": "34 / 41",
+          "fails": 7,
+          "valid": "10 / 10"
+        },
+        {
+          "model": "Sonnet",
+          "pytest": 49,
+          "pytest_fail": 0,
+          "checks": "35 / 41",
+          "fails": 6,
+          "valid": "10 / 10"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,282 @@
+{
+  "validation_method": "Deterministic dispersed maturity buckets; all instrument types at nearby tenors assigned together; endpoints retained in training.",
+  "training_n": 105,
+  "holdout_n": 26,
+  "holdout_instrument_ids": [
+    "INS0005",
+    "INS0006",
+    "INS0013",
+    "INS0014",
+    "INS0021",
+    "INS0106",
+    "INS0113",
+    "INS0031",
+    "INS0049",
+    "INS0067",
+    "INS0085",
+    "INS0103",
+    "INS0114",
+    "INS0035",
+    "INS0053",
+    "INS0071",
+    "INS0089",
+    "INS0123",
+    "INS0140",
+    "INS0141",
+    "INS0038",
+    "INS0056",
+    "INS0074",
+    "INS0092",
+    "INS0142",
+    "INS0143"
+  ],
+  "holdout_maturity_groups": [
+    "0:2",
+    "0:7",
+    "1:6",
+    "2:10",
+    "2:5"
+  ],
+  "inner_cv": {
+    "folds": 3,
+    "criterion": "mean liquidity-weighted Huber loss in bid/ask uncertainty units",
+    "results": [
+      {
+        "smoothing": 1e-05,
+        "fold_losses": [
+          1324.477320492064,
+          1069.508238380267,
+          1121.0006179598024
+        ],
+        "mean_loss": 1171.6620589440445
+      },
+      {
+        "smoothing": 0.0001,
+        "fold_losses": [
+          344.24040339337495,
+          732.3218456510954,
+          746.0609066469805
+        ],
+        "mean_loss": 607.5410518971503
+      },
+      {
+        "smoothing": 0.001,
+        "fold_losses": [
+          199.22775236586196,
+          655.6084220564942,
+          713.8835781213146
+        ],
+        "mean_loss": 522.9065841812236
+      },
+      {
+        "smoothing": 0.01,
+        "fold_losses": [
+          404.5644323180549,
+          754.9859260460984,
+          712.3715356259045
+        ],
+        "mean_loss": 623.9739646633526
+      }
+    ]
+  },
+  "chosen_smoothing": 0.001,
+  "preprocessing_caveat": "Deterministic quote-unit repair uses contemporaneous peers in the entire visible tape before splitting. The holdout tests curve interpolation; it is not an untouched temporal or ground-truth test.",
+  "evaluation_policy": "All usable validation quotes included; no residual-based deletion or validation reweighting. Report both robust score and uncapped RMSE.",
+  "baseline": {
+    "train": {
+      "n": 105,
+      "weighted_huber_loss": 630.6165264639671,
+      "standardized_rmse": 258.9297416884983,
+      "median_absolute_standardized_error": 42.523902913708156,
+      "within_bid_ask_fraction": 0.01904761904761905,
+      "by_instrument_type": {
+        "deposit": {
+          "n": 13,
+          "units": "rate basis points",
+          "rmse": 14.060015096010755,
+          "median_absolute_error": 10.776734531318041,
+          "mean_signed_error": 5.173323712348725
+        },
+        "ois_swap": {
+          "n": 53,
+          "units": "rate basis points",
+          "rmse": 39.28952584243408,
+          "median_absolute_error": 10.721359580007258,
+          "mean_signed_error": -2.6385421616430955
+        },
+        "bond": {
+          "n": 39,
+          "units": "price points per 100",
+          "rmse": 2.0997658354276085,
+          "median_absolute_error": 0.4727659930513681,
+          "mean_signed_error": 1.0776453131297035
+        }
+      }
+    },
+    "holdout": {
+      "n": 26,
+      "weighted_huber_loss": 621.927193265877,
+      "standardized_rmse": 348.0089810912306,
+      "median_absolute_standardized_error": 16.643638886020067,
+      "within_bid_ask_fraction": 0.0,
+      "by_instrument_type": {
+        "deposit": {
+          "n": 5,
+          "units": "rate basis points",
+          "rmse": 6.677440363539213,
+          "median_absolute_error": 0.5665864204007152,
+          "mean_signed_error": 2.521161319599275
+        },
+        "ois_swap": {
+          "n": 13,
+          "units": "rate basis points",
+          "rmse": 65.11888944232557,
+          "median_absolute_error": 5.673642212076987,
+          "mean_signed_error": 21.0057844186941
+        },
+        "bond": {
+          "n": 8,
+          "units": "price points per 100",
+          "rmse": 0.7801220352683591,
+          "median_absolute_error": 0.6037537170959126,
+          "mean_signed_error": 0.6500840239529655
+        }
+      }
+    },
+    "fit_iterations": 1,
+    "converged": true,
+    "full_sample": {
+      "n": 131,
+      "weighted_huber_loss": 724.8507050415795,
+      "standardized_rmse": 277.0729524564948,
+      "median_absolute_standardized_error": 64.56199314170564,
+      "within_bid_ask_fraction": 0.015267175572519083,
+      "by_instrument_type": {
+        "deposit": {
+          "n": 18,
+          "units": "rate basis points",
+          "rmse": 13.294203114344283,
+          "median_absolute_error": 10.392618853698188,
+          "mean_signed_error": 5.232747820851362
+        },
+        "ois_swap": {
+          "n": 66,
+          "units": "rate basis points",
+          "rmse": 45.73449444748163,
+          "median_absolute_error": 14.787775221685017,
+          "mean_signed_error": -3.854857083056189
+        },
+        "bond": {
+          "n": 47,
+          "units": "price points per 100",
+          "rmse": 3.1778770735611004,
+          "median_absolute_error": 1.4108818999981452,
+          "mean_signed_error": 2.2267415105168613
+        }
+      }
+    },
+    "full_fit_iterations": 1,
+    "full_fit_condition_number": 17.117996538317172,
+    "robust_residual_scale": 1.0
+  },
+  "advanced": {
+    "train": {
+      "n": 105,
+      "weighted_huber_loss": 478.07354310001955,
+      "standardized_rmse": 255.81991245502104,
+      "median_absolute_standardized_error": 4.4349303242339095,
+      "within_bid_ask_fraction": 0.1619047619047619,
+      "by_instrument_type": {
+        "deposit": {
+          "n": 13,
+          "units": "rate basis points",
+          "rmse": 4.421137031250961,
+          "median_absolute_error": 0.110683816599913,
+          "mean_signed_error": -1.1439349126269467
+        },
+        "ois_swap": {
+          "n": 53,
+          "units": "rate basis points",
+          "rmse": 39.274942147749165,
+          "median_absolute_error": 1.4907208913409602,
+          "mean_signed_error": 5.878859288950398
+        },
+        "bond": {
+          "n": 39,
+          "units": "price points per 100",
+          "rmse": 1.065721991651199,
+          "median_absolute_error": 0.3071588729910104,
+          "mean_signed_error": -0.11301609946043775
+        }
+      }
+    },
+    "holdout": {
+      "n": 26,
+      "weighted_huber_loss": 609.5295685911692,
+      "standardized_rmse": 355.5793090583697,
+      "median_absolute_standardized_error": 8.46994110006218,
+      "within_bid_ask_fraction": 0.11538461538461539,
+      "by_instrument_type": {
+        "deposit": {
+          "n": 5,
+          "units": "rate basis points",
+          "rmse": 7.040526791096155,
+          "median_absolute_error": 0.3181410630136508,
+          "mean_signed_error": 3.3670554030136755
+        },
+        "ois_swap": {
+          "n": 13,
+          "units": "rate basis points",
+          "rmse": 66.38980524466174,
+          "median_absolute_error": 2.4022114755108124,
+          "mean_signed_error": 25.973985290728276
+        },
+        "bond": {
+          "n": 8,
+          "units": "price points per 100",
+          "rmse": 0.3473610770923126,
+          "median_absolute_error": 0.17094634598817748,
+          "mean_signed_error": -0.13374653487313637
+        }
+      }
+    },
+    "fit_iterations": 26,
+    "converged": true,
+    "full_sample": {
+      "n": 131,
+      "weighted_huber_loss": 504.34826070502186,
+      "standardized_rmse": 278.09183553078,
+      "median_absolute_standardized_error": 4.908730150084486,
+      "within_bid_ask_fraction": 0.19083969465648856,
+      "by_instrument_type": {
+        "deposit": {
+          "n": 18,
+          "units": "rate basis points",
+          "rmse": 5.268732247896359,
+          "median_absolute_error": 0.11871900417756952,
+          "mean_signed_error": 0.012621556612427275
+        },
+        "ois_swap": {
+          "n": 66,
+          "units": "rate basis points",
+          "rmse": 45.88233750317593,
+          "median_absolute_error": 1.2115462960113863,
+          "mean_signed_error": 8.873151646930252
+        },
+        "bond": {
+          "n": 47,
+          "units": "price points per 100",
+          "rmse": 1.167395484357331,
+          "median_absolute_error": 0.4128701436220297,
+          "mean_signed_error": 0.2068998160460095
+        }
+      }
+    },
+    "full_fit_iterations": 25,
+    "full_fit_condition_number": 41.6551303357089,
+    "robust_residual_scale": 1.0
+  },
+  "model_selected": "baseline",
+  "relative_holdout_improvement": 0.01993420581853822,
+  "selection_rationale": "Require >5% lower holdout weighted Huber loss for added complexity. Advanced improves by 2.0%; select baseline. This is provisional single-snapshot evidence, not a significance claim."
+}

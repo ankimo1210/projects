@@ -1,0 +1,10 @@
+{
+  "started_utc": "2026-09-05T09:42:05.172567+00:00",
+  "completed_utc": "2026-09-05T09:42:49.326836+00:00",
+  "returncode": 0,
+  "stdout": ".......                                                                  [100%]\n7 passed in 43.96s\n",
+  "stderr": "",
+  "source_unchanged": true,
+  "public_data": "input/market_data/market_observations.csv",
+  "explanation": "Initial independent run skipped seven real-data tests because a temporary copy had no ancestor input directory. Supplemental run sets the documented QUANTCURVE_MARKET_DATA variable; candidate code is unchanged."
+}

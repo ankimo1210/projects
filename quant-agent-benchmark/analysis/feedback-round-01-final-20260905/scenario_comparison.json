@@ -1,0 +1,702 @@
+[
+  {
+    "model": "astra",
+    "scenario": "s01",
+    "zero_initial": 3.82629953834024,
+    "zero_final": 3.82629953834024,
+    "forward_initial": 25.394484359270397,
+    "forward_final": 25.394484359270397,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "astra",
+    "scenario": "s02",
+    "zero_initial": 6.749090310076436,
+    "zero_final": 6.749090310076436,
+    "forward_initial": 35.309453132421105,
+    "forward_final": 35.309453132421105,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "astra",
+    "scenario": "s03",
+    "zero_initial": 2.7295534772260543,
+    "zero_final": 2.7295534772260543,
+    "forward_initial": 26.370259702919437,
+    "forward_final": 26.370259702919437,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "astra",
+    "scenario": "s04",
+    "zero_initial": 8.339226729131664,
+    "zero_final": 8.339226729131664,
+    "forward_initial": 39.17293246745188,
+    "forward_final": 39.17293246745188,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "astra",
+    "scenario": "s05",
+    "zero_initial": 9.56873622048852,
+    "zero_final": 9.56873622048852,
+    "forward_initial": 41.50062881212481,
+    "forward_final": 41.50062881212481,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "astra",
+    "scenario": "s06",
+    "zero_initial": 5.111698076513254,
+    "zero_final": 5.111698076513254,
+    "forward_initial": 31.030273810643113,
+    "forward_final": 31.030273810643113,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "astra",
+    "scenario": "s07",
+    "zero_initial": 3.7133059863966293,
+    "zero_final": 3.7133059863966293,
+    "forward_initial": 27.803216822203428,
+    "forward_final": 27.803216822203428,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "astra",
+    "scenario": "s08",
+    "zero_initial": 10.896860462567398,
+    "zero_final": 10.896860462567398,
+    "forward_initial": 45.67887171521505,
+    "forward_final": 45.67887171521505,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "astra",
+    "scenario": "s09",
+    "zero_initial": 11.4924826416413,
+    "zero_final": 11.4924826416413,
+    "forward_initial": 48.660037110534375,
+    "forward_final": 48.660037110534375,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "astra",
+    "scenario": "s10",
+    "zero_initial": 3.5179254181285136,
+    "zero_final": 3.5179254181285136,
+    "forward_initial": 31.78685263423368,
+    "forward_final": 31.78685263423368,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s01",
+    "zero_initial": 4.769844424897903,
+    "zero_final": 4.769844424897903,
+    "forward_initial": 42.53062056069366,
+    "forward_final": 42.53062056069366,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s02",
+    "zero_initial": 10.103508125846483,
+    "zero_final": 10.103508125846483,
+    "forward_initial": 59.18735542045344,
+    "forward_final": 59.18735542045344,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s03",
+    "zero_initial": 7.449138419636771,
+    "zero_final": 7.449138419636771,
+    "forward_initial": 54.02810626044329,
+    "forward_final": 54.02810626044329,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s04",
+    "zero_initial": 6.470988886951299,
+    "zero_final": 6.470988886951299,
+    "forward_initial": 38.52063490612086,
+    "forward_final": 38.52063490612086,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s05",
+    "zero_initial": 4.868072944699606,
+    "zero_final": 4.868072944699606,
+    "forward_initial": 40.094999507673826,
+    "forward_final": 40.094999507673826,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s06",
+    "zero_initial": 8.100028977587769,
+    "zero_final": 8.100028977587769,
+    "forward_initial": 50.487775494881426,
+    "forward_final": 50.487775494881426,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s07",
+    "zero_initial": 5.079291445868165,
+    "zero_final": 5.079291445868165,
+    "forward_initial": 54.95092041347588,
+    "forward_final": 54.95092041347588,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s08",
+    "zero_initial": 6.082452284851852,
+    "zero_final": 6.082452284851852,
+    "forward_initial": 61.32903886859525,
+    "forward_final": 61.32903886859525,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s09",
+    "zero_initial": 5.896084109339161,
+    "zero_final": 5.896084109339161,
+    "forward_initial": 47.368948384607314,
+    "forward_final": 47.368948384607314,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sol",
+    "scenario": "s10",
+    "zero_initial": 5.675073201528795,
+    "zero_final": 5.675073201528795,
+    "forward_initial": 41.082955957831125,
+    "forward_final": 41.082955957831125,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "terra",
+    "scenario": "s01",
+    "zero_initial": 3.5070137982819523,
+    "zero_final": 2.347885388554251,
+    "forward_initial": 23.102458005376153,
+    "forward_final": 21.4012204505342,
+    "valid": true,
+    "zero_delta": -1.159128409727701
+  },
+  {
+    "model": "terra",
+    "scenario": "s02",
+    "zero_initial": 5.625988090301685,
+    "zero_final": 4.362916244869994,
+    "forward_initial": 30.56839697668221,
+    "forward_final": 27.0134999266663,
+    "valid": true,
+    "zero_delta": -1.263071845431691
+  },
+  {
+    "model": "terra",
+    "scenario": "s03",
+    "zero_initial": 3.1080796193848146,
+    "zero_final": 2.7621667659687836,
+    "forward_initial": 24.39311440802754,
+    "forward_final": 24.43700663365985,
+    "valid": true,
+    "zero_delta": -0.34591285341603095
+  },
+  {
+    "model": "terra",
+    "scenario": "s04",
+    "zero_initial": 7.109702080918563,
+    "zero_final": 6.681618504916943,
+    "forward_initial": 34.14295117945153,
+    "forward_final": 32.712403245290844,
+    "valid": true,
+    "zero_delta": -0.4280835760016197
+  },
+  {
+    "model": "terra",
+    "scenario": "s05",
+    "zero_initial": 3.684850586640724,
+    "zero_final": 3.164035700838681,
+    "forward_initial": 26.163134821405198,
+    "forward_final": 24.576084612038418,
+    "valid": true,
+    "zero_delta": -0.5208148858020429
+  },
+  {
+    "model": "terra",
+    "scenario": "s06",
+    "zero_initial": 4.015335688236996,
+    "zero_final": 2.7906957784259383,
+    "forward_initial": 27.248029375991738,
+    "forward_final": 24.390872556632758,
+    "valid": true,
+    "zero_delta": -1.2246399098110574
+  },
+  {
+    "model": "terra",
+    "scenario": "s07",
+    "zero_initial": 3.028232908562815,
+    "zero_final": 2.4349955106845775,
+    "forward_initial": 24.89707454532787,
+    "forward_final": 23.835006994744056,
+    "valid": true,
+    "zero_delta": -0.5932373978782373
+  },
+  {
+    "model": "terra",
+    "scenario": "s08",
+    "zero_initial": 10.815371912425606,
+    "zero_final": 11.923873391150059,
+    "forward_initial": 42.9842276382346,
+    "forward_final": 46.605427159282975,
+    "valid": true,
+    "zero_delta": 1.1085014787244525
+  },
+  {
+    "model": "terra",
+    "scenario": "s09",
+    "zero_initial": 7.079040322036021,
+    "zero_final": 7.160994950230451,
+    "forward_initial": 35.38611100329159,
+    "forward_final": 35.54059753665202,
+    "valid": true,
+    "zero_delta": 0.08195462819443033
+  },
+  {
+    "model": "terra",
+    "scenario": "s10",
+    "zero_initial": 3.9262650103730814,
+    "zero_final": 3.0498341389047536,
+    "forward_initial": 30.717708596345975,
+    "forward_final": 29.022010023491806,
+    "valid": true,
+    "zero_delta": -0.8764308714683278
+  },
+  {
+    "model": "luna",
+    "scenario": "s01",
+    "zero_initial": 1.895902248377006,
+    "zero_final": 1.895902248377006,
+    "forward_initial": 23.238308100753517,
+    "forward_final": 23.238308100753517,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "luna",
+    "scenario": "s02",
+    "zero_initial": 3.329717363116392,
+    "zero_final": 3.329717363116392,
+    "forward_initial": 31.726064653512278,
+    "forward_final": 31.726064653512278,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "luna",
+    "scenario": "s03",
+    "zero_initial": 2.3040512211633324,
+    "zero_final": 2.3040512211633324,
+    "forward_initial": 23.431449338465743,
+    "forward_final": 23.431449338465743,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "luna",
+    "scenario": "s04",
+    "zero_initial": 3.0208594634782857,
+    "zero_final": 3.0208594634782857,
+    "forward_initial": 28.112686775392312,
+    "forward_final": 28.112686775392312,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "luna",
+    "scenario": "s05",
+    "zero_initial": 2.344535783282124,
+    "zero_final": 2.344535783282124,
+    "forward_initial": 23.898462708000814,
+    "forward_final": 23.898462708000814,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "luna",
+    "scenario": "s06",
+    "zero_initial": 2.8416213850320067,
+    "zero_final": 2.8416213850320067,
+    "forward_initial": 25.722904332547767,
+    "forward_final": 25.722904332547767,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "luna",
+    "scenario": "s07",
+    "zero_initial": 2.8874890817637544,
+    "zero_final": 2.8874890817637544,
+    "forward_initial": 35.14027296266192,
+    "forward_final": 35.14027296266192,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "luna",
+    "scenario": "s08",
+    "zero_initial": 2.0193075527053326,
+    "zero_final": 2.0193075527053326,
+    "forward_initial": 25.85081219069598,
+    "forward_final": 25.85081219069598,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "luna",
+    "scenario": "s09",
+    "zero_initial": 2.3303099725133958,
+    "zero_final": 2.3303099725133958,
+    "forward_initial": 22.567797357918195,
+    "forward_final": 22.567797357918195,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "luna",
+    "scenario": "s10",
+    "zero_initial": 3.0075222570460647,
+    "zero_final": 3.0075222570460647,
+    "forward_initial": 31.31279206961667,
+    "forward_final": 31.31279206961667,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s01",
+    "zero_initial": 4.685837827787124,
+    "zero_final": 4.685837827787124,
+    "forward_initial": 24.14174611176049,
+    "forward_final": 24.14174611176049,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s02",
+    "zero_initial": 10.2789841298236,
+    "zero_final": 10.2789841298236,
+    "forward_initial": 96.03847912982557,
+    "forward_final": 96.03847912982557,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s03",
+    "zero_initial": 2.1731058118488056,
+    "zero_final": 2.1731058118488056,
+    "forward_initial": 19.873996627715137,
+    "forward_final": 19.873996627715137,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s04",
+    "zero_initial": 10.795470709678526,
+    "zero_final": 10.795470709678526,
+    "forward_initial": 50.902528051356455,
+    "forward_final": 50.902528051356455,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s05",
+    "zero_initial": 2.400565101831708,
+    "zero_final": 2.400565101831708,
+    "forward_initial": 18.619988146100155,
+    "forward_final": 18.619988146100155,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s06",
+    "zero_initial": 2.5966320944620573,
+    "zero_final": 2.5966320944620573,
+    "forward_initial": 22.59324700581368,
+    "forward_final": 22.59324700581368,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s07",
+    "zero_initial": 4.367317113286018,
+    "zero_final": 4.367317113286018,
+    "forward_initial": 26.846094251582855,
+    "forward_final": 26.846094251582855,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s08",
+    "zero_initial": 2.0180636912043597,
+    "zero_final": 2.0180636912043597,
+    "forward_initial": 21.757509762122712,
+    "forward_final": 21.757509762122712,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s09",
+    "zero_initial": 10.473623500089976,
+    "zero_final": 10.473623500089976,
+    "forward_initial": 62.16714229873877,
+    "forward_final": 62.16714229873877,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "sonnet",
+    "scenario": "s10",
+    "zero_initial": 8.54723879027785,
+    "zero_final": 8.54723879027785,
+    "forward_initial": 50.52801907526311,
+    "forward_final": 50.52801907526311,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s01",
+    "zero_initial": 1.5005229098040496,
+    "zero_final": 1.5005229098040496,
+    "forward_initial": 15.231797226647602,
+    "forward_final": 15.231797226647602,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s02",
+    "zero_initial": 3.5920151893287797,
+    "zero_final": 3.5920151893287797,
+    "forward_initial": 28.92490190239368,
+    "forward_final": 28.92490190239368,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s03",
+    "zero_initial": 1.8747816323443758,
+    "zero_final": 1.8747816323443758,
+    "forward_initial": 19.755931639723908,
+    "forward_final": 19.755931639723908,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s04",
+    "zero_initial": 2.7219564841117267,
+    "zero_final": 2.7219564841117267,
+    "forward_initial": 26.134584780899782,
+    "forward_final": 26.134584780899782,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s05",
+    "zero_initial": 1.9822792596211034,
+    "zero_final": 1.9822792596211034,
+    "forward_initial": 21.8609027486007,
+    "forward_final": 21.8609027486007,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s06",
+    "zero_initial": 3.357410734915922,
+    "zero_final": 3.357410734915922,
+    "forward_initial": 29.876901861463615,
+    "forward_final": 29.876901861463615,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s07",
+    "zero_initial": 1.0638330206829958,
+    "zero_final": 1.0638330206829958,
+    "forward_initial": 13.085967730433834,
+    "forward_final": 13.085967730433834,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s08",
+    "zero_initial": 1.4910736910443274,
+    "zero_final": 1.4910736910443274,
+    "forward_initial": 18.370429778471717,
+    "forward_final": 18.370429778471717,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s09",
+    "zero_initial": 2.1912428005272564,
+    "zero_final": 2.1912428005272564,
+    "forward_initial": 70.31371733869587,
+    "forward_final": 70.31371733869587,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "opus",
+    "scenario": "s10",
+    "zero_initial": 1.0147851610165284,
+    "zero_final": 1.0147851610165284,
+    "forward_initial": 12.382356876037692,
+    "forward_final": 12.382356876037692,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s01",
+    "zero_initial": 0.8835318381101958,
+    "zero_final": 0.8835318381101958,
+    "forward_initial": 8.945108388937976,
+    "forward_final": 8.945108388937976,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s02",
+    "zero_initial": 2.3672481179951386,
+    "zero_final": 2.3672481179951386,
+    "forward_initial": 20.478325709255728,
+    "forward_final": 20.478325709255728,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s03",
+    "zero_initial": 1.2134220471478772,
+    "zero_final": 1.2134220471478772,
+    "forward_initial": 11.690577917236379,
+    "forward_final": 11.690577917236379,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s04",
+    "zero_initial": 1.5205653151484058,
+    "zero_final": 1.5205653151484058,
+    "forward_initial": 19.859881313367282,
+    "forward_final": 19.859881313367282,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s05",
+    "zero_initial": 1.3858247315208356,
+    "zero_final": 1.3858247315208356,
+    "forward_initial": 17.380994683436384,
+    "forward_final": 17.380994683436384,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s06",
+    "zero_initial": 2.072451583970044,
+    "zero_final": 2.072451583970044,
+    "forward_initial": 21.642674964121557,
+    "forward_final": 21.642674964121557,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s07",
+    "zero_initial": 0.8593383166663168,
+    "zero_final": 0.8593383166663168,
+    "forward_initial": 12.1260859651824,
+    "forward_final": 12.1260859651824,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s08",
+    "zero_initial": 1.1730560151575835,
+    "zero_final": 1.1730560151575835,
+    "forward_initial": 14.709998955409912,
+    "forward_final": 14.709998955409912,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s09",
+    "zero_initial": 1.7634449387728959,
+    "zero_final": 1.7634449387728959,
+    "forward_initial": 18.952264691302,
+    "forward_final": 18.952264691302,
+    "valid": true,
+    "zero_delta": 0.0
+  },
+  {
+    "model": "fable",
+    "scenario": "s10",
+    "zero_initial": 1.8026146612379272,
+    "zero_final": 1.8026146612379272,
+    "forward_initial": 16.13468394669077,
+    "forward_final": 16.13468394669077,
+    "valid": true,
+    "zero_delta": 0.0
+  }
+]

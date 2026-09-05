@@ -1,0 +1,107 @@
+/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-final-tests-astra-w9jlxukr/candidate/src/quantcurve/fitting.py:57: in fit_curve
+    result = least_squares(residual, beta, jac=jacobian, bounds=(-2000, 2000),
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/scipy/_lib/_util.py:696: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/scipy/optimize/_lsq/least_squares.py:926: in least_squares
+    vector_fun = VectorFunction(
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/scipy/optimize/_differentiable_functions.py:605: in __init__
+    self._update_fun()
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/scipy/optimize/_differentiable_functions.py:698: in _update_fun
+    self.f = self.fun_wrapped(xp_copy(self.x))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/scipy/optimize/_differentiable_functions.py:415: in __call__
+    return np.atleast_1d(self.fun(x))
+                         ^^^^^^^^^^^
+/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/scipy/optimize/_lsq/least_squares.py:263: in __call__
+    return self.f(x, *self.args, **self.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-final-tests-astra-w9jlxukr/candidate/src/quantcurve/fitting.py:50: in residual
+    q, _ = engine.quotes_and_jacobian(x, b)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <quantcurve.pricing.PricingEngine object at 0x11b3bffe0>
+beta = array([207.6030637, 207.6030637, 207.6030637, 207.6030637, 207.6030637,
+       207.6030637, 207.6030637, 207.6030637, ... 207.6030637,
+       207.6030637, 207.6030637, 207.6030637, 207.6030637, 207.6030637,
+       207.6030637, 207.6030637])
+basis = array([[ 2.35060111e-08,  9.99999987e-01, -1.23770690e-08, ...,
+         9.38678347e-19, -3.21320705e-19,  6.65650310e...00000000e+00,  0.00000000e+00, ...,
+         1.11022302e-16,  5.55111512e-17,  1.00000000e+00]],
+      shape=(111, 22))
+
+    def quotes_and_jacobian(self, beta, basis):
+>       exponent = -self.times * (basis @ beta) * 1e-4
+                                  ^^^^^^^^^^^^
+E       RuntimeWarning: divide by zero encountered in matmul
+
+/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-final-tests-astra-w9jlxukr/candidate/src/quantcurve/pricing.py:65: RuntimeWarning
+=================================== FAILURES ===================================
+_____________ test_negative_curve_transform_consistency[baseline] ______________
+
+kind = 'baseline'
+
+    @pytest.mark.parametrize("kind", ["baseline", "advanced"])
+    def test_negative_curve_transform_consistency(kind):
+        b = CurveBasis(kind)
+        beta = np.full(b.size, -50.) if kind == "advanced" else np.array([-50., 0., 0.])
+        c = ZeroCurve(b, beta)
+        t = np.linspace(.001, 40, 501)
+>       np.testing.assert_allclose(c.zero(t), -.005, atol=1e-14)
+                                   ^^^^^^^^^
+
+tests/test_models_and_risk.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <quantcurve.curves.ZeroCurve object at 0x10eb36a80>
+times = array([1.0000000e-03, 8.0998000e-02, 1.6099600e-01, 2.4099400e-01,
+       3.2099200e-01, 4.0099000e-01, 4.8098800e-01,...3.9520012e+01, 3.9600010e+01,
+       3.9680008e+01, 3.9760006e+01, 3.9840004e+01, 3.9920002e+01,
+       4.0000000e+01])
+
+    def zero(self, times):
+>       return self.basis.matrix(times) @ self.beta * 1e-4
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeWarning: divide by zero encountered in matmul
+
+/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-final-tests-astra-w9jlxukr/candidate/src/quantcurve/curves.py:67: RuntimeWarning
+_____________ test_negative_curve_transform_consistency[advanced] ______________
+
+kind = 'advanced'
+
+    @pytest.mark.parametrize("kind", ["baseline", "advanced"])
+    def test_negative_curve_transform_consistency(kind):
+        b = CurveBasis(kind)
+        beta = np.full(b.size, -50.) if kind == "advanced" else np.array([-50., 0., 0.])
+        c = ZeroCurve(b, beta)
+        t = np.linspace(.001, 40, 501)
+>       np.testing.assert_allclose(c.zero(t), -.005, atol=1e-14)
+                                   ^^^^^^^^^
+
+tests/test_models_and_risk.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <quantcurve.curves.ZeroCurve object at 0x11b5e3350>
+times = array([1.0000000e-03, 8.0998000e-02, 1.6099600e-01, 2.4099400e-01,
+       3.2099200e-01, 4.0099000e-01, 4.8098800e-01,...3.9520012e+01, 3.9600010e+01,
+       3.9680008e+01, 3.9760006e+01, 3.9840004e+01, 3.9920002e+01,
+       4.0000000e+01])
+
+    def zero(self, times):
+>       return self.basis.matrix(times) @ self.beta * 1e-4
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeWarning: divide by zero encountered in matmul
+
+/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-final-tests-astra-w9jlxukr/candidate/src/quantcurve/curves.py:67: RuntimeWarning
+=========================== short test summary info ============================
+FAILED tests/test_models_and_risk.py::test_negative_curve_transform_consistency[baseline]
+FAILED tests/test_models_and_risk.py::test_negative_curve_transform_consistency[advanced]
+ERROR tests/test_models_and_risk.py::test_curve_continuity_and_forward_derivative
+ERROR tests/test_models_and_risk.py::test_large_and_tiny_times_stable - Runti...
+ERROR tests/test_models_and_risk.py::test_analytic_quote_jacobian_against_independent_fd
+ERROR tests/test_models_and_risk.py::test_risk_finite_difference_and_key_partition
+ERROR tests/test_models_and_risk.py::test_outlier_downweight_is_effective_without_deletion
+ERROR tests/test_models_and_risk.py::test_fit_is_reproducible - RuntimeWarnin...
+2 failed, 37 passed, 6 errors in 12.22s
+

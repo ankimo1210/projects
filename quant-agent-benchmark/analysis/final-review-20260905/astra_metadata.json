@@ -1,0 +1,6 @@
+{
+  "model_name": "astra",
+  "reasoning_effort": "xhigh",
+  "wall_time_seconds": 3118.444,
+  "timing_definition": "Sum of selected benchmark/resume user-turn wall times; tools included; inter-turn idle excluded."
+}

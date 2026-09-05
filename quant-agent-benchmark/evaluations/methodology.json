@@ -1,0 +1,90 @@
+{
+  "generated_utc": "2026-09-05T07:31:57.432990+00:00",
+  "user_script": "/Users/ankimo1210/.codex/attachments/a922796c-21dd-4200-9134-00860a8961ac/pasted-text.txt",
+  "scorer": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/tools/evaluate_candidate.py",
+  "adapter": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/evaluate_compatible.py",
+  "audit": "analysis/final-review-20260905/expanded-7-models/evaluation_audit.json",
+  "usage_audit": "analysis/final-review-20260905/expanded-7-models/usage_audit.json",
+  "test_verification": "analysis/final-review-20260905/expanded-7-models/pytest_verification.json",
+  "python": "3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:38:53) [Clang 18.1.8 ]",
+  "installed_distributions": {
+    "kiwisolver": "1.5.1",
+    "packaging": "26.3",
+    "iniconfig": "2.3.0",
+    "Pygments": "2.21.0",
+    "pytz": "2026.3.post1",
+    "contourpy": "1.3.3",
+    "numpy": "2.5.2",
+    "tzdata": "2026.3",
+    "matplotlib": "3.11.1",
+    "pip": "25.0.1",
+    "python-dateutil": "2.9.0.post0",
+    "pytest": "8.4.2",
+    "fonttools": "4.64.0",
+    "cycler": "0.12.1",
+    "pyparsing": "3.3.2",
+    "pandas": "2.3.3",
+    "pluggy": "1.6.0",
+    "pillow": "12.3.0",
+    "six": "1.17.0",
+    "scipy": "1.18.1"
+  },
+  "definitions": {
+    "score": "Original rubric /100; only required risk columns passed to avoid optional-column join collision. No weights/thresholds changed.",
+    "wall_time_sec": "Candidate self-reported elapsed time; timing boundaries differ between candidates.",
+    "work_time_min": "Logged main and resume user-turn wall time. Includes tools and compaction; excludes setup, follow-ups, inter-turn idle.",
+    "total_tokens": "Logged selected work-turn input (including cache) + output; reasoning is part of output, not additional.",
+    "session_total_tokens": "All API usage in the named session, including setup and follow-ups.",
+    "tests_passed": "Candidate self-report; verified_tests_passed is independent full pytest rerun.",
+    "missing_cost": "Unknown, not zero; no prices or costs estimated."
+  },
+  "caveats": [
+    "Each model ran once. Scores measure this rubric, not universal model capability.",
+    "Opus work turns 1+2 included. Earlier 69.9-minute /29,457,223-token value was incomplete.",
+    "Sol evaluated from output/sol; specified results/sol directory remains empty. No automatic relocation performed.",
+    "Astra report checker recognizes only 2/9 English keywords despite Japanese headings covering the requested subjects.",
+    "All 30 Astra other-directory warnings match its own results/astra path, not another model; no score override applied.",
+    "Opus README and Fable benchmark_summary other-directory warnings also refer to their own respective result directories. These hits are not evidence of another model's output being read.",
+    "Original rubric uses unittest discovery, which misses some pytest tests. Full pytest result is reported separately.",
+    "Shared older numerical environment had warning-induced test failures. Final scores and tests use isolated recorded numerical versions.",
+    "Terra is evaluated in its actual Documents/terra directory, without moving it.",
+    "Added selected work turns: Terra T2, Luna T1, Sonnet T3.",
+    "All seven logs were freshly recovered. Old-four scores/pytest were reused only on exact candidate/evaluator hash match.",
+    "The bid/ask-normalized pricing metric compares hidden true_quote, not public observed quotes."
+  ],
+  "expanded_models": [
+    "fable",
+    "opus",
+    "luna",
+    "terra",
+    "sol",
+    "astra",
+    "sonnet"
+  ],
+  "verification_reuse": {
+    "astra": {
+      "source": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/matched/astra_score.json",
+      "sha256": "854d421d7dc93482d1086dbb7fbdf00a1dd4884a64a0aebc4b0a4f531f440429",
+      "reason": "Candidate and evaluator hashes unchanged",
+      "evaluated_at": "2026-09-05T05:29:45.239687+00:00"
+    },
+    "sol": {
+      "source": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/matched/sol_score.json",
+      "sha256": "f9bb5764647b3057fc8c106e5f1c4297b0345b0037ad71c6e4e98e5fa0eff70d",
+      "reason": "Candidate and evaluator hashes unchanged",
+      "evaluated_at": "2026-09-05T05:29:45.239687+00:00"
+    },
+    "opus": {
+      "source": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/matched/opus_score.json",
+      "sha256": "3e731e9271b547dc433c895c6595dd196e970cf886d5637c033f48847d079ea7",
+      "reason": "Candidate and evaluator hashes unchanged",
+      "evaluated_at": "2026-09-05T05:29:45.239687+00:00"
+    },
+    "fable": {
+      "source": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/matched/fable_score.json",
+      "sha256": "e97da581613d84a3f141a8b2d8f80b6bfecbddfe065e6d2175d97bef56265b63",
+      "reason": "Candidate and evaluator hashes unchanged",
+      "evaluated_at": "2026-09-05T05:29:45.239687+00:00"
+    }
+  }
+}

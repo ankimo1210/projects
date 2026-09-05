@@ -1,0 +1,9 @@
+{
+  "condition": "OIS fixed payments annual until 2Y then semiannual; curve fixed; original uses payment_frequency over entire leg",
+  "affected_public_swaps": 51,
+  "reference_curve_min_quote_change_bp": 0.10370283750966297,
+  "reference_curve_max_quote_change_bp": 1.0951796599293488,
+  "all_analytic_curves_max_abs_quote_change_bp": 1.797322923605127,
+  "adopted": false,
+  "interpretation": "Ambiguous prose alone is insufficient to replace observed payment_frequency. This prices the alternative only; its calibration and contractual correctness remain unverified."
+}

@@ -1,0 +1,25 @@
+{
+  "base_model": "advanced",
+  "checks": [
+    {
+      "name": "half_smoothing",
+      "smoothing_strength": 5.0,
+      "max_zero_rate_change_bp": 2.842019559585185
+    },
+    {
+      "name": "double_smoothing",
+      "smoothing_strength": 20.0,
+      "max_zero_rate_change_bp": 2.030053037965149
+    },
+    {
+      "name": "exclude_robust_outliers",
+      "observations_removed": 79,
+      "max_zero_rate_change_bp": 5.3716769536895494
+    },
+    {
+      "name": "exclude_stale_quotes",
+      "observations_removed": 5,
+      "max_zero_rate_change_bp": 1.1384478854905775
+    }
+  ]
+}

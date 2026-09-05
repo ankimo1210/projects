@@ -1,0 +1,35 @@
+{
+  "effective_precision_definition": "weight = liquidity/reliability × robust_weight / sigma^2; units inverse normalized quote squared",
+  "excluded_obs_ids": [
+    "DUP0001",
+    "DUP0002",
+    "DUP0003",
+    "DUP0004",
+    "DUP0005",
+    "OBS0022",
+    "DUP0006",
+    "DUP0007",
+    "OBS0098",
+    "OBS0027",
+    "OBS0029",
+    "OBS0139"
+  ],
+  "final_action_counts": {
+    "correct": 5,
+    "downweight": 86,
+    "exclude": 12,
+    "keep": 40
+  },
+  "input_rows": 143,
+  "reason_counts": {
+    "duplicate instrument_id": 7,
+    "illiquid": 23,
+    "inverted bid/ask": 4,
+    "mislabelled rate units": 4,
+    "missing quote recovered": 4,
+    "price-per-face unit mismatch": 3,
+    "robust residual downweight": 80,
+    "stale observation": 5
+  },
+  "usable_instruments": 131
+}

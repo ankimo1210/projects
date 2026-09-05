@@ -1,0 +1,16 @@
+# Local Python runtimes and caches are not benchmark submissions.
+.venv*/
+venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+
+# The parent workspace ignores data files globally. These small synthetic
+# fixtures, retained evaluation results, and report query contexts are part
+# of this benchmark's reproducible evidence and must travel with the code.
+!*.csv
+!*.sqlite
+!analysis/**/*.log
+
+# Scratch output remains local even when it contains otherwise retained data.
+tmp/

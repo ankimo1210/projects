@@ -1,0 +1,124 @@
+{
+  "rows": [
+    {
+      "model": "Astra",
+      "cost": 20.411156,
+      "minutes": 94.77681666666666,
+      "main_bp": 5.021386877731334,
+      "test_bp": 6.594517886051001,
+      "forward_bp": 35.270701056701725,
+      "extra_cost": 11.344156,
+      "gain_bp": 0.0,
+      "gain_per_dollar": 0.0,
+      "scenarios": 10,
+      "tokens": 7751222,
+      "main_frontier": "他候補が両指標で優位",
+      "test_frontier": "他候補が両指標で優位"
+    },
+    {
+      "model": "Sol",
+      "cost": 11.9375792,
+      "minutes": 57.738600000000005,
+      "main_bp": 5.586990874744827,
+      "test_bp": 6.449448282120781,
+      "forward_bp": 48.958135577477606,
+      "extra_cost": 6.338076,
+      "gain_bp": 0.0,
+      "gain_per_dollar": 0.0,
+      "scenarios": 10,
+      "tokens": 17673782,
+      "main_frontier": "他候補が両指標で優位",
+      "test_frontier": "他候補が両指標で優位"
+    },
+    {
+      "model": "Terra",
+      "cost": 4.8245908,
+      "minutes": 42.86018333333334,
+      "main_bp": 4.763347947896722,
+      "test_bp": 4.6679016374544435,
+      "forward_bp": 28.953412913899324,
+      "extra_cost": 3.3329424000000003,
+      "gain_bp": 0.8919635370898007,
+      "gain_per_dollar": 0.26762044765304094,
+      "scenarios": 10,
+      "tokens": 12642019,
+      "main_frontier": "他候補が両指標で優位",
+      "test_frontier": "他候補が両指標で優位"
+    },
+    {
+      "model": "Luna",
+      "cost": 0.6266915200000001,
+      "minutes": 57.24914999999999,
+      "main_bp": 2.649017312804545,
+      "test_bp": 2.5981316328477697,
+      "forward_bp": 27.10015504895652,
+      "extra_cost": 0.26436964,
+      "gain_bp": 0.0,
+      "gain_per_dollar": 0.0,
+      "scenarios": 10,
+      "tokens": 17978287,
+      "main_frontier": "残る",
+      "test_frontier": "残る"
+    },
+    {
+      "model": "Sonnet",
+      "cost": 18.881307200000002,
+      "minutes": 102.27941666666668,
+      "main_bp": 6.859198202168316,
+      "test_bp": 5.833683877029002,
+      "forward_bp": 39.3468750460279,
+      "extra_cost": 6.8442298,
+      "gain_bp": 0.0,
+      "gain_per_dollar": 0.0,
+      "scenarios": 10,
+      "tokens": 57599306,
+      "main_frontier": "他候補が両指標で優位",
+      "test_frontier": "他候補が両指標で優位"
+    },
+    {
+      "model": "Opus",
+      "cost": 65.592235,
+      "minutes": 152.02721666666667,
+      "main_bp": 1.1117536247948616,
+      "test_bp": 2.0789900883397068,
+      "forward_bp": 25.59374918833684,
+      "extra_cost": 17.448908,
+      "gain_bp": 0.0,
+      "gain_per_dollar": 0.0,
+      "scenarios": 10,
+      "tokens": 83356355,
+      "main_frontier": "残る",
+      "test_frontier": "他候補が両指標で優位"
+    },
+    {
+      "model": "Fable",
+      "cost": 52.531471749999994,
+      "minutes": 89.30898333333334,
+      "main_bp": 1.1498187371108728,
+      "test_bp": 1.504149756572722,
+      "forward_bp": 16.192059653494038,
+      "extra_cost": 20.7622665,
+      "gain_bp": 0.0,
+      "gain_per_dollar": 0.0,
+      "scenarios": 10,
+      "tokens": 20062859,
+      "main_frontier": "残る",
+      "test_frontier": "残る"
+    }
+  ],
+  "main_frontier": [
+    "Luna",
+    "Opus",
+    "Fable"
+  ],
+  "test_frontier": [
+    "Luna",
+    "Fable"
+  ],
+  "price_time_test_frontier": [
+    "Terra",
+    "Luna",
+    "Fable"
+  ],
+  "definition": "Pareto set minimizes cost and RMSE (and optionally work minutes). One observation per model, no statistical generalization. Costs are cumulative Standard API equivalents."
+}

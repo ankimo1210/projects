@@ -1,0 +1,319 @@
+{
+  "bid_ask_repricing": {
+    "condition": "refit the selected estimator entirely on bid quotes and entirely on ask quotes; the span brackets the curve that the observable two-way market can support",
+    "interpretation": "Refitting entirely on bid and entirely on ask moves the curve by at most 0.53bp, so the observable two-way market supports the level to about that width.",
+    "result": {
+      "detail": {
+        "ask_side": {
+          "max_abs_bp": 0.5298625926517322,
+          "mean_abs_bp": 0.15587197640099953,
+          "shift_0.25y_bp": 0.11274186082030346,
+          "shift_10y_bp": 0.15064395756513027,
+          "shift_1y_bp": 0.12431825613546527,
+          "shift_20y_bp": 0.24680437100823432,
+          "shift_2y_bp": 0.11916485390211368,
+          "shift_30y_bp": 0.5298625926517322,
+          "shift_5y_bp": 0.1539144401446757,
+          "signed_mean_bp": 0.15116124795981836
+        },
+        "bid_side": {
+          "max_abs_bp": 0.5224040482966139,
+          "mean_abs_bp": 0.15651342538855953,
+          "shift_0.25y_bp": -0.11312278603035908,
+          "shift_10y_bp": -0.1755732325640219,
+          "shift_1y_bp": -0.12420024055756484,
+          "shift_20y_bp": -0.2606292491885709,
+          "shift_2y_bp": -0.11163503500621202,
+          "shift_30y_bp": -0.5224040482966139,
+          "shift_5y_bp": -0.1555965337977222,
+          "signed_mean_bp": -0.15281876436080674
+        }
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "unit": "bp of continuously compounded zero rate on the published grid",
+      "value": 0.5298625926517322
+    }
+  },
+  "checks": [
+    {
+      "description": "refit the selected estimator entirely on bid quotes and entirely on ask quotes; the span brackets the curve that the observable two-way market can support",
+      "detail": {
+        "ask_side": {
+          "max_abs_bp": 0.5298625926517322,
+          "mean_abs_bp": 0.15587197640099953,
+          "shift_0.25y_bp": 0.11274186082030346,
+          "shift_10y_bp": 0.15064395756513027,
+          "shift_1y_bp": 0.12431825613546527,
+          "shift_20y_bp": 0.24680437100823432,
+          "shift_2y_bp": 0.11916485390211368,
+          "shift_30y_bp": 0.5298625926517322,
+          "shift_5y_bp": 0.1539144401446757,
+          "signed_mean_bp": 0.15116124795981836
+        },
+        "bid_side": {
+          "max_abs_bp": 0.5224040482966139,
+          "mean_abs_bp": 0.15651342538855953,
+          "shift_0.25y_bp": -0.11312278603035908,
+          "shift_10y_bp": -0.1755732325640219,
+          "shift_1y_bp": -0.12420024055756484,
+          "shift_20y_bp": -0.2606292491885709,
+          "shift_2y_bp": -0.11163503500621202,
+          "shift_30y_bp": -0.5224040482966139,
+          "shift_5y_bp": -0.1555965337977222,
+          "signed_mean_bp": -0.15281876436080674
+        }
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "name": "bid_ask_repricing",
+      "value": 0.5298625926517322
+    },
+    {
+      "description": "move the selected smoothing control by a factor of ten in each direction and measure how far the published zero curve travels",
+      "detail": {
+        "lambda_over_ten": {
+          "max_abs_bp": 3.181937539505908,
+          "mean_abs_bp": 0.37366938134162514,
+          "shift_0.25y_bp": 0.007523043714669636,
+          "shift_10y_bp": -0.10190512736280716,
+          "shift_1y_bp": 0.040270680432726025,
+          "shift_20y_bp": 0.03170024751975031,
+          "shift_2y_bp": -0.29806684722594873,
+          "shift_30y_bp": -0.027912774838122212,
+          "shift_5y_bp": -0.18322284881803347,
+          "signed_mean_bp": 0.08748808604576676
+        },
+        "lambda_times_ten": {
+          "max_abs_bp": 2.980107192742665,
+          "mean_abs_bp": 0.5954528048711347,
+          "shift_0.25y_bp": -0.047339001694630956,
+          "shift_10y_bp": 1.096024635201878,
+          "shift_1y_bp": -0.04142309836679264,
+          "shift_20y_bp": -0.030054897496717414,
+          "shift_2y_bp": -0.4966565706770315,
+          "shift_30y_bp": 0.11586191041995653,
+          "shift_5y_bp": 0.6360891013008213,
+          "signed_mean_bp": -0.1694442395375703
+        },
+        "selected_lambda": 1e-05
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "name": "smoothing_strength",
+      "value": 3.181937539505908
+    },
+    {
+      "description": "refit with every screened observation reinstated (robust reweighting still active) to show how much of the published curve depends on the exclusion decisions rather than on the robust estimator",
+      "detail": {
+        "n_reinstated": 12,
+        "shift": {
+          "max_abs_bp": 1.944631056112478,
+          "mean_abs_bp": 0.2014484443483807,
+          "shift_0.25y_bp": 0.00018745289893234984,
+          "shift_10y_bp": -0.12700060980558314,
+          "shift_1y_bp": 0.0005218102481358011,
+          "shift_20y_bp": -0.006386613697756394,
+          "shift_2y_bp": -0.022709395983422365,
+          "shift_30y_bp": -0.025812283298391747,
+          "shift_5y_bp": -0.18760894739601464,
+          "signed_mean_bp": 0.04184808789503612
+        }
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "name": "outlier_exclusion_policy",
+      "value": 1.944631056112478
+    },
+    {
+      "description": "drop one maturity block of quotes at a time and refit; the worst resulting shift bounds how much any single maturity region is holding the published curve in place",
+      "detail": {
+        "median_max_abs_bp": 0.18896809573365828,
+        "n_refits": 8,
+        "worst_max_abs_bp": 5.634101539977125,
+        "worst_shift_0.25y_bp": 5.034885580002309,
+        "worst_shift_10y_bp": 0.031149258123593093,
+        "worst_shift_1y_bp": 0.03718400179483078,
+        "worst_shift_20y_bp": 0.02402290348785252,
+        "worst_shift_2y_bp": 0.3857129827499958,
+        "worst_shift_30y_bp": 0.008532126002588902,
+        "worst_shift_5y_bp": 0.07969649948293134
+      },
+      "metric": "worst_max_abs_zero_shift_bp",
+      "name": "leave_one_block_out_stability",
+      "value": 5.634101539977125
+    },
+    {
+      "description": "move the most heavily weighted quote near 10Y by one basis point and measure how far the shock propagates along the curve",
+      "detail": {
+        "bump_bp": 1.0,
+        "max_abs_bp": 0.026887780266715566,
+        "mean_abs_bp": 0.005724292244852912,
+        "perturbed_instrument": "INS0053",
+        "perturbed_maturity_years": 10.0,
+        "shift_0.25y_bp": -2.319637537606667e-09,
+        "shift_10y_bp": 0.026698868858705815,
+        "shift_1y_bp": -4.6666039088538724e-07,
+        "shift_20y_bp": 0.0008211102449709462,
+        "shift_2y_bp": 1.603874408284689e-05,
+        "shift_30y_bp": -0.0011614819450667113,
+        "shift_5y_bp": 0.00019946006422910667,
+        "signed_mean_bp": 0.0011764964098084966
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "name": "single_quote_one_bp_perturbation",
+      "value": 0.026887780266715566
+    },
+    {
+      "description": "difference between the two estimators on the published grid: the part of the answer that is a modelling choice rather than market data",
+      "detail": {
+        "max_abs_bp": 7.503050266341529,
+        "mean_abs_bp": 1.7199501402235293,
+        "shift_0.25y_bp": 0.007834263977043315,
+        "shift_10y_bp": 0.4302269501205505,
+        "shift_1y_bp": 0.046305933919972564,
+        "shift_20y_bp": -0.004329276905024049,
+        "shift_2y_bp": -0.34587976866059383,
+        "shift_30y_bp": 0.1497098134823141,
+        "shift_5y_bp": -0.10432507566125737,
+        "signed_mean_bp": 0.5951912448919352
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "name": "model_choice_dispersion",
+      "value": 7.503050266341529
+    }
+  ],
+  "experiment_names": [
+    "bid_ask_repricing",
+    "smoothing_strength",
+    "outlier_exclusion_policy",
+    "leave_one_block_out_stability",
+    "single_quote_one_bp_perturbation",
+    "model_choice_dispersion"
+  ],
+  "grid_max_years": 30.0,
+  "grid_min_years": 0.08333333333333333,
+  "leave_one_block_out_stability": {
+    "condition": "drop one maturity block of quotes at a time and refit; the worst resulting shift bounds how much any single maturity region is holding the published curve in place",
+    "interpretation": "Dropping any single maturity block moves the curve by at most 5.63bp; the worst block is where the data, not the model, is holding the curve up.",
+    "result": {
+      "detail": {
+        "median_max_abs_bp": 0.18896809573365828,
+        "n_refits": 8,
+        "worst_max_abs_bp": 5.634101539977125,
+        "worst_shift_0.25y_bp": 5.034885580002309,
+        "worst_shift_10y_bp": 0.031149258123593093,
+        "worst_shift_1y_bp": 0.03718400179483078,
+        "worst_shift_20y_bp": 0.02402290348785252,
+        "worst_shift_2y_bp": 0.3857129827499958,
+        "worst_shift_30y_bp": 0.008532126002588902,
+        "worst_shift_5y_bp": 0.07969649948293134
+      },
+      "metric": "worst_max_abs_zero_shift_bp",
+      "unit": "bp of continuously compounded zero rate on the published grid",
+      "value": 5.634101539977125
+    }
+  },
+  "model_choice_dispersion": {
+    "condition": "difference between the two estimators on the published grid: the part of the answer that is a modelling choice rather than market data",
+    "interpretation": "The two candidate estimators differ by at most 7.50bp on the published grid: the part of the answer that is a modelling choice rather than market data.",
+    "result": {
+      "detail": {
+        "max_abs_bp": 7.503050266341529,
+        "mean_abs_bp": 1.7199501402235293,
+        "shift_0.25y_bp": 0.007834263977043315,
+        "shift_10y_bp": 0.4302269501205505,
+        "shift_1y_bp": 0.046305933919972564,
+        "shift_20y_bp": -0.004329276905024049,
+        "shift_2y_bp": -0.34587976866059383,
+        "shift_30y_bp": 0.1497098134823141,
+        "shift_5y_bp": -0.10432507566125737,
+        "signed_mean_bp": 0.5951912448919352
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "unit": "bp of continuously compounded zero rate on the published grid",
+      "value": 7.503050266341529
+    }
+  },
+  "outlier_exclusion_policy": {
+    "condition": "refit with every screened observation reinstated (robust reweighting still active) to show how much of the published curve depends on the exclusion decisions rather than on the robust estimator",
+    "interpretation": "Reinstating every screened observation moves the curve by at most 1.94bp, which bounds how much the exclusion policy is doing.",
+    "result": {
+      "detail": {
+        "n_reinstated": 12,
+        "shift": {
+          "max_abs_bp": 1.944631056112478,
+          "mean_abs_bp": 0.2014484443483807,
+          "shift_0.25y_bp": 0.00018745289893234984,
+          "shift_10y_bp": -0.12700060980558314,
+          "shift_1y_bp": 0.0005218102481358011,
+          "shift_20y_bp": -0.006386613697756394,
+          "shift_2y_bp": -0.022709395983422365,
+          "shift_30y_bp": -0.025812283298391747,
+          "shift_5y_bp": -0.18760894739601464,
+          "signed_mean_bp": 0.04184808789503612
+        }
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "unit": "bp of continuously compounded zero rate on the published grid",
+      "value": 1.944631056112478
+    }
+  },
+  "selected_model": "advanced",
+  "single_quote_one_bp_perturbation": {
+    "condition": "move the most heavily weighted quote near 10Y by one basis point and measure how far the shock propagates along the curve",
+    "interpretation": "A one-basis-point move in the most heavily weighted quote propagates at most 0.03bp, so no single observation dominates the fit.",
+    "result": {
+      "detail": {
+        "bump_bp": 1.0,
+        "max_abs_bp": 0.026887780266715566,
+        "mean_abs_bp": 0.005724292244852912,
+        "perturbed_instrument": "INS0053",
+        "perturbed_maturity_years": 10.0,
+        "shift_0.25y_bp": -2.319637537606667e-09,
+        "shift_10y_bp": 0.026698868858705815,
+        "shift_1y_bp": -4.6666039088538724e-07,
+        "shift_20y_bp": 0.0008211102449709462,
+        "shift_2y_bp": 1.603874408284689e-05,
+        "shift_30y_bp": -0.0011614819450667113,
+        "shift_5y_bp": 0.00019946006422910667,
+        "signed_mean_bp": 0.0011764964098084966
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "unit": "bp of continuously compounded zero rate on the published grid",
+      "value": 0.026887780266715566
+    }
+  },
+  "smoothing_strength": {
+    "condition": "move the selected smoothing control by a factor of ten in each direction and measure how far the published zero curve travels",
+    "interpretation": "Moving the roughness weight one grid step either side of the cross-validated choice moves the curve by at most 3.18bp; that is the cost of the smoothing decision itself.",
+    "result": {
+      "detail": {
+        "lambda_over_ten": {
+          "max_abs_bp": 3.181937539505908,
+          "mean_abs_bp": 0.37366938134162514,
+          "shift_0.25y_bp": 0.007523043714669636,
+          "shift_10y_bp": -0.10190512736280716,
+          "shift_1y_bp": 0.040270680432726025,
+          "shift_20y_bp": 0.03170024751975031,
+          "shift_2y_bp": -0.29806684722594873,
+          "shift_30y_bp": -0.027912774838122212,
+          "shift_5y_bp": -0.18322284881803347,
+          "signed_mean_bp": 0.08748808604576676
+        },
+        "lambda_times_ten": {
+          "max_abs_bp": 2.980107192742665,
+          "mean_abs_bp": 0.5954528048711347,
+          "shift_0.25y_bp": -0.047339001694630956,
+          "shift_10y_bp": 1.096024635201878,
+          "shift_1y_bp": -0.04142309836679264,
+          "shift_20y_bp": -0.030054897496717414,
+          "shift_2y_bp": -0.4966565706770315,
+          "shift_30y_bp": 0.11586191041995653,
+          "shift_5y_bp": 0.6360891013008213,
+          "signed_mean_bp": -0.1694442395375703
+        },
+        "selected_lambda": 1e-05
+      },
+      "metric": "max_abs_zero_shift_bp",
+      "unit": "bp of continuously compounded zero rate on the published grid",
+      "value": 3.181937539505908
+    }
+  }
+}

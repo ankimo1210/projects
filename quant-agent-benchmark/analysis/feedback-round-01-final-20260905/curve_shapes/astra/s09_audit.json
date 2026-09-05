@@ -1,0 +1,23 @@
+{
+  "model": "astra",
+  "case": "s09",
+  "curve_rows": 721,
+  "truth_rows": 721,
+  "market_rows": 98,
+  "market": "evaluator/hidden_scenarios/s09/market_data.csv",
+  "truth": "evaluator/hidden_scenarios/s09/truth_curve.csv",
+  "metrics": {
+    "zero_rate_rmse_bps": 11.4924826416413,
+    "weighted_zero_rate_rmse_bps": 8.892437888130361,
+    "forward_rate_rmse_bps": 48.660037110534375,
+    "discount_factor_rmse_x1e4": 174.3756544630658,
+    "hidden_instrument_normalized_rmse": 12.204145277294247,
+    "bid_ask_normalized_pricing_rmse": 21.413428917898713,
+    "short_end_zero_rmse_bps": 1.7741526629466668,
+    "long_end_zero_rmse_bps": 16.008838454110386,
+    "forward_roughness": 8.477914335260337e-06,
+    "zero_curvature_rms": 0.006399486117227134
+  },
+  "rmse_matches_frozen_score": true,
+  "cli_seconds": 1.608779542002594
+}

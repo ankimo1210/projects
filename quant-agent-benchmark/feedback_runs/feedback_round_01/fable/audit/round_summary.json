@@ -1,0 +1,66 @@
+{
+  "round": "feedback_round_01",
+  "model_key": "fable",
+  "model_assignment_status": "prompt carried the unsubstituted placeholder '<astra | sol | opus | fable | terra | luna | sonnet>'; 'fable' taken from the explicit in-session user statement 'you are Fable' and from the original submission directory results/fable created by this session; not inferred from model name or capability",
+  "runtime_model_and_reasoning": {
+    "model_id_reported_by_harness": "claude-fable-5-1",
+    "reasoning_effort_requested": "xhigh",
+    "reasoning_effort_confirmation": "not independently verifiable from inside the session; recorded as requested"
+  },
+  "start_utc": "2026-09-05T08:44:34Z",
+  "start_epoch": 1788597874,
+  "end_utc": "2026-09-05T09:16:16Z",
+  "end_epoch": 1788599776,
+  "additional_work_seconds": 1902,
+  "time_limit_seconds": 3600,
+  "design_change_cutoff_utc": "2026-09-05T09:34:34Z",
+  "last_design_change_utc": "2026-09-05T09:15:00Z (report methodology text, format only; last numerical change 09:03 V4b)",
+  "experiment_count": 28,
+  "experiments_file": "audit/experiments.csv",
+  "tests": {
+    "original_reproduced_on_PYTHON_BIN": "60 passed",
+    "final": "65 passed, 0 failed (final run 09:15 UTC)",
+    "test_runs": 9,
+    "failed_test_runs": 2,
+    "failed_runs_reason": "run 2: heading assertions updated for bilingual labels; run 4: new singleton-guard test compared to 1.0 instead of the Tukey factor"
+  },
+  "final_adopted_version": "V4b = original + FunctionCurve diagnostic + V2 (ceil actual accrual, forward_actual rule) + V3 (type_scales fallback) + V4a (LOO edge guard) + V4b (singleton Huber guard) + format (named sensitivity keys, units, tenor-band holdout, bilingual headings, charset)",
+  "public_default_outputs_vs_original": "curve.csv, curve_baseline.csv, curve_advanced.csv, cleaning.csv, repricing.csv, risk.csv, cv_table.csv byte-identical",
+  "original_hash_unchanged": "PASS (61/61 files identical)",
+  "original_manifest_files": "audit/baseline_manifest.json vs audit/original_manifest_after.json (61 files; exclusions: .venv, __pycache__, .pytest_cache, *.egg-info, .git, build, dist, *.pyc, .DS_Store)",
+  "environment": {
+    "python_bin": "analysis/final-review-20260905/.venv-matched/bin/python (executed only)",
+    "python": "3.12.11 (macOS-26.6.2-arm64)",
+    "numpy": "2.5.2",
+    "pandas": "2.3.3",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.1",
+    "pytest": "8.4.2",
+    "env": "PYTHONDONTWRITEBYTECODE=1, MPLCONFIGDIR/TMPDIR under audit/, pytest -p no:cacheprovider"
+  },
+  "input_hashes": {
+    "market_observations.csv": "dd96a259f44c81c272f048c3600dc5f7df686ea77a1c192d2c4aa3a306654d01",
+    "CONVENTIONS.md": "21bfe79d4a1a3e82b3c17120606ae94e6aab6375c3340670744e8c981f63d53e",
+    "TASK.md": "64a63897e9f52c39b07b4bde3deb93ed4a2290686d3464680c17b5ce3158be9f"
+  },
+  "seeds": {
+    "workflow": 20260115,
+    "synthetic_scenarios": "20260115 + 10*shape_index + condition_index",
+    "noise_bootstrap": 20260115
+  },
+  "unverified_items": [
+    "effect on hidden holdout / hidden truth (not accessed by design)",
+    "which fractional-tenor payment convention the benchmark generator/evaluator uses (public spec silent); the level-accrual round reading is data-consistent, not verified",
+    "singleton Huber guard behaviour for a lone quote whose deviation is between the LOO threshold and the Tukey cutoff (no direct experiment)",
+    "lambda grid upper bound 1e4 reached in 4/25 synthetic cases (flat/missing); not changed",
+    "(resolved) HTML rendering checked in a browser via local HTTP; a title/CSS f-string regression was caught and fixed"
+  ],
+  "token_cost_quota": {
+    "tokens": null,
+    "credits": null,
+    "usd_cost": null,
+    "quota_percentage": null,
+    "note": "exact telemetry not available inside the session; not estimated"
+  },
+  "forbidden_material_incidents": "none; evaluator/, tools/, evaluations/, analysis/ (other than executing PYTHON_BIN) and other models' directories were not read, listed or searched"
+}

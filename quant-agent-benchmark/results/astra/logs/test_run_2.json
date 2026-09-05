@@ -1,0 +1,13 @@
+{
+  "run": 2,
+  "returncode": 0,
+  "passed": 45,
+  "failed": 0,
+  "skipped": 0,
+  "duration_seconds": 8.027917861938477,
+  "command": [
+    "pytest",
+    "-q",
+    "--junitxml=/Users/ankimo1210/Documents/projects/quant-agent-benchmark/results/astra/logs/test_run_2.xml"
+  ]
+}

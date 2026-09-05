@@ -1,0 +1,56 @@
+[
+  {
+    "model": "astra",
+    "tracked": 85,
+    "changed": [],
+    "missing": []
+  },
+  {
+    "model": "sol",
+    "tracked": 40,
+    "changed": [],
+    "missing": []
+  },
+  {
+    "model": "opus",
+    "tracked": 49,
+    "changed": [],
+    "missing": []
+  },
+  {
+    "model": "fable",
+    "tracked": 67,
+    "changed": [],
+    "missing": []
+  },
+  {
+    "model": "terra",
+    "tracked": 42,
+    "changed": [],
+    "missing": []
+  },
+  {
+    "model": "luna",
+    "tracked": 44,
+    "changed": [
+      "MODEL_RISKS.md",
+      "benchmark_summary.json",
+      "outputs/charts/forward_rate.png",
+      "outputs/curves/curve.csv",
+      "outputs/diagnostics/model_comparison.json",
+      "outputs/diagnostics/sensitivity.json",
+      "reports/research_report.html",
+      "src/quantcurve/cli.py",
+      "src/quantcurve/curve.py",
+      "src/quantcurve/reporting.py",
+      "tests/test_curve_engine.py"
+    ],
+    "missing": []
+  },
+  {
+    "model": "sonnet",
+    "tracked": 37,
+    "changed": [],
+    "missing": []
+  }
+]

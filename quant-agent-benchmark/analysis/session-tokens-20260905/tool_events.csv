@@ -1,0 +1,298 @@
+﻿call_id,turn_number,timestamp_utc,tool_name,activity,explicit_error,error_detection,source_line,result_timestamp_utc,model,session_name,timestamp_jst,observed_tool_interval_seconds
+call_f7wsgBf1v5cZX3QK4aGUZwAy,1,2026-09-05T00:41:03.055Z,exec,read_inspect,False,structured_exit_or_wrapper,13,2026-09-05T00:41:03.634Z,astra,Model Test Astra,2026-09-05T09:41:03.055+09:00,0.579
+call_MSobB3liW4ZphVNHXYYTuVW1,2,2026-09-05T01:21:55.801Z,exec,read_inspect,False,structured_exit_or_wrapper,36,2026-09-05T01:21:55.879Z,astra,Model Test Astra,2026-09-05T10:21:55.801+09:00,0.078
+call_S9sh9tMp5icn3KbXcfI9hvYI,2,2026-09-05T01:22:05.914Z,exec,execute_other,False,structured_exit_or_wrapper,43,2026-09-05T01:22:05.976Z,astra,Model Test Astra,2026-09-05T10:22:05.914+09:00,0.062
+call_8uEZKqL2RvC1zogGQwfgR9HB,2,2026-09-05T01:22:13.146Z,exec,read_inspect,False,structured_exit_or_wrapper,48,2026-09-05T01:22:13.245Z,astra,Model Test Astra,2026-09-05T10:22:13.146+09:00,0.099
+call_JmLh1z5Zs71vvRHauc9BrWzc,2,2026-09-05T01:22:22.017Z,exec,read_inspect,False,structured_exit_or_wrapper,56,2026-09-05T01:22:22.060Z,astra,Model Test Astra,2026-09-05T10:22:22.017+09:00,0.043
+call_9PYq15Ta6Tz1mU7wZuUiCeup,2,2026-09-05T01:22:29.270Z,exec,read_inspect,False,structured_exit_or_wrapper,63,2026-09-05T01:22:29.344Z,astra,Model Test Astra,2026-09-05T10:22:29.270+09:00,0.074
+call_K9hJRpCVIwTzfokjwIgmYve5,2,2026-09-05T01:22:56.597Z,exec,execute_other,False,structured_exit_or_wrapper,71,2026-09-05T01:22:56.653Z,astra,Model Test Astra,2026-09-05T10:22:56.597+09:00,0.056
+call_TDV3Tqrtx8LvgwXlc5TO1Atw,4,2026-09-05T01:24:08.264Z,exec,write_edit,False,structured_exit_or_wrapper,100,2026-09-05T01:24:09.523Z,astra,Model Test Astra,2026-09-05T10:24:08.264+09:00,1.259
+call_q631W6t9IPaFV8YbA58zyrwE,4,2026-09-05T01:24:18.060Z,exec,environment_files,True,structured_exit_or_wrapper,106,2026-09-05T01:24:18.143Z,astra,Model Test Astra,2026-09-05T10:24:18.060+09:00,0.083
+call_KarQiLkPW8oIT6WLIGfzPFqN,4,2026-09-05T01:24:49.282Z,exec,write_edit,False,structured_exit_or_wrapper,115,2026-09-05T01:24:50.419Z,astra,Model Test Astra,2026-09-05T10:24:49.282+09:00,1.137
+call_rpTXWGbfwFuGOtylGqkl3HCg,4,2026-09-05T01:25:07.900Z,exec,test_command,False,structured_exit_or_wrapper,121,2026-09-05T01:25:09.079Z,astra,Model Test Astra,2026-09-05T10:25:07.900+09:00,1.179
+call_pnwEZ4JZWnciDBUwZdsud1En,4,2026-09-05T01:25:34.484Z,exec,poll_wait,False,structured_exit_or_wrapper,131,2026-09-05T01:25:34.593Z,astra,Model Test Astra,2026-09-05T10:25:34.484+09:00,0.109
+call_WB3jJrNM8cBHGI2WyCZSQZpn,4,2026-09-05T01:26:07.688Z,exec,read_inspect,False,structured_exit_or_wrapper,138,2026-09-05T01:26:12.486Z,astra,Model Test Astra,2026-09-05T10:26:07.688+09:00,4.798
+call_ylR2bbIJ5BXLnHCo6KWoOByU,4,2026-09-05T01:32:28.937Z,exec,write_edit,False,structured_exit_or_wrapper,163,2026-09-05T01:32:28.989Z,astra,Model Test Astra,2026-09-05T10:32:28.937+09:00,0.052
+call_O0YlCbVuBhEbtp9ugrigGWm0,4,2026-09-05T01:32:49.494Z,exec,write_edit,False,structured_exit_or_wrapper,172,2026-09-05T01:32:50.670Z,astra,Model Test Astra,2026-09-05T10:32:49.494+09:00,1.176
+call_61O10OpJWUtMyNX8mGtPUQoj,4,2026-09-05T01:33:15.640Z,exec,poll_wait,False,structured_exit_or_wrapper,179,2026-09-05T01:33:15.685Z,astra,Model Test Astra,2026-09-05T10:33:15.640+09:00,0.045
+call_MUeJIDWpOPflFQ5HnOk2wxgy,4,2026-09-05T01:33:31.693Z,exec,execute_other,False,structured_exit_or_wrapper,185,2026-09-05T01:33:32.298Z,astra,Model Test Astra,2026-09-05T10:33:31.693+09:00,0.605
+call_ahVJlUrNyTilGKGjNWf2oA2J,4,2026-09-05T01:34:07.243Z,exec,execute_other,False,structured_exit_or_wrapper,194,2026-09-05T01:34:07.877Z,astra,Model Test Astra,2026-09-05T10:34:07.243+09:00,0.634
+call_GRlK99K5kw03hc7mFPiZtxGC,4,2026-09-05T01:34:59.141Z,exec,write_edit,False,structured_exit_or_wrapper,203,2026-09-05T01:34:59.238Z,astra,Model Test Astra,2026-09-05T10:34:59.141+09:00,0.097
+call_ob0hjq4Mo8GEsXZdk9xazozL,4,2026-09-05T01:36:43.074Z,exec,write_edit,False,structured_exit_or_wrapper,211,2026-09-05T01:36:43.117Z,astra,Model Test Astra,2026-09-05T10:36:43.074+09:00,0.043
+call_F9W47mSWAAXBnwhMzRrsPYPe,4,2026-09-05T01:36:56.147Z,exec,execute_other,True,structured_exit_or_wrapper,218,2026-09-05T01:36:56.872Z,astra,Model Test Astra,2026-09-05T10:36:56.147+09:00,0.725
+call_z7Pj0cTmgUEY4eydKrtyVrRN,4,2026-09-05T01:37:46.771Z,exec,write_edit,True,structured_exit_or_wrapper,229,2026-09-05T01:37:47.411Z,astra,Model Test Astra,2026-09-05T10:37:46.771+09:00,0.64
+call_IhXqWAiB9Bz3ZwEidRV0QV0B,4,2026-09-05T01:38:48.666Z,exec,write_edit,False,structured_exit_or_wrapper,239,2026-09-05T01:38:49.723Z,astra,Model Test Astra,2026-09-05T10:38:48.666+09:00,1.057
+call_4z4DRYWoilfxuy7DR8y7Yn4z,4,2026-09-05T01:40:06.456Z,exec,write_edit,False,structured_exit_or_wrapper,251,2026-09-05T01:40:07.273Z,astra,Model Test Astra,2026-09-05T10:40:06.456+09:00,0.817
+call_sOB6ECqJzYeJDwK1ohpVBETI,4,2026-09-05T01:44:49.639Z,exec,write_edit,False,structured_exit_or_wrapper,267,2026-09-05T01:44:49.698Z,astra,Model Test Astra,2026-09-05T10:44:49.639+09:00,0.059
+call_siDBRGGENG6HAHWPUUjolfY8,4,2026-09-05T01:46:29.488Z,exec,write_edit,False,structured_exit_or_wrapper,274,2026-09-05T01:46:29.526Z,astra,Model Test Astra,2026-09-05T10:46:29.488+09:00,0.038
+call_5HUAPyJHGsC3T5EeJaFCXd34,4,2026-09-05T01:49:58.490Z,exec,write_edit,False,structured_exit_or_wrapper,283,2026-09-05T01:49:58.591Z,astra,Model Test Astra,2026-09-05T10:49:58.490+09:00,0.101
+call_dFPGNzdcs0zZ0PXEVN7ASD5S,4,2026-09-05T01:50:10.391Z,exec,environment_files,False,structured_exit_or_wrapper,290,2026-09-05T01:50:11.009Z,astra,Model Test Astra,2026-09-05T10:50:10.391+09:00,0.618
+call_C8TZ17mrVfY5zQEXososcf4V,4,2026-09-05T01:50:18.282Z,exec,execute_other,False,structured_exit_or_wrapper,295,2026-09-05T01:50:19.447Z,astra,Model Test Astra,2026-09-05T10:50:18.282+09:00,1.165
+call_3E0MPFEOm7lnMi4WGawM1HKo,4,2026-09-05T01:51:24.554Z,exec,poll_wait,False,structured_exit_or_wrapper,306,2026-09-05T01:51:24.611Z,astra,Model Test Astra,2026-09-05T10:51:24.554+09:00,0.057
+call_Qw3HBigE1L1tK2UqnzKYe08u,4,2026-09-05T01:51:35.174Z,exec,execute_other,False,structured_exit_or_wrapper,314,2026-09-05T01:51:36.349Z,astra,Model Test Astra,2026-09-05T10:51:35.174+09:00,1.175
+call_egAOpi5zPPUdmsvi5eFpCrww,4,2026-09-05T01:52:50.143Z,exec,poll_wait,False,structured_exit_or_wrapper,325,2026-09-05T01:52:50.382Z,astra,Model Test Astra,2026-09-05T10:52:50.143+09:00,0.239
+call_Lfya8i6dyEw786ifXroqzn1Q,4,2026-09-05T01:53:33.004Z,exec,visual_check,False,structured_exit_or_wrapper,334,2026-09-05T01:53:33.069Z,astra,Model Test Astra,2026-09-05T10:53:33.004+09:00,0.065
+call_eWPsxjiS6iErIIxQ8r7DhyYD,4,2026-09-05T01:53:46.703Z,exec,execute_other,False,structured_exit_or_wrapper,345,2026-09-05T01:53:46.772Z,astra,Model Test Astra,2026-09-05T10:53:46.703+09:00,0.069
+call_9VrG1SgBbuSWlCaK27Rs77JE,4,2026-09-05T01:54:31.535Z,exec,execute_other,False,structured_exit_or_wrapper,356,2026-09-05T01:54:31.690Z,astra,Model Test Astra,2026-09-05T10:54:31.535+09:00,0.155
+call_dP9NdY4ERg2t0KYX0crlKHLu,4,2026-09-05T02:00:02.549Z,exec,write_edit,False,structured_exit_or_wrapper,369,2026-09-05T02:00:02.597Z,astra,Model Test Astra,2026-09-05T11:00:02.549+09:00,0.048
+call_fk2dTeIirYrulRg95MHcHQzY,4,2026-09-05T02:01:09.224Z,exec,write_edit,False,structured_exit_or_wrapper,378,2026-09-05T02:01:10.404Z,astra,Model Test Astra,2026-09-05T11:01:09.224+09:00,1.18
+call_MPTV9ELcnPBlCJZbu4E9gX6g,4,2026-09-05T02:02:20.739Z,exec,poll_wait,False,structured_exit_or_wrapper,389,2026-09-05T02:02:20.813Z,astra,Model Test Astra,2026-09-05T11:02:20.739+09:00,0.074
+call_PVSslOt4HWfDHVyQMhyY8hCT,4,2026-09-05T02:02:29.794Z,exec,visual_check,False,structured_exit_or_wrapper,395,2026-09-05T02:02:29.873Z,astra,Model Test Astra,2026-09-05T11:02:29.794+09:00,0.079
+call_82eT9jyMJOtVtZYvc3UXl4nN,4,2026-09-05T02:04:54.713Z,exec,write_edit,False,structured_exit_or_wrapper,415,2026-09-05T02:04:55.191Z,astra,Model Test Astra,2026-09-05T11:04:54.713+09:00,0.478
+call_wehXJZeRqMH5NUvH6BGTevOc,4,2026-09-05T02:07:12.697Z,exec,write_edit,False,structured_exit_or_wrapper,429,2026-09-05T02:07:13.878Z,astra,Model Test Astra,2026-09-05T11:07:12.697+09:00,1.181
+call_QRDiLAB32hJkirys1tykv5wm,4,2026-09-05T02:09:03.551Z,exec,poll_wait,False,structured_exit_or_wrapper,443,2026-09-05T02:09:04.722Z,astra,Model Test Astra,2026-09-05T11:09:03.551+09:00,1.171
+call_mQ1mSduhi6dVPSjsW0byCA5c,4,2026-09-05T02:09:18.216Z,exec,poll_wait,True,structured_exit_or_wrapper,452,2026-09-05T02:09:18.277Z,astra,Model Test Astra,2026-09-05T11:09:18.216+09:00,0.061
+call_lVHEN3IicGEqpLThR1uyf6nN,4,2026-09-05T02:11:36.414Z,exec,write_edit,False,structured_exit_or_wrapper,467,2026-09-05T02:11:37.526Z,astra,Model Test Astra,2026-09-05T11:11:36.414+09:00,1.112
+call_Va4K8DUHuhsnnBISG0NRNyM6,4,2026-09-05T02:11:44.775Z,exec,visual_check,False,structured_exit_or_wrapper,475,2026-09-05T02:11:44.861Z,astra,Model Test Astra,2026-09-05T11:11:44.775+09:00,0.086
+call_kayVmCaXrwD6kjcdbzDFHu0T,4,2026-09-05T02:15:17.480Z,exec,test_command,False,structured_exit_or_wrapper,493,2026-09-05T02:15:17.789Z,astra,Model Test Astra,2026-09-05T11:15:17.480+09:00,0.309
+call_vwMI3X8AnMA5epCH49JxWiEF,5,2026-09-05T02:37:47.812Z,exec,read_inspect,False,structured_exit_or_wrapper,514,2026-09-05T02:37:47.884Z,astra,Model Test Astra,2026-09-05T11:37:47.812+09:00,0.072
+call_zqtj48w4dUGcw6xnqSVyV0Wq,1,2026-09-05T00:41:40.745Z,exec,read_inspect,False,structured_exit_or_wrapper,15,2026-09-05T00:41:40.821Z,sol,Model Test Sol,2026-09-05T09:41:40.745+09:00,0.076
+call_v2X9RmAPxYoNW1Krq4cwYfHo,1,2026-09-05T00:41:51.571Z,exec,read_inspect,False,structured_exit_or_wrapper,24,2026-09-05T00:41:51.616Z,sol,Model Test Sol,2026-09-05T09:41:51.571+09:00,0.045
+call_diY778gR8mNTlddpVqKgAqc0,1,2026-09-05T00:42:03.667Z,exec,environment_files,False,structured_exit_or_wrapper,31,2026-09-05T00:42:03.715Z,sol,Model Test Sol,2026-09-05T09:42:03.667+09:00,0.048
+call_GWtVXp6w6wUkP3VS5Vic0if1,2,2026-09-05T01:22:09.014Z,exec,read_inspect,False,structured_exit_or_wrapper,50,2026-09-05T01:22:09.081Z,sol,Model Test Sol,2026-09-05T10:22:09.014+09:00,0.067
+call_cmzauVbrQav3Xgim0Z5nt47D,2,2026-09-05T01:22:27.815Z,exec,execute_other,False,structured_exit_or_wrapper,61,2026-09-05T01:22:27.882Z,sol,Model Test Sol,2026-09-05T10:22:27.815+09:00,0.067
+call_wdCibXFX6J0OHDJmgowuXgvB,2,2026-09-05T01:22:37.461Z,exec,environment_files,True,structured_exit_or_wrapper,68,2026-09-05T01:22:37.522Z,sol,Model Test Sol,2026-09-05T10:22:37.461+09:00,0.061
+call_cTVldUIUV6ViN02IFv2prG45,2,2026-09-05T01:22:44.886Z,exec,environment_files,False,structured_exit_or_wrapper,74,2026-09-05T01:22:44.951Z,sol,Model Test Sol,2026-09-05T10:22:44.886+09:00,0.065
+call_UPW9qvQTzhpdShaikjjDGCRD,2,2026-09-05T01:22:51.341Z,exec,write_edit,False,structured_exit_or_wrapper,81,2026-09-05T01:22:51.415Z,sol,Model Test Sol,2026-09-05T10:22:51.341+09:00,0.074
+call_K7BGqjw8bSGd5WIGbsM7W3uR,2,2026-09-05T01:23:03.507Z,exec,read_inspect,False,structured_exit_or_wrapper,88,2026-09-05T01:23:03.601Z,sol,Model Test Sol,2026-09-05T10:23:03.507+09:00,0.094
+call_pfMjkR88FvEMVARrOcHt1QIm,2,2026-09-05T01:23:20.045Z,exec,environment_files,False,structured_exit_or_wrapper,97,2026-09-05T01:23:20.129Z,sol,Model Test Sol,2026-09-05T10:23:20.045+09:00,0.084
+call_LeHCl9vpldzMsbE955wP8rD4,2,2026-09-05T01:23:32.168Z,exec,test_command,False,structured_exit_or_wrapper,104,2026-09-05T01:23:32.281Z,sol,Model Test Sol,2026-09-05T10:23:32.168+09:00,0.113
+call_oH9qgpkxmRtaLoz16ImLqvSA,2,2026-09-05T01:23:44.769Z,exec,test_command,False,structured_exit_or_wrapper,113,2026-09-05T01:23:45.942Z,sol,Model Test Sol,2026-09-05T10:23:44.769+09:00,1.173
+call_AOVHrZ3YFCTAAeSkHyWZHrrf,2,2026-09-05T01:23:49.008Z,exec,poll_wait,False,structured_exit_or_wrapper,119,2026-09-05T01:23:54.790Z,sol,Model Test Sol,2026-09-05T10:23:49.008+09:00,5.782
+call_oSbqHwEhMdp1Wp0pBiMSnPLN,2,2026-09-05T01:29:31.767Z,exec,write_edit,False,structured_exit_or_wrapper,154,2026-09-05T01:29:31.807Z,sol,Model Test Sol,2026-09-05T10:29:31.767+09:00,0.04
+call_y69QKIbJxUlVd6ZBck94HKuG,2,2026-09-05T01:30:27.528Z,exec,write_edit,False,structured_exit_or_wrapper,165,2026-09-05T01:30:27.572Z,sol,Model Test Sol,2026-09-05T10:30:27.528+09:00,0.044
+call_O6UztSVKQ8jLzfoACoSPlF7r,2,2026-09-05T01:32:46.574Z,exec,write_edit,False,structured_exit_or_wrapper,172,2026-09-05T01:32:46.641Z,sol,Model Test Sol,2026-09-05T10:32:46.574+09:00,0.067
+call_nCvpb30OWRcm2rQiFg49bPhi,2,2026-09-05T01:32:55.733Z,exec,test_command,False,structured_exit_or_wrapper,179,2026-09-05T01:33:00.721Z,sol,Model Test Sol,2026-09-05T10:32:55.733+09:00,4.988
+call_hnQLmGxp6HvHn0XvQ9U0cVZU,2,2026-09-05T01:33:13.601Z,exec,environment_files,False,structured_exit_or_wrapper,188,2026-09-05T01:33:14.780Z,sol,Model Test Sol,2026-09-05T10:33:13.601+09:00,1.179
+call_y2VpSftgbQPs1mxf4gh1MWvu,2,2026-09-05T01:33:19.202Z,exec,poll_wait,False,structured_exit_or_wrapper,194,2026-09-05T01:33:43.834Z,sol,Model Test Sol,2026-09-05T10:33:19.202+09:00,24.632
+call_Zp9ZmMVkHTi0eKxyoAgVgCqv,2,2026-09-05T01:34:06.361Z,exec,environment_files,False,structured_exit_or_wrapper,203,2026-09-05T01:34:06.605Z,sol,Model Test Sol,2026-09-05T10:34:06.361+09:00,0.244
+call_tlsYgiuYGmD8UEqFlmwX9QZq,2,2026-09-05T01:36:05.704Z,exec,write_edit,True,structured_exit_or_wrapper,220,2026-09-05T01:36:05.741Z,sol,Model Test Sol,2026-09-05T10:36:05.704+09:00,0.037
+call_rXODfZfjrs0QvyAZm5IrGMVj,2,2026-09-05T01:36:28.880Z,exec,write_edit,False,structured_exit_or_wrapper,226,2026-09-05T01:36:28.941Z,sol,Model Test Sol,2026-09-05T10:36:28.880+09:00,0.061
+call_X6wr9G2uh111dh3ZHCbIk7yw,2,2026-09-05T01:36:42.521Z,exec,write_edit,False,structured_exit_or_wrapper,233,2026-09-05T01:36:42.573Z,sol,Model Test Sol,2026-09-05T10:36:42.521+09:00,0.052
+call_6PZPuxQ0EPDaVjdL6zZtEIaR,2,2026-09-05T01:36:50.040Z,exec,test_command,False,structured_exit_or_wrapper,240,2026-09-05T01:36:51.211Z,sol,Model Test Sol,2026-09-05T10:36:50.040+09:00,1.171
+call_wNa5EsXjARjC8yMxsVDiaSwD,2,2026-09-05T01:36:54.460Z,exec,poll_wait,False,structured_exit_or_wrapper,246,2026-09-05T01:37:10.801Z,sol,Model Test Sol,2026-09-05T10:36:54.460+09:00,16.341
+call_2xlsnBNvB51zk8doBapxieqP,2,2026-09-05T01:37:22.594Z,exec,environment_files,False,structured_exit_or_wrapper,253,2026-09-05T01:37:25.286Z,sol,Model Test Sol,2026-09-05T10:37:22.594+09:00,2.692
+call_rZMr5atqQqq39pn1mlWPoNBO,2,2026-09-05T01:39:33.739Z,exec,write_edit,False,structured_exit_or_wrapper,266,2026-09-05T01:39:33.816Z,sol,Model Test Sol,2026-09-05T10:39:33.739+09:00,0.077
+call_mp8quoAcRUoowoeSz3cQEdqF,2,2026-09-05T01:39:38.237Z,exec,test_command,False,structured_exit_or_wrapper,273,2026-09-05T01:39:39.412Z,sol,Model Test Sol,2026-09-05T10:39:38.237+09:00,1.175
+call_pXVKuWOpEn1zKTkmEan9E7s8,2,2026-09-05T01:39:44.022Z,exec,poll_wait,False,structured_exit_or_wrapper,280,2026-09-05T01:39:44.082Z,sol,Model Test Sol,2026-09-05T10:39:44.022+09:00,0.06
+call_NXevjZCrpPJGjuS4CIoY8YO7,2,2026-09-05T01:40:00.463Z,exec,write_edit,False,structured_exit_or_wrapper,288,2026-09-05T01:40:00.540Z,sol,Model Test Sol,2026-09-05T10:40:00.463+09:00,0.077
+call_fffjZGOHf6stiEjMtwQOjQKU,2,2026-09-05T01:40:06.147Z,exec,test_command,False,structured_exit_or_wrapper,293,2026-09-05T01:40:07.321Z,sol,Model Test Sol,2026-09-05T10:40:06.147+09:00,1.174
+call_shyLa0bVGJrVLdyfMI8IQERD,2,2026-09-05T01:40:10.764Z,exec,poll_wait,False,structured_exit_or_wrapper,300,2026-09-05T01:40:10.810Z,sol,Model Test Sol,2026-09-05T10:40:10.764+09:00,0.046
+call_n3NDuWafhdeOhTCW248RoELc,2,2026-09-05T01:41:20.819Z,exec,write_edit,True,structured_exit_or_wrapper,311,2026-09-05T01:41:20.876Z,sol,Model Test Sol,2026-09-05T10:41:20.819+09:00,0.057
+call_znLisPNA297HpuD0CeT39cMU,2,2026-09-05T01:41:30.690Z,exec,read_inspect,False,structured_exit_or_wrapper,317,2026-09-05T01:41:30.769Z,sol,Model Test Sol,2026-09-05T10:41:30.690+09:00,0.079
+call_W02rXI8EzyauB97H5UNFZjH0,2,2026-09-05T01:41:50.382Z,exec,write_edit,False,structured_exit_or_wrapper,324,2026-09-05T01:41:50.429Z,sol,Model Test Sol,2026-09-05T10:41:50.382+09:00,0.047
+call_1bqwoPhloYSvWOAGLwsk2twV,2,2026-09-05T01:42:06.540Z,exec,write_edit,False,structured_exit_or_wrapper,331,2026-09-05T01:42:06.602Z,sol,Model Test Sol,2026-09-05T10:42:06.540+09:00,0.062
+call_jHekBTZ1m2BWQAFyzDSadlXr,2,2026-09-05T01:43:50.068Z,exec,write_edit,False,structured_exit_or_wrapper,340,2026-09-05T01:43:50.106Z,sol,Model Test Sol,2026-09-05T10:43:50.068+09:00,0.038
+call_le5uDpAkjJvznZ3shE0PyIeK,2,2026-09-05T01:44:15.941Z,exec,write_edit,False,structured_exit_or_wrapper,347,2026-09-05T01:44:16.017Z,sol,Model Test Sol,2026-09-05T10:44:15.941+09:00,0.076
+call_MLSnqhgsEaABot260RfCC5sE,2,2026-09-05T01:44:21.862Z,exec,test_command,False,structured_exit_or_wrapper,354,2026-09-05T01:44:23.040Z,sol,Model Test Sol,2026-09-05T10:44:21.862+09:00,1.178
+call_BOHHUhJDwUjoEFJCwqaaFYKI,2,2026-09-05T01:44:26.442Z,exec,poll_wait,False,structured_exit_or_wrapper,361,2026-09-05T01:44:26.494Z,sol,Model Test Sol,2026-09-05T10:44:26.442+09:00,0.052
+call_zY15fYFab2Gh4JaDEae71w2R,2,2026-09-05T01:45:04.711Z,exec,environment_files,False,structured_exit_or_wrapper,371,2026-09-05T01:45:06.103Z,sol,Model Test Sol,2026-09-05T10:45:04.711+09:00,1.392
+call_2MEe0jgpmJ13EnG4Qpm68i7O,2,2026-09-05T01:45:32.856Z,exec,write_edit,False,structured_exit_or_wrapper,382,2026-09-05T01:45:32.915Z,sol,Model Test Sol,2026-09-05T10:45:32.856+09:00,0.059
+call_UI5Afb4NFdBhp1qA3C4QuKL7,2,2026-09-05T01:45:42.070Z,exec,environment_files,False,structured_exit_or_wrapper,389,2026-09-05T01:45:42.861Z,sol,Model Test Sol,2026-09-05T10:45:42.070+09:00,0.791
+call_eHIsqrJGUDlIYmmAobZYrjzH,2,2026-09-05T01:45:50.245Z,exec,test_command,False,structured_exit_or_wrapper,396,2026-09-05T01:45:51.424Z,sol,Model Test Sol,2026-09-05T10:45:50.245+09:00,1.179
+call_Kpg8KAdNwkSun2rK18CqLVBN,2,2026-09-05T01:45:55.529Z,exec,poll_wait,False,structured_exit_or_wrapper,402,2026-09-05T01:46:14.366Z,sol,Model Test Sol,2026-09-05T10:45:55.529+09:00,18.837
+call_1prOREsgNpTIkA73JzMM2d94,2,2026-09-05T01:46:48.540Z,exec,environment_files,False,structured_exit_or_wrapper,411,2026-09-05T01:46:48.826Z,sol,Model Test Sol,2026-09-05T10:46:48.540+09:00,0.286
+call_lElLO32zu1BzFppPVlXlEIOl,2,2026-09-05T01:47:00.748Z,exec,visual_check,False,structured_exit_or_wrapper,418,2026-09-05T01:47:00.846Z,sol,Model Test Sol,2026-09-05T10:47:00.748+09:00,0.098
+call_c8mjKkaW3AhEFPr50O6yoE9b,2,2026-09-05T01:47:22.905Z,exec,write_edit,False,structured_exit_or_wrapper,432,2026-09-05T01:47:22.997Z,sol,Model Test Sol,2026-09-05T10:47:22.905+09:00,0.092
+call_biHe687j4BwnvtqmwGXphcyO,2,2026-09-05T01:47:34.231Z,exec,test_command,False,structured_exit_or_wrapper,439,2026-09-05T01:47:35.398Z,sol,Model Test Sol,2026-09-05T10:47:34.231+09:00,1.167
+call_1sZmo3Ke7DsdE4lGH3FgImZD,2,2026-09-05T01:47:39.262Z,exec,poll_wait,False,structured_exit_or_wrapper,445,2026-09-05T01:47:58.590Z,sol,Model Test Sol,2026-09-05T10:47:39.262+09:00,19.328
+call_CpQiJldjFCm5kFcSDcArzHz2,2,2026-09-05T01:48:09.612Z,exec,environment_files,False,structured_exit_or_wrapper,452,2026-09-05T01:48:10.791Z,sol,Model Test Sol,2026-09-05T10:48:09.612+09:00,1.179
+call_IGBES8LNjv7vSCZY8GsUUmeI,2,2026-09-05T01:48:15.167Z,js,visual_check,False,structured_exit_or_wrapper,458,2026-09-05T01:48:16.159Z,sol,Model Test Sol,2026-09-05T10:48:15.167+09:00,0.992
+call_w2fnJUNdF9BVD3GhTSIMjlNR,2,2026-09-05T01:48:20.481Z,js,execute_other,False,structured_exit_or_wrapper,465,2026-09-05T01:48:20.563Z,sol,Model Test Sol,2026-09-05T10:48:20.481+09:00,0.082
+call_HAvKIcYghHlNMmahx2FwCkLo,2,2026-09-05T01:48:28.309Z,js,execute_other,False,structured_exit_or_wrapper,472,2026-09-05T01:48:28.384Z,sol,Model Test Sol,2026-09-05T10:48:28.309+09:00,0.075
+call_jjVV3iWPm3GNtXW8IX26PifY,2,2026-09-05T01:48:33.218Z,exec,poll_wait,False,structured_exit_or_wrapper,477,2026-09-05T01:48:33.329Z,sol,Model Test Sol,2026-09-05T10:48:33.218+09:00,0.111
+call_AEFpKQz5hEt8nHi176t3qZED,2,2026-09-05T01:48:38.318Z,exec,visual_check,False,structured_exit_or_wrapper,484,2026-09-05T01:48:38.378Z,sol,Model Test Sol,2026-09-05T10:48:38.318+09:00,0.06
+call_uv2JOhnuZYoqBJHb3MPSA6gg,2,2026-09-05T01:49:47.572Z,exec,write_edit,False,structured_exit_or_wrapper,497,2026-09-05T01:49:47.638Z,sol,Model Test Sol,2026-09-05T10:49:47.572+09:00,0.066
+call_cPHjfgIJaCIN5Ha80CpZaeDs,2,2026-09-05T01:49:55.394Z,exec,test_command,False,structured_exit_or_wrapper,504,2026-09-05T01:49:56.567Z,sol,Model Test Sol,2026-09-05T10:49:55.394+09:00,1.173
+call_5OyIW9J6qGGQcT0YF7pdSgNJ,2,2026-09-05T01:49:59.884Z,exec,poll_wait,False,structured_exit_or_wrapper,510,2026-09-05T01:50:19.566Z,sol,Model Test Sol,2026-09-05T10:49:59.884+09:00,19.682
+call_uGr7Kopiq64U0JIWMvFQQ1Ax,2,2026-09-05T01:50:43.250Z,exec,test_command,False,structured_exit_or_wrapper,517,2026-09-05T01:50:43.448Z,sol,Model Test Sol,2026-09-05T10:50:43.250+09:00,0.198
+call_KsntbfVUuNzWl23lTy8qxwHS,2,2026-09-05T01:51:02.160Z,exec,test_command,True,structured_exit_or_wrapper,526,2026-09-05T01:51:02.216Z,sol,Model Test Sol,2026-09-05T10:51:02.160+09:00,0.056
+call_aG6XnYeenr1WDemdzMAkQ8aV,2,2026-09-05T01:51:57.367Z,exec,test_command,False,structured_exit_or_wrapper,538,2026-09-05T01:51:58.062Z,sol,Model Test Sol,2026-09-05T10:51:57.367+09:00,0.695
+call_V4TRZvtqCfe5hCP3Ef3vZuUD,2,2026-09-05T01:52:13.571Z,exec,test_command,False,structured_exit_or_wrapper,545,2026-09-05T01:52:13.671Z,sol,Model Test Sol,2026-09-05T10:52:13.571+09:00,0.1
+call_tATHKMxz2Ld74v0iyiG9Rt1g,2,2026-09-05T01:52:25.171Z,exec,execute_other,False,structured_exit_or_wrapper,554,2026-09-05T01:52:25.307Z,sol,Model Test Sol,2026-09-05T10:52:25.171+09:00,0.136
+call_HFl4JGd8ik3SxlveC4JJxB5c,2,2026-09-05T01:53:19.775Z,exec,write_edit,False,structured_exit_or_wrapper,567,2026-09-05T01:53:19.849Z,sol,Model Test Sol,2026-09-05T10:53:19.775+09:00,0.074
+call_Yfz8oUeUNi4glprepxHi93NI,2,2026-09-05T01:53:27.634Z,exec,environment_files,False,structured_exit_or_wrapper,574,2026-09-05T01:53:28.816Z,sol,Model Test Sol,2026-09-05T10:53:27.634+09:00,1.182
+call_0aOI0M00NxRZReh5NoiAtnXu,2,2026-09-05T01:53:32.517Z,exec,poll_wait,False,structured_exit_or_wrapper,580,2026-09-05T01:53:38.297Z,sol,Model Test Sol,2026-09-05T10:53:32.517+09:00,5.78
+call_CH6zJkZmKJVyWfVA5DFPc05J,2,2026-09-05T01:53:45.796Z,exec,test_command,False,structured_exit_or_wrapper,587,2026-09-05T01:53:46.975Z,sol,Model Test Sol,2026-09-05T10:53:45.796+09:00,1.179
+call_16Z7cGw2WnHkzIqlvbZ1L9Lr,2,2026-09-05T01:53:50.618Z,exec,poll_wait,False,structured_exit_or_wrapper,593,2026-09-05T01:54:20.625Z,sol,Model Test Sol,2026-09-05T10:53:50.618+09:00,30.007
+call_pkEYYypH0a2DMSGePRciFZjY,2,2026-09-05T01:54:23.728Z,exec,poll_wait,False,structured_exit_or_wrapper,600,2026-09-05T01:54:23.793Z,sol,Model Test Sol,2026-09-05T10:54:23.728+09:00,0.065
+call_g01232EnAAFF6TpJZAXAsH2a,2,2026-09-05T01:54:40.533Z,exec,test_command,False,structured_exit_or_wrapper,606,2026-09-05T01:54:41.123Z,sol,Model Test Sol,2026-09-05T10:54:40.533+09:00,0.59
+call_GGpcs4rzbcA7P6TUFfIyk5eV,2,2026-09-05T01:54:55.871Z,exec,test_command,False,structured_exit_or_wrapper,613,2026-09-05T01:54:56.020Z,sol,Model Test Sol,2026-09-05T10:54:55.871+09:00,0.149
+call_mL1p9BkFgGt6U2nihnRaDuNC,2,2026-09-05T01:55:57.772Z,exec,write_edit,False,structured_exit_or_wrapper,620,2026-09-05T01:55:58.840Z,sol,Model Test Sol,2026-09-05T10:55:57.772+09:00,1.068
+call_AkjgNHhK23krkWnMG9W0t5Ug,2,2026-09-05T01:56:15.600Z,exec,test_command,False,structured_exit_or_wrapper,627,2026-09-05T01:56:15.767Z,sol,Model Test Sol,2026-09-05T10:56:15.600+09:00,0.167
+call_SEPHUWGxPwkTSv1KCJIiRU0A,5,2026-09-05T02:30:30.992Z,exec,execute_other,False,structured_exit_or_wrapper,672,2026-09-05T02:30:31.083Z,sol,Model Test Sol,2026-09-05T11:30:30.992+09:00,0.091
+call_iwdBFLjJaDKt6MyD9lQYiz6S,5,2026-09-05T02:30:37.626Z,exec,write_edit,False,structured_exit_or_wrapper,679,2026-09-05T02:30:37.756Z,sol,Model Test Sol,2026-09-05T11:30:37.626+09:00,0.13
+call_IBpB0CpvsNtAVO97fTxt3ckT,5,2026-09-05T02:30:45.654Z,exec,read_inspect,False,structured_exit_or_wrapper,686,2026-09-05T02:30:45.797Z,sol,Model Test Sol,2026-09-05T11:30:45.654+09:00,0.143
+toolu_01CPW9bCUarzNLNZZNr6EzcC,1,2026-09-05T01:22:17.190Z,Bash,execute_other,False,tool_result.is_error,31,2026-09-05T01:22:17.575Z,opus,model-test-opus,2026-09-05T10:22:17.190+09:00,0.385
+toolu_017VMRnaHJNg913TMY1Ejv8r,1,2026-09-05T01:22:21.670Z,Bash,read_inspect,False,tool_result.is_error,35,2026-09-05T01:22:21.696Z,opus,model-test-opus,2026-09-05T10:22:21.670+09:00,0.026
+toolu_0199MERnXBDGo4FpFVwKvuGw,1,2026-09-05T01:22:29.024Z,Bash,read_inspect,False,tool_result.is_error,41,2026-09-05T01:22:29.064Z,opus,model-test-opus,2026-09-05T10:22:29.024+09:00,0.04
+toolu_017wSWQdtAvMqqs7wRzC8iFY,1,2026-09-05T01:22:32.746Z,Bash,read_inspect,False,tool_result.is_error,47,2026-09-05T01:22:32.783Z,opus,model-test-opus,2026-09-05T10:22:32.746+09:00,0.037
+toolu_01GEmSvcTpxZA35wdimThwNk,1,2026-09-05T01:22:37.095Z,Bash,read_inspect,False,tool_result.is_error,58,2026-09-05T01:22:37.136Z,opus,model-test-opus,2026-09-05T10:22:37.095+09:00,0.041
+toolu_01ABmocGQMQ6SCkNHV61STUL,1,2026-09-05T01:22:39.479Z,Bash,read_inspect,True,tool_result.is_error,61,2026-09-05T01:22:39.489Z,opus,model-test-opus,2026-09-05T10:22:39.479+09:00,0.01
+toolu_01EL91WVsh7XYW9TMYGJqzGc,1,2026-09-05T01:22:41.636Z,Bash,read_inspect,True,tool_result.is_error,65,2026-09-05T01:22:41.641Z,opus,model-test-opus,2026-09-05T10:22:41.636+09:00,0.005
+toolu_017evNXZC5W8ZDBmUug2vLJA,1,2026-09-05T01:22:45.480Z,Bash,execute_other,True,tool_result.is_error,69,2026-09-05T01:22:45.485Z,opus,model-test-opus,2026-09-05T10:22:45.480+09:00,0.005
+toolu_019nhXrUQEdvcK6KxkDio123,1,2026-09-05T01:22:49.221Z,Bash,read_inspect,True,tool_result.is_error,73,2026-09-05T01:22:49.228Z,opus,model-test-opus,2026-09-05T10:22:49.221+09:00,0.007
+toolu_016zuqbBihXGPjtYZLLHkeiY,1,2026-09-05T01:22:51.066Z,Read,read_inspect,True,tool_result.is_error,76,2026-09-05T01:22:51.070Z,opus,model-test-opus,2026-09-05T10:22:51.066+09:00,0.004
+toolu_019C66VL4eF8RTBxkFXiHBSP,1,2026-09-05T01:22:56.001Z,Bash,read_inspect,False,tool_result.is_error,80,2026-09-05T01:22:56.055Z,opus,model-test-opus,2026-09-05T10:22:56.001+09:00,0.054
+toolu_01XfXsmTdyd73Kq85Mdy7wJt,1,2026-09-05T01:22:58.367Z,Bash,read_inspect,False,tool_result.is_error,90,2026-09-05T01:22:58.418Z,opus,model-test-opus,2026-09-05T10:22:58.367+09:00,0.051
+toolu_013WbVGBgSKDHTuTW3MBBJwc,1,2026-09-05T01:23:06.452Z,Bash,read_inspect,False,tool_result.is_error,95,2026-09-05T01:23:06.486Z,opus,model-test-opus,2026-09-05T10:23:06.452+09:00,0.034
+toolu_01T5UVDYjxN94mUTn7TLoVSS,1,2026-09-05T01:23:11.569Z,Bash,environment_files,False,tool_result.is_error,99,2026-09-05T01:23:11.647Z,opus,model-test-opus,2026-09-05T10:23:11.569+09:00,0.078
+toolu_01XK74Qzd9kDJ8mPKW4zcFSC,1,2026-09-05T01:23:14.255Z,Bash,read_inspect,False,tool_result.is_error,102,2026-09-05T01:23:14.351Z,opus,model-test-opus,2026-09-05T10:23:14.255+09:00,0.096
+toolu_015EwF3KLqYx9JURrRaJ8YAk,1,2026-09-05T01:23:17.007Z,Bash,read_inspect,False,tool_result.is_error,112,2026-09-05T01:23:17.069Z,opus,model-test-opus,2026-09-05T10:23:17.007+09:00,0.062
+toolu_01K3NRxUPcqvguuk6pApFSQY,1,2026-09-05T01:23:45.965Z,Bash,read_inspect,False,tool_result.is_error,116,2026-09-05T01:23:46.255Z,opus,model-test-opus,2026-09-05T10:23:45.965+09:00,0.29
+toolu_01XyUJbSAnDoZqWZhtVtjb7B,1,2026-09-05T01:24:00.669Z,Bash,read_inspect,False,tool_result.is_error,120,2026-09-05T01:24:00.942Z,opus,model-test-opus,2026-09-05T10:24:00.669+09:00,0.273
+toolu_01VJDesjbD3e5M6W9skvnFoT,1,2026-09-05T01:24:22.146Z,Bash,read_inspect,False,tool_result.is_error,131,2026-09-05T01:24:22.419Z,opus,model-test-opus,2026-09-05T10:24:22.146+09:00,0.273
+toolu_014AREieVsfypNAYi6jLMust,1,2026-09-05T01:25:52.019Z,Bash,read_inspect,False,tool_result.is_error,142,2026-09-05T01:25:52.306Z,opus,model-test-opus,2026-09-05T10:25:52.019+09:00,0.287
+toolu_01BKWRRHybtYeYGTygXKstAw,1,2026-09-05T01:27:10.298Z,Bash,read_inspect,False,tool_result.is_error,154,2026-09-05T01:27:10.830Z,opus,model-test-opus,2026-09-05T10:27:10.298+09:00,0.532
+toolu_01V5UNkFQPbM7zXbnC4XfKh7,1,2026-09-05T01:27:29.768Z,Bash,read_inspect,False,tool_result.is_error,158,2026-09-05T01:27:30.269Z,opus,model-test-opus,2026-09-05T10:27:29.768+09:00,0.501
+toolu_013euaCaishjuTC43t18JPhh,1,2026-09-05T01:27:58.285Z,Bash,read_inspect,False,tool_result.is_error,169,2026-09-05T01:27:58.929Z,opus,model-test-opus,2026-09-05T10:27:58.285+09:00,0.644
+toolu_019uTHrRq52s5kyPaMyvMSRt,1,2026-09-05T01:28:30.466Z,Bash,read_inspect,False,tool_result.is_error,173,2026-09-05T01:28:36.620Z,opus,model-test-opus,2026-09-05T10:28:30.466+09:00,6.154
+toolu_01KjKSjWdjTrEZzt2Y5pkvsh,1,2026-09-05T01:33:08.616Z,Bash,read_inspect,False,tool_result.is_error,177,2026-09-05T01:33:08.890Z,opus,model-test-opus,2026-09-05T10:33:08.616+09:00,0.274
+toolu_017yA4v4j6kdYbB36GjZ11Ba,1,2026-09-05T01:34:20.987Z,Bash,environment_files,False,tool_result.is_error,191,2026-09-05T01:34:21.043Z,opus,model-test-opus,2026-09-05T10:34:20.987+09:00,0.056
+toolu_01JPbftzUKec5bzdcufHVJLt,1,2026-09-05T01:34:42.854Z,Write,write_edit,False,tool_result.is_error,195,2026-09-05T01:34:42.892Z,opus,model-test-opus,2026-09-05T10:34:42.854+09:00,0.038
+toolu_017QYfDhEZkVVPKTdHb25oAK,1,2026-09-05T01:34:57.991Z,Write,write_edit,False,tool_result.is_error,206,2026-09-05T01:34:58.026Z,opus,model-test-opus,2026-09-05T10:34:57.991+09:00,0.035
+toolu_01NTCCK75YavJjJXAZU6gZBq,1,2026-09-05T01:35:33.151Z,Write,write_edit,False,tool_result.is_error,211,2026-09-05T01:35:33.206Z,opus,model-test-opus,2026-09-05T10:35:33.151+09:00,0.055
+toolu_01JYMr5kruKm5sJYnpsgJNfB,1,2026-09-05T01:35:46.040Z,Edit,write_edit,False,tool_result.is_error,223,2026-09-05T01:35:46.076Z,opus,model-test-opus,2026-09-05T10:35:46.040+09:00,0.036
+toolu_01KDYtRwCAo9ne3nCCbcJaGp,1,2026-09-05T01:36:15.634Z,Write,write_edit,False,tool_result.is_error,227,2026-09-05T01:36:15.689Z,opus,model-test-opus,2026-09-05T10:36:15.634+09:00,0.055
+toolu_01CpuxHsGp2NwewNyyf4YkQ9,1,2026-09-05T01:36:47.060Z,Write,write_edit,False,tool_result.is_error,239,2026-09-05T01:36:47.115Z,opus,model-test-opus,2026-09-05T10:36:47.060+09:00,0.055
+toolu_0154bjh5iwaxFKsxEgqpEcSp,1,2026-09-05T01:37:39.822Z,Write,write_edit,False,tool_result.is_error,244,2026-09-05T01:37:39.880Z,opus,model-test-opus,2026-09-05T10:37:39.822+09:00,0.058
+toolu_01DuXKX88cLkrFjPxBph6grU,1,2026-09-05T01:38:16.185Z,Edit,write_edit,False,tool_result.is_error,255,2026-09-05T01:38:16.253Z,opus,model-test-opus,2026-09-05T10:38:16.185+09:00,0.068
+toolu_01DCzoWvKeo2mucsQN8xsQqS,1,2026-09-05T01:38:25.138Z,Edit,write_edit,False,tool_result.is_error,265,2026-09-05T01:38:25.180Z,opus,model-test-opus,2026-09-05T10:38:25.138+09:00,0.042
+toolu_016dvmz41y6a8GPSiyxMB9UC,1,2026-09-05T01:38:31.036Z,Edit,write_edit,False,tool_result.is_error,269,2026-09-05T01:38:31.076Z,opus,model-test-opus,2026-09-05T10:38:31.036+09:00,0.04
+toolu_01CsuLMtzbVyhQ6cx8FweR4v,1,2026-09-05T01:38:35.025Z,Edit,write_edit,False,tool_result.is_error,272,2026-09-05T01:38:35.069Z,opus,model-test-opus,2026-09-05T10:38:35.025+09:00,0.044
+toolu_01R9eFrY9euUpsFd14sTUJFV,1,2026-09-05T01:39:36.904Z,Write,write_edit,False,tool_result.is_error,277,2026-09-05T01:39:36.968Z,opus,model-test-opus,2026-09-05T10:39:36.904+09:00,0.064
+toolu_01FRxmoLBZNvV8uXYHX97EBs,1,2026-09-05T01:40:19.970Z,Bash,write_edit,False,tool_result.is_error,288,2026-09-05T01:40:20.076Z,opus,model-test-opus,2026-09-05T10:40:19.970+09:00,0.106
+toolu_01RLGTTtuopy7xXwjqMrfQe1,1,2026-09-05T01:42:36.721Z,Write,write_edit,False,tool_result.is_error,294,2026-09-05T01:42:36.797Z,opus,model-test-opus,2026-09-05T10:42:36.721+09:00,0.076
+toolu_01UQkRZF6VnTL5Ujk2pR2Zys,1,2026-09-05T01:42:41.572Z,Edit,write_edit,False,tool_result.is_error,305,2026-09-05T01:42:41.623Z,opus,model-test-opus,2026-09-05T10:42:41.572+09:00,0.051
+toolu_01FSfSPEYVRnXYNkdQjqPLNq,1,2026-09-05T01:42:44.646Z,Bash,write_edit,False,tool_result.is_error,308,2026-09-05T01:42:44.725Z,opus,model-test-opus,2026-09-05T10:42:44.646+09:00,0.079
+toolu_01FTZJ8stUoXb4tjq8cNEkj7,1,2026-09-05T01:42:49.103Z,Bash,environment_files,False,tool_result.is_error,320,2026-09-05T01:42:56.835Z,opus,model-test-opus,2026-09-05T10:42:49.103+09:00,7.732
+toolu_017KKPQBH3Xduf2dLRUgr9TN,1,2026-09-05T01:43:02.994Z,Bash,environment_files,False,tool_result.is_error,324,2026-09-05T01:43:03.054Z,opus,model-test-opus,2026-09-05T10:43:02.994+09:00,0.06
+toolu_01Dtr6YdXVjcYVe5obb5m17Q,1,2026-09-05T01:43:10.229Z,Bash,environment_files,False,tool_result.is_error,328,2026-09-05T01:43:16.413Z,opus,model-test-opus,2026-09-05T10:43:10.229+09:00,6.184
+toolu_016MVVypWdyvWaYbcLXmhCDz,1,2026-09-05T01:43:41.486Z,Bash,write_edit,False,tool_result.is_error,332,2026-09-05T01:44:19.207Z,opus,model-test-opus,2026-09-05T10:43:41.486+09:00,37.721
+toolu_01Hj4YbT4NcisUwZJjLtnByq,1,2026-09-05T01:45:30.221Z,Bash,write_edit,False,tool_result.is_error,344,2026-09-05T01:45:30.618Z,opus,model-test-opus,2026-09-05T10:45:30.221+09:00,0.397
+toolu_014c4nCQaxb4Z7UV6u3vZiPY,1,2026-09-05T01:47:08.369Z,Write,write_edit,False,tool_result.is_error,356,2026-09-05T01:47:08.456Z,opus,model-test-opus,2026-09-05T10:47:08.369+09:00,0.087
+toolu_017w3RKU3J4jsfiaGSegy4om,1,2026-09-05T01:47:18.711Z,Bash,environment_files,False,tool_result.is_error,366,2026-09-05T01:47:33.713Z,opus,model-test-opus,2026-09-05T10:47:18.711+09:00,15.002
+toolu_01YLpDMWnFh7rQnT7abGpqRJ,1,2026-09-05T01:48:15.203Z,Bash,environment_files,False,tool_result.is_error,370,2026-09-05T01:48:16.104Z,opus,model-test-opus,2026-09-05T10:48:15.203+09:00,0.901
+toolu_01QuZs5EZXxAYruZkQdbLciZ,1,2026-09-05T01:49:24.733Z,Bash,write_edit,False,tool_result.is_error,374,2026-09-05T01:49:39.059Z,opus,model-test-opus,2026-09-05T10:49:24.733+09:00,14.326
+toolu_01Xn6wQ518a9yNyA5bxB1bFg,1,2026-09-05T01:50:43.420Z,Bash,write_edit,False,tool_result.is_error,386,2026-09-05T01:50:43.527Z,opus,model-test-opus,2026-09-05T10:50:43.420+09:00,0.107
+toolu_01AxKnxe45Ua1RkQsEyxq7fG,1,2026-09-05T01:50:54.880Z,Bash,environment_files,False,tool_result.is_error,396,2026-09-05T01:51:10.418Z,opus,model-test-opus,2026-09-05T10:50:54.880+09:00,15.538
+toolu_01ReBivn9ztQAUetW43J6LMN,1,2026-09-05T01:52:02.103Z,Bash,write_edit,False,tool_result.is_error,400,2026-09-05T01:52:14.515Z,opus,model-test-opus,2026-09-05T10:52:02.103+09:00,12.412
+toolu_016rBnofao4ygfBRoja2WVSz,1,2026-09-05T01:52:43.516Z,Bash,write_edit,False,tool_result.is_error,411,2026-09-05T01:53:06.152Z,opus,model-test-opus,2026-09-05T10:52:43.516+09:00,22.636
+toolu_01Dvg4pQUVby8LPYknE7kzTF,1,2026-09-05T01:54:08.846Z,Write,write_edit,False,tool_result.is_error,416,2026-09-05T01:54:08.921Z,opus,model-test-opus,2026-09-05T10:54:08.846+09:00,0.075
+toolu_01URbAQHK4Wr4MYfbrQ3RAj1,1,2026-09-05T01:54:38.197Z,Write,write_edit,False,tool_result.is_error,428,2026-09-05T01:54:38.286Z,opus,model-test-opus,2026-09-05T10:54:38.197+09:00,0.089
+toolu_01MCShYcEDQ3NYJjtxHZrncA,1,2026-09-05T01:54:49.306Z,Bash,environment_files,False,tool_result.is_error,431,2026-09-05T01:55:10.853Z,opus,model-test-opus,2026-09-05T10:54:49.306+09:00,21.547
+toolu_01CzquKVXViu28hzRvUzub7B,1,2026-09-05T01:56:09.566Z,Edit,write_edit,False,tool_result.is_error,436,2026-09-05T01:56:09.674Z,opus,model-test-opus,2026-09-05T10:56:09.566+09:00,0.108
+toolu_011ZhFYfwr5g1ACNLJGqnzRV,1,2026-09-05T01:56:20.963Z,Bash,environment_files,False,tool_result.is_error,446,2026-09-05T01:56:42.779Z,opus,model-test-opus,2026-09-05T10:56:20.963+09:00,21.816
+toolu_01SuEkJFFhH1kk8Eh9d2uadd,1,2026-09-05T01:57:06.087Z,Bash,environment_files,False,tool_result.is_error,450,2026-09-05T01:57:19.455Z,opus,model-test-opus,2026-09-05T10:57:06.087+09:00,13.368
+toolu_01CZNgmU8LPs88yd9pP5KhER,1,2026-09-05T01:58:21.464Z,Bash,write_edit,False,tool_result.is_error,455,2026-09-05T01:58:21.617Z,opus,model-test-opus,2026-09-05T10:58:21.464+09:00,0.153
+toolu_01D2W8Bzb5FZsxVJdFpXiPV9,1,2026-09-05T01:58:35.274Z,Bash,environment_files,False,tool_result.is_error,466,2026-09-05T01:59:03.391Z,opus,model-test-opus,2026-09-05T10:58:35.274+09:00,28.117
+toolu_01Vdm1T5Po8ffu3QG9L4e8Rz,1,2026-09-05T02:00:05.067Z,Bash,environment_files,False,tool_result.is_error,470,2026-09-05T02:00:30.403Z,opus,model-test-opus,2026-09-05T11:00:05.067+09:00,25.336
+toolu_01DYY9DLcALDwEQsVnsA5ZbT,1,2026-09-05T02:01:18.691Z,Bash,write_edit,False,tool_result.is_error,481,2026-09-05T02:01:19.072Z,opus,model-test-opus,2026-09-05T11:01:18.691+09:00,0.381
+toolu_0122rvhdCBpekvpBt9ckeEGQ,1,2026-09-05T02:02:03.656Z,Write,write_edit,False,tool_result.is_error,486,2026-09-05T02:02:03.768Z,opus,model-test-opus,2026-09-05T11:02:03.656+09:00,0.112
+toolu_01LLChU88adQTp9PdGXT7y4u,1,2026-09-05T02:02:40.640Z,Bash,write_edit,False,tool_result.is_error,497,2026-09-05T02:02:40.995Z,opus,model-test-opus,2026-09-05T11:02:40.640+09:00,0.355
+toolu_01ASu7DQzX216VUVyegSkA7x,1,2026-09-05T02:03:56.045Z,Write,write_edit,False,tool_result.is_error,503,2026-09-05T02:03:56.160Z,opus,model-test-opus,2026-09-05T11:03:56.045+09:00,0.115
+toolu_01YCcmeM5VAagRKJsLWKBuJX,1,2026-09-05T02:04:04.751Z,Bash,environment_files,False,tool_result.is_error,514,2026-09-05T02:04:55.320Z,opus,model-test-opus,2026-09-05T11:04:04.751+09:00,50.569
+toolu_01SJn8W3gkLtEJHsCguiA3BU,1,2026-09-05T02:06:31.859Z,Bash,write_edit,False,tool_result.is_error,519,2026-09-05T02:06:58.208Z,opus,model-test-opus,2026-09-05T11:06:31.859+09:00,26.349
+toolu_01YKb7Ara3yn6bkYavUjYo2x,1,2026-09-05T02:07:24.703Z,Bash,environment_files,False,tool_result.is_error,531,2026-09-05T02:07:25.656Z,opus,model-test-opus,2026-09-05T11:07:24.703+09:00,0.953
+toolu_01BK4VLmTKZbVuGNMQJhMVrN,1,2026-09-05T02:08:32.215Z,Bash,write_edit,False,tool_result.is_error,536,2026-09-05T02:08:33.008Z,opus,model-test-opus,2026-09-05T11:08:32.215+09:00,0.793
+toolu_01NdkRCT5spKpvvaVaLftorH,1,2026-09-05T02:08:45.424Z,Bash,environment_files,False,tool_result.is_error,547,2026-09-05T02:09:18.130Z,opus,model-test-opus,2026-09-05T11:08:45.424+09:00,32.706
+toolu_01ExXnuRcJE5R3LszGUCw3N9,1,2026-09-05T02:10:15.126Z,Bash,write_edit,False,tool_result.is_error,551,2026-09-05T02:10:47.600Z,opus,model-test-opus,2026-09-05T11:10:15.126+09:00,32.474
+toolu_011YB1DSmxaTKVA3x9Vu27jT,1,2026-09-05T02:11:30.231Z,Bash,write_edit,False,tool_result.is_error,555,2026-09-05T02:12:05.236Z,opus,model-test-opus,2026-09-05T11:11:30.231+09:00,35.005
+toolu_019ekie4fsntAg3Awn8ZE3GH,1,2026-09-05T02:12:50.234Z,Bash,write_edit,False,tool_result.is_error,566,2026-09-05T02:13:24.706Z,opus,model-test-opus,2026-09-05T11:12:50.234+09:00,34.472
+toolu_015sZUEXGjFqeY6bhHUS9QXj,1,2026-09-05T02:13:58.511Z,Bash,write_edit,False,tool_result.is_error,570,2026-09-05T02:14:43.756Z,opus,model-test-opus,2026-09-05T11:13:58.511+09:00,45.245
+toolu_01XY5KCu9prmZFGPdo7Lio7B,1,2026-09-05T02:15:10.461Z,Bash,write_edit,False,tool_result.is_error,581,2026-09-05T02:15:55.138Z,opus,model-test-opus,2026-09-05T11:15:10.461+09:00,44.677
+toolu_01WBLYguEG5PtnP3NaHhxcRK,1,2026-09-05T02:16:22.449Z,Write,write_edit,False,tool_result.is_error,587,2026-09-05T02:16:22.496Z,opus,model-test-opus,2026-09-05T11:16:22.449+09:00,0.047
+toolu_018Fb7j3fNZK9H9DCFBM4dVQ,1,2026-09-05T02:17:10.412Z,Write,write_edit,False,tool_result.is_error,597,2026-09-05T02:17:10.525Z,opus,model-test-opus,2026-09-05T11:17:10.412+09:00,0.113
+toolu_0178LZg9sdA8Sr6YcZkVuPae,1,2026-09-05T02:19:21.541Z,Write,write_edit,False,tool_result.is_error,602,2026-09-05T02:19:21.652Z,opus,model-test-opus,2026-09-05T11:19:21.541+09:00,0.111
+toolu_01NFy3QkdLe1mZiNzcdoJt5P,1,2026-09-05T02:19:44.694Z,Write,write_edit,False,tool_result.is_error,615,2026-09-05T02:19:44.781Z,opus,model-test-opus,2026-09-05T11:19:44.694+09:00,0.087
+toolu_0164BFEfPr9JKamTZ7EpQXkG,1,2026-09-05T02:19:48.418Z,Bash,environment_files,False,tool_result.is_error,618,2026-09-05T02:20:32.653Z,opus,model-test-opus,2026-09-05T11:19:48.418+09:00,44.235
+toolu_01AcLWigg5MZt3xtpSoup6Xa,1,2026-09-05T02:20:35.869Z,Bash,execute_other,False,tool_result.is_error,622,2026-09-05T02:20:35.971Z,opus,model-test-opus,2026-09-05T11:20:35.869+09:00,0.102
+toolu_01AtG8CAep3mxN2yE4oRKbMb,1,2026-09-05T02:20:37.655Z,Read,read_inspect,False,tool_result.is_error,632,2026-09-05T02:20:37.740Z,opus,model-test-opus,2026-09-05T11:20:37.655+09:00,0.085
+toolu_01CcwTVmgnGiiXqFmQhR3Ne5,1,2026-09-05T02:20:41.167Z,Read,read_inspect,False,tool_result.is_error,643,2026-09-05T02:20:41.198Z,opus,model-test-opus,2026-09-05T11:20:41.167+09:00,0.031
+toolu_01RwkkuYDptjfEBqteBqZdAb,1,2026-09-05T02:20:45.657Z,Read,read_inspect,False,tool_result.is_error,654,2026-09-05T02:20:45.694Z,opus,model-test-opus,2026-09-05T11:20:45.657+09:00,0.037
+toolu_01UVZHyk6pUYdgVzYtKLnErn,1,2026-09-05T02:20:50.895Z,Read,read_inspect,False,tool_result.is_error,665,2026-09-05T02:20:50.906Z,opus,model-test-opus,2026-09-05T11:20:50.895+09:00,0.011
+toolu_01LqVSwS5rE87dP2QrzyAokT,1,2026-09-05T02:21:04.913Z,Bash,environment_files,False,tool_result.is_error,676,2026-09-05T02:21:05.256Z,opus,model-test-opus,2026-09-05T11:21:04.913+09:00,0.343
+toolu_011BBdtfm9M2dNFswVTUoEWN,1,2026-09-05T02:21:15.749Z,Bash,environment_files,False,tool_result.is_error,680,2026-09-05T02:21:59.575Z,opus,model-test-opus,2026-09-05T11:21:15.749+09:00,43.826
+toolu_01A982N857imtSY1D2cEEnuk,1,2026-09-05T02:22:04.928Z,Read,read_inspect,False,tool_result.is_error,684,2026-09-05T02:22:04.971Z,opus,model-test-opus,2026-09-05T11:22:04.928+09:00,0.043
+toolu_013ZFYsKWkNzwSGprumx8DKH,1,2026-09-05T02:22:09.231Z,Read,read_inspect,False,tool_result.is_error,695,2026-09-05T02:22:09.241Z,opus,model-test-opus,2026-09-05T11:22:09.231+09:00,0.01
+toolu_01Rm7V4Z2r6fohcbwKm4m6uM,1,2026-09-05T02:22:11.799Z,Read,read_inspect,False,tool_result.is_error,705,2026-09-05T02:22:11.830Z,opus,model-test-opus,2026-09-05T11:22:11.799+09:00,0.031
+toolu_017skyeceekJUTGJfcbPwChg,1,2026-09-05T02:22:23.348Z,Bash,write_edit,False,tool_result.is_error,716,2026-09-05T02:22:23.459Z,opus,model-test-opus,2026-09-05T11:22:23.348+09:00,0.111
+toolu_01RNTdJLrsrnuCtUdL5jHtwR,1,2026-09-05T02:23:06.392Z,Write,write_edit,False,tool_result.is_error,723,2026-09-05T02:23:06.476Z,opus,model-test-opus,2026-09-05T11:23:06.392+09:00,0.084
+toolu_01HQXZDgcekYk98nPwZkVpeM,1,2026-09-05T02:23:22.104Z,Write,write_edit,False,tool_result.is_error,734,2026-09-05T02:23:22.196Z,opus,model-test-opus,2026-09-05T11:23:22.104+09:00,0.092
+toolu_0129QAjEjcaoXqFbwq9euqBd,1,2026-09-05T02:23:52.576Z,Write,write_edit,False,tool_result.is_error,737,2026-09-05T02:23:52.692Z,opus,model-test-opus,2026-09-05T11:23:52.576+09:00,0.116
+toolu_01928GpnW9T6RZk9qqrZDqHh,1,2026-09-05T02:23:55.430Z,Bash,test_command,False,tool_result.is_error,741,2026-09-05T02:23:55.540Z,opus,model-test-opus,2026-09-05T11:23:55.430+09:00,0.11
+toolu_01JjKToCRrfWeZRJccb8ocwN,1,2026-09-05T02:24:01.344Z,Bash,test_command,False,tool_result.is_error,745,2026-09-05T02:24:01.434Z,opus,model-test-opus,2026-09-05T11:24:01.344+09:00,0.09
+toolu_018CM2EW4otTCWtmSTqGgHFz,1,2026-09-05T02:24:06.145Z,Bash,test_command,False,tool_result.is_error,756,2026-09-05T02:24:06.588Z,opus,model-test-opus,2026-09-05T11:24:06.145+09:00,0.443
+toolu_01KCK2JpUJ27j4EXKHFrbQwn,1,2026-09-05T02:24:36.660Z,Write,write_edit,False,tool_result.is_error,761,2026-09-05T02:24:36.749Z,opus,model-test-opus,2026-09-05T11:24:36.660+09:00,0.089
+toolu_01ActyqgoAmo5V975GQ9Gt4V,1,2026-09-05T02:24:38.975Z,Bash,test_command,False,tool_result.is_error,764,2026-09-05T02:24:39.474Z,opus,model-test-opus,2026-09-05T11:24:38.975+09:00,0.499
+toolu_01TGqzndo6WF6EvCmr63dXpK,1,2026-09-05T02:25:09.797Z,Bash,test_command,False,tool_result.is_error,768,2026-09-05T02:25:10.323Z,opus,model-test-opus,2026-09-05T11:25:09.797+09:00,0.526
+toolu_01PXbTM2PzcPTeRTi1fzrJJV,1,2026-09-05T02:25:19.277Z,Bash,environment_files,False,tool_result.is_error,781,2026-09-05T02:25:19.820Z,opus,model-test-opus,2026-09-05T11:25:19.277+09:00,0.543
+toolu_01NUV4HsjCPFdDjsBogM7U5g,1,2026-09-05T02:25:47.292Z,Bash,test_command,False,tool_result.is_error,785,2026-09-05T02:25:47.810Z,opus,model-test-opus,2026-09-05T11:25:47.292+09:00,0.518
+toolu_01JQAdFyxjegZaw1WkgkpbCv,1,2026-09-05T02:26:37.191Z,Write,write_edit,False,tool_result.is_error,788,2026-09-05T02:26:37.297Z,opus,model-test-opus,2026-09-05T11:26:37.191+09:00,0.106
+toolu_01Nz3nTk5uCdN4fDVDSqyHTD,1,2026-09-05T02:26:39.867Z,Bash,test_command,False,tool_result.is_error,799,2026-09-05T02:26:40.606Z,opus,model-test-opus,2026-09-05T11:26:39.867+09:00,0.739
+toolu_01Gh2hZr4pSht98jBA3Zw7wP,1,2026-09-05T02:26:57.269Z,Bash,environment_files,False,tool_result.is_error,803,2026-09-05T02:26:57.738Z,opus,model-test-opus,2026-09-05T11:26:57.269+09:00,0.469
+toolu_018d9NSShMUHhnQxsGgQebzr,1,2026-09-05T02:27:28.352Z,Bash,test_command,False,tool_result.is_error,807,2026-09-05T02:27:29.288Z,opus,model-test-opus,2026-09-05T11:27:28.352+09:00,0.936
+toolu_01AtoVe8E4S2D32T5JFUqCfy,1,2026-09-05T02:28:09.820Z,Write,write_edit,False,tool_result.is_error,820,2026-09-05T02:28:09.909Z,opus,model-test-opus,2026-09-05T11:28:09.820+09:00,0.089
+toolu_012RcWtzUUR9h9r4nyC2sxHE,1,2026-09-05T02:28:12.246Z,Bash,test_command,False,tool_result.is_error,823,2026-09-05T02:28:14.065Z,opus,model-test-opus,2026-09-05T11:28:12.246+09:00,1.819
+toolu_01SeuwLCDmsdrF9oZDxHV83V,1,2026-09-05T02:28:32.589Z,Bash,test_command,False,tool_result.is_error,827,2026-09-05T02:28:34.454Z,opus,model-test-opus,2026-09-05T11:28:32.589+09:00,1.865
+toolu_01RV3zn7ET6jvYfVM7ARvs7o,1,2026-09-05T02:28:52.250Z,Bash,test_command,False,tool_result.is_error,839,2026-09-05T02:28:54.107Z,opus,model-test-opus,2026-09-05T11:28:52.250+09:00,1.857
+toolu_012po4XFomZyx1if7a8qcPe8,1,2026-09-05T02:29:29.668Z,Write,write_edit,False,tool_result.is_error,842,2026-09-05T02:29:29.781Z,opus,model-test-opus,2026-09-05T11:29:29.668+09:00,0.113
+toolu_01GKrEmzbdUAkf9mvkqYe3ZV,1,2026-09-05T01:22:17.615Z,Bash,execute_other,False,tool_result.is_error,32,2026-09-05T01:22:17.925Z,fable,model-test-fable,2026-09-05T10:22:17.615+09:00,0.31
+toolu_01N2JDDeoFuUjdcT4GSEmJjf,1,2026-09-05T01:22:22.147Z,Bash,read_inspect,False,tool_result.is_error,38,2026-09-05T01:22:22.163Z,fable,model-test-fable,2026-09-05T10:22:22.147+09:00,0.016
+toolu_015kRpADErUJmi54ZsvW7zYE,1,2026-09-05T01:22:23.313Z,Bash,read_inspect,False,tool_result.is_error,41,2026-09-05T01:22:23.374Z,fable,model-test-fable,2026-09-05T10:22:23.313+09:00,0.061
+toolu_01X7cJgBXXes2ufgpdLwZz7N,1,2026-09-05T01:22:38.702Z,Bash,read_inspect,False,tool_result.is_error,55,2026-09-05T01:22:38.737Z,fable,model-test-fable,2026-09-05T10:22:38.702+09:00,0.035
+toolu_018ShkxyVMF41pqX384ox6z8,1,2026-09-05T01:22:40.704Z,Bash,read_inspect,False,tool_result.is_error,58,2026-09-05T01:22:40.785Z,fable,model-test-fable,2026-09-05T10:22:40.704+09:00,0.081
+toolu_01GvYprHEfdyVQgXmu9DiG8G,1,2026-09-05T01:22:41.956Z,Bash,read_inspect,False,tool_result.is_error,61,2026-09-05T01:22:42.018Z,fable,model-test-fable,2026-09-05T10:22:41.956+09:00,0.062
+toolu_0163pkoYE6RpbMxMRtupGNL8,1,2026-09-05T01:22:43.469Z,Bash,read_inspect,False,tool_result.is_error,64,2026-09-05T01:22:43.571Z,fable,model-test-fable,2026-09-05T10:22:43.469+09:00,0.102
+toolu_01TYdBSfJfd8B3HNbAgCVqxN,1,2026-09-05T01:22:51.301Z,Bash,read_inspect,False,tool_result.is_error,79,2026-09-05T01:22:51.365Z,fable,model-test-fable,2026-09-05T10:22:51.301+09:00,0.064
+toolu_016ggxQvoSbw5qNHmQwuNpEr,1,2026-09-05T01:22:52.086Z,Bash,read_inspect,True,tool_result.is_error,81,2026-09-05T01:22:52.093Z,fable,model-test-fable,2026-09-05T10:22:52.086+09:00,0.007
+toolu_01AcgXz8FX3Vdc3GbxaqMU6W,1,2026-09-05T01:23:14.775Z,Bash,environment_files,False,tool_result.is_error,87,2026-09-05T01:23:14.830Z,fable,model-test-fable,2026-09-05T10:23:14.775+09:00,0.055
+toolu_01FCMcbm2HFiSbBEUK2WWphM,1,2026-09-05T01:23:20.762Z,Bash,read_inspect,False,tool_result.is_error,90,2026-09-05T01:23:22.089Z,fable,model-test-fable,2026-09-05T10:23:20.762+09:00,1.327
+toolu_0134BsX9UdckjtuP8TcWSyiX,1,2026-09-05T01:23:32.543Z,Bash,read_inspect,False,tool_result.is_error,103,2026-09-05T01:23:32.831Z,fable,model-test-fable,2026-09-05T10:23:32.543+09:00,0.288
+toolu_01HkVjJB8diM5cdjfmwyfKQZ,1,2026-09-05T01:27:00.832Z,Bash,write_edit,False,tool_result.is_error,117,2026-09-05T01:27:01.934Z,fable,model-test-fable,2026-09-05T10:27:00.832+09:00,1.102
+toolu_01P7FC3RVSVTFrkzqdDBd8HM,1,2026-09-05T01:28:50.711Z,Bash,write_edit,False,tool_result.is_error,130,2026-09-05T01:28:51.264Z,fable,model-test-fable,2026-09-05T10:28:50.711+09:00,0.553
+toolu_014XqKpbQUfVkK1Bx2Ydw3GE,1,2026-09-05T01:36:19.013Z,Bash,test_command,False,tool_result.is_error,144,2026-09-05T01:36:27.686Z,fable,model-test-fable,2026-09-05T10:36:19.013+09:00,8.673
+toolu_013TxfYjSvXn2N5LenXLHWB5,1,2026-09-05T01:37:09.983Z,Bash,write_edit,False,tool_result.is_error,157,2026-09-05T01:37:10.034Z,fable,model-test-fable,2026-09-05T10:37:09.983+09:00,0.051
+toolu_018E5ajfjNy1RzK8VMiv1iTH,1,2026-09-05T01:39:04.621Z,Bash,write_edit,False,tool_result.is_error,164,2026-09-05T01:39:04.687Z,fable,model-test-fable,2026-09-05T10:39:04.621+09:00,0.066
+toolu_017XFNL6f42ssyg4YZWmmeXo,1,2026-09-05T01:39:22.847Z,Bash,environment_files,False,tool_result.is_error,176,2026-09-05T01:39:29.080Z,fable,model-test-fable,2026-09-05T10:39:22.847+09:00,6.233
+toolu_01PyWgjAs1VovpUBuapY5vYX,1,2026-09-05T01:42:01.579Z,Bash,write_edit,False,tool_result.is_error,182,2026-09-05T01:42:01.852Z,fable,model-test-fable,2026-09-05T10:42:01.579+09:00,0.273
+toolu_017pqRSWJKgyKF9V5Y2otFEa,1,2026-09-05T01:43:48.062Z,Bash,write_edit,False,tool_result.is_error,196,2026-09-05T01:43:48.125Z,fable,model-test-fable,2026-09-05T10:43:48.062+09:00,0.063
+toolu_01MiBVjsBqF5iPKDPrz2Lr3J,1,2026-09-05T01:44:53.869Z,Bash,write_edit,False,tool_result.is_error,208,2026-09-05T01:44:55.173Z,fable,model-test-fable,2026-09-05T10:44:53.869+09:00,1.304
+toolu_01H7MRPfAsQJdXF7Pjufqoe7,1,2026-09-05T01:46:31.532Z,Bash,write_edit,False,tool_result.is_error,222,2026-09-05T01:46:32.847Z,fable,model-test-fable,2026-09-05T10:46:31.532+09:00,1.315
+toolu_01CaR5GbKwshhq33C2aL3Z3V,1,2026-09-05T01:49:13.788Z,Bash,write_edit,False,tool_result.is_error,237,2026-09-05T01:49:15.387Z,fable,model-test-fable,2026-09-05T10:49:13.788+09:00,1.599
+toolu_01G3LeRrt7ZthkcYQ8ugsYqJ,1,2026-09-05T01:51:18.072Z,Bash,write_edit,False,tool_result.is_error,250,2026-09-05T01:51:19.668Z,fable,model-test-fable,2026-09-05T10:51:18.072+09:00,1.596
+toolu_01FBzgQyKg2aWc5cc65wEbYc,1,2026-09-05T01:52:48.715Z,Bash,write_edit,False,tool_result.is_error,263,2026-09-05T01:52:58.020Z,fable,model-test-fable,2026-09-05T10:52:48.715+09:00,9.305
+toolu_016k6LJ6qAgJD3Sb4vyzMLaH,1,2026-09-05T01:55:30.725Z,Bash,write_edit,False,tool_result.is_error,277,2026-09-05T01:55:30.826Z,fable,model-test-fable,2026-09-05T10:55:30.725+09:00,0.101
+toolu_01UdwVB5YzzU3GCYiZAs4ESn,1,2026-09-05T01:57:19.557Z,Bash,write_edit,False,tool_result.is_error,289,2026-09-05T01:57:19.603Z,fable,model-test-fable,2026-09-05T10:57:19.557+09:00,0.046
+toolu_01MqGpUuzz1ys67gX2Fgietz,1,2026-09-05T01:59:01.799Z,Bash,write_edit,False,tool_result.is_error,303,2026-09-05T01:59:01.838Z,fable,model-test-fable,2026-09-05T10:59:01.799+09:00,0.039
+toolu_01WMWipzoRZHTceM8UbDgj8k,1,2026-09-05T02:01:35.222Z,Bash,write_edit,False,tool_result.is_error,315,2026-09-05T02:01:44.844Z,fable,model-test-fable,2026-09-05T11:01:35.222+09:00,9.622
+toolu_0172Z2PBZ38L4WGEYHFZLobX,1,2026-09-05T02:02:15.632Z,Bash,environment_files,False,tool_result.is_error,329,2026-09-05T02:02:15.920Z,fable,model-test-fable,2026-09-05T11:02:15.632+09:00,0.288
+toolu_01SkWcCxBDCDgdb4oyE7FWoz,1,2026-09-05T02:02:16.318Z,Read,read_inspect,False,tool_result.is_error,332,2026-09-05T02:02:16.358Z,fable,model-test-fable,2026-09-05T11:02:16.318+09:00,0.04
+toolu_01VUHGYkdB3N72kxryRsZXWg,1,2026-09-05T02:02:17.006Z,Read,read_inspect,False,tool_result.is_error,334,2026-09-05T02:02:17.040Z,fable,model-test-fable,2026-09-05T11:02:17.006+09:00,0.034
+toolu_01QqmmjmuaJWVaEyfMYsstWB,1,2026-09-05T02:02:17.702Z,Read,read_inspect,False,tool_result.is_error,336,2026-09-05T02:02:17.734Z,fable,model-test-fable,2026-09-05T11:02:17.702+09:00,0.032
+toolu_01SM7Dz2k23v5Lrpej2i3bqy,1,2026-09-05T02:02:18.442Z,Read,read_inspect,False,tool_result.is_error,338,2026-09-05T02:02:18.476Z,fable,model-test-fable,2026-09-05T11:02:18.442+09:00,0.034
+toolu_01GjqFtQhJvBYiLvjDNwBuvv,1,2026-09-05T02:02:19.131Z,Read,read_inspect,False,tool_result.is_error,340,2026-09-05T02:02:19.165Z,fable,model-test-fable,2026-09-05T11:02:19.131+09:00,0.034
+toolu_01Sf7sPYYbrcXz6VaX7xUgDU,1,2026-09-05T02:02:19.891Z,Read,read_inspect,False,tool_result.is_error,342,2026-09-05T02:02:19.917Z,fable,model-test-fable,2026-09-05T11:02:19.891+09:00,0.026
+toolu_014nXukGQSKxnncFdA7jaF9H,1,2026-09-05T02:02:20.446Z,Read,read_inspect,False,tool_result.is_error,344,2026-09-05T02:02:20.465Z,fable,model-test-fable,2026-09-05T11:02:20.446+09:00,0.019
+toolu_012xskTA9B9YYSQTVvKJMdjh,1,2026-09-05T02:05:10.523Z,Bash,write_edit,True,tool_result.is_error,357,2026-09-05T02:05:10.626Z,fable,model-test-fable,2026-09-05T11:05:10.523+09:00,0.103
+toolu_01BeGEcdUPY8Hw4DSpdwrLAh,1,2026-09-05T02:06:25.906Z,Bash,write_edit,False,tool_result.is_error,369,2026-09-05T02:06:35.103Z,fable,model-test-fable,2026-09-05T11:06:25.906+09:00,9.197
+toolu_01686ZMVfqup5SQwNAWujkZR,1,2026-09-05T02:08:08.900Z,Bash,test_command,False,tool_result.is_error,382,2026-09-05T02:08:09.015Z,fable,model-test-fable,2026-09-05T11:08:08.900+09:00,0.115
+toolu_01TVgyN5PJ9nQRh5oJmAtmid,1,2026-09-05T02:09:47.321Z,Bash,test_command,False,tool_result.is_error,387,2026-09-05T02:10:04.061Z,fable,model-test-fable,2026-09-05T11:09:47.321+09:00,16.74
+toolu_01BGtxd6bbmNip5CArNsGrZc,1,2026-09-05T02:10:18.980Z,Bash,test_command,False,tool_result.is_error,400,2026-09-05T02:10:19.544Z,fable,model-test-fable,2026-09-05T11:10:18.980+09:00,0.564
+toolu_01MGjjzukH7QAodXAguM6GtY,1,2026-09-05T02:10:57.054Z,Bash,test_command,False,tool_result.is_error,408,2026-09-05T02:11:31.797Z,fable,model-test-fable,2026-09-05T11:10:57.054+09:00,34.743
+toolu_01F5Gzexhfyn9buZHiPW9MPY,1,2026-09-05T02:13:10.687Z,Bash,test_command,False,tool_result.is_error,421,2026-09-05T02:13:11.129Z,fable,model-test-fable,2026-09-05T11:13:10.687+09:00,0.442
+toolu_012Ko88UJoNrgWaRANNachyF,1,2026-09-05T02:13:11.732Z,ToolSearch,tool_discovery,False,tool_result.is_error,424,2026-09-05T02:13:11.734Z,fable,model-test-fable,2026-09-05T11:13:11.732+09:00,0.002
+toolu_01P6nPL9exDwztsNwaEni6Aj,1,2026-09-05T02:13:27.533Z,Bash,test_command,False,tool_result.is_error,429,2026-09-05T02:13:52.882Z,fable,model-test-fable,2026-09-05T11:13:27.533+09:00,25.349
+toolu_012TooqLcHT5kbsANV7iNNrn,1,2026-09-05T02:13:27.961Z,mcp__claude-in-chrome__navigate,visual_check,True,tool_result.is_error,430,2026-09-05T02:13:52.883Z,fable,model-test-fable,2026-09-05T11:13:27.961+09:00,24.922
+toolu_01MtYSD8Mc9zDtndA4wkuQ6f,1,2026-09-05T02:14:03.986Z,Bash,environment_files,False,tool_result.is_error,444,2026-09-05T02:14:03.998Z,fable,model-test-fable,2026-09-05T11:14:03.986+09:00,0.012
+toolu_012wRJZjeKbC1NKD3gxNAY7h,1,2026-09-05T02:14:06.411Z,mcp__claude-in-chrome__navigate,visual_check,False,tool_result.is_error,448,2026-09-05T02:14:13.486Z,fable,model-test-fable,2026-09-05T11:14:06.411+09:00,7.075
+toolu_01FdZ7AEVpNwNFXv5KPVFdBm,1,2026-09-05T02:14:19.629Z,mcp__claude-in-chrome__computer,visual_check,False,tool_result.is_error,455,2026-09-05T02:14:20.465Z,fable,model-test-fable,2026-09-05T11:14:19.629+09:00,0.836
+toolu_012tQvRrRwKGcNDdi1DSXyev,1,2026-09-05T02:14:19.635Z,ToolSearch,tool_discovery,False,tool_result.is_error,456,2026-09-05T02:14:20.467Z,fable,model-test-fable,2026-09-05T11:14:19.635+09:00,0.832
+toolu_01XweUSs31KqC927yxbtPP2k,1,2026-09-05T02:14:29.808Z,mcp__claude-in-chrome__browser_batch,visual_check,False,tool_result.is_error,469,2026-09-05T02:14:33.038Z,fable,model-test-fable,2026-09-05T11:14:29.808+09:00,3.23
+toolu_016tkyvnEZWkR8ijgdYtiJJ9,1,2026-09-05T02:15:01.399Z,Bash,write_edit,False,tool_result.is_error,482,2026-09-05T02:15:10.434Z,fable,model-test-fable,2026-09-05T11:15:01.399+09:00,9.035
+toolu_01MZnhEhmuJNjsWxZGukJHgH,1,2026-09-05T02:15:04.417Z,mcp__claude-in-chrome__browser_batch,visual_check,False,tool_result.is_error,483,2026-09-05T02:15:12.889Z,fable,model-test-fable,2026-09-05T11:15:04.417+09:00,8.472
+toolu_013bcusRAa6kA6z1HTfvMkBp,1,2026-09-05T02:15:27.636Z,Bash,write_edit,False,tool_result.is_error,496,2026-09-05T02:15:27.666Z,fable,model-test-fable,2026-09-05T11:15:27.636+09:00,0.03
+toolu_017zHMeUmGChxatdW3PrgCsq,1,2026-09-05T02:15:31.520Z,mcp__claude-in-chrome__browser_batch,visual_check,False,tool_result.is_error,498,2026-09-05T02:15:37.170Z,fable,model-test-fable,2026-09-05T11:15:31.520+09:00,5.65
+toolu_019pEEDkKEhD5MgimNq1UnSS,1,2026-09-05T02:16:20.596Z,Bash,test_command,False,tool_result.is_error,511,2026-09-05T02:16:46.186Z,fable,model-test-fable,2026-09-05T11:16:20.596+09:00,25.59
+toolu_01TCjAfVpHp9b5GE2YXCsRos,1,2026-09-05T02:16:20.648Z,mcp__claude-in-chrome__tabs_close_mcp,execute_other,False,tool_result.is_error,512,2026-09-05T02:16:46.789Z,fable,model-test-fable,2026-09-05T11:16:20.648+09:00,26.141
+toolu_019mspg7BaXfZ1qKNLgsnCDR,1,2026-09-05T02:17:46.788Z,Bash,test_command,False,tool_result.is_error,520,2026-09-05T02:17:47.155Z,fable,model-test-fable,2026-09-05T11:17:46.788+09:00,0.367

@@ -1,0 +1,121 @@
+{
+  "astra": {
+    "returncode": 0,
+    "stdout": ".............................................                            [100%]\n45 passed in 11.52s\n",
+    "stderr": "",
+    "wall_time_seconds": 17.993783292000444,
+    "timed_out": false,
+    "started_utc": "2026-09-05T05:19:33.146879+00:00",
+    "command": [
+      "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "candidate": "results/astra"
+  },
+  "sol": {
+    "returncode": 0,
+    "stdout": "....................                                                     [100%]\n20 passed in 11.01s\n",
+    "stderr": "",
+    "wall_time_seconds": 11.268189250000432,
+    "timed_out": false,
+    "started_utc": "2026-09-05T05:19:32.976504+00:00",
+    "command": [
+      "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "candidate": "output/sol"
+  },
+  "opus": {
+    "returncode": 0,
+    "stdout": "........................................................................ [ 35%]\n........................................................................ [ 70%]\n............................................................             [100%]\n204 passed in 151.16s (0:02:31)\n",
+    "stderr": "",
+    "wall_time_seconds": 151.4885589159967,
+    "timed_out": false,
+    "started_utc": "2026-09-05T05:19:44.259239+00:00",
+    "command": [
+      "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "candidate": "results/opus"
+  },
+  "fable": {
+    "returncode": 0,
+    "stdout": "............................................................             [100%]\n60 passed in 25.49s\n",
+    "stderr": "",
+    "wall_time_seconds": 26.07923487500011,
+    "timed_out": false,
+    "started_utc": "2026-09-05T05:19:51.201277+00:00",
+    "command": [
+      "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "candidate": "results/fable"
+  },
+  "terra": {
+    "returncode": 0,
+    "stdout": ".............                                                            [100%]\n13 passed in 0.57s\n",
+    "stderr": "",
+    "wall_time_seconds": 0.7785129590010911,
+    "timed_out": false,
+    "started_utc": "2026-09-05T07:15:26.101111+00:00",
+    "command": [
+      "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "candidate": "/Users/ankimo1210/Documents/terra"
+  },
+  "luna": {
+    "returncode": 0,
+    "stdout": "............                                                             [100%]\n12 passed in 0.37s\n",
+    "stderr": "",
+    "wall_time_seconds": 0.5142211249985849,
+    "timed_out": false,
+    "started_utc": "2026-09-05T07:17:07.808729+00:00",
+    "command": [
+      "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "candidate": "output/luna"
+  },
+  "sonnet": {
+    "returncode": 0,
+    "stdout": ".................................................                        [100%]\n49 passed in 12.09s\n",
+    "stderr": "",
+    "wall_time_seconds": 12.281919832999847,
+    "timed_out": false,
+    "started_utc": "2026-09-05T07:23:35.440374+00:00",
+    "command": [
+      "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider"
+    ],
+    "candidate": "output/sonnet"
+  }
+}

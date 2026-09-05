@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "html": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/evaluations/performance_report.html",
+  "stages": {
+    "validation": "passed",
+    "package": "passed",
+    "verification": "structural_only"
+  },
+  "browserWarning": {
+    "code": "browser_unavailable",
+    "message": "No installed Chromium headless-shell executable was found. Set CHROMIUM_EXECUTABLE_PATH (or the legacy PLAYWRIGHT_EXECUTABLE_PATH) or preinstall Chromium headless-shell under PLAYWRIGHT_BROWSERS_PATH; portable tooling never downloads browsers."
+  },
+  "counts": {
+    "blocks": 46,
+    "charts": 7,
+    "html": 0,
+    "metrics": 3,
+    "tables": 11
+  },
+  "sourceDialog": "not_verified",
+  "sourceInteraction": "not_verified",
+  "viewports": [],
+  "timings": {
+    "validateAndPackageMs": 65.1,
+    "staticChartExtractionMs": 1.8,
+    "structuralVerificationMs": 3.7,
+    "totalMs": 69.4
+  },
+  "visual_qa_limitation": "Headless chart extraction still times out in the installed Chrome, so the packaged receipt is structural-only. Visual QA was done manually on 2026-09-05 in the installed Google Chrome at 1280px (light theme, plus dark theme emulated by applying the prefers-color-scheme:dark rules): all 7 charts and 10 tables rendered without clipping after the scenario heatmap was transposed. Mobile-width layout is not verified."
+}

@@ -1,0 +1,53 @@
+{
+  "all_passed": true,
+  "fresh_directories": true,
+  "installed_package_import": ".venv/lib/python3.12/site-packages/quantcurve/__init__.py",
+  "installed_and_source_byte_identical": true,
+  "output_hashes": {
+    "charts/curve.png": "058eec26399fd5c3cae10208578cb75fff06e4f624f5eb7cacd438557e13af25",
+    "charts/forward_rate.png": "fe6d74a13c71b9ab403286af3311bf9cf21b3f9ff293cab894167d7df385c041",
+    "charts/model_comparison.png": "b2bba3f39c348edd0ecf50405f2179043f899376e4e2b8c7a5890754bc6cccdb",
+    "charts/repricing.png": "5f683164504e6b7cb82ca0facd3191dda39c15a1826dee7d39c42e47b33433a5",
+    "charts/sensitivity.png": "99ba3b66dfa2cf0b90d01f712a14c6cb9a24a09dae0081aeea692a6a6096f0ee",
+    "curves/advanced_curve.csv": "534171114a4f1fdef9f9b1b649e7db46a02507f5996b3a04028ca1cd7a747819",
+    "curves/baseline_curve.csv": "41df2dc19a2c802d534b05d61aedfff7d86a5386c51fc4fb72e18eb8e475cdfe",
+    "curves/curve.csv": "534171114a4f1fdef9f9b1b649e7db46a02507f5996b3a04028ca1cd7a747819",
+    "diagnostics/cleaning.csv": "2acc62196a5272226c7624676ca5df9f04e4ff7cf9765218a97eb8e77a82a492",
+    "diagnostics/configuration.json": "b29419864108baef03dfc4ecdad12fce8e5634b2af8f3ca76ffd18c88fec2bfc",
+    "diagnostics/data_quality.json": "7ab6d97836c38f08a05b34a3346e470f184454ff36ba1320fcb90153dc01babf",
+    "diagnostics/holdout_repricing.csv": "8ee04470cc7f78be739359dcddb7410fa5c8682e81ef441cbd6e63ff6d7ee2fd",
+    "diagnostics/model_comparison.json": "4b805297f363f4af51299a99a1ac13bba8bc52f58391329586059b2a8605f948",
+    "diagnostics/model_parameters.json": "b26e2a02cc80bced5ddc45d66e1df8b479a510b5549c91dae6776b40efd595d9",
+    "diagnostics/repricing.csv": "9f92a9ee93969b0b3e0cd54c37bd30fcab2914608c180ec935e162c7bec4f103",
+    "diagnostics/risk.csv": "785cccaf9fb8c856ca762d26b736b14fbc4b3b767c5110b27fa31ab5dc939e85",
+    "diagnostics/run_metadata.json": "0a7662fad7ad0f51b22584917ec52ac8c3df71135aae8650bac86a182af6d8b5",
+    "diagnostics/sensitivity.json": "2937087c16aa745a96cd58acbfbb45a144362600f239f7da632cfdc42367fd37",
+    "diagnostics/validation.json": "7d4247f9d75643781f9d56c236c94cf126c96a8f11c3799102de609cd82cdcfc",
+    "reports/research_report.html": "db79465e6878580e0c5bd8ff88cec28c4541401ce111063d9fe93afb584abfd2"
+  },
+  "numerical_inspection": {
+    "curves/curve.csv": {
+      "rows": 721,
+      "columns": 4,
+      "finite_numeric": true
+    },
+    "diagnostics/repricing.csv": {
+      "rows": 131,
+      "columns": 17,
+      "finite_numeric": true
+    },
+    "diagnostics/risk.csv": {
+      "rows": 131,
+      "columns": 12,
+      "finite_numeric": true
+    }
+  },
+  "input_copy_matches_supplied_manifest": true,
+  "selected_result": {
+    "grid_rows": 721,
+    "holdout_improvement": 0.09713806675183534,
+    "selected_model": "advanced",
+    "usable_instruments": 131,
+    "validation_passed": true
+  }
+}

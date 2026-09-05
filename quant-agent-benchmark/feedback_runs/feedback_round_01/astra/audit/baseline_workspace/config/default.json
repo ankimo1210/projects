@@ -1,0 +1,18 @@
+{
+  "seed": 20260115,
+  "stale_days": 3.0,
+  "rate_sigma_floor": 1e-05,
+  "price_sigma_floor": 0.0125,
+  "huber_threshold": 2.5,
+  "smoothing": 0.0001,
+  "smoothing_candidates": [
+    1e-05,
+    0.0001,
+    0.001,
+    0.01
+  ],
+  "max_irls": 100,
+  "irls_tolerance": 0.0002,
+  "grid_rows": 721,
+  "removal_trials": 8
+}

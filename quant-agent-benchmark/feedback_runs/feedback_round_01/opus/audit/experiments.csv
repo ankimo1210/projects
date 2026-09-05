@@ -1,0 +1,38 @@
+experiment_id,baseline_ref,changed_factor,input_or_split_id,model_kind,measured_object,band_or_instrument,metric,unit,value_before,value_after,runtime_s,verification_state,adopted
+E00-REPRO,round1_original,none (reproduction on copy),public_market_observations.csv,both,test suite,all,tests_passed,count,204,204,118.6,verified,n/a
+E00-REPRO-CLI,round1_original,none (reproduction on copy),public_market_observations.csv,advanced,CLI end-to-end,all,exit_code,code,0,0,44.0,verified,n/a
+E01-PRICE-DEP,independent_reference_pricer,none (pricing isolated from fitting),7 known analytic D(T),n/a,deposit simple rate,all tenors,max_abs_disagreement,bp,,0.0,2.1,verified,n/a
+E01-PRICE-SWAP,independent_reference_pricer,none (pricing isolated from fitting),7 known analytic D(T),n/a,OIS par rate,all tenors,max_abs_disagreement,bp,,1.04e-13,2.1,verified,n/a
+E01-PRICE-BOND,independent_reference_pricer,none (pricing isolated from fitting),7 known analytic D(T),n/a,bond clean price,all tenors,max_abs_disagreement,price_points,,2.84e-14,2.1,verified,n/a
+E01-PRICE-RT,independent_reference_pricer,none,7 known analytic D(T),n/a,quote round-trip residual,all,max_abs_residual,bp,,2.86e-12,2.1,verified,n/a
+E01-PRICE-NEG,independent_reference_pricer,none,negative-rate analytic D(T),n/a,discount factor positivity,0.05-30Y,all_positive_and_finite,boolean,,TRUE,2.1,verified,n/a
+E02-CONV-SWAP,round-rule schedule,period-count rule round vs ceil vs floor,fractional maturities on upward curve,n/a,OIS par rate,T=1.25Y,max_spread_between_rules,bp,,94.295,2.1,verified,not-applicable (risk quantified only)
+E02-CONV-SWAP-L,round-rule schedule,period-count rule round vs ceil vs floor,fractional maturities on upward curve,n/a,OIS par rate,T=26.4Y,max_spread_between_rules,bp,,7.501,2.1,verified,not-applicable (risk quantified only)
+E02-CONV-BOND,round-rule schedule,period-count rule round vs ceil vs floor,fractional maturities on upward curve,n/a,bond clean price,T=1.25-26.4Y,max_spread_between_rules,price_points,,1.2465,2.1,verified,not-applicable (risk quantified only)
+E03-STRESS-CLEAN-S,stress_grid as_is,none (characterisation),5 known curves x clean,advanced,zero curve,short T<=2,zero_rmse_bp_median,bp,,0.25,110,verified,n/a
+E03-STRESS-CLEAN-M,stress_grid as_is,none (characterisation),5 known curves x clean,advanced,zero curve,mid 2<T<15,zero_rmse_bp_median,bp,,0.02,110,verified,n/a
+E03-STRESS-CLEAN-L,stress_grid as_is,none (characterisation),5 known curves x clean,advanced,zero curve,long T>=15,zero_rmse_bp_median,bp,,0.01,110,verified,n/a
+E03-STRESS-CLEAN-FS,stress_grid as_is,none (characterisation),5 known curves x clean,advanced,instantaneous forward,short T<=2,fwd_rmse_bp_median,bp,,1.00,110,verified,n/a
+E03-STRESS-CLEAN-FM,stress_grid as_is,none (characterisation),5 known curves x clean,advanced,instantaneous forward,mid 2<T<15,fwd_rmse_bp_median,bp,,0.13,110,verified,n/a
+E03-STRESS-CLEAN-FL,stress_grid as_is,none (characterisation),5 known curves x clean,advanced,instantaneous forward,long T>=15,fwd_rmse_bp_median,bp,,0.20,110,verified,n/a
+E03-STRESS-SC-FM,stress_grid as_is,none (characterisation),5 known curves x sparse+contaminated,advanced,instantaneous forward,mid 2<T<15,fwd_rmse_bp_median,bp,0.13,12.86,110,verified,n/a
+E03-STRESS-SC-FL,stress_grid as_is,none (characterisation),5 known curves x sparse+contaminated,advanced,instantaneous forward,long T>=15,fwd_rmse_bp_median,bp,0.20,13.50,110,verified,n/a
+E03-STRESS-SC-ZM,stress_grid as_is,none (characterisation),5 known curves x sparse+contaminated,advanced,zero curve,mid 2<T<15,zero_rmse_bp_median,bp,0.02,7.27,110,verified,n/a
+E03-BASE-VS-ADV,stress_grid as_is,estimator (baseline vs advanced),5 known curves x 5 conditions,both,zero curve,all bands pooled,zero_rmse_bp_median,bp,0.94 (baseline),0.121 (advanced),110,verified,advanced retained
+E03-BASE-VS-ADV-F,stress_grid as_is,estimator (baseline vs advanced),5 known curves x 5 conditions,both,instantaneous forward,all bands pooled,fwd_rmse_bp_median,bp,7.51 (baseline),0.782 (advanced),110,verified,advanced retained
+E04-ONESE-CONTAM-FM,stress_grid as_is,CV selection rule: minimum -> one-standard-error,5 known curves x contaminated,advanced,instantaneous forward,mid 2<T<15,fwd_rmse_bp_median,bp,0.22,8.04,112,verified,REJECTED (A2: +3555%)
+E04-ONESE-CONTAM-ZM,stress_grid as_is,CV selection rule: minimum -> one-standard-error,5 known curves x contaminated,advanced,zero curve,mid 2<T<15,zero_rmse_bp_median,bp,0.06,3.17,112,verified,REJECTED (A2)
+E04-ONESE-SC-FM,stress_grid as_is,CV selection rule: minimum -> one-standard-error,5 known curves x sparse+contaminated,advanced,instantaneous forward,mid 2<T<15,fwd_rmse_bp_median,bp,12.86,6.62,112,verified,REJECTED overall (helps here only)
+E04-ONESE-WORST,stress_grid as_is,CV selection rule: minimum -> one-standard-error,5 known curves x 5 conditions,advanced,instantaneous forward,worst single band,fwd_max_bp,bp,251.67,53.06,112,verified,REJECTED overall (helps here only)
+E05-LAMFLOOR-CLEAN-FS,stress_grid as_is,lambda grid floored at 1e-4,5 known curves x clean,advanced,instantaneous forward,short T<=2,fwd_rmse_bp_median,bp,1.00,0.83,112,verified,REJECTED (A2 breach in long band)
+E05-LAMFLOOR-CLEAN-FL,stress_grid as_is,lambda grid floored at 1e-4,5 known curves x clean,advanced,instantaneous forward,long T>=15,fwd_rmse_bp_median,bp,0.20,0.24,112,verified,REJECTED (A2: +20%)
+E05-LAMFLOOR-SC-FM,stress_grid as_is,lambda grid floored at 1e-4,5 known curves x sparse+contaminated,advanced,instantaneous forward,mid 2<T<15,fwd_rmse_bp_median,bp,12.86,12.86,112,verified,REJECTED (no effect where it matters)
+E06-GATE-SENS,stress_grid as_is,none (characterisation of the selection gate),5 known curves x 5 conditions,advanced,forward admissibility gate,all,cases_flagged_of_true_failures,count,,1 of 1,110,verified,gate retained unchanged
+E06-GATE-SPEC,stress_grid as_is,none (characterisation of the selection gate),5 known curves x 5 conditions,advanced,forward admissibility gate,all,false_rejections_of_good_fits,count,,0 of 24,110,verified,gate retained unchanged
+E06-GATE-BASE,stress_grid as_is,none (characterisation of the selection gate),5 known curves x 5 conditions,baseline,forward admissibility gate,all,cases_flagged,count,,5 of 25,110,verified,gate retained unchanged
+E07-REPRO-MIN,minimal 5-pillar market,gross outlier 0 -> 40bp at an isolated 5Y pillar,synthetic sparse swap-only market,advanced,robust weight of the outlier,T=5Y,robust_weight,ratio,0.924,0.000,3,verified,n/a (mechanism confirmed)
+E07-REPRO-MIN-F,minimal 5-pillar market,gross outlier 0 -> 40bp at an isolated 5Y pillar,synthetic sparse swap-only market,advanced,instantaneous forward,0.5-30Y,fwd_rmse_bp,bp,11.84,19.61,3,verified,n/a (identifiability limit)
+F01-PATH,round1_original,hardcoded personal absolute path -> env var + ancestor search,tests/test_cli.py,n/a,portability,n/a,hardcoded_home_paths_in_src_and_tests,count,1,0,0,verified,ADOPTED (format)
+F02-SELMODEL,round1_original,add top-level selected_model + metric_units,model_comparison.json,n/a,submission schema,n/a,mandated_top_level_keys_present,count,3,4,0,verified,ADOPTED (format)
+F03-SENSKEYS,round1_original,promote checks to named top-level experiments with interpretation,sensitivity.json,n/a,submission schema,n/a,named_top_level_experiments,count,0,6,0,verified,ADOPTED (format)
+F04-REPORT,round1_original,nine mandated section names in English+Japanese incl. a Charts section,research_report.html,n/a,submission schema,n/a,mandated_sections_present,count,5,9,0,verified,ADOPTED (format)

@@ -1,0 +1,175 @@
+{
+  "schema_version": "1.0",
+  "round": "feedback_round_01",
+  "supersedes": "results/opus/benchmark_summary.json (round 1; left untouched)",
+  "model_name": "claude-opus-5[1m]",
+  "reasoning_effort": "xhigh",
+  "model_and_setting_confirmation": "Model id and reasoning effort are reported as configured by the benchmark owner and were not changed during the round. The candidate cannot independently verify the externally configured setting; MODEL_KEY was not substituted in the prompt and was resolved to 'opus' from the harness-assigned working directory, as recorded in audit/protocol.md \u00a70.",
+  "start_time": "2026-09-05T07:55:22Z",
+  "start_time_unix": 1788594922,
+  "finish_time": "2026-09-05T08:23:31Z",
+  "finish_time_unix": 1788596611,
+  "wall_time_seconds": 1689,
+  "time_limit_seconds": 3600,
+  "total_input_tokens": null,
+  "total_output_tokens": null,
+  "total_tokens": null,
+  "credits_consumed": null,
+  "estimated_usd_cost": null,
+  "quota_percentage_consumed": null,
+  "five_hour_quota_percentage_consumed": null,
+  "weekly_quota_percentage_consumed": null,
+  "usage_telemetry_note": "The environment exposed no per-session token, credit, cost or quota telemetry to the candidate. Every usage field is null. No figure here is estimated from text length, elapsed time, or published pricing, and no organiser-side score, hidden RMSE or billing figure is reconstructed anywhere in this round.",
+  "test_runs": 6,
+  "test_suite_runs": 6,
+  "failed_test_runs": 1,
+  "failed_test_suite_runs": 1,
+  "test_run_counting_note": "Runs in THIS round only, on the copy and on the submission: 1 baseline reproduction (204 passed), 1 targeted stress-test module (6 passed), 1 full run that failed on a stale heading assertion (1 failed), 1 targeted re-check (2 passed), 1 full run after the fix (210 passed), 1 final full run after the last report edit. Round-1 counts are in the round-1 summary and are not re-stated here.",
+  "corrective_iterations": 1,
+  "corrective_iterations_note": "One: the report-section test in tests/test_cli.py still asserted the round-1 English-only headings and failed after the nine mandated bilingual headings were introduced. It was rewritten to assert the mandated names, their order, that each section carries body text, and that the Charts section holds all seven figures.",
+  "human_interventions": 0,
+  "tests_passed": 210,
+  "tests_failed": 0,
+  "final_tests_passed": 210,
+  "final_tests_failed": 0,
+  "final_test_command": "PYTHONPATH=src:tests python -m pytest -q",
+  "changes_adopted_this_round": [
+    "FORMAT: tests/test_cli.py no longer hardcodes a personal absolute path; the public data set is resolved from QUANTCURVE_MARKET_DATA, then by searching ancestors for input/market_data/market_observations.csv, then skipped. Zero '/Users/' strings remain in src/ or tests/.",
+    "FORMAT: model_comparison.json gains the mandated top-level 'selected_model' (alongside baseline, advanced, selection_rationale; 'model_selected' kept as an alias) and a 'metric_units' block naming the unit of all seven reported metrics. Both models already carried train and holdout metrics.",
+    "FORMAT: sensitivity.json promotes each experiment to a named top-level key holding {condition, result{metric, value, unit, detail}, interpretation}; six named experiments, each with a non-empty one-sentence interpretation. The ordered 'checks' list is retained for compatibility.",
+    "FORMAT: the HTML report now uses the nine mandated section names in English with Japanese labels, in the mandated order, including a dedicated 'Charts / \u56f3\u8868' section that carries an indexed lead paragraph and all seven figures with bilingual captions. Every section is checked by test to contain real body text.",
+    "DOCUMENTATION: MODEL_RISKS.md gains the measured round-2 stress grid (\u00a75.1b) and the quantified fractional-period convention exposure (\u00a75.1c); the report's limitations section carries the same convention numbers.",
+    "TESTS: tests/test_stress_conditions.py (6 tests) pins the two behaviours measured this round - the sparse+contaminated forward-error bound, and the admissibility gate's sensitivity and specificity."
+  ],
+  "numerical_changes_adopted_this_round": [],
+  "numerical_outcome": "No verified numerical improvement, and no regression. Two candidate one-factor changes to the curvature control were tested against criteria fixed before the numbers existed, and both were rejected. Public-data results are therefore identical to round 1.",
+  "public_data_results_unchanged_from_round_1": {
+    "observations": 143,
+    "calibrating_instruments": 119,
+    "cleaning_actions": {
+      "keep": 90,
+      "correct": 15,
+      "downweight": 14,
+      "exclude": 24
+    },
+    "selected_model": "advanced",
+    "holdout_weighted_rmse_bp": {
+      "baseline": 0.705,
+      "advanced": 1.151
+    },
+    "weighted_repricing_rmse_bp": {
+      "deposit": 0.09,
+      "ois_swap": 0.89,
+      "bond": 2.55
+    },
+    "curve_rows": 601,
+    "note": "Weighted, yield-equivalent basis points. These are round-1 numbers, reproduced bit-for-bit after every edit; the format changes are numerically inert by construction."
+  },
+  "synthetic_truth_results_measured_this_round": {
+    "design": "5 self-designed analytic curves (upward, inverted, humped, steep-front, wholly negative) x 5 conditions (clean, sparse maturities, gross contamination, low liquidity, sparse+contaminated); both estimators; 50 fits; scored against the known curve.",
+    "unit": "bp",
+    "advanced_zero_rmse_median_pooled": 0.121,
+    "advanced_forward_rmse_median_pooled": 0.782,
+    "baseline_zero_rmse_median_pooled": 0.94,
+    "baseline_forward_rmse_median_pooled": 7.51,
+    "advanced_forward_rmse_median_by_condition_mid_band": {
+      "clean": 0.13,
+      "sparse": 0.48,
+      "contaminated": 0.22,
+      "illiquid": 0.13,
+      "sparse_contaminated": 12.86
+    },
+    "worst_advanced_forward_error_bp": 251.67,
+    "worst_case_caught_by_admissibility_gate": true,
+    "gate_sensitivity": "1 of 1 true failures flagged",
+    "gate_specificity": "0 of 24 good fits falsely rejected",
+    "all_discount_factors_positive": true,
+    "failed_fits": 0
+  },
+  "pricing_isolation_check": {
+    "method": "A reference pricer written directly from CONVENTIONS.md, sharing no schedule or cash-flow code with quantcurve, handed the same known analytic D(T) on 7 curve shapes x 16 maturities including fractional maturities and a wholly negative curve.",
+    "max_deposit_disagreement_bp": 0.0,
+    "max_ois_par_rate_disagreement_bp": 1.04e-13,
+    "max_bond_clean_price_disagreement_points": 2.84e-14,
+    "max_quote_round_trip_residual_bp": 2.86e-12,
+    "schedule_mismatches": 0,
+    "negative_rate_discount_factors_positive_and_finite": true
+  },
+  "convention_risk_quantified": {
+    "undetermined_point": "CONVENTIONS.md does not state the period count of a fractional maturity.",
+    "rule_used": "n = max(1, round(T * frequency)), backwards from maturity",
+    "basis_for_choice": "The only rule that reprices the 1.25Y OIS and the 2.44Y bond consistently. Fitting the observations is NOT treated as proof that this is the generating rule.",
+    "spread_across_round_ceil_floor": {
+      "ois_par_rate_1_25y_bp": 94.295,
+      "ois_par_rate_2_44y_bp": 45.56,
+      "ois_par_rate_26_4y_bp": 7.501,
+      "bond_clean_price_any_fractional_points": 1.2465
+    },
+    "status": "unresolved; larger than every fitting effect measured in this project"
+  },
+  "files_created": [
+    "submission/src/quantcurve/workflow.py (modified: selected_model, metric_units, named sensitivity experiments)",
+    "submission/src/quantcurve/report.py (modified: nine bilingual sections, Charts section, convention exposure)",
+    "submission/tests/test_cli.py (modified: portable data path, mandated-section assertions)",
+    "submission/tests/test_stress_conditions.py (new)",
+    "submission/MODEL_RISKS.md (modified: sections 5.1b and 5.1c)",
+    "submission/benchmark_summary.json (new, this round)",
+    "submission/outputs/curves/curve.csv",
+    "submission/outputs/diagnostics/cleaning.csv",
+    "submission/outputs/diagnostics/repricing.csv",
+    "submission/outputs/diagnostics/risk.csv",
+    "submission/outputs/diagnostics/model_comparison.json",
+    "submission/outputs/diagnostics/sensitivity.json",
+    "submission/outputs/diagnostics/validation_summary.json",
+    "submission/outputs/charts/ (7 PNG figures)",
+    "submission/outputs/reports/research_report.html",
+    "submission/reports/research_report.html",
+    "audit/protocol.md",
+    "audit/experiments.csv",
+    "audit/feedback_response.md",
+    "audit/round_summary.json",
+    "audit/baseline_manifest.json",
+    "audit/original_manifest_after.json",
+    "audit/diag/pricing_check.py",
+    "audit/diag/stress_grid.py",
+    "audit/diag/repro_sparse_contam.py",
+    "audit/logs/ (12 command logs, including the failing run)"
+  ],
+  "major_files_created": [
+    "audit/feedback_response.md",
+    "audit/experiments.csv",
+    "audit/diag/stress_grid.py",
+    "submission/tests/test_stress_conditions.py",
+    "submission/reports/research_report.html"
+  ],
+  "major_modelling_decisions": [
+    "No numerical change adopted. Both one-factor curvature-control variants failed criteria fixed in advance: the one-standard-error CV rule helps the sparse+contaminated corner (forward 12.86 -> 6.62bp mid; worst case 252 -> 53bp) but degrades the far commoner plain-contaminated case by 30-100x (forward 0.22 -> 8.04bp, zero 0.06 -> 3.17bp); flooring the roughness grid at 1e-4 is marginal on clean data and worsens the long band by 20%, with no effect where the problem is.",
+    "The forward-admissibility gate is retained unchanged and is now understood as a safety net rather than a tie-breaker: on the stress grid it flagged the estimator's only unusable curve (252bp forward error) and rejected none of the 24 sound fits.",
+    "The sparse+contaminated degradation is documented as an identifiability limit, not patched. The robust stage correctly drives the isolated outlier's weight to exactly zero; the residual forward error comes from the hole that rejection leaves, which only the penalty can fill. Making the estimator more aggressive would not recover information that is not there.",
+    "The fractional-maturity period-count rule is retained but explicitly demoted from 'established by repricing' to 'provisional interpretation with a measured exposure of up to 94bp / 1.25 price points', following the instruction not to treat goodness of fit as proof of a convention."
+  ],
+  "self_identified_weaknesses": [
+    "OPEN - sparse maturities combined with gross contamination degrade the forward by two orders of magnitude (0.13 -> 12.9bp mid band). Bounded, tested and documented; not fixed, because it is an identifiability limit rather than a defect.",
+    "OPEN - the weighting scheme was not subjected to a one-factor experiment inside the time limit. The illiquid condition was indistinguishable from clean to two decimals, which is weak evidence only.",
+    "OPEN - out-of-time (day-to-day) stability remains unmeasured; still one market snapshot, unchanged from round 1.",
+    "OPEN - the fractional-period convention is unresolved and is the single largest exposure in the project, an order of magnitude larger than any fitting effect measured.",
+    "OPEN - the stress grid uses five curve shapes and three defect types of my own design; a condition I did not think of is untested by construction. I deliberately did not attempt to infer the hidden scenarios.",
+    "FIXED - a hardcoded personal absolute path silently disabled the most valuable end-to-end test on any other machine.",
+    "FIXED - three submission-format defects (missing selected_model, list-shaped sensitivity payload, non-mandated report headings) that made otherwise present content hard to verify mechanically."
+  ],
+  "unresolved_limitations": [
+    "Single discount curve for deposits, OIS swaps and coupon bonds; no funding or credit basis is modelled.",
+    "Fractional-maturity period count is not determined by the public specification; exposure measured at up to 94.3bp (1.25Y OIS par rate) and 1.25 price points (fractional bonds).",
+    "Sparse maturities plus contamination degrade the instantaneous forward by roughly two orders of magnitude; bounded and tested, not eliminated.",
+    "No out-of-time validation; every stability claim is cross-sectional.",
+    "No independent benchmark curve; 'correct' still means internally consistent and consistent with the quotes.",
+    "The 200bp admissibility tolerance and the 5% parsimony margin remain judgements; they are now supported by measured gate sensitivity and specificity on a synthetic grid, but the thresholds themselves were not optimised.",
+    "The weighting scheme was not tested one-factor this round.",
+    "Below 1/12Y and beyond 30Y the instantaneous forward is held flat: a stated policy, not information.",
+    "No uncertainty band is published; curve.csv carries point estimates."
+  ],
+  "benchmark_integrity_incidents": [
+    "Before the full round-2 prompt was available, three directories (submission/, audit/, .venv-r2/) were created inside the round-1 original directory results/opus/. On reading the write-scope rule they were removed immediately. No tracked original file was modified, and audit/original_manifest_after.json confirms all 49 original files are byte-identical to the pre-round manifest, with no additions or removals."
+  ],
+  "integrity_statement": "Reads were limited to BENCHMARK_ROOT/input/, this prompt, and the candidate's own round-1 directory results/opus. No evaluator, tools, evaluations or analysis content was read, searched or imported; the approved PYTHON_BIN was executed only, its parent directory was never inspected, and no package was added to it. No other model's submission was opened or listed. No agent was delegated to, no other model consulted, no external search or network access used. Benchmark data was neither altered nor regenerated. Round-1 originals were not executed and remain byte-identical. PYTHONDONTWRITEBYTECODE=1 was set and MPLCONFIGDIR/TMPDIR were redirected into this round's audit/ directory."
+}

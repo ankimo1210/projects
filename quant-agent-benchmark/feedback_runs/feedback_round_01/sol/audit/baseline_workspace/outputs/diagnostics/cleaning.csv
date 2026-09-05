@@ -1,0 +1,144 @@
+obs_id,instrument_id,action,normalized_quote,weight,reason
+DUP0001,INS0001,exclude,0.01811375395,0,rate mislabeled PERCENT detected from maturity-local peers; treated as decimal; quote lies outside corrected bid/ask interval; retained but confidence reduced; duplicate instrument; retained newer/higher-quality obs_id OBS0001
+DUP0002,INS0002,exclude,0.01216009223,0,quote lies outside corrected bid/ask interval; retained but confidence reduced; duplicate instrument; retained newer/higher-quality obs_id OBS0002
+OBS0001,INS0001,correct,0.01211375395,0.912034486369,rate mislabeled PERCENT detected from maturity-local peers; treated as decimal
+OBS0002,INS0002,keep,0.01210009223,0.97911809835,passed validation
+OBS0009,INS0009,correct,0.01212437352,0.934055687232,bid/ask inversion corrected by swapping endpoints
+OBS0018,INS0018,keep,0.01211963556,0.994406463642,passed validation
+DUP0003,INS0003,exclude,0.01413656925,0,quote lies outside corrected bid/ask interval; retained but confidence reduced; duplicate instrument; retained newer/higher-quality obs_id OBS0003
+OBS0003,INS0003,keep,0.01407656925,0.941753122132,passed validation
+OBS0011,INS0011,keep,0.01409328864,0.994406463642,passed validation
+OBS0012,INS0012,keep,0.01408349088,0.956716814027,passed validation
+OBS0019,INS0019,keep,0.01406800527,0.928175724015,passed validation
+OBS0020,INS0020,downweight,0.01405743201,0.0265560165975,low liquidity score 0.160
+DUP0004,INS0005,exclude,0.01649189841,0,quote lies outside corrected bid/ask interval; retained but confidence reduced; duplicate instrument; retained newer/higher-quality obs_id OBS0005
+DUP0005,INS0006,exclude,0.0164744704,0,quote lies outside corrected bid/ask interval; retained but confidence reduced; duplicate instrument; retained newer/higher-quality obs_id OBS0006
+OBS0005,INS0005,keep,0.01643189841,0.994406463642,passed validation
+OBS0006,INS0006,keep,0.0164144704,0.96631982844,passed validation
+OBS0013,INS0013,keep,0.01641014737,0.952683744206,passed validation
+OBS0014,INS0014,downweight,0.01487302491,0.172180868102,passed validation; iterative Huber outlier weight 0.1946 at standardized residual 15.41
+OBS0021,INS0021,keep,0.01641835374,0.935922925652,passed validation
+OBS0022,INS0022,downweight,0.01646475811,0.09659798485,stale by 12.4 days; weight multiplied by 0.10
+DUP0006,INS0007,exclude,0.01829134861,0,passed validation; duplicate instrument; retained newer/higher-quality obs_id OBS0007
+OBS0007,INS0007,downweight,0.01823134861,0.0258100456324,low liquidity score 0.160; iterative Huber outlier weight 0.9719 at standardized residual 3.09
+OBS0015,INS0015,downweight,0.01985947292,0.562878747956,passed validation; iterative Huber outlier weight 0.6375 at standardized residual -4.71
+DUP0007,INS0008,exclude,0.01970895282,0,quote lies outside corrected bid/ask interval; retained but confidence reduced; duplicate instrument; retained newer/higher-quality obs_id OBS0008
+OBS0008,INS0008,keep,0.01964895282,0.967752954975,passed validation
+OBS0016,INS0016,keep,0.01965119122,0.929887551536,passed validation
+OBS0023,INS0023,keep,0.01964809678,0.951244743039,passed validation
+OBS0041,INS0041,keep,0.01964575815,0.948924615751,passed validation
+OBS0059,INS0059,keep,0.01968915044,0.946266111121,passed validation
+OBS0095,INS0095,keep,0.01962016834,0.864913335739,passed validation
+OBS0042,INS0042,keep,0.02574182829,0.994406463642,passed validation
+OBS0060,INS0060,downweight,0.02733588685,0.189082864883,passed validation; iterative Huber outlier weight 0.1901 at standardized residual -15.78
+OBS0078,INS0078,keep,0.02569995636,0.929982973056,passed validation
+OBS0096,INS0096,keep,0.02575815563,0.957783153361,passed validation
+OBS0025,INS0025,keep,0.01614650056,0.969774951294,passed validation
+OBS0043,INS0043,keep,0.0161603199,0.994406463642,passed validation
+OBS0061,INS0061,keep,0.01615843451,0.983505900888,passed validation
+OBS0079,INS0079,keep,0.01616597887,0.873024559559,passed validation
+OBS0105,INS0105,downweight,100.598881,0.19554088819,passed validation; iterative Huber outlier weight 0.2022 at standardized residual 14.84
+OBS0106,INS0106,downweight,99.79351759,0.0228833658296,low liquidity score 0.160
+OBS0026,INS0026,keep,0.02240527454,0.926127690179,passed validation
+OBS0062,INS0062,keep,0.02239489671,0.934887506941,passed validation
+OBS0080,INS0080,correct,0.02240465064,0.994406463642,missing quote replaced by observable bid/ask midpoint
+OBS0098,INS0098,downweight,0.02239915568,0.0994406463642,stale by 12.4 days; weight multiplied by 0.10
+OBS0107,INS0107,downweight,101.2801215,0.11656884637,passed validation; iterative Huber outlier weight 0.1205 at standardized residual -24.89
+OBS0027,INS0027,downweight,0.02278084912,0.0994406463642,stale by 12.4 days; weight multiplied by 0.10
+OBS0045,INS0045,downweight,0.005786389192,0.0163293647284,passed validation; iterative Huber outlier weight 0.0177 at standardized residual 169.91
+OBS0063,INS0063,downweight,0.02114967521,0.180295593164,passed validation; iterative Huber outlier weight 0.1843 at standardized residual 16.28
+OBS0081,INS0081,keep,0.02277775113,0.952737988217,passed validation
+OBS0099,INS0099,keep,0.02279573027,0.944270879392,passed validation
+OBS0108,INS0108,downweight,99.12831187,0.179262026592,passed validation; iterative Huber outlier weight 0.2027 at standardized residual -14.80
+OBS0028,INS0028,correct,0.02306793958,0.890497929589,bid/ask inversion corrected by swapping endpoints
+OBS0046,INS0046,downweight,0.02299460241,0.0265560165975,low liquidity score 0.160
+OBS0082,INS0082,downweight,0.02138091421,0.174227105544,passed validation; iterative Huber outlier weight 0.1803 at standardized residual 16.64
+OBS0100,INS0100,correct,0.02304496796,0.980190937599,bid/ask inversion corrected by swapping endpoints
+OBS0109,INS0109,downweight,101.5956261,0.0983614747256,passed validation; iterative Huber outlier weight 0.1172 at standardized residual -25.59
+OBS0029,INS0029,downweight,0.02297447693,0.0933749453719,stale by 12.4 days; weight multiplied by 0.10
+OBS0047,INS0047,keep,0.02305272225,0.983307624123,passed validation
+OBS0065,INS0065,keep,0.02299591168,0.97872686442,passed validation
+OBS0083,INS0083,keep,0.02304853778,0.934439940033,passed validation
+OBS0101,INS0101,downweight,0.006010536769,0.0164755806048,passed validation; iterative Huber outlier weight 0.0177 at standardized residual 169.85
+OBS0110,INS0110,keep,100.0952926,0.90550437606,passed validation
+OBS0112,INS0112,downweight,110.6761568,0.0179394512431,passed validation; iterative Huber outlier weight 0.0207 at standardized residual -145.08
+OBS0048,INS0048,keep,0.02285028668,0.994406463642,passed validation
+OBS0066,INS0066,keep,0.02288166581,0.850017530153,passed validation
+OBS0102,INS0102,keep,0.02284009492,0.902915116427,passed validation
+OBS0113,INS0113,keep,98.0175438,0.754545802985,passed validation
+OBS0031,INS0031,downweight,0.02315394621,0.0265560165975,low liquidity score 0.160
+OBS0049,INS0049,keep,0.02308432038,0.86047907903,passed validation
+OBS0067,INS0067,keep,0.02314651271,0.811004057541,passed validation
+OBS0085,INS0085,downweight,0.006196266535,0.016431389432,passed validation; iterative Huber outlier weight 0.0178 at standardized residual 168.88
+OBS0103,INS0103,keep,0.02317068705,0.844713100688,passed validation
+OBS0114,INS0114,keep,106.8693324,0.826727572031,passed validation
+OBS0115,INS0115,keep,101.2641049,0.751395832349,passed validation
+OBS0116,INS0116,downweight,103.650421,0.0951636911008,passed validation; iterative Huber outlier weight 0.1318 at standardized residual -22.77
+OBS0032,INS0032,keep,0.02346230835,0.901092378445,passed validation
+OBS0068,INS0068,keep,0.02343602076,0.91219826802,passed validation
+OBS0086,INS0086,keep,0.02350470354,0.926868594838,passed validation
+OBS0033,INS0033,keep,0.02249128725,0.881457557178,passed validation
+OBS0051,INS0051,keep,0.02250087632,0.901640011032,passed validation
+OBS0069,INS0069,correct,0.0224741242,0.851843345122,bid/ask inversion corrected by swapping endpoints
+OBS0087,INS0087,keep,0.02252975405,0.910679971327,passed validation
+OBS0118,INS0118,keep,99.46491594,0.781066899842,passed validation
+OBS0119,INS0119,downweight,109.5884189,0.18453838596,passed validation; iterative Huber outlier weight 0.2196 at standardized residual -13.66
+OBS0034,INS0034,keep,0.02160248372,0.848667981532,passed validation
+OBS0052,INS0052,keep,0.02163260639,0.75789879657,passed validation
+OBS0088,INS0088,correct,0.02156544702,0.776587726148,rate mislabeled PERCENT detected from maturity-local peers; treated as decimal
+OBS0120,INS0120,keep,112.0080362,0.65686371107,passed validation
+OBS0121,INS0121,keep,104.7359268,0.804137777703,passed validation
+OBS0122,INS0122,downweight,100.1561008,0.225534244696,passed validation; iterative Huber outlier weight 0.2651 at standardized residual -11.32
+OBS0035,INS0035,correct,0.021249598045,0.980939652373,missing quote replaced by observable bid/ask midpoint
+OBS0053,INS0053,keep,0.02125308344,0.89873594607,passed validation
+OBS0071,INS0071,downweight,0.004200516878,0.0159595854093,passed validation; iterative Huber outlier weight 0.0176 at standardized residual 170.49
+OBS0089,INS0089,keep,0.02126520422,0.794376853763,passed validation
+OBS0123,INS0123,downweight,103.9505347,0.602503600811,passed validation; iterative Huber outlier weight 0.9012 at standardized residual 3.33
+OBS0125,INS0125,downweight,105.2458188,0.20194696586,passed validation; iterative Huber outlier weight 0.2842 at standardized residual -10.55
+OBS0036,INS0036,keep,0.02092302852,0.794142204047,passed validation
+OBS0054,INS0054,keep,0.02080869915,0.627447104787,passed validation
+OBS0072,INS0072,keep,0.02092790897,0.88293802412,passed validation
+OBS0090,INS0090,keep,0.02092832494,0.87088789532,passed validation
+OBS0126,INS0126,downweight,99.39766469,0.390056627722,passed validation; iterative Huber outlier weight 0.5353 at standardized residual -5.60
+OBS0127,INS0127,keep,96.13129331,0.890419755061,passed validation
+OBS0128,INS0128,downweight,101.6306821,0.362740218197,passed validation; iterative Huber outlier weight 0.5785 at standardized residual -5.19
+OBS0129,INS0129,correct,95.39519738,0.747729211399,bond price in currency units detected; converted to points per 100
+OBS0130,INS0130,keep,98.19756059,0.665533391862,passed validation
+OBS0055,INS0055,downweight,0.0204023464,0.506834996178,passed validation; iterative Huber outlier weight 0.6315 at standardized residual -4.75
+OBS0073,INS0073,downweight,0.0203935877,0.450338733085,passed validation; iterative Huber outlier weight 0.6433 at standardized residual -4.66
+OBS0132,INS0132,downweight,103.851753,0.209466445885,passed validation; iterative Huber outlier weight 0.3605 at standardized residual 8.32
+OBS0133,INS0133,downweight,101.5045629,0.322007770348,passed validation; iterative Huber outlier weight 0.3944 at standardized residual 7.61
+OBS0134,INS0134,correct,99.4611406,0.609897454111,bond price in currency units detected; converted to points per 100
+OBS0135,INS0135,downweight,107.3457894,0.365134157125,passed validation; iterative Huber outlier weight 0.5959 at standardized residual -5.03
+OBS0136,INS0136,downweight,111.1400778,0.174268086356,passed validation; iterative Huber outlier weight 0.2846 at standardized residual -10.54
+OBS0138,INS0138,downweight,97.11789602,0.132275772317,passed validation; iterative Huber outlier weight 0.1887 at standardized residual -15.89
+OBS0139,INS0139,downweight,106.6164438,0.0226500063398,stale by 12.4 days; weight multiplied by 0.10; iterative Huber outlier weight 0.4125 at standardized residual -7.27
+OBS0140,INS0140,downweight,111.1546657,0.26930804261,passed validation; iterative Huber outlier weight 0.4024 at standardized residual -7.45
+OBS0141,INS0141,keep,101.7902353,0.571681987672,passed validation
+OBS0038,INS0038,keep,0.02007122765,0.677859373156,passed validation
+OBS0056,INS0056,keep,0.02007488869,0.80506331161,passed validation
+OBS0074,INS0074,keep,0.02004354258,0.688867578606,passed validation
+OBS0092,INS0092,correct,0.02005313369,0.793605064018,rate mislabeled PERCENT detected from maturity-local peers; treated as decimal
+OBS0142,INS0142,downweight,104.9515633,0.153601270315,missing quote replaced by observable bid/ask midpoint; low liquidity score 0.092
+OBS0143,INS0143,keep,109.1223507,0.33744054292,passed validation
+OBS0145,INS0145,downweight,94.47021544,0.123169171689,low liquidity score 0.093; iterative Huber outlier weight 0.7984 at standardized residual 3.76
+OBS0146,INS0146,downweight,101.4407908,0.22587155405,low liquidity score 0.173
+OBS0147,INS0147,downweight,98.53364284,0.0971587456682,passed validation; iterative Huber outlier weight 0.2734 at standardized residual 10.97
+OBS0148,INS0148,downweight,104.4776373,0.117373413456,bond price in currency units detected; converted to points per 100; low liquidity score 0.089; iterative Huber outlier weight 0.7784 at standardized residual -3.85
+OBS0149,INS0149,keep,108.1241821,0.329521288445,passed validation
+OBS0150,INS0150,downweight,109.2841705,0.0730718735139,low liquidity score 0.160; iterative Huber outlier weight 0.3404 at standardized residual -8.81
+OBS0039,INS0039,keep,0.02065394111,0.38766790649,passed validation
+OBS0075,INS0075,downweight,0.02054567119,0.307954533303,low liquidity score 0.168
+OBS0093,INS0093,downweight,0.020644725655,0.311060761049,missing quote replaced by observable bid/ask midpoint; low liquidity score 0.171
+OBS0152,INS0152,downweight,109.8768019,0.245810165,low liquidity score 0.196
+OBS0153,INS0153,downweight,90.37309179,0.184221572687,low liquidity score 0.125
+OBS0154,INS0154,keep,93.72557777,0.322797341865,passed validation
+OBS0155,INS0155,downweight,102.1731727,0.0228833666141,low liquidity score 0.160
+OBS0156,INS0156,downweight,88.56900169,0.236388168132,passed validation; iterative Huber outlier weight 0.9162 at standardized residual -3.27
+OBS0157,INS0157,keep,104.5315442,0.292642984042,passed validation
+OBS0159,INS0159,downweight,92.18108259,0.197875688756,low liquidity score 0.141
+OBS0160,INS0160,downweight,106.2444258,0.192081559134,low liquidity score 0.134
+OBS0040,INS0040,keep,0.02070533657,0.472123024818,passed validation
+OBS0058,INS0058,keep,0.02075650315,0.364219005172,passed validation
+OBS0076,INS0076,downweight,0.02076410959,0.250218281053,low liquidity score 0.117
+OBS0094,INS0094,downweight,0.02068136685,0.298770297434,rate mislabeled PERCENT detected from maturity-local peers; treated as decimal; low liquidity score 0.159

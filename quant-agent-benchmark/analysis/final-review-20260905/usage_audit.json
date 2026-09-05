@@ -1,0 +1,95 @@
+{
+  "astra": {
+    "session_id": "01a06f02-c11c-7ab0-971a-f7abd9ce99ab",
+    "final_thread_counter": {
+      "input_tokens": 4360256,
+      "cached_input_tokens": 4097280,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 86109,
+      "reasoning_output_tokens": 35289,
+      "total_tokens": 4446365
+    },
+    "usage_method": "response_id-deduplicated token_usage_record.usage",
+    "raw_usage_records": 52,
+    "token_count_events": 52,
+    "duplicate_counter_events": 0,
+    "counter_resets": 0,
+    "independent_cumulative_reconciliation": true,
+    "duplicate_api_blocks_removed": 0,
+    "source_path": "/Users/ankimo1210/.codex/sessions/2026/09/05/rollout-2026-09-05T09-40-46-01a06f02-c11c-7ab0-971a-f7abd9ce99ab.jsonl",
+    "source_sha256": "e34922efb6f5b6c82f0cdebf743890ee981e84ccc2a998ecc656b363acec6628"
+  },
+  "sol": {
+    "session_id": "01a06f03-72e9-70a1-a254-f7b4e04a719f",
+    "final_thread_counter": {
+      "input_tokens": 10272983,
+      "cached_input_tokens": 10096128,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 76904,
+      "reasoning_output_tokens": 25905,
+      "total_tokens": 10349887
+    },
+    "usage_method": "response_id-deduplicated token_usage_record.usage",
+    "raw_usage_records": 82,
+    "token_count_events": 84,
+    "duplicate_counter_events": 2,
+    "counter_resets": 0,
+    "independent_cumulative_reconciliation": true,
+    "duplicate_api_blocks_removed": 0,
+    "source_path": "/Users/ankimo1210/.codex/sessions/2026/09/05/rollout-2026-09-05T09-41-32-01a06f03-72e9-70a1-a254-f7b4e04a719f.jsonl",
+    "source_sha256": "49700352af01e986970e6d528e7a27568fdc7541dee5eab59cfdcdad8e129e58"
+  },
+  "opus": {
+    "session_id": "8f376df0-177d-4bfc-adf2-21852ba5358b",
+    "compaction": {
+      "timestamp_utc": "2026-09-05T02:32:07.656Z",
+      "trigger": "auto",
+      "preTokens": 469826,
+      "postTokens": 19481,
+      "durationMs": 157579
+    },
+    "usage_method": "one identical usage per message.id; requestId independently cross-checked",
+    "raw_usage_records": 449,
+    "duplicate_api_blocks_removed": 174,
+    "raw_block_totals": {
+      "uncached_input": 898,
+      "cache_read_input": 94840889,
+      "cache_creation_input": 1443065,
+      "input_total": 96284852,
+      "output_nonreasoning": 477149,
+      "output_reasoning": 329402,
+      "output_total": 806551,
+      "total_tokens": 97091403
+    },
+    "synthetic_zero_usage_records": 1,
+    "excluded_nonhuman_user_messages": 5,
+    "compaction_events": 1,
+    "all_repeated_usage_identical": true,
+    "unique_request_ids": 275,
+    "source_path": "/Users/ankimo1210/.claude/projects/-Users-ankimo1210-Documents-projects/8f376df0-177d-4bfc-adf2-21852ba5358b.jsonl",
+    "source_sha256": "c849eeb135a59989a9fec93e20e8aeb0473a096d6c4d35aaefae854257e37b12"
+  },
+  "fable": {
+    "session_id": "bf368b2b-b291-4750-a82f-8ff314837922",
+    "usage_method": "one identical usage per message.id; requestId independently cross-checked",
+    "raw_usage_records": 116,
+    "duplicate_api_blocks_removed": 75,
+    "raw_block_totals": {
+      "uncached_input": 3442,
+      "cache_read_input": 26310765,
+      "cache_creation_input": 2252505,
+      "input_total": 28566712,
+      "output_nonreasoning": 407774,
+      "output_reasoning": 338604,
+      "output_total": 746378,
+      "total_tokens": 29313090
+    },
+    "synthetic_zero_usage_records": 0,
+    "excluded_nonhuman_user_messages": 4,
+    "compaction_events": 0,
+    "all_repeated_usage_identical": true,
+    "unique_request_ids": 41,
+    "source_path": "/Users/ankimo1210/.claude/projects/-Users-ankimo1210-Documents-projects/bf368b2b-b291-4750-a82f-8ff314837922.jsonl",
+    "source_sha256": "28f2a90b6a081e16026179fe958d0e344c057529b6a293cbfca7581ca19e06b0"
+  }
+}

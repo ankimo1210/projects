@@ -1,0 +1,23 @@
+{
+  "model": "terra",
+  "case": "s02",
+  "curve_rows": 361,
+  "truth_rows": 721,
+  "market_rows": 98,
+  "market": "evaluator/hidden_scenarios/s02/market_data.csv",
+  "truth": "evaluator/hidden_scenarios/s02/truth_curve.csv",
+  "metrics": {
+    "zero_rate_rmse_bps": 4.362916244869994,
+    "weighted_zero_rate_rmse_bps": 4.626312085211915,
+    "forward_rate_rmse_bps": 27.0134999266663,
+    "discount_factor_rmse_x1e4": 35.17740068023459,
+    "hidden_instrument_normalized_rmse": 2.9316575341091395,
+    "bid_ask_normalized_pricing_rmse": 9.044994522614685,
+    "short_end_zero_rmse_bps": 4.637416061040938,
+    "long_end_zero_rmse_bps": 5.492274230523278,
+    "forward_roughness": 2.7747653020769394e-05,
+    "zero_curvature_rms": 0.015142703727244721
+  },
+  "rmse_matches_frozen_score": true,
+  "cli_seconds": 5.846606250001059
+}

@@ -1,0 +1,73 @@
+{
+  "benchmark_integrity_incidents": [],
+  "cached_input_tokens": null,
+  "corrective_iterations": 0,
+  "credits_consumed": null,
+  "data_quality_summary": {
+    "actions": {
+      "correct": 15,
+      "downweight": 23,
+      "exclude": 15,
+      "keep": 90
+    },
+    "crossed_bid_ask": 4,
+    "duplicate_instrument_ids": 14,
+    "excluded_rows": 15,
+    "input_rows": 143,
+    "low_liquidity_rows": 23,
+    "missing_quote_values": 4,
+    "peer_outlier_exclusions": 8,
+    "stale_rows": 5,
+    "unit_corrections": 8,
+    "usable_rows": 128
+  },
+  "estimated_usd_cost": null,
+  "failed_test_runs": 0,
+  "files_created": [
+    "curves/curve.csv",
+    "diagnostics/cleaning.csv",
+    "diagnostics/repricing.csv",
+    "diagnostics/risk.csv",
+    "diagnostics/model_comparison.json",
+    "diagnostics/sensitivity.json",
+    "diagnostics/data_quality.json",
+    "charts/curve.png",
+    "charts/forward_rate.png",
+    "charts/repricing.png",
+    "charts/model_comparison.png",
+    "reports/research_report.html"
+  ],
+  "final_tests_failed": null,
+  "final_tests_passed": null,
+  "finish_time": "2026-09-05T05:50:23.332002Z",
+  "five_hour_quota_after_percent": null,
+  "five_hour_quota_before_percent": null,
+  "human_interventions": 0,
+  "input_tokens": null,
+  "major_modelling_decisions": [
+    "Bootstrap deposits and OIS swaps as a transparent baseline.",
+    "Fit a positive-discount-factor, piecewise-linear continuous zero curve using spread/liquidity weights, curvature regularisation, and four robust residual reweighting iterations.",
+    "Use whole-maturity clusters near 2Y, 5Y, 10Y, 20Y, and 30Y for visible holdout validation."
+  ],
+  "model_name": "gpt-5.6-luna",
+  "model_selection": "Advanced model selected because its whole-maturity holdout standardized RMSE is no worse than 5% above the baseline and it uses the documented bond evidence and robust weighting.",
+  "output_tokens": null,
+  "quota_percentage_consumed": null,
+  "reasoning_effort": "xhigh",
+  "reasoning_tokens": null,
+  "reported_usd_cost": null,
+  "schema_version": "1.0",
+  "start_time": "2026-09-05T05:49:57.769278Z",
+  "test_runs": 0,
+  "tests_failed": 0,
+  "tests_passed": 0,
+  "total_tokens": null,
+  "unresolved_limitations": [
+    "Synthetic single-date data do not support historical rolling backtests.",
+    "Long-end extrapolation is constant in zero-rate terms beyond the last knot.",
+    "Calendar, collateral, accrued-interest, and business-day conventions outside the supplied specification are out of scope."
+  ],
+  "wall_time_seconds": 25.562724,
+  "weekly_quota_after_percent": null,
+  "weekly_quota_before_percent": null
+}

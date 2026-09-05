@@ -1,0 +1,9 @@
+{
+  "bump_shape": "Key-rate bumps are piecewise-linear tents in the continuously compounded zero rate, centred at 2Y, 5Y, 10Y and 30Y, equal to one at the centre and zero at the neighbouring centres; the 2Y tent is flat (=1) before 2Y and the 30Y tent is flat after 30Y, so the four tents sum to one at every maturity (partition of unity) and the key-rate sensitivities aggregate to the parallel DV01 up to second-order convexity.",
+  "bump_size_bp": 1.0,
+  "n_instruments": 120,
+  "max_abs_rel_diff_fd_vs_analytic": 1.2741330043473926e-06,
+  "max_abs_rel_diff_keysum_vs_dv01": 5.316904725395702e-07,
+  "max_abs_rel_diff_halfstep_vs_fullstep": 9.55598701574287e-07,
+  "all_receiver_dv01_positive": true
+}

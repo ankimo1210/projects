@@ -1,0 +1,58 @@
+{
+  "cleaning_action_counts": {
+    "correct": 15,
+    "downweight": 14,
+    "exclude": 24,
+    "keep": 90
+  },
+  "estimated_model_error_bp": {
+    "bond": 2.1401324169535894,
+    "deposit": 0.25,
+    "ois_swap": 0.5616904887011666
+  },
+  "market_data": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/input/market_data/market_observations.csv",
+  "market_snapshot": "2026-01-15T16:00:00Z",
+  "observations": 143,
+  "usable_instruments": 119,
+  "validation_findings": [
+    "missing_quote: 4 observation(s)",
+    "stale_timestamp: 5 observation(s)",
+    "crossed_market: 4 observation(s)",
+    "wide_spread: 7 observation(s)",
+    "quote_outside_band: 6 observation(s)",
+    "suspect_unit_scale: 7 observation(s)",
+    "duplicate_observation: 14 observation(s)",
+    "illiquid: 20 observation(s)"
+  ],
+  "validation_flag_counts": {
+    "bad_coupon": 0,
+    "bad_frequency": 0,
+    "bad_liquidity": 0,
+    "bad_maturity": 0,
+    "bad_settlement_days": 0,
+    "bad_timestamp": 0,
+    "crossed_market": 4,
+    "duplicate_observation": 14,
+    "forward_starting": 0,
+    "future_timestamp": 0,
+    "illiquid": 20,
+    "maturity_date_mismatch": 0,
+    "missing_bid_ask": 0,
+    "missing_coupon": 0,
+    "missing_quote": 4,
+    "quote_outside_band": 6,
+    "stale_timestamp": 5,
+    "suspect_unit_scale": 7,
+    "unexpected_coupon": 0,
+    "unexpected_currency": 0,
+    "unexpected_day_count": 0,
+    "unexpected_quote_type": 0,
+    "unexpected_quote_unit": 0,
+    "unknown_instrument_type": 0,
+    "unparseable_number": 0,
+    "wide_spread": 7,
+    "zero_spread": 0
+  },
+  "valuation_date": "2026-01-15",
+  "warnings": []
+}

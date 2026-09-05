@@ -1,0 +1,2141 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "コーディングエージェント性能評価",
+    "description": "4モデルの最終スコア・数値精度・実行時間・トークン・再現性・評価上の限界を統合。",
+    "generatedAt": "2026-09-05T07:20:22.578445+00:00",
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# コーディングエージェント性能評価\n\n量的リサーチ・ベンチマーク最終レポート · 2026年9月5日 · 時刻は日本標準時（JST）\n\n対象：Astra / Sol / Opus / Fable。完了済み提出物の自動採点、ログから回復した使用量、独立したテスト再実行を統合。",
+        "layout": "full"
+      },
+      {
+        "id": "executive-summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\n- **今回の総合得点はFableが最高。** 94.473/100点で、Opusの93.431点を1.042点上回った。全4モデルが10/10の隠しシナリオで有効なカーブを生成し、独立したpytest再実行は合計329件すべて合格した。\n- **精度・時間・トークンで、優位なモデルは異なる。** Solは34.6分で最短、Astraは3.80Mトークンで最少。Fableは55.9分・10.79M、Opusは再開を含め124.2分・59.40Mだった。ただし総量の92〜98%はキャッシュ読取で、それを除くとAstra 0.22M、Sol 0.23M、Fable 1.05M、Opus 1.29M。OpusとFableの差は5.5倍ではなく1.2倍で、トークン量は料金でもない。\n- **GPT側の点差は、未完遂ではなく主カーブとストレス条件の精度にある。** Fableとの差は、数値精度・モデル品質・頑健性の計65点部分でAstraが10.687点、Solが15.035点。ただし「モデル品質」20点のうち18点は数値精度と同じ主カーブの誤差を再採点したもので、独立した証拠ではない。Astraには日本語レポートの機械判定による不利もある。\n- **これは1回ずつの観測結果であり、普遍的な能力順位ではない。** 採点形式や支払日仕様に加え、欠損クォートの採点規則は4モデル全員が同じ理由で失点している。精度重視ではストレス条件に強いFableと主データで最も正確なOpusの両方を再検証候補とし、速度重視のSol・処理量重視のAstraも用途別に残すのが妥当。",
+        "layout": "full"
+      },
+      {
+        "id": "headline-strip",
+        "type": "metric-strip",
+        "cardIds": [
+          "score-kpi",
+          "time-kpi",
+          "tokens-kpi"
+        ]
+      },
+      {
+        "id": "overall",
+        "type": "markdown",
+        "body": "## 1. Fableが総合首位、Opusが僅差で続く\n\n生の自動採点ではFable、Opus、Sol、Astraの順だった。FableとOpusの差は1.042点、SolとAstraの差は0.335点と小さい。後述の形式依存の減点があるため、この微差から安定した順位までは判断できない。\n\n採点は100点満点の7カテゴリ。時間・トークンは得点に混ぜず別軸で示す。リスク表の任意列の衝突を避ける互換処理だけを適用し、計算式・配点・閾値は変更していない。誤検知を手作業で加点補正した値ではない。",
+        "layout": "full",
+        "sourceId": "scores"
+      },
+      {
+        "id": "score-ranking-block",
+        "type": "chart",
+        "chartId": "score-ranking",
+        "layout": "full"
+      },
+      {
+        "id": "category-scores-block",
+        "type": "table",
+        "tableId": "category-scores",
+        "layout": "full"
+      },
+      {
+        "id": "category-matrix-block",
+        "type": "chart",
+        "chartId": "category-matrix",
+        "layout": "full"
+      },
+      {
+        "id": "gap",
+        "type": "markdown",
+        "body": "## 2. GPT側の差は、完遂よりも数値・モデル品質に集中\n\n全モデルの完遂点は5/5。FableとAstraの総得点差14.370点のうち、数値精度・モデル品質・頑健性で10.687点を占める。残りにはレポート点差3.111点とデータ品質差0.572点がある。\n\nFableとSolは、同じ中核3カテゴリで15.035点の差がある一方、ソフトウェアではSolが1点上回るため、総差は14.035点になる。したがって、追加テストの件数だけを増やすより、価格付け規約・カーブ表現・ホールドアウト設計の再検証が優先される。\n\nただし「数値精度」と「モデル品質」は独立した2つの証拠ではない。採点器のモデル品質20点は、主データのゼロRMSE 7点・重み付きゼロRMSE 3点・フォワードRMSE 4点・非公開商品RMSE 4点の計18点と、モデル比較JSON・感度分析JSONの形式チェック各1点で構成される。つまり中核3カテゴリの実態は「主カーブ精度（数値精度30＋モデル品質18）」と「隠しシナリオ精度（頑健性15）」の2本で、Solのモデル品質10.218/20を「モデル選択の進め方が劣る」と読むことはできない。",
+        "layout": "full",
+        "sourceId": "scores"
+      },
+      {
+        "id": "score-gaps-block",
+        "type": "table",
+        "tableId": "score-gaps",
+        "layout": "full"
+      },
+      {
+        "id": "precision",
+        "type": "markdown",
+        "body": "## 3. Solは短期、Astraは長期の誤差が目立つ\n\n本データの正解カーブとの比較では、OpusとFableのゼロ金利RMSEは約1.1bp、AstraとSolは約5〜6bpだった。フォワード金利でも前者が約13〜15bp、後者が約31〜33bpとなっている。これは提出完了の判定ではなく、数値再現の差を示す。\n\n年限別にみるとSolは2年以下が20.223bp、Astraは15年以上が6.202bp。誤差の位置が違うため、「GPTモデルに一律の弱点がある」とまとめるより、モデル別の設計判断を調べる方が有用である。",
+        "layout": "full",
+        "sourceId": "precision"
+      },
+      {
+        "id": "zero-error-chart-block",
+        "type": "chart",
+        "chartId": "zero-error-chart",
+        "layout": "full"
+      },
+      {
+        "id": "accuracy-detail-block",
+        "type": "table",
+        "tableId": "accuracy-detail",
+        "layout": "full"
+      },
+      {
+        "id": "risk-readout",
+        "type": "markdown",
+        "body": "### リスク計算は全モデルでチェックを通過\n\n公開クォートそのものの再現では、bid/ask幅で正規化した誤差がOpus 5.4・Fable 5.1に対しAstra 17.7・Sol 63.6で、Solは入力クォートの再現から既に外れている。DV01有限差分とキーレート合計の整合性チェックは全モデルが合格した。ただし、照合できた商品数がモデル間で異なるため、下記の相対誤差だけでリスク計算の優劣を順位付けしない。非公開商品の価格誤差チェック（正規化RMSE < 3）はAstra・Solが不合格、Opus・Fableが合格だった。",
+        "layout": "full",
+        "sourceId": "precision"
+      },
+      {
+        "id": "risk-detail-block",
+        "type": "table",
+        "tableId": "risk-detail",
+        "layout": "full"
+      },
+      {
+        "id": "scenarios",
+        "type": "markdown",
+        "body": "## 4. 隠しシナリオでも精度差は残る\n\n全モデルが10/10で有効なカーブを返したが、これは全ケースで精度が十分だったという意味ではない。Fableのゼロ金利RMSEは9/10シナリオで最小、残るs10ではOpusが最小だった。これら10条件は同一実装に対するストレス検証であり、独立した10回のモデル実行ではない。\n\nまた、ゼロ金利だけでは見えない弱点がある。Opusはs09のフォワードRMSEが70.314bpまで増え、同条件のFableは18.952bpだった。本データでのOpusの高精度を、すべてのストレス条件へ一般化しないことが重要である。",
+        "layout": "full",
+        "sourceId": "precision"
+      },
+      {
+        "id": "scenario-matrix-block",
+        "type": "chart",
+        "chartId": "scenario-matrix",
+        "layout": "full"
+      },
+      {
+        "id": "scenario-forward-block",
+        "type": "table",
+        "tableId": "scenario-forward",
+        "layout": "full"
+      },
+      {
+        "id": "time",
+        "type": "markdown",
+        "body": "## 5. 最短はSol。Opusの再開待ちは作業時間と分ける\n\n作業ターンの合計はSol 34.6分、Astra 52.0分、Fable 55.9分、Opus 124.2分。FableはOpusより作業時間が55.0%短く、今回の観測では総合点も高かった。ただし、計算機の競合・ツール待ち・自動要約を含むため、モデルの純粋な推論速度ではない。\n\nOpusは途中で止まった後に再開している。69.8818分＋54.3365分が作業合計で、再開待ち78.3329分を含む最初から最後までは202.5513分。以前の69.9分という値は途中時点であり、本レポートでは最終値に置き換えている。",
+        "layout": "full",
+        "sourceId": "usage"
+      },
+      {
+        "id": "execution-time-block",
+        "type": "chart",
+        "chartId": "execution-time",
+        "layout": "full"
+      },
+      {
+        "id": "time-detail-block",
+        "type": "table",
+        "tableId": "time-detail",
+        "layout": "full"
+      },
+      {
+        "id": "selected-turns-block",
+        "type": "table",
+        "tableId": "selected-turns",
+        "layout": "full"
+      },
+      {
+        "id": "tokens",
+        "type": "markdown",
+        "body": "## 6. 総トークンの大半はキャッシュ入力\n\n本実行の総量はAstra 3.80M、Sol 8.98M、Fable 10.79M、Opus 59.40M。OpusはFableの約5.50倍を処理した。しかし総量の92〜98%はキャッシュ読取で、これを除いた「通常入力＋キャッシュ作成＋出力」はAstra 215,612、Sol 229,299、Fable 1,051,441、Opus 1,285,431。この尺度ではOpusとFableの差は1.22倍に縮まり、Claude系2モデルがGPT系2モデルの約5倍という構図になる。どちらの値も「生成した文章量」「消費料金」や「推論の深さ」とは読み替えられない。\n\n集計では、通常入力・キャッシュ読み込み・キャッシュ作成・通常出力・推論出力を排他的に足している。推論出力を出力総量へもう一度加えることはしない。API事業者間でトークナイザやキャッシュ計測が異なり、課金額・エネルギー・割当消費率は未測定である。",
+        "layout": "full",
+        "sourceId": "usage"
+      },
+      {
+        "id": "token-volume-block",
+        "type": "chart",
+        "chartId": "token-volume",
+        "layout": "full"
+      },
+      {
+        "id": "input-token-detail-block",
+        "type": "table",
+        "tableId": "input-token-detail",
+        "layout": "full"
+      },
+      {
+        "id": "output",
+        "type": "markdown",
+        "body": "### 出力だけを分けると、作業の進め方の違いが見える\n\nOpusは275回のAPI応答と415.6k出力トークン、Fableは41回と277.3k。Astraは40回と83.2k、Solは72回と74.0kだった。Fableは比較的少ない応答回数で多くの出力を返し、Opusは多くの応答を重ねた。ただし、これは記録された応答の粒度であり、ツール呼出し数や内部の思考ステップ数ではない。\n\n以下の推論量はログに明示された数値だけを使う。推論本文は収録しない。出力/APIもシステム間の応答境界に依存する観測指標で、単独の品質指標ではない。",
+        "layout": "full",
+        "sourceId": "usage"
+      },
+      {
+        "id": "output-volume-block",
+        "type": "chart",
+        "chartId": "output-volume",
+        "layout": "full"
+      },
+      {
+        "id": "work-patterns-block",
+        "type": "table",
+        "tableId": "work-patterns",
+        "layout": "full"
+      },
+      {
+        "id": "sessions-block",
+        "type": "table",
+        "tableId": "sessions",
+        "layout": "full"
+      },
+      {
+        "id": "scope-note",
+        "type": "markdown",
+        "body": "Astraでは準備・モデル名確認・終了後表示、Solではそれらに加えて出力先確認と修正依頼のターンを本実行から除外している。したがって作業時間は「完全な引き渡し対応時間」ではない。除外が採点対象を変えていないことは更新時刻で確認した：Solの本実行ターン終了（10:56:32）以降に変更されたファイルは自己申告の `benchmark_summary.json`（11:30:37）だけで、採点対象のコード・カーブ・診断出力は10:54:21のまま不変である。Solの実際の成果物は `output/sol` にあり、`results/sol` が空であることを未完遂と誤判定していない。",
+        "layout": "full"
+      },
+      {
+        "id": "profiles-heading",
+        "type": "markdown",
+        "body": "## 7. 手法の違いは確認できるが、因果関係は追加検証が必要\n\n以下は実装レビューと候補の自己申告を、観測された精度差と照合したもの。原因ごとの寄与を測る変更実験は未実施である。「この設計だから何点失った」とはまだ言えない。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-astra",
+        "type": "markdown",
+        "body": "### Astra — 少ない処理量で一式を実装、長期の誤差が課題\n\nゼロ金利をlog1p年限上の自然3次スプラインで表す高度モデルと、Nelson–Siegel基準モデルを比較。重み付きHuber損失と年限グループの検証で平滑化を選び、高度モデルを採用した。キャッシュを含む処理総量は今回最少だった。\n\n長期の誤差が目立つ一方、日本語のレポート本文にも必要な内容が見られる。長期の平滑化・価格付け規約が誤差に寄与した可能性と、英語キーワード判定による減点は分けて検証する必要がある。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-sol",
+        "type": "markdown",
+        "body": "### Sol — 最短でソフトウェア満点、短期カーブの選択が再検証点\n\n基準モデルは商品ごとの一定利回りを0.5年の満期バケットで集約し、PCHIP補間と平滑化を用いる。高度なゼロ金利スプラインも試したが、ホールドアウトで基準モデルが有利だったため基準モデルを採用した。\n\n短期の細かな年限構造をバケット集約が弱めた可能性はある。ただし、高度モデルを選び直せば改善するとは限らない。共通の価格付け規約の下で、バケット幅と検証分割を1つずつ変える実験が必要である。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-opus",
+        "type": "markdown",
+        "body": "### Opus — 高い主データ精度と多い検証、長い作業時間\n\n瞬間フォワード金利の3次スプラインに、年限依存の曲率ペナルティ、HuberからTukeyへ移るロバスト反復、商品種別ごとの残差スケールを組み合わせた。年限ブロック検証に安定性条件も加えて高度モデルを選んだ。\n\n主データのゼロ・フォワード誤差は今回最小だが、再開を含む時間とトークンは最大。自作テストの範囲も広い一方、s09のフォワード誤差は例外的に大きい。追加の反復量が常に追加の汎化精度へ結びついたとは言えない。",
+        "layout": "full"
+      },
+      {
+        "id": "profile-fable",
+        "type": "markdown",
+        "body": "### Fable — 高いストレス精度と比較的少ない応答回数\n\n瞬間フォワード金利の3次Bスプラインを積分して価格付けし、年限依存のペナルティとグループ化した交差検証を用いた。ロバスト処理では、年限上で一貫した観測群を単純に外れ値として消さない工夫がある。\n\n総合点と隠しシナリオの精度は今回良好だった。ただし、感度分析のJSON構造や自己パスの静的チェックで不合格が残る。少ないAPI応答回数を、少ない内部作業や常に優れた効率と同一視しない。",
+        "layout": "full"
+      },
+      {
+        "id": "model-metadata-notes",
+        "type": "markdown",
+        "body": "### 実行モデルと自己申告の修正回数\n\nモデルIDは記録値。修正回数は候補ごとの自己申告であり、共通定義による計測値ではない。\n\n- モデル：Fable · 記録されたモデルID：claude-fable-5-1 · 推論設定：xhigh · 修正回数（自己申告）：8 · 提出先：results/fable\n- モデル：Opus · 記録されたモデルID：claude-opus-5 · 推論設定：xhigh · 修正回数（自己申告）：27 · 提出先：results/opus\n- モデル：Sol · 記録されたモデルID：gpt-5.6-sol · 推論設定：xhigh · 修正回数（自己申告）：6 · 提出先：output/sol\n- モデル：Astra · 記録されたモデルID：gpt-6-astra · 推論設定：xhigh · 修正回数（自己申告）：6 · 提出先：results/astra",
+        "layout": "full",
+        "sourceId": "profiles"
+      },
+      {
+        "id": "test-heading",
+        "type": "markdown",
+        "body": "## 8. 再現性の検証は合格。ただし自作テスト数は性能点ではない\n\n記録された数値ライブラリに合わせた隔離環境で全候補のpytestを再実行し、Astra 45件、Sol 20件、Opus 204件、Fable 60件がすべて合格した。これは各モデルが自分で書いた異なるテスト群であり、件数が多いほど未見データに強いとは限らない。\n\n元の採点器のunittest探索ではAstra・Sol・Fableは各7件のみが対象だった。下表は全pytestと41件の採点チェックを分離している。Solは採点チェックの合格数が最多だが、連続値の数値得点が低いため総合首位ではない。",
+        "layout": "full"
+      },
+      {
+        "id": "test-results-block",
+        "type": "table",
+        "tableId": "test-results",
+        "layout": "full"
+      },
+      {
+        "id": "integrity",
+        "type": "markdown",
+        "body": "### 検証環境と保全\n\nPython 3.12.11 / NumPy 2.5.2 / pandas 2.3.3 / SciPy 1.18.1 / Matplotlib 3.11.1で再検証した。旧共有環境で発生したAstra・Fableの数値警告によるテスト失敗は、記録された版をそろえると解消。4モデルの自動採点は旧環境と小数第3位まで一致した。\n\n公開入力12ファイル、評価側108ファイルのマニフェストは採点前後で一致。検証対象の候補コード・成果物ハッシュも不変だった。互換処理4テスト、使用量回復8テスト、実行後にも適用できる評価側12テストを既存の最終確認で通過している。実行前専用の「resultsが空」という検査は、提出後の検証対象から明示的に除外した。",
+        "layout": "full",
+        "sourceId": "qa"
+      },
+      {
+        "id": "rubric",
+        "type": "markdown",
+        "body": "## 9. 採点の弱点を、候補モデルの弱点と混同しない\n\n最終スコアは追跡可能な生得点として保持する。ただし下記の仕様依存・誤検知があるため、人が内容を再審査する前に補正点や真の順位を計算することは避けた。とくにAstraの日本語レポート点差は、数値精度の差とは別の論点である。また、4モデルが同一の理由で落とした欠損クォートのチェック（各1.0点）と、「モデル品質」の18/20点が数値精度と同じ誤差であることは、順位ではなくカテゴリの読み方に影響する。",
+        "layout": "full",
+        "sourceId": "limits"
+      },
+      {
+        "id": "rubric-limitations-notes",
+        "type": "markdown",
+        "body": "### 解釈に影響する採点上の論点\n\n数値誤差、形式違反、誤検知を分けて評価する。\n\n- 優先：1 · 論点：端数期間の支払規則 · 対象：全モデル · 確認した事実：公開文書の満期・元本償還規則と、生成器のround(T×頻度)による支払時点が一部整合しない。 · 解釈への影響：価格誤差の一部が規約選択に依存する可能性。寄与は未推定。\n- 優先：2 · 論点：「モデル品質」の中身 · 対象：採点器 · 確認した事実：モデル品質20点のうち18点は数値精度と同じ主カーブのRMSE（ゼロ7・重み付き3・フォワード4・非公開商品4）。形式チェックは2点。 · 解釈への影響：数値精度とモデル品質は同じ誤差の二重採点で、独立した証拠ではない。カテゴリ名からモデル選択の質を読み取らない。\n- 優先：3 · 論点：英語キーワードによる章判定 · 対象：Astra · 確認した事実：日本語見出しがあるが2/9概念しか認識されず、レポート1.889/5。 · 解釈への影響：満点との3.111点差を内容不足だけで説明できない。自動で満点には補正しない。\n- 優先：4 · 論点：欠損クォートの採点規則 · 対象：全モデル · 確認した事実：採点器は欠損クォート4件をaction=excludeにした場合だけ合格とする。4モデルとも二者間bid/askの中値で復元して採用（correct/downweight）し、全員が0/4で不合格、データ品質から各1.0点減。 · 解釈への影響：4モデル同一の失点は実装の弱点ではなく採点規則の選択。中値復元は妥当な処理であり、次回は仕様で扱いを固定する。\n- 優先：5 · 論点：自分の出力パスの静的スキャン · 対象：Astra / Opus / Fable · 確認した事実：Astra30件、Opus1件、Fable1件はいずれも各自のパス。 · 解釈への影響：これらの警告は他モデル出力の閲覧証拠ではない。完全な隔離の証明でもない。\n- 優先：6 · 論点：比較結果のキー名 · 対象：Astra / Opus · 確認した事実：model_selected と、採点器の selected_model が不一致。 · 解釈への影響：情報の存在とスキーマ準拠が混ざる。事前にスキーマ固定が必要。\n- 優先：7 · 論点：感度分析のJSON構造 · 対象：Fable · 確認した事実：checksリストに結果があるが、トップレベル3キー以上という判定で不合格。 · 解釈への影響：チェック不合格だけで感度分析の欠落とは判断できない。\n- 優先：8 · 論点：個人環境への絶対パス · 対象：Opus · 確認した事実：tests/test_cli.py に公開入力への固定絶対パスがある。 · 解釈への影響：移植性の課題。許可された公開入力への参照を情報漏洩と混同しない。\n- 優先：9 · 論点：リスク表の任意列結合 · 対象：採点器 · 確認した事実：任意メタデータ列が正解表と衝突して停止。別ラッパーで必須列に限定。 · 解釈への影響：実行互換性を回復。元の配点・計算式・閾値は保持。",
+        "layout": "full",
+        "sourceId": "limits"
+      },
+      {
+        "id": "schedules",
+        "type": "markdown",
+        "body": "### 支払規則の違いは、有力な仮説だが未検証\n\n公開文書では満期年を正とし、債券元本を満期に返す。一方、生成器・採点器は `round(T × frequency)` から支払列を作るため、端数満期では最後の支払時点が満期Tと一致しない場合がある。\n\nAstraは端数期間を日数比例で扱い、Solは満期までの通常クーポンと満期元本を分け、Opusは満期から逆算した支払列を用い、Fableは観測への適合から規則を選んだ。これらの差が価格誤差に寄与した可能性はあるが、Opus・Fableだけが「明確に記載された正しい仕様を実装した」とは言えない。まず共通規約を定め、規約だけを入れ替える対照実験が必要である。",
+        "layout": "full"
+      },
+      {
+        "id": "next-steps",
+        "type": "markdown",
+        "body": "## 10. 次回は採点器を固定し、同じ条件で反復する\n\n1. **仕様と採点スキーマを先に固定する。** 端数期間、元本償還日、欠損クォートの扱い（除外かbid/ask中値復元か）、比較JSON、感度JSON、レポートの言語非依存判定を明文化する。「モデル品質」は主カーブ精度と分離し、検証設計そのものを採点する項目に改める。自己パスの誤検知を修正し、新旧ルーブリックを別バージョンで保存する。\n2. **共通の運用条件で複数回走らせる。** 入力・依存関係・プロンプト・ツール権限・推論設定・時間上限・中断時の扱いを統一する。乱数を変えた反復で中央値とばらつきを報告し、今回の単発結果と混ぜない。\n3. **原因を切り分ける小さな実験を行う。** 支払規約だけを統一し、次にSolのバケット幅、Astraの長期平滑化、両者の検証分割を1要因ずつ比較する。改善幅を測るまでは原因別の失点を断定しない。\n4. **目的別に選ぶ。** 精度重視ではFable（隠しシナリオで9/10最小）とOpus（主データで最小誤差）を再検証し、どの精度を優先するかを先に決める。時間制約ではSol、処理量制約ではAstraを候補として残し、必要な精度の下限を別途設定する。処理量はキャッシュ読取を除いた値で比較し、料金の意思決定には実請求データを追加する。\n\nこれらは次回への提案であり、このレポート作成で候補実装の修正や追加のモデル実行は行っていない。",
+        "layout": "full"
+      },
+      {
+        "id": "open-questions",
+        "type": "markdown",
+        "body": "## 判断前に残る問い\n\n- どの精度水準なら実務用途として許容できるか。短期、長期、価格再現、DV01のどれを必須条件にするか。\n- 「速さ」は作業ターン時間か、途中停止と引き渡し対応を含む完了までの時間か。\n- キャッシュ割引と実際の契約条件を含む請求額はいくらか。現時点では未測定で、ゼロではない。\n- 採点器の形式依存を除き、複数実行で比較したとき、今回の1点前後の順位差は残るか。",
+        "layout": "full"
+      },
+      {
+        "id": "caveats",
+        "type": "markdown",
+        "body": "## 前提と利用上の注意\n\n本レポートの評価は **「留保付きで共有可能」**。対象4モデルはそれぞれ1回の実行で、信頼区間や統計的有意差は推定していない。モデルID・推論設定はログや候補記録の値であり、モデルファミリー全体の性能を表さない。合成データのベンチマークであり、実市場での運用成績も示していない。\n\n時間は壁時計、トークンはキャッシュの反復入力を含むログ上の処理量（キャッシュ読取を除いた値も併記）。API応答数・自作テスト件数・自己申告の修正回数は定義が異なるため、それだけで「仕事の上手さ」を判定しない。数値精度に差があることと、その原因が特定できたことは別である。\n\n図表のデータ出典から、参照ファイルと計算定義を確認できる。このHTMLは最終確認済みデータの固定スナップショットで、ライブ更新や外部接続は行わない。",
+        "layout": "full"
+      }
+    ],
+    "cards": [
+      {
+        "id": "score-kpi",
+        "dataset": "headlines",
+        "sourceId": "scores",
+        "description": "今回の単一実行における自動採点。",
+        "metrics": [
+          {
+            "label": "Fable · 最高得点 /100",
+            "field": "best_score",
+            "format": "number"
+          },
+          {
+            "label": "Opusとの差（点）",
+            "field": "score_lead",
+            "format": "number",
+            "signed": true
+          }
+        ]
+      },
+      {
+        "id": "time-kpi",
+        "dataset": "headlines",
+        "sourceId": "usage",
+        "description": "選択した本実行ターンの壁時計時間。",
+        "metrics": [
+          {
+            "label": "Sol · 最短作業時間（分）",
+            "field": "fastest_min",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "tokens-kpi",
+        "dataset": "headlines",
+        "sourceId": "usage",
+        "description": "キャッシュ入力を含む処理総量。料金換算なし。",
+        "metrics": [
+          {
+            "label": "Astra · 最少処理トークン",
+            "field": "fewest_tokens",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "score-ranking",
+        "title": "モデル別総合得点",
+        "subtitle": "100点満点・各1実行。点数は高いほど良い。",
+        "type": "bar",
+        "dataset": "ranking",
+        "sourceId": "scores",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "score",
+            "type": "quantitative",
+            "label": "点"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "number",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "orientation": "horizontal"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "点"
+      },
+      {
+        "id": "category-matrix",
+        "title": "カテゴリ別の満点に対する達成率",
+        "subtitle": "各セル=得点÷カテゴリ満点。濃いほど達成率が高い。総合点への寄与は配点で異なる。",
+        "type": "heatmap",
+        "dataset": "category-attainment",
+        "sourceId": "scores",
+        "encodings": {
+          "x": {
+            "field": "category",
+            "type": "nominal",
+            "label": "カテゴリ"
+          },
+          "y": {
+            "fields": [
+              "Fable",
+              "Opus",
+              "Sol",
+              "Astra"
+            ],
+            "type": "quantitative",
+            "label": "カテゴリ別の満点に対する達成率"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "percent",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "showDescription": true
+      },
+      {
+        "id": "zero-error-chart",
+        "title": "本データのゼロ金利RMSE",
+        "subtitle": "単位bp。小さいほど良い。1bpは0.01パーセントポイント。",
+        "type": "bar",
+        "dataset": "zero-errors",
+        "sourceId": "precision",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "zero_rmse",
+            "type": "quantitative",
+            "label": "bp"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "number",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "orientation": "horizontal"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "bp"
+      },
+      {
+        "id": "scenario-matrix",
+        "title": "隠し10シナリオのゼロ金利RMSE",
+        "subtitle": "単位bp。行=モデル、列=隠しシナリオs01〜s10。濃いほど誤差が大きい（前の達成率図とは良否の向きが逆）。",
+        "type": "heatmap",
+        "dataset": "scenario-zero",
+        "sourceId": "precision",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "fields": [
+              "s01",
+              "s02",
+              "s03",
+              "s04",
+              "s05",
+              "s06",
+              "s07",
+              "s08",
+              "s09",
+              "s10"
+            ],
+            "type": "quantitative",
+            "label": "bp"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "number",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "bp",
+        "showDescription": true
+      },
+      {
+        "id": "execution-time",
+        "title": "本実行・再開の作業時間",
+        "subtitle": "単位分。準備・後続依頼・ターン間の待機を除外。ツールと要約待ちは含む。",
+        "type": "bar",
+        "dataset": "work-time",
+        "sourceId": "usage",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "minutes",
+            "type": "quantitative",
+            "label": "分"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "number",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "orientation": "horizontal"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "分"
+      },
+      {
+        "id": "token-volume",
+        "title": "本実行の入力・出力トークン",
+        "subtitle": "M=100万トークン。入力内のキャッシュ詳細は下表。総量の比較は料金の比較ではない。",
+        "type": "horizontalStackedBar",
+        "dataset": "token-composition",
+        "sourceId": "usage",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "tokens",
+            "type": "quantitative",
+            "label": "tokens"
+          },
+          "color": {
+            "field": "part",
+            "type": "nominal"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "compact",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "groupMode": "stacked"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "tokens",
+        "legend": {
+          "position": "bottom",
+          "sort": "spec"
+        }
+      },
+      {
+        "id": "output-volume",
+        "title": "通常出力と推論出力",
+        "subtitle": "k=千トークン。2区分の和が出力総量。推論は出力に含まれる。",
+        "type": "horizontalStackedBar",
+        "dataset": "output-composition",
+        "sourceId": "usage",
+        "encodings": {
+          "x": {
+            "field": "model",
+            "type": "nominal",
+            "label": "モデル"
+          },
+          "y": {
+            "field": "tokens",
+            "type": "quantitative",
+            "label": "tokens"
+          },
+          "color": {
+            "field": "part",
+            "type": "nominal"
+          }
+        },
+        "layout": "full",
+        "valueFormat": "compact",
+        "labels": {
+          "values": "all"
+        },
+        "palette": {
+          "kind": "identity",
+          "name": "blue"
+        },
+        "settings": {
+          "sort": "none",
+          "showValues": true,
+          "groupMode": "stacked"
+        },
+        "surface": {
+          "surface": "card",
+          "showControls": false,
+          "interactiveLegend": false
+        },
+        "unit": "tokens",
+        "legend": {
+          "position": "bottom",
+          "sort": "spec"
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "category-scores",
+        "title": "カテゴリ別得点",
+        "subtitle": "小数第3位までの正確な値。行=カテゴリ（満点付き）、列=モデル。",
+        "dataset": "category-scores",
+        "sourceId": "scores",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "カテゴリ",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "score-gaps",
+        "title": "Fableとのカテゴリ別得点差",
+        "subtitle": "正の値はFableが上回る点数、負の値は比較相手が上回る点数。",
+        "dataset": "score-gaps",
+        "sourceId": "scores",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "max",
+          "direction": "desc"
+        },
+        "columns": [
+          {
+            "field": "category",
+            "label": "カテゴリ",
+            "type": "text"
+          },
+          {
+            "field": "max",
+            "label": "満点",
+            "type": "number"
+          },
+          {
+            "field": "vs_astra",
+            "label": "Fable − Astra（点）",
+            "type": "text"
+          },
+          {
+            "field": "vs_sol",
+            "label": "Fable − Sol（点）",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "accuracy-detail",
+        "title": "本データの精度診断",
+        "subtitle": "RMSEは小さいほど良い。行=指標、列=モデル。非公開商品は混合正規化単位であり、単純なbpではない。",
+        "dataset": "accuracy-detail",
+        "sourceId": "precision",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "指標",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "risk-detail",
+        "title": "公開クォートの再現とDV01の照合",
+        "subtitle": "公開クォート再現=観測クォートの再現誤差÷bid/ask幅のRMSE（無次元、小さいほど良い）。DV01は相対誤差の中央値で、対象商品集合が異なる点に注意。",
+        "dataset": "risk-detail",
+        "sourceId": "precision",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "model",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル",
+            "type": "text"
+          },
+          {
+            "field": "bidask",
+            "label": "公開クォート再現（bid/ask幅比）",
+            "type": "text"
+          },
+          {
+            "field": "n",
+            "label": "照合商品数",
+            "type": "number"
+          },
+          {
+            "field": "dv01",
+            "label": "DV01相対誤差",
+            "type": "text"
+          },
+          {
+            "field": "key",
+            "label": "キーレート合計相対誤差",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "scenario-forward",
+        "title": "隠し10シナリオのフォワード金利RMSE",
+        "subtitle": "単位bp、小さいほど良い。ゼロ金利図では見えないOpusのs09（70.314bp）を含む。最小列=そのシナリオで誤差が最小のモデル。",
+        "dataset": "scenario-forward",
+        "sourceId": "precision",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "scenario",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "scenario",
+            "label": "シナリオ",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          },
+          {
+            "field": "lowest",
+            "label": "最小",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "time-detail",
+        "title": "ログ計測と自己申告の時間",
+        "subtitle": "比較の基準はログ作業時間。自己申告の時間は境界が異なるため別列。",
+        "dataset": "time-detail",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "model",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル",
+            "type": "text"
+          },
+          {
+            "field": "work",
+            "label": "作業合計（分）",
+            "type": "text"
+          },
+          {
+            "field": "idle",
+            "label": "再開待ち（分）",
+            "type": "text"
+          },
+          {
+            "field": "span",
+            "label": "開始→終了（分）",
+            "type": "text"
+          },
+          {
+            "field": "reported",
+            "label": "自己申告（分）",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "selected-turns",
+        "title": "本実行に含めたターン",
+        "subtitle": "2026年9月5日・JST、秒まで表示（ログはミリ秒まで保持）。API=そのターンの一意なAPI応答数。",
+        "dataset": "selected-turns",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "start",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル・ターン",
+            "type": "text"
+          },
+          {
+            "field": "start",
+            "label": "開始",
+            "type": "text"
+          },
+          {
+            "field": "end",
+            "label": "終了",
+            "type": "text"
+          },
+          {
+            "field": "minutes",
+            "label": "分",
+            "type": "text"
+          },
+          {
+            "field": "api",
+            "label": "API",
+            "type": "number"
+          },
+          {
+            "field": "tokens",
+            "label": "トークン",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "input-token-detail",
+        "title": "入力・出力の排他的な内訳",
+        "subtitle": "通常入力・キャッシュ読取・キャッシュ作成・出力総量の和が本実行総量。キャッシュ読取を除く総量=通常入力＋キャッシュ作成＋出力総量。料金換算はしていない。",
+        "dataset": "input-token-detail",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "指標",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "work-patterns",
+        "title": "本実行の応答粒度と出力構成",
+        "subtitle": "推論比率=推論出力÷出力総量。出力/API=出力総量÷API応答数。入力キャッシュ読取比率=キャッシュ読取÷入力総量。",
+        "dataset": "work-patterns",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "metric",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "metric",
+            "label": "指標",
+            "type": "text"
+          },
+          {
+            "field": "Fable",
+            "label": "Fable",
+            "type": "text"
+          },
+          {
+            "field": "Opus",
+            "label": "Opus",
+            "type": "text"
+          },
+          {
+            "field": "Sol",
+            "label": "Sol",
+            "type": "text"
+          },
+          {
+            "field": "Astra",
+            "label": "Astra",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "sessions",
+        "title": "セッション名と集計範囲",
+        "subtitle": "本実行以外の準備・確認・後続依頼を含むと、AstraとSolの総量が増える。",
+        "dataset": "sessions",
+        "sourceId": "usage",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "model",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル",
+            "type": "text"
+          },
+          {
+            "field": "session",
+            "label": "セッション名",
+            "type": "text"
+          },
+          {
+            "field": "turns",
+            "label": "全ターン数",
+            "type": "number"
+          },
+          {
+            "field": "selected",
+            "label": "本実行ターン",
+            "type": "text"
+          },
+          {
+            "field": "total",
+            "label": "全セッショントークン",
+            "type": "text"
+          },
+          {
+            "field": "excluded",
+            "label": "本実行以外",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "test-results",
+        "title": "再実行テストと採点チェック",
+        "subtitle": "pytest、採点チェック、隠しシナリオは別々の評価単位。",
+        "dataset": "test-results",
+        "sourceId": "qa",
+        "layout": "full",
+        "density": "spacious",
+        "defaultSort": {
+          "field": "model",
+          "direction": "asc"
+        },
+        "columns": [
+          {
+            "field": "model",
+            "label": "モデル",
+            "type": "text"
+          },
+          {
+            "field": "pytest",
+            "label": "pytest合格",
+            "type": "number"
+          },
+          {
+            "field": "pytest_fail",
+            "label": "pytest失敗",
+            "type": "number"
+          },
+          {
+            "field": "checks",
+            "label": "採点チェック合格",
+            "type": "text"
+          },
+          {
+            "field": "fails",
+            "label": "採点チェック不合格",
+            "type": "number"
+          },
+          {
+            "field": "valid",
+            "label": "有効シナリオ",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "scores",
+        "label": "最終自動採点・カテゴリ別集計",
+        "path": "evaluations/combined_summary.json",
+        "query": {
+          "engine": "SQLite (in-memory)",
+          "description": "ユーザー提示スクリプトを基にした最終再採点。リスク表の任意列の衝突のみ互換処理し、手動加点はしていない。 レポートの数値は、記載の元ファイルを読み込んだSQLite一時テーブルで独立に集計・照合。元ログの回復は記載のPython処理による。",
+          "executed_at": "2026-09-05T07:20:22.578445+00:00",
+          "tables_used": [
+            "evaluations/combined_summary.json",
+            "evaluations/fable.json",
+            "evaluations/opus.json",
+            "evaluations/sol.json",
+            "evaluations/astra.json",
+            "evaluator/scoring.py",
+            "main.raw_evaluations",
+            "main.raw_user_turns",
+            "main.raw_pytest",
+            "evaluations/performance-report/build_report.py",
+            "evaluations/performance-report/report_queries.sql"
+          ],
+          "filters": [
+            "2026年9月5日に完了した4モデルの各1実行。最終提出物のみ。"
+          ],
+          "metric_definitions": [
+            "総得点は7カテゴリの和、満点100。表示は小数第3位。配点・閾値は元のまま。",
+            "数値30、モデル品質20、頑健性15、ソフトウェア15、データ品質10、レポート5、完遂5。",
+            "カテゴリ達成率=カテゴリ得点/カテゴリ満点。グラフでは0〜1、表示は%。",
+            "Fableとの差=Fableのカテゴリ得点−比較モデルの同カテゴリ得点。",
+            "モデル品質20点=主カーブのゼロRMSE 7＋重み付きゼロRMSE 3＋フォワードRMSE 4＋非公開商品RMSE 4＋比較JSON 1＋感度JSON 1（scoring.py）。",
+            "データ品質のmissing_handlingは欠損クォート4件をaction=excludeにした比率≥0.9で合格。中値復元（correct/downweight）は不合格扱い。"
+          ],
+          "language": "sql",
+          "sql": "SELECT e.model, json_extract(e.document, '$.total_score') AS score,\n       c.key AS category, CAST(c.value AS REAL) AS category_score,\n       CASE c.key WHEN 'numerical_correctness' THEN 30\n         WHEN 'quantitative_model_quality' THEN 20\n         WHEN 'hidden_scenario_robustness' THEN 15\n         WHEN 'software_engineering_reproducibility' THEN 15\n         WHEN 'data_quality_handling' THEN 10 ELSE 5 END AS category_maximum,\n       CAST(c.value AS REAL) / CASE c.key WHEN 'numerical_correctness' THEN 30\n         WHEN 'quantitative_model_quality' THEN 20\n         WHEN 'hidden_scenario_robustness' THEN 15\n         WHEN 'software_engineering_reproducibility' THEN 15\n         WHEN 'data_quality_handling' THEN 10 ELSE 5 END AS attainment\nFROM main.raw_evaluations e, json_each(e.document, '$.category_scores') c\nORDER BY score DESC, category;"
+        }
+      },
+      {
+        "id": "precision",
+        "label": "正解カーブ・非公開商品・隠しシナリオ診断",
+        "path": "evaluations/fable.json",
+        "query": {
+          "engine": "SQLite (in-memory)",
+          "description": "最終評価JSONから診断値を抽出。主診断と隠し10シナリオの平均を混同しない。 レポートの数値は、記載の元ファイルを読み込んだSQLite一時テーブルで独立に集計・照合。元ログの回復は記載のPython処理による。",
+          "executed_at": "2026-09-05T07:20:22.578445+00:00",
+          "tables_used": [
+            "evaluations/fable.json",
+            "evaluations/opus.json",
+            "evaluations/sol.json",
+            "evaluations/astra.json",
+            "evaluator/scoring.py",
+            "main.raw_evaluations",
+            "main.raw_user_turns",
+            "main.raw_pytest",
+            "evaluations/performance-report/build_report.py",
+            "evaluations/performance-report/report_queries.sql"
+          ],
+          "filters": [
+            "2026年9月5日に完了した4モデルの各1実行。最終提出物のみ。"
+          ],
+          "metric_definitions": [
+            "ゼロ金利RMSE=1e4×sqrt(mean((推定ゼロ金利−正解)^2))、単位bp。1bp=0.01%。",
+            "重み付きゼロRMSEは重み1/sqrt(0.15+満期年)。フォワードは推定z(T)×Tの数値微分で比較。",
+            "短期は満期2年以下、長期は15年以上。主診断は本データ、s01〜s10は別の隠しシナリオ。",
+            "非公開商品RMSEは金利誤差をbp、債券価格誤差を0.1価格単位に換算してプール。単一のbpではない。",
+            "DV01相対誤差は照合できた各モデルの対象商品集合の中央値。対象数は異なる。",
+            "公開クォート再現=観測クォートの再現誤差をbid/ask幅で正規化したRMSE（bid_ask_normalized_pricing_rmse）。無次元。",
+            "隠しシナリオのフォワードRMSEは各シナリオの正解フォワードとの比較、単位bp。"
+          ],
+          "language": "sql",
+          "sql": "WITH diagnostic_rows AS (\n  SELECT model, 'main' AS scope, json_extract(document, '$.quantitative_diagnostics') AS metrics\n  FROM main.raw_evaluations\n  UNION ALL\n  SELECT e.model, s.key, s.value\n  FROM main.raw_evaluations e, json_each(e.document, '$.quantitative_diagnostics.hidden_scenarios') s\n)\nSELECT model, scope, metrics,\n       json_extract(metrics, '$.zero_rate_rmse_bps') AS zero_rmse_bps,\n       json_extract(metrics, '$.forward_rate_rmse_bps') AS forward_rmse_bps,\n       100.0 * json_extract(metrics, '$.dv01_median_relative_error') AS dv01_relative_error_percent,\n       RANK() OVER (PARTITION BY scope ORDER BY json_extract(metrics, '$.zero_rate_rmse_bps')) AS zero_error_rank\nFROM diagnostic_rows ORDER BY scope, zero_error_rank;"
+        }
+      },
+      {
+        "id": "usage",
+        "label": "監査済み作業時間・トークン・ターン集計",
+        "path": "analysis/final-review-20260905/matched/runtime_tokens.csv",
+        "query": {
+          "engine": "SQLite (in-memory)",
+          "description": "集計済みログを利用。過去の未完了Opus集計を使わず再開分を含める。思考本文・会話本文は収録しない。 レポートの数値は、記載の元ファイルを読み込んだSQLite一時テーブルで独立に集計・照合。元ログの回復は記載のPython処理による。",
+          "executed_at": "2026-09-05T07:20:22.578445+00:00",
+          "tables_used": [
+            "analysis/final-review-20260905/matched/runtime_tokens.csv",
+            "analysis/final-review-20260905/matched/user_turns.csv",
+            "analysis/final-review-20260905/matched/usage_audit.json",
+            "analysis/session-tokens-20260905/recover_tokens.py",
+            "analysis/final-review-20260905/recheck_final.py",
+            "main.raw_evaluations",
+            "main.raw_user_turns",
+            "main.raw_pytest",
+            "evaluations/performance-report/build_report.py",
+            "evaluations/performance-report/report_queries.sql"
+          ],
+          "filters": [
+            "2026年9月5日に完了した4モデルの各1実行。最終提出物のみ。"
+          ],
+          "metric_definitions": [
+            "作業時間=選択した本実行/再開ユーザーターンの開始〜終了の和（分）。ツール・自動要約待ちを含む。",
+            "Astra T4、Sol T2、Opus T1+T2、Fable T1。準備・確認・出力先対応・終了後依頼・ターン間待機は除外。",
+            "経過時間=最初の作業開始〜最後の作業終了。Opusのみ再開待ち78.332933分を含む。",
+            "総トークン=未キャッシュ入力+キャッシュ読み込み+キャッシュ作成+通常出力+推論出力。",
+            "推論は出力の内数。セッション総量は本実行以外のユーザーターンも含む。",
+            "キャッシュ読取を除く=未キャッシュ入力+キャッシュ作成+出力総量。両事業者でキャッシュ読取は最も安価なトークン区分であり、料金の代理ではないが総量より歪みが小さい。",
+            "Codexはresponse_idで重複排除したusageを累積カウンタと照合。Claudeはmessage.idで一意化しrequestIdも照合。",
+            "出力/API=本実行出力総量/一意な本実行API応答数。キャッシュ読取比率=キャッシュ読取/入力総量。異種トークナイザの単純比較には限界。"
+          ],
+          "language": "sql",
+          "sql": "SELECT model,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(minutes AS REAL) ELSE 0 END) AS work_minutes,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(api_responses AS INTEGER) ELSE 0 END) AS work_api_responses,\n SUM(CAST(api_responses AS INTEGER)) AS session_api_responses,\n SUM(CAST(total_tokens AS INTEGER)) AS session_total_tokens,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(uncached_input AS INTEGER) ELSE 0 END) AS uncached_input,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(cache_read_input AS INTEGER) ELSE 0 END) AS cache_read_input,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(cache_creation_input AS INTEGER) ELSE 0 END) AS cache_creation_input,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(uncached_input AS INTEGER) + CAST(cache_read_input AS INTEGER) + CAST(cache_creation_input AS INTEGER) ELSE 0 END) AS input_total,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(output_nonreasoning AS INTEGER) ELSE 0 END) AS output_nonreasoning,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(output_reasoning AS INTEGER) ELSE 0 END) AS output_reasoning,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(output_nonreasoning AS INTEGER) + CAST(output_reasoning AS INTEGER) ELSE 0 END) AS output_total,\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(uncached_input AS INTEGER) + CAST(cache_read_input AS INTEGER) + CAST(cache_creation_input AS INTEGER) + CAST(output_nonreasoning AS INTEGER) + CAST(output_reasoning AS INTEGER) ELSE 0 END) AS total_tokens,\n 1.0 * SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(output_total AS INTEGER) ELSE 0 END) /\n SUM(CASE WHEN selected_work_turn = 'True' THEN CAST(api_responses AS INTEGER) ELSE 0 END) AS output_per_api\nFROM main.raw_user_turns GROUP BY model ORDER BY total_tokens;"
+        }
+      },
+      {
+        "id": "qa",
+        "label": "再評価の環境・テスト・入力保全監査",
+        "path": "analysis/final-review-20260905/matched/evaluation_audit.json",
+        "query": {
+          "engine": "SQLite (in-memory)",
+          "description": "記録された数値ライブラリに合わせた隔離環境で再確認。旧環境との得点一致も既存監査で確認。 レポートの数値は、記載の元ファイルを読み込んだSQLite一時テーブルで独立に集計・照合。元ログの回復は記載のPython処理による。",
+          "executed_at": "2026-09-05T07:20:22.578445+00:00",
+          "tables_used": [
+            "analysis/final-review-20260905/matched/evaluation_audit.json",
+            "analysis/final-review-20260905/matched/pytest_verification.json",
+            "evaluations/methodology.json",
+            "evaluations/README.md",
+            "evaluations/combined_summary.json",
+            "evaluations/fable.json",
+            "evaluations/opus.json",
+            "evaluations/sol.json",
+            "evaluations/astra.json",
+            "main.raw_evaluations",
+            "main.raw_user_turns",
+            "main.raw_pytest",
+            "evaluations/performance-report/build_report.py",
+            "evaluations/performance-report/report_queries.sql"
+          ],
+          "filters": [
+            "2026年9月5日に完了した4モデルの各1実行。最終提出物のみ。"
+          ],
+          "metric_definitions": [
+            "pytestは各候補の全テストを隔離コピーで実行。候補が書いたテストであり、モデル間で同一テスト集ではない。",
+            "採点チェック41件と隠しシナリオ10件、pytest件数は別の母集団。",
+            "マニフェストは公開入力12、評価側108ファイル。検証対象候補ハッシュは採点前後で一致。"
+          ],
+          "language": "sql",
+          "sql": "WITH pytest_counts AS (\n SELECT p.model, CAST(trim(substr(json_extract(p.document, '$.stdout'),\n   instr(json_extract(p.document, '$.stdout'), ' passed') - 3, 3)) AS INTEGER) AS pytest_passed,\n   json_extract(p.document, '$.returncode') AS pytest_exit_code\n FROM main.raw_pytest p\n)\nSELECT e.model, p.pytest_passed, p.pytest_exit_code,\n SUM(CASE WHEN json_extract(c.value, '$.passed') = 1 THEN 1 ELSE 0 END) AS hidden_passed,\n COUNT(*) AS hidden_checks,\n (SELECT COUNT(*) FROM json_each(e.document, '$.quantitative_diagnostics.hidden_scenarios') s WHERE json_extract(s.value, '$.valid') = 1) AS valid_scenarios\nFROM main.raw_evaluations e JOIN pytest_counts p ON p.model = e.model,\n json_each(e.document, '$.hidden_tests.details') c\nGROUP BY e.model ORDER BY e.model;"
+        }
+      },
+      {
+        "id": "limits",
+        "label": "採点器の限界・仕様の確認記録",
+        "path": "evaluations/README.md",
+        "query": {
+          "engine": "local-file",
+          "description": "日本語章見出し・自己パスの静的スキャン・JSON形式依存・端数期間の支払規則の比較。",
+          "executed_at": "2026-09-05T05:30:21.099289+00:00",
+          "tables_used": [
+            "evaluations/README.md",
+            "evaluations/methodology.json",
+            "evaluator/scoring.py",
+            "input/market_data/CONVENTIONS.md",
+            "tools/generate_benchmark.py"
+          ],
+          "filters": [
+            "2026年9月5日に完了した4モデルの各1実行。最終提出物のみ。"
+          ],
+          "metric_definitions": [
+            "警告ヒットと実際の禁止行為を区別する。生得点を保持し、仮想的な補正スコアは計算しない。"
+          ]
+        }
+      },
+      {
+        "id": "profiles",
+        "label": "候補の実装と自己申告",
+        "path": "results/fable/benchmark_summary.json",
+        "query": {
+          "engine": "local-file",
+          "description": "前段のコードレビューで確認した手法の要約。得点差の因果的な説明は仮説として扱う。",
+          "executed_at": "2026-09-05T05:30:21.099289+00:00",
+          "tables_used": [
+            "results/fable/benchmark_summary.json",
+            "results/opus/benchmark_summary.json",
+            "output/sol/benchmark_summary.json",
+            "results/astra/benchmark_summary.json",
+            "results/fable/README.md",
+            "results/opus/README.md",
+            "output/sol/README.md",
+            "results/astra/README.md",
+            "results/fable",
+            "results/opus",
+            "output/sol",
+            "results/astra"
+          ],
+          "filters": [
+            "2026年9月5日に完了した4モデルの各1実行。最終提出物のみ。"
+          ],
+          "metric_definitions": [
+            "修正反復回数は候補の自己申告で、共通のログ分類で検証した回数ではない。",
+            "実装上の設計と観測誤差は区別する。アブレーション未実施のため原因ごとの寄与は未推定。"
+          ]
+        }
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-09-05T07:20:22.578445+00:00",
+    "status": "ready",
+    "datasets": {
+      "headlines": [
+        {
+          "best_score": 94.473,
+          "score_lead": 1.0420000000000016,
+          "fastest_min": 34.596250000000005,
+          "fewest_tokens": 3797692
+        }
+      ],
+      "ranking": [
+        {
+          "model": "Fable",
+          "score": 94.473,
+          "rank": 1,
+          "core_score": 62.044,
+          "max_score": 100,
+          "candidate": "results/fable"
+        },
+        {
+          "model": "Opus",
+          "score": 93.431,
+          "rank": 2,
+          "core_score": 61.689,
+          "max_score": 100,
+          "candidate": "results/opus"
+        },
+        {
+          "model": "Sol",
+          "score": 80.438,
+          "rank": 3,
+          "core_score": 47.009,
+          "max_score": 100,
+          "candidate": "output/sol"
+        },
+        {
+          "model": "Astra",
+          "score": 80.103,
+          "rank": 4,
+          "core_score": 51.357,
+          "max_score": 100,
+          "candidate": "results/astra"
+        }
+      ],
+      "category-scores": [
+        {
+          "metric": "1. 数値精度 /30",
+          "Fable": "29.384",
+          "Opus": "29.388",
+          "Sol": "24.567",
+          "Astra": "26.515"
+        },
+        {
+          "metric": "2. モデル品質 /20",
+          "Fable": "17.909",
+          "Opus": "18.000",
+          "Sol": "10.218",
+          "Astra": "12.147"
+        },
+        {
+          "metric": "3. 頑健性 /15",
+          "Fable": "14.751",
+          "Opus": "14.301",
+          "Sol": "12.224",
+          "Astra": "12.695"
+        },
+        {
+          "metric": "4. ソフトウェア /15",
+          "Fable": "14.000",
+          "Opus": "13.000",
+          "Sol": "15.000",
+          "Astra": "14.000"
+        },
+        {
+          "metric": "5. データ品質 /10",
+          "Fable": "8.429",
+          "Opus": "8.742",
+          "Sol": "8.429",
+          "Astra": "7.857"
+        },
+        {
+          "metric": "6. レポート /5",
+          "Fable": "5.000",
+          "Opus": "5.000",
+          "Sol": "5.000",
+          "Astra": "1.889"
+        },
+        {
+          "metric": "7. 完遂 /5",
+          "Fable": "5.000",
+          "Opus": "5.000",
+          "Sol": "5.000",
+          "Astra": "5.000"
+        },
+        {
+          "metric": "8. 総合 /100",
+          "Fable": "94.473",
+          "Opus": "93.431",
+          "Sol": "80.438",
+          "Astra": "80.103"
+        }
+      ],
+      "category-attainment": [
+        {
+          "category": "数値精度 /30",
+          "maximum": 30,
+          "Fable": 0.9794666666666667,
+          "Opus": 0.9796,
+          "Sol": 0.8189,
+          "Astra": 0.8838333333333334
+        },
+        {
+          "category": "モデル品質 /20",
+          "maximum": 20,
+          "Fable": 0.89545,
+          "Opus": 0.9,
+          "Sol": 0.5109,
+          "Astra": 0.6073500000000001
+        },
+        {
+          "category": "頑健性 /15",
+          "maximum": 15,
+          "Fable": 0.9833999999999999,
+          "Opus": 0.9534,
+          "Sol": 0.8149333333333334,
+          "Astra": 0.8463333333333334
+        },
+        {
+          "category": "ソフトウェア /15",
+          "maximum": 15,
+          "Fable": 0.9333333333333333,
+          "Opus": 0.8666666666666667,
+          "Sol": 1.0,
+          "Astra": 0.9333333333333333
+        },
+        {
+          "category": "データ品質 /10",
+          "maximum": 10,
+          "Fable": 0.8429,
+          "Opus": 0.8742000000000001,
+          "Sol": 0.8429,
+          "Astra": 0.7857000000000001
+        },
+        {
+          "category": "レポート /5",
+          "maximum": 5,
+          "Fable": 1.0,
+          "Opus": 1.0,
+          "Sol": 1.0,
+          "Astra": 0.3778
+        },
+        {
+          "category": "完遂 /5",
+          "maximum": 5,
+          "Fable": 1.0,
+          "Opus": 1.0,
+          "Sol": 1.0,
+          "Astra": 1.0
+        }
+      ],
+      "score-gaps": [
+        {
+          "category": "数値精度",
+          "max": 30,
+          "vs_astra": "2.869",
+          "vs_sol": "4.817"
+        },
+        {
+          "category": "モデル品質",
+          "max": 20,
+          "vs_astra": "5.762",
+          "vs_sol": "7.691"
+        },
+        {
+          "category": "頑健性",
+          "max": 15,
+          "vs_astra": "2.056",
+          "vs_sol": "2.527"
+        },
+        {
+          "category": "ソフトウェア",
+          "max": 15,
+          "vs_astra": "0.000",
+          "vs_sol": "-1.000"
+        },
+        {
+          "category": "データ品質",
+          "max": 10,
+          "vs_astra": "0.572",
+          "vs_sol": "0.000"
+        },
+        {
+          "category": "レポート",
+          "max": 5,
+          "vs_astra": "3.111",
+          "vs_sol": "0.000"
+        },
+        {
+          "category": "完遂",
+          "max": 5,
+          "vs_astra": "0.000",
+          "vs_sol": "0.000"
+        }
+      ],
+      "zero-errors": [
+        {
+          "model": "Opus",
+          "zero_rmse": 1.1117536247948616,
+          "forward_rmse": 12.713422577786643,
+          "short_rmse": 1.9813840464115229,
+          "long_rmse": 1.0322935093952197
+        },
+        {
+          "model": "Fable",
+          "zero_rmse": 1.1498187371108728,
+          "forward_rmse": 14.678653618490909,
+          "short_rmse": 1.5673442094749535,
+          "long_rmse": 1.2353354466608741
+        },
+        {
+          "model": "Astra",
+          "zero_rmse": 5.021386877731334,
+          "forward_rmse": 30.81117374220975,
+          "short_rmse": 1.5775567873537935,
+          "long_rmse": 6.202384077280304
+        },
+        {
+          "model": "Sol",
+          "zero_rmse": 5.586990874744827,
+          "forward_rmse": 33.06190445118328,
+          "short_rmse": 20.222692184117665,
+          "long_rmse": 1.2755121005539547
+        }
+      ],
+      "accuracy-detail": [
+        {
+          "metric": "1. ゼロ金利RMSE（bp）",
+          "Fable": "1.150",
+          "Opus": "1.112",
+          "Sol": "5.587",
+          "Astra": "5.021"
+        },
+        {
+          "metric": "2. 重み付きゼロRMSE（bp）",
+          "Fable": "1.473",
+          "Opus": "1.541",
+          "Sol": "9.229",
+          "Astra": "4.358"
+        },
+        {
+          "metric": "3. フォワードRMSE（bp）",
+          "Fable": "14.679",
+          "Opus": "12.713",
+          "Sol": "33.062",
+          "Astra": "30.811"
+        },
+        {
+          "metric": "4. 短期 ≤2Y ゼロRMSE（bp）",
+          "Fable": "1.567",
+          "Opus": "1.981",
+          "Sol": "20.223",
+          "Astra": "1.578"
+        },
+        {
+          "metric": "5. 長期 ≥15Y ゼロRMSE（bp）",
+          "Fable": "1.235",
+          "Opus": "1.032",
+          "Sol": "1.276",
+          "Astra": "6.202"
+        },
+        {
+          "metric": "6. 非公開商品RMSE（正規化）",
+          "Fable": "1.293",
+          "Opus": "1.287",
+          "Sol": "12.755",
+          "Astra": "5.683"
+        }
+      ],
+      "risk-detail": [
+        {
+          "model": "Fable",
+          "n": 123,
+          "bidask": "5.141",
+          "dv01": "0.1344%",
+          "key": "4.324e-08"
+        },
+        {
+          "model": "Opus",
+          "n": 119,
+          "bidask": "5.427",
+          "dv01": "0.1780%",
+          "key": "5.316e-08"
+        },
+        {
+          "model": "Sol",
+          "n": 136,
+          "bidask": "63.615",
+          "dv01": "0.2946%",
+          "key": "2.758e-08"
+        },
+        {
+          "model": "Astra",
+          "n": 131,
+          "bidask": "17.708",
+          "dv01": "0.3518%",
+          "key": "2.758e-08"
+        }
+      ],
+      "scenario-zero": [
+        {
+          "model": "Fable",
+          "valid_scenarios": 10,
+          "s01": 0.8835318381101958,
+          "s02": 2.3672481179951386,
+          "s03": 1.2134220471478772,
+          "s04": 1.5205653151484058,
+          "s05": 1.3858247315208356,
+          "s06": 2.072451583970044,
+          "s07": 0.8593383166663168,
+          "s08": 1.1730560151575835,
+          "s09": 1.7634449387728959,
+          "s10": 1.8026146612379272
+        },
+        {
+          "model": "Opus",
+          "valid_scenarios": 10,
+          "s01": 1.5005229098040496,
+          "s02": 3.5920151893287797,
+          "s03": 1.8747816323443758,
+          "s04": 2.7219564841117267,
+          "s05": 1.9822792596211034,
+          "s06": 3.357410734915922,
+          "s07": 1.0638330206829958,
+          "s08": 1.4910736910443274,
+          "s09": 2.1912428005272564,
+          "s10": 1.0147851610165284
+        },
+        {
+          "model": "Sol",
+          "valid_scenarios": 10,
+          "s01": 4.769844424897903,
+          "s02": 10.103508125846483,
+          "s03": 7.449138419636771,
+          "s04": 6.470988886951299,
+          "s05": 4.868072944699606,
+          "s06": 8.100028977587769,
+          "s07": 5.079291445868165,
+          "s08": 6.082452284851852,
+          "s09": 5.896084109339161,
+          "s10": 5.675073201528795
+        },
+        {
+          "model": "Astra",
+          "valid_scenarios": 10,
+          "s01": 3.82629953834024,
+          "s02": 6.749090310076436,
+          "s03": 2.7295534772260543,
+          "s04": 8.339226729131664,
+          "s05": 9.56873622048852,
+          "s06": 5.111698076513254,
+          "s07": 3.7133059863966293,
+          "s08": 10.896860462567398,
+          "s09": 11.4924826416413,
+          "s10": 3.5179254181285136
+        }
+      ],
+      "scenario-forward": [
+        {
+          "scenario": "s01",
+          "Fable": "8.945",
+          "Opus": "15.232",
+          "Sol": "42.531",
+          "Astra": "25.394",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s02",
+          "Fable": "20.478",
+          "Opus": "28.925",
+          "Sol": "59.187",
+          "Astra": "35.309",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s03",
+          "Fable": "11.691",
+          "Opus": "19.756",
+          "Sol": "54.028",
+          "Astra": "26.370",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s04",
+          "Fable": "19.860",
+          "Opus": "26.135",
+          "Sol": "38.521",
+          "Astra": "39.173",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s05",
+          "Fable": "17.381",
+          "Opus": "21.861",
+          "Sol": "40.095",
+          "Astra": "41.501",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s06",
+          "Fable": "21.643",
+          "Opus": "29.877",
+          "Sol": "50.488",
+          "Astra": "31.030",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s07",
+          "Fable": "12.126",
+          "Opus": "13.086",
+          "Sol": "54.951",
+          "Astra": "27.803",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s08",
+          "Fable": "14.710",
+          "Opus": "18.370",
+          "Sol": "61.329",
+          "Astra": "45.679",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s09",
+          "Fable": "18.952",
+          "Opus": "70.314",
+          "Sol": "47.369",
+          "Astra": "48.660",
+          "lowest": "Fable"
+        },
+        {
+          "scenario": "s10",
+          "Fable": "16.135",
+          "Opus": "12.382",
+          "Sol": "41.083",
+          "Astra": "31.787",
+          "lowest": "Opus"
+        }
+      ],
+      "work-time": [
+        {
+          "model": "Sol",
+          "minutes": 34.596250000000005,
+          "span_minutes": 34.596250000000005,
+          "idle_minutes": 0.0,
+          "work_turns": "[2]"
+        },
+        {
+          "model": "Astra",
+          "minutes": 51.974066666666666,
+          "span_minutes": 51.974066666666666,
+          "idle_minutes": 0.0,
+          "work_turns": "[4]"
+        },
+        {
+          "model": "Fable",
+          "minutes": 55.940000000000005,
+          "span_minutes": 55.940000000000005,
+          "idle_minutes": 0.0,
+          "work_turns": "[1]"
+        },
+        {
+          "model": "Opus",
+          "minutes": 124.21831666666668,
+          "span_minutes": 202.55125,
+          "idle_minutes": 78.33293333333333,
+          "work_turns": "[1, 2]"
+        }
+      ],
+      "time-detail": [
+        {
+          "model": "Fable",
+          "work": "55.94",
+          "idle": "0.00",
+          "span": "55.94",
+          "reported": "55.50"
+        },
+        {
+          "model": "Opus",
+          "work": "124.22",
+          "idle": "78.33",
+          "span": "202.55",
+          "reported": "200.68"
+        },
+        {
+          "model": "Sol",
+          "work": "34.60",
+          "idle": "0.00",
+          "span": "34.60",
+          "reported": "32.47"
+        },
+        {
+          "model": "Astra",
+          "work": "51.97",
+          "idle": "0.00",
+          "span": "51.97",
+          "reported": "53.20"
+        }
+      ],
+      "selected-turns": [
+        {
+          "start_sort": "2026-09-05T10:23:54.514+09:00",
+          "model": "Astra T4",
+          "start": "10:23:54",
+          "end": "11:15:52",
+          "minutes": "51.97",
+          "api": 40,
+          "tokens": "3,797,692"
+        },
+        {
+          "start_sort": "2026-09-05T10:21:56.779+09:00",
+          "model": "Sol T2",
+          "start": "10:21:56",
+          "end": "10:56:32",
+          "minutes": "34.60",
+          "api": 72,
+          "tokens": "8,975,027"
+        },
+        {
+          "start_sort": "2026-09-05T10:22:15.164+09:00",
+          "model": "Opus T1",
+          "start": "10:22:15",
+          "end": "11:32:08",
+          "minutes": "69.88",
+          "api": 114,
+          "tokens": "29,457,223"
+        },
+        {
+          "start_sort": "2026-09-05T12:50:28.048+09:00",
+          "model": "Opus T2",
+          "start": "12:50:28",
+          "end": "13:44:48",
+          "minutes": "54.34",
+          "api": 161,
+          "tokens": "29,944,582"
+        },
+        {
+          "start_sort": "2026-09-05T10:22:09.611+09:00",
+          "model": "Fable T1",
+          "start": "10:22:09",
+          "end": "11:18:06",
+          "minutes": "55.94",
+          "api": 41,
+          "tokens": "10,790,902"
+        }
+      ],
+      "token-composition": [
+        {
+          "model": "Astra",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 3714472,
+          "work_total": 3797692,
+          "session_total": 4446365
+        },
+        {
+          "model": "Astra",
+          "part": "出力（推論含む）",
+          "tokens": 83220,
+          "work_total": 3797692,
+          "session_total": 4446365
+        },
+        {
+          "model": "Sol",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 8901026,
+          "work_total": 8975027,
+          "session_total": 10349887
+        },
+        {
+          "model": "Sol",
+          "part": "出力（推論含む）",
+          "tokens": 74001,
+          "work_total": 8975027,
+          "session_total": 10349887
+        },
+        {
+          "model": "Fable",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 10513644,
+          "work_total": 10790902,
+          "session_total": 10790902
+        },
+        {
+          "model": "Fable",
+          "part": "出力（推論含む）",
+          "tokens": 277258,
+          "work_total": 10790902,
+          "session_total": 10790902
+        },
+        {
+          "model": "Opus",
+          "part": "入力（キャッシュ含む）",
+          "tokens": 58986233,
+          "work_total": 59401805,
+          "session_total": 59401805
+        },
+        {
+          "model": "Opus",
+          "part": "出力（推論含む）",
+          "tokens": 415572,
+          "work_total": 59401805,
+          "session_total": 59401805
+        }
+      ],
+      "input-token-detail": [
+        {
+          "metric": "1. 通常入力",
+          "Fable": "1,222",
+          "Opus": "550",
+          "Sol": "155,298",
+          "Astra": "132,392"
+        },
+        {
+          "metric": "2. キャッシュ読取",
+          "Fable": "9,739,461",
+          "Opus": "58,116,374",
+          "Sol": "8,745,728",
+          "Astra": "3,582,080"
+        },
+        {
+          "metric": "3. キャッシュ作成",
+          "Fable": "772,961",
+          "Opus": "869,309",
+          "Sol": "0",
+          "Astra": "0"
+        },
+        {
+          "metric": "4. 出力総量（推論含む）",
+          "Fable": "277,258",
+          "Opus": "415,572",
+          "Sol": "74,001",
+          "Astra": "83,220"
+        },
+        {
+          "metric": "5. 本実行総量",
+          "Fable": "10,790,902",
+          "Opus": "59,401,805",
+          "Sol": "8,975,027",
+          "Astra": "3,797,692"
+        },
+        {
+          "metric": "6. キャッシュ読取を除く総量",
+          "Fable": "1,051,441",
+          "Opus": "1,285,431",
+          "Sol": "229,299",
+          "Astra": "215,612"
+        }
+      ],
+      "output-composition": [
+        {
+          "model": "Sol",
+          "part": "通常出力",
+          "tokens": 49419,
+          "output_total": 74001,
+          "api_responses": 72
+        },
+        {
+          "model": "Sol",
+          "part": "推論出力",
+          "tokens": 24582,
+          "output_total": 74001,
+          "api_responses": 72
+        },
+        {
+          "model": "Astra",
+          "part": "通常出力",
+          "tokens": 49539,
+          "output_total": 83220,
+          "api_responses": 40
+        },
+        {
+          "model": "Astra",
+          "part": "推論出力",
+          "tokens": 33681,
+          "output_total": 83220,
+          "api_responses": 40
+        },
+        {
+          "model": "Fable",
+          "part": "通常出力",
+          "tokens": 158104,
+          "output_total": 277258,
+          "api_responses": 41
+        },
+        {
+          "model": "Fable",
+          "part": "推論出力",
+          "tokens": 119154,
+          "output_total": 277258,
+          "api_responses": 41
+        },
+        {
+          "model": "Opus",
+          "part": "通常出力",
+          "tokens": 266815,
+          "output_total": 415572,
+          "api_responses": 275
+        },
+        {
+          "model": "Opus",
+          "part": "推論出力",
+          "tokens": 148757,
+          "output_total": 415572,
+          "api_responses": 275
+        }
+      ],
+      "work-patterns": [
+        {
+          "metric": "1. API応答数",
+          "Fable": "41",
+          "Opus": "275",
+          "Sol": "72",
+          "Astra": "40"
+        },
+        {
+          "metric": "2. 通常出力",
+          "Fable": "158,104",
+          "Opus": "266,815",
+          "Sol": "49,419",
+          "Astra": "49,539"
+        },
+        {
+          "metric": "3. 推論出力",
+          "Fable": "119,154",
+          "Opus": "148,757",
+          "Sol": "24,582",
+          "Astra": "33,681"
+        },
+        {
+          "metric": "4. 推論比率",
+          "Fable": "43.0%",
+          "Opus": "35.8%",
+          "Sol": "33.2%",
+          "Astra": "40.5%"
+        },
+        {
+          "metric": "5. 出力/API",
+          "Fable": "6,762",
+          "Opus": "1,511",
+          "Sol": "1,028",
+          "Astra": "2,080"
+        },
+        {
+          "metric": "6. 入力キャッシュ読取比率",
+          "Fable": "92.6%",
+          "Opus": "98.5%",
+          "Sol": "98.3%",
+          "Astra": "96.4%"
+        }
+      ],
+      "sessions": [
+        {
+          "model": "Fable",
+          "session": "model-test-fable",
+          "turns": 1,
+          "selected": "[1]",
+          "total": "10,790,902",
+          "excluded": "0"
+        },
+        {
+          "model": "Opus",
+          "session": "model-test-opus",
+          "turns": 2,
+          "selected": "[1, 2]",
+          "total": "59,401,805",
+          "excluded": "0"
+        },
+        {
+          "model": "Sol",
+          "session": "Model Test Sol",
+          "turns": 6,
+          "selected": "[2]",
+          "total": "10,349,887",
+          "excluded": "1,374,860"
+        },
+        {
+          "model": "Astra",
+          "session": "Model Test Astra",
+          "turns": 5,
+          "selected": "[4]",
+          "total": "4,446,365",
+          "excluded": "648,673"
+        }
+      ],
+      "test-results": [
+        {
+          "model": "Fable",
+          "pytest": 60,
+          "pytest_fail": 0,
+          "checks": "36 / 41",
+          "fails": 5,
+          "valid": "10 / 10"
+        },
+        {
+          "model": "Opus",
+          "pytest": 204,
+          "pytest_fail": 0,
+          "checks": "37 / 41",
+          "fails": 4,
+          "valid": "10 / 10"
+        },
+        {
+          "model": "Sol",
+          "pytest": 20,
+          "pytest_fail": 0,
+          "checks": "38 / 41",
+          "fails": 3,
+          "valid": "10 / 10"
+        },
+        {
+          "model": "Astra",
+          "pytest": 45,
+          "pytest_fail": 0,
+          "checks": "34 / 41",
+          "fails": 7,
+          "valid": "10 / 10"
+        }
+      ]
+    }
+  }
+}

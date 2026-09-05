@@ -1,0 +1,637 @@
+{
+  "advanced": {
+    "converged": true,
+    "fit_iterations": 26,
+    "full_fit_condition_number": 41.6551303357089,
+    "full_fit_iterations": 25,
+    "full_sample": {
+      "by_instrument_type": {
+        "bond": {
+          "mean_signed_error": 0.2068998160460095,
+          "median_absolute_error": 0.4128701436220297,
+          "n": 47,
+          "rmse": 1.167395484357331,
+          "units": "price points per 100"
+        },
+        "deposit": {
+          "mean_signed_error": 0.012621556612427275,
+          "median_absolute_error": 0.11871900417756952,
+          "n": 18,
+          "rmse": 5.268732247896359,
+          "units": "rate basis points"
+        },
+        "ois_swap": {
+          "mean_signed_error": 8.873151646930252,
+          "median_absolute_error": 1.2115462960113863,
+          "n": 66,
+          "rmse": 45.88233750317593,
+          "units": "rate basis points"
+        }
+      },
+      "median_absolute_standardized_error": 4.908730150084486,
+      "n": 131,
+      "standardized_rmse": 278.09183553078,
+      "weighted_huber_loss": 504.34826070502186,
+      "within_bid_ask_fraction": 0.19083969465648856
+    },
+    "holdout": {
+      "by_instrument_type": {
+        "bond": {
+          "mean_signed_error": -0.13374653487313637,
+          "median_absolute_error": 0.17094634598817748,
+          "n": 8,
+          "rmse": 0.3473610770923126,
+          "units": "price points per 100"
+        },
+        "deposit": {
+          "mean_signed_error": 3.3670554030136755,
+          "median_absolute_error": 0.3181410630136508,
+          "n": 5,
+          "rmse": 7.040526791096155,
+          "units": "rate basis points"
+        },
+        "ois_swap": {
+          "mean_signed_error": 25.973985290728276,
+          "median_absolute_error": 2.4022114755108124,
+          "n": 13,
+          "rmse": 66.38980524466174,
+          "units": "rate basis points"
+        }
+      },
+      "median_absolute_standardized_error": 8.46994110006218,
+      "n": 26,
+      "standardized_rmse": 355.5793090583697,
+      "weighted_huber_loss": 609.5295685911692,
+      "within_bid_ask_fraction": 0.11538461538461539
+    },
+    "robust_residual_scale": 1.0,
+    "train": {
+      "by_instrument_type": {
+        "bond": {
+          "mean_signed_error": -0.11301609946043775,
+          "median_absolute_error": 0.3071588729910104,
+          "n": 39,
+          "rmse": 1.065721991651199,
+          "units": "price points per 100"
+        },
+        "deposit": {
+          "mean_signed_error": -1.1439349126269467,
+          "median_absolute_error": 0.110683816599913,
+          "n": 13,
+          "rmse": 4.421137031250961,
+          "units": "rate basis points"
+        },
+        "ois_swap": {
+          "mean_signed_error": 5.878859288950398,
+          "median_absolute_error": 1.4907208913409602,
+          "n": 53,
+          "rmse": 39.274942147749165,
+          "units": "rate basis points"
+        }
+      },
+      "median_absolute_standardized_error": 4.4349303242339095,
+      "n": 105,
+      "standardized_rmse": 255.81991245502104,
+      "weighted_huber_loss": 478.07354310001955,
+      "within_bid_ask_fraction": 0.1619047619047619
+    }
+  },
+  "baseline": {
+    "converged": true,
+    "fit_iterations": 24,
+    "full_fit_condition_number": 15.139613240013183,
+    "full_fit_iterations": 42,
+    "full_sample": {
+      "by_instrument_type": {
+        "bond": {
+          "mean_signed_error": 0.9070588753124715,
+          "median_absolute_error": 0.28098996191380365,
+          "n": 47,
+          "rmse": 2.0984330996075022,
+          "units": "price points per 100"
+        },
+        "deposit": {
+          "mean_signed_error": -2.2393604508146883,
+          "median_absolute_error": 6.530312300147061,
+          "n": 18,
+          "rmse": 8.861351107026149,
+          "units": "rate basis points"
+        },
+        "ois_swap": {
+          "mean_signed_error": 6.477630923118222,
+          "median_absolute_error": 5.937875310669735,
+          "n": 66,
+          "rmse": 47.06547718213179,
+          "units": "rate basis points"
+        }
+      },
+      "median_absolute_standardized_error": 26.586612922041162,
+      "n": 131,
+      "standardized_rmse": 285.36831844744114,
+      "weighted_huber_loss": 586.6317737107736,
+      "within_bid_ask_fraction": 0.04580152671755725
+    },
+    "holdout": {
+      "by_instrument_type": {
+        "bond": {
+          "mean_signed_error": 0.47095499577630306,
+          "median_absolute_error": 0.41290375809749236,
+          "n": 8,
+          "rmse": 0.7580777766296749,
+          "units": "price points per 100"
+        },
+        "deposit": {
+          "mean_signed_error": -3.0377050358314057,
+          "median_absolute_error": 6.125452775831396,
+          "n": 5,
+          "rmse": 6.889093357902375,
+          "units": "rate basis points"
+        },
+        "ois_swap": {
+          "mean_signed_error": 25.691802866409297,
+          "median_absolute_error": 3.638372891854279,
+          "n": 13,
+          "rmse": 67.57146795364301,
+          "units": "rate basis points"
+        }
+      },
+      "median_absolute_standardized_error": 17.57715635844651,
+      "n": 26,
+      "standardized_rmse": 362.7549045313087,
+      "weighted_huber_loss": 675.1082819477241,
+      "within_bid_ask_fraction": 0.11538461538461539
+    },
+    "robust_residual_scale": 1.0,
+    "train": {
+      "by_instrument_type": {
+        "bond": {
+          "mean_signed_error": 0.9758252145819452,
+          "median_absolute_error": 0.29936603032970766,
+          "n": 39,
+          "rmse": 2.2676878100419073,
+          "units": "price points per 100"
+        },
+        "deposit": {
+          "mean_signed_error": -2.278462063597019,
+          "median_absolute_error": 6.685546467840222,
+          "n": 13,
+          "rmse": 9.499332011301155,
+          "units": "rate basis points"
+        },
+        "ois_swap": {
+          "mean_signed_error": 1.9552302763305613,
+          "median_absolute_error": 6.40235532856713,
+          "n": 53,
+          "rmse": 40.552854149957966,
+          "units": "rate basis points"
+        }
+      },
+      "median_absolute_standardized_error": 31.214654480435687,
+      "n": 105,
+      "standardized_rmse": 263.2577637509522,
+      "weighted_huber_loss": 565.228318685828,
+      "within_bid_ask_fraction": 0.05714285714285714
+    }
+  },
+  "chosen_smoothing": 0.001,
+  "evaluation_policy": "All usable validation quotes included; no residual-based deletion or validation reweighting. Report both robust score and uncapped RMSE.",
+  "holdout_instrument_ids": [
+    "INS0005",
+    "INS0006",
+    "INS0013",
+    "INS0014",
+    "INS0021",
+    "INS0106",
+    "INS0113",
+    "INS0031",
+    "INS0049",
+    "INS0067",
+    "INS0085",
+    "INS0103",
+    "INS0114",
+    "INS0035",
+    "INS0053",
+    "INS0071",
+    "INS0089",
+    "INS0123",
+    "INS0140",
+    "INS0141",
+    "INS0038",
+    "INS0056",
+    "INS0074",
+    "INS0092",
+    "INS0142",
+    "INS0143"
+  ],
+  "holdout_maturity_groups": [
+    "0:2",
+    "0:7",
+    "1:6",
+    "2:10",
+    "2:5"
+  ],
+  "holdout_n": 26,
+  "holdout_predictions": [
+    {
+      "advanced_model_quote": 0.016446284506301367,
+      "baseline_model_quote": 0.01580580846241686,
+      "instrument_id": "INS0005",
+      "instrument_type": "deposit",
+      "market_quote": 0.01643189841,
+      "maturity_years": 0.5,
+      "reliability": 1.0,
+      "sigma": 1e-05
+    },
+    {
+      "advanced_model_quote": 0.016446284506301367,
+      "baseline_model_quote": 0.01580580846241686,
+      "instrument_id": "INS0006",
+      "instrument_type": "deposit",
+      "market_quote": 0.016414470400000002,
+      "maturity_years": 0.5,
+      "reliability": 0.9536241386,
+      "sigma": 1.0282549999999016e-05
+    },
+    {
+      "advanced_model_quote": 0.016446284506301367,
+      "baseline_model_quote": 0.01580580846241686,
+      "instrument_id": "INS0013",
+      "instrument_type": "deposit",
+      "market_quote": 0.01641014737,
+      "maturity_years": 0.5,
+      "reliability": 0.9320883152,
+      "sigma": 1.1574704999999658e-05
+    },
+    {
+      "advanced_model_quote": 0.016446284506301367,
+      "baseline_model_quote": 0.01580580846241686,
+      "instrument_id": "INS0014",
+      "instrument_type": "deposit",
+      "market_quote": 0.01487302491,
+      "maturity_years": 0.5,
+      "reliability": 0.8318544295,
+      "sigma": 1.758873500000077e-05
+    },
+    {
+      "advanced_model_quote": 0.016446284506301367,
+      "baseline_model_quote": 0.01580580846241686,
+      "instrument_id": "INS0021",
+      "instrument_type": "deposit",
+      "market_quote": 0.01641835374,
+      "maturity_years": 0.5,
+      "reliability": 0.9063600496,
+      "sigma": 1.3118394999999186e-05
+    },
+    {
+      "advanced_model_quote": 99.88764208285401,
+      "baseline_model_quote": 100.01744450049262,
+      "instrument_id": "INS0106",
+      "instrument_type": "bond",
+      "market_quote": 99.79351759,
+      "maturity_years": 1.82794182,
+      "reliability": 0.16,
+      "sigma": 0.27500000500000255
+    },
+    {
+      "advanced_model_quote": 98.0289526112471,
+      "baseline_model_quote": 97.76510433288868,
+      "instrument_id": "INS0113",
+      "instrument_type": "bond",
+      "market_quote": 98.0175438,
+      "maturity_years": 5.53098783,
+      "reliability": 0.7615844886,
+      "sigma": 0.026804929999997285
+    },
+    {
+      "advanced_model_quote": 0.022743036086375512,
+      "baseline_model_quote": 0.023186689914106384,
+      "instrument_id": "INS0031",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.023153946209999998,
+      "maturity_years": 6.0,
+      "reliability": 0.16,
+      "sigma": 0.0003749999999999986
+    },
+    {
+      "advanced_model_quote": 0.022743036086375512,
+      "baseline_model_quote": 0.023186689914106384,
+      "instrument_id": "INS0049",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.02308432038,
+      "maturity_years": 6.0,
+      "reliability": 0.7983861242,
+      "sigma": 1.9596829999999482e-05
+    },
+    {
+      "advanced_model_quote": 0.022743036086375512,
+      "baseline_model_quote": 0.023186689914106384,
+      "instrument_id": "INS0067",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.023146512709999997,
+      "maturity_years": 6.0,
+      "reliability": 0.73264806,
+      "sigma": 2.3541120000001442e-05
+    },
+    {
+      "advanced_model_quote": 0.022743036086375512,
+      "baseline_model_quote": 0.023186689914106384,
+      "instrument_id": "INS0085",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.006196266535000001,
+      "maturity_years": 6.0,
+      "reliability": 0.8899592998,
+      "sigma": 1.410244200000018e-05
+    },
+    {
+      "advanced_model_quote": 0.022743036086375512,
+      "baseline_model_quote": 0.023186689914106384,
+      "instrument_id": "INS0103",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.02317068705,
+      "maturity_years": 6.0,
+      "reliability": 0.7770826849,
+      "sigma": 2.0875039999998166e-05
+    },
+    {
+      "advanced_model_quote": 107.26983443318946,
+      "baseline_model_quote": 107.02184359748186,
+      "instrument_id": "INS0114",
+      "instrument_type": "bond",
+      "market_quote": 106.8693324,
+      "maturity_years": 6.10600661,
+      "reliability": 0.8382466116,
+      "sigma": 0.022205200000001923
+    },
+    {
+      "advanced_model_quote": 0.021469718403466214,
+      "baseline_model_quote": 0.021613435334185426,
+      "instrument_id": "INS0035",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.021249598045,
+      "maturity_years": 10.0,
+      "reliability": 0.9773960913,
+      "sigma": 1e-05
+    },
+    {
+      "advanced_model_quote": 0.021469718403466214,
+      "baseline_model_quote": 0.021613435334185426,
+      "instrument_id": "INS0053",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.02125308344,
+      "maturity_years": 10.0,
+      "reliability": 0.8517368874,
+      "sigma": 1.6395784999997942e-05
+    },
+    {
+      "advanced_model_quote": 0.021469718403466214,
+      "baseline_model_quote": 0.021613435334185426,
+      "instrument_id": "INS0071",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.0042005168780000005,
+      "maturity_years": 10.0,
+      "reliability": 0.8635965244,
+      "sigma": 1.56842085e-05
+    },
+    {
+      "advanced_model_quote": 0.021469718403466214,
+      "baseline_model_quote": 0.021613435334185426,
+      "instrument_id": "INS0089",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.02126520422,
+      "maturity_years": 10.0,
+      "reliability": 0.7112215203,
+      "sigma": 2.482671000000186e-05
+    },
+    {
+      "advanced_model_quote": 103.83622377352562,
+      "baseline_model_quote": 103.71787714617446,
+      "instrument_id": "INS0123",
+      "instrument_type": "bond",
+      "market_quote": 103.9505347,
+      "maturity_years": 10.54172767,
+      "reliability": 0.6717011098,
+      "sigma": 0.03219789999999989
+    },
+    {
+      "advanced_model_quote": 110.56130499322614,
+      "baseline_model_quote": 111.72803374908366,
+      "instrument_id": "INS0140",
+      "instrument_type": "bond",
+      "market_quote": 111.1546657,
+      "maturity_years": 19.46015271,
+      "reliability": 0.6723933389,
+      "sigma": 0.032156399999998087
+    },
+    {
+      "advanced_model_quote": 101.1751838596185,
+      "baseline_model_quote": 102.39488030885504,
+      "instrument_id": "INS0141",
+      "instrument_type": "bond",
+      "market_quote": 101.7902353,
+      "maturity_years": 19.72563127,
+      "reliability": 0.569548541,
+      "sigma": 0.038327099999996506
+    },
+    {
+      "advanced_model_quote": 0.020283763727551085,
+      "baseline_model_quote": 0.019493770224264614,
+      "instrument_id": "INS0038",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.020071227650000002,
+      "maturity_years": 20.0,
+      "reliability": 0.5679053593,
+      "sigma": 3.3425674999998725e-05
+    },
+    {
+      "advanced_model_quote": 0.020283763727551085,
+      "baseline_model_quote": 0.019493770224264614,
+      "instrument_id": "INS0056",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.02007488869,
+      "maturity_years": 20.0,
+      "reliability": 0.724958039,
+      "sigma": 2.4002515000001376e-05
+    },
+    {
+      "advanced_model_quote": 0.020283763727551085,
+      "baseline_model_quote": 0.019493770224264614,
+      "instrument_id": "INS0074",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.020043542580000004,
+      "maturity_years": 20.0,
+      "reliability": 0.5810258075,
+      "sigma": 3.263845500000098e-05
+    },
+    {
+      "advanced_model_quote": 0.020283763727551085,
+      "baseline_model_quote": 0.019493770224264614,
+      "instrument_id": "INS0092",
+      "instrument_type": "ois_swap",
+      "market_quote": 0.02005313369,
+      "maturity_years": 20.0,
+      "reliability": 0.710234101,
+      "sigma": 2.488595499999975e-05
+    },
+    {
+      "advanced_model_quote": 104.72398153449804,
+      "baseline_model_quote": 106.11165928275145,
+      "instrument_id": "INS0142",
+      "instrument_type": "bond",
+      "market_quote": 104.9515633,
+      "maturity_years": 20.34394128,
+      "reliability": 0.0922366911,
+      "sigma": 0.06696579999999841
+    },
+    {
+      "advanced_model_quote": 109.09664792285604,
+      "baseline_model_quote": 110.66054053848266,
+      "instrument_id": "INS0143",
+      "instrument_type": "bond",
+      "market_quote": 109.1223507,
+      "maturity_years": 20.95220549,
+      "reliability": 0.305859412,
+      "sigma": 0.05414840000000254
+    }
+  ],
+  "inner_cv": {
+    "criterion": "mean liquidity-weighted Huber loss in bid/ask uncertainty units",
+    "folds": 3,
+    "results": [
+      {
+        "fold_losses": [
+          1324.477320492064,
+          1069.508238380267,
+          1121.0006179598024
+        ],
+        "mean_loss": 1171.6620589440445,
+        "smoothing": 1e-05
+      },
+      {
+        "fold_losses": [
+          344.24040339337495,
+          732.3218456510954,
+          746.0609066469805
+        ],
+        "mean_loss": 607.5410518971503,
+        "smoothing": 0.0001
+      },
+      {
+        "fold_losses": [
+          199.22775236586196,
+          655.6084220564942,
+          713.8835781213146
+        ],
+        "mean_loss": 522.9065841812236,
+        "smoothing": 0.001
+      },
+      {
+        "fold_losses": [
+          404.5644323180549,
+          754.9859260460984,
+          712.3715356259045
+        ],
+        "mean_loss": 623.9739646633526,
+        "smoothing": 0.01
+      }
+    ]
+  },
+  "model_selected": "advanced",
+  "ordinary_least_squares_ablation": {
+    "full_sample": {
+      "by_instrument_type": {
+        "bond": {
+          "mean_signed_error": 2.2267415105168613,
+          "median_absolute_error": 1.4108818999981452,
+          "n": 47,
+          "rmse": 3.1778770735611004,
+          "units": "price points per 100"
+        },
+        "deposit": {
+          "mean_signed_error": 5.232747820851362,
+          "median_absolute_error": 10.392618853698188,
+          "n": 18,
+          "rmse": 13.294203114344283,
+          "units": "rate basis points"
+        },
+        "ois_swap": {
+          "mean_signed_error": -3.854857083056189,
+          "median_absolute_error": 14.787775221685017,
+          "n": 66,
+          "rmse": 45.73449444748163,
+          "units": "rate basis points"
+        }
+      },
+      "median_absolute_standardized_error": 64.56199314170564,
+      "n": 131,
+      "standardized_rmse": 277.0729524564948,
+      "weighted_huber_loss": 724.8507050415795,
+      "within_bid_ask_fraction": 0.015267175572519083
+    },
+    "holdout": {
+      "by_instrument_type": {
+        "bond": {
+          "mean_signed_error": 0.6500840239529655,
+          "median_absolute_error": 0.6037537170959126,
+          "n": 8,
+          "rmse": 0.7801220352683591,
+          "units": "price points per 100"
+        },
+        "deposit": {
+          "mean_signed_error": 2.521161319599275,
+          "median_absolute_error": 0.5665864204007152,
+          "n": 5,
+          "rmse": 6.677440363539213,
+          "units": "rate basis points"
+        },
+        "ois_swap": {
+          "mean_signed_error": 21.0057844186941,
+          "median_absolute_error": 5.673642212076987,
+          "n": 13,
+          "rmse": 65.11888944232557,
+          "units": "rate basis points"
+        }
+      },
+      "median_absolute_standardized_error": 16.643638886020067,
+      "n": 26,
+      "standardized_rmse": 348.0089810912306,
+      "weighted_huber_loss": 621.927193265877,
+      "within_bid_ask_fraction": 0.0
+    },
+    "purpose": "Separate robust estimation benefit from additional spline flexibility. The simple baseline and advanced model share identical spread/liquidity/Huber treatment.",
+    "train": {
+      "by_instrument_type": {
+        "bond": {
+          "mean_signed_error": 1.0776453131297035,
+          "median_absolute_error": 0.4727659930513681,
+          "n": 39,
+          "rmse": 2.0997658354276085,
+          "units": "price points per 100"
+        },
+        "deposit": {
+          "mean_signed_error": 5.173323712348725,
+          "median_absolute_error": 10.776734531318041,
+          "n": 13,
+          "rmse": 14.060015096010755,
+          "units": "rate basis points"
+        },
+        "ois_swap": {
+          "mean_signed_error": -2.6385421616430955,
+          "median_absolute_error": 10.721359580007258,
+          "n": 53,
+          "rmse": 39.28952584243408,
+          "units": "rate basis points"
+        }
+      },
+      "median_absolute_standardized_error": 42.523902913708156,
+      "n": 105,
+      "standardized_rmse": 258.9297416884983,
+      "weighted_huber_loss": 630.6165264639671,
+      "within_bid_ask_fraction": 0.01904761904761905
+    }
+  },
+  "preprocessing_caveat": "Deterministic quote-unit repair uses contemporaneous peers in the entire visible tape before splitting. The holdout tests curve interpolation; it is not an untouched temporal or ground-truth test.",
+  "relative_holdout_improvement": 0.09713806675183534,
+  "selection_rationale": "Require >5% lower holdout weighted Huber loss for added complexity. Advanced improves by 9.7%; select advanced. This is provisional single-snapshot evidence, not a significance claim.",
+  "training_n": 105,
+  "validation_method": "Deterministic dispersed maturity buckets; all instrument types at nearby tenors assigned together; endpoints retained in training."
+}

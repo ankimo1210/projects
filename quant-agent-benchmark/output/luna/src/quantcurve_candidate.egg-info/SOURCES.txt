@@ -1,0 +1,17 @@
+README.md
+pyproject.toml
+src/quantcurve/__init__.py
+src/quantcurve/cli.py
+src/quantcurve/conventions.py
+src/quantcurve/curve.py
+src/quantcurve/instruments.py
+src/quantcurve/io.py
+src/quantcurve/reporting.py
+src/quantcurve_candidate.egg-info/PKG-INFO
+src/quantcurve_candidate.egg-info/SOURCES.txt
+src/quantcurve_candidate.egg-info/dependency_links.txt
+src/quantcurve_candidate.egg-info/requires.txt
+src/quantcurve_candidate.egg-info/top_level.txt
+tests/test_basic_conventions.py
+tests/test_curve_engine.py
+tests/test_io.py

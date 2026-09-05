@@ -1,0 +1,65 @@
+{
+  "package_version": "0.2.0",
+  "valuation_date": "2026-01-15",
+  "market_data": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/input/market_data/market_observations.csv",
+  "stub_rule": "forward",
+  "selected_model": "advanced",
+  "lambda": 21.54434690031882,
+  "penalty_power": 1.0,
+  "knots": [
+    0.083333,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    7.0,
+    8.0,
+    9.0,
+    10.0,
+    12.0,
+    15.0,
+    20.0,
+    25.0
+  ],
+  "t_max": 30.0,
+  "grid_rows": 719,
+  "cleaning_summary": {
+    "n_observations": 143,
+    "n_usable_instruments": 123,
+    "actions": {
+      "keep": 76,
+      "correct": 7,
+      "downweight": 37,
+      "exclude": 23
+    },
+    "by_type": {
+      "deposit": 17,
+      "ois_swap": 59,
+      "bond": 47
+    },
+    "stale_excluded": 5,
+    "n_rejected_by_robust_fit": 3
+  },
+  "type_scales": {
+    "bond": 2.011569810622568,
+    "deposit": 1.0,
+    "ois_swap": 1.0
+  },
+  "timings_seconds": {
+    "cleaning": 0.01563620800152421,
+    "fitting": 2.0933439580003323,
+    "holdout": 1.2470923750006477,
+    "risk": 0.9366360410022025,
+    "sensitivity": 3.753414792001422,
+    "total": 8.197262584002601
+  },
+  "numerical_warnings": []
+}

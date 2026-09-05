@@ -1,0 +1,31 @@
+{
+  "benchmark_version": "1.0.0",
+  "dataset_files": [
+    "market_data/market_observations.csv",
+    "market_data/CONVENTIONS.md"
+  ],
+  "dataset_summary": {
+    "hidden_holdout_instruments": 24,
+    "universe_instruments": 160,
+    "visible_corruption_labels": 45,
+    "visible_observations": 143,
+    "visible_unique_instruments": 136
+  },
+  "public_file_hashes": {
+    "TASK.md": "64a63897e9f52c39b07b4bde3deb93ed4a2290686d3464680c17b5ce3158be9f",
+    "market_data/CONVENTIONS.md": "21bfe79d4a1a3e82b3c17120606ae94e6aab6375c3340670744e8c981f63d53e",
+    "market_data/market_observations.csv": "dd96a259f44c81c272f048c3600dc5f7df686ea77a1c192d2c4aa3a306654d01",
+    "starter_repo/README.md": "b95368e1b4c1b63edbc6006038ed45c0bc2fd6adad079a7c41b2e0b9aa99cb8f",
+    "starter_repo/pyproject.toml": "b9f3a7fb8283c2acceaa07207596cf0be2adee707b4d1f6afce37c99a3f1ab38",
+    "starter_repo/src/quantcurve/__init__.py": "52bebef242102cb0e70a89ec1ecbc7132557a403b91103f1efe079a629a2c9b9",
+    "starter_repo/src/quantcurve/cli.py": "4ddf43ae73221c4ab32e612e1f41915531df94072fd7ef24f4bc9dac356dee09",
+    "starter_repo/src/quantcurve/conventions.py": "a13fe1a21b96f507a98eaa914164a9d84e3d18e770e2be7fdc65a999170cf0d9",
+    "starter_repo/src/quantcurve/instruments.py": "348f553bbcb3f5b91b6cca818f09179cb0fa1c3add67a684db7c9c01a64d8dc9",
+    "starter_repo/src/quantcurve/io.py": "9f113ed48de11688a778566cf3370372f347823e8cc6b8582d33604864cd46b5",
+    "starter_repo/tests/test_basic_conventions.py": "32f1231467735f002b896713c206c64b4eddc4d946edac5af1eb4ea13eba16f9",
+    "starter_repo/tests/test_io.py": "2a9327091a8ff88bb83c0e4aa67478b97d7e2624b8c916f23b86dc6949ec70ac"
+  },
+  "required_python": ">=3.12,<3.13",
+  "schema_version": "1.0",
+  "valuation_date": "2026-01-15"
+}

@@ -1,0 +1,105 @@
+{
+  "model_key": "sonnet",
+  "round_id": "feedback_round_01",
+  "round_start_utc": "2026-09-05T08:10:32Z",
+  "round_end_utc": "2026-09-05T08:35:05Z",
+  "wall_time_minutes": 24.5,
+  "additional_time_limit_minutes": 60,
+  "reasoning_effort_stated": "xhigh",
+  "reasoning_effort_verified": false,
+  "python_bin": "analysis/final-review-20260905/.venv-matched/bin/python",
+
+  "original_submission_integrity": {
+    "checked_files": 37,
+    "missing": [],
+    "mismatched": [],
+    "unexpected_new_files": [],
+    "result": "ORIGINAL_UNCHANGED",
+    "before_manifest": "audit/baseline_manifest.json",
+    "after_manifest": "audit/original_manifest_after.json"
+  },
+
+  "hypotheses": {
+    "H1": {
+      "text": "Short-maturity zero-rate and forward-rate repricing errors are larger, indicating a methodological gap.",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "notes": "Deposit/swap short-end residuals are small (~2-3bp-equivalent, T<=2y). The only large short-end residual is 2 bonds (thin sample), more plausibly explained by the pre-existing bond-OIS-basis limitation / H5 schedule-convention sensitivity than a new short-rate defect. The 'forward' half of the claim is real but is not short-end-specific -- see H6."
+    },
+    "H2": {
+      "text": "Analytic forward f(t)=z(t)+t*z'(t) disagrees with finite-difference forward beyond expected discretisation/kink artifacts.",
+      "verdict": "NOT_SUPPORTED",
+      "notes": "Discrepancies are exactly zero inside any linear segment for any step size, and are a fixed (not step-size-dependent) value only when the FD stencil straddles a knot -- exactly the expected behaviour for a C0 piecewise-linear curve, not a bug."
+    },
+    "H3": {
+      "text": "Deposits-always-train + OIS local-smoothness screening means the visible holdout never tests the hardest points.",
+      "verdict": "SUPPORTED",
+      "notes": "T<=2y has zero holdout coverage across every instrument type (0/19 deposit, 0/16 swap, 0/2 bond). T>=15y ois_swap also has zero coverage (0/13), an additional gap. Documented; not redesigned this round (would change model-selection inputs, too risky to re-validate in the time budget)."
+    },
+    "H4": {
+      "text": "Baseline winning the real-data holdout comparison does not imply it is closer to an unknown true curve.",
+      "verdict": "SUPPORTED",
+      "notes": "On synthetic flat/upward truths both models recover almost exactly (baseline marginally better, expected). On a humped truth, advanced is closer (0.076bp vs 0.665bp overall zero-rate RMSE). Combined with H6's real-data forward-jump finding, this is real evidence that holdout-RMSE-only selection can miss forward-curve quality -- but not conclusive enough (3 shapes, no walk-forward, no hidden-truth check) to override the existing selection rule this round."
+    },
+    "H5": {
+      "text": "The payment/coupon-schedule convention (forward vs backward stub) may materially affect fitted levels and is one of several conventions consistent with CONVENTIONS.md.",
+      "verdict": "SUPPORTED",
+      "notes": "Independent reference pricers confirm the code's actual bond convention is forward/end-stub (identical to swaps), NOT the backward/front-stub the old MODEL_RISKS.md prose claimed -- that documentation bug is fixed. A symmetric synthetic A/B test shows either convention-mismatch direction produces ~1.1-1.4bp zero-rate RMSE bias; no evidence favours one convention as 'more correct'. Code convention left unchanged; sensitivity quantified and documented instead."
+    },
+    "H6": {
+      "text": "Slope differences at similar rate levels inflate forward error more than zero-rate error; must be checked as a distinct diagnostic.",
+      "verdict": "SUPPORTED",
+      "notes": "Correlation(|local slope|, |forward-zero|) = 0.82 across all real knots. New forward_smoothness_check diagnostic (shipped in submission/): baseline max knot jump 811.9bp (mean 154.0bp) vs advanced max 0.037bp (mean 0.008bp) on the real fitted curves -- a ~20,000x difference invisible to holdout RMSE alone."
+    }
+  },
+
+  "changes_adopted": [
+    {
+      "change": "New forward_smoothness_check diagnostic (diagnostics.py, wired into cli.py sensitivity.json and report.py section 5)",
+      "type": "numerical/diagnostic (additive)",
+      "justified_by": "EXP-F3, H6",
+      "regression_check": "53/53 tests pass (49 original unchanged + 4 new); full CLI exit 0; curve.csv/repricing.csv/risk.csv/cleaning.csv/model_comparison.json numerically byte-identical to a fresh phase-1 reproduction"
+    },
+    {
+      "change": "Added selected_model key (duplicate of model_selected) to model_comparison.json",
+      "type": "format only",
+      "justified_by": "explicit schema requirement in this round's prompt",
+      "regression_check": "original model_selected key and its consumer (test_cli.py contract test) unchanged"
+    },
+    {
+      "change": "MODEL_RISKS.md: corrected bond-stub documentation bug (removed incorrect 'backward from maturity' clause) and added two quantified limitation entries (schedule-convention sensitivity; holdout-coverage + forward-smoothness gap)",
+      "type": "documentation only",
+      "justified_by": "EXP-B2, EXP-E1, ANALYSIS-H3, EXP-F3",
+      "regression_check": "n/a (no code path reads this file)"
+    }
+  ],
+  "changes_considered_not_adopted": [
+    "Switching the bond schedule to backward-from-maturity (H5) -- no directional evidence; adoption rule requires evidence, symmetric mismatch effect provides none.",
+    "Redesigning the visible holdout to force short-end/long-OIS coverage (H3) -- would change model-selection inputs; re-validating the selection outcome was judged unsafe within the remaining time budget.",
+    "Switching model selection to advanced (H4/H6) -- suggestive, converging evidence but not conclusive (3 synthetic shapes only, no walk-forward, no hidden-truth access); the common feedback itself warns against forced adoption either way."
+  ],
+
+  "measurement_types_kept_separate": {
+    "synthetic_ground_truth_bp_rmse": "exp_C_D_synthetic_truth.py, exp_E_bond_convention_fix_check.py -- known z_true(T), independent of real-data holdout",
+    "real_data_holdout_and_train_residuals": "audit/baseline_repro_outputs/diagnostics/repricing.csv -- native units (pct-points / price-points), never RMSE-averaged across instrument types",
+    "internal_consistency_and_format": "test suite (53/53), CLI exit code, JSON schema keys, chart/report rendering"
+  },
+
+  "verification_before_completion": {
+    "full_test_suite": "53 passed, 0 failed (audit/logs/ -- reran after every code change)",
+    "full_cli_run": "exit 0, model selected = baseline, wall time ~70s (audit/logs/submission_cli_run_final.log)",
+    "unmodified_numerical_outputs_diffed_against_fresh_baseline_reproduction": "curve.csv, cleaning.csv, repricing.csv, risk.csv, model_comparison.json all byte-identical",
+    "original_submission_hash_reverified": "ORIGINAL_UNCHANGED (see original_submission_integrity above)",
+    "submission_runs_independently": "verified from a clean submission/ checkout using only PYTHON_BIN, no dependency on audit/ workspace"
+  },
+
+  "hidden_scoring_or_ground_truth_accessed": false,
+  "other_models_submissions_accessed": false,
+  "evaluator_or_tools_directories_accessed": false,
+
+  "unresolved_risks": [
+    "Per-type instrument weighting and moderate-outlier/staleness cleaning logic were reviewed but not re-tested this round (out of time budget after the pricing-convention and forward-smoothness lines).",
+    "The bond schedule convention question (H5) remains genuinely unresolved -- both conventions are equally consistent with the available text and equally exposed to a ~1.1-1.4bp bias if the real convention differs from the implemented one.",
+    "The holdout-coverage gap (H3) is documented but not fixed; short-end and long-OIS generalisation is untested by design.",
+    "H4's synthetic-truth evidence favouring advanced on a humped shape is suggestive, not conclusive (3 shapes, single-date, no walk-forward)."
+  ]
+}

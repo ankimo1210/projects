@@ -1,0 +1,78 @@
+{
+  "title": "Astra 改善ラウンドの判断",
+  "sections": [
+    {
+      "text": "要旨 / Executive Summary",
+      "y": 215.03125
+    },
+    {
+      "text": "手法 / Methodology",
+      "y": 431.53125
+    },
+    {
+      "text": "データ品質 / Data Quality",
+      "y": 808.03125
+    },
+    {
+      "text": "モデル比較 / Model Comparison",
+      "y": 1056.53125
+    },
+    {
+      "text": "感度分析 / Sensitivity Analysis",
+      "y": 1738.40625
+    },
+    {
+      "text": "検証と価格再現 / Validation and Repricing",
+      "y": 2014.90625
+    },
+    {
+      "text": "図 / Charts",
+      "y": 2335.40625
+    },
+    {
+      "text": "制約 / Limitations",
+      "y": 4685.046875
+    },
+    {
+      "text": "次の検証 / Recommended Next Steps",
+      "y": 4889.546875
+    }
+  ],
+  "images": [
+    {
+      "complete": true,
+      "width": 1938,
+      "height": 978
+    },
+    {
+      "complete": true,
+      "width": 1938,
+      "height": 1298
+    },
+    {
+      "complete": true,
+      "width": 1938,
+      "height": 1298
+    }
+  ],
+  "scrollWidth": 1440,
+  "clientWidth": 1440,
+  "mobile": {
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  "exceptions": [],
+  "node_version": "v22.23.2",
+  "browser_version": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/152.0.7977.82",
+    "revision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "jsVersion": "15.2.124.21"
+  },
+  "html_sha256": "2a8b152dfdd6bf83a52f0258b7462ae9f0da945b7d7cb670414cc31593e0cd30",
+  "transport": "inherited OS pipes; no network connection",
+  "no_missing_images": true,
+  "desktop_no_overflow": true,
+  "mobile_no_overflow": true
+}

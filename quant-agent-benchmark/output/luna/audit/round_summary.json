@@ -1,0 +1,283 @@
+{
+  "additional_work_seconds": 1369.170608997345,
+  "configuration_confirmation": {
+    "advanced_knots": [
+      0.0,
+      0.08333333333333333,
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      7.0,
+      8.0,
+      9.0,
+      10.0,
+      12.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ],
+    "advanced_smoothness": 100.0,
+    "baseline": "weighted-median deposit/OIS bootstrap",
+    "forward_method": "analytical piecewise-linear zero derivative with interior-knot midpoint",
+    "holdout": {
+      "holdout_instruments": 18,
+      "holdout_maturities": [
+        2.0,
+        5.0,
+        10.0,
+        20.0,
+        30.0
+      ],
+      "method": "whole maturity clusters nearest to 2Y, 5Y, 10Y, 20Y, and 30Y; no random row split",
+      "train_instruments": 110
+    },
+    "selected_model": "advanced"
+  },
+  "environment": {
+    "numpy": "2.5.2",
+    "pandas": "2.3.3",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:38:53) [Clang 18.1.8 ]"
+  },
+  "experiment_status": {
+    "E1": {
+      "adopted": true,
+      "forward_after_bp": 3.7987722149811627,
+      "forward_before_bp": 4.318051095734228
+    },
+    "E2": {
+      "adopted": false,
+      "cells": [
+        {
+          "after": 2.290045174539993,
+          "before": 1.1500213762997415,
+          "decision": "not_adopted",
+          "segment": "product:ois_swap",
+          "status": "measured"
+        },
+        {
+          "after": 1.3666644936492585,
+          "before": 1.3654187894455958,
+          "decision": "not_adopted",
+          "segment": "tenor:10-20Y",
+          "status": "measured"
+        },
+        {
+          "after": 3.4452425143934162,
+          "before": 0.8408919181355866,
+          "decision": "not_adopted",
+          "segment": "tenor:2-5Y",
+          "status": "measured"
+        },
+        {
+          "after": 0.637025714245041,
+          "before": 2.050961275103448,
+          "decision": "not_adopted",
+          "segment": "tenor:20Y+",
+          "status": "measured"
+        },
+        {
+          "after": 1.460629661583906,
+          "before": 0.1549966225017936,
+          "decision": "not_adopted",
+          "segment": "tenor:5-10Y",
+          "status": "measured"
+        }
+      ],
+      "current_holdout": {
+        "mae": {
+          "ois_swap": 9.849031819877026e-05
+        },
+        "max_abs_residual": {
+          "ois_swap": 0.0002262493540601887
+        },
+        "n": 18,
+        "raw_rmse": {
+          "ois_swap": 0.00012328456631963312
+        },
+        "weighted_standardized_rmse": 1.1500213762997415
+      },
+      "dense_holdout": {
+        "mae": {
+          "ois_swap": 0.00015034635641092265
+        },
+        "max_abs_residual": {
+          "ois_swap": 0.000348173335946278
+        },
+        "n": 18,
+        "raw_rmse": {
+          "ois_swap": 0.00018645200674130772
+        },
+        "weighted_standardized_rmse": 2.290045174539993
+      }
+    },
+    "E3_200": {
+      "adopted": false,
+      "holdout": {
+        "mae": {
+          "ois_swap": 0.00011174830422928495
+        },
+        "max_abs_residual": {
+          "ois_swap": 0.00022648599440127162
+        },
+        "n": 18,
+        "raw_rmse": {
+          "ois_swap": 0.00012914874295903494
+        },
+        "weighted_standardized_rmse": 1.2499469361685966
+      },
+      "ratio_to_current": 1.08689017606818
+    },
+    "E3_50": {
+      "adopted": false,
+      "holdout": {
+        "mae": {
+          "ois_swap": 0.0007423682518070707
+        },
+        "max_abs_residual": {
+          "ois_swap": 0.002818270436058836
+        },
+        "n": 18,
+        "raw_rmse": {
+          "ois_swap": 0.001335155501390051
+        },
+        "weighted_standardized_rmse": 16.784297043230854
+      },
+      "ratio_to_current": 14.59476961831377
+    },
+    "E4": {
+      "adopted": false,
+      "advanced_error": 1.1500213762997415,
+      "baseline_error": 16.82692294795212,
+      "fixed_5pct_accepts": true,
+      "tolerance_results": {
+        "0pct": true,
+        "10pct": true,
+        "5pct": true
+      }
+    }
+  },
+  "experiments_count": 6,
+  "final_adopted_version": {
+    "format_changes": [
+      "selected_model top-level JSON key",
+      "bilingual required HTML headings",
+      "segment_metrics.csv"
+    ],
+    "not_adopted_factors": [
+      "denser knot grid",
+      "smoothness=50",
+      "smoothness=200",
+      "post-hoc tolerance change"
+    ],
+    "numeric_change": "analytical_forward_construction",
+    "reason": "Forward RMSE improved on deterministic known-curve tests without changing fitted zero rates or quote/risk calculations; other factors did not meet the precommitted multi-condition gate."
+  },
+  "finish_time_utc": "2026-09-05T08:17:35.170609Z",
+  "input_hash_check": {
+    "all_expected_files_present": true,
+    "matches_manifest": true,
+    "sha256": {
+      "TASK.md": "64a63897e9f52c39b07b4bde3deb93ed4a2290686d3464680c17b5ce3158be9f",
+      "market_data/CONVENTIONS.md": "21bfe79d4a1a3e82b3c17120606ae94e6aab6375c3340670744e8c981f63d53e",
+      "market_data/market_observations.csv": "dd96a259f44c81c272f048c3600dc5f7df686ea77a1c192d2c4aa3a306654d01",
+      "starter_repo/README.md": "b95368e1b4c1b63edbc6006038ed45c0bc2fd6adad079a7c41b2e0b9aa99cb8f",
+      "starter_repo/pyproject.toml": "b9f3a7fb8283c2acceaa07207596cf0be2adee707b4d1f6afce37c99a3f1ab38",
+      "starter_repo/src/quantcurve/__init__.py": "52bebef242102cb0e70a89ec1ecbc7132557a403b91103f1efe079a629a2c9b9",
+      "starter_repo/src/quantcurve/cli.py": "4ddf43ae73221c4ab32e612e1f41915531df94072fd7ef24f4bc9dac356dee09",
+      "starter_repo/src/quantcurve/conventions.py": "a13fe1a21b96f507a98eaa914164a9d84e3d18e770e2be7fdc65a999170cf0d9",
+      "starter_repo/src/quantcurve/instruments.py": "348f553bbcb3f5b91b6cca818f09179cb0fa1c3add67a684db7c9c01a64d8dc9",
+      "starter_repo/src/quantcurve/io.py": "9f113ed48de11688a778566cf3370372f347823e8cc6b8582d33604864cd46b5",
+      "starter_repo/tests/test_basic_conventions.py": "32f1231467735f002b896713c206c64b4eddc4d946edac5af1eb4ea13eba16f9",
+      "starter_repo/tests/test_io.py": "2a9327091a8ff88bb83c0e4aa67478b97d7e2624b8c916f23b86dc6949ec70ac"
+    }
+  },
+  "metric_scales": {
+    "internal_checks": "dimensionless ratios, finite/test/schema status",
+    "public_bond_quote": "price points per 100 face",
+    "public_rate_quote": "annual decimal normalized quote units",
+    "synthetic_curve_rmse": "bp"
+  },
+  "model_id": "gpt-5.6-luna",
+  "original_input_hashes_unchanged": true,
+  "output_checks": {
+    "outputs/curves/curve.csv": true,
+    "outputs/diagnostics/model_comparison.json": true,
+    "outputs/diagnostics/segment_metrics.csv": true,
+    "outputs/diagnostics/sensitivity.json": true,
+    "reports/research_report.html": true
+  },
+  "quality_snapshot": {
+    "actions": {
+      "correct": 15,
+      "downweight": 23,
+      "exclude": 15,
+      "keep": 90
+    },
+    "crossed_bid_ask": 4,
+    "duplicate_instrument_ids": 14,
+    "excluded_rows": 15,
+    "input_rows": 143,
+    "low_liquidity_rows": 23,
+    "missing_quote_values": 4,
+    "peer_outlier_exclusions": 8,
+    "stale_rows": 5,
+    "unit_corrections": 8,
+    "usable_rows": 128
+  },
+  "round_name": "Luna improvement round",
+  "seed": 20260905,
+  "start_time_utc": "2026-09-05T07:54:46Z",
+  "stress_results": {
+    "base": {
+      "forward_rmse_analytical_bp": 3.7987722149811627,
+      "forward_rmse_finite_difference_bp": 4.318051095734228,
+      "n_rows": 22.0,
+      "zero_rmse_bp": 1.6808578108809704
+    },
+    "missing_mid_long": {
+      "forward_rmse_analytical_bp": 7.7406441140322135,
+      "forward_rmse_finite_difference_bp": 7.926664690415876,
+      "n_rows": 21.0,
+      "zero_rmse_bp": 1.7663178016156225
+    },
+    "outlier_low_liquidity": {
+      "forward_rmse_analytical_bp": 3.805651500852449,
+      "forward_rmse_finite_difference_bp": 4.3237780998543665,
+      "n_rows": 22.0,
+      "zero_rmse_bp": 1.6809811440553115
+    }
+  },
+  "telemetry": {
+    "cost_telemetry_available": false,
+    "estimated_usd_cost": null,
+    "input_tokens": null,
+    "output_tokens": null,
+    "token_telemetry_available": false,
+    "total_tokens": null
+  },
+  "test_results": {
+    "failed_test_suite_runs": 1,
+    "final_cli_exit_code": 0,
+    "test_suite_runs": 3,
+    "tests_failed": 0,
+    "tests_passed": 13
+  },
+  "time_limit_seconds": null,
+  "unverified_items": [
+    "\u4e3b\u50ac\u8005\u306ehidden score/\u771f\u5024\u306f\u53d6\u5f97\u3057\u3066\u3044\u306a\u3044\u3002",
+    "\u5b9f\u5e02\u5834\u306e\u55b6\u696d\u65e5\u30fb\u62c5\u4fdd\u30fb\u30ab\u30ec\u30f3\u30c0\u30fc\u898f\u7d04\u306f supplied specification \u5916\u3067\u672a\u691c\u8a3c\u3002",
+    "\u30d5\u30a9\u30ef\u30fc\u30c9\u89e3\u6790\u5316\u3068\u7bc0\u70b9/\u66f2\u7387\u5909\u66f4\u3092\u540c\u6642\u9069\u7528\u3057\u305f\u76f8\u4e92\u4f5c\u7528\u306f\u672a\u691c\u8a3c\u3002",
+    "HTML\u306e\u30d6\u30e9\u30a6\u30b6\u8868\u793a\u306f\u30ed\u30fc\u30ab\u30ebfile URL\u30dd\u30ea\u30b7\u30fc\u5236\u9650\u306e\u305f\u3081\u69cb\u9020\u691c\u67fb\u3068\u753b\u50cf\u30d5\u30a1\u30a4\u30ebQA\u307e\u3067\u3002"
+  ]
+}

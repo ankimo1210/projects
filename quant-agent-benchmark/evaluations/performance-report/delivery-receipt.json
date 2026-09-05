@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "html": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/evaluations/performance_report.html",
+  "stages": {
+    "validation": "passed",
+    "package": "passed",
+    "verification": "structural_only"
+  },
+  "browserWarning": {
+    "code": "browser_unavailable",
+    "message": "No installed Chromium headless-shell executable was found. Set CHROMIUM_EXECUTABLE_PATH (or the legacy PLAYWRIGHT_EXECUTABLE_PATH) or preinstall Chromium headless-shell under PLAYWRIGHT_BROWSERS_PATH; portable tooling never downloads browsers."
+  },
+  "counts": {
+    "blocks": 54,
+    "charts": 7,
+    "html": 0,
+    "metrics": 3,
+    "tables": 16
+  },
+  "sourceDialog": "not_verified",
+  "sourceInteraction": "not_verified",
+  "viewports": [],
+  "timings": {
+    "validateAndPackageMs": 78.2,
+    "staticChartExtractionMs": 1.6,
+    "structuralVerificationMs": 5.2,
+    "totalMs": 84
+  },
+  "visual_qa_limitation": "The packaged verifier completed structural checks only. The updated seven-model HTML has not passed browser-level layout/source-dialog QA. Earlier four-model manual QA does not certify the expanded report. Semantic table fallbacks are retained; no browser was installed."
+}

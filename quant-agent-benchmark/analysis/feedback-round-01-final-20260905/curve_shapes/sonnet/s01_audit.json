@@ -1,0 +1,23 @@
+{
+  "model": "sonnet",
+  "case": "s01",
+  "curve_rows": 400,
+  "truth_rows": 721,
+  "market_rows": 98,
+  "market": "evaluator/hidden_scenarios/s01/market_data.csv",
+  "truth": "evaluator/hidden_scenarios/s01/truth_curve.csv",
+  "metrics": {
+    "zero_rate_rmse_bps": 4.685837827787124,
+    "weighted_zero_rate_rmse_bps": 6.863534525964476,
+    "forward_rate_rmse_bps": 24.14174611176049,
+    "discount_factor_rmse_x1e4": 34.40479497796368,
+    "hidden_instrument_normalized_rmse": 7.540328486699834,
+    "bid_ask_normalized_pricing_rmse": 36.45510936477175,
+    "short_end_zero_rmse_bps": 13.14894831815427,
+    "long_end_zero_rmse_bps": 1.786234660807925,
+    "forward_roughness": 0.00011797336231074148,
+    "zero_curvature_rms": 0.02508657745727854
+  },
+  "rmse_matches_frozen_score": true,
+  "cli_seconds": 49.610435082999174
+}

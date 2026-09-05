@@ -1,0 +1,14 @@
+{
+  "input_sha256": "dd96a259f44c81c272f048c3600dc5f7df686ea77a1c192d2c4aa3a306654d01",
+  "network_required_for_workflow": false,
+  "packages": {
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.2",
+    "pandas": "2.3.3",
+    "scipy": "1.18.1"
+  },
+  "python": "3.12.11",
+  "random_seed": 20260115,
+  "selected_model": "advanced",
+  "valuation_date": "2026-01-15"
+}

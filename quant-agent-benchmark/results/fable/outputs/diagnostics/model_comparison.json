@@ -1,0 +1,507 @@
+{
+  "selected_model": "advanced",
+  "selection_rationale": "The advanced penalised-spline model has the lower precision-weighted maturity-grouped holdout RMSE (1.89bp vs 2.88bp for the bootstrap baseline, 34% lower; unweighted RMSE 2.95bp vs 3.67bp, median absolute error 1.09bp vs 2.24bp, n=110 held-out instruments). By type - bond: advanced 2.53bp vs baseline 3.56bp (weighted); deposit: advanced 1.08bp vs baseline 2.59bp (weighted); ois_swap: advanced 1.70bp vs baseline 2.60bp (weighted).",
+  "holdout_method": "Maturity-grouped 5-fold cross-validation: instruments are grouped into tenor clusters (all quotes of the same tenor, and bonds maturing within 2% of each other, form one cluster); whole clusters are assigned round-robin in maturity order to folds so near-duplicate quotes never straddle train and test; the shortest and longest clusters always stay in the training set (extrapolation is not scored). Both models are refitted on every training fold. Errors are market-minus-model in yield-equivalent basis points (bond price errors divided by dollar duration). Instruments rejected by the full-data robust fit are not scored.",
+  "baseline": {
+    "description": "Sequential bootstrap over tenor-cluster quotes of deposits and OIS with linear interpolation of continuously compounded zero rates and flat zero extrapolation; bonds unused.",
+    "train": {
+      "usable": {
+        "overall": {
+          "n": 120,
+          "rmse_bp": 2.6945825720013037,
+          "weighted_rmse_bp": 1.3930560240546324,
+          "mae_bp": 1.020269344212328,
+          "median_abs_bp": 0.23228813948457383,
+          "max_abs_bp": 24.70371483897649
+        },
+        "by_type": {
+          "bond": {
+            "n": 45,
+            "rmse_bp": 4.3880416522964305,
+            "weighted_rmse_bp": 2.7554923990035767,
+            "mae_bp": 2.4251747095656357,
+            "median_abs_bp": 1.7244661194202862,
+            "max_abs_bp": 24.70371483897649
+          },
+          "deposit": {
+            "n": 16,
+            "rmse_bp": 0.09678579171779833,
+            "weighted_rmse_bp": 0.08244882290269161,
+            "mae_bp": 0.07280284589646145,
+            "median_abs_bp": 0.056112297943658115,
+            "max_abs_bp": 0.23328854256803727
+          },
+          "ois_swap": {
+            "n": 59,
+            "rmse_bp": 0.2814074567256496,
+            "weighted_rmse_bp": 0.22505907164014205,
+            "mae_bp": 0.2056714210285155,
+            "median_abs_bp": 0.15953764111075602,
+            "max_abs_bp": 1.029876329214849
+          }
+        }
+      },
+      "all": {
+        "overall": {
+          "n": 123,
+          "rmse_bp": 11.381548440056964,
+          "weighted_rmse_bp": 11.030989686948974,
+          "mae_bp": 2.192542699275369,
+          "median_abs_bp": 0.23905422138457189,
+          "max_abs_bp": 121.2543901333005
+        },
+        "by_type": {
+          "bond": {
+            "n": 47,
+            "rmse_bp": 18.255558958630346,
+            "weighted_rmse_bp": 21.279923540996446,
+            "mae_bp": 5.10855424544349,
+            "median_abs_bp": 1.809334406557122,
+            "max_abs_bp": 121.2543901333005
+          },
+          "deposit": {
+            "n": 17,
+            "rmse_bp": 3.949897665934061,
+            "weighted_rmse_bp": 3.9032429335437375,
+            "mae_bp": 1.0262405079025885,
+            "median_abs_bp": 0.06635135409558193,
+            "max_abs_bp": 16.28124310000062
+          },
+          "ois_swap": {
+            "n": 59,
+            "rmse_bp": 0.2814074567256496,
+            "weighted_rmse_bp": 0.22505907164014205,
+            "mae_bp": 0.2056714210285155,
+            "median_abs_bp": 0.15953764111075602,
+            "max_abs_bp": 1.029876329214849
+          }
+        }
+      }
+    },
+    "holdout": {
+      "overall": {
+        "n": 110,
+        "rmse_bp": 3.6690709181262666,
+        "weighted_rmse_bp": 2.8833577436109032,
+        "mae_bp": 2.4772417904268305,
+        "median_abs_bp": 2.243350777641737,
+        "max_abs_bp": 24.711616718356993
+      },
+      "by_type": {
+        "bond": {
+          "n": 43,
+          "rmse_bp": 4.914535230994363,
+          "weighted_rmse_bp": 3.5567646390513894,
+          "mae_bp": 3.0017866895348364,
+          "median_abs_bp": 2.2222792188586467,
+          "max_abs_bp": 24.711616718356993
+        },
+        "deposit": {
+          "n": 12,
+          "rmse_bp": 2.5234408369947174,
+          "weighted_rmse_bp": 2.59305210185388,
+          "mae_bp": 2.5150163497260016,
+          "median_abs_bp": 2.5123476155006292,
+          "max_abs_bp": 2.8513491469391723
+        },
+        "ois_swap": {
+          "n": 55,
+          "rmse_bp": 2.5791178170247315,
+          "weighted_rmse_bp": 2.6021024456177715,
+          "mae_bp": 2.0589013290952964,
+          "median_abs_bp": 1.7482783026563642,
+          "max_abs_bp": 6.850179534363503
+        }
+      }
+    }
+  },
+  "advanced": {
+    "description": "Cubic B-spline instantaneous forward curve with a maturity-weighted second-derivative roughness penalty (exponent fixed a priori), spread/liquidity/type-scale weights, leave-tenor-out and Tukey-biweight robust residual treatment, lambda chosen by grouped cross-validation.",
+    "lambda": 21.54434690031882,
+    "lambda_cv_minimum": 21.54434690031882,
+    "penalty_power": 1.0,
+    "knots": [
+      0.083333,
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      7.0,
+      8.0,
+      9.0,
+      10.0,
+      12.0,
+      15.0,
+      20.0,
+      25.0
+    ],
+    "type_scales": {
+      "bond": 2.011569810622568,
+      "deposit": 1.0,
+      "ois_swap": 1.0
+    },
+    "irls_iterations": 29,
+    "irls_converged": true,
+    "n_rejected_by_robust_fit": 3,
+    "cv_table": [
+      {
+        "lambda": 0.001,
+        "cv_score": 3.933585452448409,
+        "fold_se": 0.5858502427760648
+      },
+      {
+        "lambda": 0.0021544346900318843,
+        "cv_score": 3.682677956116542,
+        "fold_se": 0.5020549727117608
+      },
+      {
+        "lambda": 0.004641588833612777,
+        "cv_score": 3.4788926309617847,
+        "fold_se": 0.5128076623968182
+      },
+      {
+        "lambda": 0.01,
+        "cv_score": 3.308989412806523,
+        "fold_se": 0.6403413056572201
+      },
+      {
+        "lambda": 0.021544346900318832,
+        "cv_score": 3.215889607477621,
+        "fold_se": 0.6206719937148317
+      },
+      {
+        "lambda": 0.046415888336127774,
+        "cv_score": 3.1879811260765547,
+        "fold_se": 0.4346179825938373
+      },
+      {
+        "lambda": 0.1,
+        "cv_score": 3.1606432743770525,
+        "fold_se": 0.3704243351002836
+      },
+      {
+        "lambda": 0.21544346900318823,
+        "cv_score": 3.1018492878937027,
+        "fold_se": 0.3649250121368639
+      },
+      {
+        "lambda": 0.46415888336127775,
+        "cv_score": 3.0028979324630525,
+        "fold_se": 0.33134752072332735
+      },
+      {
+        "lambda": 1.0,
+        "cv_score": 2.861370779112183,
+        "fold_se": 0.27016213081386387
+      },
+      {
+        "lambda": 2.154434690031882,
+        "cv_score": 2.6948197317685523,
+        "fold_se": 0.2282373798816852
+      },
+      {
+        "lambda": 4.6415888336127775,
+        "cv_score": 2.5302229578164086,
+        "fold_se": 0.23997999404192402
+      },
+      {
+        "lambda": 10.0,
+        "cv_score": 2.3877374584835818,
+        "fold_se": 0.2887202837669542
+      },
+      {
+        "lambda": 21.54434690031882,
+        "cv_score": 2.3089607237111647,
+        "fold_se": 0.35520774486401474
+      },
+      {
+        "lambda": 46.41588833612773,
+        "cv_score": 2.365717987852007,
+        "fold_se": 0.42285638200617076
+      },
+      {
+        "lambda": 100.0,
+        "cv_score": 2.5898613621355544,
+        "fold_se": 0.4795836966047622
+      },
+      {
+        "lambda": 215.44346900318823,
+        "cv_score": 2.9383256476442425,
+        "fold_se": 0.5154527290651991
+      },
+      {
+        "lambda": 464.1588833612773,
+        "cv_score": 3.3175830267358335,
+        "fold_se": 0.532078307125441
+      },
+      {
+        "lambda": 1000.0,
+        "cv_score": 3.6251267379645435,
+        "fold_se": 0.5565446690200638
+      },
+      {
+        "lambda": 2154.4346900318824,
+        "cv_score": 3.870117184365831,
+        "fold_se": 0.6273144061828632
+      },
+      {
+        "lambda": 4641.588833612773,
+        "cv_score": 4.240944016197353,
+        "fold_se": 0.7823022284475227
+      },
+      {
+        "lambda": 10000.0,
+        "cv_score": 4.974686530146346,
+        "fold_se": 0.934092912359303
+      }
+    ],
+    "cv_penalty_power_table": [
+      {
+        "penalty_power": 0.0,
+        "lambda": 21.54434690031882,
+        "cv_score": 2.192108248109444,
+        "selected": false
+      },
+      {
+        "penalty_power": 0.5,
+        "lambda": 21.54434690031882,
+        "cv_score": 2.2295957917898797,
+        "selected": false
+      },
+      {
+        "penalty_power": 1.0,
+        "lambda": 21.54434690031882,
+        "cv_score": 2.3089607237111647,
+        "selected": true
+      }
+    ],
+    "train": {
+      "usable": {
+        "overall": {
+          "n": 120,
+          "rmse_bp": 2.627723424156112,
+          "weighted_rmse_bp": 1.38631624885914,
+          "mae_bp": 1.1120197999638053,
+          "median_abs_bp": 0.4305416593443877,
+          "max_abs_bp": 24.26593810539063
+        },
+        "by_type": {
+          "bond": {
+            "n": 45,
+            "rmse_bp": 4.173826336560595,
+            "weighted_rmse_bp": 2.362337203963613,
+            "mae_bp": 2.1846178101174196,
+            "median_abs_bp": 1.4526078825151527,
+            "max_abs_bp": 24.26593810539063
+          },
+          "deposit": {
+            "n": 16,
+            "rmse_bp": 0.16990766701472793,
+            "weighted_rmse_bp": 0.1816798321847815,
+            "mae_bp": 0.14734700286302982,
+            "median_abs_bp": 0.14234677430118198,
+            "max_abs_bp": 0.3089768545391086
+          },
+          "ois_swap": {
+            "n": 59,
+            "rmse_bp": 0.8654631998616611,
+            "weighted_rmse_bp": 0.9521396446949737,
+            "mae_bp": 0.5555427541451579,
+            "median_abs_bp": 0.3224607423520445,
+            "max_abs_bp": 3.2797599006582563
+          }
+        }
+      },
+      "all": {
+        "overall": {
+          "n": 123,
+          "rmse_bp": 11.371850565510666,
+          "weighted_rmse_bp": 11.035507795303511,
+          "mae_bp": 2.283256789154656,
+          "median_abs_bp": 0.4612731576998999,
+          "max_abs_bp": 121.31934557291815
+        },
+        "by_type": {
+          "bond": {
+            "n": 47,
+            "rmse_bp": 18.219194314801825,
+            "weighted_rmse_bp": 21.250932589161373,
+            "mae_bp": 4.884418681270492,
+            "median_abs_bp": 1.5048447240935023,
+            "max_abs_bp": 121.31934557291815
+          },
+          "deposit": {
+            "n": 17,
+            "rmse_bp": 3.917589849693305,
+            "weighted_rmse_bp": 3.872187457900215,
+            "mae_bp": 1.0879932089261888,
+            "median_abs_bp": 0.1429105940632669,
+            "max_abs_bp": 16.138332505936727
+          },
+          "ois_swap": {
+            "n": 59,
+            "rmse_bp": 0.8654631998616611,
+            "weighted_rmse_bp": 0.9521396446949737,
+            "mae_bp": 0.5555427541451579,
+            "median_abs_bp": 0.3224607423520445,
+            "max_abs_bp": 3.2797599006582563
+          }
+        }
+      }
+    },
+    "holdout": {
+      "overall": {
+        "n": 110,
+        "rmse_bp": 2.9464494399147445,
+        "weighted_rmse_bp": 1.889358650516882,
+        "mae_bp": 1.6356591219342216,
+        "median_abs_bp": 1.0880369654127016,
+        "max_abs_bp": 24.345010463759724
+      },
+      "by_type": {
+        "bond": {
+          "n": 43,
+          "rmse_bp": 4.334435183459022,
+          "weighted_rmse_bp": 2.5290239093164866,
+          "mae_bp": 2.337381967114987,
+          "median_abs_bp": 1.6891508909834587,
+          "max_abs_bp": 24.345010463759724
+        },
+        "deposit": {
+          "n": 12,
+          "rmse_bp": 1.011724783426456,
+          "weighted_rmse_bp": 1.0763129301294116,
+          "mae_bp": 0.9310884806021539,
+          "median_abs_bp": 0.8530643354012768,
+          "max_abs_bp": 1.649305096174912
+        },
+        "ois_swap": {
+          "n": 55,
+          "rmse_bp": 1.565734851030417,
+          "weighted_rmse_bp": 1.7030329939737185,
+          "mae_bp": 1.2407639465380742,
+          "median_abs_bp": 0.9900665823578749,
+          "max_abs_bp": 4.579706597006017
+        }
+      }
+    }
+  },
+  "per_fold": [
+    {
+      "fold": 0,
+      "n_test": 34,
+      "baseline_rmse_bp": 3.1352639103348388,
+      "advanced_rmse_bp": 1.6034306975638255
+    },
+    {
+      "fold": 1,
+      "n_test": 14,
+      "baseline_rmse_bp": 6.948139965231038,
+      "advanced_rmse_bp": 6.600033027742455
+    },
+    {
+      "fold": 2,
+      "n_test": 22,
+      "baseline_rmse_bp": 3.1692179238648785,
+      "advanced_rmse_bp": 2.2713904107502483
+    },
+    {
+      "fold": 3,
+      "n_test": 20,
+      "baseline_rmse_bp": 2.2295797753675544,
+      "advanced_rmse_bp": 1.620261581956632
+    },
+    {
+      "fold": 4,
+      "n_test": 20,
+      "baseline_rmse_bp": 2.7418306551609204,
+      "advanced_rmse_bp": 2.1413154949054105
+    }
+  ],
+  "temporal_holdout": {
+    "available": true,
+    "cutoff_timestamp": "2026-01-15 15:14:00+00:00",
+    "n_train": 61,
+    "n_test": 59,
+    "baseline": {
+      "overall": {
+        "n": 59,
+        "rmse_bp": 5.23015284428362,
+        "weighted_rmse_bp": 3.713801031900289,
+        "mae_bp": 2.612171494700917,
+        "median_abs_bp": 1.0826992019001904,
+        "max_abs_bp": 31.665960359035886
+      },
+      "by_type": {
+        "bond": {
+          "n": 23,
+          "rmse_bp": 7.4763929980202946,
+          "weighted_rmse_bp": 4.117076453792224,
+          "mae_bp": 3.9322681737986342,
+          "median_abs_bp": 2.0639703848332034,
+          "max_abs_bp": 31.665960359035886
+        },
+        "deposit": {
+          "n": 5,
+          "rmse_bp": 0.10208348740538535,
+          "weighted_rmse_bp": 0.10238885784671875,
+          "mae_bp": 0.08979448591302577,
+          "median_abs_bp": 0.09880193506194013,
+          "max_abs_bp": 0.1540317649380632
+        },
+        "ois_swap": {
+          "n": 31,
+          "rmse_bp": 3.2540045824859773,
+          "weighted_rmse_bp": 3.956255232604225,
+          "mae_bp": 2.0395799277554962,
+          "median_abs_bp": 0.5523459305386419,
+          "max_abs_bp": 7.555142439074277
+        }
+      }
+    },
+    "advanced": {
+      "overall": {
+        "n": 59,
+        "rmse_bp": 3.8171348769510662,
+        "weighted_rmse_bp": 1.7944181457306527,
+        "mae_bp": 1.7310433813176087,
+        "median_abs_bp": 0.8798370240079706,
+        "max_abs_bp": 25.87045376081715
+      },
+      "by_type": {
+        "bond": {
+          "n": 23,
+          "rmse_bp": 5.987416631454677,
+          "weighted_rmse_bp": 2.9758819359341655,
+          "mae_bp": 3.198382510519814,
+          "median_abs_bp": 1.6877923330315299,
+          "max_abs_bp": 25.87045376081715
+        },
+        "deposit": {
+          "n": 5,
+          "rmse_bp": 0.3831671425314794,
+          "weighted_rmse_bp": 0.39259861659944256,
+          "mae_bp": 0.34516495044688983,
+          "median_abs_bp": 0.34901402917546925,
+          "max_abs_bp": 0.6018477291754726
+        },
+        "ois_swap": {
+          "n": 31,
+          "rmse_bp": 1.0533492518490188,
+          "weighted_rmse_bp": 1.183147862239179,
+          "mae_bp": 0.865901193662863,
+          "median_abs_bp": 0.7238755301732305,
+          "max_abs_bp": 2.098474026092159
+        }
+      }
+    }
+  }
+}

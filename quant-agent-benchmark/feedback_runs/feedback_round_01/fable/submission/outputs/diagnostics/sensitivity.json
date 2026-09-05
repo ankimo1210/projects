@@ -1,0 +1,238 @@
+{
+  "lambda_x0.33": {
+    "condition": "Refit with the smoothing parameter multiplied by 0.33 (lambda=7.181).",
+    "results": {
+      "max_abs_zero_change_bp": 1.5381921701405552,
+      "mean_abs_zero_change_bp": 0.3171716246786939,
+      "max_abs_forward_change_bp": 15.626270887903418,
+      "train_rmse_bp": {
+        "bond": 4.104708254150164,
+        "deposit": 0.1747149611772115,
+        "ois_swap": 0.6004248177859867,
+        "all": 2.5323092166913024
+      },
+      "n_excluded": 4
+    },
+    "interpretation": "Maximum zero-rate change versus the selected curve is 1.54bp (mean 0.32bp, forward up to 15.63bp): moderate (within the bid/ask scale). In-sample RMSE over usable instruments under this condition: 2.53bp."
+  },
+  "lambda_x3.00": {
+    "condition": "Refit with the smoothing parameter multiplied by 3.00 (lambda=64.63).",
+    "results": {
+      "max_abs_zero_change_bp": 1.384388966947994,
+      "mean_abs_zero_change_bp": 0.36976126108733015,
+      "max_abs_forward_change_bp": 13.078857504733795,
+      "train_rmse_bp": {
+        "bond": 4.2616734179532,
+        "deposit": 0.24234228759219695,
+        "ois_swap": 1.1757107637488242,
+        "all": 2.738276287507927
+      },
+      "n_excluded": 3
+    },
+    "interpretation": "Maximum zero-rate change versus the selected curve is 1.38bp (mean 0.37bp, forward up to 13.08bp): moderate (within the bid/ask scale). In-sample RMSE over usable instruments under this condition: 2.74bp."
+  },
+  "penalty_power_0": {
+    "condition": "Refit with the maturity-weight exponent of the roughness penalty set to 0 instead of the CV-selected 1 (same lambda).",
+    "results": {
+      "max_abs_zero_change_bp": 0.660164190547964,
+      "mean_abs_zero_change_bp": 0.26734258253053605,
+      "max_abs_forward_change_bp": 20.152497830678364,
+      "train_rmse_bp": {
+        "bond": 4.128078137361648,
+        "deposit": 0.4458220859765365,
+        "ois_swap": 0.8080533337942873,
+        "all": 2.579019192276936
+      }
+    },
+    "interpretation": "Maximum zero-rate change versus the selected curve is 0.66bp (mean 0.27bp, forward up to 20.15bp): negligible (below typical quote noise). In-sample RMSE over usable instruments under this condition: 2.58bp."
+  },
+  "stub_rule_round": {
+    "condition": "Rebuild every OIS/bond schedule with the 'round' stub rule instead of 'forward' and refit (same lambda).",
+    "results": {
+      "max_abs_zero_change_bp": 0.2294772502819606,
+      "mean_abs_zero_change_bp": 0.07117132343260603,
+      "max_abs_forward_change_bp": 2.3806123134278296,
+      "train_rmse_bp": {
+        "bond": 4.482076187165884,
+        "deposit": 0.1705722924689172,
+        "ois_swap": 0.9591892470627258,
+        "all": 2.8265901539969063
+      },
+      "n_excluded": 3
+    },
+    "interpretation": "Maximum zero-rate change versus the selected curve is 0.23bp (mean 0.07bp, forward up to 2.38bp): negligible (below typical quote noise). In-sample RMSE over usable instruments under this condition: 2.83bp. The public conventions do not pin the payment dates or stub accrual of non-integer tenors; this reading is reported as an alternative interpretation, not as an error of the data."
+  },
+  "stub_rule_linspace": {
+    "condition": "Rebuild every OIS/bond schedule with the 'linspace' stub rule instead of 'forward' and refit (same lambda).",
+    "results": {
+      "max_abs_zero_change_bp": 0.10117661902207115,
+      "mean_abs_zero_change_bp": 0.03203355150757012,
+      "max_abs_forward_change_bp": 0.9858541156610584,
+      "train_rmse_bp": {
+        "bond": 4.31424819098892,
+        "deposit": 0.17117304082511914,
+        "ois_swap": 0.9073053255183298,
+        "all": 2.718165685152564
+      },
+      "n_excluded": 3
+    },
+    "interpretation": "Maximum zero-rate change versus the selected curve is 0.10bp (mean 0.03bp, forward up to 0.99bp): negligible (below typical quote noise). In-sample RMSE over usable instruments under this condition: 2.72bp. The public conventions do not pin the payment dates or stub accrual of non-integer tenors; this reading is reported as an alternative interpretation, not as an error of the data."
+  },
+  "stub_rule_ceil": {
+    "condition": "Rebuild every OIS/bond schedule with the 'ceil' stub rule instead of 'forward' and refit (same lambda).",
+    "results": {
+      "max_abs_zero_change_bp": 1.9234660016271414,
+      "mean_abs_zero_change_bp": 0.5695020186490225,
+      "max_abs_forward_change_bp": 32.239839316030476,
+      "train_rmse_bp": {
+        "bond": 5.35767148292324,
+        "deposit": 0.17686445516097157,
+        "ois_swap": 17.67806229583736,
+        "all": 13.244814377419226
+      },
+      "n_excluded": 12
+    },
+    "interpretation": "Maximum zero-rate change versus the selected curve is 1.92bp (mean 0.57bp, forward up to 32.24bp): moderate (within the bid/ask scale). In-sample RMSE over usable instruments under this condition: 13.24bp. The public conventions do not pin the payment dates or stub accrual of non-integer tenors; this reading is reported as an alternative interpretation, not as an error of the data."
+  },
+  "stub_rule_forward_actual": {
+    "condition": "Rebuild every OIS/bond schedule with the 'forward_actual' stub rule instead of 'forward' and refit (same lambda).",
+    "results": {
+      "max_abs_zero_change_bp": 1.3790630512586222,
+      "mean_abs_zero_change_bp": 0.043600393433184295,
+      "max_abs_forward_change_bp": 5.962845806373427,
+      "train_rmse_bp": {
+        "bond": 4.3179700279224695,
+        "deposit": 0.1724890849667656,
+        "ois_swap": 17.537087579168613,
+        "all": 12.578060256139443
+      },
+      "n_excluded": 3
+    },
+    "interpretation": "Maximum zero-rate change versus the selected curve is 1.38bp (mean 0.04bp, forward up to 5.96bp): moderate (within the bid/ask scale). In-sample RMSE over usable instruments under this condition: 12.58bp. The public conventions do not pin the payment dates or stub accrual of non-integer tenors; this reading is reported as an alternative interpretation, not as an error of the data."
+  },
+  "rates_only": {
+    "condition": "Refit using deposits and OIS only; bonds are then priced off the rates-only curve.",
+    "results": {
+      "max_abs_zero_change_bp": 1.1239767569440686,
+      "mean_abs_zero_change_bp": 0.3407160666924883,
+      "max_abs_forward_change_bp": 12.917100474056642,
+      "bond_repricing_rmse_bp_on_rates_only_curve": 4.262875765608364,
+      "bond_repricing_rmse_bp_on_full_curve": 4.173826336560595
+    },
+    "interpretation": "Maximum zero-rate change versus the selected curve is 1.12bp (mean 0.34bp, forward up to 12.92bp): moderate (within the bid/ask scale)."
+  },
+  "uniform_weights": {
+    "condition": "Refit with every quote given the same base scale (spread and liquidity information ignored; robust reweighting still active).",
+    "results": {
+      "max_abs_zero_change_bp": 0.3340184006799668,
+      "mean_abs_zero_change_bp": 0.12725183160768921,
+      "max_abs_forward_change_bp": 8.688474955497357,
+      "train_rmse_bp": {
+        "bond": 2.0879543680014656,
+        "deposit": 0.20121625814076874,
+        "ois_swap": 0.9081317434966106,
+        "all": 1.4234696980052204
+      }
+    },
+    "interpretation": "Maximum zero-rate change versus the selected curve is 0.33bp (mean 0.13bp, forward up to 8.69bp): negligible (below typical quote noise). In-sample RMSE over usable instruments under this condition: 1.42bp."
+  },
+  "quote_shift_+1bp": {
+    "condition": "Shift every market quote by +1bp (bond prices by minus one basis point of yield) and refit; a well-behaved estimator moves the zero curve by about +1bp everywhere.",
+    "results": {
+      "mean_zero_change_bp": 0.9877872300682226,
+      "min_zero_change_bp": 0.9755291068037562,
+      "max_zero_change_bp": 0.9989947501017233,
+      "max_abs_deviation_from_1bp": 0.024470893196243848
+    },
+    "interpretation": "A +1bp parallel shift of every quote moves zero rates by 0.988bp on average (range 0.976 to 0.999bp); the maximum deviation from the expected 1bp is 0.024bp, so the estimator passes level shifts through linearly."
+  },
+  "jackknife_tenor_clusters": {
+    "condition": "Leave one tenor cluster out at a time (robust weights fixed) and measure the largest change in the zero curve; large values flag tenors that single-handedly shape the curve.",
+    "results": {
+      "n_clusters": 47,
+      "max_abs_zero_change_bp": 3.3292115785531555,
+      "median_abs_zero_change_bp": 0.16872166655190757,
+      "most_influential": [
+        {
+          "cluster": 46,
+          "maturity_years": 30.0,
+          "members": [
+            "INS0159",
+            "INS0160",
+            "INS0040",
+            "INS0058",
+            "INS0076",
+            "INS0094"
+          ],
+          "max_abs_zero_change_bp": 3.3292115785531555
+        },
+        {
+          "cluster": 0,
+          "maturity_years": 0.08333333,
+          "members": [
+            "INS0001",
+            "INS0002",
+            "INS0009",
+            "INS0018"
+          ],
+          "max_abs_zero_change_bp": 2.4459839956906744
+        },
+        {
+          "cluster": 18,
+          "maturity_years": 7.0,
+          "members": [
+            "INS0116",
+            "INS0032",
+            "INS0068",
+            "INS0086"
+          ],
+          "max_abs_zero_change_bp": 1.3965118448751312
+        },
+        {
+          "cluster": 4,
+          "maturity_years": 1.0,
+          "members": [
+            "INS0008",
+            "INS0016",
+            "INS0023",
+            "INS0041",
+            "INS0059",
+            "INS0095"
+          ],
+          "max_abs_zero_change_bp": 1.1745309385340075
+        },
+        {
+          "cluster": 6,
+          "maturity_years": 1.5,
+          "members": [
+            "INS0025",
+            "INS0043",
+            "INS0061",
+            "INS0079",
+            "INS0105"
+          ],
+          "max_abs_zero_change_bp": 1.0010224253235653
+        }
+      ]
+    },
+    "interpretation": "Deleting one tenor cluster at a time changes the zero curve by at most 3.33bp; the most influential cluster is the 30.00y cluster. Influence is concentrated where the curve is least covered."
+  },
+  "quote_noise_bootstrap": {
+    "condition": "20 seeded replications adding Gaussian noise of one estimated noise scale to every quote (robust weights fixed); reports the standard deviation of the fitted zero curve.",
+    "results": {
+      "n_replications": 20,
+      "seed": 20260115,
+      "max_zero_std_bp": 1.104134967858536,
+      "median_zero_std_bp": 0.32607562344139096,
+      "zero_std_bp_at": {
+        "0.25y": 0.24344459329229526,
+        "1y": 0.15487479519342132,
+        "2y": 0.24321874662575588,
+        "5y": 0.25879598558509553,
+        "10y": 0.14724126610332086,
+        "20y": 0.40089838262477584
+      }
+    },
+    "interpretation": "Across 20 bid/ask-scaled noise replications the zero-rate standard deviation is at most 1.10bp (median 0.33bp): quote noise of the observed size does not destabilise the curve."
+  }
+}

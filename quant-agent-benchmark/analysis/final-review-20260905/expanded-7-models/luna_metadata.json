@@ -1,0 +1,6 @@
+{
+  "model_name": "gpt-5.6-luna",
+  "reasoning_effort": "xhigh",
+  "wall_time_seconds": 1979.5689999999997,
+  "timing_definition": "Selected work-turn wall time; tools included, setup and inter-turn idle excluded."
+}

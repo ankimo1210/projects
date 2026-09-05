@@ -1,0 +1,18 @@
+{
+  "actions": {
+    "correct": 15,
+    "downweight": 23,
+    "exclude": 15,
+    "keep": 90
+  },
+  "crossed_bid_ask": 4,
+  "duplicate_instrument_ids": 14,
+  "excluded_rows": 15,
+  "input_rows": 143,
+  "low_liquidity_rows": 23,
+  "missing_quote_values": 4,
+  "peer_outlier_exclusions": 8,
+  "stale_rows": 5,
+  "unit_corrections": 8,
+  "usable_rows": 128
+}

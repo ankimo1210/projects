@@ -1,0 +1,580 @@
+{
+  "captured_curves": 77,
+  "additional_charts": 28,
+  "additional_tables": 6,
+  "curve_sampling": [
+    {
+      "case": "main",
+      "truth_rows": 721,
+      "chart_rows": 720,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.04160872000000282
+    },
+    {
+      "case": "s01",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s02",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s03",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s04",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s05",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s06",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s07",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s08",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s09",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s10",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    }
+  ],
+  "main_frontier": [
+    "Luna",
+    "Opus",
+    "Fable"
+  ],
+  "test_frontier": [
+    "Luna",
+    "Fable"
+  ],
+  "time_frontier": [
+    "Terra",
+    "Luna",
+    "Fable"
+  ],
+  "payload_bytes": 1883690,
+  "chart_map": [
+    {
+      "id": "train-zero-gpt",
+      "family": "ordered-axis shape",
+      "question": "公開データ較正後のゼロ金利：GPT群",
+      "dataset": "shape-main",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "train-zero-claude",
+      "family": "ordered-axis shape",
+      "question": "公開データ較正後のゼロ金利：Claude群",
+      "dataset": "shape-main",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "train-forward-gpt",
+      "family": "ordered-axis shape",
+      "question": "公開データ較正後の瞬間フォワード：GPT群",
+      "dataset": "shape-main",
+      "fields": [
+        "真値 benchmark f",
+        "Astra f",
+        "Sol f",
+        "Terra f",
+        "Luna f"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "train-forward-claude",
+      "family": "ordered-axis shape",
+      "question": "公開データ較正後の瞬間フォワード：Claude群",
+      "dataset": "shape-main",
+      "fields": [
+        "真値 benchmark f",
+        "Sonnet f",
+        "Opus f",
+        "Fable f"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "train-short-gpt",
+      "family": "ordered-axis shape",
+      "question": "公開データ較正後の短期ゼロ金利 ≤2年：GPT群",
+      "dataset": "shape-main-short",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "train-short-claude",
+      "family": "ordered-axis shape",
+      "question": "公開データ較正後の短期ゼロ金利 ≤2年：Claude群",
+      "dataset": "shape-main-short",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s01-gpt",
+      "family": "ordered-axis shape",
+      "question": "s01 短期負金利：GPT群のゼロ金利",
+      "dataset": "shape-s01",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s01-claude",
+      "family": "ordered-axis shape",
+      "question": "s01 短期負金利：Claude群のゼロ金利",
+      "dataset": "shape-s01",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s02-gpt",
+      "family": "ordered-axis shape",
+      "question": "s02 急勾配：GPT群のゼロ金利",
+      "dataset": "shape-s02",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s02-claude",
+      "family": "ordered-axis shape",
+      "question": "s02 急勾配：Claude群のゼロ金利",
+      "dataset": "shape-s02",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s03-gpt",
+      "family": "ordered-axis shape",
+      "question": "s03 強い逆イールド：GPT群のゼロ金利",
+      "dataset": "shape-s03",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s03-claude",
+      "family": "ordered-axis shape",
+      "question": "s03 強い逆イールド：Claude群のゼロ金利",
+      "dataset": "shape-s03",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s04-gpt",
+      "family": "ordered-axis shape",
+      "question": "s04 長期観測が疎：GPT群のゼロ金利",
+      "dataset": "shape-s04",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s04-claude",
+      "family": "ordered-axis shape",
+      "question": "s04 長期観測が疎：Claude群のゼロ金利",
+      "dataset": "shape-s04",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s05-gpt",
+      "family": "ordered-axis shape",
+      "question": "s05 複数の大きな外れ値：GPT群のゼロ金利",
+      "dataset": "shape-s05",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s05-claude",
+      "family": "ordered-axis shape",
+      "question": "s05 複数の大きな外れ値：Claude群のゼロ金利",
+      "dataset": "shape-s05",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s06-gpt",
+      "family": "ordered-axis shape",
+      "question": "s06 流動性の高い指標の欠損：GPT群のゼロ金利",
+      "dataset": "shape-s06",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s06-claude",
+      "family": "ordered-axis shape",
+      "question": "s06 流動性の高い指標の欠損：Claude群のゼロ金利",
+      "dataset": "shape-s06",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s07-gpt",
+      "family": "ordered-axis shape",
+      "question": "s07 観測重複：GPT群のゼロ金利",
+      "dataset": "shape-s07",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s07-claude",
+      "family": "ordered-axis shape",
+      "question": "s07 観測重複：Claude群のゼロ金利",
+      "dataset": "shape-s07",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s08-gpt",
+      "family": "ordered-axis shape",
+      "question": "s08 単位誤り：GPT群のゼロ金利",
+      "dataset": "shape-s08",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s08-claude",
+      "family": "ordered-axis shape",
+      "question": "s08 単位誤り：Claude群のゼロ金利",
+      "dataset": "shape-s08",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s09-gpt",
+      "family": "ordered-axis shape",
+      "question": "s09 長期の低流動性：GPT群のゼロ金利",
+      "dataset": "shape-s09",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s09-claude",
+      "family": "ordered-axis shape",
+      "question": "s09 長期の低流動性：Claude群のゼロ金利",
+      "dataset": "shape-s09",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s10-gpt",
+      "family": "ordered-axis shape",
+      "question": "s10 有効だが雑音の多い観測：GPT群のゼロ金利",
+      "dataset": "shape-s10",
+      "fields": [
+        "真値 benchmark z",
+        "Astra z",
+        "Sol z",
+        "Terra z",
+        "Luna z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "test-s10-claude",
+      "family": "ordered-axis shape",
+      "question": "s10 有効だが雑音の多い観測：Claude群のゼロ金利",
+      "dataset": "shape-s10",
+      "fields": [
+        "真値 benchmark z",
+        "Sonnet z",
+        "Opus z",
+        "Fable z"
+      ],
+      "source": "curve-shapes",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "efficiency-main_bp",
+      "family": "relationship",
+      "question": "累計API換算費用と主データゼロRMSE",
+      "dataset": "efficiency",
+      "fields": [],
+      "source": "efficiency",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    },
+    {
+      "id": "efficiency-test_bp",
+      "family": "relationship",
+      "question": "累計API換算費用と非公開10条件平均ゼロRMSE",
+      "dataset": "efficiency",
+      "fields": [],
+      "source": "efficiency",
+      "palette": "Neutral semantic benchmark; up to four model identities in the packaged reader palette. Multi-model exception to the binary benchmark palette.",
+      "non_color": "Explicit model legend and benchmark role; numeric series table remains available.",
+      "footprint": "Full width; model groups split to prevent eight-line overplotting.",
+      "limitation": "Lines show submitted curve estimates, not observed zero-rate data. Uniform maturity spacing avoids categorical-axis distortion; metrics use the full truth grid. Shared reader display interpolation is not a new estimator."
+    }
+  ]
+}

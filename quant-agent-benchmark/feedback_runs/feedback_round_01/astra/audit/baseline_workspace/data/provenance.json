@@ -1,0 +1,6 @@
+{
+  "source": "supplied benchmark input/market_data/market_observations.csv",
+  "sha256": "dd96a259f44c81c272f048c3600dc5f7df686ea77a1c192d2c4aa3a306654d01",
+  "manifest_sha256": "dd96a259f44c81c272f048c3600dc5f7df686ea77a1c192d2c4aa3a306654d01",
+  "matches": true
+}

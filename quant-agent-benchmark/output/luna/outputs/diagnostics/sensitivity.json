@@ -1,0 +1,28 @@
+{
+  "bid_ask_midpoint_band": {
+    "ask_zero_30y_shift_bp": 0.3232585867019022,
+    "bid_zero_30y_shift_bp": -0.587732431435485,
+    "interpretation": "Bid/ask envelope refit; large values indicate quote uncertainty rather than model extrapolation alone.",
+    "max_abs_forward_shift_bp": 8.46845390424785,
+    "max_abs_zero_shift_bp": 0.7220726652032092,
+    "zero_30y_shift_bp": 0.587732431435485
+  },
+  "double_smoothing_penalty": {
+    "interpretation": "Refit with twice the curvature penalty to test regularisation dependence.",
+    "max_abs_forward_shift_bp": 2.6327754006428075,
+    "max_abs_zero_shift_bp": 2.07985147914461,
+    "zero_30y_shift_bp": 0.012903820339506267
+  },
+  "exclude_low_liquidity": {
+    "interpretation": "Refit after removing observations with liquidity score below 0.25.",
+    "max_abs_forward_shift_bp": 8.370984121938777,
+    "max_abs_zero_shift_bp": 0.9909714241460379,
+    "zero_30y_shift_bp": -0.3432651939740128
+  },
+  "remove_bonds": {
+    "interpretation": "Refit without coupon-bearing bonds to isolate OIS/deposit support.",
+    "max_abs_forward_shift_bp": 34.386411423688315,
+    "max_abs_zero_shift_bp": 4.894435678357185,
+    "zero_30y_shift_bp": 0.38443170148675515
+  }
+}

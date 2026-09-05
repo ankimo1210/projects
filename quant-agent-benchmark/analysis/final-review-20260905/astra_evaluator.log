@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas/_libs/index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7096, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'instrument_type'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/tools/evaluate_candidate.py", line 52, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/tools/evaluate_candidate.py", line 25, in main
+    result = evaluate_candidate(args.candidate, metadata)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/evaluator/scoring.py", line 450, in evaluate_candidate
+    risk_rel, key_rel, risk_n = risk_agreement(curve, risk, all_truth)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/evaluator/scoring.py", line 228, in risk_agreement
+    expected = (trade_pv(row, curve, q, -1e-4) - trade_pv(row, curve, q, 1e-4)) / 2.0
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/evaluator/scoring.py", line 175, in trade_pv
+    kind = row["instrument_type"]
+           ~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/pandas/core/series.py", line 1133, in __getitem__
+    return self._get_value(key)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/pandas/core/series.py", line 1249, in _get_value
+    loc = self.index.get_loc(label)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3819, in get_loc
+    raise KeyError(key) from err
+KeyError: 'instrument_type'

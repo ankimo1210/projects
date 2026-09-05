@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "comparisons": 1965,
+  "maximum_rate_difference": 1.0408340855860843e-17,
+  "maximum_price_difference": 4.263256414560601e-14,
+  "interpretation": "All match the independently implemented provisional cash-flow interpretations. This does not identify the hidden generator convention.",
+  "unit_checks": "Original regression suite checks PERCENT, DECIMAL, BPS and PRICE_POINTS/per-face inference. Oracle returns annual decimals for rates and points per 100 for bonds."
+}

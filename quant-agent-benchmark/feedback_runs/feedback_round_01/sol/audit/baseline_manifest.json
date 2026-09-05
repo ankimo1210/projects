@@ -1,0 +1,220 @@
+{
+  "source_root": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/output/sol",
+  "algorithm": "sha256",
+  "excluded_path_components": [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist"
+  ],
+  "excluded_suffixes": [
+    ".pyc",
+    ".pyo"
+  ],
+  "file_count": 40,
+  "files": [
+    {
+      "path": "MODEL_RISKS.md",
+      "sha256": "a972ca43555bc9dbecc3991a71d41210a0e5fef8d2019c0812bd4989ab55e700",
+      "size_bytes": 4978
+    },
+    {
+      "path": "README.md",
+      "sha256": "968e2ca28a4866f7d77df1ffc0c0aa083b3db3b37efe26545b76231c3b968f8b",
+      "size_bytes": 4335
+    },
+    {
+      "path": "benchmark_start.json",
+      "sha256": "c1c5c8bc1bf625d56e69842afe1bb403aef78f7b5ae6f701f84b60a7df9e14cc",
+      "size_bytes": 242
+    },
+    {
+      "path": "benchmark_summary.json",
+      "sha256": "ca7770906a2220a9494c4fbd1882328821c49e8697c246c35473659ca99616aa",
+      "size_bytes": 6385
+    },
+    {
+      "path": "configs/default.json",
+      "sha256": "dcd6acdad0d3f6a551c89e76fb50f1a07602c3deca3e854f4f43ec5b60fccfd8",
+      "size_bytes": 565
+    },
+    {
+      "path": "examples/run_example.sh",
+      "sha256": "359309d96e53eddb03b54131085232e5dcb2330b3c5480cd45055a9942fbbdde",
+      "size_bytes": 471
+    },
+    {
+      "path": "outputs/charts/curve.png",
+      "sha256": "6bfb95fbefda7f4eb26e0d57bbf67b8904172b0e281b2478e6e12af3152bcebd",
+      "size_bytes": 47832
+    },
+    {
+      "path": "outputs/charts/forward_rate.png",
+      "sha256": "b7a039af8a25be79c9b4827fd8d767fcf7a39cdf6dcede7e088dd85138eb4a92",
+      "size_bytes": 57638
+    },
+    {
+      "path": "outputs/charts/model_comparison.png",
+      "sha256": "006d0d80909af938e3dd774164e60ead54fa646da3591d43d82cc883212492f8",
+      "size_bytes": 22569
+    },
+    {
+      "path": "outputs/charts/repricing.png",
+      "sha256": "d348f5404422b1792f31b09a4038e62a58c64b71c510ca8ec32cd5adc155258e",
+      "size_bytes": 51534
+    },
+    {
+      "path": "outputs/curves/curve.csv",
+      "sha256": "b0eea984093941ebc1a849b051b01cce37a948de4f5cd2bcea4bdac67332ab69",
+      "size_bytes": 21878
+    },
+    {
+      "path": "outputs/diagnostics/cleaning.csv",
+      "sha256": "8edddae8c6fb6e42184450cd61982d88a83f05e2ac0fbd7c88b869bce0931900",
+      "size_bytes": 14453
+    },
+    {
+      "path": "outputs/diagnostics/model_comparison.json",
+      "sha256": "10c6ed1a5eb404a98c90528cc2368e17ad5a5d579749f0acfa6b81d696c94079",
+      "size_bytes": 2875
+    },
+    {
+      "path": "outputs/diagnostics/repricing.csv",
+      "sha256": "c5af70582867d48a695aed3c8fb318b6ac49c1721f21867c3c4fa4424ccd671a",
+      "size_bytes": 13340
+    },
+    {
+      "path": "outputs/diagnostics/risk.csv",
+      "sha256": "6bf3896f455ba72aa92c4370f9aaa8764606657cb4dce49bb91786033e98aebf",
+      "size_bytes": 8867
+    },
+    {
+      "path": "outputs/diagnostics/run_metadata.json",
+      "sha256": "31ebee7cff6050f1f1ae352ec424e23a4c602eaa2d8e0444af915cc377a48f6c",
+      "size_bytes": 1008
+    },
+    {
+      "path": "outputs/diagnostics/sensitivity.json",
+      "sha256": "48156b83fac43ae3b432134b87dcf684967fd443c8e55212048931326be432fe",
+      "size_bytes": 1694
+    },
+    {
+      "path": "outputs/diagnostics/validation.json",
+      "sha256": "d1bd80d77bee035a4297ede169f703fcd4d96c4750242640a0549a75f5daafc1",
+      "size_bytes": 1274
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "69b0824c8a2ac07c9bc7845a87e67a520988e68aaa2f0cd70301883e360d7333",
+      "size_bytes": 588
+    },
+    {
+      "path": "reports/research_report.html",
+      "sha256": "51b8c9abc98b9cfc90648a6736dcfef49255f29082bdadbc272e8849a265071d",
+      "size_bytes": 249347
+    },
+    {
+      "path": "src/quantcurve/__init__.py",
+      "sha256": "a15b60ae79f1b35ee859404763d96060f7e5f945b8ba02c76ad8a8d6d7c6f0e9",
+      "size_bytes": 99
+    },
+    {
+      "path": "src/quantcurve/cleaning.py",
+      "sha256": "bb3d6ebdc0898bea1f7aeec150aac0df01846a3786d8ccaf3afd54381eff6d39",
+      "size_bytes": 14257
+    },
+    {
+      "path": "src/quantcurve/cli.py",
+      "sha256": "9d0bc246eca825ad5f87be9cd13271aba99ff103b17611644864c2488b3598ab",
+      "size_bytes": 1750
+    },
+    {
+      "path": "src/quantcurve/config.py",
+      "sha256": "f665d1a8ed83debbb6ef25f3f0e054be4859d6017c3c84d74283dd053488dbb0",
+      "size_bytes": 1242
+    },
+    {
+      "path": "src/quantcurve/conventions.py",
+      "sha256": "1577db8a376508152619ebb499c48ccf3c760fefb53a6065f7a0c289dc599d13",
+      "size_bytes": 2068
+    },
+    {
+      "path": "src/quantcurve/curve.py",
+      "sha256": "6511a788bb6fb87cc58d02f22c34b986d89ca6a6f4134d613f107cd62b922f6f",
+      "size_bytes": 4127
+    },
+    {
+      "path": "src/quantcurve/instruments.py",
+      "sha256": "348f553bbcb3f5b91b6cca818f09179cb0fa1c3add67a684db7c9c01a64d8dc9",
+      "size_bytes": 1080
+    },
+    {
+      "path": "src/quantcurve/io.py",
+      "sha256": "9f113ed48de11688a778566cf3370372f347823e8cc6b8582d33604864cd46b5",
+      "size_bytes": 1238
+    },
+    {
+      "path": "src/quantcurve/modeling.py",
+      "sha256": "dadd7ecadd82ca402993149423d55314d63a03a961cd7d00fa2d1f394be6d835",
+      "size_bytes": 10923
+    },
+    {
+      "path": "src/quantcurve/pricing.py",
+      "sha256": "dfd1221b32f870e4598a5066ebc405022c17b78e1b7ccae8b617274224e984ec",
+      "size_bytes": 4566
+    },
+    {
+      "path": "src/quantcurve/reporting.py",
+      "sha256": "ad65e4252160c5f6bb180efbb21eab5ff27f187cf27025cbd45354020e5b2df8",
+      "size_bytes": 10963
+    },
+    {
+      "path": "src/quantcurve/risk.py",
+      "sha256": "051ab5941aa3f0f999190d08d4b671055a96256dfc08bb29e34ed70abd627640",
+      "size_bytes": 3130
+    },
+    {
+      "path": "src/quantcurve/workflow.py",
+      "sha256": "7052ffa5a0b803bf49ca9084ae9f38635e422b74bcf833c038d7bc5a9f1dd993",
+      "size_bytes": 13571
+    },
+    {
+      "path": "tests/helpers.py",
+      "sha256": "1c2106414d1900e559f9bfa31bd1afdee1225e7fd2998913c0361c93cb0c65f4",
+      "size_bytes": 3182
+    },
+    {
+      "path": "tests/test_basic_conventions.py",
+      "sha256": "32f1231467735f002b896713c206c64b4eddc4d946edac5af1eb4ea13eba16f9",
+      "size_bytes": 854
+    },
+    {
+      "path": "tests/test_cleaning.py",
+      "sha256": "06d1b49805e0d45dcc5250d5ee3fbc2f048c0e534a8779b192041b9e64bea03a",
+      "size_bytes": 2915
+    },
+    {
+      "path": "tests/test_curve_and_model.py",
+      "sha256": "f86b1ed27214c5395c50adedeb5bfe90334fa66dbc44c04932997f008a9a3857",
+      "size_bytes": 1986
+    },
+    {
+      "path": "tests/test_end_to_end.py",
+      "sha256": "4938df6ec71a95eb640f302c079d3a24f6c9e68c824a479a273b99587922b8d8",
+      "size_bytes": 2218
+    },
+    {
+      "path": "tests/test_io.py",
+      "sha256": "2a9327091a8ff88bb83c0e4aa67478b97d7e2624b8c916f23b86dc6949ec70ac",
+      "size_bytes": 1087
+    },
+    {
+      "path": "tests/test_risk.py",
+      "sha256": "7b5c4391b98900e3b6c1c76adaec1741adfff9447ad08b6a520f716d41331bf8",
+      "size_bytes": 1875
+    }
+  ]
+}
