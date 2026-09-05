@@ -2,6 +2,7 @@
 
 import {
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -83,6 +84,7 @@ function Range({
       </div>
       <Slider
         aria-label={label}
+        aria-valuetext={display}
         value={[value]}
         min={min}
         max={max}
@@ -116,6 +118,13 @@ export default function VolatilityViewer() {
   const [fileError, setFileError] = useState('');
   const [fileBusy, setFileBusy] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const importRevision = useRef(0);
+  useEffect(
+    () => () => {
+      importRevision.current++;
+    },
+    [],
+  );
   const changeView = useCallback((next: View) => {
     if (![next.yaw, next.pitch, next.distance].every(Number.isFinite)) return;
     setView((previous) => {
@@ -132,6 +141,9 @@ export default function VolatilityViewer() {
     [grid],
   );
   const choosePreset = (next: keyof typeof presets) => {
+    // A later data-source choice takes precedence over a pending file read.
+    importRevision.current++;
+    setFileBusy(false);
     setPreset(next);
     setParameters({ ...presets[next].parameters });
     setImported(null);
@@ -139,23 +151,31 @@ export default function VolatilityViewer() {
     setFileError('');
   };
   const importCsv = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.currentTarget.files?.[0];
     if (!file) return;
+    // Clear this selection now; an older completion must not clear a newer file.
+    event.currentTarget.value = '';
+    const revision = ++importRevision.current;
     setFileBusy(true);
+    setFileError('');
     try {
       if (file.size > 1_000_000)
         throw new Error('CSVは1 MB以下にしてください。');
-      const next = parseSurfaceCsv(await file.text(), file.name);
+      const text = await file.text();
+      if (revision !== importRevision.current) return;
+      const next = parseSurfaceCsv(text, file.name);
       setImported(next);
       setHover(null);
       setFileError('');
     } catch (error) {
-      setFileError(
-        error instanceof Error ? error.message : 'CSVを読み込めませんでした。',
-      );
+      if (revision === importRevision.current)
+        setFileError(
+          error instanceof Error
+            ? error.message
+            : 'CSVを読み込めませんでした。',
+        );
     } finally {
-      setFileBusy(false);
-      event.target.value = '';
+      if (revision === importRevision.current) setFileBusy(false);
     }
   };
   const downloadCsv = () => {
