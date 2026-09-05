@@ -1,0 +1,1006 @@
+{
+  "campaign": "combined_all_models",
+  "check_count": 229,
+  "checks": [
+    {
+      "name": "old_input:TASK.md",
+      "passed": true
+    },
+    {
+      "name": "old_input:market_data/CONVENTIONS.md",
+      "passed": true
+    },
+    {
+      "name": "old_input:market_data/market_observations.csv",
+      "passed": true
+    },
+    {
+      "name": "old_input:starter_repo/README.md",
+      "passed": true
+    },
+    {
+      "name": "old_input:starter_repo/pyproject.toml",
+      "passed": true
+    },
+    {
+      "name": "old_input:starter_repo/src/quantcurve/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "old_input:starter_repo/src/quantcurve/cli.py",
+      "passed": true
+    },
+    {
+      "name": "old_input:starter_repo/src/quantcurve/conventions.py",
+      "passed": true
+    },
+    {
+      "name": "old_input:starter_repo/src/quantcurve/instruments.py",
+      "passed": true
+    },
+    {
+      "name": "old_input:starter_repo/src/quantcurve/io.py",
+      "passed": true
+    },
+    {
+      "name": "old_input:starter_repo/tests/test_basic_conventions.py",
+      "passed": true
+    },
+    {
+      "name": "old_input:starter_repo/tests/test_io.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:SCORECARD.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:__init__.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/bad_dv01/MODEL_RISKS.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/bad_dv01/README.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/bad_dv01/benchmark_summary.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/bad_dv01/pyproject.toml",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/bad_dv01/src/quantcurve/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/bad_dv01/src/quantcurve/cli.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/bad_dv01/src/quantcurve/variant.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/bad_dv01/tests/test_smoke.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/naive_linear/MODEL_RISKS.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/naive_linear/README.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/naive_linear/benchmark_summary.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/naive_linear/pyproject.toml",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/naive_linear/src/quantcurve/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/naive_linear/src/quantcurve/cli.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/naive_linear/src/quantcurve/variant.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/naive_linear/tests/test_smoke.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overdelete/MODEL_RISKS.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overdelete/README.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overdelete/benchmark_summary.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overdelete/pyproject.toml",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overdelete/src/quantcurve/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overdelete/src/quantcurve/cli.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overdelete/src/quantcurve/variant.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overdelete/tests/test_smoke.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overfit_spline/MODEL_RISKS.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overfit_spline/README.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overfit_spline/benchmark_summary.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overfit_spline/pyproject.toml",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overfit_spline/src/quantcurve/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overfit_spline/src/quantcurve/cli.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overfit_spline/src/quantcurve/variant.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/overfit_spline/tests/test_smoke.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/unit_bug/MODEL_RISKS.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/unit_bug/README.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/unit_bug/benchmark_summary.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/unit_bug/pyproject.toml",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/unit_bug/src/quantcurve/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/unit_bug/src/quantcurve/cli.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/unit_bug/src/quantcurve/variant.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:flawed_solutions/unit_bug/tests/test_smoke.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:ground_truth/all_instruments_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:ground_truth/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:ground_truth/holdout_instruments.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:ground_truth/main_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:ground_truth/risk_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:ground_truth/true_curve_parameters.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s01/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s01/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s01/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s01/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s01/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s02/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s02/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s02/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s02/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s02/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s03/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s03/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s03/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s03/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s03/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s04/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s04/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s04/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s04/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s04/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s05/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s05/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s05/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s05/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s05/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s06/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s06/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s06/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s06/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s06/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s07/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s07/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s07/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s07/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s07/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s08/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s08/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s08/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s08/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s08/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s09/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s09/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s09/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s09/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s09/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s10/corruption_labels.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s10/instrument_truth.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s10/market_data.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s10/metadata.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_scenarios/s10/truth_curve.csv",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_tests/test_benchmark_integrity.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:hidden_tests/test_scoring_primitives.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:reference_solution/MODEL_RISKS.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:reference_solution/README.md",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:reference_solution/benchmark_summary.json",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:reference_solution/pyproject.toml",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:reference_solution/src/quantcurve/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:reference_solution/src/quantcurve/cli.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:reference_solution/tests/test_reference.py",
+      "passed": true
+    },
+    {
+      "name": "old_evaluator:scoring.py",
+      "passed": true
+    },
+    {
+      "name": "assignment_count",
+      "passed": true
+    },
+    {
+      "name": "assignments_exact",
+      "passed": true
+    },
+    {
+      "name": "no_automatic_launch",
+      "passed": true
+    },
+    {
+      "name": "single_arm_not_factorial",
+      "passed": true
+    },
+    {
+      "name": "legacy_pilot_unchanged",
+      "passed": true
+    },
+    {
+      "name": "private_suite_integrity",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:campaign_matches",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:prompt_integrity",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:assigned_runtime",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:source_unchanged",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:baseline_copy",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:work_copy",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:input_integrity",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:resources_integrity",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:only_assigned_resources",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:no_truth_in_input",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:same_training_market",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:prompt_assigned",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:isolation_not_claimed",
+      "passed": true
+    },
+    {
+      "name": "astra_D_r1:immutable_payload",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:campaign_matches",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:prompt_integrity",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:assigned_runtime",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:source_unchanged",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:baseline_copy",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:work_copy",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:input_integrity",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:resources_integrity",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:only_assigned_resources",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:no_truth_in_input",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:same_training_market",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:prompt_assigned",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:isolation_not_claimed",
+      "passed": true
+    },
+    {
+      "name": "sol_D_r1:immutable_payload",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:campaign_matches",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:prompt_integrity",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:assigned_runtime",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:source_unchanged",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:baseline_copy",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:work_copy",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:input_integrity",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:resources_integrity",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:only_assigned_resources",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:no_truth_in_input",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:same_training_market",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:prompt_assigned",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:isolation_not_claimed",
+      "passed": true
+    },
+    {
+      "name": "terra_D_r1:immutable_payload",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:campaign_matches",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:prompt_integrity",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:assigned_runtime",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:source_unchanged",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:baseline_copy",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:work_copy",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:input_integrity",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:resources_integrity",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:only_assigned_resources",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:no_truth_in_input",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:same_training_market",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:prompt_assigned",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:isolation_not_claimed",
+      "passed": true
+    },
+    {
+      "name": "luna_D_r1:immutable_payload",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:campaign_matches",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:prompt_integrity",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:assigned_runtime",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:source_unchanged",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:baseline_copy",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:work_copy",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:input_integrity",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:resources_integrity",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:only_assigned_resources",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:no_truth_in_input",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:same_training_market",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:prompt_assigned",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:isolation_not_claimed",
+      "passed": true
+    },
+    {
+      "name": "sonnet_D_r1:immutable_payload",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:campaign_matches",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:prompt_integrity",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:assigned_runtime",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:source_unchanged",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:baseline_copy",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:work_copy",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:input_integrity",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:resources_integrity",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:only_assigned_resources",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:no_truth_in_input",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:same_training_market",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:prompt_assigned",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:isolation_not_claimed",
+      "passed": true
+    },
+    {
+      "name": "opus_D_r1:immutable_payload",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:campaign_matches",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:prompt_integrity",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:assigned_runtime",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:source_unchanged",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:baseline_copy",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:work_copy",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:input_integrity",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:resources_integrity",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:only_assigned_resources",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:no_truth_in_input",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:same_training_market",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:prompt_assigned",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:isolation_not_claimed",
+      "passed": true
+    },
+    {
+      "name": "fable_D_r1:immutable_payload",
+      "passed": true
+    },
+    {
+      "name": "quantlib_pinned",
+      "passed": true
+    },
+    {
+      "name": "base_has_no_quantlib",
+      "passed": true
+    },
+    {
+      "name": "otherwise_same_packages",
+      "passed": true
+    },
+    {
+      "name": "same_python",
+      "passed": true
+    },
+    {
+      "name": "unit_tests",
+      "passed": true
+    }
+  ],
+  "kit_source_hashes": {
+    "COMBINED_PROTOCOL.md": "10de9c5861cef794cb15414e31d5de6c056d960e24b8da7e325833769f265726",
+    "DISTRIBUTION.md": "d5d6244fb3f4846da456cc7d4d762c365cfa04c9cc67592a7b1fe678b8a64990",
+    "PROTOCOL.md": "f793510434daf0fa93be531f20869b4abcdfe8ed122f2f969715476db53a76c6",
+    "README.md": "7afa733df03306b549f9c8b6110e8d42855ca48d9772e88b703fb9094e120fd3",
+    "materials/paper_notes.md": "be99ced039ad210ebd5b5d8d2d7d52b3784dc934c45c5918fce1929eecaa8a17",
+    "materials/quantlib_quickstart.md": "fd85a9c843edcc4cbd254f6d66d50156d04183b507978d1d73a6945f7a1ba914",
+    "owner/datasets.py": "1cb12b47c9fa7b1f35084227218280d3f35783295ebeb77b4dbce65fd955d44e",
+    "owner/evaluate_curves.py": "a9f88385704c8d4022d3876e7b5355f52a3f27edf5cb8750163885989f420610",
+    "owner/fetch_materials.py": "1178b9e70c1ed4f9c37a8b2fc3a91f4a2c0fa83942741037c7b75a8f71752266",
+    "owner/prepare_combined.py": "52ffee9b16a41d20bd09d171eac2e9136e8b3db90fc75ec808f1dbaf7564dc96",
+    "owner/prepare_pilot.py": "32b63fb31158d591217f24feba668b1a28ef2aec687444eb9aae98e69ded2083",
+    "owner/prepare_run.py": "0379d57bdcf351c738d6cfa8eddcd4a77ed90383cf3b1fe43d595ac7583c4f76",
+    "owner/pricing.py": "d6b9e38103638c23a5683c76847aaf20fb31653d68a709a79f873a9f37b37ffd",
+    "owner/quantlib_baseline.py": "6bda6f9f9e5d055effd091b1c4cb3a17066d77f800b93345cccf574858008350",
+    "owner/validate_preparation.py": "dffce626bcee43453e7da2ec22f840d95ed0d5e03a470e9d3680a5fcbe044629",
+    "public/CONVENTIONS.md": "68a84d0e8f431c1dd7f9e15f03ead64f5217f1b79ae258081fe340f068aae26e",
+    "public/combined_prompt.md": "11367c25d612466f29d7807ba505243629d10f1f24913197e234f980f87a6ce7",
+    "public/common_prompt.md": "a86a6ae78dfdf4c0b99c0e895a85e67390fa92e855b60c0f960bfd870d5ff3f2",
+    "requirements-base.txt": "891e8a8304c87cec867d1783b6c83e2e10cab469a2a59abd0c0601832f82fbbc",
+    "requirements-quantlib.txt": "51ce0292d017451848e803e8d147d1eb540d1cef0755e09abf4643221daaf63c",
+    "tests/test_combined.py": "b20a3ab4d5dc7eb854143eaa9a5779e8ea5337687553b90872d59e28f653b49e",
+    "tests/test_round2.py": "4d522f928b17be2aaec851950d97efd48f6c863e319f06810f64db0861a88ead"
+  },
+  "launch_ready": false,
+  "models_started": 0,
+  "preparation_valid": true,
+  "required_before_launch": [
+    "host-enforced filesystem/network isolation and access-denial probe",
+    "actual model/reasoning/session-ID attestation"
+  ],
+  "runtimes": {
+    "base": {
+      "packages": {
+        "contourpy": "1.3.3",
+        "cycler": "0.12.1",
+        "fonttools": "4.64.0",
+        "iniconfig": "2.3.0",
+        "kiwisolver": "1.5.1",
+        "matplotlib": "3.11.1",
+        "numpy": "2.5.2",
+        "packaging": "26.3",
+        "pandas": "2.3.3",
+        "pillow": "12.3.0",
+        "pluggy": "1.6.0",
+        "pygments": "2.21.0",
+        "pyparsing": "3.3.2",
+        "pytest": "8.4.2",
+        "python-dateutil": "2.9.0.post0",
+        "pytz": "2026.3.post1",
+        "scipy": "1.18.1",
+        "six": "1.17.0",
+        "tzdata": "2026.3"
+      },
+      "python": "3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:38:53) [Clang 18.1.8 ]"
+    },
+    "quantlib": {
+      "packages": {
+        "contourpy": "1.3.3",
+        "cycler": "0.12.1",
+        "fonttools": "4.64.0",
+        "iniconfig": "2.3.0",
+        "kiwisolver": "1.5.1",
+        "matplotlib": "3.11.1",
+        "numpy": "2.5.2",
+        "packaging": "26.3",
+        "pandas": "2.3.3",
+        "pillow": "12.3.0",
+        "pluggy": "1.6.0",
+        "pygments": "2.21.0",
+        "pyparsing": "3.3.2",
+        "pytest": "8.4.2",
+        "python-dateutil": "2.9.0.post0",
+        "pytz": "2026.3.post1",
+        "quantlib": "1.43",
+        "scipy": "1.18.1",
+        "six": "1.17.0",
+        "tzdata": "2026.3"
+      },
+      "python": "3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:38:53) [Clang 18.1.8 ]"
+    }
+  },
+  "tests_failed": 0,
+  "tests_run": 16
+}
