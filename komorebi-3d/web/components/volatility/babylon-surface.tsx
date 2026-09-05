@@ -74,7 +74,7 @@ export default function BabylonSurface(props: SurfaceProps) {
       camera.lowerBetaLimit = Math.PI / 2 - 1.4;
       camera.upperBetaLimit = Math.PI / 2 - 0.12;
       camera.wheelDeltaPercentage = 0.025;
-      camera.attachControl(element, true);
+      camera.attachControl(element, false);
       const material = new StandardMaterial('surface-color', scene);
       material.disableLighting = true;
       material.emissiveColor = Color3.White();
