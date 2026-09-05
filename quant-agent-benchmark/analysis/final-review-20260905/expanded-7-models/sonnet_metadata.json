@@ -1,0 +1,6 @@
+{
+  "model_name": "claude-sonnet-5",
+  "reasoning_effort": "xhigh",
+  "wall_time_seconds": 3778.07,
+  "timing_definition": "Selected work-turn wall time; tools included, setup and inter-turn idle excluded."
+}

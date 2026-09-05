@@ -1,0 +1,238 @@
+{
+  "holdout_method": "every fifth ordered maturity bucket, with all same-maturity records held out together",
+  "metric_units": {
+    "weighted_normalized_rmse": "dimensionless: residual divided by 0.00005 annual-rate floor for deposits/OIS or 0.05 price-points floor for bonds, then quality-weighted",
+    "median_abs_standardized_error": "dimensionless residual/floor multiple",
+    "native_rmse_by_instrument_type": "annual decimal rate for deposits and OIS; clean-price points per 100 for bonds"
+  },
+  "advanced_configuration": {
+    "smoothing_strength": 10.0,
+    "long_end_curvature_multiplier": 0.5,
+    "selection_scope": "10.0 smoothing held fixed; multiplier 0.5 was adopted only after a one-factor test. No smoothing-by-multiplier interaction is claimed as tested."
+  },
+  "baseline": {
+    "train": {
+      "n": 109,
+      "weighted_normalized_rmse": 90.76878047812568,
+      "median_abs_standardized_error": 33.512093962225485,
+      "by_instrument_type": {
+        "bond": {
+          "rmse": 3.694774968886173,
+          "median_abs_error": 1.289557714019523
+        },
+        "deposit": {
+          "rmse": 0.0029889937791569,
+          "median_abs_error": 0.0016313542118429197
+        },
+        "ois_swap": {
+          "rmse": 0.005384983173923404,
+          "median_abs_error": 0.003553560341422561
+        }
+      },
+      "by_maturity_band_and_instrument_type": {
+        "long_15_to_30y/bond": {
+          "n": 17,
+          "native_rmse": 4.831405463145803,
+          "weighted_normalized_rmse": 96.62810926291604
+        },
+        "long_15_to_30y/ois_swap": {
+          "n": 12,
+          "native_rmse": 0.007232720359327209,
+          "weighted_normalized_rmse": 144.65440718654418
+        },
+        "medium_over_2_to_under_15y/bond": {
+          "n": 15,
+          "native_rmse": 1.8882814112969106,
+          "weighted_normalized_rmse": 37.765628225938215
+        },
+        "medium_over_2_to_under_15y/ois_swap": {
+          "n": 36,
+          "native_rmse": 0.005274174764298766,
+          "weighted_normalized_rmse": 105.48349528597532
+        },
+        "short_0_to_2y/bond": {
+          "n": 1,
+          "native_rmse": 0.43440680388262365,
+          "weighted_normalized_rmse": 8.688136077652473
+        },
+        "short_0_to_2y/deposit": {
+          "n": 13,
+          "native_rmse": 0.0029889937791569,
+          "weighted_normalized_rmse": 59.779875583138
+        },
+        "short_0_to_2y/ois_swap": {
+          "n": 15,
+          "native_rmse": 0.0036306173286344856,
+          "weighted_normalized_rmse": 72.6123465726897
+        }
+      }
+    },
+    "holdout": {
+      "n": 20,
+      "weighted_normalized_rmse": 15261.50580032771,
+      "median_abs_standardized_error": 88.36302225523085,
+      "by_instrument_type": {
+        "bond": {
+          "rmse": 3.6203248132722923,
+          "median_abs_error": 1.8513189047780543
+        },
+        "deposit": {
+          "rmse": 1.2868298441511103,
+          "median_abs_error": 1.2870773501307866
+        },
+        "ois_swap": {
+          "rmse": 0.009992680341638234,
+          "median_abs_error": 0.0002517727393596472
+        }
+      },
+      "by_maturity_band_and_instrument_type": {
+        "long_15_to_30y/bond": {
+          "n": 5,
+          "native_rmse": 4.191268318739308,
+          "weighted_normalized_rmse": 83.82536637478616
+        },
+        "medium_over_2_to_under_15y/bond": {
+          "n": 5,
+          "native_rmse": 3.1861238354433237,
+          "weighted_normalized_rmse": 63.72247670886647
+        },
+        "medium_over_2_to_under_15y/ois_swap": {
+          "n": 3,
+          "native_rmse": 0.009992680341638234,
+          "weighted_normalized_rmse": 199.85360683276468
+        },
+        "short_0_to_2y/bond": {
+          "n": 1,
+          "native_rmse": 2.36298396467393,
+          "weighted_normalized_rmse": 47.2596792934786
+        },
+        "short_0_to_2y/deposit": {
+          "n": 6,
+          "native_rmse": 1.2868298441511103,
+          "weighted_normalized_rmse": 25736.596883022205
+        }
+      }
+    }
+  },
+  "advanced": {
+    "train": {
+      "n": 109,
+      "weighted_normalized_rmse": 102.98634519444306,
+      "median_abs_standardized_error": 4.271649846421894,
+      "by_instrument_type": {
+        "bond": {
+          "rmse": 0.9346389804470059,
+          "median_abs_error": 0.21358249232109472
+        },
+        "deposit": {
+          "rmse": 0.003341494935200984,
+          "median_abs_error": 3.470349278153484e-05
+        },
+        "ois_swap": {
+          "rmse": 0.006052438969219793,
+          "median_abs_error": 0.0005653316567823044
+        }
+      },
+      "by_maturity_band_and_instrument_type": {
+        "long_15_to_30y/bond": {
+          "n": 17,
+          "native_rmse": 1.2941534429656267,
+          "weighted_normalized_rmse": 25.883068859312534
+        },
+        "long_15_to_30y/ois_swap": {
+          "n": 12,
+          "native_rmse": 0.008038604561848734,
+          "weighted_normalized_rmse": 160.77209123697466
+        },
+        "medium_over_2_to_under_15y/bond": {
+          "n": 15,
+          "native_rmse": 0.1427254283459353,
+          "weighted_normalized_rmse": 2.8545085669187054
+        },
+        "medium_over_2_to_under_15y/ois_swap": {
+          "n": 36,
+          "native_rmse": 0.006027224409259943,
+          "weighted_normalized_rmse": 120.54448818519886
+        },
+        "short_0_to_2y/bond": {
+          "n": 1,
+          "native_rmse": 0.22232698670943307,
+          "weighted_normalized_rmse": 4.446539734188661
+        },
+        "short_0_to_2y/deposit": {
+          "n": 13,
+          "native_rmse": 0.003341494935200984,
+          "weighted_normalized_rmse": 66.82989870401968
+        },
+        "short_0_to_2y/ois_swap": {
+          "n": 15,
+          "native_rmse": 0.003869534980761642,
+          "weighted_normalized_rmse": 77.39069961523283
+        }
+      }
+    },
+    "holdout": {
+      "n": 20,
+      "weighted_normalized_rmse": 92.20216516395648,
+      "median_abs_standardized_error": 6.834852300088672,
+      "by_instrument_type": {
+        "bond": {
+          "rmse": 2.0316586606046605,
+          "median_abs_error": 0.24349914856426835
+        },
+        "deposit": {
+          "rmse": 0.0008329683346741231,
+          "median_abs_error": 0.0003504566200044322
+        },
+        "ois_swap": {
+          "rmse": 0.009952665230687954,
+          "median_abs_error": 0.00018411397593571036
+        }
+      },
+      "by_maturity_band_and_instrument_type": {
+        "long_15_to_30y/bond": {
+          "n": 5,
+          "native_rmse": 1.2191270337267839,
+          "weighted_normalized_rmse": 24.382540674535676
+        },
+        "medium_over_2_to_under_15y/bond": {
+          "n": 5,
+          "native_rmse": 2.7553937243501516,
+          "weighted_normalized_rmse": 55.10787448700302
+        },
+        "medium_over_2_to_under_15y/ois_swap": {
+          "n": 3,
+          "native_rmse": 0.009952665230687954,
+          "weighted_normalized_rmse": 199.05330461375905
+        },
+        "short_0_to_2y/bond": {
+          "n": 1,
+          "native_rmse": 0.10807193229896939,
+          "weighted_normalized_rmse": 2.1614386459793877
+        },
+        "short_0_to_2y/deposit": {
+          "n": 6,
+          "native_rmse": 0.0008329683346741231,
+          "weighted_normalized_rmse": 16.659366693482458
+        }
+      }
+    }
+  },
+  "selected_model": "advanced",
+  "selection_rationale": "Advanced curve reduced the blocked maturity-holdout weighted error by more than 2%.",
+  "holdout_maturity_years": [
+    0.5,
+    1.50843415,
+    2.96490441,
+    4.92255282,
+    6.54221505,
+    8.55484089,
+    10.0,
+    12.61149156,
+    15.68179252,
+    19.46015271,
+    22.4178652,
+    25.52377151,
+    28.12958926
+  ]
+}

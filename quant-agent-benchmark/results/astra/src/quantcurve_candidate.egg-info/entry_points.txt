@@ -1,0 +1,2 @@
+[console_scripts]
+quantcurve = quantcurve.cli:main

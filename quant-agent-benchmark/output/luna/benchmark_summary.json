@@ -1,0 +1,117 @@
+{
+  "benchmark_integrity_incidents": [],
+  "cached_input_tokens": null,
+  "corrective_iterations": 1,
+  "credits_consumed": null,
+  "data_quality_summary": {
+    "actions": {
+      "correct": 15,
+      "downweight": 23,
+      "exclude": 15,
+      "keep": 90
+    },
+    "crossed_bid_ask": 4,
+    "duplicate_instrument_ids": 14,
+    "excluded_rows": 15,
+    "input_rows": 143,
+    "low_liquidity_rows": 23,
+    "missing_quote_values": 4,
+    "peer_outlier_exclusions": 8,
+    "stale_rows": 5,
+    "unit_corrections": 8,
+    "usable_rows": 128
+  },
+  "estimated_usd_cost": null,
+  "failed_test_runs": 1,
+  "failed_test_suite_runs": 1,
+  "files_created": [
+    "outputs/curves/curve.csv",
+    "outputs/diagnostics/cleaning.csv",
+    "outputs/diagnostics/repricing.csv",
+    "outputs/diagnostics/risk.csv",
+    "outputs/diagnostics/segment_metrics.csv",
+    "outputs/diagnostics/model_comparison.json",
+    "outputs/diagnostics/sensitivity.json",
+    "outputs/diagnostics/data_quality.json",
+    "outputs/charts/curve.png",
+    "outputs/charts/forward_rate.png",
+    "outputs/charts/repricing.png",
+    "outputs/charts/model_comparison.png",
+    "reports/research_report.html"
+  ],
+  "final_tests_failed": 0,
+  "final_tests_passed": 13,
+  "finish_epoch_seconds": 1788596231.15407,
+  "finish_time": "2026-09-05T08:17:11.154070Z",
+  "finish_time_utc": "2026-09-05T08:17:11.154070Z",
+  "five_hour_quota_after_percent": null,
+  "five_hour_quota_before_percent": null,
+  "human_interventions": 0,
+  "input_tokens": null,
+  "major_modelling_decisions": [
+    "Bootstrap deposits and OIS swaps as a transparent baseline.",
+    "Fit a positive-discount-factor, piecewise-linear continuous zero curve using spread/liquidity weights, curvature regularisation, and four robust residual reweighting iterations.",
+    "Construct instantaneous forwards analytically within each piecewise-linear zero-rate segment, using deterministic midpoint derivatives at interior knots.",
+    "Use whole-maturity clusters near 2Y, 5Y, 10Y, 20Y, and 30Y for visible holdout validation."
+  ],
+  "model_name": "gpt-5.6-luna",
+  "model_selection": "Advanced model selected because its whole-maturity holdout standardized RMSE is no worse than 5% above the baseline and it uses the documented bond evidence and robust weighting.",
+  "original_input_hashes_unchanged": true,
+  "output_tokens": null,
+  "quota_percentage_consumed": null,
+  "reasoning_effort": "xhigh",
+  "reasoning_tokens": null,
+  "reported_usd_cost": null,
+  "round_additional_work_seconds": 1369.170608997345,
+  "round_experiments_count": 6,
+  "round_final_adopted_version": {
+    "format_changes": [
+      "selected_model top-level JSON key",
+      "bilingual required HTML headings",
+      "segment_metrics.csv"
+    ],
+    "not_adopted_factors": [
+      "denser knot grid",
+      "smoothness=50",
+      "smoothness=200",
+      "post-hoc tolerance change"
+    ],
+    "numeric_change": "analytical_forward_construction",
+    "reason": "Forward RMSE improved on deterministic known-curve tests without changing fitted zero rates or quote/risk calculations; other factors did not meet the precommitted multi-condition gate."
+  },
+  "round_finish_time_utc": "2026-09-05T08:17:35.170609Z",
+  "round_name": "Luna improvement round",
+  "round_start_time_utc": "2026-09-05T07:54:46Z",
+  "round_test_results": {
+    "failed_test_suite_runs": 1,
+    "final_cli_exit_code": 0,
+    "test_suite_runs": 3,
+    "tests_failed": 0,
+    "tests_passed": 13
+  },
+  "round_time_limit_seconds": null,
+  "round_unverified_items": [
+    "\u4e3b\u50ac\u8005\u306ehidden score/\u771f\u5024\u306f\u53d6\u5f97\u3057\u3066\u3044\u306a\u3044\u3002",
+    "\u5b9f\u5e02\u5834\u306e\u55b6\u696d\u65e5\u30fb\u62c5\u4fdd\u30fb\u30ab\u30ec\u30f3\u30c0\u30fc\u898f\u7d04\u306f supplied specification \u5916\u3067\u672a\u691c\u8a3c\u3002",
+    "\u30d5\u30a9\u30ef\u30fc\u30c9\u89e3\u6790\u5316\u3068\u7bc0\u70b9/\u66f2\u7387\u5909\u66f4\u3092\u540c\u6642\u9069\u7528\u3057\u305f\u76f8\u4e92\u4f5c\u7528\u306f\u672a\u691c\u8a3c\u3002",
+    "HTML\u306e\u30d6\u30e9\u30a6\u30b6\u8868\u793a\u306f\u30ed\u30fc\u30ab\u30ebfile URL\u30dd\u30ea\u30b7\u30fc\u5236\u9650\u306e\u305f\u3081\u69cb\u9020\u691c\u67fb\u3068\u753b\u50cf\u30d5\u30a1\u30a4\u30ebQA\u307e\u3067\u3002"
+  ],
+  "schema_version": "1.0",
+  "start_epoch_seconds": 1788594886.0,
+  "start_time": "2026-09-05T07:54:46Z",
+  "start_time_utc": "2026-09-05T07:54:46Z",
+  "test_runs": 3,
+  "test_suite_runs": 3,
+  "tests_failed": 0,
+  "tests_passed": 13,
+  "time_limit_seconds": null,
+  "total_tokens": null,
+  "unresolved_limitations": [
+    "Synthetic single-date data do not support historical rolling backtests.",
+    "Long-end extrapolation is constant in zero-rate terms beyond the last knot.",
+    "Calendar, collateral, accrued-interest, and business-day conventions outside the supplied specification are out of scope."
+  ],
+  "wall_time_seconds": 1345.15407,
+  "weekly_quota_after_percent": null,
+  "weekly_quota_before_percent": null
+}

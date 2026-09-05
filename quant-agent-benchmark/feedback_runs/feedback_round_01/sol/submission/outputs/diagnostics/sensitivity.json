@@ -1,0 +1,84 @@
+{
+  "end_behaviour": {
+    "condition": "Reference advanced curve inspected on 1/12Y-1Y and 20Y-30Y dense grids.",
+    "interpretation": "Exposes endpoint ranges separately so an acceptable average cannot hide short- or long-end instability.",
+    "numerical_results": {
+      "long_end_forward_range_percent": [
+        1.7417557951993794,
+        2.586909025999282
+      ],
+      "long_end_zero_range_percent": [
+        1.94262223276353,
+        2.064791285427866
+      ],
+      "short_end_forward_range_percent": [
+        1.3174101482071459,
+        3.872668759368404
+      ],
+      "short_end_zero_range_percent": [
+        1.2107413194639203,
+        1.9565322322758083
+      ]
+    }
+  },
+  "liquidity_weighting": {
+    "condition": "All fit weights set to one and the advanced model refit; curve compared with the weighted advanced fit.",
+    "interpretation": "Quantifies the effect of spread/liquidity weighting without attributing the difference to hidden truth accuracy.",
+    "numerical_results": {
+      "max_abs_zero_delta_without_weights_bp": 1.650744639533526,
+      "rmse_zero_delta_without_weights_bp": 0.3097917982986795
+    }
+  },
+  "outlier_threshold": {
+    "condition": "Advanced model refit at Huber thresholds 2.0, 3.0, and 4.0; all other settings fixed.",
+    "interpretation": "Separates robustness-threshold sensitivity from maturity aggregation and interpolation choices.",
+    "numerical_results": {
+      "2.0": {
+        "downweighted_count": 37,
+        "max_abs_zero_delta_bp": 10.35586417569595,
+        "weighted_normalized_rmse": 36.86019895319354
+      },
+      "3.0": {
+        "downweighted_count": 32,
+        "max_abs_zero_delta_bp": 5.909408194519663,
+        "weighted_normalized_rmse": 36.81622751137656
+      },
+      "4.0": {
+        "downweighted_count": 31,
+        "max_abs_zero_delta_bp": 2.8052257668503833,
+        "weighted_normalized_rmse": 36.7921197951599
+      }
+    }
+  },
+  "remove_10_percent": {
+    "condition": "Deterministic 10% observation removal followed by an advanced-model refit.",
+    "interpretation": "Measures observation-removal stability relative to the full advanced fit; it is not a truth-error metric.",
+    "numerical_results": {
+      "max_abs_zero_delta_bp": 5.85930649380742,
+      "removed_count": 13,
+      "rmse_zero_delta_bp": 0.8805802954207202,
+      "seed": 1729
+    }
+  },
+  "smoothing_parameter": {
+    "condition": "Advanced model refit at smoothing_lambda 0.2, 2.0, and 20.0; same observations and pricing conventions.",
+    "interpretation": "Reports fit error and maximum zero-curve displacement; large displacement indicates smoothing sensitivity, not proof that one setting is true.",
+    "numerical_results": {
+      "0.2": {
+        "max_abs_zero_delta_bp": 4.685026579469148,
+        "success": true,
+        "weighted_normalized_rmse": 36.714683904799436
+      },
+      "2.0": {
+        "max_abs_zero_delta_bp": 5.909408194519663,
+        "success": true,
+        "weighted_normalized_rmse": 36.81622751137656
+      },
+      "20.0": {
+        "max_abs_zero_delta_bp": 22.851549860560226,
+        "success": true,
+        "weighted_normalized_rmse": 37.627593808550905
+      }
+    }
+  }
+}

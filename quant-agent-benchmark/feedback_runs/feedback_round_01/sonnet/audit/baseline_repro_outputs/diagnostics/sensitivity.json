@@ -1,0 +1,102 @@
+{
+  "bump_size_convergence": {
+    "description": "Mean |DV01| across a representative instrument sample at three finite-difference step sizes (10bp, 1bp, 0.1bp), each rescaled to a common per-1bp basis (DV01 scales linearly with bump size by definition, so raw values are not directly comparable); the rescaled estimate should be stable if the 1bp DV01 is a good local-derivative approximation.",
+    "mean_abs_dv01_by_bump_raw": {
+      "bump_0.001": 3415.116842035669,
+      "bump_0.0001": 341.4796754420015,
+      "bump_1e-05": 34.14793553678958
+    },
+    "mean_abs_dv01_by_bump_per_1bp": {
+      "bump_0.001": 341.5116842035669,
+      "bump_0.0001": 341.4796754420015,
+      "bump_1e-05": 341.47935536789583
+    },
+    "relative_diff_10bp_vs_1bp": 9.373548081295385e-05,
+    "relative_diff_0p1bp_vs_1bp": 9.373152450690796e-07,
+    "stable": true
+  },
+  "regularization_sensitivity": {
+    "description": "Advanced-model holdout weighted RMSE across the smoothing-strength (lambda) grid searched during model selection.",
+    "grid": [
+      {
+        "lambda": 0.0,
+        "train_wrmse": 2.2885243099713617,
+        "holdout_wrmse": 3.7399274117095143
+      },
+      {
+        "lambda": 100.0,
+        "train_wrmse": 2.2888987550041358,
+        "holdout_wrmse": 3.7370253278742753
+      },
+      {
+        "lambda": 1000.0,
+        "train_wrmse": 2.31717163077441,
+        "holdout_wrmse": 3.689164036407539
+      },
+      {
+        "lambda": 10000.0,
+        "train_wrmse": 4.654618065518068,
+        "holdout_wrmse": 2.3379602944759386
+      },
+      {
+        "lambda": 30000.0,
+        "train_wrmse": 4.657300533905734,
+        "holdout_wrmse": 2.3333318470887523
+      },
+      {
+        "lambda": 100000.0,
+        "train_wrmse": 4.658172583795872,
+        "holdout_wrmse": 2.3303175116774795
+      },
+      {
+        "lambda": 300000.0,
+        "train_wrmse": 4.65799924055606,
+        "holdout_wrmse": 2.316166128913598
+      },
+      {
+        "lambda": 1000000.0,
+        "train_wrmse": 4.656545384187745,
+        "holdout_wrmse": 2.2800872472475553
+      },
+      {
+        "lambda": 3000000.0,
+        "train_wrmse": 4.6558856576080645,
+        "holdout_wrmse": 2.234864731788101
+      },
+      {
+        "lambda": 10000000.0,
+        "train_wrmse": 4.7653018702466925,
+        "holdout_wrmse": 2.2158506934886946
+      },
+      {
+        "lambda": 30000000.0,
+        "train_wrmse": 5.336350517892931,
+        "holdout_wrmse": 2.2485576474909004
+      },
+      {
+        "lambda": 100000000.0,
+        "train_wrmse": 6.243869820626778,
+        "holdout_wrmse": 2.259027607207369
+      }
+    ]
+  },
+  "leave_worst_out_refit": {
+    "description": "Baseline curve stability when the single largest-residual training instrument is removed and the model is refit (a leave-one-out influence check).",
+    "removed_instrument_id": "INS0105",
+    "probe_maturities": [
+      2.0,
+      5.0,
+      10.0,
+      30.0
+    ],
+    "max_zero_rate_shift_bp": 2.5193015224907884,
+    "stable": true
+  },
+  "negative_rate_stress": {
+    "description": "All deposit/swap quotes parallel-shocked down by 3 percentage points and the baseline curve refit, to confirm negative zero rates are supported without discount factors falling to or below zero.",
+    "min_zero_rate": -0.017899581331939373,
+    "fraction_of_grid_negative": 0.045,
+    "min_discount_factor": 0.5405563717310279,
+    "all_discount_factors_positive": true
+  }
+}

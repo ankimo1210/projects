@@ -1,0 +1,128 @@
+{
+  "round_name": "feedback_round_01",
+  "model_key": "astra",
+  "model_id": "Astra",
+  "reasoning_effort": "xhigh",
+  "model_key_confirmation": "Explicit Astra assignment in preceding user messages.",
+  "backend_model_setting_confirmation": "not independently exposed; no switching performed",
+  "start_time_utc": "2026-09-05T07:54:25Z",
+  "start_epoch_seconds": 1788594865,
+  "time_limit_seconds": 3600,
+  "design_freeze_epoch_seconds": 1788597865,
+  "seed": 20260905,
+  "test_runs": 2,
+  "failed_test_runs": 0,
+  "corrective_iterations": 2,
+  "input_tokens": null,
+  "cached_input_tokens": null,
+  "output_tokens": null,
+  "reasoning_tokens": null,
+  "total_tokens": null,
+  "credits_consumed": null,
+  "reported_usd_cost": null,
+  "quota_percentage_consumed": null,
+  "protocol_events": [
+    {
+      "time_utc": "2026-09-05T07:59:07.237262+00:00",
+      "event": "Complete prompt supplied during preparation. Preserve original start; use the assigned output and runtime from now on. Before receipt, only a source copy and metadata were created under results/astra/improvement_round_1. No numerical experiments, installs, tests, or code modifications had run there. It is excluded from the original submission inventory and not reused."
+    }
+  ],
+  "status": "FINALIZED",
+  "finish_time_utc": "2026-09-05T08:37:29.951134Z",
+  "end_time_utc": "2026-09-05T08:37:29.951134Z",
+  "end_epoch_seconds": 1788597449.951134,
+  "additional_work_seconds": 2584.951133966446,
+  "wall_time_seconds": 2584.951133966446,
+  "within_time_limit": true,
+  "final_adopted_version": "reference_numerics_schema_v1",
+  "final_source_sha256": "1339af68d4e8684117867bcdb49f27a3b25d446eb8f0c8833c5493f6b5bfaffe",
+  "selected_model": "advanced",
+  "selected_smoothing": 0.001,
+  "numerical_factors_adopted": [],
+  "adopted_changes": [
+    "Direct D(t) pricing API with finite-positive-discount validation",
+    "Required comparison/sensitivity schema and explicit metric units",
+    "Nine bilingual report headings and undefined improvement ratio handling",
+    "Independent source-run documentation and round-specific evidence"
+  ],
+  "experiment_count": 283,
+  "experiment_count_definition": "275 model × input/split evaluations (11 variants × 25 cases), 5 convention checks, 3 format checks; not a performance target",
+  "numerical_candidate_count": 9,
+  "simple_baseline_count": 1,
+  "reference_count": 1,
+  "synthetic_conditions": 20,
+  "public_holdout_splits": 4,
+  "independent_pricing_comparisons": 1965,
+  "test_results": {
+    "baseline_copy": {
+      "passed": 45,
+      "failed": 0
+    },
+    "final_submission": {
+      "passed": 46,
+      "failed": 0
+    }
+  },
+  "tests_passed": 46,
+  "tests_failed": 0,
+  "corrective_iteration_definition": "Two validated submission change sets: direct discount pricing interface; schema/report/ratio edge case. Documentation and contract tests belong to those sets.",
+  "diagnostic_repair_iterations": 1,
+  "diagnostic_failures": [
+    {
+      "log": "logs/diagnose.json",
+      "reason": "setuptools metadata absent in the authorized runtime",
+      "resolution": "Record only required installed package versions; no installation or numeric change."
+    }
+  ],
+  "nonfatal_warnings": [
+    "Pandas concat FutureWarning in format-audit recording; results and validations passed; raw stderr retained."
+  ],
+  "original_hashes_unchanged": true,
+  "original_tracked_files": 79,
+  "input_original_unchanged": true,
+  "original_manifest_after": "original_manifest_after.json",
+  "environment": {
+    "python": "3.12.11",
+    "python_build": [
+      "main",
+      "Jun  4 2025 14:38:53"
+    ],
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "packages": {
+      "numpy": "2.5.2",
+      "pandas": "2.3.3",
+      "scipy": "1.18.1",
+      "matplotlib": "3.11.1",
+      "pytest": "8.4.2"
+    },
+    "setuptools_metadata": "not installed; package installation is not used in this round",
+    "blas_threads": 1,
+    "packages_added_or_updated": false,
+    "internet_used": false
+  },
+  "cli_seed": 20260115,
+  "standalone_execution_verified": true,
+  "standalone_all_output_bytes_identical": true,
+  "final_numeric_csvs_identical_to_initial": true,
+  "all_charts_visually_inspected": true,
+  "html_rendered_and_inspected": true,
+  "unverified_items": [
+    "採用可能な数値改善なし。初回の数値CSVを維持し、長期形状の精度上の弱点も残る。",
+    "端数クーポンとOIS頻度の実際の生成規約は不明。独立式との一致は仮定した規約内の実装検証に限る。",
+    "公開単位修正は分割前の全テープを参照する。4つの満期分割は時間外検証ではない。",
+    "人工20条件は自作の研究集合で、採用判断後の独立確認集合ではない。隠し精度・スコアの推定は行っていない。",
+    "ノット、平滑化、端点、ロバスト重みの相互作用は未検証。複数数値変更は最終版へ合成していない。",
+    "人工全条件でCLIの内部CVまで含めて比較する手続きは未検証。固定lambdaによる一要因比較と区別する。",
+    "異なるOS・BLAS・フォント・ライブラリでのバイト再現性と別日の精度は未確認。パッケージ導入は行わず承認済み環境でソース実行した。",
+    "実行バックエンドのモデルID・reasoning effortは独立取得不可。Astra/xhighは指定された記録ラベル。",
+    "正確なトークン、料金、クレジット、割当消費量は取得不可でnull。"
+  ],
+  "token_telemetry_available": false,
+  "cost_telemetry_available": false,
+  "quota_telemetry_available": false,
+  "actual_backend_model_id": null,
+  "actual_backend_reasoning_effort": null,
+  "human_interventions": 1,
+  "human_intervention_definition": "The complete instruction was supplied during preparation; original timer retained.",
+  "estimated_usd_cost": null
+}

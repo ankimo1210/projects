@@ -1,0 +1,44 @@
+{
+  "all_discount_factors_positive": true,
+  "all_outputs_finite": true,
+  "curve_end_years": 30.0,
+  "curve_rows": 361,
+  "curve_start_years": 0.08333333333333333,
+  "max_adjacent_zero_change_bp": 8.691110141503707,
+  "max_discount_factor": 0.9988312844550401,
+  "max_forward_rate": 0.04128747497807561,
+  "min_discount_factor": 0.540400254523663,
+  "min_forward_rate": 0.0046474200913499755,
+  "risk_checks": {
+    "finite_difference_consistent": true,
+    "key_sum_consistent": true,
+    "max_half_bump_relative_error": 9.558149498657712e-07,
+    "max_key_sum_relative_error": 5.314956731411848e-07
+  },
+  "selected_full_sample_metrics": {
+    "by_instrument_type": {
+      "bond": {
+        "mae": 0.48191843580508237,
+        "n": 48,
+        "rmse": 1.1414839439537185,
+        "unit": "price_points"
+      },
+      "deposit": {
+        "mae": 11.838420071236769,
+        "n": 19,
+        "rmse": 16.580817345499554,
+        "unit": "bp"
+      },
+      "ois_swap": {
+        "mae": 20.91492204894687,
+        "n": 69,
+        "rmse": 47.2373617487181,
+        "unit": "bp"
+      }
+    },
+    "n": 136,
+    "normalized_mae": 15.412767193727628,
+    "weighted_normalized_rmse": 42.139466487107725
+  },
+  "zero_discount_round_trip_max_abs_error": 4.631711680858075e-16
+}

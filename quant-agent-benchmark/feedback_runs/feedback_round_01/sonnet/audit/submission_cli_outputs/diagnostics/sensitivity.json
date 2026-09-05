@@ -1,0 +1,216 @@
+{
+  "bump_size_convergence": {
+    "description": "Mean |DV01| across a representative instrument sample at three finite-difference step sizes (10bp, 1bp, 0.1bp), each rescaled to a common per-1bp basis (DV01 scales linearly with bump size by definition, so raw values are not directly comparable); the rescaled estimate should be stable if the 1bp DV01 is a good local-derivative approximation.",
+    "mean_abs_dv01_by_bump_raw": {
+      "bump_0.001": 3415.116842035669,
+      "bump_0.0001": 341.4796754420015,
+      "bump_1e-05": 34.14793553678958
+    },
+    "mean_abs_dv01_by_bump_per_1bp": {
+      "bump_0.001": 341.5116842035669,
+      "bump_0.0001": 341.4796754420015,
+      "bump_1e-05": 341.47935536789583
+    },
+    "relative_diff_10bp_vs_1bp": 9.373548081295385e-05,
+    "relative_diff_0p1bp_vs_1bp": 9.373152450690796e-07,
+    "stable": true
+  },
+  "regularization_sensitivity": {
+    "description": "Advanced-model holdout weighted RMSE across the smoothing-strength (lambda) grid searched during model selection.",
+    "grid": [
+      {
+        "lambda": 0.0,
+        "train_wrmse": 2.2885243099713617,
+        "holdout_wrmse": 3.7399274117095143
+      },
+      {
+        "lambda": 100.0,
+        "train_wrmse": 2.2888987550041358,
+        "holdout_wrmse": 3.7370253278742753
+      },
+      {
+        "lambda": 1000.0,
+        "train_wrmse": 2.31717163077441,
+        "holdout_wrmse": 3.689164036407539
+      },
+      {
+        "lambda": 10000.0,
+        "train_wrmse": 4.654618065518068,
+        "holdout_wrmse": 2.3379602944759386
+      },
+      {
+        "lambda": 30000.0,
+        "train_wrmse": 4.657300533905734,
+        "holdout_wrmse": 2.3333318470887523
+      },
+      {
+        "lambda": 100000.0,
+        "train_wrmse": 4.658172583795872,
+        "holdout_wrmse": 2.3303175116774795
+      },
+      {
+        "lambda": 300000.0,
+        "train_wrmse": 4.65799924055606,
+        "holdout_wrmse": 2.316166128913598
+      },
+      {
+        "lambda": 1000000.0,
+        "train_wrmse": 4.656545384187745,
+        "holdout_wrmse": 2.2800872472475553
+      },
+      {
+        "lambda": 3000000.0,
+        "train_wrmse": 4.6558856576080645,
+        "holdout_wrmse": 2.234864731788101
+      },
+      {
+        "lambda": 10000000.0,
+        "train_wrmse": 4.7653018702466925,
+        "holdout_wrmse": 2.2158506934886946
+      },
+      {
+        "lambda": 30000000.0,
+        "train_wrmse": 5.336350517892931,
+        "holdout_wrmse": 2.2485576474909004
+      },
+      {
+        "lambda": 100000000.0,
+        "train_wrmse": 6.243869820626778,
+        "holdout_wrmse": 2.259027607207369
+      }
+    ]
+  },
+  "leave_worst_out_refit": {
+    "description": "Baseline curve stability when the single largest-residual training instrument is removed and the model is refit (a leave-one-out influence check).",
+    "removed_instrument_id": "INS0105",
+    "probe_maturities": [
+      2.0,
+      5.0,
+      10.0,
+      30.0
+    ],
+    "max_zero_rate_shift_bp": 2.5193015224907884,
+    "stable": true
+  },
+  "negative_rate_stress": {
+    "description": "All deposit/swap quotes parallel-shocked down by 3 percentage points and the baseline curve refit, to confirm negative zero rates are supported without discount factors falling to or below zero.",
+    "min_zero_rate": -0.017899581331939373,
+    "fraction_of_grid_negative": 0.045,
+    "min_discount_factor": 0.5405563717310279,
+    "all_discount_factors_positive": true
+  },
+  "forward_smoothness_check": {
+    "description": "Forward rate f(t)=z(t)+t*z'(t) jump at each internal calibration knot, evaluated just below/above the knot (eps=0.0001y), for the baseline (piecewise-linear zero, expected to show real jumps at knots where the local slope changes sharply) and the advanced (natural-cubic-spline zero, expected to stay ~continuous) curves. This is a distinct diagnostic from zero-rate repricing RMSE: a curve can reprice deposits/swaps/bonds well (small zero-rate error) while still producing large, economically implausible forward-rate jumps in a noisy or tightly-clustered calibration region.",
+    "per_knot": [
+      {
+        "knot": 0.25,
+        "baseline_jump_bp": 7.463098245623599,
+        "advanced_jump_bp": 0.03672564616957058
+      },
+      {
+        "knot": 0.5,
+        "baseline_jump_bp": 26.140813707848793,
+        "advanced_jump_bp": 0.024237748875201304
+      },
+      {
+        "knot": 0.75,
+        "baseline_jump_bp": 111.96874395266919,
+        "advanced_jump_bp": 0.016733179438108148
+      },
+      {
+        "knot": 1.0,
+        "baseline_jump_bp": 274.57115631391804,
+        "advanced_jump_bp": 0.008171687817630502
+      },
+      {
+        "knot": 1.25,
+        "baseline_jump_bp": 811.8979446686523,
+        "advanced_jump_bp": 0.0030601741133132188
+      },
+      {
+        "knot": 1.5,
+        "baseline_jump_bp": 750.2653533592115,
+        "advanced_jump_bp": 0.00018112764111483104
+      },
+      {
+        "knot": 2.0,
+        "baseline_jump_bp": 224.01337745395335,
+        "advanced_jump_bp": 0.001742783022652683
+      },
+      {
+        "knot": 2.5,
+        "baseline_jump_bp": 1.1676170309369085,
+        "advanced_jump_bp": 0.003186396598867103
+      },
+      {
+        "knot": 3.0,
+        "baseline_jump_bp": 15.581488576624675,
+        "advanced_jump_bp": 0.004106152401463226
+      },
+      {
+        "knot": 4.0,
+        "baseline_jump_bp": 46.58356226182801,
+        "advanced_jump_bp": 0.00018342193482817626
+      },
+      {
+        "knot": 5.0,
+        "baseline_jump_bp": 98.64465949998849,
+        "advanced_jump_bp": 0.004868334078020342
+      },
+      {
+        "knot": 6.0,
+        "baseline_jump_bp": 147.6126709586303,
+        "advanced_jump_bp": 0.003065401837747117
+      },
+      {
+        "knot": 7.0,
+        "baseline_jump_bp": 1.0614494557761174,
+        "advanced_jump_bp": 0.012421290593277179
+      },
+      {
+        "knot": 8.0,
+        "baseline_jump_bp": 62.08289464123821,
+        "advanced_jump_bp": 0.005951993315919668
+      },
+      {
+        "knot": 9.0,
+        "baseline_jump_bp": 107.2140898579494,
+        "advanced_jump_bp": 0.004426024412512025
+      },
+      {
+        "knot": 10.0,
+        "baseline_jump_bp": 119.02213975880052,
+        "advanced_jump_bp": 0.008258878443634377
+      },
+      {
+        "knot": 12.0,
+        "baseline_jump_bp": 21.478179820500696,
+        "advanced_jump_bp": 0.005658189464637087
+      },
+      {
+        "knot": 15.0,
+        "baseline_jump_bp": 17.230767244175752,
+        "advanced_jump_bp": 0.00015327882973287243
+      },
+      {
+        "knot": 20.0,
+        "baseline_jump_bp": 108.44006164067859,
+        "advanced_jump_bp": 0.005946243296466036
+      },
+      {
+        "knot": 25.0,
+        "baseline_jump_bp": 127.10770994409165,
+        "advanced_jump_bp": 0.0060453580904423765
+      }
+    ],
+    "baseline_max_jump_bp": 811.8979446686523,
+    "baseline_mean_jump_bp": 153.97738891965483,
+    "advanced_max_jump_bp": 0.03672564616957058,
+    "advanced_mean_jump_bp": 0.0077561655187569425,
+    "worst_baseline_knot": {
+      "knot": 1.25,
+      "baseline_jump_bp": 811.8979446686523,
+      "advanced_jump_bp": 0.0030601741133132188
+    }
+  }
+}

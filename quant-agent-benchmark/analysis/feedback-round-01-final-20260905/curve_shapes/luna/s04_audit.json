@@ -1,0 +1,23 @@
+{
+  "model": "luna",
+  "case": "s04",
+  "curve_rows": 601,
+  "truth_rows": 721,
+  "market_rows": 77,
+  "market": "evaluator/hidden_scenarios/s04/market_data.csv",
+  "truth": "evaluator/hidden_scenarios/s04/truth_curve.csv",
+  "metrics": {
+    "zero_rate_rmse_bps": 3.0208594634782857,
+    "weighted_zero_rate_rmse_bps": 2.9497098386267844,
+    "forward_rate_rmse_bps": 28.112686775392312,
+    "discount_factor_rmse_x1e4": 34.855418620365015,
+    "hidden_instrument_normalized_rmse": 2.5199291931857,
+    "bid_ask_normalized_pricing_rmse": 7.308706407323076,
+    "short_end_zero_rmse_bps": 2.3548131815979803,
+    "long_end_zero_rmse_bps": 4.048604534973697,
+    "forward_roughness": 0.000245248064600509,
+    "zero_curvature_rms": 0.005779183340485696
+  },
+  "rmse_matches_frozen_score": true,
+  "cli_seconds": 13.623284916000557
+}

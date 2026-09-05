@@ -1,0 +1,106 @@
+return (d2 * weights[:, None]).T @ d2
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeWarning: divide by zero encountered in matmul
+
+src/quantcurve/curve.py:189: RuntimeWarning
+_________ test_robust_fit_rejects_isolated_outlier_and_keeps_consensus _________
+
+noisy_frame =      obs_id instrument_id  ... liquidity_score settlement_days
+0   OBS0001       INS0001  ...            0.95         ...            0.70               2
+65  OBS0066       INS0066  ...            0.70               2
+
+[66 rows x 19 columns]
+
+    def test_robust_fit_rejects_isolated_outlier_and_keeps_consensus(noisy_frame):
+        f = noisy_frame.copy()
+        # a single liquid 9M deposit 16bp too high (the other 9M quote becomes illiquid)
+        nine = f.index[(f["instrument_type"] == "deposit") & np.isclose(f["maturity_years"], 0.75)]
+        f.loc[nine[0], ["quote_value", "bid", "ask"]] += 0.16
+        f.loc[nine[1], "liquidity_score"] = 0.15
+        f.loc[nine[1], "bid"] -= 0.04
+        f.loc[nine[1], "ask"] += 0.04
+        # a bond 5 points too rich
+        bond = f.index[f["instrument_type"] == "bond"][4]
+        f.loc[bond, ["quote_value", "bid", "ask"]] += 5.0
+        # both 7Y OIS quotes 3bp high: concordant, must not be rejected wholesale
+        seven = f.index[(f["instrument_type"] == "ois_swap") & np.isclose(f["maturity_years"], 7.0)]
+        f.loc[seven, ["quote_value", "bid", "ask"]] += 0.03
+        tab, insts, scale = _prepare(f)
+>       adv = fit_advanced(insts, scale, tab["instrument_type"].to_numpy(), tab["tenor_cluster"].to_numpy(), 30.0, AdvancedConfig())
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_models.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/quantcurve/advanced.py:423: in fit_advanced
+    L_ref = penalty_root(curve.penalty_matrix(penalty_weight(cfg, cfg.penalty_power)))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <quantcurve.curve.BSplineForwardCurve object at 0x124f23ce0>
+weight = <function penalty_weight.<locals>.<lambda> at 0x124b24400>
+
+    def penalty_matrix(self, weight: Callable[[np.ndarray], np.ndarray] | None = None) -> np.ndarray:
+        """``Omega[k, l] = int_0^{t_max} w(s) B_k''(s) B_l''(s) ds`` (Gauss quadrature).
+    
+        ``weight`` is an optional maturity-dependent roughness weight (default
+        1). Cubic B-splines have piecewise-linear second derivatives, so with a
+        smooth weight the 4-point rule per knot interval is essentially exact.
+        """
+        breaks = np.unique(self.knot_vector)
+        nodes, weights = _gauss_legendre_nodes(breaks[:-1], breaks[1:], n=4)
+        if weight is not None:
+            weights = weights * np.asarray(weight(nodes), dtype=float)
+        d2 = np.column_stack([np.nan_to_num(s(nodes), nan=0.0) for s in self._second])
+>       return (d2 * weights[:, None]).T @ d2
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeWarning: divide by zero encountered in matmul
+
+src/quantcurve/curve.py:189: RuntimeWarning
+_______________ test_engine_matches_generic_pricing_and_jacobian _______________
+
+    def test_engine_matches_generic_pricing_and_jacobian():
+        curve = BSplineForwardCurve(np.array([0.5, 1, 2, 5, 10, 20]), 30.0)
+        rng = np.random.default_rng(0)
+        curve = curve.with_coeffs(0.02 + 0.004 * rng.standard_normal(curve.n_basis))
+        insts = [
+            build_instrument("d1", "deposit", 0.25, 0.014),
+            build_instrument("s1", "ois_swap", 1.5, 0.0161, 1),
+            build_instrument("s2", "ois_swap", 7.0, 0.0234, 2),
+            build_instrument("s3", "ois_swap", 30.0, 0.0207, 2),
+            build_instrument("b1", "bond", 6.11, 106.9, 2, 0.0355),
+            build_instrument("b2", "bond", 29.5, 92.0, 2, 0.017),
+        ]
+        eng = SplineResidualEngine(curve, insts)
+>       r = eng.residuals(curve.coeffs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pricing.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/quantcurve/pricing.py:142: in residuals
+    disc, d_T = self._discounts(coeffs)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = SplineResidualEngine(curve=<quantcurve.curve.BSplineForwardCurve object at 0x1240de180>, instruments=[Instrument(instr....85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85,
+       0.85, 0.85, 0.85, 0.85]), frequency=2, coupon_rate=0.017)])
+coeffs = array([0.02050292, 0.01947158, 0.02256169, 0.0204196 , 0.01785732,
+       0.02144638, 0.025216  , 0.02378832, 0.01718506, 0.01493831])
+
+    def _discounts(self, coeffs: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+>       return np.exp(-(self.A @ coeffs)), np.exp(-(self.A_T @ coeffs))
+                        ^^^^^^^^^^^^^^^
+E       RuntimeWarning: divide by zero encountered in matmul
+
+src/quantcurve/pricing.py:130: RuntimeWarning
+=========================== short test summary info ============================
+FAILED tests/test_curve.py::test_negative_forwards_keep_discount_positive - R...
+FAILED tests/test_curve.py::test_penalty_zero_for_linear_forward - RuntimeWar...
+FAILED tests/test_curve.py::test_weighted_penalty_matches_unweighted_when_weight_is_one
+FAILED tests/test_models.py::test_advanced_recovers_true_curve - RuntimeWarni...
+FAILED tests/test_models.py::test_advanced_handles_negative_rates - RuntimeWa...
+FAILED tests/test_models.py::test_robust_fit_rejects_isolated_outlier_and_keeps_consensus
+FAILED tests/test_pricing.py::test_engine_matches_generic_pricing_and_jacobian
+ERROR tests/test_validation_risk.py::test_grouped_holdout_runs_and_scores_every_usable_instrument_once
+ERROR tests/test_validation_risk.py::test_risk_table_and_verification - Runti...
+7 failed, 51 passed, 2 errors in 15.93s
+

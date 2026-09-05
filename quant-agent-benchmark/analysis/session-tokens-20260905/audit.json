@@ -1,0 +1,156 @@
+{
+  "schema_version": "1.0",
+  "generated_utc": "2026-09-05T03:33:35.307111+00:00",
+  "python": "3.12.11",
+  "packages": {
+    "numpy": "2.2.6",
+    "matplotlib": "3.10.7"
+  },
+  "sources": {
+    "astra": {
+      "session_id": "01a06f02-c11c-7ab0-971a-f7abd9ce99ab",
+      "final_thread_counter": {
+        "input_tokens": 4360256,
+        "cached_input_tokens": 4097280,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 86109,
+        "reasoning_output_tokens": 35289,
+        "total_tokens": 4446365
+      },
+      "usage_method": "response_id-deduplicated token_usage_record.usage",
+      "raw_usage_records": 52,
+      "token_count_events": 52,
+      "duplicate_counter_events": 0,
+      "counter_resets": 0,
+      "independent_cumulative_reconciliation": true,
+      "duplicate_api_blocks_removed": 0,
+      "source_path": "/Users/ankimo1210/.codex/sessions/2026/09/05/rollout-2026-09-05T09-40-46-01a06f02-c11c-7ab0-971a-f7abd9ce99ab.jsonl",
+      "source_sha256": "e34922efb6f5b6c82f0cdebf743890ee981e84ccc2a998ecc656b363acec6628",
+      "source_bytes": 4059953,
+      "normalized_totals": {
+        "uncached_input": 262976,
+        "cache_read_input": 4097280,
+        "cache_creation_input": 0,
+        "input_total": 4360256,
+        "output_nonreasoning": 50820,
+        "output_reasoning": 35289,
+        "output_total": 86109,
+        "total_tokens": 4446365
+      },
+      "user_turn_totals_reconcile": true,
+      "five_minute_bins_reconcile": true
+    },
+    "sol": {
+      "session_id": "01a06f03-72e9-70a1-a254-f7b4e04a719f",
+      "final_thread_counter": {
+        "input_tokens": 10272983,
+        "cached_input_tokens": 10096128,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 76904,
+        "reasoning_output_tokens": 25905,
+        "total_tokens": 10349887
+      },
+      "usage_method": "response_id-deduplicated token_usage_record.usage",
+      "raw_usage_records": 82,
+      "token_count_events": 84,
+      "duplicate_counter_events": 2,
+      "counter_resets": 0,
+      "independent_cumulative_reconciliation": true,
+      "duplicate_api_blocks_removed": 0,
+      "source_path": "/Users/ankimo1210/.codex/sessions/2026/09/05/rollout-2026-09-05T09-41-32-01a06f03-72e9-70a1-a254-f7b4e04a719f.jsonl",
+      "source_sha256": "49700352af01e986970e6d528e7a27568fdc7541dee5eab59cfdcdad8e129e58",
+      "source_bytes": 2847595,
+      "normalized_totals": {
+        "uncached_input": 176855,
+        "cache_read_input": 10096128,
+        "cache_creation_input": 0,
+        "input_total": 10272983,
+        "output_nonreasoning": 50999,
+        "output_reasoning": 25905,
+        "output_total": 76904,
+        "total_tokens": 10349887
+      },
+      "user_turn_totals_reconcile": true,
+      "five_minute_bins_reconcile": true
+    },
+    "opus": {
+      "session_id": "8f376df0-177d-4bfc-adf2-21852ba5358b",
+      "compaction": {
+        "timestamp_utc": "2026-09-05T02:32:07.656Z",
+        "trigger": "auto",
+        "preTokens": 469826,
+        "postTokens": 19481,
+        "durationMs": 157579
+      },
+      "usage_method": "one identical usage per message.id; requestId independently cross-checked",
+      "raw_usage_records": 210,
+      "duplicate_api_blocks_removed": 96,
+      "raw_block_totals": {
+        "uncached_input": 420,
+        "cache_read_input": 52113339,
+        "cache_creation_input": 845062,
+        "input_total": 52958821,
+        "output_nonreasoning": 349032,
+        "output_reasoning": 267634,
+        "output_total": 616666,
+        "total_tokens": 53575487
+      },
+      "synthetic_zero_usage_records": 1,
+      "excluded_nonhuman_user_messages": 5,
+      "compaction_events": 1,
+      "all_repeated_usage_identical": true,
+      "unique_request_ids": 114,
+      "source_path": "/Users/ankimo1210/.claude/projects/-Users-ankimo1210-Documents-projects/8f376df0-177d-4bfc-adf2-21852ba5358b.jsonl",
+      "source_sha256": "d8e6e342d4048ee757b9220ebb7bdee4d43f201fcfa80be9d023e5d13ac0aa1e",
+      "source_bytes": 3537061,
+      "normalized_totals": {
+        "uncached_input": 228,
+        "cache_read_input": 28715729,
+        "cache_creation_input": 439475,
+        "input_total": 29155432,
+        "output_nonreasoning": 183918,
+        "output_reasoning": 117873,
+        "output_total": 301791,
+        "total_tokens": 29457223
+      },
+      "user_turn_totals_reconcile": true,
+      "five_minute_bins_reconcile": true
+    },
+    "fable": {
+      "session_id": "bf368b2b-b291-4750-a82f-8ff314837922",
+      "usage_method": "one identical usage per message.id; requestId independently cross-checked",
+      "raw_usage_records": 116,
+      "duplicate_api_blocks_removed": 75,
+      "raw_block_totals": {
+        "uncached_input": 3442,
+        "cache_read_input": 26310765,
+        "cache_creation_input": 2252505,
+        "input_total": 28566712,
+        "output_nonreasoning": 407774,
+        "output_reasoning": 338604,
+        "output_total": 746378,
+        "total_tokens": 29313090
+      },
+      "synthetic_zero_usage_records": 0,
+      "excluded_nonhuman_user_messages": 4,
+      "compaction_events": 0,
+      "all_repeated_usage_identical": true,
+      "unique_request_ids": 41,
+      "source_path": "/Users/ankimo1210/.claude/projects/-Users-ankimo1210-Documents-projects/bf368b2b-b291-4750-a82f-8ff314837922.jsonl",
+      "source_sha256": "28f2a90b6a081e16026179fe958d0e344c057529b6a293cbfca7581ca19e06b0",
+      "source_bytes": 11730209,
+      "normalized_totals": {
+        "uncached_input": 1222,
+        "cache_read_input": 9739461,
+        "cache_creation_input": 772961,
+        "input_total": 10513644,
+        "output_nonreasoning": 158104,
+        "output_reasoning": 119154,
+        "output_total": 277258,
+        "total_tokens": 10790902
+      },
+      "user_turn_totals_reconcile": true,
+      "five_minute_bins_reconcile": true
+    }
+  }
+}

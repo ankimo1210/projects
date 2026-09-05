@@ -1,0 +1,50 @@
+{
+  "round_id": "feedback_round_01",
+  "model_id": "sol",
+  "model_assignment_confirmed": true,
+  "requested_reasoning_effort": "xhigh",
+  "reasoning_effort_confirmed": false,
+  "start_utc": "2026-09-05T07:58:29Z",
+  "finish_utc": "2026-09-05T08:18:19Z",
+  "additional_work_seconds": 1190.0,
+  "time_limit_minutes": 60,
+  "experiment_count": 7,
+  "test_results": {
+    "baseline_copy": {"passed": 20, "failed": 0},
+    "improved_submission": {"passed": 24, "failed": 0},
+    "final_rerun": {"passed": 24, "failed": 0},
+    "failed_test_runs": 0
+  },
+  "cli_results": {
+    "baseline_reproduction": "passed",
+    "final_fresh_run_a": "passed",
+    "final_fresh_run_b": "passed",
+    "fresh_run_tree_diff_count": 0
+  },
+  "final_adopted_version": "Original baseline curve model retained; direct-D pricing interface, segmented diagnostics, explicit metric units, structured sensitivity JSON, bilingual report headings, and validation tests adopted.",
+  "original_manifest_unchanged": true,
+  "environment": {
+    "python": "3.12.11",
+    "numpy": "2.5.2",
+    "pandas": "2.3.3",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.1",
+    "pytest": "8.4.2",
+    "pythondontwritebytecode": true,
+    "cache_root": "audit"
+  },
+  "seed": 1729,
+  "unverified_items": [
+    "Fractional-maturity bond stub-coupon convention",
+    "Public holdout performance for deposits because the fixed split has zero held-out deposits",
+    "Multi-date and realized hedge-PnL performance",
+    "Final HTML browser rendering; local file URL was blocked by browser safety policy"
+  ],
+  "usage_available": false,
+  "input_tokens": null,
+  "output_tokens": null,
+  "reasoning_tokens": null,
+  "quota_percentage_consumed": null,
+  "credits_consumed": null,
+  "estimated_usd_cost": null
+}

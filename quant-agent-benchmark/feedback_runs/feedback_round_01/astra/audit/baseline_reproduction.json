@@ -1,0 +1,28 @@
+{
+  "numeric_csvs": {
+    "curves/advanced_curve.csv": {
+      "sha256_identical": true
+    },
+    "curves/baseline_curve.csv": {
+      "sha256_identical": true
+    },
+    "curves/curve.csv": {
+      "sha256_identical": true
+    },
+    "diagnostics/cleaning.csv": {
+      "sha256_identical": true
+    },
+    "diagnostics/holdout_repricing.csv": {
+      "sha256_identical": true
+    },
+    "diagnostics/repricing.csv": {
+      "sha256_identical": true
+    },
+    "diagnostics/risk.csv": {
+      "sha256_identical": true
+    }
+  },
+  "all_csvs_byte_identical": true,
+  "tests_passed": 45,
+  "interpretation": "All initial numeric CSVs reproduced using copied source and matched environment. pytest version differs; no shared environment modified."
+}

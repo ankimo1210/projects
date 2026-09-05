@@ -1,0 +1,13 @@
+obs_id,instrument_id,issue,genuinely_bad,severity,acceptable_action
+DUP0001,INS0001,duplicate_observation,True,medium,deduplicate
+DUP0002,INS0002,duplicate_observation,True,medium,deduplicate
+OBS0009,INS0009,missing_quote,True,high,exclude
+OBS0039,INS0039,extreme_outlier,True,critical,exclude
+OBS0043,INS0043,unusual_but_valid,False,low,keep_or_downweight
+OBS0049,INS0049,rate_unit_error,True,critical,normalize
+OBS0050,INS0050,unusual_but_valid,False,low,keep_or_downweight
+OBS0071,INS0071,bid_ask_inversion,True,high,repair_or_exclude
+OBS0075,INS0075,stale_timestamp,True,medium,downweight_or_exclude
+OBS0081,INS0081,moderate_outlier,True,medium,downweight_or_exclude
+OBS0090,INS0090,moderate_outlier,True,medium,downweight_or_exclude
+OBS0091,INS0091,price_unit_error,True,critical,normalize

@@ -1,0 +1,110 @@
+{
+  "additional_work_seconds": 1674,
+  "environment": {
+    "MPLCONFIGDIR": "audit/mplcache",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TMPDIR": "audit/tmp",
+    "agents_delegated": 0,
+    "interpreter": "approved PYTHON_BIN (analysis/final-review-20260905/.venv-matched/bin/python), executed only; parent directory never inspected, no package added",
+    "matplotlib": "3.11.1",
+    "network_access_used": false,
+    "numpy": "2.5.2",
+    "other_models_consulted": 0,
+    "pandas": "2.3.3",
+    "platform": "macOS-26.6.2-arm64",
+    "pytest": "8.4.2",
+    "python": "3.12.11",
+    "scipy": "1.18.1"
+  },
+  "experiments": {
+    "convention_spread": 3,
+    "format_fixes": 4,
+    "minimal_reproduction": 2,
+    "one_factor_curvature": 6,
+    "pricing_isolation": 5,
+    "selection_gate_characterisation": 3,
+    "stress_characterisation": 11,
+    "synthetic_fits_performed": 150,
+    "total_rows_in_experiments_csv": 37
+  },
+  "final_adopted_version": {
+    "format_and_documentation_changes_adopted": 6,
+    "location": "submission/",
+    "numerical_changes_adopted": 0,
+    "reason": "Both one-factor curvature-control variants failed acceptance criteria fixed before the numbers existed (protocol.md section 6, A2). No verified numerical improvement; no regression."
+  },
+  "finish_utc": "2026-09-05T08:23:16Z",
+  "input_hashes": {
+    "CONVENTIONS.md": "21bfe79d4a1a3e82b3c17120606ae94e6aab6375c3340670744e8c981f63d53e",
+    "TASK.md": "64a63897e9f52c39b07b4bde3deb93ed4a2290686d3464680c17b5ce3158be9f",
+    "market_observations.csv": "dd96a259f44c81c272f048c3600dc5f7df686ea77a1c192d2c4aa3a306654d01"
+  },
+  "model_id_and_settings_confirmation": {
+    "changed_during_round": false,
+    "independently_verifiable_by_candidate": false,
+    "model_name_as_configured": "claude-opus-5[1m]",
+    "reasoning_effort_as_configured": "xhigh"
+  },
+  "model_key": "opus",
+  "model_key_resolution": {
+    "basis": [
+      "the harness-assigned working directory for this session is BENCHMARK_ROOT/results/opus, which is the 'opus' row of the assignment table and contains this candidate's own round-1 output produced earlier in the same session",
+      "the section-4 'Opus' review bullets describe artefacts present verbatim in that directory (forward instability under stress, a hardcoded personal absolute path, a model_comparison.json whose top-level keys needed checking)"
+    ],
+    "not_based_on": "self-identification by model name or capability",
+    "prompt_value": "placeholder <astra | sol | opus | fable | terra | luna | sonnet> was NOT substituted",
+    "resolved_to": "opus",
+    "status": "assumption, recorded rather than silently taken; no other model's row was used as an access grant and no other submission directory was opened or listed"
+  },
+  "original_file_count": 49,
+  "original_hashes_unchanged": true,
+  "protocol_deviations": [
+    "Before the full round-2 prompt was available, submission/, audit/ and .venv-r2/ were created inside results/opus and then removed on reading the write-scope rule. Confirmed no tracked original file changed."
+  ],
+  "round_name": "feedback_round_01",
+  "seed": {
+    "diagnostic_fixtures_seed": 20260905,
+    "pipeline_rng": "none - the estimator and CLI draw no random numbers; determinism verified byte-for-byte across two runs into different output directories"
+  },
+  "start_utc": "2026-09-05T07:55:22Z",
+  "test_results": {
+    "baseline_reproduction_on_copy": {
+      "failed": 0,
+      "passed": 204
+    },
+    "failure_kept_in_logs": "audit/logs/09_submission_tests.log",
+    "final_submission": {
+      "failed": 0,
+      "passed": 210
+    },
+    "runs_this_round": 6,
+    "runs_with_failures_this_round": 1
+  },
+  "time_limit_seconds": 3600,
+  "unverified_items": [
+    "One-factor experiment on the weighting scheme (per-instrument-type variance component) - not run inside the time limit.",
+    "Out-of-time (day-to-day) stability - still a single market snapshot.",
+    "Whether the adopted fractional-maturity period-count rule matches the rule the benchmark data was generated under. Exposure measured at up to 94.3bp / 1.25 price points; not resolvable from the public specification.",
+    "Stress conditions beyond the five curve shapes and three defect types designed here; hidden scenarios were deliberately not guessed at.",
+    "Interaction effects: no two adopted changes interact numerically, because no numerical change was adopted. The six format/documentation changes were each verified independently and are numerically inert, confirmed by byte-identical outputs."
+  ],
+  "usage_telemetry_availability": {
+    "cost": "not available - null",
+    "credits": "not available - null",
+    "note": "No per-session usage telemetry is exposed to the candidate. No value was estimated, and no organiser-side score, hidden RMSE or billing figure was reconstructed.",
+    "quota": "not available - null",
+    "tokens": "not available - null"
+  },
+  "verification_performed": [
+    "Round-1 behaviour reproduced on the copy: 204 tests pass, CLI exits 0.",
+    "Full test suite on the final submission: 210 passed, 0 failed.",
+    "Full CLI from the public data into a NEW output directory; byte-identical to the shipped outputs across all 14 data/chart artefacts and the HTML report.",
+    "Standalone run from a scratch copy carrying no prior outputs: exit 0, curve.csv byte-identical.",
+    "Numeric checks: 601 grid rows spanning 1/12Y-30Y, monotone, all values finite, all discount factors positive, |DF - exp(-zT)| <= 1.7e-12, |mean(f) - z| <= 0.0053bp, key rates sum to DV01 to 5.3e-07 relative, analytic-vs-finite-difference DV01 to 1.3e-06.",
+    "Schema checks: required columns first and in order in all four CSVs; model_comparison.json carries baseline/advanced/selected_model/selection_rationale plus units; sensitivity.json carries six named top-level experiments each with condition, result and interpretation.",
+    "HTML rendered in a browser and inspected: nine mandated sections in English with Japanese labels, in order, each with body text; the Charts section carries all seven figures with bilingual captions; no external resource referenced.",
+    "The end-to-end benchmark CLI test now actually executes instead of skipping (7 passed) after the hardcoded path was removed.",
+    "Original round-1 directory: all 49 files byte-identical to the pre-round manifest; no additions, no removals."
+  ],
+  "within_time_limit": true
+}

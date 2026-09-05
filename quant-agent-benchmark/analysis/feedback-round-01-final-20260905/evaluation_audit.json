@@ -1,0 +1,116 @@
+{
+  "started_utc": "2026-09-05T09:20:41.369975+00:00",
+  "completed_utc": "2026-09-05T09:36:44.458930+00:00",
+  "python": "3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:38:53) [Clang 18.1.8 ]",
+  "packages": {
+    "numpy": "2.5.2",
+    "pandas": "2.3.3",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.1",
+    "pytest": "8.4.2"
+  },
+  "manifest_before": {
+    "input": {
+      "files_verified": 12,
+      "mismatches": []
+    },
+    "evaluator": {
+      "files_verified": 108,
+      "mismatches": []
+    }
+  },
+  "manifest_after": {
+    "input": {
+      "files_verified": 12,
+      "mismatches": []
+    },
+    "evaluator": {
+      "files_verified": 108,
+      "mismatches": []
+    }
+  },
+  "submitted_paths": {
+    "astra": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/submission",
+    "sol": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/sol/submission",
+    "terra": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/terra/submission",
+    "luna": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/output/luna",
+    "sonnet": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/sonnet/submission",
+    "opus": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/opus/submission",
+    "fable": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/fable/submission"
+  },
+  "candidates_unchanged": true,
+  "results": {
+    "astra": {
+      "scorer_returncode": 0,
+      "pytest": {
+        "returncode": 0,
+        "stdout": "..............................................                           [100%]\n46 passed in 7.83s\n",
+        "stderr": "",
+        "wall_time_seconds": 8.362901333999616,
+        "timed_out": false
+      }
+    },
+    "sol": {
+      "scorer_returncode": 0,
+      "pytest": {
+        "returncode": 0,
+        "stdout": "........................                                                 [100%]\n24 passed in 3.41s\n",
+        "stderr": "",
+        "wall_time_seconds": 3.561896708000859,
+        "timed_out": false
+      }
+    },
+    "terra": {
+      "scorer_returncode": 0,
+      "pytest": {
+        "returncode": 0,
+        "stdout": "..................                                                       [100%]\n18 passed in 0.55s\n",
+        "stderr": "",
+        "wall_time_seconds": 0.7440086670030723,
+        "timed_out": false
+      }
+    },
+    "luna": {
+      "scorer_returncode": 0,
+      "pytest": {
+        "returncode": 0,
+        "stdout": ".............                                                            [100%]\n13 passed in 0.35s\n",
+        "stderr": "",
+        "wall_time_seconds": 0.5003117080013908,
+        "timed_out": false
+      }
+    },
+    "sonnet": {
+      "scorer_returncode": 0,
+      "pytest": {
+        "returncode": 0,
+        "stdout": ".....................................................                    [100%]\n53 passed in 12.67s\n",
+        "stderr": "",
+        "wall_time_seconds": 12.868944582998665,
+        "timed_out": false
+      }
+    },
+    "opus": {
+      "scorer_returncode": 0,
+      "pytest": {
+        "returncode": 0,
+        "stdout": "...................sssssss.............................................. [ 34%]\n........................................................................ [ 68%]\n..................................................................       [100%]\n203 passed, 7 skipped in 70.43s (0:01:10)\n",
+        "stderr": "",
+        "wall_time_seconds": 70.63706416700006,
+        "timed_out": false
+      }
+    },
+    "fable": {
+      "scorer_returncode": 0,
+      "pytest": {
+        "returncode": 0,
+        "stdout": ".................................................................        [100%]\n65 passed in 19.76s\n",
+        "stderr": "",
+        "wall_time_seconds": 20.123224582999683,
+        "timed_out": false
+      }
+    }
+  },
+  "compatibility": "Risk table projected to required fields only; original weights, thresholds, formulas and remaining checks unchanged.",
+  "timing": "Evaluator and verification runtime is NOT candidate development runtime."
+}

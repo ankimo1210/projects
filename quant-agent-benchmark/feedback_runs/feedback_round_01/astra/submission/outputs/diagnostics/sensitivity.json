@@ -1,0 +1,464 @@
+{
+  "edge_behavior": {
+    "conditions": "Evaluate both full-sample curves at endpoints and 40Y under flat-forward extrapolation.",
+    "interpretation": "Negative rates are permitted. Extrapolated values lack independent observation support.",
+    "numerical_results": {
+      "advanced": {
+        "forward_0": 0.011041385855843926,
+        "forward_30y": 0.019835485881499006,
+        "forward_40y": 0.019835485881498995,
+        "forward_max": 0.025118694350862177,
+        "forward_min": 0.013167078659397322,
+        "negative_forward_grid_count": 0,
+        "observed_maturity_max": 30.0,
+        "observed_maturity_min": 0.08333333,
+        "zero_1month": 0.012125347314761418,
+        "zero_30y": 0.019758701937985373
+      },
+      "baseline": {
+        "forward_0": 0.012130773547012277,
+        "forward_30y": 0.016626699186603956,
+        "forward_40y": 0.01662656686563329,
+        "forward_max": 0.025907760176321376,
+        "forward_min": 0.013489221301854048,
+        "negative_forward_grid_count": 0,
+        "observed_maturity_max": 30.0,
+        "observed_maturity_min": 0.08333333,
+        "zero_1month": 0.012818879710826927,
+        "zero_30y": 0.018286778226271266
+      }
+    },
+    "reference": "Advanced full-sample fit; selected model may differ.",
+    "units": "Curve changes and zero_30y_bp: bp; other zero/forward levels: annual decimals; quote metrics: explicit per-product units"
+  },
+  "liquidity_weighting": {
+    "conditions": "Set all reliability multipliers to one; spread scales and smoothing unchanged.",
+    "interpretation": "Changes quantify dependence on the assumed liquidity precision.",
+    "numerical_results": {
+      "converged": true,
+      "iterations": 20,
+      "long_end_max_abs_zero_change_bp": 8.891774112470447,
+      "max_abs_forward_change_bp": 24.516180131209723,
+      "max_abs_zero_change_bp": 8.891774112470447,
+      "perturbation": "Set all reliability multipliers to one; spread scales unchanged",
+      "rms_zero_change_bp": 3.6020492237185135,
+      "short_end_max_abs_zero_change_bp": 0.007372446668030969,
+      "zero_30y_bp": 206.47879349232417
+    },
+    "reference": "Advanced full-sample fit; selected model may differ.",
+    "units": "Curve changes and zero_30y_bp: bp; other zero/forward levels: annual decimals; quote metrics: explicit per-product units"
+  },
+  "outlier_threshold": {
+    "conditions": "Refit advanced at Huber thresholds 1.5, 2.5 and 4.0 sigma; smoothing fixed.",
+    "interpretation": "Changes expose reliance on robust downweighting; lower residual weight is not proof of a bad observation.",
+    "numerical_results": [
+      {
+        "converged": true,
+        "huber_threshold": 1.5,
+        "iterations": 25,
+        "long_end_max_abs_zero_change_bp": 2.6780028590149203,
+        "max_abs_forward_change_bp": 9.34402781072683,
+        "max_abs_zero_change_bp": 2.6780028590149203,
+        "rms_zero_change_bp": 0.9721827057924634,
+        "short_end_max_abs_zero_change_bp": 0.06440000023609505,
+        "weights_below_half": 77,
+        "zero_30y_bp": 194.9090165208388
+      },
+      {
+        "converged": true,
+        "huber_threshold": 2.5,
+        "iterations": 25,
+        "long_end_max_abs_zero_change_bp": 0.0,
+        "max_abs_forward_change_bp": 0.0,
+        "max_abs_zero_change_bp": 0.0,
+        "rms_zero_change_bp": 0.0,
+        "short_end_max_abs_zero_change_bp": 0.0,
+        "weights_below_half": 65,
+        "zero_30y_bp": 197.58701937985373
+      },
+      {
+        "converged": true,
+        "huber_threshold": 4.0,
+        "iterations": 19,
+        "long_end_max_abs_zero_change_bp": 3.841729953681858,
+        "max_abs_forward_change_bp": 13.363015735580637,
+        "max_abs_zero_change_bp": 3.841729953681858,
+        "rms_zero_change_bp": 1.4035945633401266,
+        "short_end_max_abs_zero_change_bp": 0.05583642616387163,
+        "weights_below_half": 56,
+        "zero_30y_bp": 201.4287493335356
+      }
+    ],
+    "reference": "Advanced full-sample fit; selected model may differ.",
+    "units": "Curve changes and zero_30y_bp: bp; other zero/forward levels: annual decimals; quote metrics: explicit per-product units"
+  },
+  "remove_10_percent": {
+    "conditions": "Remove 10% of usable instruments for 8 fixed-seed trials; seed=20260115; smoothing fixed.",
+    "interpretation": "This is a missing-observation stability check, not holdout pricing accuracy.",
+    "numerical_results": [
+      {
+        "converged": true,
+        "iterations": 24,
+        "long_end_max_abs_zero_change_bp": 0.19371096323668457,
+        "max_abs_forward_change_bp": 0.8984880606179024,
+        "max_abs_zero_change_bp": 0.19371096323668457,
+        "removed_count": 13,
+        "removed_instrument_ids": [
+          "INS0001",
+          "INS0019",
+          "INS0106",
+          "INS0099",
+          "INS0109",
+          "INS0065",
+          "INS0101",
+          "INS0049",
+          "INS0033",
+          "INS0052",
+          "INS0088",
+          "INS0125",
+          "INS0152"
+        ],
+        "rms_zero_change_bp": 0.08040991576931475,
+        "short_end_max_abs_zero_change_bp": 0.016927295533875064,
+        "trial": 1,
+        "zero_30y_bp": 197.78073034309043
+      },
+      {
+        "converged": true,
+        "iterations": 23,
+        "long_end_max_abs_zero_change_bp": 0.7016981286718516,
+        "max_abs_forward_change_bp": 2.7664994173541917,
+        "max_abs_zero_change_bp": 0.9065203859450616,
+        "removed_count": 13,
+        "removed_instrument_ids": [
+          "INS0012",
+          "INS0059",
+          "INS0095",
+          "INS0062",
+          "INS0101",
+          "INS0048",
+          "INS0088",
+          "INS0090",
+          "INS0127",
+          "INS0141",
+          "INS0145",
+          "INS0147",
+          "INS0155"
+        ],
+        "rms_zero_change_bp": 0.40201493593741056,
+        "short_end_max_abs_zero_change_bp": 0.037041851203845066,
+        "trial": 2,
+        "zero_30y_bp": 198.2887175085256
+      },
+      {
+        "converged": true,
+        "iterations": 23,
+        "long_end_max_abs_zero_change_bp": 0.09253082164598775,
+        "max_abs_forward_change_bp": 2.9208897976333232,
+        "max_abs_zero_change_bp": 1.2417515514678845,
+        "removed_count": 13,
+        "removed_instrument_ids": [
+          "INS0003",
+          "INS0059",
+          "INS0080",
+          "INS0107",
+          "INS0100",
+          "INS0066",
+          "INS0031",
+          "INS0118",
+          "INS0121",
+          "INS0036",
+          "INS0133",
+          "INS0058",
+          "INS0094"
+        ],
+        "rms_zero_change_bp": 0.3306774164708786,
+        "short_end_max_abs_zero_change_bp": 0.09663321780289946,
+        "trial": 3,
+        "zero_30y_bp": 197.49448855820773
+      },
+      {
+        "converged": true,
+        "iterations": 23,
+        "long_end_max_abs_zero_change_bp": 0.9692345610678305,
+        "max_abs_forward_change_bp": 2.7371064641867893,
+        "max_abs_zero_change_bp": 0.9692345610678305,
+        "removed_count": 13,
+        "removed_instrument_ids": [
+          "INS0018",
+          "INS0015",
+          "INS0106",
+          "INS0102",
+          "INS0113",
+          "INS0067",
+          "INS0033",
+          "INS0054",
+          "INS0072",
+          "INS0128",
+          "INS0138",
+          "INS0056",
+          "INS0039"
+        ],
+        "rms_zero_change_bp": 0.43032100439265136,
+        "short_end_max_abs_zero_change_bp": 0.07047396517802576,
+        "trial": 4,
+        "zero_30y_bp": 198.55625394092158
+      },
+      {
+        "converged": true,
+        "iterations": 21,
+        "long_end_max_abs_zero_change_bp": 0.7195270565420187,
+        "max_abs_forward_change_bp": 3.2731791517487743,
+        "max_abs_zero_change_bp": 1.478462626913063,
+        "removed_count": 13,
+        "removed_instrument_ids": [
+          "INS0018",
+          "INS0078",
+          "INS0096",
+          "INS0062",
+          "INS0099",
+          "INS0112",
+          "INS0031",
+          "INS0068",
+          "INS0121",
+          "INS0125",
+          "INS0140",
+          "INS0142",
+          "INS0150"
+        ],
+        "rms_zero_change_bp": 0.4350588371336245,
+        "short_end_max_abs_zero_change_bp": 0.16070350651983117,
+        "trial": 5,
+        "zero_30y_bp": 198.30654643639576
+      },
+      {
+        "converged": true,
+        "iterations": 20,
+        "long_end_max_abs_zero_change_bp": 0.5407079552658539,
+        "max_abs_forward_change_bp": 1.44564870980423,
+        "max_abs_zero_change_bp": 0.5407079552658539,
+        "removed_count": 13,
+        "removed_instrument_ids": [
+          "INS0003",
+          "INS0012",
+          "INS0014",
+          "INS0021",
+          "INS0046",
+          "INS0100",
+          "INS0109",
+          "INS0065",
+          "INS0113",
+          "INS0089",
+          "INS0134",
+          "INS0141",
+          "INS0058"
+        ],
+        "rms_zero_change_bp": 0.27198175081393566,
+        "short_end_max_abs_zero_change_bp": 0.036785465994323974,
+        "trial": 6,
+        "zero_30y_bp": 198.1277273351196
+      },
+      {
+        "converged": true,
+        "iterations": 18,
+        "long_end_max_abs_zero_change_bp": 0.752111454529504,
+        "max_abs_forward_change_bp": 2.5989685380595553,
+        "max_abs_zero_change_bp": 0.752111454529504,
+        "removed_count": 13,
+        "removed_instrument_ids": [
+          "INS0018",
+          "INS0016",
+          "INS0078",
+          "INS0079",
+          "INS0045",
+          "INS0099",
+          "INS0101",
+          "INS0112",
+          "INS0048",
+          "INS0087",
+          "INS0118",
+          "INS0123",
+          "INS0132"
+        ],
+        "rms_zero_change_bp": 0.2986355845674508,
+        "short_end_max_abs_zero_change_bp": 0.06600204980652946,
+        "trial": 7,
+        "zero_30y_bp": 198.33913083438324
+      },
+      {
+        "converged": true,
+        "iterations": 20,
+        "long_end_max_abs_zero_change_bp": 0.46255901824616974,
+        "max_abs_forward_change_bp": 1.451218640681172,
+        "max_abs_zero_change_bp": 0.46255901824616974,
+        "removed_count": 13,
+        "removed_instrument_ids": [
+          "INS0002",
+          "INS0014",
+          "INS0008",
+          "INS0079",
+          "INS0080",
+          "INS0045",
+          "INS0108",
+          "INS0101",
+          "INS0066",
+          "INS0036",
+          "INS0055",
+          "INS0092",
+          "INS0058"
+        ],
+        "rms_zero_change_bp": 0.19989170884386134,
+        "short_end_max_abs_zero_change_bp": 0.08917340661050363,
+        "trial": 8,
+        "zero_30y_bp": 198.0495783980999
+      }
+    ],
+    "reference": "Advanced full-sample fit; selected model may differ.",
+    "units": "Curve changes and zero_30y_bp: bp; other zero/forward levels: annual decimals; quote metrics: explicit per-product units"
+  },
+  "smoothing": {
+    "conditions": "Refit advanced at chosen lambda / 10, chosen lambda, chosen lambda * 10; other settings fixed.",
+    "interpretation": "Curve changes measure sensitivity to regularization, not error against a known curve.",
+    "numerical_results": [
+      {
+        "converged": true,
+        "iterations": 31,
+        "long_end_max_abs_zero_change_bp": 9.620635969075503,
+        "max_abs_forward_change_bp": 32.29134637672798,
+        "max_abs_zero_change_bp": 9.620635969075503,
+        "rms_zero_change_bp": 3.748428926176701,
+        "short_end_max_abs_zero_change_bp": 0.15880612729675392,
+        "smoothing": 0.0001,
+        "zero_30y_bp": 207.20765534892925
+      },
+      {
+        "converged": true,
+        "iterations": 25,
+        "long_end_max_abs_zero_change_bp": 0.0,
+        "max_abs_forward_change_bp": 0.0,
+        "max_abs_zero_change_bp": 0.0,
+        "rms_zero_change_bp": 0.0,
+        "short_end_max_abs_zero_change_bp": 0.0,
+        "smoothing": 0.001,
+        "zero_30y_bp": 197.58701937985373
+      },
+      {
+        "converged": true,
+        "iterations": 18,
+        "long_end_max_abs_zero_change_bp": 11.952666704964539,
+        "max_abs_forward_change_bp": 37.65345941473507,
+        "max_abs_zero_change_bp": 11.952666704964539,
+        "rms_zero_change_bp": 5.144059260734564,
+        "short_end_max_abs_zero_change_bp": 11.086644389115326,
+        "smoothing": 0.01,
+        "zero_30y_bp": 185.6343526748892
+      }
+    ],
+    "reference": "Advanced full-sample fit; selected model may differ.",
+    "units": "Curve changes and zero_30y_bp: bp; other zero/forward levels: annual decimals; quote metrics: explicit per-product units"
+  },
+  "terminal_coupon_assumption": {
+    "conditions": "Refit with no terminal stub coupon or full terminal stub coupon; prorated is reference.",
+    "interpretation": "Convention differences are model risk; a better fit alone does not establish contractual correctness.",
+    "numerical_results": [
+      {
+        "alternative": "none",
+        "converged": true,
+        "fit_metrics": {
+          "by_instrument_type": {
+            "bond": {
+              "mean_signed_error": -0.18118241098405885,
+              "median_absolute_error": 0.5246478253830844,
+              "n": 47,
+              "rmse": 1.3087699128585975,
+              "units": "price points per 100"
+            },
+            "deposit": {
+              "mean_signed_error": 0.01264739480565196,
+              "median_absolute_error": 0.11901495939399716,
+              "n": 18,
+              "rmse": 5.268651932805039,
+              "units": "rate basis points"
+            },
+            "ois_swap": {
+              "mean_signed_error": 8.619091808950248,
+              "median_absolute_error": 1.616832966711765,
+              "n": 66,
+              "rmse": 45.81292226151995,
+              "units": "rate basis points"
+            }
+          },
+          "median_absolute_standardized_error": 7.320946131492492,
+          "n": 131,
+          "normalization": "(model_quote - normalized_quote) / sigma; sigma=max(half spread, configured uncertainty floor); reliability-weighted Huber and RMSE",
+          "standardized_rmse": 278.89412607604555,
+          "units": {
+            "median_absolute_standardized_error": "dimensionless",
+            "standardized_rmse": "dimensionless",
+            "weighted_huber_loss": "dimensionless",
+            "within_bid_ask_fraction": "fraction"
+          },
+          "weighted_huber_loss": 522.7477026908724,
+          "within_bid_ask_fraction": 0.15267175572519084
+        },
+        "iterations": 24,
+        "long_end_max_abs_zero_change_bp": 1.1234888161524084,
+        "max_abs_forward_change_bp": 4.8095613810604165,
+        "max_abs_zero_change_bp": 1.3357241409026401,
+        "rms_zero_change_bp": 0.7400207231105017,
+        "short_end_max_abs_zero_change_bp": 0.0023184978381260435,
+        "zero_30y_bp": 198.71050819600615
+      },
+      {
+        "alternative": "full",
+        "converged": true,
+        "fit_metrics": {
+          "by_instrument_type": {
+            "bond": {
+              "mean_signed_error": 0.6023171693938105,
+              "median_absolute_error": 0.709667089663867,
+              "n": 47,
+              "rmse": 1.4423391946492243,
+              "units": "price points per 100"
+            },
+            "deposit": {
+              "mean_signed_error": 0.012814561054481468,
+              "median_absolute_error": 0.1181991968855333,
+              "n": 18,
+              "rmse": 5.268787010072403,
+              "units": "rate basis points"
+            },
+            "ois_swap": {
+              "mean_signed_error": 9.982047199546985,
+              "median_absolute_error": 2.618733076451586,
+              "n": 66,
+              "rmse": 46.236577643476814,
+              "units": "rate basis points"
+            }
+          },
+          "median_absolute_standardized_error": 11.751717889415294,
+          "n": 131,
+          "normalization": "(model_quote - normalized_quote) / sigma; sigma=max(half spread, configured uncertainty floor); reliability-weighted Huber and RMSE",
+          "standardized_rmse": 279.93287624379707,
+          "units": {
+            "median_absolute_standardized_error": "dimensionless",
+            "standardized_rmse": "dimensionless",
+            "weighted_huber_loss": "dimensionless",
+            "within_bid_ask_fraction": "fraction"
+          },
+          "weighted_huber_loss": 525.3629287792797,
+          "within_bid_ask_fraction": 0.13740458015267176
+        },
+        "iterations": 22,
+        "long_end_max_abs_zero_change_bp": 2.847416144133308,
+        "max_abs_forward_change_bp": 10.131729912699338,
+        "max_abs_zero_change_bp": 3.9596693561701897,
+        "rms_zero_change_bp": 2.114665788715603,
+        "short_end_max_abs_zero_change_bp": 0.005756641920998118,
+        "zero_30y_bp": 194.73960323572044
+      }
+    ],
+    "reference": "Advanced full-sample fit; selected model may differ.",
+    "units": "Curve changes and zero_30y_bp: bp; other zero/forward levels: annual decimals; quote metrics: explicit per-product units"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+    "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/audit/ois_convention.py"
+  ],
+  "cwd": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/submission",
+  "start_epoch_seconds": 1788596658.4466538,
+  "end_epoch_seconds": 1788596659.001612,
+  "returncode": 0,
+  "stdout": "{\n  \"condition\": \"OIS fixed payments annual until 2Y then semiannual; curve fixed; original uses payment_frequency over entire leg\",\n  \"affected_public_swaps\": 51,\n  \"reference_curve_min_quote_change_bp\": 0.10370283750966297,\n  \"reference_curve_max_quote_change_bp\": 1.0951796599293488,\n  \"all_analytic_curves_max_abs_quote_change_bp\": 1.797322923605127,\n  \"adopted\": false,\n  \"interpretation\": \"Ambiguous prose alone is insufficient to replace observed payment_frequency. This prices the alternative only; its calibration and contractual correctness remain unverified.\"\n}\n",
+  "stderr": "",
+  "wall_seconds": 0.5549581050872803
+}

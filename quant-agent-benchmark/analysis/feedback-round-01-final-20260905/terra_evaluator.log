@@ -1,0 +1,456 @@
+{
+  "benchmark_version": "1.0.0",
+  "candidate_path": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/terra/submission",
+  "category_scores": {
+    "completion_integrity": 5.0,
+    "data_quality_handling": 8.0,
+    "hidden_scenario_robustness": 13.501,
+    "numerical_correctness": 26.714,
+    "quantitative_model_quality": 13.648,
+    "report_completeness": 5.0,
+    "software_engineering_reproducibility": 15.0
+  },
+  "efficiency_metrics": {
+    "capability_score_per_dollar": null,
+    "capability_score_per_minute": 3.442391017173051,
+    "corrective_iterations": 3,
+    "credits_consumed": null,
+    "estimated_usd_cost": null,
+    "evaluator_duration_seconds": 74.625,
+    "failed_test_run_count": 0,
+    "human_interventions": 0,
+    "model": "terra",
+    "quota_percentage_consumed": null,
+    "reasoning_effort": "xhigh",
+    "test_run_count": 4,
+    "wall_clock_duration_seconds": 1514.0
+  },
+  "evaluator_wall_time_seconds": 74.625,
+  "failed_test_identifiers": [
+    "math.hidden_instrument_repricing",
+    "data.unit_handling",
+    "data.bid_ask_inversions"
+  ],
+  "hidden_tests": {
+    "details": [
+      {
+        "detail": "quantcurve\n",
+        "id": "software.import",
+        "passed": true
+      },
+      {
+        "detail": "----------------------------------------------------------------------\nRan 18 tests in 0.014s\n\nOK\n",
+        "id": "software.candidate_tests",
+        "passed": true
+      },
+      {
+        "detail": "completed: advanced model; 129/143 usable observations; 361 curve rows\n",
+        "id": "software.cli",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.curve",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.cleaning",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.repricing",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.risk",
+        "passed": true
+      },
+      {
+        "detail": "cleaning, repricing, and risk tables contain finite usable values",
+        "id": "outputs.numeric_tables",
+        "passed": true
+      },
+      {
+        "detail": "all curve values finite",
+        "id": "math.finite_outputs",
+        "passed": true
+      },
+      {
+        "detail": "all discount factors strictly positive",
+        "id": "math.positive_discount_factors",
+        "passed": true
+      },
+      {
+        "detail": "rows=361, range=0.0833333-30",
+        "id": "math.grid_coverage",
+        "passed": true
+      },
+      {
+        "detail": "ordered=True, max zero-rate jump=0.00100243",
+        "id": "math.interpolation_behavior",
+        "passed": true
+      },
+      {
+        "detail": "30Y finite and economically bounded",
+        "id": "math.extrapolation_behavior",
+        "passed": true
+      },
+      {
+        "detail": "max abs error=1.55e-15",
+        "id": "math.zero_discount_consistency",
+        "passed": true
+      },
+      {
+        "detail": "RMSE=6.17e-05",
+        "id": "math.forward_discount_consistency",
+        "passed": true
+      },
+      {
+        "detail": "normalized RMSE=5.378",
+        "id": "math.hidden_instrument_repricing",
+        "passed": false
+      },
+      {
+        "detail": "/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-8kdr1aun/main_output/diagnostics/model_comparison.json",
+        "id": "quant.model_comparison",
+        "passed": true
+      },
+      {
+        "detail": "/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-8kdr1aun/main_output/diagnostics/sensitivity.json",
+        "id": "quant.sensitivity_analysis",
+        "passed": true
+      },
+      {
+        "detail": "n=129, median relative error=0.003722",
+        "id": "math.dv01_finite_difference",
+        "passed": true
+      },
+      {
+        "detail": "median relative error=1.766e-08",
+        "id": "math.key_rate_consistency",
+        "passed": true
+      },
+      {
+        "detail": "first=6 artifacts, repeat=6",
+        "id": "software.deterministic",
+        "passed": true
+      },
+      {
+        "detail": "front-end negative curve recovered with positive discount factors",
+        "id": "math.negative_rate_handling",
+        "passed": true
+      },
+      {
+        "detail": "10/10 scenarios produced valid curves",
+        "id": "math.numerical_stability",
+        "passed": true
+      },
+      {
+        "detail": "sparse long-end scenario remained bounded",
+        "id": "math.sparse_curve_behavior",
+        "passed": true
+      },
+      {
+        "detail": "rate=0.000",
+        "id": "data.unit_handling",
+        "passed": false
+      },
+      {
+        "detail": "rate=1.000",
+        "id": "data.duplicate_handling",
+        "passed": true
+      },
+      {
+        "detail": "rate=1.000",
+        "id": "data.missing_handling",
+        "passed": true
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.extreme_outliers",
+        "passed": true
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.moderate_outliers",
+        "passed": true
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.stale_observations",
+        "passed": true
+      },
+      {
+        "detail": "handled=0.250",
+        "id": "data.bid_ask_inversions",
+        "passed": false
+      },
+      {
+        "detail": "retained=1.000",
+        "id": "data.valid_observation_retention",
+        "passed": true
+      },
+      {
+        "detail": "retained=1.000",
+        "id": "data.unusual_valid_retention",
+        "passed": true
+      },
+      {
+        "detail": "Python sources contain no /Users/ dependency",
+        "id": "software.no_personal_paths",
+        "passed": true
+      },
+      {
+        "detail": "0 suspicious findings; warnings require manual review",
+        "id": "integrity.anti_cheating_scan",
+        "passed": true
+      },
+      {
+        "detail": "/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-8kdr1aun/main_output/reports/research_report.html",
+        "id": "report.exists",
+        "passed": true
+      },
+      {
+        "detail": "9/9 required section concepts found",
+        "id": "report.sections",
+        "passed": true
+      },
+      {
+        "detail": "4 non-empty chart files",
+        "id": "report.charts",
+        "passed": true
+      },
+      {
+        "detail": "missing=[]",
+        "id": "integrity.summary_schema",
+        "passed": true
+      },
+      {
+        "detail": "README=True, MODEL_RISKS=True",
+        "id": "integrity.documentation",
+        "passed": true
+      },
+      {
+        "detail": "fresh workflow output completeness",
+        "id": "integrity.required_outputs",
+        "passed": true
+      }
+    ],
+    "failed": [
+      "math.hidden_instrument_repricing",
+      "data.unit_handling",
+      "data.bid_ask_inversions"
+    ],
+    "passed": [
+      "software.import",
+      "software.candidate_tests",
+      "software.cli",
+      "outputs.curve",
+      "outputs.cleaning",
+      "outputs.repricing",
+      "outputs.risk",
+      "outputs.numeric_tables",
+      "math.finite_outputs",
+      "math.positive_discount_factors",
+      "math.grid_coverage",
+      "math.interpolation_behavior",
+      "math.extrapolation_behavior",
+      "math.zero_discount_consistency",
+      "math.forward_discount_consistency",
+      "quant.model_comparison",
+      "quant.sensitivity_analysis",
+      "math.dv01_finite_difference",
+      "math.key_rate_consistency",
+      "software.deterministic",
+      "math.negative_rate_handling",
+      "math.numerical_stability",
+      "math.sparse_curve_behavior",
+      "data.duplicate_handling",
+      "data.missing_handling",
+      "data.extreme_outliers",
+      "data.moderate_outliers",
+      "data.stale_observations",
+      "data.valid_observation_retention",
+      "data.unusual_valid_retention",
+      "software.no_personal_paths",
+      "integrity.anti_cheating_scan",
+      "report.exists",
+      "report.sections",
+      "report.charts",
+      "integrity.summary_schema",
+      "integrity.documentation",
+      "integrity.required_outputs"
+    ]
+  },
+  "quantitative_diagnostics": {
+    "bid_ask_normalized_pricing_rmse": 16.05637718223156,
+    "data_quality": {
+      "bad_observation_handling_rate": 1.0,
+      "duplicate_handling_rate": 1.0,
+      "missing_handling_rate": 1.0,
+      "unit_normalization_rate": 0.0,
+      "unusual_valid_retention_rate": 1.0,
+      "valid_retention_rate": 1.0
+    },
+    "discount_factor_rmse_x1e4": 65.11396732270725,
+    "dv01_median_relative_error": 0.0037217674147521315,
+    "forward_rate_rmse_bps": 26.85244630717833,
+    "forward_roughness": 1.4163477144682827e-05,
+    "hidden_instrument_normalized_rmse": 5.378025909117679,
+    "hidden_scenarios": {
+      "s01": {
+        "bid_ask_normalized_pricing_rmse": 7.570023581240557,
+        "discount_factor_rmse_x1e4": 34.0971420185083,
+        "forward_rate_rmse_bps": 21.4012204505342,
+        "forward_roughness": 1.747741297341295e-05,
+        "hidden_instrument_normalized_rmse": 2.4844320784688887,
+        "long_end_zero_rmse_bps": 2.6873026333165093,
+        "short_end_zero_rmse_bps": 3.4691723169941637,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 2.9865835594438077,
+        "zero_curvature_rms": 0.009167035173513803,
+        "zero_rate_rmse_bps": 2.347885388554251
+      },
+      "s02": {
+        "bid_ask_normalized_pricing_rmse": 9.044994522614685,
+        "discount_factor_rmse_x1e4": 35.17740068023459,
+        "forward_rate_rmse_bps": 27.0134999266663,
+        "forward_roughness": 2.7747653020769394e-05,
+        "hidden_instrument_normalized_rmse": 2.9316575341091395,
+        "long_end_zero_rmse_bps": 5.492274230523278,
+        "short_end_zero_rmse_bps": 4.637416061040938,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 4.626312085211915,
+        "zero_curvature_rms": 0.015142703727244721,
+        "zero_rate_rmse_bps": 4.362916244869994
+      },
+      "s03": {
+        "bid_ask_normalized_pricing_rmse": 10.5880827635511,
+        "discount_factor_rmse_x1e4": 31.99172655669591,
+        "forward_rate_rmse_bps": 24.43700663365985,
+        "forward_roughness": 2.2808203897380234e-05,
+        "hidden_instrument_normalized_rmse": 2.81773227711544,
+        "long_end_zero_rmse_bps": 2.780460339687497,
+        "short_end_zero_rmse_bps": 4.866076531754883,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 3.5737163405561305,
+        "zero_curvature_rms": 0.012757694850401156,
+        "zero_rate_rmse_bps": 2.7621667659687836
+      },
+      "s04": {
+        "bid_ask_normalized_pricing_rmse": 12.165748754912865,
+        "discount_factor_rmse_x1e4": 91.21135639328739,
+        "forward_rate_rmse_bps": 32.712403245290844,
+        "forward_roughness": 1.4247150245449487e-05,
+        "hidden_instrument_normalized_rmse": 6.41112179256059,
+        "long_end_zero_rmse_bps": 9.214143289187746,
+        "short_end_zero_rmse_bps": 2.0223600887645636,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 5.33447976407312,
+        "zero_curvature_rms": 0.006621556598436591,
+        "zero_rate_rmse_bps": 6.681618504916943
+      },
+      "s05": {
+        "bid_ask_normalized_pricing_rmse": 14.523499512517972,
+        "discount_factor_rmse_x1e4": 34.048651690471026,
+        "forward_rate_rmse_bps": 24.576084612038418,
+        "forward_roughness": 1.623289358590325e-05,
+        "hidden_instrument_normalized_rmse": 3.41573034923546,
+        "long_end_zero_rmse_bps": 3.3212895134094813,
+        "short_end_zero_rmse_bps": 5.7317428606275,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 3.5179420360270197,
+        "zero_curvature_rms": 0.0042442358093326485,
+        "zero_rate_rmse_bps": 3.164035700838681
+      },
+      "s06": {
+        "bid_ask_normalized_pricing_rmse": 8.558738880936676,
+        "discount_factor_rmse_x1e4": 32.037263725371254,
+        "forward_rate_rmse_bps": 24.390872556632758,
+        "forward_roughness": 1.5315067192762837e-05,
+        "hidden_instrument_normalized_rmse": 2.4704449152125587,
+        "long_end_zero_rmse_bps": 3.229568833144948,
+        "short_end_zero_rmse_bps": 2.7621546727941206,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 2.9091153417942617,
+        "zero_curvature_rms": 0.007842709092893831,
+        "zero_rate_rmse_bps": 2.7906957784259383
+      },
+      "s07": {
+        "bid_ask_normalized_pricing_rmse": 7.816349497118448,
+        "discount_factor_rmse_x1e4": 29.79165026755399,
+        "forward_rate_rmse_bps": 23.835006994744056,
+        "forward_roughness": 1.0771482548798245e-05,
+        "hidden_instrument_normalized_rmse": 2.2641006400017702,
+        "long_end_zero_rmse_bps": 2.7421164814082966,
+        "short_end_zero_rmse_bps": 1.510166562743436,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 2.3588200837594377,
+        "zero_curvature_rms": 0.004672909258823534,
+        "zero_rate_rmse_bps": 2.4349955106845775
+      },
+      "s08": {
+        "bid_ask_normalized_pricing_rmse": 21.974189357735586,
+        "discount_factor_rmse_x1e4": 162.39549439786995,
+        "forward_rate_rmse_bps": 46.605427159282975,
+        "forward_roughness": 1.8200561216024867e-05,
+        "hidden_instrument_normalized_rmse": 11.716496409025295,
+        "long_end_zero_rmse_bps": 16.626151313438225,
+        "short_end_zero_rmse_bps": 4.3398698773226805,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 9.35213432399202,
+        "zero_curvature_rms": 0.008559879110250999,
+        "zero_rate_rmse_bps": 11.923873391150059
+      },
+      "s09": {
+        "bid_ask_normalized_pricing_rmse": 13.48609240860078,
+        "discount_factor_rmse_x1e4": 106.42051722812977,
+        "forward_rate_rmse_bps": 35.54059753665202,
+        "forward_roughness": 1.2751474059704165e-05,
+        "hidden_instrument_normalized_rmse": 7.372463909424539,
+        "long_end_zero_rmse_bps": 9.928455951114515,
+        "short_end_zero_rmse_bps": 1.7896302398317323,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 5.652747825398383,
+        "zero_curvature_rms": 0.006364384828300503,
+        "zero_rate_rmse_bps": 7.160994950230451
+      },
+      "s10": {
+        "bid_ask_normalized_pricing_rmse": 10.770573686609202,
+        "discount_factor_rmse_x1e4": 32.88410960627735,
+        "forward_rate_rmse_bps": 29.022010023491806,
+        "forward_roughness": 1.2923802325820332e-05,
+        "hidden_instrument_normalized_rmse": 2.7902249525062683,
+        "long_end_zero_rmse_bps": 3.05789256269485,
+        "short_end_zero_rmse_bps": 1.6984745698025454,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 3.0279871010016475,
+        "zero_curvature_rms": 0.005637550276598258,
+        "zero_rate_rmse_bps": 3.0498341389047536
+      }
+    },
+    "key_rate_sum_median_relative_error": 1.7657964777300163e-08,
+    "long_end_zero_rmse_bps": 6.01432641793261,
+    "risk_instruments_checked": 129,
+    "short_end_zero_rmse_bps": 3.954941577669174,
+    "weighted_zero_rate_rmse_bps": 4.337923185815383,
+    "zero_curvature_rms": 0.005792083862957983,
+    "zero_rate_rmse_bps": 4.763347947896722
+  },
+  "total_score": 86.863,
+  "warnings": []
+}Summary
+Total: 86.863/100
+  numerical_correctness: 26.714
+  quantitative_model_quality: 13.648
+  hidden_scenario_robustness: 13.501
+  software_engineering_reproducibility: 15.000
+  data_quality_handling: 8.000
+  report_completeness: 5.000
+  completion_integrity: 5.000
+Hidden checks: 38 passed, 3 failed
+Failed: math.hidden_instrument_repricing, data.unit_handling, data.bid_ask_inversions
+

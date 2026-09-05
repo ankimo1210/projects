@@ -1,0 +1,831 @@
+{
+  "pricing_checks": [
+    {
+      "abs_difference": 0.0,
+      "alternate_minus_documented": 0.0,
+      "alternate_stub_coupon": 0.01500937890709538,
+      "implementation": 0.01500937890709538,
+      "independent_documented": 0.01500937890709538,
+      "instrument_id": "INS0001",
+      "maturity": 0.08333333,
+      "product": "deposit",
+      "shape": "flat"
+    },
+    {
+      "abs_difference": 0.0,
+      "alternate_minus_documented": 0.0,
+      "alternate_stub_coupon": -0.009954202461145579,
+      "implementation": -0.009954202461145579,
+      "independent_documented": -0.009954202461145579,
+      "instrument_id": "INS0001",
+      "maturity": 0.08333333,
+      "product": "deposit",
+      "shape": "negative_rising"
+    },
+    {
+      "abs_difference": 0.0,
+      "alternate_minus_documented": 0.0,
+      "alternate_stub_coupon": 0.015113064615718994,
+      "implementation": 0.015113064615718994,
+      "independent_documented": 0.015113064615718994,
+      "instrument_id": "INS0023",
+      "maturity": 1.0,
+      "product": "ois_swap",
+      "shape": "flat"
+    },
+    {
+      "abs_difference": 0.0,
+      "alternate_minus_documented": 0.0,
+      "alternate_stub_coupon": -0.009455017557099524,
+      "implementation": -0.009455017557099524,
+      "independent_documented": -0.009455017557099524,
+      "instrument_id": "INS0023",
+      "maturity": 1.0,
+      "product": "ois_swap",
+      "shape": "negative_rising"
+    },
+    {
+      "abs_difference": 0.0,
+      "alternate_minus_documented": 0.0,
+      "alternate_stub_coupon": 0.015096134615772134,
+      "implementation": 0.015096134615772134,
+      "independent_documented": 0.015096134615772134,
+      "instrument_id": "INS0042",
+      "maturity": 1.25,
+      "product": "ois_swap",
+      "shape": "flat"
+    },
+    {
+      "abs_difference": 0.0,
+      "alternate_minus_documented": 0.0,
+      "alternate_stub_coupon": -0.009336836822329069,
+      "implementation": -0.009336836822329069,
+      "independent_documented": -0.009336836822329069,
+      "instrument_id": "INS0042",
+      "maturity": 1.25,
+      "product": "ois_swap",
+      "shape": "negative_rising"
+    },
+    {
+      "abs_difference": 0.0,
+      "alternate_minus_documented": 0.02098582283150563,
+      "alternate_stub_coupon": 101.54467910794301,
+      "implementation": 101.5236932851115,
+      "independent_documented": 101.5236932851115,
+      "instrument_id": "INS0105",
+      "maturity": 1.50843415,
+      "product": "bond",
+      "shape": "flat"
+    },
+    {
+      "abs_difference": 0.0,
+      "alternate_minus_documented": 0.02176754879656073,
+      "alternate_stub_coupon": 105.28005599175573,
+      "implementation": 105.25828844295917,
+      "independent_documented": 105.25828844295917,
+      "instrument_id": "INS0105",
+      "maturity": 1.50843415,
+      "product": "bond",
+      "shape": "negative_rising"
+    }
+  ],
+  "public_holdout": {
+    "advanced": {
+      "by_maturity_convention": {
+        "fractional_maturity": {
+          "n": 15,
+          "weighted_normalized_rmse": 19.166682783895705
+        },
+        "regular_half_year_grid": {
+          "n": 12,
+          "weighted_normalized_rmse": 73.64070446699957
+        }
+      },
+      "by_product": {
+        "bond": {
+          "n": 15,
+          "native_rmse": 0.7968325470341148,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 19.166682783895705
+        },
+        "deposit": null,
+        "ois_swap": {
+          "n": 12,
+          "native_rmse": 71.51722226733892,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 73.64070446699957
+        }
+      },
+      "by_tenor": {
+        "long_T_ge_15": {
+          "n": 7,
+          "weighted_normalized_rmse": 7.154652135856891
+        },
+        "medium_2_to_15": {
+          "n": 14,
+          "weighted_normalized_rmse": 49.01463434063238
+        },
+        "short_T_le_2": {
+          "n": 6,
+          "weighted_normalized_rmse": 81.4849960976234
+        }
+      },
+      "by_tenor_product": {
+        "long_T_ge_15|bond": {
+          "n": 7,
+          "native_rmse": 0.33833462416280335,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 7.154652135856891
+        },
+        "long_T_ge_15|deposit": null,
+        "long_T_ge_15|ois_swap": null,
+        "medium_2_to_15|bond": {
+          "n": 6,
+          "native_rmse": 1.1439306547503054,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 24.507431743453097
+        },
+        "medium_2_to_15|deposit": null,
+        "medium_2_to_15|ois_swap": {
+          "n": 8,
+          "native_rmse": 59.23296490353748,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 60.52391467267917
+        },
+        "short_T_le_2|bond": {
+          "n": 2,
+          "native_rmse": 0.6600664124073609,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 11.25094382098646
+        },
+        "short_T_le_2|deposit": null,
+        "short_T_le_2|ois_swap": {
+          "n": 4,
+          "native_rmse": 91.25267656337797,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 91.25456061498296
+        }
+      },
+      "overall": {
+        "by_instrument_type": {
+          "bond": {
+            "mae": 0.5481568912774445,
+            "n": 15,
+            "rmse": 0.7968325470341148,
+            "unit": "price_points"
+          },
+          "ois_swap": {
+            "mae": 62.96553968351391,
+            "n": 12,
+            "rmse": 71.51722226733894,
+            "unit": "bp"
+          }
+        },
+        "n": 27,
+        "normalized_mae": 33.48547351824537,
+        "weighted_normalized_rmse": 56.62934155996412
+      }
+    },
+    "baseline": {
+      "by_maturity_convention": {
+        "fractional_maturity": {
+          "n": 15,
+          "weighted_normalized_rmse": 9.232154916130739
+        },
+        "regular_half_year_grid": {
+          "n": 12,
+          "weighted_normalized_rmse": 55.208633502558754
+        }
+      },
+      "by_product": {
+        "bond": {
+          "n": 15,
+          "native_rmse": 0.4430795738164569,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 9.232154916130739
+        },
+        "deposit": null,
+        "ois_swap": {
+          "n": 12,
+          "native_rmse": 52.448398269320876,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 55.208633502558754
+        }
+      },
+      "by_tenor": {
+        "long_T_ge_15": {
+          "n": 7,
+          "weighted_normalized_rmse": 7.936203472268842
+        },
+        "medium_2_to_15": {
+          "n": 14,
+          "weighted_normalized_rmse": 47.884353926474915
+        },
+        "short_T_le_2": {
+          "n": 6,
+          "weighted_normalized_rmse": 37.61468787185125
+        }
+      },
+      "by_tenor_product": {
+        "long_T_ge_15|bond": {
+          "n": 7,
+          "native_rmse": 0.3821702030265551,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 7.936203472268842
+        },
+        "long_T_ge_15|deposit": null,
+        "long_T_ge_15|ois_swap": null,
+        "medium_2_to_15|bond": {
+          "n": 6,
+          "native_rmse": 0.544503287326083,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 10.733920870163866
+        },
+        "medium_2_to_15|deposit": null,
+        "medium_2_to_15|ois_swap": {
+          "n": 8,
+          "native_rmse": 56.89123889481278,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 61.778761714076936
+        },
+        "short_T_le_2|bond": {
+          "n": 2,
+          "native_rmse": 0.26787236044207985,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 2.794356380592682
+        },
+        "short_T_le_2|deposit": null,
+        "short_T_le_2|ois_swap": {
+          "n": 4,
+          "native_rmse": 42.18148073596499,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 42.18336420244886
+        }
+      },
+      "overall": {
+        "by_instrument_type": {
+          "bond": {
+            "mae": 0.3455100312813168,
+            "n": 15,
+            "rmse": 0.4430795738164569,
+            "unit": "price_points"
+          },
+          "ois_swap": {
+            "mae": 32.014670467431216,
+            "n": 12,
+            "rmse": 52.44839826932088,
+            "unit": "bp"
+          }
+        },
+        "n": 27,
+        "normalized_mae": 17.727020688662563,
+        "weighted_normalized_rmse": 41.82457420441001
+      }
+    },
+    "exact_tenor_no_median": {
+      "by_maturity_convention": {
+        "fractional_maturity": {
+          "n": 15,
+          "weighted_normalized_rmse": 25.27504571491714
+        },
+        "regular_half_year_grid": {
+          "n": 12,
+          "weighted_normalized_rmse": 76.75817343237415
+        }
+      },
+      "by_product": {
+        "bond": {
+          "n": 15,
+          "native_rmse": 1.0131881008000847,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 25.27504571491714
+        },
+        "deposit": null,
+        "ois_swap": {
+          "n": 12,
+          "native_rmse": 75.82365098655683,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 76.75817343237415
+        }
+      },
+      "by_tenor": {
+        "long_T_ge_15": {
+          "n": 7,
+          "weighted_normalized_rmse": 6.748183625874679
+        },
+        "medium_2_to_15": {
+          "n": 14,
+          "weighted_normalized_rmse": 55.99316807137153
+        },
+        "short_T_le_2": {
+          "n": 6,
+          "weighted_normalized_rmse": 80.26855762934821
+        }
+      },
+      "by_tenor_product": {
+        "long_T_ge_15|bond": {
+          "n": 7,
+          "native_rmse": 0.31734174173543506,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 6.748183625874679
+        },
+        "long_T_ge_15|deposit": null,
+        "long_T_ge_15|ois_swap": null,
+        "medium_2_to_15|bond": {
+          "n": 6,
+          "native_rmse": 1.5112884506951463,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 33.03550757843778
+        },
+        "medium_2_to_15|deposit": null,
+        "medium_2_to_15|ois_swap": {
+          "n": 8,
+          "native_rmse": 67.70120254515066,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 67.56713617870824
+        },
+        "short_T_le_2|bond": {
+          "n": 2,
+          "native_rmse": 0.7033330503688381,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 10.997424688731474
+        },
+        "short_T_le_2|deposit": null,
+        "short_T_le_2|ois_swap": {
+          "n": 4,
+          "native_rmse": 89.89311705950857,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 89.89500110351628
+        }
+      },
+      "overall": {
+        "by_instrument_type": {
+          "bond": {
+            "mae": 0.6363415261658266,
+            "n": 15,
+            "rmse": 1.0131881008000847,
+            "unit": "price_points"
+          },
+          "ois_swap": {
+            "mae": 66.79808936260635,
+            "n": 12,
+            "rmse": 75.82365098655683,
+            "unit": "bp"
+          }
+        },
+        "n": 27,
+        "normalized_mae": 36.104174347326214,
+        "weighted_normalized_rmse": 59.91008902397149
+      }
+    },
+    "no_rolling_median": {
+      "by_maturity_convention": {
+        "fractional_maturity": {
+          "n": 15,
+          "weighted_normalized_rmse": 22.17540261299913
+        },
+        "regular_half_year_grid": {
+          "n": 12,
+          "weighted_normalized_rmse": 58.015234683482184
+        }
+      },
+      "by_product": {
+        "bond": {
+          "n": 15,
+          "native_rmse": 0.8961484434745222,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 22.17540261299913
+        },
+        "deposit": null,
+        "ois_swap": {
+          "n": 12,
+          "native_rmse": 58.02413739151803,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 58.015234683482184
+        }
+      },
+      "by_tenor": {
+        "long_T_ge_15": {
+          "n": 7,
+          "weighted_normalized_rmse": 6.745912283510833
+        },
+        "medium_2_to_15": {
+          "n": 14,
+          "weighted_normalized_rmse": 51.548242947774995
+        },
+        "short_T_le_2": {
+          "n": 6,
+          "weighted_normalized_rmse": 44.14799078701937
+        }
+      },
+      "by_tenor_product": {
+        "long_T_ge_15|bond": {
+          "n": 7,
+          "native_rmse": 0.33745362335724577,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 6.745912283510833
+        },
+        "long_T_ge_15|deposit": null,
+        "long_T_ge_15|ois_swap": null,
+        "medium_2_to_15|bond": {
+          "n": 6,
+          "native_rmse": 1.349173747126358,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 29.2394169768259
+        },
+        "medium_2_to_15|deposit": null,
+        "medium_2_to_15|ois_swap": {
+          "n": 8,
+          "native_rmse": 61.83306880222362,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 62.59593796181234
+        },
+        "short_T_le_2|bond": {
+          "n": 2,
+          "native_rmse": 0.40465235455803644,
+          "native_unit": "price_points",
+          "weighted_normalized_rmse": 0.6682319777437452
+        },
+        "short_T_le_2|deposit": null,
+        "short_T_le_2|ois_swap": {
+          "n": 4,
+          "native_rmse": 49.53528807918898,
+          "native_unit": "bp",
+          "weighted_normalized_rmse": 49.53717170735746
+        }
+      },
+      "overall": {
+        "by_instrument_type": {
+          "bond": {
+            "mae": 0.5592307637756969,
+            "n": 15,
+            "rmse": 0.8961484434745222,
+            "unit": "price_points"
+          },
+          "ois_swap": {
+            "mae": 50.82919289694535,
+            "n": 12,
+            "rmse": 58.024137391518025,
+            "unit": "bp"
+          }
+        },
+        "n": 27,
+        "normalized_mae": 28.293844676948382,
+        "weighted_normalized_rmse": 45.89082996767308
+      }
+    }
+  },
+  "public_split": {
+    "holdout_n": 27,
+    "train_n": 109
+  },
+  "runtime_seconds": 5.396342707997974,
+  "standalone_proxy": {
+    "falling": {
+      "by_product": {
+        "bond": {
+          "bias_bp": 6.121440733712151,
+          "n": 48,
+          "rmse_bp": 7.837971519729781
+        },
+        "deposit": {
+          "bias_bp": -3.4457086307034054e-12,
+          "n": 19,
+          "rmse_bp": 7.891339190649231e-12
+        },
+        "ois_swap": {
+          "bias_bp": 2.3553737717332712,
+          "n": 69,
+          "rmse_bp": 4.051820223513366
+        }
+      },
+      "overall_rmse_bp": 5.478307712650393
+    },
+    "flat": {
+      "by_product": {
+        "bond": {
+          "bias_bp": 2.3088446663802978e-10,
+          "n": 48,
+          "rmse_bp": 1.3837658357145325e-09
+        },
+        "deposit": {
+          "bias_bp": -1.928282095401588e-12,
+          "n": 19,
+          "rmse_bp": 2.111012510777886e-12
+        },
+        "ois_swap": {
+          "bias_bp": -2.1918583091846142e-10,
+          "n": 69,
+          "rmse_bp": 2.500664233332596e-10
+        }
+      },
+      "overall_rmse_bp": 8.41154909881819e-10
+    },
+    "humped": {
+      "by_product": {
+        "bond": {
+          "bias_bp": -1.8070318366631113,
+          "n": 48,
+          "rmse_bp": 2.67053810627538
+        },
+        "deposit": {
+          "bias_bp": 2.288921975933608e-12,
+          "n": 19,
+          "rmse_bp": 4.343299003255229e-12
+        },
+        "ois_swap": {
+          "bias_bp": -0.4418011020657854,
+          "n": 69,
+          "rmse_bp": 1.5790244606032025
+        }
+      },
+      "overall_rmse_bp": 1.944759361257367
+    },
+    "rising": {
+      "by_product": {
+        "bond": {
+          "bias_bp": -9.499606307137048,
+          "n": 48,
+          "rmse_bp": 12.69833484307886
+        },
+        "deposit": {
+          "bias_bp": -5.569375370241328e-13,
+          "n": 19,
+          "rmse_bp": 1.5195164547281607e-12
+        },
+        "ois_swap": {
+          "bias_bp": -4.551495355157474,
+          "n": 69,
+          "rmse_bp": 10.414524229335036
+        }
+      },
+      "overall_rmse_bp": 10.580152653563696
+    }
+  },
+  "synthetic_truth": {
+    "falling": {
+      "advanced": {
+        "forward_rmse_bp": 5.193988711422852,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 7.336252313453003,
+          "zero_rmse_bp": 2.5803827064128898e-14
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 7.672982867672955e-13,
+          "zero_rmse_bp": 1.0564469188243059e-13
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 1.1102573806299557e-11,
+          "zero_rmse_bp": 4.756515525349025e-12
+        },
+        "zero_rmse_bp": 1.2065284003677654e-12
+      },
+      "baseline": {
+        "forward_rmse_bp": 53.94958411347159,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 74.78956221311712,
+          "zero_rmse_bp": 10.670081878681325
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 15.674462435947074,
+          "zero_rmse_bp": 2.3615403707609297
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 0.8531277031309138,
+          "zero_rmse_bp": 0.5838636055119723
+        },
+        "zero_rmse_bp": 7.714485999908208
+      },
+      "exact_tenor_no_median": {
+        "forward_rmse_bp": 107.1875422695792,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 150.9393614331241,
+          "zero_rmse_bp": 10.930498852996474
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 12.63322760257424,
+          "zero_rmse_bp": 2.342226164863943
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 0.15976867364127623,
+          "zero_rmse_bp": 0.0478752063758775
+        },
+        "zero_rmse_bp": 7.891242177135379
+      },
+      "no_rolling_median": {
+        "forward_rmse_bp": 106.2804134161349,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 149.40425147146854,
+          "zero_rmse_bp": 10.812547730610572
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 15.674462435947074,
+          "zero_rmse_bp": 2.3615403707609297
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 0.8531277031309138,
+          "zero_rmse_bp": 0.5838636055119723
+        },
+        "zero_rmse_bp": 7.8132827478765865
+      }
+    },
+    "flat": {
+      "advanced": {
+        "forward_rmse_bp": 7.100131178204769e-13,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 8.444086534446073e-14,
+          "zero_rmse_bp": 2.0059954812316694e-14
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 7.237905609004043e-13,
+          "zero_rmse_bp": 9.41737013324062e-14
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 2.0629460277709298e-12,
+          "zero_rmse_bp": 1.119880756044645e-12
+        },
+        "zero_rmse_bp": 2.90625003203733e-13
+      },
+      "baseline": {
+        "forward_rmse_bp": 4.518949817620948e-09,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 5.96993310986961e-09,
+          "zero_rmse_bp": 1.4488100258331137e-10
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 2.4251905914903953e-09,
+          "zero_rmse_bp": 1.9679084205742066e-10
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 8.721135788493358e-13,
+          "zero_rmse_bp": 1.1835496014808711e-12
+        },
+        "zero_rmse_bp": 1.6538929312960194e-10
+      },
+      "exact_tenor_no_median": {
+        "forward_rmse_bp": 6.00861059648368e-08,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 8.057160385075788e-08,
+          "zero_rmse_bp": 1.2821527399190512e-09
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 2.863313063172786e-08,
+          "zero_rmse_bp": 7.013426126428066e-10
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 2.7565109276416046e-12,
+          "zero_rmse_bp": 1.281237676461537e-12
+        },
+        "zero_rmse_bp": 1.0187253750309697e-09
+      },
+      "no_rolling_median": {
+        "forward_rmse_bp": 6.003938946824764e-08,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 8.064949788302991e-08,
+          "zero_rmse_bp": 1.2960900275960871e-09
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 2.815069890831917e-08,
+          "zero_rmse_bp": 7.123063103777018e-10
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 9.612130352911505e-13,
+          "zero_rmse_bp": 1.154503339722721e-12
+        },
+        "zero_rmse_bp": 1.0308004065251217e-09
+      }
+    },
+    "humped": {
+      "advanced": {
+        "forward_rmse_bp": 10.600774702552075,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 2.4456788308284807,
+          "zero_rmse_bp": 0.00908412011475412
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 6.704442708477356,
+          "zero_rmse_bp": 0.4358094033468289
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 37.433863716443255,
+          "zero_rmse_bp": 5.578515063884714
+        },
+        "zero_rmse_bp": 1.4414524508050865
+      },
+      "baseline": {
+        "forward_rmse_bp": 30.6582962913999,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 24.015499058320927,
+          "zero_rmse_bp": 3.6489673072068896
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 3.8091626649471424,
+          "zero_rmse_bp": 0.7379633827379422
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 100.26479290218246,
+          "zero_rmse_bp": 35.16778413551571
+        },
+        "zero_rmse_bp": 9.28462901554666
+      },
+      "exact_tenor_no_median": {
+        "forward_rmse_bp": 31.484567436170444,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 42.30558770643349,
+          "zero_rmse_bp": 3.754410620467085
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 6.722358265191956,
+          "zero_rmse_bp": 0.6819103638163346
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 34.0927789144705,
+          "zero_rmse_bp": 4.689516442637476
+        },
+        "zero_rmse_bp": 2.945753239084545
+      },
+      "no_rolling_median": {
+        "forward_rmse_bp": 34.17241307524565,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 41.24392155580752,
+          "zero_rmse_bp": 3.7121457308195196
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 6.88074842686414,
+          "zero_rmse_bp": 0.7641493696879229
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 67.7772936476213,
+          "zero_rmse_bp": 15.684495023319
+        },
+        "zero_rmse_bp": 4.788850902252548
+      }
+    },
+    "rising": {
+      "advanced": {
+        "forward_rmse_bp": 6.92531828189713,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 9.781669751270663,
+          "zero_rmse_bp": 5.082685791197218e-14
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 1.1490196152918695e-12,
+          "zero_rmse_bp": 1.0588179894849151e-13
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 5.370940618803843e-12,
+          "zero_rmse_bp": 1.4026261459799342e-12
+        },
+        "zero_rmse_bp": 3.6373265570560345e-13
+      },
+      "baseline": {
+        "forward_rmse_bp": 90.0023942649051,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 126.09952429629958,
+          "zero_rmse_bp": 18.25866911944372
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 17.29129496283257,
+          "zero_rmse_bp": 2.9118733746968912
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 1.0763467911329354,
+          "zero_rmse_bp": 0.7639028508350899
+        },
+        "zero_rmse_bp": 13.07014099643858
+      },
+      "exact_tenor_no_median": {
+        "forward_rmse_bp": 121.06709776220599,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 169.5906910954789,
+          "zero_rmse_bp": 18.279131787337974
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 23.53860156662983,
+          "zero_rmse_bp": 2.8237682006638374
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 0.16106065229700056,
+          "zero_rmse_bp": 0.039628476516446104
+        },
+        "zero_rmse_bp": 13.07464713601912
+      },
+      "no_rolling_median": {
+        "forward_rmse_bp": 119.47627996098483,
+        "long_T_ge_15": {
+          "forward_rmse_bp": 167.98399577249458,
+          "zero_rmse_bp": 18.21620568365127
+        },
+        "medium_2_to_15": {
+          "forward_rmse_bp": 17.29129496283257,
+          "zero_rmse_bp": 2.9118733746968912
+        },
+        "short_T_le_2": {
+          "forward_rmse_bp": 1.0763467911329354,
+          "zero_rmse_bp": 0.7639028508350899
+        },
+        "zero_rmse_bp": 13.040407469326839
+      }
+    }
+  }
+}

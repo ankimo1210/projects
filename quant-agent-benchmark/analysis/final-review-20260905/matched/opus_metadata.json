@@ -1,0 +1,6 @@
+{
+  "model_name": "opus",
+  "reasoning_effort": "xhigh",
+  "wall_time_seconds": 7453.099000000001,
+  "timing_definition": "Sum of selected benchmark/resume user-turn wall times; tools included; inter-turn idle excluded."
+}

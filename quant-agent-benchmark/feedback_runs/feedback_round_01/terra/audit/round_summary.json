@@ -1,0 +1,55 @@
+{
+  "round_id": "feedback_round_01",
+  "model_key": "terra",
+  "model_configuration_verified": {
+    "baseline": "piecewise-linear log-discount curve",
+    "advanced": "natural cubic log-discount spline; smoothing 10.0; three deterministic IRLS rounds; long-end curvature multiplier 0.5 at 15Y+",
+    "configuration_source": "submission/src/quantcurve/curve.py and final diagnostics/model_comparison.json"
+  },
+  "started_utc": "2026-09-05T07:54:44Z",
+  "finished_utc": "2026-09-05T08:19:58Z",
+  "additional_work_seconds": 1514.0,
+  "time_limit_seconds": 3600,
+  "time_limit_complied": true,
+  "experiments": {
+    "named_experiment_rows": 10,
+    "one_factor_model_experiments": [
+      "E2_multiplier_0_25",
+      "E2_multiplier_0_5",
+      "E2_multiplier_2_0",
+      "E2_multiplier_4_0"
+    ],
+    "selected_experiment": "E2_multiplier_0_5",
+    "rejected_experiments_preserved": true
+  },
+  "tests": {
+    "final_test_cases": 18,
+    "final_test_failures": 0,
+    "test_suite_runs": 4,
+    "failed_test_runs": 0,
+    "final_cli_exit_code": 0,
+    "final_schema_validation_exit_code": 0
+  },
+  "final_selected_version": "advanced natural cubic log-DF spline with smoothing 10.0 and 15Y+ curvature multiplier 0.5",
+  "original_hash_preservation": {
+    "tracked_file_count": 31,
+    "matches_baseline_manifest": true,
+    "qualification": "The exact pre-round tracked path set excludes the accidentally pre-created original-root submission/ directory; see feedback_response.md."
+  },
+  "environment": {
+    "python_executable": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+    "python_version": "3.12.11",
+    "python_dont_write_bytecode": true,
+    "matplotlib_cache": "audit/mpl_cache",
+    "network_or_external_ai_used": false
+  },
+  "seed": 20260905,
+  "unverified": [
+    "No historical out-of-time validation is possible from the one-date public cross-section.",
+    "The long-end curvature multiplier was not jointly tuned with global smoothing or alternative spline endpoint conditions.",
+    "Calendar, accrued-interest, settlement, collateral, and external independent-price conventions are not fully represented."
+  ],
+  "token_usage_available": false,
+  "billing_or_cost_available": false,
+  "quota_usage_available": false
+}

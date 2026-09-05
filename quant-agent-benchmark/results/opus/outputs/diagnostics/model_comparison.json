@@ -1,0 +1,207 @@
+{
+  "advanced": {
+    "cross_validation_scores_bp": {
+      "lambda=0.0001,power=1": 3.1713077754256425,
+      "lambda=0.0001,power=2": 3.2773833470176137,
+      "lambda=0.001,power=1": 3.560047749545859,
+      "lambda=0.001,power=2": 4.096174282151571,
+      "lambda=0.01,power=1": 4.460577457592364,
+      "lambda=0.01,power=2": 4.159420134002799,
+      "lambda=0.1,power=1": 15.696694705368955,
+      "lambda=0.1,power=2": 17.685847224001396,
+      "lambda=1,power=1": 20.13086138920313,
+      "lambda=1,power=2": 41.65125425367967,
+      "lambda=10,power=1": 48.299566623605635,
+      "lambda=10,power=2": 53.66804649265477,
+      "lambda=1e-05,power=1": 3.184812555872905,
+      "lambda=1e-05,power=2": 2.834398422226702,
+      "lambda=1e-06,power=1": 3.284901877574802,
+      "lambda=1e-06,power=2": 3.483329761277831
+    },
+    "description": "cubic spline in the instantaneous forward rate, fitted by weighted non-linear least squares with a second-derivative roughness penalty and Tukey-biweight iteratively reweighted least squares; flat-forward extrapolation outside the calibrated maturity range",
+    "forward_admissibility": {
+      "admissible": true,
+      "breach_percent": 0.0,
+      "lower_bound_percent": -0.7899907770000001,
+      "max_forward_percent": 2.661502102241839,
+      "min_forward_percent": 1.2107212890174956,
+      "quoted_rate_range_percent": [
+        1.210009223,
+        2.575815563
+      ],
+      "upper_bound_percent": 4.575815563
+    },
+    "forward_roughness": 0.000625145959635167,
+    "full_sample_metrics": {
+      "mae_bp": 1.0097561216929583,
+      "max_abs_bp": 5.085650614533468,
+      "median_abs_bp": 0.4338325271399768,
+      "n_instruments": 119,
+      "rmse_bp": 1.6051252553560644,
+      "weighted_rmse_bp": 0.7125885590840466
+    },
+    "holdout_metrics": {
+      "mae_bp": 1.4335336879421334,
+      "max_abs_bp": 3.5973355607388307,
+      "median_abs_bp": 1.1877090768444454,
+      "n_instruments": 19,
+      "rmse_bp": 1.7380672231949508,
+      "weighted_rmse_bp": 1.1511339930871334
+    },
+    "irls_converged": true,
+    "irls_iterations": 10,
+    "knots": [
+      0.08333333,
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      7.0,
+      8.0,
+      9.0,
+      12.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ],
+    "n_knots": 21,
+    "n_zero_robust_weight": 3,
+    "name": "penalised_robust_forward_spline",
+    "notes": [],
+    "penalty_maturity_power": 2.0,
+    "robust_scale_bp": 0.5,
+    "smoothing_lambda": 1e-05,
+    "smoothing_lambda_train_split": 0.0001,
+    "train_metrics": {
+      "mae_bp": 1.2059723881395157,
+      "max_abs_bp": 5.481639657520709,
+      "median_abs_bp": 0.4106305024790702,
+      "n_instruments": 100,
+      "rmse_bp": 1.9379774962103418,
+      "weighted_rmse_bp": 1.1273488144219135
+    }
+  },
+  "baseline": {
+    "description": "sequential bootstrap of consensus pillars; log-linear discount factors (piecewise-constant instantaneous forwards); every pillar repriced exactly",
+    "forward_admissibility": {
+      "admissible": false,
+      "breach_percent": 1.2752030820046452,
+      "lower_bound_percent": -0.7899907770000001,
+      "max_forward_percent": 5.851018645004645,
+      "min_forward_percent": -1.7585965169297235,
+      "quoted_rate_range_percent": [
+        1.210009223,
+        2.575815563
+      ],
+      "upper_bound_percent": 4.575815563
+    },
+    "forward_roughness": 22.50272183639113,
+    "full_sample_metrics": {
+      "mae_bp": 0.2870604391663375,
+      "max_abs_bp": 4.583341432216921,
+      "median_abs_bp": 0.0707647239515552,
+      "n_instruments": 119,
+      "rmse_bp": 0.8021992022430167,
+      "weighted_rmse_bp": 0.2724270224664275
+    },
+    "holdout_metrics": {
+      "mae_bp": 0.9371320271452134,
+      "max_abs_bp": 4.067255603194278,
+      "median_abs_bp": 0.46343035438001223,
+      "n_instruments": 19,
+      "rmse_bp": 1.4480593728960696,
+      "weighted_rmse_bp": 0.7052758167981709
+    },
+    "n_pillars": 58,
+    "name": "bootstrap_loglinear_df",
+    "notes": [],
+    "skipped_pillars": [],
+    "train_metrics": {
+      "mae_bp": 0.2701573376468244,
+      "max_abs_bp": 4.454880808312364,
+      "median_abs_bp": 0.08376682785471434,
+      "n_instruments": 100,
+      "rmse_bp": 0.7271950008046609,
+      "weighted_rmse_bp": 0.24662732270789411
+    }
+  },
+  "estimated_model_error_bp": {
+    "bond": 2.1401324169535894,
+    "deposit": 0.25,
+    "ois_swap": 0.5616904887011666
+  },
+  "holdout": {
+    "holdout_block_indices": [
+      3,
+      7,
+      11,
+      15,
+      19,
+      23,
+      27,
+      31,
+      35,
+      39
+    ],
+    "holdout_maturity_ranges": [
+      [
+        0.75,
+        0.75
+      ],
+      [
+        2.0,
+        2.0
+      ],
+      [
+        4.0,
+        4.06642773
+      ],
+      [
+        6.54221505,
+        6.54221505
+      ],
+      [
+        9.5964236,
+        9.5964236
+      ],
+      [
+        12.61149156,
+        12.61149156
+      ],
+      [
+        15.0,
+        15.16723125
+      ],
+      [
+        17.38517975,
+        17.38517975
+      ],
+      [
+        21.92752972,
+        21.92752972
+      ],
+      [
+        25.0,
+        25.0
+      ]
+    ],
+    "method": "maturity-blocked interpolation holdout: 44 blocks formed with a max(gap 0.15Y, 2% of maturity) rule, every 4th interior block withheld",
+    "n_blocks": 44,
+    "n_holdout": 19,
+    "n_train": 100,
+    "notes": []
+  },
+  "model_selected": "advanced",
+  "selection_rationale": "the bootstrap reprices its pillars exactly but its instantaneous forward curve runs from -1.76% to 5.85% against a quoted range of 1.21%-2.58%, breaching the admissibility band by 1.28 percentage points; that is exact interpolation of quote noise between nearly coincident pillars, not information, and it makes forward-starting valuation and key-rate risk unusable. The penalised spline is admissible, so it is selected (holdout weighted RMSE: bootstrap 0.71bp, penalised spline 1.15bp)",
+  "selection_rule": "1) reject any curve whose instantaneous forward leaves the quoted rate range by more than the admissibility tolerance; 2) among admissible curves take the lower maturity-blocked holdout weighted RMSE, requiring the advanced estimator to beat the baseline by the parsimony margin before its extra complexity is accepted",
+  "warnings": []
+}

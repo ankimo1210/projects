@@ -1,0 +1,49 @@
+{
+  "baseline": {
+    "train_weighted_rmse": 2.139495208638772,
+    "holdout_weighted_rmse": 2.102581056494457,
+    "train_rmse_by_type": {
+      "bond": 0.47046003550580084,
+      "deposit": 0.05010951305796618,
+      "ois_swap": 0.05417224512316194
+    },
+    "holdout_rmse_by_type": {
+      "bond": 0.5350220941120736,
+      "ois_swap": 0.06772043349949722
+    }
+  },
+  "advanced": {
+    "lambda_regularization": 10000000.0,
+    "train_weighted_rmse": 4.7653018702466925,
+    "holdout_weighted_rmse": 2.2158506934886946,
+    "train_rmse_by_type": {
+      "bond": 0.396355962927491,
+      "deposit": 0.05758570533179224,
+      "ois_swap": 0.22009619862666363
+    },
+    "holdout_rmse_by_type": {
+      "bond": 0.5724698883499063,
+      "ois_swap": 0.05861705925891141
+    },
+    "n_irls_iterations": 5,
+    "irls_downweight_history": [
+      {
+        "n_downweighted": 16
+      },
+      {
+        "n_downweighted": 24
+      },
+      {
+        "n_downweighted": 28
+      },
+      {
+        "n_downweighted": 31
+      },
+      {
+        "n_downweighted": 33
+      }
+    ]
+  },
+  "model_selected": "baseline",
+  "selection_rationale": "Baseline achieved holdout weighted RMSE 2.1026; the fully-specified advanced model (regularised spline + iterative robust reweighting) could not beat it on this dataset (best 2.2159 at lambda=1e+07 across the searched grid). The iterative robust reweighting downweights a meaningful share of bonds whose larger-but-genuine dispersion is not actually noise, which slightly hurts generalisation here. Complexity is not rewarded on this dataset, so the simpler baseline is selected for the delivered curve."
+}

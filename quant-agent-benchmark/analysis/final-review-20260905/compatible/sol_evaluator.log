@@ -1,0 +1,456 @@
+{
+  "benchmark_version": "1.0.0",
+  "candidate_path": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/output/sol",
+  "category_scores": {
+    "completion_integrity": 5.0,
+    "data_quality_handling": 8.429,
+    "hidden_scenario_robustness": 12.224,
+    "numerical_correctness": 24.567,
+    "quantitative_model_quality": 10.218,
+    "report_completeness": 5.0,
+    "software_engineering_reproducibility": 15.0
+  },
+  "efficiency_metrics": {
+    "capability_score_per_dollar": null,
+    "capability_score_per_minute": 2.32504968023991,
+    "corrective_iterations": 6,
+    "credits_consumed": null,
+    "estimated_usd_cost": null,
+    "evaluator_duration_seconds": 205.843,
+    "failed_test_run_count": 1,
+    "human_interventions": 0,
+    "model": "sol",
+    "quota_percentage_consumed": null,
+    "reasoning_effort": "xhigh",
+    "test_run_count": 9,
+    "wall_clock_duration_seconds": 2075.775
+  },
+  "evaluator_wall_time_seconds": 205.843,
+  "failed_test_identifiers": [
+    "math.hidden_instrument_repricing",
+    "data.unit_handling",
+    "data.missing_handling"
+  ],
+  "hidden_tests": {
+    "details": [
+      {
+        "detail": "quantcurve\n",
+        "id": "software.import",
+        "passed": true
+      },
+      {
+        "detail": "----------------------------------------------------------------------\nRan 7 tests in 0.006s\n\nOK\n",
+        "id": "software.candidate_tests",
+        "passed": true
+      },
+      {
+        "detail": "{\n  \"downweighted_observations\": 55,\n  \"excluded_observations\": 7,\n  \"report_path\": \"/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-1_lsff03/main_output/reports/research_report.html\",\n  \"selected_model\": \"baseline\",\n  \"usable_instruments\": 136,\n  \"validation\": {\n    \"all_discount_factors_positive\": true,\n    \"all_outputs_finite\": true,\n    \"curve_end_years\": 30.0,\n    \"curve_rows\": 361,\n    \"curve_start_years\": 0.08333333333333333,\n    \"max_adjacent_zero_change_bp\": 8.691110141503707,\n    \"max_discount_factor\": 0.9988312844550401,\n    \"max_forward_rate\": 0.04128747497807561,\n    \"min_discount_factor\": 0.540400254523663,\n    \"min_forward_rate\": 0.0046474200913499755,\n    \"risk_checks\": {\n      \"finite_difference_consistent\": true,\n      \"key_sum_consistent\": true,\n      \"max_half_bump_relative_error\": 9.558149498657712e-07,\n      \"max_key_sum_relative_error\": 5.314956731411848e-07\n    },\n    \"selected_full_sample_metrics\": {\n      \"by_instrument_type\": {\n        \"bond\": {\n          \"mae\": 0.48191843580508237,\n          \"n\": 48,\n          \"rmse\": 1.1414839439537185,\n          \"unit\": \"price_points\"\n        },\n        \"deposit\": {\n          \"mae\": 11.838420071236769,\n          \"n\": 19,\n          \"rmse\": 16.580817345499554,\n          \"unit\": \"bp\"\n        },\n        \"ois_swap\": {\n          \"mae\": 20.91492204894687,\n          \"n\": 69,\n          \"rmse\": 47.2373617487181,\n          \"unit\": \"bp\"\n        }\n      },\n      \"n\": 136,\n      \"normalized_mae\": 15.412767193727628,\n      \"weighted_normalized_rmse\": 42.139466487107725\n    },\n    \"zero_discount_round_trip_max_abs_error\": 4.631711680858075e-16\n  }\n}\n",
+        "id": "software.cli",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.curve",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.cleaning",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.repricing",
+        "passed": true
+      },
+      {
+        "detail": "ok",
+        "id": "outputs.risk",
+        "passed": true
+      },
+      {
+        "detail": "cleaning, repricing, and risk tables contain finite usable values",
+        "id": "outputs.numeric_tables",
+        "passed": true
+      },
+      {
+        "detail": "all curve values finite",
+        "id": "math.finite_outputs",
+        "passed": true
+      },
+      {
+        "detail": "all discount factors strictly positive",
+        "id": "math.positive_discount_factors",
+        "passed": true
+      },
+      {
+        "detail": "rows=361, range=0.0833333-30",
+        "id": "math.grid_coverage",
+        "passed": true
+      },
+      {
+        "detail": "ordered=True, max zero-rate jump=0.000869111",
+        "id": "math.interpolation_behavior",
+        "passed": true
+      },
+      {
+        "detail": "30Y finite and economically bounded",
+        "id": "math.extrapolation_behavior",
+        "passed": true
+      },
+      {
+        "detail": "max abs error=1.68e-12",
+        "id": "math.zero_discount_consistency",
+        "passed": true
+      },
+      {
+        "detail": "RMSE=0.000522",
+        "id": "math.forward_discount_consistency",
+        "passed": true
+      },
+      {
+        "detail": "normalized RMSE=12.75",
+        "id": "math.hidden_instrument_repricing",
+        "passed": false
+      },
+      {
+        "detail": "/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-1_lsff03/main_output/diagnostics/model_comparison.json",
+        "id": "quant.model_comparison",
+        "passed": true
+      },
+      {
+        "detail": "/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-1_lsff03/main_output/diagnostics/sensitivity.json",
+        "id": "quant.sensitivity_analysis",
+        "passed": true
+      },
+      {
+        "detail": "n=136, median relative error=0.002946",
+        "id": "math.dv01_finite_difference",
+        "passed": true
+      },
+      {
+        "detail": "median relative error=2.758e-08",
+        "id": "math.key_rate_consistency",
+        "passed": true
+      },
+      {
+        "detail": "first=6 artifacts, repeat=6",
+        "id": "software.deterministic",
+        "passed": true
+      },
+      {
+        "detail": "front-end negative curve recovered with positive discount factors",
+        "id": "math.negative_rate_handling",
+        "passed": true
+      },
+      {
+        "detail": "10/10 scenarios produced valid curves",
+        "id": "math.numerical_stability",
+        "passed": true
+      },
+      {
+        "detail": "sparse long-end scenario remained bounded",
+        "id": "math.sparse_curve_behavior",
+        "passed": true
+      },
+      {
+        "detail": "rate=0.714",
+        "id": "data.unit_handling",
+        "passed": false
+      },
+      {
+        "detail": "rate=1.000",
+        "id": "data.duplicate_handling",
+        "passed": true
+      },
+      {
+        "detail": "rate=0.000",
+        "id": "data.missing_handling",
+        "passed": false
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.extreme_outliers",
+        "passed": true
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.moderate_outliers",
+        "passed": true
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.stale_observations",
+        "passed": true
+      },
+      {
+        "detail": "handled=1.000",
+        "id": "data.bid_ask_inversions",
+        "passed": true
+      },
+      {
+        "detail": "retained=1.000",
+        "id": "data.valid_observation_retention",
+        "passed": true
+      },
+      {
+        "detail": "retained=1.000",
+        "id": "data.unusual_valid_retention",
+        "passed": true
+      },
+      {
+        "detail": "Python sources contain no /Users/ dependency",
+        "id": "software.no_personal_paths",
+        "passed": true
+      },
+      {
+        "detail": "0 suspicious findings; warnings require manual review",
+        "id": "integrity.anti_cheating_scan",
+        "passed": true
+      },
+      {
+        "detail": "/var/folders/tv/mm_bt_cx2rg9ldhcdxl9l1vc0000gn/T/quant-benchmark-eval-1_lsff03/main_output/reports/research_report.html",
+        "id": "report.exists",
+        "passed": true
+      },
+      {
+        "detail": "9/9 required section concepts found",
+        "id": "report.sections",
+        "passed": true
+      },
+      {
+        "detail": "4 non-empty chart files",
+        "id": "report.charts",
+        "passed": true
+      },
+      {
+        "detail": "missing=[]",
+        "id": "integrity.summary_schema",
+        "passed": true
+      },
+      {
+        "detail": "README=True, MODEL_RISKS=True",
+        "id": "integrity.documentation",
+        "passed": true
+      },
+      {
+        "detail": "fresh workflow output completeness",
+        "id": "integrity.required_outputs",
+        "passed": true
+      }
+    ],
+    "failed": [
+      "math.hidden_instrument_repricing",
+      "data.unit_handling",
+      "data.missing_handling"
+    ],
+    "passed": [
+      "software.import",
+      "software.candidate_tests",
+      "software.cli",
+      "outputs.curve",
+      "outputs.cleaning",
+      "outputs.repricing",
+      "outputs.risk",
+      "outputs.numeric_tables",
+      "math.finite_outputs",
+      "math.positive_discount_factors",
+      "math.grid_coverage",
+      "math.interpolation_behavior",
+      "math.extrapolation_behavior",
+      "math.zero_discount_consistency",
+      "math.forward_discount_consistency",
+      "quant.model_comparison",
+      "quant.sensitivity_analysis",
+      "math.dv01_finite_difference",
+      "math.key_rate_consistency",
+      "software.deterministic",
+      "math.negative_rate_handling",
+      "math.numerical_stability",
+      "math.sparse_curve_behavior",
+      "data.duplicate_handling",
+      "data.extreme_outliers",
+      "data.moderate_outliers",
+      "data.stale_observations",
+      "data.bid_ask_inversions",
+      "data.valid_observation_retention",
+      "data.unusual_valid_retention",
+      "software.no_personal_paths",
+      "integrity.anti_cheating_scan",
+      "report.exists",
+      "report.sections",
+      "report.charts",
+      "integrity.summary_schema",
+      "integrity.documentation",
+      "integrity.required_outputs"
+    ]
+  },
+  "quantitative_diagnostics": {
+    "bid_ask_normalized_pricing_rmse": 63.614684735370254,
+    "data_quality": {
+      "bad_observation_handling_rate": 1.0,
+      "duplicate_handling_rate": 1.0,
+      "missing_handling_rate": 0.0,
+      "unit_normalization_rate": 0.7142857142857143,
+      "unusual_valid_retention_rate": 1.0,
+      "valid_retention_rate": 1.0
+    },
+    "discount_factor_rmse_x1e4": 16.078527804974996,
+    "dv01_median_relative_error": 0.00294610130493253,
+    "forward_rate_rmse_bps": 33.06190445118328,
+    "forward_roughness": 0.00044792690779007767,
+    "hidden_instrument_normalized_rmse": 12.75452404284623,
+    "hidden_scenarios": {
+      "s01": {
+        "bid_ask_normalized_pricing_rmse": 45.66869872899947,
+        "discount_factor_rmse_x1e4": 23.732190595484376,
+        "forward_rate_rmse_bps": 42.53062056069366,
+        "forward_roughness": 0.0014182133649530424,
+        "hidden_instrument_normalized_rmse": 9.242531391711594,
+        "long_end_zero_rmse_bps": 1.7754339576529024,
+        "short_end_zero_rmse_bps": 16.749985767725885,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 8.91145505240971,
+        "zero_curvature_rms": 0.008111217675333321,
+        "zero_rate_rmse_bps": 4.769844424897903
+      },
+      "s02": {
+        "bid_ask_normalized_pricing_rmse": 90.63026326990628,
+        "discount_factor_rmse_x1e4": 21.020707132495925,
+        "forward_rate_rmse_bps": 59.18735542045344,
+        "forward_roughness": 0.0011898287269679832,
+        "hidden_instrument_normalized_rmse": 18.23458810765417,
+        "long_end_zero_rmse_bps": 1.5811451068292237,
+        "short_end_zero_rmse_bps": 37.15377258722331,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 15.957856631971003,
+        "zero_curvature_rms": 0.023610630440916634,
+        "zero_rate_rmse_bps": 10.103508125846483
+      },
+      "s03": {
+        "bid_ask_normalized_pricing_rmse": 58.81010953097694,
+        "discount_factor_rmse_x1e4": 37.43527298300677,
+        "forward_rate_rmse_bps": 54.02810626044329,
+        "forward_roughness": 0.001845416992077263,
+        "hidden_instrument_normalized_rmse": 11.997336674130374,
+        "long_end_zero_rmse_bps": 3.185685478644507,
+        "short_end_zero_rmse_bps": 25.262812204215496,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 11.79058986172043,
+        "zero_curvature_rms": 0.02064265044208131,
+        "zero_rate_rmse_bps": 7.449138419636771
+      },
+      "s04": {
+        "bid_ask_normalized_pricing_rmse": 69.1098033831357,
+        "discount_factor_rmse_x1e4": 17.36384252497793,
+        "forward_rate_rmse_bps": 38.52063490612086,
+        "forward_roughness": 0.0014040459137806662,
+        "hidden_instrument_normalized_rmse": 13.84944880794176,
+        "long_end_zero_rmse_bps": 1.3780516305030939,
+        "short_end_zero_rmse_bps": 23.77907268044653,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 10.755585165459372,
+        "zero_curvature_rms": 0.009519752827150134,
+        "zero_rate_rmse_bps": 6.470988886951299
+      },
+      "s05": {
+        "bid_ask_normalized_pricing_rmse": 47.971348322315905,
+        "discount_factor_rmse_x1e4": 22.558475872995793,
+        "forward_rate_rmse_bps": 40.094999507673826,
+        "forward_roughness": 0.0006653151112348783,
+        "hidden_instrument_normalized_rmse": 9.673928013182755,
+        "long_end_zero_rmse_bps": 1.9028097130984578,
+        "short_end_zero_rmse_bps": 17.0490718431121,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 7.752140167646593,
+        "zero_curvature_rms": 0.0068965221739569595,
+        "zero_rate_rmse_bps": 4.868072944699606
+      },
+      "s06": {
+        "bid_ask_normalized_pricing_rmse": 73.29371327086362,
+        "discount_factor_rmse_x1e4": 22.993065599671258,
+        "forward_rate_rmse_bps": 50.487775494881426,
+        "forward_roughness": 0.0018954349788153544,
+        "hidden_instrument_normalized_rmse": 14.728642272668225,
+        "long_end_zero_rmse_bps": 1.6275940387299574,
+        "short_end_zero_rmse_bps": 26.502629651536154,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 12.840867236162666,
+        "zero_curvature_rms": 0.014579193578983284,
+        "zero_rate_rmse_bps": 8.100028977587769
+      },
+      "s07": {
+        "bid_ask_normalized_pricing_rmse": 49.38606754078066,
+        "discount_factor_rmse_x1e4": 25.794449416027355,
+        "forward_rate_rmse_bps": 54.95092041347588,
+        "forward_roughness": 0.002011325149348452,
+        "hidden_instrument_normalized_rmse": 9.997686960869514,
+        "long_end_zero_rmse_bps": 1.7042503569134313,
+        "short_end_zero_rmse_bps": 16.665461696625478,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 7.591948956228457,
+        "zero_curvature_rms": 0.01067570541374322,
+        "zero_rate_rmse_bps": 5.079291445868165
+      },
+      "s08": {
+        "bid_ask_normalized_pricing_rmse": 63.61062276005754,
+        "discount_factor_rmse_x1e4": 19.450335478895866,
+        "forward_rate_rmse_bps": 61.32903886859525,
+        "forward_roughness": 0.0025371910824025954,
+        "hidden_instrument_normalized_rmse": 12.784655513245562,
+        "long_end_zero_rmse_bps": 1.4880430671544054,
+        "short_end_zero_rmse_bps": 21.519992440444607,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 9.865095340179058,
+        "zero_curvature_rms": 0.021305507475210463,
+        "zero_rate_rmse_bps": 6.082452284851852
+      },
+      "s09": {
+        "bid_ask_normalized_pricing_rmse": 62.361702062172334,
+        "discount_factor_rmse_x1e4": 17.79983724045835,
+        "forward_rate_rmse_bps": 47.368948384607314,
+        "forward_roughness": 0.0020851791093438403,
+        "hidden_instrument_normalized_rmse": 12.520249251887677,
+        "long_end_zero_rmse_bps": 1.498724589957015,
+        "short_end_zero_rmse_bps": 21.824322534545118,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 9.884329441684494,
+        "zero_curvature_rms": 0.00832448703891615,
+        "zero_rate_rmse_bps": 5.896084109339161
+      },
+      "s10": {
+        "bid_ask_normalized_pricing_rmse": 57.290858178286875,
+        "discount_factor_rmse_x1e4": 22.445932660951232,
+        "forward_rate_rmse_bps": 41.082955957831125,
+        "forward_roughness": 0.0005917448779510822,
+        "hidden_instrument_normalized_rmse": 11.513555254574854,
+        "long_end_zero_rmse_bps": 1.5964932203921132,
+        "short_end_zero_rmse_bps": 19.38005158435266,
+        "valid": true,
+        "weighted_zero_rate_rmse_bps": 8.69026979597542,
+        "zero_curvature_rms": 0.009697152699651773,
+        "zero_rate_rmse_bps": 5.675073201528795
+      }
+    },
+    "key_rate_sum_median_relative_error": 2.757647707311474e-08,
+    "long_end_zero_rmse_bps": 1.2755121005539547,
+    "risk_instruments_checked": 136,
+    "short_end_zero_rmse_bps": 20.222692184117665,
+    "weighted_zero_rate_rmse_bps": 9.228922665844571,
+    "zero_curvature_rms": 0.00717249762988357,
+    "zero_rate_rmse_bps": 5.586990874744827
+  },
+  "total_score": 80.438,
+  "warnings": []
+}Summary
+Total: 80.438/100
+  numerical_correctness: 24.567
+  quantitative_model_quality: 10.218
+  hidden_scenario_robustness: 12.224
+  software_engineering_reproducibility: 15.000
+  data_quality_handling: 8.429
+  report_completeness: 5.000
+  completion_integrity: 5.000
+Hidden checks: 38 passed, 3 failed
+Failed: math.hidden_instrument_repricing, data.unit_handling, data.missing_handling
+

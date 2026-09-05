@@ -1,0 +1,27 @@
+experiment_id,comparison_base,changed_factor,input_split_id,model_type,measurement_target,tenor_or_product,metric_name,unit,before_value,after_value,runtime_seconds,validation_status,adoption
+E00,initial copy,none,public_full,baseline,tests,all,passed_tests,count,20,20,10.38,passed,reproduced
+E00,initial copy,none,public_full,baseline,CLI,all,selected_model,label,baseline,baseline,20.60,passed,reproduced
+E01,independent direct discount formula,direct-D pricing interface,synthetic_pricing_v1,pricing,pricing difference,deposit,max absolute quote difference,rate_decimal,0,0,5.40,passed,adopt_interface
+E01,independent direct discount formula,direct-D pricing interface,synthetic_pricing_v1,pricing,pricing difference,ois_swap,max absolute quote difference,rate_decimal,0,0,5.40,passed,adopt_interface
+E01,independent direct discount formula,direct-D pricing interface,synthetic_pricing_v1,pricing,pricing difference,bond,max absolute quote difference,price_points,0,0,5.40,passed,adopt_interface
+E01,published regular-coupon interpretation,add fractional stub coupon,synthetic_pricing_v1,pricing,convention ambiguity,fractional bond,max alternate-minus-documented,price_points,0,0.0217675488,5.40,unresolved,not_adopted
+E02,true maturity zero,flat single-instrument proxy,synthetic_v1,baseline,proxy error,rising deposit,RMSE,bp,0,0,5.40,passed,hypothesis_rejected_for_deposits
+E02,true maturity zero,flat single-instrument proxy,synthetic_v1,baseline,proxy error,rising OIS,RMSE,bp,0,10.415,5.40,passed,hypothesis_supported
+E02,true maturity zero,flat single-instrument proxy,synthetic_v1,baseline,proxy error,rising bond,RMSE,bp,0,12.698,5.40,passed,hypothesis_supported
+E03,baseline,remove rolling median only,synthetic_v1,no_rolling_median,known-curve error,short T<=2,zero RMSE,bp,17.590463,7.856969,5.40,passed,not_adopted
+E03,baseline,remove rolling median only,synthetic_v1,no_rolling_median,known-curve error,all tenors,forward RMSE,bp,54.660131,81.758580,5.40,passed,not_adopted
+E03,baseline,remove rolling median only,public_maturity_blocks_v1,no_rolling_median,holdout error,all,weighted normalized RMSE,dimensionless_spread_units,41.824574,45.890830,5.40,passed,not_adopted
+E03,baseline,remove rolling median only,public_maturity_blocks_v1,no_rolling_median,holdout error,short T<=2,weighted normalized RMSE,dimensionless_spread_units,37.6147,44.1480,5.40,passed,not_adopted
+E04,no_rolling_median,retain exact maturities before aggregation,synthetic_v1,exact_tenor_no_median,known-curve error,short T<=2,zero RMSE,bp,7.856969,2.344964,5.40,passed,not_adopted
+E04,baseline,retain exact maturities and no median,synthetic_v1,exact_tenor_no_median,known-curve error,all tenors,forward RMSE,bp,54.660131,82.367605,5.40,passed,not_adopted
+E04,baseline,retain exact maturities and no median,public_maturity_blocks_v1,exact_tenor_no_median,holdout error,all,weighted normalized RMSE,dimensionless_spread_units,41.824574,59.910089,5.40,passed,not_adopted
+E04,baseline,retain exact maturities and no median,public_maturity_blocks_v1,exact_tenor_no_median,holdout error,short OIS,weighted normalized RMSE,dimensionless_spread_units,42.183,89.895,5.40,passed,not_adopted
+E05,baseline,cash-flow-level advanced curve,synthetic_v1,advanced,known-curve error,all tenors,zero RMSE,bp,8.895873,0.720726,5.40,passed,not_adopted
+E05,baseline,cash-flow-level advanced curve,synthetic_v1,advanced,known-curve error,all tenors,forward RMSE,bp,54.660131,6.843135,5.40,passed,not_adopted
+E05,baseline,cash-flow-level advanced curve,public_maturity_blocks_v1,advanced,holdout error,all,weighted normalized RMSE,dimensionless_spread_units,41.824574,56.629342,5.40,passed,not_adopted
+E05,baseline,cash-flow-level advanced curve,public_maturity_blocks_v1,advanced,holdout error,short T<=2,weighted normalized RMSE,dimensionless_spread_units,37.6147,81.4850,5.40,passed,not_adopted
+E05,baseline,cash-flow-level advanced curve,public_maturity_blocks_v1,advanced,holdout error,long T>=15,weighted normalized RMSE,dimensionless_spread_units,7.9362,7.1547,5.40,passed,not_adopted
+E05,baseline,cash-flow-level advanced curve,public_maturity_blocks_v1,advanced,holdout error,regular half-year grid,weighted normalized RMSE,dimensionless_spread_units,55.2086,73.6407,5.40,passed,not_adopted
+E05,baseline,cash-flow-level advanced curve,public_maturity_blocks_v1,advanced,holdout error,fractional maturity,weighted normalized RMSE,dimensionless_spread_units,9.2322,19.1667,5.40,passed,not_adopted
+E06,reproduced baseline,final baseline plus diagnostics and format,public_full,baseline,numerical output,all,max absolute curve delta,bp,0,0,42.10,passed,adopted
+E06,first final CLI,second fresh final CLI,public_full,baseline,reproducibility,all,tree differences,count,0,0,21.00,passed,adopted

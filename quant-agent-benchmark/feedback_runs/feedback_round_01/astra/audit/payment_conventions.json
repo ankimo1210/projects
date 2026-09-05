@@ -1,0 +1,27 @@
+{
+  "independent_pricing": "passed",
+  "results": [
+    {
+      "condition": "none",
+      "fixed_curve_price_change_min_points": -1.247846445511513,
+      "fixed_curve_price_change_max_points": -0.012739944823039195,
+      "fixed_curve_bond_price_change_rms_points": 0.5415632589956855,
+      "changed_bond_count": 47,
+      "oracle_max_abs_difference": 4.263256414560601e-14,
+      "refit_zero_30y_bp": 198.71050819600615,
+      "reference_zero_30y_bp": 197.58701937985373
+    },
+    {
+      "condition": "full",
+      "fixed_curve_price_change_min_points": 0.02181746769267079,
+      "fixed_curve_price_change_max_points": 1.425493323875969,
+      "fixed_curve_bond_price_change_rms_points": 0.5813237163183785,
+      "changed_bond_count": 47,
+      "oracle_max_abs_difference": 2.842170943040401e-14,
+      "refit_zero_30y_bp": 194.73960323572044,
+      "reference_zero_30y_bp": 197.58701937985373
+    }
+  ],
+  "adopted": "prorated",
+  "interpretation": "Fixed-D changes isolate cash-flow differences; refit changes include curve absorption. No alternative is selected merely for in-sample fit. Actual generator convention remains unknown."
+}

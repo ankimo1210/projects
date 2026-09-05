@@ -1,0 +1,85 @@
+{
+  "cases": [
+    {
+      "case": "main",
+      "truth_rows": 721,
+      "chart_rows": 720,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.04160872000000282
+    },
+    {
+      "case": "s01",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s02",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s03",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s04",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s05",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s06",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s07",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s08",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s09",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    },
+    {
+      "case": "s10",
+      "truth_rows": 721,
+      "chart_rows": 361,
+      "display_start_years": 0.08333333333,
+      "chart_max_gap_years": 0.08310185185186292
+    }
+  ],
+  "public_observations": 143,
+  "public_unique_instruments": 136,
+  "holdout_instruments": 24,
+  "overlapping_instruments": 0
+}

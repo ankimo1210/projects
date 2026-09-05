@@ -1,0 +1,7 @@
+{
+  "mode": "installed",
+  "returncode": 0,
+  "stdout": "{\"grid_rows\": 721, \"holdout_improvement\": 0.09713806675183534, \"selected_model\": \"advanced\", \"usable_instruments\": 131, \"validation_passed\": true}\n",
+  "stderr": "",
+  "duration_seconds": 1.6848711967468262
+}

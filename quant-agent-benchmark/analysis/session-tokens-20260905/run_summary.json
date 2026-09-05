@@ -1,0 +1,277 @@
+{
+  "sessions": [
+    {
+      "model": "astra",
+      "session_name": "Model Test Astra",
+      "session_id": "01a06f02-c11c-7ab0-971a-f7abd9ce99ab",
+      "model_ids": [
+        "gpt-6-astra"
+      ],
+      "reasoning_efforts": [
+        "xhigh"
+      ],
+      "user_turns": 5,
+      "api_responses": 52,
+      "tool_calls": 47,
+      "explicit_tool_errors": 4,
+      "start_jst": "2026-09-05T09:40:55.417+09:00",
+      "end_jst": "2026-09-05T11:38:05.053+09:00",
+      "active_turn_minutes": 54.40533333333334,
+      "session_elapsed_minutes": 117.1606,
+      "primary_elapsed_minutes": 51.974066666666666,
+      "primary_api_responses": 40,
+      "primary_total_tokens": 3797692,
+      "primary_output_tokens": 83220,
+      "primary_reasoning_tokens": 33681,
+      "primary_mean_input_tokens": 92861.8,
+      "primary_mean_output_tokens": 2080.5,
+      "prior_reported_total": 4446365,
+      "uncached_input": 262976,
+      "cache_read_input": 4097280,
+      "cache_creation_input": 0,
+      "input_total": 4360256,
+      "output_nonreasoning": 50820,
+      "output_reasoning": 35289,
+      "output_total": 86109,
+      "total_tokens": 4446365,
+      "overcount_in_prior_report": 0,
+      "cache_read_fraction_of_input": 0.9396879449280042,
+      "reasoning_fraction_of_output": 0.4098177890812807
+    },
+    {
+      "model": "sol",
+      "session_name": "Model Test Sol",
+      "session_id": "01a06f03-72e9-70a1-a254-f7b4e04a719f",
+      "model_ids": [
+        "gpt-5.6-sol"
+      ],
+      "reasoning_efforts": [
+        "xhigh"
+      ],
+      "user_turns": 6,
+      "api_responses": 82,
+      "tool_calls": 77,
+      "explicit_tool_errors": 4,
+      "start_jst": "2026-09-05T09:41:32.387+09:00",
+      "end_jst": "2026-09-05T11:37:32.355+09:00",
+      "active_turn_minutes": 36.48285,
+      "session_elapsed_minutes": 115.99946666666666,
+      "primary_elapsed_minutes": 34.596250000000005,
+      "primary_api_responses": 72,
+      "primary_total_tokens": 8975027,
+      "primary_output_tokens": 74001,
+      "primary_reasoning_tokens": 24582,
+      "primary_mean_input_tokens": 123625.36111111111,
+      "primary_mean_output_tokens": 1027.7916666666667,
+      "prior_reported_total": 10349887,
+      "uncached_input": 176855,
+      "cache_read_input": 10096128,
+      "cache_creation_input": 0,
+      "input_total": 10272983,
+      "output_nonreasoning": 50999,
+      "output_reasoning": 25905,
+      "output_total": 76904,
+      "total_tokens": 10349887,
+      "overcount_in_prior_report": 0,
+      "cache_read_fraction_of_input": 0.9827844551090954,
+      "reasoning_fraction_of_output": 0.3368485384375325
+    },
+    {
+      "model": "opus",
+      "session_name": "model-test-opus",
+      "session_id": "8f376df0-177d-4bfc-adf2-21852ba5358b",
+      "model_ids": [
+        "claude-opus-5"
+      ],
+      "reasoning_efforts": [
+        "xhigh"
+      ],
+      "user_turns": 1,
+      "api_responses": 114,
+      "tool_calls": 114,
+      "explicit_tool_errors": 5,
+      "start_jst": "2026-09-05T10:22:15.164+09:00",
+      "end_jst": "2026-09-05T11:32:08.072+09:00",
+      "active_turn_minutes": 69.88180000000001,
+      "session_elapsed_minutes": 69.88180000000001,
+      "primary_elapsed_minutes": 69.88180000000001,
+      "primary_api_responses": 114,
+      "primary_total_tokens": 29457223,
+      "primary_output_tokens": 301791,
+      "primary_reasoning_tokens": 117873,
+      "primary_mean_input_tokens": 255749.40350877194,
+      "primary_mean_output_tokens": 2647.2894736842104,
+      "prior_reported_total": 53575487,
+      "uncached_input": 228,
+      "cache_read_input": 28715729,
+      "cache_creation_input": 439475,
+      "input_total": 29155432,
+      "output_nonreasoning": 183918,
+      "output_reasoning": 117873,
+      "output_total": 301791,
+      "total_tokens": 29457223,
+      "overcount_in_prior_report": 24118264,
+      "cache_read_fraction_of_input": 0.984918659411392,
+      "reasoning_fraction_of_output": 0.3905782478602742
+    },
+    {
+      "model": "fable",
+      "session_name": "model-test-fable",
+      "session_id": "bf368b2b-b291-4750-a82f-8ff314837922",
+      "model_ids": [
+        "claude-fable-5-1"
+      ],
+      "reasoning_efforts": [
+        "xhigh"
+      ],
+      "user_turns": 1,
+      "api_responses": 41,
+      "tool_calls": 59,
+      "explicit_tool_errors": 3,
+      "start_jst": "2026-09-05T10:22:09.611+09:00",
+      "end_jst": "2026-09-05T11:18:06.011+09:00",
+      "active_turn_minutes": 55.940000000000005,
+      "session_elapsed_minutes": 55.940000000000005,
+      "primary_elapsed_minutes": 55.940000000000005,
+      "primary_api_responses": 41,
+      "primary_total_tokens": 10790902,
+      "primary_output_tokens": 277258,
+      "primary_reasoning_tokens": 119154,
+      "primary_mean_input_tokens": 256430.34146341463,
+      "primary_mean_output_tokens": 6762.390243902439,
+      "prior_reported_total": 29313090,
+      "uncached_input": 1222,
+      "cache_read_input": 9739461,
+      "cache_creation_input": 772961,
+      "input_total": 10513644,
+      "output_nonreasoning": 158104,
+      "output_reasoning": 119154,
+      "output_total": 277258,
+      "total_tokens": 10790902,
+      "overcount_in_prior_report": 18522188,
+      "cache_read_fraction_of_input": 0.9263639704749371,
+      "reasoning_fraction_of_output": 0.4297585642253785
+    }
+  ],
+  "turns": [
+    {
+      "model": "astra",
+      "turn_number": 1,
+      "label": "初回準備",
+      "api_responses": 2,
+      "total_tokens": 57748,
+      "output_total": 731,
+      "elapsed_seconds": 29.161
+    },
+    {
+      "model": "astra",
+      "turn_number": 2,
+      "label": "ベンチマーク指示・確認",
+      "api_responses": 7,
+      "total_tokens": 236614,
+      "output_total": 1424,
+      "elapsed_seconds": 78.405
+    },
+    {
+      "model": "astra",
+      "turn_number": 3,
+      "label": "モデル名確認",
+      "api_responses": 1,
+      "total_tokens": 36929,
+      "output_total": 241,
+      "elapsed_seconds": 11.431
+    },
+    {
+      "model": "astra",
+      "turn_number": 4,
+      "label": "ベンチマーク本実行",
+      "api_responses": 40,
+      "total_tokens": 3797692,
+      "output_total": 83220,
+      "elapsed_seconds": 3118.444
+    },
+    {
+      "model": "astra",
+      "turn_number": 5,
+      "label": "終了後のグラフ表示",
+      "api_responses": 2,
+      "total_tokens": 317382,
+      "output_total": 493,
+      "elapsed_seconds": 26.879
+    },
+    {
+      "model": "sol",
+      "turn_number": 1,
+      "label": "初回準備（中断）",
+      "api_responses": 3,
+      "total_tokens": 97182,
+      "output_total": 1307,
+      "elapsed_seconds": 45.397
+    },
+    {
+      "model": "sol",
+      "turn_number": 2,
+      "label": "ベンチマーク本実行",
+      "api_responses": 72,
+      "total_tokens": 8975027,
+      "output_total": 74001,
+      "elapsed_seconds": 2075.775
+    },
+    {
+      "model": "sol",
+      "turn_number": 3,
+      "label": "モデル名確認",
+      "api_responses": 1,
+      "total_tokens": 181577,
+      "output_total": 67,
+      "elapsed_seconds": 9.022
+    },
+    {
+      "model": "sol",
+      "turn_number": 4,
+      "label": "出力先確認",
+      "api_responses": 1,
+      "total_tokens": 181801,
+      "output_total": 206,
+      "elapsed_seconds": 9.777
+    },
+    {
+      "model": "sol",
+      "turn_number": 5,
+      "label": "出力先修正の依頼",
+      "api_responses": 4,
+      "total_tokens": 731055,
+      "output_total": 1094,
+      "elapsed_seconds": 41.805
+    },
+    {
+      "model": "sol",
+      "turn_number": 6,
+      "label": "終了後のグラフ表示",
+      "api_responses": 1,
+      "total_tokens": 183245,
+      "output_total": 229,
+      "elapsed_seconds": 7.195
+    },
+    {
+      "model": "opus",
+      "turn_number": 1,
+      "label": "ベンチマーク本実行",
+      "api_responses": 114,
+      "total_tokens": 29457223,
+      "output_total": 301791,
+      "elapsed_seconds": 4192.908
+    },
+    {
+      "model": "fable",
+      "turn_number": 1,
+      "label": "ベンチマーク本実行",
+      "api_responses": 41,
+      "total_tokens": 10790902,
+      "output_total": 277258,
+      "elapsed_seconds": 3356.4
+    }
+  ],
+  "checks": "API totals = user-turn totals = five-minute bins; source hashes stable",
+  "output_dir": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/session-tokens-20260905"
+}

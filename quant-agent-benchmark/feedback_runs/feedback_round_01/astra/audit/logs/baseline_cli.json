@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/analysis/final-review-20260905/.venv-matched/bin/python",
+    "-m",
+    "quantcurve.cli",
+    "run",
+    "--market-data",
+    "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/input/market_data/market_observations.csv",
+    "--output-dir",
+    "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/audit/baseline_reproduced",
+    "--valuation-date",
+    "2026-01-15"
+  ],
+  "cwd": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/feedback_runs/feedback_round_01/astra/audit/baseline_workspace",
+  "start_epoch_seconds": 1788595528.187656,
+  "end_epoch_seconds": 1788595529.939593,
+  "returncode": 0,
+  "stdout": "{\"grid_rows\": 721, \"holdout_improvement\": 0.09713806675183534, \"selected_model\": \"advanced\", \"usable_instruments\": 131, \"validation_passed\": true}\n",
+  "stderr": "",
+  "wall_seconds": 1.7519371509552002
+}

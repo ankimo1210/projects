@@ -1,0 +1,8 @@
+{
+  "case": "long_hump:normal",
+  "synthetic_outliers_injected": 0,
+  "long_instruments": 37,
+  "long_downweighted_count": 35,
+  "long_median_robust_weight": 0.11939268186860232,
+  "interpretation": "Known clean shape with small noise receives reduced weights. This supports shape/robustness confounding; it does not justify disabling robustness on contaminated data."
+}

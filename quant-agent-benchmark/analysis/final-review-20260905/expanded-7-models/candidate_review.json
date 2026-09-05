@@ -1,0 +1,383 @@
+{
+  "terra": {
+    "candidate_path": "/Users/ankimo1210/Documents/terra",
+    "source_sha256": {
+      "README.md": "109e8d848e03d9a4e52333d2715bfdc6cdbea126e1f6a405720b00434e5e9a6c",
+      "benchmark_summary.json": "c63a6a1e26a36d2f7e5c0ec7ac3a11bd68b0703d0e7285426413407ec7553478",
+      "outputs/diagnostics/model_comparison.json": "252969cb31feafcb874f53fae53d2a08f78b01a89927e807c29e62bf155dc49a",
+      "outputs/diagnostics/sensitivity.json": "6d7e52c6baf6afe810c2f90508ef57a76610c9920c8d0e70a84c4331b4e909d3",
+      "outputs/curves/curve.csv": "5695c0d62ec8148cf54176182cb1293385aac74abaa1e40abda376af331f93f1"
+    },
+    "model_comparison_keys": [
+      "holdout_method",
+      "smoothing_strength",
+      "advanced_smoothing_candidates",
+      "advanced_smoothing_selection",
+      "baseline",
+      "advanced",
+      "selected_model",
+      "selection_rationale",
+      "holdout_maturity_years"
+    ],
+    "model_selection": {
+      "holdout_method": "every fifth ordered maturity bucket, with all same-maturity records held out together",
+      "advanced_smoothing_selection": "largest candidate within 1% of best advanced holdout weighted RMSE",
+      "selected_model": "advanced",
+      "selection_rationale": "Advanced curve reduced the blocked maturity-holdout weighted error by more than 2%."
+    },
+    "sensitivity_top_level_keys": [
+      "base_model",
+      "checks"
+    ],
+    "summary_keys": [
+      "schema_version",
+      "model_name",
+      "reasoning_effort",
+      "start_time",
+      "finish_time",
+      "start_time_utc",
+      "finish_time_utc",
+      "start_epoch_seconds",
+      "finish_epoch_seconds",
+      "wall_time_seconds",
+      "input_tokens",
+      "cached_input_tokens",
+      "output_tokens",
+      "reasoning_tokens",
+      "total_tokens",
+      "credits_consumed",
+      "reported_usd_cost",
+      "estimated_usd_cost",
+      "five_hour_quota_before_percent",
+      "five_hour_quota_after_percent",
+      "weekly_quota_before_percent",
+      "weekly_quota_after_percent",
+      "quota_percentage_consumed",
+      "test_runs",
+      "test_suite_runs",
+      "failed_test_suite_runs",
+      "corrective_iterations",
+      "tests_passed",
+      "tests_failed",
+      "files_created",
+      "unresolved_limitations",
+      "human_interventions"
+    ],
+    "shipped_vs_isolated_metrics": {
+      "zero_rate_rmse_bps": {
+        "shipped": 5.6553121558441966,
+        "isolated": 5.655311484986522,
+        "absolute_difference": 6.708576743008621e-07
+      },
+      "weighted_zero_rate_rmse_bps": {
+        "shipped": 4.912208537033435,
+        "isolated": 4.9122080441657365,
+        "absolute_difference": 4.928676986537539e-07
+      },
+      "forward_rate_rmse_bps": {
+        "shipped": 29.600044631759708,
+        "isolated": 29.600042734865003,
+        "absolute_difference": 1.8968947053110696e-06
+      },
+      "discount_factor_rmse_x1e4": {
+        "shipped": 80.72700236687216,
+        "isolated": 80.72699140459336,
+        "absolute_difference": 1.0962278793158475e-05
+      },
+      "hidden_instrument_normalized_rmse": {
+        "shipped": 6.320570873372197,
+        "isolated": 6.3205701313422855,
+        "absolute_difference": 7.420299112936846e-07
+      },
+      "bid_ask_normalized_pricing_rmse": {
+        "shipped": 17.05775972977141,
+        "isolated": 17.057758510531038,
+        "absolute_difference": 1.2192403708866095e-06
+      },
+      "short_end_zero_rmse_bps": {
+        "shipped": 3.955606714424997,
+        "isolated": 3.955606521914632,
+        "absolute_difference": 1.9251036498246776e-07
+      },
+      "long_end_zero_rmse_bps": {
+        "shipped": 7.398706942726806,
+        "isolated": 7.3987059749855195,
+        "absolute_difference": 9.677412862174606e-07
+      },
+      "forward_roughness": {
+        "shipped": 1.416376681679251e-05,
+        "isolated": 1.4163766638513907e-05,
+        "absolute_difference": 1.782786022757818e-13
+      },
+      "zero_curvature_rms": {
+        "shipped": 0.005792090914898004,
+        "isolated": 0.005792090911157711,
+        "absolute_difference": 3.740293665066563e-12
+      }
+    },
+    "diagnostic_tolerance": 0.0001,
+    "diagnostic_tolerance_reason": "Smaller than half a unit at the displayed 3-decimal precision.",
+    "max_difference": 1.0962278793158475e-05,
+    "unchanged_display_precision": true
+  },
+  "luna": {
+    "candidate_path": "output/luna",
+    "source_sha256": {
+      "README.md": "843c4a7b092d3df8e5159fa51fcbb431118f8d049964d06e06687a1ce9a2938c",
+      "benchmark_summary.json": "9e83d48c27d6a44265fce69498d57bca7dcd27bcf5dd6efcd3f3e82ca4f2ccf9",
+      "outputs/diagnostics/model_comparison.json": "abcb68e2458d5520a1e15a3a0d653d75dff5da5b518572d3d825ab0e2ca2b63e",
+      "outputs/diagnostics/sensitivity.json": "117008f629d808ef46fe26e252caa0ed643bd9826ec67de64bdcd015053aed25",
+      "outputs/curves/curve.csv": "2c0333e370a70c4260e20a832a78ad24575dc0e4374a0e8544c93356b79279df"
+    },
+    "model_comparison_keys": [
+      "advanced",
+      "baseline",
+      "final_fit_metadata",
+      "holdout_definition",
+      "model_selected",
+      "selection_rationale",
+      "visible_quality_issues"
+    ],
+    "model_selection": {
+      "model_selected": "advanced",
+      "selection_rationale": "Advanced model selected because its whole-maturity holdout standardized RMSE is no worse than 5% above the baseline and it uses the documented bond evidence and robust weighting."
+    },
+    "sensitivity_top_level_keys": [
+      "bid_ask_midpoint_band",
+      "double_smoothing_penalty",
+      "exclude_low_liquidity",
+      "remove_bonds"
+    ],
+    "summary_keys": [
+      "benchmark_integrity_incidents",
+      "cached_input_tokens",
+      "corrective_iterations",
+      "credits_consumed",
+      "data_quality_summary",
+      "estimated_usd_cost",
+      "failed_test_runs",
+      "failed_test_suite_runs",
+      "files_created",
+      "final_tests_failed",
+      "final_tests_passed",
+      "finish_epoch_seconds",
+      "finish_time",
+      "finish_time_utc",
+      "five_hour_quota_after_percent",
+      "five_hour_quota_before_percent",
+      "human_interventions",
+      "input_tokens",
+      "major_modelling_decisions",
+      "model_name",
+      "model_selection",
+      "output_tokens",
+      "quota_percentage_consumed",
+      "reasoning_effort",
+      "reasoning_tokens",
+      "reported_usd_cost",
+      "schema_version",
+      "start_epoch_seconds",
+      "start_time",
+      "start_time_utc",
+      "test_runs",
+      "test_suite_runs",
+      "tests_failed",
+      "tests_passed",
+      "total_tokens",
+      "unresolved_limitations",
+      "wall_time_seconds",
+      "weekly_quota_after_percent",
+      "weekly_quota_before_percent"
+    ],
+    "shipped_vs_isolated_metrics": {
+      "zero_rate_rmse_bps": {
+        "shipped": 2.649017312804545,
+        "isolated": 2.649017312804545,
+        "absolute_difference": 0.0
+      },
+      "weighted_zero_rate_rmse_bps": {
+        "shipped": 2.5990744868154323,
+        "isolated": 2.5990744868154323,
+        "absolute_difference": 0.0
+      },
+      "forward_rate_rmse_bps": {
+        "shipped": 29.27731348166434,
+        "isolated": 29.27731348166434,
+        "absolute_difference": 0.0
+      },
+      "discount_factor_rmse_x1e4": {
+        "shipped": 32.553882406926526,
+        "isolated": 32.553882406926526,
+        "absolute_difference": 0.0
+      },
+      "hidden_instrument_normalized_rmse": {
+        "shipped": 2.9222496195602234,
+        "isolated": 2.9222496195602234,
+        "absolute_difference": 0.0
+      },
+      "bid_ask_normalized_pricing_rmse": {
+        "shipped": 8.927717208706134,
+        "isolated": 8.927717208706134,
+        "absolute_difference": 0.0
+      },
+      "short_end_zero_rmse_bps": {
+        "shipped": 2.501574384705551,
+        "isolated": 2.501574384705551,
+        "absolute_difference": 0.0
+      },
+      "long_end_zero_rmse_bps": {
+        "shipped": 3.3491310278725503,
+        "isolated": 3.3491310278725503,
+        "absolute_difference": 0.0
+      },
+      "forward_roughness": {
+        "shipped": 0.0002627381983776532,
+        "isolated": 0.0002627381983776532,
+        "absolute_difference": 0.0
+      },
+      "zero_curvature_rms": {
+        "shipped": 0.005258414827803989,
+        "isolated": 0.005258414827803989,
+        "absolute_difference": 0.0
+      }
+    },
+    "diagnostic_tolerance": 0.0001,
+    "diagnostic_tolerance_reason": "Smaller than half a unit at the displayed 3-decimal precision.",
+    "max_difference": 0.0,
+    "unchanged_display_precision": true
+  },
+  "sonnet": {
+    "candidate_path": "output/sonnet",
+    "source_sha256": {
+      "README.md": "25cef2612d534907c4b2f46a33caf8d3925d74faa5417147d087c81b8e6128c7",
+      "benchmark_summary.json": "d13efb593a90284d0493a6621c68f9d216976a7c40316b810758103b0ad3f12b",
+      "outputs/diagnostics/model_comparison.json": "647947a37ced1f3c9fb916b604f8565ddb1d5da5c97f6d73548de14668479fac",
+      "outputs/diagnostics/sensitivity.json": "73f2b48ee10b70442d870e9092aa483c47ff6a6d8cd89fd9af2a884189859674",
+      "outputs/curves/curve.csv": "897caf6bc9d57e503e60b15d92d8f6cea49ede20f7ed183c40c575fe5d23b286",
+      "src/quantcurve/calibration.py": "0fcb5b37743d8fd752f5b34623fd9bf556e73982d0d95a4ca01b537d5511d4fc",
+      "src/quantcurve/curve.py": "60ebd3686b2153a42d0d5a344eed8dff336bb79135681a0e16dce9b0e6d6c883"
+    },
+    "model_comparison_keys": [
+      "baseline",
+      "advanced",
+      "model_selected",
+      "selection_rationale"
+    ],
+    "model_selection": {
+      "model_selected": "baseline",
+      "selection_rationale": "Baseline achieved holdout weighted RMSE 2.1026; the fully-specified advanced model (regularised spline + iterative robust reweighting) could not beat it on this dataset (best 2.2159 at lambda=1e+07 across the searched grid). The iterative robust reweighting downweights a meaningful share of bonds whose larger-but-genuine dispersion is not actually noise, which slightly hurts generalisation here. Complexity is not rewarded on this dataset, so the simpler baseline is selected for the delivered curve."
+    },
+    "sensitivity_top_level_keys": [
+      "bump_size_convergence",
+      "regularization_sensitivity",
+      "leave_worst_out_refit",
+      "negative_rate_stress"
+    ],
+    "summary_keys": [
+      "_note",
+      "model_name",
+      "reasoning_effort",
+      "start_time_utc",
+      "finish_time_utc",
+      "start_epoch_seconds",
+      "finish_epoch_seconds",
+      "wall_time_seconds",
+      "input_tokens",
+      "cached_input_tokens",
+      "output_tokens",
+      "reasoning_tokens",
+      "total_tokens",
+      "credits_consumed",
+      "reported_usd_cost",
+      "five_hour_quota_before_percent",
+      "five_hour_quota_after_percent",
+      "weekly_quota_before_percent",
+      "weekly_quota_after_percent",
+      "test_suite_runs",
+      "failed_test_suite_runs",
+      "corrective_iterations",
+      "final_tests_passed",
+      "final_tests_failed",
+      "schema_version",
+      "start_time",
+      "finish_time",
+      "test_runs",
+      "failed_test_runs",
+      "tests_passed",
+      "tests_failed",
+      "quota_percentage_consumed",
+      "estimated_usd_cost",
+      "human_interventions",
+      "major_files_created",
+      "files_created",
+      "major_modelling_decisions",
+      "self_identified_weaknesses",
+      "unresolved_limitations",
+      "benchmark_integrity_incidents"
+    ],
+    "shipped_vs_isolated_metrics": {
+      "zero_rate_rmse_bps": {
+        "shipped": 6.859198202168316,
+        "isolated": 6.859198202168316,
+        "absolute_difference": 0.0
+      },
+      "weighted_zero_rate_rmse_bps": {
+        "shipped": 9.354623788038742,
+        "isolated": 9.354623788038742,
+        "absolute_difference": 0.0
+      },
+      "forward_rate_rmse_bps": {
+        "shipped": 70.85653371842142,
+        "isolated": 70.85653371842142,
+        "absolute_difference": 0.0
+      },
+      "discount_factor_rmse_x1e4": {
+        "shipped": 41.05752307305758,
+        "isolated": 41.05752307305758,
+        "absolute_difference": 0.0
+      },
+      "hidden_instrument_normalized_rmse": {
+        "shipped": 13.711790648536306,
+        "isolated": 13.711790648536306,
+        "absolute_difference": 0.0
+      },
+      "bid_ask_normalized_pricing_rmse": {
+        "shipped": 67.2522142632985,
+        "isolated": 67.2522142632985,
+        "absolute_difference": 0.0
+      },
+      "short_end_zero_rmse_bps": {
+        "shipped": 20.905859939264758,
+        "isolated": 20.905859939264758,
+        "absolute_difference": 0.0
+      },
+      "long_end_zero_rmse_bps": {
+        "shipped": 3.255180067566456,
+        "isolated": 3.255180067566456,
+        "absolute_difference": 0.0
+      },
+      "forward_roughness": {
+        "shipped": 0.0018126169913301696,
+        "isolated": 0.0018126169913301696,
+        "absolute_difference": 0.0
+      },
+      "zero_curvature_rms": {
+        "shipped": 0.040106902288787535,
+        "isolated": 0.040106902288787535,
+        "absolute_difference": 0.0
+      }
+    },
+    "diagnostic_tolerance": 0.0001,
+    "diagnostic_tolerance_reason": "Smaller than half a unit at the displayed 3-decimal precision.",
+    "max_difference": 0.0,
+    "unchanged_display_precision": true
+  },
+  "scoring_metric_definition": {
+    "source": "evaluator/scoring.py",
+    "sha256": "7e853adb1a20718ac2e3506b2bcc68b4d22821c54e4de8eacc1763fe18273975",
+    "bid_ask_normalized_pricing_rmse": "model_quote minus hidden holdout true_quote, divided by max(half_spread, rate 0.002 or bond 0.02); not public quote fit",
+    "static_scan_limitation": "Four old model names hardcoded; new-name paths are not covered by the original other-results scan.",
+    "sonnet_forward": "Baseline exports analytical z(t)+t*z_prime(t); scorer compares exported values with np.gradient(-log(df),grid).",
+    "sonnet_holdout": "Deposits entirely in training; OIS candidate maturities screened for local smoothness. Selection-bias hypothesis, no ablation."
+  }
+}

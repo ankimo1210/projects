@@ -1,0 +1,224 @@
+{
+  "checks": [
+    {
+      "name": "lambda_x0.33",
+      "description": "Refit with the smoothing parameter multiplied by 0.33 (lambda=7.181).",
+      "outcome": {
+        "max_abs_zero_change_bp": 1.5381921701405552,
+        "mean_abs_zero_change_bp": 0.3171716246786939,
+        "max_abs_forward_change_bp": 15.626270887903418,
+        "train_rmse_bp": {
+          "bond": 4.104708254150164,
+          "deposit": 0.1747149611772115,
+          "ois_swap": 0.6004248177859867,
+          "all": 2.5323092166913024
+        },
+        "n_excluded": 4
+      }
+    },
+    {
+      "name": "lambda_x3.00",
+      "description": "Refit with the smoothing parameter multiplied by 3.00 (lambda=64.63).",
+      "outcome": {
+        "max_abs_zero_change_bp": 1.384388966947994,
+        "mean_abs_zero_change_bp": 0.36976126108733015,
+        "max_abs_forward_change_bp": 13.078857504733795,
+        "train_rmse_bp": {
+          "bond": 4.2616734179532,
+          "deposit": 0.24234228759219695,
+          "ois_swap": 1.1757107637488242,
+          "all": 2.738276287507927
+        },
+        "n_excluded": 3
+      }
+    },
+    {
+      "name": "penalty_power_0",
+      "description": "Refit with the maturity-weight exponent of the roughness penalty set to 0 instead of the CV-selected 1 (same lambda).",
+      "outcome": {
+        "max_abs_zero_change_bp": 0.660164190547964,
+        "mean_abs_zero_change_bp": 0.26734258253053605,
+        "max_abs_forward_change_bp": 20.152497830678364,
+        "train_rmse_bp": {
+          "bond": 4.128078137361648,
+          "deposit": 0.4458220859765365,
+          "ois_swap": 0.8080533337942873,
+          "all": 2.579019192276936
+        }
+      }
+    },
+    {
+      "name": "stub_rule_round",
+      "description": "Rebuild every OIS/bond schedule with the 'round' stub rule instead of 'forward' and refit (same lambda).",
+      "outcome": {
+        "max_abs_zero_change_bp": 0.2294772502819606,
+        "mean_abs_zero_change_bp": 0.07117132343260603,
+        "max_abs_forward_change_bp": 2.3806123134278296,
+        "train_rmse_bp": {
+          "bond": 4.482076187165884,
+          "deposit": 0.1705722924689172,
+          "ois_swap": 0.9591892470627258,
+          "all": 2.8265901539969063
+        },
+        "n_excluded": 3
+      }
+    },
+    {
+      "name": "stub_rule_linspace",
+      "description": "Rebuild every OIS/bond schedule with the 'linspace' stub rule instead of 'forward' and refit (same lambda).",
+      "outcome": {
+        "max_abs_zero_change_bp": 0.10117661902207115,
+        "mean_abs_zero_change_bp": 0.03203355150757012,
+        "max_abs_forward_change_bp": 0.9858541156610584,
+        "train_rmse_bp": {
+          "bond": 4.31424819098892,
+          "deposit": 0.17117304082511914,
+          "ois_swap": 0.9073053255183298,
+          "all": 2.718165685152564
+        },
+        "n_excluded": 3
+      }
+    },
+    {
+      "name": "stub_rule_ceil",
+      "description": "Rebuild every OIS/bond schedule with the 'ceil' stub rule instead of 'forward' and refit (same lambda).",
+      "outcome": {
+        "max_abs_zero_change_bp": 2.1469815614703207,
+        "mean_abs_zero_change_bp": 0.5856896264061836,
+        "max_abs_forward_change_bp": 32.23879944089063,
+        "train_rmse_bp": {
+          "bond": 5.0982510008949555,
+          "deposit": 0.1949902059232111,
+          "ois_swap": 28.911590774324235,
+          "all": 21.277499641758038
+        },
+        "n_excluded": 12
+      }
+    },
+    {
+      "name": "rates_only",
+      "description": "Refit using deposits and OIS only; bonds are then priced off the rates-only curve.",
+      "outcome": {
+        "max_abs_zero_change_bp": 1.1239767569440686,
+        "mean_abs_zero_change_bp": 0.3407160666924883,
+        "max_abs_forward_change_bp": 12.917100474056642,
+        "bond_repricing_rmse_bp_on_rates_only_curve": 4.262875765608364,
+        "bond_repricing_rmse_bp_on_full_curve": 4.173826336560595
+      }
+    },
+    {
+      "name": "uniform_weights",
+      "description": "Refit with every quote given the same base scale (spread and liquidity information ignored; robust reweighting still active).",
+      "outcome": {
+        "max_abs_zero_change_bp": 0.3340184006799668,
+        "mean_abs_zero_change_bp": 0.12725183160768921,
+        "max_abs_forward_change_bp": 8.688474955497357,
+        "train_rmse_bp": {
+          "bond": 2.0879543680014656,
+          "deposit": 0.20121625814076874,
+          "ois_swap": 0.9081317434966106,
+          "all": 1.4234696980052204
+        }
+      }
+    },
+    {
+      "name": "quote_shift_+1bp",
+      "description": "Shift every market quote by +1bp (bond prices by minus one basis point of yield) and refit; a well-behaved estimator moves the zero curve by about +1bp everywhere.",
+      "outcome": {
+        "mean_zero_change_bp": 0.9877872300682226,
+        "min_zero_change_bp": 0.9755291068037562,
+        "max_zero_change_bp": 0.9989947501017233,
+        "max_abs_deviation_from_1bp": 0.024470893196243848
+      }
+    },
+    {
+      "name": "jackknife_tenor_clusters",
+      "description": "Leave one tenor cluster out at a time (robust weights fixed) and measure the largest change in the zero curve; large values flag tenors that single-handedly shape the curve.",
+      "outcome": {
+        "n_clusters": 47,
+        "max_abs_zero_change_bp": 3.3292115785531555,
+        "median_abs_zero_change_bp": 0.16872166655190757,
+        "most_influential": [
+          {
+            "cluster": 46,
+            "maturity_years": 30.0,
+            "members": [
+              "INS0159",
+              "INS0160",
+              "INS0040",
+              "INS0058",
+              "INS0076",
+              "INS0094"
+            ],
+            "max_abs_zero_change_bp": 3.3292115785531555
+          },
+          {
+            "cluster": 0,
+            "maturity_years": 0.08333333,
+            "members": [
+              "INS0001",
+              "INS0002",
+              "INS0009",
+              "INS0018"
+            ],
+            "max_abs_zero_change_bp": 2.4459839956906744
+          },
+          {
+            "cluster": 18,
+            "maturity_years": 7.0,
+            "members": [
+              "INS0116",
+              "INS0032",
+              "INS0068",
+              "INS0086"
+            ],
+            "max_abs_zero_change_bp": 1.3965118448751312
+          },
+          {
+            "cluster": 4,
+            "maturity_years": 1.0,
+            "members": [
+              "INS0008",
+              "INS0016",
+              "INS0023",
+              "INS0041",
+              "INS0059",
+              "INS0095"
+            ],
+            "max_abs_zero_change_bp": 1.1745309385340075
+          },
+          {
+            "cluster": 6,
+            "maturity_years": 1.5,
+            "members": [
+              "INS0025",
+              "INS0043",
+              "INS0061",
+              "INS0079",
+              "INS0105"
+            ],
+            "max_abs_zero_change_bp": 1.0010224253235653
+          }
+        ]
+      }
+    },
+    {
+      "name": "quote_noise_bootstrap",
+      "description": "20 seeded replications adding Gaussian noise of one estimated noise scale to every quote (robust weights fixed); reports the standard deviation of the fitted zero curve.",
+      "outcome": {
+        "n_replications": 20,
+        "seed": 20260115,
+        "max_zero_std_bp": 1.104134967858536,
+        "median_zero_std_bp": 0.32607562344139096,
+        "zero_std_bp_at": {
+          "0.25y": 0.24344459329229526,
+          "1y": 0.15487479519342132,
+          "2y": 0.24321874662575588,
+          "5y": 0.25879598558509553,
+          "10y": 0.14724126610332086,
+          "20y": 0.40089838262477584
+        }
+      }
+    }
+  ]
+}

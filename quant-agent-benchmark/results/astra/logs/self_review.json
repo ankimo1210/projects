@@ -1,0 +1,46 @@
+{
+  "corrective_iterations": 6,
+  "issues_and_corrections": [
+    {
+      "issue": "Bond prices expressed per unit face despite PRICE_POINTS labels dominated the least-squares baseline.",
+      "correction": "Added conservative 100x/0.01x scale checks requiring nearby bond and rate evidence; every inference audited."
+    },
+    {
+      "issue": "The first cash-flow implementation omitted terminal stub interest, creating systematic bond-pricing bias.",
+      "correction": "Use ACT/365F prorated terminal coupons; evaluate no-stub and full-stub alternatives as model risks."
+    },
+    {
+      "issue": "30 IRLS iterations were insufficient for one alternative stub treatment.",
+      "correction": "Increase cap to 100 and fail explicitly if convergence is not attained."
+    },
+    {
+      "issue": "Repeated MAD updates in IRLS prevented convergence on a grouped cross-validation fold even at 100 iterations.",
+      "correction": "Fix robust scale to documented quote uncertainty; damp weight updates, preserving a fixed objective."
+    },
+    {
+      "issue": "Fixed-scale IRLS still converged too slowly at Huber transition points in sparse maturity folds.",
+      "correction": "Retain eight IRLS warm-start solves and finish with an exact mixed-loss optimization: Huber data residuals and strictly quadratic curvature penalty; explicitly check optimizer success and bounds."
+    },
+    {
+      "issue": "Comparing ordinary least-squares Nelson-Siegel against a robust spline confounded outlier treatment with curve flexibility.",
+      "correction": "Use the same Huber, spread and liquidity objective for both primary models; preserve ordinary least squares as a separately reported ablation. Keep the original 5% holdout Huber improvement hurdle."
+    },
+    {
+      "issue": "Malformed numeric strings could be lost during coercion, and a high fraction of downweighted observations could be mistaken for confirmed data errors.",
+      "correction": "Preserve malformed source values in audit reasons; add regression test and prominently disclose systematic residuals and the downweighted count. Add responsive HTML QA."
+    },
+    {
+      "issue": "Rendered sensitivity headers were excessively wide, and narrative constants would be inaccurate for nondefault configurations.",
+      "correction": "Use concise unit-bearing Japanese headers and render actual valuation date, uncertainty floors, freshness limit and Huber threshold."
+    }
+  ],
+  "final_test_runs": 2,
+  "failed_test_runs": 0,
+  "full_final_validation": "logs/final_validation.json",
+  "visual_review": "logs/visual_review.json",
+  "input_original_unchanged": true,
+  "no_evaluator_or_other_candidate_access": true,
+  "failed_exploratory_research_checks": 2,
+  "exploratory_failures_explanation": "Two grouped-CV runs stopped on IRLS nonconvergence before the exact Huber refinement correction; these were research checks, not pytest invocations.",
+  "no_tests_weakened": true
+}

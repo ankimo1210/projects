@@ -1,0 +1,16 @@
+obs_id,instrument_id,issue,genuinely_bad,severity,acceptable_action
+OBS0006,INS0006,unusual_but_valid,False,low,keep_or_downweight
+OBS0012,INS0012,unusual_but_valid,False,low,keep_or_downweight
+OBS0014,INS0014,unusual_but_valid,False,low,keep_or_downweight
+OBS0022,INS0022,unusual_but_valid,False,low,keep_or_downweight
+OBS0027,INS0027,unusual_but_valid,False,low,keep_or_downweight
+OBS0029,INS0029,unusual_but_valid,False,low,keep_or_downweight
+OBS0040,INS0040,unusual_but_valid,False,low,keep_or_downweight
+OBS0046,INS0046,unusual_but_valid,False,low,keep_or_downweight
+OBS0049,INS0049,unusual_but_valid,False,low,keep_or_downweight
+OBS0057,INS0057,unusual_but_valid,False,low,keep_or_downweight
+OBS0064,INS0064,unusual_but_valid,False,low,keep_or_downweight
+OBS0084,INS0084,unusual_but_valid,False,low,keep_or_downweight
+OBS0085,INS0085,unusual_but_valid,False,low,keep_or_downweight
+OBS0090,INS0090,unusual_but_valid,False,low,keep_or_downweight
+OBS0092,INS0092,unusual_but_valid,False,low,keep_or_downweight

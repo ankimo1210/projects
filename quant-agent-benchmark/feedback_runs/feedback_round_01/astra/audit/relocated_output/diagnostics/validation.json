@@ -1,0 +1,31 @@
+{
+  "all_passed": true,
+  "checks": {
+    "all_optimizers_converged": true,
+    "dv01_step_consistency": true,
+    "excluded_weights_zero": true,
+    "finite_curve": true,
+    "finite_risk": true,
+    "forward_derivative_consistency": true,
+    "grid_coverage": true,
+    "key_aggregation_consistency": true,
+    "positive_discount_factors": true,
+    "risk_covers_all_usable_instruments": true,
+    "zero_discount_consistency": true
+  },
+  "dv01_max_relative_half_step_error": 9.586220181661521e-07,
+  "forward_max_absolute_fd_error": 2.0483951340688478e-11,
+  "forward_range": [
+    0.013167078659397322,
+    0.025118694350862177
+  ],
+  "grid_rows": 721,
+  "key_max_relative_aggregation_error": 5.324025030316894e-07,
+  "max_discount_factor": 0.9989900647187007,
+  "min_discount_factor": 0.5527988658706665,
+  "scope": "Numerical invariants, not verification against an independent market truth.",
+  "zero_range": [
+    0.012125347314761418,
+    0.022957073804173046
+  ]
+}

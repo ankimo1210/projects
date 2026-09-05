@@ -1,0 +1,42 @@
+{
+  "half_smoothing": {
+    "conditions": {
+      "smoothing_strength": 5.0,
+      "long_end_curvature_multiplier": 0.5
+    },
+    "numerical_results": {
+      "max_zero_rate_change_bp": 3.4521489079989904
+    },
+    "interpretation": "Measures curve sensitivity to halving the full-data regularisation setting."
+  },
+  "double_smoothing": {
+    "conditions": {
+      "smoothing_strength": 20.0,
+      "long_end_curvature_multiplier": 0.5
+    },
+    "numerical_results": {
+      "max_zero_rate_change_bp": 2.8375806445594955
+    },
+    "interpretation": "Measures curve sensitivity to doubling the full-data regularisation setting."
+  },
+  "exclude_robust_outliers": {
+    "conditions": {
+      "observations_removed": 78,
+      "long_end_curvature_multiplier": 0.5
+    },
+    "numerical_results": {
+      "max_zero_rate_change_bp": 8.154266041702634
+    },
+    "interpretation": "Tests reliance on rows that received final robust IRLS downweights."
+  },
+  "exclude_stale_quotes": {
+    "conditions": {
+      "observations_removed": 5,
+      "long_end_curvature_multiplier": 0.5
+    },
+    "numerical_results": {
+      "max_zero_rate_change_bp": 1.138015344990806
+    },
+    "interpretation": "Tests dependence on observations marked stale before calibration."
+  }
+}

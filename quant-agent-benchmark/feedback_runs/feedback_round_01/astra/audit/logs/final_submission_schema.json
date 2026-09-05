@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "required_summary_fields_present": true,
+  "inventory_files": 54,
+  "summary_is_new_round": true,
+  "all_file_hashes_match": true,
+  "elapsed_seconds": 2584.951133966446,
+  "within_3600_seconds": true
+}

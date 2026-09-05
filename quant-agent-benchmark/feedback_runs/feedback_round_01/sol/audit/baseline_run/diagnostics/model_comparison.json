@@ -1,0 +1,102 @@
+{
+  "advanced": {
+    "description": "natural-cubic zero knots, curvature penalty, spread/liquidity weights, IRLS Huber outliers",
+    "holdout": {
+      "by_instrument_type": {
+        "bond": {
+          "mae": 0.5481568912774445,
+          "n": 15,
+          "rmse": 0.7968325470341148,
+          "unit": "price_points"
+        },
+        "ois_swap": {
+          "mae": 62.96553968351391,
+          "n": 12,
+          "rmse": 71.51722226733894,
+          "unit": "bp"
+        }
+      },
+      "n": 27,
+      "normalized_mae": 33.48547351824537,
+      "weighted_normalized_rmse": 56.62934155996412
+    },
+    "numerical_guardrails_passed": true,
+    "optimizer_success": true,
+    "train": {
+      "by_instrument_type": {
+        "bond": {
+          "mae": 0.47651481743992136,
+          "n": 33,
+          "rmse": 1.280475290516212,
+          "unit": "price_points"
+        },
+        "deposit": {
+          "mae": 1.9569771788153123,
+          "n": 19,
+          "rmse": 4.7636110952512,
+          "unit": "bp"
+        },
+        "ois_swap": {
+          "mae": 10.91813005327827,
+          "n": 57,
+          "rmse": 38.61415025353755,
+          "unit": "bp"
+        }
+      },
+      "n": 109,
+      "normalized_mae": 8.844269516060267,
+      "weighted_normalized_rmse": 35.44539810863835
+    }
+  },
+  "baseline": {
+    "description": "spread/liquidity-weighted half-year median standalone yields with PCHIP",
+    "holdout": {
+      "by_instrument_type": {
+        "bond": {
+          "mae": 0.3455100312813168,
+          "n": 15,
+          "rmse": 0.4430795738164569,
+          "unit": "price_points"
+        },
+        "ois_swap": {
+          "mae": 32.014670467431216,
+          "n": 12,
+          "rmse": 52.44839826932088,
+          "unit": "bp"
+        }
+      },
+      "n": 27,
+      "normalized_mae": 17.727020688662563,
+      "weighted_normalized_rmse": 41.82457420441001
+    },
+    "numerical_guardrails_passed": true,
+    "train": {
+      "by_instrument_type": {
+        "bond": {
+          "mae": 0.5045406090440957,
+          "n": 33,
+          "rmse": 1.3215010454249774,
+          "unit": "price_points"
+        },
+        "deposit": {
+          "mae": 7.5798610303012905,
+          "n": 19,
+          "rmse": 10.656140631243769,
+          "unit": "bp"
+        },
+        "ois_swap": {
+          "mae": 16.484449276635303,
+          "n": 57,
+          "rmse": 42.16099949508091,
+          "unit": "bp"
+        }
+      },
+      "n": 109,
+      "normalized_mae": 12.742218185952643,
+      "weighted_normalized_rmse": 38.61126595730424
+    }
+  },
+  "holdout_method": "deterministic 0.5Y maturity buckets where bucket_index mod 5 equals 3; whole buckets held together",
+  "selected_model": "baseline",
+  "selection_rationale": "Advanced model did not clear both the numerical guardrails and the predeclared 2% holdout-improvement hurdle; baseline retained."
+}

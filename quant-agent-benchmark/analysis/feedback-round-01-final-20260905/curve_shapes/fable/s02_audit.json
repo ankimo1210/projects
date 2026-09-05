@@ -1,0 +1,23 @@
+{
+  "model": "fable",
+  "case": "s02",
+  "curve_rows": 719,
+  "truth_rows": 721,
+  "market_rows": 98,
+  "market": "evaluator/hidden_scenarios/s02/market_data.csv",
+  "truth": "evaluator/hidden_scenarios/s02/truth_curve.csv",
+  "metrics": {
+    "zero_rate_rmse_bps": 2.3672481179951386,
+    "weighted_zero_rate_rmse_bps": 4.406809849538701,
+    "forward_rate_rmse_bps": 20.478325709255728,
+    "discount_factor_rmse_x1e4": 12.677595199302766,
+    "hidden_instrument_normalized_rmse": 2.4135162841986153,
+    "bid_ask_normalized_pricing_rmse": 11.528222141234398,
+    "short_end_zero_rmse_bps": 5.914398968271666,
+    "long_end_zero_rmse_bps": 1.602703492838976,
+    "forward_roughness": 1.4519806269961087e-05,
+    "zero_curvature_rms": 0.013052080247722003
+  },
+  "rmse_matches_frozen_score": true,
+  "cli_seconds": 7.645996124992962
+}

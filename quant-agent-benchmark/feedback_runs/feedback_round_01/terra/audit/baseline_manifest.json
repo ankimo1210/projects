@@ -1,0 +1,166 @@
+{
+  "excluded_rules": [
+    "submission/ was created before the complete round instruction was available and is excluded as a post-round contamination incident",
+    "outputs_pre_fix/, .git/, .venv/, quantcurve_candidate.egg-info/, __pycache__/, and *.pyc are excluded as prior/intermediate output, VCS, environment, build, or cache artifacts"
+  ],
+  "files": [
+    {
+      "bytes": 2926,
+      "path": "MODEL_RISKS.md",
+      "sha256": "7b678553650c2dd062b3bc995552cfca4ece9dd49279e6402c4838228db78109"
+    },
+    {
+      "bytes": 2188,
+      "path": "README.md",
+      "sha256": "109e8d848e03d9a4e52333d2715bfdc6cdbea126e1f6a405720b00434e5e9a6c"
+    },
+    {
+      "bytes": 1997,
+      "path": "benchmark_summary.json",
+      "sha256": "c63a6a1e26a36d2f7e5c0ec7ac3a11bd68b0703d0e7285426413407ec7553478"
+    },
+    {
+      "bytes": 41682,
+      "path": "outputs/charts/forward_curve.png",
+      "sha256": "b704a4ac38235d25e621961a267046692a2c206ac824eaacd9c64df00bad0254"
+    },
+    {
+      "bytes": 37558,
+      "path": "outputs/charts/model_comparison.png",
+      "sha256": "542290ba522c5458c91a6abea0ce0651ff82e28ec552cac751eb76e3a20fc88f"
+    },
+    {
+      "bytes": 59499,
+      "path": "outputs/charts/repricing.png",
+      "sha256": "0b3a72c15c16402586745cac082adca92c33f8660613fadf455f05c57c6f689f"
+    },
+    {
+      "bytes": 43284,
+      "path": "outputs/charts/zero_curve.png",
+      "sha256": "a524059dd4834e98fcdbadb769a2056f276c21ab82459af35bf5f4af792519f8"
+    },
+    {
+      "bytes": 28319,
+      "path": "outputs/curves/curve.csv",
+      "sha256": "5695c0d62ec8148cf54176182cb1293385aac74abaa1e40abda376af331f93f1"
+    },
+    {
+      "bytes": 15309,
+      "path": "outputs/diagnostics/cleaning.csv",
+      "sha256": "eefb97d87a2cb81472c63915e3dc5b1b70bf7cb21d08c7546b2c771b0a42a5dd"
+    },
+    {
+      "bytes": 3294,
+      "path": "outputs/diagnostics/model_comparison.json",
+      "sha256": "252969cb31feafcb874f53fae53d2a08f78b01a89927e807c29e62bf155dc49a"
+    },
+    {
+      "bytes": 12158,
+      "path": "outputs/diagnostics/repricing.csv",
+      "sha256": "9c5e739fbedc994cf60efaefe32b6e9b29849ba37988fb6c0fb27df754ed4a4e"
+    },
+    {
+      "bytes": 15563,
+      "path": "outputs/diagnostics/risk.csv",
+      "sha256": "0e137ff6992239a39f1740216265233979233b42207fded1d065834a9fe0e48f"
+    },
+    {
+      "bytes": 585,
+      "path": "outputs/diagnostics/sensitivity.json",
+      "sha256": "6d7e52c6baf6afe810c2f90508ef57a76610c9920c8d0e70a84c4331b4e909d3"
+    },
+    {
+      "bytes": 249238,
+      "path": "outputs/reports/research_report.html",
+      "sha256": "1f272eafec4dfd67875726b8be47f370c942550fff1b1497917d1246b17919fc"
+    },
+    {
+      "bytes": 447,
+      "path": "pyproject.toml",
+      "sha256": "b9f3a7fb8283c2acceaa07207596cf0be2adee707b4d1f6afce37c99a3f1ab38"
+    },
+    {
+      "bytes": 249238,
+      "path": "reports/research_report.html",
+      "sha256": "1f272eafec4dfd67875726b8be47f370c942550fff1b1497917d1246b17919fc"
+    },
+    {
+      "bytes": 99,
+      "path": "src/quantcurve/__init__.py",
+      "sha256": "52bebef242102cb0e70a89ec1ecbc7132557a403b91103f1efe079a629a2c9b9"
+    },
+    {
+      "bytes": 1311,
+      "path": "src/quantcurve/cli.py",
+      "sha256": "ef6284c274d395729bd347b6d4f6980beb1c4ea22a560b2c30739113a21ed899"
+    },
+    {
+      "bytes": 1104,
+      "path": "src/quantcurve/conventions.py",
+      "sha256": "a13fe1a21b96f507a98eaa914164a9d84e3d18e770e2be7fdc65a999170cf0d9"
+    },
+    {
+      "bytes": 32494,
+      "path": "src/quantcurve/curve.py",
+      "sha256": "35f4b0292f63cd07b570e4c9ec68334c2e4a6c549949b40246dfa9020ba7f02e"
+    },
+    {
+      "bytes": 1080,
+      "path": "src/quantcurve/instruments.py",
+      "sha256": "348f553bbcb3f5b91b6cca818f09179cb0fa1c3add67a684db7c9c01a64d8dc9"
+    },
+    {
+      "bytes": 1711,
+      "path": "src/quantcurve/io.py",
+      "sha256": "a47333e121a1691c2190e58dcc041fe68ad193c5395abd48a753473eec9be73a"
+    },
+    {
+      "bytes": 7410,
+      "path": "src/quantcurve/report.py",
+      "sha256": "54184b51c36a8fb8e6c88b77be1f02bc312e8002ddd47bb902ad1565a7825962"
+    },
+    {
+      "bytes": 280,
+      "path": "src/quantcurve_candidate.egg-info/PKG-INFO",
+      "sha256": "8d0bf43b56a622f7c48b33bace3de9b5cf5d894149db7ecb84a06f4a40202f3c"
+    },
+    {
+      "bytes": 511,
+      "path": "src/quantcurve_candidate.egg-info/SOURCES.txt",
+      "sha256": "ce47292f0913b91f59b6fa79bbc84d8be4ad28e07b4e08980868617e7e22fba4"
+    },
+    {
+      "bytes": 1,
+      "path": "src/quantcurve_candidate.egg-info/dependency_links.txt",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "bytes": 63,
+      "path": "src/quantcurve_candidate.egg-info/requires.txt",
+      "sha256": "8b8c85db4e6f2f66e21d69f9fdd6125ad4cb7e5c622b3e3adc7c667132f94e20"
+    },
+    {
+      "bytes": 11,
+      "path": "src/quantcurve_candidate.egg-info/top_level.txt",
+      "sha256": "cfd7a2b040b0103d8e0ec61f54fa66ad1d2e8b6116f66fb125fd0ab0e15c746d"
+    },
+    {
+      "bytes": 854,
+      "path": "tests/test_basic_conventions.py",
+      "sha256": "32f1231467735f002b896713c206c64b4eddc4d946edac5af1eb4ea13eba16f9"
+    },
+    {
+      "bytes": 3356,
+      "path": "tests/test_curve.py",
+      "sha256": "de750fd01151b49380bc23eabbe1259158826c78dcd5a9f5d9421a5a20dbd477"
+    },
+    {
+      "bytes": 1087,
+      "path": "tests/test_io.py",
+      "sha256": "2a9327091a8ff88bb83c0e4aa67478b97d7e2624b8c916f23b86dc6949ec70ac"
+    }
+  ],
+  "hash_algorithm": "sha256",
+  "source_root": "/Users/ankimo1210/Documents/terra",
+  "tracked_file_count": 31
+}

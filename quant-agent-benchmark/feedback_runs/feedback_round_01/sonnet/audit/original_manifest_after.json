@@ -1,0 +1,162 @@
+{
+  "source_directory": "/Users/ankimo1210/Documents/projects/quant-agent-benchmark/output/sonnet",
+  "checked_at_utc": "2026-09-05T08:35:00Z",
+  "baseline_manifest_file": "baseline_manifest.json",
+  "file_count": 37,
+  "files": {
+    "MODEL_RISKS.md": {
+      "sha256": "5d6e6984756d6bee00a80d1e1b3a2508f8b5dffdd039f4c2e08f3338a85ea5cb",
+      "size": 8721
+    },
+    "README.md": {
+      "sha256": "25cef2612d534907c4b2f46a33caf8d3925d74faa5417147d087c81b8e6128c7",
+      "size": 4464
+    },
+    "benchmark_summary.json": {
+      "sha256": "d13efb593a90284d0493a6621c68f9d216976a7c40316b810758103b0ad3f12b",
+      "size": 10513
+    },
+    "outputs/charts/curve.png": {
+      "sha256": "bc966a0c58a023216132a0191d17fb5155477035b44070b5d4b0b43387fa0648",
+      "size": 82903
+    },
+    "outputs/charts/forward_rate.png": {
+      "sha256": "4f2f24ee8f6d3d4d6d7ace0f59f3a0c9cc2b6114ac9b522bcdafd987bf04c362",
+      "size": 56472
+    },
+    "outputs/charts/model_comparison.png": {
+      "sha256": "10af43725f7b28ba9b84b88a6d67a6de609c13a4201337a9b0ce7d79f10fdce9",
+      "size": 64604
+    },
+    "outputs/charts/repricing.png": {
+      "sha256": "7cf9a8a090b7cd814598f86f97ecba3cfda6f06a49dea15561617a9b01121b63",
+      "size": 58946
+    },
+    "outputs/curves/curve.csv": {
+      "sha256": "897caf6bc9d57e503e60b15d92d8f6cea49ede20f7ed183c40c575fe5d23b286",
+      "size": 31470
+    },
+    "outputs/diagnostics/cleaning.csv": {
+      "sha256": "453782fa86a4d436cc0ccec0680b0cd931adb02cd4b3df3ad267704e6534671e",
+      "size": 9808
+    },
+    "outputs/diagnostics/model_comparison.json": {
+      "sha256": "647947a37ced1f3c9fb916b604f8565ddb1d5da5c97f6d73548de14668479fac",
+      "size": 1642
+    },
+    "outputs/diagnostics/repricing.csv": {
+      "sha256": "29deade202b704b2dd98d86893f7a311eb60418c41cbb80b6b31d13a2fcac88a",
+      "size": 12836
+    },
+    "outputs/diagnostics/risk.csv": {
+      "sha256": "392c45842048c1b217ef4f8312ff508a966129b930b34e143ca12d7772d9da54",
+      "size": 11100
+    },
+    "outputs/diagnostics/sensitivity.json": {
+      "sha256": "73f2b48ee10b70442d870e9092aa483c47ff6a6d8cd89fd9af2a884189859674",
+      "size": 3432
+    },
+    "pyproject.toml": {
+      "sha256": "b9f3a7fb8283c2acceaa07207596cf0be2adee707b4d1f6afce37c99a3f1ab38",
+      "size": 447
+    },
+    "reports/research_report.html": {
+      "sha256": "1ba69d2c26628dc465e15b03c6c455ba34e85ab4d8d19e98a6a30f0cb0e8e1c6",
+      "size": 368312
+    },
+    "src/quantcurve/__init__.py": {
+      "sha256": "52bebef242102cb0e70a89ec1ecbc7132557a403b91103f1efe079a629a2c9b9",
+      "size": 99
+    },
+    "src/quantcurve/calibration.py": {
+      "sha256": "0fcb5b37743d8fd752f5b34623fd9bf556e73982d0d95a4ca01b537d5511d4fc",
+      "size": 12238
+    },
+    "src/quantcurve/cashflows.py": {
+      "sha256": "592434d7582826559e00eee49456d0e0fa67e2fb23774db7b05feb4a90776a5a",
+      "size": 5365
+    },
+    "src/quantcurve/charts.py": {
+      "sha256": "f7ea54f5081f8386e8ac9907bb14389507029158b90b45c4286b7fac0e18a904",
+      "size": 5396
+    },
+    "src/quantcurve/cleaning.py": {
+      "sha256": "35a7951d7051cb119cc6ae939df3fe12cf0146021872ee2eb064d29ee6028cab",
+      "size": 14805
+    },
+    "src/quantcurve/cli.py": {
+      "sha256": "e826aea5e7995645540dac2b158f29b144e13cc8b249cec6491606c632105293",
+      "size": 19863
+    },
+    "src/quantcurve/conventions.py": {
+      "sha256": "a13fe1a21b96f507a98eaa914164a9d84e3d18e770e2be7fdc65a999170cf0d9",
+      "size": 1104
+    },
+    "src/quantcurve/curve.py": {
+      "sha256": "60ebd3686b2153a42d0d5a344eed8dff336bb79135681a0e16dce9b0e6d6c883",
+      "size": 5303
+    },
+    "src/quantcurve/diagnostics.py": {
+      "sha256": "e2dd1e99bc3d8231fc82ab92f1e4f4c0b5092640cb51857dda2179a92e2181f9",
+      "size": 7781
+    },
+    "src/quantcurve/grids.py": {
+      "sha256": "8cecadfb42a9d0e6ab8b21abbe59bcfdb051b1b4ce08868a33aa4f70b6f84d53",
+      "size": 777
+    },
+    "src/quantcurve/instruments.py": {
+      "sha256": "348f553bbcb3f5b91b6cca818f09179cb0fa1c3add67a684db7c9c01a64d8dc9",
+      "size": 1080
+    },
+    "src/quantcurve/io.py": {
+      "sha256": "9f113ed48de11688a778566cf3370372f347823e8cc6b8582d33604864cd46b5",
+      "size": 1238
+    },
+    "src/quantcurve/report.py": {
+      "sha256": "725591572033b940c805dc3fdb585dfcd976882475516bf1ff7759174c9b48d9",
+      "size": 11040
+    },
+    "src/quantcurve/risk.py": {
+      "sha256": "a9a79b310a147e223331031eb698f711b63b16eaca13aa3c952c596a9fe38fb4",
+      "size": 3406
+    },
+    "tests/test_basic_conventions.py": {
+      "sha256": "32f1231467735f002b896713c206c64b4eddc4d946edac5af1eb4ea13eba16f9",
+      "size": 854
+    },
+    "tests/test_calibration.py": {
+      "sha256": "06d3288bb0667cfb9a8d13796f36df4220880f578b97ff92c05e54674f2fce00",
+      "size": 4438
+    },
+    "tests/test_cashflows.py": {
+      "sha256": "a018cf487302032ccc8061b5c6a6fc7d1d34e4f3814e03d18485a7ae674892f2",
+      "size": 3392
+    },
+    "tests/test_cleaning.py": {
+      "sha256": "0fe82a399ff0019552f0ad1d2c541ab5136c719fddaf034981303c890d4d45bd",
+      "size": 7566
+    },
+    "tests/test_cli.py": {
+      "sha256": "0254378403fe971c3cde0aa65088a561620ba4eceb5a498a4507f6f0187de317",
+      "size": 7687
+    },
+    "tests/test_curve.py": {
+      "sha256": "b5ad3fb96ecae4509938a11af43e48ef301127eae9815fad519cf43ea70773d3",
+      "size": 2985
+    },
+    "tests/test_io.py": {
+      "sha256": "2a9327091a8ff88bb83c0e4aa67478b97d7e2624b8c916f23b86dc6949ec70ac",
+      "size": 1087
+    },
+    "tests/test_risk.py": {
+      "sha256": "5fe0766ccfe068fe7ee0ca432d92b7df20ff77d96142b325d206e977744bd396",
+      "size": 2305
+    }
+  },
+  "comparison_vs_baseline_manifest": {
+    "missing_files": [],
+    "mismatched_files": [],
+    "unexpected_new_files": [],
+    "result": "ORIGINAL_UNCHANGED"
+  }
+}

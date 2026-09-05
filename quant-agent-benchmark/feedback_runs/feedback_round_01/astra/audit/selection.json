@@ -1,0 +1,2809 @@
+{
+  "selected_variant": "reference",
+  "decisions": {
+    "reference": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 5.835620203119285,
+      "synthetic_long_improvement_fraction": 0.0,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 413.45840124256875,
+      "guardrail_violation_count": 0,
+      "violations": []
+    },
+    "simple_baseline": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 10.529906476637702,
+      "synthetic_long_improvement_fraction": -0.8044194293194754,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 451.1439933486341,
+      "guardrail_violation_count": 133,
+      "violations": [
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 1.2726368334792375,
+          "after_value": 2.1415934479156515
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.023394597204021223,
+          "after_value": 0.9748893513256619
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.06447646472106579,
+          "after_value": 1.5908755459199455
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 1.7950300304478177,
+          "after_value": 2.6134507914778644
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 1.1466641697062696,
+          "after_value": 1.727046812766507
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.030873576516439245,
+          "after_value": 1.1481326737551267
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.0525818760576095,
+          "after_value": 1.4676825244922813
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 1.6174901111819162,
+          "after_value": 1.9781175006327834
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.02571504677889085,
+          "after_value": 0.6759351875814015
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.39455421474670543,
+          "after_value": 2.3209823734364727
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 1.352159766475523,
+          "after_value": 2.082096484593585
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.029076014114972175,
+          "after_value": 0.9906056425964345
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.06349065587846293,
+          "after_value": 1.589742219995015
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 1.9073374273105872,
+          "after_value": 2.515692813936707
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 0.3063302273932738,
+          "after_value": 9.935989298014611
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.03548883019600634,
+          "after_value": 0.5441696828547931
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.043583283937797715,
+          "after_value": 2.1193819611498723
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.4302302763121801,
+          "after_value": 13.882355636530828
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 0.30166477502966743,
+          "after_value": 10.176062264599945
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.03060276205280685,
+          "after_value": 0.49030810478276565
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.04849018136515193,
+          "after_value": 2.211446951308252
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.4232032483501691,
+          "after_value": 14.21267363036836
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 10.023020571909989,
+          "after_value": 11.788960235797854
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.035810509391819595,
+          "after_value": 0.33113621836533297
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.6461883882004706,
+          "after_value": 2.969822875765187
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 14.132561040206966,
+          "after_value": 16.407057293189496
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 0.2881285855609464,
+          "after_value": 9.60114045524551
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.08889177900269067,
+          "after_value": 0.6313059005020538
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.042888654429510564,
+          "after_value": 1.9983626545501452
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.4034065939418358,
+          "after_value": 13.420366659624861
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 8.231114824761354,
+          "after_value": 14.974002378876657
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 12.502415664650648,
+          "after_value": 20.2817928756596
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.46895453246949187,
+          "after_value": 9.593866774733142
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 9.608984437448202,
+          "after_value": 14.581077787676007
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 14.582623758348568,
+          "after_value": 20.924421847512058
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.7866774310654134,
+          "after_value": 6.788965792016602
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 12.918866832555079,
+          "after_value": 20.42064237414211
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.07589085706588287,
+          "after_value": 0.3785803990079531
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 11.532300376090458,
+          "after_value": 19.027855649089233
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 14.757565714436423,
+          "after_value": 22.7701501413678
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 7.909520149245744,
+          "after_value": 16.071210489262757
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 12.017537953299929,
+          "after_value": 19.523479848932453
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.357669846173869,
+          "after_value": 13.634386882875589
+        },
+        {
+          "input_split_id": "long_hump:normal",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 10.868413024457112,
+          "after_value": 15.37690128682637
+        },
+        {
+          "input_split_id": "long_hump:normal",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.008684645405772259,
+          "after_value": 0.3256805125715718
+        },
+        {
+          "input_split_id": "long_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.24408623733100437,
+          "after_value": 0.6754173832103492
+        },
+        {
+          "input_split_id": "long_hump:normal",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 15.336705302762608,
+          "after_value": 21.69174297063341
+        },
+        {
+          "input_split_id": "long_hump:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 10.78835621780796,
+          "after_value": 15.357150321218649
+        },
+        {
+          "input_split_id": "long_hump:remove_10_percent",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.011511891065593943,
+          "after_value": 0.33400565675249294
+        },
+        {
+          "input_split_id": "long_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.264009750612658,
+          "after_value": 0.6652600713693362
+        },
+        {
+          "input_split_id": "long_hump:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 15.223423464650342,
+          "after_value": 21.664111176325786
+        },
+        {
+          "input_split_id": "long_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 12.484959675513416,
+          "after_value": 15.939809784015418
+        },
+        {
+          "input_split_id": "long_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.09384253210436068,
+          "after_value": 0.9496297971086042
+        },
+        {
+          "input_split_id": "long_hump:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 17.619564667272027,
+          "after_value": 22.47810820498479
+        },
+        {
+          "input_split_id": "long_hump:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 11.02620608018393,
+          "after_value": 15.376582046830663
+        },
+        {
+          "input_split_id": "long_hump:outliers",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.008541745092986889,
+          "after_value": 0.33692783481467087
+        },
+        {
+          "input_split_id": "long_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.22174807030512,
+          "after_value": 0.6671546967892507
+        },
+        {
+          "input_split_id": "long_hump:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 15.559707744061892,
+          "after_value": 21.691490322679293
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "short",
+          "metric_name": "forward_rmse",
+          "before_value": 0.0482528720651711,
+          "after_value": 1.379459255799835
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.3809192422488005,
+          "after_value": 6.240586504036007
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "short",
+          "metric_name": "forward_rmse",
+          "before_value": 0.057809573596994096,
+          "after_value": 1.6510599266903325
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.28064101663345475,
+          "after_value": 5.593400537246692
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 4.579906053336246,
+          "after_value": 8.651890937672919
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_rmse",
+          "before_value": 0.08468990422496812,
+          "after_value": 1.399270448147351
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.3934101578332617,
+          "after_value": 6.172159944096306
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 1.657674085439015,
+          "after_value": 24.96624183076706
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.08276927843443171,
+          "after_value": 11.158853660304208
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 2.3380407096135385,
+          "after_value": 33.67578858846706
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 1.7052769224500708,
+          "after_value": 25.35532241026489
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.10474354559443814,
+          "after_value": 11.45447060485702
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 2.4045591203774492,
+          "after_value": 34.16590593401572
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 6.170401548372142,
+          "after_value": 13.33701982860609
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 1.610444644297839,
+          "after_value": 24.412478053899644
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.07992543909151348,
+          "after_value": 10.742423095141422
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 2.27096896191056,
+          "after_value": 32.97616380863513
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 42.566855924108395,
+          "after_value": 54.3890334934606
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 64.61535739384767,
+          "after_value": 80.47418134917271
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 3.221828771716298,
+          "after_value": 17.610887300257296
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 44.20818694415294,
+          "after_value": 53.526321294765545
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 67.14090448666468,
+          "after_value": 79.95269261712895
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 2.6954751198849793,
+          "after_value": 14.030185723726225
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 50.31491736055866,
+          "after_value": 60.50637551100116
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "short",
+          "metric_name": "forward_rmse",
+          "before_value": 0.3474999094681267,
+          "after_value": 1.71426296892839
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 64.81345946068232,
+          "after_value": 84.22355757652657
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 42.560287392107156,
+          "after_value": 55.89208582371802
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 64.57442950830237,
+          "after_value": 81.37163419249762
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 3.7177768704126004,
+          "after_value": 22.69382696792605
+        },
+        {
+          "input_split_id": "long_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 1.0918539971246755,
+          "after_value": 3.8849673671297764
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.8903101714053535,
+          "after_value": 9.287132408538728
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.1660371935785412,
+          "after_value": 2.451011212061993
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.7625050088867422,
+          "after_value": 8.212419553890529
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.13033915052185036,
+          "after_value": 2.135088635411035
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.9446821218956138,
+          "after_value": 9.156356887025929
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.3362840184568014,
+          "after_value": 37.63975406308174
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.19529113286190225,
+          "after_value": 23.84720305750491
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.3362840184568014,
+          "after_value": 37.63975406308174
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.500613244747785,
+          "after_value": 38.133780493983004
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.1858413211643442,
+          "after_value": 24.335176818706568
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.500613244747785,
+          "after_value": 38.133780493983004
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 19.05294464272839,
+          "after_value": 27.321299325891722
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.234972960274024,
+          "after_value": 36.934286890227106
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.16692333065936385,
+          "after_value": 23.1512241458136
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.234972960274024,
+          "after_value": 36.934286890227106
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 140.35276417928185,
+          "after_value": 162.55533626651547
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 140.35276417928185,
+          "after_value": 162.55533626651547
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 7.971200276808803,
+          "after_value": 20.116414150622397
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 143.45306705591997,
+          "after_value": 159.26990864988034
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 143.45306705591997,
+          "after_value": 159.26990864988034
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.5327866889679695,
+          "after_value": 16.501212675323792
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 138.3213624461542,
+          "after_value": 177.85549352980433
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.7150037779309406,
+          "after_value": 3.781934540057763
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 138.3213624461542,
+          "after_value": 177.85549352980433
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 141.88186420742957,
+          "after_value": 167.24251371863244
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 141.88186420742957,
+          "after_value": 167.24251371863244
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 10.731333312704976,
+          "after_value": 25.23093674405178
+        },
+        {
+          "input_split_id": "long_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 3.2970738912919613,
+          "after_value": 7.261219167258824
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.3473610770923126,
+          "after_value": 0.7580777766296749
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "short",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.09412449285402147,
+          "after_value": 0.22392691049262226
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "long",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 2.2343722805540973,
+          "after_value": 5.670742631450335
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.44238537933583255,
+          "after_value": 1.0495471850815803
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "all",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 0.30053599498256,
+          "after_value": 7.1608858295690005
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 2.2819042925921544,
+          "after_value": 3.007500457664947
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "short",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 0.30053599498256,
+          "after_value": 7.1608858295690005
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "short",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.0031654485147925016,
+          "after_value": 0.09706421725893222
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "middle",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 2.6183048671388116,
+          "after_value": 7.281168863353608
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 1.2964657935555113,
+          "after_value": 2.8279115041476173
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "all",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 11.353160838882776,
+          "after_value": 21.177014693460755
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "all",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 6.463090241703006,
+          "after_value": 7.882558266999734
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.5016368329283999,
+          "after_value": 0.9267349534474573
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "short",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 11.353160838882776,
+          "after_value": 21.177014693460755
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "short",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 2.027445206034055,
+          "after_value": 10.89050125394902
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.7658682585405671,
+          "after_value": 1.7758829409014576
+        },
+        {
+          "metric_name": "public_mean_huber_loss",
+          "before_value": 413.45840124256875,
+          "after_value": 451.1439933486341
+        }
+      ]
+    },
+    "smoothing_lower": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 3.915592777792836,
+      "synthetic_long_improvement_fraction": 0.3290185718906358,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 448.82369604177933,
+      "guardrail_violation_count": 10,
+      "violations": [
+        {
+          "input_split_id": "long_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 10.510424059856916,
+          "after_value": 16.870922936542446
+        },
+        {
+          "input_split_id": "long_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 11.08361652382945,
+          "after_value": 16.057979306426315
+        },
+        {
+          "input_split_id": "long_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 9.498425395677994,
+          "after_value": 13.432493096456403
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "short",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.0031654485147925016,
+          "after_value": 0.04611574820768283
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "short",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 2.027445206034055,
+          "after_value": 9.107055069290043
+        },
+        {
+          "input_split_id": "public:S3",
+          "maturity_band": "all",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 19.923461016352732,
+          "after_value": 28.390623675980056
+        },
+        {
+          "input_split_id": "public:S3",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 4.130831456149359,
+          "after_value": 5.853972628148955
+        },
+        {
+          "input_split_id": "public:S3",
+          "maturity_band": "long",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 19.923461016352732,
+          "after_value": 28.390623675980056
+        },
+        {
+          "input_split_id": "public:S3",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 4.130831456149359,
+          "after_value": 5.853972628148955
+        },
+        {
+          "metric_name": "public_mean_huber_loss",
+          "before_value": 413.45840124256875,
+          "after_value": 448.82369604177933
+        }
+      ]
+    },
+    "smoothing_higher": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 10.917632286826706,
+      "synthetic_long_improvement_fraction": -0.8708606637887362,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 469.16539915093097,
+      "guardrail_violation_count": 127,
+      "violations": [
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 1.2726368334792375,
+          "after_value": 7.867212664899586
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.06447646472106579,
+          "after_value": 0.5771920147979085
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 1.7950300304478177,
+          "after_value": 11.089650177605952
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 1.1466641697062696,
+          "after_value": 7.545802555110639
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.0525818760576095,
+          "after_value": 0.6067662026253379
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 1.6174901111819162,
+          "after_value": 10.633997663049673
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 11.176372521642845,
+          "after_value": 16.314256973677114
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.39455421474670543,
+          "after_value": 1.409617555800083
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 15.768740338386445,
+          "after_value": 22.986657937448246
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 1.352159766475523,
+          "after_value": 8.003268075324119
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.06349065587846293,
+          "after_value": 0.5653269156454113
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 1.9073374273105872,
+          "after_value": 11.28229404085367
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 0.3063302273932738,
+          "after_value": 9.193294261392092
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.03548883019600634,
+          "after_value": 0.3553750981225332
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.043583283937797715,
+          "after_value": 0.9581390311323453
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.4302302763121801,
+          "after_value": 12.943155599301916
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 0.30166477502966743,
+          "after_value": 9.128677838199295
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.03060276205280685,
+          "after_value": 0.32472666070207173
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.04849018136515193,
+          "after_value": 0.9517559558672779
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.4232032483501691,
+          "after_value": 12.85225665111284
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 10.023020571909989,
+          "after_value": 25.960466190018646
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.035810509391819595,
+          "after_value": 0.3539389837204697
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.6461883882004706,
+          "after_value": 4.9291322668589705
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 14.132561040206966,
+          "after_value": 36.35037362279702
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 0.2881285855609464,
+          "after_value": 9.353206582825553
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.08889177900269067,
+          "after_value": 0.658335847859336
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.042888654429510564,
+          "after_value": 0.9777727403344002
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.4034065939418358,
+          "after_value": 13.166612816506253
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 8.231114824761354,
+          "after_value": 11.80727884075781
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 12.502415664650648,
+          "after_value": 17.88366470309841
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.46895453246949187,
+          "after_value": 1.4188794150141772
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 9.608984437448202,
+          "after_value": 11.933540812508088
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 14.582623758348568,
+          "after_value": 18.06751131726946
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.7866774310654134,
+          "after_value": 1.5121716517776798
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 12.918866832555079,
+          "after_value": 16.765581679726832
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 11.532300376090458,
+          "after_value": 18.34675262699361
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 14.757565714436423,
+          "after_value": 16.423297110440323
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 7.909520149245744,
+          "after_value": 11.701109203835038
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 12.017537953299929,
+          "after_value": 17.70570274670482
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.357669846173869,
+          "after_value": 1.581738798709684
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 8.615580667033717,
+          "after_value": 32.166355124531286
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.3809192422488005,
+          "after_value": 2.7839085498635465
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 12.153845028502435,
+          "after_value": 45.322042577106785
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 7.987814535752453,
+          "after_value": 31.27043106284747
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.28064101663345475,
+          "after_value": 2.626830976552571
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 11.270016636389375,
+          "after_value": 44.06381326517184
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 41.06119950853713,
+          "after_value": 53.63689061166813
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 4.579906053336246,
+          "after_value": 10.374049532141047
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 57.79267151279801,
+          "after_value": 75.08147066619578
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 8.984847792392832,
+          "after_value": 32.55708492854404
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.3934101578332617,
+          "after_value": 2.858992471988206
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 12.674842873639035,
+          "after_value": 45.8703709565563
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 1.657674085439015,
+          "after_value": 28.587558075158412
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.08276927843443171,
+          "after_value": 7.008158556118956
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 2.3380407096135385,
+          "after_value": 39.81675393097457
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 1.7052769224500708,
+          "after_value": 28.304674143081908
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.10474354559443814,
+          "after_value": 6.9171621364695755
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 2.4045591203774492,
+          "after_value": 39.4260637916809
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 31.83150236427752,
+          "after_value": 68.63325051901431
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 6.170401548372142,
+          "after_value": 25.341193700201718
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 44.556436289377594,
+          "after_value": 93.96016140406783
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 1.610444644297839,
+          "after_value": 29.022068149035213
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.07992543909151348,
+          "after_value": 7.153112025564128
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 2.27096896191056,
+          "after_value": 40.41576694669237
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 42.566855924108395,
+          "after_value": 49.92412254047853
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 64.61535739384767,
+          "after_value": 75.83455388571541
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 44.20818694415294,
+          "after_value": 50.08105921323733
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "short",
+          "metric_name": "forward_rmse",
+          "before_value": 0.14755073284741763,
+          "after_value": 1.1886402853377969
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 67.14090448666468,
+          "after_value": 76.06354129416836
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 50.31491736055866,
+          "after_value": 57.63290794188236
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 64.81345946068232,
+          "after_value": 79.30297708060529
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 42.560287392107156,
+          "after_value": 49.95361841492776
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 64.57442950830237,
+          "after_value": 75.89658753108444
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 24.630509564292183,
+          "after_value": 70.58962204762591
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.8903101714053535,
+          "after_value": 9.085812213259388
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 24.630509564292183,
+          "after_value": 70.58962204762591
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 23.23488705105424,
+          "after_value": 68.98654723505214
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.7625050088867422,
+          "after_value": 8.384457228682411
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 23.23488705105424,
+          "after_value": 68.98654723505214
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 86.3654957877549,
+          "after_value": 107.32880568845582
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 15.730978392089513,
+          "after_value": 28.827399355126694
+        },
+        {
+          "input_split_id": "negative_rising:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 86.3654957877549,
+          "after_value": 107.32880568845582
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 25.428813339789976,
+          "after_value": 71.2925566850808
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.9446821218956138,
+          "after_value": 9.3652692598108
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 25.428813339789976,
+          "after_value": 71.2925566850808
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.3362840184568014,
+          "after_value": 52.536364213769026
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.19529113286190225,
+          "after_value": 18.637089226270184
+        },
+        {
+          "input_split_id": "inverted:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.3362840184568014,
+          "after_value": 52.536364213769026
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.500613244747785,
+          "after_value": 52.05488969331651
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.1858413211643442,
+          "after_value": 18.42155610718009
+        },
+        {
+          "input_split_id": "inverted:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.500613244747785,
+          "after_value": 52.05488969331651
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 58.916289101855725,
+          "after_value": 117.13310340117059
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 19.05294464272839,
+          "after_value": 56.986975642547534
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 58.916289101855725,
+          "after_value": 117.13310340117059
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.234972960274024,
+          "after_value": 53.27409368506824
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.16692333065936385,
+          "after_value": 18.99334945488563
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.234972960274024,
+          "after_value": 53.27409368506824
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 140.35276417928185,
+          "after_value": 155.7150664801326
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.5929625116099513,
+          "after_value": 3.3054526665952237
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 140.35276417928185,
+          "after_value": 155.7150664801326
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.3235881818457534,
+          "after_value": 3.2520187941998193
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 138.3213624461542,
+          "after_value": 163.24577249725345
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.7150037779309406,
+          "after_value": 3.1886892096512702
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 138.3213624461542,
+          "after_value": 163.24577249725345
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 141.88186420742957,
+          "after_value": 156.7936279643779
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.5871993091283861,
+          "after_value": 3.1815951222304366
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 141.88186420742957,
+          "after_value": 156.7936279643779
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "all",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 7.040526791096155,
+          "after_value": 10.697244764061294
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.3473610770923126,
+          "after_value": 0.5693306395496479
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "short",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 7.040526791096155,
+          "after_value": 10.697244764061294
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "short",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.09412449285402147,
+          "after_value": 0.1573504616838619
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "middle",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.24055424022757105,
+          "after_value": 0.2811146707104307
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "long",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 2.2343722805540973,
+          "after_value": 3.715070449355091
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.44238537933583255,
+          "after_value": 0.7634237805737489
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "all",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 0.30053599498256,
+          "after_value": 13.139229853452322
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 2.2819042925921544,
+          "after_value": 2.761306494993195
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "short",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 0.30053599498256,
+          "after_value": 13.139229853452322
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "short",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.0031654485147925016,
+          "after_value": 0.05432878904375116
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 1.2964657935555113,
+          "after_value": 2.45822374239386
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "all",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 11.353160838882776,
+          "after_value": 14.55222091956096
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "all",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 6.463090241703006,
+          "after_value": 7.6894108868951
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.5016368329283999,
+          "after_value": 0.7201589369057694
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "short",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 11.353160838882776,
+          "after_value": 14.55222091956096
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "short",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 2.027445206034055,
+          "after_value": 8.902874543988682
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "middle",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.3741674576807291,
+          "after_value": 0.42676280599364447
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.7658682585405671,
+          "after_value": 1.23617802111277
+        },
+        {
+          "metric_name": "public_mean_huber_loss",
+          "before_value": 413.45840124256875,
+          "after_value": 469.16539915093097
+        }
+      ]
+    },
+    "long_knots_dense": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 5.8348932022012985,
+      "synthetic_long_improvement_fraction": 0.00012457988914328964,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 413.4618535939314,
+      "guardrail_violation_count": 0,
+      "violations": []
+    },
+    "long_knots_sparse": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 5.847360080430003,
+      "synthetic_long_improvement_fraction": -0.002011761715480136,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 413.46791791890155,
+      "guardrail_violation_count": 0,
+      "violations": []
+    },
+    "endpoint_flat_zero": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 4.457305717278314,
+      "synthetic_long_improvement_fraction": 0.23618988862644416,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 383.3404651260225,
+      "guardrail_violation_count": 2,
+      "violations": [
+        {
+          "input_split_id": "long_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 12.484959675513416,
+          "after_value": 14.859378920031716
+        },
+        {
+          "input_split_id": "long_hump:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 17.619564667272027,
+          "after_value": 20.970632312755306
+        }
+      ]
+    },
+    "long_penalty_taper": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 5.277062279402849,
+      "synthetic_long_improvement_fraction": 0.09571526320679213,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 418.53695362320923,
+      "guardrail_violation_count": 6,
+      "violations": [
+        {
+          "input_split_id": "long_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 10.510424059856916,
+          "after_value": 12.772773744108047
+        },
+        {
+          "input_split_id": "long_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 11.08361652382945,
+          "after_value": 14.342137223214909
+        },
+        {
+          "input_split_id": "public:S3",
+          "maturity_band": "all",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 19.923461016352732,
+          "after_value": 22.032141702581395
+        },
+        {
+          "input_split_id": "public:S3",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 4.130831456149359,
+          "after_value": 4.561151573888469
+        },
+        {
+          "input_split_id": "public:S3",
+          "maturity_band": "long",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 19.923461016352732,
+          "after_value": 22.032141702581395
+        },
+        {
+          "input_split_id": "public:S3",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 4.130831456149359,
+          "after_value": 4.561151573888469
+        }
+      ]
+    },
+    "huber_lower": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 5.780459540942576,
+      "synthetic_long_improvement_fraction": 0.009452407842995853,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 405.06882821557286,
+      "guardrail_violation_count": 33,
+      "violations": [
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 1.2726368334792375,
+          "after_value": 2.0783908485520355
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 1.7950300304478177,
+          "after_value": 2.931940962046152
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 1.1466641697062696,
+          "after_value": 1.9493889364793533
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 1.6174901111819162,
+          "after_value": 2.7499864663220976
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 1.352159766475523,
+          "after_value": 2.1332066751646375
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 1.9073374273105872,
+          "after_value": 3.0094927584654254
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 10.023020571909989,
+          "after_value": 11.409014032991394
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 14.132561040206966,
+          "after_value": 16.08019385332742
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 8.231114824761354,
+          "after_value": 9.969382052748122
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 12.502415664650648,
+          "after_value": 15.135310739727933
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 11.532300376090458,
+          "after_value": 14.78739027135854
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 7.909520149245744,
+          "after_value": 9.765152401890907
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 12.017537953299929,
+          "after_value": 14.828119006391914
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.357669846173869,
+          "after_value": 0.6494730793413805
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 8.615580667033717,
+          "after_value": 12.282659875935467
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 12.153845028502435,
+          "after_value": 17.32794464914384
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 7.987814535752453,
+          "after_value": 11.69494374398571
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 11.270016636389375,
+          "after_value": 16.49981036468104
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 8.984847792392832,
+          "after_value": 12.532073177618335
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 12.674842873639035,
+          "after_value": 17.68036173568141
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 31.83150236427752,
+          "after_value": 35.33358446237023
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 6.170401548372142,
+          "after_value": 7.64856798908572
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 44.556436289377594,
+          "after_value": 49.35743742514558
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 24.630509564292183,
+          "after_value": 32.59765792431576
+        },
+        {
+          "input_split_id": "negative_rising:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 24.630509564292183,
+          "after_value": 32.59765792431576
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 23.23488705105424,
+          "after_value": 31.354385650279767
+        },
+        {
+          "input_split_id": "negative_rising:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 23.23488705105424,
+          "after_value": 31.354385650279767
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 25.428813339789976,
+          "after_value": 33.126656688335714
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 25.428813339789976,
+          "after_value": 33.126656688335714
+        },
+        {
+          "input_split_id": "inverted:long_illiquid",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 19.05294464272839,
+          "after_value": 22.59066615487186
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 1.2964657935555113,
+          "after_value": 1.5574479694498669
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.5016368329283999,
+          "after_value": 0.5568632255616294
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "long",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.7658682585405671,
+          "after_value": 0.893810692508655
+        }
+      ]
+    },
+    "huber_higher": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 5.9249811114604665,
+      "synthetic_long_improvement_fraction": -0.01531300962550911,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 417.2346307592629,
+      "guardrail_violation_count": 8,
+      "violations": [
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 12.918866832555079,
+          "after_value": 16.93792107011461
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 14.757565714436423,
+          "after_value": 22.08729500950743
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 50.31491736055866,
+          "after_value": 56.82594758867483
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 37.704382167697766,
+          "after_value": 55.43273274104279
+        },
+        {
+          "input_split_id": "middle_hump:long_illiquid",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 41.00822923995929,
+          "after_value": 61.98330676054444
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 10.731333312704976,
+          "after_value": 12.75649552141222
+        },
+        {
+          "input_split_id": "long_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 11.08361652382945,
+          "after_value": 14.505757364796194
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "short",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 2.027445206034055,
+          "after_value": 2.57300162647407
+        }
+      ]
+    },
+    "no_robust": {
+      "eligible": false,
+      "synthetic_long_zero_rmse_before_bp": 5.835620203119285,
+      "synthetic_long_zero_rmse_after_bp": 5.237380918808944,
+      "synthetic_long_improvement_fraction": 0.10251511638652686,
+      "public_mean_huber_before": 413.45840124256875,
+      "public_mean_huber_after": 733.7656560288281,
+      "guardrail_violation_count": 56,
+      "violations": [
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 0.030150953710315218,
+          "after_value": 0.6755051604690903
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.015663980564511404,
+          "after_value": 0.81029670731565
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.023596670904708496,
+          "after_value": 0.6556440176137613
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.036039889486792674,
+          "after_value": 0.6731205863744897
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.029076014114972175,
+          "after_value": 2.4161927527834344
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.06349065587846293,
+          "after_value": 0.45270727336120337
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "all",
+          "metric_name": "zero_rmse",
+          "before_value": 0.2881285855609464,
+          "after_value": 1.0145195058953105
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.08889177900269067,
+          "after_value": 3.5878102159272482
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.46895453246949187,
+          "after_value": 0.9776615978895735
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "zero_rmse",
+          "before_value": 0.7866774310654134,
+          "after_value": 1.0459315097286705
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "short",
+          "metric_name": "zero_rmse",
+          "before_value": 0.09190528282531929,
+          "after_value": 2.50198830930781
+        },
+        {
+          "input_split_id": "long_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "zero_rmse",
+          "before_value": 0.22174807030512,
+          "after_value": 0.5620403197839332
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 0.20009329795913883,
+          "after_value": 3.536700478498556
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_rmse",
+          "before_value": 0.06321827747316892,
+          "after_value": 2.9921367732943915
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.14223116907285283,
+          "after_value": 2.5099566124382195
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 0.24857276259803412,
+          "after_value": 4.280270724723831
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_rmse",
+          "before_value": 0.08468990422496812,
+          "after_value": 4.514076976395004
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.3934101578332617,
+          "after_value": 2.07816373235089
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_rmse",
+          "before_value": 1.610444644297839,
+          "after_value": 3.212338035583134
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_rmse",
+          "before_value": 0.1459268682133629,
+          "after_value": 9.108535448789572
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 0.07992543909151348,
+          "after_value": 1.1925397870766061
+        },
+        {
+          "input_split_id": "middle_hump:normal",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 3.221828771716298,
+          "after_value": 5.002935855443351
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_rmse",
+          "before_value": 2.6954751198849793,
+          "after_value": 5.338564918074595
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_rmse",
+          "before_value": 0.3162620330504604,
+          "after_value": 8.452495438821053
+        },
+        {
+          "input_split_id": "long_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 3.0394607808510825,
+          "after_value": 5.2616409321256175
+        },
+        {
+          "input_split_id": "long_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 3.2261595768795273,
+          "after_value": 5.083226727670832
+        },
+        {
+          "input_split_id": "long_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_rmse",
+          "before_value": 2.7773726172064106,
+          "after_value": 5.904580706528688
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.3018538109607338,
+          "after_value": 6.4900079700427185
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.1342185852169081,
+          "after_value": 6.390525603664349
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.2948606893622349,
+          "after_value": 5.337772480742791
+        },
+        {
+          "input_split_id": "flat:outliers",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.3018538109607338,
+          "after_value": 6.4900079700427185
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.13033915052185036,
+          "after_value": 8.19412997713713
+        },
+        {
+          "input_split_id": "negative_rising:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.9446821218956138,
+          "after_value": 5.436827312765013
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "all",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.234972960274024,
+          "after_value": 13.600350132088636
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.3420583560385243,
+          "after_value": 13.600350132088636
+        },
+        {
+          "input_split_id": "inverted:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.16692333065936385,
+          "after_value": 8.110086277763294
+        },
+        {
+          "input_split_id": "middle_hump:remove_10_percent",
+          "maturity_band": "long",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 4.5327866889679695,
+          "after_value": 6.895525450597365
+        },
+        {
+          "input_split_id": "middle_hump:outliers",
+          "maturity_band": "short",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 0.5871993091283861,
+          "after_value": 18.016511719882097
+        },
+        {
+          "input_split_id": "long_hump:normal",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 10.510424059856916,
+          "after_value": 20.45565825292254
+        },
+        {
+          "input_split_id": "long_hump:remove_10_percent",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 11.08361652382945,
+          "after_value": 20.173393655297073
+        },
+        {
+          "input_split_id": "long_hump:outliers",
+          "maturity_band": "middle",
+          "metric_name": "forward_max_abs_error",
+          "before_value": 9.498425395677994,
+          "after_value": 20.030157699020002
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "all",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 7.040526791096155,
+          "after_value": 8.258557030492172
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "short",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 7.040526791096155,
+          "after_value": 8.258557030492172
+        },
+        {
+          "input_split_id": "public:S0",
+          "maturity_band": "short",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.09412449285402147,
+          "after_value": 0.5094128228815009
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "all",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 0.30053599498256,
+          "after_value": 1.3974932937280053
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "all",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 39.97407238880851,
+          "after_value": 74.512461409027
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "short",
+          "instrument_type": "deposit",
+          "metric_name": "rmse",
+          "before_value": 0.30053599498256,
+          "after_value": 1.3974932937280053
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "short",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 52.832089401915745,
+          "after_value": 90.9255699105809
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "short",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.0031654485147925016,
+          "after_value": 0.5504704679214285
+        },
+        {
+          "input_split_id": "public:S1",
+          "maturity_band": "middle",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 2.6183048671388116,
+          "after_value": 43.95039356049207
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "all",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 6.463090241703006,
+          "after_value": 33.66993724770336
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "all",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.5016368329283999,
+          "after_value": 1.653155141995691
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "short",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 2.027445206034055,
+          "after_value": 45.45397989310009
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "middle",
+          "instrument_type": "ois_swap",
+          "metric_name": "rmse",
+          "before_value": 7.6099911069363735,
+          "after_value": 27.093630981352103
+        },
+        {
+          "input_split_id": "public:S2",
+          "maturity_band": "middle",
+          "instrument_type": "bond",
+          "metric_name": "rmse",
+          "before_value": 0.3741674576807291,
+          "after_value": 1.894578647181526
+        },
+        {
+          "metric_name": "public_mean_huber_loss",
+          "before_value": 413.45840124256875,
+          "after_value": 733.7656560288281
+        }
+      ]
+    }
+  },
+  "conditions": 20,
+  "public_splits": 4,
+  "pricing_unchanged": true,
+  "multi_factor_combination": false,
+  "penalty_identity": "z_xx=(1+T)^2 z_TT+(1+T) z_T; original penalty integrates z_xx^2 dT/(1+T). A linear z(T) is not unpenalized. For 1bp/Y slope through 30Y the exact penalty is 480 bp^2, 73.4375% contributed after 15Y.",
+  "unverified": "Synthetic curves are internally designed cases used for selection, not hidden-score estimates. Public unit preprocessing uses all visible tape as in the reference."
+}

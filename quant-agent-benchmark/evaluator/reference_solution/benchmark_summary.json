@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "model_name": "hidden-reference",
+  "reasoning_effort": null,
+  "start_time": "2026-09-05T00:00:00Z",
+  "finish_time": "2026-09-05T00:00:01Z",
+  "wall_time_seconds": 1.0,
+  "test_runs": 2,
+  "failed_test_runs": 0,
+  "corrective_iterations": 1,
+  "tests_passed": 5,
+  "tests_failed": 0,
+  "files_created": ["outputs/curves/curve.csv", "outputs/diagnostics/cleaning.csv", "outputs/diagnostics/repricing.csv", "outputs/diagnostics/risk.csv", "reports/research_report.html"],
+  "unresolved_limitations": ["Synthetic calendars only", "Flat-zero extrapolation outside 30Y"],
+  "quota_percentage_consumed": null,
+  "credits_consumed": null,
+  "estimated_usd_cost": null,
+  "human_interventions": 0
+}
