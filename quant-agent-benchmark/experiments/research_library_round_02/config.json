@@ -1,0 +1,24 @@
+{
+  "round_id": "research_library_round_02",
+  "contract_version": "2.0",
+  "minutes_per_run": 60,
+  "active_campaign": "combined_all_models",
+  "combined_models": ["astra", "sol", "terra", "luna", "sonnet", "opus", "fable"],
+  "pilot_models": ["astra", "sol", "fable"],
+  "repeats": 1,
+  "arms": {
+    "A": {"papers": false, "quantlib": false},
+    "B": {"papers": true, "quantlib": false},
+    "C": {"papers": false, "quantlib": true},
+    "D": {"papers": true, "quantlib": true}
+  },
+  "starting_submissions": {
+    "astra": "feedback_runs/feedback_round_01/astra/submission",
+    "sol": "feedback_runs/feedback_round_01/sol/submission",
+    "terra": "feedback_runs/feedback_round_01/terra/submission",
+    "luna": "output/luna",
+    "sonnet": "feedback_runs/feedback_round_01/sonnet/submission",
+    "opus": "feedback_runs/feedback_round_01/opus/submission",
+    "fable": "feedback_runs/feedback_round_01/fable/submission"
+  }
+}

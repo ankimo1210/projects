@@ -42,3 +42,12 @@ Evaluation copies candidate source to a temporary directory, ignores prior outpu
 `test_result_directories_empty` は実行前の空の提出先を検証する初期状態チェックです。
 保存済み提出物を含むこの状態では失敗します。これを通すために提出物を削除したり、
 採点器を変更したりしないでください。ローカル仮想環境・キャッシュはGit対象外です。
+
+## 次の比較実験（準備済み・未実行）
+
+全7モデルに論文＋QuantLibを与え、各1セッションで改善量を比較するキットは
+[`experiments/research_library_round_02/README.md`](experiments/research_library_round_02/README.md)。
+新しい支払規約と非公開データを用い、旧スコアとは分離します。
+旧4条件pilotは保存のみとし、今回は使いません。資源別の因果効果は切り分けません。
+秘密データ・配布PDF・候補実行フォルダ・専用環境はGit外に保存し、
+ホスト側のアクセス隔離を確認するまでモデルは起動しません。
