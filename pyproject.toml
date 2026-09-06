@@ -42,6 +42,7 @@ members = [
     "market_nn",
     "portfolio-analyzer",
     "macrokit",
+    "timesfm_lab",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -189,6 +190,7 @@ testpaths = [
     "market_nn/tests",
     "labor_ai_quadrant/tests",
     "macrokit/tests",
+    "timesfm_lab/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

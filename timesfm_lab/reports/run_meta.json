@@ -1,0 +1,93 @@
+{
+  "run_utc": "2026-09-06T08:49:57+00:00",
+  "git_commit": "1900303e",
+  "timesfm_version": "3.0.1",
+  "torch_version": "2.11.0+cu128",
+  "cuda_available": true,
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "python": "3.12.3",
+  "statsmodels": "0.14.6",
+  "numpy": "2.4.6",
+  "wall_seconds": 158.3,
+  "seed": 0,
+  "n_rows": 6468,
+  "specs": [
+    {
+      "key": "electricity_hourly",
+      "title": "Electricity (hourly)",
+      "season": 24,
+      "freq": "1 hour",
+      "context_length": 1024,
+      "horizon": 48,
+      "n_series": 40,
+      "n_windows": 6,
+      "note": "321 client load series. Daily + weekly cycle, very regular."
+    },
+    {
+      "key": "traffic_hourly",
+      "title": "Traffic (hourly)",
+      "season": 24,
+      "freq": "1 hour",
+      "context_length": 1024,
+      "horizon": 48,
+      "n_series": 40,
+      "n_windows": 6,
+      "note": "862 SF freeway occupancy sensors. Strong daily + weekday/weekend cycle."
+    },
+    {
+      "key": "solar_10_minutes",
+      "title": "Solar (10 minutes)",
+      "season": 144,
+      "freq": "10 minutes",
+      "context_length": 2048,
+      "horizon": 144,
+      "n_series": 25,
+      "n_windows": 6,
+      "note": "137 PV plants. Hard floor at zero overnight; the daily shape is near-deterministic."
+    },
+    {
+      "key": "weather_daily",
+      "title": "Weather (daily)",
+      "season": 7,
+      "freq": "1 day",
+      "context_length": 512,
+      "horizon": 30,
+      "n_series": 40,
+      "n_windows": 6,
+      "note": "3010 Australian station series (rain, temp, solar). No usable weekly cycle."
+    },
+    {
+      "key": "saugeen_river",
+      "title": "Saugeen river flow (daily)",
+      "season": 7,
+      "freq": "1 day",
+      "context_length": 512,
+      "horizon": 30,
+      "n_series": 1,
+      "n_windows": 40,
+      "note": "One 65-year series. Spiky, heavy-tailed, no short seasonality."
+    },
+    {
+      "key": "ett_h1",
+      "title": "ETTh1 (hourly)",
+      "season": 24,
+      "freq": "1 hour",
+      "context_length": 1024,
+      "horizon": 48,
+      "n_series": 7,
+      "n_windows": 12,
+      "note": "Transformer station 1, all 7 channels. The standard long-horizon benchmark."
+    },
+    {
+      "key": "ett_h2",
+      "title": "ETTh2 (hourly)",
+      "season": 24,
+      "freq": "1 hour",
+      "context_length": 1024,
+      "horizon": 48,
+      "n_series": 7,
+      "n_windows": 12,
+      "note": "Transformer station 2. Noisier than ETTh1 and prone to level shifts."
+    }
+  ]
+}

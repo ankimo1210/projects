@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TimesFM 反証ベンチ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;700&family=Zen+Old+Mincho:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+
+/* --- report-local additions --- */
+.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;border-radius:var(--r-chip);
+  border:1px solid var(--rule-2);color:var(--ink-3);white-space:nowrap}
+.tag.on{color:var(--accent);border-color:var(--accent-soft);background:var(--accent-wash)}
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:34px 0 0}
+.verdict>div{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-card);padding:18px 20px 20px}
+.verdict .q{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+.verdict .a{font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.4;margin:10px 0 0;display:block}
+.verdict .a.yes{color:var(--accent)}
+.verdict .a.no{color:var(--series-2)}
+.verdict .why{font-size:13.5px;color:var(--ink-2);margin:9px 0 0;line-height:1.75}
+td.win{color:var(--accent);font-weight:700}
+.small{font-size:13.5px;color:var(--ink-3);line-height:1.75;margin-top:10px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-top:18px}
+.grid2 figure{margin:0}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">
+    <span>TimesFM 3.0.1 zero-shot</span><span>公開ベンチ7系統</span><span>1,078 windows</span>
+    <span>2026-09-06</span><b>timesfm_lab</b>
+  </div>
+  <h1>基盤モデルは、本当に古典手法に勝ったのか<span class="sub">Google TimesFM 3.0 を、こちらが有利になるよう調整した5つの古典ベースラインと、ローリング原点バックテストで正面から比較する</span></h1>
+  <p class="lede">結論は三段階に分かれる。<strong>単体の古典手法には、どれ相手でも勝つ</strong>（勝率 71.5〜79.3%、いずれも p &lt; 1e-40）。しかし<strong>窓ごとに5手法の最良を選ぶ「オラクル」には負ける</strong>（平均 MASE 1.065 対 0.899）。そしてそのオラクルは<strong>実際には到達できない</strong> — 過去の勝者を引き継ぐ実装可能な選択器は MASE 1.275 までしか届かず、TimesFM はその差の 56% を埋める。</p>
+  <p class="lede">加えて、当初立てた<strong>「学習データ汚染で勝っているのでは」という仮説は棄却された</strong>。7系統のうち2つ（traffic・weather）が TimesFM の学習コーパスにバイト単位で含まれていることを実測で確認したが、コーパス内の窓とコーパス外の窓で相対誤差に差はなかった（p = 1.00 / 0.54）。</p>
+
+  <div class="strip">
+    <div><span class="k">平均 MASE</span><span class="v a">1.029</span><span class="n">6モデル中1位。最良の単体ベースライン（Fourier+trend OLS）は 1.335</span></div>
+    <div><span class="k">対 実装可能な選択器</span><span class="v a">67.2%</span><span class="n">窓ごとの勝率。n = 918、Wilcoxon p = 8e-37</span></div>
+    <div><span class="k">対 オラクル選択器</span><span class="v b">44.2%</span><span class="n">窓ごとの勝率。負けている。ただしこの相手は事前には選べない</span></div>
+    <div><span class="k">80% 区間の被覆</span><span class="v b">0.778</span><span class="n">7系統すべてで名目 0.80 を下回る。点予測の強さと裏腹</span></div>
+  </div>
+</header>
+
+<section>
+  <div class="head"><span class="step">01</span><h2>何を、どういう条件で測ったか</h2></div>
+  <div class="col">
+    <p>比較対象は Google Research の <code>TimesFM 3.0</code>（2026年8月公開、PyTorch チェックポイント <code>google/timesfm-3.0-pytorch</code>）を<em>ゼロショット</em>で使ったもの。ファインチューニングも、系列ごとの調整も一切していない。推論フラグは公式評価器の既定値に <code>use_symmetric_averaging=False</code> を合わせた、TimesFM 側が自分のベンチマーク数値を出すときの設定をそのまま使っている。設定ミスを負けの言い訳にできないようにするためである。</p>
+    <p>ベースラインは<strong>意図的に強くした</strong>。基盤モデルの評価でよく相手にされる「直前値の繰り返し」だけでは何も分からないので、季節ナイーブ・Theta・減衰トレンド Holt-Winters・フーリエ項回帰の4つを加え、<em>5手法すべてに分位点まで出させた</em>。とくに季節ナイーブには経験残差ブートストラップによる予測区間を付けてある。これは基盤モデルの論文がしばしば省く、確率予測として本当に手強い相手である。</p>
+    <p>評価はローリング原点バックテスト。各系列の末尾から、地平線ぶんずつずらした重ならない窓を切る。窓が重なると誤差が系列相関して、有意差が実際より大きく見えてしまう。指標のスケール（MASE の分母）は<strong>文脈側だけ</strong>から計算する — 検証区間を見て正規化すると答えが分母に漏れる。</p>
+  </div>
+
+  <div class="tw"><table>
+    <caption>データセットと窓の設計</caption>
+    <thead><tr><th>データセット</th><th>頻度</th><th>季節 m</th><th>文脈長</th><th>地平線</th><th>系列</th><th>窓</th><th>学習コーパス</th></tr></thead>
+    <tbody id="tblSpecs"></tbody>
+  </table></div>
+  <p class="small">出典は Monash Time Series Forecasting Repository（Zenodo）と ETDataset。合成データは使っていない。難易度が偏らないよう、季節性をナイーブ法が利用できる系（electricity・traffic・solar）と、週次周期がまるで使えない系（weather・河川流量）を意図的に混ぜてある。</p>
+
+  <div class="note">
+    <span class="lab">ライセンス上の注意</span>
+    <p>TimesFM の<strong>ソースコードは Apache-2.0 だが、3.0 の学習済み重みは <code>timesfm-non-commercial-license-v1.0</code></strong> で、商用・本番利用は許諾されていない。商用の可能性を残すなら Apache-2.0 のままの 2.5 系（<code>google/timesfm-2.5-200m-pytorch</code>）を使うことになる。本ベンチは個人研究としての評価であり、この制約の範囲内にある。</p>
+  </div>
+</section>
+
+<svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
+
+<section>
+  <div class="head"><span class="step">02</span><h2>まず疑うべきは、記憶していただけという可能性</h2></div>
+  <div class="col">
+    <p>TimesFM 3.0 のモデルカードは、学習データに <code>GiftEvalPretrain</code> を含むと明記している。そこで中身を実際に開いた。<strong>Monash の <code>traffic_hourly</code> と <code>weather</code> が、同じ名前でそこに入っていた</strong>。名前が同じだけかもしれないので、値を突き合わせた。</p>
+    <p>結果は<strong>バイト単位で同一</strong>だった。traffic は862系列すべてが一致し（検査25系列すべて <code>allclose</code>）、系列長は Monash の 17,544 に対しコーパス側が 17,376 — <em>ちょうど 168 点（= 7日ぶん）だけ短い</em>。weather は3,010系列が一致し、各系列がちょうど30点短い。つまりコーパスは「末尾のテスト区間だけ削った完全なコピー」を持っている。</p>
+    <p>ここから、私の評価窓は3種類に分類できる。<strong>コーパス内</strong>（検証対象そのものが学習データに存在する）、<strong>コーパス外</strong>（末尾の、削られた区間に落ちる）、そして<strong>そもそもコーパスに無いデータセット</strong>（electricity・ETTh1/h2・solar・河川流量の5系統。これらは GIFT-Eval のテスト側にあるため GiftEvalPretrain から除外されている）。TimesFM 3.0 のカードは「fev-bench と重なるものを除外」とも書いているが、fev-bench のタスク一覧に Monash の traffic と weather は無いので、この除外では落ちない。</p>
+    <p>汚染仮説が正しければ、コーパス内の窓で相対誤差が小さいはずである。<strong>そうならなかった。</strong></p>
+  </div>
+
+  <figure>
+    <p class="figtitle">学習コーパスに入っている窓で、TimesFM は得をしているか</p>
+    <p class="figsub">相対誤差の中央値（同じ窓での5ベースラインの中央値を 1.00 とする）。低いほど良い。窓の難易度差を除くための正規化</p>
+    <div class="legend">
+      <span><i class="sq" style="background:var(--series-1)"></i>コーパス内（学習時に見ている）</span>
+      <span><i class="sq" style="background:var(--series-2)"></i>コーパス外（末尾。削られていて見ていない）</span>
+    </div>
+    <div class="scroll"><svg id="fig2" viewBox="0 0 760 300" role="img" aria-label="traffic と weather について、学習コーパス内の窓とコーパス外の窓での TimesFM の相対誤差。差はない"></svg></div>
+    <figcaption><b>Fig 1</b>差は出なかった。traffic ではむしろコーパス<em>外</em>の方が良く（中央値 0.527 対 0.716、片側 Mann-Whitney p = 1.000）、weather はほぼ同値（0.713 対 0.715、p = 0.535）。汚染で説明できる勝ちではない。ただしコーパス外の窓は「より新しい窓」でもあるため、時点の交絡は完全には切れていない。</figcaption>
+  </figure>
+
+  <div class="note">
+    <span class="lab">この否定的結果の読み方</span>
+    <p>これは「TimesFM に汚染が無い」ことの証明ではない。<strong>示せたのは、traffic と weather でのこのモデルの優位が、学習データに答えが入っていたことでは説明できない、ということだけ</strong>である。逆に言えば、汚染が無い5系統でも同じ優位が出るかどうかは別の問いで、それは次の節で扱う。</p>
+  </div>
+</section>
+
+<svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
+
+<section>
+  <div class="head"><span class="step">03</span><h2>「最良の古典手法」という相手は、実在しない</h2></div>
+  <div class="col">
+    <p>単体のベースラインを相手にすると、TimesFM は全戦全勝する。窓ごとの勝率は 71.5%（対 Theta）から 79.3%（対ナイーブ）で、いずれも有意である。ここで話を終えれば「基盤モデルの圧勝」という結論になる。</p>
+    <p>ところが、<strong>窓ごとに5手法の最小値を取る</strong>と数字が反転する。この「オラクル」は平均 MASE 0.899 で、TimesFM の 1.065 より良い（勝率 44.2%、p = 2.2e-4）。基盤モデルの評価でこの比較を出せば、負けたことになる。</p>
+    <p>しかしこれは<em>手法ではなく、ノイズの下界</em>である。5つのばらつく推定値の窓ごと最小値は、定義上どんな単体手法よりも良くなる。問題は、その選択が事前にできるかどうかだ。そこで、<strong>直前の窓で勝った手法を今回に引き継ぐ</strong>という、実際に運用できる選択器を組んだ。</p>
+    <p>この選択器が到達したのは MASE 1.275 で、<strong>オラクル（0.899）にまるで届いていない</strong>。選択の的中率は 32.5%（当てずっぽうは 20%）— 情報はあるが、ほとんど無い。TimesFM の 1.065 は、この「実際に届く 1.275」と「届かない 0.899」の間の <em>56%</em> を埋めた位置にある。</p>
+  </div>
+
+  <figure>
+    <p class="figtitle">平均 MASE：到達できる相手と、到達できない相手</p>
+    <p class="figsub">918 窓（各系列の最初の窓は選択器に前例が無いため除外）。低いほど良い。MASE = 1.0 は文脈内の季節ナイーブ1歩ぶんの誤差</p>
+    <div class="legend">
+      <span><i class="sq" style="background:var(--series-1)"></i>TimesFM 3.0</span>
+      <span><i class="sq" style="background:var(--series-2)"></i>実装可能な選択器 / 単体手法</span>
+      <span><i class="sq" style="background:var(--ink-3)"></i>オラクル（事前には選べない）</span>
+    </div>
+    <div class="scroll"><svg id="fig3" viewBox="0 0 760 320" role="img" aria-label="平均MASEの棒グラフ。オラクル0.899、TimesFM1.065、ウォークフォワード選択器1.275、単体ベースラインは1.37から2.18"></svg></div>
+    <figcaption><b>Fig 2</b>オラクルと実装可能な選択器の間に開いた 0.376 の隔たりが、このベンチで一番大きい数字である。「古典手法をちゃんと選べば基盤モデルは要らない」という主張は、この隔たりを無償で飛び越えられることを前提にしている。</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <caption>TimesFM 3.0 の対戦成績（MASE、窓でペア、Wilcoxon 符号順位検定）</caption>
+    <thead><tr><th>相手</th><th>n</th><th>相手の平均</th><th>TimesFM</th><th>勝率</th><th>p 値</th></tr></thead>
+    <tbody id="tblH2H"></tbody>
+  </table></div>
+</section>
+
+<svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
+
+<section>
+  <div class="head"><span class="step">04</span><h2>どこで勝ち、どこで負けるか</h2></div>
+  <div class="col">
+    <p>平均に丸める前の地図を見ると、勝敗は系統ごとにはっきり分かれる。<strong>TimesFM が大きく勝つのは、周期が強いが単純な繰り返しではない系</strong>（traffic は選択器の 1.082 に対し 0.641、weather は 0.785 に対し 0.531）。<strong>差がほとんど無いのは ETTh1/h2 と河川流量</strong>。そして<strong>負けるのは solar</strong> である。</p>
+    <p>solar の負け方には理由がある。10分足の太陽光発電は、夜間は厳密にゼロ、日中は前日とほぼ同じ釣鐘型という、季節ナイーブにとって理想的な形をしている。地平線ごとの誤差を追うと、夜間（ステップ1〜43）は両者ともほぼゼロで差が無く、<em>日の出以降で TimesFM が一貫して上回る</em> — 日中の振幅を、前日をコピーするより上手くは当てられていない。</p>
+  </div>
+
+  <figure>
+    <p class="figtitle">データセット別：TimesFM と、実装可能な選択器</p>
+    <p class="figsub">平均 MASE。線の左端と右端の距離が優劣の大きさ。左にあるほど良い</p>
+    <div class="legend">
+      <span><i class="sq" style="background:var(--series-1)"></i>TimesFM 3.0</span>
+      <span><i class="sq" style="background:var(--series-2)"></i>ウォークフォワード選択器</span>
+    </div>
+    <div class="scroll"><svg id="fig4" viewBox="0 0 760 330" role="img" aria-label="データセット別のTimesFMとウォークフォワード選択器の平均MASEのダンベルチャート"></svg></div>
+    <figcaption><b>Fig 3</b>7系統中6系統で TimesFM が前に出るが、幅は一様ではない。solar だけは実質互角（1.300 対 1.361、勝率 51.2%）で、しかもこの系統ではオラクル（0.687）が両者を大きく引き離す — 窓によって最適手法が入れ替わる、選択の価値が最も高い系統である。</figcaption>
+  </figure>
+
+  <figure>
+    <p class="figtitle">地平線に沿った誤差：勝ち方と負け方の形が違う</p>
+    <p class="figsub">文脈スケールで正規化した平均絶対誤差。横軸は予測ステップ</p>
+    <div class="legend">
+      <span><i style="background:var(--series-1)"></i>TimesFM 3.0</span>
+      <span><i style="background:var(--series-2)"></i>季節ナイーブ</span>
+    </div>
+    <div class="grid2">
+      <div class="scroll"><svg id="fig5a" viewBox="0 0 380 268" role="img" aria-label="traffic hourly の地平線別誤差。TimesFM が全ステップで下回る"></svg></div>
+      <div class="scroll"><svg id="fig5b" viewBox="0 0 380 268" role="img" aria-label="solar 10分足の地平線別誤差。夜間は同一、日の出以降 TimesFM が上回る"></svg></div>
+    </div>
+    <figcaption><b>Fig 4</b>左（traffic）では TimesFM が全48ステップで下回り、とくに季節ナイーブが崩れる2日目の朝（ステップ30〜42）で差が開く。右（solar）は逆で、ステップ43までは両者ゼロで区別がつかず、日の出以降に差が付く。<em>データセット全体の平均 MASE 1.304 対 1.187 という差は、実質すべて日中に発生している。</em></figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <caption>データセット別の平均 MASE（太字は行内最良）</caption>
+    <thead><tr id="thMase"></tr></thead>
+    <tbody id="tblMase"></tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="lab">指標を替えると順位が変わる</span>
+    <p>MASE で1位の TimesFM は、<strong>sMAPE では2位に落ち、季節ナイーブが1位になる</strong>（32.0 対 39.3）。原因は solar と weather で、ゼロ近傍の実測値に対して sMAPE の分母が潰れるためである。同じ実験・同じ予測値から、指標の選択だけで別の結論が出せる。本稿が MASE と CRPS を主指標にしたのは、両者とも<em>文脈側だけ</em>から決まるスケールで正規化されるからで、sMAPE は参考として併記した。</p>
+  </div>
+</section>
+
+<svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
+
+<section>
+  <div class="head"><span class="step">05</span><h2>点予測は勝った。不確実性は勝っていない</h2></div>
+  <div class="col">
+    <p>確率予測としては、CRPS（分位点損失の積分、文脈スケールで正規化）で TimesFM が 0.831 と、最良のベースライン 1.135 を大きく引き離す。7系統中6系統で1位である。</p>
+    <p>ところが<strong>区間の当たり方は最下位に近い</strong>。名目 80% 区間（10%〜90% 分位点）の実測被覆は 0.778 で、<em>7系統すべてで名目を下回る</em>。PIT（確率積分変換）曲線を見ると、低い分位点で実測が名目を上回り、高い分位点で下回る — 教科書どおりの「区間が狭すぎる」形である。</p>
+    <p>対照的に、経験残差ブートストラップを付けた季節ナイーブは全分位点で誤差 0.02 以内に収まる。<strong>点予測で圧倒された手法が、区間の正しさでは基盤モデルを上回っている。</strong>下流でリスク量やバッファを決めるなら、この差は点予測の優劣より効く。</p>
+  </div>
+
+  <figure>
+    <p class="figtitle">PIT 較正曲線：予測分布は当たっているか</p>
+    <p class="figsub">横軸が名目分位点、縦軸が実測で下回った割合。対角線に乗れば較正済み。同点は 0.5 として数える mid-PIT</p>
+    <div class="legend">
+      <span><i style="background:var(--series-1)"></i>TimesFM 3.0</span>
+      <span><i style="background:var(--series-2)"></i>季節ナイーブ + 経験残差</span>
+      <span><i style="background:var(--ink-3)"></i>完全較正（対角線）</span>
+    </div>
+    <div class="scroll"><svg id="fig6" viewBox="0 0 760 400" role="img" aria-label="PIT較正曲線。TimesFMは低分位で対角線の上、高分位で下にあり、区間が狭い。季節ナイーブは対角線にほぼ一致"></svg></div>
+    <figcaption><b>Fig 5</b>TimesFM の曲線は対角線を上から下へ横切る S 字を描く。10% 分位点の下に実測の 16.3% が落ち、90% 分位点の下には 87.8% しか落ちない — 分布の両裾が実際より薄い。<em>solar の厳密ゼロによる同点を 0.5 と数える mid-PIT を使わないと、この図は 10% 水準で 0.70 という無意味な値になる。</em></figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <caption>確率予測の質と、1窓あたりの計算コスト</caption>
+    <thead><tr><th>モデル</th><th>MASE</th><th>CRPS</th><th>80% 被覆</th><th>sMAPE</th><th>ms / 窓</th></tr></thead>
+    <tbody id="tblCost"></tbody>
+  </table></div>
+  <p class="small">コストは RTX 5080（16GB）での実測。TimesFM はデータセット単位でバッチ推論した値で、チェックポイント読み込みの約 2〜23 秒は含まない。ETS だけが基盤モデルより一桁遅い（113 ms 対 8.6 ms）のは、季節状態の最尤推定が窓ごとに走るためである。</p>
+</section>
+
+<svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
+
+<section>
+  <div class="head"><span class="step">06</span><h2>この結果が言えないこと</h2></div>
+  <ul>
+    <li><strong>汚染が無いことは示せていない。</strong>示したのは traffic・weather の優位がコーパス内外で変わらないことだけ。学習コーパスの完全な目録は公開されていないし、Wikipedia 閲覧数・Google Trends・合成データの寄与は測れていない。</li>
+    <li><strong>コーパス外の窓は同時に「より新しい窓」でもある。</strong>時点と汚染が交絡しており、相対誤差で正規化してもこの交絡は消えない。決定的な検定には、学習カットオフ後に生成された系列が要る。</li>
+    <li><strong>ベースラインの選び方には手心が残る。</strong>AutoARIMA や TBATS、STL 分解は入れていない。ETS は季節周期 48 を超えると非季節にフォールバックしており、solar の150窓はこの扱いになっている（表に明記）。より強い古典手法を足せばオラクルはさらに下がる — ただし実装可能な選択器の到達点が同じだけ下がる保証は無い。</li>
+    <li><strong>系列はすべて公開ベンチマークで、金融時系列は含まない。</strong>収益率のようにほぼ予測不能な対象で同じ順位が出るとは限らない。ここで測ったのは「周期と水準を持つ実測系列」での性能である。</li>
+    <li><strong>単変量ゼロショットだけを見た。</strong>TimesFM 3.0 の目玉である多変量・共変量サポートも、ファインチューニングも使っていない。これらは別の実験になる。</li>
+    <li><strong>seed は 1 本。</strong>系列のサンプリングは seed=0 固定で、系列選択のばらつきは測っていない。窓ごとのペア検定は系列選択の分散を吸収しないので、p 値は「この系列集合において」と読むべきである。</li>
+  </ul>
+
+  <div class="verdict">
+    <div><span class="q">単体の古典手法に勝つか</span><span class="a yes">勝つ</span><p class="why">5手法すべてに対し勝率 71.5〜79.3%。最も強い単体（Fourier+trend OLS、MASE 1.335）を 23% 上回る。</p></div>
+    <div><span class="q">窓ごと最良の選択に勝つか</span><span class="a no">負ける</span><p class="why">オラクル 0.899 に対し 1.065。ただしこの相手は事前情報では選べず、実際の選択器は 1.275 にしか届かない。</p></div>
+    <div><span class="q">勝ちは学習データの記憶か</span><span class="a no">説明できない</span><p class="why">コーパス内 / 外の窓で相対誤差に差なし（p = 1.00 / 0.54）。汚染仮説は本ベンチの範囲では棄却。</p></div>
+    <div><span class="q">不確実性は信用できるか</span><span class="a no">できない</span><p class="why">80% 区間の被覆が 7系統すべてで名目割れ（平均 0.778）。経験残差付き季節ナイーブの方が較正されている。</p></div>
+  </div>
+</section>
+
+<footer>
+  実装: /home/kazumasa/projects/timesfm_lab<br>
+  生データ: /home/kazumasa/projects/timesfm_lab/reports/results.parquet（6,468 行 = 1,078 窓 × 6 モデル）<br>
+  再現: <code>uv run --no-sync python scripts/run_bench.py</code>（RTX 5080 で 158 秒、seed=0）<br>
+  データ出典: Monash TSF Repository（Zenodo 4656140 / 4656132 / 4656144 / 4654822 / 4656058）、ETDataset ETT-small<br>
+  汚染照合: Salesforce/GiftEvalPretrain の traffic_hourly・weather を実データ比較（各25系列、rtol=1e-4）<br>
+  モデル: google/timesfm-3.0-pytorch、timesfm 3.0.1、torch 2.11.0+cu128、statsmodels 0.14.6<br>
+  検定: Wilcoxon 符号順位（窓でペア）、Mann-Whitney U 片側（汚染比較）<br>
+  作成 2026-09-06
+</footer>
+</div>
+
+<div id="tip" role="status"></div>
+
+<script>
+const D = {"meta":{"run_utc":"2026-09-06T08:49:57+00:00","git_commit":"1900303e","timesfm_version":"3.0.1","torch_version":"2.11.0+cu128","cuda_available":true,"gpu":"NVIDIA GeForce RTX 5080","python":"3.12.3","statsmodels":"0.14.6","numpy":"2.4.6","wall_seconds":158.3,"seed":0,"n_rows":6468,"specs":[{"key":"electricity_hourly","title":"Electricity (hourly)","season":24,"freq":"1 hour","context_length":1024,"horizon":48,"n_series":40,"n_windows":6,"note":"321 client load series. Daily + weekly cycle, very regular."},{"key":"traffic_hourly","title":"Traffic (hourly)","season":24,"freq":"1 hour","context_length":1024,"horizon":48,"n_series":40,"n_windows":6,"note":"862 SF freeway occupancy sensors. Strong daily + weekday/weekend cycle."},{"key":"solar_10_minutes","title":"Solar (10 minutes)","season":144,"freq":"10 minutes","context_length":2048,"horizon":144,"n_series":25,"n_windows":6,"note":"137 PV plants. Hard floor at zero overnight; the daily shape is near-deterministic."},{"key":"weather_daily","title":"Weather (daily)","season":7,"freq":"1 day","context_length":512,"horizon":30,"n_series":40,"n_windows":6,"note":"3010 Australian station series (rain, temp, solar). No usable weekly cycle."},{"key":"saugeen_river","title":"Saugeen river flow (daily)","season":7,"freq":"1 day","context_length":512,"horizon":30,"n_series":1,"n_windows":40,"note":"One 65-year series. Spiky, heavy-tailed, no short seasonality."},{"key":"ett_h1","title":"ETTh1 (hourly)","season":24,"freq":"1 hour","context_length":1024,"horizon":48,"n_series":7,"n_windows":12,"note":"Transformer station 1, all 7 channels. The standard long-horizon benchmark."},{"key":"ett_h2","title":"ETTh2 (hourly)","season":24,"freq":"1 hour","context_length":1024,"horizon":48,"n_series":7,"n_windows":12,"note":"Transformer station 2. Noisier than ETTh1 and prone to level shifts."}]},"display_names":{"naive":"Naive (random walk)","seasonal_naive":"Seasonal naive","theta":"Theta","ets":"ETS (damped Holt-Winters)","fourier_ols":"Fourier + trend OLS","timesfm_3.0":"TimesFM 3.0 (zero-shot)"},"models":["naive","seasonal_naive","theta","ets","fourier_ols","timesfm_3.0"],"specs":{"electricity_hourly":{"title":"Electricity (hourly)","season":24,"freq":"1 hour","context":1024,"horizon":48,"note":"321 client load series. Daily + weekly cycle, very regular.","n_windows":240,"n_series":40,"in_corpus":false},"traffic_hourly":{"title":"Traffic (hourly)","season":24,"freq":"1 hour","context":1024,"horizon":48,"note":"862 SF freeway occupancy sensors. Strong daily + weekday/weekend cycle.","n_windows":240,"n_series":40,"in_corpus":true},"solar_10_minutes":{"title":"Solar (10 minutes)","season":144,"freq":"10 minutes","context":2048,"horizon":144,"note":"137 PV plants. Hard floor at zero overnight; the daily shape is near-deterministic.","n_windows":150,"n_series":25,"in_corpus":false},"weather_daily":{"title":"Weather (daily)","season":7,"freq":"1 day","context":512,"horizon":30,"note":"3010 Australian station series (rain, temp, solar). No usable weekly cycle.","n_windows":240,"n_series":40,"in_corpus":true},"saugeen_river":{"title":"Saugeen river flow (daily)","season":7,"freq":"1 day","context":512,"horizon":30,"note":"One 65-year series. Spiky, heavy-tailed, no short seasonality.","n_windows":40,"n_series":1,"in_corpus":false},"ett_h1":{"title":"ETTh1 (hourly)","season":24,"freq":"1 hour","context":1024,"horizon":48,"note":"Transformer station 1, all 7 channels. The standard long-horizon benchmark.","n_windows":84,"n_series":7,"in_corpus":false},"ett_h2":{"title":"ETTh2 (hourly)","season":24,"freq":"1 hour","context":1024,"horizon":48,"note":"Transformer station 2. Noisier than ETTh1 and prone to level shifts.","n_windows":84,"n_series":7,"in_corpus":false}},"overall":{"naive":{"mase":2.212517639664112,"smape":52.56746954145155,"scaled_crps":2.246804324173848,"coverage_80":0.927691455370027},"seasonal_naive":{"mase":1.3392957862866828,"smape":32.02932889455299,"scaled_crps":1.224595996320961,"coverage_80":0.8206606885178314},"theta":{"mase":1.4074052197570748,"smape":55.775529811345876,"scaled_crps":1.3126610162028556,"coverage_80":0.8231228097299527},"ets":{"mase":1.4347792671062518,"smape":50.70178856535903,"scaled_crps":1.5865001956370284,"coverage_80":0.9063723974438259},"fourier_ols":{"mase":1.3346082777142936,"smape":58.21050702879912,"scaled_crps":1.1352288576289,"coverage_80":0.8064638734281592},"timesfm_3.0":{"mase":1.0286405107276173,"smape":39.29110614985958,"scaled_crps":0.830559182906219,"coverage_80":0.7777996804782519}},"per_dataset":{"mase":{"ets":{"electricity_hourly":2.5772,"ett_h1":0.7841,"ett_h2":0.9559,"saugeen_river":1.5187,"solar_10_minutes":1.6869,"traffic_hourly":1.1827,"weather_daily":0.7682},"fourier_ols":{"electricity_hourly":1.715,"ett_h1":0.871,"ett_h2":1.0221,"saugeen_river":1.4707,"solar_10_minutes":1.5423,"traffic_hourly":1.1814,"weather_daily":1.2266},"naive":{"electricity_hourly":4.6684,"ett_h1":1.7245,"ett_h2":1.3461,"saugeen_river":1.326,"solar_10_minutes":1.6869,"traffic_hourly":2.1024,"weather_daily":0.817},"seasonal_naive":{"electricity_hourly":2.4864,"ett_h1":0.9258,"ett_h2":1.1445,"saugeen_river":1.3973,"solar_10_minutes":1.1869,"traffic_hourly":0.9751,"weather_daily":0.8549},"theta":{"electricity_hourly":2.7559,"ett_h1":0.7898,"ett_h2":0.9708,"saugeen_river":1.3471,"solar_10_minutes":1.187,"traffic_hourly":1.2325,"weather_daily":0.7506},"timesfm_3.0":{"electricity_hourly":1.8526,"ett_h1":0.7693,"ett_h2":0.9316,"saugeen_river":0.9674,"solar_10_minutes":1.3045,"traffic_hourly":0.6428,"weather_daily":0.553}},"scaled_crps":{"ets":{"electricity_hourly":2.2682,"ett_h1":0.7945,"ett_h2":0.8366,"saugeen_river":1.8709,"solar_10_minutes":2.7229,"traffic_hourly":1.6267,"weather_daily":0.6466},"fourier_ols":{"electricity_hourly":1.4657,"ett_h1":0.7018,"ett_h2":0.8141,"saugeen_river":1.2829,"solar_10_minutes":1.3365,"traffic_hourly":1.0803,"weather_daily":0.9734},"naive":{"electricity_hourly":3.8461,"ett_h1":1.6653,"ett_h2":1.4434,"saugeen_river":1.3644,"solar_10_minutes":1.9364,"traffic_hourly":2.3552,"weather_daily":1.3649},"seasonal_naive":{"electricity_hourly":2.2473,"ett_h1":0.775,"ett_h2":0.9169,"saugeen_river":1.3632,"solar_10_minutes":1.17,"traffic_hourly":0.8849,"weather_daily":0.8177},"theta":{"electricity_hourly":2.4363,"ett_h1":0.6638,"ett_h2":0.766,"saugeen_river":1.4548,"solar_10_minutes":1.2541,"traffic_hourly":1.1325,"weather_daily":0.8005},"timesfm_3.0":{"electricity_hourly":1.5455,"ett_h1":0.6045,"ett_h2":0.736,"saugeen_river":0.8263,"solar_10_minutes":0.9455,"traffic_hourly":0.536,"weather_daily":0.4513}},"smape":{"ets":{"electricity_hourly":28.3374,"ett_h1":26.4904,"ett_h2":13.0487,"saugeen_river":64.294,"solar_10_minutes":107.9352,"traffic_hourly":47.5111,"weather_daily":59.8732},"fourier_ols":{"electricity_hourly":20.2315,"ett_h1":29.0847,"ett_h2":13.3878,"saugeen_river":65.929,"solar_10_minutes":158.8356,"traffic_hourly":46.3955,"weather_daily":69.7093},"naive":{"electricity_hourly":41.5331,"ett_h1":54.3368,"ett_h2":17.6323,"saugeen_river":44.8386,"solar_10_minutes":72.7778,"traffic_hourly":79.8642,"weather_daily":36.5699},"seasonal_naive":{"electricity_hourly":25.5211,"ett_h1":29.2552,"ett_h2":15.3927,"saugeen_river":46.8161,"solar_10_minutes":34.5186,"traffic_hourly":33.8401,"weather_daily":39.5002},"theta":{"electricity_hourly":25.3211,"ett_h1":26.6205,"ett_h2":13.216,"saugeen_river":45.3462,"solar_10_minutes":156.1525,"traffic_hourly":46.2778,"weather_daily":59.8305},"timesfm_3.0":{"electricity_hourly":17.8313,"ett_h1":25.9045,"ett_h2":12.4467,"saugeen_river":37.8622,"solar_10_minutes":90.6176,"traffic_hourly":31.8727,"weather_daily":50.4092}},"coverage_80":{"ets":{"electricity_hourly":0.7712,"ett_h1":0.9663,"ett_h2":0.9293,"saugeen_river":0.9442,"solar_10_minutes":0.9632,"traffic_hourly":0.9699,"weather_daily":0.9072},"fourier_ols":{"electricity_hourly":0.7509,"ett_h1":0.8475,"ett_h2":0.7671,"saugeen_river":0.9308,"solar_10_minutes":0.7626,"traffic_hourly":0.8374,"weather_daily":0.8372},"naive":{"electricity_hourly":0.8641,"ett_h1":0.9571,"ett_h2":0.9382,"saugeen_river":0.9125,"solar_10_minutes":0.8395,"traffic_hourly":0.9768,"weather_daily":0.9858},"seasonal_naive":{"electricity_hourly":0.6815,"ett_h1":0.8792,"ett_h2":0.8058,"saugeen_river":0.8558,"solar_10_minutes":0.7781,"traffic_hourly":0.852,"weather_daily":0.9339},"theta":{"electricity_hourly":0.6315,"ett_h1":0.91,"ett_h2":0.8447,"saugeen_river":0.9367,"solar_10_minutes":0.7834,"traffic_hourly":0.8549,"weather_daily":0.9508},"timesfm_3.0":{"electricity_hourly":0.7115,"ett_h1":0.8058,"ett_h2":0.7587,"saugeen_river":0.7283,"solar_10_minutes":0.8625,"traffic_hourly":0.7548,"weather_daily":0.8193}}},"head_to_head":[{"opponent":"oracle","n":918,"opponent_mean":0.8992351538691971,"timesfm_mean":1.0646825973937075,"timesfm_win_rate":0.4422657952069717,"p_value":0.00022490248191811042,"metric":"MASE"},{"opponent":"walkforward","n":918,"opponent_mean":1.2754355183870307,"timesfm_mean":1.0646825973937075,"timesfm_win_rate":0.6721132897603486,"p_value":8.046176238670784e-37,"metric":"MASE"},{"opponent":"naive","n":918,"opponent_mean":2.177818933581242,"timesfm_mean":1.0646825973937075,"timesfm_win_rate":0.7930283224400871,"p_value":4.838282149074454e-94,"metric":"MASE"},{"opponent":"seasonal_naive","n":918,"opponent_mean":1.3883029552588841,"timesfm_mean":1.0646825973937075,"timesfm_win_rate":0.7636165577342048,"p_value":4.175615007567874e-65,"metric":"MASE"},{"opponent":"theta","n":918,"opponent_mean":1.4333627221517002,"timesfm_mean":1.0646825973937075,"timesfm_win_rate":0.7145969498910676,"p_value":1.4635850124415324e-47,"metric":"MASE"},{"opponent":"ets","n":918,"opponent_mean":1.5131986745210124,"timesfm_mean":1.0646825973937075,"timesfm_win_rate":0.7734204793028322,"p_value":3.098696723381174e-66,"metric":"MASE"},{"opponent":"fourier_ols","n":918,"opponent_mean":1.369424798109729,"timesfm_mean":1.0646825973937075,"timesfm_win_rate":0.7657952069716776,"p_value":2.3138259920050493e-63,"metric":"MASE"}],"selector_skill":{"n":918,"match_rate":0.32461873638344224,"chance_rate":0.2,"oracle_mean":0.8992351538691971,"walkforward_mean":1.2754355183870307,"timesfm_mean":1.0646825973937075,"gap_closed":0.5602145581741789},"selector_per_dataset":[{"dataset":"electricity_hourly","n":200,"timesfm":2.047534580129386,"walkforward":2.205024094303304,"oracle":1.5547884039336595,"win_rate":0.665},{"dataset":"ett_h1","n":77,"timesfm":0.7635986166420792,"walkforward":0.8006057793530289,"oracle":0.6984185812970881,"win_rate":0.5324675324675324},{"dataset":"ett_h2","n":77,"timesfm":0.9601447749400938,"walkforward":1.0804417047161141,"oracle":0.8620318888794809,"win_rate":0.5974025974025974},{"dataset":"saugeen_river","n":39,"timesfm":0.9809849532345631,"walkforward":1.0596018778310685,"oracle":0.9380106938863306,"win_rate":0.6666666666666666},{"dataset":"solar_10_minutes","n":125,"timesfm":1.3004325290180752,"walkforward":1.3610433309080907,"oracle":0.6872254299927939,"win_rate":0.512},{"dataset":"traffic_hourly","n":200,"timesfm":0.6405783566346721,"walkforward":1.0824818388586939,"oracle":0.7543853379316636,"win_rate":0.83},{"dataset":"weather_daily","n":200,"timesfm":0.5310765829968865,"walkforward":0.7852653668732387,"oracle":0.6051142043229814,"win_rate":0.705}],"contamination":{"index":{"traffic_hourly":{"gep_name":"traffic_hourly","n_series":862,"checked":25,"identical":25,"min_len":17376,"max_len":17376},"weather_daily":{"gep_name":"weather","n_series":3010,"checked":25,"identical":25,"min_len":1302,"max_len":65951}},"tests":[{"dataset":"traffic_hourly","n_in":80,"n_past":120,"median_in":0.7162405787895348,"median_past":0.5268360938382131,"u":6642.0,"p_value":0.999997833942416},{"dataset":"weather_daily","n_in":200,"n_past":40,"median_in":0.7152929402972658,"median_past":0.7128435026775353,"u":4035.0,"p_value":0.5352864578582116}],"by_exposure":[{"dataset":"traffic_hourly","exposure":"in corpus","model":"timesfm_3.0","n":80,"median_rel":0.7162405787895348},{"dataset":"traffic_hourly","exposure":"partial","model":"timesfm_3.0","n":40,"median_rel":0.27896389268098054},{"dataset":"traffic_hourly","exposure":"past corpus","model":"timesfm_3.0","n":120,"median_rel":0.5268360938382131},{"dataset":"weather_daily","exposure":"in corpus","model":"timesfm_3.0","n":200,"median_rel":0.7152929402972658},{"dataset":"weather_daily","exposure":"past corpus","model":"timesfm_3.0","n":40,"median_rel":0.7128435026775353}]},"horizon":[{"dataset":"traffic_hourly","model":"seasonal_naive","step":1,"scaled_abs_error":0.2103035335636069},{"dataset":"traffic_hourly","model":"seasonal_naive","step":2,"scaled_abs_error":0.2015700848738083},{"dataset":"traffic_hourly","model":"seasonal_naive","step":3,"scaled_abs_error":0.13792872109032048},{"dataset":"traffic_hourly","model":"seasonal_naive","step":4,"scaled_abs_error":0.14654735907279096},{"dataset":"traffic_hourly","model":"seasonal_naive","step":5,"scaled_abs_error":0.3033711214742203},{"dataset":"traffic_hourly","model":"seasonal_naive","step":6,"scaled_abs_error":0.6524861324140533},{"dataset":"traffic_hourly","model":"seasonal_naive","step":7,"scaled_abs_error":0.7853893459763915},{"dataset":"traffic_hourly","model":"seasonal_naive","step":8,"scaled_abs_error":1.138199789423539},{"dataset":"traffic_hourly","model":"seasonal_naive","step":9,"scaled_abs_error":1.1746509008784871},{"dataset":"traffic_hourly","model":"seasonal_naive","step":10,"scaled_abs_error":1.1817699126797754},{"dataset":"traffic_hourly","model":"seasonal_naive","step":11,"scaled_abs_error":1.1114949599615802},{"dataset":"traffic_hourly","model":"seasonal_naive","step":12,"scaled_abs_error":1.176339444150968},{"dataset":"traffic_hourly","model":"seasonal_naive","step":13,"scaled_abs_error":0.9682971382910107},{"dataset":"traffic_hourly","model":"seasonal_naive","step":14,"scaled_abs_error":0.8343359618933731},{"dataset":"traffic_hourly","model":"seasonal_naive","step":15,"scaled_abs_error":1.1266795055694983},{"dataset":"traffic_hourly","model":"seasonal_naive","step":16,"scaled_abs_error":1.1230633907829741},{"dataset":"traffic_hourly","model":"seasonal_naive","step":17,"scaled_abs_error":1.1374102483155375},{"dataset":"traffic_hourly","model":"seasonal_naive","step":18,"scaled_abs_error":1.4297024981767263},{"dataset":"traffic_hourly","model":"seasonal_naive","step":19,"scaled_abs_error":1.0166769316624622},{"dataset":"traffic_hourly","model":"seasonal_naive","step":20,"scaled_abs_error":0.7684488577723929},{"dataset":"traffic_hourly","model":"seasonal_naive","step":21,"scaled_abs_error":0.5956026229448929},{"dataset":"traffic_hourly","model":"seasonal_naive","step":22,"scaled_abs_error":0.522354564737088},{"dataset":"traffic_hourly","model":"seasonal_naive","step":23,"scaled_abs_error":0.5312406711791163},{"dataset":"traffic_hourly","model":"seasonal_naive","step":24,"scaled_abs_error":0.39144244669076345},{"dataset":"traffic_hourly","model":"seasonal_naive","step":25,"scaled_abs_error":0.3151495087692358},{"dataset":"traffic_hourly","model":"seasonal_naive","step":26,"scaled_abs_error":0.24712812186421299},{"dataset":"traffic_hourly","model":"seasonal_naive","step":27,"scaled_abs_error":0.174152243481903},{"dataset":"traffic_hourly","model":"seasonal_naive","step":28,"scaled_abs_error":0.22334730553702384},{"dataset":"traffic_hourly","model":"seasonal_naive","step":29,"scaled_abs_error":0.5813587502621135},{"dataset":"traffic_hourly","model":"seasonal_naive","step":30,"scaled_abs_error":1.3077572062097509},{"dataset":"traffic_hourly","model":"seasonal_naive","step":31,"scaled_abs_error":1.6387444957322375},{"dataset":"traffic_hourly","model":"seasonal_naive","step":32,"scaled_abs_error":1.9762218748970215},{"dataset":"traffic_hourly","model":"seasonal_naive","step":33,"scaled_abs_error":1.9594634832990914},{"dataset":"traffic_hourly","model":"seasonal_naive","step":34,"scaled_abs_error":1.945502589448527},{"dataset":"traffic_hourly","model":"seasonal_naive","step":35,"scaled_abs_error":1.7585823845167041},{"dataset":"traffic_hourly","model":"seasonal_naive","step":36,"scaled_abs_error":1.7297725809204065},{"dataset":"traffic_hourly","model":"seasonal_naive","step":37,"scaled_abs_error":1.344650908531387},{"dataset":"traffic_hourly","model":"seasonal_naive","step":38,"scaled_abs_error":1.2374783936734814},{"dataset":"traffic_hourly","model":"seasonal_naive","step":39,"scaled_abs_error":1.4385822215512725},{"dataset":"traffic_hourly","model":"seasonal_naive","step":40,"scaled_abs_error":1.6378074499229556},{"dataset":"traffic_hourly","model":"seasonal_naive","step":41,"scaled_abs_error":1.6979257110961932},{"dataset":"traffic_hourly","model":"seasonal_naive","step":42,"scaled_abs_error":2.0413898451763197},{"dataset":"traffic_hourly","model":"seasonal_naive","step":43,"scaled_abs_error":1.32879534360606},{"dataset":"traffic_hourly","model":"seasonal_naive","step":44,"scaled_abs_error":0.877913589071041},{"dataset":"traffic_hourly","model":"seasonal_naive","step":45,"scaled_abs_error":0.7458394538285094},{"dataset":"traffic_hourly","model":"seasonal_naive","step":46,"scaled_abs_error":0.6569475979151214},{"dataset":"traffic_hourly","model":"seasonal_naive","step":47,"scaled_abs_error":0.7139846959259143},{"dataset":"traffic_hourly","model":"seasonal_naive","step":48,"scaled_abs_error":0.5616828749106406},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":1,"scaled_abs_error":0.1337858365124776},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":2,"scaled_abs_error":0.1379403142514315},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":3,"scaled_abs_error":0.12121922010645589},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":4,"scaled_abs_error":0.13974905563523154},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":5,"scaled_abs_error":0.20344321976082114},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":6,"scaled_abs_error":0.37061096061874854},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":7,"scaled_abs_error":0.4655006663059832},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":8,"scaled_abs_error":0.6666928196346057},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":9,"scaled_abs_error":0.6716964774426265},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":10,"scaled_abs_error":0.543339940618198},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":11,"scaled_abs_error":0.6173559810148386},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":12,"scaled_abs_error":0.6431636761997795},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":13,"scaled_abs_error":0.6546100759810521},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":14,"scaled_abs_error":0.613666315723849},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":15,"scaled_abs_error":0.8720060771108422},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":16,"scaled_abs_error":0.8634276013007948},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":17,"scaled_abs_error":0.937480251578211},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":18,"scaled_abs_error":1.2249708034421594},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":19,"scaled_abs_error":0.9731166880434118},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":20,"scaled_abs_error":0.7760275817109046},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":21,"scaled_abs_error":0.5827027930374553},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":22,"scaled_abs_error":0.44717687686938806},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":23,"scaled_abs_error":0.3725506181637108},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":24,"scaled_abs_error":0.2712456769413241},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":25,"scaled_abs_error":0.23756804153098493},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":26,"scaled_abs_error":0.1752770038814604},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":27,"scaled_abs_error":0.15126245268525343},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":28,"scaled_abs_error":0.15718819307664053},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":29,"scaled_abs_error":0.27744316301743843},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":30,"scaled_abs_error":0.5169991662379252},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":31,"scaled_abs_error":0.6320062900904989},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":32,"scaled_abs_error":0.7774389233665527},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":33,"scaled_abs_error":0.823140849873227},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":34,"scaled_abs_error":0.9028966380430175},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":35,"scaled_abs_error":0.9328172124148508},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":36,"scaled_abs_error":1.0682714409907743},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":37,"scaled_abs_error":0.9582722392888819},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":38,"scaled_abs_error":0.9438671150329578},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":39,"scaled_abs_error":1.0181000126822597},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":40,"scaled_abs_error":1.0707145091098638},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":41,"scaled_abs_error":1.18107387387609},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":42,"scaled_abs_error":1.439674820658049},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":43,"scaled_abs_error":1.1601066925878214},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":44,"scaled_abs_error":0.8111940256315269},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":45,"scaled_abs_error":0.6988540061745788},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":46,"scaled_abs_error":0.608417790907189},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":47,"scaled_abs_error":0.5705472731287244},{"dataset":"traffic_hourly","model":"timesfm_3.0","step":48,"scaled_abs_error":0.4367432254785807},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":1,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":2,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":3,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":4,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":5,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":6,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":7,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":8,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":9,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":10,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":11,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":12,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":13,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":14,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":15,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":16,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":17,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":18,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":19,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":20,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":21,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":22,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":23,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":24,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":25,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":26,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":27,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":28,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":29,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":30,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":31,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":32,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":33,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":34,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":35,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":36,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":37,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":38,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":39,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":40,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":41,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":42,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":43,"scaled_abs_error":0.004972385129615654},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":44,"scaled_abs_error":0.11202070771919254},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":45,"scaled_abs_error":0.3457643682030456},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":46,"scaled_abs_error":0.8457265241503155},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":47,"scaled_abs_error":1.3103640461868762},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":48,"scaled_abs_error":1.488208845185393},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":49,"scaled_abs_error":1.7978322679250436},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":50,"scaled_abs_error":1.8355007939000458},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":51,"scaled_abs_error":2.077143831934403},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":52,"scaled_abs_error":2.2843092649361023},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":53,"scaled_abs_error":2.4391764327754153},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":54,"scaled_abs_error":2.677093908175197},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":55,"scaled_abs_error":2.8856115266364757},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":56,"scaled_abs_error":3.031833499619751},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":57,"scaled_abs_error":3.179536692610842},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":58,"scaled_abs_error":3.360788837634222},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":59,"scaled_abs_error":3.473879737811279},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":60,"scaled_abs_error":3.59427027694229},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":61,"scaled_abs_error":3.692848562959027},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":62,"scaled_abs_error":3.7898082064515135},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":63,"scaled_abs_error":3.9692307396606665},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":64,"scaled_abs_error":4.101880523941612},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":65,"scaled_abs_error":4.131406892498584},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":66,"scaled_abs_error":4.052880838489655},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":67,"scaled_abs_error":3.922192236663061},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":68,"scaled_abs_error":4.035930722065688},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":69,"scaled_abs_error":4.228134600872065},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":70,"scaled_abs_error":4.349652481233318},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":71,"scaled_abs_error":4.405724546108716},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":72,"scaled_abs_error":4.565205982452121},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":73,"scaled_abs_error":4.519082245598398},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":74,"scaled_abs_error":4.385528600519216},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":75,"scaled_abs_error":4.26348846636535},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":76,"scaled_abs_error":4.232944106096681},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":77,"scaled_abs_error":4.293315738476573},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":78,"scaled_abs_error":4.324316665857406},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":79,"scaled_abs_error":4.337152864765542},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":80,"scaled_abs_error":4.244305917798884},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":81,"scaled_abs_error":4.192958656507467},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":82,"scaled_abs_error":4.14437237704339},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":83,"scaled_abs_error":4.039090503003029},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":84,"scaled_abs_error":3.9254039643526615},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":85,"scaled_abs_error":3.8277849763269236},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":86,"scaled_abs_error":3.6548904195826823},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":87,"scaled_abs_error":3.4619853945176633},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":88,"scaled_abs_error":3.280225855420052},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":89,"scaled_abs_error":3.1242355920713463},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":90,"scaled_abs_error":2.8905222368374566},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":91,"scaled_abs_error":2.654482340630027},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":92,"scaled_abs_error":2.3788646546541075},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":93,"scaled_abs_error":2.112020157446841},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":94,"scaled_abs_error":1.925307374231257},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":95,"scaled_abs_error":1.6287904810924458},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":96,"scaled_abs_error":1.3487313725417451},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":97,"scaled_abs_error":1.0158722317135218},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":98,"scaled_abs_error":0.5774035139019076},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":99,"scaled_abs_error":0.14058206413193208},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":100,"scaled_abs_error":0.0023174427636178064},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":101,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":102,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":103,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":104,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":105,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":106,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":107,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":108,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":109,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":110,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":111,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":112,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":113,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":114,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":115,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":116,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":117,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":118,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":119,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":120,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":121,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":122,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":123,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":124,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":125,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":126,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":127,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":128,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":129,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":130,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":131,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":132,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":133,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":134,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":135,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":136,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":137,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":138,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":139,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":140,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":141,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":142,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":143,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"seasonal_naive","step":144,"scaled_abs_error":0.0},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":1,"scaled_abs_error":0.004316873693074508},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":2,"scaled_abs_error":0.004296603959079566},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":3,"scaled_abs_error":0.003990591132405799},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":4,"scaled_abs_error":0.0016318491302445704},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":5,"scaled_abs_error":0.002328798355778101},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":6,"scaled_abs_error":0.002481083407649211},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":7,"scaled_abs_error":0.0007747854954936404},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":8,"scaled_abs_error":0.00015898881199743323},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":9,"scaled_abs_error":0.0018915020386215341},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":10,"scaled_abs_error":0.0015428634277749132},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":11,"scaled_abs_error":0.00047902117925108},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":12,"scaled_abs_error":0.0006056171645527248},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":13,"scaled_abs_error":0.0004339157628148944},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":14,"scaled_abs_error":0.00038225488219652693},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":15,"scaled_abs_error":0.006225540926291616},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":16,"scaled_abs_error":0.002205747236998097},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":17,"scaled_abs_error":0.0021642636139170587},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":18,"scaled_abs_error":0.003930177715081713},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":19,"scaled_abs_error":0.0020737983215079595},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":20,"scaled_abs_error":0.0030444376360302117},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":21,"scaled_abs_error":0.006483988605353404},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":22,"scaled_abs_error":0.0033107453236486412},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":23,"scaled_abs_error":0.004058411379815394},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":24,"scaled_abs_error":0.006066978604546806},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":25,"scaled_abs_error":0.004405661854918364},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":26,"scaled_abs_error":0.007931572717786526},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":27,"scaled_abs_error":0.008831386745541236},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":28,"scaled_abs_error":0.0052264779710357815},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":29,"scaled_abs_error":0.006776629438550158},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":30,"scaled_abs_error":0.004576231633919717},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":31,"scaled_abs_error":0.004242603322211795},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":32,"scaled_abs_error":0.00528584189947874},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":33,"scaled_abs_error":0.013973029042715461},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":34,"scaled_abs_error":0.02011522390330428},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":35,"scaled_abs_error":0.02035297318729912},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":36,"scaled_abs_error":0.017435480732075348},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":37,"scaled_abs_error":0.020698512854559207},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":38,"scaled_abs_error":0.021080105322441423},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":39,"scaled_abs_error":0.014928472902143245},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":40,"scaled_abs_error":0.02009104993514919},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":41,"scaled_abs_error":0.020144232475217457},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":42,"scaled_abs_error":0.01055540110637294},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":43,"scaled_abs_error":0.01511466819198457},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":44,"scaled_abs_error":0.13055215428243247},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":45,"scaled_abs_error":0.4101059877580836},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":46,"scaled_abs_error":0.8329476443887556},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":47,"scaled_abs_error":1.2460185721947221},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":48,"scaled_abs_error":1.4638014606763303},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":49,"scaled_abs_error":1.6903702902758106},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":50,"scaled_abs_error":1.8396289481861878},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":51,"scaled_abs_error":2.0406487095926775},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":52,"scaled_abs_error":2.212609230167891},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":53,"scaled_abs_error":2.382107085656123},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":54,"scaled_abs_error":2.5625966185116904},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":55,"scaled_abs_error":2.867136863879954},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":56,"scaled_abs_error":3.117004875000673},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":57,"scaled_abs_error":3.384826069272318},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":58,"scaled_abs_error":3.6742754290797794},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":59,"scaled_abs_error":3.8869900717134964},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":60,"scaled_abs_error":4.076618739484419},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":61,"scaled_abs_error":4.228163060009126},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":62,"scaled_abs_error":4.408251828808971},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":63,"scaled_abs_error":4.5629782824609},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":64,"scaled_abs_error":4.675441718171281},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":65,"scaled_abs_error":4.77591773984986},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":66,"scaled_abs_error":4.8233882227252325},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":67,"scaled_abs_error":4.8359806238719525},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":68,"scaled_abs_error":4.892589704653463},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":69,"scaled_abs_error":4.98880497167263},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":70,"scaled_abs_error":4.989853967023687},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":71,"scaled_abs_error":4.96714888627698},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":72,"scaled_abs_error":5.057856504571909},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":73,"scaled_abs_error":5.036007635673408},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":74,"scaled_abs_error":4.969893922824852},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":75,"scaled_abs_error":4.888852575133871},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":76,"scaled_abs_error":4.874766964579632},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":77,"scaled_abs_error":4.848749930593881},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":78,"scaled_abs_error":4.781909785777329},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":79,"scaled_abs_error":4.736877347102463},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":80,"scaled_abs_error":4.701222784627961},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":81,"scaled_abs_error":4.62429669958252},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":82,"scaled_abs_error":4.555275940659642},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":83,"scaled_abs_error":4.402751321844903},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":84,"scaled_abs_error":4.242474614969558},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":85,"scaled_abs_error":4.077133347140164},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":86,"scaled_abs_error":3.8693070207459814},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":87,"scaled_abs_error":3.680406391597417},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":88,"scaled_abs_error":3.485349991954647},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":89,"scaled_abs_error":3.290441966538407},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":90,"scaled_abs_error":3.012580584741442},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":91,"scaled_abs_error":2.7521279244969894},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":92,"scaled_abs_error":2.4925209549017375},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":93,"scaled_abs_error":2.2379783787795886},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":94,"scaled_abs_error":2.0055688776519514},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":95,"scaled_abs_error":1.7124067991219563},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":96,"scaled_abs_error":1.4267469816538307},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":97,"scaled_abs_error":0.9989861430570333},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":98,"scaled_abs_error":0.5042742068692934},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":99,"scaled_abs_error":0.11939662936884188},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":100,"scaled_abs_error":0.012487272358356182},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":101,"scaled_abs_error":0.001589031767116063},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":102,"scaled_abs_error":0.003256375512342438},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":103,"scaled_abs_error":0.0023029193404105757},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":104,"scaled_abs_error":0.004610281560316234},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":105,"scaled_abs_error":0.002359776603415341},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":106,"scaled_abs_error":0.004567387025944739},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":107,"scaled_abs_error":0.001006180116840554},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":108,"scaled_abs_error":0.0030506086187021774},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":109,"scaled_abs_error":0.0017160398626708381},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":110,"scaled_abs_error":0.001845574784518164},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":111,"scaled_abs_error":0.0046682679906436654},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":112,"scaled_abs_error":0.007519668956483843},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":113,"scaled_abs_error":0.002486530353389447},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":114,"scaled_abs_error":0.0034724431452625116},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":115,"scaled_abs_error":0.007995295690487944},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":116,"scaled_abs_error":0.011511613567443083},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":117,"scaled_abs_error":0.009472368663150361},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":118,"scaled_abs_error":0.01139011218243993},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":119,"scaled_abs_error":0.007071639544538854},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":120,"scaled_abs_error":0.004386429250187691},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":121,"scaled_abs_error":0.0073758256815469134},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":122,"scaled_abs_error":0.007364244326945281},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":123,"scaled_abs_error":0.010277030354705315},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":124,"scaled_abs_error":0.006474622157764365},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":125,"scaled_abs_error":0.006736252583444594},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":126,"scaled_abs_error":0.007256161225873235},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":127,"scaled_abs_error":0.005018132041328332},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":128,"scaled_abs_error":0.0036338362677411453},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":129,"scaled_abs_error":0.0027851730917101826},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":130,"scaled_abs_error":0.0010474862454510846},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":131,"scaled_abs_error":0.0012383965908744899},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":132,"scaled_abs_error":0.0014735399028349763},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":133,"scaled_abs_error":0.0017487931831830638},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":134,"scaled_abs_error":0.0015393666575167736},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":135,"scaled_abs_error":0.0020573973102403264},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":136,"scaled_abs_error":0.001682911093141224},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":137,"scaled_abs_error":0.0016843793235831335},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":138,"scaled_abs_error":0.002191293461334541},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":139,"scaled_abs_error":0.0013550263092842608},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":140,"scaled_abs_error":0.0012202891267972013},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":141,"scaled_abs_error":0.0018998609686283956},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":142,"scaled_abs_error":0.001528950036041211},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":143,"scaled_abs_error":0.00208263764159979},{"dataset":"solar_10_minutes","model":"timesfm_3.0","step":144,"scaled_abs_error":0.0026994912198325775}],"calibration":[{"dataset":"electricity_hourly","model":"naive","level":0.1,"empirical":0.06940104166666666,"gap":-0.030598958333333343},{"dataset":"electricity_hourly","model":"naive","level":0.2,"empirical":0.1282986111111111,"gap":-0.07170138888888891},{"dataset":"electricity_hourly","model":"naive","level":0.3,"empirical":0.2094618055555557,"gap":-0.09053819444444428},{"dataset":"electricity_hourly","model":"naive","level":0.4,"empirical":0.30047743055555554,"gap":-0.09952256944444449},{"dataset":"electricity_hourly","model":"naive","level":0.5,"empirical":0.44526909722222224,"gap":-0.05473090277777776},{"dataset":"electricity_hourly","model":"naive","level":0.6,"empirical":0.5884548611111112,"gap":-0.01154513888888875},{"dataset":"electricity_hourly","model":"naive","level":0.7,"empirical":0.706553819444445,"gap":0.006553819444444997},{"dataset":"electricity_hourly","model":"naive","level":0.8,"empirical":0.8333333333333335,"gap":0.03333333333333344},{"dataset":"electricity_hourly","model":"naive","level":0.9,"empirical":0.9325520833333326,"gap":0.03255208333333259},{"dataset":"electricity_hourly","model":"seasonal_naive","level":0.1,"empirical":0.140625,"gap":0.040624999999999994},{"dataset":"electricity_hourly","model":"seasonal_naive","level":0.2,"empirical":0.22322048611111114,"gap":0.023220486111111133},{"dataset":"electricity_hourly","model":"seasonal_naive","level":0.3,"empirical":0.3020833333333333,"gap":0.002083333333333326},{"dataset":"electricity_hourly","model":"seasonal_naive","level":0.4,"empirical":0.3836371527777778,"gap":-0.0163628472222222},{"dataset":"electricity_hourly","model":"seasonal_naive","level":0.5,"empirical":0.47690972222222233,"gap":-0.023090277777777668},{"dataset":"electricity_hourly","model":"seasonal_naive","level":0.6,"empirical":0.5676215277777779,"gap":-0.03237847222222212},{"dataset":"electricity_hourly","model":"seasonal_naive","level":0.7,"empirical":0.6509548611111113,"gap":-0.04904513888888862},{"dataset":"electricity_hourly","model":"seasonal_naive","level":0.8,"empirical":0.730685763888889,"gap":-0.0693142361111111},{"dataset":"electricity_hourly","model":"seasonal_naive","level":0.9,"empirical":0.8180989583333333,"gap":-0.08190104166666667},{"dataset":"electricity_hourly","model":"theta","level":0.1,"empirical":0.20477430555555565,"gap":0.10477430555555564},{"dataset":"electricity_hourly","model":"theta","level":0.2,"empirical":0.27005208333333347,"gap":0.07005208333333346},{"dataset":"electricity_hourly","model":"theta","level":0.3,"empirical":0.34296875,"gap":0.04296875},{"dataset":"electricity_hourly","model":"theta","level":0.4,"empirical":0.42578124999999967,"gap":0.025781249999999645},{"dataset":"electricity_hourly","model":"theta","level":0.5,"empirical":0.5405381944444447,"gap":0.04053819444444473},{"dataset":"electricity_hourly","model":"theta","level":0.6,"empirical":0.6399305555555556,"gap":0.03993055555555558},{"dataset":"electricity_hourly","model":"theta","level":0.7,"empirical":0.7122395833333335,"gap":0.012239583333333526},{"dataset":"electricity_hourly","model":"theta","level":0.8,"empirical":0.7723958333333337,"gap":-0.02760416666666632},{"dataset":"electricity_hourly","model":"theta","level":0.9,"empirical":0.836284722222222,"gap":-0.06371527777777797},{"dataset":"electricity_hourly","model":"ets","level":0.1,"empirical":0.11944444444444442,"gap":0.019444444444444417},{"dataset":"electricity_hourly","model":"ets","level":0.2,"empirical":0.19496527777777786,"gap":-0.005034722222222149},{"dataset":"electricity_hourly","model":"ets","level":0.3,"empirical":0.29539930555555566,"gap":-0.004600694444444331},{"dataset":"electricity_hourly","model":"ets","level":0.4,"empirical":0.41519097222222195,"gap":0.015190972222221932},{"dataset":"electricity_hourly","model":"ets","level":0.5,"empirical":0.5524305555555553,"gap":0.052430555555555314},{"dataset":"electricity_hourly","model":"ets","level":0.6,"empirical":0.6796006944444447,"gap":0.07960069444444473},{"dataset":"electricity_hourly","model":"ets","level":0.7,"empirical":0.7711805555555556,"gap":0.07118055555555569},{"dataset":"electricity_hourly","model":"ets","level":0.8,"empirical":0.8399305555555551,"gap":0.039930555555555025},{"dataset":"electricity_hourly","model":"ets","level":0.9,"empirical":0.8906250000000001,"gap":-0.009374999999999911},{"dataset":"electricity_hourly","model":"fourier_ols","level":0.1,"empirical":0.13255208333333326,"gap":0.03255208333333326},{"dataset":"electricity_hourly","model":"fourier_ols","level":0.2,"empirical":0.1980902777777778,"gap":-0.0019097222222222154},{"dataset":"electricity_hourly","model":"fourier_ols","level":0.3,"empirical":0.26822916666666646,"gap":-0.031770833333333526},{"dataset":"electricity_hourly","model":"fourier_ols","level":0.4,"empirical":0.34939236111111127,"gap":-0.05060763888888875},{"dataset":"electricity_hourly","model":"fourier_ols","level":0.5,"empirical":0.43619791666666663,"gap":-0.06380208333333337},{"dataset":"electricity_hourly","model":"fourier_ols","level":0.6,"empirical":0.5499131944444445,"gap":-0.05008680555555545},{"dataset":"electricity_hourly","model":"fourier_ols","level":0.7,"empirical":0.6742187500000002,"gap":-0.025781249999999756},{"dataset":"electricity_hourly","model":"fourier_ols","level":0.8,"empirical":0.7923611111111111,"gap":-0.007638888888888973},{"dataset":"electricity_hourly","model":"fourier_ols","level":0.9,"empirical":0.8834201388888887,"gap":-0.016579861111111316},{"dataset":"electricity_hourly","model":"timesfm_3.0","level":0.1,"empirical":0.15017361111111105,"gap":0.050173611111111044},{"dataset":"electricity_hourly","model":"timesfm_3.0","level":0.2,"empirical":0.23046874999999997,"gap":0.03046874999999996},{"dataset":"electricity_hourly","model":"timesfm_3.0","level":0.3,"empirical":0.3066840277777778,"gap":0.006684027777777823},{"dataset":"electricity_hourly","model":"timesfm_3.0","level":0.4,"empirical":0.3822048611111112,"gap":-0.01779513888888884},{"dataset":"electricity_hourly","model":"timesfm_3.0","level":0.5,"empirical":0.45946180555555505,"gap":-0.04053819444444495},{"dataset":"electricity_hourly","model":"timesfm_3.0","level":0.6,"empirical":0.543923611111111,"gap":-0.056076388888888995},{"dataset":"electricity_hourly","model":"timesfm_3.0","level":0.7,"empirical":0.6359375000000003,"gap":-0.06406249999999969},{"dataset":"electricity_hourly","model":"timesfm_3.0","level":0.8,"empirical":0.7347222222222223,"gap":-0.06527777777777777},{"dataset":"electricity_hourly","model":"timesfm_3.0","level":0.9,"empirical":0.8617187499999995,"gap":-0.03828125000000049},{"dataset":"traffic_hourly","model":"naive","level":0.1,"empirical":0.003906250000000001,"gap":-0.09609375},{"dataset":"traffic_hourly","model":"naive","level":0.2,"empirical":0.025347222222222236,"gap":-0.17465277777777777},{"dataset":"traffic_hourly","model":"naive","level":0.3,"empirical":0.05850694444444447,"gap":-0.2414930555555555},{"dataset":"traffic_hourly","model":"naive","level":0.4,"empirical":0.10559895833333328,"gap":-0.29440104166666675},{"dataset":"traffic_hourly","model":"naive","level":0.5,"empirical":0.3026909722222222,"gap":-0.1973090277777778},{"dataset":"traffic_hourly","model":"naive","level":0.6,"empirical":0.60703125,"gap":0.007031250000000044},{"dataset":"traffic_hourly","model":"naive","level":0.7,"empirical":0.8059895833333329,"gap":0.10598958333333297},{"dataset":"traffic_hourly","model":"naive","level":0.8,"empirical":0.919704861111111,"gap":0.119704861111111},{"dataset":"traffic_hourly","model":"naive","level":0.9,"empirical":0.9807291666666667,"gap":0.08072916666666663},{"dataset":"traffic_hourly","model":"seasonal_naive","level":0.1,"empirical":0.08958333333333332,"gap":-0.010416666666666685},{"dataset":"traffic_hourly","model":"seasonal_naive","level":0.2,"empirical":0.1707465277777777,"gap":-0.0292534722222223},{"dataset":"traffic_hourly","model":"seasonal_naive","level":0.3,"empirical":0.2592881944444443,"gap":-0.0407118055555557},{"dataset":"traffic_hourly","model":"seasonal_naive","level":0.4,"empirical":0.3562065972222222,"gap":-0.04379340277777782},{"dataset":"traffic_hourly","model":"seasonal_naive","level":0.5,"empirical":0.48498263888888893,"gap":-0.015017361111111072},{"dataset":"traffic_hourly","model":"seasonal_naive","level":0.6,"empirical":0.6457465277777777,"gap":0.04574652777777777},{"dataset":"traffic_hourly","model":"seasonal_naive","level":0.7,"empirical":0.7588541666666665,"gap":0.05885416666666654},{"dataset":"traffic_hourly","model":"seasonal_naive","level":0.8,"empirical":0.849305555555555,"gap":0.049305555555554936},{"dataset":"traffic_hourly","model":"seasonal_naive","level":0.9,"empirical":0.9415798611111105,"gap":0.04157986111111045},{"dataset":"traffic_hourly","model":"theta","level":0.1,"empirical":0.10755208333333328,"gap":0.007552083333333279},{"dataset":"traffic_hourly","model":"theta","level":0.2,"empirical":0.16432291666666676,"gap":-0.03567708333333325},{"dataset":"traffic_hourly","model":"theta","level":0.3,"empirical":0.2317708333333334,"gap":-0.06822916666666659},{"dataset":"traffic_hourly","model":"theta","level":0.4,"empirical":0.3112847222222222,"gap":-0.08871527777777782},{"dataset":"traffic_hourly","model":"theta","level":0.5,"empirical":0.48975694444444434,"gap":-0.010243055555555658},{"dataset":"traffic_hourly","model":"theta","level":0.6,"empirical":0.7564236111111114,"gap":0.15642361111111147},{"dataset":"traffic_hourly","model":"theta","level":0.7,"empirical":0.8649305555555553,"gap":0.16493055555555536},{"dataset":"traffic_hourly","model":"theta","level":0.8,"empirical":0.9211805555555554,"gap":0.1211805555555554},{"dataset":"traffic_hourly","model":"theta","level":0.9,"empirical":0.9624999999999997,"gap":0.06249999999999967},{"dataset":"traffic_hourly","model":"ets","level":0.1,"empirical":0.024479166666666663,"gap":-0.07552083333333334},{"dataset":"traffic_hourly","model":"ets","level":0.2,"empirical":0.06727430555555557,"gap":-0.13272569444444443},{"dataset":"traffic_hourly","model":"ets","level":0.3,"empirical":0.13133680555555557,"gap":-0.16866319444444441},{"dataset":"traffic_hourly","model":"ets","level":0.4,"empirical":0.25659722222222225,"gap":-0.14340277777777777},{"dataset":"traffic_hourly","model":"ets","level":0.5,"empirical":0.5644965277777779,"gap":0.06449652777777792},{"dataset":"traffic_hourly","model":"ets","level":0.6,"empirical":0.8622395833333331,"gap":0.2622395833333331},{"dataset":"traffic_hourly","model":"ets","level":0.7,"empirical":0.9439236111111112,"gap":0.24392361111111127},{"dataset":"traffic_hourly","model":"ets","level":0.8,"empirical":0.9782986111111109,"gap":0.1782986111111109},{"dataset":"traffic_hourly","model":"ets","level":0.9,"empirical":0.9943576388888887,"gap":0.0943576388888887},{"dataset":"traffic_hourly","model":"fourier_ols","level":0.1,"empirical":0.1392361111111111,"gap":0.03923611111111108},{"dataset":"traffic_hourly","model":"fourier_ols","level":0.2,"empirical":0.20156249999999998,"gap":0.0015624999999999667},{"dataset":"traffic_hourly","model":"fourier_ols","level":0.3,"empirical":0.27526041666666673,"gap":-0.02473958333333326},{"dataset":"traffic_hourly","model":"fourier_ols","level":0.4,"empirical":0.3797743055555557,"gap":-0.02022569444444433},{"dataset":"traffic_hourly","model":"fourier_ols","level":0.5,"empirical":0.5948784722222225,"gap":0.09487847222222245},{"dataset":"traffic_hourly","model":"fourier_ols","level":0.6,"empirical":0.8307291666666663,"gap":0.23072916666666632},{"dataset":"traffic_hourly","model":"fourier_ols","level":0.7,"empirical":0.9221354166666659,"gap":0.22213541666666592},{"dataset":"traffic_hourly","model":"fourier_ols","level":0.8,"empirical":0.95625,"gap":0.15625},{"dataset":"traffic_hourly","model":"fourier_ols","level":0.9,"empirical":0.9766493055555553,"gap":0.07664930555555527},{"dataset":"traffic_hourly","model":"timesfm_3.0","level":0.1,"empirical":0.168923611111111,"gap":0.068923611111111},{"dataset":"traffic_hourly","model":"timesfm_3.0","level":0.2,"empirical":0.2641927083333335,"gap":0.06419270833333351},{"dataset":"traffic_hourly","model":"timesfm_3.0","level":0.3,"empirical":0.3603732638888892,"gap":0.060373263888889195},{"dataset":"traffic_hourly","model":"timesfm_3.0","level":0.4,"empirical":0.45737847222222194,"gap":0.05737847222222192},{"dataset":"traffic_hourly","model":"timesfm_3.0","level":0.5,"empirical":0.5497395833333333,"gap":0.04973958333333328},{"dataset":"traffic_hourly","model":"timesfm_3.0","level":0.6,"empirical":0.6417100694444444,"gap":0.04171006944444444},{"dataset":"traffic_hourly","model":"timesfm_3.0","level":0.7,"empirical":0.7261718749999998,"gap":0.026171874999999845},{"dataset":"traffic_hourly","model":"timesfm_3.0","level":0.8,"empirical":0.8120225694444443,"gap":0.012022569444444242},{"dataset":"traffic_hourly","model":"timesfm_3.0","level":0.9,"empirical":0.899001736111111,"gap":-0.0009982638888890172},{"dataset":"solar_10_minutes","model":"naive","level":0.1,"empirical":0.0,"gap":-0.1},{"dataset":"solar_10_minutes","model":"naive","level":0.2,"empirical":0.003472222222222214,"gap":-0.1965277777777778},{"dataset":"solar_10_minutes","model":"naive","level":0.3,"empirical":0.005902777777777763,"gap":-0.29409722222222223},{"dataset":"solar_10_minutes","model":"naive","level":0.4,"empirical":0.009745370370370378,"gap":-0.39025462962962965},{"dataset":"solar_10_minutes","model":"naive","level":0.5,"empirical":0.2569212962962962,"gap":-0.24307870370370382},{"dataset":"solar_10_minutes","model":"naive","level":0.6,"empirical":0.7014351851851853,"gap":0.10143518518518535},{"dataset":"solar_10_minutes","model":"naive","level":0.7,"empirical":0.7446296296296289,"gap":0.04462962962962891},{"dataset":"solar_10_minutes","model":"naive","level":0.8,"empirical":0.7896759259259257,"gap":-0.010324074074074319},{"dataset":"solar_10_minutes","model":"naive","level":0.9,"empirical":0.8395370370370369,"gap":-0.06046296296296316},{"dataset":"solar_10_minutes","model":"seasonal_naive","level":0.1,"empirical":0.1146064814814815,"gap":0.014606481481481498},{"dataset":"solar_10_minutes","model":"seasonal_naive","level":0.2,"empirical":0.3141898148148148,"gap":0.11418981481481477},{"dataset":"solar_10_minutes","model":"seasonal_naive","level":0.3,"empirical":0.5216898148148149,"gap":0.22168981481481492},{"dataset":"solar_10_minutes","model":"seasonal_naive","level":0.4,"empirical":0.5216898148148149,"gap":0.12168981481481489},{"dataset":"solar_10_minutes","model":"seasonal_naive","level":0.5,"empirical":0.5216898148148149,"gap":0.02168981481481491},{"dataset":"solar_10_minutes","model":"seasonal_naive","level":0.6,"empirical":0.5216898148148149,"gap":-0.07831018518518507},{"dataset":"solar_10_minutes","model":"seasonal_naive","level":0.7,"empirical":0.5216898148148149,"gap":-0.17831018518518504},{"dataset":"solar_10_minutes","model":"seasonal_naive","level":0.8,"empirical":0.5552546296296298,"gap":-0.24474537037037025},{"dataset":"solar_10_minutes","model":"seasonal_naive","level":0.9,"empirical":0.8905324074074072,"gap":-0.009467592592592777},{"dataset":"solar_10_minutes","model":"theta","level":0.1,"empirical":0.12152777777777776,"gap":0.021527777777777757},{"dataset":"solar_10_minutes","model":"theta","level":0.2,"empirical":0.14745370370370373,"gap":-0.052546296296296285},{"dataset":"solar_10_minutes","model":"theta","level":0.3,"empirical":0.1666203703703704,"gap":-0.1333796296296296},{"dataset":"solar_10_minutes","model":"theta","level":0.4,"empirical":0.18375000000000008,"gap":-0.21624999999999994},{"dataset":"solar_10_minutes","model":"theta","level":0.5,"empirical":0.4297222222222223,"gap":-0.07027777777777772},{"dataset":"solar_10_minutes","model":"theta","level":0.6,"empirical":0.8430555555555552,"gap":0.24305555555555525},{"dataset":"solar_10_minutes","model":"theta","level":0.7,"empirical":0.8588888888888895,"gap":0.15888888888888952},{"dataset":"solar_10_minutes","model":"theta","level":0.8,"empirical":0.878333333333333,"gap":0.07833333333333292},{"dataset":"solar_10_minutes","model":"theta","level":0.9,"empirical":0.9049537037037036,"gap":0.004953703703703627},{"dataset":"solar_10_minutes","model":"ets","level":0.1,"empirical":0.0,"gap":-0.1},{"dataset":"solar_10_minutes","model":"ets","level":0.2,"empirical":0.0,"gap":-0.2},{"dataset":"solar_10_minutes","model":"ets","level":0.3,"empirical":0.0,"gap":-0.3},{"dataset":"solar_10_minutes","model":"ets","level":0.4,"empirical":0.005601851851851845,"gap":-0.39439814814814816},{"dataset":"solar_10_minutes","model":"ets","level":0.5,"empirical":0.34111111111111103,"gap":-0.15888888888888897},{"dataset":"solar_10_minutes","model":"ets","level":0.6,"empirical":0.7585185185185188,"gap":0.15851851851851884},{"dataset":"solar_10_minutes","model":"ets","level":0.7,"empirical":0.8366666666666663,"gap":0.13666666666666638},{"dataset":"solar_10_minutes","model":"ets","level":0.8,"empirical":0.8905092592592594,"gap":0.09050925925925934},{"dataset":"solar_10_minutes","model":"ets","level":0.9,"empirical":0.9632407407407412,"gap":0.06324074074074115},{"dataset":"solar_10_minutes","model":"fourier_ols","level":0.1,"empirical":0.11736111111111114,"gap":0.017361111111111133},{"dataset":"solar_10_minutes","model":"fourier_ols","level":0.2,"empirical":0.1425,"gap":-0.05750000000000002},{"dataset":"solar_10_minutes","model":"fourier_ols","level":0.3,"empirical":0.1592592592592592,"gap":-0.14074074074074078},{"dataset":"solar_10_minutes","model":"fourier_ols","level":0.4,"empirical":0.17685185185185182,"gap":-0.2231481481481482},{"dataset":"solar_10_minutes","model":"fourier_ols","level":0.5,"empirical":0.21486111111111109,"gap":-0.28513888888888894},{"dataset":"solar_10_minutes","model":"fourier_ols","level":0.6,"empirical":0.5035648148148146,"gap":-0.09643518518518535},{"dataset":"solar_10_minutes","model":"fourier_ols","level":0.7,"empirical":0.7938425925925926,"gap":0.09384259259259264},{"dataset":"solar_10_minutes","model":"fourier_ols","level":0.8,"empirical":0.8573148148148149,"gap":0.05731481481481482},{"dataset":"solar_10_minutes","model":"fourier_ols","level":0.9,"empirical":0.8799537037037036,"gap":-0.020046296296296395},{"dataset":"solar_10_minutes","model":"timesfm_3.0","level":0.1,"empirical":0.3818055555555554,"gap":0.2818055555555554},{"dataset":"solar_10_minutes","model":"timesfm_3.0","level":0.2,"empirical":0.4634259259259258,"gap":0.2634259259259258},{"dataset":"solar_10_minutes","model":"timesfm_3.0","level":0.3,"empirical":0.548888888888889,"gap":0.248888888888889},{"dataset":"solar_10_minutes","model":"timesfm_3.0","level":0.4,"empirical":0.6164814814814812,"gap":0.21648148148148116},{"dataset":"solar_10_minutes","model":"timesfm_3.0","level":0.5,"empirical":0.669097222222222,"gap":0.169097222222222},{"dataset":"solar_10_minutes","model":"timesfm_3.0","level":0.6,"empirical":0.7321990740740735,"gap":0.1321990740740735},{"dataset":"solar_10_minutes","model":"timesfm_3.0","level":0.7,"empirical":0.7924074074074077,"gap":0.09240740740740772},{"dataset":"solar_10_minutes","model":"timesfm_3.0","level":0.8,"empirical":0.8524537037037034,"gap":0.05245370370370339},{"dataset":"solar_10_minutes","model":"timesfm_3.0","level":0.9,"empirical":0.9177777777777769,"gap":0.017777777777776893},{"dataset":"weather_daily","model":"naive","level":0.1,"empirical":0.007986111111111117,"gap":-0.0920138888888889},{"dataset":"weather_daily","model":"naive","level":0.2,"empirical":0.036111111111111094,"gap":-0.16388888888888892},{"dataset":"weather_daily","model":"naive","level":0.3,"empirical":0.10034722222222242,"gap":-0.19965277777777757},{"dataset":"weather_daily","model":"naive","level":0.4,"empirical":0.24354166666666682,"gap":-0.1564583333333332},{"dataset":"weather_daily","model":"naive","level":0.5,"empirical":0.5692361111111114,"gap":0.06923611111111139},{"dataset":"weather_daily","model":"naive","level":0.6,"empirical":0.8706250000000005,"gap":0.27062500000000056},{"dataset":"weather_daily","model":"naive","level":0.7,"empirical":0.9495833333333336,"gap":0.2495833333333336},{"dataset":"weather_daily","model":"naive","level":0.8,"empirical":0.978055555555556,"gap":0.17805555555555597},{"dataset":"weather_daily","model":"naive","level":0.9,"empirical":0.9931250000000004,"gap":0.09312500000000035},{"dataset":"weather_daily","model":"seasonal_naive","level":0.1,"empirical":0.04152777777777774,"gap":-0.058472222222222266},{"dataset":"weather_daily","model":"seasonal_naive","level":0.2,"empirical":0.12937500000000018,"gap":-0.07062499999999983},{"dataset":"weather_daily","model":"seasonal_naive","level":0.3,"empirical":0.2497916666666668,"gap":-0.05020833333333319},{"dataset":"weather_daily","model":"seasonal_naive","level":0.4,"empirical":0.3954861111111111,"gap":-0.004513888888888928},{"dataset":"weather_daily","model":"seasonal_naive","level":0.5,"empirical":0.5740972222222226,"gap":0.07409722222222259},{"dataset":"weather_daily","model":"seasonal_naive","level":0.6,"empirical":0.7252083333333335,"gap":0.12520833333333348},{"dataset":"weather_daily","model":"seasonal_naive","level":0.7,"empirical":0.8404861111111118,"gap":0.14048611111111187},{"dataset":"weather_daily","model":"seasonal_naive","level":0.8,"empirical":0.917986111111112,"gap":0.1179861111111119},{"dataset":"weather_daily","model":"seasonal_naive","level":0.9,"empirical":0.9719444444444446,"gap":0.07194444444444459},{"dataset":"weather_daily","model":"theta","level":0.1,"empirical":0.03152777777777778,"gap":-0.06847222222222223},{"dataset":"weather_daily","model":"theta","level":0.2,"empirical":0.08958333333333339,"gap":-0.11041666666666662},{"dataset":"weather_daily","model":"theta","level":0.3,"empirical":0.17680555555555563,"gap":-0.12319444444444436},{"dataset":"weather_daily","model":"theta","level":0.4,"empirical":0.3104166666666667,"gap":-0.08958333333333335},{"dataset":"weather_daily","model":"theta","level":0.5,"empirical":0.6577777777777778,"gap":0.1577777777777778},{"dataset":"weather_daily","model":"theta","level":0.6,"empirical":0.8234722222222227,"gap":0.22347222222222274},{"dataset":"weather_daily","model":"theta","level":0.7,"empirical":0.915833333333334,"gap":0.2158333333333341},{"dataset":"weather_daily","model":"theta","level":0.8,"empirical":0.9579166666666672,"gap":0.15791666666666715},{"dataset":"weather_daily","model":"theta","level":0.9,"empirical":0.9823611111111114,"gap":0.08236111111111133},{"dataset":"weather_daily","model":"ets","level":0.1,"empirical":0.059166666666666624,"gap":-0.04083333333333338},{"dataset":"weather_daily","model":"ets","level":0.2,"empirical":0.15513888888888897,"gap":-0.044861111111111046},{"dataset":"weather_daily","model":"ets","level":0.3,"empirical":0.26763888888888904,"gap":-0.03236111111111095},{"dataset":"weather_daily","model":"ets","level":0.4,"empirical":0.4129166666666669,"gap":0.012916666666666854},{"dataset":"weather_daily","model":"ets","level":0.5,"empirical":0.5719444444444447,"gap":0.0719444444444447},{"dataset":"weather_daily","model":"ets","level":0.6,"empirical":0.7336111111111115,"gap":0.13361111111111157},{"dataset":"weather_daily","model":"ets","level":0.7,"empirical":0.8443055555555563,"gap":0.14430555555555635},{"dataset":"weather_daily","model":"ets","level":0.8,"empirical":0.9188888888888894,"gap":0.11888888888888938},{"dataset":"weather_daily","model":"ets","level":0.9,"empirical":0.9663888888888892,"gap":0.06638888888888916},{"dataset":"weather_daily","model":"fourier_ols","level":0.1,"empirical":0.12652777777777793,"gap":0.026527777777777928},{"dataset":"weather_daily","model":"fourier_ols","level":0.2,"empirical":0.31041666666666673,"gap":0.11041666666666672},{"dataset":"weather_daily","model":"fourier_ols","level":0.3,"empirical":0.4345833333333334,"gap":0.1345833333333334},{"dataset":"weather_daily","model":"fourier_ols","level":0.4,"empirical":0.6225000000000003,"gap":0.22250000000000025},{"dataset":"weather_daily","model":"fourier_ols","level":0.5,"empirical":0.7920833333333339,"gap":0.2920833333333339},{"dataset":"weather_daily","model":"fourier_ols","level":0.6,"empirical":0.8515277777777778,"gap":0.2515277777777778},{"dataset":"weather_daily","model":"fourier_ols","level":0.7,"empirical":0.8933333333333334,"gap":0.19333333333333347},{"dataset":"weather_daily","model":"fourier_ols","level":0.8,"empirical":0.9341666666666666,"gap":0.13416666666666655},{"dataset":"weather_daily","model":"fourier_ols","level":0.9,"empirical":0.96375,"gap":0.06374999999999997},{"dataset":"weather_daily","model":"timesfm_3.0","level":0.1,"empirical":0.18333333333333376,"gap":0.08333333333333376},{"dataset":"weather_daily","model":"timesfm_3.0","level":0.2,"empirical":0.2718055555555558,"gap":0.07180555555555579},{"dataset":"weather_daily","model":"timesfm_3.0","level":0.3,"empirical":0.3554166666666665,"gap":0.0554166666666665},{"dataset":"weather_daily","model":"timesfm_3.0","level":0.4,"empirical":0.44145833333333295,"gap":0.04145833333333293},{"dataset":"weather_daily","model":"timesfm_3.0","level":0.5,"empirical":0.5341666666666665,"gap":0.034166666666666456},{"dataset":"weather_daily","model":"timesfm_3.0","level":0.6,"empirical":0.6206249999999991,"gap":0.020624999999999116},{"dataset":"weather_daily","model":"timesfm_3.0","level":0.7,"empirical":0.7121527777777769,"gap":0.012152777777776902},{"dataset":"weather_daily","model":"timesfm_3.0","level":0.8,"empirical":0.8100694444444451,"gap":0.01006944444444502},{"dataset":"weather_daily","model":"timesfm_3.0","level":0.9,"empirical":0.9188888888888903,"gap":0.018888888888890287},{"dataset":"saugeen_river","model":"naive","level":0.1,"empirical":0.04625,"gap":-0.053750000000000006},{"dataset":"saugeen_river","model":"naive","level":0.2,"empirical":0.09416666666666668,"gap":-0.10583333333333333},{"dataset":"saugeen_river","model":"naive","level":0.3,"empirical":0.15583333333333332,"gap":-0.14416666666666667},{"dataset":"saugeen_river","model":"naive","level":0.4,"empirical":0.26125,"gap":-0.13875000000000004},{"dataset":"saugeen_river","model":"naive","level":0.5,"empirical":0.3433333333333333,"gap":-0.15666666666666668},{"dataset":"saugeen_river","model":"naive","level":0.6,"empirical":0.6233333333333333,"gap":0.023333333333333317},{"dataset":"saugeen_river","model":"naive","level":0.7,"empirical":0.7987499999999998,"gap":0.0987499999999999},{"dataset":"saugeen_river","model":"naive","level":0.8,"empirical":0.8899999999999999,"gap":0.08999999999999986},{"dataset":"saugeen_river","model":"naive","level":0.9,"empirical":0.9583333333333333,"gap":0.05833333333333324},{"dataset":"saugeen_river","model":"seasonal_naive","level":0.1,"empirical":0.060833333333333336,"gap":-0.03916666666666667},{"dataset":"saugeen_river","model":"seasonal_naive","level":0.2,"empirical":0.11333333333333333,"gap":-0.08666666666666668},{"dataset":"saugeen_river","model":"seasonal_naive","level":0.3,"empirical":0.1883333333333333,"gap":-0.11166666666666669},{"dataset":"saugeen_river","model":"seasonal_naive","level":0.4,"empirical":0.26458333333333334,"gap":-0.13541666666666669},{"dataset":"saugeen_river","model":"seasonal_naive","level":0.5,"empirical":0.39999999999999997,"gap":-0.10000000000000003},{"dataset":"saugeen_river","model":"seasonal_naive","level":0.6,"empirical":0.6241666666666666,"gap":0.02416666666666667},{"dataset":"saugeen_river","model":"seasonal_naive","level":0.7,"empirical":0.7350000000000001,"gap":0.03500000000000014},{"dataset":"saugeen_river","model":"seasonal_naive","level":0.8,"empirical":0.8316666666666667,"gap":0.03166666666666662},{"dataset":"saugeen_river","model":"seasonal_naive","level":0.9,"empirical":0.9166666666666666,"gap":0.016666666666666607},{"dataset":"saugeen_river","model":"theta","level":0.1,"empirical":0.026666666666666665,"gap":-0.07333333333333333},{"dataset":"saugeen_river","model":"theta","level":0.2,"empirical":0.06333333333333332,"gap":-0.1366666666666667},{"dataset":"saugeen_river","model":"theta","level":0.3,"empirical":0.10583333333333333,"gap":-0.19416666666666665},{"dataset":"saugeen_river","model":"theta","level":0.4,"empirical":0.21749999999999997,"gap":-0.18250000000000005},{"dataset":"saugeen_river","model":"theta","level":0.5,"empirical":0.5599999999999998,"gap":0.05999999999999983},{"dataset":"saugeen_river","model":"theta","level":0.6,"empirical":0.8258333333333334,"gap":0.22583333333333344},{"dataset":"saugeen_river","model":"theta","level":0.7,"empirical":0.9108333333333333,"gap":0.21083333333333332},{"dataset":"saugeen_river","model":"theta","level":0.8,"empirical":0.9433333333333331,"gap":0.1433333333333331},{"dataset":"saugeen_river","model":"theta","level":0.9,"empirical":0.9633333333333333,"gap":0.06333333333333324},{"dataset":"saugeen_river","model":"ets","level":0.1,"empirical":0.034999999999999996,"gap":-0.065},{"dataset":"saugeen_river","model":"ets","level":0.2,"empirical":0.06,"gap":-0.14},{"dataset":"saugeen_river","model":"ets","level":0.3,"empirical":0.125,"gap":-0.175},{"dataset":"saugeen_river","model":"ets","level":0.4,"empirical":0.23749999999999996,"gap":-0.16250000000000006},{"dataset":"saugeen_river","model":"ets","level":0.5,"empirical":0.4883333333333334,"gap":-0.011666666666666603},{"dataset":"saugeen_river","model":"ets","level":0.6,"empirical":0.7266666666666668,"gap":0.12666666666666682},{"dataset":"saugeen_river","model":"ets","level":0.7,"empirical":0.8691666666666664,"gap":0.16916666666666647},{"dataset":"saugeen_river","model":"ets","level":0.8,"empirical":0.9324999999999999,"gap":0.13249999999999984},{"dataset":"saugeen_river","model":"ets","level":0.9,"empirical":0.9791666666666667,"gap":0.07916666666666672},{"dataset":"saugeen_river","model":"fourier_ols","level":0.1,"empirical":0.0,"gap":-0.1},{"dataset":"saugeen_river","model":"fourier_ols","level":0.2,"empirical":0.025833333333333337,"gap":-0.17416666666666666},{"dataset":"saugeen_river","model":"fourier_ols","level":0.3,"empirical":0.17416666666666664,"gap":-0.12583333333333335},{"dataset":"saugeen_river","model":"fourier_ols","level":0.4,"empirical":0.5241666666666667,"gap":0.12416666666666665},{"dataset":"saugeen_river","model":"fourier_ols","level":0.5,"empirical":0.7191666666666665,"gap":0.2191666666666665},{"dataset":"saugeen_river","model":"fourier_ols","level":0.6,"empirical":0.8074999999999999,"gap":0.2074999999999999},{"dataset":"saugeen_river","model":"fourier_ols","level":0.7,"empirical":0.8633333333333333,"gap":0.16333333333333333},{"dataset":"saugeen_river","model":"fourier_ols","level":0.8,"empirical":0.9016666666666666,"gap":0.10166666666666657},{"dataset":"saugeen_river","model":"fourier_ols","level":0.9,"empirical":0.9308333333333332,"gap":0.030833333333333157},{"dataset":"saugeen_river","model":"timesfm_3.0","level":0.1,"empirical":0.10583333333333331,"gap":0.0058333333333333015},{"dataset":"saugeen_river","model":"timesfm_3.0","level":0.2,"empirical":0.205,"gap":0.004999999999999977},{"dataset":"saugeen_river","model":"timesfm_3.0","level":0.3,"empirical":0.2808333333333334,"gap":-0.01916666666666661},{"dataset":"saugeen_river","model":"timesfm_3.0","level":0.4,"empirical":0.3716666666666667,"gap":-0.02833333333333332},{"dataset":"saugeen_river","model":"timesfm_3.0","level":0.5,"empirical":0.4575,"gap":-0.04249999999999998},{"dataset":"saugeen_river","model":"timesfm_3.0","level":0.6,"empirical":0.5391666666666667,"gap":-0.060833333333333295},{"dataset":"saugeen_river","model":"timesfm_3.0","level":0.7,"empirical":0.6316666666666666,"gap":-0.06833333333333336},{"dataset":"saugeen_river","model":"timesfm_3.0","level":0.8,"empirical":0.7183333333333335,"gap":-0.08166666666666655},{"dataset":"saugeen_river","model":"timesfm_3.0","level":0.9,"empirical":0.8341666666666667,"gap":-0.0658333333333333},{"dataset":"ett_h1","model":"naive","level":0.1,"empirical":0.02058531746031746,"gap":-0.07941468253968255},{"dataset":"ett_h1","model":"naive","level":0.2,"empirical":0.05381944444444446,"gap":-0.14618055555555554},{"dataset":"ett_h1","model":"naive","level":0.3,"empirical":0.10689484126984124,"gap":-0.19310515873015877},{"dataset":"ett_h1","model":"naive","level":0.4,"empirical":0.16530257936507936,"gap":-0.23469742063492066},{"dataset":"ett_h1","model":"naive","level":0.5,"empirical":0.2822420634920635,"gap":-0.2177579365079365},{"dataset":"ett_h1","model":"naive","level":0.6,"empirical":0.5274057539682538,"gap":-0.07259424603174613},{"dataset":"ett_h1","model":"naive","level":0.7,"empirical":0.7419394841269842,"gap":0.04193948412698423},{"dataset":"ett_h1","model":"naive","level":0.8,"empirical":0.8861607142857144,"gap":0.08616071428571437},{"dataset":"ett_h1","model":"naive","level":0.9,"empirical":0.9776785714285713,"gap":0.07767857142857126},{"dataset":"ett_h1","model":"seasonal_naive","level":0.1,"empirical":0.05592757936507936,"gap":-0.044072420634920645},{"dataset":"ett_h1","model":"seasonal_naive","level":0.2,"empirical":0.14719742063492064,"gap":-0.05280257936507937},{"dataset":"ett_h1","model":"seasonal_naive","level":0.3,"empirical":0.2621527777777779,"gap":-0.03784722222222209},{"dataset":"ett_h1","model":"seasonal_naive","level":0.4,"empirical":0.38839285714285704,"gap":-0.011607142857142982},{"dataset":"ett_h1","model":"seasonal_naive","level":0.5,"empirical":0.5009920634920636,"gap":0.0009920634920635996},{"dataset":"ett_h1","model":"seasonal_naive","level":0.6,"empirical":0.6200396825396824,"gap":0.02003968253968247},{"dataset":"ett_h1","model":"seasonal_naive","level":0.7,"empirical":0.7457837301587301,"gap":0.04578373015873016},{"dataset":"ett_h1","model":"seasonal_naive","level":0.8,"empirical":0.8487103174603176,"gap":0.04871031746031751},{"dataset":"ett_h1","model":"seasonal_naive","level":0.9,"empirical":0.9343998015873017,"gap":0.034399801587301715},{"dataset":"ett_h1","model":"theta","level":0.1,"empirical":0.046130952380952384,"gap":-0.05386904761904762},{"dataset":"ett_h1","model":"theta","level":0.2,"empirical":0.10168650793650791,"gap":-0.0983134920634921},{"dataset":"ett_h1","model":"theta","level":0.3,"empirical":0.17336309523809526,"gap":-0.12663690476190473},{"dataset":"ett_h1","model":"theta","level":0.4,"empirical":0.28621031746031744,"gap":-0.11378968253968258},{"dataset":"ett_h1","model":"theta","level":0.5,"empirical":0.44444444444444453,"gap":-0.05555555555555547},{"dataset":"ett_h1","model":"theta","level":0.6,"empirical":0.6272321428571429,"gap":0.027232142857142927},{"dataset":"ett_h1","model":"theta","level":0.7,"empirical":0.7854662698412701,"gap":0.08546626984127015},{"dataset":"ett_h1","model":"theta","level":0.8,"empirical":0.8883928571428573,"gap":0.08839285714285727},{"dataset":"ett_h1","model":"theta","level":0.9,"empirical":0.9561011904761907,"gap":0.056101190476190665},{"dataset":"ett_h1","model":"ets","level":0.1,"empirical":0.014136904761904762,"gap":-0.08586309523809524},{"dataset":"ett_h1","model":"ets","level":0.2,"empirical":0.04712301587301587,"gap":-0.15287698412698414},{"dataset":"ett_h1","model":"ets","level":0.3,"empirical":0.10664682539682538,"gap":-0.1933531746031746},{"dataset":"ett_h1","model":"ets","level":0.4,"empirical":0.23685515873015875,"gap":-0.16314484126984127},{"dataset":"ett_h1","model":"ets","level":0.5,"empirical":0.44072420634920645,"gap":-0.05927579365079355},{"dataset":"ett_h1","model":"ets","level":0.6,"empirical":0.6817956349206349,"gap":0.08179563492063491},{"dataset":"ett_h1","model":"ets","level":0.7,"empirical":0.8370535714285714,"gap":0.13705357142857144},{"dataset":"ett_h1","model":"ets","level":0.8,"empirical":0.9293154761904758,"gap":0.1293154761904758},{"dataset":"ett_h1","model":"ets","level":0.9,"empirical":0.980406746031746,"gap":0.08040674603174602},{"dataset":"ett_h1","model":"fourier_ols","level":0.1,"empirical":0.11731150793650791,"gap":0.017311507936507903},{"dataset":"ett_h1","model":"fourier_ols","level":0.2,"empirical":0.21825396825396814,"gap":0.018253968253968134},{"dataset":"ett_h1","model":"fourier_ols","level":0.3,"empirical":0.33060515873015867,"gap":0.030605158730158677},{"dataset":"ett_h1","model":"fourier_ols","level":0.4,"empirical":0.46626984126984133,"gap":0.06626984126984131},{"dataset":"ett_h1","model":"fourier_ols","level":0.5,"empirical":0.6111111111111112,"gap":0.11111111111111116},{"dataset":"ett_h1","model":"fourier_ols","level":0.6,"empirical":0.7276785714285714,"gap":0.12767857142857142},{"dataset":"ett_h1","model":"fourier_ols","level":0.7,"empirical":0.8380456349206353,"gap":0.13804563492063537},{"dataset":"ett_h1","model":"fourier_ols","level":0.8,"empirical":0.9154265873015875,"gap":0.1154265873015875},{"dataset":"ett_h1","model":"fourier_ols","level":0.9,"empirical":0.964781746031746,"gap":0.06478174603174602},{"dataset":"ett_h1","model":"timesfm_3.0","level":0.1,"empirical":0.08035714285714286,"gap":-0.019642857142857142},{"dataset":"ett_h1","model":"timesfm_3.0","level":0.2,"empirical":0.17088293650793654,"gap":-0.029117063492063472},{"dataset":"ett_h1","model":"timesfm_3.0","level":0.3,"empirical":0.2549603174603175,"gap":-0.04503968253968249},{"dataset":"ett_h1","model":"timesfm_3.0","level":0.4,"empirical":0.34995039682539686,"gap":-0.05004960317460316},{"dataset":"ett_h1","model":"timesfm_3.0","level":0.5,"empirical":0.4422123015873016,"gap":-0.057787698412698374},{"dataset":"ett_h1","model":"timesfm_3.0","level":0.6,"empirical":0.5424107142857143,"gap":-0.057589285714285676},{"dataset":"ett_h1","model":"timesfm_3.0","level":0.7,"empirical":0.6567460317460315,"gap":-0.04325396825396843},{"dataset":"ett_h1","model":"timesfm_3.0","level":0.8,"empirical":0.773809523809524,"gap":-0.026190476190476097},{"dataset":"ett_h1","model":"timesfm_3.0","level":0.9,"empirical":0.8861607142857141,"gap":-0.013839285714285943},{"dataset":"ett_h2","model":"naive","level":0.1,"empirical":0.03298611111111111,"gap":-0.0670138888888889},{"dataset":"ett_h2","model":"naive","level":0.2,"empirical":0.06535218253968253,"gap":-0.13464781746031748},{"dataset":"ett_h2","model":"naive","level":0.3,"empirical":0.09350198412698411,"gap":-0.20649801587301586},{"dataset":"ett_h2","model":"naive","level":0.4,"empirical":0.17162698412698413,"gap":-0.2283730158730159},{"dataset":"ett_h2","model":"naive","level":0.5,"empirical":0.3603670634920635,"gap":-0.1396329365079365},{"dataset":"ett_h2","model":"naive","level":0.6,"empirical":0.6129712301587299,"gap":0.012971230158729918},{"dataset":"ett_h2","model":"naive","level":0.7,"empirical":0.822544642857143,"gap":0.12254464285714306},{"dataset":"ett_h2","model":"naive","level":0.8,"empirical":0.9202628968253967,"gap":0.1202628968253967},{"dataset":"ett_h2","model":"naive","level":0.9,"empirical":0.9712301587301587,"gap":0.0712301587301587},{"dataset":"ett_h2","model":"seasonal_naive","level":0.1,"empirical":0.08457341269841268,"gap":-0.01542658730158733},{"dataset":"ett_h2","model":"seasonal_naive","level":0.2,"empirical":0.17658730158730163,"gap":-0.023412698412698385},{"dataset":"ett_h2","model":"seasonal_naive","level":0.3,"empirical":0.25954861111111105,"gap":-0.04045138888888894},{"dataset":"ett_h2","model":"seasonal_naive","level":0.4,"empirical":0.3521825396825397,"gap":-0.047817460317460314},{"dataset":"ett_h2","model":"seasonal_naive","level":0.5,"empirical":0.45920138888888884,"gap":-0.04079861111111116},{"dataset":"ett_h2","model":"seasonal_naive","level":0.6,"empirical":0.5792410714285716,"gap":-0.02075892857142836},{"dataset":"ett_h2","model":"seasonal_naive","level":0.7,"empirical":0.6847718253968254,"gap":-0.015228174603174605},{"dataset":"ett_h2","model":"seasonal_naive","level":0.8,"empirical":0.7885664682539681,"gap":-0.0114335317460319},{"dataset":"ett_h2","model":"seasonal_naive","level":0.9,"empirical":0.890252976190476,"gap":-0.00974702380952397},{"dataset":"ett_h2","model":"theta","level":0.1,"empirical":0.037946428571428575,"gap":-0.06205357142857143},{"dataset":"ett_h2","model":"theta","level":0.2,"empirical":0.08854166666666666,"gap":-0.11145833333333335},{"dataset":"ett_h2","model":"theta","level":0.3,"empirical":0.1619543650793651,"gap":-0.1380456349206349},{"dataset":"ett_h2","model":"theta","level":0.4,"empirical":0.24702380952380948,"gap":-0.15297619047619054},{"dataset":"ett_h2","model":"theta","level":0.5,"empirical":0.3621031746031746,"gap":-0.1378968253968254},{"dataset":"ett_h2","model":"theta","level":0.6,"empirical":0.4774305555555557,"gap":-0.12256944444444429},{"dataset":"ett_h2","model":"theta","level":0.7,"empirical":0.6185515873015874,"gap":-0.08144841269841252},{"dataset":"ett_h2","model":"theta","level":0.8,"empirical":0.7663690476190477,"gap":-0.03363095238095237},{"dataset":"ett_h2","model":"theta","level":0.9,"empirical":0.882688492063492,"gap":-0.01731150793650804},{"dataset":"ett_h2","model":"ets","level":0.1,"empirical":0.018849206349206348,"gap":-0.08115079365079365},{"dataset":"ett_h2","model":"ets","level":0.2,"empirical":0.05059523809523808,"gap":-0.14940476190476193},{"dataset":"ett_h2","model":"ets","level":0.3,"empirical":0.11086309523809519,"gap":-0.1891369047619048},{"dataset":"ett_h2","model":"ets","level":0.4,"empirical":0.20436507936507933,"gap":-0.1956349206349207},{"dataset":"ett_h2","model":"ets","level":0.5,"empirical":0.3472222222222222,"gap":-0.1527777777777778},{"dataset":"ett_h2","model":"ets","level":0.6,"empirical":0.531498015873016,"gap":-0.06850198412698394},{"dataset":"ett_h2","model":"ets","level":0.7,"empirical":0.7279265873015872,"gap":0.027926587301587258},{"dataset":"ett_h2","model":"ets","level":0.8,"empirical":0.8606150793650796,"gap":0.060615079365079594},{"dataset":"ett_h2","model":"ets","level":0.9,"empirical":0.9481646825396824,"gap":0.048164682539682424},{"dataset":"ett_h2","model":"fourier_ols","level":0.1,"empirical":0.06894841269841272,"gap":-0.03105158730158729},{"dataset":"ett_h2","model":"fourier_ols","level":0.2,"empirical":0.12524801587301587,"gap":-0.07475198412698414},{"dataset":"ett_h2","model":"fourier_ols","level":0.3,"empirical":0.19717261904761904,"gap":-0.10282738095238095},{"dataset":"ett_h2","model":"fourier_ols","level":0.4,"empirical":0.2911706349206349,"gap":-0.10882936507936514},{"dataset":"ett_h2","model":"fourier_ols","level":0.5,"empirical":0.3918650793650794,"gap":-0.10813492063492058},{"dataset":"ett_h2","model":"fourier_ols","level":0.6,"empirical":0.5049603174603172,"gap":-0.09503968253968276},{"dataset":"ett_h2","model":"fourier_ols","level":0.7,"empirical":0.601438492063492,"gap":-0.09856150793650797},{"dataset":"ett_h2","model":"fourier_ols","level":0.8,"empirical":0.7199900793650791,"gap":-0.08000992063492096},{"dataset":"ett_h2","model":"fourier_ols","level":0.9,"empirical":0.836061507936508,"gap":-0.063938492063492},{"dataset":"ett_h2","model":"timesfm_3.0","level":0.1,"empirical":0.0672123015873016,"gap":-0.03278769841269841},{"dataset":"ett_h2","model":"timesfm_3.0","level":0.2,"empirical":0.13368055555555558,"gap":-0.06631944444444443},{"dataset":"ett_h2","model":"timesfm_3.0","level":0.3,"empirical":0.20262896825396823,"gap":-0.09737103174603176},{"dataset":"ett_h2","model":"timesfm_3.0","level":0.4,"empirical":0.2819940476190476,"gap":-0.1180059523809524},{"dataset":"ett_h2","model":"timesfm_3.0","level":0.5,"empirical":0.36532738095238093,"gap":-0.13467261904761907},{"dataset":"ett_h2","model":"timesfm_3.0","level":0.6,"empirical":0.4615575396825398,"gap":-0.13844246031746016},{"dataset":"ett_h2","model":"timesfm_3.0","level":0.7,"empirical":0.574156746031746,"gap":-0.1258432539682539},{"dataset":"ett_h2","model":"timesfm_3.0","level":0.8,"empirical":0.6927083333333334,"gap":-0.10729166666666667},{"dataset":"ett_h2","model":"timesfm_3.0","level":0.9,"empirical":0.825892857142857,"gap":-0.07410714285714304}],"timings":[{"model":"naive","ms_per_window":2.5376486203223743,"total_seconds":2.7355852127075195},{"model":"seasonal_naive","ms_per_window":1.5605011322502744,"total_seconds":1.682220220565796},{"model":"theta","ms_per_window":13.653053202301761,"total_seconds":14.717991352081299},{"model":"ets","ms_per_window":112.95402978921865,"total_seconds":121.76444411277771},{"model":"fourier_ols","ms_per_window":0.5739502650245001,"total_seconds":0.6187183856964111},{"model":"timesfm_3.0","ms_per_window":8.629239114184548,"total_seconds":9.302319765090942}],"metric_disagreement":{"naive":{"mase_rank":6,"smape_rank":4},"seasonal_naive":{"mase_rank":3,"smape_rank":1},"theta":{"mase_rank":4,"smape_rank":5},"ets":{"mase_rank":5,"smape_rank":3},"fourier_ols":{"mase_rank":2,"smape_rank":6},"timesfm_3.0":{"mase_rank":1,"smape_rank":2}}};
+
+const SVGNS="http://www.w3.org/2000/svg";
+const CSSATTR=new Set(["fill","stroke","font-family"]);
+const el=(t,a={})=>{const e=document.createElementNS(SVGNS,t);
+  for(const k in a){const v=String(a[k]);
+    if(CSSATTR.has(k)&&v.indexOf("var(")>=0)e.style.setProperty(k,v);else e.setAttribute(k,a[k]);}
+  return e;};
+const f2=n=>n.toFixed(2), f3=n=>n.toFixed(3);
+const pctf=v=>(100*v).toFixed(1)+"%";
+const pval=p=>p<1e-4?p.toExponential(1).replace("e-","e−"):p.toFixed(4);
+
+const tip=document.getElementById("tip");
+function bind(node,text){
+  node.addEventListener("pointerenter",()=>{tip.textContent=text;tip.style.opacity=1;});
+  node.addEventListener("pointermove",e=>{
+    const w=tip.offsetWidth,h=tip.offsetHeight;
+    let x=e.clientX+14,y=e.clientY-h-12;
+    if(x+w>innerWidth-8)x=e.clientX-w-14;
+    if(y<8)y=e.clientY+18;
+    tip.style.left=x+"px";tip.style.top=y+"px";
+  });
+  node.addEventListener("pointerleave",()=>{tip.style.opacity=0;});
+  node.classList.add("hit");
+}
+const S1="var(--series-1)", S2="var(--series-2)", INK3="var(--ink-3)",
+      GRID="var(--grid)", RULE="var(--rule)", SURF="var(--surface)", INK2="var(--ink-2)";
+
+/* ---------- tables ---------- */
+const DSORDER=["traffic_hourly","weather_daily","electricity_hourly","solar_10_minutes","ett_h1","ett_h2","saugeen_river"];
+const MODELS=D.models;
+const JP={naive:"ナイーブ（ランダムウォーク）",seasonal_naive:"季節ナイーブ + 経験残差",
+  theta:"Theta",ets:"ETS（減衰 Holt-Winters）",fourier_ols:"Fourier + trend OLS",
+  "timesfm_3.0":"TimesFM 3.0（ゼロショット）"};
+const NAME=m=>JP[m]||D.display_names[m]||m;
+const SHORT=m=>NAME(m).replace(/（.*）/,"").replace(/ \+ 経験残差/,"");
+
+(function specs(){
+  const tb=document.getElementById("tblSpecs");
+  for(const k of DSORDER){const s=D.specs[k];
+    const tr=el2("tr");
+    tr.innerHTML=`<td>${s.title}</td><td class="num">${s.freq}</td><td class="num">${s.season}</td>`+
+      `<td class="num">${s.context}</td><td class="num">${s.horizon}</td><td class="num">${s.n_series}</td>`+
+      `<td class="num">${s.n_windows}</td>`+
+      `<td>${s.in_corpus?'<span class="tag on">含まれる</span>':'<span class="tag">除外</span>'}</td>`;
+    tb.appendChild(tr);}
+})();
+function el2(t){return document.createElement(t);}
+
+(function h2h(){
+  const tb=document.getElementById("tblH2H");
+  const LBL={oracle:"オラクル（窓ごと5手法の最小 — 事前には選べない）",walkforward:"ウォークフォワード選択器（実装可能）"};
+  for(const r of D.head_to_head){
+    const tr=el2("tr");
+    if(r.opponent==="oracle")tr.className="hl";
+    tr.innerHTML=`<td>${LBL[r.opponent]||NAME(r.opponent)}</td><td class="num">${r.n}</td>`+
+      `<td class="num">${f3(r.opponent_mean)}</td><td class="num">${f3(r.timesfm_mean)}</td>`+
+      `<td class="num${r.timesfm_win_rate>0.5?" win":""}">${pctf(r.timesfm_win_rate)}</td>`+
+      `<td class="num">${pval(r.p_value)}</td>`;
+    tb.appendChild(tr);}
+})();
+
+(function maseTable(){
+  const th=document.getElementById("thMase"), tb=document.getElementById("tblMase");
+  th.innerHTML=`<th>データセット</th>`+MODELS.map(m=>`<th>${SHORT(m)}</th>`).join("");
+  for(const k of DSORDER){
+    const row=MODELS.map(m=>D.per_dataset.mase[m][k]);
+    const best=Math.min(...row);
+    const tr=el2("tr");
+    tr.innerHTML=`<td>${D.specs[k].title}</td>`+
+      row.map(v=>`<td class="num${v===best?" win":""}">${f3(v)}</td>`).join("");
+    tb.appendChild(tr);}
+})();
+
+(function costTable(){
+  const tb=document.getElementById("tblCost");
+  const t=Object.fromEntries(D.timings.map(r=>[r.model,r.ms_per_window]));
+  const order=[...MODELS].sort((a,b)=>D.overall[a].mase-D.overall[b].mase);
+  for(const m of order){const o=D.overall[m];
+    const tr=el2("tr");
+    if(m==="timesfm_3.0")tr.className="hl";
+    tr.innerHTML=`<td>${NAME(m)}</td><td class="num">${f3(o.mase)}</td><td class="num">${f3(o.scaled_crps)}</td>`+
+      `<td class="num">${f3(o.coverage_80)}</td><td class="num">${o.smape.toFixed(1)}</td>`+
+      `<td class="num">${t[m].toFixed(1)}</td>`;
+    tb.appendChild(tr);}
+})();
+
+/* ---------- Fig 2: contamination ---------- */
+(function fig2(){
+  const svg=document.getElementById("fig2");
+  const L=150,R=40,T=34,B=58,W=760,H=300, iw=W-L-R, ih=H-T-B;
+  const rows=[{k:"traffic_hourly",t:"Traffic（時間足）"},{k:"weather_daily",t:"Weather（日次）"}];
+  const be=D.contamination.by_exposure.filter(r=>r.model==="timesfm_3.0");
+  const get=(k,e)=>be.find(r=>r.dataset===k&&r.exposure===e);
+  const xmax=1.0;
+  const x=v=>L+iw*v/xmax;
+  for(let g=0;g<=5;g++){const v=g*0.2;
+    svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
+    const tx=el("text",{x:x(v),y:T+ih+22,"font-size":11,"text-anchor":"middle",fill:INK3});
+    tx.textContent=v.toFixed(1); svg.appendChild(tx);}
+  // reference line at 1.0 = baseline median
+  svg.appendChild(el("line",{x1:x(1),x2:x(1),y1:T-8,y2:T+ih,stroke:INK3,"stroke-width":1.5,"stroke-dasharray":"4 4"}));
+  const rl=el("text",{x:x(1),y:T-14,"font-size":10.5,"text-anchor":"end",fill:INK3});
+  rl.textContent="1.00 = ベースライン中央値"; svg.appendChild(rl);
+
+  const rowH=ih/rows.length, bh=26, gap=8;
+  rows.forEach((r,i)=>{
+    const cy=T+rowH*i+rowH/2;
+    const lab=el("text",{x:L-14,y:cy+4,"font-size":12,"text-anchor":"end",fill:INK2,"font-family":"var(--sans)"});
+    lab.textContent=r.t; svg.appendChild(lab);
+    [["in corpus",S1,"コーパス内"],["past corpus",S2,"コーパス外"]].forEach(([e,c,jp],j)=>{
+      const d=get(r.k,e); if(!d)return;
+      const y=cy-bh-gap/2+j*(bh+gap);
+      const bar=el("rect",{x:L,y:y,width:Math.max(2,x(d.median_rel)-L),height:bh,
+        fill:c,rx:3});
+      svg.appendChild(bar);
+      bind(bar,`${r.t}\n${jp}\n相対誤差中央値 ${f3(d.median_rel)}\nn = ${d.n} 窓`);
+      const vl=el("text",{x:x(d.median_rel)+9,y:y+bh/2+4,"font-size":11.5,fill:INK2});
+      vl.textContent=f3(d.median_rel)+"  (n="+d.n+")"; svg.appendChild(vl);
+    });
+    if(i<rows.length-1)svg.appendChild(el("line",{x1:L-120,x2:L+iw,y1:T+rowH*(i+1),y2:T+rowH*(i+1),stroke:RULE,"stroke-width":1}));
+  });
+  const ax=el("text",{x:L+iw/2,y:H-14,"font-size":11,"text-anchor":"middle",fill:INK3});
+  ax.textContent="相対誤差の中央値（小さいほど良い）"; svg.appendChild(ax);
+})();
+
+/* ---------- Fig 3: ladder ---------- */
+(function fig3(){
+  const svg=document.getElementById("fig3");
+  const L=230,R=54,T=22,B=48,W=760,H=320,iw=W-L-R,ih=H-T-B;
+  const h2=Object.fromEntries(D.head_to_head.map(r=>[r.opponent,r.opponent_mean]));
+  const items=[
+    {k:"oracle",t:"オラクル（選べない）",v:h2.oracle,c:INK3},
+    {k:"timesfm_3.0",t:"TimesFM 3.0",v:D.selector_skill.timesfm_mean,c:S1},
+    {k:"walkforward",t:"ウォークフォワード選択器",v:h2.walkforward,c:S2},
+    {k:"fourier_ols",t:"Fourier + trend OLS",v:h2.fourier_ols,c:S2},
+    {k:"seasonal_naive",t:"季節ナイーブ",v:h2.seasonal_naive,c:S2},
+    {k:"theta",t:"Theta",v:h2.theta,c:S2},
+    {k:"ets",t:"ETS（減衰 Holt-Winters）",v:h2.ets,c:S2},
+    {k:"naive",t:"ナイーブ（ランダムウォーク）",v:h2.naive,c:S2}];
+  const xmax=2.3, x=v=>L+iw*v/xmax;
+  for(let g=0;g<=4;g++){const v=g*0.5;
+    svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
+    const tx=el("text",{x:x(v),y:T+ih+21,"font-size":11,"text-anchor":"middle",fill:INK3});
+    tx.textContent=v.toFixed(1);svg.appendChild(tx);}
+  const bh=ih/items.length;
+  items.forEach((it,i)=>{
+    const y=T+bh*i+3, hh=bh-8;
+    const lab=el("text",{x:L-14,y:y+hh/2+4,"font-size":12,"text-anchor":"end",
+      fill:it.k==="timesfm_3.0"?"var(--accent)":INK2,"font-family":"var(--sans)",
+      "font-weight":it.k==="timesfm_3.0"?700:400});
+    lab.textContent=it.t;svg.appendChild(lab);
+    const r=el("rect",{x:L,y:y,width:Math.max(2,x(it.v)-L),height:hh,fill:it.c,rx:3,
+      opacity:it.k==="oracle"?0.55:1});
+    svg.appendChild(r);
+    bind(r,`${it.t}\n平均 MASE ${f3(it.v)}\nn = ${D.selector_skill.n} 窓`);
+    const vl=el("text",{x:x(it.v)+9,y:y+hh/2+4,"font-size":11.5,fill:INK2,"font-weight":it.k==="timesfm_3.0"?600:400});
+    vl.textContent=f3(it.v);svg.appendChild(vl);
+  });
+  // gap annotation between oracle and walkforward
+  const gy=T+bh*0+bh/2;
+  const ax=el("text",{x:L+iw/2,y:H-12,"font-size":11,"text-anchor":"middle",fill:INK3});
+  ax.textContent="平均 MASE（小さいほど良い）"; svg.appendChild(ax);
+})();
+
+/* ---------- Fig 4: dumbbell per dataset ---------- */
+(function fig4(){
+  const svg=document.getElementById("fig4");
+  const L=170,R=60,T=26,B=48,W=760,H=330,iw=W-L-R,ih=H-T-B;
+  const rows=D.selector_per_dataset.slice().sort((a,b)=>a.timesfm-b.timesfm);
+  const xmax=Math.max(...rows.map(r=>Math.max(r.timesfm,r.walkforward)))*1.12;
+  const x=v=>L+iw*v/xmax;
+  for(let g=0;g<=Math.ceil(xmax/0.5);g++){const v=g*0.5; if(v>xmax)break;
+    svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
+    const tx=el("text",{x:x(v),y:T+ih+21,"font-size":11,"text-anchor":"middle",fill:INK3});
+    tx.textContent=v.toFixed(1);svg.appendChild(tx);}
+  const rh=ih/rows.length;
+  rows.forEach((r,i)=>{
+    const cy=T+rh*i+rh/2;
+    const lab=el("text",{x:L-14,y:cy+4,"font-size":12,"text-anchor":"end",fill:INK2,"font-family":"var(--sans)"});
+    lab.textContent=D.specs[r.dataset].title;svg.appendChild(lab);
+    svg.appendChild(el("line",{x1:x(r.timesfm),x2:x(r.walkforward),y1:cy,y2:cy,
+      stroke:RULE,"stroke-width":3,"stroke-linecap":"round"}));
+    const c2=el("circle",{cx:x(r.walkforward),cy:cy,r:6.5,fill:S2,stroke:SURF,"stroke-width":2});
+    svg.appendChild(c2);
+    bind(c2,`${D.specs[r.dataset].title}\nウォークフォワード選択器 ${f3(r.walkforward)}\nオラクル ${f3(r.oracle)}\nn = ${r.n} 窓`);
+    const c1=el("circle",{cx:x(r.timesfm),cy:cy,r:6.5,fill:S1,stroke:SURF,"stroke-width":2});
+    svg.appendChild(c1);
+    bind(c1,`${D.specs[r.dataset].title}\nTimesFM 3.0 ${f3(r.timesfm)}\n勝率 ${pctf(r.win_rate)}\nn = ${r.n} 窓`);
+    const vl=el("text",{x:L+iw+8,y:cy+4,"font-size":11,fill:INK3,"text-anchor":"start"});
+    vl.textContent=pctf(r.win_rate);svg.appendChild(vl);
+  });
+  const hd=el("text",{x:L+iw+8,y:T-8,"font-size":10,fill:INK3,"text-anchor":"start"});
+  hd.textContent="勝率";svg.appendChild(hd);
+  const ax=el("text",{x:L+iw/2,y:H-12,"font-size":11,"text-anchor":"middle",fill:INK3});
+  ax.textContent="平均 MASE（小さいほど良い）"; svg.appendChild(ax);
+})();
+
+/* ---------- Fig 5a/5b: horizon profiles ---------- */
+function horizonPanel(id,dsKey,title,maxStep){
+  const svg=document.getElementById(id);
+  const L=48,R=14,T=48,B=44,W=380,H=268,iw=W-L-R,ih=H-T-B;
+  const rec=D.horizon.filter(r=>r.dataset===dsKey);
+  const series=["timesfm_3.0","seasonal_naive"].map(m=>({m,
+    pts:rec.filter(r=>r.model===m).sort((a,b)=>a.step-b.step)}));
+  const n=series[0].pts.length;
+  const ymax=Math.max(...series.flatMap(s=>s.pts.map(p=>p.scaled_abs_error)))*1.08;
+  const x=s=>L+iw*(s-1)/(n-1), y=v=>T+ih-ih*v/ymax;
+  const t=el("text",{x:L-34,y:18,"font-size":12,fill:INK2,"font-family":"var(--sans)","font-weight":700});
+  t.textContent=title;svg.appendChild(t);
+  const steps=Math.ceil(ymax/ (ymax>3?1:0.5));
+  for(let g=0;g<=steps;g++){const v=g*(ymax>3?1:0.5); if(v>ymax)break;
+    svg.appendChild(el("line",{x1:L,x2:L+iw,y1:y(v),y2:y(v),stroke:GRID,"stroke-width":1}));
+    const tx=el("text",{x:L-8,y:y(v)+4,"font-size":10.5,"text-anchor":"end",fill:INK3});
+    tx.textContent=v.toFixed(ymax>3?0:1);svg.appendChild(tx);}
+  [1,Math.round(n/2),n].forEach(s=>{
+    const tx=el("text",{x:x(s),y:T+ih+18,"font-size":10.5,"text-anchor":"middle",fill:INK3});
+    tx.textContent=s;svg.appendChild(tx);});
+  series.forEach(s=>{
+    const d=s.pts.map((p,i)=>(i?"L":"M")+x(p.step).toFixed(1)+" "+y(p.scaled_abs_error).toFixed(1)).join(" ");
+    svg.appendChild(el("path",{d:d,fill:"none",stroke:s.m==="timesfm_3.0"?S1:S2,
+      "stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"}));});
+  // invisible hover columns
+  for(let i=0;i<n;i++){
+    const p1=series[0].pts[i],p2=series[1].pts[i];
+    const rct=el("rect",{x:x(i+1)-iw/(2*(n-1)),y:T,width:iw/(n-1),height:ih,fill:"var(--ground)",opacity:0});
+    svg.appendChild(rct);
+    bind(rct,`${title}\nステップ ${p1.step}\nTimesFM ${f3(p1.scaled_abs_error)}\n季節ナイーブ ${f3(p2.scaled_abs_error)}`);
+  }
+  const ax=el("text",{x:L+iw/2,y:H-10,"font-size":10.5,"text-anchor":"middle",fill:INK3});
+  ax.textContent="予測ステップ";svg.appendChild(ax);
+  const ay=el("text",{x:L-34,y:T-13,"font-size":10,fill:INK3});
+  ay.textContent="正規化 |誤差|";svg.appendChild(ay);
+}
+horizonPanel("fig5a","traffic_hourly","Traffic（48時間先まで）");
+horizonPanel("fig5b","solar_10_minutes","Solar（24時間先まで、10分刻み）");
+
+/* ---------- Fig 6: PIT calibration ---------- */
+(function fig6(){
+  const svg=document.getElementById("fig6");
+  const L=70,R=190,T=26,B=52,W=760,H=400,iw=W-L-R,ih=H-T-B;
+  const x=v=>L+iw*v, y=v=>T+ih-ih*v;
+  for(let g=0;g<=5;g++){const v=g*0.2;
+    svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
+    svg.appendChild(el("line",{x1:L,x2:L+iw,y1:y(v),y2:y(v),stroke:GRID,"stroke-width":1}));
+    const tx=el("text",{x:x(v),y:T+ih+22,"font-size":11,"text-anchor":"middle",fill:INK3});
+    tx.textContent=v.toFixed(1);svg.appendChild(tx);
+    const ty=el("text",{x:L-10,y:y(v)+4,"font-size":11,"text-anchor":"end",fill:INK3});
+    ty.textContent=v.toFixed(1);svg.appendChild(ty);}
+  svg.appendChild(el("line",{x1:x(0),y1:y(0),x2:x(1),y2:y(1),stroke:INK3,"stroke-width":1.5,"stroke-dasharray":"5 5"}));
+  const dl=el("text",{x:x(0.87),y:y(0.87)-10,"font-size":10.5,fill:INK3,"text-anchor":"middle"});
+  dl.textContent="完全較正";svg.appendChild(dl);
+
+  const byModel={};
+  for(const r of D.calibration){(byModel[r.model]=byModel[r.model]||[]).push(r);}
+  const pooled=m=>{
+    const lv=[...new Set(byModel[m].map(r=>r.level))].sort((a,b)=>a-b);
+    return lv.map(l=>{const rs=byModel[m].filter(r=>r.level===l);
+      return {level:l,emp:rs.reduce((s,r)=>s+r.empirical,0)/rs.length};});};
+  [["timesfm_3.0",S1,"TimesFM 3.0"],["seasonal_naive",S2,"季節ナイーブ + 経験残差"]].forEach(([m,c,jp])=>{
+    const pts=pooled(m);
+    const d=pts.map((p,i)=>(i?"L":"M")+x(p.level).toFixed(1)+" "+y(p.emp).toFixed(1)).join(" ");
+    svg.appendChild(el("path",{d:d,fill:"none",stroke:c,"stroke-width":2,"stroke-linejoin":"round"}));
+    pts.forEach(p=>{
+      const ci=el("circle",{cx:x(p.level),cy:y(p.emp),r:5,fill:c,stroke:SURF,"stroke-width":2});
+      svg.appendChild(ci);
+      const gap=p.emp-p.level;
+      bind(ci,`${jp}\n名目 ${p.level.toFixed(1)}\n実測 ${f3(p.emp)}\nずれ ${gap>0?"+":"−"}${Math.abs(gap).toFixed(3)}`);
+    });
+  });
+  // annotation
+  const notes=[
+    {t:"下裾が薄い", sub:"10% 分位点の下に 16.3%", ly:0.86},
+    {t:"上裾が薄い", sub:"90% 分位点の下に 87.8%", ly:0.62}];
+  notes.forEach((nn,i)=>{
+    const bx=L+iw+22, by=T+40+i*76;
+    const t1=el("text",{x:bx,y:by,"font-size":12,fill:"var(--accent)","font-family":"var(--sans)","font-weight":700});
+    t1.textContent=nn.t;svg.appendChild(t1);
+    const t2=el("text",{x:bx,y:by+20,"font-size":11,fill:INK3});
+    t2.textContent=nn.sub;svg.appendChild(t2);
+  });
+  const t3=el("text",{x:L+iw+22,y:T+200,"font-size":11.5,fill:INK2,"font-family":"var(--sans)"});
+  t3.textContent="→ 区間が狭すぎる";svg.appendChild(t3);
+  const t4=el("text",{x:L+iw+22,y:T+222,"font-size":11,fill:INK3,"font-family":"var(--sans)"});
+  t4.textContent="80% 被覆 = 0.778";svg.appendChild(t4);
+
+  const ax=el("text",{x:L+iw/2,y:H-14,"font-size":11,"text-anchor":"middle",fill:INK3});
+  ax.textContent="名目分位点";svg.appendChild(ax);
+  const ay=el("text",{x:14,y:T+ih/2,"font-size":11,fill:INK3,transform:`rotate(-90 14 ${T+ih/2})`,"text-anchor":"middle"});
+  ay.textContent="実測で下回った割合";svg.appendChild(ay);
+})();
+</script>
+
+</html>
