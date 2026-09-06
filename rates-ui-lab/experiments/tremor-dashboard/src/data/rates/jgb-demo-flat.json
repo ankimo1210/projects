@@ -1,0 +1,1989 @@
+{
+  "schemaVersion": 1,
+  "dataKind": "synthetic",
+  "currency": "JPY",
+  "curve": "JGB",
+  "sourceLabel": "Synthetic JGB flat-curve fixture; not market data",
+  "snapshots": [
+    {
+      "date": "2026-06-15",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.709
+        }
+      ]
+    },
+    {
+      "date": "2026-06-16",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.707
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.707
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.707
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.707
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.707
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.707
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.707
+        }
+      ]
+    },
+    {
+      "date": "2026-06-17",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.709
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.709
+        }
+      ]
+    },
+    {
+      "date": "2026-06-18",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.715
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.715
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.715
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.715
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.715
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.715
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.715
+        }
+      ]
+    },
+    {
+      "date": "2026-06-19",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.725
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.725
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.725
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.725
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.725
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.725
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.725
+        }
+      ]
+    },
+    {
+      "date": "2026-06-22",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.738
+        }
+      ]
+    },
+    {
+      "date": "2026-06-23",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.751
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.751
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.751
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.751
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.751
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.751
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.751
+        }
+      ]
+    },
+    {
+      "date": "2026-06-24",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.763
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.763
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.763
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.763
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.763
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.763
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.763
+        }
+      ]
+    },
+    {
+      "date": "2026-06-25",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.773
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.773
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.773
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.773
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.773
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.773
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.773
+        }
+      ]
+    },
+    {
+      "date": "2026-06-26",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.778
+        }
+      ]
+    },
+    {
+      "date": "2026-06-29",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.778
+        }
+      ]
+    },
+    {
+      "date": "2026-06-30",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.775
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.775
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.775
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.775
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.775
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.775
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.775
+        }
+      ]
+    },
+    {
+      "date": "2026-07-01",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.767
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.767
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.767
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.767
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.767
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.767
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.767
+        }
+      ]
+    },
+    {
+      "date": "2026-07-02",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.758
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.758
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.758
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.758
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.758
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.758
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.758
+        }
+      ]
+    },
+    {
+      "date": "2026-07-03",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.749
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.749
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.749
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.749
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.749
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.749
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.749
+        }
+      ]
+    },
+    {
+      "date": "2026-07-06",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.742
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.742
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.742
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.742
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.742
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.742
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.742
+        }
+      ]
+    },
+    {
+      "date": "2026-07-07",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.738
+        }
+      ]
+    },
+    {
+      "date": "2026-07-08",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.738
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.738
+        }
+      ]
+    },
+    {
+      "date": "2026-07-09",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.743
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.743
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.743
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.743
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.743
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.743
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.743
+        }
+      ]
+    },
+    {
+      "date": "2026-07-10",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.752
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.752
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.752
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.752
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.752
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.752
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.752
+        }
+      ]
+    },
+    {
+      "date": "2026-07-13",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.764
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.764
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.764
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.764
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.764
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.764
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.764
+        }
+      ]
+    },
+    {
+      "date": "2026-07-14",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.778
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.778
+        }
+      ]
+    },
+    {
+      "date": "2026-07-15",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.79
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.79
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.79
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.79
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.79
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.79
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.79
+        }
+      ]
+    },
+    {
+      "date": "2026-07-16",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.801
+        }
+      ]
+    },
+    {
+      "date": "2026-07-17",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.807
+        }
+      ]
+    },
+    {
+      "date": "2026-07-20",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.809
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.809
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.809
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.809
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.809
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.809
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.809
+        }
+      ]
+    },
+    {
+      "date": "2026-07-21",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.807
+        }
+      ]
+    },
+    {
+      "date": "2026-07-22",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.801
+        }
+      ]
+    },
+    {
+      "date": "2026-07-23",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.792
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.792
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.792
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.792
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.792
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.792
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.792
+        }
+      ]
+    },
+    {
+      "date": "2026-07-24",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.783
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.783
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.783
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.783
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.783
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.783
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.783
+        }
+      ]
+    },
+    {
+      "date": "2026-07-27",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.774
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.774
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.774
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.774
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.774
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.774
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.774
+        }
+      ]
+    },
+    {
+      "date": "2026-07-28",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.769
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.769
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.769
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.769
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.769
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.769
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.769
+        }
+      ]
+    },
+    {
+      "date": "2026-07-29",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.768
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.768
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.768
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.768
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.768
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.768
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.768
+        }
+      ]
+    },
+    {
+      "date": "2026-07-30",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.772
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.772
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.772
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.772
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.772
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.772
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.772
+        }
+      ]
+    },
+    {
+      "date": "2026-07-31",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.779
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.779
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.779
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.779
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.779
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.779
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.779
+        }
+      ]
+    },
+    {
+      "date": "2026-08-03",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.791
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.791
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.791
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.791
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.791
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.791
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.791
+        }
+      ]
+    },
+    {
+      "date": "2026-08-04",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.804
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.804
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.804
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.804
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.804
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.804
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.804
+        }
+      ]
+    },
+    {
+      "date": "2026-08-05",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.817
+        }
+      ]
+    },
+    {
+      "date": "2026-08-06",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.828
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.828
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.828
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.828
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.828
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.828
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.828
+        }
+      ]
+    },
+    {
+      "date": "2026-08-07",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.836
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.836
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.836
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.836
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.836
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.836
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.836
+        }
+      ]
+    },
+    {
+      "date": "2026-08-10",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.84
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.84
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.84
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.84
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.84
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.84
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.84
+        }
+      ]
+    },
+    {
+      "date": "2026-08-11",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.839
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.839
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.839
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.839
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.839
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.839
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.839
+        }
+      ]
+    },
+    {
+      "date": "2026-08-12",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.834
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.834
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.834
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.834
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.834
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.834
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.834
+        }
+      ]
+    },
+    {
+      "date": "2026-08-13",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.826
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.826
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.826
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.826
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.826
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.826
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.826
+        }
+      ]
+    },
+    {
+      "date": "2026-08-14",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.816
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.816
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.816
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.816
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.816
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.816
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.816
+        }
+      ]
+    },
+    {
+      "date": "2026-08-17",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.808
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.808
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.808
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.808
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.808
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.808
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.808
+        }
+      ]
+    },
+    {
+      "date": "2026-08-18",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.801
+        }
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.799
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.799
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.799
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.799
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.799
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.799
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.799
+        }
+      ]
+    },
+    {
+      "date": "2026-08-20",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.801
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.801
+        }
+      ]
+    },
+    {
+      "date": "2026-08-21",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.807
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.807
+        }
+      ]
+    },
+    {
+      "date": "2026-08-24",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.817
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.817
+        }
+      ]
+    },
+    {
+      "date": "2026-08-25",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.83
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.83
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.83
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.83
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.83
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.83
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.83
+        }
+      ]
+    },
+    {
+      "date": "2026-08-26",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.844
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.844
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.844
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.844
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.844
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.844
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.844
+        }
+      ]
+    },
+    {
+      "date": "2026-08-27",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.856
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.856
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.856
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.856
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.856
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.856
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.856
+        }
+      ]
+    },
+    {
+      "date": "2026-08-28",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.865
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.865
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.865
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.865
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.865
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.865
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.865
+        }
+      ]
+    },
+    {
+      "date": "2026-08-31",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.87
+        }
+      ]
+    },
+    {
+      "date": "2026-09-01",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.87
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.87
+        }
+      ]
+    },
+    {
+      "date": "2026-09-02",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.866
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.866
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.866
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.866
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.866
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.866
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.866
+        }
+      ]
+    },
+    {
+      "date": "2026-09-03",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.859
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.859
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.859
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.859
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.859
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.859
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.859
+        }
+      ]
+    },
+    {
+      "date": "2026-09-04",
+      "points": [
+        {
+          "tenorYears": 2,
+          "yieldPct": 1.85
+        },
+        {
+          "tenorYears": 5,
+          "yieldPct": 1.85
+        },
+        {
+          "tenorYears": 7,
+          "yieldPct": 1.85
+        },
+        {
+          "tenorYears": 10,
+          "yieldPct": 1.85
+        },
+        {
+          "tenorYears": 20,
+          "yieldPct": 1.85
+        },
+        {
+          "tenorYears": 30,
+          "yieldPct": 1.85
+        },
+        {
+          "tenorYears": 40,
+          "yieldPct": 1.85
+        }
+      ]
+    }
+  ]
+}
