@@ -17,7 +17,8 @@ matches the package (2026-06-14); the full-workspace run had been latently
 broken since then (single-project runs pick quantkit/pyproject.toml as rootdir
 and never hit the shadow).
 `labor_ai_quadrant` was created with a matching directory/package name
-(2026-08-16) and needs the same treatment from the start.
+(2026-08-16) and needs the same treatment from the start; `timesfm_lab`
+(2026-09-06) is the same case.
 """
 
 import gto  # noqa: F401
@@ -28,6 +29,7 @@ import macrokit  # noqa: F401
 import optimal_execution  # noqa: F401
 import quantkit  # noqa: F401
 import rough_volatility  # noqa: F401
+import timesfm_lab  # noqa: F401
 
 
 def pytest_configure(config) -> None:

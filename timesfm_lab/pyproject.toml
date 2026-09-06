@@ -1,0 +1,22 @@
+[project]
+name = "timesfm-lab"
+version = "0.1.0"
+description = "Zero-shot falsification bench for Google TimesFM 3.0 against classical baselines"
+requires-python = ">=3.12"
+dependencies = [
+    "timesfm[torch]>=3.0.1",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "statsmodels>=0.14",
+    "scipy>=1.13",
+    "pyarrow>=16.0",
+    "huggingface-hub>=0.28",
+    "jinja2>=3.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/timesfm_lab"]
