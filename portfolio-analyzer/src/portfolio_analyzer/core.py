@@ -517,7 +517,9 @@ def most_plausible_shock(
     return shocks, distance
 
 
-def replay_returns(exposures: dict[str, Decimal], risk: FactorRisk, total: Decimal) -> list[Decimal]:
+def replay_returns(
+    exposures: dict[str, Decimal], risk: FactorRisk, total: Decimal
+) -> list[Decimal]:
     """Return the portfolio return the current holdings would have had each period.
 
     This is a replay, not a track record: past factor moves are applied to
@@ -963,6 +965,74 @@ def _proposal_source(path: str) -> dict[str, Any]:
     }
 
 
+def _ledger_source(path: str) -> dict[str, Any]:
+    return {
+        "id": "ledger",
+        "label": "証券会社の取引履歴から逆算した台帳",
+        "path": path,
+    }
+
+
+def _ledger_rows(ledger: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    """Project the ingested transaction ledger into dashboard datasets."""
+    performance = ledger["performance"]
+    cash = ledger["cash"]
+    check = ledger["reconciliation"]
+    metrics: list[tuple[str, Any, str]] = [
+        ("入金累計", performance["deposits_jpy"], "円"),
+        ("現在の口座評価額", performance["account_value_jpy"], "円"),
+        ("入金差引の増減", performance["net_gain_jpy"], "円"),
+        (
+            "資金加重リターン（年率）",
+            (
+                performance["money_weighted_return"] * 100
+                if performance["money_weighted_return"] is not None
+                else None
+            ),
+            "%",
+        ),
+        ("実現損益", performance["realized_pnl_jpy"], "円"),
+        ("含み損益", performance["unrealized_pnl_jpy"], "円"),
+        ("配当純額", cash["net_dividends_jpy"], "円"),
+        ("源泉徴収", cash["withholding_tax_jpy"], "円"),
+        ("売買手数料", cash["trade_commissions_jpy"], "円"),
+        ("諸費用", cash["other_fees_jpy"], "円"),
+        ("FX換算損益（外貨現金）", cash["fx_translation_pnl_jpy"], "円"),
+        ("為替取引損益", cash["forex_trade_component_jpy"], "円"),
+        ("口座残高との照合差異", check["unexplained_jpy"], "円"),
+    ]
+    return {
+        "ledger_performance": [
+            {"metric": metric, "value": value, "unit": unit} for metric, value, unit in metrics
+        ],
+        "ledger_attribution": [
+            {
+                "symbol": row["symbol"],
+                "name": row["name"],
+                "currency": row["currency"],
+                "quantity": row["quantity"],
+                "average_cost": row["average_cost"],
+                "average_trade_fx": row["average_trade_fx"],
+                "cost_basis_jpy": row["cost_basis_jpy"],
+                "market_value_jpy": row["market_value_jpy"],
+                "price_jpy": row["price_jpy"],
+                "fx_jpy": row["fx_jpy"],
+                "cross_jpy": row["cross_jpy"],
+                "commission_jpy": row["commission_jpy"],
+                "total_jpy": row["total_jpy"],
+                "return_on_cost": (
+                    row["total_jpy"] / row["cost_basis_jpy"] if row["cost_basis_jpy"] else None
+                ),
+            }
+            for row in ledger["holdings"]
+        ],
+        "ledger_closed": [
+            {"symbol": row["symbol"], "realized_pnl_jpy": row["realized_pnl_jpy"]}
+            for row in ledger["closed"]
+        ],
+    }
+
+
 def _dataset_projection_queries(
     datasets: dict[str, list[dict[str, Any]]],
 ) -> dict[str, str]:
@@ -987,6 +1057,7 @@ def _attach_widget_sources(
     source_path: str,
     reference_source_path: str | None,
     proposal_source_path: str | None,
+    ledger_source_path: str | None = None,
 ) -> None:
     """Attach deterministic projection SQL and transformation provenance."""
     inputs = [source_path]
@@ -994,6 +1065,8 @@ def _attach_widget_sources(
         inputs.append(reference_source_path)
     if proposal_source_path is not None:
         inputs.append(proposal_source_path)
+    if ledger_source_path is not None:
+        inputs.append(ledger_source_path)
     for collection in ("cards", "charts", "tables"):
         for item in artifact["manifest"][collection]:
             dataset = item["dataset"]
@@ -1818,7 +1891,9 @@ def _correlation_monitor_rows(risk: FactorRisk) -> list[dict[str, Any]]:
             {
                 "date": risk.dates[end - 1],
                 "stock_bond_correlation": _float(stock_bond),
-                "regime": "債券がヘッジとして機能" if stock_bond < 0 else "株債同時安（ヘッジ失効）",
+                "regime": "債券がヘッジとして機能"
+                if stock_bond < 0
+                else "株債同時安（ヘッジ失効）",
             }
         )
     return rows
@@ -1946,6 +2021,8 @@ def build_artifact(
     reference_source_path: str = "data/analysis_reference.private.json",
     factor_risk_source_path: str = "data/factor_estimates.json",
     proposal_source_path: str = "data/rebalancing-proposal.private.json",
+    ledger: dict[str, Any] | None = None,
+    ledger_source_path: str = "data/ibkr-ledger.private.json",
 ) -> dict[str, Any]:
     """Build a canonical portable dashboard artifact."""
     issues = validate_portfolio(portfolio)
@@ -1971,9 +2048,7 @@ def build_artifact(
             }
         )
     if proposal is not None:
-        proposal_datasets = _portfolio_datasets(
-            proposal.portfolio, analysis_reference, factor_risk
-        )
+        proposal_datasets = _portfolio_datasets(proposal.portfolio, analysis_reference, factor_risk)
         datasets.update(
             _proposal_comparison_rows(
                 datasets,
@@ -1983,6 +2058,9 @@ def build_artifact(
             )
         )
         sources.append(_proposal_source(proposal_source_path))
+    if ledger is not None:
+        datasets.update(_ledger_rows(ledger))
+        sources.append(_ledger_source(ledger_source_path))
     dataset_queries = _dataset_projection_queries(datasets)
     latest_as_of = max(account.as_of for account in portfolio.accounts)
     account_notes = "\n".join(
@@ -2463,6 +2541,8 @@ def build_artifact(
         )
     if proposal is not None:
         _extend_proposal_manifest(artifact, proposal)
+    if ledger is not None:
+        _extend_ledger_manifest(artifact, ledger)
     _attach_widget_sources(
         artifact,
         dataset_queries,
@@ -2470,6 +2550,7 @@ def build_artifact(
         source_path=source_path,
         reference_source_path=(reference_source_path if analysis_reference is not None else None),
         proposal_source_path=(proposal_source_path if proposal is not None else None),
+        ledger_source_path=(ledger_source_path if ledger is not None else None),
     )
     return artifact
 
@@ -3646,6 +3727,124 @@ def _extend_proposal_manifest(artifact: dict[str, Any], proposal: ProposalResult
             "type": "table",
             "tableId": "proposal_sensitivity",
             "layout": "full",
+        },
+    ]
+    insert_at = next(
+        index + 1 for index, block in enumerate(manifest["blocks"]) if block["id"] == "metrics"
+    )
+    manifest["blocks"][insert_at:insert_at] = blocks
+
+
+def _extend_ledger_manifest(artifact: dict[str, Any], ledger: dict[str, Any]) -> None:
+    """Add the transaction-derived performance and attribution tables to the manifest."""
+    manifest = artifact["manifest"]
+    ledger_source_id = "ledger"
+    period = ledger["period"]
+    manifest["tables"].extend(
+        [
+            {
+                "id": "ledger_performance",
+                "title": "海外証券口座の実績（取引履歴ベース）",
+                "subtitle": (
+                    f"{period['start']}〜{period['end']}。資金加重リターンは入金日と"
+                    "現在評価額から逆算した年率で、税引後・手数料込み"
+                ),
+                "dataset": "ledger_performance",
+                "sourceId": ledger_source_id,
+                "density": "dense",
+                "layout": "full",
+                "columns": [
+                    {"field": "metric", "label": "項目", "type": "text"},
+                    {"field": "value", "label": "値", "format": "number"},
+                    {"field": "unit", "label": "単位", "type": "text"},
+                ],
+            },
+            {
+                "id": "ledger_attribution",
+                "title": "含み損益の要因分解",
+                "subtitle": (
+                    "円建て取得原価は約定日レート換算なので、円ベースの損益は価格と為替が"
+                    "混ざる。価格・為替・交差・手数料の4項は合計に一致する"
+                ),
+                "dataset": "ledger_attribution",
+                "sourceId": ledger_source_id,
+                "defaultSort": {"field": "total_jpy", "direction": "asc"},
+                "density": "dense",
+                "layout": "full",
+                "columns": [
+                    {"field": "symbol", "label": "銘柄", "type": "text"},
+                    {"field": "currency", "label": "通貨", "type": "text"},
+                    {"field": "average_trade_fx", "label": "平均約定レート", "format": "number"},
+                    {"field": "cost_basis_jpy", "label": "取得原価", "format": "number"},
+                    {"field": "price_jpy", "label": "価格要因", "format": "number"},
+                    {"field": "fx_jpy", "label": "為替要因", "format": "number"},
+                    {"field": "cross_jpy", "label": "交差項", "format": "number"},
+                    {"field": "commission_jpy", "label": "手数料", "format": "number"},
+                    {"field": "total_jpy", "label": "含み損益", "format": "number"},
+                    {"field": "return_on_cost", "label": "原価比", "format": "percent"},
+                ],
+            },
+            {
+                "id": "ledger_closed",
+                "title": "決済済みの実現損益",
+                "subtitle": "全数売却なので、平均法とFIFOのどちらで数えても同じ金額になる",
+                "dataset": "ledger_closed",
+                "sourceId": ledger_source_id,
+                "defaultSort": {"field": "realized_pnl_jpy", "direction": "asc"},
+                "density": "dense",
+                "layout": "half",
+                "columns": [
+                    {"field": "symbol", "label": "銘柄", "type": "text"},
+                    {"field": "realized_pnl_jpy", "label": "実現損益", "format": "number"},
+                ],
+            },
+        ]
+    )
+    check = ledger["reconciliation"]
+    blocks = [
+        {
+            "id": "ledger_intro",
+            "type": "markdown",
+            "body": (
+                "## 取引履歴からの逆算\n\n"
+                f"{period['start']}〜{period['end']} の取引履歴を平均法で再生し、"
+                "取得原価・実現損益・資金加重リターンを出しています。"
+                "外貨建ての取得原価は約定日レートで円換算されるため、円建ての含み損益は"
+                "価格の動きと為替の動きが混ざります。下の表はそれを分けたものです。\n\n"
+                f"口座残高との照合差異は {check['unexplained_jpy']:,.2f} 円です。"
+            ),
+            "sourceId": ledger_source_id,
+        },
+        {
+            "id": "ledger_performance_block",
+            "type": "table",
+            "tableId": "ledger_performance",
+            "layout": "full",
+        },
+        {
+            "id": "ledger_attribution_block",
+            "type": "table",
+            "tableId": "ledger_attribution",
+            "layout": "full",
+        },
+        {
+            "id": "ledger_closed_block",
+            "type": "table",
+            "tableId": "ledger_closed",
+            "layout": "full",
+        },
+        {
+            "id": "ledger_caveats",
+            "type": "markdown",
+            "body": (
+                "取得原価は平均法で、証券会社の税務上のロット計算とは一致しないことがあります"
+                "（決済済みの4銘柄はいずれも全数売却なので、この違いは実現損益に影響しません）。"
+                "**FX換算損益（外貨現金）** は保有証券ではなく外貨の現金残高の再評価で、"
+                "銘柄別の為替要因とは別物です。"
+                "資金加重リターンは入金日と現在評価額から求めた年率で、"
+                "市場のリターンではなく入金のタイミングを含んだ自分の成績です。"
+            ),
+            "sourceId": ledger_source_id,
         },
     ]
     insert_at = next(

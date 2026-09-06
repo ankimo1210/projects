@@ -2,3 +2,4 @@ data/*.private.json
 data/*.private.md
 data/*.private.html
 dist/
+data/*.private.csv

@@ -24,6 +24,8 @@
 - 実績・予想・提供会社基準に分離したPERと各カバー率
 - 暫定投資方針の上限・下限チェック
 - JSONの売買案を使った変更前後の配分・感応度・PER比較
+- 証券会社の取引履歴から逆算した取得原価・実現損益・資金加重リターンと、
+  円建て含み損益の価格要因／為替要因への分解
 - 確定値・推定値・残高調整の区別
 - 数量×価格×為替、口座残高と明細合計の自動照合
 
@@ -317,6 +319,8 @@ $$
 | `data/portfolio.private.json` | 口座・保有明細・評価額 | `data/portfolio.example.json` |
 | `data/analysis_reference.private.json` | セクター・発行体、ファクター、PER、方針、出典 | `data/analysis_reference.example.json` |
 | `data/rebalancing-proposal.private.json` | 売買数量と固定価格による比較案 | `data/rebalancing-proposal.example.json` |
+| `data/ibkr-transactions.private.csv` | 証券会社の取引履歴（入力） | なし |
+| `data/ibkr-ledger.private.json` | 取引履歴から逆算した台帳（出力） | なし |
 
 各保有明細の `value_status` は次のいずれかです。
 
@@ -362,6 +366,53 @@ uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dash
 口座損益は取得原価が未入力のため再計算できないので、洗い替えた口座では `null` に落とします
 （古い損益額を残すと、新しい評価額と組み合わせて誤った逆算元本が出るため）。
 
+### 取引履歴から取得原価を逆算する
+
+スナップショットは「今いくら持っているか」だけの記録なので、取得原価の欄が空のままでは
+口座損益も元本比損益率も出せません。`scripts/ingest_ibkr_transactions.py` は証券会社の
+取引履歴CSV（基準通貨建て）を平均法で再生し、取得原価と実績を埋めます。
+
+```bash
+uv run --package portfolio-analyzer python \
+  portfolio-analyzer/scripts/ingest_ibkr_transactions.py \
+  --snapshot portfolio-analyzer/data/portfolio-<基準日>.private.json
+
+uv run --package portfolio-analyzer python \
+  portfolio-analyzer/scripts/build_dashboard.py \
+  --input portfolio-analyzer/data/portfolio-<基準日>-with-cost.private.json \
+  --ledger portfolio-analyzer/data/ibkr-ledger.private.json
+```
+
+**書き戻す前に数量を突き合わせます。** 台帳から再生した建玉とスナップショットの数量が
+1銘柄でも食い違えば、何も書かずに終了します。元スナップショットは書き換えず、
+`-with-cost` を付けた別ファイルを出します。
+
+#### 円建て損益は価格と為替が混ざる
+
+外貨建て銘柄の円建て取得原価は約定日レートで換算されるため、円ベースの含み損益は
+価格の動きと為替の動きの合成です。ダッシュボードはこれを分けて出します。
+
+$$
+\underbrace{q(P_1-P_0)S_0}_{\text{価格要因}}
++ \underbrace{qP_0(S_1-S_0)}_{\text{為替要因}}
++ \underbrace{q(P_1-P_0)(S_1-S_0)}_{\text{交差項}}
+- \underbrace{f}_{\text{手数料}}
+= qP_1S_1 - C
+$$
+
+$P_0$ と $S_0$ は平均取得単価と加重平均約定レート、$C$ は手数料込みの円建て取得原価です。
+約定日レートは各約定行の `Gross Amount(JPY) / (Quantity × Price)` から復元します。
+
+#### 台帳の読み方で注意すること
+
+- **取得原価は平均法です。** 証券会社の税務上のロット計算（FIFO等）とは一致しないことが
+  あります。全数売却した銘柄の実現損益は、どちらで数えても同じ金額です
+- **`FX換算損益（外貨現金）` は保有証券の損益ではありません。** 外貨の現金残高を基準通貨へ
+  評価替えした額で、銘柄別の為替要因とは別勘定です
+- **資金加重リターン（XIRR）は市場のリターンではありません。** 入金日と現在評価額から
+  求めた年率なので、入金のタイミングの巧拙が入ります
+- 口座残高との照合差異を毎回表示します。1円を超えたら台帳のどれかのバケットが誤りです
+
 ## リバランス案を記録する
 
 [`docs/rebalancing-note-template.md`](docs/rebalancing-note-template.md) を使い、判断理由、
@@ -390,12 +441,12 @@ uv run --no-sync ruff check portfolio-analyzer
 - 海外口座は現金口座・基準通貨JPYで、円現金を明細確認済み
 - 海外口座には、純資産と「証券 + 現金」の差額を残高調整として計上
 - DC口座の評価額と口座損益は算術的に整合。商品別の元画面は未照合
-- SMHの平均取得価額は非公開データへ入力済み。ただし日本の税務に必要な円換算取得原価・税区分は未確認
+- 海外口座の取得原価は取引履歴から逆算済み（平均法・約定日レート換算）。税区分は未確認
 - ETF・ファンドのセクター構成は基準日時点の公表値で、現在の実時間構成ではない
 - QQQのPERは2026年3月末値を「推定」、SMHは2026年7月末の公式値を「現行」として扱う
 - 株式市場βは3年週次推定。為替感応度とJ-REITの金利デュレーションは暫定仮定
 - 相関の変化、非線形性、流動性、税・手数料は未反映
-- 6857などSMH以外の取得原価、配当、税・手数料、過去推移は未入力
+- 国内証券口座・DC口座の取得原価、配当、税・手数料、過去推移は未入力
 
 ## 構成
 
@@ -410,6 +461,8 @@ portfolio-analyzer/
 │   ├── analysis_reference.private.json
 │   ├── rebalancing-proposal.example.json
 │   ├── rebalancing-proposal.private.json
+│   ├── ibkr-transactions.private.csv    # 取引履歴（Git対象外）
+│   ├── ibkr-ledger.private.json         # 逆算した台帳（Git対象外）
 │   └── rebalancing-note.private.md
 ├── docs/
 │   └── rebalancing-note-template.md
@@ -417,6 +470,7 @@ portfolio-analyzer/
 │   ├── build_dashboard.py       # オフライン。上のJSONだけを読む
 │   ├── estimate_factors.py      # 要ネットワーク。β・共分散・実測エピソード
 │   ├── reprice_snapshot.py      # 要ネットワーク。保有明細を直近終値で洗い替え
+│   ├── ingest_ibkr_transactions.py  # オフライン。取引履歴から取得原価と実績を逆算
 │   └── horizon3_model.py
 ├── src/portfolio_analyzer/core.py
 ├── tests/test_core.py
