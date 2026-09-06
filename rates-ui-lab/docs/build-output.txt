@@ -1,0 +1,33 @@
+$ next build
+  ▲ Next.js 14.2.23
+
+   Creating an optimized production build ...
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/9) ...
+   Generating static pages (2/9) 
+   Generating static pages (4/9) 
+   Generating static pages (6/9) 
+ ✓ Generating static pages (9/9)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /_not-found                          153 B          87.6 kB
+├ ○ /details                             153 B          87.6 kB
+├ ○ /opengraph-image.png                 0 B                0 B
+├ ○ /overview                            79.7 kB         301 kB
+├ ○ /rates                               20.3 kB         250 kB
+└ ○ /settings                            153 B          87.6 kB
++ First Load JS shared by all            87.4 kB
+  ├ chunks/465-c057010b2cb7f3f2.js       31.8 kB
+  ├ chunks/d40eefd4-9bc333efd01fb85e.js  53.6 kB
+  └ other shared chunks (total)          2.01 kB
+
+
+○  (Static)  prerendered as static content
+

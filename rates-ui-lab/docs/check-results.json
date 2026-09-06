@@ -1,0 +1,204 @@
+{
+  "verifiedAt": "2026-09-06",
+  "commands": [
+    {
+      "name": "unit",
+      "command": "npx --yes pnpm@11.1.0 test",
+      "exitCode": 0
+    },
+    {
+      "name": "types",
+      "command": "npx --yes pnpm@11.1.0 typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "command": "npx --yes pnpm@11.1.0 lint",
+      "exitCode": 0
+    }
+  ],
+  "node": "26.7.0",
+  "pnpm": "11.1.0",
+  "playwright": "1.58.2",
+  "chromium": "145.0.7632.6",
+  "unitTests": {
+    "passed": 28,
+    "failed": 0
+  },
+  "browserTests": {
+    "mode": "production",
+    "stats": {
+      "duration": 25700,
+      "expected": 28,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "name": "Meshyflix study switches mesh modes, datasets and downloads the selected observations",
+        "status": "passed"
+      },
+      {
+        "name": "Meshyflix study supports mobile controls and reduced motion without overflow or runtime errors",
+        "status": "passed"
+      },
+      {
+        "name": "金利画面が同じデータから指標・カーブ・表を表示する",
+        "status": "passed"
+      },
+      {
+        "name": "日付・凡例・選択年限・表ソートを保ったまま Blocks に切り替わる",
+        "status": "passed"
+      },
+      {
+        "name": "欠損をゼロ埋めせずカーブを分断し、負金利とゼロスプレッドも表示する",
+        "status": "passed"
+      },
+      {
+        "name": "キーボードで日付・レイアウト・テーマを操作でき、最初の観測日は差分が欠損になる",
+        "status": "passed"
+      },
+      {
+        "name": "template / light / 1440px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "blocks / light / 1440px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "template / light / 1280px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "blocks / light / 1280px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "template / light / 390px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "blocks / light / 390px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "template / dark / 1440px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "blocks / dark / 1440px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "template / dark / 1280px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "blocks / dark / 1280px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "template / dark / 390px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "blocks / dark / 390px に横溢れ・カードの文字溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "不正なデータケース名を指定しても標準の金利画面へ戻る",
+        "status": "passed"
+      },
+      {
+        "name": "欠損年限のツールチップにも — を表示する",
+        "status": "passed"
+      },
+      {
+        "name": "21st.dev sample は同じ金利指標を bento layout で表示する",
+        "status": "passed"
+      },
+      {
+        "name": "massive data lab は100万行をWorkerで生成して表を仮想化する",
+        "status": "passed"
+      },
+      {
+        "name": "Prism Hero はJGBデータとWebGL表現を表示し、reduced motionを尊重する",
+        "status": "passed"
+      },
+      {
+        "name": "Prism Hero は390pxでCTAと下部メタ情報を重ねない",
+        "status": "passed"
+      },
+      {
+        "name": "21st.dev overview-light-390 に横溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "21st.dev overview-dark-1440 に横溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "21st.dev massive-dark-390 に横溢れ・実行時エラーがない",
+        "status": "passed"
+      },
+      {
+        "name": "21st.dev prism-light-390 に横溢れ・実行時エラーがない",
+        "status": "passed"
+      }
+    ]
+  },
+  "build": {
+    "command": "NEXT_TELEMETRY_DISABLED=1 npx --yes pnpm@11.1.0 build",
+    "exitCode": 0,
+    "routes": [
+      "/overview",
+      "/rates",
+      "/rates-21st",
+      "/settings",
+      "/details"
+    ]
+  },
+  "sourceHashes": {
+    "experiments/tremor-dashboard/src/components/twentyfirst/MeshyRatesStudio.tsx": "bb118ff941cb8d0b86bd853b65ad6c6d2ab6cd8c6192f9540cd948038518908f",
+    "experiments/tremor-dashboard/src/components/twentyfirst/MeshyRatesStudio.module.css": "0fbc1d442d3a626bf618c2ccafe324bf020dddc03e3cc1426af1618f460338ce",
+    "experiments/tremor-dashboard/src/components/twentyfirst/RatesMeshScene.tsx": "73c49ac61b3ebd294842a9690aa3a25353f70cff65589183e56eb65f0fca729c",
+    "experiments/tremor-dashboard/src/lib/rates/mesh.ts": "151b4ea43fb8618405cff36be3ed62d7b40e9b148cc9b3c8b9a9474110f0762d",
+    "experiments/tremor-dashboard/src/lib/rates/mesh.test.ts": "1a8baf049129ca0003d89a1e6019a680cdd834398425e4961414aa51a6bd5bf8",
+    "experiments/tremor-dashboard/tests/meshy.spec.ts": "0ed5e1ad0f72e9596decc26afe51673416407832e0b77570c24cfbd963c78d05",
+    "experiments/tremor-dashboard/src/components/rates/RatesNavigation.tsx": "3a3fdd3adb8486d85e799119b5c2f92eaedf96dc5a6c5eb936bd5655719e6ee8",
+    "experiments/tremor-dashboard/src/components/rates/RatesDashboard.tsx": "2b52fa4d7648d336ff42be5cad2cb250cf87e5a07f0fd2bd8e2e45dfceb5f468",
+    "experiments/tremor-dashboard/src/components/rates/TenorTable.tsx": "5199f4cd3e1ab5551a31f5bccd81144472823825b0ff56cb834fb459793a7c6f",
+    "experiments/tremor-dashboard/src/components/rates/KpiCards.tsx": "ba16d1ca3e280c1e9dcce728c573c040c18127564b62ef64f302987785ee5d96",
+    "experiments/tremor-dashboard/src/components/rates/RatesCharts.tsx": "fdcf3f712e9e0c3566fe475e7c4a9848206da105914f0b1634346258c0f3d8df",
+    "experiments/tremor-dashboard/src/components/rates/RatesFilters.tsx": "294c22d2b6bbd199595f7d8f8d9eecc6be96a98c0f3e2bc2f2b6dda61304ed14",
+    "experiments/tremor-dashboard/src/lib/rates/metrics.ts": "242652f61a389724190a3e146bb5f7203f7aee8d109de6cf289bc501b0fc4f24",
+    "experiments/tremor-dashboard/src/lib/rates/view-model.test.ts": "29a82307058dc49615dfc746c62be2c1d2f3c0c0403babdecb6cdcc25daf6096",
+    "experiments/tremor-dashboard/src/lib/rates/types.ts": "3f6ae1b2a43bdfbd1ab23c54ee4e6517fc79b3a5db160ee51767e8fc63735f64",
+    "experiments/tremor-dashboard/src/lib/rates/metrics.test.ts": "8857850fb0ecc28e9194ed008e0630f6d7deea0ccf2bbf6f0461e514d39a78e8",
+    "experiments/tremor-dashboard/src/lib/rates/view-model.ts": "da11180e0629892bab0c950014588029c322eb84ac8bff6f68cb10b1dd77e458",
+    "experiments/tremor-dashboard/src/app/(main)/rates/page.tsx": "9d89f30341694519915c73287eaa8f50e166e88a9271efe0e9a1fcf028b343f6",
+    "experiments/tremor-dashboard/src/app/layout.tsx": "f60762b3f84877b5d33923f7eb6d13adb5d7668627c2718dcadc2e91652246d8",
+    "experiments/tremor-dashboard/src/app/(main)/rates-21st/page.tsx": "b4f15f4ca866c38d36ceeb03d124434bb4f57c14170d070ea744ff33aa51c4fa",
+    "experiments/tremor-dashboard/src/components/twentyfirst/MassiveDataLab.tsx": "3b1ab76cb3d0dc5841a5b607b9724b2f0be13753fb72558068b645d57f3e5bff",
+    "experiments/tremor-dashboard/src/components/twentyfirst/PrismRatesHero.tsx": "9880411e011ccc329ca0d70ab49bf9dc687806493a93206b2d31c37604762692",
+    "experiments/tremor-dashboard/src/components/twentyfirst/TwentyFirstDashboard.tsx": "60d88a12bf72b1e649b00eefbc1d36302b470886f4647405963dfdb24e647c59",
+    "experiments/tremor-dashboard/src/components/twentyfirst/TwentyFirstNavigation.tsx": "9c1b3c542fa31a6eb00ab2d5f85d7d6f5f4fa98ed34bd16813d0dd2e2f094078",
+    "experiments/tremor-dashboard/src/components/twentyfirst/TwentyFirstOverview.tsx": "db1a0dd0f56994fcd782522e02e1ae09a742c5f02f0f6f6ded285b8b88f27ce1",
+    "experiments/tremor-dashboard/src/components/ui/navigation/sidebar.tsx": "64beac1737e4c3964e2ed087c9ad12b8afe52e6004ed5ae050684b191a2299b3",
+    "experiments/tremor-dashboard/src/lib/rates/stress.test.ts": "943d99ef25c31ec356d671ec162ad013853126528fd4fba5b76fc0aa69766062",
+    "experiments/tremor-dashboard/src/lib/rates/stress.ts": "e1805d42dbcb5e934507e11afd07f782c60de183a1d82ac6bd374ca9db058365",
+    "experiments/tremor-dashboard/src/workers/ratesStress.worker.ts": "3e5f5b61e46075d3f35818dda8fad1158e20ea9efe3330f47c65a2414fc61bb6",
+    "experiments/tremor-dashboard/tests/rates.spec.ts": "2b11d8bd7c9d134fc6c5a01ac2d279e2cc089251c1c4ab1196904e5e8251100b",
+    "experiments/tremor-dashboard/package.json": "4f18d3ad967281efb956e81717ea4b1d76d921ce602503e4a07d8a90e094a054",
+    "experiments/tremor-dashboard/pnpm-lock.yaml": "e1fa376e8fba92b4d744c2b1c0e65bd342a9cd2bb9176128b380fbe345ab4f8b"
+  },
+  "dataHashes": {
+    "jgb-demo-negative.json": "0650c954fec433e473a6cf6014fd92306b9ab1e093b1405ed95d945da92ba157",
+    "jgb-demo.json": "cbf3191de5e05c5270ed051c312fec623cdd6cc34dadfba1f192bbf5e9efbf2d",
+    "jgb-demo-flat.json": "d936ffe1858a3f6a53514449b231693c6404570a2b778ca7135fb43caea8a871",
+    "jgb-demo-missing.json": "3cc3096b0a311ecbfd0f0171fa5fc6a84e496e9514fac04f90c0267bb11fabb1"
+  },
+  "screenshotCount": 28
+}
