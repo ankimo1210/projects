@@ -1,0 +1,87 @@
+{
+  "settings": [
+    {
+      "setting": "cov_syn_driver",
+      "title": "\u5408\u6210: \u672a\u89b3\u6e2c\u30c9\u30e9\u30a4\u30d0\u3092\u6e21\u3059",
+      "note": "\u771f\u306e\u6f5c\u5728AR(1)\u30c9\u30e9\u30a4\u30d0\u3092\u305d\u306e\u307e\u307e\u5171\u5909\u91cf\u306b\u3059\u308b\u3002\u52b9\u304b\u306a\u3044\u306a\u3089\u4f55\u306b\u3082\u52b9\u304b\u306a\u3044\u3002",
+      "dataset": "syn_nonlinear_driver",
+      "n_windows": 120
+    },
+    {
+      "setting": "cov_ett_h1",
+      "title": "ETTh1: \u6cb9\u6e29\u30926\u8ca0\u8377\u30c1\u30e3\u30cd\u30eb\u304b\u3089",
+      "note": "\u9577\u671f\u4e88\u6e2c\u30d9\u30f3\u30c1\u306e\u6a19\u6e96\u7684\u306a\u591a\u5909\u91cf\u8a2d\u5b9a\u3002",
+      "dataset": "ett_h1",
+      "n_windows": 12
+    },
+    {
+      "setting": "cov_fin_vol",
+      "title": "\u91d1\u878d: \u30dc\u30e9\u306b\u51fa\u6765\u9ad8\u3092\u8db3\u3059",
+      "note": "\u91d1\u878d\u3067\u30ea\u30fc\u30c9\u30e9\u30b0\u95a2\u4fc2\u304c\u5b9f\u8a3c\u3055\u308c\u3066\u3044\u308b\u6570\u5c11\u306a\u3044\u7d44\u307f\u5408\u308f\u305b\u3002",
+      "dataset": "fin_range_vol",
+      "n_windows": 108
+    }
+  ],
+  "tests": [
+    {
+      "setting": "cov_syn_driver",
+      "metric": "mase",
+      "n": 120,
+      "univariate": 3.799811669014159,
+      "with_covariates": 3.6986314404147245,
+      "delta_pct": -2.6627695636737947,
+      "win_rate": 0.5166666666666667,
+      "p_value": 0.5194186502323097
+    },
+    {
+      "setting": "cov_syn_driver",
+      "metric": "scaled_crps",
+      "n": 120,
+      "univariate": 2.7934968715919357,
+      "with_covariates": 2.7102692346452604,
+      "delta_pct": -2.979335247984227,
+      "win_rate": 0.5666666666666667,
+      "p_value": 0.3351743747047442
+    },
+    {
+      "setting": "cov_ett_h1",
+      "metric": "mase",
+      "n": 12,
+      "univariate": 0.7471314455316237,
+      "with_covariates": 0.7462896862851505,
+      "delta_pct": -0.11266548229331708,
+      "win_rate": 0.4166666666666667,
+      "p_value": 0.7333984375
+    },
+    {
+      "setting": "cov_ett_h1",
+      "metric": "scaled_crps",
+      "n": 12,
+      "univariate": 0.6007525981350859,
+      "with_covariates": 0.5971323154492649,
+      "delta_pct": -0.6026245574400124,
+      "win_rate": 0.4166666666666667,
+      "p_value": 0.90966796875
+    },
+    {
+      "setting": "cov_fin_vol",
+      "metric": "mase",
+      "n": 108,
+      "univariate": 0.7118898168121407,
+      "with_covariates": 0.7180248726222439,
+      "delta_pct": 0.861798506625111,
+      "win_rate": 0.46296296296296297,
+      "p_value": 0.726769358684956
+    },
+    {
+      "setting": "cov_fin_vol",
+      "metric": "scaled_crps",
+      "n": 108,
+      "univariate": 0.5554980515300918,
+      "with_covariates": 0.5593788941683792,
+      "delta_pct": 0.6986239875365508,
+      "win_rate": 0.5092592592592593,
+      "p_value": 0.9682152260989165
+    }
+  ]
+}

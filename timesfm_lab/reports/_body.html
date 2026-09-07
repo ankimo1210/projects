@@ -29,115 +29,162 @@ td.dim{color:var(--ink-3)}
 
 <header class="mast">
   <div class="eyebrow">
-    <span>TimesFM 3.0.1 zero-shot</span><span>18 データセット・4 層</span><span>2,362 windows</span>
-    <span>改訂 2026-09-07</span><b>timesfm_lab</b>
+    <span>TimesFM 3.0.1 zero-shot</span><span>24 データセット・5 層</span><span>3,130 windows</span>
+    <span>改訂2 2026-09-07</span><b>timesfm_lab</b>
   </div>
-  <h1>見たことがあるデータと、<br>絶対に見ていないデータ<span class="sub">同じモデル・同じ手続きで、学習コーパスとの関係だけを変えて TimesFM 3.0 を測り直す</span></h1>
-  <p class="lede">初版で「学習データ汚染の仮説は棄却された」と書いた。<strong>これは誤りだった</strong>ので訂正する。当時の検定は、汚染が効くとしたら効くはずの経路に対して構造的に盲目だった。汚染を切り分けるために、<strong>絶対に学習され得ないデータを2種類</strong>用意して測り直した — 既知の生成過程から作った合成系列と、2026年の市場データである。</p>
-  <p class="lede">結果は<strong>はっきり勾配になった</strong>。実装可能な古典手法の選択器を相手にしたとき、TimesFM の優位は<strong>学習済みと確認できたデータで +36.3%、構造的に未学習のデータで +7〜9%</strong>。優位そのものは本物だが、公開ベンチだけを見て得られる数字の 4分の1 である。</p>
-  <p class="lede">合成データはもう一つ別のことを教える。真の生成過程が分かっているので<strong>到達可能な誤差の下限が計算できる</strong>。下限が正の値を取る7過程のうち6つで、TimesFM はその <strong>+0.7〜3.4%</strong> まで届く。届かない2つ — 水準ジャンプと決定論的カオス — の外し方が、それぞれ別のことを教える。</p>
+  <h1>汚染だと思っていたものは、<br>領域だった<span class="sub">同じ領域・同じ構造で、学習カットオフの反対側にあるデータを1本足したら、汚染の勾配は消えた</span></h1>
+  <p class="lede">この報告書は二度訂正している。初版は「学習データ汚染の仮説は棄却された」と書いた。改訂1でそれを撤回し、層をまたぐ比較が<em>むしろ汚染を示唆する</em>と書いた。<strong>今回、その示唆も外れる。</strong></p>
+  <p class="lede">決め手は<strong>領域対照</strong>である。層Aの <code>traffic_hourly</code>（Monash、コーパスに実データ照合で確認済み）と、同じ「時間足・多数センサー・日次＋週次周期」を持ちながら<strong>2026年1〜6月に観測された英国高速道路の計数</strong>を並べた。後者はカレンダーの上で学習され得ない。もし優位が記憶に由来するなら、未学習側で縮むはずである。</p>
+  <p class="lede">縮まなかった。<strong>未学習の交通データの方が優位が大きい</strong> — 実装可能な古典手法の選択器に対し <strong>+54.9%（勝率 97.9%）</strong>、学習済みの <strong>+41.0%（勝率 83.0%）</strong>を上回る。層Aが突出して見えたのは汚染ではなく、<em>交通センサー系列が基盤モデルの最も得意な形をしている</em>からだった。</p>
+  <p class="lede">同じ改訂で、TimesFM 3.0 の目玉である<strong>共変量</strong>も測った。真の潜在ドライバをそのまま手渡した合成ケースを含め、3設定・6検定すべてで有意差なし。</p>
 
   <div class="strip">
-    <div><span class="k">学習済みデータでの優位</span><span class="v a">+36.3<small style="font-size:20px">%</small></span><span class="n">対 実装可能な選択器。480 窓、勝率 75.8%</span></div>
-    <div><span class="k">未学習データでの優位</span><span class="v b">+7〜9<small style="font-size:20px">%</small></span><span class="n">同じ相手。合成 +7.2% / 金融2026 +8.9% / 一覧に無い +7.4%</span></div>
-    <div><span class="k">理論限界からの距離</span><span class="v a">+0.7〜3.4<small style="font-size:20px">%</small></span><span class="n">下限が正の7過程のうち6つ。到達可能な精度にほぼ届いている</span></div>
-    <div><span class="k">決定論的カオスで</span><span class="v b">0.565</span><span class="n">理論限界は誤差ちょうど 0。古典手法との差は 0.7% しかない</span></div>
+    <div><span class="k">未学習の交通2026で</span><span class="v a">+54.9<small style="font-size:20px">%</small></span><span class="n">対 実装可能な選択器。168窓、勝率 97.9%</span></div>
+    <div><span class="k">学習済みの交通で</span><span class="v b">+41.0<small style="font-size:20px">%</small></span><span class="n">同じ相手・同じ領域。汚染側の方が<em>低い</em></span></div>
+    <div><span class="k">共変量の効果</span><span class="v b">0</span><span class="n">3設定6検定すべて p ≥ 0.33。真のドライバを渡しても −2.7%（p = 0.52）</span></div>
+    <div><span class="k">合成13過程のうち</span><span class="v a">5</span><span class="n">改善の余地が 2.6% 以下＝どんなモデルも勝てない設計だった</span></div>
   </div>
 </header>
 
 <section>
-  <div class="head"><span class="step">01</span><h2>4つの層に分けて測る</h2></div>
+  <div class="head"><span class="step">01</span><h2>5つの層に分けて測る</h2></div>
   <div class="col">
-    <p>データセットを、<em>「TimesFM がこれを学習していない」という主張の強さ</em>で4層に並べた。層のあいだで結果が食い違うなら、その食い違いの大きさこそが知りたかったものである。</p>
+    <p>データセットを、<em>「TimesFM がこれを学習していない」という主張の強さ</em>で層に並べた。層のあいだで結果が食い違うなら、その食い違いの大きさこそが知りたかったものである。</p>
     <ul>
       <li><strong>層A — 学習済みと実証したもの。</strong>コーパスから実データを落として値を突き合わせ、一致を確認した2系統。</li>
       <li><strong>層B — コーパスの一覧に無いもの。</strong>弱い主張で、ファイル一覧が完全でモデルカードが正確であることに依存する。</li>
-      <li><strong>層C（合成） — 存在し得ないもの。</strong>乱数種から今回生成した8過程。どのクローラも到達しようがない。</li>
-      <li><strong>層C（金融） — カットオフ後のもの。</strong>予測対象が全て 2026年3月〜9月の市場データ。カードが挙げる最も遅いカットオフ（2023年11月）より後である。</li>
+      <li><strong>層C（合成） — 存在し得ないもの。</strong>乱数種から生成した13過程。どのクローラも到達しようがない。</li>
+      <li><strong>層C（金融） — カットオフ後のもの。</strong>予測対象が全て 2026年3月〜9月の市場データ。</li>
+      <li><strong>層C（交通・領域対照） — 今回追加した鍵。</strong>英国 National Highways の WebTRIS から取った、2026年1〜6月の高速道路センサー計数。カットオフ後であることは日付が保証し、<em>同時に層Aの <code>traffic_hourly</code> と領域・頻度・季節構造が揃っている</em>。金融と平均してしまうと、この対照が持つ意味が消えるので層を分けた。</li>
     </ul>
-    <p>ベースラインは7手法。初版の5つ（ナイーブ・季節ナイーブ・Theta・減衰 Holt-Winters・フーリエ回帰）に、金融のために <strong>HAR</strong>（Corsi の実現ボラティリティ標準手法）と <strong>EWMA</strong> を足した。全手法が点予測と分位点の両方を出す。</p>
+    <p>ベースラインは7手法（ナイーブ・季節ナイーブ・Theta・減衰 Holt-Winters・フーリエ回帰・HAR・EWMA）。全手法が点予測と9分位点の両方を出す。窓の切り方は全層で共通で、地平線ぶんずつずらして重ねない。</p>
   </div>
 
   <div class="tw"><table>
-    <caption>18 データセット・2,362 窓</caption>
+    <caption>24 データセット・3,130 窓</caption>
     <thead><tr><th>データセット</th><th>層</th><th>頻度</th><th>季節 m</th><th>文脈長</th><th>地平線</th><th>系列</th><th>窓</th></tr></thead>
     <tbody id="tblSpecs"></tbody>
   </table></div>
-  <p class="small">公開ベンチは Monash TSF Repository と ETDataset。金融は yfinance の日次 OHLCV 18銘柄（米大型株・東証・暗号資産）から、出来高・Parkinson レンジボラ・対数収益率の3系列を作った。窓の切り方は全層で共通で、地平線ぶんずつずらして重ねない。</p>
+  <p class="small">公開ベンチは Monash TSF Repository と ETDataset。交通2026は WebTRIS の公開 API（40地点を取得、1〜6時間の欠測は補間して<strong>印を付け、印の付いた点を予測対象に含む窓は捨てる</strong>ため、補間値に対して採点することはない）。金融は yfinance の日次 OHLCV 18銘柄から出来高・Parkinson レンジボラ・対数収益率の3系列。</p>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">02</span><h2>訂正：汚染について、前回は言い過ぎた</h2></div>
+  <div class="head"><span class="step">02</span><h2>再訂正：勾配の正体は汚染ではなく領域だった</h2></div>
   <div class="col">
-    <p>確認できている事実は変わらない。TimesFM 3.0 のモデルカードが学習源に挙げる <code>GiftEvalPretrain</code> の中身を落として突き合わせると、<strong>Monash の <code>traffic_hourly</code> と <code>weather</code> がバイト単位で同一に入っている</strong>。traffic は862系列、weather は3,010系列が一致し、コーパス側は末尾のテスト区間（それぞれ168点＝7日、30点）だけを削った完全なコピーである。</p>
-    <p>初版はここから、窓を「予測対象がコーパスに入っている／入っていない」で二分して比べ、差が出なかったこと（p = 1.00 / 0.54）をもって汚染仮説を棄却した。<strong>この推論が誤りだった。</strong>いま文脈側の被覆を測ると、こうなっている。</p>
-    <div class="tw"><table>
-      <caption>評価窓のうち、学習コーパスに含まれる割合</caption>
-      <thead><tr><th>データセット</th><th>文脈（平均）</th><th>文脈（最小）</th><th>予測対象（平均）</th></tr></thead>
-      <tbody>
-        <tr><td>traffic_hourly</td><td class="num">96.5%</td><td class="num">88.3%</td><td class="num">41.7%</td></tr>
-        <tr><td>weather_daily</td><td class="num">100.0%</td><td class="num">100.0%</td><td class="num">83.3%</td></tr>
-      </tbody>
-    </table></div>
-    <p><strong>どちらの群も、条件付けに使う窓はほぼ丸ごと学習済みだった。</strong>あの検定が検出できるのは「答えそのものを覚えていたか」だけで、「このセンサーの週次プロファイルを事前学習で知っているか」には効かない。効くとしたら後者なので、否定的結果は棄却の根拠にならない。</p>
-    <p>そこで層をまたいで比べる。相手を4通り取り替えても、<strong>層Aが最上位である点は変わらない</strong>（層B と層C のあいだの順序は相手によって入れ替わるので、勾配として読めるのは A とそれ以外の差である）。</p>
+    <p>確認できている事実は変わらない。TimesFM 3.0 のモデルカードが学習源に挙げる <code>GiftEvalPretrain</code> の中身を落として突き合わせると、<strong>Monash の <code>traffic_hourly</code> と <code>weather</code> がバイト単位で同一に入っている</strong>。traffic は862系列、weather は3,010系列が一致し、コーパス側は末尾のテスト区間（それぞれ168点＝7日、30点）だけを削った完全なコピーである。文脈側の被覆は traffic 96.5%・weather 100.0% で、<strong>条件付けに使う窓はほぼ丸ごと学習済み</strong>である。</p>
+    <p>改訂1では、ここから層をまたぐ比較を行い、学習済み層 +36.3% 対 未学習層 +7〜9% という開きを「汚染が効いていることを示唆する」と書いた。同時に「層は領域と交絡している」とも書いた。<strong>その交絡を切る対照を今回作ったところ、汚染側の解釈が落ちた。</strong></p>
+  </div>
+
+  <div class="tw"><table>
+    <caption>領域対照：同じ交通センサー、学習カットオフの両側</caption>
+    <thead><tr><th>データセット</th><th>コーパスとの関係</th><th>系列</th><th>窓</th><th>TimesFM</th><th>選択器</th><th>改善</th><th>勝率</th></tr></thead>
+    <tbody id="tblDomain"></tbody>
+  </table></div>
+
+  <div class="col">
+    <p><strong>未学習の側の方が優位が大きい。</strong>もし +36.3% が記憶の産物なら、学習され得ない同種データでは縮むはずだった。縮むどころか +41.0% → +54.9% に広がり、勝率も 83.0% → 97.9% に上がる。この一対から読めるのは、traffic・weather が突出していた理由は「学習済みだから」ではなく、<em>多数センサーの時間足という形が、基盤モデルにとって最も得意で、古典手法にとって最も不利</em>だから、ということである。</p>
+    <p>層の平均を並べ直すと、勾配は層の順序ではなくなる。</p>
   </div>
 
   <figure>
     <p class="figtitle">学習コーパスとの関係だけを変えると、優位はどう変わるか</p>
-    <p class="figsub">TimesFM の改善率（%）。相手を4通り取り替えても層Aが最上位である点は変わらない。窓ごとに比を取った中央値</p>
+    <p class="figsub">TimesFM の改善率（%）。窓ごとに比を取った中央値。選択器に対してのみ平均で計算</p>
     <div class="legend">
       <span><i class="sq" style="background:var(--series-1)"></i>対 ウォークフォワード選択器（実装可能）</span>
       <span><i class="sq" style="background:var(--series-2)"></i>対 季節ナイーブ（固定）</span>
       <span><i class="sq" style="background:var(--s4)"></i>対 ベースライン中央値</span>
     </div>
-    <div class="scroll"><svg id="fig1" viewBox="0 0 760 340" role="img" aria-label="4層それぞれでのTimesFMの改善率。学習済み層だけが突出して高い"></svg></div>
-    <figcaption><b>Fig 1</b>学習済みと確認できた層だけが、どの相手に対しても突出する。層B と層C の相対順序は相手によって入れ替わるので、読めるのは「A とそれ以外」の差だけである。実装可能な選択器を相手にすると <em>+36.3% 対 +7〜9%</em>、およそ4倍の開きがある。ただしこれは<strong>決定的な証拠ではない</strong> — 層は同時に領域も違っており、「traffic と weather はたまたま基盤モデルの伸びしろが最大の性格を持つ系だった」という説明も同じデータで成立する。言えるのは、初版のようにどちらか一方を棄却済みとして扱ってはいけない、ということまでである。</figcaption>
+    <div class="scroll"><svg id="fig1" viewBox="0 0 760 420" role="img" aria-label="5層それぞれでのTimesFMの改善率。未学習の交通2026が最大で、学習済み層を上回る"></svg></div>
+    <figcaption><b>Fig 1</b>最上位は学習済み層ではなく、<em>絶対に学習され得ない交通2026</em>（+54.9%）である。層の順序で見ると「学習済み &gt; 未学習」という単調な勾配は成立しない。残る差 — 層Aの +36.3% と層B・合成・金融の +7〜10% — は、汚染の指標としてではなく<strong>領域の指標として</strong>読むほうが整合する。</figcaption>
   </figure>
 
   <div class="note fix">
-    <span class="lab">初版からの変更</span>
-    <p>初版の結論表にあった「<strong>勝ちは学習データの記憶か → 説明できない（棄却）</strong>」は撤回する。正しくは「<strong>予測対象そのものの記憶は否定できたが、系列に対する馴染みは否定できていない。層をまたぐ比較はむしろ汚染が効いていることを示唆する</strong>」である。数値そのもの（p = 1.00 / 0.54）は再計算しても変わらない。誤っていたのは、その数値から引き出した結論の範囲である。</p>
+    <span class="lab">改訂1からの変更</span>
+    <p>改訂1の「<strong>層をまたぐ比較はむしろ汚染が効いていることを示唆する</strong>」を取り下げる。同じ領域・同じ構造で未学習のデータを1本足すと、優位はむしろ大きくなった。初版の「棄却」も改訂1の「示唆」も行き過ぎで、いま言えるのは<strong>「予測対象そのものの記憶は否定でき、系列への馴染みも領域対照で説明が付かない。ただし対照は交通1領域ぶんで、weather 側には対応する対照が無い」</strong>である。数値そのもの（p = 1.00 / 0.54、被覆 96.5% / 100.0%）はどの版でも変わらない。変わったのは、そこから引ける結論の範囲だけである。</p>
   </div>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">03</span><h2>合成データ：到達可能な精度と、そこからの距離</h2></div>
+  <div class="head"><span class="step">03</span><h2>合成データ：勝てなかったのか、勝ちようが無かったのか</h2></div>
   <div class="col">
-    <p>既知の関数から系列を作ると、二つのことが同時に手に入る。ひとつは<strong>汚染が原理的に不可能</strong>なこと。もうひとつは、真の生成過程が分かっているので<strong>予測誤差の下限が計算できる</strong>ことである。ある時点までの情報を与えられたとき、未来の条件付き分布は既知だから、そのシミュレーションから最適な点予測（絶対誤差を最小化するので<em>条件付き中央値</em>）と最適な分位点が出る。この下限に対する距離が、「ベースラインより何%良い」よりずっと意味のある量になる。</p>
-    <p>8過程を用意した。安定した周期、周期＋トレンド、AR(1)、ランダムウォーク、水準ジャンプ、決定論的カオス、周期的な分散、間欠需要。下限が正の値を取る7過程のうち<strong>6つで TimesFM は理論限界の +0.7〜3.4% に入る</strong>。残る2つの外し方が対照的である。</p>
+    <p>既知の関数から系列を作ると、二つのことが同時に手に入る。ひとつは<strong>汚染が原理的に不可能</strong>なこと。もうひとつは、真の生成過程が分かっているので<strong>予測誤差の下限が計算できる</strong>ことである（絶対誤差を最小化するのは<em>条件付き中央値</em>なので、20,000本の対称変量シミュレーションの中央値を取る）。</p>
+    <p>最初に用意した8過程では、TimesFM は古典手法をほとんど上回らなかった。これを「基盤モデルの限界」と読むのは早い。<strong>下限が計算できるということは、そもそも改善の余地がいくらあったかも計算できる</strong>ということである。最良の古典手法の誤差のうち、完璧な予測器なら消せる分の割合を<em>余地</em>と呼ぶ。</p>
+  </div>
+
+  <div class="tw"><table>
+    <caption>13過程の余地と、TimesFM がそのうち回収した割合</caption>
+    <thead><tr><th>過程</th><th>理論限界</th><th>最良の古典手法</th><th>TimesFM</th><th>余地</th><th>回収</th></tr></thead>
+    <tbody id="tblHead"></tbody>
+  </table></div>
+
+  <div class="col">
+    <p><strong>最初の8過程のうち5つは、余地が 2.6% 以下だった。</strong>周期・周期＋トレンド・AR(1)・周期的分散は、古典手法が既に理論限界に乗っている — 誰が来ても勝てない問題を出していたことになる。「TimesFM が合成データで勝てない」は、モデルについての観察というより<em>テスト設計についての観察</em>だった。</p>
+    <p>そこで、古典手法が構造的に表現できない5過程を足した。閾値AR、<strong>周期の位相がゆっくりドリフトする過程</strong>、<strong>振幅が別の遅い周期で変調される過程</strong>、長期記憶、<strong>観測できない外生ドライバに駆動される過程</strong>である。余地が生まれた場所で TimesFM は取りに来た。</p>
   </div>
 
   <figure>
     <p class="figtitle">理論限界・TimesFM・最良の古典手法</p>
-    <p class="figsub">平均 MASE。左端の縦線が到達可能な下限。低いほど良い</p>
+    <p class="figsub">平均 MASE。左端の縦線が到達可能な下限。上ほど余地が大きい。右端は余地の回収率</p>
     <div class="legend">
       <span><i class="sq" style="background:var(--ink-3)"></i>理論限界（過程が既知）</span>
       <span><i class="sq" style="background:var(--series-1)"></i>TimesFM 3.0</span>
       <span><i class="sq" style="background:var(--series-2)"></i>最良の古典手法</span>
     </div>
-    <div class="scroll"><svg id="fig2" viewBox="0 0 760 400" role="img" aria-label="8つの合成過程での理論限界、TimesFM、最良ベースラインの比較"></svg></div>
-    <figcaption><b>Fig 2</b>間欠需要が最も鮮やかで、TimesFM は下限の <em>+0.7%</em>、最良の古典手法は <em>+52.1%</em> — ここでは基盤モデルが問題を実質的に解いている。逆に水準ジャンプでは <em>+12.0%</em> と大きく離れるが、最良の古典手法も +11.9% で並んでおり、これは基盤モデル固有の弱さではなく<strong>問題そのものが難しい</strong>ケースである。ランダムウォークでは TimesFM が +3.4%、最良の古典手法（＝直前値）はちょうど下限に乗る — 無い構造をわずかに読み取っている。</figcaption>
+    <div class="scroll"><svg id="fig2" viewBox="0 0 760 600" role="img" aria-label="13の合成過程での理論限界、TimesFM、最良ベースラインの比較"></svg></div>
+    <figcaption><b>Fig 2</b>余地が大きい上半分でだけ、勝敗が決まる。<em>振幅変調で 84.9%、間欠需要で 98.7%、位相ドリフトで 55.3%</em> を回収する — いずれも周期の形が固定でないため、季節ナイーブもフーリエ回帰も原理的に追随できない場所である。下半分（余地 3% 未満）で TimesFM がわずかに負けるのは、限界に張り付いた古典手法に対する誤差数%の話でしかない。</figcaption>
   </figure>
 
-  <div class="note">
-    <span class="lab">決定論的カオスは誰も学習できない</span>
-    <p>ロジスティック写像 <code>z ← 3.9 z (1−z)</code> はノイズを一切含まないので、<strong>理論限界は誤差ちょうど 0</strong> である。512点の観測からこの再帰を復元できれば完全に予測できる。TimesFM の MASE は <strong>0.565</strong>、最良の古典手法は <strong>0.569</strong> — <em>両者の差は 0.7%</em> で、要するに誰も写像を学習していない。基盤モデルは滑らかな周期や平均回帰には強いが、短い決定論的再帰の同定はしていない。到達可能な精度が 100% ある場所で、誰も 1% も取れていない。</p>
+  <div class="grid2">
+    <div class="note">
+      <span class="lab">取れなかった3つ</span>
+      <p><strong>決定論的カオス</strong>（余地 100%・回収 0.8%）：ロジスティック写像 <code>z ← 3.9 z (1−z)</code> はノイズを含まないので理論限界は誤差ちょうど 0。誰も再帰を同定していない。<strong>未観測ドライバ</strong>（余地 38.8%・回収 −0.3%）：目標系列だけからは原理的に不足する情報で、次節の共変量実験の的になる。<strong>水準ジャンプ</strong>（余地 10.6%・回収 −1.1%）：レジーム切替の検出はしていない。</p>
+    </div>
+    <div class="note">
+      <span class="lab">回収率が負でも意味は小さい</span>
+      <p>余地 3% 未満の過程では回収率が −77% まで振れるが、これは<em>3% の 77%</em> であって MASE では 0.685 対 0.695 の差にすぎない。分母が小さいほど比は暴れる。余地の小さい行の回収率は読まないほうがよい。</p>
+    </div>
   </div>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">04</span><h2>金融：カレンダーが保証する未学習データ</h2></div>
+  <div class="head"><span class="step">04</span><h2>共変量：目玉機能が、渡しても動かない</h2></div>
+  <div class="col">
+    <p>TimesFM 3.0 の目玉は共変量サポートである。前節までの数値は全て単変量なので、ここだけを切り出して測った。<strong>同じモデル・同じ窓を2回採点する</strong> — 文脈だけの腕と、そこに追加チャネルを渡した腕。窓でペアが取れるので、比較は完全に対応している。</p>
+    <p>3設定を選んだ。<strong>合成・未観測ドライバ</strong>は自分で作った過程なので、共変量が信号の全てであることも、理論限界がどこかも分かっている — <em>ここで効かないなら、どこでも効かない</em>。<strong>ETTh1</strong> は6つの負荷チャネルから油温を予測する長期予測ベンチの標準設定。<strong>金融レンジボラ＋出来高</strong>は、金融でリードラグ関係が実証されている数少ない組み合わせである。</p>
+  </div>
+
+  <figure>
+    <p class="figtitle">共変量を渡すと MASE はどれだけ動くか</p>
+    <p class="figsub">同じ窓の対応比較。負が改善。Wilcoxon 符号順位検定（窓でペア）</p>
+    <div class="scroll"><svg id="fig7" viewBox="0 0 760 280" role="img" aria-label="共変量を追加したときのMASE変化。3設定とも0付近で有意差なし"></svg></div>
+    <figcaption><b>Fig 7</b>3設定とも動かない。<strong>真の潜在ドライバをそのまま手渡した合成ケース</strong>ですら MASE 3.800 → 3.699（−2.7%、p = 0.52）で、理論限界 2.322 までの<em>余地 38.8% のうち 2.7% しか埋まらない</em>。金融ではむしろ悪化する（+0.9%、p = 0.73）。ETTh1 は窓が12本しかなく、この設定単独では何も結論できない。</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <caption>共変量アブレーション（3設定・2指標＝6検定）</caption>
+    <thead><tr><th>設定</th><th>チャネル</th><th>窓</th><th>指標</th><th>単変量</th><th>共変量あり</th><th>変化</th><th>勝率</th><th>p</th></tr></thead>
+    <tbody id="tblCov"></tbody>
+  </table></div>
+
+  <div class="note">
+    <span class="lab">実装ミスではないことの確認</span>
+    <p>「効かない」を報告する前に、共変量が本当にモデルに届いているかを別に確かめた。<code>y<sub>t</sub> = u<sub>t−48</sub></code> という、共変量が予測区間を完全に決める人工ケースを作って同じ経路で流すと、<strong>MAE 1.567 → 0.693（−56%）</strong>と大きく改善する。長さの合わない共変量は例外で弾かれる。経路は生きており、上の3設定の null は本物である。</p>
+  </div>
+</section>
+<svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
+
+<section>
+  <div class="head"><span class="step">05</span><h2>金融：カレンダーが保証する未学習データ</h2></div>
   <div class="col">
     <p>市場データを使う理由は、金融が得意分野だからではなく、<strong>未学習であることを日付が保証する</strong>からである。評価窓の予測対象はすべて 2026年3月13日〜9月7日にあり、文脈の開始でさえ最も古くて 2024年2月で、カードが挙げるどのカットオフよりも後になる。</p>
     <p>対象は予測可能性の異なる3系列。出来高（対数）は曜日周期があり素直に予測できる。レンジボラ（Parkinson 推定量）はクラスタリングし、これは HAR が作られた目的そのものである。対数収益率は<em>対照群</em>で、ここで大きく勝つ手法があったら手法より先に実装を疑うべき系列である。</p>
-    <p>結果は<strong>控えめな勝ち</strong>だった。TimesFM は3系列すべてで CRPS 1位だが、点予測で HAR を有意に上回るのは出来高だけである。</p>
+    <p>結果は<strong>控えめな勝ち</strong>だった。実装可能な選択器に対する優位は +8.9%（勝率 63.7%）で、前節までのどの層より小さい。点予測で HAR を有意に上回るのは出来高だけである。</p>
   </div>
 
   <figure>
@@ -148,7 +195,7 @@ td.dim{color:var(--ink-3)}
       <span><i class="sq" style="background:var(--series-2)"></i>HAR の勝ち</span>
     </div>
     <div class="scroll"><svg id="fig3" viewBox="0 0 760 300" role="img" aria-label="金融3系列でのTimesFM対HARの勝率。収益率ではHARが勝つ"></svg></div>
-    <figcaption><b>Fig 3</b>対数収益率では <em>HAR が勝っている</em>（TimesFM の勝率 43.5%、p = 0.33）。これは想定どおりで、日次収益率にはどちらも取り出せる構造がほとんど無い。レンジボラでも差は 5% 水準に届かない（勝率 58.3%、p = 0.098）。<strong>2026年の市場データで、TimesFM が実務標準の HAR を明確に上回るのは出来高だけ</strong>である。</figcaption>
+    <figcaption><b>Fig 3</b>対数収益率では <em>HAR が勝っている</em>（TimesFM の勝率 43.5%、p = 0.33）。これは想定どおりで、日次収益率にはどちらも取り出せる構造がほとんど無い。レンジボラでも差は 5% 水準に届かない（勝率 58.3%、p = 0.098）。有意なのは出来高だけ（勝率 60.2%、p = 0.019）。<strong>同じ「2026年・カットオフ後」でも、交通では +54.9% で市場では +8.9%</strong> — 未学習であることは優位を保証しない。</figcaption>
   </figure>
 
   <div class="tw"><table>
@@ -161,9 +208,9 @@ td.dim{color:var(--ink-3)}
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">05</span><h2>「最良の古典手法」は、いまも実在しない</h2></div>
+  <div class="head"><span class="step">06</span><h2>「最良の古典手法」は、いまも実在しない</h2></div>
   <div class="col">
-    <p>初版の中心的な指摘はそのまま残る。単体のベースラインを相手にすると TimesFM は全勝するが、<strong>窓ごとに全手法の最小値を取る「オラクル」</strong>には負ける。しかしオラクルは手法ではなく、ばらつく推定値を後知恵で選んだ<em>ノイズの下界</em>である。</p>
+    <p>初版の中心的な指摘はそのまま残る。単体のベースラインを相手にすると TimesFM は全勝する（7手法すべてに対し勝率 72〜80%、いずれも p &lt; 1e−4）が、<strong>窓ごとに全手法の最小値を取る「オラクル」</strong>には負ける（1.250 対 1.092）。しかしオラクルは手法ではなく、ばらつく推定値を後知恵で選んだ<em>ノイズの下界</em>である。</p>
     <p>今回、ベースラインを5手法から7手法に増やしたことで、この主張を直接検証できた。<strong>足した2つは平凡である</strong> — 公開ベンチ7系統での平均 MASE は HAR が 1.889、EWMA が 2.070 で、既存の5手法より悪い。もしオラクルが「良い手法を選ぶこと」を意味するなら、悪い候補を足しても改善しないはずである。ノイズの下界なら、候補が増えるだけで下がる。</p>
   </div>
 
@@ -176,7 +223,7 @@ td.dim{color:var(--ink-3)}
       <span><i class="sq" style="background:var(--series-2)"></i>ウォークフォワード選択器</span>
     </div>
     <div class="scroll"><svg id="fig4" viewBox="0 0 760 280" role="img" aria-label="候補を5から7に増やしたときのオラクル・選択器・TimesFMの平均MASEの変化"></svg></div>
-    <figcaption><b>Fig 4</b>予測どおりだった。悪い候補を2つ足しただけで<strong>オラクルは 0.899 → 0.887（−1.4%）に下がる</strong>のに、実装可能な選択器は 1.275 → 1.274（−0.1%）とほぼ動かない。オラクルの優位は手法の質ではなく、選べない情報を選んだことによる見かけの利得である。選択の的中率は 29.6%（偶然は 14.3%）で、情報はあるがほとんど無い。</figcaption>
+    <figcaption><b>Fig 4</b>予測どおりだった。悪い候補を2つ足しただけで<strong>オラクルは 0.899 → 0.887（−1.4%）に下がる</strong>のに、実装可能な選択器は 1.275 → 1.274（−0.1%）とほぼ動かない。オラクルの優位は手法の質ではなく、選べない情報を選んだことによる見かけの利得である。選択の的中率は 30.6%（偶然は 14.3%）で、情報はあるがほとんど無い。TimesFM は実装可能な選択器とオラクルの差の <strong>56.7%</strong> を埋める位置にいる。</figcaption>
   </figure>
 
   <figure>
@@ -188,17 +235,18 @@ td.dim{color:var(--ink-3)}
       <span><i class="sq" style="background:var(--accent-soft)"></i>層A（学習済み）</span>
     </div>
     <div class="scroll"><svg id="fig5" viewBox="0 0 760 620" role="img" aria-label="18データセットそれぞれでのTimesFMと選択器の平均MASEのダンベルチャート"></svg></div>
-    <figcaption><b>Fig 5</b>平均 MASE では <em>18系統すべてで</em> TimesFM が選択器を上回る。効いているのは勝ち負けではなく差の大きさで、最も開く2つ（traffic・weather）がどちらも層Aであることが Fig 1 の勾配の正体である。窓ごとの勝率で見ると 23.3%〜83.0% と幅が広い — 間欠需要は勝率 23.3% でありながら平均では大きく勝つ、つまり<em>まれに大きく外す代わりに大半の窓で僅差に負ける</em>という形をしている。</figcaption>
+    <figcaption><b>Fig 5</b>効いているのは勝ち負けではなく差の大きさである。最も開くのは <em>traffic_uk_2026</em>（未学習）で、次いで traffic_hourly と weather_daily（学習済み）— つまり上位3つは全て「多数センサーの時間足」であり、コーパスとの関係ではなく領域で並ぶ。窓ごとの勝率は 23.3%〜97.9% と幅が広く、間欠需要は勝率 23.3% でありながら平均では大きく勝つ、つまり<em>まれに大きく外す代わりに大半の窓で僅差に負ける</em>という形をしている。</figcaption>
   </figure>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">06</span><h2>不確実性は、点予測ほどには良くない</h2></div>
+  <div class="head"><span class="step">07</span><h2>不確実性：公開ベンチだけ見ると、ここでも結論が変わる</h2></div>
   <div class="col">
-    <p>確率予測としては CRPS で TimesFM が 0.950、最良のベースライン 1.335 を大きく引き離す。だが<strong>区間の当たり方は依然として狭い側に外れる</strong>。名目 80% 区間の実測被覆は 0.792 で、層別に見ると公開ベンチで 0.770〜0.787、合成と金融では 0.803〜0.807 と名目に近い。<em>未学習データの方が較正が良い</em>のは、初版で書いた「一律に狭すぎる」より穏やかな像である。</p>
-    <p>それでも PIT 曲線の形は変わらない。10% 分位点の下に実測の 14.5% が落ち、90% 分位点の下には 89.1% しか落ちない。両裾が実際より薄い。<strong>経験残差ブートストラップを付けた季節ナイーブの方が、全分位点で対角線に近い。</strong></p>
+    <p>確率予測としては CRPS で TimesFM が 0.977、最良のベースライン 1.448（フーリエ回帰）を大きく引き離す。区間の当たり方は<strong>まだ狭い側に外れる</strong> — 名目 80% 区間の実測被覆は 0.785 で、10% 分位点の下に実測の 13.9%、90% 分位点の下には 88.9% しか落ちない。</p>
+    <p>ただし初版・改訂1で書いた「<strong>経験残差ブートストラップ付きの季節ナイーブの方が全分位点で較正されている</strong>」は、24データセットでは成立しない。名目からの平均絶対乖離で並べると <strong>TimesFM 0.042 対 季節ナイーブ 0.069</strong> で、TimesFM は過程の理論限界（0.038）に次ぐ2位である。</p>
+    <p>逆転の理由は<em>データセットの構成</em>にある。公開ベンチ7系統だけで測ると順位は元のまま（季節ナイーブ 0.055 対 TimesFM 0.067）で、合成・金融・交通2026 を足すと入れ替わる。層別に見ると TimesFM の乖離は層B で 0.077 と最悪、交通2026 で 0.015 と最良である。<strong>「TimesFM の区間は信用できない」も、公開ベンチという特定の標本の上でだけ言える文だった。</strong></p>
   </div>
 
   <figure>
@@ -209,53 +257,55 @@ td.dim{color:var(--ink-3)}
       <span><i style="background:var(--series-2)"></i>季節ナイーブ + 経験残差</span>
       <span><i style="background:var(--ink-3)"></i>完全較正</span>
     </div>
-    <div class="scroll"><svg id="fig6" viewBox="0 0 760 400" role="img" aria-label="PIT較正曲線。TimesFMは両裾が薄く、季節ナイーブは対角線にほぼ一致"></svg></div>
-    <figcaption><b>Fig 6</b>点予測で全方位に勝つモデルが、区間の正しさでは 1970年代の手法に負けている。下流でリスク量やバッファを決めるなら、この差は点予測の優劣より効く。</figcaption>
+    <div class="scroll"><svg id="fig6" viewBox="0 0 760 400" role="img" aria-label="PIT較正曲線。TimesFMは両裾がやや薄く、季節ナイーブは中央部で対角線から離れる"></svg></div>
+    <figcaption><b>Fig 6</b>TimesFM は両裾が実際より薄い（下裾は名目より厚く出る）。季節ナイーブは中央部で大きく外れる。下流でリスク量やバッファを決めるなら、点予測の優劣よりこの形が効く。</figcaption>
   </figure>
 
   <div class="tw"><table>
-    <caption>全体成績と1窓あたりの計算コスト（2,362 窓）</caption>
+    <caption>全体成績と1窓あたりの計算コスト（3,130 窓）</caption>
     <thead><tr><th>モデル</th><th>MASE</th><th>CRPS</th><th>80% 被覆</th><th>sMAPE</th><th>ms / 窓</th></tr></thead>
     <tbody id="tblCost"></tbody>
   </table></div>
-  <p class="small">コストは RTX 5080 実測。TimesFM はデータセット単位のバッチ推論で 7.4 ms/窓、ETS（80.5 ms）と HAR（49.4 ms）より速い。チェックポイント読み込みの約2〜23秒は含まない。<strong>sMAPE では季節ナイーブが1位</strong>（31.1 対 37.5）になる点も初版から変わらない — solar と weather のゼロ近傍で分母が潰れるためで、同じ予測値から指標の選択だけで別の結論が作れる。</p>
+  <p class="small">コストは RTX 5080 実測。TimesFM はデータセット単位のバッチ推論で 13.4 ms/窓、ETS（89.4 ms）と HAR（57.9 ms）より速い。チェックポイント読み込みの約2〜23秒は含まない。<strong>sMAPE では季節ナイーブが1位</strong>（36.1 対 38.8）になる点は初版から変わらない — solar と weather のゼロ近傍で分母が潰れるためで、同じ予測値から指標の選択だけで別の結論が作れる。</p>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">07</span><h2>この結果が言えないこと</h2></div>
+  <div class="head"><span class="step">08</span><h2>この結果が言えないこと</h2></div>
   <ul>
-    <li><strong>層は領域とも交絡している。</strong>層Aの2系統はセンサーネットワークで、層Cは合成と金融である。汚染の効果と「領域ごとの伸びしろ」を完全には分離できていない。最も近い対照は traffic（862センサー・時間足・学習済み・+34%）と electricity（321センサー・時間足・一覧に無い・−8%）だが、これも一対の観察に過ぎない。</li>
+    <li><strong>領域対照は交通1領域ぶんしかない。</strong>traffic_hourly の対照は作れたが、<code>weather</code> に対応する「同じ気象観測・カットオフ後」のデータは用意していない。層Aのもう一方については、汚染と領域の交絡は切れていない。</li>
+    <li><strong>対照の側にも別の交絡がある。</strong>交通2026 は英国の高速道路、traffic_hourly は米国サンフランシスコ湾岸の車線占有率で、国も計測量も違う。文脈長も 1,024 対 512 と揃っていない（元データの長さの制約）。「同じ領域」は厳密には「同じ形の系列」である。</li>
     <li><strong>学習コーパスの完全な目録は公開されていない。</strong>層Bは「一覧に無い」以上のことを言えない。Wikipedia 閲覧数・Google Trends・合成／拡張データの寄与も測れていない。</li>
-    <li><strong>合成過程は現実より易しく、推定のばらつきも小さくない。</strong>8つとも定常か、単純な非定常で、実データの持つ構造変化・欠測・外れ値・複数季節性は入っていない。加えて、種の与え方を直した際に系列が張り直され、水準ジャンプでの限界超過が +4.1% から +12.0% に動いた — 1過程あたり120窓では、この程度の変動が残る。</li>
-    <li><strong>金融は日次バーだけ。</strong>レンジボラは Parkinson 推定量で、日中データによる実現ボラティリティではない。銘柄は18で、窓は各6本しかない。</li>
-    <li><strong>単変量ゼロショットのみ。</strong>TimesFM 3.0 の目玉である多変量・共変量サポートも、ファインチューニングも使っていない。</li>
+    <li><strong>合成過程は現実より易しく、推定のばらつきも小さくない。</strong>13過程とも定常か単純な非定常で、実データの持つ構造変化・欠測・外れ値・複数季節性は入っていない。1過程あたり120窓なので、余地の小さい行の回収率は特に不安定である。</li>
+    <li><strong>共変量の null は「効かない」であって「使えない」ではない。</strong>測ったのは past-only 共変量のゼロショットだけで、未来既知の共変量（カレンダー・祝日・気温予報）もファインチューニングも試していない。ETTh1 は12窓しかない。</li>
+    <li><strong>金融は日次バーだけ。</strong>レンジボラは Parkinson 推定量で、日中データによる実現ボラティリティではない。銘柄は18、窓は各6本。</li>
     <li><strong>seed は1本。</strong>系列サンプリングと合成生成のばらつきは測っていない。窓ごとのペア検定は系列選択の分散を吸収しないので、p 値は「この系列集合において」と読む。</li>
     <li><strong>重みは非商用ライセンス。</strong>TimesFM のソースコードは Apache-2.0 だが、3.0 の学習済み重みは <code>timesfm-non-commercial-license-v1.0</code> で商用・本番利用は許諾されていない。商用の目を残すなら Apache-2.0 のままの 2.5 系を使うことになる。</li>
   </ul>
 
   <div class="verdict">
-    <div><span class="q">単体の古典手法に勝つか</span><span class="a yes">勝つ</span><p class="why">7手法すべてに対し、全層で優位。最良の単体（ETS、MASE 1.415）を 16% 上回る。</p></div>
-    <div><span class="q">窓ごと最良の選択に勝つか</span><span class="a no">負ける</span><p class="why">オラクル 0.887 対 1.065。ただし悪い候補を足すだけで下がる量であり、事前には選べない。</p></div>
-    <div><span class="q">優位は汚染で説明できるか</span><span class="a no">切り分け未了</span><p class="why">学習済み +36.3% 対 未学習 +7〜9%。初版の「棄却」は撤回する。領域との交絡が残る。</p></div>
-    <div><span class="q">到達可能な精度に届くか</span><span class="a yes">ほぼ届く</span><p class="why">下限が正の7過程中6つで理論限界の +0.7〜3.4%。ただし決定論的カオスでは限界 0 に対し誰も何も取れない。</p></div>
-    <div><span class="q">2026年の市場で使えるか</span><span class="a no">HAR と互角</span><p class="why">CRPS では3系列とも1位だが、点予測で HAR に有意に勝つのは出来高のみ。収益率では負ける。</p></div>
-    <div><span class="q">不確実性は信用できるか</span><span class="a no">できない</span><p class="why">80% 区間の被覆 0.792。経験残差付き季節ナイーブの方が全分位点で較正されている。</p></div>
+    <div><span class="q">単体の古典手法に勝つか</span><span class="a yes">勝つ</span><p class="why">7手法すべてに対し勝率 72〜80%、p &lt; 1e−4。最良の単体（Theta、MASE 1.596）を 22.5% 上回る。</p></div>
+    <div><span class="q">窓ごと最良の選択に勝つか</span><span class="a no">負ける</span><p class="why">オラクル 1.092 対 1.250。ただし悪い候補を足すだけで下がる量であり、事前には選べない。</p></div>
+    <div><span class="q">優位は汚染で説明できるか</span><span class="a no">説明できない</span><p class="why">同じ領域で未学習のデータの方が優位が大きい（+54.9% 対 +41.0%）。ただし対照は交通1領域ぶん。</p></div>
+    <div><span class="q">どこで勝つのか</span><span class="a yes">領域で決まる</span><p class="why">多数センサーの時間足で +41〜55%、市場で +8.9%。カットオフとの前後関係ではなく系列の形が効く。</p></div>
+    <div><span class="q">共変量は効くか</span><span class="a no">効かない</span><p class="why">3設定6検定すべて p ≥ 0.33。真のドライバを渡しても余地 38.8% のうち 2.7% しか埋まらない。</p></div>
+    <div><span class="q">不確実性は信用できるか</span><span class="a yes">古典手法よりは</span><p class="why">名目からの平均乖離 0.042 で全モデル中1位。ただし 80% 区間の被覆は 0.785 でなお狭い。</p></div>
   </div>
 </section>
 
 <footer>
   実装: /home/kazumasa/projects/timesfm_lab<br>
-  生データ: /home/kazumasa/projects/timesfm_lab/reports/results.parquet（19,856 行 = 2,362 窓 × 8〜9 モデル）<br>
-  再現: <code>uv run --no-sync python scripts/run_bench.py</code>（RTX 5080 で 402 秒、seed=0）<br>
+  生データ: /home/kazumasa/projects/timesfm_lab/reports/results.parquet（26,600 行 = 3,130 窓 × 8〜9 モデル）<br>
+  再現: <code>uv run --no-sync python scripts/run_bench.py</code>（RTX 5080 で 640 秒、seed=0）＋ <code>scripts/run_covariates.py</code><br>
   公開データ: Monash TSF Repository（Zenodo 4656140 / 4656132 / 4656144 / 4654822 / 4656058）、ETDataset ETT-small<br>
+  交通2026: National Highways WebTRIS 公開 API、40地点・2026-01-01〜06-30 の時間別計数（採用 28系列・168窓、補間 0.66%、補間点を含む予測対象は除外）<br>
   金融データ: yfinance 日次 OHLCV 18銘柄、2018-01-01 以降。評価対象は 2026-03-13〜2026-09-07<br>
-  合成データ: <code>src/timesfm_lab/synthetic.py</code>、8過程・種固定・理論限界は20,000本の対称変量シミュレーション<br>
+  合成データ: <code>src/timesfm_lab/synthetic.py</code>、13過程・種固定（<code>zlib.crc32</code>）・理論限界は20,000本の対称変量シミュレーションの条件付き中央値<br>
   汚染照合: Salesforce/GiftEvalPretrain の traffic_hourly・weather を実データ比較（各25系列、rtol=1e-4）<br>
   モデル: google/timesfm-3.0-pytorch、timesfm 3.0.1、torch 2.11.0+cu128、statsmodels 0.14.6<br>
   検定: Wilcoxon 符号順位（窓でペア）、Mann-Whitney U 片側（層間比較）<br>
-  初版 2026-09-06 / 改訂 2026-09-07（02節の結論を訂正、合成・金融の2層と HAR・EWMA を追加）
+  初版 2026-09-06 / 改訂1 2026-09-07（02節の「棄却」を撤回、合成・金融と HAR・EWMA を追加）/ 改訂2 2026-09-07（領域対照で 02節の「示唆」も撤回、難しい合成5過程・共変量アブレーション・07節の較正の逆転を追加）
 </footer>
 </div>
 
@@ -328,6 +378,52 @@ const DS_ORDER=Object.keys(D.specs);
   }
 })();
 
+(function domainTable(){
+  const tb=document.getElementById("tblDomain"); if(!tb||!D.domain_control)return;
+  for(const r of D.domain_control){
+    const tr=mk("tr");
+    if(r.tier!=="A")tr.className="hl";
+    tr.innerHTML=`<td>${D.specs[r.dataset].title}</td>`+
+      `<td><span class="${r.tier==="A"?"tag a":"tag c"}">${D.tier_short[r.tier]}</span></td>`+
+      `<td class="num">${r.n_series}</td><td class="num">${r.n}</td>`+
+      `<td class="num${r.tier==="A"?"":" win"}">${f3(r.timesfm)}</td><td class="num dim">${f3(r.walkforward)}</td>`+
+      `<td class="num${r.tier==="A"?"":" win"}">${sgn(r.vs_selector_pct)}</td><td class="num">${pctf(r.win_rate)}</td>`;
+    tb.appendChild(tr);}
+})();
+
+(function headroomTable(){
+  const tb=document.getElementById("tblHead"); if(!tb)return;
+  const rows=D.ceiling.slice().sort((a,b)=>b.headroom_pct-a.headroom_pct);
+  for(const r of rows){
+    const cap=r.captured_pct, thin=r.headroom_pct<3;
+    const tr=mk("tr");
+    tr.innerHTML=`<td>${D.specs[r.dataset].title.replace("合成: ","")}</td>`+
+      `<td class="num dim">${f3(r.optimum)}</td>`+
+      `<td class="num">${f3(r.best_baseline)} <span class="dim">${NAME(r.best_baseline_name)}</span></td>`+
+      `<td class="num${r.timesfm<r.best_baseline?" win":""}">${f3(r.timesfm)}</td>`+
+      `<td class="num${thin?" dim":""}">${r.headroom_pct.toFixed(1)}%</td>`+
+      `<td class="num${cap===null?" dim":(thin?" dim":(cap>40?" win":""))}">`+
+      `${cap===null?"—":cap.toFixed(0)+"%"}</td>`;
+    tb.appendChild(tr);}
+})();
+
+(function covTable(){
+  const tb=document.getElementById("tblCov"); if(!tb||!D.covariates)return;
+  for(const c of D.covariates){
+    for(const m of ["mase","scaled_crps"]){
+      const t=c[m], first=m==="mase", tr=mk("tr");
+      tr.innerHTML=(first
+          ?`<td rowspan="2">${c.title}</td><td class="num" rowspan="2">${c.n_covariates}</td>`+
+           `<td class="num" rowspan="2">${c.n_windows}</td>`:"")+
+        `<td>${first?"MASE":"CRPS"}</td><td class="num">${f3(t.univariate)}</td>`+
+        `<td class="num">${f3(t.with_covariates)}</td>`+
+        `<td class="num${t.delta_pct<0?"":" dim"}">${sgn(t.delta_pct)}</td>`+
+        `<td class="num">${pctf(t.win_rate)}</td>`+
+        `<td class="num dim">${t.p_value.toFixed(2)}</td>`;
+      tb.appendChild(tr);}
+  }
+})();
+
 (function costTable(){
   const tb=document.getElementById("tblCost");
   const t=Object.fromEntries(D.timings.map(r=>[r.model,r.ms_per_window]));
@@ -344,12 +440,12 @@ const DS_ORDER=Object.keys(D.specs);
 /* ---------- Fig 1: tier gradient ---------- */
 (function fig1(){
   const svg=document.getElementById("fig1");
-  const L=190,R=44,T=30,B=56,W=760,H=340,iw=W-L-R,ih=H-T-B;
+  const L=190,R=52,T=30,B=56,W=760,H=420,iw=W-L-R,ih=H-T-B;
   const series=[["vs_selector",S1,"対 選択器"],["vs_seasonal_naive",S2,"対 季節ナイーブ"],
                 ["vs_median_baseline",S4,"対 BL中央値"]];
   const rows=D.gradient;
-  const xmax=45, x=v=>L+iw*Math.max(v,0)/xmax;
-  for(let g=0;g<=4;g++){const v=g*10;
+  const xmax=70, x=v=>L+iw*Math.max(v,0)/xmax;
+  for(let g=0;g<=7;g++){const v=g*10;
     svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
     const tx=el("text",{x:x(v),y:T+ih+22,"font-size":11,"text-anchor":"middle",fill:INK3});
     tx.textContent=v+"%";svg.appendChild(tx);}
@@ -357,7 +453,8 @@ const DS_ORDER=Object.keys(D.specs);
   rows.forEach((r,i)=>{
     const y0=T+rowH*i+7;
     const lab=el("text",{x:L-14,y:y0+rowH/2-6,"font-size":12,"text-anchor":"end",
-      fill:r.tier==="A"?ACC:INK2,"font-family":"var(--sans)","font-weight":r.tier==="A"?700:400});
+      fill:r.tier==="C_domain_control"?ACC:INK2,"font-family":"var(--sans)",
+      "font-weight":(r.tier==="A"||r.tier==="C_domain_control")?700:400});
     lab.textContent=r.short;svg.appendChild(lab);
     const sub=el("text",{x:L-14,y:y0+rowH/2+11,"font-size":10,"text-anchor":"end",fill:INK3});
     sub.textContent="n = "+r.n_windows;svg.appendChild(sub);
@@ -378,8 +475,10 @@ const DS_ORDER=Object.keys(D.specs);
 /* ---------- Fig 2: synthetic ceiling ---------- */
 (function fig2(){
   const svg=document.getElementById("fig2");
-  const L=200,R=70,T=26,B=52,W=760,H=400,iw=W-L-R,ih=H-T-B;
-  const rows=D.ceiling.slice().sort((a,b)=>a.timesfm-b.timesfm);
+  const L=200,R=76,T=26,B=52,W=760,H=600,iw=W-L-R,ih=H-T-B;
+  // Sorted by headroom, because that is what the figure is now about: how much
+  // error the best classical method carries that a perfect forecaster would not.
+  const rows=D.ceiling.slice().sort((a,b)=>b.headroom_pct-a.headroom_pct);
   const xmax=Math.max(...rows.map(r=>Math.max(r.timesfm,r.best_baseline)))*1.1;
   const x=v=>L+iw*v/xmax;
   for(let g=0;g*1<=xmax;g++){const v=g*1;
@@ -400,18 +499,26 @@ const DS_ORDER=Object.keys(D.specs);
     const cb=el("circle",{cx:x(r.best_baseline),cy:cy,r:6,fill:S2,stroke:SURF,"stroke-width":2});
     svg.appendChild(cb);
     bind(cb,`${D.specs[r.dataset].title}\n最良の古典手法 ${NAME(r.best_baseline_name)} ${f3(r.best_baseline)}`
+      +`\n余地 ${r.headroom_pct.toFixed(1)}%`
       +(r.baseline_excess_pct===null?"":`\n限界からの超過 ${sgn(r.baseline_excess_pct)}`));
     const ct=el("circle",{cx:x(r.timesfm),cy:cy,r:6,fill:S1,stroke:SURF,"stroke-width":2});
     svg.appendChild(ct);
     bind(ct,`${D.specs[r.dataset].title}\nTimesFM ${f3(r.timesfm)}`
       +(r.timesfm_excess_pct===null?"\n限界は 0（決定論的）":`\n限界からの超過 ${sgn(r.timesfm_excess_pct)}`));
-    const vl=el("text",{x:L+iw+10,y:cy+4,"font-size":11,fill:r.timesfm_excess_pct===null?INK3:
-      (r.timesfm_excess_pct>5?S2:INK2)});
-    vl.textContent=r.timesfm_excess_pct===null?"限界 0":sgn(r.timesfm_excess_pct);
+    // Right-hand column: how much of the available headroom TimesFM took.
+    // Blank where there was none — a process nobody can improve on says
+    // nothing about the model.
+    const cap=r.captured_pct;
+    const vl=el("text",{x:L+iw+10,y:cy+4,"font-size":11,
+      fill:cap===null?INK3:(cap>40?ACC:(cap>0?INK2:S2))});
+    vl.textContent=cap===null?"余地なし":(cap>=0?"":"−")+Math.abs(cap).toFixed(0)+"%";
     svg.appendChild(vl);
+    bind(vl,cap===null
+      ?`${D.specs[r.dataset].title}\n最良の古典手法が既に理論限界に乗っている\n改善の余地そのものが無い`
+      :`${D.specs[r.dataset].title}\n余地 ${r.headroom_pct.toFixed(1)}%（最良古典手法の誤差のうち、完璧な予測器なら消せる分）\n回収 ${cap.toFixed(1)}%`);
   });
   const hd=el("text",{x:L+iw+10,y:T-8,"font-size":10,fill:INK3});
-  hd.textContent="限界比";svg.appendChild(hd);
+  hd.textContent="余地の回収";svg.appendChild(hd);
   const ax=el("text",{x:L+iw/2,y:H-12,"font-size":11,"text-anchor":"middle",fill:INK3});
   ax.textContent="平均 MASE（小さいほど良い）";svg.appendChild(ax);
 })();
@@ -581,5 +688,40 @@ const DS_ORDER=Object.keys(D.specs);
   ax.textContent="名目分位点";svg.appendChild(ax);
   const ay=el("text",{x:14,y:T+ih/2,"font-size":11,fill:INK3,transform:`rotate(-90 14 ${T+ih/2})`,"text-anchor":"middle"});
   ay.textContent="実測で下回った割合";svg.appendChild(ay);
+})();
+
+/* ---------- Fig 7: covariate ablation ---------- */
+(function fig7(){
+  const svg=document.getElementById("fig7"); if(!svg||!D.covariates)return;
+  const L=210,R=150,T=34,B=54,W=760,H=280,iw=W-L-R,ih=H-T-B;
+  const rows=D.covariates;
+  const lim=4; // percent; every observed effect is far inside this
+  const x=v=>L+iw*(v+lim)/(2*lim);
+  for(let v=-lim;v<=lim;v+=2){
+    svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
+    const tx=el("text",{x:x(v),y:T+ih+22,"font-size":11,"text-anchor":"middle",fill:INK3});
+    tx.textContent=(v>0?"+":"")+v+"%";svg.appendChild(tx);}
+  svg.appendChild(el("line",{x1:x(0),x2:x(0),y1:T-6,y2:T+ih+6,stroke:INK3,"stroke-width":1.5}));
+  const z=el("text",{x:x(0),y:T-12,"font-size":10.5,"text-anchor":"middle",fill:INK3});
+  z.textContent="効果なし";svg.appendChild(z);
+  const rowH=ih/rows.length;
+  rows.forEach((r,i)=>{
+    const t=r.mase, cy=T+rowH*i+rowH/2, v=t.delta_pct;
+    const lab=el("text",{x:L-16,y:cy-2,"font-size":11.5,"text-anchor":"end",fill:INK2,"font-family":"var(--sans)"});
+    lab.textContent=r.title;svg.appendChild(lab);
+    const sub=el("text",{x:L-16,y:cy+13,"font-size":10,"text-anchor":"end",fill:INK3});
+    sub.textContent=`${r.n_windows} 窓 · ${r.n_covariates} チャネル`;svg.appendChild(sub);
+    const x0=Math.min(x(0),x(v)), w=Math.abs(x(v)-x(0));
+    const bar=el("rect",{x:x0,y:cy-11,width:Math.max(1.5,w),height:22,fill:v<0?S1:S2,rx:2});
+    svg.appendChild(bar);
+    bind(bar,`${r.title}\nMASE ${f3(t.univariate)} → ${f3(t.with_covariates)}\n${sgn(v)}（p = ${t.p_value.toFixed(2)}、勝率 ${pctf(t.win_rate)}）`
+      +(r.optimum===null?"":`\n理論限界 ${f3(r.optimum)}`));
+    const vl=el("text",{x:L+iw+12,y:cy-2,"font-size":11.5,fill:INK2,"font-weight":600});
+    vl.textContent=sgn(v);svg.appendChild(vl);
+    const pv=el("text",{x:L+iw+12,y:cy+13,"font-size":10,fill:INK3});
+    pv.textContent=`p = ${t.p_value.toFixed(2)}`;svg.appendChild(pv);
+  });
+  const ax=el("text",{x:L+iw/2,y:H-12,"font-size":11,"text-anchor":"middle",fill:INK3});
+  ax.textContent="共変量を渡したときの平均 MASE の変化（負が改善）";svg.appendChild(ax);
 })();
 </script>

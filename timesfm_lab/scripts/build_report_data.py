@@ -104,6 +104,16 @@ def main() -> None:
                 "optimum_crps": float(pc.loc[k, ORACLE_KEY]),
                 "timesfm_crps": float(pc.loc[k, MODEL_KEY]),
                 "best_baseline_crps": float(bl_c.loc[k].min()),
+                # How much error the best classical method still carries that a
+                # perfect forecaster would not, as a share of that method's own
+                # error. Zero headroom means the process is already solved and
+                # no model of any kind can win — the reading that turns "TimesFM
+                # cannot beat classical methods" into a statement about the test.
+                "headroom_pct": float(100 * (best - opt) / best) if best > 1e-9 else 0.0,
+                # Of that headroom, the share TimesFM actually took.
+                "captured_pct": (
+                    float(100 * (best - tf) / (best - opt)) if best - opt > 1e-9 else None
+                ),
             }
         )
 
@@ -207,6 +217,48 @@ def main() -> None:
                 }
             )
 
+    # --- covariates: the same windows, with and without extra channels ----- #
+    cov_path = RESULTS_DIR / "covariates.parquet"
+    if cov_path.exists():
+        from timesfm_lab.covariates import SETTINGS as COV_SETTINGS
+        from timesfm_lab.covariates import paired_arm_test
+
+        cov = pd.read_parquet(cov_path)
+        cmeta = json.loads((RESULTS_DIR / "covariates_meta.json").read_text())
+        n_by = {m["setting"]: m["n_windows"] for m in cmeta["settings"]}
+        out["covariates"] = [
+            {
+                "setting": c.key, "title": c.title, "note": c.note,
+                "dataset": c.dataset, "n_windows": n_by.get(c.key),
+                "n_covariates": int(cov[cov.setting == c.key].n_covariates.iloc[0]),
+                "optimum": (
+                    float(cov[(cov.setting == c.key) & (cov.arm == ORACLE_KEY)].mase.mean())
+                    if (cov.setting == c.key).any()
+                    and (cov[cov.setting == c.key].arm == ORACLE_KEY).any()
+                    else None
+                ),
+                **{m: paired_arm_test(cov, c.key, m) for m in ("mase", "scaled_crps")},
+            }
+            for c in COV_SETTINGS
+        ]
+
+    # --- the domain control: same domain, opposite side of the cutoff ------ #
+    pair = ("traffic_hourly", "traffic_uk_2026")
+    if set(pair) <= set(sel.dataset.unique()):
+        out["domain_control"] = [
+            {
+                "dataset": ds, "tier": tier_of(ds),
+                "n": len(g), "n_series": int(g.series_id.nunique()),
+                "timesfm": float(g[MODEL_KEY].mean()),
+                "walkforward": float(g.walkforward.mean()),
+                "oracle": float(g.oracle.mean()),
+                "vs_selector_pct": float(100 * (1 - g[MODEL_KEY].mean() / g.walkforward.mean())),
+                "win_rate": float((g[MODEL_KEY] < g.walkforward).mean()),
+            }
+            for ds in pair
+            for g in [sel[sel.dataset == ds]]
+        ]
+
     rank_mase = scored.groupby("model").mase.mean().rank()
     rank_smape = scored.groupby("model").smape.mean().rank()
     out["metric_disagreement"] = {
@@ -217,7 +269,7 @@ def main() -> None:
     path.write_text(json.dumps(out, indent=1, default=float), encoding="utf-8")
     print(f"wrote {path} ({path.stat().st_size/1024:.0f} KB)")
     print(pd.DataFrame(gradient)[["short", "n_windows", "vs_selector", "selector_win_rate"]].round(3).to_string(index=False))
-    print(pd.DataFrame(ceiling)[["dataset", "optimum", "timesfm", "timesfm_excess_pct", "baseline_excess_pct"]].round(3).to_string(index=False))
+    print(pd.DataFrame(ceiling)[["dataset", "optimum", "best_baseline", "timesfm", "headroom_pct", "captured_pct"]].round(2).to_string(index=False))
     print(json.dumps(oracle_shrink, indent=1, default=float))
 
 
