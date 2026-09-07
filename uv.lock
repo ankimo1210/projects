@@ -1950,11 +1950,9 @@ source = { editable = "health" }
 dependencies = [
     { name = "duckdb" },
     { name = "pandas" },
-    { name = "plotly" },
     { name = "python-dotenv" },
     { name = "requests" },
     { name = "scipy" },
-    { name = "streamlit" },
 ]
 
 [package.dev-dependencies]
@@ -1967,11 +1965,9 @@ dev = [
 requires-dist = [
     { name = "duckdb", specifier = ">=1.1" },
     { name = "pandas", specifier = ">=2.2" },
-    { name = "plotly", specifier = ">=6.0" },
     { name = "python-dotenv", specifier = ">=1.0" },
     { name = "requests", specifier = ">=2.32" },
     { name = "scipy", specifier = ">=1.11" },
-    { name = "streamlit", specifier = ">=1.51" },
 ]
 
 [package.metadata.requires-dev]

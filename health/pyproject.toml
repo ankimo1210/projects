@@ -1,11 +1,9 @@
 [project]
 name = "health"
 version = "0.1.0"
-description = "Personal Google Health dashboard (Streamlit + Plotly + DuckDB)"
+description = "Local Google Health lossless archive, analytics, and Next.js dashboard"
 requires-python = ">=3.12"
 dependencies = [
-    "streamlit>=1.51",
-    "plotly>=6.0",
     "duckdb>=1.1",
     "pandas>=2.2",
     # pandas dispatches .corr(method="spearman") to scipy.stats.spearmanr,
@@ -16,6 +14,9 @@ dependencies = [
     "requests>=2.32",
     "python-dotenv>=1.0",
 ]
+
+[project.scripts]
+health = "health.cli:main"
 
 [build-system]
 requires = ["hatchling"]

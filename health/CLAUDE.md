@@ -1,36 +1,40 @@
-# health — Claude Code Guide
+# health — Agent guide
 
-Google Health APIを使う個人向けダッシュボード。応答は日本語、code/identifier/commitは英語。
+Google Health APIの本人データを原本保存し、Next.jsで閲覧するローカル専用ポータル。
+応答・ドキュメントは日本語、code/identifier/commitは英語。
 
-- `src/health/`がcore（endpoints → auth/client → store → sync → inventory）、
-  `app/`は薄いStreamlit UI。viewからAPI/IO契約を実装しない。
-- `endpoints.py`の14-entry `CATALOG`が実装metricのsingle source of truth。
-  API shapeは`.superpowers/sdd/health-google-api-contracts.md`に従う。
-- `dailyRollUp`は1 payload、`reconcile`は全pageを取得してからparseする。途中pageを
-  保存済みとして扱わない。
-- raw pages、typed rows、watermarkは`Store.replace_chunk()`でchunk単位に原子的置換する。
-  chunk境界は`CHUNK_EPOCH`と`max_range_days`だけで決まるカレンダー整列（`aligned_chunk`）。
-  同じ暦日は常に同じchunk keyになるので、再取得はraw pageを置換し重複を残さない。
-  `start`/`end`は整列chunk key（raw_jsonの同一性）、`covered_start`/`covered_end`は
-  `[floor, today]`へクリップした後に実際に再取得した範囲で、両者はしばしば異なる。
-  raw_json以外の3つのtyped-row DELETE（daily_series/intraday/sleep_sessions）は必ず
-  `covered_start`/`covered_end`を使うこと――chunk keyまで広げると、そのchunkでは
-  取得していない既同期日を消してしまう（実装中に発見・修正した不具合なので徹底する）。
-- sync runはまず全metricの直近`RECENT_WINDOW_DAYS`を取得し（forward pass）、残予算で
-  `backfilled_from`から古い方向へ1 chunkずつラウンドロビンする（history pass）。
-  `sync_state`は`last_synced_date`（前方）と`backfilled_from`（後方）の両端を持つ。
-  `replace_chunk()`の`status`/`watermark`は`None`なら「そのcolumnは変更しない」という
-  意味（SQL上は真のNULLになり`coalesce()`が既存値を残す）。forward chunkは常に実際に
-  到達した日を書くので、中断したrunは取りこぼしなくそこから再開する。history chunkは
-  status/watermarkに`None`を渡してこの2列を保つ。`backfill_from`はこの規則の対象外――
-  `None`は`start`に置き換わったうえで`least(既存値, start)`により`backfilled_from`へ
-  反映されるので、無変更ではなく常に後方へだけ伸びる。物理sendは最大200件（UIで可変）。
-  ApiError/PayloadErrorはmetric単位で隔離し`SyncReport.failures`へ記録して続行するが、
-  そのmetricはhistory passも含めrun全体から除外される（失敗したpassの残りchunkだけでは
-  ない）。AuthError/429/hard capはrun全体を止める。engineへsleep/自動retryを追加しない
-  （paceと401 retryはclient責務）。
-- testsはfake HTTPとcommitted fixtureだけを使う。live Google Health APIを自動テストで
-  呼ばず、実アカウント確認は`health/scripts/probe_datatypes.py`で行う。
-- `data/`と`.env`はprivateかつgitignored。token、probe payload、実健康データをcommitしない。
-- workspace rootで`uv run --no-sync pytest health/tests`を実行する。UI用の架空DBは
-  `seed_demo.py --db-path <temporary path>`で作り、実`health/data/`を上書きしない。
+- `source_catalog.json`が公開型・取得method・scope・検証根拠の正本。
+  API形状は`docs/google-health-source-contracts.md`を参照。
+  `endpoints.py`の`CATALOG`は表示できる既存14metricの投影定義であり、取得対象の上限ではない。
+- `client.request_page`は解析・401 refresh前に受け取った全本文をcaptureする。
+  `Archive.put`の耐久保存成功後にindexを記録し、その後にparser・cursorを進める。
+  token endpoint・Authorization headerは原本に含めない。
+- 原本は不変のcontent-addressed gzip。未知フィールド・複数source・版を保持する。
+  再取得時に過去原本を削除しない。`raw_json`は互換用の解析済みJSONで原本の代用ではない。
+- `ArchiveIndex`はStoreと同じconnection、CLIが唯一のwriter。
+  新規/変更DDL前に`backup_database`でcheckpoint・close・durable backupを完了させる。
+  legacy importのindex書き込みはtransactionとmarkerで一度だけ行う。
+- `confirm_terminal`は保存・解析できた成功最終pageでのみ行う。
+  期間指定なし・空応答・min/max日付だけで全履歴の証明にしない。
+  未確認のhistoryは`unknown_history`として既知の成功区間と分離する。
+- `archive_sync`はpage cursorを永続化し、型間を公平に進める。
+  403/型別APIエラーは他型を続行。429/AuthError/保存失敗では停止する。
+  API予算には401 retryを含む物理sendを数える。paceはclient責務。
+- typed rowsの格納先は`Metric.storage_tables`で決め、`full_history`から再判定しない。
+  `replace_chunk()`はtyped rows・旧raw・watermarkをchunk単位で原子的に置換する。
+  DELETEは実際に取得した`covered_start`/`covered_end`だけに限定する。
+  aligned chunk keyまでDELETEを広げると未取得の既存行を消すので禁止。
+- `sync_state`のwatermarkは実際に取得した日付を記録する。
+  history floorを広げる際は以前クリップされた境界chunkの欠落を修復する。
+  原本に5年/30日の期限はない。期間下限が証明できない場合はその状態を明示する。
+- `web_analytics`は全履歴でbaseline/移動平均を計算してから表示期間を切り出す。
+  相関は期間ごとに計算、欠損を0にせず、civil timeにUTC offsetを補わない。
+- `web_export`は日内の全点を保持し、全file成功後にmetaを原子的に切り替える。
+  `docs/web-data-contract.md`がPython/TypeScriptの共有契約。
+- `web/`は静的Next.js、API route・認可・同期はCLI側。間引きは描画時のみで、
+  ズーム時に元の点へ戻る。7画面の解析・エラー・空データ表示を維持する。
+- `.env`、`data/`、`web/public/data/`、`web/out/`はprivateかつgitignored。
+  token、実データ、probe、生成JSONをcommitしない。配信は127.0.0.1。
+- Pythonはworkspace rootで`uv run --no-sync pytest health/tests -q`。
+  `web/`でtypecheck/lint/test/build。自動テストはfake HTTPと架空fixtureのみ。
+  UI用DBは`seed_demo.py --db-path <temporary path>`で生成し、実dataを上書きしない。
