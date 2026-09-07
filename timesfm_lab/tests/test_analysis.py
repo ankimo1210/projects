@@ -22,19 +22,21 @@ def _frame(records):
 
 
 def _full_window(series, cutoff, values, exposure="held out"):
-    out = []
-    for model, v in values.items():
-        out.append((series, cutoff, model, v, exposure))
-    return out
+    """Build one window's rows, filling any baseline the caller did not name.
+
+    The filler keeps these fixtures valid as baselines are added: an unnamed
+    baseline gets a deliberately terrible score so it never becomes the winner
+    and never changes what the test is about.
+    """
+    filled = {b: 99.0 for b in BASELINE_NAMES} | values
+    return [(series, cutoff, model, v, exposure) for model, v in filled.items()]
 
 
 def test_selector_carries_the_previous_windows_winner_forward():
     rows = []
     # window 1: fourier_ols is best. window 2: the selector must pick fourier_ols.
-    rows += _full_window("s", 100, {"naive": 5.0, "seasonal_naive": 4.0, "theta": 3.0,
-                                    "ets": 2.0, "fourier_ols": 1.0, MODEL_KEY: 9.0})
-    rows += _full_window("s", 200, {"naive": 9.0, "seasonal_naive": 8.0, "theta": 7.0,
-                                    "ets": 6.0, "fourier_ols": 5.0, MODEL_KEY: 1.0})
+    rows += _full_window("s", 100, {"fourier_ols": 1.0, "ets": 2.0, MODEL_KEY: 9.0})
+    rows += _full_window("s", 200, {"fourier_ols": 5.0, "ets": 6.0, MODEL_KEY: 1.0})
     sel = selector_table(_frame(rows))
     assert len(sel) == 1  # the first window has no predecessor
     assert sel.iloc[0].picked == "fourier_ols"
@@ -59,8 +61,7 @@ def test_selector_skill_separates_the_oracle_from_what_a_selector_can_reach():
     rows = []
     for c in range(1, 9):
         lo, hi = (1.0, 3.0) if c % 2 else (3.0, 1.0)
-        rows += _full_window("s", 100 * c, {"naive": 4.0, "seasonal_naive": 4.0, "theta": 4.0,
-                                            "ets": lo, "fourier_ols": hi, MODEL_KEY: 2.0})
+        rows += _full_window("s", 100 * c, {"ets": lo, "fourier_ols": hi, MODEL_KEY: 2.0})
     sk = selector_skill(selector_table(_frame(rows)))
     assert sk["oracle_mean"] == pytest.approx(1.0)
     assert sk["walkforward_mean"] == pytest.approx(3.0)
@@ -73,9 +74,8 @@ def test_selector_skill_separates_the_oracle_from_what_a_selector_can_reach():
 def test_head_to_head_win_rate_and_pairing():
     rows = []
     for c in range(1, 11):
-        rows += _full_window("s", 100 * c, {"naive": 2.0, "seasonal_naive": 2.0, "theta": 2.0,
-                                            "ets": 2.0, "fourier_ols": 2.0,
-                                            MODEL_KEY: 1.0 if c <= 7 else 3.0})
+        rows += _full_window("s", 100 * c, {b: 2.0 for b in BASELINE_NAMES}
+                             | {MODEL_KEY: 1.0 if c <= 7 else 3.0})
     sel = selector_table(_frame(rows))
     h = head_to_head(sel, ["walkforward"]).iloc[0]
     # The first window of the series is dropped for want of a predecessor, so
@@ -88,11 +88,9 @@ def test_contamination_table_normalises_away_window_difficulty():
     # Two windows of very different absolute difficulty but identical *relative*
     # standing: the normalisation must make them equal.
     rows = []
-    rows += _full_window("s", 100, {"naive": 10.0, "seasonal_naive": 10.0, "theta": 10.0,
-                                    "ets": 10.0, "fourier_ols": 10.0, MODEL_KEY: 5.0},
+    rows += _full_window("s", 100, {b: 10.0 for b in BASELINE_NAMES} | {MODEL_KEY: 5.0},
                          exposure="in corpus")
-    rows += _full_window("s", 200, {"naive": 1.0, "seasonal_naive": 1.0, "theta": 1.0,
-                                    "ets": 1.0, "fourier_ols": 1.0, MODEL_KEY: 0.5},
+    rows += _full_window("s", 200, {b: 1.0 for b in BASELINE_NAMES} | {MODEL_KEY: 0.5},
                          exposure="past corpus")
     tab = contamination_table(_frame(rows))
     t = tab[tab.model == MODEL_KEY]

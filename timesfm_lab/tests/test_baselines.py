@@ -49,3 +49,29 @@ def test_baselines_degrade_gracefully_on_a_near_constant_series():
         fc = fn(x, 12, 24)
         assert np.isfinite(fc.point).all(), name
         assert np.isfinite(fc.quantiles).all(), name
+
+
+def test_har_recovers_a_persistent_level_better_than_a_random_walk():
+    """HAR exists to exploit clustering; if it cannot, the finance section is void."""
+    from timesfm_lab.baselines import har, naive
+    from timesfm_lab.metrics import mae
+
+    rng = np.random.default_rng(11)
+    n, h = 600, 20
+    # slow-moving latent level plus noise: exactly the shape HAR's lag averages target
+    level = np.cumsum(rng.normal(0, 0.02, n + h))
+    x = level + rng.normal(0, 0.3, n + h)
+    ctx, actual = x[:n], x[n:]
+    assert mae(actual, har(ctx, h, 5).point) < mae(actual, naive(ctx, h, 5).point)
+
+
+def test_ewma_picks_a_smoother_lambda_on_a_noisier_series():
+    from timesfm_lab.baselines import ewma
+
+    rng = np.random.default_rng(12)
+    n = 400
+    level = np.cumsum(rng.normal(0, 0.05, n))
+    quiet = ewma(level + rng.normal(0, 0.05, n), 10, 1)
+    noisy = ewma(level + rng.normal(0, 2.0, n), 10, 1)
+    # a noisier series must get a wider band, not a narrower one
+    assert np.ptp(noisy.quantiles[0]) > np.ptp(quiet.quantiles[0])

@@ -196,12 +196,108 @@ def fourier_ols(context: np.ndarray, horizon: int, season: int) -> Forecast:
     return Forecast(point, _gaussian_fan(point, sigma))
 
 
+def _har_features(buf: np.ndarray, end: int) -> np.ndarray:
+    """[1, last, mean of last 5, mean of last 22] over ``buf[:end]``."""
+    return np.array(
+        [1.0, buf[end - 1], buf[end - 5 : end].mean(), buf[end - 22 : end].mean()]
+    )
+
+
+def _har_roll(buf: np.ndarray, start: int, steps: int, beta: np.ndarray,
+              shocks: np.ndarray | None) -> np.ndarray:
+    """Iterate the HAR recursion forward in a preallocated buffer."""
+    out = np.empty(steps)
+    for h in range(steps):
+        v = float(_har_features(buf, start + h) @ beta)
+        if shocks is not None:
+            v += shocks[h]
+        buf[start + h] = v
+        out[h] = v
+    return out
+
+
+def har(context: np.ndarray, horizon: int, season: int) -> Forecast:
+    """Corsi's HAR: regress on the last value and its 5- and 22-period averages.
+
+    The standard bar for realised volatility, and the one a comparison that skips
+    it will quietly lose to on any clustered series. Iterated forward for
+    multi-step, with the band from bootstrapping one-step residuals through the
+    same recursion, so the uncertainty compounds the way the point forecast does.
+    """
+    x = np.asarray(context, float)
+    if len(x) < 22 + 60:
+        fb = seasonal_naive(context, horizon, season)
+        return Forecast(fb.point, fb.quantiles, fallback="har->snaive (context too short)")
+
+    n = len(x)
+    xd = np.stack([_har_features(x, i) for i in range(22, n)])
+    yd = x[22:]
+    try:
+        beta, *_ = np.linalg.lstsq(xd, yd, rcond=None)
+        resid = yd - xd @ beta
+        buf = np.empty(n + horizon)
+        buf[:n] = x
+        point = _har_roll(buf, n, horizon, beta, None)
+        if not np.isfinite(point).all():
+            raise ValueError("non-finite HAR forecast")
+    except Exception as exc:
+        fb = seasonal_naive(context, horizon, season)
+        return Forecast(fb.point, fb.quantiles, fallback=f"har->snaive ({type(exc).__name__})")
+
+    rng = np.random.default_rng(_RNG_SEED)
+    r = resid[np.isfinite(resid)]
+    n_paths = 300
+    draws = rng.choice(r, size=(n_paths, horizon), replace=True)
+    paths = np.empty((n_paths, horizon))
+    buf = np.empty(n + horizon)
+    for b in range(n_paths):
+        buf[:n] = x
+        paths[b] = _har_roll(buf, n, horizon, beta, draws[b])
+    if not np.isfinite(paths).all():
+        # An explosive fitted recursion can blow up under shocks even when the
+        # point path is finite; fall back to a flat band rather than emit inf.
+        return Forecast(point, _empirical_fan(point, np.arange(1, horizon + 1), r),
+                        fallback="har fan->empirical (explosive paths)")
+    fan = _sort_fan(np.quantile(paths, QUANTILE_LEVELS, axis=0).T)
+    return Forecast(point, fan)
+
+
+def ewma(context: np.ndarray, horizon: int, season: int) -> Forecast:
+    """Flat forecast from an exponentially weighted mean, with lambda fit in-sample.
+
+    Deliberately the simplest adaptive-level method there is. It is here to catch
+    the case where a series has no exploitable structure beyond "recent values
+    matter more" — which is most of finance.
+    """
+    x = np.asarray(context, float)
+
+    def run(lam: float) -> tuple[float, np.ndarray]:
+        m = x[0]
+        err = np.empty(len(x) - 1)
+        for i, v in enumerate(x[1:]):
+            err[i] = v - m
+            m = lam * m + (1 - lam) * v
+        return m, err
+
+    best_mse, best = np.inf, run(0.94)
+    for lam in (0.80, 0.90, 0.94, 0.97, 0.99):
+        m, err = run(lam)
+        mse = float(np.mean(np.square(err)))
+        if mse < best_mse:
+            best_mse, best = mse, (m, err)
+    m, resid = best
+    point = np.repeat(m, horizon)
+    return Forecast(point, _empirical_fan(point, np.arange(1, horizon + 1), resid))
+
+
 BASELINES: dict[str, Callable[[np.ndarray, int, int], Forecast]] = {
     "naive": naive,
     "seasonal_naive": seasonal_naive,
     "theta": theta,
     "ets": ets,
     "fourier_ols": fourier_ols,
+    "har": har,
+    "ewma": ewma,
 }
 
 DISPLAY_NAMES = {
@@ -210,5 +306,7 @@ DISPLAY_NAMES = {
     "theta": "Theta",
     "ets": "ETS (damped Holt-Winters)",
     "fourier_ols": "Fourier + trend OLS",
+    "har": "HAR (Corsi)",
+    "ewma": "EWMA",
     "timesfm_3.0": "TimesFM 3.0 (zero-shot)",
 }

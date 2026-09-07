@@ -9,17 +9,18 @@ where they can be shown side by side, not baked into the run.
 from __future__ import annotations
 
 import time
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 from . import metrics
 from .baselines import BASELINES, QUANTILE_LEVELS, Forecast
-from .datasets import SPECS, DatasetSpec, Window, build_windows
+from .datasets import ALL_SPECS, DatasetSpec, Window, build_windows
+from .paths import RESULTS_DIR  # noqa: F401  (re-exported for scripts)
 from .tfm import MODEL_KEY, TimesFMRunner
 
-RESULTS_DIR = Path(__file__).resolve().parents[2] / "reports"
+# The known-process optimum. Not a forecaster — a ceiling.
+ORACLE_KEY = "process_optimum"
 
 
 def score(window: Window, fc: Forecast) -> dict[str, float]:
@@ -116,6 +117,15 @@ def run_dataset(
             record(name, w, fn(w.context, spec.horizon, spec.season))
         timings[name] = time.time() - t0
 
+    # Where the generating process is known, its conditional distribution is
+    # the ceiling — scored like any other model so the tables can show how much
+    # of the achievable signal each forecaster actually got.
+    if windows and windows[0].oracle_point is not None:
+        t0 = time.time()
+        for w in windows:
+            record(ORACLE_KEY, w, Forecast(w.oracle_point, w.oracle_quantiles))
+        timings[ORACLE_KEY] = time.time() - t0
+
     if runner is not None:
         forecasts, elapsed = runner.predict([w.context for w in windows], spec.horizon)
         timings[MODEL_KEY] = elapsed
@@ -133,7 +143,7 @@ def run_all(
     use_timesfm: bool = True,
     device: str = "cuda",
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    specs = [s for s in SPECS if dataset_keys is None or s.key in dataset_keys]
+    specs = [s for s in ALL_SPECS if dataset_keys is None or s.key in dataset_keys]
     runner = TimesFMRunner(device=device) if use_timesfm else None
     if runner is not None:
         print(f"TimesFM loaded in {runner.load_seconds:.1f}s")
@@ -203,7 +213,7 @@ def attach_contamination(df: pd.DataFrame, seed: int = 0) -> pd.DataFrame:
         return df
 
     frac: dict[tuple[str, str, int], float] = {}
-    for spec in SPECS:
+    for spec in ALL_SPECS:
         if spec.key not in index:
             continue
         for w in build_windows(spec, seed=seed):

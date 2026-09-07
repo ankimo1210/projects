@@ -5,227 +5,257 @@
 <style>
 /*TOKENS*/
 /* --- report-local additions --- */
-.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;
-  letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;border-radius:var(--r-chip);
+.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:var(--r-chip);
   border:1px solid var(--rule-2);color:var(--ink-3);white-space:nowrap}
-.tag.on{color:var(--accent);border-color:var(--accent-soft);background:var(--accent-wash)}
-.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:34px 0 0}
+.tag.a{color:var(--accent);border-color:var(--accent-soft);background:var(--accent-wash)}
+.tag.c{color:var(--series-2);border-color:var(--series-2)}
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:34px 0 0}
 .verdict>div{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r-card);padding:18px 20px 20px}
 .verdict .q{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
-.verdict .a{font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.4;margin:10px 0 0;display:block}
+.verdict .a{font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.4;margin:10px 0 0;display:block}
 .verdict .a.yes{color:var(--accent)}
 .verdict .a.no{color:var(--series-2)}
-.verdict .why{font-size:13.5px;color:var(--ink-2);margin:9px 0 0;line-height:1.75}
+.verdict .why{font-size:13px;color:var(--ink-2);margin:9px 0 0;line-height:1.75}
 td.win{color:var(--accent);font-weight:700}
-.small{font-size:13.5px;color:var(--ink-3);line-height:1.75;margin-top:10px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-top:18px}
-.grid2 figure{margin:0}
+td.dim{color:var(--ink-3)}
+.small{font-size:13.5px;color:var(--ink-3);line-height:1.75;margin-top:10px;max-width:var(--measure)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px;margin-top:18px}
+.note.fix{border-left-color:var(--series-2)}
+.note.fix .lab{color:var(--series-2)}
 </style>
 
 <div class="wrap">
 
 <header class="mast">
   <div class="eyebrow">
-    <span>TimesFM 3.0.1 zero-shot</span><span>公開ベンチ7系統</span><span>1,078 windows</span>
-    <span>2026-09-06</span><b>timesfm_lab</b>
+    <span>TimesFM 3.0.1 zero-shot</span><span>18 データセット・4 層</span><span>2,362 windows</span>
+    <span>改訂 2026-09-07</span><b>timesfm_lab</b>
   </div>
-  <h1>基盤モデルは、本当に古典手法に勝ったのか<span class="sub">Google TimesFM 3.0 を、こちらが有利になるよう調整した5つの古典ベースラインと、ローリング原点バックテストで正面から比較する</span></h1>
-  <p class="lede">結論は三段階に分かれる。<strong>単体の古典手法には、どれ相手でも勝つ</strong>（勝率 71.5〜79.3%、いずれも p &lt; 1e-40）。しかし<strong>窓ごとに5手法の最良を選ぶ「オラクル」には負ける</strong>（平均 MASE 1.065 対 0.899）。そしてそのオラクルは<strong>実際には到達できない</strong> — 過去の勝者を引き継ぐ実装可能な選択器は MASE 1.275 までしか届かず、TimesFM はその差の 56% を埋める。</p>
-  <p class="lede">加えて、当初立てた<strong>「学習データ汚染で勝っているのでは」という仮説は棄却された</strong>。7系統のうち2つ（traffic・weather）が TimesFM の学習コーパスにバイト単位で含まれていることを実測で確認したが、コーパス内の窓とコーパス外の窓で相対誤差に差はなかった（p = 1.00 / 0.54）。</p>
+  <h1>見たことがあるデータと、<br>絶対に見ていないデータ<span class="sub">同じモデル・同じ手続きで、学習コーパスとの関係だけを変えて TimesFM 3.0 を測り直す</span></h1>
+  <p class="lede">初版で「学習データ汚染の仮説は棄却された」と書いた。<strong>これは誤りだった</strong>ので訂正する。当時の検定は、汚染が効くとしたら効くはずの経路に対して構造的に盲目だった。汚染を切り分けるために、<strong>絶対に学習され得ないデータを2種類</strong>用意して測り直した — 既知の生成過程から作った合成系列と、2026年の市場データである。</p>
+  <p class="lede">結果は<strong>はっきり勾配になった</strong>。実装可能な古典手法の選択器を相手にしたとき、TimesFM の優位は<strong>学習済みと確認できたデータで +36.3%、構造的に未学習のデータで +7〜9%</strong>。優位そのものは本物だが、公開ベンチだけを見て得られる数字の 4分の1 である。</p>
+  <p class="lede">合成データはもう一つ別のことを教える。真の生成過程が分かっているので<strong>到達可能な誤差の下限が計算できる</strong>。下限が正の値を取る7過程のうち6つで、TimesFM はその <strong>+0.7〜3.4%</strong> まで届く。届かない2つ — 水準ジャンプと決定論的カオス — の外し方が、それぞれ別のことを教える。</p>
 
   <div class="strip">
-    <div><span class="k">平均 MASE</span><span class="v a">1.029</span><span class="n">6モデル中1位。最良の単体ベースライン（Fourier+trend OLS）は 1.335</span></div>
-    <div><span class="k">対 実装可能な選択器</span><span class="v a">67.2%</span><span class="n">窓ごとの勝率。n = 918、Wilcoxon p = 8e-37</span></div>
-    <div><span class="k">対 オラクル選択器</span><span class="v b">44.2%</span><span class="n">窓ごとの勝率。負けている。ただしこの相手は事前には選べない</span></div>
-    <div><span class="k">80% 区間の被覆</span><span class="v b">0.778</span><span class="n">7系統すべてで名目 0.80 を下回る。点予測の強さと裏腹</span></div>
+    <div><span class="k">学習済みデータでの優位</span><span class="v a">+36.3<small style="font-size:20px">%</small></span><span class="n">対 実装可能な選択器。480 窓、勝率 75.8%</span></div>
+    <div><span class="k">未学習データでの優位</span><span class="v b">+7〜9<small style="font-size:20px">%</small></span><span class="n">同じ相手。合成 +7.2% / 金融2026 +8.9% / 一覧に無い +7.4%</span></div>
+    <div><span class="k">理論限界からの距離</span><span class="v a">+0.7〜3.4<small style="font-size:20px">%</small></span><span class="n">下限が正の7過程のうち6つ。到達可能な精度にほぼ届いている</span></div>
+    <div><span class="k">決定論的カオスで</span><span class="v b">0.565</span><span class="n">理論限界は誤差ちょうど 0。古典手法との差は 0.7% しかない</span></div>
   </div>
 </header>
 
 <section>
-  <div class="head"><span class="step">01</span><h2>何を、どういう条件で測ったか</h2></div>
+  <div class="head"><span class="step">01</span><h2>4つの層に分けて測る</h2></div>
   <div class="col">
-    <p>比較対象は Google Research の <code>TimesFM 3.0</code>（2026年8月公開、PyTorch チェックポイント <code>google/timesfm-3.0-pytorch</code>）を<em>ゼロショット</em>で使ったもの。ファインチューニングも、系列ごとの調整も一切していない。推論フラグは公式評価器の既定値に <code>use_symmetric_averaging=False</code> を合わせた、TimesFM 側が自分のベンチマーク数値を出すときの設定をそのまま使っている。設定ミスを負けの言い訳にできないようにするためである。</p>
-    <p>ベースラインは<strong>意図的に強くした</strong>。基盤モデルの評価でよく相手にされる「直前値の繰り返し」だけでは何も分からないので、季節ナイーブ・Theta・減衰トレンド Holt-Winters・フーリエ項回帰の4つを加え、<em>5手法すべてに分位点まで出させた</em>。とくに季節ナイーブには経験残差ブートストラップによる予測区間を付けてある。これは基盤モデルの論文がしばしば省く、確率予測として本当に手強い相手である。</p>
-    <p>評価はローリング原点バックテスト。各系列の末尾から、地平線ぶんずつずらした重ならない窓を切る。窓が重なると誤差が系列相関して、有意差が実際より大きく見えてしまう。指標のスケール（MASE の分母）は<strong>文脈側だけ</strong>から計算する — 検証区間を見て正規化すると答えが分母に漏れる。</p>
+    <p>データセットを、<em>「TimesFM がこれを学習していない」という主張の強さ</em>で4層に並べた。層のあいだで結果が食い違うなら、その食い違いの大きさこそが知りたかったものである。</p>
+    <ul>
+      <li><strong>層A — 学習済みと実証したもの。</strong>コーパスから実データを落として値を突き合わせ、一致を確認した2系統。</li>
+      <li><strong>層B — コーパスの一覧に無いもの。</strong>弱い主張で、ファイル一覧が完全でモデルカードが正確であることに依存する。</li>
+      <li><strong>層C（合成） — 存在し得ないもの。</strong>乱数種から今回生成した8過程。どのクローラも到達しようがない。</li>
+      <li><strong>層C（金融） — カットオフ後のもの。</strong>予測対象が全て 2026年3月〜9月の市場データ。カードが挙げる最も遅いカットオフ（2023年11月）より後である。</li>
+    </ul>
+    <p>ベースラインは7手法。初版の5つ（ナイーブ・季節ナイーブ・Theta・減衰 Holt-Winters・フーリエ回帰）に、金融のために <strong>HAR</strong>（Corsi の実現ボラティリティ標準手法）と <strong>EWMA</strong> を足した。全手法が点予測と分位点の両方を出す。</p>
   </div>
 
   <div class="tw"><table>
-    <caption>データセットと窓の設計</caption>
-    <thead><tr><th>データセット</th><th>頻度</th><th>季節 m</th><th>文脈長</th><th>地平線</th><th>系列</th><th>窓</th><th>学習コーパス</th></tr></thead>
+    <caption>18 データセット・2,362 窓</caption>
+    <thead><tr><th>データセット</th><th>層</th><th>頻度</th><th>季節 m</th><th>文脈長</th><th>地平線</th><th>系列</th><th>窓</th></tr></thead>
     <tbody id="tblSpecs"></tbody>
   </table></div>
-  <p class="small">出典は Monash Time Series Forecasting Repository（Zenodo）と ETDataset。合成データは使っていない。難易度が偏らないよう、季節性をナイーブ法が利用できる系（electricity・traffic・solar）と、週次周期がまるで使えない系（weather・河川流量）を意図的に混ぜてある。</p>
+  <p class="small">公開ベンチは Monash TSF Repository と ETDataset。金融は yfinance の日次 OHLCV 18銘柄（米大型株・東証・暗号資産）から、出来高・Parkinson レンジボラ・対数収益率の3系列を作った。窓の切り方は全層で共通で、地平線ぶんずつずらして重ねない。</p>
+</section>
 
-  <div class="note">
-    <span class="lab">ライセンス上の注意</span>
-    <p>TimesFM の<strong>ソースコードは Apache-2.0 だが、3.0 の学習済み重みは <code>timesfm-non-commercial-license-v1.0</code></strong> で、商用・本番利用は許諾されていない。商用の可能性を残すなら Apache-2.0 のままの 2.5 系（<code>google/timesfm-2.5-200m-pytorch</code>）を使うことになる。本ベンチは個人研究としての評価であり、この制約の範囲内にある。</p>
+<svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
+
+<section>
+  <div class="head"><span class="step">02</span><h2>訂正：汚染について、前回は言い過ぎた</h2></div>
+  <div class="col">
+    <p>確認できている事実は変わらない。TimesFM 3.0 のモデルカードが学習源に挙げる <code>GiftEvalPretrain</code> の中身を落として突き合わせると、<strong>Monash の <code>traffic_hourly</code> と <code>weather</code> がバイト単位で同一に入っている</strong>。traffic は862系列、weather は3,010系列が一致し、コーパス側は末尾のテスト区間（それぞれ168点＝7日、30点）だけを削った完全なコピーである。</p>
+    <p>初版はここから、窓を「予測対象がコーパスに入っている／入っていない」で二分して比べ、差が出なかったこと（p = 1.00 / 0.54）をもって汚染仮説を棄却した。<strong>この推論が誤りだった。</strong>いま文脈側の被覆を測ると、こうなっている。</p>
+    <div class="tw"><table>
+      <caption>評価窓のうち、学習コーパスに含まれる割合</caption>
+      <thead><tr><th>データセット</th><th>文脈（平均）</th><th>文脈（最小）</th><th>予測対象（平均）</th></tr></thead>
+      <tbody>
+        <tr><td>traffic_hourly</td><td class="num">96.5%</td><td class="num">88.3%</td><td class="num">41.7%</td></tr>
+        <tr><td>weather_daily</td><td class="num">100.0%</td><td class="num">100.0%</td><td class="num">83.3%</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>どちらの群も、条件付けに使う窓はほぼ丸ごと学習済みだった。</strong>あの検定が検出できるのは「答えそのものを覚えていたか」だけで、「このセンサーの週次プロファイルを事前学習で知っているか」には効かない。効くとしたら後者なので、否定的結果は棄却の根拠にならない。</p>
+    <p>そこで層をまたいで比べる。相手を4通り取り替えても、<strong>層Aが最上位である点は変わらない</strong>（層B と層C のあいだの順序は相手によって入れ替わるので、勾配として読めるのは A とそれ以外の差である）。</p>
+  </div>
+
+  <figure>
+    <p class="figtitle">学習コーパスとの関係だけを変えると、優位はどう変わるか</p>
+    <p class="figsub">TimesFM の改善率（%）。相手を4通り取り替えても層Aが最上位である点は変わらない。窓ごとに比を取った中央値</p>
+    <div class="legend">
+      <span><i class="sq" style="background:var(--series-1)"></i>対 ウォークフォワード選択器（実装可能）</span>
+      <span><i class="sq" style="background:var(--series-2)"></i>対 季節ナイーブ（固定）</span>
+      <span><i class="sq" style="background:var(--s4)"></i>対 ベースライン中央値</span>
+    </div>
+    <div class="scroll"><svg id="fig1" viewBox="0 0 760 340" role="img" aria-label="4層それぞれでのTimesFMの改善率。学習済み層だけが突出して高い"></svg></div>
+    <figcaption><b>Fig 1</b>学習済みと確認できた層だけが、どの相手に対しても突出する。層B と層C の相対順序は相手によって入れ替わるので、読めるのは「A とそれ以外」の差だけである。実装可能な選択器を相手にすると <em>+36.3% 対 +7〜9%</em>、およそ4倍の開きがある。ただしこれは<strong>決定的な証拠ではない</strong> — 層は同時に領域も違っており、「traffic と weather はたまたま基盤モデルの伸びしろが最大の性格を持つ系だった」という説明も同じデータで成立する。言えるのは、初版のようにどちらか一方を棄却済みとして扱ってはいけない、ということまでである。</figcaption>
+  </figure>
+
+  <div class="note fix">
+    <span class="lab">初版からの変更</span>
+    <p>初版の結論表にあった「<strong>勝ちは学習データの記憶か → 説明できない（棄却）</strong>」は撤回する。正しくは「<strong>予測対象そのものの記憶は否定できたが、系列に対する馴染みは否定できていない。層をまたぐ比較はむしろ汚染が効いていることを示唆する</strong>」である。数値そのもの（p = 1.00 / 0.54）は再計算しても変わらない。誤っていたのは、その数値から引き出した結論の範囲である。</p>
   </div>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">02</span><h2>まず疑うべきは、記憶していただけという可能性</h2></div>
+  <div class="head"><span class="step">03</span><h2>合成データ：到達可能な精度と、そこからの距離</h2></div>
   <div class="col">
-    <p>TimesFM 3.0 のモデルカードは、学習データに <code>GiftEvalPretrain</code> を含むと明記している。そこで中身を実際に開いた。<strong>Monash の <code>traffic_hourly</code> と <code>weather</code> が、同じ名前でそこに入っていた</strong>。名前が同じだけかもしれないので、値を突き合わせた。</p>
-    <p>結果は<strong>バイト単位で同一</strong>だった。traffic は862系列すべてが一致し（検査25系列すべて <code>allclose</code>）、系列長は Monash の 17,544 に対しコーパス側が 17,376 — <em>ちょうど 168 点（= 7日ぶん）だけ短い</em>。weather は3,010系列が一致し、各系列がちょうど30点短い。つまりコーパスは「末尾のテスト区間だけ削った完全なコピー」を持っている。</p>
-    <p>ここから、私の評価窓は3種類に分類できる。<strong>コーパス内</strong>（検証対象そのものが学習データに存在する）、<strong>コーパス外</strong>（末尾の、削られた区間に落ちる）、そして<strong>そもそもコーパスに無いデータセット</strong>（electricity・ETTh1/h2・solar・河川流量の5系統。これらは GIFT-Eval のテスト側にあるため GiftEvalPretrain から除外されている）。TimesFM 3.0 のカードは「fev-bench と重なるものを除外」とも書いているが、fev-bench のタスク一覧に Monash の traffic と weather は無いので、この除外では落ちない。</p>
-    <p>汚染仮説が正しければ、コーパス内の窓で相対誤差が小さいはずである。<strong>そうならなかった。</strong></p>
+    <p>既知の関数から系列を作ると、二つのことが同時に手に入る。ひとつは<strong>汚染が原理的に不可能</strong>なこと。もうひとつは、真の生成過程が分かっているので<strong>予測誤差の下限が計算できる</strong>ことである。ある時点までの情報を与えられたとき、未来の条件付き分布は既知だから、そのシミュレーションから最適な点予測（絶対誤差を最小化するので<em>条件付き中央値</em>）と最適な分位点が出る。この下限に対する距離が、「ベースラインより何%良い」よりずっと意味のある量になる。</p>
+    <p>8過程を用意した。安定した周期、周期＋トレンド、AR(1)、ランダムウォーク、水準ジャンプ、決定論的カオス、周期的な分散、間欠需要。下限が正の値を取る7過程のうち<strong>6つで TimesFM は理論限界の +0.7〜3.4% に入る</strong>。残る2つの外し方が対照的である。</p>
   </div>
 
   <figure>
-    <p class="figtitle">学習コーパスに入っている窓で、TimesFM は得をしているか</p>
-    <p class="figsub">相対誤差の中央値（同じ窓での5ベースラインの中央値を 1.00 とする）。低いほど良い。窓の難易度差を除くための正規化</p>
+    <p class="figtitle">理論限界・TimesFM・最良の古典手法</p>
+    <p class="figsub">平均 MASE。左端の縦線が到達可能な下限。低いほど良い</p>
     <div class="legend">
-      <span><i class="sq" style="background:var(--series-1)"></i>コーパス内（学習時に見ている）</span>
-      <span><i class="sq" style="background:var(--series-2)"></i>コーパス外（末尾。削られていて見ていない）</span>
+      <span><i class="sq" style="background:var(--ink-3)"></i>理論限界（過程が既知）</span>
+      <span><i class="sq" style="background:var(--series-1)"></i>TimesFM 3.0</span>
+      <span><i class="sq" style="background:var(--series-2)"></i>最良の古典手法</span>
     </div>
-    <div class="scroll"><svg id="fig2" viewBox="0 0 760 300" role="img" aria-label="traffic と weather について、学習コーパス内の窓とコーパス外の窓での TimesFM の相対誤差。差はない"></svg></div>
-    <figcaption><b>Fig 1</b>差は出なかった。traffic ではむしろコーパス<em>外</em>の方が良く（中央値 0.527 対 0.716、片側 Mann-Whitney p = 1.000）、weather はほぼ同値（0.713 対 0.715、p = 0.535）。汚染で説明できる勝ちではない。ただしコーパス外の窓は「より新しい窓」でもあるため、時点の交絡は完全には切れていない。</figcaption>
+    <div class="scroll"><svg id="fig2" viewBox="0 0 760 400" role="img" aria-label="8つの合成過程での理論限界、TimesFM、最良ベースラインの比較"></svg></div>
+    <figcaption><b>Fig 2</b>間欠需要が最も鮮やかで、TimesFM は下限の <em>+0.7%</em>、最良の古典手法は <em>+52.1%</em> — ここでは基盤モデルが問題を実質的に解いている。逆に水準ジャンプでは <em>+12.0%</em> と大きく離れるが、最良の古典手法も +11.9% で並んでおり、これは基盤モデル固有の弱さではなく<strong>問題そのものが難しい</strong>ケースである。ランダムウォークでは TimesFM が +3.4%、最良の古典手法（＝直前値）はちょうど下限に乗る — 無い構造をわずかに読み取っている。</figcaption>
   </figure>
 
   <div class="note">
-    <span class="lab">この否定的結果の読み方</span>
-    <p>これは「TimesFM に汚染が無い」ことの証明ではない。<strong>示せたのは、traffic と weather でのこのモデルの優位が、学習データに答えが入っていたことでは説明できない、ということだけ</strong>である。逆に言えば、汚染が無い5系統でも同じ優位が出るかどうかは別の問いで、それは次の節で扱う。</p>
+    <span class="lab">決定論的カオスは誰も学習できない</span>
+    <p>ロジスティック写像 <code>z ← 3.9 z (1−z)</code> はノイズを一切含まないので、<strong>理論限界は誤差ちょうど 0</strong> である。512点の観測からこの再帰を復元できれば完全に予測できる。TimesFM の MASE は <strong>0.565</strong>、最良の古典手法は <strong>0.569</strong> — <em>両者の差は 0.7%</em> で、要するに誰も写像を学習していない。基盤モデルは滑らかな周期や平均回帰には強いが、短い決定論的再帰の同定はしていない。到達可能な精度が 100% ある場所で、誰も 1% も取れていない。</p>
   </div>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">03</span><h2>「最良の古典手法」という相手は、実在しない</h2></div>
+  <div class="head"><span class="step">04</span><h2>金融：カレンダーが保証する未学習データ</h2></div>
   <div class="col">
-    <p>単体のベースラインを相手にすると、TimesFM は全戦全勝する。窓ごとの勝率は 71.5%（対 Theta）から 79.3%（対ナイーブ）で、いずれも有意である。ここで話を終えれば「基盤モデルの圧勝」という結論になる。</p>
-    <p>ところが、<strong>窓ごとに5手法の最小値を取る</strong>と数字が反転する。この「オラクル」は平均 MASE 0.899 で、TimesFM の 1.065 より良い（勝率 44.2%、p = 2.2e-4）。基盤モデルの評価でこの比較を出せば、負けたことになる。</p>
-    <p>しかしこれは<em>手法ではなく、ノイズの下界</em>である。5つのばらつく推定値の窓ごと最小値は、定義上どんな単体手法よりも良くなる。問題は、その選択が事前にできるかどうかだ。そこで、<strong>直前の窓で勝った手法を今回に引き継ぐ</strong>という、実際に運用できる選択器を組んだ。</p>
-    <p>この選択器が到達したのは MASE 1.275 で、<strong>オラクル（0.899）にまるで届いていない</strong>。選択の的中率は 32.5%（当てずっぽうは 20%）— 情報はあるが、ほとんど無い。TimesFM の 1.065 は、この「実際に届く 1.275」と「届かない 0.899」の間の <em>56%</em> を埋めた位置にある。</p>
+    <p>市場データを使う理由は、金融が得意分野だからではなく、<strong>未学習であることを日付が保証する</strong>からである。評価窓の予測対象はすべて 2026年3月13日〜9月7日にあり、文脈の開始でさえ最も古くて 2024年2月で、カードが挙げるどのカットオフよりも後になる。</p>
+    <p>対象は予測可能性の異なる3系列。出来高（対数）は曜日周期があり素直に予測できる。レンジボラ（Parkinson 推定量）はクラスタリングし、これは HAR が作られた目的そのものである。対数収益率は<em>対照群</em>で、ここで大きく勝つ手法があったら手法より先に実装を疑うべき系列である。</p>
+    <p>結果は<strong>控えめな勝ち</strong>だった。TimesFM は3系列すべてで CRPS 1位だが、点予測で HAR を有意に上回るのは出来高だけである。</p>
   </div>
 
   <figure>
-    <p class="figtitle">平均 MASE：到達できる相手と、到達できない相手</p>
-    <p class="figsub">918 窓（各系列の最初の窓は選択器に前例が無いため除外）。低いほど良い。MASE = 1.0 は文脈内の季節ナイーブ1歩ぶんの誤差</p>
+    <p class="figtitle">金融3系列：TimesFM 対 HAR</p>
+    <p class="figsub">窓ごとにペアを取った勝率（縦線が 50% の互角ライン）と、平均 MASE</p>
     <div class="legend">
-      <span><i class="sq" style="background:var(--series-1)"></i>TimesFM 3.0</span>
-      <span><i class="sq" style="background:var(--series-2)"></i>実装可能な選択器 / 単体手法</span>
-      <span><i class="sq" style="background:var(--ink-3)"></i>オラクル（事前には選べない）</span>
+      <span><i class="sq" style="background:var(--series-1)"></i>TimesFM 3.0 の勝ち</span>
+      <span><i class="sq" style="background:var(--series-2)"></i>HAR の勝ち</span>
     </div>
-    <div class="scroll"><svg id="fig3" viewBox="0 0 760 320" role="img" aria-label="平均MASEの棒グラフ。オラクル0.899、TimesFM1.065、ウォークフォワード選択器1.275、単体ベースラインは1.37から2.18"></svg></div>
-    <figcaption><b>Fig 2</b>オラクルと実装可能な選択器の間に開いた 0.376 の隔たりが、このベンチで一番大きい数字である。「古典手法をちゃんと選べば基盤モデルは要らない」という主張は、この隔たりを無償で飛び越えられることを前提にしている。</figcaption>
+    <div class="scroll"><svg id="fig3" viewBox="0 0 760 300" role="img" aria-label="金融3系列でのTimesFM対HARの勝率。収益率ではHARが勝つ"></svg></div>
+    <figcaption><b>Fig 3</b>対数収益率では <em>HAR が勝っている</em>（TimesFM の勝率 43.5%、p = 0.33）。これは想定どおりで、日次収益率にはどちらも取り出せる構造がほとんど無い。レンジボラでも差は 5% 水準に届かない（勝率 58.3%、p = 0.098）。<strong>2026年の市場データで、TimesFM が実務標準の HAR を明確に上回るのは出来高だけ</strong>である。</figcaption>
   </figure>
 
   <div class="tw"><table>
-    <caption>TimesFM 3.0 の対戦成績（MASE、窓でペア、Wilcoxon 符号順位検定）</caption>
-    <thead><tr><th>相手</th><th>n</th><th>相手の平均</th><th>TimesFM</th><th>勝率</th><th>p 値</th></tr></thead>
-    <tbody id="tblH2H"></tbody>
+    <caption>金融3系列の平均 MASE と CRPS（太字は行内最良）</caption>
+    <thead><tr id="thFin"></tr></thead>
+    <tbody id="tblFin"></tbody>
   </table></div>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">04</span><h2>どこで勝ち、どこで負けるか</h2></div>
+  <div class="head"><span class="step">05</span><h2>「最良の古典手法」は、いまも実在しない</h2></div>
   <div class="col">
-    <p>平均に丸める前の地図を見ると、勝敗は系統ごとにはっきり分かれる。<strong>TimesFM が大きく勝つのは、周期が強いが単純な繰り返しではない系</strong>（traffic は選択器の 1.082 に対し 0.641、weather は 0.785 に対し 0.531）。<strong>差がほとんど無いのは ETTh1/h2 と河川流量</strong>。そして<strong>負けるのは solar</strong> である。</p>
-    <p>solar の負け方には理由がある。10分足の太陽光発電は、夜間は厳密にゼロ、日中は前日とほぼ同じ釣鐘型という、季節ナイーブにとって理想的な形をしている。地平線ごとの誤差を追うと、夜間（ステップ1〜43）は両者ともほぼゼロで差が無く、<em>日の出以降で TimesFM が一貫して上回る</em> — 日中の振幅を、前日をコピーするより上手くは当てられていない。</p>
+    <p>初版の中心的な指摘はそのまま残る。単体のベースラインを相手にすると TimesFM は全勝するが、<strong>窓ごとに全手法の最小値を取る「オラクル」</strong>には負ける。しかしオラクルは手法ではなく、ばらつく推定値を後知恵で選んだ<em>ノイズの下界</em>である。</p>
+    <p>今回、ベースラインを5手法から7手法に増やしたことで、この主張を直接検証できた。<strong>足した2つは平凡である</strong> — 公開ベンチ7系統での平均 MASE は HAR が 1.889、EWMA が 2.070 で、既存の5手法より悪い。もしオラクルが「良い手法を選ぶこと」を意味するなら、悪い候補を足しても改善しないはずである。ノイズの下界なら、候補が増えるだけで下がる。</p>
   </div>
 
   <figure>
-    <p class="figtitle">データセット別：TimesFM と、実装可能な選択器</p>
-    <p class="figsub">平均 MASE。線の左端と右端の距離が優劣の大きさ。左にあるほど良い</p>
+    <p class="figtitle">候補を5手法から7手法に増やすと何が動くか</p>
+    <p class="figsub">公開ベンチ7系統・918窓の平均 MASE。足した HAR と EWMA はどちらも既存手法より悪い</p>
     <div class="legend">
+      <span><i class="sq" style="background:var(--ink-3)"></i>オラクル（後知恵の最小値）</span>
       <span><i class="sq" style="background:var(--series-1)"></i>TimesFM 3.0</span>
       <span><i class="sq" style="background:var(--series-2)"></i>ウォークフォワード選択器</span>
     </div>
-    <div class="scroll"><svg id="fig4" viewBox="0 0 760 330" role="img" aria-label="データセット別のTimesFMとウォークフォワード選択器の平均MASEのダンベルチャート"></svg></div>
-    <figcaption><b>Fig 3</b>7系統中6系統で TimesFM が前に出るが、幅は一様ではない。solar だけは実質互角（1.300 対 1.361、勝率 51.2%）で、しかもこの系統ではオラクル（0.687）が両者を大きく引き離す — 窓によって最適手法が入れ替わる、選択の価値が最も高い系統である。</figcaption>
+    <div class="scroll"><svg id="fig4" viewBox="0 0 760 280" role="img" aria-label="候補を5から7に増やしたときのオラクル・選択器・TimesFMの平均MASEの変化"></svg></div>
+    <figcaption><b>Fig 4</b>予測どおりだった。悪い候補を2つ足しただけで<strong>オラクルは 0.899 → 0.887（−1.4%）に下がる</strong>のに、実装可能な選択器は 1.275 → 1.274（−0.1%）とほぼ動かない。オラクルの優位は手法の質ではなく、選べない情報を選んだことによる見かけの利得である。選択の的中率は 29.6%（偶然は 14.3%）で、情報はあるがほとんど無い。</figcaption>
   </figure>
 
   <figure>
-    <p class="figtitle">地平線に沿った誤差：勝ち方と負け方の形が違う</p>
-    <p class="figsub">文脈スケールで正規化した平均絶対誤差。横軸は予測ステップ</p>
+    <p class="figtitle">データセット別：TimesFM と、実装可能な選択器</p>
+    <p class="figsub">平均 MASE。色は学習コーパスとの関係</p>
     <div class="legend">
-      <span><i style="background:var(--series-1)"></i>TimesFM 3.0</span>
-      <span><i style="background:var(--series-2)"></i>季節ナイーブ</span>
+      <span><i class="sq" style="background:var(--series-1)"></i>TimesFM 3.0</span>
+      <span><i class="sq" style="background:var(--series-2)"></i>ウォークフォワード選択器</span>
+      <span><i class="sq" style="background:var(--accent-soft)"></i>層A（学習済み）</span>
     </div>
-    <div class="grid2">
-      <div class="scroll"><svg id="fig5a" viewBox="0 0 380 268" role="img" aria-label="traffic hourly の地平線別誤差。TimesFM が全ステップで下回る"></svg></div>
-      <div class="scroll"><svg id="fig5b" viewBox="0 0 380 268" role="img" aria-label="solar 10分足の地平線別誤差。夜間は同一、日の出以降 TimesFM が上回る"></svg></div>
-    </div>
-    <figcaption><b>Fig 4</b>左（traffic）では TimesFM が全48ステップで下回り、とくに季節ナイーブが崩れる2日目の朝（ステップ30〜42）で差が開く。右（solar）は逆で、ステップ43までは両者ゼロで区別がつかず、日の出以降に差が付く。<em>データセット全体の平均 MASE 1.304 対 1.187 という差は、実質すべて日中に発生している。</em></figcaption>
+    <div class="scroll"><svg id="fig5" viewBox="0 0 760 620" role="img" aria-label="18データセットそれぞれでのTimesFMと選択器の平均MASEのダンベルチャート"></svg></div>
+    <figcaption><b>Fig 5</b>平均 MASE では <em>18系統すべてで</em> TimesFM が選択器を上回る。効いているのは勝ち負けではなく差の大きさで、最も開く2つ（traffic・weather）がどちらも層Aであることが Fig 1 の勾配の正体である。窓ごとの勝率で見ると 23.3%〜83.0% と幅が広い — 間欠需要は勝率 23.3% でありながら平均では大きく勝つ、つまり<em>まれに大きく外す代わりに大半の窓で僅差に負ける</em>という形をしている。</figcaption>
   </figure>
-
-  <div class="tw"><table>
-    <caption>データセット別の平均 MASE（太字は行内最良）</caption>
-    <thead><tr id="thMase"></tr></thead>
-    <tbody id="tblMase"></tbody>
-  </table></div>
-
-  <div class="note">
-    <span class="lab">指標を替えると順位が変わる</span>
-    <p>MASE で1位の TimesFM は、<strong>sMAPE では2位に落ち、季節ナイーブが1位になる</strong>（32.0 対 39.3）。原因は solar と weather で、ゼロ近傍の実測値に対して sMAPE の分母が潰れるためである。同じ実験・同じ予測値から、指標の選択だけで別の結論が出せる。本稿が MASE と CRPS を主指標にしたのは、両者とも<em>文脈側だけ</em>から決まるスケールで正規化されるからで、sMAPE は参考として併記した。</p>
-  </div>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">05</span><h2>点予測は勝った。不確実性は勝っていない</h2></div>
+  <div class="head"><span class="step">06</span><h2>不確実性は、点予測ほどには良くない</h2></div>
   <div class="col">
-    <p>確率予測としては、CRPS（分位点損失の積分、文脈スケールで正規化）で TimesFM が 0.831 と、最良のベースライン 1.135 を大きく引き離す。7系統中6系統で1位である。</p>
-    <p>ところが<strong>区間の当たり方は最下位に近い</strong>。名目 80% 区間（10%〜90% 分位点）の実測被覆は 0.778 で、<em>7系統すべてで名目を下回る</em>。PIT（確率積分変換）曲線を見ると、低い分位点で実測が名目を上回り、高い分位点で下回る — 教科書どおりの「区間が狭すぎる」形である。</p>
-    <p>対照的に、経験残差ブートストラップを付けた季節ナイーブは全分位点で誤差 0.02 以内に収まる。<strong>点予測で圧倒された手法が、区間の正しさでは基盤モデルを上回っている。</strong>下流でリスク量やバッファを決めるなら、この差は点予測の優劣より効く。</p>
+    <p>確率予測としては CRPS で TimesFM が 0.950、最良のベースライン 1.335 を大きく引き離す。だが<strong>区間の当たり方は依然として狭い側に外れる</strong>。名目 80% 区間の実測被覆は 0.792 で、層別に見ると公開ベンチで 0.770〜0.787、合成と金融では 0.803〜0.807 と名目に近い。<em>未学習データの方が較正が良い</em>のは、初版で書いた「一律に狭すぎる」より穏やかな像である。</p>
+    <p>それでも PIT 曲線の形は変わらない。10% 分位点の下に実測の 14.5% が落ち、90% 分位点の下には 89.1% しか落ちない。両裾が実際より薄い。<strong>経験残差ブートストラップを付けた季節ナイーブの方が、全分位点で対角線に近い。</strong></p>
   </div>
 
   <figure>
-    <p class="figtitle">PIT 較正曲線：予測分布は当たっているか</p>
-    <p class="figsub">横軸が名目分位点、縦軸が実測で下回った割合。対角線に乗れば較正済み。同点は 0.5 として数える mid-PIT</p>
+    <p class="figtitle">PIT 較正曲線</p>
+    <p class="figsub">横軸が名目分位点、縦軸が実測で下回った割合。対角線に乗れば較正済み。同点は 0.5 と数える mid-PIT</p>
     <div class="legend">
       <span><i style="background:var(--series-1)"></i>TimesFM 3.0</span>
       <span><i style="background:var(--series-2)"></i>季節ナイーブ + 経験残差</span>
-      <span><i style="background:var(--ink-3)"></i>完全較正（対角線）</span>
+      <span><i style="background:var(--ink-3)"></i>完全較正</span>
     </div>
-    <div class="scroll"><svg id="fig6" viewBox="0 0 760 400" role="img" aria-label="PIT較正曲線。TimesFMは低分位で対角線の上、高分位で下にあり、区間が狭い。季節ナイーブは対角線にほぼ一致"></svg></div>
-    <figcaption><b>Fig 5</b>TimesFM の曲線は対角線を上から下へ横切る S 字を描く。10% 分位点の下に実測の 16.3% が落ち、90% 分位点の下には 87.8% しか落ちない — 分布の両裾が実際より薄い。<em>solar の厳密ゼロによる同点を 0.5 と数える mid-PIT を使わないと、この図は 10% 水準で 0.70 という無意味な値になる。</em></figcaption>
+    <div class="scroll"><svg id="fig6" viewBox="0 0 760 400" role="img" aria-label="PIT較正曲線。TimesFMは両裾が薄く、季節ナイーブは対角線にほぼ一致"></svg></div>
+    <figcaption><b>Fig 6</b>点予測で全方位に勝つモデルが、区間の正しさでは 1970年代の手法に負けている。下流でリスク量やバッファを決めるなら、この差は点予測の優劣より効く。</figcaption>
   </figure>
 
   <div class="tw"><table>
-    <caption>確率予測の質と、1窓あたりの計算コスト</caption>
+    <caption>全体成績と1窓あたりの計算コスト（2,362 窓）</caption>
     <thead><tr><th>モデル</th><th>MASE</th><th>CRPS</th><th>80% 被覆</th><th>sMAPE</th><th>ms / 窓</th></tr></thead>
     <tbody id="tblCost"></tbody>
   </table></div>
-  <p class="small">コストは RTX 5080（16GB）での実測。TimesFM はデータセット単位でバッチ推論した値で、チェックポイント読み込みの約 2〜23 秒は含まない。ETS だけが基盤モデルより一桁遅い（113 ms 対 8.6 ms）のは、季節状態の最尤推定が窓ごとに走るためである。</p>
+  <p class="small">コストは RTX 5080 実測。TimesFM はデータセット単位のバッチ推論で 7.4 ms/窓、ETS（80.5 ms）と HAR（49.4 ms）より速い。チェックポイント読み込みの約2〜23秒は含まない。<strong>sMAPE では季節ナイーブが1位</strong>（31.1 対 37.5）になる点も初版から変わらない — solar と weather のゼロ近傍で分母が潰れるためで、同じ予測値から指標の選択だけで別の結論が作れる。</p>
 </section>
 
 <svg class="burst" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>
 
 <section>
-  <div class="head"><span class="step">06</span><h2>この結果が言えないこと</h2></div>
+  <div class="head"><span class="step">07</span><h2>この結果が言えないこと</h2></div>
   <ul>
-    <li><strong>汚染が無いことは示せていない。</strong>示したのは traffic・weather の優位がコーパス内外で変わらないことだけ。学習コーパスの完全な目録は公開されていないし、Wikipedia 閲覧数・Google Trends・合成データの寄与は測れていない。</li>
-    <li><strong>コーパス外の窓は同時に「より新しい窓」でもある。</strong>時点と汚染が交絡しており、相対誤差で正規化してもこの交絡は消えない。決定的な検定には、学習カットオフ後に生成された系列が要る。</li>
-    <li><strong>ベースラインの選び方には手心が残る。</strong>AutoARIMA や TBATS、STL 分解は入れていない。ETS は季節周期 48 を超えると非季節にフォールバックしており、solar の150窓はこの扱いになっている（表に明記）。より強い古典手法を足せばオラクルはさらに下がる — ただし実装可能な選択器の到達点が同じだけ下がる保証は無い。</li>
-    <li><strong>系列はすべて公開ベンチマークで、金融時系列は含まない。</strong>収益率のようにほぼ予測不能な対象で同じ順位が出るとは限らない。ここで測ったのは「周期と水準を持つ実測系列」での性能である。</li>
-    <li><strong>単変量ゼロショットだけを見た。</strong>TimesFM 3.0 の目玉である多変量・共変量サポートも、ファインチューニングも使っていない。これらは別の実験になる。</li>
-    <li><strong>seed は 1 本。</strong>系列のサンプリングは seed=0 固定で、系列選択のばらつきは測っていない。窓ごとのペア検定は系列選択の分散を吸収しないので、p 値は「この系列集合において」と読むべきである。</li>
+    <li><strong>層は領域とも交絡している。</strong>層Aの2系統はセンサーネットワークで、層Cは合成と金融である。汚染の効果と「領域ごとの伸びしろ」を完全には分離できていない。最も近い対照は traffic（862センサー・時間足・学習済み・+34%）と electricity（321センサー・時間足・一覧に無い・−8%）だが、これも一対の観察に過ぎない。</li>
+    <li><strong>学習コーパスの完全な目録は公開されていない。</strong>層Bは「一覧に無い」以上のことを言えない。Wikipedia 閲覧数・Google Trends・合成／拡張データの寄与も測れていない。</li>
+    <li><strong>合成過程は現実より易しく、推定のばらつきも小さくない。</strong>8つとも定常か、単純な非定常で、実データの持つ構造変化・欠測・外れ値・複数季節性は入っていない。加えて、種の与え方を直した際に系列が張り直され、水準ジャンプでの限界超過が +4.1% から +12.0% に動いた — 1過程あたり120窓では、この程度の変動が残る。</li>
+    <li><strong>金融は日次バーだけ。</strong>レンジボラは Parkinson 推定量で、日中データによる実現ボラティリティではない。銘柄は18で、窓は各6本しかない。</li>
+    <li><strong>単変量ゼロショットのみ。</strong>TimesFM 3.0 の目玉である多変量・共変量サポートも、ファインチューニングも使っていない。</li>
+    <li><strong>seed は1本。</strong>系列サンプリングと合成生成のばらつきは測っていない。窓ごとのペア検定は系列選択の分散を吸収しないので、p 値は「この系列集合において」と読む。</li>
+    <li><strong>重みは非商用ライセンス。</strong>TimesFM のソースコードは Apache-2.0 だが、3.0 の学習済み重みは <code>timesfm-non-commercial-license-v1.0</code> で商用・本番利用は許諾されていない。商用の目を残すなら Apache-2.0 のままの 2.5 系を使うことになる。</li>
   </ul>
 
   <div class="verdict">
-    <div><span class="q">単体の古典手法に勝つか</span><span class="a yes">勝つ</span><p class="why">5手法すべてに対し勝率 71.5〜79.3%。最も強い単体（Fourier+trend OLS、MASE 1.335）を 23% 上回る。</p></div>
-    <div><span class="q">窓ごと最良の選択に勝つか</span><span class="a no">負ける</span><p class="why">オラクル 0.899 に対し 1.065。ただしこの相手は事前情報では選べず、実際の選択器は 1.275 にしか届かない。</p></div>
-    <div><span class="q">勝ちは学習データの記憶か</span><span class="a no">説明できない</span><p class="why">コーパス内 / 外の窓で相対誤差に差なし（p = 1.00 / 0.54）。汚染仮説は本ベンチの範囲では棄却。</p></div>
-    <div><span class="q">不確実性は信用できるか</span><span class="a no">できない</span><p class="why">80% 区間の被覆が 7系統すべてで名目割れ（平均 0.778）。経験残差付き季節ナイーブの方が較正されている。</p></div>
+    <div><span class="q">単体の古典手法に勝つか</span><span class="a yes">勝つ</span><p class="why">7手法すべてに対し、全層で優位。最良の単体（ETS、MASE 1.415）を 16% 上回る。</p></div>
+    <div><span class="q">窓ごと最良の選択に勝つか</span><span class="a no">負ける</span><p class="why">オラクル 0.887 対 1.065。ただし悪い候補を足すだけで下がる量であり、事前には選べない。</p></div>
+    <div><span class="q">優位は汚染で説明できるか</span><span class="a no">切り分け未了</span><p class="why">学習済み +36.3% 対 未学習 +7〜9%。初版の「棄却」は撤回する。領域との交絡が残る。</p></div>
+    <div><span class="q">到達可能な精度に届くか</span><span class="a yes">ほぼ届く</span><p class="why">下限が正の7過程中6つで理論限界の +0.7〜3.4%。ただし決定論的カオスでは限界 0 に対し誰も何も取れない。</p></div>
+    <div><span class="q">2026年の市場で使えるか</span><span class="a no">HAR と互角</span><p class="why">CRPS では3系列とも1位だが、点予測で HAR に有意に勝つのは出来高のみ。収益率では負ける。</p></div>
+    <div><span class="q">不確実性は信用できるか</span><span class="a no">できない</span><p class="why">80% 区間の被覆 0.792。経験残差付き季節ナイーブの方が全分位点で較正されている。</p></div>
   </div>
 </section>
 
 <footer>
   実装: /home/kazumasa/projects/timesfm_lab<br>
-  生データ: /home/kazumasa/projects/timesfm_lab/reports/results.parquet（6,468 行 = 1,078 窓 × 6 モデル）<br>
-  再現: <code>uv run --no-sync python scripts/run_bench.py</code>（RTX 5080 で 158 秒、seed=0）<br>
-  データ出典: Monash TSF Repository（Zenodo 4656140 / 4656132 / 4656144 / 4654822 / 4656058）、ETDataset ETT-small<br>
+  生データ: /home/kazumasa/projects/timesfm_lab/reports/results.parquet（19,856 行 = 2,362 窓 × 8〜9 モデル）<br>
+  再現: <code>uv run --no-sync python scripts/run_bench.py</code>（RTX 5080 で 402 秒、seed=0）<br>
+  公開データ: Monash TSF Repository（Zenodo 4656140 / 4656132 / 4656144 / 4654822 / 4656058）、ETDataset ETT-small<br>
+  金融データ: yfinance 日次 OHLCV 18銘柄、2018-01-01 以降。評価対象は 2026-03-13〜2026-09-07<br>
+  合成データ: <code>src/timesfm_lab/synthetic.py</code>、8過程・種固定・理論限界は20,000本の対称変量シミュレーション<br>
   汚染照合: Salesforce/GiftEvalPretrain の traffic_hourly・weather を実データ比較（各25系列、rtol=1e-4）<br>
   モデル: google/timesfm-3.0-pytorch、timesfm 3.0.1、torch 2.11.0+cu128、statsmodels 0.14.6<br>
-  検定: Wilcoxon 符号順位（窓でペア）、Mann-Whitney U 片側（汚染比較）<br>
-  作成 2026-09-06
+  検定: Wilcoxon 符号順位（窓でペア）、Mann-Whitney U 片側（層間比較）<br>
+  初版 2026-09-06 / 改訂 2026-09-07（02節の結論を訂正、合成・金融の2層と HAR・EWMA を追加）
 </footer>
 </div>
 
@@ -240,9 +270,11 @@ const el=(t,a={})=>{const e=document.createElementNS(SVGNS,t);
   for(const k in a){const v=String(a[k]);
     if(CSSATTR.has(k)&&v.indexOf("var(")>=0)e.style.setProperty(k,v);else e.setAttribute(k,a[k]);}
   return e;};
-const f2=n=>n.toFixed(2), f3=n=>n.toFixed(3);
+const f3=n=>n.toFixed(3);
 const pctf=v=>(100*v).toFixed(1)+"%";
+const sgn=v=>(v>=0?"+":"−")+Math.abs(v).toFixed(1)+"%";
 const pval=p=>p<1e-4?p.toExponential(1).replace("e-","e−"):p.toFixed(4);
+const mk=t=>document.createElement(t);
 
 const tip=document.getElementById("tip");
 function bind(node,text){
@@ -257,219 +289,248 @@ function bind(node,text){
   node.addEventListener("pointerleave",()=>{tip.style.opacity=0;});
   node.classList.add("hit");
 }
-const S1="var(--series-1)", S2="var(--series-2)", INK3="var(--ink-3)",
-      GRID="var(--grid)", RULE="var(--rule)", SURF="var(--surface)", INK2="var(--ink-2)";
+const S1="var(--series-1)", S2="var(--series-2)", INK3="var(--ink-3)", INK2="var(--ink-2)",
+      GRID="var(--grid)", RULE="var(--rule)", SURF="var(--surface)", S4="var(--s4)",
+      ACC="var(--accent)", ACCS="var(--accent-soft)";
+
+const JP={naive:"ナイーブ",seasonal_naive:"季節ナイーブ",theta:"Theta",ets:"ETS",
+  fourier_ols:"Fourier+trend",har:"HAR",ewma:"EWMA","timesfm_3.0":"TimesFM 3.0",
+  process_optimum:"理論限界"};
+const NAME=m=>JP[m]||m;
+const BL=D.models.filter(m=>m!=="timesfm_3.0");
+const DS_ORDER=Object.keys(D.specs);
 
 /* ---------- tables ---------- */
-const DSORDER=["traffic_hourly","weather_daily","electricity_hourly","solar_10_minutes","ett_h1","ett_h2","saugeen_river"];
-const MODELS=D.models;
-const JP={naive:"ナイーブ（ランダムウォーク）",seasonal_naive:"季節ナイーブ + 経験残差",
-  theta:"Theta",ets:"ETS（減衰 Holt-Winters）",fourier_ols:"Fourier + trend OLS",
-  "timesfm_3.0":"TimesFM 3.0（ゼロショット）"};
-const NAME=m=>JP[m]||D.display_names[m]||m;
-const SHORT=m=>NAME(m).replace(/（.*）/,"").replace(/ \+ 経験残差/,"");
-
 (function specs(){
   const tb=document.getElementById("tblSpecs");
-  for(const k of DSORDER){const s=D.specs[k];
-    const tr=el2("tr");
-    tr.innerHTML=`<td>${s.title}</td><td class="num">${s.freq}</td><td class="num">${s.season}</td>`+
-      `<td class="num">${s.context}</td><td class="num">${s.horizon}</td><td class="num">${s.n_series}</td>`+
-      `<td class="num">${s.n_windows}</td>`+
-      `<td>${s.in_corpus?'<span class="tag on">含まれる</span>':'<span class="tag">除外</span>'}</td>`;
-    tb.appendChild(tr);}
-})();
-function el2(t){return document.createElement(t);}
-
-(function h2h(){
-  const tb=document.getElementById("tblH2H");
-  const LBL={oracle:"オラクル（窓ごと5手法の最小 — 事前には選べない）",walkforward:"ウォークフォワード選択器（実装可能）"};
-  for(const r of D.head_to_head){
-    const tr=el2("tr");
-    if(r.opponent==="oracle")tr.className="hl";
-    tr.innerHTML=`<td>${LBL[r.opponent]||NAME(r.opponent)}</td><td class="num">${r.n}</td>`+
-      `<td class="num">${f3(r.opponent_mean)}</td><td class="num">${f3(r.timesfm_mean)}</td>`+
-      `<td class="num${r.timesfm_win_rate>0.5?" win":""}">${pctf(r.timesfm_win_rate)}</td>`+
-      `<td class="num">${pval(r.p_value)}</td>`;
+  const cls={A:"tag a",B:"tag",C_synthetic:"tag c",C_post_cutoff:"tag c"};
+  for(const k of DS_ORDER){const s=D.specs[k];
+    const tr=mk("tr");
+    tr.innerHTML=`<td>${s.title}</td><td><span class="${cls[s.tier]}">${D.tier_short[s.tier]}</span></td>`+
+      `<td class="num">${s.freq}</td><td class="num">${s.season}</td><td class="num">${s.context}</td>`+
+      `<td class="num">${s.horizon}</td><td class="num">${s.n_series}</td><td class="num">${s.n_windows}</td>`;
     tb.appendChild(tr);}
 })();
 
-(function maseTable(){
-  const th=document.getElementById("thMase"), tb=document.getElementById("tblMase");
-  th.innerHTML=`<th>データセット</th>`+MODELS.map(m=>`<th>${SHORT(m)}</th>`).join("");
-  for(const k of DSORDER){
-    const row=MODELS.map(m=>D.per_dataset.mase[m][k]);
-    const best=Math.min(...row);
-    const tr=el2("tr");
-    tr.innerHTML=`<td>${D.specs[k].title}</td>`+
-      row.map(v=>`<td class="num${v===best?" win":""}">${f3(v)}</td>`).join("");
-    tb.appendChild(tr);}
+(function finTable(){
+  const th=document.getElementById("thFin"), tb=document.getElementById("tblFin");
+  const models=["timesfm_3.0","har","ets","theta","fourier_ols","ewma","seasonal_naive","naive"];
+  th.innerHTML=`<th>系列 / 指標</th>`+models.map(m=>`<th>${NAME(m)}</th>`).join("");
+  const fin=DS_ORDER.filter(k=>D.specs[k].tier==="C_post_cutoff");
+  for(const metric of ["mase","scaled_crps"]){
+    for(const k of fin){
+      const row=models.map(m=>D.per_dataset[metric][m][k]);
+      const best=Math.min(...row);
+      const tr=mk("tr");
+      const lbl=D.specs[k].title.replace("金融: ","")+(metric==="mase"?" · MASE":" · CRPS");
+      tr.innerHTML=`<td>${lbl}</td>`+row.map(v=>`<td class="num${v===best?" win":""}">${f3(v)}</td>`).join("");
+      tb.appendChild(tr);}
+  }
 })();
 
 (function costTable(){
   const tb=document.getElementById("tblCost");
   const t=Object.fromEntries(D.timings.map(r=>[r.model,r.ms_per_window]));
-  const order=[...MODELS].sort((a,b)=>D.overall[a].mase-D.overall[b].mase);
+  const order=[...D.models].sort((a,b)=>D.overall[a].mase-D.overall[b].mase);
   for(const m of order){const o=D.overall[m];
-    const tr=el2("tr");
+    const tr=mk("tr");
     if(m==="timesfm_3.0")tr.className="hl";
-    tr.innerHTML=`<td>${NAME(m)}</td><td class="num">${f3(o.mase)}</td><td class="num">${f3(o.scaled_crps)}</td>`+
-      `<td class="num">${f3(o.coverage_80)}</td><td class="num">${o.smape.toFixed(1)}</td>`+
-      `<td class="num">${t[m].toFixed(1)}</td>`;
+    tr.innerHTML=`<td>${D.display_names[m]||NAME(m)}</td><td class="num">${f3(o.mase)}</td>`+
+      `<td class="num">${f3(o.scaled_crps)}</td><td class="num">${f3(o.coverage_80)}</td>`+
+      `<td class="num">${o.smape.toFixed(1)}</td><td class="num">${t[m].toFixed(1)}</td>`;
     tb.appendChild(tr);}
 })();
 
-/* ---------- Fig 2: contamination ---------- */
-(function fig2(){
-  const svg=document.getElementById("fig2");
-  const L=150,R=40,T=34,B=58,W=760,H=300, iw=W-L-R, ih=H-T-B;
-  const rows=[{k:"traffic_hourly",t:"Traffic（時間足）"},{k:"weather_daily",t:"Weather（日次）"}];
-  const be=D.contamination.by_exposure.filter(r=>r.model==="timesfm_3.0");
-  const get=(k,e)=>be.find(r=>r.dataset===k&&r.exposure===e);
-  const xmax=1.0;
-  const x=v=>L+iw*v/xmax;
-  for(let g=0;g<=5;g++){const v=g*0.2;
+/* ---------- Fig 1: tier gradient ---------- */
+(function fig1(){
+  const svg=document.getElementById("fig1");
+  const L=190,R=44,T=30,B=56,W=760,H=340,iw=W-L-R,ih=H-T-B;
+  const series=[["vs_selector",S1,"対 選択器"],["vs_seasonal_naive",S2,"対 季節ナイーブ"],
+                ["vs_median_baseline",S4,"対 BL中央値"]];
+  const rows=D.gradient;
+  const xmax=45, x=v=>L+iw*Math.max(v,0)/xmax;
+  for(let g=0;g<=4;g++){const v=g*10;
     svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
     const tx=el("text",{x:x(v),y:T+ih+22,"font-size":11,"text-anchor":"middle",fill:INK3});
-    tx.textContent=v.toFixed(1); svg.appendChild(tx);}
-  // reference line at 1.0 = baseline median
-  svg.appendChild(el("line",{x1:x(1),x2:x(1),y1:T-8,y2:T+ih,stroke:INK3,"stroke-width":1.5,"stroke-dasharray":"4 4"}));
-  const rl=el("text",{x:x(1),y:T-14,"font-size":10.5,"text-anchor":"end",fill:INK3});
-  rl.textContent="1.00 = ベースライン中央値"; svg.appendChild(rl);
-
-  const rowH=ih/rows.length, bh=26, gap=8;
+    tx.textContent=v+"%";svg.appendChild(tx);}
+  const rowH=ih/rows.length, bh=(rowH-14)/series.length;
   rows.forEach((r,i)=>{
-    const cy=T+rowH*i+rowH/2;
-    const lab=el("text",{x:L-14,y:cy+4,"font-size":12,"text-anchor":"end",fill:INK2,"font-family":"var(--sans)"});
-    lab.textContent=r.t; svg.appendChild(lab);
-    [["in corpus",S1,"コーパス内"],["past corpus",S2,"コーパス外"]].forEach(([e,c,jp],j)=>{
-      const d=get(r.k,e); if(!d)return;
-      const y=cy-bh-gap/2+j*(bh+gap);
-      const bar=el("rect",{x:L,y:y,width:Math.max(2,x(d.median_rel)-L),height:bh,
-        fill:c,rx:3});
+    const y0=T+rowH*i+7;
+    const lab=el("text",{x:L-14,y:y0+rowH/2-6,"font-size":12,"text-anchor":"end",
+      fill:r.tier==="A"?ACC:INK2,"font-family":"var(--sans)","font-weight":r.tier==="A"?700:400});
+    lab.textContent=r.short;svg.appendChild(lab);
+    const sub=el("text",{x:L-14,y:y0+rowH/2+11,"font-size":10,"text-anchor":"end",fill:INK3});
+    sub.textContent="n = "+r.n_windows;svg.appendChild(sub);
+    series.forEach(([key,c,jp],j)=>{
+      const v=r[key], y=y0+j*bh;
+      const bar=el("rect",{x:L,y:y,width:Math.max(2,x(v)-L),height:bh-2,fill:c,rx:2});
       svg.appendChild(bar);
-      bind(bar,`${r.t}\n${jp}\n相対誤差中央値 ${f3(d.median_rel)}\nn = ${d.n} 窓`);
-      const vl=el("text",{x:x(d.median_rel)+9,y:y+bh/2+4,"font-size":11.5,fill:INK2});
-      vl.textContent=f3(d.median_rel)+"  (n="+d.n+")"; svg.appendChild(vl);
+      bind(bar,`${r.label}\n${jp}\n改善 ${sgn(v)}\nn = ${r.n_windows} 窓`);
+      if(j===0){const vl=el("text",{x:x(v)+8,y:y+bh/2+3,"font-size":11.5,fill:INK2,"font-weight":600});
+        vl.textContent=sgn(v);svg.appendChild(vl);}
     });
-    if(i<rows.length-1)svg.appendChild(el("line",{x1:L-120,x2:L+iw,y1:T+rowH*(i+1),y2:T+rowH*(i+1),stroke:RULE,"stroke-width":1}));
+    if(i<rows.length-1)svg.appendChild(el("line",{x1:L-150,x2:L+iw,y1:T+rowH*(i+1),y2:T+rowH*(i+1),stroke:RULE,"stroke-width":1}));
   });
   const ax=el("text",{x:L+iw/2,y:H-14,"font-size":11,"text-anchor":"middle",fill:INK3});
-  ax.textContent="相対誤差の中央値（小さいほど良い）"; svg.appendChild(ax);
+  ax.textContent="TimesFM の改善率（大きいほど基盤モデルが有利）";svg.appendChild(ax);
 })();
 
-/* ---------- Fig 3: ladder ---------- */
+/* ---------- Fig 2: synthetic ceiling ---------- */
+(function fig2(){
+  const svg=document.getElementById("fig2");
+  const L=200,R=70,T=26,B=52,W=760,H=400,iw=W-L-R,ih=H-T-B;
+  const rows=D.ceiling.slice().sort((a,b)=>a.timesfm-b.timesfm);
+  const xmax=Math.max(...rows.map(r=>Math.max(r.timesfm,r.best_baseline)))*1.1;
+  const x=v=>L+iw*v/xmax;
+  for(let g=0;g*1<=xmax;g++){const v=g*1;
+    svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
+    const tx=el("text",{x:x(v),y:T+ih+21,"font-size":11,"text-anchor":"middle",fill:INK3});
+    tx.textContent=v;svg.appendChild(tx);}
+  const rh=ih/rows.length;
+  rows.forEach((r,i)=>{
+    const cy=T+rh*i+rh/2;
+    const lab=el("text",{x:L-16,y:cy+4,"font-size":11.5,"text-anchor":"end",fill:INK2,"font-family":"var(--sans)"});
+    lab.textContent=D.specs[r.dataset].title.replace("合成: ","");svg.appendChild(lab);
+    svg.appendChild(el("line",{x1:x(r.optimum),x2:x(Math.max(r.timesfm,r.best_baseline)),
+      y1:cy,y2:cy,stroke:RULE,"stroke-width":2.5,"stroke-linecap":"round"}));
+    // the floor: a tick, not a dot, because nothing may sit left of it
+    const fl=el("line",{x1:x(r.optimum),x2:x(r.optimum),y1:cy-9,y2:cy+9,stroke:INK3,"stroke-width":2.5});
+    svg.appendChild(fl);
+    bind(fl,`${D.specs[r.dataset].title}\n理論限界 MASE ${f3(r.optimum)}\n（過程が既知なので到達可能な下限）`);
+    const cb=el("circle",{cx:x(r.best_baseline),cy:cy,r:6,fill:S2,stroke:SURF,"stroke-width":2});
+    svg.appendChild(cb);
+    bind(cb,`${D.specs[r.dataset].title}\n最良の古典手法 ${NAME(r.best_baseline_name)} ${f3(r.best_baseline)}`
+      +(r.baseline_excess_pct===null?"":`\n限界からの超過 ${sgn(r.baseline_excess_pct)}`));
+    const ct=el("circle",{cx:x(r.timesfm),cy:cy,r:6,fill:S1,stroke:SURF,"stroke-width":2});
+    svg.appendChild(ct);
+    bind(ct,`${D.specs[r.dataset].title}\nTimesFM ${f3(r.timesfm)}`
+      +(r.timesfm_excess_pct===null?"\n限界は 0（決定論的）":`\n限界からの超過 ${sgn(r.timesfm_excess_pct)}`));
+    const vl=el("text",{x:L+iw+10,y:cy+4,"font-size":11,fill:r.timesfm_excess_pct===null?INK3:
+      (r.timesfm_excess_pct>5?S2:INK2)});
+    vl.textContent=r.timesfm_excess_pct===null?"限界 0":sgn(r.timesfm_excess_pct);
+    svg.appendChild(vl);
+  });
+  const hd=el("text",{x:L+iw+10,y:T-8,"font-size":10,fill:INK3});
+  hd.textContent="限界比";svg.appendChild(hd);
+  const ax=el("text",{x:L+iw/2,y:H-12,"font-size":11,"text-anchor":"middle",fill:INK3});
+  ax.textContent="平均 MASE（小さいほど良い）";svg.appendChild(ax);
+})();
+
+/* ---------- Fig 3: finance vs HAR ---------- */
 (function fig3(){
   const svg=document.getElementById("fig3");
-  const L=230,R=54,T=22,B=48,W=760,H=320,iw=W-L-R,ih=H-T-B;
-  const h2=Object.fromEntries(D.head_to_head.map(r=>[r.opponent,r.opponent_mean]));
-  const items=[
-    {k:"oracle",t:"オラクル（選べない）",v:h2.oracle,c:INK3},
-    {k:"timesfm_3.0",t:"TimesFM 3.0",v:D.selector_skill.timesfm_mean,c:S1},
-    {k:"walkforward",t:"ウォークフォワード選択器",v:h2.walkforward,c:S2},
-    {k:"fourier_ols",t:"Fourier + trend OLS",v:h2.fourier_ols,c:S2},
-    {k:"seasonal_naive",t:"季節ナイーブ",v:h2.seasonal_naive,c:S2},
-    {k:"theta",t:"Theta",v:h2.theta,c:S2},
-    {k:"ets",t:"ETS（減衰 Holt-Winters）",v:h2.ets,c:S2},
-    {k:"naive",t:"ナイーブ（ランダムウォーク）",v:h2.naive,c:S2}];
-  const xmax=2.3, x=v=>L+iw*v/xmax;
-  for(let g=0;g<=4;g++){const v=g*0.5;
+  const L=180,R=150,T=34,B=52,W=760,H=300,iw=W-L-R,ih=H-T-B;
+  const rows=D.finance_h2h.filter(r=>r.opponent==="har");
+  const x=v=>L+iw*(v-0.3)/0.6;   // win rate axis 0.3..0.9
+  for(let v=0.3;v<=0.9001;v+=0.1){
     svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
-    const tx=el("text",{x:x(v),y:T+ih+21,"font-size":11,"text-anchor":"middle",fill:INK3});
-    tx.textContent=v.toFixed(1);svg.appendChild(tx);}
-  const bh=ih/items.length;
-  items.forEach((it,i)=>{
-    const y=T+bh*i+3, hh=bh-8;
-    const lab=el("text",{x:L-14,y:y+hh/2+4,"font-size":12,"text-anchor":"end",
-      fill:it.k==="timesfm_3.0"?"var(--accent)":INK2,"font-family":"var(--sans)",
-      "font-weight":it.k==="timesfm_3.0"?700:400});
-    lab.textContent=it.t;svg.appendChild(lab);
-    const r=el("rect",{x:L,y:y,width:Math.max(2,x(it.v)-L),height:hh,fill:it.c,rx:3,
-      opacity:it.k==="oracle"?0.55:1});
-    svg.appendChild(r);
-    bind(r,`${it.t}\n平均 MASE ${f3(it.v)}\nn = ${D.selector_skill.n} 窓`);
-    const vl=el("text",{x:x(it.v)+9,y:y+hh/2+4,"font-size":11.5,fill:INK2,"font-weight":it.k==="timesfm_3.0"?600:400});
-    vl.textContent=f3(it.v);svg.appendChild(vl);
+    const tx=el("text",{x:x(v),y:T+ih+22,"font-size":11,"text-anchor":"middle",fill:INK3});
+    tx.textContent=(100*v).toFixed(0)+"%";svg.appendChild(tx);}
+  svg.appendChild(el("line",{x1:x(0.5),x2:x(0.5),y1:T-10,y2:T+ih,stroke:INK3,"stroke-width":1.5,"stroke-dasharray":"4 4"}));
+  const rl=el("text",{x:x(0.5),y:T-16,"font-size":10.5,"text-anchor":"middle",fill:INK3});
+  rl.textContent="互角";svg.appendChild(rl);
+  const rh=ih/rows.length;
+  rows.forEach((r,i)=>{
+    const cy=T+rh*i+rh/2, wr=r.win_rate;
+    const lab=el("text",{x:L-16,y:cy+4,"font-size":12,"text-anchor":"end",fill:INK2,"font-family":"var(--sans)"});
+    lab.textContent=D.specs[r.dataset].title.replace("金融: ","");svg.appendChild(lab);
+    const from=Math.min(wr,0.5), to=Math.max(wr,0.5);
+    const bar=el("rect",{x:x(from),y:cy-11,width:Math.max(2,x(to)-x(from)),height:22,
+      fill:wr>=0.5?S1:S2,rx:3});
+    svg.appendChild(bar);
+    bind(bar,`${D.specs[r.dataset].title}\nTimesFM 勝率 ${pctf(wr)}（n=${r.n}）\n`
+      +`MASE ${f3(r.timesfm)} 対 HAR ${f3(r.opponent_mean)}\nWilcoxon p = ${pval(r.p_value)}`);
+    const dot=el("circle",{cx:x(wr),cy:cy,r:5.5,fill:wr>=0.5?S1:S2,stroke:SURF,"stroke-width":2});
+    svg.appendChild(dot);
+    const sig=r.p_value<0.05?"有意":"有意差なし";
+    const vl=el("text",{x:L+iw+12,y:cy-1,"font-size":11.5,fill:INK2});
+    vl.textContent=`${pctf(wr)}  p=${pval(r.p_value)}`;svg.appendChild(vl);
+    const v2=el("text",{x:L+iw+12,y:cy+14,"font-size":10.5,fill:r.p_value<0.05?ACC:INK3});
+    v2.textContent=sig;svg.appendChild(v2);
   });
-  // gap annotation between oracle and walkforward
-  const gy=T+bh*0+bh/2;
-  const ax=el("text",{x:L+iw/2,y:H-12,"font-size":11,"text-anchor":"middle",fill:INK3});
-  ax.textContent="平均 MASE（小さいほど良い）"; svg.appendChild(ax);
+  const ax=el("text",{x:L+iw/2,y:H-14,"font-size":11,"text-anchor":"middle",fill:INK3});
+  ax.textContent="TimesFM が HAR に勝った窓の割合";svg.appendChild(ax);
 })();
 
-/* ---------- Fig 4: dumbbell per dataset ---------- */
+/* ---------- Fig 4: oracle shrink ---------- */
 (function fig4(){
   const svg=document.getElementById("fig4");
-  const L=170,R=60,T=26,B=48,W=760,H=330,iw=W-L-R,ih=H-T-B;
-  const rows=D.selector_per_dataset.slice().sort((a,b)=>a.timesfm-b.timesfm);
-  const xmax=Math.max(...rows.map(r=>Math.max(r.timesfm,r.walkforward)))*1.12;
-  const x=v=>L+iw*v/xmax;
-  for(let g=0;g<=Math.ceil(xmax/0.5);g++){const v=g*0.5; if(v>xmax)break;
+  const L=200,R=64,T=34,B=56,W=760,H=280,iw=W-L-R,ih=H-T-B;
+  const o=D.oracle_shrink;
+  const rows=[
+    {t:"オラクル（後知恵の最小値）",a:o.oracle_5,b:o.oracle_7,c:INK3},
+    {t:"TimesFM 3.0",a:o.timesfm,b:o.timesfm,c:S1},
+    {t:"ウォークフォワード選択器",a:o.selector_5,b:o.selector_7,c:S2}];
+  const xmin=0.8, xmax=1.35, x=v=>L+iw*(v-xmin)/(xmax-xmin);
+  for(let v=0.8;v<=1.351;v+=0.1){
     svg.appendChild(el("line",{x1:x(v),x2:x(v),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
-    const tx=el("text",{x:x(v),y:T+ih+21,"font-size":11,"text-anchor":"middle",fill:INK3});
+    const tx=el("text",{x:x(v),y:T+ih+22,"font-size":11,"text-anchor":"middle",fill:INK3});
     tx.textContent=v.toFixed(1);svg.appendChild(tx);}
   const rh=ih/rows.length;
   rows.forEach((r,i)=>{
     const cy=T+rh*i+rh/2;
-    const lab=el("text",{x:L-14,y:cy+4,"font-size":12,"text-anchor":"end",fill:INK2,"font-family":"var(--sans)"});
-    lab.textContent=D.specs[r.dataset].title;svg.appendChild(lab);
-    svg.appendChild(el("line",{x1:x(r.timesfm),x2:x(r.walkforward),y1:cy,y2:cy,
-      stroke:RULE,"stroke-width":3,"stroke-linecap":"round"}));
-    const c2=el("circle",{cx:x(r.walkforward),cy:cy,r:6.5,fill:S2,stroke:SURF,"stroke-width":2});
-    svg.appendChild(c2);
-    bind(c2,`${D.specs[r.dataset].title}\nウォークフォワード選択器 ${f3(r.walkforward)}\nオラクル ${f3(r.oracle)}\nn = ${r.n} 窓`);
-    const c1=el("circle",{cx:x(r.timesfm),cy:cy,r:6.5,fill:S1,stroke:SURF,"stroke-width":2});
-    svg.appendChild(c1);
-    bind(c1,`${D.specs[r.dataset].title}\nTimesFM 3.0 ${f3(r.timesfm)}\n勝率 ${pctf(r.win_rate)}\nn = ${r.n} 窓`);
-    const vl=el("text",{x:L+iw+8,y:cy+4,"font-size":11,fill:INK3,"text-anchor":"start"});
-    vl.textContent=pctf(r.win_rate);svg.appendChild(vl);
+    const lab=el("text",{x:L-16,y:cy+4,"font-size":12,"text-anchor":"end",fill:INK2,"font-family":"var(--sans)"});
+    lab.textContent=r.t;svg.appendChild(lab);
+    const moved=Math.abs(r.a-r.b)>1e-9;
+    if(moved){
+      svg.appendChild(el("line",{x1:x(r.a),x2:x(r.b),y1:cy,y2:cy,stroke:r.c,"stroke-width":2.5,"stroke-linecap":"round"}));
+      const c5=el("circle",{cx:x(r.a),cy:cy,r:5,fill:SURF,stroke:r.c,"stroke-width":2});
+      svg.appendChild(c5); bind(c5,`${r.t}\n候補5手法: ${f3(r.a)}`);
+      const c7=el("circle",{cx:x(r.b),cy:cy,r:6.5,fill:r.c,stroke:SURF,"stroke-width":2});
+      svg.appendChild(c7); bind(c7,`${r.t}\n候補7手法: ${f3(r.b)}\n変化 ${sgn(100*(r.b/r.a-1))}`);
+      const vl=el("text",{x:L+iw+10,y:cy+4,"font-size":11,fill:INK2});
+      vl.textContent=sgn(100*(r.b/r.a-1));svg.appendChild(vl);
+    }else{
+      const c=el("circle",{cx:x(r.a),cy:cy,r:6.5,fill:r.c,stroke:SURF,"stroke-width":2});
+      svg.appendChild(c); bind(c,`${r.t}\n${f3(r.a)}（候補集合に依らない）`);
+      const vl=el("text",{x:L+iw+10,y:cy+4,"font-size":11,fill:INK3});
+      vl.textContent="—";svg.appendChild(vl);
+    }
   });
-  const hd=el("text",{x:L+iw+8,y:T-8,"font-size":10,fill:INK3,"text-anchor":"start"});
-  hd.textContent="勝率";svg.appendChild(hd);
-  const ax=el("text",{x:L+iw/2,y:H-12,"font-size":11,"text-anchor":"middle",fill:INK3});
-  ax.textContent="平均 MASE（小さいほど良い）"; svg.appendChild(ax);
+  const hd=el("text",{x:L+iw+10,y:T-10,"font-size":10,fill:INK3});
+  hd.textContent="変化";svg.appendChild(hd);
+  const lg=el("text",{x:L,y:T-12,"font-size":10.5,fill:INK3});
+  lg.textContent="○ 候補5手法　● 候補7手法";svg.appendChild(lg);
+  const ax=el("text",{x:L+iw/2,y:H-14,"font-size":11,"text-anchor":"middle",fill:INK3});
+  ax.textContent="平均 MASE（小さいほど良い）";svg.appendChild(ax);
 })();
 
-/* ---------- Fig 5a/5b: horizon profiles ---------- */
-function horizonPanel(id,dsKey,title,maxStep){
-  const svg=document.getElementById(id);
-  const L=48,R=14,T=48,B=44,W=380,H=268,iw=W-L-R,ih=H-T-B;
-  const rec=D.horizon.filter(r=>r.dataset===dsKey);
-  const series=["timesfm_3.0","seasonal_naive"].map(m=>({m,
-    pts:rec.filter(r=>r.model===m).sort((a,b)=>a.step-b.step)}));
-  const n=series[0].pts.length;
-  const ymax=Math.max(...series.flatMap(s=>s.pts.map(p=>p.scaled_abs_error)))*1.08;
-  const x=s=>L+iw*(s-1)/(n-1), y=v=>T+ih-ih*v/ymax;
-  const t=el("text",{x:L-34,y:18,"font-size":12,fill:INK2,"font-family":"var(--sans)","font-weight":700});
-  t.textContent=title;svg.appendChild(t);
-  const steps=Math.ceil(ymax/ (ymax>3?1:0.5));
-  for(let g=0;g<=steps;g++){const v=g*(ymax>3?1:0.5); if(v>ymax)break;
-    svg.appendChild(el("line",{x1:L,x2:L+iw,y1:y(v),y2:y(v),stroke:GRID,"stroke-width":1}));
-    const tx=el("text",{x:L-8,y:y(v)+4,"font-size":10.5,"text-anchor":"end",fill:INK3});
-    tx.textContent=v.toFixed(ymax>3?0:1);svg.appendChild(tx);}
-  [1,Math.round(n/2),n].forEach(s=>{
-    const tx=el("text",{x:x(s),y:T+ih+18,"font-size":10.5,"text-anchor":"middle",fill:INK3});
-    tx.textContent=s;svg.appendChild(tx);});
-  series.forEach(s=>{
-    const d=s.pts.map((p,i)=>(i?"L":"M")+x(p.step).toFixed(1)+" "+y(p.scaled_abs_error).toFixed(1)).join(" ");
-    svg.appendChild(el("path",{d:d,fill:"none",stroke:s.m==="timesfm_3.0"?S1:S2,
-      "stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"}));});
-  // invisible hover columns
-  for(let i=0;i<n;i++){
-    const p1=series[0].pts[i],p2=series[1].pts[i];
-    const rct=el("rect",{x:x(i+1)-iw/(2*(n-1)),y:T,width:iw/(n-1),height:ih,fill:"var(--ground)",opacity:0});
-    svg.appendChild(rct);
-    bind(rct,`${title}\nステップ ${p1.step}\nTimesFM ${f3(p1.scaled_abs_error)}\n季節ナイーブ ${f3(p2.scaled_abs_error)}`);
-  }
-  const ax=el("text",{x:L+iw/2,y:H-10,"font-size":10.5,"text-anchor":"middle",fill:INK3});
-  ax.textContent="予測ステップ";svg.appendChild(ax);
-  const ay=el("text",{x:L-34,y:T-13,"font-size":10,fill:INK3});
-  ay.textContent="正規化 |誤差|";svg.appendChild(ay);
-}
-horizonPanel("fig5a","traffic_hourly","Traffic（48時間先まで）");
-horizonPanel("fig5b","solar_10_minutes","Solar（24時間先まで、10分刻み）");
+/* ---------- Fig 5: all datasets dumbbell ---------- */
+(function fig5(){
+  const svg=document.getElementById("fig5");
+  const L=190,R=64,T=26,B=52,W=760,H=620,iw=W-L-R,ih=H-T-B;
+  const rows=D.selector_per_dataset.slice().sort((a,b)=>
+    (a.timesfm/a.walkforward)-(b.timesfm/b.walkforward));
+  const xmax=Math.max(...rows.map(r=>Math.max(r.timesfm,r.walkforward)))*1.08;
+  const x=v=>L+iw*v/xmax;
+  for(let g=0;g<=Math.ceil(xmax);g++){
+    svg.appendChild(el("line",{x1:x(g),x2:x(g),y1:T,y2:T+ih,stroke:GRID,"stroke-width":1}));
+    const tx=el("text",{x:x(g),y:T+ih+21,"font-size":11,"text-anchor":"middle",fill:INK3});
+    tx.textContent=g;svg.appendChild(tx);}
+  const rh=ih/rows.length;
+  rows.forEach((r,i)=>{
+    const cy=T+rh*i+rh/2, isA=r.tier==="A";
+    const lab=el("text",{x:L-16,y:cy+4,"font-size":11,"text-anchor":"end",
+      fill:isA?ACC:INK2,"font-family":"var(--sans)","font-weight":isA?700:400});
+    lab.textContent=D.specs[r.dataset].title;svg.appendChild(lab);
+    svg.appendChild(el("line",{x1:x(r.timesfm),x2:x(r.walkforward),y1:cy,y2:cy,
+      stroke:isA?ACCS:RULE,"stroke-width":isA?3.5:2.5,"stroke-linecap":"round"}));
+    const c2=el("circle",{cx:x(r.walkforward),cy:cy,r:5.5,fill:S2,stroke:SURF,"stroke-width":2});
+    svg.appendChild(c2);
+    bind(c2,`${D.specs[r.dataset].title}\n選択器 ${f3(r.walkforward)}\nオラクル ${f3(r.oracle)}\nn = ${r.n} 窓`);
+    const c1=el("circle",{cx:x(r.timesfm),cy:cy,r:5.5,fill:S1,stroke:SURF,"stroke-width":2});
+    svg.appendChild(c1);
+    bind(c1,`${D.specs[r.dataset].title}\nTimesFM ${f3(r.timesfm)}\n勝率 ${pctf(r.win_rate)}\n層 ${D.tier_label[r.tier]}`);
+    const vl=el("text",{x:L+iw+10,y:cy+4,"font-size":10.5,fill:INK3});
+    vl.textContent=pctf(r.win_rate);svg.appendChild(vl);
+  });
+  const hd=el("text",{x:L+iw+10,y:T-8,"font-size":10,fill:INK3});
+  hd.textContent="勝率";svg.appendChild(hd);
+  const ax=el("text",{x:L+iw/2,y:H-12,"font-size":11,"text-anchor":"middle",fill:INK3});
+  ax.textContent="平均 MASE（小さいほど良い）";svg.appendChild(ax);
+})();
 
-/* ---------- Fig 6: PIT calibration ---------- */
+/* ---------- Fig 6: PIT ---------- */
 (function fig6(){
   const svg=document.getElementById("fig6");
   const L=70,R=190,T=26,B=52,W=760,H=400,iw=W-L-R,ih=H-T-B;
@@ -482,11 +543,11 @@ horizonPanel("fig5b","solar_10_minutes","Solar（24時間先まで、10分刻み
     const ty=el("text",{x:L-10,y:y(v)+4,"font-size":11,"text-anchor":"end",fill:INK3});
     ty.textContent=v.toFixed(1);svg.appendChild(ty);}
   svg.appendChild(el("line",{x1:x(0),y1:y(0),x2:x(1),y2:y(1),stroke:INK3,"stroke-width":1.5,"stroke-dasharray":"5 5"}));
-  const dl=el("text",{x:x(0.87),y:y(0.87)-10,"font-size":10.5,fill:INK3,"text-anchor":"middle"});
+  const dl=el("text",{x:x(0.86),y:y(0.86)-11,"font-size":10.5,fill:INK3,"text-anchor":"middle"});
   dl.textContent="完全較正";svg.appendChild(dl);
 
   const byModel={};
-  for(const r of D.calibration){(byModel[r.model]=byModel[r.model]||[]).push(r);}
+  for(const r of D.calibration){if(r.model===D.oracle_key)continue;(byModel[r.model]=byModel[r.model]||[]).push(r);}
   const pooled=m=>{
     const lv=[...new Set(byModel[m].map(r=>r.level))].sort((a,b)=>a-b);
     return lv.map(l=>{const rs=byModel[m].filter(r=>r.level===l);
@@ -502,21 +563,19 @@ horizonPanel("fig5b","solar_10_minutes","Solar（24時間先まで、10分刻み
       bind(ci,`${jp}\n名目 ${p.level.toFixed(1)}\n実測 ${f3(p.emp)}\nずれ ${gap>0?"+":"−"}${Math.abs(gap).toFixed(3)}`);
     });
   });
-  // annotation
-  const notes=[
-    {t:"下裾が薄い", sub:"10% 分位点の下に 16.3%", ly:0.86},
-    {t:"上裾が薄い", sub:"90% 分位点の下に 87.8%", ly:0.62}];
+  const tf=pooled("timesfm_3.0");
+  const notes=[["下裾が薄い",`10% 分位点の下に ${(100*tf[0].emp).toFixed(1)}%`],
+               ["上裾が薄い",`90% 分位点の下に ${(100*tf[8].emp).toFixed(1)}%`]];
   notes.forEach((nn,i)=>{
-    const bx=L+iw+22, by=T+40+i*76;
-    const t1=el("text",{x:bx,y:by,"font-size":12,fill:"var(--accent)","font-family":"var(--sans)","font-weight":700});
-    t1.textContent=nn.t;svg.appendChild(t1);
+    const bx=L+iw+22, by=T+44+i*74;
+    const t1=el("text",{x:bx,y:by,"font-size":12,fill:ACC,"font-family":"var(--sans)","font-weight":700});
+    t1.textContent=nn[0];svg.appendChild(t1);
     const t2=el("text",{x:bx,y:by+20,"font-size":11,fill:INK3});
-    t2.textContent=nn.sub;svg.appendChild(t2);
-  });
-  const t3=el("text",{x:L+iw+22,y:T+200,"font-size":11.5,fill:INK2,"font-family":"var(--sans)"});
+    t2.textContent=nn[1];svg.appendChild(t2);});
+  const t3=el("text",{x:L+iw+22,y:T+206,"font-size":11.5,fill:INK2,"font-family":"var(--sans)"});
   t3.textContent="→ 区間が狭すぎる";svg.appendChild(t3);
-  const t4=el("text",{x:L+iw+22,y:T+222,"font-size":11,fill:INK3,"font-family":"var(--sans)"});
-  t4.textContent="80% 被覆 = 0.778";svg.appendChild(t4);
+  const t4=el("text",{x:L+iw+22,y:T+228,"font-size":11,fill:INK3,"font-family":"var(--sans)"});
+  t4.textContent=`80% 被覆 = ${f3(D.overall["timesfm_3.0"].coverage_80)}`;svg.appendChild(t4);
 
   const ax=el("text",{x:L+iw/2,y:H-14,"font-size":11,"text-anchor":"middle",fill:INK3});
   ax.textContent="名目分位点";svg.appendChild(ax);
