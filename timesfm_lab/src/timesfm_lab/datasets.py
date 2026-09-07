@@ -140,7 +140,7 @@ SPECS: tuple[DatasetSpec, ...] = (
 
 
 def _synthetic_specs() -> tuple[DatasetSpec, ...]:
-    from .synthetic import PROCESSES
+    from .synthetic import ALL_PROCESSES
 
     return tuple(
         DatasetSpec(
@@ -148,7 +148,7 @@ def _synthetic_specs() -> tuple[DatasetSpec, ...]:
             freq_label="—", context_length=p.context_length, horizon=p.horizon,
             n_series=p.n_series, n_windows=p.n_windows, note=p.note,
         )
-        for p in PROCESSES
+        for p in ALL_PROCESSES
     )
 
 
@@ -175,8 +175,16 @@ FINANCE_SPECS: tuple[DatasetSpec, ...] = (
     ),
 )
 
+TRAFFIC_UK_SPEC = DatasetSpec(
+    key="traffic_uk_2026", title="Traffic UK 2026 (hourly)", filename="traffic_uk_2026.parquet",
+    loader="traffic_uk", season=24, freq_label="1 hour", context_length=1024, horizon=48,
+    n_series=28, n_windows=6,
+    note=("英国高速道路のセンサー計数、2026年1〜6月。Monash traffic_hourly と"
+          "同じ設計（時間足・多数センサー・日次+週次周期）で、確実に学習カットオフ後。"),
+)
+
 SYNTHETIC_SPECS = _synthetic_specs()
-ALL_SPECS: tuple[DatasetSpec, ...] = SPECS + SYNTHETIC_SPECS + FINANCE_SPECS
+ALL_SPECS: tuple[DatasetSpec, ...] = (*SPECS, TRAFFIC_UK_SPEC, *SYNTHETIC_SPECS, *FINANCE_SPECS)
 SPEC_BY_KEY = {s.key: s for s in ALL_SPECS}
 
 
@@ -254,6 +262,8 @@ class Window:
     season: int
     oracle_point: np.ndarray | None = None
     oracle_quantiles: np.ndarray | None = None
+    # (n_covariates, context_length) — filled only for the covariate ablation.
+    past_covariates: np.ndarray | None = None
 
     @property
     def uid(self) -> str:
@@ -279,6 +289,8 @@ def build_windows(spec: DatasetSpec, seed: int = 0) -> list[Window]:
         return _build_synthetic_windows(spec, seed)
     if spec.loader == "finance":
         return _build_finance_windows(spec)
+    if spec.loader == "traffic_uk":
+        return _build_traffic_uk_windows(spec, seed)
     rng = np.random.default_rng(seed)
     raw = load_series(spec)
     need = spec.context_length + spec.horizon * spec.n_windows
@@ -395,4 +407,56 @@ def _build_finance_windows(spec: DatasetSpec) -> list[Window]:
                     season=spec.season,
                 )
             )
+    return windows
+
+
+def _build_traffic_uk_windows(spec: DatasetSpec, seed: int) -> list[Window]:
+    """Windows whose held-out target contains no interpolated point.
+
+    A window may sit on a context with a bridged one-to-six-hour gap — that is
+    just slightly smoothed conditioning information — but never on a target with
+    one, because a score against an interpolated value measures the interpolator.
+    """
+    from .traffic_uk import load_series as load_uk
+
+    rng = np.random.default_rng(seed)
+    segments = load_uk(min_length=spec.context_length + spec.horizon)
+    if len(segments) > spec.n_series:
+        idx = rng.choice(len(segments), size=spec.n_series, replace=False)
+        segments = [segments[int(i)] for i in sorted(idx)]
+
+    windows: list[Window] = []
+    seen: dict[str, int] = {}
+    for site, values, _ts, imputed in segments:
+        # One site can contribute two segments (a >6h gap splits it). The id
+        # must name the *segment*, not the window: the walk-forward selector
+        # groups by series and needs several cutoffs under one id.
+        k = seen[site] = seen.get(site, -1) + 1
+        series_id = site if k == 0 else f"{site}#{k}"
+        n = len(values)
+        taken = 0
+        for w in range(spec.n_windows * 4):  # look further back to skip bad windows
+            if taken >= spec.n_windows:
+                break
+            end = n - w * spec.horizon
+            cut = end - spec.horizon
+            if cut - spec.context_length < 0:
+                break
+            if imputed[cut:end].any():
+                continue
+            ctx = values[cut - spec.context_length : cut]
+            act = values[cut:end]
+            if not (np.isfinite(ctx).all() and np.isfinite(act).all()) or float(np.std(ctx)) == 0.0:
+                continue
+            windows.append(
+                Window(
+                    dataset=spec.key,
+                    series_id=series_id,
+                    cutoff=int(cut),
+                    context=ctx.astype(np.float32),
+                    actual=act.astype(np.float64),
+                    season=spec.season,
+                )
+            )
+            taken += 1
     return windows

@@ -10,7 +10,7 @@ import time
 from datetime import UTC, datetime
 from importlib.metadata import version
 
-from timesfm_lab.bench import RESULTS_DIR, run_all
+from timesfm_lab.bench import RESULTS_DIR, attach_contamination, run_all
 from timesfm_lab.datasets import ALL_SPECS
 
 
@@ -54,6 +54,11 @@ def main() -> None:
         device=args.device,
     )
     wall = time.time() - t0
+
+    # Join the pretraining-coverage columns here rather than leaving it to a
+    # separate step: the report builder needs them, and forgetting the step
+    # produced a results file that looked complete and was not.
+    df = attach_contamination(df, seed=args.seed)
 
     df.to_parquet(RESULTS_DIR / "results.parquet", index=False)
     timings.to_parquet(RESULTS_DIR / "timings.parquet", index=False)

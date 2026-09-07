@@ -68,3 +68,38 @@ class TimesFMRunner:
         if len(forecasts) != len(contexts):
             raise RuntimeError(f"got {len(forecasts)} forecasts for {len(contexts)} contexts")
         return forecasts, elapsed
+
+    def predict_with_covariates(
+        self,
+        contexts: list[np.ndarray],
+        covariates: list[np.ndarray],
+        horizon: int,
+    ) -> tuple[list[Forecast], float]:
+        """Same call, with past-only covariate channels attached.
+
+        The covariates are *past-only*: they stop at the forecast origin. Passing
+        them as past-and-future would leak, because their future values are not
+        known at prediction time in any of the settings here.
+        """
+        import time as _time
+
+        t0 = _time.time()
+        outputs = list(
+            self._evaluator.predict_batch(
+                [np.asarray(c, dtype=np.float32) for c in contexts],
+                horizon=horizon,
+                past_only_covariates=[np.asarray(c, dtype=np.float32) for c in covariates],
+                return_quantiles=True,
+                use_symmetric_averaging=self.use_symmetric_averaging,
+                make_positive=self.make_positive,
+            )
+        )
+        elapsed = _time.time() - t0
+        forecasts = [
+            Forecast(
+                np.asarray(o.forecast, dtype=np.float64),
+                np.sort(np.asarray(o.quantiles, dtype=np.float64), axis=1),
+            )
+            for o in outputs
+        ]
+        return forecasts, elapsed
