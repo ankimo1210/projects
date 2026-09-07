@@ -31,21 +31,29 @@ def wide(df: pd.DataFrame, metric: str = "mase") -> pd.DataFrame:
     return df.pivot_table(index=KEY, columns="model", values=metric).reset_index()
 
 
-def selector_table(df: pd.DataFrame, metric: str = "mase") -> pd.DataFrame:
+def selector_table(
+    df: pd.DataFrame, metric: str = "mase", baselines: list[str] | None = None
+) -> pd.DataFrame:
     """Per-window scores for the oracle and for a walk-forward baseline selector.
 
     The walk-forward selector uses the baseline that won the *previous*
     (older, non-overlapping) window of the same series — information that was
     genuinely available before the forecast was made.  The first window of each
     series has no predecessor and is dropped.
+
+    ``baselines`` narrows the candidate set. It exists so the oracle can be
+    recomputed over a *smaller* pool: if the oracle is really a noise floor
+    rather than a method, adding candidates must push it down even when the
+    additions are individually poor, and that is a checkable prediction.
     """
+    names = list(BASELINE_NAMES if baselines is None else baselines)
     w = wide(df, metric).sort_values(KEY)
     rows: list[dict] = []
     for (dataset, series_id), g in w.groupby(["dataset", "series_id"], sort=False):
         g = g.sort_values("cutoff")
         prev_best: str | None = None
         for _, r in g.iterrows():
-            avail = r[BASELINE_NAMES].astype(float)
+            avail = r[names].astype(float)
             if prev_best is not None and np.isfinite(avail).any():
                 rows.append(
                     {
@@ -57,7 +65,7 @@ def selector_table(df: pd.DataFrame, metric: str = "mase") -> pd.DataFrame:
                         "oracle": float(avail.min()),
                         "oracle_pick": str(avail.idxmin()),
                         MODEL_KEY: float(r[MODEL_KEY]),
-                        **{b: float(r[b]) for b in BASELINE_NAMES},
+                        **{b: float(r[b]) for b in names},
                     }
                 )
             if np.isfinite(avail).any():
@@ -92,10 +100,10 @@ def head_to_head(sel: pd.DataFrame, opponents: list[str], metric_name: str = "MA
     return pd.DataFrame(out)
 
 
-def selector_skill(sel: pd.DataFrame) -> dict:
+def selector_skill(sel: pd.DataFrame, n_candidates: int | None = None) -> dict:
     """How much of the oracle's advantage a real selector can actually capture."""
     match = float((sel.picked == sel.oracle_pick).mean())
-    chance = 1.0 / len(BASELINE_NAMES)
+    chance = 1.0 / (n_candidates or len(BASELINE_NAMES))
     oracle, wf = float(sel.oracle.mean()), float(sel.walkforward.mean())
     tfm = float(sel[MODEL_KEY].mean())
     return {

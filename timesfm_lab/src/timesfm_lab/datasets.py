@@ -11,12 +11,13 @@ benchmark run cannot silently depend on what a remote host served today.
 from __future__ import annotations
 
 import dataclasses
+import zlib
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-DATA_DIR = Path(__file__).resolve().parents[2] / "_data"
+from .paths import DATA_DIR
 
 
 @dataclasses.dataclass(frozen=True)
@@ -136,7 +137,47 @@ SPECS: tuple[DatasetSpec, ...] = (
     ),
 )
 
-SPEC_BY_KEY = {s.key: s for s in SPECS}
+
+
+def _synthetic_specs() -> tuple[DatasetSpec, ...]:
+    from .synthetic import PROCESSES
+
+    return tuple(
+        DatasetSpec(
+            key=p.key, title=p.title, filename="", loader="synthetic", season=p.season,
+            freq_label="—", context_length=p.context_length, horizon=p.horizon,
+            n_series=p.n_series, n_windows=p.n_windows, note=p.note,
+        )
+        for p in PROCESSES
+    )
+
+
+# Daily bars; the window plan in `finance.py` keeps every held-out point in 2026,
+# which is after every cutoff the TimesFM 3.0 card names.
+FINANCE_SPECS: tuple[DatasetSpec, ...] = (
+    DatasetSpec(
+        key="fin_log_volume", title="金融: 出来高（対数）", filename="finance_ohlcv.parquet",
+        loader="finance", season=5, freq_label="1 営業日", context_length=512, horizon=20,
+        n_series=18, n_windows=6,
+        note="18銘柄の日次出来高。曜日周期がはっきりあり、金融系では最も予測余地がある。",
+    ),
+    DatasetSpec(
+        key="fin_range_vol", title="金融: レンジボラ（対数）", filename="finance_ohlcv.parquet",
+        loader="finance", season=5, freq_label="1 営業日", context_length=512, horizon=20,
+        n_series=18, n_windows=6,
+        note="Parkinson の高安レンジ推定量。クラスタリングするので HAR の主戦場。",
+    ),
+    DatasetSpec(
+        key="fin_log_return", title="金融: 対数収益率", filename="finance_ohlcv.parquet",
+        loader="finance", season=5, freq_label="1 営業日", context_length=512, horizon=20,
+        n_series=18, n_windows=6,
+        note="対照群。ここで有意に勝つ手法があったら、まず実装を疑うべき系列。",
+    ),
+)
+
+SYNTHETIC_SPECS = _synthetic_specs()
+ALL_SPECS: tuple[DatasetSpec, ...] = SPECS + SYNTHETIC_SPECS + FINANCE_SPECS
+SPEC_BY_KEY = {s.key: s for s in ALL_SPECS}
 
 
 def parse_tsf(path: Path) -> list[tuple[str, np.ndarray]]:
@@ -190,7 +231,20 @@ def load_series(spec: DatasetSpec) -> list[tuple[str, np.ndarray]]:
 
 @dataclasses.dataclass(frozen=True)
 class Window:
-    """One rolling-origin evaluation window."""
+    """One rolling-origin evaluation window.
+
+    ``oracle_point`` / ``oracle_quantiles`` are filled only for the synthetic
+    processes, where the true conditional distribution of the future is known.
+    They are the ceiling: no forecaster can beat them in population, so they turn
+    a relative score into a distance from what was achievable.
+
+    ``oracle_point`` is the conditional **median**, not the mean, because every
+    point metric reported here is built on absolute error and the median is what
+    minimises that. Using the mean made the "optimum" lose to TimesFM by 43% on
+    the intermittent process, whose distribution puts most of its mass on zero:
+    there the mean is a positive number no realisation ever takes. For the
+    symmetric processes the two coincide.
+    """
 
     dataset: str
     series_id: str
@@ -198,6 +252,8 @@ class Window:
     context: np.ndarray
     actual: np.ndarray
     season: int
+    oracle_point: np.ndarray | None = None
+    oracle_quantiles: np.ndarray | None = None
 
     @property
     def uid(self) -> str:
@@ -219,6 +275,10 @@ def build_windows(spec: DatasetSpec, seed: int = 0) -> list[Window]:
     overlapping test windows would make the per-window errors dependent and
     inflate the apparent significance of any comparison built on them.
     """
+    if spec.loader == "synthetic":
+        return _build_synthetic_windows(spec, seed)
+    if spec.loader == "finance":
+        return _build_finance_windows(spec)
     rng = np.random.default_rng(seed)
     raw = load_series(spec)
     need = spec.context_length + spec.horizon * spec.n_windows
@@ -251,6 +311,84 @@ def build_windows(spec: DatasetSpec, seed: int = 0) -> list[Window]:
                 Window(
                     dataset=spec.key,
                     series_id=name,
+                    cutoff=int(cut),
+                    context=ctx.astype(np.float32),
+                    actual=act.astype(np.float64),
+                    season=spec.season,
+                )
+            )
+    return windows
+
+
+# --------------------------------------------------------------------------- #
+# generated and derived series
+# --------------------------------------------------------------------------- #
+
+
+def _build_synthetic_windows(spec: DatasetSpec, seed: int) -> list[Window]:
+    """Generate paths from a known process and attach the optimal forecast.
+
+    The seed is mixed with the dataset key so two processes with the same
+    sampling protocol do not share a noise path — otherwise their results would
+    be correlated in a way the per-window pairing does not expect.
+
+    The key is folded in with ``crc32``, not ``hash()``: Python randomises string
+    hashing per process, so a ``hash()``-derived seed silently regenerates
+    *different* series on every run, and the benchmark stops being reproducible.
+    """
+    from .baselines import QUANTILE_LEVELS
+    from .synthetic import PROCESS_BY_KEY
+
+    proc = PROCESS_BY_KEY[spec.key]
+    n = spec.context_length + spec.horizon * spec.n_windows + 64
+    windows: list[Window] = []
+    for s in range(spec.n_series):
+        rng = np.random.default_rng([seed, zlib.crc32(spec.key.encode()), s])
+        values, aux = proc.generate(rng, n)
+        for w in range(spec.n_windows):
+            end = n - w * spec.horizon
+            cut = end - spec.horizon
+            if cut - spec.context_length < 0:
+                continue
+            paths = proc.simulate(aux, cut, spec.horizon, rng)
+            windows.append(
+                Window(
+                    dataset=spec.key,
+                    series_id=f"S{s:03d}",
+                    cutoff=int(cut),
+                    context=values[cut - spec.context_length : cut].astype(np.float32),
+                    actual=values[cut:end].astype(np.float64),
+                    season=spec.season,
+                    oracle_point=np.median(paths, axis=0),
+                    oracle_quantiles=np.quantile(paths, QUANTILE_LEVELS, axis=0).T,
+                )
+            )
+    return windows
+
+
+def _build_finance_windows(spec: DatasetSpec) -> list[Window]:
+    """Cut windows whose held-out target lies entirely after the training cutoff."""
+    from .finance import TARGETS, FinanceWindowPlan, build_targets, load_ohlcv
+
+    if spec.key not in TARGETS:
+        raise ValueError(f"{spec.key} is not a financial target")
+    plan = FinanceWindowPlan(
+        context_length=spec.context_length, horizon=spec.horizon, n_windows=spec.n_windows
+    )
+    series = build_targets(load_ohlcv())[spec.key]
+    windows: list[Window] = []
+    for ticker, values, dates in series:
+        for cut in plan.cutoffs(dates):
+            ctx = values[cut - spec.context_length : cut]
+            act = values[cut : cut + spec.horizon]
+            if len(act) < spec.horizon or not (np.isfinite(ctx).all() and np.isfinite(act).all()):
+                continue
+            if float(np.std(ctx)) == 0.0:
+                continue
+            windows.append(
+                Window(
+                    dataset=spec.key,
+                    series_id=ticker,
                     cutoff=int(cut),
                     context=ctx.astype(np.float32),
                     actual=act.astype(np.float64),

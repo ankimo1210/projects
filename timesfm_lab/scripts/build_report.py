@@ -16,26 +16,17 @@ ROOT = Path(__file__).resolve().parents[2]
 TOKENS = ROOT / "docs" / "templates" / "claude-report" / "tokens.css"
 BODY = RESULTS_DIR / "_body.html"
 
-# Only these panels are drawn from the per-step profile; shipping all of it would
-# triple the page for numbers nothing reads.
-HORIZON_DATASETS = {"traffic_hourly", "solar_10_minutes"}
-HORIZON_MODELS = {"timesfm_3.0", "seasonal_naive"}
+# The report draws only these two models' calibration curves; the rest of the
+# per-quantile records would triple the page for numbers nothing reads.
+CALIBRATION_MODELS = {"timesfm_3.0", "seasonal_naive"}
 
 
 def slim(data: dict) -> dict:
+    """Drop the records the page never reads, so the payload stays small."""
     out = dict(data)
-    out["horizon"] = [
-        r
-        for r in data["horizon"]
-        if r["dataset"] in HORIZON_DATASETS and r["model"] in HORIZON_MODELS
+    out["calibration"] = [
+        r for r in data["calibration"] if r["model"] in CALIBRATION_MODELS
     ]
-    out["contamination"] = {
-        k: v for k, v in data["contamination"].items() if k != "by_exposure"
-    } | {
-        "by_exposure": [
-            r for r in data["contamination"]["by_exposure"] if r["model"] == "timesfm_3.0"
-        ]
-    }
     return out
 
 

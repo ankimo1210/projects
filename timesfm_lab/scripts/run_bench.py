@@ -11,7 +11,7 @@ from datetime import UTC, datetime
 from importlib.metadata import version
 
 from timesfm_lab.bench import RESULTS_DIR, run_all
-from timesfm_lab.datasets import SPECS
+from timesfm_lab.datasets import ALL_SPECS
 
 
 def provenance() -> dict:
@@ -69,7 +69,7 @@ def main() -> None:
                 "context_length": s.context_length, "horizon": s.horizon,
                 "n_series": s.n_series, "n_windows": s.n_windows, "note": s.note,
             }
-            for s in SPECS
+            for s in ALL_SPECS
             if args.datasets is None or s.key in args.datasets
         ],
     }
