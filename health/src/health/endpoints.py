@@ -1,6 +1,6 @@
 """Google Health API v4 metric catalog: request/response contracts, chunking, parser stubs.
 
-Contract source of truth: `.superpowers/sdd/health-google-api-contracts.md`
+Contract source of truth: `docs/google-health-source-contracts.md`
 (extracted verbatim from the v4 discovery document). `CivilDateTime` never
 carries a UTC offset; `dailyRollUp` ranges are closed-open; `reconcile`
 filters use the full snake_case data-type path, never a bare field name.
@@ -43,11 +43,25 @@ class Metric:
     method: str  # DAILY_ROLLUP or RECONCILE
     max_range_days: int
     scope: str
-    full_history: bool  # False: backfill only trailing 30 days (intraday)
+    full_history: bool  # Legacy default policy; explicit history_floors override it.
     series_names: tuple[str, ...]
     parse_pages: Callable[[Sequence[dict]], ParsedRows]
     page_size: int = 1000
     filter_path: str | None = None  # reconcile only; None for dailyRollUp
+    storage_tables: tuple[str, ...] | None = None
+
+    def __post_init__(self):
+        # Resolve legacy constructors once: replacing history policy retains
+        # the table identity instead of changing the DELETE destination.
+        if self.storage_tables is None:
+            tables = ("daily_series",) if self.full_history else ("intraday",)
+            if self.name == "sleep":
+                tables += ("sleep_sessions",)
+            object.__setattr__(self, "storage_tables", tables)
+        if any(
+            t not in {"daily_series", "intraday", "sleep_sessions"} for t in self.storage_tables
+        ):
+            raise ValueError("unknown projection table")
 
 
 # -- request / response contract helpers -------------------------------------
@@ -745,65 +759,17 @@ CATALOG: list[Metric] = [
 
 
 # -- published Google Health data types (superset of CATALOG) -----------------
-# id -> (label, scope). Ids and shapes come from the ReconciledDataPoint union
-# in the contracts file (plus `total-calories`, rollup-only). Not every
-# published data type is implemented; CATALOG's data types are a subset.
-# `scope` is one of the 3 OAuth scopes actually requested by auth.py
-# (activity_and_fitness / health_metrics_and_measurements / sleep) so the
-# inventory page can point a 403 back at the scope to (re)grant.
+# The audited archival catalog owns public type and scope definitions. The
+# projection CATALOG above is deliberately a smaller, independently typed set.
+from health.source_catalog import load_sources  # noqa: E402
 
 KNOWN_DATA_TYPES: dict[str, tuple[str, str]] = {
-    "steps": ("Steps", "activity_and_fitness"),
-    "distance": ("Distance", "activity_and_fitness"),
-    "total-calories": ("Total calories", "activity_and_fitness"),
-    "active-minutes": ("Active minutes", "activity_and_fitness"),
-    "active-energy-burned": ("Active energy burned", "activity_and_fitness"),
-    "active-zone-minutes": ("Active zone minutes", "activity_and_fitness"),
-    "activity-level": ("Activity level", "activity_and_fitness"),
-    "altitude": ("Altitude", "activity_and_fitness"),
-    "basal-energy-burned": ("Basal energy burned", "activity_and_fitness"),
-    "exercise": ("Exercise session", "activity_and_fitness"),
-    "floors": ("Floors climbed", "activity_and_fitness"),
-    "sedentary-period": ("Sedentary period", "activity_and_fitness"),
-    "swim-lengths-data": ("Swim lengths", "activity_and_fitness"),
-    "time-in-heart-rate-zone": ("Time in heart rate zone", "activity_and_fitness"),
-    "daily-vo2-max": ("Daily VO2 max", "activity_and_fitness"),
-    "run-vo2-max": ("Run VO2 max", "activity_and_fitness"),
-    "vo2-max": ("VO2 max", "activity_and_fitness"),
-    "weight": ("Weight", "health_metrics_and_measurements"),
-    "body-fat": ("Body fat percentage", "health_metrics_and_measurements"),
-    "height": ("Height", "health_metrics_and_measurements"),
-    "heart-rate": ("Heart rate", "health_metrics_and_measurements"),
-    "heart-rate-variability": (
-        "Heart rate variability (sample)",
-        "health_metrics_and_measurements",
-    ),
-    "daily-resting-heart-rate": (
-        "Daily resting heart rate",
-        "health_metrics_and_measurements",
-    ),
-    "daily-heart-rate-variability": (
-        "Daily heart rate variability",
-        "health_metrics_and_measurements",
-    ),
-    "daily-heart-rate-zones": ("Daily heart rate zones", "health_metrics_and_measurements"),
-    "daily-oxygen-saturation": (
-        "Daily oxygen saturation",
-        "health_metrics_and_measurements",
-    ),
-    "oxygen-saturation": ("Oxygen saturation (sample)", "health_metrics_and_measurements"),
-    "daily-sleep-temperature-derivations": (
-        "Daily sleep temperature derivation",
-        "health_metrics_and_measurements",
-    ),
-    "core-body-temperature": ("Core body temperature", "health_metrics_and_measurements"),
-    "daily-respiratory-rate": ("Daily respiratory rate", "health_metrics_and_measurements"),
-    "respiratory-rate-sleep-summary": (
-        "Respiratory rate sleep summary",
-        "health_metrics_and_measurements",
-    ),
-    "blood-glucose": ("Blood glucose", "health_metrics_and_measurements"),
-    "nutrition-log": ("Nutrition log", "health_metrics_and_measurements"),
-    "hydration-log": ("Hydration log", "health_metrics_and_measurements"),
-    "sleep": ("Sleep session", "sleep"),
+    source.data_type: (
+        source.label,
+        ", ".join(
+            scope.split("googlehealth.", 1)[1].removesuffix(".readonly")
+            for scope in source.readonly_scopes
+        ),
+    )
+    for source in load_sources()
 }

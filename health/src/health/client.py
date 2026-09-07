@@ -1,21 +1,15 @@
 """Google Health API v4 HTTP client: request pacing, a hard request budget,
 and a Google-error-aware exception taxonomy.
 
-Only two request shapes exist for the metrics this app syncs:
-`dailyRollUp` (POST, one JSON body) and `reconcile` (GET, paged). Both share
-one physical-send path (`_dispatch`) so pacing, budgeting, one-shot 401
-refresh/retry, and error normalization are implemented exactly once.
-
-`API` is the Google Health API base URL. It is defined here (not imported
-from `health.endpoints`) because this task's file scope is limited to
-`client.py` / `tests/test_client.py` / `tests/fakes.py`; `endpoints.py` does
-not currently export a base-URL constant.
+Source list/get and existing dailyRollUp/reconcile projections share one
+physical-send path. Observers see response bytes before parsing or 401 refresh.
+OAuth token responses are never observed here.
 """
 
 from __future__ import annotations
 
 import time
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from email.utils import parsedate_to_datetime
@@ -25,6 +19,7 @@ import requests
 
 from health.auth import AuthError, GoogleHealthAuth
 from health.endpoints import Metric, closed_open_filter, daily_rollup_body
+from health.source_catalog import RequestSpec, validate_request
 
 API = "https://health.googleapis.com"
 
@@ -102,7 +97,9 @@ class HealthClient:
         clock=time.monotonic,
         wait=time.sleep,
         min_interval_s: float = 0.5,
+        response_observer: Callable[[RequestSpec, bytes, int], None] | None = None,
     ):
+        self.response_observer = response_observer
         self.auth = auth
         self.session = session or requests.Session()
         self.clock = clock
@@ -142,14 +139,48 @@ class HealthClient:
 
     # -- one physical send, with one-shot 401 refresh/retry -------------------
 
-    def _request(self, method: str, url: str, budget: RequestBudget, **kwargs) -> dict:
-        resp = self._dispatch(method, url, budget, **kwargs)
+    def request_page(
+        self,
+        request: RequestSpec,
+        budget: RequestBudget,
+        *,
+        capture: Callable[[bytes, int], None] | None = None,
+    ) -> dict:
+        """Send one page, retaining every response before JSON/error parsing.
+
+        Capture failures propagate: continuing after a failed durable write
+        would lose an observed response. Both 401 responses are captured.
+        """
+        validate_request(request)
+        kwargs = {}
+        if request.params:
+            kwargs["params"] = request.params
+        if request.body is not None:
+            kwargs["json"] = request.body
+
+        def send():
+            response = self._dispatch(request.method, API + request.path, budget, **kwargs)
+            if capture is not None:
+                capture(response.content, response.status_code)
+            if self.response_observer is not None:
+                self.response_observer(request, response.content, response.status_code)
+            return response
+
+        resp = send()
         if resp.status_code == 401:
-            self.auth.refresh()  # not paced/budgeted: token endpoint, not Health API
-            resp = self._dispatch(method, url, budget, **kwargs)
+            self.auth.refresh()  # token endpoint is not observed/paced/budgeted
+            resp = send()
             if resp.status_code == 401:
                 raise AuthError("Google Health API returned 401 after a token refresh and retry")
         return self._parse(resp)
+
+    def _request(self, method: str, url: str, budget: RequestBudget, **kwargs) -> dict:
+        if not url.startswith(API + "/"):
+            raise ValueError("Health API URL required")
+        return self.request_page(
+            RequestSpec(method, url[len(API) :], kwargs.get("params", {}), kwargs.get("json")),
+            budget,
+        )
 
     def _dispatch(self, method: str, url: str, budget: RequestBudget, **kwargs):
         # Resolving a token (and therefore any auth-internal near-expiry
@@ -187,7 +218,10 @@ class HealthClient:
         if resp.status_code >= 400:
             raise self._api_error(resp)
         try:
-            return resp.json()
+            payload = resp.json()
+            if not isinstance(payload, dict):
+                raise ValueError("expected a JSON object")
+            return payload
         except ValueError as exc:
             raise ApiError(
                 resp.status_code, f"malformed JSON in {resp.status_code} response: {exc}"

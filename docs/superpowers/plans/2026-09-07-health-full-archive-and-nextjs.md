@@ -1,5 +1,11 @@
 # Health Full Archive and Next.js Implementation Plan
 
+> **実装状況（2026-09-07）:** Tasks 1〜13 を実装し、StreamlitからNext.jsへ切り替えた。
+> CLI・全量原本保存・再開・分析export・7画面を接続済み。取得にはrequest予算と
+> Googleの権限制約があるため、コードの完成と本人データの全量取得完了は別。
+> 下のチェックボックスは当初計画の手順を保持する。実際の検証と差分は
+> `health/docs/2026-09-07-cutover-validation.md` を参照。commitは統合した変更単位にまとめる。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Google Health の取得可能な本人データを元の粒度で全量保存し、取得不能を明示したうえで既存7画面を Next.js へ移す。
