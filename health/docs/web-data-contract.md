@@ -1,5 +1,22 @@
 # Web data contract v1
 
+Health Planet追加: `healthplanet.json`も同じ世代のenvelopeで出力する。
+旧世代でこのファイルがない場合もGoogle画面は利用可能。
+`data`は`provider: "healthplanet"`, `timeBasis: "civil"`,
+`status: "not_connected" | "pending" | "partial" | "available"`,
+`historyComplete: false`, `sources: SourceCoverage[]`,
+`measurements: {id, metric, tag, timestamp, value, unit, model}[]`,
+`unsupported: {metric, label, reason}[]`, `quality: {unparsedRecords: number}`。
+測定は日時・項目・機器・ID順。`healthplanet.json`は日内の全測定を保持する。
+`daily.json`の正規系列は体重・体脂肪率だけHealth Planetの各日最終測定を採用し、
+それ以外はGoogleを採用する。Googleの体重・体脂肪の原本とtyped storeは削除しない。
+測定IDがないためIDは元レコードと応答内の出現回数のハッシュ。上流修正の観測版も保持する。
+timestampはオフセットを推測しないcivil日時。未知項目や非有限値は原本に残し、
+投影できなかったレコード数をqualityへ記録する（再走査も含む応答ごとの合計）。
+プロフィール・未知フィールド・原本・tokenは公開用JSONへ含めない。
+SQLiteの読み取りsnapshotはGoogle DBとは独立し、取得状態・日時はproviderごとに示す。
+`available`は要求区間の成功を表し、全履歴の保証ではない。
+
 Tasks 8/9 と Next.js の共有契約。以下の TypeScript 型が JSON の具体的な構造を定義する。
 すべての数値は有限値。欠損・NaN・Infinity は `null`。日付は `YYYY-MM-DD`。
 
@@ -16,6 +33,7 @@ export type Daily = {
   dates: string[]; // sorted, every civil day between first/last saved daily row
   series: Record<string, (number | null)[]>; // every column has dates.length
   units: Record<string, string>;
+  providers?: Record<string, "google" | "healthplanet">; // absent in older snapshots
 };
 export type SleepSession = {
   provider_id: string; date: string; start_ts: string | null; end_ts: string | null;
@@ -92,8 +110,8 @@ loader は最初に meta を読み、`basePath + files[key]` から同じ genera
 | distance_km | km | 活動 |
 | calories | kcal | 活動 |
 | minutes_lightly_active / minutes_fairly_active / minutes_very_active | min | 活動 |
-| weight_kg | kg | 身体 |
-| fat_pct | % | 身体 |
+| weight_kg（Health Planet各日最終測定） | kg | 身体 |
+| fat_pct（Health Planet各日最終測定） | % | 身体 |
 | resting_hr | bpm | 概要・心臓・気づき |
 | hrv_rmssd / hrv_deep_rmssd | ms | 心臓・気づき |
 | spo2_avg / spo2_lower_bound / spo2_upper_bound | % | 身体 |

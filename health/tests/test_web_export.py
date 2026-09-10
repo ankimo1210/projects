@@ -58,7 +58,10 @@ def test_daily_alignment_nulls_units_and_quality(store, tmp_path):
     data = read_export(path, "daily.json")
     assert data["dates"] == ["2025-01-01", "2025-01-02", "2025-01-03"]
     assert data["series"]["steps"] == [100.0, None, None]
-    assert data["series"]["weight_kg"] == [None, None, 65.5]
+    assert data["series"]["weight_kg"] == [None, None, None]
+    assert data["providers"]["steps"] == "google"
+    assert data["providers"]["weight_kg"] == "healthplanet"
+    assert data["providers"]["fat_pct"] == "healthplanet"
     assert all(len(values) == 3 for values in data["series"].values())
     assert data["units"]["weight_kg"] == "kg"
     assert data["units"]["fat_pct"] == "%"

@@ -35,6 +35,13 @@ Google Health APIの本人データを原本保存し、Next.jsで閲覧する�
   ズーム時に元の点へ戻る。7画面の解析・エラー・空データ表示を維持する。
 - `.env`、`data/`、`web/public/data/`、`web/out/`はprivateかつgitignored。
   token、実データ、probe、生成JSONをcommitしない。配信は127.0.0.1。
+- Health Planetは`healthplanet.py` / `healthplanet_auth.py`で独立して扱う。
+  `data/healthplanet/`のSQLite・原本・tokenを使う。Webの正規体重・体脂肪率は
+  Health Planetの各日最終測定を採用し、Google側の原本とtyped storeは保持する。
+  SQLiteの初期化は非公開の一時DBからatomicに公開し、既存schemaは変更しない。
+  最大3か月ごとの要求・60回/時間の永続台帳・単一writer lock・未完了rescanを保持する。
+  公式APIにないrefresh grantを推測せず、認可はHTTPS成功画面のコード入力方式。
+  筋肉量など提供終了項目を明示し、履歴の最古日を確認できない場合は取得済みと断定しない。
 - Pythonはworkspace rootで`uv run --no-sync pytest health/tests -q`。
   `web/`でtypecheck/lint/test/build。自動テストはfake HTTPと架空fixtureのみ。
   UI用DBは`seed_demo.py --db-path <temporary path>`で生成し、実dataを上書きしない。

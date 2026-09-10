@@ -4,10 +4,13 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import getpass
 import json
 import os
 import re
 import sys
+import time
+import webbrowser
 from collections.abc import Sequence
 from dataclasses import asdict
 from datetime import date, timedelta
@@ -97,6 +100,30 @@ def _parser() -> argparse.ArgumentParser:
     sync.add_argument("--max-requests", type=_positive, default=200)
     sync.add_argument("--rescan", action="store_true")
     sync.add_argument("--history-start", type=_history_date)
+    sync.add_argument(
+        "--archive-only",
+        action="store_true",
+        help="表示用再集計を行わず、Google原本の全source・全page取得へ予算を使う",
+    )
+    hp_auth = commands.add_parser("auth-healthplanet", help="Health Planetの読み取り連携を認可")
+    hp_auth.add_argument("--no-browser", action="store_true")
+    hp_auth.add_argument("--begin", action="store_true", help="認可URLだけを発行")
+    hp_auth.add_argument("--code-file", type=Path, help="ローカル保存した認可コードを交換")
+    hp_sync = commands.add_parser("sync-healthplanet", help="Health Planetの原本と全測定を保存")
+    hp_sync.add_argument("--history-start", type=_history_date, required=True)
+    hp_sync.add_argument("--history-end", type=_history_date, default=date.today())
+    hp_sync.add_argument("--max-requests", type=_positive, default=30)
+    hp_sync.add_argument("--rescan", action="store_true")
+    hp_sync.add_argument(
+        "--endpoint",
+        action="append",
+        choices=("innerscan", "sphygmomanometer", "pedometer"),
+        help="取得対象。省略時は全対象、複数指定可",
+    )
+    hp_sync.add_argument("--wait", action="store_true", help="指定区間の完了まで取得枠の回復を待つ")
+    hp_sync.add_argument(
+        "--export-dir", type=Path, help="各取得後に更新するローカルWebデータの保存先"
+    )
     export = commands.add_parser("export-web", help="一貫したWebデータを生成")
     export.add_argument("--out-dir", type=Path, default=_PROJECT / "web" / "public" / "data")
     return parser
@@ -451,7 +478,11 @@ def _sync(args, auth, sources) -> tuple[int, dict]:
             )
             failures.append(_failure(f"projection:{metric.name}", "permission_denied", 403))
         budgets = {phase: {"limit": 0, "used": 0} for phase in ("archive", "projection")}
-        order = ("archive", "projection") if run % 2 else ("projection", "archive")
+        order = (
+            ("archive",)
+            if args.archive_only
+            else (("archive", "projection") if run % 2 else ("projection", "archive"))
+        )
         used, stopped, retry_after = 0, None, None
         projection_report = None
         history = _projection_history(
@@ -459,7 +490,11 @@ def _sync(args, auth, sources) -> tuple[int, dict]:
         )
         hit_cap = False
         for position, phase in enumerate(order):
-            limit = (args.max_requests + 1) // 2 if position == 0 else args.max_requests - used
+            limit = (
+                args.max_requests - used
+                if len(order) == 1
+                else ((args.max_requests + 1) // 2 if position == 0 else args.max_requests - used)
+            )
             if limit <= 0:
                 continue
             budget = RequestBudget(limit)
@@ -602,12 +637,68 @@ def _sync(args, auth, sources) -> tuple[int, dict]:
         }
 
 
+def _healthplanet(args):
+    from health.healthplanet import sync as sync_healthplanet
+    from health.healthplanet_auth import HealthPlanetAuth
+
+    auth = HealthPlanetAuth.from_env(args.data_dir, args.env_file)
+    if args.command == "auth-healthplanet":
+        if args.code_file:
+            if args.begin:
+                raise ValueError("choose begin or code file")
+            code = args.code_file.read_text().strip()
+        else:
+            url = auth.begin_auth()
+            print(f"Health Planetの連携を許可してください: {url}", file=sys.stderr, flush=True)
+            if not args.no_browser:
+                webbrowser.open(url)
+            if args.begin:
+                return 2, {"command": args.command, "status": "awaiting_authorization"}
+            if not sys.stdin.isatty():
+                raise AuthError("interactive terminal or local code file required")
+            code = getpass.getpass("成功画面の認可コード（入力は非表示）: ")
+        auth.complete_auth(code)
+        return 0, {"command": args.command, "status": "complete"}
+    first = True
+    while True:
+        result = sync_healthplanet(
+            args.data_dir,
+            auth,
+            start=args.history_start,
+            end=args.history_end,
+            max_requests=args.max_requests,
+            rescan=args.rescan,
+            endpoints=args.endpoint,
+        )
+        if args.export_dir and (first or result["requests_made"]):
+            with _open_store(args.data_dir) as (store, _):
+                export_web(store, args.export_dir)
+        first = False
+        if (
+            not args.wait
+            or result["failures"]
+            or result["stopped_reason"] not in {"request_cap", "rate_limited"}
+        ):
+            break
+        print(
+            json.dumps(result, ensure_ascii=False, allow_nan=False, sort_keys=True),
+            file=sys.stderr,
+            flush=True,
+        )
+        if result["stopped_reason"] == "rate_limited":
+            time.sleep(max(1, result["retry_after_s"] or 3600) + 1)
+    result["command"] = args.command
+    return (0 if result["status"] == "available" else 2), result
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     command = None
     try:
         args = _parser().parse_args(argv)
         command = args.command
-        if command == "export-web":
+        if command in {"auth-healthplanet", "sync-healthplanet"}:
+            code, summary = _healthplanet(args)
+        elif command == "export-web":
             with _open_store(args.data_dir) as (store, backed_up):
                 manifest = export_web(store, args.out_dir)
                 summary = {
@@ -632,7 +723,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         return int(error.code or 0)  # argparse help has already printed its text.
     except (Exception, KeyboardInterrupt) as error:
         reason = _error_reason(error)
-        print(_REASONS[reason], file=sys.stderr)
+        if command in {"auth-healthplanet", "sync-healthplanet"} and reason == "authorization":
+            print(
+                "Health Planetの設定と認可期限を確認し、health auth-healthplanet を実行してください。",
+                file=sys.stderr,
+            )
+        else:
+            print(_REASONS[reason], file=sys.stderr)
         code, summary = 1, {"command": command, "status": "stopped", "stopped_reason": reason}
     print(json.dumps(summary, ensure_ascii=False, allow_nan=False, sort_keys=True), flush=True)
     return code
