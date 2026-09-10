@@ -1,5 +1,10 @@
 """Offline CLI integration: one writer, durable backups and bounded HTTP."""
 
+# health/tests/ is a package, so `from .fakes import ...` resolves through the
+# top-level name `tests`, which in a full-workspace run belongs to whichever
+# member project pytest imported first. Load the sibling module by path instead,
+# the way test_client.py and test_source_probe.py already do.
+import importlib.util as _importlib_util
 import json
 from dataclasses import replace
 from datetime import date
@@ -19,7 +24,12 @@ from health.sync import SyncReport
 
 from health import cli
 
-from .fakes import FakeResponse, FakeSession
+_fakes_spec = _importlib_util.spec_from_file_location(
+    "health_test_fakes", Path(__file__).resolve().with_name("fakes.py")
+)
+_fakes = _importlib_util.module_from_spec(_fakes_spec)
+_fakes_spec.loader.exec_module(_fakes)
+FakeResponse, FakeSession = _fakes.FakeResponse, _fakes.FakeSession
 
 
 class FakeAuth:
