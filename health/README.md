@@ -21,6 +21,57 @@ Next.js + shadcn/ui + Rechartsで閲覧する個人向けポータルです。
 根拠とAPI制約は[取得契約](docs/google-health-source-contracts.md)、
 表示形式は[Webデータ契約](docs/web-data-contract.md)を参照してください。
 
+## TANITA / Health Planet
+
+Health Planetも別の取得元として身体ページに表示できます。
+体重・体脂肪率の正規表示と分析にはHealth Planetの各日最終測定を使います。
+Googleから取得した同項目の原本とtyped系列も比較・監査用に削除せず保持します。
+公式APIで取得可能なのは体重・体脂肪率・血圧・脈拍・歩数です。
+筋肉量・内臓脂肪・基礎代謝量・体内年齢・推定骨量などのAPI連携は
+2020-06-29に終了しています。対象外を画面に明示し、全項目取得済みとは扱いません。
+[公式仕様](https://www.healthplanet.jp/apis/api.html)
+
+アプリ登録済みの`HEALTHPLANET_CLIENT_ID` / `HEALTHPLANET_CLIENT_SECRET`を
+ローカルの`health/.env`へ設定します。
+
+```bash
+uv run --no-sync health auth-healthplanet
+# 同意画面 → 成功画面のコードをターミナルに貼り付け（入力は非表示）
+uv run --no-sync health sync-healthplanet --history-start 2020-01-01 --endpoint innerscan --max-requests 30
+uv run --no-sync health export-web --out-dir health/web/out/data
+```
+
+`2020-01-01`は例です。確認したい履歴の開始日を指定してください。
+最大3か月単位で新しい順に取得します。`--endpoint innerscan`は体重・体脂肪率だけを取得し、
+省略時は3つの取得経路を順番に進めます。1回最大60要求、
+ローカルの全実行を合わせて1時間60要求までです。失敗したHTTP要求も予算に含めます。
+同じコマンドで未取得期間を再開します。直近の区間は24時間後に再取得でき、
+同日中の更新や過去の修正も確認する場合は`--rescan`を指定します。
+他のアプリによる要求はローカル予算には含まれないため、429応答でも停止します。
+
+指定区間が終わるまで1回の処理として続ける場合は`--wait`を追加します。
+`--max-requests`はこの場合1バッチの上限です。ローカル予算による待機・再開のみを行い、
+実APIのエラー・権限不足・保存失敗では停止します。完了後に繰り返す定期同期ではありません。
+`--export-dir health/web/out/data`も指定すると各バッチ後にポータルを更新します。
+ターミナルでの実行はCtrl+Cで停止でき、保存済みの取得は次回に引き継げます。
+開始日不明の場合、サービス開始年の2010年から確認することはできますが、
+それ以前の持ち込み記録やAPI対象外の項目も含めた「全データ取得済み」は保証しません。
+[サービス開始の案内](https://www.tanita-thl.co.jp/news/14)
+
+認可はGoogleとは別です。公式のHTTPS成功画面を使い、期限切れは再認可します。
+ブラウザが開かない場合は`--no-browser`で表示されたURLを手動で開いてください。
+非対話環境では`auth-healthplanet --begin --no-browser`で開始し、成功画面のコードを
+非公開のローカルファイルに保存後、`auth-healthplanet --code-file <絶対パス>`で交換できます。
+コードは10分以内に使用します。コードファイルは自動削除しません。
+
+`health/data/healthplanet/`以下に専用SQLite DB、原本アーカイブ、token、認可中の情報を
+保存します。GoogleのDBや同日の測定値は変更しません。原本は応答本文を解析前に
+可逆保存し、未知項目・不正な値・エラー応答も残します。
+測定IDがAPIにないため、応答内の同一レコードの出現回数を含めて照合し、
+再取得の重複を抑えます。上流の修正で値が変わった場合は観測した版を保持します。
+1日の複数測定は全件表示データへ渡し、間引きは描画時だけです。
+要求期間への成功応答と、アカウント全履歴の取得証明を区別します。
+
 ## 初期設定と認可
 
 Google CloudでGoogle Health APIを有効化し、Google Auth PlatformのTesting利用では
@@ -45,6 +96,8 @@ scope不足や認可期限切れの場合も`health auth`で再認可します�
 
 ```bash
 uv run --no-sync health sync --max-requests 200
+# Googleの取得可能な全source・全pageの原本保存だけを優先する場合:
+uv run --no-sync health sync --archive-only --max-requests 500
 # 中断したページから再開。同じコマンドを繰り返せます。
 # 期間を明示して集計・表示用履歴も遡る場合:
 uv run --no-sync health sync --history-start 2020-01-01 --max-requests 500

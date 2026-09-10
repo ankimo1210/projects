@@ -13,6 +13,7 @@ export type Daily = {
   dates: string[]; // sorted, every civil day between first/last saved daily row
   series: Record<string, (number | null)[]>; // every column has dates.length
   units: Record<string, string>;
+  providers?: Record<string, "google" | "healthplanet">; // absent in older snapshots
 };
 export type SleepSession = {
   provider_id: string;
@@ -117,4 +118,32 @@ export type Inventory = {
   sources: SourceCoverage[];
   series: SeriesInventory[];
   quality: { path: string; reason: "non_finite_number"; count: number }[];
+};
+
+export type HealthPlanetMetric =
+  | "weight_kg"
+  | "body_fat_pct"
+  | "systolic_mmhg"
+  | "diastolic_mmhg"
+  | "pulse_bpm"
+  | "steps";
+/** An archived observation, including changed values at the same civil timestamp. */
+export type HealthPlanetMeasurement = {
+  id: string; // Local observation identity, not a provider measurement ID.
+  metric: HealthPlanetMetric;
+  tag: string;
+  timestamp: string; // ISO civil time, without a timezone.
+  value: number;
+  unit: string;
+  model: string;
+};
+export type HealthPlanet = {
+  provider: "healthplanet";
+  timeBasis: "civil";
+  status: "not_connected" | "pending" | "partial" | "available";
+  historyComplete: false;
+  sources: SourceCoverage[];
+  measurements: HealthPlanetMeasurement[];
+  unsupported: { metric: string; label: string; reason: string }[];
+  quality: { unparsedRecords: number };
 };

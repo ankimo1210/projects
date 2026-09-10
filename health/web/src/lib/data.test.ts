@@ -42,6 +42,7 @@ it.each([
   { ...daily, series: { steps: [Infinity] } },
   { ...daily, dates: ["2026-02-30"] },
   { ...daily, dates: ["2026-01-02", "2026-01-01"], series: { steps: [1, 2] } },
+  { ...daily, providers: { steps: "unknown" } },
 ])("rejects malformed daily payload %j", (v) => {
   expect(isDaily(v)).toBe(false);
 });

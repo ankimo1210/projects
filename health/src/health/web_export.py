@@ -46,6 +46,7 @@ DAILY_UNITS = dict(
         }.items()
     )
 )
+BODY_PROVIDERS = {"weight_kg": "weight_kg", "body_fat_pct": "fat_pct"}
 _SAFE_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}\Z", re.ASCII)
 _REASONS = {
     "pending": "No archival attempt recorded.",
@@ -253,7 +254,7 @@ def _series_inventory(store: Store) -> list[dict]:
     return sorted(rows, key=lambda row: (row["metric"], row["storage"]))
 
 
-def _daily_data(store) -> tuple[pd.DataFrame, dict]:
+def _daily_data(store, healthplanet_measurements=()) -> tuple[pd.DataFrame, dict]:
     stored_metrics = [
         row[0]
         for row in store.con.execute(
@@ -264,6 +265,38 @@ def _daily_data(store) -> tuple[pd.DataFrame, dict]:
     for metric in metrics:
         _safe_id(metric)
     frame = store.daily_frame(metrics)
+    frame["date"] = pd.to_datetime(frame["date"])
+    frame = frame.set_index("date")
+    # Body measurements have an explicit provider choice. Keep Google's raw
+    # archive and typed store intact, but never let its aggregate values leak
+    # into the canonical web series or analytics.
+    for metric in BODY_PROVIDERS.values():
+        frame[metric] = float("nan")
+    body = pd.DataFrame(
+        [
+            {
+                "date": pd.Timestamp(row["timestamp"][:10]),
+                "timestamp": row["timestamp"],
+                "id": row["id"],
+                "metric": BODY_PROVIDERS[row["metric"]],
+                "value": row["value"],
+            }
+            for row in healthplanet_measurements
+            if row["metric"] in BODY_PROVIDERS
+        ]
+    )
+    if not body.empty:
+        latest = (
+            body.sort_values(["date", "metric", "timestamp", "id"], kind="stable")
+            .drop_duplicates(["date", "metric"], keep="last")
+            .pivot(index="date", columns="metric", values="value")
+        )
+        frame = frame.reindex(frame.index.union(latest.index).sort_values())
+        for metric in BODY_PROVIDERS.values():
+            frame[metric] = (
+                latest[metric].reindex(frame.index) if metric in latest else float("nan")
+            )
+    frame = frame.reset_index()
     if not frame.empty:
         frame = (
             frame.set_index("date")
@@ -275,6 +308,10 @@ def _daily_data(store) -> tuple[pd.DataFrame, dict]:
         "dates": [_day(day) for day in frame["date"]],
         "series": {metric: frame[metric].tolist() for metric in metrics},
         "units": {metric: DAILY_UNITS.get(metric, "unknown") for metric in metrics},
+        "providers": {
+            metric: "healthplanet" if metric in BODY_PROVIDERS.values() else "google"
+            for metric in metrics
+        },
     }
 
 
@@ -330,7 +367,10 @@ def export_web(
     try:
         store.con.execute("BEGIN TRANSACTION")
         in_transaction = True
-        daily, daily_data = _daily_data(store)
+        from health.healthplanet import export_data as export_healthplanet
+
+        healthplanet_data = export_healthplanet(store.path.parent)
+        daily, daily_data = _daily_data(store, healthplanet_data["measurements"])
         write("daily.json", daily_data)
         count = _non_finite_count(store, "daily_series")
         if count:
@@ -383,6 +423,9 @@ def export_web(
             if count:
                 quality.append({"path": relative, "reason": "non_finite_number", "count": count})
         write("intraday-index.json", {"metrics": intraday})
+        # Raw provider observations remain separate even though the canonical
+        # body series above follows the user's Health Planet source choice.
+        write("healthplanet.json", healthplanet_data)
         sources = _source_inventory(store)
         write(
             "inventory.json",

@@ -257,8 +257,6 @@ export function DashboardPage({
     );
   return (
     <div className="chart-grid">
-      <Panel daily={data} rows={rows} metrics={["weight_kg"]} title="体重" />
-      <Panel daily={data} rows={rows} metrics={["fat_pct"]} title="体脂肪率" />
       <Panel
         daily={data}
         rows={rows}

@@ -272,6 +272,23 @@ def test_odd_cap_and_rescan_are_shared_without_extra_requests(offline, monkeypat
     assert sum(row["used"] for row in summary["budgets"].values()) == 5
 
 
+def test_archive_only_gives_the_full_request_budget_to_original_sources(
+    offline, monkeypatch, capsys
+):
+    visits = fake_engines(monkeypatch)
+    install_transport(monkeypatch, [])
+
+    assert command(offline, "sync", "--max-requests", "5", "--archive-only") == 2
+
+    summary, _ = output(capsys)
+    assert visits == [("archive", 5, False)]
+    assert summary["budgets"] == {
+        "archive": {"limit": 5, "used": 5},
+        "projection": {"limit": 0, "used": 0},
+    }
+    assert summary["requests_made"] == 5
+
+
 def test_rate_limit_stops_both_engines_without_leaking_api_body(offline, monkeypatch, capsys):
     session, clients = install_transport(
         monkeypatch,

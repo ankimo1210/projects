@@ -6,6 +6,7 @@ import type {
   Analytics,
   Inventory,
   IntradayIndex,
+  SourceCoverage,
 } from "./types";
 export type * from "./types";
 export class DataLoadError extends Error {
@@ -76,7 +77,12 @@ export function isDaily(v: unknown): v is Daily {
     !record(v) ||
     !Array.isArray(v.dates) ||
     !record(v.series) ||
-    !values(v.units, text)
+    !values(v.units, text) ||
+    (v.providers !== undefined &&
+      !values(
+        v.providers,
+        (provider) => provider === "google" || provider === "healthplanet",
+      ))
   )
     return false;
   const dates = v.dates;
@@ -219,43 +225,45 @@ export function isAnalytics(v: unknown): v is Analytics {
     nullableDate(v.socialJetlag.lastDate)
   );
 }
+export function isSourceCoverage(s: unknown): s is SourceCoverage {
+  return (
+    record(s) &&
+    [
+      "stream_id",
+      "data_type",
+      "label",
+      "representation",
+      "status",
+      "projection_status",
+    ].every((k) => text(s[k])) &&
+    [
+      "method",
+      "requested_start",
+      "requested_end",
+      "last_attempt_at",
+      "reason",
+    ].every((k) => nullableText(s[k])) &&
+    typeof s.history_complete === "boolean" &&
+    count(s.pages) &&
+    count(s.points) &&
+    (s.stored_pages === undefined || count(s.stored_pages)) &&
+    (s.stored_points === undefined || count(s.stored_points)) &&
+    nullableNumber(s.http_status) &&
+    Array.isArray(s.intervals) &&
+    s.intervals.every(
+      (i) =>
+        record(i) &&
+        nullableText(i.start) &&
+        nullableText(i.end) &&
+        (i.status === undefined || text(i.status)),
+    )
+  );
+}
 export function isInventory(v: unknown): v is Inventory {
   return (
     record(v) &&
     Array.isArray(v.sources) &&
-    v.sources.every(
-      (s) =>
-        record(s) &&
-        [
-          "stream_id",
-          "data_type",
-          "label",
-          "representation",
-          "status",
-          "projection_status",
-        ].every((k) => text(s[k])) &&
-        [
-          "method",
-          "requested_start",
-          "requested_end",
-          "last_attempt_at",
-          "reason",
-        ].every((k) => nullableText(s[k])) &&
-        typeof s.history_complete === "boolean" &&
-        count(s.pages) &&
-        count(s.points) &&
-        (s.stored_pages === undefined || count(s.stored_pages)) &&
-        (s.stored_points === undefined || count(s.stored_points)) &&
-        nullableNumber(s.http_status) &&
-        Array.isArray(s.intervals) &&
-        s.intervals.every(
-          (i) =>
-            record(i) &&
-            nullableText(i.start) &&
-            nullableText(i.end) &&
-            (i.status === undefined || text(i.status)),
-        ),
-    ) &&
+    v.sources.every(isSourceCoverage) &&
     Array.isArray(v.series) &&
     v.series.every(
       (s) =>
