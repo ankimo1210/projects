@@ -1,9 +1,18 @@
 """J-Quants connector — Japanese equity daily OHLCV (free tier, credential-gated).
 
-Needs a refresh token (``JQUANTS_REFRESH_TOKEN``); ``_download`` exchanges it for
-an id token and pages through ``/prices/daily_quotes``. ``normalize`` maps the
-J-Quants schema to the common OHLCV columns, using ``AdjustmentClose`` as
-``adj_close``. The parser is tested offline against a sample payload (no network).
+Uses **API v2**. V1 was retired and every V1 endpoint now answers ``HTTP 410 Gone``,
+so there is no id-token exchange any more: v2 authenticates with a static
+``x-api-key`` header. The key is issued in the J-Quants dashboard; in practice the
+string previously stored as ``JQUANTS_REFRESH_TOKEN`` is that same value, so both
+``JQUANTS_API_KEY`` and ``JQUANTS_REFRESH_TOKEN`` are accepted.
+
+``_download`` pages through ``/v2/equities/bars/daily`` (rows under ``data``,
+cursor in ``pagination_key``) and ``normalize`` maps the v2 bar schema to the
+common OHLCV columns, preferring the adjusted series (``AdjO``/``AdjH``/``AdjL``/
+``AdjC``/``AdjVo``) and falling back to the unadjusted one (``O``/``H``/``L``/
+``C``/``Vo``). Both the parsing and the request contract are covered offline in
+``tests/test_connectors_jp.py`` — parsing-only tests are what let this connector
+sit broken on V1 while the suite stayed green.
 
 Symbols are J-Quants codes (e.g. ``"7203"`` Toyota; a trailing 0 / 5-digit form
 is also accepted by the API).
@@ -17,46 +26,55 @@ import requests
 from ...utils.config import env
 from ..base import Connector, ConnectorError
 
-_AUTH_URL = "https://api.jquants.com/v1/token/auth_refresh"
-_QUOTES_URL = "https://api.jquants.com/v1/prices/daily_quotes"
+_API_BASE = "https://api.jquants.com/v2"
+_BARS_PATH = "/equities/bars/daily"
+_MAX_PAGES = 50
+
+#: v2 bar columns, adjusted for splits (preferred) and raw (fallback).
+_ADJUSTED_COLUMNS = {
+    "open": "AdjO",
+    "high": "AdjH",
+    "low": "AdjL",
+    "close": "AdjC",
+    "volume": "AdjVo",
+}
+_RAW_COLUMNS = {"open": "O", "high": "H", "low": "L", "close": "C", "volume": "Vo"}
 
 
 class JQuantsConnector(Connector):
     source = "jquants"
 
-    def _id_token(self) -> str:
-        refresh = env("JQUANTS_REFRESH_TOKEN")
-        if not refresh:
-            raise ConnectorError("jquants: JQUANTS_REFRESH_TOKEN not set (free account required)")
-        r = requests.post(_AUTH_URL, params={"refreshtoken": refresh}, timeout=30)
-        r.raise_for_status()
-        token = r.json().get("idToken")
-        if not token:
-            raise ConnectorError("jquants: auth_refresh returned no idToken")
-        return token
+    def _api_key(self) -> str:
+        key = env("JQUANTS_API_KEY") or env("JQUANTS_REFRESH_TOKEN")
+        if not key:
+            raise ConnectorError(
+                "jquants: JQUANTS_API_KEY not set (free account required; "
+                "JQUANTS_REFRESH_TOKEN is accepted as an alias)"
+            )
+        return key
 
     def _download(self, symbol, start, end, **_) -> pd.DataFrame:
-        token = self._id_token()
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = {"x-api-key": self._api_key()}
         params = {
             "code": str(symbol),
-            "from": pd.Timestamp(start).strftime("%Y-%m-%d"),
-            "to": pd.Timestamp(end).strftime("%Y-%m-%d"),
+            "from": pd.Timestamp(start).strftime("%Y%m%d"),
+            "to": pd.Timestamp(end).strftime("%Y%m%d"),
         }
-        quotes: list[dict] = []
+        rows: list[dict] = []
         pagination_key = None
-        for _ in range(50):  # page through results
+        for _page in range(_MAX_PAGES):
             p = dict(params)
             if pagination_key:
                 p["pagination_key"] = pagination_key
-            r = requests.get(_QUOTES_URL, headers=headers, params=p, timeout=30)
-            r.raise_for_status()
+            r = requests.get(f"{_API_BASE}{_BARS_PATH}", headers=headers, params=p, timeout=30)
+            if r.status_code >= 400:
+                raise ConnectorError(f"jquants: {_BARS_PATH} {r.status_code}: {_error_message(r)}")
             payload = r.json()
-            quotes.extend(payload.get("daily_quotes", []))
+            rows.extend(payload.get("data") or [])
             pagination_key = payload.get("pagination_key")
             if not pagination_key:
                 break
-        return pd.DataFrame(quotes)
+        return pd.DataFrame(rows)
 
     def normalize(self, raw: pd.DataFrame, symbol: str, **_) -> pd.DataFrame:
         if raw.empty:
@@ -64,15 +82,18 @@ class JQuantsConnector(Connector):
         df = raw.copy()
         df["date"] = pd.to_datetime(df["Date"])
         df = df.set_index("date").sort_index()
+        adjusted = "AdjC" in df.columns
+        columns = _ADJUSTED_COLUMNS if adjusted else _RAW_COLUMNS
         out = pd.DataFrame(index=df.index)
-        for col, src in [
-            ("open", "Open"),
-            ("high", "High"),
-            ("low", "Low"),
-            ("close", "Close"),
-            ("volume", "Volume"),
-        ]:
+        for col, src in columns.items():
             out[col] = pd.to_numeric(df[src], errors="coerce") if src in df else pd.NA
-        adj = df["AdjustmentClose"] if "AdjustmentClose" in df else df.get("Close")
-        out["adj_close"] = pd.to_numeric(adj, errors="coerce")
+        # v2 adjusted bars are already split-adjusted, so close is the adjusted close.
+        out["adj_close"] = out["close"]
         return out
+
+
+def _error_message(response) -> str:
+    try:
+        return response.json().get("message", response.text)
+    except Exception:  # non-JSON error body
+        return response.text
