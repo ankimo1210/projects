@@ -10,7 +10,7 @@
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;
 # `rates_volatility_model/`, `notebooks/` have no managed env.
 
-.PHONY: help install sync lint fmt fmt-fix test clean tree report books sde-check hull-report hull-book hull-artifacts-check hull-notebooks-check hull-core-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
+.PHONY: health-web-check help install sync lint fmt fmt-fix test clean tree report books sde-check hull-report hull-book hull-artifacts-check hull-notebooks-check hull-core-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
 
 help:
 	@echo "Workspace targets (run from repo root):"
@@ -159,3 +159,7 @@ tree:
 	@command -v tree >/dev/null 2>&1 && \
 	  tree -L 2 -a -I '.git|.venv|venv|node_modules|__pycache__|_data|_logs|_archive|target|dist|build|.next' || \
 	  find . -maxdepth 2 -not -path './.git*' -not -path '*/.venv*' -not -path '*/node_modules*' -not -path './_data*' -not -path './_logs*' -not -path './_archive*' | sort
+
+# Local Health UI: requires npm ci in health/web once.
+health-web-check:
+	cd health/web && npm run typecheck && npm run lint && npm test && npm run build

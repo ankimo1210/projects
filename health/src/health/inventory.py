@@ -71,8 +71,8 @@ def build_series_inventory(store: Store, catalog: Sequence[Metric] = CATALOG) ->
 
     rows = []
     for metric in catalog:
-        stats = daily if metric.full_history else intraday
-        storage = "daily" if metric.full_history else "intraday"
+        stats = daily if "daily_series" in metric.storage_tables else intraday
+        storage = "daily" if "daily_series" in metric.storage_tables else "intraday"
         for series in metric.series_names:
             rows.append(_series_row(metric, series, storage, stats, raw, states))
         if metric.name == "sleep":

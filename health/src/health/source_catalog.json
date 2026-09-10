@@ -1,0 +1,1717 @@
+[
+  {
+    "key": "active-energy-burned.list",
+    "data_type": "active-energy-burned",
+    "label": "Active Energy Burned",
+    "path": "/v4/users/me/dataTypes/active-energy-burned/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "active_energy_burned.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "active-minutes.list",
+    "data_type": "active-minutes",
+    "label": "Active Minutes",
+    "path": "/v4/users/me/dataTypes/active-minutes/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "active_minutes.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "active-zone-minutes.list",
+    "data_type": "active-zone-minutes",
+    "label": "Active Zone Minutes",
+    "path": "/v4/users/me/dataTypes/active-zone-minutes/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "active_zone_minutes.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "activity-level.list",
+    "data_type": "activity-level",
+    "label": "Activity Level",
+    "path": "/v4/users/me/dataTypes/activity-level/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "activity_level.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "altitude.list",
+    "data_type": "altitude",
+    "label": "Altitude",
+    "path": "/v4/users/me/dataTypes/altitude/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "altitude.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "blood-glucose.list",
+    "data_type": "blood-glucose",
+    "label": "Blood Glucose",
+    "path": "/v4/users/me/dataTypes/blood-glucose/dataPoints",
+    "methods": [
+      "list",
+      "get",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "blood_glucose.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "blood-glucose.get",
+    "data_type": "blood-glucose",
+    "label": "Blood Glucose",
+    "path": "/v4/users/me/dataTypes/blood-glucose/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "blood-glucose.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "body-fat.list",
+    "data_type": "body-fat",
+    "label": "Body Fat",
+    "path": "/v4/users/me/dataTypes/body-fat/dataPoints",
+    "methods": [
+      "list",
+      "get",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp",
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "body_fat.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "body-fat.get",
+    "data_type": "body-fat",
+    "label": "Body Fat",
+    "path": "/v4/users/me/dataTypes/body-fat/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "body-fat.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "calories-in-heart-rate-zone.dailyRollUp",
+    "data_type": "calories-in-heart-rate-zone",
+    "label": "Calories In Heart Rate Zone",
+    "path": "/v4/users/me/dataTypes/calories-in-heart-rate-zone/dataPoints:dailyRollUp",
+    "methods": [
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "dailyRollUp",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "calories_in_heart_rate_zone.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": 14,
+    "unbounded_verified": false,
+    "representation": "aggregate",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "rollupDataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/dailyRollUp",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified. This representation is not original per-source data."
+  },
+  {
+    "key": "core-body-temperature.list",
+    "data_type": "core-body-temperature",
+    "label": "Core Body Temperature",
+    "path": "/v4/users/me/dataTypes/core-body-temperature/dataPoints",
+    "methods": [
+      "list",
+      "get",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "core_body_temperature.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "core-body-temperature.get",
+    "data_type": "core-body-temperature",
+    "label": "Core Body Temperature",
+    "path": "/v4/users/me/dataTypes/core-body-temperature/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "core-body-temperature.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "daily-heart-rate-variability.list",
+    "data_type": "daily-heart-rate-variability",
+    "label": "Daily Heart Rate Variability",
+    "path": "/v4/users/me/dataTypes/daily-heart-rate-variability/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "daily",
+    "filter_field": "daily_heart_rate_variability.date",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "daily-heart-rate-zones.list",
+    "data_type": "daily-heart-rate-zones",
+    "label": "Daily Heart Rate Zones",
+    "path": "/v4/users/me/dataTypes/daily-heart-rate-zones/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "daily",
+    "filter_field": "daily_heart_rate_zones.date",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "daily-oxygen-saturation.list",
+    "data_type": "daily-oxygen-saturation",
+    "label": "Daily Oxygen Saturation",
+    "path": "/v4/users/me/dataTypes/daily-oxygen-saturation/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "daily",
+    "filter_field": "daily_oxygen_saturation.date",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "daily-respiratory-rate.list",
+    "data_type": "daily-respiratory-rate",
+    "label": "Daily Respiratory Rate",
+    "path": "/v4/users/me/dataTypes/daily-respiratory-rate/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "daily",
+    "filter_field": "daily_respiratory_rate.date",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "daily-resting-heart-rate.list",
+    "data_type": "daily-resting-heart-rate",
+    "label": "Daily Resting Heart Rate",
+    "path": "/v4/users/me/dataTypes/daily-resting-heart-rate/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "daily",
+    "filter_field": "daily_resting_heart_rate.date",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "daily-sleep-temperature-derivations.list",
+    "data_type": "daily-sleep-temperature-derivations",
+    "label": "Daily Sleep Temperature Derivations",
+    "path": "/v4/users/me/dataTypes/daily-sleep-temperature-derivations/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "daily",
+    "filter_field": "daily_sleep_temperature_derivations.date",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "daily-vo2-max.list",
+    "data_type": "daily-vo2-max",
+    "label": "Daily VO2 Max",
+    "path": "/v4/users/me/dataTypes/daily-vo2-max/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "daily",
+    "filter_field": "daily_vo2_max.date",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "distance.list",
+    "data_type": "distance",
+    "label": "Distance",
+    "path": "/v4/users/me/dataTypes/distance/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "distance.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "electrocardiogram.list",
+    "data_type": "electrocardiogram",
+    "label": "Electrocardiogram (ECG)",
+    "path": "/v4/users/me/dataTypes/electrocardiogram/dataPoints",
+    "methods": [
+      "list"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.ecg.readonly"
+    ],
+    "filter_kind": "ecg_start",
+    "filter_field": "electrocardiogram.interval.start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified. Only >= UTC start-time is documented; no upper-bound filter."
+  },
+  {
+    "key": "exercise.list",
+    "data_type": "exercise",
+    "label": "Exercise",
+    "path": "/v4/users/me/dataTypes/exercise/dataPoints",
+    "methods": [
+      "list",
+      "get",
+      "reconcile",
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "exercise.interval.civil_start_time",
+    "page_size": 25,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "exercise.get",
+    "data_type": "exercise",
+    "label": "Exercise",
+    "path": "/v4/users/me/dataTypes/exercise/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 25,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "exercise.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "floors.reconcile",
+    "data_type": "floors",
+    "label": "Floors",
+    "path": "/v4/users/me/dataTypes/floors/dataPoints:reconcile",
+    "methods": [
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "reconcile",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "floors.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "reconciled",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified. This representation is not original per-source data."
+  },
+  {
+    "key": "food.list",
+    "data_type": "food",
+    "label": "Food",
+    "path": "/v4/users/me/dataTypes/food/dataPoints",
+    "methods": [
+      "list",
+      "get"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.nutrition.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "reference",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/data-types/nutrition",
+    "notes": "Shared food reference data, not the personal nutrition log; unfiltered listing is documented, not personal-history evidence."
+  },
+  {
+    "key": "food.get",
+    "data_type": "food",
+    "label": "Food",
+    "path": "/v4/users/me/dataTypes/food/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.nutrition.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "reference",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "food.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "food-measurement-unit.list",
+    "data_type": "food-measurement-unit",
+    "label": "Food Measurement Unit",
+    "path": "/v4/users/me/dataTypes/food-measurement-unit/dataPoints",
+    "methods": [
+      "list",
+      "get"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.nutrition.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "reference",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/data-types/nutrition",
+    "notes": "Shared food reference data, not the personal nutrition log; unfiltered listing is documented, not personal-history evidence."
+  },
+  {
+    "key": "food-measurement-unit.get",
+    "data_type": "food-measurement-unit",
+    "label": "Food Measurement Unit",
+    "path": "/v4/users/me/dataTypes/food-measurement-unit/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.nutrition.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "reference",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "food-measurement-unit.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "heart-rate.list",
+    "data_type": "heart-rate",
+    "label": "Heart Rate",
+    "path": "/v4/users/me/dataTypes/heart-rate/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "heart_rate.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "heart-rate-variability.list",
+    "data_type": "heart-rate-variability",
+    "label": "Heart Rate Variability",
+    "path": "/v4/users/me/dataTypes/heart-rate-variability/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "heart_rate_variability.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "height.list",
+    "data_type": "height",
+    "label": "Height",
+    "path": "/v4/users/me/dataTypes/height/dataPoints",
+    "methods": [
+      "list",
+      "get",
+      "reconcile",
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "height.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "height.get",
+    "data_type": "height",
+    "label": "Height",
+    "path": "/v4/users/me/dataTypes/height/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "height.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "hydration-log.list",
+    "data_type": "hydration-log",
+    "label": "Hydration Log",
+    "path": "/v4/users/me/dataTypes/hydration-log/dataPoints",
+    "methods": [
+      "list",
+      "get",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp",
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.nutrition.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "hydration_log.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "hydration-log.get",
+    "data_type": "hydration-log",
+    "label": "Hydration Log",
+    "path": "/v4/users/me/dataTypes/hydration-log/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.nutrition.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "hydration-log.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "irregular-rhythm-notification.list",
+    "data_type": "irregular-rhythm-notification",
+    "label": "Irregular Rhythm Notification",
+    "path": "/v4/users/me/dataTypes/irregular-rhythm-notification/dataPoints",
+    "methods": [
+      "list"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.irn.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "irregular_rhythm_notification.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "menstrual-period.unavailable",
+    "data_type": "menstrual-period",
+    "label": "Menstrual Period",
+    "path": "/v4/users/me/dataTypes/menstrual-period/dataPoints",
+    "methods": [
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": null,
+    "readonly_scopes": [],
+    "filter_kind": "civil_interval",
+    "filter_field": "menstrual_period.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "unsupported",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Official table advertises writes only; no readonly acquisition. Never call writes."
+  },
+  {
+    "key": "moods.unavailable",
+    "data_type": "moods",
+    "label": "Moods",
+    "path": "/v4/users/me/dataTypes/moods/dataPoints",
+    "methods": [
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": null,
+    "readonly_scopes": [],
+    "filter_kind": "civil_sample",
+    "filter_field": "moods.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "unsupported",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Official table advertises writes only; no readonly acquisition. Never call writes."
+  },
+  {
+    "key": "nutrition-log.list",
+    "data_type": "nutrition-log",
+    "label": "Nutrition Log",
+    "path": "/v4/users/me/dataTypes/nutrition-log/dataPoints",
+    "methods": [
+      "list",
+      "get",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp",
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.nutrition.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "nutrition_log.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "nutrition-log.get",
+    "data_type": "nutrition-log",
+    "label": "Nutrition Log",
+    "path": "/v4/users/me/dataTypes/nutrition-log/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.nutrition.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "nutrition-log.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "ovulation-test.unavailable",
+    "data_type": "ovulation-test",
+    "label": "Ovulation Test",
+    "path": "/v4/users/me/dataTypes/ovulation-test/dataPoints",
+    "methods": [
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": null,
+    "readonly_scopes": [],
+    "filter_kind": "civil_sample",
+    "filter_field": "ovulation_test.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "unsupported",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Official table advertises writes only; no readonly acquisition. Never call writes."
+  },
+  {
+    "key": "oxygen-saturation.list",
+    "data_type": "oxygen-saturation",
+    "label": "Oxygen Saturation",
+    "path": "/v4/users/me/dataTypes/oxygen-saturation/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "oxygen_saturation.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "respiratory-rate-sleep-summary.list",
+    "data_type": "respiratory-rate-sleep-summary",
+    "label": "Respiratory Rate Sleep Summary",
+    "path": "/v4/users/me/dataTypes/respiratory-rate-sleep-summary/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "respiratory_rate_sleep_summary.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "run-vo2-max.list",
+    "data_type": "run-vo2-max",
+    "label": "Run VO2 Max",
+    "path": "/v4/users/me/dataTypes/run-vo2-max/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "run_vo2_max.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "sedentary-period.list",
+    "data_type": "sedentary-period",
+    "label": "Sedentary Period",
+    "path": "/v4/users/me/dataTypes/sedentary-period/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "sedentary_period.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "sleep.list",
+    "data_type": "sleep",
+    "label": "Sleep",
+    "path": "/v4/users/me/dataTypes/sleep/dataPoints",
+    "methods": [
+      "list",
+      "get",
+      "reconcile",
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.sleep.readonly"
+    ],
+    "filter_kind": "sleep_end",
+    "filter_field": "sleep.interval.civil_end_time",
+    "page_size": 25,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "sleep.get",
+    "data_type": "sleep",
+    "label": "Sleep",
+    "path": "/v4/users/me/dataTypes/sleep/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.sleep.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 25,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "sleep.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "steps.list",
+    "data_type": "steps",
+    "label": "Steps",
+    "path": "/v4/users/me/dataTypes/steps/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "steps.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "swim-lengths-data.list",
+    "data_type": "swim-lengths-data",
+    "label": "Swim Lengths Data",
+    "path": "/v4/users/me/dataTypes/swim-lengths-data/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "swim_lengths_data.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "symptoms.unavailable",
+    "data_type": "symptoms",
+    "label": "Symptoms",
+    "path": "/v4/users/me/dataTypes/symptoms/dataPoints",
+    "methods": [
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": null,
+    "readonly_scopes": [],
+    "filter_kind": "civil_sample",
+    "filter_field": "symptoms.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "unsupported",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Official table advertises writes only; no readonly acquisition. Never call writes."
+  },
+  {
+    "key": "time-in-heart-rate-zone.list",
+    "data_type": "time-in-heart-rate-zone",
+    "label": "Time in Heart Rate Zone",
+    "path": "/v4/users/me/dataTypes/time-in-heart-rate-zone/dataPoints",
+    "methods": [
+      "list",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "time_in_heart_rate_zone.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "total-calories.dailyRollUp",
+    "data_type": "total-calories",
+    "label": "Total Calories",
+    "path": "/v4/users/me/dataTypes/total-calories/dataPoints:dailyRollUp",
+    "methods": [
+      "rollUp",
+      "dailyRollUp"
+    ],
+    "preferred_method": "dailyRollUp",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "total_calories.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": 14,
+    "unbounded_verified": false,
+    "representation": "aggregate",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "rollupDataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/dailyRollUp",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified. This representation is not original per-source data."
+  },
+  {
+    "key": "vo2-max.list",
+    "data_type": "vo2-max",
+    "label": "VO2 Max",
+    "path": "/v4/users/me/dataTypes/vo2-max/dataPoints",
+    "methods": [
+      "list",
+      "reconcile"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "vo2_max.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "weight.list",
+    "data_type": "weight",
+    "label": "Weight",
+    "path": "/v4/users/me/dataTypes/weight/dataPoints",
+    "methods": [
+      "list",
+      "get",
+      "reconcile",
+      "rollUp",
+      "dailyRollUp",
+      "create",
+      "patch",
+      "batchDelete"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "civil_sample",
+    "filter_field": "weight.sample_time.civil_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/data-types",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Public method only; account permission, oldest boundary and unfiltered history are unverified."
+  },
+  {
+    "key": "weight.get",
+    "data_type": "weight",
+    "label": "Weight",
+    "path": "/v4/users/me/dataTypes/weight/dataPoints/{dataPoint}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "weight.list",
+    "range_evidence_url": null,
+    "notes": "Retrieve observed list resource names; list/get payload differences are unverified, retain both."
+  },
+  {
+    "key": "basal-energy-burned.unverified",
+    "data_type": "basal-energy-burned",
+    "label": "Basal energy burned",
+    "path": "/v4/users/me/dataTypes/basal-energy-burned/dataPoints",
+    "methods": [
+      "reconcile"
+    ],
+    "preferred_method": null,
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "civil_interval",
+    "filter_field": "basal_energy_burned.interval.civil_start_time",
+    "page_size": 1000,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "unverified",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/reconcile",
+    "checked_at": "2026-09-07",
+    "response_key": "dataPoints",
+    "detail_parent": null,
+    "range_evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list",
+    "notes": "Legacy local type absent from current data-types table, but present in ReconciledDataPoint union. Method support unresolved; do not guess list support."
+  },
+  {
+    "key": "profile.getProfile",
+    "data_type": "profile",
+    "label": "Profile",
+    "path": "/v4/users/me/profile",
+    "methods": [
+      "getProfile"
+    ],
+    "preferred_method": "getProfile",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.profile.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "metadata",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users/getProfile",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": null,
+    "range_evidence_url": null,
+    "notes": "Current resource snapshot, not a time-series history."
+  },
+  {
+    "key": "identity.getIdentity",
+    "data_type": "identity",
+    "label": "Identity",
+    "path": "/v4/users/me/identity",
+    "methods": [
+      "getIdentity"
+    ],
+    "preferred_method": "getIdentity",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "metadata",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users/getIdentity",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": null,
+    "range_evidence_url": null,
+    "notes": "Current resource snapshot, not a time-series history. Identity uses one of the documented alternative scopes."
+  },
+  {
+    "key": "settings.getSettings",
+    "data_type": "settings",
+    "label": "Settings",
+    "path": "/v4/users/me/settings",
+    "methods": [
+      "getSettings"
+    ],
+    "preferred_method": "getSettings",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.settings.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "metadata",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users/getSettings",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": null,
+    "range_evidence_url": null,
+    "notes": "Current resource snapshot, not a time-series history."
+  },
+  {
+    "key": "irn-profile.getIrnProfile",
+    "data_type": "irn-profile",
+    "label": "Irn Profile",
+    "path": "/v4/users/me/irnProfile",
+    "methods": [
+      "getIrnProfile"
+    ],
+    "preferred_method": "getIrnProfile",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.irn.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 1,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "metadata",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users/getIrnProfile",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": null,
+    "range_evidence_url": null,
+    "notes": "Current resource snapshot, not a time-series history."
+  },
+  {
+    "key": "paired-devices.list",
+    "data_type": "paired-devices",
+    "label": "Paired Devices",
+    "path": "/v4/users/me/pairedDevices",
+    "methods": [
+      "list"
+    ],
+    "preferred_method": "list",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.settings.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 100,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "metadata",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.pairedDevices/list",
+    "checked_at": "2026-09-07",
+    "response_key": "pairedDevices",
+    "detail_parent": null,
+    "range_evidence_url": null,
+    "notes": "Current resource snapshot, not a time-series history."
+  },
+  {
+    "key": "paired-devices.get",
+    "data_type": "paired-devices",
+    "label": "Paired Devices",
+    "path": "/v4/users/me/pairedDevices/{pairedDevice}",
+    "methods": [
+      "get"
+    ],
+    "preferred_method": "get",
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.settings.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 100,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "metadata",
+    "availability": "candidate",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.pairedDevices/get",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "paired-devices.list",
+    "range_evidence_url": null,
+    "notes": "Use pairedDevices route from HTTP template and observed list name. The prose devices path conflicts with the HTTP template."
+  },
+  {
+    "key": "exercise.exportExerciseTcx",
+    "data_type": "exercise",
+    "label": "Exercise",
+    "path": "/v4/users/me/dataTypes/exercise/dataPoints/{dataPoint}:exportExerciseTcx",
+    "methods": [
+      "exportExerciseTcx"
+    ],
+    "preferred_method": null,
+    "readonly_scopes": [
+      "https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly",
+      "https://www.googleapis.com/auth/googlehealth.location.readonly"
+    ],
+    "filter_kind": "none",
+    "filter_field": null,
+    "page_size": 25,
+    "max_range_days": null,
+    "unbounded_verified": false,
+    "representation": "source",
+    "availability": "unverified",
+    "evidence_url": "https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/exportExerciseTcx",
+    "checked_at": "2026-09-07",
+    "response_key": null,
+    "detail_parent": "exercise.list",
+    "range_evidence_url": null,
+    "notes": "Official HTTP contract requires alt=media (TCX bytes), outside request_page JSON result contract. Retained as unverified, never claimed archived via exercise get. Both activity and location readonly scopes required."
+  }
+]

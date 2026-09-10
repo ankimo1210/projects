@@ -108,6 +108,8 @@ class SyncEngine:
         today: date | None = None,
         environ: Mapping[str, str] | None = None,
         max_requests: int = MAX_REQUESTS_PER_RUN,
+        history_floors: Mapping[str, date] | None = None,
+        budget: RequestBudget | None = None,
     ):
         self.client = client
         self.store = store
@@ -115,11 +117,15 @@ class SyncEngine:
         self.today = today or date.today()
         self.environ = environ
         self.max_requests = max_requests
+        self.history_floors = history_floors or {}
+        self.budget = budget
 
     # -- date bounds ---------------------------------------------------------
 
     def _floor(self, metric: Metric) -> date:
         """The oldest day this metric may ever request."""
+        if metric.name in self.history_floors:
+            return self.history_floors[metric.name]
         if metric.full_history:
             return backfill_start(self.today, self.environ)
         return self.today - timedelta(days=INTRADAY_LOOKBACK_DAYS - 1)
@@ -136,9 +142,32 @@ class SyncEngine:
             return max(floor, checkpoint.last_synced + timedelta(days=1))
         return max(floor, checkpoint.last_synced - timedelta(days=TRAILING_REFETCH_DAYS))
 
+    def _history_boundary_chunk(self, metric: Metric) -> tuple[date, date] | None:
+        """Recheck a possibly clipped legacy boundary once per explicit floor.
+
+        Old checkpoints stored an aligned key, not the actual covered start.
+        Moving directly to the previous chunk could therefore skip days within
+        that key. The policy is recorded only with a successful replacement.
+        """
+        if metric.name not in self.history_floors:
+            return None
+        floor = self._floor(metric)
+        if self.store.history_boundary_repaired(metric.name, floor):
+            return None
+        checkpoint = self.store.get_sync_checkpoint(metric.name)
+        if checkpoint is None or checkpoint.backfilled_from is None:
+            return None
+        start, end = aligned_chunk(checkpoint.backfilled_from, metric.max_range_days)
+        if max(start, floor) > min(end, self.today):
+            return None
+        return start, end
+
     def _next_history_chunk(self, metric: Metric) -> tuple[date, date] | None:
         """The aligned chunk immediately older than everything covered so far,
         or None once history reaches the floor."""
+        repair = self._history_boundary_chunk(metric)
+        if repair is not None:
+            return repair
         checkpoint = self.store.get_sync_checkpoint(metric.name)
         if checkpoint is None or checkpoint.backfilled_from is None:
             return None
@@ -152,19 +181,28 @@ class SyncEngine:
         if checkpoint is None or checkpoint.backfilled_from is None:
             return 0
         floor = self._floor(metric)
-        if checkpoint.backfilled_from <= floor:
-            return 0
-        return len(
-            chunk_ranges(
-                floor, checkpoint.backfilled_from - timedelta(days=1), metric.max_range_days
+        chunks = set()
+        if checkpoint.backfilled_from > floor:
+            chunks.update(
+                chunk_ranges(
+                    floor, checkpoint.backfilled_from - timedelta(days=1), metric.max_range_days
+                )
             )
-        )
+        repair = self._history_boundary_chunk(metric)
+        if repair is not None:
+            chunks.add(repair)  # an accurate clipped checkpoint can share the next chunk
+        return len(chunks)
 
     # -- one chunk -----------------------------------------------------------
 
     def _fetch_chunk(self, metric, chunk_start, chunk_end, budget, *, status, watermark):
         request_start = max(chunk_start, self._floor(metric))
         request_end = min(chunk_end, self.today)
+        repair_floor = (
+            self._floor(metric)
+            if self._history_boundary_chunk(metric) == (chunk_start, chunk_end)
+            else None
+        )
         if metric.method == DAILY_ROLLUP:
             payloads = [self.client.daily_rollup(metric, request_start, request_end, budget)]
         else:
@@ -182,7 +220,8 @@ class SyncEngine:
             watermark=watermark,
             covered_start=request_start,
             covered_end=request_end,
-            backfill_from=chunk_start,
+            backfill_from=request_start,
+            history_floor=repair_floor,
         )
         return request_start, request_end
 
@@ -190,11 +229,13 @@ class SyncEngine:
 
     def sync_all(self, progress_cb: Callable[[str, str], None] | None = None) -> SyncReport:
         report = SyncReport()
+        budget = self.budget if self.budget is not None else RequestBudget(self.max_requests)
+        started_used = budget.used
         progress = {m.name: MetricProgress(metric=m.name) for m in self.catalog}
         report.progress = list(progress.values())
         state = _RunState(
             report=report,
-            budget=RequestBudget(self.max_requests),
+            budget=budget,
             progress=progress,
             progress_cb=progress_cb,
         )
@@ -203,7 +244,7 @@ class SyncEngine:
             self._history_pass(state)
         except _RunFinished:
             pass
-        report.requests_made = state.budget.used
+        report.requests_made = state.budget.used - started_used
         # A metric abandoned this run (recorded in report.failures) is excluded
         # from the totals: the UI reads history_remaining to promise "sync
         # again and this will progress," which is not true for a metric that

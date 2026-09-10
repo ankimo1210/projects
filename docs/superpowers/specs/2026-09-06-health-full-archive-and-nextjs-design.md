@@ -1,224 +1,168 @@
 # Health: Full Google Archive + Next.js Frontend — Design
 
 **Date:** 2026-09-06
-**Status:** Approved in brainstorming; implementation plan pending
+**Updated:** 2026-09-07
+**Status:** Requirements confirmed; implementation plan prepared; implementation pending
 **Project:** `health/`
+**Plan:** `docs/superpowers/plans/2026-09-07-health-full-archive-and-nextjs.md`
 **Related:** `docs/superpowers/specs/2026-07-20-health-google-health-api-migration-design.md`
 
-## Why
+## Goal and confirmed requirements
 
-要件が2つ、同時に立った。
+Google Health の本人データを、公開された正式な取得手段で取得可能な範囲すべて、元の粒度でローカル保存する。その保存層を保ち、既存ダッシュボードを Studio Admin を基にした Next.js + shadcn/ui のローカル閲覧画面へ移す。
 
-1. **アーカイブ要件（bare minimum）** — Google が持っている自分のデータを **literally 全部**ローカルへ落として保存する。表示のためのダウンサンプルは許容するが、取得段階で捨てるのは不可。
-2. **UI 刷新** — Streamlit の既定 chrome をやめ、[21st.dev](https://21st.dev/) 系の shadcn/ui デザインへ寄せる。
+2026-09-07 にユーザーが確認した方針:
 
-調査の結果、**(1) は現状まったく満たされていない**ことが判明した。`build_inventory()` を実走したところ、Google Health が公開する **35 データ型のうち実装済みは 13、22 型が未実装**。しかも未実装側に `heart-rate-variability`（生サンプル）や `oxygen-saturation`（生サンプル）が含まれる — 実装済みの `hrv_rmssd` / `spo2_avg` は**その元データの日次要約でしかない**。
+1. 現在の取得元は **Google Health 公開 API（本人の OAuth 認可が必要）**。Google Takeout の ZIP や一般公開された個人データを読んでいるわけではない。取れないものは型・期間ごとに失敗や未確認として目立つ形で示し、それだけで全工程を停止しない。別のエクスポートサービスの自動操作は今回追加しない。
+2. **全データを元の粒度で保存する。容量を理由とする削除・間引き・保持期間の切り詰めは禁止。** 可逆圧縮・保存先の分割は許容する。表示のためのダウンサンプルは許容する。
+3. 新しい型も保存対象とするが、専用の表・グラフへの変換は必要に応じて追加する。既存の表示・分析機能は移行する。保存済みと表示対応済みを区別する。
 
-したがって優先順位は「取得 → 表示」であり、フロントエンドを先に作り替えても穴は塞がらない。本 spec は両方を1つの設計として扱い、フェーズに分けて実装する。
+アプリの完成と、特定アカウントの取得完全性は別に判定する。未取得があれば利用を継続できても「全データ取得完了」とは表示しない。
 
-## Goal
+## Constraints and non-goals
 
-- Google Health が公開する **35 データ型すべて**について、API レスポンスを verbatim でローカルへ保存する。
-- 同期と認可を **Streamlit なしで**（CLI から）実行できる。
-- ダッシュボードを **Next.js + shadcn/ui** の read-only 静的サイトへ移行し、Streamlit を廃止する。
-- 既存の Python core（`src/health/`、258 tests）と CVD 安全パレットを維持する。
+- Python >=3.12。既存の auth/client/store/sync/analytics の有用な契約とテストを維持する。
+- OAuth・同期・Web データの書き出しは Python CLI。Next.js は読み取り専用。
+- Next.js + TypeScript + Tailwind CSS + shadcn/ui + Recharts、npm を使用する。
+- 単一ユーザー、ローカル専用。公開・クラウド保存・リモートデプロイは含めない。
+- UI は日本語。コード、識別子、commit message は英語。
+- 実データ・token・認可コード・probe 結果は git に追加しない。自動テストは架空 fixture と fake HTTP のみ。
+- 新しい型すべての typed parser、新規の健康分析、E2E テスト基盤は今回の対象外。
 
-## Non-goals
+## Evidence and corrections
 
-- 生データの再解釈・新規分析の追加（アーカイブが揃った後の話）。
-- マルチユーザー、リモートデプロイ、クラウド保存。ローカル単一ユーザー専用のまま。
-- 未実装 22 型すべての typed parser 実装（下記 D-1 参照）。
-- E2E テスト基盤の導入。
+2026-09-06 の既存 DB 計測は日次 11,791 行、睡眠 897 行、intraday 701,036 行、raw_json 1,475 ページ。過去の計測値であり、完成後の容量見積もりではない。HR は主に 1〜3 秒間隔だった。
 
-## Current state (measured 2026-09-06)
+既存 `KNOWN_DATA_TYPES` は 35 型、`CATALOG` は 14 metric / 13 型。**35 は公式 API 全体の固定件数ではない。** 2026-09-07 に[公式型一覧](https://developers.google.com/health/data-types)を再照合すると 43 行あり、読み取り手段のない型も含まれていた。公式資料とローカル一覧の和集合を監査し、新規・廃止・不明を区別する。型数、取得 stream 数、表示系列数を混同しない。
 
-すべて本セッションで実測した値。
+[list](https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list) は元の data point、[reconcile](https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/reconcile) は複数 source を統合した値を返す。**日次 rollup や reconcile の JSON だけでは、元データ全量の保存と同じではない。** method・scope・filter・pagination を型ごとに確認する。
 
-### Data volume
+既存 `raw_json` は JSON をデコードして再直列化し、再同期時に同じ chunk のページを置換する。HTTP body の byte-for-byte 保存ではない。`SyncEngine._fetch_chunk()` は parser 成功後に保存する。**no-op parser の追加だけで全量アーカイブが完成するという旧案は修正する。**
 
-| Table | Rows | 備考 |
-|---|---|---|
-| `daily_series` | 11,791 | 17 系列 × 2024-03-06〜2026-09-06 |
-| `sleep_sessions` | 897 | |
-| `intraday` | 701,036 | `hr` 693,855 / `steps` 7,181 |
-| `raw_json` | 1,475 | `health.duckdb` 151MB の大半 |
+## Acquisition and storage
 
-`intraday.hr` のサンプリング間隔は **1〜3秒**（3s: 342,827 / 2s: 241,132 / 1s: 109,755）、**約 36,500 点/日**。現行 `heart_view.py` は「分単位ビューア」と称しつつ、その日の全点を間引かずに Plotly へ渡している。
+### Source inventory
 
-### Coverage gap
+取得用 `SOURCE_CATALOG` は公式の型・リソース・method・scope と検証状況を管理する。既存 `CATALOG` は表示用の typed projection を管理する。`KNOWN_DATA_TYPES` は取得側から導出し、二重管理を避ける。
 
-- 公開 35 型中 **実装 13 / 未実装 22**。
-- 未実装のうち影響が大きいもの: `heart-rate-variability`(sample), `oxygen-saturation`(sample), `exercise`, `daily-heart-rate-zones`, `time-in-heart-rate-zone`, `active-energy-burned`, `basal-energy-burned`, `activity-level`, `sedentary-period`, `floors`, `altitude`, `active-zone-minutes`, `vo2-max` 系 3 型, `respiratory-rate-sleep-summary`, `core-body-temperature`, `height`。
-- 手入力/専用デバイス依存で空の可能性が高いもの: `blood-glucose`, `nutrition-log`, `hydration-log`, `swim-lengths-data`。
-- `intraday` は `full_history=False` / `INTRADAY_LOOKBACK_DAYS = 30` により **直近 30 日より前へ遡らない**。これはアプリ側の定数であり、API 側の制限かは**未確認**。
+- list が提供される型は元 data point を全ページ保存する。reconcile/rollup しかない型は提供形態と制約を記録する。
+- 既存の表示用 rollup/reconcile も維持し、そのレスポンスも保存する。
+- get が list より詳細な本人データを返す場合は ID ごとの詳細も取得する。profile/paired devices など本人に関係する読み取り resource も監査する。共有参照データと本人の記録を区別する。
+- 読み取り不可の型に write API を呼ばない。必要な readonly scope のみを扱い、未付与は permission_denied として表示する。
 
-### Code shape
+### History, pages, and resume
 
-| | LOC |
+- 全量取得に独自の「直近30日」「既定5年」の打ち切りを使わない。
+- filter 省略で全履歴を列挙できることが確認できた endpoint は最終ページまで取得する。省略時の既定期間を検証する。
+- 期間指定が必須なら根拠のある開始境界から区間を分割する。開始境界不明は unknown_history とし、成功期間だけ記録する。空の狭い期間から「過去もすべて空」と推定しない。
+- 型ごとの filter を使用する。sleep と ECG など、指定可能な時刻条件が異なる型を一律に扱わない。
+- ページごとに保存・再開位置を記録する。最後の nextPageToken がなくなる前に complete/empty にしない。
+- cap/429 は partial/rate_limited、未訪問は pending。token 失効・反復は理由を記録し安全に再走査する。保存済みページは残す。
+- recent と history、型間を公平に進め、大きな1型の履歴が後続を毎回未訪問にしない。通常の再取得と全件再走査を区別する。
+
+### Lossless archive
+
+`health/data/archive/objects/<sha256>.json.gz` に受信した health API response body を可逆圧縮して保存する。OAuth token endpoint は含めない。同一内容の共有は許可するが、観測した異なる内容を上書きしない。
+
+DuckDB に page/attempt/coverage/cursor の索引を追加する。object を確実に書き終えてから索引を commit する。取得状態と typed projection 状態を別に管理する。
+
+- 全フィールド、source ID、単位、timestamp、UTC offset、未知の属性を残す。同時刻の異なる source を生保存時に統合しない。
+- parser error・後続ページの失敗でも受信済み body は残す。typed projection と既存 watermark は失敗によって変更しない。
+- 旧 raw_json は非破壊で取り込み、再直列化された JSON であることと実取得範囲が不明な可能性を記録する。旧 checkpoint から source-level 全履歴完了を捏造しない。
+- DB は writer 停止・checkpoint・backup 後、追加 schema で移行する。旧データを削除しない。
+- object は0600、アプリ所有 directory は0700。atomic write と fsync を使用する。
+- disk full は storage_error として取得を停止し、容量確保後に再開する。原本の自動削除・間引きは行わない。
+
+### Coverage and failure reporting
+
+各対象に型/resource、method、取得形態、要求範囲、実確認範囲、最終試行時刻、page/point 件数、状態、HTTP status、伏せ字処理した理由、再開可能性を残す。
+
+状態は `pending`, `complete`, `empty`, `partial`, `permission_denied`, `unsupported`, `failed`, `rate_limited`, `unknown_history`, `storage_error`。empty/complete は成功確認した範囲に限る。complete は Google 内部の非公開データも保有しているという意味ではない。過去の成功範囲は後の失敗で消さない。
+
+CLI と棚卸し画面に、失敗・未確認の型と期間を示す。cap や権限不足を「データなし」にしない。型単位の失敗で他の型や UI 作業を止めない。認可失効・429・storage error は run を止め状態を保存する。
+
+## CLI and local operation
+
+`[project.scripts] health = "health.cli:main"` を追加する。
+
+| Command | Behavior |
 |---|---|
-| `src/health/`（core） | 2,421 |
-| `app/`（Streamlit view） | 1,025 |
+| health auth | loopback OAuth。本人の同意で readonly token を保存 |
+| health sync | 全対象と既存 projection を進める。cap・再開・全量再走査に対応 |
+| health export-web | 一貫した DB/索引 snapshot から Web 用 JSON を生成 |
 
-`redirect_uri` の結合は `auth.py:41` のデフォルト引数 1 箇所のみ（他は test 1 行・README 1 行）。`health/.gitignore` は `/data/` のみ。
+`--data-dir` と `--env-file` を明示可能にして worktree から実アカウントを扱う際の保存先を確定する。秘密値はログに出さない。
 
-### Existing archival foundation
+OAuth callback は既に登録されている `http://localhost:8501/` を CLI の一時 server で受ける。port 使用中は説明して停止する。デフォルト URI を別 port へ変更して不要な Console 操作や移行中の互換性破壊を起こさない。readonly scope の追加同意は本人がブラウザで行う。
 
-```sql
-CREATE TABLE raw_json(
-    metric VARCHAR, range_start DATE, range_end DATE, page_index INTEGER,
-    fetched_at TIMESTAMP, payload JSON,
-    PRIMARY KEY(metric, range_start, range_end, page_index));
-```
+CLI は一つの writer として Store を所有する。DB lock を無視した別 process の強制終了はしない。
 
-**API レスポンスを verbatim で保持しており、`daily_series` / `sleep_sessions` / `intraday` はそこからの派生**。アーカイブ要件に対して既に正しい形をしている。
+## Export layer
 
-## Key decision: raw-first archive
+Web データは派生物。原本 archive は配信 directory に置かない。`health export-web --out-dir <target>` の標準 target は `health/web/public/data/`。build 後の更新には `health/web/out/data/` を指定できる。
 
-**D-1.** `Metric.parse_pages` は `Callable[[Sequence[dict]], ParsedRows]`。**空の `ParsedRows()` を返す no-op parser を渡せる**ため、「取得してアーカイブするだけの型」を**同期エンジン無改造で** `CATALOG` へ追加できる。
+`generations/<generation_id>/` を完成させ、最後に meta.json を atomic に切り替える。ブラウザは同じ generation のファイルだけを読む。失敗時は直前の正常 generation を残す。export は live API を呼ばない。
 
-したがって取得完全性は「22 本の parser を書く」問題ではなく、「22 型の request shape を確定して CATALOG に載せる」問題に縮む。typed parser は**表示したくなった型にだけ後追いで**書く。
-
-検討した代替案:
-
-| 案 | 判定 |
+| File in generation | Content |
 |---|---|
-| 22 型すべて typed parser まで実装 | 却下。データが空の型はパーサを検証できず、無駄になる |
-| probe でデータがある型だけ実装 | **却下。要件に反する** — 空と判断した型が後日埋まっても取得されない |
-| **raw-first アーカイブ（採用）** | 生データは全部残り、解釈は後からいつでもやり直せる |
+| daily.json | 全保存期間の表示系列。dates と同じ長さの列、欠損 null、単位 |
+| sleep.json | 全保存 session。主睡眠・昼寝と stage 不明の区別 |
+| intraday/<metric>/<date>.json | typed series の日別フル解像度。全 source 原本とは区別 |
+| intraday/<metric>/index.json | 保存済み日付・点数・time basis |
+| analytics.json | Python の分析結果と計算範囲・標本数 |
+| inventory.json | 型・取得範囲・失敗理由・保存/表示対応状態 |
 
-## Decisions
+meta.json は schema version、generation、生成時刻、manifest path、同期/表示 freshness を持つ。JSON は有限数と null のみ、NaN/Infinity を出さない。civil date と timestamp を区別し、naive な既存 timestamp に UTC の Z を付けない。
 
-| # | Topic | Decision |
-|---|---|---|
-| D-1 | 未実装 22 型 | no-op parser で `CATALOG` に追加。raw のみ保存 |
-| D-2 | write 面（OAuth・同期） | **Python CLI へ降ろす**。`health auth`（loopback OAuth）/ `health sync`。Next.js は完全 read-only |
-| D-3 | データ転送 | **静的エクスポート**。常駐 API を置かない |
-| D-4 | intraday の配信 | **フル解像度のまま日別ファイル**。間引きは描画時にブラウザ側で行う |
-| D-5 | 間引きアルゴリズム | **min/max バケット法**（約 2,000 点）。平均では HR の短時間スパイクが消えるため |
-| D-6 | チャートライブラリ | **Recharts 一本**（shadcn/ui 準拠）。uPlot は Recharts が詰まった場合の予備で今は入れない |
-| D-7 | 系列色 | **`app/theme.py` の CVD 安全パレットを CSS 変数へ移植**。テンプレート由来のチャート色は採用しない |
-| D-8 | テンプレートの扱い | **丸ごと clone しない**。`create-next-app` + `shadcn/ui` に、MIT の Studio Admin からシェルと必要コンポーネントのみ移植 |
-| D-9 | toolchain | **npm**（`make sde-check` の前例に合わせる。pnpm は PATH にない） |
-| D-10 | 公開 API 追加 | `[project.scripts] health = "health.cli:main"` |
+表示期間は `30/90/180/365/all`。baseline z は全履歴で計算後に表示期間で絞る。lag 相関は期間別・既存3組の pair 別に事前計算し件数を含める。social jetlag の計算範囲も明示する。任意の新しい相関期間をブラウザで再計算する機能は追加しない。
 
-## Phase 1 — Establish facts (spike)
+`/web/public/data/`, `/web/out/`, `/web/.next/`, `/web/node_modules/` を gitignore に含める。build 成果物も実データを含み得る。静的 build 後は localhost の HTTP server で配信する。file:// 直開きは保証しない。
 
-**目的:** 22 型の request shape と、実際にデータが存在するかを最小コストで確定する。
+## Frontend
 
-`scripts/probe_datatypes.py` を 35 型へ拡張して 1 回実走する。probe は狭い期間で各型を独立に叩き、DuckDB へは書かず `data/probe/<metric>/` へ JSON を保存する既存の仕組み。
+[Studio Admin](https://github.com/arhamkhnz/next-shadcn-admin-dashboard) の MIT license と採用 commit を記録し、sidebar/header/card と必要な UI 部品を移植する。Next.js の [static export](https://nextjs.org/docs/app/guides/static-exports) を使用する。認証画面・SaaS 管理機能・API route は追加しない。
 
-確定させるもの:
-
-- 各型の `method`（`dailyRollUp` / `reconcile`）
-- `reconcile` 型の `filter_path`
-- `max_range_days` の実効上限
-- **データの有無**（空でも CATALOG には載せる。D-1 の方針は変えない）
-- **`intraday` が 30 日より深く取れるか** — 取れるなら `INTRADAY_LOOKBACK_DAYS` を見直す
-
-**契約の正本:** `health/CLAUDE.md` は `.superpowers/sdd/health-google-api-contracts.md` を参照しているが、**このファイルはリポジトリに存在しない**（`find` で確認済み）。代わりに移行 spec が挙げる Google 公式ドキュメントを正とする。
-
-- [Data types](https://developers.google.com/health/data-types)
-- [`dailyRollUp`](https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/dailyRollUp)
-- [`reconcile`](https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/reconcile)
-- [`list` filter syntax](https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/list)
-- [Quotas and rate limits](https://developers.google.com/health/rate-limits)
-
-**成果物:** 型ごとの request shape 表。CLAUDE.md の壊れた参照もこの機会に直す。
-
-**Exit criteria:** 35 型それぞれについて method / shape / データ有無が表に埋まっている。
-
-## Phase 2 — Acquisition completeness
-
-**2-1. CATALOG 拡張**
-
-P1 の表に従って 22 型を `CATALOG` へ追加。parser は `lambda pages: ParsedRows()`（型ごとに名前付き関数として定義し、後から実装へ差し替えられるようにする）。
-
-**2-2. リクエスト予算**
-
-メトリクスが 14 → 35 で約 2.5 倍。現行 `MAX_REQUESTS_PER_RUN = 200` のままだと 1 run で forward pass すら終わらない可能性がある。対応:
-
-- UI の 200/500/1000 の選択肢を CLI 引数へ移す
-- forward pass が全メトリクスの `RECENT_WINDOW_DAYS` を確実に踏めるだけの下限を計算し、それを下回る cap を拒否する
-
-**2-3. intraday floor**
-
-P1 の実測結果に従って `full_history` / `INTRADAY_LOOKBACK_DAYS` を決定する。深く取れるなら backfill 対象へ格上げする。
-
-**2-4. CLI 新設**
-
-```
-health auth     # loopback OAuth。固定ポートで一時サーバを立て code を受ける
-health sync     # ヘッドレス同期。進捗は stderr、cap は引数
-health export-web   # Phase 3
-```
-
-`auth.py` の `redirect_uri` デフォルトを CLI のポートへ変更する。**Google Cloud Console 側で新しい redirect URI を完全一致登録する手作業が発生する**（README に手順を追記）。
-
-これにより **Streamlit の「接続」リンクは P2 の時点で機能しなくなる**（8501 で待ち受けていないため）。以後、認可は CLI が単独で所有する。Streamlit は `tokens.json` を読むだけなので、**閲覧用としては P4 まで動き続ける**。
-
-なお現行の `load_tokens()` は失効判定をせず、期限切れ `tokens.json` でも「接続済み」と扱う。そのため Streamlit 側には再接続導線が同期ページ最下部にしか無く、実際に本セッションで詰まった。CLI 化でこの問題は解消する。
-
-**Exit criteria:** Streamlit を起動せずに認可と同期が完走する。35 型すべてについて同期が試行され、`sync_state` に結果（成功 / 空 / 失敗理由）が残る。空レスポンスの型が `raw_json` にどう記録されるかは P1 の probe で確認し、必要なら「試行したが空」を区別できるようにする。
-
-## Phase 3 — Export layer
-
-`health export-web` が `health/web/public/data/` へ静的 JSON を書く。**`analytics` の計算結果も Python 側で確定させ**、単一の真実源を保つ。
-
-| File | 中身 | 概算 |
-|---|---|---|
-| `daily.json` | 全系列を列指向（`{dates: [...], series: {steps: [...]}}`） | ~200KB / gzip 40KB |
-| `sleep.json` | 全セッション | ~150KB |
-| `intraday/<metric>/<YYYY-MM-DD>.json` | **フル解像度** | ~700KB / gzip 150KB |
-| `intraday/<metric>/index.json` | 存在する日の一覧 | 極小 |
-| `analytics.json` | rolling z / lagged correlation / coverage calendar / social jetlag の事前計算結果 | 小 |
-| `inventory.json` | 35 型テーブル + 保存系列統計 | 小 |
-| `meta.json` | 生成時刻・同期 watermark・各系列の範囲 | 極小 |
-
-**`health/.gitignore` へ `/web/public/data/` を追加する**（実データのため。現状 `/data/` しか無い）。
-
-**Exit criteria:** 生成物だけでフロントが動く。DuckDB へ触れない。
-
-## Phase 4 — Next.js frontend
-
-`health/web/`。`create-next-app` + `shadcn/ui`、Studio Admin（MIT）からシェルとコンポーネントのみ移植。
-
-**ページ（7枚）:** 概要 / 気づき / 睡眠 / 活動 / 心拍 / 身体 / データ棚卸し。**同期ページは CLI へ移るため消える。**
-
-**データ取得:** `public/data/**` を fetch するのみ。API ルートなし・認証なし・サーバ側データ取得なし。
-
-**チャート:** Recharts。intraday は取得後にクライアントで min/max バケット間引き（D-4/D-5）。
-
-**配色:** `app/theme.py` の `LIGHT` / `DARK` を CSS 変数へ移植する。`categorical` のスロット順序と `line_safe`（細線でコントラスト 3:1 を切るスロットを避ける集合）を**そのまま維持**する。テンプレート由来のプリセットは shell（背景・枠・角丸・フォント・サイドバー）にのみ適用する。
-
-**Exit criteria:** 7 ページが実データで動く。light/dark 双方で描画確認済み。Streamlit を削除できる。
-
-## Testing
-
-現行 **258 tests**。うち **8 件が Streamlit `app/` に結合**している（`test_app_smoke.py` 3 / `test_insights_view.py` 2 / `test_sync_view.py` 3）。P4 で `app/` を削除するとこの 8 件も消え、**core 250 tests が残る**。`test_insights_view.py` が検証している判断ロジックのうち残す価値があるものは、削除前に `src/health/analytics.py` 側のテストへ移す。
-
-| 層 | 方針 |
+| Page | Required behavior |
 |---|---|
-| Python core | 既存 250 core tests を維持。CATALOG 拡張分は fixture ベースの契約テストを追加 |
-| CLI | fake HTTP で `auth` / `sync` / `export-web` を通す。**live API は自動テストで呼ばない**（既存方針を踏襲） |
-| Export | 生成 JSON のスキーマと決定性を検証 |
-| Frontend | `tsc --noEmit` + lint + **Vitest（間引き関数とデータローダのみ）**。E2E は入れない |
-| Workspace | Makefile へ `health-web-check` を `sde-check` と同形で追加 |
+| 概要 | 歩数・睡眠・安静時心拍、値の日付、暦上前日との比較、sparkline |
+| 気づき | baseline z、期間別 lag 相関と標本数、睡眠リズム、欠損 calendar |
+| 睡眠 | stage 構成、classic sleep、睡眠時間/効率、就寝起床、曜日傾向 |
+| 活動 | 歩数・移動平均、距離、消費エネルギー、活動時間、日内歩数 |
+| 心拍 | 安静時心拍、HRV、選択日の詳細心拍とズーム |
+| 身体 | 体重・体脂肪、SpO2、呼吸数、皮膚温の既存指標 |
+| データ棚卸し | 保存済み/未対応/失敗/未確認、型別・期間別 coverage、既存 CSV 書き出し |
 
-`probe_datatypes.py` の出力は**実データ**であり、共有・commit しない（既存方針）。
+Recharts の描画時のみ min/max bucket で約2,000点に間引く。取得した日別データは全点を保持し、ズーム後は全点から再計算する。端点・局所 min/max・順序・欠損区間を保つ。表示点を原本として分析・保存しない。
 
-## Risks & open questions
+`app/theme.py` の LIGHT/DARK、categorical の順序、line_safe、sequential を移植する。shell は Shadcn Neutral 系。元パレットの検証結果が異なる surface に引き継がれるとは仮定せず、実際の chart surface で確認する。
 
-| # | 内容 | 扱い |
+期間をページ間で共有する。loading/export 未作成/取得失敗/空/古い値を区別する。取得日時と値の日付は別表示。7ページを light/dark・広い画面・狭い画面で実描画確認してから Streamlit を外す。
+
+## Phases and validation
+
+| Phase | Deliverable | Exit condition |
 |---|---|---|
-| R-1 | 22 型の request shape が公式ドキュメントから確定しない | P1 の probe で実測。それでも不明な型は「未確定」として表に残し、CATALOG 追加を保留する |
-| R-2 | intraday が 30 日より深く取れない可能性 | P1 で実測。取れないなら**それが上流の限界**であり、要件は「取れる範囲すべて」と解釈する。README に明記する |
-| R-3 | 35 型同期のリクエスト量が rate limit に当たる | 既存の 429 ハンドリング（run 全体を停止）がそのまま効く。cap 設計で緩和 |
-| R-4 | Google Cloud Console の redirect URI 追加が手作業 | 避けられない。README に手順を書く |
-| R-5 | Recharts が 2,000 点で重い | uPlot への差し替えを予備案として持つ（D-6） |
-| R-6 | `health.duckdb` が raw 増加で肥大 | 現在 151MB。35 型化で数倍を見込む。上限を超えたら raw をファイルへ外出しする案を別途検討 |
+| P1 契約と probe | 公式一覧照合と限定 live probe | 各対象に method/scope/取得形態/検証結果。不明・失敗を隠さない |
+| P2 取得と CLI | lossless archive、coverage、再開、CLI | 全対象を巡回し、途中失敗・disk full でも既存原本を保持 |
+| P3 Web export | generation JSON と Python 分析 | snapshot 一貫性、欠損・期間・time basis の明示 |
+| P4 Next.js | 7ページと Studio Admin shell | 機能と実描画を確認後、Streamlit を削除 |
 
-## Out of scope
+2026-09-06 の基準は258 tests、うち8件は Streamlit view に結合。有用な判断テストは削除前に Python 側へ移す。件数だけを合格条件にしない。
 
-- 未実装 22 型の typed parser（必要になった型だけ後から）。
-- intraday の事前 1 分版生成（多日 intraday 一覧が欲しくなった時点で追加）。
-- Streamlit の段階的併存。P4 完了時に削除する。
+- 取得: 元データと集計の区別、未知フィールド、同時刻の複数 source、全ページ、空、403/401/429、cap、反復/失効 token、disk full、再起動、履歴の穴。
+- 保存: bytes 復元、atomic write、旧 JSON 非破壊取り込み、parser failure 後の原本保持、covered range 内だけの typed 更新。
+- Export: schema、determinism（生成 ID/時刻を除く）、NaN/null、日付/offset、generation 混在防止、期間別分析。
+- Frontend: typecheck、lint、Vitest（loader と間引き）、production static build、ブラウザでの実描画。常設 E2E 基盤は導入しない。
+- Makefile に health-web-check を追加し、typecheck/lint/test/build を実際に含める。
+- 本人の live probe は操作テスト。認可不足は理由を残し、fake HTTP 検証と UI 作業は続ける。
+
+## Risks and handling
+
+| # | Risk | Handling |
+|---|---|---|
+| R-1 | method/scope/一覧の変化 | 公式 URL・確認日を記録。未確定型も一覧に残す |
+| R-2 | 古いデータや型が取得不能 | 失敗・未確認の型と期間を強調。成功/空と偽らず他の作業を続ける |
+| R-3 | API quota / cap | ページ保存、公平な再開、partial 表示。cap だけで全型完走を保証しない |
+| R-4 | readonly scope 追加同意 | 必要 scope を提示。未付与型は permission_denied |
+| R-5 | chart 性能 | 描画だけ間引き、ズームで再計算。悪い実測がある場合に限り方式を再検討 |
+| R-6 | 容量増加 | 原本の自動削除なし。可逆圧縮・分割。disk full は保持して停止・再開 |

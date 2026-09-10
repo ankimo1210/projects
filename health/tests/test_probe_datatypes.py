@@ -95,3 +95,46 @@ def test_auth_error_stops_remaining_metrics(tmp_path):
     assert [call[0] for call in client.calls] == ["expired"]
     saved = (tmp_path / "manifest.json").read_text()
     assert '"expired"' in saved and '"status": "error"' in saved
+
+
+def _load_probe_script():
+    import importlib.util
+    from pathlib import Path
+
+    spec = importlib.util.spec_from_file_location(
+        "probe_script_for_test", Path(__file__).parents[1] / "scripts" / "probe_datatypes.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_all_sources_cli_uses_bounded_runner_without_real_credentials(tmp_path, monkeypatch):
+    script = _load_probe_script()
+    auth = object()
+    calls = []
+    monkeypatch.setattr(script.GoogleHealthAuth, "from_env", lambda *_a, **_kw: auth)
+    monkeypatch.setattr(script, "HealthClient", lambda value: value)
+
+    def run(client, out, sources, **kwargs):
+        calls.append((client, out, sources, kwargs))
+        return {"stopped_reason": None, "sources": {}}
+
+    monkeypatch.setattr(script, "run_source_probe", run)
+    assert script.main(["--all-sources", "--max-requests", "3", "--output-dir", str(tmp_path)]) == 0
+    assert calls[0][0] is auth
+    assert calls[0][1] == tmp_path
+    assert calls[0][2]
+    assert calls[0][3]["max_requests"] == 3
+
+
+def test_probe_cli_bad_budget_does_not_load_credentials(monkeypatch):
+    script = _load_probe_script()
+
+    def forbidden(*_a, **_kw):
+        pytest.fail("must validate arguments before loading auth")
+
+    monkeypatch.setattr(script.GoogleHealthAuth, "from_env", forbidden)
+    with pytest.raises(SystemExit) as exc:
+        script.main(["--all-sources", "--max-requests", "-1"])
+    assert exc.value.code == 2

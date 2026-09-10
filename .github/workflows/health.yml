@@ -1,4 +1,4 @@
-# Test + lint gate for the health package (Streamlit dashboard over the
+# Test + lint gate for the health package (local archive and Next.js dashboard over the
 # Google Health API). No live API call runs here: the suite is fixtures and
 # fake HTTP only.
 name: health
@@ -35,7 +35,25 @@ jobs:
         run: uv run --no-sync pytest health/tests -q
 
       - name: Lint
-        run: uv run --no-sync ruff check health/src health/app health/scripts health/tests
+        run: uv run --no-sync ruff check health/src health/scripts health/tests
 
       - name: Format check
-        run: uv run --no-sync ruff format --check health/src health/app health/scripts health/tests
+        run: uv run --no-sync ruff format --check health/src health/scripts health/tests
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: health/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: health/web/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build

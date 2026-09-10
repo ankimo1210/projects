@@ -1,12 +1,21 @@
 """Hand-rolled HTTP fakes (no mocking library in the workspace)."""
 
+import json
+
 
 class FakeResponse:
     def __init__(
-        self, status_code=200, json_data=None, headers=None, text=None, malformed_json=False
+        self,
+        status_code=200,
+        json_data=None,
+        headers=None,
+        text=None,
+        malformed_json=False,
+        content=None,
     ):
         self.status_code = status_code
         self._json = json_data
+        self._explicit_content = content is not None
         self.headers = headers or {}
         # `text` backs the ApiError fallback message when a non-2xx body has no
         # parseable Google error envelope; default to a JSON dump so callers
@@ -18,10 +27,20 @@ class FakeResponse:
         else:
             self.text = ""
         self._malformed = malformed_json
+        if content is not None:
+            self.content = content
+            self.text = content.decode("utf-8", errors="replace")
+        elif text is not None:
+            self.content = text.encode("utf-8")
+        else:
+            self.content = json.dumps(json_data).encode("utf-8")
+            self.text = self.content.decode("utf-8")
 
     def json(self):
         if self._malformed:
             raise ValueError("Expecting value: malformed JSON body")
+        if self._explicit_content:
+            return json.loads(self.content)
         return self._json
 
     def raise_for_status(self):
