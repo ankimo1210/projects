@@ -111,3 +111,26 @@ def test_build_inventory_needs_no_store():
 
     assert not frame.empty
     assert set(frame.columns) == set(PUBLISHED_COLUMNS)
+
+
+def test_changing_history_policy_preserves_inventory_table_identity(store):
+    from dataclasses import replace
+
+    metric = replace(catalog_metric("intraday_hr"), full_history=True)
+    store.replace_chunk(
+        metric,
+        date(2026, 7, 1),
+        date(2026, 7, 1),
+        [],
+        ParsedRows(intraday=(("hr", datetime(2026, 7, 1, 12), 65),)),
+    )
+    row = build_series_inventory(store, [metric]).iloc[0]
+    assert row["storage"] == "intraday"
+    assert row["n"] == 1
+
+
+def test_published_inventory_comes_from_complete_source_catalog():
+    from health.source_catalog import load_sources
+
+    assert set(KNOWN_DATA_TYPES) == {s.data_type for s in load_sources()}
+    assert KNOWN_DATA_TYPES["nutrition-log"][1] == "nutrition"

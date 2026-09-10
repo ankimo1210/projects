@@ -7,6 +7,7 @@ import base64
 import hashlib
 import json
 import os
+import re
 import secrets
 import time
 from pathlib import Path
@@ -41,6 +42,7 @@ class GoogleHealthAuth:
         redirect_uri: str = "http://localhost:8501/",
         session: Any = None,
         clock=time.time,
+        scopes: str | None = None,
     ):
         self.client_id = client_id
         self.client_secret = client_secret
@@ -48,18 +50,28 @@ class GoogleHealthAuth:
         self.redirect_uri = redirect_uri
         self.session = session or requests.Session()
         self.clock = clock
+        self.scopes = SCOPES if scopes is None else scopes
+        if not self.scopes.split() or any(
+            not re.fullmatch(
+                r"https://www\.googleapis\.com/auth/googlehealth\.[a-z_]+\.readonly", scope
+            )
+            for scope in self.scopes.split()
+        ):
+            raise AuthError("Only Google Health readonly scopes are supported")
         self.tokens_path = self.data_dir / "tokens.json"
         self.pending_path = self.data_dir / "oauth_pending.json"
         self._tokens: dict | None = None
 
     @classmethod
-    def from_env(cls, data_dir: Path, env_path: Path | None = None) -> GoogleHealthAuth:
+    def from_env(
+        cls, data_dir: Path, env_path: Path | None = None, *, scopes: str | None = None
+    ) -> GoogleHealthAuth:
         load_dotenv(env_path or Path(data_dir).parent / ".env")
         cid = os.environ.get("GOOGLE_CLIENT_ID")
         secret = os.environ.get("GOOGLE_CLIENT_SECRET")
         if not cid or not secret:
             raise AuthError("GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET not set (health/.env)")
-        return cls(cid, secret, Path(data_dir))
+        return cls(cid, secret, Path(data_dir), scopes=scopes)
 
     # -- flow ----------------------------------------------------------------
     def begin_auth(self) -> str:
@@ -83,7 +95,7 @@ class GoogleHealthAuth:
                 {
                     "response_type": "code",
                     "client_id": self.client_id,
-                    "scope": SCOPES,
+                    "scope": self.scopes,
                     "code_challenge": challenge,
                     "code_challenge_method": "S256",
                     "state": pend["state"],

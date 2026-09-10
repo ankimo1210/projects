@@ -34,6 +34,9 @@ CREATE TABLE IF NOT EXISTS intraday(
 CREATE TABLE IF NOT EXISTS sync_state(
     metric VARCHAR PRIMARY KEY, last_synced_date DATE, status VARCHAR,
     updated_at TIMESTAMP, backfilled_from DATE);
+CREATE TABLE IF NOT EXISTS sync_history_policy(
+    metric VARCHAR, floor DATE, repaired_at TIMESTAMP,
+    PRIMARY KEY(metric, floor));
 """
 
 # Applied after _SCHEMA on every open. Each statement must be idempotent: an
@@ -97,9 +100,7 @@ class Store:
                 os.chmod(candidate, 0o600)
 
     def checkpoint(self) -> None:
-        """Fold the write-ahead log back into the database file. Streamlit keeps
-        one cached connection for the whole process, so without an explicit
-        checkpoint a killed app leaves the entire recent history in a .wal."""
+        """Fold committed writes into the database before closing or backing up."""
         self.con.execute("CHECKPOINT")
 
     def close(self) -> None:
@@ -149,6 +150,7 @@ class Store:
         covered_start: date | None = None,
         covered_end: date | None = None,
         backfill_from: date | None = None,
+        history_floor: date | None = None,
     ) -> None:
         """Atomically replace one (metric, start, end) chunk: old raw pages,
         old typed rows in the covered range, and the watermark all move
@@ -173,6 +175,11 @@ class Store:
         part of that None-means-unchanged contract: it only ever extends
         `backfilled_from` backwards (`least(existing, backfill_from)`), so
         passing `None` there falls back to `start`, not to "unchanged".
+
+        `history_floor` records a successful legacy boundary refetch for this
+        explicit policy in the same transaction. It is never recorded after a
+        partial fetch, parse failure, or failed typed insert. Existing data
+        outside the covered range and in other storage tables stays intact.
 
         Caution: `None` for `watermark` only means "unchanged" when a row for
         this metric already exists. The very first write for a metric has
@@ -206,35 +213,35 @@ class Store:
             # series name is not unique across tables -- e.g. "steps" (daily
             # rollup) and "intraday_steps" (reconcile intraday) both have
             # series_names == ("steps",) -- so the target table must come from
-            # the metric's own identity (full_history=False marks the two
+            # the metric's own identity (storage_tables marks the two
             # intraday-cadence metrics), never from which fields of `rows`
             # happen to be non-empty on this particular call: an empty-payload
             # replacement must still clear stale rows in the metric's real
             # table.
-            if metric.full_history:
+            if series and "daily_series" in metric.storage_tables:
                 con.execute(
                     f"DELETE FROM daily_series WHERE metric IN ({series_ph}) "
                     "AND date BETWEEN ? AND ?",
                     [*series, covered_start, covered_end],
                 )
-            else:
+            if series and "intraday" in metric.storage_tables:
                 con.execute(
                     f"DELETE FROM intraday WHERE metric IN ({series_ph}) "
                     "AND CAST(ts AS DATE) BETWEEN ? AND ?",
                     [*series, covered_start, covered_end],
                 )
             # 4. sleep sessions are keyed by wake date, not series name
-            if metric.name == "sleep":
+            if "sleep_sessions" in metric.storage_tables:
                 con.execute(
                     "DELETE FROM sleep_sessions WHERE date BETWEEN ? AND ?",
                     [covered_start, covered_end],
                 )
             # 5. insert the freshly parsed typed rows, same table restriction as above
-            if metric.full_history and rows.daily:
+            if "daily_series" in metric.storage_tables and rows.daily:
                 con.executemany("INSERT INTO daily_series VALUES (?, ?, ?)", list(rows.daily))
-            elif not metric.full_history and rows.intraday:
+            if "intraday" in metric.storage_tables and rows.intraday:
                 con.executemany("INSERT INTO intraday VALUES (?, ?, ?)", list(rows.intraday))
-            if rows.sleep:
+            if "sleep_sessions" in metric.storage_tables and rows.sleep:
                 for r in rows.sleep:
                     con.execute(
                         f"INSERT INTO sleep_sessions VALUES ({', '.join('?' * len(_SLEEP_COLS))})",
@@ -276,12 +283,26 @@ class Store:
                     watermark,
                 ],
             )
+            if history_floor is not None:
+                con.execute(
+                    "INSERT INTO sync_history_policy VALUES (?, ?, now()) ON CONFLICT DO NOTHING",
+                    [metric.name, history_floor],
+                )
             con.execute("COMMIT")
         except Exception:
             con.execute("ROLLBACK")
             raise
 
     # -- sync state --------------------------------------------------------
+    def history_boundary_repaired(self, metric: str, floor: date) -> bool:
+        return (
+            self.con.execute(
+                "SELECT 1 FROM sync_history_policy WHERE metric = ? AND floor = ?",
+                [metric, floor],
+            ).fetchone()
+            is not None
+        )
+
     def get_sync_state(self, metric: str) -> date | None:
         checkpoint = self.get_sync_checkpoint(metric)
         return checkpoint.last_synced if checkpoint else None

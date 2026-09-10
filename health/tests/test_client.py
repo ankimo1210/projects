@@ -484,3 +484,123 @@ def test_next_send_after_access_token_failure_still_never_waits(tmp_path):
     assert result == {"rollupDataPoints": []}
     assert budget.used == 1  # only the real send counted, not the phantom attempt
     assert clock.waits == []  # pacing state wasn't corrupted by the earlier failure
+
+
+@pytest.mark.parametrize(
+    "status,body",
+    [(200, b"not json\n"), (403, b'{"error":{"message":"private"}}'), (500, b"upstream down")],
+)
+def test_request_page_captures_original_bytes_before_parsing(tmp_path, status, body):
+    from health.source_catalog import RequestSpec
+
+    seen = []
+    client, _ = make_client(tmp_path, [FakeResponse(status, content=body)])
+    with pytest.raises(ApiError):
+        client.request_page(
+            RequestSpec("GET", "/v4/users/me/profile", {}, None),
+            RequestBudget(1),
+            capture=lambda raw, code: seen.append((raw, code)),
+        )
+    assert seen == [(body, status)]
+
+
+def test_observer_captures_each_401_and_projection_response(tmp_path):
+    seen = []
+    auth = make_auth(
+        tmp_path,
+        session=FakeSession([FakeResponse(200, {"access_token": "new", "expires_in": 3600})]),
+    )
+    client, _ = make_client(
+        tmp_path,
+        [
+            FakeResponse(401, content=b"{}"),
+            FakeResponse(200, content=b'{"rollupDataPoints": []}\n'),
+        ],
+        auth=auth,
+    )
+    client.response_observer = lambda request, body, code: seen.append((request, body, code))
+    budget = RequestBudget(2)
+    client.daily_rollup(by_name("steps"), START, END, budget)
+    assert [x[2] for x in seen] == [401, 200]
+    assert seen[0][0].method == "POST"
+    assert seen[0][0].body == daily_rollup_body(START, END)
+    assert seen[1][1] == b'{"rollupDataPoints": []}\n'
+    assert budget.used == 2
+
+
+def test_capture_failure_stops_before_parse_and_auth_refresh(tmp_path):
+    from health.source_catalog import RequestSpec
+
+    client, _ = make_client(tmp_path, [FakeResponse(401, {})])
+
+    def fail(*_args):
+        raise OSError("disk full")
+
+    with pytest.raises(OSError, match="disk full"):
+        client.request_page(
+            RequestSpec("GET", "/v4/users/me/profile", {}, None), RequestBudget(2), capture=fail
+        )
+    assert len(client.session.calls) == 1
+
+
+@pytest.mark.parametrize(
+    "method,path",
+    [
+        ("DELETE", "/v4/users/me/profile"),
+        ("POST", "/v4/users/me/dataTypes/weight/dataPoints"),
+        ("GET", "https://example.com"),
+        ("GET", "/v4/users/me/../profile"),
+    ],
+)
+def test_request_page_rejects_writes_and_non_resource_paths_before_auth(tmp_path, method, path):
+    from health.source_catalog import RequestSpec
+
+    client, _ = make_client(tmp_path, [])
+    with pytest.raises(ValueError):
+        client.request_page(RequestSpec(method, path, {}, None), RequestBudget(1))
+    assert client.session.calls == []
+
+
+def test_request_page_captures_both_401_bodies_before_auth_error(tmp_path):
+    from health.source_catalog import RequestSpec
+
+    seen = []
+    auth = make_auth(
+        tmp_path,
+        session=FakeSession([FakeResponse(200, {"access_token": "new", "expires_in": 3600})]),
+    )
+    client, _ = make_client(
+        tmp_path,
+        [FakeResponse(401, content=b"first denial"), FakeResponse(401, content=b"second denial")],
+        auth=auth,
+    )
+    budget = RequestBudget(2)
+    with pytest.raises(AuthError):
+        client.request_page(
+            RequestSpec("GET", "/v4/users/me/profile"),
+            budget,
+            capture=lambda body, code: seen.append((body, code)),
+        )
+    assert seen == [(b"first denial", 401), (b"second denial", 401)]
+    assert budget.used == 2
+
+
+def test_request_page_keeps_first_401_when_retry_budget_is_exhausted(tmp_path):
+    from health.source_catalog import RequestSpec
+
+    seen = []
+    auth = make_auth(
+        tmp_path,
+        session=FakeSession([FakeResponse(200, {"access_token": "new", "expires_in": 3600})]),
+    )
+    client, _ = make_client(tmp_path, [FakeResponse(401, content=b"denied")], auth=auth)
+    budget = RequestBudget(1)
+    with pytest.raises(RequestCapExceeded):
+        client.request_page(
+            RequestSpec("GET", "/v4/users/me/profile"),
+            budget,
+            capture=lambda body, code: seen.append((body, code)),
+        )
+    assert seen == [(b"denied", 401)]
+    assert budget.used == 1
+    assert len(client.session.calls) == 1
