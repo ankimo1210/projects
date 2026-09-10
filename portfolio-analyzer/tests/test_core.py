@@ -853,8 +853,10 @@ def test_private_valuation_is_split_by_basis() -> None:
         row for row in artifact["snapshot"]["datasets"]["summary"] if row["scope"] == "すべて"
     )
 
+    # Pinned to the reference as of 2026-09-11. forward_pe moved from 23.4029
+    # when 6857, 7532 and XLE were repriced against their current forecasts.
     assert summary["trailing_pe"] == pytest.approx(38.7205, rel=1e-4)
-    assert summary["forward_pe"] == pytest.approx(23.4029, rel=1e-4)
+    assert summary["forward_pe"] == pytest.approx(21.1163, rel=1e-4)
     assert summary["provider_pe"] == pytest.approx(19.8451, rel=1e-4)
     assert summary["trailing_valuation_coverage_ratio"] < 0.25
     assert summary["forward_valuation_coverage_ratio"] < 0.41
