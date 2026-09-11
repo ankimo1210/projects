@@ -292,8 +292,11 @@ def test_private_reference_exposes_valuation_freshness() -> None:
         if row["scope"] == "すべて" and row["quality"] == "要更新"
     }
     assert stale_positions == set()
+    # QQQ and SMH are reconstructed from holdings (providers block fetches), so
+    # both are flagged 推定 even though their as-of dates are the freshest.
     assert qualities["QQQ"] == "推定"
-    assert qualities["SMH"] == "現行"
+    assert qualities["SMH"] == "推定"
+    assert qualities["XLE"] == "現行"
 
 
 @PRIVATE_ANALYSIS_ONLY
@@ -854,8 +857,11 @@ def test_private_valuation_is_split_by_basis() -> None:
     )
 
     # Pinned to the reference as of 2026-09-11. forward_pe moved from 23.4029
-    # when 6857, 7532 and XLE were repriced against their current forecasts.
-    assert summary["trailing_pe"] == pytest.approx(38.7205, rel=1e-4)
+    # when 6857, 7532 and XLE were repriced against their current forecasts;
+    # trailing_pe moved from 38.7205 when QQQ and SMH were replaced by
+    # reconstructions from their full holdings (validated against the
+    # providers' own figures to within +1.4% / +1.8%).
+    assert summary["trailing_pe"] == pytest.approx(36.4074, rel=1e-4)
     assert summary["forward_pe"] == pytest.approx(21.1163, rel=1e-4)
     assert summary["provider_pe"] == pytest.approx(19.8451, rel=1e-4)
     assert summary["trailing_valuation_coverage_ratio"] < 0.25
