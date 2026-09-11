@@ -292,10 +292,11 @@ def test_private_reference_exposes_valuation_freshness() -> None:
         if row["scope"] == "すべて" and row["quality"] == "要更新"
     }
     assert stale_positions == set()
-    # QQQ and SMH are reconstructed from holdings (providers block fetches), so
-    # both are flagged 推定 even though their as-of dates are the freshest.
-    assert qualities["QQQ"] == "推定"
-    assert qualities["SMH"] == "推定"
+    # Every ETF is reconstructed from holdings (QQQ/SMH because the providers
+    # block fetches, 1329/1475 to stay current between factsheets), so all four
+    # are flagged 推定 even though their as-of dates are the freshest.
+    for etf in ("QQQ", "SMH", "1329", "1475"):
+        assert qualities[etf] == "推定", etf
     assert qualities["XLE"] == "現行"
 
 
@@ -859,13 +860,16 @@ def test_private_valuation_is_split_by_basis() -> None:
     # Pinned to the reference as of 2026-09-11. forward_pe moved from 23.4029
     # when 6857, 7532 and XLE were repriced against their current forecasts;
     # trailing_pe moved from 38.7205 when QQQ and SMH were replaced by
-    # reconstructions from their full holdings (validated against the
-    # providers' own figures to within +1.4% / +1.8%).
-    assert summary["trailing_pe"] == pytest.approx(36.4074, rel=1e-4)
+    # reconstructions from their full holdings, and again from 36.4074 when
+    # 1329 and 1475 followed (every ETF is now a holdings reconstruction
+    # validated against the provider's own figure to within +2.6%), which
+    # leaves no position on the provider basis.
+    assert summary["trailing_pe"] == pytest.approx(26.5041, rel=1e-4)
     assert summary["forward_pe"] == pytest.approx(21.1163, rel=1e-4)
-    assert summary["provider_pe"] == pytest.approx(19.8451, rel=1e-4)
-    assert summary["trailing_valuation_coverage_ratio"] < 0.25
+    assert summary["provider_pe"] is None
+    assert summary["trailing_valuation_coverage_ratio"] > 0.45
     assert summary["forward_valuation_coverage_ratio"] < 0.41
+    assert summary["provider_valuation_coverage_ratio"] == 0.0
 
 
 @pytest.mark.skipif(
