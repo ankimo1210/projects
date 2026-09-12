@@ -143,10 +143,10 @@ def parse_args() -> argparse.Namespace:
         "environment; host and port default to smtp.gmail.com:465 (PL_SMTP_HOST / PL_SMTP_PORT).",
     )
     parser.add_argument(
-        "--attach-charts",
+        "--no-image",
         action="store_true",
-        help="also attach the rendered chart sheet as an inline image (the body already draws "
-        "its own figures with table cells, which no mail client can strip)",
+        help="send the mail without the rendered chart image; the body then falls back to "
+        "figures drawn with table cells, which no mail client can strip",
     )
     return parser.parse_args()
 
@@ -474,7 +474,7 @@ def main() -> int:
         shutil.copy2(latest, target / latest.name)
 
     png_path = None
-    if args.png or args.attach_charts:
+    if args.png or (args.email and not args.no_image):
         png_path = out_dir / f"pl-{as_of}.png"
         rendered = chartshot.render(latest, png_path)
         if rendered is None:
@@ -488,7 +488,7 @@ def main() -> int:
         password = os.environ.get("PL_SMTP_PASS")
         if not user or not password:
             raise RuntimeError("PL_SMTP_USER / PL_SMTP_PASS are not set; cannot send the email")
-        png = png_path.read_bytes() if png_path and args.attach_charts else None
+        png = png_path.read_bytes() if png_path and not args.no_image else None
         msg = mailer.build_message(
             payload, to=args.email, sender=os.environ.get("PL_SMTP_FROM", user), png=png
         )
