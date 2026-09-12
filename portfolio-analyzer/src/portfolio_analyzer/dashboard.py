@@ -212,6 +212,7 @@ def render(data: dict[str, Any], tokens_css: str) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="cache-control" content="no-store">
 <title>Portfolio · {_esc(data["as_of"])}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -287,6 +288,7 @@ svg text{{font-family:var(--mono);fill:var(--ink-3);font-size:9.5px}}
 .xh{{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 3;opacity:0}}
 .hit{{fill:transparent;cursor:crosshair}}
 #tip{{position:fixed;pointer-events:none;opacity:0;transition:opacity .08s;background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11px;line-height:1.6;padding:7px 10px;border-radius:7px;z-index:99;white-space:pre}}
+.err{{background:var(--accent-wash);border:1px solid var(--accent-soft);color:var(--ink);border-radius:8px;padding:9px 12px;margin:10px 0;font-size:12.5px}}
 ul.notes{{margin:14px 0 0;padding-left:18px;color:var(--ink-3);font-size:11.5px}}
 footer{{margin-top:22px;padding-top:10px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10.5px;color:var(--ink-3);line-height:1.9}}
 h2.sec{{font-family:var(--serif);font-size:15px;font-weight:700;margin:18px 0 0;display:flex;gap:10px;align-items:baseline}}
@@ -341,6 +343,7 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
 <script id="data" type="application/json">{payload}</script>
 <script>
 (function(){{
+try{{
 const root=document.documentElement;
 try{{const t=localStorage.getItem("pl-theme");if(t)root.setAttribute("data-theme",t);}}catch(e){{}}
 document.getElementById("theme").addEventListener("click",()=>{{const t=root.getAttribute("data-theme")==="dark"?"light":"dark";root.setAttribute("data-theme",t);try{{localStorage.setItem("pl-theme",t);}}catch(e){{}}}});
@@ -417,6 +420,12 @@ document.querySelectorAll(".card").forEach(card=>{{const sym=card.getAttribute("
   lineChart(card.querySelector(".c-price"),dates,[{{v:s.price,cls:"l1"}}],{{ml:40,ny:3,extra:s.avg_cost,marks,yfmt:v=>afmt(v,s.cur),tip:i=>{{const t=(s.trades||[]).filter(t=>t.i===i);return `${{jd(dates[i])}}\n${{name}} ${{pfmt(s.price[i],s.cur)}} ${{s.cur}}`+(t.length?"\n"+t.map(t=>(t.qty>0?"買 ":"売 ")+Math.abs(t.qty)+" @ "+pfmt(t.price,s.cur)).join("\n"):"");}}}});
   lineChart(card.querySelector(".c-pnl"),dates,[{{v:s.pnl,cls:"l1"}}],{{ml:40,zero:true,area:true,ny:3,ticksX:false,tip:i=>`${{jd(dates[i])}}\n${{s.label}} ${{sfmt(s.pnl[i])}} 円`}});
 }});
+}}catch(err){{
+  const b=document.createElement("div");b.className="err";
+  b.textContent="図の描画に失敗しました（"+err+"）。表の数値は正しく、図だけが欠けています。";
+  document.querySelector(".wrap").prepend(b);
+  console.error(err);
+}}
 }})();
 </script>
 </body>
