@@ -33,7 +33,7 @@ from zoneinfo import ZoneInfo
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from portfolio_analyzer import chartshot, dashboard, ibkr, mailer, mtm  # noqa: E402
+from portfolio_analyzer import chartshot, dashboard, ibkr, jpbroker, mailer, mtm  # noqa: E402
 from portfolio_analyzer import timeseries as ts  # noqa: E402
 
 TOKENS_CSS = PROJECT_ROOT.parent / "docs" / "templates" / "claude-report" / "tokens.css"
@@ -118,6 +118,14 @@ def parse_args() -> argparse.Namespace:
         "--transactions", default=str(PROJECT_ROOT / "data" / "ibkr-transactions.private.csv")
     )
     parser.add_argument(
+        "--jp-transactions",
+        default=str(PROJECT_ROOT / "data" / "securities-transactions.private.csv"),
+        help="the domestic broker's trade history, used for that account's cost basis",
+    )
+    parser.add_argument(
+        "--jp-account", default="securities", help="account id the domestic history belongs to"
+    )
+    parser.add_argument(
         "--history", default=str(PROJECT_ROOT / "data" / "mtm-history.private.jsonl")
     )
     parser.add_argument("--out-dir", default=str(PROJECT_ROOT / "dist" / "pl-daily"))
@@ -160,6 +168,15 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         ibkr.parse_transactions(tx_path.read_text(encoding="utf-8-sig")) if tx_path.exists() else []
     )
     ledger_account = str((ledger or {}).get("account_id", "global_broker"))
+    jp_path = Path(args.jp_transactions)
+    jp_ledger = (
+        jpbroker.ledger(
+            jpbroker.parse_transactions(jpbroker.decode(jp_path.read_bytes())),
+            account_id=args.jp_account,
+        )
+        if jp_path.exists()
+        else None
+    )
     account_names = {str(a["id"]): str(a.get("name", a["id"])) for a in snapshot["accounts"]}
 
     open_tickers = {
@@ -189,7 +206,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     generated_at = datetime.now(TZ).replace(microsecond=0).isoformat()
 
     # ---- today's marks (all accounts) ----
-    rows = mtm.mark_positions(snapshot, quotes, fx_quote, ledger)
+    rows = mtm.mark_positions(snapshot, quotes, fx_quote, [x for x in (ledger, jp_ledger) if x])
     summary = mtm.summarize(snapshot, rows)
     meta = {
         "as_of": as_of,
@@ -205,6 +222,11 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     # replay never multiplies by NaN (a NaN in the payload would break JSON.parse in the page).
     filled[mtm.FX_SYMBOL] = filled[mtm.FX_SYMBOL].bfill()
     dates = [d.date().isoformat() for d in filled.index]
+    jp_paths = (
+        jpbroker.replay(jpbroker.parse_transactions(jpbroker.decode(jp_path.read_bytes())), dates)
+        if jp_ledger
+        else {}
+    )
     fx_path = [Decimal(str(v)) for v in filled[mtm.FX_SYMBOL].tolist()]
     price_path = {
         t: [
@@ -308,7 +330,21 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
                 "unreal_pct": _pct(r.unrealized_pct),
             }
         )
-        if r.account_id == ledger_account and r.ticker in values.unrealized:
+        if r.account_id == args.jp_account and r.symbol in jp_paths:
+            path = jp_paths[r.symbol]
+            pnl_series = [
+                (path["quantity"][i] * v - path["cost_basis_jpy"][i])
+                if (v is not None and path["quantity"][i])
+                else None
+                for i, v in enumerate(price_path[r.ticker])
+            ]
+            label, mode = "含み損益（取得原価比）", "pnl"
+            trades = [
+                {"i": dates.index(d) - wi, "qty": _f(q), "price": _f(px)}
+                for d, q, px in path["trades"]
+                if d in dates and dates.index(d) >= wi
+            ]
+        elif r.account_id == ledger_account and r.ticker in values.unrealized:
             pnl_series = values.unrealized[r.ticker]
             label, mode = "含み損益（取得原価比）", "pnl"
             trades = [

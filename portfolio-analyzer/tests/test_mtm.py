@@ -181,3 +181,27 @@ def test_history_record_is_json_serialisable() -> None:
     s = mtm.summarize(snapshot(), rows)
     rec = mtm.history_record(s, rows, meta={"as_of": "2026-09-11", "generated_at": "x", "fx": FX})
     assert json.loads(json.dumps(rec))["total_jpy"] == 6971000.0
+
+
+def test_mark_positions_accepts_one_ledger_per_account() -> None:
+    # The domestic account keeps its own history, so the marker takes several ledgers.
+    domestic = {
+        "account_id": "gb",
+        "holdings": [
+            {
+                "symbol": "1329",
+                "currency": "JPY",
+                "quantity": 250.0,
+                "average_cost": 6800.0,
+                "average_trade_fx": 1.0,
+                "cost_basis_jpy": 1700500.0,
+                "commission_jpy": -500.0,
+            }
+        ],
+    }
+    rows = mtm.mark_positions(snapshot(), quotes(), FX, ledger=[ledger(), domestic])
+    by = {(r.account_id, r.symbol): r for r in rows}
+    assert by[("gb", "XLE")].unrealized_jpy is not None
+    jp = by[("gb", "1329")]
+    assert jp.cost_basis_jpy == D("1700500")
+    assert jp.unrealized_jpy == D("1750000") - D("1700500")
