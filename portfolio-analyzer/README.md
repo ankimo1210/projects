@@ -60,6 +60,41 @@ python3 -m http.server 8765
 
 その後 <http://localhost:8765/portfolio-dashboard.html> を開きます。
 
+## 日次の損益サマリー（mark-to-market）
+
+`scripts/daily_pl_report.py` は、スナップショットの保有数量に yfinance の直近終値と USD/JPY を
+掛けて評価し、IBKR 台帳に取得原価がある保有は含み損益を価格要因／為替要因に分解した
+自己完結 HTML を書きます。スナップショットも台帳も編集しません。
+
+```bash
+cd /home/kazumasa/projects
+uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py \
+  --copy-to /mnt/c/Users/<user>/Documents/pl-daily   # 省略可
+```
+
+出力は `dist/pl-daily/pl-<基準日>.html` と `dist/pl-daily/latest.html`、履歴は
+`data/mtm-history.private.jsonl`（1 日 1 行、同じ基準日は上書き）。基準日は取得できた終値の
+最新日で、日本株と米国株の日付が違う日は古い側に印を付けます。
+
+- 日次損益 ＝ 各銘柄の直近 2 つの終値の差（価格と為替の両方）。月曜は週末をまたぎます。
+- 含み損益は台帳（`ibkr-ledger.private.json`）に平均取得単価がある海外証券口座の 6 銘柄だけ。
+  国内証券口座は取得原価が未入力なので日次損益のみ、DC 残高・現金・調整額は据え置きです。
+- 台帳を更新したら（取引後に `ingest_ibkr_transactions.py`）、次の実行から反映されます。
+  数量を変えたときは `data/portfolio.private.json` も直してください。
+
+### Windows で毎朝動かす
+
+`scripts/windows/register_task.ps1` が、`run_daily_pl.cmd` を `%USERPROFILE%\Documents\pl-daily` に
+コピーしてタスク スケジューラに `PortfolioDailyPL`（毎日 07:30、PC が止まっていたら次の起動時）を登録します。
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File \\wsl$\Ubuntu\home\kazumasa\projects\portfolio-analyzer\scripts\windows\register_task.ps1
+```
+
+cmd は `wsl.exe -d Ubuntu` 経由でこのリポジトリのスクリプトを呼び、HTML を
+`Documents\pl-daily\latest.html`、ログを同じ場所の `run.log` に残します。時刻を変えるなら
+`-Time 18:00` のように渡し、外すなら `Unregister-ScheduledTask -TaskName PortfolioDailyPL`。
+
 ## 分析の読み方
 
 ### 口座損益
