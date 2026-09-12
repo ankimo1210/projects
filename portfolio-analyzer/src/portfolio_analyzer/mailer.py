@@ -125,40 +125,60 @@ def _charts(data: dict[str, Any]) -> str:
     out = ""
     series = data.get("series") or {}
     dates = series.get("dates") or []
-    pnl = series.get("pnl") or []
+    pnl = [v for v in (series.get("pnl") or [])]
     if pnl:
-        points, idx = _sample(pnl, 30)
+        points, idx = _sample(pnl, 60)
         labels = [dates[i] for i in idx] if dates else None
+        known = [v for v in pnl if v is not None]
         last = next((v for v in reversed(points) if v is not None), None)
-        peak = max((v for v in pnl if v is not None), default=None)
         out += _panel(
-            "海外証券口座の累計損益",
-            f"入金を差し引いた損益（NAV − 累計入金）。直近 {jpy(last, True)} 円・期間中の最大 "
-            f"{jpy(peak, True)} 円。週おきの点で描いています。",
-            emailchart.columns(points, labels, total_px=104, col_w=17, gap=2),
+            "累計損益（海外証券口座・1 年）",
+            f"入金を差し引いた損益（NAV − 累計入金）。ゼロ線より上が黒字。直近 {jpy(last, True)} 円。",
+            # touching columns: a running total reads as a surface, not as bars
+            emailchart.columns(
+                points,
+                labels,
+                total_px=110,
+                col_w=12,
+                gap=0,
+                cap=3,
+                top_note=f"{jpy(max(known, default=None), True)} 円",
+                bottom_note=f"{jpy(min(known, default=None), True)} 円",
+            ),
         )
     daily = list(series.get("daily_pnl") or [])
-    recent = daily[-18:]
+    recent = daily[-40:]
     if daily:
-        points, idx = _sample(daily[-18:], 22)
+        points, idx = _sample(recent, 40)
         labels = [dates[len(dates) - len(recent) + i] for i in idx] if dates else None
-        wins = sum(1 for v in recent if v is not None and v > 0)
+        known = [v for v in recent if v is not None]
+        wins = sum(1 for v in known if v > 0)
         out += _panel(
             f"日次損益（直近 {len(recent)} 営業日）",
-            f"うち上げた日 {wins} 日。最大 {jpy(max((v for v in recent if v is not None), default=None), True)} 円・"
-            f"最小 {jpy(min((v for v in recent if v is not None), default=None), True)} 円。",
-            emailchart.columns(points, labels, total_px=96, col_w=26, gap=3),
+            f"上げた日 {wins} 日 / 下げた日 {len(known) - wins} 日。",
+            emailchart.columns(
+                points,
+                labels,
+                total_px=96,
+                col_w=14,
+                gap=4,
+                top_note=f"{jpy(max(known, default=None), True)} 円",
+                bottom_note=f"{jpy(min(known, default=None), True)} 円",
+            ),
         )
+    ranked = sorted(
+        (p for p in data.get("positions", []) if p.get("chg1y") is not None),
+        key=lambda p: float(p["chg1y"]),
+        reverse=True,
+    )
     rows = [
-        (p["sym"], p.get("chg1y"), f"{pct(p['chg1y'], 1)}　{jpy(p['value'])} 円")
-        for p in data.get("positions", [])
-        if p.get("chg1y") is not None
+        (f"{p['sym']}　{pct(p['chg1y'], 1)}", p["chg1y"], f"{jpy(p['value'])} 円") for p in ranked
     ]
     if rows:
         out += _panel(
             "銘柄別 1 年騰落率",
-            "右が上昇・左が下落。数字は 1 年の騰落率と現在の評価額です。",
-            emailchart.hbars(rows, half=80),
+            "中央がゼロ。右が上昇・左が下落で、右端は現在の評価額です。",
+            emailchart.hbars(rows, half=110, bar_h=9),
         )
     return out
 

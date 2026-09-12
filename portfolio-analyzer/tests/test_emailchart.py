@@ -67,3 +67,28 @@ def test_columns_drops_the_half_that_holds_nothing() -> None:
     html = emailchart.columns([5.0, 2.0], total_px=80)
     assert emailchart.DN not in html
     assert html.count('style="height:') == 1  # one half wrapper, not an empty second one
+
+
+def test_columns_merge_equal_neighbours_when_the_bars_touch() -> None:
+    # An area chart (no gap) should not draw a seam through a flat run.
+    flat = emailchart.columns([5.0, 5.0, 5.0, 1.0], total_px=40, col_w=10, gap=0)
+    assert flat.count('bgcolor="#C05C33"') == 2  # one cell for the run, one for the step
+    assert 'width="30"' in flat
+
+
+def test_columns_keep_every_bar_separate_when_there_is_a_gap() -> None:
+    bars = emailchart.columns([5.0, 5.0, 5.0], total_px=40, col_w=10, gap=3)
+    assert bars.count('bgcolor="#C05C33"') == 3
+
+
+def test_columns_can_print_the_scale_above_and_below_the_plot() -> None:
+    html = emailchart.columns([5.0, -5.0], total_px=40, top_note="+5", bottom_note="−5")
+    assert "+5" in html and "−5" in html
+
+
+def test_columns_can_draw_a_line_instead_of_a_filled_area() -> None:
+    line = emailchart.columns([100.0, 50.0], total_px=60, col_w=10, gap=0, cap=3)
+    # the mark is a thin cap at the value, not a block reaching the baseline
+    assert 'height="3"' in line
+    assert line.count('bgcolor="#C05C33"') == 2
+    assert 'height="60" bgcolor' not in line
