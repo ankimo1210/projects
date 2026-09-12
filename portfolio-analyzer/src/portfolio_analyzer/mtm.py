@@ -13,6 +13,7 @@ close of the same report can carry different dates.
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
@@ -85,18 +86,26 @@ class Row:
     note: str
 
 
-def _cost_index(ledger: dict[str, Any] | None) -> dict[tuple[str, str], dict[str, Any]]:
+def _cost_index(
+    ledger: dict[str, Any] | Sequence[dict[str, Any]] | None,
+) -> dict[tuple[str, str], dict[str, Any]]:
+    """Cost by (account, symbol). Takes one ledger or several — one per account."""
     if not ledger:
         return {}
-    account = str(ledger.get("account_id", ""))
-    return {(account, str(h["symbol"])): h for h in ledger.get("holdings", [])}
+    ledgers = [ledger] if isinstance(ledger, dict) else list(ledger)
+    index: dict[tuple[str, str], dict[str, Any]] = {}
+    for one in ledgers:
+        account = str(one.get("account_id", ""))
+        for holding in one.get("holdings", []):
+            index[(account, str(holding["symbol"]))] = holding
+    return index
 
 
 def mark_positions(
     snapshot: dict[str, Any],
     quotes: dict[str, Quote],
     fx: Quote,
-    ledger: dict[str, Any] | None,
+    ledger: dict[str, Any] | Sequence[dict[str, Any]] | None,
 ) -> list[Row]:
     """Mark every snapshot position; positions without a quote are carried at snapshot value."""
     cost = _cost_index(ledger)

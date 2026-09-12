@@ -406,6 +406,7 @@ $$
 | `data/rebalancing-proposal.private.json` | 売買数量と固定価格による比較案 | `data/rebalancing-proposal.example.json` |
 | `data/ibkr-transactions.private.csv` | 証券会社の取引履歴（入力） | なし |
 | `data/ibkr-ledger.private.json` | 取引履歴から逆算した台帳（出力） | なし |
+| `data/securities-transactions.private.csv` | 国内証券会社の取引履歴（入力・cp932） | なし |
 
 各保有明細の `value_status` は次のいずれかです。
 
@@ -471,6 +472,30 @@ uv run --package portfolio-analyzer python \
 **書き戻す前に数量を突き合わせます。** 台帳から再生した建玉とスナップショットの数量が
 1銘柄でも食い違えば、何も書かずに終了します。元スナップショットは書き換えず、
 `-with-cost` を付けた別ファイルを出します。
+
+#### 国内口座は証券会社のCSVをそのまま再生する
+
+国内口座の保有にはスナップショット上の取得原価がなく、日次レポートの銘柄カードが
+「原価なし」になっていました。`src/portfolio_analyzer/jpbroker.py` が証券会社の
+取引履歴CSV（cp932・「商品分類,約定日,受渡日,銘柄,取引,…」）を読んで、`ibkr` と同じ形の
+台帳を組み立てます。日次レポートは `--jp-transactions`（既定
+`data/securities-transactions.private.csv`）があれば自動で読み、`--jp-account`（既定
+`securities`）の口座に当てます。
+
+この書式に固有の扱いが3つあります。
+
+- **受渡金額には手数料が入っている。** 約定単価×数量が価格だけの原価で、差額が手数料です。
+  `cost_basis_jpy` は実際に払った全額、`cost_basis_gross_jpy` が価格だけ、
+  `commission_jpy` はその差（負値）。
+- **株式分割は「保振増減資」行で来る。** 金額のない数量の増加なので、平均取得単価は
+  割り下げます。
+- **分割前の数量は今日の株数に直す。** Yahoo の `Close` は `auto_adjust=False` でも
+  分割調整済みなので、分割前の建玉をそのままの株数で掛けると、分割の倍率ぶんの
+  偽の損失が損益線に出ます。`replay()` は分割日より前の日付の数量に倍率を掛け、
+  取引マーカーも数量×倍率・価格÷倍率に直します。
+
+`mtm.mark_positions` は台帳を複数受け取れるので（口座ごとに1つ）、海外は IBKR の台帳、
+国内はこの台帳、と並べて渡します。
 
 #### 円建て損益は価格と為替が混ざる
 
@@ -548,6 +573,7 @@ portfolio-analyzer/
 │   ├── rebalancing-proposal.private.json
 │   ├── ibkr-transactions.private.csv    # 取引履歴（Git対象外）
 │   ├── ibkr-ledger.private.json         # 逆算した台帳（Git対象外）
+│   ├── securities-transactions.private.csv  # 国内口座の取引履歴（Git対象外）
 │   └── rebalancing-note.private.md
 ├── docs/
 │   └── rebalancing-note-template.md
