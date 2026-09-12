@@ -60,11 +60,11 @@ python3 -m http.server 8765
 
 その後 <http://localhost:8765/portfolio-dashboard.html> を開きます。
 
-## 日次の損益サマリー（mark-to-market）
+## 日次の損益ダッシュボード（mark-to-market）
 
 `scripts/daily_pl_report.py` は、スナップショットの保有数量に yfinance の直近終値と USD/JPY を
-掛けて評価し、IBKR 台帳に取得原価がある保有は含み損益を価格要因／為替要因に分解した
-自己完結 HTML を書きます。スナップショットも台帳も編集しません。
+掛けて評価し、IBKR の取引履歴を日次で再生して口座の NAV・損益の経路を復元した、自己完結の
+HTML ダッシュボードを書きます。スナップショット・台帳・取引履歴は編集しません。
 
 ```bash
 cd /home/kazumasa/projects
@@ -72,15 +72,23 @@ uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py \
   --copy-to /mnt/c/Users/<user>/Documents/pl-daily   # 省略可
 ```
 
-出力は `dist/pl-daily/pl-<基準日>.html` と `dist/pl-daily/latest.html`、履歴は
-`data/mtm-history.private.jsonl`（1 日 1 行、同じ基準日は上書き）。基準日は取得できた終値の
-最新日で、日本株と米国株の日付が違う日は古い側に印を付けます。
+出力は `dist/pl-daily/pl-<基準日>.html` と `dist/pl-daily/latest.html`（既定はダーク配色、右上で切替）、
+履歴は `data/mtm-history.private.jsonl`（1 日 1 行、同じ基準日は上書き）。構成は上から
+
+- **ヘッドライン**: 総資産、日次損益、含み損益（原価既知分）、期間損益（海外証券口座・入金控除後、既定 365 日）、
+  開設来損益（実現・配当込み）、資金加重リターンと期間内の最大ドローダウン
+- **一般データ**: 口座別、資産配分、損益の内訳（含み／実現／配当／費用／為替換算／為替取引 ＝ NAV − 入金）、
+  全保有の表（1D/1W/1M/1Y、1 年スパークライン、評価額、日次損益、平均取得、含み損益）
+- **時系列**: 海外証券口座の NAV と累計入金、損益（NAV − 累計入金）、日次損益、決済済み銘柄の実現損益、
+  銘柄ごとの株価（▲買 ▼売、破線＝平均取得）と損益のカード
+
+数字の定義:
 
 - 日次損益 ＝ 各銘柄の直近 2 つの終値の差（価格と為替の両方）。月曜は週末をまたぎます。
-- 含み損益は台帳（`ibkr-ledger.private.json`）に平均取得単価がある海外証券口座の 6 銘柄だけ。
-  国内証券口座は取得原価が未入力なので日次損益のみ、DC 残高・現金・調整額は据え置きです。
-- 台帳を更新したら（取引後に `ingest_ibkr_transactions.py`）、次の実行から反映されます。
-  数量を変えたときは `data/portfolio.private.json` も直してください。
+- 海外証券口座の NAV・損益は `data/ibkr-transactions.private.csv` を日次で再生した値。履歴 CSV の最終日より
+  後の取引は反映されないので、取引したら CSV を差し替えて `ingest_ibkr_transactions.py` も再実行してください。
+- 含み損益は台帳に平均取得単価がある海外証券口座の銘柄だけ。国内証券口座は取得原価が未入力なので
+  日次損益のみで、カードの損益は「期間初日比の評価額変化」。DC 残高・現金・調整額は据え置きです。
 
 ### Windows で毎朝動かす
 
