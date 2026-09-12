@@ -103,6 +103,45 @@ cmd は `wsl.exe -d Ubuntu` 経由でこのリポジトリのスクリプトを�
 `Documents\pl-daily\latest.html`、ログを同じ場所の `run.log` に残します。時刻を変えるなら
 `-Time 18:00` のように渡し、外すなら `Unregister-ScheduledTask -TaskName PortfolioDailyPL`。
 
+### メールで受け取る
+
+`--email <宛先>`（複数指定可）でサマリーを送ります。本文は HTML とプレーンテキストの両方を入れ、
+図は**本文の中にテーブルのセルで描きます**（`emailchart.py`）。海外証券口座の累計損益、直近 18 営業日の
+日次損益、銘柄別 1 年騰落率の 3 つです。
+
+メールで図を出すときの制約が 2 つあって、どちらも実測で踏みました。
+
+- クライアントは `<script>` と inline SVG を落とすので、ダッシュボードの図はそのままでは出せません。
+- 画像を `cid:` で参照しても、Gmail は送信時に Content-ID を書き換えるので参照が外れ、本文でなく
+  添付になります。さらに Gmail の送信経路は **CSS の `background` を全部削ります**（`bgcolor` 属性は
+  残る）。なので棒の色は必ず属性で持たせます。
+
+`--png` を付けると従来どおりダッシュボードの図をヘッドレス Chromium で撮って
+`dist/pl-daily/pl-<基準日>.png` に書きます（メールには入りません）。銘柄ごとの株価チャートまで
+メールに載せたいときだけ `--attach-charts` を足すと、その PNG を inline 画像として添付します。
+
+```bash
+export PL_SMTP_USER=you@gmail.com
+export PL_SMTP_PASS='<Google アカウントのアプリ パスワード 16 桁>'
+uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py --email you@gmail.com
+```
+
+Gmail は通常のログイン パスワードでは SMTP に入れません。2 段階認証を有効にしたうえで
+[アプリ パスワード](https://myaccount.google.com/apppasswords)を作り、その 16 桁を `PL_SMTP_PASS` に
+入れてください。他社の SMTP なら `PL_SMTP_HOST` / `PL_SMTP_PORT`（既定 `smtp.gmail.com` / `465`、
+465 は暗黙 TLS・それ以外は STARTTLS）、差出人を分けるなら `PL_SMTP_FROM`。
+
+Windows のタスクから送るときは、WSL 側の `~/.config/pl-daily.env` に
+
+```bash
+PL_MAIL_TO=you@gmail.com
+PL_SMTP_USER=you@gmail.com
+PL_SMTP_PASS=xxxxxxxxxxxxxxxx
+```
+
+と書いて `chmod 600` しておきます（このファイルは git の外）。`run_daily_pl.cmd` は起動時にこれを
+読み、`PL_MAIL_TO` があるときだけ `--email` を付けます。
+
 ## 分析の読み方
 
 ### 口座損益
