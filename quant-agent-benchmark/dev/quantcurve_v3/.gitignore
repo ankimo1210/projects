@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Local exploratory benchmark runs and scratch artifacts (550MB+/33MB) —
+# not curated evidence, stays local.
+.tmp/
+bench/

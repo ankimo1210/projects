@@ -1,0 +1,9 @@
+# Runtime (verified with the approved round-02 environment: CPython 3.12.11)
+numpy==2.5.2
+pandas==2.3.3
+scipy==1.18.1
+matplotlib==3.11.1
+# Tests
+pytest==8.4.2
+# Optional: independent pricing cross-checks in tests/test_contract_v2.py (skipped if absent)
+QuantLib==1.43
