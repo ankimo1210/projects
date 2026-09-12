@@ -288,14 +288,19 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
         f'bgcolor="{CARD}" style="border-collapse:collapse;width:100%;color:{INK};'
         f'font:400 12px {MONO};border:1px solid {RULE};border-radius:8px"'
     )
-    charts = _charts(data)
+    # The dashboard's own figures, rendered to an image, are the real thing; the
+    # table-cell charts stand in only when no browser was available to draw them.
     if image_cid:
-        charts += (
-            f'<div style="font:700 13px {SANS};margin:22px 0 6px">銘柄ごとのチャート</div>'
-            f'<div bgcolor="{CARD}" style="border:1px solid {RULE};border-radius:8px;padding:6px">'
-            f'<img src="cid:{image_cid}" width="820" alt="NAV・損益・銘柄ごとの株価チャート" '
-            f'style="display:block;width:100%;max-width:820px;height:auto;border-radius:4px"></div>'
+        charts = (
+            f'<div style="font:700 13px {SANS};margin:22px 0 6px">時系列</div>'
+            f'<table width="100%" cellspacing="0" cellpadding="0" bgcolor="{CARD}" '
+            f'style="border:1px solid {RULE};border-radius:8px"><tr><td style="padding:8px">'
+            f'<img src="cid:{image_cid}" width="820" alt="NAV・累計損益・日次損益と銘柄ごとの株価チャート" '
+            f'style="display:block;width:100%;max-width:820px;height:auto;border-radius:4px">'
+            f"</td></tr></table>"
         )
+    else:
+        charts = _charts(data)
     return f"""<table width="100%" cellspacing="0" cellpadding="0" bgcolor="{GROUND}"><tr>
 <td style="padding:18px;font-family:{SANS};color:{INK}">
 <div style="max-width:860px;margin:0 auto">

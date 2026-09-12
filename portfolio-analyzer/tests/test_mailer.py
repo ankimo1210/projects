@@ -123,8 +123,11 @@ def test_html_body_still_renders_when_the_payload_carries_no_series() -> None:
     assert "46,257,970" in body and "XLE" in body
 
 
-def test_html_body_references_the_inline_image_only_when_one_is_attached() -> None:
-    assert "cid:charts" in mailer.html_body(payload(), image_cid="charts")
+def test_html_body_shows_the_rendered_chart_instead_of_the_drawn_one() -> None:
+    # A real rendered chart beats the table-cell fallback, so it replaces it.
+    withimg = mailer.html_body(payload(), image_cid="charts")
+    assert "cid:charts" in withimg
+    assert "銘柄別 1 年騰落率" not in withimg  # the fallback figures stand down
     assert "cid:" not in mailer.html_body(payload())
 
 
