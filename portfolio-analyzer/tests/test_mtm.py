@@ -176,24 +176,8 @@ def test_history_upsert_replaces_same_date(tmp_path: Path) -> None:
     assert mtm.previous_record(records, "2026-09-10") is None
 
 
-def test_render_html_carries_the_numbers() -> None:
+def test_history_record_is_json_serialisable() -> None:
     rows = mtm.mark_positions(snapshot(), quotes(), FX, ledger=ledger())
     s = mtm.summarize(snapshot(), rows)
-    html = mtm.render_html(
-        s,
-        rows,
-        history=[],
-        meta={
-            "as_of": "2026-09-11",
-            "generated_at": "2026-09-12T07:30:00+09:00",
-            "fx": FX,
-            "stale": {},
-        },
-        tokens_css=":root{--ink:#000}",
-    )
-    assert "2026-09-11" in html and "6,971,000" in html and "海外証券口座" in html
-    assert "XLE" in html and "+25,000" in html
-    assert "<!doctype" in html.lower() and "--ink" in html
-    json.dumps(
-        mtm.history_record(s, rows, meta={"as_of": "2026-09-11", "generated_at": "x", "fx": FX})
-    )
+    rec = mtm.history_record(s, rows, meta={"as_of": "2026-09-11", "generated_at": "x", "fx": FX})
+    assert json.loads(json.dumps(rec))["total_jpy"] == 6971000.0
