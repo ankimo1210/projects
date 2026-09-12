@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import sys
 import warnings
@@ -32,7 +33,7 @@ from zoneinfo import ZoneInfo
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from portfolio_analyzer import dashboard, ibkr, mtm  # noqa: E402
+from portfolio_analyzer import chartshot, dashboard, ibkr, mailer, mtm  # noqa: E402
 from portfolio_analyzer import timeseries as ts  # noqa: E402
 
 TOKENS_CSS = PROJECT_ROOT.parent / "docs" / "templates" / "claude-report" / "tokens.css"
@@ -130,6 +131,23 @@ def parse_args() -> argparse.Namespace:
         "--history-days", type=int, default=760, help="how far back to fetch closes"
     )
     parser.add_argument("--keep", type=int, default=400, help="dated reports to keep in --out-dir")
+    parser.add_argument(
+        "--png", action="store_true", help="also render the chart section to pl-<as-of>.png"
+    )
+    parser.add_argument(
+        "--email",
+        action="append",
+        default=None,
+        metavar="ADDRESS",
+        help="send the summary there (repeatable). Needs PL_SMTP_USER and PL_SMTP_PASS in the "
+        "environment; host and port default to smtp.gmail.com:465 (PL_SMTP_HOST / PL_SMTP_PORT).",
+    )
+    parser.add_argument(
+        "--attach-charts",
+        action="store_true",
+        help="also attach the rendered chart sheet as an inline image (the body already draws "
+        "its own figures with table cells, which no mail client can strip)",
+    )
     return parser.parse_args()
 
 
@@ -454,6 +472,34 @@ def main() -> int:
         target.mkdir(parents=True, exist_ok=True)
         shutil.copy2(dated, target / dated.name)
         shutil.copy2(latest, target / latest.name)
+
+    png_path = None
+    if args.png or args.attach_charts:
+        png_path = out_dir / f"pl-{as_of}.png"
+        rendered = chartshot.render(latest, png_path)
+        if rendered is None:
+            png_path = None
+            print("no headless browser found; skipping the chart image")
+        else:
+            print(f"chart image: {png_path} ({png_path.stat().st_size / 1024:.0f} KB)")
+
+    if args.email:
+        user = os.environ.get("PL_SMTP_USER")
+        password = os.environ.get("PL_SMTP_PASS")
+        if not user or not password:
+            raise RuntimeError("PL_SMTP_USER / PL_SMTP_PASS are not set; cannot send the email")
+        png = png_path.read_bytes() if png_path and args.attach_charts else None
+        msg = mailer.build_message(
+            payload, to=args.email, sender=os.environ.get("PL_SMTP_FROM", user), png=png
+        )
+        mailer.send(
+            msg,
+            host=os.environ.get("PL_SMTP_HOST", "smtp.gmail.com"),
+            port=int(os.environ.get("PL_SMTP_PORT", "465")),
+            user=user,
+            password=password,
+        )
+        print(f"emailed: {', '.join(args.email)}")
 
     h = payload["headline"]
     print(f"as of {as_of}  USD/JPY {payload['fx']['last']:.2f}  history rows {len(records)}")

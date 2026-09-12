@@ -121,3 +121,9 @@ def test_render_dashboard_carries_headline_and_positions() -> None:
     )
     assert 'id="data"' in html and "--ink" in html
     assert "#" not in html.split("<style>")[0]  # no stray hex before the tokens block
+
+
+def test_page_exposes_the_chart_box_for_the_screenshot() -> None:
+    html = dashboard.render(sample(), ":root{--ink:#000}")
+    assert 'id="charts-top"' in html and 'id="charts-end"' in html
+    assert "chartBox" in html  # the drawing pass publishes the crop box

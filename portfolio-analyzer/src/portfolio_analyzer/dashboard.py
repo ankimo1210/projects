@@ -319,7 +319,7 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
 </div>
 <div class="tw">{_positions_table(data["positions"])}</div>
 
-<h2 class="sec">時系列 <small>time series · {_esc(data["window"]["start"])} → {_esc(data["as_of"])}</small></h2>
+<h2 class="sec" id="charts-top">時系列 <small>time series · {_esc(data["window"]["start"])} → {_esc(data["as_of"])}</small></h2>
 <div class="grid">
   <div class="panel">
     <h2>海外証券口座 NAV と損益 <small>入金は段差、損益 ＝ NAV − 累計入金</small></h2>
@@ -334,7 +334,7 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
     {_closed(data["closed"])}
   </div>
 </div>
-<div class="cards">{cards}</div>
+<div class="cards" id="charts-end">{cards}</div>
 
 <ul class="notes">{notes}</ul>
 <footer>ポジション data/portfolio.private.json · 取引履歴 data/ibkr-transactions.private.csv · 株価/為替 yfinance 終値（USD 建ては USD/JPY で円換算）· スクリプト portfolio-analyzer/scripts/daily_pl_report.py</footer>
@@ -420,6 +420,8 @@ document.querySelectorAll(".card").forEach(card=>{{const sym=card.getAttribute("
   lineChart(card.querySelector(".c-price"),dates,[{{v:s.price,cls:"l1"}}],{{ml:40,ny:3,extra:s.avg_cost,marks,yfmt:v=>afmt(v,s.cur),tip:i=>{{const t=(s.trades||[]).filter(t=>t.i===i);return `${{jd(dates[i])}}\n${{name}} ${{pfmt(s.price[i],s.cur)}} ${{s.cur}}`+(t.length?"\n"+t.map(t=>(t.qty>0?"買 ":"売 ")+Math.abs(t.qty)+" @ "+pfmt(t.price,s.cur)).join("\n"):"");}}}});
   lineChart(card.querySelector(".c-pnl"),dates,[{{v:s.pnl,cls:"l1"}}],{{ml:40,zero:true,area:true,ny:3,ticksX:false,tip:i=>`${{jd(dates[i])}}\n${{s.label}} ${{sfmt(s.pnl[i])}} 円`}});
 }});
+  const a=document.getElementById("charts-top"),b=document.getElementById("charts-end");
+  if(a&&b){{const y=window.scrollY;document.body.dataset.chartBox=Math.round(a.getBoundingClientRect().top+y)+","+Math.round(b.getBoundingClientRect().bottom+y);}}
 }}catch(err){{
   const b=document.createElement("div");b.className="err";
   b.textContent="図の描画に失敗しました（"+err+"）。表の数値は正しく、図だけが欠けています。";
