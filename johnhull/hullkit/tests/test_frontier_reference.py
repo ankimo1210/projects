@@ -1,4 +1,4 @@
-"""API-to-artifact contract tests for beyond-Hull volumes 21--27."""
+"""API-to-artifact contract tests for beyond-Hull volumes 21--28."""
 
 import numpy as np
 import pytest
@@ -7,7 +7,7 @@ from hullkit import frontier_reference, var_backtest
 
 @pytest.fixture(scope="module")
 def references() -> dict[int, frontier_reference.FrontierReference]:
-    return {volume: frontier_reference.build_frontier_reference(volume) for volume in range(21, 28)}
+    return {volume: frontier_reference.build_frontier_reference(volume) for volume in range(21, 29)}
 
 
 @pytest.mark.parametrize(
@@ -205,6 +205,41 @@ def references() -> dict[int, frontier_reference.FrontierReference]:
                 "hs_violation_rate",
                 "gpd_xi_hat",
                 "desk_report_var",
+            },
+        ),
+        (
+            28,
+            {
+                "bond_bootstrap_hazard",
+                "hull_bond_bootstrap_hazard",
+                "cds_payment_pv",
+                "cds_accrual_pv",
+                "cds_payoff_pv",
+                "cds_mtm_seller",
+                "tranche_expected_principal",
+                "tranche_spread_vs_rho",
+                "kth_spread",
+                "kth_conditional_cumulative_prob",
+                "compound_correlation",
+                "base_correlation",
+                "el_curve_value",
+                "double_t_spread",
+                "transition_matrix",
+                "threshold_bbb",
+                "credit_loss_by_case",
+                "collateral_case_exposure",
+                "cva_default_prob",
+            },
+            {
+                "cds_par_spread_bp",
+                "cds_mtm_seller_150bp",
+                "fixed_coupon_price",
+                "cdo_mezz_spread_bp",
+                "kth3_spread_bp",
+                "base_correlation_max_reprice_error",
+                "double_t_limit_gap_bp",
+                "heterogeneous_binomial_gap",
+                "cva_special_case",
             },
         ),
     ],
@@ -484,12 +519,12 @@ def test_volume27_exposes_recomputable_risk_desk_identities(
 
 
 def test_dispatcher_rejects_non_frontier_volume_and_accepts_explicit_seed() -> None:
-    with pytest.raises(ValueError, match=r"\[21, 27\]"):
+    with pytest.raises(ValueError, match=r"\[21, 28\]"):
         frontier_reference.build_frontier_reference(20)
     assert frontier_reference.build_frontier_reference(24, seed=7).seed == 7
 
 
-@pytest.mark.parametrize("volume", range(21, 28))
+@pytest.mark.parametrize("volume", range(21, 29))
 def test_fixed_seed_reproduces_all_non_timing_values(
     references: dict[int, frontier_reference.FrontierReference],
     volume: int,
@@ -741,3 +776,60 @@ def test_volume27_kupiec_size_study_is_recomputable_from_committed_counts(
         ]
     )
     np.testing.assert_array_equal(recomputed, flags)
+
+
+# --- vol 28 credit desk -------------------------------------------------
+
+
+def test_volume28_reproduces_hull_pins(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    reference = references[28]
+    m, a = reference.metrics, reference.arrays
+    assert m["cds_par_spread_bp"] == pytest.approx(123.0, abs=0.5)
+    assert m["cds_mtm_seller_150bp"] == pytest.approx(0.0111, abs=1e-4)
+    assert m["fixed_coupon_price"] == pytest.approx(100.27, abs=0.01)
+    assert m["cdo_mezz_spread_bp"] == pytest.approx(348.0, abs=1.0)
+    assert m["kth3_spread_bp"] == pytest.approx(153.0, abs=1.0)
+    np.testing.assert_allclose(
+        a["bond_bootstrap_hazard"], a["hull_bond_bootstrap_hazard"], atol=2e-4
+    )
+    np.testing.assert_allclose(a["compound_correlation"], a["hull_compound_correlation"], atol=0.01)
+    np.testing.assert_allclose(a["base_correlation"], a["hull_base_correlation"], atol=0.01)
+    np.testing.assert_allclose(
+        a["collateral_case_exposure"], a["hull_collateral_case_exposure"], atol=1e-12
+    )
+    assert m["base_correlation_max_reprice_error"] < 1e-6
+    assert m["double_t_limit_gap_bp"] < 0.5
+    assert m["heterogeneous_binomial_gap"] < 1e-12
+
+
+def test_volume28_identities_are_recomputable(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    reference = references[28]
+    m, a = reference.metrics, reference.arrays
+    spread = a["cds_payoff_pv"].sum() / (a["cds_payment_pv"].sum() + a["cds_accrual_pv"].sum())
+    assert spread * 1e4 == pytest.approx(m["cds_par_spread_bp"], abs=1e-9)
+    weights = a["factor_weight"]
+    assert weights @ a["tranche_protection_by_factor"] == pytest.approx(
+        m["cdo_mezz_protection"], abs=1e-12
+    )
+    widths = a["capital_structure_detach"] - a["capital_structure_attach"]
+    assert widths @ a["capital_structure_expected_loss"] == pytest.approx(
+        m["portfolio_expected_loss"], abs=1e-10
+    )
+    assert np.all(np.diff(a["kth_spread"]) < 0.0)
+    slopes = np.diff(a["el_curve_value"]) / np.diff(a["el_curve_x"])
+    assert np.all(np.diff(a["el_curve_value"]) > 0.0) and np.all(np.diff(slopes) < 0.0)
+    assert m["netting_exposure"] == pytest.approx(15.0)
+    assert m["gross_exposure"] == pytest.approx(40.0)
+    assert m["credit_var_correlated"] > m["credit_var_independent"]
+
+
+def test_volume28_reference_is_deterministic() -> None:
+    first = frontier_reference.volume28_reference()
+    second = frontier_reference.volume28_reference()
+    for name in first.arrays:
+        np.testing.assert_array_equal(first.arrays[name], second.arrays[name])
+    assert first.metrics == second.metrics

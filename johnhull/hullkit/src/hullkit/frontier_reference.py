@@ -1,4 +1,4 @@
-"""CPU-quick, API-backed reference payloads for beyond-Hull volumes 21--27.
+"""CPU-quick, API-backed reference payloads for beyond-Hull volumes 21--28.
 
 The committed teaching artifacts are deliberately small, but their numbers
 must still come from the public :mod:`hullkit` APIs.  This module is the bridge:
@@ -25,6 +25,10 @@ from . import (
     amm,
     bsm,
     carbon,
+    cds,
+    credit_curve,
+    credit_metrics,
+    credit_portfolio,
     hull_white,
     inflation,
     jarrow_yildirim,
@@ -45,6 +49,7 @@ from . import (
     var_backtest,
     volatility,
     weather,
+    xva,
     zero_dte,
 )
 
@@ -62,8 +67,8 @@ class FrontierReference:
     metrics: dict[str, Scalar]
 
     def __post_init__(self) -> None:
-        if self.volume not in range(21, 28):
-            raise ValueError("frontier reference volume must lie in [21, 27]")
+        if self.volume not in range(21, 29):
+            raise ValueError("frontier reference volume must lie in [21, 28]")
         if not self.arrays or not self.metrics:
             raise ValueError("reference arrays and metrics must be non-empty")
         for name, values in self.arrays.items():
@@ -2447,6 +2452,411 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
     return FrontierReference(27, seed, arrays, metrics)
 
 
+def volume28_reference(*, seed: int = 20260746) -> FrontierReference:
+    """Build the Hull Ch.24–25 credit-desk reference (vol 28).
+
+    Every block reproduces a printed Hull 11e example with the tested
+    :mod:`hullkit` credit APIs: the Example 24.1/24.2 hazard bootstraps, the
+    Table 25.2–25.4 CDS legs and mark-to-market, the Example 25.1 fixed-coupon
+    price, Black-type CDS options, the Example 25.2 mezzanine CDO by
+    Gauss–Hermite quadrature, the Example 25.3 third-to-default swap, the
+    Table 25.6 → 25.8 compound/base correlations, the double-t and
+    heterogeneous variants, a CreditMetrics migration simulation from
+    Table 24.4, and the §24.7 netting/collateral/CVA rules. Only the
+    CreditMetrics block draws random numbers (fixed ``seed``).
+    """
+    recovery = 0.4
+
+    # --- §24.4: spreads → hazards (Ex 24.1) and bond-price bootstrap (Ex 24.2) ---
+    spread_tenor = np.array([1.0, 2.0, 3.0])
+    yield_spread = np.array([0.0150, 0.0180, 0.0195])
+    average_hazard = credit_curve.average_hazards_from_spreads(yield_spread, recovery)
+    forward_curve = credit_curve.forward_hazards_from_average(spread_tenor, average_hazard)
+    bond_yield = np.array([0.065, 0.068, 0.0695])
+    bond_price = np.array(
+        [
+            credit_curve.bond_price_from_yield(100.0, 0.08, float(T), float(y))
+            for T, y in zip(spread_tenor, bond_yield, strict=True)
+        ]
+    )
+    bootstrap = credit_curve.bootstrap_from_bonds(
+        bond_price, 0.08, spread_tenor, r=0.05, recovery=recovery
+    )
+
+    # --- §25.2: Tables 25.1–25.4 (λ = 2%, R = 40%, r = 5%, annual) ---
+    cds_r, cds_hazard, cds_maturity = 0.05, 0.02, 5.0
+    cds_year = np.arange(1.0, 6.0)
+    cds_survival = np.exp(-cds_hazard * cds_year)
+    cds_default_prob = -np.diff(np.concatenate([[1.0], cds_survival]))
+    cds_discount_end = np.exp(-cds_r * cds_year)
+    cds_discount_mid = np.exp(-cds_r * (cds_year - 0.5))
+    cds_payment_pv = cds_survival * cds_discount_end
+    cds_accrual_pv = 0.5 * cds_default_prob * cds_discount_mid
+    cds_payoff_pv = (1.0 - recovery) * cds_default_prob * cds_discount_mid
+    legs = cds.cds_legs(cds_hazard, recovery, cds_r, cds_maturity, freq=1)
+    cds_contract_spread_grid = np.linspace(0.0, 0.03, 61)
+    cds_mtm_seller = np.array(
+        [
+            cds.cds_mtm(float(s), cds_hazard, recovery, cds_r, cds_maturity)
+            for s in cds_contract_spread_grid
+        ]
+    )
+    implied_100bp = cds.implied_hazard(0.0100, recovery, cds_r, cds_maturity)
+    binary_spread = cds.binary_cds_spread(cds_hazard, cds_r, cds_maturity)
+    cds_market_tenor = np.array([1.0, 3.0, 5.0, 7.0])
+    cds_market_spread = np.array([0.0060, 0.0100, 0.0140, 0.0160])
+    cds_curve = cds.bootstrap_from_cds(cds_market_tenor, cds_market_spread, recovery, cds_r, freq=4)
+    cds_bootstrap_repriced_spread = np.array(
+        [cds.cds_par_spread(cds_curve, recovery, cds_r, float(T), freq=4) for T in cds_market_tenor]
+    )
+
+    # --- §25.4: Example 25.1 fixed coupon / upfront ---
+    index_spread = cds.actual360_to_actual_actual(0.0034)
+    index_coupon = cds.actual360_to_actual_actual(0.0040)
+    fixed_hazard = cds.implied_hazard(index_spread, recovery, 0.04, 5.0, freq=4)
+    fixed_duration = cds.cds_risky_duration(fixed_hazard, recovery, 0.04, 5.0, freq=4)
+    fixed_price = cds.fixed_coupon_price(index_spread, index_coupon, fixed_duration)
+    index_quote_grid = np.linspace(10.0, 120.0, 45)  # bp, actual/360
+    fixed_coupon_price_grid = np.empty_like(index_quote_grid)
+    for i, quote_bp in enumerate(index_quote_grid):
+        quote = cds.actual360_to_actual_actual(float(quote_bp) * 1e-4)
+        quote_hazard = cds.implied_hazard(quote, recovery, 0.04, 5.0, freq=4)
+        duration = cds.cds_risky_duration(quote_hazard, recovery, 0.04, 5.0, freq=4)
+        fixed_coupon_price_grid[i] = cds.fixed_coupon_price(quote, index_coupon, duration)
+
+    # --- §25.5: forward spread and Black-type options ---
+    option_curve = credit_curve.HazardCurve((1.0, 6.0), (0.02, 0.035))
+    option_forward = cds.cds_forward_spread(
+        option_curve, recovery, cds_r, start=1.0, maturity=6.0, freq=4
+    )
+    option_annuity = cds.cds_legs(
+        option_curve, recovery, cds_r, 6.0, freq=4, start=1.0
+    ).risky_duration
+    option_sigma, option_expiry = 0.6, 1.0
+    option_strike_grid = np.linspace(0.5, 1.5, 41) * option_forward
+    payer_value = np.array(
+        [
+            cds.cds_option(option_forward, float(k), option_sigma, option_expiry, option_annuity)
+            for k in option_strike_grid
+        ]
+    )
+    receiver_value = np.array(
+        [
+            cds.cds_option(
+                option_forward, float(k), option_sigma, option_expiry, option_annuity, "receiver"
+            )
+            for k in option_strike_grid
+        ]
+    )
+
+    # --- §25.10: Example 25.2 mezzanine tranche ---
+    cdo_r, cdo_maturity, n_names = 0.035, 5.0, 125
+    cdo_hazard = cds.implied_hazard(0.0050, recovery, cdo_r, cdo_maturity, freq=4)
+    mezz = credit_portfolio.cdo_tranche_valuation(
+        cdo_hazard, recovery, cdo_r, cdo_maturity, 0.03, 0.06, n_names, 0.15
+    )
+    rho_grid = np.linspace(0.02, 0.6, 30)
+    standard_bounds = np.array([0.0, 0.03, 0.06, 0.09, 0.12, 0.22, 1.0])
+    capital_structure_attach = standard_bounds[:-1]
+    capital_structure_detach = standard_bounds[1:]
+    tranche_names = np.array(["0-3%", "3-6%", "6-9%", "9-12%", "12-22%", "22-100%"])
+    tranche_spread_vs_rho = np.array(
+        [
+            [
+                credit_portfolio.cdo_tranche_spread(
+                    cdo_hazard, recovery, cdo_r, cdo_maturity, float(lo), float(hi), n_names, rho
+                )
+                for lo, hi in zip(capital_structure_attach, capital_structure_detach, strict=True)
+            ]
+            for rho in rho_grid
+        ]
+    )
+    capital_structure_expected_loss = np.array(
+        [
+            credit_portfolio.cdo_tranche_valuation(
+                cdo_hazard, recovery, cdo_r, cdo_maturity, float(lo), float(hi), n_names, 0.15
+            ).protection
+            for lo, hi in zip(capital_structure_attach, capital_structure_detach, strict=True)
+        ]
+    )
+    portfolio_expected_loss = credit_portfolio.cdo_tranche_valuation(
+        cdo_hazard, recovery, cdo_r, cdo_maturity, 0.0, 1.0, n_names, 0.15
+    ).protection
+
+    # --- §25.10: Example 25.3 third-to-default ---
+    kth_order = np.arange(1, 6, dtype=float)
+    kth_valuations = [
+        credit_portfolio.kth_to_default_valuation(k, 10, 0.02, recovery, 0.05, 5.0, 0.3, freq=1)
+        for k in range(1, 6)
+    ]
+    kth_spread = np.array([valuation.spread for valuation in kth_valuations])
+    third = kth_valuations[2]
+
+    # --- §25.10: Table 25.6 → Table 25.8 implied correlations ---
+    itraxx_r = 0.03
+    itraxx_hazard = cds.implied_hazard(0.0023, recovery, itraxx_r, 5.0, freq=4)
+    market_bounds = np.array([0.0, 0.03, 0.06, 0.09, 0.12, 0.22])
+    market_tranche_quote = np.array([0.1034, 41.59e-4, 11.95e-4, 5.60e-4, 2.00e-4])
+    implied = credit_portfolio.base_correlations(
+        market_tranche_quote, market_bounds, itraxx_hazard, recovery, itraxx_r, 5.0, n_names
+    )
+    repriced_quote = np.empty(5)
+    for i, (lo, hi, rho) in enumerate(
+        zip(implied.attachments, implied.detachments, implied.compound, strict=True)
+    ):
+        valuation = credit_portfolio.cdo_tranche_valuation(
+            itraxx_hazard, recovery, itraxx_r, 5.0, float(lo), float(hi), n_names, float(rho)
+        )
+        repriced_quote[i] = valuation.upfront(0.05) if i == 0 else valuation.spread
+    el_curve_x = implied.detachments.copy()
+    el_curve_value = credit_portfolio.expected_loss_curve(
+        el_curve_x, implied.base, itraxx_hazard, recovery, itraxx_r, 5.0, n_names
+    )
+    hull_compound_correlation = np.array([0.177, 0.078, 0.140, 0.182, 0.233])
+    hull_base_correlation = np.array([0.177, 0.284, 0.365, 0.432, 0.605])
+
+    # --- §25.11: double-t copula and heterogeneous recursion ---
+    double_t_nu_grid = np.array([3.0, 4.0, 6.0, 10.0, 30.0, 1e6])
+    double_t_spread = np.array(
+        [
+            credit_portfolio.cdo_tranche_spread(
+                cdo_hazard,
+                recovery,
+                cdo_r,
+                cdo_maturity,
+                0.03,
+                0.06,
+                n_names,
+                0.15,
+                copula="double_t",
+                nu=float(nu),
+            )
+            for nu in double_t_nu_grid
+        ]
+    )
+    gaussian_mezz_spread = mezz.spread
+    asb_probe_prob = np.full(10, 0.07)
+    asb_probe_pmf = credit_portfolio.heterogeneous_default_pmf(asb_probe_prob)
+    binomial_probe = credit_portfolio.binomial_pmf(10, 0.07)
+    heterogeneous_binomial_gap = float(np.max(np.abs(asb_probe_pmf - binomial_probe)))
+    heterogeneous_spread_gap = float(
+        abs(
+            credit_portfolio.cdo_tranche_valuation(
+                np.full(n_names, cdo_hazard),
+                recovery,
+                cdo_r,
+                cdo_maturity,
+                0.03,
+                0.06,
+                n_names,
+                0.15,
+            ).spread
+            - gaussian_mezz_spread
+        )
+    )
+
+    # --- §24.9: CreditMetrics from Table 24.4 ---
+    matrix = credit_metrics.TransitionMatrix.from_percent(credit_metrics.HULL_TABLE_24_4)
+    # AAA never defaults in Table 24.4 (p = 0.00 ⇒ +inf boundary), so the stored
+    # curves keep the six finite live-rating boundaries; the BBB default boundary
+    # (Hull 2.9290) is carried as a scalar metric.
+    threshold_aaa_full = credit_metrics.rating_thresholds(matrix, "AAA")
+    threshold_bbb_full = credit_metrics.rating_thresholds(matrix, "BBB")
+    threshold_aaa = threshold_aaa_full[:-1]
+    threshold_bbb = threshold_bbb_full[:-1]
+    obligors =["A"] * 20 + ["BBB"] * 40 + ["BB"] * 25 + ["B"] * 15
+    exposures = np.full(len(obligors), 1.0)
+    n_sims = 5000
+    migrations_independent = credit_metrics.simulate_rating_migrations(
+        matrix, obligors, 0.0, n_sims, np.random.default_rng(seed)
+    )
+    migrations_correlated = credit_metrics.simulate_rating_migrations(
+        matrix, obligors, 0.2, n_sims, np.random.default_rng(seed)
+    )
+    credit_loss_by_case = np.vstack(
+        [
+            credit_metrics.credit_loss_distribution(migrations_independent, exposures, recovery),
+            credit_metrics.credit_loss_distribution(migrations_correlated, exposures, recovery),
+        ]
+    )
+    credit_loss_names = np.array(["independent", "rho=0.2"])
+    credit_var_by_case = np.array(
+        [credit_metrics.credit_var(row, 0.999) for row in credit_loss_by_case]
+    )
+    expected_loss_by_case = np.array(
+        [credit_metrics.expected_loss(row) for row in credit_loss_by_case]
+    )
+
+    # --- §24.7: netting, collateral, spread-implied CVA ---
+    netting_trade_value = np.array([10.0, 30.0, -25.0])
+    netting_exposure = float(xva.netting_set_exposure(netting_trade_value))
+    gross_exposure = float(xva.netting_set_exposure(netting_trade_value, netting=False))
+    collateral_case_value = np.array([50.0, 50.0, -50.0, -50.0])
+    collateral_case_lagged = np.array([45.0, 55.0, -45.0, -55.0])
+    collateral_case_exposure = xva.collateralized_exposure(
+        collateral_case_value, collateral_case_lagged
+    )
+    cva_r, cva_horizon, cva_f_nd, cva_hazard = 0.05, 2.0, 7.0, 0.03
+    cva_grid_time = np.linspace(0.0, cva_horizon, 2001)
+    cva_spread_term = np.full(cva_grid_time.size - 1, cva_hazard * (1.0 - recovery))
+    cva_default_prob = xva.default_probs_from_spreads(cva_grid_time[1:], cva_spread_term, recovery)
+    cva_special_case = xva.cva_single_payoff(cva_f_nd, recovery, cva_default_prob)
+    cva_general_equivalent = xva.cva(
+        cva_grid_time, cva_f_nd * np.exp(cva_r * cva_grid_time), cva_hazard, recovery, cva_r
+    )
+
+    arrays: ArrayMap = {
+        "spread_tenor": spread_tenor,
+        "yield_spread": yield_spread,
+        "average_hazard": np.asarray(average_hazard),
+        "forward_hazard": np.asarray(forward_curve.hazards),
+        "bond_maturity_label": np.array(["1y", "2y", "3y"]),
+        "bond_price": bond_price,
+        "bond_risk_free_price": np.asarray(bootstrap.risk_free_prices),
+        "bond_expected_loss_pv": np.asarray(bootstrap.expected_loss_pv),
+        "bond_bootstrap_hazard": np.asarray(bootstrap.curve.hazards),
+        "hull_bond_bootstrap_hazard": np.array([0.0246, 0.0348, 0.0374]),
+        "cds_year": cds_year,
+        "cds_year_label": np.array(["1", "2", "3", "4", "5"]),
+        "cds_survival": cds_survival,
+        "cds_default_prob": cds_default_prob,
+        "cds_discount_end": cds_discount_end,
+        "cds_discount_mid": cds_discount_mid,
+        "cds_payment_pv": cds_payment_pv,
+        "cds_accrual_pv": cds_accrual_pv,
+        "cds_payoff_pv": cds_payoff_pv,
+        "cds_contract_spread_grid": cds_contract_spread_grid,
+        "cds_mtm_seller": cds_mtm_seller,
+        "cds_market_tenor": cds_market_tenor,
+        "cds_market_spread": cds_market_spread,
+        "cds_bootstrap_hazard": np.asarray(cds_curve.hazards),
+        "cds_bootstrap_repriced_spread": cds_bootstrap_repriced_spread,
+        "index_quote_grid": index_quote_grid,
+        "fixed_coupon_price_grid": fixed_coupon_price_grid,
+        "option_strike_grid": option_strike_grid,
+        "payer_value": payer_value,
+        "receiver_value": receiver_value,
+        "tranche_payment_time": mezz.payment_times,
+        "factor_node": mezz.factor_nodes,
+        "factor_weight": mezz.factor_weights,
+        "tranche_expected_principal": mezz.expected_principal,
+        "tranche_annuity_by_factor": mezz.annuity_by_factor,
+        "tranche_accrual_by_factor": mezz.accrual_by_factor,
+        "tranche_protection_by_factor": mezz.protection_by_factor,
+        "rho_grid": rho_grid,
+        "tranche_names": tranche_names,
+        "capital_structure_attach": capital_structure_attach,
+        "capital_structure_detach": capital_structure_detach,
+        "tranche_spread_vs_rho": tranche_spread_vs_rho,
+        "capital_structure_expected_loss": capital_structure_expected_loss,
+        "kth_order": kth_order,
+        "kth_spread": kth_spread,
+        "kth_factor_node": third.factor_nodes,
+        "kth_factor_weight": third.factor_weights,
+        "kth_conditional_cumulative_prob": third.cumulative_prob,
+        "kth_payoff_by_factor": third.payoff_by_factor,
+        "kth_annuity_by_factor": third.annuity_by_factor,
+        "kth_accrual_by_factor": third.accrual_by_factor,
+        "market_tranche_label": np.array(["0-3%", "3-6%", "6-9%", "9-12%", "12-22%"]),
+        "market_tranche_attach": implied.attachments,
+        "market_tranche_detach": implied.detachments,
+        "market_tranche_quote": market_tranche_quote,
+        "repriced_quote": repriced_quote,
+        "compound_correlation": implied.compound,
+        "base_correlation": implied.base,
+        "hull_compound_correlation": hull_compound_correlation,
+        "hull_base_correlation": hull_base_correlation,
+        "tranche_expected_loss": implied.tranche_expected_loss,
+        "el_curve_x": el_curve_x,
+        "el_curve_value": el_curve_value,
+        "double_t_nu_grid": double_t_nu_grid,
+        "double_t_spread": double_t_spread,
+        "asb_probe_prob": asb_probe_prob,
+        "asb_probe_pmf": asb_probe_pmf,
+        "transition_matrix": matrix.probabilities,
+        "rating_names": np.array(matrix.ratings),
+        "threshold_index": np.arange(1.0, 7.0),
+        "threshold_aaa": threshold_aaa,
+        "threshold_bbb": threshold_bbb,
+        "hull_threshold_aaa": np.array([1.2719, 2.4089, 2.8070]),
+        "hull_threshold_bbb": np.array([-3.7190, -3.0618, -1.7866]),
+        "credit_loss_names": credit_loss_names,
+        "credit_loss_by_case": credit_loss_by_case,
+        "credit_var_by_case": credit_var_by_case,
+        "expected_loss_by_case": expected_loss_by_case,
+        "netting_trade_value": netting_trade_value,
+        "collateral_case_label": np.array(["50/45", "50/55", "-50/-45", "-50/-55"]),
+        "collateral_case_value": collateral_case_value,
+        "collateral_case_lagged": collateral_case_lagged,
+        "collateral_case_exposure": np.asarray(collateral_case_exposure),
+        "hull_collateral_case_exposure": np.array([5.0, 0.0, 0.0, 5.0]),
+        "cva_grid_time": cva_grid_time,
+        "cva_default_prob": cva_default_prob,
+    }
+    metrics: dict[str, Scalar] = {
+        "recovery": recovery,
+        "bond_bootstrap_hazard_1": float(bootstrap.curve.hazards[0]),
+        "bond_bootstrap_hazard_2": float(bootstrap.curve.hazards[1]),
+        "bond_bootstrap_hazard_3": float(bootstrap.curve.hazards[2]),
+        "cds_hazard": cds_hazard,
+        "cds_rate": cds_r,
+        "cds_par_spread_bp": float(legs.par_spread * 1e4),
+        "cds_risky_duration": float(legs.risky_duration),
+        "cds_protection_pv": float(legs.protection),
+        "cds_mtm_seller_150bp": float(
+            cds.cds_mtm(0.015, cds_hazard, recovery, cds_r, cds_maturity)
+        ),
+        "cds_implied_hazard_100bp": float(implied_100bp),
+        "binary_cds_spread_bp": float(binary_spread * 1e4),
+        "cds_bootstrap_max_reprice_error": float(
+            np.max(np.abs(cds_bootstrap_repriced_spread - cds_market_spread))
+        ),
+        "fixed_coupon_spread": float(index_spread),
+        "fixed_coupon_coupon": float(index_coupon),
+        "fixed_coupon_hazard": float(fixed_hazard),
+        "fixed_coupon_duration": float(fixed_duration),
+        "fixed_coupon_price": float(fixed_price),
+        "option_forward_spread": float(option_forward),
+        "option_risky_annuity": float(option_annuity),
+        "option_sigma": option_sigma,
+        "option_expiry": option_expiry,
+        "cdo_index_hazard": float(cdo_hazard),
+        "cdo_rate": cdo_r,
+        "cdo_rho": 0.15,
+        "cdo_mezz_annuity": mezz.annuity,
+        "cdo_mezz_accrual": mezz.accrual,
+        "cdo_mezz_protection": mezz.protection,
+        "cdo_mezz_spread_bp": float(mezz.spread * 1e4),
+        "portfolio_expected_loss": float(portfolio_expected_loss),
+        "kth3_spread_bp": float(third.spread * 1e4),
+        "kth3_payoff": third.payoff,
+        "kth3_annuity": third.annuity,
+        "kth3_accrual": third.accrual,
+        "kth_rate": 0.05,
+        "itraxx_hazard": float(itraxx_hazard),
+        "itraxx_rate": itraxx_r,
+        "base_correlation_max_reprice_error": float(
+            np.max(np.abs(repriced_quote - market_tranche_quote))
+        ),
+        "gaussian_mezz_spread": float(gaussian_mezz_spread),
+        "double_t_limit_gap_bp": float(abs(double_t_spread[-1] - gaussian_mezz_spread) * 1e4),
+        "heterogeneous_binomial_gap": heterogeneous_binomial_gap,
+        "heterogeneous_spread_gap": heterogeneous_spread_gap,
+        "creditmetrics_rho": 0.2,
+        "creditmetrics_bbb_default_threshold": float(threshold_bbb_full[-1]),
+        "hull_bbb_default_threshold": 2.9290,
+        "credit_var_independent": float(credit_var_by_case[0]),
+        "credit_var_correlated": float(credit_var_by_case[1]),
+        "netting_exposure": netting_exposure,
+        "gross_exposure": gross_exposure,
+        "cva_no_default_value": cva_f_nd,
+        "cva_rate": cva_r,
+        "cva_special_case": float(cva_special_case),
+        "cva_general_equivalent": float(cva_general_equivalent),
+    }
+    return FrontierReference(28, seed, arrays, metrics)
+
+
 _BUILDERS: dict[int, Callable[..., FrontierReference]] = {
     21: volume21_reference,
     22: volume22_reference,
@@ -2455,14 +2865,15 @@ _BUILDERS: dict[int, Callable[..., FrontierReference]] = {
     25: volume25_reference,
     26: volume26_reference,
     27: volume27_reference,
+    28: volume28_reference,
 }
 
 
 def build_frontier_reference(volume: int, *, seed: int | None = None) -> FrontierReference:
-    """Build a serialization-ready vol 21--27 payload by volume number."""
+    """Build a serialization-ready vol 21--28 payload by volume number."""
 
     try:
         builder = _BUILDERS[volume]
     except KeyError as exc:
-        raise ValueError("frontier reference volume must lie in [21, 27]") from exc
+        raise ValueError("frontier reference volume must lie in [21, 28]") from exc
     return builder() if seed is None else builder(seed=seed)
