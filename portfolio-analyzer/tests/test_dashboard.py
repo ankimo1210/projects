@@ -162,6 +162,23 @@ def test_render_dashboard_carries_the_after_tax_estimate() -> None:
         assert value in html, value
 
 
+def test_render_dashboard_shows_usd_under_yen() -> None:
+    data = sample()
+    data["headline"].update(nav_after_tax=45000000)
+    html = dashboard.render(data, ":root{--ink:#000}")
+    for value in (
+        "$301,257",  # total assets at 153.55
+        "税引後 45,000,000 · $293,064",
+        "−$2,934",  # day
+        "$165,600",  # account total
+        "+$375",  # account day
+        "$32,571",  # XLE value
+        "+$101",  # XLE day
+        "+$4,224",  # XLE unrealised
+    ):
+        assert value in html, value
+
+
 def test_page_exposes_the_chart_box_for_the_screenshot() -> None:
     html = dashboard.render(sample(), ":root{--ink:#000}")
     assert 'id="charts-top"' in html and 'id="charts-end"' in html

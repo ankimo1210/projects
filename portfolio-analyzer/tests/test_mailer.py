@@ -190,6 +190,40 @@ def test_html_body_carries_the_after_tax_estimate_for_totals_accounts_and_positi
         assert value in body, value
 
 
+def test_usd_converts_at_the_day_s_rate_with_the_sign_before_the_dollar() -> None:
+    assert mailer.usd(46257970.0, 153.55) == "$301,257"
+    assert mailer.usd(-450566.0, 153.55, True) == "−$2,934"
+    assert mailer.usd(15506.0, 153.55, True) == "+$101"
+    assert mailer.usd(None, 153.55) == "" and mailer.usd(1.0, None) == ""
+
+
+def test_text_body_shows_usd_beside_the_yen() -> None:
+    text = mailer.text_body(payload())
+    assert "$301,257" in text  # total assets
+    assert "−$2,934" in text  # day
+    assert "−$1,076" in text  # unrealised
+    assert "$32,571" in text  # XLE value
+
+
+def test_html_body_shows_usd_under_yen_for_totals_accounts_and_positions() -> None:
+    body = mailer.html_body(payload(), image_cid="charts")
+    for value in (
+        "$301,257",  # headline total
+        "税引後 45,000,000 · $293,064",
+        "−$2,934",  # headline day
+        "税引後 −380,000 · −$2,475",
+        "−$1,076",  # headline unrealised
+        "+$5,990",  # window
+        "$165,600",  # account total
+        "+$375",  # account day
+        "$32,571",  # XLE value
+        "+$101",  # XLE day
+        "+$4,224",  # XLE unrealised
+        "$19,332",  # 2561 value
+    ):
+        assert value in body, value
+
+
 def test_html_body_leaves_the_split_out_when_the_payload_has_none() -> None:
     data = payload()
     for p in data["positions"]:
