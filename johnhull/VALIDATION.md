@@ -197,6 +197,31 @@ Two findings from this run are worth carrying forward:
 The scope of PASS is unchanged: integration, numerical identity and reproducibility on
 synthetic data. Nothing here approves model performance or market predictive power.
 
+## 2026-09-14 vol 28 credit-desk run
+
+Branch `worktree-johnhull-vol28-credit-desk`; design
+`docs/superpowers/specs/2026-09-14-johnhull-vol28-credit-desk-design.md`, plan
+`docs/superpowers/plans/2026-09-14-johnhull-vol28-credit-desk.md`. Environment:
+Python 3.12.3 / NumPy 2.4.6 / SciPy 1.17.1 on Linux 6.18.33.2-microsoft-standard-WSL2
+(CPU only; `hullkit` stays torch-free).
+
+| Check | Command / evidence | Result |
+|---|---|:---:|
+| hullkit + portal tests | `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests` — 901 passed, 2 dependency deprecation warnings (was 832; +54 hullkit credit tests, +3 vol 28 reference tests, +1 acceptance independence test, report suite 15) | PASS |
+| Scoped lint/format | `ruff check` / `ruff format --check` over `johnhull/hullkit/src`, `johnhull/hullkit/tests`, `johnhull/scripts`, `johnhull/report/report_builder`, `johnhull/report/tests` — all checks passed, 159 files formatted | PASS |
+| vol 28 acceptance | `frontier_acceptance.evaluate_acceptance(28, ...)` — 17/17 PASS, recomputed from the committed arrays with numpy-only helpers (independent Gauss–Hermite tranche pricer, ASB recursion, bisection normal quantile); tampering tests confirm the stored CDO metric and compound correlations are not trusted | PASS |
+| Reference rebuild | `make hull-artifacts-check` — vol 19–28 semantic match and second-build byte identity; vol 21 `benchmark.sources` digest refreshed for the edited `frontier_reference.py` (one-line change, same practice as `0b3fa109`) | PASS |
+| Notebook execution | `make hull-notebooks-check` — vol 18–28 artifact-only execution, 46 cells and 0 errors in `credit_desk.ipynb` | PASS |
+| Portal | `make hull-report` — 12 themes / 82 figures (`risk_credit` 8 → 12); no external URL | PASS |
+| Jupyter Book | clean `make hull-book` — 31 notebook pages, build succeeded with 29 pre-existing legacy warnings (vol 13–17 / legacy ch15), 0 originating in `28_credit_desk` | PASS with legacy warnings |
+| Release contract | `make hull-release-check` — `[PASS] johnhull A5--A8 release contract` with volumes 18..28 | PASS |
+| Untouched core | `git diff --stat main -- johnhull/hullkit/src/hullkit/credit.py johnhull/hullkit/src/hullkit/copula.py johnhull/volumes/09_credit_xva` — empty | PASS |
+| Tracked release | `make hull-release-check HULL_RELEASE_FLAGS=--require-tracked` after the evidence commit | PASS |
+
+The vol 28 data policy remains `synthetic-offline`: the only external numbers are the
+Hull-printed Table 24.4 transition matrix and Table 25.6 iTraxx quotes, transcribed as
+fixtures and used solely as textbook pins (`docs/DATA_PROVENANCE.md`).
+
 ## Negative results and residual model risk
 
 - vol 18: the quick soft penalty did not reduce the hard-check count, and no neural
