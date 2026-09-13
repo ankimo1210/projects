@@ -3,8 +3,17 @@
 Mail clients drop ``<script>`` and inline SVG, and Gmail rewrites the
 ``Content-ID`` of an attached image — a ``cid:`` reference written by hand does
 not survive it, and the picture lands as an attachment instead of in the body.
-Coloured table cells survive everything, so the daily mail draws its figures
-that way: signed columns for a series over time, diverging bars for a ranking.
+Table cells survive everything, so the daily mail draws its figures that way:
+a connected line for a series, signed columns for daily changes, diverging bars
+for a ranking.
+
+What a mark is made of was measured, not assumed: Gmail's send path strips the
+CSS ``background`` shorthand and turns ``&nbsp;`` into a space, but keeps
+``border-*``, ``padding-*``, the ``bgcolor`` attribute and ``height`` on a
+cell. So a mark is a ``<div>`` whose only substance is a ``border-top`` of the
+mark's height, placed by ``padding-top`` on its cell; a column of a chart is
+one cell, and a chart of a hundred points stays well inside Gmail's ~100 KB
+clipping limit.
 
 Every function returns a self-contained ``<table>`` with inline styles only.
 """
@@ -12,9 +21,10 @@ Every function returns a self-contained ``<table>`` with inline styles only.
 from __future__ import annotations
 
 import html
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
 UP, DN, INK, MUTED, RULE, CARD = "#C05C33", "#2A6DA6", "#141413", "#85817A", "#DFDBCF", "#FAF9F5"
+UP_TINT, DN_TINT = "#F1DBD1", "#D7E2EC"
 SANS = "system-ui,sans-serif"
 MONO = "ui-monospace,monospace"
 
@@ -55,6 +65,17 @@ def _fill(color: str | None) -> str:
     return f' bgcolor="{color}"' if color else ""
 
 
+def _runs_of_zero(heights: list[int]) -> list[tuple[int, int]]:
+    """Like ``_runs`` but only the empty columns merge — bars stay one per point."""
+    out: list[tuple[int, int]] = []
+    for h in heights:
+        if h == 0 and out and out[-1][0] == 0:
+            out[-1] = (0, out[-1][1] + 1)
+        else:
+            out.append((h, 1))
+    return out
+
+
 def _runs(heights: list[int]) -> list[tuple[int, int]]:
     """Consecutive equal heights collapsed into (height, count) — no seam in a flat run."""
     out: list[tuple[int, int]] = []
@@ -66,10 +87,59 @@ def _runs(heights: list[int]) -> list[tuple[int, int]]:
     return out
 
 
-def _note_row(text: str, align: str, pad: str) -> str:
+QUARTERS = ("01", "04", "07", "10")
+
+
+def ticks(labels: Sequence[str], months: Sequence[str] | None = QUARTERS) -> list[tuple[int, str]]:
+    """Month starts in a run of ISO dates, as (index, "YY/MM") — the x axis.
+
+    ``months`` limits the ticks to those months (quarters by default, so a year
+    gets four); ``None`` marks every month, for a window of a few weeks.
+    """
+    out: list[tuple[int, str]] = []
+    prev = ""
+    for i, label in enumerate(labels):
+        month = str(label)[:7]
+        if i and month != prev and (months is None or month[5:7] in months):
+            out.append((i, f"{month[2:4]}/{month[5:7]}"))
+        prev = month
+    return out
+
+
+NOTE = f'style="font:400 10px {MONO};color:{MUTED};padding:0 6px 0 0;white-space:nowrap"'
+
+
+def _axis_top(fmt: Callable[[float], str], known: list[float], up_px: int) -> str:
+    """The gutter beside the upper half: the high at its top, zero at its foot."""
+    high = fmt(max(known)) if max(known) > 0 else "0"
     return (
-        f'<tr><td align="{align}" style="font:400 10px {MONO};color:{MUTED};padding:{pad}">'
-        f"{html.escape(text)}</td></tr>"
+        f'<td valign="top" align="right" {NOTE}><table height="{up_px}" cellspacing="0" '
+        f'cellpadding="0"><tr><td valign="top" align="right" {NOTE}>{html.escape(high)}</td></tr>'
+        f'<tr><td valign="bottom" align="right" {NOTE}>0</td></tr></table></td>'
+    )
+
+
+def _axis_bottom(fmt: Callable[[float], str], known: list[float]) -> str:
+    return f'<td valign="bottom" align="right" {NOTE}>{html.escape(fmt(min(known)))}</td>'
+
+
+def _tick_row(labels: Sequence[str], step: int, months: Sequence[str] | None, gutter: bool) -> str:
+    """Month labels under the plot, each at its column; empty when none fit."""
+    cells, at = "", 0
+    for i, text in ticks(labels, months):
+        if i > len(labels) - 4:  # no room left for the text
+            break
+        cells += f'<td width="{(i - at) * step}"></td>'
+        cells += (
+            f'<td width="{step}" style="font:400 10px {MONO};color:{MUTED};'
+            f'padding-top:4px;white-space:nowrap">{html.escape(text)}</td>'
+        )
+        at = i + 1
+    if not cells:
+        return ""
+    return (
+        f'<tr>{"<td></td>" if gutter else ""}<td><table cellspacing="0" '
+        f'cellpadding="0"><tr>{cells}</tr></table></td></tr>'
     )
 
 
@@ -84,9 +154,8 @@ def columns(
     up: str = UP,
     dn: str = DN,
     ground: str = CARD,
-    top_note: str = "",
-    bottom_note: str = "",
-    cap: int = 0,
+    fmt: Callable[[float], str] | None = None,
+    months: Sequence[str] | None = QUARTERS,
 ) -> str:
     """A signed chart: an area when ``gap`` is 0, separate columns when it is not.
 
@@ -95,72 +164,174 @@ def columns(
     its own height. With a gap, the space between columns is a border in the
     panel's colour, because a cell's fill covers its padding and would merge the
     bars; without one, equal neighbours are merged so a flat run reads as one
-    surface. ``top_note`` / ``bottom_note`` print the scale at the two edges.
+    surface. ``fmt`` prints the high, zero and low in a gutter at the left, and
+    ``labels`` puts month ticks below (see ``ticks``).
     """
     if total_px is not None:
         up_px, dn_px = split(values, total_px)
     heights = scale(values, up_px, dn_px)
-    edge = "font:0/0 a" + (f";border-right:{gap}px solid {ground}" if gap else "")
-    runs = _runs(heights) if gap == 0 else [(h, 1) for h in heights]
+    known = [float(v) for v in values if v is not None] or [0.0]
+    edge = f' style="border-right:{gap}px solid {ground}"' if gap else ""
 
     def cell(height: int, span: int, color: str, align: str) -> str:
-        width = col_w * span
+        width = col_w * span + gap * (span - 1)
         if height <= 0:
-            return f'<td width="{width}" valign="{align}" style="{edge}">&nbsp;</td>'
-        mark = f'<td height="{min(cap, height) if cap else height}" bgcolor="{color}" style="font:0/0 a">&nbsp;</td>'
-        rest = '<td style="font:0/0 a">&nbsp;</td>'
-        # the value sits at the top of an upward bar and at the bottom of a downward one
-        inner = (
-            mark
-            if not cap or height <= cap
-            else (
-                f"<tr>{mark}</tr><tr>{rest}</tr>"
-                if align == "bottom"
-                else f"<tr>{rest}</tr><tr>{mark}</tr>"
-            )
-        )
-        body = inner if cap and height > cap else f"<tr>{mark}</tr>"
-        bar = (
-            f'<table width="{width}" height="{height}" cellspacing="0" cellpadding="0" '
-            f'border="0">{body}</table>'
-        )
-        return f'<td width="{width}" valign="{align}" style="{edge}">{bar}</td>'
+            return f'<td width="{width}"{edge}></td>'
+        return f'<td width="{width}" valign="{align}"{edge}>{_mark(height, color)}</td>'
 
-    def half(px: int, color: str, above: bool) -> str:
+    def half(px: int, color: str, above: bool, axis: str) -> str:
         align = "bottom" if above else "top"
-        cells = [cell(max(h, 0) if above else max(-h, 0), span, color, align) for h, span in runs]
+        mine = [max(h, 0) if above else max(-h, 0) for h in heights]
+        # touching columns merge whenever equal; separated bars only merge the empty stretches
+        runs = _runs(mine) if gap == 0 else _runs_of_zero(mine)
+        cells = [cell(h, span, color, align) for h, span in runs]
         return (
-            f'<tr><td height="{px}" style="height:{px}px;padding:0">'
-            f'<table cellspacing="0" cellpadding="0" border="0">'
+            f'<tr>{axis}<td height="{px}" style="height:{px}px;padding:0">'
+            f'<table height="{px}" cellspacing="0" cellpadding="0">'
             f"<tr>{''.join(cells)}</tr></table></td></tr>"
         )
 
     rows = []
-    if top_note:
-        rows.append(_note_row(top_note, "right", "0 0 3px"))
     if up_px > 0:
-        rows.append(half(up_px, up, above=True))
-    rows.append(f'<tr><td height="1" bgcolor="{RULE}" style="font:0/0 a">&nbsp;</td></tr>')
+        rows.append(half(up_px, up, True, _axis_top(fmt, known, up_px) if fmt else ""))
+    rule = f'<td height="1" bgcolor="{RULE}" style="font:0/0 a">&nbsp;</td>'
+    rows.append(f"<tr>{'<td></td>' if fmt else ''}{rule}</tr>")
     if dn_px > 0:
-        rows.append(half(dn_px, dn, above=False))
-    if bottom_note:
-        rows.append(_note_row(bottom_note, "right", "3px 0 0"))
+        rows.append(half(dn_px, dn, False, _axis_bottom(fmt, known) if fmt else ""))
     if labels:
-        marks = [labels[0], labels[len(labels) // 2], labels[-1]] if len(labels) > 2 else labels
-        cells = "".join(
-            f'<td align="{a}" style="font:400 10px {MONO};color:{MUTED};padding:4px 0 0">'
-            f"{html.escape(str(m))}</td>"
-            for m, a in zip(marks, ("left", "center", "right"), strict=False)
+        rows.append(_tick_row(labels, col_w + gap, months, bool(fmt)))
+    return f'<table cellspacing="0" cellpadding="0">{"".join(rows)}</table>'
+
+
+Stack = tuple[tuple[int, str | None], ...]
+
+
+def _merged(stacks: list[tuple[Stack, int]]) -> list[tuple[Stack, int]]:
+    """Consecutive identical columns collapsed into one, their widths summed."""
+    out: list[tuple[Stack, int]] = []
+    for s, w in stacks:
+        if out and out[-1][0] == s:
+            out[-1] = (s, out[-1][1] + w)
+        else:
+            out.append((s, w))
+    return out
+
+
+def _mark(height: int, color: str) -> str:
+    """A block of colour that is nothing but a border — see the module docstring."""
+    return f'<div style="border-top:{height}px solid {color}"></div>'
+
+
+def _stack(rows: list[tuple[int, str | None]], width: int) -> str:
+    """One column: a leading gap becomes padding, coloured rows become marks."""
+    marks = ""
+    pad = 0
+    for h, c in rows:
+        if h <= 0:
+            continue
+        if c is None:
+            if marks:
+                break  # nothing below the last mark matters
+            pad += h
+        else:
+            marks += _mark(h, c)
+    if not marks:
+        return f'<td width="{width}"></td>'
+    offset = f' style="padding-top:{pad}px"' if pad else ""
+    return f'<td width="{width}" valign="top"{offset}>{marks}</td>'
+
+
+def line(
+    values: Sequence[Number],
+    labels: Sequence[str] | None = None,
+    total_px: int = 90,
+    col_w: int = 12,
+    thickness: int = 2,
+    color: str = UP,
+    fill: bool = True,
+    zero: bool = True,
+    up_tint: str = UP_TINT,
+    dn_tint: str = DN_TINT,
+    fmt: Callable[[float], str] | None = None,
+    months: Sequence[str] | None = QUARTERS,
+) -> str:
+    """A connected line, drawn as one stacked column per point.
+
+    Each column's stroke runs from the previous value to its own, so a step is a
+    vertical connector rather than a floating dash and the line reads as one
+    path. With ``zero`` the plot is split at a zero rule and the area between
+    the line and the rule is tinted by sign; without it the range is the data's
+    own (a sparkline), with no rule, no axis and no fill. ``fmt`` prints the
+    high, zero and low at the left edge; ``labels`` puts quarter ticks below.
+    """
+    clean = [None if v is None else float(v) for v in values]
+    known = [v for v in clean if v is not None]
+    if not known:
+        return ""
+    if zero:
+        # the stroke sits on top of its value, so the upper box is a stroke taller
+        plot_u, dn_px = split(clean, total_px - thickness)
+        scaled = scale([0.0 if v is None else v for v in clean], plot_u, dn_px)
+        heights = [None if v is None else h for v, h in zip(clean, scaled, strict=False)]
+        up_px = plot_u + thickness
+    else:
+        lo_v, hi_v = min(known), max(known)
+        factor = (total_px - thickness) / (hi_v - lo_v) if hi_v > lo_v else 0.0
+        heights = [None if v is None else round((v - lo_v) * factor) for v in clean]
+        up_px, dn_px, fill = total_px, 0, False
+
+    def above(lo: int, hi: int) -> Stack:
+        # spacer down to the stroke, the stroke, tint from there to the rule
+        top, bottom = min(hi, up_px), max(lo, 0)
+        stroke = max(top - bottom, 0)
+        tint = bottom if fill and stroke else 0
+        return ((up_px - top, None), (stroke, color), (tint, up_tint))
+
+    def below(lo: int, hi: int) -> Stack:
+        # tint from the rule, stroke, spacer
+        y1, y2 = max(lo, -dn_px), min(hi, 0)
+        stroke = max(y2 - y1, 0)
+        tint = -y2 if fill and stroke else 0
+        return ((tint, dn_tint), (stroke, color), (dn_px - tint - stroke, None))
+
+    # Each point is two columns: a stroke-wide riser from the previous value and
+    # the level itself — so a step reads as a thin line, not as a bar. A flat
+    # run's riser equals its level and the two merge away.
+    riser_w, level_w = (thickness, col_w - thickness) if col_w > thickness else (0, col_w)
+    upper: list[tuple[Stack, int]] = []
+    lower: list[tuple[Stack, int]] = []
+    prev: int | None = None
+    for h in heights:
+        if h is None:
+            upper.append(((), col_w))
+            lower.append(((), col_w))
+            continue
+        p = h if prev is None else prev
+        prev = h
+        for lo, hi, w in ((min(p, h), max(p, h) + thickness, riser_w), (h, h + thickness, level_w)):
+            if w:
+                upper.append((above(lo, hi), w))
+                if dn_px:
+                    lower.append((below(lo, hi), w))
+
+    def row(stacks: list[tuple[Stack, int]], px: int, axis: str) -> str:
+        # a flat run is one wide column, not a repeat of the same one
+        cells = "".join(_stack(list(s), w) for s, w in _merged(stacks))
+        return (
+            f'<tr>{axis}<td height="{px}" style="height:{px}px;padding:0">'
+            f'<table height="{px}" cellspacing="0" cellpadding="0"><tr>{cells}</tr></table></td></tr>'
         )
-        rows.append(
-            f'<tr><td><table width="100%" cellspacing="0" cellpadding="0" border="0">'
-            f"<tr>{cells}</tr></table></td></tr>"
-        )
-    width = max(len(heights), 1) * (col_w + gap)
-    return (
-        f'<table cellspacing="0" cellpadding="0" border="0" '
-        f'style="width:{width}px;max-width:100%">{"".join(rows)}</table>'
-    )
+
+    gutter = bool(fmt and zero)
+    rows = [row(upper, up_px, _axis_top(fmt, known, up_px) if gutter else "")]
+    if zero:
+        rule = f'<td height="1" bgcolor="{RULE}" style="font:0/0 a">&nbsp;</td>'
+        rows.append(f"<tr>{'<td></td>' if gutter else ''}{rule}</tr>")
+    if dn_px:
+        rows.append(row(lower, dn_px, _axis_bottom(fmt, known) if gutter else ""))
+    if labels:
+        rows.append(_tick_row(labels, col_w, months, gutter))
+    return f'<table cellspacing="0" cellpadding="0">{"".join(rows)}</table>'
 
 
 def hbars(

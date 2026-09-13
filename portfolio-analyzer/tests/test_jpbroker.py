@@ -51,7 +51,9 @@ def test_a_share_split_adds_quantity_without_adding_cost() -> None:
     h = jpbroker.derive_holdings(jpbroker.parse_transactions(SAMPLE))["7532"]
     assert h["quantity"] == Decimal("500")
     assert h["cost_basis_jpy"] == Decimal("423709")
-    assert h["average_cost"] == Decimal("421900") / Decimal("500")  # execution price, split-adjusted
+    assert h["average_cost"] == Decimal("421900") / Decimal(
+        "500"
+    )  # execution price, split-adjusted
 
 
 def test_a_closed_position_reports_its_realised_result_and_drops_out() -> None:

@@ -23,18 +23,32 @@ def test_scale_survives_an_all_zero_or_empty_series() -> None:
 def test_columns_draws_one_cell_per_point_and_colors_by_sign() -> None:
     html = emailchart.columns([10.0, -10.0], labels=["1月", "2月"])
     assert html.count("<td") >= 2
-    assert f'bgcolor="{emailchart.UP}"' in html and f'bgcolor="{emailchart.DN}"' in html
+    assert f"solid {emailchart.UP}" in html and f"solid {emailchart.DN}" in html
     assert "<script" not in html and "<svg" not in html
 
 
-def test_columns_carries_colour_as_an_attribute_not_a_style() -> None:
-    # Gmail's send path strips every CSS background; the bgcolor attribute survives it.
-    assert "background:" not in emailchart.columns([10.0, -10.0])
-    assert "background:" not in emailchart.hbars([("A", 5.0, "+5%"), ("B", -5.0, "−5%")])
+def test_marks_never_rely_on_a_css_background() -> None:
+    # Gmail's send path strips the CSS background shorthand (measured); borders,
+    # padding and the bgcolor attribute survive it, so every mark is one of those.
+    assert "background" not in emailchart.columns([10.0, -10.0])
+    assert "background" not in emailchart.line([10.0, -10.0])
+    assert "background" not in emailchart.hbars([("A", 5.0, "+5%"), ("B", -5.0, "−5%")])
 
 
-def test_columns_escapes_label_text() -> None:
-    assert "&lt;b&gt;" in emailchart.columns([1.0], labels=["<b>"])
+def test_columns_escape_the_axis_text() -> None:
+    assert "&lt;b&gt;" in emailchart.columns([1.0], fmt=lambda v: "<b>")
+
+
+def test_columns_merge_the_empty_stretch_but_not_the_bars_when_there_is_a_gap() -> None:
+    html = emailchart.columns([1.0, 1.0, -1.0, -1.0], total_px=20, col_w=10, gap=2)
+    assert html.count("solid #C05C33") == 2  # two bars, drawn apart
+    assert '<td width="22"' in html  # the empty run beneath them is one cell
+
+
+def test_line_merges_a_flat_run_into_one_column() -> None:
+    flat = emailchart.line([5.0] * 10, total_px=20, col_w=10, zero=False)
+    assert flat.count("solid #C05C33") == 1  # one stroke for the whole run
+    assert 'width="100"' in flat
 
 
 def test_hbars_are_proportional_and_signed() -> None:
@@ -72,23 +86,69 @@ def test_columns_drops_the_half_that_holds_nothing() -> None:
 def test_columns_merge_equal_neighbours_when_the_bars_touch() -> None:
     # An area chart (no gap) should not draw a seam through a flat run.
     flat = emailchart.columns([5.0, 5.0, 5.0, 1.0], total_px=40, col_w=10, gap=0)
-    assert flat.count('bgcolor="#C05C33"') == 2  # one cell for the run, one for the step
+    assert flat.count("solid #C05C33") == 2  # one cell for the run, one for the step
     assert 'width="30"' in flat
 
 
 def test_columns_keep_every_bar_separate_when_there_is_a_gap() -> None:
     bars = emailchart.columns([5.0, 5.0, 5.0], total_px=40, col_w=10, gap=3)
-    assert bars.count('bgcolor="#C05C33"') == 3
+    assert bars.count("solid #C05C33") == 3
 
 
-def test_columns_can_print_the_scale_above_and_below_the_plot() -> None:
-    html = emailchart.columns([5.0, -5.0], total_px=40, top_note="+5", bottom_note="−5")
-    assert "+5" in html and "−5" in html
+def test_columns_print_the_axis_when_given_a_formatter() -> None:
+    html = emailchart.columns([5.0, -5.0], total_px=40, fmt=lambda v: f"{v:+.0f}")
+    assert "+5" in html and "-5" in html and ">0<" in html
 
 
-def test_columns_can_draw_a_line_instead_of_a_filled_area() -> None:
-    line = emailchart.columns([100.0, 50.0], total_px=60, col_w=10, gap=0, cap=3)
-    # the mark is a thin cap at the value, not a block reaching the baseline
-    assert 'height="3"' in line
-    assert line.count('bgcolor="#C05C33"') == 2
-    assert 'height="60" bgcolor' not in line
+def test_ticks_can_fall_on_every_month_start() -> None:
+    labels = ["2026-07-30", "2026-07-31", "2026-08-03", "2026-08-04", "2026-09-01"]
+    assert emailchart.ticks(labels, months=None) == [(2, "26/08"), (4, "26/09")]
+
+
+def test_line_connects_each_point_to_the_previous_one() -> None:
+    # a rising step draws the vertical connector, not a floating dash
+    html = emailchart.line([0.0, 10.0], total_px=20, col_w=10, thickness=2, zero=False)
+    assert html.count(f"solid {emailchart.UP}") == 3  # start, riser, end
+    # the flat start (its riser merged into it) sits at the foot: 18px of padding, then the stroke
+    assert (
+        f'<td width="10" valign="top" style="padding-top:18px"><div style="border-top:2px solid {emailchart.UP}">'
+        in html
+    )
+    # the riser is stroke-wide and runs the whole 18px of rise plus the stroke, from the top
+    assert f'<td width="2" valign="top"><div style="border-top:20px solid {emailchart.UP}">' in html
+    # the level beside it sits at the top
+    assert f'<td width="8" valign="top"><div style="border-top:2px solid {emailchart.UP}">' in html
+
+
+def test_line_fills_under_the_line_with_a_tint_by_sign() -> None:
+    html = emailchart.line([10.0, 10.0, -10.0, -10.0], total_px=40, zero=True)
+    assert f"solid {emailchart.UP_TINT}" in html
+    assert f"solid {emailchart.DN_TINT}" in html
+    bare = emailchart.line([10.0, 10.0, -10.0, -10.0], total_px=40, zero=True, fill=False)
+    assert emailchart.UP_TINT not in bare and emailchart.DN_TINT not in bare
+
+
+def test_line_skips_a_missing_point_and_carries_on_from_the_last_known() -> None:
+    html = emailchart.line([5.0, None, 5.0], total_px=20, col_w=10, zero=False)
+    assert html.count(f"solid {emailchart.UP}") == 2
+
+
+def test_sparkline_has_no_zero_rule_and_no_axis() -> None:
+    html = emailchart.line([3.0, 4.0, 2.0], total_px=20, zero=False)
+    assert f'bgcolor="{emailchart.RULE}"' not in html
+
+
+def test_line_prints_the_axis_when_given_a_formatter() -> None:
+    html = emailchart.line([10.0, -4.0], total_px=40, zero=True, fmt=lambda v: f"{v:+.0f}")
+    assert "+10" in html and "-4" in html and ">0<" in html
+
+
+def test_ticks_fall_on_quarter_starts() -> None:
+    labels = ["2025-09-11", "2025-09-30", "2025-10-01", "2025-10-02", "2026-01-05", "2026-02-02"]
+    assert emailchart.ticks(labels) == [(2, "25/10"), (4, "26/01")]
+
+
+def test_line_writes_the_ticks_under_the_plot() -> None:
+    labels = ["2025-09-30", "2025-10-01", "2025-10-02", "2025-10-03", "2025-10-06", "2025-10-07"]
+    html = emailchart.line([1.0] * 6, labels=labels, total_px=20, col_w=10, zero=False)
+    assert "25/10" in html
