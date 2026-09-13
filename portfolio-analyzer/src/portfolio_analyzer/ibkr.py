@@ -295,6 +295,15 @@ class PnlDecomposition:
     total_jpy: Decimal
 
 
+def realized_since(transactions: list[Transaction], since: str) -> Decimal:
+    """Realised P&L of sales dated on or after ``since`` (ISO date)."""
+
+    def total(rows: list[Transaction]) -> Decimal:
+        return sum((h.realized_pnl_jpy for h in derive_holdings(rows).values()), Decimal(0))
+
+    return total(transactions) - total([t for t in transactions if t.date < since])
+
+
 def decompose_pnl(holding: Holding, price_now: Decimal, fx_now: Decimal) -> PnlDecomposition | None:
     """Split a holding's unrealised JPY P&L into price, FX, cross and commission terms."""
     if holding.is_closed or holding.average_trade_fx is None:

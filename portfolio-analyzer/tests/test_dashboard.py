@@ -123,6 +123,45 @@ def test_render_dashboard_carries_headline_and_positions() -> None:
     assert "#" not in html.split("<style>")[0]  # no stray hex before the tokens block
 
 
+def test_render_dashboard_splits_pnl_into_stock_and_fx() -> None:
+    data = sample()
+    data["headline"].update(day_stock=-470000, day_fx=19434, unreal_stock=-100000, unreal_fx=-65287)
+    data["accounts"][0].update(
+        day_stock=38125, day_fx=19434, unreal_stock=-100000, unreal_fx=-65287
+    )
+    data["positions"][0].update(day_stock=12000, day_fx=3506, unreal_stock=700000, unreal_fx=-51442)
+    html = dashboard.render(data, ":root{--ink:#000}")
+    for value in (
+        "株 −470,000",
+        "FX +19,434",
+        "株 −100,000",
+        "FX −65,287",
+        "株 +38,125",
+        "株 +12,000",
+        "FX +3,506",
+        "株 +700,000",
+        "FX −51,442",
+    ):
+        assert value in html, value
+
+
+def test_render_dashboard_carries_the_after_tax_estimate() -> None:
+    data = sample()
+    data["headline"].update(nav_after_tax=45000000, day_after_tax=-380000, unreal_after_tax=-131708)
+    data["accounts"][0].update(day_after_tax=45866, unreal_after_tax=-131708, tax_rate=0.20315)
+    data["positions"][0].update(day_after_tax=12356, unreal_after_tax=516803, tax_rate=0.20315)
+    html = dashboard.render(data, ":root{--ink:#000}")
+    for value in (
+        "税引後 45,000,000",
+        "税引後 −380,000",
+        "税引後 −131,708",
+        "税後 +45,866",
+        "税後 +12,356",
+        "税後 +516,803",
+    ):
+        assert value in html, value
+
+
 def test_page_exposes_the_chart_box_for_the_screenshot() -> None:
     html = dashboard.render(sample(), ":root{--ink:#000}")
     assert 'id="charts-top"' in html and 'id="charts-end"' in html

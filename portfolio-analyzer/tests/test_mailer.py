@@ -16,11 +16,18 @@ def payload() -> dict:
         "window": {"start": "2025-09-11", "end": "2026-09-11", "days": 365},
         "headline": {
             "nav_total": 46257970.0,
+            "nav_after_tax": 45000000.0,
+            "day_after_tax": -380000.0,
+            "unreal_after_tax": -131708.0,
             "quoted_value": 29170055.0,
             "quoted_share": 0.63,
             "day_pnl": -450566.0,
             "day_pnl_pct": -1.52,
+            "day_stock": -470000.0,
+            "day_fx": 19434.0,
             "unrealized_known": -165287.0,
+            "unreal_stock": -100000.0,
+            "unreal_fx": -65287.0,
             "pnl_window": 919773.0,
             "pnl_incept": 405823.0,
             "realized_cum": -580654.0,
@@ -29,13 +36,29 @@ def payload() -> dict:
             "max_dd_window": -0.104,
         },
         "accounts": [
-            {"id": "dc", "name": "DC口座", "total": 7637840.0, "day_pnl": None, "unrealized": None},
+            {
+                "id": "dc",
+                "name": "DC口座",
+                "total": 7637840.0,
+                "day_pnl": None,
+                "unrealized": None,
+                "total_after_tax": 7637840.0,
+                "tax_rate": 0.0,
+            },
             {
                 "id": "gb",
                 "name": "海外証券口座",
                 "total": 25427872.0,
                 "day_pnl": 57559.0,
+                "day_stock": 38125.0,
+                "day_fx": 19434.0,
                 "unrealized": -165287.0,
+                "unreal_stock": -100000.0,
+                "unreal_fx": -65287.0,
+                "total_after_tax": 25461450.0,
+                "day_after_tax": 45866.0,
+                "unreal_after_tax": -131708.0,
+                "tax_rate": 0.20315,
             },
         ],
         "positions": [
@@ -55,8 +78,15 @@ def payload() -> dict:
                 "value": 5001254.0,
                 "weight": 10.8,
                 "day_pnl": 15506.0,
+                "day_stock": 12000.0,
+                "day_fx": 3506.0,
                 "avg_cost": 53.865,
                 "unreal": 648558.0,
+                "unreal_stock": 700000.0,
+                "unreal_fx": -51442.0,
+                "day_after_tax": 12356.0,
+                "unreal_after_tax": 516803.0,
+                "tax_rate": 0.20315,
                 "unreal_pct": 14.9,
                 "spark": [60.0, 62.0, 65.14],
             },
@@ -76,12 +106,20 @@ def payload() -> dict:
                 "value": 2968500.0,
                 "weight": 6.4,
                 "day_pnl": -16500.0,
+                "day_stock": -16500.0,
+                "day_fx": 0.0,
                 "avg_cost": 1991.65,
                 "unreal": -18979.0,
+                "unreal_stock": -18979.0,
+                "unreal_fx": 0.0,
+                "day_after_tax": -13148.0,
+                "unreal_after_tax": -15123.0,
+                "tax_rate": 0.20315,
                 "unreal_pct": -0.6,
                 "spark": [2100.0, 2000.0, 1979.0],
             },
         ],
+        "tax_note": "税引後は口座ごとの税率で見込んだ値（テスト）",
         "series": {
             "dates": ["2025-09-11", "2026-03-11", "2026-09-11"],
             "nav": [24000000.0, 25000000.0, 25427872.0],
@@ -100,6 +138,65 @@ def test_text_body_lists_headline_and_positions() -> None:
     text = mailer.text_body(payload())
     assert "46,257,970" in text and "−450,566" in text and "XLE" in text and "海外証券口座" in text
     assert "+648,558" in text
+
+
+def test_text_body_splits_pnl_into_stock_and_fx() -> None:
+    text = mailer.text_body(payload())
+    assert "株 −470,000" in text and "FX +19,434" in text  # day, total
+    assert "株 −100,000" in text and "FX −65,287" in text  # unrealised, total
+    assert "株 +12,000" in text and "FX +3,506" in text  # day, XLE
+    assert "株 +700,000" in text and "FX −51,442" in text  # unrealised, XLE
+
+
+def test_html_body_splits_pnl_into_stock_and_fx_for_totals_accounts_and_positions() -> None:
+    body = mailer.html_body(payload(), image_cid="charts")
+    for value in (
+        "株 −470,000",  # headline day
+        "FX +19,434",
+        "株 −100,000",  # headline unrealised, and the account row
+        "FX −65,287",
+        "株 +38,125",  # account day
+        "株 +12,000",  # XLE day
+        "FX +3,506",
+        "株 +700,000",  # XLE unrealised
+        "FX −51,442",
+        "株 −16,500",  # yen holding: all stock
+        "FX ±0",
+    ):
+        assert value in body, value
+
+
+def test_text_body_carries_the_after_tax_estimate() -> None:
+    text = mailer.text_body(payload())
+    assert "税引後 45,000,000" in text
+    assert "税引後 −380,000" in text and "税引後 −131,708" in text
+    assert "税後 +12,356" in text and "税後 +516,803" in text  # XLE
+    assert "税引後は口座ごとの税率で見込んだ値（テスト）" in text
+
+
+def test_html_body_carries_the_after_tax_estimate_for_totals_accounts_and_positions() -> None:
+    body = mailer.html_body(payload(), image_cid="charts")
+    for value in (
+        "税引後 45,000,000",  # headline total
+        "税引後 −380,000",  # headline day
+        "税引後 −131,708",  # headline unrealised
+        "税後 +45,866",  # account day
+        "税後 −131,708",  # account unrealised
+        "税後 +12,356",  # XLE day
+        "税後 +516,803",  # XLE unrealised
+        "税後 −13,148",  # 2561 day
+        "税引後は口座ごとの税率で見込んだ値（テスト）",
+    ):
+        assert value in body, value
+
+
+def test_html_body_leaves_the_split_out_when_the_payload_has_none() -> None:
+    data = payload()
+    for p in data["positions"]:
+        for k in ("day_stock", "day_fx", "unreal_stock", "unreal_fx"):
+            del p[k]
+    body = mailer.html_body(data)
+    assert "株 +12,000" not in body and "+15,506" in body
 
 
 def test_html_body_draws_the_charts_in_the_body_without_an_image() -> None:

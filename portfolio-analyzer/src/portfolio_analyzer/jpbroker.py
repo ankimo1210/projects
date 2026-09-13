@@ -116,6 +116,8 @@ def _replay(rows: list[Txn]) -> dict[str, dict[str, Any]]:
                 "first_trade": "",
                 "last_trade": "",
                 "trades": 0,
+                "tax_categories": set(),
+                "sales": [],
             },
         )
         if txn.name:
@@ -136,6 +138,7 @@ def _replay(rows: list[Txn]) -> dict[str, dict[str, Any]]:
             book["quantity"] += txn.quantity
             book["cost_basis_jpy"] += -txn.amount
             book["cost_native_jpy"] += native
+            book["tax_categories"].add("nisa" if "NISA" in txn.note else "taxable")
         elif txn.action == SELL:
             held = book["quantity"]
             if held <= ZERO:
@@ -143,9 +146,12 @@ def _replay(rows: list[Txn]) -> dict[str, dict[str, Any]]:
             share = min(txn.quantity / held, ONE)
             removed = book["cost_basis_jpy"] * share
             book["realized_pnl_jpy"] += txn.amount - removed
+            book["sales"].append((txn.trade_date, txn.amount - removed, txn.note))
             book["cost_basis_jpy"] -= removed
             book["cost_native_jpy"] -= book["cost_native_jpy"] * share
             book["quantity"] -= txn.quantity
+            if book["quantity"] <= ZERO:
+                book["tax_categories"] = set()  # a later rebuy starts a new holding
     return state
 
 
@@ -172,8 +178,27 @@ def derive_holdings(rows: list[Txn]) -> dict[str, dict[str, Any]]:
             "first_trade": book["first_trade"],
             "last_trade": book["last_trade"],
             "trades": book["trades"],
+            # "nisa" / "taxable", or "mixed" when the lots still held came through both
+            "tax_category": (
+                "mixed"
+                if len(book["tax_categories"]) > 1
+                else next(iter(book["tax_categories"]), "taxable")
+            ),
         }
     return out
+
+
+def taxable_realized_since(rows: list[Txn], since: str) -> Decimal:
+    """Realised P&L of sales outside NISA on or after ``since`` (ISO date) — what tax nets."""
+    return sum(
+        (
+            realized
+            for book in _replay(rows).values()
+            for date, realized, note in book["sales"]
+            if date >= since and "NISA" not in note
+        ),
+        ZERO,
+    )
 
 
 def closed_positions(rows: list[Txn]) -> dict[str, dict[str, Any]]:

@@ -12,6 +12,9 @@ day goes to ``data/mtm-history.private.jsonl``.
     uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py \
         --copy-to /mnt/c/Users/<you>/Documents/pl-daily
 
+The DC plan's fund is priced from its fund company's daily CSV instead of
+yfinance (``dcplan``), with the units and contributions read off the plan's site.
+
 Nothing here edits the snapshot, the ledger or the transaction history. This is
 the third script that touches the network (``reprice_snapshot.py`` and
 ``estimate_factors.py`` are the others).
@@ -24,6 +27,7 @@ import json
 import os
 import shutil
 import sys
+import urllib.request
 import warnings
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -33,7 +37,15 @@ from zoneinfo import ZoneInfo
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from portfolio_analyzer import chartshot, dashboard, ibkr, jpbroker, mailer, mtm  # noqa: E402
+from portfolio_analyzer import (  # noqa: E402
+    chartshot,
+    dashboard,
+    dcplan,
+    ibkr,
+    jpbroker,
+    mailer,
+    mtm,
+)
 from portfolio_analyzer import timeseries as ts  # noqa: E402
 
 TOKENS_CSS = PROJECT_ROOT.parent / "docs" / "templates" / "claude-report" / "tokens.css"
@@ -82,6 +94,23 @@ def download_closes(tickers: list[str], start: str, end: str):
     return closes.sort_index()
 
 
+def add_series(closes, ticker: str, points: list[tuple[str, Decimal]]):
+    """Join a daily series that yfinance does not carry (a fund's price) onto the closes by date."""
+    import pandas as pd
+
+    series = pd.Series(
+        [float(v) for _, v in points], index=pd.to_datetime([d for d, _ in points]), name=ticker
+    )
+    series = series[series.index >= closes.index.min()]
+    return closes.join(series, how="outer").sort_index()
+
+
+def fetch_nav(url: str, timeout: int = 30) -> list[tuple[str, Decimal]]:
+    request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        return dcplan.parse_nav(dcplan.decode(response.read()))
+
+
 def report_as_of(quotes: dict[str, mtm.Quote]) -> str:
     return max(q.date for q in quotes.values())
 
@@ -124,6 +153,16 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--jp-account", default="securities", help="account id the domestic history belongs to"
+    )
+    parser.add_argument(
+        "--dc-holding",
+        default=str(PROJECT_ROOT / "data" / "dc-holding.private.json"),
+        help="the DC plan's anchor (units and contributions on a day) and its fund's price CSV",
+    )
+    parser.add_argument(
+        "--dc-transactions",
+        default=str(PROJECT_ROOT / "data" / "dc-transactions.private.tsv"),
+        help="the DC plan's trade history as pasted from its site",
     )
     parser.add_argument(
         "--history", default=str(PROJECT_ROOT / "data" / "mtm-history.private.jsonl")
@@ -169,32 +208,54 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     )
     ledger_account = str((ledger or {}).get("account_id", "global_broker"))
     jp_path = Path(args.jp_transactions)
-    jp_ledger = (
-        jpbroker.ledger(
-            jpbroker.parse_transactions(jpbroker.decode(jp_path.read_bytes())),
-            account_id=args.jp_account,
-        )
+    jp_rows = (
+        jpbroker.parse_transactions(jpbroker.decode(jp_path.read_bytes()))
         if jp_path.exists()
-        else None
+        else []
     )
+    jp_ledger = jpbroker.ledger(jp_rows, account_id=args.jp_account) if jp_path.exists() else None
+    dc_path = Path(args.dc_holding)
+    dc_holding = json.loads(dc_path.read_text(encoding="utf-8")) if dc_path.exists() else None
+    dc_tx_path = Path(args.dc_transactions)
+    dc_trades = (
+        dcplan.parse_trades(dcplan.decode(dc_tx_path.read_bytes()))
+        if dc_holding and dc_tx_path.exists()
+        else []
+    )
+    dc_nav: list[tuple[str, Decimal]] = []
+    if dc_holding:
+        try:
+            dc_nav = fetch_nav(dc_holding["nav_csv_url"])
+        except Exception as exc:  # the rest of the book still gets marked
+            print(f"DC fund price unavailable ({exc}); carrying the snapshot balance")
+    dc_ledger = dcplan.ledger(dc_holding, dc_trades) if dc_holding and dc_nav else None
+    if dc_ledger:
+        snapshot = dcplan.apply_to_snapshot(snapshot, dc_holding, dc_ledger)
     account_names = {str(a["id"]): str(a.get("name", a["id"])) for a in snapshot["accounts"]}
 
     open_tickers = {
         ticker: (str(row["symbol"]), str(row["account_id"]))
         for row in snapshot["positions"]
         if row.get("quantity") is not None
-        and (ticker := mtm.market_symbol(str(row["symbol"]), str(row["currency"]))) is not None
+        and (
+            ticker := row.get("ticker")
+            or mtm.market_symbol(str(row["symbol"]), str(row["currency"]))
+        )
+        is not None
     }
     ledger_symbols = sorted(
         {r.symbol for r in transactions if r.transaction_type in ibkr.TRADE_TYPES and r.symbol}
     )
-    tickers = sorted(set(open_tickers) | set(ledger_symbols))
+    dc_ticker = dc_holding["ticker"] if dc_ledger else None
+    tickers = sorted((set(open_tickers) | set(ledger_symbols)) - {dc_ticker})
 
     today = datetime.now(TZ).date()
     start = (today - timedelta(days=args.history_days)).isoformat()
     end = (today + timedelta(days=1)).isoformat()  # yfinance end is exclusive
     print(f"downloading {len(tickers) + 1} series from yfinance ({start} .. {today}) ...")
     closes = download_closes([*tickers, mtm.FX_SYMBOL], start, end)
+    if dc_ticker:
+        closes = add_series(closes, dc_ticker, dc_nav)
     quotes = quotes_from_closes(
         closes[[t for t in open_tickers if t in closes.columns] + [mtm.FX_SYMBOL]]
     )
@@ -206,7 +267,18 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     generated_at = datetime.now(TZ).replace(microsecond=0).isoformat()
 
     # ---- today's marks (all accounts) ----
-    rows = mtm.mark_positions(snapshot, quotes, fx_quote, [x for x in (ledger, jp_ledger) if x])
+    rows = mtm.mark_positions(
+        snapshot, quotes, fx_quote, [x for x in (ledger, jp_ledger, dc_ledger) if x]
+    )
+    year_start = f"{as_of[:4]}-01-01"
+    tax_pool = mtm.net_tax(
+        rows,
+        realized_ytd_jpy=ibkr.realized_since(transactions, year_start)
+        + jpbroker.taxable_realized_since(jp_rows, year_start),
+        carryforward_loss_jpy=Decimal(
+            str((snapshot.get("tax") or {}).get("carryforward_loss_jpy", 0))
+        ),
+    )
     summary = mtm.summarize(snapshot, rows)
     meta = {
         "as_of": as_of,
@@ -222,17 +294,20 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     # replay never multiplies by NaN (a NaN in the payload would break JSON.parse in the page).
     filled[mtm.FX_SYMBOL] = filled[mtm.FX_SYMBOL].bfill()
     dates = [d.date().isoformat() for d in filled.index]
-    jp_paths = (
-        jpbroker.replay(jpbroker.parse_transactions(jpbroker.decode(jp_path.read_bytes())), dates)
-        if jp_ledger
-        else {}
-    )
+    jp_paths = jpbroker.replay(jp_rows, dates) if jp_ledger else {}
+    # quantity and cost per day for the accounts replayed from their own history, by (account, symbol)
+    held_paths = {(args.jp_account, s): p for s, p in jp_paths.items()}
+    if dc_ledger:
+        held_paths |= {
+            (dc_holding["account_id"], s): p
+            for s, p in dcplan.replay(dc_holding, dc_trades, dates).items()
+        }
     fx_path = [Decimal(str(v)) for v in filled[mtm.FX_SYMBOL].tolist()]
     price_path = {
         t: [
             None if v != v else Decimal(str(v)) for v in filled[t].tolist()
         ]  # NaN before listing/first bar
-        for t in tickers
+        for t in [*tickers, *([dc_ticker] if dc_ticker else [])]
         if t in filled.columns
     }
     paths = ts.replay(transactions, dates)
@@ -267,13 +342,20 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     day_base = summary.quoted_value_jpy - (day_pnl or ZERO)
     headline = {
         "nav_total": _f(summary.total_jpy),
+        "nav_after_tax": _f(summary.total_after_tax_jpy),
+        "day_after_tax": _f(summary.day_pnl_after_tax_jpy),
+        "unreal_after_tax": _f(summary.unrealized_after_tax_jpy),
         "quoted_value": _f(summary.quoted_value_jpy),
         "quoted_share": _f(summary.quoted_value_jpy / summary.total_jpy)
         if summary.total_jpy
         else 0.0,
         "day_pnl": _f(day_pnl),
         "day_pnl_pct": _pct(day_pnl / day_base) if day_pnl is not None and day_base else None,
+        "day_stock": _f(summary.day_stock_pnl_jpy),
+        "day_fx": _f(summary.day_fx_pnl_jpy),
         "unrealized_known": _f(summary.unrealized_known_jpy),
+        "unreal_stock": _f(summary.unrealized_stock_jpy),
+        "unreal_fx": _f(summary.unrealized_fx_jpy),
         "pnl_window": _f(pnl_window),
         "pnl_incept": _f(values.pnl_total[-1]),
         "realized_cum": _f(paths.realized_cum[-1]),
@@ -290,7 +372,14 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
             "name": a.name,
             "total": _f(a.total_jpy),
             "day_pnl": _f(a.day_pnl_jpy),
+            "day_stock": _f(a.day_stock_pnl_jpy),
+            "day_fx": _f(a.day_fx_pnl_jpy),
             "unrealized": _f(a.unrealized_known_jpy),
+            "unreal_stock": _f(a.unrealized_stock_jpy),
+            "unreal_fx": _f(a.unrealized_fx_jpy),
+            "total_after_tax": _f(a.total_after_tax_jpy),
+            "day_after_tax": _f(a.day_pnl_after_tax_jpy),
+            "unreal_after_tax": _f(a.unrealized_after_tax_jpy),
         }
         for a in summary.accounts.values()
     ]
@@ -325,13 +414,20 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
                 "value": _f(r.market_value_jpy),
                 "weight": _pct(r.market_value_jpy / total),
                 "day_pnl": _f(r.day_pnl_jpy),
+                "day_stock": _f(r.day_stock_pnl_jpy),
+                "day_fx": _f(r.day_fx_pnl_jpy),
                 "avg_cost": _f(r.average_cost),
                 "unreal": _f(r.unrealized_jpy),
+                "unreal_stock": _f(r.unrealized_stock_jpy),
+                "unreal_fx": _f(r.unrealized_fx_jpy),
+                "day_after_tax": _f(r.day_pnl_after_tax_jpy),
+                "unreal_after_tax": _f(r.unrealized_after_tax_jpy),
+                "tax_rate": _f(r.tax_rate),
                 "unreal_pct": _pct(r.unrealized_pct),
             }
         )
-        if r.account_id == args.jp_account and r.symbol in jp_paths:
-            path = jp_paths[r.symbol]
+        if (r.account_id, r.symbol) in held_paths:
+            path = held_paths[(r.account_id, r.symbol)]
             pnl_series = [
                 (path["quantity"][i] * v - path["cost_basis_jpy"][i])
                 if (v is not None and path["quantity"][i])
@@ -454,8 +550,12 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         f"取引履歴は {paths.dates[0] if transactions else '—'} 以降、履歴 CSV の最終日以降の取引は反映されない"
     )
     notes.append(
-        "株価と為替は yfinance の終値。休場日は直前の終値で埋める。DC 残高・現金・調整額はスナップショットの値"
+        "株価と為替は yfinance の終値、DC のファンドは運用会社の基準価額。休場日は直前の終値で埋める。"
+        "現金・調整額はスナップショットの値"
     )
+    tax_text = mtm.tax_note(snapshot, rows, tax_pool)
+    if tax_text:
+        notes.append(tax_text)
 
     payload = {
         "as_of": as_of,
@@ -484,6 +584,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         "attribution": attribution,
         "closed": closed,
         "notes": notes,
+        "tax_note": tax_text,
     }
     return payload, record, as_of
 
