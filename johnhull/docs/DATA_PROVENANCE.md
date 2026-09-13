@@ -62,5 +62,28 @@ reference の VaR/ES・被覆率・尾部指標は教育と integration 検証�
 利用者は、リターン系列の分布、規制上の liquidity horizon、Basel の 250 日
 multiplier schedule、限度枠設定を別途検証する必要がある。FRTB IMA（liquidity-horizon
 ES 集約、stressed ES、NMRF、P&L attribution eligibility test、IMA/SA 比較）は
-vol 28 候補として scope 外。vol 27 notebook は committed JSON/NPZ だけを読み、
+vol 29 候補として scope 外。vol 27 notebook は committed JSON/NPZ だけを読み、
+network access、download、training、GPU 検出を行わない。
+
+## Volume 28 credit-desk reference
+
+vol 28 の `metrics.json` と `credit_scenarios.npz` も同じ `synthetic-offline` 方針に
+従う。ハザード曲線、CDS レッグ、固定クーポン価格、CDS オプション、Gauss–Hermite
+求積による CDO トランシェ、k-th-to-default、コンパウンド/ベース相関、double-t
+コピュラ、CreditMetrics の格付推移 MC（100 社 × 5000 path）、ネッティング・担保・
+CVA の各ブロックはすべて公開 `hullkit` API（`credit_curve`・`cds`・`credit_portfolio`・
+`credit_metrics`・`xva`）と固定 seed `20260746` から生成し、実際の市場気配、
+取引所データ、顧客 portfolio、broker quote を含めない。乱数を使うのは
+CreditMetrics ブロックだけで、それ以外は決定的である。
+
+Hull 11e Table 24.4（S&P 1981–2019 の 1 年格付推移行列）と Table 25.6（Creditex
+の iTraxx Europe 5 年トランシェ mid 気配、2007-01-31）は教科書に印刷された
+定数を転記した fixture であり、ダウンロードや再配布したベンダーデータではない。
+これらは Hull の印刷値（閾値 1.2719/2.4089/2.8070、Table 25.8 の相関）を
+再現するためのピンとしてだけ使う。
+
+reference のスプレッド・相関・信用 VaR は教育と integration 検証のための値であり、
+市場較正・model performance・production valuation の承認ではない。§25.11 の
+double-t コピュラと不均質再帰は極限（ν→∞、均質）でのみ検証し、Hull に数値例が
+ないため印刷値ピンを持たない。vol 28 notebook は committed JSON/NPZ だけを読み、
 network access、download、training、GPU 検出を行わない。
