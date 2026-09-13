@@ -106,13 +106,13 @@ def test_html_body_draws_the_charts_in_the_body_without_an_image() -> None:
     body = mailer.html_body(payload())
     assert "cid:" not in body and "<img" not in body
     assert "<script" not in body and "<svg" not in body
-    assert "累計損益" in body and "日次損益" in body and "騰落率" in body
+    assert "累計損益" in body and "日次損益" in body
     # the columns are table cells, so they survive a client that strips everything else
     assert body.count("<td") > 20
 
 
 def test_html_body_paints_every_fill_with_an_attribute() -> None:
-    # Gmail's send path strips CSS backgrounds, which would leave the charts colourless.
+    # Gmail's send path strips the CSS background shorthand, which would leave the charts colourless.
     assert "background:" not in mailer.html_body(payload())
 
 
@@ -127,8 +127,37 @@ def test_html_body_shows_the_rendered_chart_instead_of_the_drawn_one() -> None:
     # A real rendered chart beats the table-cell fallback, so it replaces it.
     withimg = mailer.html_body(payload(), image_cid="charts")
     assert "cid:charts" in withimg
-    assert "銘柄別 1 年騰落率" not in withimg  # the fallback figures stand down
+    assert "上げた日" not in withimg  # the drawn figures stand down
     assert "cid:" not in mailer.html_body(payload())
+
+
+def test_html_body_draws_a_sparkline_beside_every_position() -> None:
+    data = payload()
+    with_spark = mailer.html_body(data)
+    for p in data["positions"]:
+        p["spark"] = []
+    without = mailer.html_body(data)
+    # one stroke per point of every sparkline
+    assert with_spark.count("solid #C05C33") >= without.count("solid #C05C33") + 6
+
+
+def test_html_body_stays_under_gmails_clip_limit_with_a_full_book() -> None:
+    # Gmail clips a message past ~102 KB, and the charts are made of table cells
+    data = payload()
+    base = data["positions"][0]
+    data["positions"] = [
+        {**base, "sym": f"S{i:02d}", "spark": [float(v % 17) for v in range(i, i + 80)]}
+        for i in range(12)
+    ]
+    n = 261
+    data["series"] = {
+        "dates": [f"2026-{1 + i // 22:02d}-{1 + i % 22:02d}" for i in range(n)],
+        "nav": [1e7 + i * 1e4 for i in range(n)],
+        "pnl": [(i % 40 - 20) * 1e4 for i in range(n)],
+        "deposits": [1e7] * n,
+        "daily_pnl": [(i % 7 - 3) * 1e4 for i in range(n)],
+    }
+    assert len(mailer.html_body(data).encode("utf-8")) < 95_000
 
 
 def test_build_message_is_multipart_related_with_inline_png() -> None:
