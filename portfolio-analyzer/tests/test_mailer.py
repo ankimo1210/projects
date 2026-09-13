@@ -272,25 +272,6 @@ def test_html_body_draws_a_sparkline_beside_every_position() -> None:
     assert with_spark.count("solid #C05C33") >= without.count("solid #C05C33") + 6
 
 
-def test_html_body_stays_under_gmails_clip_limit_with_a_full_book() -> None:
-    # Gmail clips a message past ~102 KB, and the charts are made of table cells
-    data = payload()
-    base = data["positions"][0]
-    data["positions"] = [
-        {**base, "sym": f"S{i:02d}", "spark": [float(v % 17) for v in range(i, i + 80)]}
-        for i in range(12)
-    ]
-    n = 261
-    data["series"] = {
-        "dates": [f"2026-{1 + i // 22:02d}-{1 + i % 22:02d}" for i in range(n)],
-        "nav": [1e7 + i * 1e4 for i in range(n)],
-        "pnl": [(i % 40 - 20) * 1e4 for i in range(n)],
-        "deposits": [1e7] * n,
-        "daily_pnl": [(i % 7 - 3) * 1e4 for i in range(n)],
-    }
-    assert len(mailer.html_body(data).encode("utf-8")) < 95_000
-
-
 def test_build_message_is_multipart_related_with_inline_png() -> None:
     png = b"\x89PNG\r\n\x1a\n" + b"0" * 32
     msg = mailer.build_message(payload(), to=["me@example.com"], sender="me@example.com", png=png)

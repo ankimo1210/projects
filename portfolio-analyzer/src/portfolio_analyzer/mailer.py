@@ -87,9 +87,9 @@ def _under(text: str) -> str:
     """Small muted lines under a table cell's value."""
     if not text:
         return ""
-    # nowrap comes from the table (it inherits), which keeps these repeated divs short enough
-    # for Gmail's clip limit
-    return f'<div style="font-size:10px;color:{MUTED}">{text}</div>'
+    return (
+        f'<div style="font-size:10px;line-height:1.4;color:{MUTED};white-space:nowrap">{text}</div>'
+    )
 
 
 def _split_cell(row: dict[str, Any], stock: str, fx: str, taxed: str, dollars: str = "") -> str:
@@ -425,7 +425,7 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
         )
     table_style = (
         f'bgcolor="{CARD}" style="border-collapse:collapse;width:100%;color:{INK};'
-        f'font:400 12px {MONO};border:1px solid {RULE};border-radius:8px;white-space:nowrap"'
+        f'font:400 12px {MONO};border:1px solid {RULE};border-radius:8px"'
     )
     # The dashboard's own figures, rendered to an image, are the real thing; the
     # table-cell charts stand in only when no browser was available to draw them.

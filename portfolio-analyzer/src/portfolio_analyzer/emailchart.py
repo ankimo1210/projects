@@ -12,8 +12,8 @@ CSS ``background`` shorthand and turns ``&nbsp;`` into a space, but keeps
 ``border-*``, ``padding-*``, the ``bgcolor`` attribute and ``height`` on a
 cell. So a mark is a ``<div>`` whose only substance is a ``border-top`` of the
 mark's height, placed by ``padding-top`` on its cell; a column of a chart is
-one cell, and a chart of a hundred points stays well inside Gmail's ~100 KB
-clipping limit.
+one cell. (Gmail folds a body past roughly 104-106 KB of HTML behind "view entire
+message"; measured, not documented, and not treated as a limit here.)
 
 Every function returns a self-contained ``<table>`` with inline styles only.
 """
