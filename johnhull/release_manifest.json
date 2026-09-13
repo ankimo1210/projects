@@ -121,11 +121,23 @@
       "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_var_backtest.py", "johnhull/hullkit/tests/test_tail_risk.py", "johnhull/hullkit/tests/test_risk_allocation.py", "johnhull/hullkit/tests/test_pnl_explain.py"],
       "references": ["reference/metrics.json", "reference/risk_desk_scenarios.npz"],
       "validation": "VALIDATION.md"
+    },
+    {
+      "number": 28,
+      "slug": "28_credit_desk",
+      "notebook": "credit_desk.ipynb",
+      "book_name": "28_credit_desk",
+      "portal_page": "risk_credit",
+      "portal_figures": ["cds_leg_pv_by_year", "tranche_spread_vs_correlation", "base_correlation_skew", "creditmetrics_loss_distribution"],
+      "semantic_sources": ["johnhull/hullkit/src/hullkit/frontier_reference.py", "johnhull/hullkit/src/hullkit/credit_curve.py", "johnhull/hullkit/src/hullkit/cds.py", "johnhull/hullkit/src/hullkit/credit_portfolio.py", "johnhull/hullkit/src/hullkit/credit_metrics.py", "johnhull/hullkit/src/hullkit/xva.py"],
+      "semantic_tests": ["johnhull/hullkit/tests/test_frontier_reference.py", "johnhull/hullkit/tests/test_credit_curve.py", "johnhull/hullkit/tests/test_cds.py", "johnhull/hullkit/tests/test_credit_portfolio.py", "johnhull/hullkit/tests/test_credit_metrics.py", "johnhull/hullkit/tests/test_xva.py"],
+      "references": ["reference/metrics.json", "reference/credit_scenarios.npz"],
+      "validation": "VALIDATION.md"
     }
   ],
   "portal": {
     "themes": 12,
-    "figures": 78
+    "figures": 82
   },
   "allowed_book_remote_dependencies": [],
   "allowed_legacy_book_runtime_dependencies": [

@@ -1,4 +1,4 @@
-"""Canonical integration-gate checks for johnhull volumes 18--27."""
+"""Canonical integration-gate checks for johnhull volumes 18--28."""
 
 from __future__ import annotations
 
@@ -1487,6 +1487,445 @@ def _volume27(
     ]
 
 
+# --- vol 28 helpers: numpy-only normal CDF/quantile and the standard market model ---
+
+
+def _norm_cdf_np(x: np.ndarray) -> np.ndarray:
+    return 0.5 * np.vectorize(math.erfc)(-np.asarray(x, dtype=float) / math.sqrt(2.0))
+
+
+def _norm_ppf_np(p: float) -> float:
+    lo, hi = -40.0, 40.0
+    for _ in range(200):
+        mid = 0.5 * (lo + hi)
+        if float(_norm_cdf_np(np.array(mid))) < p:
+            lo = mid
+        else:
+            hi = mid
+    return 0.5 * (lo + hi)
+
+
+def _binomial_pmf_np(n: int, p: np.ndarray) -> np.ndarray:
+    p = np.clip(np.asarray(p, dtype=float), 1e-300, 1.0 - 1e-16)[..., None]
+    k = np.arange(n + 1, dtype=float)
+    log_choose = np.array(
+        [math.lgamma(n + 1.0) - math.lgamma(i + 1.0) - math.lgamma(n - i + 1.0) for i in k]
+    )
+    return np.exp(log_choose + k * np.log(p) + (n - k) * np.log1p(-p))
+
+
+def _tranche_legs_np(
+    hazard: float,
+    recovery: float,
+    r: float,
+    maturity: float,
+    attach: float,
+    detach: float,
+    n: int,
+    rho: float,
+    freq: int = 4,
+    m: int = 60,
+) -> tuple[float, float, float]:
+    """Hull eqs. 25.5–25.12 without hullkit: returns (A, B, C)."""
+    x, w = np.polynomial.hermite.hermgauss(m)
+    nodes, weights = math.sqrt(2.0) * x, w / math.sqrt(math.pi)
+    times = np.arange(1, round(maturity * freq) + 1) / freq
+    previous = times - 1.0 / freq
+    n_low, n_high = attach * n / (1.0 - recovery), detach * n / (1.0 - recovery)
+    m_low, m_high = math.floor(n_low) + 1, math.floor(n_high) + 1
+    k = np.arange(n + 1)
+    principal = np.where(
+        k < m_low,
+        1.0,
+        np.where(k >= m_high, 0.0, (detach - k * (1.0 - recovery) / n) / (detach - attach)),
+    )
+    expected = np.ones((m, times.size + 1))
+    for j, t in enumerate(times, start=1):
+        q = 1.0 - math.exp(-hazard * t)
+        conditional = _norm_cdf_np(
+            (_norm_ppf_np(q) - math.sqrt(rho) * nodes) / math.sqrt(1.0 - rho)
+        )
+        expected[:, j] = _binomial_pmf_np(n, conditional) @ principal
+    dt = times - previous
+    discount, discount_mid = np.exp(-r * times), np.exp(-r * 0.5 * (times + previous))
+    loss = expected[:, :-1] - expected[:, 1:]
+    annuity = weights @ (dt * expected[:, 1:] * discount).sum(axis=1)
+    accrual = weights @ (0.5 * dt * loss * discount_mid).sum(axis=1)
+    protection = weights @ (loss * discount_mid).sum(axis=1)
+    return float(annuity), float(accrual), float(protection)
+
+
+def _volume28(
+    metrics: dict[str, Any], arrays: dict[str, np.ndarray]
+) -> tuple[list[dict[str, Any]], list[str]]:
+    checks: list[dict[str, Any]] = []
+    recovery = float(metrics.get("recovery", 0.4))
+
+    # 1. CDS par spread re-summed from the Table 25.2–25.4 columns.
+    annuity = float(np.sum(arrays["cds_payment_pv"]))
+    accrual = float(np.sum(arrays["cds_accrual_pv"]))
+    payoff = float(np.sum(arrays["cds_payoff_pv"]))
+    spread_bp = payoff / (annuity + accrual) * 1e4
+    _add(
+        checks,
+        "cds_par_spread_hull_pin",
+        spread_bp,
+        "Σpayoff/(Σpayment+Σaccrual) within 0.5 bp of Hull's 123 bp and 1e-9 bp of the stored metric",
+        abs(spread_bp - 123.0) <= 0.5
+        and abs(spread_bp - float(metrics["cds_par_spread_bp"])) <= 1e-9,
+    )
+
+    # 2. Mark-to-market identity at 150 bp.
+    mtm = (annuity + accrual) * 0.015 - payoff
+    grid = np.asarray(arrays["cds_contract_spread_grid"], dtype=float)
+    at_150 = float(np.asarray(arrays["cds_mtm_seller"])[np.argmin(np.abs(grid - 0.015))])
+    _add(
+        checks,
+        "cds_mtm_identity",
+        mtm,
+        "D·0.015 − protection equals the stored metric and the grid value (1e-10) and Hull's 0.0111 (1e-4)",
+        abs(mtm - float(metrics["cds_mtm_seller_150bp"])) <= 1e-10
+        and abs(mtm - at_150) <= 1e-10
+        and abs(mtm - 0.0111) <= 1e-4,
+    )
+
+    # 3. CDS bootstrap reprices its quotes.
+    reprice_error = float(
+        np.max(
+            np.abs(
+                np.asarray(arrays["cds_bootstrap_repriced_spread"])
+                - np.asarray(arrays["cds_market_spread"])
+            )
+        )
+    )
+    _add(
+        checks,
+        "cds_bootstrap_round_trip",
+        reprice_error,
+        "max |repriced − market| <= 1e-10",
+        reprice_error <= 1e-10,
+    )
+
+    # 4. Bond bootstrap vs Hull Example 24.2.
+    hazard_error = float(
+        np.max(
+            np.abs(
+                np.asarray(arrays["bond_bootstrap_hazard"])
+                - np.asarray(arrays["hull_bond_bootstrap_hazard"])
+            )
+        )
+    )
+    loss_error = float(
+        np.max(np.abs(np.asarray(arrays["bond_expected_loss_pv"]) - np.array([1.50, 3.53, 5.61])))
+    )
+    _add(
+        checks,
+        "bond_bootstrap_hull_pin",
+        max(hazard_error, loss_error),
+        "hazards within 0.0002 of 2.46/3.48/3.74% and loss PVs within 0.01 of 1.50/3.53/5.61",
+        hazard_error <= 2e-4 and loss_error <= 0.01,
+    )
+
+    # 5. Fixed-coupon price identity (Example 25.1).
+    price = 100.0 - 100.0 * float(metrics["fixed_coupon_duration"]) * (
+        float(metrics["fixed_coupon_spread"]) - float(metrics["fixed_coupon_coupon"])
+    )
+    _add(
+        checks,
+        "fixed_coupon_price_identity",
+        price,
+        "100 − 100·D·(s−c) equals the stored price (1e-10) and Hull's 100.27 (0.01)",
+        abs(price - float(metrics["fixed_coupon_price"])) <= 1e-10 and abs(price - 100.27) <= 0.01,
+    )
+
+    # 6. Payer/receiver parity.
+    strikes = np.asarray(arrays["option_strike_grid"], dtype=float)
+    parity = float(
+        np.max(
+            np.abs(
+                np.asarray(arrays["payer_value"])
+                - np.asarray(arrays["receiver_value"])
+                - float(metrics["option_risky_annuity"])
+                * (float(metrics["option_forward_spread"]) - strikes)
+            )
+        )
+    )
+    _add(
+        checks,
+        "cds_option_parity",
+        parity,
+        "max |payer − receiver − A(F−K)| <= 1e-10",
+        parity <= 1e-10,
+    )
+
+    # 7. Mezzanine tranche: re-integrate A, B, C from the committed E_j(F_k) and reprice
+    #    independently with the numpy-only standard market model above.
+    times = np.asarray(arrays["tranche_payment_time"], dtype=float)
+    weights = np.asarray(arrays["factor_weight"], dtype=float)
+    expected = np.asarray(arrays["tranche_expected_principal"], dtype=float)
+    previous = np.concatenate([[0.0], times[:-1]])
+    r_cdo = float(metrics["cdo_rate"])
+    dt = times - previous
+    loss = expected[:, :-1] - expected[:, 1:]
+    a_val = float(weights @ (dt * expected[:, 1:] * np.exp(-r_cdo * times)).sum(axis=1))
+    b_val = float(
+        weights @ (0.5 * dt * loss * np.exp(-r_cdo * 0.5 * (times + previous))).sum(axis=1)
+    )
+    c_val = float(weights @ (loss * np.exp(-r_cdo * 0.5 * (times + previous))).sum(axis=1))
+    mezz_bp = c_val / (a_val + b_val) * 1e4
+    a_ind, b_ind, c_ind = _tranche_legs_np(
+        float(metrics["cdo_index_hazard"]),
+        recovery,
+        r_cdo,
+        5.0,
+        0.03,
+        0.06,
+        125,
+        float(metrics["cdo_rho"]),
+    )
+    independent_bp = c_ind / (a_ind + b_ind) * 1e4
+    _add(
+        checks,
+        "cdo_mezz_spread_hull_pin",
+        mezz_bp,
+        "re-integrated C/(A+B) within 1 bp of Hull's 348 bp, 1e-9 bp of the stored metric, and "
+        "1e-6 bp of an independent numpy repricing; A/B/C within 0.002 of 4.2846/0.0187/0.1496",
+        abs(mezz_bp - 348.0) <= 1.0
+        and abs(mezz_bp - float(metrics["cdo_mezz_spread_bp"])) <= 1e-9
+        and abs(mezz_bp - independent_bp) <= 1e-6
+        and abs(a_val - 4.2846) <= 2e-3
+        and abs(b_val - 0.0187) <= 2e-3
+        and abs(c_val - 0.1496) <= 2e-3,
+    )
+
+    # 8. Expected principal is monotone in time and in the factor.
+    nodes = np.asarray(arrays["factor_node"], dtype=float)
+    order = np.argsort(nodes)
+    time_monotone = float(np.max(np.diff(expected, axis=1)))
+    factor_monotone = float(np.min(np.diff(expected[order, -1])))
+    _add(
+        checks,
+        "expected_principal_monotone",
+        max(time_monotone, -factor_monotone),
+        "E_j(F) non-increasing in j and non-decreasing in F (1e-12)",
+        time_monotone <= 1e-12 and factor_monotone >= -1e-12,
+    )
+
+    # 9. Loss conservation across the capital structure.
+    widths = np.asarray(arrays["capital_structure_detach"], dtype=float) - np.asarray(
+        arrays["capital_structure_attach"], dtype=float
+    )
+    conservation = float(
+        abs(
+            widths @ np.asarray(arrays["capital_structure_expected_loss"], dtype=float)
+            - float(metrics["portfolio_expected_loss"])
+        )
+    )
+    _add(
+        checks,
+        "capital_structure_loss_conservation",
+        conservation,
+        "Σ width·C_tranche equals the 0–100% expected loss (1e-8)",
+        conservation <= 1e-8,
+    )
+
+    # 10. Third-to-default re-summed from the conditional cumulative probabilities;
+    #     spreads fall with k.
+    kth_weights = np.asarray(arrays["kth_factor_weight"], dtype=float)
+    cumulative = np.asarray(arrays["kth_conditional_cumulative_prob"], dtype=float)
+    kth_times = np.arange(1.0, cumulative.shape[1])
+    r_kth = float(metrics["kth_rate"])
+    trigger = cumulative[:, 1:] - cumulative[:, :-1]
+    disc_mid = np.exp(-r_kth * (kth_times - 0.5))
+    kth_payoff = float(kth_weights @ ((1.0 - recovery) * trigger * disc_mid).sum(axis=1))
+    kth_annuity = float(
+        kth_weights @ ((1.0 - cumulative[:, 1:]) * np.exp(-r_kth * kth_times)).sum(axis=1)
+    )
+    kth_accrual = float(kth_weights @ (0.5 * trigger * disc_mid).sum(axis=1))
+    kth_bp = kth_payoff / (kth_annuity + kth_accrual) * 1e4
+    kth_spreads = np.asarray(arrays["kth_spread"], dtype=float)
+    _add(
+        checks,
+        "kth_to_default_hull_pin_and_ordering",
+        kth_bp,
+        "re-summed 3rd-to-default spread within 1 bp of Hull's 153 bp and 1e-9 bp of the metric; "
+        "spreads strictly decrease in k",
+        abs(kth_bp - 153.0) <= 1.0
+        and abs(kth_bp - float(metrics["kth3_spread_bp"])) <= 1e-9
+        and bool(np.all(np.diff(kth_spreads) < 0.0)),
+    )
+
+    # 11. Compound correlations reprice Table 25.6 (independent numpy pricer).
+    attach = np.asarray(arrays["market_tranche_attach"], dtype=float)
+    detach = np.asarray(arrays["market_tranche_detach"], dtype=float)
+    quotes = np.asarray(arrays["market_tranche_quote"], dtype=float)
+    compound = np.asarray(arrays["compound_correlation"], dtype=float)
+    hazard_itx, r_itx = float(metrics["itraxx_hazard"]), float(metrics["itraxx_rate"])
+    reprice = np.empty(quotes.size)
+    for i in range(quotes.size):
+        a_i, b_i, c_i = _tranche_legs_np(
+            hazard_itx,
+            recovery,
+            r_itx,
+            5.0,
+            float(attach[i]),
+            float(detach[i]),
+            125,
+            float(compound[i]),
+        )
+        reprice[i] = c_i - 0.05 * (a_i + b_i) if i == 0 else c_i / (a_i + b_i)
+    reprice_gap = float(np.max(np.abs(reprice - quotes)))
+    _add(
+        checks,
+        "implied_correlation_reprices_quotes",
+        reprice_gap,
+        "independent repricing at the committed compound correlations within 1e-6 of the quotes "
+        "(0.01 bp / 1e-4 upfront points)",
+        reprice_gap <= 1e-6,
+    )
+
+    # 12. Table 25.8 pins.
+    compound_gap = float(
+        np.max(np.abs(compound - np.asarray(arrays["hull_compound_correlation"], dtype=float)))
+    )
+    base_gap = float(
+        np.max(
+            np.abs(
+                np.asarray(arrays["base_correlation"], dtype=float)
+                - np.asarray(arrays["hull_base_correlation"], dtype=float)
+            )
+        )
+    )
+    _add(
+        checks,
+        "implied_correlation_hull_pin",
+        max(compound_gap, base_gap),
+        "compound and base correlations within 1.0 point of Table 25.8",
+        compound_gap <= 0.01 and base_gap <= 0.01,
+    )
+
+    # 13. Expected-loss curve shape: increasing in X with a decreasing slope ΔEL/ΔX
+    #     (the X grid is uneven, so slopes rather than second differences are tested).
+    curve = np.asarray(arrays["el_curve_value"], dtype=float)
+    curve_x = np.asarray(arrays["el_curve_x"], dtype=float)
+    slopes = np.diff(curve) / np.diff(curve_x)
+    _add(
+        checks,
+        "base_correlation_curve_shape",
+        float(np.max(np.diff(slopes))),
+        "0–X% expected-loss PV increasing in X with strictly decreasing slope ΔEL/ΔX",
+        bool(np.all(np.diff(curve) > 0.0)) and bool(np.all(np.diff(slopes) < 0.0)),
+    )
+
+    # 14. Double-t limit.
+    gap_bp = float(
+        abs(
+            np.asarray(arrays["double_t_spread"], dtype=float)[-1]
+            - float(metrics["gaussian_mezz_spread"])
+        )
+        * 1e4
+    )
+    _add(
+        checks,
+        "double_t_gaussian_limit",
+        gap_bp,
+        "ν→∞ double-t spread within 0.5 bp of the Gaussian spread",
+        gap_bp <= 0.5,
+    )
+
+    # 15. ASB recursion equals the binomial pmf (both recomputed here).
+    probe = np.asarray(arrays["asb_probe_prob"], dtype=float)
+    recursion = np.zeros(probe.size + 1)
+    recursion[0] = 1.0
+    for p_i in probe:
+        recursion = recursion * (1.0 - p_i) + np.concatenate([[0.0], recursion[:-1]]) * p_i
+    binomial = _binomial_pmf_np(probe.size, np.array(probe[0]))
+    asb_gap = float(
+        max(
+            np.max(np.abs(recursion - binomial)),
+            np.max(np.abs(recursion - np.asarray(arrays["asb_probe_pmf"], dtype=float))),
+        )
+    )
+    _add(
+        checks,
+        "heterogeneous_equals_binomial",
+        asb_gap,
+        "recursion pmf equals the binomial pmf and the committed pmf (1e-12)",
+        asb_gap <= 1e-12,
+    )
+
+    # 16. CreditMetrics thresholds from the committed matrix; correlation fattens the tail.
+    #     The default boundary is N⁻¹(1 − p_default) (Hull 2.9290 for BBB), not the
+    #     cumulative sum, because the printed rows carry a 0.01-point rounding residual.
+    matrix = np.asarray(arrays["transition_matrix"], dtype=float)
+    aaa = np.array([_norm_ppf_np(float(p)) for p in np.cumsum(matrix[0])[:3]])
+    bbb = np.array([_norm_ppf_np(float(p)) for p in np.cumsum(matrix[3])[:3]])
+    bbb_default = _norm_ppf_np(1.0 - float(matrix[3][-1]))
+    stored_gap = max(
+        float(np.max(np.abs(np.asarray(arrays["threshold_aaa"], dtype=float)[:3] - aaa))),
+        float(np.max(np.abs(np.asarray(arrays["threshold_bbb"], dtype=float)[:3] - bbb))),
+        abs(bbb_default - float(metrics["creditmetrics_bbb_default_threshold"])),
+    )
+    threshold_gap = float(
+        max(
+            np.max(np.abs(aaa - np.asarray(arrays["hull_threshold_aaa"]))),
+            np.max(np.abs(bbb - np.asarray(arrays["hull_threshold_bbb"]))),
+            abs(bbb_default - 2.9290),
+        )
+    )
+    losses = np.asarray(arrays["credit_loss_by_case"], dtype=float)
+    var_independent = float(np.quantile(losses[0], 0.999))
+    var_correlated = float(np.quantile(losses[1], 0.999))
+    _add(
+        checks,
+        "creditmetrics_thresholds_hull_pin",
+        threshold_gap,
+        "thresholds recomputed from Table 24.4 within 0.0002 of Hull and 1e-9 of the stored "
+        "values; 99.9% credit VaR larger with ρ=0.2 than independent",
+        threshold_gap <= 2e-4 and stored_gap <= 1e-9 and var_correlated > var_independent,
+    )
+
+    # 17. Netting, collateral rule, and eq. 24.5.
+    trades = np.asarray(arrays["netting_trade_value"], dtype=float)
+    netted, gross = max(float(trades.sum()), 0.0), float(np.maximum(trades, 0.0).sum())
+    value = np.asarray(arrays["collateral_case_value"], dtype=float)
+    lagged = np.asarray(arrays["collateral_case_lagged"], dtype=float)
+    exposure = np.maximum(value - np.maximum(lagged, 0.0), 0.0) + np.maximum(
+        np.maximum(-lagged, 0.0) - np.maximum(-value, 0.0), 0.0
+    )
+    collateral_gap = float(
+        np.max(np.abs(exposure - np.asarray(arrays["hull_collateral_case_exposure"], dtype=float)))
+    )
+    cva_special = (
+        (1.0 - recovery)
+        * float(metrics["cva_no_default_value"])
+        * float(np.sum(arrays["cva_default_prob"]))
+    )
+    cva_gap = abs(cva_special - float(metrics["cva_special_case"]))
+    general_gap = abs(float(metrics["cva_general_equivalent"]) - cva_special)
+    _add(
+        checks,
+        "netting_collateral_and_cva_special_case",
+        max(collateral_gap, cva_gap, general_gap),
+        "netting 15 <= gross 40 (Hull 24.7); Example 24.4 exposures 5/0/0/5; (1−R)f_nd Σq_i "
+        "equals the stored CVA (1e-12) and the general CVA on a 2000-step grid (1e-5)",
+        netted == 15.0
+        and gross == 40.0
+        and netted <= gross
+        and collateral_gap <= 1e-12
+        and cva_gap <= 1e-12
+        and general_gap <= 1e-5,
+    )
+
+    return checks, [
+        "Hull Table 24.4 (S&P 1981–2019) and Table 25.6 (Creditex iTraxx quotes, 2007-01-31) are transcribed textbook constants, not downloaded market data.",
+        "The Table 25.8 implied correlations match Hull to one decimal place; residual differences reflect DerivaGem's integration grid, not calibration quality.",
+        "The double-t copula and ASB recursion are validated only by limits (ν→∞, homogeneous); Hull prints no numeric example for §25.11.",
+        "Random recovery / random factor loadings, the implied copula, dynamic models and KMV EDF mappings are out of scope (documentation only).",
+        "CDS options use the Black-type market formula; the full Hull–White (2003) knock-out treatment is not implemented.",
+    ]
+
+
 _EVALUATORS = {
     18: _volume18,
     19: _volume19,
@@ -1498,6 +1937,7 @@ _EVALUATORS = {
     25: _volume25,
     26: _volume26,
     27: _volume27,
+    28: _volume28,
 }
 
 
@@ -1510,7 +1950,7 @@ def evaluate_acceptance(
     try:
         evaluator = _EVALUATORS[volume]
     except KeyError as exc:
-        raise ValueError("acceptance volume must lie in [18, 27]") from exc
+        raise ValueError("acceptance volume must lie in [18, 28]") from exc
     checks, negative_results = evaluator(metrics, arrays)
     return {
         "schema_version": 1,

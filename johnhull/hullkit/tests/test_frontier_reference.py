@@ -833,3 +833,33 @@ def test_volume28_reference_is_deterministic() -> None:
     for name in first.arrays:
         np.testing.assert_array_equal(first.arrays[name], second.arrays[name])
     assert first.metrics == second.metrics
+
+
+# --- vol 28 acceptance gate independence -------------------------------
+
+
+def _volume28_checks(metrics: dict, arrays: dict) -> dict[str, dict]:
+    checks, _ = _frontier_acceptance()._volume28(metrics, arrays)
+    return {check["name"]: check for check in checks}
+
+
+def test_volume28_acceptance_passes_and_recomputes_from_arrays(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    reference = references[28]
+    arrays = {name: np.asarray(value) for name, value in reference.arrays.items()}
+    checks = _volume28_checks(dict(reference.metrics), arrays)
+    assert len(checks) == 17
+    assert all(check["passed"] for check in checks.values()), [
+        name for name, check in checks.items() if not check["passed"]
+    ]
+    # tampering with the stored CDO metric is caught because A, B, C are re-integrated
+    tampered = dict(reference.metrics)
+    tampered["cdo_mezz_spread_bp"] = 300.0
+    assert not _volume28_checks(tampered, arrays)["cdo_mezz_spread_hull_pin"]["passed"]
+    # tampering with the committed implied correlations is caught by independent repricing
+    broken = dict(arrays)
+    broken["compound_correlation"] = arrays["compound_correlation"] + 0.05
+    assert not _volume28_checks(dict(reference.metrics), broken)[
+        "implied_correlation_reprices_quotes"
+    ]["passed"]

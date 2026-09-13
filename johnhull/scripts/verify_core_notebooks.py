@@ -1,7 +1,7 @@
 """Fresh-execute the Hull core notebooks (vol 01--17 and the two legacy ones).
 
 `verify_frontier_notebooks.py` is driven by `release_manifest.json` and so
-covers the beyond-Hull volumes 18--27 only.  The Hull core volumes carry the
+covers the beyond-Hull volumes 18--28 only.  The Hull core volumes carry the
 same kind of contract -- each ends in a verification cell whose asserts pin the
 numerical identities -- but nothing executed them, so a broken volume stayed
 green until somebody opened it by hand.
