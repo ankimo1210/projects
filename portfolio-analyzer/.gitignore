@@ -4,3 +4,4 @@ data/*.private.html
 dist/
 data/*.private.csv
 data/*.private.jsonl
+data/*.private.tsv

@@ -47,3 +47,18 @@ def test_report_as_of_is_latest_quote_date() -> None:
     }
     assert daily_pl_report.report_as_of(quotes) == "2026-09-11"
     assert daily_pl_report.stale_quotes(quotes, "2026-09-11") == {"XLE": "2026-09-10"}
+
+
+def test_add_series_joins_a_fund_price_onto_the_closes_by_date() -> None:
+    idx = pd.to_datetime(["2026-09-10", "2026-09-11", "2026-09-12"])
+    closes = pd.DataFrame({"XLE": [64.0, 65.0, 65.5]}, index=idx)
+    points = [
+        ("2026-09-01", Decimal("26000")),  # before the frame starts: dropped
+        ("2026-09-10", Decimal("25962")),
+        ("2026-09-11", Decimal("25885")),
+    ]
+    out = daily_pl_report.add_series(closes, "SOMPO_AM:0885", points)
+    assert list(out.index) == list(idx)
+    assert out["SOMPO_AM:0885"].iloc[1] == 25885.0 and out["SOMPO_AM:0885"].isna().iloc[2]
+    q = daily_pl_report.quotes_from_closes(out[["SOMPO_AM:0885"]])["SOMPO_AM:0885"]
+    assert q.close == Decimal("25885.0") and q.prev_close == Decimal("25962.0")

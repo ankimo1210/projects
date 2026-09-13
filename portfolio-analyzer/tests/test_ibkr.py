@@ -264,3 +264,10 @@ def test_summarize_cash_buckets_the_realised_fx_on_currency_conversions() -> Non
 
     assert summary.forex_trade_component_jpy == Decimal("0.6510000000000105")
     assert summary.deposits_jpy == Decimal("5000000.0")
+
+
+def test_realized_since_counts_only_sales_from_that_date_on() -> None:
+    rows = ibkr.parse_transactions(statement(BUY_QQQ, SELL_QQQ_ALL))
+    gain = Decimal("1279840.0") - Decimal("1148273.7302331")
+    assert ibkr.realized_since(rows, "2026-01-01") == gain
+    assert ibkr.realized_since(rows, "2026-08-21") == Decimal("0")

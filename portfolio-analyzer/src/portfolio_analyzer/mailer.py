@@ -57,6 +57,33 @@ def _tone(value: float | None) -> str:
     return UP if float(value) > 0 else DN
 
 
+def split(stock: float | None, fx: float | None, sep: str = " · ") -> str:
+    """Stock and FX parts of a JPY P&L, e.g. ``株 +12,000 · FX −3,506``; empty when unknown."""
+    if stock is None and fx is None:
+        return ""
+    return f"株 {jpy(stock, True)}{sep}FX {jpy(fx, True)}"
+
+
+def after_tax(value: float | None, label: str = "税引後") -> str:
+    return "" if value is None else f"{label} {jpy(value, True)}"
+
+
+def _joined(*parts: str, sep: str = " · ") -> str:
+    return sep.join(p for p in parts if p)
+
+
+def _split_cell(row: dict[str, Any], stock: str, fx: str, taxed: str) -> str:
+    """The split and the after-tax figure under a table cell's value, one per line."""
+    text = _joined(
+        split(row.get(stock), row.get(fx), "<br>"), after_tax(row.get(taxed), "税後"), sep="<br>"
+    )
+    if not text:
+        return ""
+    return (
+        f'<div style="font-size:10px;line-height:1.4;color:{MUTED};white-space:nowrap">{text}</div>'
+    )
+
+
 def decode_header_text(raw: str | None) -> str:
     """Decode an RFC 2047 header back to text (used by the tests and by log output)."""
     return "" if raw is None else str(make_header(decode_header(raw)))
@@ -67,20 +94,37 @@ def subject(data: dict[str, Any]) -> str:
     return f"日次損益 {data['as_of']} · {jpy(h['nav_total'])} 円（{jpy(h['day_pnl'], True)}）"
 
 
+def _nav_after_tax(h: dict[str, Any]) -> str:
+    """Total assets after the estimated tax on unrealised gains (unsigned: it is a balance)."""
+    return "" if h.get("nav_after_tax") is None else f"税引後 {jpy(h['nav_after_tax'])}"
+
+
 def text_body(data: dict[str, Any]) -> str:
     h, w = data["headline"], data["window"]
     lines = [
         f"日次損益 {data['as_of']}  (USD/JPY {float(data['fx']['last']):.2f})",
         "",
         f"総資産          {jpy(h['nav_total']):>14} 円  (時価評価 {int(h['quoted_share'] * 100)}%)",
+        f"                {_nav_after_tax(h)}",
         f"日次損益        {jpy(h['day_pnl'], True):>14} 円  ({pct(h['day_pnl_pct'])})",
+        f"                {_joined(split(h.get('day_stock'), h.get('day_fx')), after_tax(h.get('day_after_tax')))}",
         f"期間損益 {w['days']}日  {jpy(h['pnl_window'], True):>14} 円  (海外証券口座・入金控除後)",
         f"含み損益        {jpy(h['unrealized_known'], True):>14} 円  (原価が台帳にある保有)",
+        f"                {_joined(split(h.get('unreal_stock'), h.get('unreal_fx')), after_tax(h.get('unreal_after_tax')))}",
         "",
         "口座別",
     ]
     for a in data["accounts"]:
         lines.append(f"  {a['name']:<12} {jpy(a['total']):>12} / {jpy(a['day_pnl'], True):>10}")
+        day_split = _joined(
+            split(a.get("day_stock"), a.get("day_fx")), after_tax(a.get("day_after_tax"), "税後")
+        )
+        unreal_split = _joined(
+            split(a.get("unreal_stock"), a.get("unreal_fx")),
+            after_tax(a.get("unreal_after_tax"), "税後"),
+        )
+        if day_split or unreal_split:
+            lines.append(f"      日次 {day_split or '—'}  /  含み {unreal_split or '—'}")
     lines += ["", "保有 (数量 / 1D / 1Y / 評価額 / 日次 / 含み)"]
     for p in data["positions"]:
         unreal = jpy(p["unreal"], True) if p.get("unreal") is not None else "原価なし"
@@ -88,8 +132,18 @@ def text_body(data: dict[str, Any]) -> str:
             f"  {p['sym']:<5} {p['acct'][:4]:<4} {jpy(p['qty']):>7} / {pct(p['chg1d']):>7} / "
             f"{pct(p['chg1y'], 1):>8} / {jpy(p['value']):>11} / {jpy(p['day_pnl'], True):>10} / {unreal:>11}"
         )
+        day_split = _joined(
+            split(p.get("day_stock"), p.get("day_fx")), after_tax(p.get("day_after_tax"), "税後")
+        )
+        unreal_split = _joined(
+            split(p.get("unreal_stock"), p.get("unreal_fx")),
+            after_tax(p.get("unreal_after_tax"), "税後"),
+        )
+        if day_split or unreal_split:
+            lines.append(f"        日次 {day_split or '—'}  /  含み {unreal_split or '—'}")
     lines += [
         "",
+        *([data["tax_note"], ""] if data.get("tax_note") else []),
         f"生成 {data['generated_at']}",
         "ダッシュボード本体: Documents\\pl-daily\\latest.html",
     ]
@@ -187,13 +241,18 @@ def _spark(values: list[Any]) -> str:
     return emailchart.line(points, total_px=22, col_w=5, thickness=2, zero=False)
 
 
-def _kpi_cell(label: str, value: str, sub: str, tone: str) -> str:
+def _kpi_cell(label: str, value: str, sub: str, tone: str, sub2: str = "") -> str:
+    second = (
+        f'<div style="font:400 11px {SANS};color:{MUTED};margin-top:1px">{html.escape(sub2)}</div>'
+        if sub2
+        else ""
+    )
     return (
         f'<td width="50%" bgcolor="{CARD}" style="padding:11px 13px;border:1px solid {RULE};'
         f'border-radius:8px;vertical-align:top">'
         f'<div style="font:500 10px {MONO};letter-spacing:.1em;color:{MUTED}">{html.escape(label)}</div>'
         f'<div style="font:600 21px {MONO};color:{tone};margin-top:5px">{value}</div>'
-        f'<div style="font:400 11px {SANS};color:{MUTED};margin-top:3px">{html.escape(sub)}</div></td>'
+        f'<div style="font:400 11px {SANS};color:{MUTED};margin-top:3px">{html.escape(sub)}</div>{second}</td>'
     )
 
 
@@ -224,12 +283,14 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
             jpy(h["nav_total"]),
             f"時価評価 {int(h['quoted_share'] * 100)}%・残りは残高据え置き",
             INK,
+            _nav_after_tax(h),
         )
         + _kpi_cell(
             "日次損益 ¥",
             jpy(h["day_pnl"], True),
-            f"時価評価分 {pct(h['day_pnl_pct'])}",
+            _joined(pct(h["day_pnl_pct"]), split(h.get("day_stock"), h.get("day_fx"))),
             _tone(h["day_pnl"]),
+            after_tax(h.get("day_after_tax")),
         )
         + "</tr><tr>"
         + _kpi_cell(
@@ -241,8 +302,9 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
         + _kpi_cell(
             "含み損益 ¥",
             jpy(h["unrealized_known"], True),
-            "取得原価が分かる保有の合計",
+            split(h.get("unreal_stock"), h.get("unreal_fx")) or "取得原価が分かる保有の合計",
             _tone(h["unrealized_known"]),
+            after_tax(h.get("unreal_after_tax")),
         )
         + "</tr></table>"
     )
@@ -253,9 +315,18 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
             "<tr>"
             + _td(html.escape(a["name"]), "left", INK, SANS, last)
             + _td(jpy(a["total"]), "right", INK, None, last)
-            + _td(jpy(a["day_pnl"], True), "right", _tone(a["day_pnl"]), None, last)
             + _td(
-                jpy(a["unrealized"], True) if a.get("unrealized") is not None else "原価なし",
+                jpy(a["day_pnl"], True) + _split_cell(a, "day_stock", "day_fx", "day_after_tax"),
+                "right",
+                _tone(a["day_pnl"]),
+                None,
+                last,
+            )
+            + _td(
+                jpy(a["unrealized"], True)
+                + _split_cell(a, "unreal_stock", "unreal_fx", "unreal_after_tax")
+                if a.get("unrealized") is not None
+                else "原価なし",
                 "right",
                 _tone(a.get("unrealized")),
                 None if a.get("unrealized") is not None else SANS,
@@ -270,7 +341,11 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
             f'<div style="font:600 12px {SANS};color:{INK}">{html.escape(p["sym"])}</div>'
             f'<div style="font:400 10.5px {SANS};color:{MUTED};white-space:nowrap">{html.escape(p["acct"])}</div>'
         )
-        unreal = jpy(p["unreal"], True) if p.get("unreal") is not None else "原価なし"
+        unreal = (
+            jpy(p["unreal"], True) + _split_cell(p, "unreal_stock", "unreal_fx", "unreal_after_tax")
+            if p.get("unreal") is not None
+            else "原価なし"
+        )
         pos_rows += (
             "<tr>"
             + _td(name, "left", INK, SANS, last)
@@ -278,7 +353,13 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
             + _td(_spark(p.get("spark") or []), "left", INK, None, last)
             + _td(pct(p["chg1y"], 1), "right", _tone(p["chg1y"]), None, last)
             + _td(jpy(p["value"]), "right", INK, None, last)
-            + _td(jpy(p["day_pnl"], True), "right", _tone(p["day_pnl"]), None, last)
+            + _td(
+                jpy(p["day_pnl"], True) + _split_cell(p, "day_stock", "day_fx", "day_after_tax"),
+                "right",
+                _tone(p["day_pnl"]),
+                None,
+                last,
+            )
             + _td(
                 unreal,
                 "right",
@@ -318,7 +399,7 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
 <table role="presentation" cellspacing="0" cellpadding="0" {table_style}>
 <tr>{_th("銘柄", "left")}{_th("1D")}{_th("値動き 1Y", "left")}{_th("1Y")}{_th("評価額 ¥")}{_th("日次 ¥")}{_th("含み ¥")}</tr>{pos_rows}</table>
 <div style="font:400 11px/1.7 {SANS};color:{MUTED};margin-top:16px">
-日次損益は各銘柄の直近 2 終値の差（価格と為替の両方）。総資産の {100 - quoted}% は時価が取れない残高（DC・現金）で据え置き。海外証券口座の累計損益は取引履歴を日次で再生した値で、入金は差し引いています。<br>
+日次損益は各銘柄の直近 2 終値の差（価格と為替の両方）。株＝価格の変化（今日のレート換算）、FX＝残り（レートの変化分）で、円建ては FX 0。含み損益の FX は取得原価（外貨）×（現在レート − 取得時レート）。総資産の {100 - quoted}% は時価が取れない残高（現金など）で据え置き。海外証券口座の累計損益は取引履歴を日次で再生した値で、入金は差し引いています。{html.escape(data.get("tax_note", ""))}<br>
 ダッシュボード本体（ホバーで数値が出る図つき）: <span style="font-family:{MONO}">Documents\\pl-daily\\latest.html</span>
 </div></div></td></tr></table>"""
 

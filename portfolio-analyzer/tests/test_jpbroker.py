@@ -47,6 +47,24 @@ def test_derive_holdings_uses_the_settled_amount_as_the_cost() -> None:
     assert h["average_trade_fx"] == Decimal("1")
 
 
+def test_holdings_carry_the_tax_category_of_the_lots_still_held() -> None:
+    holdings = jpbroker.derive_holdings(jpbroker.parse_transactions(SAMPLE))
+    assert holdings["1329"]["tax_category"] == "nisa"
+    assert holdings["7532"]["tax_category"] == "nisa"
+
+
+def test_a_symbol_bought_in_both_nisa_and_a_taxable_account_is_mixed() -> None:
+    extra = "株式,2026/04/01,2026/04/03,1329 ｉシェアーズ・コア　日経２２５　ＥＴＦ,買,オンライン,5400円,10,-54100,特定\n"
+    h = jpbroker.derive_holdings(jpbroker.parse_transactions(SAMPLE + extra))["1329"]
+    assert h["tax_category"] == "mixed"
+
+
+def test_a_taxable_lot_sold_out_before_a_nisa_rebuy_does_not_count() -> None:
+    rebuy = "株式,2025/07/01,2025/07/03,9023 東京地下鉄,買,オンライン,1600円,100,-160500,NISA成長投資枠\n"
+    h = jpbroker.derive_holdings(jpbroker.parse_transactions(SAMPLE + rebuy))["9023"]
+    assert h["quantity"] == Decimal("100") and h["tax_category"] == "nisa"
+
+
 def test_a_share_split_adds_quantity_without_adding_cost() -> None:
     h = jpbroker.derive_holdings(jpbroker.parse_transactions(SAMPLE))["7532"]
     assert h["quantity"] == Decimal("500")
@@ -94,3 +112,12 @@ def test_replay_states_a_pre_split_holding_in_todays_shares() -> None:
     dates = ["2025-02-01", "2025-10-02"]
     paths = jpbroker.replay(jpbroker.parse_transactions(SAMPLE), dates)
     assert paths["7532"]["quantity"] == [Decimal("500"), Decimal("500")]
+
+
+def test_taxable_realized_since_skips_nisa_sales_and_earlier_years() -> None:
+    nisa_sale = "株式,2025/08/01,2025/08/05,7532 パン・パシフィック,売,オンライン,5000円,100,499000,NISA成長投資枠\n"
+    rows = jpbroker.parse_transactions(SAMPLE + nisa_sale)
+    assert jpbroker.taxable_realized_since(rows, "2025-01-01") == Decimal("515902") - Decimal(
+        "528424"
+    )
+    assert jpbroker.taxable_realized_since(rows, "2026-01-01") == Decimal("0")
