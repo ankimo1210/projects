@@ -1,4 +1,4 @@
-"""Generate and execute artifact-only notebooks for johnhull vol 18--27."""
+"""Generate and execute artifact-only notebooks for johnhull vol 18--28."""
 
 from __future__ import annotations
 
@@ -315,6 +315,94 @@ VOLUME_META = {
         ),
         "citations": "Kupiec (1995); Christoffersen (1998); BCBS (1996); Barone-Adesi, Giannopoulos & Vosper (1999); McNeil & Frey (2000); Tasche (1999).",
         "gate": "G9",
+    },
+    28: {
+        "title": "Credit Desk — CDS, CDO, Correlation, CreditMetrics",
+        "question": "Hull Ch.24–25 の印刷された数値例を、検証済みコードで一つ残らず再現できるか。",
+        "focus": "vol.09 が説明文で済ませた節を節単位で埋める。債券価格と CDS 気配からの区分定数ハザード（Ex 24.1/24.2）、Table 25.2–25.4 の CDS レッグと MTM、Ex 25.1 の固定クーポン価格、Black 型 CDS オプション、Gauss–Hermite 求積による合成 CDO（Ex 25.2）と k-th-to-default（Ex 25.3）、Table 25.6 の iTraxx 気配から Table 25.8 のコンパウンド/ベース相関、double-t コピュラと不均質再帰（§25.11）、Table 24.4 の CreditMetrics 閾値と相関付き格付推移 MC、§24.7 のネッティング・担保・式 (24.5)。すべて Hull の離散化（期末払い・期中デフォルト）に合わせ、印刷値に ±許容で固定する。",
+        "sections": [
+            (
+                "bond_bootstrap_hazard",
+                "債券価格ブートストラップ vs Hull Ex 24.2",
+                "bar:bond_maturity_label:hull_bond_bootstrap_hazard",
+            ),
+            (
+                "cds_payoff_pv",
+                "CDS レッグの年別 PV（Table 25.3 vs 25.4）",
+                "bar:cds_year_label:cds_accrual_pv",
+            ),
+            (
+                "cds_mtm_seller",
+                "契約スプレッド別の売り手 MTM（150bp で 0.0111）",
+                "line:cds_contract_spread_grid",
+            ),
+            (
+                "fixed_coupon_price_grid",
+                "固定クーポン 40bp のアップフロント価格 vs 気配（Ex 25.1）",
+                "line:index_quote_grid",
+            ),
+            (
+                "payer_value",
+                "CDS オプション payer / receiver（Black 型）",
+                "line2:option_strike_grid:receiver_value",
+            ),
+            ("tranche_expected_principal", "メザニン期待元本 E_j(F_k)（Table 25.7）", "heatmap"),
+            (
+                "tranche_spread_vs_rho",
+                "標準トランシェのブレークイーブンスプレッド vs ρ",
+                "line:rho_grid",
+            ),
+            ("kth_spread", "k-th-to-default スプレッド（Ex 25.3 は k=3）", "line:kth_order"),
+            (
+                "compound_correlation",
+                "Table 25.8：コンパウンド vs ベース相関",
+                "bar:market_tranche_label:base_correlation",
+            ),
+            ("el_curve_value", "0–X% 期待損失 PV（Figure 25.3）", "line:el_curve_x"),
+            ("double_t_spread", "double-t コピュラのメザニンスプレッド vs ν", "line:double_t_nu_grid"),
+            (
+                "threshold_aaa",
+                "CreditMetrics 閾値：AAA vs BBB（Table 24.4、生存格付間の 6 境界）",
+                "line2:threshold_index:threshold_bbb",
+            ),
+            ("credit_loss_by_case", "信用損失分布：独立 vs ρ=0.2", "histrows:credit_loss_names"),
+            (
+                "collateral_case_exposure",
+                "担保付きエクスポージャ：Ex 24.4 の 4 ケース",
+                "bar:collateral_case_label:hull_collateral_case_exposure",
+            ),
+        ],
+        "verification": (
+            "m = manifest['metrics']\n"
+            "spread_bp = data['cds_payoff_pv'].sum() / (data['cds_payment_pv'].sum() + data['cds_accrual_pv'].sum()) * 1e4\n"
+            "assert abs(spread_bp - 123.0) <= 0.5 and abs(spread_bp - m['cds_par_spread_bp']) <= 1e-9\n"
+            "times = data['tranche_payment_time']; prev = np.concatenate([[0.0], times[:-1]]); w = data['factor_weight']\n"
+            "E = data['tranche_expected_principal']; dt = times - prev; r = m['cdo_rate']\n"
+            "loss = E[:, :-1] - E[:, 1:]\n"
+            "A = w @ (dt * E[:, 1:] * np.exp(-r * times)).sum(axis=1)\n"
+            "B = w @ (0.5 * dt * loss * np.exp(-r * 0.5 * (times + prev))).sum(axis=1)\n"
+            "C = w @ (loss * np.exp(-r * 0.5 * (times + prev))).sum(axis=1)\n"
+            "assert abs(C / (A + B) * 1e4 - 348.0) <= 1.0\n"
+            "widths = data['capital_structure_detach'] - data['capital_structure_attach']\n"
+            "assert abs(widths @ data['capital_structure_expected_loss'] - m['portfolio_expected_loss']) <= 1e-8\n"
+            "assert np.all(np.diff(data['kth_spread']) < 0)\n"
+            "slopes = np.diff(data['el_curve_value']) / np.diff(data['el_curve_x'])\n"
+            "assert np.all(np.diff(data['el_curve_value']) > 0) and np.all(np.diff(slopes) < 0)\n"
+            "assert np.max(np.abs(data['compound_correlation'] - data['hull_compound_correlation'])) <= 0.01\n"
+            "assert np.max(np.abs(data['base_correlation'] - data['hull_base_correlation'])) <= 0.01\n"
+            "assert np.allclose(data['collateral_case_exposure'], [5, 0, 0, 5])\n"
+            "print('PASS: 123bp / 348bp / 153bp / Table 25.8 / loss conservation / Ex 24.4 recomputed from the artifact')"
+        ),
+        "exercises": (
+            "## 練習問題\n\n"
+            "1. Table 25.2–25.4 の設定で支払いを四半期にしたとき、パースプレッドはどちらへ動くか。`cds_payment_pv` の構造から予想し、理由をアクルーアルの扱いで説明せよ。\n"
+            "2. `cds_mtm_seller` の傾きは何に等しいか。150bp の MTM 0.0111 と D=4.1150 から確かめよ。\n"
+            "3. Table 25.7 の列 F=−1.0104 で E_20 が 0.5648 まで落ちる理由を、条件付きデフォルト確率 Q(t|F) の式で説明せよ。\n"
+            "4. `tranche_spread_vs_rho` でエクイティのスプレッドが ρ とともに下がり、シニアが上がるのはなぜか。`capital_structure_expected_loss` の合計が ρ に依存しないことと整合させよ。\n"
+            "5. Table 25.8 でコンパウンド相関はスマイル、ベース相関はスキューになる。ガウシアンコピュラが市場と整合しているなら両者はどうなるはずか。`el_curve_value` の傾き ΔEL/ΔX が単調減少することはどの無裁定条件に対応するか。"
+        ),
+        "citations": "Hull (2022) Options, Futures, and Other Derivatives 11e, Ch.24–25; Vasicek (2002); Li (2000); Andersen, Sidenius & Basu (2003); Hull & White (2004); Hull & White (2003) CDS options.",
+        "gate": "G10",
     },
 }
 
