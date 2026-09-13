@@ -359,7 +359,11 @@ VOLUME_META = {
                 "bar:market_tranche_label:base_correlation",
             ),
             ("el_curve_value", "0–X% 期待損失 PV（Figure 25.3）", "line:el_curve_x"),
-            ("double_t_spread", "double-t コピュラのメザニンスプレッド vs ν", "line:double_t_nu_grid"),
+            (
+                "double_t_spread",
+                "double-t コピュラのメザニンスプレッド vs ν",
+                "line:double_t_nu_grid",
+            ),
             (
                 "threshold_aaa",
                 "CreditMetrics 閾値：AAA vs BBB（Table 24.4、生存格付間の 6 境界）",
