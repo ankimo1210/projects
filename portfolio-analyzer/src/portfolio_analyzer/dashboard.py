@@ -54,13 +54,28 @@ def split(stock: float | None, fx: float | None) -> str:
     return f"株 {jpy(stock, True)} · FX {jpy(fx, True)}"
 
 
+def usd(value: float | None, rate: float | None, sign: bool = False) -> str:
+    """A yen amount in dollars at the day's USD/JPY, e.g. ``$301,257`` / ``−$2,934``."""
+    if value is None or not rate:
+        return ""
+    v = round(float(value) / float(rate))
+    text = f"${abs(v):,}"
+    if sign:
+        return ("+" if v > 0 else "−" if v < 0 else "±") + text
+    return ("−" if v < 0 else "") + text
+
+
+def _joined(*parts: str) -> str:
+    return " · ".join(p for p in parts if p)
+
+
 def after_tax(value: float | None, label: str = "税引後") -> str:
     return "" if value is None else f"{label} {jpy(value, True)}"
 
 
-def _split_under(row: dict[str, Any], stock: str, fx: str, taxed: str) -> str:
-    """The split and the after-tax figure under a table cell's value, one per line."""
-    lines = []
+def _split_under(row: dict[str, Any], stock: str, fx: str, taxed: str, dollars: str = "") -> str:
+    """The dollar figure, the split and the after-tax figure under a cell's value, one per line."""
+    lines = [dollars] if dollars else []
     if row.get(stock) is not None or row.get(fx) is not None:
         lines += [f"株 {jpy(row.get(stock), True)}", f"FX {jpy(row.get(fx), True)}"]
     if row.get(taxed) is not None:
@@ -68,17 +83,20 @@ def _split_under(row: dict[str, Any], stock: str, fx: str, taxed: str) -> str:
     return f"<span class='sp'>{'<br>'.join(lines)}</span>" if lines else ""
 
 
-def _kpi(label: str, value: str, sub: str, tone: str = "", sub2: str = "") -> str:
+def _kpi(
+    label: str, value: str, sub: str, tone: str = "", sub2: str = "", dollars: str = ""
+) -> str:
+    in_usd = f'<span class="u">{dollars}</span>' if dollars else ""
     second = f'<span class="s">{sub2}</span>' if sub2 else ""
-    return f'<div class="kpi"><span class="k">{_esc(label)}</span><span class="v {tone}">{value}</span><span class="s">{sub}</span>{second}</div>'
+    return f'<div class="kpi"><span class="k">{_esc(label)}</span><span class="v {tone}">{value}</span>{in_usd}<span class="s">{sub}</span>{second}</div>'
 
 
-def _positions_table(rows: list[dict[str, Any]]) -> str:
+def _positions_table(rows: list[dict[str, Any]], rate: float | None) -> str:
     body = ""
     for r in rows:
         unreal = (
             f"<span class='{cls(r['unreal'])}'>{jpy(r['unreal'], True)}</span> <small>{pct(r['unreal_pct'], 1)}</small>"
-            f"{_split_under(r, 'unreal_stock', 'unreal_fx', 'unreal_after_tax')}"
+            f"{_split_under(r, 'unreal_stock', 'unreal_fx', 'unreal_after_tax', usd(r['unreal'], rate, True))}"
             if r.get("unreal") is not None
             else "<small>原価なし</small>"
         )
@@ -93,9 +111,9 @@ def _positions_table(rows: list[dict[str, Any]]) -> str:
             f"<td class='n {cls(r['chg1m'])}'>{pct(r['chg1m'], 1)}</td>"
             f"<td class='n {cls(r['chg1y'])}'>{pct(r['chg1y'], 1)}</td>"
             f"<td class='spark' data-spark='{_esc(json.dumps(r['spark']))}'></td>"
-            f"<td class='n'>{jpy(r['value'])}</td>"
+            f"<td class='n'>{jpy(r['value'])}<span class='sp'>{usd(r['value'], rate)}</span></td>"
             f"<td class='n'><small>{float(r['weight']):.1f}%</small></td>"
-            f"<td class='n {cls(r['day_pnl'])}'>{jpy(r['day_pnl'], True)}{_split_under(r, 'day_stock', 'day_fx', 'day_after_tax')}</td>"
+            f"<td class='n {cls(r['day_pnl'])}'>{jpy(r['day_pnl'], True)}{_split_under(r, 'day_stock', 'day_fx', 'day_after_tax', usd(r['day_pnl'], rate, True))}</td>"
             f"<td class='n'>{price(r.get('avg_cost'), r['cur']) if r.get('avg_cost') is not None else '—'}</td>"
             f"<td class='n'>{unreal}</td>"
             "</tr>"
@@ -143,13 +161,18 @@ def render(data: dict[str, Any], tokens_css: str) -> str:
         f"<span class='tk'><b>{_esc(t['sym'])}</b> {price(t['last'], t.get('cur', 'USD'))} <i class='{cls(t['chg_pct'])}'>{pct(t['chg_pct'])}</i></span>"
         for t in data["tape"]
     )
+    rate = data["fx"]["last"]
     kpis = "".join(
         [
             _kpi(
                 "総資産 NAV ¥",
                 jpy(h["nav_total"]),
                 f"時価評価 {int(h['quoted_share'] * 100)}% · 残りは残高据え置き",
-                sub2="" if h.get("nav_after_tax") is None else f"税引後 {jpy(h['nav_after_tax'])}",
+                sub2=_joined(
+                    "" if h.get("nav_after_tax") is None else f"税引後 {jpy(h['nav_after_tax'])}",
+                    usd(h.get("nav_after_tax"), rate),
+                ),
+                dollars=usd(h["nav_total"], rate),
             ),
             _kpi(
                 "日次損益 ¥",
@@ -160,26 +183,34 @@ def render(data: dict[str, Any], tokens_css: str) -> str:
                     if t
                 ),
                 cls(h["day_pnl"]),
-                sub2=after_tax(h.get("day_after_tax")),
+                sub2=_joined(
+                    after_tax(h.get("day_after_tax")), usd(h.get("day_after_tax"), rate, True)
+                ),
+                dollars=usd(h["day_pnl"], rate, True),
             ),
             _kpi(
                 "含み損益 ¥",
                 jpy(h["unrealized_known"], True),
                 split(h.get("unreal_stock"), h.get("unreal_fx")) or "原価が台帳にある保有",
                 cls(h["unrealized_known"]),
-                sub2=after_tax(h.get("unreal_after_tax")),
+                sub2=_joined(
+                    after_tax(h.get("unreal_after_tax")), usd(h.get("unreal_after_tax"), rate, True)
+                ),
+                dollars=usd(h["unrealized_known"], rate, True),
             ),
             _kpi(
                 f"期間損益 ¥ · {data['window']['days']}日",
                 jpy(h["pnl_window"], True),
                 f"海外証券口座 {data['window']['start']} 以降・入金控除後",
                 cls(h["pnl_window"]),
+                dollars=usd(h["pnl_window"], rate, True),
             ),
             _kpi(
                 "開設来損益 ¥",
                 jpy(h["pnl_incept"], True),
                 f"実現 {jpy(h['realized_cum'], True)} · 配当 {jpy(h['dividends_net'], True)}",
                 cls(h["pnl_incept"]),
+                dollars=usd(h["pnl_incept"], rate, True),
             ),
             _kpi(
                 "資金加重リターン",
@@ -200,10 +231,10 @@ def render(data: dict[str, Any], tokens_css: str) -> str:
         for a in data["allocation"]
     )
     accounts = "".join(
-        f"<tr><td>{_esc(a['name'])}</td><td class='n'>{jpy(a['total'])}</td>"
-        f"<td class='n {cls(a['day_pnl'])}'>{jpy(a['day_pnl'], True)}{_split_under(a, 'day_stock', 'day_fx', 'day_after_tax')}</td>"
+        f"<tr><td>{_esc(a['name'])}</td><td class='n'>{jpy(a['total'])}<span class='sp'>{usd(a['total'], rate)}</span></td>"
+        f"<td class='n {cls(a['day_pnl'])}'>{jpy(a['day_pnl'], True)}{_split_under(a, 'day_stock', 'day_fx', 'day_after_tax', usd(a['day_pnl'], rate, True))}</td>"
         f"<td class='n {cls(a['unrealized'])}'>"
-        f"{jpy(a['unrealized'], True) + _split_under(a, 'unreal_stock', 'unreal_fx', 'unreal_after_tax') if a['unrealized'] is not None else '<small>原価なし</small>'}</td></tr>"
+        f"{jpy(a['unrealized'], True) + _split_under(a, 'unreal_stock', 'unreal_fx', 'unreal_after_tax', usd(a['unrealized'], rate, True)) if a['unrealized'] is not None else '<small>原価なし</small>'}</td></tr>"
         for a in data["accounts"]
     )
     cards = ""
@@ -272,6 +303,7 @@ small{{color:var(--ink-3);font-size:11px}}
 .kpi{{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:11px 14px 12px;min-width:0}}
 .kpi .k{{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}}
 .kpi .v{{display:block;font-size:24px;font-weight:600;line-height:1.2;margin-top:6px;letter-spacing:-.01em}}
+.kpi .u{{display:block;font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-top:2px}}
 .kpi .s{{display:block;font-size:11px;color:var(--ink-3);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 /* general grid */
 .grid{{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(340px,1fr);gap:10px;margin-top:10px}}
@@ -351,7 +383,7 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
   </div>
   <div class="panel">{_attribution(data["attribution"])}</div>
 </div>
-<div class="tw">{_positions_table(data["positions"])}</div>
+<div class="tw">{_positions_table(data["positions"], data["fx"]["last"])}</div>
 
 <h2 class="sec" id="charts-top">時系列 <small>time series · {_esc(data["window"]["start"])} → {_esc(data["as_of"])}</small></h2>
 <div class="grid">
