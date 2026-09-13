@@ -31,6 +31,7 @@ John Hull *Options, Futures, and Other Derivatives* (11e) を土台に、**価�
 - **Hull の先(A5–A8)**: ML surrogateとGreeks、逆問題・無裁定surface、surface dynamicsとhedging、
   joint SPX/VIX、0DTE variance clock、RFR複利とsmile、crypto perpetual/liquidation/AMM、
   carbon・weather・renewable PPA。各巻はcommitted JSON/NPZだけで表示でき、研究trackはcoreから隔離しています。
+- **信用デスク（vol 28）**: Hull Ch.24–25 の印刷数値例（Ex 24.2、Table 25.2–25.8、Ex 25.2/25.3）を再現する CDS/CDO/相関/CreditMetrics の検証済み実装。
 
 ## A5–A8 の読み順
 

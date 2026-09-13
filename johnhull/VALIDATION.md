@@ -1,12 +1,12 @@
-# johnhull Beyond-Hull vol 18–27 — Final Validation
+# johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-14 (vol 28 credit-desk run)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
 - Data policy: fixed-seed synthetic references; no market-performance claim
 
-`PASS` は vol 18–27 の教材・実装・成果物が再現可能で、定義した数値恒等式と
+`PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
@@ -25,9 +25,11 @@ integration gate を満たすことだけを表す。実市場での予測力、
 | G8 | artifact/notebook/report/book/release integration and isolated full-workspace audit | PASS (tracked release) |
 | vol 26 | Hull–White 1F curve fit、CPI lag/seasonality、ZCIS/YoY、JGBi tenth-day reference index、Jarrow–Yildirim measures、redemption-only deflation floor | PASS (tracked release) |
 | vol 27 | Kupiec/Christoffersen/Basel backtests、FHS、EVT/GPD tail、Euler risk decomposition、P&L explain、cross-asset capstone | PASS (tracked release) |
+| vol 28 | Hull Ch.24–25 credit desk: bond/CDS bootstraps, CDS legs/MTM/fixed coupon/options, quadrature CDO and kth-to-default, compound/base correlation, double-t/ASB, CreditMetrics, netting/collateral CVA | PASS (tracked release) |
 
-vol 26 と 27 は G0–G8 とは別の Phase 計画（`docs/superpowers/plans/`）で実装したため
-G 番号を持たないが、gate の内容と PASS の意味は同じである。
+vol 26–28 は G0–G8 とは別の Phase 計画（`docs/superpowers/plans/`）で実装したため
+G 番号を持たないが、gate の内容と PASS の意味は同じである（vol 28 の notebook 上の
+gate ラベルは G10）。
 
 Canonical reference acceptance is recomputed from the committed arrays by
 `johnhull/scripts/frontier_acceptance.py`; it is not trusted as a copied JSON flag.
@@ -44,6 +46,7 @@ Canonical reference acceptance is recomputed from the committed arrays by
 | 25 | 9 | PASS | NO |
 | 26 | 11 | PASS | NO |
 | 27 | 14 | PASS | NO |
+| 28 | 17 | PASS | NO |
 
 ## Numerical evidence
 
@@ -90,6 +93,20 @@ Canonical reference acceptance is recomputed from the committed arrays by
   VaR is negative (`-5.31`) and its limit utilization is below zero: a risk-reducing
   position consumes no limit. Limit measures are the *signed* component VaRs; taking
   their absolute value would let a diversifier breach its limit.
+- vol 28: every printed Hull 11e number in the scope is reproduced from the committed
+  arrays by numpy-only recomputation. CDS par spread `123.0026 bp` (Hull 123 bp) with
+  mark-to-market `0.0111094` at 150 bp; bond-bootstrap hazards within `2e-4` of
+  2.46/3.48/3.74 % (loss PVs within `0.002` of 1.50/3.53/5.61); fixed-coupon price
+  `100.2706` (Hull 100.27); mezzanine tranche `347.574 bp` (Hull 348 bp) with A/B/C
+  within `0.002` of 4.2846/0.0187/0.1496 and an independent numpy repricing agreeing to
+  `1e-6 bp`; third-to-default `152.966 bp` (Hull 153 bp); compound/base correlations
+  within `3.4e-4` of Table 25.8 and repricing the Table 25.6 quotes to `2.6e-14`; the
+  0–X % expected-loss slope is strictly decreasing; the ν→∞ double-t spread is within
+  `0.0062 bp` of the Gaussian spread; the ASB recursion matches the binomial pmf to
+  `5.6e-16`; CreditMetrics thresholds are within `5.0e-5` of Hull's 1.2719/2.4089/2.8070
+  and −3.7190/−3.0618/−1.7866 with the BBB default boundary 2.9290; Example 24.4
+  collateral exposures are exactly 5/0/0/5 and the eq. 24.5 special-case CVA matches the
+  general CVA to `1.5e-10`.
 
 ## Fresh validation record
 
@@ -212,6 +229,16 @@ synthetic data. Nothing here approves model performance or market predictive pow
   post-shock next-day forecast. The Basel multiplier schedule is the documented 250-day
   BCBS table, not a re-derivation. Cross-gamma, vanna, and vomma P&L-explain terms are
   out of scope.
+- vol 28: Hull Table 24.4 (S&P 1981–2019) and Table 25.6 (Creditex iTraxx quotes,
+  2007-01-31) are transcribed textbook constants, not downloaded market data; no
+  calibration to live quotes is claimed. The Table 25.8 implied correlations agree with
+  Hull to one decimal place, and the residual reflects DerivaGem's integration grid rather
+  than calibration quality. The double-t copula and the heterogeneous ASB recursion are
+  validated only by limits (ν→∞, homogeneous pool) because Hull prints no §25.11 numeric
+  example. Random recovery / random factor loadings, the implied copula, dynamic models,
+  and KMV EDF mappings remain documentation-only, and CDS options use the Black-type
+  market formula rather than the full Hull–White (2003) knock-out treatment. Only the
+  CreditMetrics block draws random numbers (seed `20260746`).
 
 Foundation models, diffusion/VAE/flow/SBI, signature/POT, and other cited frontier work
 remain optional research tracks. Preprints are identified as such in the design/spec and

@@ -1,4 +1,4 @@
-"""Artifact-backed Plotly figures for johnhull volumes 18--27."""
+"""Artifact-backed Plotly figures for johnhull volumes 18--28."""
 
 from __future__ import annotations
 
@@ -555,6 +555,103 @@ def _vol27_allocation() -> go.Figure:
     return fig
 
 
+def _vol28_cds_legs() -> go.Figure:
+    data = _load("28_credit_desk", "credit_scenarios.npz")
+    metrics = _metrics("28_credit_desk")
+    years = data["cds_year_label"].astype(str)
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=years, y=data["cds_payment_pv"], name="期待支払い PV (×s)"))
+    fig.add_trace(go.Bar(x=years, y=data["cds_accrual_pv"], name="期待アクルーアル PV (×s)"))
+    fig.add_trace(go.Bar(x=years, y=data["cds_payoff_pv"], name="期待ペイオフ PV"))
+    fig.update_layout(
+        title=(
+            f"Hull Table 25.2–25.4 — D={metrics['cds_risky_duration']:.4f}, "
+            f"protection={metrics['cds_protection_pv']:.4f}, "
+            f"s={metrics['cds_par_spread_bp']:.0f} bp"
+        ),
+        barmode="group",
+        xaxis_title="年",
+        yaxis_title="現在価値（元本 1）",
+    )
+    return fig
+
+
+def _vol28_tranche_spreads() -> go.Figure:
+    data = _load("28_credit_desk", "credit_scenarios.npz")
+    rho = data["rho_grid"]
+    names = data["tranche_names"].astype(str)
+    fig = go.Figure()
+    for j, name in enumerate(names):
+        fig.add_trace(
+            go.Scatter(x=rho, y=data["tranche_spread_vs_rho"][:, j] * 1e4, mode="lines", name=name)
+        )
+    fig.update_layout(
+        title="標準トランシェのブレークイーブンスプレッド vs コピュラ相関（Ex 25.2 の設定）",
+        xaxis_title="ρ",
+        yaxis_title="スプレッド (bp/年)",
+        yaxis_type="log",
+    )
+    return fig
+
+
+def _vol28_base_correlation() -> go.Figure:
+    data = _load("28_credit_desk", "credit_scenarios.npz")
+    labels = data["market_tranche_label"].astype(str)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Bar(x=labels, y=data["compound_correlation"] * 100, name="コンパウンド相関（モデル）")
+    )
+    fig.add_trace(go.Bar(x=labels, y=data["base_correlation"] * 100, name="ベース相関（モデル）"))
+    fig.add_trace(
+        go.Scatter(
+            x=labels,
+            y=data["hull_compound_correlation"] * 100,
+            mode="markers",
+            marker_symbol="x",
+            marker_size=11,
+            name="Hull Table 25.8 コンパウンド",
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=labels,
+            y=data["hull_base_correlation"] * 100,
+            mode="markers",
+            marker_symbol="diamond-open",
+            marker_size=11,
+            name="Hull Table 25.8 ベース",
+        )
+    )
+    fig.update_layout(
+        title="iTraxx Europe 2007-01-31（Table 25.6）から逆算したインプライド相関",
+        barmode="group",
+        yaxis_title="相関 (%)",
+    )
+    return fig
+
+
+def _vol28_credit_loss() -> go.Figure:
+    data = _load("28_credit_desk", "credit_scenarios.npz")
+    names = data["credit_loss_names"].astype(str)
+    fig = go.Figure()
+    for row, label, var in zip(
+        data["credit_loss_by_case"], names, data["credit_var_by_case"], strict=True
+    ):
+        fig.add_trace(
+            go.Histogram(x=row, name=str(label), histnorm="probability density", opacity=0.55)
+        )
+        fig.add_vline(
+            x=float(var), line_dash="dash", annotation_text=f"99.9% VaR {label}: {var:.1f}"
+        )
+    fig.update_layout(
+        title="CreditMetrics 損失分布（Table 24.4、100 社、独立 vs ρ=0.2）",
+        barmode="overlay",
+        xaxis_title="損失（エクスポージャ 1/社）",
+        yaxis_title="密度",
+    )
+    return fig
+
+
 FRONTIER_BUILDERS: dict[str, Callable[[], go.Figure]] = {
     "ml_price_error": _vol18_price,
     "ml_greek_error": _vol18_greeks,
@@ -596,4 +693,8 @@ FRONTIER_BUILDERS: dict[str, Callable[[], go.Figure]] = {
     "fhs_vs_hs_coverage": _vol27_coverage,
     "gpd_tail_fit": _vol27_gpd,
     "risk_allocation_bars": _vol27_allocation,
+    "cds_leg_pv_by_year": _vol28_cds_legs,
+    "tranche_spread_vs_correlation": _vol28_tranche_spreads,
+    "base_correlation_skew": _vol28_base_correlation,
+    "creditmetrics_loss_distribution": _vol28_credit_loss,
 }

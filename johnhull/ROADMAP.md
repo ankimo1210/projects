@@ -14,7 +14,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 6 | `volumes/06_numerical_methods` | 21, 27 | done |
 | 7 | `volumes/07_swaps` | 7, 34 | done |
 | 8 | `volumes/08_risk_var` | 22 | done |
-| 9 | `volumes/09_credit_xva` | 9, 24, 25 | done |
+| 9 | `volumes/09_credit_xva` | 9, 24, 25 | done（未実装節は vol 28 で実装） |
 | 10 | `volumes/10_exotics_martingales` | 26, 28 | done |
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
@@ -129,4 +129,18 @@ Phase 6 の portal 図（`var_traffic_light`・`fhs_vs_hs_coverage`・`gpd_tail_
 release はすべて完了した（commit 691877f, 63f83ce）。
 
 FRTB IMA（liquidity-horizon ES 集約、stressed ES scaling、NMRF、P&L attribution
-eligibility test、IMA/SA 資本比較）は **vol 28 候補**として scope 外に記録する。
+eligibility test、IMA/SA 資本比較）は **vol 29 候補**として scope 外に記録する。
+
+## vol 28 — 信用デスク（Hull Ch.24–25 の節単位の完全実装、2026-09-14）
+
+Design: `docs/superpowers/specs/2026-09-14-johnhull-vol28-credit-desk-design.md`
+
+| # | Volume | 内容 | Status |
+|---|--------|------|--------|
+| 28 | `volumes/28_credit_desk` | 24.4 債券/CDS ブートストラップ、24.7 ネッティング・担保・式 (24.5)、24.9 CreditMetrics、25.2 CDS レッグ/MTM/バイナリ、25.4 固定クーポン、25.5 フォワード/オプション、25.6+25.10 k-th-to-default、25.10 合成 CDO と コンパウンド/ベース相関、25.11 double-t・不均質再帰 | done |
+
+vol 09 の設計書（2026-06-08）で「md/conceptual only」とした項目のうち、Hull 本文に数値例が
+あるものをすべて hullkit（`credit_curve` / `cds` / `credit_portfolio` / `credit_metrics` / `xva` 追加分）
+に実装し、印刷値に固定した。KMV EDF、ランダム回収率・ファクター負荷、implied copula、
+動的モデルは引き続き説明のみ。`done` は integration・恒等式・再現性・教科書ピンの PASS を表し、
+市場較正の承認ではない。
