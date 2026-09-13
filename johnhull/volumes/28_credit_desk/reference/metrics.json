@@ -1,0 +1,819 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "criterion": "Σpayoff/(Σpayment+Σaccrual) within 0.5 bp of Hull's 123 bp and 1e-9 bp of the stored metric",
+        "name": "cds_par_spread_hull_pin",
+        "observed": 123.00257615399185,
+        "passed": true
+      },
+      {
+        "criterion": "D·0.015 − protection equals the stored metric and the grid value (1e-10) and Hull's 0.0111 (1e-4)",
+        "name": "cds_mtm_identity",
+        "observed": 0.011109406541533029,
+        "passed": true
+      },
+      {
+        "criterion": "max |repriced − market| <= 1e-10",
+        "name": "cds_bootstrap_round_trip",
+        "observed": 4.388850394221322e-16,
+        "passed": true
+      },
+      {
+        "criterion": "hazards within 0.0002 of 2.46/3.48/3.74% and loss PVs within 0.01 of 1.50/3.53/5.61",
+        "name": "bond_bootstrap_hull_pin",
+        "observed": 0.0019938056124146897,
+        "passed": true
+      },
+      {
+        "criterion": "100 − 100·D·(s−c) equals the stored price (1e-10) and Hull's 100.27 (0.01)",
+        "name": "fixed_coupon_price_identity",
+        "observed": 100.2705504281483,
+        "passed": true
+      },
+      {
+        "criterion": "max |payer − receiver − A(F−K)| <= 1e-10",
+        "name": "cds_option_parity",
+        "observed": 1.3877787807814457e-17,
+        "passed": true
+      },
+      {
+        "criterion": "re-integrated C/(A+B) within 1 bp of Hull's 348 bp, 1e-9 bp of the stored metric, and 1e-6 bp of an independent numpy repricing; A/B/C within 0.002 of 4.2846/0.0187/0.1496",
+        "name": "cdo_mezz_spread_hull_pin",
+        "observed": 347.5744086539548,
+        "passed": true
+      },
+      {
+        "criterion": "E_j(F) non-increasing in j and non-decreasing in F (1e-12)",
+        "name": "expected_principal_monotone",
+        "observed": 1.1102230246251565e-16,
+        "passed": true
+      },
+      {
+        "criterion": "Σ width·C_tranche equals the 0–100% expected loss (1e-8)",
+        "name": "capital_structure_loss_conservation",
+        "observed": 2.0816681711721685e-17,
+        "passed": true
+      },
+      {
+        "criterion": "re-summed 3rd-to-default spread within 1 bp of Hull's 153 bp and 1e-9 bp of the metric; spreads strictly decrease in k",
+        "name": "kth_to_default_hull_pin_and_ordering",
+        "observed": 152.96646860498151,
+        "passed": true
+      },
+      {
+        "criterion": "independent repricing at the committed compound correlations within 1e-6 of the quotes (0.01 bp / 1e-4 upfront points)",
+        "name": "implied_correlation_reprices_quotes",
+        "observed": 2.621514116896151e-14,
+        "passed": true
+      },
+      {
+        "criterion": "compound and base correlations within 1.0 point of Table 25.8",
+        "name": "implied_correlation_hull_pin",
+        "observed": 0.000341803712258934,
+        "passed": true
+      },
+      {
+        "criterion": "0–X% expected-loss PV increasing in X with strictly decreasing slope ΔEL/ΔX",
+        "name": "base_correlation_curve_shape",
+        "observed": -0.0016636335662427392,
+        "passed": true
+      },
+      {
+        "criterion": "ν→∞ double-t spread within 0.5 bp of the Gaussian spread",
+        "name": "double_t_gaussian_limit",
+        "observed": 0.006168267563458341,
+        "passed": true
+      },
+      {
+        "criterion": "recursion pmf equals the binomial pmf and the committed pmf (1e-12)",
+        "name": "heterogeneous_equals_binomial",
+        "observed": 5.551115123125783e-16,
+        "passed": true
+      },
+      {
+        "criterion": "thresholds recomputed from Table 24.4 within 0.0002 of Hull and 1e-9 of the stored values; 99.9% credit VaR larger with ρ=0.2 than independent",
+        "name": "creditmetrics_thresholds_hull_pin",
+        "observed": 4.974893760989474e-05,
+        "passed": true
+      },
+      {
+        "criterion": "netting 15 <= gross 40 (Hull 24.7); Example 24.4 exposures 5/0/0/5; (1−R)f_nd Σq_i equals the stored CVA (1e-12) and the general CVA on a 2000-step grid (1e-5)",
+        "name": "netting_collateral_and_cva_special_case",
+        "observed": 1.5286807930614543e-10,
+        "passed": true
+      }
+    ],
+    "model_performance_approved": false,
+    "negative_results": [
+      "Hull Table 24.4 (S&P 1981–2019) and Table 25.6 (Creditex iTraxx quotes, 2007-01-31) are transcribed textbook constants, not downloaded market data.",
+      "The Table 25.8 implied correlations match Hull to one decimal place; residual differences reflect DerivaGem's integration grid, not calibration quality.",
+      "The double-t copula and ASB recursion are validated only by limits (ν→∞, homogeneous); Hull prints no numeric example for §25.11.",
+      "Random recovery / random factor loadings, the implied copula, dynamic models and KMV EDF mappings are out of scope (documentation only).",
+      "CDS options use the Black-type market formula; the full Hull–White (2003) knock-out treatment is not implemented."
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "scope": "integration_and_reproducibility"
+  },
+  "artifact_role": "implementation-derived, identity-tested teaching reference",
+  "benchmark": {
+    "nondeterministic_fields": [],
+    "schema_version": 1
+  },
+  "benchmark_policy": "no nondeterministic benchmark fields",
+  "companion_schemas": {
+    "credit_scenarios.npz": {
+      "asb_probe_pmf": {
+        "dtype": "float64",
+        "shape": [
+          11
+        ],
+        "unit": "probability"
+      },
+      "asb_probe_prob": {
+        "dtype": "float64",
+        "shape": [
+          10
+        ],
+        "unit": "probability"
+      },
+      "average_hazard": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "annualized hazard rate"
+      },
+      "base_correlation": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "copula correlation"
+      },
+      "bond_bootstrap_hazard": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "annualized hazard rate"
+      },
+      "bond_expected_loss_pv": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "PV per 100 face"
+      },
+      "bond_maturity_label": {
+        "dtype": "<U2",
+        "shape": [
+          3
+        ],
+        "unit": "label"
+      },
+      "bond_price": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "price per 100 face"
+      },
+      "bond_risk_free_price": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "price per 100 face"
+      },
+      "capital_structure_attach": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "fraction of portfolio principal"
+      },
+      "capital_structure_detach": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "fraction of portfolio principal"
+      },
+      "capital_structure_expected_loss": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "PV per unit tranche principal"
+      },
+      "cds_accrual_pv": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "PV per unit spread"
+      },
+      "cds_bootstrap_hazard": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized hazard rate"
+      },
+      "cds_bootstrap_repriced_spread": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized decimal spread"
+      },
+      "cds_contract_spread_grid": {
+        "dtype": "float64",
+        "shape": [
+          61
+        ],
+        "unit": "annualized decimal spread"
+      },
+      "cds_default_prob": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "probability"
+      },
+      "cds_discount_end": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "discount factor"
+      },
+      "cds_discount_mid": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "discount factor"
+      },
+      "cds_market_spread": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "annualized decimal spread"
+      },
+      "cds_market_tenor": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "years"
+      },
+      "cds_mtm_seller": {
+        "dtype": "float64",
+        "shape": [
+          61
+        ],
+        "unit": "value per unit notional"
+      },
+      "cds_payment_pv": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "PV per unit spread"
+      },
+      "cds_payoff_pv": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "PV per unit notional"
+      },
+      "cds_survival": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "probability"
+      },
+      "cds_year": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "years"
+      },
+      "cds_year_label": {
+        "dtype": "<U1",
+        "shape": [
+          5
+        ],
+        "unit": "label"
+      },
+      "collateral_case_exposure": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "collateral_case_label": {
+        "dtype": "<U7",
+        "shape": [
+          4
+        ],
+        "unit": "label"
+      },
+      "collateral_case_lagged": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "collateral_case_value": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "compound_correlation": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "copula correlation"
+      },
+      "credit_loss_by_case": {
+        "dtype": "float64",
+        "shape": [
+          2,
+          5000
+        ],
+        "unit": "loss per unit exposure"
+      },
+      "credit_loss_names": {
+        "dtype": "<U11",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "credit_var_by_case": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "loss per unit exposure"
+      },
+      "cva_default_prob": {
+        "dtype": "float64",
+        "shape": [
+          2000
+        ],
+        "unit": "probability"
+      },
+      "cva_grid_time": {
+        "dtype": "float64",
+        "shape": [
+          2001
+        ],
+        "unit": "years"
+      },
+      "double_t_nu_grid": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "degrees of freedom"
+      },
+      "double_t_spread": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "annualized decimal spread"
+      },
+      "el_curve_value": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "PV per unit portfolio principal"
+      },
+      "el_curve_x": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "fraction of portfolio principal"
+      },
+      "expected_loss_by_case": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "loss per unit exposure"
+      },
+      "factor_node": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "standard normal factor"
+      },
+      "factor_weight": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "quadrature weight"
+      },
+      "fixed_coupon_price_grid": {
+        "dtype": "float64",
+        "shape": [
+          45
+        ],
+        "unit": "price per 100 notional"
+      },
+      "forward_hazard": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "annualized hazard rate"
+      },
+      "hull_base_correlation": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "copula correlation"
+      },
+      "hull_bond_bootstrap_hazard": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "annualized hazard rate"
+      },
+      "hull_collateral_case_exposure": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "hull_compound_correlation": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "copula correlation"
+      },
+      "hull_threshold_aaa": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "standard normal quantile"
+      },
+      "hull_threshold_bbb": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "standard normal quantile"
+      },
+      "index_quote_grid": {
+        "dtype": "float64",
+        "shape": [
+          45
+        ],
+        "unit": "basis points (actual/360)"
+      },
+      "kth_accrual_by_factor": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "PV per unit spread"
+      },
+      "kth_annuity_by_factor": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "PV per unit spread"
+      },
+      "kth_conditional_cumulative_prob": {
+        "dtype": "float64",
+        "shape": [
+          60,
+          6
+        ],
+        "unit": "probability"
+      },
+      "kth_factor_node": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "standard normal factor"
+      },
+      "kth_factor_weight": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "quadrature weight"
+      },
+      "kth_order": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "default order k"
+      },
+      "kth_payoff_by_factor": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "PV per unit notional"
+      },
+      "kth_spread": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "annualized decimal spread"
+      },
+      "market_tranche_attach": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "fraction of portfolio principal"
+      },
+      "market_tranche_detach": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "fraction of portfolio principal"
+      },
+      "market_tranche_label": {
+        "dtype": "<U6",
+        "shape": [
+          5
+        ],
+        "unit": "label"
+      },
+      "market_tranche_quote": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "upfront fraction (equity) or annualized decimal spread"
+      },
+      "netting_trade_value": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "option_strike_grid": {
+        "dtype": "float64",
+        "shape": [
+          41
+        ],
+        "unit": "annualized decimal spread"
+      },
+      "payer_value": {
+        "dtype": "float64",
+        "shape": [
+          41
+        ],
+        "unit": "value per unit notional"
+      },
+      "rating_names": {
+        "dtype": "<U7",
+        "shape": [
+          8
+        ],
+        "unit": "label"
+      },
+      "receiver_value": {
+        "dtype": "float64",
+        "shape": [
+          41
+        ],
+        "unit": "value per unit notional"
+      },
+      "repriced_quote": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "upfront fraction (equity) or annualized decimal spread"
+      },
+      "rho_grid": {
+        "dtype": "float64",
+        "shape": [
+          30
+        ],
+        "unit": "copula correlation"
+      },
+      "spread_tenor": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "years"
+      },
+      "threshold_aaa": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "standard normal quantile"
+      },
+      "threshold_bbb": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "standard normal quantile"
+      },
+      "threshold_index": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "threshold ordinal"
+      },
+      "tranche_accrual_by_factor": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "PV per unit spread"
+      },
+      "tranche_annuity_by_factor": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "PV per unit spread"
+      },
+      "tranche_expected_loss": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "PV per unit tranche principal"
+      },
+      "tranche_expected_principal": {
+        "dtype": "float64",
+        "shape": [
+          60,
+          21
+        ],
+        "unit": "fraction of tranche principal"
+      },
+      "tranche_names": {
+        "dtype": "<U7",
+        "shape": [
+          6
+        ],
+        "unit": "label"
+      },
+      "tranche_payment_time": {
+        "dtype": "float64",
+        "shape": [
+          20
+        ],
+        "unit": "years"
+      },
+      "tranche_protection_by_factor": {
+        "dtype": "float64",
+        "shape": [
+          60
+        ],
+        "unit": "PV per unit tranche principal"
+      },
+      "tranche_spread_vs_rho": {
+        "dtype": "float64",
+        "shape": [
+          30,
+          6
+        ],
+        "unit": "annualized decimal spread"
+      },
+      "transition_matrix": {
+        "dtype": "float64",
+        "shape": [
+          8,
+          8
+        ],
+        "unit": "probability"
+      },
+      "yield_spread": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "annualized decimal spread"
+      }
+    }
+  },
+  "companions": {
+    "credit_scenarios.npz": "9c50708c8ea033c0ac9a88c65721fb0cb3ec00ff4a25fa66c48b35d7b555ae87"
+  },
+  "data_policy": "synthetic-offline",
+  "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
+  "generator_api": "hullkit.frontier_reference.build_frontier_reference",
+  "limitations": [
+    "Synthetic results are not evidence of market forecasting power."
+  ],
+  "metrics": {
+    "base_correlation_max_reprice_error": 3.737895409861025e-15,
+    "binary_cds_spread_bp": 205.00429358998645,
+    "bond_bootstrap_hazard_1": 0.024575329948416012,
+    "bond_bootstrap_hazard_2": 0.03475777894122982,
+    "bond_bootstrap_hazard_3": 0.037351228053560705,
+    "cdo_index_hazard": 0.008296995340469394,
+    "cdo_mezz_accrual": 0.01869664988180446,
+    "cdo_mezz_annuity": 4.28464661505203,
+    "cdo_mezz_protection": 0.14957319905443567,
+    "cdo_mezz_spread_bp": 347.5744086539548,
+    "cdo_rate": 0.035,
+    "cdo_rho": 0.15,
+    "cds_bootstrap_max_reprice_error": 4.388850394221322e-16,
+    "cds_hazard": 0.02,
+    "cds_implied_hazard_100bp": 0.016258868561856883,
+    "cds_mtm_seller_150bp": 0.011109406541533029,
+    "cds_par_spread_bp": 123.00257615399185,
+    "cds_protection_pv": 0.050615408045779915,
+    "cds_rate": 0.05,
+    "cds_risky_duration": 4.114987639154196,
+    "credit_var_correlated": 6.599999999999999,
+    "credit_var_independent": 3.0,
+    "creditmetrics_bbb_default_threshold": 2.9290497489376195,
+    "creditmetrics_rho": 0.2,
+    "cva_general_equivalent": 0.24458895909902348,
+    "cva_no_default_value": 7.0,
+    "cva_rate": 0.05,
+    "cva_special_case": 0.2445889589461554,
+    "double_t_limit_gap_bp": 0.006168267563458341,
+    "fixed_coupon_coupon": 0.004055555555555555,
+    "fixed_coupon_duration": 4.447404298328079,
+    "fixed_coupon_hazard": 0.005716736665913349,
+    "fixed_coupon_price": 100.2705504281483,
+    "fixed_coupon_spread": 0.0034472222222222217,
+    "gaussian_mezz_spread": 0.03475744086539548,
+    "gross_exposure": 40.0,
+    "heterogeneous_binomial_gap": 5.551115123125783e-16,
+    "heterogeneous_spread_gap": 5.93275428784068e-15,
+    "hull_bbb_default_threshold": 2.929,
+    "itraxx_hazard": 0.003818992392297505,
+    "itraxx_rate": 0.03,
+    "kth3_accrual": 0.05239597534667226,
+    "kth3_annuity": 4.057993117728011,
+    "kth3_payoff": 0.06287517041600671,
+    "kth3_spread_bp": 152.96646860498151,
+    "kth_rate": 0.05,
+    "netting_exposure": 15.0,
+    "option_expiry": 1.0,
+    "option_forward_spread": 0.021130946583698414,
+    "option_risky_annuity": 3.7743222957665576,
+    "option_sigma": 0.6,
+    "portfolio_expected_loss": 0.022380958203668554,
+    "recovery": 0.4
+  },
+  "schema_version": 1,
+  "seed": 20260746,
+  "semantic_sources": [
+    "johnhull/hullkit/src/hullkit/frontier_reference.py",
+    "johnhull/hullkit/src/hullkit/credit_curve.py",
+    "johnhull/hullkit/src/hullkit/cds.py",
+    "johnhull/hullkit/src/hullkit/credit_portfolio.py",
+    "johnhull/hullkit/src/hullkit/credit_metrics.py",
+    "johnhull/hullkit/src/hullkit/xva.py"
+  ],
+  "semantic_tests": [
+    "johnhull/hullkit/tests/test_frontier_reference.py",
+    "johnhull/hullkit/tests/test_credit_curve.py",
+    "johnhull/hullkit/tests/test_cds.py",
+    "johnhull/hullkit/tests/test_credit_portfolio.py",
+    "johnhull/hullkit/tests/test_credit_metrics.py",
+    "johnhull/hullkit/tests/test_xva.py"
+  ],
+  "volume": 28
+}
