@@ -81,3 +81,31 @@ def convexity_adjustment(y_F, sigma_y, T, g2_over_g1):
     the adjustment is positive; pass g2_over_g1 = |G''/G'| (a positive number).
     """
     return 0.5 * y_F**2 * sigma_y**2 * T * g2_over_g1
+
+
+def bond_yield_convexity(y_F, coupon, n_years, freq=1, face=1.0):
+    """G'(y_F) and G''(y_F) of a standard coupon bond's price-yield function (Hull §30.1).
+
+    G(y) = sum_k (face*coupon/freq) (1 + y/freq)^-k + face (1 + y/freq)^-(freq*n_years),
+    k = 1..freq*n_years, so y and coupon are annual rates compounded ``freq``
+    times a year (Hull Example 30.1 uses annual compounding, freq=1). Returns
+    ``(g1, g2)`` with g1 < 0 < g2 for a positive-yield bond; feed
+    ``g2_over_g1 = -g2 / g1`` to :func:`convexity_adjustment` for eq. 30.1.
+    Hull Example 30.1 (3-year 6% bond, y_F = 6%): G' = -2.6730, G'' = 9.8910.
+    """
+    if freq <= 0:
+        raise ValueError(f"freq must be positive, got {freq}")
+    n_periods = n_years * freq
+    if n_periods < 1 or abs(n_periods - round(n_periods)) > 1e-9:
+        raise ValueError(
+            f"n_years * freq must be a positive whole number of periods, got {n_periods}"
+        )
+    base = 1.0 + y_F / freq
+    if base <= 0.0:
+        raise ValueError(f"1 + y_F/freq must be positive, got {base}")
+    k = np.arange(1, round(float(n_periods)) + 1, dtype=float)
+    cashflows = np.full(k.size, face * coupon / freq)
+    cashflows[-1] += face
+    g1 = -np.sum(k * cashflows * base ** (-k - 1.0)) / freq
+    g2 = np.sum(k * (k + 1.0) * cashflows * base ** (-k - 2.0)) / freq**2
+    return float(g1), float(g2)

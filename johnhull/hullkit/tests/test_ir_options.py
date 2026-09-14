@@ -2,6 +2,7 @@
 
 import math
 
+import numpy as np
 import pytest
 from hullkit import ir_options
 
@@ -115,3 +116,45 @@ def test_black_rejects_non_positive_forward_and_strike():
             ir_options.caplet_black(100.0, 0.25, forward, strike, 0.2, 0.5, 0.99)
         with pytest.raises(ValueError, match="positive"):
             ir_options.swaption_black(100.0, 3.5, forward, strike, 0.2, 1.0)
+
+
+def test_bond_yield_convexity_hull_example_30_1():
+    """Hull 11e GE Example 30.1 (p.709): 3-year 6% annual-pay bond at y_F = 6%.
+
+    Hull prints G'(y_F) = -2.6730, G''(y_F) = 9.8910, an expected yield of
+    0.06097 with sigma_y = 22% and T = 3, and an instrument value of
+    100 * 0.06097 / 1.05^3 = 5.27 (5.18 without the adjustment).
+    """
+    g1, g2 = ir_options.bond_yield_convexity(0.06, 0.06, 3)
+    assert g1 == pytest.approx(-2.6730, abs=5e-5)
+    assert g2 == pytest.approx(9.8910, abs=5e-5)
+    adj = ir_options.convexity_adjustment(0.06, 0.22, 3.0, -g2 / g1)
+    assert 0.06 + adj == pytest.approx(0.06097, abs=5e-6)
+    assert 100.0 * (0.06 + adj) / 1.05**3 == pytest.approx(5.27, abs=5e-3)
+    assert 100.0 * 0.06 / 1.05**3 == pytest.approx(5.18, abs=5e-3)
+
+
+def test_bond_yield_convexity_matches_finite_differences():
+    # semiannual 5-year 4% bond, yield 5% with semiannual compounding
+    y, coupon, n, m, face = 0.05, 0.04, 5.0, 2, 100.0
+
+    def price(yy):
+        k = np.arange(1, int(n * m) + 1)
+        cf = np.full(k.size, face * coupon / m)
+        cf[-1] += face
+        return float(np.sum(cf * (1.0 + yy / m) ** (-k)))
+
+    h = 1e-4
+    g1, g2 = ir_options.bond_yield_convexity(y, coupon, n, freq=m, face=face)
+    assert g1 == pytest.approx((price(y + h) - price(y - h)) / (2 * h), rel=1e-6)
+    assert g2 == pytest.approx((price(y + h) - 2 * price(y) + price(y - h)) / h**2, rel=1e-5)
+    assert g1 < 0.0 < g2
+
+
+def test_bond_yield_convexity_validation():
+    with pytest.raises(ValueError):
+        ir_options.bond_yield_convexity(0.06, 0.06, 2.5, freq=1)  # not a whole number of periods
+    with pytest.raises(ValueError):
+        ir_options.bond_yield_convexity(0.06, 0.06, 3, freq=0)
+    with pytest.raises(ValueError):
+        ir_options.bond_yield_convexity(-1.5, 0.06, 3)  # 1 + y/m <= 0

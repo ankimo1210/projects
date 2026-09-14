@@ -35,10 +35,9 @@ def test_floating_lookback_call_hull_example_26_2():
 
     Newly issued floating lookback on a non-dividend-paying stock: S0 = Smin = 50,
     sigma = 40%, r = 10%, q = 0, T = 0.25. The text prints the floating lookback
-    put as 7.79 and the newly issued floating lookback call as 8.04. hullkit has
-    only the call closed form; the computed 8.0371 rounds to the printed 8.04
-    (abs 5e-3). The put (7.79) has no hullkit function and no put-call parity
-    with the floating call, so it is not pinned.
+    put as 7.79 and the newly issued floating lookback call as 8.04. The computed
+    call 8.0371 rounds to the printed 8.04 (abs 5e-3); the put (7.79) is pinned
+    in ``test_exotics_puts.py``.
     """
     value = exotics.lookback_floating_call(50.0, 50.0, 0.10, 0.40, 0.25)
     assert value == pytest.approx(8.04, abs=5e-3)

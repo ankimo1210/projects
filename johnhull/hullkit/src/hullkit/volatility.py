@@ -2,6 +2,7 @@
 
 import numpy as np
 from scipy.optimize import brentq, minimize
+from scipy.stats import norm
 
 from . import bsm
 
@@ -19,6 +20,97 @@ def implied_vol(price, S, K, r, T, q=0.0, kind="call"):
     if objective(lo) * objective(hi) > 0:
         raise ValueError("price outside no-arbitrage bounds for sigma in [1e-6, 5]")
     return brentq(objective, lo, hi)
+
+
+def breeden_litzenberger_density(strikes, call_prices, r, T):
+    """Risk-neutral density of S_T from call prices, Hull 11e GE Appendix 20A p.468.
+
+    Butterfly finite difference of eq. (20A.2) on an equally spaced strike grid
+    ``K_0 < K_1 < ... < K_m`` with spacing ``delta``::
+
+        g(K_i) = e^{rT} (c(K_i - delta) + c(K_i + delta) - 2 c(K_i)) / delta^2
+
+    for the interior strikes ``K_1..K_{m-1}`` (eq. 20A.1 is the limit
+    ``g = e^{rT} d^2c/dK^2``). Returns ``(interior_strikes, density)``. For
+    Example 20A.1 pass the grid 6.0, 6.5, ..., 14.0 and read g1..g8 at
+    6.5, 7.5, ..., 13.5. No smoothing or positivity repair is applied: a
+    negative value flags butterfly arbitrage in the input prices.
+    """
+    k = np.asarray(strikes, dtype=float)
+    c = np.asarray(call_prices, dtype=float)
+    if k.ndim != 1 or c.ndim != 1 or k.shape != c.shape:
+        raise ValueError("strikes and call_prices must be 1-D arrays of equal length")
+    if k.size < 3:
+        raise ValueError("at least 3 strikes are needed for the butterfly difference")
+    if np.any(~np.isfinite(k)) or np.any(~np.isfinite(c)):
+        raise ValueError("strikes and call_prices must be finite")
+    spacing = np.diff(k)
+    delta = (k[-1] - k[0]) / (k.size - 1)
+    if np.any(spacing <= 0.0) or not np.allclose(spacing, delta, rtol=1e-6, atol=0.0):
+        raise ValueError("strikes must be strictly increasing and equally spaced (eq. 20A.2)")
+    if np.ndim(r) != 0 or not np.isfinite(r):
+        raise ValueError("r must be a finite scalar")
+    if np.ndim(T) != 0 or not np.isfinite(T) or T < 0.0:
+        raise ValueError("T must be a finite scalar >= 0")
+    density = np.exp(r * T) * (c[:-2] + c[2:] - 2.0 * c[1:-1]) / delta**2
+    return k[1:-1], density
+
+
+def forward_moneyness(K, S0, r, T, q=0.0):
+    """Moneyness ``K / F0`` with ``F0 = S0 e^{(r-q)T}``, Hull 11e GE §20.4 p.458.
+
+    The smile axis traders prefer to ``K/S0`` because ``F0`` (eq. 5.3), not
+    ``S0``, is the risk-neutral expected price at the options' maturity;
+    ``K = F0`` is the at-the-money strike on this axis.
+    """
+    bsm._validate_price_inputs(S0, K, 0.0, T)
+    return K / (S0 * np.exp((r - q) * T))
+
+
+def strike_from_forward_moneyness(moneyness, S0, r, T, q=0.0):
+    """Inverse of `forward_moneyness`: ``K = (K/F0) S0 e^{(r-q)T}``, Hull 11e GE §20.4 p.458."""
+    m = np.asarray(moneyness, dtype=float)
+    if np.any(~np.isfinite(m)) or np.any(m <= 0.0):
+        raise ValueError("moneyness must contain only finite values > 0")
+    bsm._validate_price_inputs(S0, 1.0, 0.0, T)
+    return moneyness * S0 * np.exp((r - q) * T)
+
+
+def delta_from_strike(K, S0, r, sigma, T, q=0.0, kind="call"):
+    """Delta axis of a smile, Hull 11e GE §20.4 p.458 with Table 19.6 deltas.
+
+    Each strike's own implied vol ``sigma`` (array-aligned with ``K``) gives
+    the option's BSM delta: ``e^{-qT} N(d1)`` for calls, ``e^{-qT}(N(d1) - 1)``
+    for puts. Plotting ``sigma`` against the result re-expresses a
+    ``sigma(K)`` smile on the delta axis (0.5 call delta = "50-delta").
+    """
+    if kind not in ("call", "put"):
+        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    delta_fn = bsm.call_delta if kind == "call" else bsm.put_delta
+    return delta_fn(S0, K, r, sigma, T, q)
+
+
+def strike_from_delta(delta, S0, r, sigma, T, q=0.0, kind="call"):
+    """Strike whose BSM delta at vol ``sigma`` equals ``delta``, Hull 11e GE §20.4 p.458.
+
+    Inverts Table 19.6: ``N(d1) = delta e^{qT}`` (call) or ``1 + delta e^{qT}``
+    (put), then ``K = S0 exp(-d1 sigma sqrt(T) + (r - q + sigma^2/2) T)``.
+    Maps a smile quoted on the delta axis back to strikes. Requires
+    ``0 < delta < e^{-qT}`` for calls and ``-e^{-qT} < delta < 0`` for puts.
+    """
+    if kind not in ("call", "put"):
+        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    bsm._validate_price_inputs(S0, 1.0, sigma, T)
+    if np.any(np.asarray(sigma) == 0.0) or np.any(np.asarray(T) == 0.0):
+        raise ValueError("strike_from_delta needs sigma > 0 and T > 0")
+    delta = np.asarray(delta, dtype=float)
+    growth = np.exp(q * T)
+    n_d1 = delta * growth if kind == "call" else 1.0 + delta * growth
+    if np.any(~np.isfinite(n_d1)) or np.any(n_d1 <= 0.0) or np.any(n_d1 >= 1.0):
+        bound = "0 < delta < e^{-qT}" if kind == "call" else "-e^{-qT} < delta < 0"
+        raise ValueError(f"{kind} delta must satisfy {bound}")
+    vol_time = sigma * np.sqrt(T)
+    return S0 * np.exp(-norm.ppf(n_d1) * vol_time + (r - q + 0.5 * sigma**2) * T)
 
 
 def ewma_variance(returns, lam=0.94, init=None):
