@@ -203,7 +203,7 @@ def test_text_body_splits_pnl_into_stock_and_fx() -> None:
 
 
 def test_html_body_splits_pnl_into_stock_and_fx_for_totals_accounts_and_positions() -> None:
-    body = mailer.html_body(payload(), image_cid="charts")
+    body = mailer.html_body(payload())
     for value in (
         "株 −470,000",  # headline day
         "FX +19,434",
@@ -229,7 +229,7 @@ def test_text_body_carries_the_after_tax_estimate() -> None:
 
 
 def test_html_body_carries_the_after_tax_estimate_for_totals_accounts_and_positions() -> None:
-    body = mailer.html_body(payload(), image_cid="charts")
+    body = mailer.html_body(payload())
     for value in (
         "税引後 45,000,000",  # headline total
         "税引後 −380,000",  # headline day
@@ -260,7 +260,7 @@ def test_text_body_shows_usd_beside_the_yen() -> None:
 
 
 def test_html_body_shows_usd_under_yen_for_totals_accounts_and_positions() -> None:
-    body = mailer.html_body(payload(), image_cid="charts")
+    body = mailer.html_body(payload())
     for value in (
         "$301,257",  # headline total
         "税引後 45,000,000 · $293,064",
@@ -308,12 +308,17 @@ def test_html_body_still_renders_when_the_payload_carries_no_series() -> None:
     assert "46,257,970" in body and "XLE" in body
 
 
-def test_html_body_shows_the_rendered_chart_instead_of_the_drawn_one() -> None:
-    # A real rendered chart beats the table-cell fallback, so it replaces it.
-    withimg = mailer.html_body(payload(), image_cid="charts")
-    assert "cid:charts" in withimg
-    assert "上げた日" not in withimg  # the drawn figures stand down
-    assert "cid:" not in mailer.html_body(payload())
+def test_html_body_uses_the_attached_drawing_of_a_chart_instead_of_table_cells() -> None:
+    images = {"daily": ("chart0@pl", 560, 170), "price:XLE@gb": ("chart1@pl", 540, 140)}
+    body = mailer.html_body(payload(), images)
+    assert '<img src="cid:chart0@pl" width="560" height="170"' in body
+    assert '<img src="cid:chart1@pl" width="540" height="140"' in body
+    assert "▲ 買 ▼ 売" in body and "点線 平均取得" in body
+    # the sparkline keeps to a narrow fixed width so the holdings table fits the column
+    spark = mailer.html_body(payload(), {"spark:XLE@gb": ("chart2@pl", 100, 30)})
+    assert '<img src="cid:chart2@pl" width="64" height="19"' in spark
+    # a chart with no drawing attached is still drawn with cells
+    assert "累計損益" in body and "cid:" not in mailer.html_body(payload())
 
 
 def test_html_body_draws_a_sparkline_beside_every_position() -> None:
@@ -326,23 +331,30 @@ def test_html_body_draws_a_sparkline_beside_every_position() -> None:
     assert with_spark.count("solid #C05C33") >= without.count("solid #C05C33") + 6
 
 
-def test_build_message_is_multipart_related_with_inline_png() -> None:
+def test_build_message_attaches_each_chart_inline_under_its_content_id() -> None:
     png = b"\x89PNG\r\n\x1a\n" + b"0" * 32
-    msg = mailer.build_message(payload(), to=["me@example.com"], sender="me@example.com", png=png)
-    raw = msg.as_bytes()
-    parsed = message_from_bytes(raw)
+    pieces = {"nav": (png, 560, 210), "spark:XLE@gb": (png + b"1", 116, 46)}
+    msg = mailer.build_message(
+        payload(), to=["me@example.com"], sender="me@example.com", pieces=pieces
+    )
+    parsed = message_from_bytes(msg.as_bytes())
     assert parsed["To"] == "me@example.com"
     assert "日次損益 2026-09-11" in mailer.decode_header_text(parsed["Subject"])
     types = [part.get_content_type() for part in parsed.walk()]
     assert "multipart/related" in types and "text/plain" in types and "text/html" in types
-    image = next(p for p in parsed.walk() if p.get_content_type() == "image/png")
-    assert image["Content-ID"] == "<charts>"
-    assert image.get("Content-Disposition", "").startswith("inline")
-    assert base64.b64decode(image.get_payload()) == png
+    images = [p for p in parsed.walk() if p.get_content_type() == "image/png"]
+    assert len(images) == 2
+    assert all(p.get("Content-Disposition", "").startswith("inline") for p in images)
+    html_part = next(p for p in parsed.walk() if p.get_content_type() == "text/html")
+    body = html_part.get_payload(decode=True).decode("utf-8")
+    for image in images:
+        cid = image["Content-ID"].strip("<>")
+        assert f"cid:{cid}" in body
+    assert base64.b64decode(images[0].get_payload()) == png
 
 
 def test_build_message_without_image_has_no_related_part() -> None:
-    msg = mailer.build_message(payload(), to=["me@example.com"], sender="me@example.com", png=None)
+    msg = mailer.build_message(payload(), to=["me@example.com"], sender="me@example.com")
     types = [part.get_content_type() for part in message_from_bytes(msg.as_bytes()).walk()]
     assert "image/png" not in types and "text/html" in types
 

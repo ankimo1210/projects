@@ -8,12 +8,15 @@ once the drawing pass finishes, and this module crops the screenshot to it.
 
 from __future__ import annotations
 
+import html
+import json
 import re
 import subprocess
 import tempfile
 from pathlib import Path
 
 BOX_RE = re.compile(r'data-chart-box="(\d+),(\d+)"')
+PIECES_RE = re.compile(r'data-pieces="([^"]*)"')
 THEME_RE = re.compile(r'<html[^>]*\bdata-theme="[^"]*"[^>]*>')
 CHROME_CANDIDATES = (
     "~/.cache/ms-playwright/chromium-*/chrome-linux*/chrome",
@@ -42,6 +45,29 @@ def parse_box(dom: str) -> tuple[int, int]:
     if match is None:
         raise RuntimeError("the page published no chart box (the drawing pass did not finish)")
     return int(match.group(1)), int(match.group(2))
+
+
+def parse_pieces(dom: str) -> dict[str, tuple[int, int, int, int]]:
+    """Each chart's (left, top, width, height) in CSS pixels, as the page published them."""
+    match = PIECES_RE.search(dom)
+    if match is None:
+        raise RuntimeError("the page published no chart pieces (the drawing pass did not finish)")
+    raw = json.loads(html.unescape(match.group(1)))
+    return {str(k): (int(b[0]), int(b[1]), int(b[2]), int(b[3])) for k, b in raw.items()}
+
+
+def piece_box(
+    box: tuple[int, int, int, int], scale: int, pad: int, size: tuple[int, int]
+) -> tuple[int, int, int, int]:
+    """PIL crop box, in device pixels, around one chart: padded, scaled, clamped to the image."""
+    left, top, w, h = box
+    width, height = size
+    return (
+        max(0, (left - pad) * scale),
+        max(0, (top - pad) * scale),
+        min(width, (left + w + pad) * scale),
+        min(height, (top + h + pad) * scale),
+    )
 
 
 def crop_box(
@@ -112,3 +138,55 @@ def render(
             out_path.parent.mkdir(parents=True, exist_ok=True)
             cropped.save(out_path, optimize=True)
     return out_path
+
+
+def render_pieces(
+    html_path: Path,
+    chrome: str | None = None,
+    width: int = 1100,
+    scale: int = 2,
+    pad: int = 10,
+    theme: str | None = "light",
+) -> dict[str, tuple[bytes, int, int]] | None:
+    """Every chart on the page as its own PNG: name -> (png, width, height in CSS pixels).
+
+    The page is shot at ``scale`` device pixels per CSS pixel, so a chart shown
+    at its CSS size in the mail stays sharp on a high-density screen. Returns
+    None when no browser is available.
+    """
+    import io
+
+    from PIL import Image
+
+    chrome = chrome or find_chrome()
+    if chrome is None:
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        source = html_path
+        if theme:
+            source = Path(tmp) / "themed.html"
+            source.write_text(
+                retheme(html_path.read_text(encoding="utf-8"), theme), encoding="utf-8"
+            )
+        url = source.resolve().as_uri()
+        flags = [f"--force-device-scale-factor={scale}"]
+        dom = _run(chrome, url, width, 4000, [*flags, "--dump-dom"]).decode("utf-8", "ignore")
+        boxes = parse_pieces(dom)
+        height = max((top + h for _, top, _, h in boxes.values()), default=0) + 4 * pad
+        shot = Path(tmp) / "page.png"
+        _run(chrome, url, width, height, [*flags, f"--screenshot={shot}"])
+        if not shot.exists():
+            raise RuntimeError("headless browser produced no screenshot")
+        out: dict[str, tuple[bytes, int, int]] = {}
+        with Image.open(shot) as image:
+            page = image.convert("RGB")
+            for name, box in boxes.items():
+                if box[2] <= 0 or box[3] <= 0:
+                    continue
+                # a sparkline sits in a table cell with no axis text to spill over: cut it tight
+                margin = min(pad, 2) if name.startswith("spark:") else pad
+                piece = page.crop(piece_box(box, scale, margin, page.size))
+                buffer = io.BytesIO()
+                piece.save(buffer, format="PNG", optimize=True)
+                out[name] = (buffer.getvalue(), box[2] + 2 * margin, box[3] + 2 * margin)
+    return out

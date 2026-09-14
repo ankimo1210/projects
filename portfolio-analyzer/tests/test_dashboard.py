@@ -183,3 +183,23 @@ def test_page_exposes_the_chart_box_for_the_screenshot() -> None:
     html = dashboard.render(sample(), ":root{--ink:#000}")
     assert 'id="charts-top"' in html and 'id="charts-end"' in html
     assert "chartBox" in html  # the drawing pass publishes the crop box
+
+
+def test_render_marks_every_chart_as_a_piece_the_mail_can_cut_out() -> None:
+    data = sample()
+    html = dashboard.render(data, ":root{--ink:#000}")
+    for piece in ("nav", "pnl", "daily"):
+        assert f'data-piece="{piece}"' in html, piece
+    for key in data["series"]["symbols"]:
+        assert f"data-piece='price:{key}'" in html and f"data-piece='pnlc:{key}'" in html
+    assert "data-piece='spark:" in html
+    assert "dataset.pieces" in html
+    # on screen the charts keep their width and scale with the page
+    assert 'viewBox="0 0 860 220"' in html and 'width="540"' not in html
+
+
+def test_render_for_capture_sizes_the_charts_for_the_mail_column() -> None:
+    html = dashboard.render(sample(), ":root{--ink:#000}", capture=True)
+    assert 'viewBox="0 0 540 190" width="540" height="190" data-piece="nav"' in html
+    assert "viewBox='0 0 520 120' width='520' height='120'" in html
+    assert "grid-template-columns:1fr!important" in html

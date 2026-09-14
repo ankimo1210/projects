@@ -110,7 +110,7 @@ def _positions_table(rows: list[dict[str, Any]], rate: float | None) -> str:
             f"<td class='n {cls(r['chg1w'])}'>{pct(r['chg1w'], 1)}</td>"
             f"<td class='n {cls(r['chg1m'])}'>{pct(r['chg1m'], 1)}</td>"
             f"<td class='n {cls(r['chg1y'])}'>{pct(r['chg1y'], 1)}</td>"
-            f"<td class='spark' data-spark='{_esc(json.dumps(r['spark']))}'></td>"
+            f"<td class='spark' data-piece='spark:{_esc(r.get('key', r['sym']))}' data-spark='{_esc(json.dumps(r['spark']))}'></td>"
             f"<td class='n'>{jpy(r['value'])}<span class='sp'>{usd(r['value'], rate)}</span></td>"
             f"<td class='n'><small>{float(r['weight']):.1f}%</small></td>"
             f"<td class='n {cls(r['day_pnl'])}'>{jpy(r['day_pnl'], True)}{_split_under(r, 'day_stock', 'day_fx', 'day_after_tax', usd(r['day_pnl'], rate, True))}</td>"
@@ -154,7 +154,39 @@ def _closed(rows: list[dict[str, Any]]) -> str:
     return f"<table class='mini'><thead><tr><th>決済済み</th><th>保有期間</th><th>約定</th><th>実現損益 ¥</th></tr></thead><tbody>{body}</tbody></table>"
 
 
-def render(data: dict[str, Any], tokens_css: str) -> str:
+# Chart sizes (viewBox) on screen, where they scale with the page, and when the
+# page is captured for the mail, where each is drawn at the mail column's width.
+SCREEN_SIZES = {
+    "nav": (860, 220),
+    "pnl": (860, 150),
+    "daily": (400, 220),
+    "price": (380, 96),
+    "pnlc": (380, 80),
+}
+CAPTURE_SIZES = {
+    "nav": (540, 190),
+    "pnl": (540, 130),
+    "daily": (540, 150),
+    "price": (520, 120),
+    "pnlc": (520, 84),
+}
+CAPTURE_CSS = (
+    ".grid,.cards{grid-template-columns:1fr!important}.panel{overflow:visible}"
+    "svg[data-piece]{width:auto!important;height:auto!important;max-width:none!important;margin:14px 0}"
+    "td.spark{padding:12px 14px!important}"
+)
+
+
+def _viewbox(kind: str, capture: bool, quote: str = '"') -> str:
+    """A chart's viewBox, plus a fixed width and height when the page is captured."""
+    w, h = (CAPTURE_SIZES if capture else SCREEN_SIZES)[kind]
+    q = quote
+    fixed = f" width={q}{w}{q} height={q}{h}{q}" if capture else ""
+    return f"viewBox={q}0 0 {w} {h}{q}{fixed}"
+
+
+def render(data: dict[str, Any], tokens_css: str, capture: bool = False) -> str:
+    """The dashboard page. ``capture`` lays it out for cutting the charts out into the mail."""
     h = data["headline"]
     fx = data["fx"]
     tape = "".join(
@@ -263,9 +295,9 @@ def render(data: dict[str, Any], tokens_css: str) -> str:
             f"<div class='nm'>{_esc(p['name'])} · {_esc(p['acct'])}</div>"
             f"<div class='stats'>{stats}</div>"
             f"<div class='lab'>株価 · {data['window']['start'][:7]} → {data['as_of'][:7]}<span>▲ 買 ▼ 売 · 破線 平均取得</span></div>"
-            f"<svg class='c-price' viewBox='0 0 380 96' role='img' aria-label='{_esc(sym)} の株価'></svg>"
+            f"<svg class='c-price' {_viewbox('price', capture, "'")} data-piece='price:{_esc(key)}' role='img' aria-label='{_esc(sym)} の株価'></svg>"
             f"<div class='lab'>{_esc(s['label'])} ¥<span class='{cls(pnl_now)}'>{jpy(pnl_now, True)}</span></div>"
-            f"<svg class='c-pnl' viewBox='0 0 380 80' role='img' aria-label='{_esc(sym)} の損益'></svg>"
+            f"<svg class='c-pnl' {_viewbox('pnlc', capture, "'")} data-piece='pnlc:{_esc(key)}' role='img' aria-label='{_esc(sym)} の損益'></svg>"
             "</div>"
         )
     notes = "".join(f"<li>{_esc(n)}</li>" for n in data["notes"])
@@ -331,7 +363,7 @@ tr.tot td{{font-weight:700;background:var(--surface-3)}}
 .pos td b{{display:block;font-weight:600}}.pos td b+small{{display:block;max-width:220px;overflow:hidden;text-overflow:ellipsis}}
 .pos td small{{margin-left:3px}}
 .sp{{display:block;font-size:10.5px;line-height:1.35;color:var(--ink-3);margin-top:2px}}
-.pos td.spark svg{{width:96px;height:26px;display:block}}
+.pos td.spark svg{{width:96px;max-width:none;height:26px;display:block}}
 /* cards */
 .cards{{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin-top:10px}}
 .card{{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:11px 12px 8px;min-width:0}}
@@ -359,6 +391,7 @@ ul.notes{{margin:14px 0 0;padding-left:18px;color:var(--ink-3);font-size:11.5px}
 footer{{margin-top:22px;padding-top:10px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10.5px;color:var(--ink-3);line-height:1.9}}
 h2.sec{{font-family:var(--serif);font-size:15px;font-weight:700;margin:18px 0 0;display:flex;gap:10px;align-items:baseline}}
 h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-transform:uppercase}}
+{CAPTURE_CSS if capture else ""}
 </style>
 </head>
 <body>
@@ -390,13 +423,13 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
   <div class="panel">
     <h2>海外証券口座 NAV と損益 <small>入金は段差、損益 ＝ NAV − 累計入金</small></h2>
     <div class="legend"><span><i style="background:var(--series-1)"></i>NAV ¥</span><span><i style="background:var(--series-2)"></i>累計入金 ¥</span></div>
-    <svg id="c-nav" viewBox="0 0 860 220" role="img" aria-label="海外証券口座の NAV と累計入金"></svg>
+    <svg id="c-nav" {_viewbox("nav", capture)} data-piece="nav" role="img" aria-label="海外証券口座の NAV と累計入金"></svg>
     <div class="legend" style="margin-top:8px"><span><i style="background:var(--series-1)"></i>損益 ¥（NAV − 累計入金）</span></div>
-    <svg id="c-pnl" viewBox="0 0 860 150" role="img" aria-label="海外証券口座の累計損益"></svg>
+    <svg id="c-pnl" {_viewbox("pnl", capture)} data-piece="pnl" role="img" aria-label="海外証券口座の累計損益"></svg>
   </div>
   <div class="panel">
     <h2>日次損益 <small>海外証券口座 · 入金を除いた NAV の日次変化</small></h2>
-    <svg id="c-daily" viewBox="0 0 400 220" role="img" aria-label="日次損益の棒グラフ"></svg>
+    <svg id="c-daily" {_viewbox("daily", capture)} data-piece="daily" role="img" aria-label="日次損益の棒グラフ"></svg>
     {_closed(data["closed"])}
   </div>
 </div>
@@ -427,7 +460,7 @@ function bindTip(node,fn){{
   node.addEventListener("pointerleave",()=>{{tip.style.opacity=0;}});
 }}
 function nice(lo,hi,n){{const span=hi-lo||1;const raw=span/n;const p=Math.pow(10,Math.floor(Math.log10(raw)));const m=raw/p;const step=(m<1.5?1:m<3.5?2:m<7.5?5:10)*p;const out=[];for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step)out.push(+v.toFixed(10));return out;}}
-function yl(v){{const a=Math.abs(v);return a>=1e8?(v/1e8).toFixed(1)+"億":a>=1e4?Math.round(v/1e4)+"万":a>=1?Math.round(v).toString():v.toFixed(2);}}
+function yl(v){{const a=Math.abs(v);return a>=1e8?(v/1e8).toFixed(1)+"億":a>=1e4?Math.round(v/1e4)+"万":a>=1?Math.round(v).toString():a===0?"0":v.toFixed(2);}}
 /* generic line chart: series=[{{v:[],cls:'l1'|'l2'}}], opts: zero, area, ticksX, yfmt, marks */
 function lineChart(svg,dates,series,o){{
   const W=+svg.getAttribute("viewBox").split(" ")[2],H=+svg.getAttribute("viewBox").split(" ")[3];
@@ -488,6 +521,9 @@ document.querySelectorAll(".card").forEach(card=>{{const sym=card.getAttribute("
 }});
   const a=document.getElementById("charts-top"),b=document.getElementById("charts-end");
   if(a&&b){{const y=window.scrollY;document.body.dataset.chartBox=Math.round(a.getBoundingClientRect().top+y)+","+Math.round(b.getBoundingClientRect().bottom+y);}}
+  /* every drawn chart's box, for cutting them out of a screenshot into the mail */
+  const pieces={{}};document.querySelectorAll("[data-piece]").forEach(n=>{{const s=n.tagName.toLowerCase()==="svg"?n:n.querySelector("svg");if(!s)return;const r=s.getBoundingClientRect();pieces[n.getAttribute("data-piece")]=[Math.round(r.left+window.scrollX),Math.round(r.top+window.scrollY),Math.round(r.width),Math.round(r.height)];}});
+  document.body.dataset.pieces=JSON.stringify(pieces);
 }}catch(err){{
   const b=document.createElement("div");b.className="err";
   b.textContent="図の描画に失敗しました（"+err+"）。表の数値は正しく、図だけが欠けています。";
