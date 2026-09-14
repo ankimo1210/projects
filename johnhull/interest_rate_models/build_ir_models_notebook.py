@@ -1526,7 +1526,13 @@ cells.append(
 **Implied caplet vol のテナー構造**で比較します。
 
 - **HJM（指数型 vol）**: mean reversion $a$ により長期ほど vol が減衰 → 右肩下がり
-- **BGM/LMM（フラット vol）**: 全テナーで同一 vol（市場直接キャリブレーション）→ 水平""")
+- **BGM/LMM（フラット vol）**: 全テナーで同一 vol（市場直接キャリブレーション）→ 水平
+
+単位に注意: HW/HJM の $\sigma$ は短期金利の**正規（絶対）vol**（金利単位）で、
+$T$ 満期の金利の年率化された正規 vol は $\sigma_N(T)=\sigma\sqrt{(1-e^{-2aT})/(2aT)}$。
+BGM/LMM の $\sigma$ はフォワードレートの**対数正規（Black）vol**。同じ軸に載せるため、
+HJM 側は ATM の一次近似 $\sigma_{\mathrm{Black}}\approx\sigma_N(T)/F_0$ で Black 換算する
+（$F_0$ はフォワードレート水準。正規 vol 100bp・$F_0=5\%$ なら Black vol 20%）。""")
 )
 
 cells.append(
@@ -1534,27 +1540,37 @@ cells.append(
 
 T_fwd = np.linspace(0.25, 15, 200)
 
-def hjm_implied_vol(a, sigma, T):
-    '''HJM (Hull-White kernel) implied Black caplet vol at expiry T.'''
+def hjm_normal_vol(a, sigma, T):
+    '''HW/HJM: annualized *normal* (absolute) vol of the T-maturity rate.
+
+    Var[f(T,T)] = sigma^2 (1 - exp(-2aT)) / (2a). This is a rate vol in rate
+    units (e.g. 0.01 = 100bp), not a Black (lognormal) vol.'''
     integral = sigma**2 / (2 * a) * (1 - np.exp(-2 * a * T))
     return np.sqrt(integral / T)
 
+def hjm_black_equivalent_vol(a, sigma, T, F0):
+    '''Black-equivalent (lognormal) caplet vol ~ normal vol / F0 (first-order, ATM).'''
+    return hjm_normal_vol(a, sigma, T) / F0
+
 a_hjm_c_sl = widgets.FloatSlider(value=0.10, min=0.01, max=0.50, step=0.01,
                                  description="a（HJM回帰速度）:", style={"description_width": "initial"})
-sigma_hjm_c_sl = widgets.FloatSlider(value=0.20, min=0.001, max=0.60, step=0.001,
-                                     description="σ（HJMボラティリティ）:", style={"description_width": "initial"},
+sigma_hjm_c_sl = widgets.FloatSlider(value=0.010, min=0.001, max=0.030, step=0.001,
+                                     description="σ（HJM 正規 vol, 金利単位）:", style={"description_width": "initial"},
                                      readout_format=".3f")
+f0_c_sl = widgets.FloatSlider(value=0.05, min=0.01, max=0.10, step=0.005,
+                              description="F₀（フォワードレート水準）:", style={"description_width": "initial"},
+                              readout_format=".3f")
 sigma_bgm_c_sl = widgets.FloatSlider(value=0.25, min=0.05, max=0.60, step=0.01,
-                                     description="σ（BGMフラットvol）:", style={"description_width": "initial"},
+                                     description="σ（BGM フラット Black vol）:", style={"description_width": "initial"},
                                      readout_format=".2f")
 
 fig_fwd_cmp, ax_fwd_cmp = plt.subplots(figsize=(9, 4))
-hjm_fwd_ln, = ax_fwd_cmp.plot(T_fwd, hjm_implied_vol(0.10, 0.01, T_fwd)*100,
-                                color="#7f7f7f", lw=2.5, label="HJM（指数型 vol, 右肩下がり）")
+hjm_fwd_ln, = ax_fwd_cmp.plot(T_fwd, hjm_black_equivalent_vol(0.10, 0.010, T_fwd, 0.05)*100,
+                                color="#7f7f7f", lw=2.5, label="HJM/HW（正規 vol σ_N(T)/F₀ で Black 換算, 右肩下がり）")
 bgm_fwd_ln, = ax_fwd_cmp.plot(T_fwd, np.full_like(T_fwd, 25.0),
-                                color="#17becf", lw=2.5, ls="--", label="BGM/LMM（フラット vol）")
-ax_fwd_cmp.set_xlabel("テナー T（年）"); ax_fwd_cmp.set_ylabel("Implied vol (%)")
-ax_fwd_cmp.set_title("HJM vs BGM/LMM: Implied Caplet Vol のテナー構造", fontsize=9)
+                                color="#17becf", lw=2.5, ls="--", label="BGM/LMM（フラット Black vol）")
+ax_fwd_cmp.set_xlabel("テナー T（年）"); ax_fwd_cmp.set_ylabel("Black 換算 implied vol (%)")
+ax_fwd_cmp.set_title("HJM vs BGM/LMM: Implied Caplet Vol のテナー構造（Black 換算）", fontsize=9)
 ax_fwd_cmp.legend(loc="upper right", fontsize=8); ax_fwd_cmp.grid(True, alpha=0.3)
 fig_fwd_cmp.tight_layout()
 
@@ -1562,18 +1578,20 @@ fig_fwd_cmp.tight_layout()
 def update_fwd_cmp(change):
     a = a_hjm_c_sl.value
     sig_h = sigma_hjm_c_sl.value
+    f0 = f0_c_sl.value
     sig_b = sigma_bgm_c_sl.value
-    hjm_fwd_ln.set_ydata(hjm_implied_vol(a, sig_h, T_fwd)*100)
+    hjm_fwd_ln.set_ydata(hjm_black_equivalent_vol(a, sig_h, T_fwd, f0)*100)
     bgm_fwd_ln.set_ydata(np.full_like(T_fwd, sig_b*100))
     ax_fwd_cmp.relim(); ax_fwd_cmp.autoscale_view()
     fig_fwd_cmp.canvas.draw_idle()
 
 
-for s in [a_hjm_c_sl, sigma_hjm_c_sl, sigma_bgm_c_sl]:
+for s in [a_hjm_c_sl, sigma_hjm_c_sl, f0_c_sl, sigma_bgm_c_sl]:
     s.observe(update_fwd_cmp, names="value")
 
 display(widgets.VBox([
-    widgets.HBox([a_hjm_c_sl, sigma_hjm_c_sl, sigma_bgm_c_sl]),
+    widgets.HBox([a_hjm_c_sl, sigma_hjm_c_sl]),
+    widgets.HBox([f0_c_sl, sigma_bgm_c_sl]),
     fig_fwd_cmp.canvas,
 ]))
 """)

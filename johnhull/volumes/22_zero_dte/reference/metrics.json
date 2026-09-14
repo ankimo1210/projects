@@ -38,7 +38,7 @@
         "passed": true
       },
       {
-        "criterion": "mask counts and two-way diagnostics agree",
+        "criterion": "mask counts and two-way diagnostics agree; the announcement ramp enters event rows only",
         "name": "event_non_event_split",
         "observed": "7/6",
         "passed": true
@@ -245,7 +245,7 @@
     }
   },
   "companions": {
-    "intraday_slices.npz": "df6a1c49799b8969359ef353d6b186538cac67ba9eb61c5448c779b76283a1f7"
+    "intraday_slices.npz": "5109715c0f558b351624517c6e60625d48469f38d6b9fbecd5b93e9007217fe4"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -263,8 +263,8 @@
     "event_price_rmse": 0.11222925351085129,
     "event_teacher_standard_error": 0.019301737581782084,
     "non_event_count": 6,
-    "non_event_greek_rmse": 0.010687180266627646,
-    "non_event_price_rmse": 0.022463991836340305,
+    "non_event_greek_rmse": 0.0,
+    "non_event_price_rmse": 0.0,
     "session_seconds": 23400.0,
     "timezone": "America/New_York"
   },

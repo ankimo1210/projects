@@ -471,7 +471,12 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
             for timestamp in timestamps
         ]
     )
-    event_intensity = non_event_intensity + 8.0 * np.exp(-0.5 * ((minute - 270.0) / 25.0) ** 2)
+    # Pre-announcement intensity ramp into the 14:00 FOMC. It enters only the
+    # rows whose remaining window still contains the event; once the event has
+    # passed, the teacher runs on the non-event schedule, so non-event rows
+    # carry no event premium by construction.
+    announcement_ramp = 8.0 * np.exp(-0.5 * ((minute - 270.0) / 25.0) ** 2)
+    event_intensities: list[float] = []
 
     teacher_price: list[float] = []
     baseline_price: list[float] = []
@@ -493,7 +498,11 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
         seconds_to_settlement.append(
             zero_dte.trading_seconds_to_settlement(timestamp, trading_day, session)
         )
-        intensity = np.full(steps, event_intensity[index])
+        row_intensity = float(non_event_intensity[index]) + (
+            float(announcement_ramp[index]) if event_variance > 0.0 else 0.0
+        )
+        event_intensities.append(row_intensity)
+        intensity = np.full(steps, row_intensity)
         # The event variance enters as extra jump intensity on the last step,
         # scaled by the jump second moment so the log-return variance it adds
         # is the scheduled variance itself.
@@ -550,6 +559,7 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
         np.sqrt(model_total_variance / maturity_years),
     )
 
+    event_intensity = np.asarray(event_intensities)
     teacher_price_array = np.asarray(teacher_price)
     baseline_price_array = np.asarray(baseline_price)
     delta_array = np.asarray(delta)

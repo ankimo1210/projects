@@ -367,6 +367,18 @@ def test_volume22_clock_event_teacher_and_expiry_identities(
     np.testing.assert_allclose(
         arrays["event_jump_variance"], arrays["scheduled_variance"], rtol=1e-12, atol=0.0
     )
+    # The 14:00 announcement ramp enters only rows whose window contains the
+    # event; non-event rows share the baseline intensity and seed, so their
+    # teacher/baseline premium is exactly zero.
+    mask = arrays["event_mask"].astype(bool)
+    np.testing.assert_array_equal(
+        arrays["event_jump_intensity"][~mask], arrays["non_event_jump_intensity"][~mask]
+    )
+    assert np.all(arrays["event_jump_intensity"][mask] >= arrays["non_event_jump_intensity"][mask])
+    assert np.any(arrays["event_jump_intensity"][mask] > arrays["non_event_jump_intensity"][mask])
+    assert arrays["event_price_rmse"][1] == 0.0
+    assert arrays["event_greek_rmse"][1] == 0.0
+    assert arrays["event_price_rmse"][0] > 0.0
     assert arrays["event_mask"].any() and not arrays["event_mask"].all()
     assert arrays["teacher_price"].shape == arrays["delta"].shape == arrays["gamma"].shape
     assert np.all(np.diff(arrays["total_variance"]) >= 0.0)
