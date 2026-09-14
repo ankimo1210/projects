@@ -33,15 +33,41 @@ def swap_rate(pay_times, curve):
     return (1.0 - discount(float(pay_times[-1]), curve)) / annuity
 
 
-def irs_value_bonds(notional, s_fixed, pay_times, curve, next_float_rate, accrual_to_next=None):
+def _accrual_periods(pay_times, first_accrual):
+    """Accrual fractions per payment; the first may have started before today.
+
+    ``first_accrual=None`` means valuation on a reset date, so the first period
+    runs from 0 to ``pay_times[0]``. A seasoned swap (Hull Example 7.1) passes
+    the full length of the current period, which must cover ``pay_times[0]``.
+    """
+    taus = np.diff(np.concatenate([[0.0], pay_times]))
+    if first_accrual is not None:
+        first_accrual = float(first_accrual)
+        if not math.isfinite(first_accrual) or first_accrual < float(pay_times[0]) - 1e-12:
+            raise ValueError(
+                "first_accrual must be finite and at least the time to the first payment "
+                f"({float(pay_times[0]):.6g}); got {first_accrual!r}"
+            )
+        taus[0] = first_accrual
+    return taus
+
+
+def irs_value_bonds(
+    notional, s_fixed, pay_times, curve, next_float_rate, accrual_to_next=None, first_accrual=None
+):
     """Receive-fixed IRS value via the bond decomposition V = B_fix - B_fl.
 
     next_float_rate is the simple rate already set for the next floating
     payment; the floating bond is worth par immediately after that payment
     (Hull Ch.7), so B_fl = (L + L * r * tau1) * P(0, t1).
+
+    first_accrual is the full length of the current accrual period for a swap
+    valued between reset dates (Hull Example 7.1: 0.5 with the payment 0.2y
+    away); it sets the first fixed coupon and, unless accrual_to_next is given,
+    the first floating accrual. The default values the swap on a reset date.
     """
     pay_times = np.asarray(pay_times, dtype=float)
-    taus = np.diff(np.concatenate([[0.0], pay_times]))
+    taus = _accrual_periods(pay_times, first_accrual)
     b_fix = sum(
         notional * s_fixed * tau * discount(float(t), curve)
         for tau, t in zip(taus, pay_times, strict=True)
@@ -52,18 +78,26 @@ def irs_value_bonds(notional, s_fixed, pay_times, curve, next_float_rate, accrua
     return b_fix - b_fl
 
 
-def irs_value_fras(notional, s_fixed, pay_times, curve, next_float_rate=None):
+def irs_value_fras(notional, s_fixed, pay_times, curve, next_float_rate=None, first_accrual=None):
     """Receive-fixed IRS value via the FRA decomposition (Hull's preferred).
 
     Each floating payment is assumed to realize the curve's forward rate
     (simple, over its accrual period); the preset first rate can be given.
+    For a swap valued between reset dates pass first_accrual (the full length
+    of the current period, Hull Example 7.1) together with next_float_rate,
+    because the current period's rate was fixed in the past.
     """
     pay_times = np.asarray(pay_times, dtype=float)
+    taus = _accrual_periods(pay_times, first_accrual)
+    if first_accrual is not None and taus[0] > pay_times[0] + 1e-12 and next_float_rate is None:
+        raise ValueError(
+            "a seasoned swap (first_accrual beyond the first payment time) needs next_float_rate"
+        )
     times_aug = np.concatenate([[0.0], pay_times])
     value = 0.0
     for i in range(len(pay_times)):
         t0, t1 = float(times_aug[i]), float(times_aug[i + 1])
-        tau = t1 - t0
+        tau = float(taus[i])
         if i == 0 and next_float_rate is not None:
             f_simple = next_float_rate
         else:

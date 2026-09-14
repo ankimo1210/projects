@@ -95,3 +95,42 @@ def test_discount_rejects_a_malformed_curve_like_rates_discount_factor():
     ):
         with pytest.raises(ValueError):
             swaps.discount(1.0, bad)
+
+
+# Hull Example 7.1: a seasoned swap valued 0.3y into a 0.5y accrual period.
+EX71_TIMES = [0.2, 0.7, 1.2]
+EX71_CURVE = (EX71_TIMES, [0.028, 0.032, 0.034])
+EX71_NEXT_FLOAT = 0.02516  # 2.50% continuous -> 2.516% semiannual, as printed
+
+
+def test_seasoned_swap_reproduces_hull_example_7_1():
+    # Receive-fixed value; Hull's pay-fixed institution holds +0.292 (in $ millions).
+    v_bonds = swaps.irs_value_bonds(
+        100.0, 0.03, EX71_TIMES, EX71_CURVE, next_float_rate=EX71_NEXT_FLOAT, first_accrual=0.5
+    )
+    v_fras = swaps.irs_value_fras(
+        100.0, 0.03, EX71_TIMES, EX71_CURVE, next_float_rate=EX71_NEXT_FLOAT, first_accrual=0.5
+    )
+    assert v_bonds == pytest.approx(-0.292, abs=5e-4)
+    assert v_fras == pytest.approx(v_bonds, abs=1e-10)
+    # direct cash-flow valuation: full 1.5 fixed coupons against the preset float
+    df = np.exp(-np.asarray(EX71_TIMES) * np.asarray(EX71_CURVE[1]))
+    direct = 1.5 * df.sum() + 100.0 * df[-1] - 100.0 * (1.0 + EX71_NEXT_FLOAT * 0.5) * df[0]
+    assert v_bonds == pytest.approx(direct, abs=1e-10)
+
+
+def test_first_accrual_defaults_to_valuation_on_a_reset_date():
+    r1 = _simple_rate_to(0.5, CURVE)
+    for pricer in (swaps.irs_value_bonds, swaps.irs_value_fras):
+        base = pricer(100.0, 0.03, PAY_TIMES, CURVE, next_float_rate=r1)
+        explicit = pricer(100.0, 0.03, PAY_TIMES, CURVE, next_float_rate=r1, first_accrual=0.5)
+        assert explicit == pytest.approx(base, abs=1e-12)
+
+
+def test_seasoned_swap_rejects_inconsistent_first_accrual():
+    with pytest.raises(ValueError, match="first_accrual"):
+        swaps.irs_value_fras(100.0, 0.03, EX71_TIMES, EX71_CURVE, first_accrual=0.5)
+    with pytest.raises(ValueError, match="first_accrual"):
+        swaps.irs_value_bonds(
+            100.0, 0.03, EX71_TIMES, EX71_CURVE, next_float_rate=EX71_NEXT_FLOAT, first_accrual=0.0
+        )
