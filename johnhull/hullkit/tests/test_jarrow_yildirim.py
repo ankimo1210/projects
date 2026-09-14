@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from hullkit import hull_white, jarrow_yildirim, rates
+from hullkit import hull_white, inflation, jarrow_yildirim, rates
 
 NOMINAL_CURVE = ((0.0, 1.0, 5.0, 10.0), (0.02, 0.02, 0.02, 0.02))
 REAL_CURVE = ((0.0, 1.0, 5.0, 10.0), (0.01, 0.01, 0.01, 0.01))
@@ -112,6 +112,148 @@ def test_zero_volatility_recovers_deterministic_prices_and_no_yoy_convexity() ->
     )
     first = jarrow_yildirim.jy_cpi_forward(0.0, 1.0, 100.0, NOMINAL_CURVE, REAL_CURVE)
     assert ratio == pytest.approx(forward / first)
+
+
+# ZCIS: observed at 2y, paid 3 months later so the payment-measure adjustment is live.
+ZCIS_TERMS = dict(start_index=100.0, fixed_rate=0.012, accrual_years=2.0, observation=2.0)
+ZCIS_PAYMENT = 2.25
+# YoY: three annual ratios, each paid 3 months after its end observation.
+YOY_PAIRS = ((0.0, 1.0), (1.0, 2.0), (2.0, 3.0))
+YOY_PAYMENTS = (1.25, 2.25, 3.25)
+YOY_FIXED = 0.01
+
+
+@pytest.mark.parametrize("pay_fixed", [True, False])
+def test_jy_swaps_zero_volatility_limit_equals_deterministic_inflation_npvs(
+    pay_fixed: bool,
+) -> None:
+    """With every JY volatility at zero there is no convexity or measure adjustment.
+
+    The expected end CPI is the curve forward ``I0 P_r/P_n`` and each expected
+    YoY ratio is the ratio of curve forwards, so the JY values must reduce to
+    ``inflation.zcis_npv`` / ``inflation.yoy_swap_npv`` fed those forwards.
+    """
+    params = _params(scale=0.0)
+    notional = 1_000_000.0
+    end_forward = jarrow_yildirim.jy_cpi_forward(
+        0.0, ZCIS_TERMS["observation"], 100.0, NOMINAL_CURVE, REAL_CURVE
+    )
+    zcis = jarrow_yildirim.jy_zcis_value(
+        notional,
+        ZCIS_TERMS["start_index"],
+        ZCIS_TERMS["fixed_rate"],
+        ZCIS_TERMS["accrual_years"],
+        0.0,
+        ZCIS_TERMS["observation"],
+        ZCIS_PAYMENT,
+        100.0,
+        NOMINAL_CURVE,
+        REAL_CURVE,
+        params,
+        pay_fixed=pay_fixed,
+    )
+    expected_zcis = inflation.zcis_npv(
+        notional,
+        ZCIS_TERMS["start_index"],
+        end_forward,
+        ZCIS_TERMS["fixed_rate"],
+        ZCIS_TERMS["accrual_years"],
+        ZCIS_PAYMENT,
+        NOMINAL_CURVE,
+        pay_fixed=pay_fixed,
+    )
+    # |NPV| is about 3.8e3 per 1e6 notional; the two paths differ only by quad round-off.
+    assert zcis == pytest.approx(expected_zcis, rel=1e-12, abs=1e-8)
+    assert abs(zcis) > 1_000.0
+
+    ratios = [
+        jarrow_yildirim.jy_cpi_forward(0.0, end, 100.0, NOMINAL_CURVE, REAL_CURVE)
+        / jarrow_yildirim.jy_cpi_forward(0.0, start, 100.0, NOMINAL_CURVE, REAL_CURVE)
+        for start, end in YOY_PAIRS
+    ]
+    yoy = jarrow_yildirim.jy_yoy_value(
+        notional,
+        YOY_PAIRS,
+        YOY_PAYMENTS,
+        YOY_FIXED,
+        100.0,
+        NOMINAL_CURVE,
+        REAL_CURVE,
+        params,
+        pay_fixed=pay_fixed,
+    )
+    expected_yoy = inflation.yoy_swap_npv(
+        notional, ratios, YOY_PAYMENTS, YOY_FIXED, NOMINAL_CURVE, pay_fixed=pay_fixed
+    )
+    assert yoy == pytest.approx(expected_yoy, rel=1e-12, abs=1e-8)
+    assert abs(yoy) > 100.0
+
+
+def test_jy_swaps_match_nominal_money_market_monte_carlo() -> None:
+    """Price both swaps as E[cash flow / B(payment)] on nominal-measure JY paths.
+
+    ``simulate_jy_paths`` is independent of the payment-forward-measure algebra in
+    ``jy_payment_forward_cpi`` / ``jy_expected_cpi_ratio`` (it discounts by the
+    simulated bank account). Measured with seed 31, 60k paths, dt=1/16: ZCIS
+    z=-0.77 (SE 9.1e-5), YoY z=-0.97 (SE 1.3e-4); seeds 32-34 gave |z| <= 0.46.
+    The SE exceeds the JY adjustments themselves (-2.3e-5 ZCIS, -4.7e-5 YoY
+    versus the zero-vol values), so this checks level and measure consistency,
+    not the size of the convexity correction.
+    """
+    params = _params()
+    zcis = jarrow_yildirim.jy_zcis_value(
+        1.0,
+        ZCIS_TERMS["start_index"],
+        ZCIS_TERMS["fixed_rate"],
+        ZCIS_TERMS["accrual_years"],
+        0.0,
+        ZCIS_TERMS["observation"],
+        ZCIS_PAYMENT,
+        100.0,
+        NOMINAL_CURVE,
+        REAL_CURVE,
+        params,
+    )
+    yoy = jarrow_yildirim.jy_yoy_value(
+        1.0, YOY_PAIRS, YOY_PAYMENTS, YOY_FIXED, 100.0, NOMINAL_CURVE, REAL_CURVE, params
+    )
+
+    steps_per_year = 16
+    grid = np.linspace(0.0, 3.25, int(3.25 * steps_per_year) + 1)
+    simulation = jarrow_yildirim.simulate_jy_paths(
+        grid, 100.0, NOMINAL_CURVE, REAL_CURVE, params, n_paths=60_000, seed=31
+    )
+
+    def column(time: float) -> int:
+        index = round(time * steps_per_year)
+        assert grid[index] == pytest.approx(time, abs=1e-12)
+        return index
+
+    cpi = simulation.cpi
+    bank = simulation.nominal_bank_accounts
+    end_levels = cpi[:, column(ZCIS_TERMS["observation"])]
+    fixed_growth = (1.0 + ZCIS_TERMS["fixed_rate"]) ** ZCIS_TERMS["accrual_years"]
+    cashflows = end_levels / ZCIS_TERMS["start_index"] - fixed_growth
+    # Pin the vectorised receive-inflation cash flow to the library convention.
+    assert cashflows[0] == pytest.approx(
+        inflation.zcis_cashflow(
+            1.0,
+            ZCIS_TERMS["start_index"],
+            float(end_levels[0]),
+            ZCIS_TERMS["fixed_rate"],
+            ZCIS_TERMS["accrual_years"],
+        ),
+        rel=1e-10,
+        abs=1e-14,
+    )
+    zcis_paths = cashflows / bank[:, column(ZCIS_PAYMENT)]
+    yoy_paths = sum(
+        (cpi[:, column(end)] / cpi[:, column(start)] - 1.0 - YOY_FIXED) / bank[:, column(payment)]
+        for (start, end), payment in zip(YOY_PAIRS, YOY_PAYMENTS, strict=True)
+    )
+    for paths, analytic in ((zcis_paths, zcis), (yoy_paths, yoy)):
+        standard_error = paths.std(ddof=1) / np.sqrt(len(paths))
+        assert abs(paths.mean() - analytic) < 3.0 * standard_error
 
 
 def test_nominal_measure_simulation_preserves_numeraire_martingales() -> None:

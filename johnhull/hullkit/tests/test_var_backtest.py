@@ -209,6 +209,40 @@ def test_basel_traffic_light_invalid_inputs_raise():
         var_backtest.basel_traffic_light(5, n_obs=0, alpha=0.99)
 
 
+@pytest.mark.parametrize(
+    "n_obs, x, expected_zone, expected_multiplier",
+    [
+        # n=100: yellow is x in 3..5, so x=3 and x=4 fall below the 250-day
+        # table and clamp up to the x=5 multiplier; red already starts at x=6.
+        (100, 2, "green", 3.00),
+        (100, 3, "yellow", 3.40),
+        (100, 4, "yellow", 3.40),
+        (100, 5, "yellow", 3.40),
+        (100, 6, "red", 4.00),
+        # n=500: yellow is x in 9..14, so x>=10 clamps down to the x=9 multiplier.
+        (500, 8, "green", 3.00),
+        (500, 9, "yellow", 3.85),
+        (500, 12, "yellow", 3.85),
+        (500, 14, "yellow", 3.85),
+        (500, 15, "red", 4.00),
+    ],
+)
+def test_basel_traffic_light_yellow_multiplier_clamps_when_n_obs_is_not_250(
+    n_obs, x, expected_zone, expected_multiplier
+):
+    """Zones come from B(n_obs, p); the multiplier is the 250-day table clamped to x in 5..9.
+
+    The docstring documents (does not re-derive) the yellow schedule for n != 250,
+    so this pins exactly what the code guarantees: zone boundaries scale with
+    n_obs, and yellow multipliers are the 250-day values at min(9, max(5, x)).
+    """
+    result = var_backtest.basel_traffic_light(x, n_obs=n_obs, alpha=0.99)
+    cumulative = float(binom.cdf(x, n_obs, 0.01))
+    assert result.cumulative_probability == pytest.approx(cumulative, abs=1e-12)
+    assert result.zone == expected_zone
+    assert result.multiplier == expected_multiplier
+
+
 # --- input contract: non-finite, shape, and count types ----------------
 
 

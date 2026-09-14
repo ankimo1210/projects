@@ -56,7 +56,6 @@ def _fragment(spec, log) -> dict:
         "blurb": spec.blurb,
         "practice": spec.practice,
         "is_new": spec.is_new,
-        "tags": list(spec.tags),
         "html": html,
     }
 

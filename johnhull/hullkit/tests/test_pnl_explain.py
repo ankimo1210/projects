@@ -247,6 +247,33 @@ def test_bsm_taylor_dgv_residual_smaller_than_delta_only_and_shrinks_quadratical
         assert 2.5 < ratio < 4.5, f"expected ~quadratic shrinkage, got ratio={ratio}"
 
 
+def test_bsm_delta_only_residual_shrinks_linearly_with_move_size():
+    # Module docstring: the delta-only residual shrinks ~linearly as the move
+    # halves. With spot and vol moving together its leading term is the missing
+    # vega * dsigma = O(h), so each halving should cut it ~2x (measured 2.087,
+    # 2.046, 2.023), clearly apart from the ~4x of the delta-gamma-vega residual.
+    S, K, r, sigma, T = 100.0, 105.0, 0.03, 0.25, 0.75
+    delta = float(bsm.call_delta(S, K, r, sigma, T))
+    veg = float(bsm.vega(S, K, r, sigma, T))
+    base_price = float(bsm.call_price(S, K, r, sigma, T))
+
+    dS0, dsigma0 = 3.0, 0.015
+    halvings = [0.5, 0.25, 0.125, 0.0625]
+    residuals = []
+    for h in halvings:
+        dS = dS0 * h
+        dsigma = dsigma0 * h
+        full_pnl = float(bsm.call_price(S + dS, K, r, sigma + dsigma, T)) - base_price
+        delta_only = pnl_explain.delta_gamma_vega_pnl([delta], [0.0], [0.0], [dS], [dsigma])
+        residuals.append(abs(full_pnl - delta_only["total"]))
+
+    for prev_res, curr_res in itertools.pairwise(residuals):
+        ratio = prev_res / curr_res
+        assert 1.8 < ratio < 2.3, f"expected ~linear shrinkage, got ratio={ratio}"
+    # The O(h) coefficient is the omitted vega term (measured 1.012x at h=1/16).
+    assert residuals[-1] == pytest.approx(veg * dsigma0 * halvings[-1], rel=0.03)
+
+
 # --- limit_utilization + desk_report integration ----------------------------
 
 

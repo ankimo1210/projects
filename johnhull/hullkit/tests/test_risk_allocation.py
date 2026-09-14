@@ -84,6 +84,28 @@ def test_component_var_normal_empty_raises():
         risk_allocation.component_var_normal([], [], [[]])
 
 
+def test_degenerate_portfolio_sigma_raises_instead_of_dividing_by_zero():
+    vols = np.array([0.02, 0.02])
+    perfect_hedge = np.array([[1.0, -1.0], [-1.0, 1.0]])
+    flat_book = np.zeros(2)
+    hedged_book = np.array([1.0, 1.0])
+    assert risk.portfolio_sigma(flat_book, vols, np.eye(2)) == 0.0
+    assert risk.portfolio_sigma(hedged_book, vols, perfect_hedge) == 0.0
+    for amounts, corr in ((flat_book, np.eye(2)), (hedged_book, perfect_hedge)):
+        with pytest.raises(ValueError, match="portfolio sigma must be finite and positive"):
+            risk_allocation.marginal_var_normal(amounts, vols, corr)
+        with pytest.raises(ValueError, match="portfolio sigma must be finite and positive"):
+            risk_allocation.component_var_normal(amounts, vols, corr)
+
+    # A non-PSD "correlation" gives a^T C a < 0, so sigma_P = sqrt(<0) is NaN;
+    # the same guard rejects it through its isfinite half.
+    not_psd = np.array([[1.0, 2.0], [2.0, 1.0]])
+    with np.errstate(invalid="ignore"):
+        assert math.isnan(risk.portfolio_sigma([1.0, -1.0], vols, not_psd))
+        with pytest.raises(ValueError, match="portfolio sigma must be finite and positive"):
+            risk_allocation.marginal_var_normal([1.0, -1.0], vols, not_psd)
+
+
 # --- euler_es_components -----------------------------------------------
 
 
@@ -111,6 +133,40 @@ def test_euler_es_components_sums_to_historical_es_with_ties():
     total = pnl_matrix.sum(axis=1)
     _, es_total = risk.historical_var_es(total, alpha=alpha)
     assert float(np.sum(components)) == pytest.approx(es_total, abs=1e-12)
+
+
+def _tie_book(tie_first, tie_second):
+    # n=20, alpha=0.9 -> k=2: the worst row (total -100) plus exactly one of two
+    # distinct rows whose totals are both exactly -80.
+    rng = np.random.default_rng(5)
+    filler = rng.uniform(0.0, 1.0, size=(17, 3))
+    worst = np.array([-60.0, -30.0, -10.0])
+    return np.vstack(
+        [filler[:5], tie_first, filler[5:9], worst, filler[9:14], tie_second, filler[14:]]
+    )
+
+
+def test_euler_es_components_stable_argsort_breaks_real_ties_by_row_order():
+    tie_a = np.array([-50.0, -30.0, 0.0])
+    tie_b = np.array([-20.0, -10.0, -50.0])
+    worst = np.array([-60.0, -30.0, -10.0])
+    a_first = _tie_book(tie_a, tie_b)
+    b_first = _tie_book(tie_b, tie_a)
+    for pnl_matrix in (a_first, b_first):
+        totals = pnl_matrix.sum(axis=1)
+        assert totals[5] == totals[16] == -80.0
+        assert np.sort(totals)[1] == np.sort(totals)[2]  # the tie sits on the tail boundary
+
+    components_a = risk_allocation.euler_es_components(a_first, alpha=0.9)
+    components_b = risk_allocation.euler_es_components(b_first, alpha=0.9)
+    # Stable argsort keeps the earlier row (index 5) of the tie in the tail set.
+    np.testing.assert_array_equal(components_a, -(worst + tie_a) / 2.0)  # [55, 30, 5]
+    np.testing.assert_array_equal(components_b, -(worst + tie_b) / 2.0)  # [40, 20, 30]
+    # The allocation depends on the tie-break, the total ES does not.
+    for pnl_matrix, components in ((a_first, components_a), (b_first, components_b)):
+        _, es_total = risk.historical_var_es(pnl_matrix.sum(axis=1), alpha=0.9)
+        assert float(np.sum(components)) == pytest.approx(es_total, abs=1e-12)
+        assert es_total == pytest.approx(90.0, abs=1e-12)
 
 
 def test_euler_es_components_empty_raises():
