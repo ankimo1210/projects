@@ -148,6 +148,50 @@ def test_ticks_fall_on_quarter_starts() -> None:
     assert emailchart.ticks(labels) == [(2, "25/10"), (4, "26/01")]
 
 
+def test_line_draws_a_second_series_in_its_own_colour_under_the_first() -> None:
+    html = emailchart.line(
+        [0.0, 10.0], total_px=20, col_w=10, zero=False, overlay=[5.0, 5.0], overlay_color="#123456"
+    )
+    assert f"solid {emailchart.UP}" in html and "solid #123456" in html
+    # the gap between the two strokes is painted in the ground colour, not dropped
+    assert f"solid {emailchart.CARD}" in html
+
+
+def test_line_range_takes_in_the_overlay_so_neither_series_is_clipped() -> None:
+    html = emailchart.line([5.0, 5.0], total_px=20, col_w=10, zero=False, overlay=[0.0, 10.0])
+    # the primary sits mid-plot, not at the foot as it would on its own range
+    assert 'style="padding-top:9px"><div style="border-top:2px solid #C05C33">' in html
+
+
+def test_line_draws_a_level_across_the_plot() -> None:
+    html = emailchart.line(
+        [0.0, 0.0], total_px=20, col_w=10, zero=False, level=10.0, level_color="#654321"
+    )
+    # a flat line under a constant level is one merged column: level on top, line at the foot
+    assert html.count("solid #654321") == 1
+    assert 'style="padding-top:1px"><div style="border-top:1px solid #654321">' in html
+
+
+def test_line_puts_trade_marks_in_a_strip_under_the_plot() -> None:
+    values = [1.0, 2.0, 3.0, 4.0]
+    plain = emailchart.line(values, total_px=20, col_w=10, zero=False)
+    marked = emailchart.line(values, total_px=20, col_w=10, zero=False, marks=[(1, 1), (3, -1)])
+    assert marked.count(f"solid {emailchart.UP}") == plain.count(f"solid {emailchart.UP}") + 1
+    assert emailchart.DN not in plain and f"solid {emailchart.DN}" in marked
+
+
+def test_line_without_a_zero_rule_prints_the_high_and_the_low() -> None:
+    html = emailchart.line([100.0, 250.0], total_px=40, zero=False, fmt=lambda v: f"{v:.0f}")
+    assert ">250<" in html and ">100<" in html and ">0<" not in html
+
+
+def test_shares_draws_one_proportional_bar_per_row() -> None:
+    html = emailchart.shares([("日本株", 60.0, "29%"), ("現金", 30.0, "20%")], width=200)
+    assert "日本株" in html and "現金" in html and "29%" in html
+    assert '<td width="200"' in html and '<td width="100"' in html
+    assert "background" not in html
+
+
 def test_line_writes_the_ticks_under_the_plot() -> None:
     labels = ["2025-09-30", "2025-10-01", "2025-10-02", "2025-10-03", "2025-10-06", "2025-10-07"]
     html = emailchart.line([1.0] * 6, labels=labels, total_px=20, col_w=10, zero=False)

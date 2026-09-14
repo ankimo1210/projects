@@ -123,6 +123,15 @@ def _axis_bottom(fmt: Callable[[float], str], known: list[float]) -> str:
     return f'<td valign="bottom" align="right" {NOTE}>{html.escape(fmt(min(known)))}</td>'
 
 
+def _axis_range(fmt: Callable[[float], str], high: float, low: float, px: int) -> str:
+    """The gutter beside a plot with no zero rule: its high at the top, its low at the foot."""
+    return (
+        f'<td valign="top" align="right" {NOTE}><table height="{px}" cellspacing="0" '
+        f'cellpadding="0"><tr><td valign="top" align="right" {NOTE}>{html.escape(fmt(high))}</td></tr>'
+        f'<tr><td valign="bottom" align="right" {NOTE}>{html.escape(fmt(low))}</td></tr></table></td>'
+    )
+
+
 def _tick_row(labels: Sequence[str], step: int, months: Sequence[str] | None, gutter: bool) -> str:
     """Month labels under the plot, each at its column; empty when none fit."""
     cells, at = "", 0
@@ -241,6 +250,56 @@ def _stack(rows: list[tuple[int, str | None]], width: int) -> str:
     return f'<td width="{width}" valign="top"{offset}>{marks}</td>'
 
 
+def _paint(spans: list[tuple[int, int, str]], px: int, ground: str) -> Stack:
+    """Coloured spans, measured from the foot, as one column's stack from the top.
+
+    An earlier span is painted over a later one. The empty stretch between two
+    marks is filled with the ground colour, since ``_stack`` stops at a gap.
+    """
+    rows: list[str | None] = [None] * px  # index 0 is the top pixel
+    for lo, hi, c in reversed(spans):
+        for y in range(max(lo, 0), min(hi, px)):
+            rows[px - 1 - y] = c
+    painted = [i for i, c in enumerate(rows) if c is not None]
+    if not painted:
+        return ()
+    first, last = painted[0], painted[-1]
+    out: list[tuple[int, str | None]] = []
+    for i, c in enumerate(rows[: last + 1]):
+        c = ground if c is None and i > first else c
+        if out and out[-1][1] == c:
+            out[-1] = (out[-1][0] + 1, c)
+        else:
+            out.append((1, c))
+    return tuple(out)
+
+
+def _marks_row(marks: Sequence[tuple[int, int]], count: int, col_w: int, gutter: bool) -> str:
+    """A strip of small blocks under the plot, one at each marked point: buys up, sells down."""
+    signs: dict[int, set[int]] = {}
+    for i, sign in marks:
+        if 0 <= i < count and sign:
+            signs.setdefault(i, set()).add(1 if sign > 0 else -1)
+    cells, run = "", 0
+    for i in range(count):
+        if i not in signs:
+            run += 1
+            continue
+        if run:
+            cells += f'<td width="{run * col_w}"></td>'
+            run = 0
+        color = UP if signs[i] == {1} else DN if signs[i] == {-1} else INK
+        cells += f'<td width="{col_w}" valign="top" style="padding-top:3px">{_mark(4, color)}</td>'
+    if not signs:
+        return ""
+    if run:
+        cells += f'<td width="{run * col_w}"></td>'
+    return (
+        f'<tr>{"<td></td>" if gutter else ""}<td><table cellspacing="0" '
+        f'cellpadding="0"><tr>{cells}</tr></table></td></tr>'
+    )
+
+
 def line(
     values: Sequence[Number],
     labels: Sequence[str] | None = None,
@@ -254,6 +313,12 @@ def line(
     dn_tint: str = DN_TINT,
     fmt: Callable[[float], str] | None = None,
     months: Sequence[str] | None = QUARTERS,
+    overlay: Sequence[Number] | None = None,
+    overlay_color: str = DN,
+    level: float | None = None,
+    level_color: str = DN,
+    marks: Sequence[tuple[int, int]] | None = None,
+    ground: str = CARD,
 ) -> str:
     """A connected line, drawn as one stacked column per point.
 
@@ -261,24 +326,80 @@ def line(
     vertical connector rather than a floating dash and the line reads as one
     path. With ``zero`` the plot is split at a zero rule and the area between
     the line and the rule is tinted by sign; without it the range is the data's
-    own (a sparkline), with no rule, no axis and no fill. ``fmt`` prints the
-    high, zero and low at the left edge; ``labels`` puts quarter ticks below.
+    own, with no rule and no fill. ``fmt`` prints the high, zero and low (or,
+    without ``zero``, the high and the low) at the left edge; ``labels`` puts
+    quarter ticks below.
+
+    Without ``zero`` the plot can carry more: an ``overlay`` series drawn 1px
+    under the line, a constant ``level`` across it (an average cost), and
+    ``marks`` — (point index, sign) pairs shown as a strip of blocks below.
     """
     clean = [None if v is None else float(v) for v in values]
     known = [v for v in clean if v is not None]
     if not known:
         return ""
-    if zero:
-        # the stroke sits on top of its value, so the upper box is a stroke taller
-        plot_u, dn_px = split(clean, total_px - thickness)
-        scaled = scale([0.0 if v is None else v for v in clean], plot_u, dn_px)
-        heights = [None if v is None else h for v, h in zip(clean, scaled, strict=False)]
-        up_px = plot_u + thickness
-    else:
-        lo_v, hi_v = min(known), max(known)
+    # Each point is two columns: a stroke-wide riser from the previous value and
+    # the level itself — so a step reads as a thin line, not as a bar. A flat
+    # run's riser equals its level and the two merge away.
+    riser_w, level_w = (thickness, col_w - thickness) if col_w > thickness else (0, col_w)
+    if not zero:
+        second = [None if v is None else float(v) for v in (overlay or [])]
+        extent = known + [v for v in second if v is not None]
+        if level is not None:
+            extent.append(float(level))
+        lo_v, hi_v = min(extent), max(extent)
         factor = (total_px - thickness) / (hi_v - lo_v) if hi_v > lo_v else 0.0
-        heights = [None if v is None else round((v - lo_v) * factor) for v in clean]
-        up_px, dn_px, fill = total_px, 0, False
+
+        def lift(v: float | None) -> int | None:
+            return None if v is None else round((v - lo_v) * factor)
+
+        main = [lift(v) for v in clean]
+        under = [lift(v) for v in second] + [None] * (len(main) - len(second))
+        flat = lift(None if level is None else float(level))
+        stacks: list[tuple[Stack, int]] = []
+        prev_m: int | None = None
+        prev_u: int | None = None
+        for h, u in zip(main, under, strict=False):
+            if h is None:
+                stacks.append(((), col_w))
+                continue
+            pm = h if prev_m is None else prev_m
+            pu = u if prev_u is None else prev_u
+            prev_m = h
+            prev_u = u if u is not None else prev_u
+            for riser, w in ((True, riser_w), (False, level_w)):
+                if not w:
+                    continue
+                spans = [
+                    (min(pm, h), max(pm, h) + thickness, color)
+                    if riser
+                    else (h, h + thickness, color)
+                ]
+                if u is not None and pu is not None:
+                    spans.append(
+                        (min(pu, u), max(pu, u) + 1, overlay_color)
+                        if riser
+                        else (u, u + 1, overlay_color)
+                    )
+                if flat is not None:
+                    spans.append((flat, flat + 1, level_color))
+                stacks.append((_paint(spans, total_px, ground), w))
+        cells = "".join(_stack(list(s), w) for s, w in _merged(stacks))
+        axis = _axis_range(fmt, hi_v, lo_v, total_px) if fmt else ""
+        rows = [
+            f'<tr>{axis}<td height="{total_px}" style="height:{total_px}px;padding:0">'
+            f'<table height="{total_px}" cellspacing="0" cellpadding="0"><tr>{cells}</tr></table></td></tr>'
+        ]
+        if marks:
+            rows.append(_marks_row(marks, len(clean), col_w, bool(fmt)))
+        if labels:
+            rows.append(_tick_row(labels, col_w, months, bool(fmt)))
+        return f'<table cellspacing="0" cellpadding="0">{"".join(rows)}</table>'
+    # the stroke sits on top of its value, so the upper box is a stroke taller
+    plot_u, dn_px = split(clean, total_px - thickness)
+    scaled = scale([0.0 if v is None else v for v in clean], plot_u, dn_px)
+    heights = [None if v is None else h for v, h in zip(clean, scaled, strict=False)]
+    up_px = plot_u + thickness
 
     def above(lo: int, hi: int) -> Stack:
         # spacer down to the stroke, the stroke, tint from there to the rule
@@ -294,10 +415,6 @@ def line(
         tint = -y2 if fill and stroke else 0
         return ((tint, dn_tint), (stroke, color), (dn_px - tint - stroke, None))
 
-    # Each point is two columns: a stroke-wide riser from the previous value and
-    # the level itself — so a step reads as a thin line, not as a bar. A flat
-    # run's riser equals its level and the two merge away.
-    riser_w, level_w = (thickness, col_w - thickness) if col_w > thickness else (0, col_w)
     upper: list[tuple[Stack, int]] = []
     lower: list[tuple[Stack, int]] = []
     prev: int | None = None
@@ -322,16 +439,48 @@ def line(
             f'<table height="{px}" cellspacing="0" cellpadding="0"><tr>{cells}</tr></table></td></tr>'
         )
 
-    gutter = bool(fmt and zero)
-    rows = [row(upper, up_px, _axis_top(fmt, known, up_px) if gutter else "")]
-    if zero:
-        rule = f'<td height="1" bgcolor="{RULE}" style="font:0/0 a">&nbsp;</td>'
-        rows.append(f"<tr>{'<td></td>' if gutter else ''}{rule}</tr>")
+    gutter = bool(fmt)
+    rows = [row(upper, up_px, _axis_top(fmt, known, up_px) if fmt else "")]
+    rule = f'<td height="1" bgcolor="{RULE}" style="font:0/0 a">&nbsp;</td>'
+    rows.append(f"<tr>{'<td></td>' if gutter else ''}{rule}</tr>")
     if dn_px:
-        rows.append(row(lower, dn_px, _axis_bottom(fmt, known) if gutter else ""))
+        rows.append(row(lower, dn_px, _axis_bottom(fmt, known) if fmt else ""))
     if labels:
         rows.append(_tick_row(labels, col_w, months, gutter))
     return f'<table cellspacing="0" cellpadding="0">{"".join(rows)}</table>'
+
+
+def shares(
+    rows: Sequence[tuple[str, Number, str]],
+    width: int = 240,
+    bar_h: int = 10,
+    color: str = UP,
+) -> str:
+    """Horizontal bars from a common left edge: label, bar in proportion to the largest, note."""
+    values = [max(0.0, 0.0 if v is None else float(v)) for _, v, _ in rows]
+    peak = max(values, default=0.0)
+    out = []
+    for (label, _, note), value in zip(rows, values, strict=False):
+        px = 0 if peak == 0 else round(value / peak * width)
+        rest = f'<td width="{width - px}" style="font:0/0 a">&nbsp;</td>' if px < width else ""
+        bar = (
+            f'<table cellspacing="0" cellpadding="0" border="0"><tr>'
+            f'<td width="{px}" height="{bar_h}"{_fill(color if px else None)} style="font:0/0 a">&nbsp;</td>'
+            f"{rest}</tr></table>"
+        )
+        out.append(
+            "<tr>"
+            f'<td style="font:400 11.5px {SANS};color:{INK};padding:2px 8px 2px 0;'
+            f'white-space:nowrap">{html.escape(label)}</td>'
+            f'<td width="{width}" style="padding:2px 0">{bar}</td>'
+            f'<td align="right" style="font:400 11px {MONO};color:{MUTED};'
+            f'padding:2px 0 2px 8px;white-space:nowrap">{html.escape(note)}</td>'
+            "</tr>"
+        )
+    return (
+        f'<table cellspacing="0" cellpadding="0" border="0" style="width:100%">'
+        f"{''.join(out)}</table>"
+    )
 
 
 def hbars(

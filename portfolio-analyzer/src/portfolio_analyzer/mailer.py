@@ -1,11 +1,12 @@
 """Compose and send the daily P&L email.
 
-The dashboard's charts are drawn by JavaScript, and every mail client strips
-scripts and inline SVG, so the email redraws them with coloured table cells (see
-``emailchart``) — that keeps the figures in the body itself, where a ``cid:``
-image cannot be relied on: Gmail rewrites the Content-ID of an attached picture,
-which turns a hand-written reference into a plain attachment. A rendered PNG of
-the full dashboard section can still ride along as an opt-in inline image.
+The mail carries what the dashboard shows: the headline, accounts, allocation,
+the P&L attribution, holdings, closed positions, the time series, a card per
+position and the notes. The dashboard's charts are drawn by JavaScript, and every
+mail client strips scripts and inline SVG, so the email redraws them with
+coloured table cells (see ``emailchart``), which keeps the figures in the body
+itself. A rendered PNG of the dashboard's chart section can still ride along as
+an opt-in inline image in place of the drawn charts and cards.
 
 Credentials never live in this file: ``send`` takes them from the caller, which
 reads them from the environment (see ``scripts/daily_pl_report.py``).
@@ -15,6 +16,7 @@ from __future__ import annotations
 
 import html
 import smtplib
+from bisect import bisect_left
 from email.header import decode_header, make_header
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
@@ -49,6 +51,13 @@ def pct(value: float | None, digits: int = 2) -> str:
     if value is None:
         return "—"
     return f"{float(value):+.{digits}f}%".replace("-", "−")
+
+
+def price(value: float | None, cur: str) -> str:
+    if value is None:
+        return "—"
+    v = float(value)
+    return f"{v:,.2f}" if cur == "USD" or v < 100 else f"{v:,.1f}"
 
 
 def _tone(value: float | None) -> str:
@@ -132,6 +141,8 @@ def text_body(data: dict[str, Any]) -> str:
         f"期間損益 {w['days']}日  {jpy(h['pnl_window'], True):>14} 円  {usd(h['pnl_window'], rate, True):>10}  (海外証券口座・入金控除後)",
         f"含み損益        {jpy(h['unrealized_known'], True):>14} 円  {usd(h['unrealized_known'], rate, True):>10}  (原価が台帳にある保有)",
         f"                {_joined(split(h.get('unreal_stock'), h.get('unreal_fx')), after_tax(h.get('unreal_after_tax')))}",
+        f"開設来損益      {jpy(h.get('pnl_incept'), True):>14} 円  {usd(h.get('pnl_incept'), rate, True):>10}  (実現 {jpy(h.get('realized_cum'), True)} · 配当 {jpy(h.get('dividends_net'), True)})",
+        f"資金加重リターン {_xirr(h):>13}     最大DD（期間内） {_max_dd(h)}",
         "",
         "口座別",
     ]
@@ -168,11 +179,27 @@ def text_body(data: dict[str, Any]) -> str:
             lines.append(f"        日次 {day_split or '—'}  /  含み {unreal_split or '—'}")
     lines += [
         "",
-        *([data["tax_note"], ""] if data.get("tax_note") else []),
+        *[f"* {n}" for n in _notes(data)],
+        "",
         f"生成 {data['generated_at']}",
         "ダッシュボード本体: Documents\\pl-daily\\latest.html",
     ]
     return "\n".join(lines)
+
+
+def _xirr(h: dict[str, Any]) -> str:
+    return pct(None if h.get("xirr") is None else h["xirr"] * 100)
+
+
+def _max_dd(h: dict[str, Any]) -> str:
+    return pct(None if h.get("max_dd_window") is None else h["max_dd_window"] * 100, 1)
+
+
+def _notes(data: dict[str, Any]) -> list[str]:
+    """The dashboard's notes, with the tax note appended unless they already carry it."""
+    notes = [str(n) for n in data.get("notes") or []]
+    tax = data.get("tax_note")
+    return notes + ([tax] if tax and tax not in notes else [])
 
 
 def _sample(values: list[Any], count: int) -> tuple[list[float | None], list[int]]:
@@ -195,6 +222,28 @@ def man(value: float) -> str:
     if abs(v) >= 1e4:
         return f"{v / 1e4:+.0f}万".replace("-", "−")
     return f"{v:+.0f}".replace("-", "−")
+
+
+def man_level(value: float) -> str:
+    """An unsigned axis label in 万円, for a balance such as NAV."""
+    return f"{float(value) / 1e4:,.0f}万".replace("-", "−")
+
+
+def _price_axis(value: float, cur: str) -> str:
+    v = float(value)
+    if v >= 100:
+        return f"{v:,.0f}"
+    return f"{v:.0f}" if cur == "USD" else f"{v:.1f}"
+
+
+def _nearest(idx: list[int], i: int) -> int:
+    """Position, among sampled source indices, of the one closest to ``i``."""
+    k = bisect_left(idx, i)
+    if k >= len(idx):
+        return len(idx) - 1
+    if k and i - idx[k - 1] < idx[k] - i:
+        return k - 1
+    return k
 
 
 def _section(title: str, sub: str = "") -> str:
@@ -228,6 +277,25 @@ def _charts(data: dict[str, Any]) -> str:
     series = data.get("series") or {}
     dates = series.get("dates") or []
     w = data.get("window") or {}
+    nav = list(series.get("nav") or [])
+    if nav:
+        points, idx = _sample(nav, 52)
+        deposits = list(series.get("deposits") or [])
+        overlay = [deposits[i] for i in idx] if len(deposits) == len(nav) else None
+        labels = [dates[i] for i in idx] if len(dates) == len(nav) else None
+        out += _section(
+            "NAV と累計入金", f"海外証券口座 · {w.get('start', '')} → {w.get('end', '')}"
+        )
+        out += _card(
+            emailchart.line(
+                points, labels, total_px=120, col_w=10, zero=False, fmt=man_level, overlay=overlay
+            )
+            + _caption(
+                f'<span style="color:{UP}">━</span> NAV <b>{jpy(nav[-1])}</b> 円 · '
+                f'<span style="color:{DN}">━</span> 累計入金 {jpy(deposits[-1] if deposits else None)} 円。'
+                "入金は段差になります。"
+            )
+        )
     pnl = list(series.get("pnl") or [])
     if pnl:
         points, idx = _sample(pnl, 52)
@@ -244,18 +312,117 @@ def _charts(data: dict[str, Any]) -> str:
             )
         )
     daily = list(series.get("daily_pnl") or [])
-    recent = daily[-40:]
     if daily:
-        points, idx = _sample(recent, 40)
-        labels = [dates[len(dates) - len(recent) + i] for i in idx] if dates else None
-        known = [v for v in recent if v is not None]
+        labels = dates[-len(daily) :] if len(dates) >= len(daily) else None
+        known = [v for v in daily if v is not None]
         wins = sum(1 for v in known if v > 0)
-        out += _section("日次損益", f"直近 {len(recent)} 営業日")
+        losses = sum(1 for v in known if v < 0)
+        step = min(13, max(2, 520 // len(daily)))
+        gap = 1 if step < 6 else 3
+        out += _section("日次損益", f"海外証券口座 · 期間 {len(daily)} 営業日")
         out += _card(
-            emailchart.columns(points, labels, total_px=96, col_w=9, gap=4, fmt=man, months=None)
-            + _caption(f"上げた日 {wins} 日 / 下げた日 {len(known) - wins} 日。")
+            emailchart.columns(
+                daily,
+                labels,
+                total_px=110,
+                col_w=step - gap,
+                gap=gap,
+                fmt=man,
+                months=None if len(daily) < 60 else emailchart.QUARTERS,
+            )
+            + _caption(
+                f"入金を除いた NAV の日次変化。上げた日 {wins} 日 / 下げた日 {losses} 日"
+                f"（変化なし {len(known) - wins - losses} 日）。"
+            )
         )
     return out
+
+
+def _stat(label: str, value: str, tone: str | None = None) -> str:
+    style = f' style="color:{tone}"' if tone else ""
+    return f'<span style="white-space:nowrap">{label} <b{style}>{value}</b></span>'
+
+
+def _label(left: str, right: str = "") -> str:
+    return (
+        f'<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:8px"><tr>'
+        f'<td style="font:400 10px {MONO};color:{MUTED}">{left}</td>'
+        f'<td align="right" style="font:400 10px {MONO};color:{MUTED}">{right}</td></tr></table>'
+    )
+
+
+def _cards(data: dict[str, Any]) -> str:
+    """One card per charted position: its numbers, a year of prices and its P&L."""
+    series = data.get("series") or {}
+    dates = series.get("dates") or []
+    w = data["window"]
+    out = ""
+    for key, s in (series.get("symbols") or {}).items():
+        p = next((r for r in data["positions"] if r.get("key", r["sym"]) == key), None)
+        prices = list(s.get("price") or [])
+        if p is None or not prices:
+            continue
+        cur = p["cur"]
+        points, idx = _sample(prices, 52)
+        labels = [dates[i] for i in idx] if len(dates) == len(prices) else None
+        marks = [
+            (_nearest(idx, int(t["i"])), 1 if float(t["qty"]) > 0 else -1)
+            for t in s.get("trades") or []
+            if t.get("qty")
+        ]
+        price_chart = emailchart.line(
+            points,
+            labels,
+            total_px=84,
+            col_w=9,
+            zero=False,
+            fmt=lambda v, c=cur: _price_axis(v, c),
+            level=s.get("avg_cost"),
+            marks=marks,
+        )
+        pnl = list(s.get("pnl") or [])
+        pnl_points, _ = _sample(pnl, 52)
+        pnl_now = next((v for v in reversed(pnl) if v is not None), None)
+        pnl_chart = emailchart.line(pnl_points, total_px=64, col_w=9, fmt=man)
+        stats = " · ".join(
+            t
+            for t in (
+                _stat("数量", jpy(p["qty"])),
+                _stat("評価", jpy(p["value"])),
+                _stat("比率", f"{float(p['weight']):.1f}%"),
+                _stat("平均", price(p["avg_cost"], cur)) if p.get("avg_cost") is not None else "",
+                _stat("1W", pct(p.get("chg1w"), 1), _tone(p.get("chg1w"))),
+                _stat("1M", pct(p.get("chg1m"), 1), _tone(p.get("chg1m"))),
+                _stat("1Y", pct(p.get("chg1y"), 1), _tone(p.get("chg1y"))),
+                _stat("含み", pct(p.get("unreal_pct"), 1), _tone(p.get("unreal_pct")))
+                if p.get("unreal_pct") is not None
+                else "",
+            )
+            if t
+        )
+        legend = "下の帯 橙 買 · 青 売" if marks else ""
+        if s.get("avg_cost") is not None:
+            legend = _joined(legend, "青線 平均取得")
+        inner = (
+            f'<table width="100%" cellspacing="0" cellpadding="0"><tr>'
+            f'<td style="font:700 14px {SANS};color:{INK}">{html.escape(p["sym"])}</td>'
+            f'<td align="right" style="font:400 12px {MONO};color:{INK};white-space:nowrap">'
+            f'{price(p["last"], cur)} <span style="color:{MUTED};font-size:10px">{html.escape(cur)}</span> '
+            f'<span style="color:{_tone(p["chg1d"])}">{pct(p["chg1d"])}</span></td></tr></table>'
+            f'<div style="font:400 11px {SANS};color:{MUTED}">{html.escape(str(p.get("name", "")))} · {html.escape(p["acct"])}</div>'
+            f'<div style="font:400 11px/1.7 {SANS};color:{MUTED};margin-top:4px">{stats}</div>'
+            + _label(f"株価 · {w['start'][:7]} → {data['as_of'][:7]}", legend)
+            + price_chart
+            + _label(
+                f"{html.escape(str(s.get('label', '損益')))} ¥ "
+                f'<span style="color:{_tone(pnl_now)}">{jpy(pnl_now, True)}</span>'
+            )
+            + pnl_chart
+        )
+        out += f'<div style="padding-top:8px">{_card(inner, pad="11px 12px 10px")}</div>'
+    if not out:
+        return ""
+    return _section("銘柄ごとの推移", "株価 1 年 · 損益") + out
 
 
 def _spark(values: list[Any]) -> str:
@@ -306,6 +473,70 @@ def _td(
     )
 
 
+ATTRIBUTION = (
+    ("unrealized", "含み（保有中）"),
+    ("realized", "実現（売却済）"),
+    ("dividends", "配当 税引後"),
+    ("fees", "費用"),
+    ("fx_translation", "為替換算 現金"),
+    ("forex", "為替取引"),
+)
+
+
+def _attribution(att: dict[str, Any] | None, table_style: str) -> str:
+    """Where the overseas account's P&L came from, over the window and since inception."""
+    if not att:
+        return ""
+    keys = [*ATTRIBUTION, ("total", "合計＝NAV−入金")]
+    rows = ""
+    for i, (key, label) in enumerate(keys):
+        last = i == len(keys) - 1
+        win, inc = att["window"].get(key), att["incept"].get(key)
+        weight = "font-weight:700;" if key == "total" else ""
+        rows += (
+            f'<tr style="{weight}">'
+            + _td(html.escape(label), "left", INK, SANS, last)
+            + _td(jpy(win, True), "right", _tone(win), None, last)
+            + _td(jpy(inc, True), "right", _tone(inc), None, last)
+            + "</tr>"
+        )
+    return (
+        _section("損益の内訳", "海外証券口座")
+        + f'<table role="presentation" cellspacing="0" cellpadding="0" {table_style}>'
+        + f"<tr>{_th('内訳', 'left')}{_th('期間内 ¥')}{_th('開設来 ¥')}</tr>{rows}</table>"
+    )
+
+
+def _closed(rows: list[dict[str, Any]] | None, table_style: str) -> str:
+    """Positions sold out, with what each one realised."""
+    if not rows:
+        return ""
+    total = sum(float(r["realized"]) for r in rows)
+    body = ""
+    for r in rows:
+        body += (
+            "<tr>"
+            + _td(f"<b>{html.escape(r['sym'])}</b>", "left", INK, SANS)
+            + _td(f"{r['first']} → {r['last']}", "left", MUTED)
+            + _td(str(r["trades"]), "right", MUTED)
+            + _td(jpy(r["realized"], True), "right", _tone(r["realized"]))
+            + "</tr>"
+        )
+    body += (
+        '<tr style="font-weight:700">'
+        + _td("合計", "left", INK, SANS, True)
+        + _td("", "left", INK, None, True)
+        + _td("", "right", INK, None, True)
+        + _td(jpy(total, True), "right", _tone(total), None, True)
+        + "</tr>"
+    )
+    return (
+        _section("決済済み", "海外証券口座 · 実現損益")
+        + f'<table role="presentation" cellspacing="0" cellpadding="0" {table_style}>'
+        + f"<tr>{_th('銘柄', 'left')}{_th('保有期間', 'left')}{_th('約定')}{_th('実現損益 ¥')}</tr>{body}</table>"
+    )
+
+
 def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
     h, w = data["headline"], data["window"]
     rate = data["fx"]["last"]
@@ -329,13 +560,6 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
         )
         + "</tr><tr>"
         + _kpi_cell(
-            f"期間損益 ¥ · {w['days']}日",
-            jpy(h["pnl_window"], True),
-            f"{w['start']} 以降・入金控除後",
-            _tone(h["pnl_window"]),
-            dollars=usd(h["pnl_window"], rate, True),
-        )
-        + _kpi_cell(
             "含み損益 ¥",
             jpy(h["unrealized_known"], True),
             split(h.get("unreal_stock"), h.get("unreal_fx")) or "取得原価が分かる保有の合計",
@@ -344,6 +568,27 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
                 after_tax(h.get("unreal_after_tax")), usd(h.get("unreal_after_tax"), rate, True)
             ),
             usd(h["unrealized_known"], rate, True),
+        )
+        + _kpi_cell(
+            f"期間損益 ¥ · {w['days']}日",
+            jpy(h["pnl_window"], True),
+            f"海外証券口座 {w['start']} 以降・入金控除後",
+            _tone(h["pnl_window"]),
+            dollars=usd(h["pnl_window"], rate, True),
+        )
+        + "</tr><tr>"
+        + _kpi_cell(
+            "開設来損益 ¥",
+            jpy(h.get("pnl_incept"), True),
+            f"実現 {jpy(h.get('realized_cum'), True)} · 配当 {jpy(h.get('dividends_net'), True)}",
+            _tone(h.get("pnl_incept")),
+            dollars=usd(h.get("pnl_incept"), rate, True),
+        )
+        + _kpi_cell(
+            "資金加重リターン",
+            _xirr(h),
+            f"最大DD（期間内） {_max_dd(h)}",
+            _tone(h.get("xirr")),
         )
         + "</tr></table>"
     )
@@ -427,8 +672,8 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
         f'bgcolor="{CARD}" style="border-collapse:collapse;width:100%;color:{INK};'
         f'font:400 12px {MONO};border:1px solid {RULE};border-radius:8px"'
     )
-    # The dashboard's own figures, rendered to an image, are the real thing; the
-    # table-cell charts stand in only when no browser was available to draw them.
+    # A rendered image of the dashboard's figures, when one is attached, stands in
+    # for the drawn charts and cards (it holds the same figures).
     if image_cid:
         charts = _section("時系列", f"{w['start']} → {w['end']}") + _card(
             f'<img src="cid:{image_cid}" width="572" alt="NAV・累計損益・日次損益と銘柄ごとの株価チャート" '
@@ -436,24 +681,46 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
             pad="6px",
         )
     else:
-        charts = _charts(data)
+        charts = _charts(data) + _cards(data)
     quoted = int(h["quoted_share"] * 100)
+    tape = " &nbsp; ".join(
+        f'<span style="white-space:nowrap"><b style="color:{INK}">{html.escape(t["sym"])}</b> '
+        f'{price(t["last"], t.get("cur", "USD"))} <span style="color:{_tone(t["chg_pct"])}">{pct(t["chg_pct"])}</span></span>'
+        for t in data.get("tape") or []
+    )
+    allocation = ""
+    if data.get("allocation"):
+        allocation = _section("資産配分", "総資産比") + _card(
+            emailchart.shares(
+                [
+                    (a["label"], a["pct"], f"{float(a['pct']):.1f}% · {jpy(a['value'])}")
+                    for a in data["allocation"]
+                ],
+                width=260,
+            )
+        )
+    notes = "".join(f'<li style="margin:0 0 4px">{html.escape(n)}</li>' for n in _notes(data))
     return f"""<table width="100%" cellspacing="0" cellpadding="0" bgcolor="{GROUND}"><tr>
 <td style="padding:18px 12px;font-family:{SANS};color:{INK}">
 <div style="max-width:600px;margin:0 auto">
 <div style="font:400 11px {MONO};letter-spacing:.12em;color:{MUTED}">DAILY MARK-TO-MARKET</div>
 <div style="font:700 20px/1.3 Georgia,serif;margin:6px 0 2px">日次損益 {html.escape(data["as_of"])}</div>
 <div style="font:400 12px {SANS};color:{MUTED};margin-bottom:14px">USD/JPY {float(data["fx"]["last"]):.2f}（{pct(data["fx"]["chg_pct"])}）· 生成 {html.escape(str(data["generated_at"])[:16].replace("T", " "))}</div>
+{f'<div style="font:400 11.5px/1.8 {MONO};color:{MUTED};margin-bottom:12px">{tape}</div>' if tape else ""}
 {kpis}
-{charts}
-{_section("口座別")}
+{_section("口座別", "評価額 / 日次 / 含み")}
 <table role="presentation" cellspacing="0" cellpadding="0" {table_style}>
 <tr>{_th("口座", "left")}{_th("評価額 ¥")}{_th("日次損益 ¥")}{_th("含み損益 ¥")}</tr>{acc_rows}</table>
+{allocation}
+{_attribution(data.get("attribution"), table_style)}
 {_section("保有", "評価額の大きい順 · 1Y は直近 1 年の株価")}
 <table role="presentation" cellspacing="0" cellpadding="0" {table_style}>
 <tr>{_th("銘柄", "left")}{_th("1D")}{_th("値動き 1Y", "left")}{_th("1Y")}{_th("評価額 ¥")}{_th("日次 ¥")}{_th("含み ¥")}</tr>{pos_rows}</table>
+{_closed(data.get("closed"), table_style)}
+{charts}
 <div style="font:400 11px/1.7 {SANS};color:{MUTED};margin-top:16px">
-日次損益は各銘柄の直近 2 終値の差（価格と為替の両方）。株＝価格の変化（今日のレート換算）、FX＝残り（レートの変化分）で、円建ては FX 0。含み損益の FX は取得原価（外貨）×（現在レート − 取得時レート）。総資産の {100 - quoted}% は時価が取れない残高（現金など）で据え置き。海外証券口座の累計損益は取引履歴を日次で再生した値で、入金は差し引いています。{html.escape(data.get("tax_note", ""))}<br>
+日次損益は各銘柄の直近 2 終値の差（価格と為替の両方）。株＝価格の変化（今日のレート換算）、FX＝残り（レートの変化分）で、円建ては FX 0。含み損益の FX は取得原価（外貨）×（現在レート − 取得時レート）。総資産の {100 - quoted}% は時価が取れない残高（現金など）で据え置き。海外証券口座の累計損益は取引履歴を日次で再生した値で、入金は差し引いています。
+<ul style="margin:8px 0 0;padding-left:18px">{notes}</ul>
 ダッシュボード本体（ホバーで数値が出る図つき）: <span style="font-family:{MONO}">Documents\\pl-daily\\latest.html</span>
 </div></div></td></tr></table>"""
 
