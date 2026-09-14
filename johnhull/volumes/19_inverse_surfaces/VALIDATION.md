@@ -33,14 +33,14 @@
 | `numerical_teacher_ladder` | 3 | Heston/COS, SABR/Hagan, and rBergomi MC on one uncertainty schema | PASS |
 | `multi_start_calibration` | True | all starts successful | PASS |
 | `calibration_start_evidence` | 4 | initial/fitted parameters, errors, evaluations, and dispersion align | PASS |
-| `forward_repricing_rmse` | 5.2012449229271927e-11 | < 1e-5 | PASS |
-| `hard_surface_report` | True | complete and all checks pass | PASS |
-| `raw_stress_detected` | False | is false | PASS |
+| `forward_repricing_rmse` | 5.2012449229271927e-11 | < 1e-5 for the best start, whose parameters are the reported fit | PASS |
+| `hard_surface_report` | 0 | bounds, strike monotonicity, butterfly and calendar recomputed with zero violations | PASS |
+| `raw_stress_detected` | 5 | > 0 recomputed violations on the contaminated surface | PASS |
 | `joint_variance_refits` | 3 | >= 2 distinct actual refits | PASS |
-| `variance_pareto_improvement` | 2.1682376937831574e-06 | < lambda=0 variance loss | PASS |
+| `variance_pareto_improvement` | 2.1682376937831574e-06 | < lambda=0 variance loss, recomputed from refitted and target variances | PASS |
 | `direct_inverse_role` | ablation_only | == ablation_only | PASS |
-| `direct_inverse_evidence` | 8 | aligned parameter and repricing ablation arrays | PASS |
-| `pareto_evidence` | 3 | each actual refit has losses, parameters, and nondominance status | PASS |
+| `direct_inverse_evidence` | 8 | aligned ablation arrays reproduce the parameter and repricing RMSE | PASS |
+| `pareto_evidence` | 3 | losses and nondominance recomputed from each refit's predictions | PASS |
 
 ## Negative results
 

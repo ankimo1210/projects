@@ -14,7 +14,7 @@
         "passed": true
       },
       {
-        "criterion": "zero violations and nonnegative forward variance",
+        "criterion": "zero violations and nonnegative forward variance, recomputed from total variance",
         "name": "expiry_consistency",
         "observed": 0,
         "passed": true
@@ -26,13 +26,13 @@
         "passed": true
       },
       {
-        "criterion": "> 0",
+        "criterion": "> 0 as the mean event-row standard error",
         "name": "event_teacher_uncertainty",
         "observed": 0.019301737581782084,
         "passed": true
       },
       {
-        "criterion": "open/midday/close with aligned price and Greek buckets",
+        "criterion": "open/midday/close price and Greek MAE recomputed from teacher/baseline pairs",
         "name": "time_of_day_diagnostics",
         "observed": 3,
         "passed": true

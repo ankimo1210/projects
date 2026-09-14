@@ -38,13 +38,13 @@
         "passed": true
       },
       {
-        "criterion": "ordered for every model",
+        "criterion": "ordered for every model around the QLIKE mean recomputed from forecasts",
         "name": "block_bootstrap_intervals",
         "observed": true,
         "passed": true
       },
       {
-        "criterion": "QLIKE/RMSE/MAE and paired Log-HAR comparisons have ordered block CIs",
+        "criterion": "QLIKE/RMSE/MAE by regime and paired Log-HAR means recomputed from forecasts; CIs ordered",
         "name": "horizon_regime_intervals",
         "observed": 3,
         "passed": true
@@ -62,7 +62,7 @@
         "passed": true
       },
       {
-        "criterion": "common paths/premium/costs and explicit no-trade region",
+        "criterion": "common paths/premium/costs, explicit no-trade region, strategy risk recomputed from P&L",
         "name": "economic_comparison_controls",
         "observed": 512,
         "passed": true

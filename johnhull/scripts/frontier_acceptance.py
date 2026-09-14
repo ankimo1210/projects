@@ -33,6 +33,48 @@ def _add(
     )
 
 
+def _close(stored: Any, recomputed: float, *, rel: float = 1e-12, abs_tol: float = 1e-15) -> bool:
+    """A stored scalar agrees with its recomputation from the committed arrays."""
+    return math.isclose(float(stored), float(recomputed), rel_tol=rel, abs_tol=abs_tol)
+
+
+def _rmse_np(error: np.ndarray) -> float:
+    return float(np.sqrt(np.mean(np.square(error))))
+
+
+def _qlike_np(actual: np.ndarray, predicted: np.ndarray) -> np.ndarray:
+    ratio = np.asarray(actual, dtype=float) / np.asarray(predicted, dtype=float)
+    return ratio - np.log(ratio) - 1.0
+
+
+def _split_overlap_np(keys: list[np.ndarray]) -> int:
+    """Rows shared with any earlier split, counted as the vol-18 manifest does."""
+    seen: set[int] = set()
+    overlap = 0
+    for split in keys:
+        current = {int(value) for value in np.asarray(split).tolist()}
+        overlap += len(seen & current)
+        seen |= current
+    return overlap
+
+
+def _unit_spot_surface_violations(
+    prices: np.ndarray, strikes: np.ndarray, maturities: np.ndarray, tolerance: float = 1e-7
+) -> dict[str, int]:
+    """Vol-19 hard report on a (maturity, strike) call grid with S=1 and r=q=0."""
+    values = np.asarray(prices, dtype=float)
+    lower = np.maximum(1.0 - np.asarray(strikes, dtype=float), 0.0)
+    slopes = np.diff(values, axis=1) / np.diff(strikes)
+    ordered = bool(np.all(np.diff(strikes) > 0) and np.all(np.diff(maturities) > 0))
+    return {
+        "price_bounds": int(np.sum(np.maximum(lower - values, values - 1.0) > tolerance)),
+        "strike_monotonicity": int(np.sum(np.diff(values, axis=1) > tolerance)),
+        "strike_convexity": int(np.sum(-np.diff(slopes, axis=1) > tolerance)),
+        "calendar_monotonicity": int(np.sum(-np.diff(values, axis=0) > tolerance))
+        + (0 if ordered else 1),
+    }
+
+
 def _volume18(
     metrics: dict[str, Any], arrays: dict[str, np.ndarray]
 ) -> tuple[list[dict[str, Any]], list[str]]:
@@ -49,21 +91,40 @@ def _volume18(
     }
     names = {str(value) for value in arrays["check_names"].tolist()}
     violations = int(np.sum(arrays["violations_constrained"]))
+    overlap = _split_overlap_np(
+        [arrays[f"split_row_key_{split}"] for split in ("train", "validation", "test", "ood")]
+    )
     _add(
         checks,
         "split_overlap_count",
-        metrics["split_overlap_count"],
-        "== 0",
-        metrics["split_overlap_count"] == 0,
+        overlap,
+        "== 0 recomputed from per-split row digests",
+        overlap == 0 and metrics["split_overlap_count"] == overlap,
+    )
+    test_price_mae = float(np.mean(arrays["test_price_abs_error"]))
+    slice_consistent = arrays["price_error"].shape == arrays["neural_price"].shape and np.allclose(
+        arrays["price_error"],
+        np.abs(arrays["neural_price"] - arrays["truth_price"]),
+        rtol=0.0,
+        atol=1e-15,
     )
     _add(
         checks,
         "price_mae_normalized",
-        metrics["price_mae_normalized"],
-        "< 0.001",
-        metrics["price_mae_normalized"] < 1e-3,
+        test_price_mae,
+        "< 0.001 as the mean of the test-split per-row errors",
+        test_price_mae < 1e-3
+        and _close(metrics["price_mae_normalized"], test_price_mae)
+        and slice_consistent,
     )
-    _add(checks, "delta_mae", metrics["delta_mae"], "< 0.002", metrics["delta_mae"] < 2e-3)
+    test_delta_mae = float(np.mean(arrays["test_delta_abs_error"]))
+    _add(
+        checks,
+        "delta_mae",
+        test_delta_mae,
+        "< 0.002 as the mean of the test-split per-row errors",
+        test_delta_mae < 2e-3 and _close(metrics["delta_mae"], test_delta_mae),
+    )
     _add(checks, "hard_check_set", len(names), "exact documented 8-check set", names == expected)
     _add(
         checks,
@@ -80,22 +141,37 @@ def _volume18(
         "< raw-price MAE",
         residual_better,
     )
-    coverage = metrics["teacher_ci_coverage_20_seeds_by_estimand"]
-    coverage_ok = all(0.80 <= float(value) <= 1.0 for value in coverage.values())
+    estimands = [str(value) for value in arrays["teacher_estimand_names"].tolist()]
+    reference = arrays["teacher_reference"]
+    inside = (arrays["teacher_ci_lower"] <= reference) & (reference <= arrays["teacher_ci_upper"])
+    coverage = dict(zip(estimands, np.mean(inside, axis=0).tolist(), strict=True))
+    stored_coverage = metrics["teacher_ci_coverage_20_seeds_by_estimand"]
+    coverage_ok = (
+        arrays["teacher_ci_lower"].shape == arrays["teacher_ci_upper"].shape == (20, len(estimands))
+        and set(coverage) == set(stored_coverage)
+        and all(0.80 <= value <= 1.0 for value in coverage.values())
+        and all(_close(stored_coverage[name], value) for name, value in coverage.items())
+    )
     _add(
         checks,
         "mc_ci_coverage",
         min(coverage.values()),
-        "each estimand in [0.80, 1.00]",
+        "each estimand in [0.80, 1.00], recomputed from the 20 seeded intervals",
         coverage_ok,
     )
-    ratios = metrics["teacher_se_ratio_4x_paths_by_estimand"]
-    ratio_ok = all(0.40 <= float(value) <= 0.60 for value in ratios.values())
+    small, large = arrays["teacher_se_4x_paths"]
+    ratios = dict(zip(estimands, (large / small).tolist(), strict=True))
+    stored_ratios = metrics["teacher_se_ratio_4x_paths_by_estimand"]
+    ratio_ok = (
+        set(ratios) == set(stored_ratios)
+        and all(0.40 <= value <= 0.60 for value in ratios.values())
+        and all(_close(stored_ratios[name], value) for name, value in ratios.items())
+    )
     _add(
         checks,
         "mc_standard_error_scaling",
         max(ratios.values()),
-        "each 4x-path ratio in [0.40, 0.60]",
+        "each 4x-path ratio in [0.40, 0.60], recomputed from the paired standard errors",
         ratio_ok,
     )
     negative = []
@@ -105,6 +181,26 @@ def _volume18(
         negative.append(
             "No neural CPU break-even batch was observed in the measured quick profile."
         )
+    ood_price_mae = float(np.mean(arrays["ood_price_abs_error"]))
+    ood_delta_mae = float(np.mean(arrays["ood_delta_abs_error"]))
+    negative.append(
+        f"The OOD shell is a stress diagnostic outside the gate: price MAE {ood_price_mae:.4g} "
+        f"(median {float(np.median(arrays['ood_price_abs_error'])):.4g}, worst "
+        f"{float(np.max(arrays['ood_price_abs_error'])):.4g}, "
+        f"{float(np.mean(arrays['ood_price_abs_error'] > 0.01)):.1%} of rows above 0.01) and "
+        f"delta MAE {ood_delta_mae:.4g}, against {test_price_mae:.4g} and {test_delta_mae:.4g} "
+        "on the test split."
+    )
+    price = arrays["neural_price"]
+    slice_slopes = np.diff(price, axis=1) / np.diff(arrays["moneyness"])
+    negative.append(
+        "On the exported 21x29 teaching slice (r=2%, q=1%, vol=20%, maturities down to 0.03y) "
+        f"the network price breaks spot monotonicity at {int(np.sum(-np.diff(price, axis=1) > 1e-5))}, "
+        f"spot convexity at {int(np.sum(-np.diff(slice_slopes, axis=1) > 1e-5))} and calendar "
+        f"monotonicity at {int(np.sum(-np.diff(price, axis=0) > 1e-5))} grid steps beyond 1e-5, "
+        f"and its mean delta error is {float(np.mean(arrays['delta_error'])):.4g}; the "
+        "zero-violation hard report above is a narrower one-year, 25%-vol probe."
+    )
     return checks, negative
 
 
@@ -160,44 +256,96 @@ def _volume19(
         "initial/fitted parameters, errors, evaluations, and dispersion align",
         starts_ok,
     )
+    start_rmse = arrays["calibration_start_repricing_rmse"]
+    best_start = int(np.argmin(start_rmse))
+    best_rmse = float(start_rmse[best_start])
+    repricing_ok = (
+        best_rmse < 1e-5
+        and _close(calibration["repricing_rmse"], best_rmse)
+        and np.array_equal(
+            arrays["calibration_parameters"], arrays["calibration_start_parameters"][best_start]
+        )
+        and _close(
+            calibration["parameter_rmse"],
+            _rmse_np(arrays["calibration_parameters"] - arrays["calibration_truth"]),
+        )
+    )
     _add(
         checks,
         "forward_repricing_rmse",
-        calibration["repricing_rmse"],
-        "< 1e-5",
-        calibration["repricing_rmse"] < 1e-5,
+        best_rmse,
+        "< 1e-5 for the best start, whose parameters are the reported fit",
+        repricing_ok,
+    )
+    strikes = arrays["constraint_strikes"]
+    maturities = arrays["constraint_maturities"]
+
+    def _stored_counts(report: dict[str, Any]) -> dict[str, int]:
+        return {item["name"]: int(item["n_violations"]) for item in report["checks"]}
+
+    hard_counts = _unit_spot_surface_violations(
+        arrays["constraint_hard_price"], strikes, maturities
     )
     hard_complete = (
         hard["check_set_complete"]
         and hard["arbitrage_free"]
         and all(item["passed"] for item in hard["checks"])
-    )
-    _add(
-        checks, "hard_surface_report", hard_complete, "complete and all checks pass", hard_complete
+        and _stored_counts(hard) == hard_counts
+        and sum(hard_counts.values()) == 0
     )
     _add(
         checks,
-        "raw_stress_detected",
-        reports["raw"]["arbitrage_free"],
-        "is false",
-        not reports["raw"]["arbitrage_free"],
+        "hard_surface_report",
+        sum(hard_counts.values()),
+        "bounds, strike monotonicity, butterfly and calendar recomputed with zero violations",
+        hard_complete,
     )
+    raw_counts = _unit_spot_surface_violations(arrays["constraint_raw_price"], strikes, maturities)
+    _add(
+        checks,
+        "raw_stress_detected",
+        sum(raw_counts.values()),
+        "> 0 recomputed violations on the contaminated surface",
+        sum(raw_counts.values()) > 0
+        and not reports["raw"]["arbitrage_free"]
+        and _stored_counts(reports["raw"]) == raw_counts,
+    )
+    unique_refits = len(np.unique(np.round(arrays["pareto_fit_parameters"], 10), axis=0))
     distinct_refits = (
-        refits["actual_refit_per_lambda"] and refits["candidate_parameter_unique_count"] >= 2
+        refits["actual_refit_per_lambda"]
+        and unique_refits >= 2
+        and unique_refits == refits["candidate_parameter_unique_count"]
     )
     _add(
         checks,
         "joint_variance_refits",
-        refits["candidate_parameter_unique_count"],
+        unique_refits,
         ">= 2 distinct actual refits",
         distinct_refits,
     )
-    variance_improved = points[-1]["variance_loss"] < points[0]["variance_loss"]
+    iv_loss = np.mean(
+        (arrays["pareto_predicted_iv"] - arrays["pareto_target_iv"][None]) ** 2, axis=(1, 2)
+    )
+    variance_loss = np.mean(
+        (arrays["pareto_predicted_variance"] - arrays["pareto_target_variance"][None]) ** 2,
+        axis=1,
+    )
+    recomputed_losses = np.column_stack(
+        (iv_loss + arrays["pareto_lambdas"] * variance_loss, iv_loss, variance_loss)
+    )
+    variance_improved = (
+        len(points) == variance_loss.size
+        and variance_loss[-1] < variance_loss[0]
+        and all(
+            _close(point["variance_loss"], value)
+            for point, value in zip(points, variance_loss.tolist(), strict=True)
+        )
+    )
     _add(
         checks,
         "variance_pareto_improvement",
-        points[-1]["variance_loss"],
-        "< lambda=0 variance loss",
+        float(variance_loss[-1]),
+        "< lambda=0 variance loss, recomputed from refitted and target variances",
         variance_improved,
     )
     _add(
@@ -223,26 +371,50 @@ def _volume19(
                 "direct_inverse_test_repricing",
             )
         )
+        and _close(
+            metrics["direct_inverse"]["parameter_rmse"],
+            _rmse_np(
+                arrays["direct_inverse_test_prediction"] - arrays["direct_inverse_test_truth"]
+            ),
+        )
+        and _close(
+            metrics["direct_inverse"]["repricing_rmse"],
+            _rmse_np(arrays["direct_inverse_test_repricing"] - arrays["direct_inverse_test_quote"]),
+        )
     )
     _add(
         checks,
         "direct_inverse_evidence",
         metrics["direct_inverse"]["test_rows"],
-        "aligned parameter and repricing ablation arrays",
+        "aligned ablation arrays reproduce the parameter and repricing RMSE",
         inverse_ok,
+    )
+    nondominated = np.array(
+        [
+            not any(
+                other[1] <= row[1]
+                and other[2] <= row[2]
+                and (other[1] < row[1] or other[2] < row[2])
+                for other in recomputed_losses
+            )
+            for row in recomputed_losses
+        ],
+        dtype=np.int8,
     )
     pareto_ok = (
         arrays["pareto_losses"].shape == (len(points), 3)
         and arrays["pareto_fit_parameters"].shape[0] == len(points)
         and arrays["pareto_nondominated"].shape == (len(points),)
-        and np.all(arrays["pareto_nondominated"] == 1)
         and np.all(np.isfinite(arrays["pareto_losses"]))
+        and np.allclose(arrays["pareto_losses"], recomputed_losses, rtol=1e-12, atol=0.0)
+        and np.array_equal(arrays["pareto_nondominated"], nondominated)
+        and np.all(nondominated == 1)
     )
     _add(
         checks,
         "pareto_evidence",
         len(points),
-        "each actual refit has losses, parameters, and nondominance status",
+        "losses and nondominance recomputed from each refit's predictions",
         pareto_ok,
     )
     negative = [
@@ -348,36 +520,89 @@ def _volume20(
         "stored scaler/PCA/sequence fits and purge bounds for every horizon",
         preprocessing_evidence_ok,
     )
-    intervals_ok = all(
-        model["qlike_block_bootstrap_ci"]["lower_95"]
-        <= model["qlike_block_bootstrap_ci"]["mean"]
-        <= model["qlike_block_bootstrap_ci"]["upper_95"]
-        for model in walk["models"].values()
+    compatibility_arrays = {
+        "persistence": "persistence",
+        "ewma": "ewma",
+        "har_ridge": "har_ridge",
+        "pca_ridge_challenger": "challenger",
+    }
+    intervals_ok = set(walk["models"]) == set(compatibility_arrays)
+    for model_name, suffix in compatibility_arrays.items():
+        if model_name not in walk["models"]:
+            continue
+        model = walk["models"][model_name]
+        loss = _qlike_np(arrays["walk_forward_actual"], arrays[f"walk_forward_prediction_{suffix}"])
+        mean_loss = float(np.mean(loss))
+        interval = model["qlike_block_bootstrap_ci"]
+        intervals_ok &= bool(
+            np.allclose(arrays[f"walk_forward_qlike_{suffix}"], loss, rtol=1e-12, atol=1e-15)
+            and _close(model["qlike"], mean_loss)
+            and _close(interval["mean"], mean_loss)
+            and interval["lower_95"] <= mean_loss <= interval["upper_95"]
+        )
+    _add(
+        checks,
+        "block_bootstrap_intervals",
+        intervals_ok,
+        "ordered for every model around the QLIKE mean recomputed from forecasts",
+        intervals_ok,
     )
-    _add(checks, "block_bootstrap_intervals", intervals_ok, "ordered for every model", intervals_ok)
+    regime_names = ("low", "middle", "high")
     detailed_intervals_ok = True
     for horizon in horizons:
         comparison = comparisons[str(horizon)]
+        prefix = f"walk_forward_h{horizon}_"
+        actual = arrays[prefix + "actual"]
+        regime = arrays[prefix + "regime_code"]
         detailed_intervals_ok &= set(
             comparison["paired_qlike_difference_model_minus_log_har"]
         ) == full_models - {"log_har"}
-        for model in comparison["models"].values():
-            detailed_intervals_ok &= set(model["by_regime"]) == {"low", "middle", "high"}
-            for scope in [model, *model["by_regime"].values()]:
-                detailed_intervals_ok &= scope.get("n_observations", 1) > 0
+        losses: dict[str, np.ndarray] = {}
+        for name, model in comparison["models"].items():
+            prediction = arrays[prefix + f"prediction_{name}"]
+            loss = _qlike_np(actual, prediction)
+            losses[name] = loss
+            detailed_intervals_ok &= set(model["by_regime"]) == set(regime_names)
+            detailed_intervals_ok &= bool(
+                np.allclose(arrays[prefix + f"qlike_{name}"], loss, rtol=1e-12, atol=1e-15)
+            )
+            scopes = [(model, np.ones(actual.shape, dtype=bool))] + [
+                (model["by_regime"][regime_name], regime == code)
+                for code, regime_name in enumerate(regime_names)
+                if regime_name in model["by_regime"]
+            ]
+            for scope, selected in scopes:
+                count = int(np.sum(selected))
+                detailed_intervals_ok &= scope.get("n_observations", count) == count > 0
+                if count == 0:
+                    continue
+                error = prediction[selected] - actual[selected]
+                recomputed = {
+                    "qlike": float(np.mean(loss[selected])),
+                    "rmse": _rmse_np(error),
+                    "mae": float(np.mean(np.abs(error))),
+                }
+                detailed_intervals_ok &= all(
+                    _close(scope[key], value)
+                    and _close(scope["intervals_95"][key]["estimate"], value)
+                    for key, value in recomputed.items()
+                )
                 detailed_intervals_ok &= all(
                     interval["lower_95"] <= interval["estimate"] <= interval["upper_95"]
                     for interval in scope["intervals_95"].values()
                 )
-        detailed_intervals_ok &= all(
-            interval["lower_95"] <= interval["mean"] <= interval["upper_95"]
-            for interval in comparison["paired_qlike_difference_model_minus_log_har"].values()
-        )
+        for name, interval in comparison["paired_qlike_difference_model_minus_log_har"].items():
+            detailed_intervals_ok &= bool(
+                name in losses
+                and "log_har" in losses
+                and _close(interval["mean"], float(np.mean(losses[name] - losses["log_har"])))
+                and interval["lower_95"] <= interval["mean"] <= interval["upper_95"]
+            )
     _add(
         checks,
         "horizon_regime_intervals",
         len(horizons),
-        "QLIKE/RMSE/MAE and paired Log-HAR comparisons have ordered block CIs",
+        "QLIKE/RMSE/MAE by regime and paired Log-HAR means recomputed from forecasts; CIs ordered",
         detailed_intervals_ok,
     )
     diagnostics = walk["attention_diagnostics"]
@@ -419,12 +644,33 @@ def _volume20(
         and controls["transaction_cost_rate"] >= 0
         and end_to_end["strategy_order"] == ["delta", "delta-gamma", "no hedge", "no-trade"]
         and 0 < end_to_end["no_trade_region"]["observed_no_change_fraction"] <= 1
+        and end_to_end["no_trade_region"]["observed_no_change_fraction"]
+        == end_to_end["strategy_metrics"]["no-trade"]["no_change_fraction"]
     )
+    hedge_pnl = arrays["e2e_hedge_pnl"]
+    hedge_turnover = arrays["e2e_hedge_turnover"]
+    controls_ok &= (
+        hedge_pnl.shape[0] == len(end_to_end["strategy_order"]) == hedge_turnover.shape[0]
+    )
+    for index, name in enumerate(end_to_end["strategy_order"]):
+        if not controls_ok:
+            break
+        loss = -hedge_pnl[index]
+        var95 = float(np.quantile(loss, 0.95))
+        recomputed = {
+            "mean_pnl": float(np.mean(hedge_pnl[index])),
+            "hedging_rmse": _rmse_np(hedge_pnl[index]),
+            "var95": var95,
+            "cvar95": float(np.mean(loss[loss >= var95])),
+            "turnover": float(np.mean(hedge_turnover[index])),
+        }
+        stored = end_to_end["strategy_metrics"][name]
+        controls_ok &= all(_close(stored[key], value) for key, value in recomputed.items())
     _add(
         checks,
         "economic_comparison_controls",
         paths,
-        "common paths/premium/costs and explicit no-trade region",
+        "common paths/premium/costs, explicit no-trade region, strategy risk recomputed from P&L",
         controls_ok,
     )
     phase1 = metrics["phase1_deep_policy"]
@@ -580,45 +826,76 @@ def _volume21(
         "positive measured samples",
         timings and metrics["timing_nondeterministic"] is True,
     )
+    at_1024 = np.flatnonzero(arrays["batch_size"] == 1024)
+    speedup = (
+        float(arrays["nested_mc_ms"][at_1024[0]] / arrays["surrogate_ms"][at_1024[0]])
+        if at_1024.size == 1
+        else float("nan")
+    )
     _add(
         checks,
         "surrogate_speedup",
-        metrics["surrogate_speedup_1024"],
-        "> 1 at batch 1024",
-        metrics["surrogate_speedup_1024"] > 1.0,
+        speedup,
+        "> 1 at batch 1024, recomputed from the timing samples",
+        speedup > 1.0 and _close(metrics["surrogate_speedup_1024"], speedup),
     )
-    joint_reported = all(
-        np.isfinite(metrics[name])
-        for name in (
-            "joint_spx_rmse",
-            "joint_vix_rmse",
-            "joint_vix_option_rmse",
+    joint_components = (
+        ("spx_model_grid", "spx_target", "spx_rmse", "joint_spx_rmse"),
+        ("vix_model_grid", "vix_target", "vix_rmse", "joint_vix_rmse"),
+        ("vix_option_model_grid", "vix_option_target", "vix_option_rmse", "joint_vix_option_rmse"),
+        (
+            "variance_term_model_grid",
+            "variance_term_target",
+            "variance_rmse",
             "joint_variance_rmse",
-        )
+        ),
     )
+    joint_reported = True
+    for grid_name, target_name, rmse_name, metric_name in joint_components:
+        grid = arrays[grid_name]
+        target = arrays[target_name]
+        rmse = np.sqrt(np.mean((grid - target[None]) ** 2, axis=tuple(range(1, grid.ndim))))
+        joint_reported &= bool(
+            grid.shape[1:] == target.shape
+            and arrays[rmse_name].shape == rmse.shape
+            and np.all(np.isfinite(rmse))
+            and np.allclose(arrays[rmse_name], rmse, rtol=1e-12, atol=0.0)
+            and _close(metrics[metric_name], float(rmse[0]))
+        )
     _add(
         checks,
         "joint_objective_components",
         joint_reported,
-        "all four component errors finite",
+        "all four component errors finite and recomputed from the model grids and targets",
         joint_reported,
     )
-    domain_diagnostics = all(
-        np.isfinite(metrics[name])
-        for name in (
-            "in_domain_price_rmse",
-            "in_domain_delta_rmse",
-            "in_domain_gamma_rmse",
-            "ood_price_rmse",
-            "ood_delta_rmse",
-            "ood_gamma_rmse",
-        )
+    ood = arrays["ood_flag"].astype(bool)
+    greek_errors = {
+        "price": arrays["teacher_price"] - arrays["surrogate_price"],
+        "delta": arrays["teacher_delta"] - arrays["surrogate_delta"],
+        "gamma": arrays["teacher_gamma"] - arrays["surrogate_gamma"],
+    }
+    domain_diagnostics = bool(
+        ood.any()
+        and (~ood).any()
+        and np.allclose(arrays["ood_error"], np.abs(greek_errors["price"]), rtol=1e-12, atol=0.0)
+        and _close(metrics["surrogate_price_rmse"], _rmse_np(greek_errors["price"]))
     )
+    for name, error in greek_errors.items():
+        if not domain_diagnostics:
+            break
+        if name != "price":
+            domain_diagnostics &= _close(metrics[f"surrogate_{name}_rmse"], _rmse_np(error))
+        for scope, mask in (("in_domain", ~ood), ("ood", ood)):
+            value = _rmse_np(error[mask])
+            domain_diagnostics &= bool(np.isfinite(value)) and _close(
+                metrics[f"{scope}_{name}_rmse"], value
+            )
     _add(
         checks,
         "in_domain_ood_diagnostics",
         domain_diagnostics,
-        "price, delta and gamma RMSE finite in both domains",
+        "price, delta and gamma RMSE finite in both domains and recomputed from the pairs",
         domain_diagnostics,
     )
     negative = [
@@ -652,16 +929,23 @@ def _volume22(
         and np.all(np.diff(arrays["variance_clock"]) >= 0)
     )
     _add(checks, "variance_clock", arrays["variance_clock"][-1], "monotone from 0 to 1", clock_ok)
-    calendar_ok = (
+    expiry_years = arrays["adjacent_expiry_minutes"] / (252.0 * 390.0)
+    forward_variance = np.diff(arrays["total_variance"]) / np.diff(expiry_years)
+    model_forward = np.diff(arrays["model_total_variance"]) / np.diff(expiry_years)
+    expiry_violations = int(np.sum(model_forward < -1e-12))
+    calendar_ok = bool(
         metrics["calendar_violations"] == 0
-        and metrics["adjacent_expiry_violations"] == 0
-        and np.all(arrays["forward_variance"] >= 0)
+        and np.all(np.diff(expiry_years) > 0)
+        and expiry_violations == 0 == metrics["adjacent_expiry_violations"]
+        and arrays["forward_variance"].shape == forward_variance.shape
+        and np.allclose(arrays["forward_variance"], forward_variance, rtol=1e-12, atol=0.0)
+        and np.all(forward_variance >= 0)
     )
     _add(
         checks,
         "expiry_consistency",
-        metrics["adjacent_expiry_violations"],
-        "zero violations and nonnegative forward variance",
+        expiry_violations,
+        "zero violations and nonnegative forward variance, recomputed from total variance",
         calendar_ok,
     )
     injected = arrays["event_jump_variance"]
@@ -676,26 +960,67 @@ def _volume22(
         and bool(np.any(scheduled > 0.0))
         and injection_error <= 1e-12 * float(np.max(scheduled)),
     )
+    event_mask = arrays["event_mask"].astype(bool)
+    teacher_se = arrays["teacher_standard_error"]
+    event_se = float(np.mean(teacher_se[event_mask])) if event_mask.any() else float("nan")
     _add(
         checks,
         "event_teacher_uncertainty",
-        metrics["event_teacher_standard_error"],
-        "> 0",
-        metrics["event_teacher_standard_error"] > 0,
+        event_se,
+        "> 0 as the mean event-row standard error",
+        teacher_se.shape == arrays["teacher_price"].shape
+        and bool(np.all(teacher_se >= 0))
+        and event_se > 0
+        and _close(metrics["event_teacher_standard_error"], event_se),
     )
-    tod_ok = len(arrays["tod_names"]) == len(arrays["price_mae"]) == len(arrays["greek_mae"])
+    price_error = np.abs(arrays["teacher_price"] - arrays["baseline_price"])
+    greek_error = np.abs(arrays["delta"] - arrays["baseline_delta"])
+    buckets = arrays["time_of_day"]
+    tod_names = arrays["tod_names"].tolist()
+    tod_ok = (
+        len(tod_names) == len(arrays["price_mae"]) == len(arrays["greek_mae"])
+        and tod_names == ["open", "midday", "close"]
+        and set(buckets.tolist()) == set(tod_names)
+    )
+    if tod_ok:
+        tod_ok = bool(
+            np.allclose(
+                arrays["price_mae"],
+                [np.mean(price_error[buckets == name]) for name in tod_names],
+                rtol=1e-12,
+                atol=1e-15,
+            )
+            and np.allclose(
+                arrays["greek_mae"],
+                [np.mean(greek_error[buckets == name]) for name in tod_names],
+                rtol=1e-12,
+                atol=1e-15,
+            )
+        )
     _add(
         checks,
         "time_of_day_diagnostics",
-        len(arrays["tod_names"]),
-        "open/midday/close with aligned price and Greek buckets",
-        tod_ok
-        and arrays["tod_names"].tolist() == ["open", "midday", "close"]
-        and set(arrays["time_of_day"].tolist()) == {"open", "midday", "close"},
+        len(tod_names),
+        "open/midday/close price and Greek MAE recomputed from teacher/baseline pairs",
+        tod_ok,
     )
-    event_mask = arrays["event_mask"].astype(bool)
+    event_rmse = {
+        "price": [_rmse_np(price_error[event_mask]), _rmse_np(price_error[~event_mask])],
+        "greek": [_rmse_np(greek_error[event_mask]), _rmse_np(greek_error[~event_mask])],
+    }
     split_ok = (
-        arrays["event_split_names"].tolist() == ["event", "non-event"]
+        np.array_equal(event_mask, arrays["scheduled_variance"] > 0.0)
+        and bool(event_mask.any())
+        and bool((~event_mask).any())
+        and np.allclose(arrays["event_price_rmse"], event_rmse["price"], rtol=1e-12, atol=1e-15)
+        and np.allclose(arrays["event_greek_rmse"], event_rmse["greek"], rtol=1e-12, atol=1e-15)
+        and _close(metrics["event_price_rmse"], event_rmse["price"][0])
+        and _close(metrics["non_event_price_rmse"], event_rmse["price"][1])
+        and _close(metrics["event_greek_rmse"], event_rmse["greek"][0])
+        and _close(metrics["non_event_greek_rmse"], event_rmse["greek"][1])
+        and _close(metrics["event_price_mae"], float(np.mean(price_error[event_mask])))
+        and _close(metrics["event_greek_mae"], float(np.mean(greek_error[event_mask])))
+        and arrays["event_split_names"].tolist() == ["event", "non-event"]
         and int(event_mask.sum()) == metrics["event_count"]
         and int((~event_mask).sum()) == metrics["non_event_count"]
         and arrays["event_price_rmse"].shape == (2,)
@@ -1391,56 +1716,92 @@ def _volume26(
     metrics: dict[str, Any], arrays: dict[str, np.ndarray]
 ) -> tuple[list[dict[str, Any]], list[str]]:
     checks: list[dict[str, Any]] = []
+    hw_error = float(
+        np.max(np.abs(arrays["hw_market_discount_factor"] - arrays["hw_model_discount_factor"]))
+    )
     _add(
         checks,
         "hull_white_initial_curve",
-        metrics["hw_curve_fit_max_error"],
-        "<= 1e-12",
-        metrics["hw_curve_fit_max_error"] <= 1e-12,
+        hw_error,
+        "<= 1e-12 against the nominal discount curve",
+        hw_error <= 1e-12
+        and np.array_equal(arrays["hw_market_discount_factor"], arrays["nominal_discount_factor"])
+        and _close(metrics["hw_curve_fit_max_error"], hw_error),
     )
+    seasonality_sum = float(abs(np.sum(arrays["seasonality_log_factor"])))
     _add(
         checks,
         "annual_seasonality_normalization",
-        metrics["seasonality_annual_log_sum"],
-        "<= 1e-12",
-        metrics["seasonality_annual_log_sum"] <= 1e-12,
+        seasonality_sum,
+        "<= 1e-12 over the twelve monthly log factors",
+        arrays["seasonality_log_factor"].shape == (12,)
+        and seasonality_sum <= 1e-12
+        and _close(metrics["seasonality_annual_log_sum"], seasonality_sum, abs_tol=1e-18),
     )
+    zcis_error = float(np.max(np.abs(arrays["zcis_quote"] - arrays["zcis_repriced"])))
     _add(
         checks,
         "zcis_quote_repricing",
-        metrics["zcis_repricing_max_error"],
+        zcis_error,
         "<= 1e-10",
-        metrics["zcis_repricing_max_error"] <= 1e-10,
+        zcis_error <= 1e-10 and _close(metrics["zcis_repricing_max_error"], zcis_error),
     )
-    jy_shapes = arrays["jy_forward_index"].shape == arrays["jy_mc_forward_index"].shape == arrays[
-        "jy_mc_standard_error"
-    ].shape and np.all(arrays["jy_mc_standard_error"] > 0.0)
+    jy_se = arrays["jy_mc_standard_error"]
+    jy_shapes = bool(
+        arrays["jy_forward_index"].shape == arrays["jy_mc_forward_index"].shape == jy_se.shape
+        and np.all(jy_se > 0.0)
+    )
+    jy_z = (
+        float(np.max(np.abs(arrays["jy_mc_forward_index"] - arrays["jy_forward_index"]) / jy_se))
+        if jy_shapes
+        else float("nan")
+    )
     _add(
         checks,
         "jy_forward_measure_mc",
-        metrics["jy_forward_mc_zscore_max"],
+        jy_z,
         "aligned arrays and maximum analytic/MC z-score < 3",
-        jy_shapes and metrics["jy_forward_mc_zscore_max"] < 3.0,
+        jy_shapes and jy_z < 3.0 and _close(metrics["jy_forward_mc_zscore_max"], jy_z),
     )
+    floor_analytic = arrays["floor_analytic"]
+    floor_mc = arrays["floor_mc"]
+    floor_se = arrays["floor_mc_standard_error"]
     floor_shapes = (
-        arrays["floor_analytic"].shape
-        == arrays["floor_mc"].shape
-        == arrays["floor_mc_standard_error"].shape
+        floor_analytic.shape
+        == floor_mc.shape
+        == floor_se.shape
         == arrays["inflation_volatility"].shape
     )
+    floor_z = float("nan")
+    degenerate_ok = False
+    if floor_shapes:
+        live = floor_se > 0.0
+        floor_z = float(
+            np.max(np.abs(floor_mc[live] - floor_analytic[live]) / floor_se[live], initial=0.0)
+        )
+        degenerate_ok = bool(np.all(np.abs(floor_mc[~live] - floor_analytic[~live]) <= 1e-12))
     _add(
         checks,
         "jgbi_floor_analytic_mc",
-        metrics["floor_mc_zscore_max"],
-        "aligned arrays and maximum non-degenerate z-score < 3",
-        floor_shapes and metrics["floor_mc_zscore_max"] < 3.0,
+        floor_z,
+        "aligned arrays, maximum non-degenerate z-score < 3, zero-SE rows equal analytic",
+        floor_shapes
+        and degenerate_ok
+        and floor_z < 3.0
+        and _close(metrics["floor_mc_zscore_max"], floor_z),
+    )
+    volatility = arrays["inflation_volatility"]
+    floor_monotone = bool(
+        floor_shapes
+        and np.all(np.diff(volatility) > 0.0)
+        and np.all(np.diff(floor_analytic) >= 0.0)
     )
     _add(
         checks,
         "floor_volatility_monotonicity",
-        metrics["floor_monotone_in_volatility"],
-        "analytic floor is non-decreasing in inflation volatility",
-        metrics["floor_monotone_in_volatility"] is True,
+        floor_monotone,
+        "analytic floor is non-decreasing along the increasing inflation-volatility grid",
+        floor_monotone and metrics["floor_monotone_in_volatility"] is True,
     )
     redemption_only = (
         metrics["principal_floor_redemption_only"] is True

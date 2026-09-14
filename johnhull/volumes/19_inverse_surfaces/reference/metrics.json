@@ -20,21 +20,21 @@
         "passed": true
       },
       {
-        "criterion": "< 1e-5",
+        "criterion": "< 1e-5 for the best start, whose parameters are the reported fit",
         "name": "forward_repricing_rmse",
         "observed": 5.2012449229271927e-11,
         "passed": true
       },
       {
-        "criterion": "complete and all checks pass",
+        "criterion": "bounds, strike monotonicity, butterfly and calendar recomputed with zero violations",
         "name": "hard_surface_report",
-        "observed": true,
+        "observed": 0,
         "passed": true
       },
       {
-        "criterion": "is false",
+        "criterion": "> 0 recomputed violations on the contaminated surface",
         "name": "raw_stress_detected",
-        "observed": false,
+        "observed": 5,
         "passed": true
       },
       {
@@ -44,7 +44,7 @@
         "passed": true
       },
       {
-        "criterion": "< lambda=0 variance loss",
+        "criterion": "< lambda=0 variance loss, recomputed from refitted and target variances",
         "name": "variance_pareto_improvement",
         "observed": 2.1682376937831574e-06,
         "passed": true
@@ -56,13 +56,13 @@
         "passed": true
       },
       {
-        "criterion": "aligned parameter and repricing ablation arrays",
+        "criterion": "aligned ablation arrays reproduce the parameter and repricing RMSE",
         "name": "direct_inverse_evidence",
         "observed": 8,
         "passed": true
       },
       {
-        "criterion": "each actual refit has losses, parameters, and nondominance status",
+        "criterion": "losses and nondominance recomputed from each refit's predictions",
         "name": "pareto_evidence",
         "observed": 3,
         "passed": true

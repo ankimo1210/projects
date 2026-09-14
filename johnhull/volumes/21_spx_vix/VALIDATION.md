@@ -44,9 +44,9 @@
 | `teacher_uncertainty` | 16 | aligned, nonnegative, and nontrivial standard errors | PASS |
 | `ood_shell` | 4 | > 0 flagged observations | PASS |
 | `measured_cpu_timing` | perf_counter_ns warm-cache median of 5 | positive measured samples | PASS |
-| `surrogate_speedup` | 781.9083514612693 | > 1 at batch 1024 | PASS |
-| `joint_objective_components` | True | all four component errors finite | PASS |
-| `in_domain_ood_diagnostics` | True | price, delta and gamma RMSE finite in both domains | PASS |
+| `surrogate_speedup` | 781.9083514612693 | > 1 at batch 1024, recomputed from the timing samples | PASS |
+| `joint_objective_components` | True | all four component errors finite and recomputed from the model grids and targets | PASS |
+| `in_domain_ood_diagnostics` | True | price, delta and gamma RMSE finite in both domains and recomputed from the pairs | PASS |
 
 ## Negative results
 
