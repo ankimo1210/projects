@@ -120,12 +120,58 @@ def payload() -> dict:
             },
         ],
         "tax_note": "税引後は口座ごとの税率で見込んだ値（テスト）",
+        "tape": [{"sym": "SMH", "cur": "USD", "last": 568.53, "chg_pct": 1.47}],
+        "allocation": [
+            {"label": "日本株", "value": 13386570.0, "pct": 29.0},
+            {"label": "現金", "value": 9420855.0, "pct": 20.4},
+        ],
+        "attribution": {
+            "window": {
+                "unrealized": -158210.0,
+                "realized": 0.0,
+                "dividends": 7172.0,
+                "fees": -674.0,
+                "fx_translation": 1077796.0,
+                "forex": 766.0,
+                "total": 926850.0,
+            },
+            "incept": {
+                "unrealized": -158210.0,
+                "realized": -580654.0,
+                "dividends": 67706.0,
+                "fees": -839.0,
+                "fx_translation": 1077796.0,
+                "forex": 7102.0,
+                "total": 412901.0,
+            },
+        },
+        "closed": [
+            {
+                "sym": "LLY",
+                "first": "2024-11-01",
+                "last": "2025-06-04",
+                "trades": 2,
+                "realized": -175786.0,
+            }
+        ],
+        "notes": ["時価が取れず据え置き: CASH_JPY（合計 9,450,075 円）"],
         "series": {
             "dates": ["2025-09-11", "2026-03-11", "2026-09-11"],
             "nav": [24000000.0, 25000000.0, 25427872.0],
             "pnl": [-100000.0, 500000.0, 405823.0],
             "deposits": [24100000.0, 24500000.0, 25022049.0],
             "daily_pnl": [-50000.0, 120000.0, 57559.0],
+            "symbols": {
+                "XLE@gb": {
+                    "mode": "pnl",
+                    "label": "含み損益（取得原価比）",
+                    "cur": "USD",
+                    "price": [60.0, 62.0, 65.14],
+                    "pnl": [100000.0, 300000.0, 648558.0],
+                    "trades": [{"i": 1, "qty": 100.0, "price": 62.0}],
+                    "avg_cost": 53.865,
+                }
+            },
         },
     }
 
@@ -291,3 +337,84 @@ def test_build_message_without_image_has_no_related_part() -> None:
     msg = mailer.build_message(payload(), to=["me@example.com"], sender="me@example.com", png=None)
     types = [part.get_content_type() for part in message_from_bytes(msg.as_bytes()).walk()]
     assert "image/png" not in types and "text/html" in types
+
+
+def test_html_body_carries_every_section_of_the_dashboard() -> None:
+    body = mailer.html_body(payload())
+    for value in (
+        "SMH",  # tape
+        "568.53",
+        "+1.47%",
+        "開設来損益",
+        "+405,823",
+        "実現 −580,654 · 配当 +67,706",
+        "資金加重リターン",
+        "+1.72%",
+        "最大DD（期間内） −10.4%",
+        "資産配分",  # allocation
+        "日本株",
+        "29.0%",
+        "損益の内訳",  # attribution
+        "為替換算 現金",
+        "+1,077,796",
+        "+412,901",
+        "決済済み",  # closed
+        "LLY",
+        "2024-11-01 → 2025-06-04",
+        "−175,786",
+        "NAV と累計入金",  # time series
+        "時価が取れず据え置き: CASH_JPY（合計 9,450,075 円）",  # notes
+    ):
+        assert value in body, value
+
+
+def test_html_body_draws_a_card_for_every_charted_position() -> None:
+    body = mailer.html_body(payload())
+    card = body[body.index("銘柄ごとの推移") :]
+    for value in (
+        "XLE",
+        "65.14",
+        "Energy · 海外証券口座",
+        "数量 <b>500</b>",
+        "平均 <b>53.87</b>",
+        "比率 <b>10.8%</b>",
+        "1W <b",
+        "+1.0%",
+        "1M <b",
+        "+6.7%",
+        "含み <b",
+        "+14.9%",
+        "含み損益（取得原価比） ¥",
+        "+648,558",
+    ):
+        assert value in card, value
+    # a position with no series gets no card
+    assert "2561" not in card
+
+
+def test_html_body_marks_the_trades_and_the_average_cost_on_the_price_chart() -> None:
+    data = payload()
+    with_marks = mailer.html_body(data)
+    sym = data["series"]["symbols"]["XLE@gb"]
+    sym["trades"], sym["avg_cost"] = [], None
+    without = mailer.html_body(data)
+    assert with_marks.count(f"solid {mailer.DN}") > without.count(f"solid {mailer.DN}")
+
+
+def test_html_body_draws_the_daily_pnl_over_the_whole_window() -> None:
+    data = payload()
+    data["series"]["dates"] = [f"2026-{m:02d}-01" for m in range(1, 10)] * 10
+    data["series"]["daily_pnl"] = [1000.0] * 90
+    assert "90 営業日" in mailer.html_body(data)
+
+
+def test_html_body_does_not_count_a_flat_day_as_a_down_day() -> None:
+    data = payload()
+    data["series"]["daily_pnl"] = [0.0, 120000.0, -57559.0]
+    assert "上げた日 1 日 / 下げた日 1 日（変化なし 1 日）" in mailer.html_body(data)
+
+
+def test_text_body_carries_the_inception_figures_and_the_notes() -> None:
+    text = mailer.text_body(payload())
+    assert "開設来損益" in text and "+405,823" in text and "+1.72%" in text
+    assert "時価が取れず据え置き: CASH_JPY（合計 9,450,075 円）" in text
