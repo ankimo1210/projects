@@ -2180,14 +2180,27 @@ def _volume27(
             return math.inf
         return float(n_exceedances * math.log(beta) + (1.0 + 1.0 / xi) * np.sum(np.log1p(z)))
 
-    fit_nll = _gpd_nll(xi_hat, beta_hat)
-    neighbour_nll = [
-        _gpd_nll(xi_hat * 1.01, beta_hat),
-        _gpd_nll(xi_hat * 0.99, beta_hat),
-        _gpd_nll(xi_hat, beta_hat * 1.01),
-        _gpd_nll(xi_hat, beta_hat * 0.99),
-    ]
-    mle_local_max = math.isfinite(fit_nll) and all(fit_nll < value for value in neighbour_nll)
+    # A fit needs at least one exceedance and a finite (xi, beta) with beta > 0
+    # and 0 < |xi| < 1 (the EVT VaR divides by xi and the ES by 1 - xi). Anything
+    # else fails the GPD and EVT checks with a reason instead of raising.
+    fit_inputs_valid = (
+        n_exceedances > 0
+        and math.isfinite(xi_hat)
+        and math.isfinite(beta_hat)
+        and beta_hat > 0.0
+        and xi_hat != 0.0
+        and xi_hat < 1.0
+    )
+    mle_local_max = False
+    if fit_inputs_valid:
+        fit_nll = _gpd_nll(xi_hat, beta_hat)
+        neighbour_nll = [
+            _gpd_nll(xi_hat * 1.01, beta_hat),
+            _gpd_nll(xi_hat * 0.99, beta_hat),
+            _gpd_nll(xi_hat, beta_hat * 1.01),
+            _gpd_nll(xi_hat, beta_hat * 0.99),
+        ]
+        mle_local_max = math.isfinite(fit_nll) and all(fit_nll < value for value in neighbour_nll)
     xi_error = abs(xi_hat - xi_true)
     beta_ratio_error = abs(beta_hat / beta_true - 1.0)
     _add(
@@ -2197,7 +2210,8 @@ def _volume27(
         "(xi_hat, beta_hat) is a local maximum of the GPD likelihood on the committed "
         "exceedances (1% perturbations), the exceedance count matches the metric, and "
         "|xi_hat - xi| <= 0.1 and |beta_hat/beta - 1| <= 0.15",
-        mle_local_max
+        fit_inputs_valid
+        and mle_local_max
         and n_exceedances == int(metrics["gpd_n_exceedances"])
         and xi_error <= 0.1
         and beta_ratio_error <= 0.15,
@@ -2209,20 +2223,25 @@ def _volume27(
     evt_es = float(metrics["evt_es"])
 
     def _evt_var(level: float) -> float:
+        if not 0.0 < level < 1.0:
+            return math.nan
         ratio = (n_total / n_exceedances) * (1.0 - level)
         return threshold + (beta_hat / xi_hat) * (ratio ** (-xi_hat) - 1.0)
 
-    var_rebuild_gap = abs(_evt_var(evt_alpha) - evt_var)
-    ladder_gap = float(
-        np.max(
-            np.abs(
-                np.array([_evt_var(float(a)) for a in arrays["evt_quantile_alpha"]])
-                - arrays["evt_var_ladder"]
+    if fit_inputs_valid:
+        var_rebuild_gap = abs(_evt_var(evt_alpha) - evt_var)
+        ladder_gap = float(
+            np.max(
+                np.abs(
+                    np.array([_evt_var(float(a)) for a in arrays["evt_quantile_alpha"]])
+                    - arrays["evt_var_ladder"]
+                )
             )
         )
-    )
-    evt_es_check = (evt_var + beta_hat - xi_hat * threshold) / (1.0 - xi_hat)
-    evt_identity_error = abs(evt_es - evt_es_check)
+        evt_es_check = (evt_var + beta_hat - xi_hat * threshold) / (1.0 - xi_hat)
+        evt_identity_error = abs(evt_es - evt_es_check)
+    else:
+        var_rebuild_gap = ladder_gap = evt_identity_error = math.inf
     _add(
         checks,
         "evt_var_es_identity",
@@ -3067,12 +3086,30 @@ def evaluate_acceptance(
     metrics: dict[str, Any],
     arrays: dict[str, np.ndarray],
 ) -> dict[str, Any]:
-    """Return the canonical gate record; this does not approve empirical performance."""
+    """Return the canonical gate record; this does not approve empirical performance.
+
+    A numerical failure inside an evaluator (a zero division, a math domain
+    error, an empty slice) on tampered or degenerate inputs yields a failing
+    record with a single ``gate_evaluation`` check naming the exception, so the
+    caller still gets a diagnosable FAIL instead of an aborted run. Missing keys
+    and wrong types are schema errors and still raise.
+    """
     try:
         evaluator = _EVALUATORS[volume]
     except KeyError as exc:
         raise ValueError("acceptance volume must lie in [18, 28]") from exc
-    checks, negative_results = evaluator(metrics, arrays)
+    try:
+        checks, negative_results = evaluator(metrics, arrays)
+    except (ArithmeticError, IndexError, ValueError) as exc:
+        checks = []
+        _add(
+            checks,
+            "gate_evaluation",
+            f"{type(exc).__name__}: {exc}",
+            "the volume evaluator completes on the committed inputs",
+            False,
+        )
+        negative_results = []
     return {
         "schema_version": 1,
         "scope": "integration_and_reproducibility",
