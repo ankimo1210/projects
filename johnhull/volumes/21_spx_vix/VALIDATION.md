@@ -23,7 +23,7 @@
 | `surrogate_gamma_rmse` | 35.50726161092219 |
 | `surrogate_greek_rmse` | 25.359399280280453 |
 | `surrogate_price_rmse` | 0.4123722655252687 |
-| `surrogate_speedup_1024` | 914.2897131825704 |
+| `surrogate_speedup_1024` | 781.9083514612693 |
 | `teacher` | hullkit.spx_vix.nested_vix_teacher |
 | `timing_method` | perf_counter_ns warm-cache median of 5 |
 | `timing_nondeterministic` | True |
@@ -37,7 +37,7 @@
 | `teacher_uncertainty` | 16 | aligned, nonnegative, and nontrivial standard errors | PASS |
 | `ood_shell` | 4 | > 0 flagged observations | PASS |
 | `measured_cpu_timing` | perf_counter_ns warm-cache median of 5 | positive measured samples | PASS |
-| `surrogate_speedup` | 914.2897131825704 | > 1 at batch 1024 | PASS |
+| `surrogate_speedup` | 781.9083514612693 | > 1 at batch 1024 | PASS |
 | `joint_objective_components` | True | all four component errors finite | PASS |
 | `in_domain_ood_diagnostics` | True | price and Greek RMSE finite in both domains | PASS |
 

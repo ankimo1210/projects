@@ -10,7 +10,7 @@
 
 | Metric | Value |
 |---|---:|
-| `alloc_normal_var` | 77.52904630663974 |
+| `alloc_normal_var` | 68.80580395559257 |
 | `alpha` | 0.99 |
 | `christoffersen_ind_lr_clustered` | 9.894654433330203 |
 | `christoffersen_ind_lr_iid` | 0.008064537982836129 |
@@ -18,10 +18,10 @@
 | `christoffersen_ind_pvalue_iid` | 0.9284439448072724 |
 | `clustered_basel_zone` | yellow |
 | `cross_asset_position_sum_error` | 0.0 |
-| `desk_report_es` | 89.2145706813487 |
-| `desk_report_var` | 77.52904630663974 |
+| `desk_report_es` | 78.20437885340155 |
+| `desk_report_var` | 68.80580395559257 |
 | `euler_additivity_error` | 0.0 |
-| `euler_es_additivity_error` | 0.0 |
+| `euler_es_additivity_error` | 1.4210854715202004e-14 |
 | `evt_alpha` | 0.999 |
 | `evt_es` | 20.753067047383286 |
 | `evt_es_identity_error` | 0.0 |
@@ -36,6 +36,7 @@
 | `gpd_xi_hat` | 0.24567805084324695 |
 | `gpd_xi_true` | 0.2 |
 | `hs_violation_rate` | 0.0145 |
+| `kupiec_size_observations` | 500 |
 | `kupiec_size_rejection_rate` | 0.05 |
 | `kupiec_size_zscore` | 0.0 |
 | `swap_base_value` | 2603.6188101399357 |
@@ -55,12 +56,13 @@
 | `taylor_full_pnl` | -4350.9346606674835 |
 | `taylor_full_pnl_half` | -2177.963148804027 |
 | `taylor_unexplained_share` | 2.6301205095678685e-05 |
-| `total_historical_es` | 89.2145706813487 |
+| `total_historical_es` | 78.20437885340155 |
 
 ## Acceptance checks
 
 | Check | Observed | Criterion | Pass |
 |---|---:|---|:---:|
+| `kupiec_size_flags_match_recomputation` | 0.0 | every stored reject flag equals Kupiec's own verdict recomputed from the committed per-replication exceedance count | PASS |
 | `kupiec_size_calibration` | 0.0 | iid rejection rate within z < 3 of nominal 5% (binomial SE, 400 replications) | PASS |
 | `christoffersen_detects_clustering` | 0.0016575957546647315 | clustered LR_ind p-value (recomputed from the arrays) < 0.05 and LR_ind statistic exceeds the iid series | PASS |
 | `christoffersen_pvalue_matches_recomputation` | 1.5178830414797062e-18 | stored christoffersen_ind_pvalue_clustered matches erfc(sqrt(LR/2)) recomputed from the committed exceedance series (<= 1e-12) | PASS |
@@ -69,8 +71,8 @@
 | `gpd_parameter_recovery` | 0.04567805084324694 | |xi_hat - xi| <= 0.1 and |beta_hat/beta - 1| <= 0.15 | PASS |
 | `evt_var_es_identity` | 0.0 | <= 1e-12 | PASS |
 | `euler_additivity_normal` | 0.0 | <= 1e-12 | PASS |
-| `marginal_fd_consistency` | 1.027118008182688e-09 | analytic vs central-difference marginals, relative error <= 1e-6 | PASS |
-| `euler_es_additivity_sim` | 0.0 | sum(ES components) == total historical ES and matches committed array, <= 1e-12 | PASS |
+| `marginal_fd_consistency` | 3.1713464233488086e-10 | analytic vs central-difference marginals, relative error <= 1e-6 | PASS |
+| `euler_es_additivity_sim` | 1.4210854715202004e-14 | sum(ES components) == total historical ES and matches committed array, <= 1e-12 | PASS |
 | `pnl_explain_taylor_ordering` | 0.11443482486811263 | dgv residual < delta-only residual; both shrink when moves halve (all four recomputed from the committed exposure and P&L arrays) | PASS |
 | `cross_asset_factor_mapping` | 0.0 | position x factor mapping is (n_positions, n_factors) over explicit factor labels including parallel_zero_rate with a non-zero rate delta and zero rate vega, and the per-position full P&L sums to the desk full P&L (<= 1e-9) | PASS |
 | `desk_report_reproducible` | 0.0 | desk-report VaR equals Euler component sum and ES equals total historical ES | PASS |
