@@ -116,3 +116,16 @@ def test_bootstrap_rejects_a_coupon_bond_as_the_first_instrument():
     times, zeros = rates.bootstrap_zero_curve([(0.5, 0.0, 98.0), (1.0, 6.0, 99.0)])
     assert times == [0.5, 1.0]
     assert all(math.isfinite(rate) for rate in zeros)
+
+
+def test_bootstrap_accepts_a_long_zero_coupon_bond_as_the_first_instrument():
+    """A zero with maturity beyond 0.5y has no coupons to discount (Hull Table 4.3).
+
+    The coupon-date grid of a 1-year zero still contains 0.5y, so the bootstrap
+    must not interpolate the (still empty) curve for a coupon of zero.
+    """
+    times, zeros = rates.bootstrap_zero_curve([(1.0, 0.0, 97.8)])
+    assert times == [1.0]
+    # Hull Table 4.4: the 1-year zero price 97.8 implies 2.225% continuous.
+    assert zeros[0] == pytest.approx(-math.log(0.978), abs=1e-12)
+    assert zeros[0] == pytest.approx(0.02225, abs=5e-6)
