@@ -1702,6 +1702,31 @@ def calibrate_hull_white(market_zr, tenors, a=0.10, sigma=0.01):
     return np.array([-hw_logP(theta, tenors, r0, a, sigma, T) / T for T in tenors])
 
 
+def hjm_initial_curve_zero_rates(market_zr, tenors):
+    # HJM takes the initial instantaneous forward curve f(0,T) as an input.
+    # Build piecewise-constant f(0,T) between tenors from the market log discount
+    # factors, then rebuild P(0,T) = exp(-int_0^T f(0,u) du) and read zero rates
+    # back at the nodes. Exact by construction; RMSE shows numerical precision.
+    tenors = np.asarray(tenors, dtype=float)
+    log_discount = np.asarray(market_zr, dtype=float) * tenors
+    widths = np.diff(np.concatenate([[0.0], tenors]))
+    forwards = np.diff(np.concatenate([[0.0], log_discount])) / widths
+    return np.cumsum(forwards * widths) / tenors
+
+
+def lmm_initial_curve_zero_rates(market_zr, tenors):
+    # BGM/LMM takes the initial simple forward rates F_i(0) on the tenor grid as
+    # inputs. Build F_i from market discount factors, then chain
+    # P(0,T_i) = prod 1/(1 + tau_j F_j) and read zero rates back at the nodes.
+    tenors = np.asarray(tenors, dtype=float)
+    discount = np.exp(-np.asarray(market_zr, dtype=float) * tenors)
+    taus = np.diff(np.concatenate([[0.0], tenors]))
+    previous = np.concatenate([[1.0], discount[:-1]])
+    simple_forwards = (previous / discount - 1.0) / taus
+    rebuilt = np.cumprod(1.0 / (1.0 + taus * simple_forwards))
+    return -np.log(rebuilt) / tenors
+
+
 def bdt_bootstrap(market_zr, tenors, sigma_const=0.15):
     '''
     BDT bootstrap: calibrate theta_i at each tenor to match market zero bond price.
@@ -2012,11 +2037,17 @@ for pattern in ALL_PATTERNS:
     rmse_table[pattern]["BK"] = rmse(mzr, zr_bk)
     print(f"  BK     RMSE={rmse_table[pattern]['BK']:.2f} bps")
 
-    # HJM / BGM: exact fit (calibrated by construction)
-    fit_results[pattern]["HJM"] = mzr.copy()
-    fit_results[pattern]["BGM/LMM"] = mzr.copy()
-    rmse_table[pattern]["HJM"] = 0.0
-    rmse_table[pattern]["BGM/LMM"] = 0.0
+    # HJM / BGM: the initial curve is a model input, so the fit is exact by
+    # construction. Rebuild the curve from the model inputs (instantaneous /
+    # simple forwards) instead of copying it, so the RMSE is computed, not assumed.
+    zr_hjm = hjm_initial_curve_zero_rates(mzr, TENORS)
+    fit_results[pattern]["HJM"] = zr_hjm
+    rmse_table[pattern]["HJM"] = rmse(mzr, zr_hjm)
+    print(f"  HJM    RMSE={rmse_table[pattern]['HJM']:.2e} bps  (curve rebuilt from f(0,T))")
+    zr_lmm = lmm_initial_curve_zero_rates(mzr, TENORS)
+    fit_results[pattern]["BGM/LMM"] = zr_lmm
+    rmse_table[pattern]["BGM/LMM"] = rmse(mzr, zr_lmm)
+    print(f"  BGM    RMSE={rmse_table[pattern]['BGM/LMM']:.2e} bps  (curve rebuilt from F_i(0))")
 
 print("\nAll calibrations complete.")
 
