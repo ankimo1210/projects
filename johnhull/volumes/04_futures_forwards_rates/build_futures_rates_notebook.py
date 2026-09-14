@@ -95,34 +95,44 @@ cells.append(
 
 # Cell 04: margin account simulation
 cells.append(
-    code(r"""# --- 証拠金口座の日次決済シミュレーション（Hull Table 2.1 形式） ---
-# 金先物 2枚 × 100オンス、当初証拠金 $6,000/枚、維持証拠金 $4,500/枚
+    code(r"""# --- 証拠金口座の台帳（Hull GE Table 2.1 を再現、§2.4 p.52） ---
+# 金先物 2枚 × 100オンスのロング、Day 1 に $1,750 で約定し Day 16 に $1,726.90 で反対売買
+# 当初証拠金 $6,000/枚（計 $12,000）、維持証拠金 $4,500/枚（計 $9,000）
+# マージンコールは当日の残高で判定し、翌日の取引終了までに入金される（p.53）。超過分は引き出さない
 N_OZ = 200
-F0_M, INIT_M, MAINT_M = 1750.0, 12_000.0, 9_000.0
-rng_m = np.random.default_rng(21)
-moves = np.round(rng_m.normal(-5.0, 9.0, 10), 1)
-futures_path = F0_M + np.cumsum(moves)
+F0_M, INIT_M, MAINT_M = 1750.00, 12_000.0, 9_000.0
+futures_path = np.array([1741.00, 1738.30, 1744.60, 1741.30, 1740.10, 1736.20, 1729.90, 1730.80,
+                         1725.40, 1728.10, 1711.00, 1711.00, 1714.30, 1716.10, 1723.00,
+                         1726.90])  # Day 1–15 は決済価格、Day 16 は反対売買の約定価格
 
-rows, balance, total_calls = [], INIT_M, 0.0
-prev = F0_M
+rows = [{"日": 1, "価格": F0_M, "日次損益": np.nan, "累積損益": np.nan,
+         "証拠金残高": INIT_M, "マージンコール": np.nan}]
+daily_gains, balances, margin_calls = [], [], {}
+balance, pending_call, prev = INIT_M, 0.0, F0_M
 for day, f in enumerate(futures_path, start=1):
     gain = (f - prev) * N_OZ
-    balance += gain
-    call = 0.0
+    balance += gain + pending_call  # 前日のコールは当日中に入金済み
+    pending_call = 0.0
     if balance < MAINT_M:
-        call = INIT_M - balance
-        balance = INIT_M
-        total_calls += call
-    rows.append({"日": day, "先物価格": round(f, 1), "日次損益": round(gain, 0),
-                 "口座残高": round(balance, 0), "マージンコール": round(call, 0)})
+        pending_call = INIT_M - balance  # 当初証拠金の水準まで戻す額
+        margin_calls[day] = pending_call
+    daily_gains.append(gain)
+    balances.append(balance)
+    rows.append({"日": day, "価格": f, "日次損益": round(gain, 2),
+                 "累積損益": round(sum(daily_gains), 2), "証拠金残高": round(balance, 2),
+                 "マージンコール": round(margin_calls[day], 2) if day in margin_calls else np.nan})
     prev = f
 df_margin = pd.DataFrame(rows)
-display(df_margin)
-total_gain = (futures_path[-1] - F0_M) * N_OZ
-print(f"累積損益 = (F_最終 − F_0) × {N_OZ} = {total_gain:,.0f}"
-      f" ／ 日次損益の合計 = {df_margin['日次損益'].sum():,.0f}（一致が値洗いの本質）")
-print(f"マージンコール総額 = {total_calls:,.0f}")
-print("（GE Table 2.1 の実経路ではコール $4,020 と $3,780 が発生、累積損失 $4,620）")""")
+display(df_margin.apply(lambda col: col if col.name == "日"
+                        else col.map(lambda v: "" if pd.isna(v) else f"{v:,.2f}")))
+cum_gain = sum(daily_gains)
+total_calls = sum(margin_calls.values())
+print("マージンコール: " +"、".join(f"Day {d} に ${c:,.0f}" for d, c in margin_calls.items())
+      + "（Hull: Day 7 に $4,020、Day 11 に $3,780）")
+print(f"累積損益 = (1,726.90 − 1,750) × {N_OZ} = {(futures_path[-1] - F0_M) * N_OZ:,.2f}"
+      f" ／ 日次損益の合計 = {cum_gain:,.2f}（Hull: −$4,620。一致が値洗いの本質）")
+print(f"最終残高 = 当初 {INIT_M:,.0f} + 累積損益 {cum_gain:,.0f} + 入金 {total_calls:,.0f}"
+      f" = {balances[-1]:,.2f}（Hull: $15,180）")""")
 )
 
 # ===========================================================================
@@ -172,6 +182,24 @@ display(fig1.canvas)
 print(f"回帰推定 ĥ = {h_hat:.4f}（理論値 {h_star:.4f}）")
 n_star = h_star * 2_000_000 / 42_000
 print(f"ジェット燃料200万ガロンを 42,000ガロン/枚 の灯油先物で → N* = {n_star:.2f} ≈ {round(n_star)} 枚")""")
+)
+
+# Cell 06b: daily settlement / tailing the hedge md
+cells.append(
+    md(r"""### 日次決済の影響とテイリング（§3.4 “Impact of Daily Settlement”, p.83）
+
+上の $h^*$ は満期一括決済（フォワード）を前提にしています。先物は日次決済なので、実際は
+**1日ごとのヘッジの連続**です。日次の変化率で回帰した $\hat h = \hat\rho\,\hat\sigma_S/\hat\sigma_F$ を使うと
+
+$$N^* = \frac{\hat h\,V_A}{V_F} \quad \text{(3.3)}, \qquad V_A = S\,Q_A,\; V_F = F\,Q_F$$
+
+Hull の例: $V_A = 2{,}000{,}000 \times 1.10$、$V_F = 42{,}000 \times 1.30 = 54{,}600$。
+Hull は $\hat\rho = 0.8$ をそのまま $\hat h$ に用いて（$\hat\sigma_S = \hat\sigma_F$ に相当）
+$N^* = 0.8 \times 2{,}200{,}000 / 54{,}600 = 32.23 \approx 32$ 枚。
+
+さらに、ヘッジの残存期間に生じる証拠金の運用・調達金利を考えると、枚数を割り引くのが適切です。
+金利 5%・残存 1 年なら $N^*$ を $1.05$ で割る（$32.23/1.05 = 30.70$）。これを
+**テイリング（tailing the hedge）**と呼びます。""")
 )
 
 # Cell 07: beta hedging md
@@ -315,6 +343,8 @@ $$R_F = \frac{R_2 T_2 - R_1 T_1}{T_2 - T_1} \quad \text{(4.5)}$$
 
 $$V_{\text{FRA}} = L\,(R_K - R_F)\,(T_2 - T_1)\,e^{-R_2 T_2}$$
 
+$R_K, R_F$ は期間 $T_2 - T_1$ の複利頻度で表示した金利（Example 4.3 では半年複利）、$R_2$ は連続複利のゼロレート。
+
 順イールドではフォワードレートはゼロレートの上に位置します。""")
 )
 cells.append(
@@ -335,8 +365,10 @@ display(pd.DataFrame(rows))
 rf_simple = rates.forward_rate(0.03, 1.0, 0.04, 2.0)
 print(f"例: 1年3% / 2年4% → 1→2年フォワード = {rf_simple:.2%}（eq 4.5）")
 fra = rates.fra_value(100e6, 0.058, 0.050, 1.5, 2.0, 0.040)
-print(f"FRA（元本1億、固定5.8%受取、フォワード5.0%、1.5→2.0年、R2=4%）= {fra:,.0f}（Hull: ≈369,200）")
-print("※ 5.8%/5.0%/4.0% は連続複利表記。半年複利等の表記なら rates.to_continuous() で変換してから渡す（fra_value は連続複利前提）")""")
+print(f"FRA（Ex 4.3: 元本1億、固定5.8%受取、フォワード5.0%、1.5→2.0年、R2=4%）= {fra:,.0f}（Hull: 369,200）")
+print("※ fra_value の R_K と R_F は期間 t2−t1 の単利（その期間の複利頻度、ここでは半年複利）で、"
+      "Ex 4.3 の 5.8%/5.0% をそのまま渡す。連続複利なのは割引の R2=4% だけ。"
+      "連続複利のフォワードを使うなら rates.from_continuous(r, m=2) で半年複利に直してから渡す")""")
 )
 
 # Cell 17: duration md
@@ -418,9 +450,12 @@ cells.append(
 cells.append(
     code(r"""print(f"無収入株: S=40, r=5%, T=3ヶ月 → F = 40e^(0.05×0.25) = "
       f"{40.0 * np.exp(0.05 * 0.25):.4f}（Hull: 40.50）")
-s_i, pv_i, r_5, t_5 = 900.0, 40.0, 0.04, 0.75
-print(f"既知収入（クーポン債）: S={s_i:.0f}, I(PV)={pv_i:.0f}, r=4%, T=9ヶ月 → "
-      f"F = (900−40)e^(0.03) = {(s_i - pv_i) * np.exp(r_5 * t_5):.2f}")
+# Hull §5.5（p.130–131）: 4ヶ月後のクーポン $40 を 4ヶ月金利 3% で割り引いて I = 39.60
+s_i, r_5, t_5 = 900.0, 0.04, 0.75
+pv_i = 40.0 * np.exp(-0.03 * 4.0 / 12.0)
+f_income = (s_i - pv_i) * np.exp(r_5 * t_5)
+print(f"既知収入（クーポン債）: S={s_i:.0f}, I = 40e^(−0.03×4/12) = {pv_i:.2f}, r=4%, T=9ヶ月 → "
+      f"F = (900−{pv_i:.2f})e^(0.04×0.75) = {f_income:.2f}（Hull: 886.60）")
 print(f"株価指数: S=1300, q=1%, r=5%, T=0.25 → F = {1300.0 * np.exp((0.05 - 0.01) * 0.25):.2f}")
 print(f"外貨: S=0.80, r=6%, r_f=2%, T=2 → F = {0.80 * np.exp((0.06 - 0.02) * 2.0):.4f}（金利平価）")""")
 )
@@ -604,6 +639,29 @@ print(f"ポートフォリオ $10M（D_P=6.8年）を T-bond 先物（V_F=$93,06
 print(f"N* = P·D_P/(V_F·D_F) = {n_dur:.2f} ≈ {round(n_dur)} 枚ショート")""")
 )
 
+# Cell 30b: ED / SOFR futures zero-curve bootstrap md
+cells.append(
+    md(r"""### 先物からゼロカーブを延ばす（§6.3 “Calculating Zero Curves”, eq 6.2）
+
+先物レートにコンベクシティ調整を施すとフォワードレート $R_F$ が得られ、式 (4.5) を $R_2$ について解くと
+短いゼロレートから順に長い満期へ延ばせます（すべて連続複利）：
+
+$$R_2 = \frac{R_F\,(T_2 - T_1) + R_1 T_1}{T_2} \quad \text{(6.2)}$$
+
+**Example 6.4（ユーロドル先物, p.164–165）**: 300 日ゼロ 2.80%、300 日から 90 日間のフォワード 3.30%、
+391 日から 3.50% とすると
+
+$$R_{391} = \frac{0.033 \times 91 + 0.028 \times 300}{391} = 2.916\%, \qquad
+R_{489} = \frac{0.035 \times 98 + 0.02916 \times 391}{489} = 3.033\%$$
+
+原資産は 90 日金利だが、限月間の 91 日・98 日に適用したものとみなして繋ぐ。
+
+**Example 6.5（3ヶ月 SOFR 先物, p.165）**: 3ヶ月 SOFR 先物は期間の**終わり**に決済され、
+期間の一部の翌日物がすでに観測済みのことがある。観測済み 1ヶ月の複利が 2%、先物が示す 3ヶ月全体が 2.5% なら、
+残り 2ヶ月のゼロレート $R$ は $0.02 \times 1/12 + R \times 2/12 = 0.025 \times 3/12$ から $R = 2.75\%$。
+以降は次の限月のフォワードと式 (6.2) で 5ヶ月、8ヶ月…と延ばす。""")
+)
+
 # ===========================================================================
 # Section 6: verification / exercises / summary
 # ===========================================================================
@@ -623,12 +681,20 @@ checks.append(("FRA 369,247", rates.fra_value(100e6, 0.058, 0.050, 1.5, 2.0, 0.0
 checks.append(("Table 4.6 B=94.213", b_d, 94.213, 5e-3))
 checks.append(("Table 4.6 D=2.653", dur_d, 2.653, 2e-3))
 checks.append(("F=40.50（S=40, 3ヶ月）", 40.0 * np.exp(0.05 * 0.25), 40.5031, 1e-3))
+checks.append(("§5.5 既知収入 I=39.60", pv_i, 39.60, 5e-3))
+checks.append(("§5.5 既知収入 F=886.60", f_income, 886.60, 5e-3))
 checks.append(("フォワード価値の恒等 (5.4)≡(5.5)", val_general, val_direct, 1e-12))
 checks.append(("h* = 0.7798", h_star, 0.77976, 1e-4))
 checks.append(("ベータヘッジ N*=30", n_beta, 30.0, 1e-9))
 checks.append(("デュレーションヘッジ 79.42", n_dur, 79.42, 0.01))
-checks.append(("値洗い不変量", float(df_margin["日次損益"].sum()),
+checks.append(("Table 2.1 マージンコール Day 7 = 4,020", margin_calls.get(7, 0.0), 4_020.0, 1e-6))
+checks.append(("Table 2.1 マージンコール Day 11 = 3,780", margin_calls.get(11, 0.0), 3_780.0, 1e-6))
+checks.append(("Table 2.1 コールは2回だけ", float(len(margin_calls)), 2.0, 0.0))
+checks.append(("Table 2.1 累積損益 −4,620", cum_gain, -4_620.0, 1e-6))
+checks.append(("Table 2.1 最終残高 15,180", balances[-1], 15_180.0, 1e-6))
+checks.append(("値洗い不変量（日次損益の合計 = (F_T − F_0)×200）", cum_gain,
                float((futures_path[-1] - F0_M) * N_OZ), 1e-6))
+checks.append(("残高 = 当初 + 累積損益 + 入金", balances[-1], INIT_M + cum_gain + total_calls, 1e-6))
 
 for name, got, want, tol in checks:
     ok = abs(got - want) <= tol

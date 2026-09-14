@@ -27,3 +27,8 @@ Last updated: 2026-06-08
   Hull-White swaption analytic: md only here; implemented in vol 26 (`hullkit.hull_white`).
   LMM is not implemented anywhere (the legacy ir_models notebook has only a Black caplet slider).
 - nbformat cell ids: generated deterministically by the builder (fixed in c54491fd)
+- 2026-09-14 spec-11 follow-up: `ir_options.bond_yield_convexity` (G', G'' of a coupon bond's
+  price-yield function, 3 tests; `test_ir_options.py` now 13) replaces the notebook's continuous-compounding
+  G''/G' helper (5-year ratio 4.80 → 5.53, T=5 adjustment 12.01 → 13.82 bp); Example 30.1 is reproduced
+  and asserted (G' −2.6730, G'' 9.8910, E_T(y_T) 0.06097, value 5.27 / 5.18), and the verification cell
+  now asserts that the stripped spot vols reprice each flat-vol cap
