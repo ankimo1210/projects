@@ -7,6 +7,11 @@ check flips to FAIL. A tamper that leaves the gate green is a check that is
 reading its own answer back (the 2026-09-14 audit found that zeroing vol 28's
 ``cds_bootstrap_hazard`` or ``cds_survival`` and vol 27's ``gpd_losses`` all
 kept 17/17 and 14/14 PASS).
+
+"Exactly" allows the checks declared in ``DEPENDENT_FAILURES`` that read the
+same input. Degenerate inputs (all zeros, a fit parameter at a pole) must
+produce a failing record rather than an exception, so the gate stays
+diagnosable.
 """
 
 from __future__ import annotations
@@ -384,6 +389,11 @@ CASES = {
         ),
         ("hs_var_forecast", _scale_array("hs_var_forecast", 1.001), "fhs_coverage_improvement"),
         ("gpd_losses", _scale_array("gpd_losses", 1.01), "gpd_parameter_recovery"),
+        # No exceedance or an invalid fit must fail with a record, not raise
+        # (a zero-division in the EVT rebuild used to abort the whole gate).
+        ("gpd_losses_zero", _scale_array("gpd_losses", 0.0), "gpd_parameter_recovery"),
+        ("gpd_xi_hat_zero", _set_metric("gpd_xi_hat", 0.0), "gpd_parameter_recovery"),
+        ("gpd_xi_hat_one", _set_metric("gpd_xi_hat", 1.0), "gpd_parameter_recovery"),
         ("gpd_beta_hat", _scale_metric("gpd_beta_hat", 1.02), "gpd_parameter_recovery"),
         ("evt_var", _scale_metric("evt_var", 1.001), "evt_var_es_identity"),
         ("evt_var_ladder", _scale_array("evt_var_ladder", 1.001), "evt_var_es_identity"),
@@ -497,6 +507,48 @@ FLAT_CASES = [(volume, *case) for volume, cases in CASES.items() for case in cas
 def test_committed_gate_passes(volume):
     metrics, arrays = _load(volume)
     assert _failed(volume, copy.deepcopy(metrics), dict(arrays)) == set()
+
+
+# Inputs that used to abort evaluate_acceptance with an exception when zeroed
+# (found by zeroing every numeric array and metric of every volume in turn).
+DEGENERATE_ZEROS = [
+    (23, "array", "day_count"),
+    (23, "metric", "rfr_day_count_basis"),
+    (27, "metric", "alpha"),
+    (27, "metric", "fhs_window"),
+    (27, "metric", "gpd_beta_true"),
+    (27, "metric", "gpd_xi_hat"),
+    (27, "array", "gpd_losses"),
+    (27, "metric", "kupiec_size_observations"),
+    (28, "array", "cds_market_tenor"),
+    (28, "array", "factor_weight"),
+    (28, "array", "kth_factor_weight"),
+    (28, "array", "tranche_expected_principal"),
+    (28, "array", "tranche_payment_time"),
+    (28, "metric", "cds_bootstrap_freq"),
+    (28, "metric", "fixed_coupon_freq"),
+    (28, "metric", "fixed_coupon_maturity"),
+    (28, "metric", "option_freq"),
+    (28, "metric", "option_maturity"),
+]
+
+
+@pytest.mark.parametrize(
+    ("volume", "kind", "name"),
+    DEGENERATE_ZEROS,
+    ids=[f"vol{volume}-{kind}-{name}" for volume, kind, name in DEGENERATE_ZEROS],
+)
+def test_degenerate_input_returns_a_failing_record(volume, kind, name):
+    metrics, arrays = _load(volume)
+    metrics, arrays = copy.deepcopy(metrics), dict(arrays)
+    if kind == "array":
+        arrays[name] = np.zeros_like(arrays[name])
+    else:
+        metrics[name] = 0
+    with np.errstate(all="ignore"):
+        record = evaluate_acceptance(volume, metrics, arrays)
+    assert record["passed"] is False
+    assert all(isinstance(check["passed"], bool) for check in record["checks"])
 
 
 @pytest.mark.parametrize(
