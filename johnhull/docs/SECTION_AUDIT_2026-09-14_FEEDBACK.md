@@ -1,165 +1,118 @@
-# SECTION_AUDIT_2026-09-14 レビューフィードバック
+# SECTION_AUDIT_2026-09-14 進捗レビュー・フィードバック
 
-棚卸しの方向性は妥当で、D1・D3・D5・D8 などには実装上の裏付けがある。ただし、**カバレッジ分類、acceptance の保証範囲、未実装の範囲に修正が必要**。この監査を実装計画の根拠にする前に、以下を反映することを勧める。
+**主要な修正は進んでいる。** 現在の HEAD で hullkit＋report の **1,252 テスト**、11 巻の **118 acceptance checks**、tracked release contract が成功した。前回の CDS 入力改変の検出漏れ、D1/D2、D8 の古い出力は、今回の再現で改善を確認した。一方、文書の現在値、節別台帳、計測履歴、コアノート出力の鮮度には残課題がある。
 
-- レビュー日: 2026-09-14
-- 対象: [SECTION_AUDIT_2026-09-14.md](SECTION_AUDIT_2026-09-14.md)、653 行
-- コード: `cae1cd8410c56bcefe3548aba3c691e3c4531061`（監査記載の HEAD と一致）
-- 監査文書 SHA-256: `38c75ca40edb9559452e1d4e6f94998448d4e723a4a25e130f54e1f65c9d73e3`
-- 範囲: 文書全体のレビューと重要主張の抜き取り検証。全 306 節・全印刷値の再監査ではない。
-- 以下の行番号はこのスナップショットに対応。ソースのパスは `/home/kazumasa/projects/` 基準。
+- 更新日: 2026-09-14
+- 主対象: [VALIDATION.md](../VALIDATION.md)、特に第 2 便・第 3 便の記録
+- 照合先: [SECTION_AUDIT_2026-09-14.md](SECTION_AUDIT_2026-09-14.md)、実装・テスト・コミット済み成果物
+- レビュー時 HEAD: `839058908f9fcb32090618278d3889c555bacfa4`
+- 比較元: 初回レビュー時の `cae1cd84`。初回フィードバックは `bd278948` の Git 履歴に残る。
+- 行番号は今回の HEAD に対するもの。ソースパスは `/home/kazumasa/projects/` 基準。
+- 今回の変更はこのフィードバックノートのみ。`VALIDATION.md`、監査原文、実装、成果物は変更していない。
 
-## 1. 節カバレッジは表の訂正と分類規約の統一が必要
+## 前回 7 項目への対応状況
 
-**対象: 監査 28–33、38–40、70–73、83、86–87、108、116 行。確信度: 高。**
-
-vol 12 の内訳は \(2+4+8+1+19=34\) で、節数 35 と合わない。章表では Ch 1・8・16・35・36 が各 nb 1 なので、**70 行の nb を 4 → 5** とすると、現行の章表・要約・合計行と整合する。巻表の現状の列合計は code 104 / nb 56 / md 46 / absent 35 / qual 64。
-
-さらに、後続巻の実装を数えるという 73 行の規約が一貫していない。
-
-| 例 | 現在の分類 | 確認した根拠 | 修正案 |
-|---|---|---|---|
-| §3.4 | nb | `johnhull/hullkit/src/hullkit/weather.py:214–226` にヘッジ比率、`johnhull/hullkit/tests/test_weather.py:68–72` にテスト。監査 418 行も解決済みと認定 | 範囲を限定して code* にするか、節のノートへの配線を必須条件にする |
-| §6.3、§28.1 | nb | 監査自身の 413、447 行が `compounded_rfr`、`girsanov_weights` を実装先として挙げる | 同じ規約で再判定 |
-| §7.2 | absent | `johnhull/volumes/07_swaps/build_swaps_notebook.py:277–282` に OIS/SOFR・OIS 割引の説明 | FR-01 の「四半期 OIS 気配からの bootstrap 未対応」と、節への言及の有無を分ける |
-| §36.4 | qual | 監査 CR-23 は Schwartz–Moon を未実装・blocked としている。GE p.806–807 には確率過程・MC・割引期待 CF の説明がある | パラメータ不足を「計算対象なし」に含めない |
-
-「計算対象 242 節」「計算なし 81 節」は、分類統一後に再集計した値を採用する。上の抜き取り確認だけから新しい総数は断定できない。
-
-**提案:** 節 ID、分類、実装シンボル、テスト、ノート、部分対応の範囲、判定理由を持つ節別台帳を添え、巻表・章表をそこから集計する。分類と「印刷値の再現可否」は別項目にする。
-
-## 2. acceptance の二分法を改め、未検出の入力も追記する
-
-**対象: 監査 46–48、134、377、384–386、403、407、490 行。確信度: 高。優先して修正。**
-
-「vol 18–26 は保存値、vol 27–28 は配列から再計算」という要約は強すぎる。前者にも配列検査があり、後者にも保存済み結果への依存が残る。文書内の詳細表とも整合しない。
-
-コミット済み JSON/NPZ を読み、**メモリ内だけ**で入力を変更して `evaluate_acceptance` を呼んだ結果:
-
-| 変更 | 結果 | 判定箇所 |
+| 前回の指摘 | 今回の判定 | 根拠・残り |
 |---|---|---|
-| vol 20 の test 開始を train 終了と同じ位置にする | `purged_walk_forward` が FAIL | `johnhull/scripts/frontier_acceptance.py:261–268` |
-| vol 22 の `variance_clock[1] = -1` | `variance_clock` が FAIL | 同 :609–614 |
-| vol 27 の `gpd_losses` を全 0 にする | 14/14 PASS、判定辞書も不変 | 同 :1315–1341 は保存推定値を使用 |
-| vol 28 の `cds_bootstrap_hazard` を全 0 にする | 17/17 PASS、判定辞書も不変 | 同 :1592–1606 |
-| vol 28 の `cds_survival` を全 0 にする | 17/17 PASS、判定辞書も不変 | 同 :1565–1568 は保存 PV 列を使用 |
+| 1. カバレッジの計数・分類 | **一部対応** | 監査 §1 / §10 で vol 12 の行和、code*、§7.2、§36.4 を訂正。節別台帳は未作成。第 3 便で増えた実装も含む全 306 節の最新分類は未検証 |
+| 2. acceptance の保証範囲・検出漏れ | **主要な検出漏れは対応、保証の表現は要修正** | 全 11 巻に tamper テスト。CDS hazard / survival 改変は該当チェックが FAIL。GPD 標本も判定に使うようになったが、全 0 入力は例外になる。保存値依存の例外は残り、独立再計算が全面的になったわけではない |
+| 3. D11 の「完全版」の限定・信用 VaR | **対応済み** | `VALIDATION.md:342–349` と `cds.py` は survival-weighted risky duration と knock-out の範囲を明記。`test_credit.py:65–75` で Ex 24.8 の 0.128 / $5.13M を固定し、テスト成功 |
+| 4. CR-08 / CR-09 の既存 API の見落とし | **監査の訂正は対応済み** | 監査 §10 が binary CDS と任意 detachment 評価の存在を認定。非標準点への補間・較正規約や追加の感応度シナリオは別の open 項目 |
+| 5. D2 の再現条件・符号 | **対応済み** | `first_accrual=0.5` で bonds / fras とも \(-0.291999794242\)。監査の入力・受け固定の符号も訂正済み |
+| 6. vol 21 の比較除外・計測の来歴 | **文書は対応、来歴の実装は未対応** | 監査 §0 に timing 等の除外を明記。古い計測値を新しい source digest と組み合わせ得る実装は残る（下記 F3） |
+| 7. 実行順序・完了条件 | **進展、一部残り** | acceptance・出力の修正を先行し、印刷値ピン、API、D9 を追加。監査 §9 に判断事項を分離。現状を示す一覧と過去の指摘表の関係はまだ整理が必要 |
 
-特に **BB-18 は CDS bootstrap の欠落を追記すべき**。`cds_bootstrap_round_trip` は保存済みの再価格スプレッドと市場スプレッドを比較するだけで、保存 hazard を使わない。標準気配を再価格する要件は vol 28 spec の 211 行にもある。hazard・tenor・割引・回収率から再価格し、hazard を変えたら失敗する検査を提案に加える。「保存値依存 6 件」の件数も見直す。
+D9 は今回、**出力を保存する作業は対応済み**と判断する。指定された 17 冊に出力があり、PNG 86 件、Plotly MIME 25 件を数えた。ブラウザで全ページの描画を確認したわけではなく、数値や図の鮮度を保証する範囲にも限界がある（F4）。
 
-D6 の「これらを読む検査は常に PASS」も限定する必要がある。
+## 残る指摘
 
-- 元本フロア検査は coupon 誤差・元本配列も、測度検査は YoY 比率差も見る（同 :1077–1105）。リテラルを保ったまま対応配列を変えると両方 FAIL になる。
-- ヘッジ固定配列の問題は維持してよい（同 :1118–1128）。
-- 追加すべき直接的な自己照合は、`frontier_reference.py:1942` の `adjusted_clean_price = raw_clean_price + floor` と、:1975 の同じ式からその値を引く誤差。これを :1089–1094 の gate が検査している。
+### F1 — VALIDATION.md の現在値と保証範囲が第 3 便に追随していない
 
-**要約の修正文案:**
+**優先度: 中。確信度: 高。対象: `VALIDATION.md:34–39,50,284,293–297`。**
 
-> 配列検査と保存値への依存が巻ごとに混在する。vol 27–28 は再計算を拡充したが、原始入力からの独立検証は全面的ではない。形状・有限性検査、保存結果の再集計、原始入力からの再価格・再推定を区別して記録する。
+- 冒頭は tamper 契約の対象を vol 23–25 / 27 / 28 としているが、284 行とテストは vol 18–28 の全 11 巻を対象にしている。
+- acceptance 表の vol 25 は **9 → 10**。現在の `evaluate_acceptance(25, ...)` は `ppa_correlation_sensitivity` を含む 10 件を返し、全件 PASS。
+- 284 行の「every stored scalar a check reads must equal its recomputation」は、直後の保存値依存の例外と両立しない。`frontier_acceptance.py:136–142` の `residual_baseline` は保存した 2 つの MAE の大小比較のまま。
+- 37–38 行や `CLAUDE.md` の「該当チェックだけが落ちる」には依存チェックの例外がある。`report/tests/test_frontier_acceptance_tamper.py:470–490` は複数の FAIL を許容する。
 
-上の結果は静的 acceptance の判定範囲を示す。fingerprint や再構築を含む release 全体をすり抜けると実証したものではない。
+**修正案:** 冒頭の現在の契約を第 3 便に合わせて更新し、次のように限定する。
 
-## 3. D11③は「完全版」という限定を落としている
+> 全 11 巻で、選定した入力改変が対象チェックと定義された依存チェックに検出されることを検証する。配列から再計算できる項目は保存値との一致も要求する。原始データや実行時情報がない項目は保存値依存として別表に列挙する。
 
-**対象: 監査 139、489 行。確信度: 高（文書の比較）。**
+過去の第 2 便の記録（269–271 行）は履歴として維持してよい。現在の要約と混同しないよう、第 3 便による更新先を示す。
 
-巻別 VALIDATION 95 行は「full Hull–White (2003) knock-out treatment」、全体 VALIDATION 264–265 行も同じ限定をしている。さらに `docs/superpowers/specs/2026-09-14-johnhull-vol28-credit-desk-design.md:49` は Black 型 knock-out を対象にし、:62–63 は forward measure の厳密な扱いを除外している。
+### F2 — 監査の歴史的な「未対応」と現在の状態を分ける
 
-`johnhull/hullkit/src/hullkit/cds.py:195–199` に Black 型 knock-out の実装説明があることだけで、元の文書が「逆」だとは言えない。「実際に欠けているのは knock-out しない版」という結論も、この根拠からは導けない。
+**優先度: 中。確信度: 高。対象: 監査 43–50、134、714、738、755 行と §11.2。**
 
-**修正案:** 「Black 型 knock-out は実装済み。完全版との相違点・未対応範囲の説明を明確化する」とする。non-knock-out の追加は CR-13 の独立した拡張候補として扱う。完全版との金融理論上の同等性は本レビューでは判定していない。
+監査本文には「D9 以外を修正済み」「D9 は残り」「hazard を全 0 にしても 17/17 PASS」など、過去の状態が残る。§11.2 はその後の対応を記録しているが、本文や再現コードだけを読むと修正済みの問題を現在の欠陥と取り違えやすい。
 
-D11② / CR-01 の「単調性だけ」も「合成パラメータの単調性・閉形式一致はあるが、Ex 24.8 の印刷値は未固定」に直す。`johnhull/hullkit/tests/test_credit.py:60–62` に閉形式一致の assert がある。
+**修正案:** 冒頭に「現在の状態は §11.2、§0–10 の数値・プローブは初回監査時点」と明記し、ID ごとの現状表を置く。旧コード例の `True True 17` は対象 commit を添える。現状表では、たとえば以下を区別する。
 
-## 4. CR-09・CR-08 は既存 API と不足するシナリオを分ける
+- D1/D2/D8、CDS hazard・survival の検出漏れ: 今回再現で対応を確認。
+- D9: 出力の保存は対応済み。表示内容の鮮度確認には F4 の限界がある。
+- 節別台帳: 未対応。関数追加後の全節集計は未検証。
+- R1/R2/R3/R4/R6、BB-01、BA-08 等: 監査・negative results に残る研究／設計課題。今回それぞれを再検証したわけではない。
 
-**対象: 監査 295–296 行。確信度: 高。**
+### F3 — vol 21 の計測値と source digest の対応は未解決
 
-`johnhull/hullkit/src/hullkit/credit_portfolio.py:507–529` の `expected_loss_curve` は任意の detachments・相関を受け取る。「標準点のみ」は誤りで、4%・8% でも既存 API が動く。
+**優先度: 中。確信度: 高。対象: `johnhull/scripts/build_frontier_artifacts.py:521–570`。**
 
-hazard 0.02、回収率 0.4、年率 r 0.03、満期 5 年、125 社、相関 0.2 のプローブでは、ポートフォリオ元本あたりの割引期待損失について、
+`_benchmark_contract` は現ソース全体の digest を作る一方、`_preserve_vol21_timing_reference` は `sources` を除外して前回との一致を判断し、古い timing 配列と speedup を保持する。これは初回フィードバックから変わっていない。通常の再生成で数値配列が一致しても、どの実装を測った時間かは確定できない。
 
-\[
-EL_{PV}(0,8\%)-EL_{PV}(0,4\%)
-=0.01355080092105326
-\]
+**修正案:** 計測時の commit / source digest、実行環境、計測方式を timing と一緒に保持し、通常の成果物再生成の digest と分離する。計測の来歴を更新するのは実際に再計測したときにする。今回 timing 自体の再計測はしていない。
 
-となり、直接評価した 4–8% トランシェの protection × 0.04 との差は \(1.21\times10^{-17}\)。
+### F4 — D9 のゲートは出力の消失を検出するが、古い数値の残存は検出しない
 
-**CR-09 の修正案:** 未対応を「標準気配から非標準点へ補間・較正する規約と、その再価格検証」に限定する。任意境界の評価 API を新規実装する必要はない。
+**優先度: 中（追加の改善提案）。確信度: 高。対象: `johnhull/scripts/verify_core_notebooks.py:151–170,190–207`。**
 
-CR-08 の「0 件」も、バイナリ CDS 本体がないように読める。`johnhull/hullkit/src/hullkit/cds.py:116–118` に `binary_cds_spread`、`johnhull/hullkit/tests/test_cds.py:39–42` に Table 25.5 の 205 bp 固定がある。「本体と基準例は実装済み、列挙した回収率感応度等の追加シナリオは未固定」と書き分ける。
+コアの `check_committed_outputs` は出力種別と MIME キーだけを比較する。コードが `print(2)`、保存済み stdout が `1\n` の一時 notebook を作って実行したところ、戻り値は **`[]`（問題なし）**だった。
 
-## 5. D2 は完全な呼び出し条件と符号を残す
+これは「出力の型を比較する」という `VALIDATION.md:288` の記載どおりの限界で、D9 の出力追加を否定するものではない。ただし、今後数値や図の内容が変わっても、型が同じなら古い結果を配布し得る。
 
-**対象: 監査 130 行。確信度: 高。**
+**修正案:** stdout / text/plain の決定的な値は、frontier ゲートと同様に比較する。vol 06 の実測 LSM 時間など、非決定的な項目だけを明示的に正規化する。Plotly のデータや PNG の意味的な確認は別の検査として扱う。完了条件には「出力消去」と「同じ型で値だけ古い」の双方の検出を含める。
 
-期中評価で初回の利払期間を誤る指摘は妥当。ただし、`bonds = -1.1870` の再現には **`accrual_to_next=0.5`** が必要で、監査の再現条件にない。
+### F5 — GPD の超過標本ゼロは診断可能な FAIL にしたい
 
-`johnhull/hullkit/src/hullkit/swaps.py:36–74` に対し、監査記載の次回利率 0.02516 を使うと:
+**優先度: 低（堅牢性・診断性）。確信度: 高。対象: `johnhull/scripts/frontier_acceptance.py:2170–2215`。**
 
-| 計算 | 受け固定価値（名目元本 100 と同じ単位） |
-|---|---:|
-| bonds、既定引数 | -0.436388946734 |
-| fras、既定引数 | -0.436388946734 |
-| bonds、accrual_to_next=0.5 | -1.186973879936 |
-| 固定クーポンを全て半年分として直接評価 | -0.291999794242 |
+前回は `gpd_losses[:] = 0` でも 14/14 PASS だった。現在は標本を検査に使うようになり、この入力は **`ZeroDivisionError`** になる。`n_exceedances=0` の後、EVT 再計算で `n_total / n_exceedances` を評価するため。
 
-「手計算 0.2918」は、受け固定の負符号と、次回利率の丸め前後を明記する。以下で記載入力からの結果を再現できる。
+黙って PASS する問題は解消しているが、該当チェックを含む判定記録を返せず処理が中断する。今回の通常データでは全件 PASS で、この例外は意図的に壊したメモリ内の入力だけで発生した。
 
-```python
-import numpy as np
-from hullkit.swaps import irs_value_bonds, irs_value_fras
+**修正案:** 超過標本数や推定パラメータの有効性を先に検証し、GPD/EVT の該当チェックを理由付き FAIL にするか、契約上の明確な入力エラーとして扱う。少なくともゼロ除算のままにはしない。なお、現在の GPD 検査は保存推定値の周辺尤度比較であり、独立した最適化の再実行と同一ではない。
 
-times = np.array([0.2, 0.7, 1.2])
-zeros = np.array([0.028, 0.032, 0.034])
-curve = (times, zeros)
-args = (100.0, 0.03, times, curve, 0.02516)
-print(irs_value_bonds(*args))
-print(irs_value_fras(*args))
-print(irs_value_bonds(*args, accrual_to_next=0.5))
-df = np.exp(-times * zeros)
-direct = 1.5 * df.sum() + 100 * df[-1] - 100 * (1 + 0.02516 * 0.5) * df[0]
-print(direct)
-```
+## 今回の検証結果
 
-## 6. 再構築による改ざん検出には vol 21 の例外がある
+| 確認 | 今回の結果 |
+|---|---|
+| hullkit＋report 全テスト | **1252 passed, 2 warnings in 37.87s**。警告は japanize_matplotlib / distutils の非推奨警告 |
+| `ruff check johnhull` | PASS |
+| `verify_release.py --require-tracked` | PASS |
+| 現在のコミット済み reference の acceptance | 11 巻、計 118 checks、全件 PASS |
+| 巻別 VALIDATION と metrics 由来の生成内容 | 11 巻すべて `validation_drift=None` |
+| D1: `bootstrap_zero_curve([(1.0, 0, 97.8)])` | 例外なし。連続複利ゼロ金利 0.0222456089473 |
+| D2: Ex 7.1、`first_accrual=0.5` | bonds = −0.291999794241519、fras = −0.291999794241545 |
+| vol 28: bootstrap hazard を全 0 に変更 | `cds_bootstrap_round_trip` が FAIL |
+| vol 28: survival を全 0 に変更 | `cds_par_spread_hull_pin` が FAIL |
+| vol 27: GPD losses を全 0 に変更 | PASS にはならず ZeroDivisionError。F5 として記録 |
+| D8: vol 21 / 27 の notebook を新規実行 | 両方とも `stale_output_cells=[]`。保存テキスト出力と一致 |
+| D9: 出力の保存 | 17 冊に出力あり、PNG 86 件・Plotly MIME 25 件 |
+| コアの古い数値の検出プローブ | 保存 stdout 1 / 新規出力 2 でも `[]`。F4 として記録 |
 
-**対象: 監査 48、342、367–373 行。確信度: 高。**
+現在の acceptance 件数は vol 18 から順に **8 / 11 / 12 / 9 / 7 / 9 / 10 / 10 / 11 / 14 / 17**。tamper ケース数や pytest のテスト数とは別の指標である。
 
-`johnhull/scripts/verify_frontier_artifacts.py:23–30` は vol 21 の speedup、対応する acceptance の observed、NPZ companion hash を比較時に正規化する。:33–46 では timing 配列を厳密比較から除外し、正値だけを検査する。
-
-一時ディレクトリで同じ比較関数を実行し、speedup と observed を 2 倍、companion hash を変更しても正規化後の JSON が同じになることを確認した。`nested_mc_ms` を 2 倍にした NPZ も比較関数を通った。
-
-**修正案:** 「vol 19–28 の再構築は原則として決定的成果物の差分を検出する。ただし vol 21 の計測値・関連フィールドは明示的に除外」と限定する。
-
-BA-10 の「SHA はそもそも不要」も再考したい。決定的な数値配列の一致は、計測した実装の来歴を保証しない。`build_frontier_artifacts.py:526–527` が sources を無視して古い計測値を保存する問題には、計測時の source revision・環境を保持し、通常再生成の digest と区別する案が適切。SHA の削除は来歴を別途残すかを決めてから行う。
-
-## 7. 実行順序と完了条件を具体化する
-
-**対象: 監査 20–27、357、391、393、398、407、621、647–653 行。以下は改善提案。**
-
-- **見積もり:** 647 行の「すべて S」は D6 の S–M、D8 の再生成＋照合 gate と合わない。D2 の API 判断、D4 の指標判断も先に必要。「確認済み欠陥を優先し、変更ごとに必要な判断と検証を置く」とする。
-- **検証強化の順番:** 大型機能追加より前に、既存の PASS の根拠と出力の鮮度を修正する。BB-18 の hazard 再価格など、現在のチェック名・件数・許容値を保って判定を強化できる作業と、指標・閾値・検査集合を変える作業を分ける。生成物や fingerprint の更新は別途記録する。
-- **now / decision:** BA-04 は decision、BB-04・BB-09・BB-18 は now、621 行ではまとめて判断事項になっている。また「vol 18–26」という行に vol 27/28 の ID が含まれる。技術的な実行可否と、API・仕様・release 契約の変更判断を別列にする。now は作業の承認を意味しない。
-- **D5 / BB-02 の完了条件:** 「2 つの RMSE が異なること」では修正の正しさを検証できない。別の標本でも RMSE が偶然一致し得る。満期×αの全組合せ、固定した他条件、診断マスクの選択行、配列から再計算した RMSE の一致を検査する。26.2144 の単位も「価格 × \(10^4\) の bp」と明記する。
-- **再現性:** scratch プローブ由来の数値には、完全な入力、seed、経路数・step 数、金利・利払・損失符号の規約、期待値、許容誤差と理由を添える。grep 不一致、静的確認、実行再現、印刷値照合を別々に記録し、✅ の根拠を追えるようにする。
-
-推奨する最初の単位は、監査文書の上記訂正 → D1/D2 等の再現ケースと判定条件の確定 → acceptance・出力照合の補強 → 必要な成果物の再生成 → 未対応機能の追加。既定 seed の統一は、それ自体を欠陥修正の前提にしない。
-
-## 検証記録と限界
-
-- 監査全文、対象ソース・テスト・spec・VALIDATION の該当範囲を照合した。
-- 巻表を機械集計し、GE PDF の §7.2 / §36.4 等を抜き取り確認した。
-- D1・D2・CR-09 の軽い実行、vol 20/22/26/27/28 のメモリ内 acceptance 変更、vol 21 の一時ファイルでの比較を行った。
-- 次の既存テストを実行し、**17 passed in 0.48s**。この成功は D2 の欠陥がないことを意味しない。
+実行コマンド（projects root）:
 
 ```bash
 cd /home/kazumasa/projects
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q -p no:cacheprovider \
-  johnhull/hullkit/tests/test_rates.py johnhull/hullkit/tests/test_swaps.py
+  johnhull/hullkit/tests johnhull/report/tests
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m ruff check johnhull
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python johnhull/scripts/verify_release.py --require-tracked
 ```
 
-以下は bootstrap 検査の不足をファイル変更なしで再現する最小コード。projects root から `.venv/bin/python -B` で実行できる。
+CDS の再確認コード。配列はメモリ内だけで変更する:
 
 ```python
 import json
@@ -174,11 +127,19 @@ ref = Path("johnhull/volumes/28_credit_desk/reference")
 metrics = json.loads((ref / "metrics.json").read_text())["metrics"]
 with np.load(ref / "credit_scenarios.npz", allow_pickle=False) as stored:
     arrays = {name: stored[name].copy() for name in stored.files}
-before = evaluate_acceptance(28, metrics, arrays)
 arrays["cds_bootstrap_hazard"][:] = 0.0
-after = evaluate_acceptance(28, metrics, arrays)
-print(before == after, after["passed"], len(after["checks"]))
-# このスナップショットでは True True 17
+record = evaluate_acceptance(28, metrics, arrays)
+print([check["name"] for check in record["checks"] if not check["passed"]])
+# ['cds_bootstrap_round_trip']
 ```
 
-全テスト、book build、artifact 再生成、release gate は実行していない。原監査・コード・成果物は変更しておらず、本フィードバックだけを追加した。ここで未確認とした主張は、実装着手前に対応する原典・入力条件を確認する必要がある。
+## 検証の境界と次の作業
+
+今回は artifact の全再構築、全 19 コア notebook の再実行、book / portal の再ビルド、全ページのブラウザ描画、deep_hedge_price の 206 テストは再実行していない。これらの PASS は `VALIDATION.md` の実行記録として読み、今回独立して確認した結果とは分けて扱う。既存 build を含む tracked release の静的契約検査は上記のとおり成功している。
+
+次は **F1/F2 の現在値・状態の整理 → F3 の計測来歴 → F4/F5 の検出・診断改善**を勧める。節別台帳を作るまでは、章・節の完了率を確定値にしない。新機能・研究課題の優先順位は、その残作業を整理した後に決める。
+
+レビュー対象のハッシュ:
+
+- `VALIDATION.md`: `eb272f6ab7a44c6d13b6c3c46c86e9b9229733f1a33162743815cde82860a989`
+- `docs/SECTION_AUDIT_2026-09-14.md`: `d60b984bb902f63daf3b9f756ebf0cceab834744456125627fc78b70a25c5017`

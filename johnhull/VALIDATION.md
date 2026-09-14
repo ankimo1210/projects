@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -31,12 +31,17 @@ vol 26–28 は G0–G8 とは別の Phase 計画（`docs/superpowers/plans/`）
 内容と PASS の意味は同じで、各巻の notebook 上の gate ラベルは G8 / G9 / G10（vol 26 の
 G8 は上の統合 gate G8 と番号が重なる）。
 
-Canonical reference acceptance is recomputed from the committed arrays by
-`johnhull/scripts/frontier_acceptance.py`; it is not trusted as a copied JSON flag.
-For vol 23–25, 27 and 28 the tamper contract
-(`report/tests/test_frontier_acceptance_tamper.py`) proves this: altering one committed
-array or metric flips exactly the check that recomputes it. vol 18–22 and 26 still mix
-array checks with stored-value comparisons (`docs/SECTION_AUDIT_2026-09-14.md` §4.7).
+Canonical reference acceptance is recomputed by `johnhull/scripts/frontier_acceptance.py`;
+it is not trusted as a copied JSON flag. Current contract (after the section-audit third
+and fourth runs below): for all 11 volumes, the tamper suite
+(`report/tests/test_frontier_acceptance_tamper.py`) checks that each selected alteration of
+a committed array or metric fails the check that recomputes it, plus only the dependent
+checks declared for that input (`DEPENDENT_FAILURES`). Where a check can be rebuilt from
+the arrays, the stored scalar must also equal the rebuild. Checks without raw array or
+run-time evidence still read a stored value and are listed separately (third run, below).
+Degenerate inputs (zeros, a fit parameter at a pole) yield a failing record rather than
+an exception. The tamper cases are selected alterations, not an exhaustive proof of
+independence from every stored value.
 
 | Volume | Acceptance checks | Integration | Performance approval |
 |---:|---:|:---:|:---:|
@@ -47,7 +52,7 @@ array checks with stored-value comparisons (`docs/SECTION_AUDIT_2026-09-14.md` �
 | 22 | 7 | PASS | NO |
 | 23 | 9 | PASS | NO |
 | 24 | 10 | PASS | NO |
-| 25 | 9 | PASS | NO |
+| 25 | 10 | PASS | NO |
 | 26 | 11 | PASS | NO |
 | 27 | 14 | PASS | NO |
 | 28 | 17 | PASS | NO |
@@ -269,6 +274,7 @@ source semantics changed in this run apart from the vol 22 ramp scoping and the
 Still open after this run (`docs/SECTION_AUDIT_2026-09-14.md` §11): vol 18–22 and 26
 acceptance still mix array checks with stored-value comparisons; D9 (core notebooks without
 outputs) is a pending decision; §4 items other than the 13 pinned here remain as listed.
+(The acceptance recomputation and D9 were addressed by the third run below.)
 
 ## 2026-09-14 section-audit third run (vol 18–22/26 gates, Hull §4 APIs, static book outputs)
 
@@ -281,11 +287,11 @@ reference is re-exported from the local checkpoint `2d4ba8e38acfa5cc` (torch, CP
 | hullkit + portal tests | `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests` — 1252 passed (was 1055) | PASS |
 | deep_hedge_price tests | `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests` — 206 passed | PASS |
 | Scoped lint/format | `ruff check johnhull deep_hedge_price/scripts`; `ruff format --check` over `johnhull/hullkit`, `johnhull/scripts`, `johnhull/report`, `deep_hedge_price/scripts` | PASS |
-| Acceptance tamper contract | all 11 volumes: 18 (8 cases), 19 (9), 20 (7), 21 (6), 22 (7), 23 (7), 24 (11), 25 (14), 26 (6), 27 (14), 28 (17); every stored scalar a check reads must equal its recomputation from the NPZ | PASS |
+| Acceptance tamper contract | all 11 volumes: 18 (8 cases), 19 (9), 20 (7), 21 (6), 22 (7), 23 (7), 24 (11), 25 (14), 26 (6), 27 (14), 28 (17); each case fails its recomputing check plus only the declared dependent checks; a stored scalar that can be rebuilt from the NPZ must equal the rebuild (the stored-value exceptions are listed under this table) | PASS |
 | vol 18 re-export | `export_johnhull_pricing_reference.py` adds per-row test/OOD errors, split row digests and the teacher intervals/standard errors; the evaluation MAEs reproduce to rel 1e-12 and two exports are byte-identical. OOD shell (outside the gate): price MAE 1.606, median 0.00103, worst 261.9 (σ = 1e-4 rows below the 0.05 training floor), 20.9% of rows above 0.01 | PASS |
 | vol 25 correlation sensitivity | ρ ∈ −0.9..0.6 on common random numbers: merchant revenue within 3 SE of N·P·g·(1 + ρσ_Sσ_G) (max z 1.79); pay-as-produced fair value 29.48 → −23.85; hedged CVaR spread 76.2–86.3 is sampling noise (hedged cash flow = K·generation) | PASS |
 | Reference rebuild | `make hull-artifacts-check` — vol 19–28 semantic match and second-build byte identity | PASS |
-| Notebook execution | `make hull-notebooks-check` (vol 18–28); `make hull-core-notebooks-check` (19 notebooks; the 17 output notebooks are executed with `HULLKIT_STATIC_FIGURES=1` / `PLOTLY_RENDERER=plotly_mimetype+notebook` and their output types compared with the committed copies) | PASS |
+| Notebook execution | `make hull-notebooks-check` (vol 18–28); `make hull-core-notebooks-check` (19 notebooks; the 17 output notebooks are executed with `HULLKIT_STATIC_FIGURES=1` / `PLOTLY_RENDERER=plotly_mimetype+notebook` and their output types compared with the committed copies; this run compared types only, text values were added in the fourth run) | PASS |
 | Static book outputs (D9) | `verify_core_notebooks.py --write-outputs` — vol 01–12 and ir_models carry ipympl figures as PNG (86 figures), vol 13–16 and ir_models embed plotly.js; Plotly's hard-coded MathJax 2 CDN script is stripped (no figure uses LaTeX; the book stays offline); outputs are byte-stable across runs except vol 06's measured LSM time; notebooks total 35.7 MB (vol 13–16 ≈ 23 MB, ir_models 7.1 MB) | PASS |
 | Portal / Book | `make hull-report` (12 themes / 82 figures); `make hull-book` (build succeeded) | PASS |
 | Release contract | `make hull-release-check` and `verify_release.py --require-tracked` | PASS |
@@ -295,6 +301,31 @@ Checks that still read a stored value because no array evidence exists: vol 18
 vol 19 `multi_start_calibration` (optimizer success flags); vol 21 timing method flags;
 vol 22 `calendar_violations` (holiday/session booleans); vol 26
 `principal_floor_redemption_only`, `coupon_floor_max_error` and `measure_treatment`.
+
+## 2026-09-15 section-audit fourth run (progress review F1–F5)
+
+Branch `worktree-johnhull-astra-feedback` (base `06266ae3`), answering the progress review
+`docs/SECTION_AUDIT_2026-09-14_FEEDBACK.md` (written against `83905890`); the change table is
+`docs/SECTION_AUDIT_2026-09-14.md` §11.3 and the per-ID status is §12. Same machine as the
+previous runs (Intel Core Ultra 9 285K, WSL2, Python 3.12.3).
+
+| Check | Command / evidence | Result |
+|---|---|:---:|
+| hullkit + portal tests | `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests` — 1286 passed (was 1252) | PASS |
+| deep_hedge_price tests | `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests` — 206 passed | PASS |
+| Scoped lint/format | `ruff check johnhull deep_hedge_price/scripts`; `ruff format --check` over `johnhull/hullkit`, `johnhull/scripts`, `johnhull/report`, `deep_hedge_price/scripts` | PASS |
+| Degenerate acceptance inputs (F5) | zeroing every numeric array and metric of vol 18–28 one at a time: 18 inputs used to raise (vol 27 `gpd_losses` and `gpd_xi_hat`, 16 more in vol 23/27/28); all now return a failing record (`gate_evaluation`, or the GPD/EVT checks for no exceedance / an invalid fit). Committed references evaluate unchanged: 118 checks, all PASS | PASS |
+| Core output text (F4) | `make hull-core-notebooks-check` compares stream text and `text/plain` / `text/markdown` / `text/latex` values with the committed copies (addresses, kernel cell files, site-packages and repository paths masked; wall-clock cells by type). A committed `print(1)` output against a fresh `2` is now reported as StaleOutputs. 19 notebooks clean; ir_models' outputs rewritten after its `r₀` / `F₀` labels moved to mathtext | PASS |
+| vol 21 timing provenance (F3) | `benchmark.measurement` records the generator digests and environment of the measuring run; re-measured with `--refresh-timing` (speedup at batch 1024 786.95, was 781.91); an ordinary rebuild preserves the sample byte-identically; `make hull-artifacts-check` prints `[NOTE] vol 21: timing sample measured on the current generator` | PASS |
+| Frontier notebook figures | vol 18–28 notebooks rebuilt with `japanize_matplotlib`; 233 missing-glyph warnings (Japanese labels drawn as boxes, with past worktree paths in the warning text) removed; no committed notebook carries a glyph warning or a `/home/` path | PASS |
+| Reference rebuild / notebook freshness | `make hull-artifacts-check` (vol 19–28 semantic match, second-build byte identity); `make hull-notebooks-check` (stdout / `text/plain` of vol 18–28 against fresh runs, VALIDATION.md regeneration) | PASS |
+| Portal / Book | `make hull-report` (82 figures); `make hull-book` (build succeeded) | PASS |
+| Release contract | `make hull-release-check` and `verify_release.py --require-tracked` | PASS |
+
+Still open: the stored-value checks listed under the third run (no raw evidence);
+the section ledger (all 306 sections have not been reclassified since the audit); the core
+gate does not compare PNG or Plotly payloads, and the frontier gate still ignores stderr and
+figures (the new hygiene test covers only glyph warnings and local paths).
 
 ## Negative results and residual model risk
 

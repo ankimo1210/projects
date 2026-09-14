@@ -3,6 +3,8 @@
 Hull 11e（Global Edition）の全 306 節と、vol 13–28 の成果物を読み直した棚卸し。
 「何が実装済みか」「意図的に先送りしたもの」「今できるもの」を、コードの現状と照らして整理する。
 
+> **読み方（2026-09-14 第 4 便で追記）:** §0–§10 の数値・プローブ・「未対応」は初回監査時点（`cae1cd84`）の記述で、修正後もそのまま残している。**現在の状態は §12 の ID 別一覧**を見る。修正の経緯は §11（第 1 便）、§11.1（第 2 便）、§11.2（第 3 便）、§11.3（第 4 便）。
+
 ## 前提と方法
 
 - **対象の状態:** `main` の `cae1cd84`（2026-09-14）。vol 28 の `c7194c5d` を含む。
@@ -47,7 +49,7 @@ Hull 11e（Global Edition）の全 306 節と、vol 13–28 の成果物を読�
 - **実物で確認した欠陥が 11 件ある（§2）。** 内容は、計算の誤り・常に PASS する検査・古い出力。
 - **「acceptance はコミット済み配列から再計算する」という主張は、どの巻でも全面的には成り立たない。**
   - 配列からの検査と保存値への依存は、巻ごとに混在している。vol 27–28 は再計算を拡充したが、原始入力（hazard、損失標本など）からの独立検証は全面的ではない。
-  - メモリ内で入力を変えて `evaluate_acceptance` を呼ぶと、vol 28 は `cds_bootstrap_hazard` や `cds_survival` を全 0 にしても 17/17 PASS、vol 27 は `gpd_losses` を全 0 にしても 14/14 PASS のまま。一方 vol 22 の `variance_clock` や vol 26 の元本・YoY 配列を壊すと FAIL する（§10）。
+  - （`cae1cd84` 時点。第 2・3 便で全 11 巻を再計算化し、以下の改変はいずれも該当チェックが FAIL する。§12）メモリ内で入力を変えて `evaluate_acceptance` を呼ぶと、vol 28 は `cds_bootstrap_hazard` や `cds_survival` を全 0 にしても 17/17 PASS、vol 27 は `gpd_losses` を全 0 にしても 14/14 PASS のまま。一方 vol 22 の `variance_clock` や vol 26 の元本・YoY 配列を壊すと FAIL する（§10）。
   - 検査の種類は、形状・有限性の検査、保存結果の再集計、原始入力からの再価格・再推定に分けて記録する必要がある。
   - vol 19–28 の JSON の改ざんは、原則として `make hull-artifacts-check` の再構築で検出できる。ただし vol 21 の計測値（speedup、対応する acceptance の observed、NPZ の companion hash、timing 配列）は比較から明示的に除外されている（`johnhull/scripts/verify_frontier_artifacts.py:23-46`）。
 - **外部要因で止まっているものは少ない（§8）。**
@@ -131,7 +133,7 @@ Hull 11e（Global Edition）の全 306 節と、vol 13–28 の成果物を読�
 
 ## 2. 確認済みの欠陥（✅）
 
-> 2026-09-14 に D9 以外を修正済み。対応 commit は §11。
+> 以下は初回監査時点の記述。D9 以外は第 1 便（§11）、D9 は第 3 便（§11.2）で修正済み。現在の状態は §12。
 
 | # | 場所 | 内容 | 再確認の方法 | 規模 |
 |---|---|---|---|---|
@@ -665,7 +667,7 @@ vol 19–22 の JSON を改ざんすれば、原則として `make hull-artifact
 
 ## 10. レビュー反映（2026-09-14）
 
-`SECTION_AUDIT_2026-09-14_FEEDBACK.md`（初版 SHA-256 `38c75ca4…`、653 行に対するレビュー）の 7 項目を、次のとおり確認して反映した。
+初回レビュー（`SECTION_AUDIT_2026-09-14_FEEDBACK.md` の初版、SHA-256 `38c75ca4…`、この文書の 653 行版に対するもの）の 7 項目を、次のとおり確認して反映した。同じファイルは第 3 便の後に進捗レビューで置き換えられたので、初版は `git show bd278948:johnhull/docs/SECTION_AUDIT_2026-09-14_FEEDBACK.md` で読む。進捗レビューへの対応は §11.3。
 
 | 項目 | 確認結果 | 反映 |
 |---|---|---|
@@ -711,8 +713,10 @@ with np.load(ref / "credit_scenarios.npz", allow_pickle=False) as stored:
 before = evaluate_acceptance(28, metrics, arrays)
 arrays["cds_bootstrap_hazard"][:] = 0.0
 after = evaluate_acceptance(28, metrics, arrays)
-print(before == after, after["passed"], len(after["checks"]))  # True True 17
+print(before == after, after["passed"], len(after["checks"]))  # cae1cd84 では True True 17
 ```
+
+第 2 便（`b74ee335`）以降は同じコードで `False False 17` になり、`cds_bootstrap_round_trip` だけが FAIL する。
 
 レビューが未確認とした点（完全版 HW (2003) との金融理論上の同等性、vol 20 の FAIL 条件、全 306 節の再集計）は、この改訂でも未確認のまま。
 
@@ -735,7 +739,7 @@ D9（コア notebook の出力なし）以外の確認済み欠陥を修正し�
 
 vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成した（timing は保持）。
 
-**残り:** D9（core notebook の出力方式、§7 の判断事項）と、§3（未再確認の監査報告。R8 だけは D4 と同時に対応）・§4（open 項目）・§6（文書の食い違い）は未着手。§2 の欠陥表と §9 の推奨順序は監査時点の記述のまま残し、修正済みかどうかはこの節で判断する。
+**残り（第 1 便の時点。現在は §12）:** D9（core notebook の出力方式、§7 の判断事項）と、§3（未再確認の監査報告。R8 だけは D4 と同時に対応）・§4（open 項目）・§6（文書の食い違い）は未着手。§2 の欠陥表と §9 の推奨順序は監査時点の記述のまま残し、修正済みかどうかはこの節で判断する。
 
 ### 11.1 第 2 便（2026-09-14、ブランチ `worktree-johnhull-audit-next`、base `bd278948`）
 
@@ -752,7 +756,7 @@ vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成�
 
 §6 で今回見送ったもの（コードや検証セルの数値が変わるため別途判断）: `build_futures_rates_notebook.py` の Table 2.1 形式・886.19 / 886.60・Ex 4.3 の複利規約（§6.5）、`build_summary_notebook.py` のトランシェ境界 5/15%（Hull は 5/20%）、spec が約束して未実装の項目（spec 10 / 11 / 04）、vol 24 NPZ の `liquidation_loss` 改名、同梱 require.js の要否、`AGENTS.md` の `deep_hedge_price/tests` 未登録（事実なので据え置き）。
 
-§4 で残る open 項目は表のとおり（手順 4 で固定した 13 件を除く）。vol 18–22・26 の acceptance は保存値との照合が残る（手順 3 の続き）。
+§4 で残る open 項目は表のとおり（手順 4 で固定した 13 件を除く）。vol 18–22・26 の acceptance は保存値との照合が残る（手順 3 の続き。第 3 便で対応、§11.2）。
 
 ### 11.2 第 3 便（2026-09-14、ブランチ `worktree-johnhull-audit-third`、base `8485cc29`）
 
@@ -770,3 +774,42 @@ vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成�
 保存値のまま残るチェック（配列に根拠がないもの）: vol 18 `residual_baseline`・`hard_violation_rate`、vol 19 `multi_start_calibration`、vol 21 の timing フラグ、vol 22 `calendar_violations`、vol 26 `principal_floor_redemption_only`・`coupon_floor_max_error`・`measure_treatment`。
 
 エージェント報告で見つかった追加事項: Black 近似はツリーの厳密値を上回ることがある（S=40、K=35、配当 0.5 / 3.0 で 5.642 対 5.577）。GE の §15.12 は Black 近似の数値例を印刷していない。vol 18 の OOD 最悪行は σ = 1e-4（学習下限 0.05 の外）。
+
+### 11.3 第 4 便（2026-09-15、ブランチ `worktree-johnhull-astra-feedback`、base `06266ae3`）
+
+第 3 便の後の進捗レビュー（`SECTION_AUDIT_2026-09-14_FEEDBACK.md`、`83905890` 時点）の F1–F5 に対応した。レビューの実行系の主張（acceptance 118 件、GPD 全 0 で `ZeroDivisionError`、stdout の古い値を core gate が見逃す、PNG 86・Plotly MIME 25）はすべて再現した。実行記録は `johnhull/VALIDATION.md` の「2026-09-15 section-audit fourth run」。
+
+| 指摘 | commit | 変更 | 数値の変化 |
+|---|---|---|---|
+| F5（GPD 超過標本ゼロ） | `55c1278b` | vol 27 の GPD / EVT 再計算は、超過標本が 1 件以上かつ β > 0、0 < \|ξ\| < 1 のときだけ行い、それ以外は該当チェックを FAIL にする。全巻の数値配列・数値メトリクスを 1 つずつ 0 にするスイープで、GPD の手当ての後もほかに 17 か所（vol 23・27・28。GPD の ξ̂ = 0 を含む）が例外で止まることがわかったので、`evaluate_acceptance` は評価中の `ArithmeticError` / `IndexError` / `ValueError` を `gate_evaluation` の FAIL 記録に変える（欠けたキーと型の誤りは従来どおり例外）。tamper に GPD の 3 ケース、退化入力 18 ケースを追加 | コミット済み入力の判定・保存値は不変 |
+| F4（core の値照合） | `5d468b81` | `check_committed_outputs` が出力の型に加えて stdout / stderr の本文、`text/plain`・`text/markdown`・`text/latex` の値を比べる。メモリアドレス、カーネルの一時セルファイル名、site-packages とリポジトリの絶対パスはマスクし、`perf_counter` 等を含む計時セルは型だけを比べる。PNG と Plotly の中身は比べない。照合を入れたところ、ir_models の出力に第 3 便の worktree の絶対パスを含む警告（IPAexGothic に「₀」の字形がなく図で豆腐になる）が見つかったので、図ラベルを mathtext（`$r_0$`、`$F_0$`）に変えて ir_models の出力だけを作り直した | vol 06 の計時表以外、17 冊の本文は committed と一致 |
+| F3（vol 21 計測の来歴） | `7702089a` | `benchmark` を schema 2 にし、`measurement`（計測したときの generator digest と環境: platform、CPU、Python / numpy / scipy）を追加。通常の再生成は timing と一緒に `measurement` も引き継ぎ、実際に測った実行（`--refresh-timing`、または来歴のない参照）だけが書き換える。`make hull-artifacts-check` は来歴の欠落で失敗し、計測時の digest が現在と違えば `[NOTE]` を出す。vol 21 を来歴つきで再計測し、ノートと巻別 VALIDATION.md を再生成 | speedup（batch 1024）781.91 → 786.95 |
+| F1 / F2（文書） | この文書と同じ commit | `VALIDATION.md` 冒頭の契約（全 11 巻、依存チェックの例外、保存値依存の別表、退化入力）と vol 25 の件数 9 → 10、第 3 便の表の言い過ぎを修正。この文書の冒頭に読み方を置き、§0・§2・§10・§11 の過去の記述に時点を明記し、ID 別の現状を §12 にまとめた。初回レビューの参照先を `bd278948` の git 履歴に変更。`johnhull/CLAUDE.md` の tamper 契約・core gate・vol 21 timing の記述を更新 | — |
+| 追加（F4 の作業中に発見） | `225ff760` | vol 18–21・26–28 のノート出力に matplotlib の字形欠落の警告が計 233 件あった。frontier ノートは日本語フォントを読み込まず、図の日本語ラベルが DejaVu Sans で豆腐になっていた。警告には過去の worktree の絶対パスも入っていた。frontier builder の先頭セルで `japanize_matplotlib` を読み込み、vol 18–28 の 11 冊を再生成。コミット済みノートに字形欠落の警告とローカルパスがないことをテストで固定（frontier の gate は stderr と図を比べないため） | 図の文字だけが変わる。stdout・`text/plain` は不変 |
+
+## 12. 現在の状態（第 4 便の後、ID 別）
+
+§0–§10 は初回監査時点の記述。現在どうなっているかはこの表で判断する。「対応済み」は commit の変更とそのテスト・ゲートで確認したもので、節単位の完全性を意味しない。
+
+| 区分 | ID | 状態 | 根拠 |
+|---|---|---|---|
+| 確認済み欠陥 | D1–D8、D10、D11 | 対応済み | 第 1 便（§11） |
+| 確認済み欠陥 | D9 | 対応済み | 第 3 便 `15634200` / `e7ed438e`。出力の本文の鮮度は第 4 便の core gate で照合（PNG・Plotly の中身は対象外） |
+| 監査報告 | R5、R9、R10 | 対応済み | `9347f14d` |
+| 監査報告 | R7、R8 | 対応済み | R7 は BA-03（`1eabb8c5`）、R8 は D4 と同時（`c4654c9a`） |
+| 監査報告 | R1、R2、R3、R4、R6、R11 | 未対応（未再確認） | 研究・設計課題。§7 の判断事項を含む |
+| acceptance | BA-04、BB-04、BB-09、BB-14、BB-18 | 対応済み | 全 11 巻を配列から再計算（`b74ee335`、`c745efc5`、`b7eb9ba7`、`f812e8ef`、`1eabb8c5`）。退化入力は第 4 便で FAIL 記録化 |
+| acceptance | 保存値依存の残り | 未対応（根拠配列なし） | vol 18 `residual_baseline`・`hard_violation_rate`、vol 19 `multi_start_calibration`、vol 21 timing フラグ、vol 22 `calendar_violations`、vol 26 の 3 件（§11.2） |
+| vol 21・23 | BA-09、BB-02、BA-10 | 対応済み | `c4654c9a`、`3db10647`、BA-10 は第 4 便（計測の来歴） |
+| vol 22 | BA-11 | 一部 | D3（`2db3e49c`）と R5 は対応、乱数ストリームの分離（R4）は未対応 |
+| 出力照合 | DD-17、BB-13 | 対応済み | frontier は `8580546f`、core の本文照合は第 4 便 |
+| 印刷値ピン | OP-03、OP-11、OP-13、OP-14、VN-01、VN-03、VN-07、VN-12、EX-01、CR-02、CR-03、CR-04、CR-20 | 対応済み | `2a3e25e8` |
+| 印刷値ピン | CR-01 | 対応済み | `90e903ea`（Ex 24.8） |
+| 印刷値ピン | OP-02 | 一部 | D10（`21eadd03`）で 0.545・p=0.5503・1.7433 / 0.9497・Δ 0.4358 / 0.7273 を固定。p*=0.6266、Δ −0.4024、Fig 13.10 の 7.43 は未固定 |
+| 関数追加 | OP-04、VN-02、EX-02、EX-05、BB-03、BB-07、BB-10、BB-17 | 対応済み | `a258e242`、`9341675f`、`050510e5` |
+| 関数追加 | EX-09 | 一部 | `bond_yield_convexity` のみ（`a258e242`）。timing / quanto の関数化は未対応 |
+| ノート内のみ | FR-06、CR-16 | 一部 | vol 04 の Table 2.1 台帳と vol 12 の Table 8.1 をノートに追加（`caac5429`）。hullkit の関数にはしていない |
+| book | DD-01、DD-02 | 対応済み | D9 |
+| 基盤 | DD-15 | 据え置き | `AGENTS.md` の記述どおり `deep_hedge_price/tests` は root の testpaths にない |
+| 節カバレッジ | 節別台帳・全 306 節の再集計 | 未対応 | 第 3 便の関数追加を含む最新の分類は未検証。完了率は確定値として使わない |
+| その他 | §4 の上記以外の ID | 未対応 | §4 の表のまま。§7 の判断事項（seed 統一 VN-20、大物の置き場所など）と §8 の blocked も未決 |
