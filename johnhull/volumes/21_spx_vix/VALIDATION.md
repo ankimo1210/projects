@@ -25,7 +25,7 @@
 | `surrogate_delta_rmse` | 5.043078088519851 |
 | `surrogate_gamma_rmse` | 35.50726161092219 |
 | `surrogate_price_rmse` | 0.4123722655252687 |
-| `surrogate_speedup_1024` | 781.9083514612693 |
+| `surrogate_speedup_1024` | 786.9539451405351 |
 | `surrogate_spot_monotonicity_violations` | 32 |
 | `teacher` | hullkit.spx_vix.nested_vix_teacher |
 | `teacher_bound_violations` | 0 |
@@ -44,7 +44,7 @@
 | `teacher_uncertainty` | 16 | aligned, nonnegative, and nontrivial standard errors | PASS |
 | `ood_shell` | 4 | > 0 flagged observations | PASS |
 | `measured_cpu_timing` | perf_counter_ns warm-cache median of 5 | positive measured samples | PASS |
-| `surrogate_speedup` | 781.9083514612693 | > 1 at batch 1024, recomputed from the timing samples | PASS |
+| `surrogate_speedup` | 786.9539451405351 | > 1 at batch 1024, recomputed from the timing samples | PASS |
 | `joint_objective_components` | True | all four component errors finite and recomputed from the model grids and targets | PASS |
 | `in_domain_ood_diagnostics` | True | price, delta and gamma RMSE finite in both domains and recomputed from the pairs | PASS |
 
