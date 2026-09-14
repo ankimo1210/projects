@@ -514,6 +514,43 @@ def _volume21(
         and arrays["teacher_gamma"].shape == arrays["surrogate_gamma"].shape
     )
     _add(checks, "teacher_surrogate_pairing", paired, "price/delta/gamma shapes match", paired)
+    discount = metrics["teacher_discount_factor"]
+    future = arrays["teacher_future"]
+    strike = 20.0 * arrays["surrogate_features"][:, 2]
+    lower = discount * np.maximum(future - strike, 0.0)
+    upper = discount * future
+
+    def _bound_violations(price: np.ndarray) -> int:
+        return int(np.sum((price < lower - 1e-10) | (price > upper + 1e-10)))
+
+    def _monotonicity_violations(curves: np.ndarray) -> int:
+        return int(np.sum(np.diff(curves, axis=1) < -1e-10))
+
+    scale_grid = arrays["monotonicity_scale"]
+    hard_ok = (
+        future.shape == arrays["teacher_price"].shape
+        and np.allclose(arrays["price_lower_bound"], lower, rtol=0.0, atol=1e-12)
+        and np.allclose(arrays["price_upper_bound"], upper, rtol=0.0, atol=1e-12)
+        and scale_grid.ndim == 1
+        and np.all(np.diff(scale_grid) > 0.0)
+        and arrays["teacher_scale_price"].shape
+        == arrays["surrogate_scale_price"].shape
+        == (int((~arrays["ood_flag"].astype(bool)).sum()), scale_grid.size)
+        and metrics["teacher_bound_violations"] == _bound_violations(arrays["teacher_price"]) == 0
+        and metrics["surrogate_bound_violations"] == _bound_violations(arrays["surrogate_price"])
+        and metrics["teacher_spot_monotonicity_violations"]
+        == _monotonicity_violations(arrays["teacher_scale_price"])
+        == 0
+        and metrics["surrogate_spot_monotonicity_violations"]
+        == _monotonicity_violations(arrays["surrogate_scale_price"])
+    )
+    _add(
+        checks,
+        "surrogate_hard_checks",
+        f"{metrics['surrogate_bound_violations']}/{metrics['surrogate_spot_monotonicity_violations']}",
+        "futures-option bounds and scale monotonicity recomputed; teacher has zero violations",
+        hard_ok,
+    )
     teacher_se = arrays["teacher_standard_error"]
     uncertainty_ok = (
         teacher_se.shape == arrays["teacher_price"].shape
@@ -570,20 +607,23 @@ def _volume21(
         np.isfinite(metrics[name])
         for name in (
             "in_domain_price_rmse",
-            "in_domain_greek_rmse",
+            "in_domain_delta_rmse",
+            "in_domain_gamma_rmse",
             "ood_price_rmse",
-            "ood_greek_rmse",
+            "ood_delta_rmse",
+            "ood_gamma_rmse",
         )
     )
     _add(
         checks,
         "in_domain_ood_diagnostics",
         domain_diagnostics,
-        "price and Greek RMSE finite in both domains",
+        "price, delta and gamma RMSE finite in both domains",
         domain_diagnostics,
     )
     negative = [
-        f"The polynomial surrogate Greek RMSE is {metrics['surrogate_greek_rmse']:.6g}; this is a reported negative result, not a Greek-accuracy approval.",
+        f"The polynomial surrogate delta RMSE is {metrics['surrogate_delta_rmse']:.6g} and gamma RMSE is {metrics['surrogate_gamma_rmse']:.6g}; the nested teacher's bump gamma is ~0 because its payoff is piecewise linear in the index scale, so the gamma error is the surrogate's constant curvature. This is a reported negative result, not a Greek-accuracy approval.",
+        f"The surrogate breaks the futures-option price bounds on {metrics['surrogate_bound_violations']} of {len(arrays['surrogate_price'])} evaluation rows and scale monotonicity on {metrics['surrogate_spot_monotonicity_violations']} grid steps; the teacher breaks neither.",
         f"The manufactured joint target has SPX RMSE {metrics['joint_spx_rmse']:.6g} and VIX RMSE {metrics['joint_vix_rmse']:.6g}.",
     ]
     return checks, negative
