@@ -46,8 +46,11 @@ acceptance は `johnhull/scripts/frontier_acceptance.py` がコミット済み�
   `test_model_index.py`（両パッケージ、全モジュール掲載 + `module:symbol` 参照解決）。
   モジュールやシンボルを追加・改名したら MODEL_INDEX.md と docstring を同時に更新する。
 - **PDF は 11e Global Edition。** 節・図番号・例題数値が US 版とズレる。引用は毎回 PDF と突合。
-- 深掘り巻（13–17）の plotly 出力は mimetype-only — 静的 book には描画されない。
-  対話可視化はポータル（`make hull-report`）が担当。
+- book は notebook を実行しない。vol 01–16 と ir_models はコミット済み出力を表示する
+  （ipympl の図は PNG、vol 13–16 の plotly は plotly.js 埋め込み）。builder は出力なしで
+  書き出すので、builder を回したら `uv run --no-sync --package hullkit python
+  johnhull/scripts/verify_core_notebooks.py --write-outputs` で出力を作り直す
+  （`make hull-core-notebooks-check` が出力の型の食い違いを検出する）。
 - build スクリプトは決定的 cell-id 方式。`build_*_notebook.py` は ruff exclude 対象。
 - 巻を追加するときは `release_manifest.json` に notebook / portal 図 / semantic tests /
   references を登録し、`make hull-release-check` を通す。

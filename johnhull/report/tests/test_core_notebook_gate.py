@@ -12,7 +12,12 @@ from __future__ import annotations
 import nbformat
 import pytest
 
-from johnhull.scripts.verify_core_notebooks import core_notebooks, execute_notebook
+from johnhull.scripts.verify_core_notebooks import (
+    check_committed_outputs,
+    core_notebooks,
+    execute_notebook,
+    output_notebooks,
+)
 
 
 def test_gate_covers_every_core_volume_and_both_legacy_notebooks():
@@ -77,3 +82,26 @@ def test_gate_returns_no_errors_for_a_clean_notebook(tmp_path):
 def test_gate_surfaces_a_missing_notebook_as_an_error(tmp_path):
     with pytest.raises(FileNotFoundError):
         execute_notebook(tmp_path / "absent.ipynb")
+
+
+def test_output_notebooks_are_the_static_book_copies():
+    names = [path.name for path in output_notebooks()]
+
+    assert names == [
+        *[path.name for path in core_notebooks()[:16]],
+        "ir_models.ipynb",
+    ]
+    for path in output_notebooks():
+        notebook = nbformat.read(path, as_version=4)
+        assert any(cell.get("outputs") for cell in notebook.cells), f"{path} has no outputs"
+
+
+def test_output_check_flags_a_notebook_whose_outputs_were_wiped(tmp_path):
+    """A builder rewrites notebooks without outputs; the check must notice."""
+    notebook = nbformat.v4.new_notebook(cells=[nbformat.v4.new_code_cell("print('figure')")])
+    source = tmp_path / "wiped.ipynb"
+    nbformat.write(notebook, source)
+
+    findings = check_committed_outputs(source)
+
+    assert any(finding.startswith("StaleOutputs") for finding in findings), findings

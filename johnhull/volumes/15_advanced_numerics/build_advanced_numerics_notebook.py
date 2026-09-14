@@ -4,8 +4,9 @@ build_advanced_numerics_notebook.py
 nbformat-dict pattern to generate advanced_numerics.ipynb
 (A3 deep-dive — variance reduction, QMC, LSM, FD stability, AAD Greeks).
 
-Plotly figures (``fig.show()``) instead of ipympl. Their outputs are mimetype-only
-in the static Jupyter Book HTML; the interactive rendering is the portal (``make hull-report``).
+Plotly figures (``fig.show()``) instead of ipympl. This builder writes no outputs; the committed notebook is
+executed by ``verify_core_notebooks.py --write-outputs`` with the plotly_mimetype+notebook
+renderer, so the static Jupyter Book draws the figures (the portal, ``make hull-report``, is the other view).
 Numerical-verification cells assert against closed forms.
 References: Glasserman, *Monte Carlo Methods in Financial Engineering*;
 Longstaff & Schwartz (2001); Giles & Glasserman (2006).
