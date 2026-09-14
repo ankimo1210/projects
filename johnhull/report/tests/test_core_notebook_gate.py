@@ -13,6 +13,7 @@ import nbformat
 import pytest
 
 from johnhull.scripts.verify_core_notebooks import (
+    PLOTLY_MATHJAX_CDN,
     check_committed_outputs,
     core_notebooks,
     execute_notebook,
@@ -94,6 +95,19 @@ def test_output_notebooks_are_the_static_book_copies():
     for path in output_notebooks():
         notebook = nbformat.read(path, as_version=4)
         assert any(cell.get("outputs") for cell in notebook.cells), f"{path} has no outputs"
+
+
+def test_committed_outputs_carry_no_remote_mathjax():
+    """Plotly's notebook renderer injects a MathJax CDN script; the book is offline."""
+    tag = (
+        '<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/'
+        'MathJax.js?config=TeX-AMS-MML_SVG"></script>'
+    )
+    assert PLOTLY_MATHJAX_CDN.sub("", f"<div>{tag}<script>x()</script></div>") == (
+        "<div><script>x()</script></div>"
+    )
+    for path in output_notebooks():
+        assert "cdnjs.cloudflare.com/ajax/libs/mathjax" not in path.read_text(encoding="utf-8"), path
 
 
 def test_output_check_flags_a_notebook_whose_outputs_were_wiped(tmp_path):

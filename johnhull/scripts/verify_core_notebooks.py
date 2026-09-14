@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import os
+import re
 import tempfile
 from collections.abc import Iterator
 from pathlib import Path
@@ -78,6 +79,12 @@ OUTPUT_ENVIRONMENT = {
     "HULLKIT_STATIC_FIGURES": "1",
     "PLOTLY_RENDERER": "plotly_mimetype+notebook",
 }
+# Plotly's notebook renderer hard-codes a MathJax 2 CDN <script> into every
+# figure. No committed figure uses LaTeX text and the book must run offline
+# (verify_release.py rejects remote runtime dependencies), so it is stripped.
+PLOTLY_MATHJAX_CDN = re.compile(
+    r'<script src="https://cdnjs\.cloudflare\.com/ajax/libs/mathjax/[^"]+"></script>'
+)
 
 
 def core_notebooks() -> list[Path]:
@@ -207,6 +214,11 @@ def write_outputs(source: Path) -> list[str]:
     notebook = _execute(source, with_outputs=True)
     errors = _errors(notebook)
     if not errors:
+        for cell in notebook.cells:
+            for output in cell.get("outputs", []):
+                html = output.get("data", {}).get("text/html")
+                if isinstance(html, str):
+                    output["data"]["text/html"] = PLOTLY_MATHJAX_CDN.sub("", html)
         nbformat.write(notebook, Path(source))
     return errors
 
