@@ -62,11 +62,13 @@ final class CourseStoreTests: XCTestCase {
         XCTAssertEqual(store.snapshot?.progress["q-1"]?.attemptCount, nil)
         XCTAssertEqual(store.snapshot?.activeSession?.currentAttempt, nil)
         XCTAssertNotNil(store.errorMessage)
+        XCTAssertEqual(store.pendingOptionID, "q-1-wrong-a")
 
         XCTAssertTrue(store.submit(optionID: "q-1-wrong-a"))
         XCTAssertEqual(store.snapshot?.progress["q-1"]?.attemptCount, 1)
         XCTAssertEqual(store.snapshot?.attempts.count, 1)
         XCTAssertEqual(store.snapshot?.activeSession?.attempts.count, 1)
+        XCTAssertNil(store.pendingOptionID)
 
         let restored = CourseStore(repository: try makeRepository())
         XCTAssertTrue(restored.load(in: container))
