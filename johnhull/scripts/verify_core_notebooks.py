@@ -16,7 +16,10 @@ The Jupyter Book does not execute notebooks, so the committed copies of
 the ``plotly_mimetype+notebook`` renderer, which embeds plotly.js for the book's
 bundled require.js.  ``--write-outputs`` regenerates them after a builder run
 (builders write notebooks without outputs); the check run fails when a
-committed copy's output types no longer match a fresh execution.
+committed copy's output types or deterministic text values (printed streams,
+``text/plain`` reprs) no longer match a fresh execution.  Wall-clock timing
+cells are compared by type only; image and Plotly payloads are not compared by
+value.
 """
 
 from __future__ import annotations
@@ -85,6 +88,18 @@ OUTPUT_ENVIRONMENT = {
 PLOTLY_MATHJAX_CDN = re.compile(
     r'<script src="https://cdnjs\.cloudflare\.com/ajax/libs/mathjax/[^"]+"></script>'
 )
+# Text outputs compared by value between the committed copy and a fresh run.
+COMPARED_TEXT_MIME: tuple[str, ...] = ("text/plain", "text/markdown", "text/latex")
+# A cell whose source contains one of these measures wall-clock time (vol 06's
+# CRR / FD / LSM timing table); its outputs are compared by type only.
+WALL_CLOCK_MARKERS: tuple[str, ...] = ("perf_counter", "time.time(", "timeit")
+HEX_ADDRESS = re.compile(r"0x[0-9a-fA-F]{6,}")
+# Warnings raised from a cell name the kernel's per-process temp file
+# (/tmp/ipykernel_<pid>/<hash>.py), which changes on every run.
+KERNEL_CELL_FILE = re.compile(r"/tmp/ipykernel_\d+/\d+\.py")
+# Library warnings name the file of the installed package, whose prefix depends
+# on the checkout and its virtual environment.
+SITE_PACKAGES = re.compile(r"/[^\s'\"]*/site-packages/")
 
 
 def core_notebooks() -> list[Path]:
@@ -148,26 +163,70 @@ def _errors(notebook) -> list[str]:
     ]
 
 
-def _output_signature(notebook) -> list[list[tuple[str, ...]]]:
-    """Per code cell, the output types and MIME keys (not the bytes).
+def _text(value: object) -> str:
+    return "".join(value) if isinstance(value, list) else str(value)
 
-    Consecutive stream outputs of the same name collapse to one entry, since
-    how a kernel chunks printed text depends on timing.
+
+def _normalize_text(value: object) -> str:
+    text = HEX_ADDRESS.sub("0x…", _text(value))
+    text = KERNEL_CELL_FILE.sub("<cell>", text)
+    text = SITE_PACKAGES.sub("<site-packages>/", text)
+    return text.replace(str(ROOT), "<root>")
+
+
+def _output_signature(notebook) -> list[list[tuple[str, ...]]]:
+    """Per code cell, the output types, MIME keys and deterministic text values.
+
+    Stream text, error names and values, and the ``COMPARED_TEXT_MIME`` values of
+    display outputs are compared (memory addresses, the kernel's per-process
+    cell file names and checkout-dependent path prefixes masked), so a committed copy
+    whose printed numbers went stale fails even when the output types still
+    match. Consecutive stream outputs of the same name merge into one entry,
+    since how a kernel chunks printed text depends on timing. Cells that
+    measure wall-clock time (``WALL_CLOCK_MARKERS`` in the source) keep a
+    type-only comparison. Images and Plotly payloads are not compared by value.
     """
     signature = []
     for cell in notebook.cells:
         if cell.get("cell_type") != "code":
             continue
+        timed = any(marker in _text(cell.get("source", "")) for marker in WALL_CLOCK_MARKERS)
         entries: list[tuple[str, ...]] = []
         for output in cell.get("outputs", []):
-            if output.get("output_type") == "stream":
-                entry: tuple[str, ...] = ("stream", output.get("name", ""))
-            else:
-                entry = (output.get("output_type", ""), *sorted(output.get("data", {})))
-            if not (entry[0] == "stream" and entries and entries[-1] == entry):
-                entries.append(entry)
+            kind = output.get("output_type", "")
+            if kind == "stream":
+                name = output.get("name", "")
+                text = "" if timed else _normalize_text(output.get("text", ""))
+                if entries and entries[-1][:2] == ("stream", name):
+                    entries[-1] = ("stream", name, entries[-1][2] + text)
+                else:
+                    entries.append(("stream", name, text))
+                continue
+            if kind == "error":
+                entries.append(("error", output.get("ename", ""), output.get("evalue", "")))
+                continue
+            data = output.get("data", {})
+            values = (
+                ()
+                if timed
+                else tuple(
+                    f"{mime}={_normalize_text(data[mime])}"
+                    for mime in COMPARED_TEXT_MIME
+                    if mime in data
+                )
+            )
+            entries.append((kind, *sorted(data), *values))
         signature.append(entries)
     return signature
+
+
+def _first_difference(committed, fresh) -> str:
+    if len(committed) != len(fresh):
+        return f"code cell count {len(committed)} committed vs {len(fresh)} fresh"
+    for index, (old, new) in enumerate(zip(committed, fresh, strict=True)):
+        if old != new:
+            return f"code cell {index}: committed {str(old)[:160]!r} vs fresh {str(new)[:160]!r}"
+    return "no difference"
 
 
 def execute_notebook(source: Path) -> list[str]:
@@ -191,17 +250,21 @@ def check_committed_outputs(source: Path) -> list[str]:
     """Execute with the output environment and compare against the committed copy.
 
     Returns errors from the fresh run plus a staleness finding when the
-    committed outputs' types differ from the fresh run's (for example after
-    a builder rewrote the notebook without outputs).
+    committed outputs differ from the fresh run's in type or in deterministic
+    text (for example after a builder rewrote the notebook without outputs, or
+    after a library change moved a printed number).
     """
     import nbformat
 
     committed = nbformat.read(Path(source), as_version=4)
     fresh = _execute(source, with_outputs=True)
     findings = _errors(fresh)
-    if _output_signature(committed) != _output_signature(fresh):
+    committed_signature = _output_signature(committed)
+    fresh_signature = _output_signature(fresh)
+    if committed_signature != fresh_signature:
         findings.append(
-            "StaleOutputs: committed outputs differ from a fresh run; "
+            "StaleOutputs: committed outputs differ from a fresh run "
+            f"({_first_difference(committed_signature, fresh_signature)}); "
             "run verify_core_notebooks.py --write-outputs"
         )
     return findings
