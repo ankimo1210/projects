@@ -736,3 +736,21 @@ D9（コア notebook の出力なし）以外の確認済み欠陥を修正し�
 vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成した（timing は保持）。
 
 **残り:** D9（core notebook の出力方式、§7 の判断事項）と、§3（未再確認の監査報告。R8 だけは D4 と同時に対応）・§4（open 項目）・§6（文書の食い違い）は未着手。§2 の欠陥表と §9 の推奨順序は監査時点の記述のまま残し、修正済みかどうかはこの節で判断する。
+
+### 11.1 第 2 便（2026-09-14、ブランチ `worktree-johnhull-audit-next`、base `bd278948`）
+
+§9 の手順 3（acceptance の再計算化）・手順 4（印刷値ピン）・手順 5（文書の一括修正）と小物 R5 / R9 / R10 を実施した。全ゲート（hullkit+report 1055 tests、ruff、`hull-artifacts-check`、`hull-notebooks-check`、`hull-core-notebooks-check`、`hull-report`、`hull-book`、`hull-release-check --require-tracked`）PASS。実行記録は `johnhull/VALIDATION.md` の「2026-09-14 section-audit follow-up run」。
+
+| ID | commit | 変更 | 数値の変化 |
+|---|---|---|---|
+| R5 / R9 / R10 | 9347f14d | vol 22 の 14:00 ランプを event 行だけに限定、`mean_excess` の入力検証、HJM の vol ラベル（正規 vol と Black 換算） | vol 22 非 event RMSE 0.0225 → 0 |
+| BB-18 | b74ee335 | vol 28 の 17 チェックを λ / R / r / コピュラから再計算（`_survival_np` / `_cds_legs_np` / `_black_cds_option_np`）。tamper テスト 17 件 | 観測値は浮動小数点ノイズのみ |
+| BB-14 | c745efc5 | vol 27: Kupiec の厳密 size（n=500 で 0.0709）、HS/FHS を `garch_returns`・`conditional_sigma` から再構築、GPD MLE の局所最適性、EVT VaR と Euler VaR の再構築、book exposure = weights @ mapping。tamper テスト 14 件 | Kupiec z 0 → 1.63（判定は変わらず） |
+| BB-04 | b7eb9ba7 | vol 23: 日次複利と Bachelier を fixings / (F, σ_N, T) から再構築。vol 24: waterfall の各レグを配列化して保存則・保険恒等式・funding 台帳・LVR を再構築。vol 25: 不完備性の証拠、Black-76 再構築＋GBM MC を 4SE で照合、PPA キャッシュフロー標本から CFaR / CVaR / 残差 / 公正価値を再構築。tamper テスト 28 件 | 観測値は不変（新規メトリクス・配列の追加のみ） |
+| 手順 4 | 2a3e25e8 | OP-03/11/13/14、VN-01/03/07/12、EX-01、CR-02/03/04/20 を `test_hull_pins_{options,vol_var,exotics_ir,credit_commodity}.py` に固定（71 tests、全値を GE PDF で突合） | 印刷と食い違う値は計算値で固定し docstring に記録: Table 20.3 K=56（49.0 → 49.9）、MSFT 10 日 ES（1,687,000 → 1,685,629、丸めた Y で再現）、p.521 累積重み（0.004833 → 0.003776）、Table 22.8（丸めた共分散から rel 2e-4） |
+| 手順 5 | 918991a7 | §6.1–6.5 の文書修正（状態主張・件数・18–27 → 18–28・MODEL_INDEX 誤参照・PROGRESS・GE 節番号・図キャプション・spec/plan の状態行と許容値・FRTB vol 29 候補）。該当 notebook を builder から再生成（vol 16/17 は出力を保ったまま md だけ差し替え） | — |
+
+§6 で今回見送ったもの（コードや検証セルの数値が変わるため別途判断）: `build_futures_rates_notebook.py` の Table 2.1 形式・886.19 / 886.60・Ex 4.3 の複利規約（§6.5）、`build_summary_notebook.py` のトランシェ境界 5/15%（Hull は 5/20%）、spec が約束して未実装の項目（spec 10 / 11 / 04）、vol 24 NPZ の `liquidation_loss` 改名、同梱 require.js の要否、`AGENTS.md` の `deep_hedge_price/tests` 未登録（事実なので据え置き）。
+
+§4 で残る open 項目は表のとおり（手順 4 で固定した 13 件を除く）。vol 18–22・26 の acceptance は保存値との照合が残る（手順 3 の続き）。
+
