@@ -179,6 +179,35 @@ def intraday_jump_intensity(
     return intensities[time_of_day_bucket(timestamp, session)]
 
 
+def scheduled_jump_intensity(
+    event_variance: float,
+    step_year_fraction: float,
+    *,
+    jump_mean: float = -0.05,
+    jump_std: float = 0.10,
+) -> float:
+    r"""Extra annualized intensity that adds ``event_variance`` over one step.
+
+    Compound-Poisson log-normal jumps add ``lambda * dt * E[Y^2]`` to the
+    log-return variance, with ``E[Y^2] = jump_mean**2 + jump_std**2``.  The
+    returned intensity is ``event_variance / (dt * E[Y^2])``, so a scheduled
+    event carries its nominal variance into :func:`sv_jump_teacher`.
+    """
+
+    event_variance = float(event_variance)
+    step_year_fraction = float(step_year_fraction)
+    if not np.isfinite(step_year_fraction) or step_year_fraction <= 0.0:
+        raise ValueError("step year fraction must be finite and positive")
+    if not np.isfinite(event_variance) or event_variance < 0.0:
+        raise ValueError("event variance must be finite and non-negative")
+    second_moment = float(jump_mean) ** 2 + float(jump_std) ** 2
+    if not np.isfinite(second_moment) or second_moment <= 0.0:
+        raise ValueError("jump second moment must be finite and positive")
+    if event_variance == 0.0:
+        return 0.0
+    return event_variance / (step_year_fraction * second_moment)
+
+
 @dataclass(frozen=True)
 class TotalVarianceCheck:
     """Adjacent-expiry total-variance consistency result."""

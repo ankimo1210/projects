@@ -94,3 +94,45 @@ def test_time_of_day_jump_intensity_and_sv_jump_teacher_are_reproducible() -> No
     assert abs(first.gamma) < 1e-8
     assert "does not identify" in zero_dte.DEALER_FLOW_CAUSALITY_NOTE
     assert set(zero_dte.RESEARCH_ONLY_MODELS) == {"pide_surrogate", "differential_ml"}
+
+
+def test_scheduled_jump_intensity_adds_the_event_variance_to_log_returns() -> None:
+    """A scheduled event variance is a jump count times E[Y^2], not a jump count.
+
+    Adding ``variance / dt`` to the intensity adds ``variance`` expected jumps,
+    whose log-return variance is only ``variance * E[Y^2]`` (about 1/80 of the
+    nominal 3.5e-4 with the teacher's default jump sizes).
+    """
+    dt = 30.0 / (252.0 * 390.0)
+    second_moment = 0.05**2 + 0.10**2
+    extra = zero_dte.scheduled_jump_intensity(0.00035, dt, jump_mean=-0.05, jump_std=0.10)
+    assert extra * dt * second_moment == pytest.approx(0.00035, rel=1e-12)
+    assert zero_dte.scheduled_jump_intensity(0.0, dt) == 0.0
+
+    result = zero_dte.sv_jump_teacher(
+        100.0,
+        100.0,
+        0.0,
+        [dt],
+        [extra],
+        v0=0.0,
+        kappa=1.0,
+        theta=0.0,
+        vol_of_vol=0.0,
+        rho=0.0,
+        n_paths=400_000,
+        seed=22,
+    )
+    log_return = np.log(result.terminal_spot / 100.0)
+    centered_square = (log_return - log_return.mean()) ** 2
+    standard_error = centered_square.std() / np.sqrt(centered_square.size)
+    assert abs(centered_square.mean() - 0.00035) < 4.0 * standard_error
+
+
+def test_scheduled_jump_intensity_rejects_invalid_inputs() -> None:
+    with pytest.raises(ValueError, match="step"):
+        zero_dte.scheduled_jump_intensity(0.00035, 0.0)
+    with pytest.raises(ValueError, match="variance"):
+        zero_dte.scheduled_jump_intensity(-1e-4, 1e-3)
+    with pytest.raises(ValueError, match="second moment"):
+        zero_dte.scheduled_jump_intensity(1e-4, 1e-3, jump_mean=0.0, jump_std=0.0)

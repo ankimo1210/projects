@@ -431,6 +431,7 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
     baseline_delta: list[float] = []
     standard_error: list[float] = []
     scheduled_variances: list[float] = []
+    event_jump_variances: list[float] = []
     seconds_to_settlement: list[float] = []
     for index, timestamp in enumerate(timestamps):
         remaining_minutes = max(1.0, 390.0 - float(minute[index]))
@@ -444,8 +445,12 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
             zero_dte.trading_seconds_to_settlement(timestamp, trading_day, session)
         )
         intensity = np.full(steps, event_intensity[index])
-        if event_variance > 0.0:
-            intensity[-1] += event_variance / max(float(dt[-1]), 1e-12)
+        # The event variance enters as extra jump intensity on the last step,
+        # scaled by the jump second moment so the log-return variance it adds
+        # is the scheduled variance itself.
+        extra_intensity = zero_dte.scheduled_jump_intensity(event_variance, float(dt[-1]))
+        intensity[-1] += extra_intensity
+        event_jump_variances.append(extra_intensity * float(dt[-1]) * (0.05**2 + 0.10**2))
         result = zero_dte.sv_jump_teacher(
             100.0,
             100.0,
@@ -536,6 +541,7 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
         "event_jump_intensity": event_intensity,
         "non_event_jump_intensity": non_event_intensity,
         "scheduled_variance": scheduled_variance_array,
+        "event_jump_variance": np.asarray(event_jump_variances),
         "event_mask": event_mask,
         "time_of_day": tod_bucket,
         "seconds_to_settlement": np.asarray(seconds_to_settlement),

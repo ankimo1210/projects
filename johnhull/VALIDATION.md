@@ -40,7 +40,7 @@ Canonical reference acceptance is recomputed from the committed arrays by
 | 19 | 11 | PASS | NO |
 | 20 | 12 | PASS | NO |
 | 21 | 8 | PASS | NO |
-| 22 | 6 | PASS | NO |
+| 22 | 7 | PASS | NO |
 | 23 | 9 | PASS | NO |
 | 24 | 10 | PASS | NO |
 | 25 | 9 | PASS | NO |
@@ -65,7 +65,9 @@ Canonical reference acceptance is recomputed from the committed arrays by
 - vol 21: all four SPX/VIX/VIX-option/variance objective components are finite;
   measured CPU timings are positive and preserved as a benchmark sample.
 - vol 22: calendar and adjacent-expiry violations are both `0`; the event/non-event
-  sample is `7/6` with open/midday/close diagnostics.
+  sample is `7/6` with open/midday/close diagnostics; the jump variance injected
+  for the FOMC event equals its scheduled `3.5e-4` (the earlier injection added
+  `3.5e-4` expected jumps, about `1/80` of that variance).
 - vol 23: daily-compounding and zero-rate hand-check errors are `0`; quadrature
   hand-check error is `6.938893903907228e-18`; all four Hagan static checks pass at
   tolerance `1e-10`.

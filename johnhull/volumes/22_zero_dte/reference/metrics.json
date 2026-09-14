@@ -20,9 +20,15 @@
         "passed": true
       },
       {
+        "criterion": "jump variance added to the teacher equals the scheduled event variance",
+        "name": "event_variance_injection",
+        "observed": 5.421010862427522e-20,
+        "passed": true
+      },
+      {
         "criterion": "> 0",
         "name": "event_teacher_uncertainty",
-        "observed": 0.013281518665180658,
+        "observed": 0.019301737581782084,
         "passed": true
       },
       {
@@ -95,6 +101,13 @@
           13
         ],
         "unit": "jump intensity per session"
+      },
+      "event_jump_variance": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "variance"
       },
       "event_mask": {
         "dtype": "bool",
@@ -232,7 +245,7 @@
     }
   },
   "companions": {
-    "intraday_slices.npz": "2161a389aaa1555d968b72a2a34737a4dbebe53689b86107d9d28903434f98cb"
+    "intraday_slices.npz": "df6a1c49799b8969359ef353d6b186538cac67ba9eb61c5448c779b76283a1f7"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -244,11 +257,11 @@
     "adjacent_expiry_violations": 0,
     "calendar_violations": 0,
     "event_count": 7,
-    "event_greek_mae": 0.0028003921838527907,
-    "event_greek_rmse": 0.006149003242174065,
-    "event_price_mae": 0.0055099021873426125,
-    "event_price_rmse": 0.01160374776324586,
-    "event_teacher_standard_error": 0.013281518665180658,
+    "event_greek_mae": 0.04382690272196831,
+    "event_greek_rmse": 0.04587768786408403,
+    "event_price_mae": 0.10933144902969492,
+    "event_price_rmse": 0.11222925351085129,
+    "event_teacher_standard_error": 0.019301737581782084,
     "non_event_count": 6,
     "non_event_greek_rmse": 0.010687180266627646,
     "non_event_price_rmse": 0.022463991836340305,
