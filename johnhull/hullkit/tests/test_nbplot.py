@@ -18,6 +18,31 @@ def test_setup_disables_interactive():
     assert hasattr(plt, "subplots")
 
 
+def test_static_figures_off_without_env_or_shell(monkeypatch):
+    monkeypatch.delenv(nbplot.STATIC_FIGURES_ENV, raising=False)
+    assert nbplot.enable_static_figures() is False
+    monkeypatch.setenv(nbplot.STATIC_FIGURES_ENV, "1")
+    assert nbplot.enable_static_figures() is False  # no IPython shell under pytest
+
+
+def test_figure_canvases_walks_widget_children():
+    import matplotlib.pyplot as plt_direct
+
+    figure = plt_direct.figure()
+
+    class Node:
+        def __init__(self, children=(), figure=None):
+            self.children = children
+            if figure is not None:
+                self.figure = figure
+
+    canvas = Node(figure=figure)
+    tree = Node(children=(Node(), Node(children=(canvas,))))
+    assert list(nbplot.figure_canvases(tree)) == [canvas]
+    assert list(nbplot.figure_canvases(Node())) == []
+    plt_direct.close(figure)
+
+
 def test_kde_xy_normal_samples():
     rng = np.random.default_rng(0)
     samples = rng.normal(5.0, 1.0, size=20_000)

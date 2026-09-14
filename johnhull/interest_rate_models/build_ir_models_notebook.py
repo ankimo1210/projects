@@ -112,6 +112,8 @@ def _redraw_dist(fig, ax_dist, dist_ln, smp, T, color):
     ax_dist.set_xlim(left=0)
     ax_dist.set_title(f'分布（T={T:.1f}年）', fontsize=9)
 
+from hullkit import nbplot
+nbplot.enable_static_figures()  # static PNG outputs only under HULLKIT_STATIC_FIGURES=1
 plt.ioff()  # prevent auto-display; figures shown via display() or plt.show()
 print("Imports OK")
 """)

@@ -4,8 +4,9 @@ build_stoch_vol_fourier_notebook.py
 nbformat-dict pattern to generate stoch_vol_fourier.ipynb
 (A2 deep-dive — stochastic volatility & Fourier pricing).
 
-Plotly figures (``fig.show()``) instead of ipympl. Their outputs are mimetype-only
-in the static Jupyter Book HTML; the interactive rendering is the portal (``make hull-report``).
+Plotly figures (``fig.show()``) instead of ipympl. This builder writes no outputs; the committed notebook is
+executed by ``verify_core_notebooks.py --write-outputs`` with the plotly_mimetype+notebook
+renderer, so the static Jupyter Book draws the figures (the portal, ``make hull-report``, is the other view).
 Numerical-verification cells assert against closed forms / Monte-Carlo.
 References: Gatheral, *The Volatility Surface*; Heston (1993); Fang & Oosterlee
 (2008); Hagan et al. (2002).

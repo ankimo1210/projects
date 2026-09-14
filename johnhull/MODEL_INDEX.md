@@ -173,7 +173,7 @@ synthetic-data method demonstrations, not market-performance claims.
 
 | Module | Role |
 |---|---|
-| `hullkit.nbplot` | Matplotlib notebook setup (`setup`, `kde_xy`) for the classic volumes |
+| `hullkit.nbplot` | Matplotlib notebook setup (`setup`, `kde_xy`) for the classic volumes; `enable_static_figures` turns ipympl widgets into static PNG outputs for the committed book copies |
 | `hullkit.plotly_viz` | Seeded Plotly figure builders for the offline portal (single source of figures) |
 | `hullkit.teaching` | `scaffold`/`practice_box`/`caption` markdown blocks used across all volumes |
 | `deep_hedge_price.cli` | Command-line entry points for training and reports |
