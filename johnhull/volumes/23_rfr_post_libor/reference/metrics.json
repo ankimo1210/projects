@@ -38,9 +38,9 @@
         "passed": true
       },
       {
-        "criterion": "regime errors reported and static checks pass",
+        "criterion": "alpha x maturity grid; region RMSEs recomputed from arrays; static checks pass",
         "name": "hagan_diagnostics",
-        "observed": 60.63518673342441,
+        "observed": 65.77634984021016,
         "passed": true
       },
       {
@@ -58,7 +58,7 @@
     ],
     "model_performance_approved": false,
     "negative_results": [
-      "Hagan's quick-grid worst error is 60.6352 bp.",
+      "Hagan's quick-grid worst error is 65.7763 bp.",
       "The free-boundary SABR fixture uses an explicit shift boundary rather than an endogenous boundary solve.",
       "Monte Carlo standard errors do not include time-discretization bias."
     ],
@@ -285,6 +285,7 @@
         "dtype": "float64",
         "shape": [
           3,
+          3,
           9
         ],
         "unit": "rate-option price units"
@@ -409,6 +410,13 @@
         ],
         "unit": "decimal rate"
       },
+      "teacher_alpha": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "normal volatility"
+      },
       "teacher_maturity": {
         "dtype": "float64",
         "shape": [
@@ -420,6 +428,7 @@
         "dtype": "float64",
         "shape": [
           3,
+          3,
           9
         ],
         "unit": "rate-option price units"
@@ -428,6 +437,7 @@
         "dtype": "float64",
         "shape": [
           3,
+          3,
           9
         ],
         "unit": "rate-option price units"
@@ -435,7 +445,7 @@
     }
   },
   "companions": {
-    "rfr_scenarios.npz": "cdca59fe9f452481d789f63ea5c252d3afb5aeae89356990ca991723cda4894c"
+    "rfr_scenarios.npz": "4e3e415376f363be4bb7687e2e6d5104e0a0ce4e557c8c872055ffaf8b3a4b0c"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -448,14 +458,14 @@
     "continuous_limit_error": 4.45993810761075e-06,
     "daily_compounding_handcheck_error": 0.0,
     "hagan_calendar_monotone_pass": true,
-    "hagan_high_vol_rmse_bp": 26.214443819654765,
-    "hagan_long_maturity_rmse_bp": 26.214443819654765,
+    "hagan_high_vol_rmse_bp": 19.438542522287737,
+    "hagan_long_maturity_rmse_bp": 21.494783201876285,
     "hagan_nonnegative_pass": true,
     "hagan_static_arbitrage_pass": true,
     "hagan_strike_convex_pass": true,
     "hagan_strike_monotone_pass": true,
-    "hagan_wing_rmse_bp": 21.32424980935272,
-    "hagan_worst_error_bp": 60.63518673342441,
+    "hagan_wing_rmse_bp": 16.94772486155203,
+    "hagan_worst_error_bp": 65.77634984021016,
     "hedge_teacher": "shifted-SABR full-truncation MC with common random numbers",
     "in_advance_coupon": 10273.128311712791,
     "in_arrears_coupon": 10352.53834410721,

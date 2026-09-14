@@ -70,7 +70,9 @@ Canonical reference acceptance is recomputed from the committed arrays by
   `3.5e-4` expected jumps, about `1/80` of that variance).
 - vol 23: daily-compounding and zero-rate hand-check errors are `0`; quadrature
   hand-check error is `6.938893903907228e-18`; all four Hagan static checks pass at
-  tolerance `1e-10`.
+  tolerance `1e-10` on each alpha slice of the 3 x 3 alpha-by-maturity grid, whose
+  long-maturity and high-vol RMSEs (`21.4948 bp` / `19.4385 bp`) now come from
+  different cells (the earlier zipped grid gave both `26.2144 bp`).
 - vol 24: funding/cash-flow/solvency/insurance and both liquidation-method
   conservation identities pass within `1e-12`; stale and dislocated oracle states
   are explicitly represented.
@@ -239,7 +241,7 @@ fixtures and used solely as textbook pins (`docs/DATA_PROVENANCE.md`).
   SPX RMSE `0.0364061` and VIX RMSE `4.13935`. This is not a Greek-performance pass.
 - vol 22: the intraday teacher and event schedule are synthetic, not causal dealer-flow
   evidence. DML/PIDE and point-process research tracks remain disabled.
-- vol 23: Hagan worst quick-grid error is `60.6352 bp`; the free-boundary fixture is an
+- vol 23: Hagan worst quick-grid error is `65.7763 bp`; the free-boundary fixture is an
   explicit shift boundary, not an endogenous boundary solve; MC SE omits time-step bias.
 - vol 24: the cascade is synthetic, not an event reconstruction. Dynamic fees do not
   reduce gross LVR in this fixture; fee compensation is reported separately.

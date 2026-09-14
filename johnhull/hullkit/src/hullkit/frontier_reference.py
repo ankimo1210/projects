@@ -946,45 +946,53 @@ def volume23_reference(*, seed: int = 20260741) -> FrontierReference:
 
     teacher_maturity = np.asarray([1.0, 5.0, 10.0])
     volatility_levels = np.asarray([0.010, 0.020, 0.040])
-    hagan_price = np.empty((teacher_maturity.size, strike.size))
-    teacher_price = np.empty_like(hagan_price)
-    teacher_se = np.empty_like(hagan_price)
-    for row, (expiry, alpha) in enumerate(zip(teacher_maturity, volatility_levels, strict=True)):
-        for column, strike_value in enumerate(strike):
-            hagan_price[row, column] = sabr_normal.normal_sabr_price(
-                0.030,
-                float(strike_value),
-                float(expiry),
-                float(alpha),
-                -0.30,
-                0.65,
-            )
-            teacher = sabr_normal.normal_sabr_conditional_mc_price(
-                0.030,
-                float(strike_value),
-                float(expiry),
-                float(alpha),
-                -0.30,
-                0.65,
-                n_steps=48,
-                n_paths=8_000,
-                seed=seed + 100 * row + column,
-            )
-            teacher_price[row, column] = teacher.price
-            teacher_se[row, column] = teacher.standard_error
+    # Full alpha x maturity x strike cube: pairing maturities with alphas made the
+    # long-maturity and high-vol regions select the same rows.
+    grid_shape = (volatility_levels.size, teacher_maturity.size, strike.size)
+    hagan_price = np.empty(grid_shape)
+    teacher_price = np.empty(grid_shape)
+    teacher_se = np.empty(grid_shape)
+    for level, alpha in enumerate(volatility_levels):
+        for row, expiry in enumerate(teacher_maturity):
+            for column, strike_value in enumerate(strike):
+                hagan_price[level, row, column] = sabr_normal.normal_sabr_price(
+                    0.030,
+                    float(strike_value),
+                    float(expiry),
+                    float(alpha),
+                    -0.30,
+                    0.65,
+                )
+                teacher = sabr_normal.normal_sabr_conditional_mc_price(
+                    0.030,
+                    float(strike_value),
+                    float(expiry),
+                    float(alpha),
+                    -0.30,
+                    0.65,
+                    n_steps=48,
+                    n_paths=8_000,
+                    seed=seed + 1_000 * level + 100 * row + column,
+                )
+                teacher_price[level, row, column] = teacher.price
+                teacher_se[level, row, column] = teacher.standard_error
     diagnostics = sabr_normal.hagan_error_diagnostics(
-        hagan_price,
-        teacher_price,
+        hagan_price.reshape(-1, strike.size),
+        teacher_price.reshape(-1, strike.size),
         strike,
-        teacher_maturity,
-        volatility_levels,
+        np.tile(teacher_maturity, volatility_levels.size),
+        np.repeat(volatility_levels, teacher_maturity.size),
     )
-    arbitrage = sabr_normal.call_grid_arbitrage_diagnostics(
-        strike,
-        teacher_maturity,
-        hagan_price,
-        tolerance=1e-10,
-    )
+    # Calendar monotonicity is a statement at fixed alpha, so check each slice.
+    arbitrage_slices = [
+        sabr_normal.call_grid_arbitrage_diagnostics(
+            strike,
+            teacher_maturity,
+            hagan_price[level],
+            tolerance=1e-10,
+        )
+        for level in range(volatility_levels.size)
+    ]
 
     option_pnl, forward_change, hedge_teacher_se, sticky_delta, bartlett_delta = _sabr_hedge_paths(
         seed + 500
@@ -1035,10 +1043,11 @@ def volume23_reference(*, seed: int = 20260741) -> FrontierReference:
         "shifted_teacher_price": shifted_teacher_price,
         "shifted_teacher_standard_error": shifted_teacher_se,
         "teacher_maturity": teacher_maturity,
+        "teacher_alpha": volatility_levels,
         "hagan_price": hagan_price,
         "teacher_price": teacher_price,
         "teacher_standard_error": teacher_se,
-        "hagan_error_bp": 1e4 * np.max(np.abs(hagan_price - teacher_price), axis=0),
+        "hagan_error_bp": 1e4 * np.max(np.abs(hagan_price - teacher_price), axis=(0, 1)),
         "hedge_names": np.asarray(["sticky strike", "Bartlett"]),
         "hedge_rmse": np.asarray([hedge.sticky_rmse, hedge.bartlett_rmse]),
         "option_price_change": option_pnl,
@@ -1066,16 +1075,17 @@ def volume23_reference(*, seed: int = 20260741) -> FrontierReference:
         "hagan_long_maturity_rmse_bp": diagnostics.long_maturity_rmse * 1e4,
         "hagan_high_vol_rmse_bp": diagnostics.high_vol_rmse * 1e4,
         "hagan_wing_rmse_bp": diagnostics.wing_rmse * 1e4,
-        "hagan_static_arbitrage_pass": bool(
-            arbitrage.nonnegative
-            and arbitrage.strike_monotone
-            and arbitrage.strike_convex
-            and arbitrage.calendar_monotone
+        "hagan_static_arbitrage_pass": all(
+            item.nonnegative
+            and item.strike_monotone
+            and item.strike_convex
+            and item.calendar_monotone
+            for item in arbitrage_slices
         ),
-        "hagan_nonnegative_pass": arbitrage.nonnegative,
-        "hagan_strike_monotone_pass": arbitrage.strike_monotone,
-        "hagan_strike_convex_pass": arbitrage.strike_convex,
-        "hagan_calendar_monotone_pass": arbitrage.calendar_monotone,
+        "hagan_nonnegative_pass": all(item.nonnegative for item in arbitrage_slices),
+        "hagan_strike_monotone_pass": all(item.strike_monotone for item in arbitrage_slices),
+        "hagan_strike_convex_pass": all(item.strike_convex for item in arbitrage_slices),
+        "hagan_calendar_monotone_pass": all(item.calendar_monotone for item in arbitrage_slices),
         "sabr_teacher_nu": 0.65,
         "sabr_teacher": "conditional normal-SABR MC; shifted-SABR full-truncation MC",
         "hedge_teacher": "shifted-SABR full-truncation MC with common random numbers",

@@ -326,6 +326,19 @@ def test_volume23_uses_nonzero_nu_teacher_and_independent_option_paths(
     assert reference.metrics["hagan_long_maturity_rmse_bp"] > 0.0
     assert reference.metrics["hagan_high_vol_rmse_bp"] > 0.0
     assert reference.metrics["hagan_wing_rmse_bp"] > 0.0
+    # The Hagan grid is a full alpha x maturity x strike cube, so the long-maturity
+    # and high-vol regions select different cells instead of the same zipped rows.
+    grid_shape = (
+        arrays["teacher_alpha"].size,
+        arrays["teacher_maturity"].size,
+        arrays["strike"].size,
+    )
+    assert grid_shape == (3, 3, 9)
+    assert arrays["hagan_price"].shape == arrays["teacher_price"].shape == grid_shape
+    assert arrays["teacher_standard_error"].shape == grid_shape
+    assert reference.metrics["hagan_long_maturity_rmse_bp"] != pytest.approx(
+        reference.metrics["hagan_high_vol_rmse_bp"], rel=1e-6
+    )
     assert not np.allclose(arrays["free_boundary_sabr_iv"], arrays["shifted_sabr_iv"])
     np.testing.assert_allclose(arrays["bachelier_price"], arrays["quadrature_price"], atol=1e-12)
     assert arrays["convention_names"].tolist() == [
