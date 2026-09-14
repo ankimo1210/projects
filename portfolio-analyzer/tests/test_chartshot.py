@@ -26,3 +26,26 @@ def test_retheme_forces_the_root_theme() -> None:
     out = chartshot.retheme(page, "light")
     assert 'data-theme="light"' in out and 'data-theme="dark"' not in out
     assert chartshot.retheme('<html lang="ja">', "light") == '<html lang="ja">'
+
+
+def test_parse_pieces_reads_the_boxes_the_page_published() -> None:
+    dom = '<body data-pieces="{&quot;nav&quot;:[10,20,540,190],&quot;price:XLE@gb&quot;:[10,300,520,120]}">'
+    assert chartshot.parse_pieces(dom) == {
+        "nav": (10, 20, 540, 190),
+        "price:XLE@gb": (10, 300, 520, 120),
+    }
+
+
+def test_parse_pieces_raises_when_the_page_never_published_them() -> None:
+    with pytest.raises(RuntimeError, match="pieces"):
+        chartshot.parse_pieces("<html><body></body></html>")
+
+
+def test_piece_box_pads_scales_and_clamps() -> None:
+    assert chartshot.piece_box((10, 20, 540, 190), scale=2, pad=4, size=(2200, 9000)) == (
+        12,
+        32,
+        1108,
+        428,
+    )
+    assert chartshot.piece_box((0, 0, 100, 50), scale=2, pad=4, size=(150, 90)) == (0, 0, 150, 90)

@@ -208,10 +208,10 @@ def parse_args() -> argparse.Namespace:
         "any other text is used as it is",
     )
     parser.add_argument(
-        "--image",
+        "--no-image",
         action="store_true",
-        help="put the dashboard's charts in the mail as a rendered inline image instead of the "
-        "figures drawn with table cells (needs a headless browser)",
+        help="draw the mail's charts with table cells instead of attaching the dashboard's own "
+        "drawings (which need a headless browser)",
     )
     return parser.parse_args()
 
@@ -630,7 +630,7 @@ def main() -> int:
         shutil.copy2(latest, target / latest.name)
 
     png_path = None
-    if args.png or (args.email and args.image):
+    if args.png:
         png_path = out_dir / f"pl-{as_of}.png"
         rendered = chartshot.render(latest, png_path)
         if rendered is None:
@@ -644,9 +644,23 @@ def main() -> int:
         password = os.environ.get("PL_SMTP_PASS")
         if not user or not password:
             raise RuntimeError("PL_SMTP_USER / PL_SMTP_PASS are not set; cannot send the email")
-        png = png_path.read_bytes() if png_path and args.image else None
+        pieces = None
+        if not args.no_image:
+            capture = out_dir / "capture.html"
+            capture.write_text(
+                dashboard.render(payload, tokens_css, capture=True), encoding="utf-8"
+            )
+            try:
+                pieces = chartshot.render_pieces(capture)
+            finally:
+                capture.unlink(missing_ok=True)
+            if pieces is None:
+                print("no headless browser found; drawing the mail's charts with table cells")
+            else:
+                size = sum(len(png) for png, _, _ in pieces.values())
+                print(f"chart images: {len(pieces)} ({size / 1024:.0f} KB)")
         msg = mailer.build_message(
-            payload, to=args.email, sender=os.environ.get("PL_SMTP_FROM", user), png=png
+            payload, to=args.email, sender=os.environ.get("PL_SMTP_FROM", user), pieces=pieces
         )
         mailer.send(
             msg,

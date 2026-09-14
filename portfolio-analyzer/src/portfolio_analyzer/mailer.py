@@ -4,9 +4,10 @@ The mail carries what the dashboard shows: the headline, accounts, allocation,
 the P&L attribution, holdings, closed positions, the time series, a card per
 position and the notes. The dashboard's charts are drawn by JavaScript, and every
 mail client strips scripts and inline SVG, so the email redraws them with
-coloured table cells (see ``emailchart``), which keeps the figures in the body
-itself. A rendered PNG of the dashboard's chart section can still ride along as
-an opt-in inline image in place of the drawn charts and cards.
+coloured table cells (see ``emailchart``) when no browser is at hand. Normally
+each chart is instead the dashboard's own drawing, cut out of a headless
+screenshot (``chartshot.render_pieces``) and attached inline: sent over SMTP,
+Gmail shows ``cid:`` images in the body.
 
 Credentials never live in this file: ``send`` takes them from the caller, which
 reads them from the environment (see ``scripts/daily_pl_report.py``).
@@ -279,8 +280,30 @@ def _caption(text: str) -> str:
     return f'<div style="font:400 11px/1.5 {SANS};color:{MUTED};margin-top:8px">{text}</div>'
 
 
-def _charts(data: dict[str, Any]) -> str:
-    """The figures, drawn with table cells so they render in the body of the mail."""
+Images = dict[str, tuple[str, int, int]]  # chart name -> (content id, width, height in CSS px)
+
+
+def _img(
+    images: Images | None, name: str, alt: str = "", fluid: bool = True, width: int | None = None
+) -> str:
+    """The dashboard's own drawing of a chart, attached inline; empty when there is none.
+
+    ``fluid`` lets it shrink with a narrow screen; ``width`` shows it at that fixed width.
+    """
+    if not images or name not in images:
+        return ""
+    cid, w, h = images[name]
+    if width:
+        w, h = width, round(h * width / w)
+    size = f"width:100%;max-width:{w}px;height:auto;" if fluid else ""
+    return (
+        f'<img src="cid:{html.escape(cid)}" width="{w}" height="{h}" alt="{html.escape(alt)}" '
+        f'style="display:block;{size}border:0">'
+    )
+
+
+def _charts(data: dict[str, Any], images: Images | None = None) -> str:
+    """The time series: the dashboard's drawings when attached, else table-cell charts."""
     out = ""
     series = data.get("series") or {}
     dates = series.get("dates") or []
@@ -294,13 +317,14 @@ def _charts(data: dict[str, Any]) -> str:
         out += _section(
             "NAV と累計入金", f"海外証券口座 · {w.get('start', '')} → {w.get('end', '')}"
         )
+        drawn = _img(images, "nav", "海外証券口座の NAV と累計入金") or emailchart.line(
+            points, labels, total_px=120, col_w=10, zero=False, fmt=man_level, overlay=overlay
+        )
         out += _card(
-            emailchart.line(
-                points, labels, total_px=120, col_w=10, zero=False, fmt=man_level, overlay=overlay
-            )
+            drawn
             + _caption(
                 f'<span style="color:{UP}">━</span> NAV <b>{jpy(nav[-1])}</b> 円 · '
-                f'<span style="color:{DN}">━</span> 累計入金 {jpy(deposits[-1] if deposits else None)} 円。'
+                f'<span style="color:{DN}">┅</span> 累計入金 {jpy(deposits[-1] if deposits else None)} 円。'
                 "入金は段差になります。"
             )
         )
@@ -312,7 +336,10 @@ def _charts(data: dict[str, Any]) -> str:
         last = next((v for v in reversed(points) if v is not None), None)
         out += _section("累計損益", f"海外証券口座 · {w.get('start', '')} → {w.get('end', '')}")
         out += _card(
-            emailchart.line(points, labels, total_px=120, col_w=10, fmt=man)
+            (
+                _img(images, "pnl", "海外証券口座の累計損益")
+                or emailchart.line(points, labels, total_px=120, col_w=10, fmt=man)
+            )
             + _caption(
                 f"NAV − 累計入金。直近 <b>{jpy(last, True)}</b> 円・"
                 f"期間の高値 {jpy(max(known, default=None), True)} 円 / "
@@ -329,14 +356,17 @@ def _charts(data: dict[str, Any]) -> str:
         gap = 1 if step < 6 else 3
         out += _section("日次損益", f"海外証券口座 · 期間 {len(daily)} 営業日")
         out += _card(
-            emailchart.columns(
-                daily,
-                labels,
-                total_px=110,
-                col_w=step - gap,
-                gap=gap,
-                fmt=man,
-                months=None if len(daily) < 60 else emailchart.QUARTERS,
+            (
+                _img(images, "daily", "日次損益の棒グラフ")
+                or emailchart.columns(
+                    daily,
+                    labels,
+                    total_px=110,
+                    col_w=step - gap,
+                    gap=gap,
+                    fmt=man,
+                    months=None if len(daily) < 60 else emailchart.QUARTERS,
+                )
             )
             + _caption(
                 f"入金を除いた NAV の日次変化。上げた日 {wins} 日 / 下げた日 {losses} 日"
@@ -359,7 +389,7 @@ def _label(left: str, right: str = "") -> str:
     )
 
 
-def _cards(data: dict[str, Any]) -> str:
+def _cards(data: dict[str, Any], images: Images | None = None) -> str:
     """One card per charted position: its numbers, a year of prices and its P&L."""
     series = data.get("series") or {}
     dates = series.get("dates") or []
@@ -378,7 +408,7 @@ def _cards(data: dict[str, Any]) -> str:
             for t in s.get("trades") or []
             if t.get("qty")
         ]
-        price_chart = emailchart.line(
+        price_chart = _img(images, f"price:{key}", f"{p['sym']} の株価") or emailchart.line(
             points,
             labels,
             total_px=84,
@@ -391,7 +421,9 @@ def _cards(data: dict[str, Any]) -> str:
         pnl = list(s.get("pnl") or [])
         pnl_points, _ = _sample(pnl, 52)
         pnl_now = next((v for v in reversed(pnl) if v is not None), None)
-        pnl_chart = emailchart.line(pnl_points, total_px=64, col_w=9, fmt=man)
+        pnl_chart = _img(images, f"pnlc:{key}", f"{p['sym']} の損益") or emailchart.line(
+            pnl_points, total_px=64, col_w=9, fmt=man
+        )
         stats = " · ".join(
             t
             for t in (
@@ -408,9 +440,10 @@ def _cards(data: dict[str, Any]) -> str:
             )
             if t
         )
-        legend = "下の帯 橙 買 · 青 売" if marks else ""
+        drawn = bool(images and f"price:{key}" in images)
+        legend = ("▲ 買 ▼ 売" if drawn else "下の帯 橙 買 · 青 売") if marks else ""
         if s.get("avg_cost") is not None:
-            legend = _joined(legend, "青線 平均取得")
+            legend = _joined(legend, "点線 平均取得" if drawn else "青線 平均取得")
         inner = (
             f'<table width="100%" cellspacing="0" cellpadding="0"><tr>'
             f'<td style="font:700 14px {SANS};color:{INK}">{html.escape(p["sym"])}</td>'
@@ -545,7 +578,8 @@ def _closed(rows: list[dict[str, Any]] | None, table_style: str) -> str:
     )
 
 
-def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
+def html_body(data: dict[str, Any], images: Images | None = None) -> str:
+    """The mail's HTML. ``images`` maps chart names to attached drawings of the dashboard."""
     h, w = data["headline"], data["window"]
     rate = data["fx"]["last"]
     kpis = (
@@ -654,7 +688,14 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
             "<tr>"
             + _td(name, "left", INK, SANS, last)
             + _td(pct(p["chg1d"]), "right", _tone(p["chg1d"]), None, last)
-            + _td(_spark(p.get("spark") or []), "left", INK, None, last)
+            + _td(
+                _img(images, f"spark:{p.get('key', p['sym'])}", fluid=False, width=64)
+                or _spark(p.get("spark") or []),
+                "left",
+                INK,
+                None,
+                last,
+            )
             + _td(pct(p["chg1y"], 1), "right", _tone(p["chg1y"]), None, last)
             + _td(jpy(p["value"]) + _under(usd(p["value"], rate)), "right", INK, None, last)
             + _td(
@@ -680,16 +721,7 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
         f'bgcolor="{CARD}" style="border-collapse:collapse;width:100%;color:{INK};'
         f'font:400 12px {MONO};border:1px solid {RULE};border-radius:8px"'
     )
-    # A rendered image of the dashboard's figures, when one is attached, stands in
-    # for the drawn charts and cards (it holds the same figures).
-    if image_cid:
-        charts = _section("時系列", f"{w['start']} → {w['end']}") + _card(
-            f'<img src="cid:{image_cid}" width="572" alt="NAV・累計損益・日次損益と銘柄ごとの株価チャート" '
-            f'style="display:block;width:100%;max-width:572px;height:auto;border-radius:4px">',
-            pad="6px",
-        )
-    else:
-        charts = _charts(data) + _cards(data)
+    charts = _charts(data, images) + _cards(data, images)
     quoted = int(h["quoted_share"] * 100)
     tape = " &nbsp; ".join(
         f'<span style="white-space:nowrap"><b style="color:{INK}">{html.escape(t["sym"])}</b> '
@@ -737,31 +769,35 @@ def build_message(
     data: dict[str, Any],
     to: list[str],
     sender: str,
-    png: bytes | None,
-    cid: str | None = None,
+    pieces: dict[str, tuple[bytes, int, int]] | None = None,
 ) -> EmailMessage:
-    """RFC 5322 message: plain text, HTML, and the chart PNG inline when given."""
+    """RFC 5322 message: plain text, HTML, and each chart's PNG inline when given.
+
+    ``pieces`` maps a chart name to (png, width, height) as ``chartshot.render_pieces``
+    returns them; any chart without one is drawn with table cells instead.
+    """
     msg = EmailMessage()
     msg["From"] = sender
     msg["To"] = ", ".join(to)
     msg["Subject"] = subject(data)
     msg["Date"] = formatdate(localtime=True)
     msg["Message-ID"] = make_msgid()
-    image_cid = None
-    if png is not None:
-        image_cid = cid or "charts"
+    images: Images = {
+        name: (f"chart{i}.{data['as_of']}@pl-daily", w, h)
+        for i, (name, (_, w, h)) in enumerate((pieces or {}).items())
+    }
     msg.set_content(text_body(data))
-    msg.add_alternative(html_body(data, image_cid), subtype="html")
-    if png is not None:
+    msg.add_alternative(html_body(data, images), subtype="html")
+    if pieces:
         html_part = msg.get_payload()[-1]
-        html_part.add_related(
-            png,
-            maintype="image",
-            subtype="png",
-            cid=f"<{image_cid}>",
-            filename=f"pl-{data['as_of']}.png",
-            disposition="inline",
-        )
+        for name, (png, _, _) in pieces.items():
+            html_part.add_related(
+                png,
+                maintype="image",
+                subtype="png",
+                cid=f"<{images[name][0]}>",
+                disposition="inline",
+            )
     return msg
 
 
