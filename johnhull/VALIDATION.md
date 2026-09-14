@@ -240,6 +240,36 @@ The vol 28 data policy remains `synthetic-offline`: the only external numbers ar
 Hull-printed Table 24.4 transition matrix and Table 25.6 iTraxx quotes, transcribed as
 fixtures and used solely as textbook pins (`docs/DATA_PROVENANCE.md`).
 
+## 2026-09-14 section-audit follow-up run (acceptance recomputation, printed-value pins, documentation)
+
+Branch `worktree-johnhull-audit-next` (base `bd278948`), following
+`docs/SECTION_AUDIT_2026-09-14.md` §9 steps 3–5 plus the small items R5 / R9 / R10.
+Environment: Python 3.12.3 / NumPy 2.4.6 / SciPy 1.17.1 on Linux
+6.18.33.2-microsoft-standard-WSL2 (CPU only; `hullkit` stays torch-free).
+
+| Check | Command / evidence | Result |
+|---|---|:---:|
+| hullkit + portal tests | `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests` — 1055 passed (was 917; +71 printed-value pins in `test_hull_pins_*.py`, +66 acceptance tamper cases, +1 vol 22 / mean-excess tests) | PASS |
+| Scoped lint/format | `ruff check` / `ruff format --check` over `johnhull/hullkit`, `johnhull/scripts`, `johnhull/report` — all checks passed, 165 files formatted | PASS |
+| Acceptance tamper contract | `report/tests/test_frontier_acceptance_tamper.py` — vol 23 (7 cases), 24 (11), 25 (10), 27 (14), 28 (17): each tampered array/metric flips exactly the check that recomputes it (documented dependent checks aside); committed artifacts still pass every check | PASS |
+| vol 27 / 28 recomputation | Kupiec exact size 0.0709 at n=500 (z = 1.63, was compared with the nominal 5%); FHS/HS forecasts rebuilt from `garch_returns` / `conditional_sigma`; GPD MLE local-optimum check; EVT VaR and Euler VaR rebuilt from the fit and z_alpha; book exposures == weights @ mapping; vol 28 CDS/CDO/CVA checks rebuilt from hazards, recovery, rate and copula rather than stored PVs. Observed values unchanged except float noise | PASS |
+| vol 22 event ramp | 14:00 announcement ramp scoped to event rows; non-event teacher/baseline RMSE 0 by construction (was 0.0225); `mean_excess` rejects NaN / 2-D input | PASS |
+| Reference rebuild | `make hull-artifacts-check` — vol 19–28 semantic match and second-build byte identity; vol 21 digest refreshed for each `frontier_reference.py` edit (timings preserved) | PASS |
+| Notebook execution | `make hull-notebooks-check` (vol 18–28) and `make hull-core-notebooks-check` (19 core notebooks; vol 01/02/05–12 regenerated from their builders, vol 16/17 markdown patched in place with outputs kept) | PASS |
+| Portal / Book | `make hull-report` (12 themes / 82 figures); `make hull-book` (31 pages, build succeeded with the 29 pre-existing legacy warnings) | PASS |
+| Release contract | `make hull-release-check` and `verify_release.py --require-tracked` — `[PASS] johnhull A5--A8 release contract` | PASS |
+
+Printed-value pins that disagree with the Global Edition print are pinned at the
+computed value and documented in the test docstrings (Table 20.3 K=56 49.0 → 49.9; MSFT
+10-day ES 1,687,000 → 1,685,629, reproducible from the rounded Y; p.521 cumulative weight
+0.004833 → 0.003776; Table 22.8 variance from rounded covariances at rel 2e-4). No hullkit
+source semantics changed in this run apart from the vol 22 ramp scoping and the
+`mean_excess` input validation.
+
+Still open after this run (`docs/SECTION_AUDIT_2026-09-14.md` §11): vol 18–22 and 26
+acceptance still mix array checks with stored-value comparisons; D9 (core notebooks without
+outputs) is a pending decision; §4 items other than the 13 pinned here remain as listed.
+
 ## Negative results and residual model risk
 
 - vol 18: the quick soft penalty did not reduce the hard-check count, and no neural
