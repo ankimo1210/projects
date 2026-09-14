@@ -1379,13 +1379,24 @@ def _volume27(
     )
     n_replications = int(reject_flags.size)
     rejection_rate = float(recomputed_flags.mean())
-    binomial_se = math.sqrt(0.05 * 0.95 / n_replications)
-    size_zscore = abs(rejection_rate - 0.05) / binomial_se
+    # The exceedance count is discrete, so the 5% nominal level is not the
+    # test's actual size: sum the binomial mass over the rejection region.
+    count_grid = np.arange(kupiec_observations + 1)
+    rejects = np.array(
+        [
+            1.0 if _kupiec_pvalue_np(int(x), kupiec_observations, p) < 0.05 else 0.0
+            for x in count_grid
+        ]
+    )
+    exact_size = float(np.sum(_binomial_pmf_np(kupiec_observations, np.array(p)) * rejects))
+    binomial_se = math.sqrt(exact_size * (1.0 - exact_size) / n_replications)
+    size_zscore = abs(rejection_rate - exact_size) / binomial_se
     _add(
         checks,
         "kupiec_size_calibration",
         size_zscore,
-        "iid rejection rate within z < 3 of nominal 5% (binomial SE, 400 replications)",
+        f"iid rejection rate within z < 3 of the exact Kupiec size {exact_size:.4f} at "
+        f"n={kupiec_observations} (binomial SE, {n_replications} replications)",
         size_zscore < 3.0,
     )
 
@@ -1426,60 +1437,146 @@ def _volume27(
         fhs_constant_error <= 1e-12,
     )
 
-    # 4. FHS coverage beats plain HS on the GARCH path.
-    hs_rate = float(np.asarray(arrays["hs_violations"], dtype=float).mean())
-    fhs_rate = float(np.asarray(arrays["fhs_violations"], dtype=float).mean())
+    # 4. FHS coverage beats plain HS on the GARCH path. The rolling HS and FHS
+    #    forecasts and the violation series are rebuilt from the committed
+    #    return and conditional-volatility paths before the rates are compared.
+    returns = np.asarray(arrays["garch_returns"], dtype=float)
+    sigma_path = np.asarray(arrays["conditional_sigma"], dtype=float)
+    window = int(metrics["fhs_window"])
+    hs_forecast = np.empty(returns.size - window)
+    fhs_forecast = np.empty(returns.size - window)
+    for offset, t in enumerate(range(window, returns.size)):
+        window_returns = returns[t - window : t]
+        window_sigma = sigma_path[t - window : t]
+        hs_forecast[offset], _ = _hist_var_es_np(window_returns, alpha)
+        fhs_forecast[offset], _ = _hist_var_es_np(
+            window_returns / window_sigma * sigma_path[t], alpha
+        )
+    realized_loss = -returns[window:]
+    hs_violations = (realized_loss > hs_forecast).astype(float)
+    fhs_violations = (realized_loss > fhs_forecast).astype(float)
+    fhs_rebuild_gap = max(
+        float(np.max(np.abs(hs_forecast - arrays["hs_var_forecast"]))),
+        float(np.max(np.abs(fhs_forecast - arrays["fhs_var_forecast"]))),
+        float(np.max(np.abs(hs_violations - arrays["hs_violations"]))),
+        float(np.max(np.abs(fhs_violations - arrays["fhs_violations"]))),
+    )
+    hs_rate = float(hs_violations.mean())
+    fhs_rate = float(fhs_violations.mean())
     coverage_improved = abs(fhs_rate - p) < abs(hs_rate - p)
     _add(
         checks,
         "fhs_coverage_improvement",
         fhs_rate,
-        "|FHS violation rate - (1-alpha)| < |plain-HS violation rate - (1-alpha)|",
-        coverage_improved,
+        "rolling HS/FHS forecasts and violations rebuilt from the return and sigma paths match "
+        "the committed series (1e-12); |FHS violation rate - (1-alpha)| < |plain-HS rate - "
+        "(1-alpha)|",
+        fhs_rebuild_gap <= 1e-12 and coverage_improved,
     )
 
-    # 5. GPD parameter recovery.
+    # 5. GPD parameter recovery. The committed (xi, beta) must be a local
+    #    maximum of the GPD likelihood on the committed exceedances (1% moves
+    #    in either parameter lower the likelihood), and the exceedance count
+    #    must match the losses above the threshold.
     xi_true = float(metrics["gpd_xi_true"])
     beta_true = float(metrics["gpd_beta_true"])
     xi_hat = float(metrics["gpd_xi_hat"])
     beta_hat = float(metrics["gpd_beta_hat"])
+    threshold = float(metrics["evt_threshold"])
+    gpd_losses = np.asarray(arrays["gpd_losses"], dtype=float)
+    exceedances = gpd_losses[gpd_losses > threshold] - threshold
+    n_exceedances = int(exceedances.size)
+    n_total = int(gpd_losses.size)
+
+    def _gpd_nll(xi: float, beta: float) -> float:
+        if beta <= 0.0:
+            return math.inf
+        z = xi * exceedances / beta
+        if np.any(z <= -1.0):
+            return math.inf
+        return float(n_exceedances * math.log(beta) + (1.0 + 1.0 / xi) * np.sum(np.log1p(z)))
+
+    fit_nll = _gpd_nll(xi_hat, beta_hat)
+    neighbour_nll = [
+        _gpd_nll(xi_hat * 1.01, beta_hat),
+        _gpd_nll(xi_hat * 0.99, beta_hat),
+        _gpd_nll(xi_hat, beta_hat * 1.01),
+        _gpd_nll(xi_hat, beta_hat * 0.99),
+    ]
+    mle_local_max = math.isfinite(fit_nll) and all(fit_nll < value for value in neighbour_nll)
     xi_error = abs(xi_hat - xi_true)
     beta_ratio_error = abs(beta_hat / beta_true - 1.0)
     _add(
         checks,
         "gpd_parameter_recovery",
         xi_error,
+        "(xi_hat, beta_hat) is a local maximum of the GPD likelihood on the committed "
+        "exceedances (1% perturbations), the exceedance count matches the metric, and "
         "|xi_hat - xi| <= 0.1 and |beta_hat/beta - 1| <= 0.15",
-        xi_error <= 0.1 and beta_ratio_error <= 0.15,
+        mle_local_max
+        and n_exceedances == int(metrics["gpd_n_exceedances"])
+        and xi_error <= 0.1
+        and beta_ratio_error <= 0.15,
     )
 
-    # 6. EVT ES closed-form identity.
-    threshold = float(metrics["evt_threshold"])
+    # 6. EVT VaR rebuilt from the fit and the committed sample; ES closed form.
+    evt_alpha = float(metrics["evt_alpha"])
     evt_var = float(metrics["evt_var"])
     evt_es = float(metrics["evt_es"])
+
+    def _evt_var(level: float) -> float:
+        ratio = (n_total / n_exceedances) * (1.0 - level)
+        return threshold + (beta_hat / xi_hat) * (ratio ** (-xi_hat) - 1.0)
+
+    var_rebuild_gap = abs(_evt_var(evt_alpha) - evt_var)
+    ladder_gap = float(
+        np.max(
+            np.abs(
+                np.array([_evt_var(float(a)) for a in arrays["evt_quantile_alpha"]])
+                - arrays["evt_var_ladder"]
+            )
+        )
+    )
     evt_es_check = (evt_var + beta_hat - xi_hat * threshold) / (1.0 - xi_hat)
     evt_identity_error = abs(evt_es - evt_es_check)
     _add(
         checks,
         "evt_var_es_identity",
         evt_identity_error,
-        "<= 1e-12",
-        evt_identity_error <= 1e-12,
+        "EVT VaR rebuilt from (xi, beta, u, n, N_u) matches the metric and the committed "
+        "quantile ladder (1e-10); ES identity <= 1e-12",
+        var_rebuild_gap <= 1e-10 and ladder_gap <= 1e-10 and evt_identity_error <= 1e-12,
     )
 
-    # 7. Analytic Euler additivity: components sum to normal VaR.
+    # 7. Analytic Euler additivity: normal VaR and its components are rebuilt
+    #    from amounts, vols, correlations and z_alpha (numpy bisection quantile)
+    #    before the additivity identity is tested.
     component_var = np.asarray(arrays["alloc_component_var"], dtype=float)
     normal_var = float(metrics["alloc_normal_var"])
-    euler_error = abs(float(component_var.sum()) - normal_var)
-    _add(checks, "euler_additivity_normal", euler_error, "<= 1e-12", euler_error <= 1e-12)
-
-    # 8. Analytic marginal VaR matches a central finite difference.
     amounts = np.asarray(arrays["alloc_amounts"], dtype=float)
     vols = np.asarray(arrays["alloc_vols"], dtype=float)
     corr = np.asarray(arrays["alloc_corr"], dtype=float)
     covariance = corr * np.outer(vols, vols)
     sigma_p = math.sqrt(float(amounts @ covariance @ amounts))
-    z_alpha = normal_var / sigma_p  # recover z from committed data (avoids scipy)
+    z_alpha = _norm_ppf_np(alpha)
+    normal_var_rebuilt = z_alpha * sigma_p
+    component_rebuilt = z_alpha * amounts * (covariance @ amounts) / sigma_p
+    euler_rebuild_gap = max(
+        abs(normal_var_rebuilt - normal_var),
+        float(np.max(np.abs(component_rebuilt - component_var))),
+    )
+    euler_error = abs(float(component_var.sum()) - normal_var)
+    _add(
+        checks,
+        "euler_additivity_normal",
+        euler_error,
+        "normal VaR and component VaR rebuilt from amounts/vols/corr and z_alpha match the "
+        "committed values (1e-9); Σ components − VaR <= 1e-12",
+        euler_rebuild_gap <= 1e-9 and euler_error <= 1e-12,
+    )
+
+    # 8. Analytic marginal VaR matches a central finite difference (z from the
+    #    quantile, not from the stored VaR).
     marginal = np.asarray(arrays["alloc_marginal_var"], dtype=float)
     step = 1e-6 * np.maximum(np.abs(amounts), 1.0)
     finite_difference = np.empty_like(amounts)
@@ -1567,7 +1664,27 @@ def _volume27(
     mapping_vega = np.asarray(arrays["position_factor_vega"], dtype=float)
     n_positions = int(np.asarray(arrays["position_names"]).size)
     n_factors = len(factor_names)
-    desk_sum_error = abs(float(position_full_pnl.sum()) - full_pnl)
+    position_weights = np.asarray(arrays["position_weights"], dtype=float)
+    mapping_gamma = np.asarray(arrays["position_factor_gamma"], dtype=float)
+    # Book exposures must be the weighted aggregation of the committed
+    # position x factor matrices, and the per-position full P&L must equal the
+    # committed shocked-minus-base values (the desk total is their sum, so a
+    # Σ−Σ comparison would be identically zero).
+    book_gap = max(
+        float(np.max(np.abs(position_weights @ mapping_delta - book_delta))),
+        float(np.max(np.abs(position_weights @ mapping_gamma - book_gamma))),
+        float(np.max(np.abs(position_weights @ mapping_vega - book_vega))),
+    )
+    revaluation_gap = float(
+        np.max(
+            np.abs(
+                np.asarray(arrays["position_shocked_value"], dtype=float)
+                - np.asarray(arrays["position_base_value"], dtype=float)
+                - position_full_pnl
+            )
+        )
+    )
+    desk_sum_error = max(book_gap, revaluation_gap)
     rate_factor = "parallel_zero_rate"
     has_rate_factor = rate_factor in factor_names
     rate_column = factor_names.index(rate_factor) if has_rate_factor else 0
@@ -1585,8 +1702,9 @@ def _volume27(
         "cross_asset_factor_mapping",
         desk_sum_error,
         "position x factor mapping is (n_positions, n_factors) over explicit factor labels "
-        "including parallel_zero_rate with a non-zero rate delta and zero rate vega, and the "
-        "per-position full P&L sums to the desk full P&L (<= 1e-9)",
+        "including parallel_zero_rate with a non-zero rate delta and zero rate vega; book "
+        "delta/gamma/vega equal weights @ mapping and per-position P&L equals shocked − base "
+        "value (<= 1e-9)",
         shapes_match
         and has_rate_factor
         and rate_delta_nonzero

@@ -28,8 +28,10 @@
 | `evt_threshold` | 5.0 |
 | `evt_var` | 15.949662940402645 |
 | `fhs_constant_vol_error` | 0.0 |
+| `fhs_ewma_lambda` | 0.96 |
 | `fhs_var_constant` | 0.04886253563711847 |
 | `fhs_violation_rate` | 0.01 |
+| `fhs_window` | 200 |
 | `gpd_beta_hat` | 0.9332212999765327 |
 | `gpd_beta_true` | 1.0 |
 | `gpd_n_exceedances` | 500 |
@@ -63,18 +65,18 @@
 | Check | Observed | Criterion | Pass |
 |---|---:|---|:---:|
 | `kupiec_size_flags_match_recomputation` | 0.0 | every stored reject flag equals Kupiec's own verdict recomputed from the committed per-replication exceedance count | PASS |
-| `kupiec_size_calibration` | 0.0 | iid rejection rate within z < 3 of nominal 5% (binomial SE, 400 replications) | PASS |
+| `kupiec_size_calibration` | 1.625722560667122 | iid rejection rate within z < 3 of the exact Kupiec size 0.0709 at n=500 (binomial SE, 400 replications) | PASS |
 | `christoffersen_detects_clustering` | 0.0016575957546647315 | clustered LR_ind p-value (recomputed from the arrays) < 0.05 and LR_ind statistic exceeds the iid series | PASS |
 | `christoffersen_pvalue_matches_recomputation` | 1.5178830414797062e-18 | stored christoffersen_ind_pvalue_clustered matches erfc(sqrt(LR/2)) recomputed from the committed exceedance series (<= 1e-12) | PASS |
 | `fhs_constant_vol_identity` | 0.0 | <= 1e-12 | PASS |
-| `fhs_coverage_improvement` | 0.01 | |FHS violation rate - (1-alpha)| < |plain-HS violation rate - (1-alpha)| | PASS |
-| `gpd_parameter_recovery` | 0.04567805084324694 | |xi_hat - xi| <= 0.1 and |beta_hat/beta - 1| <= 0.15 | PASS |
-| `evt_var_es_identity` | 0.0 | <= 1e-12 | PASS |
-| `euler_additivity_normal` | 0.0 | <= 1e-12 | PASS |
-| `marginal_fd_consistency` | 3.1713464233488086e-10 | analytic vs central-difference marginals, relative error <= 1e-6 | PASS |
+| `fhs_coverage_improvement` | 0.01 | rolling HS/FHS forecasts and violations rebuilt from the return and sigma paths match the committed series (1e-12); |FHS violation rate - (1-alpha)| < |plain-HS rate - (1-alpha)| | PASS |
+| `gpd_parameter_recovery` | 0.04567805084324694 | (xi_hat, beta_hat) is a local maximum of the GPD likelihood on the committed exceedances (1% perturbations), the exceedance count matches the metric, and |xi_hat - xi| <= 0.1 and |beta_hat/beta - 1| <= 0.15 | PASS |
+| `evt_var_es_identity` | 0.0 | EVT VaR rebuilt from (xi, beta, u, n, N_u) matches the metric and the committed quantile ladder (1e-10); ES identity <= 1e-12 | PASS |
+| `euler_additivity_normal` | 0.0 | normal VaR and component VaR rebuilt from amounts/vols/corr and z_alpha match the committed values (1e-9); Σ components − VaR <= 1e-12 | PASS |
+| `marginal_fd_consistency` | 3.171354073568806e-10 | analytic vs central-difference marginals, relative error <= 1e-6 | PASS |
 | `euler_es_additivity_sim` | 1.4210854715202004e-14 | sum(ES components) == total historical ES and matches committed array, <= 1e-12 | PASS |
 | `pnl_explain_taylor_ordering` | 0.11443482486811263 | dgv residual < delta-only residual; both shrink when moves halve (all four recomputed from the committed exposure and P&L arrays) | PASS |
-| `cross_asset_factor_mapping` | 0.0 | position x factor mapping is (n_positions, n_factors) over explicit factor labels including parallel_zero_rate with a non-zero rate delta and zero rate vega, and the per-position full P&L sums to the desk full P&L (<= 1e-9) | PASS |
+| `cross_asset_factor_mapping` | 0.0 | position x factor mapping is (n_positions, n_factors) over explicit factor labels including parallel_zero_rate with a non-zero rate delta and zero rate vega; book delta/gamma/vega equal weights @ mapping and per-position P&L equals shocked − base value (<= 1e-9) | PASS |
 | `desk_report_reproducible` | 0.0 | desk-report VaR equals Euler component sum and ES equals total historical ES | PASS |
 
 ## Negative results

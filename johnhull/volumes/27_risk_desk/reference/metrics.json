@@ -8,9 +8,9 @@
         "passed": true
       },
       {
-        "criterion": "iid rejection rate within z < 3 of nominal 5% (binomial SE, 400 replications)",
+        "criterion": "iid rejection rate within z < 3 of the exact Kupiec size 0.0709 at n=500 (binomial SE, 400 replications)",
         "name": "kupiec_size_calibration",
-        "observed": 0.0,
+        "observed": 1.625722560667122,
         "passed": true
       },
       {
@@ -32,25 +32,25 @@
         "passed": true
       },
       {
-        "criterion": "|FHS violation rate - (1-alpha)| < |plain-HS violation rate - (1-alpha)|",
+        "criterion": "rolling HS/FHS forecasts and violations rebuilt from the return and sigma paths match the committed series (1e-12); |FHS violation rate - (1-alpha)| < |plain-HS rate - (1-alpha)|",
         "name": "fhs_coverage_improvement",
         "observed": 0.01,
         "passed": true
       },
       {
-        "criterion": "|xi_hat - xi| <= 0.1 and |beta_hat/beta - 1| <= 0.15",
+        "criterion": "(xi_hat, beta_hat) is a local maximum of the GPD likelihood on the committed exceedances (1% perturbations), the exceedance count matches the metric, and |xi_hat - xi| <= 0.1 and |beta_hat/beta - 1| <= 0.15",
         "name": "gpd_parameter_recovery",
         "observed": 0.04567805084324694,
         "passed": true
       },
       {
-        "criterion": "<= 1e-12",
+        "criterion": "EVT VaR rebuilt from (xi, beta, u, n, N_u) matches the metric and the committed quantile ladder (1e-10); ES identity <= 1e-12",
         "name": "evt_var_es_identity",
         "observed": 0.0,
         "passed": true
       },
       {
-        "criterion": "<= 1e-12",
+        "criterion": "normal VaR and component VaR rebuilt from amounts/vols/corr and z_alpha match the committed values (1e-9); Σ components − VaR <= 1e-12",
         "name": "euler_additivity_normal",
         "observed": 0.0,
         "passed": true
@@ -58,7 +58,7 @@
       {
         "criterion": "analytic vs central-difference marginals, relative error <= 1e-6",
         "name": "marginal_fd_consistency",
-        "observed": 3.1713464233488086e-10,
+        "observed": 3.171354073568806e-10,
         "passed": true
       },
       {
@@ -74,7 +74,7 @@
         "passed": true
       },
       {
-        "criterion": "position x factor mapping is (n_positions, n_factors) over explicit factor labels including parallel_zero_rate with a non-zero rate delta and zero rate vega, and the per-position full P&L sums to the desk full P&L (<= 1e-9)",
+        "criterion": "position x factor mapping is (n_positions, n_factors) over explicit factor labels including parallel_zero_rate with a non-zero rate delta and zero rate vega; book delta/gamma/vega equal weights @ mapping and per-position P&L equals shocked − base value (<= 1e-9)",
         "name": "cross_asset_factor_mapping",
         "observed": 0.0,
         "passed": true
@@ -532,8 +532,10 @@
     "evt_threshold": 5.0,
     "evt_var": 15.949662940402645,
     "fhs_constant_vol_error": 0.0,
+    "fhs_ewma_lambda": 0.96,
     "fhs_var_constant": 0.04886253563711847,
     "fhs_violation_rate": 0.01,
+    "fhs_window": 200,
     "gpd_beta_hat": 0.9332212999765327,
     "gpd_beta_true": 1.0,
     "gpd_n_exceedances": 500,

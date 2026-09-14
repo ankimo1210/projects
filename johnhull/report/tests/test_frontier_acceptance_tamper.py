@@ -118,6 +118,62 @@ VOL28_CASES = [
 ]
 
 
+def _flip_flag(name: str, index: int):
+    def tamper(metrics, arrays):
+        arrays[name] = arrays[name].copy()
+        arrays[name][index] = 1.0 - arrays[name][index]
+
+    return tamper
+
+
+VOL27_CASES = [
+    (
+        "kupiec_size_reject_flags",
+        _flip_flag("kupiec_size_reject_flags", 0),
+        "kupiec_size_flags_match_recomputation",
+    ),
+    ("garch_returns", _scale_array("garch_returns", 1.001), "fhs_coverage_improvement"),
+    # FHS rescales z = r/sigma by sigma_t, so a uniform sigma scale cancels;
+    # move a single day's sigma instead.
+    (
+        "conditional_sigma",
+        _set_array_value("conditional_sigma", -1, 0.05),
+        "fhs_coverage_improvement",
+    ),
+    ("hs_var_forecast", _scale_array("hs_var_forecast", 1.001), "fhs_coverage_improvement"),
+    ("gpd_losses", _scale_array("gpd_losses", 1.01), "gpd_parameter_recovery"),
+    ("gpd_beta_hat", _scale_metric("gpd_beta_hat", 1.02), "gpd_parameter_recovery"),
+    ("evt_var", _scale_metric("evt_var", 1.001), "evt_var_es_identity"),
+    ("evt_var_ladder", _scale_array("evt_var_ladder", 1.001), "evt_var_es_identity"),
+    ("alloc_component_var", _scale_array("alloc_component_var", 1.001), "euler_additivity_normal"),
+    ("alloc_normal_var", _scale_metric("alloc_normal_var", 1.001), "euler_additivity_normal"),
+    ("alloc_vols", _scale_array("alloc_vols", 1.001), "euler_additivity_normal"),
+    ("book_delta", _scale_array("book_delta", 1.001), "cross_asset_factor_mapping"),
+    ("position_full_pnl", _scale_array("position_full_pnl", 1.001), "cross_asset_factor_mapping"),
+    ("es_components", _scale_array("es_components", 1.001), "euler_es_additivity_sim"),
+]
+
+
+@pytest.fixture(scope="module")
+def vol27():
+    return _load(27)
+
+
+def test_vol27_committed_gate_passes(vol27):
+    metrics, arrays = vol27
+    assert _failed(27, dict(metrics), dict(arrays)) == set()
+
+
+@pytest.mark.parametrize(("label", "tamper", "check"), VOL27_CASES, ids=[c[0] for c in VOL27_CASES])
+def test_vol27_tamper_flips_exactly_the_recomputing_check(vol27, label, tamper, check):
+    metrics, arrays = vol27
+    metrics, arrays = dict(metrics), dict(arrays)
+    tamper(metrics, arrays)
+    failed = _failed(27, metrics, arrays)
+    assert check in failed, f"{label}: {check} still passes after tampering"
+    assert failed <= {check, *DEPENDENT_FAILURES.get(check, set())}, f"{label}: {failed}"
+
+
 @pytest.fixture(scope="module")
 def vol28():
     return _load(28)
@@ -143,4 +199,9 @@ def test_vol28_tamper_flips_exactly_the_recomputing_check(vol28, label, tamper, 
 DEPENDENT_FAILURES = {
     "cds_par_spread_hull_pin": {"cds_mtm_identity"},
     "base_correlation_curve_shape": {"implied_correlation_reprices_quotes"},
+    "fhs_coverage_improvement": {"fhs_constant_vol_identity"},
+    "gpd_parameter_recovery": {"evt_var_es_identity"},
+    "euler_additivity_normal": {"marginal_fd_consistency", "desk_report_reproducible"},
+    "cross_asset_factor_mapping": {"pnl_explain_taylor_ordering"},
+    "euler_es_additivity_sim": {"desk_report_reproducible"},
 }
