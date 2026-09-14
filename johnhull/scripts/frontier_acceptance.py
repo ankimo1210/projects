@@ -737,8 +737,41 @@ def _volume23(
     _add(
         checks, "nonzero_nu_teacher", metrics["sabr_teacher_nu"], "> 0 with positive SE", teacher_ok
     )
+    hagan_error = arrays["hagan_price"] - arrays["teacher_price"]
+    grid_shape = (
+        arrays["teacher_alpha"].size,
+        arrays["teacher_maturity"].size,
+        arrays["strike"].size,
+    )
+    long_cells = np.broadcast_to(
+        (arrays["teacher_maturity"] >= np.median(arrays["teacher_maturity"]))[None, :, None],
+        grid_shape,
+    )
+    high_cells = np.broadcast_to(
+        (arrays["teacher_alpha"] >= np.median(arrays["teacher_alpha"]))[:, None, None],
+        grid_shape,
+    )
+
+    def _region_rmse_bp(mask: np.ndarray) -> float:
+        return float(1e4 * np.sqrt(np.mean(hagan_error[mask] ** 2)))
+
+    regions_ok = (
+        hagan_error.shape == grid_shape
+        and arrays["teacher_standard_error"].shape == grid_shape
+        and not np.array_equal(long_cells, high_cells)
+        and math.isclose(
+            _region_rmse_bp(long_cells), metrics["hagan_long_maturity_rmse_bp"], rel_tol=1e-9
+        )
+        and math.isclose(
+            _region_rmse_bp(high_cells), metrics["hagan_high_vol_rmse_bp"], rel_tol=1e-9
+        )
+        and math.isclose(
+            float(1e4 * np.max(np.abs(hagan_error))), metrics["hagan_worst_error_bp"], rel_tol=1e-9
+        )
+    )
     diagnostics = (
-        metrics["hagan_static_arbitrage_pass"]
+        regions_ok
+        and metrics["hagan_static_arbitrage_pass"]
         and metrics["hagan_nonnegative_pass"]
         and metrics["hagan_strike_monotone_pass"]
         and metrics["hagan_strike_convex_pass"]
@@ -756,7 +789,7 @@ def _volume23(
         checks,
         "hagan_diagnostics",
         metrics["hagan_worst_error_bp"],
-        "regime errors reported and static checks pass",
+        "alpha x maturity grid; region RMSEs recomputed from arrays; static checks pass",
         diagnostics,
     )
     independent = not np.allclose(arrays["sticky_hedge_error"], arrays["bartlett_hedge_error"])

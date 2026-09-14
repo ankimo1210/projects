@@ -14,14 +14,14 @@
 | `continuous_limit_error` | 4.45993810761075e-06 |
 | `daily_compounding_handcheck_error` | 0.0 |
 | `hagan_calendar_monotone_pass` | True |
-| `hagan_high_vol_rmse_bp` | 26.214443819654765 |
-| `hagan_long_maturity_rmse_bp` | 26.214443819654765 |
+| `hagan_high_vol_rmse_bp` | 19.438542522287737 |
+| `hagan_long_maturity_rmse_bp` | 21.494783201876285 |
 | `hagan_nonnegative_pass` | True |
 | `hagan_static_arbitrage_pass` | True |
 | `hagan_strike_convex_pass` | True |
 | `hagan_strike_monotone_pass` | True |
-| `hagan_wing_rmse_bp` | 21.32424980935272 |
-| `hagan_worst_error_bp` | 60.63518673342441 |
+| `hagan_wing_rmse_bp` | 16.94772486155203 |
+| `hagan_worst_error_bp` | 65.77634984021016 |
 | `hedge_teacher` | shifted-SABR full-truncation MC with common random numbers |
 | `in_advance_coupon` | 10273.128311712791 |
 | `in_arrears_coupon` | 10352.53834410721 |
@@ -47,13 +47,13 @@
 | `bachelier_quadrature_handcheck` | 6.938893903907228e-18 | < 1e-12 | PASS |
 | `multi_curve_policy_collateral` | 3 | SOFR/OIS/TONA curves plus policy and collateral scenarios | PASS |
 | `nonzero_nu_teacher` | 0.65 | > 0 with positive SE | PASS |
-| `hagan_diagnostics` | 60.63518673342441 | regime errors reported and static checks pass | PASS |
+| `hagan_diagnostics` | 65.77634984021016 | alpha x maturity grid; region RMSEs recomputed from arrays; static checks pass | PASS |
 | `independent_hedge_paths` | True | sticky and Bartlett errors differ | PASS |
 | `sabr_model_ladder` | 9 | shifted/free-boundary approximations and MC teacher with positive SE | PASS |
 
 ## Negative results
 
-- Hagan's quick-grid worst error is 60.6352 bp.
+- Hagan's quick-grid worst error is 65.7763 bp.
 - The free-boundary SABR fixture uses an explicit shift boundary rather than an endogenous boundary solve.
 - Monte Carlo standard errors do not include time-discretization bias.
 

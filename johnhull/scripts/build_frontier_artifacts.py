@@ -137,6 +137,7 @@ UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
         "shifted_sabr_iv": "decimal normal volatility",
         "free_boundary_sabr_iv": "decimal normal volatility",
         "teacher_maturity": "years",
+        "teacher_alpha": "normal volatility",
         "bachelier_price": "rate-option price units",
         "quadrature_price": "rate-option price units",
         "shifted_sabr_price": "rate-option price units",
