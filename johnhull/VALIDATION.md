@@ -39,7 +39,7 @@ Canonical reference acceptance is recomputed from the committed arrays by
 | 18 | 8 | PASS | NO |
 | 19 | 11 | PASS | NO |
 | 20 | 12 | PASS | NO |
-| 21 | 8 | PASS | NO |
+| 21 | 9 | PASS | NO |
 | 22 | 7 | PASS | NO |
 | 23 | 9 | PASS | NO |
 | 24 | 10 | PASS | NO |
@@ -63,7 +63,9 @@ Canonical reference acceptance is recomputed from the committed arrays by
   train-tercile regimes have QLIKE/RMSE/MAE block-bootstrap intervals. The stored
   default uses 512 common hedge paths and a common premium/cost convention.
 - vol 21: all four SPX/VIX/VIX-option/variance objective components are finite;
-  measured CPU timings are positive and preserved as a benchmark sample.
+  measured CPU timings are positive and preserved as a benchmark sample; the nested
+  teacher has `0` futures-option bound and `0` scale-monotonicity violations, and
+  the surrogate's counts are recomputed from the committed arrays.
 - vol 22: calendar and adjacent-expiry violations are both `0`; the event/non-event
   sample is `7/6` with open/midday/close diagnostics; the jump variance injected
   for the FOMC event equals its scheduled `3.5e-4` (the earlier injection added
@@ -237,8 +239,11 @@ fixtures and used solely as textbook pins (`docs/DATA_PROVENANCE.md`).
   5-day view. Real Phase-1 checkpoint positions were not supplied, so the policy status
   is correctly `not_evaluated`. Attention/permutation/occlusion/IG are non-causal
   diagnostics, and all forecast data are synthetic.
-- vol 21: polynomial-surrogate Greek RMSE is `25.3594`; the manufactured target has
-  SPX RMSE `0.0364061` and VIX RMSE `4.13935`. This is not a Greek-performance pass.
+- vol 21: polynomial-surrogate delta RMSE is `5.04308` and gamma RMSE `35.5073`
+  (the pooled `25.3594` was a gamma-only number: the teacher's bump gamma is ~0);
+  the surrogate breaks the futures-option price bounds on `18/24` evaluation rows
+  and scale monotonicity on `32` grid steps; the manufactured target has SPX RMSE
+  `0.0364061` and VIX RMSE `4.13935`. This is not a Greek-performance pass.
 - vol 22: the intraday teacher and event schedule are synthetic, not causal dealer-flow
   evidence. DML/PIDE and point-process research tracks remain disabled.
 - vol 23: Hagan worst quick-grid error is `65.7763 bp`; the free-boundary fixture is an

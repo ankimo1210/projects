@@ -44,6 +44,7 @@ from . import (
     risk_allocation,
     sabr_normal,
     spx_vix,
+    surrogate_validation,
     swaps,
     tail_risk,
     var_backtest,
@@ -312,8 +313,54 @@ def volume21_reference(*, seed: int = 20260739) -> FrontierReference:
         surrogate_price,
         teacher_seconds=teacher_ms[-1] * 1e-3,
         surrogate_seconds=surrogate_ms[-1] * 1e-3,
-        teacher_greeks=teacher_greeks,
-        surrogate_greeks=surrogate_greeks,
+    )
+
+    # Delta and gamma are reported separately: the nested teacher is piecewise
+    # linear in the index scale (bump gamma ~0) while the quadratic surrogate has
+    # a constant gamma, so a pooled Greek RMSE is a gamma-only number.
+    def greek_rmse(column: int, mask: np.ndarray) -> float:
+        error = teacher_greeks[mask, column] - surrogate_greeks[mask, column]
+        return float(np.sqrt(np.mean(error**2)))
+
+    all_rows = np.ones(evaluation.shape[0], dtype=bool)
+
+    # Hard checks on the surrogate; the teacher passes them by construction.  A
+    # VIX call is a futures option, DF*max(F-K,0) <= C <= DF*F, which is
+    # check_price_bounds with the VIX future as spot and a dividend yield equal
+    # to the discount rate.
+    teacher_discount = 0.995
+    teacher_future = np.asarray(
+        [
+            spx_vix.nested_vix_teacher(
+                variance * factors,
+                strike=20.0 * strike_ratio,
+                discount_factor=teacher_discount,
+                index_scale=100.0 * scale,
+            ).future
+            for scale, variance, strike_ratio in evaluation
+        ]
+    )
+    evaluation_strike = 20.0 * evaluation[:, 2]
+    discount_rate = -float(np.log(teacher_discount))
+    bound_inputs = (teacher_future, evaluation_strike, discount_rate, 1.0, discount_rate)
+    teacher_bounds = surrogate_validation.check_price_bounds(teacher_price, *bound_inputs)
+    surrogate_bounds = surrogate_validation.check_price_bounds(surrogate_price, *bound_inputs)
+    monotonicity_scale = np.linspace(0.90, 1.10, 9)
+    curve_rows = np.asarray(
+        [
+            [scale, variance, strike_ratio]
+            for variance, strike_ratio in evaluation[in_domain_flag, 1:]
+            for scale in monotonicity_scale
+        ]
+    )
+    curve_shape = (int(in_domain_flag.sum()), monotonicity_scale.size)
+    teacher_scale_price = _vix_prices(curve_rows, factors).reshape(curve_shape)
+    surrogate_scale_price = surrogate.predict(curve_rows).reshape(curve_shape)
+    teacher_monotone = surrogate_validation.check_spot_monotonicity(
+        teacher_scale_price, monotonicity_scale
+    )
+    surrogate_monotone = surrogate_validation.check_spot_monotonicity(
+        surrogate_scale_price, monotonicity_scale
     )
 
     arrays: ArrayMap = {
@@ -349,6 +396,12 @@ def volume21_reference(*, seed: int = 20260739) -> FrontierReference:
         "teacher_gamma": teacher_greeks[:, 1],
         "surrogate_delta": surrogate_greeks[:, 0],
         "surrogate_gamma": surrogate_greeks[:, 1],
+        "teacher_future": teacher_future,
+        "price_lower_bound": teacher_discount * np.maximum(teacher_future - evaluation_strike, 0.0),
+        "price_upper_bound": teacher_discount * teacher_future,
+        "monotonicity_scale": monotonicity_scale,
+        "teacher_scale_price": teacher_scale_price,
+        "surrogate_scale_price": surrogate_scale_price,
         "ood_flag": ood_flag,
         "ood_radius": np.linalg.norm(evaluation - np.asarray([1.0, 0.045, 1.0]), axis=1),
         "ood_error": np.abs(teacher_price - surrogate_price),
@@ -362,13 +415,13 @@ def volume21_reference(*, seed: int = 20260739) -> FrontierReference:
         "joint_vix_option_rmse": vix_option_rmse[0],
         "joint_variance_rmse": variance_rmse[0],
         "surrogate_price_rmse": comparison.price_rmse,
-        "surrogate_greek_rmse": float(comparison.greek_rmse or 0.0),
-        "surrogate_delta_rmse": float(
-            np.sqrt(np.mean((teacher_greeks[:, 0] - surrogate_greeks[:, 0]) ** 2))
-        ),
-        "surrogate_gamma_rmse": float(
-            np.sqrt(np.mean((teacher_greeks[:, 1] - surrogate_greeks[:, 1]) ** 2))
-        ),
+        "surrogate_delta_rmse": greek_rmse(0, all_rows),
+        "surrogate_gamma_rmse": greek_rmse(1, all_rows),
+        "teacher_discount_factor": teacher_discount,
+        "teacher_bound_violations": teacher_bounds.n_violations,
+        "surrogate_bound_violations": surrogate_bounds.n_violations,
+        "teacher_spot_monotonicity_violations": teacher_monotone.n_violations,
+        "surrogate_spot_monotonicity_violations": surrogate_monotone.n_violations,
         "surrogate_speedup_1024": comparison.speedup,
         "timing_method": "perf_counter_ns warm-cache median of 5",
         "timing_nondeterministic": True,
@@ -379,14 +432,10 @@ def volume21_reference(*, seed: int = 20260739) -> FrontierReference:
         "ood_price_rmse": float(
             np.sqrt(np.mean((teacher_price[ood_flag] - surrogate_price[ood_flag]) ** 2))
         ),
-        "in_domain_greek_rmse": float(
-            np.sqrt(
-                np.mean((teacher_greeks[in_domain_flag] - surrogate_greeks[in_domain_flag]) ** 2)
-            )
-        ),
-        "ood_greek_rmse": float(
-            np.sqrt(np.mean((teacher_greeks[ood_flag] - surrogate_greeks[ood_flag]) ** 2))
-        ),
+        "in_domain_delta_rmse": greek_rmse(0, in_domain_flag),
+        "in_domain_gamma_rmse": greek_rmse(1, in_domain_flag),
+        "ood_delta_rmse": greek_rmse(0, ood_flag),
+        "ood_gamma_rmse": greek_rmse(1, ood_flag),
         "teacher": "hullkit.spx_vix.nested_vix_teacher",
     }
     return FrontierReference(21, seed, arrays, metrics)

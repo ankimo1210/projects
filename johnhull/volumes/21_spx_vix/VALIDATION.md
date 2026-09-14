@@ -10,21 +10,27 @@
 
 | Metric | Value |
 |---|---:|
-| `in_domain_greek_rmse` | 25.349173063933875 |
+| `in_domain_delta_rmse` | 4.93918215800165 |
+| `in_domain_gamma_rmse` | 35.50726164688879 |
 | `in_domain_price_rmse` | 0.4256623957319136 |
 | `joint_spx_rmse` | 0.03640612872286824 |
 | `joint_variance_rmse` | 0.012136360789840171 |
 | `joint_vix_option_rmse` | 1.7147112919089407 |
 | `joint_vix_rmse` | 4.139354595392237 |
 | `ood_count` | 4 |
-| `ood_greek_rmse` | 25.41046863034563 |
+| `ood_delta_rmse` | 5.533373084461694 |
+| `ood_gamma_rmse` | 35.507261431089184 |
 | `ood_price_rmse` | 0.3381758958670694 |
+| `surrogate_bound_violations` | 18 |
 | `surrogate_delta_rmse` | 5.043078088519851 |
 | `surrogate_gamma_rmse` | 35.50726161092219 |
-| `surrogate_greek_rmse` | 25.359399280280453 |
 | `surrogate_price_rmse` | 0.4123722655252687 |
 | `surrogate_speedup_1024` | 781.9083514612693 |
+| `surrogate_spot_monotonicity_violations` | 32 |
 | `teacher` | hullkit.spx_vix.nested_vix_teacher |
+| `teacher_bound_violations` | 0 |
+| `teacher_discount_factor` | 0.995 |
+| `teacher_spot_monotonicity_violations` | 0 |
 | `timing_method` | perf_counter_ns warm-cache median of 5 |
 | `timing_nondeterministic` | True |
 
@@ -34,16 +40,18 @@
 |---|---:|---|:---:|
 | `joint_model_ladder` | 4 | exact four-model ladder with all joint components | PASS |
 | `teacher_surrogate_pairing` | True | price/delta/gamma shapes match | PASS |
+| `surrogate_hard_checks` | 18/32 | futures-option bounds and scale monotonicity recomputed; teacher has zero violations | PASS |
 | `teacher_uncertainty` | 16 | aligned, nonnegative, and nontrivial standard errors | PASS |
 | `ood_shell` | 4 | > 0 flagged observations | PASS |
 | `measured_cpu_timing` | perf_counter_ns warm-cache median of 5 | positive measured samples | PASS |
 | `surrogate_speedup` | 781.9083514612693 | > 1 at batch 1024 | PASS |
 | `joint_objective_components` | True | all four component errors finite | PASS |
-| `in_domain_ood_diagnostics` | True | price and Greek RMSE finite in both domains | PASS |
+| `in_domain_ood_diagnostics` | True | price, delta and gamma RMSE finite in both domains | PASS |
 
 ## Negative results
 
-- The polynomial surrogate Greek RMSE is 25.3594; this is a reported negative result, not a Greek-accuracy approval.
+- The polynomial surrogate delta RMSE is 5.04308 and gamma RMSE is 35.5073; the nested teacher's bump gamma is ~0 because its payoff is piecewise linear in the index scale, so the gamma error is the surrogate's constant curvature. This is a reported negative result, not a Greek-accuracy approval.
+- The surrogate breaks the futures-option price bounds on 18 of 24 evaluation rows and scale monotonicity on 32 grid steps; the teacher breaks neither.
 - The manufactured joint target has SPX RMSE 0.0364061 and VIX RMSE 4.13935.
 
 ## Rebuild

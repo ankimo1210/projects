@@ -33,7 +33,14 @@ def references() -> dict[int, frontier_reference.FrontierReference]:
                 "vix_option_model_grid",
                 "variance_term_model_grid",
             },
-            {"surrogate_price_rmse", "surrogate_greek_rmse", "ood_count"},
+            {
+                "surrogate_price_rmse",
+                "surrogate_delta_rmse",
+                "surrogate_gamma_rmse",
+                "surrogate_bound_violations",
+                "surrogate_spot_monotonicity_violations",
+                "ood_count",
+            },
         ),
         (
             22,
@@ -287,6 +294,64 @@ def test_volume21_covers_joint_targets_teacher_greeks_timing_and_ood(
     assert np.all(arrays["nested_mc_ms"] > 0.0)
     assert np.all(arrays["surrogate_ms"] > 0.0)
     assert int(arrays["ood_flag"].sum()) == reference.metrics["ood_count"] == 4
+
+
+def test_volume21_reports_delta_and_gamma_separately_with_surrogate_hard_checks(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """Delta and gamma errors live on different scales, so one pooled RMSE hides delta.
+
+    The nested teacher is piecewise linear in the index scale, so its bump gamma
+    is ~0 while the quadratic surrogate has a constant gamma; a pooled RMSE was
+    therefore a gamma-only number.  The surrogate also gets the hard checks that
+    the teacher passes by construction: Black futures-option bounds and
+    monotonicity in the index scale.
+    """
+    reference = references[21]
+    arrays = reference.arrays
+    metrics = reference.metrics
+    for pooled in ("surrogate_greek_rmse", "in_domain_greek_rmse", "ood_greek_rmse"):
+        assert pooled not in metrics
+    in_domain = ~arrays["ood_flag"]
+    for greek in ("delta", "gamma"):
+        error = arrays[f"teacher_{greek}"] - arrays[f"surrogate_{greek}"]
+        assert metrics[f"surrogate_{greek}_rmse"] == pytest.approx(
+            float(np.sqrt(np.mean(error**2))), rel=1e-12
+        )
+        assert metrics[f"in_domain_{greek}_rmse"] == pytest.approx(
+            float(np.sqrt(np.mean(error[in_domain] ** 2))), rel=1e-12
+        )
+        assert metrics[f"ood_{greek}_rmse"] == pytest.approx(
+            float(np.sqrt(np.mean(error[~in_domain] ** 2))), rel=1e-12
+        )
+    assert metrics["surrogate_delta_rmse"] != pytest.approx(metrics["surrogate_gamma_rmse"])
+
+    discount = metrics["teacher_discount_factor"]
+    strike = 20.0 * arrays["surrogate_features"][:, 2]
+    lower = discount * np.maximum(arrays["teacher_future"] - strike, 0.0)
+    upper = discount * arrays["teacher_future"]
+    np.testing.assert_allclose(arrays["price_lower_bound"], lower, rtol=0.0, atol=1e-12)
+    np.testing.assert_allclose(arrays["price_upper_bound"], upper, rtol=0.0, atol=1e-12)
+
+    def bound_violations(price: np.ndarray) -> int:
+        return int(np.sum((price < lower - 1e-10) | (price > upper + 1e-10)))
+
+    assert metrics["teacher_bound_violations"] == bound_violations(arrays["teacher_price"]) == 0
+    assert metrics["surrogate_bound_violations"] == bound_violations(arrays["surrogate_price"])
+    assert metrics["surrogate_bound_violations"] > 0
+
+    scale_grid = arrays["monotonicity_scale"]
+    assert np.all(np.diff(scale_grid) > 0.0)
+    teacher_curves = arrays["teacher_scale_price"]
+    surrogate_curves = arrays["surrogate_scale_price"]
+    assert teacher_curves.shape == surrogate_curves.shape == (int(in_domain.sum()), scale_grid.size)
+    assert metrics["teacher_spot_monotonicity_violations"] == int(
+        np.sum(np.diff(teacher_curves, axis=1) < -1e-10)
+    )
+    assert metrics["teacher_spot_monotonicity_violations"] == 0
+    assert metrics["surrogate_spot_monotonicity_violations"] == int(
+        np.sum(np.diff(surrogate_curves, axis=1) < -1e-10)
+    )
 
 
 def test_volume22_clock_event_teacher_and_expiry_identities(
