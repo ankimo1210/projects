@@ -55,7 +55,15 @@ def forward_rate(r1, t1, r2, t2):
 
 
 def fra_value(notional, rate_fixed, rate_forward, t1, t2, r2):
-    """FRA value to the fixed-rate receiver (continuous rates, Hull §4.9)."""
+    """FRA value to the fixed-rate receiver, L (R_K - R_F)(t2 - t1) e^{-r2 t2} (Hull §4.9).
+
+    ``rate_fixed`` and ``rate_forward`` are simple rates over the accrual
+    period t2 - t1, i.e. compounded at the period's own frequency (semiannual
+    for a 6-month FRA), and enter as quoted without conversion; only ``r2``,
+    the zero rate to the payment date t2, is continuously compounded.
+    Hull Example 4.3: 5.8% / 5% semiannual, 1.5 -> 2 years, r2 = 4%
+    continuous, L = 100m gives 369,246.5 (printed as 369,200).
+    """
     return notional * (rate_fixed - rate_forward) * (t2 - t1) * math.exp(-r2 * t2)
 
 

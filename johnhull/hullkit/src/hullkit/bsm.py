@@ -3,6 +3,11 @@
 The continuous yield ``q`` generalizes the formulas:
 stock index -> q = dividend yield, currency -> q = foreign risk-free rate,
 futures -> q = r (Black-76 with S = futures price).
+
+Known cash dividends (Hull 11e GE §11.7, §15.12) use a dividend schedule
+instead: `pv_dividends`, `call_price_cash_dividends`/`put_price_cash_dividends`,
+`black_american_call_approx`, the early-exercise conditions and the bounds of
+eqs. (11.8)-(11.11).
 """
 
 import numpy as np
@@ -192,3 +197,200 @@ def vomma(S, K, r, sigma, T, q=0.0):
     d_1 = d1(S, K, r, sigma, T, q)
     d_2 = d_1 - sigma * np.sqrt(T)
     return vega(S, K, r, sigma, T, q) * d_1 * d_2 / sigma
+
+
+# ---------------------------------------------------------------------------
+# Known cash dividends: Hull 11e GE §11.7 pp.262-263 and §15.12 pp.360-363.
+#
+# Unlike the continuous yield ``q`` above, these functions take a dividend
+# schedule (ex-dividend times in years, cash amounts). Following §15.12 p.360,
+# a dividend is counted only if its ex-dividend date falls within the option's
+# life (``t_i <= T``) and is discounted from its ex-dividend date at ``r``.
+# ---------------------------------------------------------------------------
+
+
+def _validate_finite_scalar(value, name, *, minimum=None, strict=False):
+    array = np.asarray(value, dtype=float)
+    if array.ndim != 0 or not np.isfinite(array):
+        raise ValueError(f"{name} must be a finite scalar")
+    if minimum is not None and (array <= minimum if strict else array < minimum):
+        raise ValueError(f"{name} must be {'>' if strict else '>='} {minimum:g}")
+    return float(array)
+
+
+def _validate_dividend_schedule(dividend_times, dividend_amounts):
+    times = np.asarray(dividend_times, dtype=float)
+    amounts = np.asarray(dividend_amounts, dtype=float)
+    if times.ndim != 1 or amounts.ndim != 1:
+        raise ValueError("dividend_times and dividend_amounts must be 1-D sequences")
+    if times.shape != amounts.shape:
+        raise ValueError("dividend_times and dividend_amounts must have equal length")
+    if np.any(~np.isfinite(times)) or np.any(times < 0.0):
+        raise ValueError("dividend_times must contain only finite values >= 0")
+    if np.any(np.diff(times) <= 0.0):
+        raise ValueError("dividend_times must be strictly increasing (t1 < t2 < ... < tn)")
+    if np.any(~np.isfinite(amounts)) or np.any(amounts < 0.0):
+        raise ValueError("dividend_amounts must contain only finite values >= 0")
+    return times, amounts
+
+
+def _discounted_sum(times, amounts, r, mask):
+    return float(np.sum(amounts[mask] * np.exp(-r * times[mask])))
+
+
+def _stock_less_pv_dividends(S, pv):
+    adjusted = np.asarray(S, dtype=float) - pv
+    if np.any(adjusted <= 0.0):
+        raise ValueError("S - PV(dividends) must be > 0 (dividends exceed the stock price)")
+    return adjusted
+
+
+def pv_dividends(dividend_times, dividend_amounts, r, T=None):
+    """Present value D of known cash dividends, Hull 11e GE §11.7 p.263 / §15.12 p.360.
+
+    ``D = sum_i D_i exp(-r t_i)``, each dividend discounted from its
+    ex-dividend time ``t_i`` at the continuously compounded rate ``r``. When
+    ``T`` is given only dividends with ``t_i <= T`` (during the option's life)
+    count. Example 15.9: 0.5 at 2 and 5 months, r = 9% -> 0.9742.
+    """
+    times, amounts = _validate_dividend_schedule(dividend_times, dividend_amounts)
+    r = _validate_finite_scalar(r, "r")
+    if T is None:
+        return _discounted_sum(times, amounts, r, np.ones(times.shape, dtype=bool))
+    T = _validate_finite_scalar(T, "T", minimum=0.0)
+    return _discounted_sum(times, amounts, r, times <= T)
+
+
+def call_price_cash_dividends(S, K, r, sigma, T, dividend_times, dividend_amounts):
+    """European call on a stock with known cash dividends, Hull 11e GE §15.12 pp.360-361.
+
+    Black-Scholes-Merton eq. (15.20) with ``S0`` replaced by ``S0 - D``, where
+    ``D = pv_dividends(dividend_times, dividend_amounts, r, T)`` and ``sigma``
+    is the volatility of the risky component ``S - D``. ``S``/``K``/``sigma``
+    may be arrays; ``r``, ``T`` and the schedule are scalars/1-D sequences.
+    With no dividends in the option's life this is exactly `call_price`.
+    Raises ValueError if ``S - D <= 0``.
+    """
+    _validate_price_inputs(S, K, sigma, T)
+    D = pv_dividends(dividend_times, dividend_amounts, r, T)
+    return call_price(_stock_less_pv_dividends(S, D) if D else S, K, r, sigma, T)
+
+
+def put_price_cash_dividends(S, K, r, sigma, T, dividend_times, dividend_amounts):
+    """European put on a stock with known cash dividends, Hull 11e GE §15.12 p.360.
+
+    Eq. (15.21) with ``S0 - D`` in place of ``S0``; same conventions and
+    validation as `call_price_cash_dividends`. Satisfies the dividend
+    put-call parity ``c + D + K e^{-rT} = p + S0`` of eq. (11.10).
+    """
+    _validate_price_inputs(S, K, sigma, T)
+    D = pv_dividends(dividend_times, dividend_amounts, r, T)
+    return put_price(_stock_less_pv_dividends(S, D) if D else S, K, r, sigma, T)
+
+
+def black_american_call_approx(S, K, r, sigma, T, dividend_times, dividend_amounts):
+    """Black's approximation to an American call with cash dividends, Hull 11e GE §15.12 p.363.
+
+    The greater of two European calls priced as in `call_price_cash_dividends`:
+    one maturing at ``T`` (all dividends with ``t_i <= T`` removed) and one
+    maturing immediately before the final ex-dividend date ``t_n`` (only the
+    dividends with ``t_i < t_n`` removed, because exercise just before
+    ``t_n`` captures the cum-dividend price). It is never below the European
+    value. It assumes the exercise date is chosen at time zero, and its two
+    legs apply ``sigma`` to different risky components, so it is an
+    approximation rather than a bound on any single model's American price
+    (it can exceed an escrowed-dividend tree, see ``test_dividends.py``).
+    Without dividends in the option's life it returns the European call.
+    """
+    _validate_price_inputs(S, K, sigma, T)
+    times, amounts = _validate_dividend_schedule(dividend_times, dividend_amounts)
+    T = _validate_finite_scalar(T, "T", minimum=0.0)
+    european_at_T = call_price_cash_dividends(S, K, r, sigma, T, times, amounts)
+    in_life = times <= T
+    if not np.any(in_life):
+        return european_at_T
+    t_n = float(times[in_life][-1])
+    D_before = _discounted_sum(times, amounts, float(r), times < t_n)
+    european_at_t_n = call_price(
+        _stock_less_pv_dividends(S, D_before) if D_before else S, K, r, sigma, t_n
+    )
+    return np.maximum(european_at_T, european_at_t_n)
+
+
+def call_early_exercise_thresholds(K, r, T, dividend_times):
+    """Dividend thresholds ``K(1 - e^{-r(t_{i+1} - t_i)})``, Hull 11e GE §15.12 p.362.
+
+    One entry per ex-dividend date ``t_i <= T`` in order, with ``t_{n+1} = T``:
+    the last entry is eq. (15.23)/(15.24), the others eq. (15.25). If the
+    dividend ``D_i`` does not exceed its threshold it is never optimal to
+    exercise an American call immediately before ``t_i``.
+    """
+    K = _validate_finite_scalar(K, "K", minimum=0.0, strict=True)
+    r = _validate_finite_scalar(r, "r")
+    T = _validate_finite_scalar(T, "T", minimum=0.0)
+    times, _ = _validate_dividend_schedule(dividend_times, np.zeros(np.shape(dividend_times)))
+    times = times[times <= T]
+    next_times = np.append(times[1:], T)
+    return K * (1.0 - np.exp(-r * (next_times - times)))
+
+
+def call_early_exercise_can_be_optimal(K, r, T, dividend_times, dividend_amounts):
+    """Whether early exercise of an American call may be optimal before each dividend.
+
+    Hull 11e GE §15.12 p.362: element ``i`` is ``D_i > K(1 - e^{-r(t_{i+1}-t_i)})``
+    (``t_{n+1} = T``), one entry per ex-dividend date ``t_i <= T``. False means
+    exercise immediately before ``t_i`` is never optimal (eqs. 15.23, 15.25);
+    for the final date True means exercise is optimal for a sufficiently high
+    ``S(t_n)`` (eq. 15.24). If every entry is False the American call equals
+    the European call (§11.5, §15.12).
+    """
+    times, amounts = _validate_dividend_schedule(dividend_times, dividend_amounts)
+    thresholds = call_early_exercise_thresholds(K, r, T, times)
+    return amounts[: thresholds.size] > thresholds
+
+
+def _validate_bound_inputs(S, K, T, D):
+    _validate_price_inputs(S, K, 0.0, T)
+    D_array = np.asarray(D, dtype=float)
+    if np.any(~np.isfinite(D_array)) or np.any(D_array < 0.0):
+        raise ValueError("D (present value of dividends) must be finite and >= 0")
+
+
+def european_call_lower_bound(S, K, r, T, D=0.0):
+    """Lower bound ``max(S0 - D - K e^{-rT}, 0)``, Hull 11e GE §11.7 eq. (11.8) p.263.
+
+    ``D`` is the present value of the dividends during the option's life
+    (`pv_dividends`); ``D = 0`` gives eq. (11.4).
+    """
+    _validate_bound_inputs(S, K, T, D)
+    return np.maximum(S - D - K * np.exp(-r * T), 0.0)
+
+
+def european_put_lower_bound(S, K, r, T, D=0.0):
+    """Lower bound ``max(D + K e^{-rT} - S0, 0)``, Hull 11e GE §11.7 eq. (11.9) p.263.
+
+    ``D = 0`` gives eq. (11.5).
+    """
+    _validate_bound_inputs(S, K, T, D)
+    return np.maximum(D + K * np.exp(-r * T) - S, 0.0)
+
+
+def put_call_parity_residual(c, p, S, K, r, T, D=0.0):
+    """Residual ``c + D + K e^{-rT} - p - S0`` of Hull 11e GE §11.7 eq. (11.10) p.263.
+
+    Zero for arbitrage-free European prices on a stock whose dividends have
+    present value ``D``; ``D = 0`` gives eq. (11.6).
+    """
+    _validate_bound_inputs(S, K, T, D)
+    return c + D + K * np.exp(-r * T) - p - S
+
+
+def american_call_put_bounds(S, K, r, T, D=0.0):
+    """Bounds ``(S0 - D - K, S0 - K e^{-rT})`` on ``C - P``, Hull 11e GE §11.7 eq. (11.11) p.263.
+
+    American call minus American put on a stock paying dividends with present
+    value ``D``: ``S0 - D - K <= C - P <= S0 - K e^{-rT}``. ``D = 0`` gives
+    eq. (11.7).
+    """
+    _validate_bound_inputs(S, K, T, D)
+    return S - D - K, S - K * np.exp(-r * T)

@@ -210,23 +210,19 @@ cells.append(
 # Cell 10: BL density
 cells.append(
     code(r"""# --- BL 密度: フラットσ → 対数正規と一致 ／ スキュー → 左裾が厚い ---
-def bl_density(strike_grid, price_fn, r, T):
-    c = np.array([price_fn(k) for k in strike_grid])
-    dk = strike_grid[1] - strike_grid[0]
-    g = np.exp(r * T) * (c[:-2] + c[2:] - 2.0 * c[1:-1]) / dk**2
-    return strike_grid[1:-1], g
-
-
+# eq (20A.2) のバタフライ差分は hullkit.volatility.breeden_litzenberger_density（等間隔グリッド）
 k_fine = np.linspace(40.0, 180.0, 281)
-kk_f, g_flat = bl_density(k_fine, lambda k: bsm.call_price(S0_S, k, R_S, 0.22, T_S), R_S, T_S)
+kk_f, g_flat = volatility.breeden_litzenberger_density(
+    k_fine, bsm.call_price(S0_S, k_fine, R_S, 0.22, T_S), R_S, T_S
+)
 shape_ln = 0.22 * np.sqrt(T_S)
 scale_ln = S0_S * np.exp((R_S - 0.5 * 0.22**2) * T_S)
 g_ln = lognorm.pdf(kk_f, s=shape_ln, scale=scale_ln)
 central = (kk_f > 70.0) & (kk_f < 140.0)
 bl_err = float(np.max(np.abs(g_flat - g_ln)[central]) / g_ln.max())
 
-kk_s, g_skew = bl_density(
-    k_fine, lambda k: bsm.call_price(S0_S, k, R_S, smile_equity(k), T_S), R_S, T_S
+kk_s, g_skew = volatility.breeden_litzenberger_density(
+    k_fine, bsm.call_price(S0_S, k_fine, R_S, smile_equity(k_fine), T_S), R_S, T_S
 )
 
 fig3, ax3 = plt.subplots(figsize=(8, 4.5))
@@ -296,7 +292,9 @@ def _upd_smile(change=None):
     ax4a.set_xlabel("K / S0")
     ax4a.set_ylabel("IV (%)")
     ax4a.set_title("スマイル σ(K)")
-    kk_i, g_i = bl_density(k_fine, lambda k: bsm.call_price(S0_S, k, R_S, sm(k), T_S), R_S, T_S)
+    kk_i, g_i = volatility.breeden_litzenberger_density(
+        k_fine, bsm.call_price(S0_S, k_fine, R_S, sm(k_fine), T_S), R_S, T_S
+    )
     ax4b.plot(kk_f, g_ln, lw=1, color="0.7", label="対数正規（参考）")
     ax4b.plot(kk_i, g_i, lw=2, label="インプライド分布")
     ax4b.set_xlabel("S_T")

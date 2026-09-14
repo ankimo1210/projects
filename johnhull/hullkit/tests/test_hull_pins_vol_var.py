@@ -96,8 +96,8 @@ def test_example_20a_1_breeden_litzenberger_density_hull_ge():
     0.0113 (abs 5e-5) from DerivaGem prices 4.045, 3.549, 3.055 (abs 5e-4).
     The area under the histogram prints as 0.9985 (computed 0.99847, abs 5e-5)
     and the flat-26%-lognormal comparison probabilities as 0.0031 and 0.0167
-    (abs 5e-5). hullkit exposes no density extractor, so eq. (20A.2) is applied
-    inline to ``bsm.call_price``; the lognormal bin probabilities use scipy.
+    (abs 5e-5). Eq. (20A.2) is applied inline to ``bsm.call_price`` here
+    (``volatility.breeden_litzenberger_density`` is pinned in ``test_volatility.py``); the lognormal bin probabilities use scipy.
     """
     S0, r, T = 10.0, 0.03, 0.25
     strikes = np.arange(6.0, 14.01, 1.0)
