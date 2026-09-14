@@ -69,7 +69,10 @@ Canonical reference acceptance is recomputed from the committed arrays by
 - vol 22: calendar and adjacent-expiry violations are both `0`; the event/non-event
   sample is `7/6` with open/midday/close diagnostics; the jump variance injected
   for the FOMC event equals its scheduled `3.5e-4` (the earlier injection added
-  `3.5e-4` expected jumps, about `1/80` of that variance).
+  `3.5e-4` expected jumps, about `1/80` of that variance); the 14:00 announcement
+  intensity ramp enters only rows whose window still contains the event, so the
+  non-event teacher/baseline RMSE is `0` by construction (it was `0.0225`, larger
+  than the event RMSE, while the ramp leaked into post-event rows).
 - vol 23: daily-compounding and zero-rate hand-check errors are `0`; quadrature
   hand-check error is `6.938893903907228e-18`; all four Hagan static checks pass at
   tolerance `1e-10` on each alpha slice of the 3 x 3 alpha-by-maturity grid, whose

@@ -19,8 +19,8 @@
 | `event_price_rmse` | 0.11222925351085129 |
 | `event_teacher_standard_error` | 0.019301737581782084 |
 | `non_event_count` | 6 |
-| `non_event_greek_rmse` | 0.010687180266627646 |
-| `non_event_price_rmse` | 0.022463991836340305 |
+| `non_event_greek_rmse` | 0.0 |
+| `non_event_price_rmse` | 0.0 |
 | `session_seconds` | 23400.0 |
 | `timezone` | America/New_York |
 
@@ -34,7 +34,7 @@
 | `event_variance_injection` | 5.421010862427522e-20 | jump variance added to the teacher equals the scheduled event variance | PASS |
 | `event_teacher_uncertainty` | 0.019301737581782084 | > 0 | PASS |
 | `time_of_day_diagnostics` | 3 | open/midday/close with aligned price and Greek buckets | PASS |
-| `event_non_event_split` | 7/6 | mask counts and two-way diagnostics agree | PASS |
+| `event_non_event_split` | 7/6 | mask counts and two-way diagnostics agree; the announcement ramp enters event rows only | PASS |
 
 ## Negative results
 

@@ -268,9 +268,11 @@ def mean_excess(losses, thresholds):
     exceedances. Plotted against `u`, a near-linear `e(u)` with slope
     `xi/(1-xi)` supports a POT threshold choice and an approximate GPD
     shape (McNeil, Frey & Embrechts, *Quantitative Risk Management*).
+    Both inputs must be finite one-dimensional arrays; NaN losses are not
+    silently dropped and matrices are not flattened.
     """
-    losses_arr = np.asarray(losses, dtype=float)
-    thresholds_arr = np.asarray(thresholds, dtype=float)
+    losses_arr = _validate_finite_1d(losses, "losses")
+    thresholds_arr = _validate_finite_1d(thresholds, "thresholds")
     result = np.empty_like(thresholds_arr, dtype=float)
     for i, u in enumerate(thresholds_arr):
         exceed = losses_arr[losses_arr > u] - u

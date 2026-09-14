@@ -236,6 +236,18 @@ def test_mean_excess_empirical_slope_consistent_with_gpd_sample():
     assert slope == pytest.approx(xi_true / (1.0 - xi_true), abs=0.05)
 
 
+def test_mean_excess_rejects_nonfinite_and_multidimensional_inputs():
+    """NaN used to be dropped silently and a matrix flattened; both now raise."""
+    with pytest.raises(ValueError, match="losses"):
+        tail_risk.mean_excess([1.0, np.nan, 3.0], [0.5])
+    with pytest.raises(ValueError, match="losses"):
+        tail_risk.mean_excess(np.ones((3, 2)), [0.5])
+    with pytest.raises(ValueError, match="thresholds"):
+        tail_risk.mean_excess([1.0, 2.0], [[0.5]])
+    with pytest.raises(ValueError, match="thresholds"):
+        tail_risk.mean_excess([1.0, 2.0], [np.inf])
+
+
 # --- input contract: FHS returns, GPD fit inputs, GPDFit invariants ----
 
 

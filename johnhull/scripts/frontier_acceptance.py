@@ -702,12 +702,30 @@ def _volume22(
         and arrays["event_greek_rmse"].shape == (2,)
         and np.all(np.isfinite(arrays["event_price_rmse"]))
         and np.all(np.isfinite(arrays["event_greek_rmse"]))
+        # The announcement ramp enters event rows only: non-event rows run on
+        # the baseline schedule.
+        and np.array_equal(
+            arrays["event_jump_intensity"][~event_mask],
+            arrays["non_event_jump_intensity"][~event_mask],
+        )
+        and bool(
+            np.all(
+                arrays["event_jump_intensity"][event_mask]
+                >= arrays["non_event_jump_intensity"][event_mask]
+            )
+        )
+        and bool(
+            np.any(
+                arrays["event_jump_intensity"][event_mask]
+                > arrays["non_event_jump_intensity"][event_mask]
+            )
+        )
     )
     _add(
         checks,
         "event_non_event_split",
         f"{metrics['event_count']}/{metrics['non_event_count']}",
-        "mask counts and two-way diagnostics agree",
+        "mask counts and two-way diagnostics agree; the announcement ramp enters event rows only",
         split_ok,
     )
     return checks, [
