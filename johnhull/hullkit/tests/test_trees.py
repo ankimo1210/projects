@@ -6,17 +6,35 @@ import pytest
 from hullkit import bsm, trees
 
 
-def test_one_step_call_hull_13_1():
-    # S0=20, u=1.1, d=0.9, K=21, r=12%, T=3 months -> f=0.633, delta=0.25
-    stock, option = trees.binomial_tree(20.0, 21.0, 0.12, 0.25, 1, u=1.1, d=0.9)
+def test_one_step_call_hull_13_1_global_edition():
+    # 11e Global Edition (the PDF in johnhull/): S0=20, u=1.1, d=0.9, K=21, r=4%,
+    # T=3 months -> p=0.5503, f=0.545, delta=0.25
+    stock, option = trees.binomial_tree(20.0, 21.0, 0.04, 0.25, 1, u=1.1, d=0.9)
     assert stock[1][0] > stock[1][1]  # j=0 is the up node
-    assert option[0][0] == pytest.approx(0.633, abs=5e-4)
+    p = (math.exp(0.04 * 0.25) - 0.9) / (1.1 - 0.9)
+    assert p == pytest.approx(0.5503, abs=5e-5)
+    assert option[0][0] == pytest.approx(0.545, abs=5e-4)
     assert trees.tree_delta(stock, option) == pytest.approx(0.25, abs=1e-12)
 
 
-def test_two_step_call_hull_fig_13_4():
-    _, option = trees.binomial_tree(20.0, 21.0, 0.12, 0.5, 2, u=1.1, d=0.9)
-    assert option[0][0] == pytest.approx(1.2823, abs=5e-4)
+def test_two_step_call_hull_fig_13_4_global_edition():
+    # GE Figure 13.4 (r=4%): node B 1.7433, root 0.9497; deltas 0.4358 and 0.7273 (§13.6)
+    stock, option = trees.binomial_tree(20.0, 21.0, 0.04, 0.5, 2, u=1.1, d=0.9)
+    assert option[1][0] == pytest.approx(1.7433, abs=5e-5)
+    assert option[0][0] == pytest.approx(0.9497, abs=5e-5)
+    first_step_delta = (option[1][0] - option[1][1]) / (stock[1][0] - stock[1][1])
+    second_step_delta = (option[2][0] - option[2][1]) / (stock[2][0] - stock[2][1])
+    assert first_step_delta == pytest.approx(0.4358, abs=5e-5)
+    assert second_step_delta == pytest.approx(0.7273, abs=5e-5)
+
+
+def test_one_and_two_step_call_us_edition_classic():
+    # The US-edition classic uses r=12% (f=0.633, two-step 1.2823); vol 01 teaches it
+    # alongside the Global Edition values above.
+    _, one = trees.binomial_tree(20.0, 21.0, 0.12, 0.25, 1, u=1.1, d=0.9)
+    _, two = trees.binomial_tree(20.0, 21.0, 0.12, 0.5, 2, u=1.1, d=0.9)
+    assert one[0][0] == pytest.approx(0.633, abs=5e-4)
+    assert two[0][0] == pytest.approx(1.2823, abs=5e-4)
 
 
 def test_american_put_hull_fig_13_8():
