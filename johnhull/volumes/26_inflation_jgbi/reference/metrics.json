@@ -44,7 +44,7 @@
         "passed": true
       },
       {
-        "criterion": "<= 1e-12",
+        "criterion": "binding floor: floored = unfloored + face * max(1 - R, 0) within 1e-12",
         "name": "floor_payoff_decomposition",
         "observed": 0.0,
         "passed": true
@@ -62,9 +62,9 @@
         "passed": true
       },
       {
-        "criterion": "nominal-duration and CPI-delta residuals are reported separately",
+        "criterion": "revalued nominal-PV01/CPI-delta residuals vanish, real PV01 follows, scenario P&L shrinks",
         "name": "synthetic_hedge_decomposition",
-        "observed": 2,
+        "observed": 0.6659580979027157,
         "passed": true
       }
     ],
@@ -156,6 +156,28 @@
         ],
         "unit": "currency units per 100 face"
       },
+      "hedge_instrument_names": {
+        "dtype": "<U25",
+        "shape": [
+          2
+        ],
+        "unit": "label"
+      },
+      "hedge_instrument_risk": {
+        "dtype": "float64",
+        "shape": [
+          2,
+          2
+        ],
+        "unit": "currency units per unit notional per risk unit (1bp nominal shift, 1 CPI point)"
+      },
+      "hedge_notional": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "units of 100-face hedge instrument"
+      },
       "hedge_risk_names": {
         "dtype": "<U16",
         "shape": [
@@ -163,12 +185,26 @@
         ],
         "unit": "label"
       },
-      "hedged_normalized_risk": {
+      "hedge_scenario_names": {
+        "dtype": "<U34",
+        "shape": [
+          3
+        ],
+        "unit": "label"
+      },
+      "hedged_risk": {
         "dtype": "float64",
         "shape": [
           2
         ],
-        "unit": "normalized risk units"
+        "unit": "currency units per 100 face per risk unit (1bp nominal shift, 1 CPI point)"
+      },
+      "hedged_scenario_pnl": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "currency units per 100 face"
       },
       "hw_market_discount_factor": {
         "dtype": "float64",
@@ -317,12 +353,19 @@
         ],
         "unit": "log CPI multiplier"
       },
-      "unhedged_normalized_risk": {
+      "unhedged_risk": {
         "dtype": "float64",
         "shape": [
           2
         ],
-        "unit": "normalized risk units"
+        "unit": "currency units per 100 face per risk unit (1bp nominal shift, 1 CPI point)"
+      },
+      "unhedged_scenario_pnl": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "currency units per 100 face"
       },
       "yoy_deterministic_ratio": {
         "dtype": "float64",
@@ -369,7 +412,7 @@
     }
   },
   "companions": {
-    "inflation_scenarios.npz": "26f8661dcf2004dfa79475b9942dc8480ffe9c8fdf872a81fe679c7b9215bb9f"
+    "inflation_scenarios.npz": "435b19a2cf8a59a5df027a439bd9e298ccfd0593b42d7c8a990395087490fc6b"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -383,12 +426,16 @@
     "floor_decomposition_error": 0.0,
     "floor_mc_zscore_max": 1.1974973083142517,
     "floor_monotone_in_volatility": true,
+    "hedge_zcis_rate": 0.013084867359809182,
+    "hedged_real_pv01": 1.8111314047802862e-07,
     "hw_curve_fit_max_error": 0.0,
+    "jgbi_face_value": 100.0,
     "jy_forward_mc_zscore_max": 1.4888912714624325,
     "measure_treatment": "nominal_payment_forward",
     "principal_floor_redemption_only": true,
     "raw_breakeven_inflation": 0.00995024875621886,
     "seasonality_annual_log_sum": 1.734723475976807e-18,
+    "unhedged_real_pv01": -0.045125621172672936,
     "yoy_convexity_bp": 0.9818821980900339,
     "zcis_repricing_max_error": 0.0
   },

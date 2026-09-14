@@ -1820,6 +1820,94 @@ def volume25_reference(*, seed: int = 20260743) -> FrontierReference:
     return FrontierReference(25, seed, arrays, metrics)
 
 
+def _inflation_hedge(
+    nominal_curve: tuple[tuple[float, ...], tuple[float, ...]],
+    real_curve: tuple[tuple[float, ...], tuple[float, ...]],
+    base_index: float,
+    model: jarrow_yildirim.JarrowYildirimParams,
+) -> dict[str, np.ndarray]:
+    """Hedge a 5y real zero linker plus its JY deflation floor by bump revaluation.
+
+    The hedge instruments are a 5y nominal zero bond and an at-market 5y
+    receive-inflation ZCIS.  Notionals solve the two-factor hedge on nominal PV01
+    (1bp parallel zero shift) and CPI delta (central 0.01 index-point bump); the
+    hedged sensitivities, the real-rate PV01 that was not a hedge target and the
+    scenario P&L are all obtained by revaluing the weighted portfolio.
+    """
+
+    maturity = 5.0
+    face = 100.0
+    rate_bump = 1e-4
+    cpi_bump = 0.01
+
+    def shifted(curve: tuple[tuple[float, ...], tuple[float, ...]], shift: float):
+        times, zeros = curve
+        return (tuple(times), tuple(float(value) + shift for value in zeros))
+
+    def forward_cpi(cpi: float, nominal, real) -> float:
+        return jarrow_yildirim.jy_payment_forward_cpi(
+            0.0, maturity, maturity, cpi, nominal, real, model
+        )
+
+    zcis_rate = (forward_cpi(base_index, nominal_curve, real_curve) / base_index) ** (
+        1.0 / maturity
+    ) - 1.0
+
+    def values(nominal_shift: float, real_shift: float, cpi: float) -> np.ndarray:
+        nominal = shifted(nominal_curve, nominal_shift)
+        real = shifted(real_curve, real_shift)
+        nominal_discount = rates.discount_factor(maturity, nominal)
+        linker = face * forward_cpi(cpi, nominal, real) / base_index * nominal_discount
+        floor = jgbi.jgbi_deflation_floor_jy(
+            face, base_index, 0.0, maturity, maturity, cpi, nominal, real, model
+        )
+        zcis = jarrow_yildirim.jy_zcis_value(
+            face,
+            base_index,
+            zcis_rate,
+            maturity,
+            0.0,
+            maturity,
+            maturity,
+            cpi,
+            nominal,
+            real,
+            model,
+        )
+        return np.asarray([linker + floor, face * nominal_discount, zcis])
+
+    base = values(0.0, 0.0, base_index)
+    nominal_pv01 = 0.5 * (values(rate_bump, 0.0, base_index) - values(-rate_bump, 0.0, base_index))
+    real_pv01 = 0.5 * (values(0.0, rate_bump, base_index) - values(0.0, -rate_bump, base_index))
+    cpi_delta = (
+        values(0.0, 0.0, base_index + cpi_bump) - values(0.0, 0.0, base_index - cpi_bump)
+    ) / (2.0 * cpi_bump)
+    unhedged = np.asarray([nominal_pv01[0], cpi_delta[0]])
+    instrument = np.asarray([[nominal_pv01[1], nominal_pv01[2]], [cpi_delta[1], cpi_delta[2]]])
+    notional = np.linalg.solve(instrument, -unhedged)
+    weights = np.concatenate([[1.0], notional])
+    scenarios = (
+        ("nominal +50bp", 0.0050, 0.0, base_index),
+        ("CPI -3%", 0.0, 0.0, 0.97 * base_index),
+        ("nominal +50bp, real +50bp, CPI -3%", 0.0050, 0.0050, 0.97 * base_index),
+    )
+    scenario_pnl = np.asarray(
+        [values(nominal, real, cpi) - base for _, nominal, real, cpi in scenarios]
+    )
+    return {
+        "unhedged_risk": unhedged,
+        "hedge_instrument_names": np.asarray(["5y nominal zero bond", "5y ZCIS receive inflation"]),
+        "hedge_instrument_risk": instrument,
+        "hedge_notional": notional,
+        "hedged_risk": np.asarray([nominal_pv01 @ weights, cpi_delta @ weights]),
+        "real_pv01": np.asarray([real_pv01[0], real_pv01 @ weights]),
+        "hedge_scenario_names": np.asarray([name for name, *_ in scenarios]),
+        "unhedged_scenario_pnl": scenario_pnl[:, 0],
+        "hedged_scenario_pnl": scenario_pnl @ weights,
+        "zcis_rate": np.asarray([zcis_rate]),
+    }
+
+
 def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
     """Build the synthetic Hull--White, inflation-swap, JY, and JGBi reference."""
     nominal_curve = ((0.0, 1.0, 2.0, 5.0, 10.0), (0.012, 0.014, 0.016, 0.019, 0.022))
@@ -2037,7 +2125,17 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
         abs(left.coupon - right.coupon)
         for left, right in zip(floored_cashflows, unfloored_cashflows, strict=True)
     )
-    replication_error = abs((raw_clean_price + floor_analytic_array[2]) - adjusted_clean_price)
+    # Independent redemption identity: max(R, 1) = R + max(1 - R, 0) on the
+    # rounded final index ratio of the cash-flow schedule.
+    final_ratio = floored_cashflows[-1].index_ratio
+    floor_decomposition_error = abs(
+        floored_cashflows[-1].principal
+        - (
+            unfloored_cashflows[-1].principal
+            + floored_terms.face_value * max(1.0 - final_ratio, 0.0)
+        )
+    )
+    hedge = _inflation_hedge(nominal_curve, real_curve, base_index, floor_models[2])
     arrays: ArrayMap = {
         "maturity": maturity,
         "nominal_discount_factor": nominal_discount,
@@ -2078,8 +2176,14 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
         "bei_names": np.asarray(["raw", "floor-adjusted"]),
         "breakeven_inflation": breakeven,
         "hedge_risk_names": np.asarray(["nominal duration", "CPI delta"]),
-        "unhedged_normalized_risk": np.asarray([1.0, 1.0]),
-        "hedged_normalized_risk": np.asarray([0.0, 0.0]),
+        "unhedged_risk": hedge["unhedged_risk"],
+        "hedge_instrument_names": hedge["hedge_instrument_names"],
+        "hedge_instrument_risk": hedge["hedge_instrument_risk"],
+        "hedge_notional": hedge["hedge_notional"],
+        "hedged_risk": hedge["hedged_risk"],
+        "hedge_scenario_names": hedge["hedge_scenario_names"],
+        "unhedged_scenario_pnl": hedge["unhedged_scenario_pnl"],
+        "hedged_scenario_pnl": hedge["hedged_scenario_pnl"],
         "floor_value": np.asarray([floor_risk.value]),
         "floor_cpi_delta": np.asarray([floor_risk.cpi_delta]),
         "floor_inflation_vega": np.asarray([floor_risk.inflation_vega]),
@@ -2095,7 +2199,11 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
         "floor_mc_zscore_max": float(np.max(floor_zscores)),
         "floor_monotone_in_volatility": bool(np.all(np.diff(floor_analytic_array) >= 0.0)),
         "coupon_floor_max_error": float(coupon_floor_error),
-        "floor_decomposition_error": float(replication_error),
+        "floor_decomposition_error": float(floor_decomposition_error),
+        "jgbi_face_value": float(floored_terms.face_value),
+        "hedge_zcis_rate": float(hedge["zcis_rate"][0]),
+        "unhedged_real_pv01": float(hedge["real_pv01"][0]),
+        "hedged_real_pv01": float(hedge["real_pv01"][1]),
         "principal_floor_redemption_only": True,
         "raw_breakeven_inflation": float(breakeven[0]),
         "floor_adjusted_breakeven_inflation": float(breakeven[1]),

@@ -217,9 +217,9 @@ VOLUME_META = {
             ),
             ("breakeven_inflation", "raw vs floor-adjusted BEI", "bar:bei_names"),
             (
-                "unhedged_normalized_risk",
+                "unhedged_scenario_pnl",
                 "JGBi・名目債・inflation swap hedge decomposition",
-                "bar:hedge_risk_names:hedged_normalized_risk",
+                "bar:hedge_scenario_names:hedged_scenario_pnl",
             ),
         ],
         "citations": "Hull & White (1990); Jarrow & Yildirim (2003); Ministry of Finance Japan, Inflation-Indexed Bonds product conventions.",

@@ -562,6 +562,51 @@ def test_volume26_exposes_measure_consistent_inflation_and_jgbi_identities(
     assert reference.metrics["measure_treatment"] == "nominal_payment_forward"
 
 
+def test_volume26_hedge_is_revalued_and_floor_identity_is_independent(
+    references: dict[int, frontier_reference.FrontierReference],
+) -> None:
+    """The hedge residuals come from bump revaluation, not literal [1, 1] / [0, 0] arrays.
+
+    A 5y real zero linker plus its JY deflation floor is hedged with a 5y nominal
+    zero bond and a 5y receive-inflation ZCIS on nominal PV01 and CPI delta.  The
+    floor identity is checked against the cash-flow schedule rather than against
+    the same ``raw + floor`` expression that built the adjusted price.
+    """
+    reference = references[26]
+    arrays = reference.arrays
+    metrics = reference.metrics
+    assert "unhedged_normalized_risk" not in arrays
+    assert "hedged_normalized_risk" not in arrays
+    assert arrays["hedge_risk_names"].tolist() == ["nominal duration", "CPI delta"]
+    unhedged = arrays["unhedged_risk"]
+    instrument = arrays["hedge_instrument_risk"]
+    notional = arrays["hedge_notional"]
+    assert instrument.shape == (2, 2) and notional.shape == (2,)
+    assert np.all(np.abs(unhedged) > 0.0)
+    scale = np.abs(unhedged)
+    linear_residual = unhedged + instrument @ notional
+    assert np.all(np.abs(linear_residual) <= 1e-9 * scale)
+    np.testing.assert_allclose(
+        arrays["hedged_risk"], linear_residual, rtol=0.0, atol=1e-9 * scale.max()
+    )
+    # Real-rate PV01 is not a hedge target; it vanishes because every instrument
+    # depends on the 5y nominal discount factor and CPI forward only.
+    assert abs(metrics["unhedged_real_pv01"]) > 0.0
+    assert abs(metrics["hedged_real_pv01"]) <= 1e-4 * abs(metrics["unhedged_real_pv01"])
+    assert arrays["hedge_scenario_names"].size == 3
+    assert np.all(np.abs(arrays["hedged_scenario_pnl"]) < np.abs(arrays["unhedged_scenario_pnl"]))
+    assert np.any(np.abs(arrays["hedged_scenario_pnl"]) > 0.0)
+
+    face = metrics["jgbi_face_value"]
+    final_ratio = arrays["jgbi_index_ratio"][-1]
+    assert final_ratio < 1.0
+    expected_floored = arrays["jgbi_unfloored_principal"][-1] + face * max(1.0 - final_ratio, 0.0)
+    assert metrics["floor_decomposition_error"] == abs(
+        arrays["jgbi_floored_principal"][-1] - expected_floored
+    )
+    assert metrics["floor_decomposition_error"] <= 1e-12
+
+
 def test_volume27_exposes_recomputable_risk_desk_identities(
     references: dict[int, frontier_reference.FrontierReference],
 ) -> None:

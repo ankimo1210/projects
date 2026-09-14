@@ -84,9 +84,14 @@ Canonical reference acceptance is recomputed from the committed arrays by
 - vol 26: Hull–White initial-curve and ZCIS repricing errors are `0.0`; annual
   seasonality normalization is `1.734723475976807e-18`; the Jarrow–Yildirim
   payment-forward and JGBi-floor analytic/MC comparisons peak at z-scores
-  `1.4888912714624325` and `1.1974973083142517`; the floor payoff decomposition and the
+  `1.4888912714624325` and `1.1974973083142517`; the floor payoff decomposition
+  (floored = unfloored + face x max(1 - R, 0) on the final ratio `0.93346`) and the
   redemption-only principal check are exact, and raw vs floor-adjusted BEI differ by
-  `2.785788824835045e-4`.
+  `2.785788824835045e-4`. The 5y linker + floor hedge (nominal zero bond and ZCIS,
+  solved on nominal PV01 and CPI delta) is revalued: residual PV01/CPI delta `0`,
+  real PV01 `-0.0451` -> `1.81e-7`, and scenario P&L shrinks to at most `66.6%` of
+  unhedged (nominal +50bp, bond convexity). Earlier the hedge arrays were literal
+  `[1, 1]` / `[0, 0]` and the decomposition error compared an expression with itself.
 - vol 27: FHS constant-volatility identity, EVT VaR/ES identity, and Euler normal
   additivity are all `0.0`; simulated Euler ES additivity is
   `1.4210854715202004e-14`; marginal-VaR finite-difference agreement is

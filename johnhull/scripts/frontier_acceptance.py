@@ -1171,12 +1171,22 @@ def _volume26(
         "coupons identical and floored final principal exceeds unfloored principal",
         redemption_only,
     )
+    final_ratio = float(arrays["jgbi_index_ratio"][-1])
+    decomposition_error = abs(
+        float(arrays["jgbi_floored_principal"][-1])
+        - (
+            float(arrays["jgbi_unfloored_principal"][-1])
+            + metrics["jgbi_face_value"] * max(1.0 - final_ratio, 0.0)
+        )
+    )
     _add(
         checks,
         "floor_payoff_decomposition",
-        metrics["floor_decomposition_error"],
-        "<= 1e-12",
-        metrics["floor_decomposition_error"] <= 1e-12,
+        decomposition_error,
+        "binding floor: floored = unfloored + face * max(1 - R, 0) within 1e-12",
+        final_ratio < 1.0
+        and decomposition_error <= 1e-12
+        and math.isclose(decomposition_error, metrics["floor_decomposition_error"], abs_tol=1e-15),
     )
     measure_ok = (
         metrics["measure_treatment"] == "nominal_payment_forward"
@@ -1200,16 +1210,29 @@ def _volume26(
         "two explicitly different BEI measures",
         bei_ok,
     )
+    unhedged = arrays["unhedged_risk"]
+    instrument = arrays["hedge_instrument_risk"]
+    notional = arrays["hedge_notional"]
+    linear_residual = unhedged + instrument @ notional
+    unhedged_scenario = np.abs(arrays["unhedged_scenario_pnl"])
+    hedged_scenario = np.abs(arrays["hedged_scenario_pnl"])
     hedge_ok = (
         arrays["hedge_risk_names"].tolist() == ["nominal duration", "CPI delta"]
-        and np.all(arrays["unhedged_normalized_risk"] > 0.0)
-        and np.allclose(arrays["hedged_normalized_risk"], 0.0)
+        and unhedged.shape == notional.shape == arrays["hedged_risk"].shape == (2,)
+        and instrument.shape == (2, 2)
+        and bool(np.all(np.abs(unhedged) > 0.0))
+        and bool(np.all(np.abs(linear_residual) <= 1e-9 * np.abs(unhedged)))
+        and bool(np.all(np.abs(arrays["hedged_risk"] - linear_residual) <= 1e-9 * np.abs(unhedged)))
+        and abs(metrics["unhedged_real_pv01"]) > 0.0
+        and abs(metrics["hedged_real_pv01"]) <= 1e-4 * abs(metrics["unhedged_real_pv01"])
+        and unhedged_scenario.shape == hedged_scenario.shape == arrays["hedge_scenario_names"].shape
+        and bool(np.all(hedged_scenario < unhedged_scenario))
     )
     _add(
         checks,
         "synthetic_hedge_decomposition",
-        len(arrays["hedge_risk_names"]),
-        "nominal-duration and CPI-delta residuals are reported separately",
+        float(np.max(hedged_scenario / unhedged_scenario)),
+        "revalued nominal-PV01/CPI-delta residuals vanish, real PV01 follows, scenario P&L shrinks",
         hedge_ok,
     )
     return checks, [
