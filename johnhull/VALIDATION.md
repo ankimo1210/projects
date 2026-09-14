@@ -275,9 +275,13 @@ fixtures and used solely as textbook pins (`docs/DATA_PROVENANCE.md`).
   than calibration quality. The double-t copula and the heterogeneous ASB recursion are
   validated only by limits (ν→∞, homogeneous pool) because Hull prints no §25.11 numeric
   example. Random recovery / random factor loadings, the implied copula, dynamic models,
-  and KMV EDF mappings remain documentation-only, and CDS options use the Black-type
-  market formula rather than the full Hull–White (2003) knock-out treatment. Only the
-  CreditMetrics block draws random numbers (seed `20260746`).
+  and KMV EDF mappings have no code; the vol 28 notebook section 「本巻で実装しない節」
+  summarizes Hull's description of each. CDS options use the Black-type formula on the
+  survival-weighted forward risky duration (pre-expiry default knocks the option out);
+  the spread volatility is an input assumption, the lognormal-spread assumption is not
+  tested, and no non-knock-out variant exists (Hull defers these to Hull and White 2003).
+  Example 24.8 (worst-case default rate `0.128`, credit VaR `$5.13M`) is pinned in
+  `test_credit.py`. Only the CreditMetrics block draws random numbers (seed `20260746`).
 
 Foundation models, diffusion/VAE/flow/SBI, signature/POT, and other cited frontier work
 remain optional research tracks. Preprints are identified as such in the design/spec and

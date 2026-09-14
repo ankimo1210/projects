@@ -2029,8 +2029,8 @@ def _volume28(
         "Hull Table 24.4 (S&P 1981–2019) and Table 25.6 (Creditex iTraxx quotes, 2007-01-31) are transcribed textbook constants, not downloaded market data.",
         "The Table 25.8 implied correlations match Hull to one decimal place; residual differences reflect DerivaGem's integration grid, not calibration quality.",
         "The double-t copula and ASB recursion are validated only by limits (ν→∞, homogeneous); Hull prints no numeric example for §25.11.",
-        "Random recovery / random factor loadings, the implied copula, dynamic models and KMV EDF mappings are out of scope (documentation only).",
-        "CDS options use the Black-type market formula; the full Hull–White (2003) knock-out treatment is not implemented.",
+        "Random recovery / random factor loadings, the implied copula, dynamic models and KMV EDF mappings have no code; the notebook section 本巻で実装しない節 summarizes Hull's description of each and how it differs from the constant-rho, constant-R quadrature implemented here.",
+        "CDS options use the Black-type formula on the survival-weighted forward risky duration, so pre-expiry default knocks the option out. The spread volatility is an input assumption (0.6) rather than derived from a stochastic hazard-rate model, the lognormal-spread assumption is not tested, and no non-knock-out (front-end protection) variant is implemented; Hull defers these to Hull and White (2003).",
     ]
 
 
