@@ -58,8 +58,8 @@ John Hull テキストに対応した金利モデル学習用 Jupyter ノート�
 | Hull-White | θ(t)チャート + パス+分布 | a, σ, pattern, T | piecewise-θ bootstrap |
 | BDT | ツリー図 | σ | MC bootstrap |
 | Black-Karasinski | ✅ | a, σ, T | MC bootstrap |
-| HJM | vol/drift チャート | a, σ | 市場完全フィット |
-| BGM/LMM | キャップレット価格 | σ | 市場完全フィット |
+| HJM | vol/drift チャート | a, σ | 初期曲線は入力（f(0,T) から P(0,T) を再構成して RMSE を計算） |
+| BGM/LMM | キャップレット価格（Black 式のみ、LMM シミュレーションなし） | σ | 初期曲線は入力（F_i(0) から P(0,T) を再構成して RMSE を計算） |
 
 ### Section 4 キャリブレーション詳細
 
