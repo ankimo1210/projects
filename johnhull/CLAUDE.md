@@ -30,7 +30,9 @@ make hull-release-check     # release 契約（scripts/verify_release.py）
 
 acceptance は `johnhull/scripts/frontier_acceptance.py` がコミット済み配列から再計算する
 （JSON のフラグを信用しない）。vol 18–28 の全 11 巻について `report/tests/test_frontier_acceptance_tamper.py`
-が「配列を改竄すると該当チェックだけが落ちる」ことを固定している。配列に根拠がない項目
+が「選んだ入力を改竄すると、再計算しているチェックと、その入力を共有すると宣言した依存チェック
+（`DEPENDENT_FAILURES`）だけが落ちる」ことを固定している。ゼロ入力などで評価が例外になる場合は
+`gate_evaluation` の FAIL 記録を返す。配列に根拠がない項目
 （vol 18 の Heston 残差 MAE、vol 19 の start 成否、vol 22 の暦判定、vol 26 のクーポン一致など）は
 保存値のまま（`docs/SECTION_AUDIT_2026-09-14.md` §11.2）。vol 18 の reference 再生成には
 `deep_hedge_price/artifacts/pricing/quick/2d4ba8e38acfa5cc`（gitignore、ローカルのみ）が必要。
@@ -50,7 +52,14 @@ acceptance は `johnhull/scripts/frontier_acceptance.py` がコミット済み�
   （ipympl の図は PNG、vol 13–16 の plotly は plotly.js 埋め込み）。builder は出力なしで
   書き出すので、builder を回したら `uv run --no-sync --package hullkit python
   johnhull/scripts/verify_core_notebooks.py --write-outputs` で出力を作り直す
-  （`make hull-core-notebooks-check` が出力の型の食い違いを検出する）。
+  （`make hull-core-notebooks-check` が出力の型と、stdout・`text/plain` の値の食い違いを検出する。
+  `perf_counter` を含む計時セルは型だけ、PNG と plotly の中身は比較しない）。
+- vol 21 の timing は通常の再生成では保持され、`benchmark.measurement` に計測時のソース digest と
+  環境が残る。再計測は `build_frontier_artifacts.py --volume 21 --refresh-timing`（負荷のない時に）。
+  `make hull-artifacts-check` が計測時と現在の generator が一致するかを `[NOTE]` で出す。
+- 図に日本語を使う notebook は `japanize_matplotlib`（core は `hullkit.nbplot.setup()`）を読み込む。
+  ないと日本語ラベルが豆腐になり、stderr の警告に実行した checkout の絶対パスが残る
+  （`test_frontier_notebook_freshness.py` と `test_core_notebook_gate.py` が検出する）。
 - build スクリプトは決定的 cell-id 方式。`build_*_notebook.py` は ruff exclude 対象。
 - 巻を追加するときは `release_manifest.json` に notebook / portal 図 / semantic tests /
   references を登録し、`make hull-release-check` を通す。
