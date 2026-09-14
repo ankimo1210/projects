@@ -84,6 +84,7 @@ UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
         "event_jump_intensity": "jump intensity per session",
         "non_event_jump_intensity": "jump intensity per session",
         "scheduled_variance": "variance",
+        "event_jump_variance": "variance",
         "event_mask": "boolean",
         "time_of_day": "label",
         "seconds_to_settlement": "seconds",

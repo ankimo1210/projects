@@ -147,7 +147,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | Model | Theory | Implementation | Tests | Notebook | Validation |
 |---|---|---|---|---|---|
 | Trading session & variance clock | market-microstructure conventions | `hullkit.zero_dte:TradingSession`, `hullkit.zero_dte:variance_clock_fraction`, `hullkit.zero_dte:trading_seconds_to_settlement` | `test_zero_dte.py` | vol 22 | Timezone-aware settlement; calendar violations = 0 |
-| Scheduled-event variance & intraday jump intensity | event-time modeling (Sakuma 2026 as research ref) | `hullkit.zero_dte:ScheduledJump`, `hullkit.zero_dte:scheduled_variance`, `hullkit.zero_dte:intraday_jump_intensity`, `hullkit.zero_dte:total_variance_consistency` | `test_zero_dte.py` | vol 22 | Total-variance consistency check |
+| Scheduled-event variance & intraday jump intensity | event-time modeling (Sakuma 2026 as research ref) | `hullkit.zero_dte:ScheduledJump`, `hullkit.zero_dte:scheduled_variance`, `hullkit.zero_dte:intraday_jump_intensity`, `hullkit.zero_dte:scheduled_jump_intensity`, `hullkit.zero_dte:total_variance_consistency` | `test_zero_dte.py` | vol 22 | Total-variance consistency check; injected jump variance = scheduled variance (MC within 4 SE) |
 | SV + jump 0DTE teacher | Bates-style SV+jump | `hullkit.zero_dte:sv_jump_teacher`, `hullkit.zero_dte:event_non_event_metrics` | `test_zero_dte.py` | vol 22 | Event/non-event and open/midday/close splits |
 
 ## 13. Crypto market structure (perps, liquidation, AMM)

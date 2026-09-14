@@ -40,6 +40,7 @@ def references() -> dict[int, frontier_reference.FrontierReference]:
             {
                 "variance_clock",
                 "scheduled_variance",
+                "event_jump_variance",
                 "teacher_price",
                 "delta",
                 "gamma",
@@ -297,6 +298,10 @@ def test_volume22_clock_event_teacher_and_expiry_identities(
     assert arrays["variance_clock"][-1] == pytest.approx(1.0)
     assert np.all(np.diff(arrays["variance_clock"]) >= 0.0)
     assert arrays["scheduled_variance"].max() > 0.0
+    # The injected jump variance equals the scheduled event variance row by row.
+    np.testing.assert_allclose(
+        arrays["event_jump_variance"], arrays["scheduled_variance"], rtol=1e-12, atol=0.0
+    )
     assert arrays["event_mask"].any() and not arrays["event_mask"].all()
     assert arrays["teacher_price"].shape == arrays["delta"].shape == arrays["gamma"].shape
     assert np.all(np.diff(arrays["total_variance"]) >= 0.0)

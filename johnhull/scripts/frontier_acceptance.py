@@ -624,6 +624,18 @@ def _volume22(
         "zero violations and nonnegative forward variance",
         calendar_ok,
     )
+    injected = arrays["event_jump_variance"]
+    scheduled = arrays["scheduled_variance"]
+    injection_error = float(np.max(np.abs(injected - scheduled)))
+    _add(
+        checks,
+        "event_variance_injection",
+        injection_error,
+        "jump variance added to the teacher equals the scheduled event variance",
+        injected.shape == scheduled.shape
+        and bool(np.any(scheduled > 0.0))
+        and injection_error <= 1e-12 * float(np.max(scheduled)),
+    )
     _add(
         checks,
         "event_teacher_uncertainty",
