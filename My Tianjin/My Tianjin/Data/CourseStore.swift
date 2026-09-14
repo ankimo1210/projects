@@ -51,6 +51,12 @@ final class CourseStore: ObservableObject {
             return true
         } catch {
             candidateContext.rollback()
+            // A failed reload must not leave an older context writable. The
+            // rejected payload stays untouched until a valid load succeeds.
+            context = nil
+            lesson = nil
+            snapshot = nil
+            pendingSubmission = nil
             errorMessage = "コースを読み込めませんでした。\(error.localizedDescription)"
             return false
         }

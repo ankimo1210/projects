@@ -109,6 +109,39 @@ final class CourseStoreTests: XCTestCase {
         XCTAssertEqual(store.snapshot?.sessions.last?.correctCount, 3)
     }
 
+    func testFailedReloadDisablesWritesUntilValidDataIsLoaded() throws {
+        let container = try makeContainer()
+        let store = CourseStore(repository: try makeRepository())
+        XCTAssertTrue(store.load(in: container))
+        XCTAssertTrue(store.start(minutes: 3))
+
+        let editingContext = ModelContext(container)
+        editingContext.autosaveEnabled = false
+        let record = try XCTUnwrap(editingContext.fetch(FetchDescriptor<StudySessionRecord>()).first)
+        let originalPayload = record.payload
+        let corruptPayload = Data("{broken".utf8)
+        record.payload = corruptPayload
+        try editingContext.save()
+
+        XCTAssertFalse(store.load(in: container))
+        XCTAssertNil(store.lesson)
+        XCTAssertNil(store.snapshot)
+        XCTAssertFalse(store.start(minutes: 3))
+        XCTAssertFalse(store.submit(optionID: "q-1-correct"))
+        XCTAssertFalse(store.advance())
+        let readContext = ModelContext(container)
+        XCTAssertEqual(
+            try readContext.fetch(FetchDescriptor<StudySessionRecord>()).first?.payload,
+            corruptPayload
+        )
+
+        record.payload = originalPayload
+        try editingContext.save()
+        XCTAssertTrue(store.load(in: container))
+        XCTAssertTrue(store.submit(optionID: "q-1-correct"))
+        XCTAssertEqual(store.snapshot?.attempts.count, 1)
+    }
+
     private func makeContainer() throws -> ModelContainer {
         try ModelContainer(
             for: StudyProgressRecord.self,

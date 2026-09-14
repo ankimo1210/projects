@@ -202,6 +202,38 @@ final class CourseEngineTests: XCTestCase {
         }
     }
 
+    func testSnapshotRejectsProgressThatDisagreesWithAnswerHistory() throws {
+        let lesson = makeLesson(count: 1)
+        let session = try XCTUnwrap(CourseEngine.makeSession(
+            lesson: lesson, progress: [:], minutes: 3, reviewOnly: false, now: now
+        ))
+        let answered = try CourseEngine.submit(
+            snapshot: CourseSnapshot(lesson: lesson, sessions: [session]),
+            lesson: lesson, sessionID: session.id, attemptID: UUID(),
+            optionID: "q-1-correct", now: now
+        )
+        XCTAssertNoThrow(try answered.validate(against: lesson))
+
+        var missingProgress = answered
+        missingProgress.progress = [:]
+        XCTAssertThrowsError(try missingProgress.validate(against: lesson))
+
+        var wrongSchedule = answered
+        wrongSchedule.progress["q-1"]?.nextReviewAt = now
+        XCTAssertThrowsError(try wrongSchedule.validate(against: lesson))
+
+        var wrongCounts = answered
+        wrongCounts.progress["q-1"]?.correctCount = 0
+        wrongCounts.progress["q-1"]?.incorrectCount = 1
+        XCTAssertThrowsError(try wrongCounts.validate(against: lesson))
+
+        var phantomProgress = CourseSnapshot(lesson: lesson)
+        phantomProgress.progress["q-1"] = StudyItemProgress(
+            itemID: "q-1", attemptCount: 10, correctCount: 10
+        )
+        XCTAssertThrowsError(try phantomProgress.validate(against: lesson))
+    }
+
     func testCannotAdvanceBeforeCurrentQuestionIsAnswered() throws {
         let lesson = makeLesson(count: 1)
         let session = try XCTUnwrap(CourseEngine.makeSession(

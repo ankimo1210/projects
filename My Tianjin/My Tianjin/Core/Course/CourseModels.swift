@@ -330,6 +330,26 @@ nonisolated struct CourseSnapshot: Codable, Equatable, Sendable {
               attempts == flattenedAttempts else {
             throw CourseValidationError.incompatibleSnapshot(reason: "回答履歴が一致しません")
         }
+
+        // Answers are the source of truth; reject a valid-looking payload whose
+        // aggregate counts or review dates disagree with its actual history.
+        let scheduler = ReviewScheduler()
+        var expectedProgress: [String: StudyItemProgress] = [:]
+        for attempt in attempts {
+            let previous = expectedProgress[attempt.questionID]
+            guard attempt.isReview == (previous?.isDue(at: attempt.answeredAt) == true) else {
+                throw CourseValidationError.incompatibleSnapshot(reason: "回答の復習区分が履歴と一致しません")
+            }
+            expectedProgress[attempt.questionID] = scheduler.updatedProgress(
+                itemID: attempt.questionID,
+                previous: previous,
+                result: attempt.isCorrect ? .correct : .incorrect,
+                reviewedAt: attempt.answeredAt
+            )
+        }
+        guard expectedProgress == progress else {
+            throw CourseValidationError.incompatibleSnapshot(reason: "進捗と復習予定が回答履歴と一致しません")
+        }
     }
 }
 
