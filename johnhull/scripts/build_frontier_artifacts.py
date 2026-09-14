@@ -229,7 +229,7 @@ UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
         "oracle_latent_index": "synthetic USD per asset",
         "oracle_observed_dislocation": "dimensionless price ratio",
         "oracle_latent_dislocation": "dimensionless price ratio",
-        "liquidation_loss": "synthetic monetary units",
+        "oracle_mark_gap": "synthetic USD per asset (|latent index - shocked mark|)",
     },
     25: {
         "strike": "synthetic carbon price units",
@@ -281,6 +281,12 @@ UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
         "hedge_ratio_residual": "synthetic monetary units",
         "ppa_merchant_cash_flow_samples": "synthetic monetary units",
         "ppa_hedged_cash_flow_samples": "synthetic monetary units",
+        "ppa_correlation_grid": "price-generation correlation",
+        "ppa_correlation_merchant_mean": "synthetic monetary units",
+        "ppa_correlation_merchant_se": "synthetic monetary units",
+        "ppa_correlation_generation_mean": "synthetic generation units",
+        "ppa_correlation_pap_fair_value": "synthetic monetary units",
+        "ppa_correlation_pap_cvar95": "synthetic monetary units",
     },
     26: {
         "maturity": "years",

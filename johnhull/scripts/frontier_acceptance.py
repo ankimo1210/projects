@@ -1707,8 +1707,66 @@ def _volume25(
         "CVaR >= CFaR > 0; pay-as-produced metrics match",
         cashflow_ok,
     )
+    grid = arrays["ppa_correlation_grid"]
+    merchant_mean = arrays["ppa_correlation_merchant_mean"]
+    merchant_se = arrays["ppa_correlation_merchant_se"]
+    fair_value = arrays["ppa_correlation_pap_fair_value"]
+    periods = arrays["ppa_pay_as_produced"].size
+    # Unfloored generation g(1 + sigma_G z_G) with z_G = rho z_S + ...: per period
+    # E[S G] = P g (1 + rho sigma_S sigma_G), so revenue is linear in rho.
+    analytic_mean = (
+        periods
+        * float(metrics["ppa_base_price"])
+        * float(metrics["ppa_base_generation"])
+        * (
+            1.0
+            + grid
+            * float(metrics["ppa_price_volatility"])
+            * float(metrics["ppa_generation_volatility"])
+        )
+    )
+    base_rows = np.flatnonzero(np.isclose(grid, float(metrics["ppa_scenario_correlation"])))
+    correlation_z = float(np.max(np.abs(merchant_mean - analytic_mean) / merchant_se))
+    correlation_ok = bool(
+        grid.ndim == 1
+        and np.all(np.diff(grid) > 0.0)
+        and merchant_mean.shape == merchant_se.shape == fair_value.shape == grid.shape
+        and np.all(merchant_se > 0.0)
+        and base_rows.size == 1
+        and correlation_z < 3.0
+        and np.allclose(
+            fair_value,
+            float(metrics["ppa_fixed_price"]) * arrays["ppa_correlation_generation_mean"]
+            - merchant_mean,
+            rtol=0.0,
+            atol=1e-9,
+        )
+    )
+    if correlation_ok:
+        base = int(base_rows[0])
+        correlation_ok = (
+            _close(merchant_mean[base], float(np.mean(merchant)), rel=1e-12)
+            and _close(fair_value[base], float(arrays["ppa_fair_value"][pap]), rel=1e-12)
+            and _close(
+                arrays["ppa_correlation_pap_cvar95"][base], float(arrays["cvar95"][pap]), rel=1e-12
+            )
+        )
+    _add(
+        checks,
+        "ppa_correlation_sensitivity",
+        correlation_z,
+        "merchant revenue within 3 SE of N P g (1 + rho sigma_S sigma_G) on every grid rho; "
+        "pay-as-produced fair value = K * generation - revenue; base rho row equals the samples",
+        correlation_ok,
+    )
+    cvar_grid = arrays["ppa_correlation_pap_cvar95"]
     return checks, [
-        "Weather and PPA values are premium-principle dependent because the underlying market is incomplete."
+        "Weather and PPA values are premium-principle dependent because the underlying market is incomplete.",
+        "Across price-generation correlation "
+        f"{float(grid[0]):+.1f}..{float(grid[-1]):+.1f} the pay-as-produced fair value moves "
+        f"{float(fair_value[0]):.4g} -> {float(fair_value[-1]):.4g}, but its hedged cash flow is "
+        "the fixed price times generation, whose distribution does not depend on rho; the CVaR "
+        f"spread {float(np.min(cvar_grid)):.4g}..{float(np.max(cvar_grid)):.4g} is sampling noise.",
     ]
 
 

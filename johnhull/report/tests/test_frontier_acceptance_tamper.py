@@ -347,6 +347,26 @@ CASES = {
         ),
         ("cvar95", _scale_array("cvar95", 1.001), "ppa_cashflow_risk"),
         ("hedge_residual", _scale_array("hedge_residual", 1.001), "ppa_cashflow_risk"),
+        (
+            "ppa_correlation_merchant_mean",
+            _scale_array_value("ppa_correlation_merchant_mean", 0, 1.001),
+            "ppa_correlation_sensitivity",
+        ),
+        (
+            "ppa_correlation_pap_fair_value",
+            _scale_array_value("ppa_correlation_pap_fair_value", -1, 1.01),
+            "ppa_correlation_sensitivity",
+        ),
+        (
+            "ppa_correlation_pap_cvar95",
+            _scale_array("ppa_correlation_pap_cvar95", 1.001),
+            "ppa_correlation_sensitivity",
+        ),
+        (
+            "ppa_generation_volatility",
+            _scale_metric("ppa_generation_volatility", 2.0),
+            "ppa_correlation_sensitivity",
+        ),
     ],
     27: [
         (
@@ -459,8 +479,8 @@ DEPENDENT_FAILURES = {
     "liquidation_method_waterfalls": {"cashflow_conservation", "stress_waterfall"},
     "insurance_identity": {"solvency_identity", "stress_waterfall"},
     "amm_identity": {"amm_lvr_fee_variants"},
-    "ppa_risk_decomposition": {"ppa_cashflow_risk"},
-    "ppa_cashflow_risk": {"ppa_risk_decomposition"},
+    "ppa_risk_decomposition": {"ppa_cashflow_risk", "ppa_correlation_sensitivity"},
+    "ppa_cashflow_risk": {"ppa_risk_decomposition", "ppa_correlation_sensitivity"},
     "fhs_coverage_improvement": {"fhs_constant_vol_identity"},
     "gpd_parameter_recovery": {"evt_var_es_identity"},
     "euler_additivity_normal": {"marginal_fd_consistency", "desk_report_reproducible"},

@@ -160,6 +160,11 @@ VOLUME_META = {
             ),
             ("basis_rmse", "station/location basis risk", "line:station_distance_km"),
             ("cvar95", "PPA CFaR/CVaR and hedge residual", "bar:risk_names:hedge_residual"),
+            (
+                "ppa_correlation_pap_fair_value",
+                "price-generation correlation sensitivity",
+                "line:ppa_correlation_grid",
+            ),
         ],
         "citations": "Benth & Benth (2013), Modeling and Pricing in Financial Markets for Weather Derivatives; energy PPA literature.",
         "gate": "G7",
