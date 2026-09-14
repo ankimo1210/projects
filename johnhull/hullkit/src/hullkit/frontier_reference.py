@@ -2708,7 +2708,11 @@ def volume28_reference(*, seed: int = 20260746) -> FrontierReference:
         fixed_coupon_price_grid[i] = cds.fixed_coupon_price(quote, index_coupon, duration)
 
     # --- §25.5: forward spread and Black-type options ---
-    option_curve = credit_curve.HazardCurve((1.0, 6.0), (0.02, 0.035))
+    option_curve_tenor = np.array([1.0, 6.0])
+    option_curve_hazard = np.array([0.02, 0.035])
+    option_curve = credit_curve.HazardCurve(
+        tuple(option_curve_tenor.tolist()), tuple(option_curve_hazard.tolist())
+    )
     option_forward = cds.cds_forward_spread(
         option_curve, recovery, cds_r, start=1.0, maturity=6.0, freq=4
     )
@@ -2768,8 +2772,11 @@ def volume28_reference(*, seed: int = 20260746) -> FrontierReference:
 
     # --- §25.10: Example 25.3 third-to-default ---
     kth_order = np.arange(1, 6, dtype=float)
+    kth_names, kth_hazard, kth_r, kth_maturity, kth_rho = 10, 0.02, 0.05, 5.0, 0.3
     kth_valuations = [
-        credit_portfolio.kth_to_default_valuation(k, 10, 0.02, recovery, 0.05, 5.0, 0.3, freq=1)
+        credit_portfolio.kth_to_default_valuation(
+            k, kth_names, kth_hazard, recovery, kth_r, kth_maturity, kth_rho, freq=1
+        )
         for k in range(1, 6)
     ]
     kth_spread = np.array([valuation.spread for valuation in kth_valuations])
@@ -2916,6 +2923,8 @@ def volume28_reference(*, seed: int = 20260746) -> FrontierReference:
         "cds_bootstrap_repriced_spread": cds_bootstrap_repriced_spread,
         "index_quote_grid": index_quote_grid,
         "fixed_coupon_price_grid": fixed_coupon_price_grid,
+        "option_curve_tenor": option_curve_tenor,
+        "option_curve_hazard": option_curve_hazard,
         "option_strike_grid": option_strike_grid,
         "payer_value": payer_value,
         "receiver_value": receiver_value,
@@ -2994,6 +3003,10 @@ def volume28_reference(*, seed: int = 20260746) -> FrontierReference:
         "cds_bootstrap_max_reprice_error": float(
             np.max(np.abs(cds_bootstrap_repriced_spread - cds_market_spread))
         ),
+        "cds_bootstrap_freq": 4,
+        "fixed_coupon_rate": 0.04,
+        "fixed_coupon_maturity": 5.0,
+        "fixed_coupon_freq": 4,
         "fixed_coupon_spread": float(index_spread),
         "fixed_coupon_coupon": float(index_coupon),
         "fixed_coupon_hazard": float(fixed_hazard),
@@ -3003,9 +3016,14 @@ def volume28_reference(*, seed: int = 20260746) -> FrontierReference:
         "option_risky_annuity": float(option_annuity),
         "option_sigma": option_sigma,
         "option_expiry": option_expiry,
+        "option_start": 1.0,
+        "option_maturity": 6.0,
+        "option_freq": 4,
         "cdo_index_hazard": float(cdo_hazard),
         "cdo_rate": cdo_r,
         "cdo_rho": 0.15,
+        "cdo_maturity": cdo_maturity,
+        "cdo_names": n_names,
         "cdo_mezz_annuity": mezz.annuity,
         "cdo_mezz_accrual": mezz.accrual,
         "cdo_mezz_protection": mezz.protection,
@@ -3015,9 +3033,16 @@ def volume28_reference(*, seed: int = 20260746) -> FrontierReference:
         "kth3_payoff": third.payoff,
         "kth3_annuity": third.annuity,
         "kth3_accrual": third.accrual,
-        "kth_rate": 0.05,
+        "kth_rate": kth_r,
+        "kth_names": kth_names,
+        "kth_hazard": kth_hazard,
+        "kth_rho": kth_rho,
+        "kth_maturity": kth_maturity,
+        "kth_pinned_order": 3,
         "itraxx_hazard": float(itraxx_hazard),
         "itraxx_rate": itraxx_r,
+        "itraxx_maturity": 5.0,
+        "itraxx_equity_fixed_spread": 0.05,
         "base_correlation_max_reprice_error": float(
             np.max(np.abs(repriced_quote - market_tranche_quote))
         ),
@@ -3034,6 +3059,8 @@ def volume28_reference(*, seed: int = 20260746) -> FrontierReference:
         "gross_exposure": gross_exposure,
         "cva_no_default_value": cva_f_nd,
         "cva_rate": cva_r,
+        "cva_hazard": cva_hazard,
+        "cva_horizon": cva_horizon,
         "cva_special_case": float(cva_special_case),
         "cva_general_equivalent": float(cva_general_equivalent),
     }

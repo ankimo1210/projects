@@ -2,7 +2,7 @@
   "acceptance": {
     "checks": [
       {
-        "criterion": "Σpayoff/(Σpayment+Σaccrual) within 0.5 bp of Hull's 123 bp and 1e-9 bp of the stored metric",
+        "criterion": "survival/DF/PV columns recomputed from λ, r, R match the committed columns (1e-12); Σpayoff/(Σpayment+Σaccrual) within 0.5 bp of Hull's 123 bp and 1e-9 bp of the metric",
         "name": "cds_par_spread_hull_pin",
         "observed": 123.00257615399185,
         "passed": true
@@ -14,7 +14,7 @@
         "passed": true
       },
       {
-        "criterion": "max |repriced − market| <= 1e-10",
+        "criterion": "par spreads rebuilt from the committed hazards reprice the quotes (1e-10) and match the stored repricing (1e-12)",
         "name": "cds_bootstrap_round_trip",
         "observed": 4.388850394221322e-16,
         "passed": true
@@ -26,13 +26,13 @@
         "passed": true
       },
       {
-        "criterion": "100 − 100·D·(s−c) equals the stored price (1e-10) and Hull's 100.27 (0.01)",
+        "criterion": "D rebuilt from the implied hazard matches the metric (1e-12) and reprices the quote (1e-10); 100 − 100·D·(s−c) equals the stored price (1e-10) and Hull's 100.27 (0.01)",
         "name": "fixed_coupon_price_identity",
         "observed": 100.2705504281483,
         "passed": true
       },
       {
-        "criterion": "max |payer − receiver − A(F−K)| <= 1e-10",
+        "criterion": "F and A rebuilt from the hazard curve match the metrics (1e-12), Black values match the committed grids (1e-10), and max |payer − receiver − A(F−K)| <= 1e-10",
         "name": "cds_option_parity",
         "observed": 1.3877787807814457e-17,
         "passed": true
@@ -50,13 +50,13 @@
         "passed": true
       },
       {
-        "criterion": "Σ width·C_tranche equals the 0–100% expected loss (1e-8)",
+        "criterion": "tranche and 0–100% expected losses repriced independently match the committed values (1e-9); Σ width·C_tranche equals the 0–100% expected loss (1e-8)",
         "name": "capital_structure_loss_conservation",
-        "observed": 2.0816681711721685e-17,
+        "observed": 5.551115123125783e-17,
         "passed": true
       },
       {
-        "criterion": "re-summed 3rd-to-default spread within 1 bp of Hull's 153 bp and 1e-9 bp of the metric; spreads strictly decrease in k",
+        "criterion": "conditional cumulative probabilities rebuilt from the copula match the committed grid (1e-10); re-summed 3rd-to-default spread within 1 bp of Hull's 153 bp and 1e-9 bp of the metric; spreads strictly decrease in k",
         "name": "kth_to_default_hull_pin_and_ordering",
         "observed": 152.96646860498151,
         "passed": true
@@ -74,15 +74,15 @@
         "passed": true
       },
       {
-        "criterion": "0–X% expected-loss PV increasing in X with strictly decreasing slope ΔEL/ΔX",
+        "criterion": "0–X% tranches repriced at the committed base correlations carry the cumulative compound-priced expected loss (1e-8) and equal the committed curve (1e-10); the curve is increasing in X with strictly decreasing slope ΔEL/ΔX",
         "name": "base_correlation_curve_shape",
         "observed": -0.0016636335662427392,
         "passed": true
       },
       {
-        "criterion": "ν→∞ double-t spread within 0.5 bp of the Gaussian spread",
+        "criterion": "stored Gaussian mezzanine spread matches the independent repricing (1e-6 bp); ν→∞ double-t spread within 0.5 bp of it",
         "name": "double_t_gaussian_limit",
-        "observed": 0.006168267563458341,
+        "observed": 0.006168267668385852,
         "passed": true
       },
       {
@@ -98,7 +98,7 @@
         "passed": true
       },
       {
-        "criterion": "netting 15 <= gross 40 (Hull 24.7); Example 24.4 exposures 5/0/0/5; (1−R)f_nd Σq_i equals the stored CVA (1e-12) and the general CVA on a 2000-step grid (1e-5)",
+        "criterion": "netting 15 <= gross 40 (Hull 24.7); Example 24.4 exposures 5/0/0/5; q_i rebuilt from the hazard match the grid (1e-12), (1−R)f_nd Σq_i equals the stored CVA and the closed form (1−R)f_nd(1−e^{−λT}) (1e-12), and the general CVA on a 2000-step grid (1e-5)",
         "name": "netting_collateral_and_cva_special_case",
         "observed": 1.5286807930614543e-10,
         "passed": true
@@ -588,6 +588,20 @@
         ],
         "unit": "synthetic monetary units"
       },
+      "option_curve_hazard": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "annual hazard rate"
+      },
+      "option_curve_tenor": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "years"
+      },
       "option_strike_grid": {
         "dtype": "float64",
         "shape": [
@@ -734,7 +748,7 @@
     }
   },
   "companions": {
-    "credit_scenarios.npz": "9c50708c8ea033c0ac9a88c65721fb0cb3ec00ff4a25fa66c48b35d7b555ae87"
+    "credit_scenarios.npz": "ffadce77b7a61b877f22e5a348d36f3839c237c43e3001bc01383a7845c435f6"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -749,12 +763,15 @@
     "bond_bootstrap_hazard_2": 0.03475777894122982,
     "bond_bootstrap_hazard_3": 0.037351228053560705,
     "cdo_index_hazard": 0.008296995340469394,
+    "cdo_maturity": 5.0,
     "cdo_mezz_accrual": 0.01869664988180446,
     "cdo_mezz_annuity": 4.28464661505203,
     "cdo_mezz_protection": 0.14957319905443567,
     "cdo_mezz_spread_bp": 347.5744086539548,
+    "cdo_names": 125,
     "cdo_rate": 0.035,
     "cdo_rho": 0.15,
+    "cds_bootstrap_freq": 4,
     "cds_bootstrap_max_reprice_error": 4.388850394221322e-16,
     "cds_hazard": 0.02,
     "cds_implied_hazard_100bp": 0.016258868561856883,
@@ -768,32 +785,47 @@
     "creditmetrics_bbb_default_threshold": 2.9290497489376195,
     "creditmetrics_rho": 0.2,
     "cva_general_equivalent": 0.24458895909902348,
+    "cva_hazard": 0.03,
+    "cva_horizon": 2.0,
     "cva_no_default_value": 7.0,
     "cva_rate": 0.05,
     "cva_special_case": 0.2445889589461554,
     "double_t_limit_gap_bp": 0.006168267563458341,
     "fixed_coupon_coupon": 0.004055555555555555,
     "fixed_coupon_duration": 4.447404298328079,
+    "fixed_coupon_freq": 4,
     "fixed_coupon_hazard": 0.005716736665913349,
+    "fixed_coupon_maturity": 5.0,
     "fixed_coupon_price": 100.2705504281483,
+    "fixed_coupon_rate": 0.04,
     "fixed_coupon_spread": 0.0034472222222222217,
     "gaussian_mezz_spread": 0.03475744086539548,
     "gross_exposure": 40.0,
     "heterogeneous_binomial_gap": 5.551115123125783e-16,
     "heterogeneous_spread_gap": 5.93275428784068e-15,
     "hull_bbb_default_threshold": 2.929,
+    "itraxx_equity_fixed_spread": 0.05,
     "itraxx_hazard": 0.003818992392297505,
+    "itraxx_maturity": 5.0,
     "itraxx_rate": 0.03,
     "kth3_accrual": 0.05239597534667226,
     "kth3_annuity": 4.057993117728011,
     "kth3_payoff": 0.06287517041600671,
     "kth3_spread_bp": 152.96646860498151,
+    "kth_hazard": 0.02,
+    "kth_maturity": 5.0,
+    "kth_names": 10,
+    "kth_pinned_order": 3,
     "kth_rate": 0.05,
+    "kth_rho": 0.3,
     "netting_exposure": 15.0,
     "option_expiry": 1.0,
     "option_forward_spread": 0.021130946583698414,
+    "option_freq": 4,
+    "option_maturity": 6.0,
     "option_risky_annuity": 3.7743222957665576,
     "option_sigma": 0.6,
+    "option_start": 1.0,
     "portfolio_expected_loss": 0.022380958203668554,
     "recovery": 0.4
   },
