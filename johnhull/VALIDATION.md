@@ -270,6 +270,32 @@ Still open after this run (`docs/SECTION_AUDIT_2026-09-14.md` §11): vol 18–22
 acceptance still mix array checks with stored-value comparisons; D9 (core notebooks without
 outputs) is a pending decision; §4 items other than the 13 pinned here remain as listed.
 
+## 2026-09-14 section-audit third run (vol 18–22/26 gates, Hull §4 APIs, static book outputs)
+
+Branch `worktree-johnhull-audit-third` (base `8485cc29`), following
+`docs/SECTION_AUDIT_2026-09-14.md` §11.2. Same environment as the previous run; vol 18's
+reference is re-exported from the local checkpoint `2d4ba8e38acfa5cc` (torch, CPU).
+
+| Check | Command / evidence | Result |
+|---|---|:---:|
+| hullkit + portal tests | `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests` — 1252 passed (was 1055) | PASS |
+| deep_hedge_price tests | `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests` — 206 passed | PASS |
+| Scoped lint/format | `ruff check johnhull deep_hedge_price/scripts`; `ruff format --check` over `johnhull/hullkit`, `johnhull/scripts`, `johnhull/report`, `deep_hedge_price/scripts` | PASS |
+| Acceptance tamper contract | all 11 volumes: 18 (8 cases), 19 (9), 20 (7), 21 (6), 22 (7), 23 (7), 24 (11), 25 (14), 26 (6), 27 (14), 28 (17); every stored scalar a check reads must equal its recomputation from the NPZ | PASS |
+| vol 18 re-export | `export_johnhull_pricing_reference.py` adds per-row test/OOD errors, split row digests and the teacher intervals/standard errors; the evaluation MAEs reproduce to rel 1e-12 and two exports are byte-identical. OOD shell (outside the gate): price MAE 1.606, median 0.00103, worst 261.9 (σ = 1e-4 rows below the 0.05 training floor), 20.9% of rows above 0.01 | PASS |
+| vol 25 correlation sensitivity | ρ ∈ −0.9..0.6 on common random numbers: merchant revenue within 3 SE of N·P·g·(1 + ρσ_Sσ_G) (max z 1.79); pay-as-produced fair value 29.48 → −23.85; hedged CVaR spread 76.2–86.3 is sampling noise (hedged cash flow = K·generation) | PASS |
+| Reference rebuild | `make hull-artifacts-check` — vol 19–28 semantic match and second-build byte identity | PASS |
+| Notebook execution | `make hull-notebooks-check` (vol 18–28); `make hull-core-notebooks-check` (19 notebooks; the 17 output notebooks are executed with `HULLKIT_STATIC_FIGURES=1` / `PLOTLY_RENDERER=plotly_mimetype+notebook` and their output types compared with the committed copies) | PASS |
+| Static book outputs (D9) | `verify_core_notebooks.py --write-outputs` — vol 01–12 and ir_models carry ipympl figures as PNG (86 figures), vol 13–16 and ir_models embed plotly.js; Plotly's hard-coded MathJax 2 CDN script is stripped (no figure uses LaTeX; the book stays offline); outputs are byte-stable across runs except vol 06's measured LSM time; notebooks total 35.7 MB (vol 13–16 ≈ 23 MB, ir_models 7.1 MB) | PASS |
+| Portal / Book | `make hull-report` (12 themes / 82 figures); `make hull-book` (build succeeded) | PASS |
+| Release contract | `make hull-release-check` and `verify_release.py --require-tracked` | PASS |
+
+Checks that still read a stored value because no array evidence exists: vol 18
+`residual_baseline` (Heston residual MAEs from the evaluation run) and `hard_violation_rate`;
+vol 19 `multi_start_calibration` (optimizer success flags); vol 21 timing method flags;
+vol 22 `calendar_violations` (holiday/session booleans); vol 26
+`principal_floor_redemption_only`, `coupon_floor_max_error` and `measure_treatment`.
+
 ## Negative results and residual model risk
 
 - vol 18: the quick soft penalty did not reduce the hard-check count, and no neural

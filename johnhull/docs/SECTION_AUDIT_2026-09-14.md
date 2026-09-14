@@ -754,3 +754,19 @@ vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成�
 
 §4 で残る open 項目は表のとおり（手順 4 で固定した 13 件を除く）。vol 18–22・26 の acceptance は保存値との照合が残る（手順 3 の続き）。
 
+### 11.2 第 3 便（2026-09-14、ブランチ `worktree-johnhull-audit-third`、base `8485cc29`）
+
+手順 3 の残り（vol 18–22・26 の acceptance 再計算化）、D9、§4 の関数追加（OP-04・VN-02・EX-02・EX-05）、小物 BA-03・BB-03・BB-07・BB-10・BB-17、§6 で見送った 5 件を実施した。全ゲート PASS（hullkit+report 1252 tests、deep_hedge_price 206 tests）。実行記録は `johnhull/VALIDATION.md` の「2026-09-14 section-audit third run」。
+
+| ID | commit | 変更 | 数値の変化 |
+|---|---|---|---|
+| OP-04 / VN-02 / EX-02 / EX-05 | a258e242 | `bsm` の現金配当・Black 近似・早期行使条件・11.8–11.11 の境界、`volatility.breeden_litzenberger_density` と smile 軸、`exotics.gap_put` / `barrier_put` / BGK 補正 / lookback の put と固定行使、`hullkit.variance_swaps`、`ir_options.bond_yield_convexity` | Ex 15.9（3.67）、Ex 20A.1（面積 0.9985）、Ex 26.1（1,896）、Ex 26.2（7.79）、Ex 26.4（0.0621 / 1.69）、Ex 26.5（0.2484 / 1.82）、Ex 30.1（G′ −2.6730 / G″ 9.8910）を固定 |
+| §6 見送り分 | caac5429 | vol 04: Table 2.1 の証拠金台帳、I = 39.60（886.60）、Ex 4.3 は単利の期間金利をそのまま使う規約。vol 12: トランシェ 5/20% と Table 8.1。vol 10: §26.1–26.16 の商品表・T-forward 測度。vol 11: Ex 30.1 と cap vol stripping の assert | vol 12 mezzanine 毀損 70% → 47%（12% 損失時）。vol 11 の 5 年調整 12.01 → 13.82 bp |
+| BB-03 / BB-10 / BB-17 | 9341675f | `normal_sabr_conditional_mc_price(volatility_shocks=)` で共通乱数の step doubling（既定出力はバイト一致）。JY の ZCIS / YoY をゼロボラ極限と独立 MC で照合。traffic light（n ≠ 250）、ES の同値、σ_p ≤ 0、delta のみの説明誤差次数。ポータルの重複ブロックと未使用 `tags` を削除 | vol 23 最悪セルで P48−P96 = −0.07 bp、P96−P192 = −0.02 bp（SE 6.4 bp）＝離散化バイアスは SE の約 1% |
+| 手順 3 の残り＋BA-03 | 1eabb8c5 | vol 18–22・26 の各チェックが保存値を読むのをやめ、NPZ から再計算して保存値との一致も要求（名前・件数・閾値は不変）。vol 18 は per-row 誤差・分割ダイジェスト・教師の区間を追加し再 export。tamper 契約を全 11 巻へ拡張 | 観測値は不変。vol 18 の負の結果に OOD（MAE 1.606、worst 261.9）と教材スライスの裁定違反（spot 凸性 17・calendar 5 ステップ、delta 誤差平均 0.00248）を追記 |
+| BB-07＋改名 | 050510e5 | vol 25 に価格・発電量相関 ρ の感度（`ppa_correlation_sensitivity`、vol 25: 9 → 10 checks）。vol 24 NPZ `liquidation_loss` → `oracle_mark_gap` | 収入は理論値から最大 1.79 SE。pay-as-produced 公正価値 29.48 → −23.85。ヘッジ後 CVaR の ρ 依存はサンプリングノイズ |
+| D9＋require.js | 15634200 / e7ed438e | `hullkit.nbplot.enable_static_figures`（`HULLKIT_STATIC_FIGURES=1` のときだけ ipympl の widget を図の PNG として出力）と `verify_core_notebooks.py --write-outputs`。vol 01–12・ir_models は PNG、vol 13–16 は `plotly_mimetype+notebook` で plotly.js を埋め込む。ゲートは出力の型をフレッシュ実行と照合。require.js は notebook レンダラの plotly 出力が使うので残す。plotly が図ごとに埋め込む MathJax 2 の CDN script はオフライン契約に反するので除去（LaTeX を使う図はない） | notebook 合計 35.7 MB（vol 13–16 で約 23 MB、ir_models 7.1 MB） |
+
+保存値のまま残るチェック（配列に根拠がないもの）: vol 18 `residual_baseline`・`hard_violation_rate`、vol 19 `multi_start_calibration`、vol 21 の timing フラグ、vol 22 `calendar_violations`、vol 26 `principal_floor_redemption_only`・`coupon_floor_max_error`・`measure_treatment`。
+
+エージェント報告で見つかった追加事項: Black 近似はツリーの厳密値を上回ることがある（S=40、K=35、配当 0.5 / 3.0 で 5.642 対 5.577）。GE の §15.12 は Black 近似の数値例を印刷していない。vol 18 の OOD 最悪行は σ = 1e-4（学習下限 0.05 の外）。
