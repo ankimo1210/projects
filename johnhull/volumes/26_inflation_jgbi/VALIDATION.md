@@ -32,12 +32,12 @@
 
 | Check | Observed | Criterion | Pass |
 |---|---:|---|:---:|
-| `hull_white_initial_curve` | 0.0 | <= 1e-12 | PASS |
-| `annual_seasonality_normalization` | 1.734723475976807e-18 | <= 1e-12 | PASS |
+| `hull_white_initial_curve` | 0.0 | <= 1e-12 against the nominal discount curve | PASS |
+| `annual_seasonality_normalization` | 1.734723475976807e-18 | <= 1e-12 over the twelve monthly log factors | PASS |
 | `zcis_quote_repricing` | 0.0 | <= 1e-10 | PASS |
 | `jy_forward_measure_mc` | 1.4888912714624325 | aligned arrays and maximum analytic/MC z-score < 3 | PASS |
-| `jgbi_floor_analytic_mc` | 1.1974973083142517 | aligned arrays and maximum non-degenerate z-score < 3 | PASS |
-| `floor_volatility_monotonicity` | True | analytic floor is non-decreasing in inflation volatility | PASS |
+| `jgbi_floor_analytic_mc` | 1.1974973083142517 | aligned arrays, maximum non-degenerate z-score < 3, zero-SE rows equal analytic | PASS |
+| `floor_volatility_monotonicity` | True | analytic floor is non-decreasing along the increasing inflation-volatility grid | PASS |
 | `redemption_only_principal_floor` | 0.0 | coupons identical and floored final principal exceeds unfloored principal | PASS |
 | `floor_payoff_decomposition` | 0.0 | binding floor: floored = unfloored + face * max(1 - R, 0) within 1e-12 | PASS |
 | `nominal_payment_forward_measure` | nominal_payment_forward | explicit nominal payment-forward measure with non-zero YoY convexity | PASS |

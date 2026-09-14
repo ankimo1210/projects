@@ -38,19 +38,19 @@
         "passed": true
       },
       {
-        "criterion": "> 1 at batch 1024",
+        "criterion": "> 1 at batch 1024, recomputed from the timing samples",
         "name": "surrogate_speedup",
         "observed": 781.9083514612693,
         "passed": true
       },
       {
-        "criterion": "all four component errors finite",
+        "criterion": "all four component errors finite and recomputed from the model grids and targets",
         "name": "joint_objective_components",
         "observed": true,
         "passed": true
       },
       {
-        "criterion": "price, delta and gamma RMSE finite in both domains",
+        "criterion": "price, delta and gamma RMSE finite in both domains and recomputed from the pairs",
         "name": "in_domain_ood_diagnostics",
         "observed": true,
         "passed": true

@@ -16,6 +16,9 @@
 | `hard_violation_rate` | 0.0 |
 | `heston_bsm_residual_mae` | 0.0006117290429284944 |
 | `heston_raw_price_mae` | 0.012620526620790065 |
+| `ood_delta_mae` | 0.0021547001010709587 |
+| `ood_price_mae_normalized` | 1.6064324659893392 |
+| `ood_price_worst_absolute_error` | 261.85164803734585 |
 | `price_mae_normalized` | 0.0005593846268355811 |
 | `soft_penalty_improved_hard_checks` | False |
 | `split_overlap_count` | 0 |
@@ -28,19 +31,21 @@
 
 | Check | Observed | Criterion | Pass |
 |---|---:|---|:---:|
-| `split_overlap_count` | 0 | == 0 | PASS |
-| `price_mae_normalized` | 0.0005593846268355811 | < 0.001 | PASS |
-| `delta_mae` | 0.0017494819891811248 | < 0.002 | PASS |
+| `split_overlap_count` | 0 | == 0 recomputed from per-split row digests | PASS |
+| `price_mae_normalized` | 0.0005593846268355811 | < 0.001 as the mean of the test-split per-row errors | PASS |
+| `delta_mae` | 0.0017494819891811248 | < 0.002 as the mean of the test-split per-row errors | PASS |
 | `hard_check_set` | 8 | exact documented 8-check set | PASS |
 | `hard_check_violations` | 0 | == 0 | PASS |
 | `residual_baseline` | 0.0006117290429284944 | < raw-price MAE | PASS |
-| `mc_ci_coverage` | 0.9 | each estimand in [0.80, 1.00] | PASS |
-| `mc_standard_error_scaling` | 0.5036523091029843 | each 4x-path ratio in [0.40, 0.60] | PASS |
+| `mc_ci_coverage` | 0.9 | each estimand in [0.80, 1.00], recomputed from the 20 seeded intervals | PASS |
+| `mc_standard_error_scaling` | 0.5036523091029843 | each 4x-path ratio in [0.40, 0.60], recomputed from the paired standard errors | PASS |
 
 ## Negative results
 
 - The quick soft-penalty ablation did not improve the hard-check count.
 - No neural CPU break-even batch was observed in the measured quick profile.
+- The OOD shell is a stress diagnostic outside the gate: price MAE 1.606 (median 0.001033, worst 261.9, 20.9% of rows above 0.01) and delta MAE 0.002155, against 0.0005594 and 0.001749 on the test split.
+- On the exported 21x29 teaching slice (r=2%, q=1%, vol=20%, maturities down to 0.03y) the network price breaks spot monotonicity at 2, spot convexity at 17 and calendar monotonicity at 5 grid steps beyond 1e-5, and its mean delta error is 0.002476; the zero-violation hard report above is a narrower one-year, 25%-vol probe.
 
 ## Rebuild
 

@@ -29,9 +29,11 @@ make hull-release-check     # release 契約（scripts/verify_release.py）
 ```
 
 acceptance は `johnhull/scripts/frontier_acceptance.py` がコミット済み配列から再計算する
-（JSON のフラグを信用しない）。vol 23–25・27・28 は `report/tests/test_frontier_acceptance_tamper.py`
-が「配列を改竄すると該当チェックだけが落ちる」ことを固定している。vol 18–22・26 は配列検査と
-保存値の照合が混在する（`docs/SECTION_AUDIT_2026-09-14.md` §4.7）。
+（JSON のフラグを信用しない）。vol 18–28 の全 11 巻について `report/tests/test_frontier_acceptance_tamper.py`
+が「配列を改竄すると該当チェックだけが落ちる」ことを固定している。配列に根拠がない項目
+（vol 18 の Heston 残差 MAE、vol 19 の start 成否、vol 22 の暦判定、vol 26 のクーポン一致など）は
+保存値のまま（`docs/SECTION_AUDIT_2026-09-14.md` §11.2）。vol 18 の reference 再生成には
+`deep_hedge_price/artifacts/pricing/quick/2d4ba8e38acfa5cc`（gitignore、ローカルのみ）が必要。
 
 ## 規約と落とし穴
 

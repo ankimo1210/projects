@@ -33,11 +33,11 @@
 | `forecast_model_ladder` | 4 | contains four required models | PASS |
 | `horizon_model_ladders` | 10 | all ten models share purged train-only folds at 1/5/21 days | PASS |
 | `fold_preprocessing_evidence` | 3 | stored scaler/PCA/sequence fits and purge bounds for every horizon | PASS |
-| `block_bootstrap_intervals` | True | ordered for every model | PASS |
-| `horizon_regime_intervals` | 3 | QLIKE/RMSE/MAE and paired Log-HAR comparisons have ordered block CIs | PASS |
+| `block_bootstrap_intervals` | True | ordered for every model around the QLIKE mean recomputed from forecasts | PASS |
+| `horizon_regime_intervals` | 3 | QLIKE/RMSE/MAE by regime and paired Log-HAR means recomputed from forecasts; CIs ordered | PASS |
 | `explainability_diagnostics` | 4 | four finite diagnostics explicitly marked non-causal | PASS |
 | `common_path_hedge` | 512 | P&L and turnover share all path ids | PASS |
-| `economic_comparison_controls` | 512 | common paths/premium/costs and explicit no-trade region | PASS |
+| `economic_comparison_controls` | 512 | common paths/premium/costs, explicit no-trade region, strategy risk recomputed from P&L | PASS |
 | `phase1_policy_status` | not_evaluated | explicit evaluated/not_evaluated state | PASS |
 
 ## Negative results

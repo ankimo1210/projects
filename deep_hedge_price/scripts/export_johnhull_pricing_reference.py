@@ -55,7 +55,7 @@ def _verify_written_npz(path: Path, arrays: dict[str, np.ndarray]) -> None:
                 raise ValueError(f"written NPZ values differ: {path}:{name}")
 
 
-def _teacher_diagnostics() -> tuple[dict[str, float], dict[str, float]]:
+def _teacher_diagnostics() -> tuple[dict[str, float], dict[str, float], dict[str, np.ndarray]]:
     from hullkit import bsm
     from hullkit.surrogate_data import mc_black_scholes_call_estimates
 
@@ -94,7 +94,34 @@ def _teacher_diagnostics() -> tuple[dict[str, float], dict[str, float]]:
         name: getattr(large, name).standard_error / getattr(small, name).standard_error
         for name in references
     }
-    return coverage, se_ratio
+    # The raw intervals and standard errors let the acceptance gate recompute
+    # the coverage and the 4x-path ratio instead of reading them back.
+    evidence = {
+        "teacher_estimand_names": np.asarray(tuple(references)),
+        "teacher_reference": np.asarray(tuple(references.values())),
+        "teacher_ci_lower": np.asarray(
+            [[getattr(row, name).ci_lower for name in references] for row in intervals]
+        ),
+        "teacher_ci_upper": np.asarray(
+            [[getattr(row, name).ci_upper for name in references] for row in intervals]
+        ),
+        "teacher_se_4x_paths": np.asarray(
+            [[getattr(row, name).standard_error for name in references] for row in (small, large)]
+        ),
+    }
+    return coverage, se_ratio, evidence
+
+
+def _row_keys(rows: np.ndarray) -> np.ndarray:
+    """First 64 bits of each row's SHA-256, the digest the split manifest uses."""
+    value = np.ascontiguousarray(rows)
+    return np.asarray(
+        [
+            int.from_bytes(hashlib.sha256(row.tobytes(order="C")).digest()[:8], "little")
+            for row in value
+        ],
+        dtype=np.uint64,
+    )
 
 
 def _array_schema(arrays: dict[str, np.ndarray]) -> dict[str, dict[str, object]]:
@@ -112,6 +139,19 @@ def _array_schema(arrays: dict[str, np.ndarray]) -> dict[str, dict[str, object]]
         "batch_size": "rows",
         "analytic_us": "microseconds median",
         "mlp_us": "microseconds median",
+        "test_price_abs_error": "absolute C/K error per test row",
+        "test_delta_abs_error": "absolute delta error per test row",
+        "ood_price_abs_error": "absolute C/K error per OOD row",
+        "ood_delta_abs_error": "absolute delta error per OOD row",
+        "split_row_key_train": "first 64 bits of the row SHA-256",
+        "split_row_key_validation": "first 64 bits of the row SHA-256",
+        "split_row_key_test": "first 64 bits of the row SHA-256",
+        "split_row_key_ood": "first 64 bits of the row SHA-256",
+        "teacher_estimand_names": "estimand identifier",
+        "teacher_reference": "analytic BSM price, delta and vega",
+        "teacher_ci_lower": "95% MC interval lower bound per seed",
+        "teacher_ci_upper": "95% MC interval upper bound per seed",
+        "teacher_se_4x_paths": "MC standard error at 10k and 40k paths",
     }
     return {
         name: {
@@ -139,7 +179,7 @@ def export(config_path: Path, output_dir: Path, ablation_path: Path) -> tuple[Pa
         raise FileNotFoundError(
             f"missing validated pricing inputs: {names}; run pricing-demo and pricing-ablation first"
         )
-    manifest, _dataset = load_pricing_dataset(manifest_path)
+    manifest, dataset = load_pricing_dataset(manifest_path)
     evaluation = json.loads(evaluation_path.read_text(encoding="utf-8"))
     ablation = json.loads(ablation_path.read_text(encoding="utf-8"))
     if evaluation["config_fingerprint"] != config.fingerprint():
@@ -209,13 +249,46 @@ def export(config_path: Path, output_dir: Path, ablation_path: Path) -> tuple[Pa
         "analytic_us": 1_000 * np.asarray([row["median_ms"] for row in benchmark["analytic"]]),
         "mlp_us": 1_000 * np.asarray([row["median_ms"] for row in benchmark["neural"]]),
     }
+    # Per-row split errors, re-evaluated with the evaluation's adopted Greek
+    # route, so the gate recomputes the MAEs instead of trusting the JSON.
+    for split in ("test", "ood"):
+        split_inputs = torch.as_tensor(
+            np.asarray(dataset[f"{split}_inputs"], dtype=np.float64), dtype=torch.float64
+        )
+        with torch.no_grad():
+            split_price, split_direct = model.components(split_inputs)
+        if route == "direct_heads" and split_direct is not None:
+            split_delta = split_direct[:, 0].numpy()
+        else:
+            split_delta = autodiff_greeks(model, split_inputs)["delta"].numpy()
+        price_error = np.abs(
+            split_price.numpy() - np.asarray(dataset[f"{split}_price"], dtype=np.float64)
+        )
+        delta_error = np.abs(split_delta - np.asarray(dataset[f"{split}_delta"], dtype=np.float64))
+        reported = evaluation["splits"][split]
+        if not (
+            np.isclose(price_error.mean(), reported["neural_price"]["mae"], rtol=1e-12, atol=0.0)
+            and np.isclose(
+                delta_error.mean(), reported["greeks"]["delta"]["mae"], rtol=1e-12, atol=0.0
+            )
+        ):
+            raise ValueError(f"{split} per-row errors do not reproduce the evaluation MAE")
+        arrays[f"{split}_price_abs_error"] = price_error
+        arrays[f"{split}_delta_abs_error"] = delta_error
+    for split in ("train", "validation", "test", "ood"):
+        arrays[f"split_row_key_{split}"] = _row_keys(dataset[f"{split}_inputs"])
     output_dir.mkdir(parents=True, exist_ok=True)
     arrays_path = output_dir / "pricing_slices.npz"
-    coverage, se_ratio = _teacher_diagnostics()
+    coverage, se_ratio, teacher_evidence = _teacher_diagnostics()
+    arrays.update(teacher_evidence)
     test = evaluation["splits"]["test"]
+    ood = evaluation["splits"]["ood"]
     metrics = {
         "price_mae_normalized": test["neural_price"]["mae"],
         "delta_mae": test["greeks"]["delta"]["mae"],
+        "ood_price_mae_normalized": ood["neural_price"]["mae"],
+        "ood_price_worst_absolute_error": ood["neural_price"]["worst_absolute_error"],
+        "ood_delta_mae": ood["greeks"]["delta"]["mae"],
         "split_overlap_count": manifest.overlap_count,
         "hard_violation_rate": float(
             np.mean([row["violation_rate"] for row in evaluation["hard_validation"]["checks"]])

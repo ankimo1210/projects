@@ -2,19 +2,19 @@
   "acceptance": {
     "checks": [
       {
-        "criterion": "== 0",
+        "criterion": "== 0 recomputed from per-split row digests",
         "name": "split_overlap_count",
         "observed": 0,
         "passed": true
       },
       {
-        "criterion": "< 0.001",
+        "criterion": "< 0.001 as the mean of the test-split per-row errors",
         "name": "price_mae_normalized",
         "observed": 0.0005593846268355811,
         "passed": true
       },
       {
-        "criterion": "< 0.002",
+        "criterion": "< 0.002 as the mean of the test-split per-row errors",
         "name": "delta_mae",
         "observed": 0.0017494819891811248,
         "passed": true
@@ -38,13 +38,13 @@
         "passed": true
       },
       {
-        "criterion": "each estimand in [0.80, 1.00]",
+        "criterion": "each estimand in [0.80, 1.00], recomputed from the 20 seeded intervals",
         "name": "mc_ci_coverage",
         "observed": 0.9,
         "passed": true
       },
       {
-        "criterion": "each 4x-path ratio in [0.40, 0.60]",
+        "criterion": "each 4x-path ratio in [0.40, 0.60], recomputed from the paired standard errors",
         "name": "mc_standard_error_scaling",
         "observed": 0.5036523091029843,
         "passed": true
@@ -53,7 +53,9 @@
     "model_performance_approved": false,
     "negative_results": [
       "The quick soft-penalty ablation did not improve the hard-check count.",
-      "No neural CPU break-even batch was observed in the measured quick profile."
+      "No neural CPU break-even batch was observed in the measured quick profile.",
+      "The OOD shell is a stress diagnostic outside the gate: price MAE 1.606 (median 0.001033, worst 261.9, 20.9% of rows above 0.01) and delta MAE 0.002155, against 0.0005594 and 0.001749 on the test split.",
+      "On the exported 21x29 teaching slice (r=2%, q=1%, vol=20%, maturities down to 0.03y) the network price breaks spot monotonicity at 2, spot convexity at 17 and calendar monotonicity at 5 grid steps beyond 1e-5, and its mean delta error is 0.002476; the zero-violation hard report above is a narrower one-year, 25%-vol probe."
     ],
     "passed": true,
     "schema_version": 1,
@@ -126,6 +128,20 @@
         ],
         "unit": "C/K"
       },
+      "ood_delta_abs_error": {
+        "dtype": "float64",
+        "shape": [
+          1024
+        ],
+        "unit": "absolute delta error per OOD row"
+      },
+      "ood_price_abs_error": {
+        "dtype": "float64",
+        "shape": [
+          1024
+        ],
+        "unit": "absolute C/K error per OOD row"
+      },
       "price_error": {
         "dtype": "float64",
         "shape": [
@@ -133,6 +149,86 @@
           29
         ],
         "unit": "absolute C/K error"
+      },
+      "split_row_key_ood": {
+        "dtype": "uint64",
+        "shape": [
+          1024
+        ],
+        "unit": "first 64 bits of the row SHA-256"
+      },
+      "split_row_key_test": {
+        "dtype": "uint64",
+        "shape": [
+          1024
+        ],
+        "unit": "first 64 bits of the row SHA-256"
+      },
+      "split_row_key_train": {
+        "dtype": "uint64",
+        "shape": [
+          4096
+        ],
+        "unit": "first 64 bits of the row SHA-256"
+      },
+      "split_row_key_validation": {
+        "dtype": "uint64",
+        "shape": [
+          1024
+        ],
+        "unit": "first 64 bits of the row SHA-256"
+      },
+      "teacher_ci_lower": {
+        "dtype": "float64",
+        "shape": [
+          20,
+          3
+        ],
+        "unit": "95% MC interval lower bound per seed"
+      },
+      "teacher_ci_upper": {
+        "dtype": "float64",
+        "shape": [
+          20,
+          3
+        ],
+        "unit": "95% MC interval upper bound per seed"
+      },
+      "teacher_estimand_names": {
+        "dtype": "<U5",
+        "shape": [
+          3
+        ],
+        "unit": "estimand identifier"
+      },
+      "teacher_reference": {
+        "dtype": "float64",
+        "shape": [
+          3
+        ],
+        "unit": "analytic BSM price, delta and vega"
+      },
+      "teacher_se_4x_paths": {
+        "dtype": "float64",
+        "shape": [
+          2,
+          3
+        ],
+        "unit": "MC standard error at 10k and 40k paths"
+      },
+      "test_delta_abs_error": {
+        "dtype": "float64",
+        "shape": [
+          1024
+        ],
+        "unit": "absolute delta error per test row"
+      },
+      "test_price_abs_error": {
+        "dtype": "float64",
+        "shape": [
+          1024
+        ],
+        "unit": "absolute C/K error per test row"
       },
       "truth_price": {
         "dtype": "float64",
@@ -159,7 +255,7 @@
     }
   },
   "companions": {
-    "pricing_slices.npz": "a36059022f5c68d29e9def86ea29744e502329395d44cc4b8bb75a10c22a3852"
+    "pricing_slices.npz": "578084fb2a8b89cf3bc30bb6f5f32af61a04b833357ee149609d4ab9e1d1c720"
   },
   "data_policy": "synthetic-offline",
   "engine_evidence": {
@@ -193,6 +289,9 @@
     "hard_violation_rate": 0.0,
     "heston_bsm_residual_mae": 0.0006117290429284944,
     "heston_raw_price_mae": 0.012620526620790065,
+    "ood_delta_mae": 0.0021547001010709587,
+    "ood_price_mae_normalized": 1.6064324659893392,
+    "ood_price_worst_absolute_error": 261.85164803734585,
     "price_mae_normalized": 0.0005593846268355811,
     "soft_penalty_improved_hard_checks": false,
     "split_overlap_count": 0,

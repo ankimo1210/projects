@@ -30,10 +30,10 @@
 |---|---:|---|:---:|
 | `session_convention` | America/New_York | New York 6.5-hour session with nonnegative settlement clock | PASS |
 | `variance_clock` | 1.0 | monotone from 0 to 1 | PASS |
-| `expiry_consistency` | 0 | zero violations and nonnegative forward variance | PASS |
+| `expiry_consistency` | 0 | zero violations and nonnegative forward variance, recomputed from total variance | PASS |
 | `event_variance_injection` | 5.421010862427522e-20 | jump variance added to the teacher equals the scheduled event variance | PASS |
-| `event_teacher_uncertainty` | 0.019301737581782084 | > 0 | PASS |
-| `time_of_day_diagnostics` | 3 | open/midday/close with aligned price and Greek buckets | PASS |
+| `event_teacher_uncertainty` | 0.019301737581782084 | > 0 as the mean event-row standard error | PASS |
+| `time_of_day_diagnostics` | 3 | open/midday/close price and Greek MAE recomputed from teacher/baseline pairs | PASS |
 | `event_non_event_split` | 7/6 | mask counts and two-way diagnostics agree; the announcement ramp enters event rows only | PASS |
 
 ## Negative results
