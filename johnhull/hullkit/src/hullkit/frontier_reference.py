@@ -2592,6 +2592,8 @@ def volume27_reference(*, seed: int = 20260745) -> FrontierReference:
         "christoffersen_ind_lr_clustered": float(lr_ind_clustered),
         "christoffersen_ind_pvalue_iid": float(pvalue_ind_iid),
         "christoffersen_ind_pvalue_clustered": float(pvalue_ind_clustered),
+        "fhs_window": window,
+        "fhs_ewma_lambda": ewma_lambda,
         "fhs_var_constant": float(fhs_constant_var),
         "fhs_constant_vol_error": float(abs(fhs_constant_var - hs_all_var)),
         "hs_violation_rate": hs_violation_rate,
