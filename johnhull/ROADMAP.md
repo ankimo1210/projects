@@ -142,5 +142,6 @@ Design: `docs/superpowers/specs/2026-09-14-johnhull-vol28-credit-desk-design.md`
 vol 09 の設計書（2026-06-08）で「md/conceptual only」とした項目のうち、Hull 本文に数値例が
 あるものをすべて hullkit（`credit_curve` / `cds` / `credit_portfolio` / `credit_metrics` / `xva` 追加分）
 に実装し、印刷値に固定した。KMV EDF、ランダム回収率・ファクター負荷、implied copula、
-動的モデルは引き続き説明のみ。`done` は integration・恒等式・再現性・教科書ピンの PASS を表し、
+動的モデルはコードを持たず、vol 28 notebook の「本巻で実装しない節」に Hull の説明と本巻の実装との
+関係を置いた。`done` は integration・恒等式・再現性・教科書ピンの PASS を表し、
 市場較正の承認ではない。

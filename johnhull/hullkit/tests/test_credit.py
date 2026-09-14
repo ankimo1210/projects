@@ -60,3 +60,16 @@ def test_vasicek_credit_var():
     # sanity vs closed form
     expected = norm.cdf((norm.ppf(q) + math.sqrt(rho) * norm.ppf(0.999)) / math.sqrt(1.0 - rho))
     assert v999 == pytest.approx(expected, abs=1e-12)
+
+
+def test_vasicek_credit_var_hull_example_24_8():
+    """Hull 11e GE Example 24.8: $100M retail book, PD 2%, R 60%, rho 0.1.
+
+    The 99.9% worst-case default rate prints as 0.128 and the 1-year 99.9% credit
+    VaR as $5.13M (100 x 0.128 x 0.4 = 5.12 with the rounded rate; the unrounded
+    0.1282 gives 5.13).
+    """
+    worst_case_rate = credit.vasicek_credit_var(0.02, 0.1, 0.999)
+    assert worst_case_rate == pytest.approx(0.128, abs=5e-4)
+    credit_var_millions = 100.0 * worst_case_rate * (1.0 - 0.6)
+    assert credit_var_millions == pytest.approx(5.13, abs=5e-3)

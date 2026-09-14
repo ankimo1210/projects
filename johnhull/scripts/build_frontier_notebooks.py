@@ -405,6 +405,17 @@ VOLUME_META = {
             "4. `tranche_spread_vs_rho` でエクイティのスプレッドが ρ とともに下がり、シニアが上がるのはなぜか。`capital_structure_expected_loss` の合計が ρ に依存しないことと整合させよ。\n"
             "5. Table 25.8 でコンパウンド相関はスマイル、ベース相関はスキューになる。ガウシアンコピュラが市場と整合しているなら両者はどうなるはずか。`el_curve_value` の傾き ΔEL/ΔX が単調減少することはどの無裁定条件に対応するか。"
         ),
+        "scope_notes": (
+            "## 本巻で実装しない節（§24.6 脚注・§25.11）\n\n"
+            "Hull が数値例を載せていない、または非公開データに依存する項目。コードは持たず、Hull の説明と本巻の実装との関係だけを置く。\n\n"
+            "- **KMV EDF（§24.6 脚注 11）**：Merton モデルが出すデフォルト確率はリスク中立確率。Moody's KMV はそれを実世界のデフォルト確率（expected default frequency, EDF）へ変換するサービスを提供しているが、変換に使うデータは公開されていない。本巻で計算できるのは `hullkit.credit.merton_default_prob` のリスク中立確率までで、EDF は再現できない。\n"
+            "- **ランダム回収率とランダムファクター負荷（Andersen–Sidenius）**：式 (25.5) のコピュラ相関 ρ をファクター F の関数にし（F が小さい、つまりデフォルト率が高い状態ほど ρ が大きい）、回収率をデフォルト率と負に連動させる。Hull は、この拡張が標準モデルより市場気配によく当てはまると紹介するが、数値例はない。本巻の条件付き求積（`credit_portfolio`）は ρ と R を定数として扱う。\n"
+            "- **implied copula（Hull–White）**：ポートフォリオの全企業に共通の平均ハザードレートが CDO の期間中一定だと仮定し、その確率分布をトランシェ価格から逆算する。第 20 章でオプション価格から株価のインプライド分布を求めるのと同じ考え方。本巻の API はパラメータから価格を出す求積で、分布を推定する最適化は含まない。\n"
+            "- **動的モデル**：ここまでのモデルは CDO の期間を通じた平均的なデフォルト環境を表す静的モデルで、5 年・7 年・10 年の CDO ごとに別のモデルになる。動的モデルはポートフォリオ損失の時間発展を扱う。(1) 構造型は §24.6 の資産価値過程を多数の企業について相関付きで動かし、障壁に達した企業がデフォルトする。モンテカルロが必要で較正が難しい。(2) 誘導型は各社のハザードレートを確率過程にする。現実的な相関を出すにはハザードレートのジャンプが要る。(3) トップダウン型は個社を見ず、ポートフォリオの総損失を直接モデル化する。\n\n"
+            "## CDS オプションで実装した範囲（§25.5）\n\n"
+            "- **実装**：`cds.cds_option` は Black 型の式（payer は A·[F N(d₁) − K N(d₂)]）。A は `cds.cds_legs(..., start=expiry)` のフォワード risky duration（annuity＋accrual）で、生存確率を 0 時点からの無条件確率で重み付けする。満期前にデフォルトした経路は A に寄与しないので、オプションは knock-out する（Hull §25.5 の「満期前のデフォルトで消滅する」）。\n"
+            "- **未実装**：フォワードスプレッドのボラティリティ σ は入力した仮定（本巻は 0.6）で、確率的ハザードレートのモデルから導いていない。スプレッドの対数正規性も検証していない。満期前のデフォルトも保護する knock-out しない版（front-end protection 付き）もない。Hull はこれらの評価を Hull and White (2003) に委ねている（§25.5 脚注 8）。"
+        ),
         "citations": "Hull (2022) Options, Futures, and Other Derivatives 11e, Ch.24–25; Vasicek (2002); Li (2000); Andersen, Sidenius & Basu (2003); Hull & White (2004); Hull & White (2003) CDS options.",
         "gate": "G10",
     },
@@ -639,6 +650,8 @@ def build_volume(number: int, *, execute: bool = True) -> Path:
         cells.append(_code(meta["verification"]))
     if meta.get("exercises"):
         cells.append(_md(meta["exercises"]))
+    if meta.get("scope_notes"):
+        cells.append(_md(meta["scope_notes"]))
     cells.extend(
         [
             _md(
