@@ -2265,7 +2265,7 @@ def plotly_barrier_knockout(S0=100.0, K=100.0, r=0.05, sigma=0.20, T=1.0) -> go.
 def plotly_asian_vs_european(S0=100.0, r=0.05, sigma=0.20, T=1.0) -> go.Figure:
     """Asian (average-price) vs European call across strikes — averaging cuts vol.
 
-    Wraps :func:`hullkit.exotics.asian_call_turnbull_wakeman` and BSM (Hull §26.12).
+    Wraps :func:`hullkit.exotics.asian_call_turnbull_wakeman` and BSM (Hull 11e GE §26.13).
     The average is less volatile than the terminal price, so the Asian is cheaper.
     """
     from . import exotics

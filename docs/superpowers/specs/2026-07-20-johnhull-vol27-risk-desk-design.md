@@ -1,7 +1,7 @@
 # johnhull vol 27 — 日次リスク管理デスク（VaR/ES 発展編）設計
 
 - 日付: 2026-07-20
-- ステータス: 承認済み設計（実装前）
+- ステータス: 実装済み（2026-07-20 に vol 27 として release。2026-09-14 の監査で acceptance を再計算化）
 - 対象: `/home/kazumasa/projects/johnhull`（hullkit 新規 4 モジュール + volumes/27_risk_desk）
 - ブランチ: `codex/johnhull-inflation-jgbi` に積む（vol 26 の後続）
 - 背景: vol 08（Hull 11e Ch.22）は VaR/ES の定義・分散共分散法・ヒストリカル・
@@ -9,7 +9,7 @@
   銀行デスクの日次実務で使う検定統計・テールモデリング・リスク分解・PnL explain は
   未実装。本巻はこのギャップのうち**日次リスク管理軸**を一巻で埋める。
   FRTB IMA（liquidity horizon 別 ES 集約・NMRF・P&L attribution・IMA/SA 比較）は
-  スコープ外とし、将来巻（vol 28 候補）として ROADMAP に明記する。
+  スコープ外とし、将来巻（vol 29 候補。vol 28 は信用デスクになった）として ROADMAP に明記する。
 
 ## 1. 目的と成功基準
 
@@ -22,7 +22,7 @@
    4 モジュールが追加され、公開 API docstring 100% と MODEL_INDEX 掲載 +
    参照解決を guard tests が保証する。
 2. vol 27 notebook が artifact-only で実行でき、G8 式 acceptance check
-   （§4 の 13 項目。当初 11 項目に、レビュー修正で
+   （§4 の 14 項目。当初 11 項目に、レビュー修正で
    `christoffersen_pvalue_matches_recomputation` と `cross_asset_factor_mapping` を追加）を `frontier_acceptance.py` がコミット済み配列から再計算して
    全 PASS する。
 3. 既存の全ゲート（hullkit suite・`make hull-artifacts-check` /
@@ -48,7 +48,7 @@
 含まない:
 
 - FRTB IMA 一式（LH 別 ES・stressed ES scaling・NMRF・P&L attribution・
-  IMA eligibility・SA 比較）→ vol 28 候補。
+  IMA eligibility・SA 比較）→ vol 29 候補。
 - 市場・信用・流動性・オペレーショナルリスクの統合枠組み。
 - 実データ・市場キャリブレーション（synthetic-offline を維持）。
 - Hull RMFI の例題ピン（G8 式 acceptance のみで検証）。
@@ -131,7 +131,7 @@ Notebook セル構成:
   `semantic_sources` / `semantic_tests` に新規 4 モジュールと対応テスト、
   `references` に metrics.json + npz。
 - `MODEL_INDEX.md` §6（Risk & credit）に 4 モジュール分の行を追加。
-- `ROADMAP.md` に vol 27 追加 + FRTB IMA を vol 28 候補として明記。
+- `ROADMAP.md` に vol 27 追加 + FRTB IMA を vol 29 候補として明記。
 - `README.md` 巻一覧更新。
 
 ## 6. 検証ゲート（完了条件、すべて repo root から）

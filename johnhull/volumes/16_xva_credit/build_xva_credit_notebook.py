@@ -4,7 +4,8 @@ build_xva_credit_notebook.py
 nbformat-dict pattern to generate xva_credit.ipynb
 (A4 deep-dive — counterparty credit exposure, XVA, default correlation & copulas).
 
-Plotly figures (``fig.show()``) render in the static Jupyter Book HTML.
+Plotly figures (``fig.show()``) instead of ipympl. Their outputs are mimetype-only
+in the static Jupyter Book HTML; the interactive rendering is the portal (``make hull-report``).
 Numerical-verification cells assert against hand computations / closed forms.
 References: Gregory, *The xVA Challenge*; Li (2000); Vasicek (2002); Hull Ch.24-25.
 
@@ -48,7 +49,7 @@ cells.append(
 | 4 | テール依存とコピュラの限界 | — |
 | 5 | Vasicek 大規模プールと信用 VaR | Hull eq.24.10; Basel ASRF |
 
-> Hull 該当章: Ch.24–25（信用リスク・信用デリバティブ）。本巻はその先の中立 DD・XVA。""")
+> Hull 該当章: Ch.24–25（信用リスク・信用デリバティブ）。本巻はその先の XVA（EE/PFE/CVA/DVA/FVA）と信用ポートフォリオ。""")
 )
 cells.append(
     md(r"""> **核心** — デリバ取引の相手方リスク(エクスポージャ×デフォルト)を価格に織り込む。<br>
@@ -245,7 +246,7 @@ cells.append(
 <details><summary>解答</summary>
 
 両方。$\mathrm{CVA}=(1-R)\int \mathrm{DF}\,\mathrm{EE}\,d\mathrm{PD}$ は EE（エクスポージャ）と
-$d\mathrm{PD}$（ハザード）の積。さらに両者が正相関だと**ワンウェイ（wrong-way）リスク**で一段と増える。
+$d\mathrm{PD}$（ハザード）の積。さらに両者が正相関だと**誤方向（wrong-way）リスク**で一段と増える。
 </details>
 
 **Q2.** ガウシアン・コピュラで $\rho$ を上げると、シニア・トランシェの価値はどう動くか。

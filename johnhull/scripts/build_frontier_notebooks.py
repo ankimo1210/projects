@@ -318,7 +318,7 @@ VOLUME_META = {
     },
     28: {
         "title": "Credit Desk — CDS, CDO, Correlation, CreditMetrics",
-        "question": "Hull Ch.24–25 の印刷された数値例を、検証済みコードで一つ残らず再現できるか。",
+        "question": "Hull Ch.24–25 の印刷された数値例を、検証済みコードで再現できるか（本巻で実装しない節は notebook 末尾に明記）。",
         "focus": "vol.09 が説明文で済ませた節を節単位で埋める。債券価格と CDS 気配からの区分定数ハザード（Ex 24.1/24.2）、Table 25.2–25.4 の CDS レッグと MTM、Ex 25.1 の固定クーポン価格、Black 型 CDS オプション、Gauss–Hermite 求積による合成 CDO（Ex 25.2）と k-th-to-default（Ex 25.3）、Table 25.6 の iTraxx 気配から Table 25.8 のコンパウンド/ベース相関、double-t コピュラと不均質再帰（§25.11）、Table 24.4 の CreditMetrics 閾値と相関付き格付推移 MC、§24.7 のネッティング・担保・式 (24.5)。すべて Hull の離散化（期末払い・期中デフォルト）に合わせ、印刷値に ±許容で固定する。",
         "sections": [
             (

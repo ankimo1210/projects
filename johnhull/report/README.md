@@ -5,7 +5,7 @@ johnhull の Hull 11e ノートで学ぶ価格付け・リスク管理を束ね�
 `analytics/report` と同じ設計(jinja2 + plotly)。
 
 - ランディング + コンセプトギャラリー + テーマ別ショーケース + 統合(背骨)ページ
-- 図は `hullkit.plotly_viz` またはvol 18–27のversioned reference artifactから生成 → 本文と同期
+- 図は `hullkit.plotly_viz` またはvol 18–28のversioned reference artifactから生成 → 本文と同期
 - **カーネル不要・ネット不要**: plotly はローカル同梱、図はブラウザ内で動く(スライダー/ホバー/ズーム)
 
 ## 生成

@@ -310,7 +310,7 @@ display(widgets.HBox([sig_sl, t_sl]), fig2.canvas)""")
 
 # Cell 14: model inconsistency md
 cells.append(
-    md(r"""### 3モデルの非整合（§29.3）
+    md(r"""### 3モデルの非整合（Ch.29 Summary）
 
 債券価格・金利・スワップレートが**すべて同時に対数正規**ということはあり得ません
 （一方が対数正規なら他方はそうでない）。それでも実務で並用されるのは、

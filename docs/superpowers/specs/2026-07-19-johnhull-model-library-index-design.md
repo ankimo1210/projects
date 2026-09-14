@@ -1,7 +1,7 @@
 # johnhull モデルライブラリ化 — MODEL_INDEX / CLAUDE.md / docstring 整備 設計
 
 - 日付: 2026-07-19
-- ステータス: 承認済み設計（実装前）
+- ステータス: 実装済み（`johnhull/MODEL_INDEX.md` と `test_model_index.py` / `test_docstrings.py` の guard tests）
 - 対象: `/home/kazumasa/projects/johnhull`（hullkit 40 modules）+
   `/home/kazumasa/projects/deep_hedge_price`（38 modules）+ volumes 1–25
 - ブランチ: `codex/johnhull-beyond-hull-g8` に積む

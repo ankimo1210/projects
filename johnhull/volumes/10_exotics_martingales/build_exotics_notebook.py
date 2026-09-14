@@ -138,7 +138,7 @@ cells.append(
     md(r"""## 3. バリア・オプション（§26.9）
 
 バリア $H$ への到達で**発生（in）**または**消滅（out）**。
-up/down × in/out × call/put の8種に閉形式があります。鍵となる関係：
+up/down × in/out × call/put の8種に閉形式があります（hullkit はコール4種 `barrier_call` のみ実装）。鍵となる関係：
 
 $$c_{\text{di}} + c_{\text{do}} = c \quad (\text{ノックイン} + \text{ノックアウト} = \text{バニラ})$$
 
@@ -452,7 +452,7 @@ print("拡散の広がり（σ）は両測度で同一。期待成長率（点�
 
 # Cell 21: swap measure pointer md
 cells.append(
-    md(r"""### スワップ測度へのポインタ（§28.6）
+    md(r"""### スワップ測度へのポインタ（§28.4）
 
 アニュイティ $A(t) = \sum (T_{i+1}-T_i)P(t,T_{i+1})$ をニュメレールにすると、
 フォワード・スワップレート $s(t)$ がマルチンゲールになる「スワップ測度」が得られ、

@@ -1,7 +1,7 @@
 # johnhull vol 28 — 信用商品評価デスク（Hull Ch.24–25 完全実装）設計
 
 - 日付: 2026-09-14
-- ステータス: 承認済み設計（実装前。ユーザーは「推奨で承認」を選択）
+- ステータス: 実装済み（2026-09-14 release、`main` c7194c5d。許容値は実装時に緩めたものを下に反映）
 - 対象: `/home/kazumasa/projects/johnhull`（hullkit 新規 4 モジュール + `xva.py` 拡張 + `volumes/28_credit_desk`）
 - ブランチ: `worktree-johnhull-vol28-credit-desk`（git worktree、共有 index 事故の回避）
 - 親設計: `docs/superpowers/specs/2026-06-08-johnhull-09-credit-xva-design.md`（vol 09）、
@@ -140,7 +140,7 @@
 | `default_probs_from_spreads(times, spreads, recovery)` | Hull §24.7: q_i = exp(−s(t_{i−1})t_{i−1}/(1−R)) − exp(−s(t_i)t_i/(1−R)) |
 | `netting_set_exposure(values, netting=True)` | 最後の軸を取引とみなし、`netting=True` で max(Σv,0)、False で Σmax(v,0)（10/30/−25 → 15 vs 40） |
 | `collateralized_exposure(value, lagged_value, threshold=0.0)` | 二者間ゼロ閾値の担保規則（Ex 24.4）: 受取担保 C_r=max(V_lag−θ,0)、差入担保 C_p=max(−V_lag−θ,0)、exposure = max(V−C_r,0) + max(C_p−max(−V,0),0)。4 ケース 5/0/0/5 |
-| `cva_single_payoff(no_default_value, recovery, default_probs)` | 式 (24.5): (1−R) f_nd Σq_i。EE_t = f_nd·e^{rt} の一般 `cva` と一致（≤1e-10） |
+| `cva_single_payoff(no_default_value, recovery, default_probs)` | 式 (24.5): (1−R) f_nd Σq_i。閉形式 (1−R) f_nd (1−e^{−λT}) と一致（≤1e-12）、EE_t = f_nd·e^{rt} の一般 `cva`（2000 ステップ格子）と一致（≤1e-5） |
 
 ### 3.2 ボリューム `volumes/28_credit_desk/`
 
@@ -207,7 +207,7 @@ Hull の印刷値は `hull_*` プレフィクスで配列/指標に併記し、a
 | Check | 基準 |
 |---|---|
 | `cds_par_spread_hull_pin` | 配列（生存確率・割引係数）から再計算した 5Y スプレッドが 123bp ± 0.5bp |
-| `cds_mtm_identity` | D·0.015 − protection が指標 `cds_mtm_seller_150bp` と一致（≤1e-12）、値 0.0111 ± 0.0001 |
+| `cds_mtm_identity` | D·0.015 − protection が指標 `cds_mtm_seller_150bp` と一致（≤1e-10）、値 0.0111 ± 0.0001 |
 | `cds_bootstrap_round_trip` | ブートストラップ曲線で市場 CDS 気配を再価格 ≤1e-10 |
 | `bond_bootstrap_hull_pin` | λ₁/λ₂/λ₃ が 2.46/3.48/3.74% ± 0.02pt、期待損失 PV が 1.50/3.53/5.61 ± 0.01 |
 | `fixed_coupon_price_identity` | 100 − 100·D·(s−c) の再計算が指標と一致、Ex 25.1 の 100.27 ± 0.01 |
@@ -222,7 +222,7 @@ Hull の印刷値は `hull_*` プレフィクスで配列/指標に併記し、a
 | `double_t_gaussian_limit` | ν=1e6 の double-t スプレッド − ガウススプレッド ≤ 0.5bp |
 | `heterogeneous_equals_binomial` | 同質入力の ASB 再帰 pmf − 二項 pmf ≤1e-12 |
 | `creditmetrics_thresholds_hull_pin` | 閾値 7 値が Hull ± 0.0001、独立 vs ρ=0.2 で信用 VaR（99.9%）が相関側で大きい |
-| `netting_collateral_and_cva_special_case` | ネッティング 15 ≤ グロス 40、担保 4 ケース 5/0/0/5、式 (24.5) と一般 `cva` の差 ≤1e-10 |
+| `netting_collateral_and_cva_special_case` | ネッティング 15 ≤ グロス 40、担保 4 ケース 5/0/0/5、式 (24.5) と閉形式の差 ≤1e-12、一般 `cva`（2000 ステップ格子）との差 ≤1e-5 |
 
 許容値は固定 seed の実測に余裕を持たせて実装時に確定し、VALIDATION.md の表に記録する（慣行）。
 Table 25.8 の相関ピンは DerivaGem（30 点×2）との離散化差を含むので、実測差を negative results に

@@ -7,7 +7,7 @@ Last updated: 2026-04-30
 ## Overview
 
 John Hull テキストに対応した金利モデル学習用 Jupyter ノートブック。  
-ビルドスクリプト `build_ir_models_notebook.py`（2365行）から `ir_models.ipynb`（49セル）を生成する。
+ビルドスクリプト `build_ir_models_notebook.py`（2537 行、2026-09-14）から `ir_models.ipynb`（55 セル）を生成する。
 
 ---
 
@@ -68,7 +68,7 @@ John Hull テキストに対応した金利モデル学習用 Jupyter ノート�
   - `fit_results` に model 評価値を格納（コピーではなく実評価、RMSE ~1e-12）
   - `hl_theta_store`/`hw_theta_store` を Section 4.2 の dense-grid 評価に使用
 - **BDT/BK**: MC bootstrap（simplified、コメント明記）
-- **HJM/BGM**: 市場完全フィット（Section 4 からは省略）
+- **HJM/BGM**: 初期フォワードから曲線を再構築して RMSE を計算（丸め誤差のみ。以前は 0 をハードコードしていた — 2026-09-14 監査 D7）
 
 ### Section 4.2: 6M Forward Curve
 
@@ -173,7 +173,7 @@ interest_rate_models/
 ## Build Command
 
 ```bash
-/home/kazumasa/anaconda3/bin/python build_ir_models_notebook.py
+uv run --no-sync --package hullkit python johnhull/interest_rate_models/build_ir_models_notebook.py
 ```
 
 > `ir_models.ipynb` は `build_ir_models_notebook.py` から自動生成される。  

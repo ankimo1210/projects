@@ -36,8 +36,8 @@ SPX/VIX・0DTE、RFR、crypto、climate/energy を、再現可能な notebook/bo
 | G7 | integration PASS | vol 25 carbon/weather/PPA artifacts |
 | G8 | **done** | final fresh run、validation、tracked release gate、専用 branch への push を完了 |
 
-`release_manifest.json` の現行契約は vol 18–25、portal **11 themes / 70 figures**、
-Jupyter Book **28 pages**。巻別 PASS は `integration_and_reproducibility` の判定であり、
+`release_manifest.json` の 2026-07-18 時点の契約は vol 18–25、portal **11 themes / 70 figures**、
+Jupyter Book **28 pages**（2026-09-14 現在は vol 18–28、12 themes / 82 figures / 31 pages）。巻別 PASS は `integration_and_reproducibility` の判定であり、
 **model performance approved = no** とする。最終なテスト件数は G8 の fresh run 後に
 `johnhull/VALIDATION.md` へ固定する。
 
@@ -456,7 +456,7 @@ G1 の artifact/config/evaluation API を変更せず再利用できることが
 
 - [x] `johnhull/volumes/19_inverse_surfaces/` notebook + reference artifacts を作る。
 - [x] book/report に calibration、identifiability、fit-vs-arbitrage、variance consistency の図を追加する。
-- [x] VAE/diffusion/flow/SBI は `research` config からのみ実行可能にする。
+- [x] VAE/diffusion/flow/SBI は `research_profiles.json` で既定無効の research track にする（その config を読んで実行するコードは無い）。
 - [x] G2 validation report と acceptance table を作る。
 
 **G2 acceptance:** repricing、識別性、hard checks、variance term consistency、CPU calibration time を同時に報告できる。

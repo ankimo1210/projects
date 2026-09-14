@@ -7,7 +7,7 @@ functions the notebooks use, so the gallery can never drift from the maths.
 
 Adding a figure = append one ``FigureSpec``. Adding a theme = one ``BookMeta``.
 New deep-dive volumes (A1 stochastic calculus, A2 stoch-vol/Fourier, A3 advanced
-numerics, A4 XVA) register their figures here as they land.
+numerics, A4 XVA) and the vol 18–28 frontier volumes register their figures here.
 """
 
 from __future__ import annotations
@@ -538,7 +538,7 @@ _FRONTIER_SPECS = (
         "ml_hard_violations",
         "ml_derivatives",
         "soft lossとhard無裁定検査",
-        "penalty前後の違反件数をhard checkで測る。",
+        "小型ablationとpenalty_weight 0の本番モデルの違反件数をhard checkで測る。",
         "soft lossをarbitrage-freeの証明と取り違えない。",
     ),
     (
@@ -580,7 +580,7 @@ _FRONTIER_SPECS = (
         "forecast_paths",
         "ml_derivatives",
         "leakage-free RV forecast",
-        "Log-HARと小型Transformerを同じwalk-forward窓で比較。",
+        "Log-HARとPCA-ridgeを同じwalk-forward窓で比較。",
         "複雑モデルを単純baselineより先に採用しない。",
     ),
     (
@@ -608,7 +608,7 @@ _FRONTIER_SPECS = (
         "spx_joint_fit",
         "volatility_frontiers",
         "SPX IV joint fit",
-        "PDV/AFVのSPX smile fit。",
+        "PDV/AFVのSPX smile（固定パラメータの比較、較正はしない）。",
         "VIXも同時に合う状態モデルを選ぶ。",
     ),
     (
@@ -656,8 +656,8 @@ _FRONTIER_SPECS = (
     (
         "zero_dte_ood",
         "volatility_frontiers",
-        "時刻別price/Greek OOD",
-        "open/midday/event/closeの誤差。",
+        "時刻別price/Greek誤差",
+        "open/midday/event/closeのevent対baselineのMAE。",
         "平均誤差が隠すevent windowを監視する。",
     ),
     (

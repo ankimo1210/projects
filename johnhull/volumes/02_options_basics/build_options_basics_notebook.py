@@ -394,7 +394,7 @@ cells.append(
 - **bear put spread**: $K_2$ プット買い + $K_1$ プット売り。下落で利益
 - **butterfly**: $K_1, K_3$ 買い + $K_2$ 2枚売り（$K_2$ 中点）。±小動きで利益の「スパイク」
 - **box spread**: bull call + bear put。ペイオフは常に $K_2-K_1$ → 価値は $(K_2-K_1)e^{-rT}$（**ヨーロピアン限定**の裁定関係。アメリカンで組むと早期行使リスクで崩れる — Business Snapshot 12.1）
-- **calendar / diagonal spread**: 同一 $K$・異限月（calendar）／行使価格も限月も異なる（diagonal）2枚構成。損益は短期満期時点の**長期側の残存時間価値**に依存するため、本冊の「満期ペイオフ」枠組みでは正確に描けない — 時間価値チャートを扱う第3冊（Greeks）で再訪""")
+- **calendar / diagonal spread**: 同一 $K$・異限月（calendar）／行使価格も限月も異なる（diagonal）2枚構成。損益は短期満期時点の**長期側の残存時間価値**に依存するため、本冊の「満期ペイオフ」枠組みでは正確に描けない（他の巻でも未実装）""")
 )
 
 # Cell 15: spreads panel (static)
@@ -547,7 +547,7 @@ $$c = S_0 e^{-qT} N(d_1) - K e^{-rT} N(d_2) \quad \text{(17.4)}$$
 
 **ポートフォリオ保険**: ベータ $\beta$ のポートフォリオ $P$ を守る指数プット枚数は
 
-$$N^* = \beta \cdot \frac{P}{S_0 \times 100} \quad \text{(§17.4)}$$""")
+$$N^* = \beta \cdot \frac{P}{S_0 \times 100} \quad \text{(§17.1)}$$""")
 )
 cells.append(
     md(r"""> **核心** — 指数プットでポートフォリオに『下限』を付けられる。必要枚数は β で決まる。<br>

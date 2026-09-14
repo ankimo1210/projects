@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-14 (vol 28 credit-desk run)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -15,7 +15,7 @@ integration gate を満たすことだけを表す。実市場での予測力、
 | Gate | Evidence | Result |
 |---|---|:---:|
 | G0 | owner boundary、JSON+NPZ schema、split audit、torch-free `hullkit`、checkpoint/data policy | PASS |
-| G1 / vol 18 | 8 hard checks、BS price/delta、OOD、pathwise MC uncertainty、CPU report | PASS |
+| G1 / vol 18 | 8 hard checks、BS price/delta、pathwise MC uncertainty、CPU report | PASS |
 | G2 / vol 19 | Heston/COS・SABR/Hagan・rBergomi teacher、multi-start two-step calibration、hard surface checks、actual variance refits | PASS |
 | G3 / vol 20 | 1/5/21-day purged folds、train-only scaler/PCA、10-model ladder、regime/bootstrap diagnostics、common-path hedge | PASS |
 | G4 / vol 21–22 | four-family SPX/VIX joint objective、teacher/Greek/OOD/timing、0DTE clock/event/expiry checks | PASS |
@@ -27,12 +27,16 @@ integration gate を満たすことだけを表す。実市場での予測力、
 | vol 27 | Kupiec/Christoffersen/Basel backtests、FHS、EVT/GPD tail、Euler risk decomposition、P&L explain、cross-asset capstone | PASS (tracked release) |
 | vol 28 | Hull Ch.24–25 credit desk: bond/CDS bootstraps, CDS legs/MTM/fixed coupon/options, quadrature CDO and kth-to-default, compound/base correlation, double-t/ASB, CreditMetrics, netting/collateral CVA | PASS (tracked release) |
 
-vol 26–28 は G0–G8 とは別の Phase 計画（`docs/superpowers/plans/`）で実装したため
-G 番号を持たないが、gate の内容と PASS の意味は同じである（vol 28 の notebook 上の
-gate ラベルは G10）。
+vol 26–28 は G0–G8 とは別の Phase 計画（`docs/superpowers/plans/`）で実装した。gate の
+内容と PASS の意味は同じで、各巻の notebook 上の gate ラベルは G8 / G9 / G10（vol 26 の
+G8 は上の統合 gate G8 と番号が重なる）。
 
 Canonical reference acceptance is recomputed from the committed arrays by
 `johnhull/scripts/frontier_acceptance.py`; it is not trusted as a copied JSON flag.
+For vol 23–25, 27 and 28 the tamper contract
+(`report/tests/test_frontier_acceptance_tamper.py`) proves this: altering one committed
+array or metric flips exactly the check that recomputes it. vol 18–22 and 26 still mix
+array checks with stored-value comparisons (`docs/SECTION_AUDIT_2026-09-14.md` §4.7).
 
 | Volume | Acceptance checks | Integration | Performance approval |
 |---:|---:|:---:|:---:|
@@ -167,7 +171,7 @@ failures do not invalidate the scoped release candidate:
 | `rough_volatility` | 1 | Its notebook kernel inherited Windows TEMP under WSL; Jupyter rejected NTFS mode `0o677` instead of `0o600`. The failure is outside johnhull and occurs before notebook code execution. |
 
 There were no functional failures in the scoped `deep_hedge_price`, `hullkit`, portal,
-artifact, or vol 18–27 notebook gates. These exceptions are recorded rather than hidden
+artifact, or vol 18–25 notebook gates. These exceptions are recorded rather than hidden
 or used to claim a green workspace-wide suite.
 
 ## 2026-07-20 review-fix run (vol 26/27 input contracts and cross-asset capstone)
@@ -253,7 +257,9 @@ fixtures and used solely as textbook pins (`docs/DATA_PROVENANCE.md`).
   and scale monotonicity on `32` grid steps; the manufactured target has SPX RMSE
   `0.0364061` and VIX RMSE `4.13935`. This is not a Greek-performance pass.
 - vol 22: the intraday teacher and event schedule are synthetic, not causal dealer-flow
-  evidence. DML/PIDE and point-process research tracks remain disabled.
+  evidence. The disabled research tracks are those in `research_profiles.json`
+  (VAE/flow/SBI, foundation zero-shot/diffusion, signature/optimal transport, DML/PIDE,
+  storage real option).
 - vol 23: Hagan worst quick-grid error is `65.7763 bp`; the free-boundary fixture is an
   explicit shift boundary, not an endogenous boundary solve; MC SE omits time-step bias.
 - vol 24: the cascade is synthetic, not an event reconstruction. Dynamic fees do not

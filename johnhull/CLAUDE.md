@@ -29,7 +29,9 @@ make hull-release-check     # release 契約（scripts/verify_release.py）
 ```
 
 acceptance は `johnhull/scripts/frontier_acceptance.py` がコミット済み配列から再計算する
-（JSON のフラグを信用しない）。
+（JSON のフラグを信用しない）。vol 23–25・27・28 は `report/tests/test_frontier_acceptance_tamper.py`
+が「配列を改竄すると該当チェックだけが落ちる」ことを固定している。vol 18–22・26 は配列検査と
+保存値の照合が混在する（`docs/SECTION_AUDIT_2026-09-14.md` §4.7）。
 
 ## 規約と落とし穴
 

@@ -4,7 +4,8 @@ build_stoch_vol_fourier_notebook.py
 nbformat-dict pattern to generate stoch_vol_fourier.ipynb
 (A2 deep-dive — stochastic volatility & Fourier pricing).
 
-Plotly figures (``fig.show()``) so they render in the static Jupyter Book HTML.
+Plotly figures (``fig.show()``) instead of ipympl. Their outputs are mimetype-only
+in the static Jupyter Book HTML; the interactive rendering is the portal (``make hull-report``).
 Numerical-verification cells assert against closed forms / Monte-Carlo.
 References: Gatheral, *The Volatility Surface*; Heston (1993); Fang & Oosterlee
 (2008); Hagan et al. (2002).
