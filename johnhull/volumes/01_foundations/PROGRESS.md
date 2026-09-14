@@ -10,8 +10,11 @@ Last updated: 2026-06-07
   hullkit pytest (tests/), make lint/fmt
 - NOT yet verified: widget interactivity in live Jupyter (user check)
 - Note: Hull figure refs follow the 11e Global Edition PDF in `johnhull/`
-  (Fig 13.4 two-step call, Fig 13.7/13.8 puts); §13.1 uses the classic
-  US-edition example (r=12%, f=0.633) with a GE note in cell 04
+  (Fig 13.7/13.8 puts are identical in both editions). §13.1 and Fig 13.4
+  teach the classic US-edition example (r=12%: f=0.633, two-step 1.2823);
+  the Global Edition prints r=4% (f=0.545, two-step 0.9497). Both are
+  asserted in the verification cell and in `hullkit/tests/test_trees.py`
+  (corrected 2026-09-14; earlier the Fig 13.4 value was labelled GE)
 
 ## Build
 
