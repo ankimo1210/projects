@@ -514,7 +514,7 @@ _kd0, _kr0 = _kde_xy(_smp0)
 path_lines_rb = [ax_rb_p.plot(t_grid, _rb_paths[0][i]*100, color='seagreen', lw=0.8, alpha=0.5,
                      label='サンプルパス' if i==0 else '')[0] for i in range(10)]
 mean_ln_rb, = ax_rb_p.plot(t_grid, _rb_paths[0].mean(0)*100, color='darkgreen', lw=2.5, label='平均パス')
-ref_ln_rb, = ax_rb_p.plot([0,10], [3.0,3.0], color='gray', ls='--', lw=1.2, label='r₀=3%')
+ref_ln_rb, = ax_rb_p.plot([0,10], [3.0,3.0], color='gray', ls='--', lw=1.2, label='$r_0$=3%')
 t_ln_rb, = ax_rb_p.plot([5.0,5.0], [0,30], color='black', ls=':', lw=1.2)
 ax_rb_p.set_xlim(0, 10)
 ax_rb_p.set_ylim(0, 30)
@@ -948,7 +948,7 @@ plt.subplots_adjust(wspace=0.08)
 path_lines_hw = [ax_hw_p.plot(t_grid, _hw_paths[0][i]*100, color="purple", lw=0.8, alpha=0.5,
                                label="サンプルパス" if i==0 else "")[0] for i in range(10)]
 mean_ln_hw, = ax_hw_p.plot(t_grid, _hw_paths[0].mean(0)*100, color="darkviolet", lw=2.5, label="平均パス")
-ref_ln_hw, = ax_hw_p.plot([0, 10], [3.0, 3.0], color="gray", ls="--", lw=1.2, label="r₀=3%")
+ref_ln_hw, = ax_hw_p.plot([0, 10], [3.0, 3.0], color="gray", ls="--", lw=1.2, label="$r_0$=3%")
 t_ln_hw, = ax_hw_p.plot([5.0, 5.0], [-3, 15], color="black", ls=":", lw=1.2)
 ax_hw_p.set_xlim(0, 10); ax_hw_p.set_ylim(-3, 15)
 ax_hw_p.set_xlabel("時間（年）"); ax_hw_p.set_ylabel("短期金利（%）")
@@ -1157,7 +1157,7 @@ plt.subplots_adjust(wspace=0.08)
 path_lines_bk = [ax_bk_p.plot(t_grid, _bk_paths[0][i]*100, color="hotpink", lw=0.8, alpha=0.5,
                                label="サンプルパス" if i==0 else "")[0] for i in range(10)]
 mean_ln_bk, = ax_bk_p.plot(t_grid, _bk_paths[0].mean(0)*100, color="deeppink", lw=2.5, label="平均パス")
-ref_ln_bk, = ax_bk_p.plot([0, 10], [3.0, 3.0], color="gray", ls="--", lw=1.2, label="r₀=3%")
+ref_ln_bk, = ax_bk_p.plot([0, 10], [3.0, 3.0], color="gray", ls="--", lw=1.2, label="$r_0$=3%")
 t_ln_bk, = ax_bk_p.plot([5.0, 5.0], [0, 30], color="black", ls=":", lw=1.2)
 ax_bk_p.set_xlim(0, 10); ax_bk_p.set_ylim(0, 30)
 ax_bk_p.set_xlabel("時間（年）"); ax_bk_p.set_ylabel("短期金利（%）")
@@ -1568,7 +1568,7 @@ sigma_bgm_c_sl = widgets.FloatSlider(value=0.25, min=0.05, max=0.60, step=0.01,
 
 fig_fwd_cmp, ax_fwd_cmp = plt.subplots(figsize=(9, 4))
 hjm_fwd_ln, = ax_fwd_cmp.plot(T_fwd, hjm_black_equivalent_vol(0.10, 0.010, T_fwd, 0.05)*100,
-                                color="#7f7f7f", lw=2.5, label="HJM/HW（正規 vol σ_N(T)/F₀ で Black 換算, 右肩下がり）")
+                                color="#7f7f7f", lw=2.5, label="HJM/HW（正規 vol σ_N(T)/$F_0$ で Black 換算, 右肩下がり）")
 bgm_fwd_ln, = ax_fwd_cmp.plot(T_fwd, np.full_like(T_fwd, 25.0),
                                 color="#17becf", lw=2.5, ls="--", label="BGM/LMM（フラット Black vol）")
 ax_fwd_cmp.set_xlabel("テナー T（年）"); ax_fwd_cmp.set_ylabel("Black 換算 implied vol (%)")
