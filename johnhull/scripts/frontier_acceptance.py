@@ -753,27 +753,59 @@ def _volume23(
         "four observation conventions and both coupon timings",
         conventions_ok,
     )
+    # Daily compounding rebuilt from the committed fixings and day counts:
+    # prod(1 + r_i d_i / basis) must reproduce the accrual path and the
+    # in-arrears accumulation factor, not just the stored hand-check scalar.
+    basis = float(metrics["rfr_day_count_basis"])
+    daily_rate = np.asarray(arrays["daily_rate"], dtype=float)
+    day_count = np.asarray(arrays["day_count"], dtype=float)
+    factors = 1.0 + daily_rate * day_count / basis
+    accrual_rebuilt = np.cumprod(factors) - 1.0
+    accrual_gap = float(np.max(np.abs(accrual_rebuilt - arrays["discrete_accrual"])))
+    in_arrears_gap = abs(float(np.prod(factors)) - float(arrays["convention_accumulation"][0]))
+    handcheck_error = float(metrics["daily_compounding_handcheck_error"])
     _add(
         checks,
         "daily_compounding_handcheck",
-        metrics["daily_compounding_handcheck_error"],
-        "< 1e-12",
-        metrics["daily_compounding_handcheck_error"] < 1e-12,
+        max(accrual_gap, in_arrears_gap, handcheck_error),
+        "prod(1 + r_i d_i / basis) rebuilt from daily_rate and day_count matches the accrual "
+        "path and the in-arrears accumulation factor (1e-12); stored hand-check error < 1e-12",
+        accrual_gap < 1e-12 and in_arrears_gap < 1e-12 and handcheck_error < 1e-12,
     )
+    year_fraction = float(day_count.sum()) / basis
+    continuous_rebuilt = np.expm1(np.cumsum(daily_rate * day_count / basis))
+    continuous_gap = float(np.max(np.abs(continuous_rebuilt - arrays["continuous_accrual"])))
+    limit_error = abs(float(accrual_rebuilt[-1] - continuous_rebuilt[-1])) / year_fraction
+    limit_metric_gap = abs(limit_error - float(metrics["continuous_limit_error"]))
     _add(
         checks,
         "continuous_limit",
-        metrics["continuous_limit_error"],
-        "< 1e-5",
-        metrics["continuous_limit_error"] < 1e-5,
+        limit_error,
+        "expm1(sum r_i d_i / basis) rebuilt from the fixings matches continuous_accrual "
+        "(1e-12); annualized discrete-minus-continuous rate gap < 1e-5 and equals the "
+        "stored error (1e-10)",
+        continuous_gap < 1e-12 and limit_error < 1e-5 and limit_metric_gap < 1e-10,
     )
+    bachelier_forward = float(metrics["bachelier_forward"])
+    bachelier_std = float(metrics["bachelier_normal_vol"]) * math.sqrt(
+        float(metrics["bachelier_expiry"])
+    )
+    option_strike = np.asarray(arrays["strike"], dtype=float)
+    bachelier_d = (bachelier_forward - option_strike) / bachelier_std
+    bachelier_rebuilt = (bachelier_forward - option_strike) * _norm_cdf_np(
+        bachelier_d
+    ) + bachelier_std * np.exp(-0.5 * bachelier_d**2) / math.sqrt(2.0 * math.pi)
+    closed_form_gap = float(np.max(np.abs(bachelier_rebuilt - arrays["bachelier_price"])))
+    quadrature_gap = float(np.max(np.abs(bachelier_rebuilt - arrays["quadrature_price"])))
     _add(
         checks,
         "bachelier_quadrature_handcheck",
-        metrics["quadrature_handcheck_error"],
-        "< 1e-12",
-        metrics["quadrature_handcheck_error"] < 1e-12
-        and np.allclose(arrays["bachelier_price"], arrays["quadrature_price"], atol=1e-12),
+        max(closed_form_gap, quadrature_gap),
+        "Bachelier call rebuilt from (F, sigma_N, T) on the strike grid matches both the "
+        "committed closed-form and quadrature prices (1e-12); stored hand-check error < 1e-12",
+        closed_form_gap < 1e-12
+        and quadrature_gap < 1e-12
+        and float(metrics["quadrature_handcheck_error"]) < 1e-12,
     )
     curve_ok = (
         arrays["curve_names"].tolist() == ["SOFR", "USD collateral OIS", "TONA"]
@@ -897,89 +929,211 @@ def _volume24(
         "linear/inverse/quanto long-short and zero-move identities",
         contract_ok,
     )
+    # Funding ledger rebuilt per step: long + short + venue transfers net to
+    # zero, the cumulative path is the running long cash flow, and settled
+    # intervals are the completed multiples of the funding interval.
+    funding_long = np.asarray(arrays["funding_long_cashflow"], dtype=float)
+    funding_short = np.asarray(arrays["funding_short_cashflow"], dtype=float)
+    funding_venue = np.asarray(arrays["funding_venue_cashflow"], dtype=float)
+    funding_residual = float(np.max(np.abs(funding_long + funding_short + funding_venue)))
+    cumulative_gap = float(np.max(np.abs(np.cumsum(funding_long) - arrays["funding_cashflow"])))
+    interval_hours = float(metrics["funding_interval_hours"])
+    settled_rebuilt = np.floor(
+        np.asarray(arrays["elapsed_hours"], dtype=float) / interval_hours + 1e-9
+    )
+    settled_gap = float(np.max(np.abs(settled_rebuilt - arrays["funding_settled_intervals"])))
+
+    # Liquidation waterfalls rebuilt leg by leg from the committed method
+    # arrays (Hull-style ledger: equity + loss absorbers = trader return + fee).
+    method_names = [str(name) for name in arrays["liquidation_method_names"]]
+    w_equity = np.asarray(arrays["liquidation_method_equity"], dtype=float)
+    w_fee = np.asarray(arrays["liquidation_method_fee"], dtype=float)
+    w_trader = np.asarray(arrays["liquidation_method_trader_return"], dtype=float)
+    w_auction = np.asarray(arrays["liquidation_method_auction_recovery"], dtype=float)
+    w_insurance_used = np.asarray(arrays["liquidation_method_insurance_used"], dtype=float)
+    w_adl = np.asarray(arrays["liquidation_method_adl_used"], dtype=float)
+    w_social = np.asarray(arrays["liquidation_method_socialized_loss"], dtype=float)
+    w_uncovered = np.asarray(arrays["liquidation_method_uncovered_loss"], dtype=float)
+    w_before = np.asarray(arrays["liquidation_method_insurance_before"], dtype=float)
+    w_after = np.asarray(arrays["liquidation_method_insurance_after"], dtype=float)
+    w_sources = w_auction + w_insurance_used + w_adl + w_social + w_uncovered
+    conservation_rebuilt = w_equity + w_sources - w_trader - w_fee
+    shortfall_gap = float(np.max(np.abs(w_sources - np.maximum(-w_equity, 0.0))))
+    trader_gap = float(np.max(np.abs(w_trader - np.maximum(w_equity - w_fee, 0.0))))
+    insurance_rebuilt = w_after - w_before - w_fee + w_insurance_used
+    conservation_error = float(np.max(np.abs(conservation_rebuilt)))
+    conservation_metric_gap = float(
+        np.max(np.abs(conservation_rebuilt - arrays["liquidation_method_conservation_error"]))
+    )
+    cashflow_error = max(
+        funding_residual,
+        conservation_error,
+        float(np.max(np.abs(arrays["amm_identity_error"]))),
+        float(np.max(np.abs(arrays["cpmm_swap_identity_error"]))),
+    )
     _add(
         checks,
         "cashflow_conservation",
-        metrics["cashflow_conservation_error"],
-        "< 1e-12",
-        metrics["cashflow_conservation_error"] < 1e-12,
+        cashflow_error,
+        "funding long+short+venue, waterfall equity+absorbers-trader-fee (both rebuilt from the "
+        "committed legs), AMM and CPMM identities all < 1e-12; stored error < 1e-12",
+        cashflow_error < 1e-12 and float(metrics["cashflow_conservation_error"]) < 1e-12,
     )
     funding_ok = (
-        metrics["funding_interval_hours"] > 0
+        interval_hours > 0
         and metrics["funding_absolute_cap"] > 0
         and np.all(
             np.abs(arrays["funding_rate"]) <= arrays["funding_rate_cap"] + np.finfo(float).eps
         )
         and np.all(np.diff(arrays["funding_settled_intervals"]) >= 0)
-        and np.max(np.abs(arrays["funding_conservation_error"])) < 1e-12
+        and settled_gap == 0.0
+        and funding_residual < 1e-12
+        and cumulative_gap < 1e-12
     )
     _add(
         checks,
         "funding_cap_interval",
-        metrics["funding_interval_hours"],
-        "positive interval, absolute cap, and conserved transfers",
+        interval_hours,
+        "positive interval and absolute cap; settled intervals == floor(elapsed / interval); "
+        "long+short+venue == 0 and cumulative funding == cumsum(long) rebuilt from the arrays",
         funding_ok,
     )
+    auction = method_names.index("auction") if "auction" in method_names else 0
+    solvency_error = max(abs(float(insurance_rebuilt[auction])), float(w_uncovered[auction]))
+    solvency_metric_gap = abs(solvency_error - float(metrics["solvency_identity_error"]))
     _add(
         checks,
         "solvency_identity",
-        metrics["solvency_identity_error"],
-        "< 1e-12",
-        metrics["solvency_identity_error"] < 1e-12,
+        solvency_error,
+        "auction insurance identity (after - before - fee + used) rebuilt from the legs and "
+        "uncovered loss both < 1e-12; equals the stored error (1e-12)",
+        solvency_error < 1e-12 and solvency_metric_gap < 1e-12,
+    )
+    insurance_error = float(np.max(np.abs(insurance_rebuilt)))
+    insurance_metric_gap = abs(
+        abs(float(insurance_rebuilt[auction])) - float(metrics["insurance_identity_error"])
     )
     _add(
         checks,
         "insurance_identity",
-        metrics["insurance_identity_error"],
-        "< 1e-12",
-        metrics["insurance_identity_error"] < 1e-12,
+        insurance_error,
+        "insurance_after == insurance_before + fee - insurance_used for every liquidation "
+        "method (1e-12); stored auction error matches (1e-12)",
+        insurance_error < 1e-12 and insurance_metric_gap < 1e-12,
+    )
+    ending_ok = (
+        float(arrays["adl_notional"][-1]) == float(w_adl[auction]) == metrics["ending_adl_notional"]
+        and float(arrays["socialized_loss"][-1])
+        == float(w_social[auction])
+        == metrics["ending_socialized_loss"]
+        and float(arrays["uncovered_loss"][-1])
+        == float(w_uncovered[auction])
+        == metrics["ending_uncovered_loss"]
+        and float(arrays["insurance_used"][-1]) == float(w_insurance_used[auction])
+        and float(arrays["insurance_fund"][-1])
+        == float(w_after[auction])
+        == metrics["ending_insurance_fund"]
+        and bool(np.all(arrays["insurance_fund"][:-1] == w_before[auction]))
     )
     waterfall = (
-        metrics["ending_adl_notional"] > 0
-        and metrics["ending_socialized_loss"] > 0
-        and metrics["ending_uncovered_loss"] == 0
+        ending_ok
+        and float(w_adl[auction]) > 0
+        and float(w_social[auction]) > 0
+        and float(w_uncovered[auction]) == 0
         and metrics["solvent"] is True
     )
     _add(
         checks,
         "stress_waterfall",
-        metrics["ending_socialized_loss"],
-        "ADL/social loss tracked with zero uncovered loss",
+        float(w_social[auction]),
+        "ending ADL/social/uncovered/insurance path equals the auction waterfall legs and the "
+        "stored metrics; ADL and social loss > 0 with zero uncovered loss",
         waterfall,
     )
+    forced = method_names.index("forced_sale") if "forced_sale" in method_names else 0
     methods_ok = (
-        arrays["liquidation_method_names"].tolist() == ["forced_sale", "auction"]
-        and np.max(np.abs(arrays["liquidation_method_conservation_error"])) < 1e-12
-        and np.all(arrays["liquidation_method_uncovered_loss"] == 0)
-        and np.all(np.isfinite(arrays["liquidation_method_socialized_loss"]))
+        method_names == ["forced_sale", "auction"]
+        and conservation_error < 1e-12
+        and conservation_metric_gap < 1e-12
+        and shortfall_gap < 1e-12
+        and trader_gap < 1e-12
+        and bool(np.all(w_fee <= np.maximum(w_equity, 0.0) + 1e-12))
+        and bool(np.all(w_uncovered == 0))
+        and float(w_social[auction]) < float(w_social[forced])
+        and float(metrics["forced_sale_socialized_loss"]) == float(w_social[forced])
+        and float(metrics["auction_socialized_loss"]) == float(w_social[auction])
     )
     _add(
         checks,
         "liquidation_method_waterfalls",
-        len(arrays["liquidation_method_names"]),
-        "forced sale and auction conserve their stress waterfalls",
+        max(conservation_error, shortfall_gap, trader_gap),
+        "forced sale and auction: equity + absorbers - trader return - fee == 0, absorbers == "
+        "max(-equity, 0), trader return == max(equity - fee, 0), fee <= max(equity, 0) (all "
+        "rebuilt from the legs, 1e-12); auction socialized loss < forced sale; metrics match",
         methods_ok,
     )
-    amm_ok = float(np.max(np.abs(arrays["amm_identity_error"]))) < 1e-12
+    gross_rebuilt = np.maximum(
+        0.0,
+        np.asarray(arrays["rebalanced_value"], dtype=float)
+        - np.asarray(arrays["lp_value"], dtype=float),
+    )
+    lvr_gap = max(
+        float(np.max(np.abs(gross_rebuilt - arrays["lvr"]))),
+        float(np.max(np.abs(arrays["dynamic_fee_gross_lvr"] - arrays["lvr"]))),
+        float(np.max(np.abs(arrays["fixed_fee_gross_lvr"] - arrays["lvr"]))),
+    )
+    amm_identity_rebuilt = (
+        np.asarray(arrays["dynamic_fee_gross_lvr"], dtype=float)
+        - np.asarray(arrays["dynamic_fee_income"], dtype=float)
+        - np.asarray(arrays["dynamic_fee_net_lvr"], dtype=float)
+    )
+    amm_error = max(lvr_gap, float(np.max(np.abs(amm_identity_rebuilt))))
     _add(
         checks,
         "amm_identity",
-        float(np.max(np.abs(arrays["amm_identity_error"]))),
-        "< 1e-12",
-        amm_ok,
+        amm_error,
+        "gross LVR == max(0, rebalanced - LP value) for the fixed and dynamic fee ledgers and "
+        "gross - dynamic fee - net == 0, all rebuilt from the committed arrays (1e-12)",
+        amm_error < 1e-12
+        and float(np.max(np.abs(amm_identity_rebuilt - arrays["amm_identity_error"]))) < 1e-12,
+    )
+    fixed_net_gap = float(
+        np.max(
+            np.abs(
+                arrays["fixed_fee_net_lvr"] - (arrays["fixed_fee_gross_lvr"] - arrays["fee_income"])
+            )
+        )
+    )
+    dynamic_net_gap = float(
+        np.max(
+            np.abs(
+                arrays["dynamic_fee_net_lvr"]
+                - (arrays["dynamic_fee_gross_lvr"] - arrays["dynamic_fee_income"])
+            )
+        )
+    )
+    reduction_gap = abs(
+        float(np.max(np.abs(arrays["fixed_fee_gross_lvr"] - arrays["dynamic_fee_gross_lvr"])))
+        - float(metrics["dynamic_fee_gross_lvr_reduction"])
     )
     cpmm_ok = (
         np.max(np.abs(arrays["cpmm_swap_identity_error"])) < 1e-12
         and np.all(arrays["cpmm_invariant_gain"] >= 0)
-        and np.all(np.isfinite(arrays["fixed_fee_net_lvr"]))
-        and np.all(np.isfinite(arrays["dynamic_fee_net_lvr"]))
+        and fixed_net_gap < 1e-12
+        and dynamic_net_gap < 1e-12
+        and reduction_gap < 1e-12
+        and bool(np.all(np.diff(arrays["fee_income"]) >= 0))
+        and bool(np.all(np.diff(arrays["dynamic_fee_income"]) >= 0))
+        and float(arrays["dynamic_fee_income"][-1]) == float(metrics["dynamic_fee_compensation"])
         and np.all(np.isfinite(arrays["concentrated_lvr"]))
     )
     _add(
         checks,
         "amm_lvr_fee_variants",
-        float(np.max(np.abs(arrays["cpmm_swap_identity_error"]))),
-        "CPMM identity plus finite fixed/dynamic/concentrated LVR",
+        max(fixed_net_gap, dynamic_net_gap),
+        "CPMM identity; net LVR == gross - cumulative fee for the fixed and dynamic ledgers "
+        "(1e-12); fee income non-decreasing; gross-LVR reduction and fee compensation metrics "
+        "match the arrays; finite concentrated LVR",
         cpmm_ok,
     )
     oracle_ok = (
@@ -1009,12 +1163,23 @@ def _volume25(
     metrics: dict[str, Any], arrays: dict[str, np.ndarray]
 ) -> tuple[list[dict[str, Any]], list[str]]:
     checks: list[dict[str, Any]] = []
+    # Incompleteness is evidenced, not declared: the three premium principles
+    # price the same payoff differently and every off-site station hedge
+    # leaves residual variance.
+    premium_spread = float(np.ptp(arrays["weather_premium"]))
+    variance_reduction = np.asarray(arrays["basis_variance_reduction"], dtype=float)
+    incomplete = (
+        metrics["market_completeness"] == "incomplete"
+        and premium_spread > 0.0
+        and bool(np.all(variance_reduction[1:] < 1.0))
+    )
     _add(
         checks,
         "market_completeness",
-        metrics["market_completeness"],
-        "== incomplete",
-        metrics["market_completeness"] == "incomplete",
+        premium_spread,
+        "label == incomplete; premium principles disagree (ptp > 0) and off-site basis hedges "
+        "leave residual variance (variance reduction < 1)",
+        incomplete,
     )
     principles = arrays["premium_principle_names"].tolist()
     expected = ["expected_value", "standard_deviation", "exponential"]
@@ -1037,20 +1202,62 @@ def _volume25(
         sensitivity,
     )
     carbon_models = arrays["carbon_model_names"].tolist()
-    carbon_se = arrays["carbon_model_standard_error"]
+    carbon_se = np.asarray(arrays["carbon_model_standard_error"], dtype=float)
+    carbon_price = np.asarray(arrays["carbon_model_price"], dtype=float)
+    # Black-76 rebuilt from (F, r, T, sigma) on the strike grid; the constant-
+    # variance GBM teacher must agree with it inside Monte Carlo noise.
+    carbon_forward = float(metrics["carbon_forward"])
+    carbon_rate = float(metrics["carbon_rate"])
+    carbon_maturity = float(metrics["carbon_maturity"])
+    carbon_sigma = float(metrics["carbon_black76_volatility"])
+    carbon_strike = np.asarray(arrays["strike"], dtype=float)
+    vol_sqrt_t = carbon_sigma * math.sqrt(carbon_maturity)
+    d1 = np.log(carbon_forward / carbon_strike) / vol_sqrt_t + 0.5 * vol_sqrt_t
+    black76_rebuilt = math.exp(-carbon_rate * carbon_maturity) * (
+        carbon_forward * _norm_cdf_np(d1) - carbon_strike * _norm_cdf_np(d1 - vol_sqrt_t)
+    )
+    black76_gap = float(np.max(np.abs(black76_rebuilt - arrays["carbon_black76_price"])))
+    ladder_gap = float(
+        np.max(
+            np.abs(
+                carbon_price
+                - np.stack(
+                    [
+                        arrays["carbon_black76_price"],
+                        arrays["carbon_gbm_price"],
+                        arrays["carbon_heston_price"],
+                        arrays["carbon_jump_price"],
+                    ]
+                )
+            )
+        )
+    )
+    gbm_zscore = float(
+        np.max(
+            np.abs(np.asarray(arrays["carbon_gbm_price"], dtype=float) - black76_rebuilt)
+            / carbon_se[1]
+        )
+    )
     carbon_ok = (
         carbon_models == ["Black-76", "GBM MC", "Heston MC", "SV+jump MC"]
         and metrics["carbon_model_ladder_complete"] is True
-        and arrays["carbon_model_price"].shape == carbon_se.shape
-        and np.all(np.isfinite(arrays["carbon_model_price"]))
-        and np.all(carbon_se >= 0)
+        and carbon_price.shape == carbon_se.shape
+        and np.all(np.isfinite(carbon_price))
+        and black76_gap < 1e-10
+        and ladder_gap == 0.0
+        and gbm_zscore <= 4.0
+        and np.all(carbon_se[0] == 0)
         and np.all(carbon_se[1:] > 0)
+        and float(metrics["carbon_atm_black76_price"])
+        == float(arrays["carbon_black76_price"][carbon_strike.size // 2])
     )
     _add(
         checks,
         "carbon_model_ladder",
-        len(carbon_models),
-        "Black-76 and three MC models with aligned uncertainty",
+        gbm_zscore,
+        "Black-76 rebuilt from (F, r, T, sigma) matches the committed row (1e-10); the ladder "
+        "stacks the four committed price rows; constant-variance GBM MC within 4 SE of "
+        "Black-76 at every strike; zero SE for Black-76, positive for the MC rows",
         carbon_ok,
     )
     weather_ok = (
@@ -1089,32 +1296,90 @@ def _volume25(
         "finite hedge ratios and variance reduction in [0, 1]",
         hedge_ok,
     )
+    # PPA cash-flow statistics rebuilt from the committed per-scenario samples
+    # (hedge ratio 1, unit discount): fair value is the mean settlement, the
+    # unhedged std is the merchant std, and the hedge-ratio ladder ends at the
+    # hedged residual and starts at the unhedged one.
+    merchant = np.asarray(arrays["ppa_merchant_cash_flow_samples"], dtype=float)
+    hedged = np.asarray(arrays["ppa_hedged_cash_flow_samples"], dtype=float)
+    ppa_alpha = float(metrics["ppa_alpha"])
+    settlement_samples = hedged - merchant[None, :]
+    fair_value_gap = max(
+        float(np.max(np.abs(settlement_samples.mean(axis=1) - arrays["ppa_fair_value"]))),
+        float(
+            np.max(
+                np.abs(
+                    np.asarray(
+                        [
+                            arrays["ppa_fixed"].sum(),
+                            arrays["ppa_pay_as_produced"].sum(),
+                            arrays["ppa_floor_collar"].sum(),
+                        ]
+                    )
+                    - arrays["ppa_fair_value"]
+                )
+            )
+        ),
+    )
+    unhedged_gap = float(np.max(np.abs(merchant.std(ddof=0) - arrays["unhedged_cash_flow_std"])))
+    hedge_ratio = np.asarray(arrays["hedge_ratio"], dtype=float)
+    ladder = np.asarray(arrays["hedge_ratio_residual"], dtype=float)
+    pap = arrays["risk_names"].tolist().index("pay-as-produced")
+    ladder_gap = max(
+        abs(float(ladder[-1] - arrays["hedge_residual"][pap])),
+        abs(float(ladder[0] - arrays["unhedged_cash_flow_std"][pap])),
+    )
     ppa = (
-        np.all(np.isfinite(arrays["cvar95"]))
-        and np.all(np.isfinite(arrays["hedge_residual"]))
-        and np.ptp(arrays["hedge_ratio_residual"]) > 0
+        hedged.shape == (arrays["risk_names"].size, merchant.size)
+        and merchant.size >= 2
+        and np.all(np.isfinite(hedged))
+        and float(hedge_ratio[0]) == 0.0
+        and float(hedge_ratio[-1]) == 1.0
+        and fair_value_gap < 1e-9
+        and unhedged_gap < 1e-9
+        and ladder_gap < 1e-9
+        and np.ptp(ladder) > 0
     )
     _add(
         checks,
         "ppa_risk_decomposition",
-        len(arrays["risk_names"]),
-        "finite CVaR/residual and hedge sensitivity",
+        max(fair_value_gap, unhedged_gap, ladder_gap),
+        "fair value == mean(hedged - merchant) == sum of period settlement means; unhedged std "
+        "== merchant std; hedge-ratio ladder spans unhedged std (h=0) to hedged residual (h=1) "
+        "(all rebuilt from the samples, 1e-9)",
         ppa,
     )
+    expected_rebuilt = hedged.mean(axis=1)
+    quantile = np.quantile(hedged, 1.0 - ppa_alpha, axis=1)
+    cfar_rebuilt = expected_rebuilt - quantile
+    cvar_rebuilt = np.asarray(
+        [
+            expected_rebuilt[row] - hedged[row][hedged[row] <= quantile[row]].mean()
+            for row in range(hedged.shape[0])
+        ]
+    )
+    residual_rebuilt = hedged.std(axis=1, ddof=0)
+    cashflow_gap = max(
+        float(np.max(np.abs(expected_rebuilt - arrays["expected_hedged_cash_flow"]))),
+        float(np.max(np.abs(cfar_rebuilt - arrays["cash_flow_at_risk"]))),
+        float(np.max(np.abs(cvar_rebuilt - arrays["cvar95"]))),
+        float(np.max(np.abs(residual_rebuilt - arrays["hedge_residual"]))),
+    )
     cashflow_ok = (
-        arrays["cash_flow_at_risk"].shape
-        == arrays["unhedged_cash_flow_std"].shape
-        == arrays["expected_hedged_cash_flow"].shape
-        and np.all(np.isfinite(arrays["cash_flow_at_risk"]))
-        and np.all(np.isfinite(arrays["unhedged_cash_flow_std"]))
-        and np.all(np.isfinite(arrays["expected_hedged_cash_flow"]))
-        and metrics["ppa_cvar95"] >= metrics["ppa_cash_flow_at_risk95"] > 0
+        cashflow_gap < 1e-9
+        and bool(np.all(cvar_rebuilt >= cfar_rebuilt))
+        and bool(np.all(cfar_rebuilt > 0))
+        and float(metrics["ppa_cvar95"]) == float(arrays["cvar95"][pap])
+        and float(metrics["ppa_cash_flow_at_risk95"]) == float(arrays["cash_flow_at_risk"][pap])
+        and float(metrics["ppa_hedge_residual"]) == float(arrays["hedge_residual"][pap])
     )
     _add(
         checks,
         "ppa_cashflow_risk",
-        metrics["ppa_cash_flow_at_risk95"],
-        "finite aligned CFaR diagnostics and CVaR >= CFaR > 0",
+        cashflow_gap,
+        "expected cash flow, CFaR = mean - q(1-alpha), CVaR = mean - mean(tail <= q) and "
+        "residual std rebuilt from the hedged samples match the committed arrays (1e-9); "
+        "CVaR >= CFaR > 0; pay-as-produced metrics match",
         cashflow_ok,
     )
     return checks, [

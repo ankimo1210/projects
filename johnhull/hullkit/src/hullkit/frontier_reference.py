@@ -1130,6 +1130,10 @@ def volume23_reference(*, seed: int = 20260741) -> FrontierReference:
         "single_curve_coupon_pv": single_curve_coupon_pv,
         "multi_curve_coupon_pv": multi_curve_coupon_pv,
         "quadrature_handcheck_error": float(np.max(np.abs(bachelier_price - quadrature_price))),
+        "rfr_day_count_basis": 360,
+        "bachelier_forward": 0.030,
+        "bachelier_normal_vol": 0.015,
+        "bachelier_expiry": 2.0,
         "hagan_worst_error_bp": diagnostics.overall_max_abs * 1e4,
         "hagan_long_maturity_rmse_bp": diagnostics.long_maturity_rmse * 1e4,
         "hagan_high_vol_rmse_bp": diagnostics.high_vol_rmse * 1e4,
@@ -1452,6 +1456,14 @@ def volume24_reference(*, seed: int = 20260742) -> FrontierReference:
         "liquidation_method_names": np.asarray(liquidation_methods),
         "liquidation_execution_price": np.asarray(execution_prices),
         "liquidation_method_equity": np.asarray([item.account_equity for item in waterfalls]),
+        "liquidation_method_fee": np.asarray([item.liquidation_fee for item in waterfalls]),
+        "liquidation_method_trader_return": np.asarray([item.trader_return for item in waterfalls]),
+        "liquidation_method_insurance_before": np.asarray(
+            [item.insurance_fund_before for item in waterfalls]
+        ),
+        "liquidation_method_insurance_after": np.asarray(
+            [item.insurance_fund_after for item in waterfalls]
+        ),
         "liquidation_method_auction_recovery": np.asarray(
             [item.auction_recovery for item in waterfalls]
         ),
@@ -1554,6 +1566,7 @@ def volume25_reference(*, seed: int = 20260743) -> FrontierReference:
     rate = 0.02
     maturity = 1.0
     strike = np.linspace(70.0, 130.0, 9)
+    black76_volatility = 0.25
     gbm_dynamics = carbon.CarbonDynamics(v0=0.0625, theta=0.0625, vol_of_vol=0.0)
     heston_dynamics = carbon.CarbonDynamics(
         v0=0.0625,
@@ -1598,7 +1611,10 @@ def volume25_reference(*, seed: int = 20260743) -> FrontierReference:
     )
     discount = np.exp(-rate * maturity)
     black76_price = np.asarray(
-        [carbon.black76_price(forward, value, rate, 0.25, maturity) for value in strike]
+        [
+            carbon.black76_price(forward, value, rate, black76_volatility, maturity)
+            for value in strike
+        ]
     )
     gbm_payoff = np.asarray([np.maximum(gbm_terminal - value, 0.0) for value in strike])
     gbm_price = np.asarray([discount * payoff.mean() for payoff in gbm_payoff])
@@ -1739,15 +1755,27 @@ def volume25_reference(*, seed: int = 20260743) -> FrontierReference:
         hedge_ratio,
         fixed_price=60.0,
     )
-    ppa_settlements = [
+    ppa_alpha = 0.95
+    ppa_settlement_matrix = [
         ppa.ppa_settlement(
             kind,
             scenarios.spot_prices,
             scenarios.generation,
             **terms,
-        ).mean(axis=0)
+        )
         for kind, terms in ppa_inputs
     ]
+    ppa_settlements = [settlement.mean(axis=0) for settlement in ppa_settlement_matrix]
+    # Per-scenario merchant and hedged cash flows (unit discount factors, hedge
+    # ratio 1) so the acceptance gate can rebuild CFaR/CVaR from the samples.
+    ppa_merchant_cash_flow = np.sum(
+        np.asarray(scenarios.spot_prices, dtype=float)
+        * np.asarray(scenarios.generation, dtype=float),
+        axis=1,
+    )
+    ppa_hedged_cash_flow = np.stack(
+        [ppa_merchant_cash_flow + settlement.sum(axis=1) for settlement in ppa_settlement_matrix]
+    )
     arrays: ArrayMap = {
         "strike": strike,
         "carbon_model_names": np.asarray(["Black-76", "GBM MC", "Heston MC", "SV+jump MC"]),
@@ -1808,9 +1836,16 @@ def volume25_reference(*, seed: int = 20260743) -> FrontierReference:
         "hedge_ratio_residual": np.asarray(
             [hedge_sensitivity[float(value)] for value in hedge_ratio]
         ),
+        "ppa_merchant_cash_flow_samples": ppa_merchant_cash_flow,
+        "ppa_hedged_cash_flow_samples": ppa_hedged_cash_flow,
     }
     metrics: dict[str, Scalar] = {
         "carbon_model_ladder_complete": True,
+        "carbon_forward": forward,
+        "carbon_rate": rate,
+        "carbon_maturity": maturity,
+        "carbon_black76_volatility": black76_volatility,
+        "ppa_alpha": ppa_alpha,
         "carbon_atm_black76_price": float(black76_price[strike.size // 2]),
         "carbon_atm_heston_price": float(heston_price[strike.size // 2]),
         "carbon_atm_jump_price": float(jump_price[strike.size // 2]),

@@ -10,6 +10,9 @@
 
 | Metric | Value |
 |---|---:|
+| `bachelier_expiry` | 2.0 |
+| `bachelier_forward` | 0.03 |
+| `bachelier_normal_vol` | 0.015 |
 | `bartlett_hedge_rmse` | 0.0003340079814252839 |
 | `continuous_limit_error` | 4.45993810761075e-06 |
 | `daily_compounding_handcheck_error` | 0.0 |
@@ -30,6 +33,7 @@
 | `multi_curve_coupon_pv` | 2.6399144642570382 |
 | `observation_shift_rate` | 0.041484401111674174 |
 | `quadrature_handcheck_error` | 6.938893903907228e-18 |
+| `rfr_day_count_basis` | 360 |
 | `sabr_teacher` | conditional normal-SABR MC; shifted-SABR full-truncation MC |
 | `sabr_teacher_nu` | 0.65 |
 | `single_curve_coupon_pv` | 2.631479252266155 |
@@ -42,9 +46,9 @@
 | Check | Observed | Criterion | Pass |
 |---|---:|---|:---:|
 | `rfr_conventions` | 4 | four observation conventions and both coupon timings | PASS |
-| `daily_compounding_handcheck` | 0.0 | < 1e-12 | PASS |
-| `continuous_limit` | 4.45993810761075e-06 | < 1e-5 | PASS |
-| `bachelier_quadrature_handcheck` | 6.938893903907228e-18 | < 1e-12 | PASS |
+| `daily_compounding_handcheck` | 0.0 | prod(1 + r_i d_i / basis) rebuilt from daily_rate and day_count matches the accrual path and the in-arrears accumulation factor (1e-12); stored hand-check error < 1e-12 | PASS |
+| `continuous_limit` | 4.4599381075968725e-06 | expm1(sum r_i d_i / basis) rebuilt from the fixings matches continuous_accrual (1e-12); annualized discrete-minus-continuous rate gap < 1e-5 and equals the stored error (1e-10) | PASS |
+| `bachelier_quadrature_handcheck` | 6.938893903907228e-18 | Bachelier call rebuilt from (F, sigma_N, T) on the strike grid matches both the committed closed-form and quadrature prices (1e-12); stored hand-check error < 1e-12 | PASS |
 | `multi_curve_policy_collateral` | 3 | SOFR/OIS/TONA curves plus policy and collateral scenarios | PASS |
 | `nonzero_nu_teacher` | 0.65 | > 0 with positive SE | PASS |
 | `hagan_diagnostics` | 65.77634984021016 | alpha x maturity grid; region RMSEs recomputed from arrays; static checks pass | PASS |

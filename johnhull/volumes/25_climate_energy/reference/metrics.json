@@ -2,9 +2,9 @@
   "acceptance": {
     "checks": [
       {
-        "criterion": "== incomplete",
+        "criterion": "label == incomplete; premium principles disagree (ptp > 0) and off-site basis hedges leave residual variance (variance reduction < 1)",
         "name": "market_completeness",
-        "observed": "incomplete",
+        "observed": 731.4813189586184,
         "passed": true
       },
       {
@@ -20,9 +20,9 @@
         "passed": true
       },
       {
-        "criterion": "Black-76 and three MC models with aligned uncertainty",
+        "criterion": "Black-76 rebuilt from (F, r, T, sigma) matches the committed row (1e-10); the ladder stacks the four committed price rows; constant-variance GBM MC within 4 SE of Black-76 at every strike; zero SE for Black-76, positive for the MC rows",
         "name": "carbon_model_ladder",
-        "observed": 4,
+        "observed": 1.0865168682003306,
         "passed": true
       },
       {
@@ -44,15 +44,15 @@
         "passed": true
       },
       {
-        "criterion": "finite CVaR/residual and hedge sensitivity",
+        "criterion": "fair value == mean(hedged - merchant) == sum of period settlement means; unhedged std == merchant std; hedge-ratio ladder spans unhedged std (h=0) to hedged residual (h=1) (all rebuilt from the samples, 1e-9)",
         "name": "ppa_risk_decomposition",
-        "observed": 3,
+        "observed": 3.552713678800501e-15,
         "passed": true
       },
       {
-        "criterion": "finite aligned CFaR diagnostics and CVaR >= CFaR > 0",
+        "criterion": "expected cash flow, CFaR = mean - q(1-alpha), CVaR = mean - mean(tail <= q) and residual std rebuilt from the hedged samples match the committed arrays (1e-9); CVaR >= CFaR > 0; pay-as-produced metrics match",
         "name": "ppa_cashflow_risk",
-        "observed": 65.69238346389739,
+        "observed": 0.0,
         "passed": true
       }
     ],
@@ -277,6 +277,21 @@
         ],
         "unit": "synthetic monetary units"
       },
+      "ppa_hedged_cash_flow_samples": {
+        "dtype": "float64",
+        "shape": [
+          3,
+          1000
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_merchant_cash_flow_samples": {
+        "dtype": "float64",
+        "shape": [
+          1000
+        ],
+        "unit": "synthetic monetary units"
+      },
       "ppa_pay_as_produced": {
         "dtype": "float64",
         "shape": [
@@ -406,7 +421,7 @@
     }
   },
   "companions": {
-    "scenarios.npz": "46969f01a8f61e146096ca44aecb30230a1cb3cebbcfaefebb445c8ad562e487"
+    "scenarios.npz": "102deee68286e909aa266ddd953ca521946c8b08894ba4b19ec6a8b4857c28d9"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -419,9 +434,14 @@
     "carbon_atm_heston_price": 9.293620958236868,
     "carbon_atm_jump_price": 9.77883384942297,
     "carbon_atm_standard_error": 0.17495521242041653,
+    "carbon_black76_volatility": 0.25,
+    "carbon_forward": 100.0,
+    "carbon_maturity": 1.0,
     "carbon_model_ladder_complete": true,
+    "carbon_rate": 0.02,
     "hedge_residual": 40.42651541814297,
     "market_completeness": "incomplete",
+    "ppa_alpha": 0.95,
     "ppa_cash_flow_at_risk95": 65.69238346389739,
     "ppa_cvar95": 82.3691062150823,
     "ppa_hedge_residual": 40.42651541814297,
