@@ -40,7 +40,7 @@
       {
         "criterion": "> 1 at batch 1024, recomputed from the timing samples",
         "name": "surrogate_speedup",
-        "observed": 781.9083514612693,
+        "observed": 786.9539451405351,
         "passed": true
       },
       {
@@ -73,12 +73,28 @@
       128,
       1024
     ],
+    "measurement": {
+      "environment": {
+        "cpu_count": 20,
+        "cpu_model": "Intel(R) Core(TM) Ultra 9 285K",
+        "machine": "x86_64",
+        "numpy": "2.4.6",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.12.3",
+        "scipy": "1.17.1"
+      },
+      "sources": {
+        "johnhull/hullkit/src/hullkit/frontier_reference.py": "98134aac2691ad540160566cf89931d3ea991c3b1d3b2db5c6f54d584a9a2a65",
+        "johnhull/hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472"
+      }
+    },
     "nondeterministic_fields": [
       "nested_mc_ms",
       "surrogate_ms",
-      "metrics.surrogate_speedup_1024"
+      "metrics.surrogate_speedup_1024",
+      "benchmark.measurement"
     ],
-    "schema_version": 1,
+    "schema_version": 2,
     "sources": {
       "johnhull/hullkit/src/hullkit/frontier_reference.py": "98134aac2691ad540160566cf89931d3ea991c3b1d3b2db5c6f54d584a9a2a65",
       "johnhull/hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472"
@@ -412,7 +428,7 @@
     }
   },
   "companions": {
-    "joint_surface.npz": "56590ad04634f28ab0e344fdd4b2d92418f89a4e4cfcca0df8317d97e5cbf1cf"
+    "joint_surface.npz": "be75f14b4f95d60bdb7c5dce80fd25fa5c38c791e8f717d2aec22faabff7214e"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -436,7 +452,7 @@
     "surrogate_delta_rmse": 5.043078088519851,
     "surrogate_gamma_rmse": 35.50726161092219,
     "surrogate_price_rmse": 0.4123722655252687,
-    "surrogate_speedup_1024": 781.9083514612693,
+    "surrogate_speedup_1024": 786.9539451405351,
     "surrogate_spot_monotonicity_violations": 32,
     "teacher": "hullkit.spx_vix.nested_vix_teacher",
     "teacher_bound_violations": 0,

@@ -6,6 +6,8 @@ import argparse
 import hashlib
 import io
 import json
+import os
+import platform
 import tempfile
 import zipfile
 from pathlib import Path
@@ -518,23 +520,61 @@ def _digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _cpu_model() -> str:
+    try:
+        for line in Path("/proc/cpuinfo").read_text(encoding="utf-8").splitlines():
+            if line.startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return platform.processor() or "unknown"
+
+
+def _measurement_environment() -> dict[str, object]:
+    import scipy
+
+    return {
+        "platform": platform.platform(),
+        "machine": platform.machine(),
+        "cpu_model": _cpu_model(),
+        "cpu_count": os.cpu_count(),
+        "python": platform.python_version(),
+        "numpy": np.__version__,
+        "scipy": scipy.__version__,
+    }
+
+
 def _benchmark_contract(volume: int, arrays: dict[str, np.ndarray]) -> dict[str, object]:
+    """The benchmark block of a reference JSON.
+
+    For vol 21, ``sources`` is the digest of the generator as it is now (it
+    changes whenever the implementation changes, so the ordinary rebuild tracks
+    it). ``measurement`` is the provenance of the committed timing sample: the
+    generator digests and environment at the time the sample was measured. It
+    is written only by a run that actually measures (``--refresh-timing`` or a
+    first build) and is carried over unchanged when the sample is preserved, so
+    ``measurement.sources != sources`` says the timings predate the current
+    implementation.
+    """
     if volume != 21:
         return {"schema_version": 1, "nondeterministic_fields": []}
     sources = [
         PROJECT / "hullkit/src/hullkit/frontier_reference.py",
         PROJECT / "hullkit/src/hullkit/spx_vix.py",
     ]
+    digests = {str(source.relative_to(ROOT)): _digest(source) for source in sources}
     return {
-        "schema_version": 1,
-        "sources": {str(source.relative_to(ROOT)): _digest(source) for source in sources},
+        "schema_version": 2,
+        "sources": digests,
         "batch_size": np.asarray(arrays["batch_size"]).tolist(),
         "timing_method": "perf_counter_ns warm-cache median of 5",
         "nondeterministic_fields": [
             "nested_mc_ms",
             "surrogate_ms",
             "metrics.surrogate_speedup_1024",
+            "benchmark.measurement",
         ],
+        "measurement": {"sources": dict(digests), "environment": _measurement_environment()},
     }
 
 
@@ -544,19 +584,27 @@ def _preserve_vol21_timing_reference(
     arrays: dict[str, np.ndarray],
     benchmark: dict[str, object],
 ) -> None:
-    """Keep the committed benchmark sample stable unless refresh is explicit."""
+    """Keep the committed benchmark sample stable unless refresh is explicit.
+
+    The preserved sample keeps its own measurement provenance: the committed
+    ``benchmark.measurement`` replaces the one describing this (unmeasured)
+    run. A committed reference without provenance is not preserved, so its
+    timings are measured again with a recorded provenance.
+    """
     json_path = output / "metrics.json"
     npz_path = output / "joint_surface.npz"
     if not json_path.exists() or not npz_path.exists():
         return
     previous = json.loads(json_path.read_text(encoding="utf-8"))
     previous_benchmark = previous.get("benchmark", {})
-    stable_previous = {key: value for key, value in previous_benchmark.items() if key != "sources"}
-    stable_current = {key: value for key, value in benchmark.items() if key != "sources"}
+    volatile = {"sources", "measurement"}
+    stable_previous = {k: v for k, v in previous_benchmark.items() if k not in volatile}
+    stable_current = {k: v for k, v in benchmark.items() if k not in volatile}
     if (
         previous.get("generated_by") != "johnhull/scripts/build_frontier_artifacts.py"
         or previous.get("generator_api") != "hullkit.frontier_reference.build_frontier_reference"
         or stable_previous != stable_current
+        or not isinstance(previous_benchmark.get("measurement"), dict)
     ):
         return
     with np.load(npz_path, allow_pickle=False) as archive:
@@ -569,6 +617,7 @@ def _preserve_vol21_timing_reference(
                 raise ValueError(f"committed volume 21 timing schema changed for {name}")
             arrays[name] = archive[name].copy()
     metrics["surrogate_speedup_1024"] = previous["metrics"]["surrogate_speedup_1024"]
+    benchmark["measurement"] = previous_benchmark["measurement"]
 
 
 def _array_schema(

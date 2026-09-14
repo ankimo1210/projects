@@ -24,10 +24,38 @@ def _normalized_volume21_json(path: Path) -> dict:
     payload = copy.deepcopy(json.loads(path.read_text(encoding="utf-8")))
     payload["companions"]["joint_surface.npz"] = "<timing-dependent>"
     payload["metrics"]["surrogate_speedup_1024"] = "<timing-dependent>"
+    payload["benchmark"]["measurement"] = "<timing-dependent>"
     for check in payload["acceptance"]["checks"]:
         if check["name"] == "surrogate_speedup":
             check["observed"] = "<timing-dependent>"
     return payload
+
+
+def volume21_measurement_provenance(path: Path) -> str:
+    """Validate the committed vol 21 timing provenance and describe it.
+
+    The timing sample is excluded from the rebuild comparison, so its
+    provenance must be recorded instead: the generator digests and environment
+    of the run that measured it. Returns a one-line note saying whether the
+    sample was measured on the current generator.
+    """
+    benchmark = json.loads(path.read_text(encoding="utf-8"))["benchmark"]
+    measurement = benchmark.get("measurement")
+    if not isinstance(measurement, dict):
+        raise RuntimeError(
+            "volume 21 timing sample has no measurement provenance; "
+            "rebuild with build_frontier_artifacts.py --volume 21 --refresh-timing"
+        )
+    sources = measurement.get("sources")
+    environment = measurement.get("environment")
+    if not isinstance(sources, dict) or set(sources) != set(benchmark["sources"]):
+        raise RuntimeError("volume 21 measurement provenance must digest the benchmark sources")
+    if not isinstance(environment, dict) or not environment:
+        raise RuntimeError("volume 21 measurement provenance must record its environment")
+    if sources == benchmark["sources"]:
+        return "timing sample measured on the current generator"
+    stale = sorted(name for name in sources if sources[name] != benchmark["sources"][name])
+    return f"timing sample predates the current generator (changed since measurement: {stale})"
 
 
 def _compare_volume21_npz(committed: Path, rebuilt: Path) -> None:
@@ -66,6 +94,7 @@ def main() -> int:
                     rebuilt_json
                 ):
                     raise RuntimeError("volume 21 deterministic JSON fields differ")
+                print(f"[NOTE] vol 21: {volume21_measurement_provenance(committed_json)}")
             elif _sha256(committed_json) != _sha256(rebuilt_json) or _sha256(
                 committed_npz
             ) != _sha256(rebuilt_npz):
