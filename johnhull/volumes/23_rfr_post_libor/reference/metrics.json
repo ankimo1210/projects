@@ -8,19 +8,19 @@
         "passed": true
       },
       {
-        "criterion": "< 1e-12",
+        "criterion": "prod(1 + r_i d_i / basis) rebuilt from daily_rate and day_count matches the accrual path and the in-arrears accumulation factor (1e-12); stored hand-check error < 1e-12",
         "name": "daily_compounding_handcheck",
         "observed": 0.0,
         "passed": true
       },
       {
-        "criterion": "< 1e-5",
+        "criterion": "expm1(sum r_i d_i / basis) rebuilt from the fixings matches continuous_accrual (1e-12); annualized discrete-minus-continuous rate gap < 1e-5 and equals the stored error (1e-10)",
         "name": "continuous_limit",
-        "observed": 4.45993810761075e-06,
+        "observed": 4.4599381075968725e-06,
         "passed": true
       },
       {
-        "criterion": "< 1e-12",
+        "criterion": "Bachelier call rebuilt from (F, sigma_N, T) on the strike grid matches both the committed closed-form and quadrature prices (1e-12); stored hand-check error < 1e-12",
         "name": "bachelier_quadrature_handcheck",
         "observed": 6.938893903907228e-18,
         "passed": true
@@ -454,6 +454,9 @@
     "Synthetic results are not evidence of market forecasting power."
   ],
   "metrics": {
+    "bachelier_expiry": 2.0,
+    "bachelier_forward": 0.03,
+    "bachelier_normal_vol": 0.015,
     "bartlett_hedge_rmse": 0.0003340079814252839,
     "continuous_limit_error": 4.45993810761075e-06,
     "daily_compounding_handcheck_error": 0.0,
@@ -474,6 +477,7 @@
     "multi_curve_coupon_pv": 2.6399144642570382,
     "observation_shift_rate": 0.041484401111674174,
     "quadrature_handcheck_error": 6.938893903907228e-18,
+    "rfr_day_count_basis": 360,
     "sabr_teacher": "conditional normal-SABR MC; shifted-SABR full-truncation MC",
     "sabr_teacher_nu": 0.65,
     "single_curve_coupon_pv": 2.631479252266155,
