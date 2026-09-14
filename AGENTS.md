@@ -60,7 +60,7 @@ dev tooling its own CI invokes; the shared `.venv` hides omissions that
 
 **That green is not full coverage.** `make test` runs only the `testpaths`
 list in the root `pyproject.toml`, and two suites are still missing from it —
-`deep_hedge_price/tests` (206) and `johnhull/report/tests` (10). Both run
+`deep_hedge_price/tests` (206) and `johnhull/report/tests` (registered since 2026-09-14). Both run
 green when invoked directly, but never under `make test`. Do not read
 "workspace green" as "every project verified"; run the suite you actually
 touched. `analytics/fourier/tests` (47) was in this list until 2026-08-16 and

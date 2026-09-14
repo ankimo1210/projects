@@ -378,7 +378,7 @@ display(pd.DataFrame(rows))""")
 
 # Cell 18: real option lambda md
 cells.append(
-    md(r"""### リスク中立評価の実物への拡張（§36.1）
+    md(r"""### リスク中立評価の実物への拡張（§36.2）
 
 市場で取引されない実物資産でも、リスクの市場価格 $\lambda$ を CAPM 等で推定すれば
 リスク中立評価が使えます：期待成長率を $m \to m - \lambda s$ に置き換え、
@@ -493,7 +493,7 @@ cells.append(
 
 # Cell 23: hullkit inventory md
 cells.append(
-    md(r"""### hullkit モジュール一覧
+    md(r"""### hullkit モジュール一覧（本シリーズ 12 巻が使う抜粋。全モジュールは `MODEL_INDEX.md`）
 
 | モジュール | 内容 | 主な巻 |
 |---|---|---|
@@ -521,8 +521,8 @@ John Hull『Options, Futures, and Other Derivatives』(11e) の全37章を、
 12巻の新規ノートブック＋既存2巻（BSM・金利モデル）でインタラクティブに一巡しました。
 
 - 各巻は教科書の例題値に**ピン留めした検証セル**を持ち、ヘッドレス実行で再現性を担保
-- 共通ロジックは `hullkit` パッケージに集約し、pytest で教科書値と突合
-- 引用は repo の 11e Global Edition PDF と節・式・表番号まで突合済み
+- 共通ロジックは `hullkit` パッケージに集約し、pytest で教科書値と突合（節単位の未実装は `docs/SECTION_AUDIT_2026-09-14.md` §1・§4）
+- 引用は repo の 11e Global Edition PDF の節・式・表番号に合わせる（US 版とはずれる）
 
 **次の発展**: 多ファクター HJM、SABR/Heston 較正、実市場データ接続、
 LMM 完全実装などは各 PROGRESS.md の future ideas を参照。

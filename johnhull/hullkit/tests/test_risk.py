@@ -15,7 +15,7 @@ def test_hull_microsoft_att_example():
     # $5M AT&T sigma=1%/day -> 367,828 (Hull 367,800)
     v_att = risk.normal_var(50_000.0, alpha=0.99, horizon=10.0)
     assert v_att == pytest.approx(367_828.0, abs=5.0)
-    # portfolio rho=0.3 -> sigma_P = 220,227, VaR = 1,620,140 (Hull 1,620,100)
+    # portfolio rho=0.3 -> sigma_P = 220,227, VaR = 1,620,113 (Hull 1,620,100)
     sig_p = risk.portfolio_sigma([10e6, 5e6], [0.02, 0.01], [[1.0, 0.3], [0.3, 1.0]])
     assert sig_p == pytest.approx(220_227.0, abs=5.0)
     v_p = risk.normal_var(sig_p, alpha=0.99, horizon=10.0)

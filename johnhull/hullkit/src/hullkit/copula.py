@@ -40,7 +40,7 @@ def vasicek_loss_cdf(loss, pd, rho):
 
 
 def conditional_default_prob(pd, rho, factor):
-    """P(default | systemic factor M=factor) (Vasicek; Hull eq. 24.8).
+    """P(default | systemic factor M=factor) (Vasicek; Hull 11e GE eq. 24.9).
 
     A bad (low) factor lifts every name's default probability together — the
     mechanism of correlated tail losses.

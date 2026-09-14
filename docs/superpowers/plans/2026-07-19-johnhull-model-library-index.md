@@ -32,7 +32,7 @@
 **Interfaces:**
 - Produces: `_undocumented(path) -> list[str]` pattern reused verbatim in Task 3's test.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```python
 """Guard: every public hullkit API carries a docstring (model-library contract)."""
@@ -73,12 +73,12 @@ def test_public_api_documented(path: Path) -> None:
     assert not missing, f"{path.name}: undocumented public API: {missing}"
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_docstrings.py`
 Expected: 14 failed (amm, bsm, carbon, liquidation, perpetuals, ppa, rfr, spx_vix, surrogate_data, surrogate_validation, vol_surface, weather, zero_dte), 27 passed. Failure messages list the exact undocumented names.
 
-- [ ] **Step 3: Fill the 58 docstrings**
+- [x] **Step 3: Fill the 58 docstrings**
 
 For each failing module, read the module, then add a one-line imperative docstring to each listed symbol. Add Args/Returns only when the signature is not self-explanatory. Name the model/theory when the symbol implements one. Style example (match surrounding code):
 
@@ -94,12 +94,12 @@ class HaganNormalSmile:
 
 Do not touch any executable line.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_docstrings.py`
 Expected: 40 passed.
 
-- [ ] **Step 5: Full hullkit suite + ruff, then commit**
+- [x] **Step 5: Full hullkit suite + ruff, then commit**
 
 Run: `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests`
 Expected: 334 passed (294 + 40).
@@ -122,7 +122,7 @@ git commit -m "docs(hullkit): complete public-API docstrings with guard test"
 - Consumes: docstring style from Task 1 Step 3.
 - Produces: group-1 modules at zero missing, verified by audit snippet below.
 
-- [ ] **Step 1: Confirm the starting gap**
+- [x] **Step 1: Confirm the starting gap**
 
 Run (from repo root):
 
@@ -150,12 +150,12 @@ EOF
 
 Expected: `missing: 45` with the symbol list (config 20, plotting 12, policy 3, feature_diagnostics 3, experiments 2, arbitrage 1, greeks 1, hedge_capstone 1, risks 1, training 1).
 
-- [ ] **Step 2: Fill all 45, rerun audit**
+- [x] **Step 2: Fill all 45, rerun audit**
 
 Same style rules as Task 1 Step 3. Rerun the Step 1 snippet.
 Expected: `missing: 0`.
 
-- [ ] **Step 3: Suite + ruff, then commit**
+- [x] **Step 3: Suite + ruff, then commit**
 
 Run: `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests`
 Expected: 88 passed.
@@ -182,21 +182,21 @@ git commit -m "docs(deep_hedge_price): docstrings for hedging-core modules (grou
 SRC = Path(__file__).resolve().parents[1] / "src" / "deep_hedge_price"
 ```
 
-- [ ] **Step 1: Create `deep_hedge_price/tests/test_docstrings.py`** — identical to Task 1 Step 1 except the `SRC` line above and the module docstring first line: `"""Guard: every public deep_hedge_price API carries a docstring."""`
+- [x] **Step 1: Create `deep_hedge_price/tests/test_docstrings.py`** — identical to Task 1 Step 1 except the `SRC` line above and the module docstring first line: `"""Guard: every public deep_hedge_price API carries a docstring."""`
 
-- [ ] **Step 2: Run test to verify it fails on exactly group 2**
+- [x] **Step 2: Run test to verify it fails on exactly group 2**
 
 Run: `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests/test_docstrings.py`
 Expected: 15 failed (pricing_ablation, pricing_artifacts, pricing_calibration, pricing_config, pricing_evaluation, pricing_losses, pricing_plotting, pricing_policy, pricing_report, pricing_training, research_models, surface_data, surface_hedge_pipeline, volatility_data, walk_forward), 23 passed.
 
-- [ ] **Step 3: Fill the 59 docstrings** — same style rules; torch `forward` overrides get one-liners like `"""Score the lag window and return the variance forecast."""`
+- [x] **Step 3: Fill the 59 docstrings** — same style rules; torch `forward` overrides get one-liners like `"""Score the lag window and return the variance forecast."""`
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests/test_docstrings.py`
 Expected: 38 passed.
 
-- [ ] **Step 5: Full suite + ruff, then commit**
+- [x] **Step 5: Full suite + ruff, then commit**
 
 Run: `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests`
 Expected: 126 passed (88 + 38).
@@ -219,7 +219,7 @@ git commit -m "docs(deep_hedge_price): complete public-API docstrings with guard
 **Interfaces:**
 - Produces: MODEL_INDEX.md with all 15 section headers (spec §2.1) and every `hullkit.*` module referenced; the `` `package.module:symbol` `` notation consumed by both index tests; section skeleton that Task 5 extends with `deep_hedge_price.*` rows.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```python
 """Guard: MODEL_INDEX.md lists every hullkit module and its references resolve."""
@@ -254,12 +254,12 @@ def test_reference_resolves(ref: tuple[str, str]) -> None:
     assert hasattr(obj, symbol), f"{module}:{symbol} does not resolve"
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_model_index.py`
 Expected: `test_index_exists` fails, all 40 `test_module_listed` cases fail.
 
-- [ ] **Step 3: Write `johnhull/MODEL_INDEX.md`**
+- [x] **Step 3: Write `johnhull/MODEL_INDEX.md`**
 
 Header block (verbatim):
 
@@ -307,12 +307,12 @@ textbook material cite `Hull 11e ch.N` (GE edition). Symbol names MUST be
 copied from each module's `__all__`/source, never guessed — the resolution
 test rejects typos but not wrong-but-existing symbols, so copy carefully.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_model_index.py`
 Expected: all pass (1 + 40 + ~60-80 resolution cases).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add johnhull/MODEL_INDEX.md johnhull/hullkit/tests/test_model_index.py
@@ -330,7 +330,7 @@ git commit -m "docs(johnhull): MODEL_INDEX catalog with hullkit coverage guard"
 **Interfaces:**
 - Consumes: MODEL_INDEX.md section skeleton and reference notation from Task 4.
 
-- [ ] **Step 1: Write the failing test** — copy Task 4 Step 1 verbatim with three changes:
+- [x] **Step 1: Write the failing test** — copy Task 4 Step 1 verbatim with three changes:
 
 ```python
 INDEX = Path(__file__).resolve().parents[2] / "johnhull" / "MODEL_INDEX.md"
@@ -340,12 +340,12 @@ REFS = sorted(set(re.findall(r"`(deep_hedge_price\.[A-Za-z0-9_.]+):([A-Za-z0-9_]
 
 and `MODULES`/messages referencing `deep_hedge_price.` instead of `hullkit.`.
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests/test_model_index.py`
 Expected: 38 `test_module_listed` failures.
 
-- [ ] **Step 3: Extend MODEL_INDEX.md**
+- [x] **Step 3: Extend MODEL_INDEX.md**
 
 - Section 8 (ML surrogates & DML): pricing_data, pricing_policy, pricing_training, pricing_losses (differential/Sobolev loss), pricing_evaluation, pricing_ablation, pricing_residuals, greeks, arbitrage, research_models.
 - Section 9 (calibration & surfaces): pricing_calibration, pricing_benchmark, frontier_reference, surface_data.
@@ -353,12 +353,12 @@ Expected: 38 `test_module_listed` failures.
 - Section 15: cli, config, pricing_config, notebook, pricing_notebook, plotting, pricing_plotting, report, pricing_report, pricing_artifacts as one-line role entries.
 - Append final section (verbatim heading): `## Cross-project pointers (canonical implementations elsewhere)` with rows for exact rBergomi / hybrid fBM / Hawkes (`~/projects/rough_volatility`), Almgren-Chriss / Obizhaeva-Wang / reactive LOB / PPO execution (`~/projects/optimal_execution`), portfolio construction / backtesting / signals (`~/projects/quantkit`), plain-text paths only (no `module:symbol` notation, so the resolution tests ignore them).
 
-- [ ] **Step 4: Run both index tests**
+- [x] **Step 4: Run both index tests**
 
 Run: `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests/test_model_index.py && uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_model_index.py`
 Expected: all pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add johnhull/MODEL_INDEX.md deep_hedge_price/tests/test_model_index.py
@@ -372,15 +372,15 @@ git commit -m "docs(johnhull): index deep_hedge_price models and cross-project p
 **Files:**
 - Create: `johnhull/CLAUDE.md`
 
-- [ ] **Step 1: Write `johnhull/CLAUDE.md`** — Japanese prose, English identifiers, three sections from spec §2.2:
+- [x] **Step 1: Write `johnhull/CLAUDE.md`** — Japanese prose, English identifiers, three sections from spec §2.2:
 
 1. ナビゲーション: モデル探索は `MODEL_INDEX.md` が唯一の入口 → 巻↔章対応は `ROADMAP.md` → vol 18–25 の成果物配線は `release_manifest.json` → 検証範囲の意味は `VALIDATION.md`（PASS = integration のみ、performance 承認ではない）。
 2. 実行・検証コマンド（repo root から）: `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests` / `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests` / `make hull-report` / `make hull-book` / `make hull-artifacts-check` / `make hull-notebooks-check` / `make hull-release-check`。
 3. 規約と落とし穴: hullkit は torch-free（torch 依存は deep_hedge_price 側）; notebook は artifact-only 実行（build 中の学習・DL・GPU 検出禁止）; artifact は fingerprint 付き JSON+NPZ で acceptance は `johnhull/scripts/frontier_acceptance.py` が再計算; PDF は 11e Global Edition（節・図番号が US 版とズレる）; 深掘り巻の plotly は mimetype-only 出力（静的 book に非表示、対話面はポータル）; build スクリプトは決定的 cell-id・`build_*_notebook.py` は ruff exclude; docstring/index は guard test（`test_docstrings.py` / `test_model_index.py`）が強制。
 
-- [ ] **Step 2: Verify content accuracy** — every command listed must be run once (or have been run in Tasks 1–5) and match its Makefile/pyproject definition.
+- [x] **Step 2: Verify content accuracy** — every command listed must be run once (or have been run in Tasks 1–5) and match its Makefile/pyproject definition.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add johnhull/CLAUDE.md
@@ -393,27 +393,27 @@ git commit -m "docs(johnhull): agent guide (CLAUDE.md) for the model library"
 
 **Files:** none (verification only; fix fallout inline if any)
 
-- [ ] **Step 1: Scoped suites**
+- [x] **Step 1: Scoped suites**
 
 Run: `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests`
 Expected: 334+ passed (294 + 40 docstring + index cases).
 Run: `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests`
 Expected: 126+ passed.
 
-- [ ] **Step 2: Lint**
+- [x] **Step 2: Lint**
 
 Run: `uv run --no-sync ruff check johnhull deep_hedge_price && uv run --no-sync ruff format --check johnhull/hullkit deep_hedge_price`
 Expected: clean (notebook build scripts are excluded by repo config).
 
-- [ ] **Step 3: Release contract unaffected**
+- [x] **Step 3: Release contract unaffected**
 
 Run: `make hull-release-check`
 Expected: `[PASS] johnhull A5--A8 release contract`.
 
-- [ ] **Step 4: Docstring numbers re-audit** — rerun the audit snippet from Task 2 Step 1 without the GROUP filter over both packages.
+- [x] **Step 4: Docstring numbers re-audit** — rerun the audit snippet from Task 2 Step 1 without the GROUP filter over both packages.
 Expected: `missing: 0` for both.
 
-- [ ] **Step 5: Commit only if fixes were needed; otherwise nothing to commit.**
+- [x] **Step 5: Commit only if fixes were needed; otherwise nothing to commit.**
 
 ## Self-Review Notes
 

@@ -83,11 +83,11 @@ health を main にマージした時点からの既存破損で、johnhull 起�
 ぶん非対称が目立つ。Greeks 側を要素別にするなら、境界での値の定義
 （`T=0` の delta を指示関数にするか NaN にするか）を先に決める必要がある。
 
-## 7. vol 28 候補: FRTB IMA
+## 7. vol 29 候補: FRTB IMA（vol 28 は 2026-09-14 に信用デスクとして実装）
 
 vol 27 の設計時にスコープ外と決めた領域。liquidity horizon 別 ES 集約、
 stressed ES scaling、NMRF、P&L attribution test、IMA/SA 比較。
-`johnhull/ROADMAP.md` に vol 28 候補として記載済み。
+`johnhull/ROADMAP.md` に vol 29 候補として記載済み。
 
 ## 8. テスト網羅の細目（各タスクレビューの Minor 積み残し）
 

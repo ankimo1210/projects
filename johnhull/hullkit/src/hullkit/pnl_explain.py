@@ -3,7 +3,8 @@ attribution versus full revaluation, limit utilization, and a pure
 desk-report assembler for a daily risk desk.
 
 Shares P&L conventions with `hullkit.risk`: P&L amounts have gains
-positive; limit "measures" and "limits" are positive risk-usage amounts.
+positive; limit "measures" may be signed (component VaR is passed as-is) while
+"limits" are positive ceilings.
 
 `aggregate_exposures` rolls up per-position delta, gamma, and vega into
 per-factor book exposures via `weights @ matrix`. **Cross-gammas are out
@@ -27,7 +28,7 @@ reproducible daily risk report.
 
 FRTB-style P&L attribution eligibility testing (IMA vs. SA comparison,
 risk-theoretical vs. hypothetical P&L) is out of scope; see ROADMAP.md
-for the deferred vol 28 candidate.
+for the deferred vol 29 candidate.
 """
 
 from __future__ import annotations

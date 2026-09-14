@@ -14,14 +14,16 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 6 | `volumes/06_numerical_methods` | 21, 27 | done |
 | 7 | `volumes/07_swaps` | 7, 34 | done |
 | 8 | `volumes/08_risk_var` | 22 | done |
-| 9 | `volumes/09_credit_xva` | 9, 24, 25 | done（未実装節は vol 28 で実装） |
+| 9 | `volumes/09_credit_xva` | 9, 24, 25 | done（数値例のある節は vol 28 と hullkit のテストで実装・固定。残りは `docs/SECTION_AUDIT_2026-09-14.md` §4.5） |
 | 10 | `volumes/10_exotics_martingales` | 26, 28 | done |
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options.
+Shared module: `johnhull/hullkit` (uv workspace member) — 52 modules as of 2026-09-14; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-**Status (2026-06-08): all 14 rows done → Hull 11e all 37 chapters covered.**
+**Status (2026-06-08): all 14 rows done → every Hull 11e chapter has a volume.** Section-level
+coverage is narrower: `docs/SECTION_AUDIT_2026-09-14.md` §1 lists the sections that still have
+no computation, and §11 tracks what has been closed since.
 
 ## 可視化 & 深掘り(A1–A4) — 完了 (2026-06-14)
 
@@ -40,11 +42,11 @@ Hull の射程の先(同じクオンツ系で Hull が浅い領域)を深掘り�
 | # | Volume | テーマ(Hull の先) | Status |
 |---|--------|------|--------|
 | P1 | 既存全14ノートの可視化 | `plotly_viz` 6 図 + ポータル疎通(offline test 緑) | done |
-| 13 | `volumes/13_stochastic_calculus` | A1 確率解析(伊藤・Girsanov・Feynman-Kac) | **done**(21セル・実行済・book登録) |
-| 14 | `volumes/14_stoch_vol_fourier` | A2 確率ボラ & Fourier(Heston/SABR/COS) | **done**(19セル・実行済・book登録) |
-| 15 | `volumes/15_advanced_numerics` | A3 高度な数値(分散減少/QMC/LSM/CN/AAD) | **done**(15セル・実行済・book登録) |
-| 16 | `volumes/16_xva_credit` | A4 XVA/信用(EE/PFE/CVA/コピュラ) | **done**(15セル・実行済・book登録) |
-| 17 | `volumes/17_capstone` | Heston×Fourier → Greeks → CVA 一気通貫 | **done**(12セル・実行済・book登録) |
+| 13 | `volumes/13_stochastic_calculus` | A1 確率解析(伊藤・Girsanov・Feynman-Kac) | **done**(30セル・実行済・book登録) |
+| 14 | `volumes/14_stoch_vol_fourier` | A2 確率ボラ & Fourier(Heston/SABR/COS) | **done**(35セル・実行済・book登録) |
+| 15 | `volumes/15_advanced_numerics` | A3 高度な数値(分散減少/QMC/LSM/CN/AAD) | **done**(22セル・実行済・book登録) |
+| 16 | `volumes/16_xva_credit` | A4 XVA/信用(EE/PFE/CVA/コピュラ) | **done**(22セル・実行済・book登録) |
+| 17 | `volumes/17_capstone` | Heston×Fourier → Greeks → CVA 一気通貫 | **done**(18セル・実行済・book登録) |
 
 ## Hull の先 A5–A8 — G8 release 完了 (2026-07-18)
 
@@ -73,7 +75,7 @@ separate. No production dependency was added for G0/G1 core implementation.
 各巻に validation report、fingerprinted JSON/NPZ、artifact-only notebook、book
 symlinkがあり、各巻の `integration_and_reproducibility` gate は PASS。これは
 **model performance の承認ではない**。`release_manifest.json` の現行契約は portal
-**78 図/12 テーマ**（Jupyter Book は `book/_toc.yml` の 30 ページで、ページ数自体は
+**82 図/12 テーマ**（Jupyter Book は `book/_toc.yml` の root + 30 entries = 31 ページで、ページ数自体は
 manifest の契約値ではなく `book_name` の掲載のみが検証される）。G8 で fresh artifact/notebook/
 report/book/test/lint を再検証し、最終結果と model risk を `johnhull/VALIDATION.md`
 に固定した。strict tracked gate と専用 branch への remote push も完了し、その branch は
@@ -121,7 +123,7 @@ Design plan: `docs/superpowers/plans/2026-07-20-johnhull-27-risk-desk.md`
 | 6 | Portal `risk_management` page, Jupyter Book page, full tracked release | done |
 
 Phase 5 の `done` は synthetic-offline の integration/reproducibility gate（`_volume27`
-の 13 恒等式チェックと byte 再現性）を表し、市場較正・model performance の承認ではない。
+の 14 恒等式チェックと byte 再現性）を表し、市場較正・model performance の承認ではない。
 恒等式チェックは当初 11 個で、2026-07-20 の review-fix 運用で
 `christoffersen_pvalue_matches_recomputation` と `cross_asset_factor_mapping` を追加した。
 Phase 6 の portal 図（`var_traffic_light`・`fhs_vs_hs_coverage`・`gpd_tail_fit`・

@@ -1,7 +1,7 @@
 # johnhull「Hull の先」A5–A8 実装設計
 
 - 日付: 2026-07-18
-- ステータス: 実装計画用の確定設計（コード未着手）
+- ステータス: 実装済み（2026-07-18 G8 release、vol 18–25）
 - 対象: `/home/kazumasa/projects/johnhull`
 - 親提案: `docs/superpowers/specs/2026-07-18-johnhull-beyond-hull-options.md`
 - 実装計画: `docs/superpowers/plans/2026-07-18-johnhull-beyond-hull-a5.md`
@@ -30,7 +30,7 @@ acceptance を満たしてから次へ進む。
 1. **単純な基準器を先に置く。** 解析解、既存数値法、線形・計量モデルを必須 baseline とする。
 2. **正本を分ける。** 金融教師・hard validation は `hullkit`、PyTorch 学習・checkpoint・評価基盤は
    `deep_hedge_price`、教材・統合は `johnhull` が持つ。
-3. **`hullkit` は torch-free のままにする。** `import hullkit` と既存 184 tests は PyTorch なしで成立させる。
+3. **`hullkit` は torch-free のままにする。** `import hullkit` と既存テスト（計画時 184 tests）は PyTorch なしで成立させる。
 4. **既定経路は synthetic、CPU、offline。** GPU、live training、市場データは optional target に分ける。
 5. **研究トラックを本線と分離する。** preprint のモデルは mature baseline に勝ち、再現可能な場合だけ中核へ昇格する。
 6. **予測精度だけで完了判定しない。** Greeks、無裁定、較正、hedging P&L、CVaR、turnover、計算時間を含める。
@@ -187,8 +187,8 @@ Hagan 近似の長期・高 vol・wing 誤差と裁定違反を明示する。De
 契約 payoff（linear/inverse/quanto）、index/mark/last price、funding、margin、liquidation、insurance fund、ADL、
 oracle latency/manipulation、AMM/LVR を一つの solvency ledger で結ぶ。
 
-中核は決定論的 cash-flow identity と stress simulator。無限期間 BSDE、risk-based ADL、dynamic AMM fee、
-AMM-token option は研究トラックとする。
+中核は決定論的 cash-flow identity と stress simulator。無限期間 BSDE、risk-based ADL、
+AMM-token option は研究トラックとする（dynamic AMM fee は実装時に core へ入れた: `hullkit.amm.dynamic_fee_rate`）。
 
 ### 6.5 vol 25 — Climate & Energy
 

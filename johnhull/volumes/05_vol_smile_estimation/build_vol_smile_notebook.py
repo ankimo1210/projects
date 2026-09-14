@@ -248,7 +248,7 @@ cells.append(
 - **sticky strike** / **sticky delta**（Derman 1999 の用語; Hull は脚注で言及）: σ(K) ないし σ(マネーネス) を固定とみなす規約
 - **minimum variance delta**: 株価と IV の負相関を織り込む修正
   $\Delta_{MV} = \Delta_{BSM} + \mathcal{V}\,\partial E[\sigma_{imp}]/\partial S < \Delta_{BSM}$
-- スマイルの**モデル化**（局所ボラ・確率ボラ）は第6冊（Ch.27）で扱います""")
+- スマイルの**モデル化**は第6冊（Ch.27）では表のみ。SABR / Heston は第14冊で実装（局所ボラは未実装）""")
 )
 cells.append(
     md(r"""> **核心** — スマイルがあると『どの IV で Greeks を測るか』で結果が変わる。<br>

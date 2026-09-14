@@ -1,15 +1,15 @@
-# Beyond-Hull (vol 18–27) Data Provenance and Licensing
+# Beyond-Hull (vol 18–28) Data Provenance and Licensing
 
 ## Release policy
 
-vol 18–27 の committed reference artifact は、リポジトリ内の数式・数値モデルから固定seedで生成した
+vol 18–28 の committed reference artifact は、リポジトリ内の数式・数値モデルから固定seedで生成した
 小型の **synthetic data** だけである。市場データ、取引所データ、顧客データ、checkpoint、生のMonte Carlo
-pathは含めない。vol 18–27 のnotebook実行、book build、新規volume page、portalはnetwork accessを
+pathは含めない。vol 18–28 のnotebook実行、book build、新規volume page、portalはnetwork accessを
 必要としない。A1–A4で使うRequireJSもMITライセンスの固定版を`book/_static/`へ同梱した。
 同梱版はRequireJS 2.3.4で、原文licenseとSHA-256は`release_manifest.json`に固定している。
 
 既存vol 1–17の数式pageは、従来からJupyter Book既定のMathJax CDNを閲覧時に使う。このlegacy依存は
-`release_manifest.json`で明示的にallowlistし、vol 18–27へ新しいremote runtime依存を持ち込まない。
+`release_manifest.json`で明示的にallowlistし、vol 18–28へ新しいremote runtime依存を持ち込まない。
 したがって「全legacy pageを完全offlineで数式描画できる」という主張はしない。
 
 各reference JSONは `data_policy: synthetic-offline`、generator名、schema version、対応NPZのSHA-256を持つ。
@@ -24,8 +24,9 @@ pathは含めない。vol 18–27 のnotebook実行、book build、新規volume 
 
 ## Research maturity
 
-未査読preprint由来のPDV/AFV、0DTE、signature、optimal transport、foundation model、diffusion等は
-`research` trackとして扱う。core releaseは古典baseline、synthetic fixture、hard checkだけで再現でき、
+未査読preprint由来のsignature、optimal transport、foundation model、diffusion等は
+`research` trackとして扱う。PDV/AFV と 0DTE は core（`hullkit.spx_vix`・`hullkit.zero_dte`）で、
+synthetic fixture と hard check だけで検証する。core releaseは古典baseline、synthetic fixture、hard checkだけで再現でき、
 research trackの失敗や未導入dependencyから独立する。
 
 無効化されたtrackの正本は`johnhull/research_profiles.json`と、`deep_hedge_price/configs/research_*.yaml`である。
@@ -53,7 +54,7 @@ vol 27 の `metrics.json` と `risk_desk_scenarios.npz` も同じ
 plain-HS/FHS の VaR forecast と violation 系列、peaks-over-threshold GPD の損失
 標本と fit、5 資産の Euler 分解入力と 2000×5 の P&L 行列、Black–Scholes による
 P&L explain capstone はすべて公開 `hullkit` API（`var_backtest`・`tail_risk`・
-`risk_allocation`・`pnl_explain`・`risk`・`volatility`・`bsm`）と固定 seed
+`risk_allocation`・`pnl_explain`・`risk`・`volatility`・`bsm`・`swaps`）と固定 seed
 `20260745` から生成し、実際の市場リターン、取引所データ、顧客 portfolio、broker
 quote を含めない。
 

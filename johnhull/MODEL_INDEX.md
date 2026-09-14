@@ -8,7 +8,7 @@ How to use this index (for agents):
    `deep_hedge_price/src/deep_hedge_price/<module>.py`.
 3. Tests are relative to each package's `tests/` directory; notebooks are
    `johnhull/volumes/<vol>/`. Companion docs: `ROADMAP.md` (volume <-> Hull
-   chapters), `release_manifest.json` (vol 18-27 wiring), `VALIDATION.md`
+   chapters), `release_manifest.json` (vol 18-28 wiring), `VALIDATION.md`
    (what PASS does and does not mean).
 4. Freshness is test-enforced: every module below must stay listed and every
    `module:symbol` reference must resolve (`test_model_index.py` in both
@@ -22,24 +22,24 @@ synthetic-data method demonstrations, not market-performance claims.
 
 | Model | Theory | Implementation | Tests | Notebook | Validation |
 |---|---|---|---|---|---|
-| Black-Scholes-Merton prices & Greeks | Hull ch.15, 17, 19 | `hullkit.bsm:call_price`, `hullkit.bsm:put_price`, `hullkit.bsm:gamma`, `hullkit.bsm:vega`, `hullkit.bsm:vanna`, `hullkit.bsm:vomma` | `test_bsm.py` | vol 02, 03, legacy ch.15 | Pinned to Hull worked examples; put-call parity asserted |
+| Black-Scholes-Merton prices & Greeks | Hull ch.15, 17, 19 | `hullkit.bsm:call_price`, `hullkit.bsm:put_price`, `hullkit.bsm:gamma`, `hullkit.bsm:vega`, `hullkit.bsm:vanna`, `hullkit.bsm:vomma` | `test_bsm.py`, `test_greeks.py`, `test_hull_pins_options.py` | vol 02, 03 (the legacy ch.15 notebook does not import hullkit) | Pinned to Hull worked examples; put-call parity asserted |
 | Cox-Ross-Rubinstein binomial tree | CRR (1979); Hull ch.13, 21 | `hullkit.trees:crr_params`, `hullkit.trees:binomial_tree`, `hullkit.trees:crr_price`, `hullkit.trees:tree_delta` | `test_trees.py` | vol 01, 06 | Converges to BSM; arbitrage guard on `p` |
 | GBM Monte Carlo pricing | Hull ch.21 | `hullkit.mc:simulate_gbm_paths`, `hullkit.mc:price_european_mc` | `test_mc.py`, `test_mc_pricing.py` | vol 06 | Matches `gbm_theory` moments and BSM price within CI |
-| American options by least-squares Monte Carlo | Longstaff & Schwartz (2001); Hull ch.27 | `hullkit.mc:price_american_lsm`, `hullkit.mc:lsm_exercise_boundary` | `test_mc.py` | vol 06 | LSM ~ tree ~ FD cross-check |
+| American options by least-squares Monte Carlo | Longstaff & Schwartz (2001); Hull ch.27 | `hullkit.mc:price_american_lsm`, `hullkit.mc:lsm_exercise_boundary` | `test_mc_pricing.py` | vol 06 | LSM ~ tree ~ FD cross-check |
 | Vanilla finite-difference pricer | Hull ch.21 | `hullkit.fd:fd_vanilla` | `test_fd.py` | vol 06 | Grid price vs BSM |
 | Option strategy payoffs | Hull ch.10-12 | `hullkit.payoffs:leg_payoff`, `hullkit.payoffs:strategy_payoff`, `hullkit.payoffs:box_spread_value` | `test_payoffs.py` | vol 02 | Box-spread = PV of strike gap |
-| Delta and stop-loss hedge simulation | Hull ch.19 | `hullkit.hedging:simulate_delta_hedge`, `hullkit.hedging:simulate_stop_loss_hedge` | `test_hedging.py` | vol 03 | Hedge-cost table pinned to Hull Table 19.2/19.3 pattern |
+| Delta and stop-loss hedge simulation | Hull ch.19 | `hullkit.hedging:simulate_delta_hedge`, `hullkit.hedging:simulate_stop_loss_hedge` | `test_hedging.py` | vol 03 | MC hedge-cost pattern (mean/ratio checks; the printed Table 19.2/19.3 paths are not pinned) |
 
 ## 2. Volatility & smile
 
 | Model | Theory | Implementation | Tests | Notebook | Validation |
 |---|---|---|---|---|---|
 | Implied volatility inversion | Hull ch.20 | `hullkit.volatility:implied_vol` | `test_volatility.py` | vol 05 | Round-trips BSM prices |
-| EWMA / GARCH(1,1) variance | RiskMetrics; Hull ch.23 | `hullkit.volatility:ewma_variance`, `hullkit.volatility:garch11_variance`, `hullkit.volatility:garch11_forecast`, `hullkit.volatility:garch11_fit` | `test_volatility.py` | vol 05 | Long-run variance and term-structure identities |
+| EWMA / GARCH(1,1) variance | RiskMetrics; Hull ch.23 | `hullkit.volatility:ewma_variance`, `hullkit.volatility:ewma_covariance`, `hullkit.volatility:garch11_variance`, `hullkit.volatility:garch11_long_run`, `hullkit.volatility:garch11_forecast`, `hullkit.volatility:garch11_fit` | `test_volatility.py` | vol 05 | Long-run variance and term-structure identities |
 | Heston stochastic volatility | Heston (1993) | `hullkit.heston:heston_cf`, `hullkit.heston:heston_mc_price` | `test_heston.py` | vol 14 | COS(CF) ~ MC agreement |
 | COS Fourier pricing | Fang & Oosterlee (2008) | `hullkit.fourier:cos_price`, `hullkit.fourier:cos_density` | `test_fourier.py` | vol 14 | COS == BSM under lognormal CF; density integrates to 1 |
-| SABR (lognormal) smile & Greeks | Hagan et al. (2002); Hull ch.20 | `hullkit.sabr:sabr_implied_vol`, `hullkit.sabr:calibrate_sabr`, `hullkit.sabr:sabr_smile_delta` | `test_sabr.py` | vol 05 | Hagan limit checks (beta/nu edges) |
-| Normal / shifted / free-boundary SABR | Hagan et al. (2002); Antonov et al. | `hullkit.sabr_normal:normal_sabr_implied_vol`, `hullkit.sabr_normal:shifted_sabr_implied_vol`, `hullkit.sabr_normal:free_boundary_sabr_implied_vol`, `hullkit.sabr_normal:bartlett_delta` | `test_sabr_normal.py` | vol 23 | Static no-arb checks at 1e-10; MC teacher cross-check |
+| SABR (lognormal) smile & Greeks | Hagan et al. (2002); Hull §27.2 | `hullkit.sabr:sabr_implied_vol`, `hullkit.sabr:calibrate_sabr`, `hullkit.sabr:sabr_smile_delta` | `test_sabr.py` | vol 14 | Hagan limit checks (beta/nu edges) |
+| Normal / shifted / free-boundary SABR | Hagan et al. (2002); free-boundary variant uses an explicit shift boundary, not the Antonov et al. endogenous boundary | `hullkit.sabr_normal:normal_sabr_implied_vol`, `hullkit.sabr_normal:shifted_sabr_implied_vol`, `hullkit.sabr_normal:free_boundary_sabr_implied_vol`, `hullkit.sabr_normal:bartlett_delta` | `test_sabr_normal.py` | vol 23 | Static no-arb checks at 1e-10; MC teacher cross-check |
 
 ## 3. Stochastic calculus & SDE
 
@@ -55,18 +55,18 @@ synthetic-data method demonstrations, not market-performance claims.
 |---|---|---|---|---|---|
 | Explicit FD with stability analysis | von Neumann analysis; Hull ch.21 | `hullkit.fd_advanced:fd_explicit`, `hullkit.fd_advanced:stability_factor` | `test_fd_advanced.py` | vol 15 | Divergence demonstrated for factor > 0.5 |
 | Control variates / importance sampling / Sobol QMC | Glasserman (2004) | `hullkit.mc_advanced:control_variate_price`, `hullkit.mc_advanced:importance_sampling_price`, `hullkit.mc_advanced:qmc_price`, `hullkit.mc_advanced:error_vs_n` | `test_mc_advanced.py` | vol 15 | Error-vs-n slopes; CV variance reduction |
-| Pathwise / likelihood-ratio / bump Greeks (AAD) | Broadie & Glasserman (1996) | `hullkit.aad:pathwise_greeks`, `hullkit.aad:likelihood_ratio_greeks`, `hullkit.aad:bump_greeks` | `test_aad.py` | vol 15 | Pathwise delta == bump == closed form |
+| Pathwise / likelihood-ratio / bump Greeks (no AAD tape) | Broadie & Glasserman (1996) | `hullkit.aad:pathwise_greeks`, `hullkit.aad:likelihood_ratio_greeks`, `hullkit.aad:bump_greeks` | `test_aad.py` | vol 15 | Pathwise delta == bump == closed form |
 
 ## 5. Rates & swaps (curves, IR options, RFR post-LIBOR)
 
 | Model | Theory | Implementation | Tests | Notebook | Validation |
 |---|---|---|---|---|---|
-| Bond math & zero-curve bootstrap | Hull ch.4-6 | `hullkit.rates:bond_price`, `hullkit.rates:macaulay_duration`, `hullkit.rates:convexity`, `hullkit.rates:forward_rate`, `hullkit.rates:bootstrap_zero_curve` | `test_rates.py` | vol 04 | Pinned to Hull examples |
+| Bond math & zero-curve bootstrap | Hull ch.4 (ch.5–6 have no hullkit symbols; see vol 04) | `hullkit.rates:bond_price`, `hullkit.rates:macaulay_duration`, `hullkit.rates:convexity`, `hullkit.rates:forward_rate`, `hullkit.rates:bootstrap_zero_curve` | `test_rates.py` | vol 04 | Pinned to Hull ch.4 examples |
 | Interest-rate & currency swaps | Hull ch.7 | `hullkit.swaps:swap_rate`, `hullkit.swaps:irs_value_bonds`, `hullkit.swaps:irs_value_fras`, `hullkit.swaps:currency_swap_value` | `test_swaps.py` | vol 07 | Bond-view == FRA-view identity; seasoned swap (`first_accrual`) pinned to Hull Ex 7.1 (−0.292 receive-fixed) |
-| Black-76 caps, swaptions, bond options | Black (1976); Hull ch.29 | `hullkit.ir_options:bond_option_black`, `hullkit.ir_options:cap_black`, `hullkit.ir_options:swaption_black`, `hullkit.ir_options:convexity_adjustment` | `test_ir_options.py` | vol 11 | Hull ch.29 worked examples |
+| Black-76 caps, swaptions, bond options | Black (1976); Hull ch.29 | `hullkit.ir_options:bond_option_black`, `hullkit.ir_options:cap_black`, `hullkit.ir_options:swaption_black`, `hullkit.ir_options:convexity_adjustment` | `test_ir_options.py`, `test_hull_pins_exotics_ir.py` | vol 11 | Hull Ex 29.1 / 29.3 / 29.4 pinned; Black parity |
 | Backward-looking RFR conventions | Lyashenko & Mercurio (2019); ISDA fallbacks | `hullkit.rfr:BusinessCalendar`, `hullkit.rfr:RFRConvention`, `hullkit.rfr:compounded_rfr`, `hullkit.rfr:rfr_coupon`, `hullkit.rfr:RfrCurve`, `hullkit.rfr:MultiCurveScenario`, `hullkit.rfr:futures_forward_from_covariance`, `hullkit.rfr:policy_jump_path` | `test_rfr.py` | vol 23 | Daily-compounding hand checks = 0 error; convention edge cases |
 | Bachelier options on compounded rates | Bachelier (1900); post-LIBOR practice | `hullkit.rfr_options:bachelier_price`, `hullkit.rfr_options:gaussian_quadrature_price`, `hullkit.rfr_options:compounded_rate_option_mc` | `test_rfr_options.py` | vol 23 | Quadrature vs MC vs closed form (~1e-18 hand check) |
-| Hull–White one-factor term structure | Hull & White (1990) | `hullkit.hull_white:HullWhiteParams`, `hullkit.hull_white:hw_discount_bond`, `hullkit.hull_white:hw_zcb_option`, `hullkit.hull_white:hw_jamshidian_swaption`, `hullkit.hull_white:calibrate_hw1f` | `test_hull_white.py` | legacy IR models; vol 26 | Initial-curve fit; exact OU moments; ZCB parity; Jamshidian vs quadrature |
+| Hull–White one-factor term structure | Hull & White (1990) | `hullkit.hull_white:HullWhiteParams`, `hullkit.hull_white:hw_discount_bond`, `hullkit.hull_white:hw_zcb_option`, `hullkit.hull_white:hw_jamshidian_swaption`, `hullkit.hull_white:calibrate_hw1f` | `test_hull_white.py`, `test_hull_pins_exotics_ir.py` | vol 26 (the legacy IR notebook does not import hullkit) | Initial-curve fit; exact OU moments; ZCB parity; Jamshidian vs quadrature |
 | CPI conventions, seasonality, ZCIS, and YoY swaps | Wu (2013); Canty (2009); Fisher relation | `hullkit.inflation:CPIObservationConvention`, `hullkit.inflation:MonthlySeasonality`, `hullkit.inflation:ZeroCouponInflationCurve`, `hullkit.inflation:interpolated_cpi`, `hullkit.inflation:seasonal_forward_index`, `hullkit.inflation:zcis_npv`, `hullkit.inflation:yoy_swap_npv` | `test_inflation.py` | vol 26 | Fixing/forecast split; quote round-trip; annual seasonality cancellation; explicit expected YoY ratios |
 | Japanese inflation-linked government bonds (JGBi) and deflation floor | Ministry of Finance Japan JGBi conventions | `hullkit.jgbi:JGBITerms`, `hullkit.jgbi:jgbi_reference_index`, `hullkit.jgbi:jgbi_indexation_coefficient`, `hullkit.jgbi:jgbi_cashflows`, `hullkit.jgbi:jgbi_real_clean_price`, `hullkit.jgbi:jgbi_real_yield`, `hullkit.jgbi:jgbi_deflation_floor_jy`, `hullkit.jgbi:jgbi_floor_adjusted_price`, `hullkit.jgbi:jgbi_floor_risk` | `test_jgbi.py`, `test_jgbi_floor.py` | vol 26 | Three-month lag; tenth-day interpolation; staged rounding; redemption-only floor; analytic/MC option decomposition |
 | Jarrow--Yildirim inflation model | Jarrow & Yildirim (2003) | `hullkit.jarrow_yildirim:JarrowYildirimParams`, `hullkit.jarrow_yildirim:jy_cpi_forward`, `hullkit.jarrow_yildirim:jy_payment_forward_cpi`, `hullkit.jarrow_yildirim:jy_cpi_total_variance`, `hullkit.jarrow_yildirim:jy_expected_cpi_ratio`, `hullkit.jarrow_yildirim:jy_cpi_option`, `hullkit.jarrow_yildirim:simulate_jy_paths` | `test_jarrow_yildirim.py` | vol 26 | Nominal/real numeraires; payment-forward measures; real-rate quanto drift; analytic/MC CPI options |
@@ -82,7 +82,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | P&L explain: factor exposures, delta-gamma-vega attribution, limits, desk report | Desk P&L-explain / limit-monitoring practice (Hull ch.22 framing) | `hullkit.pnl_explain:aggregate_exposures`, `hullkit.pnl_explain:delta_gamma_vega_pnl`, `hullkit.pnl_explain:pnl_attribution`, `hullkit.pnl_explain:limit_utilization`, `hullkit.pnl_explain:desk_report` | `test_pnl_explain.py` | vol 27 | Linear book: delta explain == full revaluation at 1e-12; diagonal-quadratic payoff: delta+gamma explain exact at 1e-12; BSM full revaluation (via hullkit.bsm): delta-gamma-vega residual < delta-only residual and shrinks ~4x per move-halving (cross-gammas out of scope); limit utilization/breach flags and ValueError on non-positive limits; desk_report is deterministic and JSON-able |
 | Hazard rates & CDS pricing | Hull ch.24-25 | `hullkit.credit:hazard_from_spread`, `hullkit.credit:cds_spread`, `hullkit.credit:survival_prob` | `test_credit.py` | vol 09 | Spread round-trip |
 | Merton structural default model | Merton (1974) | `hullkit.credit:merton_default_prob` | `test_credit.py` | vol 09 | d2 convention pinned (sigma*sqrt(T)) |
-| Vasicek / Gaussian copula portfolio credit | Vasicek (2002); Hull ch.25 | `hullkit.copula:vasicek_loss_cdf`, `hullkit.copula:gaussian_copula_samples`, `hullkit.credit:vasicek_credit_var` | `test_copula.py`, `test_credit.py` | vol 09, 16 | Mean = pd; tail fattens with rho |
+| Vasicek / Gaussian copula portfolio credit | Vasicek (2002); Hull eq. (24.10) | `hullkit.copula:vasicek_loss_cdf`, `hullkit.copula:gaussian_copula_samples`, `hullkit.credit:vasicek_credit_var` | `test_copula.py`, `test_credit.py` | vol 09, 16 | Mean = pd; tail fattens with rho |
 | XVA exposures (EE/PFE/CVA/DVA/FVA) | Hull ch.9; Green, *XVA* | `hullkit.xva:expected_exposure`, `hullkit.xva:pfe`, `hullkit.xva:cva`, `hullkit.xva:dva`, `hullkit.xva:fva` | `test_xva.py` | vol 16, 17, 28 | CVA hand-calculation match |
 | Piecewise hazard curves; bond-price and spread bootstraps | Hull §24.4 (Examples 24.1, 24.2) | `hullkit.credit_curve:HazardCurve`, `hullkit.credit_curve:average_hazards_from_spreads`, `hullkit.credit_curve:forward_hazards_from_average`, `hullkit.credit_curve:bond_price_from_yield`, `hullkit.credit_curve:risk_free_bond_price`, `hullkit.credit_curve:forward_risk_free_value`, `hullkit.credit_curve:expected_default_loss_pv`, `hullkit.credit_curve:bootstrap_from_bonds`, `hullkit.credit_curve:BondBootstrapResult` | `test_credit_curve.py` | vol 28 | Ex 24.1 average→forward 3.5/3.75%; Ex 24.2 λ=2.46/3.48/3.74%, loss PV 1.50/3.53/5.61 |
 | Single-name CDS legs, MTM, binary, fixed coupon/upfront, forward, option | Hull §25.2–25.5 (Tables 25.1–25.5, Example 25.1); Hull & White (2003) | `hullkit.cds:CDSLegs`, `hullkit.cds:cds_legs`, `hullkit.cds:cds_par_spread`, `hullkit.cds:cds_risky_duration`, `hullkit.cds:cds_mtm`, `hullkit.cds:binary_cds_spread`, `hullkit.cds:implied_hazard`, `hullkit.cds:bootstrap_from_cds`, `hullkit.cds:actual360_to_actual_actual`, `hullkit.cds:fixed_coupon_price`, `hullkit.cds:upfront_payment`, `hullkit.cds:cds_forward_spread`, `hullkit.cds:cds_option` | `test_cds.py` | vol 28 | 4.0728s/0.0422s/0.0506 → 123 bp; MTM 0.0111; binary 205 bp; Ex 25.1 λ=0.5717%, D=4.447, P=100.27; option parity |
@@ -117,8 +117,8 @@ synthetic-data method demonstrations, not market-performance claims.
 | SSVI surface & butterfly checks | Gatheral & Jacquier (2014) | `hullkit.vol_surface:fit_ssvi_slice`, `hullkit.vol_surface:ssvi_butterfly_margins`, `hullkit.vol_surface:ssvi_total_variance` | `test_vol_surface.py` | vol 19 | Butterfly margins non-negative for safe params |
 | Convex call-price projection (hard constraint) | Ait-Sahalia & Duarte (2003) style | `hullkit.vol_surface:project_convex_call_prices`, `hullkit.vol_surface:compare_surface_constraints` | `test_vol_surface.py` | vol 19 | Unconstrained/soft/hard trade-off in one table |
 | Two-step calibration (forward surrogate + optimizer) | Bayer et al. (2019); Horvath et al. (2021) | `deep_hedge_price.pricing_calibration:CalibrationResult`, `deep_hedge_price.pricing_calibration:DirectInverseRidge` | `test_pricing_calibration.py` | vol 19 | Multi-start dispersion; repricing RMSE ~ 5e-11 |
-| Teacher IV surfaces (Heston/SABR/rBergomi) | Heston (1993); Hagan (2002); Bayer-Friz-Gatheral (2016) | `deep_hedge_price.surface_data:ForwardSurfaceDataset`, `deep_hedge_price.surface_data:SurfaceTradeoff` | `test_surface_data.py` | vol 19 | Joint IV + variance-term objective (lambda_var Pareto) |
-| Committed frontier reference artifacts | reproducibility contract | `hullkit.frontier_reference:build_frontier_reference`, `hullkit.frontier_reference:volume21_reference` | `test_frontier_reference.py` | vol 19, 21-25 | Acceptance recomputed from arrays (`frontier_acceptance.py`) |
+| Teacher IV surfaces (Heston/SABR/rBergomi; teacher data, not a forward surrogate) | Heston (1993); Hagan (2002); Bayer-Friz-Gatheral (2016) | `deep_hedge_price.surface_data:ForwardSurfaceDataset`, `deep_hedge_price.surface_data:SurfaceTradeoff` | `test_surface_data.py` | vol 19 | Joint IV + variance-term objective (lambda_var Pareto) |
+| Committed frontier reference artifacts | reproducibility contract | `hullkit.frontier_reference:build_frontier_reference`, `hullkit.frontier_reference:volume21_reference` | `test_frontier_reference.py` | vol 21-28 | Acceptance recomputed from arrays (`frontier_acceptance.py`; tamper contract for vol 23-25, 27, 28) |
 
 ## 10. Surface dynamics, forecasting & hedging decisions
 
@@ -164,7 +164,7 @@ synthetic-data method demonstrations, not market-performance claims.
 |---|---|---|---|---|---|
 | Carbon allowance options (Black-76 / SV / SV+jump) | Serafini & Bormetti (2025), arXiv:2501.17490 | `hullkit.carbon:black76_price`, `hullkit.carbon:carbon_option_mc`, `hullkit.carbon:risk_premium_sensitivity` | `test_carbon.py` | vol 25 | Model ladder MC vs Black-76; premium decomposition |
 | Weather derivatives (OU/fOU, degree days, basis risk) | Alaton et al. (2002); incomplete markets | `hullkit.weather:simulate_ou_temperature`, `hullkit.weather:simulate_fractional_ou_temperature`, `hullkit.weather:degree_day_index`, `hullkit.weather:weather_contract_premium`, `hullkit.weather:optimal_basis_hedge` | `test_weather.py` | vol 25 | fOU lag-1 autocorr > OU; premium principles explicit |
-| Renewable PPA valuation & CFaR | shape/volume/profile risk practice | `hullkit.ppa:evaluate_ppa`, `hullkit.ppa:simulate_price_generation`, `hullkit.ppa:cash_flow_risk`, `hullkit.ppa:hedge_sensitivity` | `test_ppa.py` | vol 25 | CFaR/CVaR finite; correlation sensitivity |
+| Renewable PPA valuation & CFaR | shape/volume/profile risk practice | `hullkit.ppa:evaluate_ppa`, `hullkit.ppa:simulate_price_generation`, `hullkit.ppa:cash_flow_risk`, `hullkit.ppa:hedge_sensitivity` | `test_ppa.py` | vol 25 | CFaR/CVaR rebuilt from committed samples; hedge-ratio sensitivity |
 
 ## 15. Infrastructure & utilities (non-model modules)
 
@@ -198,7 +198,7 @@ synthetic-data method demonstrations, not market-performance claims.
 
 | Topic | Canonical project | Note |
 |---|---|---|
-| Exact joint-Gaussian rBergomi, hybrid fBM, Hawkes microstructure | `~/projects/rough_volatility` | johnhull vol 19 uses small committed artifacts only; heavy 100k-path experiments live there |
+| Exact joint-Gaussian rBergomi, hybrid fBM, Hawkes microstructure | `~/projects/rough_volatility` | johnhull vol 19 uses its own hullkit rBergomi teacher; the heavy 100k-path experiments live there |
 | Almgren-Chriss, Obizhaeva-Wang, reactive LOB, PPO execution | `~/projects/optimal_execution` | execution/RL is out of johnhull scope |
 | Portfolio construction, leakage-safe backtests, market data connectors | `~/projects/quantkit` | research platform; johnhull stays education-first |
 | Deep hedging training engine (torch) | `deep_hedge_price` (this index, sections 8-10) | hullkit stays torch-free by contract |

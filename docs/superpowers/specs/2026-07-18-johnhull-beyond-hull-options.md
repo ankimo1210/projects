@@ -9,8 +9,8 @@
 - 計画時の到達点: Hull 11e 全 37 章（vol 1–12 + legacy）+ 院レベル深掘り A1–A4（vol 13–17）。
   当時は hullkit 184 tests（report 込み 187 tests collected）、portal 7 themes /
   38 figures、Jupyter Book 20 pages。
-- 現行 release candidate: `release_manifest.json` に vol 18–25、portal **11 themes /
-  70 figures**、Jupyter Book **28 pages** を登録。全 8 巻に fingerprinted JSON/NPZ、
+- 2026-07-18 時点の release candidate: `release_manifest.json` に vol 18–25、portal **11 themes /
+  70 figures**、Jupyter Book **28 pages** を登録（2026-09-14 現在は vol 18–28、12 themes / 82 figures / 31 pages）。全 8 巻に fingerprinted JSON/NPZ、
   artifact-only notebook、巻別 validation report がある。
 - Release state: fresh 検証と strict tracked gate は PASS。専用 branch
   `codex/johnhull-beyond-hull-g8` を公開する。巻別 gate の PASS は

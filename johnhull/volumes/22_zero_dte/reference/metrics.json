@@ -100,7 +100,7 @@
         "shape": [
           13
         ],
-        "unit": "jump intensity per session"
+        "unit": "annualized jump intensity"
       },
       "event_jump_variance": {
         "dtype": "float64",
@@ -170,7 +170,7 @@
         "shape": [
           13
         ],
-        "unit": "jump intensity per session"
+        "unit": "annualized jump intensity"
       },
       "price_mae": {
         "dtype": "float64",

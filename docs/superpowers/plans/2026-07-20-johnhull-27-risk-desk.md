@@ -31,7 +31,7 @@ and preserve the `synthetic-offline` release policy. Existing `hullkit.risk`
 (vol 08, Hull-pinned) and `hullkit.volatility` are reused **unchanged**.
 
 FRTB IMA (liquidity-horizon ES aggregation, NMRF, P&L attribution tests, IMA/SA
-comparison) is out of scope and recorded in `ROADMAP.md` as a vol 28 candidate.
+comparison) is out of scope and recorded in `ROADMAP.md` as a vol 29 candidate (vol 28 became the credit desk).
 
 ## 2. Sources of truth
 
@@ -381,7 +381,7 @@ Infrastructure modifications (each currently ends at vol 26; extend to 27):
   `portal_page: "risk_management"`, `portal_figures` (§10), `semantic_sources`
   and `semantic_tests` listing the four new modules and tests, `references`.
 - `johnhull/docs/DATA_PROVENANCE.md`, `johnhull/ROADMAP.md`,
-  `johnhull/README.md` — vol 27 rows + FRTB vol 28 candidate note.
+  `johnhull/README.md` — vol 27 rows + FRTB vol 29 candidate note.
 
 ### Reference artifact contents (all fixed-seed synthetic)
 
@@ -509,7 +509,7 @@ sessions and unrelated files must never be swept in.
 ## 12. Explicitly deferred
 
 - FRTB IMA: liquidity-horizon ES aggregation, stressed ES scaling, NMRF,
-  P&L attribution eligibility tests, IMA vs SA capital comparison (vol 28
+  P&L attribution eligibility tests, IMA vs SA capital comparison (vol 29
   candidate, recorded in ROADMAP).
 - Integrated market/credit/liquidity/operational risk frameworks.
 - Real market data, market calibration, or empirical-performance claims.

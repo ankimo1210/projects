@@ -66,7 +66,7 @@ def test_bootstrap_from_cds_round_trip():
     assert curve.hazards[0] < curve.hazards[1] < curve.hazards[2]  # upward-sloping quotes
 
 
-def test_forward_spread_is_between_spot_spreads_for_upward_curve():
+def test_forward_spread_exceeds_both_spot_spreads_for_upward_curve():
     curve = HazardCurve((1.0, 5.0), (0.01, 0.03))
     spot_1y = cds.cds_par_spread(curve, 0.4, 0.05, 1.0, freq=4)
     spot_5y = cds.cds_par_spread(curve, 0.4, 0.05, 5.0, freq=4)

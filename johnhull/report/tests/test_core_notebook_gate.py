@@ -1,6 +1,6 @@
 """Contract tests for the vol 01--17 (Hull core) notebook execution gate.
 
-`verify_frontier_notebooks.py` covers the beyond-Hull volumes 18--27 only, so
+`verify_frontier_notebooks.py` covers the beyond-Hull volumes 18--28 only, so
 the Hull core volumes and the two legacy notebooks had no automated execution
 gate at all.  These tests pin the gate's inventory and its failure detection
 without executing all nineteen notebooks (that is what `make hull-core-notebooks-check`

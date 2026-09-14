@@ -4,15 +4,17 @@ language: ja
 only_build_toc_files: true
 
 execute:
-  # Notebooks are committed with their outputs already executed; keep the book
-  # build fast and deterministic (same policy as the analytics books).
+  # Frontier notebooks (vol 18-28) and the A1-A4 deep dives are committed with
+  # executed outputs; the core notebooks (vol 01-12, legacy bsm/ir_models) are
+  # committed without outputs and verified by `make hull-core-notebooks-check`.
+  # Keep the book build fast and deterministic (same policy as the analytics books).
   execute_notebooks: "off"
 
 sphinx:
   config:
-    # require.js lets Plotly figures embedded by nbconvert render in static HTML
-    # (used by the A1-A4 deep-dive notebooks).  The vendored MIT-licensed copy
-    # keeps both build and viewing offline.
+    # require.js is kept for Plotly outputs embedded by nbconvert; the A1-A4
+    # deep-dive figures are mimetype-only in the static build (the portal renders
+    # them).  The vendored MIT-licensed copy keeps both build and viewing offline.
     html_static_path:
       - _static
     html_js_files:

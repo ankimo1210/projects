@@ -557,9 +557,9 @@ cells.append(
     )
 )
 
-# Cell 19: §14.3 generalized Wiener process
+# Cell 19: GE §14.2 generalized Wiener process
 cells.append(
-    md(r"""## 8. 一般化ウィーナー過程（§14.3）
+    md(r"""## 8. 一般化ウィーナー過程（GE §14.2）
 
 ドリフト $a$・拡散係数 $b$ を加えた過程：
 
@@ -619,9 +619,9 @@ _upd_gw()
 display(widgets.HBox([a_sl, b_sl]), fig6.canvas)""")
 )
 
-# Cell 21: §14.4-14.5 Ito process & GBM
+# Cell 21: GE §14.2-14.3 Ito process & GBM
 cells.append(
-    md(r"""## 9. 伊藤過程と幾何ブラウン運動（§14.4–14.5）
+    md(r"""## 9. 伊藤過程と幾何ブラウン運動（GE §14.2–14.3）
 
 係数を状態依存にしたものが **伊藤過程** $dx = a(x,t)dt + b(x,t)dz$。
 株価の標準モデルは **幾何ブラウン運動（GBM）**：

@@ -4,8 +4,8 @@ build_stochastic_calculus_notebook.py
 nbformat-dict pattern to generate stochastic_calculus.ipynb
 (A1 deep-dive — graduate stochastic calculus behind Hull's pricing).
 
-Plotly figures (``fig.show()``) instead of ipympl, so they render in the
-static Jupyter Book HTML. Numerical-verification cells assert against closed
+Plotly figures (``fig.show()``) instead of ipympl. Their outputs are mimetype-only
+in the static Jupyter Book HTML; the interactive rendering is the portal (``make hull-report``). Numerical-verification cells assert against closed
 forms. References: Shreve, *Stochastic Calculus for Finance II*; Øksendal, *SDEs*.
 
 Usage:
