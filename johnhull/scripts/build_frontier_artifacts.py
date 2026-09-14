@@ -410,6 +410,8 @@ UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
         "cds_bootstrap_repriced_spread": "annualized decimal spread",
         "index_quote_grid": "basis points (actual/360)",
         "fixed_coupon_price_grid": "price per 100 notional",
+        "option_curve_tenor": "years",
+        "option_curve_hazard": "annual hazard rate",
         "option_strike_grid": "annualized decimal spread",
         "payer_value": "value per unit notional",
         "receiver_value": "value per unit notional",
