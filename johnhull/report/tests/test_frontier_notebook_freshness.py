@@ -71,6 +71,21 @@ def test_stale_output_cells_rejects_a_changed_cell_layout():
         stale_output_cells(_notebook([_stdout("a")]), _notebook([_stdout("a")], []))
 
 
+def test_committed_notebooks_render_japanese_and_leak_no_local_paths():
+    """stderr is not compared, so a missing-glyph warning slipped into the book.
+
+    Without a Japanese font every CJK figure label rendered as boxes, and the
+    warning text carried the absolute path of the checkout that executed the
+    notebook.
+    """
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    for item in manifest["volumes"]:
+        for path in sorted((MANIFEST_PATH.parent / "volumes" / item["slug"]).glob("*.ipynb")):
+            text = path.read_text(encoding="utf-8")
+            assert "UserWarning: Glyph" not in text, path
+            assert "/home/" not in text, path
+
+
 def test_every_committed_validation_file_matches_its_metrics():
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     stale = [item["number"] for item in manifest["volumes"] if validation_drift(item)]
