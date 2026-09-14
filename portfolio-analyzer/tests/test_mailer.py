@@ -180,6 +180,14 @@ def test_subject_carries_date_and_day_pnl() -> None:
     assert mailer.subject(payload()) == "日次損益 2026-09-11 · 46,257,970 円（−450,566）"
 
 
+def test_subject_and_body_name_the_edition_when_given() -> None:
+    data = payload()
+    data["edition"] = "東京引け"
+    assert mailer.subject(data) == "日次損益 2026-09-11 · 東京引け · 46,257,970 円（−450,566）"
+    assert "日次損益 2026-09-11 · 東京引け" in mailer.html_body(data)
+    assert mailer.text_body(data).startswith("日次損益 2026-09-11 · 東京引け")
+
+
 def test_text_body_lists_headline_and_positions() -> None:
     text = mailer.text_body(payload())
     assert "46,257,970" in text and "−450,566" in text and "XLE" in text and "海外証券口座" in text

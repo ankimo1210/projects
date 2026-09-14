@@ -50,25 +50,36 @@ from portfolio_analyzer import timeseries as ts  # noqa: E402
 
 TOKENS_CSS = PROJECT_ROOT.parent / "docs" / "templates" / "claude-report" / "tokens.css"
 TZ = ZoneInfo("Asia/Tokyo")
+# The two scheduled runs: after the Tokyo close, and the next morning after New York's.
+EDITIONS = {"tokyo": "東京引け", "ny": "NY引け"}
 ZERO = Decimal(0)
 
 
 def quotes_from_closes(closes) -> dict[str, mtm.Quote]:
-    """Last two non-null closes per column of a date-indexed DataFrame."""
+    """Each column's close on the last two dates of the shared calendar.
+
+    The calendar is every date on which at least one column traded. A column
+    that did not trade on a date carries its previous close into it, so a market
+    that is still shut (New York during Tokyo's evening, or a holiday on one
+    side) shows no move of its own rather than repeating its last one; the move
+    lands once, in the first report after it trades again. ``date`` and
+    ``prev_date`` are the dates those closes were actually printed.
+    """
     import pandas as pd
 
+    numeric = closes.apply(pd.to_numeric, errors="coerce").dropna(how="all")
     out: dict[str, mtm.Quote] = {}
-    for column in closes.columns:
-        series = pd.to_numeric(closes[column], errors="coerce").dropna()
-        if series.empty:
+    for column in numeric.columns:
+        series = numeric[column]
+        known = series.dropna()
+        if known.empty:
             continue
-        last = series.iloc[-1]
-        prev = series.iloc[-2] if len(series) >= 2 else None
+        before = series.iloc[:-1].dropna() if len(series) >= 2 else series.iloc[:0]
         out[str(column)] = mtm.Quote(
-            close=Decimal(str(last)),
-            prev_close=None if prev is None else Decimal(str(prev)),
-            date=pd.Timestamp(series.index[-1]).date().isoformat(),
-            prev_date=None if prev is None else pd.Timestamp(series.index[-2]).date().isoformat(),
+            close=Decimal(str(known.iloc[-1])),
+            prev_close=None if before.empty else Decimal(str(before.iloc[-1])),
+            date=pd.Timestamp(known.index[-1]).date().isoformat(),
+            prev_date=None if before.empty else pd.Timestamp(before.index[-1]).date().isoformat(),
         )
     return out
 
@@ -188,6 +199,13 @@ def parse_args() -> argparse.Namespace:
         metavar="ADDRESS",
         help="send the summary there (repeatable). Needs PL_SMTP_USER and PL_SMTP_PASS in the "
         "environment; host and port default to smtp.gmail.com:465 (PL_SMTP_HOST / PL_SMTP_PORT).",
+    )
+    parser.add_argument(
+        "--edition",
+        default="",
+        help="name of this run in the mail's subject and heading: tokyo (after the Tokyo close, "
+        "New York still at its previous close) or ny (the next morning, the full day); "
+        "any other text is used as it is",
     )
     parser.add_argument(
         "--image",
@@ -546,7 +564,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
             )
         )
     notes.append(
-        "日次損益は各銘柄の直近 2 終値の差（価格と為替の両方）。海外証券口座の NAV・損益は取引履歴を日次で再生した値で、"
+        "日次損益は全銘柄に共通の直近 2 営業日で比べた差（価格と為替の両方）。まだ開いていない市場や休場の銘柄は前の終値のままなので株の変化は 0 で、動きは次に取引された日の分にまとめて入る。海外証券口座の NAV・損益は取引履歴を日次で再生した値で、"
         f"取引履歴は {paths.dates[0] if transactions else '—'} 以降、履歴 CSV の最終日以降の取引は反映されない"
     )
     notes.append(
@@ -585,6 +603,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         "closed": closed,
         "notes": notes,
         "tax_note": tax_text,
+        "edition": EDITIONS.get(args.edition, args.edition),
     }
     return payload, record, as_of
 

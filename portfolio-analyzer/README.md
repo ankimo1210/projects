@@ -84,7 +84,10 @@ uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py \
 
 数字の定義:
 
-- 日次損益 ＝ 各銘柄の直近 2 つの終値の差（価格と為替の両方）。月曜は週末をまたぎます。
+- 日次損益 ＝ **全銘柄に共通の日付（どれか 1 つでも取引があった日）の直近 2 日**で比べた評価額の差（価格と為替の両方）。
+  取引の無い日は前の終値のまま据え置くので、まだ開いていない市場（東京の夕方の米国株）や片方だけの祝日の銘柄は
+  株の変化 0・FX だけになり、値動きは次に取引された日のレポートに 1 回だけ入ります（銘柄ごとの直近 2 終値を
+  使っていた 2026-09-14 までは、閉まっている市場の前日の動きを繰り返し計上していた）。月曜は週末をまたぎます。
 - 株 / FX の分解（ヘッドライン・口座別・保有ごと、値のみ）。株 ＋ FX ＝ 合計が厳密に成り立ちます。
   - 日次: 株 ＝ 数量 ×（終値 − 前日終値）× 当日レート、FX ＝ 日次損益 − 株（＝ 数量 × 前日終値 × レート変化）。
   - 含み: FX ＝ 取得原価（外貨）×（現在レート − 取得時平均レート）、株 ＝ 含み損益 − FX（手数料と交差項は株側）。
@@ -120,10 +123,18 @@ uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py \
   - CSV が取れない日は DC だけスナップショットの残高で据え置き、レポート全体は止めません。
   - 約定単価は約定日の翌営業日の基準価額と一致します（2025-08〜2026-08 の 13 件で確認）。
 
-### Windows で毎朝動かす
+### Windows で 1 日 2 回動かす
 
 `scripts/windows/register_task.ps1` が、`run_daily_pl.cmd` を `%USERPROFILE%\Documents\pl-daily` に
-コピーしてタスク スケジューラに `PortfolioDailyPL`（毎日 07:30、PC が止まっていたら次の起動時）を登録します。
+コピーしてタスク スケジューラに 2 本登録します。
+
+| タスク | いつ | 中身（件名の表記） |
+|---|---|---|
+| `PortfolioPLTokyo` | 月〜金 16:30 | 東京引け。日本株・DC は当日の終値、米国株はまだ前日終値なので USD/JPY の動きだけ（`--edition tokyo`、PC が止まっていたら飛ばす） |
+| `PortfolioDailyPL` | 火〜土 07:30 | NY引け。前営業日を米国の終値まで含めて確定（`--edition ny`、PC が止まっていたら次の起動時） |
+
+朝の回は前日夕方の回と同じ基準日で、履歴（`mtm-history.private.jsonl`）とレポートを上書きします。
+日本だけの祝日の 16:30 は、日本株が動かず為替だけの回になります。
 
 ```powershell
 powershell.exe -ExecutionPolicy Bypass -File \\wsl$\Ubuntu\home\kazumasa\projects\portfolio-analyzer\scripts\windows\register_task.ps1
@@ -131,7 +142,8 @@ powershell.exe -ExecutionPolicy Bypass -File \\wsl$\Ubuntu\home\kazumasa\project
 
 cmd は `wsl.exe -d Ubuntu` 経由でこのリポジトリのスクリプトを呼び、HTML を
 `Documents\pl-daily\latest.html`、ログを同じ場所の `run.log` に残します。時刻を変えるなら
-`-Time 18:00` のように渡し、外すなら `Unregister-ScheduledTask -TaskName PortfolioDailyPL`。
+`-EveningTime 17:00` / `-MorningTime 08:00` のように渡し、外すなら
+`Unregister-ScheduledTask -TaskName PortfolioPLTokyo, PortfolioDailyPL`。
 
 ### メールで受け取る
 
