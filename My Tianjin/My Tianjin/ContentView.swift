@@ -20,9 +20,9 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
-                HomeView(selectedTab: $selectedTab)
+                CourseTodayView(selectedTab: $selectedTab)
             }
-            .tabItem { Label("ホーム", systemImage: "house.fill") }
+            .tabItem { Label("今日", systemImage: "calendar") }
             .tag(0)
 
             NavigationStack {

@@ -17,6 +17,16 @@ final class CourseStore: ObservableObject {
     private var context: ModelContext?
     private var pendingSubmission: PendingSubmission?
 
+    // A reopened screen can restore a failed, still-pending answer without
+    // changing the UUID or letting a different answer replace that retry.
+    var pendingOptionID: String? {
+        guard let pendingSubmission,
+              let session = snapshot?.activeSession,
+              session.id == pendingSubmission.sessionID,
+              session.currentQuestionID == pendingSubmission.questionID else { return nil }
+        return pendingSubmission.optionID
+    }
+
     init(
         repository: CourseRepository = CourseRepository(),
         saveAction: @escaping SaveAction = { try $0.save() }
