@@ -118,9 +118,17 @@ def decode_header_text(raw: str | None) -> str:
     return "" if raw is None else str(make_header(decode_header(raw)))
 
 
+def _edition(data: dict[str, Any]) -> str:
+    """Which run this is, e.g. ``東京引け`` or ``NY引け``, with a leading separator; empty when unset."""
+    return f" · {data['edition']}" if data.get("edition") else ""
+
+
 def subject(data: dict[str, Any]) -> str:
     h = data["headline"]
-    return f"日次損益 {data['as_of']} · {jpy(h['nav_total'])} 円（{jpy(h['day_pnl'], True)}）"
+    return (
+        f"日次損益 {data['as_of']}{_edition(data)} · "
+        f"{jpy(h['nav_total'])} 円（{jpy(h['day_pnl'], True)}）"
+    )
 
 
 def _nav_after_tax(h: dict[str, Any]) -> str:
@@ -132,7 +140,7 @@ def text_body(data: dict[str, Any]) -> str:
     h, w = data["headline"], data["window"]
     rate = data["fx"]["last"]
     lines = [
-        f"日次損益 {data['as_of']}  (USD/JPY {float(data['fx']['last']):.2f})",
+        f"日次損益 {data['as_of']}{_edition(data)}  (USD/JPY {float(data['fx']['last']):.2f})",
         "",
         f"総資産          {jpy(h['nav_total']):>14} 円  {usd(h['nav_total'], rate):>10}  (時価評価 {int(h['quoted_share'] * 100)}%)",
         f"                {_nav_after_tax(h)}",
@@ -704,7 +712,7 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
 <td style="padding:18px 12px;font-family:{SANS};color:{INK}">
 <div style="max-width:600px;margin:0 auto">
 <div style="font:400 11px {MONO};letter-spacing:.12em;color:{MUTED}">DAILY MARK-TO-MARKET</div>
-<div style="font:700 20px/1.3 Georgia,serif;margin:6px 0 2px">日次損益 {html.escape(data["as_of"])}</div>
+<div style="font:700 20px/1.3 Georgia,serif;margin:6px 0 2px">日次損益 {html.escape(data["as_of"] + _edition(data))}</div>
 <div style="font:400 12px {SANS};color:{MUTED};margin-bottom:14px">USD/JPY {float(data["fx"]["last"]):.2f}（{pct(data["fx"]["chg_pct"])}）· 生成 {html.escape(str(data["generated_at"])[:16].replace("T", " "))}</div>
 {f'<div style="font:400 11.5px/1.8 {MONO};color:{MUTED};margin-bottom:12px">{tape}</div>' if tape else ""}
 {kpis}
@@ -719,7 +727,7 @@ def html_body(data: dict[str, Any], image_cid: str | None = None) -> str:
 {_closed(data.get("closed"), table_style)}
 {charts}
 <div style="font:400 11px/1.7 {SANS};color:{MUTED};margin-top:16px">
-日次損益は各銘柄の直近 2 終値の差（価格と為替の両方）。株＝価格の変化（今日のレート換算）、FX＝残り（レートの変化分）で、円建ては FX 0。含み損益の FX は取得原価（外貨）×（現在レート − 取得時レート）。総資産の {100 - quoted}% は時価が取れない残高（現金など）で据え置き。海外証券口座の累計損益は取引履歴を日次で再生した値で、入金は差し引いています。
+日次損益は全銘柄に共通の直近 2 営業日で比べた差（価格と為替の両方）で、まだ開いていない市場の銘柄は株の変化 0。株＝価格の変化（今日のレート換算）、FX＝残り（レートの変化分）で、円建ては FX 0。含み損益の FX は取得原価（外貨）×（現在レート − 取得時レート）。総資産の {100 - quoted}% は時価が取れない残高（現金など）で据え置き。海外証券口座の累計損益は取引履歴を日次で再生した値で、入金は差し引いています。
 <ul style="margin:8px 0 0;padding-left:18px">{notes}</ul>
 ダッシュボード本体（ホバーで数値が出る図つき）: <span style="font-family:{MONO}">Documents\\pl-daily\\latest.html</span>
 </div></div></td></tr></table>"""
