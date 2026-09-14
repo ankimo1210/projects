@@ -32,3 +32,6 @@ interest_rate_models). See `johnhull/ROADMAP.md`.
   compound real options: not covered (no markdown either; audit CR-18/CR-22).
   Weather pricing is implemented in vol 25 (`hullkit.weather`).
 - nbformat cell ids: generated deterministically by the builder (fixed in c54491fd)
+- 2026-09-14 audit §6.5 follow-up: tranche boundaries switched from 5/15% to Hull GE Fig 8.1's 5/20%
+  (mezzanine impairment at a 12% pool loss 70% → 47%); the verification cell now also reproduces
+  Table 8.1 (ABS mezzanine and ABS CDO 10/25/65% tranche losses at 10/13/17/20%)

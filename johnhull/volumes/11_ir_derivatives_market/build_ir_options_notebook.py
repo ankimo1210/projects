@@ -353,7 +353,10 @@ cells.append(
 
 $$E_T(y_T) = y_F - \tfrac{1}{2}y_F^2\sigma_y^2 T\,\frac{G''(y_F)}{G'(y_F)}$$
 
+$G(y)$ は $T$ 時点の債券価格を利回りの関数として書いたもの。年 $m$ 回払い・クーポン率 $c$・$n$ 年の債券なら
+$G(y) = \sum_{k=1}^{mn} \frac{c/m}{(1+y/m)^k} + \frac{1}{(1+y/m)^{mn}}$（`ir_options.bond_yield_convexity` が $G', G''$ を返す）。
 $G'<0, G''>0$ なので $G''/G'<0$、調整は**正**（期待利回り > フォワード利回り）。
+下のセルで Example 30.1（$G' = -2.6730$、$G'' = 9.8910$、$E_T(y_T) = 0.06097$、価値 5.27）を再現します。
 第4冊で見た先物-フォワードのコンベクシティ調整 $\tfrac12\sigma^2 t_1 t_2$ も同型です。""")
 )
 cells.append(
@@ -368,20 +371,22 @@ cells.append(
 
 # Cell 17: convexity demo
 cells.append(
-    code(r"""# --- コンベクシティ調整の大きさ（満期・ボラ依存） ---
+    code(r"""# --- Hull Example 30.1（p.709–710）: 3年後に 3年スワップレート×$100 を受け取る商品 ---
+# スワップレートを 6% 年1回払い 3年債の利回りで近似。σ_y = 22%、3年ゼロレート 5%（年複利）
+g1_ex, g2_ex = ir_options.bond_yield_convexity(0.06, 0.06, 3)  # G'(y_F), G''(y_F)（年複利の G）
+adj_ex = ir_options.convexity_adjustment(0.06, 0.22, 3.0, -g2_ex / g1_ex)
+ey_ex = 0.06 + adj_ex
+value_ex = 100.0 * ey_ex / 1.05**3
+value_noadj = 100.0 * 0.06 / 1.05**3
+print(f"G'(y_F) = {g1_ex:.4f}（Hull: −2.6730） G''(y_F) = {g2_ex:.4f}（Hull: 9.8910）")
+print(f"E_T(y_T) = 0.06 + {adj_ex:.6f} = {ey_ex:.5f}（Hull: 0.06097）")
+print(f"商品価値 = 100×{ey_ex:.5f}/1.05³ = {value_ex:.2f}（Hull: 5.27、調整なしだと {value_noadj:.2f}＝Hull: 5.18）")
+
+# --- コンベクシティ調整の大きさ（満期・ボラ依存） ---
 y_F, sig_y = 0.05, 0.20
-# 標準クーポン債の G''/G'（残存n年・年1回クーポン）の絶対値を近似
-def g2_over_g1(y, n):
-    # G(y) = Σ c e^{-y t} の D と C から G''/G' ≈ C/(-D) の絶対値
-    times = np.arange(1.0, n + 1.0)
-    cfs = np.array([y] * (int(n) - 1) + [1.0 + y]) if n >= 1 else np.array([1.0 + y])
-    pv = cfs * np.exp(-y * times)
-    g1 = -np.sum(times * pv)
-    g2 = np.sum(times**2 * pv)
-    return abs(g2 / g1)
-
-
-ratio = g2_over_g1(y_F, 5)
+# 5年・年1回払い・クーポン 5% の債券で G''/G' を評価（convexity_adjustment には正の |G''/G'| を渡す）
+g1_5y, g2_5y = ir_options.bond_yield_convexity(y_F, y_F, 5)
+ratio = -g2_5y / g1_5y
 ts = np.linspace(0.25, 10.0, 60)
 adj = [ir_options.convexity_adjustment(y_F, sig_y, t, ratio) for t in ts]
 fig3, ax3 = plt.subplots(figsize=(7.5, 4))
@@ -490,6 +495,22 @@ checks.append(("コンベクシティ調整 > 0",
 checks.append(("コンベクシティ調整 ∝ T",
                ir_options.convexity_adjustment(0.05, 0.2, 2.0, ratio),
                2.0 * ir_options.convexity_adjustment(0.05, 0.2, 1.0, ratio), 1e-12))
+checks.append(("Ex 30.1 G'(y_F) = −2.6730", g1_ex, -2.6730, 5e-5))
+checks.append(("Ex 30.1 G''(y_F) = 9.8910", g2_ex, 9.8910, 5e-5))
+checks.append(("Ex 30.1 E_T(y_T) = 0.06097", ey_ex, 0.06097, 5e-6))
+checks.append(("Ex 30.1 価値 5.27", value_ex, 5.27, 5e-3))
+checks.append(("Ex 30.1 調整なし 5.18", value_noadj, 5.18, 5e-3))
+
+# ストリッピング: スポット vol で評価した各満期のキャップが、フラット vol の市場価格を再現する
+checks.append(("最短キャップ（キャップレット1本）はスポット vol = フラット vol",
+               spot_vols[0], market_flat[periods[0][1]], 1e-9))
+for idx, (a, b) in enumerate(periods):
+    n_let = idx + 1
+    cap_flat = ir_options.cap_black(L_CAP, forwards[:n_let], R_K, market_flat[b], accruals[:n_let],
+                                    pay_disc[:n_let], fix_times[:n_let])
+    cap_spot = ir_options.cap_black(L_CAP, forwards[:n_let], R_K, spot_vols[:n_let], accruals[:n_let],
+                                    pay_disc[:n_let], fix_times[:n_let])
+    checks.append((f"ストリップしたスポット vol が {b}年キャップを再現", cap_spot, cap_flat, 1e-6))
 
 for name, got, want, tol in checks:
     ok = abs(got - want) <= tol

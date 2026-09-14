@@ -76,17 +76,29 @@ plt = nbplot.setup()  # japanize_matplotlib + plt.ioff()""")
 cells.append(
     md(r"""## 1. エキゾチックの分類（Ch.26）
 
-OTC で取引される非標準ペイオフ。多くは GBM 仮定下で**解析解**を持ちます：
+OTC で取引される非標準ペイオフ。GE 版 Ch.26 の商品節（§26.1–26.16）を並べると次のとおり。
+多くは GBM 仮定下で**解析解**を持ち、ないものはツリーか MC で評価します（「Hull の評価法」は本文の記述）：
 
-| 型 | 特徴 | 評価 |
-|---|---|---|
-| パッケージ | バニラの組み合わせ | バニラの和 |
-| バイナリ | 不連続ペイオフ | cash/asset-or-nothing |
-| バリア | 到達で発生/消滅 | 閉形式（in+out=vanilla） |
-| ルックバック | 経路の最大/最小 | 閉形式 |
-| アジアン | 平均価格 | 算術平均は近似/MC |
-| 交換 | 資産を資産と交換 | Margrabe（r非依存） |
-| バリアンス・スワップ | 実現分散 | ログ・コントラクト静的複製 |""")
+| § | 型 | 特徴 | Hull の評価法 |
+|---|---|---|---|
+| 26.1 | パッケージ | バニラ・フォワード・現金・原資産の組み合わせ（レンジ・フォワード、支払繰延べ型） | 構成要素の和 |
+| 26.2 | 永久アメリカン | 満期なしのアメリカン・コール／プット | 閉形式（最適行使境界 $H_1, H_2$） |
+| 26.3 | 非標準アメリカン | 行使日を限定（バミューダン）、ロックアウト期間、行使価格の変化 | 二項ツリーで行使判定を変える |
+| 26.4 | ギャップ | $S_T > K_2$ のとき $S_T - K_1$ を支払う | BSM の修正（閉形式） |
+| 26.5 | フォワード・スタート | $T_1$ に ATM で始まるオプション | $c\,e^{-qT_1}$ |
+| 26.6 | クリケ（ラチェット） | 行使価格をリセットするオプションの列 | 通常オプション＋フォワード・スタートの和、複雑なら MC |
+| 26.7 | コンパウンド | オプションのオプション（4 種） | 2 変量正規分布 $M$ による閉形式（Geske） |
+| 26.8 | チューザー | $T_1$ にコールかプットを選ぶ | 同一 $K, T_2$ ならコール＋プットのパッケージ |
+| 26.9 | バリア | 到達で発生（in）／消滅（out） | 閉形式（in＋out＝バニラ）、離散観測は BGK 補正、パリジャンはツリー／MC |
+| 26.10 | バイナリ | 不連続ペイオフ（cash／asset-or-nothing） | 閉形式 |
+| 26.11 | ルックバック | 経路の最大／最小（フローティング・フィックスト） | 閉形式 |
+| 26.12 | シャウト | 一度だけ「叫んだ」時点の本源的価値を下限として確保 | 二項／三項ツリー |
+| 26.13 | アジアン | 平均価格でペイオフ | 算術平均を対数正規で近似しモーメント整合＋Black（26.3/26.4）（幾何平均は厳密に対数正規） |
+| 26.14 | 交換 | 資産 $U$ を資産 $V$ と交換 | Margrabe（26.5、r 非依存） |
+| 26.15 | 複数資産（レインボー） | 2 資産以上に依存（バスケットなど） | バスケットはモーメント整合＋Black か相関 GBM の MC |
+| 26.16 | ボラティリティ／バリアンス・スワップ | 実現ボラ・実現分散を固定値と交換 | バリアンスはプット・コールのストリップで複製（26.6–26.8）、ボラ・スワップはより難しい |
+
+§26.17 の**静的オプション複製**は商品ではなく、上の商品をバニラの組み合わせでヘッジする技法です。""")
 )
 cells.append(
     md(r"""> **核心** — 経路依存・多資産・条件付きなど、バニラを超える構造の分類。<br>
@@ -138,7 +150,7 @@ cells.append(
     md(r"""## 3. バリア・オプション（§26.9）
 
 バリア $H$ への到達で**発生（in）**または**消滅（out）**。
-up/down × in/out × call/put の8種に閉形式があります（hullkit はコール4種 `barrier_call` のみ実装）。鍵となる関係：
+up/down × in/out × call/put の8種に閉形式があります（hullkit は `barrier_call` / `barrier_put` の8種と離散監視の BGK 補正 `bgk_adjusted_barrier` を実装）。鍵となる関係：
 
 $$c_{\text{di}} + c_{\text{do}} = c \quad (\text{ノックイン} + \text{ノックアウト} = \text{バニラ})$$
 
@@ -250,23 +262,44 @@ for rho in (-0.5, 0.0, 0.5, 0.9):
 display(pd.DataFrame(rows))""")
 )
 
+# Cell 11b: rainbow md
+cells.append(
+    md(r"""### レインボー・オプション（§26.14–26.15）
+
+2 つ以上のリスク資産に依存するオプションを**レインボー・オプション**と呼びます。
+身近な例は第4冊の T-bond 先物で、ショート側が多数の受渡可能銘柄から最安の債券（CTD）を選べる権利です。
+
+- **ベター・オブ／ワース・オブ**は交換オプションに分解できる（§26.14）：
+  $$\max(U_T, V_T) = U_T + \max(V_T - U_T, 0), \qquad \min(U_T, V_T) = V_T - \max(V_T - U_T, 0)$$
+  したがって価値は「片方の資産（配当利回りぶん割引）± Margrabe の交換オプション」。
+- **バスケット・オプション**（§26.15）はポートフォリオの価値にペイオフが依存する。相関 GBM の MC でも評価できるが、
+  速いのは満期のバスケット価値を対数正規と見なして 2 次までのモーメントを合わせ、Black に入れる方法：
+  $$M_1 = \sum_{i=1}^n F_i, \qquad M_2 = \sum_{i=1}^n \sum_{j=1}^n F_i F_j\, e^{\rho_{ij}\sigma_i\sigma_j T}, \qquad
+  F_0 = M_1,\ \ \sigma^2 = \frac{1}{T}\ln\frac{M_2}{M_1^2} \quad \text{(26.3), (26.4)}$$
+  アジアンの Turnbull-Wakeman と同じ発想で、平均の代わりに資産の和を扱う。""")
+)
+
 # Cell 12: variance swap md + demo
 cells.append(
-    code(r"""# --- バリアンス・スワップ: OTM オプションのストリップで複製（VIX 流） ---
-# 公正バリアンス ≈ (2/T) Σ ΔK/K² e^{rT} Q(K)（Q は OTM オプション価格）
+    code(r"""# --- バリアンス・スワップ: OTM オプションのストリップで複製（Hull 式 26.6・26.8） ---
+# E(V) = (2/T)ln(F0/S*) − (2/T)(F0/S* − 1) + (2/T) Σ ΔK_i/K_i² e^{rT} Q(K_i)
+#   S* = F0 以下で最初の行使価格、Q は S* 未満でプット・超でコール・S* で両者の平均
+from hullkit import variance_swaps
+
 F0 = S_B * math.exp(R_B * T_B)
-strikes_vs = np.arange(60.0, 145.0, 5.0)
-fair_var = 0.0
-for k in strikes_vs:
-    if k < F0:
-        price = bsm.put_price(S_B, k, R_B, SIG_B, T_B)
-    else:
-        price = bsm.call_price(S_B, k, R_B, SIG_B, T_B)
-    fair_var += 5.0 / k**2 * math.exp(R_B * T_B) * price
-fair_var *= 2.0 / T_B
-print(f"ストリップ複製の公正バリアンス・レート = {fair_var:.5f}")
-print(f"→ 公正ボラティリティ = {math.sqrt(fair_var):.4%}（入力 σ={SIG_B:.0%} を概ね回復）")
-print("VIX も同型: OTM SPX オプションのストリップで30日先のバリアンスを測る")""")
+strikes_vs = np.arange(60.0, 145.0, 5.0)         # 狭いストリップ（翼が欠ける）
+strikes_wide = np.arange(20.0, 402.5, 2.5)       # 翼まで張ったストリップ
+fair_var = variance_swaps.fair_variance_from_implied_vols(S_B, strikes_vs, SIG_B, R_B, T_B)
+fair_var_wide = variance_swaps.fair_variance_from_implied_vols(S_B, strikes_wide, SIG_B, R_B, T_B)
+s_star_wide = variance_swaps.default_s_star(strikes_wide, F0)
+# 格子バイアス: Q が S* でプット→コールに切り替わる折れ目を中点和が2次精度でしか拾えない
+grid_bias = 2.5**2 * (2 * F0 - s_star_wide) / (6 * T_B * s_star_wide**3)
+print(f"F0 = {F0:.4f}, S*（広いストリップ）= {s_star_wide}")
+print(f"狭いストリップ 60–140（ΔK=5）  : E(V) = {fair_var:.6f}（翼の欠落で σ²={SIG_B**2:.4f} を下回る）")
+print(f"広いストリップ 20–400（ΔK=2.5）: E(V) = {fair_var_wide:.6f}")
+print(f"  σ² + 格子バイアス ΔK²(2F0−S*)/(6T S*³) = {SIG_B**2 + grid_bias:.6f}")
+print(f"→ 公正ボラティリティ = {math.sqrt(fair_var_wide):.4%}（入力 σ={SIG_B:.0%}）")
+print("VIX も同型（式 26.10 は ln を2次展開で打ち切った形）: OTM SPX オプションのストリップで30日先のバリアンスを測る")""")
 )
 
 # Cell 13: interactive barrier
@@ -392,11 +425,11 @@ cells.append(
 
 # Cell 18: numeraire invariance demo
 cells.append(
-    code(r"""# --- ニュメレール不変性: 同じコールを2つの測度で独立評価 → MC 誤差内で一致 ---
+    code(r"""# --- ニュメレール不変性: 同じコールを3つの測度で独立評価 → MC 誤差内で一致 ---
 S0_n, K_n, r_n, sig_n, T_n = 100.0, 100.0, 0.05, 0.25, 1.0
 rng_n = np.random.default_rng(28)
 n_paths = 400_000
-# (a) リスク中立測度 Q（ニュメレール=マネーマーケット口座、ドリフト r）
+# (a) リスク中立測度 Q（ニュメレール=マネーマーケット口座、ドリフト r）: c = E^Q[e^{-rT}(S_T-K)^+]（28.19）
 z_q = rng_n.standard_normal(n_paths)
 ST_q = S0_n * np.exp((r_n - 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z_q)
 price_q = math.exp(-r_n * T_n) * np.maximum(ST_q - K_n, 0.0).mean()
@@ -404,10 +437,25 @@ price_q = math.exp(-r_n * T_n) * np.maximum(ST_q - K_n, 0.0).mean()
 z_s = rng_n.standard_normal(n_paths)
 ST_s = S0_n * np.exp((r_n + 0.5 * sig_n**2) * T_n + sig_n * math.sqrt(T_n) * z_s)
 price_s = S0_n * (np.maximum(ST_s - K_n, 0.0) / ST_s).mean()
-print(f"(a) リスク中立測度 Q の MC 価格 = {price_q:.4f}")
-print(f"(b) 株価ニュメレールの MC 価格 = {price_s:.4f}（別測度・別サンプリング）")
-print(f"BSM 解析値                     = {bsm.call_price(S0_n, K_n, r_n, sig_n, T_n):.4f}")
-print("→ 異なる測度・異なるドリフトで独立にサンプリングしても同じ価格（測度変換の不変性）")""")
+# (c) ゼロクーポン債ニュメレール P(t,T)（T-フォワード測度）: c = P(0,T) E^T[(F_T-K)^+]（28.20）
+#     フォワード価格 F(t,T) = S/P(t,T) がドリフトゼロのマルチンゲール、F_T = S_T（28.21）
+z_t = rng_n.standard_normal(n_paths)
+P0T_n = math.exp(-r_n * T_n)
+F0_n = S0_n / P0T_n
+FT_t = F0_n * np.exp(-0.5 * sig_n**2 * T_n + sig_n * math.sqrt(T_n) * z_t)
+payoff_t = np.maximum(FT_t - K_n, 0.0)
+price_t = P0T_n * payoff_t.mean()
+se_t = P0T_n * payoff_t.std(ddof=1) / math.sqrt(n_paths)
+se_fwd_t = FT_t.std(ddof=1) / math.sqrt(n_paths)
+bsm_n = bsm.call_price(S0_n, K_n, r_n, sig_n, T_n)
+print(f"(a) リスク中立測度 Q の MC 価格       = {price_q:.4f}")
+print(f"(b) 株価ニュメレールの MC 価格       = {price_s:.4f}（別測度・別サンプリング）")
+print(f"(c) T-フォワード測度の MC 価格       = {price_t:.4f} ± {se_t:.4f}（SE、割引は期待値の外）")
+print(f"BSM 解析値                           = {bsm_n:.4f}")
+print(f"E^T[F_T] = {FT_t.mean():.4f} ／ F(0,T) = S0/P(0,T) = {F0_n:.4f}（フォワード＝T-フォワード測度での期待スポット）")
+print("→ 異なる測度・異なるドリフトで独立にサンプリングしても同じ価格（測度変換の不変性）")
+print("※ r が定数だと P(t,T) のボラはゼロなので Q と T-フォワード測度で S_T の分布は同じ。"
+      "(a) と (c) が本質的に分かれるのは r が確率的なとき（割引 e^{-∫r} が期待値の内か外か）")""")
 )
 
 # Cell 19: Girsanov md + demo
@@ -473,9 +521,12 @@ checks.append(("Margrabe 7.9656",
                exotics.exchange_option(100.0, 100.0, 0.2, 0.2, 0.5, 1.0), 7.965567, 1e-5))
 checks.append(("gap call 13.1122",
                exotics.gap_call(100.0, 95.0, 100.0, 0.05, 0.20, 1.0), 13.112208, 1e-5))
+checks.append(("分散スワップ複製 = σ² + 格子バイアス", fair_var_wide, SIG_B**2 + grid_bias, 1e-6))
 checks.append(("アジアン < バニラ", float(a_tw < van), 1.0, 0.0))
 checks.append(("ルックバック > ATM", float(lb > van), 1.0, 0.0))
 checks.append(("ニュメレール不変（a≈b）", price_q, price_s, 3e-2))
+checks.append(("ニュメレール不変（c: T-フォワード ≈ BSM, 4SE）", price_t, bsm_n, 4.0 * se_t))
+checks.append(("T-フォワード測度で E[F_T] = F(0,T)（4SE）", float(FT_t.mean()), F0_n, 4.0 * se_fwd_t))
 checks.append(("λ 一致（原資産 vs オプション）", lam_opt, lam_underlying, 1e-9))
 
 for name, got, want, tol in checks:

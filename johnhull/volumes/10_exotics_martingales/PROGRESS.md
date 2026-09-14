@@ -27,3 +27,8 @@ Last updated: 2026-06-08
 - Compound (Geske), chooser, cliquet, fixed-strike lookback, Parisian: not covered
   (no markdown either; audit EX-03/EX-04)
 - nbformat cell ids: generated deterministically by the builder (fixed in c54491fd)
+- 2026-09-14 spec-10 follow-up: the taxonomy table lists all 16 product sections of GE Ch.26
+  (§26.1–26.16, with Hull's valuation method; compound/chooser/cliquet/Parisian now appear there as
+  table rows only), a rainbow-option markdown (§26.14–26.15: best/worst-of via exchange, basket moment
+  matching) follows the Margrabe cell, and the numeraire-invariance cell prices the call three ways
+  (money market, stock, zero-coupon bond / T-forward measure; (c) asserted against BSM within 4 SE)
