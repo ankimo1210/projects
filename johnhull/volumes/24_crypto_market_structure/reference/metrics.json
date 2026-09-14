@@ -326,13 +326,6 @@
         ],
         "unit": "synthetic USD per asset"
       },
-      "liquidation_loss": {
-        "dtype": "float64",
-        "shape": [
-          8
-        ],
-        "unit": "synthetic monetary units"
-      },
       "liquidation_method_adl_used": {
         "dtype": "float64",
         "shape": [
@@ -487,6 +480,13 @@
         ],
         "unit": "synthetic USD per asset"
       },
+      "oracle_mark_gap": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "synthetic USD per asset (|latent index - shocked mark|)"
+      },
       "oracle_observed_dislocation": {
         "dtype": "float64",
         "shape": [
@@ -539,7 +539,7 @@
     }
   },
   "companions": {
-    "stress_paths.npz": "ad15ef155e386a0ee9612fb7af69d9abf9696a381832c6453aece051b5f7ac4f"
+    "stress_paths.npz": "d60b8d4e025eed2d62d37c6c10f646e48f94bffe76120fda7fa3e56e2930e65e"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",

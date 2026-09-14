@@ -22,9 +22,15 @@
 | `hedge_residual` | 40.42651541814297 |
 | `market_completeness` | incomplete |
 | `ppa_alpha` | 0.95 |
+| `ppa_base_generation` | 1.0 |
+| `ppa_base_price` | 60.0 |
 | `ppa_cash_flow_at_risk95` | 65.69238346389739 |
 | `ppa_cvar95` | 82.3691062150823 |
+| `ppa_fixed_price` | 60.0 |
+| `ppa_generation_volatility` | 0.2 |
 | `ppa_hedge_residual` | 40.42651541814297 |
+| `ppa_price_volatility` | 0.25 |
+| `ppa_scenario_correlation` | -0.6 |
 | `premium_principle` | standard_deviation |
 | `price_generation_correlation` | -0.5927276785284812 |
 | `weather_basis_rmse_100km` | 2.4258099230251826 |
@@ -45,10 +51,12 @@
 | `basis_hedge_diagnostics` | 0.9999414442205588 | finite hedge ratios and variance reduction in [0, 1] | PASS |
 | `ppa_risk_decomposition` | 3.552713678800501e-15 | fair value == mean(hedged - merchant) == sum of period settlement means; unhedged std == merchant std; hedge-ratio ladder spans unhedged std (h=0) to hedged residual (h=1) (all rebuilt from the samples, 1e-9) | PASS |
 | `ppa_cashflow_risk` | 0.0 | expected cash flow, CFaR = mean - q(1-alpha), CVaR = mean - mean(tail <= q) and residual std rebuilt from the hedged samples match the committed arrays (1e-9); CVaR >= CFaR > 0; pay-as-produced metrics match | PASS |
+| `ppa_correlation_sensitivity` | 1.7856654826647933 | merchant revenue within 3 SE of N P g (1 + rho sigma_S sigma_G) on every grid rho; pay-as-produced fair value = K * generation - revenue; base rho row equals the samples | PASS |
 
 ## Negative results
 
 - Weather and PPA values are premium-principle dependent because the underlying market is incomplete.
+- Across price-generation correlation -0.9..+0.6 the pay-as-produced fair value moves 29.48 -> -23.85, but its hedged cash flow is the fixed price times generation, whose distribution does not depend on rho; the CVaR spread 76.16..86.34 is sampling noise.
 
 ## Rebuild
 

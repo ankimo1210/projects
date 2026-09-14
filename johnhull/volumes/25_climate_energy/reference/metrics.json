@@ -54,11 +54,18 @@
         "name": "ppa_cashflow_risk",
         "observed": 0.0,
         "passed": true
+      },
+      {
+        "criterion": "merchant revenue within 3 SE of N P g (1 + rho sigma_S sigma_G) on every grid rho; pay-as-produced fair value = K * generation - revenue; base rho row equals the samples",
+        "name": "ppa_correlation_sensitivity",
+        "observed": 1.7856654826647933,
+        "passed": true
       }
     ],
     "model_performance_approved": false,
     "negative_results": [
-      "Weather and PPA values are premium-principle dependent because the underlying market is incomplete."
+      "Weather and PPA values are premium-principle dependent because the underlying market is incomplete.",
+      "Across price-generation correlation -0.9..+0.6 the pay-as-produced fair value moves 29.48 -> -23.85, but its hedged cash flow is the fixed price times generation, whose distribution does not depend on rho; the CVaR spread 76.16..86.34 is sampling noise."
     ],
     "passed": true,
     "schema_version": 1,
@@ -256,6 +263,48 @@
         ],
         "unit": "synthetic monetary units"
       },
+      "ppa_correlation_generation_mean": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "synthetic generation units"
+      },
+      "ppa_correlation_grid": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "price-generation correlation"
+      },
+      "ppa_correlation_merchant_mean": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_correlation_merchant_se": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_correlation_pap_cvar95": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "synthetic monetary units"
+      },
+      "ppa_correlation_pap_fair_value": {
+        "dtype": "float64",
+        "shape": [
+          6
+        ],
+        "unit": "synthetic monetary units"
+      },
       "ppa_fair_value": {
         "dtype": "float64",
         "shape": [
@@ -421,7 +470,7 @@
     }
   },
   "companions": {
-    "scenarios.npz": "102deee68286e909aa266ddd953ca521946c8b08894ba4b19ec6a8b4857c28d9"
+    "scenarios.npz": "860b219e38a0a857466e13a60be8cac3aec299979252edf192a55741c119d435"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -442,9 +491,15 @@
     "hedge_residual": 40.42651541814297,
     "market_completeness": "incomplete",
     "ppa_alpha": 0.95,
+    "ppa_base_generation": 1.0,
+    "ppa_base_price": 60.0,
     "ppa_cash_flow_at_risk95": 65.69238346389739,
     "ppa_cvar95": 82.3691062150823,
+    "ppa_fixed_price": 60.0,
+    "ppa_generation_volatility": 0.2,
     "ppa_hedge_residual": 40.42651541814297,
+    "ppa_price_volatility": 0.25,
+    "ppa_scenario_correlation": -0.6,
     "premium_principle": "standard_deviation",
     "price_generation_correlation": -0.5927276785284812,
     "weather_basis_rmse_100km": 2.4258099230251826,

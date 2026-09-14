@@ -1226,7 +1226,7 @@ def volume24_reference(*, seed: int = 20260742) -> FrontierReference:
     running_funding = 0.0
     equity: list[float] = []
     oracle_age: list[float] = []
-    oracle_loss: list[float] = []
+    oracle_mark_gap: list[float] = []
     oracle_observed_dislocation: list[float] = []
     oracle_latent_dislocation: list[float] = []
     oracle_stale: list[bool] = []
@@ -1279,7 +1279,7 @@ def volume24_reference(*, seed: int = 20260742) -> FrontierReference:
             latency_return=-0.002 * index,
             mark_manipulation=-0.001 * index,
         )
-        oracle_loss.append(abs(shock.latent_index - shock.shocked_mark))
+        oracle_mark_gap.append(abs(shock.latent_index - shock.shocked_mark))
         oracle_observed_dislocation.append(shock.observed_dislocation)
         oracle_latent_dislocation.append(shock.latent_dislocation)
         shocked_mark.append(shock.shocked_mark)
@@ -1501,7 +1501,7 @@ def volume24_reference(*, seed: int = 20260742) -> FrontierReference:
         "oracle_latent_index": np.asarray(latent_index),
         "oracle_observed_dislocation": np.asarray(oracle_observed_dislocation),
         "oracle_latent_dislocation": np.asarray(oracle_latent_dislocation),
-        "liquidation_loss": np.asarray(oracle_loss),
+        "oracle_mark_gap": np.asarray(oracle_mark_gap),
     }
     metrics: dict[str, Scalar] = {
         "cashflow_conservation_error": cashflow_conservation_error,
@@ -1776,6 +1776,40 @@ def volume25_reference(*, seed: int = 20260743) -> FrontierReference:
     ppa_hedged_cash_flow = np.stack(
         [ppa_merchant_cash_flow + settlement.sum(axis=1) for settlement in ppa_settlement_matrix]
     )
+    # Price-generation correlation sensitivity (spec section 6.5). The simulator
+    # draws the same normals for every correlation, so the grid moves revenue
+    # only through Cov(S, G) = P g sigma_S sigma_G rho per period.
+    correlation_grid = np.asarray([-0.9, -0.6, -0.3, 0.0, 0.3, 0.6])
+    correlation_merchant_mean: list[float] = []
+    correlation_merchant_se: list[float] = []
+    correlation_generation_mean: list[float] = []
+    correlation_pap_fair_value: list[float] = []
+    correlation_pap_cvar: list[float] = []
+    for correlation in correlation_grid:
+        grid_scenarios = ppa.simulate_price_generation(
+            1_000,
+            12,
+            base_price=60.0,
+            base_generation=1.0,
+            correlation=float(correlation),
+            seed=seed + 7,
+        )
+        grid_merchant = np.sum(grid_scenarios.spot_prices * grid_scenarios.generation, axis=1)
+        grid_valuation = ppa.evaluate_ppa(
+            "pay_as_produced",
+            grid_scenarios.spot_prices,
+            grid_scenarios.generation,
+            fixed_price=60.0,
+        )
+        correlation_merchant_mean.append(float(np.mean(grid_merchant)))
+        correlation_merchant_se.append(
+            float(np.std(grid_merchant, ddof=1) / np.sqrt(grid_merchant.size))
+        )
+        correlation_generation_mean.append(
+            float(np.mean(np.sum(grid_scenarios.generation, axis=1)))
+        )
+        correlation_pap_fair_value.append(grid_valuation.fair_value)
+        correlation_pap_cvar.append(grid_valuation.cash_flow_cvar)
     arrays: ArrayMap = {
         "strike": strike,
         "carbon_model_names": np.asarray(["Black-76", "GBM MC", "Heston MC", "SV+jump MC"]),
@@ -1838,8 +1872,20 @@ def volume25_reference(*, seed: int = 20260743) -> FrontierReference:
         ),
         "ppa_merchant_cash_flow_samples": ppa_merchant_cash_flow,
         "ppa_hedged_cash_flow_samples": ppa_hedged_cash_flow,
+        "ppa_correlation_grid": correlation_grid,
+        "ppa_correlation_merchant_mean": np.asarray(correlation_merchant_mean),
+        "ppa_correlation_merchant_se": np.asarray(correlation_merchant_se),
+        "ppa_correlation_generation_mean": np.asarray(correlation_generation_mean),
+        "ppa_correlation_pap_fair_value": np.asarray(correlation_pap_fair_value),
+        "ppa_correlation_pap_cvar95": np.asarray(correlation_pap_cvar),
     }
     metrics: dict[str, Scalar] = {
+        "ppa_base_price": 60.0,
+        "ppa_base_generation": 1.0,
+        "ppa_price_volatility": 0.25,
+        "ppa_generation_volatility": 0.20,
+        "ppa_scenario_correlation": -0.60,
+        "ppa_fixed_price": 60.0,
         "carbon_model_ladder_complete": True,
         "carbon_forward": forward,
         "carbon_rate": rate,
