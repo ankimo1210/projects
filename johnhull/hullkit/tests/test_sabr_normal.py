@@ -77,6 +77,78 @@ def test_conditional_normal_sabr_teacher_is_seeded_and_reduces_noise() -> None:
     )
 
 
+# Worst vol 23 teacher cell (frontier_reference.volume23_reference): alpha=0.04,
+# T=10y, ATM strike 0.03 -> teacher_price[2, 2, 4] in rfr_scenarios.npz.
+_VOL23_WORST_CELL = dict(forward=0.030, strike=0.030, expiry=10.0, alpha=0.040, rho=-0.30, nu=0.65)
+
+
+def test_conditional_teacher_shock_option_leaves_seeded_default_unchanged() -> None:
+    seed = 20260741 + 1_000 * 2 + 100 * 2 + 4
+    default = sabr_normal.normal_sabr_conditional_mc_price(
+        **_VOL23_WORST_CELL, n_steps=48, n_paths=8_000, seed=seed
+    )
+    # Values committed in volumes/23_rfr_post_libor/reference/rfr_scenarios.npz
+    # before ``volatility_shocks`` existed; the default path must stay bit-identical.
+    assert default.price == 0.06180665230660865
+    assert default.standard_error == 0.0010933168252864366
+
+    rng = np.random.default_rng(seed)
+    explicit_draws = np.stack([rng.standard_normal(8_000) for _ in range(48)])
+    explicit = sabr_normal.normal_sabr_conditional_mc_price(
+        **_VOL23_WORST_CELL, n_steps=48, n_paths=8_000, volatility_shocks=explicit_draws
+    )
+    np.testing.assert_array_equal(explicit.conditional_prices, default.conditional_prices)
+
+    with pytest.raises(ValueError, match="volatility_shocks"):
+        sabr_normal.normal_sabr_conditional_mc_price(
+            **_VOL23_WORST_CELL, n_steps=48, n_paths=8_000, volatility_shocks=explicit_draws[1:]
+        )
+
+
+def test_conditional_teacher_step_doubling_bias_is_far_below_reported_standard_error() -> None:
+    """Common-random-number step doubling for the left-Riemann integrated variance.
+
+    Coarse shocks are ``(z[0::2] + z[1::2]) / sqrt(2)`` of the finer grid, so the
+    48/96/192-step estimators share one Brownian path and ``P_n - P_2n`` isolates
+    time-discretization error. Measured at seed 200, 40k paths: P_48 - P_96 =
+    -0.070 bp, P_96 - P_192 = -0.021 bp against SE_192 = 6.36 bp (0.011 and 0.003
+    SE); pathwise RMS difference 39.4 bp -> 23.1 bp (ratio 0.59). Re-seeding
+    instead of coupling moves this cell by 28 bp (2.6 SE) between 48 and 192
+    steps, which is sampling noise, not discretization bias.
+    """
+    n_paths = 40_000
+    fine = np.random.default_rng(200).standard_normal((192, n_paths))
+    shocks = {192: fine}
+    shocks[96] = (shocks[192][0::2] + shocks[192][1::2]) / np.sqrt(2.0)
+    shocks[48] = (shocks[96][0::2] + shocks[96][1::2]) / np.sqrt(2.0)
+    results = {
+        n_steps: sabr_normal.normal_sabr_conditional_mc_price(
+            **_VOL23_WORST_CELL,
+            n_steps=n_steps,
+            n_paths=n_paths,
+            volatility_shocks=shocks[n_steps],
+        )
+        for n_steps in (48, 96, 192)
+    }
+    coarse_gap = results[96].conditional_prices - results[48].conditional_prices
+    fine_gap = results[192].conditional_prices - results[96].conditional_prices
+    finest_se = results[192].standard_error
+
+    # Pathwise (strong) error of the Riemann sum is O(dt): the RMS gap should
+    # roughly halve per doubling. A 40-seed sweep at 8k paths and 20 seeds at 40k
+    # paths gave ratios in [0.32, 0.69] at 40k (heavy-tailed alpha paths widen it
+    # at 8k), so 0.75 still separates first-order shrinkage from no shrinkage.
+    rms_ratio = np.sqrt(np.mean(fine_gap**2)) / np.sqrt(np.mean(coarse_gap**2))
+    assert rms_ratio < 0.75
+
+    # Richardson for an O(dt) bias: bias(P_48) ~ 2 (P_48 - P_96). Over the same
+    # 60-seed sweep max |P_48 - P_96| / SE_192 was 0.087 (so 2x = 0.17) and max
+    # |P_96 - P_192| / SE_192 was 0.061; the bounds below keep a 2x and 4x margin
+    # on those worst cases. The pooled sweep mean put bias(P_48) near -0.4 bp.
+    assert 2.0 * abs(coarse_gap.mean()) < 0.35 * finest_se
+    assert abs(fine_gap.mean()) < 0.25 * finest_se
+
+
 def test_shifted_sabr_teacher_is_independent_of_hagan_and_respects_boundary() -> None:
     arguments = dict(
         forward=0.03,

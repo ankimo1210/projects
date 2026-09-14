@@ -411,6 +411,7 @@ def normal_sabr_conditional_mc_price(
     n_steps: int = 100,
     n_paths: int = 50_000,
     seed: int = 0,
+    volatility_shocks: ArrayLike | None = None,
 ) -> ConditionalNormalSabrTeacherResult:
     r"""Conditional-Monte-Carlo teacher for beta-zero SABR.
 
@@ -426,6 +427,13 @@ def normal_sabr_conditional_mc_price(
 
     This estimator remains seeded and synthetic, while materially reducing
     teacher noise in the long-maturity/high-volatility diagnostic grid.
+
+    The volatility path is exact on the grid, but ``int alpha_t^2 dt`` is a
+    left Riemann sum, so ``standard_error`` excludes time-discretization bias.
+    ``volatility_shocks`` (shape ``(n_steps, n_paths)``, standard normals) replaces
+    the seeded draws so callers can couple grids with common random numbers,
+    e.g. coarse shocks ``(z[0::2] + z[1::2]) / sqrt(2)`` for step doubling.
+    When it is ``None`` the seeded draws and outputs are unchanged.
     """
 
     normal_sabr_implied_vol(forward, strike, expiry, alpha, rho, nu)
@@ -433,6 +441,11 @@ def normal_sabr_conditional_mc_price(
         raise ValueError("discount_factor/kind are invalid")
     if n_steps < 1 or n_paths < 2:
         raise ValueError("n_steps and n_paths are too small")
+    shocks = None
+    if volatility_shocks is not None:
+        shocks = np.asarray(volatility_shocks, dtype=float)
+        if shocks.shape != (n_steps, n_paths) or not np.all(np.isfinite(shocks)):
+            raise ValueError("volatility_shocks must be a finite (n_steps, n_paths) array")
     if expiry == 0.0 or nu == 0.0:
         price = rfr_options.bachelier_price(
             forward,
@@ -450,9 +463,9 @@ def normal_sabr_conditional_mc_price(
     sqrt_dt = np.sqrt(dt)
     volatilities = np.full(n_paths, alpha, dtype=float)
     integrated_variance = np.zeros(n_paths, dtype=float)
-    for _ in range(n_steps):
+    for step in range(n_steps):
         integrated_variance += volatilities * volatilities * dt
-        shock = rng.standard_normal(n_paths)
+        shock = rng.standard_normal(n_paths) if shocks is None else shocks[step]
         volatilities *= np.exp(-0.5 * nu**2 * dt + nu * sqrt_dt * shock)
 
     conditional_forward = forward + rho * (volatilities - alpha) / nu

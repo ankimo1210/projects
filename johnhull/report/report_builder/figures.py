@@ -13,7 +13,7 @@ numerics, A4 XVA) and the vol 18–28 frontier volumes register their figures he
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from hullkit import plotly_viz as pv
 
@@ -125,7 +125,6 @@ class FigureSpec:
     blurb: str  # 何が見えるか
     build: Callable
     is_new: bool = False
-    tags: tuple = field(default_factory=tuple)
     practice: str = ""  # 実務での意味 — なぜ実社会で役立つか
 
 
@@ -138,7 +137,6 @@ FIGURES: list[FigureSpec] = [
         "ブル/ストラドル/バタフライ…をドロップダウンで切替。脚の足し合わせが戦略の形を作る(Hull Ch.12)。",
         pv.plotly_strategy_payoffs,
         practice="セールスが顧客の相場観を『形』に翻訳する道具。脚の組み合わせで損益図を設計する。",
-        tags=("dropdown",),
     ),
     FigureSpec(
         "delta_vs_spot",
@@ -148,7 +146,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_delta_vs_spot,
         practice="満期が近いほどデルタが段差化＝ガンマ急騰。決算跨ぎ短期 ATM のヘッジが最難関な理由。",
         is_new=True,
-        tags=("slider", "greeks"),
     ),
     FigureSpec(
         "delta_hedge_cost",
@@ -158,7 +155,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_delta_hedge_cost,
         practice="マーケットメイカーの損益分布そのもの。建値(BSM)へ締まる＝方向観に依らず鞘を取れる。",
         is_new=True,
-        tags=("slider", "hedging", "mc"),
     ),
     # numerics -----------------------------------------------------------
     FigureSpec(
@@ -168,7 +164,6 @@ FIGURES: list[FigureSpec] = [
         "ステップ数 N を上げると CRR 価格が鋸歯状に振動しながら閉形式へ収束する(Hull Ch.13)。",
         pv.plotly_tree_convergence,
         practice="閉形式の無い商品を木で値付ける際の必要ステップ数の目安。木と BSM の一致は実装の検算。",
-        tags=("convergence",),
     ),
     # numerics (A3) ------------------------------------------------------
     FigureSpec(
@@ -179,7 +174,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_mc_variance_reduction,
         practice="XVA 等の重い MC を実用化する鍵。同じ精度を桁違いに少ない計算で得る。",
         is_new=True,
-        tags=("convergence", "mc"),
     ),
     FigureSpec(
         "qmc_vs_pseudo",
@@ -189,7 +183,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_qmc_vs_pseudo,
         practice="高次元の値付けを速くする低食い違い列。実務 MC が QMC を使う理由が目で分かる。",
         is_new=True,
-        tags=("qmc",),
     ),
     FigureSpec(
         "american_boundary",
@@ -199,7 +192,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_american_boundary,
         practice="『いつ行使・解約すべきか』の境界。コーラブル債・期前償還の実務判断に直結。",
         is_new=True,
-        tags=("slider", "fd", "american"),
     ),
     # risk_credit --------------------------------------------------------
     FigureSpec(
@@ -210,7 +202,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_var_es,
         practice="銀行の規制資本・リスク限度の根幹。Basel が VaR から ES へ移った理由を体感できる。",
         is_new=True,
-        tags=("slider", "risk"),
     ),
     FigureSpec(
         "credit_survival",
@@ -220,7 +211,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_credit_survival,
         practice="CDS スプレッドから読む信用の市場評価。ハザード率と価格の対応。",
         is_new=True,
-        tags=("slider", "credit"),
     ),
     # XVA & counterparty credit (A4) -------------------------------------
     FigureSpec(
@@ -231,7 +221,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_exposure_profile,
         practice="CVA を駆動する EE と限度枠の PFE。カウンターパーティ・リスク管理の基礎量。",
         is_new=True,
-        tags=("slider", "xva"),
     ),
     FigureSpec(
         "cva_sensitivity",
@@ -241,7 +230,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_cva_sensitivity,
         practice="CVA は『エクスポージャが大きい時期』と『デフォルトしやすい時期』の重なり。CVA デスクのプライシングの直感。",
         is_new=True,
-        tags=("slider", "xva", "cva"),
     ),
     FigureSpec(
         "portfolio_loss",
@@ -251,7 +239,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_portfolio_loss_correlation,
         practice="相関こそシステミックリスク。平均は不変でテールだけ肥大＝2008年の本質。",
         is_new=True,
-        tags=("slider", "copula"),
     ),
     FigureSpec(
         "copula_scatter",
@@ -261,7 +248,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_copula_scatter,
         practice="相関↑ で名柄が同時にデフォルトしやすくなる様子。CDO が崩れた仕組み。",
         is_new=True,
-        tags=("slider", "copula"),
     ),
     # stochastic (A1) ----------------------------------------------------
     FigureSpec(
@@ -272,7 +258,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_quadratic_variation,
         practice="二次変分 → t が伊藤の ½σ² 項の源。あらゆる価格 PDE の出発点。",
         is_new=True,
-        tags=("slider", "brownian"),
     ),
     FigureSpec(
         "ito_correction",
@@ -282,7 +267,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_ito_correction,
         practice="伊藤 vs Stratonovich の差＝½T。確率版の連鎖律がなぜ要るか。",
         is_new=True,
-        tags=("slider", "ito"),
     ),
     FigureSpec(
         "girsanov",
@@ -292,7 +276,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_girsanov,
         practice="実世界 μ を動かしても Q 価格は不変。リスク中立評価が成り立つ理由の可視化。",
         is_new=True,
-        tags=("slider", "measure-change"),
     ),
     # volatility (A2) ----------------------------------------------------
     FigureSpec(
@@ -303,7 +286,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_heston_smile,
         practice="ρ で傾き・ξ で曲率。市場スマイルへのカリブレーションのパラメータ感覚。",
         is_new=True,
-        tags=("slider", "smile"),
     ),
     FigureSpec(
         "cos_convergence",
@@ -313,7 +295,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_cos_density_convergence,
         practice="特性関数 → 密度を少数項で復元。Heston 高速値付けの心臓部。",
         is_new=True,
-        tags=("slider", "fourier"),
     ),
     FigureSpec(
         "sabr_smile",
@@ -323,7 +304,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_sabr_smile,
         practice="金利スマイルの市場標準。ブローカー画面が SABR パラメータで気配を出す理由。",
         is_new=True,
-        tags=("slider", "smile", "sabr"),
     ),
     FigureSpec(
         "iv_surface",
@@ -333,7 +313,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_iv_surface,
         practice="デスクが毎朝見るボラサーフェスそのもの。スマイルと期間構造を1枚で掴むカリブレーションの出発点。",
         is_new=True,
-        tags=("slider", "surface", "smile"),
     ),
     FigureSpec(
         "smile_model_risk",
@@ -343,7 +322,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_smile_model_risk,
         practice="市場価格が決めてくれない選択(β)がヘッジ全体を決める — Hagan (2002) の中心命題。モデル検証・リザーブの根拠。",
         is_new=True,
-        tags=("smile", "sabr", "greeks"),
     ),
     FigureSpec(
         "sabr_greeks_by_param",
@@ -353,7 +331,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_sabr_greeks_by_param,
         practice="どのパラメータを動かすと、どの Greek が・どのストライクで動くか。β 以外(α・ρ・ν)も含めたヘッジの依存構造を一望する。",
         is_new=True,
-        tags=("dropdown", "sabr", "greeks"),
     ),
     FigureSpec(
         "sabr_rho_nu_smile_greeks",
@@ -363,7 +340,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_sabr_rho_nu_smile_greeks,
         practice="β の影に隠れがちな ρ・ν の役割。スマイルの傾き・曲率を動かすと、ヘッジのどこがどう崩れるかを左右に並べて読む。",
         is_new=True,
-        tags=("sabr", "smile", "greeks"),
     ),
     FigureSpec(
         "sabr_param_greeks",
@@ -373,7 +349,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_sabr_param_greeks,
         practice="キャリブレーションの自由度はヘッジの自由度。あるGreekを合わせると別のGreekがずれる構造を、バンプ前に地図で知る。",
         is_new=True,
-        tags=("slider", "sabr", "greeks"),
     ),
     # extra coverage -----------------------------------------------------
     FigureSpec(
@@ -384,7 +359,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_gamma_surface,
         practice="ATM・満期直前で最もヘッジしにくい領域が一目で分かる。在庫の危険ゾーンの地図。",
         is_new=True,
-        tags=("surface", "greeks"),
     ),
     FigureSpec(
         "greeks_map",
@@ -394,7 +368,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_greeks_map,
         practice="スマイルリスク(バンナ・ボンマ)がブックのどこに溜まるかの地図。ボラデスクのリスクレポートの縮図。",
         is_new=True,
-        tags=("dropdown", "greeks"),
     ),
     FigureSpec(
         "bsm_greeks_sensitivity",
@@ -404,7 +377,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_bsm_greeks_sensitivity,
         practice="古い・誤ったボラマークを入れると全ヘッジ比率が狂う。EODマークとリアルタイムヘッジの乖離という日常的リスク。",
         is_new=True,
-        tags=("slider", "greeks"),
     ),
     FigureSpec(
         "stop_loss_vs_delta",
@@ -414,7 +386,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_stop_loss_vs_delta_hedge,
         practice="『直感的に正しそうな』ストップロスが破綻する反面教師。複製の規律がなぜ要るか。",
         is_new=True,
-        tags=("slider", "hedging"),
     ),
     FigureSpec(
         "binomial_lattice",
@@ -424,7 +395,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_binomial_lattice,
         practice="後退帰納とアメリカンの早期行使域を格子上で。エキゾチック評価器の基礎。",
         is_new=True,
-        tags=("tree",),
     ),
     FigureSpec(
         "garch_volatility",
@@ -434,7 +404,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_garch_volatility,
         practice="ボラのクラスタリングと平均回帰。危機時の VaR 過小評価を防ぐ動学。",
         is_new=True,
-        tags=("garch",),
     ),
     FigureSpec(
         "garch_term_structure",
@@ -444,7 +413,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_garch_term_structure,
         practice="高/低ボラから長期水準への回帰。ボラの期間構造＝満期別オプション値付けの素。",
         is_new=True,
-        tags=("garch",),
     ),
     FigureSpec(
         "merton_structural",
@@ -454,7 +422,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_merton_structural,
         practice="株価から信用を読む(KMV の distance-to-default)。資産ボラ・レバレッジと PD の関係。",
         is_new=True,
-        tags=("slider", "credit"),
     ),
     FigureSpec(
         "portfolio_diversification",
@@ -464,7 +431,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_portfolio_diversification,
         practice="分散しきれないリスクの『床』。相関がある限り 1/√N では消えない。",
         is_new=True,
-        tags=("risk",),
     ),
     FigureSpec(
         "yield_curve",
@@ -474,7 +440,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_yield_curve,
         practice="順/逆イールドとフォワードの関係。将来金利の市場予想の読み取り。",
         is_new=True,
-        tags=("slider", "rates"),
     ),
     FigureSpec(
         "bond_convexity",
@@ -484,7 +449,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_bond_convexity,
         practice="デュレーション(接線)が捉え損なう曲率。債券リスク管理の基本量。",
         is_new=True,
-        tags=("rates",),
     ),
     FigureSpec(
         "swap_value",
@@ -494,7 +458,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_swap_value,
         practice="受取固定スワップ価値は固定金利に線形、par で 0。世界最大級のデリバ市場の評価。",
         is_new=True,
-        tags=("rates", "swap"),
     ),
     FigureSpec(
         "barrier_knockout",
@@ -504,7 +467,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_barrier_knockout,
         practice="バリアが近いほど価値が 0 へ。為替仕組商品の定番、ヘッジ難所の可視化。",
         is_new=True,
-        tags=("slider", "exotic"),
     ),
     FigureSpec(
         "asian_vs_european",
@@ -514,7 +476,6 @@ FIGURES: list[FigureSpec] = [
         pv.plotly_asian_vs_european,
         practice="平均はブレが小さい → アジアンは割安。商品・為替の実需に合う構造。",
         is_new=True,
-        tags=("exotic",),
     ),
 ]
 
@@ -746,23 +707,28 @@ _FRONTIER_SPECS = (
     ),
 )
 
-FIGURES.extend(
-    FigureSpec(
-        figure_id,
-        book,
-        title,
-        blurb,
-        ff.FRONTIER_BUILDERS[figure_id],
-        practice=practice,
-        is_new=True,
-        tags=("a5-a8", "artifact"),
-    )
-    for figure_id, book, title, blurb, practice in _FRONTIER_SPECS
-)
+
+def _artifact_figures(specs: tuple[tuple[str, str, str, str, str], ...]) -> list[FigureSpec]:
+    """Artifact-backed figures whose builders live in ``frontier_figures``."""
+    return [
+        FigureSpec(
+            figure_id,
+            book,
+            title,
+            blurb,
+            ff.FRONTIER_BUILDERS[figure_id],
+            practice=practice,
+            is_new=True,
+        )
+        for figure_id, book, title, blurb, practice in specs
+    ]
 
 
-# Beyond A5--A8: inflation/JGBi (vol 26) and the risk desk (vol 27), also
-# artifact-backed and read via ``frontier_figures``.
+FIGURES.extend(_artifact_figures(_FRONTIER_SPECS))
+
+
+# Beyond A5--A8: inflation/JGBi (vol 26), the risk desk (vol 27) and the credit
+# desk (vol 28), also artifact-backed and read via ``frontier_figures``.
 _BEYOND_SPECS = (
     (
         "inflation_curves",
@@ -850,19 +816,7 @@ _BEYOND_SPECS = (
     ),
 )
 
-FIGURES.extend(
-    FigureSpec(
-        figure_id,
-        book,
-        title,
-        blurb,
-        ff.FRONTIER_BUILDERS[figure_id],
-        practice=practice,
-        is_new=True,
-        tags=("beyond-hull", "artifact"),
-    )
-    for figure_id, book, title, blurb, practice in _BEYOND_SPECS
-)
+FIGURES.extend(_artifact_figures(_BEYOND_SPECS))
 
 
 def figures_for(book: str) -> list[FigureSpec]:
