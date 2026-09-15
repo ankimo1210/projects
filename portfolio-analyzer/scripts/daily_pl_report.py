@@ -148,6 +148,30 @@ def _downsample(values: list[float], n: int = 80) -> list[float]:
     return [values[round(i * step)] for i in range(n)]
 
 
+def attribution_of(series: ts.AccountSeries, wi: int) -> dict[str, dict[str, float | None]]:
+    """Each P&L bucket over the window (from its first defined date on or after ``wi``) and since inception."""
+    keys = {
+        "unrealized": series.unrealized,
+        "realized": series.realized_cum,
+        "dividends": series.dividends_cum,
+        "fees": series.fees_cum,
+        "fx_translation": series.fx_translation_cum,
+        "forex": series.forex_cum,
+        "total": series.pnl,
+    }
+    start = ts.first_defined(series.pnl[wi:])
+    i0 = None if start is None else wi + start
+
+    def bucket(values, at):
+        a, b = values[at], values[-1]
+        return None if a is None or b is None else float(b - a)
+
+    return {
+        "window": {k: (None if i0 is None else bucket(v, i0)) for k, v in keys.items()},
+        "incept": {k: (None if v[-1] is None else float(v[-1])) for k, v in keys.items()},
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -265,7 +289,9 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         {r.symbol for r in transactions if r.transaction_type in ibkr.TRADE_TYPES and r.symbol}
     )
     dc_ticker = dc_holding["ticker"] if dc_ledger else None
-    tickers = sorted((set(open_tickers) | set(ledger_symbols)) - {dc_ticker})
+    # closed domestic symbols too: the account's NAV needs their price while they were held
+    jp_tickers = {mtm.market_symbol(t.symbol, "JPY") for t in jp_rows if t.symbol}
+    tickers = sorted((set(open_tickers) | set(ledger_symbols) | jp_tickers) - {dc_ticker, None})
 
     today = datetime.now(TZ).date()
     start = (today - timedelta(days=args.history_days)).isoformat()
@@ -341,19 +367,45 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     def window(series):
         return [_f(v) for v in series[wi:]]
 
-    # ---- headline ----
-    nav_ibkr = values.nav[-1]
-    pnl_window = values.pnl_total[-1] - values.pnl_total[wi]
+    # ---- account series and their total ----
     cash = ibkr.summarize_cash(transactions) if transactions else None
+    account_series = [
+        ts.from_ledger(ledger_account, paths, values, cash.deposit_flows if cash else [])
+    ]
+    if jp_rows:
+        jp_prices = {
+            sym: price_path.get(mtm.market_symbol(sym, "JPY") or "", [None] * n)
+            for sym in {t.symbol for t in jp_rows if t.symbol}
+        }
+        account_series.append(jpbroker.account_paths(jp_rows, dates, jp_prices, args.jp_account))
+    if dc_ledger:
+        account_series.append(
+            dcplan.account_paths(dc_holding, dc_trades, dates, price_path[dc_ticker])
+        )
+    total_series = ts.combine(account_series)
+    pnl = total_series.pnl
+    record["total_pnl_incept_jpy"] = _f(pnl[-1])
+    record["deposits_cum_jpy"] = _f(total_series.deposits_cum[-1])
+
+    # ---- headline ----
+    start_i = ts.first_defined(pnl[wi:])
+    i0 = None if start_i is None else wi + start_i
+    pnl_window = None if i0 is None or pnl[-1] is None else pnl[-1] - pnl[i0]
+    xirr_series = [s for s in account_series if s.xirr_flows]
     xirr = None
-    if cash and cash.deposit_flows:
-        flows = [(d, -a) for d, a in cash.deposit_flows] + [(as_of, nav_ibkr)]
+    if xirr_series and all(s.nav[-1] is not None for s in xirr_series):
+        flows = [(d, -a) for s in xirr_series for d, a in s.xirr_flows] + [
+            (as_of, sum((s.nav[-1] for s in xirr_series), ZERO))
+        ]
         xirr = ibkr.money_weighted_return(flows)
+    xirr_scope = "・".join(account_names.get(s.account_id, s.account_id) for s in xirr_series)
     peak, dd_jpy, dd_pct = None, ZERO, None
     for i in range(wi, n):
-        v = values.pnl_total[i]
+        v, nav_i = pnl[i], total_series.nav[i]
+        if v is None or nav_i is None:
+            continue
         if peak is None or v > peak[0]:
-            peak = (v, values.nav[i])
+            peak = (v, nav_i)
         if peak[1] and v - peak[0] < dd_jpy:
             dd_jpy, dd_pct = v - peak[0], (v - peak[0]) / peak[1]
     day_pnl = summary.day_pnl_jpy
@@ -375,10 +427,11 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         "unreal_stock": _f(summary.unrealized_stock_jpy),
         "unreal_fx": _f(summary.unrealized_fx_jpy),
         "pnl_window": _f(pnl_window),
-        "pnl_incept": _f(values.pnl_total[-1]),
-        "realized_cum": _f(paths.realized_cum[-1]),
-        "dividends_net": _f(paths.dividends_cum[-1]),
+        "pnl_incept": _f(pnl[-1]),
+        "realized_cum": _f(total_series.realized_cum[-1]),
+        "dividends_net": _f(total_series.dividends_cum[-1]),
         "xirr": _f(xirr),
+        "xirr_scope": xirr_scope,
         "max_dd_window": _f(dd_pct),
         "max_dd_window_jpy": _f(dd_jpy),
     }
@@ -497,37 +550,8 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     seen = set()
     tape = [t for t in tape if not (t["sym"] in seen or seen.add(t["sym"]))]
 
-    def bucket(series, i0: int, i1: int) -> float:
-        return float(series[i1] - series[i0])
-
-    unreal_total = [
-        sum((values.unrealized[s][i] for s in values.unrealized), ZERO) for i in range(n)
-    ]
-    attribution = {}
-    for name_, i0 in (("window", wi), ("incept", 0)):
-        attribution[name_] = {
-            "unrealized": bucket(unreal_total, i0, n - 1)
-            if name_ == "window"
-            else float(unreal_total[-1]),
-            "realized": bucket(paths.realized_cum, i0, n - 1)
-            if name_ == "window"
-            else float(paths.realized_cum[-1]),
-            "dividends": bucket(paths.dividends_cum, i0, n - 1)
-            if name_ == "window"
-            else float(paths.dividends_cum[-1]),
-            "fees": bucket(paths.fees_cum, i0, n - 1)
-            if name_ == "window"
-            else float(paths.fees_cum[-1]),
-            "fx_translation": bucket(paths.fx_translation_cum, i0, n - 1)
-            if name_ == "window"
-            else float(paths.fx_translation_cum[-1]),
-            "forex": bucket(paths.forex_cum, i0, n - 1)
-            if name_ == "window"
-            else float(paths.forex_cum[-1]),
-            "total": bucket(values.pnl_total, i0, n - 1)
-            if name_ == "window"
-            else float(values.pnl_total[-1]),
-        }
+    attribution = attribution_of(total_series, wi)
+    attribution["accounts"] = {s_.account_id: attribution_of(s_, wi) for s_ in account_series}
     holdings_now = ibkr.derive_holdings(transactions) if transactions else {}
     closed = [
         {
@@ -540,7 +564,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         for s, h in sorted(holdings_now.items())
         if h.is_closed
     ]
-    daily = [None] + [_f(values.pnl_total[i] - values.pnl_total[i - 1]) for i in range(wi + 1, n)]
+    daily = [_f(v) for v in ts.daily_changes(pnl)[wi:]]
 
     notes = []
     if meta["stale"]:
@@ -564,8 +588,9 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
             )
         )
     notes.append(
-        "日次損益は全銘柄に共通の直近 2 営業日で比べた差（価格と為替の両方）。まだ開いていない市場や休場の銘柄は前の終値のままなので株の変化は 0 で、動きは次に取引された日の分にまとめて入る。海外証券口座の NAV・損益は取引履歴を日次で再生した値で、"
-        f"取引履歴は {paths.dates[0] if transactions else '—'} 以降、履歴 CSV の最終日以降の取引は反映されない"
+        "日次損益は全銘柄に共通の直近 2 営業日で比べた差（価格と為替の両方）。まだ開いていない市場や休場の銘柄は前の終値のままなので株の変化は 0 で、動きは次に取引された日の分にまとめて入る。NAV・累計損益は 3 口座の合計（NAV − 累計入金）。海外は取引履歴、国内は取引 CSV（手数料は取得原価に含む）、"
+        f"DC は掛金履歴（{dc_trades[0].trade_date if dc_trades else '—'} から。それ以前の掛金は拠出金累計に含む）を日次で再生した値で、"
+        f"海外の取引履歴は {paths.dates[0] if transactions else '—'} 以降、履歴 CSV の最終日以降の取引は反映されない"
     )
     notes.append(
         "株価と為替は yfinance の終値、DC のファンドは運用会社の基準価額。休場日は直前の終値で埋める。"
@@ -593,11 +618,15 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         "positions": positions,
         "series": {
             "dates": dates[wi:],
-            "nav": window(values.nav),
-            "pnl": window(values.pnl_total),
-            "deposits": window(paths.deposits_cum),
+            "nav": window(total_series.nav),
+            "pnl": window(pnl),
+            "deposits": window(total_series.deposits_cum),
             "daily_pnl": daily,
             "symbols": symbols,
+            "accounts": {
+                s_.account_id: {"nav": window(s_.nav), "pnl": window(s_.pnl)}
+                for s_ in account_series
+            },
         },
         "attribution": attribution,
         "closed": closed,
