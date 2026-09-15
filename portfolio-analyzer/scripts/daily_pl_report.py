@@ -29,8 +29,9 @@ import shutil
 import sys
 import urllib.request
 import warnings
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from decimal import Decimal
+from itertools import pairwise
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -45,6 +46,7 @@ from portfolio_analyzer import (  # noqa: E402
     jpbroker,
     mailer,
     mtm,
+    risk,
 )
 from portfolio_analyzer import timeseries as ts  # noqa: E402
 
@@ -53,6 +55,9 @@ TZ = ZoneInfo("Asia/Tokyo")
 # The two scheduled runs: after the Tokyo close, and the next morning after New York's.
 EDITIONS = {"tokyo": "東京引け", "ny": "NY引け"}
 ZERO = Decimal(0)
+# betas of the daily JPY return: TOPIX and the S&P 500 in local currency, and the dollar
+BENCHMARKS = {"topix": "1306.T", "sp500": "SPY", "usdjpy": mtm.FX_SYMBOL}
+RISK_WINDOW = 252  # trading days behind the volatility, VaR, betas and risk contributions
 
 
 def quotes_from_closes(closes) -> dict[str, mtm.Quote]:
@@ -103,6 +108,31 @@ def download_closes(tickers: list[str], start: str, end: str):
     closes = closes.dropna(axis=1, how="all")
     closes.index = pd.to_datetime(closes.index).tz_localize(None).normalize()
     return closes.sort_index()
+
+
+def clean_closes(closes) -> tuple[object, dict[str, list[str]]]:
+    """Blank yfinance's misprinted closes: a print far off the last good level that the series
+    soon returns to (1306.T printed 37.6 instead of 376 for two days in 2026-03). A level the
+    series keeps is left alone. Returns the cleaned frame and the dates dropped per column."""
+    import math
+
+    cleaned = closes.copy()
+    dropped: dict[str, list[str]] = {}
+    for column in cleaned.columns:
+        prints = [(i, float(v)) for i, v in enumerate(cleaned[column].tolist()) if v == v]
+        if not prints:
+            continue
+        last_good = prints[0][1]
+        for k in range(1, len(prints)):
+            i, p = prints[k]
+            if last_good and not (0.25 < p / last_good < 4.0):
+                lookahead = [q for _, q in prints[k + 1 : k + 6]]
+                if any(2 / 3 < q / last_good < 1.5 for q in lookahead):
+                    cleaned.iloc[i, cleaned.columns.get_loc(column)] = math.nan
+                    dropped.setdefault(str(column), []).append(cleaned.index[i].date().isoformat())
+                    continue
+            last_good = p
+    return cleaned, dropped
 
 
 def add_series(closes, ticker: str, points: list[tuple[str, Decimal]]):
@@ -172,6 +202,36 @@ def attribution_of(series: ts.AccountSeries, wi: int) -> dict[str, dict[str, flo
     }
 
 
+def history_start(today: date, history_days: int, episodes: list[dict]) -> str:
+    """Far enough back for the P&L window and for the oldest episode to be replayed."""
+    floor = today - timedelta(days=history_days)
+    for ep in episodes:
+        first = date.fromisoformat(str(ep["start"])) - timedelta(days=7)
+        floor = min(floor, first)
+    return floor.isoformat()
+
+
+def jpy_price_paths(filled, tickers, fx_symbol, usd_tickers) -> dict[str, list[float | None]]:
+    """Forward-filled closes in JPY per ticker (None before the first bar)."""
+    fx = [float(v) for v in filled[fx_symbol].tolist()]
+    out = {}
+    for t in tickers:
+        if t not in filled.columns:
+            continue
+        raw = filled[t].tolist()
+        rate = fx if t in usd_tickers else [1.0] * len(raw)
+        out[t] = [None if v != v else float(v) * r for v, r in zip(raw, rate, strict=True)]
+    return out
+
+
+def daily_returns(path: list[float | None]) -> list[float]:
+    """Close-to-close returns; 0.0 on the first date and wherever a close is missing."""
+    out = [0.0]
+    for prev, cur in pairwise(path):
+        out.append(0.0 if prev in (None, 0.0) or cur is None else cur / prev - 1.0)
+    return out
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -201,6 +261,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--history", default=str(PROJECT_ROOT / "data" / "mtm-history.private.jsonl")
+    )
+    parser.add_argument(
+        "--reference",
+        default=str(PROJECT_ROOT / "data" / "analysis_reference.private.json"),
+        help="look-through, factor loadings, scenarios, limits and episodes for the risk section",
     )
     parser.add_argument("--out-dir", default=str(PROJECT_ROOT / "dist" / "pl-daily"))
     parser.add_argument(
@@ -274,6 +339,10 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     if dc_ledger:
         snapshot = dcplan.apply_to_snapshot(snapshot, dc_holding, dc_ledger)
     account_names = {str(a["id"]): str(a.get("name", a["id"])) for a in snapshot["accounts"]}
+    reference_path = Path(args.reference)
+    reference = (
+        json.loads(reference_path.read_text(encoding="utf-8")) if reference_path.exists() else {}
+    )
 
     open_tickers = {
         ticker: (str(row["symbol"]), str(row["account_id"]))
@@ -294,10 +363,15 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     tickers = sorted((set(open_tickers) | set(ledger_symbols) | jp_tickers) - {dc_ticker, None})
 
     today = datetime.now(TZ).date()
-    start = (today - timedelta(days=args.history_days)).isoformat()
+    start = history_start(today, args.history_days, reference.get("episodes", []))
     end = (today + timedelta(days=1)).isoformat()  # yfinance end is exclusive
-    print(f"downloading {len(tickers) + 1} series from yfinance ({start} .. {today}) ...")
-    closes = download_closes([*tickers, mtm.FX_SYMBOL], start, end)
+    # the benchmarks are downloaded alongside but are not positions: they stay out of `tickers`
+    benchmark_tickers = sorted(set(BENCHMARKS.values()) - set(tickers) - {mtm.FX_SYMBOL})
+    download = [*tickers, *benchmark_tickers, mtm.FX_SYMBOL]
+    print(f"downloading {len(download)} series from yfinance ({start} .. {today}) ...")
+    closes, dropped = clean_closes(download_closes(download, start, end))
+    for column, bad_dates in dropped.items():
+        print(f"dropped misprinted closes: {column} {', '.join(bad_dates)}")
     if dc_ticker:
         closes = add_series(closes, dc_ticker, dc_nav)
     quotes = quotes_from_closes(
@@ -386,6 +460,43 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     pnl = total_series.pnl
     record["total_pnl_incept_jpy"] = _f(pnl[-1])
     record["deposits_cum_jpy"] = _f(total_series.deposits_cum[-1])
+
+    # ---- risk: look-through exposures, statistics at today's weights, stress, limits ----
+    risk_block = None
+    if reference:
+        usd_tickers = {r.ticker for r in rows if r.ticker and r.currency == "USD"}
+        price_jpy = jpy_price_paths(filled, list(open_tickers), mtm.FX_SYMBOL, usd_tickers)
+        returns = {t: daily_returns(p)[-RISK_WINDOW:] for t, p in price_jpy.items()}
+        bench_paths = jpy_price_paths(filled, list(BENCHMARKS.values()), mtm.FX_SYMBOL, set())
+        benchmarks = {
+            name: daily_returns(bench_paths[t])[-RISK_WINDOW:]
+            for name, t in BENCHMARKS.items()
+            if t in bench_paths
+        }
+        holdings = [
+            risk.Holding(
+                r.symbol,
+                r.account_id,
+                float(r.market_value_jpy),
+                r.currency,
+                r.asset_class,
+                r.ticker if r.quoted else None,
+            )
+            for r in rows
+        ]
+        # yesterday's figures come from the history as it stands before this run is appended
+        previous = mtm.previous_record(mtm.load_history(Path(args.history)), as_of) or {}
+        risk_block = risk.assemble(
+            holdings,
+            reference,
+            returns,
+            benchmarks,
+            dates,
+            price_jpy,
+            as_of,
+            previous=previous.get("risk"),
+        )
+    record["risk"] = risk_block["history"] if risk_block else None
 
     # ---- headline ----
     start_i = ts.first_defined(pnl[wi:])
@@ -596,6 +707,11 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
         "株価と為替は yfinance の終値、DC のファンドは運用会社の基準価額。休場日は直前の終値で埋める。"
         "現金・調整額はスナップショットの値"
     )
+    if dropped:
+        notes.append(
+            "yfinance の異常な終値を除外（前後の水準から桁違い）: "
+            + "、".join(f"{c} {'・'.join(d)}" for c, d in sorted(dropped.items()))
+        )
     tax_text = mtm.tax_note(snapshot, rows, tax_pool)
     if tax_text:
         notes.append(tax_text)
@@ -629,6 +745,7 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
             },
         },
         "attribution": attribution,
+        "risk": risk_block,
         "closed": closed,
         "notes": notes,
         "tax_note": tax_text,
