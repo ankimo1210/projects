@@ -22,6 +22,13 @@ def _traces(figure, **metadata):
     ]
 
 
+def _linear_trace_value(trace, time):
+    """Evaluate the line Plotly draws between the trace's stored breakpoints."""
+    return float(
+        np.interp(time, np.asarray(trace.x, dtype=float), np.asarray(trace.y, dtype=float))
+    )
+
+
 def _assert_menu_states_match_trace_metadata(figure, state_key, states, layout_key=None):
     """Each button must reveal only its precomputed state and update layout meta."""
     buttons = figure.layout.updatemenus[0].buttons
@@ -100,13 +107,38 @@ def test_payoff_figure_exposes_path_extremes_and_payoffs_for_both_histories():
         assert len(spot) == len(running_minimum) == len(running_maximum) == len(payoffs) == 1
         np.testing.assert_array_equal(spot[0].y, PATH)
         np.testing.assert_array_equal(
-            running_minimum[0].y, np.minimum.accumulate(np.minimum(PATH, past_minimum))
+            np.interp(np.linspace(0.0, 1.0, 9), running_minimum[0].x, running_minimum[0].y),
+            np.minimum.accumulate(np.minimum(PATH, past_minimum)),
         )
         np.testing.assert_array_equal(
-            running_maximum[0].y, np.maximum.accumulate(np.maximum(PATH, past_maximum))
+            np.interp(np.linspace(0.0, 1.0, 9), running_maximum[0].x, running_maximum[0].y),
+            np.maximum.accumulate(np.maximum(PATH, past_maximum)),
         )
         assert list(payoffs[0].x) == list(CONTRACTS)
         np.testing.assert_array_equal(payoffs[0].y, expected_payoffs)
+
+
+def test_running_extrema_wait_for_piecewise_linear_crossings_and_follow_afterward():
+    figure = _figures()["lookback_payoffs"]
+    new_minimum = _traces(figure, role="running_min", scenario="new")[0]
+    new_maximum = _traces(figure, role="running_max", scenario="new")[0]
+
+    minimum_crossing = 5.0 / 24.0
+    maximum_crossing = 1.0 / 3.0
+    assert np.any(np.isclose(new_minimum.x, minimum_crossing, rtol=0.0, atol=1e-12))
+    assert np.any(np.isclose(new_maximum.x, maximum_crossing, rtol=0.0, atol=1e-12))
+    assert _linear_trace_value(new_minimum, 3.0 / 16.0) == pytest.approx(100.0)
+    assert _linear_trace_value(new_minimum, minimum_crossing) == pytest.approx(100.0)
+    assert _linear_trace_value(new_minimum, 11.0 / 48.0) == pytest.approx(97.0)
+    assert _linear_trace_value(new_maximum, 5.0 / 16.0) == pytest.approx(112.0)
+    assert _linear_trace_value(new_maximum, maximum_crossing) == pytest.approx(112.0)
+    assert _linear_trace_value(new_maximum, 17.0 / 48.0) == pytest.approx(116.5)
+
+    seasoned_minimum = _traces(figure, role="running_min", scenario="seasoned")[0]
+    seasoned_maximum = _traces(figure, role="running_max", scenario="seasoned")[0]
+    for time in (3.0 / 16.0, minimum_crossing, 11.0 / 48.0, 5.0 / 16.0, maximum_crossing):
+        assert _linear_trace_value(seasoned_minimum, time) == pytest.approx(80.0)
+        assert _linear_trace_value(seasoned_maximum, time) == pytest.approx(130.0)
 
 
 def test_history_figure_all_curve_points_match_independent_extrema_tail_oracle():
