@@ -127,7 +127,7 @@
     "release_manifest.json": "38043f3fc471f0f202ac8178400a34836428e30b33cf99ac6b5fe488de48624e",
     "report/tests/test_report_build.py": "09b4a2277116348eba549e02a27404adc752e7751e0e66f1e0b7f728c720aac0",
     "scripts/verify_section_ledger.py": "c81eeffc33aca1a29c8f948a8c0afe48d98b14c728819004b9387458a3bdffa9",
-    "report/tests/test_section_ledger.py": "e6e0361982a6bb5a4b6ebb721d068ccfa69a3f787bb96b76b4ba8bfb0593336b",
+    "report/tests/test_section_ledger.py": "46b1c8cc4f2ee6323ac338631ff494e280e99a94462272f182484b616dfa6713",
     "report/README.md": "55c8e969646ef880894ec90c11e2abe4be38455393de427f040fde8cda81ce23"
   },
   "artifact_sha256": {
@@ -183,5 +183,13 @@
       "ruff": "PASS"
     },
     "staged_diff_check": "PASS"
-  }
+  },
+  "metadata_followups": [
+    {
+      "stage": "M3a section26.11 inventory update",
+      "scope": "Only the real-ledger expected counts change from accepted2/gaps0/unreviewed304 to accepted2/gaps1/unreviewed303. Pricing, lesson, browser sources and rendered artifacts remain unchanged from M2b.",
+      "validation": "39 ledger tests PASS; ledger --check-artifacts PASS. No browser rerun claimed.",
+      "preservation_check": "90 prior source/artifact entries match; only the ledger count fixture is excluded and freshly retested."
+    }
+  ]
 }

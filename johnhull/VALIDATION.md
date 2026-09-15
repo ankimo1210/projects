@@ -10,6 +10,20 @@
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
+## Section 26.11 M3a — 2026-09-15
+
+[要求と残課題](docs/SECTION_26_11_REVIEW_2026-09-15.md)と
+[統合記録](docs/validation/section-26-11/m3a-check.json)。L01–L06を抽出し、状態はgaps_found。
+既存4価格関数を直接の極値尾部積分で検証し、教材・図・描画を未完了として区別した。
+
+- 独立128価格（floating32、fixed96）、Example 26.2のcall/putの丸め値2件、恒等式を保つ価格誤差の検出2件：132テスト成功。
+- 最大絶対誤差4.065e-12未満。8合成市場、新規/既発、fixedの3行使価格。微小なdeep OTM価格に相対精度は主張しない。
+- abs(r-q)<1e-8は既存APIで未対応。0/±5e-9の12境界診断を記録し、極限の実装完了と区別する。
+- 価格コード・notebook・portal/Bookソースと配布物は変更していない。既存2節の画面確認はM2b時点の証跡を保持し、今回の再描画検査と表現しない。
+- 台帳の集計fixtureのみ2受入/1不足/303未評価へ更新し、台帳39テストを再実行。M2b記録にはこのメタデータ変更の追記を残した。
+- 全体pytest：**1,681 passed**（74.32秒、既存deprecation warning 2件）。ruff・format・release契約・台帳両モードもPASS。独立レビューの結果は統合記録を参照。
+- 現在の台帳：受入済み2、不足あり1、未評価303。以下は各実施時点の履歴。
+
 ## Section 26.10 M2b — 2026-09-15
 
 [受入ノート](docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md)と
