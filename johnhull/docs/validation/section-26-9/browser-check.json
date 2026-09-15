@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-14T23:27:22.737Z",
+  "checked_at": "2026-09-15T04:48:52.442Z",
   "viewport": {
     "width": 1440,
     "height": 1000
@@ -187,8 +187,8 @@
         "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
         "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
         "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
-        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
         "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
         "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
         "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
       ],
@@ -395,22 +395,22 @@
     }
   },
   "source_sha256": {
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "cb0a39cc67c3aeb19b13604745b6e6f45b07876be4eb513bd89703d18ec67c0f",
-    "volumes/10_exotics_martingales/exotics.ipynb": "3d665a40d77c183ad3c36abaab670ba05cec764e8697deeda0081d46cbcfc1f3",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "c9ab4967f1b53b2b78a06890bf5e4c7b31ec711b0a2c65ee3335c0247a371030",
+    "volumes/10_exotics_martingales/exotics.ipynb": "0faddb8618787bf33f4f1af438c5770efa36eb3b1f67e614efed05c6fff4bb1a",
     "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
     "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
     "hullkit/tests/test_barrier_reference.py": "7275a9504617dd194018795f7b878ab1da68f755ca3ad551bac6c7879ee554ff",
-    "report/report_builder/figures.py": "6e38e3a05744863107fd5bfc8833b5fb7d682081ed8f2dc613163e7fd27d5e71",
+    "report/report_builder/figures.py": "528d6b5b9c0e19c52f9397cd1da275da880d29e2f4dd88648748879c68cd00c0",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
     "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
     "scripts/verify_barrier_pilot_browser.cjs": "98db63058156d3e66b45f822cb66b7e02a31afbfd1292e9aa78952ed6302f087"
   },
   "artifact_sha256": {
-    "report/site/exotics.html": "01773d2b50bd77654651f33beccd3a16e0d3cc8c1a52e9896f49c3b643688d25",
-    "report/site/assets/style.css": "c5e68db30451c3947613cbdcdb42baac286f5aa9b401d29d81a802e43fc0e175",
+    "report/site/exotics.html": "c84b1ee5a21c87a1fdd3fc32cca9cf2db7cb568bf2167060eb391f52b6c7ab0c",
+    "report/site/assets/style.css": "69db6150d16fd0c5b645ee8489b35c2494dadfe065efd5ed7bf9ffecb6806ea8",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "7f542426900d6ec0136b78beb13564e59ec5ea7c91434e31b9fc39e8f864359e"
+    "book/_build/html/notebooks/10_exotics.html": "b5058cf0b22ecbda29a3b15990dd0c32e199b7b6d3d5a3cb85c7556c5402ab2f"
   },
   "browser_version": "151.0.7922.34",
   "status": "PASS"

@@ -76,7 +76,7 @@ separate. No production dependency was added for G0/G1 core implementation.
 各巻に validation report、fingerprinted JSON/NPZ、artifact-only notebook、book
 symlinkがあり、各巻の `integration_and_reproducibility` gate は PASS。これは
 **model performance の承認ではない**。`release_manifest.json` の現行契約は portal
-**82 図/12 テーマ**（Jupyter Book は `book/_toc.yml` の root + 30 entries = 31 ページで、ページ数自体は
+**86 図/12 テーマ**（Jupyter Book は `book/_toc.yml` の root + 30 entries = 31 ページで、ページ数自体は
 manifest の契約値ではなく `book_name` の掲載のみが検証される）。G8 で fresh artifact/notebook/
 report/book/test/lint を再検証し、最終結果と model risk を `johnhull/VALIDATION.md`
 に固定した。strict tracked gate と専用 branch への remote push も完了し、その branch は
@@ -180,7 +180,7 @@ model performance の承認ではない（deep_hedge_price の 206 tests も各�
 | 区分 | 内容 |
 |---|---|
 | 保存値依存 | 根拠になる配列がない 8 チェック（vol 18・19・21・22・26）。原始データか実行時情報の保存が要る |
-| 節カバレッジ | [節別台帳](docs/SECTION_LEDGER.md)へ306項目を登録。§26.9受入済み、§26.10不足あり、304項目未評価。完了率は確定値として使わない |
+| 節カバレッジ | [節別台帳](docs/SECTION_LEDGER.md)へ306項目を登録。§26.9・§26.10受入済み、304項目未評価。完了率は確定値として使わない |
 | 未再確認の監査報告 | R1（rBergomi の補償項）、R2（Log-HAR の再変換バイアス）、R3（予測からヘッジへの経路）、R4（vol 22 の共通乱数）、R6（dynamic fee の恒等式）、R11（Table 19.1 / 19.4 の乖離） |
 | 未実装の節（§4） | Ch 26 の残り（EX-03・04）、金利ツリー・Bermudan・LMM（EX-13〜15）、Ch 2–7 の節単位実装（FR 系）、信用の残り（CR-05〜07・09〜11・13）、Ch 35–36 のツリー（CR-19・21・22）、深掘り巻の予告の回収（DD-04〜06）など |
 | 判断事項（§7） | 既定 seed の統一（VN-20）、大物の置き場所（新しい節単位の巻を足すか）、FRTB IMA（vol 29 候補）、research track の扱い |
@@ -198,10 +198,10 @@ M1は、原典outline由来の299節・7付録を台帳に登録し、要求・�
 | 段階 | 範囲 | 状態 |
 |---|---|---|
 | M1 | 全306項目のinventory、§26.9の要求と証跡、検査CLI、生成台帳 | 検証完了 |
-| M2 | §26.10を原典の要求から説明・実装・独立検証・図・実画面まで確認 | 進行中：D01–D06と独立価格検証を追加。教材・図・画面は残る |
+| M2 | §26.10を原典の要求から説明・実装・独立検証・図・実画面まで確認 | D01–D06受入済み。教材・4図・独立検証・Book/portal確認、§26.9回帰検査を完了 |
 | 以降 | 台帳を使って全節へ段階的に展開 | 未着手 |
 
 M1のPASSは台帳と保存証跡の整合性を表す。数値モデルの再検証や全節の完成判定ではない。
 M1と§26.9の試行は`ab825e03`としてmainへpush済み。
-M2の現在地は[§26.10レビュー](docs/SECTION_26_10_REVIEW_2026-09-15.md)、
+M2の現在地は[§26.10受入ノート](docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md)、
 M1実施時点の記録は[M1記録](docs/validation/section-ledger-m1/validation.json)。

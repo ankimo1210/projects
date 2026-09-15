@@ -1,9 +1,9 @@
 """Figure registry for the johnhull portal.
 
-Mirrors ``analytics/report``: every entry is a :class:`FigureSpec` whose
-``build`` callable returns a Plotly ``go.Figure`` by calling a
-:mod:`hullkit.plotly_viz` builder. Those builders wrap the same pricing/risk
-functions the notebooks use, so the gallery can never drift from the maths.
+Mirrors ``analytics/report``: every :class:`FigureSpec` returns a Plotly
+``go.Figure`` from shared hullkit builders (including the internal binary
+lesson) or versioned reference artifacts. Shared sources reduce duplication;
+semantic tests and rendered checks verify the displayed values and behavior.
 
 Adding a figure = append one ``FigureSpec``. Adding a theme = one ``BookMeta``.
 New deep-dive volumes (A1 stochastic calculus, A2 stoch-vol/Fourier, A3 advanced
@@ -16,6 +16,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from hullkit import plotly_viz as pv
+from hullkit._binary_lesson import _figures as binary_lesson_figures
 
 from . import frontier_figures as ff
 
@@ -466,6 +467,42 @@ FIGURES: list[FigureSpec] = [
         "call/put・up/down・in/out を切替え、連続観測の in + out = vanilla と H=S₀ の到達境界を比較する(Hull GE §26.9 pp.620–622)。",
         pv.plotly_barrier_knockout,
         practice="同じ契約・観測規則の組を比較する。離散観測の BGK 近似、負のベガ、Parisian の滞在条件は第10冊で確認。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "binary_payoffs",
+        "exotics",
+        "バイナリー4契約の満期給付",
+        "S₀=K=100、r=5%、q=2%、σ=20%、T=1年、Q=100。cash/asset × call/put の跳びと K での決済を比較する。",
+        lambda: binary_lesson_figures()["binary_payoffs"],
+        practice="約定時に K の等号規約、参照価格、時刻、丸めを確定し、片側極限と実際の決済を区別する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "binary_replication",
+        "exotics",
+        "バイナリーによる call/put 複製",
+        "S₀=K=100、r=5%、q=2%、σ=20%、T=1年。cash leg の Q=K と asset leg からバニラ給付を再構成する。",
+        lambda: binary_lesson_figures()["binary_replication"],
+        practice="ドロップダウンで call/put を切り替え、各 leg の符号と満期給付の分解を照合する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "binary_spreads",
+        "exotics",
+        "スプレッド極限と密度",
+        "S₀=K=100、r=5%、q=2%、σ=20%、T=1年。幅 h=1,5,15 の centered spread と butterfly の満期給付を比較する。",
+        lambda: binary_lesson_figures()["binary_spreads"],
+        practice="centered spread は K で 1/2。デジタルへの収束は K 以外で読み、正規化 butterfly の価格極限を割引終端密度として扱う。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "binary_delta",
+        "exotics",
+        "cash binary の有限時間デルタ",
+        "S₀≈K=100、r=5%、q=2%、σ=20%、Q=100。T=1年、30日、1日の有限デルタが満期接近で集中する様子を示す。",
+        lambda: binary_lesson_figures()["binary_delta"],
+        practice="各 T>0 ではデルタは有限。短期 ATM の急峻化を満期での不連続な極限と混同せず管理する。",
         is_new=True,
     ),
     FigureSpec(
