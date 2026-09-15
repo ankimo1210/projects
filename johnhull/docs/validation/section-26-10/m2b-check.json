@@ -1,0 +1,187 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-15T04:50:51.235760+00:00",
+  "base_commit": "ad3b9ab5e501654acdbe61b331b89104b41502c6",
+  "scope": "M2b section 26.10 D01-D06: teaching, four shared figures, numerical/semantic checks, notebook freshness and Book/portal delivery.",
+  "primary_reference": "Hull 11e Global Edition physical/printed pp.622-623, re-read with pdftotext. D05 corrects existing supporting material; D06 verifies delivery.",
+  "tests": {
+    "status": "PASS",
+    "command": "python -m pytest -q johnhull/hullkit/tests/test_binary_reference.py johnhull/hullkit/tests/test_binary_lesson.py",
+    "duration_seconds": 1.73,
+    "summary": "92 passed in 0.80s"
+  },
+  "notebook": {
+    "status": "PASS",
+    "checked_at": "2026-09-15T04:31:06.260548+00:00",
+    "duration_seconds": 10.07,
+    "notebook_cells": 55,
+    "saved_outputs": "PASS",
+    "separate_fresh_comparison": "PASS",
+    "later_builder_and_notebook_sources_unchanged": true,
+    "source_sha256": {
+      "volumes/10_exotics_martingales/build_exotics_notebook.py": "c9ab4967f1b53b2b78a06890bf5e4c7b31ec711b0a2c65ee3335c0247a371030",
+      "volumes/10_exotics_martingales/exotics.ipynb": "0faddb8618787bf33f4f1af438c5770efa36eb3b1f67e614efed05c6fff4bb1a"
+    },
+    "comparison_scope": "Output types, MIME keys and normalized deterministic text match a separate fresh execution. Timed cells use type-only comparison; PNG and Plotly payload values are not compared by this notebook gate. Figures are checked separately with semantic tests and rendered browser probes."
+  },
+  "builds": {
+    "portal": {
+      "status": "PASS",
+      "figures": 86,
+      "themes": 12
+    },
+    "book": {
+      "status": "PASS",
+      "command": "jupyter-book build --all johnhull/book/",
+      "pages": 31,
+      "reported_warnings": 36,
+      "visible_warning_categories": {
+        "plotly_unknown_mime": 30,
+        "non_consecutive_header": 5
+      },
+      "warning_scope": "Four Plotly MIME warnings are the new binary outputs; HTML fallbacks were verified. One additional warning is included in the builder total without a separately classified captured line."
+    }
+  },
+  "browser_record": "docs/validation/section-26-10/browser-check.json",
+  "browser": {
+    "status": "PASS",
+    "version": "151.0.7922.34",
+    "surfaces": 2,
+    "figures_per_surface": 4,
+    "viewport_widths": [
+      1440,
+      1000
+    ],
+    "figure_viewport_height": 1050,
+    "price_subsection_capture": "Same widths; height expanded to fit the whole subsection below sticky navigation.",
+    "book_typeset_math": 52,
+    "book_math_errors": 0,
+    "javascript_errors": 0,
+    "portal_external_requests": 0,
+    "portal_external_network_blocked": true,
+    "book_uses_mathjax_cdn": true,
+    "negative_control": "Temporary cash+1/asset-1 offsets preserve the total but individual displayed-leg checks reject them on both surfaces; values restored before screenshots."
+  },
+  "default_market_reference": {
+    "market": {
+      "spot": 100,
+      "strike": 100,
+      "rate": 0.05,
+      "volatility": 0.2,
+      "expiry": 1,
+      "dividend": 0.02
+    },
+    "payout": 100,
+    "prices": {
+      "cash_call": 49.45810910532236,
+      "asset_call": 58.68511461347642,
+      "cash_put": 45.66483334474906,
+      "asset_put": 39.334752717199144
+    },
+    "delta": [
+      {
+        "T": 1,
+        "S": 100,
+        "delta": 1.8950578754952356
+      },
+      {
+        "T": 0.0821917808219178,
+        "S": 100,
+        "delta": 6.92845632885124
+      },
+      {
+        "T": 0.0027397260273972603,
+        "S": 100,
+        "delta": 38.10355729155859
+      }
+    ],
+    "method": "Discounted log-return density integral, with Richardson-extrapolated symmetric differences for delta at S=100; h=.01 and .005."
+  },
+  "manual_visual_review": "Book four figures and GBM/pricing subsection; portal four figures. Checked Japanese text, panels, settlement markers, signed replication, normalized payoff units, finite-maturity delta and legibility. SVG bounds and axis/legend/annotation intersections also checked automatically at both widths.",
+  "review": {
+    "shared_figures": "APPROVED after independent review and two layout repairs; 434 focused tests on final source.",
+    "teaching_and_registry": "APPROVED after correcting the put-side N(-d1) weighted event; three independent registry/render tests passed.",
+    "final_integration_review": "APPROVED; no unresolved major or medium findings. See docs/validation/section-26-10/final-review.md.",
+    "independent_integration_checks": {
+      "binary_tests": "92 passed in 0.81s",
+      "saved_plotly_data_and_layout": "All four saved figures match the current shared builder exactly; this is separate from the core notebook output-signature gate.",
+      "browser_reference_values": "Four prices and three maturity deltas recomputed by independent log-return density integration and Richardson finite differences; all within tolerances.",
+      "final_evidence_refresh": "90 source/artifact hash entries and 38 ledger evidence entries matched before attaching this final review."
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/_binary_lesson.py": "80be5939c13e261dcbb3bb9befecc8b45fbb7b04c07b0ebe8d270f83ad900e19",
+    "hullkit/tests/test_binary_lesson.py": "ac3152dab1e15fcfbc8408f4a6efa91a722954421eaac9ab4870b6ab03b68182",
+    "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "c9ab4967f1b53b2b78a06890bf5e4c7b31ec711b0a2c65ee3335c0247a371030",
+    "volumes/10_exotics_martingales/exotics.ipynb": "0faddb8618787bf33f4f1af438c5770efa36eb3b1f67e614efed05c6fff4bb1a",
+    "report/report_builder/figures.py": "528d6b5b9c0e19c52f9397cd1da275da880d29e2f4dd88648748879c68cd00c0",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/assets/style.css": "69db6150d16fd0c5b645ee8489b35c2494dadfe065efd5ed7bf9ffecb6806ea8",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "scripts/verify_binary_lesson_browser.cjs": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71",
+    "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482",
+    "release_manifest.json": "38043f3fc471f0f202ac8178400a34836428e30b33cf99ac6b5fe488de48624e",
+    "report/tests/test_report_build.py": "09b4a2277116348eba549e02a27404adc752e7751e0e66f1e0b7f728c720aac0",
+    "scripts/verify_section_ledger.py": "c81eeffc33aca1a29c8f948a8c0afe48d98b14c728819004b9387458a3bdffa9",
+    "report/tests/test_section_ledger.py": "e6e0361982a6bb5a4b6ebb721d068ccfa69a3f787bb96b76b4ba8bfb0593336b",
+    "report/README.md": "55c8e969646ef880894ec90c11e2abe4be38455393de427f040fde8cda81ce23"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "c84b1ee5a21c87a1fdd3fc32cca9cf2db7cb568bf2167060eb391f52b6c7ab0c",
+    "report/site/assets/style.css": "69db6150d16fd0c5b645ee8489b35c2494dadfe065efd5ed7bf9ffecb6806ea8",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "b5058cf0b22ecbda29a3b15990dd0c32e199b7b6d3d5a3cb85c7556c5402ab2f",
+    "docs/validation/section-26-10/portal-binary_payoffs-1440.png": "4e2b383d07573fc14e7b2722426cfd89f425d61ebdc2be5cd4a02bc89aafbce8",
+    "docs/validation/section-26-10/portal-binary_replication-1440.png": "a86398e178bef28dba6529d28d5c6af22e8d4735b69b0d910b9fa8cef1657a74",
+    "docs/validation/section-26-10/portal-binary_spreads-1440.png": "794058cc0675cbf6c6174312dd19e3ff8eb4eabf213676f2b9fd471927e5d18e",
+    "docs/validation/section-26-10/portal-binary_delta-1440.png": "5643e2b06ffe5841b9abdd35c8a1ce4fa7ed9862e300fc384a5d7026ee6c8ff9",
+    "docs/validation/section-26-10/portal-binary_payoffs-1000.png": "289f5151a1066d31eaa6bcecb1cb562d03fb4f2333630f8d251c9efb6418229a",
+    "docs/validation/section-26-10/portal-binary_replication-1000.png": "fb63098322c658a75b34376564269c685d5f294e3dcc85320f88b3638cdda177",
+    "docs/validation/section-26-10/portal-binary_spreads-1000.png": "9a587474533628bade78fb326439c8742efb310b6558a32c819a55159dc50eea",
+    "docs/validation/section-26-10/portal-binary_delta-1000.png": "2460ea5a650450beef1347db480262d02654af909b9e092bfa8a23f09d63023d",
+    "docs/validation/section-26-10/book-binary_payoffs-1440.png": "362f9bc9936132020a84cdb660a4f321dae7e0e6eb1002cad8960996d0addff8",
+    "docs/validation/section-26-10/book-binary_replication-1440.png": "9afbe7c6b950861fad8087616e2fd2e4a74023a5789c68aa43c9e4121117a7ff",
+    "docs/validation/section-26-10/book-binary_spreads-1440.png": "8aa95901d10b55cff1d661805bc6ee60ed357718c9f78dc002ba2f4e626ff021",
+    "docs/validation/section-26-10/book-binary_delta-1440.png": "e4875fd7abeebb6e2bad2cb3ad43e2929f0dea42730a1aa0c201db6348e1dad6",
+    "docs/validation/section-26-10/book-binary_payoffs-1000.png": "a72032a015bfb801ea859df877125f123953813260895c2886c152dcc31a08b7",
+    "docs/validation/section-26-10/book-binary_replication-1000.png": "2db85b0593128a07e5dc49b69d6a3e9b34bf087062ee32feecbc164d368f81ef",
+    "docs/validation/section-26-10/book-binary_spreads-1000.png": "6c021110a49d382408fa1602568919f76eea772cfb65890599b956c6877c1188",
+    "docs/validation/section-26-10/book-binary_delta-1000.png": "b9b9127b1a66ab5a30c4c934c1d5883e6b161ac41357f2965d766bb0ef5d85c4",
+    "docs/validation/section-26-10/book-binary-prices-1440.png": "1e98dbd7ad1d4aed60ecea1f2f9932a0b7d0253c454e052c5fb0fe73788d96bb",
+    "docs/validation/section-26-10/book-binary-prices-1000.png": "82ec94ffa19c95d34a2f036ec472d76c4c95bb5d1958e55b895205e4a34dbb14",
+    "docs/validation/section-26-10/final-review.md": "87533873bc4207cdfa3c61323de588f8236d2a94924c498cdfacc12753a9c1c3"
+  },
+  "limits": [
+    "Synthetic positive-domain inputs; no T=0/sigma=0/invalid-input or all-domain stability claim.",
+    "Book math retains the external MathJax dependency; only portal external network was blocked.",
+    "Chromium at stated widths; no mobile/other-browser/full-book visual acceptance.",
+    "M2a numerical record remains a dated price-validation record; unchanged pricing code and tests rerun in the M2b 92-test scope."
+  ],
+  "integration": {
+    "pytest": {
+      "status": "PASS",
+      "command": "PYTHONPATH=johnhull/hullkit/src:johnhull/report python -m pytest johnhull -q",
+      "passed": 1549,
+      "duration_seconds": 76.84,
+      "warnings": 2,
+      "warning_scope": "Existing distutils Version deprecations in japanize_matplotlib and setuptools, from test_nbplot."
+    },
+    "ruff": "PASS",
+    "release_contract": "PASS",
+    "ledger_default": "PASS",
+    "ledger_with_artifacts": "PASS",
+    "post_review_documentation": {
+      "scope": "Registry docstring and report README clarify builder sources/validation; no numerical or render behavior changed.",
+      "registry_render_tests": "3 passed in 4.93s",
+      "portal_rebuild": "PASS",
+      "binary_browser": "PASS",
+      "barrier_browser": "PASS",
+      "ruff": "PASS"
+    },
+    "staged_diff_check": "PASS"
+  }
+}

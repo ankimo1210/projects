@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-15T04:50:51.242050+00:00",
+  "base_commit": "ad3b9ab5e501654acdbe61b331b89104b41502c6",
+  "scope": "Fresh section 26.9 regression after M2b changes to shared vol10, registry and built artifacts.",
+  "tests": {
+    "status": "PASS",
+    "command": "python -m pytest -q johnhull/hullkit/tests/test_barrier_reference.py johnhull/hullkit/tests/test_plotly_viz.py johnhull/hullkit/tests/test_exotics.py johnhull/hullkit/tests/test_exotics_puts.py",
+    "duration_seconds": 7.8,
+    "summary": "171 passed in 6.80s"
+  },
+  "notebook": {
+    "status": "PASS",
+    "checked_at": "2026-09-15T04:31:06.260548+00:00",
+    "duration_seconds": 10.07,
+    "notebook_cells": 55,
+    "saved_outputs": "PASS",
+    "separate_fresh_comparison": "PASS",
+    "later_builder_and_notebook_sources_unchanged": true,
+    "source_sha256": {
+      "volumes/10_exotics_martingales/build_exotics_notebook.py": "c9ab4967f1b53b2b78a06890bf5e4c7b31ec711b0a2c65ee3335c0247a371030",
+      "volumes/10_exotics_martingales/exotics.ipynb": "0faddb8618787bf33f4f1af438c5770efa36eb3b1f67e614efed05c6fff4bb1a"
+    },
+    "comparison_scope": "Output types, MIME keys and normalized deterministic text match a separate fresh execution. Timed cells use type-only comparison; PNG and Plotly payload values are not compared by this notebook gate. Figures are checked separately with semantic tests and rendered browser probes."
+  },
+  "browser_record": "docs/validation/section-26-9/browser-check.json",
+  "browser": {
+    "status": "PASS",
+    "book_contract_selections": 8,
+    "portal_contract_selections": 8,
+    "book_images": 5,
+    "book_typeset_math": 93,
+    "javascript_errors": 0,
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "portal_external_network_blocked": true,
+    "book_uses_mathjax_cdn": true
+  },
+  "unchanged_scope": "§3-and-later builder/notebook sources exactly match M2a. Pricing code and numerical tables unchanged; 171 relevant tests and both surfaces actually rerun.",
+  "historical_record": "docs/validation/section-26-9/double-check.json",
+  "historical_record_unchanged": true,
+  "source_sha256": {
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "c9ab4967f1b53b2b78a06890bf5e4c7b31ec711b0a2c65ee3335c0247a371030",
+    "volumes/10_exotics_martingales/exotics.ipynb": "0faddb8618787bf33f4f1af438c5770efa36eb3b1f67e614efed05c6fff4bb1a",
+    "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+    "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+    "hullkit/tests/test_barrier_reference.py": "7275a9504617dd194018795f7b878ab1da68f755ca3ad551bac6c7879ee554ff",
+    "report/report_builder/figures.py": "528d6b5b9c0e19c52f9397cd1da275da880d29e2f4dd88648748879c68cd00c0",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "scripts/verify_barrier_pilot_browser.cjs": "98db63058156d3e66b45f822cb66b7e02a31afbfd1292e9aa78952ed6302f087",
+    "hullkit/tests/test_exotics.py": "da2ee3148fbb8407865719278eb3e1bff8d323e7ebefd97ef6f33b84675c9914",
+    "hullkit/tests/test_exotics_puts.py": "cd84ff7ae5ec081bbb82b6ddd5c07dcacb34ffd9647c033e7ceb66a21f748a69",
+    "hullkit/tests/test_plotly_viz.py": "b616331df29865b1e8f12393742b29b4903aecf80bfbeafec718a041158df891",
+    "report/assets/style.css": "69db6150d16fd0c5b645ee8489b35c2494dadfe065efd5ed7bf9ffecb6806ea8"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "c84b1ee5a21c87a1fdd3fc32cca9cf2db7cb568bf2167060eb391f52b6c7ab0c",
+    "report/site/assets/style.css": "69db6150d16fd0c5b645ee8489b35c2494dadfe065efd5ed7bf9ffecb6806ea8",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "b5058cf0b22ecbda29a3b15990dd0c32e199b7b6d3d5a3cb85c7556c5402ab2f"
+  }
+}

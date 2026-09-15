@@ -1200,18 +1200,18 @@
         "Book数式はMathJax CDN依存。portalは通信遮断下で確認",
         "1440×1000 Chromiumのみ。モバイル・他ブラウザ・全巻画面は未検査",
         "Parisianの価格エンジンは追加していない",
-        "受入は既存の2026-09-15の数値・ブラウザ検査。台帳検査は再計算を行わない"
+        "M2b後に関連171テスト・出力比較・両配布画面を再検証。台帳検査自体は再計算を行わない"
       ],
       "acceptance_note": "docs/SECTION_26_9_ACCEPTANCE_2026-09-15.md",
       "evidence": {
         "lesson_builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "cb0a39cc67c3aeb19b13604745b6e6f45b07876be4eb513bd89703d18ec67c0f",
+          "sha256": "c9ab4967f1b53b2b78a06890bf5e4c7b31ec711b0a2c65ee3335c0247a371030",
           "kind": "source"
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "3d665a40d77c183ad3c36abaab670ba05cec764e8697deeda0081d46cbcfc1f3",
+          "sha256": "0faddb8618787bf33f4f1af438c5770efa36eb3b1f67e614efed05c6fff4bb1a",
           "kind": "source"
         },
         "pricing": {
@@ -1241,7 +1241,7 @@
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_9_ACCEPTANCE_2026-09-15.md",
-          "sha256": "452bb8e7b973da8aeb2313cd76ad0663016247fa7e97ff9114368995286d69c3",
+          "sha256": "b48a33c9050956f1682ebbbe5306cf513d62047efd2c1f3372b96e927eba5613",
           "kind": "note"
         },
         "numerical": {
@@ -1251,48 +1251,48 @@
         },
         "browser_run": {
           "path": "docs/validation/section-26-9/browser-check.json",
-          "sha256": "951c4b7c610d083bde348fb05001eb53152001769fd703d8eeb76ee5951ebf5d",
-          "kind": "record"
-        },
-        "double_check": {
-          "path": "docs/validation/section-26-9/double-check.json",
-          "sha256": "fc77a54acc30b2846ff45ad0e90affcc154b8ae4d86ffaff4cd2d5d4025a9fba",
+          "sha256": "576ceb123f3f2f196af41b3baf0495d43a1d501871fd88b35f380da921d028df",
           "kind": "record"
         },
         "path_image": {
           "path": "docs/validation/section-26-9/book-path.png",
-          "sha256": "c51649fb34c8d80971e136bbe64f4b8585f080c5ce51800404ff26744d8ae195",
+          "sha256": "e6f1423070037cf9469bd21d38a59cec40fcec65fea34aa79101c6c201e81225",
           "kind": "image"
         },
         "eight_image": {
           "path": "docs/validation/section-26-9/book-eight.png",
-          "sha256": "ce40e5493cb010dbb6f8198950acd266b17a930a3bd6e4767a474d6f99d6af85",
+          "sha256": "81c0133c7c94f963cfa26611251b15dfc540180934658e5f9640f2c9a2247566",
           "kind": "image"
         },
         "bgk_image": {
           "path": "docs/validation/section-26-9/book-bgk.png",
-          "sha256": "a9d87cb3664140b4882eb63adcd95795646c1b41f55383123f53b7086d797fd8",
+          "sha256": "e6c588e68e10a004d6dfada478b09c60760307600850425be2429d56c9251385",
           "kind": "image"
         },
         "vega_image": {
           "path": "docs/validation/section-26-9/book-vega.png",
-          "sha256": "1bb98676553c85e0020003950e579ca89280838127afa96f16e2a73a63ab1537",
+          "sha256": "a43035e3622df3e9489f5b024d6a59c8f0214fda7087ff119e9aee920ed9c8e6",
           "kind": "image"
         },
         "parisian_image": {
           "path": "docs/validation/section-26-9/book-parisian.png",
-          "sha256": "49e9e1c80c8fc97b41fd0e444c5503057d8342f330c3035ffbcf804fffa7453f",
+          "sha256": "43a6df90d098de41e5456fd28e0da07907419ee75f09e80135650fb659bc7b7e",
           "kind": "image"
         },
         "formulas_image": {
           "path": "docs/validation/section-26-9/book-formulas.png",
-          "sha256": "5880611a5a3e0d0adc25afd82baf18fe386b0bdcc65787d3aad2483ee0041610",
+          "sha256": "b7f9924bb8e67a6d487cc78c3c70d22fcdd8fe4d23d4c7d22ce968b0a7ca4450",
           "kind": "image"
         },
         "explorer_image": {
           "path": "docs/validation/section-26-9/book-explorer-put-up-in.png",
-          "sha256": "cd1c36bc2cf5e0eb94597188db95609ef7525699e2038f5d69e341e0d8822831",
+          "sha256": "eeadc5e00a3e5dd3121722470374927973aacfcf1763c554bb9a78a7a7aa0562",
           "kind": "image"
+        },
+        "m2b_recheck": {
+          "path": "docs/validation/section-26-9/m2b-recheck.json",
+          "sha256": "33de2fb51c6d72f5ad2427d9d15c6aa30cd3ef374cb2273f196f769db5479748",
+          "kind": "record"
         }
       },
       "requirements": [
@@ -1321,7 +1321,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "double_check"
+                "m2b_recheck"
               ]
             },
             "visualization": {
@@ -1367,7 +1367,7 @@
               "refs": [
                 "reference_tests",
                 "numerical",
-                "double_check"
+                "m2b_recheck"
               ]
             },
             "visualization": {
@@ -1413,7 +1413,7 @@
               "refs": [
                 "reference_tests",
                 "numerical",
-                "double_check"
+                "m2b_recheck"
               ]
             },
             "visualization": {
@@ -1458,7 +1458,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "double_check"
+                "m2b_recheck"
               ]
             },
             "visualization": {
@@ -1504,7 +1504,7 @@
               "refs": [
                 "reference_tests",
                 "notebook",
-                "double_check"
+                "m2b_recheck"
               ]
             },
             "visualization": {
@@ -1548,7 +1548,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "double_check"
+                "m2b_recheck"
               ]
             },
             "visualization": {
@@ -1591,7 +1591,7 @@
               "state": "verified",
               "refs": [
                 "notebook",
-                "double_check"
+                "m2b_recheck"
               ]
             },
             "visualization": {
@@ -1638,7 +1638,7 @@
                 "reference_tests",
                 "plot_tests",
                 "browser_run",
-                "double_check"
+                "m2b_recheck"
               ]
             },
             "visualization": {
@@ -1685,7 +1685,7 @@
                 "reference_tests",
                 "numerical",
                 "browser_run",
-                "double_check"
+                "m2b_recheck"
               ]
             },
             "visualization": {
@@ -1712,22 +1712,24 @@
     },
     {
       "id": "26.10",
-      "status": "gaps_found",
+      "status": "accepted",
       "reviewed_at": "2026-09-15",
       "source_pages": [
         622,
         623
       ],
-      "scope": "M2a: 原典要求・既存教材の照合と独立価格検証。教材・図・配布画面の修正は残る。",
+      "scope": "Hull 11e Global Edition §26.10のD01–D06。4給付・4価格・両複製・決済リスクと補助説明の是正、Book/portalの検査。",
       "assumptions": [
         "欧州型、満期給付、リスク中立GBM",
         "定数r/q/sigma、T>0、sigma>0、S0/K>0",
-        "通貨・年・連続複利年率・年率ボラティリティ、合成市場条件"
+        "通貨・年・連続複利年率・年率ボラティリティ、合成市場条件",
+        "満期決済はcallでS_T>=K、putでS_T<K。正のT/sigmaの連続モデルでは等号の価格影響はない。"
       ],
       "limitations": [
-        "等号の契約規約、T=0、sigma=0、不正入力は未検証",
-        "価格テストの成功は節全体の受入ではない",
-        "notebook再生成・Book/portal検査は未実施"
+        "価格検証はS0/K/T/sigma>0。T=0、sigma=0、不正入力、点質量や全入力域は未検証。",
+        "合成条件での教材受入。市場性能やCh.26全体の完成判定ではない。",
+        "BookはMathJax CDN依存。portalは外部通信遮断下で確認。",
+        "Chromium、viewport幅1440/1000。モバイル・他ブラウザ・全巻画面は未検査。"
       ],
       "review_note": "docs/SECTION_26_10_REVIEW_2026-09-15.md",
       "evidence": {
@@ -1753,23 +1755,88 @@
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "3d665a40d77c183ad3c36abaab670ba05cec764e8697deeda0081d46cbcfc1f3",
+          "sha256": "0faddb8618787bf33f4f1af438c5770efa36eb3b1f67e614efed05c6fff4bb1a",
           "kind": "source"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "cb0a39cc67c3aeb19b13604745b6e6f45b07876be4eb513bd89703d18ec67c0f",
+          "sha256": "c9ab4967f1b53b2b78a06890bf5e4c7b31ec711b0a2c65ee3335c0247a371030",
           "kind": "source"
         },
         "review": {
           "path": "docs/SECTION_26_10_REVIEW_2026-09-15.md",
-          "sha256": "33243ba0fa2e4c70e4f4ba24f666ee13f1e4f149226312cafb263d576d30d2ca",
+          "sha256": "8db965fb8779c971b5612464dc52f6bf56528ca8a221bc933c854419106c4d86",
           "kind": "note"
         },
         "textbook": {
           "path": "options, futures and other derivatives 11th.pdf",
           "sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482",
           "kind": "reference"
+        },
+        "lesson": {
+          "path": "hullkit/src/hullkit/_binary_lesson.py",
+          "sha256": "80be5939c13e261dcbb3bb9befecc8b45fbb7b04c07b0ebe8d270f83ad900e19",
+          "kind": "source"
+        },
+        "lesson_tests": {
+          "path": "hullkit/tests/test_binary_lesson.py",
+          "sha256": "ac3152dab1e15fcfbc8408f4a6efa91a722954421eaac9ab4870b6ab03b68182",
+          "kind": "test"
+        },
+        "portal": {
+          "path": "report/report_builder/figures.py",
+          "sha256": "528d6b5b9c0e19c52f9397cd1da275da880d29e2f4dd88648748879c68cd00c0",
+          "kind": "source"
+        },
+        "browser_script": {
+          "path": "scripts/verify_binary_lesson_browser.cjs",
+          "sha256": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71",
+          "kind": "source"
+        },
+        "browser_run": {
+          "path": "docs/validation/section-26-10/browser-check.json",
+          "sha256": "6d3bc3282f9d62260097e443441730d83a18943c1e7f518bac5b22eb9047402a",
+          "kind": "record"
+        },
+        "m2b_check": {
+          "path": "docs/validation/section-26-10/m2b-check.json",
+          "sha256": "85923850915c457401b78cc3deb2baebf17f7c269b0a0140ec498bf65abcb874",
+          "kind": "record"
+        },
+        "acceptance_note": {
+          "path": "docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md",
+          "sha256": "69cb0ad0f724252f839b8151003f7a7ec09407b646266b03d16d696288e780c4",
+          "kind": "note"
+        },
+        "payoff_image": {
+          "path": "docs/validation/section-26-10/book-binary_payoffs-1440.png",
+          "sha256": "362f9bc9936132020a84cdb660a4f321dae7e0e6eb1002cad8960996d0addff8",
+          "kind": "image"
+        },
+        "price_image": {
+          "path": "docs/validation/section-26-10/book-binary-prices-1000.png",
+          "sha256": "82ec94ffa19c95d34a2f036ec472d76c4c95bb5d1958e55b895205e4a34dbb14",
+          "kind": "image"
+        },
+        "replication_image": {
+          "path": "docs/validation/section-26-10/book-binary_replication-1440.png",
+          "sha256": "9afbe7c6b950861fad8087616e2fd2e4a74023a5789c68aa43c9e4121117a7ff",
+          "kind": "image"
+        },
+        "spread_image": {
+          "path": "docs/validation/section-26-10/book-binary_spreads-1440.png",
+          "sha256": "8aa95901d10b55cff1d661805bc6ee60ed357718c9f78dc002ba2f4e626ff021",
+          "kind": "image"
+        },
+        "delta_image": {
+          "path": "docs/validation/section-26-10/book-binary_delta-1440.png",
+          "sha256": "e4875fd7abeebb6e2bad2cb3ad43e2929f0dea42730a1aa0c201db6348e1dad6",
+          "kind": "image"
+        },
+        "final_review": {
+          "path": "docs/validation/section-26-10/final-review.md",
+          "sha256": "87533873bc4207cdfa3c61323de588f8236d2a94924c498cdfacc12753a9c1c3",
+          "kind": "note"
         }
       },
       "requirements": [
@@ -1778,35 +1845,45 @@
           "statement": "cash/asset × call/putの4給付、通貨単位、満期の等号規約を説明する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "builder",
-                "notebook"
+                "notebook",
+                "acceptance_note"
               ],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。",
-              "locator": "vol10 §2 バイナリ・オプション"
+              "locator": "§2.1"
             },
             "implementation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
-                "builder"
+                "lesson",
+                "builder",
+                "pricing"
               ],
-              "reason": "給付の実演はコール中心。4給付と等号規約を補う。"
+              "locator": "§2.1"
             },
             "independent_validation": {
-              "state": "pending",
-              "refs": [],
-              "reason": "今回の価格積分はT>0、sigma>0で、満期の等号処理の検査ではない。"
+              "state": "verified",
+              "refs": [
+                "lesson_tests",
+                "m2b_check"
+              ],
+              "locator": "§2.1"
             },
             "visualization": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "payoff_image"
+              ],
+              "locator": "§2.1"
             },
             "rendered": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book / portal; Chromium; viewport widths1440/1000; fresh M2b record"
             }
           }
         },
@@ -1815,39 +1892,47 @@
           "statement": "GBMの前提下で4価格を計算し、現金給付のN(d2)と資産給付のN(d1)、配当・割引の役割を区別する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "builder",
-                "notebook"
+                "notebook",
+                "acceptance_note"
               ],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。",
-              "locator": "vol10 §2 バイナリ・オプション"
+              "locator": "§2.2"
             },
             "implementation": {
               "state": "verified",
               "refs": [
-                "pricing",
-                "bsm"
+                "lesson",
+                "builder",
+                "pricing"
               ],
-              "locator": "exotics.cash_or_nothing / asset_or_nothing; bsm.d1 / d2"
+              "locator": "§2.2"
             },
             "independent_validation": {
               "state": "verified",
               "refs": [
                 "tests",
-                "numerical"
+                "numerical",
+                "lesson_tests",
+                "m2b_check"
               ],
-              "locator": "test_cash_binary_against_terminal_density / test_asset_binary_against_terminal_density; 64 prices"
+              "locator": "§2.2"
             },
             "visualization": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "price_image"
+              ],
+              "locator": "§2.2"
             },
             "rendered": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book / portal; Chromium; viewport widths1440/1000; fresh M2b record"
             }
           }
         },
@@ -1856,40 +1941,47 @@
           "statement": "バニラcall/putの分解を満期給付と現在価格の両方で確認する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "builder",
-                "notebook"
+                "notebook",
+                "acceptance_note"
               ],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。",
-              "locator": "vol10 §2 バイナリ・オプション"
+              "locator": "§2.3"
             },
             "implementation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
-                "pricing",
-                "builder"
+                "lesson",
+                "builder",
+                "pricing"
               ],
-              "reason": "価格分解は実装済み。プットを含む満期給付の教材実演が残る。"
+              "locator": "§2.3"
             },
             "independent_validation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "tests",
-                "numerical"
+                "numerical",
+                "lesson_tests",
+                "m2b_check"
               ],
-              "reason": "価格分解16ケースは成功。満期給付の分解・境界をまだ検査していない。",
-              "locator": "test_binary_replication_matches_european_vanilla"
+              "locator": "§2.3"
             },
             "visualization": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "replication_image"
+              ],
+              "locator": "§2.3"
             },
             "rendered": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book / portal; Chromium; viewport widths1440/1000; fresh M2b record"
             }
           }
         },
@@ -1898,13 +1990,13 @@
           "statement": "給付の不連続性と薄い市場での決済リスクを説明する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "builder",
-                "notebook"
+                "notebook",
+                "acceptance_note"
               ],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。",
-              "locator": "vol10 §2 バイナリ・オプション"
+              "locator": "§2.4"
             },
             "implementation": {
               "state": "not_applicable",
@@ -1917,14 +2009,19 @@
               "reason": "定性的な契約・決済リスクの説明。価格モデルや市場操作の実演を実装せず、原典との内容照合で確認する。"
             },
             "visualization": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "payoff_image"
+              ],
+              "locator": "§2.4"
             },
             "rendered": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book / portal; Chromium; viewport widths1440/1000; fresh M2b record"
             }
           }
         },
@@ -1933,33 +2030,46 @@
           "statement": "既存の補助説明を修正し、デジタルとバタフライ、満期前と満期極限の感応度を区別する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "builder",
-                "notebook"
+                "notebook",
+                "acceptance_note"
               ],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。",
-              "locator": "vol10 §2 バイナリ・オプション"
+              "locator": "§2.5–2.6"
             },
             "implementation": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "lesson",
+                "builder",
+                "pricing"
+              ],
+              "locator": "§2.5–2.6"
             },
             "independent_validation": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "lesson_tests",
+                "m2b_check"
+              ],
+              "locator": "§2.5–2.6"
             },
             "visualization": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "spread_image",
+                "delta_image"
+              ],
+              "locator": "§2.5–2.6"
             },
             "rendered": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book / portal; Chromium; viewport widths1440/1000; fresh M2b record"
             }
           }
         },
@@ -1968,37 +2078,55 @@
           "statement": "4給付とcall/put分解を図示し、Book/portalの数式・軸・凡例・表示値を確認する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "builder",
-                "notebook"
+                "notebook",
+                "acceptance_note"
               ],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。",
-              "locator": "vol10 §2 バイナリ・オプション"
+              "locator": "§2.1–2.6"
             },
             "implementation": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "lesson",
+                "portal",
+                "browser_script"
+              ],
+              "locator": "§2.1–2.6"
             },
             "independent_validation": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "lesson_tests",
+                "m2b_check",
+                "final_review"
+              ],
+              "locator": "§2.1–2.6"
             },
             "visualization": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "payoff_image",
+                "price_image",
+                "replication_image",
+                "spread_image",
+                "delta_image"
+              ],
+              "locator": "§2.1–2.6"
             },
             "rendered": {
-              "state": "pending",
-              "refs": [],
-              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book / portal; Chromium; viewport widths1440/1000; fresh M2b record"
             }
           }
         }
-      ]
+      ],
+      "acceptance_note": "docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md"
     },
     {
       "id": "26.11",

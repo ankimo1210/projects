@@ -10,6 +10,24 @@
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
+## Section 26.10 M2b — 2026-09-15
+
+[受入ノート](docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md)と
+[統合記録](docs/validation/section-26-10/m2b-check.json)。D01–D06を受入済み。
+本文6小節と共有4図、4価格の個別照合、call/put両複製、正規化spread/butterfly、正の残存期間のdeltaを確認した。
+
+- §26.10：92テスト成功。新12件は境界・個別給付・図・独立積分価格の数値微分を含む。
+- vol10：55セル。出力型・MIMEキー・正規化テキストが別実行と一致（計時セルは型のみ、画像・Plotly payloadの値は対象外）。図の値は別途semantic/browser検査。§3以降のbuilder・notebook sourceは開始コミットと完全一致。
+- portal：12テーマ86図。Book：全31ページbuild成功、36警告を報告（新4図のPlotly MIME警告を含む）。
+- Chromium：Book/portal各4図、幅1440/1000、両複製選択、各価格ラベル、52箇所の数式、文字の欠け・重なりを確認。数式/JSエラー0。
+- portalは外部通信遮断下で外部要求0。BookはMathJax CDN依存を維持。
+- §26.9：171テスト、両面各8契約、静的5図、数式93箇所を再検証。新m2b-recheckを現行の台帳へ結んだ。
+- 独立レビューで図の注記・凡例・軸の重なりと、put側のN(-d1)の事象表記を修正。
+- 全pytest：**1,549 passed**（76.84秒、既存deprecation warning 2件）。ruff、release契約、台帳両モードもPASS。
+- 台帳：受入済み2、不足あり0、未評価304。最終統合レビューの結果は統合記録を参照。
+
+以下は各実施時点の検証記録。
+
 ## Section 26.10 M2a — 2026-09-15
 
 [要求と残課題](docs/SECTION_26_10_REVIEW_2026-09-15.md)。§26.10は`gaps_found`。

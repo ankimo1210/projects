@@ -64,6 +64,7 @@ from IPython.display import display
 from scipy.stats import norm
 
 from hullkit import bsm, exotics, mc, nbplot
+from hullkit._binary_lesson import _figures
 
 plt = nbplot.setup()  # japanize_matplotlib + plt.ioff()""")
 )
@@ -106,44 +107,223 @@ cells.append(
 > **実務** — 商品設計とリスク分解の地図。分解して値付け・ヘッジする。""")
 )
 
-# Cell 04: binary md
+# Section 2: §26.10 binary options
 cells.append(
     md(r"""## 2. バイナリ・オプション（§26.10）
 
-- **cash-or-nothing**: ITM なら固定額 $Q$ → $Q e^{-rT} N(d_2)$（コール）
-- **asset-or-nothing**: ITM なら原資産 → $S_0 e^{-qT} N(d_1)$（コール）
+### 2.1 4つの満期給付と決済規約
 
-バニラはこの2つに分解できます： $c = c_{\text{aon}}(K) - K\,c_{\text{con}}(K)$。
-（第2冊のバタフライ＝建築ブロックの連続極限とも整合）""")
-)
-cells.append(
-    md(r"""> **核心** — 満期に条件を満たせば固定額、さもなくば0。<br>
-> **直感** — バタフライの連続極限＝デジタル。コール価格の K 微分にも相当する。<br>
-> **実務** — 仕組債のクーポン条件の部品。境界で Δ が発散しヘッジしにくい点に注意。""")
+現金額 $Q$ と満期原資産価格 $S_T$ に対して、4契約の給付は
+
+$$
+\begin{aligned}
+X_{\mathrm{cash\ call}}&=Q\,1_{\{S_T\ge K\}}, &
+X_{\mathrm{cash\ put}}&=Q\,1_{\{S_T<K\}},\\
+X_{\mathrm{asset\ call}}&=S_T\,1_{\{S_T\ge K\}}, &
+X_{\mathrm{asset\ put}}&=S_T\,1_{\{S_T<K\}}.
+\end{aligned}
+$$
+
+ここでは **call は $S_T\ge K$、put は $S_T<K$** を採用します。これは契約上の決済規約です。
+正の $T,\sigma$ を持つ連続分布モデルでは $P(S_T=K)=0$ なので、等号の割当ては時点0価格を変えません。
+図の塗りつぶし点が実際の決済、白抜き点が反対側の片側極限です。""")
 )
 
-# Cell 05: binary demo
 cells.append(
-    code(r"""S_B, K_B, R_B, SIG_B, T_B = 100.0, 100.0, 0.05, 0.20, 1.0
+    code(r"""S_BIN, K_BIN = 100.0, 100.0
+R_BIN, QDIV_BIN, SIG_BIN, T_BIN = 0.05, 0.02, 0.20, 1.0
+PAYOUT_BIN = 100.0
+
+binary_figures = _figures(
+    S0=S_BIN,
+    K=K_BIN,
+    r=R_BIN,
+    q=QDIV_BIN,
+    sigma=SIG_BIN,
+    T=T_BIN,
+    payout=PAYOUT_BIN,
+)
+
+# §3以降の既存セルが使う q=0・unit-cash の互換変数。
+S_B, K_B, R_B, SIG_B, T_B = 100.0, 100.0, 0.05, 0.20, 1.0
 aon = exotics.asset_or_nothing(S_B, K_B, R_B, SIG_B, T_B, kind="call")
 con = exotics.cash_or_nothing(S_B, K_B, R_B, SIG_B, T_B, kind="call", payout=1.0)
-van = bsm.call_price(S_B, K_B, R_B, SIG_B, T_B)
-print(f"asset-or-nothing = {aon:.4f}")
-print(f"cash-or-nothing（Q=1）= {con:.4f}")
-print(f"分解 aon − K·con = {aon - K_B * con:.4f} ／ バニラ = {van:.4f}（恒等）")
-
-s_grid = np.linspace(60.0, 140.0, 400)
-fig1, ax1 = plt.subplots(figsize=(8, 4))
-fig1.canvas.header_visible = False
-ax1.plot(s_grid, np.where(s_grid > K_B, 1.0, 0.0), lw=2, label="cash-or-nothing（Q=1）満期ペイオフ")
-ax1.plot(s_grid, np.where(s_grid > K_B, s_grid, 0.0) / 100.0, lw=2, ls="--",
-         label="asset-or-nothing /100")
-ax1.set_xlabel("満期株価 $S_T$")
-ax1.set_ylabel("ペイオフ")
-ax1.set_title("バイナリの不連続ペイオフ（K で跳ぶ）")
-ax1.legend()
-display(fig1.canvas)""")
+van = bsm.call_price(S_B, K_B, R_B, SIG_B, T_B)""")
 )
+
+cells.append(code(r"""binary_figures["binary_payoffs"].show()"""))
+
+cells.append(
+    md(r"""### 2.2 GBM仮定と4つの時点0価格
+
+欧州型で満期だけを観測し、リスク中立下の GBM
+
+$$dS_t=(r-q)S_t\,dt+\sigma S_t\,dW_t$$
+
+と定数 $r,q,\sigma$ を仮定します。$S_0,K,Q$ は通貨、$T$ は年、$r,q$ は連続複利の年率、
+$\sigma$ は年率ボラティリティです。閉形式の価格領域は $S_0,K,T,\sigma>0$ です。
+
+$$
+d_1=\frac{\log(S_0/K)+(r-q+\sigma^2/2)T}{\sigma\sqrt T},\qquad
+d_2=d_1-\sigma\sqrt T.
+$$
+
+ここで $N$ は標準正規分布の累積分布関数です。
+
+$$
+\begin{aligned}
+V_{\mathrm{cash\ call}}&=Qe^{-rT}N(d_2), &
+V_{\mathrm{cash\ put}}&=Qe^{-rT}N(-d_2),\\
+V_{\mathrm{asset\ call}}&=S_0e^{-qT}N(d_1), &
+V_{\mathrm{asset\ put}}&=S_0e^{-qT}N(-d_1).
+\end{aligned}
+$$
+
+$N(d_2)$ と $N(-d_2)$ はリスク中立測度での call/put 発生確率です。一方、
+
+$$
+N(d_1)=\frac{E^{\mathbb Q}[S_T1_{\{S_T\ge K\}}]}{E^{\mathbb Q}[S_T]},\qquad
+N(-d_1)=\frac{E^{\mathbb Q}[S_T1_{\{S_T<K\}}]}{E^{\mathbb Q}[S_T]}
+$$
+
+はそれぞれの事象を満期資産で重み付けした確率、すなわち配当再投資後の total-return stock を
+ニュメレールとする測度での確率に対応し、同じリスク中立事象確率ではありません。
+この違いが現金給付の $e^{-rT}$ と資産給付の $e^{-qT}$ に現れます。""")
+)
+
+cells.append(
+    code(r"""binary_prices = {
+    "cash call": exotics.cash_or_nothing(
+        S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN, q=QDIV_BIN, kind="call", payout=PAYOUT_BIN
+    ),
+    "cash put": exotics.cash_or_nothing(
+        S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN, q=QDIV_BIN, kind="put", payout=PAYOUT_BIN
+    ),
+    "asset call": exotics.asset_or_nothing(
+        S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN, q=QDIV_BIN, kind="call"
+    ),
+    "asset put": exotics.asset_or_nothing(
+        S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN, q=QDIV_BIN, kind="put"
+    ),
+}
+binary_price_table = pd.DataFrame(
+    {"price（通貨）": [f"{binary_prices[label]:.6f}" for label in binary_prices]},
+    index=pd.Index(binary_prices, name="contract"),
+)
+display(binary_price_table)""")
+)
+
+cells.append(
+    md(r"""### 2.3 call/putの給付分解と現在価値
+
+複製では任意の $Q$ を持つ価格表と区別し、cash binary の支払額を **$Q=K$** にします。
+
+$$
+\begin{aligned}
+(S_T-K)^+&=S_T1_{\{S_T\ge K\}}-K1_{\{S_T\ge K\}},\\
+(K-S_T)^+&=K1_{\{S_T<K\}}-S_T1_{\{S_T<K\}}.
+\end{aligned}
+$$
+
+したがって現在価値でも
+
+$$c=V_{\mathrm{asset\ call}}-V_{\mathrm{cash\ call}}(Q=K),\qquad
+p=V_{\mathrm{cash\ put}}(Q=K)-V_{\mathrm{asset\ put}}$$
+
+です。call の $S_T=K$ では2脚が相殺し、put では2脚とも0なので、選択した等号規約でも分解が成立します。""")
+)
+
+cells.append(
+    code(r"""PAYOUT_REPLICATION_BIN = K_BIN
+cash_call_repl = exotics.cash_or_nothing(
+    S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN,
+    q=QDIV_BIN, kind="call", payout=PAYOUT_REPLICATION_BIN,
+)
+cash_put_repl = exotics.cash_or_nothing(
+    S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN,
+    q=QDIV_BIN, kind="put", payout=PAYOUT_REPLICATION_BIN,
+)
+asset_call_repl = exotics.asset_or_nothing(
+    S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN, q=QDIV_BIN, kind="call"
+)
+asset_put_repl = exotics.asset_or_nothing(
+    S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN, q=QDIV_BIN, kind="put"
+)
+call_replication = asset_call_repl - cash_call_repl
+put_replication = cash_put_repl - asset_put_repl
+call_vanilla_bin = bsm.call_price(S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN, q=QDIV_BIN)
+put_vanilla_bin = bsm.put_price(S_BIN, K_BIN, R_BIN, SIG_BIN, T_BIN, q=QDIV_BIN)
+
+display(pd.DataFrame(
+    {
+        "binary replication": [f"{call_replication:.6f}", f"{put_replication:.6f}"],
+        "vanilla price": [f"{call_vanilla_bin:.6f}", f"{put_vanilla_bin:.6f}"],
+        "difference": [
+            f"{call_replication - call_vanilla_bin:.6e}",
+            f"{put_replication - put_vanilla_bin:.6e}",
+        ],
+    },
+    index=pd.Index(["call", "put"], name="kind"),
+))""")
+)
+
+cells.append(code(r"""binary_figures["binary_replication"].show()"""))
+
+cells.append(
+    md(r"""### 2.4 不連続給付と決済リスク
+
+現金給付のバイナリーは $K$ のごく近くで小さな参照価格差が $Q$ の給付差になり、
+資産給付のバイナリーでもジャンプ幅は $K$ になります。とくに取引の薄い市場では、
+満期判定の価格が一時的な需給の影響を受けやすく、モデル価格だけでは決済リスクを解消できません。
+契約時に参照市場・価格ソース・判定時刻・丸め・障害時の代替手順・紛争処理を合意し、
+図の片側極限と実際の等号決済を区別することが重要です。""")
+)
+
+cells.append(
+    md(r"""### 2.5 call spread、butterfly、行使価格微分
+
+幅 $h$ の centered call spread の満期給付
+
+$$\frac{(S_T-(K-h/2))^+-(S_T-(K+h/2))^+}{h}$$
+
+は $S_T\ne K$ で unit cash call の給付へ収束します。ただし $S_T=K$ ではすべての $h>0$ で $1/2$ であり、
+採用した等号決済値1とは一致しません。価格について
+
+$$-\frac{\partial C}{\partial K}=e^{-rT}N(d_2)$$
+
+は unit cash digital（$Q=1$）の現在価値です。$C(K)$ を、$S_0,r,q,\sigma,T$ を固定した同一満期の
+欧州 call 価格（行使価格 $K$ の関数）とします。正規化した centered butterfly 価格には
+
+$$
+\frac{C(K-h)-2C(K)+C(K+h)}{h^2}
+\longrightarrow \frac{\partial^2 C}{\partial K^2}
+=e^{-rT}f_{S_T}^{\mathbb Q}(K)
+$$
+
+という極限があり、$f_{S_T}^{\mathbb Q}$ はリスク中立測度での満期価格密度です。この極限は
+割引された満期密度で、デジタル給付そのものではありません。下図は価格密度ではなく、
+$[(S_T-(K-h))^+-2(S_T-K)^++(S_T-(K+h))^+]/h^2$ で正規化した満期給付を描き、
+幅 $h=1,5,15$ の局所化を比べます。""")
+)
+
+cells.append(code(r"""binary_figures["binary_spreads"].show()"""))
+
+cells.append(
+    md(r"""### 2.6 有限残存期間のcash-callデルタ
+
+$T>0$ の cash-or-nothing call のデルタは
+
+$$
+\Delta_{\mathrm{cash\ call}}
+=\frac{Qe^{-rT}\phi(d_2)}{S_0\sigma\sqrt T}
+$$
+
+$\phi$ は標準正規密度です。このデルタは正の $S_0,K,T,\sigma$ の各点では有限です。満期へ近づくと $K$ 近傍へ鋭く集中し、
+$S_0\ne K$ では0へ向かいます。有限時間のデルタを「発散」と呼ばず、不連続な満期給付へ近づく極限と
+区別します。図は $T=1$ 年、30日、1日の同じ合成市場を比較します。""")
+)
+
+cells.append(code(r"""binary_figures["binary_delta"].show()"""))
 
 # §26.9 acceptance pilot: definitions, branches, monitoring, risk and Parisian.
 cells.append(
