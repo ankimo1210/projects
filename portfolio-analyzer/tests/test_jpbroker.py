@@ -5,6 +5,9 @@ from __future__ import annotations
 from decimal import Decimal
 
 from portfolio_analyzer import jpbroker
+from portfolio_analyzer import timeseries as ts
+
+D = Decimal
 
 SAMPLE = """商品分類,約定日,受渡日,銘柄,取引,チャネル,約定単価,数量,受渡金額,備考
 入金(配当),----/--/--,2026/08/14,8976 大和証券オフィス投資法人　投資証券,配当金,-,-,-,15260,NISA成長投資枠
@@ -121,3 +124,63 @@ def test_taxable_realized_since_skips_nisa_sales_and_earlier_years() -> None:
         "528424"
     )
     assert jpbroker.taxable_realized_since(rows, "2026-01-01") == Decimal("0")
+
+
+DATES = [
+    "2024-11-01",
+    "2024-11-25",
+    "2025-01-28",
+    "2025-06-04",
+    "2025-10-01",
+    "2026-03-09",
+    "2026-08-14",
+]
+
+
+def _prices():
+    # 9023 until it is sold, 7532 (post-split shares), 1329
+    return {
+        "9023": [None, D("1754"), D("1800"), D("1727"), D("1727"), D("1727"), D("1727")],
+        "7532": [None, None, D("4219"), D("4000"), D("1000"), D("900"), D("726")],
+        "1329": [None, None, None, None, None, D("5360"), D("6636")],
+        "8976": [None] * 7,
+    }
+
+
+def test_account_paths_replays_cash_from_the_settled_amounts() -> None:
+    rows = jpbroker.parse_transactions(SAMPLE)
+    s = jpbroker.account_paths(rows, DATES, _prices())
+    assert s.account_id == "securities"
+    # deposit only
+    assert s.nav[0] == D(600000) and s.deposits_cum[0] == D(600000) and s.pnl[0] == D(0)
+    # after buying 9023: cash 600000 − 528424, position 300 × 1754
+    assert s.nav[1] == D(600000) - D(528424) + D(300) * D(1754)
+    # the sale realises 515902 − 528424 and the dividend later lands in cash
+    assert s.realized_cum[3] == D(515902) - D(528424)
+    assert s.dividends_cum[-1] == D(15260) and s.dividends_cum[3] == D(0)
+
+
+def test_account_paths_keeps_the_bucket_identity_on_every_date() -> None:
+    rows = jpbroker.parse_transactions(SAMPLE)
+    s = jpbroker.account_paths(rows, DATES, _prices())
+    for i, date in enumerate(DATES):
+        if s.nav[i] is None:
+            continue
+        parts = sum((getattr(s, b)[i] for b in ts.BUCKETS), D(0))
+        assert parts == s.pnl[i], date
+    assert s.fees_cum == [D(0)] * len(DATES)  # commissions sit inside the cost basis
+
+
+def test_account_paths_is_undefined_while_a_held_symbol_has_no_price() -> None:
+    rows = jpbroker.parse_transactions(SAMPLE)
+    prices = _prices()
+    prices["1329"][-1] = None
+    s = jpbroker.account_paths(rows, DATES, prices)
+    assert s.nav[-1] is None and s.pnl[-1] is None and s.unrealized[-1] is None
+    assert s.deposits_cum[-1] == D(600000)  # cash-side paths never depend on a price
+
+
+def test_replay_carries_realised_pnl_per_symbol() -> None:
+    rows = jpbroker.parse_transactions(SAMPLE)
+    path = jpbroker.replay(rows, DATES)["9023"]
+    assert path["realized_cum"][2] == D(0) and path["realized_cum"][3] == D(515902) - D(528424)

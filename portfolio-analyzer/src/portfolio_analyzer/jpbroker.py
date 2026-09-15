@@ -21,6 +21,8 @@ from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any
 
+from portfolio_analyzer.timeseries import AccountSeries
+
 ZERO, ONE = Decimal("0"), Decimal("1")
 BUY, SELL, SPLIT = "買", "売", "保振増減資"
 DIVIDEND_KINDS = ("入金(配当)", "入金(分配)")
@@ -267,9 +269,9 @@ def replay(rows: list[Txn], dates: Sequence[str]) -> dict[str, dict[str, Any]]:
     )
     symbols = {t.symbol for t in ordered if t.symbol}
     paths: dict[str, dict[str, Any]] = {
-        s: {"quantity": [], "cost_basis_jpy": [], "trades": []} for s in symbols
+        s: {"quantity": [], "cost_basis_jpy": [], "realized_cum": [], "trades": []} for s in symbols
     }
-    book = {s: {"quantity": ZERO, "cost_basis_jpy": ZERO} for s in symbols}
+    book = {s: {"quantity": ZERO, "cost_basis_jpy": ZERO, "realized": ZERO} for s in symbols}
     splits: dict[str, list[tuple[str, Decimal]]] = {s: [] for s in symbols}
 
     def apply(txn: Txn, *, record: bool) -> None:
@@ -293,7 +295,9 @@ def replay(rows: list[Txn], dates: Sequence[str]) -> dict[str, dict[str, Any]]:
                 state["cost_basis_jpy"] += -txn.amount
             elif txn.action == SELL and state["quantity"] > ZERO:
                 share = min(txn.quantity / state["quantity"], ONE)
-                state["cost_basis_jpy"] -= state["cost_basis_jpy"] * share
+                removed = state["cost_basis_jpy"] * share
+                state["realized"] += txn.amount - removed
+                state["cost_basis_jpy"] -= removed
                 state["quantity"] -= txn.quantity
 
     cursor = 0
@@ -304,6 +308,7 @@ def replay(rows: list[Txn], dates: Sequence[str]) -> dict[str, dict[str, Any]]:
         for symbol, state in book.items():
             paths[symbol]["quantity"].append(state["quantity"])
             paths[symbol]["cost_basis_jpy"].append(state["cost_basis_jpy"])
+            paths[symbol]["realized_cum"].append(state["realized"])
     while cursor < len(ordered):
         # a split after the window still restates everything inside it
         apply(ordered[cursor], record=False)
@@ -320,3 +325,77 @@ def replay(rows: list[Txn], dates: Sequence[str]) -> dict[str, dict[str, Any]]:
                 for d, q, p in path["trades"]
             ]
     return paths
+
+
+def account_paths(
+    rows: list[Txn],
+    dates: Sequence[str],
+    prices: dict[str, list[Decimal | None]],
+    account_id: str = "securities",
+) -> AccountSeries:
+    """The account's NAV, deposits and P&L buckets on each date.
+
+    Cash moves on the trade date (``_event_date``), the same day the quantity does,
+    so NAV never counts a purchase twice between trade and settlement. With cost at
+    the settled amount, ``NAV − deposits = unrealised + realised + dividends`` on every
+    date; commissions are inside the cost basis, so ``fees_cum`` stays zero. A date on
+    which a held symbol has no price is None.
+    """
+    ordered = sorted(rows, key=lambda t: (_event_date(t), t.settle_date or ""))
+    paths = replay(rows, dates)
+    n = len(dates)
+    cash: list[Decimal] = []
+    deposits: list[Decimal | None] = []
+    dividends: list[Decimal | None] = []
+    running_cash = running_dep = running_div = ZERO
+    cursor = 0
+    for date in dates:
+        while cursor < len(ordered) and _event_date(ordered[cursor]) <= date:
+            txn = ordered[cursor]
+            cursor += 1
+            if txn.amount is None:
+                continue
+            running_cash += txn.amount
+            if txn.kind.startswith("入金(振込)"):
+                running_dep += txn.amount
+            elif txn.kind in DIVIDEND_KINDS:
+                running_div += txn.amount
+        cash.append(running_cash)
+        deposits.append(running_dep)
+        dividends.append(running_div)
+    nav: list[Decimal | None] = []
+    unrealized: list[Decimal | None] = []
+    realized: list[Decimal | None] = []
+    for i in range(n):
+        value = unreal = ZERO
+        defined = True
+        for symbol, path in paths.items():
+            q = path["quantity"][i]
+            if q <= ZERO:
+                continue
+            price = (prices.get(symbol) or [None] * n)[i]
+            if price is None:
+                defined = False
+                break
+            value += q * price
+            unreal += q * price - path["cost_basis_jpy"][i]
+        realized.append(sum((p["realized_cum"][i] for p in paths.values()), ZERO))
+        nav.append(cash[i] + value if defined else None)
+        unrealized.append(unreal if defined else None)
+    zeros: list[Decimal | None] = [ZERO] * n
+    return AccountSeries(
+        account_id=account_id,
+        nav=nav,
+        deposits_cum=deposits,
+        unrealized=unrealized,
+        realized_cum=realized,
+        dividends_cum=dividends,
+        fees_cum=list(zeros),
+        fx_translation_cum=list(zeros),
+        forex_cum=list(zeros),
+        xirr_flows=[
+            (_event_date(t), t.amount)
+            for t in ordered
+            if t.kind.startswith("入金(振込)") and t.amount is not None
+        ],
+    )
