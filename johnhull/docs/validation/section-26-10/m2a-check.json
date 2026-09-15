@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-15T02:39:00.931003+00:00",
+  "scope": "M2a requirements and independent numerical checks for section 26.10; section remains gaps_found.",
+  "base_commit": "ab825e03382aec60d03e1320ac03dab86fc1b48e",
+  "validation_root": "/home/kazumasa/.codex/worktrees/johnhull-binary-m2a",
+  "python": "/home/kazumasa/projects/.venv/bin/python",
+  "tests": {
+    "full_command": "python -m pytest johnhull -q --tb=short",
+    "full_passed": 1535,
+    "full_duration_seconds": 69.27,
+    "warnings": 2,
+    "warning_scope": "existing japanize_matplotlib / distutils deprecations",
+    "focused_command": "python -m pytest johnhull/report/tests/test_section_ledger.py johnhull/hullkit/tests/test_binary_reference.py -q --tb=short",
+    "focused_passed": 119,
+    "new_binary_tests": 80
+  },
+  "quality": {
+    "ruff": "PASS",
+    "format_check": "PASS",
+    "default_ledger_cli": "PASS",
+    "artifact_ledger_cli": "PASS",
+    "markdown_whitespace": "PASS",
+    "new_note_links": 4
+  },
+  "setup_recovery": {
+    "initial_full_run": {
+      "passed": 1513,
+      "failed": 22
+    },
+    "cause": "Sparse worktree omitted tracked references required by paper_corpus tests.",
+    "resolution": "Added tracked johnhull/references to sparse checkout and reran the full suite successfully; no pricing or corpus-code changes."
+  },
+  "review": {
+    "status": "APPROVED",
+    "required_fixes": 0,
+    "scope": "Bounded M2a only",
+    "checks": [
+      "Direct PDF pp.622-623 comparison",
+      "64 stored actual/expected/error triples reproduced exactly",
+      "16 supplementary vanilla decompositions",
+      "13 related hashes matched",
+      "Only section 26.10 changed in ledger",
+      "Pending teaching/figures/rendering correctly remain gaps_found"
+    ],
+    "independent_tests_passed": 80
+  },
+  "ledger_negative_probes": {
+    "false_accepted": {
+      "status": "REJECTED",
+      "errors": [
+        "ledger section 26.10.acceptance_note: path must be a non-empty project-relative path",
+        "ledger section 26.10.requirements[0].coverage.explanation: accepted coverage cannot be pending",
+        "ledger section 26.10.requirements[0].coverage.implementation: accepted coverage cannot be pending"
+      ]
+    },
+    "stale_numeric_artifact": {
+      "status": "REJECTED",
+      "errors": [
+        "ledger section 26.10.evidence numerical.record.artifact_sha256['docs/validation/section-26-10/prices.json'].sha256: digest does not match 'docs/validation/section-26-10/prices.json'"
+      ]
+    },
+    "missing_D02_record": {
+      "status": "REJECTED",
+      "errors": [
+        "ledger section 26.10.requirements[1].coverage.independent_validation: unknown evidence ref: numerical",
+        "ledger section 26.10.requirements[1].coverage.independent_validation: verified requires record evidence",
+        "ledger section 26.10.requirements[2].coverage.independent_validation: unknown evidence ref: numerical"
+      ]
+    }
+  },
+  "counts": {
+    "accepted": 1,
+    "gaps_found": 1,
+    "unreviewed": 304,
+    "pending_validation": 0,
+    "out_of_scope": 0
+  },
+  "pilot_preservation": {
+    "source_hashes_unchanged": 10,
+    "artifact_hashes_unchanged": 4,
+    "pricing_and_notebook_changes": false
+  },
+  "limits": [
+    "64 synthetic numerical cases are not a proof over all inputs.",
+    "T=0, sigma=0, invalid inputs and settlement equality are not verified.",
+    "Existing teaching mistakes, four-payoff figures and Book/portal verification remain pending.",
+    "No section 26.10 acceptance or new rendered-artifact validation is claimed."
+  ],
+  "source_sha256": {
+    "ROADMAP.md": "3e049403f3687094302e379da92de34bba523075d850e9c3cdb062606411ad26",
+    "VALIDATION.md": "61bf67dd4efc18871ef31c18ea6c7465c0647db2f07bd4dd9575a10b4803e892",
+    "docs/SECTION_AUDIT_2026-09-14_FEEDBACK.md": "790e9e86557e8865ac2477dd1169e9f106167db6a6ea1e48cfd56a39554a5167",
+    "docs/SECTION_LEDGER.md": "38fdec4ef102f9983bd86002c0851d091a813f65b8d64a5140c6aab890127694",
+    "docs/SECTION_LEDGER_GUIDE.md": "881fc28d33ef6dfd3471d108578bae2a0d67b403c3dcde49c4291e4d83845d2f",
+    "docs/SECTION_REVIEW_HANDOFF_2026-09-15.md": "7627c1c13a5bbfe3abd3d8bd3d2cb960e547913e677c83846d39b84970f5afa7",
+    "docs/section_ledger.json": "72225a93eddd527c2ca31af5cffd6279bf23ce2f027699f4d9576bf47cb2168a",
+    "report/tests/test_section_ledger.py": "fc0e4abc53de24594740050d6b123e61a0bbec2b3c721de406f709ecb5ddddd8",
+    "docs/SECTION_26_10_REVIEW_2026-09-15.md": "33243ba0fa2e4c70e4f4ba24f666ee13f1e4f149226312cafb263d576d30d2ca",
+    "docs/validation/section-26-10/numerical-check.json": "9a0105b98c27d3e8ca83cfe3ed30ec7c862c24158b343c42a6f7279f1bbe1778",
+    "docs/validation/section-26-10/prices.json": "c181d406371386fd65d2492e5b487cee4f98069a8453b552ff4a0eb3effece10",
+    "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1"
+  }
+}

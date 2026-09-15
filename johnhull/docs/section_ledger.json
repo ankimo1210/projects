@@ -1712,8 +1712,293 @@
     },
     {
       "id": "26.10",
-      "status": "unreviewed",
-      "requirements": []
+      "status": "gaps_found",
+      "reviewed_at": "2026-09-15",
+      "source_pages": [
+        622,
+        623
+      ],
+      "scope": "M2a: 原典要求・既存教材の照合と独立価格検証。教材・図・配布画面の修正は残る。",
+      "assumptions": [
+        "欧州型、満期給付、リスク中立GBM",
+        "定数r/q/sigma、T>0、sigma>0、S0/K>0",
+        "通貨・年・連続複利年率・年率ボラティリティ、合成市場条件"
+      ],
+      "limitations": [
+        "等号の契約規約、T=0、sigma=0、不正入力は未検証",
+        "価格テストの成功は節全体の受入ではない",
+        "notebook再生成・Book/portal検査は未実施"
+      ],
+      "review_note": "docs/SECTION_26_10_REVIEW_2026-09-15.md",
+      "evidence": {
+        "pricing": {
+          "path": "hullkit/src/hullkit/exotics.py",
+          "sha256": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+          "kind": "source"
+        },
+        "bsm": {
+          "path": "hullkit/src/hullkit/bsm.py",
+          "sha256": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+          "kind": "source"
+        },
+        "tests": {
+          "path": "hullkit/tests/test_binary_reference.py",
+          "sha256": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
+          "kind": "test"
+        },
+        "numerical": {
+          "path": "docs/validation/section-26-10/numerical-check.json",
+          "sha256": "9a0105b98c27d3e8ca83cfe3ed30ec7c862c24158b343c42a6f7279f1bbe1778",
+          "kind": "record"
+        },
+        "notebook": {
+          "path": "volumes/10_exotics_martingales/exotics.ipynb",
+          "sha256": "3d665a40d77c183ad3c36abaab670ba05cec764e8697deeda0081d46cbcfc1f3",
+          "kind": "source"
+        },
+        "builder": {
+          "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
+          "sha256": "cb0a39cc67c3aeb19b13604745b6e6f45b07876be4eb513bd89703d18ec67c0f",
+          "kind": "source"
+        },
+        "review": {
+          "path": "docs/SECTION_26_10_REVIEW_2026-09-15.md",
+          "sha256": "33243ba0fa2e4c70e4f4ba24f666ee13f1e4f149226312cafb263d576d30d2ca",
+          "kind": "note"
+        },
+        "textbook": {
+          "path": "options, futures and other derivatives 11th.pdf",
+          "sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482",
+          "kind": "reference"
+        }
+      },
+      "requirements": [
+        {
+          "id": "D01",
+          "statement": "cash/asset × call/putの4給付、通貨単位、満期の等号規約を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook"
+              ],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。",
+              "locator": "vol10 §2 バイナリ・オプション"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": [
+                "builder"
+              ],
+              "reason": "給付の実演はコール中心。4給付と等号規約を補う。"
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": [],
+              "reason": "今回の価格積分はT>0、sigma>0で、満期の等号処理の検査ではない。"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            }
+          }
+        },
+        {
+          "id": "D02",
+          "statement": "GBMの前提下で4価格を計算し、現金給付のN(d2)と資産給付のN(d1)、配当・割引の役割を区別する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook"
+              ],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。",
+              "locator": "vol10 §2 バイナリ・オプション"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "bsm"
+              ],
+              "locator": "exotics.cash_or_nothing / asset_or_nothing; bsm.d1 / d2"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "tests",
+                "numerical"
+              ],
+              "locator": "test_cash_binary_against_terminal_density / test_asset_binary_against_terminal_density; 64 prices"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            }
+          }
+        },
+        {
+          "id": "D03",
+          "statement": "バニラcall/putの分解を満期給付と現在価格の両方で確認する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook"
+              ],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。",
+              "locator": "vol10 §2 バイナリ・オプション"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": [
+                "pricing",
+                "builder"
+              ],
+              "reason": "価格分解は実装済み。プットを含む満期給付の教材実演が残る。"
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": [
+                "tests",
+                "numerical"
+              ],
+              "reason": "価格分解16ケースは成功。満期給付の分解・境界をまだ検査していない。",
+              "locator": "test_binary_replication_matches_european_vanilla"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            }
+          }
+        },
+        {
+          "id": "D04",
+          "statement": "給付の不連続性と薄い市場での決済リスクを説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook"
+              ],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。",
+              "locator": "vol10 §2 バイナリ・オプション"
+            },
+            "implementation": {
+              "state": "not_applicable",
+              "refs": [],
+              "reason": "定性的な契約・決済リスクの説明。価格モデルや市場操作の実演を実装せず、原典との内容照合で確認する。"
+            },
+            "independent_validation": {
+              "state": "not_applicable",
+              "refs": [],
+              "reason": "定性的な契約・決済リスクの説明。価格モデルや市場操作の実演を実装せず、原典との内容照合で確認する。"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            }
+          }
+        },
+        {
+          "id": "D05",
+          "statement": "既存の補助説明を修正し、デジタルとバタフライ、満期前と満期極限の感応度を区別する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook"
+              ],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。",
+              "locator": "vol10 §2 バイナリ・オプション"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            }
+          }
+        },
+        {
+          "id": "D06",
+          "statement": "4給付とcall/put分解を図示し、Book/portalの数式・軸・凡例・表示値を確認する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook"
+              ],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。",
+              "locator": "vol10 §2 バイナリ・オプション"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": [],
+              "reason": "教材・図・実画面の受入に必要な確認が残る。"
+            }
+          }
+        }
+      ]
     },
     {
       "id": "26.11",

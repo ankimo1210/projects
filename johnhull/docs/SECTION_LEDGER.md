@@ -12,8 +12,8 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 305 |
-| gaps_found | 0 |
+| unreviewed | 304 |
+| gaps_found | 1 |
 | pending_validation | 0 |
 | accepted | 1 |
 | out_of_scope | 0 |
@@ -47,7 +47,7 @@
 | 23 | 7 | 7 | 0 | 0 | 0 | 0 |
 | 24 | 9 | 9 | 0 | 0 | 0 | 0 |
 | 25 | 11 | 11 | 0 | 0 | 0 | 0 |
-| 26 | 17 | 16 | 0 | 0 | 1 | 0 |
+| 26 | 17 | 15 | 1 | 0 | 1 | 0 |
 | 27 | 8 | 8 | 0 | 0 | 0 | 0 |
 | 28 | 8 | 8 | 0 | 0 | 0 | 0 |
 | 29 | 4 | 4 | 0 | 0 | 0 | 0 |
@@ -301,7 +301,7 @@
 | 26.7 | 26 | section | Compound Options | unreviewed |
 | 26.8 | 26 | section | Chooser Options | unreviewed |
 | 26.9 | 26 | section | Barrier Options | accepted |
-| 26.10 | 26 | section | Binary Options | unreviewed |
+| 26.10 | 26 | section | Binary Options | gaps_found |
 | 26.11 | 26 | section | Lookback Options | unreviewed |
 | 26.12 | 26 | section | Shout Options | unreviewed |
 | 26.13 | 26 | section | Asian Options | unreviewed |
