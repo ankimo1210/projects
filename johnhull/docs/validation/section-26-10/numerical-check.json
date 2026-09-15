@@ -1,0 +1,141 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-15T02:27:49.858235+00:00",
+  "scope": "M2a: numerical validation only; section 26.10 is gaps_found, not accepted.",
+  "base_commit": "ab825e03382aec60d03e1320ac03dab86fc1b48e",
+  "reference": "Hull 11e Global Edition section 26.10, physical/printed pp.622-623",
+  "method": "Discounted Gaussian log-return density integrals, no normal CDF or hullkit pricing in the oracle. Vanilla replication checks are complementary identities, not the independent oracle.",
+  "units": {
+    "spot_strike_payout": "currency",
+    "expiry": "years",
+    "rate_dividend": "continuously compounded per year",
+    "volatility": "annual"
+  },
+  "assumptions": [
+    "European terminal settlement under risk-neutral GBM",
+    "Constant rates, dividend yield and positive volatility; positive expiry",
+    "Strict above/below integrals: equality is a null event in this continuous distribution; terminal equality contract handling is not tested"
+  ],
+  "markets": [
+    {
+      "id": "atm",
+      "spot": 100,
+      "strike": 100,
+      "rate": 0.05,
+      "volatility": 0.2,
+      "expiry": 1.0,
+      "dividend": 0.0
+    },
+    {
+      "id": "low-strike",
+      "spot": 100,
+      "strike": 70,
+      "rate": 0.02,
+      "volatility": 0.3,
+      "expiry": 0.5,
+      "dividend": 0.01
+    },
+    {
+      "id": "high-strike",
+      "spot": 100,
+      "strike": 140,
+      "rate": 0.04,
+      "volatility": 0.35,
+      "expiry": 2.0,
+      "dividend": 0.02
+    },
+    {
+      "id": "dividend-above-rate",
+      "spot": 100,
+      "strike": 105,
+      "rate": 0.01,
+      "volatility": 0.25,
+      "expiry": 1.5,
+      "dividend": 0.07
+    },
+    {
+      "id": "negative-rate",
+      "spot": 100,
+      "strike": 95,
+      "rate": -0.025,
+      "volatility": 0.18,
+      "expiry": 0.75,
+      "dividend": 0.01
+    },
+    {
+      "id": "zero-carry",
+      "spot": 100,
+      "strike": 100,
+      "rate": 0.03,
+      "volatility": 0.22,
+      "expiry": 1.2,
+      "dividend": 0.03
+    },
+    {
+      "id": "near-expiry",
+      "spot": 100,
+      "strike": 100,
+      "rate": 0.03,
+      "volatility": 0.15,
+      "expiry": 0.0027397260273972603,
+      "dividend": 0.01
+    },
+    {
+      "id": "long-high-vol",
+      "spot": 100,
+      "strike": 130,
+      "rate": 0.06,
+      "volatility": 0.7,
+      "expiry": 5.0,
+      "dividend": 0.025
+    }
+  ],
+  "payouts": [
+    0.5,
+    1.0,
+    123.0
+  ],
+  "abs_tolerance": 2e-09,
+  "rel_tolerance": 2e-11,
+  "quad_error_guard": "Scaled integration error estimate < absolute tolerance / 10; not a rigorous error bound.",
+  "independent_prices_checked": 64,
+  "replication_cases_checked": 16,
+  "max_absolute_error": 4.973799150320701e-14,
+  "tests": {
+    "scoped_passed": 80,
+    "command": "python -m pytest johnhull/hullkit/tests/test_binary_reference.py -q"
+  },
+  "negative_controls": [
+    {
+      "mutation": "cash",
+      "parity_passed": true,
+      "independent_density_check": "REJECTED"
+    },
+    {
+      "mutation": "asset",
+      "parity_passed": true,
+      "independent_density_check": "REJECTED"
+    },
+    {
+      "mutation": "swapped_d1_d2",
+      "parity_passed": true,
+      "independent_density_check": "REJECTED"
+    }
+  ],
+  "source_sha256": {
+    "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
+    "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
+  },
+  "limits": [
+    "Synthetic inputs; no market performance claim",
+    "No price engine or existing notebook changes",
+    "No T=0, sigma=0, invalid-input, distribution-with-atoms or all-domain numerical stability claim",
+    "Lesson content, figures and Book/portal rendering remain pending"
+  ],
+  "artifact_sha256": {
+    "docs/validation/section-26-10/prices.json": "c181d406371386fd65d2492e5b487cee4f98069a8453b552ff4a0eb3effece10"
+  },
+  "artifact_scope": "Numerical comparison table only; no Book/portal artifact is claimed for section 26.10."
+}

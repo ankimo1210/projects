@@ -10,6 +10,22 @@
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
+## Section 26.10 M2a — 2026-09-15
+
+[要求と残課題](docs/SECTION_26_10_REVIEW_2026-09-15.md)。§26.10は`gaps_found`。
+原典pp.622–623からD01–D06を整理し、cash/asset × call/putの価格を独立積分64ケースで確認した。
+バニラ分解16ケースと合わせて80テスト成功。最大絶対誤差4.974×10⁻¹⁴。
+合計を保つ誤配分など3つの改変を独立検査が拒否した。
+[数値記録](docs/validation/section-26-10/numerical-check.json)。
+
+全`pytest johnhull -q`：**1,535 passed**（69.27秒、既存deprecation warning 2件）。
+台帳の両モード、119件の関連テスト、ruff、証跡の改変検出も成功。
+[M2a統合検証記録](docs/validation/section-26-10/m2a-check.json)。
+
+教材の誤説明の修正、4給付・プット分解の図、Book/portalの確認は残る。
+価格コード・既存notebookは変更していない。受入済み1節、不足あり1節、未評価304項目。
+M1と§26.9の試行は`ab825e03`としてmainへpush済み。以下は各実施時点の検証記録。
+
 ## Section ledger M1 — 2026-09-15
 
 [節別台帳](docs/SECTION_LEDGER.md)と[更新手順](docs/SECTION_LEDGER_GUIDE.md)。

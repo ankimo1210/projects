@@ -1,0 +1,565 @@
+{
+  "scope": "Synthetic terminal-density price comparisons for section 26.10; no rendered-lesson acceptance.",
+  "prices": [
+    {
+      "market": "atm",
+      "family": "cash",
+      "kind": "call",
+      "payout": 0.5,
+      "expected": 0.2661624077268817,
+      "actual": 0.2661624077268817,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "atm",
+      "family": "cash",
+      "kind": "call",
+      "payout": 1.0,
+      "expected": 0.5323248154537634,
+      "actual": 0.5323248154537634,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "atm",
+      "family": "cash",
+      "kind": "call",
+      "payout": 123.0,
+      "expected": 65.4759523008129,
+      "actual": 65.4759523008129,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "atm",
+      "family": "asset",
+      "kind": "call",
+      "expected": 63.68306511756195,
+      "actual": 63.68306511756191,
+      "absolute_error": 4.263256414560601e-14
+    },
+    {
+      "market": "atm",
+      "family": "cash",
+      "kind": "put",
+      "payout": 0.5,
+      "expected": 0.20945230452347532,
+      "actual": 0.20945230452347532,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "atm",
+      "family": "cash",
+      "kind": "put",
+      "payout": 1.0,
+      "expected": 0.41890460904695065,
+      "actual": 0.41890460904695065,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "atm",
+      "family": "cash",
+      "kind": "put",
+      "payout": 123.0,
+      "expected": 51.52526691277493,
+      "actual": 51.52526691277493,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "atm",
+      "family": "asset",
+      "kind": "put",
+      "expected": 36.316934882438126,
+      "actual": 36.31693488243809,
+      "absolute_error": 3.552713678800501e-14
+    },
+    {
+      "market": "low-strike",
+      "family": "cash",
+      "kind": "call",
+      "payout": 0.5,
+      "expected": 0.4678366804202837,
+      "actual": 0.4678366804202837,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "low-strike",
+      "family": "cash",
+      "kind": "call",
+      "payout": 1.0,
+      "expected": 0.9356733608405674,
+      "actual": 0.9356733608405674,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "low-strike",
+      "family": "cash",
+      "kind": "call",
+      "payout": 123.0,
+      "expected": 115.08782338338979,
+      "actual": 115.08782338338979,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "low-strike",
+      "family": "asset",
+      "kind": "call",
+      "expected": 96.01183581412425,
+      "actual": 96.01183581412421,
+      "absolute_error": 4.263256414560601e-14
+    },
+    {
+      "market": "low-strike",
+      "family": "cash",
+      "kind": "put",
+      "payout": 0.5,
+      "expected": 0.027188236454300345,
+      "actual": 0.027188236454300338,
+      "absolute_error": 6.938893903907228e-18
+    },
+    {
+      "market": "low-strike",
+      "family": "cash",
+      "kind": "put",
+      "payout": 1.0,
+      "expected": 0.05437647290860069,
+      "actual": 0.054376472908600676,
+      "absolute_error": 1.3877787807814457e-17
+    },
+    {
+      "market": "low-strike",
+      "family": "cash",
+      "kind": "put",
+      "payout": 123.0,
+      "expected": 6.688306167757885,
+      "actual": 6.688306167757883,
+      "absolute_error": 1.7763568394002505e-15
+    },
+    {
+      "market": "low-strike",
+      "family": "asset",
+      "kind": "put",
+      "expected": 3.4894121051440252,
+      "actual": 3.489412105144023,
+      "absolute_error": 2.220446049250313e-15
+    },
+    {
+      "market": "high-strike",
+      "family": "cash",
+      "kind": "call",
+      "payout": 0.5,
+      "expected": 0.09168871209531042,
+      "actual": 0.0916887120953104,
+      "absolute_error": 1.3877787807814457e-17
+    },
+    {
+      "market": "high-strike",
+      "family": "cash",
+      "kind": "call",
+      "payout": 1.0,
+      "expected": 0.18337742419062084,
+      "actual": 0.1833774241906208,
+      "absolute_error": 2.7755575615628914e-17
+    },
+    {
+      "market": "high-strike",
+      "family": "cash",
+      "kind": "call",
+      "payout": 123.0,
+      "expected": 22.555423175446364,
+      "actual": 22.55542317544636,
+      "absolute_error": 3.552713678800501e-15
+    },
+    {
+      "market": "high-strike",
+      "family": "asset",
+      "kind": "call",
+      "expected": 34.839691625662184,
+      "actual": 34.839691625662134,
+      "absolute_error": 4.973799150320701e-14
+    },
+    {
+      "market": "high-strike",
+      "family": "cash",
+      "kind": "put",
+      "payout": 0.5,
+      "expected": 0.3698694610980075,
+      "actual": 0.3698694610980075,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "high-strike",
+      "family": "cash",
+      "kind": "put",
+      "payout": 1.0,
+      "expected": 0.739738922196015,
+      "actual": 0.739738922196015,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "high-strike",
+      "family": "cash",
+      "kind": "put",
+      "payout": 123.0,
+      "expected": 90.98788743010985,
+      "actual": 90.98788743010984,
+      "absolute_error": 1.4210854715202004e-14
+    },
+    {
+      "market": "high-strike",
+      "family": "asset",
+      "kind": "put",
+      "expected": 61.23925228957023,
+      "actual": 61.23925228957019,
+      "absolute_error": 4.263256414560601e-14
+    },
+    {
+      "market": "dividend-above-rate",
+      "family": "cash",
+      "kind": "call",
+      "payout": 0.5,
+      "expected": 0.1340398769834206,
+      "actual": 0.13403987698342057,
+      "absolute_error": 2.7755575615628914e-17
+    },
+    {
+      "market": "dividend-above-rate",
+      "family": "cash",
+      "kind": "call",
+      "payout": 1.0,
+      "expected": 0.2680797539668412,
+      "actual": 0.26807975396684114,
+      "absolute_error": 5.551115123125783e-17
+    },
+    {
+      "market": "dividend-above-rate",
+      "family": "cash",
+      "kind": "call",
+      "payout": 123.0,
+      "expected": 32.973809737921464,
+      "actual": 32.973809737921464,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "dividend-above-rate",
+      "family": "asset",
+      "kind": "call",
+      "expected": 34.393721762742096,
+      "actual": 34.39372176274208,
+      "absolute_error": 1.4210854715202004e-14
+    },
+    {
+      "market": "dividend-above-rate",
+      "family": "cash",
+      "kind": "put",
+      "payout": 0.5,
+      "expected": 0.3585160928181108,
+      "actual": 0.35851609281811075,
+      "absolute_error": 5.551115123125783e-17
+    },
+    {
+      "market": "dividend-above-rate",
+      "family": "cash",
+      "kind": "put",
+      "payout": 1.0,
+      "expected": 0.7170321856362216,
+      "actual": 0.7170321856362215,
+      "absolute_error": 1.1102230246251565e-16
+    },
+    {
+      "market": "dividend-above-rate",
+      "family": "cash",
+      "kind": "put",
+      "payout": 123.0,
+      "expected": 88.19495883325526,
+      "actual": 88.19495883325524,
+      "absolute_error": 1.4210854715202004e-14
+    },
+    {
+      "market": "dividend-above-rate",
+      "family": "asset",
+      "kind": "put",
+      "expected": 55.63873049588451,
+      "actual": 55.63873049588448,
+      "absolute_error": 2.842170943040401e-14
+    },
+    {
+      "market": "negative-rate",
+      "family": "cash",
+      "kind": "call",
+      "payout": 0.5,
+      "expected": 0.27152319866167834,
+      "actual": 0.2715231986616782,
+      "absolute_error": 1.6653345369377348e-16
+    },
+    {
+      "market": "negative-rate",
+      "family": "cash",
+      "kind": "call",
+      "payout": 1.0,
+      "expected": 0.5430463973233567,
+      "actual": 0.5430463973233564,
+      "absolute_error": 3.3306690738754696e-16
+    },
+    {
+      "market": "negative-rate",
+      "family": "cash",
+      "kind": "call",
+      "payout": 123.0,
+      "expected": 66.79470687077287,
+      "actual": 66.79470687077283,
+      "absolute_error": 4.263256414560601e-14
+    },
+    {
+      "market": "negative-rate",
+      "family": "asset",
+      "kind": "call",
+      "expected": 58.984971152696474,
+      "actual": 58.984971152696424,
+      "absolute_error": 4.973799150320701e-14
+    },
+    {
+      "market": "negative-rate",
+      "family": "cash",
+      "kind": "put",
+      "payout": 0.5,
+      "expected": 0.23794024386433488,
+      "actual": 0.237940243864335,
+      "absolute_error": 1.1102230246251565e-16
+    },
+    {
+      "market": "negative-rate",
+      "family": "cash",
+      "kind": "put",
+      "payout": 1.0,
+      "expected": 0.47588048772866975,
+      "actual": 0.47588048772867,
+      "absolute_error": 2.220446049250313e-16
+    },
+    {
+      "market": "negative-rate",
+      "family": "cash",
+      "kind": "put",
+      "payout": 123.0,
+      "expected": 58.53329999062638,
+      "actual": 58.53329999062641,
+      "absolute_error": 2.842170943040401e-14
+    },
+    {
+      "market": "negative-rate",
+      "family": "asset",
+      "kind": "put",
+      "expected": 40.26783432921739,
+      "actual": 40.26783432921741,
+      "absolute_error": 1.4210854715202004e-14
+    },
+    {
+      "market": "zero-carry",
+      "family": "cash",
+      "kind": "call",
+      "payout": 0.5,
+      "expected": 0.21802990462153007,
+      "actual": 0.21802990462153005,
+      "absolute_error": 2.7755575615628914e-17
+    },
+    {
+      "market": "zero-carry",
+      "family": "cash",
+      "kind": "call",
+      "payout": 1.0,
+      "expected": 0.43605980924306015,
+      "actual": 0.4360598092430601,
+      "absolute_error": 5.551115123125783e-17
+    },
+    {
+      "market": "zero-carry",
+      "family": "cash",
+      "kind": "call",
+      "payout": 123.0,
+      "expected": 53.635356536896396,
+      "actual": 53.635356536896396,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "zero-carry",
+      "family": "asset",
+      "kind": "call",
+      "expected": 52.85804842400631,
+      "actual": 52.8580484240063,
+      "absolute_error": 1.4210854715202004e-14
+    },
+    {
+      "market": "zero-carry",
+      "family": "cash",
+      "kind": "put",
+      "payout": 0.5,
+      "expected": 0.2642902421200315,
+      "actual": 0.2642902421200315,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "zero-carry",
+      "family": "cash",
+      "kind": "put",
+      "payout": 1.0,
+      "expected": 0.528580484240063,
+      "actual": 0.528580484240063,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "zero-carry",
+      "family": "cash",
+      "kind": "put",
+      "payout": 123.0,
+      "expected": 65.01539956152774,
+      "actual": 65.01539956152776,
+      "absolute_error": 1.4210854715202004e-14
+    },
+    {
+      "market": "zero-carry",
+      "family": "asset",
+      "kind": "put",
+      "expected": 43.60598092430603,
+      "actual": 43.60598092430601,
+      "absolute_error": 2.1316282072803006e-14
+    },
+    {
+      "market": "near-expiry",
+      "family": "cash",
+      "kind": "call",
+      "payout": 0.5,
+      "expected": 0.2505884483685154,
+      "actual": 0.2505884483685153,
+      "absolute_error": 1.1102230246251565e-16
+    },
+    {
+      "market": "near-expiry",
+      "family": "cash",
+      "kind": "call",
+      "payout": 1.0,
+      "expected": 0.5011768967370308,
+      "actual": 0.5011768967370306,
+      "absolute_error": 2.220446049250313e-16
+    },
+    {
+      "market": "near-expiry",
+      "family": "cash",
+      "kind": "call",
+      "payout": 123.0,
+      "expected": 61.64475829865479,
+      "actual": 61.644758298654764,
+      "absolute_error": 2.842170943040401e-14
+    },
+    {
+      "market": "near-expiry",
+      "family": "asset",
+      "kind": "call",
+      "expected": 50.4336428101936,
+      "actual": 50.43364281019359,
+      "absolute_error": 7.105427357601002e-15
+    },
+    {
+      "market": "near-expiry",
+      "family": "cash",
+      "kind": "put",
+      "payout": 0.5,
+      "expected": 0.2493704574298997,
+      "actual": 0.24937045742989963,
+      "absolute_error": 5.551115123125783e-17
+    },
+    {
+      "market": "near-expiry",
+      "family": "cash",
+      "kind": "put",
+      "payout": 1.0,
+      "expected": 0.4987409148597994,
+      "actual": 0.49874091485979927,
+      "absolute_error": 1.1102230246251565e-16
+    },
+    {
+      "market": "near-expiry",
+      "family": "cash",
+      "kind": "put",
+      "payout": 123.0,
+      "expected": 61.345132527755325,
+      "actual": 61.34513252775531,
+      "absolute_error": 1.4210854715202004e-14
+    },
+    {
+      "market": "near-expiry",
+      "family": "asset",
+      "kind": "put",
+      "expected": 49.56361750130918,
+      "actual": 49.56361750130916,
+      "absolute_error": 2.1316282072803006e-14
+    },
+    {
+      "market": "long-high-vol",
+      "family": "cash",
+      "kind": "call",
+      "payout": 0.5,
+      "expected": 0.07441228642338665,
+      "actual": 0.07441228642338664,
+      "absolute_error": 1.3877787807814457e-17
+    },
+    {
+      "market": "long-high-vol",
+      "family": "cash",
+      "kind": "call",
+      "payout": 1.0,
+      "expected": 0.1488245728467733,
+      "actual": 0.14882457284677328,
+      "absolute_error": 2.7755575615628914e-17
+    },
+    {
+      "market": "long-high-vol",
+      "family": "cash",
+      "kind": "call",
+      "payout": 123.0,
+      "expected": 18.305422460153117,
+      "actual": 18.305422460153114,
+      "absolute_error": 3.552713678800501e-15
+    },
+    {
+      "market": "long-high-vol",
+      "family": "asset",
+      "kind": "call",
+      "expected": 67.62824901906325,
+      "actual": 67.6282490190632,
+      "absolute_error": 4.263256414560601e-14
+    },
+    {
+      "market": "long-high-vol",
+      "family": "cash",
+      "kind": "put",
+      "payout": 0.5,
+      "expected": 0.29599682391747234,
+      "actual": 0.2959968239174723,
+      "absolute_error": 5.551115123125783e-17
+    },
+    {
+      "market": "long-high-vol",
+      "family": "cash",
+      "kind": "put",
+      "payout": 1.0,
+      "expected": 0.5919936478349447,
+      "actual": 0.5919936478349446,
+      "absolute_error": 1.1102230246251565e-16
+    },
+    {
+      "market": "long-high-vol",
+      "family": "cash",
+      "kind": "put",
+      "payout": 123.0,
+      "expected": 72.81521868369819,
+      "actual": 72.81521868369819,
+      "absolute_error": 0.0
+    },
+    {
+      "market": "long-high-vol",
+      "family": "asset",
+      "kind": "put",
+      "expected": 20.62144123939637,
+      "actual": 20.621441239396358,
+      "absolute_error": 1.0658141036401503e-14
+    }
+  ]
+}
