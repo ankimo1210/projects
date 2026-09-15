@@ -169,6 +169,16 @@ def text_body(data: dict[str, Any]) -> str:
         )
         if day_split or unreal_split:
             lines.append(f"      日次 {day_split or '—'}  /  含み {unreal_split or '—'}")
+    r = data.get("risk")
+    if r:
+        s, c = r["stats"], r["concentration"]
+        lines += [
+            "",
+            f"リスク: ボラ {_ratio(s['vol_annual'])}, VaR(1日95%) {jpy(s['var_1d_95_jpy'])}, "
+            f"ES(97.5%) {jpy(s['es_1d_975_jpy'])}, 外貨 {_ratio(c['foreign_currency_ratio'])}, "
+            f"最大ルックスルー銘柄 {c.get('largest_issuer') or '—'} {_ratio(c['largest_issuer_lookthrough_ratio'])}, "
+            f"超過 {r.get('policy_breaches') or 0}",
+        ]
     lines += ["", "保有 (数量 / 1D / 1Y / 評価額 / 日次 / 含み  (USD: 評価額 / 日次 / 含み))"]
     for p in data["positions"]:
         unreal = jpy(p["unreal"], True) if p.get("unreal") is not None else "原価なし"
@@ -555,6 +565,256 @@ def _attribution(
     )
 
 
+def _ratio(value: float | None, digits: int = 1) -> str:
+    """A fraction as an unsigned percentage: 0.323 → 32.3%."""
+    return "—" if value is None else f"{float(value) * 100:.{digits}f}%"
+
+
+def _delta(cur: float | None, prev: float | None, unit: str = "pt", digits: int = 1) -> str:
+    """前日比 under a risk figure; empty when either side is unknown."""
+    if cur is None or prev is None:
+        return ""
+    d = (float(cur) - float(prev)) * (100 if unit == "pt" else 1)
+    text = f"{d:+.{digits}f}".replace("-", "−")
+    return _under(f"前日比 {text}{unit if unit == 'pt' else ''}")
+
+
+def _limit_value(metric: str, value: float | None) -> str:
+    if value is None:
+        return "—"
+    return f"{float(value):.1f}" if "effective" in metric or "count" in metric else _ratio(value)
+
+
+def _heading(text: str) -> str:
+    return (
+        f'<div style="font:500 10px {MONO};letter-spacing:.08em;color:{MUTED};margin:10px 0 3px">'
+        f"{html.escape(text)}</div>"
+    )
+
+
+def _risk(data: dict[str, Any], table_style: str) -> str:
+    """The risk section: limits, look-through exposures, statistics, contributions and stress."""
+    r = data.get("risk")
+    if not r:
+        return ""
+    s, c, x, rc, st = (
+        r["stats"],
+        r["concentration"],
+        r["exposures"],
+        r["contributions"],
+        r["stress"],
+    )
+    prev = s.get("prev") or {}
+    beta = s.get("beta") or {}
+    chips = ""
+    for lim in r.get("policy") or []:
+        breach = lim["status"] == "breach"
+        color = DN if breach else MUTED
+        chips += (
+            f'<span style="display:inline-block;border:1px solid {DN if breach else RULE};color:{color};'
+            f'border-radius:999px;padding:2px 9px;margin:0 4px 4px 0;font:{700 if breach else 400} 11px {SANS}">'
+            f"{'超過 ' if breach else ''}{html.escape(lim['label'])} · {_limit_value(lim['metric'], lim['value'])}"
+            f" / {html.escape(lim['operator'])} {_limit_value(lim['metric'], lim['threshold'])}</span>"
+        )
+    breaches = r.get("policy_breaches") or 0
+    out = '<div id="risk"></div>' + _section(
+        "リスク", f"ルックスルー · 直近 {int(s.get('window_days') or 0)} 営業日 · 現在ウェイト"
+    )
+    out += _card(
+        f'<div style="font:600 12px {SANS};color:{DN if breaches else INK};margin-bottom:6px">'
+        f"限度 · {'超過 ' + str(breaches) + ' 件' if breaches else '超過なし'}</div>{chips}"
+        f'<div style="font:400 10.5px {SANS};color:{MUTED}">参照ファイルのポリシー（draft）· 値 / 限度</div>'
+    )
+    # the asset-class split is the 資産配分 card above; the mail adds the other three
+    exposures = "".join(
+        _heading(title)
+        + emailchart.shares(
+            [(e["label"], e["pct"], f"{_ratio(e['pct'])} · {jpy(e['value'])}") for e in x[key][:5]],
+            width=170,
+        )
+        for key, title in (("currency", "通貨"), ("country", "国・地域"), ("sector", "セクター"))
+    )
+    out += _section(
+        "エクスポージャー", "ルックスルー後 · 総資産比 · DC は構成比で按分（推定）"
+    ) + _card(exposures)
+    issuers = x["issuers"][:6]
+    rows = ""
+    for i, e in enumerate(issuers):
+        last = i == len(issuers) - 1
+        rows += (
+            "<tr>"
+            + _td(
+                html.escape(e["label"]) + _under(html.escape(e.get("country") or "")),
+                "left",
+                INK,
+                SANS,
+                last,
+            )
+            + _td(html.escape(" · ".join(e["via"])), "left", MUTED, SANS, last)
+            + _td(_ratio(e["pct"]), "right", INK, None, last)
+            + "</tr>"
+        )
+    coverage = (x.get("coverage") or {}).get("issuer")
+    out += _section(
+        "ルックスルー上位銘柄", f"直接保有 ＋ ETF 経由 · 発行体カバー率 {_ratio(coverage, 0)}"
+    )
+    out += (
+        f'<table role="presentation" cellspacing="0" cellpadding="0" {table_style}>'
+        f"<tr>{_th('発行体', 'left')}{_th('経由', 'left')}{_th('比率')}</tr>{rows}</table>"
+    )
+    worst = s.get("worst_day") or {}
+
+    def num(v: float | None) -> str:
+        return "—" if v is None else f"{v:.2f}"
+
+    stat_rows = [
+        (
+            "年率ボラティリティ",
+            _ratio(s["vol_annual"]) + _delta(s["vol_annual"], prev.get("vol_annual")),
+        ),
+        (
+            "VaR 1日 95%",
+            f"{jpy(s['var_1d_95_jpy'])}"
+            + _under(_ratio(s["var_1d_95"], 2))
+            + _delta(s["var_1d_95"], prev.get("var_1d_95"), digits=2),
+        ),
+        ("VaR 1日 99%", f"{jpy(s['var_1d_99_jpy'])}" + _under(_ratio(s["var_1d_99"], 2))),
+        (
+            "ES 97.5%",
+            f"{jpy(s['es_1d_975_jpy'])}"
+            + _under(_ratio(s["es_1d_975"], 2))
+            + _delta(s["es_1d_975"], prev.get("es_1d_975"), digits=2),
+        ),
+        (
+            "VaR 20日 95%（√20 換算）",
+            f"{jpy(s['var_20d_95_jpy'])}" + _under(_ratio(s["var_20d_95"])),
+        ),
+        (
+            "最悪日（窓内）",
+            jpy(worst.get("pnl_jpy"), True)
+            + _under(
+                f"{html.escape(str(worst.get('date') or '—'))} · {pct(None if worst.get('pct') is None else worst['pct'] * 100)}"
+            ),
+        ),
+        (
+            "ベータ TOPIX",
+            num(beta.get("topix"))
+            + _delta(beta.get("topix"), prev.get("beta_topix"), unit="", digits=2),
+        ),
+        (
+            "ベータ S&P 500（現地通貨）",
+            num(beta.get("sp500"))
+            + _delta(beta.get("sp500"), prev.get("beta_sp500"), unit="", digits=2),
+        ),
+        (
+            "ベータ USD/JPY",
+            num(beta.get("usdjpy"))
+            + _delta(beta.get("usdjpy"), prev.get("beta_usdjpy"), unit="", digits=2),
+        ),
+        (
+            "外貨エクスポージャー",
+            _ratio(c["foreign_currency_ratio"])
+            + _delta(c["foreign_currency_ratio"], prev.get("foreign_currency_ratio")),
+        ),
+        (
+            "最大ルックスルー銘柄",
+            f"{html.escape(c.get('largest_issuer') or '—')} {_ratio(c['largest_issuer_lookthrough_ratio'])}"
+            + _delta(
+                c["largest_issuer_lookthrough_ratio"], prev.get("largest_issuer_lookthrough_ratio")
+            ),
+        ),
+        (
+            "最大セクター",
+            f"{html.escape(c.get('max_sector') or '—')} {_ratio(c['max_sector_ratio'])}"
+            + _delta(c["max_sector_ratio"], prev.get("max_sector_ratio")),
+        ),
+        (
+            "実効数（銘柄 · セクター · 通貨 · 国）",
+            " · ".join(
+                "—" if c.get(k) is None else f"{c[k]:.1f}"
+                for k in (
+                    "effective_positions",
+                    "effective_sectors",
+                    "effective_currencies",
+                    "effective_countries",
+                )
+            ),
+        ),
+    ]
+    rows = ""
+    for i, (label, value) in enumerate(stat_rows):
+        last = i == len(stat_rows) - 1
+        rows += (
+            "<tr>"
+            + _td(html.escape(label), "left", INK, SANS, last)
+            + _td(value, "right", INK, None, last)
+            + "</tr>"
+        )
+    out += _section("リスク量", "過去シミュレーション · 前日比は前回レポート比")
+    out += (
+        f'<table role="presentation" cellspacing="0" cellpadding="0" {table_style}>{rows}</table>'
+    )
+    positions = rc["positions"][:6]
+    rows = ""
+    for i, p in enumerate(positions):
+        last = i == len(positions) - 1
+        rows += (
+            "<tr>"
+            + _td(html.escape(p["sym"]), "left", INK, SANS, last)
+            + _td(_ratio(p["weight"]), "right", INK, None, last)
+            + _td(f"<b>{_ratio(p['risk_share'])}</b>", "right", INK, None, last)
+            + _td(_ratio(p.get("vol_annual")), "right", MUTED, None, last)
+            + "</tr>"
+        )
+    buckets = "".join(
+        _heading(title)
+        + f'<div style="font:400 11.5px/1.7 {SANS};color:{INK}">'
+        + " · ".join(
+            f"{html.escape(b['label'])} <b>{_ratio(b['risk_share'])}</b>"
+            f'<span style="color:{MUTED}">（比率 {_ratio(b.get("weight"))}）</span>'
+            for b in rc[key][:3]
+        )
+        + "</div>"
+        for key, title in (("currency", "通貨"), ("sector", "セクター"), ("country", "国・地域"))
+    )
+    out += _section("リスク寄与", "分散への寄与 w·Σw / σ² · 合計 100%")
+    out += (
+        f'<table role="presentation" cellspacing="0" cellpadding="0" {table_style}>'
+        f"<tr>{_th('銘柄', 'left')}{_th('比率')}{_th('リスク寄与')}{_th('単独ボラ')}</tr>{rows}</table>"
+        + _card(buckets, pad="4px 14px 10px")
+    )
+    scenarios = st["scenarios"]
+    shown = scenarios[:5] + [e for e in scenarios[5:] if e["kind"] == "historical"]
+    kinds = {"historical": "過去局面の換算", "compound": "複合", "hypothetical": "単一"}
+    stress = emailchart.strips(
+        [
+            (
+                f"{e['label']}（{kinds.get(e['kind'], e['kind'])}）",
+                (e["impact_pct"] or 0) * 100,
+                f"{pct((e['impact_pct'] or 0) * 100, 1)} · {jpy(e['impact_jpy'], True)}",
+            )
+            for e in shown
+        ]
+    )
+    episodes = emailchart.strips(
+        [
+            (
+                f"{e['label']} {e['start']} → {e['end']}",
+                (e["impact_pct"] or 0) * 100,
+                f"{pct((e['impact_pct'] or 0) * 100, 1)} · {jpy(e['impact_jpy'], True)} · カバー率 {_ratio(e.get('coverage'), 0)}",
+            )
+            for e in st["episodes"]
+        ]
+    )
+    out += _section("ストレス", "ファクター換算のシナリオ · 実測リプレイの局面") + _card(
+        _heading("シナリオ（参照ファイル）")
+        + stress
+        + _heading("過去局面のリプレイ · 開始前日の終値 → 終了日の終値 · 現在の保有で")
+        + (episodes if st["episodes"] else _caption("価格履歴が届く局面はありません"))
+    )
+    return out
+
+
 def _closed(rows: list[dict[str, Any]] | None, table_style: str) -> str:
     """Positions sold out, with what each one realised."""
     if not rows:
@@ -759,6 +1019,7 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
 <table role="presentation" cellspacing="0" cellpadding="0" {table_style}>
 <tr>{_th("口座", "left")}{_th("評価額 ¥")}{_th("日次損益 ¥")}{_th("含み損益 ¥")}</tr>{acc_rows}</table>
 {allocation}
+{_risk(data, table_style)}
 {_attribution(data.get("attribution"), table_style, {a["id"]: a["name"] for a in data.get("accounts") or []})}
 {_section("保有", "評価額の大きい順 · 1Y は直近 1 年の株価")}
 <table role="presentation" cellspacing="0" cellpadding="0" {table_style}>

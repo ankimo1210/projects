@@ -147,6 +147,240 @@ def _attribution(att: dict[str, Any], names: dict[str, str] | None = None) -> st
     return f"<div class='sx'><table class='mini'><thead><tr><th>内訳 <small>全口座 · 下段は口座別</small></th><th>期間内</th><th>開設来</th></tr></thead><tbody>{rows}</tbody></table></div>"
 
 
+def _ratio(value: float | None, digits: int = 1) -> str:
+    """A fraction as an unsigned percentage: 0.323 → 32.3%."""
+    return "—" if value is None else f"{float(value) * 100:.{digits}f}%"
+
+
+def _delta(cur: float | None, prev: float | None, unit: str = "pt", digits: int = 1) -> str:
+    """The change since the previous report as a small tag; empty when either side is unknown."""
+    if cur is None or prev is None:
+        return ""
+    d = (float(cur) - float(prev)) * (100 if unit == "pt" else 1)
+    text = f"{d:+.{digits}f}".replace("-", "−")
+    return f"<small class='{cls(d)}'>前日比 {text}{unit if unit == 'pt' else ''}</small>"
+
+
+def _limit_value(metric: str, value: float | None) -> str:
+    if value is None:
+        return "—"
+    return f"{float(value):.1f}" if "effective" in metric or "count" in metric else _ratio(value)
+
+
+def _share_rows(rows: list[dict[str, Any]], key: str = "pct", limit: int = 8) -> str:
+    """Label, a bar in proportion to the share, and the share itself."""
+    out = ""
+    for r in rows[:limit]:
+        p = r.get(key)
+        width = 0.0 if p is None else max(float(p) * 100, 0.0)
+        out += (
+            f"<tr><td>{_esc(r['label'])}</td><td class='b'><div class='bar' style='width:{width:.0f}%'></div></td>"
+            f"<td class='n'>{_ratio(p)}</td></tr>"
+        )
+    return out
+
+
+def _stress_rows(rows: list[dict[str, Any]], note) -> str:
+    """Label, a bar in proportion to the worst impact (red when a loss), impact and note."""
+    peak = max((abs(float(r["impact_pct"] or 0)) for r in rows), default=0.0)
+    out = ""
+    for r in rows:
+        p = float(r["impact_pct"] or 0)
+        width = 0.0 if not peak else abs(p) / peak * 100
+        out += (
+            f"<tr><td>{_esc(r['label'])}<small> {_esc(note(r))}</small></td>"
+            f"<td class='b'><div class='bar {'neg' if p < 0 else ''}' style='width:{width:.0f}%'></div></td>"
+            f"<td class='n {cls(p)}'>{pct(p * 100, 1)}<span class='sp'>{jpy(r['impact_jpy'], True)}</span></td></tr>"
+        )
+    return out
+
+
+def _risk(risk: dict[str, Any] | None) -> str:
+    """The risk section: limits, look-through exposures, statistics, contributions and stress."""
+    if not risk:
+        return ""
+    s, c, x, rc, st = (
+        risk["stats"],
+        risk["concentration"],
+        risk["exposures"],
+        risk["contributions"],
+        risk["stress"],
+    )
+    prev = s.get("prev") or {}
+    beta = s.get("beta") or {}
+    chips = ""
+    for lim in risk.get("policy") or []:
+        breach = lim["status"] == "breach"
+        chips += (
+            f"<span class='lim {lim['status']}' title='{_esc(lim.get('note') or '')}'>"
+            f"{'超過 ' if breach else ''}{_esc(lim['label'])} · {_limit_value(lim['metric'], lim['value'])}"
+            f" / {_esc(lim['operator'])} {_limit_value(lim['metric'], lim['threshold'])}</span>"
+        )
+    breaches = risk.get("policy_breaches") or 0
+    exposures = "".join(
+        f"<div><h3>{title}</h3><table class='mini'><tbody>{_share_rows(x[key])}</tbody></table></div>"
+        for key, title in (
+            ("asset_class", "資産クラス"),
+            ("currency", "通貨"),
+            ("country", "国・地域"),
+            ("sector", "セクター"),
+        )
+    )
+    issuers = "".join(
+        f"<tr><td>{_esc(r['label'])}<small> {_esc(r.get('country') or '')}</small></td>"
+        f"<td class='wrap'><small>{_esc(' · '.join(r['via']))}</small></td><td class='n'>{_ratio(r['pct'])}</td></tr>"
+        for r in x["issuers"][:10]
+    )
+    coverage = (x.get("coverage") or {}).get("issuer")
+    worst = s.get("worst_day") or {}
+    stat_rows = [
+        (
+            "年率ボラティリティ",
+            _ratio(s["vol_annual"]),
+            _delta(s["vol_annual"], prev.get("vol_annual")),
+        ),
+        (
+            "VaR 1日 95%",
+            f"{jpy(s['var_1d_95_jpy'])} <small>{_ratio(s['var_1d_95'], 2)}</small>",
+            _delta(s["var_1d_95"], prev.get("var_1d_95"), digits=2),
+        ),
+        (
+            "VaR 1日 99%",
+            f"{jpy(s['var_1d_99_jpy'])} <small>{_ratio(s['var_1d_99'], 2)}</small>",
+            "",
+        ),
+        (
+            "ES 97.5%",
+            f"{jpy(s['es_1d_975_jpy'])} <small>{_ratio(s['es_1d_975'], 2)}</small>",
+            _delta(s["es_1d_975"], prev.get("es_1d_975"), digits=2),
+        ),
+        (
+            "VaR 20日 95% <small>√20 換算</small>",
+            f"{jpy(s['var_20d_95_jpy'])} <small>{_ratio(s['var_20d_95'])}</small>",
+            "",
+        ),
+        (
+            "最悪日 <small>窓内</small>",
+            f"{jpy(worst.get('pnl_jpy'), True)} <small>{_esc(worst.get('date') or '—')} · {pct(None if worst.get('pct') is None else worst['pct'] * 100)}</small>",
+            "",
+        ),
+        (
+            "ベータ TOPIX",
+            "—" if beta.get("topix") is None else f"{beta['topix']:.2f}",
+            _delta(beta.get("topix"), prev.get("beta_topix"), unit="", digits=2),
+        ),
+        (
+            "ベータ S&amp;P 500 <small>現地通貨</small>",
+            "—" if beta.get("sp500") is None else f"{beta['sp500']:.2f}",
+            _delta(beta.get("sp500"), prev.get("beta_sp500"), unit="", digits=2),
+        ),
+        (
+            "ベータ USD/JPY",
+            "—" if beta.get("usdjpy") is None else f"{beta['usdjpy']:.2f}",
+            _delta(beta.get("usdjpy"), prev.get("beta_usdjpy"), unit="", digits=2),
+        ),
+        (
+            "外貨エクスポージャー",
+            _ratio(c["foreign_currency_ratio"]),
+            _delta(c["foreign_currency_ratio"], prev.get("foreign_currency_ratio")),
+        ),
+        (
+            "最大ルックスルー銘柄",
+            f"{_esc(c.get('largest_issuer') or '—')} <small>{_ratio(c['largest_issuer_lookthrough_ratio'])}</small>",
+            _delta(
+                c["largest_issuer_lookthrough_ratio"], prev.get("largest_issuer_lookthrough_ratio")
+            ),
+        ),
+        (
+            "最大セクター",
+            f"{_esc(c.get('max_sector') or '—')} <small>{_ratio(c['max_sector_ratio'])}</small>",
+            _delta(c["max_sector_ratio"], prev.get("max_sector_ratio")),
+        ),
+        (
+            "実効数 <small>銘柄 · セクター · 通貨 · 国</small>",
+            " · ".join(
+                "—" if c.get(k) is None else f"{c[k]:.1f}"
+                for k in (
+                    "effective_positions",
+                    "effective_sectors",
+                    "effective_currencies",
+                    "effective_countries",
+                )
+            ),
+            "",
+        ),
+    ]
+    stats = "".join(
+        f"<tr><td>{label}</td><td class='n'>{value}{f'<span class=sp>{tag}</span>' if tag else ''}</td></tr>"
+        for label, value, tag in stat_rows
+    )
+    positions = "".join(
+        f"<tr><td>{_esc(p['sym'])}</td><td class='n'>{_ratio(p['weight'])}</td>"
+        f"<td class='n'><b>{_ratio(p['risk_share'])}</b></td><td class='n'>{_ratio(p.get('vol_annual'))}</td></tr>"
+        for p in rc["positions"][:8]
+    )
+    buckets = "".join(
+        f"<div><h3>{title}</h3><table class='mini'><thead><tr><th>{title}</th><th>比率</th><th>寄与</th></tr></thead><tbody>"
+        + "".join(
+            f"<tr><td>{_esc(r['label'])}</td><td class='n'>{_ratio(r.get('weight'))}</td><td class='n'>{_ratio(r['risk_share'])}</td></tr>"
+            for r in rc[key][:6]
+        )
+        + "</tbody></table></div>"
+        for key, title in (("currency", "通貨"), ("sector", "セクター"), ("country", "国・地域"))
+    )
+    scenarios = st["scenarios"]
+    shown = scenarios[:8] + [r for r in scenarios[8:] if r["kind"] == "historical"]
+    kinds = {"historical": "過去局面の換算", "compound": "複合", "hypothetical": "単一"}
+    return f"""
+<h2 class="sec" id="risk">リスク <small>risk · ルックスルー · 直近 {
+        int(s.get("window_days") or 0)
+    } 営業日 · 現在ウェイト</small></h2>
+<div class="rgrid">
+  <div class="panel wide">
+    <h2>限度 <small>{
+        "超過 " + str(breaches) + " 件" if breaches else "超過なし"
+    } · 参照ファイルのポリシー（draft）</small></h2>
+    <div>{chips}</div>
+  </div>
+  <div class="panel wide">
+    <h2>エクスポージャー <small>ルックスルー後 · 総資産比 · DC は月次レポートの構成比で按分（推定）</small></h2>
+    <div class="xg">{exposures}</div>
+  </div>
+  <div class="panel">
+    <h2>ルックスルー上位銘柄 <small>直接保有 ＋ ETF 経由 · 発行体カバー率 {
+        _ratio(coverage, 0)
+    }</small></h2>
+    <div class="sx"><table class="mini"><thead><tr><th>発行体</th><th>経由</th><th>比率</th></tr></thead><tbody>{
+        issuers
+    }</tbody></table></div>
+  </div>
+  <div class="panel">
+    <h2>リスク量 <small>過去シミュレーション · 前日比は前回レポート比</small></h2>
+    <div class="sx"><table class="mini rs"><tbody>{stats}</tbody></table></div>
+  </div>
+  <div class="panel wide">
+    <h2>リスク寄与 <small>分散への寄与 w·Σw / σ² · 合計 100% · 通貨・セクター・国へはルックスルー比率で按分</small></h2>
+    <div class="xg"><div><h3>銘柄</h3><table class="mini"><thead><tr><th>銘柄</th><th>比率</th><th>寄与</th><th>ボラ</th></tr></thead><tbody>{
+        positions
+    }</tbody></table></div>{buckets}</div>
+  </div>
+  <div class="panel wide">
+    <h2>ストレス <small>ファクター換算のシナリオ · 実測リプレイの局面</small></h2>
+    <div class="xg2"><div><h3>シナリオ <small>参照ファイル · 損失の大きい順 · 過去局面の換算は全件</small></h3>
+    <table class="mini"><thead><tr><th>シナリオ</th><th></th><th>影響</th></tr></thead><tbody>{
+        _stress_rows(shown, lambda r: kinds.get(r["kind"], r["kind"]))
+    }</tbody></table></div>
+    <div><h3>過去局面のリプレイ <small>開始前日の終値 → 終了日の終値 · 現在の保有で</small></h3>
+    <table class="mini"><thead><tr><th>局面</th><th></th><th>影響</th></tr></thead><tbody>{
+        _stress_rows(
+            st["episodes"],
+            lambda r: f"{r['start']} → {r['end']} · カバー率 {_ratio(r.get('coverage'), 0)}",
+        )
+    }</tbody></table></div></div>
+  </div>
+</div>"""
+
+
 def _closed(rows: list[dict[str, Any]]) -> str:
     if not rows:
         return ""
@@ -396,6 +630,19 @@ ul.notes{{margin:14px 0 0;padding-left:18px;color:var(--ink-3);font-size:11.5px}
 footer{{margin-top:22px;padding-top:10px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10.5px;color:var(--ink-3);line-height:1.9}}
 h2.sec{{font-family:var(--serif);font-size:15px;font-weight:700;margin:18px 0 0;display:flex;gap:10px;align-items:baseline}}
 h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-transform:uppercase}}
+/* risk */
+.rgrid{{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}}
+.rgrid .wide{{grid-column:1/-1}}
+.xg{{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:4px 18px}}
+.xg2{{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px}}
+@media (max-width:900px){{.rgrid,.xg2{{grid-template-columns:1fr}}}}
+.panel h3{{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:10px 0 2px}}
+.lim{{display:inline-block;border-radius:999px;padding:2px 9px;margin:2px 4px 2px 0;font-size:11px;border:1px solid var(--rule);color:var(--ink-2)}}
+.lim.breach{{border-color:var(--series-2);color:var(--series-2);font-weight:700}}
+.lim.na{{opacity:.55}}
+.bar{{height:8px;background:var(--accent);border-radius:2px;min-width:1px}}.bar.neg{{background:var(--series-2)}}
+.mini td.b{{width:34%;padding-left:0}}
+.mini.rs td:first-child{{width:50%}}
 {CAPTURE_CSS if capture else ""}
 </style>
 </head>
@@ -421,6 +668,7 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
   </div>
   <div class="panel">{_attribution(data["attribution"], {a["id"]: a["name"] for a in data["accounts"]})}</div>
 </div>
+{_risk(data.get("risk"))}
 <div class="tw">{_positions_table(data["positions"], data["fx"]["last"])}</div>
 
 <h2 class="sec" id="charts-top">時系列 <small>time series · {_esc(data["window"]["start"])} → {_esc(data["as_of"])}</small></h2>

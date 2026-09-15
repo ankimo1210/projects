@@ -196,3 +196,11 @@ def test_line_writes_the_ticks_under_the_plot() -> None:
     labels = ["2025-09-30", "2025-10-01", "2025-10-02", "2025-10-03", "2025-10-06", "2025-10-07"]
     html = emailchart.line([1.0] * 6, labels=labels, total_px=20, col_w=10, zero=False)
     assert "25/10" in html
+
+
+def test_strips_are_proportional_to_the_magnitude_and_coloured_by_sign() -> None:
+    html = emailchart.strips([("A", -10.0, "−10%"), ("B", 5.0, "+5%"), ("C", 0.0, "0%")], width=100)
+    assert 'width="100" bgcolor="#2A6DA6"' in html  # the loss, full length, in the down colour
+    assert 'width="50" bgcolor="#C05C33"' in html  # half as long, in the up colour
+    assert 'width="0" style' in html and "background" not in html
+    assert html.count("<tr>") == 3 + 3  # one row each, and one bar table each
