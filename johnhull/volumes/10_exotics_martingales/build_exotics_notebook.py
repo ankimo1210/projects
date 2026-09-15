@@ -145,48 +145,338 @@ ax1.legend()
 display(fig1.canvas)""")
 )
 
-# Cell 06: barrier md
+# §26.9 acceptance pilot: definitions, branches, monitoring, risk and Parisian.
 cells.append(
-    md(r"""## 3. バリア・オプション（§26.9）
+    md(r"""## 3. バリア・オプション（§26.9、GE pp.620–622）
 
-バリア $H$ への到達で**発生（in）**または**消滅（out）**。
-up/down × in/out × call/put の8種に閉形式があります（hullkit は `barrier_call` / `barrier_put` の8種と離散監視の BGK 補正 `bgk_adjusted_barrier` を実装）。鍵となる関係：
+**到達目標**：8種類の契約を payoff から区別し、価格式の分岐、観測頻度、負のベガ、
+Parisian の滞在条件を説明できること。この節の数値はすべて**教材用の合成例**です。
 
-$$c_{\text{di}} + c_{\text{do}} = c \quad (\text{ノックイン} + \text{ノックアウト} = \text{バニラ})$$
+### 3.1 終値だけでは決まらない
 
-「どちらかには必ずなる」ので、合計はバリアのないバニラに等しくなります。
-ノックアウトはバニラより安く（消える可能性のぶん）、人気の理由です。""")
+$S_0$ は現在価格、$K$ は行使価格、$H$ はバリア（すべて同じ通貨単位）。
+$T$ は残存年数、$r,q$ は年率の連続複利金利・配当利回り、$\sigma$ は年率ボラティリティ。
+まずリスク中立下で $dS_t=(r-q)S_tdt+\sigma S_tdW_t$、定数パラメータ、欧州型、
+**リベート（到達時などの払戻し）0、期間 $[0,T]$ の連続観測**を仮定します。
+
+下方は $\tau_d=\inf\{t\ge0:S_t\le H\}$、上方は $\tau_u=\inf\{t\ge0:S_t\ge H\}$。
+等号も到達に含めます。新規の未到達契約は down なら $H<S_0$、up なら $H>S_0$。
+実装は時点0も観測し、すでに到達していれば in はバニラ、out は0を返します。
+過去の到達履歴は入力しないため、評価開始前の状態は契約側で管理します。
+
+$G_c=(S_T-K)^+$、$G_p=(K-S_T)^+$ とすると、8種類は次の4組です。
+
+| 方向・権利 | in の満期 payoff | out の満期 payoff |
+|---|---|---|
+| down call | $G_c1_{\{\tau_d\le T\}}$ | $G_c1_{\{\tau_d>T\}}$ |
+| up call | $G_c1_{\{\tau_u\le T\}}$ | $G_c1_{\{\tau_u>T\}}$ |
+| down put | $G_p1_{\{\tau_d\le T\}}$ | $G_p1_{\{\tau_d>T\}}$ |
+| up put | $G_p1_{\{\tau_u\le T\}}$ | $G_p1_{\{\tau_u>T\}}$ |
+
+各経路で $G1_{\{\tau\le T\}}+G1_{\{\tau>T\}}=G$。割引期待値を取れば
+$V_{\rm in}+V_{\rm out}=V_{\rm vanilla}$、かつ $0\le V_{\rm in},V_{\rm out}\le V_{\rm vanilla}$。
+同じ $H,K,T$ と観測規則の組で成り立ちます。両方の payoff が0の経路もあります。
+消滅・未発生の可能性により価格が抑えられますが、リベートを付けた契約にはこの分解をそのまま使えません。""")
 )
+
 cells.append(
-    md(r"""> **核心** — バリア到達で発生(in)/消滅(out)するオプション。<br>
-> **直感** — 消える可能性があるぶんバニラより安い。だから人気がある。<br>
-> **実務** — 為替仕組商品の定番。バリア近傍のヘッジ(Δ/Γ が暴れる)が難所。""")
+    code(r"""# 同じ始値100・終値110でも、H=90への途中の到達が契約を分ける。
+path_t = np.array([0, .2, .4, .6, .8, 1.0])
+path_safe = np.array([100, 96, 94, 98, 104, 110])
+path_hit = np.array([100, 95, 88, 97, 103, 110])
+fig_path, axes_path = plt.subplots(1, 2, figsize=(11, 3.8), constrained_layout=True)
+fig_path.canvas.header_visible = False
+payoff_rows = []
+for label, prices in (("未到達", path_safe), ("途中で到達", path_hit)):
+    hit = prices.min() <= 90
+    payoff = max(prices[-1] - 100, 0)
+    payoff_rows.append((label, payoff * hit, payoff * (not hit)))
+    axes_path[0].plot(path_t, prices, marker="o", label=label)
+axes_path[0].axhline(90, color="crimson", ls="--", label="H=90")
+axes_path[0].set(xlabel="時刻（年）", ylabel="原資産価格", title="同じ終値、異なる到達履歴")
+axes_path[0].legend()
+x_path = np.arange(2)
+axes_path[1].bar(x_path - .17, [row[1] for row in payoff_rows], width=.34, label="down-and-in")
+axes_path[1].bar(x_path + .17, [row[2] for row in payoff_rows], width=.34, label="down-and-out")
+axes_path[1].set(xticks=x_path, xticklabels=[row[0] for row in payoff_rows],
+                 ylabel="満期 payoff", title="K=100：合計はどちらも10")
+axes_path[1].legend()
+assert all(row[1] + row[2] == 10 for row in payoff_rows)
+display(fig_path.canvas)
+print("図の経路は点間を直線で結んだ合成例。満期 payoff と時点0の価格を区別する。")""")
 )
 
-# Cell 07: barrier demo + chart
 cells.append(
-    code(r"""# down-and-in/out call（H≤K）と in+out=vanilla
-cdi = exotics.barrier_call(S_B, K_B, 90.0, R_B, SIG_B, T_B, barrier="down-and-in")
-cdo = exotics.barrier_call(S_B, K_B, 90.0, R_B, SIG_B, T_B, barrier="down-and-out")
-print(f"down-and-in = {cdi:.4f} ／ down-and-out = {cdo:.4f}")
-print(f"in + out = {cdi + cdo:.4f} ／ バニラ = {van:.4f}（恒等）")
+    md(r"""### 3.2 閉形式の全分岐を読む
 
-h_grid = np.linspace(60.0, 99.0, 40)
-fig2, ax2 = plt.subplots(figsize=(7.5, 4))
+$\Phi$ を標準正規 CDF、$c,p$ を同じ条件の BSM バニラ価格として、記号をまとめます。
+
+$$s=\sigma\sqrt T,\quad \lambda=\frac{r-q+\sigma^2/2}{\sigma^2},\quad
+x=\frac{\ln(S_0/H)}s+\lambda s,\quad
+y_1=\frac{\ln(H/S_0)}s+\lambda s,\quad
+y=\frac{\ln(H^2/(S_0K))}s+\lambda s.$$
+
+$$A=S_0e^{-qT},\quad B=Ke^{-rT},\quad
+U=A(H/S_0)^{2\lambda},\quad W=B(H/S_0)^{2\lambda-2}.$$
+
+以下は到達前の連続観測の式です。まず表の側を求め、対応する in/out はバニラから差し引きます。
+$H=K$ では隣り合う式の値が一致します。
+
+| 組 | 条件 | 直接求める価格 | もう一方 |
+|---|---|---|---|
+| down call | $H\le K$ | $c_{di}=U\Phi(y)-W\Phi(y-s)$ | $c_{do}=c-c_{di}$ |
+| down call | $H>K$ | 下の $C_d$ | $c_{di}=c-C_d$ |
+| up call | $H\le K$ | $c_{uo}=0$ | $c_{ui}=c$ |
+| up call | $H>K$ | 下の $C_u$ | $c_{uo}=c-C_u$ |
+| up put | $H\ge K$ | $p_{ui}=-U\Phi(-y)+W\Phi(-y+s)$ | $p_{uo}=p-p_{ui}$ |
+| up put | $H<K$ | 下の $P_u$ | $p_{ui}=p-P_u$ |
+| down put | $H\ge K$ | $p_{do}=0$ | $p_{di}=p$ |
+| down put | $H<K$ | 下の $P_d$ | $p_{do}=p-P_d$ |
+
+$$\begin{aligned}
+C_d=c_{do}&=A\Phi(x)-B\Phi(x-s)-U\Phi(y_1)+W\Phi(y_1-s),\\
+C_u=c_{ui}&=A\Phi(x)-B\Phi(x-s)
+-U[\Phi(-y)-\Phi(-y_1)]+W[\Phi(-y+s)-\Phi(-y_1+s)],\\
+P_u=p_{uo}&=-A\Phi(-x)+B\Phi(-x+s)+U\Phi(-y_1)-W\Phi(-y_1+s),\\
+P_d=p_{di}&=-A\Phi(-x)+B\Phi(-x+s)
++U[\Phi(y)-\Phi(y_1)]-W[\Phi(y-s)-\Phi(y_1-s)].
+\end{aligned}$$
+
+**縮退の理由**：up call で $H\le K$ なら、正の payoff を得る経路は $S_T>K\ge H$ へ進むため
+必ず到達します。到達確率そのものが1という意味ではありません。
+down put の $H\ge K$ も同様です。
+下の表では $K=80,100,120$ を変えて両側の分岐を含めます。
+
+**別の計算法で検証**：$X=\ln(S_T/S_0)$ は平均 $(r-q-\sigma^2/2)T$、分散 $v=\sigma^2T$ の正規分布です。
+$h=\ln(H/S_0)$ とし、始点・終点がバリアの安全側にある場合、
+条件付き Brownian bridge の生存確率は
+$w_{\rm out}(X)=1-\exp[-2h(h-X)/v]$。終点が到達側なら0です。
+したがって $e^{-rT}\int G(S_0e^x)w_{\rm out}(x)f_X(x)\,dx$ を数値積分しても out の価格を求められます。
+in は積分内の重みを $1-w_{\rm out}$ に変更します。
+この方法は上の CDF 価格式や価格の差引きを参照しません。
+独立テストは8種類・$H\lessgtr K$・$H=K$・配当・負の金利を含む48ケースを照合します。""")
+)
+
+cells.append(
+    code(r"""# 8種類 × 3ストライク。価格式の分岐を通り、同じ条件の in/out を比較する。
+barrier_rows = []
+for kind, pricer, vanilla_fn in (("call", exotics.barrier_call, bsm.call_price),
+                                ("put", exotics.barrier_put, bsm.put_price)):
+    for direction, barrier_h in (("down", 90.0), ("up", 110.0)):
+        for knock in ("in", "out"):
+            row = {"契約": f"{direction}-and-{knock} {kind}", "H": barrier_h}
+            for strike in (80.0, 100.0, 120.0):
+                value = pricer(100, strike, barrier_h, .05, .2, 1, barrier=f"{direction}-and-{knock}")
+                row[f"K={strike:g}"] = value
+                assert -1e-10 <= value <= vanilla_fn(100, strike, .05, .2, 1) + 1e-10
+            barrier_rows.append(row)
+display(pd.DataFrame(barrier_rows).round(4))
+cdi = exotics.barrier_call(S_B, K_B, 90, R_B, SIG_B, T_B, barrier="down-and-in")
+cdo = exotics.barrier_call(S_B, K_B, 90, R_B, SIG_B, T_B, barrier="down-and-out")
+fig2, axes2 = plt.subplots(2, 2, figsize=(11, 7), constrained_layout=True)
 fig2.canvas.header_visible = False
-ax2.plot(h_grid, [exotics.barrier_call(S_B, K_B, h, R_B, SIG_B, T_B, barrier="down-and-in")
-                  for h in h_grid], lw=2, label="down-and-in")
-ax2.plot(h_grid, [exotics.barrier_call(S_B, K_B, h, R_B, SIG_B, T_B, barrier="down-and-out")
-                  for h in h_grid], lw=2, label="down-and-out")
-ax2.axhline(van, color="0.6", ls=":", lw=1.5, label="バニラ")
-ax2.set_xlabel("バリア H")
-ax2.set_ylabel("価格")
-ax2.set_title("H が K に近いほどノックインしやすく di↑・do↓（和は一定）")
-ax2.legend()
-display(fig2.canvas)""")
+for ax, (kind, direction) in zip(axes2.flat, [("call", "down"), ("call", "up"),
+                                             ("put", "down"), ("put", "up")]):
+    pricer = exotics.barrier_call if kind == "call" else exotics.barrier_put
+    vanilla_fn = bsm.call_price if kind == "call" else bsm.put_price
+    hs = np.linspace(60, 100, 65) if direction == "down" else np.linspace(100, 160, 65)
+    values = {}
+    for knock in ("in", "out"):
+        values[knock] = np.array([pricer(100, 100, h, .05, .2, 1, barrier=f"{direction}-and-{knock}")
+                                  for h in hs])
+        ax.plot(hs, values[knock], label=f"{direction}-and-{knock}")
+    van_barrier = vanilla_fn(100, 100, .05, .2, 1)
+    assert np.allclose(values["in"] + values["out"], van_barrier, atol=1e-10)
+    ax.axhline(van_barrier, color=".5", ls=":", label=f"vanilla {kind}")
+    ax.axvline(100, color=".7", ls=":")
+    ax.set(xlabel="バリア H", ylabel="時点0の価格", title=f"{direction} {kind}（S0=K=100）")
+    ax.legend(fontsize=9)
+display(fig2.canvas)
+print("r=5%, q=0, σ=20%, T=1年。Hが現在価格S0へ近づくほど out↓・in↑。")""")
+)
+
+cells.append(
+    md(r"""### 3.3 観測頻度と BGK 近似
+
+連続観測と、決まった時刻だけ観測する契約では到達イベントが異なります。
+時点0に加え $jT/m$（$j=1,\ldots,m$）を観測すると、観測間の一時的な到達を見逃します。
+同じ契約バリアなら、離散観測の out は連続観測以上、in は連続観測以下の価格になります。
+
+Hull p.622 の Broadie–Glasserman–Kou 補正は、連続式のバリアを
+
+$$H_{\rm BGK}=H\exp(\pm0.5826\,\sigma\sqrt{T/m})$$
+
+へ移す**近似**です。up は $+$、down は $-$ で、現在価格から遠ざけます。
+$m\to\infty$ で補正は消えます。実装の n_observations に $m$ を渡すとこの補正が有効です。
+$T$ は年、$m$ は期間全体の観測回数で、日次なら1年の例では252です。
+
+下の週次 up-and-in put は、観測日時の GBM を直接生成した MC と BGK を比較します。
+誤差棒は MC の $\pm3$ 標準誤差であり、BGK の誤差保証ではありません。
+少数観測、$S_0$ が $H$ に近い契約、不等間隔の監視は、この1例から精度を判断できません。
+実際の観測日程を用いる MC 等で別途確認します。
+
+**近似でも維持する厳密条件**：満期 $T$ が観測日なので、up-and-out call の $H\le K$ と
+down-and-out put の $H\ge K$ は離散観測でも価格0です。正の満期 payoff を得る価格に到達すると、
+その満期観測で必ず消滅するためです。対応する in はバニラ価格になります。
+この条件は補正後のバリアでなく、元の契約バリアで判定します。
+
+""")
+)
+
+cells.append(
+    code(r"""# 週次監視の独立 MC。連続式をシミュレーションの payoff 判定には使用しない。
+obs_m, obs_n, obs_sigma = 52, 200_000, .30
+obs_rng = np.random.default_rng(2026)
+obs_log = np.zeros(obs_n)
+obs_hit = np.zeros(obs_n, dtype=bool)
+for _ in range(obs_m):
+    obs_log += (.05 - .5 * obs_sigma**2) / obs_m + obs_sigma / math.sqrt(obs_m) * obs_rng.standard_normal(obs_n)
+    obs_hit |= obs_log >= math.log(1.2)
+obs_payoff = math.exp(-.05) * np.maximum(100 - 100 * np.exp(obs_log), 0) * obs_hit
+obs_mc = obs_payoff.mean()
+obs_se = obs_payoff.std(ddof=1) / math.sqrt(obs_n)
+obs_grid = np.array([4, 12, 52, 252, 1000, 10000])
+obs_prices = [exotics.barrier_put(100, 100, 120, .05, .3, 1,
+              barrier="up-and-in", n_observations=int(m)) for m in obs_grid]
+obs_cont = exotics.barrier_put(100, 100, 120, .05, .3, 1, barrier="up-and-in")
+fig_obs, ax_obs = plt.subplots(figsize=(8, 3.7), constrained_layout=True)
+fig_obs.canvas.header_visible = False
+ax_obs.semilogx(obs_grid, obs_prices, marker="o", label="BGK 近似：up-and-in put")
+ax_obs.axhline(obs_cont, color=".5", ls="--", label="連続観測")
+ax_obs.errorbar([52], [obs_mc], yerr=[3 * obs_se], fmt="s", capsize=6, label="週次 MC ±3 SE")
+ax_obs.set(xlabel="期間1年の観測回数 m（対数軸）", ylabel="価格",
+           title="S0=K=100, H=120, r=5%, q=0, σ=30%")
+ax_obs.legend()
+display(fig_obs.canvas)
+print(f"週次 MC={obs_mc:.5f}, SE={obs_se:.5f}; BGK={obs_prices[2]:.5f}; 連続={obs_cont:.5f}")
+assert abs(obs_prices[2] - obs_mc) < 3 * obs_se
+
+# 満期観測からの厳密条件は、BGKがHをKの向こう側へ動かしても維持する。
+for fixing_count in (4, 52):
+    zero_call = exotics.barrier_call(100, 110, 110, .05, .3, 1,
+                                    barrier="up-and-out", n_observations=fixing_count)
+    zero_put = exotics.barrier_put(100, 90, 90, .05, .3, 1,
+                                  barrier="down-and-out", n_observations=fixing_count)
+    assert zero_call == zero_put == 0.0
+    print(f"満期を含む年{fixing_count}回観測：H=K の up-out call / down-out put = {zero_call:g} / {zero_put:g}")
+
+
+""")
+)
+cells.append(
+    md(r"""### 3.4 ボラティリティが上がると安くなることもある
+
+up-and-out call では、ボラ増加によるバニラ価値の増加と、消滅確率の増加が競合します。
+$S_0=99,H=100,K=90$ の例では後者が勝ち、$\partial V/\partial\sigma<0$。
+負のベガはすべてのバリア・全パラメータで成り立つ法則ではありません。
+隣のバニラの正のベガと比較してください。""")
+)
+cells.append(
+    code(r"""vega_sigmas = np.linspace(.10, .50, 65)
+vega_out = [exotics.barrier_call(99, 90, 100, .05, s, 1, barrier="up-and-out") for s in vega_sigmas]
+vega_van = [bsm.call_price(99, 90, .05, s, 1) for s in vega_sigmas]
+fig_vega, axes_vega = plt.subplots(1, 2, figsize=(10, 3.6), constrained_layout=True)
+fig_vega.canvas.header_visible = False
+for ax, prices, title in zip(axes_vega, [vega_out, vega_van],
+                            ["up-and-out call：この範囲で負のベガ", "同条件の vanilla call：正のベガ"]):
+    ax.plot(100 * vega_sigmas, prices, lw=2)
+    ax.set(xlabel="年率ボラティリティ σ（%）", ylabel="価格", title=title)
+assert np.all(np.diff(vega_out) < 0) and np.all(np.diff(vega_van) > 0)
+display(fig_vega.canvas)
+vega_difference = (exotics.barrier_call(99, 90, 100, .05, .21, 1, barrier="up-and-out")
+                   - exotics.barrier_call(99, 90, 100, .05, .20, 1, barrier="up-and-out"))
+print(f"S0=99, K=90, H=100, T=1年, r=5%, q=0。σを20%→21%にすると out の価格変化={vega_difference:.6f}。")""")
+)
+
+cells.append(
+    md(r"""### 3.5 Parisian：一瞬の到達と滞在時間を分ける
+
+通常のバリアでは短いスパイクでも到達が成立します。Parisian はバリアの外側に
+一定期間滞在することを条件にします。契約で「連続50日」か「累積50日」かを確認する必要があります。
+
+Hull p.622 の契約例は、down-and-out put、$K=0.9S_0$、$H=0.75S_0$、閾値50日。
+下図はこれに合わせた**合成の経路**です。原資産価格は各1日区間で一定とし、滞在時間を正確に数えます。
+経路Aは30日と20日に分かれ、経路Bは50日続けてバリアを下回ります。
+どちらも満期 $S_T=80$、バニラ put payoff は10です。
+
+| 契約 | 経路A：30日+20日 | 経路B：連続50日 |
+|---|---|---|
+| 通常 down-and-out put | 最初の到達で消滅 | 最初の到達で消滅 |
+| Parisian・連続50日 | 生存、payoff 10 | 消滅、payoff 0 |
+| Parisian・累積50日 | 消滅、payoff 0 | 消滅、payoff 0 |
+
+リベート0とし、滞在時間が閾値に達した時点で消滅する規約です。
+通常の barrier_call / barrier_put はこの滞在履歴を持たず、Parisian の価格には使えません。
+ここでは契約の違いと payoff 判定までを扱います。価格を求める MC・二項木と必要な工夫は
+§27.5–27.6 の学習へ接続します。""")
+)
+
+cells.append(
+    code(r"""# 各区間 [day, day+1) は1日。最後の時点の価格は滞在日数に加えない。
+par_days = np.arange(101)
+par_a = np.where(((par_days >= 10) & (par_days < 40)) |
+                 ((par_days >= 60) & (par_days < 80)), 70.0, 100.0)
+par_b = np.where((par_days >= 10) & (par_days < 60), 70.0, 100.0)
+par_a[-1] = par_b[-1] = 80.0
+
+def _longest_stay(mask):
+    longest = current = 0
+    for below in mask:
+        current = current + 1 if below else 0
+        longest = max(longest, current)
+    return longest
+
+fig_par, axes_par = plt.subplots(1, 2, figsize=(11, 3.7), constrained_layout=True)
+fig_par.canvas.header_visible = False
+for ax, label, prices in zip(axes_par, ["A：30日 + 20日", "B：連続50日"], [par_a, par_b]):
+    below = prices[:-1] < 75
+    consecutive, total = _longest_stay(below), int(below.sum())
+    ax.step(par_days, prices, where="post", label="原資産価格")
+    ax.axhline(75, color="crimson", ls="--", label="H=75")
+    ax.set(xlabel="日", ylabel="原資産価格",
+           title=f"{label}（最大連続={consecutive}, 累積={total}日）")
+    ax.legend(loc="lower right")
+    payoff = max(90 - prices[-1], 0)
+    print(f"{label}: 通常out={payoff * (not below.any()):g}, "
+          f"連続50日out={payoff * (consecutive < 50):g}, 累積50日out={payoff * (total < 50):g}")
+assert (_longest_stay(par_a[:-1] < 75), _longest_stay(par_b[:-1] < 75)) == (30, 50)
+assert (par_a[:-1] < 75).sum() == (par_b[:-1] < 75).sum() == 50
+display(fig_par.canvas)""")
+)
+
+cells.append(
+    md(r"""### 3.6 8種類を操作して確認する
+
+選択欄から call/put・up/down・in/out を切り替えます。選んだ契約を実線、
+対応する契約を破線、バニラを点線で表示します。
+縦点線 $H=S_0$ で、in はバニラへ、out は0へ接続することを確認してください。
+静的な表示では上の4面図が8種類をカバーします。以下の操作図は Book と portal でも動作します。
+
+**理解の確認**
+1. $S_0=90,H=105,K=120$ の up-and-out call が0になる理由は？
+2. 観測回数を減らすと、同じ $H$ の out が高くなる理由は？
+3. ボラ増加で up-and-out call が安くなる経路上の理由は？
+4. バリアの下に30日、その後20日滞在した場合、連続50日と累積50日で何が変わる？
+
+**解答の要点**：1. 正の call payoff には $H$ を通過する必要がある。
+2. 観測間の到達が消滅条件に数えられず、生存経路が増える。
+3. 消滅する経路の増加がバニラ価値の増加を上回る場合がある。
+4. 連続条件は未成立、累積条件は成立する。""")
+)
+
+cells.append(
+    code(r"""from hullkit import plotly_viz
+
+fig_barrier_explorer = plotly_viz.plotly_barrier_knockout()
+fig_barrier_explorer.show()""")
 )
 
 # Cell 08: lookback md + demo
+cells.append(
+    md(r"""## 4. ルックバックとアジアン
+
+### 4.1 ルックバック・オプション（§26.11）""")
+)
 cells.append(
     code(r"""# --- フローティング・ルックバック・コール（min を行使価格に） ---
 lb = exotics.lookback_floating_call(S_B, S_B, R_B, SIG_B, T_B)
@@ -211,7 +501,7 @@ display(fig3.canvas)""")
 
 # Cell 09: asian md
 cells.append(
-    md(r"""## 4. アジアン・オプション（§26.13）
+    md(r"""### 4.2 アジアン・オプション（§26.13）
 
 平均価格型は満期スポットではなく**経路平均**でペイオフ。
 平均は変動を均すので**ボラが下がり、バニラより安く**なります。
@@ -300,45 +590,6 @@ print(f"広いストリップ 20–400（ΔK=2.5）: E(V) = {fair_var_wide:.6f}"
 print(f"  σ² + 格子バイアス ΔK²(2F0−S*)/(6T S*³) = {SIG_B**2 + grid_bias:.6f}")
 print(f"→ 公正ボラティリティ = {math.sqrt(fair_var_wide):.4%}（入力 σ={SIG_B:.0%}）")
 print("VIX も同型（式 26.10 は ln を2次展開で打ち切った形）: OTM SPX オプションのストリップで30日先のバリアンスを測る")""")
-)
-
-# Cell 13: interactive barrier
-cells.append(
-    code(r"""# --- バリア・エクスプローラ（インタラクティブ） ---
-fig5, ax5 = plt.subplots(figsize=(7.5, 4))
-fig5.canvas.header_visible = False
-h_sl = widgets.FloatSlider(value=90.0, min=70.0, max=99.0, step=1.0, description="H")
-sig_b_sl = widgets.FloatSlider(value=0.20, min=0.10, max=0.50, step=0.02, description="σ")
-
-
-def _upd_barrier(change=None):
-    ax5.clear()
-    ss = np.linspace(70.0, 140.0, 60)
-    do = [exotics.barrier_call(s, K_B, h_sl.value, R_B, sig_b_sl.value, T_B,
-                               barrier="down-and-out") if s > h_sl.value else 0.0
-          for s in ss]
-    van_curve = [bsm.call_price(s, K_B, R_B, sig_b_sl.value, T_B) for s in ss]
-    ax5.plot(ss, van_curve, lw=1.5, ls=":", label="バニラ")
-    ax5.plot(ss, do, lw=2, label="down-and-out")
-    ax5.axvline(h_sl.value, color="crimson", ls="--", lw=1, label=f"H={h_sl.value:.0f}")
-    # ノックアウト確率（GBM 初通過確率）
-    bdrift = R_B - 0.5 * sig_b_sl.value**2
-    lam_ko = math.log(h_sl.value / 100.0)
-    sqT = sig_b_sl.value * math.sqrt(T_B)
-    prob_ko = (norm.cdf((lam_ko - bdrift * T_B) / sqT)
-               + math.exp(2 * bdrift * lam_ko / sig_b_sl.value**2) * norm.cdf((lam_ko + bdrift * T_B) / sqT))
-    ax5.set_xlabel("現在株価 S")
-    ax5.set_ylabel("価格")
-    ax5.set_title(f"down-and-out（H={h_sl.value:.0f}, σ={sig_b_sl.value:.0%}）: "
-                  f"S=100 でのノックアウト確率 ≈ {prob_ko:.1%}")
-    ax5.legend()
-    fig5.canvas.draw_idle()
-
-
-h_sl.observe(_upd_barrier, "value")
-sig_b_sl.observe(_upd_barrier, "value")
-_upd_barrier()
-display(widgets.HBox([h_sl, sig_b_sl]), fig5.canvas)""")
 )
 
 # ===========================================================================
@@ -572,7 +823,7 @@ cells.append(
 | 概念 | 要点 |
 |---|---|
 | バイナリ | aon − K·con = バニラ。不連続ペイオフ |
-| バリア | in + out = バニラ。ノックアウトは安い |
+| バリア | 8種類・連続式の全分岐。観測頻度/BGK、負のベガ、Parisian の滞在規約 |
 | ルックバック | 経路最小で買える「後知恵」プレミアム |
 | アジアン | 平均でボラ低下 → 安い。TW近似 or MC |
 | Margrabe | 交換オプション。r 非依存、σ̂ だけで決まる |

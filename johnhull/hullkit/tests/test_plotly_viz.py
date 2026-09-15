@@ -65,6 +65,7 @@ def test_interactive_builders_have_a_control():
     assert pv.plotly_strategy_payoffs().layout.updatemenus
     assert pv.plotly_sabr_greeks_by_param().layout.updatemenus
     assert pv.plotly_greeks_map().layout.updatemenus
+    assert pv.plotly_barrier_knockout().layout.updatemenus
     for fn in (
         pv.plotly_delta_vs_spot,
         pv.plotly_delta_hedge_cost,
@@ -83,7 +84,6 @@ def test_interactive_builders_have_a_control():
         pv.plotly_stop_loss_vs_delta_hedge,
         pv.plotly_merton_structural,
         pv.plotly_yield_curve,
-        pv.plotly_barrier_knockout,
         pv.plotly_iv_surface,
         pv.plotly_cva_sensitivity,
         pv.plotly_bsm_greeks_sensitivity,
@@ -260,3 +260,41 @@ def test_delta_hedge_centers_on_bsm_price():
     S0, K, r, sigma, T = 49.0, 50.0, 0.05, 0.20, 20.0 / 52.0
     cost = hedging.simulate_delta_hedge(S0, K, r, sigma, T, 52, 4000, rng=rng)
     assert abs(cost.mean() - bsm.call_price(S0, K, r, sigma, T)) < 0.10
+
+
+def test_barrier_explorer_covers_eight_contracts_and_relative_spot_grid():
+    # A different spot exposes the old absolute 60..160 barrier grid.
+    fig = pv.plotly_barrier_knockout(S0=200.0, K=180.0)
+    steps = fig.layout.updatemenus[0].buttons
+    labels = {step.label for step in steps}
+    assert labels == {
+        f"{kind} / {direction}-and-{knock}"
+        for kind in ("call", "put")
+        for direction in ("down", "up")
+        for knock in ("in", "out")
+    }
+    for step in steps:
+        mask = step.args[0]["visible"]
+        shown = [trace for trace, visible in zip(fig.data, mask, strict=True) if visible]
+        assert len(shown) == 3  # selected contract, its complement, matching vanilla
+        selected, complement, vanilla = shown
+        kind, contract = step.label.split(" / ")
+        assert selected.name == contract
+        assert complement.name == contract.rsplit("-", 1)[0] + (
+            "-in" if contract.endswith("out") else "-out"
+        )
+        assert vanilla.name == f"vanilla {kind}"
+        expected_vanilla = (bsm.call_price if kind == "call" else bsm.put_price)(
+            200, 180, 0.05, 0.2, 1
+        )
+        assert np.allclose(vanilla.y, expected_vanilla, atol=1e-10)
+        assert np.allclose(np.asarray(selected.y) + complement.y, vanilla.y, atol=1e-10)
+        assert min(selected.y) >= -1e-10
+        assert np.all(np.asarray(selected.y) <= np.asarray(vanilla.y) + 1e-10)
+        if "down" in step.label:
+            assert max(selected.x) == 200.0
+            assert min(selected.x) >= 100.0
+        else:
+            assert min(selected.x) == 200.0
+            assert max(selected.x) <= 350.0
+        assert step.label in step.args[1]["title.text"]

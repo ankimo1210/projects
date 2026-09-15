@@ -1,0 +1,417 @@
+{
+  "checked_at": "2026-09-14T23:27:22.737Z",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "pages": {
+    "portal": {
+      "external_network_blocked": true,
+      "attempted_external_requests": [],
+      "views": [
+        {
+          "label": "call / down-and-out",
+          "title": "バリア価格 — call / down-and-out",
+          "names": [
+            "down-and-out",
+            "down-and-in",
+            "vanilla call"
+          ],
+          "points": 55,
+          "range": [
+            55.00000000000001,
+            100
+          ],
+          "parity_error": 0,
+          "minimum": 0,
+          "vanilla": 10.450583572185565,
+          "maximum": 10.45058356853628,
+          "reference_H": 90,
+          "reference_price": 8.665471658245666,
+          "independent_reference": 8.665471658245668
+        },
+        {
+          "label": "call / down-and-in",
+          "title": "バリア価格 — call / down-and-in",
+          "names": [
+            "down-and-in",
+            "down-and-out",
+            "vanilla call"
+          ],
+          "points": 55,
+          "range": [
+            55.00000000000001,
+            100
+          ],
+          "parity_error": 0,
+          "minimum": 3.649285615666821e-9,
+          "vanilla": 10.450583572185565,
+          "maximum": 10.450583572185565,
+          "reference_H": 90,
+          "reference_price": 1.7851119139398985,
+          "independent_reference": 1.7851119139399
+        },
+        {
+          "label": "call / up-and-out",
+          "title": "バリア価格 — call / up-and-out",
+          "names": [
+            "up-and-out",
+            "up-and-in",
+            "vanilla call"
+          ],
+          "points": 55,
+          "range": [
+            100,
+            160
+          ],
+          "parity_error": 0,
+          "minimum": 0,
+          "vanilla": 10.450583572185565,
+          "maximum": 8.897366508224778,
+          "reference_H": 110,
+          "reference_price": 0.11861405278910375,
+          "independent_reference": 0.11861405278910797
+        },
+        {
+          "label": "call / up-and-in",
+          "title": "バリア価格 — call / up-and-in",
+          "names": [
+            "up-and-in",
+            "up-and-out",
+            "vanilla call"
+          ],
+          "points": 55,
+          "range": [
+            100,
+            160
+          ],
+          "parity_error": 0,
+          "minimum": 1.5532170639607867,
+          "vanilla": 10.450583572185565,
+          "maximum": 10.450583572185565,
+          "reference_H": 110,
+          "reference_price": 10.331969519396461,
+          "independent_reference": 10.33196951939646
+        },
+        {
+          "label": "put / down-and-out",
+          "title": "バリア価格 — put / down-and-out",
+          "names": [
+            "down-and-out",
+            "down-and-in",
+            "vanilla put"
+          ],
+          "points": 55,
+          "range": [
+            55.00000000000001,
+            100
+          ],
+          "parity_error": 0,
+          "minimum": 0,
+          "vanilla": 5.573526022256971,
+          "maximum": 5.498487538855745,
+          "reference_H": 90,
+          "reference_price": 0.15122037643986985,
+          "independent_reference": 0.1512203764398823
+        },
+        {
+          "label": "put / down-and-in",
+          "title": "バリア価格 — put / down-and-in",
+          "names": [
+            "down-and-in",
+            "down-and-out",
+            "vanilla put"
+          ],
+          "points": 55,
+          "range": [
+            55.00000000000001,
+            100
+          ],
+          "parity_error": 0,
+          "minimum": 0.07503848340122543,
+          "vanilla": 5.573526022256971,
+          "maximum": 5.573526022256971,
+          "reference_H": 90,
+          "reference_price": 5.422305645817101,
+          "independent_reference": 5.4223056458170875
+        },
+        {
+          "label": "put / up-and-out",
+          "title": "バリア価格 — put / up-and-out",
+          "names": [
+            "up-and-out",
+            "up-and-in",
+            "vanilla put"
+          ],
+          "points": 55,
+          "range": [
+            100,
+            160
+          ],
+          "parity_error": 0,
+          "minimum": 0,
+          "vanilla": 5.573526022256971,
+          "maximum": 5.573521633713001,
+          "reference_H": 110,
+          "reference_price": 4.19819381092551,
+          "independent_reference": 4.198193810925504
+        },
+        {
+          "label": "put / up-and-in",
+          "title": "バリア価格 — put / up-and-in",
+          "names": [
+            "up-and-in",
+            "up-and-out",
+            "vanilla put"
+          ],
+          "points": 55,
+          "range": [
+            100,
+            160
+          ],
+          "parity_error": 0,
+          "minimum": 0.000004388543970186467,
+          "vanilla": 5.573526022256971,
+          "maximum": 5.573526022256971,
+          "reference_H": 110,
+          "reference_price": 1.375332211331461,
+          "independent_reference": 1.375332211331466
+        }
+      ],
+      "page_errors": []
+    },
+    "book": {
+      "external_network_blocked": false,
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "images": [
+        "path",
+        "eight",
+        "bgk",
+        "vega",
+        "parisian"
+      ],
+      "math": {
+        "typeset": 93,
+        "errors": 0,
+        "display_blocks": [
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          }
+        ]
+      },
+      "views": [
+        {
+          "label": "call / down-and-out",
+          "title": "バリア価格 — call / down-and-out",
+          "names": [
+            "down-and-out",
+            "down-and-in",
+            "vanilla call"
+          ],
+          "points": 55,
+          "range": [
+            55.00000000000001,
+            100
+          ],
+          "parity_error": 0,
+          "minimum": 0,
+          "vanilla": 10.450583572185565,
+          "maximum": 10.45058356853628,
+          "reference_H": 90,
+          "reference_price": 8.665471658245666,
+          "independent_reference": 8.665471658245668
+        },
+        {
+          "label": "call / down-and-in",
+          "title": "バリア価格 — call / down-and-in",
+          "names": [
+            "down-and-in",
+            "down-and-out",
+            "vanilla call"
+          ],
+          "points": 55,
+          "range": [
+            55.00000000000001,
+            100
+          ],
+          "parity_error": 0,
+          "minimum": 3.649285615666821e-9,
+          "vanilla": 10.450583572185565,
+          "maximum": 10.450583572185565,
+          "reference_H": 90,
+          "reference_price": 1.7851119139398985,
+          "independent_reference": 1.7851119139399
+        },
+        {
+          "label": "call / up-and-out",
+          "title": "バリア価格 — call / up-and-out",
+          "names": [
+            "up-and-out",
+            "up-and-in",
+            "vanilla call"
+          ],
+          "points": 55,
+          "range": [
+            100,
+            160
+          ],
+          "parity_error": 0,
+          "minimum": 0,
+          "vanilla": 10.450583572185565,
+          "maximum": 8.897366508224778,
+          "reference_H": 110,
+          "reference_price": 0.11861405278910375,
+          "independent_reference": 0.11861405278910797
+        },
+        {
+          "label": "call / up-and-in",
+          "title": "バリア価格 — call / up-and-in",
+          "names": [
+            "up-and-in",
+            "up-and-out",
+            "vanilla call"
+          ],
+          "points": 55,
+          "range": [
+            100,
+            160
+          ],
+          "parity_error": 0,
+          "minimum": 1.5532170639607867,
+          "vanilla": 10.450583572185565,
+          "maximum": 10.450583572185565,
+          "reference_H": 110,
+          "reference_price": 10.331969519396461,
+          "independent_reference": 10.33196951939646
+        },
+        {
+          "label": "put / down-and-out",
+          "title": "バリア価格 — put / down-and-out",
+          "names": [
+            "down-and-out",
+            "down-and-in",
+            "vanilla put"
+          ],
+          "points": 55,
+          "range": [
+            55.00000000000001,
+            100
+          ],
+          "parity_error": 0,
+          "minimum": 0,
+          "vanilla": 5.573526022256971,
+          "maximum": 5.498487538855745,
+          "reference_H": 90,
+          "reference_price": 0.15122037643986985,
+          "independent_reference": 0.1512203764398823
+        },
+        {
+          "label": "put / down-and-in",
+          "title": "バリア価格 — put / down-and-in",
+          "names": [
+            "down-and-in",
+            "down-and-out",
+            "vanilla put"
+          ],
+          "points": 55,
+          "range": [
+            55.00000000000001,
+            100
+          ],
+          "parity_error": 0,
+          "minimum": 0.07503848340122543,
+          "vanilla": 5.573526022256971,
+          "maximum": 5.573526022256971,
+          "reference_H": 90,
+          "reference_price": 5.422305645817101,
+          "independent_reference": 5.4223056458170875
+        },
+        {
+          "label": "put / up-and-out",
+          "title": "バリア価格 — put / up-and-out",
+          "names": [
+            "up-and-out",
+            "up-and-in",
+            "vanilla put"
+          ],
+          "points": 55,
+          "range": [
+            100,
+            160
+          ],
+          "parity_error": 0,
+          "minimum": 0,
+          "vanilla": 5.573526022256971,
+          "maximum": 5.573521633713001,
+          "reference_H": 110,
+          "reference_price": 4.19819381092551,
+          "independent_reference": 4.198193810925504
+        },
+        {
+          "label": "put / up-and-in",
+          "title": "バリア価格 — put / up-and-in",
+          "names": [
+            "up-and-in",
+            "up-and-out",
+            "vanilla put"
+          ],
+          "points": 55,
+          "range": [
+            100,
+            160
+          ],
+          "parity_error": 0,
+          "minimum": 0.000004388543970186467,
+          "vanilla": 5.573526022256971,
+          "maximum": 5.573526022256971,
+          "reference_H": 110,
+          "reference_price": 1.375332211331461,
+          "independent_reference": 1.375332211331466
+        }
+      ],
+      "page_errors": []
+    }
+  },
+  "source_sha256": {
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "cb0a39cc67c3aeb19b13604745b6e6f45b07876be4eb513bd89703d18ec67c0f",
+    "volumes/10_exotics_martingales/exotics.ipynb": "3d665a40d77c183ad3c36abaab670ba05cec764e8697deeda0081d46cbcfc1f3",
+    "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+    "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+    "hullkit/tests/test_barrier_reference.py": "7275a9504617dd194018795f7b878ab1da68f755ca3ad551bac6c7879ee554ff",
+    "report/report_builder/figures.py": "6e38e3a05744863107fd5bfc8833b5fb7d682081ed8f2dc613163e7fd27d5e71",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "scripts/verify_barrier_pilot_browser.cjs": "98db63058156d3e66b45f822cb66b7e02a31afbfd1292e9aa78952ed6302f087"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "01773d2b50bd77654651f33beccd3a16e0d3cc8c1a52e9896f49c3b643688d25",
+    "report/site/assets/style.css": "c5e68db30451c3947613cbdcdb42baac286f5aa9b401d29d81a802e43fc0e175",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "7f542426900d6ec0136b78beb13564e59ec5ea7c91434e31b9fc39e8f864359e"
+  },
+  "browser_version": "151.0.7922.34",
+  "status": "PASS"
+}

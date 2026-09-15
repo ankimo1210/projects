@@ -462,10 +462,10 @@ FIGURES: list[FigureSpec] = [
     FigureSpec(
         "barrier_knockout",
         "exotics",
-        "ノックアウト・バリアコール",
-        "バリア H が原資産に近づくほどノックアウトしやすく、価値が 0 へ崩れる(Hull §26.9)。",
+        "バリア・オプション8種類",
+        "call/put・up/down・in/out を切替え、連続観測の in + out = vanilla と H=S₀ の到達境界を比較する(Hull GE §26.9 pp.620–622)。",
         pv.plotly_barrier_knockout,
-        practice="バリアが近いほど価値が 0 へ。為替仕組商品の定番、ヘッジ難所の可視化。",
+        practice="同じ契約・観測規則の組を比較する。離散観測の BGK 近似、負のベガ、Parisian の滞在条件は第10冊で確認。",
         is_new=True,
     ),
     FigureSpec(
