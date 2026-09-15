@@ -7,6 +7,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 _spec = importlib.util.spec_from_file_location(
@@ -131,3 +132,62 @@ def test_attribution_of_buckets_the_window_and_inception() -> None:
     assert out["incept"]["total"] == 30.0 and out["incept"]["unrealized"] == 20.0
     # a window that starts before the series is defined measures from its first defined date
     assert daily_pl_report.attribution_of(s, wi=0)["window"]["total"] == 20.0
+
+
+def test_history_start_reaches_back_to_the_oldest_episode() -> None:
+    from datetime import date
+
+    episodes = [
+        {"start": "2024-07-31", "end": "2024-08-05"},
+        {"start": "2025-04-02", "end": "2025-04-08"},
+    ]
+    assert daily_pl_report.history_start(date(2026, 9, 15), 760, episodes) == "2024-07-24"
+    assert daily_pl_report.history_start(date(2026, 9, 15), 760, []) == "2024-08-16"
+
+
+def test_jpy_price_paths_convert_dollar_tickers_and_daily_returns_skip_gaps() -> None:
+    idx = pd.to_datetime(["2026-09-10", "2026-09-11", "2026-09-14"])
+    filled = pd.DataFrame(
+        {
+            "SMH": [560.0, 568.0, 568.0],
+            "6857.T": [float("nan"), 31720.0, 31080.0],
+            "JPY=X": [153.0, 154.0, 155.0],
+        },
+        index=idx,
+    )
+    paths = daily_pl_report.jpy_price_paths(filled, ["SMH", "6857.T", "GONE"], "JPY=X", {"SMH"})
+    assert paths["SMH"] == [560.0 * 153.0, 568.0 * 154.0, 568.0 * 155.0]
+    assert paths["6857.T"][0] is None and paths["6857.T"][1] == 31720.0 and "GONE" not in paths
+    assert daily_pl_report.daily_returns(paths["6857.T"]) == [
+        0.0,
+        0.0,
+        pytest.approx(31080.0 / 31720.0 - 1),
+    ]
+
+
+def test_clean_closes_blanks_a_misprint_run_but_keeps_a_level_the_series_holds() -> None:
+    idx = pd.to_datetime([f"2026-03-{d:02d}" for d in range(24, 32)])
+    closes = pd.DataFrame(
+        {
+            # a two-day tenfold misprint, then back to the old level (1306.T, 2026-03-30/31)
+            "1306.T": [380.0, 382.0, 382.7, float("nan"), 37.6, 37.1, 389.2, 383.0],
+            # a split-like drop the series keeps is not a misprint
+            "SPLIT": [1000.0, 1010.0, 101.0, 102.0, 103.0, 101.5, 100.0, 99.0],
+            "FLAT": [1.0] * 8,
+        },
+        index=idx,
+    )
+    cleaned, dropped = daily_pl_report.clean_closes(closes)
+    assert dropped == {"1306.T": ["2026-03-28", "2026-03-29"]}
+    assert cleaned["1306.T"].isna().tolist() == [
+        False,
+        False,
+        False,
+        True,
+        True,
+        True,
+        False,
+        False,
+    ]
+    assert cleaned["SPLIT"].tolist() == closes["SPLIT"].tolist()
+    assert cleaned["FLAT"].notna().all()

@@ -528,14 +528,19 @@ def history_record(summary: Summary, rows: list[Row], meta: dict[str, Any]) -> d
     }
 
 
-def upsert_history(path: Path, record: dict[str, Any]) -> list[dict[str, Any]]:
-    """Append ``record`` to the JSONL history, replacing any line with the same ``as_of``."""
+def load_history(path: Path) -> list[dict[str, Any]]:
+    """The JSONL history's records, oldest first; empty when there is no file yet."""
     records: list[dict[str, Any]] = []
     if path.exists():
         for line in path.read_text(encoding="utf-8").splitlines():
             if line.strip():
                 records.append(json.loads(line))
-    records = [r for r in records if r.get("as_of") != record["as_of"]]
+    return records
+
+
+def upsert_history(path: Path, record: dict[str, Any]) -> list[dict[str, Any]]:
+    """Append ``record`` to the JSONL history, replacing any line with the same ``as_of``."""
+    records = [r for r in load_history(path) if r.get("as_of") != record["as_of"]]
     records.append(record)
     records.sort(key=lambda r: str(r.get("as_of", "")))
     path.parent.mkdir(parents=True, exist_ok=True)
