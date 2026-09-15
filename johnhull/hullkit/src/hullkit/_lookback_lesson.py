@@ -53,6 +53,32 @@ def _path_payoffs(
     }
 
 
+def _running_extreme_breakpoints(times, prices, history_extreme, *, maximum):
+    """Return exact running-extreme breakpoints for a piecewise-linear path."""
+    times = np.asarray(times, dtype=float)
+    prices = np.asarray(prices, dtype=float)
+    comparator = max if maximum else min
+    current = comparator(float(history_extreme), float(prices[0]))
+    trace_times = [float(times[0])]
+    trace_values = [current]
+
+    for time0, time1, price0, price1 in zip(
+        times[:-1], times[1:], prices[:-1], prices[1:], strict=True
+    ):
+        updates = price1 > current if maximum else price1 < current
+        starts_beyond = price0 < current if maximum else price0 > current
+        if updates and starts_beyond:
+            fraction = (current - price0) / (price1 - price0)
+            trace_times.append(float(time0 + fraction * (time1 - time0)))
+            trace_values.append(current)
+        if updates:
+            current = float(price1)
+        trace_times.append(float(time1))
+        trace_values.append(current)
+
+    return np.asarray(trace_times), np.asarray(trace_values)
+
+
 def _layout_meta(key, **state):
     return {"section": "26.11", "figure": key, **state}
 
@@ -98,8 +124,12 @@ def _payoff_figure():
     )
     for scenario, _label, past_minimum, past_maximum in scenarios:
         visible = scenario == "new"
-        running_minimum = np.minimum.accumulate(np.minimum(_PATH, past_minimum))
-        running_maximum = np.maximum.accumulate(np.maximum(_PATH, past_maximum))
+        minimum_times, running_minimum = _running_extreme_breakpoints(
+            _TIMES, _PATH, past_minimum, maximum=False
+        )
+        maximum_times, running_maximum = _running_extreme_breakpoints(
+            _TIMES, _PATH, past_maximum, maximum=True
+        )
         common = {"scenario": scenario}
         figure.add_trace(
             go.Scatter(
@@ -117,7 +147,7 @@ def _payoff_figure():
         )
         figure.add_trace(
             go.Scatter(
-                x=_TIMES,
+                x=minimum_times,
                 y=running_minimum,
                 mode="lines",
                 name="running minimum",
@@ -131,7 +161,7 @@ def _payoff_figure():
         )
         figure.add_trace(
             go.Scatter(
-                x=_TIMES,
+                x=maximum_times,
                 y=running_maximum,
                 mode="lines",
                 name="running maximum",
