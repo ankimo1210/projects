@@ -113,3 +113,21 @@ def test_apply_to_snapshot_marks_the_fund_by_its_own_ticker_without_editing_the_
     pos = out["positions"][0]
     assert pos["ticker"] == "SOMPO_AM:0885" and pos["quantity"] == D("290.1109")
     assert snapshot["positions"][0]["quantity"] is None
+
+
+def test_account_paths_values_the_units_and_treats_contributions_as_deposits() -> None:
+    dates = ["2025-08-25", "2025-08-26", "2026-08-26", "2026-09-11"]
+    nav_path = [D("22000"), D("22470"), D("26502"), D("25885")]
+    trades = dcplan.parse_trades(TRADES_PASTE)
+    s = dcplan.account_paths(HOLDING, trades, dates, nav_path)
+    assert s.account_id == "dc"
+    assert s.nav[0] is None and s.pnl[0] is None and s.deposits_cum[0] is None
+    assert s.deposits_cum[-1] == D("5184000")
+    assert s.nav[-1] == D("290.1109") * D("25885")
+    assert s.pnl[-1] == s.nav[-1] - D("5184000") == s.unrealized[-1]
+    assert s.realized_cum[-1] == D(0) and s.xirr_flows is None
+    # a date with a price but no anchor path stays undefined; the reverse too
+    s2 = dcplan.account_paths(HOLDING, trades, dates, [None, *nav_path[1:]])
+    assert s2.nav[1] is not None and s2.nav[0] is None
+    s3 = dcplan.account_paths(HOLDING, trades, dates, [*nav_path[:-1], None])
+    assert s3.nav[-1] is None and s3.deposits_cum[-1] is None

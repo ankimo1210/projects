@@ -25,6 +25,8 @@ from dataclasses import dataclass
 from decimal import Decimal
 from typing import Any
 
+from portfolio_analyzer.timeseries import AccountSeries
+
 ZERO, ONE = Decimal("0"), Decimal("1")
 UNIT = Decimal("10000")
 _DATE = re.compile(r"^\d{4}/\d{1,2}/\d{1,2}$")
@@ -157,6 +159,45 @@ def replay(
         path["cost_basis_jpy"].append(cost)
     path["trades"] = [(t.trade_date, _signed(t)[0] / UNIT, t.price * UNIT) for t in trades]
     return {holding["symbol"]: path}
+
+
+def account_paths(
+    holding: dict[str, Any],
+    trades: Sequence[Trade],
+    dates: Sequence[str],
+    nav_path: Sequence[Decimal | None],
+) -> AccountSeries:
+    """Units × price as NAV, the contributions as deposits, so P&L is the unrealised gain.
+
+    Undefined (None) before the first contribution the history lists, and on a
+    date without a price. Dated flows for a money-weighted return are not known
+    (the contributions before the history are folded into the anchor), so
+    ``xirr_flows`` is None.
+    """
+    path = replay(holding, trades, dates)[holding["symbol"]]
+    nav: list[Decimal | None] = []
+    deposits: list[Decimal | None] = []
+    for q, cost, price in zip(path["quantity"], path["cost_basis_jpy"], nav_path, strict=True):
+        if q is None or cost is None or price is None:
+            nav.append(None)
+            deposits.append(None)
+        else:
+            nav.append(q * price)
+            deposits.append(cost)
+    pnl = [None if n is None or d is None else n - d for n, d in zip(nav, deposits, strict=True)]
+    zeros = [None if n is None else ZERO for n in nav]
+    return AccountSeries(
+        account_id=str(holding["account_id"]),
+        nav=nav,
+        deposits_cum=deposits,
+        unrealized=pnl,
+        realized_cum=list(zeros),
+        dividends_cum=list(zeros),
+        fees_cum=list(zeros),
+        fx_translation_cum=list(zeros),
+        forex_cum=list(zeros),
+        xirr_flows=None,
+    )
 
 
 def apply_to_snapshot(
