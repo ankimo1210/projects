@@ -10,9 +10,11 @@ translation) add up to by construction.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from decimal import Decimal
+from itertools import pairwise
 
 from portfolio_analyzer.ibkr import TRADE_TYPES, Transaction, derive_holdings
 
@@ -136,6 +138,89 @@ def value_paths(paths: Paths, prices: dict[str, list[Decimal]], fx: list[Decimal
     nav = [paths.cash[i] + positions_value[i] for i in range(n)]
     pnl_total = [nav[i] - paths.deposits_cum[i] for i in range(n)]
     return ValuePaths(nav, positions_value, pnl_total, unrealized, value)
+
+
+BUCKETS = (
+    "unrealized",
+    "realized_cum",
+    "dividends_cum",
+    "fees_cum",
+    "fx_translation_cum",
+    "forex_cum",
+)
+
+
+@dataclass
+class AccountSeries:
+    """One account's daily path in JPY. ``None`` on a date the history cannot reconstruct.
+
+    On every defined date ``nav - deposits_cum`` equals the sum of the six buckets
+    in ``BUCKETS`` — each source keeps that identity by construction.
+    """
+
+    account_id: str
+    nav: list[Decimal | None]
+    deposits_cum: list[Decimal | None]
+    unrealized: list[Decimal | None]
+    realized_cum: list[Decimal | None]
+    dividends_cum: list[Decimal | None]
+    fees_cum: list[Decimal | None]
+    fx_translation_cum: list[Decimal | None]
+    forex_cum: list[Decimal | None]
+    # dated deposits for a money-weighted return; None when the history does not have them
+    xirr_flows: list[tuple[str, Decimal]] | None = None
+
+    @property
+    def pnl(self) -> list[Decimal | None]:
+        return [
+            None if n is None or d is None else n - d
+            for n, d in zip(self.nav, self.deposits_cum, strict=True)
+        ]
+
+
+def from_ledger(
+    account_id: str, paths: Paths, values: ValuePaths, flows: list[tuple[str, Decimal]]
+) -> AccountSeries:
+    """The IBKR account's series from its replayed paths and their marks."""
+    n = len(paths.dates)
+    unrealized = [sum((values.unrealized[s][i] for s in values.unrealized), ZERO) for i in range(n)]
+    return AccountSeries(
+        account_id=account_id,
+        nav=list(values.nav),
+        deposits_cum=list(paths.deposits_cum),
+        unrealized=unrealized,
+        realized_cum=list(paths.realized_cum),
+        dividends_cum=list(paths.dividends_cum),
+        fees_cum=list(paths.fees_cum),
+        fx_translation_cum=list(paths.fx_translation_cum),
+        forex_cum=list(paths.forex_cum),
+        xirr_flows=list(flows),
+    )
+
+
+def _add(columns: Sequence[Sequence[Decimal | None]]) -> list[Decimal | None]:
+    out: list[Decimal | None] = []
+    for values in zip(*columns, strict=True):
+        out.append(None if any(v is None for v in values) else sum(values, ZERO))
+    return out
+
+
+def combine(series: Sequence[AccountSeries], account_id: str = "total") -> AccountSeries:
+    """The accounts added together; a date any of them cannot reconstruct is None."""
+    summed = {f: _add([getattr(s, f) for s in series]) for f in ("nav", "deposits_cum", *BUCKETS)}
+    return AccountSeries(account_id=account_id, xirr_flows=None, **summed)
+
+
+def first_defined(values: Sequence[Decimal | None]) -> int | None:
+    return next((i for i, v in enumerate(values) if v is not None), None)
+
+
+def daily_changes(values: Sequence[Decimal | None]) -> list[Decimal | None]:
+    """Day-over-day differences; None on the first date and wherever either side is None."""
+    out: list[Decimal | None] = [None]
+    for prev, cur in pairwise(values):
+        out.append(None if prev is None or cur is None else cur - prev)
+    return out
 
 
 def window_return(values: list[Decimal], lookback: int) -> Decimal | None:
