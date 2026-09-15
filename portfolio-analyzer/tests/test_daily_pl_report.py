@@ -102,3 +102,32 @@ def test_add_series_joins_a_fund_price_onto_the_closes_by_date() -> None:
     assert out["SOMPO_AM:0885"].iloc[1] == 25885.0 and out["SOMPO_AM:0885"].isna().iloc[2]
     q = daily_pl_report.quotes_from_closes(out[["SOMPO_AM:0885"]])["SOMPO_AM:0885"]
     assert q.close == Decimal("25885.0") and q.prev_close == Decimal("25962.0")
+
+
+def test_attribution_of_buckets_the_window_and_inception() -> None:
+    from portfolio_analyzer import timeseries as ts
+
+    s = ts.AccountSeries(
+        account_id="a",
+        nav=[None, Decimal(110), Decimal(130)],
+        deposits_cum=[None, Decimal(100), Decimal(100)],
+        unrealized=[None, Decimal(6), Decimal(20)],
+        realized_cum=[None, Decimal(1), Decimal(4)],
+        dividends_cum=[None, Decimal(3), Decimal(6)],
+        fees_cum=[None, Decimal(0), Decimal(0)],
+        fx_translation_cum=[None, Decimal(0), Decimal(0)],
+        forex_cum=[None, Decimal(0), Decimal(0)],
+    )
+    out = daily_pl_report.attribution_of(s, wi=1)
+    assert out["window"] == {
+        "unrealized": 14.0,
+        "realized": 3.0,
+        "dividends": 3.0,
+        "fees": 0.0,
+        "fx_translation": 0.0,
+        "forex": 0.0,
+        "total": 20.0,
+    }
+    assert out["incept"]["total"] == 30.0 and out["incept"]["unrealized"] == 20.0
+    # a window that starts before the series is defined measures from its first defined date
+    assert daily_pl_report.attribution_of(s, wi=0)["window"]["total"] == 20.0
