@@ -19,11 +19,12 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 52 modules as of 2026-09-14; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 53 modules as of 2026-09-15; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
 **Status (2026-06-08): all 14 rows done → every Hull 11e chapter has a volume.** Section-level
 coverage is narrower: `docs/SECTION_AUDIT_2026-09-14.md` §1 lists the sections that still have
-no computation, and §11 tracks what has been closed since.
+no computation as of the audit; §12 of that document is the per-ID current status, and the
+section-audit milestone below summarizes the fixes since.
 
 ## 可視化 & 深掘り(A1–A4) — 完了 (2026-06-14)
 
@@ -147,3 +148,40 @@ vol 09 の設計書（2026-06-08）で「md/conceptual only」とした項目の
 動的モデルはコードを持たず、vol 28 notebook の「本巻で実装しない節」に Hull の説明と本巻の実装との
 関係を置いた。`done` は integration・恒等式・再現性・教科書ピンの PASS を表し、
 市場較正の承認ではない。
+
+## 全節監査と是正 — 第 1〜4 便完了（2026-09-14〜15）
+
+監査: `docs/SECTION_AUDIT_2026-09-14.md`（初回監査は §0–§10、修正の経緯は §11–§11.3、ID 別の現状は §12）。
+レビュー: `docs/SECTION_AUDIT_2026-09-14_FEEDBACK.md`（初回レビューは `bd278948` の履歴）。実行記録: `VALIDATION.md`。
+
+Hull GE 版の全 306 節と vol 13–28 を棚卸しし、実物で確認した欠陥 11 件（D1–D11）から順に直した。
+各便とも、全ゲート PASS を確認してから `main` へ fast-forward し、push した。
+
+| 便 | 終点 commit | 範囲 | hullkit+report tests | Status |
+|---|---|---|---:|---|
+| 1 | `90e903ea` | D1–D8・D10・D11（ゼロ曲線、期中スワップ評価、vol 22 のイベント分散、vol 21 の Greek 指標、vol 23 の Hagan グリッド、vol 26 のヘッジ分解、HJM/BGM の RMSE、ノート出力の照合、Ch.13 の GE 値、vol 28 の範囲外モデル） | 917 | done |
+| 2 | `8485cc29` | vol 23–25・27・28 の acceptance を配列から再計算（tamper テスト）、Hull の印刷値ピン 71 件、文書の一括修正、R5・R9・R10 | 1055 | done |
+| 3 | `83905890` | vol 18–22・26 の再計算化（tamper 契約を全 11 巻へ）、§4 の関数追加（現金配当・Black 近似、BL 密度、エキゾチックの put 側、分散スワップ、利回りの凸性調整）、BB-03・07・10・17、D9（core ノートの出力をコミットし静的 book に図を出す） | 1252 | done |
+| 4 | `735197a6` | 進捗レビュー F1–F5（退化入力は FAIL 記録、core ノート出力の本文照合、vol 21 計測の来歴）、vol 18–28 の図の日本語フォント（字形欠落の警告 233 件）、文書の現状整理 | 1286 | done |
+
+`done` は各便の integration・恒等式・再現性・印刷値ピンの PASS を表し、節単位の完全性や
+model performance の承認ではない（deep_hedge_price の 206 tests も各便で PASS）。
+
+到達点（2026-09-15、`735197a6`）:
+
+- acceptance は vol 18–28 の 11 巻・118 チェックを、コミット済み配列から再計算する。
+  選んだ改変が該当チェックと宣言した依存チェックだけを落とすことを tamper テストで固定。
+- Jupyter Book は vol 01–16 と ir_models のコミット済み出力を表示する（ipympl は PNG、
+  vol 13–16 は plotly.js 埋め込み）。コミット済み出力の本文は新規実行と照合する。
+- vol 21 の timing には、計測したときの generator digest と環境が残る。
+
+残り（`docs/SECTION_AUDIT_2026-09-14.md` §12・§7）:
+
+| 区分 | 内容 |
+|---|---|
+| 保存値依存 | 根拠になる配列がない 8 チェック（vol 18・19・21・22・26）。原始データか実行時情報の保存が要る |
+| 節カバレッジ | 節別台帳は未作成。第 3 便の関数追加を含む全 306 節の再分類をしていないので、完了率は確定値として使わない |
+| 未再確認の監査報告 | R1（rBergomi の補償項）、R2（Log-HAR の再変換バイアス）、R3（予測からヘッジへの経路）、R4（vol 22 の共通乱数）、R6（dynamic fee の恒等式）、R11（Table 19.1 / 19.4 の乖離） |
+| 未実装の節（§4） | Ch 26 の残り（EX-03・04）、金利ツリー・Bermudan・LMM（EX-13〜15）、Ch 2–7 の節単位実装（FR 系）、信用の残り（CR-05〜07・09〜11・13）、Ch 35–36 のツリー（CR-19・21・22）、深掘り巻の予告の回収（DD-04〜06）など |
+| 判断事項（§7） | 既定 seed の統一（VN-20）、大物の置き場所（新しい節単位の巻を足すか）、FRTB IMA（vol 29 候補）、research track の扱い |
+| ゲートの限界 | core は PNG と Plotly の中身を、frontier は stderr と図を比べない（字形欠落の警告とローカルパスだけをテストで検出） |
