@@ -1,0 +1,70 @@
+{
+  "checked_at": "2026-09-14T23:31:01.224207+00:00",
+  "status": "PASS",
+  "base_commit": "735197a66d9793e880961d6d9974dd40e941642f",
+  "issues_fixed": [
+    {
+      "id": "DC01",
+      "issue": "BGK shift violated exact zero payoff with a terminal fixing",
+      "example": {
+        "S": 100,
+        "K": 110,
+        "H": 110,
+        "r": 0.05,
+        "q": 0,
+        "sigma": 0.3,
+        "T": 1,
+        "observations": 52
+      },
+      "before": 0.000819217657845428,
+      "after": 0,
+      "regression_before": {
+        "failed": 16,
+        "passed": 8
+      },
+      "regression_after": {
+        "passed": 24
+      }
+    },
+    {
+      "id": "DC02",
+      "issue": "Correct in+out total concealed incorrect individual curves",
+      "legacy_structural_check": "accepted wrong curves",
+      "independent_python_check": "rejected wrong curves",
+      "independent_browser_check": "rejected wrong curves",
+      "browser_rejection": "Independent price mismatch: call / down-and-out",
+      "mutation_scope": "temporary in-memory Figure / browser DOM; original artifact files preserved"
+    }
+  ],
+  "tests": {
+    "all_passed": 1378,
+    "duration_seconds": 44.04,
+    "related_passed": 171
+  },
+  "notebook_fresh_comparison": "PASS",
+  "ruff": "PASS",
+  "release_contract": "PASS",
+  "browser_status": "PASS",
+  "browser_version": "151.0.7922.34",
+  "browser_reference_points": 16,
+  "typeset_math": 93,
+  "new_displayed_integral_points": 64,
+  "source_sha256": {
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "cb0a39cc67c3aeb19b13604745b6e6f45b07876be4eb513bd89703d18ec67c0f",
+    "volumes/10_exotics_martingales/exotics.ipynb": "3d665a40d77c183ad3c36abaab670ba05cec764e8697deeda0081d46cbcfc1f3",
+    "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+    "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+    "hullkit/tests/test_barrier_reference.py": "7275a9504617dd194018795f7b878ab1da68f755ca3ad551bac6c7879ee554ff",
+    "report/report_builder/figures.py": "6e38e3a05744863107fd5bfc8833b5fb7d682081ed8f2dc613163e7fd27d5e71",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "scripts/verify_barrier_pilot_browser.cjs": "98db63058156d3e66b45f822cb66b7e02a31afbfd1292e9aa78952ed6302f087"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "01773d2b50bd77654651f33beccd3a16e0d3cc8c1a52e9896f49c3b643688d25",
+    "report/site/assets/style.css": "c5e68db30451c3947613cbdcdb42baac286f5aa9b401d29d81a802e43fc0e175",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "7f542426900d6ec0136b78beb13564e59ec5ea7c91434e31b9fc39e8f864359e"
+  }
+}

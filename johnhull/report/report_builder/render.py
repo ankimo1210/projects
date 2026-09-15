@@ -42,6 +42,21 @@ def _fragment(spec, log) -> dict:
         include_plotlyjs=False,
         include_mathjax=False,
         div_id=f"fig-{spec.id}",
+        # CSS auto-fit can change card width after later cards enter the DOM.
+        # Observe the actual plot box instead of waiting for a window resize.
+        post_script="""
+        (function () {
+            const plot = document.getElementById('{plot_id}');
+            let previousWidth = 0;
+            new ResizeObserver(function () {
+                const width = plot.clientWidth;
+                if (width > 0 && Math.abs(width - previousWidth) > 1) {
+                    previousWidth = width;
+                    Plotly.Plots.resize(plot);
+                }
+            }).observe(plot);
+        })();
+        """,
         default_width="100%",
         config={
             "displaylogo": False,

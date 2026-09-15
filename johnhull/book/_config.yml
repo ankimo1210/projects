@@ -13,6 +13,8 @@ execute:
   execute_notebooks: "off"
 
 sphinx:
+  local_extensions:
+    book_runtime: _ext
   config:
     # require.js is required by the notebook-renderer Plotly outputs (vol 13-16,
     # ir_models), which load the embedded plotly.js through `require`. The

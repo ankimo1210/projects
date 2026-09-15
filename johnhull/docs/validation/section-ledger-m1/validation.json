@@ -1,0 +1,185 @@
+{
+  "checked_at": "2026-09-15T02:02:42.057208+00:00",
+  "status": "PASS",
+  "milestone": "M1 section inventory and acceptance evidence ledger",
+  "base_commit": "dcf6814138ff421bb0ca2b5db6a34ed13de09f1b",
+  "git_state": "uncommitted working tree; no commit/push/publish",
+  "inventory": {
+    "total": 306,
+    "numbered_sections": 299,
+    "appendices": 7,
+    "chapters": 37
+  },
+  "states": {
+    "accepted": 1,
+    "unreviewed": 305,
+    "gaps_found": 0,
+    "pending_validation": 0,
+    "out_of_scope": 0
+  },
+  "accepted_section": "26.9",
+  "tests": {
+    "full_command": "python -m pytest johnhull -q",
+    "full_passed": 1455,
+    "full_duration_seconds": 71.86,
+    "warnings": 2,
+    "warning_scope": "existing japanize_matplotlib / distutils deprecations",
+    "new_tests_passed": 39,
+    "test_file": "report/tests/test_section_ledger.py"
+  },
+  "cli": {
+    "default": "PASS",
+    "check_artifacts": "PASS",
+    "mode_stable_summary": "PASS"
+  },
+  "negative_probes": {
+    "missing_section": {
+      "status": "FAIL",
+      "diagnostics": [
+        "ledger.sections: missing inventory IDs: 1.1"
+      ]
+    },
+    "false_accepted": {
+      "status": "FAIL",
+      "diagnostics": [
+        "ledger section 1.1.evidence: expected an object",
+        "ledger section 1.1.reviewed_at: expected an ISO date (YYYY-MM-DD)",
+        "ledger section 1.1.source_pages: expected [start, end] integers"
+      ]
+    },
+    "stale_pricing_evidence": {
+      "status": "FAIL",
+      "diagnostics": [
+        "ledger section 26.9.evidence pricing.sha256: digest does not match 'hullkit/src/hullkit/exotics.py'"
+      ]
+    },
+    "missing_validation_record": {
+      "status": "FAIL",
+      "diagnostics": [
+        "ledger section 26.9.requirements[0].coverage.independent_validation: unknown evidence ref: double_check",
+        "ledger section 26.9.requirements[0].coverage.independent_validation: verified requires record evidence",
+        "ledger section 26.9.requirements[1].coverage.independent_validation: unknown evidence ref: double_check"
+      ]
+    },
+    "empty_accepted_requirements": {
+      "status": "FAIL",
+      "diagnostics": [
+        "ledger section 26.9.requirements: accepted requires at least one requirement"
+      ]
+    },
+    "malformed_evidence_kind": {
+      "status": "FAIL",
+      "diagnostics": [
+        "ledger section 26.9.evidence pricing.kind: unknown kind {}",
+        "ledger section 26.9.requirements[0].coverage.implementation: unknown evidence ref: pricing",
+        "ledger section 26.9.requirements[1].coverage.implementation: unknown evidence ref: pricing"
+      ]
+    },
+    "malformed_coverage_state": {
+      "status": "FAIL",
+      "diagnostics": [
+        "ledger section 26.9.requirements[0].coverage.explanation.state: unknown state []",
+        "ledger section 26.9.requirements[0].coverage.explanation: accepted must be verified"
+      ]
+    },
+    "malformed_inventory_kind": {
+      "status": "FAIL",
+      "diagnostics": [
+        "inventory.entries[0].kind: expected section or appendix",
+        "inventory.entries[0]: kind/chapter does not match ID '1.1'",
+        "inventory.expected_counts.sections: declared 299, found 298"
+      ]
+    },
+    "stale_summary": {
+      "exit_code": 1,
+      "output": "status: FAIL\ninventory_total: 306\naccepted_sections: 1\nartifacts_checked: true"
+    }
+  },
+  "existing_pilot": {
+    "numerical_and_browser_runs": "reused from 2026-09-15; not rerun",
+    "source_hashes": "10 unchanged",
+    "artifact_hashes": "4 matched"
+  },
+  "limits": [
+    "Human review still determines completeness and meaning of learning requirements.",
+    "305 entries unreviewed.",
+    "Default ledger check does not inspect built artifacts; use --check-artifacts.",
+    "M2 and all-section content review not started."
+  ],
+  "validation_root": "/home/kazumasa/.codex/worktrees/johnhull-section-ledger-m1",
+  "python": "/home/kazumasa/projects/.venv/bin/python",
+  "quality_checks": {
+    "ruff_check_johnhull": "PASS",
+    "ruff_format_new_python_files": "PASS",
+    "git_diff_check": "PASS",
+    "local_doc_links": 7,
+    "bash_blocks_syntax": 4
+  },
+  "review": {
+    "status": "PASS",
+    "unresolved_findings": 0,
+    "review_fix_waves": 2,
+    "inventory_source_comparison": "All 306 IDs, chapters, kinds, page starts, and titles independently matched to the canonical PDF outline; appendix label normalization is intentional.",
+    "findings": {
+      "F1": {
+        "priority": "P1",
+        "issue": "An accepted row with empty requirements was admitted.",
+        "resolution": "Require at least one requirement for accepted; unreviewed may remain empty.",
+        "status": "ADDRESSED"
+      },
+      "F2": {
+        "priority": "P2",
+        "issue": "Malformed enum values could raise TypeError.",
+        "resolution": "Validate enum types before membership checks; return field-level FAIL diagnostics.",
+        "status": "ADDRESSED"
+      },
+      "F3": {
+        "priority": "P2",
+        "issue": "The generated summary could overwrite an external symlink target.",
+        "resolution": "Validate summary and parent resolution before read/write; reject summary symlinks and paths outside the project.",
+        "status": "ADDRESSED"
+      },
+      "F4": {
+        "priority": "P2",
+        "issue": "Cyclic summary or docs links raised RuntimeError on Python 3.12.",
+        "resolution": "Handle path resolution RuntimeError as a diagnostic; two CLI regression cases and independent original reproducer passed.",
+        "status": "ADDRESSED"
+      }
+    }
+  },
+  "source_sha256": {
+    "scripts/verify_section_ledger.py": "c81eeffc33aca1a29c8f948a8c0afe48d98b14c728819004b9387458a3bdffa9",
+    "report/tests/test_section_ledger.py": "63dd0625a457f1079fa9b3a1d22b758c07ecc1cc37101d06f2a5e1c7121ba841",
+    "docs/section_inventory.json": "febd095cd5e7699840e3e06b5af0dc0eb23d6ac8eaa79ec1cd83dce84a3a83a0",
+    "docs/section_ledger.json": "b7d03f47134a71f6e7c2d99ab3d351e1fa5fe4b16ff9c26d631e21f6b908206a",
+    "docs/SECTION_LEDGER.md": "c1da304cc24f5608cbd0ca6844bc917cc39541e4b65b3c563d2670371acffb81",
+    "docs/SECTION_LEDGER_GUIDE.md": "0f07c9317f87f50a5b5ced1a0f20050269b896be1caedb058542a7bb5b2ace86"
+  },
+  "original_checkout_reflection": {
+    "status": "PASS",
+    "path": "/home/kazumasa/projects/johnhull",
+    "files": 13,
+    "modified_document_baselines_verified": 4,
+    "copied_bytes_match": true,
+    "post_copy_checks": {
+      "default_cli": "PASS",
+      "check_artifacts_cli": "PASS",
+      "ledger_tests_passed": 39,
+      "ledger_tests_duration_seconds": 0.48,
+      "ruff_check_johnhull": "PASS",
+      "ruff_format_new_python_files": "PASS",
+      "git_diff_check": "PASS"
+    },
+    "git_operations": "No commit, merge, push, publish, or deployment performed."
+  },
+  "integration_followup": {
+    "date": "2026-09-15",
+    "note": "Commit-time check included newly tracked Markdown; replaced trailing-space hard breaks with backslash hard breaks and removed blank EOF lines. Content and pricing sources unchanged. Only affected note/data hashes were refreshed.",
+    "pre_commit_full_suite": {
+      "passed": 1455,
+      "warnings": 2,
+      "duration_seconds": 68.56,
+      "command": "python -m pytest johnhull -q"
+    }
+  }
+}

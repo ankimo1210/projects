@@ -10,6 +10,41 @@
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
+## Section ledger M1 — 2026-09-15
+
+[節別台帳](docs/SECTION_LEDGER.md)と[更新手順](docs/SECTION_LEDGER_GUIDE.md)。
+原典outlineから299節・7付録を登録。§26.9のB01–B09のみ受入済み、305項目は未評価。
+
+- 台帳のID・状態・証拠・ソースの鮮度・生成Markdownを検査。
+- `--check-artifacts`では保存記録にある配布HTML/JS/CSSの存在とハッシュも照合。
+- ID欠落、証拠改変、不十分なaccepted、生成文書改変を失敗として検出。
+- `pytest johnhull -q`：**1,455 passed**（71.86秒、既存deprecation warning 2件）。台帳の39テストを含む。
+- ruff、通常CLI、`--check-artifacts`、実台帳への9種の改変プローブを確認。独立レビューで見つかった4点を修正し、再レビューで未解決指摘なし。
+- 検証記録：[validation.json](docs/validation/section-ledger-m1/validation.json)。
+- 数値価格・教材の画面は既存の§26.9証跡を再利用。M1で価格コードや配布画面は変更していない。
+- 未コミット作業ツリー。全節の内容監査、M2、strict tracked release、push・公開は未実施。
+
+## §26.9 section acceptance pilot — 2026-09-15
+
+vol10 のバリア・オプションを、GE pp.620–622 の要求から再検証した。
+[節別の受入表・数値結果・画面証跡](docs/SECTION_26_9_ACCEPTANCE_2026-09-15.md)。
+開始コミットは `735197a66d9793e880961d6d9974dd40e941642f`、以下はその上の未コミット作業ツリーの結果。
+
+- 教材：8種類と全分岐、経路上の payoff 分解、BGK、負のベガ、Parisian の連続/累積滞在。
+- 再確認でBGKの厳密ゼロ境界の不具合を修正し、境界24ケースと図の独立価格検査2ケース（64点）を追加。
+  誤った曲線への入力改変をPython・実ブラウザの両方が拒否。
+- 独立積分48ケースの最大絶対誤差：1.7764×10⁻¹⁴（許容2×10⁻⁸）。
+- 全 pytest：**1,378 passed**（44.04秒、既存 deprecation warning 2件）。関連部分171件、ruff PASS。
+- vol10：45 cells、出力再生成と別の fresh run による出力比較 PASS。
+- portal / Book build、通常 release contract：PASS。
+- 実ブラウザ：Book / portal で各8種類の操作、Book の5図と数式93箇所、JSエラー0。
+  カード幅変更時の図の見切れと、Book の重複 Thebe 宣言を修正した。
+- portal は通信遮断下で動作。**Book の数式表示は MathJax CDN に依存**する。
+  初回全ページビルドの32警告は、vol10の Plotly MIME 1件（HTML表現で動作確認済み）と他巻の MIME/見出し31件。今回の差分ビルドは vol10 の MIME 警告1件。
+- この判定は§26.9の教材に限定する。全節・全ブラウザの完成判定ではない。
+  全19コア notebook・全artifactの再構築と strict tracked check は今回再実行していない。
+  コミット・push・公開は未実施。
+
 ## Gate matrix
 
 | Gate | Evidence | Result |

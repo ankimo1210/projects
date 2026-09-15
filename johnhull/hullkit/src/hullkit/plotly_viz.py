@@ -2214,50 +2214,58 @@ def plotly_swap_value() -> go.Figure:
 
 
 def plotly_barrier_knockout(S0=100.0, K=100.0, r=0.05, sigma=0.20, T=1.0) -> go.Figure:
-    """Knock-out barrier call price vs the barrier level; slider over barrier type.
+    """Explore all eight zero-rebate European barriers (Hull GE §26.9 pp.620–622).
 
-    Wraps :func:`hullkit.exotics.barrier_call` (Hull §26.9). As the barrier approaches
-    spot the option knocks out more easily and its value collapses toward zero.
+    The historical function name and signature are retained. A dropdown selects
+    call/put, up/down and in/out; each view shows the selected contract, its
+    complement and the matching vanilla under continuous monitoring with q=0.
+    Barrier grids scale with S0 and include the initially touched boundary H=S0.
     """
     from . import exotics
 
-    vanilla = float(bsm.call_price(S0, K, r, sigma, T))
-    configs = [
-        ("down-and-out", np.linspace(60.0, 99.0, 40)),
-        ("up-and-out", np.linspace(101.0, 160.0, 40)),
-    ]
+    configs = [(kind, direction, knock) for kind in ("call", "put")
+               for direction in ("down", "up") for knock in ("out", "in")]
     fig = go.Figure()
-    for i, (bt, hs) in enumerate(configs):
-        price = [exotics.barrier_call(S0, K, float(h), r, sigma, T, barrier=bt) for h in hs]
-        fig.add_trace(
-            go.Scatter(
-                x=hs,
-                y=price,
-                mode="lines",
-                name=bt,
-                line={"color": ACCENT, "width": 2.5},
-                visible=(i == 0),
-            )
-        )
-    fig.add_hline(
-        y=vanilla, line_color=INK, line_dash="dash", annotation_text=f"バニラ={vanilla:.2f}"
-    )
-    steps = [
-        {
-            "label": bt,
-            "method": "update",
-            "args": [
-                {"visible": [j == i for j in range(len(configs))]},
-                {"title.text": f"ノックアウト・バリアコール vs バリア H — {bt}"},
-            ],
-        }
-        for i, (bt, _hs) in enumerate(configs)
+    labels = []
+    for i, (kind, direction, knock) in enumerate(configs):
+        label = f"{kind} / {direction}-and-{knock}"
+        labels.append(label)
+        hs = np.linspace(0.55 * S0, S0, 55) if direction == "down" else np.linspace(S0, 1.6 * S0, 55)
+        if hs[0] <= K <= hs[-1]:
+            hs = np.unique(np.append(hs, K))
+        pricer = exotics.barrier_call if kind == "call" else exotics.barrier_put
+        vanilla = float((bsm.call_price if kind == "call" else bsm.put_price)(S0, K, r, sigma, T))
+        for other, dash, color in ((knock, "solid", ACCENT),
+                                    ("in" if knock == "out" else "out", "dash", INK)):
+            name = f"{direction}-and-{other}"
+            fig.add_trace(go.Scatter(
+                x=hs, y=[pricer(S0, K, float(h), r, sigma, T, barrier=name) for h in hs],
+                name=name, mode="lines", line={"color": color, "width": 2.5, "dash": dash},
+                visible=(i == 0), hovertemplate="H=%{x:.2f}<br>価格=%{y:.4f}<extra>%{fullData.name}</extra>",
+            ))
+        fig.add_trace(go.Scatter(
+            x=hs, y=np.full(len(hs), vanilla), name=f"vanilla {kind}", mode="lines",
+            line={"color": "#86868b", "width": 1.5, "dash": "dot"}, visible=(i == 0),
+        ))
+    buttons = [
+        {"label": label, "method": "update",
+         "args": [{"visible": [j // 3 == i for j in range(len(fig.data))]},
+                  {"title.text": f"バリア価格 — {label}", "xaxis.autorange": True,
+                   "yaxis.autorange": True}]}
+        for i, label in enumerate(labels)
     ]
+    fig.add_vline(x=S0, line_dash="dot", line_color="#86868b")
     fig.update_layout(
-        title={"text": f"ノックアウト・バリアコール vs バリア H — {configs[0][0]}"},
-        xaxis_title="バリア水準 H",
-        yaxis_title="価格",
-        sliders=[{"active": 0, "currentvalue": {"prefix": "バリア種類: "}, "steps": steps}],
+        title={"text": f"バリア価格 — {labels[0]}", "font": {"size": 15}, "x": 0.02},
+        xaxis_title="バリア H（縦点線は現在価格 S₀）", yaxis_title="価格",
+        updatemenus=[{"type": "dropdown", "active": 0, "buttons": buttons,
+                      "x": 0, "xanchor": "left", "y": 1.03, "yanchor": "bottom"}],
+        height=530, margin={"l": 55, "r": 25, "t": 110, "b": 150},
+        legend={"orientation": "h", "x": 0, "y": -0.24},
+        annotations=[{"text": f"S₀={S0:g}, K={K:g}, r={r:.0%}, σ={sigma:.0%}, T={T:g}年"
+                             "<br>q=0・欧州型・リベート0・連続観測。in + out = vanilla。",
+                      "xref": "paper", "yref": "paper", "x": 0, "y": -0.42, "yanchor": "top",
+                      "showarrow": False, "xanchor": "left", "font": {"size": 11}}],
     )
     return fig
 

@@ -80,14 +80,16 @@ def bgk_adjusted_barrier(H, sigma, T, n_observations, barrier):
 
 
 def barrier_call(S, K, H, r, sigma, T, q=0.0, barrier="down-and-in", n_observations=None):
-    """Barrier call closed forms (Hull §26.9). barrier in {down-and-in,
+    """Barrier call closed forms (Hull GE §26.9 pp.620–622). barrier in {down-and-in,
     down-and-out, up-and-in, up-and-out}. Uses in+out=vanilla complements.
 
     ``n_observations=None`` (default) is continuous monitoring. An integer
     ``m`` applies the Broadie-Glasserman-Kou shift of
     :func:`bgk_adjusted_barrier` (Hull 11e GE §26.9 p.622) to ``H`` before
     pricing; the already-breached guard still compares the spot with the
-    contract barrier ``H``."""
+    contract barrier H. Maturity is a fixing date, so the exact zero for
+    an up-and-out call with the original H <= K is preserved even when the
+    shifted barrier would cross the strike."""
     valid = _BARRIER_TYPES
     if barrier not in valid:
         raise ValueError(f"barrier must be one of {valid}, got {barrier!r}")
@@ -95,8 +97,14 @@ def barrier_call(S, K, H, r, sigma, T, q=0.0, barrier="down-and-in", n_observati
     breached = (barrier.startswith("down") and H >= S) or (barrier.startswith("up") and H <= S)
     if breached:
         return vanilla if barrier.endswith("in") else 0.0
+    contract_H = H
     if n_observations is not None:
         H = bgk_adjusted_barrier(H, sigma, T, n_observations, barrier)
+    # T is a fixing date even for discrete monitoring. Positive intrinsic value
+    # here necessarily breaches the original contract barrier at or before T.
+    # Validate the BGK inputs above, but do not let its shift break an exact zero.
+    if barrier.startswith("up") and contract_H <= K:
+        return vanilla if barrier.endswith("in") else 0.0
     sqt = sigma * math.sqrt(T)
     lam = (r - q + 0.5 * sigma**2) / sigma**2
     x1 = math.log(S / H) / sqt + lam * sqt
@@ -129,12 +137,12 @@ def barrier_call(S, K, H, r, sigma, T, q=0.0, barrier="down-and-in", n_observati
             + K * math.exp(-r * T) * _pow(2 * lam - 2) * (norm.cdf(-y + sqt) - norm.cdf(-y1 + sqt))
         )
     else:
-        cui = vanilla  # up-and-in with H<=K knocks in almost surely (degenerate)
+        cui = vanilla  # positive call payoff requires crossing H<=K (not certain hitting)
     return cui if barrier == "up-and-in" else vanilla - cui
 
 
 def barrier_put(S, K, H, r, sigma, T, q=0.0, barrier="down-and-in", n_observations=None):
-    """Barrier put closed forms (Hull 11e GE §26.9 pp.621-622).
+    """Barrier put closed forms (Hull 11e GE §26.9 pp.620–622).
 
     ``barrier`` in {down-and-in, down-and-out, up-and-in, up-and-out}; the
     signature, validation and already-breached guard mirror
@@ -145,7 +153,8 @@ def barrier_put(S, K, H, r, sigma, T, q=0.0, barrier="down-and-in", n_observatio
     ``H >= K`` gives ``p_do = 0`` and ``p_di = p``, otherwise the ``p_di``
     formula. The complement in each pair is ``vanilla put - value`` (in + out =
     vanilla). ``n_observations`` applies the Broadie-Glasserman-Kou discrete
-    monitoring shift exactly as in :func:`barrier_call`.
+    monitoring shift as in barrier_call, preserving the exact zero
+    down-and-out payoff for the original H >= K when T is a fixing date.
     """
     valid = _BARRIER_TYPES
     if barrier not in valid:
@@ -154,8 +163,14 @@ def barrier_put(S, K, H, r, sigma, T, q=0.0, barrier="down-and-in", n_observatio
     breached = (barrier.startswith("down") and H >= S) or (barrier.startswith("up") and H <= S)
     if breached:
         return vanilla if barrier.endswith("in") else 0.0
+    contract_H = H
     if n_observations is not None:
         H = bgk_adjusted_barrier(H, sigma, T, n_observations, barrier)
+    # T is a fixing date even for discrete monitoring. Positive intrinsic value
+    # here necessarily breaches the original contract barrier at or before T.
+    # Validate the BGK inputs above, but do not let its shift break an exact zero.
+    if barrier.startswith("down") and contract_H >= K:
+        return vanilla if barrier.endswith("in") else 0.0
     sqt = sigma * math.sqrt(T)
     lam = (r - q + 0.5 * sigma**2) / sigma**2
     x1 = math.log(S / H) / sqt + lam * sqt
