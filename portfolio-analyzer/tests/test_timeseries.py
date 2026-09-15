@@ -77,3 +77,63 @@ def test_window_slices_by_calendar_days() -> None:
     dates = ["2025-09-10", "2025-09-11", "2026-09-10", "2026-09-11"]
     assert ts.window_start_index(dates, "2026-09-11", days=365) == 1
     assert ts.window_start_index(dates, "2026-09-11", days=3650) == 0
+
+
+def _series(account_id, nav, deposits, unrealized=None, flows=None):
+    zeros = [None if v is None else D(0) for v in nav]
+    return ts.AccountSeries(
+        account_id=account_id,
+        nav=nav,
+        deposits_cum=deposits,
+        unrealized=unrealized
+        if unrealized is not None
+        else [
+            None if v is None or d is None else v - d for v, d in zip(nav, deposits, strict=True)
+        ],
+        realized_cum=list(zeros),
+        dividends_cum=list(zeros),
+        fees_cum=list(zeros),
+        fx_translation_cum=list(zeros),
+        forex_cum=list(zeros),
+        xirr_flows=flows,
+    )
+
+
+def test_account_series_pnl_is_nav_minus_deposits_and_none_where_undefined() -> None:
+    s = _series("a", [None, D(110), D(120)], [None, D(100), D(100)])
+    assert s.pnl == [None, D(10), D(20)]
+
+
+def test_combine_sums_accounts_and_propagates_none() -> None:
+    a = _series("a", [D(100), D(110), D(120)], [D(100), D(100), D(100)])
+    b = _series("b", [None, D(50), D(55)], [None, D(40), D(40)])
+    total = ts.combine([a, b])
+    assert total.account_id == "total"
+    assert total.nav == [None, D(160), D(175)]
+    assert total.deposits_cum == [None, D(140), D(140)]
+    assert total.pnl == [None, D(20), D(35)]
+    assert total.unrealized == [None, D(20), D(35)]
+    assert total.xirr_flows is None
+
+
+def test_from_ledger_reads_the_replayed_ibkr_paths() -> None:
+    paths = ts.replay(transactions(), DATES)
+    prices = {"XLE": [D(50), D(50), D(60), D(60)]}
+    fx = [D(150)] * 4
+    values = ts.value_paths(paths, prices, fx)
+    s = ts.from_ledger("global_broker", paths, values, [("2026-01-05", D(1000000))])
+    assert s.nav == values.nav and s.deposits_cum == paths.deposits_cum
+    assert s.pnl == values.pnl_total
+    assert s.realized_cum == paths.realized_cum and s.dividends_cum == paths.dividends_cum
+    assert s.xirr_flows == [("2026-01-05", D(1000000))]
+    # the buckets add up to NAV − deposits on every date
+    for i in range(len(DATES)):
+        parts = sum((getattr(s, b)[i] for b in ts.BUCKETS), D(0))
+        assert parts == s.pnl[i]
+
+
+def test_first_defined_and_daily_changes() -> None:
+    values = [None, None, D(5), D(7), D(6)]
+    assert ts.first_defined(values) == 2
+    assert ts.first_defined([None, None]) is None
+    assert ts.daily_changes(values) == [None, None, None, D(2), D(-1)]
