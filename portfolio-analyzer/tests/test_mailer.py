@@ -438,3 +438,26 @@ def test_text_body_carries_the_inception_figures_and_the_notes() -> None:
     text = mailer.text_body(payload())
     assert "開設来損益" in text and "+405,823" in text and "+1.72%" in text
     assert "時価が取れず据え置き: CASH_JPY（合計 9,450,075 円）" in text
+
+
+def test_html_body_shows_the_totals_across_accounts_with_a_row_per_account() -> None:
+    data = payload()
+    data["headline"]["xirr_scope"] = "海外証券口座・国内証券口座"
+    data["attribution"]["accounts"] = {
+        "gb": {
+            "window": {**data["attribution"]["window"], "total": 926850.0},
+            "incept": {**data["attribution"]["incept"], "total": 412901.0},
+        },
+        "dc": {
+            "window": {**data["attribution"]["window"], "total": 863802.0},
+            "incept": {**data["attribution"]["incept"], "total": 2340897.0},
+        },
+    }
+    body = mailer.html_body(data)
+    assert "全口座 · 2025-09-11 → 2026-09-11" in body and "海外証券口座 · 2025-09-11" not in body
+    assert "全口座 2025-09-11 以降・入金控除後" in body
+    assert "海外証券口座・国内証券口座 · 最大DD" in body
+    table = body.split("損益の内訳")[1].split("評価額の大きい順")[0]
+    assert "　海外証券口座" in table and "　DC口座" in table and "+2,340,897" in table
+    text = mailer.text_body(data)
+    assert "(全口座・入金控除後)" in text and "(海外証券口座・国内証券口座)" in text
