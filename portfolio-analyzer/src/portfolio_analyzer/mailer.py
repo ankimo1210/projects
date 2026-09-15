@@ -147,11 +147,11 @@ def text_body(data: dict[str, Any]) -> str:
         f"                {_nav_after_tax(h)}",
         f"日次損益        {jpy(h['day_pnl'], True):>14} 円  {usd(h['day_pnl'], rate, True):>10}  ({pct(h['day_pnl_pct'])})",
         f"                {_joined(split(h.get('day_stock'), h.get('day_fx')), after_tax(h.get('day_after_tax')))}",
-        f"期間損益 {w['days']}日  {jpy(h['pnl_window'], True):>14} 円  {usd(h['pnl_window'], rate, True):>10}  (海外証券口座・入金控除後)",
+        f"期間損益 {w['days']}日  {jpy(h['pnl_window'], True):>14} 円  {usd(h['pnl_window'], rate, True):>10}  (全口座・入金控除後)",
         f"含み損益        {jpy(h['unrealized_known'], True):>14} 円  {usd(h['unrealized_known'], rate, True):>10}  (原価が台帳にある保有)",
         f"                {_joined(split(h.get('unreal_stock'), h.get('unreal_fx')), after_tax(h.get('unreal_after_tax')))}",
         f"開設来損益      {jpy(h.get('pnl_incept'), True):>14} 円  {usd(h.get('pnl_incept'), rate, True):>10}  (実現 {jpy(h.get('realized_cum'), True)} · 配当 {jpy(h.get('dividends_net'), True)})",
-        f"資金加重リターン {_xirr(h):>13}     最大DD（期間内） {_max_dd(h)}",
+        f"資金加重リターン {_xirr(h):>13}  ({h.get('xirr_scope') or '—'})  最大DD（期間内） {_max_dd(h)}",
         "",
         "口座別",
     ]
@@ -314,10 +314,8 @@ def _charts(data: dict[str, Any], images: Images | None = None) -> str:
         deposits = list(series.get("deposits") or [])
         overlay = [deposits[i] for i in idx] if len(deposits) == len(nav) else None
         labels = [dates[i] for i in idx] if len(dates) == len(nav) else None
-        out += _section(
-            "NAV と累計入金", f"海外証券口座 · {w.get('start', '')} → {w.get('end', '')}"
-        )
-        drawn = _img(images, "nav", "海外証券口座の NAV と累計入金") or emailchart.line(
+        out += _section("NAV と累計入金", f"全口座 · {w.get('start', '')} → {w.get('end', '')}")
+        drawn = _img(images, "nav", "全口座の NAV と累計入金") or emailchart.line(
             points, labels, total_px=120, col_w=10, zero=False, fmt=man_level, overlay=overlay
         )
         out += _card(
@@ -334,10 +332,10 @@ def _charts(data: dict[str, Any], images: Images | None = None) -> str:
         labels = [dates[i] for i in idx] if dates else None
         known = [v for v in pnl if v is not None]
         last = next((v for v in reversed(points) if v is not None), None)
-        out += _section("累計損益", f"海外証券口座 · {w.get('start', '')} → {w.get('end', '')}")
+        out += _section("累計損益", f"全口座 · {w.get('start', '')} → {w.get('end', '')}")
         out += _card(
             (
-                _img(images, "pnl", "海外証券口座の累計損益")
+                _img(images, "pnl", "全口座の累計損益")
                 or emailchart.line(points, labels, total_px=120, col_w=10, fmt=man)
             )
             + _caption(
@@ -354,7 +352,7 @@ def _charts(data: dict[str, Any], images: Images | None = None) -> str:
         losses = sum(1 for v in known if v < 0)
         step = min(13, max(2, 520 // len(daily)))
         gap = 1 if step < 6 else 3
-        out += _section("日次損益", f"海外証券口座 · 期間 {len(daily)} 営業日")
+        out += _section("日次損益", f"全口座 · 期間 {len(daily)} 営業日")
         out += _card(
             (
                 _img(images, "daily", "日次損益の棒グラフ")
@@ -524,16 +522,25 @@ ATTRIBUTION = (
 )
 
 
-def _attribution(att: dict[str, Any] | None, table_style: str) -> str:
-    """Where the overseas account's P&L came from, over the window and since inception."""
+def _attribution(
+    att: dict[str, Any] | None, table_style: str, names: dict[str, str] | None = None
+) -> str:
+    """The P&L buckets over the window and since inception, then each account's total."""
     if not att:
         return ""
-    keys = [*ATTRIBUTION, ("total", "合計＝NAV−入金")]
+    names = names or {}
+    entries = [
+        (label, att["window"].get(key), att["incept"].get(key), key == "total")
+        for key, label in [*ATTRIBUTION, ("total", "合計＝NAV−入金")]
+    ]
+    entries += [
+        (f"　{names.get(acc, acc)}", a["window"].get("total"), a["incept"].get("total"), False)
+        for acc, a in (att.get("accounts") or {}).items()
+    ]
     rows = ""
-    for i, (key, label) in enumerate(keys):
-        last = i == len(keys) - 1
-        win, inc = att["window"].get(key), att["incept"].get(key)
-        weight = "font-weight:700;" if key == "total" else ""
+    for i, (label, win, inc, bold) in enumerate(entries):
+        last = i == len(entries) - 1
+        weight = "font-weight:700;" if bold else ""
         rows += (
             f'<tr style="{weight}">'
             + _td(html.escape(label), "left", INK, SANS, last)
@@ -542,7 +549,7 @@ def _attribution(att: dict[str, Any] | None, table_style: str) -> str:
             + "</tr>"
         )
     return (
-        _section("損益の内訳", "海外証券口座")
+        _section("損益の内訳", "全口座 · 下段は口座別")
         + f'<table role="presentation" cellspacing="0" cellpadding="0" {table_style}>'
         + f"<tr>{_th('内訳', 'left')}{_th('期間内 ¥')}{_th('開設来 ¥')}</tr>{rows}</table>"
     )
@@ -614,7 +621,7 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
         + _kpi_cell(
             f"期間損益 ¥ · {w['days']}日",
             jpy(h["pnl_window"], True),
-            f"海外証券口座 {w['start']} 以降・入金控除後",
+            f"全口座 {w['start']} 以降・入金控除後",
             _tone(h["pnl_window"]),
             dollars=usd(h["pnl_window"], rate, True),
         )
@@ -629,7 +636,7 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
         + _kpi_cell(
             "資金加重リターン",
             _xirr(h),
-            f"最大DD（期間内） {_max_dd(h)}",
+            f"{h.get('xirr_scope') or '—'} · 最大DD（期間内） {_max_dd(h)}",
             _tone(h.get("xirr")),
         )
         + "</tr></table>"
@@ -752,14 +759,14 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
 <table role="presentation" cellspacing="0" cellpadding="0" {table_style}>
 <tr>{_th("口座", "left")}{_th("評価額 ¥")}{_th("日次損益 ¥")}{_th("含み損益 ¥")}</tr>{acc_rows}</table>
 {allocation}
-{_attribution(data.get("attribution"), table_style)}
+{_attribution(data.get("attribution"), table_style, {a["id"]: a["name"] for a in data.get("accounts") or []})}
 {_section("保有", "評価額の大きい順 · 1Y は直近 1 年の株価")}
 <table role="presentation" cellspacing="0" cellpadding="0" {table_style}>
 <tr>{_th("銘柄", "left")}{_th("1D")}{_th("値動き 1Y", "left")}{_th("1Y")}{_th("評価額 ¥")}{_th("日次 ¥")}{_th("含み ¥")}</tr>{pos_rows}</table>
 {_closed(data.get("closed"), table_style)}
 {charts}
 <div style="font:400 11px/1.7 {SANS};color:{MUTED};margin-top:16px">
-日次損益は全銘柄に共通の直近 2 営業日で比べた差（価格と為替の両方）で、まだ開いていない市場の銘柄は株の変化 0。株＝価格の変化（今日のレート換算）、FX＝残り（レートの変化分）で、円建ては FX 0。含み損益の FX は取得原価（外貨）×（現在レート − 取得時レート）。総資産の {100 - quoted}% は時価が取れない残高（現金など）で据え置き。海外証券口座の累計損益は取引履歴を日次で再生した値で、入金は差し引いています。
+日次損益は全銘柄に共通の直近 2 営業日で比べた差（価格と為替の両方）で、まだ開いていない市場の銘柄は株の変化 0。株＝価格の変化（今日のレート換算）、FX＝残り（レートの変化分）で、円建ては FX 0。含み損益の FX は取得原価（外貨）×（現在レート − 取得時レート）。総資産の {100 - quoted}% は時価が取れない残高（現金など）で据え置き。累計損益は 3 口座の NAV − 累計入金（海外は取引履歴、国内は取引 CSV、DC は掛金履歴を日次で再生）。
 <ul style="margin:8px 0 0;padding-left:18px">{notes}</ul>
 ダッシュボード本体（ホバーで数値が出る図つき）: <span style="font-family:{MONO}">Documents\\pl-daily\\latest.html</span>
 </div></div></td></tr></table>"""

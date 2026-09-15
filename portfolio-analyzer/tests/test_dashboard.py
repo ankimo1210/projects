@@ -203,3 +203,22 @@ def test_render_for_capture_sizes_the_charts_for_the_mail_column() -> None:
     assert 'viewBox="0 0 540 190" width="540" height="190" data-piece="nav"' in html
     assert "viewBox='0 0 520 120' width='520' height='120'" in html
     assert "grid-template-columns:1fr!important" in html
+
+
+def test_render_labels_the_series_as_all_accounts_and_lists_each_account_s_attribution() -> None:
+    data = sample()
+    data["headline"]["xirr_scope"] = "海外証券口座・国内証券口座"
+    data["attribution"]["accounts"] = {
+        "gb": {
+            "window": {**data["attribution"]["window"], "total": -135387},
+            "incept": {**data["attribution"]["incept"], "total": 405724},
+        }
+    }
+    html = dashboard.render(data, ":root{--ink:#000}")
+    assert "全口座 NAV と損益" in html and "海外証券口座 NAV と損益" not in html
+    assert "日次損益 <small>全口座" in html
+    assert "全口座 2025-09-11 以降・入金控除後" in html
+    assert "海外証券口座・国内証券口座 · 最大DD" in html
+    assert (
+        "<td>海外証券口座</td><td class='n dn'>−135,387</td><td class='n up'>+405,724</td>" in html
+    )

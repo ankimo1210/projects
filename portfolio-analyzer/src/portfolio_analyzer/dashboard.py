@@ -125,7 +125,9 @@ def _positions_table(rows: list[dict[str, Any]], rate: float | None) -> str:
     )
 
 
-def _attribution(att: dict[str, Any]) -> str:
+def _attribution(att: dict[str, Any], names: dict[str, str] | None = None) -> str:
+    """The P&L buckets over the window and since inception, then each account's total."""
+    names = names or {}
     labels = [
         ("unrealized", "含み（保有中）"),
         ("realized", "実現（売却済）"),
@@ -139,7 +141,10 @@ def _attribution(att: dict[str, Any]) -> str:
         for k, lab in labels
     )
     rows += f"<tr class='tot'><td>合計＝NAV−入金</td><td class='n {cls(att['window']['total'])}'>{jpy(att['window']['total'], True)}</td><td class='n {cls(att['incept']['total'])}'>{jpy(att['incept']['total'], True)}</td></tr>"
-    return f"<div class='sx'><table class='mini'><thead><tr><th>内訳</th><th>期間内</th><th>開設来</th></tr></thead><tbody>{rows}</tbody></table></div>"
+    for acc, a in (att.get("accounts") or {}).items():
+        w, i = a["window"].get("total"), a["incept"].get("total")
+        rows += f"<tr><td>{_esc(names.get(acc, acc))}</td><td class='n {cls(w)}'>{jpy(w, True)}</td><td class='n {cls(i)}'>{jpy(i, True)}</td></tr>"
+    return f"<div class='sx'><table class='mini'><thead><tr><th>内訳 <small>全口座 · 下段は口座別</small></th><th>期間内</th><th>開設来</th></tr></thead><tbody>{rows}</tbody></table></div>"
 
 
 def _closed(rows: list[dict[str, Any]]) -> str:
@@ -233,7 +238,7 @@ def render(data: dict[str, Any], tokens_css: str, capture: bool = False) -> str:
             _kpi(
                 f"期間損益 ¥ · {data['window']['days']}日",
                 jpy(h["pnl_window"], True),
-                f"海外証券口座 {data['window']['start']} 以降・入金控除後",
+                f"全口座 {data['window']['start']} 以降・入金控除後",
                 cls(h["pnl_window"]),
                 dollars=usd(h["pnl_window"], rate, True),
             ),
@@ -247,7 +252,7 @@ def render(data: dict[str, Any], tokens_css: str, capture: bool = False) -> str:
             _kpi(
                 "資金加重リターン",
                 pct(None if h.get("xirr") is None else h["xirr"] * 100),
-                f"最大DD（期間内） {pct(None if h.get('max_dd_window') is None else h['max_dd_window'] * 100, 1)}",
+                f"{h.get('xirr_scope') or '—'} · 最大DD（期間内） {pct(None if h.get('max_dd_window') is None else h['max_dd_window'] * 100, 1)}",
                 cls(h.get("xirr")),
             ),
         ]
@@ -414,21 +419,21 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
     <h2 style="margin-top:12px">資産配分 <small>総資産比</small></h2>
     <div class="alloc">{alloc}</div>
   </div>
-  <div class="panel">{_attribution(data["attribution"])}</div>
+  <div class="panel">{_attribution(data["attribution"], {a["id"]: a["name"] for a in data["accounts"]})}</div>
 </div>
 <div class="tw">{_positions_table(data["positions"], data["fx"]["last"])}</div>
 
 <h2 class="sec" id="charts-top">時系列 <small>time series · {_esc(data["window"]["start"])} → {_esc(data["as_of"])}</small></h2>
 <div class="grid">
   <div class="panel">
-    <h2>海外証券口座 NAV と損益 <small>入金は段差、損益 ＝ NAV − 累計入金</small></h2>
+    <h2>全口座 NAV と損益 <small>3 口座の合計 · 入金は段差、損益 ＝ NAV − 累計入金</small></h2>
     <div class="legend"><span><i style="background:var(--series-1)"></i>NAV ¥</span><span><i style="background:var(--series-2)"></i>累計入金 ¥</span></div>
-    <svg id="c-nav" {_viewbox("nav", capture)} data-piece="nav" role="img" aria-label="海外証券口座の NAV と累計入金"></svg>
+    <svg id="c-nav" {_viewbox("nav", capture)} data-piece="nav" role="img" aria-label="全口座の NAV と累計入金"></svg>
     <div class="legend" style="margin-top:8px"><span><i style="background:var(--series-1)"></i>損益 ¥（NAV − 累計入金）</span></div>
-    <svg id="c-pnl" {_viewbox("pnl", capture)} data-piece="pnl" role="img" aria-label="海外証券口座の累計損益"></svg>
+    <svg id="c-pnl" {_viewbox("pnl", capture)} data-piece="pnl" role="img" aria-label="全口座の累計損益"></svg>
   </div>
   <div class="panel">
-    <h2>日次損益 <small>海外証券口座 · 入金を除いた NAV の日次変化</small></h2>
+    <h2>日次損益 <small>全口座 · 入金を除いた NAV の日次変化</small></h2>
     <svg id="c-daily" {_viewbox("daily", capture)} data-piece="daily" role="img" aria-label="日次損益の棒グラフ"></svg>
     {_closed(data["closed"])}
   </div>
