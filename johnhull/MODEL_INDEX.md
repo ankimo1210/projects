@@ -174,6 +174,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | Module | Role |
 |---|---|
 | `hullkit._binary_lesson` | Hull §26.10 の給付・複製・狭いスプレッド・cash-call delta を共有する内部 Plotly 図ビルダー |
+| `hullkit._lookback_lesson` | Hull §26.11 の経路給付・履歴極値・評価時点の複製・離散 fixing を共有する内部 Plotly 図ビルダー |
 | `hullkit.nbplot` | Matplotlib notebook setup (`setup`, `kde_xy`) for the classic volumes; `enable_static_figures` turns ipympl widgets into static PNG outputs for the committed book copies |
 | `hullkit.plotly_viz` | Seeded Plotly figure builders for the offline portal (single source of figures) |
 | `hullkit.teaching` | `scaffold`/`practice_box`/`caption` markdown blocks used across all volumes |
