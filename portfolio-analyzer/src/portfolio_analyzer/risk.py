@@ -385,6 +385,15 @@ def evaluate_limits(
 
 # ---- the payload block ----
 
+
+def _worst(scenarios: Sequence[dict[str, Any]], kind: str) -> float | None:
+    """The largest loss ratio among scenarios of one kind, as a positive number."""
+    ratios = [
+        r["impact_pct"] for r in scenarios if r["kind"] == kind and r["impact_pct"] is not None
+    ]
+    return max(-min(ratios), 0.0) if ratios else None
+
+
 HISTORY_KEYS = (
     "vol_annual",
     "var_1d_95",
@@ -495,16 +504,18 @@ def assemble(
         },
     }
     scenarios = scenario_impacts(holdings, reference)
-    compound = [
-        r["impact_pct"]
-        for r in scenarios
-        if r["kind"] == "compound" and r["impact_pct"] is not None
-    ]
     metrics = {
         **conc,
-        "worst_compound_drawdown": (max(-min(compound), 0.0) if compound else None),
+        # the names the main dashboard's policy uses (core.validate_analysis_reference)
+        "sector_effective_count": conc["effective_sectors"],
+        "worst_compound_drawdown": _worst(scenarios, "compound"),
+        "worst_historical_drawdown": _worst(scenarios, "historical"),
     }
-    policy = evaluate_limits((reference.get("policy") or {}).get("limits", []), metrics)
+    # policy.limits is shared with the main dashboard, whose loader rejects metrics it
+    # cannot compute; limits only this monitor evaluates sit in policy.daily_limits
+    policy_ref = reference.get("policy") or {}
+    limits = [*policy_ref.get("limits", []), *policy_ref.get("daily_limits", [])]
+    policy = evaluate_limits(limits, metrics)
     breaches = sum(1 for r in policy if r["status"] == "breach")
     history = {
         "vol_annual": stats["vol_annual"],
