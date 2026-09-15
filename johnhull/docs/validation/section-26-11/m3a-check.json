@@ -1,0 +1,136 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-15T06:17:53.703380+00:00",
+  "scope": "M3a requirements, independent numerical checks and integration only; section26.11 remains gaps_found.",
+  "base_commit": "5e2f9ac7c7670426c68744e9f38774406edceacc",
+  "validation_root": "/home/kazumasa/.codex/worktrees/johnhull-binary-m2a",
+  "python": "/home/kazumasa/projects/.venv/bin/python",
+  "tests": {
+    "new_lookback_tests": 132,
+    "ledger_tests": 39,
+    "full_suite": "PASS",
+    "full_command": "PYTHONPATH=johnhull/hullkit/src:johnhull/report python -m pytest johnhull -q --tb=short",
+    "full_passed": 1681,
+    "full_duration_seconds": 74.32,
+    "warnings": 2,
+    "warning_scope": "Existing japanize_matplotlib/setuptools distutils Version deprecations in test_nbplot."
+  },
+  "quality": {
+    "artifact_ledger_cli": "PASS",
+    "default_ledger_cli": "PASS",
+    "release_contract": "PASS",
+    "ruff": "PASS",
+    "format_check": "PASS",
+    "local_note_links_checked": 5
+  },
+  "review": {
+    "status": "APPROVED",
+    "report": "docs/validation/section-26-11/final-review.md",
+    "unresolved_findings": 0,
+    "independent_tests_passed": 146,
+    "independent_tests_deselected": 56,
+    "checks": [
+      "All128 stored price rows reproduced exactly",
+      "All12 unsupported-domain diagnostics reproduced with existing ValueError",
+      "Two parity-preserving mutations rejected in all4 price comparisons",
+      "Exponentially tilted reflection-density integration checked at80 points",
+      "Current ledger, source/artifact hashes and pending teaching/rendering scope verified"
+    ],
+    "scope": "Bounded M3a only; section26.11 remains gaps_found."
+  },
+  "counts": {
+    "accepted": 2,
+    "gaps_found": 1,
+    "unreviewed": 303,
+    "pending_validation": 0,
+    "out_of_scope": 0
+  },
+  "preservation": {
+    "unchanged_prior_source_artifact_entries": 90,
+    "changed_metadata_source": [
+      "report/tests/test_section_ledger.py"
+    ],
+    "pricing_notebook_or_render_changes": false,
+    "new_browser_validation_claimed": false
+  },
+  "limits": [
+    "Bounded M3a, not section acceptance.",
+    "Synthetic cases, positive S/T/sigma, valid histories and continuous monitoring; no all-domain or market-performance claim.",
+    "The abs(r-q)<1e-8 production limitation and all lesson/figure/render work remain pending."
+  ],
+  "ledger_negative_probes": {
+    "false_accepted": {
+      "status": "REJECTED",
+      "errors": [
+        "ledger section 26.11.acceptance_note: path must be a non-empty project-relative path",
+        "ledger section 26.11.requirements[0].coverage.explanation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[0].coverage.implementation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[0].coverage.independent_validation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[0].coverage.visualization: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[0].coverage.rendered: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[0].coverage.explanation: accepted must be verified",
+        "ledger section 26.11.requirements[0].coverage.rendered: accepted must be verified",
+        "ledger section 26.11.requirements[1].coverage.explanation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[1].coverage.visualization: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[1].coverage.rendered: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[1].coverage.explanation: accepted must be verified",
+        "ledger section 26.11.requirements[1].coverage.rendered: accepted must be verified",
+        "ledger section 26.11.requirements[2].coverage.explanation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[2].coverage.visualization: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[2].coverage.rendered: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[2].coverage.explanation: accepted must be verified",
+        "ledger section 26.11.requirements[2].coverage.rendered: accepted must be verified",
+        "ledger section 26.11.requirements[3].coverage.explanation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[3].coverage.implementation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[3].coverage.independent_validation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[3].coverage.visualization: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[3].coverage.rendered: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[3].coverage.explanation: accepted must be verified",
+        "ledger section 26.11.requirements[3].coverage.rendered: accepted must be verified",
+        "ledger section 26.11.requirements[4].coverage.explanation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[4].coverage.implementation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[4].coverage.visualization: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[4].coverage.rendered: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[4].coverage.explanation: accepted must be verified",
+        "ledger section 26.11.requirements[4].coverage.rendered: accepted must be verified",
+        "ledger section 26.11.requirements[5].coverage.explanation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[5].coverage.implementation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[5].coverage.independent_validation: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[5].coverage.visualization: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[5].coverage.rendered: accepted coverage cannot be pending",
+        "ledger section 26.11.requirements[5].coverage.explanation: accepted must be verified",
+        "ledger section 26.11.requirements[5].coverage.rendered: accepted must be verified"
+      ]
+    },
+    "missing_numerical_record": {
+      "status": "REJECTED",
+      "errors": [
+        "ledger section 26.11.requirements[1].coverage.independent_validation: unknown evidence ref: numerical",
+        "ledger section 26.11.requirements[1].coverage.independent_validation: verified requires record evidence",
+        "ledger section 26.11.requirements[2].coverage.independent_validation: unknown evidence ref: numerical",
+        "ledger section 26.11.requirements[2].coverage.independent_validation: verified requires record evidence",
+        "ledger section 26.11.requirements[4].coverage.independent_validation: unknown evidence ref: numerical",
+        "ledger section 26.11.requirements[4].coverage.independent_validation: verified requires record evidence"
+      ]
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+    "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
+    "hullkit/tests/test_exotics_puts.py": "cd84ff7ae5ec081bbb82b6ddd5c07dcacb34ffd9647c033e7ceb66a21f748a69",
+    "report/tests/test_section_ledger.py": "46b1c8cc4f2ee6323ac338631ff494e280e99a94462272f182484b616dfa6713",
+    "scripts/verify_section_ledger.py": "c81eeffc33aca1a29c8f948a8c0afe48d98b14c728819004b9387458a3bdffa9",
+    "docs/SECTION_26_11_REVIEW_2026-09-15.md": "30a4d17e070431d214c136bd389774d245f19965567da0ff075bcea1830a49ae",
+    "docs/validation/section-26-11/numerical-check.json": "1fa2fdbb0161fe905a9e7b432228089ba68c4517a4ea02c0a02c90131b34a984",
+    "MODEL_INDEX.md": "c63633b691290ce1008e3cfe597073cc39a1a8defc38f719736ad40f8e92ca5c",
+    "ROADMAP.md": "dff7553c5dedeed7991fa595ef84b01c8a9794482ae977ea171014a39013011f",
+    "VALIDATION.md": "78d8a9cf54939de2dc840c97f4c289cf0456d20ff6430812bc7c16b252ec1db0",
+    "docs/SECTION_AUDIT_2026-09-14_FEEDBACK.md": "b04bbe03d065e83b10d794ccd42e486638dcaf94d8179705539dce1c41427438",
+    "docs/SECTION_REVIEW_HANDOFF_2026-09-15.md": "1a7b7d9d53c8e4f75e317400abc93596fdd47fd01566162dec97f9e20c1c505a",
+    "docs/SECTION_LEDGER_GUIDE.md": "090aaabac885825006f9ffdcea4e325df2313e4c4bc9762be0954a3e5f744c6a"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-11/prices.json": "25b200e9fe5a012adbef541b6b38513aa40a955d970ff993bac93679ba8334ba",
+    "docs/validation/section-26-11/final-review.md": "664534f20a618cedb823a31f3c4c8a75adfb83f1df072289a930edcc9e91152e"
+  }
+}

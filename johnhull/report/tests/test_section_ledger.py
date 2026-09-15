@@ -573,8 +573,8 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["status"] == "PASS", result["errors"]
     assert result["inventory_total"] == 306
     assert result["counts"] == {
-        "unreviewed": 304,
-        "gaps_found": 0,
+        "unreviewed": 303,
+        "gaps_found": 1,
         "pending_validation": 0,
         "accepted": 2,
         "out_of_scope": 0,

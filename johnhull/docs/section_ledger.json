@@ -1800,7 +1800,7 @@
         },
         "m2b_check": {
           "path": "docs/validation/section-26-10/m2b-check.json",
-          "sha256": "85923850915c457401b78cc3deb2baebf17f7c269b0a0140ec498bf65abcb874",
+          "sha256": "8ee0ad71a3b13df6bea3b15097c5c3d25e97a016fd20a56663cd6333786c40f8",
           "kind": "record"
         },
         "acceptance_note": {
@@ -2130,8 +2130,283 @@
     },
     {
       "id": "26.11",
-      "status": "unreviewed",
-      "requirements": []
+      "status": "gaps_found",
+      "requirements": [
+        {
+          "id": "L01",
+          "statement": "floating/fixed × call/putの4給付、過去極値、残存期間、単位を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook",
+                "review"
+              ],
+              "locator": "vol10 §4.1"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": []
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "L02",
+          "statement": "floating call/putの式と前提を説明し、Example 26.2のcall 8.04とput 7.79を再現する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook",
+                "review"
+              ],
+              "locator": "vol10 §4.1"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "lookback_floating_call/put"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "tests",
+                "numerical",
+                "final_review"
+              ],
+              "locator": "32 floating prices and Example26.2 anchors"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "L03",
+          "statement": "fixed call/putで調整極値を使う理由を給付と現在価格から説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook",
+                "review"
+              ],
+              "locator": "vol10 §4.1"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "lookback_fixed_call/put"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "tests",
+                "numerical",
+                "final_review"
+              ],
+              "locator": "96 fixed prices and parity-preserving negative controls"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "L04",
+          "statement": "連続式と離散経路を区別し、観測頻度の影響とバニラ比較の条件を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook",
+                "review"
+              ],
+              "locator": "vol10 §4.1"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": []
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "L05",
+          "statement": "適用域とr=qを含む未対応境界を明示する。r=qの極限は可除特異点として扱う。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook",
+                "review"
+              ],
+              "locator": "vol10 §4.1"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "existing_tests",
+                "numerical"
+              ],
+              "locator": "Current unsupported-domain behavior: 12 abs(r-q)<1e-8 probes; no limit implementation claim"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "L06",
+          "statement": "4給付・履歴・fixed/floatingの関係を図示し、Book/portalの式・軸・凡例・表示値を確認する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "builder",
+                "notebook",
+                "review"
+              ],
+              "locator": "vol10 §4.1"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": []
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        }
+      ],
+      "reviewed_at": "2026-09-15",
+      "source_pages": [
+        623,
+        625
+      ],
+      "scope": "M3a: Hull 11e GE section26.11のL01–L06を抽出し、既存4価格を独立検証。教材・図・配布画面の受入は未完了。",
+      "assumptions": [
+        "リスク中立GBM、定数r/q/sigma、正のS/T/sigma、連続観測",
+        "0 < minimum-to-date <= S0 <= maximum-to-date。新規と過去履歴ありの契約",
+        "通貨、年、年率。すべて合成条件"
+      ],
+      "limitations": [
+        "abs(r-q)<1e-8の極限は現行APIで未実装。通常価格比較の最小abs(r-q)は1e-4",
+        "T=0、sigma=0、不正入力、全入力域の安定性、離散観測価格は検証対象外",
+        "教材の4契約・必要図・Book/portalの受入は未完了"
+      ],
+      "evidence": {
+        "pricing": {
+          "path": "hullkit/src/hullkit/exotics.py",
+          "kind": "source",
+          "sha256": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4"
+        },
+        "tests": {
+          "path": "hullkit/tests/test_lookback_reference.py",
+          "kind": "test",
+          "sha256": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5"
+        },
+        "existing_tests": {
+          "path": "hullkit/tests/test_exotics_puts.py",
+          "kind": "test",
+          "sha256": "cd84ff7ae5ec081bbb82b6ddd5c07dcacb34ffd9647c033e7ceb66a21f748a69"
+        },
+        "notebook": {
+          "path": "volumes/10_exotics_martingales/exotics.ipynb",
+          "kind": "source",
+          "sha256": "0faddb8618787bf33f4f1af438c5770efa36eb3b1f67e614efed05c6fff4bb1a"
+        },
+        "builder": {
+          "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
+          "kind": "source",
+          "sha256": "c9ab4967f1b53b2b78a06890bf5e4c7b31ec711b0a2c65ee3335c0247a371030"
+        },
+        "review": {
+          "path": "docs/SECTION_26_11_REVIEW_2026-09-15.md",
+          "kind": "note",
+          "sha256": "30a4d17e070431d214c136bd389774d245f19965567da0ff075bcea1830a49ae"
+        },
+        "textbook": {
+          "path": "options, futures and other derivatives 11th.pdf",
+          "kind": "reference",
+          "sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
+        },
+        "numerical": {
+          "path": "docs/validation/section-26-11/numerical-check.json",
+          "kind": "record",
+          "sha256": "1fa2fdbb0161fe905a9e7b432228089ba68c4517a4ea02c0a02c90131b34a984"
+        },
+        "m3a_check": {
+          "path": "docs/validation/section-26-11/m3a-check.json",
+          "kind": "record",
+          "sha256": "5a1a97960078d37b8f56dcb32971e19457c530a06c449edf2c06711468ee643e"
+        },
+        "final_review": {
+          "path": "docs/validation/section-26-11/final-review.md",
+          "kind": "note",
+          "sha256": "664534f20a618cedb823a31f3c4c8a75adfb83f1df072289a930edcc9e91152e"
+        }
+      }
     },
     {
       "id": "26.12",
