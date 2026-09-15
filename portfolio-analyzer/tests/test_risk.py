@@ -64,6 +64,7 @@ REFERENCE = {
             "kind": "compound",
             "shocks": {"株式全体": -0.1, "外貨対円": -0.1},
         },
+        {"id": "hist_x", "label": "過去", "kind": "historical", "shocks": {"株式全体": -0.2}},
     ],
     "policy": {
         "limits": [
@@ -82,13 +83,29 @@ REFERENCE = {
                 "threshold": 0.15,
             },
             {
+                "id": "sectors_min",
+                "label": "実効セクター数 1.4 以上",
+                "metric": "sector_effective_count",
+                "operator": ">=",
+                "threshold": 1.4,
+            },
+            {
+                "id": "hist_dd_max",
+                "label": "過去局面の下落 20% 以下",
+                "metric": "worst_historical_drawdown",
+                "operator": "<=",
+                "threshold": 0.2,
+            },
+        ],
+        "daily_limits": [
+            {
                 "id": "na_metric",
                 "label": "無い指標",
                 "metric": "does_not_exist",
                 "operator": "<=",
                 "threshold": 1,
             },
-        ]
+        ],
     },
     "episodes": [{"id": "ep", "label": "局面", "start": "2026-01-03", "end": "2026-01-05"}],
 }
@@ -228,9 +245,8 @@ def test_episode_impacts_replay_the_move_from_the_close_before_the_start() -> No
 
 
 def test_evaluate_limits_reports_ok_breach_and_na() -> None:
-    rows = risk.evaluate_limits(
-        REFERENCE["policy"]["limits"], {"largest_position_ratio": 0.3, "cash_ratio": 0.5}
-    )
+    limits = [*REFERENCE["policy"]["limits"][:2], *REFERENCE["policy"]["daily_limits"]]
+    rows = risk.evaluate_limits(limits, {"largest_position_ratio": 0.3, "cash_ratio": 0.5})
     status = {r["id"]: r["status"] for r in rows}
     assert status == {"single_position_max": "breach", "cash_min": "ok", "na_metric": "na"}
     assert rows[0]["value"] == 0.3 and rows[0]["threshold"] == 0.1
@@ -268,7 +284,15 @@ def test_assemble_builds_the_payload_block() -> None:
     assert out["stats"]["prev"]["vol_annual"] == 0.10
     assert sum(r["risk_share"] for r in out["contributions"]["positions"]) == pytest.approx(1.0)
     assert sum(r["risk_share"] for r in out["contributions"]["currency"]) == pytest.approx(1.0)
-    assert {r["id"] for r in out["policy"]} == {"single_position_max", "cash_min", "na_metric"}
+    # policy.limits (the main dashboard's, under its metric names) plus policy.daily_limits
+    status = {r["id"]: r["status"] for r in out["policy"]}
+    assert status == {
+        "single_position_max": "breach",
+        "cash_min": "ok",
+        "sectors_min": "ok",  # 1 / (0.821² + 0.179²) = 1.42 effective equity sectors
+        "hist_dd_max": "ok",  # the historical scenario loses 308 of 2000 = 15.4%
+        "na_metric": "na",
+    }
     assert out["policy_breaches"] == 1
-    assert out["stress"]["scenarios"][0]["id"] in ("global_equity_down_10", "compound_x")
+    assert out["stress"]["scenarios"][0]["id"] == "hist_x"
     assert out["history"]["vol_annual"] == out["stats"]["vol_annual"]
