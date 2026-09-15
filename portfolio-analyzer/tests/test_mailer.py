@@ -6,6 +6,7 @@ import base64
 from email import message_from_bytes
 
 from portfolio_analyzer import mailer
+from risk_fixture import risk_block
 
 
 def payload() -> dict:
@@ -155,6 +156,7 @@ def payload() -> dict:
             }
         ],
         "notes": ["時価が取れず据え置き: CASH_JPY（合計 9,450,075 円）"],
+        "risk": risk_block(),
         "series": {
             "dates": ["2025-09-11", "2026-03-11", "2026-09-11"],
             "nav": [24000000.0, 25000000.0, 25427872.0],
@@ -461,3 +463,37 @@ def test_html_body_shows_the_totals_across_accounts_with_a_row_per_account() -> 
     assert "　海外証券口座" in table and "　DC口座" in table and "+2,340,897" in table
     text = mailer.text_body(data)
     assert "(全口座・入金控除後)" in text and "(海外証券口座・国内証券口座)" in text
+
+
+def test_html_and_text_body_carry_the_risk_section() -> None:
+    body = mailer.html_body(payload())
+    for text in (
+        "リスク",
+        "限度 · 超過 2 件",
+        "超過 単一銘柄は総資産の10%以下 · 16.4% / &lt;= 10.0%",
+        "外貨エクスポージャー",
+        "年率ボラティリティ",
+        "18.0%",
+        "前日比 +1.0pt",
+        "VaR 1日 95%",
+        "690,000",
+        "ベータ TOPIX",
+        "リスク寄与",
+        "56.5%",
+        "ストレス",
+        "株式全体 -10%",
+        "2024-08 円キャリー巻き戻し",
+        "カバー率 100%",
+        "Advantest",
+        "6857 · 1329",
+    ):
+        assert text in body, text
+    assert "background:" not in body
+    text = mailer.text_body(payload())
+    assert "リスク: ボラ 18.0%, VaR(1日95%) 690,000, ES(97.5%) 920,000, 外貨 32.3%" in text
+    assert "最大ルックスルー銘柄 Advantest 14.6%, 超過 2" in text
+    data = payload()
+    data["risk"] = None
+    assert "年率ボラティリティ" not in mailer.html_body(data) and "リスク:" not in mailer.text_body(
+        data
+    )

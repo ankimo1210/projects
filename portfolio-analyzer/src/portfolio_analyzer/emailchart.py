@@ -525,3 +525,40 @@ def hbars(
         f'<table cellspacing="0" cellpadding="0" border="0" style="width:100%">'
         f"{''.join(out)}</table>"
     )
+
+
+def strips(
+    rows: Sequence[tuple[str, Number, str]],
+    width: int = 160,
+    bar_h: int = 8,
+    up: str = UP,
+    dn: str = DN,
+) -> str:
+    """One-sided bars in proportion to the largest magnitude, coloured by sign: label, bar, note.
+
+    Lighter than ``hbars`` (no zero rule, no empty half) for a long list where
+    the sign is also in the note.
+    """
+    values = [0.0 if v is None else float(v) for _, v, _ in rows]
+    peak = max((abs(v) for v in values), default=0.0)
+    out = []
+    for (label, _, note), value in zip(rows, values, strict=False):
+        px = 0 if peak == 0 else round(abs(value) / peak * width)
+        color = dn if value < 0 else up
+        bar = (
+            f'<table cellspacing="0" cellpadding="0" border="0"><tr>'
+            f'<td width="{px}"{_fill(color if px else None)} style="font:0/0 a">&nbsp;</td>'
+            f'<td width="{width - px}" style="font:0/0 a">&nbsp;</td></tr></table>'
+        )
+        out.append(
+            "<tr>"
+            f'<td style="font:400 11.5px {SANS};color:{INK};padding:2px 8px 2px 0">{html.escape(label)}</td>'
+            f'<td width="{width}" style="padding:2px 0;vertical-align:middle">{bar}</td>'
+            f'<td align="right" style="font:400 11px {MONO};color:{MUTED};'
+            f'padding:2px 0 2px 8px;white-space:nowrap">{html.escape(note)}</td>'
+            "</tr>"
+        )
+    return (
+        f'<table cellspacing="0" cellpadding="0" border="0" style="width:100%">'
+        f"{''.join(out)}</table>"
+    )

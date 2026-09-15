@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from portfolio_analyzer import dashboard
+from risk_fixture import risk_block
 
 
 def sample() -> dict:
@@ -110,6 +111,7 @@ def sample() -> dict:
             }
         ],
         "notes": ["国内証券口座は取得原価未入力"],
+        "risk": risk_block(),
     }
 
 
@@ -222,3 +224,35 @@ def test_render_labels_the_series_as_all_accounts_and_lists_each_account_s_attri
     assert (
         "<td>海外証券口座</td><td class='n dn'>−135,387</td><td class='n up'>+405,724</td>" in html
     )
+
+
+def test_render_shows_the_risk_section() -> None:
+    html = dashboard.render(sample(), ":root{--ink:#000}")
+    for text in (
+        "リスク",
+        "限度",
+        "超過 2 件",
+        "超過 単一銘柄は総資産の10%以下 · 16.4% / &lt;= 10.0%",
+        "実効セクター数は4以上 · 3.2 / &gt;= 4.0",
+        "エクスポージャー",
+        "外貨エクスポージャー",
+        "年率ボラティリティ",
+        "18.0%",
+        "前日比 +1.0pt",
+        "VaR 1日 95%",
+        "690,000",
+        "ベータ TOPIX",
+        "リスク寄与",
+        "56.5%",
+        "ストレス",
+        "株式全体 -10%",
+        "2020-03 コロナ暴落",
+        "2024-08 円キャリー巻き戻し",
+        "カバー率 100%",
+        "Advantest",
+        "6857 · 1329",
+    ):
+        assert text in html, text
+    data = sample()
+    data["risk"] = None
+    assert "年率ボラティリティ" not in dashboard.render(data, ":root{--ink:#000}")
