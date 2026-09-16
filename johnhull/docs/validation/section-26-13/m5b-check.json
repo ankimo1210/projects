@@ -8,7 +8,7 @@
     "command": "uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests",
     "passed": 2158,
     "skipped": 6,
-    "seconds": 58.44,
+    "seconds": 59.71,
     "asian_tests": {
       "test_asian_lesson.py": 35,
       "test_asian_pricing.py": 102,
@@ -50,7 +50,7 @@
     "docs/validation/section-26-12/m5b-recheck.json"
   ],
   "pinning_note": "状態件数をassertするテストは検証記録にpinしない。report/tests/test_section_ledger.py and report/tests/test_report_build.py assert section and figure counts, so registering the next section would invalidate this record for no real reason.",
-  "independent_review": "Not performed. The ledger state stays pending_validation, not accepted.",
+  "independent_review": "Performed on 2026-09-16 (docs/SECTION_26_13_FEEDBACK_2026-09-16.md): requires changes, 6 P2 and 1 P3. All were fixed. The re-review was waived by the user, so the ledger's accepted state does not include a third-party check of the fixed state.",
   "source_sha256": {
     "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
     "hullkit/src/hullkit/_asian_lesson.py": "07667046a0cb616c30e237ebad024b72c601aed9286d8009850513f8d6a1061c",

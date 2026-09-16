@@ -3053,7 +3053,7 @@
     },
     {
       "id": "26.13",
-      "status": "pending_validation",
+      "status": "accepted",
       "requirements": [
         {
           "id": "A01",
@@ -3355,7 +3355,7 @@
         "モーメント整合は近似であり、価格の正しさの承認ではない。誤差の符号にマネーネスの一般則は立たない。",
         "平均行使型は幾何平均に厳密な共分散を使う近似で、−1.83%〜+18.23%の誤差を測った。",
         "変動ボラ・現金配当・不等間隔の観測日・T=0・sigma=0は対象外。",
-        "2026-09-16の独立レビューはP2 6件で要修正。F1–F7に対応したが、独立再レビューの承認までacceptedへは変更しない。"
+        "2026-09-16の独立レビューはP2 6件で要修正となり、F1–F7に対応した。修正後の独立再レビューは利用者の指示で省略しているため、第三者が修正後の状態を確認した受入ではない。"
       ],
       "evidence": {
         "review": {
@@ -3366,7 +3366,7 @@
         "acceptance_note": {
           "path": "docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md",
           "kind": "note",
-          "sha256": "b4ec9c50a26b186bc2d7a7fb5575fea8a0889ef392432a7543d72e5f3228eea3"
+          "sha256": "167c356655c39094683774344d06a393c064ee64a20918a679414d986d8b4a19"
         },
         "reference_builder": {
           "path": "scripts/build_asian_reference.py",
@@ -3476,7 +3476,7 @@
         "m5b_check": {
           "path": "docs/validation/section-26-13/m5b-check.json",
           "kind": "record",
-          "sha256": "b2f6c434e02f1f086cf28b8942c9d22586c3edbb10f7ef0b0f2b359ae6bb7f0d"
+          "sha256": "37c14f7a82e933c50f157eb95076b92c80eafa959028eaaf7509fc18f4827d27"
         },
         "payoff_image": {
           "path": "docs/validation/section-26-13/book-asian_payoff-1000.png",
@@ -3508,7 +3508,8 @@
           "kind": "note",
           "sha256": "67a10c460f8d8dd4bbc12d71176fcec4a3f0a52fbe9d5e66e4a7699f4b69a20d"
         }
-      }
+      },
+      "acceptance_note": "docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md"
     },
     {
       "id": "26.14",

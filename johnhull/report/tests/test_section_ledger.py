@@ -575,14 +575,16 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["counts"] == {
         "unreviewed": 301,
         "gaps_found": 0,
-        "pending_validation": 1,
-        "accepted": 4,
+        "pending_validation": 0,
+        "accepted": 5,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
     asian = next(section for section in ledger["sections"] if section["id"] == "26.13")
-    # M5b delivered A01-A06; the independent review is the only gate left before accepted.
-    assert asian["status"] == "pending_validation"
+    # Accepted after the review's F1-F7 were fixed; the re-review was waived by the user,
+    # which the acceptance note and the ledger limitations both say.
+    assert asian["status"] == "accepted"
+    assert any("再レビュー" in text for text in asian["limitations"])
     assert [row["id"] for row in asian["requirements"]] == [f"A{i:02}" for i in range(1, 7)]
     assert asian["requirements"][1]["coverage"]["implementation"]["state"] == "verified"
     assert asian["requirements"][3]["coverage"]["independent_validation"]["state"] == "verified"
