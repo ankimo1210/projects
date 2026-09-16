@@ -404,6 +404,22 @@ enum BackupService {
                 context.insert(session)
                 theoryByID[snapshot.id] = session
             }
+            if let existing,
+               existing.status != .completed,
+               snapshot.statusRawValue == existing.statusRawValue {
+                // These timestamps track lifecycle transitions, not individual edits.
+                // Preserve local edits, including explicit clears. Submitted answers
+                // and their assessment stay together; only fill gaps while answering.
+                if existing.status == .inProgress {
+                    session.selectedAnswersData = encode(
+                        snapshot.selectedAnswers.merging(existing.selectedAnswers) { _, local in local }
+                    )
+                    session.writtenResponsesData = encode(
+                        snapshot.writtenResponses.merging(existing.writtenResponses) { _, local in local }
+                    )
+                }
+                continue
+            }
             guard shouldApply(snapshot, over: existing) else { continue }
             session.startedAt = snapshot.startedAt
             session.deadline = snapshot.deadline
@@ -449,7 +465,7 @@ enum BackupService {
             return true
         }
         return (snapshot.completedAt ?? snapshot.submittedAt ?? snapshot.startedAt)
-            >= (existing.completedAt ?? existing.submittedAt ?? existing.startedAt)
+            > (existing.completedAt ?? existing.submittedAt ?? existing.startedAt)
     }
 
     private static func encode<T: Encodable>(_ value: T) -> Data {
