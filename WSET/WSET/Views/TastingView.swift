@@ -6,7 +6,9 @@ struct TastingView: View {
     @Environment(EntitlementStore.self) private var entitlementStore
     @Query(sort: \TastingNote.tastedAt, order: .reverse) private var notes: [TastingNote]
     @State private var activeExam: TastingExamSnapshot?
-    @State private var didSeedUITestNotes = false
+    @State private var presentedExam: TastingExamSnapshot?
+    @State private var isPresentingExam = false
+    @State private var didSeedUITestData = false
 
     var body: some View {
         NavigationStack {
@@ -32,18 +34,24 @@ struct TastingView: View {
                         Label("2本比較ブラインド練習", systemImage: "wineglass.fill")
                     }
 
-                    NavigationLink {
-                        if entitlementStore.policy.canCreateTastingNote(existingCount: notes.count + 1) {
-                            TastingExamView()
-                        } else {
-                            PaywallView(triggerFeature: .unlimitedTastingNotes)
-                        }
+                    Button {
+                        presentedExam = entitlementStore.policy.canCreateTastingNote(existingCount: notes.count + 1)
+                            ? (TastingExamDraftStore.shared.load() ?? TastingExamSnapshot())
+                            : nil
+                        isPresentingExam = true
                     } label: {
-                        Label(
-                            activeExam == nil ? "30分テイスティング試験" : "30分試験を再開",
-                            systemImage: activeExam == nil ? "timer" : "arrow.clockwise.circle.fill"
-                        )
+                        HStack {
+                            Label(
+                                activeExam == nil ? "30分テイスティング試験" : "30分試験を再開",
+                                systemImage: activeExam == nil ? "timer" : "arrow.clockwise.circle.fill"
+                            )
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.tertiary)
+                        }
                     }
+                    .buttonStyle(.plain)
                     .accessibilityIdentifier("tasting.exam.entry")
                 }
 
@@ -95,8 +103,16 @@ struct TastingView: View {
             }
             .navigationTitle("テイスティング")
             .onAppear {
-                seedTastingNotesForUITestIfNeeded()
+                seedTastingDataForUITestIfNeeded()
                 activeExam = TastingExamDraftStore.shared.load()
+            }
+            .navigationDestination(isPresented: $isPresentingExam) {
+                if let presentedExam {
+                    TastingExamView(snapshot: presentedExam)
+                        .id(presentedExam.sessionID)
+                } else {
+                    PaywallView(triggerFeature: .unlimitedTastingNotes)
+                }
             }
         }
     }
@@ -108,12 +124,16 @@ struct TastingView: View {
         try? modelContext.save()
     }
 
-    private func seedTastingNotesForUITestIfNeeded() {
+    private func seedTastingDataForUITestIfNeeded() {
 #if DEBUG
-        guard !didSeedUITestNotes,
-              ProcessInfo.processInfo.arguments.contains("-UITestSeedTastingComparison")
-        else { return }
-        didSeedUITestNotes = true
+        guard !didSeedUITestData else { return }
+        didSeedUITestData = true
+        if ProcessInfo.processInfo.arguments.contains("-UITestSeedTastingExamDraft") {
+            var snapshot = TastingExamSnapshot(startedAt: .now.addingTimeInterval(-300))
+            snapshot.wineOne.draft.wineName = "破棄前のワイン"
+            TastingExamDraftStore.shared.save(snapshot)
+        }
+        guard ProcessInfo.processInfo.arguments.contains("-UITestSeedTastingComparison") else { return }
         guard notes.count < 2 else { return }
 
         var first = TastingDraft()
@@ -368,18 +388,21 @@ private struct TastingExamView: View {
     @State private var snapshot: TastingExamSnapshot
     @State private var selectedSample = 0
     @State private var isSubmitted = false
+    @State private var isDiscarded = false
     @State private var showingAbandonConfirmation = false
     @State private var saveError: String?
 
     private let store: TastingExamDraftStore
 
     init(
-        store: TastingExamDraftStore = .shared,
-        now: Date = .now
+        snapshot: TastingExamSnapshot,
+        store: TastingExamDraftStore = .shared
     ) {
         self.store = store
-        _snapshot = State(initialValue: store.load() ?? TastingExamSnapshot(startedAt: now))
+        _snapshot = State(initialValue: snapshot)
     }
+
+    private var shouldSaveDraft: Bool { !isSubmitted && !isDiscarded }
 
     var body: some View {
         Group {
@@ -412,6 +435,7 @@ private struct TastingExamView: View {
             titleVisibility: .visible
         ) {
             Button("下書きを破棄", role: .destructive) {
+                isDiscarded = true
                 store.clear()
                 dismiss()
             }
@@ -431,19 +455,19 @@ private struct TastingExamView: View {
             Text(saveError ?? "もう一度お試しください。")
         }
         .onAppear {
-            store.save(snapshot)
+            if shouldSaveDraft { store.save(snapshot) }
         }
         .onChange(of: snapshot) { _, updated in
-            guard !isSubmitted else { return }
+            guard shouldSaveDraft else { return }
             store.save(updated)
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase != .active && !isSubmitted {
+            if phase != .active && shouldSaveDraft {
                 store.save(snapshot)
             }
         }
         .onDisappear {
-            if !isSubmitted { store.save(snapshot) }
+            if shouldSaveDraft { store.save(snapshot) }
         }
     }
 
@@ -618,8 +642,8 @@ private struct TastingExamView: View {
 
         do {
             try modelContext.save()
-            store.clear()
             isSubmitted = true
+            store.clear()
         } catch {
             modelContext.delete(first)
             modelContext.delete(second)
