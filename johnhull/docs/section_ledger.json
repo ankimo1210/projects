@@ -1206,12 +1206,12 @@
       "evidence": {
         "lesson_builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f",
+          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
           "kind": "source"
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911",
+          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
           "kind": "source"
         },
         "pricing": {
@@ -1251,7 +1251,7 @@
         },
         "browser_run": {
           "path": "docs/validation/section-26-9/browser-check.json",
-          "sha256": "c5a69818314179a55d0db34593edd3e5d0b7a20617c0c1d7af1f90c5f2417aa4",
+          "sha256": "d19fa397d5aa2ab98b6b7858bc5f63917b118d426a595f6f7b9aaf28f7353f56",
           "kind": "record"
         },
         "path_image": {
@@ -1292,7 +1292,7 @@
         "m4b_recheck": {
           "path": "docs/validation/section-26-9/m4b-recheck.json",
           "kind": "record",
-          "sha256": "7d9d652c287d59ca1888c9511999e1bfd46cf535c5d166cd56dba607a864f057"
+          "sha256": "45dbcd00a6cb80f48edfee95b42eaada380c806bbfcce16d5f56c6975a280f6c"
         }
       },
       "requirements": [
@@ -1755,12 +1755,12 @@
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911",
+          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
           "kind": "source"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f",
+          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
           "kind": "source"
         },
         "review": {
@@ -1795,7 +1795,7 @@
         },
         "browser_run": {
           "path": "docs/validation/section-26-10/browser-check.json",
-          "sha256": "a812787ee5833039ed9afdefa54ba13b2cd4aea22f57e197ebfe6622f688c6ff",
+          "sha256": "ab7f0b489231ab57b601ef0a16de0e33d04eadf2fe93155403ac6354b6e02626",
           "kind": "record"
         },
         "acceptance_note": {
@@ -1836,7 +1836,7 @@
         "m4b_recheck": {
           "path": "docs/validation/section-26-10/m4b-recheck.json",
           "kind": "record",
-          "sha256": "1879cca7fe8c61ed850fbe69fa85ff320fb16696bafbe71a090536ff09657405"
+          "sha256": "41970a36124a14d3cadb73141aa5df4a0907ff1e0ab2941e54c5ff2012a1a062"
         }
       },
       "requirements": [
@@ -2462,12 +2462,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911"
+          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f"
+          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb"
         },
         "review": {
           "path": "docs/SECTION_26_11_REVIEW_2026-09-15.md",
@@ -2512,7 +2512,7 @@
         "browser_run": {
           "path": "docs/validation/section-26-11/browser-m4b-check.json",
           "kind": "record",
-          "sha256": "27a08bb39a1d9241087fab7c9d2bcf82cb38ffd321021f01b2a2efeb87161a31"
+          "sha256": "e97a9896a961da105ef0929ff1e4235fa76de60f43c3a405014270a3d225e2cd"
         },
         "boundary": {
           "path": "docs/validation/section-26-11/boundary-m3b-check.json",
@@ -2522,7 +2522,7 @@
         "notebook_check": {
           "path": "docs/validation/section-26-12/notebook-m4b-check.json",
           "kind": "record",
-          "sha256": "a9df81c7386105d26e7bc16fea4e36044ef2f42a828c9e566a4d05332ed9a3cf"
+          "sha256": "8b3db4ea2400c913b0b0403fe6e4aa7bd7f389d9ebafd804fd4d156c61307530"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md",
@@ -2567,7 +2567,7 @@
         "m4b_recheck": {
           "path": "docs/validation/section-26-11/m4b-recheck.json",
           "kind": "record",
-          "sha256": "f169ade1e747e00db9016412c938f0a16f0d611349a35a1299165b303b4d4d14"
+          "sha256": "495c8f44e665e1f192c426ddef96c7596152766e032256280797d0770417127e"
         }
       },
       "acceptance_note": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md"
@@ -2946,12 +2946,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911"
+          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f"
+          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb"
         },
         "pricing": {
           "path": "hullkit/src/hullkit/_shout.py",
@@ -3006,22 +3006,22 @@
         "browser_run": {
           "path": "docs/validation/section-26-12/browser-m4b-check.json",
           "kind": "record",
-          "sha256": "9fae6558854904fe276656c3784b74ab4718bf146bddb6ee6a735660bc8099cd"
+          "sha256": "a8cf577f27c29caa816486de0180aec1d85b7003a7e04bbd3e1bcf2b7fcf4fda"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-12/notebook-m4b-check.json",
           "kind": "record",
-          "sha256": "a9df81c7386105d26e7bc16fea4e36044ef2f42a828c9e566a4d05332ed9a3cf"
+          "sha256": "8b3db4ea2400c913b0b0403fe6e4aa7bd7f389d9ebafd804fd4d156c61307530"
         },
         "m4b_check": {
           "path": "docs/validation/section-26-12/m4b-check.json",
           "kind": "record",
-          "sha256": "9a1ca21bc7c8e675aa5be719d81805ab5379a544559aadb2e68217af5405cb99"
+          "sha256": "c0453fa7a3e7c344d1d727c50cd1a384ece07043559d327cfc7ddb2b8b4dd75d"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md",
           "kind": "note",
-          "sha256": "fd38a096ab9af3f1652e32d7424929d63f59b2dcf77ee3756e9431d988c17e68"
+          "sha256": "4001f30ed4b703e7bed39a6b2109c3fdd74134eef73bf2abda42ec3d06bfb0c8"
         },
         "payoff_image": {
           "path": "docs/validation/section-26-12/book-shout_payoff-1000.png",
@@ -3042,6 +3042,11 @@
           "path": "docs/validation/section-26-12/book-shout_comparison-1000.png",
           "kind": "image",
           "sha256": "0db910c379a6c3baaa3f428362d415f0e62bc3d61c7f2777305edd4911189a2a"
+        },
+        "final_review": {
+          "path": "docs/validation/section-26-12/final-m4b-review.md",
+          "kind": "note",
+          "sha256": "396f8c15d85e51f8c02acebc9e588b1b04cc6359286acb1a9ec2053b97b23414"
         }
       },
       "acceptance_note": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md"

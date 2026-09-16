@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checked_at": "2026-09-16T06:52:29.830375+00:00",
+  "checked_at": "2026-09-16T07:07:27.837779+00:00",
   "scope": "Fresh section26.10 regression after Shout insertion and shared delivery changes.",
   "related_tests": {
     "status": "PASS",
@@ -261,8 +261,8 @@
     "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
     "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f",
-    "volumes/10_exotics_martingales/exotics.ipynb": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
+    "volumes/10_exotics_martingales/exotics.ipynb": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
     "report/report_builder/figures.py": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
@@ -274,7 +274,7 @@
     "report/site/exotics.html": "1efdfcaca6f17ed27a6b2245938a88def5950a71d8c1b0437a6172f70e626115",
     "report/site/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "ccf28a1705309c98118174fe042a35f651e208037b5c79c27dc322c074b027b5",
-    "docs/validation/section-26-12/notebook-m4b-check.json": "a9df81c7386105d26e7bc16fea4e36044ef2f42a828c9e566a4d05332ed9a3cf"
+    "book/_build/html/notebooks/10_exotics.html": "a50acec8527ea1c505bba9bbe52e88e90f0b009a202b5a611d57ca9634f93c94",
+    "docs/validation/section-26-12/notebook-m4b-check.json": "8b3db4ea2400c913b0b0403fe6e4aa7bd7f389d9ebafd804fd4d156c61307530"
   }
 }
