@@ -303,24 +303,130 @@ def _exp_integral_derivative(rate, T):
     return T**2 * (x * math.exp(x) - math.expm1(x)) / x**2
 
 
+def asian_moments(S, r, sigma, T, q=0.0, times=None):
+    """First two moments of the arithmetic average (Hull eq. 26.3-26.4 inputs).
+
+    ``times=None`` averages continuously over ``[0, T]``. A sequence of
+    observation times instead averages ``S`` at those dates; the discrete form
+    is exact, needs no ``r != q``, and reproduces Hull's 12/52/250-observation
+    prices with dates ``i*T/m`` (today excluded, maturity included).
+    """
+    if S <= 0.0 or sigma <= 0.0 or T <= 0.0:
+        raise ValueError("S, sigma, and T must be > 0")
+    b = r - q
+    if times is None:
+        m1 = S * _exp_integral(b, T) / T
+        delta = b + sigma**2
+        if abs(delta * T) < 1e-7:
+            second_integral = _exp_integral_derivative(b, T)
+        else:
+            second_integral = (_exp_integral(2.0 * b + sigma**2, T) - _exp_integral(b, T)) / delta
+        return m1, 2.0 * S**2 * second_integral / T**2
+    dates = sorted(float(t) for t in times)
+    if not dates or dates[0] <= 0.0 or dates[-1] > T:
+        raise ValueError("observation times must be positive and at most T")
+    forwards = [S * math.exp(b * t) for t in dates]
+    count = len(dates)
+    m1 = math.fsum(forwards) / count
+    # With the dates sorted, min(t_i, t_j) = t_i for j > i, so a suffix sum of the
+    # forwards turns the double sum for E[A^2] into a single pass.
+    suffix = 0.0
+    terms = []
+    for index in range(count - 1, -1, -1):
+        weight = forwards[index] * math.exp(sigma**2 * dates[index])
+        terms.append(weight * (forwards[index] + 2.0 * suffix))
+        suffix += forwards[index]
+    return m1, math.fsum(terms) / count**2
+
+
+def _moment_matched_black(m1, m2, K, r, T, kind):
+    """Black-76 on the moment-matched lognormal average (Hull eq. 26.3-26.4)."""
+    if kind not in ("call", "put"):
+        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    sigma_a = math.sqrt(math.log(m2 / m1**2) / T)
+    d1 = (math.log(m1 / K) + 0.5 * sigma_a**2 * T) / (sigma_a * math.sqrt(T))
+    d2 = d1 - sigma_a * math.sqrt(T)
+    if kind == "call":
+        return math.exp(-r * T) * (m1 * norm.cdf(d1) - K * norm.cdf(d2))
+    return math.exp(-r * T) * (K * norm.cdf(-d2) - m1 * norm.cdf(-d1))
+
+
+def asian_average_price(S, K, r, sigma, T, q=0.0, kind="call", times=None):
+    """Average-price Asian call or put by Turnbull-Wakeman (Hull §26.13).
+
+    Moment matching is an approximation: the arithmetic average is not
+    lognormal. Measured against independent references it runs from +23% to
+    -7% of the price it approximates, overpricing at and above the average's
+    own forward and underpricing below it, so quote its domain of use with it
+    (`docs/SECTION_26_13_REVIEW_2026-09-16.md`). Put-call parity
+    ``C - P = exp(-r*T)*(M1 - K)`` holds exactly whatever the error.
+    """
+    if S <= 0.0 or K <= 0.0 or sigma <= 0.0 or T <= 0.0:
+        raise ValueError("S, K, sigma, and T must be > 0")
+    m1, m2 = asian_moments(S, r, sigma, T, q=q, times=times)
+    return _moment_matched_black(m1, m2, K, r, T, kind)
+
+
 def asian_call_turnbull_wakeman(S, K, r, sigma, T, q=0.0):
     """Average-price Asian call via Turnbull-Wakeman moment matching into
     Black-76 (Hull eq. 26.3/26.4, continuous arithmetic average)."""
-    if S <= 0.0 or K <= 0.0 or sigma <= 0.0 or T <= 0.0:
-        raise ValueError("S, K, sigma, and T must be > 0")
-    b = r - q
-    m1 = S * _exp_integral(b, T) / T
-    delta = b + sigma**2
-    if abs(delta * T) < 1e-7:
-        second_integral = _exp_integral_derivative(b, T)
-    else:
-        second_integral = (_exp_integral(2.0 * b + sigma**2, T) - _exp_integral(b, T)) / delta
-    m2 = 2.0 * S**2 * second_integral / T**2
-    f0 = m1
+    return asian_average_price(S, K, r, sigma, T, q=q, kind="call")
+
+
+def asian_seasoned_average_price(S, K, r, sigma, elapsed, remaining, observed_average,
+                                 q=0.0, kind="call"):
+    """Seasoned average-price option through Hull's strike shift (Hull p.627).
+
+    With ``t1`` of the averaging window already observed at average ``Sbar`` and
+    ``t2`` left, the payoff is ``t2/(t1+t2)`` of a newly issued option struck at
+    ``K* = ((t1+t2)/t2)*K - (t1/t2)*Sbar``. A non-positive ``K*`` means a call
+    is certain to be exercised, so it is worth the scaled forward on the
+    remaining average and the put is worthless.
+    """
+    if elapsed < 0.0 or remaining <= 0.0:
+        raise ValueError("elapsed must be >= 0 and remaining must be > 0")
+    if observed_average <= 0.0 and elapsed > 0.0:
+        raise ValueError("observed_average must be > 0 once the window has started")
+    window = elapsed + remaining
+    weight = remaining / window
+    shifted = K / weight - observed_average * elapsed / remaining
+    if shifted > 0.0:
+        return weight * asian_average_price(S, shifted, r, sigma, remaining, q=q, kind=kind)
+    if kind == "put":
+        return 0.0
+    if kind != "call":
+        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    m1, _ = asian_moments(S, r, sigma, remaining, q=q)
+    return weight * math.exp(-r * remaining) * (m1 - shifted)
+
+
+def asian_average_strike(S, r, sigma, T, q=0.0, kind="call", times=None):
+    """Average-strike option as an exchange option (Hull p.627).
+
+    An average-strike call pays ``max(0, S_T - Save)``, so it exchanges the
+    average for the terminal price. Hull prices it as a Margrabe exchange
+    option "when Save is assumed to be lognormal" without fixing the log
+    covariance; this uses the geometric-average proxy
+    ``Cov(ln Save, ln S_T) = sigma^2 * mean(observation times)``, exact for the
+    geometric average. Both approximations are measured in
+    `docs/SECTION_26_13_REVIEW_2026-09-16.md`.
+    """
+    if kind not in ("call", "put"):
+        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    m1, m2 = asian_moments(S, r, sigma, T, q=q, times=times)
+    mean_time = T / 2.0 if times is None else math.fsum(float(t) for t in times) / len(times)
     sigma_a = math.sqrt(math.log(m2 / m1**2) / T)
-    d1 = (math.log(f0 / K) + 0.5 * sigma_a**2 * T) / (sigma_a * math.sqrt(T))
-    d2 = d1 - sigma_a * math.sqrt(T)
-    return math.exp(-r * T) * (f0 * norm.cdf(d1) - K * norm.cdf(d2))
+    covariance = sigma**2 * mean_time
+    spread = math.sqrt(max(sigma_a**2 * T + sigma**2 * T - 2.0 * covariance, 0.0))
+    terminal = S * math.exp((r - q) * T)
+    if spread <= 0.0:
+        payoff = max(terminal - m1, 0.0) if kind == "call" else max(m1 - terminal, 0.0)
+        return math.exp(-r * T) * payoff
+    d1 = (math.log(terminal / m1) + 0.5 * spread**2) / spread
+    d2 = d1 - spread
+    if kind == "call":
+        return math.exp(-r * T) * (terminal * norm.cdf(d1) - m1 * norm.cdf(d2))
+    return math.exp(-r * T) * (m1 * norm.cdf(-d2) - terminal * norm.cdf(-d1))
 
 
 def exchange_option(U0, V0, sigma_u, sigma_v, rho, T, q_u=0.0, q_v=0.0):

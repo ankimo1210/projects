@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-16T08:35:41.026509+00:00",
+  "cells": 83,
+  "code_cells": 36,
+  "code_cells_with_outputs": 33,
+  "output_comparison": "Separate fresh execution: output types, MIME keys and normalized deterministic text. Timing cells type-only; images and Plotly payloads excluded from that comparison.",
+  "saved_plotly_comparison": [
+    {
+      "figure": "asian_payoff",
+      "traces": 10,
+      "menu_states": 2
+    },
+    {
+      "figure": "asian_distribution",
+      "traces": 9,
+      "menu_states": 3
+    },
+    {
+      "figure": "asian_observations",
+      "traces": 24,
+      "menu_states": 6
+    },
+    {
+      "figure": "asian_error",
+      "traces": 12,
+      "menu_states": 2
+    }
+  ],
+  "saved_plotly_note": "Each saved Asian payload equals hullkit._asian_lesson._figures() exactly, data and layout.",
+  "preservation": {
+    "base_commit": "cb301c33",
+    "cells_before": 74,
+    "cells_after": 83,
+    "compared_cells_outside_section": 70,
+    "identical": true
+  },
+  "source_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "5fe85540826c576e5b1605bee87a3e97d8f4337b4b6ae70510ec9b73ba02245f",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "4a6a75c6038b56eae4f42e0b3be16195eccc0e598e1950a3f0b71a328c53c25d",
+    "hullkit/src/hullkit/_asian_lesson.py": "e84aafe2a98b7805d84f3399bb738995a6042d21dbce5f507fe72ea203898331",
+    "hullkit/src/hullkit/exotics.py": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
+    "docs/validation/section-26-13/lesson-data.json": "d756b97d6409ea70b8fbb8ed4e5be669586502b1774ced725022ce36caee0018",
+    "scripts/verify_asian_notebook.py": "0a69a0d19c6b527afabde0a451807f7afed14e18916f371a4873f2ecc7f48e12"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "5fe85540826c576e5b1605bee87a3e97d8f4337b4b6ae70510ec9b73ba02245f"
+  }
+}

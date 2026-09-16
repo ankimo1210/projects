@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checked_at": "2026-09-16T07:31:05.488639+00:00",
+  "checked_at": "2026-09-16T07:45:45.646487+00:00",
   "scope": "M5a independent Asian references and approximation-error measurement; section 26.13 stays gaps_found.",
   "reference": "Hull 11e Global Edition section 26.13, physical/printed pp.626-627, Example 26.3 p.627.",
   "method": "Exact moments of the average, an exact two-date price by conditioning, and a control-variate Monte Carlo that samples the observation dates exactly with the exact geometric-average price as control. No hullkit function is used.",
@@ -103,6 +103,168 @@
       }
     ]
   },
+  "average_strike": {
+    "definition": "max(0, S_T - Save) and max(0, Save - S_T) with 52 observations.",
+    "method": "Monte Carlo with the geometric-average version as control; that control is exact because the geometric average and the terminal price are jointly lognormal, so Margrabe applies without approximation.",
+    "rows": [
+      {
+        "market": "low-vol-short",
+        "observations": 52,
+        "contract": "call",
+        "spot": 100.0,
+        "rate": 0.03,
+        "dividend": 0.01,
+        "volatility": 0.1,
+        "expiry": 0.25,
+        "reference": 1.2565748078159635,
+        "standard_error": 1.8185772074510027e-05,
+        "geometric_exact": 1.2680862206452066
+      },
+      {
+        "market": "low-vol-short",
+        "observations": 52,
+        "contract": "put",
+        "spot": 100.0,
+        "rate": 0.03,
+        "dividend": 0.01,
+        "volatility": 0.1,
+        "expiry": 0.25,
+        "reference": 1.0124220613752222,
+        "standard_error": 1.555600786678574e-05,
+        "geometric_exact": 1.003085129972873
+      },
+      {
+        "market": "positive-carry",
+        "observations": 52,
+        "contract": "call",
+        "spot": 100.0,
+        "rate": 0.05,
+        "dividend": 0.02,
+        "volatility": 0.2,
+        "expiry": 1.0,
+        "reference": 5.153898603556445,
+        "standard_error": 0.0003046431632508732,
+        "geometric_exact": 5.3396413293849845
+      },
+      {
+        "market": "positive-carry",
+        "observations": 52,
+        "contract": "put",
+        "spot": 100.0,
+        "rate": 0.05,
+        "dividend": 0.02,
+        "volatility": 0.2,
+        "expiry": 1.0,
+        "reference": 3.7263906368376083,
+        "standard_error": 0.00022656636113230558,
+        "geometric_exact": 3.586866991366353
+      },
+      {
+        "market": "dividend-above-rate",
+        "observations": 52,
+        "contract": "call",
+        "spot": 100.0,
+        "rate": 0.01,
+        "dividend": 0.07,
+        "volatility": 0.25,
+        "expiry": 1.5,
+        "reference": 4.588563709006937,
+        "standard_error": 0.0005296643172107922,
+        "geometric_exact": 4.8376735302403056
+      },
+      {
+        "market": "dividend-above-rate",
+        "observations": 52,
+        "contract": "put",
+        "spot": 100.0,
+        "rate": 0.01,
+        "dividend": 0.07,
+        "volatility": 0.25,
+        "expiry": 1.5,
+        "reference": 8.68362141533003,
+        "standard_error": 0.0006822233540410424,
+        "geometric_exact": 8.168227757798812
+      },
+      {
+        "market": "negative-rate",
+        "observations": 52,
+        "contract": "call",
+        "spot": 100.0,
+        "rate": -0.025,
+        "dividend": 0.01,
+        "volatility": 0.18,
+        "expiry": 0.75,
+        "reference": 2.9329175791137154,
+        "standard_error": 0.0001533215606833192,
+        "geometric_exact": 3.0152659616919335
+      },
+      {
+        "market": "negative-rate",
+        "observations": 52,
+        "contract": "put",
+        "spot": 100.0,
+        "rate": -0.025,
+        "dividend": 0.01,
+        "volatility": 0.18,
+        "expiry": 0.75,
+        "reference": 4.2219673154606765,
+        "standard_error": 0.00017848783828040686,
+        "geometric_exact": 4.097856181128245
+      },
+      {
+        "market": "zero-carry",
+        "observations": 52,
+        "contract": "call",
+        "spot": 100.0,
+        "rate": 0.03,
+        "dividend": 0.03,
+        "volatility": 0.3,
+        "expiry": 2.0,
+        "reference": 9.031862679863162,
+        "standard_error": 0.001307519368741237,
+        "geometric_exact": 9.698848139624596
+      },
+      {
+        "market": "zero-carry",
+        "observations": 52,
+        "contract": "put",
+        "spot": 100.0,
+        "rate": 0.03,
+        "dividend": 0.03,
+        "volatility": 0.3,
+        "expiry": 2.0,
+        "reference": 9.033367129230992,
+        "standard_error": 0.0010643188444049163,
+        "geometric_exact": 8.297258066085128
+      },
+      {
+        "market": "high-vol-long",
+        "observations": 52,
+        "contract": "call",
+        "spot": 100.0,
+        "rate": 0.06,
+        "dividend": 0.025,
+        "volatility": 0.7,
+        "expiry": 5.0,
+        "reference": 31.813548771727394,
+        "standard_error": 0.03556790188927616,
+        "geometric_exact": 38.92838159628898
+      },
+      {
+        "market": "high-vol-long",
+        "observations": 52,
+        "contract": "put",
+        "spot": 100.0,
+        "rate": 0.06,
+        "dividend": 0.025,
+        "volatility": 0.7,
+        "expiry": 5.0,
+        "reference": 24.662659214620163,
+        "standard_error": 0.016637603753758754,
+        "geometric_exact": 16.71876384987203
+      }
+    ]
+  },
   "units": {
     "spot_strike_price": "currency",
     "expiry": "years",
@@ -121,7 +283,7 @@
     "hullkit implements only the continuous average-price call; nothing else in the library is covered."
   ],
   "source_sha256": {
-    "scripts/build_asian_reference.py": "5c9931b7dda75445196ac18a3445d2f0d7f086a2c7a522fb80403b966c13e0f3",
+    "scripts/build_asian_reference.py": "0e8454ac675ce13c7fbe05a64136a05b431753c756a60fc8b8670852db3e29b1",
     "hullkit/tests/test_asian_reference.py": "358e4834c4fafb5790857c92b14c0721a2b58aa88ef511a74681c7aabf12f497",
     "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
   },

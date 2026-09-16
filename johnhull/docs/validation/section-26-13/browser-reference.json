@@ -1,0 +1,498 @@
+{
+  "method": "Displayed values are pinned to the frozen independent table in prices.json and to algebra recomputed here; no hullkit pricer and no lesson module is imported.",
+  "source_sha256": {
+    "scripts/build_asian_browser_reference.py": "e83313f176dd00892a4e8632221f0fbf3356bb89d4a0270037ed6109aa6dfb7f",
+    "scripts/build_asian_reference.py": "0e8454ac675ce13c7fbe05a64136a05b431753c756a60fc8b8670852db3e29b1",
+    "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
+    "docs/validation/section-26-13/numerical-check.json": "84571bcfd66857290fdb7371effad991bc880d36185e0cf3353c0882a21e59cb"
+  },
+  "payoff": {
+    "path": [
+      100.0,
+      112.0,
+      94.0,
+      121.0,
+      90.0,
+      105.0,
+      84.0,
+      116.0,
+      108.0
+    ],
+    "strike": 100.0,
+    "average": 103.75,
+    "terminal": 108.0,
+    "payoffs": {
+      "average_price": [
+        3.75,
+        0.0
+      ],
+      "average_strike": [
+        4.25,
+        0.0
+      ],
+      "vanilla_call": 8.0
+    }
+  },
+  "distribution": [
+    {
+      "market": "low-vol-short",
+      "rate": 0.03,
+      "dividend": 0.01,
+      "volatility": 0.1,
+      "expiry": 0.25,
+      "observations": 52,
+      "moment_1": 100.25523699685613,
+      "moment_2": 10059.74755771879,
+      "matched_volatility": 0.05860857575415165,
+      "location": 4.607289933548395,
+      "scale": 0.029304287877075823,
+      "fitted_skewness": 0.08795692162550646
+    },
+    {
+      "market": "positive-carry",
+      "rate": 0.05,
+      "dividend": 0.02,
+      "volatility": 0.2,
+      "expiry": 1.0,
+      "observations": 52,
+      "moment_1": 101.5443991998069,
+      "moment_2": 10455.230119703603,
+      "matched_volatility": 0.11775124355823563,
+      "location": 4.613563455697208,
+      "scale": 0.11775124355823563,
+      "fitted_skewness": 0.3561315216016696
+    },
+    {
+      "market": "high-vol-long",
+      "rate": 0.06,
+      "dividend": 0.025,
+      "volatility": 0.7,
+      "expiry": 5.0,
+      "observations": 52,
+      "moment_1": 109.46754608655799,
+      "moment_2": 34624.376094569365,
+      "matched_volatility": 0.4606640813623759,
+      "location": 4.165099632911738,
+      "scale": 1.0300762007187665,
+      "fitted_skewness": 6.7208205392649125
+    }
+  ],
+  "observations": [
+    {
+      "market": "dividend-above-rate",
+      "rate": 0.01,
+      "dividend": 0.07,
+      "volatility": 0.25,
+      "expiry": 1.5,
+      "entries": [
+        {
+          "observations": 12,
+          "turnbull_wakeman": 5.059553722099465,
+          "reference": 5.055992638435879,
+          "standard_error": 0.0006247590897639748,
+          "geometric": 4.781726660189571
+        },
+        {
+          "observations": 52,
+          "turnbull_wakeman": 4.86171788582297,
+          "reference": 4.859280909058528,
+          "standard_error": 0.0005939415548119171,
+          "geometric": 4.5839249792929575
+        },
+        {
+          "observations": 250,
+          "turnbull_wakeman": 4.814415854901965,
+          "reference": 4.812184696096387,
+          "standard_error": 0.0005812410172905067,
+          "geometric": 4.536972421729678
+        }
+      ],
+      "continuous_turnbull_wakeman": 4.801973500292886
+    },
+    {
+      "market": "high-vol-long",
+      "rate": 0.06,
+      "dividend": 0.025,
+      "volatility": 0.7,
+      "expiry": 5.0,
+      "entries": [
+        {
+          "observations": 12,
+          "turnbull_wakeman": 35.51367590016617,
+          "reference": 32.27960401167853,
+          "standard_error": 0.04508339713222241,
+          "geometric": 22.282125142666175
+        },
+        {
+          "observations": 52,
+          "turnbull_wakeman": 34.143476577410055,
+          "reference": 30.805552979382934,
+          "standard_error": 0.057014706594193505,
+          "geometric": 20.912820895249478
+        },
+        {
+          "observations": 250,
+          "turnbull_wakeman": 33.817710444079864,
+          "reference": 30.379951225054917,
+          "standard_error": 0.04268421601096512,
+          "geometric": 20.59729080965337
+        }
+      ],
+      "continuous_turnbull_wakeman": 33.732147840779184
+    },
+    {
+      "market": "low-vol-short",
+      "rate": 0.03,
+      "dividend": 0.01,
+      "volatility": 0.1,
+      "expiry": 0.25,
+      "entries": [
+        {
+          "observations": 12,
+          "turnbull_wakeman": 1.3560062961933732,
+          "reference": 1.355611085363077,
+          "standard_error": 2.0189885263885366e-05,
+          "geometric": 1.3440569697945217
+        },
+        {
+          "observations": 52,
+          "turnbull_wakeman": 1.2928333067066085,
+          "reference": 1.2923999943550226,
+          "standard_error": 1.9072974103126753e-05,
+          "geometric": 1.2807881082262695
+        },
+        {
+          "observations": 250,
+          "turnbull_wakeman": 1.2777849091389664,
+          "reference": 1.2773581418273114,
+          "standard_error": 1.8770122368706607e-05,
+          "geometric": 1.265730962769717
+        }
+      ],
+      "continuous_turnbull_wakeman": 1.273830196100541
+    },
+    {
+      "market": "negative-rate",
+      "rate": -0.025,
+      "dividend": 0.01,
+      "volatility": 0.18,
+      "expiry": 0.75,
+      "entries": [
+        {
+          "observations": 12,
+          "turnbull_wakeman": 3.1744347408624196,
+          "reference": 3.1743228095812164,
+          "standard_error": 0.00017414426438101954,
+          "geometric": 3.088769482455171
+        },
+        {
+          "observations": 52,
+          "turnbull_wakeman": 3.040988761972287,
+          "reference": 3.0410785810652,
+          "standard_error": 0.00016484676841709394,
+          "geometric": 2.9551012447130853
+        },
+        {
+          "observations": 250,
+          "turnbull_wakeman": 3.009144338728476,
+          "reference": 3.009381058231205,
+          "standard_error": 0.00016199876249212402,
+          "geometric": 2.9233093300451367
+        }
+      ],
+      "continuous_turnbull_wakeman": 3.0007719219633846
+    },
+    {
+      "market": "positive-carry",
+      "rate": 0.05,
+      "dividend": 0.02,
+      "volatility": 0.2,
+      "expiry": 1.0,
+      "entries": [
+        {
+          "observations": 12,
+          "turnbull_wakeman": 5.534582995150311,
+          "reference": 5.520230279051294,
+          "standard_error": 0.0003473715803919929,
+          "geometric": 5.327705787469702
+        },
+        {
+          "observations": 52,
+          "turnbull_wakeman": 5.272955707024618,
+          "reference": 5.2574225763081595,
+          "standard_error": 0.00032891261556077547,
+          "geometric": 5.0645623345790804
+        },
+        {
+          "observations": 250,
+          "turnbull_wakeman": 5.210665926088509,
+          "reference": 5.1952162241831985,
+          "standard_error": 0.00032343498294857377,
+          "geometric": 5.002145910042797
+        }
+      ],
+      "continuous_turnbull_wakeman": 5.194298294616884
+    },
+    {
+      "market": "zero-carry",
+      "rate": 0.03,
+      "dividend": 0.03,
+      "volatility": 0.3,
+      "expiry": 2.0,
+      "entries": [
+        {
+          "observations": 12,
+          "turnbull_wakeman": 9.813271695023325,
+          "reference": 9.732773692711412,
+          "standard_error": 0.0015515013167379222,
+          "geometric": 8.996237092079557
+        },
+        {
+          "observations": 52,
+          "turnbull_wakeman": 9.3794283994406,
+          "reference": 9.294780833410595,
+          "standard_error": 0.00148000198209177,
+          "geometric": 8.55829004050406
+        },
+        {
+          "observations": 250,
+          "turnbull_wakeman": 9.275989561382087,
+          "reference": 9.191500622943082,
+          "standard_error": 0.0014488799734508069,
+          "geometric": 8.454772982708896
+        }
+      ],
+      "continuous_turnbull_wakeman": 9.248799886494592
+    }
+  ],
+  "errors": [
+    {
+      "market": "low-vol-short",
+      "contract": "put",
+      "spot_ratio": 0.8,
+      "scale": 0.05,
+      "relative_error_percent": 3.7862810525064916e-05
+    },
+    {
+      "market": "low-vol-short",
+      "contract": "call",
+      "spot_ratio": 1.0,
+      "scale": 0.05,
+      "relative_error_percent": 0.03352772775289908
+    },
+    {
+      "market": "low-vol-short",
+      "contract": "put",
+      "spot_ratio": 1.0,
+      "scale": 0.05,
+      "relative_error_percent": 0.042116359404606916
+    },
+    {
+      "market": "low-vol-short",
+      "contract": "call",
+      "spot_ratio": 1.25,
+      "scale": 0.05,
+      "relative_error_percent": -4.625497497966875e-05
+    },
+    {
+      "market": "positive-carry",
+      "contract": "put",
+      "spot_ratio": 0.8,
+      "scale": 0.2,
+      "relative_error_percent": -0.08166192554164049
+    },
+    {
+      "market": "positive-carry",
+      "contract": "call",
+      "spot_ratio": 1.0,
+      "scale": 0.2,
+      "relative_error_percent": 0.2954514401497123
+    },
+    {
+      "market": "positive-carry",
+      "contract": "put",
+      "spot_ratio": 1.0,
+      "scale": 0.2,
+      "relative_error_percent": 0.40922501443272447
+    },
+    {
+      "market": "positive-carry",
+      "contract": "call",
+      "spot_ratio": 1.25,
+      "scale": 0.2,
+      "relative_error_percent": 0.05999230967172485
+    },
+    {
+      "market": "dividend-above-rate",
+      "contract": "put",
+      "spot_ratio": 0.8,
+      "scale": 0.30618621784789724,
+      "relative_error_percent": -0.16912885603828237
+    },
+    {
+      "market": "dividend-above-rate",
+      "contract": "call",
+      "spot_ratio": 1.0,
+      "scale": 0.30618621784789724,
+      "relative_error_percent": 0.050150975217324034
+    },
+    {
+      "market": "dividend-above-rate",
+      "contract": "put",
+      "spot_ratio": 1.0,
+      "scale": 0.30618621784789724,
+      "relative_error_percent": 0.02703145451440557
+    },
+    {
+      "market": "dividend-above-rate",
+      "contract": "call",
+      "spot_ratio": 1.25,
+      "scale": 0.30618621784789724,
+      "relative_error_percent": 0.4897566685461931
+    },
+    {
+      "market": "dividend-above-rate",
+      "contract": "put",
+      "spot_ratio": 1.25,
+      "scale": 0.30618621784789724,
+      "relative_error_percent": 6.748783292597287
+    },
+    {
+      "market": "negative-rate",
+      "contract": "put",
+      "spot_ratio": 0.8,
+      "scale": 0.15588457268119893,
+      "relative_error_percent": -0.01155396515477022
+    },
+    {
+      "market": "negative-rate",
+      "contract": "call",
+      "spot_ratio": 1.0,
+      "scale": 0.15588457268119893,
+      "relative_error_percent": -0.0029535275238299218
+    },
+    {
+      "market": "negative-rate",
+      "contract": "put",
+      "spot_ratio": 1.0,
+      "scale": 0.15588457268119893,
+      "relative_error_percent": -0.0015720932131905382
+    },
+    {
+      "market": "negative-rate",
+      "contract": "call",
+      "spot_ratio": 1.25,
+      "scale": 0.15588457268119893,
+      "relative_error_percent": 0.02477858316733043
+    },
+    {
+      "market": "zero-carry",
+      "contract": "call",
+      "spot_ratio": 0.8,
+      "scale": 0.4242640687119285,
+      "relative_error_percent": -2.893128695171246
+    },
+    {
+      "market": "zero-carry",
+      "contract": "put",
+      "spot_ratio": 0.8,
+      "scale": 0.4242640687119285,
+      "relative_error_percent": -0.3018409641576466
+    },
+    {
+      "market": "zero-carry",
+      "contract": "call",
+      "spot_ratio": 1.0,
+      "scale": 0.4242640687119285,
+      "relative_error_percent": 0.9106999675101017
+    },
+    {
+      "market": "zero-carry",
+      "contract": "put",
+      "spot_ratio": 1.0,
+      "scale": 0.4242640687119285,
+      "relative_error_percent": 0.9041767732023347
+    },
+    {
+      "market": "zero-carry",
+      "contract": "call",
+      "spot_ratio": 1.25,
+      "scale": 0.4242640687119285,
+      "relative_error_percent": 0.8113138667638409
+    },
+    {
+      "market": "zero-carry",
+      "contract": "put",
+      "spot_ratio": 1.25,
+      "scale": 0.4242640687119285,
+      "relative_error_percent": 8.541786915674377
+    },
+    {
+      "market": "high-vol-long",
+      "contract": "call",
+      "spot_ratio": 0.8,
+      "scale": 1.5652475842498528,
+      "relative_error_percent": 12.311783474103487
+    },
+    {
+      "market": "high-vol-long",
+      "contract": "put",
+      "spot_ratio": 0.8,
+      "scale": 1.5652475842498528,
+      "relative_error_percent": 8.545424907354507
+    },
+    {
+      "market": "high-vol-long",
+      "contract": "call",
+      "spot_ratio": 1.0,
+      "scale": 1.5652475842498528,
+      "relative_error_percent": 10.835460737423135
+    },
+    {
+      "market": "high-vol-long",
+      "contract": "put",
+      "spot_ratio": 1.0,
+      "scale": 1.5652475842498528,
+      "relative_error_percent": 14.083122502009473
+    },
+    {
+      "market": "high-vol-long",
+      "contract": "call",
+      "spot_ratio": 1.25,
+      "scale": 1.5652475842498528,
+      "relative_error_percent": 9.065850874429612
+    },
+    {
+      "market": "high-vol-long",
+      "contract": "put",
+      "spot_ratio": 1.25,
+      "scale": 1.5652475842498528,
+      "relative_error_percent": 22.712393468612596
+    }
+  ],
+  "record_extremes": {
+    "largest_overprice": {
+      "market": "high-vol-long",
+      "contract": "put",
+      "spot_ratio": 1.25,
+      "observations": 250,
+      "relative_error": 0.2335051538533239
+    },
+    "largest_underprice": {
+      "market": "dividend-above-rate",
+      "contract": "call",
+      "spot_ratio": 0.8,
+      "observations": 12,
+      "relative_error": -0.06847731827170145
+    }
+  },
+  "limits": [
+    "定義した折れ線の例であり、GBM標本ではない",
+    "今日（0）は平均に入らない",
+    "価格ではなく満期給付である",
+    "固定シード",
+    "近似誤差",
+    "幾何平均",
+    "σ√T"
+  ]
+}

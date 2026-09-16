@@ -919,43 +919,151 @@ $S,K,T,\sigma>0$、有限の一定係数 $r,q$、有効な CRR 確率が前提�
 4. いいえ、離散判断と疎な格子の区間は連続境界の保証ではありません。5. いいえ、既存 API 未対応による欠測です。""")
 )
 
-# Cell 09: asian md
+# Cell 09: asian lesson
 cells.append(
     md(r"""### 4.3 アジアン・オプション（§26.13）
 
-平均価格型は満期スポットではなく**経路平均**でペイオフ。
-平均は変動を均すので**ボラが下がり、バニラより安く**なります。
-算術平均には厳密な閉形式がなく、**Turnbull-Wakeman モーメント整合**（平均の
-1次・2次モーメントを合わせて Black-76 に入力）か MC を使います。""")
-)
-cells.append(
-    md(r"""> **核心** — 原資産の平均価格でペイオフが決まる。<br>
-> **直感** — 平均は終値よりブレが小さい → アジアンはバニラより割安。<br>
-> **実務** — 商品・為替の実需(平均で取引)に合致。モーメントマッチや MC で値付け。""")
+#### 4.3.1 三つの契約と観測の規約
+
+平均価格型は満期スポットではなく**経路平均** $A$ で決済します。call の給付は $\max(A-K,0)$、
+put は $\max(K-A,0)$。**平均行使型**は逆に、満期値を平均と比べて $\max(S_T-A,0)$、$\max(A-S_T,0)$ を払います。
+
+平均をどう取るかは契約条項です。本書では観測日を $t_i=iT/m$ とし、**今日は観測日に入れず、満期は入れます**。
+この規約でのみ原著の 12/52/250 観測の印刷値が再現します。連続平均は $m\to\infty$ の理想化です。""")
 )
 
-# Cell 10: asian demo
 cells.append(
-    code(r"""a_tw = exotics.asian_call_turnbull_wakeman(S_B, K_B, R_B, SIG_B, T_B)
-# MC（算術平均）
-rng_a = np.random.default_rng(1)
-paths_a = mc.simulate_gbm_paths(S_B, R_B, SIG_B, T_B, 252, 100_000, rng=rng_a)
-avg_a = paths_a[:, 1:].mean(axis=1)
-a_mc = math.exp(-R_B * T_B) * np.maximum(avg_a - K_B, 0.0).mean()
-print(f"Turnbull-Wakeman アジアン = {a_tw:.4f}")
-print(f"MC（算術平均、10万パス）   = {a_mc:.4f}")
-print(f"バニラ ATM コール          = {van:.4f}（アジアンは平均化でボラ低下 → 安い）")
+    code(r"""from hullkit._asian_lesson import _figures as asian_lesson_figures
 
-fig4, ax4 = plt.subplots(figsize=(8, 4))
-fig4.canvas.header_visible = False
-for i in range(20):
-    ax4.plot(np.linspace(0, T_B, 253), paths_a[i], lw=0.6, alpha=0.5)
-ax4.axhline(K_B, color="crimson", ls=":", lw=1.5, label="K")
-ax4.set_xlabel("t（年）")
-ax4.set_ylabel("S")
-ax4.set_title("アジアンは満期値でなく経路平均で決済（平均がボラを均す）")
-ax4.legend()
-display(fig4.canvas)""")
+asian_figures = asian_lesson_figures()
+asian_figures["asian_payoff"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.3.2 モーメント整合と Example 26.3
+
+算術平均の分布に閉形式はありませんが、**モーメントは厳密に書けます**。$F_u=S_0e^{(r-q)u}$ として
+
+$$M_1=\frac1m\sum_i F_{t_i},\qquad M_2=\frac1{m^2}\sum_i\sum_j F_{t_i}F_{t_j}e^{\sigma^2\min(t_i,t_j)}.$$
+
+Turnbull-Wakeman は「平均は対数正規」と仮定し、この2つを合わせて Black モデル（式18.7・18.8）に入れます。
+フォワードは $F_0=M_1$、ボラティリティは $\sigma_A^2=\ln(M_2/M_1^2)/T$ です（式26.3・26.4）。
+
+原著 Example 26.3 は $S_0=K=50$、$r=10\%$、$q=0$、$\sigma=40\%$、$T=1$ 年。
+連続平均で $M_1=52.59$、$M_2=2{,}922.76$、$\sigma_A=23.54\%$、価格 **5.62** です。
+
+連続平均の $M_1,M_2$ は $r-q$ で割るため $r=q$ では定義されません。離散版は割り算を含まないので、
+$r=q$ でも同じ式がそのまま使えます（`asian_moments` に観測日を渡してください）。""")
+)
+
+cells.append(
+    code(r"""EX = dict(S=50.0, K=50.0, r=0.10, q=0.0, sigma=0.40, T=1.0)
+m1, m2 = exotics.asian_moments(EX["S"], EX["r"], EX["sigma"], EX["T"], q=EX["q"])
+sigma_a = math.sqrt(math.log(m2 / m1**2) / EX["T"])
+price = exotics.asian_average_price(EX["S"], EX["K"], EX["r"], EX["sigma"], EX["T"], q=EX["q"])
+print(f"M1 = {m1:.2f}（原著 52.59）  M2 = {m2:.2f}（原著 2,922.76）")
+print(f"整合ボラ = {sigma_a * 100:.2f}%（原著 23.54%）  価格 = {price:.4f}（原著 5.62）")
+
+put = exotics.asian_average_price(EX["S"], EX["K"], EX["r"], EX["sigma"], EX["T"],
+                                  q=EX["q"], kind="put")
+parity = math.exp(-EX["r"] * EX["T"]) * (m1 - EX["K"])
+print(f"put = {put:.4f}、パリティ残差 C-P-e^(-rT)(M1-K) = {price - put - parity:.2e}"
+      "（近似の良し悪しによらず厳密に0）")""")
+)
+
+cells.append(
+    md(r"""#### 4.3.3 平均は対数正規ではない
+
+モーメント整合は分布を2次までしか合わせません。平均と分散は一致しますが、**形は一致しません**。
+下図は算術平均の実測分布に、当てはめた対数正規を重ねたものです。
+実測の歪度は当てはめた対数正規より**大きく**、右裾が厚いままです。このズレが価格の誤差になります。""")
+)
+
+cells.append(
+    code(r"""asian_figures["asian_distribution"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.3.4 観測数と価格
+
+観測を増やすと平均のばらつきが減り、平均価格オプションは安くなります。
+原著は Example 26.3 について 12/52/250 観測で **6.00 / 5.70 / 5.63** を示します。
+下のコードは同じ規約で同じ数字を出し、図は独立参照価格（制御変量モンテカルロ）と並べます。
+厳密な**幾何平均**の価格は算術平均の下界です。""")
+)
+
+cells.append(
+    code(r"""for m in (12, 52, 250):
+    times = [(i + 1) * EX["T"] / m for i in range(m)]
+    value = exotics.asian_average_price(EX["S"], EX["K"], EX["r"], EX["sigma"], EX["T"],
+                                        q=EX["q"], times=times)
+    print(f"観測 {m:3d} 回: {value:.4f}")
+print(f"連続平均      : {price:.4f}")
+
+asian_figures["asian_observations"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.3.5 既発契約：$K^*$ への読み替え
+
+平均期間の一部がすでに過ぎた契約も同じ道具で扱えます。観測済み期間を $t_1$、その平均を $\bar S$、
+残りを $t_2$ とすると、給付は
+
+$$\max\!\left(\frac{t_1\bar S+t_2 A}{t_1+t_2}-K,\;0\right)=\frac{t_2}{t_1+t_2}\max(A-K^*,0),
+\qquad K^*=\frac{t_1+t_2}{t_2}K-\frac{t_1}{t_2}\bar S$$
+
+となり、**新規発行の契約を $K^*$ で評価して $t_2/(t_1+t_2)$ 倍する**だけです。これは近似ではなく給付の恒等式です。
+$K^*<0$ なら call は必ず行使されるので、オプションではなくフォワードとして評価します（put は無価値）。""")
+)
+
+cells.append(
+    code(r"""rows_seasoned = []
+for observed in (80.0, 100.0, 120.0, 180.0):
+    elapsed, remaining = 0.6, 0.4
+    weight = remaining / (elapsed + remaining)
+    shifted = EX["K"] / weight - observed * elapsed / remaining
+    value = exotics.asian_seasoned_average_price(EX["S"], EX["K"], EX["r"], EX["sigma"],
+                                                 elapsed, remaining, observed, q=EX["q"])
+    rows_seasoned.append({"観測済み平均 S̄": observed, "K*": round(shifted, 3),
+                          "確実に行使": shifted <= 0.0, "call 価格": round(value, 4)})
+display(pd.DataFrame(rows_seasoned))""")
+)
+
+cells.append(
+    md(r"""#### 4.3.6 平均行使型・適用域・理解の確認
+
+平均行使型は「平均を渡して満期値を受け取る」交換オプションとして評価できます（Margrabe、式26.5）。
+ただし平均を対数正規とみなす近似に加え、**対数の共分散をどう置くか**という選択が入ります。
+ここでは幾何平均に対しては厳密な $\mathrm{Cov}(\ln A,\ln S_T)=\sigma^2\overline{t}$ を使っています。
+
+**適用域**：モーメント整合は $\sigma\sqrt T$ が小さいほど正確です。下図のとおり、
+低ボラ・短期では誤差 0.1% 未満ですが、$\sigma=70\%$・5年では **+10% を超えます**。
+誤差は片側ではありません。144行の実測（観測 2/12/52/250、$S/K=0.8/1.0/1.25$、参照価格 0.5 超）では
+
+| 実測 | 条件 | 相対誤差 |
+|---|---|---:|
+| 最大の高値 | 高ボラ・長期（σ=70%, T=5年）、put、$S/K=1.25$、観測250 | **+23.35%** |
+| 最大の安値 | 配当>金利（σ=25%, T=1.5年）、call、$S/K=0.80$、観測12 | **−6.85%** |
+| 原著 Example 26.3（連続平均） | σ=40%, T=1年、ATM call | +0.99%（5.6168 対 5.5618） |
+
+観測52日の範囲では、put は $S/K$ が大きい（$K$ が平均より下）ほど高く出て、
+call は $\sigma\sqrt T$ が小さい市場で $K$ が平均より上のとき安く出ます（ゼロキャリー $S/K=0.8$ で −2.89%）。
+実務で使うなら、この表の範囲を条件として添えてください。
+
+**理解の確認**
+
+1. 同じ $K$ のバニラと平均価格型はどちらが高いか。その理由を平均の分散で説明できるか。
+2. 観測日を「今日を含む」に変えると $M_1$ と価格はどう動くか。原著の印刷値は再現するか。
+3. $K^*<0$ の契約をオプションとして評価すると何がまずいか。
+4. 誤差が +10% になる市場で、この近似を使ってよいと言えるか。何を添えれば言えるか。""")
+)
+
+cells.append(
+    code(r"""asian_figures["asian_error"].show()
+
+# 後段のチェックで使う連続平均コール（原著の主題）
+a_tw = exotics.asian_call_turnbull_wakeman(S_B, K_B, R_B, SIG_B, T_B)
+print(f"合成市場の Turnbull-Wakeman アジアン = {a_tw:.4f}（バニラ ATM コール {van:.4f} より安い）")""")
 )
 
 # Cell 11: exchange md + demo

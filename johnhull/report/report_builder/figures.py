@@ -16,6 +16,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from hullkit import plotly_viz as pv
+from hullkit._asian_lesson import _figures as asian_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
@@ -577,6 +578,42 @@ FIGURES: list[FigureSpec] = [
         "7つの合成市場、K=100、S₀=80/100/125。call の現在価格を比較する。",
         lambda: shout_lesson_figures()["shout_comparison"],
         practice="連続観測・同じ一定係数 GBM・新規極値、S/K/T/σ>0 が条件。r=q の lookback は既存 API 未対応のため欠測であり、0ではない。現金配当・時変ボラティリティ・契約固有の離散シャウト日・T=0/σ=0・全領域の安定性は対象外。put は原典外の拡張で、この図は call。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "asian_payoff",
+        "exotics",
+        "アジアンの満期給付",
+        "定義した折れ線経路（K=100、観測8日）。平均価格型と平均行使型で何と何を比べるかが違う。",
+        lambda: asian_lesson_figures()["asian_payoff"],
+        practice="満期給付であって現在価値ではない。今日は観測日に入らない。折れ線は定義した例で GBM 標本ではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "asian_distribution",
+        "exotics",
+        "平均の分布とモーメント整合",
+        "観測52日、20万パス。算術平均の分布に、1次・2次モーメントを合わせた対数正規を重ねる。",
+        lambda: asian_lesson_figures()["asian_distribution"],
+        practice="平均と分散は一致するが形は一致しない。実測の歪度は当てはめた対数正規より大きく、その差が価格の誤差になる。固定シードの標本で、密度の厳密解ではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "asian_observations",
+        "exotics",
+        "観測数と平均価格オプション",
+        "観測 12/52/250 と連続平均。原著の 6.00 / 5.70 / 5.63 と同じ規約（i·T/m、今日を除き満期を含む）。",
+        lambda: asian_lesson_figures()["asian_observations"],
+        practice="整合値と参照価格の差は近似誤差で、標準誤差バーとは別物。幾何平均はコール価格の下界。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "asian_error",
+        "exotics",
+        "モーメント整合の誤差",
+        "観測52日、6市場、S/K=0.8/1.0/1.25。制御変量モンテカルロの参照価格に対する相対誤差。",
+        lambda: asian_lesson_figures()["asian_error"],
+        practice="誤差は片側でない。σ√T が大きいほど悪化するが、キャリーがマネーネスを動かすため σ√T だけでは順序が決まらない。参照価格は標準誤差を持ち、厳密なのは2観測日の行だけ。",
         is_new=True,
     ),
     FigureSpec(

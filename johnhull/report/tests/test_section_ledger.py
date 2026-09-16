@@ -574,17 +574,24 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["inventory_total"] == 306
     assert result["counts"] == {
         "unreviewed": 301,
-        "gaps_found": 1,
-        "pending_validation": 0,
+        "gaps_found": 0,
+        "pending_validation": 1,
         "accepted": 4,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
     asian = next(section for section in ledger["sections"] if section["id"] == "26.13")
-    assert asian["status"] == "gaps_found"
+    # M5b delivered A01-A06; the independent review is the only gate left before accepted.
+    assert asian["status"] == "pending_validation"
     assert [row["id"] for row in asian["requirements"]] == [f"A{i:02}" for i in range(1, 7)]
     assert asian["requirements"][1]["coverage"]["implementation"]["state"] == "verified"
-    assert asian["requirements"][3]["coverage"]["independent_validation"]["state"] == "pending"
+    assert asian["requirements"][3]["coverage"]["independent_validation"]["state"] == "verified"
+    assert asian["requirements"][3]["coverage"]["visualization"]["state"] == "not_applicable"
+    assert all(
+        axis["state"] in {"verified", "not_applicable"}
+        for row in asian["requirements"]
+        for axis in row["coverage"].values()
+    )
     shout = next(section for section in ledger["sections"] if section["id"] == "26.12")
     assert shout["status"] == "accepted"
     assert [row["id"] for row in shout["requirements"]] == [f"S{i:02}" for i in range(1, 7)]
