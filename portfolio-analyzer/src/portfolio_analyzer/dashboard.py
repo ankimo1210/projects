@@ -424,6 +424,84 @@ def _viewbox(kind: str, capture: bool, quote: str = '"') -> str:
     return f"viewBox={q}0 0 {w} {h}{q}{fixed}"
 
 
+def _freshness(data: dict[str, Any]) -> str:
+    notes = [str(n) for n in data.get("notes", []) if str(n).startswith("基準日より前の終値:")]
+    if not notes:
+        return ""
+    return (
+        '<div class="err freshness" role="note"><b>価格の更新状況</b><br>'
+        + "<br>".join(_esc(n) for n in notes)
+        + "</div>"
+    )
+
+
+def _overview(data: dict[str, Any]) -> str:
+    """Compact overview of the same series and risk payload used in the details."""
+    risk = data.get("risk")
+    metrics = '<p class="overview-note">リスク指標は未取得</p>'
+    if risk:
+        stats = risk.get("stats") or {}
+        concentration = risk.get("concentration") or {}
+        breaches = risk.get("policy_breaches")
+        tiles = [
+            (
+                "年率ボラティリティ",
+                _ratio(stats.get("vol_annual")),
+                "現在ウェイト・過去の値動きから推定",
+            ),
+            (
+                "VaR 1日 95%",
+                jpy(stats.get("var_1d_95_jpy")) + " 円",
+                "過去シミュレーション・損失額の目安",
+            ),
+            (
+                "外貨比率",
+                _ratio(concentration.get("foreign_currency_ratio")),
+                "ルックスルー後・総資産比",
+            ),
+            (
+                "限度",
+                "未取得" if breaches is None else f"超過 {int(breaches)} 件",
+                "設定済みポリシー（draft）",
+            ),
+        ]
+        cards = "".join(
+            f'<a class="overview-metric" href="#risk"><span>{_esc(label)}</span><b>{_esc(value)}</b><small>{_esc(note)}</small></a>'
+            for label, value, note in tiles
+        )
+        contributors = sorted(
+            [
+                r
+                for r in (risk.get("contributions") or {}).get("positions", [])
+                if r.get("risk_share") is not None
+            ],
+            key=lambda r: r["risk_share"],
+            reverse=True,
+        )[:2]
+        leaders = (
+            " · ".join(f"{_esc(r['sym'])} {_ratio(r['risk_share'])}" for r in contributors)
+            or "未取得"
+        )
+        metrics = f'<div class="overview-metrics">{cards}</div><p class="overview-note">リスク寄与上位：<b>{leaders}</b> <small>分散への寄与率・保有比率とは異なる</small> <a href="#risk">リスク詳細へ →</a></p>'
+    return f"""
+<div class="grid overview-charts">
+  <div class="panel">
+    <h2>NAV と累計入金 <small>全口座 · {_esc(data["window"]["start"])} → {_esc(data["as_of"])}</small></h2>
+    <div class="legend"><span><i style="background:var(--series-1)"></i>NAV ¥</span><span><i style="background:var(--series-2)"></i>累計入金 ¥</span></div>
+    <svg id="overview-nav" viewBox="0 0 860 220" role="img" aria-label="主要時系列：全口座NAVと累計入金"></svg>
+    <a class="overview-link" href="#charts-top">詳細時系列へ →</a>
+  </div>
+  <div class="panel">
+    <h2>累計PL <small>NAV − 累計入金 · 入金の影響を除く</small></h2>
+    <div class="legend"><span><i style="background:var(--series-1)"></i>損益 ¥</span></div>
+    <svg id="overview-pnl" viewBox="0 0 860 220" role="img" aria-label="主要時系列：全口座の累計PL"></svg>
+    <a class="overview-link" href="#charts-top">日次PL・銘柄別の推移へ →</a>
+  </div>
+</div>
+<div class="panel overview-risk"><h2>主要リスク <small>詳細と同じ計算値</small></h2>{metrics}</div>
+"""
+
+
 def render(data: dict[str, Any], tokens_css: str, capture: bool = False) -> str:
     """The dashboard page. ``capture`` lays it out for cutting the charts out into the mail."""
     h = data["headline"]
@@ -630,6 +708,17 @@ ul.notes{{margin:14px 0 0;padding-left:18px;color:var(--ink-3);font-size:11.5px}
 footer{{margin-top:22px;padding-top:10px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10.5px;color:var(--ink-3);line-height:1.9}}
 h2.sec{{font-family:var(--serif);font-size:15px;font-weight:700;margin:18px 0 0;display:flex;gap:10px;align-items:baseline}}
 h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-transform:uppercase}}
+.overview-risk{{margin-top:10px}}
+.overview-metrics{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:10px}}
+.overview-metric{{display:flex;flex-direction:column;gap:5px;padding:10px;border:1px solid var(--rule);border-radius:8px;color:var(--ink);text-decoration:none}}
+.overview-metric span,.overview-metric small,.overview-note{{font-size:11px;color:var(--ink-3)}}
+.overview-metric b{{font-family:var(--mono);font-size:22px;font-weight:500;overflow-wrap:anywhere}}
+.overview-metric:hover,.overview-metric:focus-visible{{border-color:var(--accent)}}
+.overview-link,.overview-note a{{font-size:11px;color:var(--accent)}}
+.overview-note{{margin:12px 0 0;line-height:1.8}}.overview-note b{{color:var(--ink)}}
+.overview-charts{{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.overview-charts svg{{display:block;width:100%;height:auto}}
+@media(max-width:650px){{.overview-metrics{{grid-template-columns:repeat(2,minmax(0,1fr))}}.overview-charts{{grid-template-columns:1fr}}}}
 /* risk */
 .rgrid{{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}}
 .rgrid .wide{{grid-column:1/-1}}
@@ -655,10 +744,12 @@ h2.sec small{{font-family:var(--mono);font-weight:400;letter-spacing:.06em;text-
 </div>
 <div class="tape">{tape}</div>
 
+{_freshness(data)}
 <h2 class="sec">ヘッドライン <small>headline</small></h2>
 <div class="kpis">{kpis}</div>
 
-<h2 class="sec">一般データ <small>general</small></h2>
+<h2 class="sec" id="general">一般データ <small>general</small></h2>
+{_overview(data) if not capture else ""}
 <div class="grid">
   <div class="panel">
     <h2>口座別 <small>評価額 / 日次 / 含み</small></h2>
@@ -762,6 +853,15 @@ function spark(td){{const v=JSON.parse(td.getAttribute("data-spark"));if(!v||v.l
   svg.appendChild(el("circle",{{cx:x(v.length-1),cy:y(v[v.length-1]),r:2.2,class:"dot",style:"stroke-width:1.5"}}));td.appendChild(svg);}}
 /* ---- draw ---- */
 const S=D.series,dates=S.dates;
+function drawOverview(){{
+const ovNav=document.getElementById("overview-nav"),ovPnl=document.getElementById("overview-pnl");
+for(const svg of [ovNav,ovPnl]){{if(svg){{svg.replaceChildren();svg.setAttribute("viewBox",`0 0 ${{Math.max(280,Math.round(svg.clientWidth))}} 220`);}}}}
+if(ovNav)lineChart(ovNav,dates,[{{v:S.nav,cls:"l1"}},{{v:S.deposits,cls:"l2",end:false}}],{{ny:4,tip:i=>`${{jd(dates[i])}}\nNAV ${{fmt(S.nav[i])}} 円\n累計入金 ${{fmt(S.deposits[i])}} 円`}});
+if(ovPnl)lineChart(ovPnl,dates,[{{v:S.pnl,cls:"l1"}}],{{zero:true,area:true,ny:3,tip:i=>`${{jd(dates[i])}}\n損益 ${{sfmt(S.pnl[i])}} 円`}});
+
+}}
+drawOverview();
+window.addEventListener("resize",drawOverview);
 lineChart(document.getElementById("c-nav"),dates,[{{v:S.nav,cls:"l1"}},{{v:S.deposits,cls:"l2",end:false}}],{{ny:4,tip:i=>`${{jd(dates[i])}}\nNAV      ${{fmt(S.nav[i])}} 円\n累計入金  ${{fmt(S.deposits[i])}} 円\n損益      ${{sfmt(S.pnl[i])}} 円`}});
 lineChart(document.getElementById("c-pnl"),dates,[{{v:S.pnl,cls:"l1"}}],{{zero:true,area:true,ny:3,tip:i=>`${{jd(dates[i])}}\n損益 ${{sfmt(S.pnl[i])}} 円`}});
 barChart(document.getElementById("c-daily"),dates,S.daily_pnl,{{}});

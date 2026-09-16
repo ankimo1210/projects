@@ -256,3 +256,53 @@ def test_render_shows_the_risk_section() -> None:
     data = sample()
     data["risk"] = None
     assert "年率ボラティリティ" not in dashboard.render(data, ":root{--ink:#000}")
+
+
+def test_overview_uses_existing_risk_and_series_without_changing_mail_pieces() -> None:
+    data = sample()
+    data["notes"].insert(0, "基準日より前の終値: SMH（2026-09-10）")
+    page = dashboard.render(data, "")
+    overview = page.split('id="general"')[1].split('id="risk"')[0]
+    for text in (
+        'id="overview-nav"',
+        'id="overview-pnl"',
+        "18.0%",
+        "690,000",
+        "32.3%",
+        "超過 2 件",
+        "6857",
+        "56.5%",
+        "SMH",
+        "17.9%",
+        'href="#risk"',
+        'href="#charts-top"',
+    ):
+        assert text in overview
+    assert page.index("基準日より前の終値: SMH") < page.index('id="general"')
+    assert page.count('data-piece="nav"') == 1
+    assert page.count('data-piece="pnl"') == 1
+    capture = dashboard.render(data, "", capture=True)
+    assert 'id="overview-nav"' not in capture
+    assert 'id="overview-pnl"' not in capture
+
+
+def test_overview_handles_unavailable_risk_and_escapes_freshness() -> None:
+    data = sample()
+    data["risk"] = None
+    data["notes"] = ["基準日より前の終値: <script>oops</script>"]
+    page = dashboard.render(data, "")
+    overview = page.split('id="general"')[1].split('<div class="tw">')[0]
+    assert "リスク指標は未取得" in overview
+    assert 'href="#risk"' not in overview
+    assert "&lt;script&gt;oops&lt;/script&gt;" in page
+    assert "<script>oops</script>" not in dashboard._freshness(data)
+
+
+def test_overview_sorts_risk_contributors_and_does_not_call_missing_policy_zero() -> None:
+    data = sample()
+    data["risk"]["contributions"]["positions"].reverse()
+    data["risk"].pop("policy_breaches")
+    overview = dashboard._overview(data)
+    assert overview.index("6857") < overview.index("SMH")
+    assert "未取得" in overview
+    assert "超過 0 件" not in overview
