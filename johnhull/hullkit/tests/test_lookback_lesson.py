@@ -5,7 +5,8 @@ import math
 import numpy as np
 import pytest
 from hullkit._lookback_lesson import _figures, _path_payoffs
-from tests.test_lookback_reference import Market, _reference_price
+
+from .test_lookback_reference import Market, _reference_price
 
 PATH = np.array([100.0, 112.0, 94.0, 121.0, 90.0, 105.0, 84.0, 116.0, 108.0])
 CONTRACTS = ("floating_call", "floating_put", "fixed_call", "fixed_put")
