@@ -1,0 +1,596 @@
+{
+  "market": {
+    "spot": 100,
+    "rate": 0.05,
+    "volatility": 0.2,
+    "expiry": 1,
+    "dividend": 0.02
+  },
+  "path": {
+    "times": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "prices": [
+      100,
+      112,
+      94,
+      121,
+      90,
+      105,
+      84,
+      116,
+      108
+    ]
+  },
+  "payoffs": {
+    "new": [
+      24,
+      13,
+      21,
+      16
+    ],
+    "seasoned": [
+      28,
+      22,
+      30,
+      20
+    ]
+  },
+  "monitoring": {
+    "1": [
+      8,
+      0,
+      8,
+      0
+    ],
+    "2": [
+      18,
+      0,
+      8,
+      10
+    ],
+    "4": [
+      24,
+      0,
+      8,
+      16
+    ],
+    "8": [
+      24,
+      13,
+      21,
+      16
+    ]
+  },
+  "history": [
+    {
+      "K": 80,
+      "side": "minimum",
+      "extreme": 80,
+      "prices": {
+        "floating_call": 23.6447354234865,
+        "fixed_put": 1.7232220528681017
+      }
+    },
+    {
+      "K": 80,
+      "side": "minimum",
+      "extreme": 85,
+      "prices": {
+        "floating_call": 20.418639575282405,
+        "fixed_put": 1.7232220528681017
+      }
+    },
+    {
+      "K": 80,
+      "side": "minimum",
+      "extreme": 100,
+      "prices": {
+        "floating_call": 15.975909766902848,
+        "fixed_put": 1.7232220528681017
+      }
+    },
+    {
+      "K": 80,
+      "side": "maximum",
+      "extreme": 100,
+      "prices": {
+        "floating_put": 15.010268140034825,
+        "fixed_call": 36.931781510653224
+      }
+    },
+    {
+      "K": 80,
+      "side": "maximum",
+      "extreme": 120,
+      "prices": {
+        "floating_put": 21.429719498063477,
+        "fixed_call": 43.351232868681876
+      }
+    },
+    {
+      "K": 80,
+      "side": "maximum",
+      "extreme": 130,
+      "prices": {
+        "floating_put": 28.24840423867218,
+        "fixed_call": 50.16991760929058
+      }
+    },
+    {
+      "K": 100,
+      "side": "minimum",
+      "extreme": 80,
+      "prices": {
+        "floating_call": 23.6447354234865,
+        "fixed_put": 20.747810542882384
+      }
+    },
+    {
+      "K": 100,
+      "side": "minimum",
+      "extreme": 85,
+      "prices": {
+        "floating_call": 20.418639575282405,
+        "fixed_put": 17.52171469467828
+      }
+    },
+    {
+      "K": 100,
+      "side": "minimum",
+      "extreme": 100,
+      "prices": {
+        "floating_call": 15.975909766902848,
+        "fixed_put": 13.07898488629873
+      }
+    },
+    {
+      "K": 100,
+      "side": "maximum",
+      "extreme": 100,
+      "prices": {
+        "floating_put": 15.010268140034825,
+        "fixed_call": 17.907193020638946
+      }
+    },
+    {
+      "K": 100,
+      "side": "maximum",
+      "extreme": 120,
+      "prices": {
+        "floating_put": 21.429719498063477,
+        "fixed_call": 24.326644378667595
+      }
+    },
+    {
+      "K": 100,
+      "side": "maximum",
+      "extreme": 130,
+      "prices": {
+        "floating_put": 28.24840423867218,
+        "fixed_call": 31.145329119276298
+      }
+    },
+    {
+      "K": 125,
+      "side": "minimum",
+      "extreme": 80,
+      "prices": {
+        "floating_call": 23.6447354234865,
+        "fixed_put": 44.528546155400235
+      }
+    },
+    {
+      "K": 125,
+      "side": "minimum",
+      "extreme": 85,
+      "prices": {
+        "floating_call": 20.418639575282405,
+        "fixed_put": 41.30245030719613
+      }
+    },
+    {
+      "K": 125,
+      "side": "minimum",
+      "extreme": 100,
+      "prices": {
+        "floating_call": 15.975909766902848,
+        "fixed_put": 36.859720498816586
+      }
+    },
+    {
+      "K": 125,
+      "side": "maximum",
+      "extreme": 100,
+      "prices": {
+        "floating_put": 15.010268140034825,
+        "fixed_call": 3.746115740415574
+      }
+    },
+    {
+      "K": 125,
+      "side": "maximum",
+      "extreme": 120,
+      "prices": {
+        "floating_put": 21.429719498063477,
+        "fixed_call": 3.746115740415574
+      }
+    },
+    {
+      "K": 125,
+      "side": "maximum",
+      "extreme": 130,
+      "prices": {
+        "floating_put": 28.24840423867218,
+        "fixed_call": 7.364593506758448
+      }
+    }
+  ],
+  "replication": [
+    {
+      "kind": "call",
+      "strike": 80,
+      "floating_leg": 21.429719498063477,
+      "stock_leg": 98.01986733067552,
+      "cash_leg": -76.09835396005712,
+      "reconstructed": 43.351232868681876,
+      "fixed": 43.351232868681876
+    },
+    {
+      "kind": "put",
+      "strike": 80,
+      "floating_leg": 23.6447354234865,
+      "stock_leg": -98.01986733067552,
+      "cash_leg": 76.09835396005712,
+      "reconstructed": 1.7232220528680955,
+      "fixed": 1.7232220528681017
+    },
+    {
+      "kind": "call",
+      "strike": 100,
+      "floating_leg": 21.429719498063477,
+      "stock_leg": 98.01986733067552,
+      "cash_leg": -95.1229424500714,
+      "reconstructed": 24.326644378667595,
+      "fixed": 24.326644378667595
+    },
+    {
+      "kind": "put",
+      "strike": 100,
+      "floating_leg": 20.418639575282405,
+      "stock_leg": -98.01986733067552,
+      "cash_leg": 95.1229424500714,
+      "reconstructed": 17.52171469467828,
+      "fixed": 17.52171469467828
+    },
+    {
+      "kind": "call",
+      "strike": 125,
+      "floating_leg": 24.629926472329302,
+      "stock_leg": 98.01986733067552,
+      "cash_leg": -118.90367806258925,
+      "reconstructed": 3.7461157404155756,
+      "fixed": 3.746115740415574
+    },
+    {
+      "kind": "put",
+      "strike": 125,
+      "floating_leg": 20.418639575282405,
+      "stock_leg": -98.01986733067552,
+      "cash_leg": 118.90367806258925,
+      "reconstructed": 41.302450307196125,
+      "fixed": 41.30245030719613
+    }
+  ],
+  "example": {
+    "floating_call": 8.037120139607019,
+    "floating_put": 7.790219259890343
+  },
+  "method": "M3a independent drifted Brownian extrema-tail integration for all prices. Path/fixings are direct literal payoff arithmetic on the stated piecewise-linear toy path.",
+  "source_sha256": {
+    "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5"
+  },
+  "running_extrema": {
+    "new": [
+      {
+        "time": 0.03125,
+        "spot": 103.0,
+        "minimum": 100,
+        "maximum": 103.0
+      },
+      {
+        "time": 0.0625,
+        "spot": 106.0,
+        "minimum": 100,
+        "maximum": 106.0
+      },
+      {
+        "time": 0.09375,
+        "spot": 109.0,
+        "minimum": 100,
+        "maximum": 109.0
+      },
+      {
+        "time": 0.15625,
+        "spot": 107.5,
+        "minimum": 100,
+        "maximum": 112
+      },
+      {
+        "time": 0.1875,
+        "spot": 103.0,
+        "minimum": 100,
+        "maximum": 112
+      },
+      {
+        "time": 0.21875,
+        "spot": 98.5,
+        "minimum": 98.5,
+        "maximum": 112
+      },
+      {
+        "time": 0.28125,
+        "spot": 100.75,
+        "minimum": 94,
+        "maximum": 112
+      },
+      {
+        "time": 0.3125,
+        "spot": 107.5,
+        "minimum": 94,
+        "maximum": 112
+      },
+      {
+        "time": 0.34375,
+        "spot": 114.25,
+        "minimum": 94,
+        "maximum": 114.25
+      },
+      {
+        "time": 0.40625,
+        "spot": 113.25,
+        "minimum": 94,
+        "maximum": 121
+      },
+      {
+        "time": 0.4375,
+        "spot": 105.5,
+        "minimum": 94,
+        "maximum": 121
+      },
+      {
+        "time": 0.46875,
+        "spot": 97.75,
+        "minimum": 94,
+        "maximum": 121
+      },
+      {
+        "time": 0.53125,
+        "spot": 93.75,
+        "minimum": 90,
+        "maximum": 121
+      },
+      {
+        "time": 0.5625,
+        "spot": 97.5,
+        "minimum": 90,
+        "maximum": 121
+      },
+      {
+        "time": 0.59375,
+        "spot": 101.25,
+        "minimum": 90,
+        "maximum": 121
+      },
+      {
+        "time": 0.65625,
+        "spot": 99.75,
+        "minimum": 90,
+        "maximum": 121
+      },
+      {
+        "time": 0.6875,
+        "spot": 94.5,
+        "minimum": 90,
+        "maximum": 121
+      },
+      {
+        "time": 0.71875,
+        "spot": 89.25,
+        "minimum": 89.25,
+        "maximum": 121
+      },
+      {
+        "time": 0.78125,
+        "spot": 92.0,
+        "minimum": 84,
+        "maximum": 121
+      },
+      {
+        "time": 0.8125,
+        "spot": 100.0,
+        "minimum": 84,
+        "maximum": 121
+      },
+      {
+        "time": 0.84375,
+        "spot": 108.0,
+        "minimum": 84,
+        "maximum": 121
+      },
+      {
+        "time": 0.90625,
+        "spot": 114.0,
+        "minimum": 84,
+        "maximum": 121
+      },
+      {
+        "time": 0.9375,
+        "spot": 112.0,
+        "minimum": 84,
+        "maximum": 121
+      },
+      {
+        "time": 0.96875,
+        "spot": 110.0,
+        "minimum": 84,
+        "maximum": 121
+      }
+    ],
+    "seasoned": [
+      {
+        "time": 0.03125,
+        "spot": 103.0,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.0625,
+        "spot": 106.0,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.09375,
+        "spot": 109.0,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.15625,
+        "spot": 107.5,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.1875,
+        "spot": 103.0,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.21875,
+        "spot": 98.5,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.28125,
+        "spot": 100.75,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.3125,
+        "spot": 107.5,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.34375,
+        "spot": 114.25,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.40625,
+        "spot": 113.25,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.4375,
+        "spot": 105.5,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.46875,
+        "spot": 97.75,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.53125,
+        "spot": 93.75,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.5625,
+        "spot": 97.5,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.59375,
+        "spot": 101.25,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.65625,
+        "spot": 99.75,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.6875,
+        "spot": 94.5,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.71875,
+        "spot": 89.25,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.78125,
+        "spot": 92.0,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.8125,
+        "spot": 100.0,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.84375,
+        "spot": 108.0,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.90625,
+        "spot": 114.0,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.9375,
+        "spot": 112.0,
+        "minimum": 80,
+        "maximum": 130
+      },
+      {
+        "time": 0.96875,
+        "spot": 110.0,
+        "minimum": 80,
+        "maximum": 130
+      }
+    ]
+  },
+  "running_extrema_method": "Literal piecewise-linear spot interpolation, then extrema over prior path knots and the interpolated spot, including history. Independent of plotted running-extrema construction."
+}

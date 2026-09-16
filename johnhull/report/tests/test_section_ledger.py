@@ -574,9 +574,9 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["inventory_total"] == 306
     assert result["counts"] == {
         "unreviewed": 303,
-        "gaps_found": 1,
+        "gaps_found": 0,
         "pending_validation": 0,
-        "accepted": 2,
+        "accepted": 3,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
