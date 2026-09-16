@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checked_at": "2026-09-16T07:45:45.646487+00:00",
+  "checked_at": "2026-09-16T11:55:41.224352+00:00",
   "scope": "M5a independent Asian references and approximation-error measurement; section 26.13 stays gaps_found.",
   "reference": "Hull 11e Global Edition section 26.13, physical/printed pp.626-627, Example 26.3 p.627.",
   "method": "Exact moments of the average, an exact two-date price by conditioning, and a control-variate Monte Carlo that samples the observation dates exactly with the exact geometric-average price as control. No hullkit function is used.",
@@ -12,9 +12,11 @@
     "note": "Two-observation rows carry an exact quadrature price; the gap is the Monte Carlo error."
   },
   "approximation_error": {
-    "definition": "Turnbull-Wakeman minus the simulated reference, rows with a reference above 0.5.",
+    "definition": "Turnbull-Wakeman minus the simulated reference. The headline range covers the 119 of 144 rows whose reference exceeds 0.5; 17 cheaper rows and 8 rows with a zero reference are reported separately below.",
+    "rows_total": 144,
+    "rows_measured": 119,
     "max_relative": 0.2335051538533239,
-    "sign": "both: the moment match overprices near and above the average's forward and underprices below it",
+    "sign": "both signs occur, and not by a rule in moneyness: at the same spot-to-strike ratio the sign differs by market and contract. Only the measured table below and in prices.json states where each sign appears.",
     "worst_case": {
       "market": "high-vol-long",
       "observations": 250,
@@ -50,7 +52,50 @@
       "reference": 0.5565887445687512,
       "standard_error": 0.00038172095434683495,
       "relative_error": -0.06847731827170145
-    }
+    },
+    "below_threshold": {
+      "definition": "Rows with a positive reference of at most 0.5, excluded from the headline range.",
+      "rows": 17,
+      "max_relative": 0.2044334511590044,
+      "worst_case": {
+        "market": "negative-rate",
+        "observations": 250,
+        "contract": "put",
+        "spot_ratio": 1.25,
+        "volatility": 0.18,
+        "expiry": 0.75,
+        "turnbull_wakeman": 0.03398530429579164,
+        "reference": 0.028216838599997535,
+        "standard_error": 8.000468475079785e-05,
+        "relative_error": 0.2044334511590044
+      },
+      "largest_overprice": {
+        "market": "negative-rate",
+        "observations": 250,
+        "contract": "put",
+        "spot_ratio": 1.25,
+        "volatility": 0.18,
+        "expiry": 0.75,
+        "turnbull_wakeman": 0.03398530429579164,
+        "reference": 0.028216838599997535,
+        "standard_error": 8.000468475079785e-05,
+        "relative_error": 0.2044334511590044
+      },
+      "largest_underprice": {
+        "market": "negative-rate",
+        "observations": 250,
+        "contract": "call",
+        "spot_ratio": 0.8,
+        "volatility": 0.18,
+        "expiry": 0.75,
+        "turnbull_wakeman": 0.011063105095400825,
+        "reference": 0.013540065458505945,
+        "standard_error": 5.329256598190184e-05,
+        "relative_error": -0.18293562691375914
+      },
+      "note": "Relative error is larger here, so the headline range must not be quoted as covering every row."
+    },
+    "zero_reference_rows": 8
   },
   "hull_example_26_3": {
     "inputs": {
@@ -280,10 +325,10 @@
     "The simulated references carry a standard error; they are not exact except on the two-date rows.",
     "The continuous-average reference is a Richardson extrapolation in 1/m, not a limit computation.",
     "Seasoned contracts, average-strike options and non-constant volatility are not priced here.",
-    "hullkit implements only the continuous average-price call; nothing else in the library is covered."
+    "This record is the M5a independent measurement; it prices nothing from hullkit. What the library covers is recorded in the M5b acceptance note."
   ],
   "source_sha256": {
-    "scripts/build_asian_reference.py": "0e8454ac675ce13c7fbe05a64136a05b431753c756a60fc8b8670852db3e29b1",
+    "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
     "hullkit/tests/test_asian_reference.py": "358e4834c4fafb5790857c92b14c0721a2b58aa88ef511a74681c7aabf12f497",
     "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
   },

@@ -123,7 +123,7 @@
     }
   ],
   "source_sha256": {
-    "hullkit/src/hullkit/exotics.py": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
+    "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
     "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
     "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
@@ -140,12 +140,11 @@
   "artifact_scope": "Numerical comparison table only; no Book/portal artifact is claimed for section 26.10.",
   "recheck": {
     "of": "docs/validation/section-26-10/numerical-check.json",
-    "checked_at": "2026-09-16T08:39:57.403292+00:00",
-    "note": "M5b recheck copy. The numbers are the M2a record's, unchanged; only the digests of shared sources that §26.13 touched were refreshed, after re-running the tests that recompute them (hullkit/tests/test_binary_reference.py, test_binary_lesson.py: 92 passed). The dated original is kept alongside this file.",
+    "note": "M5b recheck copy. The numbers are the M2a record's, unchanged; only the digests of shared sources that §26.13 touched were refreshed, after re-running hullkit/tests/test_binary_reference.py and test_binary_lesson.py green against the current sources. The dated original is kept alongside this file.",
     "refreshed_digests": {
       "hullkit/src/hullkit/exotics.py": {
         "was": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
-        "now": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39"
+        "now": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523"
       }
     }
   }

@@ -441,11 +441,20 @@ def main(argv=None):
     # sampling noise and no information about it either.
     anchor_sigmas = max(abs(row["exact"] - row["reference"]) / row["standard_error"]
                         for row in anchored if row["standard_error"] > 0.0)
+    # Relative error needs a price to divide by, so the headline range is measured on the
+    # rows whose reference exceeds 0.5. The rows below it are summarized separately rather
+    # than dropped: their relative errors are larger, not smaller.
     signed = [((row["turnbull_wakeman"] - row["reference"]) / row["reference"], row)
               for row in rows if row["reference"] > 0.5]
+    small = [((row["turnbull_wakeman"] - row["reference"]) / row["reference"], row)
+             for row in rows if 0.0 < row["reference"] <= 0.5]
+    zeroed = [row for row in rows if row["reference"] <= 0.0]
     worst_ratio, worst_row = max(signed, key=lambda item: abs(item[0]))
     over_ratio, over_row = max(signed, key=lambda item: item[0])
     under_ratio, under_row = min(signed, key=lambda item: item[0])
+    small_worst_ratio, small_worst_row = max(small, key=lambda item: abs(item[0]))
+    small_over_ratio, small_over_row = max(small, key=lambda item: item[0])
+    small_under_ratio, small_under_row = min(small, key=lambda item: item[0])
 
     def _case(ratio, row):
         summary = {key: row[key] for key in
@@ -471,12 +480,36 @@ def main(argv=None):
             "note": "Two-observation rows carry an exact quadrature price; the gap is the Monte Carlo error.",
         },
         "approximation_error": {
-            "definition": "Turnbull-Wakeman minus the simulated reference, rows with a reference above 0.5.",
+            "definition": (
+                "Turnbull-Wakeman minus the simulated reference. The headline range covers the "
+                f"{len(signed)} of {len(rows)} rows whose reference exceeds 0.5; "
+                f"{len(small)} cheaper rows and {len(zeroed)} rows with a zero reference are "
+                "reported separately below."
+            ),
+            "rows_total": len(rows),
+            "rows_measured": len(signed),
             "max_relative": abs(worst_ratio),
-            "sign": "both: the moment match overprices near and above the average's forward and underprices below it",
+            "sign": (
+                "both signs occur, and not by a rule in moneyness: at the same spot-to-strike "
+                "ratio the sign differs by market and contract. Only the measured table below "
+                "and in prices.json states where each sign appears."
+            ),
             "worst_case": _case(worst_ratio, worst_row),
             "largest_overprice": _case(over_ratio, over_row),
             "largest_underprice": _case(under_ratio, under_row),
+            "below_threshold": {
+                "definition": "Rows with a positive reference of at most 0.5, excluded from the headline range.",
+                "rows": len(small),
+                "max_relative": abs(small_worst_ratio),
+                "worst_case": _case(small_worst_ratio, small_worst_row),
+                "largest_overprice": _case(small_over_ratio, small_over_row),
+                "largest_underprice": _case(small_under_ratio, small_under_row),
+                "note": (
+                    "Relative error is larger here, so the headline range must not be quoted as "
+                    "covering every row."
+                ),
+            },
+            "zero_reference_rows": len(zeroed),
         },
         "hull_example_26_3": example,
         "average_strike": {
@@ -497,7 +530,8 @@ def main(argv=None):
             "The simulated references carry a standard error; they are not exact except on the two-date rows.",
             "The continuous-average reference is a Richardson extrapolation in 1/m, not a limit computation.",
             "Seasoned contracts, average-strike options and non-constant volatility are not priced here.",
-            "hullkit implements only the continuous average-price call; nothing else in the library is covered.",
+            "This record is the M5a independent measurement; it prices nothing from hullkit. "
+            "What the library covers is recorded in the M5b acceptance note.",
         ],
         "source_sha256": {
             name: _sha256(PROJECT / name)

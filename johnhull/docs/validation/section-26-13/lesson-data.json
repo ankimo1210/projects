@@ -19,11 +19,11 @@
       "The path is a defined example, not a GBM sample."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
-      "scripts/build_asian_lesson_data.py": "414177def68dd1e63a0987d4528c6ed8f221cbc9f198d177fc3351eac4a0a9c7",
-      "scripts/build_asian_reference.py": "0e8454ac675ce13c7fbe05a64136a05b431753c756a60fc8b8670852db3e29b1",
+      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
+      "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
-      "docs/validation/section-26-13/numerical-check.json": "84571bcfd66857290fdb7371effad991bc880d36185e0cf3353c0882a21e59cb"
+      "docs/validation/section-26-13/numerical-check.json": "c7ee1598f1ef0c50f0d9d2a5bb7fb75834704640d5ae097caf2726c6f22a19b8"
     },
     "rows": [
       {
@@ -79,11 +79,11 @@
       "Histogram trimmed to the 0.1%-99.9% quantiles of the sample."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
-      "scripts/build_asian_lesson_data.py": "414177def68dd1e63a0987d4528c6ed8f221cbc9f198d177fc3351eac4a0a9c7",
-      "scripts/build_asian_reference.py": "0e8454ac675ce13c7fbe05a64136a05b431753c756a60fc8b8670852db3e29b1",
+      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
+      "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
-      "docs/validation/section-26-13/numerical-check.json": "84571bcfd66857290fdb7371effad991bc880d36185e0cf3353c0882a21e59cb"
+      "docs/validation/section-26-13/numerical-check.json": "c7ee1598f1ef0c50f0d9d2a5bb7fb75834704640d5ae097caf2726c6f22a19b8"
     },
     "rows": [
       {
@@ -705,11 +705,11 @@
       "No cash dividends, nonconstant volatility, unequal observation spacing, T=0 or sigma=0."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
-      "scripts/build_asian_lesson_data.py": "414177def68dd1e63a0987d4528c6ed8f221cbc9f198d177fc3351eac4a0a9c7",
-      "scripts/build_asian_reference.py": "0e8454ac675ce13c7fbe05a64136a05b431753c756a60fc8b8670852db3e29b1",
+      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
+      "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
-      "docs/validation/section-26-13/numerical-check.json": "84571bcfd66857290fdb7371effad991bc880d36185e0cf3353c0882a21e59cb"
+      "docs/validation/section-26-13/numerical-check.json": "c7ee1598f1ef0c50f0d9d2a5bb7fb75834704640d5ae097caf2726c6f22a19b8"
     },
     "rows": [
       {
@@ -723,22 +723,22 @@
           {
             "observations": 12,
             "turnbull_wakeman": 1.3560062961933732,
-            "reference": 1.355600424536145,
-            "standard_error": 2.8499936091912212e-05,
+            "reference": 1.355611085363077,
+            "standard_error": 2.0189885263885366e-05,
             "geometric": 1.3440569697945217
           },
           {
             "observations": 52,
             "turnbull_wakeman": 1.2928333067066085,
-            "reference": 1.2924097240978238,
-            "standard_error": 2.6875358098093997e-05,
+            "reference": 1.2923999943550226,
+            "standard_error": 1.9072974103126753e-05,
             "geometric": 1.2807881082262695
           },
           {
             "observations": 250,
             "turnbull_wakeman": 1.2777849091389664,
-            "reference": 1.277342804701821,
-            "standard_error": 2.6425182791362513e-05,
+            "reference": 1.2773581418273114,
+            "standard_error": 1.8770122368706607e-05,
             "geometric": 1.265730962769717
           }
         ]
@@ -754,22 +754,22 @@
           {
             "observations": 12,
             "turnbull_wakeman": 5.534582995150311,
-            "reference": 5.520034551794043,
-            "standard_error": 0.000490351720386499,
+            "reference": 5.520230279051294,
+            "standard_error": 0.0003473715803919929,
             "geometric": 5.327705787469702
           },
           {
             "observations": 52,
             "turnbull_wakeman": 5.272955707024618,
-            "reference": 5.257595686244038,
-            "standard_error": 0.000463936000649035,
+            "reference": 5.2574225763081595,
+            "standard_error": 0.00032891261556077547,
             "geometric": 5.0645623345790804
           },
           {
             "observations": 250,
             "turnbull_wakeman": 5.210665926088509,
-            "reference": 5.194977981402066,
-            "standard_error": 0.00045543633421668686,
+            "reference": 5.1952162241831985,
+            "standard_error": 0.00032343498294857377,
             "geometric": 5.002145910042797
           }
         ]
@@ -785,22 +785,22 @@
           {
             "observations": 12,
             "turnbull_wakeman": 5.059553722099465,
-            "reference": 5.0561820460206715,
-            "standard_error": 0.0008841688925231735,
+            "reference": 5.055992638435879,
+            "standard_error": 0.0006247590897639748,
             "geometric": 4.781726660189571
           },
           {
             "observations": 52,
             "turnbull_wakeman": 4.86171788582297,
-            "reference": 4.859580935578508,
-            "standard_error": 0.0008380845986109021,
+            "reference": 4.859280909058528,
+            "standard_error": 0.0005939415548119171,
             "geometric": 4.5839249792929575
           },
           {
             "observations": 250,
             "turnbull_wakeman": 4.814415854901965,
-            "reference": 4.811750506902418,
-            "standard_error": 0.0008202512673328155,
+            "reference": 4.812184696096387,
+            "standard_error": 0.0005812410172905067,
             "geometric": 4.536972421729678
           }
         ]
@@ -816,22 +816,22 @@
           {
             "observations": 12,
             "turnbull_wakeman": 3.1744347408624196,
-            "reference": 3.1743455004989802,
-            "standard_error": 0.00024612917051790106,
+            "reference": 3.1743228095812164,
+            "standard_error": 0.00017414426438101954,
             "geometric": 3.088769482455171
           },
           {
             "observations": 52,
             "turnbull_wakeman": 3.040988761972287,
-            "reference": 3.041190585285967,
-            "standard_error": 0.0002322973608853551,
+            "reference": 3.0410785810652,
+            "standard_error": 0.00016484676841709394,
             "geometric": 2.9551012447130853
           },
           {
             "observations": 250,
             "turnbull_wakeman": 3.009144338728476,
-            "reference": 3.0092162128847932,
-            "standard_error": 0.0002281816307638769,
+            "reference": 3.009381058231205,
+            "standard_error": 0.00016199876249212402,
             "geometric": 2.9233093300451367
           }
         ]
@@ -847,22 +847,22 @@
           {
             "observations": 12,
             "turnbull_wakeman": 9.813271695023325,
-            "reference": 9.73257510630199,
-            "standard_error": 0.0021934583480690438,
+            "reference": 9.732773692711412,
+            "standard_error": 0.0015515013167379222,
             "geometric": 8.996237092079557
           },
           {
             "observations": 52,
             "turnbull_wakeman": 9.3794283994406,
-            "reference": 9.296013126249814,
-            "standard_error": 0.00209330992748618,
+            "reference": 9.294780833410595,
+            "standard_error": 0.00148000198209177,
             "geometric": 8.55829004050406
           },
           {
             "observations": 250,
             "turnbull_wakeman": 9.275989561382087,
-            "reference": 9.19021326769754,
-            "standard_error": 0.0020420500984291872,
+            "reference": 9.191500622943082,
+            "standard_error": 0.0014488799734508069,
             "geometric": 8.454772982708896
           }
         ]
@@ -878,22 +878,22 @@
           {
             "observations": 12,
             "turnbull_wakeman": 35.51367590016617,
-            "reference": 32.2902883700425,
-            "standard_error": 0.06540170782333316,
+            "reference": 32.27960401167853,
+            "standard_error": 0.04508339713222241,
             "geometric": 22.282125142666175
           },
           {
             "observations": 52,
             "turnbull_wakeman": 34.143476577410055,
-            "reference": 30.87644027418705,
-            "standard_error": 0.09035199640133383,
+            "reference": 30.805552979382934,
+            "standard_error": 0.057014706594193505,
             "geometric": 20.912820895249478
           },
           {
             "observations": 250,
             "turnbull_wakeman": 33.817710444079864,
-            "reference": 30.365341201514806,
-            "standard_error": 0.06176465807867174,
+            "reference": 30.379951225054917,
+            "standard_error": 0.04268421601096512,
             "geometric": 20.59729080965337
           }
         ]
@@ -917,11 +917,11 @@
       "No cash dividends, nonconstant volatility, unequal observation spacing, T=0 or sigma=0."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
-      "scripts/build_asian_lesson_data.py": "414177def68dd1e63a0987d4528c6ed8f221cbc9f198d177fc3351eac4a0a9c7",
-      "scripts/build_asian_reference.py": "0e8454ac675ce13c7fbe05a64136a05b431753c756a60fc8b8670852db3e29b1",
+      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
+      "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
-      "docs/validation/section-26-13/numerical-check.json": "84571bcfd66857290fdb7371effad991bc880d36185e0cf3353c0882a21e59cb"
+      "docs/validation/section-26-13/numerical-check.json": "c7ee1598f1ef0c50f0d9d2a5bb7fb75834704640d5ae097caf2726c6f22a19b8"
     },
     "rows": [
       {
@@ -1282,7 +1282,7 @@
       "volatility": "annualized",
       "observations": "averaging dates"
     },
-    "method": "Hull's K* shift, including the branch where the call is certain to pay",
+    "method": "Hull's K* shift on the contract the notebook displays, including the branch where the call is certain to pay",
     "limitations": [
       "Synthetic constant-parameter GBM; positive S, K, T, sigma; continuous annual r and q.",
       "Observation dates are i*T/m: today excluded, maturity included.",
@@ -1291,56 +1291,80 @@
       "No cash dividends, nonconstant volatility, unequal observation spacing, T=0 or sigma=0."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
-      "scripts/build_asian_lesson_data.py": "414177def68dd1e63a0987d4528c6ed8f221cbc9f198d177fc3351eac4a0a9c7",
-      "scripts/build_asian_reference.py": "0e8454ac675ce13c7fbe05a64136a05b431753c756a60fc8b8670852db3e29b1",
+      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
+      "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
-      "docs/validation/section-26-13/numerical-check.json": "84571bcfd66857290fdb7371effad991bc880d36185e0cf3353c0882a21e59cb"
+      "docs/validation/section-26-13/numerical-check.json": "c7ee1598f1ef0c50f0d9d2a5bb7fb75834704640d5ae097caf2726c6f22a19b8"
     },
     "rows": [
       {
-        "market": "positive-carry",
-        "observed_average": 80.0,
+        "contract": "Hull Example 26.3, seasoned",
+        "spot": 50.0,
+        "strike": 50.0,
+        "rate": 0.1,
+        "dividend": 0.0,
+        "volatility": 0.4,
+        "observed_average": 40.0,
         "elapsed": 0.6,
         "remaining": 0.4,
         "weight": 0.4,
-        "shifted_strike": 130.0,
+        "shifted_strike": 65.0,
         "certain_exercise": false,
-        "price": 0.00018972033109921266,
-        "remaining_moment_1": 100.60240721731462
+        "price": 0.06768705012123649,
+        "put_price": 5.442932044243242,
+        "remaining_moment_1": 51.0134677404853
       },
       {
-        "market": "positive-carry",
-        "observed_average": 100.0,
+        "contract": "Hull Example 26.3, seasoned",
+        "spot": 50.0,
+        "strike": 50.0,
+        "rate": 0.1,
+        "dividend": 0.0,
+        "volatility": 0.4,
+        "observed_average": 50.0,
         "elapsed": 0.6,
         "remaining": 0.4,
         "weight": 0.4,
-        "shifted_strike": 100.0,
+        "shifted_strike": 50.0,
         "certain_exercise": false,
-        "price": 1.2699340291394734,
-        "remaining_moment_1": 100.60240721731462
+        "price": 1.3439879570012019,
+        "put_price": 0.9544963162092671,
+        "remaining_moment_1": 51.0134677404853
       },
       {
-        "market": "positive-carry",
-        "observed_average": 120.0,
+        "contract": "Hull Example 26.3, seasoned",
+        "spot": 50.0,
+        "strike": 50.0,
+        "rate": 0.1,
+        "dividend": 0.0,
+        "volatility": 0.4,
+        "observed_average": 60.0,
         "elapsed": 0.6,
         "remaining": 0.4,
         "weight": 0.4,
-        "shifted_strike": 70.0,
+        "shifted_strike": 35.0,
         "certain_exercise": false,
-        "price": 11.998575744962308,
-        "remaining_moment_1": 100.60240721731462
+        "price": 6.158194159595496,
+        "put_price": 0.003965883889619761,
+        "remaining_moment_1": 51.0134677404853
       },
       {
-        "market": "positive-carry",
-        "observed_average": 180.0,
+        "contract": "Hull Example 26.3, seasoned",
+        "spot": 50.0,
+        "strike": 50.0,
+        "rate": 0.1,
+        "dividend": 0.0,
+        "volatility": 0.4,
+        "observed_average": 90.0,
         "elapsed": 0.6,
         "remaining": 0.4,
         "weight": 0.4,
-        "shifted_strike": -20.0,
+        "shifted_strike": -10.0,
         "certain_exercise": true,
-        "price": 47.285727820805135,
-        "remaining_moment_1": 100.60240721731462
+        "price": 23.448438180447692,
+        "put_price": 0.0,
+        "remaining_moment_1": 51.0134677404853
       }
     ]
   }

@@ -12,6 +12,7 @@ cannot drift silently.
 import json
 import math
 import sys
+from itertools import pairwise
 from pathlib import Path
 
 import pytest
@@ -41,10 +42,19 @@ SIGMA_TOL = 4.0
 def test_moments_match_the_independent_oracle(market, count):
     """Exact first two moments of the average, discrete and continuous."""
     times = None if count is None else asian.observation_times(market.expiry, count)
-    if count is None and abs(market.rate - market.dividend) < 1e-12:
-        pytest.skip("the printed continuous moments divide by r-q")
     first, second = exotics.asian_moments(STRIKE, market.rate, market.volatility,
                                           market.expiry, q=market.dividend, times=times)
+    if count is None and abs(market.rate - market.dividend) < 1e-12:
+        # The printed continuous formula divides by r-q, so the oracle cannot be evaluated
+        # at r=q. The singularity is removable: bracket the value by the two sides.
+        below = asian.continuous_moments(STRIKE, market.rate - 1e-6, market.dividend,
+                                         market.volatility, market.expiry)
+        above = asian.continuous_moments(STRIKE, market.rate + 1e-6, market.dividend,
+                                         market.volatility, market.expiry)
+        for value, low, high in zip((first, second), below, above, strict=True):
+            assert low < value < high
+            assert value == pytest.approx(0.5 * (low + high), rel=1e-9)
+        return
     expected = (asian.continuous_moments(STRIKE, market.rate, market.dividend,
                                          market.volatility, market.expiry) if count is None
                 else asian.discrete_moments(STRIKE, market.rate, market.dividend,
@@ -84,8 +94,7 @@ def test_hull_example_26_3_printed_prices():
 @pytest.mark.parametrize("count", [None, 12])
 def test_put_call_parity_is_exact(market, count):
     """C - P = exp(-r*T) * (M1 - K) holds however wrong the moment match is."""
-    if count is None and abs(market.rate - market.dividend) < 1e-12:
-        pytest.skip("the printed continuous moments divide by r-q")
+    # Parity is an identity inside the pricer, so r=q needs no oracle and no skip.
     times = None if count is None else asian.observation_times(market.expiry, count)
     strike = STRIKE * 1.1
     call = exotics.asian_average_price(STRIKE, strike, market.rate, market.volatility,
@@ -190,14 +199,34 @@ def test_average_strike_error_against_the_simulated_reference(row):
         assert resolved  # every other market's error is far larger than the sampling noise
 
 
-def test_average_strike_is_worthless_with_a_single_observation_at_maturity():
-    """One observation at T makes the average the terminal price, so nothing is exchanged."""
-    market = next(item for item in asian.MARKETS if item.name == "positive-carry")
-    for kind in ("call", "put"):
-        price = exotics.asian_average_strike(STRIKE, market.rate, market.volatility,
-                                             market.expiry, q=market.dividend, kind=kind,
-                                             times=[market.expiry])
-        assert price == pytest.approx(0.0, abs=1e-10)
+@pytest.mark.parametrize("market", asian.MARKETS, ids=lambda m: m.name)
+@pytest.mark.parametrize("kind", ["call", "put"])
+def test_average_strike_is_worthless_with_a_single_observation_at_maturity(market, kind):
+    """One observation at T makes the average the terminal price, so nothing is exchanged.
+
+    Exactly zero, not nearly zero: the three variance terms cancel, and rounding them
+    separately used to leave a positive price (6.7e-07 in the negative-rate market).
+    """
+    price = exotics.asian_average_strike(STRIKE, market.rate, market.volatility,
+                                         market.expiry, q=market.dividend, kind=kind,
+                                         times=[market.expiry])
+    assert price == 0.0
+
+
+def test_average_strike_approaches_zero_as_the_window_collapses_onto_maturity():
+    """The exact zero is the limit of the ordinary branch, not a special case beside it."""
+    market = next(item for item in asian.MARKETS if item.name == "negative-rate")
+    prices = []
+    for gap in (1e-2, 1e-3, 1e-4, 1e-5, 1e-6):
+        prices.append(exotics.asian_average_strike(
+            STRIKE, market.rate, market.volatility, market.expiry, q=market.dividend,
+            times=[market.expiry - gap, market.expiry]))
+    assert all(0.0 < later < earlier for earlier, later in pairwise(prices))
+    # Two dates a gap apart leave a spread of about sigma*sqrt(gap)/2, so each decade of
+    # gap divides the price by sqrt(10); a faster decay would mean the terms cancel early.
+    for earlier, later in pairwise(prices):
+        assert earlier / later == pytest.approx(math.sqrt(10.0), rel=0.02)
+    assert prices[-1] < 1e-2
 
 
 def test_geometric_average_strike_control_is_exact_margrabe():
