@@ -150,6 +150,7 @@ async function negativeControl(plot) {
 }
 async function layoutCheck(page,plot,label) {
   await center(page,plot);
+  await plot.hover({position:{x:10,y:10}});await settle(page);
   await page.waitForFunction(el => Math.abs(el.clientWidth-el._fullLayout.width)<3,await plot.elementHandle(),{timeout});
   const errors = await plot.evaluate(el => {
     const errors = [], frame = el.getBoundingClientRect();
@@ -160,6 +161,11 @@ async function layoutCheck(page,plot,label) {
     }
     const overlap=(a,b) => a.width>0 && b.width>0 && a.left<b.right-2 && a.right>b.left+2 && a.top<b.bottom-2 && a.bottom>b.top+2;
     const legend=el.querySelector('.legend')?.getBoundingClientRect();
+    const modebar=el.querySelector('.modebar');
+    if(modebar && Number(getComputedStyle(modebar).opacity)>0) {
+      const title=el.querySelector('.gtitle');
+      if(title && overlap(modebar.getBoundingClientRect(),title.getBoundingClientRect())) errors.push('modebar/title');
+    }
     if(legend) for(const n of el.querySelectorAll('.annotation-text')) if(overlap(n.getBoundingClientRect(),legend)) errors.push('legend/annotation');
     for(const a of el.querySelectorAll('.xtitle,.ytitle,.xtick text,.ytick text'))
       for(const b of el.querySelectorAll('.legendtext')) if(overlap(a.getBoundingClientRect(),b.getBoundingClientRect())) errors.push('axis/legend');
@@ -220,8 +226,18 @@ async function bookMath(page) {
     await page.setViewportSize({width,height:1050});await settle(page);
     check(await section.evaluate(el=>Array.from(el.querySelectorAll('div.math')).every(n=>n.scrollWidth<=n.clientWidth+3)),'Shout math overflow');
     const example=section.locator('h4').filter({hasText:/4\.2\.1/}).locator('xpath=..');
-    await center(page,example);const file=relativeOut+'book-shout-example-'+width+'.png';
-    await example.screenshot({path:path.join(root,file)});math.screenshots.push(file);
+    const contentHeading=example.locator('h4'),table=example.locator('table');
+    const contentHeight=await example.evaluate(el=>el.querySelector('table').getBoundingClientRect().bottom-el.querySelector('h4').getBoundingClientRect().top);
+    await page.setViewportSize({width,height:Math.max(1050,Math.ceil(contentHeight)+260)});await settle(page);
+    await contentHeading.evaluate(el=>{document.activeElement?.blur();window.scrollTo({top:scrollY+el.getBoundingClientRect().top-130,behavior:'instant'});});
+    await settle(page);
+    const clip=await example.evaluate(el=>{
+      const a=el.querySelector('h4').getBoundingClientRect(),b=el.querySelector('table').getBoundingClientRect(),frame=el.getBoundingClientRect();
+      return {x:frame.left,y:a.top,width:frame.width,height:b.bottom-a.top+12};
+    });
+    check((await table.boundingBox()).y+(await table.boundingBox()).height<page.viewportSize().height,'Example fully in viewport');
+    const file=relativeOut+'book-shout-example-'+width+'.png';
+    await page.screenshot({path:path.join(root,file),clip});math.screenshots.push(file);
   }
   return math;
 }
