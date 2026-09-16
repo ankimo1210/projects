@@ -83,19 +83,21 @@ def _finish(fig, key, states, titles, note, height=550):
         t.visible = t.meta["scenario"] == states[0]
     fig.update_layout(
         template="plotly_white",
-        height=height,
-        title=dict(text=titles[states[0]], font_size=18),
+        height=height + 90,
+        title=dict(text=titles[states[0]], font_size=16, y=0.98, yanchor="top"),
         meta=_meta(key, states[0]),
-        margin=dict(l=65, r=40, t=145, b=130),
+        margin=dict(l=65, r=40, t=145, b=220),
         font=dict(family="Arial, sans-serif", size=12),
-        legend=dict(orientation="h", y=-0.15, x=0),
+        legend=dict(orientation="h", y=-60 / (height - 275), yanchor="top", x=0),
         updatemenus=[dict(type="dropdown", buttons=buttons, x=1, xanchor="right", y=1.23)]
         if len(states) > 1
         else [],
     )
     fig.add_annotation(
         x=0,
-        y=-0.32,
+        y=0,
+        yshift=-120,
+        yanchor="top",
         xref="paper",
         yref="paper",
         text=note,
