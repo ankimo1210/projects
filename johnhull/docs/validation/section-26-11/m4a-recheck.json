@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-16T05:25:20.620151+00:00",
+  "scope": "Fresh section 26.11 regression after the section 26.12 (M4a) registration changed the expected ledger counts in report/tests/test_section_ledger.py. Teaching sources, figures and the browser evidence of the M3b acceptance are untouched.",
+  "base_commit": "134e1c168433bb14ecc67471bfd6bc4ee24b6b09",
+  "supersedes": "docs/validation/section-26-11/m3b-check.json",
+  "tests": {
+    "selection": [
+      "hullkit/tests/test_lookback_reference.py",
+      "hullkit/tests/test_lookback_lesson.py",
+      "hullkit/tests/test_binary_reference.py",
+      "hullkit/tests/test_binary_lesson.py",
+      "hullkit/tests/test_barrier_reference.py",
+      "hullkit/tests/test_exotics.py",
+      "hullkit/tests/test_exotics_puts.py",
+      "hullkit/tests/test_shout_reference.py"
+    ],
+    "passed": 493,
+    "skipped": 6,
+    "seconds": 8.86,
+    "lookback_tests": 144,
+    "skip_reason": "six section 26.12 rows at r=q, where the lookback closed form is undefined"
+  },
+  "ledger": {
+    "verify_section_ledger": "PASS",
+    "verify_section_ledger_check_artifacts": "PASS",
+    "guard_tests": "johnhull/report/tests/test_section_ledger.py, 39 tests"
+  },
+  "unchanged_since_m3b": "Every source the M3b record pinned is byte-identical except the ledger guard test. The rendered Book/portal evidence stays the M3b browser record; no browser, Book or portal run was repeated here, and none of their inputs changed.",
+  "pinning_note": "report/tests/test_section_ledger.py is deliberately not pinned: it asserts the live status counts of the ledger, so it has to change whenever any later section is registered. Pinning it made an accepted section go stale for an unrelated reason. Ledger freshness is enforced by scripts/verify_section_ledger.py itself.",
+  "source_sha256": {
+    "hullkit/src/hullkit/_lookback_lesson.py": "8f5e0a91131462995fd0b3afa8554795cfada8e723d5d1b77a26a4af1cee2630",
+    "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+    "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "790b85a224ec511f4e32187257dca905154dae657ce568a7cef8300a713c7bbc",
+    "volumes/10_exotics_martingales/exotics.ipynb": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f",
+    "report/report_builder/figures.py": "09d98690f14f4a43f1ea33261cb46dd6b6858000edc15a76c6f2b0d7fa9f17d3",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/assets/style.css": "165497a96ae9ff303419989df1d4f29f68d598185b1361f841788df52792856d",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "scripts/verify_lookback_lesson_browser.cjs": "1776c1a42fb856563afba7ede64665b5a4bded2c952ab3220f7051d3e0a5721e",
+    "docs/validation/section-26-11/browser-reference.json": "93d40b15e297b6ed26305b565e22b2e0f0601c910a29f8dc00be0f592a77e102",
+    "hullkit/tests/test_lookback_lesson.py": "cc17e7c10b4badd63bbc03edebd4c615587289576893c8474717314732b6cf5a",
+    "scripts/verify_section_ledger.py": "c81eeffc33aca1a29c8f948a8c0afe48d98b14c728819004b9387458a3bdffa9",
+    "release_manifest.json": "88a6976cc5a6ab1840129402b6b58d995314d90e2dda859dbaac2667b2f3fa77",
+    "report/tests/test_report_build.py": "c1f4e833a04431be9a99112142bcd6d62d603026cdf34e336002b742313c59fd"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f",
+    "docs/validation/section-26-11/browser-reference.json": "93d40b15e297b6ed26305b565e22b2e0f0601c910a29f8dc00be0f592a77e102"
+  }
+}
