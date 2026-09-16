@@ -15,6 +15,7 @@ final gate evidence.
 - `notebooks/` — Ch.15 BSM notebook (legacy location)
 - `interest_rate_models/` — Ch.31–33 notebook (legacy location)
 - `volumes/18_*` … `volumes/28_*` — artifact-only beyond-Hull teaching notebooks
+- vol 10 §26.12 — one-shout call: payoff decomposition, CRR decisions, boundary resolution, and same-market comparisons; saved synthetic artifacts power four shared Book/portal figures. Put prices are an extension beyond the original call lesson.
 - `release_manifest.json` — machine-readable volume/book/portal contract
 - `docs/DATA_PROVENANCE.md` — data origin, licensing, and synthetic-fixture policy
 
@@ -32,7 +33,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 90 figures (10 exotics)
+make hull-report           # offline portal: 12 themes / 94 figures (14 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above

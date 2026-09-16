@@ -171,3 +171,6 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1.1rem, 4vw, 2re
   .topbar { gap: 0.5rem; }
   .stats div { padding: 0 1.1rem; }
 }
+
+/* Shout lesson: preserve readable node labels and boundary panels. */
+.fig-card:has([id^="fig-shout_"]) { grid-column: 1 / -1; }
