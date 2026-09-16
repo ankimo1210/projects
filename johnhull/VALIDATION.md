@@ -10,6 +10,24 @@
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
+## Section 26.11 M3b — 2026-09-16
+
+[受入ノート](docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md)と
+[統合記録](docs/validation/section-26-11/m3b-check.json)へ、L01–L06の教材・図・配布検査を集約する。
+実装・全体pytest・Task 2独立レビューは完了。最終ブランチレビューも承認済み。
+
+- 本文6小節、4給付・履歴・fixed/floating複製・観測頻度の共有4図をBook/portalへ接続。
+- vol10は64セル。別の新規実行と出力型・MIMEキー・正規化テキストが一致（計時セルは型のみ）。保存した4図のdata/layoutは共有builderとも一致。lookbackより前とAsian以降のbuilder・notebook sourceは開始時点を保持。
+- portalは12テーマ90図（exotics 10図）。Bookは31 notebookページのbuildに成功し、40警告を報告（Plotly MIME 34、既存の見出し順5、報告総数の未分類1）。PlotlyのHTML fallbackは実ブラウザで別途確認。
+- Chromium 141でBook/portalの各面・各幅（1440/1000）で全11状態のレイアウトを検査。18枚のlookback画像を保存。各面で経路内部48点の極値を独立照合し、call/put両方で総額を保つlegの誤配分も拒否した。
+- 影響範囲のpytestは**407 passed**（8.55秒：lookback 144、binary 92、barrier 171）。テスト専用oracleの相対importを修正し、project rootからの収集にも対応。
+- §26.9・§26.10も今回のBook/portalで再検証。現行証跡は[barrier再検査](docs/validation/section-26-9/m3b-recheck.json)と[binary再検査](docs/validation/section-26-10/m3b-recheck.json)へ更新し、日付付きM2b/M3a記録は履歴として保持する。
+- abs(r-q)<1e-8は既存価格APIで未対応のまま。L05では可除特異点と実装境界を説明し、新しい極限価格エンジンは今回の実装対象外とする。価格API・依存関係は変更していない。
+- 全体pytestは**1,695 passed**（79.36秒、既存deprecation warning 2件）。台帳39テストと、成果物ハッシュを含む台帳CLI検査も成功。
+- 台帳は受入済み3、不足あり0、未評価303。最終ブランチレビューも承認済み。未評価項目の完成を意味しない。portalは外部要求0、BookのMathJax CDN依存は残る。
+
+以下は各実施時点の履歴。
+
 ## Section 26.11 M3a — 2026-09-15
 
 [要求と残課題](docs/SECTION_26_11_REVIEW_2026-09-15.md)と
@@ -22,7 +40,7 @@ integration gate を満たすことだけを表す。実市場での予測力、
 - 価格コード・notebook・portal/Bookソースと配布物は変更していない。既存2節の画面確認はM2b時点の証跡を保持し、今回の再描画検査と表現しない。
 - 台帳の集計fixtureのみ2受入/1不足/303未評価へ更新し、台帳39テストを再実行。M2b記録にはこのメタデータ変更の追記を残した。
 - 全体pytest：**1,681 passed**（74.32秒、既存deprecation warning 2件）。ruff・format・release契約・台帳両モードもPASS。独立レビューの結果は統合記録を参照。
-- 現在の台帳：受入済み2、不足あり1、未評価303。以下は各実施時点の履歴。
+- M3a時点の台帳：受入済み2、不足あり1、未評価303。
 
 ## Section 26.10 M2b — 2026-09-15
 

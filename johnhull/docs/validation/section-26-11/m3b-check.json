@@ -1,0 +1,334 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-16T04:22:27.054125+00:00",
+  "scope": "L01-L06 teaching, independent prices/payoffs and rendered Book/portal acceptance within the unchanged production pricing domain.",
+  "base_commit": "4b828c61789b1fdcb5f96f10a1682ca787b0356d",
+  "delivery_base_commit": "2ff7bd0a9481c6e057bffb94aa2af236117017b8",
+  "regression_tests": {
+    "status": "PASS",
+    "passed": 407,
+    "warnings": 0,
+    "seconds": 8.55,
+    "log_sha256": "c71ed3a0d775ab3e5cb575bf6f050d33b42d79b9f80f60ede4e763e75befa1a8"
+  },
+  "lookback_tests": 144,
+  "notebook": {
+    "status": "PASS",
+    "checked_at": "2026-09-16T03:51:32.573772+00:00",
+    "base_commit": "4b828c61789b1fdcb5f96f10a1682ca787b0356d",
+    "cells": 64,
+    "output_comparison": "Separate fresh execution: output types/MIME keys/normalized deterministic text only; wall-clock cells type-only. Image/Plotly values excluded from this signature.",
+    "saved_plotly_comparison": "All four saved lookback figure data and layout payloads equal current shared builders exactly.",
+    "preservation": "Builder bytes and notebook cell sources before lookback and from Asian onward equal base.",
+    "source_sha256": {
+      "volumes/10_exotics_martingales/exotics.ipynb": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f",
+      "volumes/10_exotics_martingales/build_exotics_notebook.py": "790b85a224ec511f4e32187257dca905154dae657ce568a7cef8300a713c7bbc",
+      "hullkit/src/hullkit/_lookback_lesson.py": "8f5e0a91131462995fd0b3afa8554795cfada8e723d5d1b77a26a4af1cee2630"
+    },
+    "artifact_sha256": {
+      "volumes/10_exotics_martingales/exotics.ipynb": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f"
+    }
+  },
+  "builds": {
+    "checked_at": "2026-09-16T03:58:07.304471+00:00",
+    "portal": {
+      "status": "PASS",
+      "figures": 90,
+      "themes": 12,
+      "exotics_figures": 10
+    },
+    "book": {
+      "status": "PASS",
+      "notebook_pages": 31,
+      "reported_warnings": 40,
+      "warning_categories": {
+        "plotly_unknown_mime": 34,
+        "non_consecutive_header": 5,
+        "unclassified_in_reported_total": 1
+      },
+      "warning_scope": "Four new lookback Plotly MIME warnings are included. Actual HTML fallback rendering is verified separately; existing unrelated-volume header warnings remain."
+    }
+  },
+  "browser_record": "docs/validation/section-26-11/browser-m3b-check.json",
+  "browser": {
+    "portal": {
+      "figures": [
+        "lookback_payoffs",
+        "lookback_history",
+        "lookback_replication",
+        "lookback_monitoring"
+      ],
+      "states": [
+        {
+          "figure": "lookback_payoffs",
+          "scenario": "new",
+          "interior_probes": 24
+        },
+        {
+          "figure": "lookback_payoffs",
+          "scenario": "seasoned",
+          "interior_probes": 24
+        },
+        {
+          "figure": "lookback_history",
+          "K": 80
+        },
+        {
+          "figure": "lookback_history",
+          "K": 100
+        },
+        {
+          "figure": "lookback_history",
+          "K": 125
+        },
+        {
+          "figure": "lookback_replication",
+          "kind": "call"
+        },
+        {
+          "figure": "lookback_replication",
+          "kind": "put"
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 1
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 2
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 4
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 8
+        }
+      ],
+      "negative_controls": [
+        {
+          "kind": "call",
+          "rejected": true,
+          "total_unchanged": true,
+          "mutation": "floating_leg +1, stock_leg -1 at K=100",
+          "restored": true
+        },
+        {
+          "kind": "put",
+          "rejected": true,
+          "total_unchanged": true,
+          "mutation": "floating_leg +1, stock_leg -1 at K=100",
+          "restored": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-11/portal-lookback_payoffs-1440.png",
+        "docs/validation/section-26-11/portal-lookback_history-1440.png",
+        "docs/validation/section-26-11/portal-lookback_replication-1440.png",
+        "docs/validation/section-26-11/portal-lookback_monitoring-1440.png",
+        "docs/validation/section-26-11/portal-lookback_payoffs-1000.png",
+        "docs/validation/section-26-11/portal-lookback_history-1000.png",
+        "docs/validation/section-26-11/portal-lookback_replication-1000.png",
+        "docs/validation/section-26-11/portal-lookback_monitoring-1000.png"
+      ],
+      "layout_errors": 0,
+      "external_network_blocked": true,
+      "external_requests": [],
+      "page_errors": []
+    },
+    "book": {
+      "figures": [
+        "lookback_payoffs",
+        "lookback_history",
+        "lookback_replication",
+        "lookback_monitoring"
+      ],
+      "states": [
+        {
+          "figure": "lookback_payoffs",
+          "scenario": "new",
+          "interior_probes": 24
+        },
+        {
+          "figure": "lookback_payoffs",
+          "scenario": "seasoned",
+          "interior_probes": 24
+        },
+        {
+          "figure": "lookback_history",
+          "K": 80
+        },
+        {
+          "figure": "lookback_history",
+          "K": 100
+        },
+        {
+          "figure": "lookback_history",
+          "K": 125
+        },
+        {
+          "figure": "lookback_replication",
+          "kind": "call"
+        },
+        {
+          "figure": "lookback_replication",
+          "kind": "put"
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 1
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 2
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 4
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 8
+        }
+      ],
+      "negative_controls": [
+        {
+          "kind": "call",
+          "rejected": true,
+          "total_unchanged": true,
+          "mutation": "floating_leg +1, stock_leg -1 at K=100",
+          "restored": true
+        },
+        {
+          "kind": "put",
+          "rejected": true,
+          "total_unchanged": true,
+          "mutation": "floating_leg +1, stock_leg -1 at K=100",
+          "restored": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-11/book-lookback_payoffs-1440.png",
+        "docs/validation/section-26-11/book-lookback_history-1440.png",
+        "docs/validation/section-26-11/book-lookback_replication-1440.png",
+        "docs/validation/section-26-11/book-lookback_monitoring-1440.png",
+        "docs/validation/section-26-11/book-lookback_payoffs-1000.png",
+        "docs/validation/section-26-11/book-lookback_history-1000.png",
+        "docs/validation/section-26-11/book-lookback_replication-1000.png",
+        "docs/validation/section-26-11/book-lookback_monitoring-1000.png"
+      ],
+      "layout_errors": 0,
+      "math": {
+        "typeset": 60,
+        "errors": 0,
+        "headings": [
+          "4.1.1 契約と過去の極値#",
+          "4.1.2 フローティング価格式と Example 26.2#",
+          "4.1.3 過去の極値が現在価格に与える影響#",
+          "4.1.4 固定行使価格の複製#",
+          "4.1.5 観測頻度と連続観測#",
+          "4.1.6 適用範囲と確認問題#"
+        ],
+        "prices": {
+          "floating_call": "8.037120",
+          "floating_put": "7.790219"
+        },
+        "screenshots": [
+          "docs/validation/section-26-11/book-lookback-example-1440.png",
+          "docs/validation/section-26-11/book-lookback-example-1000.png"
+        ]
+      },
+      "external_network_blocked": false,
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "page_errors": []
+    }
+  },
+  "boundary_record": "docs/validation/section-26-11/boundary-m3b-check.json",
+  "reviews": {
+    "task1": "APPROVED after exact extrema-crossing repair",
+    "task2": "APPROVED; see task-2-review evidence",
+    "final": "APPROVED",
+    "task1_report": "docs/validation/section-26-11/task-1-m3b-review.md",
+    "task2_report": "docs/validation/section-26-11/task-2-m3b-review.md",
+    "final_report": "docs/validation/section-26-11/final-m3b-review.md"
+  },
+  "historical_records_preserved": {
+    "docs/validation/section-26-9/double-check.json": "fc77a54acc30b2846ff45ad0e90affcc154b8ae4d86ffaff4cd2d5d4025a9fba",
+    "docs/validation/section-26-9/m2b-recheck.json": "33de2fb51c6d72f5ad2427d9d15c6aa30cd3ef374cb2273f196f769db5479748",
+    "docs/validation/section-26-10/m2b-check.json": "8ee0ad71a3b13df6bea3b15097c5c3d25e97a016fd20a56663cd6333786c40f8",
+    "docs/validation/section-26-11/m3a-check.json": "5a1a97960078d37b8f56dcb32971e19457c530a06c449edf2c06711468ee643e",
+    "docs/validation/section-26-11/numerical-check.json": "1fa2fdbb0161fe905a9e7b432228089ba68c4517a4ea02c0a02c90131b34a984",
+    "docs/validation/section-26-11/final-review.md": "664534f20a618cedb823a31f3c4c8a75adfb83f1df072289a930edcc9e91152e"
+  },
+  "limits": [
+    "abs(r-q)<1e-8 remains unsupported. L05 implementation is not_applicable for a new zero-carry pricing engine; teaching and exception probes are verified.",
+    "The nested fixing demonstration uses an explicitly piecewise-linear toy path, not simulated continuous GBM or a discrete-pricing convergence claim.",
+    "Synthetic positive-domain inputs; no all-domain numerical stability, T=0/sigma=0 or market-performance claim.",
+    "Book math retains MathJax CDN; only portal external HTTP(S) is blocked. Chromium widths1440/1000, not all browsers/mobile/full-book visual acceptance."
+  ],
+  "source_sha256": {
+    "hullkit/src/hullkit/_lookback_lesson.py": "8f5e0a91131462995fd0b3afa8554795cfada8e723d5d1b77a26a4af1cee2630",
+    "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+    "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "790b85a224ec511f4e32187257dca905154dae657ce568a7cef8300a713c7bbc",
+    "volumes/10_exotics_martingales/exotics.ipynb": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f",
+    "report/report_builder/figures.py": "09d98690f14f4a43f1ea33261cb46dd6b6858000edc15a76c6f2b0d7fa9f17d3",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/assets/style.css": "165497a96ae9ff303419989df1d4f29f68d598185b1361f841788df52792856d",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "scripts/verify_lookback_lesson_browser.cjs": "1776c1a42fb856563afba7ede64665b5a4bded2c952ab3220f7051d3e0a5721e",
+    "docs/validation/section-26-11/browser-reference.json": "93d40b15e297b6ed26305b565e22b2e0f0601c910a29f8dc00be0f592a77e102",
+    "hullkit/tests/test_lookback_lesson.py": "cc17e7c10b4badd63bbc03edebd4c615587289576893c8474717314732b6cf5a",
+    "report/tests/test_section_ledger.py": "a69dd0cd2d987831cd33f1636feacff527f2492ca8a72d8644477d15876905f0",
+    "scripts/verify_section_ledger.py": "c81eeffc33aca1a29c8f948a8c0afe48d98b14c728819004b9387458a3bdffa9",
+    "release_manifest.json": "88a6976cc5a6ab1840129402b6b58d995314d90e2dda859dbaac2667b2f3fa77",
+    "report/tests/test_report_build.py": "c1f4e833a04431be9a99112142bcd6d62d603026cdf34e336002b742313c59fd"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "e5606d6bb5e3c6fac6a6c4f7a69c86a5ca758878a56325c5050982ed85e93aa3",
+    "report/site/assets/style.css": "165497a96ae9ff303419989df1d4f29f68d598185b1361f841788df52792856d",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "d7637ddbbf2d2fb1db39f3eeba12f622920139a79f37378d1e43d1f5e001c80f",
+    "docs/validation/section-26-11/portal-lookback_payoffs-1440.png": "bdb98bf61f3f2664b0e55325c60a9333853983a44af5e32aaaa8826031489638",
+    "docs/validation/section-26-11/portal-lookback_history-1440.png": "f20f8d39f672a067f95d7a58d9cfa11d88155246dc1817aa03d1dc2f195b13ea",
+    "docs/validation/section-26-11/portal-lookback_replication-1440.png": "f4f324d7a8a6bbd1d896cccffa615ac577f07016f64b8d7b36220c69128b1161",
+    "docs/validation/section-26-11/portal-lookback_monitoring-1440.png": "d2249fdb9219df6cc47532cf3e588e1ceb088178221bfd63078685c7806e5aaf",
+    "docs/validation/section-26-11/portal-lookback_payoffs-1000.png": "e8b105eb31200fd203d333d2e9840e244e56db190b6171f6e623719e40f12cde",
+    "docs/validation/section-26-11/portal-lookback_history-1000.png": "3fc9281e7d09aaeff175d8e480d3fe29779c699faa654134c0a4bc2b38a47cf6",
+    "docs/validation/section-26-11/portal-lookback_replication-1000.png": "fbbe09372865a8222e2b8de67d698ca220d96cbbc024b38a5dabf66ad1339acc",
+    "docs/validation/section-26-11/portal-lookback_monitoring-1000.png": "2fe15f603a4c93e6d499e703fef39eedf65df345c91c0818a58c5e14db86bcc2",
+    "docs/validation/section-26-11/book-lookback_payoffs-1440.png": "6622c5ce4e3c80a1ed7061ba5796bf59eee8373069e9a4af00fe177b8185ba07",
+    "docs/validation/section-26-11/book-lookback_history-1440.png": "6f9f2685e48b57cd8c453865d81a216d92a8e2a36c665b0c168b668f469fc96f",
+    "docs/validation/section-26-11/book-lookback_replication-1440.png": "f4854028c6e2c146bb71cf64872a671e75e132929d0a3ffb041006286633222f",
+    "docs/validation/section-26-11/book-lookback_monitoring-1440.png": "49510285def0b9a97216c215f18470fbef62c11ba8a1e84d0ad0283c8b052f10",
+    "docs/validation/section-26-11/book-lookback_payoffs-1000.png": "6c8d942b3169a4c3ad3c6dbfad62972979b5c647916381e5ec195b93cfad55b4",
+    "docs/validation/section-26-11/book-lookback_history-1000.png": "27bb6c4178e8711c93207bebad4cbbbdf65d943e175f97af5ba9ba9dae5dc882",
+    "docs/validation/section-26-11/book-lookback_replication-1000.png": "b66f21bc63018441550a44fabdbbb56653438b3b5d5a3fc960d7fed90d6a93a7",
+    "docs/validation/section-26-11/book-lookback_monitoring-1000.png": "016a5c2af98522127534a1dd16a347f92fecdb5e4e78ce7e02afbf1033895b65",
+    "docs/validation/section-26-11/book-lookback-example-1440.png": "c9bc1d1e2f2c7b9de8bcb568258fb63f28d601d84acd61143d2c5916f43818be",
+    "docs/validation/section-26-11/book-lookback-example-1000.png": "9d0f7500370ec1ea0c2a3de0a4dbef0dffb91189f5c472e45f50d2e618429ced",
+    "docs/validation/section-26-11/boundary-m3b-check.json": "3700b9f104edfbe95f4e19e6226976611312d40353ea04627ed255fe72ede08d",
+    "docs/validation/section-26-11/notebook-m3b-check.json": "3289105153c321d7c10233788091cbd07e871266e28655259ac610124641ca51",
+    "docs/validation/section-26-11/task-1-m3b-review.md": "53fd5699d60677d2ff757dd9bb93090ee7309092c5fe52aafbd7fe7232af808f",
+    "docs/validation/section-26-11/task-2-m3b-review.md": "17d66e8678870dbd2dfb8cafa4f4806fe0fb86118e6685c77001f0d1f6a0f531",
+    "docs/validation/section-26-11/final-m3b-review.md": "7b01ebf8490e67a1bdf6fd4ea76ad2a309630070a628ca59373865880c12bd9e"
+  },
+  "full_suite": {
+    "status": "PASS",
+    "passed": 1695,
+    "warnings": 2,
+    "seconds": 79.36,
+    "log_sha256": "828c786dddff7b80fdd8b634b1fcf6d1fda6ae315269d3ff31d7f2e92f2b000a"
+  }
+}
