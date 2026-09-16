@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-16T03:51:32.573772+00:00",
+  "base_commit": "4b828c61789b1fdcb5f96f10a1682ca787b0356d",
+  "cells": 64,
+  "output_comparison": "Separate fresh execution: output types/MIME keys/normalized deterministic text only; wall-clock cells type-only. Image/Plotly values excluded from this signature.",
+  "saved_plotly_comparison": "All four saved lookback figure data and layout payloads equal current shared builders exactly.",
+  "preservation": "Builder bytes and notebook cell sources before lookback and from Asian onward equal base.",
+  "source_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "790b85a224ec511f4e32187257dca905154dae657ce568a7cef8300a713c7bbc",
+    "hullkit/src/hullkit/_lookback_lesson.py": "8f5e0a91131462995fd0b3afa8554795cfada8e723d5d1b77a26a4af1cee2630"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f"
+  }
+}
