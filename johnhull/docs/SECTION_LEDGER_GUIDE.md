@@ -105,16 +105,20 @@ M1では306項目の識別を完了し、§26.9のみ既存の受入証跡を登
 M2bで[§26.10のD01–D06](SECTION_26_10_ACCEPTANCE_2026-09-15.md)も受入済みとなった。
 M3aで[§26.11のL01–L06と独立128価格](SECTION_26_11_REVIEW_2026-09-15.md)を確認した。
 M3bでは本文6小節・共有4図・Book/portal両面2幅、全体1,695テストと台帳の成果物ハッシュ検査を完了した。最終ブランチレビューも承認済み。
-現在の判定は[§26.11受入ノート](SECTION_26_11_ACCEPTANCE_2026-09-16.md)と[m4a-recheck](validation/section-26-11/m4a-recheck.json)を参照。
+M3b時点の判定は[§26.11受入ノート](SECTION_26_11_ACCEPTANCE_2026-09-16.md)と[m4a-recheck](validation/section-26-11/m4a-recheck.json)を参照。
 M4aで[§26.12の要求S01–S06と独立参照価格42件](SECTION_26_12_REVIEW_2026-09-16.md)を登録した。
-実装・教材・図はまだ無く、状態はgaps_foundである。
-台帳は受入済み3、不足あり1、未評価302項目。
+M4a時点では実装・教材・図が無く、gaps_foundだった。
+M4bで独立CRR・本文6小節・共有4図・Book/portal52状態を確認し、Task1–3の独立レビューが承認された。
+現在は[§26.12受入ノート](SECTION_26_12_ACCEPTANCE_2026-09-16.md)と[M4b統合記録](validation/section-26-12/m4b-check.json)を参照。
+台帳は受入済み4、不足あり0、未評価302項目。全体テスト・最終ブランチ判定は統合記録へ保存する。
 過去の実装分類をそのまま学習内容の受入へ移していない。
 全節の現在の充足率・計算カバレッジは、この台帳だけではまだ確定できない。
 
 M3bは共有成果物を変更した§26.9・§26.10も今回のBook/portalで再検証した。
-現行台帳には[§26.9 m3b-recheck](validation/section-26-9/m3b-recheck.json)と
-[§26.10 m3b-recheck](validation/section-26-10/m3b-recheck.json)を結び、古いdouble-check・M2b・M3aの記録は実施時点の履歴として保持する。
+M4bの現行台帳には[§26.9 m4b-recheck](validation/section-26-9/m4b-recheck.json)、
+[§26.10 m4b-recheck](validation/section-26-10/m4b-recheck.json)、[§26.11 m4b-recheck](validation/section-26-11/m4b-recheck.json)を結ぶ。
+過去の日時付き18数値・統合記録は保持し、lookbackの古いブラウザJSONと18画像も元のバイト列を維持する。
+最新のlookback画像はm4b接頭辞、ブラウザ記録はbrowser-m4b-check.jsonへ保存する。
 §26.12の登録でledger guard testの期待件数が変わり、それをpinしていた§26.11のM3b統合記録が鮮度切れになった。
 教材側が無変更であることをハッシュ比較で確かめた上で回帰を再実行し、m4a-recheckを現行の根拠に差し替えた。
 **状態件数をassertするテストは検証記録にpinしない**（どの節を登録しても必ず変わるため）。

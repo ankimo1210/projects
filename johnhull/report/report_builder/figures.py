@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from hullkit import plotly_viz as pv
 from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
+from hullkit._shout_lesson import _figures as shout_lesson_figures
 
 from . import frontier_figures as ff
 
@@ -540,6 +541,42 @@ FIGURES: list[FigureSpec] = [
         "K=100、m₀=M₀=100。今日・満期を含む1/2/4/8区間で同じ決定論的折れ線を観測する。",
         lambda: lookback_lesson_figures()["lookback_monitoring"],
         practice="8区間はこの折れ線の極値を完全に捕捉する。連続 GBM の極値・価格収束の検証ではない。解析式は連続観測を仮定する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "shout_payoff",
+        "exotics",
+        "シャウトの満期給付",
+        "K=50、Sτ=60 または50。一度だけ利益を確保し、その後の上昇にも参加する。",
+        lambda: shout_lesson_figures()["shout_payoff"],
+        practice="満期給付と現在価値を区別する。文字通りの給付と内在価値の床は Sτ≥K で一致する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "shout_decision",
+        "exotics",
+        "シャウト判断の小さな二項木",
+        "S₀=K=100、r=5%、q=2%、σ=20%、T=1年、N=3。継続と即時シャウトを比較する。",
+        lambda: shout_lesson_figures()["shout_decision"],
+        practice="符号付き現金脚と ATM call 脚を個別に確認する。N=3 は手順の図で、精密価格ではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "shout_boundary",
+        "exotics",
+        "シャウト境界と格子収束",
+        "実際の CRR 層の節点区間と独立 B 境界を比較する。残差は各市場の ATM call。",
+        lambda: shout_lesson_figures()["shout_boundary"],
+        practice="CRR の上下節点は連続境界を囲む保証がない。42行の最大残差は経験的検査で、証明された誤差上界ではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "shout_comparison",
+        "exotics",
+        "同条件の欧州・シャウト・ルックバック",
+        "7つの合成市場、K=100、S₀=80/100/125。call の現在価格を比較する。",
+        lambda: shout_lesson_figures()["shout_comparison"],
+        practice="連続観測・同じ一定係数 GBM・新規極値、S/K/T/σ>0 が条件。r=q の lookback は既存 API 未対応のため欠測であり、0ではない。現金配当・時変ボラティリティ・契約固有の離散シャウト日・T=0/σ=0・全領域の安定性は対象外。put は原典外の拡張で、この図は call。",
         is_new=True,
     ),
     FigureSpec(
