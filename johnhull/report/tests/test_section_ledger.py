@@ -573,13 +573,18 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["status"] == "PASS", result["errors"]
     assert result["inventory_total"] == 306
     assert result["counts"] == {
-        "unreviewed": 303,
-        "gaps_found": 0,
+        "unreviewed": 302,
+        "gaps_found": 1,
         "pending_validation": 0,
         "accepted": 3,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
+    shout = next(section for section in ledger["sections"] if section["id"] == "26.12")
+    assert shout["status"] == "gaps_found"
+    assert [row["id"] for row in shout["requirements"]] == [f"S{i:02}" for i in range(1, 7)]
+    assert shout["requirements"][1]["coverage"]["independent_validation"]["state"] == "verified"
+    assert all(row["coverage"]["implementation"]["state"] == "pending" for row in shout["requirements"])
     binary = next(section for section in ledger["sections"] if section["id"] == "26.10")
     assert binary["status"] == "accepted"
     assert [row["id"] for row in binary["requirements"]] == [f"D{i:02}" for i in range(1, 7)]

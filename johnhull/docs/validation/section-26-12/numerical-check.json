@@ -1,0 +1,163 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-16T05:18:16.894796+00:00",
+  "scope": "M4a independent shout-price reference only; section 26.12 stays gaps_found.",
+  "reference": "Hull 11e Global Edition section 26.12, physical/printed pp.625-626.",
+  "method": "Two engines with no shared pricing path: Gaussian-kernel backward induction on a log grid, and a free-boundary solution of the shout-premium representation. Both are extrapolated in their own step size. Neither engine calls hullkit.",
+  "engines": {
+    "convolution": {
+      "coarse_dates": 800,
+      "fine_dates": 1600,
+      "extrapolation": "2*V(2m) - V(m)"
+    },
+    "integral_equation": {
+      "coarse_steps": 200,
+      "fine_steps": 400,
+      "extrapolation": "2*V(2n) - V(n)",
+      "grid": "uniform in sqrt(time to maturity)"
+    }
+  },
+  "agreement": {
+    "max_absolute": 0.000355196166992755,
+    "max_relative": 4.629335153018445e-06,
+    "comparisons": [
+      {
+        "market": "hull-example-market",
+        "contract": "call",
+        "convolution": 11.67906399674908,
+        "integral_equation": 11.679084412242126,
+        "difference": 2.0415493045433664e-05,
+        "boundary_at_inception": 117.87383058715844
+      },
+      {
+        "market": "hull-example-market",
+        "contract": "put",
+        "convolution": 8.933339263434762,
+        "integral_equation": 8.933353569393802,
+        "difference": 1.4305959039617733e-05,
+        "boundary_at_inception": 87.63333416996389
+      },
+      {
+        "market": "positive-carry",
+        "contract": "call",
+        "convolution": 11.66888148250406,
+        "integral_equation": 11.668901595373342,
+        "difference": 2.0112869281163626e-05,
+        "boundary_at_inception": 118.33042476224675
+      },
+      {
+        "market": "positive-carry",
+        "contract": "put",
+        "convolution": 8.527192384196173,
+        "integral_equation": 8.527205745547823,
+        "difference": 1.3361351649976427e-05,
+        "boundary_at_inception": 87.82168758468619
+      },
+      {
+        "market": "dividend-above-rate",
+        "contract": "call",
+        "convolution": 11.8856427215032,
+        "integral_equation": 11.885663951036596,
+        "difference": 2.122953339700473e-05,
+        "boundary_at_inception": 120.00882277087308
+      },
+      {
+        "market": "dividend-above-rate",
+        "contract": "put",
+        "convolution": 18.992744716220532,
+        "integral_equation": 18.992765182504705,
+        "difference": 2.0466284173181748e-05,
+        "boundary_at_inception": 76.01788005454739
+      },
+      {
+        "market": "negative-rate",
+        "contract": "call",
+        "convolution": 7.111456448431629,
+        "integral_equation": 7.111468582179025,
+        "difference": 1.2133747396170236e-05,
+        "boundary_at_inception": 110.64389162070466
+      },
+      {
+        "market": "negative-rate",
+        "contract": "put",
+        "convolution": 9.355190642500947,
+        "integral_equation": 9.355202870623796,
+        "difference": 1.2228122848512157e-05,
+        "boundary_at_inception": 87.9919991040631
+      },
+      {
+        "market": "zero-carry",
+        "contract": "call",
+        "convolution": 21.541763315599333,
+        "integral_equation": 21.5418033268596,
+        "difference": 4.001126026764723e-05,
+        "boundary_at_inception": 137.46160568121215
+      },
+      {
+        "market": "zero-carry",
+        "contract": "put",
+        "convolution": 19.794634028846,
+        "integral_equation": 19.794658036834466,
+        "difference": 2.4007988464802565e-05,
+        "boundary_at_inception": 74.04264843319386
+      },
+      {
+        "market": "long-high-vol",
+        "contract": "call",
+        "convolution": 76.72725245679351,
+        "integral_equation": 76.7276076529605,
+        "difference": 0.000355196166992755,
+        "boundary_at_inception": 460.35004730874186
+      },
+      {
+        "market": "long-high-vol",
+        "contract": "put",
+        "convolution": 45.39812990431035,
+        "integral_equation": 45.39820357255702,
+        "difference": 7.366824667087712e-05,
+        "boundary_at_inception": 37.6128275550909
+      },
+      {
+        "market": "near-expiry",
+        "contract": "call",
+        "convolution": 0.4113364509475552,
+        "integral_equation": 0.4113366212141925,
+        "difference": 1.7026663728936242e-07,
+        "boundary_at_inception": 100.57706032410334
+      },
+      {
+        "market": "near-expiry",
+        "contract": "put",
+        "convolution": 0.4055115654048855,
+        "integral_equation": 0.4055117290069711,
+        "difference": 1.636020856010667e-07,
+        "boundary_at_inception": 99.43286247662024
+      }
+    ]
+  },
+  "units": {
+    "spot_strike_price": "currency",
+    "expiry": "years",
+    "rate_dividend": "continuously compounded per year",
+    "volatility": "annual"
+  },
+  "assumptions": [
+    "Risk-neutral GBM with constant r/q/sigma; positive spot, volatility and maturity.",
+    "One shout at any time in [0, T], and the holder may also never shout.",
+    "All markets are synthetic; no claim about market performance."
+  ],
+  "limitations": [
+    "Both engines are numerical. The recorded agreement is a measured spread, not a proven bound.",
+    "No hullkit shout implementation exists yet, so no library code is validated here.",
+    "Deep out-of-the-money rows carry absolute accuracy only; their relative error is not bounded.",
+    "Discrete shout dates, cash dividends and non-constant volatility are out of scope."
+  ],
+  "source_sha256": {
+    "scripts/build_shout_reference.py": "944a54bafc3615f428daf8ccdbb2e26ffa592fdbb11b79514bc1bdc8fb7f8574",
+    "hullkit/tests/test_shout_reference.py": "c8fa221a0279b94f3e1f3b5fa92efd205609f63b7846f09410128b668ae04a85",
+    "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-12/prices.json": "98fbe101c5a19424082202f743eaa2166ac7609a515f6b43e2737584552a7633"
+  }
+}
