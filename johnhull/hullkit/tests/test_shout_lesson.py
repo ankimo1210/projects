@@ -145,6 +145,29 @@ def test_refuse_stale_hashes(lesson, tmp_path):
         lesson._load_data(path)
 
 
+@pytest.mark.parametrize(
+    "family", ["contract", "payoff", "decision_tree", "prices", "convergence", "boundaries"]
+)
+@pytest.mark.parametrize(
+    "source",
+    [
+        "hullkit/src/hullkit/_shout.py",
+        "scripts/build_shout_lesson_data.py",
+        "scripts/build_shout_reference.py",
+        "docs/validation/section-26-12/prices.json",
+        "docs/validation/section-26-12/numerical-check.json",
+        "hullkit/src/hullkit/exotics.py",
+    ],
+)
+def test_refuse_missing_required_source_hash(lesson, tmp_path, family, source):
+    data = lesson._load_data()
+    del data[family]["source_hashes"][source]
+    path = tmp_path / "missing-hash.json"
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValueError, match=r"missing.*source"):
+        lesson._load_data(path)
+
+
 def test_figures_do_not_price_again(lesson, monkeypatch):
     from hullkit import _shout, exotics
 
