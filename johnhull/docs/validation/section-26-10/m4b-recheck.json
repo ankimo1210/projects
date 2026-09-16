@@ -1,41 +1,19 @@
 {
-  "checked_at": "2026-09-16T06:37:39.623Z",
-  "reference": {
-    "market": {
-      "spot": 100,
-      "strike": 100,
-      "rate": 0.05,
-      "volatility": 0.2,
-      "expiry": 1,
-      "dividend": 0.02
-    },
-    "payout": 100,
-    "prices": {
-      "cash_call": 49.45810910532236,
-      "asset_call": 58.68511461347642,
-      "cash_put": 45.66483334474906,
-      "asset_put": 39.334752717199144
-    },
-    "delta": [
-      {
-        "T": 1,
-        "S": 100,
-        "delta": 1.8950578754952356
-      },
-      {
-        "T": 0.0821917808219178,
-        "S": 100,
-        "delta": 6.92845632885124
-      },
-      {
-        "T": 0.0027397260273972603,
-        "S": 100,
-        "delta": 38.10355729155859
-      }
-    ],
-    "method": "Discounted log-return density integral, with Richardson-extrapolated symmetric differences for delta at S=100; h=.01 and .005."
+  "status": "PASS",
+  "checked_at": "2026-09-16T06:52:29.830375+00:00",
+  "scope": "Fresh section26.10 regression after Shout insertion and shared delivery changes.",
+  "related_tests": {
+    "status": "PASS",
+    "passed": 622,
+    "skipped": 6,
+    "warnings": 0,
+    "seconds": 16.73,
+    "log_sha256": "18ef37adeeb8d0c1cc0b75de9863b910f0016ae5e11f08ab6f54b5f9072dbaa0"
   },
-  "pages": {
+  "notebook_record": "docs/validation/section-26-12/notebook-m4b-check.json",
+  "notebook_preservation": "All prior notebook cell sources and builder prefix/suffix preserved except authorized Asian heading4.2->4.3.",
+  "browser_record": "docs/validation/section-26-10/browser-check.json",
+  "browser": {
     "portal": {
       "figures": [
         "binary_payoffs",
@@ -274,6 +252,9 @@
       "page_errors": []
     }
   },
+  "historical_record": "docs/validation/section-26-10/m3b-recheck.json",
+  "historical_record_unchanged": true,
+  "pinning_note": "Ledger status-count fixtures are intentionally excluded; run the ledger checker separately.",
   "source_sha256": {
     "hullkit/src/hullkit/_binary_lesson.py": "80be5939c13e261dcbb3bb9befecc8b45fbb7b04c07b0ebe8d270f83ad900e19",
     "hullkit/tests/test_binary_lesson.py": "ac3152dab1e15fcfbc8408f4a6efa91a722954421eaac9ab4870b6ab03b68182",
@@ -293,8 +274,7 @@
     "report/site/exotics.html": "1efdfcaca6f17ed27a6b2245938a88def5950a71d8c1b0437a6172f70e626115",
     "report/site/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "ccf28a1705309c98118174fe042a35f651e208037b5c79c27dc322c074b027b5"
-  },
-  "browser_version": "141.0.7390.37",
-  "status": "PASS"
+    "book/_build/html/notebooks/10_exotics.html": "ccf28a1705309c98118174fe042a35f651e208037b5c79c27dc322c074b027b5",
+    "docs/validation/section-26-12/notebook-m4b-check.json": "a9df81c7386105d26e7bc16fea4e36044ef2f42a828c9e566a4d05332ed9a3cf"
+  }
 }

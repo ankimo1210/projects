@@ -1206,12 +1206,12 @@
       "evidence": {
         "lesson_builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "790b85a224ec511f4e32187257dca905154dae657ce568a7cef8300a713c7bbc",
+          "sha256": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f",
           "kind": "source"
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f",
+          "sha256": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911",
           "kind": "source"
         },
         "pricing": {
@@ -1251,7 +1251,7 @@
         },
         "browser_run": {
           "path": "docs/validation/section-26-9/browser-check.json",
-          "sha256": "45318dc53ecf76265080554bde1dc2651e93ee185dd7d70fe86693c79160bb45",
+          "sha256": "c5a69818314179a55d0db34593edd3e5d0b7a20617c0c1d7af1f90c5f2417aa4",
           "kind": "record"
         },
         "path_image": {
@@ -1289,10 +1289,10 @@
           "sha256": "24791168bc242e9cf98827481297b99e6c26af57e0208d3cb074069a970d4405",
           "kind": "image"
         },
-        "m3b_recheck": {
-          "path": "docs/validation/section-26-9/m3b-recheck.json",
+        "m4b_recheck": {
+          "path": "docs/validation/section-26-9/m4b-recheck.json",
           "kind": "record",
-          "sha256": "b6a3976065090fc60e03c9e584426b6f018ceb3b81df34c0389572e821de3ed0"
+          "sha256": "7d9d652c287d59ca1888c9511999e1bfd46cf535c5d166cd56dba607a864f057"
         }
       },
       "requirements": [
@@ -1321,7 +1321,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "m3b_recheck"
+                "m4b_recheck"
               ]
             },
             "visualization": {
@@ -1367,7 +1367,7 @@
               "refs": [
                 "reference_tests",
                 "numerical",
-                "m3b_recheck"
+                "m4b_recheck"
               ]
             },
             "visualization": {
@@ -1413,7 +1413,7 @@
               "refs": [
                 "reference_tests",
                 "numerical",
-                "m3b_recheck"
+                "m4b_recheck"
               ]
             },
             "visualization": {
@@ -1458,7 +1458,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "m3b_recheck"
+                "m4b_recheck"
               ]
             },
             "visualization": {
@@ -1504,7 +1504,7 @@
               "refs": [
                 "reference_tests",
                 "notebook",
-                "m3b_recheck"
+                "m4b_recheck"
               ]
             },
             "visualization": {
@@ -1548,7 +1548,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "m3b_recheck"
+                "m4b_recheck"
               ]
             },
             "visualization": {
@@ -1591,7 +1591,7 @@
               "state": "verified",
               "refs": [
                 "notebook",
-                "m3b_recheck"
+                "m4b_recheck"
               ]
             },
             "visualization": {
@@ -1638,7 +1638,7 @@
                 "reference_tests",
                 "plot_tests",
                 "browser_run",
-                "m3b_recheck"
+                "m4b_recheck"
               ]
             },
             "visualization": {
@@ -1685,7 +1685,7 @@
                 "reference_tests",
                 "numerical",
                 "browser_run",
-                "m3b_recheck"
+                "m4b_recheck"
               ]
             },
             "visualization": {
@@ -1755,12 +1755,12 @@
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f",
+          "sha256": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911",
           "kind": "source"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "790b85a224ec511f4e32187257dca905154dae657ce568a7cef8300a713c7bbc",
+          "sha256": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f",
           "kind": "source"
         },
         "review": {
@@ -1785,7 +1785,7 @@
         },
         "portal": {
           "path": "report/report_builder/figures.py",
-          "sha256": "09d98690f14f4a43f1ea33261cb46dd6b6858000edc15a76c6f2b0d7fa9f17d3",
+          "sha256": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226",
           "kind": "source"
         },
         "browser_script": {
@@ -1795,7 +1795,7 @@
         },
         "browser_run": {
           "path": "docs/validation/section-26-10/browser-check.json",
-          "sha256": "24089158b3403a71ee82399c9036133653ac87e28c8384543985e0c3c9008a8f",
+          "sha256": "a812787ee5833039ed9afdefa54ba13b2cd4aea22f57e197ebfe6622f688c6ff",
           "kind": "record"
         },
         "acceptance_note": {
@@ -1833,10 +1833,10 @@
           "sha256": "87533873bc4207cdfa3c61323de588f8236d2a94924c498cdfacc12753a9c1c3",
           "kind": "note"
         },
-        "m3b_recheck": {
-          "path": "docs/validation/section-26-10/m3b-recheck.json",
+        "m4b_recheck": {
+          "path": "docs/validation/section-26-10/m4b-recheck.json",
           "kind": "record",
-          "sha256": "2fda9fc8eaa7688cc52a509c2d0ef03b4c813870e5bfbd555ce8ef027492a1fa"
+          "sha256": "1879cca7fe8c61ed850fbe69fa85ff320fb16696bafbe71a090536ff09657405"
         }
       },
       "requirements": [
@@ -1866,7 +1866,7 @@
               "state": "verified",
               "refs": [
                 "lesson_tests",
-                "m3b_recheck"
+                "m4b_recheck"
               ],
               "locator": "§2.1"
             },
@@ -1915,7 +1915,7 @@
                 "tests",
                 "numerical",
                 "lesson_tests",
-                "m3b_recheck"
+                "m4b_recheck"
               ],
               "locator": "§2.2"
             },
@@ -1964,7 +1964,7 @@
                 "tests",
                 "numerical",
                 "lesson_tests",
-                "m3b_recheck"
+                "m4b_recheck"
               ],
               "locator": "§2.3"
             },
@@ -2051,7 +2051,7 @@
               "state": "verified",
               "refs": [
                 "lesson_tests",
-                "m3b_recheck"
+                "m4b_recheck"
               ],
               "locator": "§2.5–2.6"
             },
@@ -2099,7 +2099,7 @@
               "state": "verified",
               "refs": [
                 "lesson_tests",
-                "m3b_recheck",
+                "m4b_recheck",
                 "final_review"
               ],
               "locator": "§2.1–2.6"
@@ -2160,7 +2160,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4a_recheck"
+                "m4b_recheck"
               ],
               "locator": "§4.1.1"
             },
@@ -2209,7 +2209,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4a_recheck"
+                "m4b_recheck"
               ],
               "locator": "§4.1.2"
             },
@@ -2258,7 +2258,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4a_recheck"
+                "m4b_recheck"
               ],
               "locator": "§4.1.3–4.1.4"
             },
@@ -2308,7 +2308,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4a_recheck"
+                "m4b_recheck"
               ],
               "locator": "§4.1.5"
             },
@@ -2352,7 +2352,7 @@
               "refs": [
                 "tests",
                 "boundary",
-                "m4a_recheck"
+                "m4b_recheck"
               ],
               "locator": "§4.1.6"
             },
@@ -2399,7 +2399,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4a_recheck"
+                "m4b_recheck"
               ],
               "locator": "§4.1.1–4.1.6"
             },
@@ -2462,12 +2462,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f"
+          "sha256": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "790b85a224ec511f4e32187257dca905154dae657ce568a7cef8300a713c7bbc"
+          "sha256": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f"
         },
         "review": {
           "path": "docs/SECTION_26_11_REVIEW_2026-09-15.md",
@@ -2502,7 +2502,7 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "09d98690f14f4a43f1ea33261cb46dd6b6858000edc15a76c6f2b0d7fa9f17d3"
+          "sha256": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226"
         },
         "browser_script": {
           "path": "scripts/verify_lookback_lesson_browser.cjs",
@@ -2510,9 +2510,9 @@
           "sha256": "1776c1a42fb856563afba7ede64665b5a4bded2c952ab3220f7051d3e0a5721e"
         },
         "browser_run": {
-          "path": "docs/validation/section-26-11/browser-m3b-check.json",
+          "path": "docs/validation/section-26-11/browser-m4b-check.json",
           "kind": "record",
-          "sha256": "34ced21a685bb95136dfe62708ddddb105e0bf19809cc4dce3226bee26b4e19e"
+          "sha256": "27a08bb39a1d9241087fab7c9d2bcf82cb38ffd321021f01b2a2efeb87161a31"
         },
         "boundary": {
           "path": "docs/validation/section-26-11/boundary-m3b-check.json",
@@ -2520,9 +2520,9 @@
           "sha256": "3700b9f104edfbe95f4e19e6226976611312d40353ea04627ed255fe72ede08d"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-11/notebook-m3b-check.json",
+          "path": "docs/validation/section-26-12/notebook-m4b-check.json",
           "kind": "record",
-          "sha256": "3289105153c321d7c10233788091cbd07e871266e28655259ac610124641ca51"
+          "sha256": "a9df81c7386105d26e7bc16fea4e36044ef2f42a828c9e566a4d05332ed9a3cf"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md",
@@ -2535,27 +2535,27 @@
           "sha256": "93d40b15e297b6ed26305b565e22b2e0f0601c910a29f8dc00be0f592a77e102"
         },
         "payoffs_image": {
-          "path": "docs/validation/section-26-11/book-lookback_payoffs-1000.png",
+          "path": "docs/validation/section-26-11/m4b-book-lookback_payoffs-1000.png",
           "kind": "image",
           "sha256": "6c8d942b3169a4c3ad3c6dbfad62972979b5c647916381e5ec195b93cfad55b4"
         },
         "history_image": {
-          "path": "docs/validation/section-26-11/book-lookback_history-1000.png",
+          "path": "docs/validation/section-26-11/m4b-book-lookback_history-1000.png",
           "kind": "image",
           "sha256": "27bb6c4178e8711c93207bebad4cbbbdf65d943e175f97af5ba9ba9dae5dc882"
         },
         "replication_image": {
-          "path": "docs/validation/section-26-11/book-lookback_replication-1000.png",
+          "path": "docs/validation/section-26-11/m4b-book-lookback_replication-1000.png",
           "kind": "image",
           "sha256": "b66f21bc63018441550a44fabdbbb56653438b3b5d5a3fc960d7fed90d6a93a7"
         },
         "monitoring_image": {
-          "path": "docs/validation/section-26-11/book-lookback_monitoring-1000.png",
+          "path": "docs/validation/section-26-11/m4b-book-lookback_monitoring-1000.png",
           "kind": "image",
           "sha256": "016a5c2af98522127534a1dd16a347f92fecdb5e4e78ce7e02afbf1033895b65"
         },
         "example_image": {
-          "path": "docs/validation/section-26-11/book-lookback-example-1000.png",
+          "path": "docs/validation/section-26-11/m4b-book-lookback-example-1000.png",
           "kind": "image",
           "sha256": "9d0f7500370ec1ea0c2a3de0a4dbef0dffb91189f5c472e45f50d2e618429ced"
         },
@@ -2564,50 +2564,67 @@
           "kind": "note",
           "sha256": "7b01ebf8490e67a1bdf6fd4ea76ad2a309630070a628ca59373865880c12bd9e"
         },
-        "m4a_recheck": {
-          "path": "docs/validation/section-26-11/m4a-recheck.json",
+        "m4b_recheck": {
+          "path": "docs/validation/section-26-11/m4b-recheck.json",
           "kind": "record",
-          "sha256": "5dacb91bdea4e56e190095d38b4f44235a61868af7cb1b636e67c1906bf65d8b"
+          "sha256": "f169ade1e747e00db9016412c938f0a16f0d611349a35a1299165b303b4d4d14"
         }
       },
       "acceptance_note": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md"
     },
     {
       "id": "26.12",
-      "status": "gaps_found",
+      "status": "accepted",
       "requirements": [
         {
           "id": "S01",
           "statement": "1回だけのshoutという契約、満期給付、原典のK=50・shout 60の例、本源的価値と給付式の2つの読み方を説明する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
-                "notebook",
                 "builder",
-                "review"
+                "notebook",
+                "acceptance_note"
               ],
-              "locator": "vol10 §1 分類表のみ"
+              "locator": "§4.2.1"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "lesson",
+                "lesson_builder"
+              ],
+              "locator": "CRR backward induction and shared saved-data figures"
             },
             "independent_validation": {
               "state": "verified",
               "refs": [
+                "tests",
+                "tree_tests",
+                "lesson_tests",
                 "numerical",
-                "tests"
+                "tree_check",
+                "browser_reference",
+                "m4b_check"
               ],
-              "locator": "給付の同値性と行使価格未満のshoutが劣後することの固定"
+              "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "payoff_image"
+              ],
+              "locator": "Shared lesson figures; annotated limitations"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book/portal actual menus, independent numericpins and recordedviewport checks"
             }
           }
         },
@@ -2616,34 +2633,51 @@
           "statement": "給付分解 max(0,S_T-S_t)+(S_t-K) と、shout時点価値＝e^{-r tau}(S_t-K)+行使価格S_tの欧州オプションを説明する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
-                "notebook",
                 "builder",
-                "review"
+                "notebook",
+                "acceptance_note"
               ],
-              "locator": "vol10 §1 分類表のみ"
+              "locator": "§4.2.2"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "lesson",
+                "lesson_builder"
+              ],
+              "locator": "CRR backward induction and shared saved-data figures"
             },
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "numerical",
                 "tests",
-                "prices"
+                "tree_tests",
+                "lesson_tests",
+                "numerical",
+                "tree_check",
+                "browser_reference",
+                "m4b_check"
               ],
-              "locator": "対数正規密度への直接積分6条件とATM恒等式"
+              "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "payoff_image",
+                "decision_image"
+              ],
+              "locator": "Shared lesson figures; annotated limitations"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book/portal actual menus, independent numericpins and recordedviewport checks"
             }
           }
         },
@@ -2652,29 +2686,51 @@
           "statement": "ツリーで各ノードのshout値と継続値を比べる手続きを、アメリカンとの類似とともに示す。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
-                "notebook",
                 "builder",
-                "review"
+                "notebook",
+                "acceptance_note"
               ],
-              "locator": "vol10 §1 分類表のみ"
+              "locator": "§4.2.3–4.2.4"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "lesson",
+                "lesson_builder"
+              ],
+              "locator": "CRR backward induction and shared saved-data figures"
             },
             "independent_validation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "tests",
+                "tree_tests",
+                "lesson_tests",
+                "numerical",
+                "tree_check",
+                "browser_reference",
+                "m4b_check"
+              ],
+              "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "decision_image",
+                "boundary_image"
+              ],
+              "locator": "Shared lesson figures; annotated limitations"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book/portal actual menus, independent numericpins and recordedviewport checks"
             }
           }
         },
@@ -2683,34 +2739,50 @@
           "statement": "ルックバックより大幅に安い理由と、欧州オプションとの比較条件を説明する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
-                "notebook",
                 "builder",
-                "review"
+                "notebook",
+                "acceptance_note"
               ],
-              "locator": "vol10 §1 分類表のみ"
+              "locator": "§4.2.5"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "lesson",
+                "lesson_builder"
+              ],
+              "locator": "CRR backward induction and shared saved-data figures"
             },
             "independent_validation": {
               "state": "verified",
               "refs": [
+                "tests",
+                "tree_tests",
+                "lesson_tests",
                 "numerical",
-                "prices",
-                "tests"
+                "tree_check",
+                "browser_reference",
+                "m4b_check"
               ],
-              "locator": "42価格で 欧州 <= shout <= 固定ルックバック"
+              "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "comparison_image"
+              ],
+              "locator": "Shared lesson figures; annotated limitations"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book/portal actual menus, independent numericpins and recordedviewport checks"
             }
           }
         },
@@ -2719,29 +2791,50 @@
           "statement": "適用域（連続shout・GBM・定数パラメータ）と対象外（離散shout日、現金配当、原典に無いput）を明示する。r=qは特異点ではない。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
-                "notebook",
                 "builder",
-                "review"
+                "notebook",
+                "acceptance_note"
               ],
-              "locator": "vol10 §1 分類表のみ"
+              "locator": "§4.2.6"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "lesson",
+                "lesson_builder"
+              ],
+              "locator": "CRR backward induction and shared saved-data figures"
             },
             "independent_validation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "tests",
+                "tree_tests",
+                "lesson_tests",
+                "numerical",
+                "tree_check",
+                "browser_reference",
+                "m4b_check"
+              ],
+              "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "comparison_image"
+              ],
+              "locator": "Shared lesson figures; annotated limitations"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book/portal actual menus, independent numericpins and recordedviewport checks"
             }
           }
         },
@@ -2750,29 +2843,53 @@
           "statement": "給付・shout境界・ルックバック比較を図示し、Book/portalの式・軸・凡例・表示値を確認する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
-                "notebook",
                 "builder",
-                "review"
+                "notebook",
+                "acceptance_note"
               ],
-              "locator": "vol10 §1 分類表のみ"
+              "locator": "§4.2.4・4.2.6 and all four delivered figures"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "lesson",
+                "lesson_builder"
+              ],
+              "locator": "CRR backward induction and shared saved-data figures"
             },
             "independent_validation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "tests",
+                "tree_tests",
+                "lesson_tests",
+                "numerical",
+                "tree_check",
+                "browser_reference",
+                "m4b_check"
+              ],
+              "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "payoff_image",
+                "decision_image",
+                "boundary_image",
+                "comparison_image"
+              ],
+              "locator": "Shared lesson figures; annotated limitations"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "browser_script"
+              ],
+              "locator": "Book/portal actual menus, independent numericpins and recordedviewport checks"
             }
           }
         }
@@ -2782,17 +2899,18 @@
         625,
         626
       ],
-      "scope": "Hull 11e GE §26.12のS01–S06。契約・給付分解・ツリー手続き・ルックバック比較・適用域・図と配布画面。M4aは要求整理と独立参照価格のみ。",
+      "scope": "Hull11eGE§26.12のS01–S06：原典call契約・分解・ツリー・境界/収束・条件付き比較・Book/portal。put価格は明示した拡張。",
       "assumptions": [
         "リスク中立GBM、定数r/q/sigma、正のS/T/sigma",
         "連続shout（[0,T]の任意の1点、shoutしない選択も可）",
         "通貨、年、年率。すべて合成条件"
       ],
       "limitations": [
-        "hullkitにshout実装が無く、今回検証したのは参照エンジン同士である。ライブラリのコードは未検証。",
-        "2エンジンとも数値解。ATM14条件の一致は最大絶対3.552e-4・相対4.63e-6の実測値で、証明された誤差上限ではない。",
-        "深いOTM行はほぼ0で相対精度を保証しない。離散shout日・現金配当・非定数ボラは対象外。",
-        "putは原典の範囲外の拡張として参照値のみを作った。Book/portalは再生成・再検査していない。"
+        "CRR N1024で連続shoutを近似。42合成価格の観測誤差で、全入力域の誤差上限ではない。",
+        "境界は実ノードの解像度。15比較点中1点で独立B基準がブラケット外に出る有限刻み誤差を明記。",
+        "r=qはshoutで検査。既存lookbackAPIは未対応なので比較を欠測表示。putは原典外の拡張。",
+        "T=0/sigma=0/現金配当/非定数vol/別契約の離散shout日/全域安定性は受入対象外。",
+        "BookはMathJax CDN依存。記録したChromiumと幅の範囲で検証。全巻の受入ではない。"
       ],
       "evidence": {
         "review": {
@@ -2828,14 +2946,105 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f"
+          "sha256": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "790b85a224ec511f4e32187257dca905154dae657ce568a7cef8300a713c7bbc"
+          "sha256": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f"
+        },
+        "pricing": {
+          "path": "hullkit/src/hullkit/_shout.py",
+          "kind": "source",
+          "sha256": "e7077dced64d63baa86169d227edbaf4a1f899c580d9a1222d0b9b7404e08f3a"
+        },
+        "tree_tests": {
+          "path": "hullkit/tests/test_shout_tree.py",
+          "kind": "test",
+          "sha256": "00caf9cbcdf6eebaf1a364715e3350b01e462dbb57e60d476aef50166c022c71"
+        },
+        "lesson": {
+          "path": "hullkit/src/hullkit/_shout_lesson.py",
+          "kind": "source",
+          "sha256": "14d388049bc47a1aa53e45dc730376f626f077b170194ced5d4c2e480191acc1"
+        },
+        "lesson_tests": {
+          "path": "hullkit/tests/test_shout_lesson.py",
+          "kind": "test",
+          "sha256": "0dc4a42b46479fb8e74874e9e350669b2b62cd4d02bacb56f33b0fd392db8a2c"
+        },
+        "lesson_builder": {
+          "path": "scripts/build_shout_lesson_data.py",
+          "kind": "source",
+          "sha256": "3173d416cf5c0549926eb302da40b85915c25ba95c04e6eac9a44e9693c217ee"
+        },
+        "lesson_data": {
+          "path": "docs/validation/section-26-12/lesson-data.json",
+          "kind": "reference",
+          "sha256": "1a4f3614049d92670a8332a0d242f7b0b95a1c90efcb7e4764a2cc272b700fec"
+        },
+        "tree_check": {
+          "path": "docs/validation/section-26-12/tree-check.json",
+          "kind": "reference",
+          "sha256": "357aff84d713ab7023a35af30befeea42a19dde7aff23b169c5369b29c0491a3"
+        },
+        "portal": {
+          "path": "report/report_builder/figures.py",
+          "kind": "source",
+          "sha256": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226"
+        },
+        "browser_script": {
+          "path": "scripts/verify_shout_lesson_browser.cjs",
+          "kind": "source",
+          "sha256": "463b1ebe81108b654715794a61f0606e46a29da288dff3cb41a5564866875a0d"
+        },
+        "browser_reference": {
+          "path": "docs/validation/section-26-12/browser-reference.json",
+          "kind": "reference",
+          "sha256": "db6646b7dec5380ff02d6003c82b97ef3e1a1ec99bbed47e985eabcc68a01f26"
+        },
+        "browser_run": {
+          "path": "docs/validation/section-26-12/browser-m4b-check.json",
+          "kind": "record",
+          "sha256": "9fae6558854904fe276656c3784b74ab4718bf146bddb6ee6a735660bc8099cd"
+        },
+        "notebook_check": {
+          "path": "docs/validation/section-26-12/notebook-m4b-check.json",
+          "kind": "record",
+          "sha256": "a9df81c7386105d26e7bc16fea4e36044ef2f42a828c9e566a4d05332ed9a3cf"
+        },
+        "m4b_check": {
+          "path": "docs/validation/section-26-12/m4b-check.json",
+          "kind": "record",
+          "sha256": "9a1ca21bc7c8e675aa5be719d81805ab5379a544559aadb2e68217af5405cb99"
+        },
+        "acceptance_note": {
+          "path": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md",
+          "kind": "note",
+          "sha256": "fd38a096ab9af3f1652e32d7424929d63f59b2dcf77ee3756e9431d988c17e68"
+        },
+        "payoff_image": {
+          "path": "docs/validation/section-26-12/book-shout_payoff-1000.png",
+          "kind": "image",
+          "sha256": "d2ea979cacdf8d2217ee7d58d7ba8f1ba3a1b9f5a16067dc573d837395906a72"
+        },
+        "decision_image": {
+          "path": "docs/validation/section-26-12/book-shout_decision-1000.png",
+          "kind": "image",
+          "sha256": "7e65918529773112db8066a81eebbd8655d45f03e3d030f5f7d8c23331ec1114"
+        },
+        "boundary_image": {
+          "path": "docs/validation/section-26-12/book-shout_boundary-1000.png",
+          "kind": "image",
+          "sha256": "e07ca3d448a61905fae10b0909c2e5b3b1a56ac57ed46fe2115d17970f25664e"
+        },
+        "comparison_image": {
+          "path": "docs/validation/section-26-12/book-shout_comparison-1000.png",
+          "kind": "image",
+          "sha256": "0db910c379a6c3baaa3f428362d415f0e62bc3d61c7f2777305edd4911189a2a"
         }
-      }
+      },
+      "acceptance_note": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md"
     },
     {
       "id": "26.13",

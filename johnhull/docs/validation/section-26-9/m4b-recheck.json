@@ -1,10 +1,19 @@
 {
-  "checked_at": "2026-09-16T06:37:29.689Z",
-  "viewport": {
-    "width": 1440,
-    "height": 1000
+  "status": "PASS",
+  "checked_at": "2026-09-16T06:52:29.830375+00:00",
+  "scope": "Fresh section26.9 regression after Shout insertion and shared delivery changes.",
+  "related_tests": {
+    "status": "PASS",
+    "passed": 622,
+    "skipped": 6,
+    "warnings": 0,
+    "seconds": 16.73,
+    "log_sha256": "18ef37adeeb8d0c1cc0b75de9863b910f0016ae5e11f08ab6f54b5f9072dbaa0"
   },
-  "pages": {
+  "notebook_record": "docs/validation/section-26-12/notebook-m4b-check.json",
+  "notebook_preservation": "All prior notebook cell sources and builder prefix/suffix preserved except authorized Asian heading4.2->4.3.",
+  "browser_record": "docs/validation/section-26-9/browser-check.json",
+  "browser": {
     "portal": {
       "external_network_blocked": true,
       "attempted_external_requests": [],
@@ -44,7 +53,7 @@
             100
           ],
           "parity_error": 0,
-          "minimum": 3.649285615666821e-9,
+          "minimum": 3.649285615666821e-09,
           "vanilla": 10.450583572185565,
           "maximum": 10.450583572185565,
           "reference_H": 90,
@@ -170,7 +179,7 @@
             160
           ],
           "parity_error": 0,
-          "minimum": 0.000004388543970186467,
+          "minimum": 4.388543970186467e-06,
           "vanilla": 5.573526022256971,
           "maximum": 5.573526022256971,
           "reference_H": 110,
@@ -257,7 +266,7 @@
             100
           ],
           "parity_error": 0,
-          "minimum": 3.649285615666821e-9,
+          "minimum": 3.649285615666821e-09,
           "vanilla": 10.450583572185565,
           "maximum": 10.450583572185565,
           "reference_H": 90,
@@ -383,7 +392,7 @@
             160
           ],
           "parity_error": 0,
-          "minimum": 0.000004388543970186467,
+          "minimum": 4.388543970186467e-06,
           "vanilla": 5.573526022256971,
           "maximum": 5.573526022256971,
           "reference_H": 110,
@@ -394,6 +403,9 @@
       "page_errors": []
     }
   },
+  "historical_record": "docs/validation/section-26-9/m3b-recheck.json",
+  "historical_record_unchanged": true,
+  "pinning_note": "Ledger status-count fixtures are intentionally excluded; run the ledger checker separately.",
   "source_sha256": {
     "volumes/10_exotics_martingales/build_exotics_notebook.py": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f",
     "volumes/10_exotics_martingales/exotics.ipynb": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911",
@@ -410,8 +422,7 @@
     "report/site/exotics.html": "1efdfcaca6f17ed27a6b2245938a88def5950a71d8c1b0437a6172f70e626115",
     "report/site/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "ccf28a1705309c98118174fe042a35f651e208037b5c79c27dc322c074b027b5"
-  },
-  "browser_version": "141.0.7390.37",
-  "status": "PASS"
+    "book/_build/html/notebooks/10_exotics.html": "ccf28a1705309c98118174fe042a35f651e208037b5c79c27dc322c074b027b5",
+    "docs/validation/section-26-12/notebook-m4b-check.json": "a9df81c7386105d26e7bc16fea4e36044ef2f42a828c9e566a4d05332ed9a3cf"
+  }
 }
