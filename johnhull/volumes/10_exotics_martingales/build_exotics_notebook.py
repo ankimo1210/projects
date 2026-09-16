@@ -655,28 +655,142 @@ fig_barrier_explorer.show()""")
 cells.append(
     md(r"""## 4. ルックバックとアジアン
 
-### 4.1 ルックバック・オプション（§26.11）""")
+### 4.1 ルックバック・オプション（§26.11）
+
+#### 4.1.1 契約と過去の極値
+
+Hull GE pp.623–625。以下はすべて合成例です。$S_0,K,m_0,M_0$ と給付・価格の単位は通貨、
+$T$ は年、$r,q$ は連続複利の年率、$\sigma$ は年率ボラティリティです。
+過去の最小値 $m_0$ と最大値 $M_0$ は今日を含み、$0<m_0\le S_0\le M_0$。
+新規契約では $m_0=M_0=S_0$ です。満期までの観測も今日と満期を含めます。
+
+$$m_T=\min\{m_0,\inf_{0\le t\le T}S_t\},\qquad
+M_T=\max\{M_0,\sup_{0\le t\le T}S_t\}.$$
+
+|契約|満期給付（通貨）|意味|
+|---|---|---|
+|floating call|$S_T-m_T$|最安値で買う|
+|floating put|$M_T-S_T$|最高値で売る|
+|fixed call|$(M_T-K)^+$|最高値と固定行使価格を比較|
+|fixed put|$(K-m_T)^+$|最安値と固定行使価格を比較|
+
+下図は9節点を直線補間した決定論的経路です。棒はこの経路の**満期給付**であり現在価格ではありません。
+過去の極値を $(100,100)$ から $(80,130)$ に変え、将来経路が同じでも給付が変わることを確認します。""")
 )
 cells.append(
-    code(r"""# --- フローティング・ルックバック・コール（min を行使価格に） ---
-lb = exotics.lookback_floating_call(S_B, S_B, R_B, SIG_B, T_B)
-print(f"フローティング・ルックバック・コール = {lb:.4f} ／ ATM バニラ = {van:.4f}")
-print("（経路最安値で買える権利 → 常にバニラより高い。「後知恵」のプレミアム）")
+    code(r"""from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 
-rng_lb = np.random.default_rng(26)
-path = mc.simulate_gbm_paths(S_B, R_B, SIG_B, T_B, 252, 1, rng=rng_lb)[0]
-t_lb = np.linspace(0.0, T_B, 253)
-running_min = np.minimum.accumulate(path)
-fig3, ax3 = plt.subplots(figsize=(8, 4))
-fig3.canvas.header_visible = False
-ax3.plot(t_lb, path, lw=1.5, label="株価パス")
-ax3.plot(t_lb, running_min, lw=1.5, ls="--", label="経路最小値（実効行使価格）")
-ax3.axhline(path[-1], color="0.6", ls=":", lw=1, label=f"満期 S_T={path[-1]:.1f}")
-ax3.set_xlabel("t（年）")
-ax3.set_ylabel("価格")
-ax3.set_title(f"ルックバック・ペイオフ = S_T − min = {path[-1] - running_min[-1]:.2f}")
-ax3.legend()
-display(fig3.canvas)""")
+lookback_figures = lookback_lesson_figures()
+lb = exotics.lookback_floating_call(S_B, S_B, R_B, SIG_B, T_B)
+lookback_figures["lookback_payoffs"].show()""")
+)
+cells.append(
+    md(r"""#### 4.1.2 フローティング価格式と Example 26.2
+
+連続観測、一定係数のリスク中立 GBM $dS_t=(r-q)S_tdt+\sigma S_tdW_t$ を仮定します。
+$S_0,T,\sigma>0$、有効な過去の極値、$r\ne q$ の場合の式です。
+$N$ は標準正規分布関数、$d=r-q$、$A=\sigma^2/(2d)$ とおきます。
+式を短く分けて示すと、
+
+$$c_{\rm fl}=S_0e^{-qT}\{N(a_1)-A N(-a_1)\}
+-m_0e^{-rT}\{N(a_2)-A e^{Y_1}N(-a_3)\},$$
+
+$$a_1=\frac{\ln(S_0/m_0)+(d+\sigma^2/2)T}{\sigma\sqrt T},
+\qquad a_2=a_1-\sigma\sqrt T,$$
+
+$$a_3=\frac{\ln(S_0/m_0)+(-d+\sigma^2/2)T}{\sigma\sqrt T},
+\qquad Y_1=-\frac{2(d-\sigma^2/2)\ln(S_0/m_0)}{\sigma^2}.$$
+
+同じ記法で put は
+
+$$p_{\rm fl}=M_0e^{-rT}\{N(b_1)-A e^{Y_2}N(-b_3)\}
++S_0e^{-qT}\{A N(-b_2)-N(b_2)\},$$
+
+$$b_1=\frac{\ln(M_0/S_0)+(-d+\sigma^2/2)T}{\sigma\sqrt T},
+\qquad b_2=b_1-\sigma\sqrt T,$$
+
+$$b_3=\frac{\ln(M_0/S_0)+(d-\sigma^2/2)T}{\sigma\sqrt T},
+\qquad Y_2=\frac{2(d-\sigma^2/2)\ln(M_0/S_0)}{\sigma^2}.$$
+
+$a_i,b_i,Y_i,A$ は無次元です。$e^{-rT}$ は現金の割引、$S_0e^{-qT}$ は配当を考慮した
+満期の株式受渡しの現在価値。極値に依存する項が経路依存性を取り込みます。
+価格は $e^{-rT}\mathbb E^Q[\text{満期給付}]$ であり、一つの標本経路の給付とは異なります。
+
+**Example 26.2**：$S_0=m_0=M_0=50,r=0.10,q=0,\sigma=0.40,T=0.25$。
+put の係数は $b_1=-0.025,b_2=-0.225,b_3=0.025,Y_2=0$。
+原著の丸め値は call 8.04、put 7.79 です。""")
+)
+cells.append(
+    code(r"""lookback_example = {
+    "floating call": exotics.lookback_floating_call(50., 50., .10, .40, .25, q=0.),
+    "floating put": exotics.lookback_floating_put(50., 50., .10, .40, .25, q=0.),
+}
+display(pd.DataFrame({
+    "price（通貨）": [f"{v:.6f}" for v in lookback_example.values()],
+    "原著の丸め": ["8.04", "7.79"],
+}, index=pd.Index(lookback_example, name="contract")))""")
+)
+cells.append(
+    md(r"""#### 4.1.3 過去の極値が現在価格に与える影響
+
+$S_0=100,r=5\%,q=2\%,\sigma=20\%,T=1$ を固定します。
+横軸は現在株価ではなく過去の最小値 $m_0$／最大値 $M_0$ です。
+$m_0$ が低いほど floating call と fixed put は高く、$M_0$ が高いほど floating put と
+fixed call は高くなります（弱い単調性）。floating の価格は $K$ に依存しません。
+fixed put は $m_0\ge K$、fixed call は $M_0\le K$ の範囲で過去の極値を変えても価格が一定です。
+この平坦部分は次の starred history から説明できます。""")
+)
+cells.append(code(r"""lookback_figures["lookback_history"].show()"""))
+cells.append(
+    md(r"""#### 4.1.4 固定行使価格の複製
+
+$M_0^*=\max(M_0,K)$、$m_0^*=\min(m_0,K)$ を定義します。
+星付き floating はこの修正した過去の極値と同じ満期を使う契約です。
+満期には $M_T^*=\max(M_T,K)$、$m_T^*=\min(m_T,K)$ なので、経路ごとに
+
+$$(M_T-K)^+=(M_T^*-S_T)+S_T-K,$$
+$$(K-m_T)^+=(S_T-m_T^*)+K-S_T.$$
+
+これは満期給付の恒等式です。各脚を現在価値にすると Hull の価格関係になります。
+
+$$c_{\rm fix}=p_{\rm fl}^*+S_0e^{-qT}-Ke^{-rT},$$
+$$p_{\rm fix}=c_{\rm fl}^*+Ke^{-rT}-S_0e^{-qT}.$$
+
+下図は $m_0=85,M_0=120$、他の市場条件は前図と同じです。
+各脚と合計はすべて**現在価格（通貨）**。合計だけでなく floating・株式・現金の各脚の
+符号と値を確認します。$K$ が過去の極値を跨ぐと星付き履歴が切り替わります。
+同一の原資産・満期・行使価格・観測規則なら、fixed call/put はそれぞれバニラ以上です。
+floating call は $K\ge m_0$ のバニラ call 以上、floating put は $K\le M_0$ の
+バニラ put 以上（いずれも今日・満期を観測）です。任意の $K$ への無条件な比較ではありません。""")
+)
+cells.append(code(r"""lookback_figures["lookback_replication"].show()"""))
+cells.append(
+    md(r"""#### 4.1.5 観測頻度と連続観測
+
+解析式は連続観測です。離散 fixing では見逃した高値・安値によって給付が変わります。
+今日と満期を含む入れ子の観測集合を増やすと、最小値は下がり最大値は上がるため、4給付は減りません。
+ただし実際の契約では fixing 時刻、参照価格、休日、欠測処理も確定する必要があります。
+
+図の1・2・4・8区間は同じ9節点の直線補間経路を観測します。8区間ならこの**人工的な折れ線**の
+極値を完全に捉えます。これは連続 GBM の極値を有限格子で捕捉した証拠でも、価格精度・収束の検証でもありません。
+離散観測の価格には専用モデルまたは補正の検証が必要です。""")
+)
+cells.append(code(r"""lookback_figures["lookback_monitoring"].show()"""))
+cells.append(
+    md(r"""#### 4.1.6 適用範囲と確認問題
+
+**未対応境界：`abs(r-q)<1e-8` は既存 API が例外を返します。**
+$r=q$ で式に現れる分母の特異性は除去可能であり、経済的価値が発散する意味ではありません。
+原著は Problem 26.23 にこの場合を委ねています。本教材では極限エンジンを実装していません。
+適用条件は $S_0,T,\sigma>0$、$0<m_0\le S_0\le M_0$、固定型では $K>0$、
+連続観測の一定係数 GBM とします。満期ゼロ・ゼロボラ・離散契約への外挿は扱いません。
+
+1. 同じ終値でも過去の極値を変えると、どの4給付がどれだけ変わるか。
+2. $K=125,M_0=120$ の fixed call が、履歴をそのまま使った floating put では複製できない理由は何か。
+3. fixing を増やすと給付はどう変わるか。それだけで解析価格の精度を主張できるか。
+4. $r=q$ の除去可能特異点と、現在の API の未対応境界を区別して説明できるか。
+
+数値は独立な極値分布の積分参照と照合し、共有図は Book とポータルの双方で操作・各脚・表示を検査します。""")
 )
 
 # Cell 09: asian md

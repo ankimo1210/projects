@@ -4,8 +4,8 @@ johnhull の Hull 11e ノートで学ぶ価格付け・リスク管理を束ね�
 **オフライン自己完結のインタラクティブ静的サイト**を生成するジェネレータ。
 `analytics/report` と同じ設計(jinja2 + plotly)。
 
-- ランディング + コンセプトギャラリー + 12テーマ別ショーケース（全86図）+ 統合(背骨)ページ
-- 図は `hullkit.plotly_viz`、内部教材モジュール `hullkit._binary_lesson`、またはvol 18–28のversioned reference artifactから生成。共有ソースに加え、値・操作・実画面を検査する
+- ランディング + コンセプトギャラリー + 12テーマ別ショーケース（全90図、exotics 10図）+ 統合(背骨)ページ
+- 図は `hullkit.plotly_viz`、内部教材モジュール `hullkit._binary_lesson` / `hullkit._lookback_lesson`、またはvol 18–28のversioned reference artifactから生成。共有ソースに加え、値・操作・実画面を検査する
 - **カーネル不要・ネット不要**: plotly はローカル同梱、図はブラウザ内で動く(スライダー/ホバー/ズーム)
 
 ## 生成

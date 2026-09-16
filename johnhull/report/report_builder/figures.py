@@ -17,6 +17,7 @@ from dataclasses import dataclass
 
 from hullkit import plotly_viz as pv
 from hullkit._binary_lesson import _figures as binary_lesson_figures
+from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 
 from . import frontier_figures as ff
 
@@ -503,6 +504,42 @@ FIGURES: list[FigureSpec] = [
         "S₀≈K=100、r=5%、q=2%、σ=20%、Q=100。T=1年、30日、1日の有限デルタが満期接近で集中する様子を示す。",
         lambda: binary_lesson_figures()["binary_delta"],
         practice="各 T>0 ではデルタは有限。短期 ATM の急峻化を満期での不連続な極限と混同せず管理する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "lookback_payoffs",
+        "exotics",
+        "ルックバック4契約と過去の極値",
+        "K=100、今日と満期を含む折れ線経路。新規／過去の極値ありを切り替え、4契約の満期給付（通貨）を比較する。",
+        lambda: lookback_lesson_figures()["lookback_payoffs"],
+        practice="棒は現在価格ではない。m₀=80、M₀=130 の履歴を与えると将来経路が同じでも給付が変わる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "lookback_history",
+        "exotics",
+        "過去の最小値・最大値と現在価格",
+        "S₀=100、r=5%、q=2%、σ=20%、T=1年の連続観測 GBM。横軸は過去の極値、縦軸は現在価格（通貨）。",
+        lambda: lookback_lesson_figures()["lookback_history"],
+        practice="K を変え、fixed の平坦部分と floating の K 非依存性を確認する。S₀,T,σ>0、有効な履歴が前提。abs(r-q)<1e-8 は既存 API 未対応。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "lookback_replication",
+        "exotics",
+        "固定型ルックバックの価格複製",
+        "S₀=100、m₀=85、M₀=120、r=5%、q=2%、σ=20%、T=1年。M₀*=max(M₀,K)、m₀*=min(m₀,K) を使う。",
+        lambda: lookback_lesson_figures()["lookback_replication"],
+        practice="全脚は現在価値（通貨）。call は p*+S₀e⁻ᑫᵀ−Ke⁻ʳᵀ、put は c*−S₀e⁻ᑫᵀ+Ke⁻ʳᵀ。給付恒等式と割引後の価格を区別する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "lookback_monitoring",
+        "exotics",
+        "fixing 頻度と満期給付",
+        "K=100、m₀=M₀=100。今日・満期を含む1/2/4/8区間で同じ決定論的折れ線を観測する。",
+        lambda: lookback_lesson_figures()["lookback_monitoring"],
+        practice="8区間はこの折れ線の極値を完全に捕捉する。連続 GBM の極値・価格収束の検証ではない。解析式は連続観測を仮定する。",
         is_new=True,
     ),
     FigureSpec(
