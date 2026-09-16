@@ -1,0 +1,1000 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-16T14:27:32.295036+00:00",
+  "scope": "M6a independent references for section 26.14: the exchange price itself, the rate-independence claim, the numeraire reinterpretation, the better-of/worse-of decomposition and Rubinstein's American version.",
+  "reference": "Hull 11e Global Edition section 26.14, physical/printed pp.627-628.",
+  "method": "Three routes that share no code path and never call hullkit: conditioning on U_T with an exact inner expectation, a numeraire change to U with the ratio integrated numerically, and a correlated-draw Monte Carlo with both discounted assets as control variates. The American version is a CRR tree on V/U with rate qU and yield qV.",
+  "engines": {
+    "max_absolute_gap": 1.7763568394002505e-14,
+    "max_relative_gap": 2.2408021533894654e-14,
+    "max_simulated_standard_errors": 1.0572350349187185,
+    "rows": 24
+  },
+  "rate_independence": {
+    "claim": "Hull p.628: equation (26.5) does not depend on the risk-free rate.",
+    "rates": [
+      0.0,
+      0.08,
+      -0.02
+    ],
+    "max_spread": 1.7763568394002505e-14,
+    "probes": [
+      {
+        "market": "equal-vol-uncorrelated",
+        "value_ratio": 0.8,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          3.0826523017186034,
+          3.0826523017186025,
+          3.0826523017186025
+        ],
+        "spread": 8.881784197001252e-16
+      },
+      {
+        "market": "equal-vol-uncorrelated",
+        "value_ratio": 1.0,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          11.246291601828492,
+          11.246291601828496,
+          11.246291601828489
+        ],
+        "spread": 7.105427357601002e-15
+      },
+      {
+        "market": "equal-vol-uncorrelated",
+        "value_ratio": 1.25,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          28.853315377148256,
+          28.853315377148274,
+          28.85331537714826
+        ],
+        "spread": 1.7763568394002505e-14
+      },
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 0.8,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          0.007818944247649758,
+          0.007818944247649872,
+          0.007818944247649806
+        ],
+        "spread": 1.1449174941446927e-16
+      },
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 1.0,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          2.603377460300873,
+          2.6033774603008704,
+          2.6033774603008704
+        ],
+        "spread": 2.6645352591003757e-15
+      },
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 1.25,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          22.33971094032287,
+          22.339710940322878,
+          22.33971094032287
+        ],
+        "spread": 7.105427357601002e-15
+      },
+      {
+        "market": "equal-vol-opposed",
+        "value_ratio": 0.8,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          2.336810174764732,
+          2.3368101747647314,
+          2.336810174764734
+        ],
+        "spread": 2.6645352591003757e-15
+      },
+      {
+        "market": "equal-vol-opposed",
+        "value_ratio": 1.0,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          10.06568114386338,
+          10.065681143863378,
+          10.06568114386338
+        ],
+        "spread": 1.7763568394002505e-15
+      },
+      {
+        "market": "equal-vol-opposed",
+        "value_ratio": 1.25,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          27.921012718455927,
+          27.921012718455913,
+          27.921012718455916
+        ],
+        "spread": 1.4210854715202004e-14
+      },
+      {
+        "market": "asymmetric-vol",
+        "value_ratio": 0.8,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          13.888200105556528,
+          13.888200105556523,
+          13.888200105556525
+        ],
+        "spread": 5.329070518200751e-15
+      },
+      {
+        "market": "asymmetric-vol",
+        "value_ratio": 1.0,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          25.40818229160313,
+          25.40818229160312,
+          25.408182291603122
+        ],
+        "spread": 1.0658141036401503e-14
+      },
+      {
+        "market": "asymmetric-vol",
+        "value_ratio": 1.25,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          43.188731592656985,
+          43.188731592657,
+          43.18873159265699
+        ],
+        "spread": 1.4210854715202004e-14
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 0.8,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          2.072941843207767,
+          2.072941843207766,
+          2.0729418432077664
+        ],
+        "spread": 8.881784197001252e-16
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 1.0,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          7.835570990531293,
+          7.835570990531295,
+          7.835570990531291
+        ],
+        "spread": 3.552713678800501e-15
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 1.25,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          21.356199677756617,
+          21.35619967775661,
+          21.356199677756614
+        ],
+        "spread": 7.105427357601002e-15
+      },
+      {
+        "market": "yield-on-given",
+        "value_ratio": 0.8,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          5.691841215082469,
+          5.691841215082468,
+          5.6918412150824675
+        ],
+        "spread": 1.7763568394002505e-15
+      },
+      {
+        "market": "yield-on-given",
+        "value_ratio": 1.0,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          16.44245246340847,
+          16.442452463408472,
+          16.44245246340848
+        ],
+        "spread": 1.0658141036401503e-14
+      },
+      {
+        "market": "yield-on-given",
+        "value_ratio": 1.25,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          36.19805877688689,
+          36.198058776886896,
+          36.198058776886896
+        ],
+        "spread": 7.105427357601002e-15
+      },
+      {
+        "market": "short-dated",
+        "value_ratio": 0.8,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          1.0470317531325402,
+          1.0470317531325397,
+          1.047031753132542
+        ],
+        "spread": 2.220446049250313e-15
+      },
+      {
+        "market": "short-dated",
+        "value_ratio": 1.0,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          7.655722395027054,
+          7.655722395027052,
+          7.655722395027053
+        ],
+        "spread": 1.7763568394002505e-15
+      },
+      {
+        "market": "short-dated",
+        "value_ratio": 1.25,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          26.246367751352178,
+          26.246367751352174,
+          26.246367751352185
+        ],
+        "spread": 1.0658141036401503e-14
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 0.8,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          50.582813943055505,
+          50.582813943055505,
+          50.582813943055505
+        ],
+        "spread": 0.0
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 1.0,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          66.06678816785983,
+          66.06678816785983,
+          66.06678816785984
+        ],
+        "spread": 1.4210854715202004e-14
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 1.25,
+        "rates": [
+          0.0,
+          0.08,
+          -0.02
+        ],
+        "prices": [
+          85.9203475376261,
+          85.9203475376261,
+          85.9203475376261
+        ],
+        "spread": 0.0
+      }
+    ]
+  },
+  "numeraire_reinterpretation": {
+    "claim": "Hull p.628: the price equals U0 European calls on an asset worth V/U struck at 1.0 with risk-free rate qU and dividend yield qV.",
+    "checked_by": "ratio_price integrates that contract directly; see engines.max_relative_gap."
+  },
+  "decomposition": {
+    "claim": "Hull p.628: max(U,V) = U + max(V-U,0) and min(U,V) = V - max(V-U,0).",
+    "max_residual": 8.526512829121202e-14,
+    "rows": [
+      {
+        "market": "equal-vol-uncorrelated",
+        "value_ratio": 0.8,
+        "exchange": 3.0826523017186034,
+        "better_of": 103.08265230171861,
+        "worse_of": 76.91734769828142,
+        "better_residual": 0.0,
+        "worse_residual": 2.842170943040401e-14,
+        "sum_residual": 2.842170943040401e-14
+      },
+      {
+        "market": "equal-vol-uncorrelated",
+        "value_ratio": 1.0,
+        "exchange": 11.246291601828492,
+        "better_of": 111.24629160182849,
+        "worse_of": 88.75370839817151,
+        "better_residual": 0.0,
+        "worse_residual": 0.0,
+        "sum_residual": 0.0
+      },
+      {
+        "market": "equal-vol-uncorrelated",
+        "value_ratio": 1.25,
+        "exchange": 28.853315377148256,
+        "better_of": 128.85331537714825,
+        "worse_of": 96.14668462285175,
+        "better_residual": 0.0,
+        "worse_residual": 0.0,
+        "sum_residual": 0.0
+      },
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 0.8,
+        "exchange": 0.007818944247649758,
+        "better_of": 99.01280231916446,
+        "worse_of": 77.627823739633,
+        "better_residual": 1.4210854715202004e-14,
+        "worse_residual": 0.0,
+        "sum_residual": 0.0
+      },
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 1.0,
+        "exchange": 2.603377460300873,
+        "better_of": 101.60836083521768,
+        "worse_of": 94.44117589454996,
+        "better_residual": 0.0,
+        "worse_residual": 1.4210854715202004e-14,
+        "sum_residual": 0.0
+      },
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 1.25,
+        "exchange": 22.33971094032287,
+        "better_of": 121.34469431523969,
+        "worse_of": 98.96598075324066,
+        "better_residual": 1.4210854715202004e-14,
+        "worse_residual": 1.4210854715202004e-14,
+        "sum_residual": 2.842170943040401e-14
+      },
+      {
+        "market": "equal-vol-opposed",
+        "value_ratio": 0.8,
+        "exchange": 2.336810174764732,
+        "better_of": 102.33681017476476,
+        "worse_of": 77.66318982523528,
+        "better_residual": 2.842170943040401e-14,
+        "worse_residual": 1.4210854715202004e-14,
+        "sum_residual": 5.684341886080802e-14
+      },
+      {
+        "market": "equal-vol-opposed",
+        "value_ratio": 1.0,
+        "exchange": 10.06568114386338,
+        "better_of": 110.0656811438634,
+        "worse_of": 89.93431885613664,
+        "better_residual": 2.842170943040401e-14,
+        "worse_residual": 1.4210854715202004e-14,
+        "sum_residual": 5.684341886080802e-14
+      },
+      {
+        "market": "equal-vol-opposed",
+        "value_ratio": 1.25,
+        "exchange": 27.921012718455927,
+        "better_of": 127.92101271845594,
+        "worse_of": 97.0789872815441,
+        "better_residual": 1.4210854715202004e-14,
+        "worse_residual": 2.842170943040401e-14,
+        "sum_residual": 5.684341886080802e-14
+      },
+      {
+        "market": "asymmetric-vol",
+        "value_ratio": 0.8,
+        "exchange": 13.888200105556528,
+        "better_of": 109.96714402078885,
+        "worse_of": 66.11179989444345,
+        "better_residual": 0.0,
+        "worse_residual": -1.4210854715202004e-14,
+        "sum_residual": -2.842170943040401e-14
+      },
+      {
+        "market": "asymmetric-vol",
+        "value_ratio": 1.0,
+        "exchange": 25.40818229160313,
+        "better_of": 121.48712620683547,
+        "worse_of": 74.59181770839692,
+        "better_residual": 2.842170943040401e-14,
+        "worse_residual": 4.263256414560601e-14,
+        "sum_residual": 8.526512829121202e-14
+      },
+      {
+        "market": "asymmetric-vol",
+        "value_ratio": 1.25,
+        "exchange": 43.188731592656985,
+        "better_of": 139.26767550788932,
+        "worse_of": 81.81126840734301,
+        "better_residual": 2.842170943040401e-14,
+        "worse_residual": -1.4210854715202004e-14,
+        "sum_residual": 2.842170943040401e-14
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 0.8,
+        "exchange": 2.072941843207767,
+        "better_of": 102.07294184320777,
+        "worse_of": 71.0415529784905,
+        "better_residual": 0.0,
+        "worse_residual": 1.4210854715202004e-14,
+        "sum_residual": 0.0
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 1.0,
+        "exchange": 7.835570990531293,
+        "better_of": 107.8355709905313,
+        "worse_of": 83.55754753659156,
+        "better_residual": 0.0,
+        "worse_residual": 2.842170943040401e-14,
+        "sum_residual": 2.842170943040401e-14
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 1.25,
+        "exchange": 21.356199677756617,
+        "better_of": 121.35619967775663,
+        "worse_of": 92.88519848114692,
+        "better_residual": 1.4210854715202004e-14,
+        "worse_residual": 1.4210854715202004e-14,
+        "sum_residual": 5.684341886080802e-14
+      },
+      {
+        "market": "yield-on-given",
+        "value_ratio": 0.8,
+        "exchange": 5.691841215082469,
+        "better_of": 97.08495974220529,
+        "worse_of": 74.30815878491754,
+        "better_residual": 0.0,
+        "worse_residual": 0.0,
+        "sum_residual": 0.0
+      },
+      {
+        "market": "yield-on-given",
+        "value_ratio": 1.0,
+        "exchange": 16.44245246340847,
+        "better_of": 107.8355709905313,
+        "worse_of": 83.55754753659153,
+        "better_residual": 0.0,
+        "worse_residual": 0.0,
+        "sum_residual": 0.0
+      },
+      {
+        "market": "yield-on-given",
+        "value_ratio": 1.25,
+        "exchange": 36.19805877688689,
+        "better_of": 127.59117730400973,
+        "worse_of": 88.80194122311312,
+        "better_residual": 2.842170943040401e-14,
+        "worse_residual": 0.0,
+        "sum_residual": 2.842170943040401e-14
+      },
+      {
+        "market": "short-dated",
+        "value_ratio": 0.8,
+        "exchange": 1.0470317531325402,
+        "better_of": 100.79734399287858,
+        "worse_of": 78.75321803866426,
+        "better_residual": 2.842170943040401e-14,
+        "worse_residual": 0.0,
+        "sum_residual": 0.0
+      },
+      {
+        "market": "short-dated",
+        "value_ratio": 1.0,
+        "exchange": 7.655722395027054,
+        "better_of": 107.40603463477306,
+        "worse_of": 92.09458984471897,
+        "better_residual": 0.0,
+        "worse_residual": 1.4210854715202004e-14,
+        "sum_residual": 2.842170943040401e-14
+      },
+      {
+        "market": "short-dated",
+        "value_ratio": 1.25,
+        "exchange": 26.246367751352178,
+        "better_of": 125.99667999109822,
+        "worse_of": 98.44152254833034,
+        "better_residual": 2.842170943040401e-14,
+        "worse_residual": 1.4210854715202004e-14,
+        "sum_residual": 5.684341886080802e-14
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 0.8,
+        "exchange": 50.582813943055505,
+        "better_of": 136.6536115855613,
+        "worse_of": 21.80417949982127,
+        "better_residual": 0.0,
+        "worse_residual": 1.7763568394002505e-14,
+        "sum_residual": 0.0
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 1.0,
+        "exchange": 66.06678816785983,
+        "better_of": 152.1375858103656,
+        "worse_of": 24.41695363573615,
+        "better_residual": 0.0,
+        "worse_residual": 2.842170943040401e-14,
+        "sum_residual": 2.842170943040401e-14
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 1.25,
+        "exchange": 85.9203475376261,
+        "better_of": 171.99114518013187,
+        "worse_of": 27.184329716868856,
+        "better_residual": 0.0,
+        "worse_residual": 1.0658141036401503e-14,
+        "sum_residual": 0.0
+      }
+    ]
+  },
+  "correlation_limits": {
+    "claim": "As the ratio volatility vanishes the option collapses onto the forward spread.",
+    "rows": [
+      {
+        "correlation": 0.9,
+        "value_ratio": 0.8,
+        "spread_volatility": 0.08944271909999163,
+        "price": 0.016278734604681423,
+        "discounted_forward_spread": 0.0,
+        "excess_over_forward": 0.016278734604681423
+      },
+      {
+        "correlation": 0.9,
+        "value_ratio": 1.25,
+        "spread_volatility": 0.08944271909999163,
+        "price": 25.020348418255857,
+        "discounted_forward_spread": 25.0,
+        "excess_over_forward": 0.02034841825585687
+      },
+      {
+        "correlation": 0.99,
+        "value_ratio": 0.8,
+        "spread_volatility": 0.02828427124746206,
+        "price": 4.72592656422315e-16,
+        "discounted_forward_spread": 0.0,
+        "excess_over_forward": 4.72592656422315e-16
+      },
+      {
+        "correlation": 0.99,
+        "value_ratio": 1.25,
+        "spread_volatility": 0.02828427124746206,
+        "price": 25.000000000000004,
+        "discounted_forward_spread": 25.0,
+        "excess_over_forward": 3.552713678800501e-15
+      },
+      {
+        "correlation": 0.999,
+        "value_ratio": 0.8,
+        "spread_volatility": 0.008944271909999753,
+        "price": 3.5690901861169916e-139,
+        "discounted_forward_spread": 0.0,
+        "excess_over_forward": 3.5690901861169916e-139
+      },
+      {
+        "correlation": 0.999,
+        "value_ratio": 1.25,
+        "spread_volatility": 0.008944271909999753,
+        "price": 25.000000000000004,
+        "discounted_forward_spread": 25.0,
+        "excess_over_forward": 3.552713678800501e-15
+      },
+      {
+        "correlation": 0.9999,
+        "value_ratio": 0.8,
+        "spread_volatility": 0.0028284271247476043,
+        "price": 0.0,
+        "discounted_forward_spread": 0.0,
+        "excess_over_forward": 0.0
+      },
+      {
+        "correlation": 0.9999,
+        "value_ratio": 1.25,
+        "spread_volatility": 0.0028284271247476043,
+        "price": 25.000000000000007,
+        "discounted_forward_spread": 25.0,
+        "excess_over_forward": 7.105427357601002e-15
+      }
+    ]
+  },
+  "american": {
+    "claim": "Hull p.628 (Rubinstein): the American version is U0 American calls on V/U with rate qU and yield qV, so early exercise is worthless when qV = 0.",
+    "steps": 2000,
+    "max_tree_residual": 0.007388799437819671,
+    "max_premium_without_yield": 1.8829382497642655e-13,
+    "max_premium_with_yield": 4.278274939815745,
+    "rows": [
+      {
+        "market": "equal-vol-uncorrelated",
+        "value_ratio": 0.8,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 3.0826523017186034,
+        "european_tree": 3.083231381745487,
+        "american_tree": 3.083231381745489,
+        "tree_residual": 0.0005790800268834495,
+        "early_exercise_premium": 2.220446049250313e-15
+      },
+      {
+        "market": "equal-vol-uncorrelated",
+        "value_ratio": 1.0,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 11.246291601828492,
+        "european_tree": 11.244885940636241,
+        "american_tree": 11.244885940636241,
+        "tree_residual": -0.001405661192251273,
+        "early_exercise_premium": 0.0
+      },
+      {
+        "market": "equal-vol-uncorrelated",
+        "value_ratio": 1.25,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 28.853315377148256,
+        "european_tree": 28.854039227183126,
+        "american_tree": 28.854039227183137,
+        "tree_residual": 0.0007238500348698551,
+        "early_exercise_premium": 1.0658141036401503e-14
+      },
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 0.8,
+        "yield_v": 0.03,
+        "steps": 2000,
+        "european_reference": 0.007818944247649758,
+        "european_tree": 0.007805583032549053,
+        "american_tree": 0.00800880005602906,
+        "tree_residual": -1.3361215100704538e-05,
+        "early_exercise_premium": 0.00020321702348000646
+      },
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 1.0,
+        "yield_v": 0.03,
+        "steps": 2000,
+        "european_reference": 2.603377460300873,
+        "european_tree": 2.6029299270155617,
+        "american_tree": 2.8037074368896566,
+        "tree_residual": -0.0004475332853113301,
+        "early_exercise_premium": 0.20077750987409493
+      },
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 1.25,
+        "yield_v": 0.03,
+        "steps": 2000,
+        "european_reference": 22.33971094032287,
+        "european_tree": 22.339632242616332,
+        "american_tree": 25.0,
+        "tree_residual": -7.869770653812225e-05,
+        "early_exercise_premium": 2.6603677573836677
+      },
+      {
+        "market": "equal-vol-opposed",
+        "value_ratio": 0.8,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 2.336810174764732,
+        "european_tree": 2.3370725977133273,
+        "american_tree": 2.3370725977133393,
+        "tree_residual": 0.00026242294859546433,
+        "early_exercise_premium": 1.199040866595169e-14
+      },
+      {
+        "market": "equal-vol-opposed",
+        "value_ratio": 1.0,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 10.06568114386338,
+        "european_tree": 10.064423033811366,
+        "american_tree": 10.064423033811421,
+        "tree_residual": -0.0012581100520137056,
+        "early_exercise_premium": 5.5067062021407764e-14
+      },
+      {
+        "market": "equal-vol-opposed",
+        "value_ratio": 1.25,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 27.921012718455927,
+        "european_tree": 27.92134074713779,
+        "american_tree": 27.92134074713798,
+        "tree_residual": 0.00032802868186365686,
+        "early_exercise_premium": 1.8829382497642655e-13
+      },
+      {
+        "market": "asymmetric-vol",
+        "value_ratio": 0.8,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 13.888200105556528,
+        "european_tree": 13.88879654929931,
+        "american_tree": 13.88879654929931,
+        "tree_residual": 0.0005964437427810054,
+        "early_exercise_premium": 0.0
+      },
+      {
+        "market": "asymmetric-vol",
+        "value_ratio": 1.0,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 25.40818229160313,
+        "european_tree": 25.405253939485632,
+        "american_tree": 25.405253939485632,
+        "tree_residual": -0.0029283521174967575,
+        "early_exercise_premium": 0.0
+      },
+      {
+        "market": "asymmetric-vol",
+        "value_ratio": 1.25,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 43.188731592656985,
+        "european_tree": 43.18953067440146,
+        "american_tree": 43.18953067440146,
+        "tree_residual": 0.0007990817444749609,
+        "early_exercise_premium": 0.0
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 0.8,
+        "yield_v": 0.06,
+        "steps": 2000,
+        "european_reference": 2.072941843207767,
+        "european_tree": 2.0733461831583284,
+        "american_tree": 2.2511386615243967,
+        "tree_residual": 0.0004043399505615497,
+        "early_exercise_premium": 0.17779247836606826
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 1.0,
+        "yield_v": 0.06,
+        "steps": 2000,
+        "european_reference": 7.835570990531293,
+        "european_tree": 7.8340592190510465,
+        "american_tree": 8.838361366278539,
+        "tree_residual": -0.0015117714802466153,
+        "early_exercise_premium": 1.0043021472274924
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 1.25,
+        "yield_v": 0.06,
+        "steps": 2000,
+        "european_reference": 21.356199677756617,
+        "european_tree": 21.356565039540044,
+        "american_tree": 25.63483997935579,
+        "tree_residual": 0.0003653617834267209,
+        "early_exercise_premium": 4.278274939815745
+      },
+      {
+        "market": "yield-on-given",
+        "value_ratio": 0.8,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 5.691841215082469,
+        "european_tree": 5.69213350451301,
+        "american_tree": 5.69213350451301,
+        "tree_residual": 0.00029228943054082634,
+        "early_exercise_premium": 0.0
+      },
+      {
+        "market": "yield-on-given",
+        "value_ratio": 1.0,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 16.44245246340847,
+        "european_tree": 16.440940691937005,
+        "american_tree": 16.440940691937005,
+        "tree_residual": -0.001511771471463419,
+        "early_exercise_premium": 0.0
+      },
+      {
+        "market": "yield-on-given",
+        "value_ratio": 1.25,
+        "yield_v": 0.0,
+        "steps": 2000,
+        "european_reference": 36.19805877688689,
+        "european_tree": 36.19856420183913,
+        "american_tree": 36.19856420183913,
+        "tree_residual": 0.000505424952244482,
+        "early_exercise_premium": 0.0
+      },
+      {
+        "market": "short-dated",
+        "value_ratio": 0.8,
+        "yield_v": 0.01,
+        "steps": 2000,
+        "european_reference": 1.0470317531325402,
+        "european_tree": 1.0467281029652085,
+        "american_tree": 1.0468945970437908,
+        "tree_residual": -0.0003036501673316927,
+        "early_exercise_premium": 0.00016649407858237986
+      },
+      {
+        "market": "short-dated",
+        "value_ratio": 1.0,
+        "yield_v": 0.01,
+        "steps": 2000,
+        "european_reference": 7.655722395027054,
+        "european_tree": 7.654765495058754,
+        "american_tree": 7.657367596654545,
+        "tree_residual": -0.0009568999682993962,
+        "early_exercise_premium": 0.0026021015957908844
+      },
+      {
+        "market": "short-dated",
+        "value_ratio": 1.25,
+        "yield_v": 0.01,
+        "steps": 2000,
+        "european_reference": 26.246367751352178,
+        "european_tree": 26.245988188638496,
+        "american_tree": 26.266152909518503,
+        "tree_residual": -0.00037956271368244643,
+        "early_exercise_premium": 0.020164720880007536
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 0.8,
+        "yield_v": 0.02,
+        "steps": 2000,
+        "european_reference": 50.582813943055505,
+        "european_tree": 50.58403551554538,
+        "american_tree": 52.085227163380445,
+        "tree_residual": 0.0012215724898752,
+        "early_exercise_premium": 1.5011916478350642
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 1.0,
+        "yield_v": 0.02,
+        "steps": 2000,
+        "european_reference": 66.06678816785983,
+        "european_tree": 66.059399368422,
+        "american_tree": 68.18656913597042,
+        "tree_residual": -0.007388799437819671,
+        "early_exercise_premium": 2.127169767548409
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 1.25,
+        "yield_v": 0.02,
+        "steps": 2000,
+        "european_reference": 85.9203475376261,
+        "european_tree": 85.92188303488962,
+        "american_tree": 88.91959648544741,
+        "tree_residual": 0.001535497263517982,
+        "early_exercise_premium": 2.9977134505577965
+      }
+    ]
+  },
+  "units": {
+    "asset_prices": "currency",
+    "expiry": "years",
+    "yields": "continuously compounded per year",
+    "volatility": "annual"
+  },
+  "assumptions": [
+    "Both assets follow correlated geometric Brownian motion with constant parameters.",
+    "European exercise except in the American block; positive prices, volatility, maturity.",
+    "All markets are synthetic; no claim about market performance."
+  ],
+  "limitations": [
+    "The Monte Carlo route carries a standard error; the quadrature routes do not bound it.",
+    "The correlation limit is approached numerically, not proved.",
+    "The American block is a finite CRR tree, so its residual is a grid effect, not a bound.",
+    "Section 26.14 prints no worked example, so nothing here is pinned to a printed price.",
+    "This record prices nothing from hullkit; library coverage is recorded separately."
+  ],
+  "source_sha256": {
+    "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4"
+  }
+}
