@@ -98,6 +98,7 @@ synthetic-data method demonstrations, not market-performance claims.
 |---|---|---|---|---|---|
 | Digital, gap, barrier, lookback options | Hull ch.26; Broadie–Glasserman–Kou (1997) | `hullkit.exotics:cash_or_nothing`, `hullkit.exotics:gap_put`, `hullkit.exotics:barrier_call`, `hullkit.exotics:barrier_put`, `hullkit.exotics:bgk_adjusted_barrier`, `hullkit.exotics:lookback_floating_call`, `hullkit.exotics:lookback_floating_put`, `hullkit.exotics:lookback_fixed_call`, `hullkit.exotics:lookback_fixed_put` | `test_exotics.py`, `test_exotics_puts.py`, `test_barrier_reference.py`, `test_lookback_reference.py` | vol 10 | §26.9: 48 independent bridge-integral cases, 16 inception-touch cases, 24 terminal-fixing cases, 64 displayed-price checks, negative vega; in-out parity; Ex 26.1 gap put (1,896) and Ex 26.2 floating lookback put (7.79) pinned; BGK and lookbacks within 3 SE of MC; section26.11: 128 independent extrema-tail prices, call/put Ex26.2 anchors, parity-preserving bias rejection |
 | Asian options (Turnbull-Wakeman) | Turnbull & Wakeman (1991); Hull ch.26 | `hullkit.exotics:asian_call_turnbull_wakeman` | `test_exotics.py` | vol 10 | Moment-matched lognormal vs MC |
+| Private single-shout teaching tree | Hull §26.12 call; independently priced put extension | `hullkit._shout:_price`, `hullkit._shout:_tree` | `test_shout_tree.py` | vol 10 | CRR versus 42 frozen independent prices; signed payoff integration; actual node boundary brackets versus engine B; finite decision dates approximate continuous shouting |
 | Exchange options (Margrabe) | Margrabe (1978); Hull ch.26, 28 | `hullkit.exotics:exchange_option` | `test_exotics.py` | vol 10 | Numeraire-change demo |
 | Variance & volatility swaps (static OTM-strip replication) | Demeterfi et al. (1999); Hull §26.16 eqs. 26.6-26.10 | `hullkit.variance_swaps:fair_variance`, `hullkit.variance_swaps:fair_variance_from_implied_vols`, `hullkit.variance_swaps:vix_cumulative_variance`, `hullkit.variance_swaps:variance_swap_value`, `hullkit.variance_swaps:expected_volatility`, `hullkit.variance_swaps:volatility_swap_value` | `test_variance_swaps.py` | vol 10 | Hull Ex 26.4 (0.0621 / 1.69) and Ex 26.5 (0.2484 / 1.82) pinned; flat smile recovers sigma^2 up to the derived dK^2 grid bias |
 
@@ -175,6 +176,7 @@ synthetic-data method demonstrations, not market-performance claims.
 |---|---|
 | `hullkit._binary_lesson` | Hull §26.10 の給付・複製・狭いスプレッド・cash-call delta を共有する内部 Plotly 図ビルダー |
 | `hullkit._lookback_lesson` | Hull §26.11 の経路給付・履歴極値・評価時点の複製・離散 fixing を共有する内部 Plotly 図ビルダー |
+| `hullkit._shout_lesson` | Hull §26.12 の給付・宣言木・実ノード境界・合成価格比較を保存済みデータから共有する内部 Plotly 図ビルダー（`test_shout_lesson.py`） |
 | `hullkit.nbplot` | Matplotlib notebook setup (`setup`, `kde_xy`) for the classic volumes; `enable_static_figures` turns ipympl widgets into static PNG outputs for the committed book copies |
 | `hullkit.plotly_viz` | Seeded Plotly figure builders for the offline portal (single source of figures) |
 | `hullkit.teaching` | `scaffold`/`practice_box`/`caption` markdown blocks used across all volumes |

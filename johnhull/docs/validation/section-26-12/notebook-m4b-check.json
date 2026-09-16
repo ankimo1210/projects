@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-16T07:01:00.075390+00:00",
+  "base_commit": "8c092f5e",
+  "cells": 74,
+  "new_cells": 10,
+  "output_comparison": "Separate fresh execution: output types/MIME keys/normalized deterministic text. Timing cells type-only; images/Plotly excluded.",
+  "saved_plotly_comparison": "All4saved Shout data/layout equal current shared builders exactly.",
+  "preservation": "All prior notebook cell sources and builder prefix/suffix preserved except authorized Asian heading4.2->4.3.",
+  "source_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
+    "hullkit/src/hullkit/_shout.py": "e7077dced64d63baa86169d227edbaf4a1f899c580d9a1222d0b9b7404e08f3a",
+    "hullkit/src/hullkit/_shout_lesson.py": "14d388049bc47a1aa53e45dc730376f626f077b170194ced5d4c2e480191acc1",
+    "docs/validation/section-26-12/lesson-data.json": "1a4f3614049d92670a8332a0d242f7b0b95a1c90efcb7e4764a2cc272b700fec"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86"
+  }
+}

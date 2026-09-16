@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-16T03:59:44.433Z",
+  "checked_at": "2026-09-16T07:02:43.584Z",
   "reference": {
     "market": {
       "spot": 100,
@@ -280,20 +280,20 @@
     "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
     "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "790b85a224ec511f4e32187257dca905154dae657ce568a7cef8300a713c7bbc",
-    "volumes/10_exotics_martingales/exotics.ipynb": "0d5f903f5b19e1e2f4449f809d51cf9bb4a3f25ba32902161c300fc42c0b4d0f",
-    "report/report_builder/figures.py": "09d98690f14f4a43f1ea33261cb46dd6b6858000edc15a76c6f2b0d7fa9f17d3",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
+    "volumes/10_exotics_martingales/exotics.ipynb": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
+    "report/report_builder/figures.py": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
-    "report/assets/style.css": "165497a96ae9ff303419989df1d4f29f68d598185b1361f841788df52792856d",
+    "report/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
     "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
     "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
     "scripts/verify_binary_lesson_browser.cjs": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71"
   },
   "artifact_sha256": {
-    "report/site/exotics.html": "e5606d6bb5e3c6fac6a6c4f7a69c86a5ca758878a56325c5050982ed85e93aa3",
-    "report/site/assets/style.css": "165497a96ae9ff303419989df1d4f29f68d598185b1361f841788df52792856d",
+    "report/site/exotics.html": "1efdfcaca6f17ed27a6b2245938a88def5950a71d8c1b0437a6172f70e626115",
+    "report/site/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "d7637ddbbf2d2fb1db39f3eeba12f622920139a79f37378d1e43d1f5e001c80f"
+    "book/_build/html/notebooks/10_exotics.html": "a50acec8527ea1c505bba9bbe52e88e90f0b009a202b5a611d57ca9634f93c94"
   },
   "browser_version": "141.0.7390.37",
   "status": "PASS"
