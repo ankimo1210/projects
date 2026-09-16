@@ -13,6 +13,16 @@ from plotly.subplots import make_subplots
 _ROOT = Path(__file__).resolve().parents[3]
 _DATA = _ROOT / "docs/validation/section-26-12/lesson-data.json"
 _FAMILIES = ("contract", "payoff", "decision_tree", "prices", "convergence", "boundaries")
+_REQUIRED_SOURCES = frozenset(
+    {
+        "hullkit/src/hullkit/_shout.py",
+        "scripts/build_shout_lesson_data.py",
+        "scripts/build_shout_reference.py",
+        "docs/validation/section-26-12/prices.json",
+        "docs/validation/section-26-12/numerical-check.json",
+        "hullkit/src/hullkit/exotics.py",
+    }
+)
 _COLORS = ("#1f77b4", "#d62728", "#bc8f00", "#86868b")
 _LABELS = {
     "shout60": "宣言時株価60（原著の例）",
@@ -34,7 +44,11 @@ def _load_data(path=None):
         raise ValueError("unsupported shout lesson schema")
     digests = {}
     for family in _FAMILIES:
-        for relative, expected in data[family]["source_hashes"].items():
+        sources = data[family].get("source_hashes", {})
+        missing = _REQUIRED_SOURCES.difference(sources)
+        if missing:
+            raise ValueError(f"missing shout lesson source hashes: {family}: {sorted(missing)}")
+        for relative, expected in sources.items():
             if relative not in digests:
                 digests[relative] = hashlib.sha256((_ROOT / relative).read_bytes()).hexdigest()
             if digests[relative] != expected:
