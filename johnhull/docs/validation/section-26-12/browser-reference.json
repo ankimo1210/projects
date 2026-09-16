@@ -1,6 +1,7 @@
 {
   "method": "Payoff literals; independent lognormal quadrature; frozen M4a shout prices; independent extrema-tail lookback integral; independent N3 recursion; M4a engineB boundary.",
   "source_sha256": {
+    "scripts/build_shout_browser_reference.py": "6f20e8f34bdd68739d7e8177f381d1ac1fc14ac73ee48699c9ee2a65e86c611b",
     "scripts/build_shout_reference.py": "944a54bafc3615f428daf8ccdbb2e26ffa592fdbb11b79514bc1bdc8fb7f8574",
     "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
     "docs/validation/section-26-12/prices.json": "98fbe101c5a19424082202f743eaa2166ac7609a515f6b43e2737584552a7633"
