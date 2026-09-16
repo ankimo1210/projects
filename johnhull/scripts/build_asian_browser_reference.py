@@ -20,6 +20,7 @@ SOURCE_PATHS = (
     "docs/validation/section-26-13/prices.json",
     "docs/validation/section-26-13/numerical-check.json",
 )
+UNRESOLVED_MULTIPLE = 4.0
 EXAMPLE_PATH = [100.0, 112.0, 94.0, 121.0, 90.0, 105.0, 84.0, 116.0, 108.0]
 DISTRIBUTION_MARKETS = ("low-vol-short", "positive-carry", "high-vol-long")
 OBSERVATION_COUNTS = (12, 52, 250)
@@ -165,20 +166,55 @@ def _observation_pins(rows):
     return pins
 
 
+# The seasoned contract the notebook displays: Hull's Example 26.3, part way through.
+SEASONED = {"spot": 50.0, "strike": 50.0, "rate": 0.10, "dividend": 0.0, "volatility": 0.40,
+            "elapsed": 0.6, "remaining": 0.4}
+SEASONED_AVERAGES = (40.0, 50.0, 60.0, 90.0)
+
+
+def _seasoned_pins():
+    """K*, the branch and the price of each displayed row, without importing the pricer."""
+    spot, strike = SEASONED["spot"], SEASONED["strike"]
+    elapsed, remaining = SEASONED["elapsed"], SEASONED["remaining"]
+    rate, dividend, sigma = SEASONED["rate"], SEASONED["dividend"], SEASONED["volatility"]
+    weight = remaining / (elapsed + remaining)
+    first, second = _continuous_moments(spot, rate, dividend, sigma, remaining)
+    matched, _ = _matched(first, second, remaining)
+    rows = []
+    for observed in SEASONED_AVERAGES:
+        shifted = strike / weight - observed * elapsed / remaining
+        if shifted > 0.0:
+            price = weight * _black(first, shifted, matched, rate, remaining, "call")
+        else:
+            price = weight * math.exp(-rate * remaining) * (first - shifted)
+        rows.append({
+            "observed_average": observed,
+            "shifted_strike": shifted,
+            "certain_exercise": shifted <= 0.0,
+            "price": price,
+        })
+    return {"inputs": {**SEASONED, "weight": weight, "remaining_moment_1": first,
+                       "remaining_matched_volatility": matched}, "rows": rows}
+
+
 def _error_pins(rows):
     pins = []
     for row in rows:
         if row["observations"] != 52 or row["reference"] <= 0.5:
             continue
+        gap = row["turnbull_wakeman"] - row["reference"]
         pins.append(
             {
                 "market": row["market"],
                 "contract": row["contract"],
                 "spot_ratio": row["spot_ratio"],
                 "scale": row["volatility"] * math.sqrt(row["expiry"]),
-                "relative_error_percent": 100.0
-                * (row["turnbull_wakeman"] - row["reference"])
-                / row["reference"],
+                "relative_error_percent": 100.0 * gap / row["reference"],
+                "standard_error": row["standard_error"],
+                "standard_errors_of_gap": (
+                    abs(gap) / row["standard_error"] if row["standard_error"] > 0.0 else None
+                ),
+                "sign_resolved": abs(gap) > UNRESOLVED_MULTIPLE * row["standard_error"],
             }
         )
     return pins
@@ -201,6 +237,7 @@ def build():
         "distribution": _distribution_pins(rows),
         "observations": _observation_pins(rows),
         "errors": _error_pins(rows),
+        "seasoned": _seasoned_pins(),
         "record_extremes": {
             key: {
                 k: extremes[key][k]

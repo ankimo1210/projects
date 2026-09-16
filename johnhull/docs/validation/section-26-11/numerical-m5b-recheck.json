@@ -333,7 +333,7 @@
     }
   ],
   "source_sha256": {
-    "hullkit/src/hullkit/exotics.py": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
+    "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
     "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
     "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
   },
@@ -350,12 +350,11 @@
   "tolerance_rule": "Absolute error <= max(abs_tolerance, rel_tolerance * abs(reference)); no relative-accuracy claim for near-zero deep OTM prices.",
   "recheck": {
     "of": "docs/validation/section-26-11/numerical-check.json",
-    "checked_at": "2026-09-16T08:39:30.904646+00:00",
-    "note": "M5b recheck copy. The numbers are the M3a/M3b record's, unchanged; only the digests of shared sources that §26.13 touched were refreshed, after re-running the tests that recompute them (hullkit/tests/test_lookback_reference.py, test_exotics_puts.py, test_lookback_lesson.py: 192 passed). The dated original is kept alongside this file.",
+    "note": "M5b recheck copy. The numbers are the original record's, unchanged; only the digests of shared sources that §26.13 touched were refreshed, after re-running hullkit/tests/test_lookback_reference.py, test_exotics_puts.py, test_lookback_lesson.py green against the current sources. The dated original is kept alongside this file.",
     "refreshed_digests": {
       "hullkit/src/hullkit/exotics.py": {
         "was": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
-        "now": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39"
+        "now": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523"
       }
     }
   }

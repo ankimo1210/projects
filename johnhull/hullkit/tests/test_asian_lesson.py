@@ -10,6 +10,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 PRICES = json.loads((ROOT / "docs/validation/section-26-13/prices.json").read_text())
 RECORD = json.loads((ROOT / "docs/validation/section-26-13/numerical-check.json").read_text())
+BROWSER = json.loads((ROOT / "docs/validation/section-26-13/browser-reference.json").read_text())
 KEYS = ["asian_payoff", "asian_distribution", "asian_observations", "asian_error"]
 FAMILIES = ["contract", "distribution", "observations", "errors", "seasoned"]
 SOURCES = [
@@ -185,13 +186,61 @@ def test_error_figure_reports_both_signs_and_the_recorded_extremes(figures):
             assert worst["observations"] != 52 or priced(*key_52, 52)["reference"] <= 0.5
     assert max(plotted.values()) == pytest.approx(0.22712, abs=5e-5)
     assert min(plotted.values()) == pytest.approx(-0.02893, abs=5e-5)
+    # The same spot-to-strike ratio carries both signs, so no rule in moneyness holds.
+    for ratio in (0.8, 1.0, 1.25):
+        at_ratio = [value for (_, _, r), value in plotted.items() if r == ratio]
+        assert max(at_ratio) > 0.0 > min(at_ratio)
+
+
+def test_unresolved_points_are_marked_and_counted_in_the_note(figures, lesson, data):
+    """Points whose difference hides inside the simulation noise must be drawn apart."""
+    rows = data["errors"]["rows"]
+    unresolved = {
+        (row["market"], row["contract"], row["spot_ratio"])
+        for row in rows
+        if abs(row["turnbull_wakeman"] - row["reference"]) <= 4.0 * row["standard_error"]
+    }
+    assert unresolved, "the figure claims some points are unresolved"
+    fig = figures["asian_error"]
+    seen = set()
+    for item in fig.data:
+        market = item.meta["role"].split(":", 1)[1]
+        for ratio, symbol, flag in zip(
+            item.x, item.marker.symbol, (row[1] for row in item.customdata), strict=True
+        ):
+            key = (market, item.meta["scenario"], ratio)
+            assert flag == (key not in unresolved)
+            assert (symbol == "x-thin") == (key in unresolved)
+            if symbol == "x-thin":
+                seen.add(key)
+    assert seen == unresolved
+    note = fig.layout.annotations[0].text
+    assert f"×印の{len(unresolved)}点" in note
+    assert "はるかに小さい" not in note
+    assert "0.5以下" in note
+
+
+def test_seasoned_rows_are_the_contract_the_notebook_displays(data):
+    """The saved evidence and the displayed table must price the same contract."""
+    rows = data["seasoned"]["rows"]
+    displayed = BROWSER["seasoned"]
+    assert [row["observed_average"] for row in rows] == [
+        pin["observed_average"] for pin in displayed["rows"]
+    ]
+    for key in ("spot", "strike", "rate", "dividend", "volatility", "elapsed", "remaining"):
+        assert {row[key] for row in rows} == {displayed["inputs"][key]}
+    for row, pin in zip(rows, displayed["rows"], strict=True):
+        assert row["shifted_strike"] == pytest.approx(pin["shifted_strike"], rel=1e-12)
+        assert row["certain_exercise"] == pin["certain_exercise"]
+        # The independent browser reference never imports the pricer under test.
+        assert row["price"] == pytest.approx(pin["price"], rel=1e-9)
 
 
 def test_seasoned_shift_holds_two_ways_including_the_certain_call(data):
     rows = data["seasoned"]["rows"]
-    strike = data["strike"]
     assert any(row["certain_exercise"] for row in rows)
     for row in rows:
+        strike = row["strike"]
         window = row["elapsed"] + row["remaining"]
         weight = row["remaining"] / window
         assert row["weight"] == pytest.approx(weight)
@@ -203,15 +252,16 @@ def test_seasoned_shift_holds_two_ways_including_the_certain_call(data):
         )
         assert row["certain_exercise"] == (shifted <= 0.0)
         if row["certain_exercise"]:
-            market = next(m for m in PRICES["rows"] if m["market"] == row["market"])
-            discount = math.exp(-market["rate"] * row["remaining"])
+            discount = math.exp(-row["rate"] * row["remaining"])
             whole = (
-                row["elapsed"] * row["observed_average"] + row["remaining"] * row["remaining_moment_1"]
+                row["elapsed"] * row["observed_average"]
+                + row["remaining"] * row["remaining_moment_1"]
             ) / window
             assert row["price"] == pytest.approx(discount * (whole - strike), rel=1e-12)
             assert row["price"] == pytest.approx(
                 weight * discount * (row["remaining_moment_1"] - shifted), rel=1e-12
             )
+            assert row["put_price"] == 0.0
 
 
 def test_refuse_stale_hashes(lesson, tmp_path):

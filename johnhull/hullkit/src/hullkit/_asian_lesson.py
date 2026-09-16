@@ -272,9 +272,20 @@ def _observation_figure(data):
     return _finish(fig, "asian_observations", states, titles, note, legend_rows=3)
 
 
+def _resolved(row):
+    """True when the simulation separates the approximation error from its own noise."""
+    return abs(row["turnbull_wakeman"] - row["reference"]) > 4.0 * row["standard_error"]
+
+
 def _error_figure(data):
     """Where the moment match is safe and where it is not."""
     rows = data["errors"]["rows"]
+    unresolved = [row for row in rows if not _resolved(row)]
+    smallest = min(
+        (abs(row["turnbull_wakeman"] - row["reference"]) / row["standard_error"]
+         for row in rows if row["standard_error"] > 0.0),
+        default=0.0,
+    )
     fig = go.Figure()
     titles = {}
     for state in ("call", "put"):
@@ -290,8 +301,20 @@ def _error_figure(data):
                 y=[100.0 * row["relative_error"] for row in entries],
                 mode="lines+markers", name=_COMPACT[market],
                 line=dict(color=_MARKET_COLORS[index], width=2),
+                # An x marks a point whose difference is inside 4 standard errors of the
+                # simulated reference, so its sign is not established.
+                marker=dict(
+                    symbol=["circle" if _resolved(row) else "x-thin" for row in entries],
+                    size=[7 if _resolved(row) else 11 for row in entries],
+                    line=dict(width=[0 if _resolved(row) else 2 for row in entries],
+                              color=_MARKET_COLORS[index]),
+                ),
+                customdata=[[row["standard_error"], _resolved(row)] for row in entries],
                 meta=_trace_meta(f"market:{market}", state),
-                hovertemplate="S/K=%{x:.2f}: %{y:+.2f}%<extra></extra>"))
+                hovertemplate=(
+                    "S/K=%{x:.2f}: %{y:+.2f}%（標準誤差 %{customdata[0]:.2e}、"
+                    "符号確定 %{customdata[1]}）<extra></extra>"
+                )))
         worst = max(selected, key=lambda row: abs(row["relative_error"]))
         titles[state] = (
             f"{_LABELS[state]}：モーメント整合の相対誤差<br>"
@@ -301,10 +324,12 @@ def _error_figure(data):
     fig.update_layout(xaxis=dict(title="スポット / 行使価格", tickvals=[0.8, 1.0, 1.25]),
                       yaxis=dict(title="相対誤差（%）"))
     note = (
-        "誤差は片側ではない。プットは S/K が大きい（K が平均より下）ほど高く出て、<br>"
-        "コールは σ√T が小さい市場で K が平均より上のとき安く出る（ゼロキャリー S/K=0.8 で −2.89%）。<br>"
+        "誤差は片側ではない。同じ S/K でも市場と契約で符号が変わるので、"
+        "マネーネスの一般則としては読めない。<br>"
         "σ√T が大きいほど悪化するが、キャリーがマネーネスを動かすため σ√T だけでは順序が決まらない。<br>"
-        "観測52日。参照価格は制御変量モンテカルロで、標準誤差は各点の誤差よりはるかに小さい。"
+        f"観測52日。×印の{len(unresolved)}点は差が標準誤差の4倍未満で符号を確定できない"
+        f"（最小 {smallest:.2f}倍）。<br>"
+        "参照価格が0.5以下の行は相対誤差が大きくなるため、この図には含めていない。"
     )
     return _finish(fig, "asian_error", ["call", "put"], titles, note, legend_rows=3)
 

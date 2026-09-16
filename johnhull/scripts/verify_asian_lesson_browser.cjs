@@ -240,6 +240,47 @@ async function verifySurface(page, label) {
   return { figures: keys, states, negative_controls, screenshots, layout_errors: 0,
     numeric_scope: 'Both widths, every menu state: payoff 8 algebraic pins, distribution M1 and the whole fitted density against an independently recomputed lognormal, observations 18 frozen rows plus an independently quadratured continuous price, errors 29 frozen relative errors. Monte Carlo references carry a standard error and are compared within 4 SE.' };
 }
+async function seasonedTable(section) {
+  // The displayed K* table must be the contract the independent reference prices.
+  const table = await section.evaluate(el => {
+    const found = Array.from(el.querySelectorAll('table')).filter(node =>
+      node.textContent.includes('K*') && node.textContent.includes('観測済み平均'));
+    if (found.length !== 1) return { count: found.length };
+    const header = Array.from(found[0].querySelectorAll('thead th')).map(n => n.textContent.trim());
+    const rows = Array.from(found[0].querySelectorAll('tbody tr')).map(tr =>
+      Array.from(tr.querySelectorAll('th,td')).map(n => n.textContent.trim()));
+    return { count: 1, header, rows };
+  });
+  check(table.count === 1, 'Expected exactly one seasoned K* table, found ' + table.count);
+  const column = name => {
+    const index = table.header.findIndex(text => text.includes(name));
+    check(index >= 0, 'Seasoned column ' + name + ' in ' + JSON.stringify(table.header));
+    return index;
+  };
+  const columns = {
+    average: column('観測済み平均'), shifted: column('K*'),
+    certain: column('確実に行使'), price: column('call 価格'),
+  };
+  const pins = reference.seasoned.rows;
+  const body = table.rows.filter(row => row.length >= table.header.length);
+  check(body.length === pins.length, `Seasoned rows ${body.length} != ${pins.length}`);
+  const checked = [];
+  pins.forEach((pin, index) => {
+    const row = body[index];
+    const cell = key => Number(row[row.length - table.header.length + columns[key]]);
+    close(cell('average'), pin.observed_average, 'Displayed observed average');
+    close(cell('shifted'), pin.shifted_strike, 'Displayed K*', 5e-4);
+    close(cell('price'), pin.price, 'Displayed seasoned price', 5e-5);
+    const flag = row[row.length - table.header.length + columns.certain];
+    check(flag.toLowerCase() === String(pin.certain_exercise),
+      `Displayed exercise flag ${flag} for K*=${pin.shifted_strike}`);
+    checked.push({ observed_average: pin.observed_average, shifted_strike: pin.shifted_strike,
+      certain_exercise: pin.certain_exercise, price: pin.price });
+  });
+  check(checked.some(row => row.certain_exercise), 'The table must show the K*<0 branch');
+  return { inputs: reference.seasoned.inputs, checked };
+}
+
 async function bookMath(page) {
   const heading = page.locator('h3').filter({ hasText: /4\.3 アジアン/ });
   check(await heading.count() === 1, 'Missing asian h3');
@@ -263,6 +304,12 @@ async function bookMath(page) {
     check(math.text.includes(phrase), 'Teaching text ' + phrase);
   check(math.rows.some(r => r.includes('観測250') && r.includes('+' + over + '%')), 'Measured error table');
   check(math.rows.some(r => r.includes('観測12') && r.includes(under.replace('-', '−') + '%')), 'Measured error table');
+  // The headline range covers only the rows priced above the threshold; say so on the page.
+  const measured = record.approximation_error;
+  for (const phrase of [String(measured.rows_measured), String(measured.rows_total), '可除特異点',
+    '一般則ではありません', '上界'])
+    check(math.text.includes(phrase), 'Teaching text ' + phrase);
+  math.seasoned = await seasonedTable(section);
   delete math.text; delete math.rows; math.screenshots = [];
   for (const width of [1440, 1000]) {
     await page.setViewportSize({ width, height: 1050 }); await settle(page);

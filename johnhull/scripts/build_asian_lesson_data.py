@@ -192,22 +192,36 @@ def _error_rows(prices):
     return rows
 
 
+# The same contract the notebook displays: Hull's Example 26.3 inputs, seasoned.
+SEASONED = {"spot": 50.0, "strike": 50.0, "rate": 0.10, "dividend": 0.0, "volatility": 0.40,
+            "elapsed": 0.6, "remaining": 0.4}
+SEASONED_AVERAGES = (40.0, 50.0, 60.0, 90.0)
+
+
 def _seasoned_rows():
-    """Hull's K* shift on one contract, including the certain-exercise branch."""
-    market = next(item for item in MARKETS if item.name == "positive-carry")
+    """Hull's K* shift on the Example 26.3 contract, including certain exercise."""
+    spot, strike = SEASONED["spot"], SEASONED["strike"]
+    elapsed, remaining = SEASONED["elapsed"], SEASONED["remaining"]
+    rate, dividend, volatility = SEASONED["rate"], SEASONED["dividend"], SEASONED["volatility"]
+    window = elapsed + remaining
+    weight = remaining / window
     rows = []
-    for observed in (80.0, 100.0, 120.0, 180.0):
-        elapsed, remaining = 0.6, 0.4
-        window = elapsed + remaining
-        weight = remaining / window
-        shifted = STRIKE / weight - observed * elapsed / remaining
+    for observed in SEASONED_AVERAGES:
+        shifted = strike / weight - observed * elapsed / remaining
         price = exotics.asian_seasoned_average_price(
-            STRIKE, STRIKE, market.rate, market.volatility, elapsed, remaining, observed,
-            q=market.dividend, kind="call")
-        first, _ = exotics.asian_moments(STRIKE, market.rate, market.volatility, remaining,
-                                         q=market.dividend)
+            spot, strike, rate, volatility, elapsed, remaining, observed,
+            q=dividend, kind="call")
+        put = exotics.asian_seasoned_average_price(
+            spot, strike, rate, volatility, elapsed, remaining, observed,
+            q=dividend, kind="put")
+        first, _ = exotics.asian_moments(spot, rate, volatility, remaining, q=dividend)
         rows.append({
-            "market": market.name,
+            "contract": "Hull Example 26.3, seasoned",
+            "spot": spot,
+            "strike": strike,
+            "rate": rate,
+            "dividend": dividend,
+            "volatility": volatility,
             "observed_average": observed,
             "elapsed": elapsed,
             "remaining": remaining,
@@ -215,6 +229,7 @@ def _seasoned_rows():
             "shifted_strike": shifted,
             "certain_exercise": shifted <= 0.0,
             "price": price,
+            "put_price": put,
             "remaining_moment_1": first,
         })
     return rows
@@ -241,7 +256,8 @@ def build(paths):
                           "Relative error of the moment match at 52 dates, from the saved table",
                           hashes),
         "seasoned": _family(_seasoned_rows(),
-                            "Hull's K* shift, including the branch where the call is certain to pay",
+                            "Hull's K* shift on the contract the notebook displays, "
+                            "including the branch where the call is certain to pay",
                             hashes),
     }
 

@@ -355,9 +355,11 @@ def asian_average_price(S, K, r, sigma, T, q=0.0, kind="call", times=None):
     """Average-price Asian call or put by Turnbull-Wakeman (Hull §26.13).
 
     Moment matching is an approximation: the arithmetic average is not
-    lognormal. Measured against independent references it runs from +23% to
-    -7% of the price it approximates, overpricing at and above the average's
-    own forward and underpricing below it, so quote its domain of use with it
+    lognormal. Over the 119 measured rows whose independent reference exceeds
+    0.5 the error runs from +23.35% to -6.85%; the 25 rows below that price
+    reach -18.29%. It has no single direction in moneyness -- both signs occur
+    at the same spot-to-strike ratio in different markets -- so quote the
+    measured table and its domain of use with the price
     (`docs/SECTION_26_13_REVIEW_2026-09-16.md`). Put-call parity
     ``C - P = exp(-r*T)*(M1 - K)`` holds exactly whatever the error.
     """
@@ -413,11 +415,17 @@ def asian_average_strike(S, r, sigma, T, q=0.0, kind="call", times=None):
     """
     if kind not in ("call", "put"):
         raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
-    m1, m2 = asian_moments(S, r, sigma, T, q=q, times=times)
-    mean_time = T / 2.0 if times is None else math.fsum(float(t) for t in times) / len(times)
+    dates = None if times is None else sorted(float(t) for t in times)
+    if dates is not None and len(dates) == 1 and dates[0] == T:
+        return 0.0  # a single observation at maturity makes the average the terminal price
+    m1, m2 = asian_moments(S, r, sigma, T, q=q, times=dates)
+    mean_time = T / 2.0 if dates is None else math.fsum(dates) / len(dates)
     sigma_a = math.sqrt(math.log(m2 / m1**2) / T)
     covariance = sigma**2 * mean_time
-    spread = math.sqrt(max(sigma_a**2 * T + sigma**2 * T - 2.0 * covariance, 0.0))
+    # The three terms cancel to zero as the average collapses onto S_T, so read a
+    # residue below the rounding scale of sigma^2*T as the exact zero it stands for.
+    variance = sigma_a**2 * T + sigma**2 * T - 2.0 * covariance
+    spread = math.sqrt(variance) if variance > 1e-12 * sigma**2 * T else 0.0
     terminal = S * math.exp((r - q) * T)
     if spread <= 0.0:
         payoff = max(terminal - m1, 0.0) if kind == "call" else max(m1 - terminal, 0.0)

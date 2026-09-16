@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checked_at": "2026-09-16T08:42:31.654654+00:00",
+  "checked_at": "2026-09-16T12:08:44.376330+00:00",
   "scope": "Fresh section 26.11 regression after the §26.13 Asian insertion and the shared delivery changes.",
   "related_tests": {
     "status": "PASS",
@@ -44,7 +44,7 @@
     "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
     "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
     "hullkit/src/hullkit/_lookback_lesson.py": "8f5e0a91131462995fd0b3afa8554795cfada8e723d5d1b77a26a4af1cee2630",
-    "hullkit/src/hullkit/exotics.py": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
+    "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
     "hullkit/tests/test_exotics_puts.py": "cd84ff7ae5ec081bbb82b6ddd5c07dcacb34ffd9647c033e7ceb66a21f748a69",
     "hullkit/tests/test_lookback_lesson.py": "cc17e7c10b4badd63bbc03edebd4c615587289576893c8474717314732b6cf5a",
     "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
@@ -52,12 +52,12 @@
     "report/report_builder/figures.py": "7bdc9b601b0ae4b0a37b131d234fadc62d65111935ebd348a998c555cd785451",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "scripts/verify_lookback_lesson_browser.cjs": "1776c1a42fb856563afba7ede64665b5a4bded2c952ab3220f7051d3e0a5721e",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "4a6a75c6038b56eae4f42e0b3be16195eccc0e598e1950a3f0b71a328c53c25d",
-    "volumes/10_exotics_martingales/exotics.ipynb": "5fe85540826c576e5b1605bee87a3e97d8f4337b4b6ae70510ec9b73ba02245f"
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "b2580f1fcfa35c32bacdf50481347a16767e38f4ca6df05362773abcb59d145b",
+    "volumes/10_exotics_martingales/exotics.ipynb": "a26017eab021cc5603aff98771884d23930a7e027026fd8028b86310cde2727c"
   },
   "artifact_sha256": {
-    "report/site/exotics.html": "eb0d11fb240e196a8266a931647adfb3c9b06f92dddfcc1c19cd93831a27c819",
+    "report/site/exotics.html": "4cb592f7a147003df506dfd977fcf7d36ccebc42202f957502a6694c72e679dc",
     "report/site/assets/style.css": "f2f2adc53d4f4837d675ebdc202b86007db5b36e0f05e775e9b745a852cabf89",
-    "book/_build/html/notebooks/10_exotics.html": "237b92e3e00ad050141370b28ec86e4fa66228f9b739c7ec8c2ee19eb1167a83"
+    "book/_build/html/notebooks/10_exotics.html": "1636a403d3d9184231e32beff9e052b404c0c6ade43cb6aa17a93141d15785fa"
   }
 }
