@@ -3513,8 +3513,291 @@
     },
     {
       "id": "26.14",
-      "status": "unreviewed",
-      "requirements": []
+      "status": "gaps_found",
+      "requirements": [
+        {
+          "id": "E01",
+          "statement": "給付max(V_T-U_T,0)、2資産の文脈（通貨・株式公開買付）、単位を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "vol10は章対応表の1行とρの小表のみ"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "exchange_option（Margrabe 式26.5）"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "tests"
+              ],
+              "locator": "条件付き求積・比の求積・MCの3経路で24価格"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "E02",
+          "statement": "式26.5の係数とσ^=sqrt(σU^2+σV^2-2ρσUσV)、qU・qVの入り方、ρの効果を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "ρの小表のみで式・σ^の説明が無い"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "σ^と両配当利回りを含む実装"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "tests"
+              ],
+              "locator": "2求積が1.78e-14で一致。交差項を落とす誤りは相関21行すべてで検出"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "E03",
+          "statement": "価格がリスクフリー金利rに依存しない理由（成長率↑と割引率↑の相殺）を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "notebookは1行のprintのみで理由の説明が無い"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "rは引数に無い"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "tests"
+              ],
+              "locator": "r∈{0,8%,-2%}の24×3価格で最大差1.78e-14。既存テストは引数の有無だけだった"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "E04",
+          "statement": "V/Uを原資産・行使1.0・金利qU・配当qVとする読み替え（式17.4との比較）を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "教材に記述が無い"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "tests"
+              ],
+              "locator": "ニュメレール変換した比の求積が24行で一致"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "E05",
+          "statement": "better-of/worse-ofの分解とRubinsteinの米国型（qV=0なら早期行使に価値が無い）を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "分解の式は§26.15の前置きに1行あるのみ"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "tests"
+              ],
+              "locator": "分解の残差8.53e-14。木の欧州残差7.39e-3、qV=0のプレミアム1.9e-13、qV>0で最大4.2783"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "E06",
+          "statement": "ρ・満期・配当の効果と分解を図示し、Book/portalの式・軸・凡例・表示値を確認する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "review"
+              ]
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": []
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        }
+      ],
+      "reviewed_at": "2026-09-16",
+      "source_pages": [
+        627,
+        628
+      ],
+      "scope": "Hull 11e GE §26.14のE01–E06。交換オプションの給付・式26.5・r非依存・V/Uへの読み替え・better-of/worse-ofの分解・Rubinsteinの米国型。M6aは要求整理と独立参照価格のみ。",
+      "assumptions": [
+        "相関一定の2資産GBM、定数σU/σV/ρ/qU/qV、正の価格・T・σ",
+        "欧州型（米国型の検査ブロックを除く）。通貨・年・年率、すべて合成条件",
+        "§26.14に印刷された例題は無く、外部の正解に対するピンは存在しない"
+      ],
+      "limitations": [
+        "モンテカルロは標準誤差を持ち、求積の誤差上界を証明するものではない。",
+        "ρ→±1の極限は数値的に近づけただけで証明ではない。",
+        "米国型は有限のCRR木で、残差は格子効果であり誤差上界ではない。",
+        "T=0・σ=0・ρ=±1ちょうど・不正入力・全入力域の安定性は対象外。",
+        "教材・図・Book/portalの実画面はM6aの対象外で、次のM6bで確認する。"
+      ],
+      "evidence": {
+        "review": {
+          "path": "docs/SECTION_26_14_REVIEW_2026-09-16.md",
+          "kind": "note",
+          "sha256": "e318a56f32994758b322b04468fa5e152a58b4ae202627c6271dc94621b6a674"
+        },
+        "reference_builder": {
+          "path": "scripts/build_exchange_reference.py",
+          "kind": "source",
+          "sha256": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146"
+        },
+        "tests": {
+          "path": "hullkit/tests/test_exchange_reference.py",
+          "kind": "test",
+          "sha256": "522522167f3fc0137365eb2f9d1f7db8cb9bf6baaac35cc0d0217e1fd229008b"
+        },
+        "numerical": {
+          "path": "docs/validation/section-26-14/numerical-check.json",
+          "kind": "record",
+          "sha256": "b68d3cacd753da95c0ccaca53611e2750d62052d27895c802a9a4050eee07203"
+        },
+        "prices": {
+          "path": "docs/validation/section-26-14/prices.json",
+          "kind": "reference",
+          "sha256": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4"
+        },
+        "pricing": {
+          "path": "hullkit/src/hullkit/exotics.py",
+          "kind": "source",
+          "sha256": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523"
+        },
+        "existing_tests": {
+          "path": "hullkit/tests/test_exotics.py",
+          "kind": "test",
+          "sha256": "da2ee3148fbb8407865719278eb3e1bff8d323e7ebefd97ef6f33b84675c9914"
+        },
+        "textbook": {
+          "path": "options, futures and other derivatives 11th.pdf",
+          "kind": "reference",
+          "sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
+        },
+        "notebook": {
+          "path": "volumes/10_exotics_martingales/exotics.ipynb",
+          "kind": "source",
+          "sha256": "a26017eab021cc5603aff98771884d23930a7e027026fd8028b86310cde2727c"
+        },
+        "builder": {
+          "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
+          "kind": "source",
+          "sha256": "b2580f1fcfa35c32bacdf50481347a16767e38f4ca6df05362773abcb59d145b"
+        }
+      }
     },
     {
       "id": "26.15",
