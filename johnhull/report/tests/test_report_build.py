@@ -36,13 +36,19 @@ def test_registry_is_consistent():
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
     assert len(figures_for("rates_swaps")) == 11
-    assert len(figures_for("exotics")) == 6
+    assert len(figures_for("exotics")) == 10
     assert len(figures_for("ml_derivatives")) == 12
     assert len(figures_for("volatility_frontiers")) == 8
     assert len(figures_for("crypto_market")) == 4
     assert len(figures_for("climate_energy")) == 4
     assert len(figures_for("risk_management")) == 4
-    assert len(FIGURES) == 86
+    assert len(FIGURES) == 90
+    assert {
+        "lookback_payoffs",
+        "lookback_history",
+        "lookback_replication",
+        "lookback_monitoring",
+    } <= {figure.id for figure in figures_for("exotics")}
     assert {
         "binary_payoffs",
         "binary_replication",

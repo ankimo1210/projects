@@ -129,6 +129,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1.1rem, 4vw, 2re
   padding: 1.3rem 1.3rem 0.7rem; transition: border-color 0.18s;
 }
 .fig-card:has([id^="fig-binary_"]) { grid-column: 1 / -1; }
+.fig-card:has([id^="fig-lookback_"]) { grid-column: 1 / -1; }
 .fig-card:hover { border-color: var(--line-2); }
 .fig-card figcaption h3 { margin: 0 0 0.35rem; font-size: 1.02rem; font-weight: 600; }
 .fig-card figcaption p { color: var(--ink-2); font-size: 0.88rem; margin: 0 0 0.7rem; }
