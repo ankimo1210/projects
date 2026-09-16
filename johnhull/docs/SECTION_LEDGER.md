@@ -12,8 +12,8 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 303 |
-| gaps_found | 0 |
+| unreviewed | 302 |
+| gaps_found | 1 |
 | pending_validation | 0 |
 | accepted | 3 |
 | out_of_scope | 0 |
@@ -47,7 +47,7 @@
 | 23 | 7 | 7 | 0 | 0 | 0 | 0 |
 | 24 | 9 | 9 | 0 | 0 | 0 | 0 |
 | 25 | 11 | 11 | 0 | 0 | 0 | 0 |
-| 26 | 17 | 14 | 0 | 0 | 3 | 0 |
+| 26 | 17 | 13 | 1 | 0 | 3 | 0 |
 | 27 | 8 | 8 | 0 | 0 | 0 | 0 |
 | 28 | 8 | 8 | 0 | 0 | 0 | 0 |
 | 29 | 4 | 4 | 0 | 0 | 0 | 0 |
@@ -303,7 +303,7 @@
 | 26.9 | 26 | section | Barrier Options | accepted |
 | 26.10 | 26 | section | Binary Options | accepted |
 | 26.11 | 26 | section | Lookback Options | accepted |
-| 26.12 | 26 | section | Shout Options | unreviewed |
+| 26.12 | 26 | section | Shout Options | gaps_found |
 | 26.13 | 26 | section | Asian Options | unreviewed |
 | 26.14 | 26 | section | Options to Exchange One Asset for Another | unreviewed |
 | 26.15 | 26 | section | Options Involving Several Assets | unreviewed |
