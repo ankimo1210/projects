@@ -3053,8 +3053,286 @@
     },
     {
       "id": "26.13",
-      "status": "unreviewed",
-      "requirements": []
+      "status": "gaps_found",
+      "requirements": [
+        {
+          "id": "A01",
+          "statement": "平均価格call/putの給付、平均の定義（観測日・今日を含むか・満期を含むか）、単位を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "vol10 §4.3（3セル）のみ"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "tests"
+              ],
+              "locator": "観測規約 t_i=iT/m の再現（印刷値12/52/250と一致）"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "A02",
+          "statement": "モーメント整合（式26.3・26.4＋Black式18.7・18.8）とExample 26.3の全表示値を説明・再現する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "vol10 §4.3（3セル）のみ"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "asian_call_turnbull_wakeman（連続平均・新規発行・callのみ）"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "tests",
+                "hull_pins"
+              ],
+              "locator": "M1=52.59・M2=2922.76・23.54%・5.62、hullkitとの1e-8一致"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "A03",
+          "statement": "離散観測のM1・M2と、12/52/250観測の6.00・5.70・5.63を再現する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "vol10 §4.3（3セル）のみ"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "tests"
+              ],
+              "locator": "独立実装で5.9958/5.7043/5.6350。hullkitに離散実装は無い"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "A04",
+          "statement": "既発契約のK*変換（K*=((t1+t2)/t2)K-(t1/t2)平均）と、K*<0のフォワード評価を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "vol10 §4.3（3セル）のみ"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": []
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "A05",
+          "statement": "平均行使型（average strike）の給付と、交換オプションとしての評価を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "vol10 §4.3（3セル）のみ"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": []
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "A06",
+          "statement": "モーメント整合が近似であること、誤差の向きと大きさ、適用域を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": [
+                "notebook",
+                "builder",
+                "review"
+              ],
+              "locator": "vol10 §4.3（3セル）のみ"
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "prices",
+                "tests"
+              ],
+              "locator": "144行で+23.35%〜−6.85%、Example 26.3自体が約+1%"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        }
+      ],
+      "reviewed_at": "2026-09-16",
+      "source_pages": [
+        626,
+        627
+      ],
+      "scope": "Hull 11e GE §26.13のA01–A06。平均価格call/put・モーメント整合・離散観測・既発契約・平均行使型・近似誤差と適用域。M5aは要求整理と独立参照価格・誤差測定のみ。",
+      "assumptions": [
+        "リスク中立GBM、定数r/q/sigma、正のS/T/sigma",
+        "観測日は t_i=iT/m（今日を含まず満期を含む）。新規発行契約のみ",
+        "通貨、年、年率。すべて合成条件"
+      ],
+      "limitations": [
+        "参照価格は制御変量モンテカルロで標準誤差を持つ。厳密なのは2観測日の行だけ（36件で最大2.12標準誤差）。",
+        "連続平均の参照値は1/mリチャードソン外挿であり、極限計算ではない。",
+        "既発契約（A04）と平均行使型（A05）は価格を作っていない。検証方法のみ定義した。",
+        "hullkitは連続平均のcall1本のみ実装。putも離散観測も無く、ライブラリで検証できたのはその1本だけ。",
+        "変動ボラ・現金配当・不等間隔の観測日は対象外。Book/portalは再生成・再検査していない。"
+      ],
+      "evidence": {
+        "review": {
+          "path": "docs/SECTION_26_13_REVIEW_2026-09-16.md",
+          "kind": "note",
+          "sha256": "ece32546fc1695cc9f5d3c947961d7e3db98ec8655a53ac539ad7bf0bb6a9881"
+        },
+        "reference_builder": {
+          "path": "scripts/build_asian_reference.py",
+          "kind": "source",
+          "sha256": "5c9931b7dda75445196ac18a3445d2f0d7f086a2c7a522fb80403b966c13e0f3"
+        },
+        "tests": {
+          "path": "hullkit/tests/test_asian_reference.py",
+          "kind": "test",
+          "sha256": "358e4834c4fafb5790857c92b14c0721a2b58aa88ef511a74681c7aabf12f497"
+        },
+        "numerical": {
+          "path": "docs/validation/section-26-13/numerical-check.json",
+          "kind": "record",
+          "sha256": "6075df7d9e1bb1bc6964dfa135b22ed339dec2aa036ce850b1d99ff1efbf6862"
+        },
+        "prices": {
+          "path": "docs/validation/section-26-13/prices.json",
+          "kind": "reference",
+          "sha256": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02"
+        },
+        "pricing": {
+          "path": "hullkit/src/hullkit/exotics.py",
+          "kind": "source",
+          "sha256": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4"
+        },
+        "hull_pins": {
+          "path": "hullkit/tests/test_hull_pins_exotics_ir.py",
+          "kind": "test",
+          "sha256": "69e820953f6d98712cc6a582a0dac8118402ad1d525acbfedda5724b0c778d0e"
+        },
+        "textbook": {
+          "path": "options, futures and other derivatives 11th.pdf",
+          "kind": "reference",
+          "sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
+        },
+        "notebook": {
+          "path": "volumes/10_exotics_martingales/exotics.ipynb",
+          "kind": "source",
+          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86"
+        },
+        "builder": {
+          "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
+          "kind": "source",
+          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb"
+        }
+      }
     },
     {
       "id": "26.14",

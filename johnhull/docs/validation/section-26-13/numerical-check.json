@@ -1,0 +1,131 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-16T07:31:05.488639+00:00",
+  "scope": "M5a independent Asian references and approximation-error measurement; section 26.13 stays gaps_found.",
+  "reference": "Hull 11e Global Edition section 26.13, physical/printed pp.626-627, Example 26.3 p.627.",
+  "method": "Exact moments of the average, an exact two-date price by conditioning, and a control-variate Monte Carlo that samples the observation dates exactly with the exact geometric-average price as control. No hullkit function is used.",
+  "observation_convention": "t_i = i*T/m for i=1..m; today excluded, maturity included.",
+  "anchor": {
+    "max_absolute_gap": 0.14305077804362298,
+    "max_standard_errors": 2.120053000319674,
+    "cases": 36,
+    "note": "Two-observation rows carry an exact quadrature price; the gap is the Monte Carlo error."
+  },
+  "approximation_error": {
+    "definition": "Turnbull-Wakeman minus the simulated reference, rows with a reference above 0.5.",
+    "max_relative": 0.2335051538533239,
+    "sign": "both: the moment match overprices near and above the average's forward and underprices below it",
+    "worst_case": {
+      "market": "high-vol-long",
+      "observations": 250,
+      "contract": "put",
+      "spot_ratio": 1.25,
+      "volatility": 0.7,
+      "expiry": 5.0,
+      "turnbull_wakeman": 22.07402693359398,
+      "reference": 17.895366601945145,
+      "standard_error": 0.007552415487310334,
+      "relative_error": 0.2335051538533239
+    },
+    "largest_overprice": {
+      "market": "high-vol-long",
+      "observations": 250,
+      "contract": "put",
+      "spot_ratio": 1.25,
+      "volatility": 0.7,
+      "expiry": 5.0,
+      "turnbull_wakeman": 22.07402693359398,
+      "reference": 17.895366601945145,
+      "standard_error": 0.007552415487310334,
+      "relative_error": 0.2335051538533239
+    },
+    "largest_underprice": {
+      "market": "dividend-above-rate",
+      "observations": 12,
+      "contract": "call",
+      "spot_ratio": 0.8,
+      "volatility": 0.25,
+      "expiry": 1.5,
+      "turnbull_wakeman": 0.5184750399604701,
+      "reference": 0.5565887445687512,
+      "standard_error": 0.00038172095434683495,
+      "relative_error": -0.06847731827170145
+    }
+  },
+  "hull_example_26_3": {
+    "inputs": {
+      "spot": 50.0,
+      "strike": 50.0,
+      "rate": 0.1,
+      "dividend": 0.0,
+      "volatility": 0.4,
+      "expiry": 1.0
+    },
+    "printed": {
+      "moment_1": 52.59,
+      "moment_2": 2922.76,
+      "volatility": 0.2354,
+      "price": 5.62
+    },
+    "continuous": {
+      "moment_1": 52.58545903782385,
+      "moment_2": 2922.762258974806,
+      "matched_volatility": 0.23538299099729676,
+      "turnbull_wakeman": 5.616791502292813,
+      "extrapolated_reference": 5.56183750419272,
+      "approximation_error": 0.054953998100092605,
+      "extrapolation": "Richardson in 1/m from the 52- and 250-observation references"
+    },
+    "discrete": [
+      {
+        "observations": 12,
+        "printed": 6.0,
+        "turnbull_wakeman": 5.995788315131891,
+        "reference": 5.944734076472501,
+        "standard_error": 0.0005137485390458346,
+        "approximation_error": 0.05105423865939063
+      },
+      {
+        "observations": 52,
+        "printed": 5.7,
+        "turnbull_wakeman": 5.704306157826323,
+        "reference": 5.649342102741796,
+        "standard_error": 0.0004846029700128927,
+        "approximation_error": 0.054964055084527175
+      },
+      {
+        "observations": 250,
+        "printed": 5.63,
+        "turnbull_wakeman": 5.6349976323316815,
+        "reference": 5.580038460690928,
+        "standard_error": 0.0004791013295487992,
+        "approximation_error": 0.05495917164075337
+      }
+    ]
+  },
+  "units": {
+    "spot_strike_price": "currency",
+    "expiry": "years",
+    "rate_dividend": "continuously compounded per year",
+    "volatility": "annual"
+  },
+  "assumptions": [
+    "Risk-neutral GBM with constant r/q/sigma; positive spot, volatility and maturity.",
+    "Newly issued contracts: the whole averaging window lies in the future.",
+    "All markets are synthetic; no claim about market performance."
+  ],
+  "limitations": [
+    "The simulated references carry a standard error; they are not exact except on the two-date rows.",
+    "The continuous-average reference is a Richardson extrapolation in 1/m, not a limit computation.",
+    "Seasoned contracts, average-strike options and non-constant volatility are not priced here.",
+    "hullkit implements only the continuous average-price call; nothing else in the library is covered."
+  ],
+  "source_sha256": {
+    "scripts/build_asian_reference.py": "5c9931b7dda75445196ac18a3445d2f0d7f086a2c7a522fb80403b966c13e0f3",
+    "hullkit/tests/test_asian_reference.py": "358e4834c4fafb5790857c92b14c0721a2b58aa88ef511a74681c7aabf12f497",
+    "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02"
+  }
+}
