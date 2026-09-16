@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-16T06:37:51.093Z",
+  "checked_at": "2026-09-16T07:02:55.450Z",
   "pages": {
     "portal": {
       "figures": [
@@ -207,8 +207,8 @@
     "hullkit/src/hullkit/_lookback_lesson.py": "8f5e0a91131462995fd0b3afa8554795cfada8e723d5d1b77a26a4af1cee2630",
     "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
     "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f",
-    "volumes/10_exotics_martingales/exotics.ipynb": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
+    "volumes/10_exotics_martingales/exotics.ipynb": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
     "report/report_builder/figures.py": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
@@ -221,7 +221,7 @@
     "report/site/exotics.html": "1efdfcaca6f17ed27a6b2245938a88def5950a71d8c1b0437a6172f70e626115",
     "report/site/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "ccf28a1705309c98118174fe042a35f651e208037b5c79c27dc322c074b027b5",
+    "book/_build/html/notebooks/10_exotics.html": "a50acec8527ea1c505bba9bbe52e88e90f0b009a202b5a611d57ca9634f93c94",
     "docs/validation/section-26-11/m4b-portal-lookback_payoffs-1440.png": "bdb98bf61f3f2664b0e55325c60a9333853983a44af5e32aaaa8826031489638",
     "docs/validation/section-26-11/m4b-portal-lookback_history-1440.png": "f20f8d39f672a067f95d7a58d9cfa11d88155246dc1817aa03d1dc2f195b13ea",
     "docs/validation/section-26-11/m4b-portal-lookback_replication-1440.png": "f4f324d7a8a6bbd1d896cccffa615ac577f07016f64b8d7b36220c69128b1161",
@@ -232,7 +232,7 @@
     "docs/validation/section-26-11/m4b-portal-lookback_monitoring-1000.png": "2fe15f603a4c93e6d499e703fef39eedf65df345c91c0818a58c5e14db86bcc2",
     "docs/validation/section-26-11/m4b-book-lookback_payoffs-1440.png": "6622c5ce4e3c80a1ed7061ba5796bf59eee8373069e9a4af00fe177b8185ba07",
     "docs/validation/section-26-11/m4b-book-lookback_history-1440.png": "6f9f2685e48b57cd8c453865d81a216d92a8e2a36c665b0c168b668f469fc96f",
-    "docs/validation/section-26-11/m4b-book-lookback_replication-1440.png": "7d181409a6643624d32d92e09e7110862f7fa51c0878e38a9731c827b7a52633",
+    "docs/validation/section-26-11/m4b-book-lookback_replication-1440.png": "e4e485b36c129826fee506b216bf86655d9cf60f1a24f4581dcdecd17a63514a",
     "docs/validation/section-26-11/m4b-book-lookback_monitoring-1440.png": "49510285def0b9a97216c215f18470fbef62c11ba8a1e84d0ad0283c8b052f10",
     "docs/validation/section-26-11/m4b-book-lookback_payoffs-1000.png": "6c8d942b3169a4c3ad3c6dbfad62972979b5c647916381e5ec195b93cfad55b4",
     "docs/validation/section-26-11/m4b-book-lookback_history-1000.png": "27bb6c4178e8711c93207bebad4cbbbdf65d943e175f97af5ba9ba9dae5dc882",

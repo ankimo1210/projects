@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-16T06:37:29.689Z",
+  "checked_at": "2026-09-16T07:02:33.308Z",
   "viewport": {
     "width": 1440,
     "height": 1000
@@ -395,8 +395,8 @@
     }
   },
   "source_sha256": {
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f",
-    "volumes/10_exotics_martingales/exotics.ipynb": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
+    "volumes/10_exotics_martingales/exotics.ipynb": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
     "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
     "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
     "hullkit/tests/test_barrier_reference.py": "7275a9504617dd194018795f7b878ab1da68f755ca3ad551bac6c7879ee554ff",
@@ -410,7 +410,7 @@
     "report/site/exotics.html": "1efdfcaca6f17ed27a6b2245938a88def5950a71d8c1b0437a6172f70e626115",
     "report/site/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "ccf28a1705309c98118174fe042a35f651e208037b5c79c27dc322c074b027b5"
+    "book/_build/html/notebooks/10_exotics.html": "a50acec8527ea1c505bba9bbe52e88e90f0b009a202b5a611d57ca9634f93c94"
   },
   "browser_version": "141.0.7390.37",
   "status": "PASS"

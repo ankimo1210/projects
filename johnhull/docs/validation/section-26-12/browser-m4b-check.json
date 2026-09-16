@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-16T06:39:53.006Z",
+  "checked_at": "2026-09-16T07:02:36.495Z",
   "pages": {
     "portal": {
       "figures": [
@@ -18455,8 +18455,8 @@
     "docs/validation/section-26-12/lesson-data.json": "1a4f3614049d92670a8332a0d242f7b0b95a1c90efcb7e4764a2cc272b700fec",
     "hullkit/src/hullkit/exotics.py": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
     "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "23c199135b49b8c41fff8f4ac439251d26ec4a92cad5cde6fbf64058d485572f",
-    "volumes/10_exotics_martingales/exotics.ipynb": "b10802d2b6ceeead2b99d3e12104d1ad04afac447b6c103dd2017cd4edcb4911",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
+    "volumes/10_exotics_martingales/exotics.ipynb": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
     "report/report_builder/figures.py": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
@@ -18469,7 +18469,7 @@
     "report/site/exotics.html": "1efdfcaca6f17ed27a6b2245938a88def5950a71d8c1b0437a6172f70e626115",
     "report/site/assets/style.css": "121d8ac2bb0b4e0d20f49328c48a3a6dd2d51d55fb98ba99d586caf3854a4132",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "ccf28a1705309c98118174fe042a35f651e208037b5c79c27dc322c074b027b5",
+    "book/_build/html/notebooks/10_exotics.html": "a50acec8527ea1c505bba9bbe52e88e90f0b009a202b5a611d57ca9634f93c94",
     "docs/validation/section-26-12/portal-shout_payoff-1440.png": "31859e1213be7a79cec740abb0ac3782d3bf10b506d47a8720463397b311fb79",
     "docs/validation/section-26-12/portal-shout_decision-1440.png": "ca7708cd85491f018f88a7027450c5adb7a01ed0fb1fa8a99182b037219892c2",
     "docs/validation/section-26-12/portal-shout_boundary-1440.png": "a9c7e19bb67dc634c93225a321467bd151ea0dd0a75df0c147216268a12f2641",
@@ -18479,9 +18479,9 @@
     "docs/validation/section-26-12/portal-shout_boundary-1000.png": "24675166019ff36692b0bda81e8df60051ed5334a73af986c2cb779592f7bffc",
     "docs/validation/section-26-12/portal-shout_comparison-1000.png": "2b0678e43685f4e05f312d3658c2320be184d80e045b1f3c51ac524af3e222b1",
     "docs/validation/section-26-12/book-shout_payoff-1440.png": "4b824c3360de82b8f7d8cd4f7f202ec04d7154b0ab7e041be9f1247a9e4e126f",
-    "docs/validation/section-26-12/book-shout_decision-1440.png": "c916cc674ea4ead9595307fd7f6413ad59bc815f3a5050ace60561e3e69ddef4",
-    "docs/validation/section-26-12/book-shout_boundary-1440.png": "3f61786c5e3eb14928eddae6f4f7c6f801d08bc14e35d0c3b796cc7891328cad",
-    "docs/validation/section-26-12/book-shout_comparison-1440.png": "e78f4acbf46e8b8f0a8a3a15360ebf0f5ce7b76f82894c01967f750d4331a8ed",
+    "docs/validation/section-26-12/book-shout_decision-1440.png": "8da867564590c2ff57d326798edef164efc22ba88ec4f6e0f7bcc301e37cc303",
+    "docs/validation/section-26-12/book-shout_boundary-1440.png": "a7a39dee562e525d76fdf86e42f5075b5d142e6e18f100ea0cdbb58b19cb14ad",
+    "docs/validation/section-26-12/book-shout_comparison-1440.png": "6dcce0d560840a44f747893e8a6e10e543d0c191e9c46dd8b189cda17f0ba24e",
     "docs/validation/section-26-12/book-shout_payoff-1000.png": "d2ea979cacdf8d2217ee7d58d7ba8f1ba3a1b9f5a16067dc573d837395906a72",
     "docs/validation/section-26-12/book-shout_decision-1000.png": "7e65918529773112db8066a81eebbd8655d45f03e3d030f5f7d8c23331ec1114",
     "docs/validation/section-26-12/book-shout_boundary-1000.png": "e07ca3d448a61905fae10b0909c2e5b3b1a56ac57ed46fe2115d17970f25664e",
