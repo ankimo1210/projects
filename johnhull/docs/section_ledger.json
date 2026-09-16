@@ -1206,17 +1206,17 @@
       "evidence": {
         "lesson_builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
+          "sha256": "4a6a75c6038b56eae4f42e0b3be16195eccc0e598e1950a3f0b71a328c53c25d",
           "kind": "source"
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
+          "sha256": "5fe85540826c576e5b1605bee87a3e97d8f4337b4b6ae70510ec9b73ba02245f",
           "kind": "source"
         },
         "pricing": {
           "path": "hullkit/src/hullkit/exotics.py",
-          "sha256": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+          "sha256": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
           "kind": "source"
         },
         "plot_builder": {
@@ -1248,11 +1248,6 @@
           "path": "docs/validation/section-26-9/numerical-check.json",
           "sha256": "110674cd552fd3c446ec1a54f5dd8eb6d1d19cced9a48095a8c31ef74f5282f2",
           "kind": "reference"
-        },
-        "browser_run": {
-          "path": "docs/validation/section-26-9/browser-check.json",
-          "sha256": "d19fa397d5aa2ab98b6b7858bc5f63917b118d426a595f6f7b9aaf28f7353f56",
-          "kind": "record"
         },
         "path_image": {
           "path": "docs/validation/section-26-9/book-path.png",
@@ -1289,10 +1284,15 @@
           "sha256": "24791168bc242e9cf98827481297b99e6c26af57e0208d3cb074069a970d4405",
           "kind": "image"
         },
-        "m4b_recheck": {
-          "path": "docs/validation/section-26-9/m4b-recheck.json",
+        "browser_run": {
+          "path": "docs/validation/section-26-9/browser-m5b-check.json",
+          "sha256": "8ed2e8389d24c741230d4aa45633f6fef1b55a7e577ed125003f9138a77e2e7a",
+          "kind": "record"
+        },
+        "m5b_recheck": {
+          "path": "docs/validation/section-26-9/m5b-recheck.json",
           "kind": "record",
-          "sha256": "45dbcd00a6cb80f48edfee95b42eaada380c806bbfcce16d5f56c6975a280f6c"
+          "sha256": "7c552f22b69ae3f04c13b8de253ee5f85b6fe526ed5af6cc8ad6fe1da75c918b"
         }
       },
       "requirements": [
@@ -1321,7 +1321,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "m4b_recheck"
+                "m5b_recheck"
               ]
             },
             "visualization": {
@@ -1367,7 +1367,7 @@
               "refs": [
                 "reference_tests",
                 "numerical",
-                "m4b_recheck"
+                "m5b_recheck"
               ]
             },
             "visualization": {
@@ -1413,7 +1413,7 @@
               "refs": [
                 "reference_tests",
                 "numerical",
-                "m4b_recheck"
+                "m5b_recheck"
               ]
             },
             "visualization": {
@@ -1458,7 +1458,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "m4b_recheck"
+                "m5b_recheck"
               ]
             },
             "visualization": {
@@ -1504,7 +1504,7 @@
               "refs": [
                 "reference_tests",
                 "notebook",
-                "m4b_recheck"
+                "m5b_recheck"
               ]
             },
             "visualization": {
@@ -1548,7 +1548,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "m4b_recheck"
+                "m5b_recheck"
               ]
             },
             "visualization": {
@@ -1591,7 +1591,7 @@
               "state": "verified",
               "refs": [
                 "notebook",
-                "m4b_recheck"
+                "m5b_recheck"
               ]
             },
             "visualization": {
@@ -1638,7 +1638,7 @@
                 "reference_tests",
                 "plot_tests",
                 "browser_run",
-                "m4b_recheck"
+                "m5b_recheck"
               ]
             },
             "visualization": {
@@ -1685,7 +1685,7 @@
                 "reference_tests",
                 "numerical",
                 "browser_run",
-                "m4b_recheck"
+                "m5b_recheck"
               ]
             },
             "visualization": {
@@ -1735,7 +1735,7 @@
       "evidence": {
         "pricing": {
           "path": "hullkit/src/hullkit/exotics.py",
-          "sha256": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4",
+          "sha256": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39",
           "kind": "source"
         },
         "bsm": {
@@ -1748,19 +1748,14 @@
           "sha256": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
           "kind": "test"
         },
-        "numerical": {
-          "path": "docs/validation/section-26-10/numerical-check.json",
-          "sha256": "9a0105b98c27d3e8ca83cfe3ed30ec7c862c24158b343c42a6f7279f1bbe1778",
-          "kind": "record"
-        },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86",
+          "sha256": "5fe85540826c576e5b1605bee87a3e97d8f4337b4b6ae70510ec9b73ba02245f",
           "kind": "source"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb",
+          "sha256": "4a6a75c6038b56eae4f42e0b3be16195eccc0e598e1950a3f0b71a328c53c25d",
           "kind": "source"
         },
         "review": {
@@ -1785,18 +1780,13 @@
         },
         "portal": {
           "path": "report/report_builder/figures.py",
-          "sha256": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226",
+          "sha256": "7bdc9b601b0ae4b0a37b131d234fadc62d65111935ebd348a998c555cd785451",
           "kind": "source"
         },
         "browser_script": {
           "path": "scripts/verify_binary_lesson_browser.cjs",
           "sha256": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71",
           "kind": "source"
-        },
-        "browser_run": {
-          "path": "docs/validation/section-26-10/browser-check.json",
-          "sha256": "ab7f0b489231ab57b601ef0a16de0e33d04eadf2fe93155403ac6354b6e02626",
-          "kind": "record"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md",
@@ -1833,10 +1823,20 @@
           "sha256": "87533873bc4207cdfa3c61323de588f8236d2a94924c498cdfacc12753a9c1c3",
           "kind": "note"
         },
-        "m4b_recheck": {
-          "path": "docs/validation/section-26-10/m4b-recheck.json",
+        "browser_run": {
+          "path": "docs/validation/section-26-10/browser-m5b-check.json",
+          "sha256": "e2091fc3be0108f0ff1d8a3a8fd3f3c940e0cced68fd6c2f008d6759d1f4654e",
+          "kind": "record"
+        },
+        "numerical": {
+          "path": "docs/validation/section-26-10/numerical-m5b-recheck.json",
+          "sha256": "eb4f8e928f6e7a96b525751a170fa098e86ddc472652956c43f4ba87bb542ae3",
+          "kind": "record"
+        },
+        "m5b_recheck": {
+          "path": "docs/validation/section-26-10/m5b-recheck.json",
           "kind": "record",
-          "sha256": "41970a36124a14d3cadb73141aa5df4a0907ff1e0ab2941e54c5ff2012a1a062"
+          "sha256": "ebe12cb927e933f3b90146af2c2db9de9aba04ca4eb554366ebf5d618740ce7b"
         }
       },
       "requirements": [
@@ -1866,7 +1866,7 @@
               "state": "verified",
               "refs": [
                 "lesson_tests",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§2.1"
             },
@@ -1915,7 +1915,7 @@
                 "tests",
                 "numerical",
                 "lesson_tests",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§2.2"
             },
@@ -1964,7 +1964,7 @@
                 "tests",
                 "numerical",
                 "lesson_tests",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§2.3"
             },
@@ -2051,7 +2051,7 @@
               "state": "verified",
               "refs": [
                 "lesson_tests",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§2.5–2.6"
             },
@@ -2099,7 +2099,7 @@
               "state": "verified",
               "refs": [
                 "lesson_tests",
-                "m4b_recheck",
+                "m5b_recheck",
                 "final_review"
               ],
               "locator": "§2.1–2.6"
@@ -2160,7 +2160,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§4.1.1"
             },
@@ -2209,7 +2209,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§4.1.2"
             },
@@ -2258,7 +2258,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§4.1.3–4.1.4"
             },
@@ -2308,7 +2308,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§4.1.5"
             },
@@ -2352,7 +2352,7 @@
               "refs": [
                 "tests",
                 "boundary",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§4.1.6"
             },
@@ -2399,7 +2399,7 @@
                 "tests",
                 "lesson_tests",
                 "numerical",
-                "m4b_recheck"
+                "m5b_recheck"
               ],
               "locator": "§4.1.1–4.1.6"
             },
@@ -2447,7 +2447,7 @@
         "pricing": {
           "path": "hullkit/src/hullkit/exotics.py",
           "kind": "source",
-          "sha256": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4"
+          "sha256": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39"
         },
         "tests": {
           "path": "hullkit/tests/test_lookback_reference.py",
@@ -2462,12 +2462,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86"
+          "sha256": "5fe85540826c576e5b1605bee87a3e97d8f4337b4b6ae70510ec9b73ba02245f"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb"
+          "sha256": "4a6a75c6038b56eae4f42e0b3be16195eccc0e598e1950a3f0b71a328c53c25d"
         },
         "review": {
           "path": "docs/SECTION_26_11_REVIEW_2026-09-15.md",
@@ -2478,11 +2478,6 @@
           "path": "options, futures and other derivatives 11th.pdf",
           "kind": "reference",
           "sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
-        },
-        "numerical": {
-          "path": "docs/validation/section-26-11/numerical-check.json",
-          "kind": "record",
-          "sha256": "1fa2fdbb0161fe905a9e7b432228089ba68c4517a4ea02c0a02c90131b34a984"
         },
         "m3a_review": {
           "path": "docs/validation/section-26-11/final-review.md",
@@ -2502,27 +2497,12 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226"
+          "sha256": "7bdc9b601b0ae4b0a37b131d234fadc62d65111935ebd348a998c555cd785451"
         },
         "browser_script": {
           "path": "scripts/verify_lookback_lesson_browser.cjs",
           "kind": "source",
           "sha256": "1776c1a42fb856563afba7ede64665b5a4bded2c952ab3220f7051d3e0a5721e"
-        },
-        "browser_run": {
-          "path": "docs/validation/section-26-11/browser-m4b-check.json",
-          "kind": "record",
-          "sha256": "e97a9896a961da105ef0929ff1e4235fa76de60f43c3a405014270a3d225e2cd"
-        },
-        "boundary": {
-          "path": "docs/validation/section-26-11/boundary-m3b-check.json",
-          "kind": "record",
-          "sha256": "3700b9f104edfbe95f4e19e6226976611312d40353ea04627ed255fe72ede08d"
-        },
-        "notebook_check": {
-          "path": "docs/validation/section-26-12/notebook-m4b-check.json",
-          "kind": "record",
-          "sha256": "8b3db4ea2400c913b0b0403fe6e4aa7bd7f389d9ebafd804fd4d156c61307530"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md",
@@ -2564,10 +2544,30 @@
           "kind": "note",
           "sha256": "7b01ebf8490e67a1bdf6fd4ea76ad2a309630070a628ca59373865880c12bd9e"
         },
-        "m4b_recheck": {
-          "path": "docs/validation/section-26-11/m4b-recheck.json",
+        "browser_run": {
+          "path": "docs/validation/section-26-11/browser-m5b-check.json",
           "kind": "record",
-          "sha256": "495c8f44e665e1f192c426ddef96c7596152766e032256280797d0770417127e"
+          "sha256": "1375392e1993fb1a1cbb6255c82112cf3b4dd0b2818eb9da302a4df97b9bee56"
+        },
+        "numerical": {
+          "path": "docs/validation/section-26-11/numerical-m5b-recheck.json",
+          "kind": "record",
+          "sha256": "37d8ca8d3ca0dd66478a84edb8a9f13d18078a068af763f3a0ded375f6066bd3"
+        },
+        "boundary": {
+          "path": "docs/validation/section-26-11/boundary-m5b-recheck.json",
+          "kind": "record",
+          "sha256": "206bf3d54e5e9944cbe0e39f9e3d49636f8bb21e4a4420db489b70ed42c38d28"
+        },
+        "notebook_check": {
+          "path": "docs/validation/section-26-13/notebook-m5b-check.json",
+          "kind": "record",
+          "sha256": "c463ce7dab1eaef352aea01b56a1cb9e540f92c8344c642d3c38d90455d0f797"
+        },
+        "m5b_recheck": {
+          "path": "docs/validation/section-26-11/m5b-recheck.json",
+          "kind": "record",
+          "sha256": "7773990fb596d93943e316b555ffbc8d56ad503589184d8e64d10e6cc6e85ea4"
         }
       },
       "acceptance_note": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md"
@@ -2607,7 +2607,7 @@
                 "numerical",
                 "tree_check",
                 "browser_reference",
-                "m4b_check"
+                "m5b_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -2659,7 +2659,7 @@
                 "numerical",
                 "tree_check",
                 "browser_reference",
-                "m4b_check"
+                "m5b_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -2712,7 +2712,7 @@
                 "numerical",
                 "tree_check",
                 "browser_reference",
-                "m4b_check"
+                "m5b_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -2765,7 +2765,7 @@
                 "numerical",
                 "tree_check",
                 "browser_reference",
-                "m4b_check"
+                "m5b_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -2817,7 +2817,7 @@
                 "numerical",
                 "tree_check",
                 "browser_reference",
-                "m4b_check"
+                "m5b_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -2869,7 +2869,7 @@
                 "numerical",
                 "tree_check",
                 "browser_reference",
-                "m4b_check"
+                "m5b_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -2946,12 +2946,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86"
+          "sha256": "5fe85540826c576e5b1605bee87a3e97d8f4337b4b6ae70510ec9b73ba02245f"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb"
+          "sha256": "4a6a75c6038b56eae4f42e0b3be16195eccc0e598e1950a3f0b71a328c53c25d"
         },
         "pricing": {
           "path": "hullkit/src/hullkit/_shout.py",
@@ -2981,17 +2981,17 @@
         "lesson_data": {
           "path": "docs/validation/section-26-12/lesson-data.json",
           "kind": "reference",
-          "sha256": "1a4f3614049d92670a8332a0d242f7b0b95a1c90efcb7e4764a2cc272b700fec"
+          "sha256": "f8a1cdb5d73fb84a4385e56314474281ee6534d816b80a0b81497b400ab9ba66"
         },
         "tree_check": {
           "path": "docs/validation/section-26-12/tree-check.json",
           "kind": "reference",
-          "sha256": "357aff84d713ab7023a35af30befeea42a19dde7aff23b169c5369b29c0491a3"
+          "sha256": "e4431aedf450db5512f979623c7f468c1514636e4dee3dfa2f8564fe76435741"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "b897a4d66db846741689cb1f1dd344acd034ce6ac7966ff0ce6654c93c836226"
+          "sha256": "7bdc9b601b0ae4b0a37b131d234fadc62d65111935ebd348a998c555cd785451"
         },
         "browser_script": {
           "path": "scripts/verify_shout_lesson_browser.cjs",
@@ -3002,21 +3002,6 @@
           "path": "docs/validation/section-26-12/browser-reference.json",
           "kind": "reference",
           "sha256": "db6646b7dec5380ff02d6003c82b97ef3e1a1ec99bbed47e985eabcc68a01f26"
-        },
-        "browser_run": {
-          "path": "docs/validation/section-26-12/browser-m4b-check.json",
-          "kind": "record",
-          "sha256": "a8cf577f27c29caa816486de0180aec1d85b7003a7e04bbd3e1bcf2b7fcf4fda"
-        },
-        "notebook_check": {
-          "path": "docs/validation/section-26-12/notebook-m4b-check.json",
-          "kind": "record",
-          "sha256": "8b3db4ea2400c913b0b0403fe6e4aa7bd7f389d9ebafd804fd4d156c61307530"
-        },
-        "m4b_check": {
-          "path": "docs/validation/section-26-12/m4b-check.json",
-          "kind": "record",
-          "sha256": "c0453fa7a3e7c344d1d727c50cd1a384ece07043559d327cfc7ddb2b8b4dd75d"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md",
@@ -3047,46 +3032,72 @@
           "path": "docs/validation/section-26-12/final-m4b-review.md",
           "kind": "note",
           "sha256": "396f8c15d85e51f8c02acebc9e588b1b04cc6359286acb1a9ec2053b97b23414"
+        },
+        "browser_run": {
+          "path": "docs/validation/section-26-12/browser-m5b-check.json",
+          "kind": "record",
+          "sha256": "72b81961067dba4fa97a3c8197f713d7f7d87a8a65fe84858bc1add5875f84e6"
+        },
+        "notebook_check": {
+          "path": "docs/validation/section-26-13/notebook-m5b-check.json",
+          "kind": "record",
+          "sha256": "c463ce7dab1eaef352aea01b56a1cb9e540f92c8344c642d3c38d90455d0f797"
+        },
+        "m5b_recheck": {
+          "path": "docs/validation/section-26-12/m5b-recheck.json",
+          "kind": "record",
+          "sha256": "96cd461688d9e1dccc039b96be886f993dbb046e6f7e22cc12b8f434d5cd649f"
         }
       },
       "acceptance_note": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md"
     },
     {
       "id": "26.13",
-      "status": "gaps_found",
+      "status": "pending_validation",
       "requirements": [
         {
           "id": "A01",
           "statement": "平均価格call/putの給付、平均の定義（観測日・今日を含むか・満期を含むか）、単位を説明する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "notebook",
                 "builder",
-                "review"
+                "acceptance_note"
               ],
-              "locator": "vol10 §4.3（3セル）のみ"
+              "locator": "vol10 §4.3.1：三契約の給付と t_i=iT/m の規約、今日を除き満期を含む"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "asian_moments(times=...) と asian_average_price の観測日引数"
             },
             "independent_validation": {
               "state": "verified",
               "refs": [
                 "numerical",
-                "tests"
+                "tests",
+                "pricing_tests"
               ],
-              "locator": "観測規約 t_i=iT/m の再現（印刷値12/52/250と一致）"
+              "locator": "観測規約の再現と印刷値12/52/250"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "payoff_image"
+              ],
+              "locator": "同一経路の平均・満期値・行使価格と3契約の給付"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "Book/portal両面・1440/1000pxで経路と給付を独立pinと照合"
             }
           }
         },
@@ -3095,37 +3106,45 @@
           "statement": "モーメント整合（式26.3・26.4＋Black式18.7・18.8）とExample 26.3の全表示値を説明・再現する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "notebook",
                 "builder",
-                "review"
+                "acceptance_note"
               ],
-              "locator": "vol10 §4.3（3セル）のみ"
+              "locator": "vol10 §4.3.2：式26.3・26.4とBlack、Example 26.3の全表示値"
             },
             "implementation": {
               "state": "verified",
               "refs": [
                 "pricing"
               ],
-              "locator": "asian_call_turnbull_wakeman（連続平均・新規発行・callのみ）"
+              "locator": "asian_moments・asian_average_price（call/put）"
             },
             "independent_validation": {
               "state": "verified",
               "refs": [
                 "numerical",
                 "tests",
-                "hull_pins"
+                "hull_pins",
+                "pricing_tests"
               ],
-              "locator": "M1=52.59・M2=2922.76・23.54%・5.62、hullkitとの1e-8一致"
+              "locator": "M1=52.59・M2=2,922.76・23.54%・5.62、独立実装と1e-8一致、パリティ残差1e-10以下"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "distribution_image"
+              ],
+              "locator": "整合した対数正規と実測分布、M1の位置"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "整合ボラ・歪度の表示値を独立再計算と照合"
             }
           }
         },
@@ -3134,33 +3153,44 @@
           "statement": "離散観測のM1・M2と、12/52/250観測の6.00・5.70・5.63を再現する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "notebook",
                 "builder",
-                "review"
+                "acceptance_note"
               ],
-              "locator": "vol10 §4.3（3セル）のみ"
+              "locator": "vol10 §4.3.4：観測数と価格、幾何平均の下界"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "離散モーメントはO(m)のsuffix sum。r=qでも割り算を含まない"
             },
             "independent_validation": {
               "state": "verified",
               "refs": [
                 "numerical",
-                "tests"
+                "tests",
+                "pricing_tests"
               ],
-              "locator": "独立実装で5.9958/5.7043/5.6350。hullkitに離散実装は無い"
+              "locator": "12/52/250で6.00/5.70/5.63、独立参照との差は近似誤差として記録"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "observations_image"
+              ],
+              "locator": "12/52/250と連続値、独立参照の±4標準誤差"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "表示3点を凍結表と、連続値を独立求積と照合"
             }
           }
         },
@@ -3169,29 +3199,42 @@
           "statement": "既発契約のK*変換（K*=((t1+t2)/t2)K-(t1/t2)平均）と、K*<0のフォワード評価を説明する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "notebook",
                 "builder",
-                "review"
+                "acceptance_note"
               ],
-              "locator": "vol10 §4.3（3セル）のみ"
+              "locator": "vol10 §4.3.5：K*の導出と確実行使の分岐"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "asian_seasoned_average_price（K*<0はフォワード評価、putは0）"
             },
             "independent_validation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing_tests",
+                "lesson_tests",
+                "m5b_check"
+              ],
+              "locator": "恒等式を2通りで検算し、K*<0の行で両式の一致を確認"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "not_applicable",
+              "refs": [],
+              "reason": "K*変換は給付の恒等式で、確実行使の分岐を含む全4条件を表で示す。図にすると分岐が読めない。"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "Bookの表に K*・確実行使・価格が出ることを確認"
             }
           }
         },
@@ -3200,29 +3243,44 @@
           "statement": "平均行使型（average strike）の給付と、交換オプションとしての評価を説明する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "notebook",
                 "builder",
-                "review"
+                "acceptance_note"
               ],
-              "locator": "vol10 §4.3（3セル）のみ"
+              "locator": "vol10 §4.3.6：交換オプションとしての評価と共分散の選択"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "pricing"
+              ],
+              "locator": "asian_average_strike（Margrabe、幾何平均に対して厳密な共分散）"
             },
             "independent_validation": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "tests",
+                "pricing_tests"
+              ],
+              "locator": "幾何平均を制御変量にした独立参照に対し −1.83%〜+18.23%"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "payoff_image"
+              ],
+              "locator": "平均行使型の状態で満期値と平均を比べる"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "給付バーの切替を両面で確認"
             }
           }
         },
@@ -3231,34 +3289,43 @@
           "statement": "モーメント整合が近似であること、誤差の向きと大きさ、適用域を説明する。",
           "coverage": {
             "explanation": {
-              "state": "pending",
+              "state": "verified",
               "refs": [
                 "notebook",
                 "builder",
+                "acceptance_note",
                 "review"
               ],
-              "locator": "vol10 §4.3（3セル）のみ"
+              "locator": "vol10 §4.3.6：実測の誤差表（+23.35%／−6.85%／Example 26.3 +0.99%）と適用域"
             },
             "implementation": {
-              "state": "pending",
-              "refs": []
+              "state": "not_applicable",
+              "refs": [],
+              "reason": "誤差の測定は独立参照側（制御変量モンテカルロと厳密2観測日）の実装であり、hullkitの価格APIに追加する対象ではない。"
             },
             "independent_validation": {
               "state": "verified",
               "refs": [
                 "numerical",
-                "prices",
-                "tests"
+                "tests",
+                "lesson_tests"
               ],
-              "locator": "144行で+23.35%〜−6.85%、Example 26.3自体が約+1%"
+              "locator": "144行の符号付き誤差と両端を記録に固定"
             },
             "visualization": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "error_image",
+                "domain_image"
+              ],
+              "locator": "6市場×マネーネスの相対誤差と、Bookの誤差表"
             },
             "rendered": {
-              "state": "pending",
-              "refs": []
+              "state": "verified",
+              "refs": [
+                "browser_run"
+              ],
+              "locator": "表示誤差を凍結表と、誤差表の数値を記録と照合"
             }
           }
         }
@@ -3268,7 +3335,7 @@
         626,
         627
       ],
-      "scope": "Hull 11e GE §26.13のA01–A06。平均価格call/put・モーメント整合・離散観測・既発契約・平均行使型・近似誤差と適用域。M5aは要求整理と独立参照価格・誤差測定のみ。",
+      "scope": "Hull 11e GE §26.13のA01–A06。平均価格call/put・モーメント整合・離散観測・既発契約のK*変換・平均行使型・近似誤差と適用域。M5aの要求整理と独立参照に、M5bの実装・教材6小節・共有4図・Book/portalの実画面検査を加えた。",
       "assumptions": [
         "リスク中立GBM、定数r/q/sigma、正のS/T/sigma",
         "観測日は t_i=iT/m（今日を含まず満期を含む）。新規発行契約のみ",
@@ -3277,9 +3344,10 @@
       "limitations": [
         "参照価格は制御変量モンテカルロで標準誤差を持つ。厳密なのは2観測日の行だけ（36件で最大2.12標準誤差）。",
         "連続平均の参照値は1/mリチャードソン外挿であり、極限計算ではない。",
-        "既発契約（A04）と平均行使型（A05）は価格を作っていない。検証方法のみ定義した。",
-        "hullkitは連続平均のcall1本のみ実装。putも離散観測も無く、ライブラリで検証できたのはその1本だけ。",
-        "変動ボラ・現金配当・不等間隔の観測日は対象外。Book/portalは再生成・再検査していない。"
+        "モーメント整合は近似であり、144行で +23.35%〜−6.85% の誤差を実測した。価格の正しさの承認ではない。",
+        "平均行使型は幾何平均に厳密な共分散を使う近似で、−1.83%〜+18.23%の誤差を測った。",
+        "変動ボラ・現金配当・不等間隔の観測日・T=0・sigma=0は対象外。",
+        "独立レビューは未実施のため状態はpending_validationであり、acceptedではない。"
       ],
       "evidence": {
         "review": {
@@ -3287,10 +3355,15 @@
           "kind": "note",
           "sha256": "ece32546fc1695cc9f5d3c947961d7e3db98ec8655a53ac539ad7bf0bb6a9881"
         },
+        "acceptance_note": {
+          "path": "docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md",
+          "kind": "note",
+          "sha256": "f8e195f4474fa5f59d7a2d7ec4d76a07bfdbde5bc37e7a34a043a65258fc7307"
+        },
         "reference_builder": {
           "path": "scripts/build_asian_reference.py",
           "kind": "source",
-          "sha256": "5c9931b7dda75445196ac18a3445d2f0d7f086a2c7a522fb80403b966c13e0f3"
+          "sha256": "0e8454ac675ce13c7fbe05a64136a05b431753c756a60fc8b8670852db3e29b1"
         },
         "tests": {
           "path": "hullkit/tests/test_asian_reference.py",
@@ -3300,7 +3373,7 @@
         "numerical": {
           "path": "docs/validation/section-26-13/numerical-check.json",
           "kind": "record",
-          "sha256": "6075df7d9e1bb1bc6964dfa135b22ed339dec2aa036ce850b1d99ff1efbf6862"
+          "sha256": "84571bcfd66857290fdb7371effad991bc880d36185e0cf3353c0882a21e59cb"
         },
         "prices": {
           "path": "docs/validation/section-26-13/prices.json",
@@ -3310,7 +3383,12 @@
         "pricing": {
           "path": "hullkit/src/hullkit/exotics.py",
           "kind": "source",
-          "sha256": "67e92f442ea18313895c08ea8361bdd09524799458e29debd12a9a4a4a1326b4"
+          "sha256": "5789f70e0bfac15ec3109513ebc39f4f81ac117f4d54b3e66bab791010d4de39"
+        },
+        "pricing_tests": {
+          "path": "hullkit/tests/test_asian_pricing.py",
+          "kind": "test",
+          "sha256": "c6c95c66bea2b1fcdfa5e6b16ae6be55722b8d2b59338e65c70a6135e941622c"
         },
         "hull_pins": {
           "path": "hullkit/tests/test_hull_pins_exotics_ir.py",
@@ -3325,12 +3403,97 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "cb1cb21e51810fc0dcd3db3baca294d952b9145d7e83d0ada3976064c97ffb86"
+          "sha256": "5fe85540826c576e5b1605bee87a3e97d8f4337b4b6ae70510ec9b73ba02245f"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "0308da59a0b2bb5d42872944b667c12b8a30a88d50bd1835ed1adc85ec88bcbb"
+          "sha256": "4a6a75c6038b56eae4f42e0b3be16195eccc0e598e1950a3f0b71a328c53c25d"
+        },
+        "lesson": {
+          "path": "hullkit/src/hullkit/_asian_lesson.py",
+          "kind": "source",
+          "sha256": "e84aafe2a98b7805d84f3399bb738995a6042d21dbce5f507fe72ea203898331"
+        },
+        "lesson_tests": {
+          "path": "hullkit/tests/test_asian_lesson.py",
+          "kind": "test",
+          "sha256": "c4727d368cf0055d40b82f3f5855acccf6d6f3a03f27b4b12f626d6b10eb062e"
+        },
+        "lesson_builder": {
+          "path": "scripts/build_asian_lesson_data.py",
+          "kind": "source",
+          "sha256": "414177def68dd1e63a0987d4528c6ed8f221cbc9f198d177fc3351eac4a0a9c7"
+        },
+        "lesson_data": {
+          "path": "docs/validation/section-26-13/lesson-data.json",
+          "kind": "reference",
+          "sha256": "d756b97d6409ea70b8fbb8ed4e5be669586502b1774ced725022ce36caee0018"
+        },
+        "portal": {
+          "path": "report/report_builder/figures.py",
+          "kind": "source",
+          "sha256": "7bdc9b601b0ae4b0a37b131d234fadc62d65111935ebd348a998c555cd785451"
+        },
+        "styles": {
+          "path": "report/assets/style.css",
+          "kind": "source",
+          "sha256": "f2f2adc53d4f4837d675ebdc202b86007db5b36e0f05e775e9b745a852cabf89"
+        },
+        "browser_script": {
+          "path": "scripts/verify_asian_lesson_browser.cjs",
+          "kind": "source",
+          "sha256": "740a8c163238526217b8827ba3a93ab2586e46c91944c508557ac716f3d1b58b"
+        },
+        "browser_reference": {
+          "path": "docs/validation/section-26-13/browser-reference.json",
+          "kind": "reference",
+          "sha256": "5ad07b05e54cf7da8996901fa333364bef3a2dbe5e0ad156ca0833c87747e6c4"
+        },
+        "browser_run": {
+          "path": "docs/validation/section-26-13/browser-m5b-check.json",
+          "kind": "record",
+          "sha256": "8979bb1c81fcd40515a309d729383e4a7c04b5856a51ca0efa1754fa3f81edb4"
+        },
+        "notebook_script": {
+          "path": "scripts/verify_asian_notebook.py",
+          "kind": "source",
+          "sha256": "0a69a0d19c6b527afabde0a451807f7afed14e18916f371a4873f2ecc7f48e12"
+        },
+        "notebook_check": {
+          "path": "docs/validation/section-26-13/notebook-m5b-check.json",
+          "kind": "record",
+          "sha256": "c463ce7dab1eaef352aea01b56a1cb9e540f92c8344c642d3c38d90455d0f797"
+        },
+        "m5b_check": {
+          "path": "docs/validation/section-26-13/m5b-check.json",
+          "kind": "record",
+          "sha256": "9825360d5bfec8a10231cfa302cddaec5cbb14b2a189d4473f793e114231aa78"
+        },
+        "payoff_image": {
+          "path": "docs/validation/section-26-13/book-asian_payoff-1000.png",
+          "kind": "image",
+          "sha256": "6a26798ea51742f7e53ee7a193ffe90cae981b752f703d4c63064f632cabf81a"
+        },
+        "distribution_image": {
+          "path": "docs/validation/section-26-13/book-asian_distribution-1000.png",
+          "kind": "image",
+          "sha256": "9e04987768e1b859a9001c573e9ce88357ac6b8df43363cca94e25154c8d2bdd"
+        },
+        "observations_image": {
+          "path": "docs/validation/section-26-13/book-asian_observations-1000.png",
+          "kind": "image",
+          "sha256": "9129c047f54fbb56da78e3ba273e697b26f92a18d1f1782f1ce5b77e3d1d9c72"
+        },
+        "error_image": {
+          "path": "docs/validation/section-26-13/book-asian_error-1000.png",
+          "kind": "image",
+          "sha256": "930ff1b7db263d69e0adfbe319229f8d60df8500b13dc592b5273405ff9ea6dd"
+        },
+        "domain_image": {
+          "path": "docs/validation/section-26-13/book-asian-domain-1000.png",
+          "kind": "image",
+          "sha256": "0e291fb78602f23a9c667f2f07d319c01dd64ecd158bb2164379b509aed46ff6"
         }
       }
     },

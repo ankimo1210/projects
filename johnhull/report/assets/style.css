@@ -174,3 +174,9 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1.1rem, 4vw, 2re
 
 /* Shout lesson: preserve readable node labels and boundary panels. */
 .fig-card:has([id^="fig-shout_"]) { grid-column: 1 / -1; }
+
+/* Asian lesson: the three-line notes and horizontal legends need the full row. */
+.fig-card:has(#fig-asian_payoff),
+.fig-card:has(#fig-asian_distribution),
+.fig-card:has(#fig-asian_observations),
+.fig-card:has(#fig-asian_error) { grid-column: 1 / -1; }

@@ -220,6 +220,71 @@ def control_variate_price(spot, strikes, rate, dividend, sigma, expiry, times, *
     return results
 
 
+def geometric_average_strike_price(spot, rate, dividend, sigma, expiry, times, kind):
+    """Exact average-strike price when the average is geometric.
+
+    The geometric average and the terminal price are jointly lognormal, so
+    Margrabe's exchange formula is exact here. Covariance of the logs is
+    ``sigma^2 * mean(times)`` because ``min(t_i, T) = t_i``.
+    """
+    dates = np.asarray(times, dtype=float)
+    count = dates.size
+    mean_time = float(dates.mean())
+    log_mean = math.log(spot) + (rate - dividend - 0.5 * sigma**2) * mean_time
+    log_variance = sigma**2 * float(np.minimum.outer(dates, dates).sum()) / count**2
+    average_forward = math.exp(log_mean + 0.5 * log_variance)
+    terminal_forward = spot * math.exp((rate - dividend) * expiry)
+    spread = math.sqrt(log_variance + sigma**2 * expiry - 2.0 * sigma**2 * mean_time)
+    d1 = (math.log(terminal_forward / average_forward) + 0.5 * spread**2) / spread
+    d2 = d1 - spread
+    discount = math.exp(-rate * expiry)
+    if kind == "call":
+        return discount * (terminal_forward * ndtr(d1) - average_forward * ndtr(d2))
+    return discount * (average_forward * ndtr(-d2) - terminal_forward * ndtr(-d1))
+
+
+def average_strike_price(spot, rate, dividend, sigma, expiry, times, *,
+                         paths=400_000, chunk=50_000, seed=20260917):
+    """Monte Carlo average-strike prices, with the geometric version as control."""
+    dates = np.asarray(times, dtype=float)
+    steps = np.diff(np.concatenate([[0.0], dates]))
+    drift = (rate - dividend - 0.5 * sigma**2) * steps
+    diffusion = sigma * np.sqrt(steps)
+    discount = math.exp(-rate * expiry)
+    generator = np.random.default_rng(seed)
+    exact = {kind: geometric_average_strike_price(spot, rate, dividend, sigma, expiry, dates, kind)
+             for kind in CONTRACTS}
+    collected = {kind: [] for kind in CONTRACTS}
+    done = 0
+    while done < paths:
+        size = min(chunk, paths - done)
+        done += size
+        noise = generator.standard_normal((size, dates.size))
+        logs = math.log(spot) + np.cumsum(drift + diffusion * noise, axis=1)
+        prices = np.exp(logs)
+        arithmetic = prices.mean(axis=1)
+        geometric = np.exp(logs.mean(axis=1))
+        terminal = prices[:, -1]
+        for kind in CONTRACTS:
+            if kind == "call":
+                plain = np.maximum(terminal - arithmetic, 0.0)
+                control = np.maximum(terminal - geometric, 0.0)
+            else:
+                plain = np.maximum(arithmetic - terminal, 0.0)
+                control = np.maximum(geometric - terminal, 0.0)
+            collected[kind].append((discount * plain, discount * control))
+    results = {}
+    for kind, chunks in collected.items():
+        plain = np.concatenate([item[0] for item in chunks])
+        control = np.concatenate([item[1] for item in chunks])
+        beta = np.cov(plain, control)[0, 1] / control.var(ddof=1)
+        adjusted = plain - beta * (control - exact[kind])
+        results[kind] = (float(adjusted.mean()),
+                         float(adjusted.std(ddof=1) / math.sqrt(adjusted.size)),
+                         exact[kind])
+    return results
+
+
 def continuous_limit(values, counts):
     """Richardson extrapolation of the 1/m discretisation: (m2*V2 - m1*V1)/(m2-m1)."""
     (count_low, value_low), (count_high, value_high) = zip(counts, values, strict=True)
@@ -314,6 +379,31 @@ def hull_example_checks():
     }
 
 
+def build_extensions(paths=400_000):
+    """Average-strike references: the extension the section names but never prices."""
+    rows = []
+    for market in MARKETS:
+        times = observation_times(market.expiry, 52)
+        estimates = average_strike_price(STRIKE, market.rate, market.dividend,
+                                         market.volatility, market.expiry, times, paths=paths)
+        for kind in CONTRACTS:
+            reference, error, geometric = estimates[kind]
+            rows.append({
+                "market": market.name,
+                "observations": 52,
+                "contract": kind,
+                "spot": STRIKE,
+                "rate": market.rate,
+                "dividend": market.dividend,
+                "volatility": market.volatility,
+                "expiry": market.expiry,
+                "reference": reference,
+                "standard_error": error,
+                "geometric_exact": geometric,
+            })
+    return rows
+
+
 def _project_relative(path: Path) -> str:
     """Record paths the way the ledger reads them, relative to the project root."""
     resolved = path.resolve()
@@ -336,6 +426,7 @@ def main(argv=None):
 
     rows = build_rows(args.paths)
     example = hull_example_checks()
+    extensions = build_extensions(args.paths)
 
     args.output.mkdir(parents=True, exist_ok=True)
     prices_path = args.output / "prices.json"
@@ -388,6 +479,13 @@ def main(argv=None):
             "largest_underprice": _case(under_ratio, under_row),
         },
         "hull_example_26_3": example,
+        "average_strike": {
+            "definition": "max(0, S_T - Save) and max(0, Save - S_T) with 52 observations.",
+            "method": ("Monte Carlo with the geometric-average version as control; that control is "
+                       "exact because the geometric average and the terminal price are jointly "
+                       "lognormal, so Margrabe applies without approximation."),
+            "rows": extensions,
+        },
         "units": {"spot_strike_price": "currency", "expiry": "years",
                   "rate_dividend": "continuously compounded per year", "volatility": "annual"},
         "assumptions": [
