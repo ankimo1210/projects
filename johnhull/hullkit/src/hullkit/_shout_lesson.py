@@ -83,13 +83,22 @@ def _finish(fig, key, states, titles, note, height=550):
         t.visible = t.meta["scenario"] == states[0]
     fig.update_layout(
         template="plotly_white",
-        height=height + 90,
-        title=dict(text=titles[states[0]], font_size=16, y=0.98, yanchor="top"),
+        height=height + 130,
+        title=dict(text=titles[states[0]], font_size=16, y=1 - 60 / (height + 130), yanchor="top"),
         meta=_meta(key, states[0]),
-        margin=dict(l=65, r=40, t=145, b=220),
+        margin=dict(l=65, r=40, t=185, b=220),
         font=dict(family="Arial, sans-serif", size=12),
         legend=dict(orientation="h", y=-60 / (height - 275), yanchor="top", x=0),
-        updatemenus=[dict(type="dropdown", buttons=buttons, x=1, xanchor="right", y=1.23)]
+        updatemenus=[
+            dict(
+                type="dropdown",
+                buttons=buttons,
+                x=1,
+                xanchor="right",
+                y=1 + 80 / (height - 275),
+                yanchor="top",
+            )
+        ]
         if len(states) > 1
         else [],
     )
