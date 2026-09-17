@@ -25,6 +25,11 @@ def risk_block() -> dict[str, Any]:
                 {"label": "米国", "value": 12650000.0, "pct": 0.275},
                 {"label": "台湾", "value": 598000.0, "pct": 0.013},
             ],
+            "region": [
+                {"label": "日本", "value": 31142000.0, "pct": 0.677},
+                {"label": "米国", "value": 12650000.0, "pct": 0.275},
+                {"label": "新興国", "value": 973000.0, "pct": 0.021},
+            ],
             "sector": [
                 {"label": "債券・現金等", "value": 16192000.0, "pct": 0.352},
                 {"label": "情報技術", "value": 15502000.0, "pct": 0.337},
@@ -112,7 +117,8 @@ def risk_block() -> dict[str, Any]:
                 {"label": "USD", "risk_share": 0.209, "weight": 0.295},
             ],
             "sector": [{"label": "情報技術", "risk_share": 0.82, "weight": 0.337}],
-            "country": [{"label": "日本", "risk_share": 0.784, "weight": 0.677}],
+            "country": [{"label": "台湾", "risk_share": 0.017, "weight": 0.013}],
+            "region": [{"label": "新興国", "risk_share": 0.021, "weight": 0.021}],
         },
         "stress": {
             "scenarios": [

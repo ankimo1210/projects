@@ -516,3 +516,9 @@ def test_limit_values_are_shares_unless_the_metric_is_a_count() -> None:
     assert mailer._limit_value("largest_foreign_country_ratio", 0.2712) == "27.1%"
     assert mailer._limit_value("worst_compound_drawdown", 0.17) == "17.0%"
     assert mailer._limit_value("sector_effective_count", 3.2177) == "3.2"
+
+
+def test_mail_shows_regions_under_country_and_region() -> None:
+    body = mailer.html_body(payload())
+    assert "新興国" in body  # the region table and its risk share
+    assert "台湾" not in body  # a country row would mix the two taxonomies

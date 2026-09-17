@@ -313,3 +313,11 @@ def test_limit_values_are_shares_unless_the_metric_is_a_count() -> None:
     assert dashboard._limit_value("largest_foreign_country_ratio", 0.2712) == "27.1%"
     assert dashboard._limit_value("worst_compound_drawdown", 0.17) == "17.0%"
     assert dashboard._limit_value("sector_effective_count", 3.2177) == "3.2"
+
+
+def test_dashboard_shows_regions_under_country_and_region() -> None:
+    from test_mailer import payload
+
+    page = dashboard.render(payload(), tokens_css="")
+    assert "新興国" in page
+    assert "台湾" not in page.split('id="data"')[0]  # the embedded payload still carries countries

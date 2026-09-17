@@ -650,7 +650,7 @@ def _risk(data: dict[str, Any], table_style: str) -> str:
             [(e["label"], e["pct"], f"{_ratio(e['pct'])} · {jpy(e['value'])}") for e in x[key][:5]],
             width=170,
         )
-        for key, title in (("currency", "通貨"), ("country", "国・地域"), ("sector", "セクター"))
+        for key, title in (("currency", "通貨"), ("region", "国・地域"), ("sector", "セクター"))
     )
     out += _section(
         "エクスポージャー", "ルックスルー後 · 総資産比 · DC は構成比で按分（推定）"
@@ -747,7 +747,7 @@ def _risk(data: dict[str, Any], table_style: str) -> str:
             + _delta(c["max_sector_ratio"], prev.get("max_sector_ratio")),
         ),
         (
-            "実効数（銘柄 · セクター · 通貨 · 国）",
+            "実効数（銘柄 · セクター · 通貨 · 国・地域）",
             " · ".join(
                 "—" if c.get(k) is None else f"{c[k]:.1f}"
                 for k in (
@@ -793,7 +793,7 @@ def _risk(data: dict[str, Any], table_style: str) -> str:
             for b in rc[key][:3]
         )
         + "</div>"
-        for key, title in (("currency", "通貨"), ("sector", "セクター"), ("country", "国・地域"))
+        for key, title in (("currency", "通貨"), ("sector", "セクター"), ("region", "国・地域"))
     )
     out += _section("リスク寄与", "分散への寄与 w·Σw / σ² · 合計 100%")
     out += (
