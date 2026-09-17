@@ -547,15 +547,18 @@ def strips(
         color = dn if value < 0 else up
         bar = (
             f'<table cellspacing="0" cellpadding="0" border="0"><tr>'
-            f'<td width="{px}"{_fill(color if px else None)} style="font:0/0 a">&nbsp;</td>'
+            f'<td width="{px}" height="{bar_h}"{_fill(color if px else None)} style="font:0/0 a">&nbsp;</td>'
             f'<td width="{width - px}" style="font:0/0 a">&nbsp;</td></tr></table>'
         )
+        # the label has a line of its own: beside the bar and the note it had a few
+        # characters per line on a phone
         out.append(
             "<tr>"
-            f'<td style="font:400 11.5px {SANS};color:{INK};padding:2px 8px 2px 0">{html.escape(label)}</td>'
-            f'<td width="{width}" style="padding:2px 0;vertical-align:middle">{bar}</td>'
+            f'<td colspan="2" style="font:400 11.5px {SANS};color:{INK};padding:5px 0 1px">'
+            f"{html.escape(label)}</td></tr><tr>"
+            f'<td width="{width}" style="padding:0 0 2px;vertical-align:middle">{bar}</td>'
             f'<td align="right" style="font:400 11px {MONO};color:{MUTED};'
-            f'padding:2px 0 2px 8px;white-space:nowrap">{html.escape(note)}</td>'
+            f'padding:0 0 2px 8px;white-space:nowrap">{html.escape(note)}</td>'
             "</tr>"
         )
     return (

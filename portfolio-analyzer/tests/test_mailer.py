@@ -504,7 +504,7 @@ def test_warnings_lead_both_bodies() -> None:
     data["warnings"] = ["図を画像にできませんでした（ヘッドレスブラウザが見つからない）"]
     html_text = mailer.html_body(data)
     head = html_text.index("図を画像にできませんでした")
-    assert head < html_text.index("総資産")
+    assert head < html_text.index("総資産 ¥")  # before the figures (the hidden preview line aside)
     assert "background:" not in html_text[head - 400 : head]  # Gmail strips the shorthand
     text = mailer.text_body(data)
     assert text.index("! 図を画像にできませんでした") < text.index("総資産")
@@ -522,3 +522,30 @@ def test_mail_shows_regions_under_country_and_region() -> None:
     body = mailer.html_body(payload())
     assert "新興国" in body  # the region table and its risk share
     assert "台湾" not in body  # a country row would mix the two taxonomies
+
+
+def test_the_inbox_preview_carries_the_numbers_and_stays_hidden() -> None:
+    data = payload()
+    line = mailer.preheader(data)
+    assert line.startswith("総資産 46,257,970 円 · 日次 −450,566 円")
+    body = mailer.html_body(data)
+    hidden = body.index('<div style="display:none;')
+    assert body.index(line) > hidden and body.index(line) < body.index("DAILY MARK-TO-MARKET")
+
+
+def test_the_heading_is_sized_for_a_mail_client_not_a_page() -> None:
+    body = mailer.html_body(payload())
+    assert "Georgia" not in body and "font:700 20px" not in body and "font:600 21px" not in body
+    assert "font:700 15px" in body  # the date line
+    assert "font:600 17px" in body  # the headline figures
+
+
+def test_holdings_wrap_two_by_two_on_a_narrow_screen() -> None:
+    body = mailer.html_body(payload())
+    # the four blocks of each holding fit a 600px column in one row and pair up below that
+    assert sum(mailer.HOLDING_WIDTHS) <= 580
+    assert mailer.HOLDING_WIDTHS[0] + mailer.HOLDING_WIDTHS[1] <= 300
+    assert mailer.HOLDING_WIDTHS[2:] == mailer.HOLDING_WIDTHS[:2]  # so the pairs line up
+    for label in ("銘柄 · 1D · 1Y", "評価額 ¥", "日次 ¥", "含み ¥"):
+        assert label in body
+    assert "値動き 1Y" not in body  # the old seven-column head
