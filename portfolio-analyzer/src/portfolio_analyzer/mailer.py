@@ -533,40 +533,32 @@ def _kpi_cell(
     )
 
 
-# Holdings as fixed-width blocks instead of table columns: in a 600px column the four sit in
-# one row; on a phone they wrap two by two, and every row (the head too) wraps the same way,
-# so the figures still line up. A 7-column table needs ~594px and makes Gmail's app shrink
-# the whole mail to fit.
-HOLDING_WIDTHS = (150, 130, 150, 130)
-
-
-def _holding_block(inner: str, width: int, align: str, color: str, pad: str = "7px 0") -> str:
-    tone = f"color:{color};" if color != INK else ""
-    return (
-        f'<div style="display:inline-block;vertical-align:top;width:{width}px;'
-        f'text-align:{align};padding:{pad};{tone}">{inner}</div>'
-    )
+# Holdings: a plain four-column table. The seven columns of before needed ~594px, which made
+# the Gmail app shrink the whole mail; laying the four out as inline-block divs instead came out
+# broken in Gmail (2026-09-18), so the price change and the sparkline moved under the name and
+# the rest stays a table, which every client lays out the same way.
+HOLDING_COLUMNS = ("銘柄 · 1D · 1Y", "評価額 ¥", "日次 ¥", "含み ¥")
 
 
 def _holding_head() -> str:
-    labels = ("銘柄 · 1D · 1Y", "評価額 ¥", "日次 ¥", "含み ¥")
-    blocks = "".join(
-        _holding_block(label, width, "left" if n == 0 else "right", MUTED, pad="6px 0 5px")
-        for n, (label, width) in enumerate(zip(labels, HOLDING_WIDTHS, strict=True))
-    )
     return (
-        f'<div style="border-bottom:1px solid {RULE};font:500 10px {MONO};'
-        f'letter-spacing:.06em">{blocks}</div>'
+        "<tr>"
+        + "".join(
+            _th(label, "left" if n == 0 else "right") for n, label in enumerate(HOLDING_COLUMNS)
+        )
+        + "</tr>"
     )
 
 
 def _holding_row(cells: tuple[tuple[str, str], ...], last: bool) -> str:
-    blocks = "".join(
-        _holding_block(inner, width, "left" if n == 0 else "right", color)
-        for n, ((inner, color), width) in enumerate(zip(cells, HOLDING_WIDTHS, strict=True))
+    return (
+        "<tr>"
+        + "".join(
+            _td(inner, "left" if n == 0 else "right", color, SANS if n == 0 else None, last)
+            for n, (inner, color) in enumerate(cells)
+        )
+        + "</tr>"
     )
-    border = "" if last else f"border-bottom:1px solid {RULE};"
-    return f'<div style="{border}font:400 12px {MONO}">{blocks}</div>'
 
 
 def _th(text: str, align: str = "right") -> str:
@@ -1084,7 +1076,8 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
 {_risk(data, table_style)}
 {_attribution(data.get("attribution"), table_style, {a["id"]: a["name"] for a in data.get("accounts") or []})}
 {_section("保有", "評価額の大きい順 · 1Y は直近 1 年の株価")}
-{_card(_holding_head() + pos_rows, pad="0 10px")}
+<table role="presentation" cellspacing="0" cellpadding="0" {table_style}>
+{_holding_head()}{pos_rows}</table>
 {_closed(data.get("closed"), table_style)}
 {charts}
 <div style="font:400 11px/1.7 {SANS};color:{MUTED};margin-top:16px">

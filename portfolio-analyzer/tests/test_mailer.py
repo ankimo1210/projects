@@ -540,15 +540,16 @@ def test_the_heading_is_sized_for_a_mail_client_not_a_page() -> None:
     assert "font:600 17px" in body  # the headline figures
 
 
-def test_holdings_wrap_two_by_two_on_a_narrow_screen() -> None:
+def test_holdings_are_a_four_column_table() -> None:
+    # seven columns needed ~594px and the Gmail app shrank the whole mail to fit; inline-block
+    # blocks came out broken in Gmail, so the day and year changes sit under the name instead
     body = mailer.html_body(payload())
-    # the four blocks of each holding fit a 600px column in one row and pair up below that
-    assert sum(mailer.HOLDING_WIDTHS) <= 580
-    assert mailer.HOLDING_WIDTHS[0] + mailer.HOLDING_WIDTHS[1] <= 300
-    assert mailer.HOLDING_WIDTHS[2:] == mailer.HOLDING_WIDTHS[:2]  # so the pairs line up
-    for label in ("銘柄 · 1D · 1Y", "評価額 ¥", "日次 ¥", "含み ¥"):
+    table = body[body.index("評価額の大きい順") :]
+    assert table[: table.index("</table>", table.index("<table"))].count("<th") == 4
+    for label in mailer.HOLDING_COLUMNS:
         assert label in body
     assert "値動き 1Y" not in body  # the old seven-column head
+    assert "display:inline-block;vertical-align:top;width:" not in body
 
 
 def test_the_fx_row_says_what_a_one_percent_move_does_on_its_own() -> None:
