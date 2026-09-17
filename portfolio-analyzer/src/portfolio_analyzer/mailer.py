@@ -640,7 +640,8 @@ def _delta(cur: float | None, prev: float | None, unit: str = "pt", digits: int 
     if cur is None or prev is None:
         return ""
     d = (float(cur) - float(prev)) * (100 if unit == "pt" else 1)
-    text = f"{d:+.{digits}f}".replace("-", "−")
+    # a change that rounds to nothing is ±, never −0.0
+    text = f"±{0:.{digits}f}" if round(d, digits) == 0 else f"{d:+.{digits}f}".replace("-", "−")
     return _under(f"前日比 {text}{unit if unit == 'pt' else ''}")
 
 
@@ -776,6 +777,9 @@ def _risk(data: dict[str, Any], table_style: str) -> str:
         (
             "ベータ USD/JPY",
             num(beta.get("usdjpy"))
+            # the regression slope is not the direct sensitivity: say what a 1% move does
+            # to the book at unchanged local prices (that is the foreign-currency share)
+            + _under(f"円安 1% で {pct(c['foreign_currency_ratio'])}（株価一定）")
             + _delta(beta.get("usdjpy"), prev.get("beta_usdjpy"), unit="", digits=2),
         ),
         (

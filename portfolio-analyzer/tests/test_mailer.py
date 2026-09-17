@@ -549,3 +549,15 @@ def test_holdings_wrap_two_by_two_on_a_narrow_screen() -> None:
     for label in ("銘柄 · 1D · 1Y", "評価額 ¥", "日次 ¥", "含み ¥"):
         assert label in body
     assert "値動き 1Y" not in body  # the old seven-column head
+
+
+def test_the_fx_row_says_what_a_one_percent_move_does_on_its_own() -> None:
+    # the regression slope answers a different question from "how much is in foreign currency"
+    body = mailer.html_body(payload())
+    assert "ベータ USD/JPY" in body and "円安 1% で +0.32%（株価一定）" in body
+
+
+def test_a_change_that_rounds_to_nothing_is_not_a_signed_zero() -> None:
+    assert "±0.0pt" in mailer._delta(0.3189, 0.3190)
+    assert "±0.00" in mailer._delta(0.512, 0.5124, unit="", digits=2)
+    assert "−0.1pt" in mailer._delta(0.156, 0.1572)

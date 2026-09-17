@@ -162,6 +162,19 @@ def test_lookthrough_merges_an_issuer_held_directly_and_through_a_fund() -> None
     assert x["mix"]["SMH"]["country"] == pytest.approx({"米国": 0.9, "台湾": 0.1})
 
 
+def test_the_same_symbol_in_two_accounts_is_one_position() -> None:
+    # 1329 held at two brokers is one name's worth of concentration, not two
+    rows = [*holdings(), risk.Holding("1329", "gb", 200.0, "JPY", "日本株", "1329.T")]
+    x = risk.lookthrough(rows, REFERENCE)
+    c = risk.concentration(rows, x)
+    assert c["largest_position_ratio"] == 600.0 / 2200.0  # SMH, still the largest
+    assert math.isclose(c["top5_ratio"], (600.0 + 400.0 + 100.0 + 100.0) / 2200.0)
+    merged = 1.0 / sum((v / 1200.0) ** 2 for v in (600.0, 400.0, 100.0, 100.0))
+    split = 1.0 / sum((v / 1200.0) ** 2 for v in (600.0, 200.0, 200.0, 100.0, 100.0))
+    assert math.isclose(c["effective_positions"], merged)
+    assert merged < split  # counting the two lots apart would look more diversified than it is
+
+
 def test_concentration_metrics() -> None:
     x = risk.lookthrough(holdings(), REFERENCE)
     c = risk.concentration(holdings(), x)

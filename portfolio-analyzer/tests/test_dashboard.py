@@ -321,3 +321,10 @@ def test_dashboard_shows_regions_under_country_and_region() -> None:
     page = dashboard.render(payload(), tokens_css="")
     assert "新興国" in page
     assert "台湾" not in page.split('id="data"')[0]  # the embedded payload still carries countries
+
+
+def test_dashboard_fx_row_also_carries_the_direct_sensitivity() -> None:
+    from test_mailer import payload
+
+    page = dashboard.render(payload(), tokens_css="")
+    assert "ベータ USD/JPY" in page and "円安 1% で +0.32%" in page
