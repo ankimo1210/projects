@@ -200,7 +200,10 @@ def test_line_writes_the_ticks_under_the_plot() -> None:
 
 def test_strips_are_proportional_to_the_magnitude_and_coloured_by_sign() -> None:
     html = emailchart.strips([("A", -10.0, "−10%"), ("B", 5.0, "+5%"), ("C", 0.0, "0%")], width=100)
-    assert 'width="100" bgcolor="#2A6DA6"' in html  # the loss, full length, in the down colour
-    assert 'width="50" bgcolor="#C05C33"' in html  # half as long, in the up colour
-    assert 'width="0" style' in html and "background" not in html
-    assert html.count("<tr>") == 3 + 3  # one row each, and one bar table each
+    assert (
+        'width="100" height="8" bgcolor="#2A6DA6"' in html
+    )  # the loss, full length, in the down colour
+    assert 'width="50" height="8" bgcolor="#C05C33"' in html  # half as long, in the up colour
+    # the cell carries its own height: with font:0/0 and no text it would collapse to nothing
+    assert 'width="0" height="8" style' in html and "background" not in html
+    assert html.count("<tr>") == 3 * 2 + 3  # a label row and a bar row each, and one bar table each

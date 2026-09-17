@@ -132,6 +132,18 @@ def subject(data: dict[str, Any]) -> str:
     )
 
 
+def preheader(data: dict[str, Any]) -> str:
+    """The inbox preview line: the numbers, not the mail's heading repeated after the subject."""
+    h = data["headline"]
+    breaches = (data.get("risk") or {}).get("policy_breaches")
+    return _joined(
+        f"総資産 {jpy(h['nav_total'])} 円",
+        f"日次 {jpy(h['day_pnl'], True)} 円（{pct(h['day_pnl_pct'])}）",
+        f"含み {jpy(h['unrealized_known'], True)} 円",
+        f"限度超過 {breaches} 件" if breaches else "",
+    )
+
+
 def _nav_after_tax(h: dict[str, Any]) -> str:
     """Total assets after the estimated tax on unrealised gains (unsigned: it is a balance)."""
     return "" if h.get("nav_after_tax") is None else f"税引後 {jpy(h['nav_after_tax'])}"
@@ -283,13 +295,14 @@ def _nearest(idx: list[int], i: int) -> int:
 
 def _section(title: str, sub: str = "") -> str:
     right = (
-        f'<td align="right" style="font:400 11px {MONO};color:{MUTED};white-space:nowrap">{html.escape(sub)}</td>'
+        f'<td align="right" style="font:400 11px {MONO};color:{MUTED}">{html.escape(sub)}</td>'
         if sub
         else ""
     )
     return (
         f'<table width="100%" cellspacing="0" cellpadding="0" style="margin:22px 0 6px"><tr>'
-        f'<td style="font:700 13px {SANS};color:{INK}">{html.escape(title)}</td>{right}</tr></table>'
+        f'<td style="font:700 13px {SANS};color:{INK};white-space:nowrap;padding-right:8px">'
+        f"{html.escape(title)}</td>{right}</tr></table>"
     )
 
 
@@ -512,12 +525,48 @@ def _kpi_cell(
         else ""
     )
     return (
-        f'<td width="50%" bgcolor="{CARD}" style="padding:11px 13px;border:1px solid {RULE};'
+        f'<td width="50%" bgcolor="{CARD}" style="padding:10px 12px;border:1px solid {RULE};'
         f'border-radius:8px;vertical-align:top">'
         f'<div style="font:500 10px {MONO};letter-spacing:.1em;color:{MUTED}">{html.escape(label)}</div>'
-        f'<div style="font:600 21px {MONO};color:{tone};margin-top:5px">{value}</div>{in_usd}'
+        f'<div style="font:600 17px {MONO};color:{tone};margin-top:4px">{value}</div>{in_usd}'
         f'<div style="font:400 11px {SANS};color:{MUTED};margin-top:3px">{html.escape(sub)}</div>{second}</td>'
     )
+
+
+# Holdings as fixed-width blocks instead of table columns: in a 600px column the four sit in
+# one row; on a phone they wrap two by two, and every row (the head too) wraps the same way,
+# so the figures still line up. A 7-column table needs ~594px and makes Gmail's app shrink
+# the whole mail to fit.
+HOLDING_WIDTHS = (150, 130, 150, 130)
+
+
+def _holding_block(inner: str, width: int, align: str, color: str, pad: str = "7px 0") -> str:
+    tone = f"color:{color};" if color != INK else ""
+    return (
+        f'<div style="display:inline-block;vertical-align:top;width:{width}px;'
+        f'text-align:{align};padding:{pad};{tone}">{inner}</div>'
+    )
+
+
+def _holding_head() -> str:
+    labels = ("銘柄 · 1D · 1Y", "評価額 ¥", "日次 ¥", "含み ¥")
+    blocks = "".join(
+        _holding_block(label, width, "left" if n == 0 else "right", MUTED, pad="6px 0 5px")
+        for n, (label, width) in enumerate(zip(labels, HOLDING_WIDTHS, strict=True))
+    )
+    return (
+        f'<div style="border-bottom:1px solid {RULE};font:500 10px {MONO};'
+        f'letter-spacing:.06em">{blocks}</div>'
+    )
+
+
+def _holding_row(cells: tuple[tuple[str, str], ...], last: bool) -> str:
+    blocks = "".join(
+        _holding_block(inner, width, "left" if n == 0 else "right", color)
+        for n, ((inner, color), width) in enumerate(zip(cells, HOLDING_WIDTHS, strict=True))
+    )
+    border = "" if last else f"border-bottom:1px solid {RULE};"
+    return f'<div style="{border}font:400 12px {MONO}">{blocks}</div>'
 
 
 def _th(text: str, align: str = "right") -> str:
@@ -960,6 +1009,13 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
         name = (
             f'<div style="font:600 12px {SANS};color:{INK}">{html.escape(p["sym"])}</div>'
             f'<div style="font:400 10.5px {SANS};color:{MUTED};white-space:nowrap">{html.escape(p["acct"])}</div>'
+            f'<div style="font:400 11px {MONO};color:{MUTED};white-space:nowrap;margin:2px 0">'
+            f'1D <span style="color:{_tone(p["chg1d"])}">{pct(p["chg1d"])}</span> · '
+            f'1Y <span style="color:{_tone(p["chg1y"])}">{pct(p["chg1y"], 1)}</span></div>'
+            + (
+                _img(images, f"spark:{p.get('key', p['sym'])}", fluid=False, width=64)
+                or _spark(p.get("spark") or [])
+            )
         )
         unreal = (
             jpy(p["unreal"], True)
@@ -969,38 +1025,20 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
             if p.get("unreal") is not None
             else "原価なし"
         )
-        pos_rows += (
-            "<tr>"
-            + _td(name, "left", INK, SANS, last)
-            + _td(pct(p["chg1d"]), "right", _tone(p["chg1d"]), None, last)
-            + _td(
-                _img(images, f"spark:{p.get('key', p['sym'])}", fluid=False, width=64)
-                or _spark(p.get("spark") or []),
-                "left",
-                INK,
-                None,
-                last,
-            )
-            + _td(pct(p["chg1y"], 1), "right", _tone(p["chg1y"]), None, last)
-            + _td(jpy(p["value"]) + _under(usd(p["value"], rate)), "right", INK, None, last)
-            + _td(
-                jpy(p["day_pnl"], True)
-                + _split_cell(
-                    p, "day_stock", "day_fx", "day_after_tax", usd(p["day_pnl"], rate, True)
+        pos_rows += _holding_row(
+            (
+                (name, INK),
+                (jpy(p["value"]) + _under(usd(p["value"], rate)), INK),
+                (
+                    jpy(p["day_pnl"], True)
+                    + _split_cell(
+                        p, "day_stock", "day_fx", "day_after_tax", usd(p["day_pnl"], rate, True)
+                    ),
+                    _tone(p["day_pnl"]),
                 ),
-                "right",
-                _tone(p["day_pnl"]),
-                None,
-                last,
-            )
-            + _td(
-                unreal,
-                "right",
-                _tone(p.get("unreal")),
-                None if p.get("unreal") is not None else SANS,
-                last,
-            )
-            + "</tr>"
+                (unreal, _tone(p.get("unreal"))),
+            ),
+            last,
         )
     table_style = (
         f'bgcolor="{CARD}" style="border-collapse:collapse;width:100%;color:{INK};'
@@ -1026,11 +1064,12 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
         )
     notes = "".join(f'<li style="margin:0 0 4px">{html.escape(n)}</li>' for n in _notes(data))
     return f"""<table width="100%" cellspacing="0" cellpadding="0" bgcolor="{GROUND}"><tr>
-<td style="padding:18px 12px;font-family:{SANS};color:{INK}">
+<td style="padding:16px 12px;font-family:{SANS};color:{INK};-webkit-text-size-adjust:100%">
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all">{html.escape(preheader(data))}</div>
 <div style="max-width:600px;margin:0 auto">
-<div style="font:400 11px {MONO};letter-spacing:.12em;color:{MUTED}">DAILY MARK-TO-MARKET</div>
-<div style="font:700 20px/1.3 Georgia,serif;margin:6px 0 2px">日次損益 {html.escape(data["as_of"] + _edition(data))}</div>
-<div style="font:400 12px {SANS};color:{MUTED};margin-bottom:14px">USD/JPY {float(data["fx"]["last"]):.2f}（{pct(data["fx"]["chg_pct"])}）· 生成 {html.escape(str(data["generated_at"])[:16].replace("T", " "))}</div>
+<div style="font:400 10px {MONO};letter-spacing:.12em;color:{MUTED}">DAILY MARK-TO-MARKET</div>
+<div style="font:700 15px/1.4 {SANS};margin:4px 0 1px">日次損益 {html.escape(data["as_of"] + _edition(data))}</div>
+<div style="font:400 11.5px {SANS};color:{MUTED};margin-bottom:12px">USD/JPY {float(data["fx"]["last"]):.2f}（{pct(data["fx"]["chg_pct"])}）· 生成 {html.escape(str(data["generated_at"])[:16].replace("T", " "))}</div>
 {_warning_box(data)}
 {f'<div style="font:400 11.5px/1.8 {MONO};color:{MUTED};margin-bottom:12px">{tape}</div>' if tape else ""}
 {kpis}
@@ -1041,8 +1080,7 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
 {_risk(data, table_style)}
 {_attribution(data.get("attribution"), table_style, {a["id"]: a["name"] for a in data.get("accounts") or []})}
 {_section("保有", "評価額の大きい順 · 1Y は直近 1 年の株価")}
-<table role="presentation" cellspacing="0" cellpadding="0" {table_style}>
-<tr>{_th("銘柄", "left")}{_th("1D")}{_th("値動き 1Y", "left")}{_th("1Y")}{_th("評価額 ¥")}{_th("日次 ¥")}{_th("含み ¥")}</tr>{pos_rows}</table>
+{_card(_holding_head() + pos_rows, pad="0 10px")}
 {_closed(data.get("closed"), table_style)}
 {charts}
 <div style="font:400 11px/1.7 {SANS};color:{MUTED};margin-top:16px">
