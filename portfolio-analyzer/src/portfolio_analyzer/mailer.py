@@ -137,11 +137,27 @@ def _nav_after_tax(h: dict[str, Any]) -> str:
     return "" if h.get("nav_after_tax") is None else f"税引後 {jpy(h['nav_after_tax'])}"
 
 
+def _warning_box(data: dict[str, Any]) -> str:
+    """Problems with this run itself (not the portfolio), at the top where they are seen.
+    Colour by attribute and longhand CSS only: Gmail strips the ``background`` shorthand."""
+    warnings = [str(w) for w in data.get("warnings") or []]
+    if not warnings:
+        return ""
+    items = "<br>".join(html.escape(w) for w in warnings)
+    return (
+        f'<table role="presentation" width="100%" cellspacing="0" cellpadding="0" bgcolor="{CARD}" '
+        f'style="border-left:3px solid {UP};margin:0 0 12px"><tr>'
+        f'<td style="padding:8px 12px;font:400 12px/1.7 {SANS};color:{INK}"><b>このメールの注意</b><br>{items}</td>'
+        "</tr></table>"
+    )
+
+
 def text_body(data: dict[str, Any]) -> str:
     h, w = data["headline"], data["window"]
     rate = data["fx"]["last"]
     lines = [
         f"日次損益 {data['as_of']}{_edition(data)}  (USD/JPY {float(data['fx']['last']):.2f})",
+        *[f"! {warning}" for warning in data.get("warnings") or []],
         "",
         f"総資産          {jpy(h['nav_total']):>14} 円  {usd(h['nav_total'], rate):>10}  (時価評価 {int(h['quoted_share'] * 100)}%)",
         f"                {_nav_after_tax(h)}",
@@ -1013,6 +1029,7 @@ def html_body(data: dict[str, Any], images: Images | None = None) -> str:
 <div style="font:400 11px {MONO};letter-spacing:.12em;color:{MUTED}">DAILY MARK-TO-MARKET</div>
 <div style="font:700 20px/1.3 Georgia,serif;margin:6px 0 2px">日次損益 {html.escape(data["as_of"] + _edition(data))}</div>
 <div style="font:400 12px {SANS};color:{MUTED};margin-bottom:14px">USD/JPY {float(data["fx"]["last"]):.2f}（{pct(data["fx"]["chg_pct"])}）· 生成 {html.escape(str(data["generated_at"])[:16].replace("T", " "))}</div>
+{_warning_box(data)}
 {f'<div style="font:400 11.5px/1.8 {MONO};color:{MUTED};margin-bottom:12px">{tape}</div>' if tape else ""}
 {kpis}
 {_section("口座別", "評価額 / 日次 / 含み")}
