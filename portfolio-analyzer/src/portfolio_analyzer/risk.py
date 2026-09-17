@@ -213,7 +213,12 @@ def _hhi(values: Sequence[float]) -> float:
 def concentration(holdings: Sequence[Holding], exposures: dict[str, Any]) -> dict[str, Any]:
     """Concentration as ratios of total assets (the sector effective count over the equity part)."""
     total = float(exposures["total"])
-    invested = sorted((float(h.value_jpy) for h in holdings if not h.is_cash), reverse=True)
+    # by symbol, not by holding: the same ETF in two accounts is one position's worth of risk
+    by_symbol: dict[str, float] = {}
+    for h in holdings:
+        if not h.is_cash:
+            by_symbol[h.symbol] = by_symbol.get(h.symbol, 0.0) + float(h.value_jpy)
+    invested = sorted(by_symbol.values(), reverse=True)
     sectors = [r for r in exposures["sector"] if r["label"] != NON_EQUITY_SECTOR]
     # countries only: a region row (欧州, 新興国, …) is not a single country
     foreign = [

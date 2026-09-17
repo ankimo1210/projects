@@ -157,7 +157,8 @@ def _delta(cur: float | None, prev: float | None, unit: str = "pt", digits: int 
     if cur is None or prev is None:
         return ""
     d = (float(cur) - float(prev)) * (100 if unit == "pt" else 1)
-    text = f"{d:+.{digits}f}".replace("-", "−")
+    # a change that rounds to nothing is ±, never −0.0
+    text = f"±{0:.{digits}f}" if round(d, digits) == 0 else f"{d:+.{digits}f}".replace("-", "−")
     return f"<small class='{cls(d)}'>前日比 {text}{unit if unit == 'pt' else ''}</small>"
 
 
@@ -278,7 +279,9 @@ def _risk(risk: dict[str, Any] | None) -> str:
         ),
         (
             "ベータ USD/JPY",
-            "—" if beta.get("usdjpy") is None else f"{beta['usdjpy']:.2f}",
+            ("—" if beta.get("usdjpy") is None else f"{beta['usdjpy']:.2f}")
+            # the slope is not the direct sensitivity: a 1% move at unchanged local prices
+            + f" <small>円安 1% で {pct(c['foreign_currency_ratio'])}</small>",
             _delta(beta.get("usdjpy"), prev.get("beta_usdjpy"), unit="", digits=2),
         ),
         (
