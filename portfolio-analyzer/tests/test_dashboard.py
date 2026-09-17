@@ -306,3 +306,10 @@ def test_overview_sorts_risk_contributors_and_does_not_call_missing_policy_zero(
     assert overview.index("6857") < overview.index("SMH")
     assert "未取得" in overview
     assert "超過 0 件" not in overview
+
+
+def test_limit_values_are_shares_unless_the_metric_is_a_count() -> None:
+    # "country" contains "count": the foreign-country limit is a share like the others
+    assert dashboard._limit_value("largest_foreign_country_ratio", 0.2712) == "27.1%"
+    assert dashboard._limit_value("worst_compound_drawdown", 0.17) == "17.0%"
+    assert dashboard._limit_value("sector_effective_count", 3.2177) == "3.2"

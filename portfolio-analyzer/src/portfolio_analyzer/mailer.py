@@ -598,7 +598,9 @@ def _delta(cur: float | None, prev: float | None, unit: str = "pt", digits: int 
 def _limit_value(metric: str, value: float | None) -> str:
     if value is None:
         return "—"
-    return f"{float(value):.1f}" if "effective" in metric or "count" in metric else _ratio(value)
+    # whole words: "largest_foreign_country_ratio" contains "count" but is a share
+    words = set(metric.split("_"))
+    return f"{float(value):.1f}" if words & {"effective", "count"} else _ratio(value)
 
 
 def _heading(text: str) -> str:

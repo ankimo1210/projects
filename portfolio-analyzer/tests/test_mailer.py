@@ -509,3 +509,10 @@ def test_warnings_lead_both_bodies() -> None:
     text = mailer.text_body(data)
     assert text.index("! 図を画像にできませんでした") < text.index("総資産")
     assert "図を画像にできませんでした" not in mailer.html_body(payload())
+
+
+def test_limit_values_are_shares_unless_the_metric_is_a_count() -> None:
+    # "country" contains "count": the foreign-country limit is a share like the others
+    assert mailer._limit_value("largest_foreign_country_ratio", 0.2712) == "27.1%"
+    assert mailer._limit_value("worst_compound_drawdown", 0.17) == "17.0%"
+    assert mailer._limit_value("sector_effective_count", 3.2177) == "3.2"
