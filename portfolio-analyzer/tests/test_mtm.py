@@ -494,3 +494,25 @@ def test_tax_note_ignores_positions_without_pnl() -> None:
     }
     rows = mtm.mark_positions(snap, quotes(), FX, ledger=nisa)
     assert "海外証券口座 NISA 0%。" in mtm.tax_note(snap, rows, mtm.net_tax(rows))
+
+
+def test_bar_is_final_waits_for_each_market_s_close() -> None:
+    from datetime import date, datetime
+    from zoneinfo import ZoneInfo
+
+    jst = ZoneInfo("Asia/Tokyo")
+    day = date(2026, 9, 16)
+    # Tokyo closes 15:30 JST
+    assert not mtm.bar_is_final("6857.T", day, datetime(2026, 9, 16, 11, 1, tzinfo=jst))
+    assert mtm.bar_is_final("6857.T", day, datetime(2026, 9, 16, 16, 30, tzinfo=jst))
+    # New York closes 16:00 ET = 05:00 JST next day in summer
+    assert not mtm.bar_is_final("SMH", day, datetime(2026, 9, 16, 23, 50, tzinfo=jst))
+    assert not mtm.bar_is_final("SMH", day, datetime(2026, 9, 17, 4, 59, tzinfo=jst))
+    assert mtm.bar_is_final("SMH", day, datetime(2026, 9, 17, 7, 30, tzinfo=jst))
+    # after the switch to standard time it is 06:00 JST
+    winter = date(2026, 12, 1)
+    assert not mtm.bar_is_final("SMH", winter, datetime(2026, 12, 2, 5, 30, tzinfo=jst))
+    assert mtm.bar_is_final("SMH", winter, datetime(2026, 12, 2, 6, 0, tzinfo=jst))
+    # earlier bars are closes; FX trades around the clock and is taken live on purpose
+    assert mtm.bar_is_final("SMH", date(2026, 9, 15), datetime(2026, 9, 16, 23, 50, tzinfo=jst))
+    assert mtm.bar_is_final(mtm.FX_SYMBOL, day, datetime(2026, 9, 16, 23, 50, tzinfo=jst))
