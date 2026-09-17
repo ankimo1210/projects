@@ -93,6 +93,10 @@ HTML冒頭には基準日より古い価格の注意を表示。一般データ�
   取引の無い日は前の終値のまま据え置くので、まだ開いていない市場（東京の夕方の米国株）や片方だけの祝日の銘柄は
   株の変化 0・FX だけになり、値動きは次に取引された日のレポートに 1 回だけ入ります（銘柄ごとの直近 2 終値を
   使っていた 2026-09-14 までは、閉まっている市場の前日の動きを繰り返し計上していた）。月曜は週末をまたぎます。
+- **取引時間中の足は使いません。** 市場が開いている間、yfinance はその日の足に途中の価格を入れて返すので、
+  引け（東京 15:30 JST、ニューヨーク 16:00 ET）より前のその日の足は捨てて前日の終値を使います
+  （`mtm.bar_is_final`）。USD/JPY は 24 時間動くので、その時点の値をそのまま使います。夜中に手で回しても
+  履歴にはその日の途中の値が入らず、米国株は東京引けの回と同じく為替の動きだけになります。
 - 株 / FX の分解（ヘッドライン・口座別・保有ごと、値のみ）。株 ＋ FX ＝ 合計が厳密に成り立ちます。
   - 日次: 株 ＝ 数量 ×（終値 − 前日終値）× 当日レート、FX ＝ 日次損益 − 株（＝ 数量 × 前日終値 × レート変化）。
   - 含み: FX ＝ 取得原価（外貨）×（現在レート − 取得時平均レート）、株 ＝ 含み損益 − FX（手数料と交差項は株側）。
@@ -182,6 +186,7 @@ HTML冒頭には基準日より古い価格の注意を表示。一般データ�
 
 朝の回は前日夕方の回と同じ基準日で、履歴（`mtm-history.private.jsonl`）とレポートを上書きします。
 日本だけの祝日の 16:30 は、日本株が動かず為替だけの回になります。
+PC がスリープ中で時刻を過ぎた回は、起動から 10 分ほどで遅れて走ります（`StartWhenAvailable`、スリープ解除はしない）。
 
 ```powershell
 powershell.exe -ExecutionPolicy Bypass -File \\wsl$\Ubuntu\home\kazumasa\projects\portfolio-analyzer\scripts\windows\register_task.ps1
@@ -209,6 +214,18 @@ NAV と累計入金・累計損益・期間全体の日次損益・銘柄ごと�
 ヘッドレス Chromium に描かせ、ページが公開する各図の位置（`<body data-pieces>`）で 2 倍解像度のスクリーンショットを
 切り出します。NAV・累計損益・日次損益・銘柄カードの株価と損益・保有表のスパークラインで計 36 枚、500 KB 前後。
 HTML 本体は画像を含まないので小さく、Gmail の折りたたみにかかりにくくなります。
+
+ブラウザは `~/.cache/ms-playwright/chromium-*/chrome-linux*/chrome` から探します（`chartshot.find_chrome`）。
+ここは他のプロジェクトの Playwright と共有なので、そちらの `playwright install` で消えたり入れ替わったりします。
+2026-09-16 には Node 26 で動かした Playwright 1.58 のインストーラーが展開の途中で止まり、本体の無い
+`chromium-1208` だけが残って、メールの図が黙ってセル描画に落ちました（`run.log` の
+`no headless browser found`）。インストーラーが止まるときは、表示されるダウンロード URL の zip を手で展開します:
+
+```bash
+d=~/.cache/ms-playwright/chromium-1208
+curl -sSLo /tmp/chrome.zip https://cdn.playwright.dev/builds/cft/145.0.7632.6/linux64/chrome-linux64.zip
+rm -rf "$d/chrome-linux64" && unzip -q /tmp/chrome.zip -d "$d" && touch "$d/INSTALLATION_COMPLETE"
+```
 
 ブラウザが無いときや `--no-image` のときは、代わりに**テーブルのセルで描いた図**（`emailchart.py`）を
 本文に入れます（階段状の線になります）。`--png` は時系列セクション全体を
@@ -249,6 +266,12 @@ PL_SMTP_PASS=xxxxxxxxxxxxxxxx
 
 と書いて `chmod 600` しておきます（このファイルは git の外）。`run_daily_pl.cmd` は起動時にこれを
 読み、`PL_MAIL_TO` があるときだけ `--email` を付けます。
+
+`wsl.exe -- <コマンド行>` はコマンド行をまず既定のシェルに渡すので、`$` は env ファイルを読む前に展開されます。
+cmd の中の `${PL_MAIL_TO:+...}` を `\$` でエスケープしていなかった 2026-09-14〜16 は、定期実行が毎回
+`--email` なしで正常終了し、メールが 1 通も出ていませんでした（`run.log` に `emailed:` の行が無い）。
+`tests/test_windows_task.py` が同じ 2 段のシェルで cmd を展開して確かめます。cmd を変えたら
+`register_task.ps1` を再実行するか、`Documents\pl-daily` へコピーしてください（タスクはコピーの方を呼びます）。
 
 ## 分析の読み方
 
@@ -552,7 +575,9 @@ uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dash
 2. **時価の無いものは据え置きです。** 円現金（相場では動かないので `exact` のまま）、
    DC口座の残高、残高調整はいずれも元の日付の値のままで、理由は `source_note` に残ります
 3. **市場ごとに基準日がずれます。** 日本株は当日終値でも、米国株は前営業日までしか
-   取れません。銘柄ごとの実際の値付け日は `price_as_of` と `repricing.quotes` に入ります
+   取れないことがあります。取引時間中のその日の足は途中の価格なので使わず、前の終値にします
+   （日次レポートと同じ `mtm.bar_is_final`）。銘柄ごとの実際の値付け日は `price_as_of` と
+   `repricing.quotes` に入ります
 
 口座損益は取得原価が未入力のため再計算できないので、洗い替えた口座では `null` に落とします
 （古い損益額を残すと、新しい評価額と組み合わせて誤った逆算元本が出るため）。
