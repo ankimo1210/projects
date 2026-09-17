@@ -21,10 +21,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from portfolio_analyzer.mtm import bar_is_final
 
 FX_SYMBOL = "JPY=X"
 PRICE_DECIMALS = Decimal("0.0001")
@@ -43,6 +48,20 @@ def market_symbol(symbol: str, currency: str) -> str | None:
     return None
 
 
+def last_final_close(series: Any, symbol: str, now: datetime) -> dict[str, Any] | None:
+    """The last close whose session has ended at ``now``; a bar still trading is skipped."""
+    import pandas as pd
+
+    for stamp, value in reversed(list(series.items())):
+        bar_date = pd.Timestamp(stamp).date()
+        if bar_is_final(symbol, bar_date, now):
+            return {
+                "close": Decimal(str(value)).quantize(PRICE_DECIMALS),
+                "date": bar_date.isoformat(),
+            }
+    return None
+
+
 def download_closes(symbols: list[str], start: str, end: str) -> dict[str, Any]:
     """Return the last non-null close and its date for each symbol."""
     import warnings
@@ -50,6 +69,7 @@ def download_closes(symbols: list[str], start: str, end: str) -> dict[str, Any]:
     import pandas as pd
     import yfinance as yf
 
+    now = datetime.now(UTC)
     out: dict[str, Any] = {}
     for symbol in symbols:
         with warnings.catch_warnings():
@@ -60,12 +80,10 @@ def download_closes(symbols: list[str], start: str, end: str) -> dict[str, Any]:
         if isinstance(raw.columns, pd.MultiIndex):
             raw.columns = raw.columns.get_level_values(0)
         series = pd.to_numeric(raw["Close"], errors="coerce").dropna()
-        if series.empty:
+        quote = last_final_close(series, symbol, now)
+        if quote is None:
             raise RuntimeError(f"no usable close for {symbol}")
-        out[symbol] = {
-            "close": Decimal(str(series.iloc[-1])).quantize(PRICE_DECIMALS),
-            "date": pd.Timestamp(series.index[-1]).date().isoformat(),
-        }
+        out[symbol] = quote
     return out
 
 

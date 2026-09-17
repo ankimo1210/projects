@@ -198,3 +198,21 @@ def test_reprice_does_not_mutate_the_input(snapshot: dict, quotes: dict) -> None
     reprice_snapshot.reprice(snapshot, quotes, Decimal("159.794"), "2026-08-31")
 
     assert json.dumps(snapshot, ensure_ascii=False, sort_keys=True) == before
+
+
+def test_last_final_close_skips_a_bar_still_trading() -> None:
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    import pandas as pd
+
+    series = pd.Series([542.11, 550.22], index=pd.to_datetime(["2026-09-15", "2026-09-16"]))
+    jst = ZoneInfo("Asia/Tokyo")
+    live = reprice_snapshot.last_final_close(
+        series, "SMH", datetime(2026, 9, 16, 23, 50, tzinfo=jst)
+    )
+    assert live == {"close": Decimal("542.1100"), "date": "2026-09-15"}
+    done = reprice_snapshot.last_final_close(
+        series, "SMH", datetime(2026, 9, 17, 7, 30, tzinfo=jst)
+    )
+    assert done == {"close": Decimal("550.2200"), "date": "2026-09-16"}

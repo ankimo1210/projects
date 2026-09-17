@@ -110,6 +110,20 @@ def download_closes(tickers: list[str], start: str, end: str):
     return closes.sort_index()
 
 
+def drop_live_bars(closes, now: datetime) -> tuple[object, dict[str, str]]:
+    """Blank each column's bars that are still trading at ``now`` (``mtm.bar_is_final``), so a
+    run during a session reads the previous close. Returns the frame and the date dropped per
+    column."""
+    kept = closes.copy()
+    dropped: dict[str, str] = {}
+    for column in kept.columns:
+        for stamp in kept.index[kept[column].notna()]:
+            if not mtm.bar_is_final(str(column), stamp.date(), now):
+                kept.loc[stamp, column] = float("nan")
+                dropped[str(column)] = stamp.date().isoformat()
+    return kept, dropped
+
+
 def clean_closes(closes) -> tuple[object, dict[str, list[str]]]:
     """Blank yfinance's misprinted closes: a print far off the last good level that the series
     soon returns to (1306.T printed 37.6 instead of 376 for two days in 2026-03). A level the
@@ -369,7 +383,10 @@ def build_payload(args: argparse.Namespace) -> tuple[dict, dict, str]:
     benchmark_tickers = sorted(set(BENCHMARKS.values()) - set(tickers) - {mtm.FX_SYMBOL})
     download = [*tickers, *benchmark_tickers, mtm.FX_SYMBOL]
     print(f"downloading {len(download)} series from yfinance ({start} .. {today}) ...")
-    closes, dropped = clean_closes(download_closes(download, start, end))
+    closes, live = drop_live_bars(download_closes(download, start, end), datetime.now(TZ))
+    for column, bar_date in live.items():
+        print(f"still trading, previous close used: {column} {bar_date}")
+    closes, dropped = clean_closes(closes)
     for column, bad_dates in dropped.items():
         print(f"dropped misprinted closes: {column} {', '.join(bad_dates)}")
     if dc_ticker:

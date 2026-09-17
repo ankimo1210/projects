@@ -15,9 +15,11 @@ from __future__ import annotations
 import json
 from collections.abc import Sequence
 from dataclasses import dataclass
+from datetime import date, datetime, time
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from portfolio_analyzer.ibkr import Holding, decompose_pnl
 
@@ -25,6 +27,9 @@ NON_MARKET_SYMBOLS = {"CASH_JPY", "RECONCILIATION"}
 FX_SYMBOL = "JPY=X"
 ZERO = Decimal(0)
 ONE = Decimal(1)
+# Where each market's daily bar stops moving: Tokyo, and New York for the dollar tickers.
+TOKYO_CLOSE = (ZoneInfo("Asia/Tokyo"), time(15, 30))
+NEW_YORK_CLOSE = (ZoneInfo("America/New_York"), time(16, 0))
 
 
 @dataclass(frozen=True)
@@ -46,6 +51,18 @@ def market_symbol(symbol: str, currency: str) -> str | None:
     if currency == "USD":
         return symbol
     return None
+
+
+def bar_is_final(ticker: str, bar_date: date, now: datetime) -> bool:
+    """Whether the daily bar dated ``bar_date`` is a close yet. While a market is open
+    yfinance serves the live price as that day's bar; taking it as a close would put an
+    intraday price into the history under that date. FX trades around the clock and is
+    taken live on purpose (the Tokyo run marks the dollar holdings at the rate of the hour)."""
+    if ticker.endswith("=X"):
+        return True
+    zone, close = TOKYO_CLOSE if ticker.endswith(".T") else NEW_YORK_CLOSE
+    local = now.astimezone(zone)
+    return bar_date < local.date() or (bar_date == local.date() and local.time() >= close)
 
 
 def _dec(value: Any) -> Decimal | None:

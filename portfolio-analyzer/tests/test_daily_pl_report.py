@@ -191,3 +191,21 @@ def test_clean_closes_blanks_a_misprint_run_but_keeps_a_level_the_series_holds()
     ]
     assert cleaned["SPLIT"].tolist() == closes["SPLIT"].tolist()
     assert cleaned["FLAT"].notna().all()
+
+
+def test_drop_live_bars_blanks_only_today_s_unfinished_bars() -> None:
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    idx = pd.to_datetime(["2026-09-15", "2026-09-16"])
+    closes = pd.DataFrame(
+        {"6857.T": [30160.0, 30700.0], "SMH": [542.11, 550.22], "JPY=X": [154.38, 155.10]},
+        index=idx,
+    )
+    now = datetime(2026, 9, 16, 23, 50, tzinfo=ZoneInfo("Asia/Tokyo"))
+    kept, dropped = daily_pl_report.drop_live_bars(closes, now)
+    assert dropped == {"SMH": "2026-09-16"}
+    assert kept["SMH"].isna().tolist() == [False, True]
+    assert kept["6857.T"].tolist() == closes["6857.T"].tolist()
+    assert kept["JPY=X"].tolist() == closes["JPY=X"].tolist()
+    assert closes["SMH"].notna().all()  # the input is left alone
