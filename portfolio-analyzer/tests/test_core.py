@@ -323,15 +323,18 @@ def test_private_risk_model_exposes_compound_and_lookthrough_risk() -> None:
     }
 
     assert summary["position_effective_count"] == pytest.approx(6.8636, rel=1e-4)
-    assert summary["sector_effective_count"] == pytest.approx(3.0001, rel=1e-4)
+    # 1329 / 1475 rebuilt from their full holdings on 2026-09-16: their unclassified
+    # industries (14.8% / 26.1%) are now sectors, and Advantest's weights fell
+    # (3.0001, 0.17661 and 0.16588 before).
+    assert summary["sector_effective_count"] == pytest.approx(3.0310, rel=1e-4)
     assert summary["policy_breach_count"] == 4
     assert impacts["株式全体 -10%"] == pytest.approx(-0.07934, rel=1e-4)
     assert impacts["円10%上昇（外貨バスケット）"] == pytest.approx(-0.05323, rel=1e-4)
-    assert summary["worst_compound_drawdown"] == pytest.approx(0.17661, rel=1e-4)
+    assert summary["worst_compound_drawdown"] == pytest.approx(0.17648, rel=1e-4)
     # Replayed history is worse than every hand-set compound scenario.
     assert summary["worst_historical_drawdown"] == pytest.approx(0.24099, rel=1e-4)
     assert summary["worst_historical_drawdown"] > summary["worst_compound_drawdown"]
-    assert issuers["Advantest"] == pytest.approx(0.16588, rel=1e-4)
+    assert issuers["Advantest"] == pytest.approx(0.16522, rel=1e-4)
     smh_market_loading = next(
         row["loading"]
         for row in datasets["factor_loadings"]
@@ -863,8 +866,9 @@ def test_private_valuation_is_split_by_basis() -> None:
     # reconstructions from their full holdings, and again from 36.4074 when
     # 1329 and 1475 followed (every ETF is now a holdings reconstruction
     # validated against the provider's own figure to within +2.6%), which
-    # leaves no position on the provider basis.
-    assert summary["trailing_pe"] == pytest.approx(26.5041, rel=1e-4)
+    # leaves no position on the provider basis. 26.5041 moved to 26.5133 when 1329
+    # and 1475's look-through gained their cash rows (less equity to weight).
+    assert summary["trailing_pe"] == pytest.approx(26.5133, rel=1e-4)
     assert summary["forward_pe"] == pytest.approx(21.1163, rel=1e-4)
     assert summary["provider_pe"] is None
     assert summary["trailing_valuation_coverage_ratio"] > 0.45
