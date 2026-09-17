@@ -1,0 +1,7 @@
+﻿scenario,mortgage_rate,after_tax_investment_return,purchase_price,monthly_rent,residence_years,corporate_housing_years,g_star_vs_normal_rent_pct_per_year,g_star_vs_corporate_housing_pct_per_year
+初期ケース,1.5%,3%,2.5億円,75万円/月,10年,10年,0.14,2.46
+ローン金利2.0%,2.0%,3%,2.5億円,75万円/月,10年,10年,0.60,2.93
+社宅利用5年,1.5%,3%,2.5億円,75万円/月,10年,5年,0.14,1.33
+税後運用利回り5%,1.5%,5%,2.5億円,75万円/月,10年,10年,0.70,3.28
+購入価格2.2億円,1.5%,3%,2.2億円,75万円/月,10年,10年,-0.32,2.28
+居住15年・社宅10年,1.5%,3%,2.5億円,75万円/月,15年,10年,-0.21,1.57

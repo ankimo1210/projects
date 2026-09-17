@@ -1,0 +1,67 @@
+{
+  "review_date": "2026-09-17",
+  "archive_name": "housing_buy_vs_rent_package_2026-09-17.zip",
+  "archive_sha256": "275b4e5b12879e40c168cef403f824dcfc42baaf3c4235c741f441e1b2794257",
+  "files": [
+    {
+      "path": "original/README.md",
+      "bytes": 2428,
+      "sha256": "03f4424f7a2a273ff9ae21bd0299701f0cab28cb4ff92019d1cac4f2410b8d04",
+      "matches_archive": true
+    },
+    {
+      "path": "original/source/full_source.html",
+      "bytes": 202610,
+      "sha256": "6b9eb6591548a22ddf2746cfb9b645ff059911f8b457021355261949f6b5f5ed",
+      "matches_archive": true
+    },
+    {
+      "path": "original/source/extracted_styles.css",
+      "bytes": 19500,
+      "sha256": "a4e09b232fabad86acde7f1e3f7ca31aea1803bf6e28dd34d35297a771663467",
+      "matches_archive": true
+    },
+    {
+      "path": "original/source/extracted_scripts.js",
+      "bytes": 57155,
+      "sha256": "ed5a12f1efcd789d871fa51506cba3ec8453831c1ab5a5e272365aef0b1c36ce",
+      "matches_archive": true
+    },
+    {
+      "path": "original/data/baseline_sensitivity_snapshot.csv",
+      "bytes": 649,
+      "sha256": "39ca2fe9229d2a761f166edecfc31f13c7bc462918bcbb504c86651e35104c46",
+      "matches_archive": true
+    },
+    {
+      "path": "original/data/parameter_catalog.csv",
+      "bytes": 2993,
+      "sha256": "f8e40632df62be456e8a6297bd069eee5d6c94f9ea657d1ecedf6026cad98962",
+      "matches_archive": true
+    },
+    {
+      "path": "original/docs/assumptions_and_parameters.md",
+      "bytes": 2947,
+      "sha256": "55587750c7a44fcadb5125aa110690eee6c0ca0dfff5a92b8291741f46b271f7",
+      "matches_archive": true
+    },
+    {
+      "path": "original/docs/model_specification.md",
+      "bytes": 2226,
+      "sha256": "dd916c5e896454dd81afdb5e4c069e39212332e18bad9244961fb7b425e1c61b",
+      "matches_archive": true
+    },
+    {
+      "path": "original/report/housing_rent_corporate_buy_report_v1_archive.html",
+      "bytes": 90144,
+      "sha256": "8ed402aa05d597d01b3646fe39e57731126bbbfcc25bcf550fd38e3d80c8716a",
+      "matches_archive": true
+    },
+    {
+      "path": "original/report/housing_rent_corporate_buy_report_v2.html",
+      "bytes": 202610,
+      "sha256": "6b9eb6591548a22ddf2746cfb9b645ff059911f8b457021355261949f6b5f5ed",
+      "matches_archive": true
+    }
+  ]
+}

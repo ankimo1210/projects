@@ -1,0 +1,260 @@
+{
+  "checks": [
+    {
+      "name": "snapshot: baseline",
+      "status": "PASS"
+    },
+    {
+      "name": "break-even residual: baseline",
+      "status": "PASS"
+    },
+    {
+      "name": "snapshot: mortgage 2%",
+      "status": "PASS"
+    },
+    {
+      "name": "break-even residual: mortgage 2%",
+      "status": "PASS"
+    },
+    {
+      "name": "snapshot: corporate housing 5 years",
+      "status": "PASS"
+    },
+    {
+      "name": "break-even residual: corporate housing 5 years",
+      "status": "PASS"
+    },
+    {
+      "name": "snapshot: investment 5%",
+      "status": "PASS"
+    },
+    {
+      "name": "break-even residual: investment 5%",
+      "status": "PASS"
+    },
+    {
+      "name": "snapshot: purchase 220M",
+      "status": "PASS"
+    },
+    {
+      "name": "break-even residual: purchase 220M",
+      "status": "PASS"
+    },
+    {
+      "name": "snapshot: residence 15 / corporate 10",
+      "status": "PASS"
+    },
+    {
+      "name": "break-even residual: residence 15 / corporate 10",
+      "status": "PASS"
+    },
+    {
+      "name": "closed-form amortization",
+      "status": "PASS"
+    },
+    {
+      "name": "cash-flow difference independent of synthetic budget",
+      "status": "PASS"
+    },
+    {
+      "name": "corporate saving independently calculated from high-income brackets",
+      "status": "PASS"
+    },
+    {
+      "name": "no corporate benefit => identical rent strategies",
+      "status": "PASS"
+    },
+    {
+      "name": "corporate duration zero => identical rent strategies",
+      "status": "PASS"
+    },
+    {
+      "name": "corporate duration beyond residence has no effect",
+      "status": "PASS"
+    },
+    {
+      "name": "zero-rate loan and maturity",
+      "status": "PASS"
+    },
+    {
+      "name": "rate reset payment independent remaining-term formula",
+      "status": "PASS"
+    },
+    {
+      "name": "IO retains principal and validates maturity",
+      "status": "PASS"
+    },
+    {
+      "name": "renewals exclude terminal month",
+      "status": "PASS"
+    },
+    {
+      "name": "extra repair future value",
+      "status": "PASS"
+    },
+    {
+      "name": "forecast growth does not change break-even growth",
+      "status": "PASS"
+    },
+    {
+      "name": "HTML and source snapshots are byte-identical",
+      "status": "PASS"
+    },
+    {
+      "name": "audited JavaScript matches every live HTML script block",
+      "status": "PASS"
+    }
+  ],
+  "defects": [
+    {
+      "name": "month 61 must remain short-term under September acquisition",
+      "status": "PASS"
+    },
+    {
+      "name": "month 125 must qualify for reduced rate under September acquisition",
+      "status": "PASS"
+    },
+    {
+      "name": "non-business depreciation must round elapsed years",
+      "status": "PASS"
+    },
+    {
+      "name": "inactive corporate salary must not reject ordinary rent",
+      "status": "PASS"
+    },
+    {
+      "name": "rent after corporate housing ends must not invalidate salary",
+      "status": "PASS"
+    },
+    {
+      "name": "extracted script can be required without a browser",
+      "status": "PASS"
+    },
+    {
+      "name": "sale-year boundary and six-month rounding over every monthly row",
+      "status": "PASS"
+    },
+    {
+      "name": "active corporate salary below model range remains rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "last active year of increasing rent remains validated",
+      "status": "PASS"
+    },
+    {
+      "name": "falling rent validates the most expensive active year",
+      "status": "PASS"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "baseline",
+      "normal": 0.14060653295353553,
+      "corp": 2.4575638077848128
+    },
+    {
+      "name": "mortgage 2%",
+      "normal": 0.6007417365188727,
+      "corp": 2.927586834498608
+    },
+    {
+      "name": "corporate housing 5 years",
+      "normal": 0.14060653295353553,
+      "corp": 1.3323351089498336
+    },
+    {
+      "name": "investment 5%",
+      "normal": 0.7036985179444288,
+      "corp": 3.2827970641189586
+    },
+    {
+      "name": "purchase 220M",
+      "normal": -0.3221605353523893,
+      "corp": 2.284496050243101
+    },
+    {
+      "name": "residence 15 / corporate 10",
+      "normal": -0.20516696062404804,
+      "corp": 1.568354640257974
+    }
+  ],
+  "baseline": {
+    "normalGstar": {
+      "price": 253537488.3957008,
+      "growth": 0.0014060653295353553,
+      "price_change": 0.014149953582803354,
+      "tax": 0
+    },
+    "corpGstar": {
+      "price": 318698677.0039028,
+      "growth": 0.024575638077848128,
+      "price_change": 0.27479470801561123,
+      "tax": 5703278.46517585
+    },
+    "initialCapital": 42499999.99999999,
+    "monthlyPayment": 688914.9893351203,
+    "balance": 172256167.83007026,
+    "ownerWealth": 71800787.66151205,
+    "rentWealth": 75214463.96336335,
+    "corpWealth": 132391732.5051024,
+    "annualTaxBenefit": 4909977.500000002,
+    "effectiveMonthlyRent": 340835.2083333332
+  },
+  "probes": {
+    "month61Sale": {
+      "years": 5.083333333333333,
+      "actual": {
+        "tax": 21567581.898465615,
+        "taxable_gain": 54422361.59087968,
+        "depreciation": 5265000,
+        "basis": 254735000,
+        "price": 320370322.8921033,
+        "net_before_debt": 287589779.69241405
+      },
+      "expectedRate": 0.3963,
+      "expectedTax": 21567581.898465615,
+      "correctedTaxWithRoundedDepreciation": 21567581.898465615
+    },
+    "month125Sale": {
+      "years": 10.416666666666666,
+      "actual": {
+        "tax": 27128726.089901198,
+        "taxable_gain": 151571381.19567412,
+        "depreciation": 10530000,
+        "basis": 249470000,
+        "price": 415586923.5188333,
+        "net_before_debt": 373912655.1057729
+      },
+      "expectedRate": 0.1421,
+      "expectedTaxAtSameBasis": 27128726.089901198
+    },
+    "inactiveCorpValidation": {
+      "error": null,
+      "allFinite": true
+    },
+    "afterCorpEndValidation": {
+      "error": null,
+      "firstYearGross": 18000000
+    },
+    "requireWholeModule": null,
+    "fringeSensitivity": [
+      {
+        "fringe": 0,
+        "gstar": 2.4575638077848128,
+        "annualBenefit": 4909977.500000002
+      },
+      {
+        "fringe": 600000,
+        "gstar": 2.3080744540600495,
+        "annualBenefit": 4604937.500000002
+      },
+      {
+        "fringe": 1200000,
+        "gstar": 2.1565930012434675,
+        "annualBenefit": 4299897.5
+      }
+    ],
+    "effectiveAnnualReturn": 0.030415956913506736
+  }
+}
