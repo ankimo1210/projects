@@ -819,6 +819,10 @@ def main() -> int:
                 capture.unlink(missing_ok=True)
             if pieces is None:
                 print("no headless browser found; drawing the mail's charts with table cells")
+                payload["warnings"] = [
+                    "図を画像にできませんでした（ヘッドレスブラウザが見つからない）。表のセルで描いています。"
+                    "~/.cache/ms-playwright の Chromium を確認してください（README「メールで受け取る」）"
+                ]
             else:
                 size = sum(len(png) for png, _, _ in pieces.values())
                 print(f"chart images: {len(pieces)} ({size / 1024:.0f} KB)")

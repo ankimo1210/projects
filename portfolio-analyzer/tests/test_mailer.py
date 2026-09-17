@@ -497,3 +497,15 @@ def test_html_and_text_body_carry_the_risk_section() -> None:
     assert "年率ボラティリティ" not in mailer.html_body(data) and "リスク:" not in mailer.text_body(
         data
     )
+
+
+def test_warnings_lead_both_bodies() -> None:
+    data = payload()
+    data["warnings"] = ["図を画像にできませんでした（ヘッドレスブラウザが見つからない）"]
+    html_text = mailer.html_body(data)
+    head = html_text.index("図を画像にできませんでした")
+    assert head < html_text.index("総資産")
+    assert "background:" not in html_text[head - 400 : head]  # Gmail strips the shorthand
+    text = mailer.text_body(data)
+    assert text.index("! 図を画像にできませんでした") < text.index("総資産")
+    assert "図を画像にできませんでした" not in mailer.html_body(payload())
