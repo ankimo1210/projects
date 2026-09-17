@@ -1,0 +1,425 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><meta name="description" content="通常賃貸・借上社宅・購入の税引後キャッシュフローと損益分岐を比較。年収5,000万円、家賃75万円の個人ケース。"><title>賃貸・借上社宅・購入｜税引後の損益分岐レポート</title><style>
+:root{--ink:#142a35;--muted:#637782;--paper:#f4f6f5;--line:#dce5e5;--navy:#132c38;--green:#137766;--violet:#7956aa;--gold:#b28a35;--pale:#eaf4f0;--warn:#fff5df}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.85;font-size:15px;font-variant-numeric:tabular-nums}a{color:var(--green);text-decoration:none}a:hover{text-decoration:underline}strong{font-weight:750}h1,h2,h3,p{margin:0}h1{font-size:clamp(31px,5vw,52px);line-height:1.4;letter-spacing:-.03em}h2{font-size:clamp(23px,3vw,31px);line-height:1.5;letter-spacing:-.02em}h3{font-size:19px;line-height:1.55;margin:26px 0 10px}p+p{margin-top:13px}.topbar{background:var(--navy);color:#dfe9ec;padding:15px 24px;font-size:12px;letter-spacing:.14em}.topbar>div{max-width:1160px;margin:auto;display:flex;justify-content:space-between;gap:15px}.wrap{max-width:1160px;padding:0 28px;margin:0 auto}.hero{background:var(--navy);color:white;padding:50px 0 55px}.eyebrow{font-size:11px;letter-spacing:.19em;font-weight:700;color:#a2cfc7;margin-bottom:16px}.hero .sub{color:#cad8dd;max-width:800px;margin:18px 0 25px;font-size:16px}.tags{display:flex;gap:8px;flex-wrap:wrap}.tag{padding:5px 10px;border:1px solid #46616e;border-radius:5px;font-size:11px;color:#d7e4e8}.hero-note{color:#b7c8ce;font-size:12px;margin-top:20px}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:28px 0}.kpi{padding:23px 25px;border-radius:12px;background:white;border:1px solid var(--line);box-shadow:0 3px 12px #122b3404}.kpi span{font-size:12px;color:var(--muted);font-weight:650}.kpi strong{display:block;font-size:clamp(26px,3.6vw,38px);line-height:1.3;letter-spacing:-.035em;margin:8px 0;color:var(--green)}.kpi small{font-size:12px;color:var(--muted);display:block;line-height:1.7}.kpi.purple strong{color:var(--violet)}.kpi.navy strong{color:var(--navy)}nav{display:flex;gap:9px 18px;flex-wrap:wrap;padding:8px 0 22px;font-size:12px}nav a{color:var(--muted)}section{margin:0 0 24px;padding:35px;background:white;border:1px solid var(--line);border-radius:14px;scroll-margin-top:20px}.sec-label{font-size:11px;font-weight:700;color:var(--green);letter-spacing:.18em;margin-bottom:9px}.lead{font-size:17px;margin-top:13px;margin-bottom:18px}.note{font-size:12px;color:var(--muted);line-height:1.85;margin-top:12px}.callout{border-left:4px solid var(--green);background:var(--pale);padding:18px 21px;margin:21px 0;border-radius:0 8px 8px 0}.callout.warning{border-left-color:var(--gold);background:var(--warn)}.callout.purple{border-left-color:var(--violet);background:#f2edf7}.callout p{margin-top:7px}.refs{font-size:10px;white-space:nowrap;margin-left:4px}.refs a{padding:0 1px}.table-wrap{overflow-x:auto;margin:20px 0 8px;border:1px solid var(--line);border-radius:9px}table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.65}th{text-align:left;background:#eef3f3;color:var(--muted);font-weight:700;padding:13px 16px;white-space:nowrap}td{padding:13px 16px;border-top:1px solid var(--line);vertical-align:top}td:not(:first-child){min-width:100px}tbody tr:last-child{background:#f6faf8}tbody tr:hover{background:#f8fafb}td:first-child{min-width:165px;font-weight:550}table.numeric td:not(:first-child){text-align:right}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}.two-col>.card{border:1px solid var(--line);border-radius:9px;padding:22px}.card h3{margin-top:0}.formula{background:#eef3f5;border:1px solid #dde7eb;border-radius:8px;padding:18px 22px;font-family:"SFMono-Regular",Consolas,"Yu Gothic",monospace;font-size:14px;line-height:1.9;overflow-x:auto;margin:20px 0}.big-number{font-size:33px;line-height:1.4;font-weight:750;color:var(--green)}.big-number.purple{color:var(--violet)}.chart-box{margin:23px 0 12px;border:1px solid var(--line);border-radius:10px;padding:17px 16px 10px;background:#fff}.chart{display:block;width:100%;height:auto;overflow:visible}.chart text{font-family:inherit}.chart .tick{fill:#6a7c84;font-size:12px}.chart .axis-title{fill:#5f727c;font-size:12px}.chart .grid{stroke:#e4eaea;stroke-width:1}.chart .zero{stroke:#7b919b;stroke-width:1.5}.chart .series{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.chart .buy{stroke:var(--navy)}.chart .rent{stroke:var(--gold);stroke-dasharray:7 4}.chart .corp{stroke:var(--violet)}.legend{display:flex;flex-wrap:wrap;gap:12px 22px;font-size:12px;justify-content:center;color:var(--muted);margin-bottom:8px}.legend span:before{content:"";display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:7px;background:var(--navy)}.legend .rent:before{background:var(--gold)}.legend .corp:before{background:var(--violet)}.heat-cell{font-size:16px;font-weight:700;color:var(--violet);white-space:nowrap}.heat td{background:#f5f1f9}.heat tr:nth-child(3) td{background:#ece3f4}.heat th:first-child{white-space:normal;max-width:200px}.divider{height:1px;background:var(--line);margin:25px 0}.foot{max-width:1160px;margin:auto;padding:10px 28px 45px;font-size:11px;color:var(--muted)}.source-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}.source{font-size:12px;border-top:1px solid var(--line);padding-top:10px;overflow-wrap:anywhere}.source b{display:block}.source small{color:var(--muted)}details{border:1px solid var(--line);border-radius:9px;margin:18px 0}summary{padding:15px 18px;cursor:pointer;font-weight:650;font-size:14px}details>.detail-body{padding:4px 18px 20px}.code{font-size:11px;line-height:1.65;white-space:pre;overflow:auto;max-height:500px;padding:18px;background:#f1f5f5;border-radius:6px}.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:15px 20px;margin:23px 0}.field label{display:block;font-size:12px;color:var(--muted);font-weight:650;margin-bottom:6px}.field input,.field select{width:100%;border:1px solid #c7d5d9;border-radius:7px;background:white;padding:11px 12px;font-size:16px;color:var(--ink);line-height:1.5;min-width:0;font-family:inherit}.field input:focus,.field select:focus{outline:2px solid #94c8bd;border-color:var(--green)}.field small{display:block;font-size:11px;color:var(--muted);line-height:1.6;margin-top:5px}.field.check{display:flex;align-items:center;padding-top:15px}.field.check input{width:auto;margin-right:8px}.field.check label{margin:0}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}button{background:var(--green);border:1px solid var(--green);color:white;border-radius:7px;font:600 13px/1.5 inherit;padding:10px 16px;cursor:pointer;font-family:inherit}button.secondary{background:#fff;color:var(--green);border-color:#c9dcd5}button:hover{filter:brightness(.97)}.sim-status{font-size:11px;background:#e9f3ef;color:var(--green);display:inline-block;border-radius:20px;padding:4px 11px;margin-top:12px}.sim-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.sim-kpis .kpi{padding:17px 16px;box-shadow:none}.sim-kpis .kpi strong{font-size:25px}.error{background:#fff2ec;color:#9b4c32;padding:12px 16px;border-radius:7px;font-size:13px;display:none}.bar-row{display:grid;grid-template-columns:80px 1fr 90px;gap:12px;align-items:center;font-size:12px;margin:15px 0}.bar-track{height:22px;background:#edf2f3;border-radius:4px;overflow:hidden}.bar-fill{height:100%;background:var(--gold)}.bar-fill.corp{background:var(--violet)}.stat-pair{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);padding:12px 0}.stat-pair span{font-size:13px}.stat-pair strong{font-size:22px}.pill{font-size:10px;color:var(--muted);border:1px solid var(--line);padding:3px 8px;border-radius:20px;white-space:nowrap}.print-only{display:none}
+@media(max-width:760px){body{font-size:14px}.wrap{padding:0 14px}.hero{padding:30px 0}.topbar{padding:11px 14px}.topbar .right{display:none}section{padding:23px 18px;margin-bottom:16px}.kpis{gap:10px;grid-template-columns:1fr;margin:20px 0}.kpi{padding:18px 21px}.kpi strong{font-size:32px}.two-col{grid-template-columns:1fr;gap:15px}.controls{grid-template-columns:1fr 1fr;gap:13px}.sim-kpis{grid-template-columns:1fr 1fr}.source-grid{grid-template-columns:1fr}.table-wrap{margin-left:0;margin-right:0}th,td{padding:11px 12px}td:first-child{min-width:140px}.chart-box{padding:14px 6px 8px}.chart .tick,.chart .axis-title{font-size:15px}.lead{font-size:15px}.big-number{font-size:29px}.formula{font-size:12px;padding:14px}.heat-cell{font-size:14px}.foot{padding-left:18px;padding-right:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;font-size:10pt}.topbar,nav,.buttons,.controls,#simAdvanced,.sim-status,.no-print{display:none!important}.hero{background:white;color:var(--ink);padding:15px 0}.hero .sub,.hero-note,.eyebrow{color:var(--muted)}.tag{color:var(--ink);border-color:var(--line)}.wrap{max-width:none;padding:0}.kpis{grid-template-columns:repeat(3,1fr)}section{padding:22px 0;border:0;border-top:1px solid #aaa;border-radius:0;break-inside:auto;margin:0}.kpi,.callout,.chart-box,table,details{break-inside:avoid}.table-wrap{overflow:visible}h2,h3{break-after:avoid}.source-grid{grid-template-columns:1fr 1fr}.foot{padding:15px 0}.print-only{display:block}.sim-kpis{grid-template-columns:repeat(4,1fr)}a{color:inherit}#codeDetails{display:none}}
+</style></head><body>
+<div class="topbar"><div><span>HOUSING × CAPITAL ALLOCATION</span><span class="right">PERSONAL SCENARIO STUDY · 2026.09.17</span></div></div>
+<header class="hero"><div class="wrap"><div class="eyebrow">通常賃貸 / 借上社宅 / 購入</div><h1>住宅を「持つか」より、<br>どの条件なら「買う価値があるか」。</h1><p class="sub">年収5,000万円・月額家賃75万円の借上社宅を加え、同じ住戸・同じ資金・同じ生活予算で比較する。元本返済、差額運用、給与課税、売却税まで含めた損益分岐分析。</p><div class="tags"><span class="tag">ユーザー申告：年収5,000万円・家賃75万円</span><span class="tag">比較用仮定：購入2.5億円・10年保有</span><span class="tag">自己完結HTML・入力変更で再計算</span></div><p class="hero-note">金額は特記なき限り名目・概算。実在住戸の査定や、勤務先の制度適法性・融資承認を判断する資料ではない。</p></div></header>
+<main class="wrap">
+<div class="kpis"><div class="kpi"><span>借上社宅の実質家賃負担</span><strong>34.1万円<span> / 月</span></strong><small>額面家賃75万円。更新料・初期費用は別。社会保険料は利用前後とも年150万円と仮定。</small></div><div class="kpi purple"><span>年間の税負担減少</span><strong>491万円<span> / 年</span></strong><small>年収5,000万円 → 4,100万円。所得税の40%・45%の境目をまたいで計算。</small></div><div class="kpi navy"><span>購入が社宅と互角になる価格変化率</span><strong>+2.46%<span> / 年</span></strong><small>10年後の分岐売値 3.187億円。通常賃貸だけなら +0.14% / 年。</small></div></div>
+<nav aria-label="目次"><a href="#summary">結論</a><a href="#salary">給与・節税</a><a href="#assumptions">比較条件</a><a href="#wealth">純資産</a><a href="#break-even">損益分岐</a><a href="#continuity">制度継続・ストレス</a><a href="#simulator">シミュレーター</a><a href="#method">計算方法</a><a href="#sources">出典</a></nav>
+<section id="summary"><div class="sec-label">01 / DECISION FRAME</div><h2>借上社宅は、比較の出発点を大きく変える。</h2><p class="lead">このケースでは、購入によって節約できる家賃は年間900万円ではなく、<strong>実質約409万円</strong>。購入すると、住宅だけでなく<strong>年間約491万円の税メリットを手放す</strong>ことも評価する必要がある。</p>
+<div class="two-col"><div class="card"><h3>通常賃貸と比べると</h3><p class="big-number">10年後 2.535億円</p><p>2.5億円で購入した住戸が、ほぼ横ばいで売れれば互角。必要な価格上昇は累計 1.4%。</p></div><div class="card"><h3>借上社宅と比べると</h3><p class="big-number purple">10年後 3.187億円</p><p>同じ条件でも、社宅が10年間続くなら必要な価格上昇は累計 <strong>27.5%</strong>。売却税も含む。</p></div></div>
+<div class="callout"><strong>価格横ばいなら、10年後は借上社宅が購入より約6,059万円有利。</strong><p>ただし「だから永久に賃貸が正解」ではない。安い取得価格、住戸価格の上昇、制度終了、低い保有費用などで逆転する。以下は、どの条件で逆転するかを見るための試算。</p></div>
+<p class="note">本レポートの数値はユーザー申告と明示した仮定による独自計算。税率・制度要件だけを公的資料で確認している。住宅価格や金融資産リターンの将来予測は置いていない。</p></section>
+
+<section id="salary"><div class="sec-label">02 / PAYROLL & TAX</div><h2>75万円の家賃が、家計には月約34万円の負担。</h2><p class="lead">社宅の家賃を「給与から払ったあと、さらに自分でも払う」と二重計上しない。反対に、会社が900万円を追加で負担する無料の福利厚生とも扱わない。</p>
+<div class="formula">社宅利用前の報酬枠：5,000万円<br>− 会社契約の年間家賃：900万円<br>＝ 現金給与・課税対象給与：4,100万円</div>
+<p>この仕組みを、ユーザーの説明どおりの<strong>税前の報酬振替</strong>としてモデル化した。給与所得控除は両ケースとも195万円、合計所得が2,500万円を超えるため基礎控除は0円。社会保険料等は両ケースとも年150万円、その他控除0円と仮置きする。<sup class="refs"><a href="#src-1">[1]</a><a href="#src-2">[2]</a><a href="#src-3">[3]</a></sup></p>
+<div class="table-wrap"><table class=""><thead><tr><th>年間・概算</th><th>通常賃貸</th><th>借上社宅</th></tr></thead><tbody><tr><td>制度利用前の報酬枠</td><td>5,000万円</td><td>5,000万円</td></tr><tr><td>会社契約の家賃に税前振替</td><td>—</td><td>900万円</td></tr><tr><td>現金給与・課税対象給与</td><td>5,000万円</td><td>4,100万円</td></tr><tr><td>給与所得控除</td><td>195万円</td><td>195万円</td></tr><tr><td>社会保険料控除〈仮定〉</td><td>150万円</td><td>150万円</td></tr><tr><td>基礎控除</td><td>0万円</td><td>0万円</td></tr><tr><td>課税所得</td><td>4,655万円</td><td>3,755万円</td></tr><tr><td>所得税・付加税</td><td>1,649.1万円</td><td>1,248.1万円</td></tr><tr><td>住民税等〈均等割等を含む〉</td><td>466.0万円</td><td>376.0万円</td></tr><tr><td>税引後給与〈社会保険料控除後〉</td><td>2,734.9万円</td><td>2,325.9万円</td></tr><tr><td>そこから個人が払う家賃</td><td>900万円</td><td>0万円</td></tr><tr><td>家賃負担後の年間手元資金</td><td>1,834.9万円</td><td><strong>2,325.9万円</strong></td></tr></tbody></table></div>
+<div class="two-col"><div><h3>所得税を単純に「45%」で計算しない</h3><p>家賃振替で減る課税所得900万円のうち、655万円は45%部分、245万円は40%部分。住民税所得割は10%として計算する。<sup class="refs"><a href="#src-1">[1]</a><a href="#src-4">[4]</a></sup></p><div class="formula">減る所得税・付加税<br>＝ (655万円 × 45% + 245万円 × 40%) × 1.021<br>＝ 約401.0万円<br><br>減る住民税 ＝ 900万円 × 10% ＝ 90万円<br><strong>合計の税負担減少 ＝ 約491.0万円</strong></div></div><div><h3>家賃の実質負担への変換</h3><div class="bar-row"><span>通常賃貸</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><strong>75.0万円</strong></div><div class="bar-row"><span>借上社宅</span><div class="bar-track"><div class="bar-fill corp" style="width:45.4%"></div></div><strong>34.1万円</strong></div><div class="stat-pair"><span>節税額 / 額面家賃</span><strong>54.56%</strong></div><div class="stat-pair"><span>10年間の累計税メリット</span><strong>4,910万円</strong></div><div class="stat-pair"><span>毎月差額を年3%で運用した10年後価値</span><strong>5,718万円</strong></div><p class="note">「54.56%」は家賃900万円に対する税負担減少率であって、給与全体の平均税率ではない。最後の金額は運用仮定を含み、保証された税効果ではない。</p></div></div>
+<div class="callout warning"><strong>税制上の扱いと会社制度の確認は、数字の前提になる。</strong><p>一般の使用人向け社宅では、税法上の「賃貸料相当額」の50%以上を本人から受け取るか等で給与課税が決まる。これは<strong>市場家賃75万円の50%</strong>ではない。現金の住宅手当や本人の直接契約は別扱い。年収から減らすだけで、どのケースでも非課税になるわけではない。<sup class="refs"><a href="#src-5">[5]</a></sup></p><p>ここでは「正式な給与明細が4,100万円になる」という説明を採用し、追加の本人負担・現物利益課税を0とした。規程・源泉徴収票・会社の税務処理の確認は未実施。税前振替率や現物利益はシミュレーターで変更できる。</p></div>
+<p class="note">住民税は原則として前年所得ベースで負担する。本分析は各年に帰属する税効果を同年の経済効果として評価し、特別徴収の月別タイミングは再現しない。制度利用開始直後に、月34.1万円相当の効果が直ちに給与明細に現れるという意味ではない。<sup class="refs"><a href="#src-4">[4]</a></sup></p></section>
+
+<section id="assumptions"><div class="sec-label">03 / APPLES TO APPLES</div><h2>「75万円で借りる住戸」を、いくらで買うか。</h2><p class="lead">前回の1億円・家賃30万円と同じ年家賃／価格比率3.6%を保ち、主シナリオを<strong>2.5億円・家賃75万円</strong>へ拡大。1億円の住戸と75万円の賃貸住宅を、そのまま比べることはしない。</p>
+<div class="table-wrap"><table class=""><thead><tr><th>項目</th><th>基準ケース</th><th>根拠・位置づけ</th></tr></thead><tbody><tr><td>額面報酬 / 月額家賃</td><td>5,000万円 / 75万円</td><td>ユーザー申告。家賃900万円を報酬から税前振替</td></tr><tr><td>同じ住戸の購入価格</td><td><strong>2億5,000万円</strong></td><td>分析上の仮定。年家賃900万円 ÷ 3.6%。相場査定ではない</td></tr><tr><td>住居・住む期間</td><td>同等の中古RCマンション / 10年</td><td>間取り・立地・品質を同じに固定。最後に売却</td></tr><tr><td>頭金 / ローン</td><td>2,500万円 / 2億2,500万円</td><td>LTV 90%。この金額を借りられるかは未確認</td></tr><tr><td>期間 / 金利</td><td>35年・元利均等 / 年1.5%一定</td><td>商品金利の引用ではなく、金利経路の仮定</td></tr><tr><td>取得費用 / 売却費用</td><td>購入額の7% / 売却額の3.5%</td><td>取得費用1,750万円。うち価格の4%を税務取得費に算入と仮置き</td></tr><tr><td>所有中の費用</td><td><strong>年間250万円</strong></td><td>管理・修繕積立150万円、税・保険・専有部修繕等100万円を仮置き</td></tr><tr><td>賃貸初期費用 / 更新料</td><td>家賃2か月 / 2年ごと1か月</td><td>社宅側にも同額を税引後負担させる。満期時の更新はしない</td></tr><tr><td>金融資産の運用利回り</td><td>税・費用控除後 年3%</td><td>名目年率を12分割して月次複利。元本保証ではない</td></tr><tr><td>家賃 / 保有費用の増加率</td><td>双方 年0%</td><td>基準ケース。増加するストレスは別掲</td></tr><tr><td>給与 / 社宅の継続</td><td>報酬5,000万円・10年間利用</td><td>購入・通常賃貸では5,000万円の現金報酬に戻る前提</td></tr><tr><td>売却税</td><td>算入。3,000万円控除あり</td><td>条件を満たす仮定。建物比率30%、RCの取得費減額を反映</td></tr><tr><td>住宅ローン控除</td><td>算入しない</td><td>この所得水準では所得要件を満たさない <sup class="refs"><a href="#src-8">[8]</a></sup></td></tr></tbody></table></div>
+<div class="callout"><strong>同じ初期資金、同じ毎月の支出可能額。</strong><p>初期資金は全員4,250万円。購入側は頭金と諸費用に使い、賃貸2ケースは初期費用150万円を払って残り4,100万円を運用する。毎月の予算は3ケースで同額とし、住居支出が少ないケースが差額を全額運用する。購入側が安い月も、同じように購入側が運用する。</p></div>
+<p class="note">購入価格2.5億円・年間保有費用250万円・融資2.25億円は実物件や金融機関から取得した数値ではない。特に保有費用は前回の1億円ケースを2.5倍した計算上の仮定で、実際の管理費・修繕計画・納税通知に置き換える必要がある。敷金の拘束資金・共通の引越費用・日常生活費・他の保有資産は比較から除外する。</p></section>
+
+<section id="wealth"><div class="sec-label">04 / ENDING NET WORTH</div><h2>返済額ではなく、売却・返済後に残る純資産で比較。</h2><p class="lead">以下は住戸価格が10年間横ばいの基準ケース。金融資産の利回りは3%、売却費用と譲渡税を控除する。</p>
+<div class="table-wrap"><table class=""><thead><tr><th>10年後・価格横ばい</th><th>購入</th><th>通常賃貸</th><th>借上社宅</th></tr></thead><tbody><tr><td>初期共通資金</td><td>4,250万円</td><td>4,250万円</td><td>4,250万円</td></tr><tr><td>初日に住居に支出</td><td>4,250万円</td><td>150万円</td><td>150万円</td></tr><tr><td>通常月の住居関連負担</td><td>89.7万円</td><td>75.0万円</td><td><strong>34.1万円</strong></td></tr><tr><td>10年後の住宅売却額</td><td>2億5,000万円</td><td>—</td><td>—</td></tr><tr><td>売却費用 / 売却税</td><td>875万円 / 0万円</td><td>—</td><td>—</td></tr><tr><td>10年後のローン残高</td><td>17,226万円</td><td>—</td><td>—</td></tr><tr><td>金融資産残高</td><td>281万円</td><td>7,521万円</td><td>13,239万円</td></tr><tr><td>比較用の最終純資産</td><td><strong>7,180万円</strong></td><td><strong>7,521万円</strong></td><td><strong>13,239万円</strong></td></tr><tr><td>購入との差</td><td>—</td><td>通常賃貸 +341万円</td><td><strong>借上社宅 +6,059万円</strong></td></tr></tbody></table></div>
+<div class="chart-box"><div class="legend"><span class="buy">購入</span><span class="rent">通常賃貸</span><span class="corp">借上社宅</span></div><svg class="chart" viewBox="0 0 940 350" role="img" aria-label="各年に売却したと仮定した比較用純資産（万円）"><line class="grid zero" x1="82" x2="912" y1="288.0" y2="288.0"/><text class="tick" x="70" y="292.0" text-anchor="end">0</text><line class="grid " x1="82" x2="912" y1="201.3" y2="201.3"/><text class="tick" x="70" y="205.3" text-anchor="end">5,000</text><line class="grid " x1="82" x2="912" y1="114.7" y2="114.7"/><text class="tick" x="70" y="118.7" text-anchor="end">10,000</text><line class="grid " x1="82" x2="912" y1="28.0" y2="28.0"/><text class="tick" x="70" y="32.0" text-anchor="end">15,000</text><text class="tick" x="82.0" y="321" text-anchor="middle">1</text><text class="tick" x="174.2" y="321" text-anchor="middle">2</text><text class="tick" x="358.7" y="321" text-anchor="middle">4</text><text class="tick" x="543.1" y="321" text-anchor="middle">6</text><text class="tick" x="727.6" y="321" text-anchor="middle">8</text><text class="tick" x="912.0" y="321" text-anchor="middle">10</text><text class="axis-title" x="82" y="16">各年に売却したと仮定した比較用純資産（万円）</text><text class="axis-title" x="912" y="347" text-anchor="end">経過年数</text><polyline class="series buy" points="82.00,251.30 174.22,241.58 266.44,232.75 358.67,222.75 450.89,213.61 543.11,203.30 635.33,193.86 727.56,183.23 819.78,173.46 912.00,163.55"><title>購入</title></polyline><polyline class="series rent" points="82.00,211.67 174.22,206.49 266.44,200.91 358.67,195.41 450.89,189.49 543.11,183.64 635.33,177.36 727.56,171.15 819.78,164.49 912.00,157.63"><title>通常賃貸</title></polyline><polyline class="series corp" points="82.00,203.04 174.22,188.98 266.44,174.23 358.67,159.29 450.89,143.64 543.11,127.77 635.33,111.16 727.56,94.31 819.78,76.68 912.00,58.52"><title>借上社宅</title></polyline></svg></div>
+<p class="note">「比較用純資産」は共通の生活費・共通の金融資産を取り除いたモデル内残高であり、本人の総資産予測ではない。各年の購入側は、その時点で売却したと仮定した清算価値。グラフは10年シナリオの予算を共通にした経路表示であり、各年で契約を終了する別シナリオそのものではない。</p>
+<h3>購入側に金融資産が約281万円ある理由</h3><p>更新料が発生する月は通常賃貸の支出が購入を上回る。その月の共通予算に対して、購入側にも余剰資金が生まれ、同じ年3%で運用される。賃貸側だけに運用を認める非対称なモデルではない。</p>
+<div class="formula">購入の最終純資産<br>＝ 売却価格 − 売却費用 − 売却税 − 残ローン + 金融資産<br><br>賃貸・社宅の最終純資産<br>＝ 初期余剰資金の運用残高 + 毎月の支出差額の運用残高</div>
+</section>
+
+<section id="break-even"><div class="sec-label">05 / BREAK-EVEN FRONTIER</div><h2>購入に必要な「値上がりのハードル」を見る。</h2><p class="lead">売却価格以外のキャッシュフローを固定して、購入と賃貸の最終純資産が一致する売値を逆算する。</p>
+<div class="chart-box"><div class="legend"><span class="rent">購入 − 通常賃貸</span><span class="corp">購入 − 借上社宅</span></div><svg class="chart" viewBox="0 0 940 350" role="img" aria-label="購入側の10年後純資産 − 賃貸側（万円）"><line class="grid " x1="82" x2="912" y1="288.0" y2="288.0"/><text class="tick" x="70" y="292.0" text-anchor="end">-20,000</text><line class="grid " x1="82" x2="912" y1="223.0" y2="223.0"/><text class="tick" x="70" y="227.0" text-anchor="end">-10,000</text><line class="grid zero" x1="82" x2="912" y1="158.0" y2="158.0"/><text class="tick" x="70" y="162.0" text-anchor="end">0</text><line class="grid " x1="82" x2="912" y1="93.0" y2="93.0"/><text class="tick" x="70" y="97.0" text-anchor="end">10,000</text><line class="grid " x1="82" x2="912" y1="28.0" y2="28.0"/><text class="tick" x="70" y="32.0" text-anchor="end">20,000</text><text class="tick" x="82.0" y="321" text-anchor="middle">-3</text><text class="tick" x="174.2" y="321" text-anchor="middle">-2</text><text class="tick" x="266.4" y="321" text-anchor="middle">-1</text><text class="tick" x="358.7" y="321" text-anchor="middle">0</text><text class="tick" x="450.9" y="321" text-anchor="middle">1</text><text class="tick" x="543.1" y="321" text-anchor="middle">2</text><text class="tick" x="635.3" y="321" text-anchor="middle">3</text><text class="tick" x="727.6" y="321" text-anchor="middle">4</text><text class="tick" x="819.8" y="321" text-anchor="middle">5</text><text class="tick" x="912.0" y="321" text-anchor="middle">6</text><text class="axis-title" x="82" y="16">購入側の10年後純資産 − 賃貸側（万円）</text><text class="axis-title" x="912" y="347" text-anchor="end">その住戸の年率価格変化率（%）</text><polyline class="series rent" points="82.00,201.39 105.06,198.38 128.11,195.29 151.17,192.14 174.22,188.90 197.28,185.60 220.33,182.21 243.39,178.75 266.44,175.21 289.50,171.59 312.56,167.89 335.61,164.10 358.67,160.22 381.72,156.25 404.78,152.20 427.83,148.05 450.89,143.81 473.94,139.48 497.00,135.11 520.06,131.50 543.11,127.81 566.17,124.03 589.22,120.17 612.28,116.23 635.33,112.20 658.39,108.08 681.44,103.87 704.50,99.56 727.56,95.16 750.61,90.67 773.67,86.08 796.72,81.38 819.78,76.59 842.83,71.69 865.89,66.69 888.94,61.57 912.00,56.35"><title>購入 − 通常賃貸</title></polyline><polyline class="series corp" points="82.00,238.56 105.06,235.54 128.11,232.46 151.17,229.30 174.22,226.07 197.28,222.76 220.33,219.38 243.39,215.92 266.44,212.38 289.50,208.76 312.56,205.05 335.61,201.26 358.67,197.38 381.72,193.42 404.78,189.36 427.83,185.22 450.89,180.98 473.94,176.64 497.00,172.28 520.06,168.67 543.11,164.97 566.17,161.20 589.22,157.34 612.28,153.39 635.33,149.36 658.39,145.24 681.44,141.03 704.50,136.73 727.56,132.33 750.61,127.83 773.67,123.24 796.72,118.55 819.78,113.75 842.83,108.85 865.89,103.85 888.94,98.74 912.00,93.52"><title>購入 − 借上社宅</title></polyline></svg></div>
+<p class="note">縦軸が正なら購入、負なら比較先の賃貸が有利。通常賃貸の分岐は年+0.14%、借上社宅の分岐は年+2.46%。どちらも住戸自身の経年変化を含む売値であり、住宅価格指数の上昇率ではない。</p>
+<div class="table-wrap"><table class=""><thead><tr><th>住戸の年率価格変化</th><th>10年後の売値</th><th>購入 − 通常賃貸</th><th>購入 − 借上社宅</th></tr></thead><tbody><tr><td>-2.0%</td><td>2.043億円</td><td>−4,754万円</td><td>−10,472万円</td></tr><tr><td>+0.0%</td><td>2.500億円</td><td>−341万円</td><td>−6,059万円</td></tr><tr><td>+1.0%</td><td>2.762億円</td><td>+2,183万円</td><td>−3,535万円</td></tr><tr><td>+2.0%</td><td>3.047億円</td><td>+4,645万円</td><td>−1,073万円</td></tr><tr><td>+2.5%</td><td>3.200億円</td><td>+5,819万円</td><td>+102万円</td></tr><tr><td>+3.0%</td><td>3.360億円</td><td>+7,047万円</td><td>+1,329万円</td></tr><tr><td>+4.0%</td><td>3.701億円</td><td>+9,667万円</td><td>+3,950万円</td></tr></tbody></table></div>
+<div class="two-col"><div class="card"><h3>金利の損益分岐</h3><p>価格横ばい・10年保有では、通常賃貸との分岐金利は<strong>約1.35%</strong>。</p><p>借上社宅に対しては、<strong>金利0%でも購入は下回る</strong>。金利だけを安くすれば解決する条件ではない。金利0%でも住戸価格に年約1.09%の上昇が必要。</p></div><div class="card"><h3>買値の損益分岐</h3><p>将来の売値を<strong>2.5億円に固定</strong>して買値だけを変えると、購入が社宅と互角になる取得価格は<strong>約2.020億円</strong>。</p><p>これは将来評価を据え置いて約19%安く買う仮定。相場の値下がりに伴い将来売値も下げる場合とは、意味が違う。</p></div></div>
+<details><summary>「購入価格の上限」には、2つの別の問いがある</summary><div class="detail-body"><p><strong>① 将来売値を固定して、今いくらまで払うか。</strong>基準ケースの10年後売値2.5億円を固定すると、分岐買値は約2.020億円。将来売値への評価が正しいことが前提。</p><p><strong>② 買値を変えるたび、将来も同額で売る横ばいケースにする。</strong>家賃75万円・保有費用250万円を固定すると、社宅との分岐は約0.710億円まで下がる。これはその値段で買えるという主張ではなく、社宅に対して「値上がりなし」で勝つハードルの高さを示す仮想計算。実務で値付けするには①と②を混ぜない。</p></div></details>
+<h3>運用利回り × 住宅ローン金利</h3><p>表の値は、<strong>借上社宅と互角になる住戸価格の年率変化</strong>。その他は基準ケース。1.5%金利・3%運用のセルが基本設定。</p>
+<div class="table-wrap"><table class="heat"><thead><tr><th>税後運用利回り ↓ / ローン金利 →</th><th>1.0%</th><th>1.5%</th><th>2.5%</th><th>4.0%</th></tr></thead><tbody><tr><td>運用 0%</td><td><span class="heat-cell">+1.01%</span></td><td><span class="heat-cell">+1.39%</span></td><td><span class="heat-cell">+2.29%</span></td><td><span class="heat-cell">+3.59%</span></td></tr><tr><td>運用 1%</td><td><span class="heat-cell">+1.28%</span></td><td><span class="heat-cell">+1.71%</span></td><td><span class="heat-cell">+2.64%</span></td><td><span class="heat-cell">+3.95%</span></td></tr><tr><td>運用 3%</td><td><span class="heat-cell">+1.98%</span></td><td><span class="heat-cell">+2.46%</span></td><td><span class="heat-cell">+3.39%</span></td><td><span class="heat-cell">+4.71%</span></td></tr><tr><td>運用 5%</td><td><span class="heat-cell">+2.80%</span></td><td><span class="heat-cell">+3.28%</span></td><td><span class="heat-cell">+4.22%</span></td><td><span class="heat-cell">+5.54%</span></td></tr></tbody></table></div>
+<p class="note">高い運用利回りは賃貸の優位を大きくするが、実現にはリスクが伴う。「税後3%だから安全」とは扱わない。利回り0%でも、社宅と互角になるには住戸の年率約1.39%の上昇が必要。</p>
+<h3>長く住めば、必ず購入が勝つわけではない</h3>
+<div class="table-wrap"><table class=""><thead><tr><th>居住・保有期間</th><th>通常賃貸との分岐</th><th>借上社宅との分岐</th></tr></thead><tbody><tr><td>3年</td><td>+2.48%</td><td>+4.46%</td></tr><tr><td>5年</td><td>+1.13%</td><td>+3.14%</td></tr><tr><td>10年</td><td>+0.14%</td><td>+2.46%</td></tr><tr><td>15年</td><td>-0.21%</td><td>+2.23%</td></tr><tr><td>20年</td><td>-0.35%</td><td>+2.26%</td></tr></tbody></table></div>
+<p class="note">上表は期間ごとに独立して再計算し、社宅・報酬・税制がその全期間続くと仮定。15年・20年では要件を満たす10年超所有の軽減税率を使う。時間による減価、運用複利、税負担が相互に効くため、分岐率が単調に下がるとは限らない。基準条件・価格横ばいでは、1〜35年の範囲に社宅を逆転する保有年数は見つからない。</p>
+</section>
+
+<section id="continuity"><div class="sec-label">06 / CONTINUITY & STRESS</div><h2>最大の個人パラメータは、制度を何年使えるか。</h2><p class="lead">社宅の税メリットは、住宅価格の見通しと違って計算しやすい。一方で、雇用・会社規程・報酬水準・税制に依存する。10年間の継続を無条件の権利として評価しない。</p>
+<div class="table-wrap"><table class=""><thead><tr><th>社宅が使える期間</th><th>通常賃貸に対する優位の10年後価値</th><th>購入に必要な売値</th><th>必要な年率値上がり</th></tr></thead><tbody><tr><td>0年〈利用なし〉</td><td>0万円</td><td>2.535億円</td><td>+0.14%</td></tr><tr><td>3年 → 以後通常賃貸</td><td>1,899万円</td><td>2.732億円</td><td>+0.89%</td></tr><tr><td>5年 → 以後通常賃貸</td><td>3,073万円</td><td>2.854億円</td><td>+1.33%</td></tr><tr><td>7年 → 以後通常賃貸</td><td>4,178万円</td><td>2.987億円</td><td>+1.80%</td></tr><tr><td>10年〈全期間〉</td><td>5,718万円</td><td>3.187億円</td><td>+2.46%</td></tr></tbody></table></div>
+<p class="note">制度終了後も同じ家賃・同じ住戸で通常賃貸を続け、額面報酬は5,000万円に戻る仮定。失職による所得低下、住み替え費用、契約切替費用はこの表には入れない。制度を失うリスクだけを切り出したもの。</p>
+<h3>単独ストレスで、どこまで結論が動くか</h3>
+<div class="table-wrap"><table class=""><thead><tr><th>単独の条件変更</th><th>購入が社宅を上回る分岐売値</th><th>年率価格変化</th></tr></thead><tbody><tr><td>基本設定</td><td>3.187億円</td><td>+2.46%</td></tr><tr><td>保有費用を年150万円に縮小</td><td>3.036億円</td><td>+1.96%</td></tr><tr><td>家賃のみ年2%上昇〈税前振替も全額追随〉</td><td>3.123億円</td><td>+2.25%</td></tr><tr><td>家賃・保有費用とも年2%上昇</td><td>3.157億円</td><td>+2.36%</td></tr><tr><td>5年間1.5%、6年目から金利3%</td><td>3.383億円</td><td>+3.07%</td></tr><tr><td>8年目に追加修繕負担500万円</td><td>3.256億円</td><td>+2.68%</td></tr><tr><td>社宅の税前振替は家賃の90%</td><td>3.118億円</td><td>+2.23%</td></tr><tr><td>現物利益の追加課税5万円/月</td><td>3.141億円</td><td>+2.31%</td></tr><tr><td>売却の3,000万円控除を使えない</td><td>3.266億円</td><td>+2.71%</td></tr><tr><td>全期間IO〈同金利・同費用の仮想比較〉</td><td>3.132億円</td><td>+2.28%</td></tr></tbody></table></div>
+<p class="note">金利変更ケースは変更時に残存期間で返済額を再計算し、5年・125%ルールは適用しない。これは金利負担のストレスであり、特定銀行商品の再現ではない。IOは同金利・同費用という仮想商品で、満期元本は売却代金から返す。</p>
+<div class="callout purple"><strong>社宅を使いながら「後で買う」選択肢にも価値がある。</strong><p>この報告書は「今買ってN年後に売る」と「N年間借りる」の比較。社宅を数年使ってから購入する戦略は、将来の価格・金利・勤務先制度を観測して判断できる点が異なる。将来の買値を仮定していないため、そのオプション価値は数値に上乗せしていない。</p></div>
+<h3>投資としての有利さと、住まいの価値は別に考える</h3><p>購入には改装・居住継続など所有ならではの価値がある。一方で、売却流動性、管理組合の意思決定、修繕、災害の損失も抱える。このモデルはそれらに便宜的な金額をつけて結論を操作せず、<strong>「その住み心地のために、いくらの経済差を受け入れるか」</strong>を別の判断として残す。</p>
+</section>
+
+<section id="simulator"><div class="sec-label">07 / INTERACTIVE LAB</div><h2>条件を変えて、損益分岐を再計算。</h2><p class="lead">上の01〜06章は<strong>基準ケースの固定レポート</strong>。この章だけが入力に連動する。家賃・購入価格は同等の住戸について入力する。</p><span id="sim-status" class="sim-status">基準ケースの計算結果を表示</span><noscript><div class="callout warning">この閲覧環境ではJavaScriptが無効です。基準ケースの本文・表・図はそのまま読めます。条件変更はJavaScriptを有効にしたブラウザーで開いてください。</div></noscript>
+<div class="controls"><div class="field"><label for="f-price">購入価格（万円）</label><input id="f-price" data-param="price" type="number" value="25000" min="1000" max="100000" step="500" inputmode="decimal"></div><div class="field"><label for="f-rent">同等住戸の月額家賃（万円）</label><input id="f-rent" data-param="rent" type="number" value="75" min="10" max="200" step="5" inputmode="decimal"></div><div class="field"><label for="f-years">居住・比較期間（年）</label><input id="f-years" data-param="years" type="number" value="10" min="1" max="35" step="1" inputmode="decimal"></div><div class="field"><label for="f-growth">その住戸の価格変化率（年%）</label><input id="f-growth" data-param="growth" type="number" value="0" min="-10" max="10" step="0.25" inputmode="decimal"></div><div class="field"><label for="f-mortgage_rate">住宅ローン金利（年%）</label><input id="f-mortgage_rate" data-param="mortgage_rate" type="number" value="1.5" min="0" max="15" step="0.1" inputmode="decimal"></div><div class="field"><label for="f-invest">金融資産・税後利回り（年%）</label><input id="f-invest" data-param="invest" type="number" value="3" min="0" max="10" step="0.5" inputmode="decimal"></div><div class="field"><label for="f-corp_years">社宅が使える期間（年）</label><input id="f-corp_years" data-param="corp_years" type="number" value="10" min="0" max="35" step="1" inputmode="decimal"></div><div class="field"><label for="f-salary">社宅振替前の年収（万円）</label><input id="f-salary" data-param="salary" type="number" value="5000" min="3000" max="10000" step="100" inputmode="decimal"></div><div class="field"><label for="f-loan_type">元本の返済方法</label><select id="f-loan_type" data-param="loan_type"><option value="amortizing">元利均等返済</option><option value="io">全期間IO〈仮想比較〉</option></select></div></div>
+<details id="simAdvanced"><summary>詳細設定：取得費用・税・社宅条件・金利変更・修繕</summary><div class="detail-body"><div class="controls"><div class="field"><label for="f-ltv">LTV（%）</label><input id="f-ltv" data-param="ltv" type="number" value="90" min="0" max="100" step="5" inputmode="decimal"></div><div class="field"><label for="f-mortgage_years">ローン期間（年）</label><input id="f-mortgage_years" data-param="mortgage_years" type="number" value="35" min="5" max="50" step="1" inputmode="decimal"></div><div class="field"><label for="f-buy_cost">購入諸費用（価格の%）</label><input id="f-buy_cost" data-param="buy_cost" type="number" value="7" min="0" max="15" step="0.5" inputmode="decimal"></div><div class="field"><label for="f-sell_cost">売却費用（売値の%）</label><input id="f-sell_cost" data-param="sell_cost" type="number" value="3.5" min="0" max="10" step="0.1" inputmode="decimal"></div><div class="field"><label for="f-owner_cost">所有中費用（年・万円）</label><input id="f-owner_cost" data-param="owner_cost" type="number" value="250" min="0" max="1000" step="10" inputmode="decimal"></div><div class="field"><label for="f-rent_initial">賃貸初期費用（家賃の月数）</label><input id="f-rent_initial" data-param="rent_initial" type="number" value="2" min="0" max="10" step="0.5" inputmode="decimal"></div><div class="field"><label for="f-renewal">2年ごとの更新料（家賃の月数）</label><input id="f-renewal" data-param="renewal" type="number" value="1" min="0" max="3" step="0.5" inputmode="decimal"></div><div class="field"><label for="f-rent_growth">家賃増加率（年%）</label><input id="f-rent_growth" data-param="rent_growth" type="number" value="0" min="-5" max="10" step="0.5" inputmode="decimal"></div><div class="field"><label for="f-owner_growth">所有中費用増加率（年%）</label><input id="f-owner_growth" data-param="owner_growth" type="number" value="0" min="-5" max="10" step="0.5" inputmode="decimal"></div><div class="field"><label for="f-social">通常・購入の社会保険料（年・万円）</label><input id="f-social" data-param="social" type="number" value="150" min="0" max="500" step="10" inputmode="decimal"></div><div class="field"><label for="f-social_corp">社宅利用時の社会保険料（年・万円）</label><input id="f-social_corp" data-param="social_corp" type="number" value="150" min="0" max="500" step="10" inputmode="decimal"></div><div class="field"><label for="f-other_deduction">その他の所得控除（年・万円）</label><input id="f-other_deduction" data-param="other_deduction" type="number" value="0" min="0" max="500" step="10" inputmode="decimal"></div><div class="field"><label for="f-sacrifice">家賃の税前振替率（%）</label><input id="f-sacrifice" data-param="sacrifice" type="number" value="100" min="0" max="100" step="5" inputmode="decimal"></div><div class="field"><label for="f-cap">税前振替の上限（月・万円、0=なし）</label><input id="f-cap" data-param="cap" type="number" value="0" min="0" max="200" step="5" inputmode="decimal"></div><div class="field"><label for="f-fringe">別途課税される現物利益（月・万円）</label><input id="f-fringe" data-param="fringe" type="number" value="0" min="0" max="50" step="1" inputmode="decimal"></div><div class="field"><label for="f-building_share">取得価格の建物比率（%）</label><input id="f-building_share" data-param="building_share" type="number" value="30" min="0" max="100" step="5" inputmode="decimal"></div><div class="field"><label for="f-basis_cost">税務取得費に入れる購入費用（価格の%）</label><input id="f-basis_cost" data-param="basis_cost" type="number" value="4" min="0" max="15" step="0.5" inputmode="decimal"></div><div class="field"><label for="f-deduction_sale">売却益の特別控除（万円）</label><input id="f-deduction_sale" data-param="deduction_sale" type="number" value="3000" min="0" max="3000" step="1000" inputmode="decimal"></div><div class="field"><label for="f-step_year">金利変更までの年数（0=なし）</label><input id="f-step_year" data-param="step_year" type="number" value="0" min="0" max="34" step="1" inputmode="decimal"></div><div class="field"><label for="f-step_rate">変更後のローン金利（年%）</label><input id="f-step_rate" data-param="step_rate" type="number" value="3" min="0" max="15" step="0.1" inputmode="decimal"></div><div class="field"><label for="f-extra_repair">追加修繕一時負担（万円）</label><input id="f-extra_repair" data-param="extra_repair" type="number" value="0" min="0" max="5000" step="100" inputmode="decimal"></div><div class="field"><label for="f-repair_year">追加修繕の支払年</label><input id="f-repair_year" data-param="repair_year" type="number" value="8" min="1" max="35" step="1" inputmode="decimal"></div><div class="field check"><input type="checkbox" id="f-sale_tax" data-param="sale_tax" checked><label for="f-sale_tax">売却税を算入する</label></div><div class="field check"><input type="checkbox" id="f-reduced_long" data-param="reduced_long" checked><label for="f-reduced_long">11年目以降は10年超軽減を適用〈要件を満たす仮定〉</label></div></div><p class="note">税前振替率100%では家賃全額が給与から振り替わる。例えば90%なら残り10%は税引後で本人負担。現物利益は給与課税だけに加算し、現金収入には加算しない。更新料・初期費用は両賃貸方式とも税引後負担のまま。</p></div></details>
+<div class="buttons"><button id="recalculate" type="button">再計算</button><button class="secondary" id="reset" type="button">個人ケースに戻す</button><button class="secondary" id="previous" type="button">前回の1億円・家賃30万円</button><button class="secondary" id="csv" type="button">月次データCSV</button><button class="secondary" id="save-settings" type="button">設定を保存</button></div>
+<div class="error" id="sim-error" role="alert"></div>
+<div id="sim-results" aria-live="polite"><div class="sim-kpis"><div class="kpi"><span>適用初年度の実質家賃</span><strong id="sim-rent">34.1万円</strong><small>月額・更新料を除く</small></div><div class="kpi purple"><span>初年度の社宅メリット</span><strong id="sim-tax">491万円</strong><small>年間・社会保険差も含む</small></div><div class="kpi navy"><span>購入 vs 社宅：分岐売値</span><strong id="sim-be-price">3.187億円</strong><small id="sim-be-period">10年後の売却価格</small></div><div class="kpi purple"><span>必要な年率価格変化</span><strong id="sim-be-growth">+2.46%</strong><small>購入 vs 社宅</small></div></div><div id="sim-verdict" class="callout">現在の仮定では、借上社宅が購入を約6,059万円上回ります。</div><div id="sim-table"><div class="table-wrap"><table class=""><thead><tr><th>10年後・価格横ばい</th><th>購入</th><th>通常賃貸</th><th>借上社宅</th></tr></thead><tbody><tr><td>初期共通資金</td><td>4,250万円</td><td>4,250万円</td><td>4,250万円</td></tr><tr><td>初日に住居に支出</td><td>4,250万円</td><td>150万円</td><td>150万円</td></tr><tr><td>通常月の住居関連負担</td><td>89.7万円</td><td>75.0万円</td><td><strong>34.1万円</strong></td></tr><tr><td>10年後の住宅売却額</td><td>2億5,000万円</td><td>—</td><td>—</td></tr><tr><td>売却費用 / 売却税</td><td>875万円 / 0万円</td><td>—</td><td>—</td></tr><tr><td>10年後のローン残高</td><td>17,226万円</td><td>—</td><td>—</td></tr><tr><td>金融資産残高</td><td>281万円</td><td>7,521万円</td><td>13,239万円</td></tr><tr><td>比較用の最終純資産</td><td><strong>7,180万円</strong></td><td><strong>7,521万円</strong></td><td><strong>13,239万円</strong></td></tr><tr><td>購入との差</td><td>—</td><td>通常賃貸 +341万円</td><td><strong>借上社宅 +6,059万円</strong></td></tr></tbody></table></div></div><div id="sim-thresholds" class="note"></div><div id="sim-plot" class="chart-box"><div class="legend"><span class="rent">購入 − 通常賃貸</span><span class="corp">購入 − 借上社宅</span></div><svg class="chart" viewBox="0 0 940 350" role="img" aria-label="購入側の10年後純資産 − 賃貸側（万円）"><line class="grid " x1="82" x2="912" y1="288.0" y2="288.0"/><text class="tick" x="70" y="292.0" text-anchor="end">-20,000</text><line class="grid " x1="82" x2="912" y1="223.0" y2="223.0"/><text class="tick" x="70" y="227.0" text-anchor="end">-10,000</text><line class="grid zero" x1="82" x2="912" y1="158.0" y2="158.0"/><text class="tick" x="70" y="162.0" text-anchor="end">0</text><line class="grid " x1="82" x2="912" y1="93.0" y2="93.0"/><text class="tick" x="70" y="97.0" text-anchor="end">10,000</text><line class="grid " x1="82" x2="912" y1="28.0" y2="28.0"/><text class="tick" x="70" y="32.0" text-anchor="end">20,000</text><text class="tick" x="82.0" y="321" text-anchor="middle">-3</text><text class="tick" x="174.2" y="321" text-anchor="middle">-2</text><text class="tick" x="266.4" y="321" text-anchor="middle">-1</text><text class="tick" x="358.7" y="321" text-anchor="middle">0</text><text class="tick" x="450.9" y="321" text-anchor="middle">1</text><text class="tick" x="543.1" y="321" text-anchor="middle">2</text><text class="tick" x="635.3" y="321" text-anchor="middle">3</text><text class="tick" x="727.6" y="321" text-anchor="middle">4</text><text class="tick" x="819.8" y="321" text-anchor="middle">5</text><text class="tick" x="912.0" y="321" text-anchor="middle">6</text><text class="axis-title" x="82" y="16">購入側の10年後純資産 − 賃貸側（万円）</text><text class="axis-title" x="912" y="347" text-anchor="end">その住戸の年率価格変化率（%）</text><polyline class="series rent" points="82.00,201.39 105.06,198.38 128.11,195.29 151.17,192.14 174.22,188.90 197.28,185.60 220.33,182.21 243.39,178.75 266.44,175.21 289.50,171.59 312.56,167.89 335.61,164.10 358.67,160.22 381.72,156.25 404.78,152.20 427.83,148.05 450.89,143.81 473.94,139.48 497.00,135.11 520.06,131.50 543.11,127.81 566.17,124.03 589.22,120.17 612.28,116.23 635.33,112.20 658.39,108.08 681.44,103.87 704.50,99.56 727.56,95.16 750.61,90.67 773.67,86.08 796.72,81.38 819.78,76.59 842.83,71.69 865.89,66.69 888.94,61.57 912.00,56.35"><title>購入 − 通常賃貸</title></polyline><polyline class="series corp" points="82.00,238.56 105.06,235.54 128.11,232.46 151.17,229.30 174.22,226.07 197.28,222.76 220.33,219.38 243.39,215.92 266.44,212.38 289.50,208.76 312.56,205.05 335.61,201.26 358.67,197.38 381.72,193.42 404.78,189.36 427.83,185.22 450.89,180.98 473.94,176.64 497.00,172.28 520.06,168.67 543.11,164.97 566.17,161.20 589.22,157.34 612.28,153.39 635.33,149.36 658.39,145.24 681.44,141.03 704.50,136.73 727.56,132.33 750.61,127.83 773.67,123.24 796.72,118.55 819.78,113.75 842.83,108.85 865.89,103.85 888.94,98.74 912.00,93.52"><title>購入 − 借上社宅</title></polyline></svg></div><div id="sim-warning" class="note"></div></div>
+<p class="note">入力はブラウザー内だけで計算し、外部へ送信しない。変更後は「再計算」を押す。保存する設定ファイルとCSVには給与・家賃等の個人情報が含まれる。投資利回りは税後を入力するため、金融資産売却時に譲渡税を再度引かない。</p>
+</section>
+
+<section id="method"><div class="sec-label">08 / METHODOLOGY & LIMITS</div><h2>計算の構造と、実行前の確認事項。</h2>
+<h3>1. 社宅の税効果を、家計キャッシュフローに変換</h3><div class="formula">G：社宅利用前の現金報酬　R：年間家賃<br>A：税前に振り替える家賃　V：別途課税される現物利益<br>S₀ / S₁：通常 / 社宅の社会保険料<br>T(給与, 保険料)：所得税・付加税・住民税の概算<br><br>通常賃貸後の手元資金 ＝ G − S₀ − T(G,S₀) − R<br>社宅利用後の手元資金 ＝ G − R − S₁ − T(G−A+V,S₁)<br><br>実質家賃負担 ＝ R − [T(G,S₀) − T(G−A+V,S₁)] + (S₁−S₀)</div>
+<p>額面給与の減額と家賃支出は別々に二重控除しない。会社負担分以外の家賃は本人が税引後で負担する。社会保険の現物給与評価は所得税の社宅評価とは別の仕組みであるため、社会保険の節約を自動的には織り込まない。<sup class="refs"><a href="#src-7">[7]</a></sup></p>
+<h3>2. 月次の同一予算で、金融資産を積み立てる</h3><div class="formula">Bₘ ＝ max(購入住居支出ₘ, 通常賃貸支出ₘ, 社宅実質支出ₘ)<br>金融資産ⱼ,ₘ ＝ 金融資産ⱼ,ₘ₋₁ × (1 + r / 12) + Bₘ − 住居支出ⱼ,ₘ<br><br>購入純資産 ＝ 売値 × (1 − 売却費用率) − 売却税 − 残債 + 金融資産<br>損益分岐売値 P*：購入純資産(P*) ＝ 比較先の金融資産<br>損益分岐年率 g* ＝ (P* / 購入価格)^(1 / 保有年数) − 1</div>
+<p>予算Bを十分大きい共通額に置くのは、資金不足をモデル上発生させず、同じ給与・生活消費にそろえるため。共通資産の絶対水準はBの取り方に依存するが、<strong>ケース間の純資産差は依存しない</strong>。実際にその予算を用意できるかは別途確認する。</p>
+<h3>3. 売却税・取得費のモデル</h3><p>購入費用7%のうち4%を税務取得費に入れ、残りは取得費に入れない仮定。土地・建物への費用配分も価格比率30%に比例させる。非業務用RC建物の取得費は「取得価額 × 0.9 × 0.015 × 経過年数」を差し引く。95%が限度。<sup class="refs"><a href="#src-10">[10]</a></sup></p><div class="formula">課税譲渡益 ＝ max[0, 売値 − 売却費用 − 減価後取得費 − 3,000万円]<br><br>基準10年ケース：譲渡税率20.315%<br>保有5年以内のケース：39.63%<br>保有11年以上・特例適用：課税譲渡益6,000万円まで14.21%、超過分20.315%</div>
+<p>取得日・売却日をそれぞれ9月とみなし、売却年1月1日の所有期間で長短を判定する。ちょうど5年後の売却は短期、ちょうど10年後では10年超軽減を使わない。3,000万円控除と10年超軽減は要件を満たす想定だが、実際の居住歴・過去の特例利用・売却相手等により変わる。<sup class="refs"><a href="#src-9">[9]</a><a href="#src-11">[11]</a><a href="#src-12">[12]</a><a href="#src-13">[13]</a><a href="#src-4">[4]</a></sup></p>
+<h3>4. 税制を将来に固定する仮定</h3><p>2026年確認の所得税・住民税・特例を計算期間に固定。2027年からは復興特別所得税の税率変更と防衛特別所得税が予定されるが、給与所得税に対する付加分の合計を2.1%としてモデル化する。将来の所得税改正や社宅制度の改定を予言しているわけではない。<sup class="refs"><a href="#src-1">[1]</a></sup></p>
+<p>基準ケースは社会保険料150万円、その他控除なし。ふるさと納税の返礼品価値、所得金額調整控除、外国税額控除、給与以外の総合課税所得、退職金・株式報酬の変動、高額売却益で影響し得る追加の高所得者課税などは未反映。所得税の課税所得は千円未満切捨て、税額の最終端数処理は簡略化している。</p>
+<h3>5. 勤務先に確認する項目</h3>
+<div class="table-wrap"><table class=""><thead><tr><th>確認すること</th><th>このモデルへの影響</th></tr></thead><tbody><tr><td>社宅を使わないと、報酬枠5,000万円は全額現金給与になるか</td><td>購入側の反実仮想。ならない場合は比較の土台が変わる</td></tr><tr><td>税引後本人負担・課税現物利益が別にないか</td><td>初期値は0。ある場合は振替率や現物利益を修正</td></tr><tr><td>給与明細の4,100万円と源泉徴収票の支払金額が一致するか</td><td>現物利益の加算、賞与との相殺、税前・税後控除を確認</td></tr><tr><td>更新料・礼金・保証料・管理費も税前処理されるか</td><td>本モデルは家賃以外の賃貸費用を税引後負担とした</td></tr><tr><td>家賃上限・利用年数・退職時の期限・転籍や休職時の扱い</td><td>社宅の継続年数、上限、退出費用を変更</td></tr><tr><td>所得税法上「使用人」か「役員」か</td><td>役職名だけで判断せず、社宅課税の適用区分を確認 <sup class="refs"><a href="#src-5">[5]</a><a href="#src-6">[6]</a></sup></td></tr><tr><td>実際の社会保険料と現物給与評価</td><td>所得税とは別計算。2026年10月の住宅評価改定も確認 <sup class="refs"><a href="#src-7">[7]</a><a href="#src-14">[14]</a></sup></td></tr></tbody></table></div>
+<h3>6. この数字に含まれないもの</h3><p>災害・訴訟・管理不全の確率分布、物件の実査、賃料の成約実績、銀行の融資審査、賃貸借の個別解約条項、資産リターンの変動・相関、売却に要する期間、売却後の次の住居コストは未評価。価格変化率に経年による減価を含めるので、住宅価値の減価を別途費用として二重計上しない。税務上の取得費減額は、売却税を計算するためだけに別に使う。</p>
+<div class="callout"><strong>使い方：未来を当てる資料ではなく、価格と制度のどこを確認すべきかを決める資料。</strong><p>実住戸の売買価格・賃料・管理費・税負担と、勤務先の給与処理を入力した後、必要値上がり率を自分の価格観と比較する。そのハードルを超える見通しがない場合、購入の非金銭的価値に差額を払う意思があるかを分けて判断する。</p></div>
+<details id="codeDetails"><summary>再現用：計算エンジンのJavaScriptを表示</summary><div class="detail-body"><p class="note">このHTMLに埋め込まれている関数。金額単位は円、利率は小数。ブラウザーの開発者コンソールで HousingModel.run(BASE_PARAMS) 等を実行できる。</p><pre class="code">&#x27;use strict&#x27;;
+/* Deterministic monthly cash-flow model. All monetary values in JPY.
+ * Tax law is a fixed-rate 2026 snapshot, not a tax-return calculator.
+ * Identical initial capital and monthly disposable housing budgets for all strategies.
+ */
+const HousingModel = (() =&gt; {
+ const clone=(p,x={})=&gt;Object.assign({},p,x);
+ function wageDeduction(g){return g&lt;=2200000?Math.min(g,740000):g&lt;=3600000?g*.3+80000:g&lt;=6600000?g*.2+440000:g&lt;=8500000?g*.1+1100000:1950000;}
+ function basicDeduction(i,local=false){
+  if(i&gt;25000000)return 0;
+  if(i&gt;24500000)return local?150000:160000;
+  if(i&gt;24000000)return local?290000:320000;
+  if(local)return 430000;
+  if(i&gt;23500000)return 480000;
+  if(i&gt;6550000)return 620000;
+  if(i&gt;4890000)return 670000;
+  return 1040000;
+ }
+ function tax(g,s,other=0){
+  const inc=Math.max(0,g-wageDeduction(g));
+  const x=Math.max(0,Math.floor((inc-s-other-basicDeduction(inc))/1000)*1000);
+  const xl=Math.max(0,Math.floor((inc-s-other-basicDeduction(inc,true))/1000)*1000);
+  const brackets=[[1950000,.05,0],[3300000,.1,97500],[6950000,.2,427500],[9000000,.23,636000],[18000000,.33,1536000],[40000000,.4,2796000],[Infinity,.45,4796000]];
+  const [,rate,offset]=brackets.find(([b])=&gt;x&lt;b);
+  const national=Math.max(0,x*rate-offset)*1.021,local=xl*.1+5000;
+  return {gross:g,wage_deduction:wageDeduction(g),income:inc,taxable:x,national,local,total:national+local,net:g-s-national-local,social:s,marginal:rate};
+ }
+ function housingTax(p,rent=p.rent,active=true){
+  const R=rent*12,normal=tax(p.salary,p.social,p.other_deduction);
+  if(!active)return {normal,corp:normal,annual_rent:R,annual_effective:R,benefit:0,tax_saving:0,amount_sacrificed:0,cash_gross:p.salary,annual_corp_net:normal.net-R};
+  const A=p.cap&gt;0?Math.min(R*p.sacrifice,p.cap):R*p.sacrifice;
+  const corp=tax(p.salary-A+p.fringe,p.social_corp,p.other_deduction);
+  const tax_saving=normal.total-corp.total,benefit=tax_saving+p.social-p.social_corp;
+  return {normal,corp,annual_rent:R,annual_effective:R-benefit,benefit,tax_saving,amount_sacrificed:A,cash_gross:p.salary-A,annual_corp_net:p.salary-A-p.social_corp-corp.total-(R-A)};
+ }
+ function pmt(B,r,n){return n&lt;=0?0:Math.abs(r)&lt;1e-12?B/n:B*r/(1-Math.pow(1+r,-n));}
+ function saleTax(p,price=null,years=p.years){
+  const P=price===null?p.price*Math.pow(1+p.growth,years):price;
+  const basisInitial=p.price*(1+p.basis_cost),B=basisInitial*p.building_share;
+  const dep=Math.min(B*.95,B*.9*.015*years),basis=basisInitial-dep;
+  const taxable=Math.max(0,P*(1-p.sell_cost)-basis-p.deduction_sale);
+  let t=0;
+  if(p.sale_tax){
+   if(years&lt;=5)t=taxable*.3963;
+   else if(years&gt;=11&amp;&amp;p.reduced_long)t=Math.min(taxable,60000000)*.1421+Math.max(0,taxable-60000000)*.20315;
+   else t=taxable*.20315;
+  }
+  return {tax:t,taxable_gain:taxable,depreciation:dep,basis,price:P,net_before_debt:P*(1-p.sell_cost)-t};
+ }
+ function run(p,allMonths=false){
+  const n=p.years*12,term=p.mortgage_years*12;
+  let bal=p.price*p.ltv,r=p.mortgage_rate/12;
+  let pay=p.loan_type===&#x27;amortizing&#x27;?pmt(bal,r,term):bal*r;
+  const initBuy=p.price*(1-p.ltv+p.buy_cost),initRent=p.rent*p.rent_initial,K=Math.max(initBuy,initRent);
+  let ib=K-initBuy,ir=K-initRent,ic=ir,totalInt=0,taxSaved=0;
+  const sums=[initBuy,initRent,initRent],rows=[];
+  for(let m=1;m&lt;=n;m++){
+   const year=Math.floor((m-1)/12);
+   if(p.step_year&gt;0&amp;&amp;m===p.step_year*12+1&amp;&amp;m&lt;=term){
+    r=p.step_rate/12;pay=p.loan_type===&#x27;amortizing&#x27;?pmt(bal,r,term-m+1):bal*r;
+   }
+   const interest=m&lt;=term?bal*r:0;
+   let mp=0,principal=0;
+   if(m&lt;=term){mp=p.loan_type===&#x27;amortizing&#x27;?Math.min(pay,bal+interest):interest;principal=mp-interest;bal=Math.max(0,bal-principal);}
+   totalInt+=interest;
+   const rent=p.rent*Math.pow(1+p.rent_growth,year);
+   const renewal=m%24===0&amp;&amp;m&lt;n?rent*p.renewal:0;
+   let cb=mp+p.owner_cost*Math.pow(1+p.owner_growth,year)/12;
+   if(p.extra_repair&amp;&amp;m===p.repair_year*12)cb+=p.extra_repair;
+   const cr=rent+renewal,tx=housingTax(p,rent,m&lt;=p.corp_years*12),cc=tx.annual_effective/12+renewal;
+   taxSaved+=tx.benefit/12;
+   const budget=Math.max(cb,cr,cc);
+   ib=ib*(1+p.invest/12)+(budget-cb);ir=ir*(1+p.invest/12)+(budget-cr);ic=ic*(1+p.invest/12)+(budget-cc);
+   sums[0]+=cb;sums[1]+=cr;sums[2]+=cc;
+   if(allMonths||m%12===0||m===n){
+    const st=saleTax(p,null,m/12),wb=st.net_before_debt-bal+ib;
+    rows.push({month:m,year:m/12,balance:bal,owner_spend:cb,rent_spend:cr,corp_spend:cc,common_budget:budget,principal,interest,owner_fin:ib,rent_fin:ir,corp_fin:ic,owner_wealth:wb,rent_wealth:ir,corp_wealth:ic,price:st.price,sale_tax:st.tax});
+   }
+  }
+  const st=saleTax(p),wb=st.net_before_debt-bal+ib;
+  return {owner_wealth:wb,rent_wealth:ir,corp_wealth:ic,balance:bal,owner_fin:ib,initial_capital:K,initial_buy:initBuy,initial_rent:initRent,total_interest:totalInt,sums,wealth_diff_rent:wb-ir,wealth_diff_corp:wb-ic,corp_advantage:ic-ir,tax_saved:taxSaved,rows,sale:st};
+ }
+ function bisect(f,lo,hi,iters=65){
+  let fl=f(lo),fh=f(hi);if(!Number.isFinite(fl)||!Number.isFinite(fh))return null;
+  if(Math.abs(fl)&lt;.01)return lo;if(Math.abs(fh)&lt;.01)return hi;
+  if(fl*fh&gt;0)return null;
+  for(let k=0;k&lt;iters;k++){const mid=(lo+hi)/2,fm=f(mid);if(fl*fm&lt;=0){hi=mid;fh=fm;}else{lo=mid;fl=fm;}}
+  return (lo+hi)/2;
+ }
+ function breakSale(p,mode=&#x27;corp&#x27;){
+  const res=run(p),target=res[mode+&#x27;_wealth&#x27;]+res.balance-res.owner_fin;
+  const price=bisect(x=&gt;saleTax(p,x).net_before_debt-target,0,p.price*20);
+  return price===null?null:{price,growth:Math.pow(price/p.price,1/p.years)-1,price_change:price/p.price-1,tax:saleTax(p,price).tax};
+ }
+ function breakPrice(p,mode=&#x27;corp&#x27;){return bisect(x=&gt;run(clone(p,{price:x}))[&#x27;wealth_diff_&#x27;+mode],p.price*.05,p.price*4);}
+ function breakEntry(p,mode=&#x27;corp&#x27;){
+  const exit=p.price*Math.pow(1+p.growth,p.years);
+  return bisect(x=&gt;run(clone(p,{price:x,growth:Math.pow(exit/x,1/p.years)-1}))[&#x27;wealth_diff_&#x27;+mode],p.price*.05,p.price*4);
+ }
+ function breakRate(p,mode=&#x27;corp&#x27;){return bisect(x=&gt;run(clone(p,{mortgage_rate:x,step_year:0}))[&#x27;wealth_diff_&#x27;+mode],0,.15);}
+ return {clone,tax,housingTax,pmt,saleTax,run,bisect,breakSale,breakPrice,breakEntry,breakRate};
+})();
+if(typeof module!==&#x27;undefined&#x27;)module.exports=HousingModel;
+</pre></div></details>
+</section>
+<section id="sources"><div class="sec-label">09 / PRIMARY SOURCES</div><h2>出典・前提の区別。</h2><p class="note">確認日：2026年9月17日。ユーザー申告は本会話、前回の1億円・家賃30万円は会話内の仮定。下記資料は制度・税率の根拠として用い、物件価格・運用利回り・将来の継続年数の根拠には用いていない。</p><div class="source-grid"><div class="source" id="src-1"><b>[1] 所得税の速算表・付加税</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2260.htm" target="_blank" rel="noopener noreferrer">国税庁 No.2260</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-2"><b>[2] 給与所得控除の上限</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm" target="_blank" rel="noopener noreferrer">国税庁 No.1410</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-3"><b>[3] 基礎控除の所得制限</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1199.htm" target="_blank" rel="noopener noreferrer">国税庁 No.1199</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-4"><b>[4] 住民税の所得割・前年所得・譲渡所得課税</b><a href="https://www.tax.metro.tokyo.lg.jp/kazei/life/kojin_ju" target="_blank" rel="noopener noreferrer">東京都主税局「個人住民税」</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-5"><b>[5] 使用人向け社宅の給与課税条件</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2597.htm" target="_blank" rel="noopener noreferrer">国税庁 No.2597</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-6"><b>[6] 役員向け社宅の別ルール</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2600.htm" target="_blank" rel="noopener noreferrer">国税庁 No.2600</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-7"><b>[7] 社会保険における現物給与の評価</b><a href="https://www.nenkin.go.jp/service/kounen/hokenryo/hoshu/20150511.html" target="_blank" rel="noopener noreferrer">日本年金機構「全国現物給与価額一覧表」</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-8"><b>[8] 中古住宅の住宅ローン控除・所得要件</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-3.htm" target="_blank" rel="noopener noreferrer">国税庁 No.1211-3</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-9"><b>[9] 自宅売却時の3,000万円特別控除</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3302.htm" target="_blank" rel="noopener noreferrer">国税庁 No.3302</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-10"><b>[10] 非業務用RC建物の取得費・減価償却</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3261.htm" target="_blank" rel="noopener noreferrer">国税庁 No.3261</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-11"><b>[11] 長期譲渡所得と1月1日の所有期間判定</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3208.htm" target="_blank" rel="noopener noreferrer">国税庁 No.3208</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-12"><b>[12] 短期譲渡所得の税額</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3211.htm" target="_blank" rel="noopener noreferrer">国税庁 No.3211</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-13"><b>[13] 10年超所有の自宅売却・軽減税率</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3305.htm" target="_blank" rel="noopener noreferrer">国税庁 No.3305</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-14"><b>[14] 2026年10月の住宅現物給与評価の改定</b><a href="https://www.nenkin.go.jp/oshirase/taisetu/jigyosho/2026/202603/0319.html" target="_blank" rel="noopener noreferrer">日本年金機構・2026年3月19日公表</a><br><small>制度の適用条件は原文を確認。</small></div></div></section>
+</main><footer class="foot">PRIVATE SCENARIO REPORT · 2026.09.17<br>給与・家賃に関する個人情報を含む。比較計算であり、個別の税務助言・融資承認・将来価値の保証ではない。基本ケースの静的表示とブラウザー内再計算を同梱。</footer>
+<script>'use strict';
+/* Deterministic monthly cash-flow model. All monetary values in JPY.
+ * Tax law is a fixed-rate 2026 snapshot, not a tax-return calculator.
+ * Identical initial capital and monthly disposable housing budgets for all strategies.
+ */
+const HousingModel = (() => {
+ const clone=(p,x={})=>Object.assign({},p,x);
+ function wageDeduction(g){return g<=2200000?Math.min(g,740000):g<=3600000?g*.3+80000:g<=6600000?g*.2+440000:g<=8500000?g*.1+1100000:1950000;}
+ function basicDeduction(i,local=false){
+  if(i>25000000)return 0;
+  if(i>24500000)return local?150000:160000;
+  if(i>24000000)return local?290000:320000;
+  if(local)return 430000;
+  if(i>23500000)return 480000;
+  if(i>6550000)return 620000;
+  if(i>4890000)return 670000;
+  return 1040000;
+ }
+ function tax(g,s,other=0){
+  const inc=Math.max(0,g-wageDeduction(g));
+  const x=Math.max(0,Math.floor((inc-s-other-basicDeduction(inc))/1000)*1000);
+  const xl=Math.max(0,Math.floor((inc-s-other-basicDeduction(inc,true))/1000)*1000);
+  const brackets=[[1950000,.05,0],[3300000,.1,97500],[6950000,.2,427500],[9000000,.23,636000],[18000000,.33,1536000],[40000000,.4,2796000],[Infinity,.45,4796000]];
+  const [,rate,offset]=brackets.find(([b])=>x<b);
+  const national=Math.max(0,x*rate-offset)*1.021,local=xl*.1+5000;
+  return {gross:g,wage_deduction:wageDeduction(g),income:inc,taxable:x,national,local,total:national+local,net:g-s-national-local,social:s,marginal:rate};
+ }
+ function housingTax(p,rent=p.rent,active=true){
+  const R=rent*12,normal=tax(p.salary,p.social,p.other_deduction);
+  if(!active)return {normal,corp:normal,annual_rent:R,annual_effective:R,benefit:0,tax_saving:0,amount_sacrificed:0,cash_gross:p.salary,annual_corp_net:normal.net-R};
+  const A=p.cap>0?Math.min(R*p.sacrifice,p.cap):R*p.sacrifice;
+  const corp=tax(p.salary-A+p.fringe,p.social_corp,p.other_deduction);
+  const tax_saving=normal.total-corp.total,benefit=tax_saving+p.social-p.social_corp;
+  return {normal,corp,annual_rent:R,annual_effective:R-benefit,benefit,tax_saving,amount_sacrificed:A,cash_gross:p.salary-A,annual_corp_net:p.salary-A-p.social_corp-corp.total-(R-A)};
+ }
+ function pmt(B,r,n){return n<=0?0:Math.abs(r)<1e-12?B/n:B*r/(1-Math.pow(1+r,-n));}
+ function saleTax(p,price=null,years=p.years){
+  const P=price===null?p.price*Math.pow(1+p.growth,years):price;
+  const basisInitial=p.price*(1+p.basis_cost),B=basisInitial*p.building_share;
+  const dep=Math.min(B*.95,B*.9*.015*years),basis=basisInitial-dep;
+  const taxable=Math.max(0,P*(1-p.sell_cost)-basis-p.deduction_sale);
+  let t=0;
+  if(p.sale_tax){
+   if(years<=5)t=taxable*.3963;
+   else if(years>=11&&p.reduced_long)t=Math.min(taxable,60000000)*.1421+Math.max(0,taxable-60000000)*.20315;
+   else t=taxable*.20315;
+  }
+  return {tax:t,taxable_gain:taxable,depreciation:dep,basis,price:P,net_before_debt:P*(1-p.sell_cost)-t};
+ }
+ function run(p,allMonths=false){
+  const n=p.years*12,term=p.mortgage_years*12;
+  let bal=p.price*p.ltv,r=p.mortgage_rate/12;
+  let pay=p.loan_type==='amortizing'?pmt(bal,r,term):bal*r;
+  const initBuy=p.price*(1-p.ltv+p.buy_cost),initRent=p.rent*p.rent_initial,K=Math.max(initBuy,initRent);
+  let ib=K-initBuy,ir=K-initRent,ic=ir,totalInt=0,taxSaved=0;
+  const sums=[initBuy,initRent,initRent],rows=[];
+  for(let m=1;m<=n;m++){
+   const year=Math.floor((m-1)/12);
+   if(p.step_year>0&&m===p.step_year*12+1&&m<=term){
+    r=p.step_rate/12;pay=p.loan_type==='amortizing'?pmt(bal,r,term-m+1):bal*r;
+   }
+   const interest=m<=term?bal*r:0;
+   let mp=0,principal=0;
+   if(m<=term){mp=p.loan_type==='amortizing'?Math.min(pay,bal+interest):interest;principal=mp-interest;bal=Math.max(0,bal-principal);}
+   totalInt+=interest;
+   const rent=p.rent*Math.pow(1+p.rent_growth,year);
+   const renewal=m%24===0&&m<n?rent*p.renewal:0;
+   let cb=mp+p.owner_cost*Math.pow(1+p.owner_growth,year)/12;
+   if(p.extra_repair&&m===p.repair_year*12)cb+=p.extra_repair;
+   const cr=rent+renewal,tx=housingTax(p,rent,m<=p.corp_years*12),cc=tx.annual_effective/12+renewal;
+   taxSaved+=tx.benefit/12;
+   const budget=Math.max(cb,cr,cc);
+   ib=ib*(1+p.invest/12)+(budget-cb);ir=ir*(1+p.invest/12)+(budget-cr);ic=ic*(1+p.invest/12)+(budget-cc);
+   sums[0]+=cb;sums[1]+=cr;sums[2]+=cc;
+   if(allMonths||m%12===0||m===n){
+    const st=saleTax(p,null,m/12),wb=st.net_before_debt-bal+ib;
+    rows.push({month:m,year:m/12,balance:bal,owner_spend:cb,rent_spend:cr,corp_spend:cc,common_budget:budget,principal,interest,owner_fin:ib,rent_fin:ir,corp_fin:ic,owner_wealth:wb,rent_wealth:ir,corp_wealth:ic,price:st.price,sale_tax:st.tax});
+   }
+  }
+  const st=saleTax(p),wb=st.net_before_debt-bal+ib;
+  return {owner_wealth:wb,rent_wealth:ir,corp_wealth:ic,balance:bal,owner_fin:ib,initial_capital:K,initial_buy:initBuy,initial_rent:initRent,total_interest:totalInt,sums,wealth_diff_rent:wb-ir,wealth_diff_corp:wb-ic,corp_advantage:ic-ir,tax_saved:taxSaved,rows,sale:st};
+ }
+ function bisect(f,lo,hi,iters=65){
+  let fl=f(lo),fh=f(hi);if(!Number.isFinite(fl)||!Number.isFinite(fh))return null;
+  if(Math.abs(fl)<.01)return lo;if(Math.abs(fh)<.01)return hi;
+  if(fl*fh>0)return null;
+  for(let k=0;k<iters;k++){const mid=(lo+hi)/2,fm=f(mid);if(fl*fm<=0){hi=mid;fh=fm;}else{lo=mid;fl=fm;}}
+  return (lo+hi)/2;
+ }
+ function breakSale(p,mode='corp'){
+  const res=run(p),target=res[mode+'_wealth']+res.balance-res.owner_fin;
+  const price=bisect(x=>saleTax(p,x).net_before_debt-target,0,p.price*20);
+  return price===null?null:{price,growth:Math.pow(price/p.price,1/p.years)-1,price_change:price/p.price-1,tax:saleTax(p,price).tax};
+ }
+ function breakPrice(p,mode='corp'){return bisect(x=>run(clone(p,{price:x}))['wealth_diff_'+mode],p.price*.05,p.price*4);}
+ function breakEntry(p,mode='corp'){
+  const exit=p.price*Math.pow(1+p.growth,p.years);
+  return bisect(x=>run(clone(p,{price:x,growth:Math.pow(exit/x,1/p.years)-1}))['wealth_diff_'+mode],p.price*.05,p.price*4);
+ }
+ function breakRate(p,mode='corp'){return bisect(x=>run(clone(p,{mortgage_rate:x,step_year:0}))['wealth_diff_'+mode],0,.15);}
+ return {clone,tax,housingTax,pmt,saleTax,run,bisect,breakSale,breakPrice,breakEntry,breakRate};
+})();
+if(typeof module!=='undefined')module.exports=HousingModel;
+</script>
+<script>const BASE_PARAMS={"price": 250000000, "rent": 750000, "years": 10, "salary": 50000000, "social": 1500000, "social_corp": 1500000, "other_deduction": 0, "sacrifice": 1.0, "cap": 0, "fringe": 0, "corp_years": 35, "ltv": 0.9, "mortgage_rate": 0.015, "mortgage_years": 35, "loan_type": "amortizing", "buy_cost": 0.07, "sell_cost": 0.035, "owner_cost": 2500000, "rent_initial": 2.0, "renewal": 1.0, "growth": 0, "rent_growth": 0, "owner_growth": 0, "invest": 0.03, "building_share": 0.3, "basis_cost": 0.04, "deduction_sale": 30000000, "sale_tax": true, "reduced_long": true, "extra_repair": 0, "repair_year": 8, "step_year": 0, "step_rate": 0.015};</script>
+<script>'use strict';
+(()=>{
+ const M=HousingModel, $=id=>document.getElementById(id);
+ const defaults={...BASE_PARAMS,corp_years:10,step_rate:.03};
+ const moneyKeys=new Set(['price','rent','salary','social','social_corp','other_deduction','owner_cost','deduction_sale','extra_repair']);
+ const pctKeys=new Set(['ltv','mortgage_rate','buy_cost','sell_cost','growth','rent_growth','owner_growth','invest','building_share','basis_cost','step_rate','sacrifice']);
+ const annualFromMonthly=new Set(['cap','fringe']);
+ let current=null, result=null;
+ const fmtMan=(v,d=0)=>Number(v/10000).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d})+'万円';
+ const fmtOku=(v,d=3)=>(v/1e8).toFixed(d)+'億円';
+ const fmtPct=(v,d=2)=>((v>=0?'+':'')+(v*100).toFixed(d)+'%');
+ const fmtDelta=v=>(v>=0?'+':'−')+fmtMan(Math.abs(v));
+ function fill(p){
+  for(const e of document.querySelectorAll('[data-param]')){
+   const k=e.dataset.param;let v=p[k];
+   if(e.type==='checkbox'){e.checked=Boolean(v);continue;}
+   if(moneyKeys.has(k))v/=10000;else if(pctKeys.has(k))v*=100;else if(annualFromMonthly.has(k))v/=120000;
+   e.value=typeof v==='number'?String(Number(v.toFixed(7))):v;
+  }
+ }
+ function read(){
+  const p={...defaults};
+  for(const e of document.querySelectorAll('[data-param]')){
+   const k=e.dataset.param;
+   if(e.type==='checkbox'){p[k]=e.checked;continue;}
+   if(k==='loan_type'){p[k]=e.value;continue;}
+   if(e.value.trim()==='')throw new Error('空欄の入力があります。すべての金額・年数を入力してください。');
+   let v=Number(e.value);if(!Number.isFinite(v))throw new Error('数値を確認してください。');
+   if(e.min!==''&&v<Number(e.min)||e.max!==''&&v>Number(e.max))throw new Error(e.previousElementSibling.textContent+'：'+e.min+'〜'+e.max+'の範囲で入力してください。');
+   if(moneyKeys.has(k))v*=10000;else if(pctKeys.has(k))v/=100;else if(annualFromMonthly.has(k))v*=120000;
+   p[k]=v;
+  }
+  for(const k of ['years','corp_years','mortgage_years','step_year','repair_year'])if(!Number.isInteger(p[k]))throw new Error('年数は整数で入力してください。');
+  if(p.basis_cost>p.buy_cost)throw new Error('税務取得費に含める購入費用率は、購入諸費用率以下にしてください。');
+  if(p.loan_type==='io'&&p.years>p.mortgage_years)throw new Error('全期間IOでは比較期間をローン満期以内にしてください。満期借換えはこの計算に含みません。');
+  const lastRent=p.rent*Math.pow(1+p.rent_growth,p.years-1);
+  const maxRent=Math.max(p.rent,lastRent),A=p.cap>0?Math.min(maxRent*12*p.sacrifice,p.cap):maxRent*12*p.sacrifice;
+  if(p.salary-A+p.fringe<15000000)throw new Error('高所得者向け簡易モデルです。社宅振替後の課税給与が年1,500万円以上となる条件で使用してください。');
+  return p;
+ }
+ function makeTable(head,rows){return '<div class="table-wrap"><table><thead><tr>'+head.map(s=>'<th>'+s+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';}
+ function plot(p){
+  const xmin=Math.min(-3,p.growth*100-1),xmax=Math.max(6,p.growth*100+1),N=64;
+  const xs=Array.from({length:N+1},(_,i)=>xmin+(xmax-xmin)*i/N),rr=xs.map(x=>M.run({...p,growth:x/100}));
+  const vals=[...rr.map(r=>r.wealth_diff_rent/1e4),...rr.map(r=>r.wealth_diff_corp/1e4)];
+  let lo=Math.min(0,...vals),hi=Math.max(0,...vals);const range=Math.max(1,hi-lo);lo-=range*.06;hi+=range*.06;
+  const W=940,H=355,L=88,R=28,T=30,B=62,w=W-L-R,h=H-T-B;
+  const X=x=>L+(x-xmin)/(xmax-xmin)*w,Y=y=>T+(hi-y)/(hi-lo)*h;
+  let out='<div class="legend"><span class="rent">購入 − 通常賃貸</span><span class="corp">購入 − 借上社宅</span></div><svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="入力に基づく損益分岐チャート">';
+  for(let i=0;i<=5;i++){
+   const y=lo+(hi-lo)*i/5;
+   out+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(y)+'" y2="'+Y(y)+'"/><text class="tick" x="'+(L-10)+'" y="'+(Y(y)+4)+'" text-anchor="end">'+Math.round(y).toLocaleString('ja-JP')+'</text>';
+  }
+  out+='<line class="grid zero" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(0)+'" y2="'+Y(0)+'"/>';
+  for(let i=Math.ceil(xmin);i<=xmax;i++)out+='<text class="tick" x="'+X(i)+'" y="'+(H-29)+'" text-anchor="middle">'+i+'</text>';
+  for(const [field,cl] of [['wealth_diff_rent','rent'],['wealth_diff_corp','corp']]){
+   const points=rr.map((r,i)=>X(xs[i]).toFixed(2)+','+Y(r[field]/1e4).toFixed(2)).join(' ');
+   out+='<polyline class="series '+cl+'" points="'+points+'"/>';
+  }
+  const x=X(p.growth*100);
+  out+='<line x1="'+x+'" x2="'+x+'" y1="'+T+'" y2="'+(H-B)+'" stroke="#9eafb5" stroke-dasharray="3 5"/><text class="tick" x="'+Math.min(W-R-90,Math.max(L,x+7))+'" y="'+(T+13)+'">現在の設定 '+fmtPct(p.growth)+'</text>';
+  return out+'<text class="axis-title" x="'+L+'" y="17">購入 − 賃貸の最終純資産差（万円）</text><text class="axis-title" x="'+(W-R)+'" y="'+(H-3)+'" text-anchor="end">その住戸の年率価格変化率（%）</text></svg>';
+ }
+ function recalc(){
+  try{
+   const p=read(),r=M.run(p),tx=M.housingTax(p,p.rent,p.corp_years>0),bc=M.breakSale(p),br=M.breakSale(p,'rent');
+   current=p;result=r;$('sim-error').style.display='none';$('sim-results').style.opacity='1';
+   $('sim-rent').textContent=fmtMan(tx.annual_effective/12,1);
+   $('sim-tax').textContent=fmtMan(tx.benefit);
+   $('sim-be-price').textContent=bc?fmtOku(bc.price):'範囲内なし';
+   $('sim-be-growth').textContent=bc?fmtPct(bc.growth):'範囲内なし';
+   $('sim-be-period').textContent=p.years+'年後の売却価格';
+   const preferred=r.wealth_diff_corp>=0?'購入':'借上社宅';
+   $('sim-verdict').innerHTML='<strong>現在の仮定では、'+preferred+'が'+(preferred==='購入'?'借上社宅':'購入')+'を約'+fmtMan(Math.abs(r.wealth_diff_corp))+'上回ります。</strong><p>住戸価格 '+fmtPct(p.growth)+' / 年、比較期間 '+p.years+'年、社宅適用 '+Math.min(p.corp_years,p.years)+'年。通常賃貸との比較は購入側 '+fmtDelta(r.wealth_diff_rent)+'。</p>';
+   const mp=p.loan_type==='io'?p.price*p.ltv*p.mortgage_rate/12:M.pmt(p.price*p.ltv,p.mortgage_rate/12,p.mortgage_years*12);
+   $('sim-table').innerHTML=makeTable([p.years+'年後の比較','購入','通常賃貸','借上社宅'],[
+    ['共通の初期資金',fmtMan(r.initial_capital),fmtMan(r.initial_capital),fmtMan(r.initial_capital)],
+    ['初期の住居支出',fmtMan(r.initial_buy),fmtMan(r.initial_rent),fmtMan(r.initial_rent)],
+    ['初年度の通常月負担',fmtMan(mp+p.owner_cost/12,1),fmtMan(p.rent,1),fmtMan(tx.annual_effective/12,1)],
+    ['購入側の最終売値',fmtOku(r.sale.price),'—','—'],
+    ['売却税 / 残債',fmtMan(r.sale.tax)+' / '+fmtMan(r.balance),'—','—'],
+    ['最終金融資産',fmtMan(r.owner_fin),fmtMan(r.rent_wealth),fmtMan(r.corp_wealth)],
+    ['最終比較用純資産','<strong>'+fmtMan(r.owner_wealth)+'</strong>','<strong>'+fmtMan(r.rent_wealth)+'</strong>','<strong>'+fmtMan(r.corp_wealth)+'</strong>'],
+    ['購入と互角の売値','—',br?fmtOku(br.price):'範囲内なし',bc?fmtOku(bc.price):'範囲内なし'],
+    ['必要な住戸の年率価格変化','—',br?fmtPct(br.growth):'—',bc?fmtPct(bc.growth):'—']
+   ]);
+   const beEntry=M.breakEntry(p),beRate=M.breakRate(p),beFlat=M.breakPrice(p);
+   const texts=[];
+   if(beEntry!==null)texts.push('将来売値 '+fmtOku(r.sale.price)+' を固定した分岐買値：'+fmtOku(beEntry)+'。');
+   if(beFlat!==null)texts.push('住戸の年率価格変化 '+fmtPct(p.growth)+' を固定した分岐買値：'+fmtOku(beFlat)+'。');
+   if(beRate!==null)texts.push('一定金利での分岐金利：'+(beRate*100).toFixed(2)+'%。');
+   else if(M.run({...p,mortgage_rate:0,step_year:0}).wealth_diff_corp<0)texts.push('一定金利0%でも購入は社宅を下回る。');
+   else texts.push('一定金利0〜15%の範囲に金利分岐なし。');
+   $('sim-thresholds').textContent=texts.join(' ');
+   $('sim-plot').innerHTML=plot(p);
+   const warnings=['給与課税・住民税は年次帰属で概算。税制・報酬は期間中固定し、住民税の徴収時差は未再現。'];
+   if(p.corp_years<p.years)warnings.push('社宅終了後は通常賃貸へ移行し、報酬が元の額面に戻る。失職による収入減や引越費用は含まない。');
+   if(p.step_year>0)warnings.push('金利変更時に返済額を再計算。5年・125%ルールなし。分岐金利の表示だけは金利一定として逆算。');
+   if(p.loan_type==='io')warnings.push('IOは仮想比較。最後に残元本を売却代金から一括返済する。');
+   if(!p.sale_tax)warnings.push('売却税OFF：税引後の購入価値を過大に評価する可能性がある。');
+   if(p.rent_growth>0&&p.cap===0)warnings.push('家賃上昇分も税前振替が全額または指定率で続く仮定。勤務先上限は未確認。');
+   if(r.sale.taxable_gain>100000000)warnings.push('売却益が大きいため、高所得者への追加課税等を含む個別税務確認が必要。本モデルは通常の譲渡税計算に限定。');
+   if(p.years>20)warnings.push('20年超の試算は制度・税制・報酬の固定仮定への依存が強い。');
+   if(p.fringe>0)warnings.push('現物利益 '+fmtMan(p.fringe)+' / 年は課税給与に加算するが、現金支給には加算しない。');
+   $('sim-warning').textContent=warnings.join(' ');
+   $('sim-status').textContent='再計算済み · 購入 '+fmtOku(p.price,2)+' / 家賃 '+fmtMan(p.rent,1)+' / '+p.years+'年';
+  }catch(e){
+   $('sim-error').textContent=e.message;$('sim-error').style.display='block';$('sim-results').style.opacity='.45';
+   $('sim-status').textContent='入力を確認してください。結果は直前の有効な設定です。';
+  }
+ }
+ function download(text,name,type){const a=document.createElement('a');const url=URL.createObjectURL(new Blob([text],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+ $('recalculate').addEventListener('click',recalc);
+ $('reset').addEventListener('click',()=>{fill(defaults);recalc();});
+ $('previous').addEventListener('click',()=>{fill({...defaults,price:100000000,rent:300000,owner_cost:1000000});recalc();});
+ for(const e of document.querySelectorAll('[data-param]')){
+  e.addEventListener('input',()=>{$('sim-status').textContent='入力変更あり · 「再計算」を押してください';});
+  e.addEventListener('keydown',event=>{if(event.key==='Enter')recalc();});
+ }
+ $('csv').addEventListener('click',()=>{
+  recalc();if($('sim-error').style.display==='block'||!current)return;
+  const r=M.run(current,true),cols=[['month','経過月'],['year','経過年'],['common_budget','共通住居予算_円'],['owner_spend','購入住居支出_円'],['rent_spend','通常賃貸支出_円'],['corp_spend','社宅実質支出_円'],['interest','支払利息_円'],['principal','元本返済_円'],['balance','ローン残高_円'],['price','住宅価格_円'],['sale_tax','仮売却税_円'],['owner_fin','購入金融資産_円'],['rent_fin','通常賃貸金融資産_円'],['corp_fin','社宅金融資産_円'],['owner_wealth','購入比較純資産_円'],['rent_wealth','通常賃貸比較純資産_円'],['corp_wealth','社宅比較純資産_円']];
+  const lines=[cols.map(c=>c[1]).join(',')];for(const row of r.rows)lines.push(cols.map(([k])=>Number(row[k]).toFixed(k==='year'?6:2)).join(','));
+  download('\ufeff'+lines.join('\r\n'),'housing_monthly_cashflows.csv','text/csv;charset=utf-8');
+ });
+ $('save-settings').addEventListener('click',()=>{recalc();if($('sim-error').style.display==='block'||!current)return;download(JSON.stringify({model:'housing-tax-comparison-2026-09-17',units:'JPY and decimal rates',parameters:current},null,2),'housing_scenario_settings.json','application/json');});
+ fill(defaults);recalc();
+})();
+</script></body></html>

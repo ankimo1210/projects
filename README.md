@@ -11,6 +11,7 @@
 | [`stock/`](stock/) | 日本株・米株の価格・財務・マクロを取得し Jupyter / Dash で分析する `stockkit` ツールキット | Python / DuckDB / Dash |
 | [`market-viz/`](market-viz/) | 個人用マーケット可視化・分析アプリ | Streamlit / Plotly / DuckDB |
 | [`portfolio-analyzer/`](portfolio-analyzer/) | 複数口座の資産配分・集中度・通貨・簡易ストレスを確認するローカル専用ダッシュボード | Python / Portable HTML |
+| [`housing-buy-vs-rent/`](housing-buy-vs-rent/) | 住宅購入・通常賃貸・借上社宅の損益分岐比較、原本アーカイブと計算監査 | HTML / JavaScript / Node.js (stdlib) |
 | [`nbody-gpu/`](nbody-gpu/) | GPU 加速 N 体シミュレーション + リアルタイム 3D 可視化 | CuPy / VisPy |
 | [`line_backup/`](line_backup/) | iPhone ローカルバックアップから LINE データを完全オフラインで解析する CLI | Python |
 | [`agent-profiler/`](agent-profiler/) | Codex CLI / Claude Code の実行をリアルタイム可視化・保存・分析するローカル TUI | Python / Textual |
