@@ -5,6 +5,7 @@ Variance and volatility swaps (§26.16) live in :mod:`hullkit.variance_swaps`.
 
 import math
 
+import numpy as np
 from scipy.stats import norm
 
 from . import bsm
@@ -437,10 +438,87 @@ def asian_average_strike(S, r, sigma, T, q=0.0, kind="call", times=None):
     return math.exp(-r * T) * (m1 * norm.cdf(-d2) - terminal * norm.cdf(-d1))
 
 
+def exchange_spread_volatility(sigma_u, sigma_v, rho):
+    """Volatility of V/U: sqrt(su^2 + sv^2 - 2 rho su sv) (Hull §26.14).
+
+    Dropping the cross term is the usual mistake and overprices every
+    correlated contract; the independent references in
+    `docs/validation/section-26-14/` reject it on all 21 correlated rows.
+    """
+    if sigma_u < 0.0 or sigma_v < 0.0:
+        raise ValueError("volatilities must be >= 0")
+    if not -1.0 <= rho <= 1.0:
+        raise ValueError("rho must lie in [-1, 1]")
+    return math.sqrt(max(sigma_u**2 + sigma_v**2 - 2.0 * rho * sigma_u * sigma_v, 0.0))
+
+
 def exchange_option(U0, V0, sigma_u, sigma_v, rho, T, q_u=0.0, q_v=0.0):
     """Margrabe option to exchange asset U for asset V (Hull eq. 26.5).
-    r-independent: drift and discounting cancel."""
-    sig = math.sqrt(sigma_u**2 + sigma_v**2 - 2.0 * rho * sigma_u * sigma_v)
+
+    The price does not depend on the risk-free rate, and r is not an argument:
+    a higher rate raises both risk-neutral growth rates and the discount rate by
+    the same amount. Measured, not assumed - the same 24 contracts priced at
+    r = 0, 8% and -2% move by at most 1.8e-14
+    (`docs/validation/section-26-14/numerical-check.json`).
+    """
+    if U0 <= 0.0 or V0 <= 0.0 or T <= 0.0:
+        raise ValueError("U0, V0 and T must be > 0")
+    sig = exchange_spread_volatility(sigma_u, sigma_v, rho)
+    if sig <= 0.0:
+        # The ratio is deterministic, so only the discounted forward spread is left.
+        return max(V0 * math.exp(-q_v * T) - U0 * math.exp(-q_u * T), 0.0)
     d1 = (math.log(V0 / U0) + (q_u - q_v + 0.5 * sig**2) * T) / (sig * math.sqrt(T))
     d2 = d1 - sig * math.sqrt(T)
     return V0 * math.exp(-q_v * T) * norm.cdf(d1) - U0 * math.exp(-q_u * T) * norm.cdf(d2)
+
+
+def exchange_option_american(U0, V0, sigma_u, sigma_v, rho, T, q_u=0.0, q_v=0.0, steps=1024):
+    """American exchange option on a CRR tree (Rubinstein 1991; Hull §26.14).
+
+    Hull states the equivalence this uses: the contract is ``U0`` American calls
+    on an asset worth ``V/U`` struck at 1.0 when the risk-free rate is ``q_u``
+    and the dividend yield is ``q_v``. Early exercise is therefore worth nothing
+    when ``q_v = 0``; the saved references measure a premium of 1.9e-13 there
+    and up to 4.28 when ``q_v > 0``.
+
+    The tree is a finite grid, so it carries a discretisation residual, not an
+    error bound. Against the closed form where the two must agree (``q_v = 0``)
+    the worst residual over the saved markets halves with each doubling:
+    0.0457 at 128 steps, 0.0114 at 512, 0.0057 at the default 1024.
+    """
+    if U0 <= 0.0 or V0 <= 0.0 or T <= 0.0:
+        raise ValueError("U0, V0 and T must be > 0")
+    if steps < 1:
+        raise ValueError("steps must be >= 1")
+    volatility = exchange_spread_volatility(sigma_u, sigma_v, rho)
+    if volatility <= 0.0:
+        raise ValueError("a deterministic ratio has no tree; use exchange_option")
+    dt = T / steps
+    up = math.exp(volatility * math.sqrt(dt))
+    growth = math.exp((q_u - q_v) * dt)
+    probability = (growth - 1.0 / up) / (up - 1.0 / up)
+    if not 0.0 < probability < 1.0:
+        raise ValueError(f"tree probability {probability} outside (0, 1); use more steps")
+    discount = math.exp(-q_u * dt)
+    exponents = np.arange(-steps, steps + 1, 2, dtype=float)
+    ratio = (V0 / U0) * up**exponents
+    values = np.maximum(ratio - 1.0, 0.0)
+    for step in range(steps - 1, -1, -1):
+        values = discount * (probability * values[1:] + (1.0 - probability) * values[:-1])
+        ratio = (V0 / U0) * up ** np.arange(-step, step + 1, 2, dtype=float)
+        values = np.maximum(values, ratio - 1.0)
+    return U0 * float(values[0])
+
+
+def better_of_two_assets(U0, V0, sigma_u, sigma_v, rho, T, q_u=0.0, q_v=0.0):
+    """Value of receiving max(U_T, V_T) = U_T + max(V_T - U_T, 0) (Hull §26.14)."""
+    return U0 * math.exp(-q_u * T) + exchange_option(
+        U0, V0, sigma_u, sigma_v, rho, T, q_u=q_u, q_v=q_v
+    )
+
+
+def worse_of_two_assets(U0, V0, sigma_u, sigma_v, rho, T, q_u=0.0, q_v=0.0):
+    """Value of receiving min(U_T, V_T) = V_T - max(V_T - U_T, 0) (Hull §26.14)."""
+    return V0 * math.exp(-q_v * T) - exchange_option(
+        U0, V0, sigma_u, sigma_v, rho, T, q_u=q_u, q_v=q_v
+    )

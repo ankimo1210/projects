@@ -1,0 +1,301 @@
+{
+  "checked_at": "2026-09-17T14:26:08.709Z",
+  "reference": {
+    "market": {
+      "spot": 100,
+      "strike": 100,
+      "rate": 0.05,
+      "volatility": 0.2,
+      "expiry": 1,
+      "dividend": 0.02
+    },
+    "payout": 100,
+    "prices": {
+      "cash_call": 49.45810910532236,
+      "asset_call": 58.68511461347642,
+      "cash_put": 45.66483334474906,
+      "asset_put": 39.334752717199144
+    },
+    "delta": [
+      {
+        "T": 1,
+        "S": 100,
+        "delta": 1.8950578754952356
+      },
+      {
+        "T": 0.0821917808219178,
+        "S": 100,
+        "delta": 6.92845632885124
+      },
+      {
+        "T": 0.0027397260273972603,
+        "S": 100,
+        "delta": 38.10355729155859
+      }
+    ],
+    "method": "Discounted log-return density integral, with Richardson-extrapolated symmetric differences for delta at S=100; h=.01 and .005."
+  },
+  "pages": {
+    "portal": {
+      "figures": [
+        "binary_payoffs",
+        "binary_replication",
+        "binary_spreads",
+        "binary_delta"
+      ],
+      "replication_states": [
+        {
+          "kind": "call",
+          "points": [
+            {
+              "terminal": 80,
+              "cash_leg": 0,
+              "asset_leg": 0,
+              "reconstructed": 0,
+              "vanilla": 0
+            },
+            {
+              "terminal": 100,
+              "cash_leg": -100,
+              "asset_leg": 100,
+              "reconstructed": 0,
+              "vanilla": 0
+            },
+            {
+              "terminal": 120,
+              "cash_leg": -100,
+              "asset_leg": 120,
+              "reconstructed": 20,
+              "vanilla": 20
+            }
+          ]
+        },
+        {
+          "kind": "put",
+          "points": [
+            {
+              "terminal": 80,
+              "cash_leg": 100,
+              "asset_leg": -80,
+              "reconstructed": 20,
+              "vanilla": 20
+            },
+            {
+              "terminal": 100,
+              "cash_leg": 0,
+              "asset_leg": 0,
+              "reconstructed": 0,
+              "vanilla": 0
+            },
+            {
+              "terminal": 120,
+              "cash_leg": 0,
+              "asset_leg": 0,
+              "reconstructed": 0,
+              "vanilla": 0
+            }
+          ]
+        }
+      ],
+      "negative_control": {
+        "type": "offset_cash_and_asset_legs",
+        "total_payoff_unchanged": true,
+        "rejected": true
+      },
+      "screenshots": [
+        "docs/validation/section-26-10/portal-binary_payoffs-1440.png",
+        "docs/validation/section-26-10/portal-binary_replication-1440.png",
+        "docs/validation/section-26-10/portal-binary_spreads-1440.png",
+        "docs/validation/section-26-10/portal-binary_delta-1440.png",
+        "docs/validation/section-26-10/portal-binary_payoffs-1000.png",
+        "docs/validation/section-26-10/portal-binary_replication-1000.png",
+        "docs/validation/section-26-10/portal-binary_spreads-1000.png",
+        "docs/validation/section-26-10/portal-binary_delta-1000.png"
+      ],
+      "external_network_blocked": true,
+      "external_requests": [],
+      "page_errors": []
+    },
+    "book": {
+      "figures": [
+        "binary_payoffs",
+        "binary_replication",
+        "binary_spreads",
+        "binary_delta"
+      ],
+      "replication_states": [
+        {
+          "kind": "call",
+          "points": [
+            {
+              "terminal": 80,
+              "cash_leg": 0,
+              "asset_leg": 0,
+              "reconstructed": 0,
+              "vanilla": 0
+            },
+            {
+              "terminal": 100,
+              "cash_leg": -100,
+              "asset_leg": 100,
+              "reconstructed": 0,
+              "vanilla": 0
+            },
+            {
+              "terminal": 120,
+              "cash_leg": -100,
+              "asset_leg": 120,
+              "reconstructed": 20,
+              "vanilla": 20
+            }
+          ]
+        },
+        {
+          "kind": "put",
+          "points": [
+            {
+              "terminal": 80,
+              "cash_leg": 100,
+              "asset_leg": -80,
+              "reconstructed": 20,
+              "vanilla": 20
+            },
+            {
+              "terminal": 100,
+              "cash_leg": 0,
+              "asset_leg": 0,
+              "reconstructed": 0,
+              "vanilla": 0
+            },
+            {
+              "terminal": 120,
+              "cash_leg": 0,
+              "asset_leg": 0,
+              "reconstructed": 0,
+              "vanilla": 0
+            }
+          ]
+        }
+      ],
+      "negative_control": {
+        "type": "offset_cash_and_asset_legs",
+        "total_payoff_unchanged": true,
+        "rejected": true
+      },
+      "screenshots": [
+        "docs/validation/section-26-10/book-binary_payoffs-1440.png",
+        "docs/validation/section-26-10/book-binary_replication-1440.png",
+        "docs/validation/section-26-10/book-binary_spreads-1440.png",
+        "docs/validation/section-26-10/book-binary_delta-1440.png",
+        "docs/validation/section-26-10/book-binary_payoffs-1000.png",
+        "docs/validation/section-26-10/book-binary_replication-1000.png",
+        "docs/validation/section-26-10/book-binary_spreads-1000.png",
+        "docs/validation/section-26-10/book-binary_delta-1000.png"
+      ],
+      "math": {
+        "typeset": 52,
+        "errors": 0,
+        "blocks": [
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          },
+          {
+            "width": 790,
+            "scroll_width": 790
+          }
+        ],
+        "headings": [
+          "2.1 4つの満期給付と決済規約#",
+          "2.2 GBM仮定と4つの時点0価格#",
+          "2.3 call/putの給付分解と現在価値#",
+          "2.4 不連続給付と決済リスク#",
+          "2.5 call spread、butterfly、行使価格微分#",
+          "2.6 有限残存期間のcash-callデルタ#"
+        ],
+        "prices": {
+          "cash_call": "49.458109",
+          "asset_call": "58.685115",
+          "cash_put": "45.664833",
+          "asset_put": "39.334753"
+        },
+        "price_screenshots": [
+          "docs/validation/section-26-10/book-binary-prices-1440.png",
+          "docs/validation/section-26-10/book-binary-prices-1000.png"
+        ]
+      },
+      "external_network_blocked": false,
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "page_errors": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/_binary_lesson.py": "80be5939c13e261dcbb3bb9befecc8b45fbb7b04c07b0ebe8d270f83ad900e19",
+    "hullkit/tests/test_binary_lesson.py": "ac3152dab1e15fcfbc8408f4a6efa91a722954421eaac9ab4870b6ab03b68182",
+    "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "36dbd303233a27d4d70fd4c0d6a2572bcf08689fcec12f5f38dd13de960aacf1",
+    "volumes/10_exotics_martingales/exotics.ipynb": "4df4884619129478d686e634ed9965dea0ed0fcebed499d67b2131c86880a439",
+    "report/report_builder/figures.py": "3fd5e8e337829a78dcb10edf975b7c37a2fcff2cf2eedf2bc4beefc525f70a16",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/assets/style.css": "d900a71aab34cc3f3941d04325c34c1750144d38b7e56d2dbe10996f604a1022",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "scripts/verify_binary_lesson_browser.cjs": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "900f9a09352a7c45f23dd7d0d5d853af95d4e14cb063981076988af809b445eb",
+    "report/site/assets/style.css": "d900a71aab34cc3f3941d04325c34c1750144d38b7e56d2dbe10996f604a1022",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "39f5d884a42b655c8dbedaddb6ac6028f2e8e4481ff9b755a67be7a588436122"
+  },
+  "browser_version": "141.0.7390.37",
+  "status": "PASS"
+}

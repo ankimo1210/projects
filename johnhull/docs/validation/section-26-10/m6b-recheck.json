@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-17T14:33:15.791241+00:00",
+  "scope": "Fresh section 26.10 regression after the §26.14 exchange-option delivery changed the shared pricing module, notebook, portal builder and stylesheet.",
+  "related_tests": {
+    "status": "PASS",
+    "files": [
+      "hullkit/tests/test_binary_reference.py",
+      "hullkit/tests/test_binary_lesson.py",
+      "hullkit/tests/test_exotics.py"
+    ],
+    "passed": 107,
+    "skipped": 0,
+    "seconds": 1.91,
+    "command": "uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_binary_reference.py johnhull/hullkit/tests/test_binary_lesson.py johnhull/hullkit/tests/test_exotics.py"
+  },
+  "whole_suite": {
+    "status": "PASS",
+    "scope": "johnhull/hullkit/tests + johnhull/report/tests",
+    "note": "Counted in docs/validation/section-26-14/m6b-check.json."
+  },
+  "browser_record": "docs/validation/section-26-10/browser-m6b-recheck.json",
+  "browser": {
+    "status": "PASS",
+    "chromium": "141.0.7390.37",
+    "surfaces": [
+      "portal",
+      "book"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "screenshot_handling": "The re-run rewrote the section's element screenshots; the committed M-series images were restored so the earlier acceptance evidence stays byte-identical. Every re-rendered image had the same dimensions; 5 of the 82 differed at all. Four differ by at most 12/255 on at most 0.9% of their pixels (text antialiasing). The fifth, docs/validation/section-26-11/book-lookback_replication-1440.png, differs by up to 86/255 on 0.71% of its pixels, all inside y 6-55 / x 577-784: the harness hovers the plot before screenshotting and Plotly's 'Autoscale' modebar tooltip was fully opaque this time instead of mid-fade, covering the dropdown label. A transient hover state, not a change in the figure."
+  },
+  "notebook_record": "docs/validation/section-26-14/notebook-m6b-check.json",
+  "notebook": {
+    "status": "PASS",
+    "note": "77 cells outside the rewritten §4.4-§4.5 span are byte-identical to 42a6cbc0, and the committed outputs match a fresh execution."
+  },
+  "historical_records": [
+    "docs/validation/section-26-10/browser-check.json",
+    "docs/validation/section-26-10/browser-m5b-check.json",
+    "docs/validation/section-26-10/m5b-recheck.json",
+    "docs/validation/section-26-10/numerical-m5b-recheck.json"
+  ],
+  "historical_records_unchanged": true,
+  "pinning_note": "状態件数をassertするテストは検証記録にpinしない。This record pins the sources and delivery artifacts it actually re-checked, not report/tests/test_section_ledger.py or report/tests/test_report_build.py, whose counts change whenever a section or figure is registered.",
+  "source_sha256": {
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "hullkit/src/hullkit/_binary_lesson.py": "80be5939c13e261dcbb3bb9befecc8b45fbb7b04c07b0ebe8d270f83ad900e19",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+    "report/assets/style.css": "d900a71aab34cc3f3941d04325c34c1750144d38b7e56d2dbe10996f604a1022",
+    "report/report_builder/figures.py": "3fd5e8e337829a78dcb10edf975b7c37a2fcff2cf2eedf2bc4beefc525f70a16",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "scripts/verify_binary_lesson_browser.cjs": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "36dbd303233a27d4d70fd4c0d6a2572bcf08689fcec12f5f38dd13de960aacf1",
+    "volumes/10_exotics_martingales/exotics.ipynb": "4df4884619129478d686e634ed9965dea0ed0fcebed499d67b2131c86880a439"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "900f9a09352a7c45f23dd7d0d5d853af95d4e14cb063981076988af809b445eb",
+    "report/site/assets/style.css": "d900a71aab34cc3f3941d04325c34c1750144d38b7e56d2dbe10996f604a1022",
+    "book/_build/html/notebooks/10_exotics.html": "39f5d884a42b655c8dbedaddb6ac6028f2e8e4481ff9b755a67be7a588436122"
+  }
+}

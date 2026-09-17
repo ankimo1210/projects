@@ -1,0 +1,497 @@
+{
+  "method": "Displayed values are pinned to the frozen independent table in prices.json and to algebra recomputed here; no hullkit pricer and no lesson module is imported.",
+  "source_sha256": {
+    "scripts/build_exchange_browser_reference.py": "eee63979b526215286b81042a42bb3f7729fe406bd8e9869c43e25741f0fbd9c",
+    "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
+    "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
+    "docs/validation/section-26-14/numerical-check.json": "b68d3cacd753da95c0ccaca53611e2750d62052d27895c802a9a4050eee07203"
+  },
+  "payoff": {
+    "terminal_u": 100.0,
+    "rows": [
+      {
+        "terminal_v": 60.0,
+        "exchange": 0.0,
+        "better_of": 100.0,
+        "worse_of": 60.0
+      },
+      {
+        "terminal_v": 80.0,
+        "exchange": 0.0,
+        "better_of": 100.0,
+        "worse_of": 80.0
+      },
+      {
+        "terminal_v": 100.0,
+        "exchange": 0.0,
+        "better_of": 100.0,
+        "worse_of": 100.0
+      },
+      {
+        "terminal_v": 120.0,
+        "exchange": 20.0,
+        "better_of": 120.0,
+        "worse_of": 100.0
+      },
+      {
+        "terminal_v": 140.0,
+        "exchange": 40.0,
+        "better_of": 140.0,
+        "worse_of": 100.0
+      },
+      {
+        "terminal_v": 160.0,
+        "exchange": 60.0,
+        "better_of": 160.0,
+        "worse_of": 100.0
+      }
+    ]
+  },
+  "correlation": [
+    {
+      "market": "equal-vol-uncorrelated",
+      "endpoints": {
+        "-0.95": {
+          "price": 15.655133712655186,
+          "spread_volatility": 0.39496835316263
+        },
+        "+0.95": {
+          "price": 2.522712063003965,
+          "spread_volatility": 0.06324555320336761
+        }
+      },
+      "forward_spread": 0.0,
+      "volatility_u": 0.2,
+      "volatility_v": 0.2,
+      "correlation": 0.0,
+      "yield_u": 0.0,
+      "yield_v": 0.0,
+      "expiry": 1.0
+    },
+    {
+      "market": "asymmetric-vol",
+      "endpoints": {
+        "-0.95": {
+          "price": 33.92704634051384,
+          "spread_volatility": 0.5943483826847685
+        },
+        "+0.95": {
+          "price": 19.097061265604665,
+          "spread_volatility": 0.3110466202999158
+        }
+      },
+      "forward_spread": 3.9210560847676845,
+      "volatility_u": 0.15,
+      "volatility_v": 0.45,
+      "correlation": 0.3,
+      "yield_u": 0.02,
+      "yield_v": 0.0,
+      "expiry": 2.0
+    },
+    {
+      "market": "long-high-vol",
+      "endpoints": {
+        "-0.95": {
+          "price": 75.70170812564756,
+          "spread_volatility": 1.2345039489608771
+        },
+        "+0.95": {
+          "price": 21.48827924976372,
+          "spread_volatility": 0.2469817807045695
+        }
+      },
+      "forward_spread": 4.4129441610901665,
+      "volatility_u": 0.55,
+      "volatility_v": 0.7,
+      "correlation": -0.2,
+      "yield_u": 0.03,
+      "yield_v": 0.02,
+      "expiry": 5.0
+    }
+  ],
+  "rate": [
+    {
+      "market": "equal-vol-tight",
+      "value_ratio": 1.1,
+      "spread_volatility": 0.08944271909999163,
+      "price": 8.769243060234743,
+      "restated_price": 8.769243060234764,
+      "rates": [
+        -0.05,
+        -0.02,
+        0.0,
+        0.02,
+        0.05,
+        0.08,
+        0.12
+      ],
+      "fixed_strike_misreading": [
+        6.75493191839562,
+        9.0363062707593,
+        10.68826553521707,
+        12.412471402969064,
+        15.077515960630738,
+        17.77342110528849,
+        21.33145155760361
+      ],
+      "misreading_spread": 14.57651963920799,
+      "volatility_u": 0.2,
+      "volatility_v": 0.2,
+      "correlation": 0.9,
+      "yield_u": 0.01,
+      "yield_v": 0.03,
+      "expiry": 1.0
+    },
+    {
+      "market": "yield-on-received",
+      "value_ratio": 1.1,
+      "spread_volatility": 0.25,
+      "price": 12.467942349308835,
+      "restated_price": 12.46794234930883,
+      "rates": [
+        -0.05,
+        -0.02,
+        0.0,
+        0.02,
+        0.05,
+        0.08,
+        0.12
+      ],
+      "fixed_strike_misreading": [
+        14.38442224106831,
+        16.72976450972582,
+        18.384551746149484,
+        20.104434829989277,
+        22.78974762736615,
+        25.577290880206746,
+        29.403973100046194
+      ],
+      "misreading_spread": 15.019550858977885,
+      "volatility_u": 0.25,
+      "volatility_v": 0.25,
+      "correlation": 0.5,
+      "yield_u": 0.0,
+      "yield_v": 0.06,
+      "expiry": 1.5
+    },
+    {
+      "market": "long-high-vol",
+      "value_ratio": 1.1,
+      "spread_volatility": 0.9728823155962905,
+      "price": 73.9512163555874,
+      "restated_price": 73.95121635558742,
+      "rates": [
+        -0.05,
+        -0.02,
+        0.0,
+        0.02,
+        0.05,
+        0.08,
+        0.12
+      ],
+      "fixed_strike_misreading": [
+        77.15886995681238,
+        79.48929833871821,
+        80.99267541886543,
+        82.45415251338214,
+        84.56514365856673,
+        86.57574932297328,
+        89.09641490165885
+      ],
+      "misreading_spread": 11.937544944846465,
+      "volatility_u": 0.55,
+      "volatility_v": 0.7,
+      "correlation": -0.2,
+      "yield_u": 0.03,
+      "yield_v": 0.02,
+      "expiry": 5.0
+    }
+  ],
+  "american": [
+    {
+      "market": "equal-vol-uncorrelated",
+      "ratios": [
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95,
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.25,
+        1.3,
+        1.35,
+        1.4
+      ],
+      "european": [
+        0.30569348391281714,
+        0.6293734850573003,
+        1.1617946343358092,
+        1.9626113634270919,
+        3.082652301718607,
+        4.558704081543201,
+        6.411067988848593,
+        8.643705342327038,
+        11.246291601828489,
+        14.1973506492945,
+        17.467730366014855,
+        21.023883133943016,
+        24.830635378173753,
+        28.85331537714825,
+        33.05923877702722,
+        37.418628026386244,
+        41.90507652739207
+      ],
+      "intrinsic": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.0,
+        10.000000000000014,
+        14.999999999999986,
+        20.0,
+        25.0,
+        30.0,
+        35.0,
+        40.0
+      ],
+      "recorded_premiums": {
+        "0.8": 2.220446049250313e-15,
+        "1.0": 0.0,
+        "1.25": 1.0658141036401503e-14
+      },
+      "volatility_u": 0.2,
+      "volatility_v": 0.2,
+      "correlation": 0.0,
+      "yield_u": 0.0,
+      "yield_v": 0.0,
+      "expiry": 1.0
+    },
+    {
+      "market": "yield-on-received",
+      "ratios": [
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95,
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.25,
+        1.3,
+        1.35,
+        1.4
+      ],
+      "european": [
+        0.21091713853793803,
+        0.4268922090933782,
+        0.7812338985120553,
+        1.3166482596489857,
+        2.0729418432077686,
+        3.083440673907184,
+        4.372617759663797,
+        5.955053219250409,
+        7.835570990531295,
+        10.010246538777615,
+        12.46794234930885,
+        15.192063976824123,
+        18.162301328701055,
+        21.356199677756607,
+        24.750475962397303,
+        28.322050851214627,
+        32.04880460776681
+      ],
+      "intrinsic": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.0,
+        10.000000000000014,
+        14.999999999999986,
+        20.0,
+        25.0,
+        30.0,
+        35.0,
+        40.0
+      ],
+      "recorded_premiums": {
+        "0.8": 0.17779247836606826,
+        "1.0": 1.0043021472274924,
+        "1.25": 4.278274939815745
+      },
+      "volatility_u": 0.25,
+      "volatility_v": 0.25,
+      "correlation": 0.5,
+      "yield_u": 0.0,
+      "yield_v": 0.06,
+      "expiry": 1.5
+    },
+    {
+      "market": "equal-vol-tight",
+      "ratios": [
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95,
+        1.0,
+        1.05,
+        1.1,
+        1.15,
+        1.2,
+        1.25,
+        1.3,
+        1.35,
+        1.4
+      ],
+      "european": [
+        1.597338765709479e-09,
+        3.045791204334514e-07,
+        2.010283037346219e-05,
+        0.0005623220935927348,
+        0.00781894424764984,
+        0.06146140958969615,
+        0.3037083110405181,
+        1.0318743379108248,
+        2.6033774603008695,
+        5.212939723354893,
+        8.769243060234771,
+        12.989748854614561,
+        17.58045339232835,
+        22.33971094032286,
+        27.16319241016322,
+        32.007587922685246,
+        36.857911502424145
+      ],
+      "intrinsic": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.0,
+        10.000000000000014,
+        14.999999999999986,
+        20.0,
+        25.0,
+        30.0,
+        35.0,
+        40.0
+      ],
+      "recorded_premiums": {
+        "0.8": 0.00020321702348000646,
+        "1.0": 0.20077750987409493,
+        "1.25": 2.6603677573836677
+      },
+      "volatility_u": 0.2,
+      "volatility_v": 0.2,
+      "correlation": 0.9,
+      "yield_u": 0.01,
+      "yield_v": 0.03,
+      "expiry": 1.0
+    }
+  ],
+  "notebook": {
+    "ratio_table": [
+      {
+        "correlation": -0.5,
+        "spread_volatility": 0.3464101615137755,
+        "price": 13.750976986407835,
+        "restated": 13.750976986407837
+      },
+      {
+        "correlation": 0.0,
+        "spread_volatility": 0.28284271247461906,
+        "price": 11.246291601828489,
+        "restated": 11.246291601828485
+      },
+      {
+        "correlation": 0.5,
+        "spread_volatility": 0.2,
+        "price": 7.965567455405804,
+        "restated": 7.965567455405798
+      },
+      {
+        "correlation": 0.9,
+        "spread_volatility": 0.08944271909999163,
+        "price": 3.56705917296798,
+        "restated": 3.5670591729679844
+      }
+    ],
+    "american_table": [
+      {
+        "label": "配当なし q_V=0",
+        "value_ratio": 1.0,
+        "yield_v": 0.0,
+        "european": 12.167514989896517
+      },
+      {
+        "label": "配当なし q_V=0",
+        "value_ratio": 1.25,
+        "yield_v": 0.0,
+        "european": 29.62600246715914
+      },
+      {
+        "label": "受取側に配当 q_V=6%",
+        "value_ratio": 1.0,
+        "yield_v": 0.06,
+        "european": 7.835570990531295
+      },
+      {
+        "label": "受取側に配当 q_V=6%",
+        "value_ratio": 1.25,
+        "yield_v": 0.06,
+        "european": 21.356199677756607
+      }
+    ],
+    "decomposition": {
+      "exchange": 12.467942349308835,
+      "better_of": 112.46794234930883,
+      "worse_of": 88.06448803052626,
+      "forward_sum": 200.5324303798351
+    }
+  },
+  "record": {
+    "rate_independence_max_spread": 1.7763568394002505e-14,
+    "decomposition_max_residual": 8.526512829121202e-14,
+    "max_premium_without_yield": 1.8829382497642655e-13,
+    "max_premium_with_yield": 4.278274939815745
+  },
+  "limits": [
+    "満期給付であって現在価値ではない",
+    "格子",
+    "例題がなく",
+    "近似"
+  ]
+}

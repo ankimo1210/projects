@@ -19,7 +19,7 @@
       "The path is a defined example, not a GBM sample."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
       "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
       "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
@@ -79,7 +79,7 @@
       "Histogram trimmed to the 0.1%-99.9% quantiles of the sample."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
       "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
       "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
@@ -705,7 +705,7 @@
       "No cash dividends, nonconstant volatility, unequal observation spacing, T=0 or sigma=0."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
       "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
       "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
@@ -917,7 +917,7 @@
       "No cash dividends, nonconstant volatility, unequal observation spacing, T=0 or sigma=0."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
       "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
       "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
@@ -1291,7 +1291,7 @@
       "No cash dividends, nonconstant volatility, unequal observation spacing, T=0 or sigma=0."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
       "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
       "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
       "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
