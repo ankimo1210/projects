@@ -1,0 +1,102 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-17T14:33:40.601426+00:00",
+  "scope": "Section 26.14 M6b delivery: the pricing API, the four lesson figures, the notebook sections 4.4.1-4.4.6, and both rendered surfaces.",
+  "related_tests": {
+    "status": "PASS",
+    "files": [
+      "hullkit/tests/test_exchange_reference.py",
+      "hullkit/tests/test_exchange_pricing.py",
+      "hullkit/tests/test_exchange_lesson.py",
+      "hullkit/tests/test_exotics.py"
+    ],
+    "passed": 366,
+    "skipped": 0,
+    "seconds": 2.03,
+    "command": "uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_exchange_reference.py johnhull/hullkit/tests/test_exchange_pricing.py johnhull/hullkit/tests/test_exchange_lesson.py johnhull/hullkit/tests/test_exotics.py"
+  },
+  "whole_suite": {
+    "status": "PASS",
+    "scope": "johnhull/hullkit/tests + johnhull/report/tests",
+    "passed": 2515,
+    "skipped": 6,
+    "seconds": 55.0,
+    "command": "uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests",
+    "note": "Counted after the ledger evidence was repointed to this milestone's records; before that, test_section_ledger.py failed on the stale digests this run replaces."
+  },
+  "browser_record": "docs/validation/section-26-14/browser-m6b-check.json",
+  "browser": {
+    "status": "PASS",
+    "chromium": "141.0.7390.37",
+    "surfaces": [
+      "portal",
+      "book"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "figures": 4,
+    "states_checked": 24,
+    "negative_control": "Tilting the flat r-independence line by +0.5 at the last rate is rejected by the numeric check and then restored.",
+    "screenshots": 18
+  },
+  "notebook_record": "docs/validation/section-26-14/notebook-m6b-check.json",
+  "shared_source_rechecks": [
+    "docs/validation/section-26-9/m6b-recheck.json",
+    "docs/validation/section-26-10/m6b-recheck.json",
+    "docs/validation/section-26-11/m6b-recheck.json",
+    "docs/validation/section-26-12/m6b-recheck.json",
+    "docs/validation/section-26-13/m6b-recheck.json"
+  ],
+  "measurements": {
+    "engine_agreement": "conditioning vs ratio quadrature, 24 rows, max 1.776e-14",
+    "rate_independence": "24 rows x r in {-5%,-2%,0,2%,5%,8%,12%}, max spread 1.6e-14",
+    "ratio_restatement": "U0 calls on V/U struck at 1, residual at most 2.842e-14 over 3 markets",
+    "decomposition": "max(U,V)+min(U,V)=U+V, max residual 8.527e-14 over 24 rows",
+    "early_exercise_qv_zero": "1.208e-13 against a 2.745e-03 grid residual at 1024 steps",
+    "early_exercise_qv_positive": "up to 7.951 at qV=6%, 3.142 at qV=3%",
+    "tree_convergence": "the residual halves with each doubling: 0.0457/0.0114/0.0057 at 128/512/1024"
+  },
+  "limitations": [
+    "Two correlated GBM assets with constant sigma_u, sigma_v, rho, q_u, q_v.",
+    "The American price is a finite CRR tree on V/U; the residual is a grid effect, not a bound.",
+    "Section 26.14 prints no worked example, so no number here is pinned to Hull.",
+    "Synthetic markets; the Monte Carlo reference carries a standard error."
+  ],
+  "historical_records": [
+    "docs/validation/section-26-14/prices.json",
+    "docs/validation/section-26-14/numerical-check.json"
+  ],
+  "historical_records_unchanged": true,
+  "pinning_note": "状態件数をassertするテストは検証記録にpinしない。This record does not pin report/tests/test_section_ledger.py or report/tests/test_report_build.py, whose asserted counts change whenever a section or figure is registered.",
+  "source_sha256": {
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "docs/validation/section-26-14/browser-reference.json": "11d5f25a1aec8ac510565f477edbf0808938c9e942edb12b0e797ab86813b0f2",
+    "docs/validation/section-26-14/lesson-data.json": "5f87de11ac78b24896ea78c35b3dab736c1280ac4c0effcdd366d476bf1ebc87",
+    "docs/validation/section-26-14/numerical-check.json": "b68d3cacd753da95c0ccaca53611e2750d62052d27895c802a9a4050eee07203",
+    "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
+    "hullkit/src/hullkit/_exchange_lesson.py": "b1dd20d413d7d23d6c888290547af89a0af687ff2ca63812eac57fd4cf525d91",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+    "hullkit/tests/test_exchange_lesson.py": "83e2a42d747e2fcd13076f5de0665e2bf75336312ddc322223c44243bed7afea",
+    "hullkit/tests/test_exchange_pricing.py": "f6d9318e568466875a9f1ffed12750b2007f7017f15d727ec6da016499061a7f",
+    "hullkit/tests/test_exchange_reference.py": "522522167f3fc0137365eb2f9d1f7db8cb9bf6baaac35cc0d0217e1fd229008b",
+    "report/assets/style.css": "d900a71aab34cc3f3941d04325c34c1750144d38b7e56d2dbe10996f604a1022",
+    "report/report_builder/figures.py": "3fd5e8e337829a78dcb10edf975b7c37a2fcff2cf2eedf2bc4beefc525f70a16",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "scripts/build_exchange_browser_reference.py": "eee63979b526215286b81042a42bb3f7729fe406bd8e9869c43e25741f0fbd9c",
+    "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
+    "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
+    "scripts/verify_exchange_lesson_browser.cjs": "20b920296b7e70404489fff1218f087ce815357e6ed8df2ba35681115b6f42f9",
+    "scripts/verify_exchange_notebook.py": "d3afa4f672c1b912118df10f466b381e8c222955b22c6bb6e4e445366b4ad99a",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "36dbd303233a27d4d70fd4c0d6a2572bcf08689fcec12f5f38dd13de960aacf1",
+    "volumes/10_exotics_martingales/exotics.ipynb": "4df4884619129478d686e634ed9965dea0ed0fcebed499d67b2131c86880a439"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "900f9a09352a7c45f23dd7d0d5d853af95d4e14cb063981076988af809b445eb",
+    "report/site/assets/style.css": "d900a71aab34cc3f3941d04325c34c1750144d38b7e56d2dbe10996f604a1022",
+    "book/_build/html/notebooks/10_exotics.html": "39f5d884a42b655c8dbedaddb6ac6028f2e8e4481ff9b755a67be7a588436122"
+  }
+}

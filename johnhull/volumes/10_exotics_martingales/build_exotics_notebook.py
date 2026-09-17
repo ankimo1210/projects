@@ -1084,35 +1084,187 @@ a_tw = exotics.asian_call_turnbull_wakeman(S_B, K_B, R_B, SIG_B, T_B)
 print(f"合成市場の Turnbull-Wakeman アジアン = {a_tw:.4f}（バニラ ATM コール {van:.4f} より安い）")""")
 )
 
-# Cell 11: exchange md + demo
+# Cell 11: exchange options (section 26.14)
 cells.append(
-    code(r"""# --- 交換オプション（Margrabe）: 資産Uを資産Vと交換 ---
-print("Margrabe は r に依存しない（exchange_option の引数に r がない）:")
-print(f"  交換オプション価値 = {exotics.exchange_option(100.0, 100.0, 0.2, 0.2, 0.5, 1.0):.6f}")
-print("  （一方の資産をニュメレールに取ると成長率↑と割引率↑が相殺するため）")
-print("σ̂ = √(σ_U²+σ_V²−2ρσ_Uσ_V)。ρ が高いほど2資産が連動し交換の価値は下がる")
-rows = []
-for rho in (-0.5, 0.0, 0.5, 0.9):
-    rows.append({"相関ρ": rho,
-                 "交換オプション": round(exotics.exchange_option(100.0, 100.0, 0.2, 0.2, rho, 1.0), 4)})
-display(pd.DataFrame(rows))""")
+    md(r"""### 4.4 交換オプション（§26.14、GE pp.627–628）
+
+#### 4.4.1 行使価格が資産である契約
+
+満期 $T$ に価値 $U_T$ の資産を渡して価値 $V_T$ の資産を受け取る権利の給付は
+
+$$\max(V_T - U_T,\ 0).$$
+
+普通のオプションとの違いは**行使価格が固定額でなく、満期に確定する別の資産の価値**である点です。
+通貨の交換（円建て資産とドル建て資産）、株式を対価とする公開買付、
+最良の投資先を選べる契約などがこの形になります。
+
+$U,V$ はともに相関 $\rho$ の幾何ブラウン運動とし、ボラティリティを $\sigma_U,\sigma_V$、
+連続配当利回りを $q_U,q_V$ とします。単位は価格が通貨、$T$ が年、利回りとボラは年率連続です。""")
 )
 
-# Cell 11b: rainbow md
 cells.append(
-    md(r"""### レインボー・オプション（§26.14–26.15）
+    code(r"""from hullkit._exchange_lesson import _figures as exchange_lesson_figures
+
+exchange_figures = exchange_lesson_figures()
+exchange_figures["exchange_payoff"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.4.2 Margrabe の式と $\hat\sigma$
+
+価格は式 26.5 で与えられます。
+
+$$
+V_0e^{-q_VT}N(d_1)-U_0e^{-q_UT}N(d_2),\qquad
+d_1=\frac{\ln(V_0/U_0)+(q_U-q_V+\hat\sigma^2/2)T}{\hat\sigma\sqrt T},\qquad
+d_2=d_1-\hat\sigma\sqrt T,
+$$
+
+$$
+\hat\sigma=\sqrt{\sigma_U^2+\sigma_V^2-2\rho\sigma_U\sigma_V}.
+$$
+
+$\hat\sigma$ は**比 $V/U$ のボラティリティ**です。2つのボラと相関は、この1つの量を通じてしか価格に入りません。
+$\rho$ が高いほど2資産が同じ方向に動き、比のばらつきが減って交換の価値は下がります。
+$\rho\to1$ かつ $\sigma_U=\sigma_V$ では $\hat\sigma\to0$ となり、価格は
+$\max(V_0e^{-q_VT}-U_0e^{-q_UT},0)$ すなわち**割引フォワードの差**に収束します。
+
+$q_U,q_V$ は $d_1$ では差 $q_U-q_V$ としてのみ効き、係数では各資産の割引に効きます。
+
+交差項 $-2\rho\sigma_U\sigma_V$ を落とす誤りは、相関のある行では必ず検出されます
+（独立参照との比較で、$\rho\neq0$ の 21 行すべてが拒否されました）。""")
+)
+
+cells.append(
+    code(r"""exchange_figures["exchange_correlation"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.4.3 なぜ $r$ に依存しないのか
+
+式 26.5 にリスクフリー金利 $r$ は現れません。理由は、$r$ が上がると
+リスク中立測度での**2資産の期待成長率も、満期給付の割引率も同じだけ上がり、打ち消し合う**ためです。
+形式的には $U$ をニュメレールに取ると $r$ が消えます。
+
+これは「$r$ を入れ忘れている」のではなく、契約の性質です。
+下図では、式 26.5 を一切使わない求積による独立参照価格を $r\in[-5\%, 12\%]$ で計算しています
+（24 行 × 3 レートの測定で最大差は 1.8×10⁻¹⁴、つまり浮動小数の丸めだけです）。
+
+比較のため、同じ $\hat\sigma$ を使いながら**行使価格を今日の $U_0$ に固定した普通のコール**として
+読んだ場合も重ねています。こちらは $r$ とともに動きます。差を生むのは
+「行使価格が満期に確定する資産の価値である」という一点です。""")
+)
+
+cells.append(
+    code(r"""exchange_figures["exchange_rate"].show()
+
+# 独立参照（求積）と式26.5、そして V/U への読み替えを同じ条件で並べる
+rows_exchange = []
+for rho in (-0.5, 0.0, 0.5, 0.9):
+    sigma_hat = exotics.exchange_spread_volatility(0.2, 0.2, rho)
+    price = exotics.exchange_option(100.0, 100.0, 0.2, 0.2, rho, 1.0)
+    restated = 100.0 * bsm.call_price(1.0, 1.0, 0.0, sigma_hat, 1.0, q=0.0)
+    rows_exchange.append({"相関ρ": rho, "σ̂": round(sigma_hat, 4),
+                          "交換オプション（26.5）": round(price, 4),
+                          "V/U への読み替え": round(restated, 4),
+                          "差": f"{restated - price:.2e}"})
+display(pd.DataFrame(rows_exchange))""")
+)
+
+cells.append(
+    md(r"""#### 4.4.4 $V/U$ への読み替え
+
+原典は同じ価格を別の言葉で書き直します。この契約は
+
+> **$V/U$ を原資産、行使価格 1.0、リスクフリー金利 $q_U$、配当利回り $q_V$ とするコール $U_0$ 個**
+
+と等価です（式 17.4 と比べてください）。上の表の最終列がこの読み替えで、
+式 26.5 と $10^{-14}$ の桁で一致します。
+
+この読み替えには2つの使い道があります。第一に、$\hat\sigma$ が比のボラだという意味が見えます。
+第二に、**米国型の評価経路がそのまま出てきます**。""")
+)
+
+cells.append(
+    md(r"""#### 4.4.5 better-of／worse-of と米国型
+
+$\max$ と $\min$ は恒等式で交換オプションに分解できます。
+
+$$\max(U_T, V_T) = U_T + \max(V_T - U_T, 0), \qquad \min(U_T, V_T) = V_T - \max(V_T - U_T, 0)$$
+
+したがって価値は「片方の資産を配当利回りぶん割引した値 $\pm$ 交換オプション」です。
+足すと $\max+\min=U+V$ になるので、2つの値が同時にずれることはありません
+（独立に価格付けした参照との残差は $8.5\times10^{-14}$）。
+
+**米国型**（Rubinstein）は上の読み替えから、$V/U$ 上の米国型コール $U_0$ 個として二項木で評価できます。
+配当のない資産に対するコールは早期行使されないので、**$q_V=0$ なら米国型は欧州型に一致します**。
+受け取る資産に配当（あるいは利回り）があるときにだけ早期行使に価値が出ます。
+
+木は有限格子なので、欧州型の閉形式との差には早期行使と離散化が混ざります。
+下図は**同じ格子で行使判定だけを外した価格**と比べることで両者を分離しています。
+$q_V=0$ の市場では早期行使ぶんが $1.2\times10^{-13}$、残るのは格子の $2.7\times10^{-3}$ だけです。""")
+)
+
+cells.append(
+    code(r"""exchange_figures["exchange_american"].show()
+
+rows_american = []
+for name, q_v in (("配当なし q_V=0", 0.0), ("受取側に配当 q_V=6%", 0.06)):
+    for ratio in (1.0, 1.25):
+        kwargs = dict(U0=100.0, V0=100.0 * ratio, sigma_u=0.25, sigma_v=0.25,
+                      rho=0.5, T=1.5, q_u=0.0, q_v=q_v)
+        european = exotics.exchange_option(**kwargs)
+        american = exotics.exchange_option_american(**kwargs)
+        rows_american.append({"市場": name, "V₀/U₀": ratio,
+                              "欧州型": round(european, 4), "米国型（木）": round(american, 4),
+                              "早期行使の上乗せ": f"{american - european:+.4f}"})
+display(pd.DataFrame(rows_american))
+
+# better-of / worse-of は分解の恒等式そのもの
+bw = dict(U0=100.0, V0=110.0, sigma_u=0.25, sigma_v=0.25, rho=0.5, T=1.5, q_u=0.0, q_v=0.06)
+better, worse = exotics.better_of_two_assets(**bw), exotics.worse_of_two_assets(**bw)
+forwards = 100.0 * math.exp(-0.0 * 1.5) + 110.0 * math.exp(-0.06 * 1.5)
+print(f"better-of {better:.4f} + worse-of {worse:.4f} = {better + worse:.4f}")
+print(f"割引フォワードの和                     = {forwards:.4f}"
+      f"（差 {better + worse - forwards:.2e}）")""")
+)
+
+cells.append(
+    md(r"""#### 4.4.6 適用域・限界と理解の確認
+
+この節の実装と数値は、**定数の $\sigma_U,\sigma_V,\rho,q_U,q_V$ をもつ2本の相関 GBM**という仮定の上にあります。
+確率的ボラティリティ、ジャンプ、時間変動する相関、現金配当は対象外です。
+米国型は有限の CRR 木で、残差は格子効果であって誤差上界ではありません。
+$T=0$、$\hat\sigma=0$ ちょうど、$\rho=\pm1$ ちょうどは端点として扱い、$\hat\sigma\le0$ では
+割引フォワードの差を返します（木は立てられないので拒否します）。
+
+**§26.14 には例題がなく、印刷された数値もありません。** 本冊の 7.965567 は原典の値ではなく、
+本リポジトリが独立参照（求積2経路とモンテカルロ）で確かめた自前の固定値です。
+
+**理解の確認**
+
+1. $\sigma_U=\sigma_V=30\%$、$\rho=1$ のとき価格はいくらか。式を使わずに答えられるか。
+2. $r$ を 2% から 10% に上げると交換オプションの価格はどう動くか。理由を1文で。
+3. worse-of を「$V$ を買って交換オプションを売る」と読むと、売った側のリスクは何か。
+4. 受け取る資産が配当利回り 6% の株価指数のとき、米国型と欧州型のどちらを買うべきか。""")
+)
+
+# Cell 11b: basket / rainbow md
+cells.append(
+    md(r"""### 4.5 レインボーとバスケット（§26.15）
 
 2 つ以上のリスク資産に依存するオプションを**レインボー・オプション**と呼びます。
+§4.4 の交換オプション、better-of／worse-of はその最小の例です。
 身近な例は第4冊の T-bond 先物で、ショート側が多数の受渡可能銘柄から最安の債券（CTD）を選べる権利です。
 
-- **ベター・オブ／ワース・オブ**は交換オプションに分解できる（§26.14）：
-  $$\max(U_T, V_T) = U_T + \max(V_T - U_T, 0), \qquad \min(U_T, V_T) = V_T - \max(V_T - U_T, 0)$$
-  したがって価値は「片方の資産（配当利回りぶん割引）± Margrabe の交換オプション」。
-- **バスケット・オプション**（§26.15）はポートフォリオの価値にペイオフが依存する。相関 GBM の MC でも評価できるが、
-  速いのは満期のバスケット価値を対数正規と見なして 2 次までのモーメントを合わせ、Black に入れる方法：
-  $$M_1 = \sum_{i=1}^n F_i, \qquad M_2 = \sum_{i=1}^n \sum_{j=1}^n F_i F_j\, e^{\rho_{ij}\sigma_i\sigma_j T}, \qquad
-  F_0 = M_1,\ \ \sigma^2 = \frac{1}{T}\ln\frac{M_2}{M_1^2} \quad \text{(26.3), (26.4)}$$
-  アジアンの Turnbull-Wakeman と同じ発想で、平均の代わりに資産の和を扱う。""")
+**バスケット・オプション**（§26.15）はポートフォリオの価値にペイオフが依存します。相関 GBM の MC でも評価できますが、
+速いのは満期のバスケット価値を対数正規と見なして 2 次までのモーメントを合わせ、Black に入れる方法です：
+
+$$M_1 = \sum_{i=1}^n F_i, \qquad M_2 = \sum_{i=1}^n \sum_{j=1}^n F_i F_j\, e^{\rho_{ij}\sigma_i\sigma_j T}, \qquad
+F_0 = M_1,\ \ \sigma^2 = \frac{1}{T}\ln\frac{M_2}{M_1^2} \quad \text{(26.3), (26.4)}$$
+
+アジアンの Turnbull-Wakeman と同じ発想で、平均の代わりに資産の和を扱います。
+交換オプションと違い、こちらは**近似**です（和の分布は対数正規ではありません）。""")
 )
 
 # Cell 12: variance swap md + demo

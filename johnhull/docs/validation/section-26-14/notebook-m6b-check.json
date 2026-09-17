@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-17T14:30:31.447310+00:00",
+  "cells": 92,
+  "code_cells": 39,
+  "code_cells_with_outputs": 36,
+  "output_comparison": "Separate fresh execution: output types, MIME keys and normalized deterministic text. Timing cells type-only; images and Plotly payloads excluded from that comparison.",
+  "saved_plotly_comparison": [
+    "exchange_american: data and layout identical (15 traces)",
+    "exchange_correlation: data and layout identical (9 traces)",
+    "exchange_payoff: data and layout identical (11 traces)",
+    "exchange_rate: data and layout identical (9 traces)"
+  ],
+  "saved_plotly_note": "Each saved exchange payload equals hullkit._exchange_lesson._figures() exactly, data and layout.",
+  "preservation": {
+    "base_commit": "42a6cbc0",
+    "cells_before": 83,
+    "cells_after": 92,
+    "compared_cells_outside_section": 77,
+    "identical": true
+  },
+  "source_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "4df4884619129478d686e634ed9965dea0ed0fcebed499d67b2131c86880a439",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "36dbd303233a27d4d70fd4c0d6a2572bcf08689fcec12f5f38dd13de960aacf1",
+    "hullkit/src/hullkit/_exchange_lesson.py": "b1dd20d413d7d23d6c888290547af89a0af687ff2ca63812eac57fd4cf525d91",
+    "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+    "docs/validation/section-26-14/lesson-data.json": "5f87de11ac78b24896ea78c35b3dab736c1280ac4c0effcdd366d476bf1ebc87",
+    "scripts/verify_exchange_notebook.py": "d3afa4f672c1b912118df10f466b381e8c222955b22c6bb6e4e445366b4ad99a"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "4df4884619129478d686e634ed9965dea0ed0fcebed499d67b2131c86880a439"
+  }
+}

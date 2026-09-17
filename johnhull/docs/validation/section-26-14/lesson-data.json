@@ -1,0 +1,1541 @@
+{
+  "schema_version": 1,
+  "spot_u": 100.0,
+  "contract": {
+    "units": {
+      "money": "currency",
+      "time": "years",
+      "yields": "continuous per year",
+      "volatility": "annualized"
+    },
+    "method": "Terminal payoffs of the exchange, better-of and worse-of contracts on one grid",
+    "limitations": [
+      "Two correlated GBM assets, constant sigma_u/sigma_v/rho/q_u/q_v; positive prices, T, sigma.",
+      "European except in the American family; the tree is a finite grid, not an error bound.",
+      "Synthetic markets. Section 26.14 prints no worked example, so nothing is pinned to Hull.",
+      "The payoff family is a terminal payoff, not a price."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
+      "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
+      "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
+      "docs/validation/section-26-14/numerical-check.json": "b68d3cacd753da95c0ccaca53611e2750d62052d27895c802a9a4050eee07203"
+    },
+    "data": {
+      "terminal_u": 100.0,
+      "rows": [
+        {
+          "terminal_v": 60.0,
+          "terminal_u": 100.0,
+          "exchange": 0.0,
+          "better_of": 100.0,
+          "worse_of": 60.0,
+          "given_up": 100.0
+        },
+        {
+          "terminal_v": 80.0,
+          "terminal_u": 100.0,
+          "exchange": 0.0,
+          "better_of": 100.0,
+          "worse_of": 80.0,
+          "given_up": 100.0
+        },
+        {
+          "terminal_v": 100.0,
+          "terminal_u": 100.0,
+          "exchange": 0.0,
+          "better_of": 100.0,
+          "worse_of": 100.0,
+          "given_up": 100.0
+        },
+        {
+          "terminal_v": 120.0,
+          "terminal_u": 100.0,
+          "exchange": 20.0,
+          "better_of": 120.0,
+          "worse_of": 100.0,
+          "given_up": 100.0
+        },
+        {
+          "terminal_v": 140.0,
+          "terminal_u": 100.0,
+          "exchange": 40.0,
+          "better_of": 140.0,
+          "worse_of": 100.0,
+          "given_up": 100.0
+        },
+        {
+          "terminal_v": 160.0,
+          "terminal_u": 100.0,
+          "exchange": 60.0,
+          "better_of": 160.0,
+          "worse_of": 100.0,
+          "given_up": 100.0
+        }
+      ]
+    }
+  },
+  "correlation": {
+    "units": {
+      "money": "currency",
+      "time": "years",
+      "yields": "continuous per year",
+      "volatility": "annualized"
+    },
+    "method": "Price and ratio volatility across rho, against the discounted forward spread",
+    "limitations": [
+      "Two correlated GBM assets, constant sigma_u/sigma_v/rho/q_u/q_v; positive prices, T, sigma.",
+      "European except in the American family; the tree is a finite grid, not an error bound.",
+      "Synthetic markets. Section 26.14 prints no worked example, so nothing is pinned to Hull.",
+      "The payoff family is a terminal payoff, not a price."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
+      "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
+      "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
+      "docs/validation/section-26-14/numerical-check.json": "b68d3cacd753da95c0ccaca53611e2750d62052d27895c802a9a4050eee07203"
+    },
+    "data": [
+      {
+        "market": "equal-vol-uncorrelated",
+        "volatility_u": 0.2,
+        "volatility_v": 0.2,
+        "yield_u": 0.0,
+        "yield_v": 0.0,
+        "expiry": 1.0,
+        "spot": 100.0,
+        "forward_spread": 0.0,
+        "entries": [
+          {
+            "correlation": -0.95,
+            "spread_volatility": 0.39496835316263,
+            "price": 15.655133712655186
+          },
+          {
+            "correlation": -0.9,
+            "spread_volatility": 0.3898717737923586,
+            "price": 15.455686060369686
+          },
+          {
+            "correlation": -0.85,
+            "spread_volatility": 0.3847076812334269,
+            "price": 15.253495298898898
+          },
+          {
+            "correlation": -0.8,
+            "spread_volatility": 0.37947331922020555,
+            "price": 15.048450763496518
+          },
+          {
+            "correlation": -0.75,
+            "spread_volatility": 0.37416573867739417,
+            "price": 14.84043406871642
+          },
+          {
+            "correlation": -0.7,
+            "spread_volatility": 0.3687817782917155,
+            "price": 14.629318331306408
+          },
+          {
+            "correlation": -0.65,
+            "spread_volatility": 0.363318042491699,
+            "price": 14.41496728949241
+          },
+          {
+            "correlation": -0.6,
+            "spread_volatility": 0.35777087639996635,
+            "price": 14.197234301247889
+          },
+          {
+            "correlation": -0.55,
+            "spread_volatility": 0.3521363372331802,
+            "price": 13.975961200577387
+          },
+          {
+            "correlation": -0.5,
+            "spread_volatility": 0.3464101615137755,
+            "price": 13.750976986407835
+          },
+          {
+            "correlation": -0.45,
+            "spread_volatility": 0.34058772731852804,
+            "price": 13.52209631312602
+          },
+          {
+            "correlation": -0.4,
+            "spread_volatility": 0.33466401061363027,
+            "price": 13.28911774479527
+          },
+          {
+            "correlation": -0.35,
+            "spread_volatility": 0.3286335345030997,
+            "price": 13.051821726183839
+          },
+          {
+            "correlation": -0.3,
+            "spread_volatility": 0.322490309931942,
+            "price": 12.809968212338148
+          },
+          {
+            "correlation": -0.25,
+            "spread_volatility": 0.31622776601683794,
+            "price": 12.563293883710827
+          },
+          {
+            "correlation": -0.2,
+            "spread_volatility": 0.30983866769659335,
+            "price": 12.311508854662122
+          },
+          {
+            "correlation": -0.15,
+            "spread_volatility": 0.30331501776206204,
+            "price": 12.054292757893847
+          },
+          {
+            "correlation": -0.1,
+            "spread_volatility": 0.29664793948382656,
+            "price": 11.79129005377235
+          },
+          {
+            "correlation": -0.05,
+            "spread_volatility": 0.2898275349237888,
+            "price": 11.522104368289504
+          },
+          {
+            "correlation": 0.0,
+            "spread_volatility": 0.28284271247461906,
+            "price": 11.246291601828489
+          },
+          {
+            "correlation": 0.05,
+            "spread_volatility": 0.27568097504180444,
+            "price": 10.963351465883918
+          },
+          {
+            "correlation": 0.1,
+            "spread_volatility": 0.2683281572999748,
+            "price": 10.672716985778813
+          },
+          {
+            "correlation": 0.15,
+            "spread_volatility": 0.260768096208106,
+            "price": 10.373741337851932
+          },
+          {
+            "correlation": 0.2,
+            "spread_volatility": 0.2529822128134704,
+            "price": 10.065681143863372
+          },
+          {
+            "correlation": 0.25,
+            "spread_volatility": 0.24494897427831783,
+            "price": 9.747674982232056
+          },
+          {
+            "correlation": 0.3,
+            "spread_volatility": 0.23664319132398468,
+            "price": 9.418715327225605
+          },
+          {
+            "correlation": 0.35,
+            "spread_volatility": 0.22803508501982764,
+            "price": 9.077611278235771
+          },
+          {
+            "correlation": 0.4,
+            "spread_volatility": 0.21908902300206645,
+            "price": 8.722938090343789
+          },
+          {
+            "correlation": 0.45,
+            "spread_volatility": 0.20976176963403034,
+            "price": 8.35296729906365
+          },
+          {
+            "correlation": 0.5,
+            "spread_volatility": 0.2,
+            "price": 7.965567455405804
+          },
+          {
+            "correlation": 0.55,
+            "spread_volatility": 0.18973665961010278,
+            "price": 7.558058781332932
+          },
+          {
+            "correlation": 0.6,
+            "spread_volatility": 0.1788854381999832,
+            "price": 7.126992543519734
+          },
+          {
+            "correlation": 0.65,
+            "spread_volatility": 0.16733200530681513,
+            "price": 6.667801170860315
+          },
+          {
+            "correlation": 0.7,
+            "spread_volatility": 0.15491933384829673,
+            "price": 6.1742124035163926
+          },
+          {
+            "correlation": 0.75,
+            "spread_volatility": 0.14142135623730953,
+            "price": 5.6371977797016655
+          },
+          {
+            "correlation": 0.8,
+            "spread_volatility": 0.12649110640673517,
+            "price": 5.042902884889486
+          },
+          {
+            "correlation": 0.85,
+            "spread_volatility": 0.10954451150103327,
+            "price": 4.368009608449654
+          },
+          {
+            "correlation": 0.9,
+            "spread_volatility": 0.08944271909999163,
+            "price": 3.567059172967994
+          },
+          {
+            "correlation": 0.95,
+            "spread_volatility": 0.06324555320336761,
+            "price": 2.522712063003965
+          }
+        ]
+      },
+      {
+        "market": "asymmetric-vol",
+        "volatility_u": 0.15,
+        "volatility_v": 0.45,
+        "yield_u": 0.02,
+        "yield_v": 0.0,
+        "expiry": 2.0,
+        "spot": 100.0,
+        "forward_spread": 3.9210560847676845,
+        "entries": [
+          {
+            "correlation": -0.95,
+            "spread_volatility": 0.5943483826847685,
+            "price": 33.92704634051384
+          },
+          {
+            "correlation": -0.9,
+            "spread_volatility": 0.5886425061104575,
+            "price": 33.63825879872807
+          },
+          {
+            "correlation": -0.85,
+            "spread_volatility": 0.5828807768317634,
+            "price": 33.34615847108561
+          },
+          {
+            "correlation": -0.8,
+            "spread_volatility": 0.5770615218501404,
+            "price": 33.05065042830255
+          },
+          {
+            "correlation": -0.75,
+            "spread_volatility": 0.5711829829397931,
+            "price": 32.751634982360365
+          },
+          {
+            "correlation": -0.7,
+            "spread_volatility": 0.5652433104425032,
+            "price": 32.44900734275377
+          },
+          {
+            "correlation": -0.65,
+            "spread_volatility": 0.5592405564692174,
+            "price": 32.14265724005209
+          },
+          {
+            "correlation": -0.6,
+            "spread_volatility": 0.5531726674375732,
+            "price": 31.832468512889818
+          },
+          {
+            "correlation": -0.55,
+            "spread_volatility": 0.5470374758643141,
+            "price": 31.51831865394184
+          },
+          {
+            "correlation": -0.5,
+            "spread_volatility": 0.5408326913195983,
+            "price": 31.200078309787635
+          },
+          {
+            "correlation": -0.45,
+            "spread_volatility": 0.5345558904361638,
+            "price": 30.87761072880155
+          },
+          {
+            "correlation": -0.4,
+            "spread_volatility": 0.5282045058497703,
+            "price": 30.55077115030418
+          },
+          {
+            "correlation": -0.35,
+            "spread_volatility": 0.5217758139277826,
+            "price": 30.219406127143465
+          },
+          {
+            "correlation": -0.3,
+            "spread_volatility": 0.5152669211195301,
+            "price": 29.883352772608788
+          },
+          {
+            "correlation": -0.25,
+            "spread_volatility": 0.5086747487343951,
+            "price": 29.542437921073386
+          },
+          {
+            "correlation": -0.2,
+            "spread_volatility": 0.5019960159204453,
+            "price": 29.196477189957676
+          },
+          {
+            "correlation": -0.15,
+            "spread_volatility": 0.4952272205765753,
+            "price": 28.8452739284387
+          },
+          {
+            "correlation": -0.1,
+            "spread_volatility": 0.48836461788299124,
+            "price": 28.48861803571552
+          },
+          {
+            "correlation": -0.05,
+            "spread_volatility": 0.48140419607643636,
+            "price": 28.126284628467005
+          },
+          {
+            "correlation": 0.0,
+            "spread_volatility": 0.4743416490252569,
+            "price": 27.75803253326984
+          },
+          {
+            "correlation": 0.05,
+            "spread_volatility": 0.4671723450719231,
+            "price": 27.383602575001746
+          },
+          {
+            "correlation": 0.1,
+            "spread_volatility": 0.45989129150267677,
+            "price": 27.002715626406662
+          },
+          {
+            "correlation": 0.15,
+            "spread_volatility": 0.4524930938699507,
+            "price": 26.61507037674594
+          },
+          {
+            "correlation": 0.2,
+            "spread_volatility": 0.4449719092257398,
+            "price": 26.220340768403325
+          },
+          {
+            "correlation": 0.25,
+            "spread_volatility": 0.43732139211339754,
+            "price": 25.81817303892965
+          },
+          {
+            "correlation": 0.3,
+            "spread_volatility": 0.4295346318982906,
+            "price": 25.408182291603126
+          },
+          {
+            "correlation": 0.35,
+            "spread_volatility": 0.4216040796766559,
+            "price": 24.98994849919439
+          },
+          {
+            "correlation": 0.4,
+            "spread_volatility": 0.41352146256270667,
+            "price": 24.563011821974392
+          },
+          {
+            "correlation": 0.45,
+            "spread_volatility": 0.4052776825831889,
+            "price": 24.126867090305716
+          },
+          {
+            "correlation": 0.5,
+            "spread_volatility": 0.3968626966596886,
+            "price": 23.680957261940883
+          },
+          {
+            "correlation": 0.55,
+            "spread_volatility": 0.3882653731663435,
+            "price": 23.224665610919423
+          },
+          {
+            "correlation": 0.6,
+            "spread_volatility": 0.37947331922020555,
+            "price": 22.757306333720216
+          },
+          {
+            "correlation": 0.65,
+            "spread_volatility": 0.37047267105685405,
+            "price": 22.27811316185683
+          },
+          {
+            "correlation": 0.7,
+            "spread_volatility": 0.36124783736376886,
+            "price": 21.786225437764962
+          },
+          {
+            "correlation": 0.75,
+            "spread_volatility": 0.35178118198675723,
+            "price": 21.280670926710307
+          },
+          {
+            "correlation": 0.8,
+            "spread_volatility": 0.3420526275297414,
+            "price": 20.76034437730361
+          },
+          {
+            "correlation": 0.85,
+            "spread_volatility": 0.33203915431767983,
+            "price": 20.223980469384294
+          },
+          {
+            "correlation": 0.9,
+            "spread_volatility": 0.3217141588429082,
+            "price": 19.670119240698547
+          },
+          {
+            "correlation": 0.95,
+            "spread_volatility": 0.3110466202999158,
+            "price": 19.097061265604673
+          }
+        ]
+      },
+      {
+        "market": "long-high-vol",
+        "volatility_u": 0.55,
+        "volatility_v": 0.7,
+        "yield_u": 0.03,
+        "yield_v": 0.02,
+        "expiry": 5.0,
+        "spot": 100.0,
+        "forward_spread": 4.4129441610901665,
+        "entries": [
+          {
+            "correlation": -0.95,
+            "spread_volatility": 1.2345039489608771,
+            "price": 75.70170812564757
+          },
+          {
+            "correlation": -0.9,
+            "spread_volatility": 1.2188108959145385,
+            "price": 75.21939979107243
+          },
+          {
+            "correlation": -0.85,
+            "spread_volatility": 1.202913130695646,
+            "price": 74.71890217720099
+          },
+          {
+            "correlation": -0.8,
+            "spread_volatility": 1.186802426691149,
+            "price": 74.19935023484562
+          },
+          {
+            "correlation": -0.75,
+            "spread_volatility": 1.1704699910719625,
+            "price": 73.659822422469
+          },
+          {
+            "correlation": -0.7,
+            "spread_volatility": 1.1539064086831305,
+            "price": 73.0993355036283
+          },
+          {
+            "correlation": -0.65,
+            "spread_volatility": 1.1371015785759864,
+            "price": 72.51683869420887
+          },
+          {
+            "correlation": -0.6,
+            "spread_volatility": 1.120044641967453,
+            "price": 71.91120705507431
+          },
+          {
+            "correlation": -0.55,
+            "spread_volatility": 1.1027239001672178,
+            "price": 71.2812340051289
+          },
+          {
+            "correlation": -0.5,
+            "spread_volatility": 1.0851267207105353,
+            "price": 70.62562280427399
+          },
+          {
+            "correlation": -0.45,
+            "spread_volatility": 1.067239429556461,
+            "price": 69.94297682398418
+          },
+          {
+            "correlation": -0.4,
+            "spread_volatility": 1.049047186736612,
+            "price": 69.23178838343973
+          },
+          {
+            "correlation": -0.35,
+            "spread_volatility": 1.03053384223906,
+            "price": 68.49042587893149
+          },
+          {
+            "correlation": -0.3,
+            "spread_volatility": 1.0116817681464858,
+            "price": 67.71711887038886
+          },
+          {
+            "correlation": -0.25,
+            "spread_volatility": 0.9924716620639604,
+            "price": 66.90994070698659
+          },
+          {
+            "correlation": -0.2,
+            "spread_volatility": 0.9728823155962905,
+            "price": 66.06678816785981
+          },
+          {
+            "correlation": -0.15,
+            "spread_volatility": 0.9528903399657276,
+            "price": 65.18535745564573
+          },
+          {
+            "correlation": -0.1,
+            "spread_volatility": 0.9324698386543127,
+            "price": 64.26311569814987
+          },
+          {
+            "correlation": -0.05,
+            "spread_volatility": 0.9115920140062659,
+            "price": 63.29726687019874
+          },
+          {
+            "correlation": 0.0,
+            "spread_volatility": 0.8902246907382427,
+            "price": 62.284710719577795
+          },
+          {
+            "correlation": 0.05,
+            "spread_volatility": 0.8683317338436964,
+            "price": 61.2219928325162
+          },
+          {
+            "correlation": 0.1,
+            "spread_volatility": 0.8458723307923011,
+            "price": 60.10524335279653
+          },
+          {
+            "correlation": 0.15,
+            "spread_volatility": 0.8228000972289685,
+            "price": 58.9301009943398
+          },
+          {
+            "correlation": 0.2,
+            "spread_volatility": 0.799061950038919,
+            "price": 57.69161773641776
+          },
+          {
+            "correlation": 0.25,
+            "spread_volatility": 0.7745966692414834,
+            "price": 56.38413776804523
+          },
+          {
+            "correlation": 0.3,
+            "spread_volatility": 0.7493330367733696,
+            "price": 55.001141537155505
+          },
+          {
+            "correlation": 0.35,
+            "spread_volatility": 0.7231873892705818,
+            "price": 53.53504163466812
+          },
+          {
+            "correlation": 0.4,
+            "spread_volatility": 0.6960603422117941,
+            "price": 51.97691080210352
+          },
+          {
+            "correlation": 0.45,
+            "spread_volatility": 0.66783231428256,
+            "price": 50.31611199703103
+          },
+          {
+            "correlation": 0.5,
+            "spread_volatility": 0.6383572667401852,
+            "price": 48.53978324398619
+          },
+          {
+            "correlation": 0.55,
+            "spread_volatility": 0.6074537019394975,
+            "price": 46.63210028657245
+          },
+          {
+            "correlation": 0.6,
+            "spread_volatility": 0.5748912940721924,
+            "price": 44.573186398393815
+          },
+          {
+            "correlation": 0.65,
+            "spread_volatility": 0.5403702434442518,
+            "price": 42.337436516586635
+          },
+          {
+            "correlation": 0.7,
+            "spread_volatility": 0.5034878350069643,
+            "price": 39.8908153311567
+          },
+          {
+            "correlation": 0.75,
+            "spread_volatility": 0.4636809247747852,
+            "price": 37.186232771051
+          },
+          {
+            "correlation": 0.8,
+            "spread_volatility": 0.4201190307520001,
+            "price": 34.15499121165834
+          },
+          {
+            "correlation": 0.85,
+            "spread_volatility": 0.3714835124201342,
+            "price": 30.68921700545349
+          },
+          {
+            "correlation": 0.9,
+            "spread_volatility": 0.31543620591175,
+            "price": 26.599854190495492
+          },
+          {
+            "correlation": 0.95,
+            "spread_volatility": 0.2469817807045695,
+            "price": 21.48827924976372
+          }
+        ]
+      }
+    ]
+  },
+  "rate": {
+    "units": {
+      "money": "currency",
+      "time": "years",
+      "yields": "continuous per year",
+      "volatility": "annualized"
+    },
+    "method": "The independent reference priced at seven risk-free rates, with Hull's restatement",
+    "limitations": [
+      "Two correlated GBM assets, constant sigma_u/sigma_v/rho/q_u/q_v; positive prices, T, sigma.",
+      "European except in the American family; the tree is a finite grid, not an error bound.",
+      "Synthetic markets. Section 26.14 prints no worked example, so nothing is pinned to Hull.",
+      "The payoff family is a terminal payoff, not a price."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
+      "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
+      "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
+      "docs/validation/section-26-14/numerical-check.json": "b68d3cacd753da95c0ccaca53611e2750d62052d27895c802a9a4050eee07203"
+    },
+    "data": [
+      {
+        "market": "equal-vol-tight",
+        "value_ratio": 1.1,
+        "expiry": 1.0,
+        "yield_u": 0.01,
+        "yield_v": 0.03,
+        "spread_volatility": 0.08944271909999163,
+        "library_price": 8.769243060234771,
+        "restated_price": 8.769243060234743,
+        "restatement_residual": -2.842170943040401e-14,
+        "entries": [
+          {
+            "rate": -0.05,
+            "reference": 8.769243060234764,
+            "fixed_strike_misreading": 6.754931918395613
+          },
+          {
+            "rate": -0.02,
+            "reference": 8.76924306023477,
+            "fixed_strike_misreading": 9.03630627075934
+          },
+          {
+            "rate": 0.0,
+            "reference": 8.769243060234764,
+            "fixed_strike_misreading": 10.688265535217084
+          },
+          {
+            "rate": 0.02,
+            "reference": 8.769243060234778,
+            "fixed_strike_misreading": 12.41247140296909
+          },
+          {
+            "rate": 0.05,
+            "reference": 8.769243060234762,
+            "fixed_strike_misreading": 15.077515960630734
+          },
+          {
+            "rate": 0.08,
+            "reference": 8.769243060234766,
+            "fixed_strike_misreading": 17.77342110528849
+          },
+          {
+            "rate": 0.12,
+            "reference": 8.769243060234768,
+            "fixed_strike_misreading": 21.331451557603614
+          }
+        ],
+        "reference_spread": 1.5987211554602254e-14
+      },
+      {
+        "market": "yield-on-received",
+        "value_ratio": 1.1,
+        "expiry": 1.5,
+        "yield_u": 0.0,
+        "yield_v": 0.06,
+        "spread_volatility": 0.25,
+        "library_price": 12.46794234930885,
+        "restated_price": 12.467942349308835,
+        "restatement_residual": -1.4210854715202004e-14,
+        "entries": [
+          {
+            "rate": -0.05,
+            "reference": 12.467942349308851,
+            "fixed_strike_misreading": 14.384422241068322
+          },
+          {
+            "rate": -0.02,
+            "reference": 12.467942349308847,
+            "fixed_strike_misreading": 16.72976450972582
+          },
+          {
+            "rate": 0.0,
+            "reference": 12.467942349308847,
+            "fixed_strike_misreading": 18.384551746149484
+          },
+          {
+            "rate": 0.02,
+            "reference": 12.467942349308837,
+            "fixed_strike_misreading": 20.104434829989273
+          },
+          {
+            "rate": 0.05,
+            "reference": 12.467942349308847,
+            "fixed_strike_misreading": 22.789747627366175
+          },
+          {
+            "rate": 0.08,
+            "reference": 12.467942349308847,
+            "fixed_strike_misreading": 25.57729088020676
+          },
+          {
+            "rate": 0.12,
+            "reference": 12.467942349308847,
+            "fixed_strike_misreading": 29.40397310004623
+          }
+        ],
+        "reference_spread": 1.4210854715202004e-14
+      },
+      {
+        "market": "long-high-vol",
+        "value_ratio": 1.1,
+        "expiry": 5.0,
+        "yield_u": 0.03,
+        "yield_v": 0.02,
+        "spread_volatility": 0.9728823155962905,
+        "library_price": 73.95121635558742,
+        "restated_price": 73.9512163555874,
+        "restatement_residual": -1.4210854715202004e-14,
+        "entries": [
+          {
+            "rate": -0.05,
+            "reference": 73.95121635558743,
+            "fixed_strike_misreading": 77.1588699568124
+          },
+          {
+            "rate": -0.02,
+            "reference": 73.95121635558743,
+            "fixed_strike_misreading": 79.48929833871821
+          },
+          {
+            "rate": 0.0,
+            "reference": 73.9512163555874,
+            "fixed_strike_misreading": 80.99267541886545
+          },
+          {
+            "rate": 0.02,
+            "reference": 73.9512163555874,
+            "fixed_strike_misreading": 82.45415251338213
+          },
+          {
+            "rate": 0.05,
+            "reference": 73.95121635558742,
+            "fixed_strike_misreading": 84.56514365856677
+          },
+          {
+            "rate": 0.08,
+            "reference": 73.95121635558745,
+            "fixed_strike_misreading": 86.57574932297331
+          },
+          {
+            "rate": 0.12,
+            "reference": 73.9512163555874,
+            "fixed_strike_misreading": 89.09641490165889
+          }
+        ],
+        "reference_spread": 4.263256414560601e-14
+      }
+    ]
+  },
+  "american": {
+    "units": {
+      "money": "currency",
+      "time": "years",
+      "yields": "continuous per year",
+      "volatility": "annualized"
+    },
+    "method": "European, American and the early-exercise premium by moneyness, plus the grid residual",
+    "limitations": [
+      "Two correlated GBM assets, constant sigma_u/sigma_v/rho/q_u/q_v; positive prices, T, sigma.",
+      "European except in the American family; the tree is a finite grid, not an error bound.",
+      "Synthetic markets. Section 26.14 prints no worked example, so nothing is pinned to Hull.",
+      "The payoff family is a terminal payoff, not a price.",
+      "The American prices come from a finite CRR tree on V/U."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
+      "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
+      "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
+      "docs/validation/section-26-14/numerical-check.json": "b68d3cacd753da95c0ccaca53611e2750d62052d27895c802a9a4050eee07203"
+    },
+    "data": [
+      {
+        "market": "equal-vol-uncorrelated",
+        "yield_u": 0.0,
+        "yield_v": 0.0,
+        "expiry": 1.0,
+        "spread_volatility": 0.28284271247461906,
+        "entries": [
+          {
+            "value_ratio": 0.6,
+            "european": 0.30569348391281714,
+            "american": 0.305143125977561,
+            "european_on_grid": 0.3051431259775608,
+            "premium": -0.0005503579352561516,
+            "premium_on_grid": 1.6653345369377348e-16,
+            "grid_residual": -0.0005503579352563182,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.65,
+            "european": 0.6293734850573012,
+            "american": 0.6294194262052127,
+            "european_on_grid": 0.6294194262052115,
+            "premium": 4.594114791156567e-05,
+            "premium_on_grid": 1.2212453270876722e-15,
+            "grid_residual": 4.5941147910344426e-05,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.7,
+            "european": 1.1617946343358128,
+            "american": 1.1613893488548002,
+            "european_on_grid": 1.1613893488547997,
+            "premium": -0.0004052854810125961,
+            "premium_on_grid": 4.440892098500626e-16,
+            "grid_residual": -0.0004052854810130402,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.75,
+            "european": 1.9626113634270865,
+            "american": 1.962926553336928,
+            "european_on_grid": 1.962926553336924,
+            "premium": 0.00031518990984147344,
+            "premium_on_grid": 3.9968028886505635e-15,
+            "grid_residual": 0.00031518990983747663,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.8,
+            "european": 3.0826523017186034,
+            "american": 3.08385456385976,
+            "european_on_grid": 3.083854563859759,
+            "premium": 0.0012022621411564849,
+            "premium_on_grid": 8.881784197001252e-16,
+            "grid_residual": 0.0012022621411555967,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.85,
+            "european": 4.558704081543201,
+            "american": 4.558965071044686,
+            "european_on_grid": 4.558965071044686,
+            "premium": 0.00026098950148512046,
+            "premium_on_grid": 0.0,
+            "grid_residual": 0.00026098950148512046,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.9,
+            "european": 6.411067988848593,
+            "american": 6.409271555742532,
+            "european_on_grid": 6.409271555742527,
+            "premium": -0.001796433106060924,
+            "premium_on_grid": 5.329070518200751e-15,
+            "grid_residual": -0.001796433106066253,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.95,
+            "european": 8.643705342327038,
+            "american": 8.642906084694314,
+            "european_on_grid": 8.64290608469431,
+            "premium": -0.0007992576327247036,
+            "premium_on_grid": 3.552713678800501e-15,
+            "grid_residual": -0.0007992576327282563,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 1.0,
+            "european": 11.246291601828489,
+            "american": 11.243546333663607,
+            "european_on_grid": 11.243546333663604,
+            "premium": -0.0027452681648814092,
+            "premium_on_grid": 3.552713678800501e-15,
+            "grid_residual": -0.002745268164884962,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 1.05,
+            "european": 14.197350649294513,
+            "american": 14.19857710603038,
+            "european_on_grid": 14.19857710603038,
+            "premium": 0.0012264567358659662,
+            "premium_on_grid": 0.0,
+            "grid_residual": 0.0012264567358659662,
+            "intrinsic": 5.0
+          },
+          {
+            "value_ratio": 1.1,
+            "european": 17.467730366014855,
+            "american": 17.470050930026225,
+            "european_on_grid": 17.470050930026204,
+            "premium": 0.002320564011370152,
+            "premium_on_grid": 2.1316282072803006e-14,
+            "grid_residual": 0.0023205640113488357,
+            "intrinsic": 10.000000000000014
+          },
+          {
+            "value_ratio": 1.15,
+            "european": 21.02388313394301,
+            "american": 21.0228427518597,
+            "european_on_grid": 21.02284275185963,
+            "premium": -0.001040382083310476,
+            "premium_on_grid": 6.750155989720952e-14,
+            "grid_residual": -0.0010403820833779776,
+            "intrinsic": 14.999999999999986
+          },
+          {
+            "value_ratio": 1.2,
+            "european": 24.830635378173767,
+            "american": 24.83201540993076,
+            "european_on_grid": 24.83201540993074,
+            "premium": 0.0013800317569945264,
+            "premium_on_grid": 2.1316282072803006e-14,
+            "grid_residual": 0.0013800317569732101,
+            "intrinsic": 20.0
+          },
+          {
+            "value_ratio": 1.25,
+            "european": 28.85331537714825,
+            "american": 28.854818204823573,
+            "european_on_grid": 28.854818204823562,
+            "premium": 0.0015028276753241698,
+            "premium_on_grid": 1.0658141036401503e-14,
+            "grid_residual": 0.0015028276753135117,
+            "intrinsic": 25.0
+          },
+          {
+            "value_ratio": 1.3,
+            "european": 33.05923877702722,
+            "american": 33.05880855776289,
+            "european_on_grid": 33.058808557762845,
+            "premium": -0.00043021926433084445,
+            "premium_on_grid": 4.263256414560601e-14,
+            "grid_residual": -0.000430219264373477,
+            "intrinsic": 30.0
+          },
+          {
+            "value_ratio": 1.35,
+            "european": 37.41862802638626,
+            "american": 37.41647206845248,
+            "european_on_grid": 37.41647206845236,
+            "premium": -0.002155957933780428,
+            "premium_on_grid": 1.2079226507921703e-13,
+            "grid_residual": -0.0021559579339012203,
+            "intrinsic": 35.0
+          },
+          {
+            "value_ratio": 1.4,
+            "european": 41.905076527392055,
+            "american": 41.90313017597642,
+            "european_on_grid": 41.903130175976365,
+            "premium": -0.0019463514156328188,
+            "premium_on_grid": 5.684341886080802e-14,
+            "grid_residual": -0.0019463514156896622,
+            "intrinsic": 40.0
+          }
+        ],
+        "convergence": [
+          {
+            "steps": 64,
+            "american": 11.202449408514767,
+            "gap_to_european": -0.04384219331372208
+          },
+          {
+            "steps": 128,
+            "american": 11.224348430535807,
+            "gap_to_european": -0.02194317129268164
+          },
+          {
+            "steps": 256,
+            "american": 11.235314575462468,
+            "gap_to_european": -0.010977026366020937
+          },
+          {
+            "steps": 512,
+            "american": 11.24080173824711,
+            "gap_to_european": -0.0054898635813778185
+          },
+          {
+            "steps": 1024,
+            "american": 11.243546333663607,
+            "gap_to_european": -0.0027452681648814092
+          }
+        ],
+        "early_exercise_possible": false
+      },
+      {
+        "market": "yield-on-received",
+        "yield_u": 0.0,
+        "yield_v": 0.06,
+        "expiry": 1.5,
+        "spread_volatility": 0.25,
+        "entries": [
+          {
+            "value_ratio": 0.6,
+            "european": 0.21091713853793959,
+            "american": 0.2225600421162775,
+            "european_on_grid": 0.21092723573063188,
+            "premium": 0.011642903578337915,
+            "premium_on_grid": 0.011632806385645622,
+            "grid_residual": 1.0097192692293255e-05,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.65,
+            "european": 0.42689220909338,
+            "american": 0.453528254066194,
+            "european_on_grid": 0.427171387060281,
+            "premium": 0.02663604497281402,
+            "premium_on_grid": 0.026356867005913,
+            "grid_residual": 0.00027917796690102303,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.7,
+            "european": 0.7812338985120535,
+            "american": 0.8356906567786697,
+            "european_on_grid": 0.7816765645087147,
+            "premium": 0.05445675826661622,
+            "premium_on_grid": 0.054014092269955016,
+            "grid_residual": 0.00044266599666120676,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.75,
+            "european": 1.3166482596489768,
+            "american": 1.417443635611007,
+            "european_on_grid": 1.315559552937072,
+            "premium": 0.10079537596203014,
+            "premium_on_grid": 0.1018840826739349,
+            "grid_residual": -0.0010887067119047522,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.8,
+            "european": 2.072941843207774,
+            "american": 2.2517612938643876,
+            "european_on_grid": 2.0739542851244597,
+            "premium": 0.17881945065661364,
+            "premium_on_grid": 0.17780700873992794,
+            "grid_residual": 0.0010124419166857024,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.85,
+            "european": 3.0834406739071873,
+            "american": 3.3783432147821992,
+            "european_on_grid": 3.0851324340774284,
+            "premium": 0.2949025408750119,
+            "premium_on_grid": 0.2932107807047708,
+            "grid_residual": 0.0016917601702410856,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.9,
+            "european": 4.372617759663797,
+            "american": 4.834844978613639,
+            "european_on_grid": 4.3746543560255935,
+            "premium": 0.46222721894984264,
+            "premium_on_grid": 0.4601906225880459,
+            "grid_residual": 0.002036596361796761,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.95,
+            "european": 5.955053219250409,
+            "american": 6.6489914888565576,
+            "european_on_grid": 5.956719962524845,
+            "premium": 0.6939382696061482,
+            "premium_on_grid": 0.6922715263317123,
+            "grid_residual": 0.0016667432744359445,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 1.0,
+            "european": 7.835570990531295,
+            "american": 8.837808958088694,
+            "european_on_grid": 7.832618487554469,
+            "premium": 1.0022379675573987,
+            "premium_on_grid": 1.0051904705342247,
+            "grid_residual": -0.0029525029768260325,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 1.05,
+            "european": 10.010246538777622,
+            "american": 11.420211007744905,
+            "european_on_grid": 10.012667179730062,
+            "premium": 1.4099644689672832,
+            "premium_on_grid": 1.407543828014843,
+            "grid_residual": 0.0024206409524403227,
+            "intrinsic": 5.0
+          },
+          {
+            "value_ratio": 1.1,
+            "european": 12.46794234930885,
+            "american": 14.389652487430565,
+            "european_on_grid": 12.464885430334144,
+            "premium": 1.9217101381217159,
+            "premium_on_grid": 1.924767057096421,
+            "grid_residual": -0.0030569189747051695,
+            "intrinsic": 10.000000000000014
+          },
+          {
+            "value_ratio": 1.15,
+            "european": 15.192063976824123,
+            "american": 17.755085769908383,
+            "european_on_grid": 15.193362383598782,
+            "premium": 2.5630217930842605,
+            "premium_on_grid": 2.561723386309602,
+            "grid_residual": 0.0012984067746586447,
+            "intrinsic": 14.999999999999986
+          },
+          {
+            "value_ratio": 1.2,
+            "european": 18.16230132870104,
+            "american": 21.505143729724534,
+            "european_on_grid": 18.164265111331122,
+            "premium": 3.3428424010234927,
+            "premium_on_grid": 3.340878618393411,
+            "grid_residual": 0.0019637826300815675,
+            "intrinsic": 20.0
+          },
+          {
+            "value_ratio": 1.25,
+            "european": 21.356199677756592,
+            "american": 25.63466563499145,
+            "european_on_grid": 21.357303410628468,
+            "premium": 4.278465957234857,
+            "premium_on_grid": 4.277362224362982,
+            "grid_residual": 0.0011037328718757067,
+            "intrinsic": 25.0
+          },
+          {
+            "value_ratio": 1.3,
+            "european": 24.750475962397303,
+            "american": 30.1359993531564,
+            "european_on_grid": 24.75088274279479,
+            "premium": 5.385523390759097,
+            "premium_on_grid": 5.38511661036161,
+            "grid_residual": 0.00040678039748698325,
+            "intrinsic": 30.0
+          },
+          {
+            "value_ratio": 1.35,
+            "european": 28.322050851214627,
+            "american": 35.00000000000001,
+            "european_on_grid": 28.322405444481834,
+            "premium": 6.67794914878538,
+            "premium_on_grid": 6.677594555518173,
+            "grid_residual": 0.000354593267207548,
+            "intrinsic": 35.0
+          },
+          {
+            "value_ratio": 1.4,
+            "european": 32.048804607766826,
+            "american": 39.99999999999999,
+            "european_on_grid": 32.04938056516264,
+            "premium": 7.951195392233167,
+            "premium_on_grid": 7.95061943483735,
+            "grid_residual": 0.0005759573958172837,
+            "intrinsic": 40.0
+          }
+        ],
+        "convergence": [
+          {
+            "steps": 64,
+            "american": 8.819606353799376,
+            "gap_to_european": 0.9840353632680809
+          },
+          {
+            "steps": 128,
+            "american": 8.829473964709972,
+            "gap_to_european": 0.9939029741786776
+          },
+          {
+            "steps": 256,
+            "american": 8.834298434404426,
+            "gap_to_european": 0.9987274438731308
+          },
+          {
+            "steps": 512,
+            "american": 8.836663095952503,
+            "gap_to_european": 1.0010921054212076
+          },
+          {
+            "steps": 1024,
+            "american": 8.837808958088694,
+            "gap_to_european": 1.0022379675573987
+          }
+        ],
+        "early_exercise_possible": true
+      },
+      {
+        "market": "equal-vol-tight",
+        "yield_u": 0.01,
+        "yield_v": 0.03,
+        "expiry": 1.0,
+        "spread_volatility": 0.08944271909999163,
+        "entries": [
+          {
+            "value_ratio": 0.6,
+            "european": 1.5973387657094657e-09,
+            "american": 1.4805007645575123e-09,
+            "european_on_grid": 1.464148123139013e-09,
+            "premium": -1.168380011519534e-10,
+            "premium_on_grid": 1.6352641418499384e-11,
+            "grid_residual": -1.3319064257045278e-10,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.65,
+            "european": 3.0457912043352256e-07,
+            "american": 2.928180128800778e-07,
+            "european_on_grid": 2.8880697501960795e-07,
+            "premium": -1.176110755344475e-08,
+            "premium_on_grid": 4.011037860469852e-09,
+            "grid_residual": -1.57721454139146e-08,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.7,
+            "european": 2.010283037346219e-05,
+            "american": 1.9995813398356876e-05,
+            "european_on_grid": 1.965997702508154e-05,
+            "premium": -1.0701697510531272e-07,
+            "premium_on_grid": 3.358363732753373e-07,
+            "grid_residual": -4.4285334838065004e-07,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.75,
+            "european": 0.0005623220935927452,
+            "american": 0.0005697060945222506,
+            "european_on_grid": 0.0005582536437840772,
+            "premium": 7.384000929505424e-06,
+            "premium_on_grid": 1.145245073817336e-05,
+            "grid_residual": -4.068449808667936e-06,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.8,
+            "european": 0.007818944247649728,
+            "american": 0.00798429986615065,
+            "european_on_grid": 0.007778828424541056,
+            "premium": 0.00016535561850092133,
+            "premium_on_grid": 0.00020547144160959398,
+            "grid_residual": -4.0115823108672656e-05,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.85,
+            "european": 0.06146140958969659,
+            "american": 0.06337786308783395,
+            "european_on_grid": 0.0613277194149906,
+            "premium": 0.0019164534981373632,
+            "premium_on_grid": 0.0020501436728433547,
+            "grid_residual": -0.00013369017470599154,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.9,
+            "european": 0.3037083110405234,
+            "american": 0.31683005053753815,
+            "european_on_grid": 0.30362273599573536,
+            "premium": 0.013121739497014728,
+            "premium_on_grid": 0.013207314541802795,
+            "grid_residual": -8.557504478806655e-05,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 0.95,
+            "european": 1.0318743379108177,
+            "american": 1.091166612811569,
+            "european_on_grid": 1.0319173214408335,
+            "premium": 0.059292274900751174,
+            "premium_on_grid": 0.059249291370735424,
+            "grid_residual": 4.298353001574995e-05,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 1.0,
+            "european": 2.6033774603008695,
+            "american": 2.8035352372110753,
+            "european_on_grid": 2.6025034239897775,
+            "premium": 0.20015777691020586,
+            "premium_on_grid": 0.20103181322129782,
+            "grid_residual": -0.0008740363110919525,
+            "intrinsic": 0.0
+          },
+          {
+            "value_ratio": 1.05,
+            "european": 5.2129397233549,
+            "american": 5.756359819595271,
+            "european_on_grid": 5.213237196523572,
+            "premium": 0.5434200962403715,
+            "premium_on_grid": 0.5431226230716995,
+            "grid_residual": 0.00029747316867201334,
+            "intrinsic": 5.0
+          },
+          {
+            "value_ratio": 1.1,
+            "european": 8.769243060234771,
+            "american": 10.006675670110342,
+            "european_on_grid": 8.768479119657274,
+            "premium": 1.2374326098755706,
+            "premium_on_grid": 1.2381965504530683,
+            "grid_residual": -0.0007639405774977348,
+            "intrinsic": 10.000000000000014
+          },
+          {
+            "value_ratio": 1.15,
+            "european": 12.989748854614547,
+            "american": 14.999999999999991,
+            "european_on_grid": 12.988969679253474,
+            "premium": 2.0102511453854444,
+            "premium_on_grid": 2.011030320746517,
+            "grid_residual": -0.0007791753610728591,
+            "intrinsic": 14.999999999999986
+          },
+          {
+            "value_ratio": 1.2,
+            "european": 17.580453392328366,
+            "american": 19.999999999999996,
+            "european_on_grid": 17.580304109388877,
+            "premium": 2.4195466076716308,
+            "premium_on_grid": 2.41969589061112,
+            "grid_residual": -0.00014928293948912597,
+            "intrinsic": 20.0
+          },
+          {
+            "value_ratio": 1.25,
+            "european": 22.33971094032286,
+            "american": 25.0,
+            "european_on_grid": 22.339503762576935,
+            "premium": 2.6602890596771402,
+            "premium_on_grid": 2.6604962374230645,
+            "grid_residual": -0.00020717774592426963,
+            "intrinsic": 25.0
+          },
+          {
+            "value_ratio": 1.3,
+            "european": 27.16319241016322,
+            "american": 30.000000000000004,
+            "european_on_grid": 27.163097682666887,
+            "premium": 2.836807589836784,
+            "premium_on_grid": 2.8369023173331165,
+            "grid_residual": -9.472749633232525e-05,
+            "intrinsic": 30.0
+          },
+          {
+            "value_ratio": 1.35,
+            "european": 32.007587922685246,
+            "american": 35.00000000000001,
+            "european_on_grid": 32.00756196944979,
+            "premium": 2.9924120773147607,
+            "premium_on_grid": 2.9924380305502183,
+            "grid_residual": -2.595323545762085e-05,
+            "intrinsic": 35.0
+          },
+          {
+            "value_ratio": 1.4,
+            "european": 36.857911502424145,
+            "american": 39.99999999999999,
+            "european_on_grid": 36.85790160004066,
+            "premium": 3.1420884975758483,
+            "premium_on_grid": 3.1420983999593304,
+            "grid_residual": -9.902383482085497e-06,
+            "intrinsic": 40.0
+          }
+        ],
+        "convergence": [
+          {
+            "steps": 64,
+            "american": 2.7979306404889854,
+            "gap_to_european": 0.19455318018811596
+          },
+          {
+            "steps": 128,
+            "american": 2.800983427931881,
+            "gap_to_european": 0.19760596763101157
+          },
+          {
+            "steps": 256,
+            "american": 2.802455710502858,
+            "gap_to_european": 0.19907825020198855
+          },
+          {
+            "steps": 512,
+            "american": 2.803179128725677,
+            "gap_to_european": 0.1998016684248074
+          },
+          {
+            "steps": 1024,
+            "american": 2.8035352372110753,
+            "gap_to_european": 0.20015777691020586
+          }
+        ],
+        "early_exercise_possible": true
+      }
+    ]
+  }
+}

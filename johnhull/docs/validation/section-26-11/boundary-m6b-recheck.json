@@ -1,0 +1,218 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-17T14:36:49.280518+00:00",
+  "scope": "M3b fresh recheck of current unsupported abs(r-q)<1e-8 behavior and finite independent oracle; no limit engine implementation claim.",
+  "count": 12,
+  "probes": [
+    {
+      "carry": 0.0,
+      "contract": "floating_call",
+      "reference": 14.253482409203839,
+      "production": "ValueError: lookback_floating_call: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.05,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": 0.0,
+      "contract": "floating_put",
+      "reference": 16.15594125820526,
+      "production": "ValueError: lookback_floating_put: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.05,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": 0.0,
+      "contract": "fixed_call",
+      "reference": 16.155941258205264,
+      "production": "ValueError: lookback_floating_put: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.05,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": 0.0,
+      "contract": "fixed_put",
+      "reference": 14.253482409203839,
+      "production": "ValueError: lookback_floating_call: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.05,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": 5e-09,
+      "contract": "floating_call",
+      "reference": 14.253482611377489,
+      "production": "ValueError: lookback_floating_call: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.050000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": 5e-09,
+      "contract": "floating_put",
+      "reference": 16.155940980008054,
+      "production": "ValueError: lookback_floating_put: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.050000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": 5e-09,
+      "contract": "fixed_call",
+      "reference": 16.15594145562277,
+      "production": "ValueError: lookback_floating_put: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.050000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": 5e-09,
+      "contract": "fixed_put",
+      "reference": 14.253482135762777,
+      "production": "ValueError: lookback_floating_call: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.050000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": -5e-09,
+      "contract": "floating_call",
+      "reference": 14.253482207030189,
+      "production": "ValueError: lookback_floating_call: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.049999995000000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": -5e-09,
+      "contract": "floating_put",
+      "reference": 16.15594153640248,
+      "production": "ValueError: lookback_floating_put: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.049999995000000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": -5e-09,
+      "contract": "fixed_call",
+      "reference": 16.15594106078776,
+      "production": "ValueError: lookback_floating_put: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.049999995000000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": -5e-09,
+      "contract": "fixed_put",
+      "reference": 14.2534826826449,
+      "production": "ValueError: lookback_floating_call: the b=r-q=0 limit is not implemented; use r != q (the closed form has a removable singularity at b=0)",
+      "market": {
+        "spot": 100,
+        "rate": 0.049999995000000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    }
+  ],
+  "source_sha256": {
+    "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+    "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-11/numerical-check.json": "1fa2fdbb0161fe905a9e7b432228089ba68c4517a4ea02c0a02c90131b34a984"
+  },
+  "recheck": {
+    "of": "docs/validation/section-26-11/boundary-m3b-check.json",
+    "previous_copy": "docs/validation/section-26-11/boundary-m5b-recheck.json",
+    "note": "M6b recheck copy. The numbers are the original record's, unchanged; only the digests of shared sources that §26.14 touched were refreshed, after re-running the same lookback tests (192 passed) green against the current sources. Those tests carry their own quadrature oracles and recompute every quantity; they do not read this file. The dated originals are kept alongside this file.",
+    "refreshed_digests": {
+      "hullkit/src/hullkit/exotics.py": {
+        "was": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+        "now": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775"
+      }
+    }
+  }
+}

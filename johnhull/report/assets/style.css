@@ -180,3 +180,9 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1.1rem, 4vw, 2re
 .fig-card:has(#fig-asian_distribution),
 .fig-card:has(#fig-asian_observations),
 .fig-card:has(#fig-asian_error) { grid-column: 1 / -1; }
+
+/* Exchange lesson: dual axes plus three-line notes need the full row. */
+.fig-card:has(#fig-exchange_payoff),
+.fig-card:has(#fig-exchange_correlation),
+.fig-card:has(#fig-exchange_rate),
+.fig-card:has(#fig-exchange_american) { grid-column: 1 / -1; }

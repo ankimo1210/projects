@@ -1,0 +1,362 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-17T14:36:49.280518+00:00",
+  "scope": "M3a independent numerical validation only; section 26.11 remains gaps_found.",
+  "base_commit": "5e2f9ac7c7670426c68744e9f38774406edceacc",
+  "reference": "Hull 11e Global Edition section 26.11, physical/printed pp.623-625; Example 26.2 p.624.",
+  "method": "Integrate each discounted payoff directly through the drifted Brownian maximum survival function; use minus the log price for minima. The drifted law is derived by exponential tilting of the reflection-principle terminal/maximum distribution. No hullkit price, lookback closed-form coefficient, floating/fixed parity or Monte Carlo price is used in the oracle.",
+  "reflection_source": {
+    "url": "https://ocw.mit.edu/courses/15-070j-advanced-stochastic-processes-fall-2013/aca1518a09539a09ddd37428ab0d0268_MIT15_070JF13_Lec7.pdf",
+    "locator": "Proposition 2, PDF page 3. Finite-drift tail and payoff integrals are our derivation, not a verbatim formula from this lecture."
+  },
+  "units": {
+    "spot_strike_extrema_price": "currency",
+    "expiry": "years",
+    "rate_dividend": "continuously compounded per year",
+    "volatility": "annual"
+  },
+  "assumptions": [
+    "Risk-neutral GBM, constant r/q/sigma; positive spot, volatility and remaining maturity.",
+    "Continuous monitoring includes today and expiry, with minimum-to-date <= spot <= maximum-to-date.",
+    "All inputs are synthetic; no market performance claim."
+  ],
+  "markets": [
+    {
+      "id": "hull-example-26-2",
+      "spot": 50,
+      "rate": 0.1,
+      "volatility": 0.4,
+      "expiry": 0.25,
+      "dividend": 0.0
+    },
+    {
+      "id": "positive-carry",
+      "spot": 100,
+      "rate": 0.05,
+      "volatility": 0.2,
+      "expiry": 1.0,
+      "dividend": 0.02
+    },
+    {
+      "id": "dividend-above-rate",
+      "spot": 100,
+      "rate": 0.01,
+      "volatility": 0.25,
+      "expiry": 1.5,
+      "dividend": 0.07
+    },
+    {
+      "id": "negative-rate",
+      "spot": 100,
+      "rate": -0.025,
+      "volatility": 0.18,
+      "expiry": 0.75,
+      "dividend": 0.01
+    },
+    {
+      "id": "near-expiry",
+      "spot": 100,
+      "rate": 0.03,
+      "volatility": 0.15,
+      "expiry": 0.0027397260273972603,
+      "dividend": 0.01
+    },
+    {
+      "id": "long-high-vol",
+      "spot": 100,
+      "rate": 0.06,
+      "volatility": 0.7,
+      "expiry": 5.0,
+      "dividend": 0.025
+    },
+    {
+      "id": "small-positive-carry",
+      "spot": 100,
+      "rate": 0.0301,
+      "volatility": 0.3,
+      "expiry": 2.0,
+      "dividend": 0.03
+    },
+    {
+      "id": "small-negative-carry",
+      "spot": 100,
+      "rate": 0.03,
+      "volatility": 0.3,
+      "expiry": 2.0,
+      "dividend": 0.0301
+    }
+  ],
+  "history_ratios": {
+    "new": [
+      1,
+      1
+    ],
+    "seasoned": [
+      0.85,
+      1.2
+    ]
+  },
+  "fixed_strike_ratios": [
+    0.75,
+    1.0,
+    1.35
+  ],
+  "abs_tolerance": 2e-09,
+  "rel_tolerance": 2e-11,
+  "quad_error_guard": "Discounted currency-scaled QUADPACK error estimate < absolute tolerance / 10 for every integral; not a rigorous error bound.",
+  "independent_prices_checked": 128,
+  "floating_prices_checked": 32,
+  "fixed_prices_checked": 96,
+  "max_absolute_error": 4.064304448547773e-12,
+  "textbook_example": [
+    {
+      "contract": "floating_call",
+      "printed": 8.04,
+      "reference": 8.037120139607019,
+      "actual": 8.037120139607019
+    },
+    {
+      "contract": "floating_put",
+      "printed": 7.79,
+      "reference": 7.790219259890343,
+      "actual": 7.790219259890346
+    }
+  ],
+  "tests": {
+    "command": "PYTHONPATH=johnhull/hullkit/src:johnhull/report python -m pytest -q johnhull/hullkit/tests/test_lookback_reference.py",
+    "passed": 132
+  },
+  "negative_controls": [
+    {
+      "mutation": "floating_call shifted by +0.25, automatically shifting its fixed counterpart",
+      "parity_passed": true,
+      "independent_price_checks_rejected": 2
+    },
+    {
+      "mutation": "floating_put shifted by +0.25, automatically shifting its fixed counterpart",
+      "parity_passed": true,
+      "independent_price_checks_rejected": 2
+    }
+  ],
+  "unsupported_domain_probes": [
+    {
+      "carry": 0.0,
+      "contract": "floating_call",
+      "reference": 14.253482409203839,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.05,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": 0.0,
+      "contract": "floating_put",
+      "reference": 16.15594125820526,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.05,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": 0.0,
+      "contract": "fixed_call",
+      "reference": 16.155941258205264,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.05,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": 0.0,
+      "contract": "fixed_put",
+      "reference": 14.253482409203839,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.05,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": 5e-09,
+      "contract": "floating_call",
+      "reference": 14.253482611377489,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.050000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": 5e-09,
+      "contract": "floating_put",
+      "reference": 16.155940980008054,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.050000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": 5e-09,
+      "contract": "fixed_call",
+      "reference": 16.15594145562277,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.050000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": 5e-09,
+      "contract": "fixed_put",
+      "reference": 14.253482135762777,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.050000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": -5e-09,
+      "contract": "floating_call",
+      "reference": 14.253482207030189,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.049999995000000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": -5e-09,
+      "contract": "floating_put",
+      "reference": 16.15594153640248,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.049999995000000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": null
+    },
+    {
+      "carry": -5e-09,
+      "contract": "fixed_call",
+      "reference": 16.15594106078776,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.049999995000000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    },
+    {
+      "carry": -5e-09,
+      "contract": "fixed_put",
+      "reference": 14.2534826826449,
+      "production": "ValueError: zero-carry limit unsupported",
+      "market": {
+        "spot": 100,
+        "rate": 0.049999995000000005,
+        "volatility": 0.2,
+        "expiry": 1,
+        "dividend": 0.05
+      },
+      "minimum": 100,
+      "maximum": 100,
+      "strike": 100
+    }
+  ],
+  "source_sha256": {
+    "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+    "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
+    "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-11/prices.json": "25b200e9fe5a012adbef541b6b38513aa40a955d970ff993bac93679ba8334ba"
+  },
+  "artifact_scope": "Numerical comparison table only. No new Book/portal rendering or teaching acceptance.",
+  "limits": [
+    "Prices with abs(r-q)<1e-8 still raise ValueError in the existing production API. The finite oracle diagnostics do not implement this limit.",
+    "No T=0, sigma=0, invalid-input or all-domain numerical stability claim. The smallest supported nonzero carry tested is 1e-4.",
+    "No discrete-monitoring pricing or new pathwise/visual verification in M3a.",
+    "Lesson descriptions, four-payoff figures and Book/portal rendered verification remain pending."
+  ],
+  "tolerance_rule": "Absolute error <= max(abs_tolerance, rel_tolerance * abs(reference)); no relative-accuracy claim for near-zero deep OTM prices.",
+  "recheck": {
+    "of": "docs/validation/section-26-11/numerical-check.json",
+    "previous_copy": "docs/validation/section-26-11/numerical-m5b-recheck.json",
+    "note": "M6b recheck copy. The numbers are the original record's, unchanged; only the digests of shared sources that §26.14 touched were refreshed, after re-running hullkit/tests/test_lookback_reference.py, test_lookback_lesson.py and test_exotics_puts.py (192 passed) green against the current sources. Those tests carry their own quadrature oracles and recompute every quantity; they do not read this file. The dated originals are kept alongside this file.",
+    "refreshed_digests": {
+      "hullkit/src/hullkit/exotics.py": {
+        "was": "15340f5b60977919bbf8179aa2b2a9610464fe7514a3e15528756fb8d8479523",
+        "now": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775"
+      }
+    }
+  }
+}

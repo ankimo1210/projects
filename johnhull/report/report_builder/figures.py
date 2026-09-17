@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from hullkit import plotly_viz as pv
 from hullkit._asian_lesson import _figures as asian_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
+from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
 
@@ -614,6 +615,42 @@ FIGURES: list[FigureSpec] = [
         "観測52日、6市場、S/K=0.8/1.0/1.25。制御変量モンテカルロの参照価格に対する相対誤差。",
         lambda: asian_lesson_figures()["asian_error"],
         practice="誤差は片側でない。σ√T が大きいほど悪化するが、キャリーがマネーネスを動かすため σ√T だけでは順序が決まらない。参照価格は標準誤差を持ち、厳密なのは2観測日の行だけ。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "exchange_payoff",
+        "exotics",
+        "交換オプションの満期給付",
+        "U_T=100 を渡して V_T を受け取る。better-of / worse-of は同じ給付の足し引きで書ける。",
+        lambda: exchange_lesson_figures()["exchange_payoff"],
+        practice="満期給付であって現在価値ではない。行使価格が固定額でなく別の資産の価値になる点が普通のオプションとの違い。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "exchange_correlation",
+        "exotics",
+        "相関と交換オプション",
+        "ρ を −0.95 から 0.95 まで動かす。価格を決めるのは σ̂=√(σ_U²+σ_V²−2ρσ_Uσ_V) だけである。",
+        lambda: exchange_lesson_figures()["exchange_correlation"],
+        practice="ρ が高いほど2資産が連動し、比 V/U のばらつきが減って交換の価値は下がる。σ̂→0 では割引フォワードの差に張り付く。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "exchange_rate",
+        "exotics",
+        "リスクフリー金利に依存しない",
+        "r を −5% から 12% まで動かした独立参照価格と、V/U への読み替え（行使1.0・金利 q_U・配当 q_V）。",
+        lambda: exchange_lesson_figures()["exchange_rate"],
+        practice="成長率の上昇と割引率の上昇が相殺するため式26.5に r は現れない。行使価格を今日の U_0 に固定した誤読では r とともに動く。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "exchange_american",
+        "exotics",
+        "米国型と早期行使",
+        "Rubinstein の読み替えによる V/U 上の二項木（1024ステップ）。q_V=0 と q_V>0 を比べる。",
+        lambda: exchange_lesson_figures()["exchange_american"],
+        practice="受け取る資産に配当がなければ早期行使に価値はない。木は有限格子なので、同じ格子で行使判定を外した価格と比べて離散化と早期行使を分離している。",
         is_new=True,
     ),
     FigureSpec(
