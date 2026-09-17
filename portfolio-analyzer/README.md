@@ -60,6 +60,16 @@ python3 -m http.server 8765
 
 その後 <http://localhost:8765/portfolio-dashboard.html> を開きます。
 
+HTML は `src/portfolio_analyzer/manifest_html.py` が `dist/artifact.json` と同じ中身
+（`build_artifact` の manifest とデータセット）から描きます。外部のビルダーは使わず、フォント以外は
+何も読み込みません。口座の切り替えは各口座分を描いておいて表示だけ切り替えるので、URL の末尾に
+`#海外証券口座` のように付けるとその口座で開きます。棒グラフは長い日本語の項目名が折り返せるよう HTML、
+折れ線は SVG で、各点・各棒にカーソルを合わせると値が出ます。
+
+2026-09-06 までは Codex data-analytics プラグインの portable builder で HTML にしていましたが、
+プラグイン 1.0.8（2026-09-13 導入）でその部品が削除され、`--artifact-only` までしか作れなくなったため
+置き換えました。
+
 ## 日次の損益ダッシュボード（mark-to-market）
 
 `scripts/daily_pl_report.py` は、スナップショットの保有数量に yfinance の直近終値と USD/JPY を
@@ -714,6 +724,7 @@ portfolio-analyzer/
 │   ├── ingest_ibkr_transactions.py  # オフライン。取引履歴から取得原価と実績を逆算
 │   └── horizon3_model.py
 ├── src/portfolio_analyzer/core.py
+├── src/portfolio_analyzer/manifest_html.py  # artifact から自己完結 HTML を描く
 ├── tests/test_core.py
 └── dist/                        # 生成物（Git対象外）
 ```

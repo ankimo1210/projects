@@ -5,8 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -20,46 +18,13 @@ from portfolio_analyzer import (
     load_analysis_reference,
     load_factor_risk,
     load_portfolio,
+    manifest_html,
     validate_portfolio,
 )
 
 DEFAULT_REFERENCE = PROJECT_ROOT / "data/analysis_reference.private.json"
 DEFAULT_FACTOR_RISK = PROJECT_ROOT / "data/factor_estimates.json"
-
-
-def find_delivery_script() -> Path:
-    configured = os.environ.get("DATA_ANALYTICS_PLUGIN_ROOT")
-    if configured:
-        candidate = Path(configured) / "skills/build-report/scripts/deliver_portable_artifact.mjs"
-        if candidate.is_file():
-            return candidate
-        raise FileNotFoundError(f"portable builder not found under {configured}")
-
-    cache_root = Path(
-        "/mnt/c/Users/Kazumasa/.codex/plugins/cache/openai-curated-remote/data-analytics"
-    )
-    candidates = sorted(
-        cache_root.glob("*/skills/build-report/scripts/deliver_portable_artifact.mjs"),
-        key=lambda path: path.stat().st_mtime,
-        reverse=True,
-    )
-    if not candidates:
-        raise FileNotFoundError(
-            "Data Analytics portable builder was not found. Set DATA_ANALYTICS_PLUGIN_ROOT."
-        )
-    return candidates[0]
-
-
-def apply_portable_scrollbar_fix(output: Path) -> None:
-    """Prevent the shared reader's 100vw top bar from adding scrollbar-width overflow."""
-    html = output.read_text(encoding="utf-8")
-    marker = "</head>"
-    if marker not in html:
-        raise ValueError("portable HTML has no closing head tag")
-    style = (
-        '<style data-portfolio-scrollbar-fix="true">html,body{overflow-x:clip!important}</style>\n'
-    )
-    output.write_text(html.replace(marker, f"{style}{marker}", 1), encoding="utf-8")
+TOKENS_CSS = WORKSPACE_ROOT / "docs/templates/claude-report/tokens.css"
 
 
 def parse_args() -> argparse.Namespace:
@@ -111,7 +76,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--artifact-only",
         action="store_true",
-        help="write artifact.json without invoking the portable HTML builder",
+        help="write artifact.json only, without the HTML page",
     )
     return parser.parse_args()
 
@@ -210,47 +175,8 @@ def main() -> int:
     if args.artifact_only:
         return 0
 
-    try:
-        delivery_script = find_delivery_script()
-    except FileNotFoundError as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
-        print(
-            "Run again with --artifact-only to produce validated input without HTML packaging.",
-            file=sys.stderr,
-        )
-        return 1
-    portable_scripts = delivery_script.parent
-    plugin_version = delivery_script.parents[3].name
-    print(f"portable builder: data-analytics/{plugin_version}")
-    build_result = subprocess.run(
-        [
-            "node",
-            str(portable_scripts / "build_portable_artifact.mjs"),
-            "--input",
-            str(artifact_path),
-            "--output",
-            str(output),
-        ],
-        cwd=WORKSPACE_ROOT,
-        check=False,
-    )
-    if build_result.returncode != 0:
-        return build_result.returncode
-    apply_portable_scrollbar_fix(output)
-    verify_result = subprocess.run(
-        [
-            "node",
-            str(portable_scripts / "verify_portable_artifact.mjs"),
-            "--artifact",
-            str(artifact_path),
-            "--html",
-            str(output),
-        ],
-        cwd=WORKSPACE_ROOT,
-        check=False,
-    )
-    if verify_result.returncode != 0:
-        return verify_result.returncode
+    tokens_css = TOKENS_CSS.read_text(encoding="utf-8")
+    output.write_text(manifest_html.render(artifact, tokens_css), encoding="utf-8")
     print(f"dashboard: {output}")
     return 0
 
