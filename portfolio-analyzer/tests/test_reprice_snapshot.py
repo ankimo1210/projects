@@ -216,3 +216,74 @@ def test_last_final_close_skips_a_bar_still_trading() -> None:
         series, "SMH", datetime(2026, 9, 17, 7, 30, tzinfo=jst)
     )
     assert done == {"close": Decimal("550.2200"), "date": "2026-09-16"}
+
+
+DC_HOLDING = {
+    "account_id": "dc",
+    "symbol": "HAPPY_AGING_40",
+    "ticker": "SOMPO_AM:0885",
+    "anchor": {"as_of": "2026-09-12", "units": 2901109, "contributions_jpy": 5184000},
+}
+
+
+def dc_trade(trade_date: str, units: str, amount: str):
+    from portfolio_analyzer.dcplan import Trade
+
+    return Trade(
+        trade_date=trade_date,
+        settle_date=trade_date,
+        name="ハッピーエイジング４０",
+        units=Decimal(units),
+        price=Decimal("2.6"),
+        amount=Decimal(amount),
+        kind="買 掛金",
+    )
+
+
+def test_fund_quote_values_the_plan_units_at_the_last_price_on_or_before_the_day() -> None:
+    nav = [("2026-09-15", Decimal("25885")), ("2026-09-16", Decimal("25964"))]
+    trades = [dc_trade("2026-09-28", "21000", "55000")]  # after the day: not held yet
+    quote = reprice_snapshot.fund_quote(DC_HOLDING, trades, nav, "2026-09-16")
+    assert quote == {
+        "ticker": "SOMPO_AM:0885",
+        "quantity": Decimal("290.1109"),
+        "close": Decimal("25964"),
+        "date": "2026-09-16",
+        "cost_basis_jpy": Decimal("5184000"),
+    }
+    later = reprice_snapshot.fund_quote(DC_HOLDING, trades, nav, "2026-09-30")
+    assert later is not None and later["quantity"] == Decimal("292.2109")
+    assert later["cost_basis_jpy"] == Decimal("5239000") and later["date"] == "2026-09-16"
+    assert reprice_snapshot.fund_quote(DC_HOLDING, trades, nav, "2026-09-14") is None
+
+
+def test_the_dc_fund_is_repriced_with_its_account_pnl(
+    snapshot: dict, quotes: dict, tmp_path: Path
+) -> None:
+    fund = {
+        "ticker": "SOMPO_AM:0885",
+        "quantity": Decimal("290.1109"),
+        "close": Decimal("25964"),
+        "date": "2026-08-31",
+        "cost_basis_jpy": Decimal("5184000"),
+    }
+    result = reprice_snapshot.reprice(
+        snapshot, quotes, Decimal("159.794"), "2026-08-31", funds={("dc", "HAPPY_AGING_40"): fund}
+    )
+    dc_pos = next(r for r in result["positions"] if r["symbol"] == "HAPPY_AGING_40")
+    value = float((Decimal("290.1109") * Decimal("25964")).quantize(Decimal("0.01")))
+    assert dc_pos["quantity"] == pytest.approx(290.1109)
+    assert dc_pos["price"] == 25964
+    assert dc_pos["market_value_jpy"] == pytest.approx(value)
+    assert dc_pos["value_status"] == "estimated" and dc_pos["price_as_of"] == "2026-08-31"
+    assert "基準価額" in dc_pos["source_note"]
+
+    dc = next(a for a in result["accounts"] if a["id"] == "dc")
+    assert dc["as_of"] == "2026-08-31"
+    assert dc["total_value_jpy"] == pytest.approx(value)
+    assert dc["unrealized_pnl_jpy"] == pytest.approx(value - 5184000)
+    assert result["repricing"]["quotes"]["SOMPO_AM:0885"] == "2026-08-31"
+
+    path = tmp_path / "repriced.json"
+    path.write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
+    assert validate_portfolio(load_portfolio(path)) == []

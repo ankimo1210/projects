@@ -6,9 +6,12 @@ It reads that file, replaces the price of every position that carries a
 quantity with the latest close at or before ``--as-of``, and writes a new
 snapshot next to it.
 
-Positions without a quantity (cash, the DC balance fund, the reconciliation
-plug) have no market quote, so they are carried forward unchanged and the
-reason is written into ``source_note``. Account totals are recomputed as the
+The DC plan's fund has no market quote; it is valued like the daily report
+does, at its fund company's published price times the units held (the plan's
+anchor plus the contributions in its trade history, ``dcplan``), and its account
+P&L is the value less the contributions. Cash and the reconciliation plug have
+no quote either, so they are carried forward unchanged and the reason is written
+into ``source_note`` (so is the DC balance when the price CSV cannot be read). Account totals are recomputed as the
 sum of their positions, and any account P&L figure that the repricing
 invalidates is dropped rather than carried forward as if it still held.
 
@@ -29,6 +32,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from portfolio_analyzer import dcplan
 from portfolio_analyzer.mtm import bar_is_final
 
 FX_SYMBOL = "JPY=X"
@@ -87,15 +91,66 @@ def download_closes(symbols: list[str], start: str, end: str) -> dict[str, Any]:
     return out
 
 
-def reprice(snapshot: dict[str, Any], quotes: dict[str, Any], fx: Decimal, as_of: str) -> dict:
-    """Return a new snapshot priced at ``quotes``, leaving ``snapshot`` untouched."""
+def fund_quote(
+    holding: dict[str, Any],
+    trades: list[dcplan.Trade],
+    nav: list[tuple[str, Decimal]],
+    as_of: str,
+) -> dict[str, Any] | None:
+    """The DC plan's fund on ``as_of``: units from the plan's anchor plus the contributions
+    traded by then (in 10,000 units), at the last published price on or before the day.
+    None when there is no price yet or the anchor is later than the day."""
+    prices = [(d, p) for d, p in nav if d <= as_of]
+    if not prices or holding["anchor"]["as_of"] > as_of:
+        return None
+    (h,) = dcplan.ledger(holding, [t for t in trades if t.trade_date <= as_of])["holdings"]
+    day, price = max(prices)
+    return {
+        "ticker": holding["ticker"],
+        "quantity": h["quantity"],
+        "close": price,
+        "date": day,
+        "cost_basis_jpy": h["cost_basis_jpy"],
+    }
+
+
+def reprice(
+    snapshot: dict[str, Any],
+    quotes: dict[str, Any],
+    fx: Decimal,
+    as_of: str,
+    funds: dict[tuple[str, str], dict[str, Any]] | None = None,
+) -> dict:
+    """Return a new snapshot priced at ``quotes``, leaving ``snapshot`` untouched.
+    ``funds`` prices unlisted funds by (account id, symbol) with ``fund_quote``'s result."""
+    funds = funds or {}
     positions: list[dict[str, Any]] = []
     repriced_accounts: set[str] = set()
+    fund_accounts: dict[str, dict[str, Any]] = {}
 
     for row in snapshot["positions"]:
         new = dict(row)
         ticker = market_symbol(str(row["symbol"]), str(row["currency"]))
-        if ticker is not None and row.get("quantity") is not None:
+        fund = funds.get((str(row["account_id"]), str(row["symbol"])))
+        if fund is not None:
+            value = (fund["quantity"] * fund["close"]).quantize(VALUE_DECIMALS)
+            new["quantity"] = float(fund["quantity"])
+            new["price"] = float(fund["close"])
+            new["fx_rate"] = 1.0
+            new["market_value_jpy"] = float(value)
+            new["value_status"] = "estimated"
+            new["price_as_of"] = fund["date"]
+            new["source_note"] = (
+                f"{fund['date']} の基準価額（1万口あたり）× 保有口数（万口）。"
+                "口数は DC サイトの残高に掛金履歴を足したもの"
+            )
+            account = fund_accounts.setdefault(
+                str(row["account_id"]), {"value": Decimal(0), "cost": Decimal(0), "date": ""}
+            )
+            account["value"] += value
+            account["cost"] += fund["cost_basis_jpy"]
+            account["date"] = max(account["date"], fund["date"])
+        elif ticker is not None and row.get("quantity") is not None:
             quote = quotes[ticker]
             rate = fx if row["currency"] == "USD" else Decimal(1)
             quantity = Decimal(str(row["quantity"]))
@@ -131,7 +186,16 @@ def reprice(snapshot: dict[str, Any], quotes: dict[str, Any], fx: Decimal, as_of
         new = dict(row)
         account_id = str(row["id"])
         new["total_value_jpy"] = float(totals[account_id].quantize(VALUE_DECIMALS))
-        if account_id in repriced_accounts:
+        if account_id in fund_accounts and account_id not in repriced_accounts:
+            fund = fund_accounts[account_id]
+            new["as_of"] = fund["date"]
+            new["unrealized_pnl_jpy"] = float(fund["value"] - fund["cost"])
+            new["daily_pnl_jpy"] = None
+            new["quality_note"] = (
+                f"{fund['date']} の基準価額で再評価。口座損益は評価額 − 拠出金累計"
+                f"（{fund['cost']:,.0f} 円）"
+            )
+        elif account_id in repriced_accounts:
             new["as_of"] = as_of
             new["unrealized_pnl_jpy"] = None
             new["daily_pnl_jpy"] = None
@@ -146,7 +210,9 @@ def reprice(snapshot: dict[str, Any], quotes: dict[str, Any], fx: Decimal, as_of
             )
         accounts.append(new)
 
-    stale = {ticker: quote["date"] for ticker, quote in quotes.items() if quote["date"] != as_of}
+    dates = {ticker: quote["date"] for ticker, quote in quotes.items()}
+    dates.update({fund["ticker"]: fund["date"] for fund in funds.values()})
+    stale = {ticker: day for ticker, day in dates.items() if day != as_of}
     return {
         "snapshot_name": f"{as_of} 再評価スナップショット",
         "base_currency": snapshot.get("base_currency", "JPY"),
@@ -156,9 +222,12 @@ def reprice(snapshot: dict[str, Any], quotes: dict[str, Any], fx: Decimal, as_of
             "source": "yfinance (close)",
             "fx_symbol": FX_SYMBOL,
             "fx_rate": float(fx),
-            "quotes": {ticker: quote["date"] for ticker, quote in quotes.items()},
+            "quotes": dates,
             "quotes_older_than_as_of": stale,
-            "carried_forward": "現金・DC残高・残高調整は時価が取れないため元スナップショットのまま",
+            "carried_forward": (
+                "現金・残高調整は時価が無いため元スナップショットのまま"
+                + ("" if funds else "。DC残高も基準価額が取れなかったため据え置き")
+            ),
         },
         "accounts": accounts,
         "positions": positions,
@@ -174,7 +243,41 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--as-of", default=date.today().isoformat())
     parser.add_argument("--lookback-days", type=int, default=30)
+    parser.add_argument(
+        "--dc-holding",
+        default=str(root / "data" / "dc-holding.private.json"),
+        help="the DC plan's anchor and its fund's price CSV (skipped when missing)",
+    )
+    parser.add_argument(
+        "--dc-transactions",
+        default=str(root / "data" / "dc-transactions.private.tsv"),
+        help="the DC plan's trade history as pasted from its site",
+    )
     return parser.parse_args()
+
+
+def load_funds(args: argparse.Namespace) -> dict[tuple[str, str], dict[str, Any]]:
+    """The DC fund's quote for ``args.as_of``, or nothing (and a note) when it cannot be had."""
+    import urllib.request
+
+    holding_path = Path(args.dc_holding)
+    if not holding_path.exists():
+        return {}
+    holding = json.loads(holding_path.read_text(encoding="utf-8"))
+    tx_path = Path(args.dc_transactions)
+    trades = dcplan.parse_trades(dcplan.decode(tx_path.read_bytes())) if tx_path.exists() else []
+    request = urllib.request.Request(holding["nav_csv_url"], headers={"User-Agent": "Mozilla/5.0"})
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            nav = dcplan.parse_nav(dcplan.decode(response.read()))
+    except OSError as exc:
+        print(f"DC fund price unavailable, balance carried forward: {exc}")
+        return {}
+    quote = fund_quote(holding, trades, nav, args.as_of)
+    if quote is None:
+        print(f"no DC fund price on or before {args.as_of}; balance carried forward")
+        return {}
+    return {(holding["account_id"], holding["symbol"]): quote}
 
 
 def main() -> None:
@@ -199,7 +302,8 @@ def main() -> None:
     quotes = download_closes([*tickers, FX_SYMBOL], start_date, end_date)
     fx = quotes.pop(FX_SYMBOL)["close"].quantize(FX_DECIMALS)
 
-    repriced = reprice(snapshot, quotes, fx, args.as_of)
+    funds = load_funds(args)
+    repriced = reprice(snapshot, quotes, fx, args.as_of, funds=funds)
     target = (
         Path(args.output)
         if args.output
@@ -209,7 +313,7 @@ def main() -> None:
 
     print(f"repriced snapshot: {target}")
     print(f"  {FX_SYMBOL}: {fx}")
-    for ticker, quote in sorted(quotes.items()):
+    for ticker, quote in sorted([*quotes.items(), *((f["ticker"], f) for f in funds.values())]):
         flag = "" if quote["date"] == args.as_of else "  <- 直近終値が基準日より前"
         print(f"  {ticker}: {quote['close']} ({quote['date']}){flag}")
     for account in repriced["accounts"]:
