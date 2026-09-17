@@ -596,6 +596,23 @@ uv run --package portfolio-analyzer python portfolio-analyzer/scripts/build_dash
 口座損益は取得原価が未入力のため再計算できないので、洗い替えた口座では `null` に落とします
 （古い損益額を残すと、新しい評価額と組み合わせて誤った逆算元本が出るため）。
 
+### 国内 ETF の中身を最新の保有銘柄で更新する
+
+1329（日経225）と 1475（TOPIX）のルックスルーは、iShares が毎営業日公開する保有銘柄 CSV から作り直します。
+
+```bash
+uv run --package portfolio-analyzer python portfolio-analyzer/scripts/ishares_lookthrough.py 1329 1475          # 差分の表示だけ
+uv run --package portfolio-analyzer python portfolio-analyzer/scripts/ishares_lookthrough.py 1329 1475 --write  # 書き込み（日付つきバックアップを先に作る）
+```
+
+- **業種**は全銘柄の時価を東証 33 業種 → 広義セクターの対応表（スクリプトの `TSE33_TO_SECTOR`。電気機器は丸ごと情報技術、
+  精密機器は組入比率の大きいテルモ・オリンパスに合わせてヘルスケア）で集約します。以前はファクトシートの上位業種だけで、
+  1329 の 14.8%・1475 の 26.1% が未分類でした。現金の行は `現金等`、先物は時価 0 です。
+- **比率は時価から計算します。** CSV の比率の列は小数 2 桁なので、1475 では 1,000 銘柄ほどが 0.00 と表示され、合計が 99.1% にしかなりません。
+- **発行体**は上位 10 銘柄に加えて、参照データのどこかで追っている銘柄（`TRACKED_ISSUERS`）を全部入れるので、
+  直接保有や別の ETF 経由の同じ発行体が足し合わされます。テーマ・チェーン層・事業構成・国のタグは、同じ発行体の既存の行から引き継ぎます。
+- **感応度**の `情報技術` は集約後の情報技術の比率、`IT装置` はチェーン層が「半導体製造・検査装置」の発行体の比率の合計に更新します。
+
 ### 取引履歴から取得原価を逆算する
 
 スナップショットは「今いくら持っているか」だけの記録なので、取得原価の欄が空のままでは
@@ -726,6 +743,7 @@ portfolio-analyzer/
 │   ├── estimate_factors.py      # 要ネットワーク。β・共分散・実測エピソード
 │   ├── reprice_snapshot.py      # 要ネットワーク。保有明細を直近終値で洗い替え
 │   ├── ingest_ibkr_transactions.py  # オフライン。取引履歴から取得原価と実績を逆算
+│   ├── ishares_lookthrough.py   # 要ネットワーク。1329/1475 の業種・発行体を保有銘柄 CSV から更新
 │   └── horizon3_model.py
 ├── src/portfolio_analyzer/core.py
 ├── src/portfolio_analyzer/manifest_html.py  # artifact から自己完結 HTML を描く
