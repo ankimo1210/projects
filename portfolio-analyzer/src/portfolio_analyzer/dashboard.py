@@ -224,7 +224,7 @@ def _risk(risk: dict[str, Any] | None) -> str:
         for key, title in (
             ("asset_class", "資産クラス"),
             ("currency", "通貨"),
-            ("country", "国・地域"),
+            ("region", "国・地域"),
             ("sector", "セクター"),
         )
     )
@@ -299,7 +299,7 @@ def _risk(risk: dict[str, Any] | None) -> str:
             _delta(c["max_sector_ratio"], prev.get("max_sector_ratio")),
         ),
         (
-            "実効数 <small>銘柄 · セクター · 通貨 · 国</small>",
+            "実効数 <small>銘柄 · セクター · 通貨 · 国・地域</small>",
             " · ".join(
                 "—" if c.get(k) is None else f"{c[k]:.1f}"
                 for k in (
@@ -328,7 +328,7 @@ def _risk(risk: dict[str, Any] | None) -> str:
             for r in rc[key][:6]
         )
         + "</tbody></table></div>"
-        for key, title in (("currency", "通貨"), ("sector", "セクター"), ("country", "国・地域"))
+        for key, title in (("currency", "通貨"), ("sector", "セクター"), ("region", "国・地域"))
     )
     scenarios = st["scenarios"]
     shown = scenarios[:8] + [r for r in scenarios[8:] if r["kind"] == "historical"]

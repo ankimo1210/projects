@@ -28,6 +28,53 @@ NON_EQUITY_SECTOR = "債券・現金等"
 UNMAPPED_SECTOR = "その他・未分類株式"
 TRADING_DAYS = 252
 COUNTRY_BY_CURRENCY = {"JPY": HOME_COUNTRY, "USD": "米国"}
+# One taxonomy for 国・地域: a balanced fund reports regions, an ETF's issuers countries.
+# Countries roll up to the region a fund would count them in (MSCI's classes, so Taiwan
+# and Korea are emerging); the single-country limit reads the countries alone.
+REGIONS = ("日本", "米国", "欧州", "その他先進国", "新興国")
+REGION_OF = {
+    **{r: r for r in REGIONS},
+    **dict.fromkeys(
+        (
+            "英国",
+            "ドイツ",
+            "フランス",
+            "オランダ",
+            "スイス",
+            "アイルランド",
+            "スウェーデン",
+            "デンマーク",
+            "イタリア",
+            "スペイン",
+            "ベルギー",
+            "フィンランド",
+            "ノルウェー",
+        ),
+        "欧州",
+    ),
+    **dict.fromkeys(
+        ("カナダ", "オーストラリア", "香港", "シンガポール", "イスラエル", "ニュージーランド"),
+        "その他先進国",
+    ),
+    **dict.fromkeys(
+        (
+            "台湾",
+            "韓国",
+            "中国",
+            "インド",
+            "ブラジル",
+            "メキシコ",
+            "南アフリカ",
+            "サウジアラビア",
+            "インドネシア",
+            "タイ",
+        ),
+        "新興国",
+    ),
+}
+OTHER_REGION = "その他"
+# labels that name a region and no single country (日本 and 米国 are both)
+REGION_ONLY = frozenset({"欧州", "その他先進国", "新興国", OTHER_REGION})
 
 
 @dataclass(frozen=True)
@@ -89,14 +136,17 @@ def _mixes(holding: Holding, instrument: dict[str, Any]) -> dict[str, dict[str, 
         rest = max(1.0 - covered, 0.0)
         _bump(sector, NON_EQUITY_SECTOR, min(rest, non_equity))
         _bump(sector, UNMAPPED_SECTOR, max(rest - non_equity, 0.0))
-    return {"currency": currency, "country": country, "sector": sector}
+    region: dict[str, float] = {}
+    for label, w in country.items():
+        _bump(region, REGION_OF.get(label, OTHER_REGION), w)
+    return {"currency": currency, "country": country, "region": region, "sector": sector}
 
 
 def lookthrough(holdings: Sequence[Holding], reference: dict[str, Any]) -> dict[str, Any]:
     """Value by asset class, currency, country, sector and issuer after looking through funds."""
     instruments = _instruments(reference)
     by: dict[str, dict[str, float]] = {
-        k: {} for k in ("asset_class", "currency", "country", "sector")
+        k: {} for k in ("asset_class", "currency", "country", "region", "sector")
     }
     issuers: dict[str, dict[str, Any]] = {}
     mix: dict[str, dict[str, dict[str, float]]] = {}
@@ -107,7 +157,7 @@ def lookthrough(holdings: Sequence[Holding], reference: dict[str, Any]) -> dict[
         inst = instruments.get(h.symbol, {})
         m = _mixes(h, inst)
         mix.setdefault(h.symbol, m)
-        for key in ("currency", "country", "sector"):
+        for key in ("currency", "country", "region", "sector"):
             for label, w in m[key].items():
                 _bump(by[key], label, v * w)
         asset_mix = inst.get("asset_mix")
@@ -165,7 +215,12 @@ def concentration(holdings: Sequence[Holding], exposures: dict[str, Any]) -> dic
     total = float(exposures["total"])
     invested = sorted((float(h.value_jpy) for h in holdings if not h.is_cash), reverse=True)
     sectors = [r for r in exposures["sector"] if r["label"] != NON_EQUITY_SECTOR]
-    foreign = [r for r in exposures["country"] if r["label"] != HOME_COUNTRY]
+    # countries only: a region row (欧州, 新興国, …) is not a single country
+    foreign = [
+        r
+        for r in exposures["country"]
+        if r["label"] != HOME_COUNTRY and r["label"] not in REGION_ONLY
+    ]
     jpy = next((r["value"] for r in exposures["currency"] if r["label"] == HOME_CURRENCY), 0.0)
     issuers = exposures["issuers"]
     cash = sum(float(h.value_jpy) for h in holdings if h.is_cash)
@@ -183,7 +238,7 @@ def concentration(holdings: Sequence[Holding], exposures: dict[str, Any]) -> dic
         "effective_positions": (1.0 / _hhi(invested)) if invested else None,
         "effective_sectors": effective(sectors),
         "effective_currencies": effective(exposures["currency"]),
-        "effective_countries": effective(exposures["country"]),
+        "effective_countries": effective(exposures["region"]),
         "max_sector_ratio": ratio(sectors[0]["value"]) if sectors else None,
         "max_sector": sectors[0]["label"] if sectors else None,
         "largest_issuer_lookthrough_ratio": ratio(issuers[0]["value"]) if issuers else None,
@@ -483,7 +538,12 @@ def assemble(
         ),
         key=lambda r: -r["risk_share"],
     )
-    buckets: dict[str, dict[str, float]] = {"currency": {}, "sector": {}, "country": {}}
+    buckets: dict[str, dict[str, float]] = {
+        "currency": {},
+        "sector": {},
+        "country": {},
+        "region": {},
+    }
     for t, share in shares.items():
         mixes = exposures["mix"].get(symbol_of[t], {})
         for key in buckets:
@@ -534,7 +594,15 @@ def assemble(
         "total": total,
         "exposures": {
             k: exposures[k]
-            for k in ("asset_class", "currency", "country", "sector", "issuers", "coverage")
+            for k in (
+                "asset_class",
+                "currency",
+                "country",
+                "region",
+                "sector",
+                "issuers",
+                "coverage",
+            )
         },
         "concentration": conc,
         "stats": stats,

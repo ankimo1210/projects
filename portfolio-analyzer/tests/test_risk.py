@@ -284,6 +284,8 @@ def test_assemble_builds_the_payload_block() -> None:
     assert out["stats"]["prev"]["vol_annual"] == 0.10
     assert sum(r["risk_share"] for r in out["contributions"]["positions"]) == pytest.approx(1.0)
     assert sum(r["risk_share"] for r in out["contributions"]["currency"]) == pytest.approx(1.0)
+    assert sum(r["risk_share"] for r in out["contributions"]["region"]) == pytest.approx(1.0)
+    assert out["exposures"]["region"][0]["label"] == "日本"
     # policy.limits (the main dashboard's, under its metric names) plus policy.daily_limits
     status = {r["id"]: r["status"] for r in out["policy"]}
     assert status == {
@@ -296,3 +298,44 @@ def test_assemble_builds_the_payload_block() -> None:
     assert out["policy_breaches"] == 1
     assert out["stress"]["scenarios"][0]["id"] == "hist_x"
     assert out["history"]["vol_annual"] == out["stats"]["vol_annual"]
+
+
+def test_region_rolls_countries_and_fund_regions_into_one_taxonomy() -> None:
+    x = risk.lookthrough(holdings(), REFERENCE)
+    # TSMC's Taiwan is an emerging market, as the fund's own 新興国 counts it
+    assert _value(x["region"], "新興国") == 60.0
+    assert _value(x["region"], "米国") == 600.0 * 0.9 + 20.0
+    assert _value(x["region"], "日本") == 200.0 + 100.0 + 80.0 + 1000.0
+    assert math.isclose(sum(r["value"] for r in x["region"]), 2000.0)
+    assert {r["label"] for r in x["region"]} <= set(risk.REGIONS) | {"その他"}
+    assert x["mix"]["SMH"]["region"] == pytest.approx({"米国": 0.9, "新興国": 0.1})
+
+
+def test_the_single_country_limit_reads_countries_not_regions() -> None:
+    reference = {
+        "instruments": [
+            {
+                "symbol": "WORLD",
+                "country_mix": {"日本": 0.2, "米国": 0.3, "欧州": 0.5},
+                "exposures": [{"group": "sector", "category": "その他・未分類株式", "weight": 1.0}],
+            },
+            {
+                "symbol": "ASML",
+                "country_default": "オランダ",
+                "exposures": [
+                    {"group": "issuer", "category": "ASML", "weight": 1.0, "country": "オランダ"}
+                ],
+            },
+        ]
+    }
+    hs = [
+        risk.Holding("WORLD", "a", 1000.0, "JPY", "バランス型"),
+        risk.Holding("ASML", "a", 100.0, "USD", "海外株"),
+    ]
+    c = risk.concentration(hs, risk.lookthrough(hs, reference))
+    # 欧州 (550) is the largest foreign row but not a country: 米国 (300) is
+    assert c["largest_foreign_country"] == "米国"
+    assert math.isclose(c["largest_foreign_country_ratio"], 300.0 / 1100.0)
+    # the effective count uses the regions, where the Netherlands has joined 欧州
+    shares = [200.0 / 1100.0, 300.0 / 1100.0, 600.0 / 1100.0]
+    assert math.isclose(c["effective_countries"], 1 / sum(s * s for s in shares))
