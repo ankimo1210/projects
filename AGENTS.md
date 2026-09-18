@@ -9,9 +9,9 @@ A personal multi-project workspace: each top-level directory is an
 independent project, managed together in one git repository. Docs are
 Japanese-first; code, identifiers, and commit messages are English.
 
-**Start here:** read the target project's `README.md` first (source of
-truth), then its `CLAUDE.md` / `AGENTS.md` if present. The project index
-lives in the root [`README.md`](README.md).
+Follow the target project's applicable `AGENTS.md` / `CLAUDE.md`. Consult
+its `README.md` for project context as needed; the project index is in the
+root [`README.md`](README.md).
 
 ## Workspace Policy
 
@@ -49,10 +49,9 @@ The root `conftest.py` imports same-named packages explicitly so that a
 full-workspace `pytest` run does not break them via namespace packages
 (pytest 9 behavior); keep it when touching test config.
 
-`make lint` and the full-workspace `pytest` are green as of 2026-08-17
-(3050 passed, 45 skipped, 203.9s), so a red
-result means the change under test broke something — diagnose it rather than
-assuming it predates you. Every member declares what it imports, including
+A historical green run does not establish the cause of a current failure.
+Compare with a relevant baseline before attributing failures to this change.
+Every member declares what it imports, including
 indirect (`health` declares `scipy` for `pandas.corr(method="spearman")`) and
 dev tooling its own CI invokes; the shared `.venv` hides omissions that
 `uv sync --package <member>` exposes. See
@@ -88,21 +87,45 @@ built or tested here at all — say so rather than reporting them as checked.
 bash cannot exec; use `npx --yes pnpm@11.1.0 <cmd>` for `ts-rosetta` and
 `b737-ops-sim`.
 
-## Docs & knowledge layers (ADR 0001)
+## Docs & knowledge layers
 
-See `docs/decisions/0001-workspace-docs-and-knowledge-layers.md`.
+See `docs/decisions/0001-workspace-docs-and-knowledge-layers.md` and
+`docs/decisions/0003-keep-knowledge-in-repository.md`.
 
 | Location | Role |
 |---|---|
 | `<project>/README.md` + `<project>/docs/` | Source of truth for that project |
+| `docs/knowledge/` | Shared environment notes and reusable troubleshooting knowledge |
 | `docs/decisions/` | Workspace-level ADRs (load-bearing "why" only) |
 | `docs/superpowers/` | Skill-generated plans/specs (generated artifacts) |
 | `docs/templates/` | Reusable output formats (see HTML reports below) |
 | `_docs/` | Ephemeral worklogs/handoffs — not curated, do not rely on |
 | git log | The what/when history |
 
+Keep requested knowledge captures in this repository: use the relevant
+project docs for project-specific material and `docs/knowledge/` for shared
+material. Keep notes concise, dated where facts can change, and free of
+secrets or employer/client-confidential content. The former `~/wiki` is a
+legacy archive; do not write new notes there.
+
 Write an ADR only when a future reader cannot reconstruct the "why"
 from the diff or log.
+
+## Development progress & recaps
+
+For ongoing development, reuse the project's existing roadmap or status
+document; if none exists and progress needs to persist, use its
+`docs/STATUS.md`. Reconcile it with evidence when resuming work and update
+the current state when meaningful progress or a plan change occurs.
+Include the goal and completion criteria, milestone-wide done/current/pending
+status, validation evidence, blockers, next steps, and the update date.
+Distinguish implemented-but-unverified from complete; reflect approved plan
+changes in remaining work and completion criteria. Preserve other agents' work.
+
+Keep progress in that document, not in instruction files or an append-only
+turn diary. For a compact final recap and status guidance, consult
+`docs/templates/development-recap.md` when needed. Simple tasks need no new
+status document; do not initialize other projects' progress speculatively.
 
 ## HTML reports & Artifacts
 

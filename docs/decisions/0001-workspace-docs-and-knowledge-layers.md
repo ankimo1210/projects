@@ -1,6 +1,6 @@
 # 0001. Workspace docs and knowledge layers
 
-- Status: Accepted
+- Status: Accepted; wiki placement superseded by [ADR 0003](0003-keep-knowledge-in-repository.md) on 2026-09-16
 - Date: 2026-07-08
 
 ## Context
@@ -18,6 +18,10 @@ recover is the *why* behind a decision — rejected alternatives and decisions
 that produce no diff.
 
 ## Decision
+
+The placement rules below reflect the original 2026-07-08 decision.
+For current shared knowledge placement, use `docs/knowledge/` in this
+repository as specified in ADR 0003; `~/wiki` is a legacy archive.
 
 Define where each kind of knowledge lives:
 
