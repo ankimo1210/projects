@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1" name="viewport"><meta content="light" name="color-scheme"><meta content="通常賃貸・借上社宅・購入の税引後キャッシュフローと損益分岐を比較。年収5,000万円、家賃75万円の個人ケース。" name="description"><title>賃貸・借上社宅・購入｜パラメータと損益分岐の感応度 v2.1</title><style>
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1" name="viewport"><meta content="light" name="color-scheme"><meta content="通常賃貸・借上社宅・購入の税引後キャッシュフローと損益分岐を比較。年収5,000万円、家賃75万円の個人ケース。" name="description"><title>賃貸・借上社宅・購入｜パラメータと損益分岐の感応度 v2.2</title><style>
 :root{--ink:#142a35;--muted:#637782;--paper:#f4f6f5;--line:#dce5e5;--navy:#132c38;--green:#137766;--violet:#7956aa;--gold:#b28a35;--pale:#eaf4f0;--warn:#fff5df}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.85;font-size:15px;font-variant-numeric:tabular-nums}a{color:var(--green);text-decoration:none}a:hover{text-decoration:underline}strong{font-weight:750}h1,h2,h3,p{margin:0}h1{font-size:clamp(31px,5vw,52px);line-height:1.4;letter-spacing:-.03em}h2{font-size:clamp(23px,3vw,31px);line-height:1.5;letter-spacing:-.02em}h3{font-size:19px;line-height:1.55;margin:26px 0 10px}p+p{margin-top:13px}.topbar{background:var(--navy);color:#dfe9ec;padding:15px 24px;font-size:12px;letter-spacing:.14em}.topbar>div{max-width:1160px;margin:auto;display:flex;justify-content:space-between;gap:15px}.wrap{max-width:1160px;padding:0 28px;margin:0 auto}.hero{background:var(--navy);color:white;padding:50px 0 55px}.eyebrow{font-size:11px;letter-spacing:.19em;font-weight:700;color:#a2cfc7;margin-bottom:16px}.hero .sub{color:#cad8dd;max-width:800px;margin:18px 0 25px;font-size:16px}.tags{display:flex;gap:8px;flex-wrap:wrap}.tag{padding:5px 10px;border:1px solid #46616e;border-radius:5px;font-size:11px;color:#d7e4e8}.hero-note{color:#b7c8ce;font-size:12px;margin-top:20px}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:28px 0}.kpi{padding:23px 25px;border-radius:12px;background:white;border:1px solid var(--line);box-shadow:0 3px 12px #122b3404}.kpi span{font-size:12px;color:var(--muted);font-weight:650}.kpi strong{display:block;font-size:clamp(26px,3.6vw,38px);line-height:1.3;letter-spacing:-.035em;margin:8px 0;color:var(--green)}.kpi small{font-size:12px;color:var(--muted);display:block;line-height:1.7}.kpi.purple strong{color:var(--violet)}.kpi.navy strong{color:var(--navy)}nav{display:flex;gap:9px 18px;flex-wrap:wrap;padding:8px 0 22px;font-size:12px}nav a{color:var(--muted)}section{margin:0 0 24px;padding:35px;background:white;border:1px solid var(--line);border-radius:14px;scroll-margin-top:20px}.sec-label{font-size:11px;font-weight:700;color:var(--green);letter-spacing:.18em;margin-bottom:9px}.lead{font-size:17px;margin-top:13px;margin-bottom:18px}.note{font-size:12px;color:var(--muted);line-height:1.85;margin-top:12px}.callout{border-left:4px solid var(--green);background:var(--pale);padding:18px 21px;margin:21px 0;border-radius:0 8px 8px 0}.callout.warning{border-left-color:var(--gold);background:var(--warn)}.callout.purple{border-left-color:var(--violet);background:#f2edf7}.callout p{margin-top:7px}.refs{font-size:10px;white-space:nowrap;margin-left:4px}.refs a{padding:0 1px}.table-wrap{overflow-x:auto;margin:20px 0 8px;border:1px solid var(--line);border-radius:9px}table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.65}th{text-align:left;background:#eef3f3;color:var(--muted);font-weight:700;padding:13px 16px;white-space:nowrap}td{padding:13px 16px;border-top:1px solid var(--line);vertical-align:top}td:not(:first-child){min-width:100px}tbody tr:last-child{background:#f6faf8}tbody tr:hover{background:#f8fafb}td:first-child{min-width:165px;font-weight:550}table.numeric td:not(:first-child){text-align:right}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}.two-col>.card{border:1px solid var(--line);border-radius:9px;padding:22px}.card h3{margin-top:0}.formula{background:#eef3f5;border:1px solid #dde7eb;border-radius:8px;padding:18px 22px;font-family:"SFMono-Regular",Consolas,"Yu Gothic",monospace;font-size:14px;line-height:1.9;overflow-x:auto;margin:20px 0}.big-number{font-size:33px;line-height:1.4;font-weight:750;color:var(--green)}.big-number.purple{color:var(--violet)}.chart-box{margin:23px 0 12px;border:1px solid var(--line);border-radius:10px;padding:17px 16px 10px;background:#fff}.chart{display:block;width:100%;height:auto;overflow:visible}.chart text{font-family:inherit}.chart .tick{fill:#6a7c84;font-size:12px}.chart .axis-title{fill:#5f727c;font-size:12px}.chart .grid{stroke:#e4eaea;stroke-width:1}.chart .zero{stroke:#7b919b;stroke-width:1.5}.chart .series{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.chart .buy{stroke:var(--navy)}.chart .rent{stroke:var(--gold);stroke-dasharray:7 4}.chart .corp{stroke:var(--violet)}.legend{display:flex;flex-wrap:wrap;gap:12px 22px;font-size:12px;justify-content:center;color:var(--muted);margin-bottom:8px}.legend span:before{content:"";display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:7px;background:var(--navy)}.legend .rent:before{background:var(--gold)}.legend .corp:before{background:var(--violet)}.heat-cell{font-size:16px;font-weight:700;color:var(--violet);white-space:nowrap}.heat td{background:#f5f1f9}.heat tr:nth-child(3) td{background:#ece3f4}.heat th:first-child{white-space:normal;max-width:200px}.divider{height:1px;background:var(--line);margin:25px 0}.foot{max-width:1160px;margin:auto;padding:10px 28px 45px;font-size:11px;color:var(--muted)}.source-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}.source{font-size:12px;border-top:1px solid var(--line);padding-top:10px;overflow-wrap:anywhere}.source b{display:block}.source small{color:var(--muted)}details{border:1px solid var(--line);border-radius:9px;margin:18px 0}summary{padding:15px 18px;cursor:pointer;font-weight:650;font-size:14px}details>.detail-body{padding:4px 18px 20px}.code{font-size:11px;line-height:1.65;white-space:pre;overflow:auto;max-height:500px;padding:18px;background:#f1f5f5;border-radius:6px}.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:15px 20px;margin:23px 0}.field label{display:block;font-size:12px;color:var(--muted);font-weight:650;margin-bottom:6px}.field input,.field select{width:100%;border:1px solid #c7d5d9;border-radius:7px;background:white;padding:11px 12px;font-size:16px;color:var(--ink);line-height:1.5;min-width:0;font-family:inherit}.field input:focus,.field select:focus{outline:2px solid #94c8bd;border-color:var(--green)}.field small{display:block;font-size:11px;color:var(--muted);line-height:1.6;margin-top:5px}.field.check{display:flex;align-items:center;padding-top:15px}.field.check input{width:auto;margin-right:8px}.field.check label{margin:0}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}button{background:var(--green);border:1px solid var(--green);color:white;border-radius:7px;font:600 13px/1.5 inherit;padding:10px 16px;cursor:pointer;font-family:inherit}button.secondary{background:#fff;color:var(--green);border-color:#c9dcd5}button:hover{filter:brightness(.97)}.sim-status{font-size:11px;background:#e9f3ef;color:var(--green);display:inline-block;border-radius:20px;padding:4px 11px;margin-top:12px}.sim-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.sim-kpis .kpi{padding:17px 16px;box-shadow:none}.sim-kpis .kpi strong{font-size:25px}.error{background:#fff2ec;color:#9b4c32;padding:12px 16px;border-radius:7px;font-size:13px;display:none}.bar-row{display:grid;grid-template-columns:80px 1fr 90px;gap:12px;align-items:center;font-size:12px;margin:15px 0}.bar-track{height:22px;background:#edf2f3;border-radius:4px;overflow:hidden}.bar-fill{height:100%;background:var(--gold)}.bar-fill.corp{background:var(--violet)}.stat-pair{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);padding:12px 0}.stat-pair span{font-size:13px}.stat-pair strong{font-size:22px}.pill{font-size:10px;color:var(--muted);border:1px solid var(--line);padding:3px 8px;border-radius:20px;white-space:nowrap}.print-only{display:none}
 @media(max-width:760px){body{font-size:14px}.wrap{padding:0 14px}.hero{padding:30px 0}.topbar{padding:11px 14px}.topbar .right{display:none}section{padding:23px 18px;margin-bottom:16px}.kpis{gap:10px;grid-template-columns:1fr;margin:20px 0}.kpi{padding:18px 21px}.kpi strong{font-size:32px}.two-col{grid-template-columns:1fr;gap:15px}.controls{grid-template-columns:1fr 1fr;gap:13px}.sim-kpis{grid-template-columns:1fr 1fr}.source-grid{grid-template-columns:1fr}.table-wrap{margin-left:0;margin-right:0}th,td{padding:11px 12px}td:first-child{min-width:140px}.chart-box{padding:14px 6px 8px}.chart .tick,.chart .axis-title{font-size:15px}.lead{font-size:15px}.big-number{font-size:29px}.formula{font-size:12px;padding:14px}.heat-cell{font-size:14px}.foot{padding-left:18px;padding-right:18px}}
@@ -11,7 +11,7 @@
 @media print{.sensitivity-controls,.heat-controls,.sensitivity-actions,.no-print{display:none!important}.sensitivity-kpis{grid-template-columns:repeat(4,1fr)}.sensitivity-kpis .kpi strong{font-size:20px}.param-editor{border:0;background:none;min-height:0;padding:0}.heat-button{height:48px}.live-badge{display:none}.param-table{min-width:0;width:100%;font-size:9px;table-layout:auto}.param-table th:nth-child(n){width:auto}.param-table td{font-size:9px;padding:7px}.sensitivity-table,.heat-map{min-width:0}.param-note{font-size:8px!important}.chart-box svg{min-width:0!important}.scenario-status{font-size:9px}.sensitivity-table td,.sensitivity-table th{font-size:9px;padding:7px}.heat-selection{break-inside:avoid}}
 .v2-summary code{overflow-wrap:anywhere;word-break:break-word}.live-section{min-width:0}.sensitivity-kpis .kpi{min-width:0}
 </style></head><body>
-<div class="topbar"><div><span>HOUSING × CAPITAL ALLOCATION</span><span class="right">INTERACTIVE SENSITIVITY · v2.1 · 2026.09.17</span></div></div>
+<div class="topbar"><div><span>HOUSING × CAPITAL ALLOCATION</span><span class="right">INTERACTIVE SENSITIVITY · v2.2 · 2026.09.18</span></div></div>
 <header class="hero"><div class="wrap"><div class="eyebrow">通常賃貸 / 借上社宅 / 購入</div><h1>住宅を「持つか」より、<br>どの条件なら「買う価値があるか」。</h1><p class="sub">年収5,000万円・家賃75万円の借上社宅を含め、同じ住戸・同じ資金で比較。静的・動的パラメータから「購入に必要な値上がり率」を逆算し、条件の境界を確かめる。</p><div class="tags"><span class="tag">ユーザー申告：年収5,000万円・家賃75万円</span><span class="tag">比較用仮定：購入2.5億円・10年保有</span><span class="tag">v2：連動パラメータ表・感応度・ヒートマップ</span></div><p class="hero-note">金額は特記なき限り名目・概算。実在住戸の査定や、勤務先の制度適法性・融資承認を判断する資料ではない。</p></div></header>
 <main class="wrap">
 <nav aria-label="目次"><a href="#sensitivity">1変数感応度</a><a href="#heatmap">2変数マップ</a><a href="#tornado">単独ストレス</a><a href="#parameters">パラメータ一覧</a><a href="#states">状態変数</a><a href="#simulator">入力フォーム</a><a href="#base-reference">初期ケース解説</a><a href="#method">計算方法</a><a href="#sources">出典</a></nav><noscript><style>.no-print button,.no-print input,.no-print select,.param-editor{pointer-events:none}#dash-status:after{content:" ｜ 固定スナップショット（JavaScript無効）"}</style><div class="noscript-warning">このビューアーではJavaScriptが無効です。表示は初期ケースの固定結果です。編集・再計算にはHTMLをJavaScript対応ブラウザーで開いてください。</div></noscript><section class="live-section" id="sensitivity">
@@ -23,7 +23,7 @@
 <p class="note" id="dash-payroll">現在の条件：社宅の実質家賃 <strong>34.1万円/月</strong>、初年度の税・社保メリット <strong>491万円/年</strong>。基準入力は年収・家賃の本人説明、その他は明示した仮定。</p>
 <div class="scenario-toolbar no-print"><span>初期ケースから1項目だけ変更</span><div class="buttons"><button class="secondary" data-quick="rate" type="button">金利 2.0%</button><button class="secondary" data-quick="corp" type="button">社宅 5年</button><button class="secondary" data-quick="invest" type="button">運用 5.0%</button><button class="secondary" data-quick="price" type="button">買値 2.2億円</button><button id="dash-reset" type="button">初期ケース</button><a class="text-link" href="#parameters">すべてのパラメータを編集 ↗</a></div></div>
 <div class="divider"></div>
-<div class="section-top"><h3 class="no-top">1つの条件を変える</h3><span class="pill">他の入力は現在値で固定</span></div>
+<div class="section-top"><h3 class="no-top">1つの条件を変える</h3><span class="pill">関連する概算値は連動して再計算</span></div>
 <div class="sensitivity-controls no-print"><div class="field"><label for="s-key">動かすパラメータ</label><select id="s-key"><option value="mortgage_rate" selected="">当初の住宅ローン金利</option><option value="invest">金融資産の税後利回り</option><option value="price">購入価格</option><option value="rent">同等住戸の月額家賃</option><option value="years">居住・比較期間</option><option value="corp_years">社宅を利用できる年数</option><option value="owner_cost">所有中の費用</option><option value="rent_growth">家賃増加率</option><option value="owner_growth">所有中費用の増加率</option><option value="ltv">LTV</option><option value="buy_cost">購入諸費用率</option><option value="sell_cost">売却費用率</option><option value="salary">社宅利用前の額面報酬</option><option value="sacrifice">家賃の税前振替率</option><option value="extra_repair">追加修繕の一時負担</option><option value="building_share">税務上の建物比率</option><option value="mortgage_years">ローン期間</option><option value="fringe">追加で課税される現物利益</option></select></div><div class="field"><label for="s-values" id="s-values-label">試す値（%／年）</label><input autocomplete="off" id="s-values" spellcheck="false" type="text" value="0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5"><small>カンマ区切りで2〜25個。現在値は自動で追加します。</small></div><div class="sensitivity-actions"><button id="s-redraw" type="button">感応度を更新</button><button class="secondary" id="s-default-grid" type="button">標準の試算幅</button></div></div>
 <div class="error" id="s-error" role="alert" style="display: none;"></div>
 <div class="sensitivity-explanation" id="s-explanation">金利変更なしなら全期間一定。変更設定があるときは当初期間だけを変更。</div>
@@ -35,7 +35,7 @@
 <div class="section-top"><div><div class="sec-label">LIVE / TWO-PARAMETER MAP</div><h2>2つの条件を、同時に動かす。</h2></div><span class="live-badge">連動計算</span></div>
 <p class="lead">表の数字は <strong>必要な年率価格変化 g*</strong>。セルを選ぶと詳細が表示され、その組み合わせを現在の設定に反映できます。</p>
 <div class="heat-controls no-print"><div class="field"><label for="h-preset">比較する組み合わせ</label><select id="h-preset"><option value="rates" selected="">ローン金利 × 運用利回り</option><option value="price_rent">購入価格 × 家賃</option><option value="duration">居住期間 × 社宅利用期間</option></select></div><div class="field"><label for="h-mode">表示する分岐率</label><select id="h-mode"><option value="corp" selected="">購入 vs 借上社宅</option><option value="normal">購入 vs 通常賃貸</option><option value="gap">社宅による上乗せ幅（pp）</option></select></div></div>
-<p class="note" id="h-note">表示：購入 vs 借上社宅 の g*（年率）。その他の入力は現在値で固定。</p>
+<p class="note" id="h-note">表示：購入 vs 借上社宅 の g*（年率）。独立入力は固定し、選択した連動値は再計算。</p>
 <div id="h-map"><div class="table-wrap" tabindex="0" role="region" aria-label="横にスクロールできるデータ表"><table class="heat-map"><thead><tr><th scope="col"><span>金融資産の税後利回り ↓<br>当初の住宅ローン金利 →</span></th><th scope="col">0<br><small>%／年</small></th><th scope="col">1<br><small>%／年</small></th><th scope="col">1.50<br><small>%／年</small></th><th scope="col">2<br><small>%／年</small></th><th scope="col">2.50<br><small>%／年</small></th><th scope="col">3<br><small>%／年</small></th><th scope="col">4<br><small>%／年</small></th></tr></thead><tbody><tr><td class="row-head">0 %／年</td><td style="background:rgba(121,86,170,0.0250)"><button type="button" class="heat-button" data-hi="0" data-hj="0" aria-current="false" title="金融資産の税後利回り 0 %／年 / 当初の住宅ローン金利 0 %／年">+0.24%</button></td><td style="background:rgba(121,86,170,0.0585)"><button type="button" class="heat-button" data-hi="0" data-hj="1" aria-current="false" title="金融資産の税後利回り 0 %／年 / 当初の住宅ローン金利 1 %／年">+1.01%</button></td><td style="background:rgba(121,86,170,0.0750)"><button type="button" class="heat-button" data-hi="0" data-hj="2" aria-current="false" title="金融資産の税後利回り 0 %／年 / 当初の住宅ローン金利 1.50 %／年">+1.39%</button></td><td style="background:rgba(121,86,170,0.0942)"><button type="button" class="heat-button" data-hi="0" data-hj="3" aria-current="false" title="金融資産の税後利回り 0 %／年 / 当初の住宅ローン金利 2 %／年">+1.84%</button></td><td style="background:rgba(121,86,170,0.1140)"><button type="button" class="heat-button" data-hi="0" data-hj="4" aria-current="false" title="金融資産の税後利回り 0 %／年 / 当初の住宅ローン金利 2.50 %／年">+2.29%</button></td><td style="background:rgba(121,86,170,0.1333)"><button type="button" class="heat-button" data-hi="0" data-hj="5" aria-current="false" title="金融資産の税後利回り 0 %／年 / 当初の住宅ローン金利 3 %／年">+2.74%</button></td><td style="background:rgba(121,86,170,0.1704)"><button type="button" class="heat-button" data-hi="0" data-hj="6" aria-current="false" title="金融資産の税後利回り 0 %／年 / 当初の住宅ローン金利 4 %／年">+3.59%</button></td></tr><tr><td class="row-head">1 %／年</td><td style="background:rgba(121,86,170,0.0365)"><button type="button" class="heat-button" data-hi="1" data-hj="0" aria-current="false" title="金融資産の税後利回り 1 %／年 / 当初の住宅ローン金利 0 %／年">+0.51%</button></td><td style="background:rgba(121,86,170,0.0703)"><button type="button" class="heat-button" data-hi="1" data-hj="1" aria-current="false" title="金融資産の税後利回り 1 %／年 / 当初の住宅ローン金利 1 %／年">+1.28%</button></td><td style="background:rgba(121,86,170,0.0889)"><button type="button" class="heat-button" data-hi="1" data-hj="2" aria-current="false" title="金融資産の税後利回り 1 %／年 / 当初の住宅ローン金利 1.50 %／年">+1.71%</button></td><td style="background:rgba(121,86,170,0.1092)"><button type="button" class="heat-button" data-hi="1" data-hj="3" aria-current="false" title="金融資産の税後利回り 1 %／年 / 当初の住宅ローン金利 2 %／年">+2.18%</button></td><td style="background:rgba(121,86,170,0.1290)"><button type="button" class="heat-button" data-hi="1" data-hj="4" aria-current="false" title="金融資産の税後利回り 1 %／年 / 当初の住宅ローン金利 2.50 %／年">+2.64%</button></td><td style="background:rgba(121,86,170,0.1484)"><button type="button" class="heat-button" data-hi="1" data-hj="5" aria-current="false" title="金融資産の税後利回り 1 %／年 / 当初の住宅ローン金利 3 %／年">+3.09%</button></td><td style="background:rgba(121,86,170,0.1857)"><button type="button" class="heat-button" data-hi="1" data-hj="6" aria-current="false" title="金融資産の税後利回り 1 %／年 / 当初の住宅ローン金利 4 %／年">+3.95%</button></td></tr><tr><td class="row-head">3 %／年</td><td style="background:rgba(121,86,170,0.0619)"><button type="button" class="heat-button" data-hi="2" data-hj="0" aria-current="false" title="金融資産の税後利回り 3 %／年 / 当初の住宅ローン金利 0 %／年">+1.09%</button></td><td style="background:rgba(121,86,170,0.1004)"><button type="button" class="heat-button" data-hi="2" data-hj="1" aria-current="false" title="金融資産の税後利回り 3 %／年 / 当初の住宅ローン金利 1 %／年">+1.98%</button></td><td style="background:rgba(121,86,170,0.1212)"><button type="button" class="heat-button" data-hi="2" data-hj="2" aria-current="true" title="金融資産の税後利回り 3 %／年 / 当初の住宅ローン金利 1.50 %／年">+2.46%<small>現在の設定</small></button></td><td style="background:rgba(121,86,170,0.1415)"><button type="button" class="heat-button" data-hi="2" data-hj="3" aria-current="false" title="金融資産の税後利回り 3 %／年 / 当初の住宅ローン金利 2 %／年">+2.93%</button></td><td style="background:rgba(121,86,170,0.1615)"><button type="button" class="heat-button" data-hi="2" data-hj="4" aria-current="false" title="金融資産の税後利回り 3 %／年 / 当初の住宅ローン金利 2.50 %／年">+3.39%</button></td><td style="background:rgba(121,86,170,0.1810)"><button type="button" class="heat-button" data-hi="2" data-hj="5" aria-current="false" title="金融資産の税後利回り 3 %／年 / 当初の住宅ローン金利 3 %／年">+3.84%</button></td><td style="background:rgba(121,86,170,0.2187)"><button type="button" class="heat-button" data-hi="2" data-hj="6" aria-current="false" title="金融資産の税後利回り 3 %／年 / 当初の住宅ローン金利 4 %／年">+4.71%</button></td></tr><tr><td class="row-head">5 %／年</td><td style="background:rgba(121,86,170,0.0935)"><button type="button" class="heat-button" data-hi="3" data-hj="0" aria-current="false" title="金融資産の税後利回り 5 %／年 / 当初の住宅ローン金利 0 %／年">+1.82%</button></td><td style="background:rgba(121,86,170,0.1362)"><button type="button" class="heat-button" data-hi="3" data-hj="1" aria-current="false" title="金融資産の税後利回り 5 %／年 / 当初の住宅ローン金利 1 %／年">+2.80%</button></td><td style="background:rgba(121,86,170,0.1570)"><button type="button" class="heat-button" data-hi="3" data-hj="2" aria-current="false" title="金融資産の税後利回り 5 %／年 / 当初の住宅ローン金利 1.50 %／年">+3.28%</button></td><td style="background:rgba(121,86,170,0.1774)"><button type="button" class="heat-button" data-hi="3" data-hj="3" aria-current="false" title="金融資産の税後利回り 5 %／年 / 当初の住宅ローン金利 2 %／年">+3.75%</button></td><td style="background:rgba(121,86,170,0.1974)"><button type="button" class="heat-button" data-hi="3" data-hj="4" aria-current="false" title="金融資産の税後利回り 5 %／年 / 当初の住宅ローン金利 2.50 %／年">+4.22%</button></td><td style="background:rgba(121,86,170,0.2170)"><button type="button" class="heat-button" data-hi="3" data-hj="5" aria-current="false" title="金融資産の税後利回り 5 %／年 / 当初の住宅ローン金利 3 %／年">+4.67%</button></td><td style="background:rgba(121,86,170,0.2550)"><button type="button" class="heat-button" data-hi="3" data-hj="6" aria-current="false" title="金融資産の税後利回り 5 %／年 / 当初の住宅ローン金利 4 %／年">+5.54%</button></td></tr></tbody></table></div></div>
 <div class="heat-scale"><span>薄い：必要上昇率・上乗せが小さい</span><span aria-hidden="true" class="heat-gradient"></span><span>濃い：大きい</span></div>
 <div aria-live="polite" class="heat-selection" id="h-selection">セルを選ぶと、通常賃貸・社宅の両方の分岐率と売却価格を確認できます。</div>
@@ -61,13 +61,13 @@
 </section>
 <section id="simulator"><div class="sec-label">07 / INTERACTIVE LAB<span class="initial-pill">現在の設定に連動</span></div><h2>条件を変えて、損益分岐を再計算。</h2><p class="lead">感応度・パラメータ一覧・この入力フォームは同じ設定に連動する。<strong>初期ケース解説だけは固定表示</strong>。家賃・購入価格は同等の住戸について入力する。</p><span class="sim-status" id="sim-status">再計算済み · 購入 2.50億円 / 家賃 75.0万円 / 10年</span><noscript><div class="callout warning">この閲覧環境ではJavaScriptが無効です。基準ケースの本文・表・図はそのまま読めます。条件変更はJavaScriptを有効にしたブラウザーで開いてください。</div></noscript>
 <div class="controls"><div class="field"><label for="f-price">購入価格（万円）</label><input data-param="price" id="f-price" inputmode="decimal" max="100000" min="1000" step="500" type="number" value="25000"></div><div class="field"><label for="f-rent">同等住戸の月額家賃（万円）</label><input data-param="rent" id="f-rent" inputmode="decimal" max="200" min="10" step="5" type="number" value="75"></div><div class="field"><label for="f-years">居住・比較期間（年）</label><input data-param="years" id="f-years" inputmode="decimal" max="35" min="1" step="1" type="number" value="10"></div><div class="field"><label for="f-growth">その住戸の価格変化率（年%）</label><input data-param="growth" id="f-growth" inputmode="decimal" max="10" min="-10" step="0.25" type="number" value="0"></div><div class="field"><label for="f-mortgage_rate">住宅ローン金利（年%）</label><input data-param="mortgage_rate" id="f-mortgage_rate" inputmode="decimal" max="15" min="0" step="0.1" type="number" value="1.5"></div><div class="field"><label for="f-invest">金融資産・税後利回り（名目年%）</label><input data-param="invest" id="f-invest" inputmode="decimal" max="10" min="0" step="0.5" type="number" value="3"></div><div class="field"><label for="f-corp_years">社宅が使える期間（年）</label><input data-param="corp_years" id="f-corp_years" inputmode="decimal" max="35" min="0" step="1" type="number" value="10"></div><div class="field"><label for="f-salary">社宅振替前の年収（万円）</label><input data-param="salary" id="f-salary" inputmode="decimal" max="10000" min="3000" step="100" type="number" value="5000"></div><div class="field"><label for="f-loan_type">元本の返済方法</label><select data-param="loan_type" id="f-loan_type"><option value="amortizing" selected="">元利均等返済</option><option value="io">全期間IO〈仮想比較〉</option></select></div></div>
-<details id="simAdvanced"><summary>詳細設定：取得費用・税・社宅条件・金利変更・修繕</summary><div class="detail-body"><div class="controls"><div class="field"><label for="f-ltv">LTV（%）</label><input data-param="ltv" id="f-ltv" inputmode="decimal" max="100" min="0" step="5" type="number" value="90"></div><div class="field"><label for="f-mortgage_years">ローン期間（年）</label><input data-param="mortgage_years" id="f-mortgage_years" inputmode="decimal" max="50" min="5" step="1" type="number" value="35"></div><div class="field"><label for="f-buy_cost">購入諸費用（価格の%）</label><input data-param="buy_cost" id="f-buy_cost" inputmode="decimal" max="15" min="0" step="0.5" type="number" value="7"></div><div class="field"><label for="f-sell_cost">売却費用（売値の%）</label><input data-param="sell_cost" id="f-sell_cost" inputmode="decimal" max="10" min="0" step="0.1" type="number" value="3.5"></div><div class="field"><label for="f-owner_cost">所有中費用（年・万円）</label><input data-param="owner_cost" id="f-owner_cost" inputmode="decimal" max="1000" min="0" step="10" type="number" value="250"></div><div class="field"><label for="f-rent_initial">賃貸初期費用（家賃の月数）</label><input data-param="rent_initial" id="f-rent_initial" inputmode="decimal" max="10" min="0" step="0.5" type="number" value="2"></div><div class="field"><label for="f-renewal">2年ごとの更新料（家賃の月数）</label><input data-param="renewal" id="f-renewal" inputmode="decimal" max="3" min="0" step="0.5" type="number" value="1"></div><div class="field"><label for="f-rent_growth">家賃増加率（年%）</label><input data-param="rent_growth" id="f-rent_growth" inputmode="decimal" max="10" min="-5" step="0.5" type="number" value="0"></div><div class="field"><label for="f-owner_growth">所有中費用増加率（年%）</label><input data-param="owner_growth" id="f-owner_growth" inputmode="decimal" max="10" min="-5" step="0.5" type="number" value="0"></div><div class="field"><label for="f-social">通常・購入の社会保険料（年・万円）</label><input data-param="social" id="f-social" inputmode="decimal" max="500" min="0" step="10" type="number" value="150"></div><div class="field"><label for="f-social_corp">社宅利用時の社会保険料（年・万円）</label><input data-param="social_corp" id="f-social_corp" inputmode="decimal" max="500" min="0" step="10" type="number" value="150"></div><div class="field"><label for="f-other_deduction">その他の所得控除（年・万円）</label><input data-param="other_deduction" id="f-other_deduction" inputmode="decimal" max="500" min="0" step="10" type="number" value="0"></div><div class="field"><label for="f-sacrifice">家賃の税前振替率（%）</label><input data-param="sacrifice" id="f-sacrifice" inputmode="decimal" max="100" min="0" step="5" type="number" value="100"></div><div class="field"><label for="f-cap">税前振替の上限（月・万円、0=なし）</label><input data-param="cap" id="f-cap" inputmode="decimal" max="200" min="0" step="5" type="number" value="0"></div><div class="field"><label for="f-fringe">別途課税される現物利益（月・万円）</label><input data-param="fringe" id="f-fringe" inputmode="decimal" max="50" min="0" step="1" type="number" value="0"></div><div class="field"><label for="f-building_share">取得価格の建物比率（%）</label><input data-param="building_share" id="f-building_share" inputmode="decimal" max="100" min="0" step="5" type="number" value="30"></div><div class="field"><label for="f-basis_cost">税務取得費に入れる購入費用（価格の%）</label><input data-param="basis_cost" id="f-basis_cost" inputmode="decimal" max="15" min="0" step="0.5" type="number" value="4"></div><div class="field"><label for="f-deduction_sale">売却益の特別控除（万円）</label><input data-param="deduction_sale" id="f-deduction_sale" inputmode="decimal" max="3000" min="0" step="1000" type="number" value="3000"></div><div class="field"><label for="f-step_year">金利変更までの年数（0=なし）</label><input data-param="step_year" id="f-step_year" inputmode="decimal" max="34" min="0" step="1" type="number" value="0"></div><div class="field"><label for="f-step_rate">変更後のローン金利（年%）</label><input data-param="step_rate" id="f-step_rate" inputmode="decimal" max="15" min="0" step="0.1" type="number" value="3"></div><div class="field"><label for="f-extra_repair">追加修繕一時負担（万円）</label><input data-param="extra_repair" id="f-extra_repair" inputmode="decimal" max="5000" min="0" step="100" type="number" value="0"></div><div class="field"><label for="f-repair_year">追加修繕の支払年</label><input data-param="repair_year" id="f-repair_year" inputmode="decimal" max="35" min="1" step="1" type="number" value="8"></div><div class="field check"><input checked="" data-param="sale_tax" id="f-sale_tax" type="checkbox"><label for="f-sale_tax">売却税を算入する</label></div><div class="field check"><input checked="" data-param="reduced_long" id="f-reduced_long" type="checkbox"><label for="f-reduced_long">11年目以降は10年超軽減を適用〈要件を満たす仮定〉</label></div></div><p class="note">税前振替率100%では家賃全額が給与から振り替わる。例えば90%なら残り10%は税引後で本人負担。現物利益は給与課税だけに加算し、現金収入には加算しない。更新料・初期費用は両賃貸方式とも税引後負担のまま。</p></div></details>
+<details id="simAdvanced"><summary>詳細設定：社保と保有費用の概算・社宅条件・価格予想・税・金利変更</summary><div class="detail-body"><div class="controls"><div class="field"><label for="f-ltv">LTV（%）</label><input data-param="ltv" id="f-ltv" inputmode="decimal" max="100" min="0" step="5" type="number" value="90"></div><div class="field"><label for="f-mortgage_years">ローン期間（年）</label><input data-param="mortgage_years" id="f-mortgage_years" inputmode="decimal" max="50" min="5" step="1" type="number" value="35"></div><div class="field"><label for="f-buy_cost">購入諸費用（価格の%）</label><input data-param="buy_cost" id="f-buy_cost" inputmode="decimal" max="15" min="0" step="0.5" type="number" value="7"></div><div class="field"><label for="f-sell_cost">売却費用（売値の%）</label><input data-param="sell_cost" id="f-sell_cost" inputmode="decimal" max="10" min="0" step="0.1" type="number" value="3.5"></div><div class="field"><label for="f-owner_cost">所有中費用（年・万円）</label><input data-param="owner_cost" id="f-owner_cost" inputmode="decimal" max="1000" min="0" step="10" type="number" value="250"></div><div class="field"><label for="f-rent_initial">賃貸初期費用（家賃の月数）</label><input data-param="rent_initial" id="f-rent_initial" inputmode="decimal" max="10" min="0" step="0.5" type="number" value="2"></div><div class="field"><label for="f-renewal">2年ごとの更新料（家賃の月数）</label><input data-param="renewal" id="f-renewal" inputmode="decimal" max="3" min="0" step="0.5" type="number" value="1"></div><div class="field"><label for="f-rent_growth">家賃増加率（年%）</label><input data-param="rent_growth" id="f-rent_growth" inputmode="decimal" max="10" min="-5" step="0.5" type="number" value="0"></div><div class="field"><label for="f-owner_growth">所有中費用増加率（年%）</label><input data-param="owner_growth" id="f-owner_growth" inputmode="decimal" max="10" min="-5" step="0.5" type="number" value="0"></div><div class="field"><label for="f-social">通常・購入の社会保険料（年・万円）</label><input data-param="social" id="f-social" inputmode="decimal" max="500" min="0" step="10" type="number" value="150"></div><div class="field"><label for="f-social_corp">社宅利用時の社会保険料（年・万円）</label><input data-param="social_corp" id="f-social_corp" inputmode="decimal" max="500" min="0" step="10" type="number" value="150"></div><div class="field"><label for="f-other_deduction">その他の所得控除（年・万円）</label><input data-param="other_deduction" id="f-other_deduction" inputmode="decimal" max="500" min="0" step="10" type="number" value="0"></div><div class="field"><label for="f-sacrifice">家賃の税前振替率（%）</label><input data-param="sacrifice" id="f-sacrifice" inputmode="decimal" max="100" min="0" step="5" type="number" value="100"></div><div class="field"><label for="f-cap">税前振替の上限（月・万円、0=なし）</label><input data-param="cap" id="f-cap" inputmode="decimal" max="200" min="0" step="5" type="number" value="0"></div><div class="field"><label for="f-fringe">別途課税される現物利益（月・万円）</label><input data-param="fringe" id="f-fringe" inputmode="decimal" max="50" min="0" step="1" type="number" value="0"></div><div class="field"><label for="f-building_share">取得価格の建物比率（%）</label><input data-param="building_share" id="f-building_share" inputmode="decimal" max="100" min="0" step="5" type="number" value="30"></div><div class="field"><label for="f-basis_cost">税務取得費に入れる購入費用（価格の%）</label><input data-param="basis_cost" id="f-basis_cost" inputmode="decimal" max="15" min="0" step="0.5" type="number" value="4"></div><div class="field"><label for="f-deduction_sale">売却益の特別控除（万円）</label><input data-param="deduction_sale" id="f-deduction_sale" inputmode="decimal" max="3000" min="0" step="1000" type="number" value="3000"></div><div class="field"><label for="f-step_year">金利変更までの年数（0=なし）</label><input data-param="step_year" id="f-step_year" inputmode="decimal" max="34" min="0" step="1" type="number" value="0"></div><div class="field"><label for="f-step_rate">変更後のローン金利（年%）</label><input data-param="step_rate" id="f-step_rate" inputmode="decimal" max="15" min="0" step="0.1" type="number" value="3"></div><div class="field"><label for="f-extra_repair">追加修繕一時負担（万円）</label><input data-param="extra_repair" id="f-extra_repair" inputmode="decimal" max="5000" min="0" step="100" type="number" value="0"></div><div class="field"><label for="f-repair_year">追加修繕の支払年</label><input data-param="repair_year" id="f-repair_year" inputmode="decimal" max="35" min="1" step="1" type="number" value="8"></div><div class="field check"><input checked="" data-param="sale_tax" id="f-sale_tax" type="checkbox"><label for="f-sale_tax">売却税を算入する</label></div><div class="field check"><input checked="" data-param="reduced_long" id="f-reduced_long" type="checkbox"><label for="f-reduced_long">11年目以降は10年超軽減を適用〈要件を満たす仮定〉</label></div></div><p class="note">税前振替率100%では家賃全額が給与から振り替わる。例えば90%なら残り10%は税引後で本人負担。現物利益は給与課税だけに加算し、現金収入には加算しない。更新料・初期費用は両賃貸方式とも税引後負担のまま。</p></div></details>
 <div class="buttons"><button id="recalculate" type="button">再計算</button><button class="secondary" id="reset" type="button">個人ケースに戻す</button><button class="secondary" id="previous" type="button">前回の1億円・家賃30万円</button><button class="secondary" id="csv" type="button">月次データCSV</button><button class="secondary" id="save-settings" type="button">設定を保存</button></div>
 <div class="error" id="sim-error" role="alert" style="display: none;"></div>
 <div aria-live="polite" id="sim-results" style="opacity: 1;"><div class="sim-kpis"><div class="kpi"><span>適用初年度の実質家賃</span><strong id="sim-rent">34.1万円</strong><small>月額・更新料を除く</small></div><div class="kpi purple"><span>初年度の社宅メリット</span><strong id="sim-tax">491万円</strong><small>年間・社会保険差も含む</small></div><div class="kpi navy"><span>購入 vs 社宅：分岐売値</span><strong id="sim-be-price">3.187億円</strong><small id="sim-be-period">10年後の売却価格</small></div><div class="kpi purple"><span>必要な年率価格変化</span><strong id="sim-be-growth">+2.46%</strong><small>購入 vs 社宅</small></div></div><div class="callout" id="sim-verdict"><strong>現在の仮定では、借上社宅が購入を約6,059万円上回ります。</strong><p>住戸価格 +0.00% / 年、比較期間 10年、社宅適用 10年。通常賃貸との比較は購入側 −341万円。</p></div><div id="sim-table"><div class="table-wrap"><table><thead><tr><th>10年後の比較</th><th>購入</th><th>通常賃貸</th><th>借上社宅</th></tr></thead><tbody><tr><td>共通の初期資金</td><td>4,250万円</td><td>4,250万円</td><td>4,250万円</td></tr><tr><td>初期の住居支出</td><td>4,250万円</td><td>150万円</td><td>150万円</td></tr><tr><td>初年度の通常月負担</td><td>89.7万円</td><td>75.0万円</td><td>34.1万円</td></tr><tr><td>購入側の最終売値</td><td>2.500億円</td><td>—</td><td>—</td></tr><tr><td>売却税 / 残債</td><td>0万円 / 17,226万円</td><td>—</td><td>—</td></tr><tr><td>最終金融資産</td><td>281万円</td><td>7,521万円</td><td>13,239万円</td></tr><tr><td>最終比較用純資産</td><td><strong>7,180万円</strong></td><td><strong>7,521万円</strong></td><td><strong>13,239万円</strong></td></tr><tr><td>購入と互角の売値</td><td>—</td><td>2.535億円</td><td>3.187億円</td></tr><tr><td>必要な住戸の年率価格変化</td><td>—</td><td>+0.14%</td><td>+2.46%</td></tr></tbody></table></div></div><div class="note" id="sim-thresholds">将来売値 2.500億円 を固定した分岐買値：2.020億円。 住戸の年率価格変化 +0.00% を固定した分岐買値：0.710億円。 一定金利0%でも購入は社宅を下回る。</div><div class="chart-box" id="sim-plot"><div class="legend"><span class="rent">購入 − 通常賃貸</span><span class="corp">購入 − 借上社宅</span></div><svg class="chart" viewBox="0 0 940 355" role="img" aria-label="入力に基づく損益分岐チャート"><line class="grid" x1="88" x2="912" y1="293" y2="293"></line><text class="tick" x="78" y="297" text-anchor="end">-14,076</text><line class="grid" x1="88" x2="912" y1="240.39999999999998" y2="240.39999999999998"></line><text class="tick" x="78" y="244.39999999999998" text-anchor="end">-7,796</text><line class="grid" x1="88" x2="912" y1="187.79999999999995" y2="187.79999999999995"></line><text class="tick" x="78" y="191.79999999999995" text-anchor="end">-1,517</text><line class="grid" x1="88" x2="912" y1="135.2" y2="135.2"></line><text class="tick" x="78" y="139.2" text-anchor="end">4,762</text><line class="grid" x1="88" x2="912" y1="82.6" y2="82.6"></line><text class="tick" x="78" y="86.6" text-anchor="end">11,041</text><line class="grid" x1="88" x2="912" y1="30" y2="30"></line><text class="tick" x="78" y="34" text-anchor="end">17,320</text><line class="grid zero" x1="88" x2="912" y1="175.08980091659848" y2="175.08980091659848"></line><text class="tick" x="88" y="326" text-anchor="middle">-3</text><text class="tick" x="179.55555555555554" y="326" text-anchor="middle">-2</text><text class="tick" x="271.1111111111111" y="326" text-anchor="middle">-1</text><text class="tick" x="362.66666666666663" y="326" text-anchor="middle">0</text><text class="tick" x="454.22222222222223" y="326" text-anchor="middle">1</text><text class="tick" x="545.7777777777778" y="326" text-anchor="middle">2</text><text class="tick" x="637.3333333333333" y="326" text-anchor="middle">3</text><text class="tick" x="728.8888888888889" y="326" text-anchor="middle">4</text><text class="tick" x="820.4444444444445" y="326" text-anchor="middle">5</text><text class="tick" x="912" y="326" text-anchor="middle">6</text><polyline class="series rent" points="88.00,231.01 100.88,228.84 113.75,226.64 126.63,224.40 139.50,222.14 152.38,219.85 165.25,217.53 178.13,215.18 191.00,212.80 203.88,210.39 216.75,207.94 229.63,205.47 242.50,202.96 255.38,200.42 268.25,197.85 281.13,195.24 294.00,192.60 306.88,189.93 319.75,187.23 332.63,184.48 345.50,181.71 358.38,178.89 371.25,176.05 384.13,173.16 397.00,170.24 409.88,167.28 422.75,164.29 435.63,161.26 448.50,158.18 461.38,155.07 474.25,151.92 487.13,148.73 500.00,145.59 512.88,142.99 525.75,140.35 538.63,137.68 551.50,134.97 564.38,132.23 577.25,129.46 590.13,126.66 603.00,123.81 615.88,120.94 628.75,118.02 641.63,115.07 654.50,112.09 667.38,109.07 680.25,106.01 693.13,102.91 706.00,99.78 718.88,96.60 731.75,93.39 744.63,90.14 757.50,86.85 770.38,83.52 783.25,80.14 796.13,76.73 809.00,73.28 821.88,69.78 834.75,66.24 847.63,62.66 860.50,59.03 873.38,55.36 886.25,51.65 899.13,47.89 912.00,44.09"></polyline><polyline class="series corp" points="88.00,278.91 100.88,276.74 113.75,274.53 126.63,272.30 139.50,270.04 152.38,267.75 165.25,265.43 178.13,263.08 191.00,260.70 203.88,258.28 216.75,255.84 229.63,253.36 242.50,250.86 255.38,248.32 268.25,245.75 281.13,243.14 294.00,240.50 306.88,237.83 319.75,235.12 332.63,232.38 345.50,229.60 358.38,226.79 371.25,223.94 384.13,221.06 397.00,218.14 409.88,215.18 422.75,212.19 435.63,209.15 448.50,206.08 461.38,202.97 474.25,199.82 487.13,196.63 500.00,193.49 512.88,190.88 525.75,188.25 538.63,185.57 551.50,182.87 564.38,180.13 577.25,177.36 590.13,174.55 603.00,171.71 615.88,168.83 628.75,165.92 641.63,162.97 654.50,159.99 667.38,156.96 680.25,153.91 693.13,150.81 706.00,147.67 718.88,144.50 731.75,141.29 744.63,138.04 757.50,134.74 770.38,131.41 783.25,128.04 796.13,124.63 809.00,121.17 821.88,117.68 834.75,114.14 847.63,110.55 860.50,106.93 873.38,103.26 886.25,99.55 899.13,95.79 912.00,91.99"></polyline><line x1="362.66666666666663" x2="362.66666666666663" y1="30" y2="293" stroke="#9eafb5" stroke-dasharray="3 5"></line><text class="tick" x="369.66666666666663" y="43">現在の設定 +0.00%</text><text class="axis-title" x="88" y="17">購入 − 賃貸の最終純資産差（万円）</text><text class="axis-title" x="912" y="352" text-anchor="end">その住戸の年率価格変化率（%）</text></svg></div><div class="note" id="sim-warning">給与課税・住民税は年次帰属で概算。税制・報酬は期間中固定し、住民税の徴収時差は未再現。</div></div>
 <p class="note">入力はブラウザー内だけで計算し、外部へ送信しない。変更後は「再計算」を押す。保存する設定ファイルとCSVには給与・家賃等の個人情報が含まれる。投資利回りは税後を入力するため、金融資産売却時に譲渡税を再度引かない。</p>
 </section>
-<details id="base-reference"><summary>初期ケースの解説 — 年収5,000万円・家賃75万円・購入2.5億円（固定表示）</summary><div class="detail-body"><div class="reference-warning">以下は前版の初期ケースを保存した参考資料です。入力変更には連動しません。現在の設定は上の感応度分析・パラメータ一覧・シミュレーターで確認してください。</div><div class="kpis"><div class="kpi"><span>借上社宅の実質家賃負担</span><strong>34.1万円<span> / 月</span></strong><small>額面家賃75万円。更新料・初期費用は別。社会保険料は利用前後とも年150万円と仮定。</small></div><div class="kpi purple"><span>年間の税負担減少</span><strong>491万円<span> / 年</span></strong><small>年収5,000万円 → 4,100万円。所得税の40%・45%の境目をまたいで計算。</small></div><div class="kpi navy"><span>購入が社宅と互角になる価格変化率</span><strong>+2.46%<span> / 年</span></strong><small>10年後の分岐売値 3.187億円。通常賃貸だけなら +0.14% / 年。</small></div></div><section id="summary"><div class="sec-label">01 / DECISION FRAME</div><h2>借上社宅は、比較の出発点を大きく変える。</h2><p class="lead">このケースでは、購入によって節約できる家賃は年間900万円ではなく、<strong>実質約409万円</strong>。購入すると、住宅だけでなく<strong>年間約491万円の税メリットを手放す</strong>ことも評価する必要がある。</p>
+<details id="base-reference"><summary>初期ケースの解説 — 年収5,000万円・家賃75万円・購入2.5億円（固定表示）</summary><div class="detail-body"><div class="reference-warning">以下は前版の社会保険料を手入力した初期ケースを保存した参考資料です。入力変更には連動しません。現在の設定は上の感応度分析・パラメータ一覧・シミュレーターで確認してください。</div><div class="kpis"><div class="kpi"><span>借上社宅の実質家賃負担</span><strong>34.1万円<span> / 月</span></strong><small>額面家賃75万円。更新料・初期費用は別。社会保険料は利用前後とも年150万円と仮定。</small></div><div class="kpi purple"><span>年間の税負担減少</span><strong>491万円<span> / 年</span></strong><small>年収5,000万円 → 4,100万円。所得税の40%・45%の境目をまたいで計算。</small></div><div class="kpi navy"><span>購入が社宅と互角になる価格変化率</span><strong>+2.46%<span> / 年</span></strong><small>10年後の分岐売値 3.187億円。通常賃貸だけなら +0.14% / 年。</small></div></div><section id="summary"><div class="sec-label">01 / DECISION FRAME</div><h2>借上社宅は、比較の出発点を大きく変える。</h2><p class="lead">このケースでは、購入によって節約できる家賃は年間900万円ではなく、<strong>実質約409万円</strong>。購入すると、住宅だけでなく<strong>年間約491万円の税メリットを手放す</strong>ことも評価する必要がある。</p>
 <div class="two-col"><div class="card"><h3>通常賃貸と比べると</h3><p class="big-number">10年後 2.535億円</p><p>2.5億円で購入した住戸が、ほぼ横ばいで売れれば互角。必要な価格上昇は累計 1.4%。</p></div><div class="card"><h3>借上社宅と比べると</h3><p class="big-number purple">10年後 3.187億円</p><p>同じ条件でも、社宅が10年間続くなら必要な価格上昇は累計 <strong>27.5%</strong>。売却税も含む。</p></div></div>
 <div class="callout"><strong>価格横ばいなら、10年後は借上社宅が購入より約6,059万円有利。</strong><p>ただし「だから永久に賃貸が正解」ではない。安い取得価格、住戸価格の上昇、制度終了、低い保有費用などで逆転する。以下は、どの条件で逆転するかを見るための試算。</p></div>
 <p class="note">本レポートの数値はユーザー申告と明示した仮定による独自計算。税率・制度要件だけを公的資料で確認している。住宅価格や金融資産リターンの将来予測は置いていない。</p></section><section id="salary"><div class="sec-label">02 / PAYROLL &amp; TAX</div><h2>75万円の家賃が、家計には月約34万円の負担。</h2><p class="lead">社宅の家賃を「給与から払ったあと、さらに自分でも払う」と二重計上しない。反対に、会社が900万円を追加で負担する無料の福利厚生とも扱わない。</p>
@@ -105,15 +105,15 @@
 <p class="note">金利変更ケースは変更時に残存期間で返済額を再計算し、5年・125%ルールは適用しない。これは金利負担のストレスであり、特定銀行商品の再現ではない。IOは同金利・同費用という仮想商品で、満期元本は売却代金から返す。</p>
 <div class="callout purple"><strong>社宅を使いながら「後で買う」選択肢にも価値がある。</strong><p>この報告書は「今買ってN年後に売る」と「N年間借りる」の比較。社宅を数年使ってから購入する戦略は、将来の価格・金利・勤務先制度を観測して判断できる点が異なる。将来の買値を仮定していないため、そのオプション価値は数値に上乗せしていない。</p></div>
 <h3>投資としての有利さと、住まいの価値は別に考える</h3><p>購入には改装・居住継続など所有ならではの価値がある。一方で、売却流動性、管理組合の意思決定、修繕、災害の損失も抱える。このモデルはそれらに便宜的な金額をつけて結論を操作せず、<strong>「その住み心地のために、いくらの経済差を受け入れるか」</strong>を別の判断として残す。</p>
-</section></div></details><section id="method"><div class="sec-label">08 / METHODOLOGY &amp; LIMITS</div><h2>計算の構造と、実行前の確認事項。</h2><div class="v2-summary"><h3>v2で追加した分析と、継承した前提</h3><p>今回の追加は、編集可能な静的・動的パラメータ表、18種類の1変数感応度、3種類の2変数マップ、単独ストレス、状態変数一覧、設定読込・CSV出力です。v2.1では社宅利用期間の入力検証、月次CSVの売却税率・減価償却年数を修正しました。整数年の基準ケース6条件は原本と一致します。公開する BASE_PARAMS も画面の初期値（社宅10年・金利変更なし）に統一しました。</p><p>1変数感応度は指定した入力だけを変更し、借入額・返済額・税・残債・差額運用など従属する値を再計算します。購入価格を変えても、同じ住戸の家賃と年額所有費用は固定。居住年数を変えても社宅年数は固定し、実効年数は min(T, T_C) とします。従来の「保有期間ごとに社宅を全期間利用する」固定解説表とは別の問いです。</p><p>予想する住戸価格変化率 g_H は、損益分岐として求める g* の入力ではありません。g_H を変えた場合は予想売値・最終純資産差だけが変わります。Δg* はパーセントポイントで表示し、金融資産運用利回りと住戸価格上昇率をリスクが同一の利回りとして扱いません。</p><p>税務計算は高所得者向けの簡易モデルです。2026年の税率・特例を期間中固定し、実際の会社規程、本人負担、適用資格、将来税制、超高額の譲渡所得に係る追加課税を完全には判定しません。2026年9月17日に国税庁の所得税率・使用人社宅・自宅売却の2特例を再確認しています。<sup class="refs"><a href="#src-1">[1]</a><a href="#src-5">[5]</a><a href="#src-9">[9]</a><a href="#src-13">[13]</a></sup></p><p>分岐売値は0円〜取得価格の20倍で探索。範囲内に解がない場合は無理に数値を作らず表示します。「売値0円でも購入優位」は損益分岐点が存在しないケースとして区別。税務・ローン期間の入力範囲を外れるシナリオも対象外とします。</p><p>ブラウザーのコンソールでは <code>HousingSensitivity.evaluate(HousingUI.getCurrent())</code> や <code>HousingSensitivity.curve(HousingUI.getCurrent(), 'mortgage_rate', [0, 1, 1.5, 2, 3, 4])</code> で再現できます。curveの試す値は表示単位（ここでは%）、各シナリオ内のpは円・小数利率です。</p></div><details id="validation-notes"><summary>検算・動作確認</summary><div class="detail-body"><p class="note">初期ケースは前版と一致。条件を変えた1,238個の分岐点で、分岐売値における純資産差が1円未満となることを確認。社宅0年で通常賃貸と一致、比較期間を超える社宅年数は追加効果なし、予想価格変化率を変えてもg*は不変、IO満期超過と入力範囲外のエラー表示も確認しています。</p><p class="note">パラメータ表と入力フォームの双方向同期、18種類の1変数感応度、ヒートマップの2条件反映、CSV出力、設定JSONの保存・読込をブラウザーで確認。幅1440・768・390・375pxでページ全体の横はみ出しがなく、横長の表・グラフだけが内部でスクロールします。</p><p class="note">これは数値計算と画面動作の検証であり、勤務先の給与処理や税制の適用資格に対する税務監査ではありません。</p></div></details>
+</section></div></details><section id="method"><div class="sec-label">08 / METHODOLOGY &amp; LIMITS</div><h2>計算の構造と、実行前の確認事項。</h2><div class="v2-summary"><h3>v2で追加した分析と、継承した前提</h3><p>今回の追加は、編集可能な静的・動的パラメータ表、18種類の1変数感応度、3種類の2変数マップ、単独ストレス、状態変数一覧、設定読込・CSV出力です。v2.1では社宅利用期間の入力検証、月次CSVの売却税率・減価償却年数を修正しました。v2.2では社会保険料と保有費用の概算、任意の入力連動、旧設定の読込を追加しました。整数年の基準ケース6条件は原本と一致します。公開する BASE_PARAMS も画面の初期値（社宅10年・金利変更なし）に統一しました。</p><p>1変数感応度は指定した入力と選択中の連動値を変更し、借入額・返済額・税・残債・差額運用など従属する値を再計算します。購入価格を変えても同じ住戸の家賃は固定し、保有費用は概算モードなら買値の1%で再計算します。居住年数を変える際、社宅全期間モードなら社宅年数も連動します。手入力モードでは指定年数を維持し、実効年数は min(T, T_C) とします。従来の「保有期間ごとに社宅を全期間利用する」固定解説表とは別の問いです。</p><p>予想する住戸価格変化率 g_H は、損益分岐として求める g* の入力ではありません。g_H を変えた場合は予想売値・最終純資産差だけが変わります。Δg* はパーセントポイントで表示し、金融資産運用利回りと住戸価格上昇率をリスクが同一の利回りとして扱いません。</p><p>税務計算は高所得者向けの簡易モデルです。2026年の税率・特例を期間中固定し、実際の会社規程、本人負担、適用資格、将来税制、超高額の譲渡所得に係る追加課税を完全には判定しません。2026年9月17日に国税庁の所得税率・使用人社宅・自宅売却の2特例を再確認しています。<sup class="refs"><a href="#src-1">[1]</a><a href="#src-5">[5]</a><a href="#src-9">[9]</a><a href="#src-13">[13]</a></sup></p><p>分岐売値は0円〜取得価格の20倍で探索。範囲内に解がない場合は無理に数値を作らず表示します。「売値0円でも購入優位」は損益分岐点が存在しないケースとして区別。税務・ローン期間の入力範囲を外れるシナリオも対象外とします。</p><p>ブラウザーのコンソールでは <code>HousingSensitivity.evaluate(HousingUI.getCurrent())</code> や <code>HousingSensitivity.curve(HousingUI.getCurrent(), 'mortgage_rate', [0, 1, 1.5, 2, 3, 4])</code> で再現できます。curveの試す値は表示単位（ここでは%）、各シナリオ内のpは円・小数利率です。</p></div><details id="validation-notes"><summary>検算・動作確認</summary><div class="detail-body"><p class="note">初期ケースは前版と一致。条件を変えた1,238個の分岐点で、分岐売値における純資産差が1円未満となることを確認。社宅0年で通常賃貸と一致、比較期間を超える社宅年数は追加効果なし、予想価格変化率を変えてもg*は不変、IO満期超過と入力範囲外のエラー表示も確認しています。</p><p class="note">パラメータ表と入力フォームの双方向同期、18種類の1変数感応度、ヒートマップの2条件反映、CSV出力、設定JSONの保存・読込をブラウザーで確認。幅1440・768・390・375pxでページ全体の横はみ出しがなく、横長の表・グラフだけが内部でスクロールします。</p><p class="note">これは数値計算と画面動作の検証であり、勤務先の給与処理や税制の適用資格に対する税務監査ではありません。</p></div></details>
 <h3>1. 社宅の税効果を、家計キャッシュフローに変換</h3><div class="formula">G：社宅利用前の現金報酬　R：年間家賃<br>A：税前に振り替える家賃　V：別途課税される現物利益<br>S₀ / S₁：通常 / 社宅の社会保険料<br>T(給与, 保険料)：所得税・付加税・住民税の概算<br><br>通常賃貸後の手元資金 ＝ G − S₀ − T(G,S₀) − R<br>社宅利用後の手元資金 ＝ G − R − S₁ − T(G−A+V,S₁)<br><br>実質家賃負担 ＝ R − [T(G,S₀) − T(G−A+V,S₁)] + (S₁−S₀)</div>
-<p>額面給与の減額と家賃支出は別々に二重控除しない。会社負担分以外の家賃は本人が税引後で負担する。社会保険の現物給与評価は所得税の社宅評価とは別の仕組みであるため、社会保険の節約を自動的には織り込まない。<sup class="refs"><a href="#src-7">[7]</a></sup></p>
+<p>額面給与の減額と家賃支出は別々に二重控除しない。会社負担分以外の家賃は本人が税引後で負担する。社会保険料の概算は2026年度の東京・協会けんぽ、給与を12か月均等、賞与なしとして年収から計算する。社宅時も減額後の初年度の現金給与を基に概算し、その年額を比較期間中に固定する。家賃上昇に伴う年ごとの社保変化、社宅の現物給与評価、標準報酬改定の時差、個別の保険者条件は反映しない。明細の実額で上書きできる。<a href="https://www.kyoukaikenpo.or.jp/shibu/tokyo/public_relations/e-mail_magazine/473.html">協会けんぽ東京・2026年度保険料率</a>、<a href="https://www.nenkin.go.jp/service/kounen/hokenryo/hoshu/20150515-01.html">日本年金機構・標準報酬と保険料</a>、<a href="https://www.mhlw.go.jp/stf/newpage_71570.html">厚生労働省・雇用保険料率</a>を参照。<sup class="refs"><a href="#src-7">[7]</a></sup></p>
 <h3>2. 月次の同一予算で、金融資産を積み立てる</h3><div class="formula">Bₘ ＝ max(購入住居支出ₘ, 通常賃貸支出ₘ, 社宅実質支出ₘ)<br>金融資産ⱼ,ₘ ＝ 金融資産ⱼ,ₘ₋₁ × (1 + r / 12) + Bₘ − 住居支出ⱼ,ₘ<br><br>購入純資産 ＝ 売値 × (1 − 売却費用率) − 売却税 − 残債 + 金融資産<br>損益分岐売値 P*：購入純資産(P*) ＝ 比較先の金融資産<br>損益分岐年率 g* ＝ (P* / 購入価格)^(1 / 保有年数) − 1</div>
 <p>予算Bを十分大きい共通額に置くのは、資金不足をモデル上発生させず、同じ給与・生活消費にそろえるため。共通資産の絶対水準はBの取り方に依存するが、<strong>ケース間の純資産差は依存しない</strong>。実際にその予算を用意できるかは別途確認する。</p>
 <h3>3. 売却税・取得費のモデル</h3><p>購入費用7%のうち4%を税務取得費に入れ、残りは取得費に入れない仮定。土地・建物への費用配分も価格比率30%に比例させる。非業務用RC建物の取得費は「取得価額 × 0.9 × 0.015 × 経過年数」を差し引く。95%が限度。税務上の経過年数は6か月未満を切捨て、6か月以上を切上げる。価格成長・金融資産・ローンは実際の月数で計算する。<sup class="refs"><a href="#src-10">[10]</a></sup></p><div class="formula">課税譲渡益 ＝ max[0, 売値 − 売却費用 − 減価後取得費 − 3,000万円]<br><br>基準10年ケース：譲渡税率20.315%<br>保有5年以内のケース：39.63%<br>保有11年以上・特例適用：課税譲渡益6,000万円まで14.21%、超過分20.315%</div>
 <p>取得日を2026年9月17日とし、月次CSVも各月の17日に売却する仮定で、売却年1月1日の所有期間から長短を判定する。ちょうど5年後の売却は短期、ちょうど10年後では10年超軽減を使わない。3,000万円控除と10年超軽減は要件を満たす想定だが、実際の居住歴・過去の特例利用・売却相手等により変わる。<sup class="refs"><a href="#src-9">[9]</a><a href="#src-11">[11]</a><a href="#src-12">[12]</a><a href="#src-13">[13]</a><a href="#src-4">[4]</a></sup></p>
 <h3>4. 税制を将来に固定する仮定</h3><p>2026年確認の所得税・住民税・特例を計算期間に固定。2027年からは復興特別所得税の税率変更と防衛特別所得税が予定されるが、給与所得税に対する付加分の合計を2.1%としてモデル化する。将来の所得税改正や社宅制度の改定を予言しているわけではない。<sup class="refs"><a href="#src-1">[1]</a></sup></p>
-<p>基準ケースは社会保険料150万円、その他控除なし。ふるさと納税の返礼品価値、所得金額調整控除、外国税額控除、給与以外の総合課税所得、退職金・株式報酬の変動、高額売却益で影響し得る追加の高所得者課税などは未反映。所得税の課税所得は千円未満切捨て、税額の最終端数処理は簡略化している。</p>
+<p>折りたたみ式の前版の基準解説は社会保険料150万円、現在の初期設定は年収からの概算、その他控除なし。ふるさと納税の返礼品価値、所得金額調整控除、外国税額控除、給与以外の総合課税所得、退職金・株式報酬の変動、高額売却益で影響し得る追加の高所得者課税などは未反映。所得税の課税所得は千円未満切捨て、税額の最終端数処理は簡略化している。</p>
 <h3>5. 勤務先に確認する項目</h3>
 <div class="table-wrap"><table class=""><thead><tr><th>確認すること</th><th>このモデルへの影響</th></tr></thead><tbody><tr><td>社宅を使わないと、報酬枠5,000万円は全額現金給与になるか</td><td>購入側の反実仮想。ならない場合は比較の土台が変わる</td></tr><tr><td>税引後本人負担・課税現物利益が別にないか</td><td>初期値は0。ある場合は振替率や現物利益を修正</td></tr><tr><td>給与明細の4,100万円と源泉徴収票の支払金額が一致するか</td><td>現物利益の加算、賞与との相殺、税前・税後控除を確認</td></tr><tr><td>更新料・礼金・保証料・管理費も税前処理されるか</td><td>本モデルは家賃以外の賃貸費用を税引後負担とした</td></tr><tr><td>家賃上限・利用年数・退職時の期限・転籍や休職時の扱い</td><td>社宅の継続年数、上限、退出費用を変更</td></tr><tr><td>所得税法上「使用人」か「役員」か</td><td>役職名だけで判断せず、社宅課税の適用区分を確認 <sup class="refs"><a href="#src-5">[5]</a><a href="#src-6">[6]</a></sup></td></tr><tr><td>実際の社会保険料と現物給与評価</td><td>所得税とは別計算。2026年10月の住宅評価改定も確認 <sup class="refs"><a href="#src-7">[7]</a><a href="#src-14">[14]</a></sup></td></tr></tbody></table></div>
 <h3>6. この数字に含まれないもの</h3><p>災害・訴訟・管理不全の確率分布、物件の実査、賃料の成約実績、銀行の融資審査、賃貸借の個別解約条項、資産リターンの変動・相関、売却に要する期間、売却後の次の住居コストは未評価。価格変化率に経年による減価を含めるので、住宅価値の減価を別途費用として二重計上しない。税務上の取得費減額は、売却税を計算するためだけに別に使う。</p>
@@ -232,8 +232,8 @@ if(typeof module!=='undefined')module.exports=HousingModel;
 
 const BASE_PARAMS={"price": 250000000, "rent": 750000, "years": 10, "salary": 50000000, "social": 1500000, "social_corp": 1500000, "other_deduction": 0, "sacrifice": 1.0, "cap": 0, "fringe": 0, "corp_years": 10, "ltv": 0.9, "mortgage_rate": 0.015, "mortgage_years": 35, "loan_type": "amortizing", "buy_cost": 0.07, "sell_cost": 0.035, "owner_cost": 2500000, "rent_initial": 2.0, "renewal": 1.0, "growth": 0, "rent_growth": 0, "owner_growth": 0, "invest": 0.03, "building_share": 0.3, "basis_cost": 0.04, "deduction_sale": 30000000, "sale_tax": true, "reduced_long": true, "extra_repair": 0, "repair_year": 8, "step_year": 0, "step_rate": 0.03};</pre></div></details>
 </section>
-<section id="sources"><div class="sec-label">09 / PRIMARY SOURCES</div><h2>出典・前提の区別。</h2><p class="note">確認日：2026年9月17日。ユーザー申告は本会話、前回の1億円・家賃30万円は会話内の仮定。下記資料は制度・税率の根拠として用い、物件価格・運用利回り・将来の継続年数の根拠には用いていない。</p><div class="source-grid"><div class="source" id="src-1"><b>[1] 所得税の速算表・付加税</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2260.htm" rel="noopener noreferrer" target="_blank">国税庁 No.2260</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-2"><b>[2] 給与所得控除の上限</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm" rel="noopener noreferrer" target="_blank">国税庁 No.1410</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-3"><b>[3] 基礎控除の所得制限</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1199.htm" rel="noopener noreferrer" target="_blank">国税庁 No.1199</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-4"><b>[4] 住民税の所得割・前年所得・譲渡所得課税</b><a href="https://www.tax.metro.tokyo.lg.jp/kazei/life/kojin_ju" rel="noopener noreferrer" target="_blank">東京都主税局「個人住民税」</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-5"><b>[5] 使用人向け社宅の給与課税条件</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2597.htm" rel="noopener noreferrer" target="_blank">国税庁 No.2597</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-6"><b>[6] 役員向け社宅の別ルール</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2600.htm" rel="noopener noreferrer" target="_blank">国税庁 No.2600</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-7"><b>[7] 社会保険における現物給与の評価</b><a href="https://www.nenkin.go.jp/service/kounen/hokenryo/hoshu/20150511.html" rel="noopener noreferrer" target="_blank">日本年金機構「全国現物給与価額一覧表」</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-8"><b>[8] 中古住宅の住宅ローン控除・所得要件</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-3.htm" rel="noopener noreferrer" target="_blank">国税庁 No.1211-3</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-9"><b>[9] 自宅売却時の3,000万円特別控除</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3302.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3302</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-10"><b>[10] 非業務用RC建物の取得費・減価償却</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3261.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3261</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-11"><b>[11] 長期譲渡所得と1月1日の所有期間判定</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3208.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3208</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-12"><b>[12] 短期譲渡所得の税額</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3211.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3211</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-13"><b>[13] 10年超所有の自宅売却・軽減税率</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3305.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3305</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-14"><b>[14] 2026年10月の住宅現物給与評価の改定</b><a href="https://www.nenkin.go.jp/oshirase/taisetu/jigyosho/2026/202603/0319.html" rel="noopener noreferrer" target="_blank">日本年金機構・2026年3月19日公表</a><br><small>制度の適用条件は原文を確認。</small></div></div></section>
-</main><footer class="foot">PRIVATE SCENARIO REPORT · v2.1 · 2026.09.17<br>給与・家賃に関する個人情報を含む。計算・入力はブラウザー内で完結し、外部へ送信しない。比較計算であり、税務助言・融資承認・将来価値の保証ではない。現在の設定に連動する分析と、折りたたみ式の初期ケース解説を収録。</footer>
+<section id="sources"><div class="sec-label">09 / PRIMARY SOURCES</div><h2>出典・前提の区別。</h2><p class="note">税・社保の出典確認日：2026年9月18日。ユーザー申告は本会話、前回の1億円・家賃30万円は会話内の仮定。下記資料は制度・税率の根拠として用い、物件価格・運用利回り・将来の継続年数の根拠には用いていない。</p><div class="source-grid"><div class="source" id="src-1"><b>[1] 所得税の速算表・付加税</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2260.htm" rel="noopener noreferrer" target="_blank">国税庁 No.2260</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-2"><b>[2] 給与所得控除の上限</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm" rel="noopener noreferrer" target="_blank">国税庁 No.1410</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-3"><b>[3] 基礎控除の所得制限</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1199.htm" rel="noopener noreferrer" target="_blank">国税庁 No.1199</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-4"><b>[4] 住民税の所得割・前年所得・譲渡所得課税</b><a href="https://www.tax.metro.tokyo.lg.jp/kazei/life/kojin_ju" rel="noopener noreferrer" target="_blank">東京都主税局「個人住民税」</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-5"><b>[5] 使用人向け社宅の給与課税条件</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2597.htm" rel="noopener noreferrer" target="_blank">国税庁 No.2597</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-6"><b>[6] 役員向け社宅の別ルール</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2600.htm" rel="noopener noreferrer" target="_blank">国税庁 No.2600</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-7"><b>[7] 社会保険における現物給与の評価</b><a href="https://www.nenkin.go.jp/service/kounen/hokenryo/hoshu/20150511.html" rel="noopener noreferrer" target="_blank">日本年金機構「全国現物給与価額一覧表」</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-8"><b>[8] 中古住宅の住宅ローン控除・所得要件</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-3.htm" rel="noopener noreferrer" target="_blank">国税庁 No.1211-3</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-9"><b>[9] 自宅売却時の3,000万円特別控除</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3302.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3302</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-10"><b>[10] 非業務用RC建物の取得費・減価償却</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3261.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3261</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-11"><b>[11] 長期譲渡所得と1月1日の所有期間判定</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3208.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3208</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-12"><b>[12] 短期譲渡所得の税額</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3211.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3211</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-13"><b>[13] 10年超所有の自宅売却・軽減税率</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3305.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3305</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-14"><b>[14] 2026年10月の住宅現物給与評価の改定</b><a href="https://www.nenkin.go.jp/oshirase/taisetu/jigyosho/2026/202603/0319.html" rel="noopener noreferrer" target="_blank">日本年金機構・2026年3月19日公表</a><br><small>制度の適用条件は原文を確認。</small></div></div></section>
+</main><footer class="foot">PRIVATE SCENARIO REPORT · v2.2 · 2026.09.18<br>給与・家賃に関する個人情報を含む。計算・入力はブラウザー内で完結し、外部へ送信しない。比較計算であり、税務助言・融資承認・将来価値の保証ではない。現在の設定に連動する分析と、折りたたみ式の初期ケース解説を収録。</footer>
 <script>
 'use strict';
 /* Deterministic monthly cash-flow model. All monetary values in JPY.
@@ -357,14 +357,14 @@ const BASE_PARAMS={"price": 250000000, "rent": 750000, "years": 10, "salary": 50
 const HousingSensitivity = (() => {
  const M=HousingModel;
  const specs=[
-  ['price','dynamic','物件','購入価格','P','億円',1e8, .1,10,.01,'同じ住戸の家賃・所有中費用は固定。頭金、借入、取得費は価格に連動。','仮定'],
+  ['price','dynamic','物件','購入価格','P','億円',1e8, .1,10,.01,'家賃は固定。保有費用は概算モードなら買値の1%に連動。頭金、借入、取得費も再計算。','仮定'],
   ['rent','dynamic','賃貸','同等住戸の月額家賃','R','万円／月',1e4,10,200,1,'購入価格は固定。初期費用、更新料、社宅の税前振替額は家賃に連動。','本人申告'],
-  ['years','dynamic','期間','居住・比較期間','T','年',1,1,35,1,'最後に売却。社宅の入力年数は固定し、実効適用年数は両者の短い方。','仮定'],
+  ['years','dynamic','期間','居住・比較期間','T','年',1,1,35,1,'最後に売却。社宅全期間モードなら社宅年数も連動し、それ以外は指定年数を維持。','仮定'],
   ['growth','dynamic','判断用','予想する住戸価格変化率','g_H','%／年',.01,-10,10,.1,'最終純資産の評価用。g*を逆算するときの入力ではなく、g*との比較対象。','予想・仮定'],
   ['mortgage_rate','dynamic','融資','当初の住宅ローン金利','r_M','%／年',.01,0,15,.1,'金利変更なしなら全期間一定。変更設定があるときは当初期間だけを変更。','仮定'],
   ['invest','dynamic','資産運用','金融資産の税後利回り','r_F','%／年',.01,0,10,.5,'名目年率を12分割した月次複利。利回りの変動・損失確率は未モデル化。','仮定'],
   ['corp_years','dynamic','社宅','社宅を利用できる年数','T_C','年',1,0,35,1,'終了後は通常賃貸、額面報酬も元に戻る。失職・引越費用は別。','仮定'],
-  ['owner_cost','dynamic','購入','所有中の費用','C_O','万円／年',1e4,0,1000,10,'管理・修繕積立・税・保険等の合計。買値を変えても自動比例させない。','要実額'],
+  ['owner_cost','dynamic','購入','所有中の費用','C_O','万円／年',1e4,0,1000,10,'概算モードは購入価格の1%／年。管理・修繕積立・税・保険等の実額で上書き可能。','概算・要実額'],
   ['rent_growth','dynamic','賃貸','家賃増加率','g_R','%／年',.01,-5,10,.5,'年初に変更。税前振替率・上限に従って社宅側の税効果も再計算。','仮定'],
   ['owner_growth','dynamic','購入','所有中費用の増加率','g_C','%／年',.01,-5,10,.5,'年初に変更。臨時の追加修繕負担とは別計上。','仮定'],
   ['step_year','dynamic','金利経路','金利変更までの年数','T_r','年',1,0,34,1,'0なら変更なし。例えば5は6年目の開始時に変更。','仮定'],
@@ -375,8 +375,8 @@ const HousingSensitivity = (() => {
   ['sacrifice','static','社宅','家賃の税前振替率','a','%',.01,0,100,5,'残りは税引後本人負担。一般的な社宅非課税要件の判定とは別。','本人説明を仮定'],
   ['cap','static','社宅','税前振替の月額上限','A_max','万円／月',120000,0,200,5,'0は上限なし。内部では年額換算。会社規程は未確認。','要規程確認'],
   ['fringe','static','社宅','追加で課税される現物利益','V','万円／月',120000,0,50,1,'内部では年額換算。課税給与にだけ加算し、現金収入には加えない。','要明細確認'],
-  ['social','static','税・社保','通常・購入の社会保険料','S_0','万円／年',1e4,0,500,10,'制度から自動推計せず入力額を使う。給与明細の実額に置換。','要実額'],
-  ['social_corp','static','税・社保','社宅利用時の社会保険料','S_1','万円／年',1e4,0,500,10,'所得税の現物給与評価とは別。基準値は通常時と同額。','要実額'],
+  ['social','static','税・社保','通常・購入の社会保険料','S_0','万円／年',1e4,0,500,10,'例示値は東京・協会けんぽの年収概算。給与明細の実額で上書き可能。','概算・要実額'],
+  ['social_corp','static','税・社保','社宅利用時の社会保険料','S_1','万円／年',1e4,0,500,10,'社宅時給与から概算、通常時と同額、または実額入力を選択。現物報酬は概算に含めない。','概算・要実額'],
   ['other_deduction','static','税・社保','その他の所得控除','D','万円／年',1e4,0,500,10,'両ケース共通。所得税と住民税の控除差等は簡略化。','仮定'],
   ['ltv','static','融資','LTV','LTV','%',.01,0,100,5,'購入価格に対する借入割合。審査・担保評価は別途確認。','仮定'],
   ['mortgage_years','static','融資','ローン期間','T_M','年',1,5,50,1,'元利均等は満期に返済終了。IOは比較期間が満期を超えない範囲のみ。','仮定'],
@@ -483,15 +483,131 @@ const HousingSensitivity = (() => {
  return {meta,byKey,validate,evaluate,curve,stresses,grid,defaultValues};
 })();
 if(typeof module!=='undefined')module.exports=HousingSensitivity;
+
+// Resolve optional estimates and links before passing the familiar flat parameter set to the model.
+const HousingInputs=(() => {
+ const S=HousingSensitivity;
+ const modeOptions={
+  social:['manual','estimate'],
+  social_corp:['manual','estimate','same_as_normal'],
+  owner_cost:['manual','estimate'],
+  corp_years:['manual','full_residence'],
+  owner_growth:['manual','same_as_rent']
+ };
+ const manualModes=()=>Object.fromEntries(Object.keys(modeOptions).map(key=>[key,'manual']));
+ const validAges=['under40','40-64'];
+ const keys=Object.keys(BASE_PARAMS);
+ function create(parameters=BASE_PARAMS){
+  const values={};
+  for(const key of keys){
+   const value=parameters?.[key];
+   if(typeof value!==typeof BASE_PARAMS[key]||(typeof value==='number'&&!Number.isFinite(value)))throw new Error(key+'の値または型が不正です。');
+   values[key]=value;
+  }
+  return {values,modes:manualModes(),ageBand:'under40'};
+ }
+ function createDefault(){
+  const state=create();
+  state.modes.social='estimate';state.modes.social_corp='estimate';state.modes.owner_cost='estimate';
+  return state;
+ }
+ function setMode(state,key,mode){
+  if(!modeOptions[key]?.includes(mode))throw new Error('連動モードが不正です。');
+  return {...state,values:{...state.values},modes:{...state.modes,[key]:mode}};
+ }
+ function setAgeBand(state,ageBand){
+  if(!validAges.includes(ageBand))throw new Error('年齢区分が不正です。');
+  return {...state,values:{...state.values},modes:{...state.modes},ageBand};
+ }
+ function update(state,patch){
+  let next={...state,values:{...state.values},modes:{...state.modes}};
+  for(const [key,value] of Object.entries(patch)){
+   if(!keys.includes(key)||typeof value!==typeof BASE_PARAMS[key]||(typeof value==='number'&&!Number.isFinite(value)))throw new Error(key+'の値または型が不正です。');
+   next.values[key]=value;
+   if(modeOptions[key])next.modes[key]='manual';
+  }
+  return next;
+ }
+ function estimateSocial(gross,ageBand){
+  const monthly=Math.max(0,gross/12);
+  const care=ageBand==='40-64' ? .0162 : 0;
+  const health=12*Math.min(monthly,1390000)*(.0985+.0023+care)/2;
+  const pension=12*Math.min(monthly,650000)*.183/2;
+  return health+pension+Math.max(0,gross)*.005;
+ }
+ function resolve(state){
+  if(!state||!state.values||!state.modes||!validAges.includes(state.ageBand))throw new Error('設定の形式が不正です。');
+  for(const [key,options] of Object.entries(modeOptions))if(!options.includes(state.modes[key]))throw new Error(key+'の連動モードが不正です。');
+  const parameters=create(state.values).values;
+  const provenance=Object.fromEntries(keys.map(key=>[key,{mode:'manual',dependsOn:[]}]));
+  function assign(key,value,mode,dependsOn){parameters[key]=value;provenance[key]={mode,dependsOn};}
+  if(state.modes.social==='estimate')assign('social',estimateSocial(parameters.salary,state.ageBand),'estimate',['salary','ageBand']);
+  if(state.modes.social_corp==='estimate'){
+   const rentYear=parameters.rent*12;
+   const sacrificed=parameters.cap>0?Math.min(rentYear*parameters.sacrifice,parameters.cap):rentYear*parameters.sacrifice;
+   assign('social_corp',estimateSocial(parameters.salary-sacrificed,state.ageBand),'estimate',['salary','rent','sacrifice','cap','ageBand']);
+  } else if(state.modes.social_corp==='same_as_normal')assign('social_corp',parameters.social,'same_as_normal',['social']);
+  if(state.modes.owner_cost==='estimate')assign('owner_cost',parameters.price*.01,'estimate',['price']);
+  if(state.modes.corp_years==='full_residence')assign('corp_years',parameters.years,'full_residence',['years']);
+  if(state.modes.owner_growth==='same_as_rent')assign('owner_growth',parameters.rent_growth,'same_as_rent',['rent_growth']);
+  const error=S.validate(parameters);if(error)throw new Error(error);
+  return {parameters,provenance};
+ }
+ function scenario(state,patch,mode='linked'){
+  if(!['linked','independent'].includes(mode))throw new Error('試算モードが不正です。');
+  return update(mode==='independent'?create(resolve(state).parameters):state,patch);
+ }
+ function evaluate(state){
+  const {parameters,provenance}=resolve(state);
+  return {...S.evaluate(parameters),inputState:state,provenance};
+ }
+ function breakAtEntryPrice(state,keepExit){
+  const p=resolve(state).parameters;
+  const exit=p.price*Math.pow(1+p.growth,p.years);
+  const priceSpec=S.byKey.price,growthSpec=S.byKey.growth;
+  let lo=Math.max(p.price*.05,priceSpec.min*priceSpec.scale);
+  let hi=Math.min(p.price*4,priceSpec.max*priceSpec.scale);
+  if(keepExit){
+   lo=Math.max(lo,exit/Math.pow(1+growthSpec.max*growthSpec.scale,p.years)*(1+1e-10));
+   hi=Math.min(hi,exit/Math.pow(1+growthSpec.min*growthSpec.scale,p.years)*(1-1e-10));
+  }
+  if(lo>=hi)return null;
+  return HousingModel.bisect(price=>{
+   const growth=keepExit?Math.pow(exit/price,1/p.years)-1:p.growth;
+   return HousingModel.run(resolve(scenario(state,{price,growth})).parameters).wealth_diff_corp;
+  },lo,hi);
+ }
+ function breakPrice(state){return breakAtEntryPrice(state,false);}
+ function breakEntry(state){return breakAtEntryPrice(state,true);}
+ function serialize(state){
+  const {parameters}=resolve(state);
+  return JSON.stringify({model:'housing-input-state',schemaVersion:1,taxRuleSet:'jp-2026-fixed',units:'JPY and decimal rates',inputs:state,parameters},null,2);
+ }
+ function deserialize(document){
+  if(!document||typeof document!=='object')throw new Error('設定JSONが不正です。');
+  if(!document.model||document.model==='housing-tax-comparison-v2-2026-09-17')return create(document.parameters);
+  if(document.model!=='housing-input-state'||document.schemaVersion!==1||document.taxRuleSet!=='jp-2026-fixed')throw new Error('設定JSONの版が未対応です。');
+  const supplied=document.inputs;
+  if(!supplied||Object.keys(supplied.values||{}).length!==keys.length)throw new Error('入力設定が不足しています。');
+  const state=create(supplied.values);
+  for(const key of Object.keys(modeOptions))state.modes[key]=supplied.modes?.[key];
+  state.ageBand=supplied.ageBand;
+  const {parameters}=resolve(state);
+  if(!document.parameters||keys.some(key=>document.parameters[key]!==parameters[key]))throw new Error('保存済みの計算値が入力と一致しません。');
+  return state;
+ }
+ return {create,createDefault,setMode,setAgeBand,update,estimateSocial,resolve,scenario,evaluate,breakPrice,breakEntry,serialize,deserialize};
+})();
 </script><script>
 'use strict';
 if(typeof document!=='undefined')(()=>{
- const M=HousingModel, $=id=>document.getElementById(id);
+ const M=HousingModel,I=HousingInputs,$=id=>document.getElementById(id);
  const defaults={...BASE_PARAMS,corp_years:10,step_rate:.03};
  const moneyKeys=new Set(['price','rent','salary','social','social_corp','other_deduction','owner_cost','deduction_sale','extra_repair']);
  const pctKeys=new Set(['ltv','mortgage_rate','buy_cost','sell_cost','growth','rent_growth','owner_growth','invest','building_share','basis_cost','step_rate','sacrifice']);
  const annualFromMonthly=new Set(['cap','fringe']);
- let current=null, result=null;
+ let state=I.createDefault(),current=null,result=null;
+ const dirtyKeys=new Set();
  const fmtMan=(v,d=0)=>Number(v/10000).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d})+'万円';
  const fmtOku=(v,d=3)=>(v/1e8).toFixed(d)+'億円';
  const fmtPct=(v,d=2)=>((v>=0?'+':'')+(v*100).toFixed(d)+'%');
@@ -505,20 +621,20 @@ if(typeof document!=='undefined')(()=>{
   }
  }
  function read(){
-  const p={...defaults};
+  const patch={};
   for(const e of document.querySelectorAll('[data-param]')){
    const k=e.dataset.param;
-   if(e.type==='checkbox'){p[k]=e.checked;continue;}
-   if(k==='loan_type'){p[k]=e.value;continue;}
+   if(!dirtyKeys.has(k))continue;
+   if(e.type==='checkbox'){patch[k]=e.checked;continue;}
+   if(k==='loan_type'){patch[k]=e.value;continue;}
    if(e.value.trim()==='')throw new Error('空欄の入力があります。すべての金額・年数を入力してください。');
    let v=Number(e.value);if(!Number.isFinite(v))throw new Error('数値を確認してください。');
-   if(e.min!==''&&v<Number(e.min)||e.max!==''&&v>Number(e.max))throw new Error(e.previousElementSibling.textContent+'：'+e.min+'〜'+e.max+'の範囲で入力してください。');
+   if(e.min!==''&&v<Number(e.min)||e.max!==''&&v>Number(e.max))throw new Error(e.closest('.field').querySelector('label').textContent+'：'+e.min+'〜'+e.max+'の範囲で入力してください。');
    if(moneyKeys.has(k))v*=10000;else if(pctKeys.has(k))v/=100;else if(annualFromMonthly.has(k))v*=120000;
-   p[k]=v;
+   patch[k]=v;
   }
-  const error=HousingSensitivity.validate(p);
-  if(error)throw new Error(error);
-  return p;
+  const next=I.update(state,patch);
+  return {next,p:I.resolve(next).parameters};
  }
  function makeTable(head,rows){return '<div class="table-wrap"><table><thead><tr>'+head.map(s=>'<th>'+s+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';}
  function plot(p){
@@ -545,8 +661,8 @@ if(typeof document!=='undefined')(()=>{
  }
  function recalc(){
   try{
-   const p=read(),r=M.run(p),tx=M.housingTax(p,p.rent,p.corp_years>0),bc=M.breakSale(p),br=M.breakSale(p,'rent');
-   current=p;result=r;$('sim-error').style.display='none';$('sim-results').style.opacity='1';
+   const {next,p}=read(),r=M.run(p),tx=M.housingTax(p,p.rent,p.corp_years>0),bc=M.breakSale(p),br=M.breakSale(p,'rent');
+   state=next;dirtyKeys.clear();current=p;result=r;fill(p);renderModes();$('sim-error').style.display='none';$('sim-results').style.opacity='1';
    $('sim-rent').textContent=fmtMan(tx.annual_effective/12,1);
    $('sim-tax').textContent=fmtMan(tx.benefit);
    $('sim-be-price').textContent=bc?fmtOku(bc.price):'範囲内なし';
@@ -566,7 +682,7 @@ if(typeof document!=='undefined')(()=>{
     ['購入と互角の売値','—',br?fmtOku(br.price):'範囲内なし',bc?fmtOku(bc.price):'範囲内なし'],
     ['必要な住戸の年率価格変化','—',br?fmtPct(br.growth):'—',bc?fmtPct(bc.growth):'—']
    ]);
-   const beEntry=M.breakEntry(p),beRate=M.breakRate(p),beFlat=M.breakPrice(p);
+   const beEntry=I.breakEntry(state),beRate=M.breakRate(p),beFlat=I.breakPrice(state);
    const texts=[];
    if(beEntry!==null)texts.push('将来売値 '+fmtOku(r.sale.price)+' を固定した分岐買値：'+fmtOku(beEntry)+'。');
    if(beFlat!==null)texts.push('住戸の年率価格変化 '+fmtPct(p.growth)+' を固定した分岐買値：'+fmtOku(beFlat)+'。');
@@ -584,9 +700,11 @@ if(typeof document!=='undefined')(()=>{
    if(r.sale.taxable_gain>100000000)warnings.push('売却益が大きいため、高所得者への追加課税等を含む個別税務確認が必要。本モデルは通常の譲渡税計算に限定。');
    if(p.years>20)warnings.push('20年超の試算は制度・税制・報酬の固定仮定への依存が強い。');
    if(p.fringe>0)warnings.push('現物利益 '+fmtMan(p.fringe)+' / 年は課税給与に加算するが、現金支給には加算しない。');
+   if(state.modes.social==='estimate'||state.modes.social_corp==='estimate')warnings.push('社会保険料は東京・協会けんぽ、給与均等12か月、賞与なしの概算。初年度の年額を全期間に固定し、社宅時の現物給与評価・標準報酬改定時差は省略。');
    $('sim-warning').textContent=warnings.join(' ');
+   $('sim-assumptions').textContent='社会保険料 通常 '+fmtMan(p.social)+' / 社宅 '+fmtMan(p.social_corp)+'（年額・'+(state.modes.social==='estimate'?'概算':'入力')+'）、保有費用 '+fmtMan(p.owner_cost)+' / 年（'+(state.modes.owner_cost==='estimate'?'価格の1%で概算':'入力')+'）。価格予想 '+fmtPct(p.growth)+' / 年、売却特別控除 '+fmtMan(p.deduction_sale)+'。';
    $('sim-status').textContent='再計算済み · 購入 '+fmtOku(p.price,2)+' / 家賃 '+fmtMan(p.rent,1)+' / '+p.years+'年';
-   document.dispatchEvent(new CustomEvent('housing:updated',{detail:{parameters:{...p},result:r}}));
+   document.dispatchEvent(new CustomEvent('housing:updated',{detail:{parameters:{...p},inputState:state,provenance:I.resolve(state).provenance,result:r}}));
    return true;
   }catch(e){
    $('sim-error').textContent=e.message;$('sim-error').style.display='block';$('sim-results').style.opacity='.45';
@@ -596,11 +714,50 @@ if(typeof document!=='undefined')(()=>{
   }
  }
  function download(text,name,type){const a=document.createElement('a');const url=URL.createObjectURL(new Blob([text],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+ function renderModes(){
+  for(const key of ['social','social_corp','owner_cost','owner_growth']){
+   $('mode-'+key).value=state.modes[key];
+   $('f-'+key).disabled=state.modes[key]!=='manual';
+  }
+  $('age-band').value=state.ageBand;
+  $('corp-choice').value=state.modes.corp_years==='full_residence'?'full_residence':state.values.corp_years===0?'none':'manual';
+  $('f-corp_years').disabled=$('corp-choice').value!=='manual';
+ }
+ function applyState(next){
+  try{const {parameters}=I.resolve(next);state=next;dirtyKeys.clear();fill(parameters);return recalc();}
+  catch(e){$('sim-error').textContent=e.message;$('sim-error').style.display='block';return false;}
+ }
+ function applyControlChange(transform){
+  try{return applyState(transform(dirtyKeys.size?read().next:state));}
+  catch(e){$('sim-error').textContent=e.message;$('sim-error').style.display='block';renderModes();return false;}
+ }
+ function setupInputControls(){
+  const basic=$('simulator').querySelector(':scope > .controls'),advanced=$('simAdvanced').querySelector('.controls');
+  basic.append($('f-ltv').closest('.field'));
+  advanced.prepend($('f-loan_type').closest('.field'),$('f-growth').closest('.field'));
+  $('sim-status').insertAdjacentHTML('afterend','<p class="note" id="sim-assumptions"></p>');
+  $('f-corp_years').closest('.field').insertAdjacentHTML('afterbegin','<label for="corp-choice">社宅利用</label><select id="corp-choice" aria-label="社宅利用期間の指定"><option value="none">利用しない</option><option value="full_residence">比較期間中ずっと</option><option value="manual">年数を指定</option></select>');
+  $('simAdvanced').querySelector('.detail-body').insertAdjacentHTML('afterbegin','<div class="field"><label for="age-band">概算社保の年齢区分（協会けんぽ東京・2026年度）</label><select id="age-band"><option value="under40">40歳未満・例示設定</option><option value="40-64">40〜64歳</option></select></div>');
+  const modes={social:[['estimate','年収から概算'],['manual','年額を入力']],social_corp:[['estimate','社宅時の給与から概算'],['same_as_normal','通常時と同額'],['manual','年額を入力']],owner_cost:[['estimate','購入価格の1%で概算'],['manual','年額を入力']],owner_growth:[['manual','増加率を入力'],['same_as_rent','家賃増加率と同じ']]};
+  for(const [key,choices] of Object.entries(modes)){
+   const field=$('f-'+key).closest('.field');
+   const select=document.createElement('select');select.id='mode-'+key;select.setAttribute('aria-label',field.querySelector('label').textContent+'の計算方法');
+   for(const [value,label] of choices){const option=document.createElement('option');option.value=value;option.textContent=label;select.append(option);}
+   field.insertBefore(select,$('f-'+key));
+   select.addEventListener('change',()=>applyControlChange(current=>I.setMode(current,key,select.value)));
+  }
+  $('age-band').addEventListener('change',()=>applyControlChange(current=>I.setAgeBand(current,$('age-band').value)));
+  $('corp-choice').addEventListener('change',()=>{
+   const choice=$('corp-choice').value;
+   applyControlChange(current=>choice==='full_residence'?I.setMode(current,'corp_years','full_residence'):I.update(current,{corp_years:choice==='none'?0:Math.max(1,current.values.corp_years||current.values.years)}));
+  });
+ }
+ setupInputControls();
  $('recalculate').addEventListener('click',recalc);
- $('reset').addEventListener('click',()=>{fill(defaults);recalc();});
- $('previous').addEventListener('click',()=>{fill({...defaults,price:100000000,rent:300000,owner_cost:1000000});recalc();});
+ $('reset').addEventListener('click',()=>applyState(I.createDefault()));
+ $('previous').addEventListener('click',()=>applyState(I.update(I.createDefault(),{price:100000000,rent:300000})));
  for(const e of document.querySelectorAll('[data-param]')){
-  e.addEventListener('input',()=>{$('sim-status').textContent='入力変更あり · 「再計算」を押してください';document.dispatchEvent(new Event('housing:dirty'));});
+  e.addEventListener('input',()=>{dirtyKeys.add(e.dataset.param);$('sim-status').textContent='入力変更あり · 「再計算」を押してください';document.dispatchEvent(new Event('housing:dirty'));});
   e.addEventListener('keydown',event=>{if(event.key==='Enter')recalc();});
  }
  $('csv').addEventListener('click',()=>{
@@ -609,14 +766,14 @@ if(typeof document!=='undefined')(()=>{
   const lines=[cols.map(c=>c[1]).join(',')];for(const row of r.rows)lines.push(cols.map(([k])=>Number(row[k]).toFixed(k==='year'?6:2)).join(','));
   download('\ufeff'+lines.join('\r\n'),'housing_monthly_cashflows.csv','text/csv;charset=utf-8');
  });
- $('save-settings').addEventListener('click',()=>{recalc();if($('sim-error').style.display==='block'||!current)return;download(JSON.stringify({model:'housing-tax-comparison-v2-2026-09-17',units:'JPY and decimal rates',parameters:current},null,2),'housing_scenario_settings.json','application/json');});
- window.HousingUI={defaults:{...defaults},getCurrent:()=>({...current||defaults}),getResult:()=>result,recalculate:recalc,update:patch=>{fill(patch);return recalc();}};
- fill(defaults);recalc();
+ $('save-settings').addEventListener('click',()=>{recalc();if($('sim-error').style.display==='block'||!current)return;download(I.serialize(state),'housing_scenario_settings.json','application/json');});
+ window.HousingUI={defaults:{...defaults},getCurrent:()=>({...current||I.resolve(state).parameters}),getInputState:()=>state,getResult:()=>result,recalculate:recalc,update:patch=>applyControlChange(current=>I.update(current,patch)),loadState:applyState,reset:patch=>applyState(I.update(I.createDefault(),patch||{}))};
+ fill(I.resolve(state).parameters);renderModes();recalc();
 })();
 </script><script>
 'use strict';
 if(typeof document!=='undefined')(() => {
- const S=HousingSensitivity,M=HousingModel,U=window.HousingUI,$=id=>document.getElementById(id);
+ const S=HousingSensitivity,M=HousingModel,I=HousingInputs,U=window.HousingUI,$=id=>document.getElementById(id);
  const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const n=(v,d=0)=>Number(v).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d});
  const m=(v,d=0)=>n(v/1e4,d)+'万円',o=(v,d=3)=>n(v/1e8,d)+'億円';
@@ -633,8 +790,19 @@ if(typeof document!=='undefined')(() => {
  const row=(cells,cls='')=>'<tr class="'+cls+'">'+cells.map(c=>'<td>'+c+'</td>').join('')+'</tr>';
  const modeNames={corp:'借上社宅',normal:'通常賃貸'};
  const curveKeys=['mortgage_rate','invest','price','rent','years','corp_years','owner_cost','rent_growth','owner_growth','ltv','buy_cost','sell_cost','salary','sacrifice','extra_repair','building_share','mortgage_years','fringe'];
- let p=U.getCurrent(),base=S.evaluate(p),curves=[],trows=[],hg=null,gridKey='mortgage_rate',customValues=false,dirty=false;
+ let state=U.getInputState(),p=U.getCurrent(),base=I.evaluate(state),curves=[],trows=[],hg=null,gridKey='mortgage_rate',customValues=false,dirty=false;
  let renderVersion=0;
+ function evaluateScenario(patch,mode='linked'){
+  try{return I.evaluate(I.scenario(state,patch,mode));}
+  catch(e){return {error:e.message,p:{...p,...patch},inputState:state};}
+ }
+ function curveFor(key,values){const s=S.byKey[key];return values.map(value=>({value,...evaluateScenario({[key]:Number((value*s.scale).toPrecision(14))})}));}
+ function gridFor(preset){
+  const grid=S.grid(p,preset),scenarioMode=preset==='duration'?'independent':'linked';
+  grid.cells=grid.ys.map(y=>grid.xs.map(x=>({x,y,...evaluateScenario({[grid.xkey]:Number((x*S.byKey[grid.xkey].scale).toPrecision(14)),[grid.ykey]:Number((y*S.byKey[grid.ykey].scale).toPrecision(14))},scenarioMode)})));
+  return grid;
+ }
+ function stressesFor(){return S.stresses(p).map(t=>({...t,lo:evaluateScenario({[t.key]:t.lo.p[t.key]}),hi:evaluateScenario({[t.key]:t.hi.p[t.key]})}));}
  function showMsg(text){$('export-message').textContent=text;}
  function emitDownload(text,name,type){
   const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2500);
@@ -650,7 +818,7 @@ if(typeof document!=='undefined')(() => {
    card('社宅で上がるハードル',delta===null?'—':pp(delta),'社宅 g* − 通常賃貸 g*','navy')+
    card('予想と分岐の差',margin===null?'—':pp(margin),'予想 '+rate(p.growth)+' − 社宅 g*','');
   const tx=M.housingTax(p,p.rent,p.corp_years>0);
-  $('dash-payroll').innerHTML='現在の条件：社宅の実質家賃 <strong>'+m(tx.annual_effective/12,1)+'/月</strong>、初年度の税・社保メリット <strong>'+m(tx.benefit)+'/年</strong>。基準入力は年収・家賃の本人説明、その他は明示した仮定。';
+  $('dash-payroll').innerHTML='現在の条件：社宅の実質家賃 <strong>'+m(tx.annual_effective/12,1)+'/月</strong>、初年度の税・社保メリット <strong>'+m(tx.benefit)+'/年</strong>。社会保険料は'+(state.modes.social==='estimate'?'概算':'手入力')+'、年間保有費用は'+(state.modes.owner_cost==='estimate'?'購入価格の1%で概算':'手入力')+'。';
   $('dash-status').className='scenario-status';
   $('dash-status').textContent='計算済み ｜ 買値 '+o(p.price,2)+'・家賃 '+m(p.rent,1)+'/月・保有 '+p.years+'年・社宅入力 '+p.corp_years+'年（有効 '+Math.min(p.years,p.corp_years)+'年）・金利 '+num(p.mortgage_rate*100)+'%・運用 '+num(p.invest*100)+'%';
  }
@@ -673,6 +841,12 @@ if(typeof document!=='undefined')(() => {
  }
  function syncParams(){
   for(const s of S.meta){const e=$('p-'+s.key),v=p[s.key];if(e.type==='checkbox')e.checked=v;else e.value=typeof v==='number'?String(Number((v/s.scale).toFixed(7))):v;$('pr-'+s.key).classList.toggle('changed',!same(v,U.defaults[s.key]));}
+  const labels={social:'年収から概算',social_corp:'社宅時給与から概算',owner_cost:'購入価格の1%で概算',corp_years:'比較期間に連動',owner_growth:'家賃増加率に連動'};
+  for(const key of Object.keys(labels)){
+   const mode=state.modes[key],isLinked=mode!=='manual';
+   $('pr-'+key).querySelector('.param-note').textContent=isLinked?labels[key]+'。値を直接編集すると手入力に切り替わります。':S.byKey[key].note;
+  }
+  $('pr-price').querySelector('.param-note').textContent=state.modes.owner_cost==='estimate'?'家賃は固定。保有費用は買値の1%で概算し直します。頭金・借入・取得費も再計算。':'家賃と入力した年額保有費用は固定。頭金・借入・取得費は買値に連動。';
  }
  function states(){
   const r=base.r,last=r.rows.at(-1),ownerInc=p.owner_cost*Math.pow(1+p.owner_growth,p.years-1);
@@ -719,10 +893,11 @@ if(typeof document!=='undefined')(() => {
    if(tokens.length<2||tokens.length>25||tokens.some(x=>x===''))throw new Error('試す値は、カンマ区切りで2〜25個を入力してください。');
    let xs=tokens.map(Number);if(xs.some(x=>!Number.isFinite(x)))throw new Error('試す値は数値のみを入力してください。');
    xs=[...new Set([...xs,Number((p[k]/s.scale).toFixed(7))])].sort((a,b)=>a-b);
-   curves=S.curve(p,k,xs);$('s-error').style.display='none';
+   curves=curveFor(k,xs);$('s-error').style.display='none';
    $('s-chart').innerHTML=chartCurve(k,curves);
    let explain=s.note;
-   if(k==='years')explain+=' 現在は社宅 '+p.corp_years+'年を固定。保有年数を延ばしても社宅は自動延長しません。税務上、保有6年・11年で扱いが切り替わる仮定です。';
+   if(k==='price'&&state.modes.owner_cost==='manual')explain='家賃と年額保有費用は固定。頭金、借入、取得費は買値に連動します。';
+   if(k==='years')explain+=state.modes.corp_years==='full_residence'?' 社宅期間も比較年数に連動します。':' 社宅期間は'+p.corp_years+'年で固定します。';
    if(k==='corp_years')explain+=' 保有 '+p.years+'年を超える設定は同じ結果になります。';
    if(k==='mortgage_rate'&&p.step_year>0)explain+=' 現在は'+p.step_year+'年後に '+num(p.step_rate*100)+'%へ変更する設定です。';
    $('s-explanation').textContent=explain;
@@ -736,7 +911,7 @@ if(typeof document!=='undefined')(() => {
   }catch(e){$('s-error').textContent=e.message;$('s-error').style.display='block';$('s-chart').innerHTML='';$('s-table').innerHTML='';$('s-reading').textContent='';curves=[];}
  }
  function drawHeat(){
-  const preset=$('h-preset').value,mode=$('h-mode').value;hg=S.grid(p,preset);
+  const preset=$('h-preset').value,mode=$('h-mode').value;hg=gridFor(preset);
   const value=q=>q.error?null:mode==='gap'?(g(q.corp)===null||g(q.normal)===null?null:g(q.corp)-g(q.normal)):g(q[mode]);
   const vals=hg.cells.flat().map(value).filter(v=>v!==null),min=Math.min(...vals),max=Math.max(...vals),range=Math.max(.00001,max-min);
   const xs=S.byKey[hg.xkey],ys=S.byKey[hg.ykey];
@@ -748,9 +923,9 @@ if(typeof document!=='undefined')(() => {
   }).join('')+'</tr>');
   $('h-map').innerHTML=table(heading,rows,'heat-map');
   const modeText=mode==='gap'?'社宅 g* − 通常賃貸 g*（pp）':('購入 vs '+modeNames[mode]+' の g*（年率）');
-  let note='表示：'+modeText+'。その他の入力は現在値で固定。';
-  if(preset==='duration')note+=' 有効な社宅年数は「居住年数と社宅年数の短い方」。税務上の保有期間判定も各セルで再計算します。';
-  if(preset==='price_rent')note+=' 所有費用は年 '+m(p.owner_cost)+' のまま固定。価格に応じた頭金・借入・取引費用は再計算します。';
+  let note='表示：'+modeText+'。その他の独立入力は現在値を維持し、連動値は各セルで再計算。';
+  if(preset==='duration')note+=' 2軸を独立に指定するため、この表の各セルでは「社宅全期間」の連動を外します。';
+  if(preset==='price_rent')note+=state.modes.owner_cost==='estimate'?' 所有費用は各買値の1%で概算します。':' 所有費用は年 '+m(p.owner_cost)+' に固定します。';
   if(preset==='rates'&&p.step_year>0)note+=' 変更後金利は '+num(p.step_rate*100)+'%（'+p.step_year+'年後）のまま固定し、当初金利を動かします。';
   $('h-note').textContent=note;
   $('h-selection').textContent='セルを選ぶと、通常賃貸・社宅の両方の分岐率と売却価格を確認できます。';
@@ -764,7 +939,7 @@ if(typeof document!=='undefined')(() => {
  function drawTornado(){
   const mode=$('t-mode').value,bg=g(base[mode]);
   if(bg===null){$('t-chart').textContent='現在の設定に有効な分岐率がありません。';$('t-table').textContent='';return;}
-  trows=S.stresses(p).map(t=>({...t,dl:t.lo.error||g(t.lo[mode])===null?null:g(t.lo[mode])-bg,dh:t.hi.error||g(t.hi[mode])===null?null:g(t.hi[mode])-bg}));
+  trows=stressesFor().map(t=>({...t,dl:t.lo.error||g(t.lo[mode])===null?null:g(t.lo[mode])-bg,dh:t.hi.error||g(t.hi[mode])===null?null:g(t.hi[mode])-bg}));
   trows.sort((a,b)=>Math.max(Math.abs(b.dl||0),Math.abs(b.dh||0))-Math.max(Math.abs(a.dl||0),Math.abs(a.dh||0)));
   const vals=trows.flatMap(t=>[t.dl,t.dh]).filter(v=>v!==null).map(v=>v*100),lim=Math.max(.2,...vals.map(Math.abs))*1.18;
   const W=990,L=280,R=68,T=37,rowH=57,H=T+trows.length*rowH+65,w=W-L-R;
@@ -782,8 +957,8 @@ if(typeof document!=='undefined')(() => {
   $('t-chart').innerHTML=out;
   $('t-table').innerHTML=table(['変更パラメータ','小さい試算値','その g*','Δg*','大きい試算値','その g*','Δg*'],trows.map(t=>row([E(S.byKey[t.key].label),E(label(t.key,t.lo.p[t.key])),t.lo.error?'対象外':gr(t.lo[mode]),t.dl===null?'—':pp(t.dl),E(label(t.key,t.hi.p[t.key])),t.hi.error?'対象外':gr(t.hi[mode]),t.dh===null?'—':pp(t.dh)])),'sensitivity-table');
  }
- function update(newP){
-  p={...newP};base=S.evaluate(p);if(base.error){markDirty(base.error);return;}
+ function update(newP,newState){
+  p={...newP};state=newState||U.getInputState();base=I.evaluate(state);if(base.error){markDirty(base.error);return;}
   dirty=false;renderVersion++;kpis();syncParams();states();
   if(!customValues||gridKey!==$('s-key').value)setStandardValues();
   drawCurve();drawHeat();drawTornado();
@@ -792,20 +967,20 @@ if(typeof document!=='undefined')(() => {
  function ensureChartFresh(){if(dirty)return checkFresh();return true;}
  function parameterCSV(){
   if(!checkFresh())return;
-  const rows=[['分類','パラメータ','キー','初期値','現在値','単位','根拠','固定・連動の扱い']];
-  for(const s of S.meta)rows.push([s.group==='dynamic'?'動的':'静的',s.label,s.key,typeof U.defaults[s.key]==='number'?U.defaults[s.key]/s.scale:U.defaults[s.key],typeof p[s.key]==='number'?p[s.key]/s.scale:p[s.key],s.unit,s.source,s.note]);
+  const rows=[['分類','パラメータ','キー','初期値','現在値','単位','根拠','固定・連動の扱い','入力モード']];
+  for(const s of S.meta)rows.push([s.group==='dynamic'?'動的':'静的',s.label,s.key,typeof U.defaults[s.key]==='number'?U.defaults[s.key]/s.scale:U.defaults[s.key],typeof p[s.key]==='number'?p[s.key]/s.scale:p[s.key],s.unit,s.source,s.note,state.modes[s.key]||'manual']);
   emitDownload(csv(rows),'housing_parameters_v2.csv','text/csv;charset=utf-8');showMsg('パラメータCSVを作成しました。給与・家賃等の個人情報を含みます。');
  }
  function sensitivityCSV(){
   if(!checkFresh())return;
-  const keys=S.meta.map(s=>s.key),header=['種類','変更項目','試す値','表示単位','状態','通常賃貸_gstar_pct','社宅_gstar_pct','通常賃貸_分岐売値_円','社宅_分岐売値_円','社宅_delta_gstar_pp',...keys.map(k=>'p_'+k)];
+  const keys=S.meta.map(s=>s.key),modeKeys=Object.keys(state.modes),header=['種類','変更項目','試す値','表示単位','状態','通常賃貸_gstar_pct','社宅_gstar_pct','通常賃貸_分岐売値_円','社宅_分岐売値_円','社宅_delta_gstar_pp',...keys.map(k=>'p_'+k),...modeKeys.map(k=>'mode_'+k),'age_band','tax_rule_set'];
   const rows=[header];
-  const add=(kind,k,v,unit,q)=>rows.push([kind,k,v,unit,q.error||q.corp.status,g(q.normal)===null?'':g(q.normal)*100,g(q.corp)===null?'':g(q.corp)*100,q.normal?.price??'',q.corp?.price??'',g(q.corp)===null||g(base.corp)===null?'':(g(q.corp)-g(base.corp))*100,...keys.map(key=>q.p[key])]);
+  const add=(kind,k,v,unit,q)=>rows.push([kind,k,v,unit,q.error||q.corp.status,g(q.normal)===null?'':g(q.normal)*100,g(q.corp)===null?'':g(q.corp)*100,q.normal?.price??'',q.corp?.price??'',g(q.corp)===null||g(base.corp)===null?'':(g(q.corp)-g(base.corp))*100,...keys.map(key=>q.p[key]),...modeKeys.map(key=>q.inputState?.modes[key]||state.modes[key]),q.inputState?.ageBand||state.ageBand,'jp-2026-fixed']);
   add('現在値','baseline','','',base);
-  for(const k of curveKeys)for(const q of S.curve(p,k,S.defaultValues(k,p)))add('1変数_標準幅',k,q.value,S.byKey[k].unit,q);
+  for(const k of curveKeys)for(const q of curveFor(k,S.defaultValues(k,p)))add('1変数_標準幅',k,q.value,S.byKey[k].unit,q);
   for(const q of curves)add('表示中_1変数',$('s-key').value,q.value,S.byKey[$('s-key').value].unit,q);
   for(const preset of ['rates','price_rent','duration']){
-   const grid=S.grid(p,preset);for(const q of grid.cells.flat())add('2変数_'+preset,grid.xkey+' / '+grid.ykey,q.x+' / '+q.y,S.byKey[grid.xkey].unit+' / '+S.byKey[grid.ykey].unit,q);
+   const grid=gridFor(preset);for(const q of grid.cells.flat())add('2変数_'+preset,grid.xkey+' / '+grid.ykey,q.x+' / '+q.y,S.byKey[grid.xkey].unit+' / '+S.byKey[grid.ykey].unit,q);
   }
   emitDownload(csv(rows),'housing_sensitivity_v2.csv','text/csv;charset=utf-8');showMsg('全パラメータの標準感応度・表示中の試算・3種類の2変数表を出力しました。p_列の金額は円、利率は小数です。');
  }
@@ -822,9 +997,9 @@ if(typeof document!=='undefined')(() => {
   $('h-map').addEventListener('click',e=>{const b=e.target.closest('[data-hi]');if(b&&!dirty)selectCell(Number(b.dataset.hi),Number(b.dataset.hj));});
   document.querySelectorAll('[data-quick]').forEach(b=>b.addEventListener('click',()=>{
    const patches={rate:{mortgage_rate:.02},corp:{corp_years:5},invest:{invest:.05},price:{price:220000000}};
-   U.update({...U.defaults,...patches[b.dataset.quick]});
+   U.reset(patches[b.dataset.quick]);
   }));
-  $('dash-reset').addEventListener('click',()=>{customValues=false;U.update({...U.defaults});});
+  $('dash-reset').addEventListener('click',()=>{customValues=false;U.reset();});
   $('parameters').addEventListener('change',e=>{
    const el=e.target.closest('[data-edit]');if(!el)return;
    const key=el.dataset.edit,s=S.byKey[key];let v;
@@ -840,12 +1015,11 @@ if(typeof document!=='undefined')(() => {
   $('settings-file').addEventListener('change',async e=>{
    try{
     const f=e.target.files[0];if(!f)return;if(f.size>1000000)throw new Error('設定ファイルが大きすぎます。');
-    const doc=JSON.parse(await f.text()),params=doc.parameters;if(!params||typeof params!=='object')throw new Error('parametersを含む設定JSONではありません。');
-    const q={};for(const s of S.meta){const v=params[s.key];if(v===undefined||typeof v!==typeof U.defaults[s.key])throw new Error(s.label+'の値または型が不正です。');q[s.key]=v;}
-    const er=S.validate(q);if(er)throw new Error(er);customValues=false;U.update(q);showMsg('設定を読み込み、すべての比較を再計算しました。');
+    const doc=JSON.parse(await f.text()),loaded=I.deserialize(doc);
+    customValues=false;if(!U.loadState(loaded))throw new Error('設定を適用できませんでした。');showMsg('設定を読み込み、すべての比較を再計算しました。');
    }catch(err){showMsg('設定は変更していません：'+err.message);}finally{e.target.value='';}
   });
-  document.addEventListener('housing:updated',e=>update(e.detail.parameters));
+  document.addEventListener('housing:updated',e=>update(e.detail.parameters,e.detail.inputState));
   document.addEventListener('housing:dirty',()=>markDirty());
   document.addEventListener('housing:invalid',e=>markDirty('入力エラー：'+e.detail.message+'。結果は直前の有効な設定です。'));
   for(const a of document.querySelectorAll('a[href^="#"]'))a.addEventListener('click',()=>{const target=document.getElementById(a.hash.slice(1));if(target){let el=target;while(el){if(el.tagName==='DETAILS')el.open=true;el=el.parentElement;}}});

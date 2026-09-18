@@ -125,14 +125,14 @@ const BASE_PARAMS={"price": 250000000, "rent": 750000, "years": 10, "salary": 50
 const HousingSensitivity = (() => {
  const M=HousingModel;
  const specs=[
-  ['price','dynamic','物件','購入価格','P','億円',1e8, .1,10,.01,'同じ住戸の家賃・所有中費用は固定。頭金、借入、取得費は価格に連動。','仮定'],
+  ['price','dynamic','物件','購入価格','P','億円',1e8, .1,10,.01,'家賃は固定。保有費用は概算モードなら買値の1%に連動。頭金、借入、取得費も再計算。','仮定'],
   ['rent','dynamic','賃貸','同等住戸の月額家賃','R','万円／月',1e4,10,200,1,'購入価格は固定。初期費用、更新料、社宅の税前振替額は家賃に連動。','本人申告'],
-  ['years','dynamic','期間','居住・比較期間','T','年',1,1,35,1,'最後に売却。社宅の入力年数は固定し、実効適用年数は両者の短い方。','仮定'],
+  ['years','dynamic','期間','居住・比較期間','T','年',1,1,35,1,'最後に売却。社宅全期間モードなら社宅年数も連動し、それ以外は指定年数を維持。','仮定'],
   ['growth','dynamic','判断用','予想する住戸価格変化率','g_H','%／年',.01,-10,10,.1,'最終純資産の評価用。g*を逆算するときの入力ではなく、g*との比較対象。','予想・仮定'],
   ['mortgage_rate','dynamic','融資','当初の住宅ローン金利','r_M','%／年',.01,0,15,.1,'金利変更なしなら全期間一定。変更設定があるときは当初期間だけを変更。','仮定'],
   ['invest','dynamic','資産運用','金融資産の税後利回り','r_F','%／年',.01,0,10,.5,'名目年率を12分割した月次複利。利回りの変動・損失確率は未モデル化。','仮定'],
   ['corp_years','dynamic','社宅','社宅を利用できる年数','T_C','年',1,0,35,1,'終了後は通常賃貸、額面報酬も元に戻る。失職・引越費用は別。','仮定'],
-  ['owner_cost','dynamic','購入','所有中の費用','C_O','万円／年',1e4,0,1000,10,'管理・修繕積立・税・保険等の合計。買値を変えても自動比例させない。','要実額'],
+  ['owner_cost','dynamic','購入','所有中の費用','C_O','万円／年',1e4,0,1000,10,'概算モードは購入価格の1%／年。管理・修繕積立・税・保険等の実額で上書き可能。','概算・要実額'],
   ['rent_growth','dynamic','賃貸','家賃増加率','g_R','%／年',.01,-5,10,.5,'年初に変更。税前振替率・上限に従って社宅側の税効果も再計算。','仮定'],
   ['owner_growth','dynamic','購入','所有中費用の増加率','g_C','%／年',.01,-5,10,.5,'年初に変更。臨時の追加修繕負担とは別計上。','仮定'],
   ['step_year','dynamic','金利経路','金利変更までの年数','T_r','年',1,0,34,1,'0なら変更なし。例えば5は6年目の開始時に変更。','仮定'],
@@ -143,8 +143,8 @@ const HousingSensitivity = (() => {
   ['sacrifice','static','社宅','家賃の税前振替率','a','%',.01,0,100,5,'残りは税引後本人負担。一般的な社宅非課税要件の判定とは別。','本人説明を仮定'],
   ['cap','static','社宅','税前振替の月額上限','A_max','万円／月',120000,0,200,5,'0は上限なし。内部では年額換算。会社規程は未確認。','要規程確認'],
   ['fringe','static','社宅','追加で課税される現物利益','V','万円／月',120000,0,50,1,'内部では年額換算。課税給与にだけ加算し、現金収入には加えない。','要明細確認'],
-  ['social','static','税・社保','通常・購入の社会保険料','S_0','万円／年',1e4,0,500,10,'制度から自動推計せず入力額を使う。給与明細の実額に置換。','要実額'],
-  ['social_corp','static','税・社保','社宅利用時の社会保険料','S_1','万円／年',1e4,0,500,10,'所得税の現物給与評価とは別。基準値は通常時と同額。','要実額'],
+  ['social','static','税・社保','通常・購入の社会保険料','S_0','万円／年',1e4,0,500,10,'例示値は東京・協会けんぽの年収概算。給与明細の実額で上書き可能。','概算・要実額'],
+  ['social_corp','static','税・社保','社宅利用時の社会保険料','S_1','万円／年',1e4,0,500,10,'社宅時給与から概算、通常時と同額、または実額入力を選択。現物報酬は概算に含めない。','概算・要実額'],
   ['other_deduction','static','税・社保','その他の所得控除','D','万円／年',1e4,0,500,10,'両ケース共通。所得税と住民税の控除差等は簡略化。','仮定'],
   ['ltv','static','融資','LTV','LTV','%',.01,0,100,5,'購入価格に対する借入割合。審査・担保評価は別途確認。','仮定'],
   ['mortgage_years','static','融資','ローン期間','T_M','年',1,5,50,1,'元利均等は満期に返済終了。IOは比較期間が満期を超えない範囲のみ。','仮定'],
@@ -252,16 +252,132 @@ const HousingSensitivity = (() => {
 })();
 if(typeof module!=='undefined')module.exports=HousingSensitivity;
 
+// Resolve optional estimates and links before passing the familiar flat parameter set to the model.
+const HousingInputs=(() => {
+ const S=HousingSensitivity;
+ const modeOptions={
+  social:['manual','estimate'],
+  social_corp:['manual','estimate','same_as_normal'],
+  owner_cost:['manual','estimate'],
+  corp_years:['manual','full_residence'],
+  owner_growth:['manual','same_as_rent']
+ };
+ const manualModes=()=>Object.fromEntries(Object.keys(modeOptions).map(key=>[key,'manual']));
+ const validAges=['under40','40-64'];
+ const keys=Object.keys(BASE_PARAMS);
+ function create(parameters=BASE_PARAMS){
+  const values={};
+  for(const key of keys){
+   const value=parameters?.[key];
+   if(typeof value!==typeof BASE_PARAMS[key]||(typeof value==='number'&&!Number.isFinite(value)))throw new Error(key+'の値または型が不正です。');
+   values[key]=value;
+  }
+  return {values,modes:manualModes(),ageBand:'under40'};
+ }
+ function createDefault(){
+  const state=create();
+  state.modes.social='estimate';state.modes.social_corp='estimate';state.modes.owner_cost='estimate';
+  return state;
+ }
+ function setMode(state,key,mode){
+  if(!modeOptions[key]?.includes(mode))throw new Error('連動モードが不正です。');
+  return {...state,values:{...state.values},modes:{...state.modes,[key]:mode}};
+ }
+ function setAgeBand(state,ageBand){
+  if(!validAges.includes(ageBand))throw new Error('年齢区分が不正です。');
+  return {...state,values:{...state.values},modes:{...state.modes},ageBand};
+ }
+ function update(state,patch){
+  let next={...state,values:{...state.values},modes:{...state.modes}};
+  for(const [key,value] of Object.entries(patch)){
+   if(!keys.includes(key)||typeof value!==typeof BASE_PARAMS[key]||(typeof value==='number'&&!Number.isFinite(value)))throw new Error(key+'の値または型が不正です。');
+   next.values[key]=value;
+   if(modeOptions[key])next.modes[key]='manual';
+  }
+  return next;
+ }
+ function estimateSocial(gross,ageBand){
+  const monthly=Math.max(0,gross/12);
+  const care=ageBand==='40-64' ? .0162 : 0;
+  const health=12*Math.min(monthly,1390000)*(.0985+.0023+care)/2;
+  const pension=12*Math.min(monthly,650000)*.183/2;
+  return health+pension+Math.max(0,gross)*.005;
+ }
+ function resolve(state){
+  if(!state||!state.values||!state.modes||!validAges.includes(state.ageBand))throw new Error('設定の形式が不正です。');
+  for(const [key,options] of Object.entries(modeOptions))if(!options.includes(state.modes[key]))throw new Error(key+'の連動モードが不正です。');
+  const parameters=create(state.values).values;
+  const provenance=Object.fromEntries(keys.map(key=>[key,{mode:'manual',dependsOn:[]}]));
+  function assign(key,value,mode,dependsOn){parameters[key]=value;provenance[key]={mode,dependsOn};}
+  if(state.modes.social==='estimate')assign('social',estimateSocial(parameters.salary,state.ageBand),'estimate',['salary','ageBand']);
+  if(state.modes.social_corp==='estimate'){
+   const rentYear=parameters.rent*12;
+   const sacrificed=parameters.cap>0?Math.min(rentYear*parameters.sacrifice,parameters.cap):rentYear*parameters.sacrifice;
+   assign('social_corp',estimateSocial(parameters.salary-sacrificed,state.ageBand),'estimate',['salary','rent','sacrifice','cap','ageBand']);
+  } else if(state.modes.social_corp==='same_as_normal')assign('social_corp',parameters.social,'same_as_normal',['social']);
+  if(state.modes.owner_cost==='estimate')assign('owner_cost',parameters.price*.01,'estimate',['price']);
+  if(state.modes.corp_years==='full_residence')assign('corp_years',parameters.years,'full_residence',['years']);
+  if(state.modes.owner_growth==='same_as_rent')assign('owner_growth',parameters.rent_growth,'same_as_rent',['rent_growth']);
+  const error=S.validate(parameters);if(error)throw new Error(error);
+  return {parameters,provenance};
+ }
+ function scenario(state,patch,mode='linked'){
+  if(!['linked','independent'].includes(mode))throw new Error('試算モードが不正です。');
+  return update(mode==='independent'?create(resolve(state).parameters):state,patch);
+ }
+ function evaluate(state){
+  const {parameters,provenance}=resolve(state);
+  return {...S.evaluate(parameters),inputState:state,provenance};
+ }
+ function breakAtEntryPrice(state,keepExit){
+  const p=resolve(state).parameters;
+  const exit=p.price*Math.pow(1+p.growth,p.years);
+  const priceSpec=S.byKey.price,growthSpec=S.byKey.growth;
+  let lo=Math.max(p.price*.05,priceSpec.min*priceSpec.scale);
+  let hi=Math.min(p.price*4,priceSpec.max*priceSpec.scale);
+  if(keepExit){
+   lo=Math.max(lo,exit/Math.pow(1+growthSpec.max*growthSpec.scale,p.years)*(1+1e-10));
+   hi=Math.min(hi,exit/Math.pow(1+growthSpec.min*growthSpec.scale,p.years)*(1-1e-10));
+  }
+  if(lo>=hi)return null;
+  return HousingModel.bisect(price=>{
+   const growth=keepExit?Math.pow(exit/price,1/p.years)-1:p.growth;
+   return HousingModel.run(resolve(scenario(state,{price,growth})).parameters).wealth_diff_corp;
+  },lo,hi);
+ }
+ function breakPrice(state){return breakAtEntryPrice(state,false);}
+ function breakEntry(state){return breakAtEntryPrice(state,true);}
+ function serialize(state){
+  const {parameters}=resolve(state);
+  return JSON.stringify({model:'housing-input-state',schemaVersion:1,taxRuleSet:'jp-2026-fixed',units:'JPY and decimal rates',inputs:state,parameters},null,2);
+ }
+ function deserialize(document){
+  if(!document||typeof document!=='object')throw new Error('設定JSONが不正です。');
+  if(!document.model||document.model==='housing-tax-comparison-v2-2026-09-17')return create(document.parameters);
+  if(document.model!=='housing-input-state'||document.schemaVersion!==1||document.taxRuleSet!=='jp-2026-fixed')throw new Error('設定JSONの版が未対応です。');
+  const supplied=document.inputs;
+  if(!supplied||Object.keys(supplied.values||{}).length!==keys.length)throw new Error('入力設定が不足しています。');
+  const state=create(supplied.values);
+  for(const key of Object.keys(modeOptions))state.modes[key]=supplied.modes?.[key];
+  state.ageBand=supplied.ageBand;
+  const {parameters}=resolve(state);
+  if(!document.parameters||keys.some(key=>document.parameters[key]!==parameters[key]))throw new Error('保存済みの計算値が入力と一致しません。');
+  return state;
+ }
+ return {create,createDefault,setMode,setAgeBand,update,estimateSocial,resolve,scenario,evaluate,breakPrice,breakEntry,serialize,deserialize};
+})();
+
 
 // ===== script block 4 =====
 'use strict';
 if(typeof document!=='undefined')(()=>{
- const M=HousingModel, $=id=>document.getElementById(id);
+ const M=HousingModel,I=HousingInputs,$=id=>document.getElementById(id);
  const defaults={...BASE_PARAMS,corp_years:10,step_rate:.03};
  const moneyKeys=new Set(['price','rent','salary','social','social_corp','other_deduction','owner_cost','deduction_sale','extra_repair']);
  const pctKeys=new Set(['ltv','mortgage_rate','buy_cost','sell_cost','growth','rent_growth','owner_growth','invest','building_share','basis_cost','step_rate','sacrifice']);
  const annualFromMonthly=new Set(['cap','fringe']);
- let current=null, result=null;
+ let state=I.createDefault(),current=null,result=null;
+ const dirtyKeys=new Set();
  const fmtMan=(v,d=0)=>Number(v/10000).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d})+'万円';
  const fmtOku=(v,d=3)=>(v/1e8).toFixed(d)+'億円';
  const fmtPct=(v,d=2)=>((v>=0?'+':'')+(v*100).toFixed(d)+'%');
@@ -275,20 +391,20 @@ if(typeof document!=='undefined')(()=>{
   }
  }
  function read(){
-  const p={...defaults};
+  const patch={};
   for(const e of document.querySelectorAll('[data-param]')){
    const k=e.dataset.param;
-   if(e.type==='checkbox'){p[k]=e.checked;continue;}
-   if(k==='loan_type'){p[k]=e.value;continue;}
+   if(!dirtyKeys.has(k))continue;
+   if(e.type==='checkbox'){patch[k]=e.checked;continue;}
+   if(k==='loan_type'){patch[k]=e.value;continue;}
    if(e.value.trim()==='')throw new Error('空欄の入力があります。すべての金額・年数を入力してください。');
    let v=Number(e.value);if(!Number.isFinite(v))throw new Error('数値を確認してください。');
-   if(e.min!==''&&v<Number(e.min)||e.max!==''&&v>Number(e.max))throw new Error(e.previousElementSibling.textContent+'：'+e.min+'〜'+e.max+'の範囲で入力してください。');
+   if(e.min!==''&&v<Number(e.min)||e.max!==''&&v>Number(e.max))throw new Error(e.closest('.field').querySelector('label').textContent+'：'+e.min+'〜'+e.max+'の範囲で入力してください。');
    if(moneyKeys.has(k))v*=10000;else if(pctKeys.has(k))v/=100;else if(annualFromMonthly.has(k))v*=120000;
-   p[k]=v;
+   patch[k]=v;
   }
-  const error=HousingSensitivity.validate(p);
-  if(error)throw new Error(error);
-  return p;
+  const next=I.update(state,patch);
+  return {next,p:I.resolve(next).parameters};
  }
  function makeTable(head,rows){return '<div class="table-wrap"><table><thead><tr>'+head.map(s=>'<th>'+s+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';}
  function plot(p){
@@ -315,8 +431,8 @@ if(typeof document!=='undefined')(()=>{
  }
  function recalc(){
   try{
-   const p=read(),r=M.run(p),tx=M.housingTax(p,p.rent,p.corp_years>0),bc=M.breakSale(p),br=M.breakSale(p,'rent');
-   current=p;result=r;$('sim-error').style.display='none';$('sim-results').style.opacity='1';
+   const {next,p}=read(),r=M.run(p),tx=M.housingTax(p,p.rent,p.corp_years>0),bc=M.breakSale(p),br=M.breakSale(p,'rent');
+   state=next;dirtyKeys.clear();current=p;result=r;fill(p);renderModes();$('sim-error').style.display='none';$('sim-results').style.opacity='1';
    $('sim-rent').textContent=fmtMan(tx.annual_effective/12,1);
    $('sim-tax').textContent=fmtMan(tx.benefit);
    $('sim-be-price').textContent=bc?fmtOku(bc.price):'範囲内なし';
@@ -336,7 +452,7 @@ if(typeof document!=='undefined')(()=>{
     ['購入と互角の売値','—',br?fmtOku(br.price):'範囲内なし',bc?fmtOku(bc.price):'範囲内なし'],
     ['必要な住戸の年率価格変化','—',br?fmtPct(br.growth):'—',bc?fmtPct(bc.growth):'—']
    ]);
-   const beEntry=M.breakEntry(p),beRate=M.breakRate(p),beFlat=M.breakPrice(p);
+   const beEntry=I.breakEntry(state),beRate=M.breakRate(p),beFlat=I.breakPrice(state);
    const texts=[];
    if(beEntry!==null)texts.push('将来売値 '+fmtOku(r.sale.price)+' を固定した分岐買値：'+fmtOku(beEntry)+'。');
    if(beFlat!==null)texts.push('住戸の年率価格変化 '+fmtPct(p.growth)+' を固定した分岐買値：'+fmtOku(beFlat)+'。');
@@ -354,9 +470,11 @@ if(typeof document!=='undefined')(()=>{
    if(r.sale.taxable_gain>100000000)warnings.push('売却益が大きいため、高所得者への追加課税等を含む個別税務確認が必要。本モデルは通常の譲渡税計算に限定。');
    if(p.years>20)warnings.push('20年超の試算は制度・税制・報酬の固定仮定への依存が強い。');
    if(p.fringe>0)warnings.push('現物利益 '+fmtMan(p.fringe)+' / 年は課税給与に加算するが、現金支給には加算しない。');
+   if(state.modes.social==='estimate'||state.modes.social_corp==='estimate')warnings.push('社会保険料は東京・協会けんぽ、給与均等12か月、賞与なしの概算。初年度の年額を全期間に固定し、社宅時の現物給与評価・標準報酬改定時差は省略。');
    $('sim-warning').textContent=warnings.join(' ');
+   $('sim-assumptions').textContent='社会保険料 通常 '+fmtMan(p.social)+' / 社宅 '+fmtMan(p.social_corp)+'（年額・'+(state.modes.social==='estimate'?'概算':'入力')+'）、保有費用 '+fmtMan(p.owner_cost)+' / 年（'+(state.modes.owner_cost==='estimate'?'価格の1%で概算':'入力')+'）。価格予想 '+fmtPct(p.growth)+' / 年、売却特別控除 '+fmtMan(p.deduction_sale)+'。';
    $('sim-status').textContent='再計算済み · 購入 '+fmtOku(p.price,2)+' / 家賃 '+fmtMan(p.rent,1)+' / '+p.years+'年';
-   document.dispatchEvent(new CustomEvent('housing:updated',{detail:{parameters:{...p},result:r}}));
+   document.dispatchEvent(new CustomEvent('housing:updated',{detail:{parameters:{...p},inputState:state,provenance:I.resolve(state).provenance,result:r}}));
    return true;
   }catch(e){
    $('sim-error').textContent=e.message;$('sim-error').style.display='block';$('sim-results').style.opacity='.45';
@@ -366,11 +484,50 @@ if(typeof document!=='undefined')(()=>{
   }
  }
  function download(text,name,type){const a=document.createElement('a');const url=URL.createObjectURL(new Blob([text],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+ function renderModes(){
+  for(const key of ['social','social_corp','owner_cost','owner_growth']){
+   $('mode-'+key).value=state.modes[key];
+   $('f-'+key).disabled=state.modes[key]!=='manual';
+  }
+  $('age-band').value=state.ageBand;
+  $('corp-choice').value=state.modes.corp_years==='full_residence'?'full_residence':state.values.corp_years===0?'none':'manual';
+  $('f-corp_years').disabled=$('corp-choice').value!=='manual';
+ }
+ function applyState(next){
+  try{const {parameters}=I.resolve(next);state=next;dirtyKeys.clear();fill(parameters);return recalc();}
+  catch(e){$('sim-error').textContent=e.message;$('sim-error').style.display='block';return false;}
+ }
+ function applyControlChange(transform){
+  try{return applyState(transform(dirtyKeys.size?read().next:state));}
+  catch(e){$('sim-error').textContent=e.message;$('sim-error').style.display='block';renderModes();return false;}
+ }
+ function setupInputControls(){
+  const basic=$('simulator').querySelector(':scope > .controls'),advanced=$('simAdvanced').querySelector('.controls');
+  basic.append($('f-ltv').closest('.field'));
+  advanced.prepend($('f-loan_type').closest('.field'),$('f-growth').closest('.field'));
+  $('sim-status').insertAdjacentHTML('afterend','<p class="note" id="sim-assumptions"></p>');
+  $('f-corp_years').closest('.field').insertAdjacentHTML('afterbegin','<label for="corp-choice">社宅利用</label><select id="corp-choice" aria-label="社宅利用期間の指定"><option value="none">利用しない</option><option value="full_residence">比較期間中ずっと</option><option value="manual">年数を指定</option></select>');
+  $('simAdvanced').querySelector('.detail-body').insertAdjacentHTML('afterbegin','<div class="field"><label for="age-band">概算社保の年齢区分（協会けんぽ東京・2026年度）</label><select id="age-band"><option value="under40">40歳未満・例示設定</option><option value="40-64">40〜64歳</option></select></div>');
+  const modes={social:[['estimate','年収から概算'],['manual','年額を入力']],social_corp:[['estimate','社宅時の給与から概算'],['same_as_normal','通常時と同額'],['manual','年額を入力']],owner_cost:[['estimate','購入価格の1%で概算'],['manual','年額を入力']],owner_growth:[['manual','増加率を入力'],['same_as_rent','家賃増加率と同じ']]};
+  for(const [key,choices] of Object.entries(modes)){
+   const field=$('f-'+key).closest('.field');
+   const select=document.createElement('select');select.id='mode-'+key;select.setAttribute('aria-label',field.querySelector('label').textContent+'の計算方法');
+   for(const [value,label] of choices){const option=document.createElement('option');option.value=value;option.textContent=label;select.append(option);}
+   field.insertBefore(select,$('f-'+key));
+   select.addEventListener('change',()=>applyControlChange(current=>I.setMode(current,key,select.value)));
+  }
+  $('age-band').addEventListener('change',()=>applyControlChange(current=>I.setAgeBand(current,$('age-band').value)));
+  $('corp-choice').addEventListener('change',()=>{
+   const choice=$('corp-choice').value;
+   applyControlChange(current=>choice==='full_residence'?I.setMode(current,'corp_years','full_residence'):I.update(current,{corp_years:choice==='none'?0:Math.max(1,current.values.corp_years||current.values.years)}));
+  });
+ }
+ setupInputControls();
  $('recalculate').addEventListener('click',recalc);
- $('reset').addEventListener('click',()=>{fill(defaults);recalc();});
- $('previous').addEventListener('click',()=>{fill({...defaults,price:100000000,rent:300000,owner_cost:1000000});recalc();});
+ $('reset').addEventListener('click',()=>applyState(I.createDefault()));
+ $('previous').addEventListener('click',()=>applyState(I.update(I.createDefault(),{price:100000000,rent:300000})));
  for(const e of document.querySelectorAll('[data-param]')){
-  e.addEventListener('input',()=>{$('sim-status').textContent='入力変更あり · 「再計算」を押してください';document.dispatchEvent(new Event('housing:dirty'));});
+  e.addEventListener('input',()=>{dirtyKeys.add(e.dataset.param);$('sim-status').textContent='入力変更あり · 「再計算」を押してください';document.dispatchEvent(new Event('housing:dirty'));});
   e.addEventListener('keydown',event=>{if(event.key==='Enter')recalc();});
  }
  $('csv').addEventListener('click',()=>{
@@ -379,16 +536,16 @@ if(typeof document!=='undefined')(()=>{
   const lines=[cols.map(c=>c[1]).join(',')];for(const row of r.rows)lines.push(cols.map(([k])=>Number(row[k]).toFixed(k==='year'?6:2)).join(','));
   download('\ufeff'+lines.join('\r\n'),'housing_monthly_cashflows.csv','text/csv;charset=utf-8');
  });
- $('save-settings').addEventListener('click',()=>{recalc();if($('sim-error').style.display==='block'||!current)return;download(JSON.stringify({model:'housing-tax-comparison-v2-2026-09-17',units:'JPY and decimal rates',parameters:current},null,2),'housing_scenario_settings.json','application/json');});
- window.HousingUI={defaults:{...defaults},getCurrent:()=>({...current||defaults}),getResult:()=>result,recalculate:recalc,update:patch=>{fill(patch);return recalc();}};
- fill(defaults);recalc();
+ $('save-settings').addEventListener('click',()=>{recalc();if($('sim-error').style.display==='block'||!current)return;download(I.serialize(state),'housing_scenario_settings.json','application/json');});
+ window.HousingUI={defaults:{...defaults},getCurrent:()=>({...current||I.resolve(state).parameters}),getInputState:()=>state,getResult:()=>result,recalculate:recalc,update:patch=>applyControlChange(current=>I.update(current,patch)),loadState:applyState,reset:patch=>applyState(I.update(I.createDefault(),patch||{}))};
+ fill(I.resolve(state).parameters);renderModes();recalc();
 })();
 
 
 // ===== script block 5 =====
 'use strict';
 if(typeof document!=='undefined')(() => {
- const S=HousingSensitivity,M=HousingModel,U=window.HousingUI,$=id=>document.getElementById(id);
+ const S=HousingSensitivity,M=HousingModel,I=HousingInputs,U=window.HousingUI,$=id=>document.getElementById(id);
  const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const n=(v,d=0)=>Number(v).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d});
  const m=(v,d=0)=>n(v/1e4,d)+'万円',o=(v,d=3)=>n(v/1e8,d)+'億円';
@@ -405,8 +562,19 @@ if(typeof document!=='undefined')(() => {
  const row=(cells,cls='')=>'<tr class="'+cls+'">'+cells.map(c=>'<td>'+c+'</td>').join('')+'</tr>';
  const modeNames={corp:'借上社宅',normal:'通常賃貸'};
  const curveKeys=['mortgage_rate','invest','price','rent','years','corp_years','owner_cost','rent_growth','owner_growth','ltv','buy_cost','sell_cost','salary','sacrifice','extra_repair','building_share','mortgage_years','fringe'];
- let p=U.getCurrent(),base=S.evaluate(p),curves=[],trows=[],hg=null,gridKey='mortgage_rate',customValues=false,dirty=false;
+ let state=U.getInputState(),p=U.getCurrent(),base=I.evaluate(state),curves=[],trows=[],hg=null,gridKey='mortgage_rate',customValues=false,dirty=false;
  let renderVersion=0;
+ function evaluateScenario(patch,mode='linked'){
+  try{return I.evaluate(I.scenario(state,patch,mode));}
+  catch(e){return {error:e.message,p:{...p,...patch},inputState:state};}
+ }
+ function curveFor(key,values){const s=S.byKey[key];return values.map(value=>({value,...evaluateScenario({[key]:Number((value*s.scale).toPrecision(14))})}));}
+ function gridFor(preset){
+  const grid=S.grid(p,preset),scenarioMode=preset==='duration'?'independent':'linked';
+  grid.cells=grid.ys.map(y=>grid.xs.map(x=>({x,y,...evaluateScenario({[grid.xkey]:Number((x*S.byKey[grid.xkey].scale).toPrecision(14)),[grid.ykey]:Number((y*S.byKey[grid.ykey].scale).toPrecision(14))},scenarioMode)})));
+  return grid;
+ }
+ function stressesFor(){return S.stresses(p).map(t=>({...t,lo:evaluateScenario({[t.key]:t.lo.p[t.key]}),hi:evaluateScenario({[t.key]:t.hi.p[t.key]})}));}
  function showMsg(text){$('export-message').textContent=text;}
  function emitDownload(text,name,type){
   const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2500);
@@ -422,7 +590,7 @@ if(typeof document!=='undefined')(() => {
    card('社宅で上がるハードル',delta===null?'—':pp(delta),'社宅 g* − 通常賃貸 g*','navy')+
    card('予想と分岐の差',margin===null?'—':pp(margin),'予想 '+rate(p.growth)+' − 社宅 g*','');
   const tx=M.housingTax(p,p.rent,p.corp_years>0);
-  $('dash-payroll').innerHTML='現在の条件：社宅の実質家賃 <strong>'+m(tx.annual_effective/12,1)+'/月</strong>、初年度の税・社保メリット <strong>'+m(tx.benefit)+'/年</strong>。基準入力は年収・家賃の本人説明、その他は明示した仮定。';
+  $('dash-payroll').innerHTML='現在の条件：社宅の実質家賃 <strong>'+m(tx.annual_effective/12,1)+'/月</strong>、初年度の税・社保メリット <strong>'+m(tx.benefit)+'/年</strong>。社会保険料は'+(state.modes.social==='estimate'?'概算':'手入力')+'、年間保有費用は'+(state.modes.owner_cost==='estimate'?'購入価格の1%で概算':'手入力')+'。';
   $('dash-status').className='scenario-status';
   $('dash-status').textContent='計算済み ｜ 買値 '+o(p.price,2)+'・家賃 '+m(p.rent,1)+'/月・保有 '+p.years+'年・社宅入力 '+p.corp_years+'年（有効 '+Math.min(p.years,p.corp_years)+'年）・金利 '+num(p.mortgage_rate*100)+'%・運用 '+num(p.invest*100)+'%';
  }
@@ -445,6 +613,12 @@ if(typeof document!=='undefined')(() => {
  }
  function syncParams(){
   for(const s of S.meta){const e=$('p-'+s.key),v=p[s.key];if(e.type==='checkbox')e.checked=v;else e.value=typeof v==='number'?String(Number((v/s.scale).toFixed(7))):v;$('pr-'+s.key).classList.toggle('changed',!same(v,U.defaults[s.key]));}
+  const labels={social:'年収から概算',social_corp:'社宅時給与から概算',owner_cost:'購入価格の1%で概算',corp_years:'比較期間に連動',owner_growth:'家賃増加率に連動'};
+  for(const key of Object.keys(labels)){
+   const mode=state.modes[key],isLinked=mode!=='manual';
+   $('pr-'+key).querySelector('.param-note').textContent=isLinked?labels[key]+'。値を直接編集すると手入力に切り替わります。':S.byKey[key].note;
+  }
+  $('pr-price').querySelector('.param-note').textContent=state.modes.owner_cost==='estimate'?'家賃は固定。保有費用は買値の1%で概算し直します。頭金・借入・取得費も再計算。':'家賃と入力した年額保有費用は固定。頭金・借入・取得費は買値に連動。';
  }
  function states(){
   const r=base.r,last=r.rows.at(-1),ownerInc=p.owner_cost*Math.pow(1+p.owner_growth,p.years-1);
@@ -491,10 +665,11 @@ if(typeof document!=='undefined')(() => {
    if(tokens.length<2||tokens.length>25||tokens.some(x=>x===''))throw new Error('試す値は、カンマ区切りで2〜25個を入力してください。');
    let xs=tokens.map(Number);if(xs.some(x=>!Number.isFinite(x)))throw new Error('試す値は数値のみを入力してください。');
    xs=[...new Set([...xs,Number((p[k]/s.scale).toFixed(7))])].sort((a,b)=>a-b);
-   curves=S.curve(p,k,xs);$('s-error').style.display='none';
+   curves=curveFor(k,xs);$('s-error').style.display='none';
    $('s-chart').innerHTML=chartCurve(k,curves);
    let explain=s.note;
-   if(k==='years')explain+=' 現在は社宅 '+p.corp_years+'年を固定。保有年数を延ばしても社宅は自動延長しません。税務上、保有6年・11年で扱いが切り替わる仮定です。';
+   if(k==='price'&&state.modes.owner_cost==='manual')explain='家賃と年額保有費用は固定。頭金、借入、取得費は買値に連動します。';
+   if(k==='years')explain+=state.modes.corp_years==='full_residence'?' 社宅期間も比較年数に連動します。':' 社宅期間は'+p.corp_years+'年で固定します。';
    if(k==='corp_years')explain+=' 保有 '+p.years+'年を超える設定は同じ結果になります。';
    if(k==='mortgage_rate'&&p.step_year>0)explain+=' 現在は'+p.step_year+'年後に '+num(p.step_rate*100)+'%へ変更する設定です。';
    $('s-explanation').textContent=explain;
@@ -508,7 +683,7 @@ if(typeof document!=='undefined')(() => {
   }catch(e){$('s-error').textContent=e.message;$('s-error').style.display='block';$('s-chart').innerHTML='';$('s-table').innerHTML='';$('s-reading').textContent='';curves=[];}
  }
  function drawHeat(){
-  const preset=$('h-preset').value,mode=$('h-mode').value;hg=S.grid(p,preset);
+  const preset=$('h-preset').value,mode=$('h-mode').value;hg=gridFor(preset);
   const value=q=>q.error?null:mode==='gap'?(g(q.corp)===null||g(q.normal)===null?null:g(q.corp)-g(q.normal)):g(q[mode]);
   const vals=hg.cells.flat().map(value).filter(v=>v!==null),min=Math.min(...vals),max=Math.max(...vals),range=Math.max(.00001,max-min);
   const xs=S.byKey[hg.xkey],ys=S.byKey[hg.ykey];
@@ -520,9 +695,9 @@ if(typeof document!=='undefined')(() => {
   }).join('')+'</tr>');
   $('h-map').innerHTML=table(heading,rows,'heat-map');
   const modeText=mode==='gap'?'社宅 g* − 通常賃貸 g*（pp）':('購入 vs '+modeNames[mode]+' の g*（年率）');
-  let note='表示：'+modeText+'。その他の入力は現在値で固定。';
-  if(preset==='duration')note+=' 有効な社宅年数は「居住年数と社宅年数の短い方」。税務上の保有期間判定も各セルで再計算します。';
-  if(preset==='price_rent')note+=' 所有費用は年 '+m(p.owner_cost)+' のまま固定。価格に応じた頭金・借入・取引費用は再計算します。';
+  let note='表示：'+modeText+'。その他の独立入力は現在値を維持し、連動値は各セルで再計算。';
+  if(preset==='duration')note+=' 2軸を独立に指定するため、この表の各セルでは「社宅全期間」の連動を外します。';
+  if(preset==='price_rent')note+=state.modes.owner_cost==='estimate'?' 所有費用は各買値の1%で概算します。':' 所有費用は年 '+m(p.owner_cost)+' に固定します。';
   if(preset==='rates'&&p.step_year>0)note+=' 変更後金利は '+num(p.step_rate*100)+'%（'+p.step_year+'年後）のまま固定し、当初金利を動かします。';
   $('h-note').textContent=note;
   $('h-selection').textContent='セルを選ぶと、通常賃貸・社宅の両方の分岐率と売却価格を確認できます。';
@@ -536,7 +711,7 @@ if(typeof document!=='undefined')(() => {
  function drawTornado(){
   const mode=$('t-mode').value,bg=g(base[mode]);
   if(bg===null){$('t-chart').textContent='現在の設定に有効な分岐率がありません。';$('t-table').textContent='';return;}
-  trows=S.stresses(p).map(t=>({...t,dl:t.lo.error||g(t.lo[mode])===null?null:g(t.lo[mode])-bg,dh:t.hi.error||g(t.hi[mode])===null?null:g(t.hi[mode])-bg}));
+  trows=stressesFor().map(t=>({...t,dl:t.lo.error||g(t.lo[mode])===null?null:g(t.lo[mode])-bg,dh:t.hi.error||g(t.hi[mode])===null?null:g(t.hi[mode])-bg}));
   trows.sort((a,b)=>Math.max(Math.abs(b.dl||0),Math.abs(b.dh||0))-Math.max(Math.abs(a.dl||0),Math.abs(a.dh||0)));
   const vals=trows.flatMap(t=>[t.dl,t.dh]).filter(v=>v!==null).map(v=>v*100),lim=Math.max(.2,...vals.map(Math.abs))*1.18;
   const W=990,L=280,R=68,T=37,rowH=57,H=T+trows.length*rowH+65,w=W-L-R;
@@ -554,8 +729,8 @@ if(typeof document!=='undefined')(() => {
   $('t-chart').innerHTML=out;
   $('t-table').innerHTML=table(['変更パラメータ','小さい試算値','その g*','Δg*','大きい試算値','その g*','Δg*'],trows.map(t=>row([E(S.byKey[t.key].label),E(label(t.key,t.lo.p[t.key])),t.lo.error?'対象外':gr(t.lo[mode]),t.dl===null?'—':pp(t.dl),E(label(t.key,t.hi.p[t.key])),t.hi.error?'対象外':gr(t.hi[mode]),t.dh===null?'—':pp(t.dh)])),'sensitivity-table');
  }
- function update(newP){
-  p={...newP};base=S.evaluate(p);if(base.error){markDirty(base.error);return;}
+ function update(newP,newState){
+  p={...newP};state=newState||U.getInputState();base=I.evaluate(state);if(base.error){markDirty(base.error);return;}
   dirty=false;renderVersion++;kpis();syncParams();states();
   if(!customValues||gridKey!==$('s-key').value)setStandardValues();
   drawCurve();drawHeat();drawTornado();
@@ -564,20 +739,20 @@ if(typeof document!=='undefined')(() => {
  function ensureChartFresh(){if(dirty)return checkFresh();return true;}
  function parameterCSV(){
   if(!checkFresh())return;
-  const rows=[['分類','パラメータ','キー','初期値','現在値','単位','根拠','固定・連動の扱い']];
-  for(const s of S.meta)rows.push([s.group==='dynamic'?'動的':'静的',s.label,s.key,typeof U.defaults[s.key]==='number'?U.defaults[s.key]/s.scale:U.defaults[s.key],typeof p[s.key]==='number'?p[s.key]/s.scale:p[s.key],s.unit,s.source,s.note]);
+  const rows=[['分類','パラメータ','キー','初期値','現在値','単位','根拠','固定・連動の扱い','入力モード']];
+  for(const s of S.meta)rows.push([s.group==='dynamic'?'動的':'静的',s.label,s.key,typeof U.defaults[s.key]==='number'?U.defaults[s.key]/s.scale:U.defaults[s.key],typeof p[s.key]==='number'?p[s.key]/s.scale:p[s.key],s.unit,s.source,s.note,state.modes[s.key]||'manual']);
   emitDownload(csv(rows),'housing_parameters_v2.csv','text/csv;charset=utf-8');showMsg('パラメータCSVを作成しました。給与・家賃等の個人情報を含みます。');
  }
  function sensitivityCSV(){
   if(!checkFresh())return;
-  const keys=S.meta.map(s=>s.key),header=['種類','変更項目','試す値','表示単位','状態','通常賃貸_gstar_pct','社宅_gstar_pct','通常賃貸_分岐売値_円','社宅_分岐売値_円','社宅_delta_gstar_pp',...keys.map(k=>'p_'+k)];
+  const keys=S.meta.map(s=>s.key),modeKeys=Object.keys(state.modes),header=['種類','変更項目','試す値','表示単位','状態','通常賃貸_gstar_pct','社宅_gstar_pct','通常賃貸_分岐売値_円','社宅_分岐売値_円','社宅_delta_gstar_pp',...keys.map(k=>'p_'+k),...modeKeys.map(k=>'mode_'+k),'age_band','tax_rule_set'];
   const rows=[header];
-  const add=(kind,k,v,unit,q)=>rows.push([kind,k,v,unit,q.error||q.corp.status,g(q.normal)===null?'':g(q.normal)*100,g(q.corp)===null?'':g(q.corp)*100,q.normal?.price??'',q.corp?.price??'',g(q.corp)===null||g(base.corp)===null?'':(g(q.corp)-g(base.corp))*100,...keys.map(key=>q.p[key])]);
+  const add=(kind,k,v,unit,q)=>rows.push([kind,k,v,unit,q.error||q.corp.status,g(q.normal)===null?'':g(q.normal)*100,g(q.corp)===null?'':g(q.corp)*100,q.normal?.price??'',q.corp?.price??'',g(q.corp)===null||g(base.corp)===null?'':(g(q.corp)-g(base.corp))*100,...keys.map(key=>q.p[key]),...modeKeys.map(key=>q.inputState?.modes[key]||state.modes[key]),q.inputState?.ageBand||state.ageBand,'jp-2026-fixed']);
   add('現在値','baseline','','',base);
-  for(const k of curveKeys)for(const q of S.curve(p,k,S.defaultValues(k,p)))add('1変数_標準幅',k,q.value,S.byKey[k].unit,q);
+  for(const k of curveKeys)for(const q of curveFor(k,S.defaultValues(k,p)))add('1変数_標準幅',k,q.value,S.byKey[k].unit,q);
   for(const q of curves)add('表示中_1変数',$('s-key').value,q.value,S.byKey[$('s-key').value].unit,q);
   for(const preset of ['rates','price_rent','duration']){
-   const grid=S.grid(p,preset);for(const q of grid.cells.flat())add('2変数_'+preset,grid.xkey+' / '+grid.ykey,q.x+' / '+q.y,S.byKey[grid.xkey].unit+' / '+S.byKey[grid.ykey].unit,q);
+   const grid=gridFor(preset);for(const q of grid.cells.flat())add('2変数_'+preset,grid.xkey+' / '+grid.ykey,q.x+' / '+q.y,S.byKey[grid.xkey].unit+' / '+S.byKey[grid.ykey].unit,q);
   }
   emitDownload(csv(rows),'housing_sensitivity_v2.csv','text/csv;charset=utf-8');showMsg('全パラメータの標準感応度・表示中の試算・3種類の2変数表を出力しました。p_列の金額は円、利率は小数です。');
  }
@@ -594,9 +769,9 @@ if(typeof document!=='undefined')(() => {
   $('h-map').addEventListener('click',e=>{const b=e.target.closest('[data-hi]');if(b&&!dirty)selectCell(Number(b.dataset.hi),Number(b.dataset.hj));});
   document.querySelectorAll('[data-quick]').forEach(b=>b.addEventListener('click',()=>{
    const patches={rate:{mortgage_rate:.02},corp:{corp_years:5},invest:{invest:.05},price:{price:220000000}};
-   U.update({...U.defaults,...patches[b.dataset.quick]});
+   U.reset(patches[b.dataset.quick]);
   }));
-  $('dash-reset').addEventListener('click',()=>{customValues=false;U.update({...U.defaults});});
+  $('dash-reset').addEventListener('click',()=>{customValues=false;U.reset();});
   $('parameters').addEventListener('change',e=>{
    const el=e.target.closest('[data-edit]');if(!el)return;
    const key=el.dataset.edit,s=S.byKey[key];let v;
@@ -612,12 +787,11 @@ if(typeof document!=='undefined')(() => {
   $('settings-file').addEventListener('change',async e=>{
    try{
     const f=e.target.files[0];if(!f)return;if(f.size>1000000)throw new Error('設定ファイルが大きすぎます。');
-    const doc=JSON.parse(await f.text()),params=doc.parameters;if(!params||typeof params!=='object')throw new Error('parametersを含む設定JSONではありません。');
-    const q={};for(const s of S.meta){const v=params[s.key];if(v===undefined||typeof v!==typeof U.defaults[s.key])throw new Error(s.label+'の値または型が不正です。');q[s.key]=v;}
-    const er=S.validate(q);if(er)throw new Error(er);customValues=false;U.update(q);showMsg('設定を読み込み、すべての比較を再計算しました。');
+    const doc=JSON.parse(await f.text()),loaded=I.deserialize(doc);
+    customValues=false;if(!U.loadState(loaded))throw new Error('設定を適用できませんでした。');showMsg('設定を読み込み、すべての比較を再計算しました。');
    }catch(err){showMsg('設定は変更していません：'+err.message);}finally{e.target.value='';}
   });
-  document.addEventListener('housing:updated',e=>update(e.detail.parameters));
+  document.addEventListener('housing:updated',e=>update(e.detail.parameters,e.detail.inputState));
   document.addEventListener('housing:dirty',()=>markDirty());
   document.addEventListener('housing:invalid',e=>markDirty('入力エラー：'+e.detail.message+'。結果は直前の有効な設定です。'));
   for(const a of document.querySelectorAll('a[href^="#"]'))a.addEventListener('click',()=>{const target=document.getElementById(a.hash.slice(1));if(target){let el=target;while(el){if(el.tagName==='DETAILS')el.open=true;el=el.parentElement;}}});
