@@ -3967,8 +3967,214 @@
     },
     {
       "id": "26.15",
-      "status": "unreviewed",
-      "requirements": []
+      "status": "gaps_found",
+      "requirements": [
+        {
+          "id": "BSK01",
+          "statement": "欧州型 call/put の basket 給付、rainbow との関係、非負保有量と通貨・年率の単位を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": []
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": []
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "BSK02",
+          "statement": "相関 GBM の厳密 M1/M2 を導き、モーメント整合 Black 価格が一般には近似であることを区別する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": []
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "reference_tests"
+              ],
+              "locator": "M7a independent numerical grid and uncertainty; API/teaching pending"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "BSK03",
+          "statement": "独立した条件付き積分と相関 GBM MC に対して近似価格を比較し、標準誤差を表示する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": []
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "reference_tests"
+              ],
+              "locator": "M7a independent numerical grid and uncertainty; API/teaching pending"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "BSK04",
+          "statement": "他条件を固定した相関の変更が二次モーメントと価格へ与える効果を示す。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": []
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "reference_tests"
+              ],
+              "locator": "M7a independent numerical grid and uncertainty; API/teaching pending"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "BSK05",
+          "statement": "許容入力と除外領域、実測近似誤差、価格 floor、4SE に基づく未確定符号を示す。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": []
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "numerical",
+                "reference_tests"
+              ],
+              "locator": "M7a independent numerical grid and uncertainty; API/teaching pending"
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        },
+        {
+          "id": "BSK06",
+          "statement": "六小節・四共有図を Book/portal 両面に配置し、保存数値・出力・実画面を検証する。",
+          "coverage": {
+            "explanation": {
+              "state": "pending",
+              "refs": []
+            },
+            "implementation": {
+              "state": "pending",
+              "refs": []
+            },
+            "independent_validation": {
+              "state": "pending",
+              "refs": []
+            },
+            "visualization": {
+              "state": "pending",
+              "refs": []
+            },
+            "rendered": {
+              "state": "pending",
+              "refs": []
+            }
+          }
+        }
+      ],
+      "reviewed_at": "2026-09-19",
+      "source_pages": [
+        628,
+        629
+      ],
+      "scope": "M7a: independent basket references and BSK01-BSK06 requirements; M7b implementation and teaching pending.",
+      "evidence": {
+        "review": {
+          "path": "docs/SECTION_26_15_REVIEW_2026-09-19.md",
+          "kind": "note",
+          "sha256": "f7b804f66a2413a48a5b9b780b396d6029f00d5b75bf38fd0b1e9152f74893ee"
+        },
+        "reference_generator": {
+          "path": "scripts/build_basket_reference.py",
+          "kind": "source",
+          "sha256": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69"
+        },
+        "reference_tests": {
+          "path": "hullkit/tests/test_basket_reference.py",
+          "kind": "test",
+          "sha256": "2304492027841179924a9d633aae283e0c7f9d4cbf54ccf56c7b37cb4fddff80"
+        },
+        "prices": {
+          "path": "docs/validation/section-26-15/prices.json",
+          "kind": "reference",
+          "sha256": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8"
+        },
+        "numerical": {
+          "path": "docs/validation/section-26-15/numerical-check.json",
+          "kind": "record",
+          "sha256": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea"
+        }
+      }
     },
     {
       "id": "26.16",

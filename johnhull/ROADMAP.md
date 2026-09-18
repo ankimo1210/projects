@@ -203,15 +203,21 @@ M1は、原典outline由来の299節・7付録を台帳に登録し、要求・�
 | M4 | §26.12を独立参照からツリー・本文・図・実画面まで確認 | M4b：S01–S06、42価格へのCRR収束、本文6小節・4図、Book/portal両面2幅を検証。Task1–3独立レビュー承認済み |
 | M5 | §26.13の要求抽出・独立参照・既存近似の誤差測定から教材・図・実画面まで | 完了（accepted）。独立レビューのP2 6件とP3 1件に対応（F1–F7）。再レビューは利用者判断で省略。[レビュー結果](docs/SECTION_26_13_FEEDBACK_2026-09-16.md)・[受入ノート](docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md) |
 | M6 | §26.14 Options to Exchange One Asset for Another（pp.627–628）を要求整理から配布画面まで | 完了（accepted）。M6a：独立24価格（2求積が1.8e-14で一致）。M6b：API4関数・本文6小節・共有4図・Book/portal両面2幅。早期行使は同一格子で分離し、q_V=0で1.2e-13（格子残差2.7e-3）。[受入ノート](docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md) |
-| 以降 | 台帳を使って残る未評価節（§26.15–§26.17ほか）へ段階的に展開 | 未着手 |
+| M7 | §26.15 Basket Options（pp.628–629）の独立参照から教材・図・実画面まで | M7a完了、gaps_found。独立72価格・BSK01–BSK06を固定。M7bのAPI・六小節・四図・両画面確認は未了。[レビュー](docs/SECTION_26_15_REVIEW_2026-09-19.md) |
+| 以降 | 台帳を使って残る未評価節（§26.16–§26.17ほか）へ段階的に展開 | 未着手 |
 
 M1のPASSは台帳と保存証跡の整合性を表す。数値モデルの再検証や全節の完成判定ではない。
 M1と§26.9の試行は`ab825e03`としてmainへpush済み。
 M2の現在地は[§26.10受入ノート](docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md)、
 M1実施時点の記録は[M1記録](docs/validation/section-ledger-m1/validation.json)。
 
-現在地は[§26.14のM6b](docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md)と
-[統合記録](docs/validation/section-26-14/m6b-check.json)。台帳は受入6・未評価300。
+現在地（2026-09-19）は[§26.15のM7a](docs/SECTION_26_15_REVIEW_2026-09-19.md)。台帳は受入6・gaps_found 1・未評価299。
+独立72価格（48市場行＋24解析アンカー）で、MCの最大差は2.405SE、1市場100万標本の最大SEは0.02089通貨。
+近似誤差は全72行の最大絶対値6.4174通貨、参照価格0.5以上の63行では−1.94%〜+66.84%。
+これは経験的範囲で精度保証ではない。M7bのAPI・教材・図・両画面検証が残る。
+
+前段階の[§26.14のM6b](docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md)と
+[統合記録](docs/validation/section-26-14/m6b-check.json)は受入済みである。
 `exchange_spread_volatility`・`exchange_option_american`・`better_of_two_assets`・`worse_of_two_assets`を追加し、
 vol10 §4.4は6小節・4図になった。**早期行使プレミアムは同じ格子で行使判定を外した価格と比べて測る。**
 閉形式と比べると離散化が混ざり、$q_V=0$でも2.3e-3の見かけのプレミアムが出る（実際は1.2e-13、格子残差2.7e-3）。
@@ -242,7 +248,8 @@ V/Uを原資産・行使1.0・金利qU・配当qVとする読み替え、better-
 Rubinsteinの米国型（qV=0で早期行使プレミアム1.9e-13、qV>0で最大4.2783）。
 §26.14には印刷された例題が無いため、外部の正解に対するピンは存在しない。
 M6bでE01–E06の本文・図・Book/portalの実画面確認まで揃い、acceptedへ変更した。
-次は§26.15 Basket Options（p.628）。vol10 §4.5に式26.3・26.4の再掲だけがあり、独立検証も図も無い。
+§26.15 Basket Options（pp.628–629）はM7aで独立参照を固定した。vol10 §4.5の式の再掲から、
+公開API・本文・図・両画面へ拡張するM7bが次の作業となる。
 
 §26.12の現在地は[受入ノート](docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md)と
 [M4b統合記録](docs/validation/section-26-12/m4b-check.json)。

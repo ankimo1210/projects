@@ -12,8 +12,8 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 300 |
-| gaps_found | 0 |
+| unreviewed | 299 |
+| gaps_found | 1 |
 | pending_validation | 0 |
 | accepted | 6 |
 | out_of_scope | 0 |
@@ -47,7 +47,7 @@
 | 23 | 7 | 7 | 0 | 0 | 0 | 0 |
 | 24 | 9 | 9 | 0 | 0 | 0 | 0 |
 | 25 | 11 | 11 | 0 | 0 | 0 | 0 |
-| 26 | 17 | 11 | 0 | 0 | 6 | 0 |
+| 26 | 17 | 10 | 1 | 0 | 6 | 0 |
 | 27 | 8 | 8 | 0 | 0 | 0 | 0 |
 | 28 | 8 | 8 | 0 | 0 | 0 | 0 |
 | 29 | 4 | 4 | 0 | 0 | 0 | 0 |
@@ -306,7 +306,7 @@
 | 26.12 | 26 | section | Shout Options | accepted |
 | 26.13 | 26 | section | Asian Options | accepted |
 | 26.14 | 26 | section | Options to Exchange One Asset for Another | accepted |
-| 26.15 | 26 | section | Options Involving Several Assets | unreviewed |
+| 26.15 | 26 | section | Options Involving Several Assets | gaps_found |
 | 26.16 | 26 | section | Volatility and Variance Swaps | unreviewed |
 | 26.17 | 26 | section | Static Options Replication | unreviewed |
 | 27.1 | 27 | section | Alternatives to Black–Scholes–Merton | unreviewed |
