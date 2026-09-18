@@ -156,7 +156,10 @@ const HousingModel = (() =&gt; {
  function pmt(B,r,n){return n&lt;=0?0:Math.abs(r)&lt;1e-12?B/n:B*r/(1-Math.pow(1+r,-n));}
  function saleTax(p,price=null,years=p.years){
   const P=price===null?p.price*Math.pow(1+p.growth,years):price;
-  const basisInitial=p.price*(1+p.basis_cost),B=basisInitial*p.building_share;
+  // Transaction costs carry a price-proportional rate and a flat yen amount, so a
+  // break-even search reprices the brokerage sliding scale at every candidate price.
+  const basisInitial=p.price*(1+p.basis_cost)+p.basis_cost_fixed,B=basisInitial*p.building_share;
+  const proceeds=P*(1-p.sell_cost)-p.sell_cost_fixed;
   // Acquisition is fixed at September 2026, as specified in the report.
   // Monthly hypothetical sales use the same calendar rule as terminal sales.
   const elapsedMonths=Math.round(years*12);
@@ -166,20 +169,20 @@ const HousingModel = (() =&gt; {
   const reducedEligible=januaryFirst&gt;new Date(Date.UTC(2036,8,17));
   const depreciationYears=Math.floor((elapsedMonths+6)/12);
   const dep=Math.min(B*.95,B*.9*.015*depreciationYears),basis=basisInitial-dep;
-  const taxable=Math.max(0,P*(1-p.sell_cost)-basis-p.deduction_sale);
+  const taxable=Math.max(0,proceeds-basis-p.deduction_sale);
   let t=0;
   if(p.sale_tax){
    if(!longTerm)t=taxable*.3963;
    else if(reducedEligible&amp;&amp;p.reduced_long)t=Math.min(taxable,60000000)*.1421+Math.max(0,taxable-60000000)*.20315;
    else t=taxable*.20315;
   }
-  return {tax:t,taxable_gain:taxable,depreciation:dep,basis,price:P,net_before_debt:P*(1-p.sell_cost)-t};
+  return {tax:t,taxable_gain:taxable,depreciation:dep,basis,price:P,net_before_debt:proceeds-t};
  }
  function run(p,allMonths=false){
   const n=p.years*12,term=p.mortgage_years*12;
   let bal=p.price*p.ltv,r=p.mortgage_rate/12;
   let pay=p.loan_type==='amortizing'?pmt(bal,r,term):bal*r;
-  const initBuy=p.price*(1-p.ltv+p.buy_cost),initRent=p.rent*p.rent_initial,K=Math.max(initBuy,initRent);
+  const initBuy=p.price*(1-p.ltv+p.buy_cost)+p.buy_cost_fixed,initRent=p.rent*p.rent_initial,K=Math.max(initBuy,initRent);
   let ib=K-initBuy,ir=K-initRent,ic=ir,totalInt=0,taxSaved=0;
   const sums=[initBuy,initRent,initRent],rows=[];
   for(let m=1;m&lt;=n;m++){
@@ -230,7 +233,7 @@ const HousingModel = (() =&gt; {
 })();
 if(typeof module!=='undefined')module.exports=HousingModel;
 
-const BASE_PARAMS={"price": 250000000, "rent": 750000, "years": 10, "salary": 50000000, "social": 1500000, "social_corp": 1500000, "other_deduction": 0, "sacrifice": 1.0, "cap": 0, "fringe": 0, "corp_years": 10, "ltv": 0.9, "mortgage_rate": 0.015, "mortgage_years": 35, "loan_type": "amortizing", "buy_cost": 0.07, "sell_cost": 0.035, "owner_cost": 2500000, "rent_initial": 2.0, "renewal": 1.0, "growth": 0, "rent_growth": 0, "owner_growth": 0, "invest": 0.03, "building_share": 0.3, "basis_cost": 0.04, "deduction_sale": 30000000, "sale_tax": true, "reduced_long": true, "extra_repair": 0, "repair_year": 8, "step_year": 0, "step_rate": 0.03};</pre></div></details>
+const BASE_PARAMS={"price": 250000000, "rent": 750000, "years": 10, "salary": 50000000, "social": 1500000, "social_corp": 1500000, "other_deduction": 0, "sacrifice": 1.0, "cap": 0, "fringe": 0, "corp_years": 10, "ltv": 0.9, "mortgage_rate": 0.015, "mortgage_years": 35, "loan_type": "amortizing", "buy_cost": 0.07, "buy_cost_fixed": 0, "sell_cost": 0.035, "sell_cost_fixed": 0, "owner_cost": 2500000, "rent_initial": 2.0, "renewal": 1.0, "growth": 0, "rent_growth": 0, "owner_growth": 0, "invest": 0.03, "building_share": 0.3, "basis_cost": 0.04, "basis_cost_fixed": 0, "deduction_sale": 30000000, "sale_tax": true, "reduced_long": true, "extra_repair": 0, "repair_year": 8, "step_year": 0, "step_rate": 0.03};</pre></div></details>
 </section>
 <section id="sources"><div class="sec-label">09 / PRIMARY SOURCES</div><h2>出典・前提の区別。</h2><p class="note">税・社保の出典確認日：2026年9月18日。ユーザー申告は本会話、前回の1億円・家賃30万円は会話内の仮定。下記資料は制度・税率の根拠として用い、物件価格・運用利回り・将来の継続年数の根拠には用いていない。</p><div class="source-grid"><div class="source" id="src-1"><b>[1] 所得税の速算表・付加税</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2260.htm" rel="noopener noreferrer" target="_blank">国税庁 No.2260</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-2"><b>[2] 給与所得控除の上限</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm" rel="noopener noreferrer" target="_blank">国税庁 No.1410</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-3"><b>[3] 基礎控除の所得制限</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1199.htm" rel="noopener noreferrer" target="_blank">国税庁 No.1199</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-4"><b>[4] 住民税の所得割・前年所得・譲渡所得課税</b><a href="https://www.tax.metro.tokyo.lg.jp/kazei/life/kojin_ju" rel="noopener noreferrer" target="_blank">東京都主税局「個人住民税」</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-5"><b>[5] 使用人向け社宅の給与課税条件</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2597.htm" rel="noopener noreferrer" target="_blank">国税庁 No.2597</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-6"><b>[6] 役員向け社宅の別ルール</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/gensen/2600.htm" rel="noopener noreferrer" target="_blank">国税庁 No.2600</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-7"><b>[7] 社会保険における現物給与の評価</b><a href="https://www.nenkin.go.jp/service/kounen/hokenryo/hoshu/20150511.html" rel="noopener noreferrer" target="_blank">日本年金機構「全国現物給与価額一覧表」</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-8"><b>[8] 中古住宅の住宅ローン控除・所得要件</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-3.htm" rel="noopener noreferrer" target="_blank">国税庁 No.1211-3</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-9"><b>[9] 自宅売却時の3,000万円特別控除</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3302.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3302</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-10"><b>[10] 非業務用RC建物の取得費・減価償却</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3261.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3261</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-11"><b>[11] 長期譲渡所得と1月1日の所有期間判定</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3208.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3208</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-12"><b>[12] 短期譲渡所得の税額</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3211.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3211</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-13"><b>[13] 10年超所有の自宅売却・軽減税率</b><a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/joto/3305.htm" rel="noopener noreferrer" target="_blank">国税庁 No.3305</a><br><small>制度の適用条件は原文を確認。</small></div><div class="source" id="src-14"><b>[14] 2026年10月の住宅現物給与評価の改定</b><a href="https://www.nenkin.go.jp/oshirase/taisetu/jigyosho/2026/202603/0319.html" rel="noopener noreferrer" target="_blank">日本年金機構・2026年3月19日公表</a><br><small>制度の適用条件は原文を確認。</small></div></div></section>
 </main><footer class="foot">PRIVATE SCENARIO REPORT · v2.2 · 2026.09.18<br>給与・家賃に関する個人情報を含む。計算・入力はブラウザー内で完結し、外部へ送信しない。比較計算であり、税務助言・融資承認・将来価値の保証ではない。現在の設定に連動する分析と、折りたたみ式の初期ケース解説を収録。</footer>
@@ -273,7 +276,10 @@ const HousingModel = (() => {
  function pmt(B,r,n){return n<=0?0:Math.abs(r)<1e-12?B/n:B*r/(1-Math.pow(1+r,-n));}
  function saleTax(p,price=null,years=p.years){
   const P=price===null?p.price*Math.pow(1+p.growth,years):price;
-  const basisInitial=p.price*(1+p.basis_cost),B=basisInitial*p.building_share;
+  // Transaction costs carry a price-proportional rate and a flat yen amount, so a
+  // break-even search reprices the brokerage sliding scale at every candidate price.
+  const basisInitial=p.price*(1+p.basis_cost)+p.basis_cost_fixed,B=basisInitial*p.building_share;
+  const proceeds=P*(1-p.sell_cost)-p.sell_cost_fixed;
   // Acquisition is fixed at September 2026, as specified in the report.
   // Monthly hypothetical sales use the same calendar rule as terminal sales.
   const elapsedMonths=Math.round(years*12);
@@ -283,20 +289,20 @@ const HousingModel = (() => {
   const reducedEligible=januaryFirst>new Date(Date.UTC(2036,8,17));
   const depreciationYears=Math.floor((elapsedMonths+6)/12);
   const dep=Math.min(B*.95,B*.9*.015*depreciationYears),basis=basisInitial-dep;
-  const taxable=Math.max(0,P*(1-p.sell_cost)-basis-p.deduction_sale);
+  const taxable=Math.max(0,proceeds-basis-p.deduction_sale);
   let t=0;
   if(p.sale_tax){
    if(!longTerm)t=taxable*.3963;
    else if(reducedEligible&&p.reduced_long)t=Math.min(taxable,60000000)*.1421+Math.max(0,taxable-60000000)*.20315;
    else t=taxable*.20315;
   }
-  return {tax:t,taxable_gain:taxable,depreciation:dep,basis,price:P,net_before_debt:P*(1-p.sell_cost)-t};
+  return {tax:t,taxable_gain:taxable,depreciation:dep,basis,price:P,net_before_debt:proceeds-t};
  }
  function run(p,allMonths=false){
   const n=p.years*12,term=p.mortgage_years*12;
   let bal=p.price*p.ltv,r=p.mortgage_rate/12;
   let pay=p.loan_type==='amortizing'?pmt(bal,r,term):bal*r;
-  const initBuy=p.price*(1-p.ltv+p.buy_cost),initRent=p.rent*p.rent_initial,K=Math.max(initBuy,initRent);
+  const initBuy=p.price*(1-p.ltv+p.buy_cost)+p.buy_cost_fixed,initRent=p.rent*p.rent_initial,K=Math.max(initBuy,initRent);
   let ib=K-initBuy,ir=K-initRent,ic=ir,totalInt=0,taxSaved=0;
   const sums=[initBuy,initRent,initRent],rows=[];
   for(let m=1;m<=n;m++){
@@ -347,7 +353,7 @@ const HousingModel = (() => {
 })();
 if(typeof module!=='undefined')module.exports=HousingModel;
 </script><script>
-const BASE_PARAMS={"price": 250000000, "rent": 750000, "years": 10, "salary": 50000000, "social": 1500000, "social_corp": 1500000, "other_deduction": 0, "sacrifice": 1.0, "cap": 0, "fringe": 0, "corp_years": 10, "ltv": 0.9, "mortgage_rate": 0.015, "mortgage_years": 35, "loan_type": "amortizing", "buy_cost": 0.07, "sell_cost": 0.035, "owner_cost": 2500000, "rent_initial": 2.0, "renewal": 1.0, "growth": 0, "rent_growth": 0, "owner_growth": 0, "invest": 0.03, "building_share": 0.3, "basis_cost": 0.04, "deduction_sale": 30000000, "sale_tax": true, "reduced_long": true, "extra_repair": 0, "repair_year": 8, "step_year": 0, "step_rate": 0.03};
+const BASE_PARAMS={"price": 250000000, "rent": 750000, "years": 10, "salary": 50000000, "social": 1500000, "social_corp": 1500000, "other_deduction": 0, "sacrifice": 1.0, "cap": 0, "fringe": 0, "corp_years": 10, "ltv": 0.9, "mortgage_rate": 0.015, "mortgage_years": 35, "loan_type": "amortizing", "buy_cost": 0.07, "buy_cost_fixed": 0, "sell_cost": 0.035, "sell_cost_fixed": 0, "owner_cost": 2500000, "rent_initial": 2.0, "renewal": 1.0, "growth": 0, "rent_growth": 0, "owner_growth": 0, "invest": 0.03, "building_share": 0.3, "basis_cost": 0.04, "basis_cost_fixed": 0, "deduction_sale": 30000000, "sale_tax": true, "reduced_long": true, "extra_repair": 0, "repair_year": 8, "step_year": 0, "step_rate": 0.03};
 </script><script>
 'use strict';
 /* Sensitivity layer v2.1 — corrected monthly sale tax and active housing validation.
@@ -382,11 +388,14 @@ const HousingSensitivity = (() => {
   ['mortgage_years','static','融資','ローン期間','T_M','年',1,5,50,1,'元利均等は満期に返済終了。IOは比較期間が満期を超えない範囲のみ。','仮定'],
   ['loan_type','static','融資','返済方法','—','',1,null,null,null,'IOは同金利・同費用の仮想比較。購入終了時に残債を売却代金から返す。','仮定'],
   ['buy_cost','static','取引','購入諸費用率','c_B','%',.01,0,15,.5,'頭金とは別の初期支出。税務取得費に含まれる額とは一致しない。','仮定'],
+  ['buy_cost_fixed','static','取引','購入諸費用の定額分','c_B0','万円',1e4,0,1000,1,'価格に比例しない部分。仲介手数料の速算式の定額、登記・印紙など。','仮定'],
   ['sell_cost','static','取引','売却費用率','c_S','%',.01,0,10,.1,'損益分岐として求める売値にも比例。','仮定'],
+  ['sell_cost_fixed','static','取引','売却費用の定額分','c_S0','万円',1e4,0,1000,1,'売値に比例しない部分。分岐売値を探索するときも同額を差し引く。','仮定'],
   ['rent_initial','static','賃貸','賃貸初期費用','n_0','か月分',1,0,10,.5,'返還される敷金を除く。社宅側も税引後で同額を負担。','仮定'],
   ['renewal','static','賃貸','2年ごとの更新料','n_U','か月分',1,0,3,.5,'退出する最終月には課さない。社宅側も税引後負担。','仮定'],
   ['building_share','static','売却税','税務上の建物比率','s_B','%',.01,0,100,5,'非業務用RCの取得費減額に使用。住宅の価格予想とは別。','要資料確認'],
   ['basis_cost','static','売却税','取得費に入れる購入費率','c_A','%',.01,0,15,.5,'購入諸費用率以下。土地・建物に価格比率で配分。','要資料確認'],
+  ['basis_cost_fixed','static','売却税','取得費に入れる定額分','c_A0','万円',1e4,0,1000,1,'購入諸費用の定額分のうち取得費に算入できる額。定額分以下。','要資料確認'],
   ['deduction_sale','static','売却税','売却益の特別控除','D_S','万円',1e4,0,3000,1000,'3,000万円控除等の要件を満たす仮定。自動資格判定はしない。','要件付き仮定'],
   ['sale_tax','static','売却税','売却税の算入','—','',1,null,null,null,'2026年に確認した税率を固定する簡易計算。特例の適否は別途確認。','算入'],
   ['reduced_long','static','売却税','10年超所有の軽減税率','—','',1,null,null,null,'2026年9月取得とし、売却年1月1日に10年超かを判定。月次CSVでは124か月から。','要件付き仮定']
@@ -401,6 +410,7 @@ const HousingSensitivity = (() => {
   }
   for(const k of ['years','corp_years','mortgage_years','step_year','repair_year'])if(!Number.isInteger(p[k]))return '年数は整数';
   if(p.basis_cost>p.buy_cost)return '税務取得費への算入率が購入諸費用率を超える';
+  if(p.basis_cost_fixed>p.buy_cost_fixed)return '税務取得費に算入する定額分が購入諸費用の定額分を超える';
   if(!['io','amortizing'].includes(p.loan_type))return '返済方式が不正';
   if(p.loan_type==='io'&&p.years>p.mortgage_years)return 'IOの比較期間がローン満期を超える';
   const activeYears=Math.min(p.years,p.corp_years);
@@ -492,55 +502,106 @@ const HousingInputs=(() => {
   social_corp:['manual','estimate','same_as_normal'],
   owner_cost:['manual','estimate'],
   corp_years:['manual','full_residence'],
-  owner_growth:['manual','same_as_rent']
+  owner_growth:['manual','same_as_rent'],
+  rent:['manual','yield_linked'],
+  deduction_sale:['manual','residential','non_residential'],
+  sell_cost:['manual','itemized']
  };
+ // 不動産譲渡契約書の印紙税（軽減後、令和9年3月31日まで）。500万円以下は未確認のため最小区分と同額。
+ const STAMP_DUTY=[[10000000,5000],[50000000,10000],[100000000,30000],[500000000,60000],[1000000000,160000],[5000000000,320000],[Infinity,480000]];
+ const stampDuty=amount=>STAMP_DUTY.find(([limit])=>amount<=limit)[1];
+ // 仲介手数料の速算式（税込）と、マンションの抵当権抹消（土地1＋建物1）。
+ const BROKERAGE_RATE=.033,BROKERAGE_FIXED=66000,MORTGAGE_RELEASE=2000;
+ const sellCostKeys=['sell_cost','sell_cost_fixed'];
+ // The relief preset drives reduced_long too, so editing either one returns both to manual.
+ const reliefKeys=['deduction_sale','reduced_long'];
+ // Which parameters each link writes. A link driving two of them has to hand both back
+ // when it is switched off, or the one the user did not type would snap to a stale value.
+ const drivenKeys={deduction_sale:reliefKeys,sell_cost:sellCostKeys};
  const manualModes=()=>Object.fromEntries(Object.keys(modeOptions).map(key=>[key,'manual']));
  const validAges=['under40','40-64'];
  const keys=Object.keys(BASE_PARAMS);
+ // Added after schema 1; an older saved file omits them and keeps the zero default.
+ const optionalKeys=new Set(['buy_cost_fixed','sell_cost_fixed','basis_cost_fixed']);
+ const optionalModes=new Set(['rent','deduction_sale','sell_cost']);
  function create(parameters=BASE_PARAMS){
   const values={};
   for(const key of keys){
-   const value=parameters?.[key];
+   const supplied=parameters?.[key];
+   const value=supplied===undefined&&optionalKeys.has(key)?BASE_PARAMS[key]:supplied;
    if(typeof value!==typeof BASE_PARAMS[key]||(typeof value==='number'&&!Number.isFinite(value)))throw new Error(key+'の値または型が不正です。');
    values[key]=value;
   }
-  return {values,modes:manualModes(),ageBand:'under40'};
+  // Captured from the manual pair so that switching the link on leaves the rent where it is.
+  return {values,modes:manualModes(),ageBand:'under40',rentYield:values.rent*12/values.price};
  }
  function createDefault(){
   const state=create();
   state.modes.social='estimate';state.modes.social_corp='estimate';state.modes.owner_cost='estimate';
   return state;
  }
+ // Copy what the link currently produces into the stored values, so dropping it keeps
+ // the numbers the user is looking at instead of reverting to whatever was stored before.
+ function materialize(state,keys){
+  const next={...state,values:{...state.values},modes:{...state.modes}};
+  let resolved;
+  try{resolved=resolve(state).parameters;}catch{return next;}
+  for(const key of keys)for(const driven of drivenKeys[key]||[key])next.values[driven]=resolved[driven];
+  return next;
+ }
  function setMode(state,key,mode){
   if(!modeOptions[key]?.includes(mode))throw new Error('連動モードが不正です。');
-  return {...state,values:{...state.values},modes:{...state.modes,[key]:mode}};
+  const base=mode==='manual'&&state.modes[key]!=='manual'?materialize(state,[key]):state;
+  return {...base,values:{...base.values},modes:{...base.modes,[key]:mode}};
  }
  function setAgeBand(state,ageBand){
   if(!validAges.includes(ageBand))throw new Error('年齢区分が不正です。');
   return {...state,values:{...state.values},modes:{...state.modes},ageBand};
  }
  function update(state,patch){
-  let next={...state,values:{...state.values},modes:{...state.modes}};
+  const dropping=new Set();
+  for(const key of Object.keys(patch)){
+   if(modeOptions[key]&&state.modes[key]!=='manual')dropping.add(key);
+   for(const [mode,keys] of Object.entries(drivenKeys))if(keys.includes(key)&&state.modes[mode]!=='manual')dropping.add(mode);
+  }
+  let next=dropping.size?materialize(state,[...dropping]):{...state,values:{...state.values},modes:{...state.modes}};
+  next={...next,values:{...next.values},modes:{...next.modes}};
   for(const [key,value] of Object.entries(patch)){
    if(!keys.includes(key)||typeof value!==typeof BASE_PARAMS[key]||(typeof value==='number'&&!Number.isFinite(value)))throw new Error(key+'の値または型が不正です。');
    next.values[key]=value;
    if(modeOptions[key])next.modes[key]='manual';
+   if(reliefKeys.includes(key))next.modes.deduction_sale='manual';
+   if(sellCostKeys.includes(key))next.modes.sell_cost='manual';
   }
+  if(next.modes.rent==='manual')next.rentYield=next.values.rent*12/next.values.price;
   return next;
  }
+ function setRentYield(state,rentYield){
+  if(!Number.isFinite(rentYield)||rentYield<=0)throw new Error('表面利回りが不正です。');
+  return {...state,values:{...state.values},modes:{...state.modes},rentYield};
+ }
+ // Rates verified 2026-09-18 against the primary sources cited in the report.
+ // childSupport is the separate 子ども・子育て支援金 scheme, not part of the health rate;
+ // it is also split with the employer and shares the same standard monthly cap, so it is
+ // added before halving. Keeping it apart matters because the two rates change separately.
+ const SOCIAL_RATES={health:.0985,childSupport:.0023,care:.0162,pension:.183,employment:.005};
+ const SOCIAL_CAPS={health:1390000,pension:650000};
  function estimateSocial(gross,ageBand){
   const monthly=Math.max(0,gross/12);
-  const care=ageBand==='40-64' ? .0162 : 0;
-  const health=12*Math.min(monthly,1390000)*(.0985+.0023+care)/2;
-  const pension=12*Math.min(monthly,650000)*.183/2;
-  return health+pension+Math.max(0,gross)*.005;
+  const care=ageBand==='40-64'?SOCIAL_RATES.care:0;
+  const health=12*Math.min(monthly,SOCIAL_CAPS.health)*(SOCIAL_RATES.health+SOCIAL_RATES.childSupport+care)/2;
+  const pension=12*Math.min(monthly,SOCIAL_CAPS.pension)*SOCIAL_RATES.pension/2;
+  return health+pension+Math.max(0,gross)*SOCIAL_RATES.employment;
  }
  function resolve(state){
   if(!state||!state.values||!state.modes||!validAges.includes(state.ageBand))throw new Error('設定の形式が不正です。');
   for(const [key,options] of Object.entries(modeOptions))if(!options.includes(state.modes[key]))throw new Error(key+'の連動モードが不正です。');
+  if(!Number.isFinite(state.rentYield)||state.rentYield<=0)throw new Error('表面利回りが不正です。');
   const parameters=create(state.values).values;
   const provenance=Object.fromEntries(keys.map(key=>[key,{mode:'manual',dependsOn:[]}]));
   function assign(key,value,mode,dependsOn){parameters[key]=value;provenance[key]={mode,dependsOn};}
+  // Rent resolves first: the corporate-housing premium estimate reads it.
+  if(state.modes.rent==='yield_linked')assign('rent',parameters.price*state.rentYield/12,'yield_linked',['price','rentYield']);
   if(state.modes.social==='estimate')assign('social',estimateSocial(parameters.salary,state.ageBand),'estimate',['salary','ageBand']);
   if(state.modes.social_corp==='estimate'){
    const rentYear=parameters.rent*12;
@@ -550,6 +611,19 @@ const HousingInputs=(() => {
   if(state.modes.owner_cost==='estimate')assign('owner_cost',parameters.price*.01,'estimate',['price']);
   if(state.modes.corp_years==='full_residence')assign('corp_years',parameters.years,'full_residence',['years']);
   if(state.modes.owner_growth==='same_as_rent')assign('owner_growth',parameters.rent_growth,'same_as_rent',['rent_growth']);
+  // The stamp bracket is pinned to the forecast sale price, but the flat total is
+  // subtracted at every candidate price, so a break-even search keeps the sliding scale.
+  if(state.modes.sell_cost==='itemized'){
+   const expected=parameters.price*Math.pow(1+parameters.growth,parameters.years);
+   assign('sell_cost',BROKERAGE_RATE,'itemized',['price','growth','years']);
+   assign('sell_cost_fixed',BROKERAGE_FIXED+stampDuty(expected)+MORTGAGE_RELEASE,'itemized',['price','growth','years']);
+  }
+  // A preset for the居住用財産 assumptions; it does not check eligibility.
+  if(state.modes.deduction_sale!=='manual'){
+   const residential=state.modes.deduction_sale==='residential';
+   assign('deduction_sale',residential?30000000:0,state.modes.deduction_sale,[]);
+   assign('reduced_long',residential,state.modes.deduction_sale,[]);
+  }
   const error=S.validate(parameters);if(error)throw new Error(error);
   return {parameters,provenance};
  }
@@ -567,6 +641,12 @@ const HousingInputs=(() => {
   const priceSpec=S.byKey.price,growthSpec=S.byKey.growth;
   let lo=Math.max(p.price*.05,priceSpec.min*priceSpec.scale);
   let hi=Math.min(p.price*4,priceSpec.max*priceSpec.scale);
+  // A rent tied to the price must stay inside its own range, or resolve() rejects the candidate.
+  if(state.modes.rent==='yield_linked'){
+   const rentSpec=S.byKey.rent;
+   lo=Math.max(lo,rentSpec.min*rentSpec.scale*12/state.rentYield);
+   hi=Math.min(hi,rentSpec.max*rentSpec.scale*12/state.rentYield);
+  }
   if(keepExit){
    lo=Math.max(lo,exit/Math.pow(1+growthSpec.max*growthSpec.scale,p.years)*(1+1e-10));
    hi=Math.min(hi,exit/Math.pow(1+growthSpec.min*growthSpec.scale,p.years)*(1-1e-10));
@@ -581,22 +661,27 @@ const HousingInputs=(() => {
  function breakEntry(state){return breakAtEntryPrice(state,true);}
  function serialize(state){
   const {parameters}=resolve(state);
-  return JSON.stringify({model:'housing-input-state',schemaVersion:1,taxRuleSet:'jp-2026-fixed',units:'JPY and decimal rates',inputs:state,parameters},null,2);
+  return JSON.stringify({model:'housing-input-state',schemaVersion:2,taxRuleSet:'jp-2026-fixed',units:'JPY and decimal rates',inputs:state,parameters},null,2);
  }
  function deserialize(document){
   if(!document||typeof document!=='object')throw new Error('設定JSONが不正です。');
   if(!document.model||document.model==='housing-tax-comparison-v2-2026-09-17')return create(document.parameters);
-  if(document.model!=='housing-input-state'||document.schemaVersion!==1||document.taxRuleSet!=='jp-2026-fixed')throw new Error('設定JSONの版が未対応です。');
+  if(document.model!=='housing-input-state'||![1,2].includes(document.schemaVersion)||document.taxRuleSet!=='jp-2026-fixed')throw new Error('設定JSONの版が未対応です。');
   const supplied=document.inputs;
-  if(!supplied||Object.keys(supplied.values||{}).length!==keys.length)throw new Error('入力設定が不足しています。');
+  if(!supplied||keys.some(key=>!optionalKeys.has(key)&&supplied.values?.[key]===undefined))throw new Error('入力設定が不足しています。');
   const state=create(supplied.values);
-  for(const key of Object.keys(modeOptions))state.modes[key]=supplied.modes?.[key];
+  // Only links introduced after schema 1 may be absent; the original five stay required.
+  for(const key of Object.keys(modeOptions))state.modes[key]=supplied.modes?.[key]??(optionalModes.has(key)?'manual':undefined);
   state.ageBand=supplied.ageBand;
+  if(supplied.rentYield!==undefined)state.rentYield=supplied.rentYield;
   const {parameters}=resolve(state);
-  if(!document.parameters||keys.some(key=>document.parameters[key]!==parameters[key]))throw new Error('保存済みの計算値が入力と一致しません。');
+  if(!document.parameters)throw new Error('保存済みの計算値がありません。');
+  // A schema-1 file predates the flat cost amounts, so only compare what it stored.
+  if(keys.some(key=>!optionalKeys.has(key)&&document.parameters[key]===undefined))throw new Error('保存済みの計算値が不足しています。');
+  if(keys.some(key=>document.parameters[key]!==undefined&&document.parameters[key]!==parameters[key]))throw new Error('保存済みの計算値が入力と一致しません。');
   return state;
  }
- return {create,createDefault,setMode,setAgeBand,update,estimateSocial,resolve,scenario,evaluate,breakPrice,breakEntry,serialize,deserialize};
+ return {create,createDefault,setMode,setAgeBand,setRentYield,update,estimateSocial,resolve,scenario,evaluate,breakPrice,breakEntry,serialize,deserialize};
 })();
 </script><script>
 'use strict';
@@ -703,7 +788,7 @@ if(typeof document!=='undefined')(()=>{
    if(state.modes.social==='estimate'||state.modes.social_corp==='estimate')warnings.push('社会保険料は東京・協会けんぽ、給与均等12か月、賞与なしの概算。初年度の年額を全期間に固定し、社宅時の現物給与評価・標準報酬改定時差は省略。');
    $('sim-warning').textContent=warnings.join(' ');
    const socialSource=key=>state.modes[key]==='estimate'?'概算':state.modes[key]==='same_as_normal'?'通常時と同額':'手入力';
-   $('sim-assumptions').textContent='社会保険料（年額）通常 '+fmtMan(p.social)+'（'+socialSource('social')+'） / 社宅 '+fmtMan(p.social_corp)+'（'+socialSource('social_corp')+'）、保有費用 '+fmtMan(p.owner_cost)+' / 年（'+(state.modes.owner_cost==='estimate'?'価格の1%で概算':'手入力')+'）。価格予想 '+fmtPct(p.growth)+' / 年、売却特別控除 '+fmtMan(p.deduction_sale)+'。';
+   $('sim-assumptions').textContent='社会保険料（年額）通常 '+fmtMan(p.social)+'（'+socialSource('social')+'） / 社宅 '+fmtMan(p.social_corp)+'（'+socialSource('social_corp')+'）、保有費用 '+fmtMan(p.owner_cost)+' / 年（'+(state.modes.owner_cost==='estimate'?'価格の1%で概算':'手入力')+'）。価格予想 '+fmtPct(p.growth)+' / 年、売却特別控除 '+fmtMan(p.deduction_sale)+'（'+(state.modes.deduction_sale==='manual'?'手入力':state.modes.deduction_sale==='residential'?'居住用の特例を適用する仮定':'特例なし')+'）。'+(state.modes.rent==='yield_linked'?'家賃は表面利回り '+(state.rentYield*100).toFixed(2)+'% で買値に連動。':'家賃は入力額で固定。');
    $('sim-status').textContent='再計算済み · 購入 '+fmtOku(p.price,2)+' / 家賃 '+fmtMan(p.rent,1)+' / '+p.years+'年';
    document.dispatchEvent(new CustomEvent('housing:updated',{detail:{parameters:{...p},inputState:state,provenance:I.resolve(state).provenance,result:r}}));
    return true;
@@ -716,10 +801,12 @@ if(typeof document!=='undefined')(()=>{
  }
  function download(text,name,type){const a=document.createElement('a');const url=URL.createObjectURL(new Blob([text],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}
  function renderModes(){
-  for(const key of ['social','social_corp','owner_cost','owner_growth']){
+  for(const key of ['social','social_corp','owner_cost','owner_growth','rent','deduction_sale','sell_cost']){
    $('mode-'+key).value=state.modes[key];
    $('f-'+key).disabled=state.modes[key]!=='manual';
   }
+  // The relief preset owns the reduced-rate flag as well.
+  $('f-reduced_long').disabled=state.modes.deduction_sale!=='manual';
   $('age-band').value=state.ageBand;
   $('corp-choice').value=state.modes.corp_years==='full_residence'?'full_residence':state.values.corp_years===0?'none':'manual';
   $('f-corp_years').disabled=$('corp-choice').value!=='manual';
@@ -739,7 +826,7 @@ if(typeof document!=='undefined')(()=>{
   $('sim-status').insertAdjacentHTML('afterend','<p class="note" id="sim-assumptions"></p>');
   $('f-corp_years').closest('.field').insertAdjacentHTML('afterbegin','<label for="corp-choice">社宅利用</label><select id="corp-choice" aria-label="社宅利用期間の指定"><option value="none">利用しない</option><option value="full_residence">比較期間中ずっと</option><option value="manual">年数を指定</option></select>');
   $('simAdvanced').querySelector('.detail-body').insertAdjacentHTML('afterbegin','<div class="field"><label for="age-band">概算社保の年齢区分（協会けんぽ東京・2026年度）</label><select id="age-band"><option value="under40">40歳未満・例示設定</option><option value="40-64">40〜64歳</option></select></div>');
-  const modes={social:[['estimate','年収から概算'],['manual','年額を入力']],social_corp:[['estimate','社宅時の給与から概算'],['same_as_normal','通常時と同額'],['manual','年額を入力']],owner_cost:[['estimate','購入価格の1%で概算'],['manual','年額を入力']],owner_growth:[['manual','増加率を入力'],['same_as_rent','家賃増加率と同じ']]};
+  const modes={social:[['estimate','年収から概算'],['manual','年額を入力']],social_corp:[['estimate','社宅時の給与から概算'],['same_as_normal','通常時と同額'],['manual','年額を入力']],owner_cost:[['estimate','購入価格の1%で概算'],['manual','年額を入力']],owner_growth:[['manual','増加率を入力'],['same_as_rent','家賃増加率と同じ']],rent:[['manual','月額を入力'],['yield_linked','買値と同じ表面利回りで連動']],deduction_sale:[['manual','控除額を入力'],['residential','居住用（3,000万円控除と10年超軽減）'],['non_residential','居住用以外（特例なし）']],sell_cost:[['manual','率を入力'],['itemized','仲介手数料・印紙税・抹消から計算']]};
   for(const [key,choices] of Object.entries(modes)){
    const field=$('f-'+key).closest('.field');
    const select=document.createElement('select');select.id='mode-'+key;select.setAttribute('aria-label',field.querySelector('label').textContent+'の計算方法');
