@@ -12,8 +12,8 @@ final class R6UITests: XCTestCase {
         ])
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
         let link = app.descendants(matching: .any)["study.theoryExam.open"]
         for _ in 0..<8 where !link.exists { app.swipeUp() }
         XCTAssertTrue(link.exists)
@@ -31,8 +31,8 @@ final class R6UITests: XCTestCase {
         app.launchArguments.append("-UITestProEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
         let link = app.descendants(matching: .any)["study.theoryExam.open"]
         for _ in 0..<8 where !link.exists { app.swipeUp() }
         XCTAssertTrue(link.exists)
@@ -107,8 +107,8 @@ final class R6UITests: XCTestCase {
         app.launchArguments.append("-UITestFreeEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
 
         let writtenStart = app.buttons["study.written.startButton"]
         for _ in 0..<5 where !writtenStart.exists { app.swipeUp() }
@@ -135,8 +135,8 @@ final class R6UITests: XCTestCase {
         app.launchArguments.append("-UITestProEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
 
         let writtenStart = app.buttons["study.written.startButton"]
         for _ in 0..<5 where !writtenStart.exists { app.swipeUp() }
@@ -158,8 +158,8 @@ final class R6UITests: XCTestCase {
         app.launchArguments.append("-UITestFreeEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["問題集"].tap()
+        XCTAssertTrue(app.tabBars.buttons["図鑑"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["図鑑"].tap()
 
         let questionSearch = app.searchFields.firstMatch
         XCTAssertTrue(questionSearch.waitForExistence(timeout: 5))
@@ -175,8 +175,8 @@ final class R6UITests: XCTestCase {
         let glossaryApp = XCUIApplication()
         glossaryApp.launchArguments.append("-UITestFreeEntitlement")
         glossaryApp.launch()
-        XCTAssertTrue(glossaryApp.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
-        glossaryApp.tabBars.buttons["問題集"].tap()
+        XCTAssertTrue(glossaryApp.tabBars.buttons["図鑑"].waitForExistence(timeout: 20))
+        glossaryApp.tabBars.buttons["図鑑"].tap()
 
         let glossaryLink = glossaryApp.descendants(matching: .any)["reference.glossary.link"]
         XCTAssertTrue(glossaryLink.exists)
@@ -195,8 +195,8 @@ final class R6UITests: XCTestCase {
         app.launchArguments.append(contentsOf: arguments)
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
         let link = app.descendants(matching: .any)["study.daily.open"]
         for _ in 0..<8 where !link.exists { app.swipeUp() }
         XCTAssertTrue(link.exists)

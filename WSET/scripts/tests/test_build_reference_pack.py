@@ -103,6 +103,13 @@ class ReferencePackBuilderTests(unittest.TestCase):
         self.assertTrue(all(term["nameJapanese"] for term in self.payload["terms"]))
         self.assertTrue(all(term["nameEnglish"] for term in self.payload["terms"]))
 
+    def test_vinho_verde_grapes_do_not_inherit_the_icewine_distractor(self) -> None:
+        for name in ("アルヴァリーニョ", "ロウレイロ"):
+            with self.subTest(grape=name):
+                term = self.terms[name]
+                self.assertNotIn("樹上凍結", term["summary"] + term["description"])
+                self.assertIn("柑橘", term["summary"])
+
     def test_classification_names_are_bilingual_and_match_glossary(self) -> None:
         terms_by_id = {term["id"]: term for term in self.payload["terms"]}
         for entry in self.payload["classificationEntries"]:

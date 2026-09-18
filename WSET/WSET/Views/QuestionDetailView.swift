@@ -4,6 +4,7 @@ import SwiftUI
 struct QuestionDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(EntitlementStore.self) private var entitlementStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let question: StudyQuestion
     @State private var showAnswer = false
     @State private var isBookmarked = false
@@ -76,12 +77,17 @@ struct QuestionDetailView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(AppTheme.wineSoft, in: RoundedRectangle(cornerRadius: 16))
                     .id("question-answer")
+                    QuestionRegionLinksView(question: question)
                 } else {
                     Button("解答を見る") {
-                        withAnimation { showAnswer = true }
+                        if reduceMotion {
+                            showAnswer = true
+                        } else {
+                            withAnimation { showAnswer = true }
+                        }
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                 }
 
                 TermAnnotationsView(questionID: question.id)
@@ -128,8 +134,10 @@ struct QuestionDetailView: View {
                 .onChange(of: showAnswer) { _, revealed in
                     guard revealed else { return }
                     DispatchQueue.main.async {
-                        withAnimation {
+                        if reduceMotion {
                             proxy.scrollTo("question-answer", anchor: .center)
+                        } else {
+                            withAnimation { proxy.scrollTo("question-answer", anchor: .center) }
                         }
                     }
                 }

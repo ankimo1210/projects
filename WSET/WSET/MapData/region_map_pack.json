@@ -1,10 +1,10 @@
 {
   "schemaVersion": 2,
-  "sourceHash": "9b6f80d39ac9407bcbe887e4d39662885df992a9a22fd928d6a0a124173b0a48",
-  "questionPackSourceHash": "0ae696ecb3e11f04b33cee1e970b3ef0c99e20ead03fb9903e133f70390cc49f",
-  "referencePackSourceHash": "53ab8cf5131ffd9572a1a96b8c8be93e100b51288d7b0fb9091df7496b2f2925",
+  "sourceHash": "62b9d0ed9d0b47c3569bbd73788a19f889dfe92b4519a36104e9faffca1e583c",
+  "questionPackSourceHash": "03d94b848baddd8667a3f49a9e2cc4e10ed61def256a099d99447460a8dd2db2",
+  "referencePackSourceHash": "3ff2b214a43d85234201f55c2555fb725fdbef395ffb47f96600abb16882a6a5",
   "mapCount": 1,
-  "reviewTargetHash": "239a5955a7a490b005afdb7ef0a7fb7bbef3828d4f66d3b8e5eadb9025fc0275",
+  "reviewTargetHash": "871b27ca2529cd50d6ebedc876be7576e3954351b4fbcacdab18c73b5cf94fc3",
   "review": {
     "status": "pending_external_review",
     "reviewer": null,
@@ -27,9 +27,9 @@
       "nameJapanese": "フランス",
       "nameOriginal": "France",
       "assetName": "map_france",
-      "aspectRatio": 0.8181818182,
+      "aspectRatio": 0.95,
       "sourceIDs": [
-        "wset_app_schematic_france_2026"
+        "natural_earth_france_2026"
       ],
       "regions": [
         {
@@ -52,8 +52,8 @@
             "サンテミリオン"
           ],
           "position": {
-            "x": 0.2,
-            "y": 0.66
+            "x": 0.352381,
+            "y": 0.6278689
           },
           "labelOffset": {
             "x": 0.12,
@@ -212,8 +212,8 @@
             "プイィ・フュイッセ"
           ],
           "position": {
-            "x": 0.6,
-            "y": 0.53
+            "x": 0.675,
+            "y": 0.4483607
           },
           "labelOffset": {
             "x": 0.0,
@@ -370,8 +370,8 @@
             "コート・デ・バール"
           ],
           "position": {
-            "x": 0.61,
-            "y": 0.27
+            "x": 0.6220238,
+            "y": 0.2836066
           },
           "labelOffset": {
             "x": 0.03,
@@ -532,8 +532,8 @@
             "コトー・デュ・レイヨン"
           ],
           "position": {
-            "x": 0.32,
-            "y": 0.47
+            "x": 0.427381,
+            "y": 0.4188525
           },
           "labelOffset": {
             "x": -0.02,
@@ -687,8 +687,8 @@
             "アルザス"
           ],
           "position": {
-            "x": 0.8,
-            "y": 0.39
+            "x": 0.822619,
+            "y": 0.3622951
           },
           "labelOffset": {
             "x": -0.03,
@@ -848,8 +848,8 @@
             "コルナス"
           ],
           "position": {
-            "x": 0.62,
-            "y": 0.65
+            "x": 0.6744048,
+            "y": 0.6032787
           },
           "labelOffset": {
             "x": 0.04,
@@ -1004,8 +1004,8 @@
             "ミュスカ・ド・ボーム・ド・ヴニーズ"
           ],
           "position": {
-            "x": 0.61,
-            "y": 0.75
+            "x": 0.6744048,
+            "y": 0.6918033
           },
           "labelOffset": {
             "x": 0.04,
@@ -1161,8 +1161,8 @@
             "バンドール"
           ],
           "position": {
-            "x": 0.72,
-            "y": 0.83
+            "x": 0.7440476,
+            "y": 0.7409836
           },
           "labelOffset": {
             "x": 0.01,
@@ -1316,8 +1316,8 @@
             "モルゴン"
           ],
           "position": {
-            "x": 0.56,
-            "y": 0.62
+            "x": 0.6636905,
+            "y": 0.5245902
           },
           "labelOffset": {
             "x": -0.1,
@@ -1475,8 +1475,8 @@
             "コート・デュ・ルーション・ヴィラージュ"
           ],
           "position": {
-            "x": 0.44,
-            "y": 0.82
+            "x": 0.5642857,
+            "y": 0.7639344
           },
           "labelOffset": {
             "x": -0.04,
@@ -1642,17 +1642,18 @@
             }
           }
         }
-      ]
+      ],
+      "assetFileDark": "france_dark.svg"
     }
   ],
   "sources": [
     {
-      "id": "wset_app_schematic_france_2026",
-      "name": "CruNote用の自作フランス概略図",
-      "url": null,
-      "license": "プロジェクト自作",
-      "checkedAt": "2026-07-19",
-      "note": "産地の相対位置を学ぶための簡略図です。行政境界、原産地呼称の法的境界、正確な縮尺を表しません。"
+      "id": "natural_earth_france_2026",
+      "name": "Natural Earth — フランスの国土・河川",
+      "url": "https://www.naturalearthdata.com/about/terms-of-use/",
+      "license": "Public domain（パブリックドメイン）",
+      "checkedAt": "2026-09-15",
+      "note": "Made with Natural Earth。1:50mの国土・河川データを配色・範囲調整。ピンは編集上選んだ概略の代表地点で、産地の範囲や法的境界を示しません。"
     },
     {
       "id": "official_bordeaux_2026",

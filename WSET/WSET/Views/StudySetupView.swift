@@ -182,7 +182,7 @@ struct StudySetupView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .disabled(eligibleQuestions.isEmpty)
                 }
 
@@ -222,7 +222,7 @@ struct StudySetupView: View {
                         .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .disabled(writtenQuestions.isEmpty)
                     .accessibilityIdentifier("study.written.startButton")
                 } header: {
@@ -293,7 +293,7 @@ struct StudySetupView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .disabled(focusedQuestions.isEmpty)
                     .accessibilityIdentifier("study.focus.startButton")
                 } header: {
@@ -347,7 +347,7 @@ struct StudySetupView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .disabled(mcqQuestions.count < miniMockQuestionCount)
                     .accessibilityIdentifier("study.miniMock.startButton")
                 } header: {

@@ -9,13 +9,13 @@ final class WSETUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["ホーム"].waitForExistence(timeout: 20))
-        XCTAssertTrue(app.tabBars.buttons["学習"].exists)
-        XCTAssertTrue(app.tabBars.buttons["問題集"].exists)
-        XCTAssertTrue(app.tabBars.buttons["テイスティング"].exists)
-        XCTAssertTrue(app.tabBars.buttons["進捗"].exists)
+        XCTAssertTrue(app.tabBars.buttons["探索"].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].exists)
+        XCTAssertTrue(app.tabBars.buttons["図鑑"].exists)
+        XCTAssertTrue(app.tabBars.buttons["ノート"].exists)
+        XCTAssertTrue(app.tabBars.buttons["記録"].exists)
 
-        app.tabBars.buttons["テイスティング"].tap()
+        app.tabBars.buttons["ノート"].tap()
         XCTAssertTrue(app.buttons["テイスティング記録を作成"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["2本比較ブラインド練習"].exists)
 
@@ -29,8 +29,8 @@ final class WSETUITests: XCTestCase {
     func testSettingsAreReachableFromProgress() {
         let app = XCUIApplication()
         app.launch()
-        XCTAssertTrue(app.tabBars.buttons["進捗"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["進捗"].tap()
+        XCTAssertTrue(app.tabBars.buttons["記録"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["記録"].tap()
         app.buttons["設定"].tap()
 
         XCTAssertTrue(app.navigationBars["設定"].waitForExistence(timeout: 5))
@@ -44,8 +44,8 @@ final class WSETUITests: XCTestCase {
         app.launchArguments.append("-UITestProEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
 
         let startButton = app.buttons["study.focus.startButton"]
         for _ in 0..<5 where !startButton.exists {
@@ -96,16 +96,16 @@ final class WSETUITests: XCTestCase {
         app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["ホーム"].waitForExistence(timeout: 20))
-        XCTAssertTrue(app.tabBars.buttons["学習"].exists)
-        XCTAssertTrue(app.tabBars.buttons["問題集"].exists)
+        XCTAssertTrue(app.tabBars.buttons["探索"].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].exists)
+        XCTAssertTrue(app.tabBars.buttons["図鑑"].exists)
         XCTAssertFalse(app.tabBars.buttons["Home"].exists)
         XCTAssertTrue(app.navigationBars["CruNote"].exists)
-        XCTAssertTrue(app.staticTexts["学習成果別の収録数"].exists)
+        XCTAssertTrue(app.staticTexts["地図から、ワインを知る。"].exists)
         XCTAssertFalse(app.navigationBars["WSET学習"].exists)
         XCTAssertFalse(app.staticTexts["Coverage"].exists)
 
-        app.tabBars.buttons["学習"].tap()
+        app.tabBars.buttons["学ぶ"].tap()
         XCTAssertTrue(app.navigationBars["学習"].exists)
         XCTAssertTrue(app.staticTexts["クイック学習"].exists)
         XCTAssertTrue(app.buttons["混合学習を開始"].exists)
@@ -113,7 +113,7 @@ final class WSETUITests: XCTestCase {
         XCTAssertFalse(app.buttons["Start mixed study session"].exists)
         XCTAssertFalse(app.staticTexts["アプリと問題の言語"].exists)
 
-        app.tabBars.buttons["進捗"].tap()
+        app.tabBars.buttons["記録"].tap()
         XCTAssertTrue(app.navigationBars["進捗"].exists)
         XCTAssertTrue(app.staticTexts["学習成果別"].exists)
         XCTAssertTrue(app.buttons["設定"].exists)
@@ -126,8 +126,8 @@ final class WSETUITests: XCTestCase {
         app.launchArguments.append("-UITestFreeEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["問題集"].tap()
+        XCTAssertTrue(app.tabBars.buttons["図鑑"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["図鑑"].tap()
 
         let glossaryLink = app.descendants(matching: .any)["reference.glossary.link"]
         XCTAssertTrue(glossaryLink.waitForExistence(timeout: 5))

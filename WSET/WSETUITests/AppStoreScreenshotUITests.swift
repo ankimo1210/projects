@@ -17,11 +17,11 @@ final class AppStoreScreenshotUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["CruNote"].waitForExistence(timeout: 20))
         capture("01-home")
 
-        tab("学習", in: app).tap()
+        tab("学ぶ", in: app).tap()
         XCTAssertTrue(app.navigationBars["学習"].waitForExistence(timeout: 10))
         capture("02-study")
 
-        tab("問題集", in: app).tap()
+        tab("図鑑", in: app).tap()
         XCTAssertTrue(app.navigationBars["問題集"].waitForExistence(timeout: 10))
         app.descendants(matching: .any)["regionMap.hub.link"].tap()
         XCTAssertTrue(app.navigationBars["産地マップ"].waitForExistence(timeout: 10))
@@ -29,7 +29,7 @@ final class AppStoreScreenshotUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["フランス"].waitForExistence(timeout: 10))
         capture("03-region-map")
 
-        tab("テイスティング", in: app).tap()
+        tab("ノート", in: app).tap()
         XCTAssertTrue(app.navigationBars["テイスティング"].waitForExistence(timeout: 10))
         capture("04-tasting")
 
@@ -49,7 +49,7 @@ final class AppStoreScreenshotUITests: XCTestCase {
         ]
         app.launch()
 
-        let progressTab = tab("進捗", in: app)
+        let progressTab = tab("記録", in: app)
         XCTAssertTrue(progressTab.waitForExistence(timeout: 20))
         progressTab.tap()
         app.buttons["設定"].tap()

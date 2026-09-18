@@ -66,7 +66,7 @@ struct PaywallView: View {
                     }
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(AppTheme.wine)
+                .tint(AppTheme.wineAction)
                 .disabled(isProcessing || entitlementStore.product == nil)
                 .accessibilityIdentifier("paywall.purchase")
 

@@ -21,11 +21,11 @@ from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = PROJECT_ROOT / "QuestionSources" / "wset_level3_original_questions_1100_v7.xlsx"
+DEFAULT_INPUT = PROJECT_ROOT / "QuestionSources" / "wset_level3_original_questions_1100_v8.xlsx"
 DEFAULT_OUTPUT = PROJECT_ROOT / "WSET" / "QuestionData" / "question_pack.json"
 SHEET_NAME = "問題集"
 SCHEMA_VERSION = 4
-SOURCE_ID = "wset_level3_original_1100_v7"
+SOURCE_ID = "wset_level3_original_1100_v8"
 EXPECTED_QUESTION_COUNT = 1100
 
 MAIN_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"

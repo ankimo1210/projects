@@ -129,7 +129,7 @@ struct DailyStudyView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .accessibilityIdentifier("study.daily.startButton")
                 }
             }

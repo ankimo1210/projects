@@ -165,7 +165,7 @@ def _svg_aspect_ratio(content: bytes, label: str) -> float:
     return width / height
 
 
-def _imageset_contents(asset_file: str) -> bytes:
+def _imageset_contents(asset_file: str, dark_file: str | None = None) -> bytes:
     payload = {
         "images": [
             {"filename": asset_file, "idiom": "universal"},
@@ -173,6 +173,12 @@ def _imageset_contents(asset_file: str) -> bytes:
         "info": {"author": "xcode", "version": 1},
         "properties": {"preserves-vector-representation": True},
     }
+    if dark_file is not None:
+        payload["images"].append({
+            "filename": dark_file,
+            "idiom": "universal",
+            "appearances": [{"appearance": "luminosity", "value": "dark"}],
+        })
     return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
@@ -350,6 +356,21 @@ def build_pack(
             asset_file: svg_content,
             "Contents.json": _imageset_contents(asset_file),
         }
+        dark_file = map_document.get("assetFileDark")
+        if dark_file is not None:
+            dark_file = _required_string(dark_file, f"{map_id}.assetFileDark")
+            if (Path(dark_file).name != dark_file or "\\" in dark_file
+                    or not dark_file.endswith(".svg") or dark_file == asset_file):
+                raise RegionMapPackError(f"{map_id}: assetFileDark must be a distinct local SVG filename")
+            try:
+                dark_content = (asset_source_dir / dark_file).read_bytes()
+            except OSError as error:
+                raise RegionMapPackError(f"{map_id}: missing dark SVG {dark_file}") from error
+            if abs(_svg_aspect_ratio(dark_content, dark_file) - float(aspect_ratio)) > 0.002:
+                raise RegionMapPackError(f"{map_id}: dark SVG aspectRatio does not match")
+            source_hash_assets[dark_file] = sha256(dark_content)
+            generated_assets[asset_name][dark_file] = dark_content
+            generated_assets[asset_name]["Contents.json"] = _imageset_contents(asset_file, dark_file)
 
         regions = map_document.get("regions")
         if not isinstance(regions, list) or not regions or not all(

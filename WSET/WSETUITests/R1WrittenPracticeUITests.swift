@@ -32,8 +32,8 @@ final class R1WrittenPracticeUITests: XCTestCase {
         app.terminate()
         app.launchArguments = ["-UITestFreeEntitlement"]
         app.launch()
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
 
         let resume = app.buttons["study.written.resumeDrafts"]
         for _ in 0..<6 where !resume.exists { app.swipeUp() }
@@ -80,8 +80,8 @@ final class R1WrittenPracticeUITests: XCTestCase {
     }
 
     private func openFreeWrittenPractice(in app: XCUIApplication) {
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
         let start = app.buttons["study.written.startButton"]
         for _ in 0..<6 where !start.exists { app.swipeUp() }
         XCTAssertTrue(start.exists)

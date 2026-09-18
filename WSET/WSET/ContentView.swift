@@ -24,19 +24,19 @@ struct ContentView: View {
             } else {
                 TabView {
                     HomeView()
-                        .tabItem { Label("ホーム", systemImage: "house") }
+                        .tabItem { Label("探索", systemImage: "map") }
 
                     StudySetupView()
-                        .tabItem { Label("学習", systemImage: "rectangle.stack") }
+                        .tabItem { Label("学ぶ", systemImage: "rectangle.stack") }
 
                     QuestionLibraryView()
-                        .tabItem { Label("問題集", systemImage: "books.vertical") }
+                        .tabItem { Label("図鑑", systemImage: "books.vertical") }
 
                     TastingView()
-                        .tabItem { Label("テイスティング", systemImage: "wineglass") }
+                        .tabItem { Label("ノート", systemImage: "wineglass") }
 
                     StudyProgressView()
-                        .tabItem { Label("進捗", systemImage: "chart.bar") }
+                        .tabItem { Label("記録", systemImage: "chart.bar") }
                 }
                 .tint(AppTheme.wine)
             }

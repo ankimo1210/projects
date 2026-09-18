@@ -15,12 +15,16 @@ test-python:
 		scripts.tests.test_build_reference_pack \
 		scripts.tests.test_build_written_question_pack \
 		scripts.tests.test_build_region_map_pack \
+		scripts.tests.test_build_atlas_media \
+		scripts.tests.test_build_france_basemap \
 		scripts.tests.test_build_content_review_packet \
 		scripts.tests.test_validate_ai_review_fixture \
 		scripts.tests.test_validate_free_content_manifest \
 		scripts.tests.test_validate_release_readiness
 
 check-generated:
+	$(PYTHON) scripts/build_france_basemap.py --check
+	$(PYTHON) scripts/build_atlas_media.py --check
 	$(PYTHON) scripts/build_question_pack.py --check
 	$(PYTHON) scripts/build_reference_pack.py --check
 	$(PYTHON) scripts/build_written_question_pack.py --check

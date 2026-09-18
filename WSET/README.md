@@ -14,7 +14,7 @@ CruNoteは、日本語で学習できる個人利用向けのオフライン WSE
 - 問題詳細と解答後の用語注釈、用語からの重点学習
 - ボルドー、ブルゴーニュ、シャンパーニュの格付け一覧
 - 50問ミニ模試と、四択50問＋記述4問・120分の理論模擬試験
-- フランス主要10産地のオフライン概略マップ、関連問題・用語、出典付き9軸の2産地比較
+- フランス主要10産地を地図・実写写真から巡るオフライン図鑑、関連問題・用語、出典付き9軸の2産地比較
 - ブックマーク、間違い復習、期限付き復習、学習統計
 - WSET Level 3 SAT形式のテイスティング記録
 - 2本比較のブラインド練習と、中断再開できる30分テイスティング試験
@@ -28,7 +28,7 @@ CruNoteは、日本語で学習できる個人利用向けのオフライン WSE
 
 ## 問題データ
 
-問題の正本は `QuestionSources/wset_level3_original_questions_1100_v7.xlsx` です。次のコマンドでアプリ用JSONを生成します。
+問題の正本は `QuestionSources/wset_level3_original_questions_1100_v8.xlsx` です。2026-09-14の改訂では、正答扱いの誤り16問、複数正解に見える選択肢、因果関係の説明を修正しました。問題IDと四択の正答位置を維持し、旧版は比較用に残しています。変更内容と確認範囲は [`docs/question-content-review-2026-09-14.md`](docs/question-content-review-2026-09-14.md) を参照してください。次のコマンドでアプリ用JSONを生成します。
 
 ```sh
 python3 scripts/build_question_pack.py
@@ -70,13 +70,22 @@ python3 scripts/build_reference_pack.py
 
 ## 産地マップデータ
 
-産地、概略位置、問題・用語参照の正本は `ReferenceSources/wset_region_map_master.json`、自作ベクター地図は `ReferenceSources/RegionMaps/` です。
+「探索」タブで地図と写真付き一覧を切り替え、産地を選ぶと写真と概要を確認できます。詳細では気候・品種・スタイルを読み、比較や演習へ進めます。演習の解答後は関連する産地を地図で確認でき、戻ると解答状態を保持します。
+
+産地、代表位置、問題・用語参照の正本は `ReferenceSources/wset_region_map_master.json` です。背景地図は [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/) のパブリックドメイン地理データに基づき、`ReferenceSources/RegionMaps/france_geography.json` に取得元・固定コミット・元データのハッシュを保存しています。背景と産地ピンには共通の座標変換を使います。
 
 ```sh
+python3 scripts/build_france_basemap.py
 python3 scripts/build_region_map_pack.py
+python3 scripts/build_atlas_media.py
+python3 scripts/build_content_review_packet.py
 ```
 
-生成先は `WSET/MapData/region_map_pack.json` と `WSET/Assets.xcassets/RegionMaps/` です。表示位置は学習用の概略で、法的境界や正確な縮尺を表しません。
+地図の生成先は `WSET/MapData/region_map_pack.json` と `WSET/Assets.xcassets/RegionMaps/` です。明暗の2種類を収録します。産地ピンは代表位置で、アペラシオンの法的境界を表しません。小画面で近接するピンはまとめて表示され、タップすると各産地を選択できます。
+
+写真と権利情報の正本は `ReferenceSources/AtlasMedia/` です。写真パックは `WSET/AtlasData/atlas_media.json`、画像は `WSET/Assets.xcassets/AtlasPhotos/` に生成します。各写真の作者・原典・ライセンス・加工内容・確認日は、産地詳細の「写真の出典」で閲覧できます。地図・写真・解説はアプリに同梱され、閲覧に通信は不要です。原典リンクを開く場合のみ通信を使います。画像が読み込めない場合も産地情報と演習は利用できます。
+
+素材を更新したら上記を再生成し、`make verify` で10産地の対応、権利情報、画像寸法・ハッシュ、生成物の一致を検証してください。設計・確認範囲は [`docs/atlas-ux-design.md`](docs/atlas-ux-design.md) を参照してください。
 
 ## 課金と任意オンライン機能
 

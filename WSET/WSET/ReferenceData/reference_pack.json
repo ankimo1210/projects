@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-19T06:14:38Z",
-  "sourceHash": "53ab8cf5131ffd9572a1a96b8c8be93e100b51288d7b0fb9091df7496b2f2925",
-  "questionPackSourceHash": "0ae696ecb3e11f04b33cee1e970b3ef0c99e20ead03fb9903e133f70390cc49f",
+  "generatedAt": "2026-09-14T13:43:45Z",
+  "sourceHash": "3ff2b214a43d85234201f55c2555fb725fdbef395ffb47f96600abb16882a6a5",
+  "questionPackSourceHash": "03d94b848baddd8667a3f49a9e2cc4e10ed61def256a099d99447460a8dd2db2",
   "termCount": 680,
   "classificationEntryCount": 279,
   "source": {
     "file": "ReferenceSources/wset_reference_master.xlsx",
-    "sha256": "901451e413f038a190af14b653f3931aa349115a5736449162073c49e1827327"
+    "sha256": "fb1ea0d65d68a6ce71b17d3595affae72ebe911395ac134bddf8fb429407ab24"
   },
   "termIDReviewSource": {
     "file": "ReferenceSources/glossary_term_id_review.json",
@@ -201,8 +201,8 @@
       "nameFrench": null,
       "reading": null,
       "category": "品種",
-      "summary": "アルヴァリーニョはワイン用ブドウ品種。ブドウを樹上凍結し、水分を氷として分離する。",
-      "description": "栽培・成熟：周囲の山が海洋影響を一部遮り、より暖かく乾燥して成熟が進むから。典型的なスタイル：ブドウを樹上凍結し、水分を氷として分離する。主要な関連産地：ヴィーニョ・ヴェルデ、モンサオン・エ・メルガソ。",
+      "summary": "アルヴァリーニョはポルトガル北西部の白ブドウ品種。柑橘からトロピカルフルーツの香り、しっかりした構成と酸のバランスを持つワインを生む。",
+      "description": "ヴィーニョ・ヴェルデ、特にモンサオン・エ・メルガソを代表する品種。夏が比較的暖かく乾燥した当地の微気候が成熟を助ける。オレンジやグレープフルーツ、マンゴーなどの香りを示し、上質なものには瓶熟成の可能性がある。",
       "country": null,
       "region": null,
       "labels": [
@@ -216,8 +216,8 @@
         "LO2-325",
         "LO2-351"
       ],
-      "sourceID": "portugal_official_wine",
-      "checkedAt": "2026-07-12"
+      "sourceID": "vinho_verde_grape_varieties",
+      "checkedAt": "2026-09-14"
     },
     {
       "id": "term-1244a1d388b2",
@@ -2910,8 +2910,8 @@
       "nameFrench": null,
       "reading": null,
       "category": "品種",
-      "summary": "ロウレイロはワイン用ブドウ品種。ブドウを樹上凍結し、水分を氷として分離する。",
-      "description": "栽培・成熟：花や柑橘を思わせる香りと高い酸。Loureiroの花・柑橘・高酸を正しく示しており、品種の酸、タンニン、芳香、果皮または成熟特性がワインのスタイルを形作る。典型的なスタイル：ブドウを樹上凍結し、水分を氷として分離する。主要な関連産地：ヴィーニョ・ヴェルデ。",
+      "summary": "ロウレイロはヴィーニョ・ヴェルデの白ブドウ品種。ライムやレモンなどの柑橘と花の香りを持つ、繊細で爽やかなワインを生む。",
+      "description": "ヴィーニョ・ヴェルデで広く栽培され、大西洋の影響が強い涼しく湿潤な地区を好む。過度の暑さには弱い。ワインは柑橘や花の香りを特徴とし、上質なものには瓶熟成の可能性がある。",
       "country": null,
       "region": null,
       "labels": [
@@ -2925,8 +2925,8 @@
         "LO2-325",
         "LO2-352"
       ],
-      "sourceID": "portugal_official_wine",
-      "checkedAt": "2026-07-12"
+      "sourceID": "vinho_verde_grape_varieties",
+      "checkedAt": "2026-09-14"
     },
     {
       "id": "term-1c9cb2dba59e",
@@ -3767,6 +3767,7 @@
         "LO2-149",
         "LO2-150",
         "LO2-151",
+        "LO2-153",
         "LO2-191",
         "LO2-192",
         "LO2-193",
@@ -4384,8 +4385,7 @@
         "LO4-016",
         "LO4-066",
         "LO4-109",
-        "LO5-035",
-        "LO5-036"
+        "LO5-035"
       ],
       "sourceID": "champagne_official_terroir",
       "checkedAt": "2026-07-12"
@@ -6269,6 +6269,7 @@
         "LO4-069",
         "LO4-075",
         "LO4-080",
+        "LO4-095",
         "LO4-100",
         "LO4-115",
         "LO4-131",
@@ -6433,6 +6434,7 @@
         "élevage biologique"
       ],
       "questionIDs": [
+        "LO4-005",
         "LO4-010",
         "LO4-011",
         "LO4-012",
@@ -6519,6 +6521,7 @@
         "LO3-045",
         "LO3-086",
         "LO4-004",
+        "LO4-005",
         "LO4-006",
         "LO4-007",
         "LO4-009",
@@ -12565,8 +12568,7 @@
       "relatedTermIDs": [],
       "aliases": [],
       "questionIDs": [
-        "LO2-064",
-        "LO2-138"
+        "LO2-064"
       ],
       "sourceID": "bordeaux_official_grapes",
       "checkedAt": "2026-07-12"
@@ -13665,7 +13667,6 @@
         "LO5-101",
         "LO5-103",
         "LO5-104",
-        "LO5-105",
         "LO5-106",
         "LO5-107",
         "LO5-108",
@@ -13877,6 +13878,7 @@
       "questionIDs": [
         "LO2-081",
         "LO2-083",
+        "LO2-153",
         "LO2-191",
         "LO2-192",
         "LO2-197",
@@ -14155,7 +14157,6 @@
       "questionIDs": [
         "LO2-015",
         "LO2-171",
-        "LO2-174",
         "LO2-238",
         "LO2-281"
       ],
@@ -14591,8 +14592,7 @@
       "relatedTermIDs": [],
       "aliases": [],
       "questionIDs": [
-        "LO2-106",
-        "LO2-112"
+        "LO2-106"
       ],
       "sourceID": "usa_official_wine",
       "checkedAt": "2026-07-12"
@@ -14642,7 +14642,6 @@
       "aliases": [],
       "questionIDs": [
         "LO2-031",
-        "LO2-116",
         "LO2-117",
         "LO2-151",
         "LO3-040",
@@ -14777,9 +14776,7 @@
       "relatedTermIDs": [],
       "aliases": [],
       "questionIDs": [
-        "LO2-127",
-        "LO2-129",
-        "LO2-156"
+        "LO2-129"
       ],
       "sourceID": "bourgogne_official_profiles",
       "checkedAt": "2026-07-12"
@@ -15594,6 +15591,7 @@
         "LO2-062",
         "LO2-122",
         "LO2-124",
+        "LO2-138",
         "LO2-182",
         "LO2-183",
         "LO2-184",
@@ -16656,7 +16654,6 @@
       "aliases": [],
       "questionIDs": [
         "LO2-014",
-        "LO2-019",
         "LO2-166",
         "LO2-277",
         "LO2-323"
@@ -16863,8 +16860,7 @@
       "relatedTermIDs": [],
       "aliases": [],
       "questionIDs": [
-        "LO2-148",
-        "LO2-153"
+        "LO2-148"
       ],
       "sourceID": "germany_official_regions",
       "checkedAt": "2026-07-12"
@@ -16963,7 +16959,6 @@
       "aliases": [],
       "questionIDs": [
         "LO2-080",
-        "LO2-141",
         "LO2-143"
       ],
       "sourceID": "languedoc_official_terroir",
@@ -18159,9 +18154,7 @@
       "relatedTermIDs": [],
       "aliases": [],
       "questionIDs": [
-        "LO2-127",
-        "LO2-129",
-        "LO2-156"
+        "LO2-129"
       ],
       "sourceID": "bourgogne_official_profiles",
       "checkedAt": "2026-07-12"
@@ -18436,7 +18429,6 @@
         "LO3-024",
         "LO3-029",
         "LO3-030",
-        "LO3-031",
         "LO3-034",
         "LO3-058",
         "LO3-062",
@@ -18544,7 +18536,6 @@
         "LO3-071",
         "LO3-075",
         "LO3-080",
-        "LO3-085",
         "LO3-087",
         "LO3-089",
         "LO3-094",
@@ -18821,7 +18812,6 @@
         "LO2-096",
         "LO2-106",
         "LO2-107",
-        "LO2-112",
         "LO2-156",
         "LO2-161",
         "LO2-169",
@@ -19088,8 +19078,6 @@
         "LO4-091",
         "LO4-092",
         "LO4-094",
-        "LO4-095",
-        "LO4-096",
         "LO4-102",
         "LO4-103",
         "LO4-105",
@@ -19113,7 +19101,6 @@
         "LO4-176",
         "LO4-177",
         "LO4-178",
-        "LO5-073",
         "LO5-110",
         "LO5-146"
       ],
@@ -19373,11 +19360,11 @@
         "LO1-083",
         "LO1-086",
         "LO1-159",
+        "LO1-160",
         "LO2-045",
         "LO2-077",
         "LO2-078",
         "LO2-106",
-        "LO2-112",
         "LO2-197",
         "LO2-205",
         "LO2-300",
@@ -19504,6 +19491,7 @@
         "LO1-096",
         "LO1-111",
         "LO1-114",
+        "LO1-160",
         "LO1-161",
         "LO1-162",
         "LO1-163",
@@ -19531,7 +19519,6 @@
         "LO4-143",
         "LO4-144",
         "LO5-068",
-        "LO5-091",
         "LO5-165"
       ],
       "sourceID": "wset_questions_1100_v6",
@@ -23533,6 +23520,13 @@
       "url": "https://winesoftokaj.hu/en/",
       "effectiveDate": "2026-07-12",
       "checkedAt": "2026-07-12"
+    },
+    {
+      "id": "vinho_verde_grape_varieties",
+      "name": "CVRVV: Vinhos Verdes Indigenous Grape Varieties",
+      "url": "https://www.vinhoverde.pt/en/grape-varieties/white-wines/",
+      "effectiveDate": "2026-09-14",
+      "checkedAt": "2026-09-14"
     }
   ],
   "termIDMigrations": {}

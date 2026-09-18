@@ -131,13 +131,13 @@ struct MockExamView: View {
                 if currentIndex + 1 == questions.count {
                     Button("提出") { showingSubmitConfirmation = true }
                         .buttonStyle(.borderedProminent)
-                        .tint(AppTheme.wine)
+                        .tint(AppTheme.wineAction)
                 } else {
                     Button("次へ") {
                         currentIndex += 1
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                 }
             }
             .padding()
@@ -213,7 +213,7 @@ struct MockExamView: View {
 
                 Button("完了") { dismiss() }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .frame(maxWidth: .infinity)
             }
             .padding()
