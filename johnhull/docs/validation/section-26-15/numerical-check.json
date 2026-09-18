@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "section": "26.15",
+  "status": "PASS",
+  "milestone_status": "gaps_found",
+  "scope": "Independent synthetic numerical reference; API and teaching still pending.",
+  "source_pages": [
+    628,
+    629
+  ],
+  "printed_price_anchor": null,
+  "price_floor": 0.5,
+  "paths_per_market": 1000000,
+  "pilot_paths_per_market": 20000,
+  "row_count": 72,
+  "ordinary_rows": 48,
+  "exact_anchor_rows": 24,
+  "units": {
+    "price": "currency",
+    "M2": "currency squared",
+    "T": "years",
+    "rates": "continuously compounded annual",
+    "volatilities": "annualized"
+  },
+  "method": {
+    "moments": "Direct double loops under correlated risk-neutral GBM",
+    "conditional": "Conditional lognormal payoff; one finite Gaussian quad integral",
+    "quad_error": "QUADPACK estimate on finite interval only, not a certified total error",
+    "tail": "Separate analytic upper bound using payoff <= B+K and tilted Gaussian tails",
+    "mc": "IID terminal GBM; PSD eigendecomposition; independent pilot first-moment control",
+    "parity": "Call/put share paths and controls; controlled residuals differ by constant",
+    "reproducibility": "No timestamps; --check regenerates both files byte for byte"
+  },
+  "tolerances": {
+    "mc_standard_errors": 4.0,
+    "quad_epsabs": 1e-10,
+    "quad_epsrel": 1e-11,
+    "deterministic_error_floor": 1e-10
+  },
+  "mc_validation": {
+    "anchor_rows": 54,
+    "max_standard_errors": 2.404841020499905,
+    "within_four_se": true
+  },
+  "empirical_error_floor": {
+    "max_mc_standard_error": 0.020887601334837552,
+    "max_four_se": 0.08355040533935021,
+    "max_quadrature_estimate": 2.9897821880773337e-10,
+    "max_tail_bound": 3.982601872036262e-31
+  },
+  "approximation_error": {
+    "max_absolute": 6.417394632030479,
+    "max_relative": 0.6683779332970005,
+    "min_signed_relative": -0.019361283883357082,
+    "max_signed_relative": 0.6683779332970005,
+    "relative_error_rows": 63,
+    "below_price_floor_rows": 9,
+    "unresolved_sign_rows": 26,
+    "caveat": "Empirical market grid only; no universal error bound. MC gaps <=4SE have unresolved sign."
+  },
+  "source_sha256": {
+    "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
+    "hullkit/tests/test_basket_reference.py": "2304492027841179924a9d633aae283e0c7f9d4cbf54ccf56c7b37cb4fddff80"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8"
+  }
+}
