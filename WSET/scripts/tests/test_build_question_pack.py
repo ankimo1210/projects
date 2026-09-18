@@ -69,7 +69,10 @@ class QuestionPackBuilderTests(unittest.TestCase):
             "wset_level3_original_questions_1100_v6.xlsx"
         )
         previous_rows = read_question_rows(previous_input)
-        current_by_id = {row["問題ID"]: row for row in self.rows}
+        v7_rows = read_question_rows(
+            DEFAULT_INPUT.with_name("wset_level3_original_questions_1100_v7.xlsx")
+        )
+        current_by_id = {row["問題ID"]: row for row in v7_rows}
         previous_by_id = {row["問題ID"]: row for row in previous_rows}
         allowed_changed_fields = {
             "問題文",
@@ -120,6 +123,48 @@ class QuestionPackBuilderTests(unittest.TestCase):
         self.assertEqual(choice_changed_questions, 90)
         self.assertEqual(changed_choice_count, 325)
 
+    def test_curated_answer_regressions_are_scored_as_correct(self) -> None:
+        # These facts were previously present as distractors while false answers
+        # were marked correct. Structural validation alone cannot detect that.
+        # This is a curated regression set, not an automated fact checker.
+        facts = {
+            "LO1-116": "コルクごとに酸素透過性や密閉性",
+            "LO1-127": "低い樹冠が果房へ自然な日陰",
+            "LO1-135": "浸食を抑え",
+            "LO1-147": "果房と葉の温度を下げ",
+            "LO2-023": "北部の花崗岩質丘陵",
+            "LO2-030": "南向き斜面が日射を受け",
+            "LO2-040": "大西洋の影響",
+            "LO2-079": "幅広い品種",
+            "LO2-174": "水はけのよい",
+            "LO3-042": "ハウス・スタイルを維持",
+            "LO3-095": "夜間が冷涼",
+            "LO3-150": "水分を保持",
+            "LO4-120": "若い型は新鮮なブドウと花",
+            "LO4-178": "化学反応と蒸発",
+            "LO5-040": "好みや反応が人によって異なる",
+            "LO5-163": "色素とタンニンが沈殿",
+        }
+        by_id = {question["id"]: question for question in self.payload["questions"]}
+        for identifier, fact in facts.items():
+            question = by_id[identifier]
+            with self.subTest(question_id=identifier):
+                selected = question["choices"][question["correctAnswerIndex"]]
+                self.assertIn(fact, selected)
+                self.assertEqual(question["answer"], selected)
+                self.assertEqual(
+                    question["explanation"],
+                    question["choiceExplanations"][question["correctAnswerIndex"]],
+                )
+
+    def test_explanations_do_not_use_duplicate_verdicts_or_topic_only_rejections(self) -> None:
+        for question in self.payload["questions"]:
+            with self.subTest(question_id=question["id"]):
+                for explanation in [question["explanation"], *question["choiceExplanations"]]:
+                    self.assertNotIn("正しい。正しい。", explanation)
+                    self.assertNotIn("誤り。誤り。", explanation)
+                    self.assertNotIn("これは同じ知識領域の", explanation)
+
     def test_metadata_and_review_flags_are_preserved(self) -> None:
         questions = self.payload["questions"]
         self.assertEqual(sum(question["needsReview"] for question in questions), 130)
@@ -135,7 +180,7 @@ class QuestionPackBuilderTests(unittest.TestCase):
         self.assertEqual(self.payload["distributionStatus"], "release")
         self.assertEqual(
             self.payload["source"]["file"],
-            "QuestionSources/wset_level3_original_questions_1100_v7.xlsx",
+            "QuestionSources/wset_level3_original_questions_1100_v8.xlsx",
         )
         self.assertEqual(self.payload["source"]["sheet"], "問題集")
         geographic = next(

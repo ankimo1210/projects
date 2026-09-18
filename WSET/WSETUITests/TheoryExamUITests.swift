@@ -10,8 +10,8 @@ final class TheoryExamUITests: XCTestCase {
         app.launchArguments += ["-UITestProEntitlement", "-UITestInMemoryStore"]
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
         let entry = app.descendants(matching: .any)["study.theoryExam.open"]
         for _ in 0..<8 where !entry.exists { app.swipeUp() }
         XCTAssertTrue(entry.exists)

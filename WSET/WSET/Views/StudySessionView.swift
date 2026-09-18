@@ -4,6 +4,7 @@ import SwiftUI
 struct StudySessionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(EntitlementStore.self) private var entitlementStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let questions: [StudyQuestion]
     @State private var currentIndex = 0
     @State private var isRevealed = false
@@ -14,6 +15,7 @@ struct StudySessionView: View {
     @State private var selectedRubricIDs: Set<String> = []
     @State private var questionStartedAt = Date.now
     @State private var answerSubmittedAt: Date?
+    @State private var hasPreparedSession = false
 
     private var question: StudyQuestion { questions[currentIndex] }
 
@@ -49,7 +51,8 @@ struct StudySessionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .interactiveDismissDisabled(!isFinished && currentIndex > 0)
         .onAppear {
-            guard !questions.isEmpty, inaccessibleQuestion == nil else { return }
+            guard !hasPreparedSession, !questions.isEmpty, inaccessibleQuestion == nil else { return }
+            hasPreparedSession = true
             prepareCurrentQuestion()
         }
     }
@@ -93,7 +96,7 @@ struct StudySessionView: View {
                             revealAnswer()
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(AppTheme.wine)
+                        .tint(AppTheme.wineAction)
                         .frame(maxWidth: .infinity)
                     }
 
@@ -101,6 +104,7 @@ struct StudySessionView: View {
                         answerCard
                             .id("answer-card")
                         TermAnnotationsView(questionID: question.id)
+                        QuestionRegionLinksView(question: question)
                         if question.studyMode == "written_answer", !question.rubricItems.isEmpty {
                             writtenRubricScoring
                         } else {
@@ -113,8 +117,10 @@ struct StudySessionView: View {
             .onChange(of: isRevealed) { _, revealed in
                 guard revealed else { return }
                 DispatchQueue.main.async {
-                    withAnimation {
+                    if reduceMotion {
                         proxy.scrollTo("answer-card", anchor: .center)
+                    } else {
+                        withAnimation { proxy.scrollTo("answer-card", anchor: .center) }
                     }
                 }
             }
@@ -159,7 +165,7 @@ struct StudySessionView: View {
                 revealAnswer()
             }
             .buttonStyle(.borderedProminent)
-            .tint(AppTheme.wine)
+            .tint(AppTheme.wineAction)
             .disabled(writtenResponse.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
     }
@@ -176,7 +182,7 @@ struct StudySessionView: View {
                         Text(String(UnicodeScalar(65 + index)!))
                             .font(.caption.bold())
                             .frame(width: 25, height: 25)
-                            .background(.white.opacity(0.8), in: Circle())
+                            .background(AppTheme.surface, in: Circle())
                         Text(choice)
                             .multilineTextAlignment(.leading)
                         Spacer()
@@ -226,7 +232,7 @@ struct StudySessionView: View {
                 .frame(maxWidth: .infinity)
             Button("理解できた") { recordAndAdvance(rating: 3) }
                 .buttonStyle(.borderedProminent)
-                .tint(AppTheme.wine)
+                .tint(AppTheme.wineAction)
                 .frame(maxWidth: .infinity)
         }
     }
@@ -287,7 +293,7 @@ struct StudySessionView: View {
                 recordWrittenAndAdvance()
             }
             .buttonStyle(.borderedProminent)
-            .tint(AppTheme.wine)
+            .tint(AppTheme.wineAction)
             .frame(maxWidth: .infinity)
         }
         .padding()
@@ -307,7 +313,7 @@ struct StudySessionView: View {
                     Label("Pro機能を見る", systemImage: "graduationcap.fill")
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(AppTheme.wine)
+                .tint(AppTheme.wineAction)
                 .accessibilityIdentifier("paywall.afterStudy")
             }
         }
@@ -395,7 +401,11 @@ struct StudySessionView: View {
         if question.studyMode == "written_answer" {
             persistWrittenDraft(for: question.id)
         }
-        withAnimation { isRevealed = true }
+        if reduceMotion {
+            isRevealed = true
+        } else {
+            withAnimation { isRevealed = true }
+        }
     }
 
     private var writtenResponseBinding: Binding<String> {

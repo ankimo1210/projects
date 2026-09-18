@@ -523,7 +523,7 @@ struct GlossaryReviewView: View {
                             .accessibilityIdentifier("glossary.review.again")
                         Button("覚えた") { recordAndAdvance(isCorrect: true) }
                             .buttonStyle(.borderedProminent)
-                            .tint(AppTheme.wine)
+                            .tint(AppTheme.wineAction)
                             .frame(maxWidth: .infinity)
                             .accessibilityIdentifier("glossary.review.good")
                     }
@@ -532,7 +532,7 @@ struct GlossaryReviewView: View {
                         withAnimation { isRevealed = true }
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .frame(maxWidth: .infinity)
                     .accessibilityIdentifier("glossary.review.reveal")
                 }

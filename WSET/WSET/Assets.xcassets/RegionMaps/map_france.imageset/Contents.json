@@ -3,6 +3,16 @@
     {
       "filename": "france.svg",
       "idiom": "universal"
+    },
+    {
+      "filename": "france_dark.svg",
+      "idiom": "universal",
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ]
     }
   ],
   "info": {

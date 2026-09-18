@@ -10,8 +10,8 @@ final class R5UITests: XCTestCase {
         app.launchArguments.append("-UITestProEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["問題集"].tap()
+        XCTAssertTrue(app.tabBars.buttons["図鑑"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["図鑑"].tap()
         let glossaryLink = app.descendants(matching: .any)["reference.glossary.link"]
         XCTAssertTrue(glossaryLink.waitForExistence(timeout: 5))
         glossaryLink.tap()
@@ -32,8 +32,8 @@ final class R5UITests: XCTestCase {
         app.launchArguments.append("-UITestProEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["テイスティング"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["テイスティング"].tap()
+        XCTAssertTrue(app.tabBars.buttons["ノート"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["ノート"].tap()
         let examEntry = app.descendants(matching: .any)["tasting.exam.entry"]
         XCTAssertTrue(examEntry.waitForExistence(timeout: 5))
         examEntry.tap()
@@ -58,8 +58,8 @@ final class R5UITests: XCTestCase {
         app.launchArguments += ["-UITestProEntitlement", "-UITestInMemoryStore"]
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["テイスティング"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["テイスティング"].tap()
+        XCTAssertTrue(app.tabBars.buttons["ノート"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["ノート"].tap()
         app.buttons["テイスティング記録を作成"].tap()
 
         let vocabulary = app.descendants(matching: .any)["tasting.vocabulary.aroma"]
@@ -112,8 +112,8 @@ final class R5UITests: XCTestCase {
         app.launchArguments.append("-UITestProEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
         let dailyEntry = app.descendants(matching: .any)["study.daily.open"]
         for _ in 0..<6 where !dailyEntry.exists { app.swipeUp() }
         XCTAssertTrue(dailyEntry.waitForExistence(timeout: 5))
@@ -141,8 +141,8 @@ final class R5UITests: XCTestCase {
         ]
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["テイスティング"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["テイスティング"].tap()
+        XCTAssertTrue(app.tabBars.buttons["ノート"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["ノート"].tap()
         let entry = app.descendants(matching: .any)["tasting.compare.entry"]
         XCTAssertTrue(entry.waitForExistence(timeout: 5))
         XCTAssertTrue(entry.isEnabled)

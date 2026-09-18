@@ -137,7 +137,7 @@ struct TheoryExamDashboardView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .disabled(!canStartNewExam)
                     .accessibilityIdentifier("theoryExam.start")
                 } header: {
@@ -440,11 +440,11 @@ struct TheoryExamView: View {
                 if session.currentIndex + 1 >= session.totalQuestionCount {
                     Button("提出") { showingSubmitConfirmation = true }
                         .buttonStyle(.borderedProminent)
-                        .tint(AppTheme.wine)
+                        .tint(AppTheme.wineAction)
                 } else {
                     Button("次へ") { move(to: session.currentIndex + 1) }
                         .buttonStyle(.borderedProminent)
-                        .tint(AppTheme.wine)
+                        .tint(AppTheme.wineAction)
                 }
             }
             .padding()
@@ -642,7 +642,7 @@ struct TheoryExamView: View {
 
                 Button("自己採点を確定") { finalizeExam() }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .frame(maxWidth: .infinity)
                     .accessibilityIdentifier("theoryExam.finalize")
             }

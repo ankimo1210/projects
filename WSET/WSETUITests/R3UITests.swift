@@ -14,8 +14,8 @@ final class R3UITests: XCTestCase {
         ])
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["学習"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["学習"].tap()
+        XCTAssertTrue(app.tabBars.buttons["学ぶ"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["学ぶ"].tap()
 
         let dailyEntry = app.descendants(matching: .any)["study.daily.open"]
         for _ in 0..<8 where !dailyEntry.exists { app.swipeUp() }

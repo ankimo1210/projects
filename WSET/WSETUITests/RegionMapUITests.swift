@@ -10,8 +10,8 @@ final class RegionMapUITests: XCTestCase {
         app.launchArguments.append("-UITestProEntitlement")
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["問題集"].tap()
+        XCTAssertTrue(app.tabBars.buttons["図鑑"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["図鑑"].tap()
 
         let hubLink = app.descendants(matching: .any)["regionMap.hub.link"]
         XCTAssertTrue(hubLink.waitForExistence(timeout: 5))
@@ -22,6 +22,7 @@ final class RegionMapUITests: XCTestCase {
         XCTAssertTrue(france.waitForExistence(timeout: 5))
         france.tap()
         XCTAssertTrue(app.navigationBars["フランス"].waitForExistence(timeout: 5))
+        app.segmentedControls["atlas.displayMode"].buttons["一覧"].tap()
         XCTAssertTrue(app.staticTexts["産地一覧"].exists)
 
         let bordeaux = app.descendants(matching: .any)["regionMap.list.france_bordeaux"]
@@ -58,8 +59,8 @@ final class RegionMapUITests: XCTestCase {
         app.launchArguments += ["-UITestProEntitlement", "-UITestInMemoryStore"]
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["問題集"].tap()
+        XCTAssertTrue(app.tabBars.buttons["図鑑"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["図鑑"].tap()
         app.descendants(matching: .any)["regionMap.hub.link"].tap()
         app.descendants(matching: .any)["regionMap.country.france"].tap()
 
@@ -75,20 +76,27 @@ final class RegionMapUITests: XCTestCase {
             "france_beaujolais",
             "france_languedoc_roussillon",
         ]
-        for regionID in regionIDs {
-            XCTAssertTrue(app.buttons["regionMap.marker.\(regionID)"].exists)
-            XCTAssertTrue(app.buttons["regionMap.list.\(regionID)"].exists)
-        }
-
+        // Nearby regions are exposed by a named cluster menu; the list exposes all ten.
         let marker = app.descendants(matching: .any)["regionMap.marker.france_bordeaux"]
         XCTAssertTrue(marker.waitForExistence(timeout: 5))
         marker.tap()
+        let preview = app.descendants(matching: .any)["atlas.selected.france_bordeaux"]
+        XCTAssertTrue(preview.exists)
+        app.segmentedControls["atlas.displayMode"].buttons["一覧"].tap()
+        for regionID in regionIDs {
+            XCTAssertTrue(app.buttons["regionMap.list.\(regionID)"].exists)
+        }
+        app.segmentedControls["atlas.displayMode"].buttons["地図"].tap()
+        let detail = app.descendants(matching: .any)["atlas.detail.open"]
+        for _ in 0..<10 where !detail.isHittable { app.swipeUp() }
+        detail.tap()
         XCTAssertTrue(app.navigationBars["産地詳細"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["ボルドー"].exists)
 
         let study = app.descendants(matching: .any)["regionMap.study.10"]
         XCTAssertTrue(study.waitForExistence(timeout: 5))
         XCTAssertTrue(study.isEnabled)
+        for _ in 0..<15 where !study.isHittable { app.swipeUp() }
         study.tap()
         XCTAssertTrue(app.navigationBars["1 / 10 問"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["study.session.choice.0"].waitForExistence(timeout: 5))
@@ -99,8 +107,8 @@ final class RegionMapUITests: XCTestCase {
         app.launchArguments += ["-UITestInMemoryStore", "-UITestRegionMapLoadFailure"]
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["問題集"].tap()
+        XCTAssertTrue(app.tabBars.buttons["図鑑"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["図鑑"].tap()
         app.descendants(matching: .any)["regionMap.hub.link"].tap()
 
         let error = app.descendants(matching: .any)["regionMap.loadError"]
@@ -114,8 +122,8 @@ final class RegionMapUITests: XCTestCase {
         app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
 
-        XCTAssertTrue(app.tabBars.buttons["問題集"].waitForExistence(timeout: 20))
-        app.tabBars.buttons["問題集"].tap()
+        XCTAssertTrue(app.tabBars.buttons["図鑑"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["図鑑"].tap()
         app.descendants(matching: .any)["regionMap.hub.link"].tap()
 
         XCTAssertTrue(app.navigationBars["産地マップ"].waitForExistence(timeout: 5))

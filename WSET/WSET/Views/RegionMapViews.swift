@@ -128,290 +128,130 @@ private struct RegionMapCountryRow: View {
 }
 
 struct CountryRegionMapView: View {
-    @Environment(EntitlementStore.self) private var entitlementStore
-    @Query private var questions: [StudyQuestion]
-    @Query private var progressRecords: [QuestionProgress]
-    @Query private var attempts: [StudyAttempt]
-    @State private var selectedRegionID: String?
-    @State private var showingSelectedRegion = false
-
     let document: RegionMapDocument
     let store: RegionMapStore
+    let initialSelectedRegionID: String?
+    let allowsRegionNavigation: Bool
 
-    init(document: RegionMapDocument, store: RegionMapStore = .shared) {
+    init(document: RegionMapDocument, store: RegionMapStore = .shared,
+         initialSelectedRegionID: String? = nil, allowsRegionNavigation: Bool = true) {
         self.document = document
         self.store = store
-        _selectedRegionID = State(initialValue: document.regions.first?.id)
-    }
-
-    private var selectedRegion: MapRegion? {
-        guard let selectedRegionID else { return nil }
-        return document.regions.first { $0.id == selectedRegionID }
-    }
-
-    private var countryStatistics: RegionStudyStatistics {
-        RegionStudyQuery.statistics(
-            focusValues: [document.country],
-            questions: accessibleQuestions,
-            progress: progressRecords,
-            attempts: attempts
-        )
-    }
-
-    private var accessibleQuestions: [StudyQuestion] {
-        questions.filter {
-            entitlementStore.policy.canAccessQuestion(id: $0.id, studyMode: $0.studyMode)
-        }
+        self.initialSelectedRegionID = initialSelectedRegionID
+        self.allowsRegionNavigation = allowsRegionNavigation
     }
 
     var body: some View {
-        if entitlementStore.policy.canAccessRegionMap(country: document.country) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                countrySummary
-
-                RegionMapCanvasView(
-                    document: document,
-                    selectedRegionID: selectedRegionID,
-                    statistics: regionStatistics,
-                    onSelect: { region in
-                        selectedRegionID = region.id
-                        showingSelectedRegion = true
-                    }
-                )
-                .frame(maxWidth: 520)
-                .frame(maxWidth: .infinity)
-                .aspectRatio(document.aspectRatio, contentMode: .fit)
-
-                Label(
-                    "産地マーカーは学習用の概略位置です。法的境界や正確な縮尺を表しません。",
-                    systemImage: "info.circle"
-                )
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("産地一覧")
-                        .font(.headline)
-                    ForEach(document.regions) { region in
-                        NavigationLink {
-                            RegionDetailView(region: region, country: document.country)
-                        } label: {
-                            RegionListRow(
-                                region: region,
-                                statistics: regionStatistics(region),
-                                isSelected: selectedRegionID == region.id
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        .simultaneousGesture(
-                            TapGesture().onEnded { selectedRegionID = region.id }
-                        )
-                        .accessibilityIdentifier("regionMap.list.\(region.id)")
-                    }
-                }
-
-                sourceDisclosure
-                }
+        ScrollView {
+            AtlasExplorerContent(document: document, store: store,
+                initialSelectedRegionID: initialSelectedRegionID,
+                allowsRegionNavigation: allowsRegionNavigation)
                 .padding()
-            }
-            .navigationTitle(document.nameJapanese)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                if document.regions.count >= 2 {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        NavigationLink {
-                            RegionComparisonView(document: document)
-                        } label: {
-                            Label("比較", systemImage: "rectangle.split.2x1")
-                        }
-                    }
-                }
-            }
-            .navigationDestination(isPresented: $showingSelectedRegion) {
-                if let selectedRegion {
-                    RegionDetailView(region: selectedRegion, country: document.country)
-                }
-            }
-        } else {
-            PaywallView(triggerFeature: .fullRegionMaps)
         }
-    }
-
-    private var countrySummary: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                VStack(alignment: .leading) {
-                    Text(document.nameJapanese)
-                        .font(.title2.bold())
-                    Text(document.nameOriginal)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                RegionProgressBadge(statistics: countryStatistics)
-            }
-            HStack(spacing: 18) {
-                MetricLabel(title: "関連問題", value: "\(countryStatistics.questionCount)問")
-                MetricLabel(
-                    title: "学習済み",
-                    value: "\(countryStatistics.studiedQuestionCount)問"
-                )
-                MetricLabel(title: "正答率", value: percentage(countryStatistics.accuracy))
-            }
-        }
-        .padding()
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
-    }
-
-    private var sourceDisclosure: some View {
-        DisclosureGroup("地図の出典と注意事項") {
-            VStack(alignment: .leading, spacing: 10) {
-                ForEach(document.sourceIDs.compactMap(store.source)) { source in
-                    Text(source.name)
-                        .font(.subheadline.weight(.semibold))
-                    LabeledContent("権利", value: source.license)
-                        .font(.caption)
-                    LabeledContent("確認日", value: source.checkedAt)
-                        .font(.caption)
-                    Text(source.note)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    if let rawURL = source.url, let url = URL(string: rawURL) {
-                        Link("参照ページを開く", destination: url)
-                    }
-                }
-            }
-            .padding(.top, 8)
-        }
-        .font(.footnote)
-    }
-
-    private func regionStatistics(_ region: MapRegion) -> RegionStudyStatistics {
-        RegionStudyQuery.statistics(
-            region: region,
-            questions: accessibleQuestions,
-            progress: progressRecords,
-            attempts: attempts
-        )
+        .background(AppTheme.paper)
+        .navigationTitle(document.nameJapanese)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 struct RegionMapCanvasView: View {
     let document: RegionMapDocument
     let selectedRegionID: String?
-    let statistics: (MapRegion) -> RegionStudyStatistics
     let onSelect: (MapRegion) -> Void
 
     var body: some View {
-        ZStack {
-            Image(document.assetName)
-                .resizable()
-                .scaledToFit()
-                .accessibilityHidden(true)
-
-            GeometryReader { proxy in
+        GeometryReader { proxy in
+            ZStack {
+                Image(document.assetName)
+                    .resizable()
+                    .scaledToFit()
+                    .accessibilityHidden(true)
+                // Dots stay on the exact projected representative positions, even in a cluster.
                 ForEach(document.regions) { region in
-                    RegionMarkerButton(
-                        region: region,
-                        statistics: statistics(region),
-                        isSelected: selectedRegionID == region.id,
-                        canvasSize: proxy.size,
-                        onSelect: { onSelect(region) }
-                    )
-                    .position(
-                        x: region.position.x * proxy.size.width,
-                        y: region.position.y * proxy.size.height
-                    )
+                    Circle()
+                        .fill(region.id == selectedRegionID ? AppTheme.wine : AppTheme.forest)
+                        .frame(width: region.id == selectedRegionID ? 14 : 7,
+                               height: region.id == selectedRegionID ? 14 : 7)
+                        .overlay { Circle().stroke(AppTheme.surface, lineWidth: 2) }
+                        .position(point(region, size: proxy.size))
+                        .accessibilityHidden(true)
+                }
+                ForEach(clusters(size: proxy.size)) { cluster in
+                    if cluster.regions.count == 1, let region = cluster.regions.first {
+                        Button { onSelect(region) } label: {
+                            Image(systemName: region.id == selectedRegionID ? "mappin.circle.fill" : "mappin.circle")
+                                .font(.system(size: 26))
+                                .foregroundStyle(AppTheme.forest)
+                                .frame(width: 44, height: 44)
+                                .background(AppTheme.surface.opacity(0.9), in: Circle())
+                                .contentShape(Circle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(region.nameJapanese)
+                        .accessibilityValue(region.id == selectedRegionID ? "選択中" : "")
+                        .accessibilityHint("産地の写真と概要を表示します")
+                        .accessibilityIdentifier("regionMap.marker.\(region.id)")
+                        .position(cluster.center)
+                    } else {
+                        Menu {
+                            ForEach(cluster.regions) { region in
+                                Button(region.nameJapanese) { onSelect(region) }
+                                    .accessibilityIdentifier("regionMap.marker.\(region.id)")
+                            }
+                        } label: {
+                            Image(systemName: "\(cluster.regions.count).circle.fill")
+                                .font(.system(size: 30))
+                                .foregroundStyle(AppTheme.forest)
+                                .frame(width: 44, height: 44)
+                                .background(AppTheme.surface, in: Circle())
+                                .overlay { Circle().stroke(AppTheme.forest, lineWidth: 2) }
+                        }
+                        .accessibilityLabel("近接する\(cluster.regions.count)産地：\(cluster.regions.map(\.nameJapanese).joined(separator: "、"))")
+                        .accessibilityHint("産地名を選択してください")
+                        .accessibilityIdentifier("regionMap.cluster.\(cluster.id)")
+                        .position(cluster.center)
+                    }
                 }
             }
         }
     }
-}
 
-private struct RegionMarkerButton: View {
-    let region: MapRegion
-    let statistics: RegionStudyStatistics
-    let isSelected: Bool
-    let canvasSize: CGSize
-    let onSelect: () -> Void
-
-    var body: some View {
-        Button(action: onSelect) {
-            ZStack {
-                Circle()
-                    .fill(isSelected ? AppTheme.wine : Color.white)
-                    .frame(width: 20, height: 20)
-                    .overlay {
-                        Circle()
-                            .stroke(AppTheme.wine, lineWidth: isSelected ? 4 : 3)
-                    }
-                    .shadow(radius: 1)
-
-                Text(region.nameJapanese)
-                    .font(.caption2.weight(.bold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.65)
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 3)
-                    .foregroundStyle(AppTheme.wine)
-                    .background(.regularMaterial, in: Capsule())
-                    .offset(
-                        x: region.labelOffset.x * canvasSize.width,
-                        y: region.labelOffset.y * canvasSize.height
-                    )
-            }
-            .frame(width: 112, height: 52)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(region.nameJapanese)
-        .accessibilityValue(
-            "関連\(statistics.questionCount)問、正答率\(percentage(statistics.accuracy))"
-        )
-        .accessibilityHint("産地の詳細を開きます")
-        .accessibilityIdentifier("regionMap.marker.\(region.id)")
+    private struct Cluster: Identifiable {
+        let regions: [MapRegion]
+        let center: CGPoint
+        var id: String { regions.map(\.id).joined(separator: ".") }
     }
-}
 
-private struct RegionListRow: View {
-    let region: MapRegion
-    let statistics: RegionStudyStatistics
-    let isSelected: Bool
+    private func point(_ region: MapRegion, size: CGSize) -> CGPoint {
+        CGPoint(x: region.position.x * size.width, y: region.position.y * size.height)
+    }
 
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: isSelected ? "mappin.circle.fill" : "mappin.circle")
-                .font(.title3)
-                .foregroundStyle(AppTheme.wine)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 3) {
-                Text(region.nameJapanese)
-                    .font(.body.weight(.semibold))
-                Text(region.nameOriginal)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-            VStack(alignment: .trailing, spacing: 3) {
-                Text("\(statistics.questionCount)問")
-                    .font(.subheadline.weight(.semibold))
-                Text(statistics.attemptCount == 0 ? "未学習" : "正答率 \(percentage(statistics.accuracy))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Image(systemName: "chevron.right")
-                .font(.caption.bold())
-                .foregroundStyle(.tertiary)
+    /// Repeatedly merge intersecting 44pt controls. No hidden overlapping hit rectangles.
+    private func clusters(size: CGSize) -> [Cluster] {
+        var groups = document.regions.map { [$0] }
+        func center(_ group: [MapRegion]) -> CGPoint {
+            let count = Double(group.count)
+            let x = group.reduce(0.0) { $0 + $1.position.x } / count * size.width
+            let y = group.reduce(0.0) { $0 + $1.position.y } / count * size.height
+            return CGPoint(x: min(max(x, 22), max(22, size.width - 22)),
+                           y: min(max(y, 22), max(22, size.height - 22)))
         }
-        .padding(12)
-        .background(
-            isSelected ? AppTheme.wineSoft : Color(.secondarySystemGroupedBackground),
-            in: RoundedRectangle(cornerRadius: 13)
-        )
-        .overlay {
-            RoundedRectangle(cornerRadius: 13)
-                .stroke(isSelected ? AppTheme.wine : .clear, lineWidth: 2)
+        var didMerge = true
+        while didMerge {
+            didMerge = false
+            outer: for i in groups.indices {
+                for j in groups.indices where j > i {
+                    let a = center(groups[i]), b = center(groups[j])
+                    if abs(a.x - b.x) < 48 && abs(a.y - b.y) < 48 {
+                        groups[i].append(contentsOf: groups[j])
+                        groups.remove(at: j)
+                        didMerge = true
+                        break outer
+                    }
+                }
+            }
         }
+        return groups.map { Cluster(regions: $0, center: center($0)) }
     }
 }
 
@@ -440,15 +280,6 @@ struct RegionDetailView: View {
         )
     }
 
-    private var grapeVarieties: [GrapeVarietyFrequency] {
-        Array(
-            RegionStudyQuery.relatedGrapeVarieties(
-                region: region,
-                questions: accessibleQuestions
-            ).prefix(8)
-        )
-    }
-
     private var relatedTerms: [ReferenceTerm] {
         RegionStudyQuery.relatedTerms(region: region, terms: referenceStore.terms)
             .filter { entitlementStore.policy.canAccessGlossaryTerm(id: $0.id) }
@@ -460,88 +291,157 @@ struct RegionDetailView: View {
         }
     }
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var selectedAxis = RegionComparisonAxis.climateInfluence
+    @State private var showingPhotoCredits = false
+
+    private let mainAxes: [RegionComparisonAxis] = [.climateInfluence, .grapeVarieties, .wineStyles]
+
     var body: some View {
         if entitlementStore.policy.canAccessRegionMap(country: country) {
-            List {
-            Section {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(region.nameJapanese)
-                        .font(.title2.bold())
-                    Text(region.nameOriginal)
-                        .foregroundStyle(AppTheme.wine)
-                    Text(country)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.vertical, 4)
-            }
-
-            Section("学習状況") {
-                LabeledContent("関連問題", value: "\(statistics.questionCount)問")
-                LabeledContent("学習済み", value: "\(statistics.studiedQuestionCount)問")
-                LabeledContent("カバー率", value: percentage(statistics.coverage))
-                LabeledContent("正答率", value: percentage(statistics.accuracy))
-                LabeledContent("復習期限", value: "\(statistics.dueQuestionCount)問")
-            }
-
-            Section {
-                HStack(spacing: 12) {
-                    studyButton(count: 10)
-                    studyButton(count: 20)
-                }
-            } header: {
-                Text("重点学習")
-            } footer: {
-                Text("該当問題が指定数より少ない場合は、該当する全問題を出題します。")
-            }
-
-            if !grapeVarieties.isEmpty {
-                Section("主要品種") {
-                    ForEach(grapeVarieties) { grape in
-                        LabeledContent(grape.name, value: "\(grape.questionCount)問")
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    RegionPhotoView(regionID: region.id, height: 240)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(country).font(.subheadline).foregroundStyle(AppTheme.forest)
+                        Text(region.nameJapanese).font(.largeTitle.bold())
+                        Text(region.nameOriginal).font(.title3).foregroundStyle(AppTheme.forest)
+                        if AtlasMediaStore.shared.photo(for: region.id) != nil {
+                            Button { showingPhotoCredits = true } label: {
+                                Label("写真の出典", systemImage: "info.circle")
+                                    .font(.footnote).frame(minHeight: 44)
+                            }
+                            .accessibilityIdentifier("atlas.photo.credits")
+                        }
                     }
-                }
-            }
+                    VStack(alignment: .leading, spacing: 16) {
+                        if dynamicTypeSize.isAccessibilitySize {
+                            knowledgePicker.pickerStyle(.menu)
+                        } else {
+                            knowledgePicker.pickerStyle(.segmented)
+                        }
+                        factContent(selectedAxis)
+                    }
+                    .padding(16)
+                    .background(AppTheme.surface, in: RoundedRectangle(cornerRadius: 20))
 
-            if !relatedTerms.isEmpty {
-                Section("関連用語（\(relatedTerms.count)件）") {
-                    ForEach(relatedTerms.prefix(20)) { term in
-                        NavigationLink {
-                            GlossaryTermDetailView(term: term)
-                        } label: {
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(term.nameJapanese)
-                                Text(term.summary)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(2)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("この産地を学ぶ").font(.title2.bold())
+                        Text("読んだ知識を、問題で確かめましょう。")
+                            .foregroundStyle(.secondary)
+                        studyButton(count: 10)
+                        studyButton(count: 20)
+                        Text("該当問題が指定数より少ない場合は、該当する全問題を出題します。")
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
+
+                    DisclosureGroup("土壌・栽培・醸造と、ワインを形づくる要因") {
+                        VStack(alignment: .leading, spacing: 24) {
+                            ForEach(RegionComparisonAxis.allCases.filter { !mainAxes.contains($0) }) { axis in
+                                factContent(axis)
                             }
                         }
+                        .padding(.top, 16)
                     }
-                }
-            }
-
-            if !relatedQuestions.isEmpty {
-                Section("関連問題（\(relatedQuestions.count)問）") {
-                    ForEach(relatedQuestions.prefix(20)) { question in
+                    if let document = RegionMapStore.shared.maps.first(where: { $0.country == country }) {
                         NavigationLink {
-                            QuestionDetailView(question: question)
+                            RegionComparisonView(document: document)
                         } label: {
-                            Text(question.displayPrompt)
-                                .lineLimit(2)
+                            Label("ほかの産地と比較する", systemImage: "rectangle.split.2x1")
+                                .frame(minHeight: 44)
                         }
                     }
+                    DisclosureGroup("学習状況") {
+                        VStack(spacing: 12) {
+                            LabeledContent("関連問題", value: "\(statistics.questionCount)問")
+                            LabeledContent("学習済み", value: "\(statistics.studiedQuestionCount)問")
+                            LabeledContent("カバー率", value: percentage(statistics.coverage))
+                            LabeledContent("正答率", value: percentage(statistics.accuracy))
+                            LabeledContent("復習期限", value: "\(statistics.dueQuestionCount)問")
+                        }.padding(.top, 12)
+                    }
+                    if !relatedTerms.isEmpty {
+                        DisclosureGroup("関連用語（\(relatedTerms.count)件）") {
+                            VStack(alignment: .leading, spacing: 16) {
+                                ForEach(relatedTerms.prefix(20)) { term in
+                                    NavigationLink {
+                                        GlossaryTermDetailView(term: term)
+                                    } label: {
+                                        VStack(alignment: .leading, spacing: 6) {
+                                            Text(term.nameJapanese).font(.headline)
+                                            Text(term.summary).font(.subheadline).foregroundStyle(.secondary)
+                                        }.frame(minHeight: 44)
+                                    }
+                                }
+                            }.padding(.top, 12)
+                        }
+                    }
+                    if !relatedQuestions.isEmpty {
+                        DisclosureGroup("関連問題（\(relatedQuestions.count)問）") {
+                            VStack(alignment: .leading, spacing: 16) {
+                                ForEach(relatedQuestions.prefix(20)) { question in
+                                    NavigationLink {
+                                        QuestionDetailView(question: question)
+                                    } label: {
+                                        Text(question.displayPrompt).frame(minHeight: 44)
+                                    }
+                                    .accessibilityIdentifier("atlas.relatedQuestion.\(question.id)")
+                                }
+                            }.padding(.top, 12)
+                        }
+                        .accessibilityIdentifier("atlas.relatedQuestions")
+                    }
                 }
+                .padding()
             }
-            }
+            .background(AppTheme.paper)
             .navigationTitle("産地詳細")
             .navigationBarTitleDisplayMode(.inline)
             .accessibilityIdentifier("regionMap.detail.\(region.id)")
             .navigationDestination(isPresented: $showingSession) {
                 StudySessionView(questions: sessionQuestions)
             }
+            .sheet(isPresented: $showingPhotoCredits) {
+                if let photo = AtlasMediaStore.shared.photo(for: region.id) {
+                    AtlasPhotoCreditsView(photo: photo)
+                }
+            }
         } else {
             PaywallView(triggerFeature: .fullRegionMaps)
+        }
+    }
+
+    private var knowledgePicker: some View {
+        Picker("産地の特徴", selection: $selectedAxis) {
+            Text("気候").tag(RegionComparisonAxis.climateInfluence)
+            Text("品種").tag(RegionComparisonAxis.grapeVarieties)
+            Text("スタイル").tag(RegionComparisonAxis.wineStyles)
+        }
+        .frame(minHeight: 44)
+        .accessibilityIdentifier("atlas.detail.topic")
+    }
+
+    private func factContent(_ axis: RegionComparisonAxis) -> some View {
+        let fact = region.comparison.fact(for: axis)
+        return VStack(alignment: .leading, spacing: 12) {
+            Text(axis.title).font(.headline).foregroundStyle(AppTheme.forest)
+            Text(fact.summary).font(.body).fixedSize(horizontal: false, vertical: true)
+            Text(fact.keywords.joined(separator: "・"))
+                .font(.subheadline).foregroundStyle(.secondary)
+            DisclosureGroup("解説の出典・確認日") {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(fact.sourceIDs, id: \.self) { id in
+                        if let source = RegionMapStore.shared.source(id: id) {
+                            Text(source.name)
+                            if let rawURL = source.url, let url = URL(string: rawURL) {
+                                Link("参照ページを開く", destination: url).frame(minHeight: 44)
+                            }
+                        }
+                    }
+                    Text("確認日：\(fact.checkedAt)・情報基準日：\(fact.effectiveDate)")
+                }.padding(.top, 8)
+            }
+            .font(.footnote)
         }
     }
 
@@ -551,10 +451,10 @@ struct RegionDetailView: View {
             showingSession = !sessionQuestions.isEmpty
         } label: {
             Label("\(min(count, relatedQuestions.count))問", systemImage: "scope")
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, minHeight: 44)
         }
         .buttonStyle(.borderedProminent)
-        .tint(AppTheme.wine)
+        .tint(AppTheme.wineAction)
         .disabled(relatedQuestions.isEmpty)
         .accessibilityLabel("\(region.nameJapanese)を最大\(count)問学習")
         .accessibilityIdentifier("regionMap.study.\(count)")
@@ -709,7 +609,7 @@ struct RegionComparisonView: View {
                         .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(AppTheme.wine)
+                    .tint(AppTheme.wineAction)
                     .disabled(comparisonQuestions.isEmpty)
                     .accessibilityIdentifier("regionMap.comparison.study")
                 } footer: {

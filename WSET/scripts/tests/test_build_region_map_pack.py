@@ -146,6 +146,29 @@ class RegionMapPackBuilderTests(unittest.TestCase):
         contents = json.loads(files["Contents.json"])
         self.assertTrue(contents["properties"]["preserves-vector-representation"])
 
+    def test_dark_map_variant_is_bundled_and_validated(self) -> None:
+        master = self._master()
+        master["maps"][0]["assetFileDark"] = "france_dark_test.svg"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "master.json"
+            source.write_text(json.dumps(master), encoding="utf-8")
+            base_svg = (DEFAULT_ASSET_SOURCE_DIR / "france.svg").read_bytes()
+            (root / "france.svg").write_bytes(base_svg)
+            dark_svg = root / "france_dark_test.svg"
+            dark_svg.write_bytes(base_svg)
+            _, assets = build_pack(source, DEFAULT_QUESTION_PACK, DEFAULT_REFERENCE_PACK, root)
+            self.assertIn("france_dark_test.svg", assets["map_france"])
+            contents = json.loads(assets["map_france"]["Contents.json"])
+            self.assertIn(
+                {"filename": "france_dark_test.svg", "idiom": "universal",
+                 "appearances": [{"appearance": "luminosity", "value": "dark"}]},
+                contents["images"],
+            )
+            dark_svg.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"/>')
+            with self.assertRaisesRegex(RegionMapPackError, "aspectRatio"):
+                build_pack(source, DEFAULT_QUESTION_PACK, DEFAULT_REFERENCE_PACK, root)
+
     def test_normalizer_aliases_match_runtime_contract(self) -> None:
         self.assertEqual(
             canonical_geography("ヴァレ・ドゥ・ラ・マルヌ"),
@@ -178,6 +201,9 @@ class RegionMapPackBuilderTests(unittest.TestCase):
     def test_source_hash_changes_when_svg_content_changes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             asset_dir = Path(directory)
+            dark_file = self._master()["maps"][0].get("assetFileDark")
+            if dark_file:
+                (asset_dir / dark_file).write_bytes((DEFAULT_ASSET_SOURCE_DIR / dark_file).read_bytes())
             source = (DEFAULT_ASSET_SOURCE_DIR / "france.svg").read_bytes()
             (asset_dir / "france.svg").write_bytes(
                 source.replace(b"</svg>", b"<!-- hash test -->\n</svg>")
