@@ -18,4 +18,4 @@ if ((html.match(/<pre class="code">/g) || []).length !== 1) throw new Error('Exp
 html = html.replace(/<pre class="code">[\s\S]*?<\/pre>/, '<pre class="code">' + escape(blocks.slice(0, 2).join('\n\n')) + '</pre>');
 fs.writeFileSync(path.join(sourceDir, 'full_source.html'), html);
 fs.writeFileSync(path.join(project, 'current/report/housing_rent_corporate_buy_report_v2.html'), html);
-console.log('Built self-contained v2.1 report; embedded scripts and model excerpt synchronized.');
+console.log('Built self-contained v2.2 report; embedded scripts and model excerpt synchronized.');
