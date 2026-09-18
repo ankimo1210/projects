@@ -372,7 +372,7 @@ const HousingInputs=(() => {
 'use strict';
 if(typeof document!=='undefined')(()=>{
  const M=HousingModel,I=HousingInputs,$=id=>document.getElementById(id);
- const defaults={...BASE_PARAMS,corp_years:10,step_rate:.03};
+ const defaults={...I.resolve(I.createDefault()).parameters,step_rate:.03};
  const moneyKeys=new Set(['price','rent','salary','social','social_corp','other_deduction','owner_cost','deduction_sale','extra_repair']);
  const pctKeys=new Set(['ltv','mortgage_rate','buy_cost','sell_cost','growth','rent_growth','owner_growth','invest','building_share','basis_cost','step_rate','sacrifice']);
  const annualFromMonthly=new Set(['cap','fringe']);
@@ -472,7 +472,8 @@ if(typeof document!=='undefined')(()=>{
    if(p.fringe>0)warnings.push('現物利益 '+fmtMan(p.fringe)+' / 年は課税給与に加算するが、現金支給には加算しない。');
    if(state.modes.social==='estimate'||state.modes.social_corp==='estimate')warnings.push('社会保険料は東京・協会けんぽ、給与均等12か月、賞与なしの概算。初年度の年額を全期間に固定し、社宅時の現物給与評価・標準報酬改定時差は省略。');
    $('sim-warning').textContent=warnings.join(' ');
-   $('sim-assumptions').textContent='社会保険料 通常 '+fmtMan(p.social)+' / 社宅 '+fmtMan(p.social_corp)+'（年額・'+(state.modes.social==='estimate'?'概算':'入力')+'）、保有費用 '+fmtMan(p.owner_cost)+' / 年（'+(state.modes.owner_cost==='estimate'?'価格の1%で概算':'入力')+'）。価格予想 '+fmtPct(p.growth)+' / 年、売却特別控除 '+fmtMan(p.deduction_sale)+'。';
+   const socialSource=key=>state.modes[key]==='estimate'?'概算':state.modes[key]==='same_as_normal'?'通常時と同額':'手入力';
+   $('sim-assumptions').textContent='社会保険料（年額）通常 '+fmtMan(p.social)+'（'+socialSource('social')+'） / 社宅 '+fmtMan(p.social_corp)+'（'+socialSource('social_corp')+'）、保有費用 '+fmtMan(p.owner_cost)+' / 年（'+(state.modes.owner_cost==='estimate'?'価格の1%で概算':'手入力')+'）。価格予想 '+fmtPct(p.growth)+' / 年、売却特別控除 '+fmtMan(p.deduction_sale)+'。';
    $('sim-status').textContent='再計算済み · 購入 '+fmtOku(p.price,2)+' / 家賃 '+fmtMan(p.rent,1)+' / '+p.years+'年';
    document.dispatchEvent(new CustomEvent('housing:updated',{detail:{parameters:{...p},inputState:state,provenance:I.resolve(state).provenance,result:r}}));
    return true;
@@ -570,8 +571,8 @@ if(typeof document!=='undefined')(() => {
  }
  function curveFor(key,values){const s=S.byKey[key];return values.map(value=>({value,...evaluateScenario({[key]:Number((value*s.scale).toPrecision(14))})}));}
  function gridFor(preset){
-  const grid=S.grid(p,preset),scenarioMode=preset==='duration'?'independent':'linked';
-  grid.cells=grid.ys.map(y=>grid.xs.map(x=>({x,y,...evaluateScenario({[grid.xkey]:Number((x*S.byKey[grid.xkey].scale).toPrecision(14)),[grid.ykey]:Number((y*S.byKey[grid.ykey].scale).toPrecision(14))},scenarioMode)})));
+  const grid=S.grid(p,preset);
+  grid.cells=grid.ys.map(y=>grid.xs.map(x=>({x,y,...evaluateScenario({[grid.xkey]:Number((x*S.byKey[grid.xkey].scale).toPrecision(14)),[grid.ykey]:Number((y*S.byKey[grid.ykey].scale).toPrecision(14))})})));
   return grid;
  }
  function stressesFor(){return S.stresses(p).map(t=>({...t,lo:evaluateScenario({[t.key]:t.lo.p[t.key]}),hi:evaluateScenario({[t.key]:t.hi.p[t.key]})}));}
@@ -590,7 +591,8 @@ if(typeof document!=='undefined')(() => {
    card('社宅で上がるハードル',delta===null?'—':pp(delta),'社宅 g* − 通常賃貸 g*','navy')+
    card('予想と分岐の差',margin===null?'—':pp(margin),'予想 '+rate(p.growth)+' − 社宅 g*','');
   const tx=M.housingTax(p,p.rent,p.corp_years>0);
-  $('dash-payroll').innerHTML='現在の条件：社宅の実質家賃 <strong>'+m(tx.annual_effective/12,1)+'/月</strong>、初年度の税・社保メリット <strong>'+m(tx.benefit)+'/年</strong>。社会保険料は'+(state.modes.social==='estimate'?'概算':'手入力')+'、年間保有費用は'+(state.modes.owner_cost==='estimate'?'購入価格の1%で概算':'手入力')+'。';
+  const socialSource=key=>state.modes[key]==='estimate'?'概算':state.modes[key]==='same_as_normal'?'通常時と同額':'手入力';
+  $('dash-payroll').innerHTML='現在の条件：社宅の実質家賃 <strong>'+m(tx.annual_effective/12,1)+'/月</strong>、初年度の税・社保メリット <strong>'+m(tx.benefit)+'/年</strong>。社会保険料（通常 / 社宅）は'+socialSource('social')+' / '+socialSource('social_corp')+'、年間保有費用は'+(state.modes.owner_cost==='estimate'?'購入価格の1%で概算':'手入力')+'。';
   $('dash-status').className='scenario-status';
   $('dash-status').textContent='計算済み ｜ 買値 '+o(p.price,2)+'・家賃 '+m(p.rent,1)+'/月・保有 '+p.years+'年・社宅入力 '+p.corp_years+'年（有効 '+Math.min(p.years,p.corp_years)+'年）・金利 '+num(p.mortgage_rate*100)+'%・運用 '+num(p.invest*100)+'%';
  }
