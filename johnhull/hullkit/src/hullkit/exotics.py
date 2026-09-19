@@ -524,27 +524,38 @@ def worse_of_two_assets(U0, V0, sigma_u, sigma_v, rho, T, q_u=0.0, q_v=0.0):
     )
 
 
+def _real_array(value, name):
+    """Convert a real-valued input without silently discarding complex components."""
+    raw = np.asarray(value)
+    if np.iscomplexobj(raw) or (raw.dtype == object and any(np.iscomplexobj(item) for item in raw.flat)):
+        raise ValueError(f"{name} must be real")
+    try:
+        return np.asarray(value, dtype=float)
+    except (TypeError, ValueError) as error:
+        raise ValueError(f"{name} must be numeric") from error
+
+
 def _validated_basket_inputs(spots, weights, rate, dividends, volatilities, correlations, expiry):
     """Return validated numeric basket inputs for the public basket pricers."""
-    try:
-        spot_array = np.asarray(spots, dtype=float)
-        weight_array = np.asarray(weights, dtype=float)
-        dividend_array = np.asarray(dividends, dtype=float)
-        volatility_array = np.asarray(volatilities, dtype=float)
-        correlation_array = np.asarray(correlations, dtype=float)
-        scalar_array = np.asarray([rate, expiry], dtype=float)
-    except (TypeError, ValueError) as error:
-        raise ValueError("basket inputs must be numeric") from error
+    spot_array = _real_array(spots, "spots")
+    weight_array = _real_array(weights, "weights")
+    dividend_array = _real_array(dividends, "dividends")
+    volatility_array = _real_array(volatilities, "volatilities")
+    correlation_array = _real_array(correlations, "correlations")
+    rate_array = _real_array(rate, "rate")
+    expiry_array = _real_array(expiry, "expiry")
 
     arrays = (spot_array, weight_array, dividend_array, volatility_array)
     if any(array.ndim != 1 for array in arrays) or spot_array.size == 0:
         raise ValueError("spots, weights, dividends, and volatilities must be nonempty one-dimensional sequences")
+    if rate_array.ndim != 0 or expiry_array.ndim != 0:
+        raise ValueError("rate and expiry must be finite scalars")
     n_assets = spot_array.size
     if any(array.size != n_assets for array in arrays[1:]):
         raise ValueError("spots, weights, dividends, and volatilities must have equal lengths")
     if correlation_array.shape != (n_assets, n_assets):
         raise ValueError("correlations must be a square matrix aligned with the asset inputs")
-    if not all(np.all(np.isfinite(array)) for array in (*arrays, correlation_array, scalar_array)):
+    if not all(np.all(np.isfinite(array)) for array in (*arrays, correlation_array, rate_array, expiry_array)):
         raise ValueError("basket inputs must be finite")
     if np.any(spot_array <= 0.0):
         raise ValueError("spots must be > 0")
@@ -552,7 +563,7 @@ def _validated_basket_inputs(spots, weights, rate, dividends, volatilities, corr
         raise ValueError("weights must be nonnegative with at least one positive weight")
     if np.any(volatility_array < 0.0):
         raise ValueError("volatilities must be >= 0")
-    if expiry <= 0.0:
+    if float(expiry_array) <= 0.0:
         raise ValueError("expiry must be > 0")
     if not np.allclose(correlation_array, correlation_array.T, rtol=0.0, atol=1e-12):
         raise ValueError("correlations must be symmetric")
@@ -565,7 +576,58 @@ def _validated_basket_inputs(spots, weights, rate, dividends, volatilities, corr
     if np.min(eigenvalues) < -1e-12:
         raise ValueError("correlations must be positive semidefinite")
 
-    return spot_array, weight_array, float(rate), dividend_array, volatility_array, correlation_array, float(expiry)
+    return spot_array, weight_array, float(rate_array), dividend_array, volatility_array, correlation_array, float(expiry_array)
+
+
+def _active_basket_terms(spots, weights, rate, dividends, volatilities, correlations, expiry):
+    """Return validated forward terms after removing zero holdings from arithmetic."""
+    spots, weights, rate, dividends, volatilities, correlations, expiry = _validated_basket_inputs(
+        spots, weights, rate, dividends, volatilities, correlations, expiry
+    )
+    active = weights > 0.0
+    spots = spots[active]
+    weights = weights[active]
+    dividends = dividends[active]
+    volatilities = volatilities[active]
+    correlations = correlations[np.ix_(active, active)]
+    with np.errstate(over="raise", under="ignore", invalid="raise"):
+        try:
+            forwards = weights * spots * np.exp((rate - dividends) * expiry)
+        except FloatingPointError as error:
+            raise ValueError("basket inputs produce nonfinite moments") from error
+    if not np.all(np.isfinite(forwards)) or np.any(forwards <= 0.0):
+        raise ValueError("basket inputs produce nonfinite moments")
+    return forwards, volatilities, correlations, rate, expiry
+
+
+def _basket_moments_and_relative_variance(spots, weights, rate, dividends, volatilities, correlations, expiry):
+    """Return exact moments and a cancellation-safe matched relative variance."""
+    forwards, volatilities, correlations, rate, expiry = _active_basket_terms(
+        spots, weights, rate, dividends, volatilities, correlations, expiry
+    )
+    exponents = np.outer(volatilities, volatilities) * correlations * expiry
+    with np.errstate(over="raise", invalid="raise"):
+        try:
+            second_moment = float(np.sum(np.outer(forwards, forwards) * np.exp(exponents)))
+        except FloatingPointError as error:
+            raise ValueError("basket inputs produce nonfinite moments") from error
+    first_moment = float(np.sum(forwards))
+    if not math.isfinite(first_moment) or not math.isfinite(second_moment):
+        raise ValueError("basket inputs produce nonfinite moments")
+
+    shares = forwards / first_moment
+    variance_terms = [
+        float(shares[i] * shares[j]) * math.expm1(float(exponents[i, j]))
+        for i in range(forwards.size)
+        for j in range(forwards.size)
+    ]
+    relative_variance = math.fsum(variance_terms)
+    roundoff_tolerance = 64.0 * math.ulp(1.0) * math.fsum(abs(term) for term in variance_terms)
+    if relative_variance < 0.0:
+        if relative_variance < -roundoff_tolerance:
+            raise ValueError("basket moments imply a negative matched variance")
+        relative_variance = 0.0
+    return first_moment, second_moment, relative_variance, rate, expiry
 
 
 def basket_moments(spots, weights, rate, dividends, volatilities, correlations, expiry):
@@ -577,19 +639,9 @@ def basket_moments(spots, weights, rate, dividends, volatilities, correlations, 
     unit-diagonal matrix. Rates and dividend yields are continuously
     compounded and ``expiry`` is measured in years.
     """
-    spots, weights, rate, dividends, volatilities, correlations, expiry = _validated_basket_inputs(
+    first_moment, second_moment, _, _, _ = _basket_moments_and_relative_variance(
         spots, weights, rate, dividends, volatilities, correlations, expiry
     )
-    forwards = weights * spots * np.exp((rate - dividends) * expiry)
-    exponents = np.outer(volatilities, volatilities) * correlations * expiry
-    with np.errstate(over="raise", invalid="raise"):
-        try:
-            second_moment = float(np.sum(np.outer(forwards, forwards) * np.exp(exponents)))
-        except FloatingPointError as error:
-            raise ValueError("basket inputs produce nonfinite moments") from error
-    first_moment = float(np.sum(forwards))
-    if not math.isfinite(first_moment) or not math.isfinite(second_moment):
-        raise ValueError("basket inputs produce nonfinite moments")
     return first_moment, second_moment
 
 
@@ -603,24 +655,20 @@ def basket_option_price(spots, weights, strike, rate, dividends, volatilities, c
     """
     if kind not in ("call", "put"):
         raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
-    try:
-        strike = float(strike)
-    except (TypeError, ValueError) as error:
-        raise ValueError("strike must be a finite scalar > 0") from error
-    if not math.isfinite(strike) or strike <= 0.0:
+    strike_array = _real_array(strike, "strike")
+    if strike_array.ndim != 0 or not math.isfinite(float(strike_array)) or float(strike_array) <= 0.0:
         raise ValueError("strike must be a finite scalar > 0")
+    strike = float(strike_array)
 
-    first_moment, second_moment = basket_moments(
+    first_moment, _, relative_variance, rate, expiry = _basket_moments_and_relative_variance(
         spots, weights, rate, dividends, volatilities, correlations, expiry
     )
-    log_variance = math.log(second_moment) - 2.0 * math.log(first_moment)
-    if log_variance < -1e-12:
-        raise ValueError("basket moments imply a negative matched variance")
     discount = math.exp(-rate * expiry)
-    if log_variance <= 1e-12:
+    if relative_variance == 0.0:
         intrinsic = first_moment - strike if kind == "call" else strike - first_moment
         return discount * max(intrinsic, 0.0)
 
+    log_variance = math.log1p(relative_variance)
     matched_volatility = math.sqrt(log_variance / expiry)
     volatility_time = matched_volatility * math.sqrt(expiry)
     d1 = (math.log(first_moment / strike) + 0.5 * log_variance) / volatility_time

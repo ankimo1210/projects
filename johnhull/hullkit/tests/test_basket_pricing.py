@@ -4,6 +4,7 @@ import json
 import math
 from pathlib import Path
 
+import numpy as np
 import pytest
 from hullkit import bsm, exotics
 
@@ -118,3 +119,26 @@ def test_invalid_option_kind_raises_value_error():
     """Unsupported payoff kinds must not be treated as puts."""
     with pytest.raises(ValueError, match="kind"):
         exotics.basket_option_price([100.0], [1.0], 100.0, 0.01, [0.0], [0.2], [[1.0]], 1.0, "digital")
+
+
+def test_tiny_nonzero_basket_variance_is_not_treated_as_deterministic():
+    """A small but real diffusion must retain its Black-Scholes time value."""
+    got = exotics.basket_option_price([1e8], [1.0], 1e8, 0.0, [0.0], [1e-7], [[1.0]], 1.0)
+    expected = bsm.call_price(1e8, 1e8, 0.0, 1e-7, 1.0)
+    assert got == pytest.approx(expected, rel=0.0, abs=1e-9)
+
+
+def test_complex_nan_component_is_rejected_before_float_conversion():
+    """Casting complex inputs must not silently discard a nonfinite imaginary component."""
+    with pytest.raises(ValueError, match="real"):
+        exotics.basket_moments(
+            np.array([complex(100.0, float("nan"))]), [1.0], 0.0, [0.0], [0.2], [[1.0]], 1.0
+        )
+
+
+def test_zero_weight_asset_does_not_overflow_moment_calculation():
+    """A zero holding cannot make an otherwise valid one-asset basket overflow."""
+    got = exotics.basket_option_price(
+        [100.0, 100.0], [1.0, 0.0], 100.0, 0.0, [0.0, 0.0], [0.2, 100.0], [[1.0, 0.0], [0.0, 1.0]], 1.0
+    )
+    assert got == pytest.approx(bsm.call_price(100.0, 100.0, 0.0, 0.2, 1.0), rel=0.0, abs=1e-12)
