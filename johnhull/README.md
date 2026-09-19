@@ -16,6 +16,7 @@ final gate evidence.
 - `interest_rate_models/` — Ch.31–33 notebook (legacy location)
 - `volumes/18_*` … `volumes/28_*` — artifact-only beyond-Hull teaching notebooks
 - vol 10 §26.12 — one-shout call: payoff decomposition, CRR decisions, boundary resolution, and same-market comparisons; saved synthetic artifacts power four shared Book/portal figures. Put prices are an extension beyond the original call lesson.
+- vol 10 §26.15 — basket payoff, exact moments versus approximate Black pricing, correlation, independent references and measured errors; six teaching subsections and four saved-data Book/portal figures. MC sign uncertainty is separate from deterministic-reference error.
 - `release_manifest.json` — machine-readable volume/book/portal contract
 - `docs/DATA_PROVENANCE.md` — data origin, licensing, and synthetic-fixture policy
 
@@ -33,7 +34,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 94 figures (14 exotics)
+make hull-report           # offline portal: 12 themes / 106 figures (26 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -47,3 +48,10 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 A5–A8 design: `docs/superpowers/specs/2026-07-18-johnhull-beyond-hull-a5-design.md`
 
 vol 28 design: `docs/superpowers/specs/2026-09-14-johnhull-vol28-credit-desk-design.md`
+
+The basket delivery checks are `scripts/verify_basket_notebook.py` (fresh deterministic
+outputs, exact four-figure data/layout, preservation outside §4.5 against `9b7a75c7`)
+and `scripts/verify_basket_lesson_browser.cjs` (both surfaces, all menus at 1440/1000px,
+independent numeric pins, MathJax, layout and a rejected/restored numeric mutation).
+They save M7 evidence under `docs/validation/section-26-15/`; earlier sections receive
+new M7 recheck records while their historical evidence stays intact.

@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-19T01:06:30.538645+00:00",
+  "command": "/home/kazumasa/projects/.venv/bin/python -m pytest -q hullkit/tests/test_binary_reference.py hullkit/tests/test_binary_lesson.py",
+  "environment": {
+    "PYTHONPATH": "/home/kazumasa/.codex/worktrees/johnhull-basket-m7/johnhull/hullkit/src:/home/kazumasa/.codex/worktrees/johnhull-basket-m7/johnhull/scripts:/home/kazumasa/.codex/worktrees/johnhull-basket-m7/johnhull/report"
+  },
+  "exit_code": 0,
+  "pytest_output": "........................................................................ [ 78%]\n....................                                                     [100%]\n92 passed in 0.82s\n",
+  "passed": 92,
+  "source_sha256": {
+    "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
+    "hullkit/tests/test_binary_lesson.py": "ac3152dab1e15fcfbc8408f4a6efa91a722954421eaac9ab4870b6ab03b68182",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "report/assets/style.css": "9c018e8abf6c6198a441a639bd6570548851268021428452f6ccfe5113727adf",
+    "report/report_builder/figures.py": "0741b2d798369421c2e48e5052036f99222449d71faf61b13b472cc6d4557acc"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "92ba7a166fdd59d77de8fa02d841844ad0fae1bd67e823744c718359060452fc",
+    "book/_build/html/notebooks/10_exotics.html": "902989a4c8807e6dc9ae39fac36d985ff6c61e90122b2c61791a047a02d2a04b"
+  },
+  "scope": "Accepted section tests against final M7 assets; historical numerical and browser records preserved."
+}

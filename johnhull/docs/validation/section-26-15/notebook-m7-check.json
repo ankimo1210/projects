@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "command": "PYTHONPATH=hullkit/src:scripts python scripts/verify_basket_notebook.py --base 9b7a75c7",
+  "checked_at": "2026-09-19T01:03:33.927307+00:00",
+  "cells": 102,
+  "code_cells": 44,
+  "code_cells_with_outputs": 41,
+  "output_comparison": "Separate fresh execution: output types, MIME keys and normalized deterministic text. Timing cells type-only; images and Plotly payloads excluded from that comparison.",
+  "saved_plotly_comparison": [
+    "basket_comparison: data and layout identical (9 traces)",
+    "basket_correlation: data and layout identical (4 traces)",
+    "basket_error: data and layout identical (6 traces)",
+    "basket_payoff: data and layout identical (6 traces)"
+  ],
+  "saved_plotly_note": "Each saved basket payload equals hullkit._basket_lesson._figures() exactly, data and layout.",
+  "preservation": {
+    "base_commit": "9b7a75c7",
+    "cells_before": 92,
+    "cells_after": 102,
+    "compared_cells_outside_section": 91,
+    "identical": true
+  },
+  "source_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "43b167b5d2c2d5ecc7d1d0ca76d18b0642ece19b23aedd08822e31182e53939a",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "dd537ca6dbf0fc48e689c576aae1f4407c063ac3d606b0653c1f72f0fefaf07b",
+    "hullkit/src/hullkit/_basket_lesson.py": "9756e01ac64ba426050e5560bc496ebc96f1a33444db72a7d9881519c67f96d5",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "docs/validation/section-26-15/lesson-data.json": "ad34be99d7968c57fe275de52312f0675f9f9fb460f97a0a6cc512077680ffc3",
+    "scripts/verify_basket_notebook.py": "adb840c569723e9987236c9c6b047670ca50bae918291435680a3ddbbd71e525"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "43b167b5d2c2d5ecc7d1d0ca76d18b0642ece19b23aedd08822e31182e53939a"
+  }
+}

@@ -211,7 +211,9 @@ def build():
             "Absolute relative proxy gap against four-SE uncertainty; unresolved signs stay unsigned",
             hashes,
             [
-                "The sign is unresolved whenever the frozen gap is no larger than four standard errors."
+                "When MC supplies the reference, a gap no larger than four standard errors has unresolved sign. "
+                "Conditional or analytic references use their own numerical uncertainty and can establish "
+                "a sign even inside the MC error bar."
             ],
         ),
     }
