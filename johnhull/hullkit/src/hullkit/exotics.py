@@ -522,3 +522,109 @@ def worse_of_two_assets(U0, V0, sigma_u, sigma_v, rho, T, q_u=0.0, q_v=0.0):
     return V0 * math.exp(-q_v * T) - exchange_option(
         U0, V0, sigma_u, sigma_v, rho, T, q_u=q_u, q_v=q_v
     )
+
+
+def _validated_basket_inputs(spots, weights, rate, dividends, volatilities, correlations, expiry):
+    """Return validated numeric basket inputs for the public basket pricers."""
+    try:
+        spot_array = np.asarray(spots, dtype=float)
+        weight_array = np.asarray(weights, dtype=float)
+        dividend_array = np.asarray(dividends, dtype=float)
+        volatility_array = np.asarray(volatilities, dtype=float)
+        correlation_array = np.asarray(correlations, dtype=float)
+        scalar_array = np.asarray([rate, expiry], dtype=float)
+    except (TypeError, ValueError) as error:
+        raise ValueError("basket inputs must be numeric") from error
+
+    arrays = (spot_array, weight_array, dividend_array, volatility_array)
+    if any(array.ndim != 1 for array in arrays) or spot_array.size == 0:
+        raise ValueError("spots, weights, dividends, and volatilities must be nonempty one-dimensional sequences")
+    n_assets = spot_array.size
+    if any(array.size != n_assets for array in arrays[1:]):
+        raise ValueError("spots, weights, dividends, and volatilities must have equal lengths")
+    if correlation_array.shape != (n_assets, n_assets):
+        raise ValueError("correlations must be a square matrix aligned with the asset inputs")
+    if not all(np.all(np.isfinite(array)) for array in (*arrays, correlation_array, scalar_array)):
+        raise ValueError("basket inputs must be finite")
+    if np.any(spot_array <= 0.0):
+        raise ValueError("spots must be > 0")
+    if np.any(weight_array < 0.0) or not np.any(weight_array > 0.0):
+        raise ValueError("weights must be nonnegative with at least one positive weight")
+    if np.any(volatility_array < 0.0):
+        raise ValueError("volatilities must be >= 0")
+    if expiry <= 0.0:
+        raise ValueError("expiry must be > 0")
+    if not np.allclose(correlation_array, correlation_array.T, rtol=0.0, atol=1e-12):
+        raise ValueError("correlations must be symmetric")
+    if not np.allclose(np.diag(correlation_array), 1.0, rtol=0.0, atol=1e-12):
+        raise ValueError("correlations must have a unit diagonal")
+    try:
+        eigenvalues = np.linalg.eigvalsh(correlation_array)
+    except np.linalg.LinAlgError as error:
+        raise ValueError("correlations must be positive semidefinite") from error
+    if np.min(eigenvalues) < -1e-12:
+        raise ValueError("correlations must be positive semidefinite")
+
+    return spot_array, weight_array, float(rate), dividend_array, volatility_array, correlation_array, float(expiry)
+
+
+def basket_moments(spots, weights, rate, dividends, volatilities, correlations, expiry):
+    """Return exact first and second moments of a positive GBM basket (Hull §26.15).
+
+    ``spots``, ``weights``, ``dividends`` and ``volatilities`` are aligned
+    numerical sequences. Weights are nonnegative holdings with at least one
+    positive value; ``correlations`` is a symmetric positive-semidefinite
+    unit-diagonal matrix. Rates and dividend yields are continuously
+    compounded and ``expiry`` is measured in years.
+    """
+    spots, weights, rate, dividends, volatilities, correlations, expiry = _validated_basket_inputs(
+        spots, weights, rate, dividends, volatilities, correlations, expiry
+    )
+    forwards = weights * spots * np.exp((rate - dividends) * expiry)
+    exponents = np.outer(volatilities, volatilities) * correlations * expiry
+    with np.errstate(over="raise", invalid="raise"):
+        try:
+            second_moment = float(np.sum(np.outer(forwards, forwards) * np.exp(exponents)))
+        except FloatingPointError as error:
+            raise ValueError("basket inputs produce nonfinite moments") from error
+    first_moment = float(np.sum(forwards))
+    if not math.isfinite(first_moment) or not math.isfinite(second_moment):
+        raise ValueError("basket inputs produce nonfinite moments")
+    return first_moment, second_moment
+
+
+def basket_option_price(spots, weights, strike, rate, dividends, volatilities, correlations, expiry, kind="call"):
+    """Price a European positive-basket option with the §26.15 lognormal proxy.
+
+    The first two basket moments are exact under correlated risk-neutral GBM;
+    replacing the basket with their matched lognormal distribution is an
+    approximation except for single-asset and proportional perfectly
+    correlated baskets. ``kind`` is either ``"call"`` or ``"put"``.
+    """
+    if kind not in ("call", "put"):
+        raise ValueError(f"kind must be 'call' or 'put', got {kind!r}")
+    try:
+        strike = float(strike)
+    except (TypeError, ValueError) as error:
+        raise ValueError("strike must be a finite scalar > 0") from error
+    if not math.isfinite(strike) or strike <= 0.0:
+        raise ValueError("strike must be a finite scalar > 0")
+
+    first_moment, second_moment = basket_moments(
+        spots, weights, rate, dividends, volatilities, correlations, expiry
+    )
+    log_variance = math.log(second_moment) - 2.0 * math.log(first_moment)
+    if log_variance < -1e-12:
+        raise ValueError("basket moments imply a negative matched variance")
+    discount = math.exp(-rate * expiry)
+    if log_variance <= 1e-12:
+        intrinsic = first_moment - strike if kind == "call" else strike - first_moment
+        return discount * max(intrinsic, 0.0)
+
+    matched_volatility = math.sqrt(log_variance / expiry)
+    volatility_time = matched_volatility * math.sqrt(expiry)
+    d1 = (math.log(first_moment / strike) + 0.5 * log_variance) / volatility_time
+    d2 = d1 - volatility_time
+    if kind == "call":
+        return discount * (first_moment * norm.cdf(d1) - strike * norm.cdf(d2))
+    return discount * (strike * norm.cdf(-d2) - first_moment * norm.cdf(-d1))
