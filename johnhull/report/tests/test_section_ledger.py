@@ -574,9 +574,9 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["inventory_total"] == 306
     assert result["counts"] == {
         "unreviewed": 299,
-        "gaps_found": 1,
+        "gaps_found": 0,
         "pending_validation": 0,
-        "accepted": 6,
+        "accepted": 7,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
@@ -606,6 +606,15 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     )
     # Section 26.14 prints no worked example, so the ledger must say nothing is pinned to Hull.
     assert any("印刷された例題が無い" in text for text in exchange["limitations"])
+    basket = next(section for section in ledger["sections"] if section["id"] == "26.15")
+    assert basket["status"] == "accepted"
+    assert [row["id"] for row in basket["requirements"]] == [f"BSK{i:02}" for i in range(1, 7)]
+    assert all(
+        axis["state"] == "verified"
+        for row in basket["requirements"]
+        for axis in row["coverage"].values()
+    )
+    assert any("印刷された価格例が無い" in text for text in basket["limitations"])
     shout = next(section for section in ledger["sections"] if section["id"] == "26.12")
     assert shout["status"] == "accepted"
     assert [row["id"] for row in shout["requirements"]] == [f"S{i:02}" for i in range(1, 7)]

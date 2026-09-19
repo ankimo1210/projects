@@ -18,7 +18,7 @@ def test_basket_pricing_public_api_is_importable():
 def test_single_asset_basket_is_bsm():
     """A one-asset basket must retain the exact Black-Scholes-Merton price."""
     got = exotics.basket_option_price([100.0], [1.0], 100.0, 0.05, [0.02], [0.2], [[1.0]], 1.0)
-    assert got == pytest.approx(bsm.call_price(100.0, 100.0, 0.05, 0.2, 1.0, q=0.02), abs=1e-11)
+    assert got == pytest.approx(bsm.call_price(100.0, 100.0, 0.05, 0.2, 1.0, q=0.02), rel=0.0, abs=1e-11)
 
 
 def test_two_asset_moments_match_direct_sum():
@@ -30,7 +30,7 @@ def test_two_asset_moments_match_direct_sum():
     f2 = 40.0 * math.exp(0.005)
     want_m1 = f1 + f2
     want_m2 = f1 * f1 * math.exp(0.04) + 2.0 * f1 * f2 * math.exp(0.021) + f2 * f2 * math.exp(0.09)
-    assert got == pytest.approx((want_m1, want_m2), abs=1e-12)
+    assert got == pytest.approx((want_m1, want_m2), rel=0.0, abs=1e-12)
 
 
 def test_three_asset_moments_match_direct_sum():
@@ -57,7 +57,7 @@ def test_three_asset_moments_match_direct_sum():
         ),
     )
     got = exotics.basket_moments(spots, weights, rate, dividends, volatilities, correlations, expiry)
-    assert got == pytest.approx(want, abs=1e-12)
+    assert got == pytest.approx(want, rel=0.0, abs=1e-12)
 
 
 def test_saved_two_asset_moment_match_prices_are_reproduced():
@@ -71,7 +71,7 @@ def test_saved_two_asset_moment_match_prices_are_reproduced():
             row["spots"], row["weights"], row["K"], row["r"], row["dividends"], row["volatilities"],
             row["correlation"], row["T"], row["kind"]
         )
-        assert got == pytest.approx(row["approximation"], abs=1e-11), (row["market"], row["K"])
+        assert got == pytest.approx(row["approximation"], rel=0.0, abs=1e-11), (row["market"], row["K"])
 
 
 def test_call_put_parity_uses_the_exact_first_moment():
@@ -80,7 +80,7 @@ def test_call_put_parity_uses_the_exact_first_moment():
     call = exotics.basket_option_price(*args, kind="call")
     put = exotics.basket_option_price(*args, kind="put")
     m1, _ = exotics.basket_moments(args[0], args[1], args[3], args[4], args[5], args[6], args[7])
-    assert call - put == pytest.approx(math.exp(-args[3] * args[7]) * (m1 - args[2]), abs=1e-12)
+    assert call - put == pytest.approx(math.exp(-args[3] * args[7]) * (m1 - args[2]), rel=0.0, abs=1e-12)
 
 
 def test_proportional_perfectly_correlated_basket_is_bsm():
@@ -88,14 +88,14 @@ def test_proportional_perfectly_correlated_basket_is_bsm():
     got = exotics.basket_option_price(
         [100.0, 80.0], [0.6, 0.5], 100.0, 0.04, [0.02, 0.02], [0.25, 0.25], [[1.0, 1.0], [1.0, 1.0]], 1.0
     )
-    assert got == pytest.approx(bsm.call_price(100.0, 100.0, 0.04, 0.25, 1.0, q=0.02), abs=1e-11)
+    assert got == pytest.approx(bsm.call_price(100.0, 100.0, 0.04, 0.25, 1.0, q=0.02), rel=0.0, abs=1e-11)
 
 
 @pytest.mark.parametrize("kind, expected", [("call", 0.0), ("put", 5.0)])
 def test_zero_matched_variance_prices_the_deterministic_basket(kind, expected):
     """A zero proxy variance must not divide by zero or create NaN prices."""
     got = exotics.basket_option_price([100.0], [1.0], 105.0, 0.0, [0.0], [0.0], [[1.0]], 1.0, kind)
-    assert got == pytest.approx(expected, abs=1e-12)
+    assert got == pytest.approx(expected, rel=0.0, abs=1e-12)
 
 
 @pytest.mark.parametrize(
