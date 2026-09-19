@@ -1,0 +1,164 @@
+{
+  "status": "PASS",
+  "scope": "Task 4 delivery only; controller owns section acceptance",
+  "checked_at": "2026-09-19T01:14:12.163765+00:00",
+  "checks": {
+    "focused_tests": {
+      "command": "PYTHONPATH=hullkit/src:report:scripts /home/kazumasa/projects/.venv/bin/python -m pytest hullkit/tests/test_basket_pricing.py hullkit/tests/test_basket_reference.py hullkit/tests/test_basket_lesson.py hullkit/tests/test_model_index.py report/tests/test_report_build.py -q",
+      "status": "PASS",
+      "passed": 429,
+      "elapsed_seconds": 7.31
+    },
+    "registry_tdd": {
+      "red": "1 failed, 3 deselected in 0.87s; missing [] vs four ordered basket keys",
+      "green": "39 basket-lesson/report tests passed after integration"
+    },
+    "axis_tdd": {
+      "red": "1 failed, 34 deselected in 0.67s; categoryorder None vs array",
+      "green": "explicit market order and semantic axes pass"
+    },
+    "lint": {
+      "status": "PASS",
+      "command": "ruff check scripts/build_basket_browser_reference.py scripts/verify_basket_notebook.py scripts/build_basket_lesson_data.py hullkit/src/hullkit/_basket_lesson.py hullkit/tests/test_basket_lesson.py report/report_builder/figures.py report/tests/test_report_build.py"
+    },
+    "format": {
+      "status": "PASS",
+      "files": 7,
+      "command": "ruff format --check (same seven Python files)"
+    },
+    "diff_check": {
+      "status": "PASS",
+      "command": "git diff --check; git diff --cached --check"
+    },
+    "release": {
+      "status": "PASS",
+      "command": "PYTHONPATH=hullkit/src:report:scripts /home/kazumasa/projects/.venv/bin/python scripts/verify_release.py --require-tracked --json",
+      "findings": [],
+      "checked_commit": "04bf2c3f"
+    },
+    "portal_build": {
+      "status": "PASS",
+      "command": "PYTHONPATH=<absolute worktree hullkit/src:report:scripts> python -m report_builder.build",
+      "figures": 106,
+      "exotics_figures": 26
+    },
+    "book_build": {
+      "status": "PASS",
+      "evidence": "docs/validation/section-26-15/book-build-m7-check.json"
+    },
+    "notebook": {
+      "status": "PASS",
+      "cells": 102,
+      "code_cells": 44,
+      "preserved_cells": 91,
+      "numeric_mutation_rejected": true,
+      "outside_section_mutation_rejected": true,
+      "evidence": "docs/validation/section-26-15/notebook-m7-check.json"
+    },
+    "browser": {
+      "status": "PASS",
+      "surfaces": 2,
+      "widths": [
+        1440,
+        1000
+      ],
+      "states_per_width_surface": 10,
+      "total_state_checks": 40,
+      "screenshots": 18,
+      "evidence": "docs/validation/section-26-15/browser-m7-check.json",
+      "book_js_errors": [],
+      "portal_js_errors": [],
+      "book_failed_requests": [],
+      "portal_external_requests": []
+    },
+    "independent_oracle": {
+      "status": "PASS",
+      "import_boundary": [
+        "pathlib",
+        "hashlib",
+        "json",
+        "math"
+      ],
+      "description": "Independent literal payoff algebra, direct-loop moments and Black proxy; frozen M7a prices/SE only. No hullkit or lesson imports."
+    }
+  },
+  "accepted_section_rechecks": {
+    "26.9": {
+      "tests": 91,
+      "test_record": "docs/validation/section-26-9/m7-recheck.json",
+      "browser_record": "docs/validation/section-26-9/browser-m7-recheck.json",
+      "screenshots": 10
+    },
+    "26.10": {
+      "tests": 92,
+      "test_record": "docs/validation/section-26-10/m7-recheck.json",
+      "browser_record": "docs/validation/section-26-10/browser-m7-recheck.json",
+      "screenshots": 18
+    },
+    "26.11": {
+      "tests": 144,
+      "test_record": "docs/validation/section-26-11/m7-recheck.json",
+      "browser_record": "docs/validation/section-26-11/browser-m7-recheck.json",
+      "screenshots": 18
+    },
+    "26.12": {
+      "tests": 215,
+      "test_record": "docs/validation/section-26-12/m7-recheck.json",
+      "browser_record": "docs/validation/section-26-12/browser-m7-recheck.json",
+      "screenshots": 18
+    },
+    "26.13": {
+      "tests": 274,
+      "test_record": "docs/validation/section-26-13/m7-recheck.json",
+      "browser_record": "docs/validation/section-26-13/browser-m7-recheck.json",
+      "screenshots": 18
+    },
+    "26.14": {
+      "tests": 351,
+      "test_record": "docs/validation/section-26-14/m7-recheck.json",
+      "browser_record": "docs/validation/section-26-14/browser-m7-recheck.json",
+      "screenshots": 18
+    }
+  },
+  "source_sha256": {
+    "scripts/build_basket_browser_reference.py": "5d1f778c70698d389a82c37a541c20ca9d668b78376d83ae0a884f2933cd835a",
+    "scripts/verify_basket_notebook.py": "adb840c569723e9987236c9c6b047670ca50bae918291435680a3ddbbd71e525",
+    "scripts/verify_basket_lesson_browser.cjs": "3dccf81e8a103dafe9de22ba647820654e81589412c5907f71d30556a7d87c4a",
+    "scripts/recheck_exotics_m7.cjs": "e1386b0756523b4c1985821ded3496fa904bf81a14f1e7bf76ebfe8e4e5538ce",
+    "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b",
+    "hullkit/src/hullkit/_basket_lesson.py": "9756e01ac64ba426050e5560bc496ebc96f1a33444db72a7d9881519c67f96d5",
+    "hullkit/tests/test_basket_lesson.py": "9aa8fcd7a12c4362c983c785a34db33c1538694e3eeea43af86060ee8c6c14aa",
+    "report/tests/test_report_build.py": "75cb01d86029dfb7b8efb870311f2dea0ed6fa77467d9ef6355068134e4a72c8",
+    "report/report_builder/figures.py": "0741b2d798369421c2e48e5052036f99222449d71faf61b13b472cc6d4557acc",
+    "report/assets/style.css": "9c018e8abf6c6198a441a639bd6570548851268021428452f6ccfe5113727adf",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "dd537ca6dbf0fc48e689c576aae1f4407c063ac3d606b0653c1f72f0fefaf07b",
+    "volumes/10_exotics_martingales/exotics.ipynb": "43b167b5d2c2d5ecc7d1d0ca76d18b0642ece19b23aedd08822e31182e53939a",
+    "release_manifest.json": "c2adaab524c450e63985130d279f2262c41118802d78215328c8cdd15e2c44b1",
+    "README.md": "8c27fd939f78e7d65c335cb6237ae743f72b60b8ed164937da1a3aac98587e73",
+    "report/README.md": "166e12b6fcafe1e88b0a7ee53bd654d60659dc444eae38f61ab607875ca3890b"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-15/lesson-data.json": "ad34be99d7968c57fe275de52312f0675f9f9fb460f97a0a6cc512077680ffc3",
+    "docs/validation/section-26-15/browser-reference.json": "7aa23b3418cf81b71ad1fb003b083b73c8ab9266b830baa1c49f01c44298ea2f",
+    "docs/validation/section-26-15/browser-m7-check.json": "62f68577aa86affc6c84e19c34165c51a6c25519319a706bf836671caa3927e0",
+    "docs/validation/section-26-15/notebook-m7-check.json": "e736b49fbf40c2fc5cc256433b699f703109e1acce886784ac62d0c52bf9e8e2",
+    "report/site/exotics.html": "92ba7a166fdd59d77de8fa02d841844ad0fae1bd67e823744c718359060452fc",
+    "report/site/assets/style.css": "9c018e8abf6c6198a441a639bd6570548851268021428452f6ccfe5113727adf",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "902989a4c8807e6dc9ae39fac36d985ff6c61e90122b2c61791a047a02d2a04b"
+  },
+  "visual_self_inspection_1000px": [
+    "Both surfaces: all four plots retain complete titles, menu, axes, legends and notes; payoff kink and positive holdings are visible.",
+    "Correlation: currency-squared contribution and volatility percent have separate left/right axes; labels do not overlap.",
+    "Comparison: solid/dashed/diamond roles remain meaningful after portal recoloring; the near-overlap in the baseline is supported by the numerical and error chart checks.",
+    "Error: category order stays baseline, long-high-volatility, three-diversified, three-high-volatility; unresolved bar is hatched and a four-SE marker is present.",
+    "Formula/example: all seven display-equation blocks, input code and five output lines fit with no horizontal overflow or fixed UI overlay. Capture uses a viewport taller than the section; focus-only skip link is outside the clip."
+  ],
+  "historical_preservation": "Existing numerical/browser records and screenshots were not modified. Operational lesson-data hashes in 26.12-26.14 were refreshed for exotics.py only; stripped numeric payloads are identical.",
+  "limitations": [
+    "Book retains external MathJax requests; portal has zero external requests.",
+    "Book succeeds with 50 Plotly-MIME notices, five unchanged header warnings and one unchanged BSM transition parse error outside this scope.",
+    "Browser geometry and numerical checks cover the declared 1440/1000 widths and menu states, not every device.",
+    "No section ledger/status, ROADMAP, root VALIDATION, volume PROGRESS or acceptance note was changed."
+  ]
+}
