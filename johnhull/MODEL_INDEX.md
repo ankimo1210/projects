@@ -177,6 +177,7 @@ synthetic-data method demonstrations, not market-performance claims.
 |---|---|
 | `hullkit._asian_lesson` | Hull §26.13 の給付・平均の分布・観測回数・近似誤差を保存済みデータから共有する内部 Plotly 図ビルダー（`test_asian_lesson.py`） |
 | `hullkit._binary_lesson` | Hull §26.10 の給付・複製・狭いスプレッド・cash-call delta を共有する内部 Plotly 図ビルダー |
+| `hullkit._basket_lesson` | Hull §26.15 の2資産給付・相関と交差共分散寄与・近似/独立参照/MC比較・不確実性つき絶対相対誤差を保存済みデータから共有する内部 Plotly 図ビルダー（`test_basket_lesson.py`） |
 | `hullkit._exchange_lesson` | Hull §26.14 の給付と分解・相関と σ̂・$r$ 非依存と $V/U$ 読み替え・米国型の早期行使を保存済みデータから共有する内部 Plotly 図ビルダー（`test_exchange_lesson.py`） |
 | `hullkit._lookback_lesson` | Hull §26.11 の経路給付・履歴極値・評価時点の複製・離散 fixing を共有する内部 Plotly 図ビルダー |
 | `hullkit._shout_lesson` | Hull §26.12 の給付・宣言木・実ノード境界・合成価格比較を保存済みデータから共有する内部 Plotly 図ビルダー（`test_shout_lesson.py`） |
