@@ -99,6 +99,103 @@ test('old JSON stays manual and new JSON restores active estimates and links', (
   near(I.resolve(loaded).parameters.social, 1804372);
 });
 
+test('flat transaction amounts stay out of the price-proportional rates', () => {
+  const flat = {...p, buy_cost_fixed: 1200000, sell_cost_fixed: 900000, basis_cost_fixed: 400000};
+  const plain = M.saleTax(p, 300000000), withFlat = M.saleTax(flat, 300000000);
+  const basisAfterDepreciation = 400000 * (1 - p.building_share * .9 * .015 * p.years);
+  near(plain.taxable_gain - withFlat.taxable_gain, 900000 + basisAfterDepreciation);
+  near(withFlat.basis - plain.basis, 400000 - 400000 * p.building_share * .9 * .015 * p.years);
+  near(M.run(flat).initial_buy - M.run(p).initial_buy, 1200000);
+});
+
+test('break-even search reprices flat sale costs at the candidate price', () => {
+  const flat = {...p, sell_cost_fixed: 900000};
+  for (const mode of ['rent', 'corp']) {
+    const be = M.breakSale(flat, mode);
+    near(M.run({...flat, growth: be.growth})['wealth_diff_' + mode], 0, .01);
+  }
+  assert.ok(M.breakSale(flat).price > M.breakSale(p).price);
+});
+
+test('rent follows the captured yield until an amount is typed in', () => {
+  const linked = I.setMode(I.createDefault(), 'rent', 'yield_linked');
+  near(linked.rentYield, .036, 1e-12);
+  near(I.resolve(linked).parameters.rent, 750000, 1e-6);
+  near(I.resolve(I.scenario(linked, {price: 150000000})).parameters.rent, 450000, 1e-6);
+  const typed = I.update(linked, {rent: 800000});
+  assert.equal(typed.modes.rent, 'manual');
+  near(I.resolve(I.scenario(typed, {price: 150000000})).parameters.rent, 800000, 1e-6);
+  near(typed.rentYield, 800000 * 12 / 250000000, 1e-12);
+});
+
+test('yield-linked rent keeps the entry-price search inside the rent range', () => {
+  const linked = I.setMode(I.createDefault(), 'rent', 'yield_linked');
+  for (const solver of ['breakPrice', 'breakEntry']) {
+    assert.doesNotThrow(() => I[solver](linked), `${solver} walked outside the rent range`);
+    const price = I[solver](linked);
+    if (price === null) continue;
+    const rent = price * linked.rentYield / 12;
+    assert.ok(rent >= 100000 && rent <= 2000000, `${solver} implied rent ${rent}`);
+    assert.doesNotThrow(() => I.resolve(I.scenario(linked, {price})));
+  }
+  // Rent that scales with the price removes the crossing; holding the exit price keeps one.
+  assert.equal(I.breakPrice(linked), null);
+  assert.ok(I.breakEntry(linked) > 0);
+});
+
+test('residential relief preset sets both assumptions and yields to either edit', () => {
+  const off = I.setMode(I.createDefault(), 'deduction_sale', 'non_residential');
+  const resolved = I.resolve(off).parameters;
+  assert.equal(resolved.deduction_sale, 0);
+  assert.equal(resolved.reduced_long, false);
+  assert.equal(I.update(off, {reduced_long: true}).modes.deduction_sale, 'manual');
+  assert.equal(I.resolve(I.setMode(off, 'deduction_sale', 'residential')).parameters.deduction_sale, 30000000);
+  assert.ok(I.evaluate(off).corp.growth > I.evaluate(I.createDefault()).corp.growth);
+});
+
+test('itemized sale costs follow the brokerage scale and the stamp bracket', () => {
+  const itemized = I.setMode(I.createDefault(), 'sell_cost', 'itemized');
+  const q = I.resolve(itemized).parameters;
+  near(q.sell_cost, .033, 1e-12);
+  // 2.5億円は「1億円超5億円以下」区分なので印紙6万円。仲介の定額6.6万円と抹消0.2万円を足す。
+  near(q.sell_cost_fixed, 66000 + 60000 + 2000);
+  const price = 250000000, fee = price * q.sell_cost + q.sell_cost_fixed;
+  near(fee, price * .033 + 128000);
+  near(fee / price, .0335, 1e-4);
+  // 5億円超に届く予想売値では印紙が16万円の区分に上がる。
+  const bigger = I.resolve(I.scenario(itemized, {price: 600000000})).parameters;
+  near(bigger.sell_cost_fixed, 66000 + 160000 + 2000);
+  // 率を手で入れると連動が外れるが、画面に出ていた定額はそのまま引き継ぐ。
+  const typed = I.update(itemized, {sell_cost: .04});
+  assert.equal(typed.modes.sell_cost, 'manual');
+  near(I.resolve(typed).parameters.sell_cost, .04, 1e-12);
+  near(I.resolve(I.scenario(typed, {price: 600000000})).parameters.sell_cost_fixed, 128000);
+  // 選択欄で手入力に戻したときも同じ。
+  const released = I.setMode(itemized, 'sell_cost', 'manual');
+  near(I.resolve(released).parameters.sell_cost_fixed, 128000);
+  near(I.resolve(released).parameters.sell_cost, .033, 1e-12);
+});
+
+test('schema 1 files load without the flat amounts or the newer links', () => {
+  const saved = JSON.parse(I.serialize(I.createDefault()));
+  saved.schemaVersion = 1;
+  for (const key of ['buy_cost_fixed', 'sell_cost_fixed', 'basis_cost_fixed']) {
+    delete saved.inputs.values[key];
+    delete saved.parameters[key];
+  }
+  delete saved.inputs.modes.rent;
+  delete saved.inputs.modes.deduction_sale;
+  delete saved.inputs.rentYield;
+  const loaded = I.deserialize(saved);
+  assert.equal(loaded.modes.rent, 'manual');
+  assert.equal(loaded.modes.deduction_sale, 'manual');
+  assert.equal(I.resolve(loaded).parameters.sell_cost_fixed, 0);
+  near(I.resolve(loaded).parameters.social, 1804372);
+  const missingRequired = JSON.parse(I.serialize(I.createDefault()));
+  delete missingRequired.inputs.modes.social;
+  assert.throws(() => I.deserialize(missingRequired));
+});
+
 test('reject invalid modes and altered resolved snapshot', () => {
   const current = I.createDefault();
   assert.throws(() => I.setMode(current, 'social', 'same_as_rent'));
