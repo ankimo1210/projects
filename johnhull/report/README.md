@@ -4,8 +4,8 @@ johnhull の Hull 11e ノートで学ぶ価格付け・リスク管理を束ね�
 **オフライン自己完結のインタラクティブ静的サイト**を生成するジェネレータ。
 `analytics/report` と同じ設計(jinja2 + plotly)。
 
-- ランディング + コンセプトギャラリー + 12テーマ別ショーケース（全94図、exotics 14図）+ 統合(背骨)ページ
-- 図は `hullkit.plotly_viz`、内部教材モジュール `hullkit._binary_lesson` / `hullkit._lookback_lesson` / `hullkit._shout_lesson`、またはvol 18–28のversioned reference artifactから生成。共有ソースに加え、値・操作・実画面を検査する
+- ランディング + コンセプトギャラリー + 12テーマ別ショーケース（全106図、exotics 26図）+ 統合(背骨)ページ
+- 図は `hullkit.plotly_viz`、内部教材モジュール `hullkit._binary_lesson` / `hullkit._lookback_lesson` / `hullkit._shout_lesson` / `hullkit._asian_lesson` / `hullkit._exchange_lesson` / `hullkit._basket_lesson`、またはvol 18–28のversioned reference artifactから生成。共有ソースに加え、値・操作・実画面を検査する
 - **カーネル不要・ネット不要**: plotly はローカル同梱、図はブラウザ内で動く(スライダー/ホバー/ズーム)
 
 ## 生成
@@ -45,3 +45,10 @@ uv run --no-sync pytest johnhull/report/tests -q
 `PLAYWRIGHT_MODULE` / `CHROMIUM_BIN` で指定して実行し、
 `docs/validation/section-26-12/browser-m4b-check.json` に実際の検査範囲・ハッシュ・18画像を記録する。
 Portal の HTTP(S) は遮断し、Book の既存 MathJax リクエストは許可して記録する。
+
+§26.15 バスケットの4図は、厳密なモーメントと近似価格、条件付き積分参照と MC の不確実性を区別する。
+`build_basket_browser_reference.py` は保存参照から独立の照合値を作り、
+`verify_basket_lesson_browser.cjs` は両面・1440/1000px の全10状態、数値・軸・数式・
+数値改変の拒否と復元を検査する。18画像と `section-26-15/browser-m7-check.json` を保存する。
+`verify_basket_notebook.py` は §4.5 外のソースを基点 `9b7a75c7` と比較し、
+新鮮な実行結果と4図の data/layout を照合する。通常ビルドは求積・MCを実行しない。

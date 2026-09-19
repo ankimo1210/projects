@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "lesson_numeric_payload_unchanged": true,
+  "hash_refresh": [
+    {
+      "family": "contract",
+      "source": "hullkit/src/hullkit/exotics.py",
+      "old": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "new": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
+    },
+    {
+      "family": "correlation",
+      "source": "hullkit/src/hullkit/exotics.py",
+      "old": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "new": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
+    },
+    {
+      "family": "rate",
+      "source": "hullkit/src/hullkit/exotics.py",
+      "old": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "new": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
+    },
+    {
+      "family": "american",
+      "source": "hullkit/src/hullkit/exotics.py",
+      "old": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "new": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
+    }
+  ],
+  "checked_at": "2026-09-19T01:06:46.941682+00:00",
+  "command": "/home/kazumasa/projects/.venv/bin/python -m pytest -q hullkit/tests/test_exchange_reference.py hullkit/tests/test_exchange_pricing.py hullkit/tests/test_exchange_lesson.py",
+  "environment": {
+    "PYTHONPATH": "/home/kazumasa/.codex/worktrees/johnhull-basket-m7/johnhull/hullkit/src:/home/kazumasa/.codex/worktrees/johnhull-basket-m7/johnhull/scripts:/home/kazumasa/.codex/worktrees/johnhull-basket-m7/johnhull/report"
+  },
+  "exit_code": 0,
+  "pytest_output": "........................................................................ [ 20%]\n........................................................................ [ 41%]\n........................................................................ [ 61%]\n........................................................................ [ 82%]\n...............................................................          [100%]\n351 passed in 1.07s\n",
+  "passed": 351,
+  "source_sha256": {
+    "hullkit/tests/test_exchange_reference.py": "522522167f3fc0137365eb2f9d1f7db8cb9bf6baaac35cc0d0217e1fd229008b",
+    "hullkit/tests/test_exchange_pricing.py": "f6d9318e568466875a9f1ffed12750b2007f7017f15d727ec6da016499061a7f",
+    "hullkit/tests/test_exchange_lesson.py": "83e2a42d747e2fcd13076f5de0665e2bf75336312ddc322223c44243bed7afea",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "report/assets/style.css": "9c018e8abf6c6198a441a639bd6570548851268021428452f6ccfe5113727adf",
+    "report/report_builder/figures.py": "0741b2d798369421c2e48e5052036f99222449d71faf61b13b472cc6d4557acc"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "92ba7a166fdd59d77de8fa02d841844ad0fae1bd67e823744c718359060452fc",
+    "book/_build/html/notebooks/10_exotics.html": "902989a4c8807e6dc9ae39fac36d985ff6c61e90122b2c61791a047a02d2a04b"
+  },
+  "scope": "Accepted section tests against final M7 assets; historical numerical and browser records preserved."
+}

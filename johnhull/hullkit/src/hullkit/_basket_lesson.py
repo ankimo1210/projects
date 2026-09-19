@@ -330,7 +330,7 @@ def _comparison_figure(data):
         yaxis=dict(title="オプション価格"),
     )
     note = (
-        "赤は M₁・M₂ に合う対数正規代理分布による近似。青破線は2資産条件付き積分の独立参照。<br>"
+        "実線は M₁・M₂ に合う対数正規代理分布による近似。破線は2資産条件付き積分の独立参照。<br>"
         "菱形は別の相関 GBM シミュレーションで、エラーバーは ±4 標準誤差。"
     )
     return _finish(
@@ -414,6 +414,8 @@ def _error_figure(data):
         xaxis=dict(
             title="固定市場（K=100）",
             tickvals=list(_ERROR_MARKETS),
+            categoryorder="array",
+            categoryarray=list(_ERROR_MARKETS),
             ticktext=[_LABELS[name] for name in _ERROR_MARKETS],
         ),
         yaxis=dict(title="絶対相対誤差 / 4SE 相対値（%）", rangemode="tozero"),

@@ -16,7 +16,7 @@
       "The payoff family is a terminal payoff, not a price."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
       "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
       "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
       "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
@@ -91,7 +91,7 @@
       "The payoff family is a terminal payoff, not a price."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
       "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
       "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
       "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
@@ -736,7 +736,7 @@
       "The payoff family is a terminal payoff, not a price."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
       "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
       "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
       "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
@@ -908,7 +908,7 @@
       "The American prices come from a finite CRR tree on V/U."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775",
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
       "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
       "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
       "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",

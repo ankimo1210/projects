@@ -19,7 +19,7 @@
       "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
       "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
       "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
-      "scripts/build_basket_lesson_data.py": "1031ba909f66bf75da2b1f586f44d32c24d5764036a575bfd87d75491731cc15"
+      "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b"
     },
     "data": {
       "weights": [
@@ -85,7 +85,7 @@
       "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
       "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
       "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
-      "scripts/build_basket_lesson_data.py": "1031ba909f66bf75da2b1f586f44d32c24d5764036a575bfd87d75491731cc15"
+      "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b"
     },
     "data": {
       "strike": 100.0,
@@ -193,7 +193,7 @@
       "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
       "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
       "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
-      "scripts/build_basket_lesson_data.py": "1031ba909f66bf75da2b1f586f44d32c24d5764036a575bfd87d75491731cc15"
+      "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b"
     },
     "data": [
       {
@@ -312,14 +312,14 @@
       "Synthetic constant-parameter correlated-GBM markets; values are in currency.",
       "Moment matching is an approximation except for exact lognormal anchors.",
       "Recorded Monte Carlo uncertainty is four standard errors, not a universal bound.",
-      "The sign is unresolved whenever the frozen gap is no larger than four standard errors."
+      "When MC supplies the reference, a gap no larger than four standard errors has unresolved sign. Conditional or analytic references use their own numerical uncertainty and can establish a sign even inside the MC error bar."
     ],
     "source_hashes": {
       "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
       "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
       "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
       "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
-      "scripts/build_basket_lesson_data.py": "1031ba909f66bf75da2b1f586f44d32c24d5764036a575bfd87d75491731cc15"
+      "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b"
     },
     "data": [
       {

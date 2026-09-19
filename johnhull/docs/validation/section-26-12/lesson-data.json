@@ -23,7 +23,7 @@
       "scripts/build_shout_reference.py": "944a54bafc3615f428daf8ccdbb2e26ffa592fdbb11b79514bc1bdc8fb7f8574",
       "docs/validation/section-26-12/prices.json": "98fbe101c5a19424082202f743eaa2166ac7609a515f6b43e2737584552a7633",
       "docs/validation/section-26-12/numerical-check.json": "ca038c13b9596d8ad9626fc72f3d652fbe46df8dd3337f71785e2ce7f935bbe5",
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775"
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
     },
     "data": {
       "shouts_allowed": 1,
@@ -59,7 +59,7 @@
       "scripts/build_shout_reference.py": "944a54bafc3615f428daf8ccdbb2e26ffa592fdbb11b79514bc1bdc8fb7f8574",
       "docs/validation/section-26-12/prices.json": "98fbe101c5a19424082202f743eaa2166ac7609a515f6b43e2737584552a7633",
       "docs/validation/section-26-12/numerical-check.json": "ca038c13b9596d8ad9626fc72f3d652fbe46df8dd3337f71785e2ce7f935bbe5",
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775"
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
     },
     "data": {
       "strike": 50.0,
@@ -125,7 +125,7 @@
       "scripts/build_shout_reference.py": "944a54bafc3615f428daf8ccdbb2e26ffa592fdbb11b79514bc1bdc8fb7f8574",
       "docs/validation/section-26-12/prices.json": "98fbe101c5a19424082202f743eaa2166ac7609a515f6b43e2737584552a7633",
       "docs/validation/section-26-12/numerical-check.json": "ca038c13b9596d8ad9626fc72f3d652fbe46df8dd3337f71785e2ce7f935bbe5",
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775"
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
     },
     "data": {
       "market": "positive-carry",
@@ -321,7 +321,7 @@
       "scripts/build_shout_reference.py": "944a54bafc3615f428daf8ccdbb2e26ffa592fdbb11b79514bc1bdc8fb7f8574",
       "docs/validation/section-26-12/prices.json": "98fbe101c5a19424082202f743eaa2166ac7609a515f6b43e2737584552a7633",
       "docs/validation/section-26-12/numerical-check.json": "ca038c13b9596d8ad9626fc72f3d652fbe46df8dd3337f71785e2ce7f935bbe5",
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775"
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
     },
     "data": [
       {
@@ -1314,7 +1314,7 @@
       "scripts/build_shout_reference.py": "944a54bafc3615f428daf8ccdbb2e26ffa592fdbb11b79514bc1bdc8fb7f8574",
       "docs/validation/section-26-12/prices.json": "98fbe101c5a19424082202f743eaa2166ac7609a515f6b43e2737584552a7633",
       "docs/validation/section-26-12/numerical-check.json": "ca038c13b9596d8ad9626fc72f3d652fbe46df8dd3337f71785e2ce7f935bbe5",
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775"
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
     },
     "data": [
       {
@@ -3220,7 +3220,7 @@
       "scripts/build_shout_reference.py": "944a54bafc3615f428daf8ccdbb2e26ffa592fdbb11b79514bc1bdc8fb7f8574",
       "docs/validation/section-26-12/prices.json": "98fbe101c5a19424082202f743eaa2166ac7609a515f6b43e2737584552a7633",
       "docs/validation/section-26-12/numerical-check.json": "ca038c13b9596d8ad9626fc72f3d652fbe46df8dd3337f71785e2ce7f935bbe5",
-      "hullkit/src/hullkit/exotics.py": "173dad8c097fc6af851d56ffe35e6e4b621285212c52cf5a58d6c9523e7fa775"
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556"
     },
     "data": [
       {

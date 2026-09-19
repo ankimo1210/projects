@@ -295,3 +295,66 @@ def test_figures_never_run_pricing_quadrature_or_monte_carlo(lesson, monkeypatch
     monkeypatch.setattr(build_basket_reference, "conditional_two_asset", forbidden)
     monkeypatch.setattr(build_basket_reference, "simulate", forbidden)
     assert list(lesson._figures()) == KEYS
+
+
+@pytest.mark.parametrize(
+    "key, states, roles",
+    [
+        ("basket_payoff", ["call", "put"], [["basket-terminal", "payoff", "strike"]] * 2),
+        (
+            "basket_correlation",
+            ["all", "covariance-only", "volatility-only"],
+            [
+                ["cross-covariance", "matched-volatility"],
+                ["cross-covariance"],
+                ["matched-volatility"],
+            ],
+        ),
+        (
+            "basket_comparison",
+            ["baseline-call", "long-high-volatility-call", "baseline-put"],
+            [["approximation", "independent-reference", "mc-estimate"]] * 3,
+        ),
+        (
+            "basket_error",
+            ["call", "put"],
+            [
+                [
+                    "absolute-relative-gap-established",
+                    "absolute-relative-gap-unresolved",
+                    "four-se-relative-uncertainty",
+                ]
+            ]
+            * 2,
+        ),
+    ],
+)
+def test_exact_menu_contract_and_axis_semantics(figures, key, states, roles):
+    """Losing a state or mixing currency-squared and volatility axes must fail."""
+    fig = figures[key]
+    buttons = fig.layout.updatemenus[0].buttons
+    assert [button.args[1]["meta"]["scenario"] for button in buttons] == states
+    for button, expected in zip(buttons, roles, strict=True):
+        visible = [t for t, flag in zip(fig.data, button.args[0]["visible"], strict=True) if flag]
+        assert [t.meta["role"] for t in visible] == expected
+        for trace in visible:
+            assert (trace.yaxis or "y") == (
+                "y2" if trace.meta["role"] == "matched-volatility" else "y"
+            )
+    if key == "basket_correlation":
+        assert fig.layout.yaxis2.overlaying == "y"
+        assert fig.layout.yaxis2.side == "right"
+        assert "M₂" in fig.layout.yaxis.title.text
+        assert "%" in fig.layout.yaxis2.title.text
+    if key == "basket_error":
+        for state in states:
+            assert (
+                _trace(fig, "absolute-relative-gap-unresolved", state).marker.pattern.shape == "/"
+            )
+
+
+def test_error_axis_keeps_the_same_market_order_when_sign_partition_changes(figures):
+    """Plotly must not append the unresolved market after all established markets."""
+    axis = figures["basket_error"].layout.xaxis
+    assert axis.categoryorder == "array"
+    assert list(axis.categoryarray) == ERROR_MARKETS
