@@ -76,7 +76,7 @@
   },
   "review": {
     "task_1": "Approved, no Critical/Important/Minor",
-    "task_2": "Important findings fixed and scoped re-review clean; deferred absolute-tolerance Minor resolved by setting rel=0.0.",
+    "task_2": "Important findings fixed and scoped re-review clean. Final review corrected the deferred premise: pytest 9.0.3 disables relative tolerance when abs is supplied; rel=0.0 only makes the existing absolute-only contract explicit.",
     "task_3": "Approved; two Minors resolved in Task 4.",
     "task_4": "Approved, no Critical/Important; duplicate prior-section captures are evidence-size Minor only."
   },
@@ -86,7 +86,7 @@
     "release_strict": "PASS",
     "ruff": "PASS",
     "diff_check": "PASS",
-    "format_scope": "Task 4 scoped seven-file format check PASS; full M7 diff format check is not a required gate and would reformat five already-reviewed task files."
+    "format_scope": "Task 4 scoped seven-file format check PASS. A full M7 diff check would reformat five reviewed files: the Task 4 notebook builder plus four Task 1/2 files; this is not a required final gate."
   },
   "limitations": [
     "Synthetic constant-parameter correlated-GBM markets; no market-performance or production-readiness claim.",
