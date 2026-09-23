@@ -36,13 +36,13 @@ def test_registry_is_consistent():
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
     assert len(figures_for("rates_swaps")) == 11
-    assert len(figures_for("exotics")) == 22
+    assert len(figures_for("exotics")) == 26
     assert len(figures_for("ml_derivatives")) == 12
     assert len(figures_for("volatility_frontiers")) == 8
     assert len(figures_for("crypto_market")) == 4
     assert len(figures_for("climate_energy")) == 4
     assert len(figures_for("risk_management")) == 4
-    assert len(FIGURES) == 102
+    assert len(FIGURES) == 106
     assert {"shout_payoff", "shout_decision", "shout_boundary", "shout_comparison"} <= {
         figure.id for figure in figures_for("exotics")
     }
@@ -98,3 +98,15 @@ def test_render_site_is_offline_and_complete(tmp_path):
     for name in PAGES:
         text = (out / f"{name}.html").read_text(encoding="utf-8")
         assert not re.search(r"https?://", text), f"external URL leaked into {name}.html"
+
+
+def test_basket_registry_delivers_four_ordered_section_figures():
+    """A missing card or wrong section would hide or misidentify the lesson."""
+    expected = ["basket_payoff", "basket_correlation", "basket_comparison", "basket_error"]
+    basket = [spec for spec in figures_for("exotics") if spec.id.startswith("basket_")]
+    assert [spec.id for spec in basket] == expected
+    for spec in basket:
+        assert spec.practice and spec.title and spec.blurb
+        figure = spec.build()
+        assert figure.layout.meta["section"] == "26.15"
+        assert figure.layout.meta["figure"] == spec.id

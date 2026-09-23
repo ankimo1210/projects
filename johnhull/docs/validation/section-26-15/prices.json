@@ -1,0 +1,3904 @@
+{
+  "schema_version": 1,
+  "section": "26.15",
+  "paths": 1000000,
+  "pilot_paths": 20000,
+  "chunk_size": 50000,
+  "price_floor": 0.5,
+  "rows": [
+    {
+      "market": "baseline",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 101.41258123598138,
+      "M2": 10694.064085144184,
+      "anchor": null,
+      "approximation": 21.74524440349604,
+      "conditional": 21.725376917397654,
+      "conditional_quadrature_error": 1.2280455025118203e-11,
+      "conditional_tail_bound": 1.5399042207108637e-31,
+      "exact": null,
+      "mc": 21.723069893049004,
+      "standard_error": 0.0027559081263922726,
+      "control_beta": 0.9206439044786383,
+      "seed": 261500,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 21.725376917397654,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.019867486098387843,
+      "relative_error": 0.0009144829189351364,
+      "error_sign_established": true
+    },
+    {
+      "market": "baseline",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 101.41258123598138,
+      "M2": 10694.064085144184,
+      "anchor": null,
+      "approximation": 0.9655005812933248,
+      "conditional": 0.9456330951949166,
+      "conditional_quadrature_error": 6.471157712417272e-11,
+      "conditional_tail_bound": 1.5399042207108637e-31,
+      "exact": null,
+      "mc": 0.9433260708462825,
+      "standard_error": 0.0027559081263922726,
+      "control_beta": -0.07935609552136169,
+      "seed": 261500,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.9456330951949166,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.01986748609840827,
+      "relative_error": 0.021009719519506802,
+      "error_sign_established": true
+    },
+    {
+      "market": "baseline",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 101.41258123598138,
+      "M2": 10694.064085144184,
+      "anchor": null,
+      "approximation": 8.39675442015023,
+      "conditional": 8.381800132136227,
+      "conditional_quadrature_error": 1.4534438501974831e-11,
+      "conditional_tail_bound": 1.6002317649229085e-31,
+      "exact": null,
+      "mc": 8.379045871982607,
+      "standard_error": 0.005751939721342353,
+      "control_beta": 0.6137839013242662,
+      "seed": 261500,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 8.381800132136227,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.014954288014003225,
+      "relative_error": 0.0017841379868589041,
+      "error_sign_established": true
+    },
+    {
+      "market": "baseline",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 101.41258123598138,
+      "M2": 10694.064085144184,
+      "anchor": null,
+      "approximation": 7.025921268917664,
+      "conditional": 7.0109669809036586,
+      "conditional_quadrature_error": 2.2028435986296395e-11,
+      "conditional_tail_bound": 1.6002317649229085e-31,
+      "exact": null,
+      "mc": 7.0082127207500475,
+      "standard_error": 0.005751939721342353,
+      "control_beta": -0.3862160986757338,
+      "seed": 261500,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 7.0109669809036586,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.01495428801400589,
+      "relative_error": 0.0021329850867559496,
+      "error_sign_established": true
+    },
+    {
+      "market": "baseline",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 101.41258123598138,
+      "M2": 10694.064085144184,
+      "anchor": null,
+      "approximation": 2.312778645184455,
+      "conditional": 2.3246737717264616,
+      "conditional_quadrature_error": 3.495955152084248e-11,
+      "conditional_tail_bound": 1.6605593091349532e-31,
+      "exact": null,
+      "mc": 2.325158102803914,
+      "standard_error": 0.00520970325023545,
+      "control_beta": 0.26802973273493186,
+      "seed": 261500,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 2.3246737717264616,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -0.01189512654200664,
+      "relative_error": -0.005116901427924876,
+      "error_sign_established": true
+    },
+    {
+      "market": "baseline",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 101.41258123598138,
+      "M2": 10694.064085144184,
+      "anchor": null,
+      "approximation": 20.350856164922064,
+      "conditional": 20.362751291464054,
+      "conditional_quadrature_error": 5.92436264643776e-11,
+      "conditional_tail_bound": 1.6605593091349532e-31,
+      "exact": null,
+      "mc": 20.36323562254152,
+      "standard_error": 0.00520970325023545,
+      "control_beta": -0.7319702672650681,
+      "seed": 261500,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 20.362751291464054,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -0.011895126541990209,
+      "relative_error": -0.0005841610680073756,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 101.41258123598138,
+      "M2": 10401.375125012622,
+      "anchor": null,
+      "approximation": 20.821228340338294,
+      "conditional": 20.813629408067264,
+      "conditional_quadrature_error": 4.055023732794971e-11,
+      "conditional_tail_bound": 1.9621928463635026e-31,
+      "exact": null,
+      "mc": 20.81384669436968,
+      "standard_error": 0.00039386581641323034,
+      "control_beta": 0.9927480844682243,
+      "seed": 261501,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 20.813629408067264,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.007598932271029923,
+      "relative_error": 0.0003650940507321906,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 101.41258123598138,
+      "M2": 10401.375125012622,
+      "anchor": null,
+      "approximation": 0.041484518135574286,
+      "conditional": 0.033885585864528965,
+      "conditional_quadrature_error": 2.078308939909594e-11,
+      "conditional_tail_bound": 1.9621928463635026e-31,
+      "exact": null,
+      "mc": 0.034102872166958065,
+      "standard_error": 0.00039386581641323034,
+      "control_beta": -0.007251915531775732,
+      "seed": 261501,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.033885585864528965,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.007598932271045321,
+      "relative_error": null,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 101.41258123598138,
+      "M2": 10401.375125012622,
+      "anchor": null,
+      "approximation": 4.863806756513861,
+      "conditional": 4.827543896809597,
+      "conditional_quadrature_error": 1.7724138487193928e-13,
+      "conditional_tail_bound": 2.022520390575547e-31,
+      "exact": null,
+      "mc": 4.826625266695582,
+      "standard_error": 0.003094564714049136,
+      "control_beta": 0.6077124319670556,
+      "seed": 261501,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 4.827543896809597,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.03626285970426402,
+      "relative_error": 0.0075116582012292495,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 101.41258123598138,
+      "M2": 10401.375125012622,
+      "anchor": null,
+      "approximation": 3.4929736052813083,
+      "conditional": 3.456710745577027,
+      "conditional_quadrature_error": 1.124592578005825e-11,
+      "conditional_tail_bound": 2.022520390575547e-31,
+      "exact": null,
+      "mc": 3.455792115463023,
+      "standard_error": 0.003094564714049136,
+      "control_beta": -0.3922875680329444,
+      "seed": 261501,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 3.456710745577027,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.036262859704281336,
+      "relative_error": 0.010490568165323302,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 101.41258123598138,
+      "M2": 10401.375125012622,
+      "anchor": null,
+      "approximation": 0.27482061264812496,
+      "conditional": 0.3100476260433256,
+      "conditional_quadrature_error": 7.219782956815838e-12,
+      "conditional_tail_bound": 2.0828479347875916e-31,
+      "exact": null,
+      "mc": 0.3090661096278392,
+      "standard_error": 0.0016708274832251753,
+      "control_beta": 0.08533396060748175,
+      "seed": 261501,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.3100476260433256,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -0.035227013395200624,
+      "relative_error": null,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 101.41258123598138,
+      "M2": 10401.375125012622,
+      "anchor": null,
+      "approximation": 18.31289813238573,
+      "conditional": 18.34812514578092,
+      "conditional_quadrature_error": 6.968199496560694e-11,
+      "conditional_tail_bound": 2.0828479347875916e-31,
+      "exact": null,
+      "mc": 18.347143629365444,
+      "standard_error": 0.0016708274832251753,
+      "control_beta": -0.9146660393925182,
+      "seed": 261501,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 18.34812514578092,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -0.035227013395189744,
+      "relative_error": -0.0019199244127288972,
+      "error_sign_established": true
+    },
+    {
+      "market": "high-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.9
+        ],
+        [
+          0.9,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 101.41258123598138,
+      "M2": 10862.687658488396,
+      "anchor": null,
+      "approximation": 22.43041843236302,
+      "conditional": 22.398421170605403,
+      "conditional_quadrature_error": 3.8157251194025905e-11,
+      "conditional_tail_bound": 1.250921274848515e-31,
+      "exact": null,
+      "mc": 22.398065677874303,
+      "standard_error": 0.003781282347153646,
+      "control_beta": 0.8982583558324568,
+      "seed": 261502,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 22.398421170605403,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.03199726175761697,
+      "relative_error": 0.0014285498747388773,
+      "error_sign_established": true
+    },
+    {
+      "market": "high-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.9
+        ],
+        [
+          0.9,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 101.41258123598138,
+      "M2": 10862.687658488396,
+      "anchor": null,
+      "approximation": 1.650674610160292,
+      "conditional": 1.618677348402668,
+      "conditional_quadrature_error": 5.476200574816696e-11,
+      "conditional_tail_bound": 1.250921274848515e-31,
+      "exact": null,
+      "mc": 1.6183218556715815,
+      "standard_error": 0.003781282347153646,
+      "control_beta": -0.10174164416754317,
+      "seed": 261502,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 1.618677348402668,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.031997261757624074,
+      "relative_error": 0.0197675353826378,
+      "error_sign_established": true
+    },
+    {
+      "market": "high-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.9
+        ],
+        [
+          0.9,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 101.41258123598138,
+      "M2": 10862.687658488396,
+      "anchor": null,
+      "approximation": 9.799193355795303,
+      "conditional": 9.780224229666663,
+      "conditional_quadrature_error": 3.145550103338721e-12,
+      "conditional_tail_bound": 1.2763961195927493e-31,
+      "exact": null,
+      "mc": 9.776226149891393,
+      "standard_error": 0.006789705084793318,
+      "control_beta": 0.620700483105856,
+      "seed": 261502,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 9.780224229666663,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.018969126128640212,
+      "relative_error": 0.0019395389802107567,
+      "error_sign_established": true
+    },
+    {
+      "market": "high-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.9
+        ],
+        [
+          0.9,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 101.41258123598138,
+      "M2": 10862.687658488396,
+      "anchor": null,
+      "approximation": 8.428360204562743,
+      "conditional": 8.409391078434096,
+      "conditional_quadrature_error": 2.7503197263805752e-11,
+      "conditional_tail_bound": 1.2763961195927493e-31,
+      "exact": null,
+      "mc": 8.405392998658833,
+      "standard_error": 0.006789705084793318,
+      "control_beta": -0.379299516894144,
+      "seed": 261502,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 8.409391078434096,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.018969126128647318,
+      "relative_error": 0.0022557074527421715,
+      "error_sign_established": true
+    },
+    {
+      "market": "high-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.9
+        ],
+        [
+          0.9,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 101.41258123598138,
+      "M2": 10862.687658488396,
+      "anchor": null,
+      "approximation": 3.4464963042683316,
+      "conditional": 3.459521958244861,
+      "conditional_quadrature_error": 2.2493058281640974e-11,
+      "conditional_tail_bound": 1.3018709643369832e-31,
+      "exact": null,
+      "mc": 3.4579971383663146,
+      "standard_error": 0.006614816171233262,
+      "control_beta": 0.3181949440978358,
+      "seed": 261502,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 3.459521958244861,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -0.013025653976529217,
+      "relative_error": -0.0037651600810007855,
+      "error_sign_established": true
+    },
+    {
+      "market": "high-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.9
+        ],
+        [
+          0.9,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 101.41258123598138,
+      "M2": 10862.687658488396,
+      "anchor": null,
+      "approximation": 21.48457382400593,
+      "conditional": 21.497599477982458,
+      "conditional_quadrature_error": 4.924775387561073e-13,
+      "conditional_tail_bound": 1.3018709643369832e-31,
+      "exact": null,
+      "mc": 21.49607465810392,
+      "standard_error": 0.006614816171233262,
+      "control_beta": -0.6818050559021642,
+      "seed": 261502,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 21.497599477982458,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -0.013025653976526996,
+      "relative_error": -0.0006059120224036032,
+      "error_sign_established": true
+    },
+    {
+      "market": "short-expiry",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 0.1,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 100.14012508087345,
+      "M2": 10067.126637108484,
+      "anchor": null,
+      "approximation": 20.080012523307875,
+      "conditional": 20.079998144380404,
+      "conditional_quadrature_error": 1.6755535920449006e-10,
+      "conditional_tail_bound": 3.3240035830178294e-31,
+      "exact": null,
+      "mc": 20.07999014885755,
+      "standard_error": 2.0333514675375465e-05,
+      "control_beta": 0.9999920328685024,
+      "seed": 261503,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 20.079998144380404,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1.6755535920449006e-10,
+      "approximation_error": 1.437892747091496e-05,
+      "relative_error": 7.160821115383943e-07,
+      "error_sign_established": true
+    },
+    {
+      "market": "short-expiry",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 0.1,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 100.14012508087345,
+      "M2": 10067.126637108484,
+      "anchor": null,
+      "approximation": 0.00021727767682096786,
+      "conditional": 0.0002028987493390998,
+      "conditional_quadrature_error": 5.255226384903971e-13,
+      "conditional_tail_bound": 3.3240035830178294e-31,
+      "exact": null,
+      "mc": 0.00019490322648962888,
+      "standard_error": 2.0333514675375465e-05,
+      "control_beta": -7.96713149764372e-06,
+      "seed": 261503,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.0002028987493390998,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 1.4378927481868058e-05,
+      "relative_error": null,
+      "error_sign_established": true
+    },
+    {
+      "market": "short-expiry",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 0.1,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 100.14012508087345,
+      "M2": 10067.126637108484,
+      "anchor": null,
+      "approximation": 2.5524604183500035,
+      "conditional": 2.551977932671833,
+      "conditional_quadrature_error": 1.5359336341031882e-12,
+      "conditional_tail_bound": 3.6533027275270463e-31,
+      "exact": null,
+      "mc": 2.552494815269898,
+      "standard_error": 0.0018702484106946277,
+      "control_beta": 0.5302212326746999,
+      "seed": 261503,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 2.551977932671833,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0004824856781704412,
+      "relative_error": 0.000189063420961989,
+      "error_sign_established": true
+    },
+    {
+      "market": "short-expiry",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 0.1,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 100.14012508087345,
+      "M2": 10067.126637108484,
+      "anchor": null,
+      "approximation": 2.4127550827864113,
+      "conditional": 2.4122725971082266,
+      "conditional_quadrature_error": 1.6458563201123713e-11,
+      "conditional_tail_bound": 3.6533027275270463e-31,
+      "exact": null,
+      "mc": 2.4127894797062988,
+      "standard_error": 0.0018702484106946277,
+      "control_beta": -0.4697787673253001,
+      "seed": 261503,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 2.4122725971082266,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.00048248567818465204,
+      "relative_error": 0.00020001291676697072,
+      "error_sign_established": true
+    },
+    {
+      "market": "short-expiry",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 0.1,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 100.14012508087345,
+      "M2": 10067.126637108484,
+      "anchor": null,
+      "approximation": 0.003679319645070716,
+      "conditional": 0.003842486149826053,
+      "conditional_quadrature_error": 1.124946458508118e-11,
+      "conditional_tail_bound": 3.982601872036262e-31,
+      "exact": null,
+      "mc": 0.0038596693982657,
+      "standard_error": 0.00012714064297228892,
+      "control_beta": 0.0014142312954359465,
+      "seed": 261503,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.003842486149826053,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -0.0001631665047553371,
+      "relative_error": null,
+      "error_sign_established": true
+    },
+    {
+      "market": "short-expiry",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.3
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.35
+        ],
+        [
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 0.1,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 100.14012508087345,
+      "M2": 10067.126637108484,
+      "anchor": null,
+      "approximation": 19.804063894148943,
+      "conditional": 19.804227060653687,
+      "conditional_quadrature_error": 1.3977670385009522e-10,
+      "conditional_tail_bound": 3.982601872036262e-31,
+      "exact": null,
+      "mc": 19.804244243902126,
+      "standard_error": 0.00012714064297228892,
+      "control_beta": -0.9985857687045641,
+      "seed": 261503,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 19.804227060653687,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1.3977670385009522e-10,
+      "approximation_error": -0.00016316650474479388,
+      "relative_error": -8.23897364159024e-06,
+      "error_sign_established": true
+    },
+    {
+      "market": "long-high-volatility",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.65,
+        0.4
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 3.0,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 104.31471537735032,
+      "M2": 20198.042589751694,
+      "anchor": null,
+      "approximation": 38.24081727322452,
+      "conditional": 31.823422641194043,
+      "conditional_quadrature_error": 2.9897821880773337e-10,
+      "conditional_tail_bound": 1.03453919277282e-31,
+      "exact": null,
+      "mc": 31.838703508249676,
+      "standard_error": 0.011729729930829831,
+      "control_beta": 0.9375220167058441,
+      "seed": 261504,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 31.823422641194043,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 2.9897821880773337e-10,
+      "approximation_error": 6.417394632030479,
+      "relative_error": 0.20165633044521866,
+      "error_sign_established": true
+    },
+    {
+      "market": "long-high-volatility",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.65,
+        0.4
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 3.0,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 104.31471537735032,
+      "M2": 20198.042589751694,
+      "anchor": null,
+      "approximation": 16.018840628870183,
+      "conditional": 9.601445996839704,
+      "conditional_quadrature_error": 7.70197343124149e-11,
+      "conditional_tail_bound": 1.03453919277282e-31,
+      "exact": null,
+      "mc": 9.616726863895334,
+      "standard_error": 0.011729729930829831,
+      "control_beta": -0.06247798329415588,
+      "seed": 261504,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 9.601445996839704,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 6.417394632030479,
+      "relative_error": 0.6683779332970005,
+      "error_sign_established": true
+    },
+    {
+      "market": "long-high-volatility",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.65,
+        0.4
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 3.0,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 104.31471537735032,
+      "M2": 20198.042589751694,
+      "anchor": null,
+      "approximation": 30.566359052439566,
+      "conditional": 24.209285597481568,
+      "conditional_quadrature_error": 1.0288934778498565e-10,
+      "conditional_tail_bound": 1.0345396208458114e-31,
+      "exact": null,
+      "mc": 24.221948044828913,
+      "standard_error": 0.0169053996795148,
+      "control_beta": 0.8836783333906965,
+      "seed": 261504,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 24.209285597481568,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1.0288934778498565e-10,
+      "approximation_error": 6.357073454957998,
+      "relative_error": 0.26258823001449116,
+      "error_sign_established": true
+    },
+    {
+      "market": "long-high-volatility",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.65,
+        0.4
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 3.0,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 104.31471537735032,
+      "M2": 20198.042589751694,
+      "anchor": null,
+      "approximation": 26.62300611350979,
+      "conditional": 20.2659326585518,
+      "conditional_quadrature_error": 1.420944787649392e-10,
+      "conditional_tail_bound": 1.0345396208458114e-31,
+      "exact": null,
+      "mc": 20.278595105899136,
+      "standard_error": 0.0169053996795148,
+      "control_beta": -0.11632166660930354,
+      "seed": 261504,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 20.2659326585518,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1.420944787649392e-10,
+      "approximation_error": 6.3570734549579875,
+      "relative_error": 0.3136827483868814,
+      "error_sign_established": true
+    },
+    {
+      "market": "long-high-volatility",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.65,
+        0.4
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 3.0,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 104.31471537735032,
+      "M2": 20198.042589751694,
+      "anchor": null,
+      "approximation": 24.65319241223508,
+      "conditional": 19.1397188048788,
+      "conditional_quadrature_error": 3.12998065571321e-11,
+      "conditional_tail_bound": 1.0345400489188024e-31,
+      "exact": null,
+      "mc": 19.151327093378338,
+      "standard_error": 0.020887601334837552,
+      "control_beta": 0.8279769232437145,
+      "seed": 261504,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 19.1397188048788,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 5.5134736073562784,
+      "relative_error": 0.2880645041635026,
+      "error_sign_established": true
+    },
+    {
+      "market": "long-high-volatility",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.65,
+        0.4
+      ],
+      "dividends": [
+        0.01,
+        0.025
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.65
+        ],
+        [
+          -0.65,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 3.0,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 104.31471537735032,
+      "M2": 20198.042589751694,
+      "anchor": null,
+      "approximation": 38.988463178729866,
+      "conditional": 33.474989571373605,
+      "conditional_quadrature_error": 7.54705543200434e-11,
+      "conditional_tail_bound": 1.0345400489188024e-31,
+      "exact": null,
+      "mc": 33.48659785987313,
+      "standard_error": 0.020887601334837552,
+      "control_beta": -0.17202307675628548,
+      "seed": 261504,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 33.474989571373605,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 5.513473607356261,
+      "relative_error": 0.16470426661674453,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-rate",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.35,
+        0.5
+      ],
+      "dividends": [
+        0.03,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2
+        ],
+        [
+          0.2,
+          1.0
+        ]
+      ],
+      "r": -0.015,
+      "T": 1.5,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 94.61143994579453,
+      "M2": 10494.123015677831,
+      "anchor": null,
+      "approximation": 22.794219969906862,
+      "conditional": 22.663002743479446,
+      "conditional_quadrature_error": 2.8045125882481585e-11,
+      "conditional_tail_bound": 1.0512571295509007e-31,
+      "exact": null,
+      "mc": 22.651021299438174,
+      "standard_error": 0.00915766782652999,
+      "control_beta": 0.799310579744113,
+      "seed": 261505,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 22.663002743479446,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.13121722642741673,
+      "relative_error": 0.0057899311892891285,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-rate",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.35,
+        0.5
+      ],
+      "dividends": [
+        0.03,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2
+        ],
+        [
+          0.2,
+          1.0
+        ]
+      ],
+      "r": -0.015,
+      "T": 1.5,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 94.61143994579453,
+      "M2": 10494.123015677831,
+      "anchor": null,
+      "approximation": 7.850296208954023,
+      "conditional": 7.7190789825266135,
+      "conditional_quadrature_error": 3.568868251685397e-11,
+      "conditional_tail_bound": 1.0512571295509007e-31,
+      "exact": null,
+      "mc": 7.707097538485339,
+      "standard_error": 0.00915766782652999,
+      "control_beta": -0.20068942025588699,
+      "seed": 261505,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 7.7190789825266135,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.13121722642740963,
+      "relative_error": 0.016999078092663787,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-rate",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.35,
+        0.5
+      ],
+      "dividends": [
+        0.03,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2
+        ],
+        [
+          0.2,
+          1.0
+        ]
+      ],
+      "r": -0.015,
+      "T": 1.5,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 94.61143994579453,
+      "M2": 10494.123015677831,
+      "anchor": null,
+      "approximation": 13.121652126244062,
+      "conditional": 13.023077998611313,
+      "conditional_quadrature_error": 1.4022907491131685e-11,
+      "conditional_tail_bound": 1.0549936445559485e-31,
+      "exact": null,
+      "mc": 13.01575834468119,
+      "standard_error": 0.011922223359056624,
+      "control_beta": 0.6094683997927924,
+      "seed": 261505,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 13.023077998611313,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.09857412763274809,
+      "relative_error": 0.00756918814762987,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-rate",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.35,
+        0.5
+      ],
+      "dividends": [
+        0.03,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2
+        ],
+        [
+          0.2,
+          1.0
+        ]
+      ],
+      "r": -0.015,
+      "T": 1.5,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 94.61143994579453,
+      "M2": 10494.123015677831,
+      "anchor": null,
+      "approximation": 18.632829048580138,
+      "conditional": 18.534254920947404,
+      "conditional_quadrature_error": 1.6334207907161186e-12,
+      "conditional_tail_bound": 1.0549936445559485e-31,
+      "exact": null,
+      "mc": 18.526935267017276,
+      "standard_error": 0.011922223359056624,
+      "control_beta": -0.39053160020720756,
+      "seed": 261505,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 18.534254920947404,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.09857412763273388,
+      "relative_error": 0.0053184834272094455,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-rate",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.35,
+        0.5
+      ],
+      "dividends": [
+        0.03,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2
+        ],
+        [
+          0.2,
+          1.0
+        ]
+      ],
+      "r": -0.015,
+      "T": 1.5,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 94.61143994579453,
+      "M2": 10494.123015677831,
+      "anchor": null,
+      "approximation": 7.297902010469993,
+      "conditional": 7.262574491133652,
+      "conditional_quadrature_error": 1.8951508672375765e-11,
+      "conditional_tail_bound": 1.0587301595609963e-31,
+      "exact": null,
+      "mc": 7.256884330368544,
+      "standard_error": 0.012450723946127786,
+      "control_beta": 0.4297798387103033,
+      "seed": 261505,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 7.262574491133652,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.035327519336341595,
+      "relative_error": 0.004864324542140035,
+      "error_sign_established": true
+    },
+    {
+      "market": "negative-rate",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.35,
+        0.5
+      ],
+      "dividends": [
+        0.03,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2
+        ],
+        [
+          0.2,
+          1.0
+        ]
+      ],
+      "r": -0.015,
+      "T": 1.5,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 94.61143994579453,
+      "M2": 10494.123015677831,
+      "anchor": null,
+      "approximation": 33.26417961609501,
+      "conditional": 33.228852096758665,
+      "conditional_quadrature_error": 2.1736103315465714e-12,
+      "conditional_tail_bound": 1.0587301595609963e-31,
+      "exact": null,
+      "mc": 33.22316193599355,
+      "standard_error": 0.012450723946127786,
+      "control_beta": -0.5702201612896967,
+      "seed": 261505,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 33.228852096758665,
+      "reference_method": "conditional_quadrature",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.035327519336341595,
+      "relative_error": 0.0010631579819089703,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-diversified",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.2,
+        0.3,
+        0.25
+      ],
+      "dividends": [
+        0.01,
+        0.025,
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2,
+          -0.15
+        ],
+        [
+          0.2,
+          1.0,
+          0.35
+        ],
+        [
+          -0.15,
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 101.2901601167259,
+      "M2": 10515.967711028276,
+      "anchor": null,
+      "approximation": 21.06011307919904,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 21.04019089044813,
+      "standard_error": 0.0016065000965110054,
+      "control_beta": 0.9545507461799158,
+      "seed": 261506,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 21.04019089044813,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.006426000386044022,
+      "approximation_error": 0.01992218875091112,
+      "relative_error": 0.0009468634982753619,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-diversified",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.2,
+        0.3,
+        0.25
+      ],
+      "dividends": [
+        0.01,
+        0.025,
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2,
+          -0.15
+        ],
+        [
+          0.2,
+          1.0,
+          0.35
+        ],
+        [
+          -0.15,
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 101.2901601167259,
+      "M2": 10515.967711028276,
+      "anchor": null,
+      "approximation": 0.3991722853898135,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 0.379250096638895,
+      "standard_error": 0.0016065000965110054,
+      "control_beta": -0.045449253820084246,
+      "seed": 261506,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.379250096638895,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.006426000386044022,
+      "approximation_error": 0.0199221887509185,
+      "relative_error": null,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-diversified",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.2,
+        0.3,
+        0.25
+      ],
+      "dividends": [
+        0.01,
+        0.025,
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2,
+          -0.15
+        ],
+        [
+          0.2,
+          1.0,
+          0.35
+        ],
+        [
+          -0.15,
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 101.2901601167259,
+      "M2": 10515.967711028276,
+      "anchor": null,
+      "approximation": 6.7603305319820945,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 6.745860269850957,
+      "standard_error": 0.004575043673150928,
+      "control_beta": 0.6005091546048423,
+      "seed": 261506,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 6.745860269850957,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.018300174692603713,
+      "approximation_error": 0.014470262131137446,
+      "relative_error": 0.0021450580878185238,
+      "error_sign_established": false
+    },
+    {
+      "market": "three-diversified",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.2,
+        0.3,
+        0.25
+      ],
+      "dividends": [
+        0.01,
+        0.025,
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2,
+          -0.15
+        ],
+        [
+          0.2,
+          1.0,
+          0.35
+        ],
+        [
+          -0.15,
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 101.2901601167259,
+      "M2": 10515.967711028276,
+      "anchor": null,
+      "approximation": 5.50830040914303,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 5.493830147011885,
+      "standard_error": 0.004575043673150928,
+      "control_beta": -0.39949084539515767,
+      "seed": 261506,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 5.493830147011885,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.018300174692603713,
+      "approximation_error": 0.014470262131144551,
+      "relative_error": 0.0026339114504686646,
+      "error_sign_established": false
+    },
+    {
+      "market": "three-diversified",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.2,
+        0.3,
+        0.25
+      ],
+      "dividends": [
+        0.01,
+        0.025,
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2,
+          -0.15
+        ],
+        [
+          0.2,
+          1.0,
+          0.35
+        ],
+        [
+          -0.15,
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 101.2901601167259,
+      "M2": 10515.967711028276,
+      "anchor": null,
+      "approximation": 1.1991184445878058,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 1.2227932926576148,
+      "standard_error": 0.0035650645223311178,
+      "control_beta": 0.18350213729201476,
+      "seed": 261506,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 1.2227932926576148,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.014260258089324471,
+      "approximation_error": -0.023674848069809018,
+      "relative_error": -0.019361283883357082,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-diversified",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.2,
+        0.3,
+        0.25
+      ],
+      "dividends": [
+        0.01,
+        0.025,
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.2,
+          -0.15
+        ],
+        [
+          0.2,
+          1.0,
+          0.35
+        ],
+        [
+          -0.15,
+          0.35,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 101.2901601167259,
+      "M2": 10515.967711028276,
+      "anchor": null,
+      "approximation": 19.3559989927189,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 19.379673840788705,
+      "standard_error": 0.0035650645223311178,
+      "control_beta": -0.8164978627079853,
+      "seed": 261506,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 19.379673840788705,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.014260258089324471,
+      "approximation_error": -0.02367484806980613,
+      "relative_error": -0.001221632947195288,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-high-volatility",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.6,
+        0.45,
+        0.5
+      ],
+      "dividends": [
+        0.02,
+        0.01,
+        0.03
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.3,
+          0.1
+        ],
+        [
+          -0.3,
+          1.0,
+          0.25
+        ],
+        [
+          0.1,
+          0.25,
+          1.0
+        ]
+      ],
+      "r": -0.01,
+      "T": 2.5,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 92.5133926904538,
+      "M2": 11935.823807207144,
+      "anchor": null,
+      "approximation": 27.09947757399246,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 25.933497160748537,
+      "standard_error": 0.013180699245231181,
+      "control_beta": 0.8289528462350982,
+      "seed": 261507,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 25.933497160748537,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.052722796980924726,
+      "approximation_error": 1.165980413243922,
+      "relative_error": 0.04496040028911656,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-high-volatility",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.6,
+        0.45,
+        0.5
+      ],
+      "dividends": [
+        0.02,
+        0.01,
+        0.03
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.3,
+          0.1
+        ],
+        [
+          -0.3,
+          1.0,
+          0.25
+        ],
+        [
+          0.1,
+          0.25,
+          1.0
+        ]
+      ],
+      "r": -0.01,
+      "T": 2.5,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 92.5133926904538,
+      "M2": 11935.823807207144,
+      "anchor": null,
+      "approximation": 14.26930683941032,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 13.103326426166394,
+      "standard_error": 0.013180699245231181,
+      "control_beta": -0.17104715376490176,
+      "seed": 261507,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 13.103326426166394,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.052722796980924726,
+      "approximation_error": 1.1659804132439255,
+      "relative_error": 0.08898354321048944,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-high-volatility",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.6,
+        0.45,
+        0.5
+      ],
+      "dividends": [
+        0.02,
+        0.01,
+        0.03
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.3,
+          0.1
+        ],
+        [
+          -0.3,
+          1.0,
+          0.25
+        ],
+        [
+          0.1,
+          0.25,
+          1.0
+        ]
+      ],
+      "r": -0.01,
+      "T": 2.5,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 92.5133926904538,
+      "M2": 11935.823807207144,
+      "anchor": null,
+      "approximation": 18.75575356353651,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 17.736769753588934,
+      "standard_error": 0.01690286204649662,
+      "control_beta": 0.7141486143619763,
+      "seed": 261507,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 17.736769753588934,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.06761144818598648,
+      "approximation_error": 1.0189838099475743,
+      "relative_error": 0.057450360133439106,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-high-volatility",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.6,
+        0.45,
+        0.5
+      ],
+      "dividends": [
+        0.02,
+        0.01,
+        0.03
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.3,
+          0.1
+        ],
+        [
+          -0.3,
+          1.0,
+          0.25
+        ],
+        [
+          0.1,
+          0.25,
+          1.0
+        ]
+      ],
+      "r": -0.01,
+      "T": 2.5,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 92.5133926904538,
+      "M2": 11935.823807207144,
+      "anchor": null,
+      "approximation": 26.431885239442945,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 25.412901429495367,
+      "standard_error": 0.01690286204649662,
+      "control_beta": -0.2858513856380237,
+      "seed": 261507,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 25.412901429495367,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.06761144818598648,
+      "approximation_error": 1.0189838099475779,
+      "relative_error": 0.04009710629754771,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-high-volatility",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.6,
+        0.45,
+        0.5
+      ],
+      "dividends": [
+        0.02,
+        0.01,
+        0.03
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.3,
+          0.1
+        ],
+        [
+          -0.3,
+          1.0,
+          0.25
+        ],
+        [
+          0.1,
+          0.25,
+          1.0
+        ]
+      ],
+      "r": -0.01,
+      "T": 2.5,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 92.5133926904538,
+      "M2": 11935.823807207144,
+      "anchor": null,
+      "approximation": 13.020164214563172,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 12.297773191064593,
+      "standard_error": 0.01901835138052696,
+      "control_beta": 0.6044259765846115,
+      "seed": 261507,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 12.297773191064593,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.07607340552210784,
+      "approximation_error": 0.7223910234985791,
+      "relative_error": 0.05874161218255833,
+      "error_sign_established": true
+    },
+    {
+      "market": "three-high-volatility",
+      "spots": [
+        100.0,
+        80.0,
+        120.0
+      ],
+      "weights": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "volatilities": [
+        0.6,
+        0.45,
+        0.5
+      ],
+      "dividends": [
+        0.02,
+        0.01,
+        0.03
+      ],
+      "correlation": [
+        [
+          1.0,
+          -0.3,
+          0.1
+        ],
+        [
+          -0.3,
+          1.0,
+          0.25
+        ],
+        [
+          0.1,
+          0.25,
+          1.0
+        ]
+      ],
+      "r": -0.01,
+      "T": 2.5,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 92.5133926904538,
+      "M2": 11935.823807207144,
+      "anchor": null,
+      "approximation": 41.20259830095818,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": null,
+      "mc": 40.4802072774596,
+      "standard_error": 0.01901835138052696,
+      "control_beta": -0.3955740234153885,
+      "seed": 261507,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 40.4802072774596,
+      "reference_method": "mc",
+      "reference_uncertainty": 0.07607340552210784,
+      "approximation_error": 0.7223910234985809,
+      "relative_error": 0.017845536672951436,
+      "error_sign_established": true
+    },
+    {
+      "market": "single-asset",
+      "spots": [
+        100.0
+      ],
+      "weights": [
+        1.0
+      ],
+      "volatilities": [
+        0.2
+      ],
+      "dividends": [
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_asset",
+      "approximation": 22.764125453783155,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 22.764125453783183,
+      "mc": 22.768893280140222,
+      "standard_error": 0.0026329594396064786,
+      "control_beta": 0.9301584525005009,
+      "seed": 261508,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 22.764125453783183,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -2.842170943040401e-14,
+      "relative_error": -1.2485306974830691e-15,
+      "error_sign_established": false
+    },
+    {
+      "market": "single-asset",
+      "spots": [
+        100.0
+      ],
+      "weights": [
+        1.0
+      ],
+      "volatilities": [
+        0.2
+      ],
+      "dividends": [
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_asset",
+      "approximation": 0.8426120831647367,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 0.8426120831647469,
+      "mc": 0.8473799095217984,
+      "standard_error": 0.0026329594396064786,
+      "control_beta": -0.06984154749949911,
+      "seed": 261508,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.8426120831647469,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -1.021405182655144e-14,
+      "relative_error": -1.2121890998985825e-14,
+      "error_sign_established": false
+    },
+    {
+      "market": "single-asset",
+      "spots": [
+        100.0
+      ],
+      "weights": [
+        1.0
+      ],
+      "volatilities": [
+        0.2
+      ],
+      "dividends": [
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_asset",
+      "approximation": 9.227005508154054,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 9.227005508154061,
+      "mc": 9.24069188514411,
+      "standard_error": 0.005691177451394174,
+      "control_beta": 0.638794141954288,
+      "seed": 261508,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 9.227005508154061,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -7.105427357601002e-15,
+      "relative_error": -7.700686155786745e-16,
+      "error_sign_established": false
+    },
+    {
+      "market": "single-asset",
+      "spots": [
+        100.0
+      ],
+      "weights": [
+        1.0
+      ],
+      "volatilities": [
+        0.2
+      ],
+      "dividends": [
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_asset",
+      "approximation": 6.330080627549905,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 6.330080627549911,
+      "mc": 6.343767004539968,
+      "standard_error": 0.005691177451394174,
+      "control_beta": -0.36120585804571204,
+      "seed": 261508,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 6.330080627549911,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -6.217248937900877e-15,
+      "relative_error": -9.82175315562654e-16,
+      "error_sign_established": false
+    },
+    {
+      "market": "single-asset",
+      "spots": [
+        100.0
+      ],
+      "weights": [
+        1.0
+      ],
+      "volatilities": [
+        0.2
+      ],
+      "dividends": [
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_asset",
+      "approximation": 2.7117761282482475,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 2.7117761282482475,
+      "mc": 2.7224370681995413,
+      "standard_error": 0.00543059890404004,
+      "control_beta": 0.28984883801627426,
+      "seed": 261508,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 2.7117761282482475,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": 0.0,
+      "error_sign_established": false
+    },
+    {
+      "market": "single-asset",
+      "spots": [
+        100.0
+      ],
+      "weights": [
+        1.0
+      ],
+      "volatilities": [
+        0.2
+      ],
+      "dividends": [
+        0.02
+      ],
+      "correlation": [
+        [
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_asset",
+      "approximation": 18.839439737658378,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 18.839439737658378,
+      "mc": 18.85010067760968,
+      "standard_error": 0.00543059890404004,
+      "control_beta": -0.7101511619837257,
+      "seed": 261508,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 18.839439737658378,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": 0.0,
+      "error_sign_established": false
+    },
+    {
+      "market": "perfect-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.2
+      ],
+      "dividends": [
+        0.01,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 102.02013400267558,
+      "M2": 10832.870676749584,
+      "anchor": "proportional",
+      "approximation": 22.318548020384377,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 22.31854802038435,
+      "mc": 22.32148540631641,
+      "standard_error": 0.0027943848472919805,
+      "control_beta": 0.9210972186242978,
+      "seed": 261509,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 22.31854802038435,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 2.842170943040401e-14,
+      "relative_error": 1.2734569204253528e-15,
+      "error_sign_established": false
+    },
+    {
+      "market": "perfect-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.2
+      ],
+      "dividends": [
+        0.01,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 102.02013400267558,
+      "M2": 10832.870676749584,
+      "anchor": "proportional",
+      "approximation": 0.9492073293482203,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 0.9492073293482134,
+      "mc": 0.9521447152802622,
+      "standard_error": 0.0027943848472919805,
+      "control_beta": -0.07890278137570217,
+      "seed": 261509,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.9492073293482134,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 6.8833827526759706e-15,
+      "relative_error": 7.25171681660164e-15,
+      "error_sign_established": false
+    },
+    {
+      "market": "perfect-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.2
+      ],
+      "dividends": [
+        0.01,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 102.02013400267558,
+      "M2": 10832.870676749584,
+      "anchor": "proportional",
+      "approximation": 8.827321225352126,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 8.827321225352126,
+      "mc": 8.828577087349837,
+      "standard_error": 0.0058253779465278505,
+      "control_beta": 0.6183149379465499,
+      "seed": 261509,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 8.827321225352126,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": 0.0,
+      "error_sign_established": false
+    },
+    {
+      "market": "perfect-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.2
+      ],
+      "dividends": [
+        0.01,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 102.02013400267558,
+      "M2": 10832.870676749584,
+      "anchor": "proportional",
+      "approximation": 6.866891205286136,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 6.86689120528615,
+      "mc": 6.8681470672838545,
+      "standard_error": 0.0058253779465278505,
+      "control_beta": -0.3816850620534501,
+      "seed": 261509,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 6.86689120528615,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -1.3322676295501878e-14,
+      "relative_error": -1.9401321350840755e-15,
+      "error_sign_established": false
+    },
+    {
+      "market": "perfect-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.2
+      ],
+      "dividends": [
+        0.01,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 102.02013400267558,
+      "M2": 10832.870676749584,
+      "anchor": "proportional",
+      "approximation": 2.521583917935707,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 2.5215839179357102,
+      "mc": 2.528251668175756,
+      "standard_error": 0.005368665041193795,
+      "control_beta": 0.27163084416456135,
+      "seed": 261509,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 2.5215839179357102,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -3.1086244689504383e-15,
+      "relative_error": -1.2328062718195425e-15,
+      "error_sign_established": false
+    },
+    {
+      "market": "perfect-correlation",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.2,
+        0.2
+      ],
+      "dividends": [
+        0.01,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "r": 0.03,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 102.02013400267558,
+      "M2": 10832.870676749584,
+      "anchor": "proportional",
+      "approximation": 19.970064568839888,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 19.970064568839888,
+      "mc": 19.976732319079936,
+      "standard_error": 0.005368665041193795,
+      "control_beta": -0.7283691558354386,
+      "seed": 261509,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 19.970064568839888,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": 0.0,
+      "error_sign_established": false
+    },
+    {
+      "market": "singular-single-exposure",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        1.0,
+        0.0
+      ],
+      "volatilities": [
+        0.2,
+        0.4
+      ],
+      "dividends": [
+        0.02,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          -1.0
+        ],
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_nonzero_weight",
+      "approximation": 22.764125453783155,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 22.764125453783183,
+      "mc": 22.762808863650402,
+      "standard_error": 0.0026201267555379863,
+      "control_beta": 0.9288974560120512,
+      "seed": 261510,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 22.764125453783183,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -2.842170943040401e-14,
+      "relative_error": -1.2485306974830691e-15,
+      "error_sign_established": false
+    },
+    {
+      "market": "singular-single-exposure",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        1.0,
+        0.0
+      ],
+      "volatilities": [
+        0.2,
+        0.4
+      ],
+      "dividends": [
+        0.02,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          -1.0
+        ],
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_nonzero_weight",
+      "approximation": 0.8426120831647367,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 0.8426120831647469,
+      "mc": 0.8412954930319785,
+      "standard_error": 0.0026201267555379863,
+      "control_beta": -0.0711025439879488,
+      "seed": 261510,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.8426120831647469,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -1.021405182655144e-14,
+      "relative_error": -1.2121890998985825e-14,
+      "error_sign_established": false
+    },
+    {
+      "market": "singular-single-exposure",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        1.0,
+        0.0
+      ],
+      "volatilities": [
+        0.2,
+        0.4
+      ],
+      "dividends": [
+        0.02,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          -1.0
+        ],
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_nonzero_weight",
+      "approximation": 9.227005508154054,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 9.227005508154061,
+      "mc": 9.222841555520356,
+      "standard_error": 0.005679342477690841,
+      "control_beta": 0.6362986640254343,
+      "seed": 261510,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 9.227005508154061,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -7.105427357601002e-15,
+      "relative_error": -7.700686155786745e-16,
+      "error_sign_established": false
+    },
+    {
+      "market": "singular-single-exposure",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        1.0,
+        0.0
+      ],
+      "volatilities": [
+        0.2,
+        0.4
+      ],
+      "dividends": [
+        0.02,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          -1.0
+        ],
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_nonzero_weight",
+      "approximation": 6.330080627549905,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 6.330080627549911,
+      "mc": 6.325916674916213,
+      "standard_error": 0.005679342477690841,
+      "control_beta": -0.36370133597456566,
+      "seed": 261510,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 6.330080627549911,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": -6.217248937900877e-15,
+      "relative_error": -9.82175315562654e-16,
+      "error_sign_established": false
+    },
+    {
+      "market": "singular-single-exposure",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        1.0,
+        0.0
+      ],
+      "volatilities": [
+        0.2,
+        0.4
+      ],
+      "dividends": [
+        0.02,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          -1.0
+        ],
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_nonzero_weight",
+      "approximation": 2.7117761282482475,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 2.7117761282482475,
+      "mc": 2.709881782262017,
+      "standard_error": 0.005413095415701983,
+      "control_beta": 0.2865319212585233,
+      "seed": 261510,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 2.7117761282482475,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": 0.0,
+      "error_sign_established": false
+    },
+    {
+      "market": "singular-single-exposure",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        1.0,
+        0.0
+      ],
+      "volatilities": [
+        0.2,
+        0.4
+      ],
+      "dividends": [
+        0.02,
+        0.01
+      ],
+      "correlation": [
+        [
+          1.0,
+          -1.0
+        ],
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "r": 0.05,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 103.0454533953517,
+      "M2": 11051.70918075648,
+      "anchor": "single_nonzero_weight",
+      "approximation": 18.839439737658378,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 18.839439737658378,
+      "mc": 18.837545391672155,
+      "standard_error": 0.005413095415701983,
+      "control_beta": -0.7134680787414767,
+      "seed": 261510,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 18.839439737658378,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": 0.0,
+      "error_sign_established": false
+    },
+    {
+      "market": "cash-basket",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.0,
+        0.0
+      ],
+      "dividends": [
+        0.0,
+        0.0
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.3
+        ],
+        [
+          0.3,
+          1.0
+        ]
+      ],
+      "r": 0.0,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "call",
+      "M1": 100.0,
+      "M2": 10000.0,
+      "anchor": "deterministic",
+      "approximation": 20.0,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 20.0,
+      "mc": 20.0,
+      "standard_error": 0.0,
+      "control_beta": 0.0,
+      "seed": 261511,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 20.0,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": 0.0,
+      "error_sign_established": false
+    },
+    {
+      "market": "cash-basket",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.0,
+        0.0
+      ],
+      "dividends": [
+        0.0,
+        0.0
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.3
+        ],
+        [
+          0.3,
+          1.0
+        ]
+      ],
+      "r": 0.0,
+      "T": 1.0,
+      "K": 80.0,
+      "kind": "put",
+      "M1": 100.0,
+      "M2": 10000.0,
+      "anchor": "deterministic",
+      "approximation": 0.0,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 0.0,
+      "mc": 0.0,
+      "standard_error": 0.0,
+      "control_beta": -1.0,
+      "seed": 261511,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.0,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": null,
+      "error_sign_established": false
+    },
+    {
+      "market": "cash-basket",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.0,
+        0.0
+      ],
+      "dividends": [
+        0.0,
+        0.0
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.3
+        ],
+        [
+          0.3,
+          1.0
+        ]
+      ],
+      "r": 0.0,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "call",
+      "M1": 100.0,
+      "M2": 10000.0,
+      "anchor": "deterministic",
+      "approximation": 0.0,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 0.0,
+      "mc": 0.0,
+      "standard_error": 0.0,
+      "control_beta": 0.0,
+      "seed": 261511,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.0,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": null,
+      "error_sign_established": false
+    },
+    {
+      "market": "cash-basket",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.0,
+        0.0
+      ],
+      "dividends": [
+        0.0,
+        0.0
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.3
+        ],
+        [
+          0.3,
+          1.0
+        ]
+      ],
+      "r": 0.0,
+      "T": 1.0,
+      "K": 100.0,
+      "kind": "put",
+      "M1": 100.0,
+      "M2": 10000.0,
+      "anchor": "deterministic",
+      "approximation": 0.0,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 0.0,
+      "mc": 0.0,
+      "standard_error": 0.0,
+      "control_beta": -1.0,
+      "seed": 261511,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.0,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": null,
+      "error_sign_established": false
+    },
+    {
+      "market": "cash-basket",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.0,
+        0.0
+      ],
+      "dividends": [
+        0.0,
+        0.0
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.3
+        ],
+        [
+          0.3,
+          1.0
+        ]
+      ],
+      "r": 0.0,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "call",
+      "M1": 100.0,
+      "M2": 10000.0,
+      "anchor": "deterministic",
+      "approximation": 0.0,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 0.0,
+      "mc": 0.0,
+      "standard_error": 0.0,
+      "control_beta": 0.0,
+      "seed": 261511,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 0.0,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": null,
+      "error_sign_established": false
+    },
+    {
+      "market": "cash-basket",
+      "spots": [
+        100.0,
+        80.0
+      ],
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "volatilities": [
+        0.0,
+        0.0
+      ],
+      "dividends": [
+        0.0,
+        0.0
+      ],
+      "correlation": [
+        [
+          1.0,
+          0.3
+        ],
+        [
+          0.3,
+          1.0
+        ]
+      ],
+      "r": 0.0,
+      "T": 1.0,
+      "K": 120.0,
+      "kind": "put",
+      "M1": 100.0,
+      "M2": 10000.0,
+      "anchor": "deterministic",
+      "approximation": 20.0,
+      "conditional": null,
+      "conditional_quadrature_error": null,
+      "conditional_tail_bound": null,
+      "exact": 20.0,
+      "mc": 20.0,
+      "standard_error": 0.0,
+      "control_beta": -1.0,
+      "seed": 261511,
+      "paths": 1000000,
+      "pilot_paths": 20000,
+      "reference": 20.0,
+      "reference_method": "analytic",
+      "reference_uncertainty": 1e-10,
+      "approximation_error": 0.0,
+      "relative_error": 0.0,
+      "error_sign_established": false
+    }
+  ]
+}

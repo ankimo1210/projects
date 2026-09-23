@@ -1,0 +1,150 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-19T01:39:17.534012+00:00",
+  "scope": "Section 26.15 M7 acceptance: independent references, public pricing API, six teaching subsections, four shared figures, saved notebook, Book/portal, and shared-section regressions.",
+  "whole_suite": {
+    "status": "PASS",
+    "scope": "johnhull/hullkit/tests + johnhull/report/tests",
+    "passed": 2585,
+    "skipped": 6,
+    "warnings": 2,
+    "seconds": 51.82,
+    "command": "PYTHONPATH=<worktree>/johnhull/hullkit/src:<worktree>/johnhull/report:<worktree>/johnhull/scripts /home/kazumasa/projects/.venv/bin/python -m pytest -q johnhull/hullkit/tests johnhull/report/tests",
+    "notes": [
+      "Six skips are the accepted lookback upper-bound rows at r=q.",
+      "Two warnings are existing japanize_matplotlib/distutils deprecations."
+    ]
+  },
+  "focused_delivery": {
+    "status": "PASS",
+    "passed": 429,
+    "evidence": "docs/validation/section-26-15/delivery-m7-check.json"
+  },
+  "accepted_section_rechecks": {
+    "status": "PASS",
+    "sections": [
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14"
+    ],
+    "passed": 1167,
+    "skipped": 6,
+    "browser": "PASS on Book and portal for all six sections"
+  },
+  "browser": {
+    "status": "PASS",
+    "chromium": "141.0.7390.37",
+    "surfaces": [
+      "portal",
+      "book"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "states_per_width_surface": 10,
+    "states_checked": 40,
+    "screenshots": 18,
+    "negative_control": "Approximation at K=100 mutated by +0.5 currency, rejected and restored on both surfaces.",
+    "book_math_typeset": 51,
+    "book_math_errors": 0,
+    "portal_external_requests": 0
+  },
+  "notebook": {
+    "status": "PASS",
+    "cells": 102,
+    "code_cells": 44,
+    "output_cells": 41,
+    "outside_section_cells_preserved": 91,
+    "saved_plotly_figures_exact": 4,
+    "evidence": "docs/validation/section-26-15/notebook-m7-check.json"
+  },
+  "measurements": {
+    "reference_rows": 72,
+    "ordinary_rows": 48,
+    "analytic_anchor_rows": 24,
+    "mc_anchor_rows": 54,
+    "max_mc_standard_errors": 2.404841020499905,
+    "max_mc_standard_error": 0.020887601334837552,
+    "max_absolute_approximation_error": 6.417394632030479,
+    "relative_error_scope": "63 rows with reference price >= 0.5",
+    "min_signed_relative_error": -0.019361283883357082,
+    "max_signed_relative_error": 0.6683779332970005
+  },
+  "review": {
+    "task_1": "Approved, no Critical/Important/Minor",
+    "task_2": "Important findings fixed and scoped re-review clean. Final review corrected the deferred premise: pytest 9.0.3 disables relative tolerance when abs is supplied; rel=0.0 only makes the existing absolute-only contract explicit.",
+    "task_3": "Approved; two Minors resolved in Task 4.",
+    "task_4": "Approved, no Critical/Important; duplicate prior-section captures are evidence-size Minor only."
+  },
+  "gates": {
+    "ledger": "PASS",
+    "ledger_artifacts": "PASS",
+    "release_strict": "PASS",
+    "ruff": "PASS",
+    "diff_check": "PASS",
+    "format_scope": "Task 4 scoped seven-file format check PASS. A full M7 diff check would reformat five reviewed files: the Task 4 notebook builder plus four Task 1/2 files; this is not a required final gate."
+  },
+  "limitations": [
+    "Synthetic constant-parameter correlated-GBM markets; no market-performance or production-readiness claim.",
+    "The moment-matched Black price is generally approximate and the measured range is not a universal error bound.",
+    "Monte Carlo references carry sampling error; the quadrature estimate covers a finite interval with a separate tail bound.",
+    "Short baskets, stochastic volatility, jumps, time-varying correlation, cash dividends, rebalancing, and expiry zero are outside scope.",
+    "One hundred duplicate prior-section recheck captures (6.83 MiB) remain as a repository-size Minor after cleanup was rejected before execution."
+  ],
+  "historical_records_unchanged": true,
+  "pinning_note": "State-count and figure-count assertion tests are not pinned in this record because their expected metadata changes when a section or figure is registered.",
+  "source_sha256": {
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/src/hullkit/_basket_lesson.py": "9756e01ac64ba426050e5560bc496ebc96f1a33444db72a7d9881519c67f96d5",
+    "hullkit/tests/test_basket_reference.py": "2304492027841179924a9d633aae283e0c7f9d4cbf54ccf56c7b37cb4fddff80",
+    "hullkit/tests/test_basket_pricing.py": "9a54a1320ad67e5b8a7412bcda1bc141cf4bb6eb2f14e281a4d6e75edf1e0e60",
+    "hullkit/tests/test_basket_lesson.py": "9aa8fcd7a12c4362c983c785a34db33c1538694e3eeea43af86060ee8c6c14aa",
+    "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
+    "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b",
+    "scripts/build_basket_browser_reference.py": "5d1f778c70698d389a82c37a541c20ca9d668b78376d83ae0a884f2933cd835a",
+    "scripts/verify_basket_notebook.py": "adb840c569723e9987236c9c6b047670ca50bae918291435680a3ddbbd71e525",
+    "scripts/verify_basket_lesson_browser.cjs": "3dccf81e8a103dafe9de22ba647820654e81589412c5907f71d30556a7d87c4a",
+    "scripts/recheck_exotics_m7.cjs": "e1386b0756523b4c1985821ded3496fa904bf81a14f1e7bf76ebfe8e4e5538ce",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "dd537ca6dbf0fc48e689c576aae1f4407c063ac3d606b0653c1f72f0fefaf07b",
+    "volumes/10_exotics_martingales/exotics.ipynb": "43b167b5d2c2d5ecc7d1d0ca76d18b0642ece19b23aedd08822e31182e53939a",
+    "report/report_builder/figures.py": "0741b2d798369421c2e48e5052036f99222449d71faf61b13b472cc6d4557acc",
+    "report/assets/style.css": "9c018e8abf6c6198a441a639bd6570548851268021428452f6ccfe5113727adf",
+    "release_manifest.json": "c2adaab524c450e63985130d279f2262c41118802d78215328c8cdd15e2c44b1"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
+    "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
+    "docs/validation/section-26-15/lesson-data.json": "ad34be99d7968c57fe275de52312f0675f9f9fb460f97a0a6cc512077680ffc3",
+    "docs/validation/section-26-15/browser-reference.json": "7aa23b3418cf81b71ad1fb003b083b73c8ab9266b830baa1c49f01c44298ea2f",
+    "docs/validation/section-26-15/browser-m7-check.json": "62f68577aa86affc6c84e19c34165c51a6c25519319a706bf836671caa3927e0",
+    "docs/validation/section-26-15/notebook-m7-check.json": "e736b49fbf40c2fc5cc256433b699f703109e1acce886784ac62d0c52bf9e8e2",
+    "docs/validation/section-26-15/delivery-m7-check.json": "e60b3cbd3f2cbab7cbcd21601317529538b17899ae1aea27d34a0537eeab8fd0",
+    "docs/validation/section-26-15/book-build-m7-check.json": "55fff2bc435443b72d44043470fe0fd6858140793b4d0337f5b4afca727ea65d",
+    "report/site/exotics.html": "92ba7a166fdd59d77de8fa02d841844ad0fae1bd67e823744c718359060452fc",
+    "report/site/assets/style.css": "9c018e8abf6c6198a441a639bd6570548851268021428452f6ccfe5113727adf",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "902989a4c8807e6dc9ae39fac36d985ff6c61e90122b2c61791a047a02d2a04b",
+    "docs/validation/section-26-15/book-basket-formula-example-1000.png": "14436491573372a787c20b77fdfc4de3db445d957f02e2ad36442ee4af88a0be",
+    "docs/validation/section-26-15/book-basket-formula-example-1440.png": "4385da25d7c1e4ab04c2cc0cf67e516df290ea1d6c1403d90cecdc464a78c7b9",
+    "docs/validation/section-26-15/book-basket_comparison-1000.png": "f7350810a847d199d5aa202636e7a768eaf3a0f199183c715fc4e1cbfca8c4a6",
+    "docs/validation/section-26-15/book-basket_comparison-1440.png": "f8c81b1a6bf3a0ed2a1102fdeb12f8e43ca647faea6708e06c274388f4e4b37a",
+    "docs/validation/section-26-15/book-basket_correlation-1000.png": "856c8ac317cb42bbf33d78e6756fcec97d0aea4d96897b6a336907c0181ae33d",
+    "docs/validation/section-26-15/book-basket_correlation-1440.png": "d703254441f19e45c629b75bb054a7578f44553180fb95e90baada68f8a063f3",
+    "docs/validation/section-26-15/book-basket_error-1000.png": "105d4578ccdc6ad268fbc945ae241b0fa4556ef0e13467ddba8874d12fb038cf",
+    "docs/validation/section-26-15/book-basket_error-1440.png": "d4fcf52842a7ff0a4f7fbb741cb4378388e16ce547906667f91514c3fde7ab94",
+    "docs/validation/section-26-15/book-basket_payoff-1000.png": "eb71fcdba46a22a94cf077298f234be6232342a90d44f2048c581fdb8b02e3e2",
+    "docs/validation/section-26-15/book-basket_payoff-1440.png": "6f2a00b18d9e1781cf035267b646afa1fb4f6e6ed2914a5afe7aadff27dd8aec",
+    "docs/validation/section-26-15/portal-basket_comparison-1000.png": "66017fc7c14815a0c2047a373100c5fa0e2ab9cdf107498a129d6a91279cab0e",
+    "docs/validation/section-26-15/portal-basket_comparison-1440.png": "bba286fbcd2a87bdc6a361640aacbd44e08f1bffd70549cfec09ff88f3492171",
+    "docs/validation/section-26-15/portal-basket_correlation-1000.png": "3eae2118e010426fbd9fc2eba4972562fcdde0bc6a3e46bad16833bf1f2c77d9",
+    "docs/validation/section-26-15/portal-basket_correlation-1440.png": "fb09eb06fe27117de1ec80e59947e51456693c92496738279532790f78748182",
+    "docs/validation/section-26-15/portal-basket_error-1000.png": "abe6d2dc1b0331d351918262eeae16ab70bdee7fb41a62256157446c3dbd2825",
+    "docs/validation/section-26-15/portal-basket_error-1440.png": "f6a9b01a2cf2544dbf1b80c611dbe2594a38f16c33475e4070ed2f755e078457",
+    "docs/validation/section-26-15/portal-basket_payoff-1000.png": "8b5efdc1690391dada608b45e5de2ce0db2330a90ec6b0eab5c5340668ccc159",
+    "docs/validation/section-26-15/portal-basket_payoff-1440.png": "cd5307c7d2b060d8322c94dd99a06ae87a7989e12348a15b376da04a941eda17"
+  }
+}

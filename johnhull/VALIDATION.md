@@ -10,6 +10,21 @@
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
+## Section 26.15 M7 — 2026-09-19
+
+[受入ノート](docs/SECTION_26_15_ACCEPTANCE_2026-09-19.md)と
+[統合記録](docs/validation/section-26-15/m7-check.json)へ、BSK01–BSK06の5軸を集約する。
+
+- 独立72価格（通常48・解析アンカー24）。54確率的アンカー行のMC差は最大2.404841 SE、最大SE 0.02088760通貨。最大絶対近似誤差6.41739463通貨、参照価格0.5以上63行の相対誤差は−1.9361%〜+66.8378%。
+- 公開API `basket_moments` / `basket_option_price`、本文6小節、保存データ駆動の共有4図を追加。一般basketの価格はモーメント整合近似であり、解析的に厳密とは扱わない。
+- vol10は102セル。§4.5外の91セルを基点と照合し、保存4図のdata/layoutを現builderと完全一致させた。
+- Chromium 141でBook/portal×1440/1000px×全10状態＝40状態を独立参照と照合。18画像、MathJax 51要素・エラー0、両面JS/page error 0、portal外部要求0。
+- 共有ソースの影響を受ける§26.9–§26.14は1,167 passed / 6 skipped、両画面再検証PASS。過去証跡は変更していない。
+- Task 1–4の独立レビューはCritical/Importantなし。johnhull全体は **2,585 passed / 6 skipped / 2 warnings（51.82秒）**。
+- 台帳は受入7・不足0・未評価299。測定範囲は合成市場に限られ、全域の誤差上界・実市場性能・production readinessを意味しない。
+
+以下は各実施時点の履歴。
+
 ## Section 26.12 M4b — 2026-09-16
 
 [受入ノート](docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md)と[統合記録](docs/validation/section-26-12/m4b-check.json)へ、S01–S06の証跡を集約する。

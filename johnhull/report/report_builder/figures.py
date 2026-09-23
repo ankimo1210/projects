@@ -17,6 +17,7 @@ from dataclasses import dataclass
 
 from hullkit import plotly_viz as pv
 from hullkit._asian_lesson import _figures as asian_lesson_figures
+from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
@@ -651,6 +652,42 @@ FIGURES: list[FigureSpec] = [
         "Rubinstein の読み替えによる V/U 上の二項木（1024ステップ）。q_V=0 と q_V>0 を比べる。",
         lambda: exchange_lesson_figures()["exchange_american"],
         practice="受け取る資産に配当がなければ早期行使に価値はない。木は有限格子なので、同じ格子で行使判定を外した価格と比べて離散化と早期行使を分離している。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "basket_payoff",
+        "exotics",
+        "バスケットの満期給付",
+        "B_T=0.6 S₁(T)+0.5 S₂(T)。コール max(B_T−K,0) とプット max(K−B_T,0) を切り替える。",
+        lambda: basket_lesson_figures()["basket_payoff"],
+        practice="非負の保有量は単位なし、資産価格・行使価格・給付は通貨単位。ゼロ給付はゼロ保有量を意味しない。CBOT の受渡選択権はレインボーの文脈であり、印刷されたバスケット価格例ではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "basket_correlation",
+        "exotics",
+        "相関・厳密なモーメントと近似分布",
+        "Fᵢ=wᵢSᵢexp((r−qᵢ)T)、M₁=ΣFᵢ、M₂=ΣᵢΣⱼFᵢFⱼexp(ρᵢⱼσᵢσⱼT)。相関だけを変えた3市場。",
+        lambda: basket_lesson_figures()["basket_correlation"],
+        practice="M₁・M₂ は相関 GBM 下で厳密。σ̂²=log(M₂/M₁²)/T を使う Black 価格は近似で、和の分布は一般に対数正規ではない。左軸は通貨の二乗、右軸は年率ボラ（%）。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "basket_comparison",
+        "exotics",
+        "近似価格と独立な価格参照",
+        "Black 近似 C=e⁻ʳᵀ[M₁N(d₁)−KN(d₂)] と条件付き積分、独立 MC（±4SE）を同じ行使価格で比較する。",
+        lambda: basket_lesson_figures()["basket_comparison"],
+        practice="d₁=log(M₁/K)/(σ̂√T)+σ̂√T/2、d₂=d₁−σ̂√T。2資産は条件付き積分、3資産は MC を参照する。条件付き積分・解析参照は自身の数値誤差で符号を判定でき、MC の誤差棒内でも符号が確定する場合がある。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "basket_error",
+        "exotics",
+        "観測された誤差と適用範囲",
+        "K=100 の絶対相対差と4SEを比較する。斜線は MC だけを参照し |gap|≤4SE となる符号未確定の点。",
+        lambda: basket_lesson_figures()["basket_error"],
+        practice="保存72行のうち参照価格0.5以上の63行で最大絶対相対誤差66.8378%。普遍的な誤差上限ではない。定数パラメータ・非負保有量・正半定値相関行列の範囲で使い、短期や低ボラでも精度を自動保証しない。",
         is_new=True,
     ),
     FigureSpec(
