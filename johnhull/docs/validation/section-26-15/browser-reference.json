@@ -1,0 +1,257 @@
+{
+  "method": "Independent payoff algebra, direct-loop GBM moments and Black proxy; frozen M7a conditional/MC prices. No lesson or hullkit imports.",
+  "source_sha256": {
+    "scripts/build_basket_browser_reference.py": "5d1f778c70698d389a82c37a541c20ca9d668b78376d83ae0a884f2933cd835a",
+    "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
+    "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
+    "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea"
+  },
+  "payoff": {
+    "weights": [
+      0.6,
+      0.5
+    ],
+    "strike": 100.0,
+    "terminals": [
+      [
+        90.0,
+        60.0
+      ],
+      [
+        100.0,
+        80.0
+      ],
+      [
+        115.0,
+        90.0
+      ],
+      [
+        120.0,
+        120.0
+      ]
+    ],
+    "labels": [
+      "S₁(T)=90, S₂(T)=60",
+      "S₁(T)=100, S₂(T)=80",
+      "S₁(T)=115, S₂(T)=90",
+      "S₁(T)=120, S₂(T)=120"
+    ],
+    "basket": [
+      84.0,
+      100.0,
+      114.0,
+      132.0
+    ],
+    "call": [
+      0,
+      0.0,
+      14.0,
+      32.0
+    ],
+    "put": [
+      16.0,
+      0.0,
+      0,
+      0
+    ]
+  },
+  "correlation": [
+    {
+      "market": "negative-correlation",
+      "rho": -0.65,
+      "M1": 101.41258123598138,
+      "M2": 10401.375125012624,
+      "sigma_percent": 10.629667170601282,
+      "cross_covariance": -188.24436605552128
+    },
+    {
+      "market": "baseline",
+      "rho": 0.35,
+      "M1": 101.41258123598138,
+      "M2": 10694.064085144184,
+      "sigma_percent": 19.761019858563415,
+      "cross_covariance": 104.44459407604002
+    },
+    {
+      "market": "high-correlation",
+      "rho": 0.9,
+      "M1": 101.41258123598138,
+      "M2": 10862.687658488396,
+      "sigma_percent": 23.38690396414229,
+      "cross_covariance": 273.06816742025217
+    }
+  ],
+  "comparison": {
+    "baseline-call": [
+      {
+        "K": 80.0,
+        "approximation": 21.74524440349604,
+        "reference": 21.725376917397654,
+        "mc": 21.723069893049004,
+        "four_se": 0.01102363250556909
+      },
+      {
+        "K": 100.0,
+        "approximation": 8.39675442015023,
+        "reference": 8.381800132136227,
+        "mc": 8.379045871982607,
+        "four_se": 0.023007758885369413
+      },
+      {
+        "K": 120.0,
+        "approximation": 2.312778645184455,
+        "reference": 2.3246737717264616,
+        "mc": 2.325158102803914,
+        "four_se": 0.0208388130009418
+      }
+    ],
+    "long-high-volatility-call": [
+      {
+        "K": 80.0,
+        "approximation": 38.24081727322451,
+        "reference": 31.823422641194043,
+        "mc": 31.838703508249676,
+        "four_se": 0.046918919723319324
+      },
+      {
+        "K": 100.0,
+        "approximation": 30.56635905243956,
+        "reference": 24.209285597481568,
+        "mc": 24.221948044828913,
+        "four_se": 0.0676215987180592
+      },
+      {
+        "K": 120.0,
+        "approximation": 24.65319241223508,
+        "reference": 19.1397188048788,
+        "mc": 19.151327093378338,
+        "four_se": 0.08355040533935021
+      }
+    ],
+    "baseline-put": [
+      {
+        "K": 80.0,
+        "approximation": 0.9655005812933214,
+        "reference": 0.9456330951949166,
+        "mc": 0.9433260708462825,
+        "four_se": 0.01102363250556909
+      },
+      {
+        "K": 100.0,
+        "approximation": 7.025921268917664,
+        "reference": 7.0109669809036586,
+        "mc": 7.0082127207500475,
+        "four_se": 0.023007758885369413
+      },
+      {
+        "K": 120.0,
+        "approximation": 20.350856164922064,
+        "reference": 20.362751291464054,
+        "mc": 20.36323562254152,
+        "four_se": 0.0208388130009418
+      }
+    ]
+  },
+  "error": {
+    "call": [
+      {
+        "market": "baseline",
+        "reference_method": "conditional_quadrature",
+        "gap": 0.014954288014003225,
+        "four_se": 0.023007758885369413,
+        "gap_percent": 0.1784137986858904,
+        "four_se_percent": 0.2744966298725801,
+        "sign_established": true
+      },
+      {
+        "market": "long-high-volatility",
+        "reference_method": "conditional_quadrature",
+        "gap": 6.357073454957991,
+        "four_se": 0.0676215987180592,
+        "gap_percent": 26.258823001449088,
+        "four_se_percent": 0.2793209177766638,
+        "sign_established": true
+      },
+      {
+        "market": "three-diversified",
+        "reference_method": "mc",
+        "gap": 0.014470262131137446,
+        "four_se": 0.018300174692603713,
+        "gap_percent": 0.21450580878185238,
+        "four_se_percent": 0.27128007341616694,
+        "sign_established": false
+      },
+      {
+        "market": "three-high-volatility",
+        "reference_method": "mc",
+        "gap": 1.0189838099475743,
+        "four_se": 0.06761144818598648,
+        "gap_percent": 5.745036013343911,
+        "four_se_percent": 0.3811936960635444,
+        "sign_established": true
+      }
+    ],
+    "put": [
+      {
+        "market": "baseline",
+        "reference_method": "conditional_quadrature",
+        "gap": 0.01495428801400589,
+        "four_se": 0.023007758885369413,
+        "gap_percent": 0.213298508675595,
+        "four_se_percent": 0.32816812499670184,
+        "sign_established": true
+      },
+      {
+        "market": "long-high-volatility",
+        "reference_method": "conditional_quadrature",
+        "gap": 6.35707345495798,
+        "four_se": 0.0676215987180592,
+        "gap_percent": 31.368274838688105,
+        "four_se_percent": 0.33367128894274845,
+        "sign_established": true
+      },
+      {
+        "market": "three-diversified",
+        "reference_method": "mc",
+        "gap": 0.014470262131144551,
+        "four_se": 0.018300174692603713,
+        "gap_percent": 0.26339114504686645,
+        "four_se_percent": 0.33310412231359654,
+        "sign_established": false
+      },
+      {
+        "market": "three-high-volatility",
+        "reference_method": "mc",
+        "gap": 1.0189838099475779,
+        "four_se": 0.06761144818598648,
+        "gap_percent": 4.009710629754771,
+        "four_se_percent": 0.2660516681795081,
+        "sign_established": true
+      }
+    ]
+  },
+  "notebook": {
+    "M1": 101.41258123598138,
+    "M2": 10694.064085144184,
+    "sigma": 0.19761019858563414,
+    "call": 8.39675442015023,
+    "put": 7.025921268917664,
+    "parity": 1.3708331512325593
+  },
+  "summary": {
+    "rows": 72,
+    "relative_rows": 63,
+    "price_floor": 0.5,
+    "max_relative_percent": 66.83779332969978,
+    "max_absolute": 6.417394632030465
+  },
+  "deterministic_sign_inside_mc_bar": {
+    "market": "baseline",
+    "K": 100.0,
+    "kind": "call",
+    "gap": 0.014954288014003225,
+    "reference_uncertainty": 1e-10,
+    "four_se": 0.023007758885369413,
+    "explanation": "MC uncertainty belongs to the sampled estimate. A conditional or analytic reference uses its own numerical error and can establish a sign inside the MC bar."
+  }
+}

@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "section": "26.15",
+  "payoff": {
+    "units": {
+      "money": "currency",
+      "time": "years",
+      "rates": "continuous per year",
+      "volatility": "annualized"
+    },
+    "method": "Literal two-asset terminal states and European basket call/put payoffs",
+    "limitations": [
+      "Synthetic constant-parameter correlated-GBM markets; values are in currency.",
+      "Moment matching is an approximation except for exact lognormal anchors.",
+      "Recorded Monte Carlo uncertainty is four standard errors, not a universal bound."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+      "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
+      "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
+      "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
+      "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b"
+    },
+    "data": {
+      "weights": [
+        0.6,
+        0.5
+      ],
+      "strike": 100.0,
+      "rows": [
+        {
+          "terminal_assets": [
+            90.0,
+            60.0
+          ],
+          "basket_terminal": 84.0,
+          "call": 0.0,
+          "put": 16.0
+        },
+        {
+          "terminal_assets": [
+            100.0,
+            80.0
+          ],
+          "basket_terminal": 100.0,
+          "call": 0.0,
+          "put": 0.0
+        },
+        {
+          "terminal_assets": [
+            115.0,
+            90.0
+          ],
+          "basket_terminal": 114.0,
+          "call": 14.0,
+          "put": 0.0
+        },
+        {
+          "terminal_assets": [
+            120.0,
+            120.0
+          ],
+          "basket_terminal": 132.0,
+          "call": 32.0,
+          "put": 0.0
+        }
+      ]
+    }
+  },
+  "correlation": {
+    "units": {
+      "money": "currency",
+      "time": "years",
+      "rates": "continuous per year",
+      "volatility": "annualized"
+    },
+    "method": "Frozen otherwise-identical markets isolate rho in the cross covariance and matched volatility",
+    "limitations": [
+      "Synthetic constant-parameter correlated-GBM markets; values are in currency.",
+      "Moment matching is an approximation except for exact lognormal anchors.",
+      "Recorded Monte Carlo uncertainty is four standard errors, not a universal bound."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+      "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
+      "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
+      "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
+      "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b"
+    },
+    "data": {
+      "strike": 100.0,
+      "kind": "call",
+      "entries": [
+        {
+          "market": "negative-correlation",
+          "spots": [
+            100.0,
+            80.0
+          ],
+          "weights": [
+            0.6,
+            0.5
+          ],
+          "volatilities": [
+            0.2,
+            0.3
+          ],
+          "dividends": [
+            0.01,
+            0.025
+          ],
+          "rate": 0.03,
+          "expiry": 1.0,
+          "rho": -0.65,
+          "first_moment": 101.41258123598138,
+          "second_moment": 10401.375125012622,
+          "cross_second_moment": 4733.268212461737,
+          "cross_covariance_contribution": -188.2443660555209,
+          "matched_volatility": 0.10629667170601179
+        },
+        {
+          "market": "baseline",
+          "spots": [
+            100.0,
+            80.0
+          ],
+          "weights": [
+            0.6,
+            0.5
+          ],
+          "volatilities": [
+            0.2,
+            0.3
+          ],
+          "dividends": [
+            0.01,
+            0.025
+          ],
+          "rate": 0.03,
+          "expiry": 1.0,
+          "rho": 0.35,
+          "first_moment": 101.41258123598138,
+          "second_moment": 10694.064085144184,
+          "cross_second_moment": 5025.957172593297,
+          "cross_covariance_contribution": 104.44459407603972,
+          "matched_volatility": 0.19761019858563414
+        },
+        {
+          "market": "high-correlation",
+          "spots": [
+            100.0,
+            80.0
+          ],
+          "weights": [
+            0.6,
+            0.5
+          ],
+          "volatilities": [
+            0.2,
+            0.3
+          ],
+          "dividends": [
+            0.01,
+            0.025
+          ],
+          "rate": 0.03,
+          "expiry": 1.0,
+          "rho": 0.9,
+          "first_moment": 101.41258123598138,
+          "second_moment": 10862.687658488396,
+          "cross_second_moment": 5194.58074593751,
+          "cross_covariance_contribution": 273.0681674202524,
+          "matched_volatility": 0.23386903964142292
+        }
+      ]
+    }
+  },
+  "comparison": {
+    "units": {
+      "money": "currency",
+      "time": "years",
+      "rates": "continuous per year",
+      "volatility": "annualized"
+    },
+    "method": "Frozen lognormal proxy, conditional-quadrature reference and independent Monte Carlo with four-SE bars",
+    "limitations": [
+      "Synthetic constant-parameter correlated-GBM markets; values are in currency.",
+      "Moment matching is an approximation except for exact lognormal anchors.",
+      "Recorded Monte Carlo uncertainty is four standard errors, not a universal bound."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+      "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
+      "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
+      "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
+      "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b"
+    },
+    "data": [
+      {
+        "scenario": "baseline-call",
+        "market": "baseline",
+        "kind": "call",
+        "entries": [
+          {
+            "strike": 80.0,
+            "approximation": 21.74524440349604,
+            "independent_reference": 21.725376917397654,
+            "reference_method": "conditional_quadrature",
+            "mc": 21.723069893049004,
+            "standard_error": 0.0027559081263922726,
+            "four_standard_errors": 0.01102363250556909
+          },
+          {
+            "strike": 100.0,
+            "approximation": 8.39675442015023,
+            "independent_reference": 8.381800132136227,
+            "reference_method": "conditional_quadrature",
+            "mc": 8.379045871982607,
+            "standard_error": 0.005751939721342353,
+            "four_standard_errors": 0.023007758885369413
+          },
+          {
+            "strike": 120.0,
+            "approximation": 2.312778645184455,
+            "independent_reference": 2.3246737717264616,
+            "reference_method": "conditional_quadrature",
+            "mc": 2.325158102803914,
+            "standard_error": 0.00520970325023545,
+            "four_standard_errors": 0.0208388130009418
+          }
+        ]
+      },
+      {
+        "scenario": "long-high-volatility-call",
+        "market": "long-high-volatility",
+        "kind": "call",
+        "entries": [
+          {
+            "strike": 80.0,
+            "approximation": 38.24081727322452,
+            "independent_reference": 31.823422641194043,
+            "reference_method": "conditional_quadrature",
+            "mc": 31.838703508249676,
+            "standard_error": 0.011729729930829831,
+            "four_standard_errors": 0.046918919723319324
+          },
+          {
+            "strike": 100.0,
+            "approximation": 30.566359052439566,
+            "independent_reference": 24.209285597481568,
+            "reference_method": "conditional_quadrature",
+            "mc": 24.221948044828913,
+            "standard_error": 0.0169053996795148,
+            "four_standard_errors": 0.0676215987180592
+          },
+          {
+            "strike": 120.0,
+            "approximation": 24.65319241223508,
+            "independent_reference": 19.1397188048788,
+            "reference_method": "conditional_quadrature",
+            "mc": 19.151327093378338,
+            "standard_error": 0.020887601334837552,
+            "four_standard_errors": 0.08355040533935021
+          }
+        ]
+      },
+      {
+        "scenario": "baseline-put",
+        "market": "baseline",
+        "kind": "put",
+        "entries": [
+          {
+            "strike": 80.0,
+            "approximation": 0.9655005812933248,
+            "independent_reference": 0.9456330951949166,
+            "reference_method": "conditional_quadrature",
+            "mc": 0.9433260708462825,
+            "standard_error": 0.0027559081263922726,
+            "four_standard_errors": 0.01102363250556909
+          },
+          {
+            "strike": 100.0,
+            "approximation": 7.025921268917664,
+            "independent_reference": 7.0109669809036586,
+            "reference_method": "conditional_quadrature",
+            "mc": 7.0082127207500475,
+            "standard_error": 0.005751939721342353,
+            "four_standard_errors": 0.023007758885369413
+          },
+          {
+            "strike": 120.0,
+            "approximation": 20.350856164922064,
+            "independent_reference": 20.362751291464054,
+            "reference_method": "conditional_quadrature",
+            "mc": 20.36323562254152,
+            "standard_error": 0.00520970325023545,
+            "four_standard_errors": 0.0208388130009418
+          }
+        ]
+      }
+    ]
+  },
+  "error": {
+    "units": {
+      "money": "currency",
+      "time": "years",
+      "rates": "continuous per year",
+      "volatility": "annualized"
+    },
+    "method": "Absolute relative proxy gap against four-SE uncertainty; unresolved signs stay unsigned",
+    "limitations": [
+      "Synthetic constant-parameter correlated-GBM markets; values are in currency.",
+      "Moment matching is an approximation except for exact lognormal anchors.",
+      "Recorded Monte Carlo uncertainty is four standard errors, not a universal bound.",
+      "When MC supplies the reference, a gap no larger than four standard errors has unresolved sign. Conditional or analytic references use their own numerical uncertainty and can establish a sign even inside the MC error bar."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+      "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
+      "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
+      "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
+      "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b"
+    },
+    "data": [
+      {
+        "scenario": "call",
+        "strike": 100.0,
+        "entries": [
+          {
+            "market": "baseline",
+            "strike": 100.0,
+            "kind": "call",
+            "approximation": 8.39675442015023,
+            "reference": 8.381800132136227,
+            "reference_method": "conditional_quadrature",
+            "absolute_gap": 0.014954288014003225,
+            "four_standard_errors": 0.023007758885369413,
+            "absolute_relative_error_percent": 0.1784137986858904,
+            "four_se_relative_percent": 0.2744966298725801,
+            "error_sign_established": true
+          },
+          {
+            "market": "long-high-volatility",
+            "strike": 100.0,
+            "kind": "call",
+            "approximation": 30.566359052439566,
+            "reference": 24.209285597481568,
+            "reference_method": "conditional_quadrature",
+            "absolute_gap": 6.357073454957998,
+            "four_standard_errors": 0.0676215987180592,
+            "absolute_relative_error_percent": 26.258823001449116,
+            "four_se_relative_percent": 0.2793209177766638,
+            "error_sign_established": true
+          },
+          {
+            "market": "three-diversified",
+            "strike": 100.0,
+            "kind": "call",
+            "approximation": 6.7603305319820945,
+            "reference": 6.745860269850957,
+            "reference_method": "mc",
+            "absolute_gap": 0.014470262131137446,
+            "four_standard_errors": 0.018300174692603713,
+            "absolute_relative_error_percent": 0.21450580878185238,
+            "four_se_relative_percent": 0.27128007341616694,
+            "error_sign_established": false
+          },
+          {
+            "market": "three-high-volatility",
+            "strike": 100.0,
+            "kind": "call",
+            "approximation": 18.75575356353651,
+            "reference": 17.736769753588934,
+            "reference_method": "mc",
+            "absolute_gap": 1.0189838099475743,
+            "four_standard_errors": 0.06761144818598648,
+            "absolute_relative_error_percent": 5.745036013343911,
+            "four_se_relative_percent": 0.3811936960635444,
+            "error_sign_established": true
+          }
+        ]
+      },
+      {
+        "scenario": "put",
+        "strike": 100.0,
+        "entries": [
+          {
+            "market": "baseline",
+            "strike": 100.0,
+            "kind": "put",
+            "approximation": 7.025921268917664,
+            "reference": 7.0109669809036586,
+            "reference_method": "conditional_quadrature",
+            "absolute_gap": 0.01495428801400589,
+            "four_standard_errors": 0.023007758885369413,
+            "absolute_relative_error_percent": 0.213298508675595,
+            "four_se_relative_percent": 0.32816812499670184,
+            "error_sign_established": true
+          },
+          {
+            "market": "long-high-volatility",
+            "strike": 100.0,
+            "kind": "put",
+            "approximation": 26.62300611350979,
+            "reference": 20.2659326585518,
+            "reference_method": "conditional_quadrature",
+            "absolute_gap": 6.3570734549579875,
+            "four_standard_errors": 0.0676215987180592,
+            "absolute_relative_error_percent": 31.368274838688144,
+            "four_se_relative_percent": 0.33367128894274845,
+            "error_sign_established": true
+          },
+          {
+            "market": "three-diversified",
+            "strike": 100.0,
+            "kind": "put",
+            "approximation": 5.50830040914303,
+            "reference": 5.493830147011885,
+            "reference_method": "mc",
+            "absolute_gap": 0.014470262131144551,
+            "four_standard_errors": 0.018300174692603713,
+            "absolute_relative_error_percent": 0.26339114504686645,
+            "four_se_relative_percent": 0.33310412231359654,
+            "error_sign_established": false
+          },
+          {
+            "market": "three-high-volatility",
+            "strike": 100.0,
+            "kind": "put",
+            "approximation": 26.431885239442945,
+            "reference": 25.412901429495367,
+            "reference_method": "mc",
+            "absolute_gap": 1.0189838099475779,
+            "four_standard_errors": 0.06761144818598648,
+            "absolute_relative_error_percent": 4.009710629754771,
+            "four_se_relative_percent": 0.2660516681795081,
+            "error_sign_established": true
+          }
+        ]
+      }
+    ]
+  }
+}
