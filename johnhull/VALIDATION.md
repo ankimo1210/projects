@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -431,8 +431,8 @@ reference is re-exported from the local checkpoint `2d4ba8e38acfa5cc` (torch, CP
 Checks that still read a stored value because no array evidence exists: vol 18
 `residual_baseline` (Heston residual MAEs from the evaluation run) and `hard_violation_rate`;
 vol 19 `multi_start_calibration` (optimizer success flags); vol 21 timing method flags;
-vol 22 `calendar_violations` (holiday/session booleans); vol 26
-`principal_floor_redemption_only`, `coupon_floor_max_error` and `measure_treatment`.
+vol 22 `calendar_violations` (holiday/session booleans). The three vol 26 items listed here
+at the time were moved to array recomputation on 2026-09-25 (see that run below).
 
 ## 2026-09-15 section-audit fourth run (progress review F1–F5)
 
@@ -458,6 +458,26 @@ Still open: the stored-value checks listed under the third run (no raw evidence)
 the section ledger (all 306 sections have not been reclassified since the audit); the core
 gate does not compare PNG or Plotly payloads, and the frontier gate still ignores stderr and
 figures (the new hygiene test covers only glyph warnings and local paths).
+
+## 2026-09-25 vol 26 stored-evidence run
+
+Branch `claude/johnhull-vol26-m8` (base `f6a2b62e`); change table in
+`docs/SECTION_AUDIT_2026-09-14.md` §11.4. The last vol 26 checks that read stored values now
+recompute from the committed NPZ: `redemption_only_principal_floor` rebuilds the coupon gap,
+coupon/index-ratio proportionality and the redemption-only principal from both schedules;
+`nominal_payment_forward_measure` rebuilds the YoY ratio from its payment-forward CPI,
+measure adjustments and log covariances (relative 1e-12). Check names and counts are unchanged;
+the two criterion strings now describe what is recomputed.
+
+| Check | Command / evidence | Result |
+|---|---|:---:|
+| hullkit + portal + corpus tests | `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests johnhull/report/tests johnhull/tests` — 2630 passed, 6 skipped before the vol 26 notebook was rebuilt (1 stale-VALIDATION failure, fixed by the rebuild) | PASS |
+| Tamper contract | 8 new vol 26 cases (unfloored coupon, floored final coupon, interim principal on either schedule, YoY ratio, start adjustment, covariance, end forward) each fail only their check | PASS |
+| Reference rebuild | vol 26 regenerated (46 existing arrays byte-identical, 7 added); vol 21 regenerated for its `frontier_reference.py` SHA contract (1-line diff); `make hull-artifacts-check` | PASS |
+| Notebook freshness | vol 26 notebook and VALIDATION.md rebuilt; `make hull-notebooks-check` | PASS |
+| Release contract | `make hull-report`; `make hull-release-check` | PASS |
+
+Still open: the stored-value checks of vol 18, 19, 21 and 22 (no raw evidence).
 
 ## Negative results and residual model risk
 

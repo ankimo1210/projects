@@ -96,7 +96,7 @@
     ],
     "schema_version": 2,
     "sources": {
-      "johnhull/hullkit/src/hullkit/frontier_reference.py": "98134aac2691ad540160566cf89931d3ea991c3b1d3b2db5c6f54d584a9a2a65",
+      "johnhull/hullkit/src/hullkit/frontier_reference.py": "1d0d688d8170bf182c374732904bd0c524583cb739ab0a8e06c8666cb53bfcd5",
       "johnhull/hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472"
     },
     "timing_method": "perf_counter_ns warm-cache median of 5"

@@ -247,6 +247,42 @@ CASES = {
             _set_array_value("inflation_volatility", slice(1, 3), [0.02, 0.01]),
             "floor_volatility_monotonicity",
         ),
+        (
+            "jgbi_unfloored_coupon",
+            _scale_array("jgbi_unfloored_coupon", 1.001),
+            "redemption_only_principal_floor",
+        ),
+        (
+            "jgbi_coupon-floored",
+            _set_array_value("jgbi_coupon", -1, 0.25),
+            "redemption_only_principal_floor",
+        ),
+        (
+            "jgbi_floored_principal-interim",
+            _set_array_value("jgbi_floored_principal", 0, 100.0),
+            "redemption_only_principal_floor",
+        ),
+        (
+            "jgbi_unfloored_principal-interim",
+            _set_array_value("jgbi_unfloored_principal", 0, 100.0),
+            "redemption_only_principal_floor",
+        ),
+        ("yoy_jy_ratio", _scale_array("yoy_jy_ratio", 1.0001), "nominal_payment_forward_measure"),
+        (
+            "yoy_start_payment_adjustment",
+            _scale_array("yoy_start_payment_adjustment", 0.0),
+            "nominal_payment_forward_measure",
+        ),
+        (
+            "yoy_log_covariance",
+            _scale_array("yoy_log_covariance", 1.01),
+            "nominal_payment_forward_measure",
+        ),
+        (
+            "yoy_end_forward_cpi",
+            _scale_array("yoy_end_forward_cpi", 1.001),
+            "nominal_payment_forward_measure",
+        ),
     ],
     23: [
         ("daily_rate", _scale_array("daily_rate", 1.001), "daily_compounding_handcheck"),
