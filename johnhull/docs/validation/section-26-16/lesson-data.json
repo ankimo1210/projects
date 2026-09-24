@@ -1,0 +1,590 @@
+{
+  "schema_version": 1,
+  "section": "26.16",
+  "payoff": {
+    "units": {
+      "payoff": "$ millions",
+      "volatility": "annualized decimal",
+      "time": "years"
+    },
+    "method": "Undiscounted payoffs at T of Example 26.5's volatility swap and the variance swap with L_var = L_vol/(2 sigma_K)",
+    "limitations": [
+      "Hull's Examples 26.4-26.5 are printed; every other market is synthetic.",
+      "Replication assumes continuous paths observed continuously; the daily contract is discrete.",
+      "Measured errors describe the saved grids and are not universal bounds."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
+      "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
+      "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
+      "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256",
+      "scripts/build_variance_swap_lesson_data.py": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d"
+    },
+    "data": {
+      "volatility_notional": 100.0,
+      "volatility_strike": 0.23,
+      "variance_notional": 217.39130434782606,
+      "variance_strike": 0.0529,
+      "rows": [
+        {
+          "realized_volatility": 0.1,
+          "volatility_payoff": -13.0,
+          "variance_payoff": -9.326086956521738,
+          "difference": 3.6739130434782616
+        },
+        {
+          "realized_volatility": 0.11,
+          "volatility_payoff": -12.000000000000002,
+          "variance_payoff": -8.869565217391305,
+          "difference": 3.130434782608697
+        },
+        {
+          "realized_volatility": 0.12,
+          "volatility_payoff": -11.000000000000002,
+          "variance_payoff": -8.369565217391305,
+          "difference": 2.630434782608697
+        },
+        {
+          "realized_volatility": 0.13,
+          "volatility_payoff": -10.0,
+          "variance_payoff": -7.826086956521739,
+          "difference": 2.1739130434782608
+        },
+        {
+          "realized_volatility": 0.14,
+          "volatility_payoff": -9.0,
+          "variance_payoff": -7.2391304347826075,
+          "difference": 1.7608695652173925
+        },
+        {
+          "realized_volatility": 0.15,
+          "volatility_payoff": -8.000000000000002,
+          "variance_payoff": -6.608695652173913,
+          "difference": 1.3913043478260887
+        },
+        {
+          "realized_volatility": 0.16,
+          "volatility_payoff": -7.000000000000001,
+          "variance_payoff": -5.934782608695651,
+          "difference": 1.0652173913043494
+        },
+        {
+          "realized_volatility": 0.17,
+          "volatility_payoff": -6.0,
+          "variance_payoff": -5.217391304347825,
+          "difference": 0.7826086956521747
+        },
+        {
+          "realized_volatility": 0.18,
+          "volatility_payoff": -5.000000000000002,
+          "variance_payoff": -4.4565217391304355,
+          "difference": 0.5434782608695663
+        },
+        {
+          "realized_volatility": 0.19,
+          "volatility_payoff": -4.000000000000001,
+          "variance_payoff": -3.6521739130434785,
+          "difference": 0.3478260869565224
+        },
+        {
+          "realized_volatility": 0.2,
+          "volatility_payoff": -3.0,
+          "variance_payoff": -2.804347826086955,
+          "difference": 0.1956521739130448
+        },
+        {
+          "realized_volatility": 0.21,
+          "volatility_payoff": -2.0000000000000018,
+          "variance_payoff": -1.9130434782608714,
+          "difference": 0.08695652173913038
+        },
+        {
+          "realized_volatility": 0.22,
+          "volatility_payoff": -1.0000000000000009,
+          "variance_payoff": -0.9782608695652182,
+          "difference": 0.021739130434782705
+        },
+        {
+          "realized_volatility": 0.23,
+          "volatility_payoff": 0.0,
+          "variance_payoff": 0.0,
+          "difference": 0.0
+        },
+        {
+          "realized_volatility": 0.24,
+          "volatility_payoff": 0.9999999999999981,
+          "variance_payoff": 1.0217391304347816,
+          "difference": 0.021739130434783482
+        },
+        {
+          "realized_volatility": 0.25,
+          "volatility_payoff": 1.9999999999999991,
+          "variance_payoff": 2.0869565217391295,
+          "difference": 0.08695652173913038
+        },
+        {
+          "realized_volatility": 0.26,
+          "volatility_payoff": 3.0,
+          "variance_payoff": 3.1956521739130443,
+          "difference": 0.19565217391304435
+        },
+        {
+          "realized_volatility": 0.27,
+          "volatility_payoff": 4.000000000000001,
+          "variance_payoff": 4.347826086956522,
+          "difference": 0.3478260869565215
+        },
+        {
+          "realized_volatility": 0.28,
+          "volatility_payoff": 5.000000000000002,
+          "variance_payoff": 5.543478260869566,
+          "difference": 0.5434782608695645
+        },
+        {
+          "realized_volatility": 0.29,
+          "volatility_payoff": 5.999999999999997,
+          "variance_payoff": 6.782608695652171,
+          "difference": 0.7826086956521738
+        },
+        {
+          "realized_volatility": 0.3,
+          "volatility_payoff": 6.999999999999998,
+          "variance_payoff": 8.065217391304346,
+          "difference": 1.0652173913043477
+        },
+        {
+          "realized_volatility": 0.31,
+          "volatility_payoff": 7.999999999999999,
+          "variance_payoff": 9.391304347826086,
+          "difference": 1.391304347826087
+        },
+        {
+          "realized_volatility": 0.32,
+          "volatility_payoff": 9.0,
+          "variance_payoff": 10.76086956521739,
+          "difference": 1.7608695652173907
+        },
+        {
+          "realized_volatility": 0.33,
+          "volatility_payoff": 10.0,
+          "variance_payoff": 12.173913043478262,
+          "difference": 2.1739130434782616
+        },
+        {
+          "realized_volatility": 0.34,
+          "volatility_payoff": 11.000000000000002,
+          "variance_payoff": 13.630434782608699,
+          "difference": 2.630434782608697
+        },
+        {
+          "realized_volatility": 0.35,
+          "volatility_payoff": 11.999999999999996,
+          "variance_payoff": 15.13043478260869,
+          "difference": 3.1304347826086936
+        },
+        {
+          "realized_volatility": 0.36,
+          "volatility_payoff": 12.999999999999998,
+          "variance_payoff": 16.673913043478258,
+          "difference": 3.67391304347826
+        },
+        {
+          "realized_volatility": 0.37,
+          "volatility_payoff": 13.999999999999998,
+          "variance_payoff": 18.260869565217387,
+          "difference": 4.260869565217389
+        },
+        {
+          "realized_volatility": 0.38,
+          "volatility_payoff": 15.0,
+          "variance_payoff": 19.891304347826086,
+          "difference": 4.891304347826086
+        },
+        {
+          "realized_volatility": 0.39,
+          "volatility_payoff": 16.0,
+          "variance_payoff": 21.565217391304348,
+          "difference": 5.565217391304348
+        },
+        {
+          "realized_volatility": 0.4,
+          "volatility_payoff": 17.0,
+          "variance_payoff": 23.28260869565218,
+          "difference": 6.282608695652179
+        }
+      ]
+    }
+  },
+  "strip": {
+    "units": {
+      "variance": "variance rate per year",
+      "strike": "index points",
+      "time": "years"
+    },
+    "method": "Example 26.4 strip recomputed with the reference's own BSM; printed Q to 2 dp",
+    "limitations": [
+      "Hull's Examples 26.4-26.5 are printed; every other market is synthetic.",
+      "Replication assumes continuous paths observed continuously; the daily contract is discrete.",
+      "Measured errors describe the saved grids and are not universal bounds."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
+      "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
+      "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
+      "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256",
+      "scripts/build_variance_swap_lesson_data.py": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d"
+    },
+    "data": {
+      "forward": 1027.6787593534245,
+      "s_star": 1000.0,
+      "expiry": 0.25,
+      "boundary_terms": -0.0030090564579592083,
+      "strip_sum": 0.008138736237947669,
+      "expected_variance": 0.062100833445622144,
+      "swap_value": 1.6930677309810418,
+      "rows": [
+        {
+          "strike": 800.0,
+          "q": 2.2226360084984305,
+          "q_kind": "put",
+          "printed_q": 2.22,
+          "variance_contribution": 0.001403108669844455
+        },
+        {
+          "strike": 850.0,
+          "q": 5.222203937444913,
+          "q_kind": "put",
+          "printed_q": 5.22,
+          "variance_contribution": 0.0029202424689626764
+        },
+        {
+          "strike": 900.0,
+          "q": 11.051234522803943,
+          "q_kind": "put",
+          "printed_q": 11.05,
+          "variance_contribution": 0.005512247543824419
+        },
+        {
+          "strike": 950.0,
+          "q": 21.266724973225486,
+          "q_kind": "put",
+          "printed_q": 21.27,
+          "variance_contribution": 0.009520425091430227
+        },
+        {
+          "strike": 1000.0,
+          "q": 51.20916101921811,
+          "q_kind": "average",
+          "printed_q": 51.21,
+          "variance_contribution": 0.020689528657480524
+        },
+        {
+          "strike": 1050.0,
+          "q": 38.9442996901299,
+          "q_kind": "call",
+          "printed_q": 38.94,
+          "variance_contribution": 0.01427145447945274
+        },
+        {
+          "strike": 1100.0,
+          "q": 20.688219177817388,
+          "q_kind": "call",
+          "printed_q": 20.69,
+          "variance_contribution": 0.006907814623877137
+        },
+        {
+          "strike": 1150.0,
+          "q": 9.442014559890922,
+          "q_kind": "call",
+          "printed_q": 9.44,
+          "variance_contribution": 0.0028845091520087627
+        },
+        {
+          "strike": 1200.0,
+          "q": 3.566172550141578,
+          "q_kind": "call",
+          "printed_q": 3.57,
+          "variance_contribution": 0.0010005592167004096
+        }
+      ]
+    }
+  },
+  "replication": {
+    "units": {
+      "variance": "variance rate per year",
+      "strike": "index points",
+      "time": "years"
+    },
+    "method": "Eq. 26.8 strip minus the closed-form Heston E(V) that the continuous eq. 26.6 integral reproduces",
+    "limitations": [
+      "Hull's Examples 26.4-26.5 are printed; every other market is synthetic.",
+      "Replication assumes continuous paths observed continuously; the daily contract is discrete.",
+      "Measured errors describe the saved grids and are not universal bounds."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
+      "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
+      "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
+      "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256",
+      "scripts/build_variance_swap_lesson_data.py": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d"
+    },
+    "data": {
+      "market": "skewed",
+      "expiry": 0.5,
+      "forward": 101.00501670841679,
+      "exact": 0.04,
+      "families": [
+        {
+          "range": "narrow",
+          "strike_low": 70.0,
+          "strike_high": 140.0,
+          "entries": [
+            {
+              "delta_k": 10.0,
+              "strikes": 8,
+              "error": 0.0031016973274838877,
+              "relative_error_percent": 7.754243318709719
+            },
+            {
+              "delta_k": 5.0,
+              "strikes": 15,
+              "error": 0.00037843286260422215,
+              "relative_error_percent": 0.9460821565105554
+            },
+            {
+              "delta_k": 2.5,
+              "strikes": 29,
+              "error": -0.00037145394530993525,
+              "relative_error_percent": -0.9286348632748381
+            },
+            {
+              "delta_k": 1.25,
+              "strikes": 57,
+              "error": -0.0005928493955402736,
+              "relative_error_percent": -1.482123488850684
+            }
+          ]
+        },
+        {
+          "range": "medium",
+          "strike_low": 40.0,
+          "strike_high": 220.0,
+          "entries": [
+            {
+              "delta_k": 10.0,
+              "strikes": 19,
+              "error": 0.00339014203704463,
+              "relative_error_percent": 8.475355092611576
+            },
+            {
+              "delta_k": 5.0,
+              "strikes": 37,
+              "error": 0.0008489528091184598,
+              "relative_error_percent": 2.1223820227961494
+            },
+            {
+              "delta_k": 2.5,
+              "strikes": 73,
+              "error": 0.00021168141018352432,
+              "relative_error_percent": 0.5292035254588108
+            },
+            {
+              "delta_k": 1.25,
+              "strikes": 145,
+              "error": 5.214074164653498e-05,
+              "relative_error_percent": 0.13035185411633746
+            }
+          ]
+        },
+        {
+          "range": "wide",
+          "strike_low": 10.0,
+          "strike_high": 400.0,
+          "entries": [
+            {
+              "delta_k": 10.0,
+              "strikes": 40,
+              "error": 0.003390290740607302,
+              "relative_error_percent": 8.475726851518255
+            },
+            {
+              "delta_k": 5.0,
+              "strikes": 79,
+              "error": 0.0008494514872319225,
+              "relative_error_percent": 2.1236287180798064
+            },
+            {
+              "delta_k": 2.5,
+              "strikes": 157,
+              "error": 0.0002124813367032491,
+              "relative_error_percent": 0.5312033417581227
+            },
+            {
+              "delta_k": 1.25,
+              "strikes": 313,
+              "error": 5.312775188250074e-05,
+              "relative_error_percent": 0.13281937970625185
+            }
+          ]
+        }
+      ],
+      "continuous_max_abs_difference": 1.5131403074963856e-12,
+      "flat_s_star_max_abs_difference": 8.326672684688674e-17
+    }
+  },
+  "convexity": {
+    "units": {
+      "volatility": "annualized decimal",
+      "vol_of_vol": "xi per sqrt(year)"
+    },
+    "method": "Eq. 26.9 and sqrt(E(V)) against the exact CIR-Laplace E[sqrt V] and exact-CIR MC ±4SE",
+    "limitations": [
+      "Hull's Examples 26.4-26.5 are printed; every other market is synthetic.",
+      "Replication assumes continuous paths observed continuously; the daily contract is discrete.",
+      "Measured errors describe the saved grids and are not universal bounds.",
+      "Continuously monitored variance of one Heston/CIR market with v0 = theta."
+    ],
+    "source_hashes": {
+      "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
+      "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
+      "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
+      "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256",
+      "scripts/build_variance_swap_lesson_data.py": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d"
+    },
+    "data": {
+      "base": {
+        "v0": 0.0621,
+        "kappa": 2.0,
+        "theta": 0.0621,
+        "expiry": 0.25
+      },
+      "mc": {
+        "steps": 250,
+        "paths": 100000,
+        "seed": 20260925,
+        "method": "exact CIR transitions, trapezoid"
+      },
+      "rows": [
+        {
+          "xi": 0.1,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 3.616902575871575e-05,
+          "exact": 0.24890676096317835,
+          "approximation": 0.24890656351091558,
+          "naive": 0.24919871588754225,
+          "approximation_error": -1.9745226276235428e-07,
+          "naive_error": 0.0002919549243639019,
+          "mc": null
+        },
+        {
+          "xi": 0.2,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 0.000144676103034863,
+          "exact": 0.24803350700596505,
+          "approximation": 0.24803010638103548,
+          "naive": 0.24919871588754225,
+          "approximation_error": -3.400624929567053e-06,
+          "naive_error": 0.001165208881577201,
+          "mc": null
+        },
+        {
+          "xi": 0.3,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 0.0003255212318284417,
+          "exact": 0.24658864523106516,
+          "approximation": 0.24656934449790208,
+          "naive": 0.24919871588754225,
+          "approximation_error": -1.930073316308567e-05,
+          "naive_error": 0.002610070656477087,
+          "mc": {
+            "estimate": 0.24661176003815272,
+            "four_standard_errors": 0.00045564982904180805
+          }
+        },
+        {
+          "xi": 0.4,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 0.000578704412139452,
+          "exact": 0.24459445366643787,
+          "approximation": 0.24452427786151523,
+          "naive": 0.24919871588754225,
+          "approximation_error": -7.01758049226342e-05,
+          "naive_error": 0.004604262221104383,
+          "mc": null
+        },
+        {
+          "xi": 0.5,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 0.0009042256439678936,
+          "exact": 0.24209291070991693,
+          "approximation": 0.24189490647187506,
+          "naive": 0.24919871588754225,
+          "approximation_error": -0.00019800423804186562,
+          "naive_error": 0.007105805177625324,
+          "mc": null
+        },
+        {
+          "xi": 0.6,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 0.0013020849273137668,
+          "exact": 0.23914853222360552,
+          "approximation": 0.23868123032898148,
+          "naive": 0.24919871588754225,
+          "approximation_error": -0.0004673018946240448,
+          "naive_error": 0.01005018366393673,
+          "mc": {
+            "estimate": 0.2390013289193618,
+            "four_standard_errors": 0.0008845315720819656
+          }
+        },
+        {
+          "xi": 0.7,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 0.001772282262177071,
+          "exact": 0.23584270796609855,
+          "approximation": 0.23488324943283456,
+          "naive": 0.24919871588754225,
+          "approximation_error": -0.0009594585332639849,
+          "naive_error": 0.013356007921443702,
+          "mc": null
+        },
+        {
+          "xi": 0.8,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 0.002314817648557808,
+          "exact": 0.2322627493116064,
+          "approximation": 0.23050096378343424,
+          "naive": 0.24919871588754225,
+          "approximation_error": -0.0017617855281721606,
+          "naive_error": 0.01693596657593585,
+          "mc": null
+        },
+        {
+          "xi": 0.9,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 0.0029296910864559755,
+          "exact": 0.22849175347139622,
+          "approximation": 0.22553437338078053,
+          "naive": 0.24919871588754225,
+          "approximation_error": -0.002957380090615691,
+          "naive_error": 0.02070696241614603,
+          "mc": {
+            "estimate": 0.22883304961939474,
+            "four_standard_errors": 0.0012596380559989882
+          }
+        },
+        {
+          "xi": 1.0,
+          "expected_variance": 0.0621,
+          "variance_of_variance": 0.0036169025758715743,
+          "exact": 0.22460241310429274,
+          "approximation": 0.21998347822487346,
+          "naive": 0.24919871588754225,
+          "approximation_error": -0.004618934879419279,
+          "naive_error": 0.024596302783249507,
+          "mc": null
+        }
+      ]
+    }
+  }
+}
