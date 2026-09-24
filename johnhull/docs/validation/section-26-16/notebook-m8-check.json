@@ -1,7 +1,7 @@
 {
   "status": "PASS",
   "command": "PYTHONPATH=hullkit/src:scripts python scripts/verify_variance_swap_notebook.py --base f6a2b62e",
-  "checked_at": "2026-09-24T18:41:51.652215+00:00",
+  "checked_at": "2026-09-24T20:37:51.732388+00:00",
   "cells": 115,
   "code_cells": 49,
   "code_cells_with_outputs": 46,
@@ -51,14 +51,14 @@
     }
   ],
   "source_sha256": {
-    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
+    "volumes/10_exotics_martingales/exotics.ipynb": "eb9096389885d5584c5dc48c8c06dec9c9b6fe2073a6c9cb03a7d384af14c639",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "532896dc6870aa752e5a2533c0ae84b8697bc779a7b7bf5ebc31100e12c29682",
     "hullkit/src/hullkit/_variance_swap_lesson.py": "5c4c82d63a7bdc0f656c04c3cdd1113f29e3537d99d91341dbcf818880cc0174",
     "hullkit/src/hullkit/variance_swaps.py": "7fc64e7fba2e11bceb07819c3d65c792e9a09e067f5b06b7b1850d7153846b0e",
     "docs/validation/section-26-16/lesson-data.json": "941a89849274ee6a6210904c66f7bc19b003fbab368545e24c31422c13b141be",
-    "scripts/verify_variance_swap_notebook.py": "36648a0ec65f040e5d16cb755182b8a893a3c022cf948b119576f9ba91d87a4e"
+    "scripts/verify_variance_swap_notebook.py": "fdd62eef5a527271e7f150b25144f9b646ad9f3d953f29679b4d1920428423f1"
   },
   "artifact_sha256": {
-    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1"
+    "volumes/10_exotics_martingales/exotics.ipynb": "eb9096389885d5584c5dc48c8c06dec9c9b6fe2073a6c9cb03a7d384af14c639"
   }
 }

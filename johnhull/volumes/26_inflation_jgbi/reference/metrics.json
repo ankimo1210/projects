@@ -50,7 +50,7 @@
         "passed": true
       },
       {
-        "criterion": "YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, consecutive annual payments, measure adjustment applied, non-zero YoY convexity",
+        "criterion": "YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, consecutive annual payments, measure adjustment applied, non-zero YoY convexity equal to yoy_convexity_bp",
         "name": "nominal_payment_forward_measure",
         "observed": 0.0,
         "passed": true

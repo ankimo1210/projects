@@ -320,8 +320,18 @@ async function bookMath(page) {
             && b.right > box.x && b.top < box.y + box.height && b.bottom > box.y; }), clip);
       check(!overlaps, 'Skip-link overlay must not cover formula/example ' + number);
       if (number === '4.6.5') {
-        const shown = await exampleSection.evaluate(el => el.textContent);
-        check(shown.includes('式26.6: E(V)T') && shown.includes('式26.10'), 'VIX numbers inside the 4.6.5 screenshot');
+        // The numbers must be in a rendered output block inside the clip, not just in the DOM
+        // (a collapsed or hidden output would still expose its text to textContent).
+        const outputs = await exampleSection.evaluate(el => Array.from(el.querySelectorAll('pre'))
+          .filter(n => /式26\.6: E\(V\)T = [\d.]+; 式26\.10: [\d.]+/.test(n.innerText))
+          .map(n => { const b = n.getBoundingClientRect(); const style = getComputedStyle(n);
+            return { text: n.innerText, top: b.top, bottom: b.bottom, height: b.height,
+              visible: style.visibility !== 'hidden' && style.display !== 'none' && n.offsetParent !== null }; }));
+        check(outputs.length === 1 && outputs[0].visible && outputs[0].height > 0, 'One visible VIX output block in 4.6.5');
+        check(outputs[0].top >= clip.y && outputs[0].bottom <= clip.y + clip.height, 'VIX output block inside the 4.6.5 screenshot');
+        const shown = outputs[0].text.match(/式26\.6: E\(V\)T = ([\d.]+); 式26\.10: ([\d.]+)/);
+        close(Number(shown[1]), reference.notebook.cumulative_26_6, 'Screenshot eq. 26.6 cumulative variance', 5.1e-8);
+        close(Number(shown[2]), reference.notebook.cumulative_26_10, 'Screenshot eq. 26.10 cumulative variance', 5.1e-8);
       }
       const file = relativeOut + stem + '-' + width + '.png';
       await page.screenshot({ path: path.join(root, file), clip }); screenshots.push(file);

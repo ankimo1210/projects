@@ -1,5 +1,6 @@
 """Saved-data §26.16 lesson figures: values, menu states and provenance."""
 
+import ast
 import hashlib
 import importlib
 import json
@@ -8,7 +9,6 @@ import os
 import shutil
 import subprocess
 import sys
-import types
 from pathlib import Path
 
 import pytest
@@ -193,10 +193,26 @@ def test_refuse_deleted_mandatory_source(lesson, tmp_path):
         lesson._load_data(data_path, root=tmp_path)
 
 
-def test_figure_module_holds_no_numerical_code(lesson):
-    """The figure layer reads saved data only: its module globals hold no numerical module."""
-    modules = {name for name, value in vars(lesson).items() if isinstance(value, types.ModuleType)}
-    assert modules == {"hashlib", "json", "go"}
+def test_figure_module_imports_only_io_and_plotly(lesson):
+    """Every import in the figure module, including ones inside functions, is on an allowlist.
+
+    ``import hullkit`` already loads numpy/scipy, so a runtime module check cannot see a
+    function-level import of numerical code; the source can.
+    """
+    tree = ast.parse(Path(lesson.__file__).read_text(encoding="utf-8"))
+    imported = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            imported.add(node.module)
+    assert imported == {"__future__", "hashlib", "json", "pathlib", "plotly.graph_objects"}
+    calls = {
+        node.func.id
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+    }
+    assert not calls & {"__import__", "exec", "eval"}
 
 
 def test_building_figures_imports_nothing_beyond_plotly():

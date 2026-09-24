@@ -1,6 +1,6 @@
 {
   "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_exotics_m8.cjs 26-15",
-  "checked_at": "2026-09-24T18:46:01.679Z",
+  "checked_at": "2026-09-24T20:41:44.381Z",
   "pages": {
     "portal": {
       "figures": [
@@ -452,8 +452,8 @@
     "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
     "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
     "docs/validation/section-26-15/browser-reference.json": "7aa23b3418cf81b71ad1fb003b083b73c8ab9266b830baa1c49f01c44298ea2f",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
-    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "532896dc6870aa752e5a2533c0ae84b8697bc779a7b7bf5ebc31100e12c29682",
+    "volumes/10_exotics_martingales/exotics.ipynb": "eb9096389885d5584c5dc48c8c06dec9c9b6fe2073a6c9cb03a7d384af14c639",
     "report/report_builder/figures.py": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
@@ -465,7 +465,7 @@
     "report/site/exotics.html": "2d84dff44071eb485b58d68cee1dd446a7c55ade722e9364fe48c923f46ae04b",
     "report/site/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "c00285d7c0427ad4fa67450a9b93f0b5d8cb4d21350568bc4fb46854f8a25be4",
+    "book/_build/html/notebooks/10_exotics.html": "618c6551af665b45d1c79dea32e75859fc28c3ff7415b769255c88a263f85463",
     "docs/validation/section-26-15/portal-basket_payoff-1440-m8-recheck.png": "cd5307c7d2b060d8322c94dd99a06ae87a7989e12348a15b376da04a941eda17",
     "docs/validation/section-26-15/portal-basket_correlation-1440-m8-recheck.png": "fb09eb06fe27117de1ec80e59947e51456693c92496738279532790f78748182",
     "docs/validation/section-26-15/portal-basket_comparison-1440-m8-recheck.png": "bba286fbcd2a87bdc6a361640aacbd44e08f1bffd70549cfec09ff88f3492171",

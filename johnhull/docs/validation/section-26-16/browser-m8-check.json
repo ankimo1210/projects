@@ -1,6 +1,6 @@
 {
   "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/verify_variance_swap_lesson_browser.cjs",
-  "checked_at": "2026-09-24T18:41:52.721Z",
+  "checked_at": "2026-09-24T20:37:52.819Z",
   "pages": {
     "portal": {
       "figures": [
@@ -463,20 +463,20 @@
     "docs/validation/section-26-16/reference.json": "2e33bb9c852d69ae34d7e68f01145743732b4af3c235e0ceb21d3138e44f1fe2",
     "docs/validation/section-26-16/numerical-check.json": "c68435fdeaaf2b856e62f35d815b087af1d19f075cf6e5f2aa014d230e39cef9",
     "docs/validation/section-26-16/browser-reference.json": "4fc3cbf596e33a72e892f5b06da313837d5c6cdb970683743fe465cfc7d5b4a3",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
-    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "532896dc6870aa752e5a2533c0ae84b8697bc779a7b7bf5ebc31100e12c29682",
+    "volumes/10_exotics_martingales/exotics.ipynb": "eb9096389885d5584c5dc48c8c06dec9c9b6fe2073a6c9cb03a7d384af14c639",
     "report/report_builder/figures.py": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
     "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
-    "scripts/verify_variance_swap_lesson_browser.cjs": "54910e7388ce07b8203112c04805b59ed8bcfa08c24de0761369a10979a4e92f"
+    "scripts/verify_variance_swap_lesson_browser.cjs": "5adc156b823a2a4ba39da52c190c31cee3abf8b2c79fac7bb0dea593bf685cb5"
   },
   "artifact_sha256": {
     "report/site/exotics.html": "2d84dff44071eb485b58d68cee1dd446a7c55ade722e9364fe48c923f46ae04b",
     "report/site/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "c00285d7c0427ad4fa67450a9b93f0b5d8cb4d21350568bc4fb46854f8a25be4",
+    "book/_build/html/notebooks/10_exotics.html": "618c6551af665b45d1c79dea32e75859fc28c3ff7415b769255c88a263f85463",
     "docs/validation/section-26-16/portal-varswap_payoff-1440.png": "b0e3231248c559da33415717859ed182875237d1b155bc0cb68285d41bd30512",
     "docs/validation/section-26-16/portal-varswap_strip-1440.png": "363dd2e0d9f20295991dbacfdf9e650be1ba1135af612eb156c9c1984a6aec03",
     "docs/validation/section-26-16/portal-varswap_replication-1440.png": "f82f0b8a6e17bd97f25c34fcd46b03597ecb3d6eed6cdc30851cf2193d63d253",
@@ -495,8 +495,8 @@
     "docs/validation/section-26-16/book-volswap_convexity-1000.png": "e4e7fdc9fb350475e039fa6883c41db0bd07c7b5dcdbf5a643c5747abc0e31cc",
     "docs/validation/section-26-16/book-volswap-formula-example-1440.png": "c389c19581692de07a1e1d6b9803f1b6c05bb667d24956a222c63c820d15e708",
     "docs/validation/section-26-16/book-volswap-formula-example-1000.png": "6e66733bb488f76acc7f1002139702d3159daab0e36138aa44d630b7de467062",
-    "docs/validation/section-26-16/book-vix-example-1440.png": "2b5397a8e56460341be364d3a2a32d147169510c3fe30f810e23839a68c13232",
-    "docs/validation/section-26-16/book-vix-example-1000.png": "5602fbc8e9e4022778bef2584b25a793b5c4eb6257e9b3be91e840fe147d6b3b"
+    "docs/validation/section-26-16/book-vix-example-1440.png": "2f9af1cd0b9998ad9c3200d1305934575d26ae894af70248114cb7a0c75341bb",
+    "docs/validation/section-26-16/book-vix-example-1000.png": "3fb86107b604932e3a1e1d211bcca2a5c94ddfdb70abdba5d3a36b09e381408f"
   },
   "browser_version": "145.0.7632.6",
   "status": "PASS",

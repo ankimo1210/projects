@@ -575,8 +575,8 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["counts"] == {
         "unreviewed": 298,
         "gaps_found": 0,
-        "pending_validation": 1,
-        "accepted": 7,
+        "pending_validation": 0,
+        "accepted": 8,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
@@ -616,15 +616,20 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     )
     assert any("印刷された価格例が無い" in text for text in basket["limitations"])
     swaps = next(section for section in ledger["sections"] if section["id"] == "26.16")
-    # M8 delivered every axis, but no independent review has been done, so it stays pending.
-    assert swaps["status"] == "pending_validation"
+    # Accepted after two independent reviews (F1-F19) and a scoped re-review (N1-N6).
+    assert swaps["status"] == "accepted"
     assert [row["id"] for row in swaps["requirements"]] == [f"VS{i:02}" for i in range(1, 7)]
     assert all(
         axis["state"] == "verified"
         for row in swaps["requirements"]
         for axis in row["coverage"].values()
     )
-    assert any("独立レビューは未実施" in text for text in swaps["limitations"])
+    assert any("F1–F19" in text and "N1–N6" in text for text in swaps["limitations"])
+    notes = {item["path"] for item in swaps["evidence"].values() if item["kind"] == "note"}
+    assert {
+        "docs/SECTION_26_16_FEEDBACK_2026-09-25.md",
+        "docs/SECTION_26_16_ACCEPTANCE_2026-09-25.md",
+    } <= notes
     shout = next(section for section in ledger["sections"] if section["id"] == "26.12")
     assert shout["status"] == "accepted"
     assert [row["id"] for row in shout["requirements"]] == [f"S{i:02}" for i in range(1, 7)]

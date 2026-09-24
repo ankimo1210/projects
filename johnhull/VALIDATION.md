@@ -12,16 +12,19 @@ integration gate を満たすことだけを表す。実市場での予測力、
 
 ## Section 26.16 M8 — 2026-09-25
 
-[レビュー](docs/SECTION_26_16_REVIEW_2026-09-25.md)と
-[統合記録](docs/validation/section-26-16/m8-check.json)へ、VS01–VS06の5軸を集約する。台帳は **pending_validation**（独立レビュー未実施）。
+[受入ノート](docs/SECTION_26_16_ACCEPTANCE_2026-09-25.md)・[レビュー](docs/SECTION_26_16_REVIEW_2026-09-25.md)・
+[指摘と対応](docs/SECTION_26_16_FEEDBACK_2026-09-25.md)・[統合記録](docs/validation/section-26-16/m8-check.json)へ、
+VS01–VS06の5軸を集約する。台帳は **accepted**。
 
 - 独立参照（NumPy/SciPyのみ）でExample 26.4（strip 0.00813874、E(V) 0.06210083、価値1.69307）と26.5（E(σ) 0.24839097、価値1.82080）を再現し、印刷Q 9本を2桁で一致させた。
 - 式26.6：平坦BSMで$S^*/F_0$=0.8–1.25の最大差8.3e-17、Heston 3市場で閉形式E(V)との最大差1.51e-12。ストリップはwide範囲でΔK=10→1.25に3.39e-3→5.31e-5、narrow範囲は打切りで0に収束しない。
 - 式26.9：厳密E(√V)（CIRラプラス変換）に対し近似誤差はξ=0.3で−1.9e-5、ξ=1で−4.6e-3。厳密CIR遷移MCは最大1.08 SE。VIX打切り差1.385e-5、30日補間のボラ誤差−3.24e-4。
 - 公開API `realized_variance` / `realized_volatility` / `variance_notional` / `vix_index`、本文6小節、保存データ駆動の共有4図を追加（portal全110図、exotics 30図）。
-- vol10は115セル。§4.6外の101セルと既受入6節の24図を基点f6a2b62eと照合し一致。保存4図のdata/layoutは現builderと完全一致。
-- Chromium 145でBook/portal×1440/1000px×4図×2状態＝32状態を独立参照と照合。18画像、MathJax 105要素・エラー0、ξ=0.6の近似値+0.5%pt改変を両面で拒否。
+- vol10は115セル。§4.6外の101セルをソースと出力53件まで、既受入6節の24図とともに基点f6a2b62eと照合し一致。保存4図のdata/layoutは現builderと完全一致。出力・§26.16図・§26.15図の改変3種を拒否。
+- Chromium 145でBook/portal×1440/1000px×4図×2状態＝32状態を独立参照と照合。20画像（§4.6.5のVIXを含む）、MathJax 112要素・エラー0、ξ=0.6の近似値+0.5%pt改変を両面で拒否。
 - 既受入§26.9–§26.15は共有notebook/builder/portal/styleの変更に伴い各節テスト（1,232 passed / 6 skipped）と両画面を再検証しPASS。過去証跡は変更していない。
+- 独立レビュー2本（原典・数値・本文／検証の仕組みと記録）は価格式・原典数値・独立参照の中核に誤りなし。受入を止めた1件（VS05の可視化の根拠画像）とP3 18件、修正の再レビューで出たP3 6件（N1–N6）をすべて修正。vol 26のredemption-only・YoYチェックも、全ゼロ・切り詰め・metric改竄で落ちるように強化した。
+- johnhull全体は **2,690 passed / 6 skipped**。artifacts・frontier notebooks・core notebooks・release（`--require-tracked`）の各ゲートPASS。
 - 誤差は選んだ合成市場と格子の実測で、全域の上界・実市場性能・production readinessを意味しない。
 
 ## Section 26.15 M7 — 2026-09-19
