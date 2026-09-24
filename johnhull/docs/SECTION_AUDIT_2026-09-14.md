@@ -787,6 +787,17 @@ vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成�
 | F1 / F2（文書） | この文書と同じ commit | `VALIDATION.md` 冒頭の契約（全 11 巻、依存チェックの例外、保存値依存の別表、退化入力）と vol 25 の件数 9 → 10、第 3 便の表の言い過ぎを修正。この文書の冒頭に読み方を置き、§0・§2・§10・§11 の過去の記述に時点を明記し、ID 別の現状を §12 にまとめた。初回レビューの参照先を `bd278948` の git 履歴に変更。`johnhull/CLAUDE.md` の tamper 契約・core gate・vol 21 timing の記述を更新 | — |
 | 追加（F4 の作業中に発見） | `225ff760` | vol 18–21・26–28 のノート出力に matplotlib の字形欠落の警告が計 233 件あった。frontier ノートは日本語フォントを読み込まず、図の日本語ラベルが DejaVu Sans で豆腐になっていた。警告には過去の worktree の絶対パスも入っていた。frontier builder の先頭セルで `japanize_matplotlib` を読み込み、vol 18–28 の 11 冊を再生成。コミット済みノートに字形欠落の警告とローカルパスがないことをテストで固定（frontier の gate は stderr と図を比べないため） | 図の文字だけが変わる。stdout・`text/plain` は不変 |
 
+### 11.4 第 5 便（2026-09-25、ブランチ `claude/johnhull-vol26-m8`、base `f6a2b62e`）
+
+§11.2 で保存値のまま残した vol 26 の 3 項目を、配列からの再計算に移した。2026-09-15 に別の worktree で途中まで書かれ未コミットのまま残っていた reference 側の変更（YoY 比の構成要素の保存）を引き継ぎ、ゲートと改竄テストを足した。検査名・件数は不変、判定条件の記述だけを実際の検査に合わせて更新した。
+
+| 項目 | 変更 | 数値の変化 |
+|---|---|---|
+| `principal_floor_redemption_only`・`coupon_floor_max_error` | reference に `jgbi_unfloored_coupon` を追加。`redemption_only_principal_floor` は、両スキームのクーポン一致（最大差を再計算して保存値と照合）、クーポンが指数比に比例すること（R < 1 の日に床を当てると比例が崩れる）、満期前の元本が 0、満期の元本が face·max(R, 1) と face·R であることを配列から確かめる | 観測値 0.0 は不変 |
+| `measure_treatment` | reference に YoY 比の構成要素 6 本（始点・終点のフォワード CPI、名目支払フォワード測度への調整項、始点の対数分散、始点–終点の対数共分散）を追加。`nominal_payment_forward_measure` は E[I(e)/I(s)] = F_pay(e)/F_pay(s)·exp(Var_s − Cov_{s,e}) を組み直して保存値と相対 1e-12 で照合し、確定的比 F(e)/F(s) の一致、終点の調整項が 0（終点観測日＝支払日）、始点の調整項が非 0 であることも要求する | 観測値は文字列 `nominal_payment_forward` から再計算誤差 0.0 へ |
+
+改竄テストを 8 件追加（未調整クーポンの拡大、最終クーポンに床を当てる、満期前の元本、YoY 比・始点調整項・共分散・終点フォワードの改変）。既存の vol 26 配列 46 本は byte 単位で不変、追加 7 本。`frontier_reference.py` を編集したので vol 21 の SHA 契約により vol 21 の reference を再生成した（1 行の diff）。
+
 ## 12. 現在の状態（第 4 便の後、ID 別）
 
 §0–§10 は初回監査時点の記述。現在どうなっているかはこの表で判断する。「対応済み」は commit の変更とそのテスト・ゲートで確認したもので、節単位の完全性を意味しない。
@@ -799,7 +810,7 @@ vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成�
 | 監査報告 | R7、R8 | 対応済み | R7 は BA-03（`1eabb8c5`）、R8 は D4 と同時（`c4654c9a`） |
 | 監査報告 | R1、R2、R3、R4、R6、R11 | 未対応（未再確認） | 研究・設計課題。§7 の判断事項を含む |
 | acceptance | BA-04、BB-04、BB-09、BB-14、BB-18 | 対応済み | 全 11 巻を配列から再計算（`b74ee335`、`c745efc5`、`b7eb9ba7`、`f812e8ef`、`1eabb8c5`）。退化入力は第 4 便で FAIL 記録化 |
-| acceptance | 保存値依存の残り | 未対応（根拠配列なし） | vol 18 `residual_baseline`・`hard_violation_rate`、vol 19 `multi_start_calibration`、vol 21 timing フラグ、vol 22 `calendar_violations`、vol 26 の 3 件（§11.2） |
+| acceptance | 保存値依存の残り | 未対応（根拠配列なし） | vol 18 `residual_baseline`・`hard_violation_rate`、vol 19 `multi_start_calibration`、vol 21 timing フラグ、vol 22 `calendar_violations`（vol 26 の 3 件は §11.4 で対応済み） |
 | vol 21・23 | BA-09、BB-02、BA-10 | 対応済み | `c4654c9a`、`3db10647`、BA-10 は第 4 便（計測の来歴） |
 | vol 22 | BA-11 | 一部 | D3（`2db3e49c`）と R5 は対応、乱数ストリームの分離（R4）は未対応 |
 | 出力照合 | DD-17、BB-13 | 対応済み | frontier は `8580546f`、core の本文照合は第 4 便 |

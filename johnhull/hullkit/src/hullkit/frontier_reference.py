@@ -2086,6 +2086,55 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
             for end in yoy_payment
         ]
     )
+    # Components of the nominal payment-forward YoY ratio, so the acceptance gate
+    # can rebuild it: E[I(e)/I(s)] = F_pay(e)/F_pay(s) * exp(Var_s - Cov_{s,e}),
+    # with F_pay(o) = F(o) * exp(a(o)) and a(o) = 0 when o is the payment date.
+    yoy_start_forward = np.asarray(
+        [
+            jarrow_yildirim.jy_cpi_forward(0.0, end - 1.0, 100.0, nominal_curve, real_curve)
+            for end in yoy_payment
+        ]
+    )
+    yoy_end_forward = np.asarray(
+        [
+            jarrow_yildirim.jy_cpi_forward(0.0, end, 100.0, nominal_curve, real_curve)
+            for end in yoy_payment
+        ]
+    )
+    yoy_start_payment_adjustment = np.log(
+        np.asarray(
+            [
+                jarrow_yildirim.jy_payment_forward_cpi(
+                    0.0, end - 1.0, end, 100.0, nominal_curve, real_curve, jy_params
+                )
+                for end in yoy_payment
+            ]
+        )
+        / yoy_start_forward
+    )
+    yoy_end_payment_adjustment = np.log(
+        np.asarray(
+            [
+                jarrow_yildirim.jy_payment_forward_cpi(
+                    0.0, end, end, 100.0, nominal_curve, real_curve, jy_params
+                )
+                for end in yoy_payment
+            ]
+        )
+        / yoy_end_forward
+    )
+    yoy_start_log_variance = np.asarray(
+        [
+            jarrow_yildirim.jy_cpi_log_covariance(0.0, end - 1.0, end - 1.0, jy_params)
+            for end in yoy_payment
+        ]
+    )
+    yoy_log_covariance = np.asarray(
+        [
+            jarrow_yildirim.jy_cpi_log_covariance(0.0, end - 1.0, end, jy_params)
+            for end in yoy_payment
+        ]
+    )
     jy_observation = np.asarray([1.0, 2.0, 5.0])
     jy_forward_index = np.asarray(
         [
@@ -2248,6 +2297,12 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
         "yoy_payment": yoy_payment,
         "yoy_deterministic_ratio": yoy_deterministic_ratio,
         "yoy_jy_ratio": yoy_jy_ratio,
+        "yoy_start_forward_cpi": yoy_start_forward,
+        "yoy_end_forward_cpi": yoy_end_forward,
+        "yoy_start_payment_adjustment": yoy_start_payment_adjustment,
+        "yoy_end_payment_adjustment": yoy_end_payment_adjustment,
+        "yoy_start_log_variance": yoy_start_log_variance,
+        "yoy_log_covariance": yoy_log_covariance,
         "jy_observation": jy_observation,
         "jy_forward_index": jy_forward_index,
         "jy_mc_forward_index": jy_mc_forward,
@@ -2258,6 +2313,7 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
         ),
         "jgbi_index_ratio": np.asarray([row.index_ratio for row in floored_cashflows]),
         "jgbi_coupon": np.asarray([row.coupon for row in floored_cashflows]),
+        "jgbi_unfloored_coupon": np.asarray([row.coupon for row in unfloored_cashflows]),
         "jgbi_unfloored_principal": np.asarray([row.principal for row in unfloored_cashflows]),
         "jgbi_floored_principal": np.asarray([row.principal for row in floored_cashflows]),
         "inflation_volatility": inflation_volatility,

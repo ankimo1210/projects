@@ -38,7 +38,7 @@
         "passed": true
       },
       {
-        "criterion": "coupons identical and floored final principal exceeds unfloored principal",
+        "criterion": "coupons identical and proportional to the index ratio, no interim principal, final principal face * max(R, 1) against face * R",
         "name": "redemption_only_principal_floor",
         "observed": 0.0,
         "passed": true
@@ -50,9 +50,9 @@
         "passed": true
       },
       {
-        "criterion": "explicit nominal payment-forward measure with non-zero YoY convexity",
+        "criterion": "YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, measure adjustment applied, non-zero YoY convexity",
         "name": "nominal_payment_forward_measure",
-        "observed": "nominal_payment_forward",
+        "observed": 0.0,
         "passed": true
       },
       {
@@ -276,6 +276,13 @@
         ],
         "unit": "years from issue"
       },
+      "jgbi_unfloored_coupon": {
+        "dtype": "float64",
+        "shape": [
+          10
+        ],
+        "unit": "currency units per 100 face"
+      },
       "jgbi_unfloored_principal": {
         "dtype": "float64",
         "shape": [
@@ -374,6 +381,20 @@
         ],
         "unit": "CPI index ratio"
       },
+      "yoy_end_forward_cpi": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "synthetic CPI index points"
+      },
+      "yoy_end_payment_adjustment": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "log CPI multiplier"
+      },
       "yoy_jy_ratio": {
         "dtype": "float64",
         "shape": [
@@ -381,12 +402,40 @@
         ],
         "unit": "expected CPI index ratio"
       },
+      "yoy_log_covariance": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "log CPI covariance"
+      },
       "yoy_payment": {
         "dtype": "float64",
         "shape": [
           5
         ],
         "unit": "years"
+      },
+      "yoy_start_forward_cpi": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "synthetic CPI index points"
+      },
+      "yoy_start_log_variance": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "log CPI variance"
+      },
+      "yoy_start_payment_adjustment": {
+        "dtype": "float64",
+        "shape": [
+          5
+        ],
+        "unit": "log CPI multiplier"
       },
       "zcis_maturity": {
         "dtype": "float64",
@@ -412,7 +461,7 @@
     }
   },
   "companions": {
-    "inflation_scenarios.npz": "435b19a2cf8a59a5df027a439bd9e298ccfd0593b42d7c8a990395087490fc6b"
+    "inflation_scenarios.npz": "629f79997a413c7630a797b6fb1f53160bae758742ac7d92f3b1defbe70b6f5f"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",

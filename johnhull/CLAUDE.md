@@ -33,7 +33,7 @@ acceptance は `johnhull/scripts/frontier_acceptance.py` がコミット済み�
 が「選んだ入力を改竄すると、再計算しているチェックと、その入力を共有すると宣言した依存チェック
 （`DEPENDENT_FAILURES`）だけが落ちる」ことを固定している。ゼロ入力などで評価が例外になる場合は
 `gate_evaluation` の FAIL 記録を返す。配列に根拠がない項目
-（vol 18 の Heston 残差 MAE、vol 19 の start 成否、vol 22 の暦判定、vol 26 のクーポン一致など）は
+（vol 18 の Heston 残差 MAE、vol 19 の start 成否、vol 21 の計時フラグ、vol 22 の暦判定）は
 保存値のまま（`docs/SECTION_AUDIT_2026-09-14.md` §11.2）。vol 18 の reference 再生成には
 `deep_hedge_price/artifacts/pricing/quick/2d4ba8e38acfa5cc`（gitignore、ローカルのみ）が必要。
 

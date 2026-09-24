@@ -1861,17 +1861,50 @@ def _volume26(
         "analytic floor is non-decreasing along the increasing inflation-volatility grid",
         floor_monotone and metrics["floor_monotone_in_volatility"] is True,
     )
-    redemption_only = (
-        metrics["principal_floor_redemption_only"] is True
-        and metrics["coupon_floor_max_error"] == 0.0
-        and arrays["jgbi_floored_principal"][-1] > arrays["jgbi_unfloored_principal"][-1]
+    # The floor may touch the redemption only: both schedules pay identical
+    # coupons proportional to the unfloored index ratio (a floored coupon would
+    # break the proportionality on the R < 1 dates), no principal before
+    # maturity, and a final principal of face * max(R, 1) against face * R.
+    index_ratio = arrays["jgbi_index_ratio"]
+    coupon = arrays["jgbi_coupon"]
+    unfloored_coupon = arrays["jgbi_unfloored_coupon"]
+    floored_principal = arrays["jgbi_floored_principal"]
+    unfloored_principal = arrays["jgbi_unfloored_principal"]
+    face = float(metrics["jgbi_face_value"])
+    schedule_shapes = bool(
+        index_ratio.ndim == 1
+        and index_ratio.size >= 2
+        and coupon.shape == unfloored_coupon.shape == index_ratio.shape
+        and floored_principal.shape == unfloored_principal.shape == index_ratio.shape
+        and np.all(index_ratio > 0.0)
     )
+    coupon_error = float("nan")
+    redemption_only = False
+    if schedule_shapes:
+        coupon_error = float(np.max(np.abs(coupon - unfloored_coupon)))
+        coupon_per_ratio = coupon / index_ratio
+        ratio = float(index_ratio[-1])
+        redemption_only = bool(
+            coupon_error == 0.0
+            and np.all(
+                np.abs(coupon_per_ratio - coupon_per_ratio[0]) <= 1e-12 * coupon_per_ratio[0]
+            )
+            and np.all(floored_principal[:-1] == 0.0)
+            and np.all(unfloored_principal[:-1] == 0.0)
+            and math.isclose(float(unfloored_principal[-1]), face * ratio, rel_tol=1e-12)
+            and math.isclose(float(floored_principal[-1]), face * max(ratio, 1.0), rel_tol=1e-12)
+            and floored_principal[-1] > unfloored_principal[-1]
+        )
     _add(
         checks,
         "redemption_only_principal_floor",
-        metrics["coupon_floor_max_error"],
-        "coupons identical and floored final principal exceeds unfloored principal",
-        redemption_only,
+        coupon_error,
+        "coupons identical and proportional to the index ratio, no interim principal, "
+        "final principal face * max(R, 1) against face * R",
+        schedule_shapes
+        and redemption_only
+        and metrics["principal_floor_redemption_only"] is True
+        and _close(metrics["coupon_floor_max_error"], coupon_error),
     )
     final_ratio = float(arrays["jgbi_index_ratio"][-1])
     decomposition_error = abs(
@@ -1890,16 +1923,58 @@ def _volume26(
         and decomposition_error <= 1e-12
         and math.isclose(decomposition_error, metrics["floor_decomposition_error"], abs_tol=1e-15),
     )
-    measure_ok = (
-        metrics["measure_treatment"] == "nominal_payment_forward"
-        and np.ptp(arrays["yoy_jy_ratio"] - arrays["yoy_deterministic_ratio"]) > 0.0
+    # Rebuild E[I(e)/I(s)] under the nominal payment-forward measure from its
+    # committed components: F_pay(o) = F(o) exp(a(o)), with a(e) = 0 because the
+    # end observation is the payment date, times exp(Var_s - Cov_{s,e}).
+    start_forward = arrays["yoy_start_forward_cpi"]
+    end_forward = arrays["yoy_end_forward_cpi"]
+    start_adjustment = arrays["yoy_start_payment_adjustment"]
+    end_adjustment = arrays["yoy_end_payment_adjustment"]
+    start_variance = arrays["yoy_start_log_variance"]
+    log_covariance = arrays["yoy_log_covariance"]
+    jy_ratio = arrays["yoy_jy_ratio"]
+    deterministic_ratio = arrays["yoy_deterministic_ratio"]
+    yoy_shapes = bool(
+        jy_ratio.ndim == 1
+        and jy_ratio.shape
+        == deterministic_ratio.shape
+        == start_forward.shape
+        == end_forward.shape
+        == start_adjustment.shape
+        == end_adjustment.shape
+        == start_variance.shape
+        == log_covariance.shape
+        == arrays["yoy_payment"].shape
+        and np.all(start_forward > 0.0)
+        and np.all(jy_ratio > 0.0)
     )
+    measure_error = float("nan")
+    measure_ok = False
+    if yoy_shapes:
+        rebuilt = (
+            end_forward
+            * np.exp(end_adjustment)
+            / (start_forward * np.exp(start_adjustment))
+            * np.exp(start_variance - log_covariance)
+        )
+        measure_error = float(np.max(np.abs(rebuilt / jy_ratio - 1.0)))
+        deterministic_error = float(
+            np.max(np.abs(end_forward / start_forward / deterministic_ratio - 1.0))
+        )
+        measure_ok = bool(
+            measure_error <= 1e-12
+            and deterministic_error <= 1e-12
+            and np.all(end_adjustment == 0.0)
+            and np.any(start_adjustment != 0.0)
+            and np.ptp(jy_ratio - deterministic_ratio) > 0.0
+        )
     _add(
         checks,
         "nominal_payment_forward_measure",
-        metrics["measure_treatment"],
-        "explicit nominal payment-forward measure with non-zero YoY convexity",
-        measure_ok,
+        measure_error,
+        "YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, "
+        "measure adjustment applied, non-zero YoY convexity",
+        yoy_shapes and measure_ok and metrics["measure_treatment"] == "nominal_payment_forward",
     )
     bei_ok = (
         arrays["bei_names"].tolist() == ["raw", "floor-adjusted"]

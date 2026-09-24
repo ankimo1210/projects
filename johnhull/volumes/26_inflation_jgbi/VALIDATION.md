@@ -38,9 +38,9 @@
 | `jy_forward_measure_mc` | 1.4888912714624325 | aligned arrays and maximum analytic/MC z-score < 3 | PASS |
 | `jgbi_floor_analytic_mc` | 1.1974973083142517 | aligned arrays, maximum non-degenerate z-score < 3, zero-SE rows equal analytic | PASS |
 | `floor_volatility_monotonicity` | True | analytic floor is non-decreasing along the increasing inflation-volatility grid | PASS |
-| `redemption_only_principal_floor` | 0.0 | coupons identical and floored final principal exceeds unfloored principal | PASS |
+| `redemption_only_principal_floor` | 0.0 | coupons identical and proportional to the index ratio, no interim principal, final principal face * max(R, 1) against face * R | PASS |
 | `floor_payoff_decomposition` | 0.0 | binding floor: floored = unfloored + face * max(1 - R, 0) within 1e-12 | PASS |
-| `nominal_payment_forward_measure` | nominal_payment_forward | explicit nominal payment-forward measure with non-zero YoY convexity | PASS |
+| `nominal_payment_forward_measure` | 0.0 | YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, measure adjustment applied, non-zero YoY convexity | PASS |
 | `raw_and_floor_adjusted_breakeven` | 0.0002785788824835045 | two explicitly different BEI measures | PASS |
 | `synthetic_hedge_decomposition` | 0.6659580979027157 | revalued nominal-PV01/CPI-delta residuals vanish, real PV01 follows, scenario P&L shrinks | PASS |
 
