@@ -45,7 +45,7 @@
     "vix_gap_matches_formula": true
   },
   "method": {
-    "options": "Own BSM; Heston by Lewis single integral of the trap-stable CF (quad to infinity)",
+    "options": "Own BSM; Heston by Lewis single integral of the trap-stable CF (quad to infinity). Deep out-of-the-money Heston prices carry about 1e-11 of cancellation noise (strip_min_q), below 1e-15 in E(V) after the 1/K^2 weights",
     "replication": "Eq. 26.6 by quad in x=ln(K/F) over a declared finite range; tails omitted",
     "strip": "Eq. 26.8 with Hull's spacing, S* = largest strike <= F0, Q average at S*",
     "variance_of_variance": "xi^2 ∫ b(s)^2 E[v_s] ds / T^2 from the Itô isometry",
@@ -64,15 +64,16 @@
     "heston_max_quadrature_error": 8.417221426250049e-13,
     "convexity_max_abs_approximation_error": 0.004618934879419279,
     "convexity_max_abs_zscore": 1.083791161669365,
+    "strip_min_q": -2.0591528482327703e-11,
     "vix_truncation_gap": 1.3849604854980144e-05,
     "vix_interpolation_error": -0.00032367235994013033
   },
   "caveat": "Synthetic Heston markets and a fixed strike grid; the measured errors are not bounds. Continuous monitoring and continuous paths are assumed except in the daily-estimator check.",
   "source_sha256": {
-    "scripts/build_variance_swap_reference.py": "cb4067649726a91b2fda0eb2a326e5f84213a0428bff29a5ffb3a5055ff3a229",
+    "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
     "hullkit/tests/test_variance_swap_reference.py": "a3ed35a71fe9960af0b65c902c4595ec3c21aeb9fec2d8ff19bda06f898c31d0"
   },
   "artifact_sha256": {
-    "docs/validation/section-26-16/reference.json": "c9910a5a19c0c4a909047b63396be9b2eb0899e297c61bda7a7ef2609353091d"
+    "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4"
   }
 }

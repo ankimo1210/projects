@@ -134,8 +134,13 @@ def hull_spacing(strikes):
     return spacing
 
 
-def discrete_strip_expected_variance(pricer, strikes, forward, rate, expiry, s_star=None):
-    """Eq. (26.6) with the integrals replaced by the strip of eq. (26.8)."""
+def discrete_strip_expected_variance(
+    pricer, strikes, forward, rate, expiry, s_star=None, q_out=None
+):
+    """Eq. (26.6) with the integrals replaced by the strip of eq. (26.8).
+
+    ``q_out``, when a list, receives the ``Q(K_i)`` used (for noise-floor records).
+    """
     k = np.asarray(strikes, dtype=float)
     if s_star is None:
         s_star = float(k[k <= forward][-1])
@@ -146,6 +151,8 @@ def discrete_strip_expected_variance(pricer, strikes, forward, rate, expiry, s_s
             q.append(0.5 * (call + put))
         else:
             q.append(put if strike < s_star else call)
+    if q_out is not None:
+        q_out.extend(q)
     strip = math.fsum(hull_spacing(k) / k**2 * math.exp(rate * expiry) * np.asarray(q))
     ratio = forward / s_star
     return 2.0 / expiry * (math.log(ratio) - (ratio - 1.0)) + 2.0 / expiry * strip
@@ -402,8 +409,9 @@ def _strip_convergence(pricers):
         rows = []
         for step in (10.0, 5.0, 2.5, 1.25):
             strikes = np.arange(lo, hi + step / 2, step)
+            q_used = []
             value = discrete_strip_expected_variance(
-                pricers[market["name"]], strikes, forward, HESTON_RATE, expiry
+                pricers[market["name"]], strikes, forward, HESTON_RATE, expiry, q_out=q_used
             )
             rows.append(
                 dict(
@@ -412,6 +420,7 @@ def _strip_convergence(pricers):
                     s_star=float(strikes[strikes <= forward][-1]),
                     expected_variance=value,
                     error=value - exact,
+                    min_q=min(q_used),
                 )
             )
         families.append(dict(range=name, strike_low=lo, strike_high=hi, rows=rows))
@@ -612,7 +621,11 @@ def build_artifacts():
         ),
         checks=checks,
         method=dict(
-            options="Own BSM; Heston by Lewis single integral of the trap-stable CF (quad to infinity)",
+            options=(
+                "Own BSM; Heston by Lewis single integral of the trap-stable CF (quad to infinity). "
+                "Deep out-of-the-money Heston prices carry about 1e-11 of cancellation noise "
+                "(strip_min_q), below 1e-15 in E(V) after the 1/K^2 weights"
+            ),
             replication="Eq. 26.6 by quad in x=ln(K/F) over a declared finite range; tails omitted",
             strip="Eq. 26.8 with Hull's spacing, S* = largest strike <= F0, Q average at S*",
             variance_of_variance="xi^2 ∫ b(s)^2 E[v_s] ds / T^2 from the Itô isometry",
@@ -633,6 +646,9 @@ def build_artifacts():
                 abs(row["approximation_error"]) for row in convexity["rows"]
             ),
             convexity_max_abs_zscore=max(abs(mc["sqrt_mean_zscore"]) for mc in mc_rows),
+            strip_min_q=min(
+                row["min_q"] for family in convergence["families"] for row in family["rows"]
+            ),
             vix_truncation_gap=vix["example_26_4"]["gap"],
             vix_interpolation_error=vix["interpolation"]["error"],
         ),
