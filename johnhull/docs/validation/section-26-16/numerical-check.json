@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "section": "26.16",
+  "status": "PASS",
+  "milestone_status": "gaps_found",
+  "scope": "Independent numerical reference for §26.16; API extensions, teaching and figures pending.",
+  "source_pages": [
+    629,
+    630,
+    631,
+    632
+  ],
+  "printed_anchors": {
+    "example_26_4": {
+      "strip_sum": 0.008138736237947669,
+      "expected_variance": 0.062100833445622144,
+      "swap_value": 1.6930677309810418,
+      "printed": {
+        "strip_sum": 0.008139,
+        "expected_variance": 0.0621,
+        "swap_value": 1.69
+      }
+    },
+    "example_26_5": {
+      "expected_volatility": 0.2483909739854638,
+      "swap_value": 1.820798073679371,
+      "printed": {
+        "expected_volatility": 0.2484,
+        "swap_value": 1.82
+      }
+    }
+  },
+  "checks": {
+    "example_26_4_printed_q_2dp": true,
+    "example_26_4_expected_variance": true,
+    "example_26_4_value": true,
+    "example_26_5_expected_volatility": true,
+    "example_26_5_value": true,
+    "flat_replication_s_star_invariant": true,
+    "heston_replication_closed_form": true,
+    "wide_fine_strip_converges": true,
+    "convexity_mc_within_4se": true,
+    "variance_mc_within_4se": true,
+    "realized_variance_mc_within_4se": true,
+    "vix_gap_matches_formula": true
+  },
+  "method": {
+    "options": "Own BSM; Heston by Lewis single integral of the trap-stable CF (quad to infinity)",
+    "replication": "Eq. 26.6 by quad in x=ln(K/F) over a declared finite range; tails omitted",
+    "strip": "Eq. 26.8 with Hull's spacing, S* = largest strike <= F0, Q average at S*",
+    "variance_of_variance": "xi^2 ∫ b(s)^2 E[v_s] ds / T^2 from the Itô isometry",
+    "expected_volatility": "CIR Laplace transform integral with a Taylor head below t=1e-2",
+    "mc": "Exact CIR transitions (noncentral chi-square), trapezoid in time, fixed seeds",
+    "reproducibility": "No timestamps; --check regenerates both files byte for byte"
+  },
+  "tolerances": {
+    "quad_epsabs": 1e-13,
+    "quad_epsrel": 1e-12,
+    "mc_standard_errors": 4.0
+  },
+  "measured": {
+    "flat_max_abs_difference": 8.326672684688674e-17,
+    "heston_max_abs_difference": 1.5131403074963856e-12,
+    "heston_max_quadrature_error": 8.417221426250049e-13,
+    "convexity_max_abs_approximation_error": 0.004618934879419279,
+    "convexity_max_abs_zscore": 1.083791161669365,
+    "vix_truncation_gap": 1.3849604854980144e-05,
+    "vix_interpolation_error": -0.00032367235994013033
+  },
+  "caveat": "Synthetic Heston markets and a fixed strike grid; the measured errors are not bounds. Continuous monitoring and continuous paths are assumed except in the daily-estimator check.",
+  "source_sha256": {
+    "scripts/build_variance_swap_reference.py": "cb4067649726a91b2fda0eb2a326e5f84213a0428bff29a5ffb3a5055ff3a229",
+    "hullkit/tests/test_variance_swap_reference.py": "a3ed35a71fe9960af0b65c902c4595ec3c21aeb9fec2d8ff19bda06f898c31d0"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-16/reference.json": "c9910a5a19c0c4a909047b63396be9b2eb0899e297c61bda7a7ef2609353091d"
+  }
+}
