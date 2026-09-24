@@ -62,6 +62,22 @@ def _set_array_value(name: str, index, value: float):
     return tamper
 
 
+def _both(*tampers):
+    def tamper(metrics, arrays):
+        for step in tampers:
+            step(metrics, arrays)
+
+    return tamper
+
+
+def _truncate_prefix(prefix: str, rows: int):
+    def tamper(metrics, arrays):
+        for name in [name for name in arrays if name.startswith(prefix)]:
+            arrays[name] = arrays[name][:rows]
+
+    return tamper
+
+
 def _scale_metric(name: str, factor: float):
     def tamper(metrics, arrays):
         metrics[name] = metrics[name] * factor
@@ -267,6 +283,26 @@ CASES = {
             _set_array_value("jgbi_unfloored_principal", 0, 100.0),
             "redemption_only_principal_floor",
         ),
+        (
+            "jgbi_coupons-both-zero",
+            _both(_scale_array("jgbi_coupon", 0.0), _scale_array("jgbi_unfloored_coupon", 0.0)),
+            "redemption_only_principal_floor",
+        ),
+        (
+            "jgbi_coupons-both-tripled",
+            _both(_scale_array("jgbi_coupon", 3.0), _scale_array("jgbi_unfloored_coupon", 3.0)),
+            "redemption_only_principal_floor",
+        ),
+        (
+            "jgbi_coupon_rate",
+            _scale_metric("jgbi_coupon_rate", 2.0),
+            "redemption_only_principal_floor",
+        ),
+        (
+            "jgbi_index_ratio-final",
+            _scale_array_value("jgbi_index_ratio", -1, 1.001),
+            "redemption_only_principal_floor",
+        ),
         ("yoy_jy_ratio", _scale_array("yoy_jy_ratio", 1.0001), "nominal_payment_forward_measure"),
         (
             "yoy_start_payment_adjustment",
@@ -283,6 +319,13 @@ CASES = {
             _scale_array("yoy_end_forward_cpi", 1.001),
             "nominal_payment_forward_measure",
         ),
+        ("yoy_payment-zero", _scale_array("yoy_payment", 0.0), "nominal_payment_forward_measure"),
+        (
+            "yoy_payment-gap",
+            _set_array_value("yoy_payment", -1, 50.0),
+            "nominal_payment_forward_measure",
+        ),
+        ("yoy-truncated", _truncate_prefix("yoy_", 2), "nominal_payment_forward_measure"),
     ],
     23: [
         ("daily_rate", _scale_array("daily_rate", 1.001), "daily_compounding_handcheck"),
@@ -534,6 +577,8 @@ DEPENDENT_FAILURES = {
     "euler_es_additivity_sim": {"desk_report_reproducible"},
     "cds_par_spread_hull_pin": {"cds_mtm_identity"},
     "base_correlation_curve_shape": {"implied_correlation_reprices_quotes"},
+    # Both read the final index ratio, the final principals and the face value.
+    "redemption_only_principal_floor": {"floor_payoff_decomposition"},
 }
 
 FLAT_CASES = [(volume, *case) for volume, cases in CASES.items() for case in cases]

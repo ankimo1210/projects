@@ -2348,6 +2348,7 @@ def volume26_reference(*, seed: int = 20260744) -> FrontierReference:
         "coupon_floor_max_error": float(coupon_floor_error),
         "floor_decomposition_error": float(floor_decomposition_error),
         "jgbi_face_value": float(floored_terms.face_value),
+        "jgbi_coupon_rate": float(floored_terms.coupon_rate),
         "hedge_zcis_rate": float(hedge["zcis_rate"][0]),
         "unhedged_real_pv01": float(hedge["real_pv01"][0]),
         "hedged_real_pv01": float(hedge["real_pv01"][1]),

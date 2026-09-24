@@ -1,6 +1,6 @@
 {
   "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_exotics_m8.cjs 26-15",
-  "checked_at": "2026-09-24T16:23:21.157Z",
+  "checked_at": "2026-09-24T18:46:01.679Z",
   "pages": {
     "portal": {
       "figures": [
@@ -452,9 +452,9 @@
     "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
     "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
     "docs/validation/section-26-15/browser-reference.json": "7aa23b3418cf81b71ad1fb003b083b73c8ab9266b830baa1c49f01c44298ea2f",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
-    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2",
-    "report/report_builder/figures.py": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
+    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
+    "report/report_builder/figures.py": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
@@ -462,10 +462,10 @@
     "scripts/verify_basket_lesson_browser.cjs": "3dccf81e8a103dafe9de22ba647820654e81589412c5907f71d30556a7d87c4a"
   },
   "artifact_sha256": {
-    "report/site/exotics.html": "1759596a5d4e6553d528f81939bc49bf51c99245f27deb4edb65f8790835b91e",
+    "report/site/exotics.html": "2d84dff44071eb485b58d68cee1dd446a7c55ade722e9364fe48c923f46ae04b",
     "report/site/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "72235eaa543dc1df1ae4ff621d1a70d618b556c667c62cdb40429ef44e31a75f",
+    "book/_build/html/notebooks/10_exotics.html": "c00285d7c0427ad4fa67450a9b93f0b5d8cb4d21350568bc4fb46854f8a25be4",
     "docs/validation/section-26-15/portal-basket_payoff-1440-m8-recheck.png": "cd5307c7d2b060d8322c94dd99a06ae87a7989e12348a15b376da04a941eda17",
     "docs/validation/section-26-15/portal-basket_correlation-1440-m8-recheck.png": "fb09eb06fe27117de1ec80e59947e51456693c92496738279532790f78748182",
     "docs/validation/section-26-15/portal-basket_comparison-1440-m8-recheck.png": "bba286fbcd2a87bdc6a361640aacbd44e08f1bffd70549cfec09ff88f3492171",
@@ -475,7 +475,7 @@
     "docs/validation/section-26-15/portal-basket_comparison-1000-m8-recheck.png": "66017fc7c14815a0c2047a373100c5fa0e2ab9cdf107498a129d6a91279cab0e",
     "docs/validation/section-26-15/portal-basket_error-1000-m8-recheck.png": "abe6d2dc1b0331d351918262eeae16ab70bdee7fb41a62256157446c3dbd2825",
     "docs/validation/section-26-15/book-basket_payoff-1440-m8-recheck.png": "6f2a00b18d9e1781cf035267b646afa1fb4f6e6ed2914a5afe7aadff27dd8aec",
-    "docs/validation/section-26-15/book-basket_correlation-1440-m8-recheck.png": "c0bbba941df85ba3a13e89f8bf739d000d9c7ca7c15da608acf2006e1738b296",
+    "docs/validation/section-26-15/book-basket_correlation-1440-m8-recheck.png": "d703254441f19e45c629b75bb054a7578f44553180fb95e90baada68f8a063f3",
     "docs/validation/section-26-15/book-basket_comparison-1440-m8-recheck.png": "f8c81b1a6bf3a0ed2a1102fdeb12f8e43ca647faea6708e06c274388f4e4b37a",
     "docs/validation/section-26-15/book-basket_error-1440-m8-recheck.png": "d4fcf52842a7ff0a4f7fbb741cb4378388e16ce547906667f91514c3fde7ab94",
     "docs/validation/section-26-15/book-basket_payoff-1000-m8-recheck.png": "eb71fcdba46a22a94cf077298f234be6232342a90d44f2048c581fdb8b02e3e2",

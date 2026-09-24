@@ -83,9 +83,10 @@ def realized_volatility(prices, periods_per_year=252.0, denominator="n-2"):
 def variance_notional(volatility_notional, volatility_strike):
     """``L_var = L_vol / (2 sigma_K)`` (Hull §26.16, p.629).
 
-    At ``sigma = sigma_K`` the variance payoff ``L_var (sigma^2 - sigma_K^2)`` then has
-    the same slope ``L_vol`` as the volatility payoff; away from ``sigma_K`` it is
-    larger by ``L_vol (sigma - sigma_K)^2 / (2 sigma_K) >= 0``.
+    With the variance strike ``V_K = sigma_K^2``, the variance payoff
+    ``L_var (sigma^2 - sigma_K^2)`` then has the same slope ``L_vol`` as the volatility
+    payoff at ``sigma = sigma_K``, and differs from it by
+    ``L_vol (sigma - sigma_K)^2 / (2 sigma_K)``, which is non-negative for ``L_vol >= 0``.
     """
     if not math.isfinite(volatility_notional):
         raise ValueError(f"volatility_notional must be finite, got {volatility_notional!r}")

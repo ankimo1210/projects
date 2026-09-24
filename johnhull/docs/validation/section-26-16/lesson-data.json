@@ -14,11 +14,11 @@
       "Measured errors describe the saved grids and are not universal bounds."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
-      "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
-      "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
-      "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256",
-      "scripts/build_variance_swap_lesson_data.py": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d"
+      "hullkit/src/hullkit/variance_swaps.py": "7fc64e7fba2e11bceb07819c3d65c792e9a09e067f5b06b7b1850d7153846b0e",
+      "scripts/build_variance_swap_reference.py": "335e7619a67853b56db18ddf81e1e4dbc7ee3519b2b0e384b0a85c6f3269026a",
+      "docs/validation/section-26-16/reference.json": "2e33bb9c852d69ae34d7e68f01145743732b4af3c235e0ceb21d3138e44f1fe2",
+      "docs/validation/section-26-16/numerical-check.json": "c68435fdeaaf2b856e62f35d815b087af1d19f075cf6e5f2aa014d230e39cef9",
+      "scripts/build_variance_swap_lesson_data.py": "e9fc4b37eaaecfb6283a8f57fe2a1352be48eb68d28ae515660619e557e0585b"
     },
     "data": {
       "volatility_notional": 100.0,
@@ -228,11 +228,11 @@
       "Measured errors describe the saved grids and are not universal bounds."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
-      "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
-      "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
-      "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256",
-      "scripts/build_variance_swap_lesson_data.py": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d"
+      "hullkit/src/hullkit/variance_swaps.py": "7fc64e7fba2e11bceb07819c3d65c792e9a09e067f5b06b7b1850d7153846b0e",
+      "scripts/build_variance_swap_reference.py": "335e7619a67853b56db18ddf81e1e4dbc7ee3519b2b0e384b0a85c6f3269026a",
+      "docs/validation/section-26-16/reference.json": "2e33bb9c852d69ae34d7e68f01145743732b4af3c235e0ceb21d3138e44f1fe2",
+      "docs/validation/section-26-16/numerical-check.json": "c68435fdeaaf2b856e62f35d815b087af1d19f075cf6e5f2aa014d230e39cef9",
+      "scripts/build_variance_swap_lesson_data.py": "e9fc4b37eaaecfb6283a8f57fe2a1352be48eb68d28ae515660619e557e0585b"
     },
     "data": {
       "forward": 1027.6787593534245,
@@ -240,6 +240,7 @@
       "expiry": 0.25,
       "boundary_terms": -0.0030090564579592083,
       "strip_sum": 0.008138736237947669,
+      "variance_strip_sum": 0.06510988990358135,
       "expected_variance": 0.062100833445622144,
       "swap_value": 1.6930677309810418,
       "rows": [
@@ -322,11 +323,11 @@
       "Measured errors describe the saved grids and are not universal bounds."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
-      "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
-      "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
-      "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256",
-      "scripts/build_variance_swap_lesson_data.py": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d"
+      "hullkit/src/hullkit/variance_swaps.py": "7fc64e7fba2e11bceb07819c3d65c792e9a09e067f5b06b7b1850d7153846b0e",
+      "scripts/build_variance_swap_reference.py": "335e7619a67853b56db18ddf81e1e4dbc7ee3519b2b0e384b0a85c6f3269026a",
+      "docs/validation/section-26-16/reference.json": "2e33bb9c852d69ae34d7e68f01145743732b4af3c235e0ceb21d3138e44f1fe2",
+      "docs/validation/section-26-16/numerical-check.json": "c68435fdeaaf2b856e62f35d815b087af1d19f075cf6e5f2aa014d230e39cef9",
+      "scripts/build_variance_swap_lesson_data.py": "e9fc4b37eaaecfb6283a8f57fe2a1352be48eb68d28ae515660619e557e0585b"
     },
     "data": {
       "market": "skewed",
@@ -428,7 +429,9 @@
           ]
         }
       ],
+      "continuous_difference": 2.914335439641036e-15,
       "continuous_max_abs_difference": 1.5131403074963856e-12,
+      "continuous_markets": 3,
       "flat_s_star_max_abs_difference": 8.326672684688674e-17
     }
   },
@@ -445,11 +448,11 @@
       "Continuously monitored variance of one Heston/CIR market with v0 = theta."
     ],
     "source_hashes": {
-      "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
-      "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
-      "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
-      "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256",
-      "scripts/build_variance_swap_lesson_data.py": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d"
+      "hullkit/src/hullkit/variance_swaps.py": "7fc64e7fba2e11bceb07819c3d65c792e9a09e067f5b06b7b1850d7153846b0e",
+      "scripts/build_variance_swap_reference.py": "335e7619a67853b56db18ddf81e1e4dbc7ee3519b2b0e384b0a85c6f3269026a",
+      "docs/validation/section-26-16/reference.json": "2e33bb9c852d69ae34d7e68f01145743732b4af3c235e0ceb21d3138e44f1fe2",
+      "docs/validation/section-26-16/numerical-check.json": "c68435fdeaaf2b856e62f35d815b087af1d19f075cf6e5f2aa014d230e39cef9",
+      "scripts/build_variance_swap_lesson_data.py": "e9fc4b37eaaecfb6283a8f57fe2a1352be48eb68d28ae515660619e557e0585b"
     },
     "data": {
       "base": {
@@ -464,6 +467,9 @@
         "seed": 20260925,
         "method": "exact CIR transitions, trapezoid"
       },
+      "error_log_slope_min": 4.106224087410041,
+      "error_log_slope_max": 4.709739673611533,
+      "all_errors_negative": true,
       "rows": [
         {
           "xi": 0.1,

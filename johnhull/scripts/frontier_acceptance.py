@@ -1862,8 +1862,8 @@ def _volume26(
         floor_monotone and metrics["floor_monotone_in_volatility"] is True,
     )
     # The floor may touch the redemption only: both schedules pay identical
-    # coupons proportional to the unfloored index ratio (a floored coupon would
-    # break the proportionality on the R < 1 dates), no principal before
+    # semiannual coupons face * rate / 2 * R on the unfloored index ratio (a
+    # floored coupon would break this on the R < 1 dates), no principal before
     # maturity, and a final principal of face * max(R, 1) against face * R.
     index_ratio = arrays["jgbi_index_ratio"]
     coupon = arrays["jgbi_coupon"]
@@ -1871,6 +1871,7 @@ def _volume26(
     floored_principal = arrays["jgbi_floored_principal"]
     unfloored_principal = arrays["jgbi_unfloored_principal"]
     face = float(metrics["jgbi_face_value"])
+    coupon_per_ratio_contract = face * float(metrics["jgbi_coupon_rate"]) / 2.0
     schedule_shapes = bool(
         index_ratio.ndim == 1
         and index_ratio.size >= 2
@@ -1886,8 +1887,10 @@ def _volume26(
         ratio = float(index_ratio[-1])
         redemption_only = bool(
             coupon_error == 0.0
+            and coupon_per_ratio_contract > 0.0
             and np.all(
-                np.abs(coupon_per_ratio - coupon_per_ratio[0]) <= 1e-12 * coupon_per_ratio[0]
+                np.abs(coupon_per_ratio - coupon_per_ratio_contract)
+                <= 1e-12 * coupon_per_ratio_contract
             )
             and np.all(floored_principal[:-1] == 0.0)
             and np.all(unfloored_principal[:-1] == 0.0)
@@ -1899,7 +1902,7 @@ def _volume26(
         checks,
         "redemption_only_principal_floor",
         coupon_error,
-        "coupons identical and proportional to the index ratio, no interim principal, "
+        "coupons identical and equal to face * rate / 2 * R, no interim principal, "
         "final principal face * max(R, 1) against face * R",
         schedule_shapes
         and redemption_only
@@ -1925,7 +1928,9 @@ def _volume26(
     )
     # Rebuild E[I(e)/I(s)] under the nominal payment-forward measure from its
     # committed components: F_pay(o) = F(o) exp(a(o)), with a(e) = 0 because the
-    # end observation is the payment date, times exp(Var_s - Cov_{s,e}).
+    # end observation is the payment date, times exp(Var_s - Cov_{s,e}). Annual
+    # YoY coupons pay at years 1..n, so each start is the previous end.
+    yoy_payment = arrays["yoy_payment"]
     start_forward = arrays["yoy_start_forward_cpi"]
     end_forward = arrays["yoy_end_forward_cpi"]
     start_adjustment = arrays["yoy_start_payment_adjustment"]
@@ -1944,7 +1949,9 @@ def _volume26(
         == end_adjustment.shape
         == start_variance.shape
         == log_covariance.shape
-        == arrays["yoy_payment"].shape
+        == yoy_payment.shape
+        and jy_ratio.size >= 3
+        and np.array_equal(yoy_payment, np.arange(1.0, jy_ratio.size + 1.0))
         and np.all(start_forward > 0.0)
         and np.all(jy_ratio > 0.0)
     )
@@ -1967,13 +1974,14 @@ def _volume26(
             and np.all(end_adjustment == 0.0)
             and np.any(start_adjustment != 0.0)
             and np.ptp(jy_ratio - deterministic_ratio) > 0.0
+            and np.array_equal(start_forward[1:], end_forward[:-1])
         )
     _add(
         checks,
         "nominal_payment_forward_measure",
         measure_error,
         "YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, "
-        "measure adjustment applied, non-zero YoY convexity",
+        "consecutive annual payments, measure adjustment applied, non-zero YoY convexity",
         yoy_shapes and measure_ok and metrics["measure_treatment"] == "nominal_payment_forward",
     )
     bei_ok = (

@@ -715,7 +715,7 @@ FIGURES: list[FigureSpec] = [
         "離散ストリップの格子誤差と翼の欠落",
         "Heston の歪んだスマイルで、式26.8の和と閉形式 E(V) の差を行使価格の間隔と範囲ごとに測る。",
         lambda: variance_swap_lesson_figures()["varswap_replication"],
-        practice="連続積分としての式26.6は閉形式と差 1.5e-12 以内。広い範囲では ΔK を半分にすると誤差がほぼ1/4、狭い範囲では翼の欠落で負に転じ、細かくしても消えない。",
+        practice="連続積分としての式26.6は Heston 3市場で閉形式と差 1.5e-12 以内。広い範囲では ΔK を半分にすると誤差がほぼ1/4、狭い範囲では翼の欠落で負に転じ、細かくしても消えない。",
         is_new=True,
     ),
     FigureSpec(
@@ -724,7 +724,7 @@ FIGURES: list[FigureSpec] = [
         "ボラ・スワップの凸性補正（式26.9）",
         "E(σ)≈√E(V){1−var(V)/(8E(V)²)} を厳密 E(√V)（CIR ラプラス変換）と MC ±4SE に対して測る。",
         lambda: variance_swap_lesson_figures()["volswap_convexity"],
-        practice="Example 26.5 は 0.2484・1.82（$m）。ボラ・スワップには分散の分散が必要で、オプションの束だけでは決まらない。この市場では近似は常に下側で、誤差は ξ⁴ の速さで広がる（ξ=1 で −0.46%pt）。",
+        practice="Example 26.5 は 0.2484・1.82（$m）。ボラ・スワップには分散の分散が必要で、満期1本のオプションの束だけでは追加の仮定なしに決まらない。この市場では近似はどの ξ でも下側で、誤差は小さい ξ で ξ⁴ に比例して広がる（ξ=1 で −0.46%pt）。",
         is_new=True,
     ),
     FigureSpec(

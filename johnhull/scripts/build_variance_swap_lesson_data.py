@@ -7,7 +7,9 @@ independent reference and evaluates the closed-form payoff helpers of
 
 import argparse
 import hashlib
+import itertools
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -70,13 +72,14 @@ def _payoff_rows():
 
 def _strip_rows(reference):
     example = reference["example_26_4"]
-    expiry = 0.25
+    expiry = example["expiry"]
     return {
         "forward": example["forward"],
         "s_star": example["s_star"],
         "expiry": expiry,
         "boundary_terms": example["boundary_terms"],
         "strip_sum": example["strip_sum"],
+        "variance_strip_sum": 2.0 / expiry * example["strip_sum"],
         "expected_variance": example["expected_variance"],
         "swap_value": example["swap_value"],
         "rows": [
@@ -114,19 +117,32 @@ def _replication_rows(reference):
         )
     flat = reference["flat_replication"]
     heston = reference["heston_replication"]
+    plotted = next(row for row in heston["rows"] if row["market"] == block["market"])
     return {
         "market": block["market"],
         "expiry": block["expiry"],
         "forward": block["forward"],
         "exact": block["exact"],
         "families": families,
+        "continuous_difference": plotted["difference"],
         "continuous_max_abs_difference": max(abs(row["difference"]) for row in heston["rows"]),
+        "continuous_markets": len(heston["rows"]),
         "flat_s_star_max_abs_difference": max(abs(row["difference"]) for row in flat["rows"]),
     }
 
 
+def _error_slopes(rows):
+    """Local log-log slopes of |eq. 26.9 error| against xi between neighbouring grid points."""
+    return [
+        math.log(abs(b["approximation_error"]) / abs(a["approximation_error"]))
+        / math.log(b["xi"] / a["xi"])
+        for a, b in itertools.pairwise(rows)
+    ]
+
+
 def _convexity_rows(reference):
     block = reference["volatility_convexity"]
+    slopes = _error_slopes(block["rows"])
     rows = []
     for row in block["rows"]:
         entry = {
@@ -146,7 +162,14 @@ def _convexity_rows(reference):
                 "four_standard_errors": 4.0 * row["mc"]["sqrt_mean_se"],
             }
         rows.append(entry)
-    return {"base": block["base"], "mc": block["mc"], "rows": rows}
+    return {
+        "base": block["base"],
+        "mc": block["mc"],
+        "error_log_slope_min": min(slopes),
+        "error_log_slope_max": max(slopes),
+        "all_errors_negative": all(row["approximation_error"] < 0.0 for row in block["rows"]),
+        "rows": rows,
+    }
 
 
 def build():

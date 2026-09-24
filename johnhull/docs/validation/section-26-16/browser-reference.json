@@ -1,9 +1,9 @@
 {
   "source_sha256": {
-    "scripts/build_variance_swap_browser_reference.py": "dc4f5dbc26d4ce75141bd7b95d574ed1f18dffcb79e695520724aec3833871ca",
-    "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
-    "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
-    "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256"
+    "scripts/build_variance_swap_browser_reference.py": "a75aee80be96b1a84777ac57be4dc5a8523699410dba8f4be8ca1ce9e8f68f34",
+    "scripts/build_variance_swap_reference.py": "335e7619a67853b56db18ddf81e1e4dbc7ee3519b2b0e384b0a85c6f3269026a",
+    "docs/validation/section-26-16/reference.json": "2e33bb9c852d69ae34d7e68f01145743732b4af3c235e0ceb21d3138e44f1fe2",
+    "docs/validation/section-26-16/numerical-check.json": "c68435fdeaaf2b856e62f35d815b087af1d19f075cf6e5f2aa014d230e39cef9"
   },
   "payoff": {
     "sigma": [
