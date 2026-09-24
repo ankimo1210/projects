@@ -128,7 +128,7 @@ def _outputs(cell):
     """Outputs without execution counts, with Plotly div UUIDs masked."""
     kept = []
     for output in cell.get("outputs", ()):
-        item = {"output_type": output["output_type"]}
+        item = {"output_type": output["output_type"], "name": output.get("name")}
         if "text" in output:
             item["text"] = "".join(output["text"])
         for mime, value in sorted(output.get("data", {}).items()):

@@ -1975,13 +1975,19 @@ def _volume26(
             and np.any(start_adjustment != 0.0)
             and np.ptp(jy_ratio - deterministic_ratio) > 0.0
             and np.array_equal(start_forward[1:], end_forward[:-1])
+            and math.isclose(
+                1e4 * float(np.max(np.abs(jy_ratio - deterministic_ratio))),
+                float(metrics["yoy_convexity_bp"]),
+                rel_tol=1e-12,
+            )
         )
     _add(
         checks,
         "nominal_payment_forward_measure",
         measure_error,
         "YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, "
-        "consecutive annual payments, measure adjustment applied, non-zero YoY convexity",
+        "consecutive annual payments, measure adjustment applied, non-zero YoY convexity "
+        "equal to yoy_convexity_bp",
         yoy_shapes and measure_ok and metrics["measure_treatment"] == "nominal_payment_forward",
     )
     bei_ok = (

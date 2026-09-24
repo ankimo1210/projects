@@ -4,13 +4,13 @@
   "base_commit": "f6a2b62e",
   "lesson_numeric_payload_unchanged": null,
   "hash_refresh": [],
-  "checked_at": "2026-09-24T18:42:42.692814+00:00",
+  "checked_at": "2026-09-24T20:38:31.364533+00:00",
   "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_lookback_reference.py hullkit/tests/test_lookback_lesson.py",
   "environment": {
     "PYTHONPATH": "hullkit/src:scripts:report (this checkout)"
   },
   "exit_code": 0,
-  "pytest_output": "........................................................................ [ 50%]\n........................................................................ [100%]\n144 passed in 1.19s\n",
+  "pytest_output": "........................................................................ [ 50%]\n........................................................................ [100%]\n144 passed in 1.20s\n",
   "passed": 144,
   "source_sha256": {
     "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
@@ -19,12 +19,12 @@
     "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "report/report_builder/figures.py": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181",
     "scripts/recheck_exotics_m8.py": "3d4b4d1a71b5588df05d3a2251a73086d03174abefe929bde578268ac8f1567b",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
-    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1"
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "532896dc6870aa752e5a2533c0ae84b8697bc779a7b7bf5ebc31100e12c29682",
+    "volumes/10_exotics_martingales/exotics.ipynb": "eb9096389885d5584c5dc48c8c06dec9c9b6fe2073a6c9cb03a7d384af14c639"
   },
   "artifact_sha256": {
     "report/site/exotics.html": "2d84dff44071eb485b58d68cee1dd446a7c55ade722e9364fe48c923f46ae04b",
-    "book/_build/html/notebooks/10_exotics.html": "c00285d7c0427ad4fa67450a9b93f0b5d8cb4d21350568bc4fb46854f8a25be4"
+    "book/_build/html/notebooks/10_exotics.html": "618c6551af665b45d1c79dea32e75859fc28c3ff7415b769255c88a263f85463"
   },
   "scope": "Accepted section tests against the final M8 assets after the shared vol10 notebook, portal registry and stylesheet changed; no pricing code or lesson data of this section changed. Historical numerical and browser records preserved."
 }

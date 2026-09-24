@@ -2,14 +2,14 @@
   "status": "PASS",
   "milestone": "M8",
   "section": "26.16",
-  "checked_at": "2026-09-24T20:21:56.194668+00:00",
-  "scope": "Section 26.16 M8 delivery after the independent review fixes (F1-F19): independent references, public API additions, six teaching subsections, four shared figures, saved notebook, Book/portal, and rechecks of the seven accepted sections on the final build.",
+  "checked_at": "2026-09-24T20:47:53.372665+00:00",
+  "scope": "Section 26.16 M8 delivery after the independent review fixes (F1-F19, N1-N6): independent references, public API additions, six teaching subsections, four shared figures, saved notebook, Book/portal, and rechecks of the seven accepted sections on the final build.",
   "whole_suite": {
     "status": "PASS",
     "scope": "johnhull/hullkit/tests + johnhull/report/tests + johnhull/tests",
-    "passed": 2690,
+    "passed": 2693,
     "skipped": 6,
-    "seconds": 86.28,
+    "seconds": 90.81,
     "command": "PYTHONPATH=<worktree>/johnhull/hullkit/src:<worktree>/johnhull/report:<worktree>/johnhull/scripts /home/kazumasa/projects/.venv/bin/python -m pytest -q -p no:cacheprovider johnhull/hullkit/tests johnhull/report/tests johnhull/tests",
     "notes": [
       "Six skips are the accepted lookback upper-bound rows at r=q.",
@@ -19,12 +19,12 @@
   },
   "focused": {
     "status": "PASS",
-    "passed": 488,
+    "passed": 489,
     "files": {
       "hullkit/tests/test_variance_swaps.py": 13,
       "hullkit/tests/test_variance_swap_reference.py": 13,
       "hullkit/tests/test_variance_swap_contracts.py": 18,
-      "hullkit/tests/test_variance_swap_lesson.py": 13
+      "hullkit/tests/test_variance_swap_lesson.py": 14
     },
     "also": [
       "test_model_index.py",
@@ -157,6 +157,7 @@
       "verification machinery and evidence"
     ],
     "findings": "one blocking (F1: VS05 visualization evidence), eighteen P3; all fixed",
+    "rereview": "scoped re-review of the fixes: no P1/P2, no regression; N1-N6 (P3) fixed",
     "note": "docs/SECTION_26_16_FEEDBACK_2026-09-25.md"
   },
   "source_sha256": {
@@ -165,25 +166,25 @@
     "hullkit/tests/test_variance_swaps.py": "79ea5ba0b1af0022c75efa50d0332e1b9cc6d2aa23ab4e4ff6025c757a907a27",
     "hullkit/tests/test_variance_swap_reference.py": "be260b1c572ccbcea70c9f8a3c6d2e8f114614828a7465e699903093f35b93f6",
     "hullkit/tests/test_variance_swap_contracts.py": "01deb5aa1a22cfd07abf62ac8c80114143d5c2b8a7cb2d2765f2c9818540ce9b",
-    "hullkit/tests/test_variance_swap_lesson.py": "f301bf01918b145cde8317467cb04c8dde41dd6dc1d1190c0c2bd5790225758f",
+    "hullkit/tests/test_variance_swap_lesson.py": "84a0607097bb8d2683c5108331fa2f4ef9dbabe1ef35c6429d968dfad08321f3",
     "scripts/build_variance_swap_reference.py": "335e7619a67853b56db18ddf81e1e4dbc7ee3519b2b0e384b0a85c6f3269026a",
     "scripts/build_variance_swap_lesson_data.py": "e9fc4b37eaaecfb6283a8f57fe2a1352be48eb68d28ae515660619e557e0585b",
     "scripts/build_variance_swap_browser_reference.py": "a75aee80be96b1a84777ac57be4dc5a8523699410dba8f4be8ca1ce9e8f68f34",
-    "scripts/verify_variance_swap_notebook.py": "36648a0ec65f040e5d16cb755182b8a893a3c022cf948b119576f9ba91d87a4e",
-    "scripts/verify_variance_swap_lesson_browser.cjs": "54910e7388ce07b8203112c04805b59ed8bcfa08c24de0761369a10979a4e92f",
+    "scripts/verify_variance_swap_notebook.py": "fdd62eef5a527271e7f150b25144f9b646ad9f3d953f29679b4d1920428423f1",
+    "scripts/verify_variance_swap_lesson_browser.cjs": "5adc156b823a2a4ba39da52c190c31cee3abf8b2c79fac7bb0dea593bf685cb5",
     "scripts/recheck_exotics_m8.py": "3d4b4d1a71b5588df05d3a2251a73086d03174abefe929bde578268ac8f1567b",
     "scripts/recheck_exotics_m8.cjs": "5d2e4cf36db383f41d4c768ba0bd4efd3885603cd91923ef36f4e4b1ad0432b6",
     "docs/validation/section-26-16/reference.json": "2e33bb9c852d69ae34d7e68f01145743732b4af3c235e0ceb21d3138e44f1fe2",
     "docs/validation/section-26-16/numerical-check.json": "c68435fdeaaf2b856e62f35d815b087af1d19f075cf6e5f2aa014d230e39cef9",
     "docs/validation/section-26-16/lesson-data.json": "941a89849274ee6a6210904c66f7bc19b003fbab368545e24c31422c13b141be",
     "docs/validation/section-26-16/browser-reference.json": "4fc3cbf596e33a72e892f5b06da313837d5c6cdb970683743fe465cfc7d5b4a3",
-    "docs/validation/section-26-16/browser-m8-check.json": "20291cc8e7602947829f581b91d4b7e0a2ea1d520c0079bc62500c0adf3e9f30",
-    "docs/validation/section-26-16/notebook-m8-check.json": "f7c4923007d04b39b1fa6a765902dacc438c19fa6377b8e13476d921a2a6393e",
+    "docs/validation/section-26-16/browser-m8-check.json": "e3f918ea5326be1f2d3db10a8bfbeba8c0093fe6967c79e100c68da8e140289c",
+    "docs/validation/section-26-16/notebook-m8-check.json": "79345d2acff041e55e3742181cff8e432138ac3734ff42599351cf659f07ccac",
     "report/report_builder/figures.py": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181",
     "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "report/tests/test_report_build.py": "d2b91490bf40474655e8f325398c05f1b3eb0b99c6c8a466756cae454b8cc867",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
-    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "532896dc6870aa752e5a2533c0ae84b8697bc779a7b7bf5ebc31100e12c29682",
+    "volumes/10_exotics_martingales/exotics.ipynb": "eb9096389885d5584c5dc48c8c06dec9c9b6fe2073a6c9cb03a7d384af14c639",
     "release_manifest.json": "e11b367fdfa5aae340278c9d0b315e7bcf28094ecb52f8622316c46cb5e515d2",
     "README.md": "3d419564dd463eccf85f90360c7f03429de716d5ac4a1c66e02fe13ded4a2cd5",
     "report/README.md": "07f5a50355191ec31469c931f63d876cf960e2350219ddbed980981f139a4d38",
@@ -191,6 +192,6 @@
   },
   "artifact_sha256": {
     "report/site/exotics.html": "2d84dff44071eb485b58d68cee1dd446a7c55ade722e9364fe48c923f46ae04b",
-    "book/_build/html/notebooks/10_exotics.html": "c00285d7c0427ad4fa67450a9b93f0b5d8cb4d21350568bc4fb46854f8a25be4"
+    "book/_build/html/notebooks/10_exotics.html": "618c6551af665b45d1c79dea32e75859fc28c3ff7415b769255c88a263f85463"
   }
 }

@@ -41,7 +41,7 @@
 | `floor_volatility_monotonicity` | True | analytic floor is non-decreasing along the increasing inflation-volatility grid | PASS |
 | `redemption_only_principal_floor` | 0.0 | coupons identical and equal to face * rate / 2 * R, no interim principal, final principal face * max(R, 1) against face * R | PASS |
 | `floor_payoff_decomposition` | 0.0 | binding floor: floored = unfloored + face * max(1 - R, 0) within 1e-12 | PASS |
-| `nominal_payment_forward_measure` | 0.0 | YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, consecutive annual payments, measure adjustment applied, non-zero YoY convexity | PASS |
+| `nominal_payment_forward_measure` | 0.0 | YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, consecutive annual payments, measure adjustment applied, non-zero YoY convexity equal to yoy_convexity_bp | PASS |
 | `raw_and_floor_adjusted_breakeven` | 0.0002785788824835045 | two explicitly different BEI measures | PASS |
 | `synthetic_hedge_decomposition` | 0.6659580979027157 | revalued nominal-PV01/CPI-delta residuals vanish, real PV01 follows, scenario P&L shrinks | PASS |
 

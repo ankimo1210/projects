@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T18:43:02.566Z",
+  "checked_at": "2026-09-24T20:38:46.319Z",
   "viewport": {
     "width": 1440,
     "height": 1000
@@ -396,8 +396,8 @@
     }
   },
   "source_sha256": {
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
-    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "532896dc6870aa752e5a2533c0ae84b8697bc779a7b7bf5ebc31100e12c29682",
+    "volumes/10_exotics_martingales/exotics.ipynb": "eb9096389885d5584c5dc48c8c06dec9c9b6fe2073a6c9cb03a7d384af14c639",
     "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
     "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
     "hullkit/tests/test_barrier_reference.py": "7275a9504617dd194018795f7b878ab1da68f755ca3ad551bac6c7879ee554ff",
@@ -411,7 +411,7 @@
     "report/site/exotics.html": "2d84dff44071eb485b58d68cee1dd446a7c55ade722e9364fe48c923f46ae04b",
     "report/site/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "c00285d7c0427ad4fa67450a9b93f0b5d8cb4d21350568bc4fb46854f8a25be4",
+    "book/_build/html/notebooks/10_exotics.html": "618c6551af665b45d1c79dea32e75859fc28c3ff7415b769255c88a263f85463",
     "docs/validation/section-26-9/book-bgk-m8-recheck.png": "daab28b566b8e36272a2cee57f0f47657ede588b40f984f84ce02526623f0660",
     "docs/validation/section-26-9/book-eight-m8-recheck.png": "db53cc9ebd235f957a9b42efc52411087b2b8d9d948598cbf4b60997b918c5cb",
     "docs/validation/section-26-9/book-explorer-initial-m8-recheck.png": "6db04be21223e2653ec855178b4382e832c12bfaf2fcd230d5657363ca5f063c",

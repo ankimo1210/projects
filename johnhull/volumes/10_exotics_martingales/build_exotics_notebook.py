@@ -1572,8 +1572,8 @@ ex_calls, ex_puts = bsm.call_price(*ex_args), bsm.put_price(*ex_args)
 ex_q = vs.otm_option_prices(ex_strikes, ex_calls, ex_puts, 1000.0)
 ex_f0 = S_EX * math.exp((R_EX - Q_EX) * T_EX)
 ex_cum = vs.vix_cumulative_variance(ex_strikes, ex_q, ex_f0, R_EX, T_EX)
-print(f"式26.6: E(V)T = {ex_ev * 0.25:.7f}; 式26.10: {ex_cum:.7f}")
-print(f"差 = {ex_ev * 0.25 - ex_cum:.2e}")
+print(f"式26.6: E(V)T = {ex_ev * T_EX:.7f}; 式26.10: {ex_cum:.7f}")
+print(f"差 = {ex_ev * T_EX - ex_cum:.2e}")
 # 23日と37日の累積分散（一定ボラ20%なら補間しても20%に戻る）
 t1, t2 = 23 / 365, 37 / 365
 flat_vix = vs.vix_index(t1, 0.04 * t1, t2, 0.04 * t2)

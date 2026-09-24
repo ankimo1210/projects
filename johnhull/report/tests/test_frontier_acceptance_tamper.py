@@ -326,6 +326,13 @@ CASES = {
             "nominal_payment_forward_measure",
         ),
         ("yoy-truncated", _truncate_prefix("yoy_", 2), "nominal_payment_forward_measure"),
+        ("yoy-truncated-3", _truncate_prefix("yoy_", 3), "nominal_payment_forward_measure"),
+        ("yoy-truncated-4", _truncate_prefix("yoy_", 4), "nominal_payment_forward_measure"),
+        (
+            "yoy_convexity_bp",
+            _scale_metric("yoy_convexity_bp", 1.001),
+            "nominal_payment_forward_measure",
+        ),
     ],
     23: [
         ("daily_rate", _scale_array("daily_rate", 1.001), "daily_compounding_handcheck"),

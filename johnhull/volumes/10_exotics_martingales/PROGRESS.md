@@ -4,8 +4,8 @@ Last updated: 2026-09-25
 
 ## Status: v1 released; section-level acceptance in progress
 
-§26.16はM8でVS01–VS06の本文6小節（§4.6）と共有4図を追加した。独立レビュー待ちでpending_validation。
-[レビュー](../../docs/SECTION_26_16_REVIEW_2026-09-25.md)と
+§26.16はM8でVS01–VS06の本文6小節（§4.6）と共有4図を追加し、独立レビューを経てacceptedとした。
+[受入ノート](../../docs/SECTION_26_16_ACCEPTANCE_2026-09-25.md)・[指摘と対応](../../docs/SECTION_26_16_FEEDBACK_2026-09-25.md)と
 [統合記録](../../docs/validation/section-26-16/m8-check.json)に、印刷例26.4/26.5の独立再現、
 公開API 4関数（`variance_swaps.py`）、Book/portal両面2幅・32状態の検査を集約する。
 既存の分散スワップのコードセルは残した。共有ソースの影響を受ける§26.9–§26.15もM8配布物で再検証した。
