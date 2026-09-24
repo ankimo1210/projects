@@ -1,10 +1,13 @@
 """Variance and volatility swaps by static replication (Hull 11e GE §26.16, pp.629-632).
 
-The risk-neutral expected variance rate is replicated from a strip of
-out-of-the-money European options (eqs. 26.6 and 26.8, including the ``S*``
-boundary terms), a variance swap is valued with eq. (26.7), and a volatility
-swap with the convexity approximation of eq. (26.9). Eq. (26.10) is the VIX
-truncation of the log term.
+The contract side is the zero-mean realized volatility of p.629
+(:func:`realized_variance`, :func:`realized_volatility`) and the notional link
+``L_var = L_vol / (2 sigma_K)`` (:func:`variance_notional`). The risk-neutral
+expected variance rate is replicated from a strip of out-of-the-money European
+options (eqs. 26.6 and 26.8, including the ``S*`` boundary terms), a variance
+swap is valued with eq. (26.7), and a volatility swap with the convexity
+approximation of eq. (26.9). Eq. (26.10) is the VIX truncation of the log term,
+and :func:`vix_index` applies the 30-day interpolation Hull describes on p.632.
 
 Kept apart from :mod:`hullkit.exotics` (closed-form option pricers under one
 set of BSM parameters): these functions consume a strike strip of option prices
@@ -42,6 +45,52 @@ def _prices(prices, n, name):
 def _positive(value, name):
     if not math.isfinite(value) or value <= 0.0:
         raise ValueError(f"{name} must be finite and > 0, got {value!r}")
+
+
+def realized_variance(prices, periods_per_year=252.0, denominator="n-2"):
+    """Realized variance rate ``V = sigma^2`` of a volatility swap (Hull §26.16, p.629).
+
+    ``sigma^2 = periods_per_year / (n - 2) * sum_{i=1}^{n-1} ln(S_{i+1}/S_i)^2`` for
+    ``n`` observations, with the mean daily return taken as zero. Hull notes that
+    ``n - 1`` sometimes replaces ``n - 2`` (``denominator="n-1"``). With ``n - 1``
+    squared returns in the sum, the ``n - 2`` convention overstates a zero-drift
+    variance by the factor ``(n - 1)/(n - 2)`` in expectation.
+    """
+    s = np.asarray(prices, dtype=float)
+    if s.ndim != 1:
+        raise ValueError("prices must be a 1-D array of observations")
+    if denominator == "n-2":
+        minimum, divisor = 3, s.size - 2
+    elif denominator == "n-1":
+        minimum, divisor = 2, s.size - 1
+    else:
+        raise ValueError(f"denominator must be 'n-2' or 'n-1', got {denominator!r}")
+    if s.size < minimum:
+        raise ValueError(f"{denominator} needs at least {minimum} observations, got {s.size}")
+    if not np.all(np.isfinite(s)) or np.any(s <= 0.0):
+        raise ValueError("prices must be finite and > 0")
+    if not math.isfinite(periods_per_year) or periods_per_year <= 0.0:
+        raise ValueError(f"periods_per_year must be finite and > 0, got {periods_per_year!r}")
+    log_returns = np.diff(np.log(s))
+    return float(periods_per_year * math.fsum(log_returns * log_returns) / divisor)
+
+
+def realized_volatility(prices, periods_per_year=252.0, denominator="n-2"):
+    """Realized volatility ``sigma`` of Hull §26.16 p.629; see :func:`realized_variance`."""
+    return math.sqrt(realized_variance(prices, periods_per_year, denominator))
+
+
+def variance_notional(volatility_notional, volatility_strike):
+    """``L_var = L_vol / (2 sigma_K)`` (Hull §26.16, p.629).
+
+    At ``sigma = sigma_K`` the variance payoff ``L_var (sigma^2 - sigma_K^2)`` then has
+    the same slope ``L_vol`` as the volatility payoff; away from ``sigma_K`` it is
+    larger by ``L_vol (sigma - sigma_K)^2 / (2 sigma_K) >= 0``.
+    """
+    if not math.isfinite(volatility_notional):
+        raise ValueError(f"volatility_notional must be finite, got {volatility_notional!r}")
+    _positive(volatility_strike, "volatility_strike")
+    return volatility_notional / (2.0 * volatility_strike)
 
 
 def default_s_star(strikes, F0):
@@ -133,6 +182,40 @@ def vix_cumulative_variance(strikes, otm_prices, F0, r, T, S_star=None):
     s_star = default_s_star(k, F0) if S_star is None else S_star
     _positive(s_star, "S_star")
     return -((F0 / s_star - 1.0) ** 2) + 2.0 * _strip_sum(k, q_values, r, T)
+
+
+def vix_index(
+    near_term,
+    near_cumulative_variance,
+    next_term,
+    next_cumulative_variance,
+    target_term=30.0 / 365.0,
+):
+    """Hull's 30-day VIX from two cumulative variances ``E(V)T`` (§26.16, p.632).
+
+    The cumulative variances of the maturities just below and above 30 days
+    (typically from :func:`vix_cumulative_variance`) are interpolated linearly in
+    time to ``target_term``, multiplied by ``1/target_term`` (365/30 for terms in
+    years of 365 days) and square-rooted. Returns a decimal volatility; the
+    published index quotes 100 times this. This is Hull's description, not the
+    full CBOE rulebook (strike selection, minute-level terms, forward determination).
+    """
+    for value, name in (
+        (near_term, "near_term"),
+        (next_term, "next_term"),
+        (target_term, "target_term"),
+    ):
+        _positive(value, name)
+    if not near_term < next_term:
+        raise ValueError(f"need near_term < next_term, got {near_term!r} and {next_term!r}")
+    if not near_term <= target_term <= next_term:
+        raise ValueError("near_term and next_term must bracket target_term")
+    for value in (near_cumulative_variance, next_cumulative_variance):
+        if not math.isfinite(value) or value < 0.0:
+            raise ValueError("cumulative variances must be finite and >= 0")
+    weight = (next_term - target_term) / (next_term - near_term)
+    cumulative = weight * near_cumulative_variance + (1.0 - weight) * next_cumulative_variance
+    return math.sqrt(cumulative / target_term)
 
 
 def fair_variance_from_implied_vols(S, strikes, implied_vols, r, T, q=0.0, S_star=None):
