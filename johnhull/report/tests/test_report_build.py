@@ -36,13 +36,13 @@ def test_registry_is_consistent():
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
     assert len(figures_for("rates_swaps")) == 11
-    assert len(figures_for("exotics")) == 30
+    assert len(figures_for("exotics")) == 34
     assert len(figures_for("ml_derivatives")) == 12
     assert len(figures_for("volatility_frontiers")) == 8
     assert len(figures_for("crypto_market")) == 4
     assert len(figures_for("climate_energy")) == 4
     assert len(figures_for("risk_management")) == 4
-    assert len(FIGURES) == 110
+    assert len(FIGURES) == 114
     assert {"shout_payoff", "shout_decision", "shout_boundary", "shout_comparison"} <= {
         figure.id for figure in figures_for("exotics")
     }
@@ -124,3 +124,19 @@ def test_variance_swap_registry_delivers_four_ordered_section_figures():
         figure = spec.build()
         assert figure.layout.meta["section"] == "26.16"
         assert figure.layout.meta["figure"] == spec.id
+
+
+def test_static_replication_registry_follows_variance_swaps():
+    expected = [
+        "static_boundary",
+        "static_ladder",
+        "static_boundary_error",
+        "static_convergence",
+    ]
+    ids = [spec.id for spec in figures_for("exotics")]
+    assert ids[ids.index("volswap_convexity") + 1 :][:4] == expected
+    for spec in figures_for("exotics"):
+        if spec.id in expected:
+            figure = spec.build()
+            assert figure.layout.meta["section"] == "26.17"
+            assert figure.layout.meta["figure"] == spec.id
