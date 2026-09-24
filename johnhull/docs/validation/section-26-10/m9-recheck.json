@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "milestone": "M9",
+  "base_commit": "f0d25b9e",
+  "lesson_numeric_payload_unchanged": null,
+  "hash_refresh": [],
+  "checked_at": "2026-09-24T22:59:55.507186+00:00",
+  "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_binary_reference.py hullkit/tests/test_binary_lesson.py",
+  "environment": {
+    "PYTHONPATH": "hullkit/src:scripts:report (this checkout)"
+  },
+  "exit_code": 0,
+  "pytest_output": "........................................................................ [ 78%]\n....................                                                     [100%]\n92 passed in 0.80s\n",
+  "passed": 92,
+  "source_sha256": {
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/tests/test_binary_lesson.py": "ac3152dab1e15fcfbc8408f4a6efa91a722954421eaac9ab4870b6ab03b68182",
+    "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
+    "report/assets/style.css": "797019b06cdada1d6817dda31c394f7dd69fb12b9a15bd9d3051d8f5f7ad9fb6",
+    "report/report_builder/figures.py": "198cb5ef76fa37c1387b0f76507ce0b9b70bf6b29db0c922f1a1aa35ed4cd00a",
+    "scripts/recheck_exotics_m8.py": "3d4b4d1a71b5588df05d3a2251a73086d03174abefe929bde578268ac8f1567b",
+    "scripts/recheck_exotics_m9.py": "93a72c10e4e2684f11fca9706b01b5a74a2c310dc4090447f78fbccc8dd22448",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52"
+  },
+  "scope": "Accepted section tests against the final M9 assets after the shared vol10 notebook, portal registry and stylesheet changed; no pricing code or lesson data of this section changed. Historical numerical and browser records preserved."
+}

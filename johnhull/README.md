@@ -17,6 +17,7 @@ final gate evidence.
 - `volumes/18_*` … `volumes/28_*` — artifact-only beyond-Hull teaching notebooks
 - vol 10 §26.12 — one-shout call: payoff decomposition, CRR decisions, boundary resolution, and same-market comparisons; saved synthetic artifacts power four shared Book/portal figures. Put prices are an extension beyond the original call lesson.
 - vol 10 §26.15 — basket payoff, exact moments versus approximate Black pricing, correlation, independent references and measured errors; six teaching subsections and four saved-data Book/portal figures. MC sign uncertainty is separate from deterministic-reference error.
+- vol 10 §26.17 — static call ladders for a continuously monitored up-and-out call: Hull Table 26.1, 3/18/100 matching nodes, an independent absorbed-density price, and four shared Book/portal figures. Finite nodes leave boundary risk between nodes.
 - `release_manifest.json` — machine-readable volume/book/portal contract
 - `docs/DATA_PROVENANCE.md` — data origin, licensing, and synthetic-fixture policy
 
@@ -34,7 +35,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 110 figures (30 exotics)
+make hull-report           # offline portal: 12 themes / 114 figures (34 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -65,3 +66,11 @@ state at 1440/1000px against the independent oracle
 mutation). `scripts/recheck_exotics_m8.py` / `.cjs` rerun the accepted §26.9–§26.15 tests
 and browser checks on the final build and write `m8-recheck.json` /
 `browser-m8-recheck.json` next to each section's historical records.
+
+The §26.17 (M9) checks are `scripts/build_static_replication_reference.py --check`,
+`scripts/verify_static_replication_notebook.py`, and
+`scripts/verify_static_replication_browser.cjs` (Book/portal at 1440/1000px,
+all 3/18/100-node states, numeric mutation rejection). `scripts/recheck_exotics_m9.py`
+and `.cjs` rerun accepted §26.9–§26.16 tests and browser checks without changing
+historical records. `scripts/build_static_replication_acceptance_record.py --check`
+and `scripts/verify_section_ledger.py --check-artifacts` verify the integrated evidence.

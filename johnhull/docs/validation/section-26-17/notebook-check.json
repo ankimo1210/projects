@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-09-24T23:04:29.375318+00:00",
+  "base_commit": "f0d25b9e",
+  "cells": 125,
+  "preserved_cells": 115,
+  "saved_figures": [
+    "static_boundary",
+    "static_boundary_error",
+    "static_convergence",
+    "static_ladder"
+  ],
+  "checks": [
+    "fresh execution",
+    "original source and output signatures",
+    "four exact Plotly data/layout payloads"
+  ],
+  "source_sha256": {
+    "scripts/verify_static_replication_notebook.py": "ef5fa1dc6d77764e7f1947896a6480f30ae6addf83d9e49beef3620b46fecf08",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_static_replication_lesson.py": "f8942fc7b7737fe13e819ba0e2cc29c7fa1acfed7f4cc9896f9513ab19f100eb",
+    "docs/validation/section-26-17/reference.json": "059f33cc340feefb84afb2158efaa526efd31e9411d01226347aa4273d5d3f28",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9",
+    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52"
+  }
+}

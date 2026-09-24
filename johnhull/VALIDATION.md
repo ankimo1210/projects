@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,18 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 26.17 M9 — 2026-09-25
+
+[受入ノート](docs/SECTION_26_17_ACCEPTANCE_2026-09-25.md)・[レビュー](docs/SECTION_26_17_REVIEW_2026-09-25.md)・[統合記録](docs/validation/section-26-17/m9-check.json)にSR01–SR06の5軸を集約。台帳は**accepted**（受入9・未評価297）。
+
+- Hull GE pp.632–634のTable 26.1：独立三角方程式でA–Dの枚数+1/−2.664331/+0.972738/+0.281843、3/18/100点の価値0.730293/0.377569/0.324861。吸収境界の密度積分は0.313571。原典表示0.73/0.38/0.32/0.31と一致。
+- 公開API`up_and_out_call_hedge`、6小節、4共有図。節点残差最大3.52e-14通貨と節点間の非ゼロ残差を区別。複製脚の時価はバリア到達時に解消する前の値である。
+- vol10は125セル。§4.7外の既存115セルは基点`f0d25b9e`とソース・出力署名が一致。新規実行と保存出力、4図のdata/layout一致を確認。
+- Chromium 145でBook/portal×1440/1000px×4図の24状態を独立保存値と照合。16画像、数値改変の拒否、JSエラー0、Book MathJaxエラー0。portalは外部要求0。
+- 既受入§26.9–§26.16の個別テストと両画面をM9再検証し、過去の記録は保持。台帳`--check-artifacts`とM9統合記録`--check`はPASS。
+- johnhull全体は**2,678 passed / 6 skipped / 2件の既存deprecation warning**。core notebook 19冊、frontier notebook 11冊、vol19–28のartifact再生成（2回目もbyte一致）、Book/portal build、release contractがPASS。
+- 連続監視・一定BSM・必要な取引可能コールを仮定。有限節点は完全複製でなく、市場での取引性能・解消費用は未評価。
 
 ## Section 26.16 M8 — 2026-09-25
 

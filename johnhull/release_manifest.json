@@ -137,7 +137,7 @@
   ],
   "portal": {
     "themes": 12,
-    "figures": 110
+    "figures": 114
   },
   "allowed_book_remote_dependencies": [],
   "allowed_legacy_book_runtime_dependencies": [

@@ -22,6 +22,7 @@ from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
+from hullkit._static_replication_lesson import _figures as static_replication_lesson_figures
 from hullkit._variance_swap_lesson import _figures as variance_swap_lesson_figures
 
 from . import frontier_figures as ff
@@ -725,6 +726,42 @@ FIGURES: list[FigureSpec] = [
         "E(σ)≈√E(V){1−var(V)/(8E(V)²)} を厳密 E(√V)（CIR ラプラス変換）と MC ±4SE に対して測る。",
         lambda: variance_swap_lesson_figures()["volswap_convexity"],
         practice="Example 26.5 は 0.2484・1.82（$m）。ボラ・スワップには分散の分散が必要で、満期1本のオプションの束だけでは追加の仮定なしに決まらない。この市場では近似はどの ξ でも下側で、誤差は小さい ξ で ξ⁴ に比例して広がる（ξ=1 で −0.46%pt）。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "static_boundary",
+        "exotics",
+        "静的複製で合わせる2つの境界",
+        "§26.17 Figure 26.1。満期の給付と S=60 のノックアウト境界を同時に見る。",
+        lambda: static_replication_lesson_figures()["static_boundary"],
+        practice="満期の S<60 ではコール給付を合わせる。S=60 の境界は離散時刻でだけゼロに合わせる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "static_ladder",
+        "exotics",
+        "Table 26.1 の4本のコール",
+        "原典の A–D のポジションと初期価値。負の B 脚が全体を大きく相殺する。",
+        lambda: static_replication_lesson_figures()["static_ladder"],
+        practice="独立した線形方程式で計算すると A=1、B≈−2.66、C≈0.97、D≈0.28。合計0.7303で、解析バリア価格0.3136とは異なる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "static_boundary_error",
+        "exotics",
+        "境界の節点間に残る誤差",
+        "3・18・100点のバリア境界で、合わせた時刻とその間の価値を比較する。",
+        lambda: static_replication_lesson_figures()["static_boundary_error"],
+        practice="選んだ節点では価値がほぼゼロでも、その間や満期直前は一致しない。バリアに触れたらポートフォリオを解消する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "static_convergence",
+        "exotics",
+        "3・18・100点と解析バリア価格",
+        "初期価値0.73→0.38→0.32と、連続監視の解析価格0.3136を比較する。",
+        lambda: static_replication_lesson_figures()["static_convergence"],
+        practice="点数を増やすとこの市場では近づくが、節点間の完全複製や誤差上界は保証しない。",
         is_new=True,
     ),
     FigureSpec(

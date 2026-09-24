@@ -573,10 +573,10 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["status"] == "PASS", result["errors"]
     assert result["inventory_total"] == 306
     assert result["counts"] == {
-        "unreviewed": 298,
+        "unreviewed": 297,
         "gaps_found": 0,
         "pending_validation": 0,
-        "accepted": 8,
+        "accepted": 9,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
@@ -630,6 +630,14 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
         "docs/SECTION_26_16_FEEDBACK_2026-09-25.md",
         "docs/SECTION_26_16_ACCEPTANCE_2026-09-25.md",
     } <= notes
+    replication = next(section for section in ledger["sections"] if section["id"] == "26.17")
+    assert replication["status"] == "accepted"
+    assert [row["id"] for row in replication["requirements"]] == [f"SR{i:02}" for i in range(1, 7)]
+    assert all(
+        axis["state"] == "verified"
+        for row in replication["requirements"]
+        for axis in row["coverage"].values()
+    )
     shout = next(section for section in ledger["sections"] if section["id"] == "26.12")
     assert shout["status"] == "accepted"
     assert [row["id"] for row in shout["requirements"]] == [f"S{i:02}" for i in range(1, 7)]

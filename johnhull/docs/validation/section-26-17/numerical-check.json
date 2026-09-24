@@ -1,0 +1,30 @@
+{
+  "section": "26.17",
+  "status": "PASS",
+  "method": "independent triangular system and absorbed-density quadrature",
+  "printed_table_positions": [
+    1.0,
+    -2.66,
+    0.97,
+    0.28
+  ],
+  "printed_initial_values": {
+    "3": 0.73,
+    "18": 0.38,
+    "100": 0.32
+  },
+  "measured": {
+    "analytic_price": 0.3135714805109533,
+    "initial_values": {
+      "3": 0.7302929749617303,
+      "18": 0.3775689826551669,
+      "100": 0.3248614522156321
+    },
+    "max_boundary_node_residual": 3.5132487197220286e-14
+  },
+  "source_sha256": {
+    "scripts/build_static_replication_reference.py": "ead61a4df54c1f64d6dda7411c3d295b4f2a454c7894c23a1c3e0da6ef013ac6",
+    "hullkit/tests/test_static_replication_reference.py": "91e7a4eeffba4a1c77f544891b84c4559ca0d5d45e2b02e56e412c2583332b10"
+  },
+  "artifact_sha256": "059f33cc340feefb84afb2158efaa526efd31e9411d01226347aa4273d5d3f28"
+}
