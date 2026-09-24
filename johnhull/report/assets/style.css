@@ -189,3 +189,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1.1rem, 4vw, 2re
 
 /* Basket lesson: dual axes and uncertainty legends need a readable full row. */
 .fig-card:has([id^="fig-basket_"]) { grid-column: 1 / -1; min-width: 0; }
+
+/* Variance-swap lesson: long legends and notes need a readable full row. */
+.fig-card:has([id^="fig-varswap_"]),
+.fig-card:has([id^="fig-volswap_"]) { grid-column: 1 / -1; min-width: 0; }

@@ -36,13 +36,13 @@ def test_registry_is_consistent():
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
     assert len(figures_for("rates_swaps")) == 11
-    assert len(figures_for("exotics")) == 26
+    assert len(figures_for("exotics")) == 30
     assert len(figures_for("ml_derivatives")) == 12
     assert len(figures_for("volatility_frontiers")) == 8
     assert len(figures_for("crypto_market")) == 4
     assert len(figures_for("climate_energy")) == 4
     assert len(figures_for("risk_management")) == 4
-    assert len(FIGURES) == 106
+    assert len(FIGURES) == 110
     assert {"shout_payoff", "shout_decision", "shout_boundary", "shout_comparison"} <= {
         figure.id for figure in figures_for("exotics")
     }
@@ -109,4 +109,18 @@ def test_basket_registry_delivers_four_ordered_section_figures():
         assert spec.practice and spec.title and spec.blurb
         figure = spec.build()
         assert figure.layout.meta["section"] == "26.15"
+        assert figure.layout.meta["figure"] == spec.id
+
+
+def test_variance_swap_registry_delivers_four_ordered_section_figures():
+    """§26.16 cards follow the basket lesson, in lesson order, tagged with their section."""
+    expected = ["varswap_payoff", "varswap_strip", "varswap_replication", "volswap_convexity"]
+    ids = [spec.id for spec in figures_for("exotics")]
+    lesson = [spec for spec in figures_for("exotics") if spec.id in expected]
+    assert [spec.id for spec in lesson] == expected
+    assert ids.index("varswap_payoff") == ids.index("basket_error") + 1
+    for spec in lesson:
+        assert spec.practice and spec.title and spec.blurb
+        figure = spec.build()
+        assert figure.layout.meta["section"] == "26.16"
         assert figure.layout.meta["figure"] == spec.id

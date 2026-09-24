@@ -573,9 +573,9 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["status"] == "PASS", result["errors"]
     assert result["inventory_total"] == 306
     assert result["counts"] == {
-        "unreviewed": 299,
+        "unreviewed": 298,
         "gaps_found": 0,
-        "pending_validation": 0,
+        "pending_validation": 1,
         "accepted": 7,
         "out_of_scope": 0,
     }
@@ -615,6 +615,16 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
         for axis in row["coverage"].values()
     )
     assert any("印刷された価格例が無い" in text for text in basket["limitations"])
+    swaps = next(section for section in ledger["sections"] if section["id"] == "26.16")
+    # M8 delivered every axis, but no independent review has been done, so it stays pending.
+    assert swaps["status"] == "pending_validation"
+    assert [row["id"] for row in swaps["requirements"]] == [f"VS{i:02}" for i in range(1, 7)]
+    assert all(
+        axis["state"] == "verified"
+        for row in swaps["requirements"]
+        for axis in row["coverage"].values()
+    )
+    assert any("独立レビューは未実施" in text for text in swaps["limitations"])
     shout = next(section for section in ledger["sections"] if section["id"] == "26.12")
     assert shout["status"] == "accepted"
     assert [row["id"] for row in shout["requirements"]] == [f"S{i:02}" for i in range(1, 7)]

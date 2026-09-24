@@ -22,6 +22,7 @@ from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
+from hullkit._variance_swap_lesson import _figures as variance_swap_lesson_figures
 
 from . import frontier_figures as ff
 
@@ -688,6 +689,42 @@ FIGURES: list[FigureSpec] = [
         "K=100 の絶対相対差と4SEを比較する。斜線は MC だけを参照し |gap|≤4SE となる符号未確定の点。",
         lambda: basket_lesson_figures()["basket_error"],
         practice="保存72行のうち参照価格0.5以上の63行で最大絶対相対誤差66.8378%。普遍的な誤差上限ではない。定数パラメータ・非負保有量・正半定値相関行列の範囲で使い、短期や低ボラでも精度を自動保証しない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "varswap_payoff",
+        "exotics",
+        "ボラ・スワップとバリアンス・スワップの給付",
+        "L_vol(σ−σ_K) と L_var(σ²−σ_K²)、L_var=L_vol/(2σ_K)。Example 26.5 の $100m・23% を満期で描く。",
+        lambda: variance_swap_lesson_figures()["varswap_payoff"],
+        practice="σ は平均0の日次対数リターンから 252/(n−2) で年率化する（n−1 の契約もある）。換算 L_var=L_vol/(2σ_K) は σ_K での傾きをそろえるだけで、離れるほどバリアンス側が凸性の分だけ大きい。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "varswap_strip",
+        "exotics",
+        "OTM オプションの束で分散を複製する",
+        "式26.8：Σ ΔKᵢ/Kᵢ² e^{rT} Q(Kᵢ)。Q は S* の下でプット、上でコール、S* で平均。Example 26.4 で E(V)=0.0621。",
+        lambda: variance_swap_lesson_figures()["varswap_strip"],
+        practice="Q はインプライド・ボラからこのリポジトリの BSM で再計算し、印刷値と小数2桁で一致。1/K² の重みで低い行使価格が効く。0.045 を払う $100m の契約は 1.69（$m）。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "varswap_replication",
+        "exotics",
+        "離散ストリップの格子誤差と翼の欠落",
+        "Heston の歪んだスマイルで、式26.8の和と閉形式 E(V) の差を行使価格の間隔と範囲ごとに測る。",
+        lambda: variance_swap_lesson_figures()["varswap_replication"],
+        practice="連続積分としての式26.6は閉形式と差 1.5e-12 以内。広い範囲では ΔK を半分にすると誤差がほぼ1/4、狭い範囲では翼の欠落で負に転じ、細かくしても消えない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "volswap_convexity",
+        "exotics",
+        "ボラ・スワップの凸性補正（式26.9）",
+        "E(σ)≈√E(V){1−var(V)/(8E(V)²)} を厳密 E(√V)（CIR ラプラス変換）と MC ±4SE に対して測る。",
+        lambda: variance_swap_lesson_figures()["volswap_convexity"],
+        practice="Example 26.5 は 0.2484・1.82（$m）。ボラ・スワップには分散の分散が必要で、オプションの束だけでは決まらない。この市場では近似は常に下側で、誤差は ξ⁴ の速さで広がる（ξ=1 で −0.46%pt）。",
         is_new=True,
     ),
     FigureSpec(

@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "milestone": "M8",
+  "base_commit": "f6a2b62e",
+  "lesson_numeric_payload_unchanged": true,
+  "hash_refresh": [],
+  "checked_at": "2026-09-24T16:20:22.112902+00:00",
+  "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_basket_reference.py hullkit/tests/test_basket_pricing.py hullkit/tests/test_basket_lesson.py",
+  "environment": {
+    "PYTHONPATH": "hullkit/src:scripts:report (this checkout)"
+  },
+  "exit_code": 0,
+  "pytest_output": ".................................................................        [100%]\n65 passed in 0.72s\n",
+  "passed": 65,
+  "source_sha256": {
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/tests/test_basket_lesson.py": "9aa8fcd7a12c4362c983c785a34db33c1538694e3eeea43af86060ee8c6c14aa",
+    "hullkit/tests/test_basket_pricing.py": "9a54a1320ad67e5b8a7412bcda1bc141cf4bb6eb2f14e281a4d6e75edf1e0e60",
+    "hullkit/tests/test_basket_reference.py": "2304492027841179924a9d633aae283e0c7f9d4cbf54ccf56c7b37cb4fddff80",
+    "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
+    "report/report_builder/figures.py": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be",
+    "scripts/recheck_exotics_m8.py": "3d4b4d1a71b5588df05d3a2251a73086d03174abefe929bde578268ac8f1567b",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
+    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "1759596a5d4e6553d528f81939bc49bf51c99245f27deb4edb65f8790835b91e",
+    "book/_build/html/notebooks/10_exotics.html": "72235eaa543dc1df1ae4ff621d1a70d618b556c667c62cdb40429ef44e31a75f"
+  },
+  "scope": "Accepted section tests against the final M8 assets after the shared vol10 notebook, portal registry and stylesheet changed; no pricing code or lesson data of this section changed. Historical numerical and browser records preserved."
+}

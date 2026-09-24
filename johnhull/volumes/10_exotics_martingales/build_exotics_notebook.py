@@ -1397,7 +1397,101 @@ cells.append(
 参照ごとの誤差、両側に共通する近似誤差、小さな分母と通貨単位の絶対差を区別します。""")
 )
 
-# Cell 12: variance swap md + demo
+# Cell 12: volatility and variance swaps (section 26.16)
+cells.append(
+    md(r"""### 4.6 ボラティリティ・スワップとバリアンス・スワップ（§26.16、GE pp.629–632）
+
+ここまでのオプションは価格とボラティリティの両方に反応しました。§26.16 の2つのスワップは
+**実現したボラティリティ（または分散）だけ**を受け渡す契約です。原典には Example 26.4（バリアンス）と
+26.5（ボラティリティ）の数値例があり、以下では両方を再現してから、その前提を独立参照で測ります。
+
+#### 4.6.1 実現ボラティリティと2つの契約
+
+$n$ 個の日次観測 $S_1,\dots,S_n$ から、平均日次リターンを0とみなして
+
+$$\bar\sigma=\sqrt{\frac{252}{n-2}\sum_{i=1}^{n-1}\left[\ln\frac{S_{i+1}}{S_i}\right]^2}$$
+
+を実現ボラティリティとします（原典は $n-2$ の代わりに $n-1$ を使う場合もあると注記）。
+分散率は $\bar V=\bar\sigma^2$ です。固定側を払う当事者の満期の受取は
+
+$$\text{ボラティリティ・スワップ: } L_{\rm vol}(\bar\sigma-\sigma_K),\qquad
+\text{バリアンス・スワップ: } L_{\rm var}(\bar V-V_K).$$
+
+$L$ は想定元本（Hull の例では 100 万ドル単位）、$\sigma_K$ は年率の小数、$V_K$ は年率の分散です。
+2つの想定元本は慣行として $L_{\rm var}=L_{\rm vol}/(2\sigma_K)$ で結びます。このとき
+$\bar\sigma=\sigma_K$ での傾きが一致し、差は $L_{\rm vol}(\bar\sigma-\sigma_K)^2/(2\sigma_K)\ge 0$。
+**ボラ・スワップは $\bar\sigma$ に線形、バリアンス・スワップは凸**です。""")
+)
+cells.append(
+    code(r"""from hullkit import variance_swaps as vs
+from hullkit._variance_swap_lesson import _figures as vs_figures
+
+path = [100.0, 101.0, 99.0, 100.5, 102.0]
+v_n2 = vs.realized_variance(path)
+v_n1 = vs.realized_variance(path, denominator="n-1")
+print(f"n=5 の実現分散（n−2）= {v_n2:.6f}")
+print(f"n=5 の実現分散（n−1）= {v_n1:.6f}")
+L_var = vs.variance_notional(100.0, 0.23)
+print(f"L_vol=100, σ_K=23% → L_var = {L_var:.4f}")
+
+varswap_figures = vs_figures()
+varswap_figures["varswap_payoff"].show()""")
+)
+cells.append(
+    md(r"""#### 4.6.2 静的複製：分散は OTM オプションの束で買える
+
+連続なパスなら伊藤の公式から $\ln S_T-\ln S_0=\int_0^T dS/S-\tfrac12\int_0^T\sigma_t^2dt$。
+つまり累積分散 $\bar VT$ は「$S$ を連続的に保有する取引」と「対数契約 $-2\ln(S_T/S_0)$」で作れます。
+対数契約は満期給付なので、行使価格 $S^*$ を境にプットとコールの束で静的に複製でき、
+リスク中立期待値は（Technical Note 22、原典の式26.6）
+
+$$\hat E(\bar V)=\frac2T\ln\frac{F_0}{S^*}-\frac2T\left(\frac{F_0}{S^*}-1\right)
++\frac2T\int_0^{S^*}\frac{e^{rT}p(K)}{K^2}dK+\frac2T\int_{S^*}^\infty\frac{e^{rT}c(K)}{K^2}dK.$$
+
+$F_0$ はフォワード、$c(K),p(K)$ は満期 $T$ の欧州オプション価格です。**どの $S^*$ でも同じ値**になり、
+モデルの形は問いません（仮定は連続パスと連続観測）。価格の単位は通貨、$1/K^2$ で割ると年率分散になります。
+
+**独立参照での確認。** 本リポジトリの生成器（hullkit を import しない）で積分を数値求積しました。
+一定ボラ25%では $S^*=0.8F_0$ から $1.25F_0$ の5通りすべてで $\sigma^2$ との差が $10^{-16}$ 未満。
+歪んだスマイルを持つ Heston 3市場では、Lewis 積分で求めたオプション価格からの式26.6が
+閉形式 $\theta+(v_0-\theta)(1-e^{-\kappa T})/(\kappa T)$ と一致しました（差は最大 $1.5\times10^{-12}$）。
+一定ボラでしか成り立たない式ではない、というのがここで確かめたことです。""")
+)
+cells.append(
+    md(r"""#### 4.6.3 離散ストリップと Example 26.4
+
+実際に取引される行使価格 $K_1<\dots<K_n$ しかないので、積分を和で置き換えます（式26.8）。
+
+$$\int_0^{S^*}\frac{e^{rT}p(K)}{K^2}dK+\int_{S^*}^\infty\frac{e^{rT}c(K)}{K^2}dK
+\approx\sum_{i=1}^n\frac{\Delta K_i}{K_i^2}e^{rT}Q(K_i).$$
+
+$\Delta K_i=\tfrac12(K_{i+1}-K_{i-1})$（両端は隣との差）。$S^*$ は $F_0$ の下で最初の行使価格、
+$Q(K_i)$ は $K_i<S^*$ ならプット、$K_i>S^*$ ならコール、$K_i=S^*$ なら両者の平均です。
+
+**Example 26.4（原典の数値例）。** 3か月、指数1020、$r=4\%$、配当利回り1%、行使価格800〜1200（50刻み）の
+インプライド・ボラ29%〜21%。$F_0=1027.68$、$S^*=1000$、和は0.008139、$\hat E(\bar V)=0.0621$。
+0.045 を払い実現分散を受け取る元本1億ドルの契約は $100\times(0.0621-0.045)e^{-0.04\times0.25}=1.69$（百万ドル）。""")
+)
+cells.append(
+    code(r"""S_EX, R_EX, Q_EX, T_EX = 1020.0, 0.04, 0.01, 0.25
+ex_strikes = np.arange(800.0, 1201.0, 50.0)
+ex_vols = np.array([29, 28, 27, 26, 25, 24, 23, 22, 21]) / 100
+ex_ev = vs.fair_variance_from_implied_vols(
+    S_EX, ex_strikes, ex_vols, R_EX, T_EX, Q_EX
+)
+ex_value = vs.variance_swap_value(ex_ev, 0.045, R_EX, T_EX, notional=100)
+print(f"E(V) = {ex_ev:.6f}（原典 0.0621）; 価値 = {ex_value:.4f}（原典 1.69）")
+
+varswap_figures["varswap_strip"].show()""")
+)
+cells.append(
+    md(r"""離散化の誤差は2種類あります。**格子誤差**：$Q$ は $S^*$ でプットからコールへ切り替わる折れ目を持ち、
+和はそれを2次精度でしか拾えないので、行使価格が十分広く並ぶとき $\Delta K$ を半分にすると誤差はほぼ1/4。
+**翼の欠落**：端より外の安いオプションを落とすと、和は必ず小さくなります。次のセルは一定ボラで格子誤差を、
+その次の図は Heston の歪んだスマイル（厳密 $\hat E(\bar V)=0.04$）で両方を測ったものです。
+広い範囲では $\Delta K=10\to1.25$ で誤差が $3.39\times10^{-3}\to5.31\times10^{-5}$ と4分の1ずつ減り、
+狭い範囲（70〜140）では $\Delta K=2.5$ から負に転じます。細かくしても翼の欠落は消えません。""")
+)
 cells.append(
     code(r"""# --- バリアンス・スワップ: OTM オプションのストリップで複製（Hull 式 26.6・26.8） ---
 # E(V) = (2/T)ln(F0/S*) − (2/T)(F0/S* − 1) + (2/T) Σ ΔK_i/K_i² e^{rT} Q(K_i)
@@ -1418,6 +1512,92 @@ print(f"広いストリップ 20–400（ΔK=2.5）: E(V) = {fair_var_wide:.6f}"
 print(f"  σ² + 格子バイアス ΔK²(2F0−S*)/(6T S*³) = {SIG_B**2 + grid_bias:.6f}")
 print(f"→ 公正ボラティリティ = {math.sqrt(fair_var_wide):.4%}（入力 σ={SIG_B:.0%}）")
 print("VIX も同型（式 26.10 は ln を2次展開で打ち切った形）: OTM SPX オプションのストリップで30日先のバリアンスを測る")""")
+)
+cells.append(code(r"""varswap_figures["varswap_replication"].show()"""))
+cells.append(
+    md(r"""#### 4.6.4 ボラティリティ・スワップと Example 26.5
+
+$\bar\sigma=\sqrt{\bar V}$ は凹関数なので $\hat E(\bar\sigma)<\sqrt{\hat E(\bar V)}$。平方根を $\hat E(\bar V)$ の周りで
+2次まで展開すると（式26.9）
+
+$$\hat E(\bar\sigma)\approx\sqrt{\hat E(\bar V)}\left\{1-\frac18\frac{\operatorname{var}(\bar V)}{\hat E(\bar V)^2}\right\}.$$
+
+ボラ・スワップの価値は $L_{\rm vol}[\hat E(\bar\sigma)-\sigma_K]e^{-rT}$。**分散の分散**という、オプション価格の束からは
+決まらない量が必要になる点が、バリアンス・スワップとの本質的な違いです。
+
+**Example 26.5。** Example 26.4 の $\hat E(\bar V)=0.0621$、実現分散の標準偏差0.01（$\operatorname{var}=0.0001$）、
+固定23%、元本1億ドル。$\hat E(\bar\sigma)=0.2484$、価値 $100\times(0.2484-0.23)e^{-0.01}=1.82$（百万ドル）。""")
+)
+cells.append(
+    code(r"""ex_sigma = vs.expected_volatility(0.0621, 0.0001)
+ex_naive = math.sqrt(0.0621)
+ex_vol_value = vs.volatility_swap_value(
+    ex_sigma, 0.23, R_EX, T_EX, notional=100
+)
+print(f"E(σ) = {ex_sigma:.6f}（原典 0.2484）; √E(V) = {ex_naive:.6f}")
+print(f"価値 = {ex_vol_value:.4f}（原典 1.82、$ millions）")
+
+varswap_figures["volswap_convexity"].show()""")
+)
+cells.append(
+    md(r"""式26.9は近似です。図は連続観測の Heston 分散（$v_0=\theta=0.0621$、$\kappa=2$、$T=0.25$）で
+$\hat E(\bar V)$ を固定し、分散過程のボラ $\xi$ だけを動かしました。厳密な $E(\sqrt{\bar V})$ は
+CIR 過程のラプラス変換の積分、$\operatorname{var}(\bar V)$ は伊藤等長性から求め、
+非心カイ二乗による厳密推移の MC（10万本）は3点とも4SE以内（最大1.08SE）でした。
+$\xi=0.3$ では近似の誤差は $-1.9\times10^{-5}$ ですが、$\xi=1$ では $-4.6\times10^{-3}$（0.46%ポイント）に
+広がります。誤差は $\xi^4$ の速さで大きくなり、この市場では常に近似が厳密値を下回りました。
+凸性を無視した $\sqrt{\hat E(\bar V)}$ の誤差（$\xi=1$ で $+2.5\times10^{-2}$）よりはずっと小さい、というのが
+式26.9の実用上の価値です。""")
+)
+cells.append(
+    md(r"""#### 4.6.5 VIX 指数（式26.10）
+
+式26.6の $\ln(F_0/S^*)$ を2次で打ち切ると、累積分散は
+
+$$\hat E(\bar V)T=-\left(\frac{F_0}{S^*}-1\right)^2+2\sum_{i=1}^n\frac{\Delta K_i}{K_i^2}e^{rT}Q(K_i).$$
+
+2004年以降の VIX はこの式に基づき、30日の前後の満期で $\hat E(\bar V)T$ を計算して時間について補間し、
+$365/30$ を掛けて平方根を取ります。これは原典の説明で、行使価格の選び方や分単位の満期など
+CBOE の規則の細部はここでは扱いません。打ち切りによる差は
+$2[\ln x-(x-1)+\tfrac12(x-1)^2]\approx\tfrac23(x-1)^3$（$x=F_0/S^*$）。Example 26.4 では
+$1.38\times10^{-5}$ で、累積分散0.01553の約0.09%です。""")
+)
+cells.append(
+    code(r"""ex_args = (S_EX, ex_strikes, R_EX, ex_vols, T_EX, Q_EX)
+ex_calls, ex_puts = bsm.call_price(*ex_args), bsm.put_price(*ex_args)
+ex_q = vs.otm_option_prices(ex_strikes, ex_calls, ex_puts, 1000.0)
+ex_f0 = S_EX * math.exp((R_EX - Q_EX) * T_EX)
+ex_cum = vs.vix_cumulative_variance(ex_strikes, ex_q, ex_f0, R_EX, T_EX)
+print(f"式26.6: E(V)T = {ex_ev * 0.25:.7f}; 式26.10: {ex_cum:.7f}")
+print(f"差 = {ex_ev * 0.25 - ex_cum:.2e}")
+# 23日と37日の累積分散（一定ボラ20%なら補間しても20%に戻る）
+t1, t2 = 23 / 365, 37 / 365
+flat_vix = vs.vix_index(t1, 0.04 * t1, t2, 0.04 * t2)
+print(f"一定ボラ20%の30日 VIX = {100 * flat_vix:.4f}")""")
+)
+cells.append(
+    md(r"""累積分散は満期について線形とは限らないので、補間にも誤差があります。平均回帰する Heston 市場
+（$v_0=0.09$、$\theta=0.04$、$\kappa=2$）で23日と37日から補間した30日ボラは29.312%、
+閉形式の30日値は29.344%でした（差 −0.032%ポイント）。
+
+#### 4.6.6 適用範囲と理解の確認
+
+**前提。** 複製は連続パスを連続観測した分散を扱います（ジャンプがあると対数契約との関係が崩れ、
+ここでの等式は保証されません）。実際の契約は日次の離散観測です。平均0の推定量で $n-1$ 個の
+二乗リターンを $n-2$ で割ると、ドリフトが小さいとき期待値は $(n-1)/(n-2)$ 倍に膨らみます
+（3か月 $n=64$、$\sigma=25\%$ で $0.063509$ 対 $\sigma^2=0.0625$、+1.6%）。行使価格の範囲と間隔、
+ボラ・スワップでの $\operatorname{var}(\bar V)$ の推定も結果を左右します。上の誤差は保存した合成市場の測定で、
+一般の上限ではありません。現金配当と CBOE 規則の細部は範囲外です。
+
+1. $L_{\rm vol}=100$、$\sigma_K=23\%$ のとき、$L_{\rm var}$ はいくらで、$\bar\sigma=30\%$ での2つの給付はどれだけ違うか。
+2. 式26.6の答えが $S^*$ に依存しないのはなぜか。$S^*$ を $F_0$ に取ると境界項はどうなるか。
+3. 狭い行使価格の範囲で $\Delta K$ を細かくしても誤差が0に近づかないのはなぜか。
+4. バリアンス・スワップはオプションの束で値付けできるのに、ボラ・スワップにはなぜ追加の仮定が要るのか。
+5. 式26.9の近似が厳密値を下回ったのは、$\xi$ のどの範囲でどの程度か。それは一般的な性質といえるか。
+6. 日次63リターンの実現分散を $n-2$ で割る契約と $n-1$ で割る契約では、公正な分散ストライクはどちらが高いか。
+
+**回答の手掛かり：** 傾きをそろえる換算と凸性、対数契約の複製、翼の欠落と格子誤差、分散の分散、
+合成市場での測定と一般の保証、推定量の分母を区別します。""")
 )
 
 # ===========================================================================
