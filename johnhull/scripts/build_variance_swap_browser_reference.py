@@ -1,8 +1,9 @@
 """Independent browser oracle for §26.16; no hullkit or lesson imports.
 
-Payoffs are recomputed from the contract formulas; strip, replication and
-convexity values are read from the M8a reference (never from lesson-data or
-plotting arrays). The notebook's printed examples are recomputed here too.
+Payoffs, the notional link and the realized-variance example are recomputed from
+the contract formulas. Strip, replication and convexity values and the Example
+26.4/26.5 results the notebook prints are read from the M8a reference (never from
+lesson data or plotting arrays).
 """
 
 import hashlib
@@ -28,7 +29,7 @@ def build():
     var_notional = VOL_NOTIONAL / (2 * VOL_STRIKE)
     example = reference["example_26_4"]
     rows = example["rows"]
-    expiry = 0.25
+    expiry = example["expiry"]
     convergence = reference["strip_convergence"]
     convexity = reference["volatility_convexity"]["rows"]
     mc_rows = [row for row in convexity if row["mc"] is not None]

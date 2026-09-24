@@ -2,14 +2,17 @@
 
 Three separate questions: do the committed outputs match a fresh execution, do the
 saved Plotly figures equal what the shared builder produces now, and were the cells
-outside the new §4.6 span preserved against the base commit (with the old
-variance-swap code cell, which the assertion cell still reads, kept verbatim).
+outside the new §4.6 span preserved against the base commit, sources and outputs
+alike (with the old variance-swap code cell, which the assertion cell still reads,
+kept verbatim). In-memory mutations then show that each comparison rejects a change.
 """
 
 import argparse
+import copy
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -36,6 +39,8 @@ PLOTLY_MIME = "application/vnd.plotly.v1+json"
 START_MARKERS = ("### 4.6 ボラティリティ", "# --- バリアンス・スワップ:")
 END_MARKER = "## 5. マルチンゲールと測度"
 RETAINED_MARKER = "# --- バリアンス・スワップ:"
+# Plotly's HTML fallback names each figure's div with a fresh UUID on every execution.
+UUID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
 
 
 def _sha256(relative):
@@ -119,9 +124,24 @@ def accepted_figures_unchanged(reference, notebook):
     }
 
 
-def preservation(reference, notebook):
-    """Cells outside the rewritten §4.6 span must be identical to the base commit."""
-    before = nbformat.reads(_committed(reference, NOTEBOOK), as_version=4)
+def _outputs(cell):
+    """Outputs without execution counts, with Plotly div UUIDs masked."""
+    kept = []
+    for output in cell.get("outputs", ()):
+        item = {"output_type": output["output_type"]}
+        if "text" in output:
+            item["text"] = "".join(output["text"])
+        for mime, value in sorted(output.get("data", {}).items()):
+            text = value if isinstance(value, str) else json.dumps(value, sort_keys=True)
+            item[mime] = UUID.sub("<uuid>", "".join(text)) if mime == "text/html" else text
+        kept.append(item)
+    return kept
+
+
+def preservation(reference, notebook, before=None):
+    """Cells outside the rewritten §4.6 span, sources and outputs, equal the base commit's."""
+    if before is None:
+        before = nbformat.reads(_committed(reference, NOTEBOOK), as_version=4)
 
     def outside(book):
         keep, inside = [], False
@@ -132,7 +152,7 @@ def preservation(reference, notebook):
             elif source.startswith(END_MARKER):
                 inside = False
             if not inside:
-                keep.append((cell.cell_type, source))
+                keep.append((cell.cell_type, source, _outputs(cell)))
         return keep
 
     def retained(book):
@@ -146,7 +166,8 @@ def preservation(reference, notebook):
     if kept_before != kept_after:
         for index, (old, new) in enumerate(zip(kept_before, kept_after, strict=False)):
             if old != new:
-                raise ValueError(f"cell {index} outside §4.6 changed: {old[1][:60]!r}")
+                part = "source" if old[:2] != new[:2] else "outputs"
+                raise ValueError(f"cell {index} outside §4.6 changed ({part}): {old[1][:60]!r}")
         raise ValueError(
             f"cell count outside §4.6 changed: {len(kept_before)} -> {len(kept_after)}"
         )
@@ -158,9 +179,64 @@ def preservation(reference, notebook):
         "cells_before": len(before.cells),
         "cells_after": len(notebook.cells),
         "compared_cells_outside_section": len(kept_before),
+        "compared_outputs_outside_section": sum(len(cell[2]) for cell in kept_before),
+        "compared": "sources and outputs; execution counts ignored, Plotly HTML div UUIDs masked",
         "retained_variance_swap_code_cell": True,
         "identical": True,
     }
+
+
+def _rejects(check, *args):
+    try:
+        check(*args)
+    except ValueError as error:
+        return str(error)
+    raise AssertionError(f"{check.__name__} accepted a mutated notebook")
+
+
+def negative_controls(reference, notebook):
+    """Mutate copies in memory; every comparison must reject its mutation."""
+    before = nbformat.reads(_committed(reference, NOTEBOOK), as_version=4)
+    controls = []
+
+    mutated = copy.deepcopy(notebook)
+    cell = next(
+        cell
+        for cell in mutated.cells
+        if cell.cell_type == "code"
+        and any(output.get("output_type") == "stream" for output in cell.get("outputs", ()))
+        and not "".join(cell.source).startswith(START_MARKERS)
+    )
+    stream = next(output for output in cell.outputs if output.output_type == "stream")
+    stream.text = "".join(stream.text) + "0"
+    controls.append(
+        {
+            "mutation": "one printed character appended to a stream output outside §4.6",
+            "reason": _rejects(preservation, reference, mutated, before),
+        }
+    )
+
+    mutated = copy.deepcopy(notebook)
+    payload = saved_figures(mutated)["volswap_convexity"]
+    trace = next(trace for trace in payload["data"] if trace["meta"]["role"] == "approximation")
+    trace["y"] = [trace["y"][0] + 0.5, *trace["y"][1:]]
+    controls.append(
+        {
+            "mutation": "eq. 26.9 level at the first xi +0.5 percentage points in the saved figure",
+            "reason": _rejects(compare_figures, saved_figures(mutated)),
+        }
+    )
+
+    mutated = copy.deepcopy(notebook)
+    key, payload = next(iter(_payloads(mutated, ("26.15",)).items()))
+    payload["data"][0]["y"] = [value + 1.0 for value in payload["data"][0]["y"]]
+    controls.append(
+        {
+            "mutation": f"every y of the first trace of accepted figure {key[1]} +1",
+            "reason": _rejects(accepted_figures_unchanged, reference, mutated),
+        }
+    )
+    return controls
 
 
 def main():
@@ -198,6 +274,7 @@ def main():
         ),
         "preservation": preservation(options.base, notebook),
         "accepted_section_figures": accepted_figures_unchanged(options.base, notebook),
+        "negative_controls": negative_controls(options.base, notebook),
         "source_sha256": {relative: _sha256(relative) for relative in SOURCE_PATHS},
         "artifact_sha256": {NOTEBOOK: _sha256(NOTEBOOK)},
     }
@@ -210,6 +287,8 @@ def main():
     )
     print("preservation:", record["preservation"])
     print("accepted section figures:", record["accepted_section_figures"])
+    for control in record["negative_controls"]:
+        print("rejected:", control["mutation"], "->", control["reason"][:80])
     for figure in figures:
         print(" ", figure)
 

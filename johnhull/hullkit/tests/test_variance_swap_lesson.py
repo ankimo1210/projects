@@ -4,8 +4,11 @@ import hashlib
 import importlib
 import json
 import math
+import os
 import shutil
+import subprocess
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -190,20 +193,29 @@ def test_refuse_deleted_mandatory_source(lesson, tmp_path):
         lesson._load_data(data_path, root=tmp_path)
 
 
-def test_figures_never_run_quadrature_or_monte_carlo(lesson, monkeypatch):
-    import build_variance_swap_reference as ref
-    from hullkit import variance_swaps
+def test_figure_module_holds_no_numerical_code(lesson):
+    """The figure layer reads saved data only: its module globals hold no numerical module."""
+    modules = {name for name, value in vars(lesson).items() if isinstance(value, types.ModuleType)}
+    assert modules == {"hashlib", "json", "go"}
 
-    def forbidden(*args, **kwargs):
-        raise AssertionError("figure build must read saved data only")
 
-    for name in ("fair_variance", "fair_variance_from_implied_vols", "variance_notional"):
-        monkeypatch.setattr(variance_swaps, name, forbidden)
-    for name in (
-        "continuous_expected_variance",
-        "cir_laplace_sqrt_mean",
-        "cir_integrated_variance_mc",
-        "heston_call_put",
-    ):
-        monkeypatch.setattr(ref, name, forbidden)
-    assert list(lesson._figures()) == KEYS
+def test_building_figures_imports_nothing_beyond_plotly():
+    """After ``import hullkit``, building the figures loads no pricing or reference code."""
+    script = (
+        "import sys, hullkit\n"
+        "before = set(sys.modules)\n"
+        "import hullkit._variance_swap_lesson as m\n"
+        "m._figures()\n"
+        "print('\\n'.join(sorted(set(sys.modules) - before)))\n"
+    )
+    completed = subprocess.run(
+        [sys.executable, "-c", script],
+        env={**os.environ, "PYTHONPATH": str(ROOT / "hullkit/src")},
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    loaded = set(completed.stdout.split())
+    allowed = ("plotly", "_plotly_utils", "narwhals", "hullkit._variance_swap_lesson")
+    assert "hullkit._variance_swap_lesson" in loaded
+    assert [name for name in loaded if not name.startswith(allowed)] == []

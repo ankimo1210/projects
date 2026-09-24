@@ -198,13 +198,17 @@ def test_vix_truncation_and_flat_interpolation():
     )
 
 
-def test_generated_reference_is_byte_reproducible():
+def test_generated_reference_matches_committed_bytes():
+    """The generator must reproduce the committed files byte for byte (same as --check)."""
+    import json
+
     from build_variance_swap_reference import build_artifacts
 
-    first = build_artifacts()
-    second = build_artifacts()
-    assert first == second
-    reference, record = first
+    reference, record = build_artifacts()
+    folder = Path(__file__).resolve().parents[2] / "docs/validation/section-26-16"
+    for name, value in (("reference.json", reference), ("numerical-check.json", record)):
+        content = json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+        assert (folder / name).read_bytes() == content.encode("utf-8"), f"{name} is stale"
     assert record["status"] == "PASS"
     assert record["printed_anchors"]["example_26_4"]["expected_variance"] == pytest.approx(
         0.0621, abs=5e-5

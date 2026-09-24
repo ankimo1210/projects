@@ -261,7 +261,7 @@ async function bookMath(page) {
     pre: Array.from(el.querySelectorAll('pre')).map(n => n.textContent).join('\n'),
     equations: Array.from(window.MathJax.startup.document.math).filter(m => el.contains(m.typesetRoot)).map(m => m.math),
   }));
-  check(info.typeset >= 25 && info.errors === 0, 'Variance-swap math typesetting ' + info.typeset + '/' + info.errors);
+  check(info.typeset >= 100 && info.errors === 0, 'Variance-swap math typesetting ' + info.typeset + '/' + info.errors);
   for (let i = 1; i <= 6; i++) check(info.headings.some(h => h.includes('4.6.' + i)), 'Subsection ' + i);
   const equations = info.equations.map(s => s.replace(/\s/g, '')).join('\n');
   for (const formula of ['\\bar\\sigma=\\sqrt{\\frac{252}{n-2}\\sum_{i=1}^{n-1}',
@@ -295,29 +295,37 @@ async function bookMath(page) {
   close(Number(vix[1]), nb.cumulative_26_6, 'Printed eq. 26.6 cumulative variance', 5.1e-8);
   close(Number(vix[2]), nb.cumulative_26_10, 'Printed eq. 26.10 cumulative variance', 5.1e-8);
   const screenshots = [];
-  for (const width of [1440, 1000]) {
-    await page.setViewportSize({ width, height: 1050 }); await settle(page);
-    check(await section.evaluate(el => Array.from(el.querySelectorAll('div.math')).every(n => n.scrollWidth <= n.clientWidth + 3)), 'Variance-swap math overflow');
-    const exampleSection = section.locator('h4').filter({ hasText: /4\.6\.4/ }).locator('xpath=..');
-    const contentHeight = await exampleSection.evaluate(el => el.getBoundingClientRect().height);
-    await page.setViewportSize({ width, height: Math.max(1050, Math.ceil(contentHeight) + 280) });
-    await exampleSection.evaluate(el => {
-      document.activeElement?.blur();
-      window.scrollTo({ top: scrollY + el.getBoundingClientRect().top - 140, behavior: 'instant' });
-    });
-    await settle(page);
-    check(await exampleSection.evaluate(el => Array.from(el.querySelectorAll('pre')).every(
-      n => n.scrollWidth <= n.clientWidth + 3)), 'Example code/output horizontal overflow');
-    const clip = await exampleSection.boundingBox();
-    check(clip.y >= 100 && clip.y + clip.height < page.viewportSize().height,
-      'Entire formula/example must be within the viewport');
-    const overlaps = await page.locator('a').filter({ hasText: 'Skip to main content' }).evaluateAll(
-      (els, box) => els.some(n => { const b = n.getBoundingClientRect();
-        return b.width > 0 && b.height > 0 && b.left < box.x + box.width
-          && b.right > box.x && b.top < box.y + box.height && b.bottom > box.y; }), clip);
-    check(!overlaps, 'Skip-link overlay must not cover formula/example');
-    const file = relativeOut + 'book-volswap-formula-example-' + width + '.png';
-    await page.screenshot({ path: path.join(root, file), clip }); screenshots.push(file);
+  // 4.6.4 carries eq. 26.9 and Example 26.5; 4.6.5 carries eq. 26.10 and the VIX numbers.
+  for (const [number, stem] of [['4.6.4', 'book-volswap-formula-example'], ['4.6.5', 'book-vix-example']]) {
+    for (const width of [1440, 1000]) {
+      await page.setViewportSize({ width, height: 1050 }); await settle(page);
+      check(await section.evaluate(el => Array.from(el.querySelectorAll('div.math')).every(n => n.scrollWidth <= n.clientWidth + 3)), 'Variance-swap math overflow');
+      const exampleSection = section.locator('h4').filter({ hasText: new RegExp(number.replace(/\./g, '\\.')) }).locator('xpath=..');
+      check(await exampleSection.count() === 1, 'Subsection ' + number + ' container');
+      const contentHeight = await exampleSection.evaluate(el => el.getBoundingClientRect().height);
+      await page.setViewportSize({ width, height: Math.max(1050, Math.ceil(contentHeight) + 280) });
+      await exampleSection.evaluate(el => {
+        document.activeElement?.blur();
+        window.scrollTo({ top: scrollY + el.getBoundingClientRect().top - 140, behavior: 'instant' });
+      });
+      await settle(page);
+      check(await exampleSection.evaluate(el => Array.from(el.querySelectorAll('pre')).every(
+        n => n.scrollWidth <= n.clientWidth + 3)), 'Example code/output horizontal overflow ' + number);
+      const clip = await exampleSection.boundingBox();
+      check(clip.y >= 100 && clip.y + clip.height < page.viewportSize().height,
+        'Entire formula/example must be within the viewport ' + number);
+      const overlaps = await page.locator('a').filter({ hasText: 'Skip to main content' }).evaluateAll(
+        (els, box) => els.some(n => { const b = n.getBoundingClientRect();
+          return b.width > 0 && b.height > 0 && b.left < box.x + box.width
+            && b.right > box.x && b.top < box.y + box.height && b.bottom > box.y; }), clip);
+      check(!overlaps, 'Skip-link overlay must not cover formula/example ' + number);
+      if (number === '4.6.5') {
+        const shown = await exampleSection.evaluate(el => el.textContent);
+        check(shown.includes('式26.6: E(V)T') && shown.includes('式26.10'), 'VIX numbers inside the 4.6.5 screenshot');
+      }
+      const file = relativeOut + stem + '-' + width + '.png';
+      await page.screenshot({ path: path.join(root, file), clip }); screenshots.push(file);
+    }
   }
   return { typeset: info.typeset, errors: info.errors, headings: info.headings,
     verified_equations: info.equations, example: reference.notebook, screenshots };
@@ -357,10 +365,12 @@ async function bookMath(page) {
       'book/_build/html/notebooks/10_exotics.html'];
     const screenshots = [];
     for (const p of Object.values(result.pages)) screenshots.push(...p.screenshots, ...(p.math?.screenshots || []));
-    check(screenshots.length === 18, 'Exactly 18 screenshots');
+    check(screenshots.length === 20, 'Exactly 20 screenshots');
     for (const file of [...artifacts, ...screenshots]) result.artifact_sha256[file] = hash(file);
     result.status = 'PASS';
-    console.log(JSON.stringify({ status: 'PASS', surfaces: 2, state_checks: 32, screenshots: screenshots.length, output: out }, null, 2));
+    const stateChecks = Object.values(result.pages).reduce((n, p) => n + p.states.length, 0);
+    result.state_checks = stateChecks;
+    console.log(JSON.stringify({ status: 'PASS', surfaces: 2, state_checks: stateChecks, screenshots: screenshots.length, output: out }, null, 2));
   } finally { await browser.close(); }
 })().catch(error => { result.status = 'FAIL'; result.error = error.message; console.error(error.stack); process.exitCode = 1; })
   .finally(() => fs.writeFileSync(path.join(out, 'browser-m8-check.json'), JSON.stringify(result, null, 2) + '\n'));

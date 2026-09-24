@@ -38,7 +38,7 @@
         "passed": true
       },
       {
-        "criterion": "coupons identical and proportional to the index ratio, no interim principal, final principal face * max(R, 1) against face * R",
+        "criterion": "coupons identical and equal to face * rate / 2 * R, no interim principal, final principal face * max(R, 1) against face * R",
         "name": "redemption_only_principal_floor",
         "observed": 0.0,
         "passed": true
@@ -50,7 +50,7 @@
         "passed": true
       },
       {
-        "criterion": "YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, measure adjustment applied, non-zero YoY convexity",
+        "criterion": "YoY ratio rebuilt from payment-forward CPI and log covariances within 1e-12 relative, consecutive annual payments, measure adjustment applied, non-zero YoY convexity",
         "name": "nominal_payment_forward_measure",
         "observed": 0.0,
         "passed": true
@@ -478,6 +478,7 @@
     "hedge_zcis_rate": 0.013084867359809182,
     "hedged_real_pv01": 1.8111314047802862e-07,
     "hw_curve_fit_max_error": 0.0,
+    "jgbi_coupon_rate": 0.005,
     "jgbi_face_value": 100.0,
     "jy_forward_mc_zscore_max": 1.4888912714624325,
     "measure_treatment": "nominal_payment_forward",

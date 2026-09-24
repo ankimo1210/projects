@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T16:21:30.862Z",
+  "checked_at": "2026-09-24T18:44:11.101Z",
   "pages": {
     "portal": {
       "figures": [
@@ -18456,9 +18456,9 @@
     "docs/validation/section-26-12/lesson-data.json": "8e18e17616d9432beaf0346ddc104e8076230e38c17fa763e4eea15afd9b697a",
     "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
     "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
-    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2",
-    "report/report_builder/figures.py": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
+    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
+    "report/report_builder/figures.py": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
@@ -18467,10 +18467,10 @@
     "docs/validation/section-26-12/browser-reference.json": "db6646b7dec5380ff02d6003c82b97ef3e1a1ec99bbed47e985eabcc68a01f26"
   },
   "artifact_sha256": {
-    "report/site/exotics.html": "1759596a5d4e6553d528f81939bc49bf51c99245f27deb4edb65f8790835b91e",
+    "report/site/exotics.html": "2d84dff44071eb485b58d68cee1dd446a7c55ade722e9364fe48c923f46ae04b",
     "report/site/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "72235eaa543dc1df1ae4ff621d1a70d618b556c667c62cdb40429ef44e31a75f",
+    "book/_build/html/notebooks/10_exotics.html": "c00285d7c0427ad4fa67450a9b93f0b5d8cb4d21350568bc4fb46854f8a25be4",
     "docs/validation/section-26-12/portal-shout_payoff-1440-m8-recheck.png": "40da97153c4d2f48973011a24b9502264f6ed9fd9b23317457516a787d41ff5d",
     "docs/validation/section-26-12/portal-shout_decision-1440-m8-recheck.png": "3a2b58b6e516b6b2275bb192023a2d6db2854e4328bd4c82a5a0b4ea75d85812",
     "docs/validation/section-26-12/portal-shout_boundary-1440-m8-recheck.png": "a9c7e19bb67dc634c93225a321467bd151ea0dd0a75df0c147216268a12f2641",

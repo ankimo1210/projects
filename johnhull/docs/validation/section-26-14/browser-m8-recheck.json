@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T16:22:45.501Z",
+  "checked_at": "2026-09-24T18:45:26.263Z",
   "pages": {
     "portal": {
       "figures": [
@@ -488,9 +488,9 @@
     "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
     "docs/validation/section-26-14/numerical-check.json": "b68d3cacd753da95c0ccaca53611e2750d62052d27895c802a9a4050eee07203",
     "docs/validation/section-26-14/browser-reference.json": "11d5f25a1aec8ac510565f477edbf0808938c9e942edb12b0e797ab86813b0f2",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
-    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2",
-    "report/report_builder/figures.py": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
+    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
+    "report/report_builder/figures.py": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
@@ -498,10 +498,10 @@
     "scripts/verify_exchange_lesson_browser.cjs": "20b920296b7e70404489fff1218f087ce815357e6ed8df2ba35681115b6f42f9"
   },
   "artifact_sha256": {
-    "report/site/exotics.html": "1759596a5d4e6553d528f81939bc49bf51c99245f27deb4edb65f8790835b91e",
+    "report/site/exotics.html": "2d84dff44071eb485b58d68cee1dd446a7c55ade722e9364fe48c923f46ae04b",
     "report/site/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "72235eaa543dc1df1ae4ff621d1a70d618b556c667c62cdb40429ef44e31a75f",
+    "book/_build/html/notebooks/10_exotics.html": "c00285d7c0427ad4fa67450a9b93f0b5d8cb4d21350568bc4fb46854f8a25be4",
     "docs/validation/section-26-14/portal-exchange_payoff-1440-m8-recheck.png": "46c34ee15967ae88cfbd7420be252a07587306690bc9dfc5e3a15ad00c81224f",
     "docs/validation/section-26-14/portal-exchange_correlation-1440-m8-recheck.png": "51d9c503d1fd493aea6cabfcf9f4fa7090ae7879c4e2985b9569a2a2ec2dfdc1",
     "docs/validation/section-26-14/portal-exchange_rate-1440-m8-recheck.png": "bd607996757ccf5ab7ffee77da002ac12e53b4aa0c04352e67c324df1a8c4c46",

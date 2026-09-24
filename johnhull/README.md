@@ -55,3 +55,13 @@ and `scripts/verify_basket_lesson_browser.cjs` (both surfaces, all menus at 1440
 independent numeric pins, MathJax, layout and a rejected/restored numeric mutation).
 They save M7 evidence under `docs/validation/section-26-15/`; earlier sections receive
 new M7 recheck records while their historical evidence stays intact.
+
+The §26.16 (M8) delivery checks follow the same pattern:
+`scripts/verify_variance_swap_notebook.py` (fresh outputs, exact four-figure data/layout,
+sources and outputs outside §4.6 against `f6a2b62e`, and in-memory mutations that must be
+rejected) and `scripts/verify_variance_swap_lesson_browser.cjs` (both surfaces, every menu
+state at 1440/1000px against the independent oracle
+`scripts/build_variance_swap_browser_reference.py`, MathJax and a rejected numeric
+mutation). `scripts/recheck_exotics_m8.py` / `.cjs` rerun the accepted §26.9–§26.15 tests
+and browser checks on the final build and write `m8-recheck.json` /
+`browser-m8-recheck.json` next to each section's historical records.

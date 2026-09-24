@@ -310,6 +310,10 @@ def example_26_4():
     printed_expected = boundary + 2.0 / EX_EXPIRY * printed_strip
     discount = math.exp(-EX_RATE * EX_EXPIRY)
     return dict(
+        spot=EX_SPOT,
+        rate=EX_RATE,
+        dividend=EX_DIVIDEND,
+        expiry=EX_EXPIRY,
         forward=forward,
         s_star=s_star,
         rows=rows,
@@ -413,6 +417,11 @@ def _strip_convergence(pricers):
             value = discrete_strip_expected_variance(
                 pricers[market["name"]], strikes, forward, HESTON_RATE, expiry, q_out=q_used
             )
+            q_array = np.asarray(q_used)
+            weights = (
+                2.0 / expiry * hull_spacing(strikes) / strikes**2 * math.exp(HESTON_RATE * expiry)
+            )
+            negative = q_array < 0.0
             rows.append(
                 dict(
                     delta_k=step,
@@ -421,6 +430,7 @@ def _strip_convergence(pricers):
                     expected_variance=value,
                     error=value - exact,
                     min_q=min(q_used),
+                    negative_q_weight=float(np.sum(weights[negative] * -q_array[negative])),
                 )
             )
         families.append(dict(range=name, strike_low=lo, strike_high=hi, rows=rows))
@@ -479,9 +489,13 @@ def _realized_variance():
     n, sigma = 64, 0.25
     drift = HESTON_RATE - HESTON_DIVIDEND - sigma * sigma / 2
     rows = []
-    for denominator in ("n-2", "n-1"):
+    # Separate draws per denominator: with shared draws the two estimates differ
+    # only by the factor (n-1)/(n-2) and would be one check, not two.
+    for offset, denominator in enumerate(("n-2", "n-1")):
         exact = realized_variance_expectation(n, sigma, drift, denominator=denominator)
-        mc = realized_variance_mc(n, sigma, drift, denominator, paths=200_000, seed=MC_SEED)
+        mc = realized_variance_mc(
+            n, sigma, drift, denominator, paths=200_000, seed=MC_SEED + 1000 * (offset + 1)
+        )
         rows.append(
             dict(
                 denominator=denominator,
@@ -603,8 +617,11 @@ def build_artifacts():
         schema_version=1,
         section="26.16",
         status="PASS" if all(checks.values()) else "FAIL",
-        milestone_status="gaps_found",
-        scope="Independent numerical reference for §26.16; API extensions, teaching and figures pending.",
+        scope=(
+            "Independent numerical reference for §26.16 (M8a): printed examples, replication, "
+            "strip error, convexity, daily estimator and VIX. The section's status is kept in "
+            "the section ledger, not here."
+        ),
         source_pages=[629, 630, 631, 632],
         printed_anchors=dict(
             example_26_4=dict(
@@ -624,7 +641,8 @@ def build_artifacts():
             options=(
                 "Own BSM; Heston by Lewis single integral of the trap-stable CF (quad to infinity). "
                 "Deep out-of-the-money Heston prices carry about 1e-11 of cancellation noise "
-                "(strip_min_q), below 1e-15 in E(V) after the 1/K^2 weights"
+                "(strip_min_q); the negative ones weigh at most strip_negative_q_max_weight "
+                "(about 2e-14) in E(V) after the 1/K^2 weights"
             ),
             replication="Eq. 26.6 by quad in x=ln(K/F) over a declared finite range; tails omitted",
             strip="Eq. 26.8 with Hull's spacing, S* = largest strike <= F0, Q average at S*",
@@ -648,6 +666,11 @@ def build_artifacts():
             convexity_max_abs_zscore=max(abs(mc["sqrt_mean_zscore"]) for mc in mc_rows),
             strip_min_q=min(
                 row["min_q"] for family in convergence["families"] for row in family["rows"]
+            ),
+            strip_negative_q_max_weight=max(
+                row["negative_q_weight"]
+                for family in convergence["families"]
+                for row in family["rows"]
             ),
             vix_truncation_gap=vix["example_26_4"]["gap"],
             vix_interpolation_error=vix["interpolation"]["error"],

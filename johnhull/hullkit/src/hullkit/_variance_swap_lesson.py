@@ -97,20 +97,28 @@ def _trace_meta(role, scenario):
     return {"role": role, "scenario": scenario}
 
 
-def _finish(fig, key, states, titles, note, *, height=500, legend_rows=1):
+def _finish(fig, key, states, titles, note, *, height=500, legend_rows=1, y_titles=None):
+    def layout(state):
+        update = {"title.text": titles[state], "meta": _meta(key, state)}
+        if y_titles is not None:
+            update["yaxis.title.text"] = y_titles[state]
+        return update
+
     buttons = [
         dict(
             label=_LABELS.get(state, state),
             method="update",
             args=[
                 {"visible": [trace.meta["scenario"] == state for trace in fig.data]},
-                {"title.text": titles[state], "meta": _meta(key, state)},
+                layout(state),
             ],
         )
         for state in states
     ]
     for trace in fig.data:
         trace.visible = trace.meta["scenario"] == states[0]
+    if y_titles is not None:
+        fig.update_layout(yaxis_title_text=y_titles[states[0]])
     extra = 20 * (legend_rows - 1)
     fig.update_layout(
         template="plotly_white",
@@ -217,8 +225,9 @@ def _payoff_figure(data):
         "difference": "バリアンス − ボラティリティ給付：常に 0 以上（凸性）",
     }
     note = (
-        "Example 26.5 の契約（$100m、23%）を満期の給付で描く。L_var=L_vol/(2σ_K) は σ_K での傾きを<br>"
-        "そろえる換算で、σ_K から離れるほどバリアンス側が大きい。割引前の値である。"
+        "Example 26.5 の契約（$100m、23%）を満期の給付で描く。分散側の行使は V_K=σ_K² とした。<br>"
+        "L_var=L_vol/(2σ_K) は σ_K での傾きをそろえる換算で、σ_K から離れるほどバリアンス側が大きい。"
+        "割引前の値である。"
     )
     return _finish(fig, "varswap_payoff", ("payoffs", "difference"), titles, note, legend_rows=2)
 
@@ -275,7 +284,7 @@ def _strip_figure(data):
             "S* の下はプット、上はコール"
         ),
         "contribution": (
-            f"寄与の合計 {sum(row['variance_contribution'] for row in rows):.6f} + 境界項 "
+            f"寄与の合計 {payload['variance_strip_sum']:.6f} + 境界項 "
             f"{payload['boundary_terms']:.6f} = E(V) {payload['expected_variance']:.6f}"
         ),
     }
@@ -307,9 +316,10 @@ def _replication_figure(data):
                     hovertemplate=("ΔK=%{x}: %{y:.3e}<br>行使価格 %{customdata} 本<extra></extra>"),
                 )
             )
+        spacings = [entry["delta_k"] for family in families.values() for entry in family["entries"]]
         fig.add_trace(
             go.Scatter(
-                x=[1.25, 10.0],
+                x=[min(spacings), max(spacings)],
                 y=[0.0, 0.0],
                 mode="lines",
                 name="連続積分（誤差 0）",
@@ -325,7 +335,7 @@ def _replication_figure(data):
             tickvals=[1.25, 2.5, 5, 10],
             ticktext=["1.25", "2.5", "5", "10"],
         ),
-        yaxis=dict(title="離散ストリップ − 厳密 E(V)", exponentformat="e"),
+        yaxis=dict(exponentformat="e"),
     )
     exact = payload["exact"]
     titles = {
@@ -333,13 +343,24 @@ def _replication_figure(data):
         "relative": "同じ誤差を厳密 E(V) に対する % で表示",
     }
     note = (
-        "厳密値は閉形式の E(V)。連続積分としての式26.6は同じ価格から閉形式と一致した"
-        f"（差は最大 {payload['continuous_max_abs_difference']:.1e}）。<br>"
+        "厳密値は閉形式の E(V)。連続積分の式26.6はこの市場で閉形式と一致"
+        f"（差 {abs(payload['continuous_difference']):.1e}、"
+        f"{payload['continuous_markets']}市場で最大 {payload['continuous_max_abs_difference']:.1e}）。<br>"
         "中間と広いはほぼ重なる（40–220 の外の寄与は小さい）。ΔK を半分にすると誤差はほぼ1/4。"
         "<br>狭い範囲では翼の欠落で負へ転じ、細かくしても 0 に近づかない。"
     )
+    y_titles = {
+        "absolute": "離散ストリップ − 厳密 E(V)（年率分散）",
+        "relative": "（離散ストリップ − 厳密 E(V)）/ 厳密 E(V)（%）",
+    }
     return _finish(
-        fig, "varswap_replication", ("absolute", "relative"), titles, note, legend_rows=2
+        fig,
+        "varswap_replication",
+        ("absolute", "relative"),
+        titles,
+        note,
+        legend_rows=2,
+        y_titles=y_titles,
     )
 
 
@@ -407,11 +428,17 @@ def _convexity_figure(data):
         "levels": (
             f"E(V)={base['theta']} で固定し ξ だけを動かす：E(√V) < √E(V)（T={base['expiry']}年）"
         ),
-        "error": "近似の誤差（%ポイント）：式26.9 は ξ⁴ の速さで外れ、常に下側",
+        "error": (
+            "近似の誤差（%ポイント）：小さい ξ で ξ⁴ に比例して増える（隣接点の傾き "
+            f"{payload['error_log_slope_min']:.1f}–{payload['error_log_slope_max']:.1f}）"
+        ),
     }
+    side = "すべて下側に外れた" if payload["all_errors_negative"] else "符号は ξ によって変わる"
     note = (
-        "連続観測の Heston/CIR 分散（v₀=θ、κ=2）。var(V) は伊藤等長性、厳密値はラプラス変換の積分、<br>"
-        "MC は非心カイ二乗による厳密推移。誤差の向きはこの市場の測定結果で、一般の保証ではない。"
+        f"連続観測の Heston/CIR 分散（v₀=θ、κ={base['kappa']:g}）。var(V) は伊藤等長性、"
+        "厳密値はラプラス変換の積分、<br>"
+        f"MC は非心カイ二乗による厳密推移。この市場では式26.9 は{side}。<br>"
+        "誤差の向きは分布の歪みに依存し、一般の保証ではない。"
     )
     return _finish(fig, "volswap_convexity", ("levels", "error"), titles, note, legend_rows=3)
 

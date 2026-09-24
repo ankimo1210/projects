@@ -1207,12 +1207,12 @@
       "evidence": {
         "lesson_builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
+          "sha256": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
           "kind": "source"
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2",
+          "sha256": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
           "kind": "source"
         },
         "pricing": {
@@ -1288,17 +1288,17 @@
         "m8_recheck": {
           "path": "docs/validation/section-26-9/m8-recheck.json",
           "kind": "record",
-          "sha256": "ec37de8f84d022456ccb4fbc6174ae05ca39b803b868ed38e110f6fd361c04c8"
+          "sha256": "6b9d52fe675774db732a9d7d697998cd2b36807d0faceed87f4690fb72387360"
         },
         "browser_run": {
           "path": "docs/validation/section-26-9/browser-m8-recheck.json",
           "kind": "record",
-          "sha256": "efb0e35720a2cbd9e1b866fb86d4ea0c1cc687974b2f2806eb7c78a737152591"
+          "sha256": "4a686e4ff791ef1c7cbb0631c8d51909386830cc79293d6be6a08e7b2f29be9d"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-16/notebook-m8-check.json",
           "kind": "record",
-          "sha256": "b82656c9d5d0ea8ee5c1c59d5c73ae8407fab89a58b7d90d20cc92270f3ce91a"
+          "sha256": "f7c4923007d04b39b1fa6a765902dacc438c19fa6377b8e13476d921a2a6393e"
         }
       },
       "requirements": [
@@ -1766,12 +1766,12 @@
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2",
+          "sha256": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
           "kind": "source"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
+          "sha256": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
           "kind": "source"
         },
         "review": {
@@ -1796,7 +1796,7 @@
         },
         "portal": {
           "path": "report/report_builder/figures.py",
-          "sha256": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be",
+          "sha256": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181",
           "kind": "source"
         },
         "browser_script": {
@@ -1842,17 +1842,17 @@
         "m8_recheck": {
           "path": "docs/validation/section-26-10/m8-recheck.json",
           "kind": "record",
-          "sha256": "61644cf5f494f2c80ef101d3fd30934553de92a8b25afbec4b3a0794c4604927"
+          "sha256": "3db70983d879ccf2782c574b41a78e935a02a1d089583707700b4c41a6cedbe7"
         },
         "browser_run": {
           "path": "docs/validation/section-26-10/browser-m8-recheck.json",
           "kind": "record",
-          "sha256": "beb1fa8b63b73813142208ace0dc4af49f9196fd484906c2e852594bc0eccaae"
+          "sha256": "5f7bb1ddcf702c5df205b5466b18584e49a48446ab8629874132c285d90041b8"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-16/notebook-m8-check.json",
           "kind": "record",
-          "sha256": "b82656c9d5d0ea8ee5c1c59d5c73ae8407fab89a58b7d90d20cc92270f3ce91a"
+          "sha256": "f7c4923007d04b39b1fa6a765902dacc438c19fa6377b8e13476d921a2a6393e"
         }
       },
       "requirements": [
@@ -2483,12 +2483,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2"
+          "sha256": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd"
+          "sha256": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77"
         },
         "review": {
           "path": "docs/SECTION_26_11_REVIEW_2026-09-15.md",
@@ -2518,7 +2518,7 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be"
+          "sha256": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181"
         },
         "browser_script": {
           "path": "scripts/verify_lookback_lesson_browser.cjs",
@@ -2568,17 +2568,17 @@
         "m8_recheck": {
           "path": "docs/validation/section-26-11/m8-recheck.json",
           "kind": "record",
-          "sha256": "cdbc9c5520b68d30f66339e251a5f2833be46e06493b910259e1d91f03a5cf6b"
+          "sha256": "0044ad1ab1da2ed03e7188741daabae23d8c01ef40460708088056b71d1c14b7"
         },
         "browser_run": {
           "path": "docs/validation/section-26-11/browser-m8-recheck.json",
           "kind": "record",
-          "sha256": "80ecdc20e8705e6573dce0f6d824b9b04b6dddd25397fa7dd7f7d94aa9aff4fb"
+          "sha256": "2d43a027edcd17f5c325c40cef49d9da3ce3391188ea6bbd4d52d3ea5c9c127a"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-16/notebook-m8-check.json",
           "kind": "record",
-          "sha256": "b82656c9d5d0ea8ee5c1c59d5c73ae8407fab89a58b7d90d20cc92270f3ce91a"
+          "sha256": "f7c4923007d04b39b1fa6a765902dacc438c19fa6377b8e13476d921a2a6393e"
         }
       },
       "acceptance_note": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md"
@@ -2953,12 +2953,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2"
+          "sha256": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd"
+          "sha256": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77"
         },
         "pricing": {
           "path": "hullkit/src/hullkit/_shout.py",
@@ -2998,7 +2998,7 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be"
+          "sha256": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181"
         },
         "browser_script": {
           "path": "scripts/verify_shout_lesson_browser.cjs",
@@ -3043,17 +3043,17 @@
         "m8_recheck": {
           "path": "docs/validation/section-26-12/m8-recheck.json",
           "kind": "record",
-          "sha256": "9bb47607fae95249a403bf5c3828463b0b14d717265a1d70e0ba7e2da9f9cdcd"
+          "sha256": "699af1f2b3e3384416a53c260addeae36ace01ddb88cd1e903c2170a5135198f"
         },
         "browser_run": {
           "path": "docs/validation/section-26-12/browser-m8-recheck.json",
           "kind": "record",
-          "sha256": "1b501687bcfec360d80fb0f55cd545897b0ea34a217c570d56fd1108c5ac630d"
+          "sha256": "3cb3f15eab065fd9d0df340009c034250a79e9154f32941bb3478678741925e8"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-16/notebook-m8-check.json",
           "kind": "record",
-          "sha256": "b82656c9d5d0ea8ee5c1c59d5c73ae8407fab89a58b7d90d20cc92270f3ce91a"
+          "sha256": "f7c4923007d04b39b1fa6a765902dacc438c19fa6377b8e13476d921a2a6393e"
         }
       },
       "acceptance_note": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md"
@@ -3415,12 +3415,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2"
+          "sha256": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd"
+          "sha256": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77"
         },
         "lesson": {
           "path": "hullkit/src/hullkit/_asian_lesson.py",
@@ -3445,7 +3445,7 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be"
+          "sha256": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -3500,17 +3500,17 @@
         "m8_recheck": {
           "path": "docs/validation/section-26-13/m8-recheck.json",
           "kind": "record",
-          "sha256": "8ed5e4c335e92f4a1407da77c426673ae2281187521401eb96fd9be112f80d89"
+          "sha256": "3b0be2fddb86f66933483c27445ea83995102c34fbc7b39f66cbc912d8bf4bbd"
         },
         "browser_run": {
           "path": "docs/validation/section-26-13/browser-m8-recheck.json",
           "kind": "record",
-          "sha256": "c06a35cdfc53981351241d6565ac9ecba4c4f897b4037f8a1ca1db10d30079b6"
+          "sha256": "76420fd5039621ab63c19310ab29bbcb51513c572aa93d948da553de07f83cfd"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-16/notebook-m8-check.json",
           "kind": "record",
-          "sha256": "b82656c9d5d0ea8ee5c1c59d5c73ae8407fab89a58b7d90d20cc92270f3ce91a"
+          "sha256": "f7c4923007d04b39b1fa6a765902dacc438c19fa6377b8e13476d921a2a6393e"
         }
       },
       "acceptance_note": "docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md"
@@ -3859,12 +3859,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2"
+          "sha256": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd"
+          "sha256": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md",
@@ -3899,7 +3899,7 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be"
+          "sha256": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -3949,17 +3949,17 @@
         "m8_recheck": {
           "path": "docs/validation/section-26-14/m8-recheck.json",
           "kind": "record",
-          "sha256": "cbd7ffe839e3ba8917979ee7129fa6e0635153bf17bf4bb170cc9ac50c57117d"
+          "sha256": "1a793910172a2bd73e498aa7307e8df85606de946d68fa140745498a28af5ddb"
         },
         "browser_run": {
           "path": "docs/validation/section-26-14/browser-m8-recheck.json",
           "kind": "record",
-          "sha256": "85fbb84561bdfd24fddcb0618d5a8d63edd6a07e6c413d05aee9aad1ff874522"
+          "sha256": "6825ed1adae53388e77858fc5f4a6b36745ac05a94b3dce5f5e7b8b37db258c2"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-16/notebook-m8-check.json",
           "kind": "record",
-          "sha256": "b82656c9d5d0ea8ee5c1c59d5c73ae8407fab89a58b7d90d20cc92270f3ce91a"
+          "sha256": "f7c4923007d04b39b1fa6a765902dacc438c19fa6377b8e13476d921a2a6393e"
         }
       },
       "acceptance_note": "docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md"
@@ -4233,7 +4233,8 @@
                 "lesson_tests",
                 "browser_reference",
                 "m8_recheck",
-                "m8_check"
+                "m8_check",
+                "browser_run"
               ],
               "locator": "basket関連65件をM8最終ビルドで再実行、独立browser oracle、数値改変拒否"
             },
@@ -4330,17 +4331,17 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2"
+          "sha256": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd"
+          "sha256": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be"
+          "sha256": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -4360,7 +4361,7 @@
         "browser_run": {
           "path": "docs/validation/section-26-15/browser-m8-recheck.json",
           "kind": "record",
-          "sha256": "e7c2685a1272b4c227d895899b9656691b003331f2829b85a431da243bdb082d"
+          "sha256": "44abdb6b7287199a2fc6a065b26ac2ceeb803ab64b4973b30ad6ba03216bc695"
         },
         "notebook_script": {
           "path": "scripts/verify_basket_notebook.py",
@@ -4370,7 +4371,7 @@
         "notebook_check": {
           "path": "docs/validation/section-26-16/notebook-m8-check.json",
           "kind": "record",
-          "sha256": "b82656c9d5d0ea8ee5c1c59d5c73ae8407fab89a58b7d90d20cc92270f3ce91a"
+          "sha256": "f7c4923007d04b39b1fa6a765902dacc438c19fa6377b8e13476d921a2a6393e"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_15_ACCEPTANCE_2026-09-19.md",
@@ -4400,12 +4401,12 @@
         "m8_recheck": {
           "path": "docs/validation/section-26-15/m8-recheck.json",
           "kind": "record",
-          "sha256": "eb89a32c0c069fd99ab9701b504a2731d9b138412543c751004af18284f3ff0c"
+          "sha256": "2013be5c77267524ccacebd5dbe63c8a0451d04afe4b598c0ce56927e5cfd853"
         },
         "m8_check": {
           "path": "docs/validation/section-26-16/m8-check.json",
           "kind": "record",
-          "sha256": "477e16ddaae5a51f7232562c6ac1e12b674c7c38d598484eadae4a323aa5662f"
+          "sha256": "43685d1325fbdd33c7cbf53fab934fe53cb14b90e26681183f4550b7b4da4ca9"
         }
       },
       "assumptions": [
@@ -4418,7 +4419,6 @@
         "一般basketのモーメント整合Black価格は近似。最大6.4174通貨・相対−1.94%〜+66.84%は選んだ市場の実測で、全域の保証ではない。",
         "MCは標本誤差を持つ。4SE規則はMC参照だけに適用し、条件付き/解析参照は各数値誤差で符号を判定する。",
         "確率的ボラティリティ、ジャンプ、時変相関、現金配当、リバランス、short basket、満期0は対象外。",
-        "既受入6節の現行証跡はM7再検証記録へ差し替え、過去の日時付き記録は履歴として保持する。",
         "M8（§26.16）で共有notebook/builder/figure/styleが更新されたため、現行証跡はm8-recheck・browser-m8-recheck・M8 notebook check・M8統合記録へ差し替えた。M7の受入・納品記録は履歴として保持する。"
       ],
       "acceptance_note": "docs/SECTION_26_15_ACCEPTANCE_2026-09-19.md"
@@ -4647,9 +4647,9 @@
             "visualization": {
               "state": "verified",
               "refs": [
-                "formula_image"
+                "vix_image"
               ],
-              "locator": "Book式例に式26.6と式26.10の累積分散を並記"
+              "locator": "Book §4.6.5：式26.10と、式26.6/式26.10の累積分散0.0155252/0.0155114の出力"
             },
             "rendered": {
               "state": "verified",
@@ -4657,7 +4657,7 @@
                 "browser_run",
                 "notebook_check"
               ],
-              "locator": "Book式例の数値を独立再計算と照合"
+              "locator": "Book §4.6.5の累積分散と打切り差を独立再計算と照合（画面内に写ることも確認）"
             }
           }
         },
@@ -4693,7 +4693,7 @@
                 "m8_check",
                 "notebook_check"
               ],
-              "locator": "保存図は_figures()と完全一致、既受入6節の24図は基準と一致、独立browser oracle"
+              "locator": "保存図は_figures()と完全一致、§4.6外は出力まで基準と一致、改変3種を拒否、独立browser oracle"
             },
             "visualization": {
               "state": "verified",
@@ -4701,9 +4701,11 @@
                 "payoff_image",
                 "strip_image",
                 "replication_image",
-                "convexity_image"
+                "convexity_image",
+                "formula_image",
+                "vix_image"
               ],
-              "locator": "4図×両面×2幅とBook式例の計18画像"
+              "locator": "4図×両面×2幅とBook §4.6.4/§4.6.5の計20画像"
             },
             "rendered": {
               "state": "verified",
@@ -4712,7 +4714,7 @@
                 "notebook_check",
                 "m8_check"
               ],
-              "locator": "両面×2幅×4図×2状態=32、MathJax 105式・JS/overflowを検査"
+              "locator": "両面×2幅×4図×2状態=32、MathJax 112式・JS/overflowを検査"
             }
           }
         }
@@ -4727,7 +4729,7 @@
         "review": {
           "path": "docs/SECTION_26_16_REVIEW_2026-09-25.md",
           "kind": "note",
-          "sha256": "7cdb9e429f086835859e4b3119ba1dac4dbea7aa94b9f4cd3994de60c191c36c"
+          "sha256": "c3d2c69dba6a391db59f13f0517f1776d54cb61ebdc7bb7fff68badc7f2f3dec"
         },
         "design": {
           "path": "docs/superpowers/specs/2026-09-25-section-26-16-variance-swaps-design.md",
@@ -4742,27 +4744,27 @@
         "reference_generator": {
           "path": "scripts/build_variance_swap_reference.py",
           "kind": "source",
-          "sha256": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91"
+          "sha256": "335e7619a67853b56db18ddf81e1e4dbc7ee3519b2b0e384b0a85c6f3269026a"
         },
         "reference_tests": {
           "path": "hullkit/tests/test_variance_swap_reference.py",
           "kind": "test",
-          "sha256": "a3ed35a71fe9960af0b65c902c4595ec3c21aeb9fec2d8ff19bda06f898c31d0"
+          "sha256": "be260b1c572ccbcea70c9f8a3c6d2e8f114614828a7465e699903093f35b93f6"
         },
         "reference": {
           "path": "docs/validation/section-26-16/reference.json",
           "kind": "reference",
-          "sha256": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4"
+          "sha256": "2e33bb9c852d69ae34d7e68f01145743732b4af3c235e0ceb21d3138e44f1fe2"
         },
         "numerical": {
           "path": "docs/validation/section-26-16/numerical-check.json",
           "kind": "record",
-          "sha256": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256"
+          "sha256": "c68435fdeaaf2b856e62f35d815b087af1d19f075cf6e5f2aa014d230e39cef9"
         },
         "pricing": {
           "path": "hullkit/src/hullkit/variance_swaps.py",
           "kind": "source",
-          "sha256": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c"
+          "sha256": "7fc64e7fba2e11bceb07819c3d65c792e9a09e067f5b06b7b1850d7153846b0e"
         },
         "existing_tests": {
           "path": "hullkit/tests/test_variance_swaps.py",
@@ -4777,37 +4779,37 @@
         "lesson": {
           "path": "hullkit/src/hullkit/_variance_swap_lesson.py",
           "kind": "source",
-          "sha256": "08289ba51a8a39cced6b3c76a2fc21c0528d678bde10891ad7556e1e56c6c77c"
+          "sha256": "5c4c82d63a7bdc0f656c04c3cdd1113f29e3537d99d91341dbcf818880cc0174"
         },
         "lesson_tests": {
           "path": "hullkit/tests/test_variance_swap_lesson.py",
           "kind": "test",
-          "sha256": "b17d98bd5ba50f79044a1f268972298c904cbf55594c425a1ea610e082293edc"
+          "sha256": "f301bf01918b145cde8317467cb04c8dde41dd6dc1d1190c0c2bd5790225758f"
         },
         "lesson_builder": {
           "path": "scripts/build_variance_swap_lesson_data.py",
           "kind": "source",
-          "sha256": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d"
+          "sha256": "e9fc4b37eaaecfb6283a8f57fe2a1352be48eb68d28ae515660619e557e0585b"
         },
         "lesson_data": {
           "path": "docs/validation/section-26-16/lesson-data.json",
           "kind": "reference",
-          "sha256": "8ca3bd9f6d14b17f5256e6dc3ce2974e1d2e1bf4d092550db84d59065b37b2b5"
+          "sha256": "941a89849274ee6a6210904c66f7bc19b003fbab368545e24c31422c13b141be"
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2"
+          "sha256": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd"
+          "sha256": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be"
+          "sha256": "6c1338f48ae7eb72763192fffb63b49574ee71870176c7fd44804063062cc181"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -4817,62 +4819,67 @@
         "browser_reference_builder": {
           "path": "scripts/build_variance_swap_browser_reference.py",
           "kind": "source",
-          "sha256": "dc4f5dbc26d4ce75141bd7b95d574ed1f18dffcb79e695520724aec3833871ca"
+          "sha256": "a75aee80be96b1a84777ac57be4dc5a8523699410dba8f4be8ca1ce9e8f68f34"
         },
         "browser_reference": {
           "path": "docs/validation/section-26-16/browser-reference.json",
           "kind": "reference",
-          "sha256": "a8f830fef87d34beb004f92d8e0a33c06921e16e372eccc0931a6ede071fde1f"
+          "sha256": "4fc3cbf596e33a72e892f5b06da313837d5c6cdb970683743fe465cfc7d5b4a3"
         },
         "browser_script": {
           "path": "scripts/verify_variance_swap_lesson_browser.cjs",
           "kind": "source",
-          "sha256": "daa152723aa2cc78bc1fe519cc24c9704685e0f4ef4d2c11d9082b1a4e5f7f64"
+          "sha256": "54910e7388ce07b8203112c04805b59ed8bcfa08c24de0761369a10979a4e92f"
         },
         "browser_run": {
           "path": "docs/validation/section-26-16/browser-m8-check.json",
           "kind": "record",
-          "sha256": "9b1aa0a383f2736ff320c570236a66d1b0177a2b686df76472e8223f3ce288ec"
+          "sha256": "20291cc8e7602947829f581b91d4b7e0a2ea1d520c0079bc62500c0adf3e9f30"
         },
         "notebook_script": {
           "path": "scripts/verify_variance_swap_notebook.py",
           "kind": "source",
-          "sha256": "b68da21791c819b679b0d307d4e7e5d27a84a2c4e3934a3c714de25d7d1e73e4"
+          "sha256": "36648a0ec65f040e5d16cb755182b8a893a3c022cf948b119576f9ba91d87a4e"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-16/notebook-m8-check.json",
           "kind": "record",
-          "sha256": "b82656c9d5d0ea8ee5c1c59d5c73ae8407fab89a58b7d90d20cc92270f3ce91a"
+          "sha256": "f7c4923007d04b39b1fa6a765902dacc438c19fa6377b8e13476d921a2a6393e"
         },
         "payoff_image": {
           "path": "docs/validation/section-26-16/book-varswap_payoff-1000.png",
           "kind": "image",
-          "sha256": "484e20dbeedbe4e7728d20b5e9578ca5bbf1cfaa7226f1fa69546d358af4d134"
+          "sha256": "d337e1b781275d651296b6b3ec0c844b946f75058451823008993c6f0ee0c4a0"
         },
         "strip_image": {
           "path": "docs/validation/section-26-16/book-varswap_strip-1000.png",
           "kind": "image",
-          "sha256": "c239540548dbfab72a0f217d1442d6b0e9cc4f1c8a4b4ccdee27d70a4e77ee73"
+          "sha256": "ee8826252144c3a898bf9d515e90dc49e19d8ed5eee8a9ad471232d898b9540c"
         },
         "replication_image": {
           "path": "docs/validation/section-26-16/book-varswap_replication-1000.png",
           "kind": "image",
-          "sha256": "d8b5c34d2dfa829274cb74bd6c38af27c2a8ac997afd1a0b0bc1540800d71543"
+          "sha256": "4b85a1cf07351483f413744a383367ec83fcdf64351f46521aa7d8485653fe3f"
         },
         "convexity_image": {
           "path": "docs/validation/section-26-16/book-volswap_convexity-1000.png",
           "kind": "image",
-          "sha256": "fa064239459e2715fe207327e54b80b12771af9cfb4a013dfa2020debf636157"
+          "sha256": "e4e7fdc9fb350475e039fa6883c41db0bd07c7b5dcdbf5a643c5747abc0e31cc"
         },
         "formula_image": {
           "path": "docs/validation/section-26-16/book-volswap-formula-example-1000.png",
           "kind": "image",
-          "sha256": "f2b2c57440c21ba9b991ed259222060c8ee0dcaa46a3cab4832b74b92ffd300e"
+          "sha256": "6e66733bb488f76acc7f1002139702d3159daab0e36138aa44d630b7de467062"
+        },
+        "vix_image": {
+          "path": "docs/validation/section-26-16/book-vix-example-1000.png",
+          "kind": "image",
+          "sha256": "5602fbc8e9e4022778bef2584b25a793b5c4eb6257e9b3be91e840fe147d6b3b"
         },
         "m8_check": {
           "path": "docs/validation/section-26-16/m8-check.json",
           "kind": "record",
-          "sha256": "477e16ddaae5a51f7232562c6ac1e12b674c7c38d598484eadae4a323aa5662f"
+          "sha256": "43685d1325fbdd33c7cbf53fab934fe53cb14b90e26681183f4550b7b4da4ca9"
         }
       },
       "assumptions": [

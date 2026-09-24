@@ -1,7 +1,7 @@
 {
   "status": "PASS",
   "command": "PYTHONPATH=hullkit/src:scripts python scripts/verify_variance_swap_notebook.py --base f6a2b62e",
-  "checked_at": "2026-09-24T16:19:25.043358+00:00",
+  "checked_at": "2026-09-24T18:41:51.652215+00:00",
   "cells": 115,
   "code_cells": 49,
   "code_cells_with_outputs": 46,
@@ -18,6 +18,8 @@
     "cells_before": 102,
     "cells_after": 115,
     "compared_cells_outside_section": 101,
+    "compared_outputs_outside_section": 53,
+    "compared": "sources and outputs; execution counts ignored, Plotly HTML div UUIDs masked",
     "retained_variance_swap_code_cell": true,
     "identical": true
   },
@@ -34,15 +36,29 @@
     "figures_compared": 24,
     "identical": true
   },
+  "negative_controls": [
+    {
+      "mutation": "one printed character appended to a stream output outside §4.6",
+      "reason": "cell 20 outside §4.6 changed (outputs): '# 同じ始値100・終値110でも、H=90への途中の到達が契約を分ける。\\npath_t = np.array([0, '"
+    },
+    {
+      "mutation": "eq. 26.9 level at the first xi +0.5 percentage points in the saved figure",
+      "reason": "saved volswap_convexity.data differs from the builder"
+    },
+    {
+      "mutation": "every y of the first trace of accepted figure basket_payoff +1",
+      "reason": "saved ('26.15', 'basket_payoff').data differs from the base notebook"
+    }
+  ],
   "source_sha256": {
-    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
-    "hullkit/src/hullkit/_variance_swap_lesson.py": "08289ba51a8a39cced6b3c76a2fc21c0528d678bde10891ad7556e1e56c6c77c",
-    "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
-    "docs/validation/section-26-16/lesson-data.json": "8ca3bd9f6d14b17f5256e6dc3ce2974e1d2e1bf4d092550db84d59065b37b2b5",
-    "scripts/verify_variance_swap_notebook.py": "b68da21791c819b679b0d307d4e7e5d27a84a2c4e3934a3c714de25d7d1e73e4"
+    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "ede0d9254b3fbb515bdb907e39a780752a489fb268279562b0c8906f932c0b77",
+    "hullkit/src/hullkit/_variance_swap_lesson.py": "5c4c82d63a7bdc0f656c04c3cdd1113f29e3537d99d91341dbcf818880cc0174",
+    "hullkit/src/hullkit/variance_swaps.py": "7fc64e7fba2e11bceb07819c3d65c792e9a09e067f5b06b7b1850d7153846b0e",
+    "docs/validation/section-26-16/lesson-data.json": "941a89849274ee6a6210904c66f7bc19b003fbab368545e24c31422c13b141be",
+    "scripts/verify_variance_swap_notebook.py": "36648a0ec65f040e5d16cb755182b8a893a3c022cf948b119576f9ba91d87a4e"
   },
   "artifact_sha256": {
-    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2"
+    "volumes/10_exotics_martingales/exotics.ipynb": "2e45f4ad57e4421ce7979c5eaaa725bcca04eba2d8cdb1e3d7511fa89fe864b1"
   }
 }
