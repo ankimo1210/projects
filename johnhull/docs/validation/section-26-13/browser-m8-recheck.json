@@ -1,0 +1,553 @@
+{
+  "checked_at": "2026-09-24T16:22:08.450Z",
+  "pages": {
+    "portal": {
+      "figures": [
+        "asian_payoff",
+        "asian_distribution",
+        "asian_observations",
+        "asian_error"
+      ],
+      "states": [
+        {
+          "figure": "asian_payoff",
+          "scenario": "average_price",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "asian_payoff",
+          "scenario": "average_strike",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "low-vol-short",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "positive-carry",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "high-vol-long",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "dividend-above-rate",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "high-vol-long",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "low-vol-short",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "negative-rate",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "positive-carry",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "zero-carry",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_error",
+          "scenario": "call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 6
+        },
+        {
+          "figure": "asian_error",
+          "scenario": "put",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 6
+        },
+        {
+          "figure": "asian_payoff",
+          "scenario": "average_price",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "asian_payoff",
+          "scenario": "average_strike",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "low-vol-short",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "positive-carry",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "high-vol-long",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "dividend-above-rate",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "high-vol-long",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "low-vol-short",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "negative-rate",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "positive-carry",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "zero-carry",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_error",
+          "scenario": "call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 6
+        },
+        {
+          "figure": "asian_error",
+          "scenario": "put",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 6
+        }
+      ],
+      "negative_controls": [
+        {
+          "rejected": true,
+          "restored": true,
+          "mutation": "market:low-vol-short first point +1 percentage point"
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-13/portal-asian_payoff-1440-m8-recheck.png",
+        "docs/validation/section-26-13/portal-asian_distribution-1440-m8-recheck.png",
+        "docs/validation/section-26-13/portal-asian_observations-1440-m8-recheck.png",
+        "docs/validation/section-26-13/portal-asian_error-1440-m8-recheck.png",
+        "docs/validation/section-26-13/portal-asian_payoff-1000-m8-recheck.png",
+        "docs/validation/section-26-13/portal-asian_distribution-1000-m8-recheck.png",
+        "docs/validation/section-26-13/portal-asian_observations-1000-m8-recheck.png",
+        "docs/validation/section-26-13/portal-asian_error-1000-m8-recheck.png"
+      ],
+      "layout_errors": 0,
+      "numeric_scope": "Both widths, every menu state: payoff 8 algebraic pins, distribution M1 and the whole fitted density against an independently recomputed lognormal, observations 18 frozen rows plus an independently quadratured continuous price, errors 29 frozen relative errors. Monte Carlo references carry a standard error and are compared within 4 SE.",
+      "external_network_blocked": true,
+      "external_requests": [],
+      "page_errors": []
+    },
+    "book": {
+      "figures": [
+        "asian_payoff",
+        "asian_distribution",
+        "asian_observations",
+        "asian_error"
+      ],
+      "states": [
+        {
+          "figure": "asian_payoff",
+          "scenario": "average_price",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "asian_payoff",
+          "scenario": "average_strike",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "low-vol-short",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "positive-carry",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "high-vol-long",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "dividend-above-rate",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "high-vol-long",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "low-vol-short",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "negative-rate",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "positive-carry",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "zero-carry",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_error",
+          "scenario": "call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 6
+        },
+        {
+          "figure": "asian_error",
+          "scenario": "put",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 6
+        },
+        {
+          "figure": "asian_payoff",
+          "scenario": "average_price",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "asian_payoff",
+          "scenario": "average_strike",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "low-vol-short",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "positive-carry",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_distribution",
+          "scenario": "high-vol-long",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "dividend-above-rate",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "high-vol-long",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "low-vol-short",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "negative-rate",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "positive-carry",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_observations",
+          "scenario": "zero-carry",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "asian_error",
+          "scenario": "call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 6
+        },
+        {
+          "figure": "asian_error",
+          "scenario": "put",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 6
+        }
+      ],
+      "negative_controls": [
+        {
+          "rejected": true,
+          "restored": true,
+          "mutation": "market:low-vol-short first point +1 percentage point"
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-13/book-asian_payoff-1440-m8-recheck.png",
+        "docs/validation/section-26-13/book-asian_distribution-1440-m8-recheck.png",
+        "docs/validation/section-26-13/book-asian_observations-1440-m8-recheck.png",
+        "docs/validation/section-26-13/book-asian_error-1440-m8-recheck.png",
+        "docs/validation/section-26-13/book-asian_payoff-1000-m8-recheck.png",
+        "docs/validation/section-26-13/book-asian_distribution-1000-m8-recheck.png",
+        "docs/validation/section-26-13/book-asian_observations-1000-m8-recheck.png",
+        "docs/validation/section-26-13/book-asian_error-1000-m8-recheck.png"
+      ],
+      "layout_errors": 0,
+      "numeric_scope": "Both widths, every menu state: payoff 8 algebraic pins, distribution M1 and the whole fitted density against an independently recomputed lognormal, observations 18 frozen rows plus an independently quadratured continuous price, errors 29 frozen relative errors. Monte Carlo references carry a standard error and are compared within 4 SE.",
+      "math": {
+        "typeset": 64,
+        "errors": 0,
+        "headings": [
+          "4.3.1 三つの契約と観測の規約#",
+          "4.3.2 モーメント整合と Example 26.3#",
+          "4.3.3 平均は対数正規ではない#",
+          "4.3.4 観測数と価格#",
+          "4.3.5 既発契約：K∗ への読み替え#",
+          "4.3.6 平均行使型・適用域・理解の確認#"
+        ],
+        "seasoned": {
+          "inputs": {
+            "spot": 50,
+            "strike": 50,
+            "rate": 0.1,
+            "dividend": 0,
+            "volatility": 0.4,
+            "elapsed": 0.6,
+            "remaining": 0.4,
+            "weight": 0.4,
+            "remaining_moment_1": 51.01346774048528,
+            "remaining_matched_volatility": 0.23271349021965923
+          },
+          "checked": [
+            {
+              "observed_average": 40,
+              "shifted_strike": 65,
+              "certain_exercise": false,
+              "price": 0.06768705012127114
+            },
+            {
+              "observed_average": 50,
+              "shifted_strike": 50,
+              "certain_exercise": false,
+              "price": 1.3439879570013167
+            },
+            {
+              "observed_average": 60,
+              "shifted_strike": 35,
+              "certain_exercise": false,
+              "price": 6.158194159595492
+            },
+            {
+              "observed_average": 90,
+              "shifted_strike": -10,
+              "certain_exercise": true,
+              "price": 23.44843818044769
+            }
+          ]
+        },
+        "screenshots": [
+          "docs/validation/section-26-13/book-asian-domain-1440-m8-recheck.png",
+          "docs/validation/section-26-13/book-asian-domain-1000-m8-recheck.png"
+        ]
+      },
+      "external_network_blocked": false,
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "page_errors": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/_asian_lesson.py": "07667046a0cb616c30e237ebad024b72c601aed9286d8009850513f8d6a1061c",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "scripts/build_asian_browser_reference.py": "95982479a737bcc38af39b16d5123d129afe765f879fecb6a37cda43b911ff5f",
+    "scripts/build_asian_lesson_data.py": "5f083bcbeed80bd0414aeb9a7ba2f56f628f8effbe02923c596b0ad4daa35294",
+    "scripts/build_asian_reference.py": "7bbe9dcf48cc6c5d7eddc9553aebccb2fba1f4c6d47893bff666c5b362dd5e42",
+    "docs/validation/section-26-13/lesson-data.json": "0b26805c8d90d7f47551449b1c97e3bb17630c062c34ad264cd392bd459866fe",
+    "docs/validation/section-26-13/prices.json": "b3776b58080bdb4fc83a47003c46ebb5f93d7b54d31a4758769f34ebb9bada02",
+    "docs/validation/section-26-13/numerical-check.json": "c7ee1598f1ef0c50f0d9d2a5bb7fb75834704640d5ae097caf2726c6f22a19b8",
+    "docs/validation/section-26-13/browser-reference.json": "7d65a4aa8bcd5542a949922e719d8edb41c525e1f35dd7f53bec0c07c3072ec4",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
+    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2",
+    "report/report_builder/figures.py": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "scripts/verify_asian_lesson_browser.cjs": "35708f91602c10ce43e56eb40e554a96875ea4e6ae2919bbbb0fdd4edd43cca2"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "1759596a5d4e6553d528f81939bc49bf51c99245f27deb4edb65f8790835b91e",
+    "report/site/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "72235eaa543dc1df1ae4ff621d1a70d618b556c667c62cdb40429ef44e31a75f",
+    "docs/validation/section-26-13/portal-asian_payoff-1440-m8-recheck.png": "9a40804610ec250dff8bdcb3543ed81a5671a6205e388c96d6b23976aca907b5",
+    "docs/validation/section-26-13/portal-asian_distribution-1440-m8-recheck.png": "8c88c57e50ecb146e8f62351346127cb2cd8222ae80ba3f2f0e8e4dd8f4b7b87",
+    "docs/validation/section-26-13/portal-asian_observations-1440-m8-recheck.png": "d66f33c8a6c17f7b2888c410550d5ed84edab2dfc8771d6a498e522fffa961f3",
+    "docs/validation/section-26-13/portal-asian_error-1440-m8-recheck.png": "49fd0b44464cf9200229d84a6c822233c3726b91b624462df67c2c08ce1db2af",
+    "docs/validation/section-26-13/portal-asian_payoff-1000-m8-recheck.png": "59b4e19b22b951389c3a5649f4a02e22a04db0368a90ef6ca83bc302c28ac755",
+    "docs/validation/section-26-13/portal-asian_distribution-1000-m8-recheck.png": "8030b27390cfc39a9884f5c55efc15e88669c58197cb0d963ce363986487351b",
+    "docs/validation/section-26-13/portal-asian_observations-1000-m8-recheck.png": "7dfaf5bac34cf7ea57728179e393b23b5236f1883f53acbc96047d920051836b",
+    "docs/validation/section-26-13/portal-asian_error-1000-m8-recheck.png": "30c3aedf0dd5637dcd1d4801c06881b1e449496e0256888ef37e2a92c821b1ab",
+    "docs/validation/section-26-13/book-asian_payoff-1440-m8-recheck.png": "b7ecc70752b117a0f758ae603dbdf18c99382be167f50acd925f824bc62f87b8",
+    "docs/validation/section-26-13/book-asian_distribution-1440-m8-recheck.png": "6725dacd854062042756d9db25a045c17b18c3fdbf13a14f5bac1238c2b9cd90",
+    "docs/validation/section-26-13/book-asian_observations-1440-m8-recheck.png": "b9bbf5b7cf3b9d234832da99f14442cd74469589562e1b4468178d486d4e3d62",
+    "docs/validation/section-26-13/book-asian_error-1440-m8-recheck.png": "c02999bffb8f04ff09ebdd3ef5214ff7516ecf0c1550c9f1538744949900105f",
+    "docs/validation/section-26-13/book-asian_payoff-1000-m8-recheck.png": "6a26798ea51742f7e53ee7a193ffe90cae981b752f703d4c63064f632cabf81a",
+    "docs/validation/section-26-13/book-asian_distribution-1000-m8-recheck.png": "366bfe0b74d3fd869f64f26f02d475087d8d6a7d6b660e92847adcbfe80afbb0",
+    "docs/validation/section-26-13/book-asian_observations-1000-m8-recheck.png": "6927c36ee53d5ebb2733c6a4be2748e3d3fceddc5233e14869f717a981320004",
+    "docs/validation/section-26-13/book-asian_error-1000-m8-recheck.png": "9cebc4694e97eff6f1dee30067201871cfeb3bd4ea6df02e9473eaeb9b1e6652",
+    "docs/validation/section-26-13/book-asian-domain-1440-m8-recheck.png": "dbd221afb1404cbf8ff486c1ec167935e64f26edb94e1fa731f565da727046ae",
+    "docs/validation/section-26-13/book-asian-domain-1000-m8-recheck.png": "a3948331d9fc4c8eb17697400a931989b01b8f314178ef1aafaf3c90f81f5c43"
+  },
+  "browser_version": "145.0.7632.6",
+  "status": "PASS",
+  "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_exotics_m8.cjs 26-13",
+  "recheck": {
+    "milestone": "M8",
+    "original_verifier": "scripts/verify_asian_lesson_browser.cjs",
+    "original_sha256": "35708f91602c10ce43e56eb40e554a96875ea4e6ae2919bbbb0fdd4edd43cca2",
+    "executed_sha256": "0a94a9113eb9f8d529e79c12b28bdb7650bcc4f7724a5f0f74bfad39f634479c",
+    "wrapper_sha256": "5d2e4cf36db383f41d4c768ba0bd4efd3885603cd91923ef36f4e4b1ad0432b6",
+    "changes": "Only screenshot basenames and browser record basename; original assertions unchanged."
+  }
+}

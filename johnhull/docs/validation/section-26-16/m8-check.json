@@ -1,0 +1,181 @@
+{
+  "status": "PASS",
+  "milestone": "M8",
+  "section": "26.16",
+  "section_status": "pending_validation",
+  "checked_at": "2026-09-24T16:34:11.463605+00:00",
+  "scope": "Section 26.16 M8 delivery: independent references, public API additions, six teaching subsections, four shared figures, saved notebook, Book/portal, and rechecks of the seven accepted sections on the final build. Integration only; no independent review has been performed.",
+  "whole_suite": {
+    "status": "PASS",
+    "scope": "johnhull/hullkit/tests + johnhull/report/tests + johnhull/tests",
+    "passed": 2682,
+    "skipped": 6,
+    "seconds": 90.42,
+    "command": "PYTHONPATH=<worktree>/johnhull/hullkit/src:<worktree>/johnhull/report:<worktree>/johnhull/scripts /home/kazumasa/projects/.venv/bin/python -m pytest -q -p no:cacheprovider johnhull/hullkit/tests johnhull/report/tests johnhull/tests",
+    "notes": [
+      "Six skips are the accepted lookback upper-bound rows at r=q.",
+      "Two warnings are existing japanize_matplotlib/distutils deprecations."
+    ],
+    "warnings": 2
+  },
+  "focused": {
+    "status": "PASS",
+    "passed": 488,
+    "files": {
+      "hullkit/tests/test_variance_swaps.py": 13,
+      "hullkit/tests/test_variance_swap_reference.py": 13,
+      "hullkit/tests/test_variance_swap_contracts.py": 18,
+      "hullkit/tests/test_variance_swap_lesson.py": 13
+    },
+    "also": [
+      "test_model_index.py",
+      "test_docstrings.py",
+      "test_report_build.py"
+    ]
+  },
+  "numerical": {
+    "status": "PASS",
+    "checks": [
+      "convexity_mc_within_4se",
+      "example_26_4_expected_variance",
+      "example_26_4_printed_q_2dp",
+      "example_26_4_value",
+      "example_26_5_expected_volatility",
+      "example_26_5_value",
+      "flat_replication_s_star_invariant",
+      "heston_replication_closed_form",
+      "realized_variance_mc_within_4se",
+      "variance_mc_within_4se",
+      "vix_gap_matches_formula",
+      "wide_fine_strip_converges"
+    ],
+    "measured": {
+      "flat_max_abs_difference": 8.326672684688674e-17,
+      "heston_max_abs_difference": 1.5131403074963856e-12,
+      "heston_max_quadrature_error": 8.417221426250049e-13,
+      "convexity_max_abs_approximation_error": 0.004618934879419279,
+      "convexity_max_abs_zscore": 1.083791161669365,
+      "strip_min_q": -2.0591528482327703e-11,
+      "vix_truncation_gap": 1.3849604854980144e-05,
+      "vix_interpolation_error": -0.00032367235994013033
+    }
+  },
+  "notebook": {
+    "status": "PASS",
+    "cells": 115,
+    "code_cells": 49,
+    "outside_section_cells_preserved": 101,
+    "saved_plotly_figures_exact": 4,
+    "accepted_section_figures_identical": 24
+  },
+  "browser": {
+    "status": "PASS",
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "states_checked": 32,
+    "negative_control": "eq. 26.9 level at xi=0.6 +0.5 percentage points",
+    "book_math_typeset": 105,
+    "book_math_errors": 0,
+    "portal_external_requests": 0
+  },
+  "accepted_section_rechecks": {
+    "26.9": {
+      "tests": "PASS",
+      "passed": 91,
+      "lesson_numeric_payload_unchanged": null,
+      "browser": "PASS"
+    },
+    "26.10": {
+      "tests": "PASS",
+      "passed": 92,
+      "lesson_numeric_payload_unchanged": null,
+      "browser": "PASS"
+    },
+    "26.11": {
+      "tests": "PASS",
+      "passed": 144,
+      "lesson_numeric_payload_unchanged": null,
+      "browser": "PASS"
+    },
+    "26.12": {
+      "tests": "PASS",
+      "passed": 215,
+      "lesson_numeric_payload_unchanged": true,
+      "browser": "PASS"
+    },
+    "26.13": {
+      "tests": "PASS",
+      "passed": 274,
+      "lesson_numeric_payload_unchanged": true,
+      "browser": "PASS"
+    },
+    "26.14": {
+      "tests": "PASS",
+      "passed": 351,
+      "lesson_numeric_payload_unchanged": true,
+      "browser": "PASS"
+    },
+    "26.15": {
+      "tests": "PASS",
+      "passed": 65,
+      "lesson_numeric_payload_unchanged": true,
+      "browser": "PASS"
+    }
+  },
+  "lint": {
+    "status": "PASS",
+    "command": "ruff check + ruff format --check on the changed Python files"
+  },
+  "diff_check": {
+    "status": "PASS",
+    "command": "git diff --check"
+  },
+  "release": {
+    "status": "PASS",
+    "command": "make hull-release-check",
+    "portal_figures": 110,
+    "exotics_figures": 30
+  },
+  "review": "No independent review. The ledger row stays pending_validation until a review or an explicit user waiver.",
+  "source_sha256": {
+    "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
+    "hullkit/src/hullkit/_variance_swap_lesson.py": "08289ba51a8a39cced6b3c76a2fc21c0528d678bde10891ad7556e1e56c6c77c",
+    "hullkit/tests/test_variance_swaps.py": "79ea5ba0b1af0022c75efa50d0332e1b9cc6d2aa23ab4e4ff6025c757a907a27",
+    "hullkit/tests/test_variance_swap_reference.py": "a3ed35a71fe9960af0b65c902c4595ec3c21aeb9fec2d8ff19bda06f898c31d0",
+    "hullkit/tests/test_variance_swap_contracts.py": "01deb5aa1a22cfd07abf62ac8c80114143d5c2b8a7cb2d2765f2c9818540ce9b",
+    "hullkit/tests/test_variance_swap_lesson.py": "b17d98bd5ba50f79044a1f268972298c904cbf55594c425a1ea610e082293edc",
+    "scripts/build_variance_swap_reference.py": "ebecc9f3ab86ce522b7f22c04ef513becd564a17f108e7b5fae08431bde41c91",
+    "scripts/build_variance_swap_lesson_data.py": "84fbefc6965c4a62a291dc5b58f3b5d30a98ed80012ad7e87c34e1a11ed49d1d",
+    "scripts/build_variance_swap_browser_reference.py": "dc4f5dbc26d4ce75141bd7b95d574ed1f18dffcb79e695520724aec3833871ca",
+    "scripts/verify_variance_swap_notebook.py": "b68da21791c819b679b0d307d4e7e5d27a84a2c4e3934a3c714de25d7d1e73e4",
+    "scripts/verify_variance_swap_lesson_browser.cjs": "daa152723aa2cc78bc1fe519cc24c9704685e0f4ef4d2c11d9082b1a4e5f7f64",
+    "scripts/recheck_exotics_m8.py": "3d4b4d1a71b5588df05d3a2251a73086d03174abefe929bde578268ac8f1567b",
+    "scripts/recheck_exotics_m8.cjs": "5d2e4cf36db383f41d4c768ba0bd4efd3885603cd91923ef36f4e4b1ad0432b6",
+    "docs/validation/section-26-16/reference.json": "c2f63363c405634aca97efb5bf4c270e3a93f478cdef34692d44e93255b457f4",
+    "docs/validation/section-26-16/numerical-check.json": "4ef31797a5cae6a45465c919bf42a9723e8fe87e0d9a46faf11edead3c9c7256",
+    "docs/validation/section-26-16/lesson-data.json": "8ca3bd9f6d14b17f5256e6dc3ce2974e1d2e1bf4d092550db84d59065b37b2b5",
+    "docs/validation/section-26-16/browser-reference.json": "a8f830fef87d34beb004f92d8e0a33c06921e16e372eccc0931a6ede071fde1f",
+    "docs/validation/section-26-16/browser-m8-check.json": "9b1aa0a383f2736ff320c570236a66d1b0177a2b686df76472e8223f3ce288ec",
+    "docs/validation/section-26-16/notebook-m8-check.json": "b82656c9d5d0ea8ee5c1c59d5c73ae8407fab89a58b7d90d20cc92270f3ce91a",
+    "report/report_builder/figures.py": "8297e24cc3626b82d6e32eb821afe8d08ebb593ad73410f83e4ee9d64fb3d3be",
+    "report/assets/style.css": "5b77ebb943211192f9c69e6ed982ff414bbf2bbdb6b3b873987093f0cc1f20d2",
+    "report/tests/test_report_build.py": "d2b91490bf40474655e8f325398c05f1b3eb0b99c6c8a466756cae454b8cc867",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
+    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2",
+    "release_manifest.json": "e11b367fdfa5aae340278c9d0b315e7bcf28094ecb52f8622316c46cb5e515d2",
+    "README.md": "ce1a4b284517a3db36c2647af6e90a8003e89991b2b858774ae7f56ef1d4ea80",
+    "report/README.md": "967f4f9a929adbed6404e4682fef9414c05b6a106df21206b597bcac143c8ceb",
+    "MODEL_INDEX.md": "a966111fab892b7334cb6d66ae6da5365aa5d79416f29939721a102c1a3074b1"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "1759596a5d4e6553d528f81939bc49bf51c99245f27deb4edb65f8790835b91e",
+    "book/_build/html/notebooks/10_exotics.html": "72235eaa543dc1df1ae4ff621d1a70d618b556c667c62cdb40429ef44e31a75f"
+  }
+}

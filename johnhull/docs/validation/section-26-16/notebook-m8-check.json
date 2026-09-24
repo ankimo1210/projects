@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "command": "PYTHONPATH=hullkit/src:scripts python scripts/verify_variance_swap_notebook.py --base f6a2b62e",
+  "checked_at": "2026-09-24T16:19:25.043358+00:00",
+  "cells": 115,
+  "code_cells": 49,
+  "code_cells_with_outputs": 46,
+  "output_comparison": "Separate fresh execution: output types, MIME keys and normalized deterministic text. Timing cells type-only; images and Plotly payloads excluded from that comparison.",
+  "saved_plotly_comparison": [
+    "varswap_payoff: data and layout identical (5 traces)",
+    "varswap_replication: data and layout identical (8 traces)",
+    "varswap_strip: data and layout identical (7 traces)",
+    "volswap_convexity: data and layout identical (6 traces)"
+  ],
+  "saved_plotly_note": "Each saved §26.16 payload equals hullkit._variance_swap_lesson._figures() exactly, data and layout.",
+  "preservation": {
+    "base_commit": "f6a2b62e",
+    "cells_before": 102,
+    "cells_after": 115,
+    "compared_cells_outside_section": 101,
+    "retained_variance_swap_code_cell": true,
+    "identical": true
+  },
+  "accepted_section_figures": {
+    "base_commit": "f6a2b62e",
+    "sections": [
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15"
+    ],
+    "figures_compared": 24,
+    "identical": true
+  },
+  "source_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "0c3096ff8c47f466b5ec9186b3d21c6b10cf0cdd0fe8d659f502ab616e3ef0cd",
+    "hullkit/src/hullkit/_variance_swap_lesson.py": "08289ba51a8a39cced6b3c76a2fc21c0528d678bde10891ad7556e1e56c6c77c",
+    "hullkit/src/hullkit/variance_swaps.py": "6f89dc8945578bf7c7643bb23390783fcbd8f12cf6a5d705532e43f9893a517c",
+    "docs/validation/section-26-16/lesson-data.json": "8ca3bd9f6d14b17f5256e6dc3ce2974e1d2e1bf4d092550db84d59065b37b2b5",
+    "scripts/verify_variance_swap_notebook.py": "b68da21791c819b679b0d307d4e7e5d27a84a2c4e3934a3c714de25d7d1e73e4"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "0ab8ea136f119e4fb2055d261803ac62f931315e2cc1c12a0306b6aa3356beb2"
+  }
+}

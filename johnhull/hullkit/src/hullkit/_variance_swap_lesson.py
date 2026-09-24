@@ -39,6 +39,14 @@ _LABELS = {
 }
 _KIND_COLORS = {"put": _COLORS[0], "average": _COLORS[2], "call": _COLORS[1]}
 _RANGE_COLORS = {"narrow": _COLORS[1], "medium": _COLORS[2], "wide": _COLORS[0]}
+# medium and wide nearly coincide (the wings beyond 40-220 carry almost nothing), so the
+# three ranges differ in dash and marker too, and medium is drawn last and open.
+_RANGE_STYLE = {
+    "narrow": dict(dash="solid", symbol="circle", size=9, width=2.5),
+    "medium": dict(dash="dot", symbol="diamond-open", size=13, width=3),
+    "wide": dict(dash="solid", symbol="square", size=8, width=2.5),
+}
+_BAR_WIDTH = 34.0
 
 
 def _load_data(path=None, root=None):
@@ -227,6 +235,7 @@ def _strip_figure(data):
                 y=[row["q"] for row in chosen],
                 name=f"Q(Kᵢ)：{_LABELS[kind]}",
                 marker_color=_KIND_COLORS[kind],
+                width=_BAR_WIDTH,
                 meta=_trace_meta(f"q-{kind}", "q"),
                 hovertemplate="K=%{x:.0f}: Q=%{y:.4f}<extra></extra>",
             )
@@ -250,6 +259,7 @@ def _strip_figure(data):
                 y=[row["variance_contribution"] for row in chosen],
                 name=f"(2/T)ΔK/K² e^{{rT}} Q：{_LABELS[kind]}",
                 marker_color=_KIND_COLORS[kind],
+                width=_BAR_WIDTH,
                 meta=_trace_meta(f"contribution-{kind}", "contribution"),
                 hovertemplate="K=%{x:.0f}: 寄与 %{y:.5f}<extra></extra>",
             )
@@ -279,17 +289,19 @@ def _strip_figure(data):
 def _replication_figure(data):
     payload = data["replication"]["data"]
     fig = go.Figure()
+    families = {family["range"]: family for family in payload["families"]}
     for state, field in (("absolute", "error"), ("relative", "relative_error_percent")):
-        for family in payload["families"]:
-            name = family["range"]
+        for name in ("narrow", "wide", "medium"):
+            family = families[name]
+            style = _RANGE_STYLE[name]
             fig.add_trace(
                 go.Scatter(
                     x=[entry["delta_k"] for entry in family["entries"]],
                     y=[entry[field] for entry in family["entries"]],
                     mode="lines+markers",
                     name=f"行使価格の範囲 {_LABELS[name]}",
-                    line=dict(color=_RANGE_COLORS[name], width=2.5),
-                    marker=dict(size=9),
+                    line=dict(color=_RANGE_COLORS[name], width=style["width"], dash=style["dash"]),
+                    marker=dict(size=style["size"], symbol=style["symbol"]),
                     meta=_trace_meta(f"strip-error-{name}", state),
                     customdata=[entry["strikes"] for entry in family["entries"]],
                     hovertemplate=("ΔK=%{x}: %{y:.3e}<br>行使価格 %{customdata} 本<extra></extra>"),
@@ -321,9 +333,10 @@ def _replication_figure(data):
         "relative": "同じ誤差を厳密 E(V) に対する % で表示",
     }
     note = (
-        "厳密値は閉形式の E(V)。連続積分としての式26.6は同じ価格から閉形式と "
-        f"{payload['continuous_max_abs_difference']:.1e} 以内で一致した。<br>"
-        "広い範囲では ΔK を半分にすると誤差がほぼ1/4（格子誤差）。狭い範囲では翼の欠落で負へ転じる。"
+        "厳密値は閉形式の E(V)。連続積分としての式26.6は同じ価格から閉形式と一致した"
+        f"（差は最大 {payload['continuous_max_abs_difference']:.1e}）。<br>"
+        "中間と広いはほぼ重なる（40–220 の外の寄与は小さい）。ΔK を半分にすると誤差はほぼ1/4。"
+        "<br>狭い範囲では翼の欠落で負へ転じ、細かくしても 0 に近づかない。"
     )
     return _finish(
         fig, "varswap_replication", ("absolute", "relative"), titles, note, legend_rows=2
