@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T23:11:55.484Z",
+  "checked_at": "2026-09-25T03:19:27.974Z",
   "pages": {
     "portal": {
       "states": [
@@ -195,23 +195,23 @@
   },
   "artifact_sha256": {
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
     "docs/validation/section-26-17/portal-static_boundary-1440.png": "951e853b1070e78980543033ce20d2c33b28509a51d4423064c04f907d984660",
     "docs/validation/section-26-17/portal-static_ladder-1440.png": "05dcdb4920806db4604537e566cd547c7663ee5cb9d43ad926d23d43102b06d9",
-    "docs/validation/section-26-17/portal-static_boundary_error-1440.png": "39c748074a78fa4bce6eeac6445f317784590a6f770cc27757b92b87116274a5",
+    "docs/validation/section-26-17/portal-static_boundary_error-1440.png": "a1da94ae1f77ce88daf6df3959961a7e9da3d57a22163d7d4762358a308c05ee",
     "docs/validation/section-26-17/portal-static_convergence-1440.png": "8e7f4aebb1bce4e57f134f1727b40a1102a087b7f1e492f20b0d42b5924ccb50",
     "docs/validation/section-26-17/portal-static_boundary-1000.png": "dd478a60474c56fb859a9097844f4c2067ccb2fa925dceff5d6a3af978bcb3ac",
     "docs/validation/section-26-17/portal-static_ladder-1000.png": "64e62bf96845ade468a270b8afc4478e49ddc5cc2ce02d1c9a77821d6ea2c388",
-    "docs/validation/section-26-17/portal-static_boundary_error-1000.png": "d0bd752c443919630f1f9da9daed8d33c95e4559c21e883c229f6092955bc84b",
+    "docs/validation/section-26-17/portal-static_boundary_error-1000.png": "714baeb38d7f9ef462473a630efcd712938864423dea376f33df65035773dc55",
     "docs/validation/section-26-17/portal-static_convergence-1000.png": "d17aac9e8e0c4b0e45be9cf42f23942fba2367f7429c2031077cb587d0439fd2",
     "docs/validation/section-26-17/book-static_boundary-1440.png": "61e6eb1b40fc18760e8e5403cb66104d0b5803e765216e5e3320cef28d22d95d",
     "docs/validation/section-26-17/book-static_ladder-1440.png": "3aab37e0575c6a64020e55cefd35fb986f4a8e22aeec10af9fb4b1ddda30c308",
     "docs/validation/section-26-17/book-static_boundary_error-1440.png": "5e678d5fea25ae8e3da5eff05818aafc5ce239c6184e4bdb04daf3705ca90bde",
-    "docs/validation/section-26-17/book-static_convergence-1440.png": "079d862772f512b02cd15d7ac6e20d00b09948161195288367b80484d720b67c",
+    "docs/validation/section-26-17/book-static_convergence-1440.png": "a1cf18bf338838397b50333703670b2bab064ce51b810c5cf450bd557823ae9f",
     "docs/validation/section-26-17/book-static_boundary-1000.png": "9de5145dda4c721fa30ae7a19b31bfc75698044eee26fe91e208e97cb2c1240d",
     "docs/validation/section-26-17/book-static_ladder-1000.png": "f8bfa8a7ec4bdf2528ec7352d4a2eab3cfd6f935e90d94286f9191a8f5dceef1",
-    "docs/validation/section-26-17/book-static_boundary_error-1000.png": "ea4bde3cca2a9207b078959871f5821e1fad6de8ef57adc798b629e608cb1efd",
-    "docs/validation/section-26-17/book-static_convergence-1000.png": "99977bd5ce608ed9691f29b47c650aa2d1c5dc2040c1410acd8c36f61faeac7e"
+    "docs/validation/section-26-17/book-static_boundary_error-1000.png": "23670f27bae28286148febaf1cc931edf92a1d84b89bc07f564b10a354ce2ac5",
+    "docs/validation/section-26-17/book-static_convergence-1000.png": "4d46f514e5f2a12695f16775b7ea29c4873c62cc58d6c03ca191d559365dd407"
   },
   "browser_version": "145.0.7632.6",
   "book_math": {

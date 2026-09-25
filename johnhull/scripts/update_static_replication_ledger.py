@@ -51,6 +51,8 @@ def main():
         if "m8_check" in evidence:
             evidence["m9_check"] = item("docs/validation/section-26-17/m9-check.json", "record")
             del evidence["m8_check"]
+        if "m9_recheck" in evidence:
+            evidence["m9_recheck"]["sha256"] = digest(evidence["m9_recheck"]["path"])
         evidence["browser_run"] = item(
             f"docs/validation/section-26-{number}/browser-m9-recheck.json", "record"
         )

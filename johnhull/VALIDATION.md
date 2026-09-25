@@ -20,6 +20,7 @@ integration gate を満たすことだけを表す。実市場での予測力、
 - Chromium 145でBook/portal×1440/1000px×4図の24状態を独立保存値と照合。16画像、数値改変の拒否、JSエラー0、Book MathJaxエラー0。portalは外部要求0。
 - 既受入§26.9–§26.16の個別テストと両画面をM9再検証し、過去の記録は保持。台帳`--check-artifacts`とM9統合記録`--check`はPASS。
 - johnhull全体は**2,678 passed / 6 skipped / 2件の既存deprecation warning**。core notebook 19冊、frontier notebook 11冊、vol19–28のartifact再生成（2回目もbyte一致）、Book/portal build、release contractがPASS。
+- `main`へのローカル統合後にBook/portalをその場所で再生成した。Book HTMLのbyte hashが作業ツリー時点と異なったため、§26.9–§26.16の画面・個別テストと§26.17のnotebook・画面を`main`で再実行し、現行のM9証跡へ更新した。台帳の成果物ハッシュ検査は再度PASS。
 - 連続監視・一定BSM・必要な取引可能コールを仮定。有限節点は完全複製でなく、市場での取引性能・解消費用は未評価。
 
 ## Section 26.16 M8 — 2026-09-25

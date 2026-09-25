@@ -4,13 +4,13 @@
   "base_commit": "f0d25b9e",
   "lesson_numeric_payload_unchanged": null,
   "hash_refresh": [],
-  "checked_at": "2026-09-24T22:59:55.507186+00:00",
+  "checked_at": "2026-09-25T03:19:31.911418+00:00",
   "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_binary_reference.py hullkit/tests/test_binary_lesson.py",
   "environment": {
     "PYTHONPATH": "hullkit/src:scripts:report (this checkout)"
   },
   "exit_code": 0,
-  "pytest_output": "........................................................................ [ 78%]\n....................                                                     [100%]\n92 passed in 0.80s\n",
+  "pytest_output": "........................................................................ [ 78%]\n....................                                                     [100%]\n92 passed in 0.89s\n",
   "passed": 92,
   "source_sha256": {
     "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
@@ -25,7 +25,7 @@
   },
   "artifact_sha256": {
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52"
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790"
   },
   "scope": "Accepted section tests against the final M9 assets after the shared vol10 notebook, portal registry and stylesheet changed; no pricing code or lesson data of this section changed. Historical numerical and browser records preserved."
 }

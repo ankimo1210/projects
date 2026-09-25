@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checked_at": "2026-09-24T23:04:29.375318+00:00",
+  "checked_at": "2026-09-25T03:19:34.177234+00:00",
   "base_commit": "f0d25b9e",
   "cells": 125,
   "preserved_cells": 115,
@@ -25,6 +25,6 @@
   },
   "artifact_sha256": {
     "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52"
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T23:00:41.114Z",
+  "checked_at": "2026-09-25T03:19:54.655Z",
   "pages": {
     "portal": {
       "figures": [
@@ -222,7 +222,7 @@
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
     "report/site/assets/style.css": "797019b06cdada1d6817dda31c394f7dd69fb12b9a15bd9d3051d8f5f7ad9fb6",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
     "docs/validation/section-26-11/portal-lookback_payoffs-1440-m9-recheck.png": "bdb98bf61f3f2664b0e55325c60a9333853983a44af5e32aaaa8826031489638",
     "docs/validation/section-26-11/portal-lookback_history-1440-m9-recheck.png": "f20f8d39f672a067f95d7a58d9cfa11d88155246dc1817aa03d1dc2f195b13ea",
     "docs/validation/section-26-11/portal-lookback_replication-1440-m9-recheck.png": "f4f324d7a8a6bbd1d896cccffa615ac577f07016f64b8d7b36220c69128b1161",
@@ -233,7 +233,7 @@
     "docs/validation/section-26-11/portal-lookback_monitoring-1000-m9-recheck.png": "2fe15f603a4c93e6d499e703fef39eedf65df345c91c0818a58c5e14db86bcc2",
     "docs/validation/section-26-11/book-lookback_payoffs-1440-m9-recheck.png": "6622c5ce4e3c80a1ed7061ba5796bf59eee8373069e9a4af00fe177b8185ba07",
     "docs/validation/section-26-11/book-lookback_history-1440-m9-recheck.png": "6f9f2685e48b57cd8c453865d81a216d92a8e2a36c665b0c168b668f469fc96f",
-    "docs/validation/section-26-11/book-lookback_replication-1440-m9-recheck.png": "7d181409a6643624d32d92e09e7110862f7fa51c0878e38a9731c827b7a52633",
+    "docs/validation/section-26-11/book-lookback_replication-1440-m9-recheck.png": "f4854028c6e2c146bb71cf64872a671e75e132929d0a3ffb041006286633222f",
     "docs/validation/section-26-11/book-lookback_monitoring-1440-m9-recheck.png": "49510285def0b9a97216c215f18470fbef62c11ba8a1e84d0ad0283c8b052f10",
     "docs/validation/section-26-11/book-lookback_payoffs-1000-m9-recheck.png": "6c8d942b3169a4c3ad3c6dbfad62972979b5c647916381e5ec195b93cfad55b4",
     "docs/validation/section-26-11/book-lookback_history-1000-m9-recheck.png": "27bb6c4178e8711c93207bebad4cbbbdf65d943e175f97af5ba9ba9dae5dc882",
