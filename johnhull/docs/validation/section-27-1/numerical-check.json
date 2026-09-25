@@ -1,0 +1,22 @@
+{
+  "section": "27.1",
+  "status": "PASS",
+  "method": "CEV local-volatility PDE; original-Poisson conditional Merton; VG gamma-density integration",
+  "measured": {
+    "cev_pde_max_abs_currency": 0.0005624346043209272,
+    "merton_26_strikes_max_abs_currency": 8.881784197001252e-14,
+    "vg_26_strikes_max_abs_currency": 0.000122087898756007,
+    "poisson_table_probability_sum_m0_to_8": 0.999998874797402
+  },
+  "tolerances": {
+    "cev_currency": 0.002,
+    "merton_currency": 1e-09,
+    "vg_currency": 0.0002
+  },
+  "artifact_sha256": "402526876785aa20650c9fd69d22a3a1349f538929bd078e5870ca1163cdc7ba",
+  "source_sha256": {
+    "scripts/build_alternative_models_reference.py": "c87a7df004a53eb09c50f97bc7f4413bf76e9063b86104064ed733668b627f83",
+    "scripts/verify_alternative_models_numerics.py": "f407479c8d7ff14415fe90de0cb3a731d3dd6c10163093cda561560dc86269e0",
+    "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0"
+  }
+}

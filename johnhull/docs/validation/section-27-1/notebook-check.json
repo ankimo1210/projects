@@ -1,0 +1,24 @@
+{
+  "section": "27.1",
+  "status": "PASS",
+  "base": "7cfd0864",
+  "preserved_cells_outside_lesson": 34,
+  "saved_figures": [
+    "alternative_cev",
+    "alternative_merton",
+    "alternative_poisson",
+    "alternative_vg"
+  ],
+  "source_sha256": {
+    "scripts/verify_alternative_models_notebook.py": "e2172434f526250ed3be4ecb8b41c3ad41816fd9e1d6160d57c17f0837a090b3",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_alternative_models_lesson.py": "a5c6b4e4e2ea5eab00d9af9f97932373705129fb8131bfcc92fa6657360aab37",
+    "docs/validation/section-27-1/reference.json": "402526876785aa20650c9fd69d22a3a1349f538929bd078e5870ca1163cdc7ba",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "c7ba4be3c50868ba0b96e3dece94c79c471355663dbd6bf8ab3acbb67b05155d",
+    "volumes/06_numerical_methods/numerical.ipynb": "3bf1cea6ed62713379daabb8d073089a022659b1498b72a3163bd4c8aef397e3"
+  },
+  "artifact_sha256": {
+    "volumes/06_numerical_methods/numerical.ipynb": "3bf1cea6ed62713379daabb8d073089a022659b1498b72a3163bd4c8aef397e3",
+    "book/_build/html/notebooks/06_numerical.html": "f6347527638713d1bf8c3de658cede38f23f166f4ef883140f8b63e256b36b85"
+  }
+}

@@ -561,7 +561,7 @@ def test_cli_reports_cyclic_summary_paths(project_fixture: ProjectFixture, loop_
     assert "Traceback" not in result.stderr
 
 
-def test_real_inventory_and_section_26_migration_are_complete() -> None:
+def test_real_inventory_and_accepted_sections_are_complete() -> None:
     project = REPO_ROOT / "johnhull"
     inventory = json.loads((project / "docs/section_inventory.json").read_text(encoding="utf-8"))
     ledger = json.loads((project / "docs/section_ledger.json").read_text(encoding="utf-8"))
@@ -573,10 +573,10 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert result["status"] == "PASS", result["errors"]
     assert result["inventory_total"] == 306
     assert result["counts"] == {
-        "unreviewed": 297,
+        "unreviewed": 296,
         "gaps_found": 0,
         "pending_validation": 0,
-        "accepted": 9,
+        "accepted": 10,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
@@ -636,6 +636,14 @@ def test_real_inventory_and_section_26_migration_are_complete() -> None:
     assert all(
         axis["state"] == "verified"
         for row in replication["requirements"]
+        for axis in row["coverage"].values()
+    )
+    alternatives = next(section for section in ledger["sections"] if section["id"] == "27.1")
+    assert alternatives["status"] == "accepted"
+    assert [row["id"] for row in alternatives["requirements"]] == [f"AM{i:02}" for i in range(1, 7)]
+    assert all(
+        axis["state"] == "verified"
+        for row in alternatives["requirements"]
         for axis in row["coverage"].values()
     )
     shout = next(section for section in ledger["sections"] if section["id"] == "26.12")

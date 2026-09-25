@@ -381,75 +381,103 @@ implicit / CN はこの構造を「連立を解く」ことで無条件安定に
 )
 
 # ===========================================================================
-# Section 4: Ch.27 alternative models & LSM
+# Section 4: Hull §27.1 alternative models & later LSM
 # ===========================================================================
 
-# Cell 18: models map md
+# Cell 18: §27.1 model map
 cells.append(
-    md(r"""## 7. BSM を超えるモデルたち（Ch.27）
+    md(r"""## 7. Black–Scholes–Merton 以外のモデル（§27.1）
 
-| モデル | アイデア | スマイルへの効き方 |
+この節は Hull 11e Global Edition pp.641–646 の3モデルを追う。記号の時間は年、金額は通貨、
+ボラティリティは年率。次節以降に現れる Heston・SABR は第14巻で扱う。
+
+| モデル | ランダム性 | 主な形状 |
 |---|---|---|
-| CEV | σ ∝ S^{β−1} | β<1 で株式型スキュー |
-| **Merton ジャンプ拡散** | 拡散＋ポアソンジャンプ | 裾を厚くする（短期で強い） |
-| 分散ガンマ | ガンマ時間変換の純ジャンプ | 裾と歪みを独立に制御 |
-| Heston | 分散が CIR 過程 | ρ<0 で株式型スキュー |
-| SABR | フォワードとσの連立 SDE | 近似式でスマイルを直接表現 |
-| 局所ボラ (IVF/Dupire) | σ(S,t) を市場に完全整合 | バニラは完全再現（エキゾチックは注意） |
+| CEV | 株価依存の局所ボラ | β<1 で下側のボラが高い |
+| Merton ジャンプ拡散 | 正規拡散＋ポアソンジャンプ | 下向きジャンプで左尾が厚い |
+| 分散ガンマ（VG） | ガンマ時計で進むブラウン運動 | 時計のばらつきで厚い裾、θで歪み |
 
-このうち Merton は **BSM の重み付き級数**で書けるので、ここで実装して
-「ジャンプ → スマイル」を直接見ます。""")
+以下の図は独立参照の保存値を Book と portal で共用する。価格の一致は数値検証であり、
+市場較正やヘッジ成績の検証ではない。""")
 )
 cells.append(
-    md(r"""> **核心** — ジャンプ・確率ボラを入れると、スマイルが自然に出る。<br>
-> **直感** — ジャンプ → 短期スキューが急に。BSM の正規仮定の綻びを埋める。<br>
-> **実務** — 現実のスマイルを再現するモデル選択。第14巻 Heston/SABR への入口。""")
+    md(r"""### 7.1 CEV：株価が変わると局所ボラも変わる
+
+$$dS_t=(r-q)S_t\,dt+\sigma S_t^{\beta}\,dW_t,\qquad
+\sigma_{\mathrm{loc}}(S)=\sigma S^{\beta-1}.$$
+
+$\beta=1$ なら BSM。$\beta<1$ なら株価低下で局所ボラが上がり、$\beta>1$ なら逆。
+異なる $\beta$ を比較するときは $S_0=100$ における局所ボラを20%に固定し、
+$\sigma=0.2S_0^{1-\beta}$ とする。$\sigma$ の単位は $\beta$ に応じて変わる。
+欧州価格は非心カイ二乗分布の閉形式で計算できる。ここでは $0<\beta<1$ の
+価格を独立した局所ボラ PDE（Crank–Nicolson）とも照合した。""")
 )
 
-# Cell 19: Merton series + smile
 cells.append(
-    code(r"""def merton_jump_call(S, K, r, sigma, T, lam, gamma_j, delta_j, q=0.0, n_terms=40):
-    # Merton ジャンプ拡散のヨーロピアンコール（BSM 級数、Hull Ch.27）
-    k_j = np.exp(gamma_j + 0.5 * delta_j**2) - 1.0
-    lam_p = lam * (1.0 + k_j)
-    total = 0.0
-    for n in range(n_terms):
-        sigma_n = np.sqrt(sigma**2 + n * delta_j**2 / T)
-        r_n = r - lam * k_j + n * (gamma_j + 0.5 * delta_j**2) / T
-        w = np.exp(-lam_p * T) * (lam_p * T) ** n / math.factorial(n)
-        total += w * bsm.call_price(S, K, r_n, sigma_n, T, q)
-    return total
+    code(r"""from hullkit import alternative_models
+from hullkit._alternative_models_lesson import _figures, _load_reference
 
+am_reference = _load_reference()
+am_figures = _figures()
+display(am_figures["alternative_cev"])
+for strike, pde_price in am_reference["cev"]["pde_beta_0_8_calls"].items():
+    closed = alternative_models.cev_price(
+        100.0, float(strike), 0.05, 0.2 * 100**0.2, 0.5, beta=0.8)
+    print(f"CEV K={strike}: 非心χ² {closed:.6f}, 独立PDE {pde_price:.6f}, 差 {closed-pde_price:+.6f}")""")
+)
 
-# ジャンプが作るスマイル: Merton 価格 → BSM の IV を逆算
-S_J, R_J, T_J = 100.0, 0.05, 0.25
+cells.append(
+    md(r"""### 7.2 Merton：ジャンプ補償と欧州価格
+
+ジャンプ回数 $N_T\sim\mathrm{Poisson}(\lambda T)$、各ジャンプの倍率の対数を
+$\log(1+J_i)\sim N(\gamma,\delta^2)$ とする。平均ジャンプ率
+$k=E[J]=e^{\gamma+\delta^2/2}-1$ を引き、リスク中立ドリフトを $r-q-\lambda k$ にする。
+そうしないと割引後の期待株価が $S_0e^{-qT}$ と一致しない。
+
+$$\log(S_T/S_0)=(r-q-\lambda k-\sigma^2/2)T+\sigma W_T+
+\sum_{i=1}^{N_T}\log(1+J_i).$$
+
+Hull の BSM 級数は $\lambda'=\lambda(1+k)$ でポアソン重みを変え、
+$\sigma_n^2=\sigma^2+n\delta^2/T$、
+$r_n=r-\lambda k+n(\gamma+\delta^2/2)/T$ を用いる。
+下図の価格は別経路（元の $\mathrm{Poisson}(\lambda T)$ ごとに条件付き対数正規給付を積分）と照合した。""")
+)
+cells.append(
+    code(r"""S_J, R_J, T_J = 100.0, 0.05, 0.25
 LAM_J, GAM_J, DEL_J, SIG_J = 1.0, -0.10, 0.15, 0.20
-ks_j = np.linspace(75.0, 125.0, 26)
-ivs_j = []
-for k in ks_j:
-    c_j = merton_jump_call(S_J, k, R_J, SIG_J, T_J, LAM_J, GAM_J, DEL_J)
-    ivs_j.append(volatility.implied_vol(c_j, S_J, k, R_J, T_J, kind="call"))
 
-fig5, ax5 = plt.subplots(figsize=(7.5, 4))
-fig5.canvas.header_visible = False
-ax5.plot(ks_j / S_J, np.array(ivs_j) * 100, "o-", lw=1.5,
-         label=f"Merton（λ={LAM_J}, γ={GAM_J}, δ={DEL_J}）")
-ax5.axhline(SIG_J * 100, color="0.6", ls=":", lw=1.5, label="拡散部分 σ=20%")
-ax5.set_xlabel("K / S0")
-ax5.set_ylabel("インプライド・ボラティリティ (%)")
-ax5.set_title("下向きジャンプ（γ<0）が株式型スキューを生む")
-ax5.legend()
-display(fig5.canvas)""")
+def merton_jump_call(S, K, r, sigma, T, lam, gamma_j, delta_j, q=0.0):
+    return alternative_models.merton_jump_price(S, K, r, sigma, T, lam, gamma_j, delta_j, q)
+
+display(am_figures["alternative_merton"])
+for strike in (75.0, 100.0, 125.0):
+    print(f"K={strike:.0f}: Merton call={merton_jump_call(S_J, strike, R_J, SIG_J, T_J, LAM_J, GAM_J, DEL_J):.6f}")""")
 )
 
-# Cell 20: jump interpretation md
 cells.append(
-    md(r"""### ジャンプとスマイルの関係
+    md(r"""### 7.3 Table 27.1：ジャンプ回数を実際に数える
+
+原典の $\lambda=0.5$/年、$T=2$ 年では $E[N_T]=1$。$m=0$ と $m=1$ は共に約0.3679、
+$m\le2$ の累積確率は約0.9197。1回以上のジャンプ確率は $1-e^{-1}\approx0.6321$。
+個々のジャンプの大きさも標本抽出する。複数回の対数ジャンプを合計した分布は
+$N\gamma+\sqrt N\delta Z$ と等価で、下の経路例はこの表現を使う。""")
+)
+cells.append(
+    code(r"""display(am_figures["alternative_poisson"])
+print("m / P(N=m) / P(N≤m)")
+for m, p, cumulative in zip(
+    am_reference["poisson_table"]["counts"],
+    am_reference["poisson_table"]["probability"],
+    am_reference["poisson_table"]["cumulative"], strict=True):
+    print(f"{m} / {p:.4f} / {cumulative:.4f}")""")
+)
+
+cells.append(
+    md(r"""### 7.4 ジャンプの経路と短期スマイル
 
 - $\gamma < 0$（下向きジャンプ）→ 左裾が厚い → **株式型スキュー**（第5冊のスマイル再現）
-- $\gamma = 0$ で対称ジャンプ → 両裾 → FX 型 U 字
-- ジャンプの影響は **短満期で強烈**（拡散は √T、ジャンプ確率は T に比例）—
-  実市場で短期スキューが急な理由の一つ""")
+- ジャンプ回数と各サイズが偶然に決まるため、経路は連続ではない
+- 短期でジャンプ由来の裾・スマイルが目立ち得る。形状は $\lambda,\gamma,\delta,\sigma,T$ に依存する""")
 )
 
 # Cell 21: jump path simulation
@@ -484,6 +512,40 @@ ax6b.plot(grid_r, np.exp(-grid_r**2 / (2 * SIG_J**2 * dt_j)) / np.sqrt(2 * np.pi
 ax6b.set_title("日次対数収益: 裾が正規より厚い")
 ax6b.legend()
 display(fig6.canvas)""")
+)
+
+cells.append(
+    md(r"""### 7.5 分散ガンマ：ランダムな時計
+
+$G_T\sim\mathrm{Gamma}(T/\nu,\text{scale}=\nu)$ なので $E[G_T]=T$、
+$\operatorname{Var}(G_T)=\nu T$。独立なブラウン運動をこの時計で動かす：
+
+$$\log S_T=\log S_0+(r-q+\omega)T+\theta G_T+\sigma W_{G_T},\quad
+\omega=\nu^{-1}\log(1-\theta\nu-\sigma^2\nu/2).$$
+
+$1-\theta\nu-\sigma^2\nu/2>0$ は株価の指数モーメントに必要。
+$\omega$ が $E[S_T]=S_0e^{(r-q)T}$ を保つ。原典 Figure 27.1 と同じ
+$S_0=100,T=0.5,\nu=0.5,\theta=0.1,\sigma=0.2,r=q=0$ の満期株価を、
+40万標本の VG 密度と GBM の対数正規密度で比較する。密度図は標本誤差を持つ。
+欧州価格は独立にガンマ密度積分で照合する。""")
+)
+cells.append(
+    code(r"""display(am_figures["alternative_vg"])
+for strike in (75.0, 100.0, 125.0):
+    vg_call = alternative_models.variance_gamma_price(100.0, strike, 0.0, 0.2, 0.5, 0.5, 0.1)
+    print(f"VG K={strike:.0f}: call={vg_call:.6f}")""")
+)
+cells.append(
+    md(r"""### 7.6 使い分けと限界
+
+CEV は **株価水準と瞬時ボラの結び付き**、Merton は **まれな大きい変化**、
+VG は **価格変動が進む時計そのもののばらつき**を表す。どれも BSM の一定ボラ正規対数収益から
+外れるが、パラメータだけで市場スマイル全体に自動で一致するわけではない。
+
+ここでの価格は欧州バニラ・定数パラメータ・連続利回りの合成例。
+CEV の $\beta>1$ には無限遠境界の扱いに注意が要り、教材の独立 PDE 照合は $\beta=0.8$ のみ。
+ジャンプや VG での動的ヘッジは連続拡散のデルタだけでは完結しない。
+モデル選択・較正・尾部リスク・ヘッジ費用は別の検証を要する。""")
 )
 
 # Cell 22: LSM md

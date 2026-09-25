@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "milestone": "M10",
+  "base_commit": "7cfd0864",
+  "lesson_numeric_payload_unchanged": true,
+  "hash_refresh": [],
+  "checked_at": "2026-09-25T05:51:41.871518+00:00",
+  "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_static_replication.py hullkit/tests/test_static_replication_reference.py hullkit/tests/test_static_replication_lesson.py report/tests/test_static_replication_notebook.py",
+  "environment": {
+    "PYTHONPATH": "hullkit/src:scripts:report (this checkout)"
+  },
+  "exit_code": 0,
+  "pytest_output": "................                                                         [100%]\n16 passed in 2.99s\n",
+  "passed": 16,
+  "source_sha256": {
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/tests/test_static_replication.py": "70d4a2a385742d593f65f20a2a78d8001d195a076347a312d7b5d5151556d6a0",
+    "hullkit/tests/test_static_replication_lesson.py": "99c1c83afa34a77f4fcc3cf32f20119103c298d8514e64b7ef56bf007b545922",
+    "hullkit/tests/test_static_replication_reference.py": "91e7a4eeffba4a1c77f544891b84c4559ca0d5d45e2b02e56e412c2583332b10",
+    "report/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
+    "report/report_builder/figures.py": "b5eb8464713c2d1b7d96e5462f6fa34d73bf2db04e692770c0c678df8fa3b88d",
+    "report/tests/test_static_replication_notebook.py": "110097841cd0aef4aad8136c52999c0556d7c610e6aafbd0bce075917dcd0fef",
+    "scripts/recheck_exotics_m10.py": "7c0722d24841dbe0941bab58886e34ec2dd9321259c48f542416db66c1c01bc8",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52"
+  },
+  "scope": "Accepted section tests against the final M10 assets after the shared portal registry and stylesheet changed; no pricing code or lesson data of this section changed. Historical numerical and browser records preserved."
+}
