@@ -1,0 +1,512 @@
+{
+  "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_exotics_m10.cjs 26-16",
+  "checked_at": "2026-09-25T06:00:32.644Z",
+  "pages": {
+    "portal": {
+      "figures": [
+        "varswap_payoff",
+        "varswap_strip",
+        "varswap_replication",
+        "volswap_convexity"
+      ],
+      "states": [
+        {
+          "figure": "varswap_payoff",
+          "scenario": "payoffs",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "varswap_payoff",
+          "scenario": "difference",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "varswap_strip",
+          "scenario": "q",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "varswap_strip",
+          "scenario": "contribution",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "varswap_replication",
+          "scenario": "absolute",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "varswap_replication",
+          "scenario": "relative",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "volswap_convexity",
+          "scenario": "levels",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "volswap_convexity",
+          "scenario": "error",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "varswap_payoff",
+          "scenario": "payoffs",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "varswap_payoff",
+          "scenario": "difference",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "varswap_strip",
+          "scenario": "q",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "varswap_strip",
+          "scenario": "contribution",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "varswap_replication",
+          "scenario": "absolute",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "varswap_replication",
+          "scenario": "relative",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "volswap_convexity",
+          "scenario": "levels",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "volswap_convexity",
+          "scenario": "error",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 2
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-16/portal-varswap_payoff-1440-m10-recheck.png",
+        "docs/validation/section-26-16/portal-varswap_strip-1440-m10-recheck.png",
+        "docs/validation/section-26-16/portal-varswap_replication-1440-m10-recheck.png",
+        "docs/validation/section-26-16/portal-volswap_convexity-1440-m10-recheck.png",
+        "docs/validation/section-26-16/portal-varswap_payoff-1000-m10-recheck.png",
+        "docs/validation/section-26-16/portal-varswap_strip-1000-m10-recheck.png",
+        "docs/validation/section-26-16/portal-varswap_replication-1000-m10-recheck.png",
+        "docs/validation/section-26-16/portal-volswap_convexity-1000-m10-recheck.png"
+      ],
+      "layout_errors": 0,
+      "negative_controls": [
+        {
+          "rejected": true,
+          "restored": true,
+          "reason": "Level approximation[5]: 24.368123032898147 != 23.868123032898147",
+          "mutation": "eq. 26.9 level at xi=0.6 +0.5 percentage points"
+        }
+      ],
+      "math_presentation": "Unicode equations and domain text, no raw TeX renderer required",
+      "numeric_scope": "Both widths, every exact menu state: payoff grid and notional link, Example 26.4 Q/printed Q/contributions and their sum, strip errors per range and spacing, exact/approximate/naive E(sigma) with MC four-SE bars and errors.",
+      "external_network_blocked": true,
+      "external_requests": [],
+      "page_errors": [],
+      "failed_requests": [],
+      "http_errors": []
+    },
+    "book": {
+      "figures": [
+        "varswap_payoff",
+        "varswap_strip",
+        "varswap_replication",
+        "volswap_convexity"
+      ],
+      "states": [
+        {
+          "figure": "varswap_payoff",
+          "scenario": "payoffs",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "varswap_payoff",
+          "scenario": "difference",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "varswap_strip",
+          "scenario": "q",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "varswap_strip",
+          "scenario": "contribution",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "varswap_replication",
+          "scenario": "absolute",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "varswap_replication",
+          "scenario": "relative",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "volswap_convexity",
+          "scenario": "levels",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "volswap_convexity",
+          "scenario": "error",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "varswap_payoff",
+          "scenario": "payoffs",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "varswap_payoff",
+          "scenario": "difference",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "varswap_strip",
+          "scenario": "q",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "varswap_strip",
+          "scenario": "contribution",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "varswap_replication",
+          "scenario": "absolute",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "varswap_replication",
+          "scenario": "relative",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "volswap_convexity",
+          "scenario": "levels",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "volswap_convexity",
+          "scenario": "error",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 2
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-16/book-varswap_payoff-1440-m10-recheck.png",
+        "docs/validation/section-26-16/book-varswap_strip-1440-m10-recheck.png",
+        "docs/validation/section-26-16/book-varswap_replication-1440-m10-recheck.png",
+        "docs/validation/section-26-16/book-volswap_convexity-1440-m10-recheck.png",
+        "docs/validation/section-26-16/book-varswap_payoff-1000-m10-recheck.png",
+        "docs/validation/section-26-16/book-varswap_strip-1000-m10-recheck.png",
+        "docs/validation/section-26-16/book-varswap_replication-1000-m10-recheck.png",
+        "docs/validation/section-26-16/book-volswap_convexity-1000-m10-recheck.png"
+      ],
+      "layout_errors": 0,
+      "negative_controls": [
+        {
+          "rejected": true,
+          "restored": true,
+          "reason": "Level approximation[5]: 24.368123032898147 != 23.868123032898147",
+          "mutation": "eq. 26.9 level at xi=0.6 +0.5 percentage points"
+        }
+      ],
+      "math_presentation": "MathJax, separately checked",
+      "numeric_scope": "Both widths, every exact menu state: payoff grid and notional link, Example 26.4 Q/printed Q/contributions and their sum, strip errors per range and spacing, exact/approximate/naive E(sigma) with MC four-SE bars and errors.",
+      "math": {
+        "typeset": 112,
+        "errors": 0,
+        "headings": [
+          "4.6.1 実現ボラティリティと2つの契約#",
+          "4.6.2 静的複製：分散は OTM オプションの束で買える#",
+          "4.6.3 離散ストリップと Example 26.4#",
+          "4.6.4 ボラティリティ・スワップと Example 26.5#",
+          "4.6.5 VIX 指数（式26.10）#",
+          "4.6.6 適用範囲と理解の確認#"
+        ],
+        "verified_equations": [
+          "n",
+          "S_1,\\dots,S_n",
+          "\\bar\\sigma=\\sqrt{\\frac{252}{n-2}\\sum_{i=1}^{n-1}\\left[\\ln\\frac{S_{i+1}}{S_i}\\right]^2}",
+          "n-2",
+          "n-1",
+          "\\bar V=\\bar\\sigma^2",
+          "\\text{ボラティリティ・スワップ: } L_{\\rm vol}(\\bar\\sigma-\\sigma_K),\\qquad\n\\text{バリアンス・スワップ: } L_{\\rm var}(\\bar V-V_K).",
+          "L",
+          "\\sigma_K",
+          "V_K",
+          "L_{\\rm var}=L_{\\rm vol}/(2\\sigma_K)",
+          "V_K=\\sigma_K^2",
+          "\\bar\\sigma=\\sigma_K",
+          "L_{\\rm vol}(\\bar\\sigma-\\sigma_K)^2/(2\\sigma_K)\\ge 0",
+          "L_{\\rm vol}>0",
+          "\\bar\\sigma",
+          "\\ln S_T-\\ln S_0=\\int_0^T dS/S-\\tfrac12\\int_0^T\\sigma_t^2dt",
+          "\\bar VT",
+          "S",
+          "-2\\ln(S_T/S_0)",
+          "S^*",
+          "\\hat E(\\bar V)=\\frac2T\\ln\\frac{F_0}{S^*}-\\frac2T\\left(\\frac{F_0}{S^*}-1\\right)\n+\\frac2T\\int_0^{S^*}\\frac{e^{rT}p(K)}{K^2}dK+\\frac2T\\int_{S^*}^\\infty\\frac{e^{rT}c(K)}{K^2}dK.",
+          "F_0",
+          "c(K),p(K)",
+          "T",
+          "S^*",
+          "e^{rT}p(K)\\,dK/K^2",
+          "2/T",
+          "S^*=0.8F_0",
+          "1.25F_0",
+          "\\sigma^2",
+          "10^{-16}",
+          "\\rho<0",
+          "\\rho=0",
+          "\\theta+(v_0-\\theta)(1-e^{-\\kappa T})/(\\kappa T)",
+          "1.5\\times10^{-12}",
+          "K_1<\\dots<K_n",
+          "\\int_0^{S^*}\\frac{e^{rT}p(K)}{K^2}dK+\\int_{S^*}^\\infty\\frac{e^{rT}c(K)}{K^2}dK\n\\approx\\sum_{i=1}^n\\frac{\\Delta K_i}{K_i^2}e^{rT}Q(K_i).",
+          "\\Delta K_i=\\tfrac12(K_{i+1}-K_{i-1})",
+          "S^*",
+          "F_0",
+          "Q(K_i)",
+          "K_i<S^*",
+          "K_i>S^*",
+          "K_i=S^*",
+          "r=4\\%",
+          "F_0=1027.68",
+          "S^*=1000",
+          "\\hat E(\\bar V)=0.0621",
+          "100\\times(0.0621-0.045)e^{-0.04\\times0.25}=1.69",
+          "Q",
+          "S^*",
+          "\\Delta K",
+          "\\hat E(\\bar V)=0.04",
+          "\\Delta K=10\\to1.25",
+          "3.39\\times10^{-3}\\to5.31\\times10^{-5}",
+          "\\Delta K=2.5",
+          "\\bar\\sigma=\\sqrt{\\bar V}",
+          "\\hat E(\\bar\\sigma)<\\sqrt{\\hat E(\\bar V)}",
+          "\\hat E(\\bar V)",
+          "\\hat E(\\bar\\sigma)\\approx\\sqrt{\\hat E(\\bar V)}\\left\\{1-\\frac18\\frac{\\operatorname{var}(\\bar V)}{\\hat E(\\bar V)^2}\\right\\}.",
+          "L_{\\rm vol}[\\hat E(\\bar\\sigma)-\\sigma_K]e^{-rT}",
+          "\\hat E(\\bar V)=0.0621",
+          "\\operatorname{var}=0.0001",
+          "\\hat E(\\bar\\sigma)=0.2484",
+          "100\\times(0.2484-0.23)e^{-0.01}=1.82",
+          "v_0=\\theta=0.0621",
+          "\\kappa=2",
+          "T=0.25",
+          "\\hat E(\\bar V)",
+          "\\xi",
+          "E(\\sqrt{\\bar V})",
+          "\\operatorname{var}(\\bar V)",
+          "\\xi=0.3",
+          "-1.9\\times10^{-5}",
+          "\\xi=1",
+          "-4.6\\times10^{-3}",
+          "\\xi",
+          "\\xi^4",
+          "\\xi",
+          "\\sqrt{\\hat E(\\bar V)}",
+          "\\xi=1",
+          "+2.5\\times10^{-2}",
+          "\\ln(F_0/S^*)",
+          "\\hat E(\\bar V)T=-\\left(\\frac{F_0}{S^*}-1\\right)^2+2\\sum_{i=1}^n\\frac{\\Delta K_i}{K_i^2}e^{rT}Q(K_i).",
+          "\\hat E(\\bar V)T",
+          "365/30",
+          "2[\\ln x-(x-1)+\\tfrac12(x-1)^2]\\approx\\tfrac23(x-1)^3",
+          "x=F_0/S^*",
+          "1.38\\times10^{-5}",
+          "v_0=0.09",
+          "\\theta=0.04",
+          "\\kappa=2",
+          "n-1",
+          "n-2",
+          "(n-1)/(n-2)",
+          "n=64",
+          "\\sigma=25\\%",
+          "0.063509",
+          "\\sigma^2=0.0625",
+          "\\operatorname{var}(\\bar V)",
+          "L_{\\rm vol}=100",
+          "\\sigma_K=23\\%",
+          "L_{\\rm var}",
+          "\\bar\\sigma=30\\%",
+          "S^*",
+          "S^*",
+          "F_0",
+          "\\Delta K",
+          "\\xi",
+          "n-2",
+          "n-1"
+        ],
+        "example": {
+          "realized_n2": 0.07935146312106935,
+          "realized_n1": 0.059513597340802006,
+          "variance_notional": 217.39130434782606,
+          "example_26_4_expected_variance": 0.062100833445622144,
+          "example_26_4_value": 1.6930677309810418,
+          "example_26_5_expected_volatility": 0.2483909739854638,
+          "example_26_5_value": 1.820798073679371,
+          "naive_volatility": 0.24919871588754225,
+          "cumulative_26_6": 0.015525208361405536,
+          "cumulative_26_10": 0.015511358756550556
+        },
+        "screenshots": [
+          "docs/validation/section-26-16/book-volswap-formula-example-1440-m10-recheck.png",
+          "docs/validation/section-26-16/book-volswap-formula-example-1000-m10-recheck.png",
+          "docs/validation/section-26-16/book-vix-example-1440-m10-recheck.png",
+          "docs/validation/section-26-16/book-vix-example-1000-m10-recheck.png"
+        ]
+      },
+      "external_network_blocked": false,
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "page_errors": [],
+      "failed_requests": [],
+      "http_errors": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/_variance_swap_lesson.py": "5c4c82d63a7bdc0f656c04c3cdd1113f29e3537d99d91341dbcf818880cc0174",
+    "hullkit/src/hullkit/variance_swaps.py": "7fc64e7fba2e11bceb07819c3d65c792e9a09e067f5b06b7b1850d7153846b0e",
+    "scripts/build_variance_swap_browser_reference.py": "a75aee80be96b1a84777ac57be4dc5a8523699410dba8f4be8ca1ce9e8f68f34",
+    "scripts/build_variance_swap_lesson_data.py": "e9fc4b37eaaecfb6283a8f57fe2a1352be48eb68d28ae515660619e557e0585b",
+    "scripts/build_variance_swap_reference.py": "335e7619a67853b56db18ddf81e1e4dbc7ee3519b2b0e384b0a85c6f3269026a",
+    "docs/validation/section-26-16/lesson-data.json": "941a89849274ee6a6210904c66f7bc19b003fbab368545e24c31422c13b141be",
+    "docs/validation/section-26-16/reference.json": "2e33bb9c852d69ae34d7e68f01145743732b4af3c235e0ceb21d3138e44f1fe2",
+    "docs/validation/section-26-16/numerical-check.json": "c68435fdeaaf2b856e62f35d815b087af1d19f075cf6e5f2aa014d230e39cef9",
+    "docs/validation/section-26-16/browser-reference.json": "4fc3cbf596e33a72e892f5b06da313837d5c6cdb970683743fe465cfc7d5b4a3",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9",
+    "report/report_builder/figures.py": "b5eb8464713c2d1b7d96e5462f6fa34d73bf2db04e692770c0c678df8fa3b88d",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "scripts/verify_variance_swap_lesson_browser.cjs": "5adc156b823a2a4ba39da52c190c31cee3abf8b2c79fac7bb0dea593bf685cb5"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "report/site/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "docs/validation/section-26-16/portal-varswap_payoff-1440-m10-recheck.png": "b0e3231248c559da33415717859ed182875237d1b155bc0cb68285d41bd30512",
+    "docs/validation/section-26-16/portal-varswap_strip-1440-m10-recheck.png": "363dd2e0d9f20295991dbacfdf9e650be1ba1135af612eb156c9c1984a6aec03",
+    "docs/validation/section-26-16/portal-varswap_replication-1440-m10-recheck.png": "f82f0b8a6e17bd97f25c34fcd46b03597ecb3d6eed6cdc30851cf2193d63d253",
+    "docs/validation/section-26-16/portal-volswap_convexity-1440-m10-recheck.png": "6d5a594ada297e8676fd2956a39ec0ea48c6869c05056bf75d7c5ec066ad60e0",
+    "docs/validation/section-26-16/portal-varswap_payoff-1000-m10-recheck.png": "b2db8d96c8b38ab3c2a47e2f7d08a57e9792723581a29d65e3728aa0ae7b5a95",
+    "docs/validation/section-26-16/portal-varswap_strip-1000-m10-recheck.png": "74f6399fd8fe9f8a699df917662e79cb3405db2fe011e6f593e4c4ef637c411f",
+    "docs/validation/section-26-16/portal-varswap_replication-1000-m10-recheck.png": "f37e2a46ae7c9226f76e4b750a2fa857d3e85b9f43c940bb54e4b03fe497ccc3",
+    "docs/validation/section-26-16/portal-volswap_convexity-1000-m10-recheck.png": "adfd65089a494fedd7378a63366b73bf775301ad56c812437db5c4d72e5dac3c",
+    "docs/validation/section-26-16/book-varswap_payoff-1440-m10-recheck.png": "25600beca08da2276bbd236d71cb6cae77fc5606502525acf0659182ca67c83a",
+    "docs/validation/section-26-16/book-varswap_strip-1440-m10-recheck.png": "7f5ef177ac816fc377f87c952398c3f794b26670a88923a4c3e44cf80199d540",
+    "docs/validation/section-26-16/book-varswap_replication-1440-m10-recheck.png": "ff1bf10ade21c79cb793dd948417d40e1bda6437a64de524412bf31fb65e3011",
+    "docs/validation/section-26-16/book-volswap_convexity-1440-m10-recheck.png": "fd3aa7dbc4ab1c271991c6817e5da0339197cc40b960ba1fd6985d8accbf31d5",
+    "docs/validation/section-26-16/book-varswap_payoff-1000-m10-recheck.png": "d337e1b781275d651296b6b3ec0c844b946f75058451823008993c6f0ee0c4a0",
+    "docs/validation/section-26-16/book-varswap_strip-1000-m10-recheck.png": "ee8826252144c3a898bf9d515e90dc49e19d8ed5eee8a9ad471232d898b9540c",
+    "docs/validation/section-26-16/book-varswap_replication-1000-m10-recheck.png": "4b85a1cf07351483f413744a383367ec83fcdf64351f46521aa7d8485653fe3f",
+    "docs/validation/section-26-16/book-volswap_convexity-1000-m10-recheck.png": "e4e7fdc9fb350475e039fa6883c41db0bd07c7b5dcdbf5a643c5747abc0e31cc",
+    "docs/validation/section-26-16/book-volswap-formula-example-1440-m10-recheck.png": "c389c19581692de07a1e1d6b9803f1b6c05bb667d24956a222c63c820d15e708",
+    "docs/validation/section-26-16/book-volswap-formula-example-1000-m10-recheck.png": "ed87415086f7bc155044aa8341d17ff481f90d98536eb8bb854dffe3e910ad82",
+    "docs/validation/section-26-16/book-vix-example-1440-m10-recheck.png": "2f9af1cd0b9998ad9c3200d1305934575d26ae894af70248114cb7a0c75341bb",
+    "docs/validation/section-26-16/book-vix-example-1000-m10-recheck.png": "3fb86107b604932e3a1e1d211bcca2a5c94ddfdb70abdba5d3a36b09e381408f"
+  },
+  "browser_version": "145.0.7632.6",
+  "status": "PASS",
+  "state_checks": 32,
+  "recheck": {
+    "milestone": "M10",
+    "original_verifier": "scripts/verify_variance_swap_lesson_browser.cjs",
+    "original_sha256": "5adc156b823a2a4ba39da52c190c31cee3abf8b2c79fac7bb0dea593bf685cb5",
+    "executed_sha256": "64d7f60786a85a3272c8f9d72b5ab14d71d981d1ede1407bae70562864f189d7",
+    "wrapper_sha256": "0066b81b530c481830265b14b05a94f2dc5cee6080b803e99a78d48d6c95f1ad",
+    "changes": "Only screenshot basenames and browser record basename; original assertions unchanged."
+  }
+}

@@ -16,6 +16,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from hullkit import plotly_viz as pv
+from hullkit._alternative_models_lesson import _figures as alternative_models_lesson_figures
 from hullkit._asian_lesson import _figures as asian_lesson_figures
 from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
@@ -199,6 +200,42 @@ FIGURES: list[FigureSpec] = [
         "Crank-Nicolson から読む S*(τ)。境界より下で行使。σ を上げると境界は下がる(待つ価値)。",
         pv.plotly_american_boundary,
         practice="『いつ行使・解約すべきか』の境界。コーラブル債・期前償還の実務判断に直結。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "alternative_cev",
+        "numerics",
+        "CEV：株価と局所ボラ",
+        "β<1では株価下落とともに局所ボラが上がる。S₀=100で20%に揃えて比較する（Hull §27.1）。",
+        lambda: alternative_models_lesson_figures()["alternative_cev"],
+        practice="βだけを変えても同じσを使えば比較条件がずれる。開始時点の局所ボラを固定する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "alternative_merton",
+        "numerics",
+        "Merton：下向きジャンプとスキュー",
+        "ジャンプ補償を入れた欧州価格をBSM-IVに戻すと、短期の左側が高くなる（Hull §27.1）。",
+        lambda: alternative_models_lesson_figures()["alternative_merton"],
+        practice="下落ジャンプの頻度・大きさを変えると短期の尾部価格が大きく動く。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "alternative_poisson",
+        "numerics",
+        "Table 27.1：ジャンプ回数",
+        "λ=0.5/年、T=2年での回数別確率と累積確率を原典の表示桁で示す。",
+        lambda: alternative_models_lesson_figures()["alternative_poisson"],
+        practice="1回以上のジャンプ確率は約63.2%。回数ごとのシナリオ重みを確認する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "alternative_vg",
+        "numerics",
+        "Figure 27.1：VG と GBM の満期株価",
+        "ガンマ時計で変動する満期株価の標本密度を、同じ拡散σのGBM対数正規密度と比較する。",
+        lambda: alternative_models_lesson_figures()["alternative_vg"],
+        practice="裾はモデルと満期・歪みパラメータに依存する。図は40万標本の有限誤差を含む。",
         is_new=True,
     ),
     # risk_credit --------------------------------------------------------

@@ -1,6 +1,7 @@
 """hullkit — shared utilities for the johnhull Hull 11e notebook volumes."""
 
 from . import (
+    alternative_models,
     amm,
     bsm,
     carbon,
@@ -49,6 +50,7 @@ from . import (
 )
 
 __all__ = [
+    "alternative_models",
     "amm",
     "bsm",
     "carbon",

@@ -31,7 +31,7 @@ def test_registry_is_consistent():
     for f in FIGURES:
         assert f.book in BOOKS, f.id
     assert len(figures_for("options_core")) == 7
-    assert len(figures_for("numerics")) == 5
+    assert len(figures_for("numerics")) == 9
     assert len(figures_for("risk_credit")) == 12
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
@@ -42,7 +42,7 @@ def test_registry_is_consistent():
     assert len(figures_for("crypto_market")) == 4
     assert len(figures_for("climate_energy")) == 4
     assert len(figures_for("risk_management")) == 4
-    assert len(FIGURES) == 114
+    assert len(FIGURES) == 118
     assert {"shout_payoff", "shout_decision", "shout_boundary", "shout_comparison"} <= {
         figure.id for figure in figures_for("exotics")
     }
@@ -140,3 +140,14 @@ def test_static_replication_registry_follows_variance_swaps():
             figure = spec.build()
             assert figure.layout.meta["section"] == "26.17"
             assert figure.layout.meta["figure"] == spec.id
+
+
+def test_alternative_models_registry_delivers_four_section_figures():
+    expected = ["alternative_cev", "alternative_merton", "alternative_poisson", "alternative_vg"]
+    lesson = [spec for spec in figures_for("numerics") if spec.id in expected]
+    assert [spec.id for spec in lesson] == expected
+    for spec in lesson:
+        assert spec.practice and spec.title and spec.blurb
+        figure = spec.build()
+        assert figure.layout.meta["section"] == "27.1"
+        assert figure.layout.meta["figure"] == spec.id

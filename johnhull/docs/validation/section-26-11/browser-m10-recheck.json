@@ -1,0 +1,256 @@
+{
+  "checked_at": "2026-09-25T05:57:21.317Z",
+  "pages": {
+    "portal": {
+      "figures": [
+        "lookback_payoffs",
+        "lookback_history",
+        "lookback_replication",
+        "lookback_monitoring"
+      ],
+      "states": [
+        {
+          "figure": "lookback_payoffs",
+          "scenario": "new",
+          "interior_probes": 24
+        },
+        {
+          "figure": "lookback_payoffs",
+          "scenario": "seasoned",
+          "interior_probes": 24
+        },
+        {
+          "figure": "lookback_history",
+          "K": 80
+        },
+        {
+          "figure": "lookback_history",
+          "K": 100
+        },
+        {
+          "figure": "lookback_history",
+          "K": 125
+        },
+        {
+          "figure": "lookback_replication",
+          "kind": "call"
+        },
+        {
+          "figure": "lookback_replication",
+          "kind": "put"
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 1
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 2
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 4
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 8
+        }
+      ],
+      "negative_controls": [
+        {
+          "kind": "call",
+          "rejected": true,
+          "total_unchanged": true,
+          "mutation": "floating_leg +1, stock_leg -1 at K=100",
+          "restored": true
+        },
+        {
+          "kind": "put",
+          "rejected": true,
+          "total_unchanged": true,
+          "mutation": "floating_leg +1, stock_leg -1 at K=100",
+          "restored": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-11/portal-lookback_payoffs-1440-m10-recheck.png",
+        "docs/validation/section-26-11/portal-lookback_history-1440-m10-recheck.png",
+        "docs/validation/section-26-11/portal-lookback_replication-1440-m10-recheck.png",
+        "docs/validation/section-26-11/portal-lookback_monitoring-1440-m10-recheck.png",
+        "docs/validation/section-26-11/portal-lookback_payoffs-1000-m10-recheck.png",
+        "docs/validation/section-26-11/portal-lookback_history-1000-m10-recheck.png",
+        "docs/validation/section-26-11/portal-lookback_replication-1000-m10-recheck.png",
+        "docs/validation/section-26-11/portal-lookback_monitoring-1000-m10-recheck.png"
+      ],
+      "layout_errors": 0,
+      "external_network_blocked": true,
+      "external_requests": [],
+      "page_errors": []
+    },
+    "book": {
+      "figures": [
+        "lookback_payoffs",
+        "lookback_history",
+        "lookback_replication",
+        "lookback_monitoring"
+      ],
+      "states": [
+        {
+          "figure": "lookback_payoffs",
+          "scenario": "new",
+          "interior_probes": 24
+        },
+        {
+          "figure": "lookback_payoffs",
+          "scenario": "seasoned",
+          "interior_probes": 24
+        },
+        {
+          "figure": "lookback_history",
+          "K": 80
+        },
+        {
+          "figure": "lookback_history",
+          "K": 100
+        },
+        {
+          "figure": "lookback_history",
+          "K": 125
+        },
+        {
+          "figure": "lookback_replication",
+          "kind": "call"
+        },
+        {
+          "figure": "lookback_replication",
+          "kind": "put"
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 1
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 2
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 4
+        },
+        {
+          "figure": "lookback_monitoring",
+          "intervals": 8
+        }
+      ],
+      "negative_controls": [
+        {
+          "kind": "call",
+          "rejected": true,
+          "total_unchanged": true,
+          "mutation": "floating_leg +1, stock_leg -1 at K=100",
+          "restored": true
+        },
+        {
+          "kind": "put",
+          "rejected": true,
+          "total_unchanged": true,
+          "mutation": "floating_leg +1, stock_leg -1 at K=100",
+          "restored": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-11/book-lookback_payoffs-1440-m10-recheck.png",
+        "docs/validation/section-26-11/book-lookback_history-1440-m10-recheck.png",
+        "docs/validation/section-26-11/book-lookback_replication-1440-m10-recheck.png",
+        "docs/validation/section-26-11/book-lookback_monitoring-1440-m10-recheck.png",
+        "docs/validation/section-26-11/book-lookback_payoffs-1000-m10-recheck.png",
+        "docs/validation/section-26-11/book-lookback_history-1000-m10-recheck.png",
+        "docs/validation/section-26-11/book-lookback_replication-1000-m10-recheck.png",
+        "docs/validation/section-26-11/book-lookback_monitoring-1000-m10-recheck.png"
+      ],
+      "layout_errors": 0,
+      "math": {
+        "typeset": 60,
+        "errors": 0,
+        "headings": [
+          "4.1.1 契約と過去の極値#",
+          "4.1.2 フローティング価格式と Example 26.2#",
+          "4.1.3 過去の極値が現在価格に与える影響#",
+          "4.1.4 固定行使価格の複製#",
+          "4.1.5 観測頻度と連続観測#",
+          "4.1.6 適用範囲と確認問題#"
+        ],
+        "prices": {
+          "floating_call": "8.037120",
+          "floating_put": "7.790219"
+        },
+        "screenshots": [
+          "docs/validation/section-26-11/book-lookback-example-1440-m10-recheck.png",
+          "docs/validation/section-26-11/book-lookback-example-1000-m10-recheck.png"
+        ]
+      },
+      "external_network_blocked": false,
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "page_errors": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/_lookback_lesson.py": "8f5e0a91131462995fd0b3afa8554795cfada8e723d5d1b77a26a4af1cee2630",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/tests/test_lookback_reference.py": "1dd1d7c009fd6827e319577b416536e2bdcb1419886fcdb5d145fae734b381d5",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9",
+    "report/report_builder/figures.py": "b5eb8464713c2d1b7d96e5462f6fa34d73bf2db04e692770c0c678df8fa3b88d",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "scripts/verify_lookback_lesson_browser.cjs": "1776c1a42fb856563afba7ede64665b5a4bded2c952ab3220f7051d3e0a5721e",
+    "docs/validation/section-26-11/browser-reference.json": "93d40b15e297b6ed26305b565e22b2e0f0601c910a29f8dc00be0f592a77e102"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "report/site/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "docs/validation/section-26-11/portal-lookback_payoffs-1440-m10-recheck.png": "bdb98bf61f3f2664b0e55325c60a9333853983a44af5e32aaaa8826031489638",
+    "docs/validation/section-26-11/portal-lookback_history-1440-m10-recheck.png": "f20f8d39f672a067f95d7a58d9cfa11d88155246dc1817aa03d1dc2f195b13ea",
+    "docs/validation/section-26-11/portal-lookback_replication-1440-m10-recheck.png": "f4f324d7a8a6bbd1d896cccffa615ac577f07016f64b8d7b36220c69128b1161",
+    "docs/validation/section-26-11/portal-lookback_monitoring-1440-m10-recheck.png": "d2249fdb9219df6cc47532cf3e588e1ceb088178221bfd63078685c7806e5aaf",
+    "docs/validation/section-26-11/portal-lookback_payoffs-1000-m10-recheck.png": "e8b105eb31200fd203d333d2e9840e244e56db190b6171f6e623719e40f12cde",
+    "docs/validation/section-26-11/portal-lookback_history-1000-m10-recheck.png": "324a30871549721351dbd482ada8afa75806f1bda3e50c96a708bf28173973b6",
+    "docs/validation/section-26-11/portal-lookback_replication-1000-m10-recheck.png": "e0f4505cd84bb41786317a9e773be31dbc3d12d8267cd548fd772e9f6844e673",
+    "docs/validation/section-26-11/portal-lookback_monitoring-1000-m10-recheck.png": "2fe15f603a4c93e6d499e703fef39eedf65df345c91c0818a58c5e14db86bcc2",
+    "docs/validation/section-26-11/book-lookback_payoffs-1440-m10-recheck.png": "6622c5ce4e3c80a1ed7061ba5796bf59eee8373069e9a4af00fe177b8185ba07",
+    "docs/validation/section-26-11/book-lookback_history-1440-m10-recheck.png": "6f9f2685e48b57cd8c453865d81a216d92a8e2a36c665b0c168b668f469fc96f",
+    "docs/validation/section-26-11/book-lookback_replication-1440-m10-recheck.png": "f4854028c6e2c146bb71cf64872a671e75e132929d0a3ffb041006286633222f",
+    "docs/validation/section-26-11/book-lookback_monitoring-1440-m10-recheck.png": "49510285def0b9a97216c215f18470fbef62c11ba8a1e84d0ad0283c8b052f10",
+    "docs/validation/section-26-11/book-lookback_payoffs-1000-m10-recheck.png": "6c8d942b3169a4c3ad3c6dbfad62972979b5c647916381e5ec195b93cfad55b4",
+    "docs/validation/section-26-11/book-lookback_history-1000-m10-recheck.png": "27bb6c4178e8711c93207bebad4cbbbdf65d943e175f97af5ba9ba9dae5dc882",
+    "docs/validation/section-26-11/book-lookback_replication-1000-m10-recheck.png": "b66f21bc63018441550a44fabdbbb56653438b3b5d5a3fc960d7fed90d6a93a7",
+    "docs/validation/section-26-11/book-lookback_monitoring-1000-m10-recheck.png": "016a5c2af98522127534a1dd16a347f92fecdb5e4e78ce7e02afbf1033895b65",
+    "docs/validation/section-26-11/book-lookback-example-1440-m10-recheck.png": "c9bc1d1e2f2c7b9de8bcb568258fb63f28d601d84acd61143d2c5916f43818be",
+    "docs/validation/section-26-11/book-lookback-example-1000-m10-recheck.png": "9d0f7500370ec1ea0c2a3de0a4dbef0dffb91189f5c472e45f50d2e618429ced"
+  },
+  "browser_version": "145.0.7632.6",
+  "status": "PASS",
+  "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_exotics_m10.cjs 26-11",
+  "recheck": {
+    "milestone": "M10",
+    "original_verifier": "scripts/verify_lookback_lesson_browser.cjs",
+    "original_sha256": "1776c1a42fb856563afba7ede64665b5a4bded2c952ab3220f7051d3e0a5721e",
+    "executed_sha256": "bf1d36090dc3dbd76a7762fcfa7022b832f76fa937d2c23dc29455c36453e979",
+    "wrapper_sha256": "0066b81b530c481830265b14b05a94f2dc5cee6080b803e99a78d48d6c95f1ad",
+    "changes": "Only screenshot basenames and browser record basename; original assertions unchanged."
+  }
+}

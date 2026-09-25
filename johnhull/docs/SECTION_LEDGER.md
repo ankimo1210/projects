@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **9**
+- accepted: **10**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 297 |
+| unreviewed | 296 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 9 |
+| accepted | 10 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -48,7 +48,7 @@
 | 24 | 9 | 9 | 0 | 0 | 0 | 0 |
 | 25 | 11 | 11 | 0 | 0 | 0 | 0 |
 | 26 | 17 | 8 | 0 | 0 | 9 | 0 |
-| 27 | 8 | 8 | 0 | 0 | 0 | 0 |
+| 27 | 8 | 7 | 0 | 0 | 1 | 0 |
 | 28 | 8 | 8 | 0 | 0 | 0 | 0 |
 | 29 | 4 | 4 | 0 | 0 | 0 | 0 |
 | 30 | 4 | 4 | 0 | 0 | 0 | 0 |
@@ -309,7 +309,7 @@
 | 26.15 | 26 | section | Options Involving Several Assets | accepted |
 | 26.16 | 26 | section | Volatility and Variance Swaps | accepted |
 | 26.17 | 26 | section | Static Options Replication | accepted |
-| 27.1 | 27 | section | Alternatives to Black–Scholes–Merton | unreviewed |
+| 27.1 | 27 | section | Alternatives to Black–Scholes–Merton | accepted |
 | 27.2 | 27 | section | Stochastic Volatility Models | unreviewed |
 | 27.3 | 27 | section | The IVF Model | unreviewed |
 | 27.4 | 27 | section | Convertible Bonds | unreviewed |

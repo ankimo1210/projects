@@ -1,0 +1,535 @@
+{
+  "checked_at": "2026-09-25T05:59:21.935Z",
+  "pages": {
+    "portal": {
+      "figures": [
+        "exchange_payoff",
+        "exchange_correlation",
+        "exchange_rate",
+        "exchange_american"
+      ],
+      "states": [
+        {
+          "figure": "exchange_payoff",
+          "scenario": "exchange",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "better_of",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "worse_of",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "equal-vol-uncorrelated",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "asymmetric-vol",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "long-high-vol",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "equal-vol-tight",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "yield-on-received",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "long-high-vol",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "equal-vol-uncorrelated",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "yield-on-received",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "equal-vol-tight",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "exchange",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "better_of",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "worse_of",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "equal-vol-uncorrelated",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "asymmetric-vol",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "long-high-vol",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "equal-vol-tight",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "yield-on-received",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "long-high-vol",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "equal-vol-uncorrelated",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "yield-on-received",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "equal-vol-tight",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        }
+      ],
+      "negative_controls": [
+        {
+          "rejected": true,
+          "restored": true,
+          "mutation": "rate reference last point +0.5 currency units"
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-14/portal-exchange_payoff-1440-m10-recheck.png",
+        "docs/validation/section-26-14/portal-exchange_correlation-1440-m10-recheck.png",
+        "docs/validation/section-26-14/portal-exchange_rate-1440-m10-recheck.png",
+        "docs/validation/section-26-14/portal-exchange_american-1440-m10-recheck.png",
+        "docs/validation/section-26-14/portal-exchange_payoff-1000-m10-recheck.png",
+        "docs/validation/section-26-14/portal-exchange_correlation-1000-m10-recheck.png",
+        "docs/validation/section-26-14/portal-exchange_rate-1000-m10-recheck.png",
+        "docs/validation/section-26-14/portal-exchange_american-1000-m10-recheck.png"
+      ],
+      "layout_errors": 0,
+      "numeric_scope": "Both widths, every menu state: the payoff identity recomputed from max/min, 39 correlation points against equation 26.5 rewritten in JS, 7 rates against the flat price plus the ratio restatement and the moving misreading, and 17 moneyness points of the American figure with the early-exercise premium separated from the grid residual.",
+      "external_network_blocked": true,
+      "external_requests": [],
+      "page_errors": []
+    },
+    "book": {
+      "figures": [
+        "exchange_payoff",
+        "exchange_correlation",
+        "exchange_rate",
+        "exchange_american"
+      ],
+      "states": [
+        {
+          "figure": "exchange_payoff",
+          "scenario": "exchange",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "better_of",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "worse_of",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "equal-vol-uncorrelated",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "asymmetric-vol",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "long-high-vol",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "equal-vol-tight",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "yield-on-received",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "long-high-vol",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "equal-vol-uncorrelated",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "yield-on-received",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "equal-vol-tight",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "exchange",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "better_of",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "exchange_payoff",
+          "scenario": "worse_of",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 4
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "equal-vol-uncorrelated",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "asymmetric-vol",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_correlation",
+          "scenario": "long-high-vol",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "equal-vol-tight",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "yield-on-received",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_rate",
+          "scenario": "long-high-vol",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "equal-vol-uncorrelated",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "yield-on-received",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        },
+        {
+          "figure": "exchange_american",
+          "scenario": "equal-vol-tight",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 5
+        }
+      ],
+      "negative_controls": [
+        {
+          "rejected": true,
+          "restored": true,
+          "mutation": "rate reference last point +0.5 currency units"
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-14/book-exchange_payoff-1440-m10-recheck.png",
+        "docs/validation/section-26-14/book-exchange_correlation-1440-m10-recheck.png",
+        "docs/validation/section-26-14/book-exchange_rate-1440-m10-recheck.png",
+        "docs/validation/section-26-14/book-exchange_american-1440-m10-recheck.png",
+        "docs/validation/section-26-14/book-exchange_payoff-1000-m10-recheck.png",
+        "docs/validation/section-26-14/book-exchange_correlation-1000-m10-recheck.png",
+        "docs/validation/section-26-14/book-exchange_rate-1000-m10-recheck.png",
+        "docs/validation/section-26-14/book-exchange_american-1000-m10-recheck.png"
+      ],
+      "layout_errors": 0,
+      "numeric_scope": "Both widths, every menu state: the payoff identity recomputed from max/min, 39 correlation points against equation 26.5 rewritten in JS, 7 rates against the flat price plus the ratio restatement and the moving misreading, and 17 moneyness points of the American figure with the early-exercise premium separated from the grid residual.",
+      "math": {
+        "typeset": 62,
+        "errors": 0,
+        "headings": [
+          "4.4.1 行使価格が資産である契約#",
+          "4.4.2 Margrabe の式と σ^#",
+          "4.4.3 なぜ r に依存しないのか#",
+          "4.4.4 V/U への読み替え#",
+          "4.4.5 better-of／worse-of と米国型#",
+          "4.4.6 適用域・限界と理解の確認#"
+        ],
+        "tables": {
+          "ratio_table": [
+            {
+              "correlation": -0.5,
+              "price": 13.750976986407835,
+              "restated": 13.750976986407837
+            },
+            {
+              "correlation": 0,
+              "price": 11.246291601828489,
+              "restated": 11.246291601828485
+            },
+            {
+              "correlation": 0.5,
+              "price": 7.965567455405804,
+              "restated": 7.965567455405798
+            },
+            {
+              "correlation": 0.9,
+              "price": 3.56705917296798,
+              "restated": 3.5670591729679844
+            }
+          ],
+          "american_table": [
+            {
+              "label": "配当なし q_V=0",
+              "value_ratio": 1,
+              "european": 12.167514989896517,
+              "premium": -0.003
+            },
+            {
+              "label": "配当なし q_V=0",
+              "value_ratio": 1.25,
+              "european": 29.62600246715914,
+              "premium": 0.0016
+            },
+            {
+              "label": "受取側に配当 q_V=6%",
+              "value_ratio": 1,
+              "european": 7.835570990531295,
+              "premium": 1.0022
+            },
+            {
+              "label": "受取側に配当 q_V=6%",
+              "value_ratio": 1.25,
+              "european": 21.356199677756607,
+              "premium": 4.2785
+            }
+          ]
+        },
+        "screenshots": [
+          "docs/validation/section-26-14/book-exchange-domain-1440-m10-recheck.png",
+          "docs/validation/section-26-14/book-exchange-domain-1000-m10-recheck.png"
+        ]
+      },
+      "external_network_blocked": false,
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "page_errors": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/_exchange_lesson.py": "b1dd20d413d7d23d6c888290547af89a0af687ff2ca63812eac57fd4cf525d91",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "scripts/build_exchange_browser_reference.py": "eee63979b526215286b81042a42bb3f7729fe406bd8e9869c43e25741f0fbd9c",
+    "scripts/build_exchange_lesson_data.py": "0cc720ed6500d413ec0ae0493a97e7fdebe43b2f28d01c44406c11120b8e2f19",
+    "scripts/build_exchange_reference.py": "5272e79a19f3593dfe41657a4d0cfe34d5aa2278651a6408b9de871790022146",
+    "docs/validation/section-26-14/lesson-data.json": "71c078fee8b73dbc581a7f23f558ced65f89bd83809ccadb0cf2742a01bd1087",
+    "docs/validation/section-26-14/prices.json": "90c6a7146c8216bdd8fe77132e31bc2a2ef748db6ac7fbffc9f50f1c8cee93b4",
+    "docs/validation/section-26-14/numerical-check.json": "b68d3cacd753da95c0ccaca53611e2750d62052d27895c802a9a4050eee07203",
+    "docs/validation/section-26-14/browser-reference.json": "11d5f25a1aec8ac510565f477edbf0808938c9e942edb12b0e797ab86813b0f2",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9",
+    "report/report_builder/figures.py": "b5eb8464713c2d1b7d96e5462f6fa34d73bf2db04e692770c0c678df8fa3b88d",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "scripts/verify_exchange_lesson_browser.cjs": "20b920296b7e70404489fff1218f087ce815357e6ed8df2ba35681115b6f42f9"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "report/site/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "docs/validation/section-26-14/portal-exchange_payoff-1440-m10-recheck.png": "46c34ee15967ae88cfbd7420be252a07587306690bc9dfc5e3a15ad00c81224f",
+    "docs/validation/section-26-14/portal-exchange_correlation-1440-m10-recheck.png": "51d9c503d1fd493aea6cabfcf9f4fa7090ae7879c4e2985b9569a2a2ec2dfdc1",
+    "docs/validation/section-26-14/portal-exchange_rate-1440-m10-recheck.png": "bd607996757ccf5ab7ffee77da002ac12e53b4aa0c04352e67c324df1a8c4c46",
+    "docs/validation/section-26-14/portal-exchange_american-1440-m10-recheck.png": "3e654b2fb91f2a898fdb296d7d7f2cbad7302d92e91993697569a573eca44656",
+    "docs/validation/section-26-14/portal-exchange_payoff-1000-m10-recheck.png": "88af35345c1591d076f4abbcad59c3facdd4075b4d9e224ce80e43550a61154f",
+    "docs/validation/section-26-14/portal-exchange_correlation-1000-m10-recheck.png": "c7ed42445181867779f61cd37b7484820c35a9d96bb54abed3296f10acb2d675",
+    "docs/validation/section-26-14/portal-exchange_rate-1000-m10-recheck.png": "c8a30a76c266519087e59aae4041f30de94ffe0e9a06e5389ba09c2a5c75197f",
+    "docs/validation/section-26-14/portal-exchange_american-1000-m10-recheck.png": "6cfe9bb3c6f0b9c3c58dbd9a459c12b7863f4e10d729af2b096b51340e9c8c90",
+    "docs/validation/section-26-14/book-exchange_payoff-1440-m10-recheck.png": "b647f40b9d3242aa0a049d20b9e6b2a97116843d0507b227db1ed533e5b6cc8e",
+    "docs/validation/section-26-14/book-exchange_correlation-1440-m10-recheck.png": "dd90eae7e7d848e9e65c6153c9fc4beb5f9bb0d4e28d87c0a813f06dd9f1f50f",
+    "docs/validation/section-26-14/book-exchange_rate-1440-m10-recheck.png": "16f71fd16509f5fa3784d340c5c0594c27f8abfd22b6ef1d45af11b2d4c45e91",
+    "docs/validation/section-26-14/book-exchange_american-1440-m10-recheck.png": "525055182d145cf21dc26d7268b5d3e5659b06658058675126acc2e2cced7f71",
+    "docs/validation/section-26-14/book-exchange_payoff-1000-m10-recheck.png": "a069a31108a28c03209d4d2da9eaf4ca623636dcea9741b414d2bf54c8d20638",
+    "docs/validation/section-26-14/book-exchange_correlation-1000-m10-recheck.png": "150b4bfe9f3b094efb8d0d4ae715185b306ae84f07226121a2b7d6f76f65d0cf",
+    "docs/validation/section-26-14/book-exchange_rate-1000-m10-recheck.png": "32dd077ad143b13deafee5abf681fff8630dbfddc050abc26d6d3f0dba8b4cd0",
+    "docs/validation/section-26-14/book-exchange_american-1000-m10-recheck.png": "82decfea1b9c1c06216131a795b05745229e3d7adec3de018bfb2823b0defffc",
+    "docs/validation/section-26-14/book-exchange-domain-1440-m10-recheck.png": "45ee74e61304a4a9f661af4383608c05d93610e2d350a911ea9b7616ce1b4a6d",
+    "docs/validation/section-26-14/book-exchange-domain-1000-m10-recheck.png": "92e3173d29f6b9936026895cfb0ae8f262bd4f063d4a0e89b6b63d81cdd75447"
+  },
+  "browser_version": "145.0.7632.6",
+  "status": "PASS",
+  "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_exotics_m10.cjs 26-14",
+  "recheck": {
+    "milestone": "M10",
+    "original_verifier": "scripts/verify_exchange_lesson_browser.cjs",
+    "original_sha256": "20b920296b7e70404489fff1218f087ce815357e6ed8df2ba35681115b6f42f9",
+    "executed_sha256": "04cf93c9efc562ad2a507d48cd419b4184f1e2aaf15c2dd421c290949f50d159",
+    "wrapper_sha256": "0066b81b530c481830265b14b05a94f2dc5cee6080b803e99a78d48d6c95f1ad",
+    "changes": "Only screenshot basenames and browser record basename; original assertions unchanged."
+  }
+}

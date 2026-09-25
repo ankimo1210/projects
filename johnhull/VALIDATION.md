@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,17 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 27.1 M10 — 2026-09-25
+
+[受入ノート](docs/SECTION_27_1_ACCEPTANCE_2026-09-25.md)・[レビュー](docs/SECTION_27_1_REVIEW_2026-09-25.md)・[統合記録](docs/validation/section-27-1/m10-check.json)にAM01–AM06の5軸を集約。台帳は**accepted**（受入10・未評価296）。
+
+- CEV非心カイ二乗価格と独立局所ボラPDEの3行使価格は最大差0.000563通貨。Mertonの元Poisson条件付き期待値26価格は最大差8.9e-14通貨、VGのガンマ密度積分26価格は最大差0.000123通貨。Table 27.1の確率を印刷4桁で再現。
+- 公開API3関数、vol06 §7.1–7.6の本文6小節、保存4図をBook/portalで共用。Figure 27.1は原典どおり満期株価$S_T$の密度。§7以外のセル本文・保存出力は基点と一致。
+- ChromiumでBook/portal×1440/1000pxの16状態・16画像を独立保存値と照合。数値改変を両面で拒否し、Book MathJaxエラー0、portal外部要求0。
+- 共有portalレジストリとstylesheetの変更に伴い§26.9–§26.17の個別テスト・両画面をM10再検証。旧受入記録は保持した。
+- johnhullの価格・portalテストは**2,703 passed / 6 skipped**（既存のdeprecation warning 2件）。`ruff check johnhull`、変更したPythonファイルの`ruff format --check`、release contract、台帳`--check-artifacts`はPASS。全johnhullのformat checkには今回変更していない23ファイルの既存書式差が残る。
+- CEVの$\beta>1$の無限遠境界、VG分布図の標本誤差、市場較正・取引費用・動的ヘッジ成績は受入範囲外。
 
 ## Section 26.17 M9 — 2026-09-25
 
