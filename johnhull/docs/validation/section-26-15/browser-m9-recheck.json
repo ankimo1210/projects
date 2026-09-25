@@ -1,6 +1,6 @@
 {
   "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_exotics_m9.cjs 26-15",
-  "checked_at": "2026-09-24T23:03:19.154Z",
+  "checked_at": "2026-09-25T03:22:31.241Z",
   "pages": {
     "portal": {
       "figures": [
@@ -465,7 +465,7 @@
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
     "report/site/assets/style.css": "797019b06cdada1d6817dda31c394f7dd69fb12b9a15bd9d3051d8f5f7ad9fb6",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
     "docs/validation/section-26-15/portal-basket_payoff-1440-m9-recheck.png": "cd5307c7d2b060d8322c94dd99a06ae87a7989e12348a15b376da04a941eda17",
     "docs/validation/section-26-15/portal-basket_correlation-1440-m9-recheck.png": "fb09eb06fe27117de1ec80e59947e51456693c92496738279532790f78748182",
     "docs/validation/section-26-15/portal-basket_comparison-1440-m9-recheck.png": "bba286fbcd2a87bdc6a361640aacbd44e08f1bffd70549cfec09ff88f3492171",
@@ -475,7 +475,7 @@
     "docs/validation/section-26-15/portal-basket_comparison-1000-m9-recheck.png": "66017fc7c14815a0c2047a373100c5fa0e2ab9cdf107498a129d6a91279cab0e",
     "docs/validation/section-26-15/portal-basket_error-1000-m9-recheck.png": "abe6d2dc1b0331d351918262eeae16ab70bdee7fb41a62256157446c3dbd2825",
     "docs/validation/section-26-15/book-basket_payoff-1440-m9-recheck.png": "6f2a00b18d9e1781cf035267b646afa1fb4f6e6ed2914a5afe7aadff27dd8aec",
-    "docs/validation/section-26-15/book-basket_correlation-1440-m9-recheck.png": "c0bbba941df85ba3a13e89f8bf739d000d9c7ca7c15da608acf2006e1738b296",
+    "docs/validation/section-26-15/book-basket_correlation-1440-m9-recheck.png": "d703254441f19e45c629b75bb054a7578f44553180fb95e90baada68f8a063f3",
     "docs/validation/section-26-15/book-basket_comparison-1440-m9-recheck.png": "f8c81b1a6bf3a0ed2a1102fdeb12f8e43ca647faea6708e06c274388f4e4b37a",
     "docs/validation/section-26-15/book-basket_error-1440-m9-recheck.png": "d4fcf52842a7ff0a4f7fbb741cb4378388e16ce547906667f91514c3fde7ab94",
     "docs/validation/section-26-15/book-basket_payoff-1000-m9-recheck.png": "eb71fcdba46a22a94cf077298f234be6232342a90d44f2048c581fdb8b02e3e2",

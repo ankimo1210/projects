@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T23:01:26.206Z",
+  "checked_at": "2026-09-25T03:20:40.149Z",
   "pages": {
     "portal": {
       "figures": [
@@ -18470,14 +18470,14 @@
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
     "report/site/assets/style.css": "797019b06cdada1d6817dda31c394f7dd69fb12b9a15bd9d3051d8f5f7ad9fb6",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
     "docs/validation/section-26-12/portal-shout_payoff-1440-m9-recheck.png": "40da97153c4d2f48973011a24b9502264f6ed9fd9b23317457516a787d41ff5d",
     "docs/validation/section-26-12/portal-shout_decision-1440-m9-recheck.png": "3a2b58b6e516b6b2275bb192023a2d6db2854e4328bd4c82a5a0b4ea75d85812",
     "docs/validation/section-26-12/portal-shout_boundary-1440-m9-recheck.png": "a9c7e19bb67dc634c93225a321467bd151ea0dd0a75df0c147216268a12f2641",
     "docs/validation/section-26-12/portal-shout_comparison-1440-m9-recheck.png": "cef6d12426957cfdda489f199592143a45a474434b9758d5ee4ab63b97993e01",
     "docs/validation/section-26-12/portal-shout_payoff-1000-m9-recheck.png": "bdf78d7f3c745997928f0227fbb880e188cc536ea84d37f23087bb132d883aeb",
     "docs/validation/section-26-12/portal-shout_decision-1000-m9-recheck.png": "840ef31ebfe7fada83213e5d3e006084ee5895478a61624ee9fcc92a41f52f2b",
-    "docs/validation/section-26-12/portal-shout_boundary-1000-m9-recheck.png": "1499deeb1fcbf1bad6423b1577d953c9418a4b10aab3a0d232a2135f2ce4654b",
+    "docs/validation/section-26-12/portal-shout_boundary-1000-m9-recheck.png": "24675166019ff36692b0bda81e8df60051ed5334a73af986c2cb779592f7bffc",
     "docs/validation/section-26-12/portal-shout_comparison-1000-m9-recheck.png": "2b0678e43685f4e05f312d3658c2320be184d80e045b1f3c51ac524af3e222b1",
     "docs/validation/section-26-12/book-shout_payoff-1440-m9-recheck.png": "1e8a9e9dade1ee56050277993acfd196547c5e5476b4ce18ca5206ff6efa5b3a",
     "docs/validation/section-26-12/book-shout_decision-1440-m9-recheck.png": "8da867564590c2ff57d326798edef164efc22ba88ec4f6e0f7bcc301e37cc303",

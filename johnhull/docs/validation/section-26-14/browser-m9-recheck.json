@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T23:02:42.510Z",
+  "checked_at": "2026-09-25T03:21:55.409Z",
   "pages": {
     "portal": {
       "figures": [
@@ -501,7 +501,7 @@
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
     "report/site/assets/style.css": "797019b06cdada1d6817dda31c394f7dd69fb12b9a15bd9d3051d8f5f7ad9fb6",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
     "docs/validation/section-26-14/portal-exchange_payoff-1440-m9-recheck.png": "46c34ee15967ae88cfbd7420be252a07587306690bc9dfc5e3a15ad00c81224f",
     "docs/validation/section-26-14/portal-exchange_correlation-1440-m9-recheck.png": "51d9c503d1fd493aea6cabfcf9f4fa7090ae7879c4e2985b9569a2a2ec2dfdc1",
     "docs/validation/section-26-14/portal-exchange_rate-1440-m9-recheck.png": "bd607996757ccf5ab7ffee77da002ac12e53b4aa0c04352e67c324df1a8c4c46",

@@ -1288,17 +1288,17 @@
         "browser_run": {
           "path": "docs/validation/section-26-9/browser-m9-recheck.json",
           "kind": "record",
-          "sha256": "23de02f6fafc65cf165733d01a940c89a2e2f40e437dbd2c6a73ff3e2d02fa93"
+          "sha256": "64b564a40b7e97944c9338f9e9f46ca724fb1f853d81e1faf72f1af726aa6f85"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-17/notebook-check.json",
           "kind": "record",
-          "sha256": "4b54a27b62b05aa9dc4fcc53fb2921fcc60f638f5ed7b3a868fe45d893cbfa76"
+          "sha256": "461d3c206e3e598d05263962aa121a2d0d93450a4a420c4f1e3c5d2efbcfaff1"
         },
         "m9_recheck": {
           "path": "docs/validation/section-26-9/m9-recheck.json",
           "kind": "record",
-          "sha256": "d42a61eccfeb743a9a4ca569f917f34cd26fb85bdcce462d39ee8232c1e1a148"
+          "sha256": "8b09909519c7c00e0eebc1e169aca8444883831a85f96a9765d57d5b4e8b432c"
         }
       },
       "requirements": [
@@ -1842,17 +1842,17 @@
         "browser_run": {
           "path": "docs/validation/section-26-10/browser-m9-recheck.json",
           "kind": "record",
-          "sha256": "d30d94e942180813e04d73558aae949b486da60544f948e559b12f4baff72b42"
+          "sha256": "81085208c6741a1e7b31bb6ac7634d980c5ad699753e2ad1a9a2f4d7371a5c3a"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-17/notebook-check.json",
           "kind": "record",
-          "sha256": "4b54a27b62b05aa9dc4fcc53fb2921fcc60f638f5ed7b3a868fe45d893cbfa76"
+          "sha256": "461d3c206e3e598d05263962aa121a2d0d93450a4a420c4f1e3c5d2efbcfaff1"
         },
         "m9_recheck": {
           "path": "docs/validation/section-26-10/m9-recheck.json",
           "kind": "record",
-          "sha256": "e94a18e8765b517839b61b78ad76e34ea46ec8d1169137676d07a81d828d7f14"
+          "sha256": "b7e5da4df77e1697f807c6907d5f5d89a9288396e008a9f5cb5fcd8d15c6b70a"
         }
       },
       "requirements": [
@@ -2568,17 +2568,17 @@
         "browser_run": {
           "path": "docs/validation/section-26-11/browser-m9-recheck.json",
           "kind": "record",
-          "sha256": "c09cc082bc5ce3557fad32adc541e9eba620d9690468efe7a83836b1f1fe3a80"
+          "sha256": "60255a723f5f46ef11475e36505247ed314bc6a5e5c355e23ecd0198f744c1d1"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-17/notebook-check.json",
           "kind": "record",
-          "sha256": "4b54a27b62b05aa9dc4fcc53fb2921fcc60f638f5ed7b3a868fe45d893cbfa76"
+          "sha256": "461d3c206e3e598d05263962aa121a2d0d93450a4a420c4f1e3c5d2efbcfaff1"
         },
         "m9_recheck": {
           "path": "docs/validation/section-26-11/m9-recheck.json",
           "kind": "record",
-          "sha256": "67910ecc868e60298e5b936a5c63eff2abd156c65e0fb5cc4ffcca550dd0c945"
+          "sha256": "53bf02a087c03c25b611a8214645c96f5d0513c261a815ba780d9ddc5edd2fcc"
         }
       },
       "acceptance_note": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md"
@@ -3043,17 +3043,17 @@
         "browser_run": {
           "path": "docs/validation/section-26-12/browser-m9-recheck.json",
           "kind": "record",
-          "sha256": "8b7a75619186ff061528c179848605083dc92af1409aafe321eec86694693fa2"
+          "sha256": "f4b431cf455a53e99f3b606cfca4c5755863b39e22e1634cf5975889458b6790"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-17/notebook-check.json",
           "kind": "record",
-          "sha256": "4b54a27b62b05aa9dc4fcc53fb2921fcc60f638f5ed7b3a868fe45d893cbfa76"
+          "sha256": "461d3c206e3e598d05263962aa121a2d0d93450a4a420c4f1e3c5d2efbcfaff1"
         },
         "m9_recheck": {
           "path": "docs/validation/section-26-12/m9-recheck.json",
           "kind": "record",
-          "sha256": "fb351262a1b82f64ae01619b06559a789e56577de2334866241a1cd33e7384e7"
+          "sha256": "bf9997dd1db4738018705a930167167ff134febe5752e9f1270f3e67dfda2a67"
         }
       },
       "acceptance_note": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md"
@@ -3500,17 +3500,17 @@
         "browser_run": {
           "path": "docs/validation/section-26-13/browser-m9-recheck.json",
           "kind": "record",
-          "sha256": "14fbe801efdfb0a851cfca9f538a8c9c39e49a2367904ddd8b7794a41f37faf7"
+          "sha256": "3b3921c3f73a693112b6c6195e3c94723dba53d8c3246d8327276899374680eb"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-17/notebook-check.json",
           "kind": "record",
-          "sha256": "4b54a27b62b05aa9dc4fcc53fb2921fcc60f638f5ed7b3a868fe45d893cbfa76"
+          "sha256": "461d3c206e3e598d05263962aa121a2d0d93450a4a420c4f1e3c5d2efbcfaff1"
         },
         "m9_recheck": {
           "path": "docs/validation/section-26-13/m9-recheck.json",
           "kind": "record",
-          "sha256": "94e65c05bff4c3a694439acb0f9adf4cc79e5e9105da3feec39d4eee5da186c6"
+          "sha256": "03894fc069c6d83d93ac439339ba9d6b97a7487c5ffdc242ff5e29bdef8c3eb6"
         }
       },
       "acceptance_note": "docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md"
@@ -3949,17 +3949,17 @@
         "browser_run": {
           "path": "docs/validation/section-26-14/browser-m9-recheck.json",
           "kind": "record",
-          "sha256": "cad4738c05168b9129436cf6840be6349df7342ba926b710b333c1140051bbb8"
+          "sha256": "7f0cd12de8d60710109542d95ff73cd3afa2df7e0d57ea67691590517aa27b0e"
         },
         "notebook_check": {
           "path": "docs/validation/section-26-17/notebook-check.json",
           "kind": "record",
-          "sha256": "4b54a27b62b05aa9dc4fcc53fb2921fcc60f638f5ed7b3a868fe45d893cbfa76"
+          "sha256": "461d3c206e3e598d05263962aa121a2d0d93450a4a420c4f1e3c5d2efbcfaff1"
         },
         "m9_recheck": {
           "path": "docs/validation/section-26-14/m9-recheck.json",
           "kind": "record",
-          "sha256": "ae1b601bfa36c6017213143cb4bb26fa688e1623c506d7b20ed064746064ab4b"
+          "sha256": "26b617625a9a9e6c0591af895c01ff3fafbfdfc5c2de2490559c33b147f28de8"
         }
       },
       "acceptance_note": "docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md"
@@ -4361,7 +4361,7 @@
         "browser_run": {
           "path": "docs/validation/section-26-15/browser-m9-recheck.json",
           "kind": "record",
-          "sha256": "dc2c1c29f118adb551463e92c3b42a919ed95a988d4ce07875a44da09e97e593"
+          "sha256": "f964f6ce34c0526d5d6844e410a099362a9118b405cef22ee8d443e5639ee5cc"
         },
         "notebook_script": {
           "path": "scripts/verify_basket_notebook.py",
@@ -4371,7 +4371,7 @@
         "notebook_check": {
           "path": "docs/validation/section-26-17/notebook-check.json",
           "kind": "record",
-          "sha256": "4b54a27b62b05aa9dc4fcc53fb2921fcc60f638f5ed7b3a868fe45d893cbfa76"
+          "sha256": "461d3c206e3e598d05263962aa121a2d0d93450a4a420c4f1e3c5d2efbcfaff1"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_15_ACCEPTANCE_2026-09-19.md",
@@ -4401,12 +4401,12 @@
         "m9_recheck": {
           "path": "docs/validation/section-26-15/m9-recheck.json",
           "kind": "record",
-          "sha256": "0bf38d1e1259b85a06432c635b6311fa4d48c1cb9f396f4813caad4b422c8051"
+          "sha256": "fbf21a9b45236510a3c3e1ffd1907bfd3f1e203daeb6051567f87a15babe64ae"
         },
         "m9_check": {
           "path": "docs/validation/section-26-17/m9-check.json",
           "kind": "record",
-          "sha256": "f2f72eba47c1f2ac49220dd154cadb303f24c2f70eac488b2063b9d1275cc17d"
+          "sha256": "7c08d17c5dda6ac7204cefea98c56cf4f219b970dac0839b44a5a86f050d0f15"
         }
       },
       "assumptions": [
@@ -4841,7 +4841,7 @@
         "browser_run": {
           "path": "docs/validation/section-26-16/browser-m9-recheck.json",
           "kind": "record",
-          "sha256": "3a3c324f75aaa7bb0aa40d2543739576298a68943b1ba6772d0052def0d0c70d"
+          "sha256": "a2ad3df65c862a5d293ebaf8f177e87ba5dc981ed2324a4b10acf88b98c416e3"
         },
         "notebook_script": {
           "path": "scripts/verify_variance_swap_notebook.py",
@@ -4851,7 +4851,7 @@
         "notebook_check": {
           "path": "docs/validation/section-26-17/notebook-check.json",
           "kind": "record",
-          "sha256": "4b54a27b62b05aa9dc4fcc53fb2921fcc60f638f5ed7b3a868fe45d893cbfa76"
+          "sha256": "461d3c206e3e598d05263962aa121a2d0d93450a4a420c4f1e3c5d2efbcfaff1"
         },
         "payoff_image": {
           "path": "docs/validation/section-26-16/book-varswap_payoff-1000.png",
@@ -4896,7 +4896,7 @@
         "m9_check": {
           "path": "docs/validation/section-26-17/m9-check.json",
           "kind": "record",
-          "sha256": "f2f72eba47c1f2ac49220dd154cadb303f24c2f70eac488b2063b9d1275cc17d"
+          "sha256": "7c08d17c5dda6ac7204cefea98c56cf4f219b970dac0839b44a5a86f050d0f15"
         }
       },
       "assumptions": [
@@ -5289,7 +5289,7 @@
         "notebook_check": {
           "path": "docs/validation/section-26-17/notebook-check.json",
           "kind": "record",
-          "sha256": "4b54a27b62b05aa9dc4fcc53fb2921fcc60f638f5ed7b3a868fe45d893cbfa76"
+          "sha256": "461d3c206e3e598d05263962aa121a2d0d93450a4a420c4f1e3c5d2efbcfaff1"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -5309,12 +5309,12 @@
         "browser_run": {
           "path": "docs/validation/section-26-17/browser-check.json",
           "kind": "record",
-          "sha256": "169c78974b2d32e91ef4eec686aaa806ff085af76b566d23dad7b8c49ab9ea23"
+          "sha256": "fd7f74214af7d3d19345478edcccb0e8bd8b8e763db440dfa83b70ee834f536a"
         },
         "m9_check": {
           "path": "docs/validation/section-26-17/m9-check.json",
           "kind": "record",
-          "sha256": "f2f72eba47c1f2ac49220dd154cadb303f24c2f70eac488b2063b9d1275cc17d"
+          "sha256": "7c08d17c5dda6ac7204cefea98c56cf4f219b970dac0839b44a5a86f050d0f15"
         },
         "boundary_image": {
           "path": "docs/validation/section-26-17/portal-static_boundary-1000.png",
@@ -5329,7 +5329,7 @@
         "error_image": {
           "path": "docs/validation/section-26-17/portal-static_boundary_error-1000.png",
           "kind": "image",
-          "sha256": "d0bd752c443919630f1f9da9daed8d33c95e4559c21e883c229f6092955bc84b"
+          "sha256": "714baeb38d7f9ef462473a630efcd712938864423dea376f33df65035773dc55"
         },
         "convergence_image": {
           "path": "docs/validation/section-26-17/portal-static_convergence-1000.png",
