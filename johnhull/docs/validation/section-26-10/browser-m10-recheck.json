@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T05:57:07.351Z",
+  "checked_at": "2026-09-25T06:07:31.957Z",
   "reference": {
     "market": {
       "spot": 100,
@@ -294,7 +294,7 @@
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
     "report/site/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
     "docs/validation/section-26-10/book-binary-prices-1000-m10-recheck.png": "d8f976a1684a5f586b3927061de044b112f45772e3ad8f36aa24f7e5e8412adb",
     "docs/validation/section-26-10/book-binary-prices-1440-m10-recheck.png": "8343a3d9cf1392a7da648f9a21b979bea952cc123b87bdda68cb3c0b6fbfb113",
     "docs/validation/section-26-10/book-binary_delta-1000-m10-recheck.png": "354bca19f2be3baaa8024d0f5b287b3a9d41a3bb68e95d380a4c1c4d75ff4c19",
@@ -305,11 +305,11 @@
     "docs/validation/section-26-10/book-binary_replication-1440-m10-recheck.png": "43f91c2a08d64f59992a2de73f6619ef0c96f5a6563172298cecd6973a77a8dc",
     "docs/validation/section-26-10/book-binary_spreads-1000-m10-recheck.png": "1b11f3a425b8738516922c2a0c0dbad5cb26d1a255b51944d4900a48dce19afa",
     "docs/validation/section-26-10/book-binary_spreads-1440-m10-recheck.png": "daea71832b7bdfcfaddf233dd064f960c39116920f03e87a8681bbead54a5037",
-    "docs/validation/section-26-10/portal-binary_delta-1000-m10-recheck.png": "2d788255fbe6425d6afc8ae9c1164bc84432d381cb3e2b5594a92f83d08c7d09",
+    "docs/validation/section-26-10/portal-binary_delta-1000-m10-recheck.png": "b15212c47f9a44e24b26e7845b78ffcdd21567aa0c7c950661acb57b6cccabbf",
     "docs/validation/section-26-10/portal-binary_delta-1440-m10-recheck.png": "76eec772107c70dcc8eb8bfc04aebb8ece7b1c541ed6555021e11c2ef0368563",
     "docs/validation/section-26-10/portal-binary_payoffs-1000-m10-recheck.png": "14cc13b281f3518cac209a1ef3035e1c1bd610ed9db908f5c4065b6c34a2e3ed",
     "docs/validation/section-26-10/portal-binary_payoffs-1440-m10-recheck.png": "bcb75350a2b770e750a6f739214e1c234dd7b9c6b07b8ce24cc03873435dd0b6",
-    "docs/validation/section-26-10/portal-binary_replication-1000-m10-recheck.png": "a536e10b05000b897b96545f13175ca9601e2e4f54cd4279355f7b9eb1e233ba",
+    "docs/validation/section-26-10/portal-binary_replication-1000-m10-recheck.png": "7cf009f19a911e545ff979cbffa71e3dd0c58f8cb66736ee5ab8b30685b07921",
     "docs/validation/section-26-10/portal-binary_replication-1440-m10-recheck.png": "e705774cee3857b01703bfb91fa7cdf608d1bbd5bbf0ea7fb4e090e82b5b161a",
     "docs/validation/section-26-10/portal-binary_spreads-1000-m10-recheck.png": "9abb2b779c04c73ca6aaf42a23e0f7794c2ea9f4c12033fd9e0cd4511130b7ef",
     "docs/validation/section-26-10/portal-binary_spreads-1440-m10-recheck.png": "301218fe6ce754c60fa980345e4f9c7e4d94374132e06b10d3f3067621a723ce"

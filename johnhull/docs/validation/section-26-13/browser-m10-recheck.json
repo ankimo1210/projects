@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T05:58:44.764Z",
+  "checked_at": "2026-09-25T06:09:10.022Z",
   "pages": {
     "portal": {
       "figures": [
@@ -519,7 +519,7 @@
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
     "report/site/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
     "docs/validation/section-26-13/portal-asian_payoff-1440-m10-recheck.png": "9a40804610ec250dff8bdcb3543ed81a5671a6205e388c96d6b23976aca907b5",
     "docs/validation/section-26-13/portal-asian_distribution-1440-m10-recheck.png": "8c88c57e50ecb146e8f62351346127cb2cd8222ae80ba3f2f0e8e4dd8f4b7b87",
     "docs/validation/section-26-13/portal-asian_observations-1440-m10-recheck.png": "d66f33c8a6c17f7b2888c410550d5ed84edab2dfc8771d6a498e522fffa961f3",

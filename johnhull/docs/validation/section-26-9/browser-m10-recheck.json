@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T05:56:56.085Z",
+  "checked_at": "2026-09-25T06:07:20.010Z",
   "viewport": {
     "width": 1440,
     "height": 1000
@@ -411,7 +411,7 @@
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
     "report/site/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
     "docs/validation/section-26-9/book-bgk-m10-recheck.png": "daab28b566b8e36272a2cee57f0f47657ede588b40f984f84ce02526623f0660",
     "docs/validation/section-26-9/book-eight-m10-recheck.png": "db53cc9ebd235f957a9b42efc52411087b2b8d9d948598cbf4b60997b918c5cb",
     "docs/validation/section-26-9/book-explorer-initial-m10-recheck.png": "6db04be21223e2653ec855178b4382e832c12bfaf2fcd230d5657363ca5f063c",

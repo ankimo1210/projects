@@ -1,6 +1,6 @@
 {
   "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_exotics_m10.cjs 26-15",
-  "checked_at": "2026-09-25T05:59:57.780Z",
+  "checked_at": "2026-09-25T06:10:23.235Z",
   "pages": {
     "portal": {
       "figures": [
@@ -465,7 +465,7 @@
     "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
     "report/site/assets/style.css": "866e59e7a2d942c4b4b394e43b7178a3ab06e992fcf162eacf7f61e4e12de3a2",
     "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
-    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
     "docs/validation/section-26-15/portal-basket_payoff-1440-m10-recheck.png": "cd5307c7d2b060d8322c94dd99a06ae87a7989e12348a15b376da04a941eda17",
     "docs/validation/section-26-15/portal-basket_correlation-1440-m10-recheck.png": "fb09eb06fe27117de1ec80e59947e51456693c92496738279532790f78748182",
     "docs/validation/section-26-15/portal-basket_comparison-1440-m10-recheck.png": "bba286fbcd2a87bdc6a361640aacbd44e08f1bffd70549cfec09ff88f3492171",
