@@ -1,0 +1,172 @@
+{
+  "section": "27.2",
+  "milestone": "M11",
+  "status": "PASS",
+  "numerical": {
+    "method": "time-dependent-vol Crank–Nicolson PDE; Gil-Pelaez Heston quadrature against hullkit COS and the Hull–White conditional Monte Carlo; transcription of Hull's SABR formula and an Euler SABR Monte Carlo",
+    "measured": {
+      "average_variance_rate": 0.065,
+      "average_volatility": 0.25495097567963926,
+      "term_pde_max_abs_currency": 0.0001584545174040386,
+      "term_arithmetic_vol_gap_atm_currency": 0.1872398781888478,
+      "mixing_sample_mean_z": -0.31348289332915075,
+      "mixing_max_abs_z_26_strikes": 0.30890412792802313,
+      "overpriced_strike_band": [
+        88.0,
+        128.0
+      ],
+      "atm_price_minus_flat_bsm": -0.7177261022861074,
+      "heston_cos_max_abs_currency_78_prices": 1.5765166949677223e-13,
+      "heston_atm_vol_slope_per_currency": {
+        "-0.7": -0.0030086892117233456,
+        "+0.0": -0.0006531098723293813,
+        "+0.7": 0.0027512859027584366
+      },
+      "rho_zero_symmetry_max_vol": 1.7763568394002505e-15,
+      "small_xi_1e-3_minus_bsm_currency": 2.774841732389177e-06,
+      "deterministic_mixing_minus_bsm_currency": 0.0,
+      "sabr_transcription_max_abs_vol_216": 3.0531133177191805e-16,
+      "sabr_atm_limit_gap_vol": 5.073582878822869e-08,
+      "sabr_monte_carlo_max_abs_vol": 0.000649126733457156,
+      "sabr_monte_carlo_max_abs_z": 1.4935921310735265,
+      "sabr_smile_curvature_by_nu": {
+        "0.2": 0.033697749491818585,
+        "0.4": 0.08445743826097168,
+        "0.8": 0.21787941566703561
+      }
+    }
+  },
+  "notebook": {
+    "cells": 58,
+    "lesson_cells": 12,
+    "preserved_cells_outside_lesson": 46,
+    "renumbered_headings": {
+      "## 8. Longstaff-Schwartz（LSM）": "## 9. Longstaff-Schwartz（LSM）",
+      "## 9. 練習問題": "## 10. 練習問題"
+    },
+    "negative_controls_rejected": [
+      "§7.1 source edited",
+      "§27.2 SABR saved value changed",
+      "unlisted heading renumbered",
+      "§27.1 CEV saved value changed"
+    ]
+  },
+  "browser": {
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "state_checks": 20,
+    "screenshots": 20,
+    "numeric_mutation_rejected": true,
+    "book_math": {
+      "rendered": 152,
+      "errors": 0
+    }
+  },
+  "regression": {
+    "sections": [
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "27.1"
+    ],
+    "tests_passed": {
+      "26-9": 91,
+      "26-10": 92,
+      "26-11": 144,
+      "26-12": 215,
+      "26-13": 274,
+      "26-14": 351,
+      "26-15": 65,
+      "26-16": 45,
+      "26-17": 16,
+      "27-1": 16
+    },
+    "browser": "each accepted section's own verifier rerun on the M11 Book and portal",
+    "vol10_notebook_unchanged": true
+  },
+  "source_sha256": {
+    "scripts/build_stochastic_volatility_acceptance_record.py": "d07a14b965f5be3cc4f75f4a6d6f9d2027ad384e9a9ecd1ec1be1304d2c8605e",
+    "scripts/build_stochastic_volatility_reference.py": "c1f4ba86b3ef6487be7ca7ac6fbaed52a93256d5fb9de8eb06fa622ce55e0991",
+    "scripts/verify_stochastic_volatility_numerics.py": "b42e6730469f3ad0c740edda81a683ec81b73b5778a1b38e83eaa75ea8610f4e",
+    "scripts/verify_stochastic_volatility_notebook.py": "5eea33eb6de58a5864c1d99fb2fb0d0bc320bad5f96e41ca51f0d520733ac024",
+    "scripts/verify_stochastic_volatility_browser.cjs": "fcb743bf0030734cab861ec23582997307b49e7f15026e128fbad6ab3b851018",
+    "scripts/recheck_accepted_m11.py": "2c4e60af78fb3fd7a70d15412c5b4d26add5b055c8b214f4e91fc2ce9a21b33a",
+    "scripts/recheck_accepted_m11.cjs": "695e3390e80631b2e88345d2493b4e6d1701c71b7bf91147574aa0b3b9b0c813",
+    "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+    "hullkit/src/hullkit/_stochastic_volatility_lesson.py": "e3625860a42a20fc4daf6e5a8d9f4e660b553dc70d567fecf17bc2a0b6ecb666",
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+    "hullkit/tests/test_stochastic_volatility.py": "5213099e3a965f0e4b6a65d499aed0eef71a7b474fb7381c48cf6ef708edb082",
+    "hullkit/tests/test_stochastic_volatility_reference.py": "80063b8a30e74409f54a0a0b77b20e1f8092abc6ff60b225419e3265753cc637",
+    "hullkit/tests/test_stochastic_volatility_lesson.py": "6d2718d413bbf4c2dfd8b628a2649d5cf3d71ac0b6acd861bac70f869867eda7",
+    "report/tests/test_stochastic_volatility_notebook.py": "45a949c52975b064520e82fcf86199ab19e157bbc3453af190288f8eac7ea2c8",
+    "report/tests/test_report_build.py": "8f74fc4f19e361de0066b64038a885dc6a748de40706fbd1097a2b33a93de9f1",
+    "report/report_builder/figures.py": "54e22723616cb63f7643e97fd08574fbc69d405d8c24a21f2f87837a314d73d7",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "c762ad837485afec4df3ba568e66aa9a57276d593ca120a60ca23eeee76408da",
+    "volumes/06_numerical_methods/numerical.ipynb": "ee1b7eda9815a19fe2398afda5c48f221da27355352f5dd7bf4aa351ee8376dc",
+    "release_manifest.json": "53f5c8128020d4b963fec1799abc5eaf94d1861b9e7060b3849dd009c99bdab1",
+    "docs/validation/section-27-2/numerical-check.json": "2b00a2293ced684cb9a2143c4acceae329349841b343b7e24927ef8188b79f6e",
+    "docs/validation/section-27-2/notebook-check.json": "9eee71471fb714322643fefb0ffdf324dbd1dc5ca883588fe003bd69464cfa2b",
+    "docs/validation/section-27-2/browser-check.json": "86abb8fcbe588a948970404691c3adf384e29da33c97487ca23a36de4c57d287",
+    "docs/validation/section-26-9/m11-recheck.json": "03a8427223e9629364703f77bf191b03e625577472da3396a2ce36bacbe836d6",
+    "docs/validation/section-26-10/m11-recheck.json": "cab5ca49df0f5cb8f7abc7331a41c3a2ef5854707472cdc54674cc75a5744725",
+    "docs/validation/section-26-11/m11-recheck.json": "69915e46b35c8a6e091ee40dd4e6b776c0413bb8d809a1cb5b05648858717fa1",
+    "docs/validation/section-26-12/m11-recheck.json": "b220491e2229cae2fdb66bca38f49ea74347e462e8131c058fc742e19fc28ea6",
+    "docs/validation/section-26-13/m11-recheck.json": "b767e2367d4c546d02d40f78027ab7e91431076b1d1c293e7a888509bfea1330",
+    "docs/validation/section-26-14/m11-recheck.json": "2561289609f84083796dbc9b9fa3a1f53a58b7f519a7449019576c3414bafb89",
+    "docs/validation/section-26-15/m11-recheck.json": "e3a244260759794a7d93414c85180ff6c6243a375d2a7904532167276a5e31ef",
+    "docs/validation/section-26-16/m11-recheck.json": "f971a80ec7477a383b9d07e0ba25e23b9b68fb67d2a6d4979ee8c82851ad5d85",
+    "docs/validation/section-26-17/m11-recheck.json": "e8f1afaf7edb6368130a93e9ab8df0d487a28d95daa9ae404979fd4f05aa883c",
+    "docs/validation/section-27-1/m11-recheck.json": "cfda61235e1ad8b93a1c442370ddf2ebc5a5897cd4a9759e1f9f1cf02899704c",
+    "docs/validation/section-26-9/browser-m11-recheck.json": "2ebd4da626da8f71bc6fccfd46257fa760c383a24e469604c257fbdd96261ddb",
+    "docs/validation/section-26-10/browser-m11-recheck.json": "b9192d837634d4b57414a75de5c4cdb56c874b469aebf7d04ec950052fa772dc",
+    "docs/validation/section-26-11/browser-m11-recheck.json": "cdce3160c7d2cb71c5a3a8641a20bab137f9aa065076e22f0f34bd186a6f8de9",
+    "docs/validation/section-26-12/browser-m11-recheck.json": "42fc63a0e3c30b076cfa4ee583935a5477ba3cb1a26e43f524525b01d53de9a9",
+    "docs/validation/section-26-13/browser-m11-recheck.json": "db4e8ce65e4444ac5b713ecc44d786934bc99526c8d2a1ccdfe3b53962b3fa11",
+    "docs/validation/section-26-14/browser-m11-recheck.json": "d6663affec86f36708c297e7729cae7dad96d0dc223c0c311c06b0f3a3734cc4",
+    "docs/validation/section-26-15/browser-m11-recheck.json": "3b3faf8fe731d1f792098e3f8a05da37f71c1b1d1ed597d37c489c4dd35e12b4",
+    "docs/validation/section-26-16/browser-m11-recheck.json": "3b90e4098991ecca569fc7f3121bcc7239f6ec2c5eb7b5255a979b5b0172a184",
+    "docs/validation/section-26-17/browser-m11-recheck.json": "9e9cc22c9a16ae5e44d645b747dd98bb3948a82fb5db2d12c5ff79e678304adb",
+    "docs/validation/section-27-1/browser-m11-recheck.json": "f5c0ab5d1a43f736001f09d9410b52e600651d22562bf81aad1ee70728d427e0"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-27-2/reference.json": "9e237ed9780699a3abfa5799197174c010fdc8b81b8f67d66f7fc7395fb38adb",
+    "report/site/numerics.html": "7e1127a0f9cff57aaaa572d637a03b7d1069663f8a88aba8586585574c257973",
+    "book/_build/html/notebooks/06_numerical.html": "d569f4a1b85795d2e8861588d57e10aa7e190708faaeb9eea9418862e601b96d",
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "docs/validation/section-27-2/book-stochvol_term-1440.png": "25bd5c1d0ef81e10b6c103dcd6368f5e19a0f23f5b88de8e56c75ebcaa2a455f",
+    "docs/validation/section-27-2/book-stochvol_term-1000.png": "95ea12b6459375dbcd53bf84ab9b298069b5a0bd23ec27a93ed63f360ad34599",
+    "docs/validation/section-27-2/book-stochvol_mixing-1440.png": "48d9bbb97d11ddfe48e359b8edd710a1c6a141f1a1ed9b4eb19022d57968b6f9",
+    "docs/validation/section-27-2/book-stochvol_mixing-1000.png": "ea12382d42405e586c92b78007448aba5bd6849906e52d6b2eaf304d0f1b1923",
+    "docs/validation/section-27-2/book-stochvol_correlation-1440.png": "121ddf39a799bf08c3ce7698f1ecebf3b7c428ea1346c801055715821c30a766",
+    "docs/validation/section-27-2/book-stochvol_correlation-1000.png": "8eddae10eab97c16978edbcbe2542e40500682c50e3a90f2cf11dd560db51834",
+    "docs/validation/section-27-2/book-stochvol_sabr-1440.png": "a2cdfff1c760e6cab822c0aed6314fa317f139c77f70f785c142429fb177f530",
+    "docs/validation/section-27-2/book-stochvol_sabr-1000.png": "2e9c7248a6760b1062f2f602a7a47ed02b9e28605b96c8d7a8cec5841a2f6a01",
+    "docs/validation/section-27-2/book-stochvol_sabr-nu-1440.png": "1f6b6b9b482f9768e17db87e6a8e03c6849ee5162dbb5e2c771a6c230a44aa2c",
+    "docs/validation/section-27-2/book-stochvol_sabr-nu-1000.png": "9f97bf0b7d7f0c490ce2102d4ecf686656de63651702d5920917c9ce5bf3f207",
+    "docs/validation/section-27-2/portal-stochvol_term-1440.png": "4517f0ba94b968fec1bf6f7a7228eda3d3787c0b1ee30510ab81f0c1d13eecf7",
+    "docs/validation/section-27-2/portal-stochvol_term-1000.png": "d6449d561ae617d033476615de381d54eeeb9d48dd540eb4a190203c4cb5feb9",
+    "docs/validation/section-27-2/portal-stochvol_mixing-1440.png": "cd03617ec60dbc2302782051c8e5568d277e2682f6136c9be1cb739206694eb5",
+    "docs/validation/section-27-2/portal-stochvol_mixing-1000.png": "20e427d2a751990af80a7e8c0b3d11812033ee3c2f2b233e1a727e83d779873d",
+    "docs/validation/section-27-2/portal-stochvol_correlation-1440.png": "9a79e4d696ec5b354db4b77e500b5f9b98c3cf0cc974f32df91ed5f7e1dd9af2",
+    "docs/validation/section-27-2/portal-stochvol_correlation-1000.png": "2f15aaff17004c2e99a1b3c9977079833417b13917520db62f9afa51285e38fe",
+    "docs/validation/section-27-2/portal-stochvol_sabr-1440.png": "00ced738dbf5d252dc9b3a6c3ea01ffcfd5b8da8e5225890d291b63fabff18b9",
+    "docs/validation/section-27-2/portal-stochvol_sabr-1000.png": "107347a472c9a19cded22f4e7f6744b941265718f548e88aaa14771c8da8ef8e",
+    "docs/validation/section-27-2/portal-stochvol_sabr-nu-1440.png": "2ce33f724cacf9b2f76b25634896d2285502e2deaf84dea754a36e2692a2f8c8",
+    "docs/validation/section-27-2/portal-stochvol_sabr-nu-1000.png": "9bd55bf0c0d8a03e2c487aa5c67e951235ecdc3aaf40ebef6421e497fc66e83b"
+  }
+}

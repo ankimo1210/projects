@@ -548,9 +548,207 @@ CEV の $\beta>1$ には無限遠境界の扱いに注意が要り、教材の�
 モデル選択・較正・尾部リスク・ヘッジ費用は別の検証を要する。""")
 )
 
+# ===========================================================================
+# Section 8: §27.2 stochastic volatility models
+# ===========================================================================
+
+cells.append(
+    md(r"""## 8. 確率ボラティリティ・モデル（§27.2）
+
+この節は Hull 11e Global Edition pp.646–649 を追う。時間は年、金額は通貨、金利とボラは年率。
+BSM は一定のボラを仮定するが、実際のボラは時間とともに変わる（第23章）。§27.2 は次の順で一定ボラを外す。
+
+| 小節 | ボラの扱い | 原典の要点 |
+|---|---|---|
+| 8.1 | 時間の既知関数 $\sigma(t)$ | 式27.1。BSM に平均分散率を入れれば正しい |
+| 8.2–8.3 | 株価と無相関な確率変数 | Hull–White：BSM 価格を平均分散率の分布で平均する |
+| 8.4 | 株価と相関 | 負の相関で株式型スキュー。$\alpha=0.5$ は Heston |
+| 8.5 | SABR | Hagan らの近似 IV。$\sigma_0,\rho,\nu$ の役割 |
+| 8.6 | GARCH・rough volatility | 位置付けと限界 |
+
+図は独立参照（本冊の関数を使わない数値計算）の保存値を Book と portal で共用する。
+Heston の特性関数と COS 法、SABR の Greeks は第14巻で深掘りする。""")
+)
+cells.append(
+    md(r"""### 8.1 時間で決まるボラと平均分散率（式27.1）
+
+ボラが時間の既知関数なら、リスク中立過程は
+
+$$dS=(r-q)S\,dt+\sigma(t)S\,dz. \tag{27.1}$$
+
+$\ln S_T$ は平均 $\ln S_0+(r-q)T-\tfrac12\int_0^T\sigma(t)^2dt$、分散 $\int_0^T\sigma(t)^2dt$ の正規分布。
+したがって BSM に**平均分散率** $\bar V=\frac1T\int_0^T\sigma(t)^2dt$ を入れれば正確な価格になる。
+分散率はボラの2乗である。
+
+原典の例：1年のうち前半6か月は20%、後半6か月は30%。平均分散率は
+$0.5\times0.20^2+0.5\times0.30^2=0.065$ で、BSM のボラは $\sqrt{0.065}=25.5\%$。
+ボラの単純平均25%を入れるのは誤り。下の赤線は、時刻 $t$ に残る期間の平均分散率の平方根で、
+$t$ が進むと前半の低いボラが抜けて30%へ近づく。価格は $\sigma(t)$ を直接使う独立の
+Crank–Nicolson PDE と照合した。""")
+)
+cells.append(
+    code(r"""from hullkit import stochastic_volatility as sv
+from hullkit._stochastic_volatility_lesson import _figures as sv_lesson_figures
+from hullkit._stochastic_volatility_lesson import _load_reference as sv_load_reference
+
+sv_reference = sv_load_reference()
+sv_figures = sv_lesson_figures()
+display(sv_figures["stochvol_term"])
+sv_term = sv_reference["term_structure"]
+sv_avg = sv.average_variance_rate(sv_term["durations"], sv_term["volatilities"])
+print(f"平均分散率 = {sv_avg:.4f}, BSMのボラ = {math.sqrt(sv_avg):.4f}（原典 0.065, 25.5%）")
+for strike, row in sv_term["prices"].items():
+    price = sv.time_dependent_bsm_price(
+        100.0, float(strike), 0.05, sv_term["durations"], sv_term["volatilities"])
+    print(f"K={float(strike):.0f}: 平均分散のBSM {price:.5f}, 独立PDE {row['pde']:.5f}, "
+          f"差 {price - row['pde']:+.1e} / 単純平均25%のBSM {row['arithmetic_vol_bsm']:.5f}")""")
+)
+cells.append(
+    md(r"""### 8.2 確率ボラ（式27.2–27.3）と Hull–White の混合公式
+
+ボラ自体が確率的に動くモデルとして、原典は分散率 $V$ の過程を明示する：
+
+$$\frac{dS}{S}=(r-q)\,dt+\sqrt V\,dz_S, \tag{27.2}$$
+$$dV=a(V_L-V)\,dt+\xi V^{\alpha}\,dz_V. \tag{27.3}$$
+
+$V$ は率 $a$ で水準 $V_L$ に引き戻される。$\alpha=0.5$ が Heston モデル。
+
+**Hull–White の結果。** ボラが株価と**無相関**なら、分散の経路を条件にすると $\ln S_T$ は
+分散 $\bar V T$ の正規分布になる（$\bar V$ は満期までの平均分散率）。よって欧州コールは
+
+$$c=\int_0^\infty c_{\mathrm{BSM}}(\bar V)\,g(\bar V)\,d\bar V,$$
+
+$c_{\mathrm{BSM}}(\bar V)$ は分散率 $\bar V$ の BSM 価格、$g$ はリスク中立世界での $\bar V$ の密度。
+$g$ は $V$ の過程によらず、この式が成り立つ。以下は $S_0=100,r=5\%,T=1$、$V_0=V_L=0.04$、
+$a=1.5$、$\xi=0.6$、$\alpha=0.5$。$V$ の各ステップを厳密な平方根過程の遷移（非心カイ二乗）で
+抽出し、$\bar V$ の標本で BSM 価格を平均する。独立参照は Heston 特性関数の Gil-Pelaez 積分。""")
+)
+cells.append(
+    code(r"""sv_h = sv_reference["heston"]
+sv_vbar = sv.simulate_average_variance(
+    sv_h["v0"], sv_h["reversion"], sv_h["long_run"], sv_h["vol_of_variance"], sv_h["expiry"],
+    n_steps=250, n_paths=50_000, seed=2702)
+sv_ev = sv.expected_average_variance(sv_h["v0"], sv_h["reversion"], sv_h["long_run"], sv_h["expiry"])
+print(f"E[V̄] = {sv_ev:.4f}（標本平均 {sv_vbar.mean():.4f}）, √E[V̄] = {math.sqrt(sv_ev):.4f}")
+for strike in (80.0, 100.0, 120.0):
+    mixed, se = sv.mixing_price(sv_h["spot"], strike, sv_h["rate"], sv_h["expiry"], sv_vbar)
+    fourier_price = sv_h["smiles"]["+0.0"]["prices"][sv_h["strikes"].index(strike)]
+    print(f"K={strike:.0f}: 混合公式 {mixed:.4f} ± {se:.4f}, 独立Fourier {fourier_price:.4f}, "
+          f"差 {(mixed - fourier_price) / se:+.2f} SE")""")
+)
+cells.append(
+    md(r"""### 8.3 無相関なら ATM は過大、裾は過小
+
+原典は、この結果から BSM が**ATM 付近を過大評価し、深い ITM・OTM を過小評価する**と述べる。
+比較の BSM は同じ期待分散 $E[\bar V]$ を使う。理由は $c_{\mathrm{BSM}}$ の $\bar V$ に関する曲がり方にある。
+ATM 付近では $c_{\mathrm{BSM}}\approx 0.4S_0\sqrt{\bar V T}$ が $\bar V$ の凹関数なので、
+Jensen の不等式から $E[c(\bar V)]<c(E[\bar V])$。深い OTM では凸なので逆になる。
+
+逆算 IV にすると U 字のスマイルで、通貨オプションのスマイルに近い（§20.2）。$\rho=0$ では
+IV が対数フォワード・マネネス $\ln(K/F_0)$ について左右対称になる。""")
+)
+cells.append(
+    code(r"""display(sv_figures["stochvol_mixing"])
+sv_gap = [p - f for p, f in zip(sv_h["smiles"]["+0.0"]["prices"], sv_h["flat_prices"], strict=True)]
+sv_over = [k for k, g in zip(sv_h["strikes"], sv_gap, strict=True) if g < 0]
+print(f"BSM(√E[V̄]) が過大評価する行使価格: {min(sv_over):.0f}–{max(sv_over):.0f}（それ以外は過小評価）")
+for strike in (60.0, 100.0, 160.0):
+    print(f"K={strike:.0f}: 確率ボラ − BSM = {sv_gap[sv_h['strikes'].index(strike)]:+.4f}")
+sv_sym = max(abs(r["upper_vol"] - r["lower_vol"]) for r in sv_h["rho_zero_symmetry"])
+print(f"ρ=0 の IV の左右差（ln K/F = ±0.1〜±0.4）: 最大 {sv_sym:.1e}")""")
+)
+cells.append(
+    md(r"""### 8.4 相関と Heston：株式型スキュー
+
+株価とボラが相関すると計算は難しくなり、一般にはモンテカルロを使う。$\alpha=0.5$ なら
+Heston の解析解がある。原典 p.649 の書き方では
+
+$$\frac{dS_t}{S_t}=(r-q)\,dt+\sqrt{V_t}\left(\rho\,dz_t+\sqrt{1-\rho^2}\,dw_t\right),\qquad
+dV_t=a(V_L-V_t)\,dt+\xi\sqrt{V_t}\,dz_t,$$
+
+$dz_t,dw_t$ は無相関、$\rho$ は株価とボラの相関。**負の相関**では株価下落時にボラが上がり、
+左の裾が厚くなって、株式のような右下がりのスキューになる（§20.3）。
+
+下図は他のパラメータを 8.2 と同じにして $\rho$ だけを変える。公開関数は COS 法、
+独立参照は特性関数の Gil-Pelaez 積分で、78価格の差は保存記録にある。""")
+)
+cells.append(
+    code(r"""display(sv_figures["stochvol_correlation"])
+for label in ("-0.7", "+0.0", "+0.7"):
+    row = sv_h["smiles"][label]
+    cos_100 = sv.heston_price(sv_h["spot"], 100.0, sv_h["rate"], sv_h["expiry"], sv_h["v0"],
+                              sv_h["reversion"], sv_h["long_run"], sv_h["vol_of_variance"], float(label))
+    reference_100 = row["prices"][sv_h["strikes"].index(100.0)]
+    iv = dict(zip(sv_h["strikes"], row["implied_vol"], strict=True))
+    print(f"ρ={float(label):+.1f}: K=100 COS {cos_100:.6f} / Gil-Pelaez {reference_100:.6f}, "
+          f"IV(K=80) {iv[80.0]:.2%}, IV(K=120) {iv[120.0]:.2%}")""")
+)
+cells.append(
+    md(r"""### 8.5 SABR：Hull の近似式と $\sigma_0,\rho,\nu$
+
+SABR は満期 $T$ ごとの欧州オプション（特に金利オプション）のスマイルに使われる：
+
+$$dF=\sigma F^{\beta}\,dz,\qquad \frac{d\sigma}{\sigma}=\nu\,dw,$$
+
+$F$ はフォワード（ドリフト0の世界）、$\sigma$ は確率ボラ、$\rho$ は $dz,dw$ の相関、
+$\sigma_0,F_0$ は初期値。原典の Hagan らの近似 IV は、
+$x=(F_0K)^{(1-\beta)/2}$、$y=(1-\beta)\ln(F_0/K)$ として
+
+$$A=\frac{\sigma_0}{x\left(1+y^2/24+y^4/1920\right)},\quad
+B=1+\left(\frac{(1-\beta)^2\sigma_0^2}{24x^2}+\frac{\rho\beta\nu\sigma_0}{4x}+\frac{2-3\rho^2}{24}\nu^2\right)T,$$
+$$\phi=\frac{\nu x}{\sigma_0}\ln\frac{F_0}{K},\qquad
+\chi=\ln\left(\frac{\sqrt{1-2\rho\phi+\phi^2}+\phi-\rho}{1-\rho}\right),$$
+
+IV は $AB\phi/\chi$、$F_0=K$ では $\sigma_0B/F_0^{1-\beta}$。$\sigma_0$ は水準を決め、
+BSM 型のボラに $F_0^{1-\beta}$ を掛けたものに近い。$\rho$ が大きく正なら右上がり、大きく負なら
+右下がり、中間ではU字。$\nu$ が大きいほどスマイルが強まる。金利では $\beta=0.5$ がよく使われる。
+
+例は $F_0=3\%$、$T=1$、$\beta=0.5$、$\sigma_0=0.2F_0^{0.5}$。`hullkit.sabr.sabr_implied_vol` は
+原典の式の独立転記と一致し（保存記録）、点は Euler 法 SABR のモンテカルロ（40万経路）の逆算 IV。
+メニューで $\rho$ と $\nu$ を切り替えられる。""")
+)
+cells.append(
+    code(r"""from hullkit import sabr as sabr_model
+
+display(sv_figures["stochvol_sabr"])
+sv_s = sv_reference["sabr"]
+print(f"σ0 = {sv_s['sigma0']:.6f}（= 0.2 × F0^0.5）")
+print("K / Hull式IV / MC逆算IV ± SE / 差")
+for row in sv_s["monte_carlo"]["rows"]:
+    formula = sabr_model.sabr_implied_vol(
+        sv_s["forward"], row["strike"], sv_s["expiry"], sv_s["sigma0"], sv_s["beta"], 0.0, 0.4)
+    print(f"{row['strike']:.3f} / {formula:.4%} / {row['implied_vol']:.4%} ± "
+          f"{row['implied_vol_standard_error']:.4%} / {formula - row['implied_vol']:+.4%}")""")
+)
+cells.append(
+    md(r"""### 8.6 GARCH・rough volatility と限界
+
+**GARCH。** 第23章の EWMA・GARCH(1,1) も確率ボラの別の表し方で、Duan は GARCH(1,1) を
+内部整合的なオプション価格モデルの基礎にできることを示した（推定は第5巻）。
+
+**Rough volatility。** Gatheral・Jaisson・Rosenbaum（2018）は、ボラの振る舞いは通常のブラウン運動より
+分数ブラウン運動（§14.8）でよく表せると論じ、高頻度データから株価指数のハースト指数 $H$ を
+0.06–0.20 と推定した（通常のブラウン運動は $H=0.5$）。解析的に扱える rough Heston、
+通常のブラウン運動だけで rough Heston を模倣する lifted Heston（Jaber 2019）がある。
+本リポジトリでは rough Heston の核を第21巻、rBergomi の教師データを第18–19巻で扱う。本節では数値検証していない。
+
+**限界。** 本節の価格は一定パラメータ・欧州バニラ・合成市場の例。Hull–White の混合公式は
+無相関のときだけ成り立つ。SABR 式は近似で、誤差は深い OTM と長い満期で大きくなり得る
+（ここでは7行使価格で MC との差を実測した）。市場への較正、ヘッジ成績、ジャンプは扱わない。
+$\xi\to0$ では確率ボラの効果が消え、BSM（$\sqrt{E[\bar V]}$）に戻る。
+
+1. ボラが20%→30%と変わるとき、BSM に25%を入れるとどちらに偏るか。
+2. 混合公式で平均しているのは何の分布か。相関があるとなぜ使えないか。
+3. ATM では確率ボラが価格を下げ、深い OTM では上げるのはなぜか。
+4. 株式市場で $\rho<0$ が選ばれるのは、どんな株価とボラの動きを表すためか。
+5. SABR の $\rho$ と $\nu$ を変えると、スマイルのどこがどう変わるか。
+
+**回答の手掛かり：** 分散の加法性、条件付き対数正規、BSM 価格の凹凸、下落時のボラ上昇、傾きと曲がり。""")
+)
+
 # Cell 22: LSM md
 cells.append(
-    md(r"""## 8. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
+    md(r"""## 9. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
 
 後ろ向きに各行使時点で:
 1. ITM パスについて「継続価値」を**将来キャッシュフローの回帰**（基底: $1, S, S^2$）で推定
@@ -675,7 +873,7 @@ print("\n全チェック合格")""")
 
 # Cell 27: exercises
 cells.append(
-    md(r"""## 9. 練習問題
+    md(r"""## 10. 練習問題
 
 **Q1.** CN と implicit、グリッドを倍に細かくしたとき誤差はそれぞれ何分の1になる？
 
