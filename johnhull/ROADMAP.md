@@ -207,6 +207,7 @@ M1は、原典outline由来の299節・7付録を台帳に登録し、要求・�
 | M8 | §26.16 Volatility and Variance Swaps（pp.629–632）の独立参照から教材・図・実画面まで | 完了（accepted）。印刷例26.4/26.5を独立再計算で再現、公開API 4関数、本文6小節、共有4図、Book/portal両面2幅・32状態。独立レビュー2本＋修正の再レビューの指摘をすべて修正。既受入7節も最終ビルドで再検証。[受入ノート](docs/SECTION_26_16_ACCEPTANCE_2026-09-25.md) |
 | M9 | §26.17 Static Options Replication（pp.632–634）の独立参照から教材・図・実画面まで | 完了（accepted）。Table 26.1と3/18/100点、吸収境界積分を独立再計算。公開API、本文6小節、共有4図、Book/portal両面2幅・24状態。既受入8節もM9で再検証。[受入ノート](docs/SECTION_26_17_ACCEPTANCE_2026-09-25.md) |
 | M10 | §27.1 Alternatives to Black–Scholes–Merton（pp.641–646）の独立参照から教材・図・実画面まで | 完了（accepted）。CEV PDE 3価格、Merton元Poisson 26価格、VGガンマ積分26価格、Table 27.1とFigure 27.1。公開API 3関数、本文6小節、共有4図、Book/portal両面2幅・16状態。既受入9節もM10で再検証。[受入ノート](docs/SECTION_27_1_ACCEPTANCE_2026-09-25.md) |
+| M11 | §27.2 Stochastic Volatility Models（pp.646–649）の独立参照から教材・図・実画面まで | 完了（accepted）。式27.1の0.065・25.5%を独立PDEで、Hull–White混合公式を独立Gil-Pelaez 26価格（最大0.31 SE）で、Heston COS 78価格（1.6e-13）、SABR式の独立転記216値とMC 7行使価格を照合。公開API 6関数、本文6小節、共有4図、Book/portal両面2幅・20状態。既受入10節もM11で再検証。[受入ノート](docs/SECTION_27_2_ACCEPTANCE_2026-09-26.md) |
 | 以降 | 台帳を使って残る未評価節へ段階的に展開 | 未着手 |
 
 M1のPASSは台帳と保存証跡の整合性を表す。数値モデルの再検証や全節の完成判定ではない。
@@ -214,11 +215,12 @@ M1と§26.9の試行は`ab825e03`としてmainへpush済み。
 M2の現在地は[§26.10受入ノート](docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md)、
 M1実施時点の記録は[M1記録](docs/validation/section-ledger-m1/validation.json)。
 
-現在地（2026-09-25）は[§27.1のM10](docs/SECTION_27_1_ACCEPTANCE_2026-09-25.md)。台帳は受入10・未評価296。
-Table 27.1のPoisson確率、CEVの独立PDE3価格、MertonとVGの各26価格を照合した。
-Figure 27.1は原典の満期株価軸で作り直し、vol06の本文6小節・共有4図をBook/portal両面2幅で確認した。
-既受入9節の個別テストと両画面をM10で再検証し、台帳の現行証跡へ接続した。
+現在地（2026-09-26）は[§27.2のM11](docs/SECTION_27_2_ACCEPTANCE_2026-09-26.md)。台帳は受入11・未評価295。
+式27.1の平均分散率、Hull–Whiteの混合公式と過大・過小評価の帯、相関とHestonのスキュー、SABRの近似式を独立参照で照合し、
+vol06 §8の本文6小節・共有4図をBook/portal両面2幅で確認した。LSMは§9、練習問題は§10へ繰り下げた。
+既受入10節の個別テストと両画面をM11で再検証し、台帳の現行証跡へ接続した。
 
+前段階の[§27.1のM10](docs/SECTION_27_1_ACCEPTANCE_2026-09-25.md)は受入済み。
 前段階の[§26.17のM9](docs/SECTION_26_17_ACCEPTANCE_2026-09-25.md)は受入済み。
 Table 26.1のコール束と3/18/100点の初期価値0.730293/0.377569/0.324861を独立三角方程式で再計算した。
 吸収境界の対数GBM密度積分では連続監視価格0.313571。節点での最大残差3.52e-14通貨と節点間残差を分けて示した。
@@ -276,6 +278,7 @@ M6bでE01–E06の本文・図・Book/portalの実画面確認まで揃い、acc
 既存の`hullkit.variance_swaps`と説明なしのコードセルは根拠にせず、NumPy/SciPyだけの独立参照から組み直した。
 §26.17 Static Options Replication（pp.632–634）はM9でSR01–SR06の全軸を揃え、独立参照とBook/portalの実画面を経てacceptedとなった。
 §27.1 Alternatives to Black–Scholes–Merton（pp.641–646）はM10でAM01–AM06の全軸を揃え、独立参照とBook/portalの実画面を経てacceptedとなった。
+§27.2 Stochastic Volatility Models（pp.646–649）はM11でSV01–SV06の全軸を揃え、独立参照とBook/portalの実画面を経てacceptedとなった。
 
 §26.12の現在地は[受入ノート](docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md)と
 [M4b統合記録](docs/validation/section-26-12/m4b-check.json)。

@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,19 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 27.2 M11 — 2026-09-26
+
+[受入ノート](docs/SECTION_27_2_ACCEPTANCE_2026-09-26.md)・[レビュー](docs/SECTION_27_2_REVIEW_2026-09-26.md)・[統合記録](docs/validation/section-27-2/m11-check.json)にSV01–SV06の5軸を集約。台帳は**accepted**（受入11・未評価295）。
+
+- 式27.1の例の平均分散率0.065・25.5%を再現。平均分散のBSMは時間依存ボラの独立Crank–Nicolson PDEと3行使価格で最大1.58e-4通貨（単純平均25%はATMで0.187通貨のずれ）。
+- Hull–Whiteの混合公式（厳密CIR遷移の条件付きMC、20万経路）は独立Gil-Pelaez 26価格と最大0.31 SE。同じ期待分散のBSMはK=88–128を過大評価、両裾を過小評価。ρ=0のIVは対数フォワード・マネネスで対称（1.8e-15）。
+- 公開HestonのCOS価格は独立Gil-Pelaez 78価格と最大1.6e-13通貨。`hullkit.sabr.sabr_implied_vol`は原典のSABR式の独立転記216値と3.1e-16以内、Euler MC（40万経路）と7行使価格で最大6.5e-4（1.49 SE）。
+- 公開API6関数、vol06 §8.1–8.6と保存4図をBook/portalで共用。§8以外の46セルは基点`c3dd6ae5`と本文・出力署名が一致（LSM・練習問題の見出し番号変更2件のみ）、4種類の改変を拒否。
+- ChromiumでBook/portal×1440/1000pxの20状態（SABRの2メニュー状態を含む）・20画像を独立保存値と照合。IV改変を両面で拒否し、Book MathJaxエラー0、portal外部要求0。
+- 共有portalレジストリ・stylesheet・vol06 notebookの変更に伴い§26.9–§26.17と§27.1の個別テスト・両画面をM11再検証。旧受入記録は保持した。M10のnotebook基点比較は見出し番号変更で成立しなくなり、§7の保存はM11 notebook検査が確かめる。
+- johnhullの価格・portalテストは**2,780 passed / 6 skipped**（既存のdeprecation warning 2件）。変更したPythonファイルの`ruff check`・`ruff format --check`、release contract、台帳`--check-artifacts`はPASS。
+- SABR近似の誤差上界、rough volatility・GARCHの数値検証、市場較正・ヘッジ成績は受入範囲外。
 
 ## Section 27.1 M10 — 2026-09-25
 

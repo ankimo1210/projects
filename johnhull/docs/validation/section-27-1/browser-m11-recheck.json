@@ -1,0 +1,166 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "alternative_cev",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_merton",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_poisson",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_vg",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_cev",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_merton",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_poisson",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_vg",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-1/portal-alternative_cev-1440-m11-recheck.png",
+        "docs/validation/section-27-1/portal-alternative_merton-1440-m11-recheck.png",
+        "docs/validation/section-27-1/portal-alternative_poisson-1440-m11-recheck.png",
+        "docs/validation/section-27-1/portal-alternative_vg-1440-m11-recheck.png",
+        "docs/validation/section-27-1/portal-alternative_cev-1000-m11-recheck.png",
+        "docs/validation/section-27-1/portal-alternative_merton-1000-m11-recheck.png",
+        "docs/validation/section-27-1/portal-alternative_poisson-1000-m11-recheck.png",
+        "docs/validation/section-27-1/portal-alternative_vg-1000-m11-recheck.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "alternative_cev",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_merton",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_poisson",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_vg",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_cev",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_merton",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_poisson",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "alternative_vg",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-1/book-alternative_cev-1440-m11-recheck.png",
+        "docs/validation/section-27-1/book-alternative_merton-1440-m11-recheck.png",
+        "docs/validation/section-27-1/book-alternative_poisson-1440-m11-recheck.png",
+        "docs/validation/section-27-1/book-alternative_vg-1440-m11-recheck.png",
+        "docs/validation/section-27-1/book-alternative_cev-1000-m11-recheck.png",
+        "docs/validation/section-27-1/book-alternative_merton-1000-m11-recheck.png",
+        "docs/validation/section-27-1/book-alternative_poisson-1000-m11-recheck.png",
+        "docs/validation/section-27-1/book-alternative_vg-1000-m11-recheck.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+    "hullkit/src/hullkit/_alternative_models_lesson.py": "a5c6b4e4e2ea5eab00d9af9f97932373705129fb8131bfcc92fa6657360aab37",
+    "scripts/build_alternative_models_reference.py": "c87a7df004a53eb09c50f97bc7f4413bf76e9063b86104064ed733668b627f83",
+    "scripts/verify_alternative_models_browser.cjs": "362c1d6ca5e7ca9b8a93e26e128de1ed38fea38530f1851e581641ecc1c9efad",
+    "docs/validation/section-27-1/reference.json": "402526876785aa20650c9fd69d22a3a1349f538929bd078e5870ca1163cdc7ba",
+    "docs/validation/section-27-1/numerical-check.json": "94d9a2823188eaca128ee61167bde95425d60b2a5a2080bc621179f361c4c4b9",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "c762ad837485afec4df3ba568e66aa9a57276d593ca120a60ca23eeee76408da",
+    "volumes/06_numerical_methods/numerical.ipynb": "ee1b7eda9815a19fe2398afda5c48f221da27355352f5dd7bf4aa351ee8376dc",
+    "report/report_builder/figures.py": "54e22723616cb63f7643e97fd08574fbc69d405d8c24a21f2f87837a314d73d7",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "7e1127a0f9cff57aaaa572d637a03b7d1069663f8a88aba8586585574c257973",
+    "book/_build/html/notebooks/06_numerical.html": "d569f4a1b85795d2e8861588d57e10aa7e190708faaeb9eea9418862e601b96d",
+    "docs/validation/section-27-1/portal-alternative_cev-1440-m11-recheck.png": "eb75c717bb90aba532a9d039fc61ae61049a911639fd93f5f531e0a12d11653b",
+    "docs/validation/section-27-1/portal-alternative_merton-1440-m11-recheck.png": "6a5d19bbe79d7055a391c886fa47218395652adb6b25cd15619abad944bc19b2",
+    "docs/validation/section-27-1/portal-alternative_poisson-1440-m11-recheck.png": "8b7ceb4041b27daeed8a0268258af692ea9f4ce7e48cd021584f6ddebb4ef952",
+    "docs/validation/section-27-1/portal-alternative_vg-1440-m11-recheck.png": "1c5db41df37e351a6f2495ee5c0f0d472f0079e94bc3a07317497704c5517a89",
+    "docs/validation/section-27-1/portal-alternative_cev-1000-m11-recheck.png": "4e5ee23618c99b300753ea14769bfa879217c8ac0cd7dbb69dbe4a4d3d2cdf0d",
+    "docs/validation/section-27-1/portal-alternative_merton-1000-m11-recheck.png": "c32907970ddab35cd9eedbb514071da761ec55901fc3571c00fc86ee0278020a",
+    "docs/validation/section-27-1/portal-alternative_poisson-1000-m11-recheck.png": "f66c74ae86c0a0b8cd606516dbf85ef96426dea409f4da6ca0e5ae905320d385",
+    "docs/validation/section-27-1/portal-alternative_vg-1000-m11-recheck.png": "905f75e3f7ec7517e582422e52c9a098ce5e2d6447c90cad9a2480fe561cc89c",
+    "docs/validation/section-27-1/book-alternative_cev-1440-m11-recheck.png": "b2b393e7682964bd6d052d2f473bd1365faa4b06e09973b7195f7932b72f0621",
+    "docs/validation/section-27-1/book-alternative_merton-1440-m11-recheck.png": "3aab46be8d0b8f6a960b0b581e36901229a38eb1bbaffcba6623c1c14df26853",
+    "docs/validation/section-27-1/book-alternative_poisson-1440-m11-recheck.png": "eba5acbf3c9ac5fd16a985579a41ace211b2e293c744c9c59214b364b71b6efa",
+    "docs/validation/section-27-1/book-alternative_vg-1440-m11-recheck.png": "1db3827f552008350125a6acfb6618b3e7f831e4ec4b7fc43a1ef6ffcc603f10",
+    "docs/validation/section-27-1/book-alternative_cev-1000-m11-recheck.png": "87603587e8adb775fdeb13ae9da294d4170d5b1d7354357dcb15f8645c8e1b97",
+    "docs/validation/section-27-1/book-alternative_merton-1000-m11-recheck.png": "3aec4ee83818ec2ccd0d05fe99bd0445f5eb35579a9c442e6194365a110af2dd",
+    "docs/validation/section-27-1/book-alternative_poisson-1000-m11-recheck.png": "a43982cecba6af03c309fb8914cefb642be87533a366ea267ee0bb2222135317",
+    "docs/validation/section-27-1/book-alternative_vg-1000-m11-recheck.png": "68261bd23b455daf6d58f3fcf8a0b9a70a21c144f72aeaadda671f2475a99735"
+  },
+  "book_math": {
+    "rendered": 152,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_accepted_m11.cjs 27-1",
+  "recheck": {
+    "milestone": "M11",
+    "original_verifier": "scripts/verify_alternative_models_browser.cjs",
+    "original_sha256": "362c1d6ca5e7ca9b8a93e26e128de1ed38fea38530f1851e581641ecc1c9efad",
+    "executed_sha256": "81a4d55f1834cd0425f2894b442dc186f95f2c6d91cb93d9ee97f990f15bc8ac",
+    "wrapper_sha256": "695e3390e80631b2e88345d2493b4e6d1701c71b7bf91147574aa0b3b9b0c813",
+    "changes": "Only screenshot basenames and browser record basename; original assertions unchanged."
+  }
+}

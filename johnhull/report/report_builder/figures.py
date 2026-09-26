@@ -24,6 +24,9 @@ from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
 from hullkit._static_replication_lesson import _figures as static_replication_lesson_figures
+from hullkit._stochastic_volatility_lesson import (
+    _figures as stochastic_volatility_lesson_figures,
+)
 from hullkit._variance_swap_lesson import _figures as variance_swap_lesson_figures
 
 from . import frontier_figures as ff
@@ -236,6 +239,42 @@ FIGURES: list[FigureSpec] = [
         "ガンマ時計で変動する満期株価の標本密度を、同じ拡散σのGBM対数正規密度と比較する。",
         lambda: alternative_models_lesson_figures()["alternative_vg"],
         practice="裾はモデルと満期・歪みパラメータに依存する。図は40万標本の有限誤差を含む。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "stochvol_term",
+        "numerics",
+        "式27.1：平均分散率",
+        "ボラが時間の既知関数なら、BSMには残存期間の平均分散率を入れる。20%→30%なら25.5%（Hull §27.2）。",
+        lambda: stochastic_volatility_lesson_figures()["stochvol_term"],
+        practice="ボラの単純平均（25%）ではなく分散を平均する。期間構造のあるボラを1つの数に縮める手順。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "stochvol_mixing",
+        "numerics",
+        "Hull–White：無相関のスマイル",
+        "ボラが株価と無相関なら、価格は平均分散率の分布でBSM価格を平均したもの。ATM付近は過大、裾は過小になる。",
+        lambda: stochastic_volatility_lesson_figures()["stochvol_mixing"],
+        practice="同じ期待分散でも、ボラの不確実性があると裾のオプションが高くなる。通貨オプションのU字に近い。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "stochvol_correlation",
+        "numerics",
+        "相関とスキュー",
+        "α=0.5（Heston）で株価とボラの相関ρだけを変える。負の相関で株式型の右下がりスキュー。",
+        lambda: stochastic_volatility_lesson_figures()["stochvol_correlation"],
+        practice="株価下落時にボラが上がる市場ではρ<0。スキューの傾きはρ、深さはξで主に決まる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "stochvol_sabr",
+        "numerics",
+        "SABR：ρとνの役割",
+        "Hullの近似式（β=0.5）。ρはスマイルの傾き、νは曲がりを決める。点はMCの逆算IV。",
+        lambda: stochastic_volatility_lesson_figures()["stochvol_sabr"],
+        practice="金利オプションの満期ごとにρ・σ₀・νを合わせるのが典型。近似式の誤差は深いOTMと長い満期で増える。",
         is_new=True,
     ),
     # risk_credit --------------------------------------------------------

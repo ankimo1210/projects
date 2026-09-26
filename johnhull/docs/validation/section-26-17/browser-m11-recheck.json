@@ -1,0 +1,232 @@
+{
+  "checked_at": "2026-09-26T15:23:04.120Z",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "static_boundary",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_ladder",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "3",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "18",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "100",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_convergence",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_ladder",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "3",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "18",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "100",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_convergence",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-17/portal-static_boundary-1440-m11-recheck.png",
+        "docs/validation/section-26-17/portal-static_ladder-1440-m11-recheck.png",
+        "docs/validation/section-26-17/portal-static_boundary_error-1440-m11-recheck.png",
+        "docs/validation/section-26-17/portal-static_convergence-1440-m11-recheck.png",
+        "docs/validation/section-26-17/portal-static_boundary-1000-m11-recheck.png",
+        "docs/validation/section-26-17/portal-static_ladder-1000-m11-recheck.png",
+        "docs/validation/section-26-17/portal-static_boundary_error-1000-m11-recheck.png",
+        "docs/validation/section-26-17/portal-static_convergence-1000-m11-recheck.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "layout_errors": 0,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "static_boundary",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_ladder",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "3",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "18",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "100",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_convergence",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_ladder",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "3",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "18",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "100",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_convergence",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-17/book-static_boundary-1440-m11-recheck.png",
+        "docs/validation/section-26-17/book-static_ladder-1440-m11-recheck.png",
+        "docs/validation/section-26-17/book-static_boundary_error-1440-m11-recheck.png",
+        "docs/validation/section-26-17/book-static_convergence-1440-m11-recheck.png",
+        "docs/validation/section-26-17/book-static_boundary-1000-m11-recheck.png",
+        "docs/validation/section-26-17/book-static_ladder-1000-m11-recheck.png",
+        "docs/validation/section-26-17/book-static_boundary_error-1000-m11-recheck.png",
+        "docs/validation/section-26-17/book-static_convergence-1000-m11-recheck.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "layout_errors": 0,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/static_replication.py": "67d27c75e8cf1f591010672501434962cb194fa87d04a4a7772b268793d5a02b",
+    "hullkit/src/hullkit/_static_replication_lesson.py": "f8942fc7b7737fe13e819ba0e2cc29c7fa1acfed7f4cc9896f9513ab19f100eb",
+    "scripts/build_static_replication_reference.py": "ead61a4df54c1f64d6dda7411c3d295b4f2a454c7894c23a1c3e0da6ef013ac6",
+    "scripts/verify_static_replication_browser.cjs": "8af43d56d57c81590cd35e63e6829eb963894b78a98cf3fdbfa32de4c9811c4d",
+    "docs/validation/section-26-17/reference.json": "059f33cc340feefb84afb2158efaa526efd31e9411d01226347aa4273d5d3f28",
+    "docs/validation/section-26-17/numerical-check.json": "c6294dc6c8c57e73941f77ba01341c19c9763bb03298bef5a183de2b16269a28",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9",
+    "report/report_builder/figures.py": "54e22723616cb63f7643e97fd08574fbc69d405d8c24a21f2f87837a314d73d7"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "docs/validation/section-26-17/portal-static_boundary-1440-m11-recheck.png": "951e853b1070e78980543033ce20d2c33b28509a51d4423064c04f907d984660",
+    "docs/validation/section-26-17/portal-static_ladder-1440-m11-recheck.png": "05dcdb4920806db4604537e566cd547c7663ee5cb9d43ad926d23d43102b06d9",
+    "docs/validation/section-26-17/portal-static_boundary_error-1440-m11-recheck.png": "1e66907865f6689dbc7aa810323bc08bbb62f5f7a6870b5533a3d94cf3ee8267",
+    "docs/validation/section-26-17/portal-static_convergence-1440-m11-recheck.png": "8e7f4aebb1bce4e57f134f1727b40a1102a087b7f1e492f20b0d42b5924ccb50",
+    "docs/validation/section-26-17/portal-static_boundary-1000-m11-recheck.png": "dd478a60474c56fb859a9097844f4c2067ccb2fa925dceff5d6a3af978bcb3ac",
+    "docs/validation/section-26-17/portal-static_ladder-1000-m11-recheck.png": "64e62bf96845ade468a270b8afc4478e49ddc5cc2ce02d1c9a77821d6ea2c388",
+    "docs/validation/section-26-17/portal-static_boundary_error-1000-m11-recheck.png": "359ddc3e5030157b74fa88e22b3556368b4f5eaa0366217c4d1718a847fe0417",
+    "docs/validation/section-26-17/portal-static_convergence-1000-m11-recheck.png": "5e4e116f0e371fd987b8454f0700d8303aa2116109b646b2ca9bb73cf43c6d35",
+    "docs/validation/section-26-17/book-static_boundary-1440-m11-recheck.png": "61e6eb1b40fc18760e8e5403cb66104d0b5803e765216e5e3320cef28d22d95d",
+    "docs/validation/section-26-17/book-static_ladder-1440-m11-recheck.png": "3aab37e0575c6a64020e55cefd35fb986f4a8e22aeec10af9fb4b1ddda30c308",
+    "docs/validation/section-26-17/book-static_boundary_error-1440-m11-recheck.png": "d65910bed7d61437b1611adad6fb2d3f3476e0f543a8f040b5e11051ab1cf723",
+    "docs/validation/section-26-17/book-static_convergence-1440-m11-recheck.png": "817a50c26439031a37a313d4c353878f1837e4dbc53c0741436c856af842908f",
+    "docs/validation/section-26-17/book-static_boundary-1000-m11-recheck.png": "9de5145dda4c721fa30ae7a19b31bfc75698044eee26fe91e208e97cb2c1240d",
+    "docs/validation/section-26-17/book-static_ladder-1000-m11-recheck.png": "f8bfa8a7ec4bdf2528ec7352d4a2eab3cfd6f935e90d94286f9191a8f5dceef1",
+    "docs/validation/section-26-17/book-static_boundary_error-1000-m11-recheck.png": "ea4bde3cca2a9207b078959871f5821e1fad6de8ef57adc798b629e608cb1efd",
+    "docs/validation/section-26-17/book-static_convergence-1000-m11-recheck.png": "f7f9a336641190aea4acb7228eb2031d1701705a24e05737e7ee980ac81f4378"
+  },
+  "browser_version": "145.0.7632.6",
+  "book_math": {
+    "typeset": 609,
+    "errors": 0
+  },
+  "status": "PASS",
+  "state_checks": 24,
+  "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_accepted_m11.cjs 26-17",
+  "recheck": {
+    "milestone": "M11",
+    "original_verifier": "scripts/verify_static_replication_browser.cjs",
+    "original_sha256": "8af43d56d57c81590cd35e63e6829eb963894b78a98cf3fdbfa32de4c9811c4d",
+    "executed_sha256": "a31551372ef99f19ec4fd16b61f985709f30302709077ff17729aa442a078655",
+    "wrapper_sha256": "695e3390e80631b2e88345d2493b4e6d1701c71b7bf91147574aa0b3b9b0c813",
+    "changes": "Only screenshot basenames and browser record basename; original assertions unchanged."
+  }
+}

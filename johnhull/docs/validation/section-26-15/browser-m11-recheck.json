@@ -1,0 +1,498 @@
+{
+  "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_accepted_m11.cjs 26-15",
+  "checked_at": "2026-09-26T15:21:49.931Z",
+  "pages": {
+    "portal": {
+      "figures": [
+        "basket_payoff",
+        "basket_correlation",
+        "basket_comparison",
+        "basket_error"
+      ],
+      "states": [
+        {
+          "figure": "basket_payoff",
+          "scenario": "call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_payoff",
+          "scenario": "put",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "all",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "covariance-only",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 1
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "volatility-only",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 1
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "baseline-call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "long-high-volatility-call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "baseline-put",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_error",
+          "scenario": "call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_error",
+          "scenario": "put",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_payoff",
+          "scenario": "call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_payoff",
+          "scenario": "put",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "all",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "covariance-only",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 1
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "volatility-only",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 1
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "baseline-call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "long-high-volatility-call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "baseline-put",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_error",
+          "scenario": "call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_error",
+          "scenario": "put",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-15/portal-basket_payoff-1440-m11-recheck.png",
+        "docs/validation/section-26-15/portal-basket_correlation-1440-m11-recheck.png",
+        "docs/validation/section-26-15/portal-basket_comparison-1440-m11-recheck.png",
+        "docs/validation/section-26-15/portal-basket_error-1440-m11-recheck.png",
+        "docs/validation/section-26-15/portal-basket_payoff-1000-m11-recheck.png",
+        "docs/validation/section-26-15/portal-basket_correlation-1000-m11-recheck.png",
+        "docs/validation/section-26-15/portal-basket_comparison-1000-m11-recheck.png",
+        "docs/validation/section-26-15/portal-basket_error-1000-m11-recheck.png"
+      ],
+      "layout_errors": 0,
+      "negative_controls": [
+        {
+          "rejected": true,
+          "restored": true,
+          "reason": "Approximation[1]: 8.89675442015023 != 8.39675442015023",
+          "mutation": "approximation at K=100 +0.5 currency"
+        }
+      ],
+      "math_presentation": "Unicode equations and domain text, no raw TeX renderer required",
+      "numeric_scope": "Both widths, every exact menu state: all terminal payoffs, covariance and matched volatility, Black/conditional/MC price points and four-SE error bars, absolute error markets and sign partition.",
+      "external_network_blocked": true,
+      "external_requests": [],
+      "page_errors": [],
+      "failed_requests": [],
+      "http_errors": []
+    },
+    "book": {
+      "figures": [
+        "basket_payoff",
+        "basket_correlation",
+        "basket_comparison",
+        "basket_error"
+      ],
+      "states": [
+        {
+          "figure": "basket_payoff",
+          "scenario": "call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_payoff",
+          "scenario": "put",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "all",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "covariance-only",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 1
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "volatility-only",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 1
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "baseline-call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "long-high-volatility-call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "baseline-put",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_error",
+          "scenario": "call",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_error",
+          "scenario": "put",
+          "width": 1440,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_payoff",
+          "scenario": "call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_payoff",
+          "scenario": "put",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "all",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 2
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "covariance-only",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 1
+        },
+        {
+          "figure": "basket_correlation",
+          "scenario": "volatility-only",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 1
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "baseline-call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "long-high-volatility-call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_comparison",
+          "scenario": "baseline-put",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_error",
+          "scenario": "call",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        },
+        {
+          "figure": "basket_error",
+          "scenario": "put",
+          "width": 1000,
+          "numeric_checked": true,
+          "traces": 3
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-15/book-basket_payoff-1440-m11-recheck.png",
+        "docs/validation/section-26-15/book-basket_correlation-1440-m11-recheck.png",
+        "docs/validation/section-26-15/book-basket_comparison-1440-m11-recheck.png",
+        "docs/validation/section-26-15/book-basket_error-1440-m11-recheck.png",
+        "docs/validation/section-26-15/book-basket_payoff-1000-m11-recheck.png",
+        "docs/validation/section-26-15/book-basket_correlation-1000-m11-recheck.png",
+        "docs/validation/section-26-15/book-basket_comparison-1000-m11-recheck.png",
+        "docs/validation/section-26-15/book-basket_error-1000-m11-recheck.png"
+      ],
+      "layout_errors": 0,
+      "negative_controls": [
+        {
+          "rejected": true,
+          "restored": true,
+          "reason": "Approximation[1]: 8.89675442015023 != 8.39675442015023",
+          "mutation": "approximation at K=100 +0.5 currency"
+        }
+      ],
+      "math_presentation": "MathJax, separately checked",
+      "numeric_scope": "Both widths, every exact menu state: all terminal payoffs, covariance and matched volatility, Black/conditional/MC price points and four-SE error bars, absolute error markets and sign partition.",
+      "math": {
+        "typeset": 51,
+        "errors": 0,
+        "headings": [
+          "4.5.1 保有量を先に足し、最後に行使する#",
+          "4.5.2 厳密な2モーメントと近似 Black 価格#",
+          "4.5.3 相関は平均を動かさず交差項を動かす#",
+          "4.5.4 独立参照で近似を測る#",
+          "4.5.5 観測誤差と MC の不確実性を分ける#",
+          "4.5.6 適用範囲と理解の確認#"
+        ],
+        "verified_equations": [
+          "B_T=\\sum_i w_iS_i(T),\\qquad\nC_T=(B_T-K)^+,\\quad P_T=(K-B_T)^+.",
+          "w_i",
+          "K",
+          "B_T",
+          "T",
+          "r,q_i",
+          "\\sigma_i",
+          "w=(0.6,0.5)",
+          "(90,60)",
+          "B_T=84",
+          "\\frac{dS_i}{S_i}=(r-q_i)dt+\\sigma_i dW_i,\\qquad\ndW_i\\,dW_j=\\rho_{ij}dt.",
+          "F_i=w_iS_i(0)e^{(r-q_i)T}",
+          "M_2",
+          "M_1=E[B_T]=\\sum_iF_i,",
+          "M_2=E[B_T^2]=\\sum_i\\sum_jF_iF_j e^{\\rho_{ij}\\sigma_i\\sigma_jT}.",
+          "B_T",
+          "v=\\log(M_2/M_1^2),\\quad\\hat\\sigma=\\sqrt{v/T},",
+          "d_1=\\frac{\\log(M_1/K)}{\\sqrt v}+\\frac{\\sqrt v}{2},\\quad d_2=d_1-\\sqrt v.",
+          "C_{\\rm MM}=e^{-rT}[M_1N(d_1)-KN(d_2)],",
+          "P_{\\rm MM}=e^{-rT}[KN(-d_2)-M_1N(-d_1)].",
+          "v=0",
+          "C-P=e^{-rT}(M_1-K)",
+          "S=(100,80)",
+          "w=(0.6,0.5)",
+          "\\sigma=(0.2,0.3)",
+          "q=(0.01,0.025)",
+          "\\rho=0.35",
+          "r=0.03",
+          "T=1",
+          "K=100",
+          "S,w,r,q,\\sigma,T",
+          "M_1",
+          "\\rho",
+          "M_2",
+          "2F_1F_2e^{\\rho\\sigma_1\\sigma_2T}",
+          "2\\operatorname{Cov}(w_1S_1(T),w_2S_2(T))\n=2F_1F_2\\left(e^{\\rho\\sigma_1\\sigma_2T}-1\\right).",
+          "\\rho=-0.65,0.35,0.90",
+          "\\hat\\sigma",
+          "\\rho=\\pm1",
+          "3.0\\times10^{-10}",
+          "4.0\\times10^{-31}",
+          "100\\,|V_{\\rm MM}-V_{\\rm ref}|/|V_{\\rm ref}|",
+          "|gap|\\le4SE",
+          "K=100",
+          "|gap|=0.0144703 < 4SE=0.0183002",
+          "(0.6,0.5)",
+          "(90,60)",
+          "K=100",
+          "M_1,M_2",
+          "M_1",
+          "M_2"
+        ],
+        "example": {
+          "M1": 101.41258123598138,
+          "M2": 10694.064085144184,
+          "sigma": 0.19761019858563414,
+          "call": 8.39675442015023,
+          "put": 7.025921268917664,
+          "parity": 1.3708331512325593
+        },
+        "screenshots": [
+          "docs/validation/section-26-15/book-basket-formula-example-1440-m11-recheck.png",
+          "docs/validation/section-26-15/book-basket-formula-example-1000-m11-recheck.png"
+        ]
+      },
+      "external_network_blocked": false,
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "page_errors": [],
+      "failed_requests": [],
+      "http_errors": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/_basket_lesson.py": "9756e01ac64ba426050e5560bc496ebc96f1a33444db72a7d9881519c67f96d5",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "scripts/build_basket_browser_reference.py": "5d1f778c70698d389a82c37a541c20ca9d668b78376d83ae0a884f2933cd835a",
+    "scripts/build_basket_lesson_data.py": "1cc45d2baea693f1c7754bb839a1790c70d3c5364c31197875934d740b879a8b",
+    "scripts/build_basket_reference.py": "1103914f090102eec206c040c0c063269fba82c7f16ce76e94c6515d26855d69",
+    "docs/validation/section-26-15/lesson-data.json": "ad34be99d7968c57fe275de52312f0675f9f9fb460f97a0a6cc512077680ffc3",
+    "docs/validation/section-26-15/prices.json": "77da8b4f0ba480900d4085a015299f6eda2abb60d239e7b29d4a087bf1c235a8",
+    "docs/validation/section-26-15/numerical-check.json": "67109c8c98cb9bf40015754f87db4efd2010261366f5fe4136e9b94a7aab62ea",
+    "docs/validation/section-26-15/browser-reference.json": "7aa23b3418cf81b71ad1fb003b083b73c8ab9266b830baa1c49f01c44298ea2f",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9",
+    "report/report_builder/figures.py": "54e22723616cb63f7643e97fd08574fbc69d405d8c24a21f2f87837a314d73d7",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "scripts/verify_basket_lesson_browser.cjs": "3dccf81e8a103dafe9de22ba647820654e81589412c5907f71d30556a7d87c4a"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "report/site/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+    "book/_build/html/notebooks/10_exotics.html": "9864498d63191db8af579c23676002b0f0cdaff1dfff7b0ced16d4075c5ded52",
+    "docs/validation/section-26-15/portal-basket_payoff-1440-m11-recheck.png": "cd5307c7d2b060d8322c94dd99a06ae87a7989e12348a15b376da04a941eda17",
+    "docs/validation/section-26-15/portal-basket_correlation-1440-m11-recheck.png": "fb09eb06fe27117de1ec80e59947e51456693c92496738279532790f78748182",
+    "docs/validation/section-26-15/portal-basket_comparison-1440-m11-recheck.png": "bba286fbcd2a87bdc6a361640aacbd44e08f1bffd70549cfec09ff88f3492171",
+    "docs/validation/section-26-15/portal-basket_error-1440-m11-recheck.png": "f6a9b01a2cf2544dbf1b80c611dbe2594a38f16c33475e4070ed2f755e078457",
+    "docs/validation/section-26-15/portal-basket_payoff-1000-m11-recheck.png": "8b5efdc1690391dada608b45e5de2ce0db2330a90ec6b0eab5c5340668ccc159",
+    "docs/validation/section-26-15/portal-basket_correlation-1000-m11-recheck.png": "3eae2118e010426fbd9fc2eba4972562fcdde0bc6a3e46bad16833bf1f2c77d9",
+    "docs/validation/section-26-15/portal-basket_comparison-1000-m11-recheck.png": "66017fc7c14815a0c2047a373100c5fa0e2ab9cdf107498a129d6a91279cab0e",
+    "docs/validation/section-26-15/portal-basket_error-1000-m11-recheck.png": "abe6d2dc1b0331d351918262eeae16ab70bdee7fb41a62256157446c3dbd2825",
+    "docs/validation/section-26-15/book-basket_payoff-1440-m11-recheck.png": "6f2a00b18d9e1781cf035267b646afa1fb4f6e6ed2914a5afe7aadff27dd8aec",
+    "docs/validation/section-26-15/book-basket_correlation-1440-m11-recheck.png": "c0bbba941df85ba3a13e89f8bf739d000d9c7ca7c15da608acf2006e1738b296",
+    "docs/validation/section-26-15/book-basket_comparison-1440-m11-recheck.png": "f8c81b1a6bf3a0ed2a1102fdeb12f8e43ca647faea6708e06c274388f4e4b37a",
+    "docs/validation/section-26-15/book-basket_error-1440-m11-recheck.png": "d4fcf52842a7ff0a4f7fbb741cb4378388e16ce547906667f91514c3fde7ab94",
+    "docs/validation/section-26-15/book-basket_payoff-1000-m11-recheck.png": "eb71fcdba46a22a94cf077298f234be6232342a90d44f2048c581fdb8b02e3e2",
+    "docs/validation/section-26-15/book-basket_correlation-1000-m11-recheck.png": "856c8ac317cb42bbf33d78e6756fcec97d0aea4d96897b6a336907c0181ae33d",
+    "docs/validation/section-26-15/book-basket_comparison-1000-m11-recheck.png": "3014b7651ef65ad9da4510713b008521e8c8cdc9ddc34794f750cb8b28e041d7",
+    "docs/validation/section-26-15/book-basket_error-1000-m11-recheck.png": "105d4578ccdc6ad268fbc945ae241b0fa4556ef0e13467ddba8874d12fb038cf",
+    "docs/validation/section-26-15/book-basket-formula-example-1440-m11-recheck.png": "4385da25d7c1e4ab04c2cc0cf67e516df290ea1d6c1403d90cecdc464a78c7b9",
+    "docs/validation/section-26-15/book-basket-formula-example-1000-m11-recheck.png": "14436491573372a787c20b77fdfc4de3db445d957f02e2ad36442ee4af88a0be"
+  },
+  "browser_version": "145.0.7632.6",
+  "status": "PASS",
+  "recheck": {
+    "milestone": "M11",
+    "original_verifier": "scripts/verify_basket_lesson_browser.cjs",
+    "original_sha256": "3dccf81e8a103dafe9de22ba647820654e81589412c5907f71d30556a7d87c4a",
+    "executed_sha256": "bd90fc86b66d829912cf15411510122d9aaf459e0d30bb0d36c0f67c8b280273",
+    "wrapper_sha256": "695e3390e80631b2e88345d2493b4e6d1701c71b7bf91147574aa0b3b9b0c813",
+    "changes": "Only screenshot basenames and browser record basename; original assertions unchanged."
+  }
+}

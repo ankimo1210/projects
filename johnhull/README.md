@@ -35,7 +35,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 118 figures (34 exotics)
+make hull-report           # offline portal: 12 themes / 122 figures (34 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -83,3 +83,16 @@ independent values and changed-value rejection). The previous nine accepted
 §26.9–§26.17 lessons are rechecked with `scripts/recheck_exotics_m10.py`
 and `.cjs` on the same final portal and Book build. The integrated result is
 `scripts/build_alternative_models_acceptance_record.py --check`.
+
+The §27.2 (M11) checks are `scripts/build_stochastic_volatility_reference.py --check`,
+`scripts/verify_stochastic_volatility_numerics.py`,
+`scripts/verify_stochastic_volatility_notebook.py --check` (fresh vol06 run, cells
+outside lesson 8 preserved with the two listed heading renumberings, four rejected
+mutations), and `scripts/verify_stochastic_volatility_browser.cjs` (Book/portal,
+1440/1000px, both SABR menu states, changed-value rejection). The ten earlier
+accepted lessons (§26.9–§26.17, §27.1) are rechecked with
+`scripts/recheck_accepted_m11.py` and `.cjs`. The integrated result is
+`scripts/build_stochastic_volatility_acceptance_record.py --check`. Renumbering the
+vol06 headings retires the M10 notebook check's baseline comparison
+(`verify_alternative_models_notebook.py` now reports differences outside §7); the
+M11 notebook check covers the preserved §7 cells instead.

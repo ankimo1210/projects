@@ -1,0 +1,58 @@
+{
+  "section": "27.2",
+  "status": "PASS",
+  "method": "time-dependent-vol Crank–Nicolson PDE; Gil-Pelaez Heston quadrature against hullkit COS and the Hull–White conditional Monte Carlo; transcription of Hull's SABR formula and an Euler SABR Monte Carlo",
+  "mixing_simulation": {
+    "n_steps": 250,
+    "n_paths": 200000,
+    "seed": 2702
+  },
+  "measured": {
+    "average_variance_rate": 0.065,
+    "average_volatility": 0.25495097567963926,
+    "term_pde_max_abs_currency": 0.0001584545174040386,
+    "term_arithmetic_vol_gap_atm_currency": 0.1872398781888478,
+    "mixing_sample_mean_z": -0.31348289332915075,
+    "mixing_max_abs_z_26_strikes": 0.30890412792802313,
+    "overpriced_strike_band": [
+      88.0,
+      128.0
+    ],
+    "atm_price_minus_flat_bsm": -0.7177261022861074,
+    "heston_cos_max_abs_currency_78_prices": 1.5765166949677223e-13,
+    "heston_atm_vol_slope_per_currency": {
+      "-0.7": -0.0030086892117233456,
+      "+0.0": -0.0006531098723293813,
+      "+0.7": 0.0027512859027584366
+    },
+    "rho_zero_symmetry_max_vol": 1.7763568394002505e-15,
+    "small_xi_1e-3_minus_bsm_currency": 2.774841732389177e-06,
+    "deterministic_mixing_minus_bsm_currency": 0.0,
+    "sabr_transcription_max_abs_vol_216": 3.0531133177191805e-16,
+    "sabr_atm_limit_gap_vol": 5.073582878822869e-08,
+    "sabr_monte_carlo_max_abs_vol": 0.000649126733457156,
+    "sabr_monte_carlo_max_abs_z": 1.4935921310735265,
+    "sabr_smile_curvature_by_nu": {
+      "0.2": 0.033697749491818585,
+      "0.4": 0.08445743826097168,
+      "0.8": 0.21787941566703561
+    }
+  },
+  "tolerances": {
+    "term_pde_currency": 0.0005,
+    "mixing_standard_errors": 3.0,
+    "heston_cos_currency": 1e-08,
+    "rho_zero_symmetry_vol": 1e-10,
+    "sabr_transcription_vol": 1e-12,
+    "sabr_monte_carlo_standard_errors": 3.0,
+    "sabr_monte_carlo_vol": 0.002,
+    "small_xi_currency": 1e-05
+  },
+  "artifact_sha256": "9e237ed9780699a3abfa5799197174c010fdc8b81b8f67d66f7fc7395fb38adb",
+  "source_sha256": {
+    "scripts/build_stochastic_volatility_reference.py": "c1f4ba86b3ef6487be7ca7ac6fbaed52a93256d5fb9de8eb06fa622ce55e0991",
+    "scripts/verify_stochastic_volatility_numerics.py": "b42e6730469f3ad0c740edda81a683ec81b73b5778a1b38e83eaa75ea8610f4e",
+    "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6"
+  }
+}

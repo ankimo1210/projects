@@ -1,0 +1,75 @@
+{
+  "section": "27.2",
+  "status": "PASS",
+  "base": "c3dd6ae5",
+  "cells": 58,
+  "lesson_cells": 12,
+  "preserved_cells_outside_lesson": 46,
+  "renumbered_headings": {
+    "## 8. Longstaff-Schwartz（LSM）": "## 9. Longstaff-Schwartz（LSM）",
+    "## 9. 練習問題": "## 10. 練習問題"
+  },
+  "saved_figures": {
+    "27.1": [
+      "alternative_cev",
+      "alternative_merton",
+      "alternative_poisson",
+      "alternative_vg"
+    ],
+    "27.2": [
+      "stochvol_correlation",
+      "stochvol_mixing",
+      "stochvol_sabr",
+      "stochvol_term"
+    ]
+  },
+  "checks": [
+    "fresh execution matches the committed output signature",
+    "cells outside §8 keep base source and output signature (two listed renumberings)",
+    "saved §27.1 and §27.2 Plotly data/layout equal the shared figures"
+  ],
+  "negative_controls": [
+    {
+      "mutation": "§7.1 source edited",
+      "rejected": true,
+      "findings": [
+        "§8以外のセル本文が基点（見出しの番号変更2件を除く）と異なる"
+      ]
+    },
+    {
+      "mutation": "§27.2 SABR saved value changed",
+      "rejected": true,
+      "findings": [
+        "stochvol_sabr.data が共有図と異なる"
+      ]
+    },
+    {
+      "mutation": "unlisted heading renumbered",
+      "rejected": true,
+      "findings": [
+        "§8以外のセル本文が基点（見出しの番号変更2件を除く）と異なる"
+      ]
+    },
+    {
+      "mutation": "§27.1 CEV saved value changed",
+      "rejected": true,
+      "findings": [
+        "alternative_cev.data が共有図と異なる"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "scripts/verify_stochastic_volatility_notebook.py": "5eea33eb6de58a5864c1d99fb2fb0d0bc320bad5f96e41ca51f0d520733ac024",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_stochastic_volatility_lesson.py": "e3625860a42a20fc4daf6e5a8d9f4e660b553dc70d567fecf17bc2a0b6ecb666",
+    "hullkit/src/hullkit/_alternative_models_lesson.py": "a5c6b4e4e2ea5eab00d9af9f97932373705129fb8131bfcc92fa6657360aab37",
+    "docs/validation/section-27-2/reference.json": "9e237ed9780699a3abfa5799197174c010fdc8b81b8f67d66f7fc7395fb38adb",
+    "docs/validation/section-27-1/reference.json": "402526876785aa20650c9fd69d22a3a1349f538929bd078e5870ca1163cdc7ba",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "c762ad837485afec4df3ba568e66aa9a57276d593ca120a60ca23eeee76408da",
+    "volumes/06_numerical_methods/numerical.ipynb": "ee1b7eda9815a19fe2398afda5c48f221da27355352f5dd7bf4aa351ee8376dc"
+  },
+  "artifact_sha256": {
+    "volumes/06_numerical_methods/numerical.ipynb": "ee1b7eda9815a19fe2398afda5c48f221da27355352f5dd7bf4aa351ee8376dc",
+    "book/_build/html/notebooks/06_numerical.html": "d569f4a1b85795d2e8861588d57e10aa7e190708faaeb9eea9418862e601b96d"
+  }
+}
