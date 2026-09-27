@@ -20,7 +20,11 @@ from johnhull.scripts.verify_section_ledger import evaluate_ledger
 PNG_A = b"\x89PNG\r\n\x1a\nbaseline-a"
 PNG_B = b"\x89PNG\r\n\x1a\nbaseline-b"
 COMMIT = "a" * 40
-RUNTIME = {"browser_version": "145.0.7632.6", "mathjax_version": "3.2.2"}
+RUNTIME = {
+    "browser_version": "145.0.7632.6",
+    "mathjax_version": "3.2.2",
+    "fonts": {"portal_plot_text": ["Liberation Sans"]},
+}
 
 
 def _sha(data: bytes) -> str:
@@ -340,3 +344,13 @@ def test_ledger_artifact_check_fails_for_a_missing_blob(project_fixture, stores)
         check_artifacts=True,
     )
     assert any("missing" in error for error in result["errors"])
+
+
+def test_reuse_after_a_font_change_is_rejected(project):
+    baseline_path = _save(project, "redrawn", _record(project))
+    record = _reused(
+        project,
+        baseline_path,
+        environment={"runtime": RUNTIME | {"fonts": {"portal_plot_text": ["DejaVu Sans"]}}},
+    )
+    assert any("fonts" in error for error in validate_record(project, record))
