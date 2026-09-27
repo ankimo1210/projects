@@ -3434,6 +3434,7 @@ dependencies = [
     { name = "plotly" },
     { name = "pytz" },
     { name = "streamlit" },
+    { name = "yfinance" },
 ]
 
 [package.dev-dependencies]
@@ -3450,6 +3451,7 @@ requires-dist = [
     { name = "plotly", specifier = ">=5.22" },
     { name = "pytz", specifier = ">=2024.1" },
     { name = "streamlit", specifier = ">=1.51" },
+    { name = "yfinance", specifier = ">=0.2.50" },
 ]
 
 [package.metadata.requires-dev]
