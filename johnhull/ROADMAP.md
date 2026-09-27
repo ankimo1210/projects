@@ -30,7 +30,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 | 全節監査の是正 | 第 1〜5 便完了 | 残りは下の「全節監査と是正」の表 |
 | 節単位の受入 | M14（§27.5）まで。台帳は受入 14・未評価 292（4.6%） | 次は D1-preflight、その後 M15（§27.6）。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
-| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | D1-preflight 実施中（段階1–3 完了：保管庫 C:/F:、依存指紋、schema 2 記録、§27.3 で全再描画と基準再利用が同じ検査範囲で PASS）。M15 はその完了後 |
+| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | D1-preflight 実施中（段階1–4 完了：保管庫 C:/F:、依存指紋、schema 2 記録、§27.3 の全再描画/基準再利用の比較、負の対照 16 件）。M15 はその完了後 |
 | テスト | hullkit+report 2810 passed・6 skipped（M14、2026-09-27） | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
@@ -85,7 +85,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 | 1 | 不変 blob の保存・復元器（`scripts/evidence_store.py`）と保管庫の実接続 | **完了（2026-09-28）**。C: `%USERPROFILE%\ProjectArtifacts\projects`（primary）と F: `F:\ProjectArtifacts\projects-backup`（mirror）を作成。§27.3 の画像2枚を両方に保存し、それぞれ別に復元してバイト一致。path traversal・欠損・1 byte 破損・切詰め・既存ファイル衝突・symlink 逸脱の拒否をテスト（47件） |
 | 2 | 依存指紋と v2 record、台帳検査の互換対応 | **完了（2026-09-28）**。`scripts/evidence_fingerprint.py`（節スライス・Book の section・portal の図カード・ページ資産・hullkit の import 閉包・データ・検証器・環境）と `scripts/evidence_dependencies.json`（§27.3 を宣言）。§27.3 の notebook スライスの指紋は M12・M13・M14 の3 commit で同一（ファイル全体のハッシュは毎回変化）。`scripts/evidence_record.py` の schema 2 記録（redrawn / reused、再利用は redrawn の基準へ直接参照し連鎖を拒否）を `verify_section_ledger.py` が検査。schema 1 の既存記録は従来どおり（実台帳は通常・`--check-artifacts` とも PASS） |
 | 3 | §27.3 で全再描画と基準再利用を比較 | **完了（2026-09-28）**。`scripts/d1_preflight_compare.py` が既存の検証器を書き換えずに（宣言した見出し番号2か所の置換のみ、`scripts/run_browser_verifier.cjs`）overlay の root で実行し、既存の証跡には書き込まない。A（全再描画）: 16 状態の数値・配置検査と pytest 14 件が PASS、画像 16 枚・413,577 B を C:/F: に保存し各コピーから復元一致。B（基準再利用）: 同じ 16 状態・同じ検査が PASS、新規保存 0 B、A の画像へ直接参照し両コピーから復元・閲覧できた。新しい撮影は 16/16 が A・M14 再検査・受入時の画像とバイト一致。実行時の Chromium 145.0.7632.6・MathJax 3.2.2・実フォント（Liberation Sans と Droid Sans Fallback。fc-match の Noto Sans とは異なる）も記録し、再利用の条件にした。記録は `docs/validation/d1-preflight/section-27-3/` |
-| 4 | 変更伝播の負の対照 | 未着手 |
+| 4 | 変更伝播の負の対照 | **完了（2026-09-28）**。`scripts/d1_preflight_negative.py` が実際の §27.3 の入力を overlay 上でだけ書き換えて判定（プロジェクトには書き込まない）。16 件すべて期待どおり：§27.3 の前に節を足す（notebook の id・実行番号・図の UUID、Book の自動 id、portal のカード）→ 再利用可・検証器 PASS。本文1文字・portal の値・参照データ・共有 CSS・Book のテーマ JS・plotly.js・hullkit のソース・fc-match のフォント・正規化の版・未宣言の節・未構築のページ → 再描画。値と参照データの変更では既存の検証器も FAIL（例 `ivf_local values 0[0]: 32.82 != 32.32`）。実行時の Chromium・実フォントの変化、C: の blob 欠損、F: の 1 byte 破損 → 再利用を拒否。途中で overlay が節ディレクトリ内の差し替えを無視するバグを負の対照が検出し、修正した |
 | 5 | 小群の保管・既存 gate・統合記録 | 未着手 |
 
 保管庫は環境変数 `PROJECTS_ARTIFACT_STORE`・`PROJECTS_ARTIFACT_MIRROR` で渡す（WSL では `/mnt/c/Users/<user>/ProjectArtifacts/projects`・`/mnt/f/ProjectArtifacts/projects-backup`）。未設定・未接続・marker なしは明示的なエラーで、空のフォルダーを自動作成しない。

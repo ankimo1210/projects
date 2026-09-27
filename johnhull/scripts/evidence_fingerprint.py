@@ -198,7 +198,7 @@ def _attribute(attributes: str, name: str) -> str | None:
 
 def page_assets(project: Path | str, page: str) -> dict:
     """Hash the stylesheets and scripts a page loads; list external URLs as floating."""
-    project = Path(project).resolve()
+    project = Path(os.path.abspath(project))
     page_path = project / page
     html = page_path.read_text(encoding="utf-8")
     local: dict[str, str | None] = {}
@@ -217,7 +217,8 @@ def page_assets(project: Path | str, page: str) -> dict:
         if re.match(r"^[a-z][a-z0-9+.-]*:", reference, re.I):
             external.add(reference)
             continue
-        target = (page_path.parent / reference.split("#")[0].split("?")[0]).resolve()
+        # Lexical normalization: an overlay's symlinked directories stay "local".
+        target = Path(os.path.normpath(page_path.parent / reference.split("#")[0].split("?")[0]))
         if not target.is_relative_to(project):
             external.add(reference)
             continue

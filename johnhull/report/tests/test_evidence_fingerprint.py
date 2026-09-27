@@ -437,3 +437,16 @@ def test_an_input_missing_in_both_runs_still_forces_a_redraw(mini_project):
     result = decide(baseline, current)
     assert result["decision"] == "redraw"
     assert all(reason.startswith("unknown dependency") for reason in result["reasons"])
+
+
+def test_page_assets_treat_symlinked_directories_as_local(tmp_path):
+    real = tmp_path / "real"
+    (real / "book/notebooks").mkdir(parents=True)
+    (real / "book/notebooks/page.html").write_text(BOOK, encoding="utf-8")
+    (real / "book/_static").mkdir(parents=True)
+    (real / "book/_static/theme.css").write_text("body{}", encoding="utf-8")
+    overlay = tmp_path / "overlay"
+    overlay.mkdir()
+    (overlay / "book").symlink_to(real / "book", target_is_directory=True)
+    assets = page_assets(overlay, "book/notebooks/page.html")
+    assert assets["local"] == {"book/_static/theme.css": hashlib.sha256(b"body{}").hexdigest()}

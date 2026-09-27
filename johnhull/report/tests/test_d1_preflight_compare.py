@@ -154,3 +154,93 @@ def test_wrapper_rejects_a_rename_that_does_not_match_exactly_once(tmp_path):
     assert completed.returncode != 0
     assert "matched 0 times" in completed.stderr
     assert not (overlay / "docs/validation/section-27-3/out.txt").exists()
+
+
+def test_overlay_replacements_change_only_the_named_file(project, tmp_path):
+    (project / "report/site/numerics.html").write_text("original", encoding="utf-8")
+    (project / "report/site/other.html").write_text("other", encoding="utf-8")
+    overlay = tmp_path / "overlay"
+    build_overlay(
+        project,
+        overlay,
+        "docs/validation/section-27-3",
+        [],
+        replacements={"report/site/numerics.html": b"mutated"},
+    )
+    assert (overlay / "report/site/numerics.html").read_bytes() == b"mutated"
+    assert not (overlay / "report/site/numerics.html").is_symlink()
+    assert (overlay / "report/site/other.html").is_symlink()
+    assert (overlay / "hullkit").is_symlink()
+    assert (project / "report/site/numerics.html").read_text(encoding="utf-8") == "original"
+
+
+def test_overlay_replacement_must_name_an_existing_file(project, tmp_path):
+    with pytest.raises(FileNotFoundError):
+        build_overlay(
+            project,
+            tmp_path / "overlay",
+            "docs/validation/section-27-3",
+            [],
+            replacements={"report/site/missing.html": b"x"},
+        )
+
+
+def test_source_hashes_pin_section_inputs_but_not_the_driver(tmp_path):
+    from johnhull.scripts.d1_preflight_compare import (
+        DRIVER_FILES,
+        _source_hashes,
+        driver_provenance,
+    )
+
+    root = tmp_path / "records"
+    files = {
+        "volumes/nb.ipynb": b"{}",
+        "hullkit/src/hullkit/lv.py": b"x = 1",
+        "docs/validation/section-27-3/reference.json": b"{}",
+        "scripts/verify.cjs": b"//",
+        "hullkit/tests/test_lv.py": b"def test(): pass",
+    }
+    for name in DRIVER_FILES:
+        files[name] = b"driver"
+    for name, data in files.items():
+        (root / name).parent.mkdir(parents=True, exist_ok=True)
+        (root / name).write_bytes(data)
+    spec = {"notebook": {"path": "volumes/nb.ipynb"}, "tests": ["hullkit/tests/test_lv.py"]}
+    fingerprint = {
+        "components": {
+            "python_sources": {"hullkit/src/hullkit/lv.py": "0"},
+            "data_files": {"docs/validation/section-27-3/reference.json": "0"},
+            "verifier": {"scripts/verify.cjs": "0"},
+        }
+    }
+    hashes = _source_hashes(root, spec, fingerprint)
+    assert set(hashes) == {
+        "volumes/nb.ipynb",
+        "hullkit/src/hullkit/lv.py",
+        "docs/validation/section-27-3/reference.json",
+        "scripts/verify.cjs",
+        "hullkit/tests/test_lv.py",
+    }
+    assert set(driver_provenance(root)) == set(DRIVER_FILES)
+
+
+def test_overlay_replacement_of_a_verifier_input_is_applied(project, tmp_path):
+    overlay = build_overlay(
+        project,
+        tmp_path / "overlay",
+        "docs/validation/section-27-3",
+        ["docs/validation/section-27-3/reference.json"],
+        replacements={"docs/validation/section-27-3/reference.json": b'{"a": 2}'},
+    )
+    assert (overlay / "docs/validation/section-27-3/reference.json").read_bytes() == b'{"a": 2}'
+
+
+def test_overlay_rejects_a_replacement_in_the_section_that_is_not_an_input(project, tmp_path):
+    with pytest.raises(ValueError, match="not a verifier input"):
+        build_overlay(
+            project,
+            tmp_path / "overlay",
+            "docs/validation/section-27-3",
+            ["docs/validation/section-27-3/reference.json"],
+            replacements={"docs/validation/section-27-3/numerical-check.json": b"{}"},
+        )
