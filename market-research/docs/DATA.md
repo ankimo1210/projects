@@ -164,6 +164,7 @@ ALFRED・e-Stat・SECのライブ疎通は未実施です。独立レビュー�
 |---|---|
 | Binance BTCUSDT | 2行取得・保存・再読込一致。実CLIのfetch/prices/snapshotsも成功 |
 | yfinance BTC-USD | 2行取得・保存・再読込一致 |
+| yfinance IBM / 7203.T | 2026-09-24〜25に明示スケジュールを渡し、NYSE・東証とも2足取得、除外0件、再読込2足 |
 | Stooq IBM | JavaScriptによるブラウザ検証HTMLが返り、CSV取得できず。回避せずエラーとして記録 |
 | J-Quants | 合成V2応答で検証。ライブ認証・契約範囲の疎通は未検証 |
 
