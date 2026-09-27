@@ -9,6 +9,8 @@ dependencies = [
     "numpy>=1.26",
     "streamlit>=1.51",
     "plotly>=5.22",
+    "duckdb>=1.0",
+    "pytz>=2024.1",
 ]
 
 [project.scripts]
