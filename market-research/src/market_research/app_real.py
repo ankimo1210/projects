@@ -21,6 +21,7 @@ from .research.indicators import close_history, indicator_table
 from .research.macro_view import macro_snapshot_table
 from .research.overview import market_overview
 from .research.portfolio import VirtualConstraints, virtual_risk_report
+from .research.saved_strategy import compare_saved_strategies
 from .research.screener import ThresholdRule, screen_research
 from .storage import ResearchStore
 
@@ -265,6 +266,36 @@ def render_real_app() -> None:
                 if benchmark_id != "選択なし"
                 else None
             )
+            strategy_asset = st.sidebar.selectbox("戦略比較の銘柄", assets)
+            strategy_options = tuple(
+                snapshot_id
+                for snapshot_id in price_options
+                if snapshots[snapshot_id].key.identity == strategy_asset
+                and snapshots[snapshot_id].key.currency == dataset.currency
+                and snapshots[snapshot_id].key.adjustment == "raw"
+                and snapshots[snapshot_id].key.interval == "1d"
+            )
+            strategy_ids = st.sidebar.multiselect(
+                "戦略用の履歴snapshot",
+                strategy_options,
+                format_func=lambda snapshot_id: (
+                    f"{snapshots[snapshot_id].observed_at.isoformat()} / "
+                    f"{snapshots[snapshot_id].key.provider} / {snapshot_id[:12]}"
+                ),
+                help="各判断時点に実際に観測した保存版を選択。後日一括取得した履歴では代用しません。",
+            )
+            strategy_train = int(st.sidebar.number_input("戦略の訓練観測数", min_value=2, value=5))
+            strategy_test = int(st.sidebar.number_input("戦略の評価観測数", min_value=1, value=1))
+            strategy_commission = float(
+                st.sidebar.number_input("戦略の手数料（bps）", min_value=0.0, value=3.0)
+            )
+            strategy_slippage = float(
+                st.sidebar.number_input("戦略のスリッページ（bps）", min_value=0.0, value=2.0)
+            )
+            lockbox_text = st.sidebar.text_input(
+                "戦略の封印開始（任意、タイムゾーン付き）",
+                help="指定時刻以降の判断・ラベル・リターンを比較から除外します。",
+            )
             fundamental_options = tuple(
                 snapshot_id
                 for snapshot_id, item in snapshots.items()
@@ -453,7 +484,51 @@ def render_real_app() -> None:
         st.caption("pass / fail / unknown を分けて表示。品質理由と欠損理由を保持します。")
     with tabs[3]:
         st.subheader("戦略比較")
-        st.info("この保存データ画面は後続で接続します。")
+        if not strategy_ids:
+            st.info("同一銘柄の時点ごとに保存したPIT snapshotを選択してください。")
+        else:
+            try:
+                lockbox_start = (
+                    datetime.fromisoformat(lockbox_text) if lockbox_text.strip() else None
+                )
+                with ResearchStore(Path(root)) as strategy_store:
+                    comparison = compare_saved_strategies(
+                        strategy_store,
+                        strategy_ids,
+                        instrument_id=strategy_asset,
+                        as_of=as_of,
+                        train_size=strategy_train,
+                        test_size=strategy_test,
+                        commission_bps=strategy_commission,
+                        slippage_bps=strategy_slippage,
+                        lockbox_start=lockbox_start,
+                    )
+                st.dataframe(comparison.evaluation.table)
+                equities = pd.DataFrame(
+                    {name: result.equity for name, result in comparison.backtests.items()}
+                )
+                st.line_chart(equities)
+                st.dataframe(
+                    pd.DataFrame(
+                        {
+                            "最終資産倍率": {
+                                name: float(result.equity.iloc[-1])
+                                for name, result in comparison.backtests.items()
+                            },
+                            "費用合計": {
+                                name: float(result.costs.sum())
+                                for name, result in comparison.backtests.items()
+                            },
+                        }
+                    )
+                )
+                st.caption(
+                    "zero / mean / ridge / tree / buy-and-hold を同じ終値・"
+                    "lag1・費用で評価。各判断時点に観測済みのsnapshotだけを使用。"
+                    "翌日始値での約定や実口座の成績ではありません。"
+                )
+            except (ValueError, OSError) as error:
+                st.warning(f"戦略比較を計算できません: {error}")
     with tabs[4]:
         _render_macro_tab(macro_result, calendar_id, calendar_rows)
     with tabs[5]:

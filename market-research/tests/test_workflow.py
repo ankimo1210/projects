@@ -209,6 +209,7 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
     app.sidebar.radio[0].set_value("保存データ").run()
     app.sidebar.multiselect[0].set_value([saved.snapshot_id]).run()
     assert not app.exception
+    assert "戦略用の履歴snapshot" in [item.label for item in app.sidebar.multiselect]
     assert len(app.tabs) == 7
     assert any("retrospective" in item.value for item in app.caption)
     assert any("PAF=1" in item.value for item in app.caption)
