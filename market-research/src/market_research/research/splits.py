@@ -56,26 +56,33 @@ def walk_forward_splits(
     if "label" not in table or "label_available_at" not in table:
         raise ValueError("label and label availability are required")
     availability = table["label_available_at"]
-    if not isinstance(availability.dtype, pd.DatetimeTZDtype):
-        raise ValueError("label availability must be timezone-aware")
     if lockbox_start is not None:
         if not isinstance(lockbox_start, datetime) or lockbox_start.utcoffset() is None:
             raise ValueError("lockbox_start must be timezone-aware")
         lockbox_start = lockbox_start.astimezone(UTC)
+    elif not isinstance(availability.dtype, pd.DatetimeTZDtype):
+        raise ValueError("label availability must be timezone-aware")
     times = table.index.tz_convert(UTC)
-    for index, available_at in enumerate(availability):
-        label = table["label"].iloc[index]
-        if index + horizon >= len(times):
-            if pd.notna(available_at) or pd.notna(label):
+    usable_end = len(times) if lockbox_start is None else int(times.searchsorted(lockbox_start))
+    for index in range(usable_end):
+        if index + horizon >= usable_end:
+            if lockbox_start is None and (
+                pd.notna(availability.iloc[index]) or pd.notna(table["label"].iloc[index])
+            ):
                 raise ValueError("tail future label cannot be known")
-        elif pd.notna(label) and (pd.isna(available_at) or available_at < times[index + horizon]):
+            continue
+        available_at = availability.iloc[index]
+        if pd.notna(available_at) and (
+            not isinstance(available_at, datetime) or available_at.utcoffset() is None
+        ):
+            raise ValueError("label availability must be timezone-aware")
+        label = table["label"].iloc[index]
+        if pd.notna(label) and (pd.isna(available_at) or available_at < times[index + horizon]):
             raise ValueError("label availability precedes its future close")
     results = []
     first_test = train_size + horizon + embargo
-    for test_start in range(first_test, len(times) - horizon - test_size + 1, step):
+    for test_start in range(first_test, usable_end - horizon - test_size + 1, step):
         test_end = test_start + test_size
-        if lockbox_start is not None and times[test_end - 1] >= lockbox_start:
-            break
         train_end = test_start - horizon - embargo
         train_start = 0 if expanding else train_end - train_size
         train_indices = tuple(range(train_start, train_end))
