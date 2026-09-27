@@ -20,8 +20,9 @@ def build_pit_close_frame(
     *,
     currency: str,
     adjustment: str,
+    expected_bar_ends: Mapping[str, Sequence[datetime]],
 ) -> pd.DataFrame:
-    """Use only a snapshot already observed when each decision was made."""
+    """Use observed snapshots and caller-verified session closes at each decision."""
     if any(
         not isinstance(decision, datetime) or decision.utcoffset() is None
         for decision in decision_times
@@ -32,6 +33,20 @@ def build_pit_close_frame(
         raise ValueError("decision times must be nonempty, unique and ordered")
     if not snapshot_ids_by_instrument:
         raise ValueError("at least one instrument is required")
+    if set(expected_bar_ends) != set(snapshot_ids_by_instrument):
+        raise ValueError("expected close times must match selected instruments")
+    expected: dict[str, tuple[datetime, ...]] = {}
+    for instrument_id, ends in expected_bar_ends.items():
+        if len(ends) != len(times) or any(
+            not isinstance(end, datetime) or end.utcoffset() is None for end in ends
+        ):
+            raise ValueError(f"expected close times must be aware and aligned for {instrument_id}")
+        normalized = tuple(end.astimezone(UTC) for end in ends)
+        if any(end > decision for end, decision in zip(normalized, times, strict=True)):
+            raise ValueError(f"expected close cannot follow decision for {instrument_id}")
+        if any(left >= right for left, right in pairwise(normalized)):
+            raise ValueError(f"expected close times must increase for {instrument_id}")
+        expected[instrument_id] = normalized
     catalog: dict[str, tuple[Snapshot, ...]] = {
         instrument_id: tuple(store.get_snapshot(snapshot_id) for snapshot_id in ids)
         for instrument_id, ids in snapshot_ids_by_instrument.items()
@@ -39,7 +54,8 @@ def build_pit_close_frame(
     rows: list[dict[str, float]] = []
     previous_ends: dict[str, datetime] = {}
     previous_providers: dict[str, str] = {}
-    for decision_at in times:
+    previous_intervals: dict[str, str] = {}
+    for decision_index, decision_at in enumerate(times):
         selected: list[Snapshot] = []
         for instrument_id, snapshots in catalog.items():
             eligible = [
@@ -62,6 +78,10 @@ def build_pit_close_frame(
             if previous_provider is not None and previous_provider != snapshot.key.provider:
                 raise ValueError(f"provider switch for {instrument_id}")
             previous_providers[instrument_id] = snapshot.key.provider
+            previous_interval = previous_intervals.get(instrument_id)
+            if previous_interval is not None and previous_interval != snapshot.key.interval:
+                raise ValueError(f"interval switch for {instrument_id}")
+            previous_intervals[instrument_id] = snapshot.key.interval
             selected.append(snapshot)
         dataset = load_price_dataset(
             store,
@@ -93,6 +113,8 @@ def build_pit_close_frame(
             previous_end = previous_ends.get(instrument_id)
             if previous_end is not None and latest.bar_end <= previous_end:
                 raise ValueError(f"new final close required for {instrument_id}")
+            if latest.bar_end != expected[instrument_id][decision_index]:
+                raise ValueError(f"expected close is unavailable for {instrument_id}")
             previous_ends[instrument_id] = latest.bar_end
             row[instrument_id] = latest.close
         rows.append(row)

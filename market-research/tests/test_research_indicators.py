@@ -47,7 +47,7 @@ def test_indicator_values_match_hand_calculation():
     index = pd.date_range("2026-09-21 20:00", periods=5, freq="D", tz="UTC")
     frame = pd.DataFrame({"XNYS:IBM": [100, 110, 100, 120, 115]}, index=index)
     source = IndicatorInput(frame, "point_in_time", "USD", "raw")
-    result = indicator_table(source, momentum_window=2, volatility_window=2)
+    result = indicator_table(source, momentum_window=2, volatility_window=2, periods_per_year=252)
     row = result.loc["XNYS:IBM"]
     assert row["latest_close"] == 115
     assert row["momentum"] == pytest.approx(0.15)
@@ -73,7 +73,9 @@ def test_short_history_and_missing_latest_price_are_explicit():
         "USD",
         "raw",
     )
-    short_row = indicator_table(short, momentum_window=3, volatility_window=3).loc["XNYS:IBM"]
+    short_row = indicator_table(
+        short, momentum_window=3, volatility_window=3, periods_per_year=252
+    ).loc["XNYS:IBM"]
     assert short_row["latest_close"] == 102
     assert pd.isna(short_row["momentum"])
     assert pd.isna(short_row["volatility_annualized"])
@@ -86,7 +88,9 @@ def test_short_history_and_missing_latest_price_are_explicit():
         "USD",
         "raw",
     )
-    missing_row = indicator_table(missing, momentum_window=1, volatility_window=2).loc["XNYS:IBM"]
+    missing_row = indicator_table(
+        missing, momentum_window=1, volatility_window=2, periods_per_year=252
+    ).loc["XNYS:IBM"]
     assert pd.isna(missing_row["latest_close"])
     assert pd.isna(missing_row["momentum"])
     assert missing_row["missing_reason"] == "missing_price"
@@ -115,7 +119,7 @@ def test_retro_history_keeps_warning_and_excludes_rejected_price():
     assert source.currency == "USD"
     assert source.prices.loc[next_day - timedelta(hours=1), "XNYS:IBM"] == 110
     assert pd.isna(source.prices.loc[next_day - timedelta(hours=1), "XNAS:MSFT"])
-    summary = indicator_table(source, momentum_window=1, volatility_window=2)
+    summary = indicator_table(source, momentum_window=1, volatility_window=2, periods_per_year=252)
     assert summary.loc["XNYS:IBM", "quality_reasons"] == ("large_close_jump",)
     assert summary.loc["XNAS:MSFT", "quality_reasons"] == ("manual_reject",)
     assert summary.loc["XNAS:MSFT", "missing_reason"] == "rejected_price"
@@ -144,7 +148,7 @@ def test_gap_or_open_bar_does_not_turn_old_close_into_current_metric(missing_kin
         else (),
     )
     source = close_history(dataset)
-    summary = indicator_table(source, momentum_window=1, volatility_window=2)
+    summary = indicator_table(source, momentum_window=1, volatility_window=2, periods_per_year=252)
     row = summary.loc["XNYS:IBM"]
     assert pd.isna(row["latest_close"])
     assert pd.isna(row["momentum"])
@@ -164,7 +168,9 @@ def test_gap_only_snapshot_still_produces_an_explained_empty_summary():
         gaps=(gap,),
         exclusions=(),
     )
-    summary = indicator_table(close_history(dataset), momentum_window=1, volatility_window=2)
+    summary = indicator_table(
+        close_history(dataset), momentum_window=1, volatility_window=2, periods_per_year=252
+    )
     assert pd.isna(summary.loc["XNYS:IBM", "latest_close"])
     assert summary.loc["XNYS:IBM", "missing_reason"] == "gap"
 
@@ -182,7 +188,9 @@ def test_gap_only_asset_is_visible_beside_another_assets_bars():
         gaps=(gap,),
         exclusions=(),
     )
-    summary = indicator_table(close_history(dataset), momentum_window=1, volatility_window=2)
+    summary = indicator_table(
+        close_history(dataset), momentum_window=1, volatility_window=2, periods_per_year=252
+    )
     assert summary.index.tolist() == ["XNYS:IBM", "XNAS:MSFT"]
     assert pd.isna(summary.loc["XNAS:MSFT", "latest_close"])
     assert summary.loc["XNAS:MSFT", "missing_reason"] == "gap"
@@ -244,6 +252,7 @@ def test_display_history_rejects_mixed_source_contract():
             ),
             "currency",
         ),
+        (replace(_bar(IBM, other_time, 101), interval="1h"), "interval"),
     ):
         dataset = PriceDataset(
             as_of=other_time,
@@ -274,6 +283,120 @@ def test_display_history_rejects_bar_observed_after_its_as_of():
         close_history(dataset)
 
 
+def test_missing_session_is_independent_of_other_assets():
+    from market_research.research.indicators import close_history, indicator_table
+
+    middle = T1 + timedelta(days=1)
+    last = T1 + timedelta(days=2)
+    gap = PriceGap(IBM, "yfinance", "IBM", "1d", middle.date(), middle, middle, "raw")
+    ibm_bars = (_bar(IBM, T1, 100), _bar(IBM, last, 110))
+    single = PriceDataset(last, ("ibm",), "USD", "raw", ibm_bars, (gap,), ())
+    paired = PriceDataset(
+        last,
+        ("ibm", "msft"),
+        "USD",
+        "raw",
+        (*ibm_bars, _bar(MSFT, middle, 50)),
+        (gap,),
+        (),
+    )
+    single_input = close_history(single)
+    paired_input = close_history(paired)
+    assert len(single_input.prices) == 3
+    assert pd.isna(single_input.prices.iloc[1]["XNYS:IBM"])
+    for source in (single_input, paired_input):
+        row = indicator_table(
+            source, momentum_window=1, volatility_window=2, periods_per_year=252
+        ).loc["XNYS:IBM"]
+        assert pd.isna(row["momentum"])
+
+
+def test_historical_gap_observed_later_keeps_display_dates_ordered():
+    from market_research.research.indicators import close_history, indicator_table
+
+    middle = T1 + timedelta(days=1)
+    last = T1 + timedelta(days=2)
+    gap = PriceGap(IBM, "yfinance", "IBM", "1d", middle.date(), last, last, "raw")
+    dataset = PriceDataset(
+        last,
+        ("ibm",),
+        "USD",
+        "raw",
+        (_bar(IBM, T1, 100), _bar(IBM, last, 110)),
+        (gap,),
+        (),
+    )
+    source = close_history(dataset)
+    assert source.prices.index.is_monotonic_increasing
+    assert pd.isna(
+        indicator_table(source, momentum_window=1, volatility_window=2, periods_per_year=252).loc[
+            "XNYS:IBM", "momentum"
+        ]
+    )
+
+
+def test_quality_reasons_include_warned_observations_used_by_indicators():
+    from market_research.research.indicators import close_history, indicator_table
+
+    days = tuple(T1 + timedelta(days=offset) for offset in range(4))
+    dataset = PriceDataset(
+        days[-1],
+        ("ibm",),
+        "USD",
+        "raw",
+        (
+            _bar(IBM, days[0], 100),
+            _bar(IBM, days[1], 10, quality="warn", reasons=("large_close_jump",)),
+            _bar(IBM, days[2], 100, quality="warn", reasons=("large_close_jump",)),
+            _bar(IBM, days[3], 101),
+        ),
+        (),
+        (),
+    )
+    row = indicator_table(
+        close_history(dataset), momentum_window=2, volatility_window=2, periods_per_year=252
+    ).loc["XNYS:IBM"]
+    assert row["volatility_annualized"] > 0
+    assert row["quality_reasons"] == ("large_close_jump",)
+
+
+def test_annualization_basis_is_explicit_for_crypto():
+    from market_research.research.indicators import IndicatorInput, indicator_table
+
+    prices = pd.DataFrame(
+        {"CRYPTO:BTC": [100, 110, 99, 109]},
+        index=pd.date_range("2026-09-21", periods=4, freq="D", tz="UTC"),
+    )
+    source = IndicatorInput(prices, "point_in_time", "USD", "raw")
+    result = indicator_table(source, momentum_window=2, volatility_window=2, periods_per_year=365)
+    returns = prices.pct_change(fill_method=None)
+    expected = returns.iloc[-2:, 0].std(ddof=1) * math.sqrt(365)
+    assert result.loc["CRYPTO:BTC", "volatility_annualized"] == pytest.approx(expected)
+    assert result.loc["CRYPTO:BTC", "periods_per_year"] == 365
+
+
+def test_indicator_input_rejects_text_prices_and_invalid_annualization():
+    from market_research.research.indicators import IndicatorInput, indicator_table
+
+    index = pd.date_range("2026-09-21", periods=3, freq="D", tz="UTC")
+    text_prices = IndicatorInput(
+        pd.DataFrame({"XNYS:IBM": ["100", "101", "102"]}, index=index),
+        "point_in_time",
+        "USD",
+        "raw",
+    )
+    with pytest.raises(ValueError, match="numeric"):
+        indicator_table(text_prices, momentum_window=1, volatility_window=2, periods_per_year=252)
+    numeric_prices = IndicatorInput(
+        pd.DataFrame({"XNYS:IBM": [100, 101, 102]}, index=index),
+        "point_in_time",
+        "USD",
+        "raw",
+    )
+    with pytest.raises(ValueError, match="periods_per_year"):
+        indicator_table(numeric_prices, momentum_window=1, volatility_window=2, periods_per_year=0)
+
+
 def test_indicator_input_requires_ordered_aware_positive_prices():
     from market_research.research.indicators import IndicatorInput, indicator_table
 
@@ -295,4 +418,5 @@ def test_indicator_input_requires_ordered_aware_positive_prices():
                 IndicatorInput(frame, "point_in_time", "USD", "raw"),
                 momentum_window=1,
                 volatility_window=2,
+                periods_per_year=252,
             )
