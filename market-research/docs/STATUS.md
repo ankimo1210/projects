@@ -7,7 +7,8 @@
 [マクロ・財務の計画](../../docs/superpowers/plans/2026-09-27-market-macro-fundamentals.md)、
 [財務・バスケットの計画](../../docs/superpowers/plans/2026-09-27-market-research-fundamentals-baskets.md)、
 [仮想配分・リスクの計画](../../docs/superpowers/plans/2026-09-27-market-research-virtual-risk.md)、
-[市場概要・品質の計画](../../docs/superpowers/plans/2026-09-27-market-research-overview-quality.md)。
+[市場概要・品質の計画](../../docs/superpowers/plans/2026-09-27-market-research-overview-quality.md)、
+[マクロ画面の計画](../../docs/superpowers/plans/2026-09-27-market-research-macro-view.md)。
 
 ## 目標と完了条件
 
@@ -19,7 +20,7 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 | 工程2 設計 | 完了 | 上記統合仕様、ADR 0004 |
 | 工程3a オフライン中核 | main `7c4bb109` へ取込み済み | 価格/マクロ契約、時点別読取、lag1バックテスト、CLI、合成7画面 |
 | 工程3b 実データと保存 | main `7b7cbd1b` へ取込み済み | 4価格provider、ALFRED/ESRI/MoF/e-Stat/SEC、manifestと時点別読取、日米株の自動カレンダー。認証元のライブ疎通は残り |
-| 工程3c 分析機能 | `codex/market-research-stage3c` で実装中 | 明示snapshotの価格・財務入力、品質付き指標、3値スクリーナー、基準日付きbasket、benchmark比較、仮想配分リスク、市場概要、品質表示を実装。5画面に接続。信号モデル・公式指数の照合・FX換算・保存run・5ノート・HTML・残り2画面は未実装 |
+| 工程3c 分析機能 | `codex/market-research-stage3c` で実装中 | 明示snapshotの価格・財務入力、品質付き指標、3値スクリーナー、基準日付きbasket、benchmark比較、仮想配分リスク、市場概要、品質表示、マクロ・公表を実装。6画面に接続。信号モデル・公式指数の照合・FX換算・保存run・5ノート・HTML・戦略比較画面は未実装 |
 | 工程3d 連携・切替 | 未着手 | portfolio向け一方向export、旧結果との照合、代表画面の手動確認 |
 
 ## 検証
@@ -53,6 +54,9 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
   アプリ内アラートを表示する。選択snapshotの出典、gap、除外理由も表示する。
   保存runと取得失敗履歴は未記録で、外部送信や定時実行は追加していない。
   追加後のmemberテスト192件は成功。
+- F06の保存データ画面は、完全なマクロsnapshotの公表・観測時刻を照合し、同じkeyの過去版との差を表示する。
+  ESRIの公表calendarは保存時点に知られた予定として表示する。価格snapshotなしでもマクロは閲覧可能。
+  追加後のmemberテスト195件は成功。
 - 工程3bのブランチはALFREDの全版取得と再開、ESRIの公表一覧とGDPの回別表、MoFの履歴・当月、
   e-Statの分類指定とページ再開、SEC companyfactsの提出日と対象期を実装した。
   `estimated` と `snapshot` を区別し、完成snapshot単位でオフライン読取する。
@@ -90,7 +94,7 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 
 ## 次の作業
 
-1. 工程3cの信号モデル、公式指数との照合、5ノート・HTML・残り2画面を接続し、
+1. 工程3cの信号モデル、公式指数との照合、5ノート・HTML・戦略比較画面を接続し、
    代表操作を確認する。Q09–Q11・Q13を完了する。
 2. ALFRED・e-Stat・SECの設定済み環境で実通信を確認する。ESRIの過去掲載は
    表の取得成功まで実績に昇格させず、MoF/e-Statは収集前の時点を再現しない。
@@ -100,7 +104,7 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 
 制約: 日米株は自動カレンダーを使用し、それ以外の市場は確認済み時間表が必要。
 J-Quantsのライブ認証は未検証。Stooqはブラウザ検証要求でライブ取得不可。
-画面の既定は合成デモ。保存データモードの戦略比較・マクロと公表は実データ未接続。
+画面の既定は合成デモ。保存データモードの戦略比較は実データ未接続。
 今回のマクロ・財務も旧DBの移管と旧入口の切替はしていない。
 
 ## 既知の不具合と修正
