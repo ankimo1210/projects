@@ -30,3 +30,17 @@ def test_demo_cli_writes_identical_html_after_restart(tmp_path, monkeypatch, cap
     second = json.loads(capsys.readouterr().out)
     assert second == first
     assert path.read_text(encoding="utf-8") == content
+
+
+def test_demo_cli_saves_immutable_run_and_reopens_offline(tmp_path, capsys):
+    from market_research.research.run_store import load_demo_run
+
+    args = ["--data-root", str(tmp_path), "demo", "--json", "--save-run"]
+    assert main(args) == 0
+    first = json.loads(capsys.readouterr().out)
+    artifact = load_demo_run(tmp_path / "runs", first["artifact_id"], expected=build_demo_run())
+    assert artifact.manifest["source_run_id"] == first["run_id"]
+    assert artifact.html is not None and first["run_id"] in artifact.html
+    assert main(args) == 0
+    second = json.loads(capsys.readouterr().out)
+    assert first == second
