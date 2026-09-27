@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 
 import numpy as np
@@ -11,6 +11,7 @@ import pandas as pd
 
 @dataclass(frozen=True, slots=True)
 class BacktestResult:
+    base_currency: str
     held_weights: pd.DataFrame
     gross_returns: pd.Series
     turnover: pd.Series
@@ -32,6 +33,8 @@ def run_backtest(
     target_weights: pd.DataFrame,
     returns: pd.DataFrame,
     *,
+    base_currency: str | None = None,
+    return_currencies: Mapping[str, str] | None = None,
     commission_bps: float = 0.0,
     slippage_bps: float = 0.0,
 ) -> BacktestResult:
@@ -50,6 +53,16 @@ def run_backtest(
         raise ValueError("target and return timestamps must match exactly")
     if set(target_weights.columns) != set(returns.columns) or not len(returns.columns):
         raise ValueError("asset columns must match exactly and be nonempty")
+    if not isinstance(base_currency, str) or not base_currency.strip():
+        raise ValueError("base currency is required")
+    base = base_currency.strip().upper()
+    if not isinstance(return_currencies, Mapping) or set(return_currencies) != set(returns.columns):
+        raise ValueError("return currency must be declared for every asset")
+    if any(
+        not isinstance(currency, str) or currency.strip().upper() != base
+        for currency in return_currencies.values()
+    ):
+        raise ValueError("all returns must be expressed in the base currency")
     if any(not np.isfinite(v) or v < 0 for v in (commission_bps, slippage_bps)):
         raise ValueError("cost basis points must be finite and nonnegative")
     targets = target_weights[returns.columns].astype(float)
@@ -70,6 +83,7 @@ def run_backtest(
         raise ValueError("net return exhausts equity")
     equity = (1.0 + net).cumprod()
     return BacktestResult(
+        base_currency=base,
         held_weights=held,
         gross_returns=gross,
         turnover=turnover,

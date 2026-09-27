@@ -19,11 +19,14 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 
 ## 検証
 
-- オフラインテスト38件、CLIの `demo --json`、Streamlit AppTestの7画面、ruff check/formatを確認。
+- オフラインテスト44件、CLIの `demo --json`、Streamlit AppTestの7画面、ruff check/formatを確認。
   pre-commit、相対リンクと49件の索引（13 / 7 / 13 / 6 / 10）も確認済み。
 - 比較基準として quantkit のバックテストと macrokit のPITテストを実行し、24件成功。
 - 旧プロジェクトの実データ・保存DB、個人口座、外部APIへの疎通は確認していない。
-- 同じ `run_id` は合成runの入力と費用条件のハッシュに基づく。永続run保管は未実装。
+- 同じ `run_id` は合成runの入力時刻・価格と費用条件のハッシュに基づく。
+  デモの判断は足終端1時間後で、価格の `available_at` と一致する。永続run保管は未実装。
+- 独立レビュー後に、日付ラベルから足境界を推定せず明示入力を要求し、provider symbolを照合、
+  異通貨リターンを拒否する契約を追加した。実provider側の時刻・FX変換の検証は後続。
 
 ## 次の作業
 

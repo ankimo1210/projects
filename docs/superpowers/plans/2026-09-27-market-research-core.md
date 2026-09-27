@@ -6,7 +6,7 @@
 
 **Architecture:** `src/market_research` がデータ契約と計算の正本、`app/` と CLI は薄い入口。実データの取得は明示的な操作だけにし、オフライン demo と区別する。旧プロジェクトは比較対象に残す。
 
-**Tech Stack:** Python 3.12+、uv、pandas、DuckDB、Streamlit、Plotly、pytest。既存 workspace で使う依存のみ。
+**Tech Stack:** Python 3.12+、uv、pandas、numpy、Streamlit、Plotly、pytest。既存 workspace で使う依存のみ。DuckDB 保存は後続。
 
 **Spec:** [工程2の統合仕様](../specs/2026-09-27-market-research-design.md)。この計画は工程3の最初の垂直スライスで、旧機能 F01–F19 の全面移行・切替は後続計画で扱う。
 
@@ -102,3 +102,12 @@
 ## Next increments
 
 次の計画では実provider接続と不変cache・PIT DuckDB保存、財務・バスケット・e-Stat/SEC、戦略/リスク/5ノート、HTML、portfolio向け一方向export、旧コードとの差分照合、代表画面の手動操作、メールなしの日次確認、切替を扱う。上記Task 5の7画面は初版の完成判定ではない。
+
+## 実装レビューでの契約補強（2026-09-27）
+
+- yfinance形式の入力indexは日付ラベルかもしれないため、`normalize_yfinance` は
+  `expected_provider_symbol` と各行の `BarTiming(start, end, is_final)` を要求する。
+  取引所カレンダーからこの値を供給する実provider adapterは後続。
+- 合成デモは足終端から1時間後を判断時刻とし、`available_at` と照合した。
+- `run_backtest` は `base_currency` と資産ごとの `return_currencies` の明示を要求し、
+  異通貨の値を合算しない。FX換算済みであることの証跡・実装は後続。

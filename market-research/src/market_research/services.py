@@ -29,10 +29,11 @@ class DemoRun:
 
 def build_demo_run() -> DemoRun:
     """Create a fixed synthetic run without reading account files or the network."""
-    index = pd.bdate_range("2026-06-01", periods=60, tz="UTC") + pd.Timedelta(hours=20)
-    alpha = [100.0 + 0.35 * n + 2.0 * math.sin(n / 5) for n in range(len(index))]
-    beta = [70.0 + 0.15 * n + 1.5 * math.cos(n / 7) for n in range(len(index))]
-    prices = pd.DataFrame({"DEMO:ALPHA": alpha, "DEMO:BETA": beta}, index=index)
+    close_index = pd.bdate_range("2026-06-01", periods=60, tz="UTC") + pd.Timedelta(hours=20)
+    decision_index = close_index + pd.Timedelta(hours=1)
+    alpha = [100.0 + 0.35 * n + 2.0 * math.sin(n / 5) for n in range(len(close_index))]
+    beta = [70.0 + 0.15 * n + 1.5 * math.cos(n / 7) for n in range(len(close_index))]
+    prices = pd.DataFrame({"DEMO:ALPHA": alpha, "DEMO:BETA": beta}, index=decision_index)
     instruments = (
         Instrument("DEMO", "ALPHA", "USD", "UTC"),
         Instrument("DEMO", "BETA", "USD", "UTC"),
@@ -42,15 +43,15 @@ def build_demo_run() -> DemoRun:
             instrument=instrument,
             provider="synthetic-demo",
             interval="1d",
-            bar_start=stamp.to_pydatetime() - timedelta(days=1),
-            bar_end=stamp.to_pydatetime(),
-            available_at=stamp.to_pydatetime() + timedelta(hours=1),
-            observed_at=stamp.to_pydatetime() + timedelta(hours=1),
-            close=float(prices.loc[stamp, instrument.instrument_id]),
+            bar_start=close_at.to_pydatetime() - timedelta(hours=8),
+            bar_end=close_at.to_pydatetime(),
+            available_at=decision_at.to_pydatetime(),
+            observed_at=decision_at.to_pydatetime(),
+            close=float(prices.loc[decision_at, instrument.instrument_id]),
             adjustment="raw",
             revision_id="demo-v1",
         )
-        for stamp in index
+        for close_at, decision_at in zip(close_index, decision_index, strict=True)
         for instrument in instruments
     )
 
@@ -60,12 +61,19 @@ def build_demo_run() -> DemoRun:
         return pd.Series({"DEMO:ALPHA": alpha_weight, "DEMO:BETA": 0.4})
 
     target = run_prefix_strategy(prices, strategy)
-    result = run_backtest(target, prices.pct_change(), commission_bps=3, slippage_bps=2)
+    result = run_backtest(
+        target,
+        prices.pct_change(),
+        base_currency="USD",
+        return_currencies={instrument.instrument_id: "USD" for instrument in instruments},
+        commission_bps=3,
+        slippage_bps=2,
+    )
     rows = (
         MacroObservation(
             "DEMO_CPI",
             date(2026, 6, 1),
-            index[10].to_pydatetime() + timedelta(hours=1),
+            decision_index[10].to_pydatetime(),
             100.0,
             "synthetic-demo",
             "first",
@@ -74,7 +82,7 @@ def build_demo_run() -> DemoRun:
         MacroObservation(
             "DEMO_CPI",
             date(2026, 6, 1),
-            index[30].to_pydatetime() + timedelta(hours=1),
+            decision_index[30].to_pydatetime(),
             101.0,
             "synthetic-demo",
             "revised",
@@ -82,10 +90,12 @@ def build_demo_run() -> DemoRun:
         ),
     )
     payload = {
-        "schema": "demo-v1",
+        "schema": "demo-v2",
         "prices": [
-            [stamp.isoformat(), round(a, 10), round(b, 10)]
-            for stamp, a, b in zip(index, alpha, beta, strict=True)
+            [close_at.isoformat(), decision_at.isoformat(), round(a, 10), round(b, 10)]
+            for close_at, decision_at, a, b in zip(
+                close_index, decision_index, alpha, beta, strict=True
+            )
         ],
         "commission_bps": 3,
         "slippage_bps": 2,
@@ -96,7 +106,7 @@ def build_demo_run() -> DemoRun:
         run_id=input_hash[:16],
         input_hash=input_hash,
         prices=prices,
-        bars=assess_bars(bars, index[-1].to_pydatetime() + timedelta(hours=1)),
+        bars=assess_bars(bars, decision_index[-1].to_pydatetime()),
         macro_observations=rows,
         target_weights=target,
         backtest=result,

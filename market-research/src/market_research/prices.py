@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from collections.abc import Iterable
-from dataclasses import replace
-from datetime import UTC, datetime, timedelta
+from collections.abc import Iterable, Mapping
+from dataclasses import dataclass, replace
+from datetime import UTC, datetime
 
 import pandas as pd
 
@@ -16,6 +16,23 @@ def _aware_utc(value: datetime, name: str) -> datetime:
     if not isinstance(value, datetime) or value.utcoffset() is None:
         raise ValueError(f"{name} must be timezone-aware")
     return value.astimezone(UTC)
+
+
+@dataclass(frozen=True, slots=True)
+class BarTiming:
+    """Caller-verified session bounds and finality for one provider row."""
+
+    bar_start: datetime
+    bar_end: datetime
+    is_final: bool
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "bar_start", _aware_utc(self.bar_start, "bar_start"))
+        object.__setattr__(self, "bar_end", _aware_utc(self.bar_end, "bar_end"))
+        if self.bar_start >= self.bar_end:
+            raise ValueError("bar_start must precede bar_end")
+        if not isinstance(self.is_final, bool):
+            raise ValueError("is_final must be a bool")
 
 
 def _single_symbol_columns(raw: pd.DataFrame) -> tuple[pd.DataFrame, str | None]:
@@ -41,27 +58,42 @@ def _single_symbol_columns(raw: pd.DataFrame) -> tuple[pd.DataFrame, str | None]
 
 
 def normalize_yfinance(
-    raw: pd.DataFrame, instrument: Instrument, observed_at: datetime
+    raw: pd.DataFrame,
+    instrument: Instrument,
+    observed_at: datetime,
+    *,
+    expected_provider_symbol: str | None = None,
+    bar_timing: Mapping[pd.Timestamp, BarTiming] | None = None,
 ) -> tuple[PriceBar, ...]:
-    """Read a one-symbol snapshot; never infer publication time from a date-only index.
+    """Read a one-symbol snapshot using explicit provider identity and bar timing.
 
-    The caller supplies the observed snapshot time. Historical rows become
-    available no earlier than that time until source release times are known.
-    An ``Adj Close`` column is retained as ``unknown`` adjustment provenance.
+    yfinance's daily index may be a session-date label, not a bar end. The
+    caller must resolve every label against a verified calendar/provider
+    interval. Snapshot rows become available no earlier than observation.
+    ``Adj Close`` remains an unclassified adjustment until verified.
     """
     observed = _aware_utc(observed_at, "observed_at")
     if raw.empty:
         raise ValueError("empty price response")
-    frame, provider_symbol = _single_symbol_columns(raw)
+    frame, input_symbol = _single_symbol_columns(raw)
     if "Close" not in frame.columns:
         raise ValueError("missing Close column")
     if not isinstance(frame.index, pd.DatetimeIndex) or frame.index.tz is None:
-        raise ValueError("price index must be timezone-aware bar-end timestamps")
+        raise ValueError("price index must be timezone-aware session labels")
     if frame.index.has_duplicates:
-        raise ValueError("duplicate bar-end timestamps")
+        raise ValueError("duplicate session labels")
+    if not isinstance(expected_provider_symbol, str) or not expected_provider_symbol.strip():
+        raise ValueError("expected_provider_symbol is required")
+    provider_symbol = expected_provider_symbol.strip()
+    if input_symbol is not None and input_symbol.upper() != provider_symbol.upper():
+        raise ValueError(f"provider symbol mismatch: {input_symbol} != {provider_symbol}")
+    if bar_timing is None or set(bar_timing) != set(frame.index):
+        raise ValueError("bar_timing must contain verified bounds for every source row")
     result: list[PriceBar] = []
     for index, row in frame.sort_index().iterrows():
-        end = _aware_utc(index.to_pydatetime(), "bar_end")
+        timing = bar_timing[index]
+        if not isinstance(timing, BarTiming):
+            raise ValueError(f"bar_timing must use BarTiming for {index}")
         fields = {
             "open": float(row["Open"]) if "Open" in frame and pd.notna(row["Open"]) else None,
             "high": float(row["High"]) if "High" in frame and pd.notna(row["High"]) else None,
@@ -73,13 +105,14 @@ def normalize_yfinance(
         common = dict(
             instrument=instrument,
             provider="yfinance",
-            provider_symbol=provider_symbol or instrument.symbol,
+            provider_symbol=input_symbol or provider_symbol,
             interval="1d",
-            bar_start=end - timedelta(days=1),
-            bar_end=end,
+            bar_start=timing.bar_start,
+            bar_end=timing.bar_end,
             available_at=observed,
             observed_at=observed,
             revision_id=f"yf:{observed.isoformat()}",
+            is_final=timing.is_final,
             volume_unit="shares",
             **fields,
         )
