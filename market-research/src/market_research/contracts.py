@@ -145,6 +145,14 @@ class MacroObservation:
     source: str
     vintage_id: str
     vintage_kind: str = "actual"
+    unit: str | None = None
+    frequency: str | None = None
+    seasonal_adjustment: str | None = None
+    release_precision: str = "instant"
+    source_release_date: date | None = None
+    observed_at: datetime | None = None
+    raw_hash: str | None = None
+    source_ref: str | None = None
 
     def __post_init__(self) -> None:
         for name in ("indicator", "source", "vintage_id"):
@@ -158,3 +166,57 @@ class MacroObservation:
             raise ValueError("value must be finite")
         if self.vintage_kind not in VINTAGE_KINDS:
             raise ValueError("vintage_kind must be actual, snapshot, or estimated")
+        if self.release_precision not in {"instant", "date", "snapshot"}:
+            raise ValueError("invalid release precision")
+        if self.source_release_date is not None and type(self.source_release_date) is not date:
+            raise ValueError("source_release_date must be a date")
+        if self.observed_at is not None:
+            object.__setattr__(self, "observed_at", _utc(self.observed_at, "observed_at"))
+        if self.raw_hash is not None and (
+            len(self.raw_hash) != 64 or any(c not in "0123456789abcdef" for c in self.raw_hash)
+        ):
+            raise ValueError("invalid raw hash")
+
+
+@dataclass(frozen=True, slots=True)
+class FundamentalObservation:
+    cik: int
+    taxonomy: str
+    concept: str
+    unit: str
+    period_start: date | None
+    period_end: date
+    filed: date
+    available_at: datetime
+    observed_at: datetime
+    value: float
+    form: str
+    accession: str
+    source: str = "sec"
+    vintage_kind: str = "estimated"
+    raw_hash: str | None = None
+
+    def __post_init__(self) -> None:
+        if type(self.cik) is not int or self.cik <= 0:
+            raise ValueError("cik must be a positive integer")
+        for name in ("taxonomy", "concept", "unit", "form", "accession", "source"):
+            if not isinstance(getattr(self, name), str) or not getattr(self, name).strip():
+                raise ValueError(f"{name} must be nonempty")
+        if type(self.period_end) is not date or type(self.filed) is not date:
+            raise ValueError("period_end and filed must be dates")
+        if self.period_start is not None and (
+            type(self.period_start) is not date or self.period_start > self.period_end
+        ):
+            raise ValueError("invalid period_start")
+        for name in ("available_at", "observed_at"):
+            object.__setattr__(self, name, _utc(getattr(self, name), name))
+        if self.available_at > self.observed_at:
+            raise ValueError("fundamental cannot be available after observation")
+        if not math.isfinite(self.value):
+            raise ValueError("value must be finite")
+        if self.vintage_kind not in VINTAGE_KINDS:
+            raise ValueError("invalid vintage kind")
+        if self.raw_hash is not None and (
+            len(self.raw_hash) != 64 or any(c not in "0123456789abcdef" for c in self.raw_hash)
+        ):
+            raise ValueError("invalid raw hash")

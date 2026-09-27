@@ -12,7 +12,14 @@ from pathlib import Path
 
 import duckdb
 
-from .contracts import Instrument, MacroObservation, PriceBar, PriceGap, _utc
+from .contracts import (
+    FundamentalObservation,
+    Instrument,
+    MacroObservation,
+    PriceBar,
+    PriceGap,
+    _utc,
+)
 from .macro import as_of
 from .prices import PriceView, price_view_as_of
 
@@ -97,7 +104,21 @@ def _macro_decode(payload: str) -> MacroObservation:
     data = json.loads(payload)
     data["period_start"] = date.fromisoformat(data["period_start"])
     data["release_at"] = datetime.fromisoformat(data["release_at"])
+    if data.get("source_release_date"):
+        data["source_release_date"] = date.fromisoformat(data["source_release_date"])
+    if data.get("observed_at"):
+        data["observed_at"] = datetime.fromisoformat(data["observed_at"])
     return MacroObservation(**data)
+
+
+def _fundamental_decode(payload: str) -> FundamentalObservation:
+    data = json.loads(payload)
+    for name in ("period_start", "period_end", "filed"):
+        if data[name] is not None:
+            data[name] = date.fromisoformat(data[name])
+    for name in ("available_at", "observed_at"):
+        data[name] = datetime.fromisoformat(data[name])
+    return FundamentalObservation(**data)
 
 
 def _gap_decode(payload: str) -> PriceGap:
@@ -193,6 +214,7 @@ class ResearchStore:
         prices=(),
         gaps=(),
         macro=(),
+        fundamentals=(),
         complete: bool = True,
         cursor: str | None = None,
     ) -> Snapshot:
@@ -238,6 +260,10 @@ class ResearchStore:
                 raise ValueError("macro row does not match cache key")
             if row.release_at > observed:
                 raise ValueError("macro release after snapshot")
+            if row.observed_at is not None and row.observed_at > observed:
+                raise ValueError("macro observed after snapshot")
+            if row.raw_hash is not None and row.raw_hash != _hash(raw):
+                raise ValueError("macro raw hash does not match snapshot")
             row_key = (row.indicator, row.period_start, row.source, row.release_at, row.vintage_id)
             records.append(
                 (
@@ -247,6 +273,38 @@ class ResearchStore:
                     row.source,
                     "none",
                     row.release_at,
+                    _json(asdict(row)),
+                )
+            )
+        for row in fundamentals:
+            identity = f"CIK{row.cik:010d}:{row.taxonomy}:{row.concept}:{row.unit}:{row.form}"
+            if (row.source, "fundamental", identity, row.unit) != (
+                key.provider,
+                key.dataset,
+                key.identity,
+                key.currency,
+            ):
+                raise ValueError("fundamental does not match cache key")
+            if row.observed_at > observed:
+                raise ValueError("fundamental observed after snapshot")
+            if row.raw_hash is not None and row.raw_hash != _hash(raw):
+                raise ValueError("fundamental raw hash does not match snapshot")
+            row_key = (
+                identity,
+                row.period_start,
+                row.period_end,
+                row.filed,
+                row.accession,
+                row.available_at,
+            )
+            records.append(
+                (
+                    "fundamental",
+                    _hash(_json(row_key).encode()),
+                    identity,
+                    row.source,
+                    "none",
+                    row.available_at,
                     _json(asdict(row)),
                 )
             )
@@ -442,3 +500,21 @@ class ResearchStore:
     ) -> tuple[MacroObservation, ...]:
         rows = [_macro_decode(row[0]) for row in self._rows("macro", indicator, source)]
         return as_of(rows, indicator, when, source=source)
+
+    def fundamental_view(
+        self, cik: int, taxonomy: str, concept: str, unit: str, form: str, when: datetime
+    ) -> tuple[FundamentalObservation, ...]:
+        cutoff = _utc(when, "when")
+        identity = f"CIK{cik:010d}:{taxonomy}:{concept}:{unit}:{form}"
+        rows = [_fundamental_decode(row[0]) for row in self._rows("fundamental", identity, "sec")]
+        selected: dict[tuple[date | None, date], FundamentalObservation] = {}
+        for row in rows:
+            if row.available_at > cutoff:
+                continue
+            period = (row.period_start, row.period_end)
+            previous = selected.get(period)
+            if previous is not None and previous.available_at == row.available_at:
+                raise ValueError("conflicting fundamental releases")
+            if previous is None or row.available_at > previous.available_at:
+                selected[period] = row
+        return tuple(selected[key] for key in sorted(selected, key=lambda p: (p[1], p[0] or p[1])))
