@@ -77,6 +77,7 @@ def test_streamlit_opens_seven_demo_views_without_exceptions(monkeypatch):
         "品質・実行履歴",
     ]
     assert any("合成デモ" in item.value for item in app.caption)
+    assert "HTMLレポートを保存" in [item.label for item in app.get("download_button")]
 
 
 def test_streamlit_has_separate_saved_data_mode_without_fetching(monkeypatch, tmp_path):

@@ -25,6 +25,7 @@ from .mof import MoFRequest, ingest_mof_jgb
 from .portfolio_export import write_portfolio_export
 from .prices import PriceView
 from .providers import ADJUSTMENTS, PriceRequest
+from .reports import render_demo_report
 from .research.dataset import load_price_dataset
 from .sec import SecRequest, ingest_sec_companyfacts
 from .services import build_demo_run
@@ -163,6 +164,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     demo = sub.add_parser("demo", help="Run the offline synthetic workflow")
     demo.add_argument("--json", action="store_true", help="Print machine-readable summary")
+    demo.add_argument("--html", type=Path, help="Write a standalone synthetic report")
     fetch = sub.add_parser("fetch-prices", help="Explicitly fetch and persist daily prices")
     fetch.add_argument("--provider", choices=sorted(ADJUSTMENTS), required=True)
     for name in ("market", "symbol", "provider-symbol", "currency", "timezone", "adjustment"):
@@ -240,6 +242,10 @@ def main(argv: list[str] | None = None) -> int:
             "assets": list(run.prices.columns),
             "last_equity": round(float(run.backtest.equity.iloc[-1]), 8),
         }
+        if args.html is not None:
+            args.html.parent.mkdir(parents=True, exist_ok=True)
+            args.html.write_text(render_demo_report(run), encoding="utf-8")
+            summary["html"] = str(args.html)
         if args.json:
             print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
         else:
