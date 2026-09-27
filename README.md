@@ -4,15 +4,16 @@
 
 ## プロジェクト一覧
 
-48件のプロジェクトを目的別に案内します（2026-09-27確認）。「状態」は各 README と
+49件のプロジェクトを目的別に案内します（2026-09-27確認）。「状態」は各 README と
 [整理計画](docs/superpowers/plans/2026-09-27-workspace-cleanup.md) に基づく位置づけで、
 今回すべてを実行検証したという意味ではありません。「統合検討」は今後の工程です。
 個人データを扱うものも、ここではツールの目的と公開文書だけを案内します。
 
-### 市場・投資・意思決定（12件）
+### 市場・投資・意思決定（13件）
 
 | プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
 |---|---|---|---|---|---|
+| market-research | 市場データ・時点管理・研究計算の統合先 | [README](market-research/README.md) | 工程3の初期実装・合成デモ | stock / quantkit / macrokit / market-viz | Python / Streamlit / Plotly |
 | stock | 日米株・財務・マクロの取得と Dash 分析 | [README](stock/README.md) | 統合検討 | quantkit / market-viz / macrokit | Python / DuckDB / Dash |
 | quantkit | マルチアセットの信号研究・バックテスト | [README](quantkit/README.md) | 統合検討 | stock / market-viz / macrokit | Python / DuckDB / Plotly |
 | market-viz | 市場データの対話的な可視化 | [README](market-viz/README.md) | MVP・統合検討 | stock / quantkit | Streamlit / Plotly / DuckDB |
@@ -140,13 +141,13 @@ make help      # ターゲット一覧
 make install   # uv 管理プロジェクトを一括 sync
 make lint      # ruff check を全体に
 make fmt       # ruff format --check を全体に
-make test      # testpaths の35件を pytest で実行 + npm があれば sde-check
+make test      # testpaths の36件を pytest で実行 + npm があれば sde-check
 make clean     # __pycache__ / .pytest_cache などを掃除
 make tree      # ヘビーディレクトリを除外したツリー表示
 ```
 
 `make test` の Python 対象は [pyproject.toml](pyproject.toml) の `testpaths` に登録した
-35ディレクトリです（2026-09-27確認）。全プロジェクトを検証するものではありません。
+36ディレクトリです（market-research 追加後）。全プロジェクトを検証するものではありません。
 `johnhull/report/tests` は登録済み、`deep_hedge_price/tests` は未登録です。
 対象プロジェクトのテストを個別に実行してください。`npm` がなければ `sde-check` は省略されます。
 

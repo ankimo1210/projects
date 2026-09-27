@@ -11,6 +11,9 @@ dependencies = [
     "plotly>=5.22",
 ]
 
+[project.scripts]
+market-research = "market_research.cli:main"
+
 [build-system]
 requires = ["uv_build>=0.11.12,<0.12.0"]
 build-backend = "uv_build"

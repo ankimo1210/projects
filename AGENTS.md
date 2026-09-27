@@ -58,7 +58,7 @@ dev tooling its own CI invokes; the shared `.venv` hides omissions that
 `docs/decisions/0002-workspace-green-and-declared-dependencies.md`.
 
 **That green is not full coverage.** `make test` runs only the `testpaths`
-list in the root `pyproject.toml` (35 directories as of 2026-09-27).
+list in the root `pyproject.toml` (36 directories as of 2026-09-27).
 `deep_hedge_price/tests` is still missing; `johnhull/report/tests` is registered.
 A previous direct run of the deep-hedging suite passed, but `make test` does not
 invoke it. Do not read
