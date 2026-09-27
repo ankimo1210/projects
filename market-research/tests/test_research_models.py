@@ -52,6 +52,45 @@ def test_models_share_walk_and_fit_only_eligible_training_rows():
     assert result.currency == "USD"
 
 
+def test_tree_depth_and_leaf_size_bound_train_only_splits():
+    from market_research.research.models import evaluate_models
+
+    original = _dataset()
+    table = original.table.copy()
+    table.loc[:, "momentum"] = np.arange(len(table), dtype=float)
+    table.loc[table.index[:8], "label"] = [0.0, 0.0, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2]
+    table.loc[table.index[9], "momentum"] = 3.0
+    dataset = replace(original, table=table)
+    kwargs = dict(train_size=8, test_size=1, feature_names=("momentum",))
+
+    shallow = evaluate_models(dataset, **kwargs, tree_max_depth=1)
+    deeper = evaluate_models(dataset, **kwargs, tree_max_depth=2)
+    wide_leaf = evaluate_models(dataset, **kwargs, tree_max_depth=2, tree_min_leaf=3)
+
+    assert shallow.table.iloc[0]["tree"] == pytest.approx(0.06)
+    assert deeper.table.iloc[0]["tree"] == pytest.approx(0.1)
+    assert wide_leaf.table.iloc[0]["tree"] == pytest.approx(0.06)
+    assert deeper.table.iloc[0]["train_rows"] == 8
+
+
+@pytest.mark.parametrize(
+    ("parameter", "value"),
+    [
+        ("tree_max_depth", 0),
+        ("tree_max_depth", True),
+        ("tree_max_depth", 1.5),
+        ("tree_min_leaf", 0),
+        ("tree_min_leaf", True),
+        ("tree_min_leaf", 1.5),
+    ],
+)
+def test_tree_requires_positive_integer_bounds(parameter, value):
+    from market_research.research.models import evaluate_models
+
+    with pytest.raises(ValueError, match=parameter):
+        evaluate_models(_dataset(), train_size=5, test_size=2, **{parameter: value})
+
+
 def test_future_label_change_does_not_change_past_predictions():
     from market_research.research.models import evaluate_models
 
