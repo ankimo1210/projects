@@ -393,3 +393,6 @@ Notebook の表・数式・文章は静的 HTML に含まれます。Plotly の�
 - [2026-08-11 — Opus alignment follow-up](docs/updates/2026-08-11-opus-alignment-follow-up.md)
 - [2026-08-11 — B11 FINRA feasibility gate](docs/updates/2026-08-11-b11-finra-feasibility.md)
 - [2026-08-11 — B11 Treasury forecast-to-decision教材](docs/updates/2026-08-11-stage-2e-b11.md)
+
+当時の実測・独立レビューは [調査記録](docs/reviews/README.md) にまとめています。
+現状判断には上の更新ノートとコード・テストを優先してください。

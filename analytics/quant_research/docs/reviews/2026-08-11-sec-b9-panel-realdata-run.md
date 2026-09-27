@@ -116,7 +116,7 @@ regression fixture として追加する価値がある（`treasury_phantom_row.
 23.3% 発生）への GPT 側の対応と、その後の B9 M6 protocol 実装のレビューは、
 レビュー系を1本に集約するため次のノートへ記載した。
 
-→ `_docs/2026-08-10-quant-research-curriculum-alignment-feedback.md` の
+→ `./2026-08-10-quant-research-curriculum-alignment-feedback.md` の
 **追記5: B9 M6 protocol レビュー（2026-08-11 11:03）**
 
 要点だけ記すと、§3 で挙げた3案のうち **案2（同日提出ペアを除外し件数を診断へ
