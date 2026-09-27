@@ -121,18 +121,18 @@ portfolio-analyzer は口座データをローカル専用のまま保持する�
 
 johnhull、portfolio-analyzer、housing-buy-vs-rent、quant-agent-benchmark は進行中または次の実験が文書にあり、今回の退避候補から外す。既存の _archive の4群は、後継案内を索引に載せる。アーカイブ後はルートの設定・テスト対象・CI・リンク・起動手順・Git の外の依存を照合し、退避物を現役の入口として案内しない。
 
-### 作業ツリー・ブランチ・stash の整理
+### 作業ツリー・ブランチ・stash の整理（2026-09-27 完了）
 
-2026-09-27 時点の状態。削除はすべて本人の承認後に行う。
+本人の承認を得て、同日に次のとおり片付けた。残る worktree は main だけ、stash は0件。
 
-| 対象 | 状態 | 提案 |
-|---|---|---|
-| `/home/kazumasa/housing-inputs-20260918`（feature/housing-inputs） | main にマージ済み・未変更 | worktree とブランチを削除 |
-| `/home/kazumasa/johnhull-alternative-models`（codex/johnhull-section-27-1） | main にマージ済み・未変更 | 同上 |
-| `/home/kazumasa/rates-vol-completion-20260927`（rates-vol-completion） | main にマージ済み・未変更 | 同上 |
-| Codex の hsk3-course worktree（codex/hsk3-first-lesson） | 未マージの3コミット（My Tianjin の HSK 講座、16ファイル）。作業ツリーは未変更 | 継続してマージするか破棄するかを決める |
-| Codex の atlas-project worktree（detached、`735197a6`） | WSET の Atlas UX 作業が未コミット（変更237件・新規22件、2026-09-14～15）。WSET 以外の20,887件が index 上で削除扱いになっている | 作業を捨てずに WSET のブランチとしてコミットするか、破棄を決める。削除扱いは WSET だけを残した作業用の状態と見られるので、そのままコミットしない |
-| stash@{0}（2026-09-18、housing-buy-vs-rent/docs/STATUS.md の12行追加） | 元のブランチは main に取り込み済み | 現行の STATUS と比べ、不要なら破棄 |
+| 対象 | 処置 |
+|---|---|
+| housing-inputs-20260918、johnhull-alternative-models、rates-vol-completion-20260927 の worktree | main にマージ済み・未変更を確認して削除し、ローカルブランチも削除 |
+| Codex の hsk3-course worktree（codex/hsk3-first-lesson） | 未マージの3コミット（My Tianjin の HSK 講座）を origin/codex/hsk3-first-lesson へ push したうえで、worktree とローカルブランチを削除。main へのマージは未判断（この環境には Xcode がなくビルド検証できない） |
+| Codex の atlas-project worktree | 未コミットの WSET Atlas UX 作業を一時 index で木にして main と比べたところ、2026-09-18 の `c03ef39c` で main に全部取り込み済みだった。差分の8ファイルは、その後の main 側の修正（1.0.1 build 2 など）による新しい内容。push するものがないため、ブランチは作らずに worktree を削除 |
+| stash@{0}（housing-buy-vs-rent/docs/STATUS.md） | 削除 |
+
+Codex の作業ディレクトリ（`C:\Users\Kazumasa\Documents\Codex\2026-09-14\` 配下）にある worktree 以外のファイル（スクリーンショット・検証スクリプト）は残してある。
 
 ## 大容量ファイルの移管案
 
@@ -152,7 +152,7 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 
 ## 実施順と完了条件
 
-0. **基準点と作業ツリー**: push 済みの基準点から始め、上の「作業ツリー・ブランチ・stash の整理」を本人の判断に沿って片付ける。以後の工程は工程ごとの worktree で行う。完了条件は、main がクリーンで origin と一致し、残る worktree・ブランチ・stash のすべてに残す理由があること。
+0. **基準点と作業ツリー**（2026-09-27 完了）: push 済みの基準点から始め、上の「作業ツリー・ブランチ・stash の整理」を本人の判断に沿って片付けた。以後の工程は工程ごとの worktree で行う。完了条件は、main がクリーンで origin と一致し、残る worktree・ブランチ・stash のすべてに残す理由があること。
 1. **入口と文書**: ルート README をカテゴリ化し、欠けた3件、外部 re_invest_os、_archive 索引を加える。確認済みの矛盾を修正し、古い README は実装との照合結果に応じて更新する。完了条件は、48件すべてと成果物・資料・作業用ディレクトリが索引から到達でき、リンクと説明が実在すること。
 2. **統合仕様**: 新市場分析プロジェクトの対象機能、正本、データ契約（portfolio-analyzer のデータ品質規則を含む）、UI、旧プロジェクトごとの採否、個人口座との境界を設計文書に固定する。公開 API・依存関係の変更はこの段階で承認を得る。完了条件は、旧機能の行き先と検証方法が対応表で追えること。
 3. **統合実装**: 新しい workspace メンバーを追加し、fixture による価格・マクロ・バックテストの比較から段階的に移す。採用するアプリの主要操作を確認する。依存を変えたら portfolio-analyzer の日次レポートを確認する。完了条件は、採用機能のテストと代表画面が新入口で動き、未移行機能が明示され、定時タスクが動き続けること。
@@ -167,7 +167,7 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 - 新しい統合プロジェクトの名称、最初に使う入口、残す画面の範囲。
 - 大容量ファイルの保管先と、過去履歴の容量も対象にするか。
 - johnhull の再検査方針（D1）を M15 の前に決めるか。
-- 作業ツリーの扱い: マージ済み3件の削除、hsk3-course の継続か破棄か、atlas-project の未コミット作業の保存か破棄か、stash@{0} の破棄。
+- origin/codex/hsk3-first-lesson を main へマージするか（Xcode のある環境でのビルドとテストが前提）。
 - 案内カテゴリの変更（market_nn、quant-agent-benchmark、rates-ui-lab）でよいか。
 - アーカイブは候補ごとに、後継の検証結果を添えて最終確認する。
 
