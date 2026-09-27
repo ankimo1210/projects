@@ -2,7 +2,7 @@
 
 Autonomous trading-strategy research, ported from
 [autoresearch](https://github.com/karpathy/autoresearch) to a quant setting: an
-agent edits one file (`strategy.py`) to maximize a cheat-proof out-of-sample
+agent edits one file (`strategy.py`) to maximize a fixed out-of-sample
 Sharpe over the Magnificent 7 (AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA).
 
 ## Files
@@ -13,19 +13,19 @@ Sharpe over the Magnificent 7 (AAPL, MSFT, GOOGL, AMZN, NVDA, META, TSLA).
 
 ## Quick start
 
-    cd ~/projects/autostock
-    uv run prepare.py          # download + cache 15y of Mag-7 prices (one-time)
-    uv run strategy.py         # run one backtest, print the summary block
+    cd ~/projects
+    uv run --no-sync python autostock/prepare.py   # 2011-06-01 以降の価格を取得・保存
+    uv run --no-sync python autostock/strategy.py  # バックテスト1回、指標を表示
 
 Then point an agent at `program.md` to start the autonomous loop. The metric is
-**OOS test Sharpe** (higher is better). The lockbox segment is withheld until you
-run `uv run strategy.py --reveal-lockbox` when finalizing a strategy.
+**OOS test Sharpe** (higher is better). The lockbox metric is hidden until you
+run `uv run --no-sync python autostock/strategy.py --reveal-lockbox` from the workspace root when finalizing a strategy.
 
 ## Why a read-only metric
 
-In a backtest the easy way to "win" is to cheat: peek at the future, ignore
-costs, or pile on leverage. `prepare.py` makes those impossible — the engine
-lags every position by a day, charges turnover, and caps gross/per-name weight —
-so any Sharpe the loop reports is at least structurally honest. Survivorship in
-the hand-picked Mag-7 still makes absolute levels optimistic; the point of the
-demo is the autonomous *search loop*, not deployable alpha.
+`prepare.py` は翌日執行、売買コスト、銘柄別・総ウェイト上限を評価時に適用します。
+ただし、`generate_weights(prices)` には全期間の価格が渡され、lockbox も読み込み対象です。
+`--reveal-lockbox` が制御するのは指標の表示であり、戦略から将来の価格へアクセスすることは防ぎません。
+先読みの有無は戦略コードで別途確認する必要があります。
+固定 OOS 期間で探索を繰り返すことによる過適合と、現在の Mag7 を選ぶ生存者バイアスも残ります。
+これは自律探索ループの研究デモです。

@@ -27,23 +27,20 @@ For a short call, training loss is \(L_T=\widetilde H-G_T\). Economic reporting 
 
 ## Installation
 
-Python 3.11 or newer is required.
-
-```bash
-cd /home/kazumasa/projects/deep_hedge_price
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -e ".[dev]"
-```
-
-Inside the parent uv workspace, the equivalent is:
+Python 3.12 以上が必要です（[pyproject.toml](pyproject.toml)）。
+このチェックアウトでは親の uv workspace の共有環境を使います。
+`uv` はワークスペースルートで実行し、以後の `python` / `pytest` / `make` は
+その環境を有効にした状態でプロジェクトディレクトリから実行します。
 
 ```bash
 cd /home/kazumasa/projects
-uv sync --package deep-hedge-price
+uv sync --package deep-hedge-price --extra dev
+source .venv/bin/activate
 cd deep_hedge_price
 ```
+
+このプロジェクト単体のコピーを使う場合だけ、コピー先で仮想環境を作り
+`python -m pip install -e ".[dev]"` で導入できます。
 
 ## Exact commands
 
