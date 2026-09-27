@@ -1,0 +1,153 @@
+{
+  "section": "27.4",
+  "milestone": "M13",
+  "status": "PASS",
+  "numerical": {
+    "method": "independent memoized recursion, printed Figure 27.2, cash-flow identity, BSM limit",
+    "measured": {
+      "textbook_price": 107.4418504343806,
+      "nodes": 10,
+      "scenarios": 20,
+      "max_node_error": 0.0,
+      "max_scenario_error": 1.2732925824820995e-11,
+      "probability_error": 0.0,
+      "coupon_identity_error": 1.4210854715202004e-14,
+      "bsm_limit_error": 0.006402003424213376
+    }
+  },
+  "notebook": {
+    "cells": 82,
+    "lesson_cells": 12,
+    "preserved_cells_outside_lesson": 70,
+    "renumbered_headings": {
+      "## 10. Longstaff-Schwartz（LSM）": "## 11. Longstaff-Schwartz（LSM）",
+      "## 11. 練習問題": "## 12. 練習問題"
+    },
+    "negative_controls_rejected": [
+      "§9 source changed",
+      "§27.4 saved tree changed",
+      "unlisted heading changed",
+      "§27.3 saved local volatility changed"
+    ]
+  },
+  "browser": {
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "state_checks": 16,
+    "screenshots": 16,
+    "numeric_mutation_rejected": true,
+    "book_math": {
+      "rendered": 182,
+      "errors": 0
+    }
+  },
+  "regression": {
+    "sections": [
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "27.1",
+      "27.2",
+      "27.3"
+    ],
+    "tests_passed": {
+      "26-9": 91,
+      "26-10": 92,
+      "26-11": 144,
+      "26-12": 215,
+      "26-13": 274,
+      "26-14": 351,
+      "26-15": 65,
+      "26-16": 45,
+      "26-17": 16,
+      "27-1": 16,
+      "27-2": 27,
+      "27-3": 13
+    },
+    "browser": "each accepted section's original verifier rerun on M13 Book/portal assets",
+    "vol10_notebook_unchanged": true
+  },
+  "source_sha256": {
+    "scripts/build_convertible_bond_acceptance_record.py": "90058543711163c72c053c27734c744f0b38ce34faf54cc9698700a4a5872603",
+    "scripts/build_convertible_bond_reference.py": "5be4a51cb75bc38fd5194c48900e13a32adaa3ee9d98b206722ab1c8ee9c7093",
+    "scripts/verify_convertible_bond_numerics.py": "b72c926cc5758eb056fc340487c66e12a4e51a729aca8659e4020ab8d7bb1132",
+    "scripts/verify_convertible_bond_notebook.py": "790e7146f9a6eb25d769b74c87f83b29b77b3ab6138cd7011ffd2b91113e9acf",
+    "scripts/verify_convertible_bond_browser.cjs": "ce6fd5536c7fb80b67f598b417470d0fb51e648dfd59e43233a4150ada157755",
+    "scripts/recheck_accepted_m13.py": "d40c56080377096dc38911e94bd6351f37850060f927764f5892cf6c533a3427",
+    "scripts/recheck_accepted_m13.cjs": "df5c1fe94ccbde62cca6c555a12a774e4f1ac35ba0bcc8aa701ef0e842f4229c",
+    "hullkit/src/hullkit/convertible_bond.py": "776877eb0588209b3500902684392d5c8f92575a4ebe8bbac98920d71e5d4538",
+    "hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
+    "hullkit/tests/test_convertible_bond.py": "302fe59e668fb80a1f26524b1e39f014df8ecc7519c4a0801e9f278da1e6b925",
+    "hullkit/tests/test_convertible_bond_lesson.py": "c6e01e3b239d1232370a7f71afa43056706a62da6424768af72590d3a5e5c21f",
+    "report/tests/test_convertible_bond_notebook.py": "e10f3b42fde79836a9f1445d2c2fd110df5207cd523763a0868e9c019a5e9b3b",
+    "report/tests/test_report_build.py": "719e57700ff2f088a572ad8faea350664a9399fd1ba280c59fa0e046ca34aa7c",
+    "report/report_builder/figures.py": "3708c4f10938ab927e28497571aaf3edea71c1644002daa5d30c17e3ccd61885",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "f3a3f52b084ac51d7d46efb58daa64a618a40943e358550420e54d59510f0dbc",
+    "volumes/06_numerical_methods/numerical.ipynb": "53cb1fa42f74e40a6cf558ebbe251cf20d8c44ac47f2e3e19fdb63408ef2a9ba",
+    "release_manifest.json": "4173f4f6e81bb446684eb5b318e10bd415bce2ed8df2972bb9ac5f995761f04f",
+    "docs/validation/section-27-4/numerical-check.json": "875577515d5ce191b1111a873c5308754cbcb450aa3ce92882db9614c3a9283c",
+    "docs/validation/section-27-4/notebook-check.json": "07eeb848f815f1b5048e1b877feeda43c1db56eb43a769b6c331aad29d738eac",
+    "docs/validation/section-27-4/browser-check.json": "256b1a8c747bb2001c932b0ffe8ca2414b1142e95d2fd82364d21097ef9fd94b",
+    "docs/validation/section-26-9/m13-recheck.json": "a400e150c8955d8c7eb79cc0ce631d78e4154001a355962ba880fdb02352c3c4",
+    "docs/validation/section-26-10/m13-recheck.json": "db5ed3f14560ef93bab2198e20df65cf208aeb2e8ec393795299240091d184e5",
+    "docs/validation/section-26-11/m13-recheck.json": "65037cffa851a51922301a43952366cecf33e63ff94ba5e858222aa7e0ff5e1d",
+    "docs/validation/section-26-12/m13-recheck.json": "7e709776803c6167f389c8fd7e33e395005c28cf931d16bead6f40b929cfe54d",
+    "docs/validation/section-26-13/m13-recheck.json": "b9d51d7e713ee38716a9f8b14eba80bf35d68fa1b1f28eccb1908b16259c2e89",
+    "docs/validation/section-26-14/m13-recheck.json": "c19989883331187995162b4800a6e68b079d0c283acfb9a6629ce01bacca7feb",
+    "docs/validation/section-26-15/m13-recheck.json": "23e375f01c7c6b77e5ed7c58723e0f9ca0db95d56a42ba49ecfb1438d2378c32",
+    "docs/validation/section-26-16/m13-recheck.json": "fa1a7a371554021947313b176e7e72e58db19808220df1718ccbe1c4f372bb10",
+    "docs/validation/section-26-17/m13-recheck.json": "ce7274b13f0b1f272772dc9e485e062567a07cca781026943e2163aefefd0822",
+    "docs/validation/section-27-1/m13-recheck.json": "0d0b8f7f4f8dc493bd26b2a5bbdab46b9e30dc6f80e7259d65d9d0878166ee15",
+    "docs/validation/section-27-2/m13-recheck.json": "bee778a9cf726ed82ce0d64664b4667b532d1ec3d40ddb928346aacdcf33e17f",
+    "docs/validation/section-27-3/m13-recheck.json": "d5f71db9f3b6a0c7cd2542804347bec3effa1089b5d758d860cc8bd5699d1665",
+    "docs/validation/section-26-9/browser-m13-recheck.json": "0196385c1e0d392170ab989e108268b73638248e4425603ad8e403de4a950822",
+    "docs/validation/section-26-10/browser-m13-recheck.json": "da4422b0093c45280e48f497815883649be0393a2d180ae84a34f3a7af52eae8",
+    "docs/validation/section-26-11/browser-m13-recheck.json": "48dd4424422be5e42eab04a2b9937d4255dad710bbd4318844badce2749d9742",
+    "docs/validation/section-26-12/browser-m13-recheck.json": "26856b12f2368353610017868142461a480763002271d6c3a7755940b427a55c",
+    "docs/validation/section-26-13/browser-m13-recheck.json": "f9500de58b8df6adeff1fd0bd5b0e9f12dffd2be676b0c27ef7b3b61b731739c",
+    "docs/validation/section-26-14/browser-m13-recheck.json": "af0aae4ac5ecdbed42d02f0d296296047b76d8e87ff9bb3c28e59cb9b4dec519",
+    "docs/validation/section-26-15/browser-m13-recheck.json": "2dfc16af8453189398494a1cc9bcc07896fc2fafff6803bb5cdf0d57254209cb",
+    "docs/validation/section-26-16/browser-m13-recheck.json": "9a8e352723744e1ef4e8a84a33883f075eabe7b87aa93284790f0fb482e119a5",
+    "docs/validation/section-26-17/browser-m13-recheck.json": "a902887309d97caa8d298be2d30186bdfddc0fd5cd727baa81e1f2198e1ba6d2",
+    "docs/validation/section-27-1/browser-m13-recheck.json": "93c3440271e93d76b17a980db0f6e97a9c556720a1274fd0c5be0224ccca2ac5",
+    "docs/validation/section-27-2/browser-m13-recheck.json": "6657c259e7ca10b1370aaec5f518b428728c99b93a64317d7be2a725882f9bc5",
+    "docs/validation/section-27-3/browser-m13-recheck.json": "d559121c769f54a670edb70acd9d116e27685e7d43f2efe7c0888860d5316d08"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-27-4/reference.json": "c1e4a7d9ff7b6a55fb7b2ddca4f8e2fcb0f5fbaa9436949186587fdda911e8ed",
+    "report/site/numerics.html": "35e4ab9d34a4e110641df9c410cc968f6b9f0457b6e212e1b0dda406baf641f2",
+    "book/_build/html/notebooks/06_numerical.html": "4d54dedd0b3c767410299835a9be50b2c146d28a543ffa55fda51ca833c3892e",
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
+    "docs/validation/section-27-4/book-cb_tree-1440.png": "f5a5938513d13a68c60c791ee541c70f1a20ff48ea70683c9eea195c43c8feee",
+    "docs/validation/section-27-4/book-cb_tree-1000.png": "ade74d17152f1e3aad8d3e90f88ed3473ccd7d9ace0c371910c094d328603978",
+    "docs/validation/section-27-4/book-cb_decisions-1440.png": "0c348018bb10de4bc5d9463a80777605cf8fced4198095517ccf15b2ade87cb9",
+    "docs/validation/section-27-4/book-cb_decisions-1000.png": "b89bee53b90a2a1224c90b5761e1a1451a1cb286120962158f28252ffc84f9ae",
+    "docs/validation/section-27-4/book-cb_credit-1440.png": "861c35eacdd25b62f991141af40fa8ae7d3e6af6a1aa431f3e4f8a1b1d22d2ed",
+    "docs/validation/section-27-4/book-cb_credit-1000.png": "3c68805b1a840fdd7c2189bb184a3a775ec2f884e4f9a489baca104ae6899696",
+    "docs/validation/section-27-4/book-cb_convergence-1440.png": "871727dd9d355c0a30d1f21a83e9b3d20a61152aad1388bfaa9e268f7307e534",
+    "docs/validation/section-27-4/book-cb_convergence-1000.png": "66b6012d2484615f40ee6c2c46a84dce635be56743a16330e738a15d89c9bf3a",
+    "docs/validation/section-27-4/portal-cb_tree-1440.png": "7e012d8e1e1a4dca0f9251d0f07fc62d0b7e6d5386b92ddb605e6eef69895ac6",
+    "docs/validation/section-27-4/portal-cb_tree-1000.png": "ff59edf9d2a25e4b81d966ef539cb2f2a95d168dd5015e52e4eba85a32e7bf17",
+    "docs/validation/section-27-4/portal-cb_decisions-1440.png": "e0630e90a5ec1c3a4ea78f8533d24558f3c9ece9f7181564bbfabca98f7e2b8d",
+    "docs/validation/section-27-4/portal-cb_decisions-1000.png": "8cf1bbfb73eae535b919c386db447299bf1ba2d1b28f32fc7a8beef35ddb9e84",
+    "docs/validation/section-27-4/portal-cb_credit-1440.png": "2847be665fabf6f80c0c1903a19dddde618f9dd759eb2a7da66110093d381a3a",
+    "docs/validation/section-27-4/portal-cb_credit-1000.png": "f8999ddaf54c95335f3cfd3aa811774f68753cd7eef3eca09d5bb31fe87fa76d",
+    "docs/validation/section-27-4/portal-cb_convergence-1440.png": "3e5bc3e503be610d0219ba5e5e9381279408604ec3404af9e0d6b46bb711c3ee",
+    "docs/validation/section-27-4/portal-cb_convergence-1000.png": "4ae7afa3d9f8d6af1123f6819bb4c8eb1563a1f7ee5bafd9c8554e2992909211"
+  }
+}

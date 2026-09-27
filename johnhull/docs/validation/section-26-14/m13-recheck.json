@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "milestone": "M13",
+  "base_commit": "44272e45",
+  "lesson_numeric_payload_unchanged": true,
+  "hash_refresh": [],
+  "checked_at": "2026-09-27T03:16:23.386749+00:00",
+  "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_exchange_reference.py hullkit/tests/test_exchange_pricing.py hullkit/tests/test_exchange_lesson.py",
+  "environment": {
+    "PYTHONPATH": "hullkit/src:scripts:report (this checkout)"
+  },
+  "exit_code": 0,
+  "pytest_output": "........................................................................ [ 20%]\n........................................................................ [ 41%]\n........................................................................ [ 61%]\n........................................................................ [ 82%]\n...............................................................          [100%]\n351 passed in 1.02s\n",
+  "passed": 351,
+  "source_sha256": {
+    "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/tests/test_exchange_lesson.py": "83e2a42d747e2fcd13076f5de0665e2bf75336312ddc322223c44243bed7afea",
+    "hullkit/tests/test_exchange_pricing.py": "f6d9318e568466875a9f1ffed12750b2007f7017f15d727ec6da016499061a7f",
+    "hullkit/tests/test_exchange_reference.py": "522522167f3fc0137365eb2f9d1f7db8cb9bf6baaac35cc0d0217e1fd229008b",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "report/report_builder/figures.py": "3708c4f10938ab927e28497571aaf3edea71c1644002daa5d30c17e3ccd61885",
+    "scripts/recheck_accepted_m11.py": "2c4e60af78fb3fd7a70d15412c5b4d26add5b055c8b214f4e91fc2ce9a21b33a",
+    "scripts/recheck_accepted_m12.py": "8b5ec6be9916efcebf3bf3a8a46fd3a6d196327d30c4ff17640b2ebe5975f212",
+    "scripts/recheck_accepted_m13.py": "d40c56080377096dc38911e94bd6351f37850060f927764f5892cf6c533a3427",
+    "scripts/recheck_exotics_m10.py": "7c0722d24841dbe0941bab58886e34ec2dd9321259c48f542416db66c1c01bc8",
+    "scripts/recheck_exotics_m8.py": "3d4b4d1a71b5588df05d3a2251a73086d03174abefe929bde578268ac8f1567b",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "f3a3f52b084ac51d7d46efb58daa64a618a40943e358550420e54d59510f0dbc",
+    "volumes/06_numerical_methods/numerical.ipynb": "53cb1fa42f74e40a6cf558ebbe251cf20d8c44ac47f2e3e19fdb63408ef2a9ba",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
+    "report/site/numerics.html": "35e4ab9d34a4e110641df9c410cc968f6b9f0457b6e212e1b0dda406baf641f2",
+    "book/_build/html/notebooks/06_numerical.html": "4d54dedd0b3c767410299835a9be50b2c146d28a543ffa55fda51ca833c3892e"
+  },
+  "scope": "Accepted section tests against the final M13 assets after the shared portal registry and stylesheet changed; no pricing code or lesson data of this section changed. Historical numerical and browser records preserved."
+}

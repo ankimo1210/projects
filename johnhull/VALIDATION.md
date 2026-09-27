@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,17 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 27.4 M13 — 2026-09-27
+
+[受入ノート](docs/SECTION_27_4_ACCEPTANCE_2026-09-27.md)・[レビュー](docs/SECTION_27_4_REVIEW_2026-09-27.md)・[統合記録](docs/validation/section-27-4/m13-check.json)にCB01–CB06の5軸を集約。台帳は**accepted**（受入13・未評価293）。
+
+- 原典Example 27.1／Figure 27.2の10節点とB・D・Eの判断を独立の再帰参照で固定。初期価格107.4418504343806ドル（印刷値107.44）。公開ツリーとの最大差は10節点・20シナリオで1.3e-11ドル。
+- 利付の非転換債の生存確率別キャッシュフロー恒等式は1.5e-14ドル以下。無信用・無コールの400段ツリーはBSM分解と0.0065ドル以内。粗い格子値と連続時間極限を区別した。
+- 公開APIは3枝確率と転換社債ツリー、vol06 §10.1–10.6の12セルとBook/portal共有4図。§10以外の70セルはM12基点`44272e45`と本文・保存出力が同じ（後続2見出しの番号変更のみ）。4改変を拒否。
+- ChromiumでBook/portal×1440/1000pxの16状態・16画像、数値改変拒否、Book MathJaxエラー0、portal外部要求0を確認。既受入§26.9–§27.3の12節を個別テスト・両画面でM13再検証。
+- hullkit+report **2,786 passed / 6 skipped**（既存deprecation warning 2件）。19 core notebooks、`ruff check johnhull`、変更Pythonの`ruff format --check`、release contract、台帳`--check-artifacts`はPASS。
+- 時変・株価依存ハザード、契約別のコール・転換・利息条件、市場較正、実市場価格・ヘッジ成績は受入範囲外。
 
 ## Section 27.3 M12 — 2026-09-27
 
