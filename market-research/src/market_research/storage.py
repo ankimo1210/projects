@@ -117,7 +117,8 @@ def _fundamental_decode(payload: str) -> FundamentalObservation:
         if data[name] is not None:
             data[name] = date.fromisoformat(data[name])
     for name in ("available_at", "observed_at"):
-        data[name] = datetime.fromisoformat(data[name])
+        if data[name] is not None:
+            data[name] = datetime.fromisoformat(data[name])
     return FundamentalObservation(**data)
 
 
@@ -285,7 +286,7 @@ class ResearchStore:
                 key.currency,
             ):
                 raise ValueError("fundamental does not match cache key")
-            if row.observed_at > observed:
+            if row.observed_at is not None and row.observed_at > observed:
                 raise ValueError("fundamental observed after snapshot")
             if row.raw_hash is not None and row.raw_hash != _hash(raw):
                 raise ValueError("fundamental raw hash does not match snapshot")
