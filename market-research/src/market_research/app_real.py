@@ -128,6 +128,28 @@ def render_real_app() -> None:
                 for item in store.snapshots(1000)
                 if item.complete and item.observed_at <= as_of
             }
+            extra_ids_text = st.sidebar.text_area(
+                "追加snapshot ID（1行1件）",
+                help="一覧に出ない古いsnapshotをIDで読み込みます。最大20件。",
+                max_chars=1300,
+            )
+            extra_ids = tuple(
+                dict.fromkeys(line.strip() for line in extra_ids_text.splitlines() if line.strip())
+            )
+            if len(extra_ids) > 20:
+                raise ValueError("追加snapshot IDは20件以内にしてください")
+            for snapshot_id in extra_ids:
+                if snapshot_id in snapshots:
+                    continue
+                try:
+                    item = store.get_snapshot(snapshot_id)
+                except (ValueError, OSError):
+                    st.sidebar.warning(f"追加snapshot IDを読み込めません: {snapshot_id}")
+                    continue
+                if not item.complete or item.observed_at > as_of:
+                    st.sidebar.warning(f"未完了または基準時刻より未来のsnapshotです: {snapshot_id}")
+                    continue
+                snapshots[snapshot_id] = item
             macro_options = tuple(
                 snapshot_id
                 for snapshot_id, item in snapshots.items()
