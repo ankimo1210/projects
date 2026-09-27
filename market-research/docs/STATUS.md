@@ -20,10 +20,32 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 | 工程2 設計 | 完了 | 上記統合仕様、ADR 0004 |
 | 工程3a オフライン中核 | main `7c4bb109` へ取込み済み | 価格/マクロ契約、時点別読取、lag1バックテスト、CLI、合成7画面 |
 | 工程3b 実データと保存 | main `7b7cbd1b` へ取込み済み | 4価格provider、ALFRED/ESRI/MoF/e-Stat/SEC、manifestと時点別読取、日米株の自動カレンダー。認証元のライブ疎通は残り |
-| 工程3c 分析機能 | `codex/market-research-stage3c` で実装中 | 明示snapshotの価格・財務入力、品質付き指標、3値スクリーナー、基準日付きbasket、benchmark比較、仮想配分リスク、市場概要、品質表示、マクロ・公表を実装。6画面に接続。PIT特徴量・ラベルと前向き分割、zero/mean/ridgeの同条件比較、Mag7固定例を実装中。tree・公式指数の照合・FX換算・保存run・5ノート・HTML・戦略比較画面は未実装 |
-| 工程3d 連携・切替 | 未着手 | portfolio向け一方向export、旧結果との照合、代表画面の手動確認 |
+| 工程3c 分析機能 | codex/market-research-stage3c で実装・検証中、main未反映 | 品質付き指標・3値スクリーナー・basket・公式指数の明示出典照合・円換算の仮想リスク・マクロ/財務表示、PIT履歴からのzero/mean/ridge/tree比較、Mag7固定例、5ノート、合成runのHTMLと不変保存を実装。7画面の代表操作はAppTestで確認。実providerの網羅、保存データの研究run永続化、ノート分析を一括HTMLへ載せる機能は残る |
+| 工程3d 連携・切替 | 一方向exportと口座側adapterを実装・検証中、main未反映 | Q12の合成入力、版・ハッシュ・時刻・FX鮮度検査、日次レポートの従来経路を確認。旧結果の差分記録と旧入口の切替、旧市場プロジェクトの個別退避は残る |
 
-## 検証
+## 2026-09-28の実装・検証
+
+- 工程3cの時点別信号、前向き分割、zero/mean/ridge/treeとbuy-and-holdの同条件比較、
+  公式指数の出典を利用者が宣言する照合、保存済みUSD/JPY日足の評価時刻別円換算、
+  5本の独立した合成ノート、自己完結HTMLと不変の合成run保存を追加した。
+  保存データ画面は複数の当時観測済みsnapshotを選んだときだけ戦略を比較し、
+  円換算ではFX snapshot・UTC評価時刻・鮮度上限を要求する。公式指数の真正性と
+  過去の構成銘柄は自動確認できない。合成runのartifact IDは入力・コードcommit・
+  設定などから作り、元のrun_idを別に記録する。
+- market-research member suiteは290 passed。Streamlit AppTestで合成7画面、
+  保存データのPIT戦略比較・公式指数比較・円換算リスク、CLIのHTML・保存run再読込を確認。
+  5ノートはnbformatとnbclientで各先頭から実行でき、コミットしたセル出力は空。
+  コードはRuffとpre-commitを実施する。実データの手動画面確認と認証付きproviderの
+  ライブ疎通は未実施。
+- 工程3dのmarket側immutable Parquet/JSON exportとportfolio側read-only adapter、
+  明示CLIを合成入力で統合。portfolio-analyzer suiteは318 passed、19 skipped
+  （隔離worktreeにprivate test fixtureがない）。uv lock --checkが成功。
+  隔離worktreeの全workspaceをuv syncした後、private入力を読み込む日次レポートを
+  メール指定なし・履歴とHTMLを一時フォルダにして実行し、終了コード0・HTML 2件を確認。
+  内容や個人の数値は出力せず、一時ファイルは削除。Windows定時タスクと共有mainの
+  .venvは変更していない。
+
+## 検証（以下は各実装時点の履歴。現在の状態は上の表を参照）
 
 - 工程3bのmain取込み後に共有 `.venv` を同期。導入は `exchange-calendars` と関連2パッケージ、
   `market-research` の入れ直しのみ。`portfolio-analyzer` の日次レポートは
@@ -114,18 +136,19 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 
 ## 次の作業
 
-1. 工程3cのtree候補、公式指数との照合、5ノート・HTML・戦略比較画面を接続し、
-   費用付き比較の代表操作を確認する。Q09–Q11・Q13を完了する。
-2. ALFRED・e-Stat・SECの設定済み環境で実通信を確認する。ESRIの過去掲載は
-   表の取得成功まで実績に昇格させず、MoF/e-Statは収集前の時点を再現しない。
-   Q06–Q08のfixtureを継続し、必要な改定・期間の広がりを追加する。
-3. 工程3dでportfolio向けexportと口座側adapterを作り、Q12、旧結果との照合、
-   旧入口の切替を確認する。
+1. 工程3c/3dブランチをmainの最新へ追随させ、文書リンク・Ruff・pre-commit・対象suite、
+   代表画面を再検証してmainへ統合する。Q09–Q13のfixtureと旧結果の差分を記録する。
+2. 旧 stock / quantkit / market-viz / macrokit / autostock は、採用機能と旧入口の
+   実行条件を個別に照合する。後継で置き換えない高度モデル、イントラデイ、
+   税/NISA、AIチャット、API scaffoldは歴史的成果として復元方法を残す。
+   退避時にworkspace設定・Makefile・CI・索引・Git外参照を更新する。
+3. 認証がある環境でALFRED・e-Stat・SECの実通信を小範囲で確認する。
+   Stooqのブラウザ検証とJ-Quantsの未検証は、初版の対応済み扱いにしない。
+   長期のPIT履歴がないと過去の成績は再現できない。
 
 制約: 日米株は自動カレンダーを使用し、それ以外の市場は確認済み時間表が必要。
-J-Quantsのライブ認証は未検証。Stooqはブラウザ検証要求でライブ取得不可。
-画面の既定は合成デモ。保存データモードの戦略比較は実データ未接続。
-今回のマクロ・財務も旧DBの移管と旧入口の切替はしていない。
+保存データモードの戦略比較は実際に観測された複数の版を要する。
+保存データの研究runはまだ永続保存しない。Mag7旧Parquetの過去PIT成績は不明。
 
 ## 既知の不具合と修正
 
