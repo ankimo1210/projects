@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime
 
 from .contracts import MacroObservation, _utc
-from .fetch import FetchError, HttpClient
+from .fetch import FetchError, HttpClient, parse_json_response, redact_json_response
 from .storage import CacheKey, CacheUnavailableError, ResearchStore, Snapshot, _json
 
 URL = "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData"
@@ -90,7 +90,7 @@ def _envelope(key: CacheKey, limit: int, pages: list[str], next_position: int) -
 
 
 def _page_data(raw: bytes, request: EstatRequest) -> tuple[list[dict], int | None]:
-    payload = json.loads(raw)
+    payload = parse_json_response(raw)
     body = payload["GET_STATS_DATA"]
     if int(body["RESULT"]["STATUS"]) != 0:
         raise FetchError("provider")
@@ -194,10 +194,15 @@ def ingest_estat(
             "limit": limit,
             **{"cd" + name[0].upper() + name[1:]: code for name, code in request.classifications},
         }
+        failure: FetchError | None = None
         try:
             raw = http.get(URL, params=params)
-            observations, next_key = _page_data(raw, request)
+            _, safe = redact_json_response(raw, secret)
+            observations, next_key = _page_data(safe, request)
         except FetchError as error:
+            failure = error
+        if failure is not None:
+            partial = None
             if pages:
                 partial = _envelope(request.key, limit, pages, position)
                 store.save(
@@ -208,12 +213,11 @@ def ingest_estat(
                     cursor=str(position),
                 )
             raise FetchError(
-                error.category,
-                status=error.status,
-                partial_raw=partial if pages else None,
+                failure.category,
+                status=failure.status,
+                partial_raw=partial,
                 cursor=str(position) if pages else None,
             ) from None
-        safe = raw.replace(secret.encode(), b"[REDACTED]")
         pages.append(base64.b64encode(safe).decode())
         if next_key is None:
             break

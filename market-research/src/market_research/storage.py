@@ -259,7 +259,13 @@ class ResearchStore:
         for row in macro:
             if (row.source, "macro", row.indicator) != (key.provider, key.dataset, key.identity):
                 raise ValueError("macro row does not match cache key")
-            if row.release_at > observed:
+            date_only_same_day = (
+                row.vintage_kind == "estimated"
+                and row.release_precision == "date"
+                and row.source_release_date is not None
+                and row.source_release_date <= observed.date()
+            )
+            if row.release_at > observed and not date_only_same_day:
                 raise ValueError("macro release after snapshot")
             if row.observed_at is not None and row.observed_at > observed:
                 raise ValueError("macro observed after snapshot")
@@ -288,6 +294,10 @@ class ResearchStore:
                 raise ValueError("fundamental does not match cache key")
             if row.observed_at is not None and row.observed_at > observed:
                 raise ValueError("fundamental observed after snapshot")
+            if row.available_at > observed and not (
+                row.vintage_kind == "estimated" and row.filed <= observed.date()
+            ):
+                raise ValueError("fundamental availability after snapshot")
             if row.raw_hash is not None and row.raw_hash != _hash(raw):
                 raise ValueError("fundamental raw hash does not match snapshot")
             row_key = (
