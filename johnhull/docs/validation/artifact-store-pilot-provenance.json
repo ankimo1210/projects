@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "artifacts": [
+    {
+      "path": "johnhull/docs/validation/section-27-4/book-cb_decisions-1000.png",
+      "ref": "artifact:sha256:b89bee53b90a2a1224c90b5761e1a1451a1cb286120962158f28252ffc84f9ae",
+      "size": 21008,
+      "mime": "image/png",
+      "provenance": {
+        "origin": "Section 27.4 accepted browser evidence; browser-check.json",
+        "license": "project-generated evidence; repository terms apply",
+        "generation_commit": "ff3ada1280e52d0379ff7d7f4ab368bd3cb730af",
+        "input_sha256": {
+          "johnhull/docs/validation/section-27-4/numerical-check.json": "875577515d5ce191b1111a873c5308754cbcb450aa3ce92882db9614c3a9283c",
+          "johnhull/docs/validation/section-27-4/reference.json": "c1e4a7d9ff7b6a55fb7b2ddca4f8e2fcb0f5fbaa9436949186587fdda911e8ed",
+          "johnhull/hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
+          "johnhull/hullkit/src/hullkit/convertible_bond.py": "776877eb0588209b3500902684392d5c8f92575a4ebe8bbac98920d71e5d4538",
+          "johnhull/report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+          "johnhull/report/report_builder/figures.py": "3708c4f10938ab927e28497571aaf3edea71c1644002daa5d30c17e3ccd61885",
+          "johnhull/scripts/build_convertible_bond_reference.py": "5be4a51cb75bc38fd5194c48900e13a32adaa3ee9d98b206722ab1c8ee9c7093",
+          "johnhull/scripts/verify_convertible_bond_browser.cjs": "ce6fd5536c7fb80b67f598b417470d0fb51e648dfd59e43233a4150ada157755",
+          "johnhull/volumes/06_numerical_methods/build_numerical_notebook.py": "f3a3f52b084ac51d7d46efb58daa64a618a40943e358550420e54d59510f0dbc",
+          "johnhull/volumes/06_numerical_methods/numerical.ipynb": "53cb1fa42f74e40a6cf558ebbe251cf20d8c44ac47f2e3e19fdb63408ef2a9ba",
+          "johnhull/docs/validation/section-27-4/browser-check.json": "256b1a8c747bb2001c932b0ffe8ca2414b1142e95d2fd82364d21097ef9fd94b"
+        },
+        "environment": {
+          "browser": "145.0.7632.6"
+        },
+        "parameters": {
+          "surface": "book",
+          "width_px": 1000,
+          "phase": "accepted"
+        },
+        "regenerable": true
+      },
+      "restore_command": "python johnhull/scripts/evidence_store.py restore johnhull/docs/validation/artifact-store-pilot.json --dest <empty-directory>",
+      "verification": {
+        "status": "pending",
+        "checked_at": "2026-09-27T21:53:03+00:00",
+        "scope": "D1 end-to-end acceptance pending; two-copy storage and byte restoration verified",
+        "storage": {
+          "primary": "PASS",
+          "mirror": "PASS",
+          "restore_from_primary": "PASS",
+          "restore_from_mirror": "PASS"
+        },
+        "quality_gates": {
+          "section_27_4_pytest": "15 passed",
+          "section_ledger_without_generated_artifacts": "PASS; accepted_sections=14",
+          "release_contract": "PASS",
+          "section_ledger_with_generated_artifacts": "FAIL in isolated worktree: regenerated Book HTML CSS URL differs from pinned M14 hash; main baseline PASS"
+        }
+      }
+    },
+    {
+      "path": "johnhull/docs/validation/section-27-4/portal-cb_decisions-1000.png",
+      "ref": "artifact:sha256:8cf1bbfb73eae535b919c386db447299bf1ba2d1b28f32fc7a8beef35ddb9e84",
+      "size": 16798,
+      "mime": "image/png",
+      "provenance": {
+        "origin": "Section 27.4 accepted browser evidence; browser-check.json",
+        "license": "project-generated evidence; repository terms apply",
+        "generation_commit": "ff3ada1280e52d0379ff7d7f4ab368bd3cb730af",
+        "input_sha256": {
+          "johnhull/docs/validation/section-27-4/numerical-check.json": "875577515d5ce191b1111a873c5308754cbcb450aa3ce92882db9614c3a9283c",
+          "johnhull/docs/validation/section-27-4/reference.json": "c1e4a7d9ff7b6a55fb7b2ddca4f8e2fcb0f5fbaa9436949186587fdda911e8ed",
+          "johnhull/hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
+          "johnhull/hullkit/src/hullkit/convertible_bond.py": "776877eb0588209b3500902684392d5c8f92575a4ebe8bbac98920d71e5d4538",
+          "johnhull/report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+          "johnhull/report/report_builder/figures.py": "3708c4f10938ab927e28497571aaf3edea71c1644002daa5d30c17e3ccd61885",
+          "johnhull/scripts/build_convertible_bond_reference.py": "5be4a51cb75bc38fd5194c48900e13a32adaa3ee9d98b206722ab1c8ee9c7093",
+          "johnhull/scripts/verify_convertible_bond_browser.cjs": "ce6fd5536c7fb80b67f598b417470d0fb51e648dfd59e43233a4150ada157755",
+          "johnhull/volumes/06_numerical_methods/build_numerical_notebook.py": "f3a3f52b084ac51d7d46efb58daa64a618a40943e358550420e54d59510f0dbc",
+          "johnhull/volumes/06_numerical_methods/numerical.ipynb": "53cb1fa42f74e40a6cf558ebbe251cf20d8c44ac47f2e3e19fdb63408ef2a9ba",
+          "johnhull/docs/validation/section-27-4/browser-check.json": "256b1a8c747bb2001c932b0ffe8ca2414b1142e95d2fd82364d21097ef9fd94b"
+        },
+        "environment": {
+          "browser": "145.0.7632.6"
+        },
+        "parameters": {
+          "surface": "portal",
+          "width_px": 1000,
+          "phase": "accepted"
+        },
+        "regenerable": true
+      },
+      "restore_command": "python johnhull/scripts/evidence_store.py restore johnhull/docs/validation/artifact-store-pilot.json --dest <empty-directory>",
+      "verification": {
+        "status": "pending",
+        "checked_at": "2026-09-27T21:53:03+00:00",
+        "scope": "D1 end-to-end acceptance pending; two-copy storage and byte restoration verified",
+        "storage": {
+          "primary": "PASS",
+          "mirror": "PASS",
+          "restore_from_primary": "PASS",
+          "restore_from_mirror": "PASS"
+        },
+        "quality_gates": {
+          "section_27_4_pytest": "15 passed",
+          "section_ledger_without_generated_artifacts": "PASS; accepted_sections=14",
+          "release_contract": "PASS",
+          "section_ledger_with_generated_artifacts": "FAIL in isolated worktree: regenerated Book HTML CSS URL differs from pinned M14 hash; main baseline PASS"
+        }
+      }
+    },
+    {
+      "path": "johnhull/docs/validation/section-27-4/book-cb_decisions-1000-m14-recheck.png",
+      "ref": "artifact:sha256:b89bee53b90a2a1224c90b5761e1a1451a1cb286120962158f28252ffc84f9ae",
+      "size": 21008,
+      "mime": "image/png",
+      "provenance": {
+        "origin": "Section 27.4 m14-recheck browser evidence; browser-m14-recheck.json",
+        "license": "project-generated evidence; repository terms apply",
+        "generation_commit": "e4288dc0977e70b0017104f053e0690552588790",
+        "input_sha256": {
+          "johnhull/docs/validation/section-27-4/numerical-check.json": "875577515d5ce191b1111a873c5308754cbcb450aa3ce92882db9614c3a9283c",
+          "johnhull/docs/validation/section-27-4/reference.json": "c1e4a7d9ff7b6a55fb7b2ddca4f8e2fcb0f5fbaa9436949186587fdda911e8ed",
+          "johnhull/hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
+          "johnhull/hullkit/src/hullkit/convertible_bond.py": "776877eb0588209b3500902684392d5c8f92575a4ebe8bbac98920d71e5d4538",
+          "johnhull/report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+          "johnhull/report/report_builder/figures.py": "b7c6255f09ad6203c618f55bba63fc75ac7a24b6959855d7f778f369e6cb069c",
+          "johnhull/scripts/build_convertible_bond_reference.py": "5be4a51cb75bc38fd5194c48900e13a32adaa3ee9d98b206722ab1c8ee9c7093",
+          "johnhull/scripts/verify_convertible_bond_browser.cjs": "ce6fd5536c7fb80b67f598b417470d0fb51e648dfd59e43233a4150ada157755",
+          "johnhull/volumes/06_numerical_methods/build_numerical_notebook.py": "fb55bd48ac8807303ef3d4e4541c674b8cf80db7130d914d1e5eff322437c700",
+          "johnhull/volumes/06_numerical_methods/numerical.ipynb": "21e56333b5d8c9879d9315fc54f9d4ca8e29b569d9752065c142b5930335e740",
+          "johnhull/docs/validation/section-27-4/browser-m14-recheck.json": "723cc6b008eb54d408c851757306ddbf49525030d096e86eb6a770a4f4e6a72e"
+        },
+        "environment": {
+          "browser": "145.0.7632.6"
+        },
+        "parameters": {
+          "surface": "book",
+          "width_px": 1000,
+          "phase": "m14-recheck"
+        },
+        "regenerable": true
+      },
+      "restore_command": "python johnhull/scripts/evidence_store.py restore johnhull/docs/validation/artifact-store-pilot.json --dest <empty-directory>",
+      "verification": {
+        "status": "pending",
+        "checked_at": "2026-09-27T21:53:03+00:00",
+        "scope": "D1 end-to-end acceptance pending; two-copy storage and byte restoration verified",
+        "storage": {
+          "primary": "PASS",
+          "mirror": "PASS",
+          "restore_from_primary": "PASS",
+          "restore_from_mirror": "PASS"
+        },
+        "quality_gates": {
+          "section_27_4_pytest": "15 passed",
+          "section_ledger_without_generated_artifacts": "PASS; accepted_sections=14",
+          "release_contract": "PASS",
+          "section_ledger_with_generated_artifacts": "FAIL in isolated worktree: regenerated Book HTML CSS URL differs from pinned M14 hash; main baseline PASS"
+        }
+      }
+    },
+    {
+      "path": "johnhull/docs/validation/section-27-4/portal-cb_decisions-1000-m14-recheck.png",
+      "ref": "artifact:sha256:8cf1bbfb73eae535b919c386db447299bf1ba2d1b28f32fc7a8beef35ddb9e84",
+      "size": 16798,
+      "mime": "image/png",
+      "provenance": {
+        "origin": "Section 27.4 m14-recheck browser evidence; browser-m14-recheck.json",
+        "license": "project-generated evidence; repository terms apply",
+        "generation_commit": "e4288dc0977e70b0017104f053e0690552588790",
+        "input_sha256": {
+          "johnhull/docs/validation/section-27-4/numerical-check.json": "875577515d5ce191b1111a873c5308754cbcb450aa3ce92882db9614c3a9283c",
+          "johnhull/docs/validation/section-27-4/reference.json": "c1e4a7d9ff7b6a55fb7b2ddca4f8e2fcb0f5fbaa9436949186587fdda911e8ed",
+          "johnhull/hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
+          "johnhull/hullkit/src/hullkit/convertible_bond.py": "776877eb0588209b3500902684392d5c8f92575a4ebe8bbac98920d71e5d4538",
+          "johnhull/report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+          "johnhull/report/report_builder/figures.py": "b7c6255f09ad6203c618f55bba63fc75ac7a24b6959855d7f778f369e6cb069c",
+          "johnhull/scripts/build_convertible_bond_reference.py": "5be4a51cb75bc38fd5194c48900e13a32adaa3ee9d98b206722ab1c8ee9c7093",
+          "johnhull/scripts/verify_convertible_bond_browser.cjs": "ce6fd5536c7fb80b67f598b417470d0fb51e648dfd59e43233a4150ada157755",
+          "johnhull/volumes/06_numerical_methods/build_numerical_notebook.py": "fb55bd48ac8807303ef3d4e4541c674b8cf80db7130d914d1e5eff322437c700",
+          "johnhull/volumes/06_numerical_methods/numerical.ipynb": "21e56333b5d8c9879d9315fc54f9d4ca8e29b569d9752065c142b5930335e740",
+          "johnhull/docs/validation/section-27-4/browser-m14-recheck.json": "723cc6b008eb54d408c851757306ddbf49525030d096e86eb6a770a4f4e6a72e"
+        },
+        "environment": {
+          "browser": "145.0.7632.6"
+        },
+        "parameters": {
+          "surface": "portal",
+          "width_px": 1000,
+          "phase": "m14-recheck"
+        },
+        "regenerable": true
+      },
+      "restore_command": "python johnhull/scripts/evidence_store.py restore johnhull/docs/validation/artifact-store-pilot.json --dest <empty-directory>",
+      "verification": {
+        "status": "pending",
+        "checked_at": "2026-09-27T21:53:03+00:00",
+        "scope": "D1 end-to-end acceptance pending; two-copy storage and byte restoration verified",
+        "storage": {
+          "primary": "PASS",
+          "mirror": "PASS",
+          "restore_from_primary": "PASS",
+          "restore_from_mirror": "PASS"
+        },
+        "quality_gates": {
+          "section_27_4_pytest": "15 passed",
+          "section_ledger_without_generated_artifacts": "PASS; accepted_sections=14",
+          "release_contract": "PASS",
+          "section_ledger_with_generated_artifacts": "FAIL in isolated worktree: regenerated Book HTML CSS URL differs from pinned M14 hash; main baseline PASS"
+        }
+      }
+    }
+  ],
+  "kind": "johnhull-artifact-pilot-provenance",
+  "manifest": "johnhull/docs/validation/artifact-store-pilot.json"
+}
