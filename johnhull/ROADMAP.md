@@ -83,7 +83,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 [研究バックログ計画](docs/superpowers/plans/2026-09-27-research-backlog.md)（2026-09-27）は、
 外部の[提案書](docs/RESEARCH_HANDOFF_2026-09-27.md)にある 94 件を次の4つに振り分けた：
 本編に畳む（RB-F02→P1、RB-F03→P3、R11・§19.14・RB-H16→P4）、章の受入後のコラム、研究トラック（同時1本）、johnhull の外。
-**移行期間中は実装しない。** 研究トラック #1（推奨 RB-F07）を含む5点が判断待ち。
+**移行期間中は実装しない。** 研究トラック #1 は RB-F07 に決定（2026-09-27）。研究の置き場と移行明けの定義の2点が判断待ち。
 
 ## 可視化 & 深掘り(A1–A4) — 完了 (2026-06-14)
 
