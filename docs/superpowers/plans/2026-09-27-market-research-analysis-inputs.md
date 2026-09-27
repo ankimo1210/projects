@@ -71,11 +71,11 @@
 
 **Interfaces:**
 - Consumes: `PriceDataset` の確定バー、`build_pit_close_frame` の価格行列。
-- Produces: `close_history(dataset) -> pd.DataFrame`（観測済み履歴を `bar_end` で表示する `retrospective` 入力）と `indicator_table(prices, *, momentum_window, volatility_window) -> pd.DataFrame`（変化率、年率volatility、drawdown、z-score、欠損理由）。
+- Produces: `close_history(dataset) -> IndicatorInput`（`prices` は市場ごとの `session_date` で揃え、行時刻はその日の最後の `bar_end`。mode・通貨・調整方式・品質を別フィールドで保持）と `indicator_table(source, *, momentum_window, volatility_window) -> pd.DataFrame`（変化率、年率volatility、drawdown、z-score、欠損理由）。
 
 - [ ] **Step 1: Write the failing tests.** 既知の5観測で変化率・drawdown・volatilityを手計算で照合する。prefixの後ろへ極端な価格を追加しても前の指標値が変わらないこと、短い系列は `NaN` と理由を返すこと、`warn` は理由を残し `reject` は分析値に使わないこと、異通貨・別provider混合を拒否することを確認する。
 - [ ] **Step 2: Run the targeted test.** `uv run --no-sync pytest market-research/tests/test_research_indicators.py -q` で新関数未定義の失敗を見る。
-- [ ] **Step 3: Implement pure calculations.** pandasの `pct_change(fill_method=None)`、`rolling`、`cummax` を使い、対象ウィンドウ不足をゼロにしない。計算結果へ入力モード、通貨、価格調整、quality reasons を添える。取得・保存やUI処理はこのモジュールに入れない。
+- [ ] **Step 3: Implement pure calculations.** pandasの `pct_change(fill_method=None)`、`rolling`、`cummax` を使い、対象ウィンドウ不足をゼロにしない。`IndicatorInput` に入力モード、通貨、価格調整、quality reasons を明示し、`attrs` に依存しない。`reject`・無約定・未確定足から古い終値を「現在値」に繰り上げない。取得・保存やUI処理はこのモジュールに入れない。
 - [ ] **Step 4: Run verification.** 対象とmember suite、`ruff check market-research`、`ruff format --check market-research` を実行する。
 - [ ] **Step 5: Commit.** `git add market-research/src/market_research/research market-research/tests/test_research_indicators.py && git commit -m "feat: calculate quality-aware market indicators"`。
 
