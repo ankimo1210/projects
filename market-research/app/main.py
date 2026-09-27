@@ -8,6 +8,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 from market_research.macro import as_of
+from market_research.reports import render_demo_report
 from market_research.services import build_demo_run
 
 st.set_page_config(page_title="market-research", layout="wide")
@@ -111,4 +112,10 @@ with tabs[6]:
         data=f"{run.run_id} / 合成デモ\n",
         file_name=f"market-research-{run.run_id}.txt",
     )
-    st.caption("永続run保管・HTML出力・外部通知は未接続です。")
+    st.download_button(
+        "HTMLレポートを保存",
+        data=render_demo_report(run),
+        file_name=f"market-research-{run.run_id}.html",
+        mime="text/html",
+    )
+    st.caption("永続run保管・外部通知は未接続です。")

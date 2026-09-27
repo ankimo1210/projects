@@ -13,6 +13,7 @@ CLIで明示取得し、保存した版を通信なしで読めます。工程3c
 ```bash
 uv sync --package market-research --group dev
 uv run --no-sync market-research demo --json
+uv run --no-sync market-research demo --html /tmp/market-research-demo.html --json
 uv run --no-sync streamlit run market-research/app/main.py
 uv run --no-sync pytest market-research/tests -q
 ```
@@ -22,6 +23,8 @@ uv run --no-sync pytest market-research/tests -q
 既定の**合成デモ**では7画面で同じ `run_id` を使います。価格・指標・
 ポートフォリオは架空データで、閲覧時にネットワークへ接続しません。
 デモは架空の足終端から1時間後を判断時刻とし、その時点で利用可能な価格だけを使います。
+品質・実行履歴画面から、同じrunの自己完結HTMLレポートをダウンロードできます。
+CLI の --html は指定した WSL パスに同じレポートを書き出します。
 `demo --json` は同じ run の入力ハッシュと要約を標準出力へ出します。
 
 画面左の「データ」を「保存データ」にすると、保存先は **WSLのパス**で指定し、
