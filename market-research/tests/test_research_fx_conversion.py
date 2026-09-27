@@ -286,3 +286,27 @@ def test_jpy_equity_cannot_masquerade_as_jpy_equals_x_fx(tmp_path):
     mislabeled = replace(fx, bars=tuple(replace(bar, instrument=equity) for bar in fx.bars))
     with pytest.raises(ValueError, match="FX instrument"):
         convert_price_datasets_to_jpy(prices, mislabeled, VALUATIONS, max_fx_age=timedelta(hours=6))
+
+
+def test_saved_data_screen_can_show_jpy_converted_virtual_risk(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    from streamlit.testing.v1 import AppTest
+
+    root = tmp_path / "store"
+    prices, fx = _saved_inputs(root)
+    monkeypatch.setenv("MARKET_RESEARCH_DATA_ROOT", str(root))
+    path = Path(__file__).resolve().parents[1] / "app" / "main.py"
+    app = AppTest.from_file(str(path), default_timeout=15).run()
+    app.sidebar.radio[0].set_value("保存データ").run()
+    selected = next(box for box in app.sidebar.multiselect if box.label == "価格snapshot")
+    selected.set_value([prices[0].snapshot_ids[0]]).run()
+    extra = next(
+        box for box in app.sidebar.multiselect if box.label == "円換算用の追加価格snapshot"
+    )
+    extra.set_value([prices[1].snapshot_ids[0]]).run()
+    fx_select = next(box for box in app.sidebar.selectbox if box.label == "円換算用のFX snapshot")
+    fx_select.set_value(fx.snapshot_ids[0]).run()
+    assert not app.exception
+    assert any("円換算" in item.value for item in app.caption)
+    assert any(metric.label == "年率ボラティリティ" for metric in app.metric)
