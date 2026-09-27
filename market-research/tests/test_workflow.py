@@ -184,6 +184,8 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
     assert any("retrospective" in item.value for item in app.caption)
     assert any("PAF=1" in item.value for item in app.caption)
     assert len(app.dataframe) >= 3
+    assert any("momentum_rank" in frame.value.columns for frame in app.dataframe)
+    assert any("相関の有効組数" in caption.value for caption in app.caption)
     assert any(metric.label == "年率ボラティリティ" for metric in app.metric)
     cash_floor = next(
         box for box in app.sidebar.number_input if box.label == "仮想配分の最低現金比率"

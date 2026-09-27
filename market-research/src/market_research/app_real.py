@@ -17,6 +17,7 @@ from .research.fundamentals import (
     load_fundamental_table,
 )
 from .research.indicators import close_history, indicator_table
+from .research.overview import market_overview
 from .research.portfolio import VirtualConstraints, virtual_risk_report
 from .research.screener import ThresholdRule, screen_research
 from .storage import ResearchStore
@@ -198,6 +199,22 @@ def render_real_app() -> None:
             ),
         )
     screened = screen_research(indicators, fundamentals, rules)
+    correlation_window = int(
+        st.sidebar.number_input(
+            "相関の観測数", min_value=3, value=min(20, max(3, len(history.prices) - 1))
+        )
+    )
+    drawdown_alert = float(
+        st.sidebar.number_input("下落アラートの閾値", min_value=-1.0, max_value=-0.01, value=-0.2)
+    )
+    zscore_alert = float(st.sidebar.number_input("Zスコアアラートの閾値", min_value=0.1, value=2.0))
+    overview = market_overview(
+        history,
+        indicators,
+        correlation_window=correlation_window,
+        drawdown_alert=drawdown_alert,
+        zscore_alert=zscore_alert,
+    )
     risk_lookback = int(
         st.sidebar.number_input(
             "リスク観測数", min_value=2, value=min(20, max(2, len(history.prices) - 1))
@@ -244,12 +261,21 @@ def render_real_app() -> None:
         "risk_cash_min": risk_cash_min,
         "risk_max_name": risk_max_name,
         "risk_weights": risk_weights.to_dict(),
+        "correlation_window": correlation_window,
+        "drawdown_alert": drawdown_alert,
+        "zscore_alert": zscore_alert,
     }
     st.caption(f"研究run未保存 | {dataset.currency} | {dataset.adjustment}")
     tabs = st.tabs(TITLES)
     with tabs[0]:
         st.subheader("市場概要")
-        st.info("保存データの市場概要は後続で接続します。")
+        st.dataframe(overview.summary)
+        st.dataframe(overview.correlations)
+        st.dataframe(overview.pair_counts)
+        st.caption(
+            f"{overview.mode} / {overview.currency} / {overview.adjustment}。"
+            f"相関の有効組数を別表に表示（最低3組）。観測窓: {overview.correlation_window}リターン。"
+        )
     with tabs[1]:
         st.subheader("銘柄・バスケット")
         st.dataframe(history.prices)
@@ -325,5 +351,46 @@ def render_real_app() -> None:
             st.warning(f"仮想リスクを計算できません: {error}")
     with tabs[6]:
         st.subheader("品質・実行履歴")
-        st.info("保存runと通知は後続で接続します。")
+        used_ids = (*selected_prices,)
+        if benchmark_id != "選択なし":
+            used_ids += (benchmark_id,)
+        if request is not None:
+            used_ids += (request.snapshot_id,)
+        st.dataframe(
+            pd.DataFrame.from_records(
+                [
+                    {
+                        "snapshot_id": snapshot_id,
+                        "provider": snapshots[snapshot_id].key.provider,
+                        "identity": snapshots[snapshot_id].key.identity,
+                        "observed_at": snapshots[snapshot_id].observed_at,
+                    }
+                    for snapshot_id in used_ids
+                ]
+            )
+        )
+        st.dataframe(overview.alerts)
+        st.caption("アプリ内アラートのみ。品質・欠損・閾値を表示し、外部へ通知しません。")
+        st.dataframe(
+            pd.DataFrame.from_records(
+                [
+                    {
+                        "instrument_id": gap.instrument.instrument_id,
+                        "session_date": gap.session_date,
+                        "kind": "gap",
+                    }
+                    for gap in dataset.gaps
+                ]
+                + [
+                    {
+                        "instrument_id": exclusion.bar.instrument.instrument_id,
+                        "session_date": exclusion.bar.session_date,
+                        "kind": exclusion.reason,
+                    }
+                    for exclusion in dataset.exclusions
+                ],
+                columns=["instrument_id", "session_date", "kind"],
+            )
+        )
+        st.info("保存runと取得失敗履歴はまだ記録していません。")
         st.json({"research_run_saved": False, "inputs": payload, "network_fetch": False})
