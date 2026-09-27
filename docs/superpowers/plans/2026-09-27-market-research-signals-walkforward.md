@@ -16,7 +16,7 @@
 
 **Files:** `market-research/src/market_research/research/splits.py`、`market-research/tests/test_research_splits.py`。
 
-- `walk_forward_splits` はPIT出典付きの `SignalDataset` を受け、そこから `horizon` を得る。訓練末尾からテスト先頭まで `horizon + embargo` の空白を取る。各訓練ラベルの利用可能時刻はテスト先頭より厳密に前。step既定は非重複のテスト幅。評価ラベルが未完成の末尾は分割から除き、途中の欠損ラベルは拒否する。
+- `walk_forward_splits` はPIT出典付きの `SignalDataset` を受け、そこから `horizon` を得る。訓練末尾からテスト先頭まで `horizon + embargo` の空白を取る。各訓練ラベルの利用可能時刻はテスト先頭より厳密に前。step既定は非重複のテスト幅。評価ラベルが未完成の末尾は分割から除き、途中の欠損ラベルは拒否する。lockbox開始前の評価行でも、ラベルの利用可能時刻がlockbox以降なら除く。
 - **Red:** horizon/embargo境界、ローリングと拡大型、重複・naive時刻、短期データ、lockbox内ラベルの学習拒否。
 
 ## Task 3: モデルと戦略比較
