@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from types import MappingProxyType
 
 import pandas as pd
@@ -36,8 +36,12 @@ class BasketDefinition:
         if self.weighting not in {"price", "market_cap"}:
             raise ValueError("basket weighting must be price or market_cap")
         if self.factors is None:
-            if self.weighting == "market_cap" or self.factors_as_of is not None:
+            if self.weighting == "market_cap":
                 raise ValueError("market-cap factors and their date are required")
+            if self.factors_as_of is None:
+                object.__setattr__(self, "factors_as_of", self.composition_as_of)
+            elif type(self.factors_as_of) is not date:
+                raise ValueError("PAF assumption date is required")
         else:
             factors = dict(self.factors)
             if set(factors) != set(self.constituents):
@@ -62,6 +66,8 @@ class BasketResult:
     weights: pd.DataFrame
     currency: str
     adjustment: str
+    as_of: datetime
+    session_dates: tuple[date, ...]
     snapshot_ids: tuple[str, ...]
     assumptions: tuple[str, ...]
     quality_reasons: Mapping[str, tuple[str, ...]]
@@ -117,9 +123,78 @@ def basket_series(dataset: PriceDataset, definition: BasketDefinition) -> Basket
         weights=weights,
         currency=dataset.currency,
         adjustment=dataset.adjustment,
+        as_of=dataset.as_of,
+        session_dates=history.session_dates,
         snapshot_ids=dataset.snapshot_ids,
         assumptions=("current_composition_applied_historically", factor_assumption),
         quality_reasons={
             asset: history.quality_reasons.get(asset, ()) for asset in definition.constituents
         },
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class BasketComparison:
+    benchmark_name: str
+    values: pd.DataFrame
+    currency: str
+    adjustment: str
+    snapshot_ids: tuple[str, ...]
+    mode: str = "retrospective"
+
+
+def compare_basket(
+    basket: BasketResult, benchmark: PriceDataset, *, benchmark_name: str
+) -> BasketComparison:
+    """Compare only matching dated daily closes, without filling either side."""
+    if not isinstance(benchmark_name, str) or not benchmark_name.strip():
+        raise ValueError("benchmark name is required")
+    if basket.mode != "retrospective" or benchmark.mode != "retrospective":
+        raise ValueError("benchmark comparison requires retrospective inputs")
+    if basket.as_of != benchmark.as_of:
+        raise ValueError("basket and benchmark as_of must match")
+    if basket.currency != benchmark.currency:
+        raise ValueError("basket and benchmark currency must match")
+    if basket.adjustment != benchmark.adjustment:
+        raise ValueError("basket and benchmark adjustment must match")
+    history = close_history(benchmark)
+    if len(history.prices.columns) != 1:
+        raise ValueError("benchmark must contain exactly one instrument")
+    if history.session_dates != basket.session_dates:
+        raise ValueError("basket and benchmark session dates must match")
+    reference = history.prices.iloc[:, 0].astype(float)
+    basket_level = basket.values["level"]
+    if any(
+        left != right
+        for left, right, left_price, right_price in zip(
+            basket_level.index,
+            reference.index,
+            basket_level,
+            reference,
+            strict=True,
+        )
+        if pd.notna(left_price) and pd.notna(right_price)
+    ):
+        raise ValueError("basket and benchmark close timestamps must match")
+    valid = basket_level.notna().to_numpy() & reference.notna().to_numpy()
+    if not valid.any():
+        raise ValueError("basket and benchmark have no common complete row")
+    first = int(valid.argmax())
+    basket_relative = basket_level / basket_level.iloc[first]
+    benchmark_relative = reference.to_numpy() / reference.iloc[first]
+    values = pd.DataFrame(
+        {
+            "basket_level": basket_relative.to_numpy(),
+            "benchmark_level": benchmark_relative,
+        },
+        index=basket_level.index,
+    )
+    values.iloc[:first] = float("nan")
+    values["relative_return"] = values["basket_level"] / values["benchmark_level"] - 1
+    return BasketComparison(
+        benchmark_name=benchmark_name,
+        values=values,
+        currency=basket.currency,
+        adjustment=basket.adjustment,
+        snapshot_ids=(*basket.snapshot_ids, *benchmark.snapshot_ids),
     )

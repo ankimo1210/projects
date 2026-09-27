@@ -12,7 +12,7 @@
 
 - `FundamentalField` に名称、taxonomy、concept、unit、form を固定する。`FundamentalRequest` は instrument ID、CIK、field、完全 snapshot ID（未取得なら `None`）を持つ。
 - `load_fundamental_table(store, requests, *, as_of)` は snapshot の `observed_at <= as_of`、SEC の key、CIK・field の一致を検証する。`snapshot_fundamental_view` から取得時点で利用可能な最新決算期を選ぶ。
-- 戻り値は銘柄×field の長い表。値・単位・決算期・`available_at`・`observed_at`・`vintage_kind`・accession・snapshot ID・欠損理由を同じ行に残す。未取得と公表前を区別する。
+- 戻り値は銘柄×field の長い表。値・CIK・taxonomy・concept・unit・form・決算期・`available_at`・`observed_at`・`vintage_kind`・accession・snapshot ID・欠損理由を同じ行に残す。未取得と公表前を区別する。
 - **Red:** 後から取った snapshot を過去に使う、別 CIK/概念/単位/form、未完成 snapshot、後日訂正、未取得、公表前、同一期末の曖昧な候補、naive `as_of`。
 - **Green/verify:** 対象テスト、market-research 全テスト、Ruff、pre-commit。
 
@@ -45,4 +45,11 @@
 2026-09-27 の実装範囲: 保存済みデータモードを既定の合成デモから分け、選択した価格・SEC snapshot を
 銘柄・バスケット画面とシグナル・スクリーナー画面に表示する。CIKと銘柄の対応は利用者が明示確認する。
 その他5画面は未接続と表示する。代表 fixture の AppTest は通信を遮断して検証した。
-ベンチマーク系列との比較、指数公式値の再現、PITバックテストへの転用は今回の範囲外。
+保存済みの価格snapshotを比較対象に選ぶ経路を追加し、同じ通貨・調整方式・セッション日・
+終値時刻だけを基準化して比較する。欠損は補完しない。公式指数値の再現とPITバックテストへの
+転用は今回の範囲外。
+
+独立レビューの修正: 財務表にCIK・taxonomy・concept・formを保持して条件の定義を照合する。
+画面はCIKと銘柄を並べ、利用者がCIKを入力した場合だけ財務値を示す（企業名の対応表は未実装）。
+保存済みデータの画面は永続runや入力manifest hashをまだ作らないため、研究run IDを表示しない。
+PAF=1の仮定日は構成基準日を使う。

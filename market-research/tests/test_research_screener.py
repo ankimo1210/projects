@@ -6,6 +6,7 @@ from datetime import UTC, date, datetime
 import pandas as pd
 import pytest
 from market_research.contracts import FundamentalObservation
+from market_research.research.fundamentals import FundamentalField
 from market_research.storage import CacheKey, ResearchStore
 
 
@@ -27,6 +28,9 @@ def _fundamentals(values=(100.0, 50.0), units=("USD", "USD"), reasons=("", "")):
         {
             "value": values,
             "unit": units,
+            "taxonomy": ["us-gaap", "us-gaap"],
+            "concept": ["Assets", "Assets"],
+            "form": ["10-K", "10-K"],
             "missing_reason": reasons,
         },
         index=pd.MultiIndex.from_tuples(
@@ -40,7 +44,15 @@ def test_combined_rules_pass_or_fail_with_explicit_evidence():
     from market_research.research.screener import ThresholdRule, screen_research
 
     rules = (
-        ThresholdRule("large_assets", "fundamental", "assets", "ge", 75, "USD"),
+        ThresholdRule(
+            "large_assets",
+            "fundamental",
+            "assets",
+            "ge",
+            75,
+            "USD",
+            field_definition=FundamentalField("assets", "us-gaap", "Assets", "USD", "10-K"),
+        ),
         ThresholdRule("positive_momentum", "technical", "momentum", "gt", 0, "fraction"),
     )
     result = screen_research(_indicators(), _fundamentals(), rules)
@@ -62,7 +74,15 @@ def test_missing_filing_or_indicator_is_unknown_not_false():
     indicators.loc["XNAS:MSFT", "missing_reason"] = "insufficient_history"
     fundamentals = _fundamentals(values=(100.0, math.nan), reasons=("", "not_collected"))
     rules = (
-        ThresholdRule("assets", "fundamental", "assets", "gt", 40, "USD"),
+        ThresholdRule(
+            "assets",
+            "fundamental",
+            "assets",
+            "gt",
+            40,
+            "USD",
+            field_definition=FundamentalField("assets", "us-gaap", "Assets", "USD", "10-K"),
+        ),
         ThresholdRule("trend", "technical", "momentum", "gt", 0, "fraction"),
     )
     result = screen_research(indicators, fundamentals, rules)
@@ -78,7 +98,17 @@ def test_unit_mismatch_and_missing_asset_do_not_compare_numbers():
     from market_research.research.screener import ThresholdRule, screen_research
 
     fundamentals = _fundamentals(units=("USD", "shares"))
-    rules = (ThresholdRule("assets", "fundamental", "assets", "ge", 75, "USD"),)
+    rules = (
+        ThresholdRule(
+            "assets",
+            "fundamental",
+            "assets",
+            "ge",
+            75,
+            "USD",
+            field_definition=FundamentalField("assets", "us-gaap", "Assets", "USD", "10-K"),
+        ),
+    )
     result = screen_research(_indicators(), fundamentals, rules)
     assert result.loc["XNAS:MSFT", "status"] == "unknown"
     assert result.loc["XNAS:MSFT", "unknown_rules"] == ("assets:unit_mismatch",)
@@ -100,7 +130,17 @@ def test_bad_rule_or_foreign_fundamental_asset_fails_closed():
         screen_research(
             _indicators(),
             foreign,
-            (ThresholdRule("assets", "fundamental", "assets", "ge", 75, "USD"),),
+            (
+                ThresholdRule(
+                    "assets",
+                    "fundamental",
+                    "assets",
+                    "ge",
+                    75,
+                    "USD",
+                    field_definition=FundamentalField("assets", "us-gaap", "Assets", "USD", "10-K"),
+                ),
+            ),
         )
 
 
@@ -149,8 +189,30 @@ def test_screener_accepts_real_indicator_and_filing_tables(tmp_path):
         indicators,
         fundamentals,
         (
-            ThresholdRule("assets", "fundamental", "assets", "ge", 80, "USD"),
+            ThresholdRule(
+                "assets", "fundamental", "assets", "ge", 80, "USD", field_definition=field
+            ),
             ThresholdRule("trend", "technical", "momentum", "gt", 0, "fraction"),
         ),
     )
     assert result.loc["XNAS:AAPL", "status"] == "pass"
+
+
+def test_same_alias_and_unit_cannot_compare_different_sec_concepts():
+    from market_research.research.screener import ThresholdRule, screen_research
+
+    fundamentals = _fundamentals(values=(100.0, 100.0)).rename(index={"assets": "size"}, level=1)
+    fundamentals.loc[("XNAS:MSFT", "size"), "concept"] = "Liabilities"
+    rule = ThresholdRule(
+        "size",
+        "fundamental",
+        "size",
+        "ge",
+        75,
+        "USD",
+        field_definition=FundamentalField("size", "us-gaap", "Assets", "USD", "10-K"),
+    )
+    result = screen_research(_indicators(), fundamentals, (rule,))
+    assert result.loc["XNYS:IBM", "status"] == "pass"
+    assert result.loc["XNAS:MSFT", "status"] == "unknown"
+    assert result.loc["XNAS:MSFT", "unknown_rules"] == ("size:definition_mismatch",)

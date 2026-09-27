@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
-import json
 import os
 from datetime import UTC, datetime
 from pathlib import Path
@@ -11,7 +9,7 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from .research.baskets import BasketDefinition, basket_series
+from .research.baskets import BasketDefinition, basket_series, compare_basket
 from .research.dataset import load_price_dataset
 from .research.fundamentals import (
     FundamentalField,
@@ -111,18 +109,58 @@ def render_real_app() -> None:
                 periods_per_year=periods_per_year,
             )
             assets = tuple(indicators.index)
+            benchmark_id = st.sidebar.selectbox(
+                "比較対象の価格snapshot",
+                ("選択なし", *(item for item in price_options if item not in selected_prices)),
+                format_func=lambda snapshot_id: (
+                    snapshot_id
+                    if snapshot_id == "選択なし"
+                    else f"{snapshots[snapshot_id].key.identity} / "
+                    f"{snapshots[snapshot_id].key.provider} / "
+                    f"{snapshots[snapshot_id].observed_at.isoformat()}"
+                ),
+            )
+            benchmark_dataset = (
+                load_price_dataset(
+                    store,
+                    (benchmark_id,),
+                    as_of=as_of,
+                    currency=dataset.currency,
+                    adjustment=dataset.adjustment,
+                )
+                if benchmark_id != "選択なし"
+                else None
+            )
             fundamental_options = tuple(
                 snapshot_id
                 for snapshot_id, item in snapshots.items()
                 if item.key.dataset == "fundamental" and item.key.provider == "sec"
             )
-            financial_id = st.sidebar.selectbox("財務snapshot", ("選択なし", *fundamental_options))
+            financial_id = st.sidebar.selectbox(
+                "財務snapshot",
+                ("選択なし", *fundamental_options),
+                format_func=lambda snapshot_id: (
+                    snapshot_id
+                    if snapshot_id == "選択なし"
+                    else f"{snapshots[snapshot_id].key.identity} / "
+                    f"{snapshots[snapshot_id].observed_at.isoformat()}"
+                ),
+            )
             request = None
             if financial_id != "選択なし":
                 financial_asset = st.sidebar.selectbox("財務の対応銘柄", assets)
-                mapping_confirmed = st.sidebar.checkbox("CIKと銘柄の対応を確認")
-                if mapping_confirmed:
-                    request = _financial_request(snapshots[financial_id], financial_asset)
+                candidate = _financial_request(snapshots[financial_id], financial_asset)
+                cik_label = f"CIK{candidate.cik:010d}"
+                typed_cik = st.sidebar.text_input(
+                    f"{financial_asset} と {cik_label} の対応を確認（CIKを入力）"
+                )
+                st.sidebar.caption(
+                    "保存データに企業名の対応表はありません。選択した銘柄とCIKを照合してください。"
+                )
+                if typed_cik.strip() == cik_label:
+                    request = candidate
+                elif typed_cik:
+                    st.sidebar.warning("CIKが一致しません。財務値を表示しません。")
             if request is None:
                 fundamentals = pd.DataFrame(
                     columns=["value", "unit", "missing_reason"],
@@ -155,14 +193,20 @@ def render_real_app() -> None:
                 "ge",
                 financial_floor,
                 request.field.unit,
+                field_definition=request.field,
             ),
         )
     screened = screen_research(indicators, fundamentals, rules)
     payload = {
         "price_snapshot_ids": selected_prices,
+        "benchmark_snapshot_id": benchmark_id if benchmark_id != "選択なし" else None,
         "fundamental_snapshot_id": request.snapshot_id if request else None,
         "fundamental_asset": request.instrument_id if request else None,
         "fundamental_field": request.field.name if request else None,
+        "fundamental_cik": request.cik if request else None,
+        "fundamental_taxonomy": request.field.taxonomy if request else None,
+        "fundamental_concept": request.field.concept if request else None,
+        "fundamental_form": request.field.form if request else None,
         "financial_floor": financial_floor,
         "as_of": as_of.isoformat(),
         "momentum_window": momentum_window,
@@ -171,8 +215,7 @@ def render_real_app() -> None:
         "composition_date": composition_date.isoformat(),
         "momentum_floor": momentum_floor,
     }
-    run_id = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:16]
-    st.caption(f"研究run {run_id} | {dataset.currency} | {dataset.adjustment}")
+    st.caption(f"研究run未保存 | {dataset.currency} | {dataset.adjustment}")
     tabs = st.tabs(TITLES)
     with tabs[0]:
         st.subheader("市場概要")
@@ -183,6 +226,11 @@ def render_real_app() -> None:
         st.caption(f"履歴の種類: {history.mode} / 基準時刻: {dataset.as_of.isoformat()}")
         st.dataframe(fundamentals)
         st.caption("財務はSECの選択済み開示値のみ。未取得項目は補完しません。")
+        if request is not None:
+            st.caption(
+                f"手動対応: {request.instrument_id} ↔ CIK{request.cik:010d} / "
+                f"{request.field.taxonomy}:{request.field.concept}:{request.field.form}"
+            )
         try:
             definition = BasketDefinition(
                 "手動選択バスケット",
@@ -195,8 +243,14 @@ def render_real_app() -> None:
             st.line_chart(basket.values["level"])
             st.dataframe(basket.weights)
             st.caption(
-                "現在の構成を過去へ固定したretrospective近似。PAF=1を仮定し、公式指数やPITバックテストではありません。"
+                f"現在の構成を過去へ固定したretrospective近似。PAF=1（仮定日: "
+                f"{definition.factors_as_of.isoformat()}）で、公式指数やPITバックテストではありません。"
             )
+            if benchmark_dataset is not None:
+                compared = compare_basket(basket, benchmark_dataset, benchmark_name=benchmark_id)
+                st.line_chart(compared.values[["basket_level", "benchmark_level"]])
+                st.dataframe(compared.values)
+                st.caption("比較対象は同じ通貨・調整方式・日付・確定時刻の保存済み価格のみ。")
         except ValueError as error:
             st.warning(f"バスケットを計算できません: {error}")
     with tabs[2]:
@@ -209,4 +263,4 @@ def render_real_app() -> None:
             st.subheader(title)
             st.info("この保存データ画面は後続で接続します。")
     with tabs[6]:
-        st.json({"run_id": run_id, "inputs": payload, "network_fetch": False})
+        st.json({"research_run_saved": False, "inputs": payload, "network_fetch": False})
