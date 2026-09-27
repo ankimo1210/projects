@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "description": "Declared inputs of accepted sections' browser evidence for D1 dependency fingerprints. A section without an entry is never reused.",
+  "sections": {
+    "27.3": {
+      "notebook": {
+        "path": "volumes/06_numerical_methods/numerical.ipynb",
+        "heading": "9. IVF（局所ボラティリティ）モデル（§27.3）"
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/06_numerical.html",
+        "heading": "9. IVF（局所ボラティリティ）モデル（§27.3）"
+      },
+      "portal": {
+        "page": "report/site/numerics.html",
+        "figures": ["ivf_smile", "ivf_local", "ivf_repricing", "ivf_joint"]
+      },
+      "python_modules": ["hullkit.local_volatility", "hullkit._local_volatility_lesson"],
+      "data": [
+        "docs/validation/section-27-3/reference.json",
+        "docs/validation/section-27-3/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_local_volatility_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-27-3/reference.json",
+        "docs/validation/section-27-3/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-27-3",
+      "verifier_text_renames": {
+        "'10. Longstaff-Schwartz'": "'12. Longstaff-Schwartz'",
+        "'11. 練習問題'": "'13. 練習問題'"
+      },
+      "viewports": [[1440, 1050], [1000, 1050]]
+    }
+  }
+}
