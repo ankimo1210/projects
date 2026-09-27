@@ -232,11 +232,9 @@ def ingest_alfred(
         )
         return MacroIngestResult(
             replace(snapshot, stale=True),
-            store.macro_view(request.indicator, observed, "alfred"),
+            store.snapshot_macro_view(snapshot, observed),
             True,
             error.category,
         )
     snapshot = store.save(batch.key, batch.raw, observed_at=batch.observed_at, macro=batch.rows)
-    return MacroIngestResult(
-        snapshot, store.macro_view(request.indicator, batch.observed_at, "alfred")
-    )
+    return MacroIngestResult(snapshot, store.snapshot_macro_view(snapshot, batch.observed_at))

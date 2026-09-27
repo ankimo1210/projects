@@ -3,7 +3,8 @@
 更新日: 2026-09-27
 基準: [工程2の統合仕様](../../docs/superpowers/specs/2026-09-27-market-research-design.md)、
 [工程3の初期計画](../../docs/superpowers/plans/2026-09-27-market-research-core.md)、
-[今回の取得・保存計画](../../docs/superpowers/plans/2026-09-27-market-data-ingestion.md)。
+[価格取得・保存計画](../../docs/superpowers/plans/2026-09-27-market-data-ingestion.md)、
+[マクロ・財務の計画](../../docs/superpowers/plans/2026-09-27-market-macro-fundamentals.md)。
 
 ## 目標と完了条件
 
@@ -14,12 +15,21 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 |---|---|---|
 | 工程2 設計 | 完了 | 上記統合仕様、ADR 0004 |
 | 工程3a オフライン中核 | main `7c4bb109` へ取込み済み | 価格/マクロ契約、時点別読取、lag1バックテスト、CLI、合成7画面 |
-| 工程3b 実データと保存 | 価格取得・保存をブランチ `codex/market-data-stage3b` で実装 | 4価格provider、明示取引時間表、cache、DuckDB。外部マクロ/財務と自動カレンダーは残り |
+| 工程3b 実データと保存 | 価格ブランチに重ねた `codex/market-macro-stage3b` でマクロ・財務を実装・検証中 | 4価格provider、ALFRED/ESRI/MoF/e-Stat/SEC、manifestと時点別読取。日米株の自動カレンダーと認証元のライブ疎通は残り |
 | 工程3c 分析機能 | 未着手 | 財務・basket・高度信号・比較・リスク・5ノート・HTML |
 | 工程3d 連携・切替 | 未着手 | portfolio向け一方向export、旧結果との照合、代表画面の手動確認 |
 
 ## 検証
 
+- 今回のブランチはALFREDの全版取得と再開、ESRIの公表一覧とGDPの回別表、MoFの履歴・当月、
+  e-Statの分類指定とページ再開、SEC companyfactsの提出日と対象期を実装した。
+  `estimated` と `snapshot` を区別し、完成snapshot単位でオフライン読取する。
+  [取得ガイド](DATA.md)にCLIと制約を記録。専用worktreeのmemberテストは111件成功。
+- 公開元のライブ疎通はESRI公表一覧148件と2026年4–6月期GDP1次速報129行、
+  MoF履歴・当月CSVを確認し、CLIの取得→読取も一時保存先で確認。
+  ALFRED・e-Stat・SECの資格情報は未設定で、ライブ疎通は未実施。
+  新たなproduction依存は追加していない。共有mainの `.venv`、定時処理、個人口座には触れていない。
+- 以下は前の価格取得ブランチと工程3aの検証記録であり、今回の検証とは分けて読む。
 - 今回は86件成功、ruff check/format・pre-commit・相対リンク122件・`uv lock --check` 成功。
   価格取得CLIと保存後のオフライン読取を確認。
   [DATA](DATA.md)にライブ疎通を区別して記録（Binance/yfinance成功、Stooqは検証HTML、J-Quants未検証）。
@@ -40,13 +50,15 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 ## 次の作業
 
 1. 新規カレンダー依存への回答を反映し、日米株の自動解決とライブの銘柄範囲を拡張する。
-2. ALFRED/ESRI/MoF/SEC/e-Statの取得・公表時刻・vintage区分・中断再開を移植し、Q06–Q08を完成する。
-   現在の `MacroObservation` 保存は合成系列を用いたPIT部分のみで、外部取得器は未接続。
+2. ALFRED・e-Stat・SECの設定済み環境で実通信を確認する。ESRIの過去掲載は
+   表の取得成功まで実績に昇格させず、MoF/e-Statは収集前の時点を再現しない。
+   Q06–Q08のfixtureを継続し、必要な改定・期間の広がりを追加する。
 3. 旧分析の採用機能と7画面を順に接続し、Q09–Q13、HTML、portfolio向けexportを完成させる。
 4. 依存を変えてroot workspaceを同期した後、portfolio-analyzerの日次処理をメールなしで検証する。
 
 制約: 株は確認済み時間表が必要。J-Quantsのライブ認証は未検証。Stooqはブラウザ検証要求でライブ取得不可。
 画面は合成デモのままで、実データの分析画面接続は工程3c。
+今回のマクロ・財務も旧DBの移管と旧入口の切替はしていない。
 
 ## 既知の不具合と修正
 
