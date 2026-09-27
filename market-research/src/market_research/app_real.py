@@ -1,0 +1,212 @@
+"""Offline saved-data views; each input is an explicit immutable snapshot."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+from datetime import UTC, datetime
+from pathlib import Path
+
+import pandas as pd
+import streamlit as st
+
+from .research.baskets import BasketDefinition, basket_series
+from .research.dataset import load_price_dataset
+from .research.fundamentals import (
+    FundamentalField,
+    FundamentalRequest,
+    load_fundamental_table,
+)
+from .research.indicators import close_history, indicator_table
+from .research.screener import ThresholdRule, screen_research
+from .storage import ResearchStore
+
+TITLES = (
+    "市場概要",
+    "銘柄・バスケット",
+    "シグナル・スクリーナー",
+    "戦略比較",
+    "マクロと公表",
+    "仮想配分・リスク",
+    "品質・実行履歴",
+)
+
+
+def _financial_request(snapshot, instrument_id: str) -> FundamentalRequest:
+    parts = snapshot.key.identity.split(":")
+    if len(parts) != 5 or not parts[0].startswith("CIK"):
+        raise ValueError("SEC snapshot identity is invalid")
+    cik = int(parts[0][3:])
+    field = FundamentalField(parts[2].lower(), parts[1], parts[2], parts[3], parts[4])
+    return FundamentalRequest(instrument_id, cik, field, snapshot.snapshot_id)
+
+
+def render_real_app() -> None:
+    """Show local snapshots without triggering any provider request."""
+    default_root = os.environ.get(
+        "MARKET_RESEARCH_DATA_ROOT", str(Path.home() / ".local/share/market-research")
+    )
+    root = st.sidebar.text_input("保存先（WSLパス）", value=default_root)
+    as_of_text = st.sidebar.text_input(
+        "基準時刻（タイムゾーン付き）", value=datetime.now(UTC).replace(microsecond=0).isoformat()
+    )
+    try:
+        as_of = datetime.fromisoformat(as_of_text)
+        if as_of.utcoffset() is None:
+            raise ValueError("timezone-aware as_of required")
+        as_of = as_of.astimezone(UTC)
+    except ValueError:
+        st.error("基準時刻はタイムゾーン付きISO形式で入力してください。")
+        return
+    st.title("market-research")
+    st.caption("保存済みデータ | 明示snapshotのみ | 通信なし | 個人口座データなし")
+    try:
+        with ResearchStore(Path(root)) as store:
+            snapshots = {
+                item.snapshot_id: item
+                for item in store.snapshots(1000)
+                if item.complete and item.observed_at <= as_of
+            }
+            price_options = tuple(
+                snapshot_id
+                for snapshot_id, item in snapshots.items()
+                if item.key.dataset == "prices"
+            )
+            if not price_options:
+                st.info("この保存先に利用可能な価格snapshotがありません。")
+                return
+            selected_prices = st.sidebar.multiselect(
+                "価格snapshot",
+                price_options,
+                format_func=lambda snapshot_id: (
+                    f"{snapshots[snapshot_id].key.identity} / "
+                    f"{snapshots[snapshot_id].key.provider} / "
+                    f"{snapshots[snapshot_id].observed_at.isoformat()}"
+                ),
+            )
+            if not selected_prices:
+                st.info("価格snapshotを選択してください。")
+                return
+            first = snapshots[selected_prices[0]]
+            momentum_window = int(st.sidebar.number_input("変化率の観測数", min_value=1, value=5))
+            volatility_window = int(st.sidebar.number_input("変動率の観測数", min_value=2, value=5))
+            periods_per_year = int(
+                st.sidebar.number_input("年率換算の年間観測数", min_value=1, value=252)
+            )
+            composition_date = st.sidebar.date_input("構成基準日", value=as_of.date())
+            momentum_floor = float(st.sidebar.number_input("変化率の下限", value=0.0, step=0.01))
+            dataset = load_price_dataset(
+                store,
+                tuple(selected_prices),
+                as_of=as_of,
+                currency=first.key.currency,
+                adjustment=first.key.adjustment,
+            )
+            history = close_history(dataset)
+            indicators = indicator_table(
+                history,
+                momentum_window=momentum_window,
+                volatility_window=volatility_window,
+                periods_per_year=periods_per_year,
+            )
+            assets = tuple(indicators.index)
+            fundamental_options = tuple(
+                snapshot_id
+                for snapshot_id, item in snapshots.items()
+                if item.key.dataset == "fundamental" and item.key.provider == "sec"
+            )
+            financial_id = st.sidebar.selectbox("財務snapshot", ("選択なし", *fundamental_options))
+            request = None
+            if financial_id != "選択なし":
+                financial_asset = st.sidebar.selectbox("財務の対応銘柄", assets)
+                mapping_confirmed = st.sidebar.checkbox("CIKと銘柄の対応を確認")
+                if mapping_confirmed:
+                    request = _financial_request(snapshots[financial_id], financial_asset)
+            if request is None:
+                fundamentals = pd.DataFrame(
+                    columns=["value", "unit", "missing_reason"],
+                    index=pd.MultiIndex.from_tuples([], names=["instrument_id", "field"]),
+                )
+            else:
+                fundamentals = load_fundamental_table(store, (request,), as_of=as_of)
+    except (ValueError, OSError) as error:
+        st.error(f"保存済みデータを読み込めません: {type(error).__name__}: {error}")
+        return
+
+    rules = (
+        ThresholdRule(
+            "momentum",
+            "technical",
+            "momentum",
+            "ge",
+            momentum_floor,
+            "fraction",
+        ),
+    )
+    financial_floor = None
+    if request is not None:
+        financial_floor = float(st.sidebar.number_input("財務値の下限", value=0.0, step=1.0))
+        rules += (
+            ThresholdRule(
+                request.field.name,
+                "fundamental",
+                request.field.name,
+                "ge",
+                financial_floor,
+                request.field.unit,
+            ),
+        )
+    screened = screen_research(indicators, fundamentals, rules)
+    payload = {
+        "price_snapshot_ids": selected_prices,
+        "fundamental_snapshot_id": request.snapshot_id if request else None,
+        "fundamental_asset": request.instrument_id if request else None,
+        "fundamental_field": request.field.name if request else None,
+        "financial_floor": financial_floor,
+        "as_of": as_of.isoformat(),
+        "momentum_window": momentum_window,
+        "volatility_window": volatility_window,
+        "periods_per_year": periods_per_year,
+        "composition_date": composition_date.isoformat(),
+        "momentum_floor": momentum_floor,
+    }
+    run_id = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:16]
+    st.caption(f"研究run {run_id} | {dataset.currency} | {dataset.adjustment}")
+    tabs = st.tabs(TITLES)
+    with tabs[0]:
+        st.subheader("市場概要")
+        st.info("保存データの市場概要は後続で接続します。")
+    with tabs[1]:
+        st.subheader("銘柄・バスケット")
+        st.dataframe(history.prices)
+        st.caption(f"履歴の種類: {history.mode} / 基準時刻: {dataset.as_of.isoformat()}")
+        st.dataframe(fundamentals)
+        st.caption("財務はSECの選択済み開示値のみ。未取得項目は補完しません。")
+        try:
+            definition = BasketDefinition(
+                "手動選択バスケット",
+                assets,
+                composition_date,
+                "保存済みsnapshotからの手動選択",
+                "price",
+            )
+            basket = basket_series(dataset, definition)
+            st.line_chart(basket.values["level"])
+            st.dataframe(basket.weights)
+            st.caption(
+                "現在の構成を過去へ固定したretrospective近似。PAF=1を仮定し、公式指数やPITバックテストではありません。"
+            )
+        except ValueError as error:
+            st.warning(f"バスケットを計算できません: {error}")
+    with tabs[2]:
+        st.subheader("シグナル・スクリーナー")
+        st.dataframe(indicators)
+        st.dataframe(screened)
+        st.caption("pass / fail / unknown を分けて表示。品質理由と欠損理由を保持します。")
+    for tab, title in zip(tabs[3:], TITLES[3:], strict=True):
+        with tab:
+            st.subheader(title)
+            st.info("この保存データ画面は後続で接続します。")
+    with tabs[6]:
+        st.json({"run_id": run_id, "inputs": payload, "network_fetch": False})
