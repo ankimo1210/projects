@@ -6,7 +6,7 @@
 
 **Architecture:** 既存の不変契約を維持し、価格選択には除外理由を返す API を追加する。取得器は通信・日足時刻解決・正規化を分離し、DuckDB の transaction と content hash で snapshot と行を結び付ける。CLI の fetch のみが通信し、query は保存済みの版だけを使う。
 
-**Tech Stack:** Python 3.12、uv、pandas、DuckDB、yfinance、pytest。DuckDB/yfinance は既存 workspace 依存。取引所カレンダーの新規依存 exchange-calendars は本人の回答待ちで、承認されるまで追加しない。
+**Tech Stack:** Python 3.12、uv、pandas、DuckDB、yfinance、pytest。DuckDB/yfinance は既存 workspace 依存。取引所カレンダーの `exchange-calendars` は当初回答待ちで、2026-09-27に本人が追加を承認した。
 
 **Spec:** [統合仕様](../specs/2026-09-27-market-research-design.md) §5、Q01–Q08。これは工程3bの価格取得・保存部分。外部マクロ/財務取得器の移植（ALFRED/ESRI/MoF/SEC/e-Stat）は別の実装単位として STATUS に残す。
 
@@ -104,3 +104,7 @@ assert query_after_reopen == result.view.bars
 [レビュー記録](../../../market-research/docs/STAGE3B_REVIEW.md)と
 [現在の進捗](../../../market-research/docs/STATUS.md)を参照。
 レビュー用ブランチをpushし、mainへの取込みはレビュー後に行う。
+
+2026-09-27、承認を受け、後続の `codex/market-macro-stage3b` で
+`exchange-calendars` による東証・NYSE・NASDAQの日足時間表自動解決を追加。
+明示スケジュールを優先し、カレンダーの版と内容をcache keyへ記録する。

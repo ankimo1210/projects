@@ -12,6 +12,7 @@ dependencies = [
     "duckdb>=1.0",
     "pytz>=2024.1",
     "yfinance>=0.2.50",
+    "exchange-calendars>=4.13.2,<5",
 ]
 
 [project.scripts]

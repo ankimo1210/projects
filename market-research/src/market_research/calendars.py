@@ -1,4 +1,4 @@
-"""Explicit exchange schedules; never infer sessions from weekday numbers."""
+"""Versioned exchange schedules; never infer sessions from weekday numbers."""
 
 from __future__ import annotations
 
@@ -6,12 +6,16 @@ import hashlib
 import json
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, time, timedelta
+from importlib.metadata import version
 from types import MappingProxyType
 
+import exchange_calendars as xcals
 import pandas as pd
 
 from .contracts import Instrument, _utc
 from .prices import BarTiming
+
+AUTO_MARKETS = frozenset({"XTKS", "XNYS", "XNAS"})
 
 
 @dataclass(frozen=True)
@@ -56,6 +60,27 @@ class SessionCalendar:
                 datetime.fromisoformat(row["close"]),
             )
         return cls(data["market"], data["version"], sessions)
+
+
+def auto_session_calendar(market: str, start: date, end: date) -> SessionCalendar:
+    """Freeze supported exchange sessions and their source version for a request."""
+    if market not in AUTO_MARKETS:
+        raise ValueError("automatic calendar is unavailable for this market")
+    if type(start) is not date or type(end) is not date or start > end:
+        raise ValueError("automatic calendar requires an ordered date range")
+    try:
+        exchange = xcals.get_calendar(market, start=start, end=end + timedelta(days=1))
+    except (ValueError, OverflowError) as error:
+        raise ValueError("automatic calendar is unavailable for this date range") from error
+    schedule = exchange.schedule.loc[start.isoformat() : end.isoformat()]
+    sessions = {
+        label.date(): (row["open"].to_pydatetime(), row["close"].to_pydatetime())
+        for label, row in schedule.iterrows()
+    }
+    if not sessions:
+        raise ValueError("no exchange sessions in requested range")
+    release = version("exchange-calendars")
+    return SessionCalendar(market, f"exchange-calendars/{release}/{exchange.name}", sessions)
 
 
 def daily_timings(
