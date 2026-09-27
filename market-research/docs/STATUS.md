@@ -1,6 +1,6 @@
 # market-research 開発状況
 
-更新日: 2026-09-27
+更新日: 2026-09-28
 基準: [工程2の統合仕様](../../docs/superpowers/specs/2026-09-27-market-research-design.md)、
 [工程3の初期計画](../../docs/superpowers/plans/2026-09-27-market-research-core.md)、
 [価格取得・保存計画](../../docs/superpowers/plans/2026-09-27-market-data-ingestion.md)、
@@ -20,7 +20,7 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 | 工程2 設計 | 完了 | 上記統合仕様、ADR 0004 |
 | 工程3a オフライン中核 | main `7c4bb109` へ取込み済み | 価格/マクロ契約、時点別読取、lag1バックテスト、CLI、合成7画面 |
 | 工程3b 実データと保存 | main `7b7cbd1b` へ取込み済み | 4価格provider、ALFRED/ESRI/MoF/e-Stat/SEC、manifestと時点別読取、日米株の自動カレンダー。認証元のライブ疎通は残り |
-| 工程3c 分析機能 | `codex/market-research-stage3c` で実装中 | 明示snapshotの価格・財務入力、品質付き指標、3値スクリーナー、基準日付きbasket、benchmark比較、仮想配分リスク、市場概要、品質表示、マクロ・公表を実装。6画面に接続。PIT特徴量・ラベルと前向き分割、zero/mean/ridgeの同条件比較を実装中。tree・取引費用付き戦略比較・公式指数の照合・FX換算・保存run・5ノート・HTML・戦略比較画面は未実装 |
+| 工程3c 分析機能 | `codex/market-research-stage3c` で実装中 | 明示snapshotの価格・財務入力、品質付き指標、3値スクリーナー、基準日付きbasket、benchmark比較、仮想配分リスク、市場概要、品質表示、マクロ・公表を実装。6画面に接続。PIT特徴量・ラベルと前向き分割、zero/mean/ridgeの同条件比較を実装中。tree・公式指数の照合・FX換算・保存run・5ノート・HTML・戦略比較画面は未実装 |
 | 工程3d 連携・切替 | 未着手 | portfolio向け一方向export、旧結果との照合、代表画面の手動確認 |
 
 ## 検証
@@ -36,8 +36,9 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
   ラベル利用可能時刻の両方で確認する。
   zero/mean/ridgeの前向き予測は同じ訓練・評価行を使い、特徴量の欠損を補完せず、
   ridgeは訓練行だけで標準化する。将来ラベルを特徴量名として指定する経路は拒否する。
-  treeと費用付きバックテスト、画面は未接続。
-  追加後のmemberテスト218件、Ruff checkは成功。
+  one-stepの予測が正ならlong、それ以外はcashとしてlag1バックテストへ渡し、
+  zero/mean/ridgeとbuy-and-holdに同じ価格・費用を適用する。lockbox以降のリターンは使わない。
+  treeと戦略比較画面は未接続。追加後のmemberテスト221件、Ruff checkは成功。
 - 工程3cの最初の入力層は[実装計画](../../docs/superpowers/plans/2026-09-27-market-research-analysis-inputs.md)
   に沿い、表示用のretrospective履歴と、当時観測済みsnapshotだけのPIT履歴を分離した。
   独立レビューで見つかった5件を回帰テストで修正し、欠損日を他銘柄によらず保持、初回を含むPIT判断で
@@ -104,8 +105,8 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 
 ## 次の作業
 
-1. 工程3cの信号モデル、公式指数との照合、5ノート・HTML・戦略比較画面を接続し、
-   代表操作を確認する。Q09–Q11・Q13を完了する。
+1. 工程3cのtree候補、公式指数との照合、5ノート・HTML・戦略比較画面を接続し、
+   費用付き比較の代表操作を確認する。Q09–Q11・Q13を完了する。
 2. ALFRED・e-Stat・SECの設定済み環境で実通信を確認する。ESRIの過去掲載は
    表の取得成功まで実績に昇格させず、MoF/e-Statは収集前の時点を再現しない。
    Q06–Q08のfixtureを継続し、必要な改定・期間の広がりを追加する。
