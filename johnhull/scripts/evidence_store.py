@@ -11,12 +11,16 @@ and hold project-relative paths only.
 from __future__ import annotations
 
 import argparse
+import base64
+import ctypes
+import errno
 import fcntl
 import hashlib
 import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 from collections.abc import Iterable, Sequence
@@ -38,6 +42,13 @@ MIME_TYPES = {
 }
 _DIGEST_RE = re.compile(r"[0-9a-f]{64}")
 _REF_RE = re.compile(r"artifact:sha256:([0-9a-f]{64})")
+_WINDOWS_MOVE_COMMAND = base64.b64encode(
+    (
+        '$ErrorActionPreference = "Stop"; '
+        "try { [System.IO.File]::Move($env:PROJECTS_MOVE_SOURCE, $env:PROJECTS_MOVE_TARGET); exit 0 } "
+        "catch [System.IO.IOException] { exit 17 } catch { exit 18 }"
+    ).encode("utf-16le")
+).decode("ascii")
 
 
 class StoreError(Exception):
@@ -235,6 +246,66 @@ def _copy_exclusive(source: Path, target: Path) -> None:
         raise
 
 
+def _move_without_overwrite(source: Path, target: Path) -> None:
+    """Atomically move on Linux or DrvFS, failing closed if neither can do so."""
+    try:
+        renameat2 = ctypes.CDLL(None, use_errno=True).renameat2
+    except AttributeError:
+        renameat2 = None
+    if renameat2 is not None:
+        renameat2.argtypes = [
+            ctypes.c_int,
+            ctypes.c_char_p,
+            ctypes.c_int,
+            ctypes.c_char_p,
+            ctypes.c_uint,
+        ]
+        renameat2.restype = ctypes.c_int
+        if renameat2(-100, os.fsencode(source), -100, os.fsencode(target), 1) == 0:
+            return
+        error = ctypes.get_errno()
+        if error == errno.EEXIST:
+            raise FileExistsError(error, os.strerror(error), str(target))
+        if error not in (errno.EINVAL, errno.ENOSYS, errno.EOPNOTSUPP):
+            raise OSError(error, os.strerror(error), str(target))
+
+    try:
+        source_windows = subprocess.run(
+            ["wslpath", "-w", os.fspath(source)], capture_output=True, text=True, check=True
+        ).stdout.rstrip("\n")
+        target_windows = subprocess.run(
+            ["wslpath", "-w", os.fspath(target)], capture_output=True, text=True, check=True
+        ).stdout.rstrip("\n")
+        environment = os.environ.copy()
+        environment["PROJECTS_MOVE_SOURCE"] = source_windows
+        environment["PROJECTS_MOVE_TARGET"] = target_windows
+        environment["WSLENV"] = ":".join(
+            filter(
+                None,
+                (environment.get("WSLENV"), "PROJECTS_MOVE_SOURCE", "PROJECTS_MOVE_TARGET"),
+            )
+        )
+        result = subprocess.run(
+            [
+                "powershell.exe",
+                "-NoProfile",
+                "-NonInteractive",
+                "-EncodedCommand",
+                _WINDOWS_MOVE_COMMAND,
+            ],
+            capture_output=True,
+            env=environment,
+            check=False,
+        )
+    except (OSError, subprocess.CalledProcessError, UnicodeError) as exc:
+        raise StoreError(f"atomic no-overwrite publication is unavailable: {exc}") from exc
+    if result.returncode == 0:
+        return
+    if result.returncode == 17 and (target.exists() or target.is_symlink()):
+        raise FileExistsError(errno.EEXIST, os.strerror(errno.EEXIST), str(target))
+    raise StoreError(f"atomic no-overwrite publication failed (Windows exit {result.returncode})")
+
+
 def _publish_without_overwrite(temporary: Path, final: Path) -> None:
     """Publish complete bytes once, serializing writers on filesystems without links."""
     lock_path = final.with_name(f".lock-{final.name}")
@@ -248,11 +319,14 @@ def _publish_without_overwrite(temporary: Path, final: Path) -> None:
         except FileExistsError:
             return
         except OSError:
-            # DrvFS disallows hardlinks. Both paths are in one directory, so
-            # rename exposes only the already fsynced, verified temporary file.
+            # DrvFS disallows hardlinks and renameat2. Windows File.Move is
+            # atomic and refuses an existing target, even outside this lock.
             if final.exists() or final.is_symlink():
                 return
-            os.rename(temporary, final)
+            try:
+                _move_without_overwrite(temporary, final)
+            except FileExistsError:
+                return
 
 
 def init_store(root: Path | str, role: str) -> Store:

@@ -222,7 +222,51 @@ def test_put_fallback_never_overwrites_a_file_that_appears_during_publish(primar
     assert final.read_bytes() == b"competing writer"
 
 
-def _put_without_links_in_process(root, data, started, rename_entered, release, done):
+def test_put_fallback_never_overwrites_a_file_created_after_the_last_check(primary, monkeypatch):
+    final = primary.blob_path(_digest(PNG))
+    original_exists = Path.exists
+    link_failed = False
+    appeared = False
+
+    def unsupported_link(_source, _target):
+        nonlocal link_failed
+        link_failed = True
+        raise OSError(errno.EPERM, "hardlinks unsupported")
+
+    def racing_exists(path):
+        nonlocal appeared
+        found = original_exists(path)
+        if path == final and link_failed and not found and not appeared:
+            final.write_bytes(b"competing writer")
+            appeared = True
+        return found
+
+    monkeypatch.setattr(os, "link", unsupported_link)
+    monkeypatch.setattr(Path, "exists", racing_exists)
+    with pytest.raises(StoreError, match=r"size mismatch|digest mismatch"):
+        primary.put_bytes(PNG)
+    assert appeared
+    assert final.read_bytes() == b"competing writer"
+
+
+def test_put_fallback_fails_closed_without_an_atomic_move(primary, monkeypatch):
+    from johnhull.scripts import evidence_store
+
+    def unsupported_link(_source, _target):
+        raise OSError(errno.EPERM, "hardlinks unsupported")
+
+    def missing_wslpath(*_args, **_kwargs):
+        raise FileNotFoundError("wslpath unavailable")
+
+    monkeypatch.setattr(os, "link", unsupported_link)
+    monkeypatch.setattr(evidence_store.ctypes, "CDLL", lambda *_args, **_kwargs: object())
+    monkeypatch.setattr(evidence_store.subprocess, "run", missing_wslpath)
+    with pytest.raises(StoreError, match="atomic no-overwrite publication is unavailable"):
+        primary.put_bytes(PNG)
+    assert not primary.blob_path(_digest(PNG)).exists()
+
+
+def _put_without_links_in_process(root, data, started, move_entered, release, done):
     from johnhull.scripts import evidence_store
 
     def unsupported_link(_source, _target):
@@ -236,16 +280,16 @@ def _put_without_links_in_process(root, data, started, rename_entered, release, 
 
     evidence_store._publish_without_overwrite = announced_publish
     os.link = unsupported_link
-    if rename_entered is not None:
-        original_rename = os.rename
+    if move_entered is not None:
+        original_move = evidence_store._move_without_overwrite
 
-        def paused_rename(source, target):
-            rename_entered.set()
+        def paused_move(source, target):
+            move_entered.set()
             if not release.wait(10):
                 raise TimeoutError("publication was not released")
-            original_rename(source, target)
+            original_move(source, target)
 
-        os.rename = paused_rename
+        evidence_store._move_without_overwrite = paused_move
     Store.open(root).put_bytes(data)
     done.set()
 
@@ -261,14 +305,14 @@ def test_put_fallback_coordinates_processes_per_digest(
     monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[3]))
     context = multiprocessing.get_context("spawn")
     first_started = context.Event()
-    first_rename_entered = context.Event()
+    first_move_entered = context.Event()
     release = context.Event()
     first_done = context.Event()
     second_started = context.Event()
     second_done = context.Event()
     first = context.Process(
         target=_put_without_links_in_process,
-        args=(primary.root, PNG, first_started, first_rename_entered, release, first_done),
+        args=(primary.root, PNG, first_started, first_move_entered, release, first_done),
     )
     second = context.Process(
         target=_put_without_links_in_process,
@@ -276,7 +320,7 @@ def test_put_fallback_coordinates_processes_per_digest(
     )
     try:
         first.start()
-        assert first_rename_entered.wait(5)
+        assert first_move_entered.wait(5)
         assert not primary.blob_path(_digest(PNG)).exists()
         second.start()
         assert second_started.wait(5)
