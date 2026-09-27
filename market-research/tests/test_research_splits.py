@@ -62,9 +62,12 @@ def test_expanding_and_lockbox_exclude_future_evaluation():
     )
     assert splits[0].train_indices == (0, 1, 2)
     assert splits[0].test_indices == (4, 5)
-    assert splits[1].train_indices == (0, 1, 2, 3, 4)
-    assert splits[1].test_indices == (6, 7)
-    assert len(splits) == 2
+    assert len(splits) == 1
+    assert all(
+        _table(horizon=1).iloc[i]["label_available_at"] < T0 + timedelta(days=8)
+        for split in splits
+        for i in split.test_indices
+    )
 
 
 def test_splitter_rejects_mislabeled_or_short_data():

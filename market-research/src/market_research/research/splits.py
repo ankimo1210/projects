@@ -80,6 +80,10 @@ def walk_forward_splits(
         train_start = 0 if expanding else train_end - train_size
         train_indices = tuple(range(train_start, train_end))
         test_indices = tuple(range(test_start, test_end))
+        if lockbox_start is not None and any(
+            availability.iloc[index] >= lockbox_start for index in test_indices
+        ):
+            break
         test_time = times[test_start].to_pydatetime()
         for index in test_indices:
             if pd.isna(availability.iloc[index]) or not np.isfinite(table["label"].iloc[index]):

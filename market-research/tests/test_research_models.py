@@ -93,9 +93,8 @@ def test_lockbox_is_excluded_from_model_predictions():
     assert list(result.table.index) == [
         T0 + timedelta(days=6),
         T0 + timedelta(days=7),
-        T0 + timedelta(days=8),
-        T0 + timedelta(days=9),
     ]
+    assert (result.table["label_available_at"] < T0 + timedelta(days=10)).all()
 
 
 def test_future_label_cannot_be_selected_as_model_feature():
