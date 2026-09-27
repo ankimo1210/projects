@@ -1,3 +1,10 @@
+# 退避済みの旧 market-viz
+
+現行の市場分析入口は [market-research](../../../market-research/README.md) です。
+以下の起動手順とルートパスは退避前の記録です。暗号資産のイントラデイ更新、
+FastAPIとNext.jsの構成は統合先に移していません。復元手順は
+[旧市場プロジェクト索引](../README.md) を参照してください。
+
 # market-viz
 
 `market-viz` は個人用のマーケット可視化・分析アプリ。yfinance / ccxt で株式・暗号資産の価格を取得して DuckDB に蓄積し、ボラティリティ・z スコア・ドローダウン・相関・シグナル・バックテスト・アラートを Streamlit 上で対話的に確認する。

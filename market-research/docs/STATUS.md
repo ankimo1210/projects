@@ -20,8 +20,8 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 | 工程2 設計 | 完了 | 上記統合仕様、ADR 0004 |
 | 工程3a オフライン中核 | main `7c4bb109` へ取込み済み | 価格/マクロ契約、時点別読取、lag1バックテスト、CLI、合成7画面 |
 | 工程3b 実データと保存 | main `7b7cbd1b` へ取込み済み | 4価格provider、ALFRED/ESRI/MoF/e-Stat/SEC、manifestと時点別読取、日米株の自動カレンダー。認証元のライブ疎通は残り |
-| 工程3c 分析機能 | codex/market-research-stage3c で実装・検証中、main未反映 | 品質付き指標・3値スクリーナー・basket・公式指数の明示出典照合・円換算の仮想リスク・マクロ/財務表示、PIT履歴からのzero/mean/ridge/tree比較、Mag7固定例、5ノート、合成runのHTMLと不変保存を実装。7画面の代表操作はAppTestで確認。実providerの網羅、保存データの研究run永続化、ノート分析を一括HTMLへ載せる機能は残る |
-| 工程3d 連携・切替 | 一方向exportと口座側adapterを実装・検証中、main未反映 | Q12の合成入力、版・ハッシュ・時刻・FX鮮度検査、日次レポートの従来経路を確認。旧結果の差分記録と旧入口の切替、旧市場プロジェクトの個別退避は残る |
+| 工程3c 分析機能 | main 6fbd93caに初版取込み済み | 品質付き指標・3値スクリーナー・basket・公式指数の明示出典照合・円換算の仮想リスク・マクロ/財務表示、PIT履歴からのzero/mean/ridge/tree比較、Mag7固定例、5ノート、合成runのHTMLと不変保存を実装。7画面の代表操作はAppTestで確認。実providerの網羅、保存データの研究run永続化、ノート分析を一括HTMLへ載せる機能は残る |
+| 工程3d 連携・切替 | 一方向exportと口座側adapterをmain 6fbd93caに取込み済み | [初版の受入記録](STAGE3_ACCEPTANCE.md)にQ09–Q13と旧engine差分を記録。旧3件は工程4で退避、quantkit・macrokitは独立継続。最終uv同期後の日次レポート再確認は残る |
 
 ## 2026-09-28の実装・検証
 
@@ -32,13 +32,13 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
   円換算ではFX snapshot・UTC評価時刻・鮮度上限を要求する。公式指数の真正性と
   過去の構成銘柄は自動確認できない。合成runのartifact IDは入力・コードcommit・
   設定などから作り、元のrun_idを別に記録する。
-- market-research member suiteは290 passed。Streamlit AppTestで合成7画面、
+- market-research member suiteは291 passed。Streamlit AppTestで合成7画面、
   保存データのPIT戦略比較・公式指数比較・円換算リスク、CLIのHTML・保存run再読込を確認。
   5ノートはnbformatとnbclientで各先頭から実行でき、コミットしたセル出力は空。
   コードはRuffとpre-commitを実施する。実データの手動画面確認と認証付きproviderの
   ライブ疎通は未実施。
 - 工程3dのmarket側immutable Parquet/JSON exportとportfolio側read-only adapter、
-  明示CLIを合成入力で統合。portfolio-analyzer suiteは318 passed、19 skipped
+  明示CLIを合成入力で統合。portfolio-analyzer suiteは320 passed、19 skipped
   （隔離worktreeにprivate test fixtureがない）。uv lock --checkが成功。
   隔離worktreeの全workspaceをuv syncした後、private入力を読み込む日次レポートを
   メール指定なし・履歴とHTMLを一時フォルダにして実行し、終了コード0・HTML 2件を確認。
@@ -136,12 +136,10 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 
 ## 次の作業
 
-1. 工程3c/3dブランチをmainの最新へ追随させ、文書リンク・Ruff・pre-commit・対象suite、
-   代表画面を再検証してmainへ統合する。Q09–Q13のfixtureと旧結果の差分を記録する。
-2. 旧 stock / quantkit / market-viz / macrokit / autostock は、採用機能と旧入口の
-   実行条件を個別に照合する。後継で置き換えない高度モデル、イントラデイ、
-   税/NISA、AIチャット、API scaffoldは歴史的成果として復元方法を残す。
-   退避時にworkspace設定・Makefile・CI・索引・Git外参照を更新する。
+1. [初版の受入記録](STAGE3_ACCEPTANCE.md)のQ12について、最終uv同期後に日次レポートをメールなしで再確認する。
+2. 旧 autostock / stock / market-viz は退避済み。quantkitとmacrokitは
+   高度モデル・税/NISA、GDP公表回蓄積などの固有機能があり独立継続する。
+   旧成果の復元方法と未採用機能は旧市場索引に残す。
 3. 認証がある環境でALFRED・e-Stat・SECの実通信を小範囲で確認する。
    Stooqのブラウザ検証とJ-Quantsの未検証は、初版の対応済み扱いにしない。
    長期のPIT履歴がないと過去の成績は再現できない。

@@ -29,6 +29,9 @@ tmp/
 
 # Legacy autostock ledger can remain at its old path after archival.
 /autostock/results.tsv
+# Preserve any local files left under retired project paths.
+/stock/
+/market-viz/
 
 # heavy local data
 *.duckdb

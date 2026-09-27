@@ -2,7 +2,7 @@
 
 単発の分析・実験ノートブック置き場。明確なプロダクト境界を持たないアドホックな分析がここに入ります。
 
-製品レベルに育ったものは個別プロジェクト（例: [stock](../stock/README.md)、[gto](../gto/README.md)）に昇格させます。不動産 DD アプリの開発先は独立リポジトリ [re_invest_os](https://github.com/ankimo1210/re_invest_os) です。
+製品レベルに育ったものは個別プロジェクト（例: [旧stock](../_archive/market/stock/README.md)、[gto](../gto/README.md)）に昇格させます。不動産 DD アプリの開発先は独立リポジトリ [re_invest_os](https://github.com/ankimo1210/re_invest_os) です。
 
 ## 構成
 

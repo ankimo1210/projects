@@ -4,21 +4,19 @@
 
 ## プロジェクト一覧
 
-48件の現役プロジェクトを目的別に案内します（2026-09-28確認）。「状態」は各 README と
+46件の現役プロジェクトを目的別に案内します（2026-09-28確認）。「状態」は各 README と
 [整理計画](docs/superpowers/plans/2026-09-27-workspace-cleanup.md) に基づく位置づけで、
-今回すべてを実行検証したという意味ではありません。「統合検討」は今後の工程です。
+今回すべてを実行検証したという意味ではありません。
 個人データを扱うものも、ここではツールの目的と公開文書だけを案内します。
 
-### 市場・投資・意思決定（12件）
+### 市場・投資・意思決定（10件）
 
 | プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
 |---|---|---|---|---|---|
-| market-research | 市場データ・時点管理・研究計算の統合先 | [README](market-research/README.md) | 価格取得・保存CLI、画面は合成デモ | stock / quantkit / macrokit / market-viz / [旧 autostock](_archive/market/autostock/README.md) | Python / Streamlit / Plotly |
-| stock | 日米株・財務・マクロの取得と Dash 分析 | [README](stock/README.md) | 統合検討 | quantkit / market-viz / macrokit | Python / DuckDB / Dash |
-| quantkit | マルチアセットの信号研究・バックテスト | [README](quantkit/README.md) | 統合検討 | stock / market-viz / macrokit | Python / DuckDB / Plotly |
-| market-viz | 市場データの対話的な可視化 | [README](market-viz/README.md) | MVP・統合検討 | stock / quantkit | Streamlit / Plotly / DuckDB |
-| macrokit | 公表時点を再現するマクロ指標ストア | [README](macrokit/README.md) | 統合検討 | stock / quantkit | Python / DuckDB |
-| portfolio-analyzer | 資産配分・集中度などを確認するローカル分析 | [README](portfolio-analyzer/README.md) | 独立継続 | 市場分析基盤との連携を設計予定 | Python / Portable HTML |
+| market-research | 市場データ・時点管理・研究計算の統合先 | [README](market-research/README.md) | 保存データの7画面・分析CLI | quantkit / macrokit / [旧stock](_archive/market/stock/README.md) / [旧market-viz](_archive/market/market-viz/README.md) / [旧autostock](_archive/market/autostock/README.md) | Python / Streamlit / Plotly |
+| quantkit | 高度モデル・税・多資産研究を含む独立ライブラリ | [README](quantkit/README.md) | 高度研究を独立継続 | market-research / [旧stock](_archive/market/stock/README.md) | Python / DuckDB / Plotly |
+| macrokit | 公表時点を再現するマクロ指標ストア | [README](macrokit/README.md) | PIT蓄積を独立継続 | market-research / [旧stock](_archive/market/stock/README.md) | Python / DuckDB |
+| portfolio-analyzer | 資産配分・集中度などを確認するローカル分析 | [README](portfolio-analyzer/README.md) | 独立継続 | market-research の読取adapterを追加 | Python / Portable HTML |
 | JHRMBS | JHF MBS の償還・CF・価格リスク分析 | [README](JHRMBS/README.md) | 分析基盤 | 金利研究教材 | Python / Pandas / SciPy |
 | aisan_lbo_case | 公開情報に基づく LBO ケーススタディ | [README](aisan_lbo_case/README.md) | 調査成果 | small_ma_search（関連テーマ） | Python / Jupyter |
 | labor_ai_quadrant | 人手不足と AI 代替可能性の業種分析 | [README](labor_ai_quadrant/README.md) | 分析レポート | 市場分析基盤（接続候補） | Python / Plotly |
@@ -80,7 +78,7 @@
 | CsharpApp | WPF / MVVM の価格ティッカー | [README](CsharpApp/README.md) | 学習サンプル | csharp_calc / .NET | C# / WPF / .NET 9 |
 | ts-rosetta | 同じタスクアプリで TS 技術を比較 | [README](ts-rosetta/README.md) | 学習ラボ | 独立 | TypeScript / pnpm |
 | kaggle | コンペの分析・実験記録 | [README](kaggle/README.md) | 実験成果 | 独立 | Python |
-| notebooks | 単発の金融・不動産分析など | [README](notebooks/README.md) | 探索・試作 | stock / gto / re_invest_os | Jupyter |
+| notebooks | 単発の金融・不動産分析など | [README](notebooks/README.md) | 探索・試作 | [旧stock](_archive/market/stock/README.md) / gto / re_invest_os | Jupyter |
 | interactive-email-demo | メール内で切り替える指標レポート | [README](interactive-email-demo/README.md) | 検証サンプル | AMP for Email | Python (stdlib) / AMP for Email |
 | rates-ui-lab | 金利データを題材に UI を比較 | [README](rates-ui-lab/README.md) | 合成データの UI 実験 | 市場分析の UI 候補 | TypeScript / Next.js / React / pnpm |
 
@@ -140,7 +138,7 @@ make help      # ターゲット一覧
 make install   # uv 管理プロジェクトを一括 sync
 make lint      # ruff check を全体に
 make fmt       # ruff format --check を全体に
-make test      # testpaths の35件を pytest で実行 + npm があれば sde-check
+make test      # testpaths の33件を pytest で実行 + npm があれば sde-check
 make clean     # __pycache__ / .pytest_cache などを掃除
 make tree      # ヘビーディレクトリを除外したツリー表示
 ```
@@ -154,7 +152,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 
 - 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
-  - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-viz`, `market-research`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `rates_volatility_model`, `jp_llm_lab`, `labor_ai_quadrant`, `macrokit`, `timesfm_lab`, `market_nn`, `portfolio-analyzer`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
+  - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-research`, `nbody-gpu`, `line_backup`, `akinator`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `rates_volatility_model`, `jp_llm_lab`, `labor_ai_quadrant`, `macrokit`, `timesfm_lab`, `market_nn`, `portfolio-analyzer`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
   - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` / `monster_gate` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` / `interactive-email-demo` は依存なし（前者は `PYTHONPATH=shortest_path/src` で実行）
   - `WSET/wset_l3_question_corpus` は**ワークスペース外の独立 uv プロジェクト**（自前の `pyproject.toml` / `uv.lock`）。root の `uv sync --all-packages` では依存が入らないので、そのディレクトリで個別に sync する（詳細は同 README）
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照

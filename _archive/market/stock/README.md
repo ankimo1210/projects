@@ -1,3 +1,9 @@
+# 退避済みの旧 stockkit
+
+現行の市場分析入口は [market-research](../../../market-research/README.md) です。
+以下の起動手順とルートパスは退避前の記録です。8画面の Dash とAIコード実行は
+統合先に移していません。復元手順は [旧市場プロジェクト索引](../README.md) を参照してください。
+
 # stockkit
 
 個人投資分析ツールキット。yfinance / FRED / e-Stat / J-Quants / Stooq から金融データを取得し、Jupyter で探索したり Dash ダッシュボードで可視化したり、Claude API による自然言語分析を行うためのワークスペース。
@@ -6,7 +12,7 @@
 日本株・米株の価格 / 財務 / マクロ経済指標 / インデックスバスケット / AI チャット
 ```
 
-> 📦 **このプロジェクトは [projects monorepo](../README.md) の uv workspace メンバー**です。リポジトリルートは `/home/kazumasa/projects/`、`.venv` も共有されます。
+> 📦 **このプロジェクトは [projects monorepo](../../../README.md) の uv workspace メンバー**です。リポジトリルートは `/home/kazumasa/projects/`、`.venv` も共有されます。
 
 ---
 

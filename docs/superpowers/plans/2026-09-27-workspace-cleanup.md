@@ -2,7 +2,7 @@
 
 更新日: 2026-09-28（先行整理と工程3cの再開を反映）
 
-状態: 工程0–2は完了。工程3a・3bは main `7b7cbd1b` までに取込み済み。工程3cの作りかけを専用worktreeに保全してフォルダ整理を先行し、2026-09-28に同worktreeで工程3cを再開した（`codex/market-research-stage3c`、`bbda0077`、main未反映）。旧市場プロジェクトの退避、旧入口の切替、容量移管、履歴変更は未実施。別件の HSK3 は main `6dd2e69f` へ取込み済み。以下の初回調査の数値は `5852c526` 時点。
+状態: 工程0–2と工程3a–3d初版のコードをmainへ反映済み（工程3c/3dは `6fbd93ca`）。旧市場入口の個別退避を工程4で進め、autostock・stock・market-vizを退避、quantkit・macrokitは固有機能と継続蓄積のため独立継続とする。工程3の未検証provider・高度分析と工程5の容量移管は残る。以下の初回調査の数値は `5852c526` 時点。
 
 ## 目的と決まった方針
 
@@ -153,10 +153,10 @@ johnhull/ROADMAP.md の D1 によると、1マイルストーンで増える約1
 
 Git LFS 等へ移しても、過去コミットの blob は履歴を書き換えない限り残る。現環境の WSL では `git lfs version` が実行できず、LFS は現時点で利用可能と確認できていない。GitHub の LFS 容量・転送量の上限は、実施時に公式文書で確認する。履歴変更はこの計画の実行範囲外とし、必要なら影響・バックアップ・クローン先を調べた別工程にする。
 
-## フォルダ整理の先行（2026-09-27）
+## フォルダ整理の先行（2026-09-27時点の判断）
 
 本人の指示で、作りかけの工程3cよりフォルダ整理を優先する。市場分析の旧プロジェクトは
-後継機能と受入検証が未完了なので、現時点では移さない。工程3cの作業中のファイルは
+後継機能と受入検証が未完了だったため、この時点では移さなかった。工程3cの作業中のファイルは
 専用worktreeに保全し、この整理ブランチからは変更しない。
 
 候補ごとの確認を経て、`_scratch/notebooks/2026-04/` の単発比較ノート8件を
@@ -171,7 +171,7 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 この整理時点では `stock`・`quantkit`・`market-viz`・`macrokit`・`autostock` は
 いずれも root uv workspace と pytest `testpaths` の対象である。うち `quantkit`・`macrokit` は
 root `conftest.py` にも明示importがある。後継 `market-research` の工程3c/3dと受入が未完了なので、
-5ディレクトリの退避は保留する。`rates-ui-lab` には次のUI比較実験が明記され、
+5ディレクトリの退避をこの時点では保留した。`rates-ui-lab` には次のUI比較実験が明記され、
 `interactive-email-demo` には後継がないため、これらも退避しない。
 
 2026-09-28時点で、先行できる整理はローカルの `codex/workspace-cleanup`（`eb42d389`）に記録済み。
@@ -188,7 +188,7 @@ root `conftest.py` にも明示importがある。後継 `market-research` の工
 1. **入口と文書**（2026-09-27 完了、ブランチ `codex/workspace-index`、実装コミット `06849a7a`・`25606280`。main `dd18befe` へ取込み済み）: ルート README をカテゴリ化し、欠けた3件、外部 re_invest_os、_archive 索引を加える。確認済みの矛盾を修正し、古い README は実装との照合結果に応じて更新する。完了条件は、48件すべてと成果物・資料・作業用ディレクトリが索引から到達でき、リンクと説明が実在すること。
 2. **統合仕様**（2026-09-27 完了、main `1df81924` に反映済み）: 新市場分析プロジェクトの対象機能、正本、データ契約（portfolio-analyzer のデータ品質規則を含む）、UI、旧プロジェクトごとの採否、個人口座との境界を設計文書に固定する。[統合仕様](../specs/2026-09-27-market-research-design.md) に新契約と既存依存の候補を明示。旧入口の一斉切替は承認済み。実装で新規 production 依存が必要なら具体的な差分で確認する。完了条件は、旧機能の行き先と検証方法が対応表で追えること。
 3. **統合実装**: 新しい workspace メンバーを追加し、fixture による価格・マクロ・バックテストの比較から段階的に移す。採用するアプリの主要操作を確認する。依存を変えたら portfolio-analyzer の日次レポートを確認する。完了条件は、採用機能のテストと代表画面が新入口で動き、未移行機能が明示され、定時タスクが動き続けること。
-4. **個別退避**: 候補ごとに差分・依存・ローカルデータ・復元方法を確認し、承認を受けて _archive へ移す。pyproject.toml、testpaths、conftest.py、Makefile、CI、README、プロジェクト内リンク、Git の外の依存（「実施の前提と外部依存」の表）を更新する。完了条件は、現役の入口に壊れた参照がなく、退避理由と後継を索引から確認できること。
+4. **個別退避**: 候補ごとに差分・依存・ローカルデータ・復元方法を確認し、委任された判断に基づき _archive へ移す。pyproject.toml、testpaths、conftest.py、Makefile、CI、README、プロジェクト内リンク、Git の外の依存（「実施の前提と外部依存」の表）を更新する。完了条件は、現役の入口に壊れた参照がなく、退避理由と後継を索引から確認できること。
 5. **容量整理**: 決定済みの johnhull D1 と保管先を基に、再生成できる群から小さな移管実験を行い、manifest、復元、品質ゲートを確認して群単位で移す。原本・人手レビュー・評価提出物は別判断とする。完了条件は、復元可能性と監査可能性を失わず、新規生成分の増加方針が定まること。
 6. **次の統合候補**: 市場分析が安定した後、ratesvol（rates_volatility_model、2026-09-27 にテスト付きパッケージ化）と hullkit の重なりなどを個別に調査する。ratesvol の SABR テストは hullkit.sabr を独立実装として照合に使っているため、統合するとこの独立照合を失う点も比較に入れる。johnhull と deep_hedge_price の既存の役割分担は尊重し、題材が近いという理由だけで統合しない。
 
@@ -214,7 +214,7 @@ root `conftest.py` にも明示importがある。後継 `market-research` の工
 
 | README | 明確なずれに対する修正 | 照合先 |
 |---|---|---|
-| stock | uv をルートから使う起動例、依存バージョンを固定値でなく下限として記載 | [起動コード](../../../stock/app/app.py)、[依存宣言](../../../stock/pyproject.toml) |
+| stock | uv をルートから使う起動例、依存バージョンを固定値でなく下限として記載 | [起動コード](../../../_archive/market/stock/app/app.py)、[依存宣言](../../../_archive/market/stock/pyproject.toml) |
 | line_backup | 共有環境での CLI・テスト例、`--sample-rows 0` の説明 | [CLI](../../../line_backup/src/line_backup_exporter/cli.py)、[SQLite 検査](../../../line_backup/src/line_backup_exporter/sqlite_inspector.py) |
 | akinator | 同梱35件は手作り seed、ライブ Wikidata 取得と区別 | [seed 生成](../../../akinator/scripts/seed_data.py) と同梱データの ID・件数 |
 | autostock | ルート実行例と取得開始日、lockbox は指標非表示であって未来データへのアクセス制限ではないと訂正 | [戦略](../../../_archive/market/autostock/strategy.py)、[評価器](../../../_archive/market/autostock/prepare.py) |
@@ -274,7 +274,7 @@ root `conftest.py` にも明示importがある。後継 `market-research` の工
   影響のある節を再描画し、同一画像は実体を保持して参照。M15 前に D1-preflight を行う。
   数値・意味・受入検査と14節の受入状態は維持。D3 の軽量化は未決。
 - [ルート README](../../../README.md) の48件にスタック列を復元し、
-  [stock README](../../../stock/README.md) に既存 start.sh の案内を戻した。
+  [stock README](../../../_archive/market/stock/README.md) に既存 start.sh の案内を戻した。
   agentic-setup の同期、Makefile help、stock/akinator の指示ファイルは前節の残件のまま。
 
 設計時に、portfolio-analyzer の `clean_closes` が後続5観測を使うことを確認した。
@@ -359,7 +359,30 @@ market-viz、macrokit と合わせた旧suiteが410 passed・13 skippedだった
 root pyproject.toml のuvメンバー、testpaths、Ruff例外、uv.lock、
 READMEの現役一覧とメンバー案内、Makefileのhelp、AGENTSのtestpaths件数を更新した。
 退避先の旧READMEには当時の起動例であることを明記した。
-他4件は、旧機能の採否と参照元を照合するまで現役の場所に保つ。
+残る4件は、旧機能の採否と参照元を照合して次の判断を記録する。
+
+## 工程4の個別退避: stock と market-viz（2026-09-28）
+
+工程3c/3d初版を main 6fbd93ca に取込み、[初版の受入記録](../../../market-research/docs/STAGE3_ACCEPTANCE.md)に
+Q09–Q13のfixtureと旧バックテスト結果の差を残した。両旧プロジェクトの現役コードからの
+参照と root 設定・CI を照合した。stock の価格・財務・バスケット、
+market-viz の日足・市場概要・相関・品質表示の初版対応を新入口に実装した。
+旧2件の suite は移動前に56件成功、移動後も退避先の src を明示して56件成功。
+ただし stock の8画面Dash・AIコード実行と market-viz の暗号資産イントラデイ・
+FastAPI・Next.js は新入口へ移していない。旧成果は
+[旧市場索引](../../../_archive/market/README.md)から辿れ、再開には
+退避前commitの専用worktreeを使う。ライブAPIと旧UIの起動は今回未検証。
+
+rootのuvメンバー、testpaths、Ruff例外、Makefile help、README、AGENTSと
+uv.lockを更新した。退避後の隔離uv環境ではmarket-researchとportfolio-analyzerが
+611 passed・19 skipped、継続するquantkitとmacrokitが337 passed・13 skipped。
+追跡外のローカルデータ・設定・生成物は公開Gitに入れず、共有mainのものは
+mainへ統合した後で同じプロジェクトの退避先へ移す。
+
+quantkitは高度モデル・CPCV・税/NISAなど初版未採用の研究機能を持ち、
+macrokitはGDP公表回の継続蓄積とイベントパネルを持つ。両者を
+単なる重複として退避せず、現役の独立ライブラリとして残す。
+再検討の条件は各固有機能の採否・受入とローカルデータの移行方法が揃うこと。
 
 ## レビュー記録
 
