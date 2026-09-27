@@ -1,8 +1,8 @@
 # ワークスペース整理計画
 
-更新日: 2026-09-27（工程3aのマージと工程3bの価格取得・保存を反映）
+更新日: 2026-09-27（フォルダ整理の先行を反映）
 
-状態: 工程0–2は完了し、工程2は main `1df81924`、工程3aのオフライン中核は main `7c4bb109` へ取込み済み。工程3bの価格取得・保存を `codex/market-data-stage3b` で実装。外部マクロ/財務・研究画面への接続・ファイル移管・退避・履歴変更は未実施。別件の HSK3 は main `6dd2e69f` へ取込み済み。調査基準点は `5852c526`。
+状態: 工程0–2は完了。工程3a・3bは main `7b7cbd1b` までに取込み済み。工程3cは専用worktreeの `codex/market-research-stage3c` で実装中だったが、本人の指示で作りかけを保全し、フォルダ整理を先行する。旧市場プロジェクトの退避、旧入口の切替、容量移管、履歴変更は未実施。別件の HSK3 は main `6dd2e69f` へ取込み済み。以下の初回調査の数値は `5852c526` 時点。
 
 ## 目的と決まった方針
 
@@ -167,6 +167,12 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 [プロジェクト内の調査記録](../../../analytics/quant_research/docs/reviews/README.md) へ移す。
 記録時点の主張と現行実装を混同しない索引を付け、ノート内の旧 `_docs` パス参照だけを更新する。
 残る一時メモには [_docs の索引](../../../_docs/README.md) を設け、現在の仕様の正本ではないことを明示する。
+
+この整理時点では `stock`・`quantkit`・`market-viz`・`macrokit`・`autostock` は
+いずれも root uv workspace と pytest `testpaths` の対象である。うち `quantkit`・`macrokit` は
+root `conftest.py` にも明示importがある。後継 `market-research` の工程3c/3dと受入が未完了なので、
+5ディレクトリの退避は保留する。`rates-ui-lab` には次のUI比較実験が明記され、
+`interactive-email-demo` には後継がないため、これらも退避しない。
 
 ## 実施順と完了条件
 
