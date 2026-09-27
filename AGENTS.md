@@ -17,6 +17,11 @@ root [`README.md`](README.md).
 
 - **Scope your work to one project.** Do not grep or scan the whole
   repository; search within the project directory you are working on.
+- **Paths:** The repository lives at `/home/kazumasa/projects` in Ubuntu WSL.
+  Run Git and build commands in WSL with Linux paths. For Windows-side file
+  links or operations, use `//wsl.localhost/Ubuntu/home/kazumasa/projects/...`
+  (or the corresponding UNC path for a worktree), and verify the target exists.
+  Do not combine Windows drive paths with WSL paths.
 - **Do not inspect by default:** `_data/`, `_logs/`, `_archive/`,
   `_scratch/`, `_docs/` (ephemeral notes), generated outputs
   (`models/*/`, `reports/`, `**/dist/`, `**/build/`), lock files, and
