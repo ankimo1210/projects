@@ -47,6 +47,17 @@ xcodebuild test -project "My Tianjin.xcodeproj" -scheme "My Tianjin" \
   -destination 'platform=iOS Simulator,id=SIMULATOR_ID'
 ```
 
+### CI 検証（2026-09-27）
+
+コミット `6dd2e69f` を GitHub の macOS 26 / Xcode 26.6 / iOS Simulator で検証し、
+アプリのビルドと `My TianjinTests` の57件が成功しました。
+既存教材の検証・self-test、新単元の検証、Node テスト8件も成功しています。
+[実行ログ](https://github.com/ankimo1210/projects/actions/runs/36301052893)。
+[CI 定義](../../.github/workflows/my-tianjin.yml) は main と HSK3 ブランチ、関連 PR の変更で実行します。
+
+この結果で自動ビルド・XCTest の未検証は解消しました。以下の画面操作・実機の音声・
+アクセシビリティ確認、教材の人手監修は引き続き未実施です。
+
 ## Mac・実機での確認
 
 | 操作 | 期待する状態 |
@@ -65,7 +76,7 @@ xcodebuild test -project "My Tianjin.xcodeproj" -scheme "My Tianjin" \
 
 ## 次の判断
 
-1. Macでビルド・XCTest・上表の主要導線を確認する。
+1. 上表の主要導線を Mac・実機で確認する。ビルド・XCTest は上記 CI で確認済み。
 2. 中国語と日本語の監修者が全20問を確認する。複数の解釈が成立する選択肢は書き直す。現在の誤答には語順の違いと語義の違いが混在しており、技能別診断には使わない。
 3. 受験予定者に操作してもらい、解説の理解と数日後の復習を確認する。募集・外部送信は別途承認後に行う。
 4. 日本で対象にする試験版・会場・受験日を確定し、次の単元や有料商品を判断する。
