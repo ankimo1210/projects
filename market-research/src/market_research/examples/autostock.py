@@ -101,16 +101,21 @@ def run_mag7_example(
         for instrument, ends in expected_bar_ends.items()
     }
     eligible: list[str] = []
+    eligible_by_instrument: dict[str, tuple[str, ...]] = {}
     for instrument in MAG7:
+        selected_ids = []
         for snapshot_id in snapshot_ids_by_instrument[instrument]:
             snapshot = store.get_snapshot(snapshot_id)
+            if snapshot.observed_at > selected_times[-1]:
+                continue
             if snapshot.key.interval != "1d":
                 raise ValueError("Mag7 example requires daily price snapshots")
-            if snapshot.observed_at <= selected_times[-1]:
-                eligible.append(snapshot_id)
+            selected_ids.append(snapshot_id)
+            eligible.append(snapshot_id)
+        eligible_by_instrument[instrument] = tuple(selected_ids)
     prices = build_pit_close_frame(
         store,
-        snapshot_ids_by_instrument,
+        eligible_by_instrument,
         selected_times,
         currency="USD",
         adjustment=adjustment,
