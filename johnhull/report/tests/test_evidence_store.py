@@ -173,9 +173,7 @@ def test_truncated_blob_is_detected(primary):
         primary.read_verified(info["sha256"], info["bytes"])
 
 
-def test_put_fallback_never_overwrites_a_file_that_appears_during_publish(
-    primary, monkeypatch
-):
+def test_put_fallback_never_overwrites_a_file_that_appears_during_publish(primary, monkeypatch):
     digest = _digest(PNG)
     final = primary.blob_path(digest)
     original_open = os.open
