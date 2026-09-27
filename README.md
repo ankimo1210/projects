@@ -101,9 +101,9 @@
 | [docs/decisions/](docs/decisions/) | ワークスペースの判断理由（ADR） |
 | [docs/superpowers/](docs/superpowers/) | 計画・仕様。今回の [整理計画](docs/superpowers/plans/2026-09-27-workspace-cleanup.md) |
 | [docs/templates/](docs/templates/) | レポート等の共通テンプレート |
-| [_scratch/](_scratch/) | 試行・実験の作業場所。一部だけ Git 管理 |
+| [_scratch/](_scratch/README.md) | 試行・実験の作業場所。4月の比較ノートは退避済み |
 | [_docs/](_docs/) | 一時的な作業ログ・引き継ぎ。現在の仕様の正本ではない |
-| [_archive/](_archive/README.md) | 退避済みの4群。理由・後継・実行可能性は索引参照 |
+| [_archive/](_archive/README.md) | 退避済みの5群。理由・後継・実行可能性は索引参照 |
 
 ### 外部リポジトリ
 

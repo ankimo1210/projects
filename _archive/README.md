@@ -1,11 +1,10 @@
 # アーカイブ索引
 
 2026-09-27確認。ここは退避済みの成果・旧構成を履歴として読む場所です。
-現役の入口は [ルート README](../README.md)。新たな退避は、後継との重複を確認し、
-[整理計画](../docs/superpowers/plans/2026-09-27-workspace-cleanup.md) に沿って個別に判断します。
-この索引の追加に伴う移動・削除は行っていません。
+現役の入口は [ルート README](../README.md)。新たな退避は
+[整理計画](../docs/superpowers/plans/2026-09-27-workspace-cleanup.md) に沿って候補ごとに判断します。
 
-## 退避済みの4群
+## 退避済みの5群
 
 | 群 | 退避理由・根拠 | 後継・現在の入口 | 実行可能性 |
 |---|---|---|---|
@@ -13,6 +12,7 @@
 | [land_price_api_app/](land_price_api_app/README.md) | Streamlit PoC のデータ取得基盤を外部へ移管（2026-06-13、`b57432bd`） | [re_invest_os](https://github.com/ankimo1210/re_invest_os) の `packages/market-data` と `docs/data/market-data.md` | root uv workspace 非メンバー。旧 README 下段は当時の手順で、移管前データ参照も残る。ここでの起動は未検証 |
 | [notebooks/](notebooks/) | 旧世代の不動産シミュと未完成の Streamlit 試作を保存（2026-05-21、`a7ec74a9`） | [現行の探索ノート](../notebooks/README.md)、製品開発は外部 re_invest_os | 下記参照。現在の配置・依存での再実行は未検証 |
 | [restructure_prompts/](restructure_prompts/) | 旧ワークスペース再編プロンプトをルートから履歴資料へ移した（2026-05-21、`e4a807c9`） | [AGENTS.md](../AGENTS.md) と [今回の整理計画](../docs/superpowers/plans/2026-09-27-workspace-cleanup.md) | 文書のみ。当時の作業指示であり、今の構成にそのまま適用しない |
+| [scratch/](scratch/README.md) | 2026年4月の単発比較ノート8件を、候補ごとの確認を経て作業場所から退避（2026-09-27） | [market-research](../market-research/README.md) は現役の市場研究入口。ノートの機能移植は未確定 | 出力付きノートをそのまま保管。移動後の再実行は未検証 |
 
 ### notebooks の内訳
 
