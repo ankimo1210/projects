@@ -13,7 +13,7 @@
 | [notebooks/](notebooks/) | 旧世代の不動産シミュと未完成の Streamlit 試作を保存（2026-05-21、`a7ec74a9`） | [現行の探索ノート](../notebooks/README.md)、製品開発は外部 re_invest_os | 下記参照。現在の配置・依存での再実行は未検証 |
 | [restructure_prompts/](restructure_prompts/) | 旧ワークスペース再編プロンプトをルートから履歴資料へ移した（2026-05-21、`e4a807c9`） | [AGENTS.md](../AGENTS.md) と [今回の整理計画](../docs/superpowers/plans/2026-09-27-workspace-cleanup.md) | 文書のみ。当時の作業指示であり、今の構成にそのまま適用しない |
 | [scratch/](scratch/README.md) | 2026年4月の単発比較ノート8件を、候補ごとの確認を経て作業場所から退避（2026-09-27） | [market-research](../market-research/README.md) は現役の市場研究入口。ノートの機能移植は未確定 | 出力付きノートをそのまま保管。移動後の再実行は未検証 |
-| [docs/](docs/README.md) | 2026年6〜7月の一時作業ログ3件と、同年5月の旧スキル設計・計画2件を _docs から個別確認後に退避（2026-09-28） | [各対象の現行入口](docs/README.md) | 文書のみ。記録中の手順・配置は再確認が必要 |
+| [docs/](docs/README.md) | 一時作業ログ・環境記録6件、旧スキル設計2件、未実施調査案1件を _docs から退避（2026-09-28） | [各対象の現行入口](docs/README.md) | 文書のみ。記録中の手順・配置は再確認が必要 |
 
 ### notebooks の内訳
 
