@@ -54,7 +54,7 @@
 
 **Interfaces:**
 - Consumes: Task 1 の `PriceDataset` と `ResearchStore`。
-- Produces: `build_pit_close_frame(store, snapshot_ids_by_instrument, decision_times, *, currency, adjustment) -> pd.DataFrame`。行はUTCの判断時刻、列は明示したinstrument ID。値はその時刻までに観測済みの完全snapshotが示す直近の確定終値。
+- Produces: `build_pit_close_frame(store, snapshot_ids_by_instrument, decision_times, *, currency, adjustment, expected_bar_ends) -> pd.DataFrame`。行はUTCの判断時刻、列は明示したinstrument ID。`expected_bar_ends` は銘柄ごと・判断時刻ごとに、確認済み市場カレンダー等から求めた足の終了時刻。値はその時刻までに観測済みの完全snapshotが示す、期待時刻と一致する確定終値。初回も古い足を拒否する。
 
 - [ ] **Step 1: Write the failing tests.** 2つの判断時刻の間に訂正snapshotを追加し、最初の行と `run_prefix_strategy` の最初のウェイトが不変であることを確認する。取得時刻が未来のsnapshot、古い足しかない銘柄、未確定足、無約定、通貨・調整方式の不一致、重複・naive判断時刻を拒否する。固定した2銘柄×3時点の終値は手計算値と一致させる。
 - [ ] **Step 2: Run the targeted test.** `uv run --no-sync pytest market-research/tests/test_research_history.py -q` で新関数未定義の失敗を見る。
@@ -71,7 +71,7 @@
 
 **Interfaces:**
 - Consumes: `PriceDataset` の確定バー、`build_pit_close_frame` の価格行列。
-- Produces: `close_history(dataset) -> IndicatorInput`（`prices` は市場ごとの `session_date` で揃え、行時刻はその日の最後の `bar_end`。mode・通貨・調整方式・品質を別フィールドで保持）と `indicator_table(source, *, momentum_window, volatility_window) -> pd.DataFrame`（変化率、年率volatility、drawdown、z-score、欠損理由）。
+- Produces: `close_history(dataset) -> IndicatorInput`（`prices` は市場ごとの `session_date` で揃え、行時刻はその日の最後の `bar_end`。足がない日の表示時刻は当該UTC日の終端を `as_of` で上限化したラベルで、実際の公表時刻やPITの判断時刻ではない。mode・通貨・調整方式・品質を別フィールドで保持）と `indicator_table(source, *, momentum_window, volatility_window, periods_per_year) -> pd.DataFrame`（変化率、指定した年率基準のvolatility、drawdown、z-score、欠損理由と年率基準）。
 
 - [ ] **Step 1: Write the failing tests.** 既知の5観測で変化率・drawdown・volatilityを手計算で照合する。prefixの後ろへ極端な価格を追加しても前の指標値が変わらないこと、短い系列は `NaN` と理由を返すこと、`warn` は理由を残し `reject` は分析値に使わないこと、異通貨・別provider混合を拒否することを確認する。
 - [ ] **Step 2: Run the targeted test.** `uv run --no-sync pytest market-research/tests/test_research_indicators.py -q` で新関数未定義の失敗を見る。
@@ -82,5 +82,6 @@
 ## Self-review and handoff
 
 - この計画の出口は、実snapshotを使う表示入力と、後日訂正を遡及させないバックテスト入力が別々に動くこと。Q02–Q04・Q09–Q11 のうち価格入力側だけを満たす。
+- 独立レビュー後の修正: 無約定・未確定日の行を銘柄集合によらず残し、後日取得された無約定の行時刻を取得日へ動かさない。PIT履歴は初回を含む各判断で期待する足の終了時刻を照合し、同一銘柄の足間隔の切替を拒否する。品質理由は指標が使う履歴から保持し、年率換算基準は呼出側が明示する。
 - 財務・バスケット・機械学習・リスク・HTML・7画面・5ノート・口座連携は、それぞれ既存仕様の別計画とテストで実装し、工程3完了をこの3タスクの成功だけでは宣言しない。
 - 実データの日足を今日初めて取得した場合、そのsnapshotから過去のPITバックテストは作れない。表示用は `retrospective` と明示し、PIT用には各判断時点に存在したsnapshotが必要。
