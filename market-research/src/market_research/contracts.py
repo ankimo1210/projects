@@ -76,8 +76,12 @@ class PriceBar:
             object.__setattr__(self, name, _utc(getattr(self, name), name))
         if self.bar_start >= self.bar_end:
             raise ValueError("bar_start must precede bar_end")
-        if self.available_at < self.bar_end:
-            raise ValueError("available_at must be at or after bar_end")
+        if not isinstance(self.is_final, bool):
+            raise ValueError("is_final must be a bool")
+        if self.is_final and self.available_at < self.bar_end:
+            raise ValueError("available_at must be at or after bar_end for a final bar")
+        if not self.is_final and min(self.available_at, self.observed_at) < self.bar_start:
+            raise ValueError("partial bar cannot be observed before bar_start")
         if not math.isfinite(self.close) or self.close <= 0:
             raise ValueError("close must be positive and finite")
         if self.adjustment not in ADJUSTMENTS:

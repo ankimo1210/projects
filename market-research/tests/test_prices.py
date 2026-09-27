@@ -99,8 +99,7 @@ def test_duplicate_revision_and_open_bar_fail_closed():
     bar = sample_bar()
     with pytest.raises(ValueError, match="duplicate"):
         select_bars_as_of([bar, bar], END + timedelta(days=1))
-    with pytest.raises(ValueError, match="non-final"):
-        select_bars_as_of([replace(bar, is_final=False)], END + timedelta(days=1))
+    assert select_bars_as_of([replace(bar, is_final=False)], END + timedelta(days=1)) == ()
 
 
 def test_extreme_value_is_flagged_without_rewriting_past():
@@ -197,5 +196,54 @@ def test_explicit_nonfinal_bar_stays_nonfinal_and_is_not_readable():
         bar_timing={pd.Timestamp(END): BarTiming(END - timedelta(hours=7), END, is_final=False)},
     )
     assert not bars[0].is_final
-    with pytest.raises(ValueError, match="non-final"):
-        select_bars_as_of(bars, END + timedelta(hours=1))
+    assert select_bars_as_of(bars, END + timedelta(hours=1)) == ()
+
+
+def test_intraday_snapshot_retains_partial_bar_and_audits_exclusion():
+    from market_research.prices import price_view_as_of
+
+    instrument = Instrument("XTKS", "7203", "JPY", "Asia/Tokyo")
+    today = pd.Timestamp("2026-09-25 00:00", tz="Asia/Tokyo")
+    yesterday = today - pd.Timedelta(days=1)
+    observed = datetime(2026, 9, 25, 5, tzinfo=UTC)  # 14:00 JST
+    end = datetime(2026, 9, 25, 6, 30, tzinfo=UTC)
+    raw = pd.DataFrame({"Close": [100.0, 101.0]}, index=[yesterday, today])
+    bars = normalize_yfinance(
+        raw,
+        instrument,
+        observed,
+        expected_provider_symbol="7203.T",
+        bar_timing={
+            yesterday: BarTiming(
+                end - timedelta(days=1, hours=6, minutes=30), end - timedelta(days=1), True
+            ),
+            today: BarTiming(end - timedelta(hours=6, minutes=30), end, False),
+        },
+    )
+    view = price_view_as_of(bars, observed)
+    assert [bar.close for bar in view.bars] == [100.0]
+    assert [(row.bar.close, row.reason) for row in view.exclusions] == [(101.0, "non_final")]
+    assert [bar.close for bar in price_view_as_of(bars, end + timedelta(days=1)).bars] == [100.0]
+    final = replace(
+        bars[1],
+        is_final=True,
+        close=102.0,
+        available_at=end + timedelta(minutes=5),
+        observed_at=end + timedelta(minutes=5),
+        revision_id="final",
+    )
+    assert [
+        bar.close for bar in price_view_as_of([*bars, final], end + timedelta(minutes=5)).bars
+    ] == [100.0, 102.0]
+
+
+def test_final_bar_still_cannot_be_available_before_its_close():
+    with pytest.raises(ValueError, match="available_at"):
+        sample_bar(available_at=END - timedelta(hours=1), observed_at=END - timedelta(hours=1))
+
+
+def test_partial_bar_can_be_observed_during_its_interval():
+    bar = sample_bar(
+        is_final=False, available_at=END - timedelta(hours=1), observed_at=END - timedelta(hours=1)
+    )
+    assert bar.available_at < bar.bar_end
