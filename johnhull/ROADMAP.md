@@ -11,20 +11,28 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 3 | `volumes/03_greeks` | 19 | done |
 | 4 | `volumes/04_futures_forwards_rates` | 2, 3, 4, 5, 6 | done |
 | 5 | `volumes/05_vol_smile_estimation` | 20, 23 | done |
-| 6 | `volumes/06_numerical_methods` | 21, 27 | done |
+| 6 | `volumes/06_numerical_methods` | 21, 27 | done（§27.1–§27.2 は節単位で受入済み） |
 | 7 | `volumes/07_swaps` | 7, 34 | done |
 | 8 | `volumes/08_risk_var` | 22 | done |
 | 9 | `volumes/09_credit_xva` | 9, 24, 25 | done（数値例のある節は vol 28 と hullkit のテストで実装・固定。残りは `docs/SECTION_AUDIT_2026-09-14.md` §4.5） |
-| 10 | `volumes/10_exotics_martingales` | 26, 28 | done |
+| 10 | `volumes/10_exotics_martingales` | 26, 28 | done（§26.9–§26.17 は節単位で受入済み） |
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 53 modules as of 2026-09-15; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 56 public + 11 private modules as of 2026-09-27; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-**Status (2026-06-08): all 14 rows done → every Hull 11e chapter has a volume.** Section-level
-coverage is narrower: `docs/SECTION_AUDIT_2026-09-14.md` §1 lists the sections that still have
-no computation as of the audit; §12 of that document is the per-ID current status, and the
-section-audit milestone below summarizes the fixes since.
+## 現在地（2026-09-27、`ad365fee`）
+
+| 層 | 状態 | 詳細 |
+|---|---|---|
+| 章単位（Hull 11e 全 37 章） | 上表の 14 行すべて done（2026-06-08） | 章に巻があるという意味。節単位の完全性ではない |
+| Beyond Hull（vol 13–28） | すべて done | A1–A4（vol 13–17）、A5–A8 G8 release（vol 18–25）、vol 26・27・28 |
+| 全節監査の是正 | 第 1〜5 便完了 | 残りは下の「全節監査と是正」の表 |
+| 節単位の受入 | M11（§27.2）まで。台帳は受入 11・未評価 295 | 次は M12（§27.3） |
+| テスト | hullkit+report 2742 passed・6 skipped、deep_hedge_price 206 passed（2026-09-27） | コマンドは `CLAUDE.md` |
+
+`done`・`accepted`・PASS はいずれも integration・数値恒等式・再現性・印刷値ピンの PASS を表す。
+データはすべて synthetic で、市場較正や model performance の承認ではない。
 
 ## 可視化 & 深掘り(A1–A4) — 完了 (2026-06-14)
 
@@ -76,8 +84,9 @@ separate. No production dependency was added for G0/G1 core implementation.
 各巻に validation report、fingerprinted JSON/NPZ、artifact-only notebook、book
 symlinkがあり、各巻の `integration_and_reproducibility` gate は PASS。これは
 **model performance の承認ではない**。`release_manifest.json` の現行契約は portal
-**86 図/12 テーマ**（Jupyter Book は `book/_toc.yml` の root + 30 entries = 31 ページで、ページ数自体は
-manifest の契約値ではなく `book_name` の掲載のみが検証される）。G8 で fresh artifact/notebook/
+**122 図/12 テーマ**で、監査第 4 便の 82 図に節単位受入 M2–M11 の共有 4 図×10 節が加わった（2026-09-27）。
+Jupyter Book は `book/_toc.yml` の root + 30 entries = 31 ページで、ページ数自体は
+manifest の契約値ではなく `book_name` の掲載のみが検証される。G8 で fresh artifact/notebook/
 report/book/test/lint を再検証し、最終結果と model risk を `johnhull/VALIDATION.md`
 に固定した。strict tracked gate と専用 branch への remote push も完了し、その branch は
 `main` へ merge 済み（release 履歴は `VALIDATION.md` の Release decision 表）。
@@ -149,9 +158,9 @@ vol 09 の設計書（2026-06-08）で「md/conceptual only」とした項目の
 関係を置いた。`done` は integration・恒等式・再現性・教科書ピンの PASS を表し、
 市場較正の承認ではない。
 
-## 全節監査と是正 — 第 1〜4 便完了（2026-09-14〜15）
+## 全節監査と是正 — 第 1〜5 便完了（2026-09-14〜25）
 
-監査: `docs/SECTION_AUDIT_2026-09-14.md`（初回監査は §0–§10、修正の経緯は §11–§11.3、ID 別の現状は §12）。
+監査: `docs/SECTION_AUDIT_2026-09-14.md`（初回監査は §0–§10、修正の経緯は §11–§11.4、ID 別の現状は §12）。
 レビュー: `docs/SECTION_AUDIT_2026-09-14_FEEDBACK.md`（初回レビューは `bd278948` の履歴）。実行記録: `VALIDATION.md`。
 
 Hull GE 版の全 306 節と vol 13–28 を棚卸しし、実物で確認した欠陥 11 件（D1–D11）から順に直した。
@@ -163,11 +172,12 @@ Hull GE 版の全 306 節と vol 13–28 を棚卸しし、実物で確認した
 | 2 | `8485cc29` | vol 23–25・27・28 の acceptance を配列から再計算（tamper テスト）、Hull の印刷値ピン 71 件、文書の一括修正、R5・R9・R10 | 1055 | done |
 | 3 | `83905890` | vol 18–22・26 の再計算化（tamper 契約を全 11 巻へ）、§4 の関数追加（現金配当・Black 近似、BL 密度、エキゾチックの put 側、分散スワップ、利回りの凸性調整）、BB-03・07・10・17、D9（core ノートの出力をコミットし静的 book に図を出す） | 1252 | done |
 | 4 | `735197a6` | 進捗レビュー F1–F5（退化入力は FAIL 記録、core ノート出力の本文照合、vol 21 計測の来歴）、vol 18–28 の図の日本語フォント（字形欠落の警告 233 件）、文書の現状整理 | 1286 | done |
+| 5 | `7d04851e` | vol 26 の保存値依存 3 項目を配列からの再計算へ（改竄テスト 8 件、reference 配列 7 本追加。監査文書 §11.4） | 2630（`johnhull/tests` を含む） | done |
 
 `done` は各便の integration・恒等式・再現性・印刷値ピンの PASS を表し、節単位の完全性や
 model performance の承認ではない（deep_hedge_price の 206 tests も各便で PASS）。
 
-到達点（2026-09-15、`735197a6`）:
+到達点（第 4 便、2026-09-15、`735197a6`）:
 
 - acceptance は vol 18–28 の 11 巻・118 チェックを、コミット済み配列から再計算する。
   選んだ改変が該当チェックと宣言した依存チェックだけを落とすことを tamper テストで固定。
@@ -180,114 +190,48 @@ model performance の承認ではない（deep_hedge_price の 206 tests も各�
 | 区分 | 内容 |
 |---|---|
 | 保存値依存 | 根拠になる配列がない 5 項目（vol 18・19・21・22）。原始データか実行時情報の保存が要る。vol 26 の 3 項目は 2026-09-25 に配列からの再計算へ移した（監査文書 §11.4） |
-| 節カバレッジ | [節別台帳](docs/SECTION_LEDGER.md)へ306項目を登録。§26.9–§26.17の9項目受入、297項目未評価。最終統合判定は各受入ノートと統合記録を参照。完了率は確定値として使わない |
+| 節カバレッジ | [節別台帳](docs/SECTION_LEDGER.md)へ306項目を登録。§26.9–§27.2の11項目受入、295項目未評価。最終統合判定は各受入ノートと統合記録を参照。完了率は確定値として使わない |
 | 未再確認の監査報告 | R1（rBergomi の補償項）、R2（Log-HAR の再変換バイアス）、R3（予測からヘッジへの経路）、R4（vol 22 の共通乱数）、R6（dynamic fee の恒等式）、R11（Table 19.1 / 19.4 の乖離） |
-| 未実装の節（§4） | Ch 26 の残り（EX-03・04）、金利ツリー・Bermudan・LMM（EX-13〜15）、Ch 2–7 の節単位実装（FR 系）、信用の残り（CR-05〜07・09〜11・13）、Ch 35–36 のツリー（CR-19・21・22）、深掘り巻の予告の回収（DD-04〜06）など |
+| 未実装の節（§4） | Ch 26 の残り（EX-03 のうち §26.2–§26.8 の perpetual American・Bermudan・forward start・cliquet・compound・chooser。EX-04 は M5–M7 の公開 API で、§26.12 の shout は M4 の非公開モジュールで対応）、金利ツリー・Bermudan・LMM（EX-13〜15）、Ch 2–7 の節単位実装（FR 系）、信用の残り（CR-05〜07・09〜11・13）、Ch 35–36 のツリー（CR-19・21・22）、深掘り巻の予告の回収（DD-04〜06）など |
 | 判断事項（§7） | 既定 seed の統一（VN-20）、大物の置き場所（新しい節単位の巻を足すか）、FRTB IMA（vol 29 候補）、research track の扱い |
 | ゲートの限界 | core は PNG と Plotly の中身を、frontier は stderr と図を比べない（字形欠落の警告とローカルパスだけをテストで検出） |
 
-## 節単位の品質確認 — M1（2026-09-15）
+## 節単位の品質確認 — M1–M11（2026-09-15〜26）
 
 [台帳](docs/SECTION_LEDGER.md) ／ [更新手順](docs/SECTION_LEDGER_GUIDE.md) ／
 [実装計画](docs/superpowers/plans/2026-09-15-section-ledger-m1.md)。
 
 M1は、原典outline由来の299節・7付録を台帳に登録し、要求・証跡・集計の整合性を検査する段階。
-§26.9のB01–B09を受入済みとして登録し、残り305項目は未評価とした。
 「未評価」は内容の再監査をしていないという状態で、実装がないという判定ではない。
+M1のPASSは台帳と保存証跡の整合性を表し、数値モデルの再検証や全節の完成判定ではない
+（M1と§26.9の試行は`ab825e03`、[M1記録](docs/validation/section-ledger-m1/validation.json)）。
 
-| 段階 | 範囲 | 状態 |
+M2以降は1節ずつ、原典の要求抽出 → 独立参照 → 公開API → 本文6小節・共有4図 →
+Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる。数値・レビュー指摘と対応・
+既受入節の再検査記録は各受入ノートが正本で、下表は1行要約に留める。
+
+| 段階 | 節 | 状態 |
 |---|---|---|
-| M1 | 全306項目のinventory、§26.9の要求と証跡、検査CLI、生成台帳 | 検証完了 |
-| M2 | §26.10を原典の要求から説明・実装・独立検証・図・実画面まで確認 | D01–D06受入済み。教材・4図・独立検証・Book/portal確認、§26.9回帰検査を完了 |
-| M3 | §26.11の要求抽出から教材・図・実画面まで確認 | M3b：L01–L06の本文6小節・共有4図・独立価格とBook/portal検査、全体1,695テストを完了。最終ブランチレビューも承認済み |
-| M4 | §26.12を独立参照からツリー・本文・図・実画面まで確認 | M4b：S01–S06、42価格へのCRR収束、本文6小節・4図、Book/portal両面2幅を検証。Task1–3独立レビュー承認済み |
-| M5 | §26.13の要求抽出・独立参照・既存近似の誤差測定から教材・図・実画面まで | 完了（accepted）。独立レビューのP2 6件とP3 1件に対応（F1–F7）。再レビューは利用者判断で省略。[レビュー結果](docs/SECTION_26_13_FEEDBACK_2026-09-16.md)・[受入ノート](docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md) |
-| M6 | §26.14 Options to Exchange One Asset for Another（pp.627–628）を要求整理から配布画面まで | 完了（accepted）。M6a：独立24価格（2求積が1.8e-14で一致）。M6b：API4関数・本文6小節・共有4図・Book/portal両面2幅。早期行使は同一格子で分離し、q_V=0で1.2e-13（格子残差2.7e-3）。[受入ノート](docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md) |
-| M7 | §26.15 Basket Options（pp.628–629）の独立参照から教材・図・実画面まで | 完了（accepted）。独立72価格、公開API 2関数、本文6小節、共有4図、Book/portal両面2幅・40状態を検証。最大誤差6.4174通貨、価格0.5以上の63行で−1.94%〜+66.84%。[受入ノート](docs/SECTION_26_15_ACCEPTANCE_2026-09-19.md) |
-| M8 | §26.16 Volatility and Variance Swaps（pp.629–632）の独立参照から教材・図・実画面まで | 完了（accepted）。印刷例26.4/26.5を独立再計算で再現、公開API 4関数、本文6小節、共有4図、Book/portal両面2幅・32状態。独立レビュー2本＋修正の再レビューの指摘をすべて修正。既受入7節も最終ビルドで再検証。[受入ノート](docs/SECTION_26_16_ACCEPTANCE_2026-09-25.md) |
-| M9 | §26.17 Static Options Replication（pp.632–634）の独立参照から教材・図・実画面まで | 完了（accepted）。Table 26.1と3/18/100点、吸収境界積分を独立再計算。公開API、本文6小節、共有4図、Book/portal両面2幅・24状態。既受入8節もM9で再検証。[受入ノート](docs/SECTION_26_17_ACCEPTANCE_2026-09-25.md) |
-| M10 | §27.1 Alternatives to Black–Scholes–Merton（pp.641–646）の独立参照から教材・図・実画面まで | 完了（accepted）。CEV PDE 3価格、Merton元Poisson 26価格、VGガンマ積分26価格、Table 27.1とFigure 27.1。公開API 3関数、本文6小節、共有4図、Book/portal両面2幅・16状態。既受入9節もM10で再検証。[受入ノート](docs/SECTION_27_1_ACCEPTANCE_2026-09-25.md) |
-| M11 | §27.2 Stochastic Volatility Models（pp.646–649）の独立参照から教材・図・実画面まで | 完了（accepted）。式27.1の0.065・25.5%を独立PDEで、Hull–White混合公式を独立Gil-Pelaez 26価格（最大0.31 SE）で、Heston COS 78価格（1.6e-13）、SABR式の独立転記216値とMC 7行使価格を照合。公開API 6関数、本文6小節、共有4図、Book/portal両面2幅・20状態。既受入10節もM11で再検証。[受入ノート](docs/SECTION_27_2_ACCEPTANCE_2026-09-26.md) |
-| 以降 | 台帳を使って残る未評価節へ段階的に展開 | 未着手 |
+| M1 | 全306項目のinventory、§26.9 B01–B09の要求と証跡、検査CLI、生成台帳 | 検証完了 |
+| M2 | §26.10（D01–D06） | 受入。[受入ノート](docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md) |
+| M3 | §26.11（L01–L06） | 受入。最終ブランチレビュー承認。[受入ノート](docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md) |
+| M4 | §26.12（S01–S06、CRR N1024で42価格） | 受入。Task1–3独立レビュー承認。[受入ノート](docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md) |
+| M5 | §26.13 Asian | 受入。独立レビューP2 6件・P3 1件に対応（F1–F7）、**再レビューは利用者判断で省略**。[受入ノート](docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md)・[レビュー](docs/SECTION_26_13_FEEDBACK_2026-09-16.md) |
+| M6 | §26.14 Exchange options（pp.627–628） | 受入。独立24価格、早期行使は同一格子で分離。[受入ノート](docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md) |
+| M7 | §26.15 Basket options（pp.628–629） | 受入。独立72価格、近似誤差の範囲を明示。[受入ノート](docs/SECTION_26_15_ACCEPTANCE_2026-09-19.md) |
+| M8 | §26.16 Volatility and variance swaps（pp.629–632） | 受入。Example 26.4/26.5を再現、独立レビュー2本＋再レビュー。[受入ノート](docs/SECTION_26_16_ACCEPTANCE_2026-09-25.md)・[指摘と対応](docs/SECTION_26_16_FEEDBACK_2026-09-25.md) |
+| M9 | §26.17 Static options replication（pp.632–634） | 受入。Table 26.1と3/18/100点を独立再計算。[受入ノート](docs/SECTION_26_17_ACCEPTANCE_2026-09-25.md) |
+| M10 | §27.1 Alternatives to BSM（pp.641–646） | 受入。CEV・Merton・VG、Table 27.1とFigure 27.1。[受入ノート](docs/SECTION_27_1_ACCEPTANCE_2026-09-25.md) |
+| M11 | §27.2 Stochastic volatility models（pp.646–649） | 受入。式27.1・Hull–White混合公式・Heston COS・SABRを独立参照で照合。[受入ノート](docs/SECTION_27_2_ACCEPTANCE_2026-09-26.md) |
+| 以降 | §27.3 から台帳の未評価節へ順に展開 | 未着手 |
 
-M1のPASSは台帳と保存証跡の整合性を表す。数値モデルの再検証や全節の完成判定ではない。
-M1と§26.9の試行は`ab825e03`としてmainへpush済み。
-M2の現在地は[§26.10受入ノート](docs/SECTION_26_10_ACCEPTANCE_2026-09-15.md)、
-M1実施時点の記録は[M1記録](docs/validation/section-ledger-m1/validation.json)。
+現在地（2026-09-26、`ad365fee`）：M11まで受入、台帳は受入11・未評価295。
+各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
-現在地（2026-09-26）は[§27.2のM11](docs/SECTION_27_2_ACCEPTANCE_2026-09-26.md)。台帳は受入11・未評価295。
-式27.1の平均分散率、Hull–Whiteの混合公式と過大・過小評価の帯、相関とHestonのスキュー、SABRの近似式を独立参照で照合し、
-vol06 §8の本文6小節・共有4図をBook/portal両面2幅で確認した。LSMは§9、練習問題は§10へ繰り下げた。
-既受入10節の個別テストと両画面をM11で再検証し、台帳の現行証跡へ接続した。
+受入を通じて決まった進め方と、残している制限:
 
-前段階の[§27.1のM10](docs/SECTION_27_1_ACCEPTANCE_2026-09-25.md)は受入済み。
-前段階の[§26.17のM9](docs/SECTION_26_17_ACCEPTANCE_2026-09-25.md)は受入済み。
-Table 26.1のコール束と3/18/100点の初期価値0.730293/0.377569/0.324861を独立三角方程式で再計算した。
-吸収境界の対数GBM密度積分では連続監視価格0.313571。節点での最大残差3.52e-14通貨と節点間残差を分けて示した。
-公開API・本文6小節・共有4図を追加し、Book/portal両面2幅・24状態、16画像を確認した。
-既受入8節の個別テストと両画面をM9で再検証し、台帳の現行証跡へ接続した。
-
-前段階の[§26.16のM8](docs/SECTION_26_16_ACCEPTANCE_2026-09-25.md)は受入済み。
-Example 26.4（0.008139、E(V)=0.0621、1.69）と26.5（0.2484、1.82）を独立参照で再現し、
-式26.6を平坦BSM（最大差8.3e-17）とHeston 3市場（閉形式との最大差1.51e-12）で検証した。
-式26.9の近似誤差はξ=0.3で−1.9e-5、ξ=1で−4.6e-3（厳密E(√V)はCIRラプラス変換、MCは最大1.08SE）。
-公開API 4関数・本文6小節・共有4図を実装し、Book/portal両面2幅の32状態を独立参照と照合した。
-共有notebook/portal/styleの変更に伴い、既受入7節のテストと両画面も最終ビルドで再検証した（全PASS）。
-独立レビュー2本と修正の再レビューを行い、受入を止めた1件（VS05の根拠画像）とP3をすべて直して受入とした
-（[指摘と対応](docs/SECTION_26_16_FEEDBACK_2026-09-25.md)）。
-
-前段階の[§26.15のM7](docs/SECTION_26_15_ACCEPTANCE_2026-09-19.md)は受入済み。
-独立72価格に対し公開API 2関数・本文6小節・共有4図を実装し、両面2幅・40状態を検証した。
-近似誤差は全72行の最大絶対値6.4174通貨、参照価格0.5以上の63行では−1.94%〜+66.84%（合成市場の経験的範囲）。
-
-前段階の[§26.14のM6b](docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md)と
-[統合記録](docs/validation/section-26-14/m6b-check.json)は受入済みである。
-`exchange_spread_volatility`・`exchange_option_american`・`better_of_two_assets`・`worse_of_two_assets`を追加し、
-vol10 §4.4は6小節・4図になった。**早期行使プレミアムは同じ格子で行使判定を外した価格と比べて測る。**
-閉形式と比べると離散化が混ざり、$q_V=0$でも2.3e-3の見かけのプレミアムが出る（実際は1.2e-13、格子残差2.7e-3）。
-$r$非依存の図には「行使価格を今日の$U_0$に固定した誤読」という動く比較線を並べ、平坦な線が何と対比されるかを示した。
-共有ソースの変更が及ぶ§26.9–§26.13は再検査して`m6b-recheck.json`に記録した。
-再検査で82枚中5枚のスクリーンショットが変化した。4枚は文字のアンチエイリアス（最大12/255）で、
-残る1枚はPlotlyのmodebarツールチップが完全に不透明な状態で写ったもの（最大86/255、差は右上の帯に限られる）。
-図の中身の変化ではないため、コミット済み画像は復元した。
-
-一つ前の現在地は[§26.13のM5b](docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md)と
-[統合記録](docs/validation/section-26-13/m5b-check.json)。
-`asian_moments`・`asian_average_price`・`asian_seasoned_average_price`・`asian_average_strike`を追加し、
-離散モーメントはO(m)で$r=q$でも定義される。vol10 §4.3は6小節・4図になり、Book/portal両面を1440/1000pxで検査した。
-モーメント整合の近似誤差は144行中、参照価格0.5超の119行で+23.35%〜−6.85%（Example 26.3は外挿参照比で+0.99%）。全144行の範囲ではない。
-実画面で図の欠陥を3件（半幅カード・タイトル切れ・2市場が同色）検出して直し、
-実測と食い違っていた説明2件（歪度の向き・誤差の向き）を測定に合わせて書き換えた。
-共有ソースの変更が及ぶ§26.9–§26.12は再検査して`m5b-recheck.json`に記録した。
-2026-09-16の[独立レビュー](docs/SECTION_26_13_FEEDBACK_2026-09-16.md)は要修正（P2 6件・P3 1件）。
-F1–F7すべてに対応した：$r=q$の可除特異点の説明、標準誤差に埋もれる5点の×印表示、
-集計対象（119行／17行／0価格8行）の分離、反証済みの誤差方向の削除、既発契約の例の統一と表示表の独立照合、
-観測数・幾何平均の一般化の限定、満期1観測の平均行使型を厳密に0にする修正。
-独立再レビューは利用者の指示で省略し、acceptedへ変更した。修正後の状態を第三者が確認した受入ではない。
-
-§26.14の[M6a](docs/SECTION_26_14_REVIEW_2026-09-16.md)時点では台帳はgaps_foundだった。
-既存の`exchange_option`はMargrabe 1本で、教材は章対応表の1行とρの小表だけ、portalの図は0件だった。
-独立24価格に加えて、原典が述べる4つの主張を測定した：r∈{0,8%,−2%}で価格が動かないこと（最大差1.8e-14）、
-V/Uを原資産・行使1.0・金利qU・配当qVとする読み替え、better-of/worse-ofの分解（残差8.5e-14）、
-Rubinsteinの米国型（qV=0で早期行使プレミアム1.9e-13、qV>0で最大4.2783）。
-§26.14には印刷された例題が無いため、外部の正解に対するピンは存在しない。
-M6bでE01–E06の本文・図・Book/portalの実画面確認まで揃い、acceptedへ変更した。
-§26.15 Basket Options（pp.628–629）はM7でacceptedとなった。M7aの独立参照に、
-公開API・本文6小節・共有4図・保存出力・Book/portal実画面検査を接続した。
-§26.16 Volatility and Variance Swaps（pp.629–632）はM8でVS01–VS06の全軸を揃え、独立レビューを経てacceptedとなった。
-既存の`hullkit.variance_swaps`と説明なしのコードセルは根拠にせず、NumPy/SciPyだけの独立参照から組み直した。
-§26.17 Static Options Replication（pp.632–634）はM9でSR01–SR06の全軸を揃え、独立参照とBook/portalの実画面を経てacceptedとなった。
-§27.1 Alternatives to Black–Scholes–Merton（pp.641–646）はM10でAM01–AM06の全軸を揃え、独立参照とBook/portalの実画面を経てacceptedとなった。
-§27.2 Stochastic Volatility Models（pp.646–649）はM11でSV01–SV06の全軸を揃え、独立参照とBook/portalの実画面を経てacceptedとなった。
-
-§26.12の現在地は[受入ノート](docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md)と
-[M4b統合記録](docs/validation/section-26-12/m4b-check.json)。
-採用CRR N1024の42価格最大絶対残差は0.003793（許容差0.005）。境界は有限木の実ノード幅で、厳密な包含区間ではない。
-portalは102図、vol10は92セル。putは原典外の独立拡張、r=qのlookbackは既存API未対応として欠測表示する。
-§26.13では既存Asian実装の存在を受入判定へ流用せず、その誤差を測ってから教材に載せた。
-
-M3b時点は[§26.11受入ノート](docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md)と
-[統合記録](docs/validation/section-26-11/m3b-check.json)。影響範囲407テストと、両配布面・2幅の検査を完了した。
-台帳は受入済み3、不足あり0、未評価303。最終ブランチレビューも承認済み。
-abs(r-q)<1e-8の価格API対応は今回の対象外で、教材に適用域を明示する。
-[M3aの要求と残課題](docs/SECTION_26_11_REVIEW_2026-09-15.md)は実施時点の履歴として保持する。
+- 既存のhullkit実装や説明なしのコードセルは受入の根拠にしない。NumPy/SciPyだけの独立参照を先に作り、既存実装はその誤差を測ってから教材に載せる（M5・M8）。
+- 早期行使プレミアムは閉形式ではなく、同じ格子で行使判定を外した価格と比べて測る。閉形式と比べると離散化誤差が混ざる（M6）。
+- 再検査のスクリーンショット差分は、文字のアンチエイリアスやmodebarツールチップと図の中身の変化を分けて判定する。前者ならコミット済み画像を戻す（M6b）。
+- 適用域の制限：§26.11の価格APIは$|r-q|<10^{-8}$に未対応（教材に適用域として明示）、§26.12のlookbackは$r=q$を欠測表示、putは原典外の独立拡張。
+- M5は修正後の状態を第三者が確認していない受入である。
