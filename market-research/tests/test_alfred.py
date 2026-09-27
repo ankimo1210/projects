@@ -3,6 +3,7 @@ from datetime import UTC, date, datetime, timedelta
 
 import pytest
 from market_research.alfred import AlfredRequest, fetch_alfred, ingest_alfred
+from market_research.contracts import MacroObservation
 from market_research.fetch import FetchError
 from market_research.storage import ResearchStore
 
@@ -161,3 +162,17 @@ def test_ingest_keeps_partial_private_then_resumes_and_stale_is_explicit(tmp_pat
         )
         assert stale.stale and stale.error == "network"
         assert stale.snapshot.snapshot_id == completed.snapshot.snapshot_id
+
+
+def test_ingest_result_is_scoped_to_its_requested_snapshot(tmp_path):
+    source = Pages({0: page(0, 1, [row("2025-01-01", "2025-04-01", "100")])})
+    unrelated = MacroObservation(
+        "GDP", date(2024, 1, 1), NOW - timedelta(days=2), 999, "alfred", "unrelated"
+    )
+    with ResearchStore(tmp_path) as store:
+        other_key = request(series_id="OTHER").key
+        store.save(other_key, b"other", observed_at=NOW, macro=(unrelated,))
+        result = ingest_alfred(
+            store, request(), client=source, api_key="secret", now=lambda: NOW, limit=2
+        )
+        assert [item.period_start for item in result.rows] == [date(2025, 1, 1)]

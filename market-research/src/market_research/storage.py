@@ -464,6 +464,36 @@ class ResearchStore:
             saved.key.adjustment,
         )
 
+    def _snapshot_rows(self, snapshot: Snapshot, dataset: str, kind: str) -> tuple[str, ...]:
+        saved = self.get_snapshot(snapshot.snapshot_id)
+        if not saved.complete or saved.key.dataset != dataset:
+            raise CacheUnavailableError(f"complete {dataset} snapshot required")
+        rows = self.con.execute(
+            """SELECT e.payload FROM entries e JOIN snapshot_entries se
+            ON se.kind=e.kind AND se.row_key=e.row_key
+            WHERE se.snapshot_id=? AND e.kind=? ORDER BY e.available_at, e.row_key""",
+            [saved.snapshot_id, kind],
+        ).fetchall()
+        return tuple(row[0] for row in rows)
+
+    def snapshot_macro_view(
+        self, snapshot: Snapshot, when: datetime
+    ) -> tuple[MacroObservation, ...]:
+        rows = [
+            _macro_decode(payload) for payload in self._snapshot_rows(snapshot, "macro", "macro")
+        ]
+        saved = self.get_snapshot(snapshot.snapshot_id)
+        return as_of(rows, saved.key.identity, when, source=saved.key.provider)
+
+    def snapshot_fundamental_view(
+        self, snapshot: Snapshot, when: datetime
+    ) -> tuple[FundamentalObservation, ...]:
+        rows = [
+            _fundamental_decode(payload)
+            for payload in self._snapshot_rows(snapshot, "fundamental", "fundamental")
+        ]
+        return _fundamental_as_of(rows, when)
+
     def _rows(self, kind: str, identity: str, provider: str):
         return self.con.execute(
             """
@@ -508,14 +538,21 @@ class ResearchStore:
         cutoff = _utc(when, "when")
         identity = f"CIK{cik:010d}:{taxonomy}:{concept}:{unit}:{form}"
         rows = [_fundamental_decode(row[0]) for row in self._rows("fundamental", identity, "sec")]
-        selected: dict[tuple[date | None, date], FundamentalObservation] = {}
-        for row in rows:
-            if row.available_at > cutoff:
-                continue
-            period = (row.period_start, row.period_end)
-            previous = selected.get(period)
-            if previous is not None and previous.available_at == row.available_at:
-                raise ValueError("conflicting fundamental releases")
-            if previous is None or row.available_at > previous.available_at:
-                selected[period] = row
-        return tuple(selected[key] for key in sorted(selected, key=lambda p: (p[1], p[0] or p[1])))
+        return _fundamental_as_of(rows, cutoff)
+
+
+def _fundamental_as_of(
+    rows: list[FundamentalObservation], when: datetime
+) -> tuple[FundamentalObservation, ...]:
+    cutoff = _utc(when, "when")
+    selected: dict[tuple[date | None, date], FundamentalObservation] = {}
+    for row in rows:
+        if row.available_at > cutoff:
+            continue
+        period = (row.period_start, row.period_end)
+        previous = selected.get(period)
+        if previous is not None and previous.available_at == row.available_at:
+            raise ValueError("conflicting fundamental releases")
+        if previous is None or row.available_at > previous.available_at:
+            selected[period] = row
+    return tuple(selected[key] for key in sorted(selected, key=lambda p: (p[1], p[0] or p[1])))

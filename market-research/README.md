@@ -1,9 +1,9 @@
 # market-research
 
 市場データ・マクロ指標・バックテスト・可視化を1つの研究基盤にまとめるプロジェクトです。
-現在は工程3bの価格取得・保存部分を実装しています。CLIで日足を明示取得し、
-保存した版を通信なしで読めます。画面は引き続き合成デモです。
-外部マクロ・財務取得器の移植、個人口座の連携、旧プロジェクトからの切替は後続です。
+現在は工程3bの価格・マクロ・財務データの取得と保存を専用ブランチで実装しています。
+CLIで明示取得し、保存した版を通信なしで読めます。画面は引き続き合成デモです。
+個人口座の連携と旧プロジェクトからの切替は後続です。
 [設計仕様](../docs/superpowers/specs/2026-09-27-market-research-design.md)と
 [進捗](docs/STATUS.md)を参照してください。
 
@@ -27,7 +27,8 @@ uv run --no-sync pytest market-research/tests -q
 
 [データ取得ガイド](docs/DATA.md)に、CLI、カレンダー、再開・失敗時の扱いをまとめています。
 既定の保存先は WSL の `~/.local/share/market-research`（Git管理外）で、`--data-root` で変更できます。
-`prices` と `snapshots` は通信しません。`fetch-prices` だけが取得します。
+`prices`・`macro`・`fundamentals`・`releases`・`snapshots` は通信しません。
+通信は `fetch-prices`・`fetch-macro`・`fetch-fundamentals` の明示操作だけです。
 
 ```bash
 uv run --no-sync market-research fetch-prices \
@@ -35,6 +36,18 @@ uv run --no-sync market-research fetch-prices \
   --currency USDT --timezone UTC --adjustment raw --start 2026-09-24 --end 2026-09-25
 uv run --no-sync market-research snapshots
 ```
+
+マクロはALFRED、ESRI GDP、MoF JGB、e-Stat、財務はSEC companyfactsを扱います。
+例えば公開データのMoF 10年債利回りは次のように取得します。出力の `snapshot_id` を
+`macro --snapshot-id ... --as-of ...` に渡して時点別に読みます。
+
+```bash
+uv run --no-sync market-research fetch-macro \
+  --provider mof-jgb --tenor-years 10 --start 2026-09-24 --end 2026-09-26
+```
+
+ALFREDには `FRED_API_KEY`、e-Statには `ESTAT_APP_ID`、SECには連絡先を含む
+`SEC_USER_AGENT` が必要です。入力例と時刻の精度は[データ取得ガイド](docs/DATA.md)を参照してください。
 
 日米株は確認済み取引時間表の `--calendar` 指定が必要です。
 新しいカレンダー依存の追加は確認中で、自動接続はまだ実装していません。
@@ -50,7 +63,8 @@ uv run --no-sync market-research snapshots
 - 取得元・期間・銘柄記号・通貨・調整方式・カレンダーを含むmanifestと、SHA256付き入力を保存。
   DuckDBの行とmanifestはtransactionで結び、改定前の版を上書きしません。
 - マクロは公表日時以前に値を返さず、後の改定を別の版として保持します。
-  DuckDBへの保存・再読込まで合成系列で検証済みです。外部マクロの取得は未接続です。
+  ALFREDとSECの日付だけの版は翌NY暦日からの `estimated`、MoFとe-Statは
+  取得完了時刻からの `snapshot` として扱い、実測時刻と区別します。
 - バックテストは意思決定時の目標ウェイトを1期遅らせる
   close-to-close **研究近似**です。保有中の欠損・非有限値・列の食い違い、
   基準通貨の未指定・異通貨のリターンを拒否します。FX換算そのものは未実装です。

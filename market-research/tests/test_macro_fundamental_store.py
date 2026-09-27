@@ -98,3 +98,27 @@ def test_fundamental_rejects_naive_time_and_wrong_unit(tmp_path):
         fundamental(available_at=T1.replace(tzinfo=None))
     with ResearchStore(tmp_path) as store, pytest.raises(ValueError, match="cache key"):
         store.save(FUND_KEY, b"bad", observed_at=T2, fundamentals=(fundamental(unit="shares"),))
+
+
+def test_snapshot_views_never_mix_other_requests_or_partial_rows(tmp_path):
+    first = MacroObservation("GDP", date(2025, 1, 1), T1, 100, "alfred", "first")
+    other = replace(first, value=200, source="esri_gdp", vintage_id="other")
+    with ResearchStore(tmp_path) as store:
+        a = store.save(MACRO_KEY, b"a", observed_at=T2, macro=(first,))
+        b_key = replace(MACRO_KEY, provider="esri_gdp")
+        store.save(b_key, b"b", observed_at=T2, macro=(other,))
+        partial = store.save(
+            MACRO_KEY,
+            b"partial",
+            observed_at=T2,
+            macro=(replace(first, vintage_id="partial", release_at=T2),),
+            complete=False,
+            cursor="2",
+        )
+        assert store.snapshot_macro_view(a, T1) == (first,)
+        with pytest.raises(CacheUnavailableError):
+            store.snapshot_macro_view(partial, T2)
+        f = store.save(FUND_KEY, b"filing", observed_at=T2, fundamentals=(fundamental(),))
+        assert store.snapshot_fundamental_view(f, T1) == (fundamental(),)
+        with pytest.raises(CacheUnavailableError):
+            store.snapshot_fundamental_view(a, T2)
