@@ -4938,6 +4938,9 @@ wheels = [
 name = "portfolio-analyzer"
 version = "0.1.0"
 source = { editable = "portfolio-analyzer" }
+dependencies = [
+    { name = "duckdb" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -4946,6 +4949,7 @@ dev = [
 ]
 
 [package.metadata]
+requires-dist = [{ name = "duckdb", specifier = ">=1.0" }]
 
 [package.metadata.requires-dev]
 dev = [
