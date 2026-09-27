@@ -152,3 +152,36 @@ def test_splitter_rejects_dataset_without_pit_provenance(changes):
     dataset = replace(_dataset(_table()), **changes)
     with pytest.raises(ValueError, match="point-in-time snapshot provenance"):
         walk_forward_splits(dataset, train_size=3, test_size=2, embargo=1)
+
+
+def test_sealed_label_metadata_does_not_affect_pre_lockbox_splits():
+    from market_research.research.splits import walk_forward_splits
+
+    baseline = _table(count=14, horizon=1)
+    settings = dict(
+        train_size=3,
+        test_size=2,
+        lockbox_start=T0 + timedelta(days=10),
+    )
+    expected = walk_forward_splits(_dataset(baseline, 1), **settings)
+    assert tuple(split.test_indices for split in expected) == ((4, 5), (6, 7))
+
+    changed = baseline.copy()
+    changed["label_available_at"] = changed["label_available_at"].astype(object)
+    changed.loc[T0 + timedelta(days=12), "label_available_at"] = "unprocessed"
+    changed.loc[T0 + timedelta(days=12), "label"] = float("inf")
+    assert walk_forward_splits(_dataset(changed, 1), **settings) == expected
+
+
+def test_lockbox_excludes_labels_whose_future_close_is_sealed():
+    from market_research.research.splits import walk_forward_splits
+
+    frame = _table(count=14, horizon=1)
+    frame.loc[T0 + timedelta(days=9), "label_available_at"] = T0 + timedelta(days=9)
+    splits = walk_forward_splits(
+        _dataset(frame, 1),
+        train_size=3,
+        test_size=2,
+        lockbox_start=T0 + timedelta(days=10),
+    )
+    assert tuple(split.test_indices for split in splits) == ((4, 5), (6, 7))
