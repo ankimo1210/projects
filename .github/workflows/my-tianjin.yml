@@ -1,0 +1,56 @@
+name: My Tianjin iOS
+
+on:
+  push:
+    branches: [main, 'codex/hsk3-*']
+    paths: ['My Tianjin/**', '.github/workflows/my-tianjin.yml']
+  pull_request:
+    paths: ['My Tianjin/**', '.github/workflows/my-tianjin.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: my-tianjin-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios-tests:
+    runs-on: macos-26
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: My Tianjin
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: My Tianjin
+      - name: Validate bundled lessons
+        run: |
+          node Tools/validate_content_packs.mjs
+          node Tools/validate_content_packs.mjs --self-test
+          node Tools/validate_first_lesson.mjs
+          node --test Tools/validate_first_lesson.test.mjs
+      - name: Select an available iOS simulator
+        run: |
+          xcodebuild -version
+          xcodebuild -list -project 'My Tianjin.xcodeproj'
+          xcrun simctl list devices available --json > "$RUNNER_TEMP/devices.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          devices = json.loads((Path(os.environ['RUNNER_TEMP']) / 'devices.json').read_text())['devices']
+          candidates = [(runtime, device) for runtime, group in devices.items()
+                        if 'iOS-26-' in runtime for device in group
+                        if device.get('isAvailable') and device['name'].startswith('iPhone')]
+          if not candidates:
+              raise SystemExit('No available iOS 26 iPhone simulator')
+          runtime, device = sorted(candidates, key=lambda item: (item[0], item[1]['name']))[-1]
+          print(runtime, device['name'], device['udid'])
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              env.write('SIMULATOR_ID=' + device['udid'] + chr(10))
+          PY
+      - name: Build and run XCTest
+        run: |
+          xcodebuild test -project 'My Tianjin.xcodeproj' -scheme 'My Tianjin'             -destination "platform=iOS Simulator,id=$SIMULATOR_ID"             -only-testing:'My TianjinTests'             -resultBundlePath "$RUNNER_TEMP/MyTianjin.xcresult"             CODE_SIGNING_ALLOWED=NO
