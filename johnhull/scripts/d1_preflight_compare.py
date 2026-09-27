@@ -20,7 +20,7 @@ import subprocess
 import sys
 import time
 from datetime import UTC, datetime
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 try:
     from . import evidence_fingerprint, evidence_record, evidence_store
@@ -41,31 +41,63 @@ DRIVER_FILES = (
 )
 
 
-def build_overlay(project: Path, overlay: Path, section_dir: str, inputs: list[str]) -> Path:
+def build_overlay(
+    project: Path,
+    overlay: Path,
+    section_dir: str,
+    inputs: list[str],
+    replacements: dict[str, bytes] | None = None,
+) -> Path:
     """Mirror ``project`` with symlinks, except a real, fresh ``section_dir``.
 
     Only ``inputs`` (files inside ``section_dir``) are copied into it, so a
     verifier that writes there cannot overwrite accepted evidence.
+    ``replacements`` substitutes the bytes of existing files (negative
+    controls) without touching the project.
     """
     project = Path(project).resolve()
     overlay = Path(overlay)
-    overlay.mkdir(parents=True, exist_ok=False)
     section_parts = evidence_store.validate_relative_path(section_dir).parts
     for item in inputs:
         parts = evidence_store.validate_relative_path(item).parts
         if parts[:-1] != section_parts:
             raise ValueError(f"verifier input {item!r} is not in the section directory")
-    source, target = project, overlay
-    for depth, part in enumerate(section_parts):
+    replacements = dict(replacements or {})
+    for item in replacements:
+        if not project.joinpath(*evidence_store.validate_relative_path(item).parts).is_file():
+            raise FileNotFoundError(f"replacement target does not exist: {item!r}")
+    for item in replacements:
+        parts = PurePosixPath(item).parts
+        if parts[:-1] == section_parts and item not in inputs:
+            raise ValueError(
+                f"replacement {item!r} is in the section directory but not a verifier input"
+            )
+    real_dirs = {section_parts[:depth] for depth in range(1, len(section_parts) + 1)}
+    for item in replacements:
+        parts = PurePosixPath(item).parts
+        real_dirs |= {parts[:depth] for depth in range(1, len(parts))}
+    overlay.mkdir(parents=True, exist_ok=False)
+
+    def materialize(source: Path, target: Path, prefix: tuple[str, ...]) -> None:
         for entry in sorted(source.iterdir()):
-            if entry.name != part:
+            key = (*prefix, entry.name)
+            if key == section_parts:
+                (target / entry.name).mkdir()
+                for item in inputs:
+                    name = Path(item).name
+                    data = replacements.get(item)
+                    if data is None:
+                        data = (entry / name).read_bytes()
+                    (target / entry.name / name).write_bytes(data)
+            elif key in real_dirs:
+                (target / entry.name).mkdir()
+                materialize(entry, target / entry.name, key)
+            elif "/".join(key) in replacements:
+                (target / entry.name).write_bytes(replacements["/".join(key)])
+            else:
                 (target / entry.name).symlink_to(entry, target_is_directory=entry.is_dir())
-        source, target = source / part, target / part
-        target.mkdir()
-        if depth == len(section_parts) - 1:
-            for item in inputs:
-                name = Path(item).name
-                (target / name).write_bytes((source / name).read_bytes())
+
+    materialize(project, overlay, ())
     return overlay
 
 
@@ -226,9 +258,15 @@ def _browser_check(observed: dict, record_sha256: str) -> dict:
     }
 
 
+def driver_provenance(records_root: Path) -> dict:
+    """Digests of the code that produced a record (provenance, not freshness)."""
+    return {name: _sha256_file(records_root / name) for name in DRIVER_FILES}
+
+
 def _source_hashes(records_root: Path, spec: dict, fingerprint: dict) -> dict:
+    """Section inputs whose change makes the record stale (ledger freshness)."""
     components = fingerprint.get("components") or {}
-    names = set(DRIVER_FILES) | set(spec["tests"]) | {spec["notebook"]["path"]}
+    names = set(spec["tests"]) | {spec["notebook"]["path"]}
     for name in ("python_sources", "data_files", "verifier"):
         names |= set((components.get(name) or {}).keys())
     return {name: _sha256_file(records_root / name) for name in sorted(names)}
@@ -355,6 +393,7 @@ def main(argv: list[str] | None = None) -> int:
             "runtime": {key: runtime.get(key) for key in evidence_fingerprint.RUNTIME_KEYS},
             "static": fingerprint["components"].get("environment"),
             "records_commit": _git(records_root, "rev-parse", "HEAD"),
+            "driver_sha256": driver_provenance(records_root),
         },
         storage_verification=storage,
         source_sha256=_source_hashes(records_root, spec, fingerprint),
