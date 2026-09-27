@@ -12,7 +12,7 @@
 | [land_price_api_app/](land_price_api_app/README.md) | Streamlit PoC のデータ取得基盤を外部へ移管（2026-06-13、`b57432bd`） | [re_invest_os](https://github.com/ankimo1210/re_invest_os) の `packages/market-data` と `docs/data/market-data.md` | root uv workspace 非メンバー。旧 README 下段は当時の手順で、移管前データ参照も残る。ここでの起動は未検証 |
 | [notebooks/](notebooks/) | 旧世代の不動産シミュと未完成の Streamlit 試作を保存（2026-05-21、`a7ec74a9`） | [現行の探索ノート](../notebooks/README.md)、製品開発は外部 re_invest_os | 下記参照。現在の配置・依存での再実行は未検証 |
 | [restructure_prompts/](restructure_prompts/) | 旧ワークスペース再編プロンプトをルートから履歴資料へ移した（2026-05-21、`e4a807c9`） | [AGENTS.md](../AGENTS.md) と [今回の整理計画](../docs/superpowers/plans/2026-09-27-workspace-cleanup.md) | 文書のみ。当時の作業指示であり、今の構成にそのまま適用しない |
-| [scratch/](scratch/README.md) | 2026年4月の単発比較ノート8件を、候補ごとの確認を経て作業場所から退避（2026-09-27） | [market-research](../market-research/README.md) は現役の市場研究入口。ノートの機能移植は未確定 | 出力付きノートをそのまま保管。移動後の再実行は未検証 |
+| [scratch/](scratch/README.md) | 2026年4月の単発比較ノート8件と、2026年7月のWhisper文字起こし検証を作業場所から退避 | [market-research](../market-research/README.md) は市場研究入口。Whisper検証に後継サービスはない | ノートとWhisperスクリプトの移動後の再実行は未検証。音声・文字起こし結果はGit管理外 |
 | [market/](market/README.md) | 後継の市場研究基盤に固定Mag7例を実装し、旧自律探索デモを退避（2026-09-28） | [market-research](../market-research/README.md)。自律編集ループは履歴として保持 | 旧5件のsuiteは退避前に検証。autostockの移動後のtestsは17件成功。旧自律起動と復元手順は群の索引を参照 |
 | [docs/](docs/README.md) | 一時作業ログ・環境記録6件、旧スキル設計2件、未実施調査案1件を _docs から退避（2026-09-28） | [各対象の現行入口](docs/README.md) | 文書のみ。記録中の手順・配置は再確認が必要 |
 
