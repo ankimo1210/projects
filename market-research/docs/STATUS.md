@@ -20,8 +20,8 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 | 工程2 設計 | 完了 | 上記統合仕様、ADR 0004 |
 | 工程3a オフライン中核 | main `7c4bb109` へ取込み済み | 価格/マクロ契約、時点別読取、lag1バックテスト、CLI、合成7画面 |
 | 工程3b 実データと保存 | main `7b7cbd1b` へ取込み済み | 4価格provider、ALFRED/ESRI/MoF/e-Stat/SEC、manifestと時点別読取、日米株の自動カレンダー。認証元のライブ疎通は残り |
-| 工程3c 分析機能 | main 6fbd93caに初版取込み済み | 品質付き指標・3値スクリーナー・basket・公式指数の明示出典照合・円換算の仮想リスク・マクロ/財務表示、PIT履歴からのzero/mean/ridge/tree比較、Mag7固定例、5ノート、合成runのHTMLと不変保存を実装。7画面の代表操作はAppTestで確認。実providerの網羅、保存データの研究run永続化、ノート分析を一括HTMLへ載せる機能は残る |
-| 工程3d 連携・切替 | 一方向exportと口座側adapterをmain 6fbd93caに取込み済み | [初版の受入記録](STAGE3_ACCEPTANCE.md)にQ09–Q13と旧engine差分を記録。旧3件は工程4で退避、quantkit・macrokitは独立継続。最終uv同期後の日次レポート再確認は残る |
+| 工程3c 分析機能 | 初版完了、main 6fbd93ca | 品質付き指標・3値スクリーナー・basket・公式指数の明示出典照合・円換算の仮想リスク・マクロ/財務表示、PIT履歴からのzero/mean/ridge/tree比較、Mag7固定例、5ノート、合成runのHTMLと不変保存を実装。7画面の代表操作はAppTestで確認。実providerの網羅、保存データの研究run永続化、ノート分析を一括HTMLへ載せる機能は残る |
+| 工程3d 連携・切替 | 初版完了、main 6fbd93ca | [初版の受入記録](STAGE3_ACCEPTANCE.md)にQ09–Q13と旧engine差分を記録。旧3件は工程4で退避、quantkit・macrokitは独立継続。共有uv環境の最終同期後、従来の日次レポートをメールなし・一時出力で実行しHTML 2件を確認 |
 
 ## 2026-09-28の実装・検証
 
@@ -136,7 +136,7 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 
 ## 次の作業
 
-1. [初版の受入記録](STAGE3_ACCEPTANCE.md)のQ12について、最終uv同期後に日次レポートをメールなしで再確認する。
+1. [初版の受入記録](STAGE3_ACCEPTANCE.md)のQ09–Q13は完了。今後の実データ検証で判明した差分だけ追加する。
 2. 旧 autostock / stock / market-viz は退避済み。quantkitとmacrokitは
    高度モデル・税/NISA、GDP公表回蓄積などの固有機能があり独立継続する。
    旧成果の復元方法と未採用機能は旧市場索引に残す。

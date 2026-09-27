@@ -39,7 +39,7 @@ F01–F19 と Q09–Q13 を、初版の採用範囲で照合した記録。
 | Q09 lag・費用・反転 | [手計算4足](../tests/test_backtest.py)で建玉0/1/0/-1、反転時のturnover 2、最終equity 1.074845079を確認 | 合成の終値近似。実約定の再現ではない |
 | Q10 欠損・列・調整方式 | [backtestの拒否テスト](../tests/test_backtest.py)、[datasetの混在拒否](../tests/test_research_dataset.py) | 保有中の欠損、列ずれ、調整方式とproviderの混在を拒否 |
 | Q11 将来情報の隔離 | [価格攪乱](../tests/test_research_signals.py)、[purge/embargoとlockbox](../tests/test_research_splits.py)、[Mag7例](../tests/test_autostock_example.py) | 観測済みsnapshotからの判断だけを比較。古い一括取得履歴のPIT成績は不明 |
-| Q12 口座境界 | [export](../tests/test_portfolio_export.py)と[adapter](../../portfolio-analyzer/tests/test_market_export.py)のハッシュ・版・鮮度・FX ID検査 | 合成入力。日次レポートは従来経路のメールなし確認を最終同期後に再実行する |
+| Q12 口座境界 | [export](../tests/test_portfolio_export.py)と[adapter](../../portfolio-analyzer/tests/test_market_export.py)のハッシュ・版・鮮度・FX ID検査 | 合成入力。共有uv環境の最終同期後、従来経路の日次レポートをメール指定なし・一時出力で実行し、HTML 2件を確認した |
 | Q13 画面・再現 | [7画面AppTest](../tests/test_workflow.py)、[保存run](../tests/test_research_run_store.py)、5ノートをnbclientで先頭から実行 | デモはオフライン。手元の保存実データを用いた全画面の目視確認は未実施 |
 
 ## 旧バックテストとの差分
@@ -68,4 +68,6 @@ market_vizは始値間の変化率を使うため同じ入力でも成績が異�
 
 採用した初版機能は合成データ・画面・オフライン連携で検証した。
 移さない固有機能は現役quantkit・macrokitと旧市場索引に残す。
+market-researchとportfolio-analyzerの隔離環境テストは611 passed・19 skipped。
+共有環境では口座データの数値を表示せず、日次レポートの出力だけ確認した。
 本記録は認証付きライブ疎通や過去のPIT成績を保証しない。
