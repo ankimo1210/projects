@@ -20,7 +20,7 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 | 工程2 設計 | 完了 | 上記統合仕様、ADR 0004 |
 | 工程3a オフライン中核 | main `7c4bb109` へ取込み済み | 価格/マクロ契約、時点別読取、lag1バックテスト、CLI、合成7画面 |
 | 工程3b 実データと保存 | main `7b7cbd1b` へ取込み済み | 4価格provider、ALFRED/ESRI/MoF/e-Stat/SEC、manifestと時点別読取、日米株の自動カレンダー。認証元のライブ疎通は残り |
-| 工程3c 分析機能 | `codex/market-research-stage3c` で実装中 | 明示snapshotの価格・財務入力、品質付き指標、3値スクリーナー、基準日付きbasket、benchmark比較、仮想配分リスク、市場概要、品質表示、マクロ・公表を実装。6画面に接続。PIT特徴量・ラベルと前向き分割、zero/mean/ridgeの同条件比較を実装中。tree・公式指数の照合・FX換算・保存run・5ノート・HTML・戦略比較画面は未実装 |
+| 工程3c 分析機能 | `codex/market-research-stage3c` で実装中 | 明示snapshotの価格・財務入力、品質付き指標、3値スクリーナー、基準日付きbasket、benchmark比較、仮想配分リスク、市場概要、品質表示、マクロ・公表を実装。6画面に接続。PIT特徴量・ラベルと前向き分割、zero/mean/ridgeの同条件比較、Mag7固定例を実装中。tree・公式指数の照合・FX換算・保存run・5ノート・HTML・戦略比較画面は未実装 |
 | 工程3d 連携・切替 | 未着手 | portfolio向け一方向export、旧結果との照合、代表画面の手動確認 |
 
 ## 検証
@@ -39,6 +39,13 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
   one-stepの予測が正ならlong、それ以外はcashとしてlag1バックテストへ渡し、
   zero/mean/ridgeとbuy-and-holdに同じ価格・費用を適用する。lockbox以降のリターンは使わない。
   treeと戦略比較画面は未接続。追加後のmemberテスト221件、Ruff checkは成功。
+- F15のMag7モメンタム順位の固定例を、7銘柄の判断時点に観測済みの日足snapshotから組み立てる
+  `run_mag7_example` として追加。旧設定のlookback 126期、銘柄上限0.5、総上限1.0、費用5bpsを既定とし、
+  戦略に価格prefixだけを渡してlag1で評価する。合成7銘柄の手計算、将来価格攪乱、lockbox除外を確認。
+  完全な合成132営業日では、旧 `generate_weights` + `enforce_constraints` と新prefix例の目標ウェイトが
+  全行一致（最大絶対差0）。旧 autostock のsuiteはmainの共有環境で17件成功。
+  旧 autostock の一括取得Parquetには過去の取得時点版がなく、当時の履歴PIT成績は再現済みと扱わない。
+  新memberテスト224件、Ruff checkは成功。旧プロジェクトの退避は未判断。
 - 工程3cの最初の入力層は[実装計画](../../docs/superpowers/plans/2026-09-27-market-research-analysis-inputs.md)
   に沿い、表示用のretrospective履歴と、当時観測済みsnapshotだけのPIT履歴を分離した。
   独立レビューで見つかった5件を回帰テストで修正し、欠損日を他銘柄によらず保持、初回を含むPIT判断で
