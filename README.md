@@ -13,7 +13,7 @@
 
 | プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
 |---|---|---|---|---|---|
-| market-research | 市場データ・時点管理・研究計算の統合先 | [README](market-research/README.md) | 工程3の初期実装・合成デモ | stock / quantkit / macrokit / market-viz | Python / Streamlit / Plotly |
+| market-research | 市場データ・時点管理・研究計算の統合先 | [README](market-research/README.md) | 価格取得・保存CLI、画面は合成デモ | stock / quantkit / macrokit / market-viz | Python / Streamlit / Plotly |
 | stock | 日米株・財務・マクロの取得と Dash 分析 | [README](stock/README.md) | 統合検討 | quantkit / market-viz / macrokit | Python / DuckDB / Dash |
 | quantkit | マルチアセットの信号研究・バックテスト | [README](quantkit/README.md) | 統合検討 | stock / market-viz / macrokit | Python / DuckDB / Plotly |
 | market-viz | 市場データの対話的な可視化 | [README](market-viz/README.md) | MVP・統合検討 | stock / quantkit | Streamlit / Plotly / DuckDB |

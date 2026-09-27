@@ -1,6 +1,6 @@
 # Market Data Ingestion and Storage Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 未確定足の不具合を修正し、明示取得→不変snapshot→価格/マクロの時点別保存→オフライン読取を接続する。
 
@@ -32,7 +32,7 @@
 
 **Interfaces:** `price_view_as_of(bars, decision_at, adjustment=None) -> PriceView(bars, exclusions)`; `PriceExclusion(bar, reason)`。既存 `select_bars_as_of` は tuple 戻り値を保ち除外件数をログに残す。
 
-- [ ] 次の回帰を追加し、pytestで失敗を確認する。
+- [x] 次の回帰を追加し、pytestで失敗を確認する。
 ```python
 partial = replace(final, is_final=False, available_at=intraday, observed_at=intraday)
 view = price_view_as_of([previous, partial], intraday)
@@ -40,9 +40,9 @@ assert view.bars == (previous,)
 assert view.exclusions[0].reason == "non_final"
 assert not price_view_as_of([partial], tomorrow).bars
 ```
-- [ ] Run: `uv run --no-sync pytest market-research/tests/test_prices.py market-research/tests/test_contracts.py -q`。Expected: 新規API欠如または未確定時刻のValueErrorでFAIL。
-- [ ] 確定足だけに `available_at >= bar_end` を要求。未確定足は足開始前の観測を拒否。選択時に未確定を除外し構造化理由を返す。既存の重複/競合/調整方式エラーは維持。
-- [ ] 同コマンドを実行。Expected: PASS。ruff/pre-commitを通し `fix(market-research): retain and audit unfinished bars` とコミット。
+- [x] Run: `uv run --no-sync pytest market-research/tests/test_prices.py market-research/tests/test_contracts.py -q`。Expected: 新規API欠如または未確定時刻のValueErrorでFAIL。
+- [x] 確定足だけに `available_at >= bar_end` を要求。未確定足は足開始前の観測を拒否。選択時に未確定を除外し構造化理由を返す。既存の重複/競合/調整方式エラーは維持。
+- [x] 同コマンドを実行。Expected: PASS。ruff/pre-commitを通し `fix(market-research): retain and audit unfinished bars` とコミット。
 
 ### Task 2: Immutable snapshot and transactional PIT store
 
@@ -50,16 +50,16 @@ assert not price_view_as_of([partial], tomorrow).bars
 
 **Interfaces:** `CacheKey(provider,dataset,identity,interval,currency,adjustment,schema_version=1)`; `ResearchStore(root)`; `save(key, raw, observed_at, prices=(), macro=(), complete=True, cursor=None) -> Snapshot`; `latest_snapshot(key, now, max_age, allow_stale=False)`; `price_view(instrument_id,provider,when,adjustment)`; `macro_view(indicator,when,source)`。
 
-- [ ] 一時フォルダで不変性、同じ入力の冪等性、後日revision、provider差、UTC、同revision競合、transaction rollback、hash破損、partial snapshot拒否をテストする。
+- [x] 一時フォルダで不変性、同じ入力の冪等性、後日revision、provider差、UTC、同revision競合、transaction rollback、hash破損、partial snapshot拒否をテストする。
 ```python
 first = store.save(key, b"v1", observed_at=t1, prices=(original,))
 assert store.save(key, b"v1", observed_at=t1, prices=(original,)).snapshot_id == first.snapshot_id
 store.save(key, b"v2", observed_at=t2, prices=(revision,))
 assert store.price_view("XTKS:7203", "yfinance", t1, "raw").bars == (original,)
 ```
-- [ ] Run: `uv run --no-sync pytest market-research/tests/test_storage.py -q`。Expected: モジュール未作成でFAIL。
-- [ ] DuckDBを既存workspace版から追加。rawはSHA256パスで不変保存、manifestと各行は単一transaction。重複キーの内容が違う場合rollback。保存前後のhash一致を確認し、再開cursorとcompleteをmanifestへ保存。
-- [ ] 同コマンドおよび既存suite。Expected: PASS。`feat(market-research): persist immutable snapshots and PIT rows` とコミット。
+- [x] Run: `uv run --no-sync pytest market-research/tests/test_storage.py -q`。Expected: モジュール未作成でFAIL。
+- [x] DuckDBを既存workspace版から追加。rawはSHA256パスで不変保存、manifestと各行は単一transaction。重複キーの内容が違う場合rollback。保存前後のhash一致を確認し、再開cursorとcompleteをmanifestへ保存。
+- [x] 同コマンドおよび既存suite。Expected: PASS。`feat(market-research): persist immutable snapshots and PIT rows` とコミット。
 
 ### Task 3: Price fetchers with bounded transport and session timing
 
@@ -67,15 +67,15 @@ assert store.price_view("XTKS:7203", "yfinance", t1, "raw").bars == (original,)
 
 **Interfaces:** `HttpClient.get(url,params,headers) -> bytes`; `FetchError.category`; `PriceRequest(instrument,provider_symbol,start,end)`; `fetch_prices(provider,request,...) -> PriceBatch(raw,bars,observed_at,complete)`; `daily_timings(labels,instrument,observed_at)`。
 
-- [ ] 注入したtransportに401/403/429/5xx/timeout/空bodyを返させ、試行回数・Retry-After・secret非露出をテスト。J-Quants V2分页終端と上限、Binance開いた日足、yfinance MultiIndex、Stooq unknown adjustmentをfixtureで確認。
+- [x] 注入したtransportに401/403/429/5xx/timeout/空bodyを返させ、試行回数・Retry-After・secret非露出をテスト。J-Quants V2分页終端と上限、Binance開いた日足、yfinance MultiIndex、Stooq unknown adjustmentをfixtureで確認。
 ```python
 with pytest.raises(FetchError, match="authentication"):
     client.get("https://example.test", params={"api_key": "secret"})
 assert "secret" not in captured_error
 ```
-- [ ] Run: `uv run --no-sync pytest market-research/tests/test_fetch.py market-research/tests/test_providers.py market-research/tests/test_calendars.py -q`。Expected: 未実装でFAIL。
-- [ ] HTTPは最大3回、timeout10秒。Retry-Afterが待機上限を超えたら早く再送せず失敗。価格の調整方法をsourceごとに保持。日米株カレンダーは承認済み依存または明示スケジュールで解決、cryptoはUTC24時間、FXは確認できない日足を確定扱いしない。
-- [ ] 同コマンドと全member suite。Expected: PASS。`feat(market-research): fetch prices with explicit timing and provenance` とコミット。
+- [x] Run: `uv run --no-sync pytest market-research/tests/test_fetch.py market-research/tests/test_providers.py market-research/tests/test_calendars.py -q`。Expected: 未実装でFAIL。
+- [x] HTTPは最大3回、timeout10秒。Retry-Afterが待機上限を超えたら早く再送せず失敗。価格の調整方法をsourceごとに保持。日米株カレンダーは承認済み依存または明示スケジュールで解決、cryptoはUTC24時間、FXは確認できない日足を確定扱いしない。
+- [x] 同コマンドと全member suite。Expected: PASS。`feat(market-research): fetch prices with explicit timing and provenance` とコミット。
 
 ### Task 4: Explicit fetch and offline query workflow
 
@@ -83,13 +83,17 @@ assert "secret" not in captured_error
 
 **Interfaces:** `ingest_prices(store,provider,request,allow_stale=False) -> IngestResult(snapshot,view,stale,error)`; CLI `fetch-prices`, `prices`, `snapshots`。
 
-- [ ] 合成transportの取得→保存→process再起動相当の再open→as-of読取、失敗時の明示stale fallback、キャッシュだけの読取で通信なしをテスト。
+- [x] 合成transportの取得→保存→process再起動相当の再open→as-of読取、失敗時の明示stale fallback、キャッシュだけの読取で通信なしをテスト。
 ```python
 result = ingest_prices(store, "stooq", request)
 assert not result.stale
 assert query_after_reopen == result.view.bars
 ```
-- [ ] Run: `uv run --no-sync pytest market-research/tests/test_ingestion.py -q`。Expected: 未実装でFAIL。
-- [ ] 既定rootを `~/.local/share/market-research` に固定。queryでは通信しない。stdoutのJSONに品質・除外件数・stale・raw hashを含める。ドキュメントでfixture成功とlive疎通を分け、既知不具合の解消と工程3bの残件を記録。
-- [ ] member suite、ruff、pre-commit、相対リンク、CLI smoke。キー不要の公開価格を小範囲で明示取得し、失敗もsourceごとに記録。Expected: テストPASS、live成否は事実どおり。
-- [ ] `feat(market-research): expose explicit fetch and offline queries` とコミット。独立review後、修正と検証を行ってレビュー用ブランチをpush。
+- [x] Run: `uv run --no-sync pytest market-research/tests/test_ingestion.py -q`。Expected: 未実装でFAIL。
+- [x] 既定rootを `~/.local/share/market-research` に固定。queryでは通信しない。stdoutのJSONに品質・除外件数・stale・raw hashを含める。ドキュメントでfixture成功とlive疎通を分け、既知不具合の解消と工程3bの残件を記録。
+- [x] member suite、ruff、pre-commit、相対リンク、CLI smoke。キー不要の公開価格を小範囲で明示取得し、失敗もsourceごとに記録。Expected: テストPASS、live成否は事実どおり。
+- [x] `feat(market-research): expose explicit fetch and offline queries` とコミット。
+
+## 仕上げ
+
+- [ ] 独立review後、修正と検証を行ってレビュー用ブランチをpush。

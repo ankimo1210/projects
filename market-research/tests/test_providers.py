@@ -61,6 +61,27 @@ def test_stooq_never_claims_raw_adjustment():
     assert batch.bars[0].provider == "stooq"
 
 
+def test_stooq_html_challenge_is_explicit():
+    request = PriceRequest(INST, "7203.jp", date(2026, 9, 24), date(2026, 9, 24), "unknown")
+    client = client_for(
+        [b"<!DOCTYPE html><html>Enable JavaScript to verify your browser</html>"], []
+    )
+    with pytest.raises(FetchError, match="provider_challenge"):
+        fetch_prices("stooq", request, calendar=CAL, now=lambda: NOW, client=client)
+
+
+def test_yfinance_snapshot_retains_small_price_precision():
+    value = 1.234567890123456e-12
+    frame = pd.DataFrame(
+        {"Close": [value]}, index=pd.DatetimeIndex(["2026-09-24"], tz="Asia/Tokyo")
+    )
+    request = PriceRequest(INST, "7203.T", date(2026, 9, 24), date(2026, 9, 24))
+    batch = fetch_prices(
+        "yfinance", request, calendar=CAL, now=lambda: NOW, history=lambda *_: frame
+    )
+    assert json.loads(batch.raw)["data"][0][0] == batch.bars[0].close == value
+
+
 def test_jquants_v2_pagination_and_explicit_split_adjustment(monkeypatch):
     monkeypatch.setenv("JQUANTS_API_KEY", "fixture-token")
     request = PriceRequest(INST, "7203", date(2026, 9, 24), date(2026, 9, 25), "split")

@@ -70,6 +70,22 @@ def test_provider_series_do_not_overwrite_each_other(tmp_path):
         assert store.price_view(INST.instrument_id, "stooq", T1, "unknown").bars[0].close == 99
 
 
+def test_currency_series_survive_together_and_require_explicit_selection(tmp_path):
+    dollar = bar(instrument=replace(INST, currency="USD"), close=0.7)
+    with ResearchStore(tmp_path) as store:
+        yen_snapshot = store.save(KEY, b"yen", observed_at=T1, prices=(bar(),))
+        usd_snapshot = store.save(
+            replace(KEY, currency="USD"), b"usd", observed_at=T1, prices=(dollar,)
+        )
+        assert store.snapshot_price_view(usd_snapshot, T1).bars == (dollar,)
+        assert store.snapshot_price_view(yen_snapshot, T1).bars == (bar(),)
+        with pytest.raises(ValueError, match="currency"):
+            store.price_view(INST.instrument_id, "yfinance", T1, "raw")
+        assert store.price_view(INST.instrument_id, "yfinance", T1, "raw", currency="USD").bars == (
+            dollar,
+        )
+
+
 def test_conflict_rolls_back_entire_batch(tmp_path):
     with ResearchStore(tmp_path) as store:
         store.save(KEY, b"first", observed_at=T1, prices=(bar(),))
