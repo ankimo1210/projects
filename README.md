@@ -4,67 +4,119 @@
 
 ## プロジェクト一覧
 
-| ディレクトリ | 概要 | スタック |
-|---|---|---|
-| [`JHRMBS/`](JHRMBS/) | JHF MBS の公開データ取得、期限前償還推定、CF・WAL・価格リスク分析基盤 | Python / Pandas / SciPy |
-| [`gto/`](gto/) | テキサスホールデムの GTO 分析・ソリューション参照・GPU 計算を統合した Web アプリ | Rust / FastAPI / Next.js |
-| [`stock/`](stock/) | 日本株・米株の価格・財務・マクロを取得し Jupyter / Dash で分析する `stockkit` ツールキット | Python / DuckDB / Dash |
-| [`market-viz/`](market-viz/) | 個人用マーケット可視化・分析アプリ | Streamlit / Plotly / DuckDB |
-| [`portfolio-analyzer/`](portfolio-analyzer/) | 複数口座の資産配分・集中度・通貨・簡易ストレスを確認するローカル専用ダッシュボード | Python / Portable HTML |
-| [`housing-buy-vs-rent/`](housing-buy-vs-rent/) | 住宅購入・通常賃貸・借上社宅の損益分岐比較、原本アーカイブと計算監査 | HTML / JavaScript / Node.js (stdlib) |
-| [`nbody-gpu/`](nbody-gpu/) | GPU 加速 N 体シミュレーション + リアルタイム 3D 可視化 | CuPy / VisPy |
-| [`line_backup/`](line_backup/) | iPhone ローカルバックアップから LINE データを完全オフラインで解析する CLI | Python |
-| [`agent-profiler/`](agent-profiler/) | Codex CLI / Claude Code の実行をリアルタイム可視化・保存・分析するローカル TUI | Python / Textual |
-| [`health/`](health/) | Google Health API の本人データを OAuth 取得 → DuckDB 保存 → 閲覧するローカル専用ダッシュボード | Python / Streamlit / DuckDB / Plotly |
-| [`akinator/`](akinator/) | Wikidata をエンティティ源とするローカル・アキネーター風推測ゲーム（確率的候補更新エンジン） | Python / FastAPI |
-| [`pokemon/`](pokemon/) | Quokka Wilds: オリジナル 3D モンスター収集ゲーム | Vite / React Three Fiber |
-| [`komorebi-3d/`](komorebi-3d/) | 喫茶店ジオラマの3D制作とUnreal Engineへの移行実験（Blender描画確認済み、UE実機確認待ち） | Blender / Unreal Engine / Python |
-| [`monster_gate/`](monster_gate/) | コナミ『モンスターゲート』風ローグライク（使い切りカード 10 枚 + MP 経済 + 1 ダンジョン、Canvas 2D） | TypeScript / pnpm / Vite |
-| [`b737-ops-sim/`](b737-ops-sim/) | ローカル専用 Boeing 737-800 運航手順トレーナー（FlightGear/mock バックエンド、3D コックピット、ATC・チェックリスト・デブリーフ。認定訓練装置ではない） | TypeScript / pnpm / React / Babylon.js / Fastify |
-| [`eagle/`](eagle/) | Apollo 11 月着陸船の降下シミュレータ（Luminary099 の実 AGC コードを yaAGC で実行、Rust ランタイム + Web DSKY・6DoF・エンジニアボード） | Rust / TypeScript / yaAGC |
-| [`EitanQuest/`](EitanQuest/) | えいたんクエスト: iPhone 向け英単語 4 択クイズアプリ（オフライン完結 MVP） | Swift / SwiftUI / SwiftData |
-| [`NeonThread/`](NeonThread/) | 発光ラインを操作して隙間をくぐる iOS 無限ランゲーム | Swift / SwiftUI + SpriteKit |
-| [`WSET/`](WSET/) | CruNote for WSET: WSET Level 3 のオフライン学習 iOS アプリ（自作日本語 4 択 1100 問・用語 SRS・模試・テイスティング記録） | Swift / SwiftUI（問題コーパス生成は Python） |
-| [`My Tianjin/`](My%20Tianjin/) | 中国語 (HSK) 学習 iOS アプリ。公式 HSK 3.0 の 11,000 語を 7 パック収録、選択・整列・読解・産出トラック | Swift / SwiftUI |
-| [`genequest/`](genequest/) | Genequest 健康リスク・体質・母系祖先結果のローカル保存と検証（機微データは Git 管理外） | CSV / JSON / Markdown / Python |
-| [`shortest_path/`](shortest_path/) | ダイクストラ法・A*・双方向探索の実装と可視化ラボ | Python / Jupyter / HTML |
-| [`cpp_algo_lab/`](cpp_algo_lab/) | C++学習ラボ：ソート10種 / 文字列検索 / CPU 並列 / CUDA の実装と 4 軸計測（Phase 1〜4 完了） | C++20 / CUDA / make / doctest |
-| [`analytics/`](analytics/) | 体験型インタラクティブ教科書シリーズ（線形代数・NN・ベイズ・フーリエ・ラプラス・ODE/PDE/SDE・機械学習・統計）+ 統合オフラインポータル。索引: [`analytics/README.md`](analytics/README.md) | Python / Jupyter Book / Plotly / TypeScript |
-| [`johnhull/`](johnhull/) | Hull『Options, Futures, and Other Derivatives』11e の章別学習ボリューム + `hullkit` 共有パッケージ + Jupyter Book / オフラインポータル | Python / Jupyter |
-| [`autostock/`](autostock/) | Mag7 株ストラテジーの自律探索デモ（read-only バックテスト + OOS 評価） | Python |
-| [`quantkit/`](quantkit/) | ローカル無料データで完結するマルチアセット投資リサーチ基盤（データ→シグナル→バックテスト→ポートフォリオ→可視化） | Python / DuckDB / Plotly |
-| [`rough_volatility/`](rough_volatility/) | ラフボラティリティ + Hawkes マイクロ構造のビジュアルラボ（exact rBergomi、オフライン日英レポート） | Python / Jupyter |
-| [`optimal_execution/`](optimal_execution/) | 最適執行ビジュアルラボ（Almgren-Chriss / OW / 反応型 LOB / PPO、日英レポート） | Python / Jupyter |
-| [`deep_hedge_price/`](deep_hedge_price/) | Deep Hedging デモ（PyTorch 方策で短期コールをヘッジ、BS / no-hedge 比較） | Python / PyTorch |
-| [`jp_llm_lab/`](jp_llm_lab/) | 日本語小型 LLM 教育ラボ（30M 級モデルを実走、可視化ファースト、静的サイト出力） | Python / PyTorch |
-| [`rates_volatility_model/`](rates_volatility_model/) | 金利ボラティリティモデルの学習ノート（Black-76〜HJM/LMM/SABR/SVI、テスト付きパッケージ `ratesvol`） | Python / Jupyter |
-| [`market_nn/`](market_nn/) | LOB予測論文の一次資料・公式コード差分を追跡する構造再現スイート | Python / PyTorch |
-| [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
-| [`labor_ai_quadrant/`](labor_ai_quadrant/) | 人手不足の深刻度 × AI代替可能性の4象限フレームワーク（東証33業種・個別銘柄、オフライン HTML レポート） | Python / Plotly |
-| [`macrokit/`](macrokit/) | カタログ駆動のポイントインタイム・マクロ指標ストア（ALFRED ヴィンテージ取込、公表スケジュール解決、任意日時点の再現） | Python / DuckDB |
-| [`timesfm_lab/`](timesfm_lab/) | Google TimesFM 3.0 のゼロショット反証ベンチ（公開ベンチ7系統 × 古典5手法のローリング原点バックテスト、学習コーパス汚染の実測照合、HTML レポート） | Python / PyTorch |
-| [`tokyo_subway_3d/`](tokyo_subway_3d/) | 中央防災会議の浸水縦断図を画素トレースし、東京の地下鉄9路線を実測の軌条面標高で3D化（地上/地下の2視点ビューア） | Python / deck.gl / MapLibre |
-| [`small_ma_search/`](small_ma_search/) | 個人による小型M&A（事業承継型買収）の調査・実行計画。工程・資金スタック・案件の読み方をまとめた単一 HTML | Markdown / HTML |
-| [`interactive-email-demo/`](interactive-email-demo/) | メール本文内で指標を切り替える週次レポートの検証サンプル（AMP for Email + HTML/テキストのフォールバック）。標準ライブラリのみ | Python (stdlib) / AMP for Email |
-| [`notebooks/`](notebooks/) | 単発の分析ノートブック置き場（債券、ETF、不動産シミュ等） | Jupyter |
-| [`kaggle/`](kaggle/) | Kaggle コンペの実験（house_prices / titanic）。env 管理なしの単発スクリプト | Python |
-| [`csharp_calc/`](csharp_calc/) | WinForms 四則演算電卓サンプル（エンジンは UI 非依存・ユニットテスト付き） | C# / .NET 9 |
-| [`CsharpApp/`](CsharpApp/) | WPF / MVVM 学習用リアルタイム価格ティッカー（オフライン GBM、固定長履歴、カスタムチャート） | C# / WPF / .NET 9 |
-| [`ts-rosetta/`](ts-rosetta/) | 同一タスクアプリを React / Vue / Angular / Next.js / Express / NestJS 等で並列実装した TS エコシステム学習ラボ | TypeScript / pnpm |
-| [`models/`](models/) | 洋書教科書の日本語翻訳パイプライン成果物（Markdown / HTML 教科書 3 冊分） | Markdown / HTML |
+48件のプロジェクトを目的別に案内します（2026-09-27確認）。「状態」は各 README と
+[整理計画](docs/superpowers/plans/2026-09-27-workspace-cleanup.md) に基づく位置づけで、
+今回すべてを実行検証したという意味ではありません。「統合検討」は今後の工程です。
+個人データを扱うものも、ここではツールの目的と公開文書だけを案内します。
 
-> `re_invest_os`（不動産買付前 DD Web アプリ）は独立リポジトリへ移管済み:
-> ローカル `~/re_invest_os` / GitHub `ankimo1210/re_invest_os`
->
-> `land_price_api_app`（地価公示 Streamlit PoC）は `_archive/land_price_api_app/` へ退避済み
-> （market-data エンジンは `~/re_invest_os/packages/market-data` へ移植）。
+### 市場・投資・意思決定（12件）
+
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
+|---|---|---|---|---|
+| stock | 日米株・財務・マクロの取得と Dash 分析 | [README](stock/README.md) | 統合検討 | quantkit / market-viz / macrokit |
+| quantkit | マルチアセットの信号研究・バックテスト | [README](quantkit/README.md) | 統合検討 | stock / market-viz / macrokit |
+| market-viz | 市場データの対話的な可視化 | [README](market-viz/README.md) | MVP・統合検討 | stock / quantkit |
+| macrokit | 公表時点を再現するマクロ指標ストア | [README](macrokit/README.md) | 統合検討 | stock / quantkit |
+| autostock | Mag7 の自律戦略探索デモ | [README](autostock/README.md) | 実験・統合検討 | quantkit（評価基盤の候補） |
+| portfolio-analyzer | 資産配分・集中度などを確認するローカル分析 | [README](portfolio-analyzer/README.md) | 独立継続 | 市場分析基盤との連携を設計予定 |
+| JHRMBS | JHF MBS の償還・CF・価格リスク分析 | [README](JHRMBS/README.md) | 分析基盤 | 金利研究教材 |
+| aisan_lbo_case | 公開情報に基づく LBO ケーススタディ | [README](aisan_lbo_case/README.md) | 調査成果 | small_ma_search（関連テーマ） |
+| labor_ai_quadrant | 人手不足と AI 代替可能性の業種分析 | [README](labor_ai_quadrant/README.md) | 分析レポート | 市場分析基盤（接続候補） |
+| timesfm_lab | 時系列基盤モデルと古典手法の比較 | [README](timesfm_lab/README.md) | 研究ベンチ | quantkit（関連テーマ） |
+| small_ma_search | 小型 M&A の調査・実行計画 | [README](small_ma_search/README.md) | 意思決定資料 | aisan_lbo_case |
+| housing-buy-vs-rent | 住宅購入・賃貸・借上社宅の比較 | [README](housing-buy-vs-rent/README.md) | HTML シミュレーター | re_invest_os（別用途の不動産分析） |
+
+### 定量・数学の教材と研究（7件）
+
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
+|---|---|---|---|---|
+| johnhull | Hull の章別教材・現代デリバティブ研究・hullkit | [README](johnhull/README.md) | 継続開発 | 金利・ボラ・ヘッジ研究群 |
+| rates_volatility_model | 金利ボラモデルの教材と ratesvol | [README](rates_volatility_model/README.md) | 教材・合成データ | johnhull（統合方法を検討） |
+| rough_volatility | ラフボラと Hawkes 過程の可視化 | [README](rough_volatility/README.md) | 独立した研究ラボ | johnhull |
+| deep_hedge_price | Deep Hedging と別系統のニューラル価格近似 | [README](deep_hedge_price/README.md) | 独立した研究ラボ | johnhull の参照計算 |
+| optimal_execution | 最適執行・板モデル・強化学習の比較 | [README](optimal_execution/README.md) | 独立した研究ラボ | johnhull / market_nn |
+| market_nn | LOB 予測論文の構造再現 | [README](market_nn/README.md) | 研究・合成データ検証 | optimal_execution（関連テーマ） |
+| analytics | 数学・統計・ML の体験型教材群 | [README](analytics/README.md)・[統合ポータル](analytics/report/README.md) | 教材シリーズ | 10冊の Python メンバーと SDE Web 教材 |
+
+### ゲーム・シミュレーター・体験アプリ（13件）
+
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
+|---|---|---|---|---|
+| gto | ポーカーの GTO 分析・計算 | [README](gto/README.md) | Web アプリ | 独立 |
+| akinator | 確率更新による人物・キャラクター推測 | [README](akinator/README.md) | オフライン seed 付き試作 | Wikidata 取得機能 |
+| pokemon | オリジナル 3D モンスター収集ゲーム | [README](pokemon/README.md) | Web 試作 | 独立 |
+| monster_gate | カードと MP を使うローグライク | [README](monster_gate/README.md) | Web ゲーム | 独立 |
+| EitanQuest | iPhone 向け英単語クイズ | [README](EitanQuest/README.md) | iOS MVP | Xcode が必要 |
+| NeonThread | 発光ラインを操作する無限ランゲーム | [README](NeonThread/README.md) | iOS アプリ | Xcode が必要 |
+| WSET | CruNote: WSET のオフライン学習 | [README](WSET/README.md) | iOS アプリ | Xcode・独立 uv の問題コーパス |
+| My Tianjin | HSK の語彙・語順・読解・産出学習 | [README](My%20Tianjin/README.md) | iOS アプリ | Xcode が必要 |
+| b737-ops-sim | Boeing 737 の運航手順を学ぶ | [README](b737-ops-sim/README.md) | ローカル訓練用試作 | FlightGear / mock、認定訓練装置ではない |
+| eagle | Apollo AGC と月着陸のシミュレーション | [README](eagle/README.md) | プレイ可能な Alpha | yaAGC / Rust / Web |
+| komorebi-3d | 喫茶店ジオラマの 3D 制作 | [README](komorebi-3d/README.md) | Blender 描画確認・UE 確認待ち | Blender / Unreal Engine |
+| tokyo_subway_3d | 地下鉄の標高を再現する 3D ビューア | [README](tokyo_subway_3d/README.md) | 可視化作品 | 独立 |
+| nbody-gpu | GPU による N 体計算と 3D 可視化 | [README](nbody-gpu/README.md) | Phase 0–2 実装済み | NVIDIA CUDA が必要 |
+
+### 個人データ・開発環境・AI 評価（6件）
+
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
+|---|---|---|---|---|
+| health | 本人の健康データをローカルで保存・閲覧 | [README](health/README.md) | Python CLI + Next.js ポータル | 独立 |
+| genequest | 検査結果のローカル保存・検証 | [README](genequest/README.md) | 個人利用 | 独立 |
+| line_backup | バックアップをオフラインで解析する CLI | [README](line_backup/README.md) | ローカル専用 | 独立 |
+| agent-profiler | エージェント実行の観測・保存・分析 | [README](agent-profiler/README.md) | TUI / CLI | Codex CLI / Claude Code |
+| agentic-setup | エージェント・端末設定の復元用バックアップ | [README](agentic-setup/README.md) | 稼働設定と差分あり・同期待ち | 共有知識は docs/knowledge |
+| quant-agent-benchmark | 定量研究・開発エージェントの評価 | [README](quant-agent-benchmark/README.md) | ベンチ・評価結果を保存 | agent-profiler（関連テーマ） |
+
+### 学習ラボ・単発の成果（10件）
+
+完成した小さな作品も成果として見える位置に残します。更新日だけではアーカイブしません。
+
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
+|---|---|---|---|---|
+| jp_llm_lab | 日本語小型 LLM の内部・学習過程を学ぶ | [README](jp_llm_lab/README.md) | 教育ラボ | analytics（関連教材） |
+| cpp_algo_lab | C++ / CUDA のアルゴリズム実装と計測 | [README](cpp_algo_lab/README.md) | Phase 1–4 の学習成果 | shortest_path |
+| shortest_path | 最短経路探索の実装と可視化 | [README](shortest_path/README.md) | 学習成果 | cpp_algo_lab |
+| csharp_calc | WinForms 電卓 | [README](csharp_calc/README.md) | 学習サンプル | CsharpApp / .NET |
+| CsharpApp | WPF / MVVM の価格ティッカー | [README](CsharpApp/README.md) | 学習サンプル | csharp_calc / .NET |
+| ts-rosetta | 同じタスクアプリで TS 技術を比較 | [README](ts-rosetta/README.md) | 学習ラボ | 独立 |
+| kaggle | コンペの分析・実験記録 | [README](kaggle/README.md) | 実験成果 | 独立 |
+| notebooks | 単発の金融・不動産分析など | [README](notebooks/README.md) | 探索・試作 | stock / gto / re_invest_os |
+| interactive-email-demo | メール内で切り替える指標レポート | [README](interactive-email-demo/README.md) | 検証サンプル | AMP for Email |
+| rates-ui-lab | 金利データを題材に UI を比較 | [README](rates-ui-lab/README.md) | 合成データの UI 実験 | 市場分析の UI 候補 |
+
+### 成果物・資料
+
+| 場所 | 役割 | 扱い |
+|---|---|---|
+| [models/](models/) | 教科書翻訳パイプラインの成果物 | 再生成可否・保存先は整理計画で検討 |
+| [reports/](reports/) | 共有の分析レポート | 生成物と原本を区別して参照 |
+| [papers/](papers/) | 論文・教科書などの参照資料 | 個々のライセンス・再配布条件に従う |
+
+### 共通知識・作業用ディレクトリ
+
+| 場所 | 役割 |
+|---|---|
+| [docs/knowledge/](docs/knowledge/README.md) | 共有する環境設定・トラブル解決の正本 |
+| [docs/decisions/](docs/decisions/) | ワークスペースの判断理由（ADR） |
+| [docs/superpowers/](docs/superpowers/) | 計画・仕様。今回の [整理計画](docs/superpowers/plans/2026-09-27-workspace-cleanup.md) |
+| [docs/templates/](docs/templates/) | レポート等の共通テンプレート |
+| [_scratch/](_scratch/) | 試行・実験の作業場所。一部だけ Git 管理 |
+| [_docs/](_docs/) | 一時的な作業ログ・引き継ぎ。現在の仕様の正本ではない |
+| [_archive/](_archive/README.md) | 退避済みの4群。理由・後継・実行可能性は索引参照 |
+
+### 外部リポジトリ
+
+不動産買付前 DD アプリは [re_invest_os](https://github.com/ankimo1210/re_invest_os)
+で開発します。ローカル配置は `~/re_invest_os`（このリポジトリの外）です。
+旧地価アプリのデータ取得基盤は同リポジトリの `packages/market-data` へ移管済みです。
+履歴は [アーカイブ索引](_archive/README.md)、探索用ノートは [notebooks](notebooks/README.md) を参照してください。
 
 ## ディレクトリ構成
 
 ```
 projects/
 ├── <各プロジェクト>/        # 上記の独立プロジェクト
-├── _docs/                   # 横断ドキュメント（recipes / ai 系メモ）
+├── _docs/                   # 一時的な作業ログ・引き継ぎ（正本ではない）
 ├── _scratch/                # 使い捨ての試行（gitignore 一部対象）
 ├── _archive/                # 過去成果物・旧プロンプト・旧 capability_index
 ├── _data/                   # 重データ（gitignore 対象、`_data/<project>/` 規約）
@@ -88,10 +140,15 @@ make help      # ターゲット一覧
 make install   # uv 管理プロジェクトを一括 sync
 make lint      # ruff check を全体に
 make fmt       # ruff format --check を全体に
-make test      # pytest -q を全体に
+make test      # testpaths の35件を pytest で実行 + npm があれば sde-check
 make clean     # __pycache__ / .pytest_cache などを掃除
 make tree      # ヘビーディレクトリを除外したツリー表示
 ```
+
+`make test` の Python 対象は [pyproject.toml](pyproject.toml) の `testpaths` に登録した
+35ディレクトリです（2026-09-27確認）。全プロジェクトを検証するものではありません。
+`johnhull/report/tests` は登録済み、`deep_hedge_price/tests` は未登録です。
+対象プロジェクトのテストを個別に実行してください。`npm` がなければ `sde-check` は省略されます。
 
 ## 環境前提
 

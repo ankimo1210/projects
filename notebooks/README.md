@@ -2,7 +2,7 @@
 
 単発の分析・実験ノートブック置き場。明確なプロダクト境界を持たないアドホックな分析がここに入ります。
 
-製品レベルに育ったものは個別プロジェクト（例: `re_invest_os/`, `stock/`, `gto/`）に昇格させます。
+製品レベルに育ったものは個別プロジェクト（例: [stock](../stock/README.md)、[gto](../gto/README.md)）に昇格させます。不動産 DD アプリの開発先は独立リポジトリ [re_invest_os](https://github.com/ankimo1210/re_invest_os) です。
 
 ## 構成
 
@@ -16,7 +16,7 @@
 
 ## 過去世代のノート
 
-旧世代の不動産投資シミュ（`real_estate_investment_sim_0..2`, `_simulator`, `_gen_re_sim*.py` 生成スクリプト）と、ここで試作されていた `real_estate_app/` Streamlit ミニアプリは `_archive/notebooks/old_real_estate_sim/` に退避済み。
+旧世代の不動産投資シミュ（`real_estate_investment_sim_0..2`, `_simulator`, `_gen_re_sim*.py` 生成スクリプト）は [old_real_estate_sim](../_archive/notebooks/old_real_estate_sim/) に、Streamlit ミニアプリは [real_estate_app](../_archive/notebooks/real_estate_app/) に退避済みです。退避理由と後継は [アーカイブ索引](../_archive/README.md) を参照してください。
 
 ## 派生データ
 

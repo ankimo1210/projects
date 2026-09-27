@@ -58,9 +58,10 @@ dev tooling its own CI invokes; the shared `.venv` hides omissions that
 `docs/decisions/0002-workspace-green-and-declared-dependencies.md`.
 
 **That green is not full coverage.** `make test` runs only the `testpaths`
-list in the root `pyproject.toml`, and two suites are still missing from it —
-`deep_hedge_price/tests` (206) and `johnhull/report/tests` (registered since 2026-09-14). Both run
-green when invoked directly, but never under `make test`. Do not read
+list in the root `pyproject.toml` (35 directories as of 2026-09-27).
+`deep_hedge_price/tests` is still missing; `johnhull/report/tests` is registered.
+A previous direct run of the deep-hedging suite passed, but `make test` does not
+invoke it. Do not read
 "workspace green" as "every project verified"; run the suite you actually
 touched. `analytics/fourier/tests` (47) was in this list until 2026-08-16 and
 needed only the `testpaths` line, because its import name `fourier_book`
