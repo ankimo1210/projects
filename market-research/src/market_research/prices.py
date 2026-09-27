@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, replace
@@ -128,20 +129,34 @@ def normalize_yfinance(
     return tuple(result)
 
 
-def select_bars_as_of(
+@dataclass(frozen=True, slots=True)
+class PriceExclusion:
+    bar: PriceBar
+    reason: str
+
+
+@dataclass(frozen=True, slots=True)
+class PriceView:
+    bars: tuple[PriceBar, ...]
+    exclusions: tuple[PriceExclusion, ...]
+
+
+def price_view_as_of(
     bars: Iterable[PriceBar], decision_at: datetime, *, adjustment: str | None = None
-) -> tuple[PriceBar, ...]:
-    """Return latest available revision per source and adjustment at a decision time."""
+) -> PriceView:
+    """Select final revisions and retain an audit of excluded unfinished observations."""
     when = _aware_utc(decision_at, "decision_at")
     seen: set[tuple[str, str, str, datetime, str, str]] = set()
     latest: dict[tuple[str, str, str, datetime, str], PriceBar] = {}
+    exclusions: list[PriceExclusion] = []
     for bar in bars:
         if bar.available_at > when:
             continue
         if adjustment is not None and bar.adjustment != adjustment:
             continue
         if not bar.is_final:
-            raise ValueError(f"non-final bar: {bar.key}")
+            exclusions.append(PriceExclusion(bar, "non_final"))
+            continue
         if bar.key in seen:
             raise ValueError(f"duplicate price revision: {bar.key}")
         seen.add(bar.key)
@@ -151,9 +166,9 @@ def select_bars_as_of(
             latest[base_key] = bar
         elif bar.available_at == previous.available_at:
             raise ValueError(f"conflicting price revisions: {base_key}")
-    if adjustment is not None and not latest:
+    if adjustment is not None and not latest and not exclusions:
         raise ValueError(f"requested adjustment unavailable: {adjustment}")
-    return tuple(
+    selected = tuple(
         sorted(
             latest.values(),
             key=lambda b: (
@@ -165,6 +180,20 @@ def select_bars_as_of(
             ),
         )
     )
+
+    return PriceView(selected, tuple(exclusions))
+
+
+def select_bars_as_of(
+    bars: Iterable[PriceBar], decision_at: datetime, *, adjustment: str | None = None
+) -> tuple[PriceBar, ...]:
+    """Compatibility reader; use price_view_as_of for row-level exclusion details."""
+    view = price_view_as_of(bars, decision_at, adjustment=adjustment)
+    if view.exclusions:
+        logging.getLogger(__name__).warning(
+            "Excluded %d non_final price observations", len(view.exclusions)
+        )
+    return view.bars
 
 
 def assess_bars(bars: Iterable[PriceBar], as_of: datetime) -> tuple[PriceBar, ...]:
