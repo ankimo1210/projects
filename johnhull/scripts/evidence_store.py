@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import sys
 import tempfile
 from collections.abc import Iterable, Sequence
@@ -220,6 +221,19 @@ class Store:
         return self.put_bytes(Path(path).read_bytes())
 
 
+def _copy_exclusive(source: Path, target: Path) -> None:
+    """Copy on filesystems without hardlinks without replacing a racing writer."""
+    descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+    try:
+        with os.fdopen(descriptor, "wb") as output, source.open("rb") as input_file:
+            shutil.copyfileobj(input_file, output)
+            output.flush()
+            os.fsync(output.fileno())
+    except BaseException:
+        target.unlink(missing_ok=True)
+        raise
+
+
 def _publish_without_overwrite(temporary: Path, final: Path) -> None:
     """Move a verified temporary file into place without replacing anything."""
     try:
@@ -227,9 +241,10 @@ def _publish_without_overwrite(temporary: Path, final: Path) -> None:
     except FileExistsError:
         return
     except OSError:
-        if final.exists():
+        try:
+            _copy_exclusive(temporary, final)
+        except FileExistsError:
             return
-        os.rename(temporary, final)
 
 
 def init_store(root: Path | str, role: str) -> Store:
@@ -286,9 +301,10 @@ def _write_restored(target: Path, data: bytes, relative: str) -> str:
         except FileExistsError as exc:
             raise StoreError(f"restore target appeared during restore: {relative!r}") from exc
         except OSError:
-            if target.exists():
-                raise StoreError(f"restore target appeared during restore: {relative!r}") from None
-            os.rename(temporary, target)
+            try:
+                _copy_exclusive(temporary, target)
+            except FileExistsError as exc:
+                raise StoreError(f"restore target appeared during restore: {relative!r}") from exc
     finally:
         temporary.unlink(missing_ok=True)
     return "written"

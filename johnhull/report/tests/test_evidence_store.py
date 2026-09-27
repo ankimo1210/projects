@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import json
 import os
@@ -172,6 +173,34 @@ def test_truncated_blob_is_detected(primary):
         primary.read_verified(info["sha256"], info["bytes"])
 
 
+def test_put_fallback_never_overwrites_a_file_that_appears_during_publish(
+    primary, monkeypatch
+):
+    digest = _digest(PNG)
+    final = primary.blob_path(digest)
+    original_open = os.open
+    appeared = False
+
+    def unsupported_link(_source, _target):
+        raise OSError(errno.EPERM, "hardlinks unsupported")
+
+    def competing_open(path, flags, mode=0o777, *, dir_fd=None):
+        nonlocal appeared
+        if str(path) == str(final) and flags & os.O_EXCL:
+            appeared = True
+            final.write_bytes(b"competing writer")
+        if dir_fd is None:
+            return original_open(path, flags, mode)
+        return original_open(path, flags, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(os, "link", unsupported_link)
+    monkeypatch.setattr(os, "open", competing_open)
+    with pytest.raises(StoreError, match=r"existing blob|size mismatch|digest mismatch"):
+        primary.put_bytes(PNG)
+    assert appeared
+    assert final.read_bytes() == b"competing writer"
+
+
 # --- paths and manifests --------------------------------------------------------
 
 
@@ -301,6 +330,35 @@ def test_restore_fails_when_no_store_has_a_verified_copy(primary, mirror, tmp_pa
     manifest = load_manifest(_manifest([manifest_entry("a.png", PNG)]))
     with pytest.raises(StoreError, match="no verified copy"):
         restore([primary, mirror], manifest, tmp_path / "dest")
+
+
+def test_restore_fallback_never_overwrites_a_file_that_appears_during_restore(
+    primary, tmp_path, monkeypatch
+):
+    primary.put_bytes(PNG)
+    target = tmp_path / "dest" / "a.png"
+    original_open = os.open
+    appeared = False
+
+    def unsupported_link(_source, _target):
+        raise OSError(errno.EPERM, "hardlinks unsupported")
+
+    def competing_open(path, flags, mode=0o777, *, dir_fd=None):
+        nonlocal appeared
+        if str(path) == str(target) and flags & os.O_EXCL:
+            appeared = True
+            target.write_bytes(b"competing writer")
+        if dir_fd is None:
+            return original_open(path, flags, mode)
+        return original_open(path, flags, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(os, "link", unsupported_link)
+    monkeypatch.setattr(os, "open", competing_open)
+    manifest = load_manifest(_manifest([manifest_entry("a.png", PNG)]))
+    with pytest.raises(StoreError, match="appeared during restore"):
+        restore([primary], manifest, tmp_path / "dest")
+    assert appeared
+    assert target.read_bytes() == b"competing writer"
 
 
 # --- two copies -----------------------------------------------------------------
