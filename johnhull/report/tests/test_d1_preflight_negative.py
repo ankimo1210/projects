@@ -7,6 +7,7 @@ import pytest
 from johnhull.scripts.d1_preflight_negative import (
     bump_first_y,
     insert_unrelated_notebook_section,
+    public_report_paths,
     renumber_auto_ids,
     replace_once,
 )
@@ -83,3 +84,26 @@ def test_inserted_section_keeps_the_target_slice_fingerprint():
     before, _ = notebook_slice(_notebook(), "9. IVF")
     after, _ = notebook_slice(insert_unrelated_notebook_section(_notebook(), "## 9. IVF"), "9. IVF")
     assert before == after
+
+
+def test_public_report_paths_remove_local_worktree_and_scratch_paths(tmp_path):
+    project = tmp_path / "project"
+    work = tmp_path / "scratch"
+    report = {
+        "cases": [
+            {
+                "reasons": [
+                    f"missing '{project}/report/site/missing.html'",
+                    f"temporary '{work}/overlay/book.html'",
+                ],
+                "status": "PASS",
+            }
+        ]
+    }
+    public = public_report_paths(report, project, work)
+    assert public["cases"][0]["reasons"] == [
+        "missing 'report/site/missing.html'",
+        "temporary '<work>/overlay/book.html'",
+    ]
+    assert str(tmp_path) not in str(public)
+    assert report["cases"][0]["reasons"][0].startswith("missing '/")
