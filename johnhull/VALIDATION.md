@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,18 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 27.5 M14 — 2026-09-27
+
+[受入ノート](docs/SECTION_27_5_ACCEPTANCE_2026-09-27.md)・[レビュー](docs/SECTION_27_5_REVIEW_2026-09-27.md)・[統合記録](docs/validation/section-27-5/m14-check.json)にPD01–PD06の5軸を集約。台帳は**accepted**（受入14・未評価292）。
+
+- Figure 27.3 のX・Y・Zの代表平均と補間値、20段×4平均と60段×100平均の欧州型/米国型4価格を原典に固定。印刷価格との差は最大0.0032ドル。
+- 独立の4–12段全経路列挙10価格との差は最大0.00048ドル。線形平均ペイオフの期待値恒等式との差は2.2e-14ドル以下。
+- 公開APIは算術平均コール格子、vol06 §11.1–11.6の12セルとBook/portal共有4図。§11以外の82セルはM13基点`84387c5d`と本文・保存出力が同じ（後続2見出しの番号変更のみ）。4改変を拒否。
+- ChromiumでBook/portal×1440/1000pxの16状態・16画像、数値改変拒否を確認。既受入§26.9–§27.4の13節を個別テスト・両画面でM14再検証。
+- hullkit+report **2,810 passed / 6 skipped**（既存deprecation warning 2件）。19 core notebooks、`ruff check johnhull` と変更Pythonの`ruff format --check`、release contract、台帳`--check-artifacts`はPASS。commit後のstrict tracked gateは最終確認中。
+- M12/M13レビューのF1には、現行HEAD用の§27.1–§27.4セル照合と新規実行の検査を追加。F2は割引済みコール価格であることをdocstringに明記し、§27.3数値記録を更新。歴史的な受入時点の検査・記録は保持した。
+- 離散平均と連続平均の規約の差、有限格子と線形補間の誤差、複数経路状態と市場較正・ヘッジは受入範囲外。
 
 ## Section 27.4 M13 — 2026-09-27
 

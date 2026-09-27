@@ -27,3 +27,8 @@
 |---|---|---|---|
 | F1 | P3 | 節ごとの notebook 検査は「§N 以外のセルが基点と同じ」ことを確かめる。そのため次の節が vol06 に入ると HEAD では再実行できない。`verify_local_volatility_notebook.py --check`（M12）は M13 の §10 追加後に FAIL し、M10 の `verify_alternative_models_notebook.py`・M11 の `verify_stochastic_volatility_notebook.py` も同じ理由で FAIL する。M12 で始まった問題ではない。既受入節の再検査は pytest とブラウザ検査が担っているので、受入の判断は変わらない。ただし受入ノートが挙げる検査スクリプトの一部は、その時点の証跡としてしか読めない | 未対応。次の節（M14）の前に、保持の検査を「自節の範囲と見出しの並び」に限るか、基点を直前の受入 commit に更新する規約にするかを決める |
 | F2 | P3 | `dupire_local_vol` の docstring が「undiscounted-spot European call price」と「already discounted to today」を並べており、どちらの価格を入れるのか読み取りにくい。実装と独立参照は今日への割引済みのコール価格を前提にしている | 未対応（文言だけの修正） |
+
+## M14 着手時の対応（2026-09-27）
+
+- **F1 対応済み。** 受入時点の `verify_*_notebook.py` とハッシュ付き記録は歴史的証跡として保持する。現行HEADでは `verify_accepted_vol06_notebook.py --check` が §27.1–§27.4 の各節の本文・保存出力をそれぞれの受入commitと照合し、共有図を新規計算し、全巻を再実行する。M14の新規§11は `verify_path_dependent_notebook.py --check` が直前M13基点と比較する。後続節の追加ではこの現行HEAD用検査の対象を増やす。
+- **F2 対応済み。** `dupire_local_vol` の入力を「今日への割引済みの通貨単位コール価格」と明記し、テストと§27.3数値記録のソースハッシュを更新した。価格計算は変更していない。

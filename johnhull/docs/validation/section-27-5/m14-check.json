@@ -1,0 +1,160 @@
+{
+  "section": "27.5",
+  "milestone": "M14",
+  "status": "PASS",
+  "numerical": {
+    "method": "printed Figure 27.3, exact non-recombining path enumeration, linear-average moment",
+    "measured": {
+      "printed_errors": {
+        "coarse_european": 0.0031163764891850576,
+        "coarse_american": 0.0007403082633175018,
+        "fine_european": 0.00026567065816163193,
+        "fine_american": 0.0008633448511892183
+      },
+      "max_figure_grid_error": 0.003930239381070066,
+      "x_value_error": 0.00025142553323664885,
+      "exact_paths": 10,
+      "max_exact_path_error": 0.0004789009065975236,
+      "moment_error": 2.1316282072803006e-14
+    }
+  },
+  "notebook": {
+    "cells": 94,
+    "lesson_cells": 12,
+    "preserved_cells_outside_lesson": 82,
+    "renumbered_headings": {
+      "## 11. Longstaff-Schwartz（LSM）": "## 12. Longstaff-Schwartz（LSM）",
+      "## 12. 練習問題": "## 13. 練習問題"
+    },
+    "negative_controls_rejected": [
+      "§10 source changed",
+      "§27.5 saved grid changed",
+      "unlisted heading changed",
+      "§27.4 saved tree changed"
+    ]
+  },
+  "browser": {
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "state_checks": 16,
+    "screenshots": 16,
+    "numeric_mutation_rejected": true,
+    "book_math": {
+      "rendered": 201,
+      "errors": 0
+    }
+  },
+  "regression": {
+    "sections": [
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4"
+    ],
+    "tests_passed": {
+      "26-9": 91,
+      "26-10": 92,
+      "26-11": 144,
+      "26-12": 215,
+      "26-13": 274,
+      "26-14": 351,
+      "26-15": 65,
+      "26-16": 45,
+      "26-17": 16,
+      "27-1": 16,
+      "27-2": 27,
+      "27-3": 14,
+      "27-4": 15
+    },
+    "browser": "each accepted section's original verifier rerun on M14 Book/portal assets",
+    "vol10_notebook_unchanged": true
+  },
+  "source_sha256": {
+    "scripts/build_path_dependent_acceptance_record.py": "2251df5e0bf6670ce349e5090cf517ee38283777b6cfbdea834b2de8a5322693",
+    "scripts/build_path_dependent_reference.py": "d37fe27991805f83dafa6240d1e53c84c45bdfe9a8081c3c25e17c0207976a79",
+    "scripts/verify_path_dependent_numerics.py": "fdd1ec173b62a18732bbf1ac9be9e20d6a26ec7f036b4fc321a1d4e92deaaae2",
+    "scripts/verify_path_dependent_notebook.py": "fa5bb4d0dbf1d1849a9892447d5bdb2b5b00d937c0918e9867c689e3c895f4f2",
+    "scripts/verify_path_dependent_browser.cjs": "ada9aa9c2e36e57faad829e89d988b6aca92fd091143c8aacde17e6010c70bd9",
+    "scripts/recheck_accepted_m14.py": "5ccd7b0bbff810d46c3c020ec82c70aa964035ca447b7f581733bb9d769bed14",
+    "scripts/recheck_accepted_m14.cjs": "aaa06192ed4045af5a15a5159b276696e0891a99013a5f3b5e8570306b4a6209",
+    "hullkit/src/hullkit/path_dependent_tree.py": "b87b22ea2c34e6d9a2dddbb197563100d26400100de990e36db322421bad5854",
+    "hullkit/src/hullkit/_path_dependent_lesson.py": "b732e71477cce55dc942ce1fba58a37b9f125bba80716bcf37d4e86913d1aade",
+    "hullkit/tests/test_path_dependent_tree.py": "7a63540d965daaef2e19690cdcb2a3289ae9e77436fb5a62b9635a95aa4ca10c",
+    "hullkit/tests/test_path_dependent_lesson.py": "75ec93208c5d4bbfabbcfc43589465c01d680980a9e9ed7e63901b0883af1acf",
+    "report/tests/test_path_dependent_notebook.py": "f521627b91abd8521fe2b3b4e873acf05e3285827efd1cc53e040eafbe2d0897",
+    "report/tests/test_report_build.py": "ee0bf59a33f4477e73bcec9b7cc0b8b708bae8ff83c67099bb7b9446c7750f67",
+    "report/report_builder/figures.py": "b7c6255f09ad6203c618f55bba63fc75ac7a24b6959855d7f778f369e6cb069c",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "fb55bd48ac8807303ef3d4e4541c674b8cf80db7130d914d1e5eff322437c700",
+    "volumes/06_numerical_methods/numerical.ipynb": "21e56333b5d8c9879d9315fc54f9d4ca8e29b569d9752065c142b5930335e740",
+    "release_manifest.json": "32c76f8c49dd22020d40fb6c882d65ad8c14c68501535f21b85187bee15e1099",
+    "docs/validation/section-27-5/numerical-check.json": "4a93d5241dcb26326a8c52c9d84b6706c3ff6737877a8dd25c1172795143794f",
+    "docs/validation/section-27-5/notebook-check.json": "bdc0ee61786f81fc7a0520de1b7eef8574f25c8c22bcc04c65445d4552dc8b17",
+    "docs/validation/section-27-5/browser-check.json": "fb80457e7026debf937ed599b5c5954f799c81936cfddab5473af31c7375e84f",
+    "docs/validation/section-26-9/m14-recheck.json": "8cd4cf49258041124221a5515b1cb1667d151756f9052210c50bc7af9818040f",
+    "docs/validation/section-26-10/m14-recheck.json": "6ceed9e3f8f8f43832391ad01bfcdc4338c0f2ac8f188850df9a755f6dc3b40b",
+    "docs/validation/section-26-11/m14-recheck.json": "cca7eaa682d3c84b16232e6d9cca7f9c839fa4f0609b9ae4806f7d2335f09952",
+    "docs/validation/section-26-12/m14-recheck.json": "874125acbdcfcceadc8a7d3c4d23f9214422d60229b7cfbb0353eebf2c270307",
+    "docs/validation/section-26-13/m14-recheck.json": "eff1129518f1d8a7382c519df4bba5c27d8b0613ab2881ff30edbe5618192a9f",
+    "docs/validation/section-26-14/m14-recheck.json": "66ed2dc1f5574388f6c27b92f4acd7de7208fe92daef2d038e669d9898a8e7c2",
+    "docs/validation/section-26-15/m14-recheck.json": "23c85e5a6f05706f5d51b04bee1df4212ac6c492142725500996d84b4e29bae3",
+    "docs/validation/section-26-16/m14-recheck.json": "d5790aa70ab5d569e0a1df1e4d462644b003c884a1cfca0631e5f117e8a542b7",
+    "docs/validation/section-26-17/m14-recheck.json": "baa0d9e09ef70a98acc70fb9f15a2c3c946f04e5485b3e552d21581ec338297a",
+    "docs/validation/section-27-1/m14-recheck.json": "f4ffd5e59158e3beef7865379a4c73e4cea2b7977ee305121c2e44dd733eca80",
+    "docs/validation/section-27-2/m14-recheck.json": "a89eea9a052fbad1d182ebb6ce6df68918fa2948579d645785068410d519be8a",
+    "docs/validation/section-27-3/m14-recheck.json": "899d4bec36b5c50883ba7e90c04c04eeea8debdffc1c6378e5d1ac11197b856d",
+    "docs/validation/section-27-4/m14-recheck.json": "21e93a3a1226e4b1e111808f5c4ab7022c0000bbec74af0c42ec328f8d64e5fb",
+    "docs/validation/section-26-9/browser-m14-recheck.json": "63d1cb9a1c6651c32761d5c9f12c17911e8b213728331256733158c400cf7be6",
+    "docs/validation/section-26-10/browser-m14-recheck.json": "51583f243a8130963ae47b32384166abe04bd5bae973ec3539a787a8a3e19a66",
+    "docs/validation/section-26-11/browser-m14-recheck.json": "89a5e14f5bea98faee95961a66e5984bbd01d68be60b8d871a94abfe86551061",
+    "docs/validation/section-26-12/browser-m14-recheck.json": "af838e292a066521d16f542120018f11c4d3e5cec1957606ce2d07946d65c9c7",
+    "docs/validation/section-26-13/browser-m14-recheck.json": "2370459d002e1e3655aab9cfe382eabf70f9d40e70ab766f161e54d6e31cd26b",
+    "docs/validation/section-26-14/browser-m14-recheck.json": "573438fb82a0f1605cf719f938108374eff6fe333245ee18b7e75817488a2cca",
+    "docs/validation/section-26-15/browser-m14-recheck.json": "575a23ab72e20b13e0c0751f61576632f4c8e4ad5b8654f180eadf5035cbff57",
+    "docs/validation/section-26-16/browser-m14-recheck.json": "a8643d2eaf5625bb584060134e806ee38a6a56cccc8b7c81d4429b0d936a638a",
+    "docs/validation/section-26-17/browser-m14-recheck.json": "8a8a394c554b446c15b00c00dd3e3e7e082ff48fc35be9ed71d358e799eb45cf",
+    "docs/validation/section-27-1/browser-m14-recheck.json": "c2c9cdc847ec9ea0459aaaa162a0e578ca7c04d975f156a781345494579a42a8",
+    "docs/validation/section-27-2/browser-m14-recheck.json": "978d6aee522d3bc233f21374b6e98834d5cf902ff70681a1d4890a5f2fb1dc2c",
+    "docs/validation/section-27-3/browser-m14-recheck.json": "bf86f89feaed5f6b0b635531b17d13604a0b0acf65115f8b61e8d2593bfe0051",
+    "docs/validation/section-27-4/browser-m14-recheck.json": "723cc6b008eb54d408c851757306ddbf49525030d096e86eb6a770a4f4e6a72e"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-27-5/reference.json": "444f76ffbb903fafd121d6fe5e79810b7b24b81a9fda7bea6972f374df918210",
+    "report/site/numerics.html": "c9b043a5427dd28d3c702e1d731eb76d355122514ea0433358458776df0af9eb",
+    "book/_build/html/notebooks/06_numerical.html": "45f3ebbd10f14d69483ceed956a45fdede34f88ea30cb016768dceb87eab7912",
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
+    "docs/validation/section-27-5/book-path_grids-1440.png": "85d0474bdc20b230fceb7bef3be7eeb1af7e92d916e6f2d5c54d77173de3cc15",
+    "docs/validation/section-27-5/book-path_grids-1000.png": "00a9712a28d1fd6794068292b68925ef228ff9299fddbb58da0677ad809ff170",
+    "docs/validation/section-27-5/book-path_interpolation-1440.png": "21fa40acf8f345769a420c662f7f2141bc816bd2ecbd849f497dd715d5bd423b",
+    "docs/validation/section-27-5/book-path_interpolation-1000.png": "28537f0433d8a23991087cdc1c5db088376406e665ed2599ca36f12e2cbcd419",
+    "docs/validation/section-27-5/book-path_prices-1440.png": "403ec58fbd7c8c44d1151e80b43ac5e7319b80439e69e26118441674a96db2b1",
+    "docs/validation/section-27-5/book-path_prices-1000.png": "1d268befd3c3d25ef564801ae542a439f94bda47b8df9dcd8650ca8d8a76d905",
+    "docs/validation/section-27-5/book-path_exact-1440.png": "fd960d59537d575cbbc589eaae5ab4ff0ca955feaf83cbf10a6481e38d5e27b5",
+    "docs/validation/section-27-5/book-path_exact-1000.png": "8d8f00a381737ce44a76aa1c2e1471fcfb545478c1adc95b4c0ba75cafc35e09",
+    "docs/validation/section-27-5/portal-path_grids-1440.png": "792d0d560b18ca7e8b009744bad87b6f748bee402e4c29a48063d6b228a4c26b",
+    "docs/validation/section-27-5/portal-path_grids-1000.png": "e7abc056bfb4e96ede7ce1cc3e2ac26e422a5b05fa9f7bdf8b42bc24ac9017fa",
+    "docs/validation/section-27-5/portal-path_interpolation-1440.png": "0844bc3f0e8abccc92b1a52027eab00b4849fc340c7d6470bd4b035efb51c401",
+    "docs/validation/section-27-5/portal-path_interpolation-1000.png": "5bf491c0ff0135ce629145eeff0def77a0bccf339de1bcfaeccaff8124644a74",
+    "docs/validation/section-27-5/portal-path_prices-1440.png": "f9bc5340309e1c38e69a7a2941b5e93b335096d5b73c2cc44770f917efd764e7",
+    "docs/validation/section-27-5/portal-path_prices-1000.png": "0e75bb1a2421b46cf1345d340d693596d772eb74f7143d86576fa9012c910c84",
+    "docs/validation/section-27-5/portal-path_exact-1440.png": "54e2272e7ad69cfb455dc59cf508440e9b6cb5a92f860475a07e58ecc4a77a82",
+    "docs/validation/section-27-5/portal-path_exact-1000.png": "1dae89f494f94f5a3013fbef430acbd0adb23bdc463b926c2ed29f629270789c"
+  }
+}

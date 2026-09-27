@@ -1,0 +1,29 @@
+{
+  "section": "27.5",
+  "status": "PASS",
+  "method": "printed Figure 27.3, exact non-recombining path enumeration, linear-average moment",
+  "tolerances": {
+    "printed_currency": 0.01,
+    "exact_small_currency": 0.02,
+    "average_moment_currency": 1e-10
+  },
+  "measured": {
+    "printed_errors": {
+      "coarse_european": 0.0031163764891850576,
+      "coarse_american": 0.0007403082633175018,
+      "fine_european": 0.00026567065816163193,
+      "fine_american": 0.0008633448511892183
+    },
+    "max_figure_grid_error": 0.003930239381070066,
+    "x_value_error": 0.00025142553323664885,
+    "exact_paths": 10,
+    "max_exact_path_error": 0.0004789009065975236,
+    "moment_error": 2.1316282072803006e-14
+  },
+  "source_sha256": {
+    "scripts/build_path_dependent_reference.py": "d37fe27991805f83dafa6240d1e53c84c45bdfe9a8081c3c25e17c0207976a79",
+    "scripts/verify_path_dependent_numerics.py": "fdd1ec173b62a18732bbf1ac9be9e20d6a26ec7f036b4fc321a1d4e92deaaae2",
+    "hullkit/src/hullkit/path_dependent_tree.py": "b87b22ea2c34e6d9a2dddbb197563100d26400100de990e36db322421bad5854"
+  },
+  "artifact_sha256": "444f76ffbb903fafd121d6fe5e79810b7b24b81a9fda7bea6972f374df918210"
+}

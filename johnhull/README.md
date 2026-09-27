@@ -35,7 +35,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 130 figures (34 exotics)
+make hull-report           # offline portal: 12 themes / 134 figures (34 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -116,3 +116,15 @@ cells outside §10, four rejected mutations), and
 with `scripts/recheck_accepted_m13.py` and `.cjs`; the integrated gate is
 `scripts/build_convertible_bond_acceptance_record.py --check`. The M12 notebook
 baseline comparison predates the new §10 headings; the M13 check covers §9.
+
+The §27.5 (M14) checks are `scripts/build_path_dependent_reference.py --check`,
+`scripts/verify_path_dependent_numerics.py --check`,
+`scripts/verify_path_dependent_notebook.py --check` (fresh vol06, 82 preserved
+cells outside §11, four rejected mutations), and
+`scripts/verify_path_dependent_browser.cjs` (Book/portal at 1440/1000px,
+16 states and changed-value rejection). The thirteen earlier lessons are
+rechecked with `scripts/recheck_accepted_m14.py` and `.cjs`; the integrated
+gate is `scripts/build_path_dependent_acceptance_record.py --check`.
+Historical notebook verifiers remain acceptance-time snapshots. For current
+HEAD, `scripts/verify_accepted_vol06_notebook.py --check` independently checks
+each accepted §27.1–§27.4 lesson against its own acceptance commit.

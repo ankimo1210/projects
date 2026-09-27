@@ -1,0 +1,167 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "cb_tree",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_decisions",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_credit",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_convergence",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_tree",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_decisions",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_credit",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_convergence",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-4/portal-cb_tree-1440-m14-recheck.png",
+        "docs/validation/section-27-4/portal-cb_decisions-1440-m14-recheck.png",
+        "docs/validation/section-27-4/portal-cb_credit-1440-m14-recheck.png",
+        "docs/validation/section-27-4/portal-cb_convergence-1440-m14-recheck.png",
+        "docs/validation/section-27-4/portal-cb_tree-1000-m14-recheck.png",
+        "docs/validation/section-27-4/portal-cb_decisions-1000-m14-recheck.png",
+        "docs/validation/section-27-4/portal-cb_credit-1000-m14-recheck.png",
+        "docs/validation/section-27-4/portal-cb_convergence-1000-m14-recheck.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "cb_tree",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_decisions",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_credit",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_convergence",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_tree",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_decisions",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_credit",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "cb_convergence",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-4/book-cb_tree-1440-m14-recheck.png",
+        "docs/validation/section-27-4/book-cb_decisions-1440-m14-recheck.png",
+        "docs/validation/section-27-4/book-cb_credit-1440-m14-recheck.png",
+        "docs/validation/section-27-4/book-cb_convergence-1440-m14-recheck.png",
+        "docs/validation/section-27-4/book-cb_tree-1000-m14-recheck.png",
+        "docs/validation/section-27-4/book-cb_decisions-1000-m14-recheck.png",
+        "docs/validation/section-27-4/book-cb_credit-1000-m14-recheck.png",
+        "docs/validation/section-27-4/book-cb_convergence-1000-m14-recheck.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/convertible_bond.py": "776877eb0588209b3500902684392d5c8f92575a4ebe8bbac98920d71e5d4538",
+    "hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
+    "scripts/build_convertible_bond_reference.py": "5be4a51cb75bc38fd5194c48900e13a32adaa3ee9d98b206722ab1c8ee9c7093",
+    "scripts/verify_convertible_bond_browser.cjs": "ce6fd5536c7fb80b67f598b417470d0fb51e648dfd59e43233a4150ada157755",
+    "docs/validation/section-27-4/reference.json": "c1e4a7d9ff7b6a55fb7b2ddca4f8e2fcb0f5fbaa9436949186587fdda911e8ed",
+    "docs/validation/section-27-4/numerical-check.json": "875577515d5ce191b1111a873c5308754cbcb450aa3ce92882db9614c3a9283c",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "fb55bd48ac8807303ef3d4e4541c674b8cf80db7130d914d1e5eff322437c700",
+    "volumes/06_numerical_methods/numerical.ipynb": "21e56333b5d8c9879d9315fc54f9d4ca8e29b569d9752065c142b5930335e740",
+    "report/report_builder/figures.py": "b7c6255f09ad6203c618f55bba63fc75ac7a24b6959855d7f778f369e6cb069c",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "c9b043a5427dd28d3c702e1d731eb76d355122514ea0433358458776df0af9eb",
+    "book/_build/html/notebooks/06_numerical.html": "45f3ebbd10f14d69483ceed956a45fdede34f88ea30cb016768dceb87eab7912",
+    "docs/validation/section-27-4/portal-cb_tree-1440-m14-recheck.png": "7e012d8e1e1a4dca0f9251d0f07fc62d0b7e6d5386b92ddb605e6eef69895ac6",
+    "docs/validation/section-27-4/portal-cb_decisions-1440-m14-recheck.png": "e0630e90a5ec1c3a4ea78f8533d24558f3c9ece9f7181564bbfabca98f7e2b8d",
+    "docs/validation/section-27-4/portal-cb_credit-1440-m14-recheck.png": "2847be665fabf6f80c0c1903a19dddde618f9dd759eb2a7da66110093d381a3a",
+    "docs/validation/section-27-4/portal-cb_convergence-1440-m14-recheck.png": "3e5bc3e503be610d0219ba5e5e9381279408604ec3404af9e0d6b46bb711c3ee",
+    "docs/validation/section-27-4/portal-cb_tree-1000-m14-recheck.png": "ff59edf9d2a25e4b81d966ef539cb2f2a95d168dd5015e52e4eba85a32e7bf17",
+    "docs/validation/section-27-4/portal-cb_decisions-1000-m14-recheck.png": "8cf1bbfb73eae535b919c386db447299bf1ba2d1b28f32fc7a8beef35ddb9e84",
+    "docs/validation/section-27-4/portal-cb_credit-1000-m14-recheck.png": "f8999ddaf54c95335f3cfd3aa811774f68753cd7eef3eca09d5bb31fe87fa76d",
+    "docs/validation/section-27-4/portal-cb_convergence-1000-m14-recheck.png": "4ae7afa3d9f8d6af1123f6819bb4c8eb1563a1f7ee5bafd9c8554e2992909211",
+    "docs/validation/section-27-4/book-cb_tree-1440-m14-recheck.png": "f5a5938513d13a68c60c791ee541c70f1a20ff48ea70683c9eea195c43c8feee",
+    "docs/validation/section-27-4/book-cb_decisions-1440-m14-recheck.png": "0c348018bb10de4bc5d9463a80777605cf8fced4198095517ccf15b2ade87cb9",
+    "docs/validation/section-27-4/book-cb_credit-1440-m14-recheck.png": "861c35eacdd25b62f991141af40fa8ae7d3e6af6a1aa431f3e4f8a1b1d22d2ed",
+    "docs/validation/section-27-4/book-cb_convergence-1440-m14-recheck.png": "871727dd9d355c0a30d1f21a83e9b3d20a61152aad1388bfaa9e268f7307e534",
+    "docs/validation/section-27-4/book-cb_tree-1000-m14-recheck.png": "ade74d17152f1e3aad8d3e90f88ed3473ccd7d9ace0c371910c094d328603978",
+    "docs/validation/section-27-4/book-cb_decisions-1000-m14-recheck.png": "b89bee53b90a2a1224c90b5761e1a1451a1cb286120962158f28252ffc84f9ae",
+    "docs/validation/section-27-4/book-cb_credit-1000-m14-recheck.png": "3c68805b1a840fdd7c2189bb184a3a775ec2f884e4f9a489baca104ae6899696",
+    "docs/validation/section-27-4/book-cb_convergence-1000-m14-recheck.png": "66b6012d2484615f40ee6c2c46a84dce635be56743a16330e738a15d89c9bf3a"
+  },
+  "book_math": {
+    "rendered": 201,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16,
+  "command": "CHROMIUM_BIN=<existing runtime> PLAYWRIGHT_MODULE=<existing runtime> node scripts/recheck_accepted_m14.cjs 27-4",
+  "recheck": {
+    "milestone": "M14",
+    "original_verifier": "scripts/verify_convertible_bond_browser.cjs",
+    "original_sha256": "ce6fd5536c7fb80b67f598b417470d0fb51e648dfd59e43233a4150ada157755",
+    "executed_sha256": "79cbceef89608bfe9c35e8b0be82351df2b84178737d38bbde2f329e7808bef9",
+    "wrapper_sha256": "aaa06192ed4045af5a15a5159b276696e0891a99013a5f3b5e8570306b4a6209",
+    "changes": "Screenshot/record basenames and two following Book heading numbers; all section numerical assertions unchanged."
+  }
+}
