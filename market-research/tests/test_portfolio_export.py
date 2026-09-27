@@ -222,3 +222,16 @@ def test_close_column_is_double_even_for_integer_looking_prices(tmp_path):
             ).fetchall()
         )
     assert schema["close"] == "DOUBLE"
+
+
+def test_rejects_fx_symbol_on_an_unrelated_instrument(tmp_path):
+    from market_research.portfolio_export import write_portfolio_export
+
+    datasets = _saved_datasets(tmp_path / "store")
+    fake = Instrument("XTKS", "FAKE", "JPY", "Asia/Tokyo")
+    fx = replace(
+        datasets[2],
+        bars=tuple(replace(bar, instrument=fake) for bar in datasets[2].bars),
+    )
+    with pytest.raises(ValueError, match="FX instrument"):
+        write_portfolio_export((*datasets[:2], fx), tmp_path / "exports")

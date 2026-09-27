@@ -147,6 +147,8 @@ def _validated_rows(
         raise ValueError(f"FX provider_symbol {fx_symbol!r} is missing")
     if symbols[fx_symbol][0][1] != "JPY":
         raise ValueError("FX quote currency must be JPY")
+    if symbols[fx_symbol][0][0] != "FX:JPY=X":
+        raise ValueError("FX instrument must be FX:JPY=X")
     rows.sort(
         key=lambda row: (
             row["provider_symbol"],
@@ -179,8 +181,8 @@ def write_portfolio_export(
     ``load_price_dataset`` so each row has an unambiguous snapshot ID.
     Freshness relative to report time is checked by the consuming adapter.
     """
-    if not isinstance(fx_symbol, str) or not fx_symbol.strip() or fx_symbol != fx_symbol.strip():
-        raise ValueError("fx_symbol must be a nonempty provider symbol")
+    if fx_symbol != "JPY=X":
+        raise ValueError("fx_symbol must be JPY=X for a JPY per USD quote")
     as_of, rows, snapshot_ids = _validated_rows(datasets, fx_symbol)
     destination = Path(destination)
     destination.mkdir(parents=True, exist_ok=True)
