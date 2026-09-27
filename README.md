@@ -103,7 +103,7 @@
 | [docs/templates/](docs/templates/) | レポート等の共通テンプレート |
 | [_scratch/](_scratch/README.md) | 試行・実験の作業場所。4月の比較ノートは退避済み |
 | [_docs/](_docs/README.md) | 一時的な作業ログ・引き継ぎ。現在の仕様の正本ではない |
-| [_archive/](_archive/README.md) | 退避済みの5群。理由・後継・実行可能性は索引参照 |
+| [_archive/](_archive/README.md) | 退避済みの6群。理由・後継・実行可能性は索引参照 |
 
 ### 外部リポジトリ
 
