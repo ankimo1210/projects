@@ -45,6 +45,18 @@ def test_sabr_alpha_from_atm_vol_round_trips():
     assert sabr_black_vol(0.03, 0.03, 1.0, alpha, 0.5, -0.3, 0.4) == pytest.approx(0.2, abs=1e-10)
 
 
+def test_sabr_alpha_from_atm_vol_uses_the_first_positive_root():
+    # Hagan ATM vol bends down at large alpha; the endpoint at alpha=10 has the wrong sign.
+    alpha = sabr_alpha_from_atm_vol(0.03, 1.0, 0.2, 1.0, -0.9, 1.0)
+    assert alpha == pytest.approx(0.2141561015478571, abs=1e-10)
+    assert sabr_black_vol(0.03, 0.03, 1.0, alpha, 1.0, -0.9, 1.0) == pytest.approx(0.2)
+
+
+def test_sabr_alpha_from_atm_vol_returns_nan_when_target_is_unattainable():
+    # At beta=1, rho=-0.9, nu=2, the ATM approximation peaks below 60%.
+    assert np.isnan(sabr_alpha_from_atm_vol(0.03, 1.0, 0.6, 1.0, -0.9, 2.0))
+
+
 def test_sabr_calibration_recovers_noise_free_parameters():
     F, T = 0.031, 1.0
     strikes = F + np.arange(-100, 101, 25) / 1e4

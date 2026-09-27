@@ -33,5 +33,14 @@ _w.Output = _RaisingOutput
 def test_notebook_executes_without_errors():
     nb = nbformat.read(NOTEBOOK, as_version=4)
     nb.cells.insert(0, nbformat.v4.new_code_cell(_PREAMBLE))
+    # Exercise SABR slider values that expose a turned-down ATM equation and no-root case.
+    nb.cells.append(
+        nbformat.v4.new_code_cell(
+            "plot_sabr_smile(20, 1.0, -0.9, 1.0)\nplot_sabr_smile(60, 1.0, -0.9, 2.0)"
+        )
+    )
     # raises CellExecutionError, with the failing cell's traceback, on the first error
     NotebookClient(nb, timeout=600, kernel_name="python3").execute()
+    assert "再現できません" in "".join(
+        output.get("text", "") for output in nb.cells[-1].outputs if output.output_type == "stream"
+    )
