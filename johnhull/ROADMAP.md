@@ -21,7 +21,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 57 public + 12 private modules as of 2026-09-27; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-09-27、M12作業ツリー）
+## 現在地（2026-09-27、`5d906f31`）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
@@ -226,7 +226,7 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M12 | §27.3 The IVF Model（pp.649–650） | 受入。式27.4を独立解析式33点・後退PDE9価格・二時点paired MCで照合。[受入ノート](docs/SECTION_27_3_ACCEPTANCE_2026-09-27.md) |
 | 以降 | §27.4 から台帳の未評価節へ順に展開 | 未着手 |
 
-現在地（2026-09-27）：M12まで受入、台帳は受入12・未評価294。M11の終点`ad365fee`からのM12作業はローカル未コミット。
+現在地（2026-09-27）：M12まで受入、台帳は受入12・未評価294。M12はローカルcommit `5d906f31`、remoteには未反映。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
