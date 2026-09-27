@@ -4,7 +4,8 @@ from pathlib import Path
 
 import pytest
 from market_research.cli import main
-from market_research.contracts import FundamentalObservation, Instrument, PriceBar
+from market_research.contracts import FundamentalObservation, Instrument, MacroObservation, PriceBar
+from market_research.esri import CALENDAR_KEY
 from market_research.macro import as_of
 from market_research.prices import select_bars_as_of
 from market_research.services import build_demo_run
@@ -175,6 +176,33 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
             observed_at=decisions[-1],
             fundamentals=(fact,),
         )
+        macro_saved = store.save(
+            CacheKey("alfred", "macro", "DEMO_CPI", "monthly", "index", "none"),
+            b"macro",
+            observed_at=decisions[-1],
+            macro=(
+                MacroObservation(
+                    "DEMO_CPI",
+                    date(2026, 8, 1),
+                    decisions[-1],
+                    103.0,
+                    "alfred",
+                    "initial",
+                    unit="index",
+                    frequency="monthly",
+                ),
+            ),
+        )
+        calendar_saved = store.save(
+            CALENDAR_KEY,
+            """<e-stat><class_1 name="四半期別ＧＤＰ速報">
+            <class_2 name="2026年10-12月期"><class_3 name="2次速報"><class_5>
+            <release_year>2027</release_year><release_month>3</release_month>
+            <release_day>9</release_day><release_hour>8</release_hour>
+            <release_minute>50</release_minute>
+            </class_5></class_3></class_2></class_1></e-stat>""".encode(),
+            observed_at=decisions[-1],
+        )
     path = Path(__file__).resolve().parents[1] / "app" / "main.py"
     app = AppTest.from_file(str(path), default_timeout=15).run()
     app.sidebar.radio[0].set_value("保存データ").run()
@@ -194,6 +222,15 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
     assert any("仮想リスクを計算できません" in item.value for item in app.warning)
     cash_floor.set_value(0.0).run()
     assert any(metric.label == "年率ボラティリティ" for metric in app.metric)
+    macro_widget = next(box for box in app.sidebar.selectbox if box.label == "マクロsnapshot")
+    macro_widget.set_value(macro_saved.snapshot_id).run()
+    assert any(metric.label == "DEMO_CPI" for metric in app.metric)
+    assert any(date(2026, 8, 1) in frame.value.index for frame in app.dataframe)
+    calendar_widget = next(
+        box for box in app.sidebar.selectbox if box.label == "公表calendar snapshot"
+    )
+    calendar_widget.set_value(calendar_saved.snapshot_id).run()
+    assert any("公表予定" in caption.value for caption in app.caption)
     benchmark_widget = next(
         box for box in app.sidebar.selectbox if box.label == "比較対象の価格snapshot"
     )
@@ -218,6 +255,60 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
         ("XNAS:AAPL", "assets") in frame.value.index
         for frame in app.dataframe
         if hasattr(frame.value, "index")
+    )
+
+
+def test_saved_macro_can_be_opened_without_any_price_snapshot(monkeypatch, tmp_path):
+    import socket
+    import urllib.request
+
+    def blocked(*_args, **_kwargs):
+        raise AssertionError("unexpected network access")
+
+    monkeypatch.setattr(socket, "create_connection", blocked)
+    monkeypatch.setattr(urllib.request, "urlopen", blocked)
+    monkeypatch.setenv("MARKET_RESEARCH_DATA_ROOT", str(tmp_path))
+    observed = datetime(2026, 9, 25, 12, tzinfo=UTC)
+    with ResearchStore(tmp_path) as store:
+        key = CacheKey("alfred", "macro", "DEMO_CPI", "monthly", "index", "none")
+        initial = MacroObservation(
+            "DEMO_CPI", date(2026, 8, 1), observed, 103.0, "alfred", "first", unit="index"
+        )
+        saved = store.save(key, b"macro-only", observed_at=observed, macro=(initial,))
+        revised_at = observed + timedelta(days=1)
+        revised = store.save(
+            key,
+            b"macro-revised",
+            observed_at=revised_at,
+            macro=(
+                initial,
+                MacroObservation(
+                    "DEMO_CPI",
+                    date(2026, 8, 1),
+                    revised_at,
+                    105.0,
+                    "alfred",
+                    "revised",
+                    unit="index",
+                ),
+            ),
+        )
+    path = Path(__file__).resolve().parents[1] / "app" / "main.py"
+    app = AppTest.from_file(str(path), default_timeout=15).run()
+    app.sidebar.radio[0].set_value("保存データ").run()
+    macro_widget = next(box for box in app.sidebar.selectbox if box.label == "マクロsnapshot")
+    macro_widget.set_value(revised.snapshot_id).run()
+    previous_widget = next(
+        box for box in app.sidebar.selectbox if box.label == "比較する過去のマクロsnapshot"
+    )
+    previous_widget.set_value(saved.snapshot_id).run()
+    assert not app.exception
+    assert len(app.tabs) == 7
+    assert any(metric.label == "DEMO_CPI" for metric in app.metric)
+    assert any(
+        frame.value.loc[date(2026, 8, 1), "revision"] == 2
+        for frame in app.dataframe
+        if "revision" in frame.value.columns
     )
 
 
