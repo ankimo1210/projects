@@ -64,6 +64,13 @@ acceptance は `johnhull/scripts/frontier_acceptance.py` がコミット済み�
 - 巻を追加するときは `release_manifest.json` に notebook / portal 図 / semantic tests /
   references を登録し、`make hull-release-check` を通す。
 
+## ROADMAP の更新
+
+- 節の受入、段階（`ROADMAP.md` の P0–P8）の着手・完了、判断事項（D1–D3 ほか）の決定、計画の変更があったら、
+  **同じコミットで** `ROADMAP.md` の「現在地」と「完了までの計画」を更新する。誰が作業しても（Claude・Codex・Sol ほか）同じ。
+- 件数（受入・未評価・テスト数・portal 図数）は台帳の生成値やコマンドの実測値を写す。手で数えない。
+- 途中で止める場合も、作業中の段階と未コミットの変更の有無を「現在地」に残す。
+
 ## 境界（正本の所在）
 
 | 対象 | 正本 |
