@@ -7,6 +7,7 @@ import json
 import math
 import os
 import re
+import subprocess
 import tempfile
 from collections.abc import Mapping, Sequence
 from dataclasses import asdict, dataclass
@@ -393,3 +394,46 @@ def load_demo_run(
         if _digest(_canonical(expected_payload)) != manifest["result_sha256"]:
             raise ValueError("expected run differs from saved result")
     return RunArtifact(artifact_id, folder, manifest, result, html)
+
+
+def save_current_demo_run(root: Path, run: DemoRun, *, html: str) -> RunArtifact:
+    """Persist the fixed demo with its current repository commit and dirty state."""
+    repository = Path(__file__).resolve().parents[4]
+    commit = subprocess.run(
+        ["git", "-C", str(repository), "rev-parse", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    status = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(repository),
+            "status",
+            "--porcelain",
+            "--untracked-files=no",
+            "--",
+            "market-research",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if commit.returncode or status.returncode:
+        raise ValueError("repository commit and working-tree state are required")
+    return save_demo_run(
+        root,
+        run,
+        code_commit=commit.stdout.strip(),
+        config={
+            "strategy": "synthetic-demo",
+            "lag": 1,
+            "base_currency": "USD",
+            "working_tree_modified": bool(status.stdout.strip()),
+        },
+        seed=None,
+        splits={"kind": "none", "lockbox": None},
+        costs={"commission_bps": 3.0, "slippage_bps": 2.0},
+        html=html,
+    )

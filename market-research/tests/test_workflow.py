@@ -238,6 +238,18 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
     )
     benchmark_widget.set_value(benchmark_saved.snapshot_id).run()
     assert any("比較対象" in item.value for item in app.caption)
+    official = next(
+        box for box in app.sidebar.checkbox if box.label == "公式指数として比較（出典は手動確認）"
+    )
+    official.set_value(True).run()
+    source = next(box for box in app.sidebar.text_input if box.label == "公式指数の出典")
+    source.set_value("fixture official close series").run()
+    assert not app.exception
+    assert any(
+        "official_index_level" in frame.value.columns
+        for frame in app.dataframe
+        if hasattr(frame.value, "columns")
+    )
     financial_widget = next(box for box in app.sidebar.selectbox if box.label == "財務snapshot")
     financial_widget.set_value(filing.snapshot_id).run()
     assert not any(
@@ -354,3 +366,25 @@ def test_demo_decisions_only_use_bars_available_by_that_time():
         known = select_bars_as_of(demo.bars, decision_at)
         assert len(known) == 2 * position
         assert max(bar.bar_end for bar in known) <= decision_at
+
+
+def test_demo_app_saves_and_reopens_run_without_network(monkeypatch, tmp_path):
+    import socket
+
+    monkeypatch.setattr(
+        socket,
+        "create_connection",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            AssertionError("unexpected network access")
+        ),
+    )
+    monkeypatch.setenv("MARKET_RESEARCH_DATA_ROOT", str(tmp_path))
+    path = Path(__file__).resolve().parents[1] / "app" / "main.py"
+    app = AppTest.from_file(str(path), default_timeout=15).run()
+    button = next(item for item in app.button if item.label == "合成runを永続保存")
+    button.click().run()
+    assert not app.exception
+    assert len(tuple((tmp_path / "runs").glob("*/manifest.json"))) == 1
+    app = AppTest.from_file(str(path), default_timeout=15).run()
+    assert not app.exception
+    assert any("保存済み合成run" in item.value for item in app.caption)
