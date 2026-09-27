@@ -185,6 +185,10 @@ def load_market_quotes(
     if observed_ids != set(metadata["snapshot_ids"]):
         raise ValueError("market snapshot IDs do not match exported rows")
 
+    # Mirror daily_pl_report.quotes_from_closes: the latest saved market
+    # session is shared across symbols. A closed market carries its last close
+    # into that session, so its daily P&L is zero rather than counted twice.
+    latest_global_session = max(session for bars in by_symbol.values() for session, _, _ in bars)
     quotes: dict[str, Quote] = {}
     fx_symbol = metadata["fx_symbol"]
     fx: Quote | None = None
@@ -199,7 +203,13 @@ def load_market_quotes(
         if when - latest_end > limit:
             label = "FX" if symbol == fx_symbol else "price"
             raise ValueError(f"{label} quote is stale")
-        previous = bars[-2] if len(bars) > 1 else None
+        previous = (
+            bars[-1]
+            if latest_session < latest_global_session
+            else bars[-2]
+            if len(bars) > 1
+            else None
+        )
         quote = Quote(
             close=latest_close,
             prev_close=previous[2] if previous else None,
@@ -209,6 +219,8 @@ def load_market_quotes(
         if symbol == fx_symbol:
             if identities[symbol][1] != "JPY":
                 raise ValueError("FX quote must be in JPY per USD")
+            if identities[symbol][0] != "FX:JPY=X":
+                raise ValueError("FX instrument must be FX:JPY=X")
             fx = quote
         else:
             quotes[symbol] = quote

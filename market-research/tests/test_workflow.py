@@ -388,3 +388,4 @@ def test_demo_app_saves_and_reopens_run_without_network(monkeypatch, tmp_path):
     app = AppTest.from_file(str(path), default_timeout=15).run()
     assert not app.exception
     assert any("保存済み合成run" in item.value for item in app.caption)
+    assert "保存済みrunのartifact" in [item.label for item in app.selectbox]

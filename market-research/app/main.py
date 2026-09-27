@@ -137,9 +137,13 @@ with tabs[6]:
             st.success(f"保存済み合成run: {artifact.artifact_id}")
         except (ValueError, OSError) as error:
             st.error(f"合成runを保存できません: {error}")
-    saved = sorted(artifact_root.glob("*/manifest.json")) if artifact_root.is_dir() else []
+    saved = (
+        sorted(path.parent.name for path in artifact_root.glob("*/manifest.json"))
+        if artifact_root.is_dir()
+        else []
+    )
     if saved:
-        artifact_id = saved[-1].parent.name
+        artifact_id = st.selectbox("保存済みrunのartifact", saved)
         try:
             artifact = load_demo_run(artifact_root, artifact_id, expected=run)
             st.caption(

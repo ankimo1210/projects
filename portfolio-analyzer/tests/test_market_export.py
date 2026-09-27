@@ -191,3 +191,35 @@ def test_rejects_other_fx_pair_even_with_valid_manifest_hash(tmp_path: Path) -> 
 
     with pytest.raises(ValueError, match="JPY=X"):
         _load(manifest)
+
+
+def test_closed_market_uses_shared_latest_session_for_previous_close(tmp_path: Path) -> None:
+    rows = [row for row in _rows() if not (row[2] == "AAA" and row[9] == "2026-09-25")]
+    earlier = list(next(row for row in rows if row[2] == "AAA"))
+    earlier[9] = "2026-09-23"
+    earlier[10] = 80.0
+    earlier[6] = "2026-09-23T21:00:00+00:00"
+    earlier[7] = "2026-09-23T21:00:00+00:00"
+    earlier[11] = "2026-09-23T00:00:00+00:00"
+    earlier[12] = "2026-09-23T20:00:00+00:00"
+    rows.append(tuple(earlier))
+    quotes, _ = _load(_export(tmp_path, rows))
+
+    assert quotes["AAA"].close == Decimal("90")
+    assert quotes["AAA"].prev_close == Decimal("90")
+    assert quotes["AAA"].date == "2026-09-24"
+    assert quotes["AAA"].prev_date == "2026-09-24"
+    assert quotes["7203.T"].prev_close == Decimal("2450")
+
+
+def test_rejects_fx_symbol_on_an_unrelated_instrument_even_with_valid_hash(tmp_path: Path) -> None:
+    rows = []
+    for row in _rows():
+        if row[2] == "JPY=X":
+            changed = list(row)
+            changed[1] = "XTKS:FAKE"
+            rows.append(tuple(changed))
+        else:
+            rows.append(row)
+    with pytest.raises(ValueError, match="FX instrument"):
+        _load(_export(tmp_path, rows))
