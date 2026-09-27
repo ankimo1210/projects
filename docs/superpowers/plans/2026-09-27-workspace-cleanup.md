@@ -376,6 +376,10 @@ FastAPI・Next.js は新入口へ移していない。旧成果は
 rootのuvメンバー、testpaths、Ruff例外、Makefile help、README、AGENTSと
 uv.lockを更新した。退避後の隔離uv環境ではmarket-researchとportfolio-analyzerが
 611 passed・19 skipped、継続するquantkitとmacrokitが337 passed・13 skipped。
+全体make testは6281 passed・98 skipped・10 failedだった。失敗10件はjohnhull/reportと
+analytics/reportの同名report_builderが収集時に衝突する既存問題で、mainの同じ2 suiteでも
+再現した。johnhull/report単体は11件成功。pytest失敗によりsde-checkは未実行。
+変更範囲のpre-commitとuv lock --checkは成功。
 追跡外のローカルデータ・設定・生成物は公開Gitに入れず、共有mainのものは
 mainへ統合した後で同じプロジェクトの退避先へ移す。
 
