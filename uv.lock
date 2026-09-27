@@ -50,6 +50,7 @@ members = [
     "projects-workspace",
     "quant-research-textbook",
     "quantkit",
+    "rates-volatility-model",
     "rough-volatility",
     "stats-book",
     "stockkit",
@@ -5800,6 +5801,45 @@ dev = [
     { name = "nbconvert", specifier = ">=7.16" },
     { name = "pytest", specifier = ">=8.3" },
 ]
+
+[[package]]
+name = "rates-volatility-model"
+version = "0.2.0"
+source = { editable = "rates_volatility_model" }
+dependencies = [
+    { name = "ipykernel" },
+    { name = "ipywidgets" },
+    { name = "japanize-matplotlib" },
+    { name = "jupyterlab" },
+    { name = "matplotlib" },
+    { name = "nbclient" },
+    { name = "nbformat" },
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "scipy" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ipykernel", specifier = ">=6.29" },
+    { name = "ipywidgets", specifier = ">=8.1" },
+    { name = "japanize-matplotlib", specifier = ">=1.1" },
+    { name = "jupyterlab", specifier = ">=4.2" },
+    { name = "matplotlib", specifier = ">=3.9" },
+    { name = "nbclient", specifier = ">=0.10" },
+    { name = "nbformat", specifier = ">=5.10" },
+    { name = "numpy", specifier = ">=2.0" },
+    { name = "pandas", specifier = ">=2.2" },
+    { name = "scipy", specifier = ">=1.13" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "referencing"
