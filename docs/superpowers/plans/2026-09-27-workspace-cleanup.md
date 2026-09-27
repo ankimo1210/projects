@@ -397,7 +397,7 @@ macrokitはGDP公表回の継続蓄積とイベントパネルを持つ。両者
 [次の統合候補の調査](../specs/2026-09-28-next-consolidation-candidates.md)で
 ratesvol と hullkit の重なりと固有機能、deep_hedge_price の torch 境界を照合した。
 ratesvol の63テスト（ノートブック含む）と hullkit の関連56テストが成功。
-SABR の独立実装を照合に使っているため、3者は独立継続とする。
+ratesvol と hullkit は SABR の独立照合を維持し、deep_hedge_price は PyTorch 学習系として独立継続とする。
 実際の二重保守が生じた関数だけ再評価する。ルート索引の関連表示を更新した。
 
 工程5では johnhull の D1-preflight が別 worktree で進行中。
