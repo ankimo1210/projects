@@ -42,8 +42,14 @@
 - 2026-09-27: `PYTHONPATH=rates_volatility_model/src /home/kazumasa/projects/.venv/bin/python -m pytest rates_volatility_model/tests -q` → `63 passed in 10.35s`（worktree `rates-vol-completion`、NumPy 2.4.6）。
 - `ruff check rates_volatility_model/src rates_volatility_model/tests` → `All checks passed!`。`ruff format --check` → `14 files already formatted`。
 - ノートブック 71 セルを検証。保存出力は PNG 11 件、error 出力 0 件、kernelspec は `python3`。実行テストはウィジェットのコールバックも強制実行する。
-- 通常のヘッドレス `nbconvert --execute` は対話型サーフェスの初回描画で時間切れになるため、保存出力だけは初回ウィジェット描画を抑えて生成した。ソースは元へ戻しており、対話型の初回表示は Jupyter でセルを再実行すれば描画される。
+- 保存出力は通常のヘッドレス `nbconvert` で再生成した（128.9 秒、35/35 コードセル実行、error 0、PNG 11 件）。worktree では以下をリポジトリルートから実行する。
+
+```bash
+PYTHONPATH="$(pwd)/rates_volatility_model/src" /home/kazumasa/projects/.venv/bin/python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=120 rates_volatility_model/rates_volatility_models.ipynb
+```
+
+- G2++ 対話セル `7aaa0880` の終了から次のコードセルまで 119.7 秒の待ちがあった。原因は未特定。短い全体タイムアウトではここで停止する。
 
 ## 既知の残件
 
-- Ch11 のセル `bf4cde9e` では市場点の横軸だけ `%` への ×100 が欠落し、曲線と市場点がずれて表示される。旧版から存在し、今回の 17 件の対象外。
+- 通常のヘッドレス実行では G2++ 対話セル後に約 120 秒待つ。原因は未特定。
