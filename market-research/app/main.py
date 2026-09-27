@@ -1,4 +1,4 @@
-"""Seven offline views over the same synthetic research run."""
+"""Seven offline views with separate synthetic and saved-data modes."""
 
 from __future__ import annotations
 
@@ -11,6 +11,13 @@ from market_research.macro import as_of
 from market_research.services import build_demo_run
 
 st.set_page_config(page_title="market-research", layout="wide")
+data_mode = st.sidebar.radio("データ", ("合成デモ", "保存データ"), key="data_mode")
+if data_mode == "保存データ":
+    from market_research.app_real import render_real_app
+
+    render_real_app()
+    st.stop()
+
 run = build_demo_run()
 st.title("market-research")
 st.caption(f"合成デモ | run {run.run_id} | 実データ・口座情報は含みません")
