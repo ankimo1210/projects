@@ -34,7 +34,8 @@ def _view(snapshot: Snapshot, view: PriceView, *, error: str | None = None) -> d
         **_summary(snapshot),
         "bars": [asdict(bar) for bar in view.bars],
         "excluded": [asdict(item) for item in view.exclusions],
-        "excluded_count": len(view.exclusions),
+        "gaps": [asdict(gap) for gap in view.gaps],
+        "excluded_count": len(view.exclusions) + len(view.gaps),
         "error": error,
     }
 

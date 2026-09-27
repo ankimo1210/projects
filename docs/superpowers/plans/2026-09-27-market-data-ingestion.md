@@ -96,4 +96,11 @@ assert query_after_reopen == result.view.bars
 
 ## 仕上げ
 
-- [ ] 独立review後、修正と検証を行ってレビュー用ブランチをpush。
+- [x] 独立review後、重要指摘を修正し検証。
+
+2026-09-27、ブランチ `codex/market-data-stage3b` で本計画の価格取得・保存部分を実装済み。
+工程3b全体は外部マクロ/財務の移植などが残る。
+実装コミット: `71d42e9e` / `0effe339` / `7ba1f567` / `d3f65c28`、および後続のレビュー修正。
+[レビュー記録](../../../market-research/docs/STAGE3B_REVIEW.md)と
+[現在の進捗](../../../market-research/docs/STATUS.md)を参照。
+レビュー用ブランチをpushし、mainへの取込みはレビュー後に行う。

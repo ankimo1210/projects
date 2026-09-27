@@ -5,13 +5,14 @@ from __future__ import annotations
 import io
 import json
 import os
+from collections import defaultdict
 from dataclasses import dataclass, replace
 from datetime import UTC, date, datetime, time, timedelta
 
 import pandas as pd
 
 from .calendars import SessionCalendar, daily_timings
-from .contracts import Instrument, PriceBar, _utc
+from .contracts import Instrument, PriceBar, PriceGap, _utc
 from .fetch import FetchError, HttpClient
 from .prices import normalize_yfinance
 
@@ -48,6 +49,7 @@ class PriceBatch:
     observed_at: datetime
     calendar_hash: str
     complete: bool = True
+    gaps: tuple[PriceGap, ...] = ()
 
 
 def _history(symbol, start, end):
@@ -77,7 +79,7 @@ def _envelope(pages, cursor):
     return json.dumps({"pages": pages, "next_cursor": cursor}, sort_keys=True).encode()
 
 
-def _jquants(request, client, resume_raw):
+def _jquants(request, client, resume_raw, now):
     token = os.environ.get("JQUANTS_API_KEY")
     if not token:
         raise FetchError("missing_credentials")
@@ -99,6 +101,7 @@ def _jquants(request, client, resume_raw):
         if cursor:
             params["pagination_key"] = cursor
         failure = None
+        started = _utc(now(), "request_started_at")
         try:
             raw = client.get(
                 "https://api.jquants.com/v2/equities/bars/daily",
@@ -114,15 +117,32 @@ def _jquants(request, client, resume_raw):
                 partial_raw=_envelope(pages, cursor) if pages else None,
                 cursor=cursor,
             )
+        observed = _utc(now(), "observed_at")
+        if observed < started:
+            raise FetchError("clock")
         payload = json.loads(raw)
         if not isinstance(payload.get("data"), list):
             raise FetchError("schema")
         next_cursor = payload.get("pagination_key")
         if next_cursor and (not isinstance(next_cursor, str) or next_cursor in seen):
             raise FetchError("pagination", partial_raw=_envelope(pages, cursor), cursor=cursor)
-        pages.append(raw.decode("utf-8"))
+        pages.append(
+            {
+                "body": raw.decode("utf-8"),
+                "started_at": started.isoformat(),
+                "observed_at": observed.isoformat(),
+            }
+        )
         if not next_cursor:
-            rows = [row for page in pages for row in json.loads(page)["data"]]
+            rows, captures = [], {}
+            for page in pages:
+                window = (
+                    datetime.fromisoformat(page["started_at"]),
+                    datetime.fromisoformat(page["observed_at"]),
+                )
+                for row in json.loads(page["body"])["data"]:
+                    rows.append(row)
+                    captures[row["Date"]] = window
             code = request.provider_symbol.upper()
             expected = code + "0" if len(code) == 4 else code
             if any(str(row["Code"]).upper() != expected for row in rows):
@@ -135,8 +155,11 @@ def _jquants(request, client, resume_raw):
                 raise FetchError("empty")
             frame = frame.set_index("Date").rename(columns=selected)
             # Keep only the selected adjustment basis; raw and adjusted OHLC never mix.
-            return frame[[column for column in selected.values() if column in frame]], _envelope(
-                pages, None
+            return (
+                frame[[column for column in selected.values() if column in frame]],
+                _envelope(pages, None),
+                captures,
+                max(datetime.fromisoformat(page["observed_at"]) for page in pages),
             )
         seen.add(next_cursor)
         cursor = next_cursor
@@ -213,6 +236,8 @@ def fetch_prices(
     client = client or HttpClient()
     failed = False
     try:
+        started = _utc(now(), "request_started_at") if provider != "jquants" else None
+        captures = None
         if provider == "yfinance":
             frame = (history or _history)(
                 request.provider_symbol, request.start, request.end + timedelta(days=1)
@@ -237,10 +262,13 @@ def fetch_prices(
                 raise FetchError("provider_challenge")
             frame = pd.read_csv(io.BytesIO(raw)).set_index("Date")
         elif provider == "jquants":
-            frame, raw = _jquants(request, client, resume_raw)
+            frame, raw, captures, observed = _jquants(request, client, resume_raw, now)
         else:
             frame, raw = _binance(request, client)
-        observed = _utc(now(), "observed_at")
+        if provider != "jquants":
+            observed = _utc(now(), "observed_at")
+            if observed < started:
+                raise FetchError("clock")
         frame = frame.copy()
         frame.index = pd.DatetimeIndex(frame.index)
         if frame.index.tz is None:
@@ -250,14 +278,55 @@ def fetch_prices(
             for label in frame.index
         ):
             raise FetchError("coverage")
-        timings = daily_timings(frame.index, request.instrument, observed, calendar=calendar)
-        rows = normalize_yfinance(
-            frame,
-            request.instrument,
-            observed,
-            expected_provider_symbol=request.provider_symbol,
-            bar_timing=timings,
-        )
+        if frame.index.has_duplicates or "Close" not in frame.columns:
+            # MultiIndex yfinance frames validate their Close column in normalize_yfinance.
+            if frame.index.has_duplicates or not isinstance(frame.columns, pd.MultiIndex):
+                raise FetchError("schema")
+        groups = defaultdict(list)
+        for label in frame.index:
+            window = (
+                captures[label.date().isoformat()] if captures is not None else (started, observed)
+            )
+            groups[window].append(label)
+        rows, gaps = [], []
+        for (page_start, page_observed), labels in groups.items():
+            page_start = _utc(page_start, "request_started_at")
+            page_observed = _utc(page_observed, "observed_at")
+            if page_observed < page_start:
+                raise FetchError("clock")
+            part = frame.loc[labels]
+            # Finality uses the earlier bound of the fetch window, not response completion.
+            timings = daily_timings(part.index, request.instrument, page_start, calendar=calendar)
+            if any(page_observed < timing.bar_start for timing in timings.values()):
+                raise FetchError("coverage")
+            if provider == "jquants":
+                # Official no-trade / full-day suspension rows have null OHLCV.
+                no_trade = part.isna().all(axis=1)
+                for label in part.index[no_trade]:
+                    gaps.append(
+                        PriceGap(
+                            request.instrument,
+                            provider,
+                            request.provider_symbol,
+                            "1d",
+                            label.date(),
+                            page_observed,
+                            page_observed,
+                            request.adjustment,
+                        )
+                    )
+                part = part.loc[~no_trade]
+                timings = {label: timings[label] for label in part.index}
+            if not part.empty:
+                rows.extend(
+                    normalize_yfinance(
+                        part,
+                        request.instrument,
+                        page_observed,
+                        expected_provider_symbol=request.provider_symbol,
+                        bar_timing=timings,
+                    )
+                )
         if provider == "yfinance":
             bars = tuple(row for row in rows if row.adjustment == request.adjustment)
         else:
@@ -266,12 +335,12 @@ def fetch_prices(
                     row,
                     provider=provider,
                     adjustment=request.adjustment,
-                    revision_id=f"{provider}:{observed.isoformat()}",
+                    revision_id=f"{provider}:{row.observed_at.isoformat()}",
                 )
                 for row in rows
                 if row.adjustment == "raw"
             )
-        if not bars:
+        if not bars and not gaps:
             raise FetchError("empty")
         unit = (
             "base_asset"
@@ -291,7 +360,9 @@ def fetch_prices(
             )
             for row in bars
         )
-        return PriceBatch(raw, bars, observed, calendar.digest if calendar else "crypto-utc-v1")
+        return PriceBatch(
+            raw, bars, observed, calendar.digest if calendar else "crypto-utc-v1", gaps=tuple(gaps)
+        )
     except (ValueError, TypeError, KeyError, IndexError, AttributeError):
         failed = True
     if failed:

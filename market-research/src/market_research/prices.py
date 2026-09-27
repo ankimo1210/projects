@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 
 import pandas as pd
 
-from .contracts import Instrument, PriceBar
+from .contracts import Instrument, PriceBar, PriceGap
 
 
 def _aware_utc(value: datetime, name: str) -> datetime:
@@ -139,6 +139,7 @@ class PriceExclusion:
 class PriceView:
     bars: tuple[PriceBar, ...]
     exclusions: tuple[PriceExclusion, ...]
+    gaps: tuple[PriceGap, ...] = ()
 
 
 def price_view_as_of(

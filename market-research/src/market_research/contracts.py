@@ -89,7 +89,15 @@ class PriceBar:
         if self.quality not in QUALITY_STATES:
             raise ValueError(f"invalid quality: {self.quality}")
         object.__setattr__(
-            self, "session_date", self.bar_end.astimezone(ZoneInfo(self.instrument.timezone)).date()
+            self,
+            "session_date",
+            (
+                self.bar_start
+                if self.instrument.market == "CRYPTO" and self.interval == "1d"
+                else self.bar_end
+            )
+            .astimezone(ZoneInfo(self.instrument.timezone))
+            .date(),
         )
 
     @property
@@ -102,6 +110,30 @@ class PriceBar:
             self.adjustment,
             self.revision_id,
         )
+
+
+@dataclass(frozen=True, slots=True)
+class PriceGap:
+    """An observed source row without a traded price; never an imputed PriceBar."""
+
+    instrument: Instrument
+    provider: str
+    provider_symbol: str
+    interval: str
+    session_date: date
+    available_at: datetime
+    observed_at: datetime
+    adjustment: str
+    reason: str = "no_trade"
+
+    def __post_init__(self):
+        for name in ("provider", "provider_symbol", "interval", "reason"):
+            if not isinstance(getattr(self, name), str) or not getattr(self, name).strip():
+                raise ValueError(f"{name} must be nonempty")
+        for name in ("available_at", "observed_at"):
+            object.__setattr__(self, name, _utc(getattr(self, name), name))
+        if type(self.session_date) is not date or self.adjustment not in ADJUSTMENTS:
+            raise ValueError("invalid gap session date or adjustment")
 
 
 @dataclass(frozen=True, slots=True)
