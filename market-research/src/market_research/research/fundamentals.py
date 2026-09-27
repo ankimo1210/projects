@@ -67,6 +67,10 @@ def load_fundamental_table(
         record = {
             "instrument_id": request.instrument_id,
             "field": request.field.name,
+            "cik": request.cik,
+            "taxonomy": request.field.taxonomy,
+            "concept": request.field.concept,
+            "form": request.field.form,
             "as_of": when,
             "value": float("nan"),
             "unit": request.field.unit,

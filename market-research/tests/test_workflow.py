@@ -123,6 +123,22 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
         for decision, close in zip(decisions, (100, 105, 110), strict=True)
     )
     key = CacheKey("yfinance", "prices", instrument.instrument_id, "1d", "USD", "raw")
+    benchmark = Instrument("XNYS", "SPY", "USD", "America/New_York")
+    benchmark_bars = tuple(
+        PriceBar(
+            benchmark,
+            "yfinance",
+            "1d",
+            decision - timedelta(hours=7),
+            decision - timedelta(hours=1),
+            decision,
+            decision,
+            close,
+            "raw",
+            decision.isoformat(),
+        )
+        for decision, close in zip(decisions, (300, 330, 310), strict=True)
+    )
     fact = FundamentalObservation(
         320193,
         "us-gaap",
@@ -147,6 +163,12 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
     )
     with ResearchStore(tmp_path) as store:
         saved = store.save(key, b"fixture", observed_at=decisions[-1], prices=bars)
+        benchmark_saved = store.save(
+            CacheKey("yfinance", "prices", benchmark.instrument_id, "1d", "USD", "raw"),
+            b"benchmark",
+            observed_at=decisions[-1],
+            prices=benchmark_bars,
+        )
         filing = store.save(
             fundamental_key,
             b"filing",
@@ -162,9 +184,26 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
     assert any("retrospective" in item.value for item in app.caption)
     assert any("PAF=1" in item.value for item in app.caption)
     assert len(app.dataframe) >= 3
-    app.sidebar.selectbox[0].set_value(filing.snapshot_id).run()
-    app.sidebar.checkbox[0].set_value(True).run()
+    benchmark_widget = next(
+        box for box in app.sidebar.selectbox if box.label == "比較対象の価格snapshot"
+    )
+    benchmark_widget.set_value(benchmark_saved.snapshot_id).run()
+    assert any("比較対象" in item.value for item in app.caption)
+    financial_widget = next(box for box in app.sidebar.selectbox if box.label == "財務snapshot")
+    financial_widget.set_value(filing.snapshot_id).run()
+    assert not any(
+        ("XNAS:AAPL", "assets") in frame.value.index
+        for frame in app.dataframe
+        if hasattr(frame.value, "index")
+    )
+    confirmation = next(
+        box
+        for box in app.sidebar.text_input
+        if "XNAS:AAPL" in box.label and "CIK0000320193" in box.label
+    )
+    confirmation.set_value("CIK0000320193").run()
     assert not app.exception
+    assert any("研究run未保存" in item.value for item in app.caption)
     assert any(
         ("XNAS:AAPL", "assets") in frame.value.index
         for frame in app.dataframe

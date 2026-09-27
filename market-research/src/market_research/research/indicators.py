@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from collections.abc import Mapping
 from dataclasses import dataclass, field
-from datetime import UTC, datetime, time
+from datetime import UTC, date, datetime, time
 
 import numpy as np
 import pandas as pd
@@ -23,6 +23,7 @@ class IndicatorInput:
     adjustment: str
     quality_reasons: Mapping[str, tuple[str, ...]] = field(default_factory=dict)
     missing_by_asset: Mapping[str, str] = field(default_factory=dict)
+    session_dates: tuple[date, ...] = ()
 
 
 def indicator_table(
@@ -215,6 +216,7 @@ def close_history(dataset: PriceDataset) -> IndicatorInput:
             .sort_index()
             .reindex(columns=asset_order)
         )
+        session_dates = tuple(prices.index)
         prices.index = pd.DatetimeIndex(
             [session_times[session_date] for session_date in prices.index]
         ).tz_convert(UTC)
@@ -223,6 +225,7 @@ def close_history(dataset: PriceDataset) -> IndicatorInput:
             exclusion.bar.instrument.instrument_id for exclusion in dataset.exclusions
         }
         prices = pd.DataFrame(index=pd.DatetimeIndex([], tz=UTC), columns=sorted(assets))
+        session_dates = ()
     quality_reasons = {
         asset: tuple(dict.fromkeys(reasons)) for asset, reasons in reasons_by_asset.items()
     }
@@ -246,4 +249,5 @@ def close_history(dataset: PriceDataset) -> IndicatorInput:
         dataset.adjustment,
         quality_reasons,
         missing_by_asset,
+        session_dates,
     )

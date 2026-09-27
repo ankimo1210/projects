@@ -64,6 +64,10 @@ def test_latest_filing_and_uncollected_field_keep_provenance(tmp_path):
     row = result.loc[("XNAS:AAPL", "assets")]
     assert row["value"] == 100
     assert row["unit"] == "USD"
+    assert row["cik"] == CIK
+    assert row["taxonomy"] == "us-gaap"
+    assert row["concept"] == "Assets"
+    assert row["form"] == "10-K"
     assert row["period_end"] == date(2025, 9, 27)
     assert row["available_at"] == T1
     assert row["observed_at"] == T1

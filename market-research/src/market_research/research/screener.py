@@ -10,6 +10,8 @@ from numbers import Real
 
 import pandas as pd
 
+from .fundamentals import FundamentalField
+
 _COMPARISONS = {"lt": operator.lt, "le": operator.le, "gt": operator.gt, "ge": operator.ge}
 _TECHNICAL_UNITS = {
     "momentum": "fraction",
@@ -28,6 +30,7 @@ class ThresholdRule:
     comparison: str
     threshold: float
     unit: str
+    field_definition: FundamentalField | None = None
 
     def __post_init__(self) -> None:
         for name in ("name", "field", "unit"):
@@ -35,6 +38,13 @@ class ThresholdRule:
                 raise ValueError(f"rule {name} must be nonempty")
         if self.source not in {"technical", "fundamental"}:
             raise ValueError("rule source must be technical or fundamental")
+        if self.source == "fundamental":
+            if not isinstance(self.field_definition, FundamentalField):
+                raise ValueError("fundamental rule requires its field definition")
+            if self.field_definition.name != self.field or self.field_definition.unit != self.unit:
+                raise ValueError("fundamental rule field definition differs from its alias or unit")
+        elif self.field_definition is not None:
+            raise ValueError("technical rule cannot have a fundamental field definition")
         if self.comparison not in _COMPARISONS:
             raise ValueError("rule operator must be lt, le, gt or ge")
         if isinstance(self.threshold, bool) or not isinstance(self.threshold, Real):
@@ -105,6 +115,14 @@ def screen_research(
             if actual_unit != rule.unit:
                 unknown.append(f"{rule.name}:unit_mismatch")
                 continue
+            if rule.source == "fundamental":
+                expected = rule.field_definition
+                if any(
+                    fact.get(name) != getattr(expected, name)
+                    for name in ("taxonomy", "concept", "form")
+                ):
+                    unknown.append(f"{rule.name}:definition_mismatch")
+                    continue
             number = _number(value)
             if number is None:
                 unknown.append(f"{rule.name}:{reason}")

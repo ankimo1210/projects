@@ -13,6 +13,7 @@ T2 = T1 + timedelta(days=1)
 T3 = T2 + timedelta(days=1)
 IBM = Instrument("XNYS", "IBM", "USD", "America/New_York")
 MSFT = Instrument("XNAS", "MSFT", "USD", "America/New_York")
+SPY = Instrument("XNYS", "SPY", "USD", "America/New_York")
 
 
 def _bar(instrument: Instrument, decision: datetime, close: float) -> PriceBar:
@@ -63,12 +64,25 @@ def _definition(**changes):
     return replace(definition, **changes)
 
 
+def _benchmark(*, missing_middle: bool = False) -> PriceDataset:
+    times = (T1, T3) if missing_middle else (T1, T2, T3)
+    values = (300, 310) if missing_middle else (300, 330, 310)
+    bars = tuple(_bar(SPY, time, value) for time, value in zip(times, values, strict=True))
+    gaps = (
+        (PriceGap(SPY, "yfinance", "SPY", "1d", T2.date(), T2, T2, "raw"),)
+        if missing_middle
+        else ()
+    )
+    return PriceDataset(T3, ("spy-snapshot",), "USD", "raw", bars, gaps, ())
+
+
 def test_price_weighted_level_and_weights_match_hand_calculation():
     from market_research.research.baskets import basket_series
 
     result = basket_series(_dataset(), _definition())
     assert result.mode == "retrospective"
     assert result.definition.composition_as_of == date(2026, 9, 26)
+    assert result.definition.factors_as_of == date(2026, 9, 26)
     assert result.snapshot_ids == ("ibm-snapshot", "msft-snapshot")
     assert result.assumptions == ("current_composition_applied_historically", "PAF_assumed_1")
     assert result.values["level"].tolist() == pytest.approx((1, 320 / 300, 310 / 300))
@@ -76,6 +90,7 @@ def test_price_weighted_level_and_weights_match_hand_calculation():
     assert result.weights.iloc[0].to_dict() == pytest.approx(
         {"XNYS:IBM": 1 / 3, "XNAS:MSFT": 2 / 3}
     )
+    assert result.as_of == T3
 
 
 def test_missing_constituent_session_stays_missing_without_forward_fill():
@@ -138,4 +153,43 @@ def test_mixed_interval_or_currency_is_not_a_basket():
                 ),
             ),
             _definition(),
+        )
+
+
+def test_benchmark_comparison_uses_same_dates_and_currency():
+    from market_research.research.baskets import basket_series, compare_basket
+
+    basket = basket_series(_dataset(), _definition())
+    compared = compare_basket(basket, _benchmark(), benchmark_name="synthetic ETF")
+    assert compared.mode == "retrospective"
+    assert compared.snapshot_ids == (
+        "ibm-snapshot",
+        "msft-snapshot",
+        "spy-snapshot",
+    )
+    assert compared.values["benchmark_level"].tolist() == pytest.approx((1, 330 / 300, 310 / 300))
+    assert compared.values.iloc[1]["relative_return"] == pytest.approx(320 / 330 - 1)
+    assert compared.benchmark_name == "synthetic ETF"
+
+
+def test_benchmark_gap_remains_missing_and_misaligned_time_is_rejected():
+    from market_research.research.baskets import basket_series, compare_basket
+
+    basket = basket_series(_dataset(), _definition())
+    compared = compare_basket(basket, _benchmark(missing_middle=True), benchmark_name="SPY")
+    assert pd.isna(compared.values.iloc[1]["benchmark_level"])
+    assert pd.isna(compared.values.iloc[1]["relative_return"])
+    shifted = _benchmark()
+    moved = replace(shifted.bars[1], bar_end=T2 - timedelta(hours=2))
+    with pytest.raises(ValueError, match="timestamps"):
+        compare_basket(
+            basket,
+            replace(shifted, bars=(shifted.bars[0], moved, shifted.bars[2])),
+            benchmark_name="SPY",
+        )
+    with pytest.raises(ValueError, match="currency"):
+        compare_basket(
+            basket,
+            replace(shifted, currency="JPY"),
+            benchmark_name="SPY",
         )
