@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -17,6 +17,8 @@ from .research.fundamentals import (
     FundamentalRequest,
     load_fundamental_table,
 )
+from .research.fx_conversion import convert_price_datasets_to_jpy
+from .research.index_benchmark import compare_official_index
 from .research.indicators import close_history, indicator_table
 from .research.macro_view import macro_snapshot_table
 from .research.overview import market_overview
@@ -244,6 +246,73 @@ def render_real_app() -> None:
                 periods_per_year=periods_per_year,
             )
             assets = tuple(indicators.index)
+            extra_currency_options = tuple(
+                snapshot_id
+                for snapshot_id in price_options
+                if snapshots[snapshot_id].key.currency in {"USD", "JPY"}
+                and snapshots[snapshot_id].key.currency != dataset.currency
+                and snapshots[snapshot_id].key.identity != "FX:JPY=X"
+                and snapshots[snapshot_id].key.adjustment == "raw"
+                and snapshots[snapshot_id].key.interval == "1d"
+            )
+            extra_ids = st.sidebar.multiselect(
+                "円換算用の追加価格snapshot",
+                extra_currency_options,
+                help="USDとJPYの異通貨銘柄を仮想リスクでのみ比較します。",
+            )
+            fx_options = tuple(
+                snapshot_id
+                for snapshot_id in price_options
+                if snapshots[snapshot_id].key.identity == "FX:JPY=X"
+                and snapshots[snapshot_id].key.currency == "JPY"
+                and snapshots[snapshot_id].key.adjustment == "raw"
+                and snapshots[snapshot_id].key.interval == "1d"
+            )
+            fx_id = (
+                st.sidebar.selectbox("円換算用のFX snapshot", ("選択なし", *fx_options))
+                if extra_ids
+                else "選択なし"
+            )
+            valuation_clock = (
+                st.sidebar.text_input("円換算の評価時刻（UTC、HH:MM）", value="21:00")
+                if fx_id != "選択なし"
+                else ""
+            )
+            max_fx_hours = (
+                float(
+                    st.sidebar.number_input("FXの最大経過時間（時間）", min_value=0.0, value=30.0)
+                )
+                if fx_id != "選択なし"
+                else 0.0
+            )
+            extra_datasets = tuple(
+                load_price_dataset(
+                    store,
+                    (snapshot_id,),
+                    as_of=as_of,
+                    currency=snapshots[snapshot_id].key.currency,
+                    adjustment="raw",
+                )
+                for snapshot_id in extra_ids
+            )
+            fx_dataset = (
+                load_price_dataset(
+                    store,
+                    (fx_id,),
+                    as_of=as_of,
+                    currency="JPY",
+                    adjustment="raw",
+                )
+                if fx_id != "選択なし"
+                else None
+            )
+            extra_assets = tuple(
+                dict.fromkeys(
+                    bar.instrument.instrument_id
+                    for extra_dataset in extra_datasets
+                    for bar in extra_dataset.bars
+                )
+            )
             benchmark_id = st.sidebar.selectbox(
                 "比較対象の価格snapshot",
                 ("選択なし", *(item for item in price_options if item not in selected_prices)),
@@ -266,6 +335,12 @@ def render_real_app() -> None:
                 if benchmark_id != "選択なし"
                 else None
             )
+            official_index = (
+                st.sidebar.checkbox("公式指数として比較（出典は手動確認）")
+                if benchmark_dataset is not None
+                else False
+            )
+            official_source = st.sidebar.text_input("公式指数の出典") if official_index else ""
             strategy_asset = st.sidebar.selectbox("戦略比較の銘柄", assets)
             strategy_options = tuple(
                 snapshot_id
@@ -389,6 +464,7 @@ def render_real_app() -> None:
     risk_max_name = float(
         st.sidebar.number_input("仮想配分の銘柄上限", min_value=0.01, max_value=1.0, value=1.0)
     )
+    risk_assets = tuple(dict.fromkeys((*assets, *extra_assets)))
     risk_weights = pd.Series(
         {
             asset: float(
@@ -396,11 +472,11 @@ def render_real_app() -> None:
                     f"仮想ウェイト {asset}",
                     min_value=0.0,
                     max_value=1.0,
-                    value=1.0 / len(assets),
+                    value=1.0 / len(risk_assets),
                     step=0.05,
                 )
             )
-            for asset in assets
+            for asset in risk_assets
         }
     )
     payload = {
@@ -424,6 +500,10 @@ def render_real_app() -> None:
         "risk_cash_min": risk_cash_min,
         "risk_max_name": risk_max_name,
         "risk_weights": risk_weights.to_dict(),
+        "risk_extra_snapshot_ids": extra_ids,
+        "risk_fx_snapshot_id": fx_id if fx_id != "選択なし" else None,
+        "risk_valuation_clock_utc": valuation_clock,
+        "risk_max_fx_age_hours": max_fx_hours,
         "correlation_window": correlation_window,
         "drawdown_alert": drawdown_alert,
         "zscore_alert": zscore_alert,
@@ -471,10 +551,32 @@ def render_real_app() -> None:
                 f"{definition.factors_as_of.isoformat()}）で、公式指数やPITバックテストではありません。"
             )
             if benchmark_dataset is not None:
-                compared = compare_basket(basket, benchmark_dataset, benchmark_name=benchmark_id)
-                st.line_chart(compared.values[["basket_level", "benchmark_level"]])
-                st.dataframe(compared.values)
-                st.caption("比較対象は同じ通貨・調整方式・日付・確定時刻の保存済み価格のみ。")
+                if official_index:
+                    comparison = compare_official_index(
+                        dataset,
+                        definition,
+                        benchmark_dataset,
+                        index_name=snapshots[benchmark_id].key.identity,
+                        index_instrument_id=snapshots[benchmark_id].key.identity,
+                        index_source_ref=official_source,
+                        snapshot_observed_at={
+                            snapshot_id: snapshots[snapshot_id].observed_at
+                            for snapshot_id in (*selected_prices, benchmark_id)
+                        },
+                    )
+                    st.line_chart(comparison.values[["basket_level", "official_index_level"]])
+                    st.dataframe(comparison.values)
+                    st.caption(
+                        f"公式指数出典（利用者確認）: {comparison.index_source_ref}。"
+                        "構成固定のretrospective比較で、出典の真正性やPIT構成を自動確認しません。"
+                    )
+                else:
+                    compared = compare_basket(
+                        basket, benchmark_dataset, benchmark_name=benchmark_id
+                    )
+                    st.line_chart(compared.values[["basket_level", "benchmark_level"]])
+                    st.dataframe(compared.values)
+                    st.caption("比較対象は同じ通貨・調整方式・日付・確定時刻の保存済み価格のみ。")
         except ValueError as error:
             st.warning(f"バスケットを計算できません: {error}")
     with tabs[2]:
@@ -534,10 +636,47 @@ def render_real_app() -> None:
     with tabs[5]:
         st.subheader("仮想配分・リスク")
         try:
+            risk_source = history
+            risk_currency = dataset.currency
+            fx_note = "FX換算なし。"
+            if extra_ids:
+                if fx_dataset is None:
+                    raise ValueError("異通貨の仮想リスクには保存済みFX snapshotが必要です")
+                try:
+                    hour_text, minute_text = valuation_clock.split(":")
+                    hour, minute = int(hour_text), int(minute_text)
+                    if not (0 <= hour <= 23 and 0 <= minute <= 59):
+                        raise ValueError
+                except ValueError as error:
+                    raise ValueError("評価時刻はUTCのHH:MM形式で指定してください") from error
+                days = sorted(
+                    {
+                        bar.session_date
+                        for source in (dataset, *extra_datasets)
+                        for bar in source.bars
+                    }
+                )
+                valuations = {
+                    day: datetime(day.year, day.month, day.day, hour, minute, tzinfo=UTC)
+                    for day in days
+                }
+                converted = convert_price_datasets_to_jpy(
+                    (dataset, *extra_datasets),
+                    fx_dataset,
+                    valuations,
+                    max_fx_age=timedelta(hours=max_fx_hours),
+                )
+                risk_source = converted.source
+                risk_currency = "JPY"
+                fx_note = (
+                    f"円換算: FX snapshot {converted.fx_snapshot_id[:12]} / "
+                    f"評価UTC {valuation_clock} / 最大経過{max_fx_hours:g}時間。"
+                    "retrospectiveでありPIT成績ではありません。"
+                )
             risk = virtual_risk_report(
-                history,
+                risk_source,
                 risk_weights,
-                base_currency=dataset.currency,
+                base_currency=risk_currency,
                 lookback=risk_lookback,
                 periods_per_year=periods_per_year,
                 constraints=VirtualConstraints(
@@ -558,7 +697,7 @@ def render_real_app() -> None:
             st.caption(
                 f"{risk.mode} / {risk.base_currency} / {risk.adjustment} / "
                 f"{risk.lookback}リターン / 年間{risk.periods_per_year}観測。"
-                "実口座配分・FX換算・PITバックテストではありません。"
+                f"{fx_note}実口座配分・PITバックテストではありません。"
             )
         except ValueError as error:
             st.warning(f"仮想リスクを計算できません: {error}")
