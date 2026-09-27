@@ -1,0 +1,26 @@
+{
+  "section": "27.4",
+  "status": "PASS",
+  "method": "independent memoized recursion, printed Figure 27.2, cash-flow identity, BSM limit",
+  "tolerances": {
+    "node_and_scenario_currency": 1e-10,
+    "coupon_identity_currency": 1e-10,
+    "bsm_limit_currency": 0.02
+  },
+  "measured": {
+    "textbook_price": 107.4418504343806,
+    "nodes": 10,
+    "scenarios": 20,
+    "max_node_error": 0.0,
+    "max_scenario_error": 1.2732925824820995e-11,
+    "probability_error": 0.0,
+    "coupon_identity_error": 1.4210854715202004e-14,
+    "bsm_limit_error": 0.006402003424213376
+  },
+  "source_sha256": {
+    "scripts/build_convertible_bond_reference.py": "5be4a51cb75bc38fd5194c48900e13a32adaa3ee9d98b206722ab1c8ee9c7093",
+    "scripts/verify_convertible_bond_numerics.py": "b72c926cc5758eb056fc340487c66e12a4e51a729aca8659e4020ab8d7bb1132",
+    "hullkit/src/hullkit/convertible_bond.py": "776877eb0588209b3500902684392d5c8f92575a4ebe8bbac98920d71e5d4538"
+  },
+  "artifact_sha256": "c1e4a7d9ff7b6a55fb7b2ddca4f8e2fcb0f5fbaa9436949186587fdda911e8ed"
+}

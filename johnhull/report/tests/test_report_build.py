@@ -31,7 +31,7 @@ def test_registry_is_consistent():
     for f in FIGURES:
         assert f.book in BOOKS, f.id
     assert len(figures_for("options_core")) == 7
-    assert len(figures_for("numerics")) == 17
+    assert len(figures_for("numerics")) == 21
     assert len(figures_for("risk_credit")) == 12
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
@@ -42,7 +42,7 @@ def test_registry_is_consistent():
     assert len(figures_for("crypto_market")) == 4
     assert len(figures_for("climate_energy")) == 4
     assert len(figures_for("risk_management")) == 4
-    assert len(FIGURES) == 126
+    assert len(FIGURES) == 130
     assert {"shout_payoff", "shout_decision", "shout_boundary", "shout_comparison"} <= {
         figure.id for figure in figures_for("exotics")
     }
@@ -174,4 +174,16 @@ def test_ivf_registry_follows_stochastic_volatility():
             assert spec.practice and spec.title and spec.blurb
             figure = spec.build()
             assert figure.layout.meta["section"] == "27.3"
+            assert figure.layout.meta["figure"] == spec.id
+
+
+def test_convertible_registry_follows_ivf():
+    expected = ["cb_tree", "cb_decisions", "cb_credit", "cb_convergence"]
+    ids = [spec.id for spec in figures_for("numerics")]
+    assert ids[ids.index("ivf_joint") + 1 : ids.index("ivf_joint") + 5] == expected
+    for spec in figures_for("numerics"):
+        if spec.id in expected:
+            assert spec.practice and spec.title and spec.blurb
+            figure = spec.build()
+            assert figure.layout.meta["section"] == "27.4"
             assert figure.layout.meta["figure"] == spec.id

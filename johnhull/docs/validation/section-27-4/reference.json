@@ -1,0 +1,178 @@
+{
+  "section": "27.4",
+  "source": "Hull 11e Global Edition pp.650–653, Example 27.1 and Figure 27.2",
+  "units": "stock, bond, face, call, coupon and recovery in dollars; maturity in years; rates and volatility annual decimals",
+  "parameters": {
+    "spot": 50.0,
+    "face": 100.0,
+    "conversion_ratio": 2.0,
+    "call_price": 113.0,
+    "rate": 0.05,
+    "dividend_yield": 0.0,
+    "volatility": 0.3,
+    "hazard_rate": 0.01,
+    "recovery_value": 40.0,
+    "maturity": 0.75,
+    "steps": 3
+  },
+  "textbook": {
+    "price": 107.4418504343806,
+    "nodes": {
+      "A": {
+        "stock": 50.0,
+        "value": 107.4418504343806,
+        "continuation": 107.4418504343806,
+        "decision": "hold"
+      },
+      "B": {
+        "stock": 58.09171213641415,
+        "value": 116.1834242728283,
+        "continuation": 119.53852042258495,
+        "decision": "call-convert"
+      },
+      "C": {
+        "stock": 43.03539882125289,
+        "value": 101.36956899877428,
+        "continuation": 101.36956899877428,
+        "decision": "hold"
+      },
+      "D": {
+        "stock": 67.49294037880014,
+        "value": 134.98588075760028,
+        "continuation": 135.08451519323305,
+        "decision": "call-convert"
+      },
+      "E": {
+        "stock": 50.0,
+        "value": 106.78447470472321,
+        "continuation": 106.78447470472321,
+        "decision": "hold"
+      },
+      "F": {
+        "stock": 37.040911034085894,
+        "value": 98.60982839593902,
+        "continuation": 98.60982839593902,
+        "decision": "hold"
+      },
+      "G": {
+        "stock": 78.41560927450843,
+        "value": 156.83121854901685,
+        "continuation": null,
+        "decision": "convert"
+      },
+      "H": {
+        "stock": 58.091712136414145,
+        "value": 116.18342427282829,
+        "continuation": null,
+        "decision": "convert"
+      },
+      "I": {
+        "stock": 43.03539882125289,
+        "value": 100.0,
+        "continuation": null,
+        "decision": "redeem"
+      },
+      "J": {
+        "stock": 31.881407581088666,
+        "value": 100.0,
+        "continuation": null,
+        "decision": "redeem"
+      }
+    },
+    "probabilities": {
+      "up": 0.5114783226154926,
+      "down": 0.48602479978196744,
+      "default": 0.0024968776025399153
+    }
+  },
+  "scenarios": {
+    "credit": [
+      {
+        "hazard_rate": 0,
+        "price": 107.57502334838865
+      },
+      {
+        "hazard_rate": 0.005,
+        "price": 107.50783452395916
+      },
+      {
+        "hazard_rate": 0.01,
+        "price": 107.4418504343806
+      },
+      {
+        "hazard_rate": 0.02,
+        "price": 107.31344608632907
+      },
+      {
+        "hazard_rate": 0.04,
+        "price": 107.07054425745271
+      }
+    ],
+    "recovery": [
+      {
+        "recovery_value": 0,
+        "price": 107.24923429487492
+      },
+      {
+        "recovery_value": 20,
+        "price": 107.34554236462775
+      },
+      {
+        "recovery_value": 40,
+        "price": 107.4418504343806
+      },
+      {
+        "recovery_value": 60,
+        "price": 107.53815850413342
+      },
+      {
+        "recovery_value": 80,
+        "price": 107.63446657388627
+      }
+    ],
+    "call": [
+      {
+        "call_price": 105.0,
+        "price": 105.0
+      },
+      {
+        "call_price": 113.0,
+        "price": 107.4418504343806
+      },
+      {
+        "call_price": 125.0,
+        "price": 109.13659215861959
+      },
+      {
+        "call_price": null,
+        "price": 109.16175882351916
+      }
+    ],
+    "convergence": [
+      {
+        "steps": 3,
+        "price": 107.4418504343806
+      },
+      {
+        "steps": 6,
+        "price": 106.8003964594041
+      },
+      {
+        "steps": 12,
+        "price": 106.85449882101567
+      },
+      {
+        "steps": 24,
+        "price": 106.87254421220757
+      },
+      {
+        "steps": 48,
+        "price": 106.62699050574444
+      },
+      {
+        "steps": 96,
+        "price": 106.50949214630376
+      }
+    ]
+  }
+}

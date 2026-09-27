@@ -20,6 +20,7 @@ from hullkit._alternative_models_lesson import _figures as alternative_models_le
 from hullkit._asian_lesson import _figures as asian_lesson_figures
 from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
+from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
@@ -312,6 +313,42 @@ FIGURES: list[FigureSpec] = [
         "同じ欧州コール面の潜在ボラ混合と局所ボラを同じ乱数で追跡し、二時点同時上昇を比べる。",
         lambda: local_volatility_lesson_figures()["ivf_joint"],
         practice="バリアや複合オプションには二時点以上の同時分布が必要。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "cb_tree",
+        "numerics",
+        "転換社債：原著の3段ツリー",
+        "Figure 27.2 の株価・転換社債の全生存ノードを独立再帰計算で照合する。",
+        lambda: convertible_bond_lesson_figures()["cb_tree"],
+        practice="転換価値、継続価値、デフォルト回収を各節点で比較する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "cb_decisions",
+        "numerics",
+        "発行体コールと強制転換",
+        "B・D・E でコール前後の価値を比べ、コール後にも転換権が残ることを見る。",
+        lambda: convertible_bond_lesson_figures()["cb_decisions"],
+        practice="コール価格だけで節点価値を切り下げると転換権を見落とす。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "cb_credit",
+        "numerics",
+        "信用リスクと回収額",
+        "一定ハザード率・回収額をそれぞれ動かし、転換社債の価格感応度を比較する。",
+        lambda: convertible_bond_lesson_figures()["cb_credit"],
+        practice="原著例のハザード率は危険中立値であり、社債・CDS価格に整合させる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "cb_convergence",
+        "numerics",
+        "転換社債ツリーの刻み",
+        "3～96段でコール・転換境界の格子誤差を確認する。",
+        lambda: convertible_bond_lesson_figures()["cb_convergence"],
+        practice="3段の教科書値と高解像度の数値推定を混同しない。",
         is_new=True,
     ),
     # risk_credit --------------------------------------------------------

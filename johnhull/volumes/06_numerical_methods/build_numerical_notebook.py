@@ -855,9 +855,92 @@ cells.append(md(r"""### 9.6 適用条件と限界
 
 **回答の手掛かり：** 価格への逆算と過程の係数、蝶型裁定または微分ノイズ、二時点以上の同時分布。"""))
 
-# Cell 22: LSM md
+# Hull GE §27.4: convertible bonds (M13)
+cells.append(md(r"""## 10. 転換社債（§27.4）
+
+株式への転換権、発行体のコール権、社債の信用リスクを一つの格子で評価する。
+原典 pp.650–653 の Example 27.1 / Figure 27.2 にある10個の生存ノードを独立計算で照合する。"""))
+cells.append(md(r"""### 10.1 契約と三つの選択
+
+転換社債の保有者は指定時点に社債を株式へ交換できる。転換価値は**転換株数 × 株価**。
+発行体がコールすると、保有者はなお転換できる。したがって転換可能な節点では、
+継続価値 $H$、転換価値 $X$、コール価格 $C$ から
+$V=\min[\max(H,X),\max(C,X)]$ と評価する。満期は元本と転換価値の大きい方。
+原典の例は元本100ドル、転換株数2、コール113ドル、満期9か月、株価50ドル。"""))
+cells.append(md(r"""### 10.2 生存・上昇・下落・デフォルトの確率
+
+株価は生存時に $u=e^{\sigma\sqrt{\Delta t}}$ または $d=1/u$ 倍、デフォルト時は0になる。
+危険中立ハザード率 $\lambda$、$a=e^{(r-q)\Delta t}$ に対して
+
+$$p_u=\frac{a-de^{-\lambda\Delta t}}{u-d},\quad
+p_d=\frac{ue^{-\lambda\Delta t}-a}{u-d},\quad
+p_{\mathrm{def}}=1-e^{-\lambda\Delta t}.$$
+
+ここで $\sigma$ は**生存条件付き**の株価ボラティリティ。$p_u+p_d=e^{-\lambda\Delta t}$、
+$p_uu+p_dd=a$ を確認する。粗すぎる格子で負の確率が出たら、計算を拒否する。"""))
+cells.append(code(r"""from hullkit import convertible_bond as cb
+from hullkit._convertible_bond_lesson import _figures as cb_lesson_figures
+from hullkit._convertible_bond_lesson import _load_reference as cb_load_reference
+
+cb_reference = cb_load_reference()
+cb_params = cb_reference["parameters"]
+cb_figures = cb_lesson_figures()
+cb_tree = cb.convertible_bond_tree(**cb_params)
+display(cb_figures["cb_tree"])
+print(f"原著の初期価格 {cb_reference['textbook']['price']:.4f} $、公開ツリー {cb_tree.price:.4f} $")
+print(f"pu={cb_tree.up_probability:.6f}, pd={cb_tree.down_probability:.6f}, "
+      f"pdef={cb_tree.default_probability:.6f}")"""))
+cells.append(md(r"""### 10.3 満期から後退帰納
+
+満期の G・H は転換、I・J は元本100ドルを受け取る。デフォルト節点では株価0、
+社債回収額40ドル。節点 E では転換価値100ドルに対して継続価値106.78ドルなので保有する。
+次期に利払いがあれば、生存した枝の利息も割り引いて継続価値へ加える。
+デフォルト枝は回収額を一度だけ支払う。"""))
+cells.append(code(r"""for name in ("G", "H", "I", "J", "E"):
+    node = cb_reference["textbook"]["nodes"][name]
+    print(f"{name}: 株価 {node['stock']:.2f} $, 社債 {node['value']:.2f} $, "
+          f"判断 {node['decision']}")"""))
+cells.append(md(r"""### 10.4 コール後の再転換
+
+B では継続119.54ドルより転換116.18ドルが低いので保有者は当初転換しない。
+発行体は113ドルでコールし、保有者は113ドルを受け取る代わりに116.18ドルの株式へ転換する。
+D も継続135.08ドルが転換134.99ドルへ引き下げられる。
+E は継続106.78ドルがコール113ドルより低く、発行体はコールしない。"""))
+cells.append(code(r"""display(cb_figures["cb_decisions"])
+for name in ("B", "D", "E"):
+    node = cb_reference["textbook"]["nodes"][name]
+    print(f"{name}: コール前 {node['continuation']:.4f} $, 判断後 {node['value']:.4f} $ "
+          f"({node['decision']})")"""))
+cells.append(md(r"""### 10.5 信用リスク・回収・利払い
+
+信用リスクを無視すると、元本・利息の生存確率を過大にみる。下図は**ほかの条件を固定**し、
+危険中立ハザード率と固定回収額を個別に動かしたもの。原典の1%/年と40ドルを中心に比較する。
+年率ハザードは社債またはCDS価格から推定できる。利払いを加えた場合は各期末に生存した場合だけ
+利息を支払うと仮定し、閉形式の割引期待キャッシュフローと別に照合した。"""))
+cells.append(code(r"""display(cb_figures["cb_credit"])
+cb_coupon = cb.convertible_bond_tree(**dict(cb_params, conversion_ratio=0,
+                                            call_price=None, coupon_amount=2.0))
+print(f"転換権・コールなし、各四半期2 $の利息を加えた信用リスク付き債券: {cb_coupon.price:.4f} $")"""))
+cells.append(md(r"""### 10.6 格子収束とモデルの限界
+
+3段の107.44ドルは**教材の粗い格子値**であり、連続時間の厳密解ではない。
+格子数を増やすと転換・コール境界の位置が変わり、価格は単調には収束しないことがある。
+この教材は一定の $r,q,\sigma,\lambda$、一定の転換株数・コール価格・回収額を扱う。
+現実には権利行使時期、転換株数やコール条件が変わり、株価と信用ハザードも独立とは限らない。
+原典は状態依存ハザードに陰的有限差分法を挙げている。
+
+1. B で転換116.18ドルを受け取れるのに、コール価格113ドルだけで評価しない理由は何か。
+2. デフォルト時の回収額を株価ゼロと同時に扱う必要があるのはなぜか。
+3. 3段値と96段値が違うとき、どちらを原典例との照合に使うか。
+
+**回答の手掛かり：** コール後の転換権、株式と社債の異なる回収、格子誤差と原典設定。"""))
+cells.append(code(r"""display(cb_figures["cb_convergence"])
+for row in cb_reference["scenarios"]["convergence"]:
+    print(f"N={row['steps']:>2}: {row['price']:.5f} $")"""))
+
+# LSM md
 cells.append(
-    md(r"""## 10. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
+    md(r"""## 11. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
 
 後ろ向きに各行使時点で:
 1. ITM パスについて「継続価値」を**将来キャッシュフローの回帰**（基底: $1, S, S^2$）で推定
@@ -982,7 +1065,7 @@ print("\n全チェック合格")""")
 
 # Cell 27: exercises
 cells.append(
-    md(r"""## 11. 練習問題
+    md(r"""## 12. 練習問題
 
 **Q1.** CN と implicit、グリッドを倍に細かくしたとき誤差はそれぞれ何分の1になる？
 
