@@ -1,4 +1,4 @@
-# Backtest configuration (Phase 2+). Cheat-proof defaults in the spirit of autostock.
+# Backtest configuration (Phase 2+). Lagged execution; check input leakage separately.
 
 execution:
   rebalance: monthly          # daily | weekly | monthly
