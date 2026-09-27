@@ -1,10 +1,7 @@
 # Workspace-wide convenience targets.
 #
 # Most Python work runs inside a single uv workspace at the repo root
-# (members: agent-profiler, JHRMBS, gto, market-viz, stock, nbody-gpu,
-#  line_backup, akinator, autostock, health, market_nn, johnhull/hullkit,
-#  and the analytics books — see pyproject.toml [tool.uv.workspace] for
-#  the canonical list).
+# (see pyproject.toml [tool.uv.workspace] for the canonical member list).
 #
 # `johnhull/hullkit` is a workspace member (used by johnhull notebooks).
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;

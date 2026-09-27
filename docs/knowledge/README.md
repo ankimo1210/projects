@@ -8,3 +8,4 @@
 ノートは必要なときに読み、秘密情報や勤務先・顧客の機密は保存しない。
 
 - [WSL Ubuntu の仮想ディスク圧縮（2026-09-16）](2026-09-16-wsl-vhdx-compaction.md)
+- [Windows のネットワーク状態を記録する（2026-09-27）](2026-09-27-network-monitor.md) — [PowerShell スクリプト](network-monitor.ps1) の用途・実行・読み方
