@@ -15,6 +15,6 @@ AI agents:
 - Do not use scratch code as canonical implementation.
 - Prefer the root README and each project's docs for current guidance.
 
-The April 2026 comparison notebooks are preserved in the
-[archive](../_archive/scratch/README.md). The remaining Whisper notes and script
-are still local scratch material, not a shared transcription service.
+The April 2026 comparison notebooks and the July 2026 Whisper trial are
+preserved in the [archive](../_archive/scratch/README.md). Audio and transcripts
+from the Whisper trial were never tracked here.
