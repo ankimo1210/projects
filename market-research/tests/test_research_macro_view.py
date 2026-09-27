@@ -92,3 +92,55 @@ def test_future_partial_or_mismatched_macro_snapshot_fails_closed(tmp_path):
             )
         with pytest.raises(ValueError, match="timezone-aware"):
             macro_snapshot_table(store, first.snapshot_id, as_of=T2.replace(tzinfo=None))
+
+
+def test_same_cache_key_cannot_compare_different_macro_definitions(tmp_path):
+    from market_research.research.macro_view import macro_snapshot_table
+
+    initial = _row()
+    incompatible = replace(
+        _row(2, release_at=T2, vintage_id="wrong-definition"),
+        unit="percent",
+        frequency="monthly",
+    )
+    with ResearchStore(tmp_path) as store:
+        first = store.save(KEY, b"first", observed_at=T1, macro=(initial,))
+        later = store.save(KEY, b"wrong", observed_at=T2, macro=(incompatible,))
+        with pytest.raises(ValueError, match="unit"):
+            macro_snapshot_table(
+                store, later.snapshot_id, as_of=T2, previous_snapshot_id=first.snapshot_id
+            )
+        changed_adjustment = replace(
+            _row(120, release_at=T2, vintage_id="different-adjustment"),
+            seasonal_adjustment="nsa",
+        )
+        later = store.save(KEY, b"adjustment", observed_at=T2, macro=(initial, changed_adjustment))
+        with pytest.raises(ValueError, match="seasonal"):
+            macro_snapshot_table(
+                store, later.snapshot_id, as_of=T2, previous_snapshot_id=first.snapshot_id
+            )
+
+
+def test_missing_row_definition_cannot_be_used_for_revision(tmp_path):
+    from market_research.research.macro_view import macro_snapshot_table
+
+    with ResearchStore(tmp_path) as store:
+        first = store.save(
+            KEY,
+            b"missing-frequency",
+            observed_at=T1,
+            macro=(replace(_row(), frequency=None),),
+        )
+        later = store.save(
+            KEY,
+            b"defined",
+            observed_at=T2,
+            macro=(_row(120, release_at=T2, vintage_id="revision"),),
+        )
+        with pytest.raises(ValueError, match="explicit unit and frequency"):
+            macro_snapshot_table(
+                store,
+                later.snapshot_id,
+                as_of=T2,
+                previous_snapshot_id=first.snapshot_id,
+            )

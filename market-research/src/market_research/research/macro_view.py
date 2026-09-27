@@ -60,7 +60,22 @@ def macro_snapshot_table(
     )
     records = []
     for row in current_rows:
+        if row.unit is not None and row.unit != current.key.currency:
+            raise ValueError("macro row unit differs from snapshot key")
+        if row.frequency is not None and row.frequency != current.key.interval:
+            raise ValueError("macro row frequency differs from snapshot key")
         old = previous_rows.get(row.period_start)
+        if old is not None:
+            if (
+                old.unit is None
+                or old.frequency is None
+                or row.unit is None
+                or row.frequency is None
+            ):
+                raise ValueError("macro comparison requires explicit unit and frequency")
+            for name in ("unit", "frequency", "seasonal_adjustment"):
+                if getattr(old, name) != getattr(row, name):
+                    raise ValueError(f"macro comparison {name} differs between vintages")
         records.append(
             {
                 "period_start": row.period_start,

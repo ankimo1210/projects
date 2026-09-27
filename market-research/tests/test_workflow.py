@@ -272,7 +272,14 @@ def test_saved_macro_can_be_opened_without_any_price_snapshot(monkeypatch, tmp_p
     with ResearchStore(tmp_path) as store:
         key = CacheKey("alfred", "macro", "DEMO_CPI", "monthly", "index", "none")
         initial = MacroObservation(
-            "DEMO_CPI", date(2026, 8, 1), observed, 103.0, "alfred", "first", unit="index"
+            "DEMO_CPI",
+            date(2026, 8, 1),
+            observed,
+            103.0,
+            "alfred",
+            "first",
+            unit="index",
+            frequency="monthly",
         )
         saved = store.save(key, b"macro-only", observed_at=observed, macro=(initial,))
         revised_at = observed + timedelta(days=1)
@@ -290,12 +297,29 @@ def test_saved_macro_can_be_opened_without_any_price_snapshot(monkeypatch, tmp_p
                     "alfred",
                     "revised",
                     unit="index",
+                    frequency="monthly",
                 ),
             ),
         )
+    original_snapshots = ResearchStore.snapshots
+    monkeypatch.setattr(
+        ResearchStore,
+        "snapshots",
+        lambda self, limit=50: original_snapshots(self, min(limit, 1)),
+    )
     path = Path(__file__).resolve().parents[1] / "app" / "main.py"
     app = AppTest.from_file(str(path), default_timeout=15).run()
     app.sidebar.radio[0].set_value("保存データ").run()
+    macro_widget = next(box for box in app.sidebar.selectbox if box.label == "マクロsnapshot")
+    macro_widget.set_value(revised.snapshot_id).run()
+    assert (
+        saved.snapshot_id
+        not in next(
+            box for box in app.sidebar.selectbox if box.label == "比較する過去のマクロsnapshot"
+        ).options
+    )
+    extra_ids = next(box for box in app.sidebar.text_area if "追加snapshot ID" in box.label)
+    extra_ids.set_value(saved.snapshot_id).run()
     macro_widget = next(box for box in app.sidebar.selectbox if box.label == "マクロsnapshot")
     macro_widget.set_value(revised.snapshot_id).run()
     previous_widget = next(
