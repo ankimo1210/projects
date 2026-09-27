@@ -184,6 +184,14 @@ def test_streamlit_saved_snapshot_shows_research_tables_offline(monkeypatch, tmp
     assert any("retrospective" in item.value for item in app.caption)
     assert any("PAF=1" in item.value for item in app.caption)
     assert len(app.dataframe) >= 3
+    assert any(metric.label == "年率ボラティリティ" for metric in app.metric)
+    cash_floor = next(
+        box for box in app.sidebar.number_input if box.label == "仮想配分の最低現金比率"
+    )
+    cash_floor.set_value(0.25).run()
+    assert any("仮想リスクを計算できません" in item.value for item in app.warning)
+    cash_floor.set_value(0.0).run()
+    assert any(metric.label == "年率ボラティリティ" for metric in app.metric)
     benchmark_widget = next(
         box for box in app.sidebar.selectbox if box.label == "比較対象の価格snapshot"
     )

@@ -17,6 +17,7 @@ from .research.fundamentals import (
     load_fundamental_table,
 )
 from .research.indicators import close_history, indicator_table
+from .research.portfolio import VirtualConstraints, virtual_risk_report
 from .research.screener import ThresholdRule, screen_research
 from .storage import ResearchStore
 
@@ -197,6 +198,31 @@ def render_real_app() -> None:
             ),
         )
     screened = screen_research(indicators, fundamentals, rules)
+    risk_lookback = int(
+        st.sidebar.number_input(
+            "リスク観測数", min_value=2, value=min(20, max(2, len(history.prices) - 1))
+        )
+    )
+    risk_cash_min = float(
+        st.sidebar.number_input("仮想配分の最低現金比率", min_value=0.0, max_value=0.99, value=0.0)
+    )
+    risk_max_name = float(
+        st.sidebar.number_input("仮想配分の銘柄上限", min_value=0.01, max_value=1.0, value=1.0)
+    )
+    risk_weights = pd.Series(
+        {
+            asset: float(
+                st.sidebar.number_input(
+                    f"仮想ウェイト {asset}",
+                    min_value=0.0,
+                    max_value=1.0,
+                    value=1.0 / len(assets),
+                    step=0.05,
+                )
+            )
+            for asset in assets
+        }
+    )
     payload = {
         "price_snapshot_ids": selected_prices,
         "benchmark_snapshot_id": benchmark_id if benchmark_id != "選択なし" else None,
@@ -214,6 +240,10 @@ def render_real_app() -> None:
         "periods_per_year": periods_per_year,
         "composition_date": composition_date.isoformat(),
         "momentum_floor": momentum_floor,
+        "risk_lookback": risk_lookback,
+        "risk_cash_min": risk_cash_min,
+        "risk_max_name": risk_max_name,
+        "risk_weights": risk_weights.to_dict(),
     }
     st.caption(f"研究run未保存 | {dataset.currency} | {dataset.adjustment}")
     tabs = st.tabs(TITLES)
@@ -258,9 +288,42 @@ def render_real_app() -> None:
         st.dataframe(indicators)
         st.dataframe(screened)
         st.caption("pass / fail / unknown を分けて表示。品質理由と欠損理由を保持します。")
-    for tab, title in zip(tabs[3:], TITLES[3:], strict=True):
+    for tab, title in zip(tabs[3:5], TITLES[3:5], strict=True):
         with tab:
             st.subheader(title)
             st.info("この保存データ画面は後続で接続します。")
+    with tabs[5]:
+        st.subheader("仮想配分・リスク")
+        try:
+            risk = virtual_risk_report(
+                history,
+                risk_weights,
+                base_currency=dataset.currency,
+                lookback=risk_lookback,
+                periods_per_year=periods_per_year,
+                constraints=VirtualConstraints(
+                    max_name_weight=risk_max_name, cash_min=risk_cash_min
+                ),
+            )
+            st.metric("年率ボラティリティ", f"{risk.total_vol_annualized:.1%}")
+            st.metric("現金比率", f"{risk.cash_weight:.1%}")
+            st.dataframe(
+                pd.DataFrame(
+                    {
+                        "weight": risk.weights,
+                        "component_vol_annualized": risk.component_vol_annualized,
+                        "quality_reasons": pd.Series(risk.quality_reasons),
+                    }
+                )
+            )
+            st.caption(
+                f"{risk.mode} / {risk.base_currency} / {risk.adjustment} / "
+                f"{risk.lookback}リターン / 年間{risk.periods_per_year}観測。"
+                "実口座配分・FX換算・PITバックテストではありません。"
+            )
+        except ValueError as error:
+            st.warning(f"仮想リスクを計算できません: {error}")
     with tabs[6]:
+        st.subheader("品質・実行履歴")
+        st.info("保存runと通知は後続で接続します。")
         st.json({"research_run_saved": False, "inputs": payload, "network_fetch": False})
