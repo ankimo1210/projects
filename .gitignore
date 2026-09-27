@@ -27,6 +27,9 @@ _scratch/outputs/
 # scratch dirs at any depth (mineru corpus output, market_nn reports, ...)
 tmp/
 
+# Legacy autostock ledger can remain at its old path after archival.
+/autostock/results.tsv
+
 # heavy local data
 *.duckdb
 *.duckdb.wal
