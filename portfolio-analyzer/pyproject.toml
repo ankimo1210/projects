@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Privacy-first local dashboard for multi-account portfolio analysis"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["duckdb>=1.0"]
 
 [build-system]
 requires = ["hatchling"]
