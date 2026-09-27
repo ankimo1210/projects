@@ -1,0 +1,27 @@
+{
+  "section": "27.3",
+  "status": "PASS",
+  "method": "independent analytic latent-volatility mixture, Dupire finite differences, backward spot PDE",
+  "tolerances": {
+    "local_vol_absolute": 0.0002,
+    "pde_repricing_currency": 0.005,
+    "flat_bsm_vol_absolute": 0.0002,
+    "term_carry_vol_absolute": 0.0002
+  },
+  "measured": {
+    "points": 33,
+    "max_local_vol_absolute_error": 5.456062361908209e-07,
+    "max_pde_repricing_currency_error": 0.004047111918636936,
+    "max_flat_bsm_vol_error": 2.494351695747632e-07,
+    "varying_carry_vol_error": 3.5622135463597715e-08,
+    "latent_vs_local_one_date_max_paired_z": 1.653823887393182,
+    "latent_vs_local_two_date_paired_z": 17.825923210574302,
+    "latent_vs_local_two_date_probability_gap": -0.00854
+  },
+  "source_sha256": {
+    "scripts/build_local_volatility_reference.py": "cd40fc895ece0d1a7bd0fff4a2272817bfd290c4d5669e3bc0e9fe002d28a473",
+    "scripts/verify_local_volatility_numerics.py": "7ca1412cb163c3ebb665e6ad3e8e310a12468bef66c783014b4cb9d14c2a1d1f",
+    "hullkit/src/hullkit/local_volatility.py": "ce64a9a887b54199e9978c824371850498206f654c56d47fa7684eb0c6d9f303"
+  },
+  "artifact_sha256": "70e1aef8b7f1dfa71e66744482f5886f5f06351cb1f988c907b3b1372dfbf36c"
+}

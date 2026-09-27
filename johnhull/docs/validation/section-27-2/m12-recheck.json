@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "milestone": "M12",
+  "base_commit": "ad365fee",
+  "lesson_numeric_payload_unchanged": true,
+  "hash_refresh": [],
+  "checked_at": "2026-09-27T02:31:04.941040+00:00",
+  "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_stochastic_volatility.py hullkit/tests/test_stochastic_volatility_reference.py hullkit/tests/test_stochastic_volatility_lesson.py report/tests/test_stochastic_volatility_notebook.py",
+  "environment": {
+    "PYTHONPATH": "hullkit/src:scripts:report (this checkout)"
+  },
+  "exit_code": 0,
+  "pytest_output": "...........................                                              [100%]\n27 passed in 2.61s\n",
+  "passed": 27,
+  "source_sha256": {
+    "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/tests/test_stochastic_volatility.py": "5213099e3a965f0e4b6a65d499aed0eef71a7b474fb7381c48cf6ef708edb082",
+    "hullkit/tests/test_stochastic_volatility_lesson.py": "6d2718d413bbf4c2dfd8b628a2649d5cf3d71ac0b6acd861bac70f869867eda7",
+    "hullkit/tests/test_stochastic_volatility_reference.py": "80063b8a30e74409f54a0a0b77b20e1f8092abc6ff60b225419e3265753cc637",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "report/report_builder/figures.py": "b6d335b21ef27b35f4e0e7b7efb2dc2218e80d70414114c801a0dd59b50d74b6",
+    "report/tests/test_stochastic_volatility_notebook.py": "5e1a64d8ea37d42cb1e88c8ff890f832204dda5f08eb70eae15ebcf96438a87f",
+    "scripts/recheck_accepted_m12.py": "8b5ec6be9916efcebf3bf3a8a46fd3a6d196327d30c4ff17640b2ebe5975f212",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "9323540c2646b3657a0dbf1d6cfe255fcf070165d88c93ce89a85c0ad216aea3",
+    "volumes/06_numerical_methods/numerical.ipynb": "cf079e90628a4f9f2fea2dced5f5258fe74a019d15dc25e75d8332cc2862846d",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "3e06578195fffaa238378b92aca60beed7122f99b3c0acf90d5203fd07dfe993",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5d27290fccde85a06a3543ddf8e219a999795faa3af737b5bc4ca86ac866ecc9"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
+    "report/site/numerics.html": "731e2bcfe5b7dd9b40aec46ba270233be36155db6fda4d180a0cccdb5611c3dc",
+    "book/_build/html/notebooks/06_numerical.html": "21291f0b4ef67d1e14776ab0325869688f0c21b5445bebdc51bd0ef8162f6bdd"
+  },
+  "scope": "Accepted section tests against the final M12 assets after the shared portal registry and stylesheet changed; no pricing code or lesson data of this section changed. Historical numerical and browser records preserved."
+}
