@@ -235,10 +235,41 @@ def test_python_closure_follows_package_imports_only(tmp_path):
     (package / "unrelated.py").write_text("x = 1\n", encoding="utf-8")
     closure = python_closure(tmp_path, ["hullkit.local_volatility"])
     assert sorted(closure) == [
+        "hullkit/src/hullkit/__init__.py",
         "hullkit/src/hullkit/_helper.py",
         "hullkit/src/hullkit/bsm.py",
         "hullkit/src/hullkit/local_volatility.py",
     ]
+
+
+def test_python_closure_follows_package_initializer_imports(tmp_path):
+    package = tmp_path / "hullkit/src/hullkit"
+    package.mkdir(parents=True)
+    (package / "__init__.py").write_text("from . import shared\n", encoding="utf-8")
+    (package / "shared.py").write_text("value = 1\n", encoding="utf-8")
+    (package / "local_volatility.py").write_text("value = 2\n", encoding="utf-8")
+    before = python_closure(tmp_path, ["hullkit.local_volatility"])
+    (package / "shared.py").write_text("value = 3\n", encoding="utf-8")
+    after = python_closure(tmp_path, ["hullkit.local_volatility"])
+    assert "hullkit/src/hullkit/shared.py" in before
+    assert before != after
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        '__import__("hullkit.dynamic")\n',
+        'from importlib import import_module as load\nload("hullkit.dynamic")\n',
+        'import importlib\nload = importlib.import_module\nload("hullkit.dynamic")\n',
+    ],
+)
+def test_python_closure_rejects_dynamic_package_import(tmp_path, source):
+    package = tmp_path / "hullkit/src/hullkit"
+    package.mkdir(parents=True)
+    (package / "__init__.py").write_text("", encoding="utf-8")
+    (package / "local_volatility.py").write_text(source, encoding="utf-8")
+    with pytest.raises(ValueError, match="dynamic import"):
+        python_closure(tmp_path, ["hullkit.local_volatility"])
 
 
 # --- fingerprints and decisions --------------------------------------------------
@@ -262,6 +293,7 @@ def mini_project(tmp_path):
     (root / "report/site/assets/style.css").write_text(".fig-card{}", encoding="utf-8")
     package = root / "hullkit/src/hullkit"
     package.mkdir(parents=True)
+    (package / "__init__.py").write_text("", encoding="utf-8")
     (package / "local_volatility.py").write_text("x = 1\n", encoding="utf-8")
     (root / "docs/validation/section-27-3").mkdir(parents=True)
     (root / "docs/validation/section-27-3/reference.json").write_text("{}", encoding="utf-8")
@@ -341,6 +373,17 @@ def test_environment_change_forces_a_redraw(mini_project):
     assert decide(baseline, current)["decision"] == "redraw"
 
 
+def test_package_initializer_change_forces_a_redraw(mini_project):
+    root, config = mini_project
+    baseline = compute_fingerprint(root, "27.3", config, environment=_environment())
+    (root / "hullkit/src/hullkit/__init__.py").write_text("VALUE = 1\n", encoding="utf-8")
+    current = compute_fingerprint(root, "27.3", config, environment=_environment())
+    assert decide(baseline, current) == {
+        "decision": "redraw",
+        "reasons": ["python_sources changed"],
+    }
+
+
 def test_unknown_section_is_never_reused(mini_project):
     root, config = mini_project
     current = compute_fingerprint(root, "99.9", config, environment=_environment())
@@ -381,6 +424,7 @@ def test_runtime_mismatch_detects_browser_mathjax_and_font_changes():
     baseline = {
         "browser_version": "145.0.7632.6",
         "mathjax_version": "3.2.2",
+        "mathjax_scripts": [{"url": "https://example/mathjax.js", "sha256": "a" * 64}],
         "fonts": {"portal_plot_text": ["Liberation Sans"]},
     }
     assert runtime_mismatches(baseline, dict(baseline)) == []
@@ -392,6 +436,9 @@ def test_runtime_mismatch_detects_browser_mathjax_and_font_changes():
     ]
     partial = {key: value for key, value in baseline.items() if key != "mathjax_version"}
     assert runtime_mismatches(baseline, partial) == ["mathjax_version"]
+    changed_script = copy.deepcopy(baseline)
+    changed_script["mathjax_scripts"][0]["sha256"] = "b" * 64
+    assert runtime_mismatches(baseline, changed_script) == ["mathjax_scripts"]
 
 
 def test_execute_result_counts_are_not_part_of_the_slice():

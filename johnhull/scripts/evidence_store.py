@@ -11,6 +11,7 @@ and hold project-relative paths only.
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import json
 import os
@@ -235,16 +236,23 @@ def _copy_exclusive(source: Path, target: Path) -> None:
 
 
 def _publish_without_overwrite(temporary: Path, final: Path) -> None:
-    """Move a verified temporary file into place without replacing anything."""
-    try:
-        os.link(temporary, final)
-    except FileExistsError:
-        return
-    except OSError:
+    """Publish complete bytes once, serializing writers on filesystems without links."""
+    lock_path = final.with_name(f".lock-{final.name}")
+    # Keep the lock file: unlinking it would let another process lock a new inode.
+    with lock_path.open("a+b") as lock_file:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        if final.exists() or final.is_symlink():
+            return
         try:
-            _copy_exclusive(temporary, final)
+            os.link(temporary, final)
         except FileExistsError:
             return
+        except OSError:
+            # DrvFS disallows hardlinks. Both paths are in one directory, so
+            # rename exposes only the already fsynced, verified temporary file.
+            if final.exists() or final.is_symlink():
+                return
+            os.rename(temporary, final)
 
 
 def init_store(root: Path | str, role: str) -> Store:

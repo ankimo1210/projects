@@ -19,6 +19,7 @@ import os
 import subprocess
 import sys
 import time
+import uuid
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 
@@ -240,7 +241,7 @@ def run_check(project: Path, config_path: Path, section_id: str, work: Path) -> 
     }
 
 
-def _browser_check(observed: dict, record_sha256: str) -> dict:
+def _browser_check(observed: dict, record_sha256: str, record_path: str) -> dict:
     browser = observed["browser"]
     pages = browser.get("pages") or {}
     passed = (
@@ -262,6 +263,7 @@ def _browser_check(observed: dict, record_sha256: str) -> dict:
             surface: page.get("numeric_mutation_rejected") for surface, page in pages.items()
         },
         "raw_record_sha256": record_sha256,
+        "raw_record_path": record_path,
         "wrapper": observed["wrapper"],
         "seconds": observed["verifier_run"]["seconds"],
     }
@@ -275,7 +277,20 @@ def driver_provenance(records_root: Path) -> dict:
 def _source_hashes(records_root: Path, spec: dict, fingerprint: dict) -> dict:
     """Section inputs whose change makes the record stale (ledger freshness)."""
     components = fingerprint.get("components") or {}
-    names = set(spec["tests"]) | {spec["notebook"]["path"]}
+    # The notebook is checked by its section slice in the fingerprint. Hashing
+    # the whole notebook would stale this section when another section changes.
+    names = set(spec["tests"]) | {
+        "scripts/evidence_dependencies.json",
+        "scripts/evidence_fingerprint.py",
+        "book/_config.yml",
+        "book/_toc.yml",
+    }
+    for directory in ("book/_ext", "book/_static", "report/assets", "report/report_builder"):
+        names |= {
+            path.relative_to(records_root).as_posix()
+            for path in (records_root / directory).rglob("*")
+            if path.is_file()
+        }
     for name in ("python_sources", "data_files", "verifier"):
         names |= set((components.get(name) or {}).keys())
     return {name: _sha256_file(records_root / name) for name in sorted(names)}
@@ -283,6 +298,20 @@ def _source_hashes(records_root: Path, spec: dict, fingerprint: dict) -> dict:
 
 def _manifest(entries: list[dict]) -> dict:
     return {"schema_version": 1, "kind": evidence_store.MANIFEST_KIND, "entries": entries}
+
+
+def new_run_id(section: str, mode: str, stamp: str | None = None) -> str:
+    """Give concurrent same-second runs distinct evidence namespaces."""
+    stamp = stamp or datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    return f"d1pf-{section}-{stamp}-{mode}-{uuid.uuid4().hex}"
+
+
+def write_new(path: Path, data: bytes) -> None:
+    """Create a record once; an existing run is never replaced."""
+    with path.open("xb") as output:
+        output.write(data)
+        output.flush()
+        os.fsync(output.fileno())
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -313,10 +342,11 @@ def main(argv: list[str] | None = None) -> int:
     mirror = evidence_store.store_from_env("PROJECTS_ARTIFACT_MIRROR", role="mirror")
 
     commit, dirty = worktree_state(project)
-    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
-    run_id = f"d1pf-{args.section}-{stamp}-{args.mode}"
+    if dirty:
+        raise SystemExit("D1-preflight requires a clean project worktree")
+    run_id = new_run_id(args.section, args.mode)
     work = args.work.resolve() / run_id
-    work.mkdir(parents=True)
+    work.mkdir(parents=True, exist_ok=False)
     observed = run_check(project, args.config.resolve(), args.section, work)
     fingerprint = observed["fingerprint"]
     runtime = observed["runtime"]
@@ -325,9 +355,10 @@ def main(argv: list[str] | None = None) -> int:
     record_dir = records_root / record_dir_rel
     record_dir.mkdir(parents=True, exist_ok=True)
     raw_path = record_dir / f"{run_id}.browser.json"
-    raw_path.write_bytes(observed["raw_browser_record"])
+    write_new(raw_path, observed["raw_browser_record"])
+    raw_relative = f"{record_dir_rel}/{run_id}.browser.json"
     checks = {
-        "browser": _browser_check(observed, _sha256_file(raw_path)),
+        "browser": _browser_check(observed, _sha256_file(raw_path), raw_relative),
         "runtime_probe": {"status": runtime.get("status", "FAIL"), **observed["probe_run"]},
         "pytest": observed["pytest"],
     }
@@ -402,6 +433,7 @@ def main(argv: list[str] | None = None) -> int:
         environment={
             "runtime": {key: runtime.get(key) for key in evidence_fingerprint.RUNTIME_KEYS},
             "static": fingerprint["components"].get("environment"),
+            "fingerprint_config": "scripts/evidence_dependencies.json",
             "records_commit": _git(records_root, "rev-parse", "HEAD"),
             "driver_sha256": driver_provenance(records_root),
         },
@@ -414,8 +446,8 @@ def main(argv: list[str] | None = None) -> int:
         observations=observations,
     )
     record_path = record_dir / f"{run_id}.json"
-    record_path.write_text(
-        json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    write_new(
+        record_path, (json.dumps(record, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
     )
     print(
         json.dumps(

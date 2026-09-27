@@ -28,9 +28,9 @@ NORMALIZATION_RULES = (
     "Sphinx auto-generated anchor ids (id<N>) are renamed by order of first appearance",
     "An inline plotly.js bundle is replaced by its sha256 and fingerprinted as a shared asset",
     "Notebook cell ids and execution counts are dropped (not rendered by Book or portal)",
-    "Package __init__ modules are not followed when collecting hullkit sources",
+    "Imported package __init__ modules and their static imports are included",
 )
-RUNTIME_KEYS = ("browser_version", "mathjax_version", "fonts")
+RUNTIME_KEYS = ("browser_version", "mathjax_version", "mathjax_scripts", "fonts")
 DEFAULT_CONFIG = Path(__file__).with_name("evidence_dependencies.json")
 
 _UUID_RE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
@@ -231,36 +231,72 @@ def _module_file(src: Path, module: str) -> Path | None:
     base = src.joinpath(*module.split("."))
     if base.with_suffix(".py").is_file():
         return base.with_suffix(".py")
+    if (base / "__init__.py").is_file():
+        return base / "__init__.py"
     return None
 
 
 def python_closure(project: Path | str, modules: list[str], package: str = "hullkit") -> dict:
-    """Whole-file hashes of the listed modules and the package modules they import."""
+    """Whole-file hashes of modules, package initializers, and static imports."""
     project = Path(project)
     src = project / package / "src"
-    pending = list(modules)
+    pending = [(module, True) for module in modules]
     seen: dict[str, str] = {}
     while pending:
-        module = pending.pop()
+        module, required = pending.pop()
+        if module in seen:
+            continue
         path = _module_file(src, module)
-        if path is None or module in seen:
+        if path is None:
+            if required:
+                raise ValueError(f"missing Python module {module}")
             continue
         data = path.read_bytes()
         seen[module] = path.relative_to(project).as_posix()
         tree = ast.parse(data)
-        parent = module.rsplit(".", 1)[0]
+        parent = module if path.name == "__init__.py" else module.rsplit(".", 1)[0]
+        dynamic_names = {"__import__", "exec", "eval"}
         for node in ast.walk(tree):
+            if isinstance(node, ast.Import) and any(
+                alias.name.split(".")[0] == "importlib" for alias in node.names
+            ):
+                raise ValueError(f"dynamic import machinery in {module}")
+            if isinstance(node, ast.ImportFrom) and node.module == "importlib":
+                raise ValueError(f"dynamic import machinery in {module}")
+            if isinstance(node, ast.ImportFrom) and node.module in {"importlib", "builtins"}:
+                dynamic_names.update(
+                    alias.asname or alias.name
+                    for alias in node.names
+                    if alias.name in {"import_module", "__import__", "exec", "eval"}
+                )
+        for index in range(1, len(module.split("."))):
+            pending.append((".".join(module.split(".")[:index]), True))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call) and (
+                (isinstance(node.func, ast.Name) and node.func.id in dynamic_names)
+                or (isinstance(node.func, ast.Attribute) and node.func.attr == "import_module")
+            ):
+                raise ValueError(f"dynamic import in {module}")
             if isinstance(node, ast.Import):
-                pending.extend(alias.name for alias in node.names)
+                pending.extend(
+                    (alias.name, True)
+                    for alias in node.names
+                    if alias.name.split(".")[0] == package
+                )
             elif isinstance(node, ast.ImportFrom):
                 base = node.module or ""
                 if node.level:
-                    anchor = parent.rsplit(".", node.level - 1)[0] if node.level > 1 else parent
+                    parent_parts = parent.split(".")
+                    if node.level > len(parent_parts):
+                        raise ValueError(f"invalid relative import in {module}")
+                    anchor = ".".join(parent_parts[: len(parent_parts) - node.level + 1])
                     base = f"{anchor}.{base}" if base else anchor
                 if base.split(".")[0] != package:
                     continue
-                pending.append(base)
-                pending.extend(f"{base}.{alias.name}" for alias in node.names)
+                pending.append((base, True))
+                if any(alias.name == "*" for alias in node.names):
+                    raise ValueError(f"wildcard package import in {module}")
+                pending.extend((f"{base}.{alias.name}", False) for alias in node.names)
     closure = {}
     for relative in sorted(seen.values()):
         closure[relative] = _sha256_bytes((project / relative).read_bytes())

@@ -5,7 +5,9 @@ from __future__ import annotations
 import errno
 import hashlib
 import json
+import multiprocessing
 import os
+from pathlib import Path
 
 import pytest
 
@@ -137,7 +139,8 @@ def test_put_is_idempotent_and_leaves_no_temporary_files(primary):
     primary.put_bytes(PNG)
     primary.put_bytes(PNG)
     shard = primary.root / "sha256" / _digest(PNG)[:2]
-    assert [path.name for path in shard.iterdir()] == [_digest(PNG)]
+    assert not list(shard.glob(".tmp-*"))
+    assert primary.read_verified(_digest(PNG)) == PNG
 
 
 def test_put_refuses_to_replace_a_corrupted_existing_blob(primary):
@@ -173,30 +176,126 @@ def test_truncated_blob_is_detected(primary):
         primary.read_verified(info["sha256"], info["bytes"])
 
 
-def test_put_fallback_never_overwrites_a_file_that_appears_during_publish(primary, monkeypatch):
+def test_put_fallback_publishes_only_complete_bytes_after_an_interruption(primary, monkeypatch):
     digest = _digest(PNG)
     final = primary.blob_path(digest)
     original_open = os.open
-    appeared = False
 
     def unsupported_link(_source, _target):
         raise OSError(errno.EPERM, "hardlinks unsupported")
 
-    def competing_open(path, flags, mode=0o777, *, dir_fd=None):
-        nonlocal appeared
-        if str(path) == str(final) and flags & os.O_EXCL:
-            appeared = True
-            final.write_bytes(b"competing writer")
+    def interrupted_open(path, flags, mode=0o777, *, dir_fd=None):
         if dir_fd is None:
-            return original_open(path, flags, mode)
-        return original_open(path, flags, mode, dir_fd=dir_fd)
+            descriptor = original_open(path, flags, mode)
+        else:
+            descriptor = original_open(path, flags, mode, dir_fd=dir_fd)
+        if str(path) == str(final) and flags & os.O_EXCL:
+            os.close(descriptor)
+            raise SystemExit("simulated process interruption after creating canonical path")
+        return descriptor
 
     monkeypatch.setattr(os, "link", unsupported_link)
-    monkeypatch.setattr(os, "open", competing_open)
+    monkeypatch.setattr(os, "open", interrupted_open)
+    try:
+        primary.put_bytes(PNG)
+    except SystemExit as exc:
+        assert "simulated process interruption" in str(exc)
+    assert final.read_bytes() == PNG
+
+
+def test_put_fallback_never_overwrites_a_file_that_appears_during_publish(primary, monkeypatch):
+    digest = _digest(PNG)
+    final = primary.blob_path(digest)
+    appeared = False
+
+    def unsupported_link(_source, _target):
+        nonlocal appeared
+        if not appeared:
+            appeared = True
+            final.write_bytes(b"competing writer")
+        raise OSError(errno.EPERM, "hardlinks unsupported")
+
+    monkeypatch.setattr(os, "link", unsupported_link)
     with pytest.raises(StoreError, match=r"existing blob|size mismatch|digest mismatch"):
         primary.put_bytes(PNG)
     assert appeared
     assert final.read_bytes() == b"competing writer"
+
+
+def _put_without_links_in_process(root, data, started, rename_entered, release, done):
+    from johnhull.scripts import evidence_store
+
+    def unsupported_link(_source, _target):
+        raise OSError(errno.EPERM, "hardlinks unsupported")
+
+    original_publish = evidence_store._publish_without_overwrite
+
+    def announced_publish(temporary, final):
+        started.set()
+        original_publish(temporary, final)
+
+    evidence_store._publish_without_overwrite = announced_publish
+    os.link = unsupported_link
+    if rename_entered is not None:
+        original_rename = os.rename
+
+        def paused_rename(source, target):
+            rename_entered.set()
+            if not release.wait(10):
+                raise TimeoutError("publication was not released")
+            original_rename(source, target)
+
+        os.rename = paused_rename
+    Store.open(root).put_bytes(data)
+    done.set()
+
+
+@pytest.mark.parametrize(
+    "other_data,second_finishes_while_first_waits",
+    [(PNG, False), (PNG + b"other", True)],
+    ids=["same-digest", "other-digest"],
+)
+def test_put_fallback_coordinates_processes_per_digest(
+    primary, other_data, second_finishes_while_first_waits, monkeypatch
+):
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[3]))
+    context = multiprocessing.get_context("spawn")
+    first_started = context.Event()
+    first_rename_entered = context.Event()
+    release = context.Event()
+    first_done = context.Event()
+    second_started = context.Event()
+    second_done = context.Event()
+    first = context.Process(
+        target=_put_without_links_in_process,
+        args=(primary.root, PNG, first_started, first_rename_entered, release, first_done),
+    )
+    second = context.Process(
+        target=_put_without_links_in_process,
+        args=(primary.root, other_data, second_started, None, None, second_done),
+    )
+    try:
+        first.start()
+        assert first_rename_entered.wait(5)
+        assert not primary.blob_path(_digest(PNG)).exists()
+        second.start()
+        assert second_started.wait(5)
+        assert second_done.wait(5 if second_finishes_while_first_waits else 0.2) is (
+            second_finishes_while_first_waits
+        )
+        assert not primary.blob_path(_digest(PNG)).exists()
+    finally:
+        release.set()
+        for process in (first, second):
+            if process.pid is not None:
+                process.join(5)
+                if process.is_alive():
+                    process.terminate()
+                    process.join(5)
+    assert first.exitcode == second.exitcode == 0
+    assert first_done.is_set() and second_done.is_set()
+    assert primary.blob_path(_digest(PNG)).read_bytes() == PNG
+    assert primary.blob_path(_digest(other_data)).read_bytes() == other_data
 
 
 # --- paths and manifests --------------------------------------------------------
