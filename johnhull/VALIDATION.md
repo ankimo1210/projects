@@ -18,7 +18,7 @@ integration gate を満たすことだけを表す。実市場での予測力、
 - 利付の非転換債の生存確率別キャッシュフロー恒等式は1.5e-14ドル以下。無信用・無コールの400段ツリーはBSM分解と0.0065ドル以内。粗い格子値と連続時間極限を区別した。
 - 公開APIは3枝確率と転換社債ツリー、vol06 §10.1–10.6の12セルとBook/portal共有4図。§10以外の70セルはM12基点`44272e45`と本文・保存出力が同じ（後続2見出しの番号変更のみ）。4改変を拒否。
 - ChromiumでBook/portal×1440/1000pxの16状態・16画像、数値改変拒否、Book MathJaxエラー0、portal外部要求0を確認。既受入§26.9–§27.3の12節を個別テスト・両画面でM13再検証。
-- hullkit+report **2,786 passed / 6 skipped**（既存deprecation warning 2件）。19 core notebooks、`ruff check johnhull`、変更Pythonの`ruff format --check`、release contract、台帳`--check-artifacts`はPASS。
+- hullkit+report **2,786 passed / 6 skipped**（既存deprecation warning 2件）。19 core notebooks、`ruff check johnhull`、変更Pythonの`ruff format --check`、release contract、台帳`--check-artifacts`、commit後のstrict tracked gateはPASS。M13はローカルcommit `ff3ada12`、remoteには未反映。
 - 時変・株価依存ハザード、契約別のコール・転換・利息条件、市場較正、実市場価格・ヘッジ成績は受入範囲外。
 
 ## Section 27.3 M12 — 2026-09-27
