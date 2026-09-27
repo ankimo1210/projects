@@ -34,8 +34,19 @@ def sabr_black_vol(F, K, T, alpha, beta, rho, nu):
 
 
 def sabr_alpha_from_atm_vol(F, T, atm_vol, beta, rho, nu):
-    """Alpha that reproduces a target ATM Black vol (so beta can move without moving the ATM level)."""
-    return brentq(lambda a: sabr_black_vol(F, F, T, a, beta, rho, nu) - atm_vol, 1e-8, 10.0)
+    """Smallest positive alpha reproducing the target ATM Black vol; nan if none exists.
+
+    With x = alpha / F**(1-beta), the Hagan ATM approximation is a cubic in x.
+    Its large-alpha branch can turn down, so a fixed outer bracket can miss a root.
+    """
+    if F <= 0 or T <= 0 or atm_vol <= 0:
+        return np.nan
+    c0 = 1 + T * (2 - 3 * rho**2) * nu**2 / 24
+    c1 = T * rho * beta * nu / 4
+    c2 = T * (1 - beta) ** 2 / 24
+    roots = np.roots([c2, c1, c0, -atm_vol])
+    positive = [z.real for z in roots if z.real > 0 and abs(z.imag) < 1e-10 * max(1, abs(z.real))]
+    return min(positive) * F ** (1 - beta) if positive else np.nan
 
 
 def calibrate_sabr(F, T, strikes, market_vols, beta, x0=None):

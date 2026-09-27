@@ -10,7 +10,7 @@
 
 ## 完成条件
 
-1. worktree で `PYTHONPATH=rates_volatility_model/src .venv/bin/python -m pytest rates_volatility_model/tests -q` が緑（単体 60 + ノートブック実行 1 = 61）。統合後の editable 導入・再実行は別途確認する
+1. worktree で `PYTHONPATH=rates_volatility_model/src .venv/bin/python -m pytest rates_volatility_model/tests -q` が緑（単体 62 + ノートブック実行 1 = 63）。統合後の editable 導入・再実行は別途確認する
 2. ノートブックのモデル関数はすべて `ratesvol` から import しており、同名関数の再定義が無い
 3. 2026-09-27 レビューの指摘 17 件（下表）がすべて解消している
 4. README と本ファイルが実態と一致し、旧生成スクリプト・分割ノートブック・旧検証スクリプトが無い
@@ -28,18 +28,22 @@
 | 7 | Vasicek・G2++ のヒストグラムに重ねた密度が 100 倍ずれていた（% 軸に小数の pdf） | pdf を 1/100 |
 | 8 | Vasicek キャリブで r0 を 6M ゼロ金利に固定し短期で 21bp 外れていた。カーブだけでは b と σ が識別できない旨の説明が無かった | r0 も推定、識別性の注記 |
 | 9 | G2++ の φ(t) が定数 2% で、カーブにフィットしていなかった | Brigo-Mercurio の φ(t)。MC で初期カーブ再現をテスト |
-| 10 | SABR の α を vol-of-vol と説明、弱点を「短い満期」と記載、スライダーで β を動かすと ATM 水準が跳ぶ | 文言修正、ATM vol から α を逆算 |
+| 10 | SABR の α を vol-of-vol と説明、弱点を「短い満期」と記載、スライダーで β を動かすと ATM 水準が跳ぶ | 文言修正、ATM vol から最小の正の α を逆算し、解が無い設定は案内を表示 |
 | 11 | Ch10 に複利計算が無い。SONIA・€STR を政策金利と記載、「RFR は単一カーブ」 | `compounded_in_arrears` のデモ、事実関係を修正 |
 | 12 | SVI の無裁定条件が必要条件だけ（文は 4/T、コードは 4）で g(k) 検査が無い | g(k) ≥ 0 をペナルティと検査に |
 | 13 | 25Δ ストライクを ATM vol で求めていた | スマイル整合デルタ |
 | 14 | SABR 式が 3 か所に重複、セルの章ずれ（LMM が Ch9、SABR 表が Ch10） | `ratesvol.smile` に一本化、迷子セル削除 |
 | 15 | 再生成パイプラインが壊れていた（part1 生成器が無い、付録は統合版にしか無い＝再統合で 7 セル消える） | 生成器と分割版を廃止し、統合ノートブックを正本に |
 | 16 | `VALIDATION_SUMMARY.md`（46 セル・6 テスト・完了）と `SABR_CORRECTION.md` が実態と不一致、`venv/` は空 | 本ファイルと README に置き換え |
-| 17 | CIR の Feller 条件を「非負の条件」と説明（実際は 0 に到達しない条件） | 文言修正 |
+| 17 | CIR の Feller 条件を「非負の条件」と説明（実際は 0 に到達しない条件） | 見出しと本文を修正 |
 
 ## 検証
 
-- 2026-09-27: `PYTHONPATH=rates_volatility_model/src /home/kazumasa/projects/.venv/bin/python -m pytest rates_volatility_model/tests -q` → `61 passed in 10.26s`（worktree `rates-vol-completion`、NumPy 2.4.6）。
+- 2026-09-27: `PYTHONPATH=rates_volatility_model/src /home/kazumasa/projects/.venv/bin/python -m pytest rates_volatility_model/tests -q` → `63 passed in 10.35s`（worktree `rates-vol-completion`、NumPy 2.4.6）。
 - `ruff check rates_volatility_model/src rates_volatility_model/tests` → `All checks passed!`。`ruff format --check` → `14 files already formatted`。
 - ノートブック 71 セルを検証。保存出力は PNG 11 件、error 出力 0 件、kernelspec は `python3`。実行テストはウィジェットのコールバックも強制実行する。
 - 通常のヘッドレス `nbconvert --execute` は対話型サーフェスの初回描画で時間切れになるため、保存出力だけは初回ウィジェット描画を抑えて生成した。ソースは元へ戻しており、対話型の初回表示は Jupyter でセルを再実行すれば描画される。
+
+## 既知の残件
+
+- Ch11 のセル `bf4cde9e` では市場点の横軸だけ `%` への ×100 が欠落し、曲線と市場点がずれて表示される。旧版から存在し、今回の 17 件の対象外。
