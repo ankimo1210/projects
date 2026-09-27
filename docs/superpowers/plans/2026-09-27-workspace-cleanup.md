@@ -163,6 +163,9 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 `_archive/scratch/2026-04/` へ移す。現役コードからの参照はなく、
 ノート本体と保存済み出力を保持する。機能の後継は未確定で、再実行も未検証。
 退避理由・元の配置・再開方法は [_archive/scratch の索引](../../../_archive/scratch/README.md) に残す。
+また `_docs` にあった quant_research の調査・レビュー5件は、内容の正本となる
+[プロジェクト内の調査記録](../../../analytics/quant_research/docs/reviews/README.md) へ移す。
+記録時点の主張と現行実装を混同しない索引を付け、ノート内の旧 `_docs` パス参照だけを更新する。
 
 ## 実施順と完了条件
 

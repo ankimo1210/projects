@@ -3,7 +3,7 @@
 作成日: 2026-08-11
 対象: `analytics/quant_research` / B11（Week 41–44）
 実施者: Claude（リポジトリ内ファイルは未変更）
-関連: `_docs/2026-08-10-quant-research-curriculum-alignment-feedback.md` 追記8 §4
+関連: `./2026-08-10-quant-research-curriculum-alignment-feedback.md` 追記8 §4
 
 ## 要点
 
