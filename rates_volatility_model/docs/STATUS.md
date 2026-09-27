@@ -2,7 +2,7 @@
 
 更新日: 2026-09-27
 
-状態: `rates-vol-completion` ブランチで実装・worktree 検証済み。main への統合と共有 `.venv` への editable 導入は未実施。
+状態: main に統合済み（マージ `b7480742`）。共有 `.venv` への editable 導入と統合後の検証も完了。
 
 ## ゴール
 
@@ -10,7 +10,7 @@
 
 ## 完成条件
 
-1. worktree で `PYTHONPATH=rates_volatility_model/src .venv/bin/python -m pytest rates_volatility_model/tests -q` が緑（単体 62 + ノートブック実行 1 = 63）。統合後の editable 導入・再実行は別途確認する
+1. main で `uv sync --all-packages --inexact` 後、`uv run --no-sync pytest rates_volatility_model/tests -q` が緑（単体 62 + ノートブック実行 1 = 63）
 2. ノートブックのモデル関数はすべて `ratesvol` から import しており、同名関数の再定義が無い
 3. 2026-09-27 レビューの指摘 17 件（下表）がすべて解消している
 4. README と本ファイルが実態と一致し、旧生成スクリプト・分割ノートブック・旧検証スクリプトが無い
@@ -39,7 +39,7 @@
 
 ## 検証
 
-- 2026-09-27: `PYTHONPATH=rates_volatility_model/src /home/kazumasa/projects/.venv/bin/python -m pytest rates_volatility_model/tests -q` → `63 passed in 10.35s`（worktree `rates-vol-completion`、NumPy 2.4.6）。
+- 2026-09-27: worktree で `PYTHONPATH=/home/kazumasa/rates-vol-completion-20260927/rates_volatility_model/src /home/kazumasa/projects/.venv/bin/python -m pytest rates_volatility_model/tests -q` → `63 passed in 10.10s`。main で `uv sync --all-packages --inexact` → `rates-volatility-model==0.2.0` を editable 導入し、`uv run --no-sync pytest rates_volatility_model/tests -q` → `63 passed in 11.14s`。
 - `ruff check rates_volatility_model/src rates_volatility_model/tests` → `All checks passed!`。`ruff format --check` → `14 files already formatted`。
 - ノートブック 71 セルを検証。保存出力は PNG 11 件、error 出力 0 件、kernelspec は `python3`。実行テストはウィジェットのコールバックも強制実行する。
 - 保存出力は通常のヘッドレス `nbconvert` で再生成した（128.9 秒、35/35 コードセル実行、error 0、PNG 11 件）。worktree では以下をリポジトリルートから実行する。
@@ -47,6 +47,8 @@
 ```bash
 PYTHONPATH="$(pwd)/rates_volatility_model/src" /home/kazumasa/projects/.venv/bin/python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=120 rates_volatility_model/rates_volatility_models.ipynb
 ```
+
+main の共有 `.venv` から再生成する場合は、リポジトリルートで `uv run --no-sync python -m nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=120 rates_volatility_model/rates_volatility_models.ipynb` を実行する。
 
 - G2++ 対話セル `7aaa0880` の終了から次のコードセルまで 119.7 秒の待ちがあった。原因は未特定。短い全体タイムアウトではここで停止する。
 
