@@ -11,6 +11,7 @@ dependencies = [
     "plotly>=5.22",
     "duckdb>=1.0",
     "pytz>=2024.1",
+    "yfinance>=0.2.50",
 ]
 
 [project.scripts]
