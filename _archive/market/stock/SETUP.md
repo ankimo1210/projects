@@ -2,7 +2,7 @@
 
 stockkit の環境構築手順。所要時間: 10〜20分（API キー取得を含む）。
 
-> 📦 stockkit は [projects monorepo](../README.md) の uv workspace メンバー。`.venv` はワークスペース全体で共有されます。
+> 📦 stockkit は [projects monorepo](../../../README.md) の uv workspace メンバー。`.venv` はワークスペース全体で共有されます。
 
 ---
 

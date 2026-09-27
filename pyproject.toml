@@ -15,9 +15,7 @@ members = [
     "agent-profiler",
     "JHRMBS",
     "gto",
-    "market-viz",
     "market-research",
-    "stock",
     "nbody-gpu",
     "line_backup",
     "akinator",
@@ -123,8 +121,6 @@ ignore = [
 "aisan_lbo_case/**/*.py" = ["N803", "N806", "N816", "E741"]
 "models/**/*.py" = ["N803", "N806", "N816", "E741"]
 "deep_hedge_price/**/*.py" = ["N803", "N806", "N816", "E741"]
-# stockkit: h / l / c is the universal OHLC spelling in market data code.
-"stock/**/*.py" = ["N803", "N806", "N816", "E741"]
 # The SPARQL bodies are full of literal { } braces, so %-format is the one
 # style that does not need every brace escaped.
 "akinator/scripts/fetch_wikidata_entities.py" = ["UP031"]
@@ -159,9 +155,7 @@ testpaths = [
     "agent-profiler/tests",
     "JHRMBS/tests",
     "gto/tests",
-    "market-viz/tests",
     "market-research/tests",
-    "stock/tests",
     "nbody-gpu/tests",
     "line_backup/tests",
     "akinator/tests",

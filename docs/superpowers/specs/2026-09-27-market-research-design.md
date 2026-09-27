@@ -90,8 +90,8 @@ market-research/
 | 正本にする層 | 採用元 | 引き継ぐもの / 変更点 |
 |---|---|---|
 | 取得器の共通 IF・診断 | [quantkit data/base](../../../quantkit/src/quantkit/data/base.py)、[quality](../../../quantkit/src/quantkit/data/quality.py) | FetchResult の data/quality/meta 分離。cache key に provider・adjustment・頻度・通貨・契約版を追加 |
-| J-Quants / yfinance / Stooq | [quantkit connectors](../../../quantkit/src/quantkit/data/connectors/) | 新契約に正規化。[stock providers](../../../stock/src/stockkit/data/providers/) の銘柄対応・財務は差分テストで補完 |
-| crypto | [market-viz loaders](../../../market-viz/src/market_viz/data/loaders.py) と quantkit Binance | provider は別ID。二つの価格を黙って継ぎ足さない |
+| J-Quants / yfinance / Stooq | [quantkit connectors](../../../quantkit/src/quantkit/data/connectors/) | 新契約に正規化。[stock providers](../../../_archive/market/stock/src/stockkit/data/providers/) の銘柄対応・財務は差分テストで補完 |
+| crypto | [market-viz loaders](../../../_archive/market/market-viz/src/market_viz/data/loaders.py) と quantkit Binance | provider は別ID。二つの価格を黙って継ぎ足さない |
 | PIT・snapshot | [macrokit pit](../../../macrokit/src/macrokit/pit.py)、[store](../../../macrokit/src/macrokit/store.py)、[snapshot](../../../macrokit/src/macrokit/snapshot.py) | timezone-aware 公表時刻と vintage_kind を採用。quantkit の DataFrame IF は薄い読取変換へ |
 | 研究評価 | [quantkit backtest](../../../quantkit/src/quantkit/backtest/engine.py)、[split](../../../quantkit/src/quantkit/backtest/split.py) | 単一の評価エンジン。欠損・コスト・約定基準・lag を追加契約で固定 |
 | 可視化・HTML | [quantkit visualization](../../../quantkit/src/quantkit/visualization/)、[共通テンプレート](../../templates/claude-report/README.md) | レポートの token を共通化。UI は market-viz の操作を参照 |
