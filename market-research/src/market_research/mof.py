@@ -10,6 +10,7 @@ import json
 import math
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
+from zoneinfo import ZoneInfo
 
 from .contracts import MacroObservation, _utc
 from .fetch import FetchError, HttpClient
@@ -19,6 +20,7 @@ BASE = "https://www.mof.go.jp/jgbs/reference/interest_rate"
 HISTORY_URL = f"{BASE}/data/jgbcm_all.csv"
 CURRENT_URL = f"{BASE}/jgbcm.csv"
 ERA_OFFSET = {"S": 1925, "H": 1988, "R": 2018}
+JST = ZoneInfo("Asia/Tokyo")
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,12 +99,20 @@ def _parse_csv(raw: bytes, tenor: float) -> dict[date, float]:
     return values
 
 
-def _envelope(key: CacheKey, history: bytes, current: bytes | None) -> bytes:
+def _month(when: datetime) -> tuple[int, int]:
+    local = when.astimezone(JST)
+    return local.year, local.month
+
+
+def _envelope(
+    key: CacheKey, history: bytes, current: bytes | None, history_fetched_at: datetime
+) -> bytes:
     return _json(
         {
             "key_digest": key.digest,
             "history": base64.b64encode(history).decode(),
             "current": base64.b64encode(current).decode() if current is not None else None,
+            "history_fetched_at": history_fetched_at,
         }
     ).encode()
 
@@ -126,12 +136,21 @@ def ingest_mof_jgb(
         if pending["key_digest"] != request.key.digest:
             raise ValueError("MoF pending snapshot does not match request")
         history = base64.b64decode(pending["history"])
+        fetched = pending.get("history_fetched_at")
+        history_fetched_at = (
+            _utc(datetime.fromisoformat(fetched), "history_fetched_at") if fetched else None
+        )
     else:
+        history_fetched_at = None
+    if history_fetched_at is None or _month(history_fetched_at) != _month(
+        _utc(now(), "observed_at")
+    ):
+        history_fetched_at = _utc(now(), "observed_at")
         history = http.get(HISTORY_URL)
     try:
         current = http.get(CURRENT_URL)
     except FetchError as error:
-        raw = _envelope(request.key, history, None)
+        raw = _envelope(request.key, history, None, history_fetched_at)
         store.save(
             request.key,
             raw,
@@ -142,6 +161,9 @@ def ingest_mof_jgb(
         raise FetchError(
             error.category, status=error.status, partial_raw=raw, cursor="current"
         ) from None
+    if _month(history_fetched_at) != _month(_utc(now(), "observed_at")):
+        history_fetched_at = _utc(now(), "observed_at")
+        history = http.get(HISTORY_URL)
     historical = _parse_csv(history, request.tenor_years)
     recent = _parse_csv(current, request.tenor_years)
     values = historical.copy()
@@ -150,7 +172,7 @@ def ingest_mof_jgb(
             raise ValueError("conflicting MoF yields across files")
         values[day] = value
     observed = _utc(now(), "observed_at")
-    raw = _envelope(request.key, history, current)
+    raw = _envelope(request.key, history, current, history_fetched_at)
     digest = hashlib.sha256(raw).hexdigest()
     rows = tuple(
         MacroObservation(

@@ -107,7 +107,7 @@ def ingest_sec_companyfacts(
     raw = (client or HttpClient()).get(BASE.format(cik=request.cik), headers={"User-Agent": agent})
     rows = _parse_companyfacts(raw, request)
     observed = _utc(now(), "observed_at")
-    if any(row.available_at > observed for row in rows):
+    if any(row.filed > observed.astimezone(NY).date() for row in rows):
         raise ValueError("SEC filing date lies after this snapshot")
     snapshot = store.save(request.key, raw, observed_at=observed, fundamentals=rows)
     return SecResult(snapshot, rows)

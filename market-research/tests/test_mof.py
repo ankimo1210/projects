@@ -19,14 +19,14 @@ R8.9.26,0.6,1.4
 
 
 class Client:
-    def __init__(self, *, fail_current=False, current=CURRENT):
-        self.fail_current, self.current = fail_current, current
+    def __init__(self, *, fail_current=False, current=CURRENT, history=HISTORY):
+        self.fail_current, self.current, self.history = fail_current, current, history
         self.urls = []
 
     def get(self, url):
         self.urls.append(url)
         if url == HISTORY_URL:
-            return HISTORY
+            return self.history
         if url == CURRENT_URL:
             if self.fail_current:
                 raise FetchError("network")
@@ -64,3 +64,42 @@ def test_overlap_conflict_is_rejected_instead_of_arbitrarily_choosing_a_file(tmp
         ingest_mof_jgb(store, MoFRequest(10), client=Client(current=changed), now=lambda: NOW)
     with ResearchStore(tmp_path) as store:
         assert store.macro_view("JP_JGB_10Y", NOW, "mof_jgb") == ()
+
+
+@pytest.mark.parametrize(
+    ("failed_at", "resumed_at", "old_history", "new_history", "new_current", "missing_day"),
+    [
+        (
+            NOW,
+            datetime(2026, 10, 2, 12, tzinfo=UTC),
+            HISTORY,
+            HISTORY + "R8.9.26,0.6,1.4\n".encode("cp932"),
+            "国債金利情報,,\n日付,2年,10年\nR8.10.2,0.7,1.5\n".encode("cp932"),
+            date(2026, 9, 26),
+        ),
+        (
+            datetime(2026, 12, 31, 12, tzinfo=UTC),
+            datetime(2027, 1, 2, 12, tzinfo=UTC),
+            "国債金利情報,,\n日付,2年,10年\nR8.12.29,0.5,1.2\n".encode("cp932"),
+            "国債金利情報,,\n日付,2年,10年\nR8.12.29,0.5,1.2\nR8.12.30,0.6,1.4\n".encode("cp932"),
+            "国債金利情報,,\n日付,2年,10年\nR9.1.2,0.7,1.5\n".encode("cp932"),
+            date(2026, 12, 30),
+        ),
+    ],
+)
+def test_resume_across_mof_file_rollover_refetches_history(
+    tmp_path, failed_at, resumed_at, old_history, new_history, new_current, missing_day
+):
+    request = MoFRequest(10)
+    with ResearchStore(tmp_path) as store:
+        with pytest.raises(FetchError):
+            ingest_mof_jgb(
+                store,
+                request,
+                client=Client(fail_current=True, history=old_history),
+                now=lambda: failed_at,
+            )
+        source = Client(history=new_history, current=new_current)
+        result = ingest_mof_jgb(store, request, client=source, now=lambda: resumed_at, resume=True)
+        assert source.urls == [HISTORY_URL, CURRENT_URL]
+        assert missing_day in [row.period_start for row in result.rows]

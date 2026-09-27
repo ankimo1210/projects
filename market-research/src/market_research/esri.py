@@ -197,6 +197,26 @@ class _Links(HTMLParser):
             self.href = None
 
 
+class _Headings(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.headings: list[str] = []
+        self.active: list[str] | None = None
+
+    def handle_starttag(self, tag, attrs):
+        if tag in ("title", "h1"):
+            self.active = []
+
+    def handle_data(self, data):
+        if self.active is not None:
+            self.active.append(data)
+
+    def handle_endtag(self, tag):
+        if tag in ("title", "h1") and self.active is not None:
+            self.headings.append("".join(self.active))
+            self.active = None
+
+
 def select_series_url(menu_html: bytes, menu_url: str, *, label: str = LABEL) -> str:
     links = _Links()
     links.feed(menu_html.decode("utf-8", errors="replace"))
@@ -217,13 +237,43 @@ def select_series_url(menu_html: bytes, menu_url: str, *, label: str = LABEL) ->
     return matches[0]
 
 
-def _menu_url(request: EsriGdpRequest) -> str:
-    if request.menu_override:
-        return request.menu_override
+def _expected_menu_url(request: EsriGdpRequest) -> str:
     year = request.period_start.year
     quarter = (request.period_start.month - 1) // 3 + 1
     suffix = "_2" if request.release_kind == "2nd_prelim" else ""
     return f"{MENU_BASE}/{year}/qe{year % 100:02d}{quarter}{suffix}/gdemenuja.html"
+
+
+def _menu_url(request: EsriGdpRequest) -> str:
+    return request.menu_override or _expected_menu_url(request)
+
+
+def _validate_release_menu(request: EsriGdpRequest, menu_url: str, menu: bytes) -> None:
+    if request.release_kind != "2nd_prelim_revised":
+        if menu_url != _expected_menu_url(request):
+            raise ValueError("ESRI GDP menu URL does not match release period and kind")
+        return
+    headings = _Headings()
+    headings.feed(menu.decode("utf-8", errors="replace"))
+    year, month = request.period_start.year, request.period_start.month
+    period_labels = (f"{year}年{month}-{month + 2}月期",)
+    if 1989 <= year <= 2018:
+        period_labels += (f"平成{year - 1988}年{month}-{month + 2}月期",)
+    if year >= 2019:
+        period_labels += (f"令和{year - 2018}年{month}-{month + 2}月期",)
+    for heading in headings.headings:
+        normalized = re.sub(r"\s+", "", unicodedata.normalize("NFKC", heading))
+        if any(period in normalized for period in period_labels) and all(
+            word in normalized for word in ("2次速報", "改定")
+        ):
+            return
+    raise ValueError("ESRI GDP menu heading does not identify revised release")
+
+
+def _validate_csv_url(csv_url: str, menu_url: str) -> None:
+    csv_url = _official_url(csv_url)
+    if not csv_url.startswith(menu_url.rsplit("/", 1)[0] + "/"):
+        raise ValueError("ESRI GDP CSV URL is outside release menu directory")
 
 
 def parse_gdp_csv(raw: bytes, column: str) -> dict[date, float]:
@@ -288,6 +338,9 @@ def ingest_esri_gdp(
         raise ValueError("GDP request does not match the release event")
     if event.release_at > _utc(now(), "observed_at"):
         raise ValueError("GDP release is still scheduled")
+    menu_url = _menu_url(request)
+    if request.release_kind != "2nd_prelim_revised" and menu_url != _expected_menu_url(request):
+        raise ValueError("ESRI GDP menu URL does not match release period and kind")
     http = client or HttpClient()
     pending = None
     if resume:
@@ -304,9 +357,10 @@ def ingest_esri_gdp(
         menu = base64.b64decode(pending["menu"])
         csv_url = _official_url(pending["csv_url"])
     else:
-        menu_url = _menu_url(request)
         menu = http.get(menu_url)
         csv_url = select_series_url(menu, menu_url, label=request.series_label)
+    _validate_release_menu(request, menu_url, menu)
+    _validate_csv_url(csv_url, menu_url)
     try:
         csv_raw = http.get(csv_url)
     except FetchError as error:
@@ -318,6 +372,8 @@ def ingest_esri_gdp(
             error.category, status=error.status, partial_raw=raw, cursor="csv"
         ) from None
     values = parse_gdp_csv(csv_raw, request.column)
+    if max(values) != request.period_start:
+        raise ValueError("ESRI GDP CSV final quarter does not match release period")
     observed = _utc(now(), "observed_at")
     if event.release_at > observed:
         raise ValueError("GDP release is still scheduled")

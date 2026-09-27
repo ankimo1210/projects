@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import math
 import time
 from datetime import UTC, datetime
@@ -25,6 +26,42 @@ class FetchError(RuntimeError):
         self.status = status
         self.partial_raw = partial_raw
         self.cursor = cursor
+
+
+def parse_json_response(raw: bytes) -> dict:
+    """Discard malformed source text before raising a printable error."""
+    try:
+        payload = json.loads(raw)
+    except (ValueError, UnicodeError):
+        payload = None
+    if not isinstance(payload, dict):
+        raise FetchError("invalid_response")
+    return payload
+
+
+def redact_json_response(raw: bytes, credential: str) -> tuple[dict, bytes]:
+    """Remove decoded credential echoes before a JSON response is retained."""
+    payload = parse_json_response(raw)
+
+    def scrub(value):
+        if isinstance(value, dict):
+            return {
+                key.replace(credential, "[REDACTED]"): (
+                    "[REDACTED]"
+                    if "".join(ch for ch in key.lower() if ch.isalnum()) in {"apikey", "appid"}
+                    else scrub(item)
+                )
+                for key, item in value.items()
+            }
+        if isinstance(value, list):
+            return [scrub(item) for item in value]
+        if isinstance(value, str):
+            return value.replace(credential, "[REDACTED]")
+        return value
+
+    safe = scrub(payload)
+    content = json.dumps(safe, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return safe, content.encode()
 
 
 class _NoRedirect(HTTPRedirectHandler):

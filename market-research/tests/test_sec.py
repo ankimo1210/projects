@@ -139,3 +139,42 @@ def test_sec_requires_identifying_user_agent_and_rejects_cik_mismatch(tmp_path):
                 user_agent="Research example@example.org",
                 now=lambda: NOW,
             )
+
+
+def test_same_day_filing_can_be_saved_before_estimated_availability(tmp_path):
+    observed = datetime(2026, 9, 27, 17, tzinfo=UTC)
+    payload = {
+        "cik": 320193,
+        "facts": {
+            "us-gaap": {
+                "Assets": {
+                    "units": {
+                        "USD": [
+                            {
+                                "end": "2026-09-27",
+                                "val": 200,
+                                "accn": "0000320193-26-000003",
+                                "form": "10-K",
+                                "filed": "2026-09-27",
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+    }
+    with ResearchStore(tmp_path) as store:
+        result = ingest_sec_companyfacts(
+            store,
+            SecRequest(320193, "us-gaap", "Assets", "USD", "10-K"),
+            client=Client(payload),
+            user_agent="Research example@example.org",
+            now=lambda: observed,
+        )
+        assert store.snapshot_fundamental_view(result.snapshot, observed) == ()
+        assert (
+            store.snapshot_fundamental_view(result.snapshot, datetime(2026, 9, 28, 4, tzinfo=UTC))[
+                0
+            ].value
+            == 200
+        )

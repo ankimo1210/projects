@@ -10,7 +10,7 @@ from datetime import UTC, date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 from .contracts import MacroObservation, _utc
-from .fetch import FetchError, HttpClient
+from .fetch import FetchError, HttpClient, redact_json_response
 from .storage import CacheKey, CacheUnavailableError, ResearchStore, Snapshot, _json
 
 URL = "https://api.stlouisfed.org/fred/series/observations"
@@ -168,7 +168,7 @@ def fetch_alfred(
                 partial_raw=_envelope(key.digest, limit, pages, offset),
                 cursor=str(offset),
             ) from None
-        payload = json.loads(raw)
+        payload, safe = redact_json_response(raw, secret)
         if not isinstance(payload.get("observations"), list):
             raise ValueError("ALFRED response lacks observations")
         count = int(payload["count"])
@@ -176,7 +176,6 @@ def fetch_alfred(
         observations = payload["observations"]
         if response_offset != offset or count < 0 or len(observations) > limit:
             raise ValueError("invalid ALFRED page bounds")
-        safe = raw.replace(secret.encode(), b"[REDACTED]")
         pages.append(base64.b64encode(safe).decode())
         offset += len(observations)
         if offset >= count:
@@ -188,9 +187,10 @@ def fetch_alfred(
     else:
         raise ValueError("ALFRED page limit exceeded")
     observed = _utc(now(), "observed_at")
-    return AlfredBatch(
-        key, _envelope(key.digest, limit, pages, offset), _parse_pages(pages, request), observed
-    )
+    rows = _parse_pages(pages, request)
+    if any(row.source_release_date > observed.astimezone(NY).date() for row in rows):
+        raise ValueError("ALFRED vintage date is after retrieval")
+    return AlfredBatch(key, _envelope(key.digest, limit, pages, offset), rows, observed)
 
 
 def ingest_alfred(

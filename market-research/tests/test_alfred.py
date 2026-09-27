@@ -176,3 +176,24 @@ def test_ingest_result_is_scoped_to_its_requested_snapshot(tmp_path):
             store, request(), client=source, api_key="secret", now=lambda: NOW, limit=2
         )
         assert [item.period_start for item in result.rows] == [date(2025, 1, 1)]
+
+
+def test_same_day_release_can_be_saved_but_not_read_until_next_ny_day(tmp_path):
+    observed = datetime(2026, 9, 27, 17, tzinfo=UTC)
+    source = Pages({0: page(0, 1, [row("2025-01-01", "2026-09-27", "103")])})
+    with ResearchStore(tmp_path) as store:
+        result = ingest_alfred(
+            store,
+            request(realtime_end=date(2026, 9, 27)),
+            client=source,
+            api_key="secret",
+            now=lambda: observed,
+            limit=2,
+        )
+        assert store.snapshot_macro_view(result.snapshot, observed) == ()
+        assert (
+            store.snapshot_macro_view(result.snapshot, datetime(2026, 9, 28, 4, tzinfo=UTC))[
+                0
+            ].value
+            == 103
+        )
