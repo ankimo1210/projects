@@ -1,8 +1,8 @@
 # ワークスペース整理計画
 
-更新日: 2026-09-28（工程0–4の初版完了を反映）
+更新日: 2026-09-28（工程5の第一群と工程6の個別調査を反映）
 
-状態: 工程0–4は初版の整理・統合・個別退避を完了。工程6は ratesvol / hullkit / deep_hedge_price の個別調査を終え、独立継続を決定。工程5の容量移管と D1-preflight は継続中。
+状態: 工程0–4は初版の整理・統合・個別退避を完了。工程5は保管庫の2コピー・D1-preflightと新規再検査画像の第一群を実証済み。残る大容量群は個別 gate 前のため現状維持。工程6は ratesvol / hullkit / deep_hedge_price の個別調査を終え、独立継続を決定。
 工程3c/3dの採用範囲は[受入記録](../../../market-research/docs/STAGE3_ACCEPTANCE.md)、工程4の退避は[旧市場索引](../../../_archive/market/README.md)を参照。quantkit・macrokitも固有機能のため独立継続。以下の初回調査の数値は5852c526時点。
 
 ## 目的と決まった方針
@@ -400,10 +400,18 @@ ratesvol の63テスト（ノートブック含む）と hullkit の関連56テ�
 ratesvol と hullkit は SABR の独立照合を維持し、deep_hedge_price は PyTorch 学習系として独立継続とする。
 実際の二重保守が生じた関数だけ再評価する。ルート索引の関連表示を更新した。
 
-工程5では johnhull の D1-preflight が別 worktree で進行中。
-同じ保管庫を扱う保存器の二重実装を main に入れず、D1 側の保存・復元契約へ一本化してから
-小群の完全監査と既存ファイルの移管判断を行う。M15 の開始条件は
-[証跡方針](../../../johnhull/docs/EVIDENCE_POLICY.md)に従う。
+## 工程5の第一群（2026-09-28）
+
+保存器を johnhull の [D1 実装](../../../johnhull/scripts/evidence_store.py)に一本化した。
+C: と別ディスクの F: の不変保管庫を実機で検証。§27.4 の
+[4画像の小群](../../../johnhull/docs/validation/ARTIFACT_STORE_PILOT.md)は
+2コピーから復元し、出典・入力ハッシュを照合した。
+[§27.3 の D1-preflight](../../../johnhull/docs/validation/d1-preflight/README.md)は
+全再描画と基準再利用、変更伝播、2コピー復元、既存 gate を通した。
+新規再検査画像16枚の実体は保管庫に置き、Git には参照と検証記録を残す。
+既存受入画像・履歴には触れていない。johnhull/references/processed、
+market_nn、models、quant-agent-benchmark の候補は、各群固有の復元・品質 gate
+が揃うまで現状維持とする。
 
 ## レビュー記録
 

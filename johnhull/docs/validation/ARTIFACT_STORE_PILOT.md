@@ -28,7 +28,8 @@ python johnhull/scripts/evidence_store.py verify   johnhull/docs/validation/arti
 ```
 
 §27.4 の対象テスト15件、台帳のソース照合、release 契約は PASS。
-専用 worktree で Book HTML を再生成した際は CSS URL の版識別子が既存 M14 の
-ハッシュと異なり、台帳の `--check-artifacts` は FAIL。main の既存生成物では PASS
-だった。この差は既存証跡の書換えで解消しない。D1 の全工程・M15 の開始条件が
-満たされたという判定にも使わない。
+専用 worktree の Book 初回ビルドは CSS URL の版識別子が欠け、
+台帳の `--check-artifacts` は FAIL。CSS 配置後に
+`jupyter-book build johnhull/book/ --all` で再ビルドすると、
+既存 M14 のハッシュと一致して PASS した。既存証跡は書き換えていない。
+D1 全体の判定は[実証記録](d1-preflight/README.md)に分ける。
