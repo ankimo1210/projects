@@ -43,6 +43,7 @@ members = [
     "portfolio-analyzer",
     "macrokit",
     "timesfm_lab",
+    "rates_volatility_model",
 ]
 
 # PyTorch CUDA 12.8 — used by `gto`. Defined here so all workspace members
@@ -142,7 +143,6 @@ ignore = [
 "**/download_*.py" = ["E402"]
 "**/recompute_*.py" = ["E402"]
 "**/build_*.py" = ["E402"]
-"rates_volatility_model/test_suite_validation.py" = ["E402"]
 # __init__.py commonly re-exports symbols; allow F401 there.
 "**/__init__.py" = ["F401"]
 # gto solver: low-level GPU code uses single-letter math notation.
@@ -191,6 +191,7 @@ testpaths = [
     "labor_ai_quadrant/tests",
     "macrokit/tests",
     "timesfm_lab/tests",
+    "rates_volatility_model/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

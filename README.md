@@ -37,7 +37,7 @@
 | [`optimal_execution/`](optimal_execution/) | 最適執行ビジュアルラボ（Almgren-Chriss / OW / 反応型 LOB / PPO、日英レポート） | Python / Jupyter |
 | [`deep_hedge_price/`](deep_hedge_price/) | Deep Hedging デモ（PyTorch 方策で短期コールをヘッジ、BS / no-hedge 比較） | Python / PyTorch |
 | [`jp_llm_lab/`](jp_llm_lab/) | 日本語小型 LLM 教育ラボ（30M 級モデルを実走、可視化ファースト、静的サイト出力） | Python / PyTorch |
-| [`rates_volatility_model/`](rates_volatility_model/) | 金利ボラティリティ・モデリングのリサーチノート | Python / Jupyter |
+| [`rates_volatility_model/`](rates_volatility_model/) | 金利ボラティリティモデルの学習ノート（Black-76〜HJM/LMM/SABR/SVI、テスト付きパッケージ `ratesvol`） | Python / Jupyter |
 | [`market_nn/`](market_nn/) | LOB予測論文の一次資料・公式コード差分を追跡する構造再現スイート | Python / PyTorch |
 | [`aisan_lbo_case/`](aisan_lbo_case/) | アイサンテクノロジー (4667.T) 非公開化 LBO ケーススタディ（公開情報ベース、HTML レポート出力） | Python / Jupyter |
 | [`labor_ai_quadrant/`](labor_ai_quadrant/) | 人手不足の深刻度 × AI代替可能性の4象限フレームワーク（東証33業種・個別銘柄、オフライン HTML レポート） | Python / Plotly |
@@ -97,8 +97,8 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 
 - 対応プラットフォーム: **WSL2 (Ubuntu) を主**とし、ネイティブ Windows (PowerShell) と macOS でも動作（差分は下記セットアップ参照）
 - Python は **ルート単一の uv workspace** で管理（`.venv` は repo root に1個）
-  - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `jp_llm_lab`, `labor_ai_quadrant`, `macrokit`, `timesfm_lab`, `market_nn`, `portfolio-analyzer`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
-  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` / `monster_gate` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`rates_volatility_model` / `notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` / `interactive-email-demo` は依存なし（前者は `PYTHONPATH=shortest_path/src` で実行）
+  - workspace メンバー（正は root `pyproject.toml` の `[tool.uv.workspace]`）: `agent-profiler`, `JHRMBS`, `gto`, `market-viz`, `stock`, `nbody-gpu`, `line_backup`, `akinator`, `autostock`, `health`, `quantkit`, `deep_hedge_price`, `optimal_execution`, `rough_volatility`, `rates_volatility_model`, `jp_llm_lab`, `labor_ai_quadrant`, `macrokit`, `timesfm_lab`, `market_nn`, `portfolio-analyzer`, `johnhull/hullkit`、`analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}` と `analytics/differential_equation/{ode-book,pde-book}`（`analytics/report` のみメンバー外）
+  - 例外: `aisan_lbo_case` は `requirements.txt`、`csharp_calc` / `CsharpApp` は .NET、`EitanQuest` / `NeonThread` / `WSET` / `My Tianjin` は Xcode (Swift)、`ts-rosetta` / `b737-ops-sim` / `monster_gate` は pnpm、`pokemon` は npm、`eagle` は Rust (cargo) + npm、`notebooks` / `models` / `kaggle` は env 管理なし、`shortest_path` / `interactive-email-demo` は依存なし（前者は `PYTHONPATH=shortest_path/src` で実行）
   - `WSET/wset_l3_question_corpus` は**ワークスペース外の独立 uv プロジェクト**（自前の `pyproject.toml` / `uv.lock`）。root の `uv sync --all-packages` では依存が入らないので、そのディレクトリで個別に sync する（詳細は同 README）
 - AI コラボ前提（Claude Code / Copilot）。エージェント向け規約は `CLAUDE.md` と `AGENTS.md` を参照
 
