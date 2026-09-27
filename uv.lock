@@ -39,6 +39,7 @@ members = [
     "line-backup-exporter",
     "lob-paper-reproductions",
     "macrokit",
+    "market-research",
     "market-viz",
     "ml-textbook",
     "nbody-gpu",
@@ -3420,6 +3421,37 @@ wheels = [
 [package.optional-dependencies]
 linkify = [
     { name = "linkify-it-py" },
+]
+
+[[package]]
+name = "market-research"
+version = "0.1.0"
+source = { editable = "market-research" }
+dependencies = [
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "plotly" },
+    { name = "streamlit" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "numpy", specifier = ">=1.26" },
+    { name = "pandas", specifier = ">=2.2" },
+    { name = "plotly", specifier = ">=5.22" },
+    { name = "streamlit", specifier = ">=1.51" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "pytest", specifier = ">=8" },
+    { name = "ruff", specifier = ">=0.6" },
 ]
 
 [[package]]
