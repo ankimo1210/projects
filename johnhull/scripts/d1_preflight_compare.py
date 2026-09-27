@@ -285,11 +285,17 @@ def _source_hashes(records_root: Path, spec: dict, fingerprint: dict) -> dict:
         "book/_config.yml",
         "book/_toc.yml",
     }
-    for directory in ("book/_ext", "book/_static", "report/assets", "report/report_builder"):
+    source_suffixes = {
+        "book/_ext": {".py"},
+        "book/_static": {".js", ".css"},
+        "report/assets": {".css", ".js"},
+        "report/report_builder": {".py"},
+    }
+    for directory, suffixes in source_suffixes.items():
         names |= {
             path.relative_to(records_root).as_posix()
             for path in (records_root / directory).rglob("*")
-            if path.is_file()
+            if path.is_file() and path.suffix in suffixes and "__pycache__" not in path.parts
         }
     for name in ("python_sources", "data_files", "verifier"):
         names |= set((components.get(name) or {}).keys())

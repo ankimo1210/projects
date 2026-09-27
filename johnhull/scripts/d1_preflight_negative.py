@@ -366,9 +366,15 @@ def run_controls(
     )
 
     runtime = baseline["environment"]["runtime"]
+    changed_mathjax = copy.deepcopy(runtime["mathjax_scripts"])
+    changed_mathjax[0]["sha256"] = "0" * 64
+    changed_fonts = copy.deepcopy(runtime["fonts"])
+    first_selector = next(iter(changed_fonts))
+    changed_fonts[first_selector][0]["sha256"] = "0" * 64
     for key, value in (
         ("browser_version", "146.0.0.0"),
-        ("fonts", {"portal_plot_text": ["DejaVu Sans"]}),
+        ("mathjax_scripts", changed_mathjax),
+        ("fonts", changed_fonts),
     ):
         mismatched = evidence_fingerprint.runtime_mismatches(runtime, runtime | {key: value})
         edited = copy.deepcopy(reused)

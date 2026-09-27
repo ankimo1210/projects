@@ -221,6 +221,7 @@ def test_source_hashes_pin_section_inputs_but_not_the_driver(tmp_path):
         "book/_static/require.min.js": b"// js",
         "report/assets/style.css": b"body {}",
         "report/report_builder/render.py": b"# render",
+        "report/report_builder/__pycache__/render.cpython-312.pyc": b"ignored bytecode",
     }
     for name in DRIVER_FILES:
         files[name] = b"driver"
