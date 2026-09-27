@@ -1,0 +1,470 @@
+{
+  "schema_version": 2,
+  "kind": "johnhull-section-recheck",
+  "status": "PASS",
+  "run_id": "d1pf-27.3-20260927T220449Z-redraw",
+  "created_at": "2026-09-27T22:05:02.131937+00:00",
+  "commit": "7cc7f41df3bf0c4e61802e3992b2a9d737507a07",
+  "dirty": false,
+  "section_id": "27.3",
+  "decision": "redrawn",
+  "reasons": [
+    "D1-preflight stage 3: full redraw"
+  ],
+  "dependency_fingerprint": {
+    "section_id": "27.3",
+    "rules": {
+      "fingerprint_schema": 1,
+      "normalizer_version": 1,
+      "normalization": [
+        "Plotly div UUIDs are renamed by order of first appearance within a slice",
+        "Sphinx auto-generated anchor ids (id<N>) are renamed by order of first appearance",
+        "An inline plotly.js bundle is replaced by its sha256 and fingerprinted as a shared asset",
+        "Notebook cell ids and execution counts are dropped (not rendered by Book or portal)",
+        "Package __init__ modules are not followed when collecting hullkit sources"
+      ]
+    },
+    "components": {
+      "notebook_slice": "8a0ad6f694fe8aa09cfc0ccf12c6ed9f7a686dc1088fa848c6f1085ddce15dfb",
+      "notebook_shared_assets": [
+        "cef0e322ca434b712776e98b2709050fd54c53187afdbf4bfd04722041c2f3ee"
+      ],
+      "book_section": "182722e98aabb888975c38183fa7665259ae218e5141f664c3d3fcdc6ec05be0",
+      "book_assets": {
+        "local": {
+          "book/_build/html/_static/clipboard.min.js": "261ffa06f381039cf7d18984d1364c59f3c2b9b60b1fa05d5f9c8c152e4d5be5",
+          "book/_build/html/_static/copybutton.css": "0f7c9f303bd3058bdc9db7263fe560c0a41f3526729ce1f00ccab527724c5476",
+          "book/_build/html/_static/copybutton.js": "89ee4163ba2fdd47404883ebc81bf93f696f6ab02aa5795331a8ff7161e9e256",
+          "book/_build/html/_static/design-tabs.js": "de2467cfca5bb555043369f1eea82c9cd794e70fa0444f216aa4ebb18cefc9f0",
+          "book/_build/html/_static/doctools.js": "81cb2da3c284e429a1a63ab28a20b7e30bceb8eb1556a154c8cbac0b4ce7795b",
+          "book/_build/html/_static/documentation_options.js": "47b8afcb442c0349307d7c464ed881d903dba4271c8428d44c3c3f78aa1af20c",
+          "book/_build/html/_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css": "11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e",
+          "book/_build/html/_static/pygments.css": "66f472fe9022ecdf197c5abc2b437f123c349c85f8741219a42963c77eb14920",
+          "book/_build/html/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+          "book/_build/html/_static/scripts/bootstrap.js": "f4b2b6f5d4bf7ebd727eec8f512a3b419ba97dfa5a361f8a419e8ab087f77352",
+          "book/_build/html/_static/scripts/fontawesome.js": "3255175d1c4cfe78e9f5e8fab69afc6a7002e6e793c2c669c12bb9cacad33b9a",
+          "book/_build/html/_static/scripts/pydata-sphinx-theme.js": "f264bd85cd58f330ce33afffc7839c247a93498680ab7968d7d2d1ddecf955fe",
+          "book/_build/html/_static/scripts/sphinx-book-theme.js": "20f5c4379fa2fa1af248209415a03ef275f18d4dc56fd2db6c3f6ae2c87ab18b",
+          "book/_build/html/_static/sphinx-design.min.css": "eb53d5c272ecc4d93a04605b3d42aa6942858e634bb9686d32d576203a0033ba",
+          "book/_build/html/_static/sphinx-thebe.css": "da591f8cfbc259361ee704d861877be843aaee54f67aed9bda27be1a0f3d3a80",
+          "book/_build/html/_static/sphinx-thebe.js": "bbdfa292b3885f2c3af48ee6d3ea13658afac228ac35d45b39ffa2ed902a1334",
+          "book/_build/html/_static/sphinx_highlight.js": "096231e9c87df80ec3273da9c5b71bc81503206726a07a4dd4de44c256ff859c",
+          "book/_build/html/_static/styles/pydata-sphinx-theme.css": "218db1720af3aa73ee8b997003ae097f87cb997cec296426ef2885d01a1eaa02",
+          "book/_build/html/_static/styles/sphinx-book-theme.css": "dcc916931d8a6e224a4584c5a89f8c3a6e741f048960f91662f5a9a1281cef99",
+          "book/_build/html/_static/styles/theme.css": "c5ad46e4d126fbddecf0ece57fc8345279fac39110306ac7e643f0d4505423f7",
+          "book/_build/html/_static/togglebutton.css": "33f384087b19f23dc8e64faa0b88c6d5c37ddefa9d89dc60a66efd3da2edd0b7",
+          "book/_build/html/_static/togglebutton.js": "a8995912efab60a1a4277dc13d269fb8de05d6b82f49a1981ac557fbcad0bb55"
+        },
+        "external": [
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+        ],
+        "inline_bundles": [
+          "cef0e322ca434b712776e98b2709050fd54c53187afdbf4bfd04722041c2f3ee"
+        ]
+      },
+      "portal_cards": {
+        "ivf_smile": "85063f6321d6ee073a432c156aad40e1509d4fea6e9974bd1fd793ccee852586",
+        "ivf_local": "cd39f0f64f9869fd4cf228ef49e2d39e061e430d30f8a98c4776098c1c014be0",
+        "ivf_repricing": "e42492d457a01233d09b26dc67003367d25ed7b86097b6189874c498b1b9a9e7",
+        "ivf_joint": "233e7515de32c0c7824d19f082b724069167ac27f3ceecbd458558d5366fde20"
+      },
+      "portal_assets": {
+        "local": {
+          "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+          "report/site/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+        },
+        "external": []
+      },
+      "python_sources": {
+        "hullkit/src/hullkit/_local_volatility_lesson.py": "f957ab42b0f9e60227b4cf37d42bfd25b7f608acd0c1126699cd88f5053fc76f",
+        "hullkit/src/hullkit/local_volatility.py": "c6ac1f3fe096ed5761b47649366975b4dfd529f7e9f27522491e1744f785eb8d"
+      },
+      "data_files": {
+        "docs/validation/section-27-3/reference.json": "70e1aef8b7f1dfa71e66744482f5886f5f06351cb1f988c907b3b1372dfbf36c",
+        "docs/validation/section-27-3/numerical-check.json": "3b003c323cd11716b9b1c1122066c901f65534c496c4af753e1a37c8601744bd"
+      },
+      "verifier": {
+        "scripts/verify_local_volatility_browser.cjs": "759efb1d856951d5abce2fb0d17c498da2771efbfcaf8345c8671234da5e10aa"
+      },
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "environment": {
+        "node": "v26.7.0",
+        "playwright": "1.56.0",
+        "chromium_bin": "chrome",
+        "fonts": {
+          "Noto Sans JP": {
+            "file": "NotoSans-Regular.ttf",
+            "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+          },
+          "sans-serif": {
+            "file": "NotoSans-Regular.ttf",
+            "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+          }
+        },
+        "locale": "C.UTF-8",
+        "timezone": null
+      }
+    },
+    "unknown": [],
+    "digest": "8f71f617514eece8cf9b80a84defd902e6e5d7559915b991afbfeb03f8c9a177"
+  },
+  "baseline": null,
+  "images": [
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/book-ivf_joint-1000.png",
+      "ref": "artifact:sha256:a39f1b210e90c74676a62808b6260d5fae2c7af3c5ab8849919b5765af9007cc",
+      "bytes": 18659,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/book-ivf_joint-1440.png",
+      "ref": "artifact:sha256:da1d46ab7251889a4460c1492596a60d7e3371a667b0edb8d3bbe91d4eef51b9",
+      "bytes": 18762,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/book-ivf_local-1000.png",
+      "ref": "artifact:sha256:7dc272b4f5d131acb0a633fe1b916890132396cb1783492c4a6f00901d0e812b",
+      "bytes": 36136,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/book-ivf_local-1440.png",
+      "ref": "artifact:sha256:b257eb4af9d92fe3679dd0b65075e6e2c7b4c58cd9a077d8aad2890a727d6dd6",
+      "bytes": 38168,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/book-ivf_repricing-1000.png",
+      "ref": "artifact:sha256:b00ab01d9b4b2ee26748580620fe2ac6edbcfcd2de328a461617ab5614663e44",
+      "bytes": 24493,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/book-ivf_repricing-1440.png",
+      "ref": "artifact:sha256:0500acf78f5834eb1b213d2e1bc2a6c9517f8eab1ded7658442ea469ed16bdf8",
+      "bytes": 24296,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/book-ivf_smile-1000.png",
+      "ref": "artifact:sha256:6e062bc6a6be3d12cabf9804d5d4c049db1cdfa3d6470c4e61bacb74edb259a5",
+      "bytes": 38483,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/book-ivf_smile-1440.png",
+      "ref": "artifact:sha256:f9aaaddb68eaa9b23706b3fee8639dae9936b726d3f3474ce7f1d12a8da35cf3",
+      "bytes": 38789,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/portal-ivf_joint-1000.png",
+      "ref": "artifact:sha256:1291d9e707096c118a10e201f7a9dedbb3ccc2db935cb42b29fd253fafad7295",
+      "bytes": 14409,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/portal-ivf_joint-1440.png",
+      "ref": "artifact:sha256:1cdd2fc981d829a895f34b541a07610dceca19ba799425257be5d5a7d4128ee1",
+      "bytes": 14405,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/portal-ivf_local-1000.png",
+      "ref": "artifact:sha256:53277ff62300c08c8f58d63cb41260239960525ba41cd13ce70e5b00c67adb73",
+      "bytes": 26895,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/portal-ivf_local-1440.png",
+      "ref": "artifact:sha256:5149eaa66685f957501be91420f60759e33689fcbb516e04816a51c402750792",
+      "bytes": 27795,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/portal-ivf_repricing-1000.png",
+      "ref": "artifact:sha256:f270ca5132bf3767c9a3cd6bca89a54f7a0ff275ccc5ffae4ed61ee5cdda191c",
+      "bytes": 17745,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/portal-ivf_repricing-1440.png",
+      "ref": "artifact:sha256:76d879517a5b5dee7a6bb2c084212440beae3a9c60843228df4dd5796dbd0a1e",
+      "bytes": 18037,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/portal-ivf_smile-1000.png",
+      "ref": "artifact:sha256:449aedf06f5f60c86d3aac31fdb4a1db5f68217c368997d5184d8adab6c25ab9",
+      "bytes": 27857,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T220449Z-redraw/portal-ivf_smile-1440.png",
+      "ref": "artifact:sha256:b32f4552194d3cde039c0eb339a6dcd48e38eb88dd555072594bd673d2cefbfc",
+      "bytes": 28648,
+      "mime": "image/png"
+    }
+  ],
+  "checks": {
+    "browser": {
+      "status": "PASS",
+      "browser_version": "145.0.7632.6",
+      "state_checks": 16,
+      "screenshots": 16,
+      "coverage": [
+        [
+          "book",
+          "ivf_joint",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "ivf_joint",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "ivf_local",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "ivf_local",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "ivf_repricing",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "ivf_repricing",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "ivf_smile",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "ivf_smile",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "ivf_joint",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "ivf_joint",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "ivf_local",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "ivf_local",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "ivf_repricing",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "ivf_repricing",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "ivf_smile",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "ivf_smile",
+          1440,
+          true
+        ]
+      ],
+      "book_math": {
+        "rendered": 201,
+        "errors": 0
+      },
+      "numeric_mutation_rejected": {
+        "portal": true,
+        "book": true
+      },
+      "raw_record_sha256": "088f784a5ec1eef30d44975b8c30156226dccdb805ad2d40b43f5234aac702db",
+      "wrapper": {
+        "verifier": "scripts/verify_local_volatility_browser.cjs",
+        "original_sha256": "759efb1d856951d5abce2fb0d17c498da2771efbfcaf8345c8671234da5e10aa",
+        "executed_sha256": "791a96a4bfb4d3e42ada0b648310aceb670e6207a646a070eec9719a8a96109c",
+        "wrapper_sha256": "562ed6b693760c0c35a96c328bcdd5db3771e39f995989847a0fe21d99739509",
+        "renames": [
+          {
+            "from": "'10. Longstaff-Schwartz'",
+            "to": "'12. Longstaff-Schwartz'"
+          },
+          {
+            "from": "'11. 練習問題'",
+            "to": "'13. 練習問題'"
+          }
+        ],
+        "overlay_root_redirect": true
+      },
+      "seconds": 6.07
+    },
+    "runtime_probe": {
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 3.43
+    },
+    "pytest": {
+      "status": "PASS",
+      "passed": 14,
+      "exit_code": 0,
+      "summary": "14 passed in 1.83s",
+      "seconds": 2.74,
+      "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_local_volatility.py hullkit/tests/test_local_volatility_lesson.py report/tests/test_local_volatility_notebook.py"
+    }
+  },
+  "environment": {
+    "runtime": {
+      "browser_version": "145.0.7632.6",
+      "mathjax_version": "3.2.2",
+      "fonts": {
+        "book_heading": [
+          "Droid Sans Fallback",
+          "Liberation Sans"
+        ],
+        "book_body": [
+          "Droid Sans Fallback",
+          "Liberation Sans"
+        ],
+        "portal_heading": [
+          "Droid Sans Fallback",
+          "Liberation Sans"
+        ],
+        "portal_plot_text": [
+          "Liberation Sans"
+        ]
+      }
+    },
+    "static": {
+      "node": "v26.7.0",
+      "playwright": "1.56.0",
+      "chromium_bin": "chrome",
+      "fonts": {
+        "Noto Sans JP": {
+          "file": "NotoSans-Regular.ttf",
+          "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+        },
+        "sans-serif": {
+          "file": "NotoSans-Regular.ttf",
+          "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+        }
+      },
+      "locale": "C.UTF-8",
+      "timezone": null
+    },
+    "records_commit": "7cc7f41df3bf0c4e61802e3992b2a9d737507a07",
+    "driver_sha256": {
+      "scripts/d1_preflight_compare.py": "668327dfa00ec9750bde8dbc44cb35f3f4175bb608d79042fe70e7f3339c507a",
+      "scripts/run_browser_verifier.cjs": "562ed6b693760c0c35a96c328bcdd5db3771e39f995989847a0fe21d99739509",
+      "scripts/probe_render_runtime.cjs": "bb84da823177664e0ed195641c64884bd12d4d8219308254a0bc4f27a681294d",
+      "scripts/evidence_fingerprint.py": "4261cfad2a69e4febbbee1ce5dc616623f8f9c8b283c9655726051f7e57e9d73",
+      "scripts/evidence_record.py": "9cae853d825f5bab2ed51cf6efff06be70f797942e0850fb333fbf7ae34496eb",
+      "scripts/evidence_store.py": "a457e2e11db686f75c702f6c2a4f7af2637274f72fd51a27069884dc3c47811e",
+      "scripts/evidence_dependencies.json": "a8eefb797d87793ccc03b2d3cbd155295674ee248e7e3d6fdaba08f311d6f548"
+    }
+  },
+  "storage_verification": {
+    "status": "PASS",
+    "primary": {
+      "status": "PASS",
+      "entries": 16,
+      "bytes": 413577
+    },
+    "mirror": {
+      "status": "PASS",
+      "entries": 16,
+      "bytes": 413577
+    },
+    "checked_at": "2026-09-27T22:05:02.131925+00:00"
+  },
+  "source_sha256": {
+    "docs/validation/section-27-3/numerical-check.json": "3b003c323cd11716b9b1c1122066c901f65534c496c4af753e1a37c8601744bd",
+    "docs/validation/section-27-3/reference.json": "70e1aef8b7f1dfa71e66744482f5886f5f06351cb1f988c907b3b1372dfbf36c",
+    "hullkit/src/hullkit/_local_volatility_lesson.py": "f957ab42b0f9e60227b4cf37d42bfd25b7f608acd0c1126699cd88f5053fc76f",
+    "hullkit/src/hullkit/local_volatility.py": "c6ac1f3fe096ed5761b47649366975b4dfd529f7e9f27522491e1744f785eb8d",
+    "hullkit/tests/test_local_volatility.py": "adeb848a71b535d7d6677adca99a70f89015cb80cef7012d107610f1e5a0930e",
+    "hullkit/tests/test_local_volatility_lesson.py": "32e1cd2241ba9b8981959575a345639307c72c4f4c7725bb94c7ff67ed8779df",
+    "report/tests/test_local_volatility_notebook.py": "a2369b4248641ca14182ee634f28cbb1a1b107b68af20e8a067f6e29879b8a7f",
+    "scripts/verify_local_volatility_browser.cjs": "759efb1d856951d5abce2fb0d17c498da2771efbfcaf8345c8671234da5e10aa",
+    "volumes/06_numerical_methods/numerical.ipynb": "21e56333b5d8c9879d9315fc54f9d4ca8e29b569d9752065c142b5930335e740"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "c9b043a5427dd28d3c702e1d731eb76d355122514ea0433358458776df0af9eb",
+    "book/_build/html/notebooks/06_numerical.html": "45f3ebbd10f14d69483ceed956a45fdede34f88ea30cb016768dceb87eab7912"
+  },
+  "observations": {
+    "capture_sha256": {
+      "book-ivf_joint-1000.png": "a39f1b210e90c74676a62808b6260d5fae2c7af3c5ab8849919b5765af9007cc",
+      "book-ivf_joint-1440.png": "da1d46ab7251889a4460c1492596a60d7e3371a667b0edb8d3bbe91d4eef51b9",
+      "book-ivf_local-1000.png": "7dc272b4f5d131acb0a633fe1b916890132396cb1783492c4a6f00901d0e812b",
+      "book-ivf_local-1440.png": "b257eb4af9d92fe3679dd0b65075e6e2c7b4c58cd9a077d8aad2890a727d6dd6",
+      "book-ivf_repricing-1000.png": "b00ab01d9b4b2ee26748580620fe2ac6edbcfcd2de328a461617ab5614663e44",
+      "book-ivf_repricing-1440.png": "0500acf78f5834eb1b213d2e1bc2a6c9517f8eab1ded7658442ea469ed16bdf8",
+      "book-ivf_smile-1000.png": "6e062bc6a6be3d12cabf9804d5d4c049db1cdfa3d6470c4e61bacb74edb259a5",
+      "book-ivf_smile-1440.png": "f9aaaddb68eaa9b23706b3fee8639dae9936b726d3f3474ce7f1d12a8da35cf3",
+      "portal-ivf_joint-1000.png": "1291d9e707096c118a10e201f7a9dedbb3ccc2db935cb42b29fd253fafad7295",
+      "portal-ivf_joint-1440.png": "1cdd2fc981d829a895f34b541a07610dceca19ba799425257be5d5a7d4128ee1",
+      "portal-ivf_local-1000.png": "53277ff62300c08c8f58d63cb41260239960525ba41cd13ce70e5b00c67adb73",
+      "portal-ivf_local-1440.png": "5149eaa66685f957501be91420f60759e33689fcbb516e04816a51c402750792",
+      "portal-ivf_repricing-1000.png": "f270ca5132bf3767c9a3cd6bca89a54f7a0ff275ccc5ffae4ed61ee5cdda191c",
+      "portal-ivf_repricing-1440.png": "76d879517a5b5dee7a6bb2c084212440beae3a9c60843228df4dd5796dbd0a1e",
+      "portal-ivf_smile-1000.png": "449aedf06f5f60c86d3aac31fdb4a1db5f68217c368997d5184d8adab6c25ab9",
+      "portal-ivf_smile-1440.png": "b32f4552194d3cde039c0eb339a6dcd48e38eb88dd555072594bd673d2cefbfc"
+    },
+    "stored_new_bytes": 413577,
+    "seconds": {
+      "verifier": 6.07,
+      "probe": 3.43,
+      "pytest": 2.74
+    }
+  }
+}

@@ -28,9 +28,9 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 | 章単位（Hull 11e 全 37 章） | 上表の 14 行すべて done（2026-06-08） | 章に巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol 13–28） | すべて done | A1–A4（vol 13–17）、A5–A8 G8 release（vol 18–25）、vol 26・27・28 |
 | 全節監査の是正 | 第 1〜5 便完了 | 残りは下の「全節監査と是正」の表 |
-| 節単位の受入 | M14（§27.5）まで。台帳は受入 14・未評価 292（4.6%） | 次は D1-preflight、その後 M15（§27.6）。全体計画は下の「完了までの計画」 |
+| 節単位の受入 | M14（§27.5）まで。台帳は受入 14・未評価 292（4.6%） | 次は M15（§27.6）。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
-| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | D1-preflight 実施中（段階1–4 完了：保管庫 C:/F:、依存指紋、schema 2 記録、§27.3 の全再描画/基準再利用の比較、負の対照 16 件）。M15 はその完了後 |
+| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | [D1-preflight 完了](docs/validation/d1-preflight/README.md)（保管庫 C:/F:、依存指紋、schema 2 記録、§27.3 の全再描画/基準再利用、負の対照 16 件、既存 gate）。次は M15 |
 | テスト | hullkit+report 2810 passed・6 skipped（M14、2026-09-27） | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
@@ -54,7 +54,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 | 段階 | 範囲 | 台帳の項目 | 受入済み | うち定性 | 主な課題 | 状態 |
 |---|---|---:|---:|---:|---|---|
 | P0 | §26.9–§27.4（M1–M13） | 13 | 13 | 0 | — | 完了 |
-| P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 1 | 0 | — | 進行中。D1-preflight 後に M15 §27.6 |
+| P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 1 | 0 | — | 進行中。次は M15 §27.6 |
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 0 | 0 | perpetual・Bermudan・forward start・cliquet・compound・chooser はコードがない（EX-03） | 下調べ済み・節受入未着手 |
 | P3 | 金利（Ch 28–34） | 37 | 0 | 3 | HW/BK 三項ツリー・Bermudan・LMM がない（EX-13〜15）。最も重い | 下調べ・設計済み、節受入未着手 |
 | P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 件数が最大。多くは実装済みで、印刷値での固定が中心 | 下調べ済み・節受入未着手 |
@@ -68,7 +68,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 
 | # | 事項 | 現状と影響 | 状態 |
 |---|---|---|---|
-| D1 | 再検査の証跡の増え方 | 1 マイルストーンの約 13MB の大半は、受入済みの全節を撮り直した再検査画像（節自身の証跡は §27.3 で 916KB、§27.4 で 472KB）。再検査量は受入済みの節数に比例して増えた（M7 7.7MB → M13 13.0MB）。この方式のまま 306 節まで進めると、証跡は合計**約 45GB**になる（実測の傾向からの外挿）。決定：依存の変わった節を再描画し、不変の実体を保持した参照とする（[D1方針](docs/EVIDENCE_POLICY.md)） | **方針決定・実装待ち**。M15 前に D1-preflight |
+| D1 | 再検査の証跡の増え方 | 1 マイルストーンの約 13MB の大半は、受入済みの全節を撮り直した再検査画像（節自身の証跡は §27.3 で 916KB、§27.4 で 472KB）。再検査量は受入済みの節数に比例して増えた（M7 7.7MB → M13 13.0MB）。この方式のまま 306 節まで進めると、証跡は合計**約 45GB**になる（実測の傾向からの外挿）。決定：依存の変わった節を再描画し、不変の実体を保持した参照とする（[D1方針](docs/EVIDENCE_POLICY.md)） | **D1-preflight 完了**。次は M15 |
 | D2 | 節ごとの notebook 検査の規約 | 次の節が同じ巻に入ると、前の節の検査が HEAD で FAIL していた（[レビュー F1](docs/SECTION_27_3_27_4_FEEDBACK_2026-09-27.md)）。M14 で、現行 HEAD 用の `verify_accepted_vol06_notebook.py` が各節を受入 commit と照合する方式に変更 | M14 で対応済み |
 | D3 | ペースと受入の軽量化 | 従来の概算は5〜10か月。現行台帳では説明とrenderedが必須で、画面検査を省略できない。[準備案](docs/prep/design/D3_LIGHT_ACCEPTANCE.md)は定性節のN/Aに理由を付け、buildと画面検査を章内で共有する。旧監査の定性63節は今回の混在分類と同一ではない | **案を作成・規約変更は未承認** |
 
@@ -86,7 +86,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 | 2 | 依存指紋と v2 record、台帳検査の互換対応 | **完了（2026-09-28）**。`scripts/evidence_fingerprint.py`（節スライス・Book の section・portal の図カード・ページ資産・hullkit の import 閉包・データ・検証器・環境）と `scripts/evidence_dependencies.json`（§27.3 を宣言）。§27.3 の notebook スライスの指紋は M12・M13・M14 の3 commit で同一（ファイル全体のハッシュは毎回変化）。`scripts/evidence_record.py` の schema 2 記録（redrawn / reused、再利用は redrawn の基準へ直接参照し連鎖を拒否）を `verify_section_ledger.py` が検査。schema 1 の既存記録は従来どおり（実台帳は通常・`--check-artifacts` とも PASS） |
 | 3 | §27.3 で全再描画と基準再利用を比較 | **完了（2026-09-28）**。`scripts/d1_preflight_compare.py` が既存の検証器を書き換えずに（宣言した見出し番号2か所の置換のみ、`scripts/run_browser_verifier.cjs`）overlay の root で実行し、既存の証跡には書き込まない。A（全再描画）: 16 状態の数値・配置検査と pytest 14 件が PASS、画像 16 枚・413,577 B を C:/F: に保存し各コピーから復元一致。B（基準再利用）: 同じ 16 状態・同じ検査が PASS、新規保存 0 B、A の画像へ直接参照し両コピーから復元・閲覧できた。新しい撮影は 16/16 が A・M14 再検査・受入時の画像とバイト一致。実行時の Chromium 145.0.7632.6・MathJax 3.2.2・実フォント（Liberation Sans と Droid Sans Fallback。fc-match の Noto Sans とは異なる）も記録し、再利用の条件にした。記録は `docs/validation/d1-preflight/section-27-3/` |
 | 4 | 変更伝播の負の対照 | **完了（2026-09-28）**。`scripts/d1_preflight_negative.py` が実際の §27.3 の入力を overlay 上でだけ書き換えて判定（プロジェクトには書き込まない）。16 件すべて期待どおり：§27.3 の前に節を足す（notebook の id・実行番号・図の UUID、Book の自動 id、portal のカード）→ 再利用可・検証器 PASS。本文1文字・portal の値・参照データ・共有 CSS・Book のテーマ JS・plotly.js・hullkit のソース・fc-match のフォント・正規化の版・未宣言の節・未構築のページ → 再描画。値と参照データの変更では既存の検証器も FAIL（例 `ivf_local values 0[0]: 32.82 != 32.32`）。実行時の Chromium・実フォントの変化、C: の blob 欠損、F: の 1 byte 破損 → 再利用を拒否。途中で overlay が節ディレクトリ内の差し替えを無視するバグを負の対照が検出し、修正した |
-| 5 | 小群の保管・既存 gate・統合記録 | 未着手 |
+| 5 | 小群の保管・既存 gate・統合記録 | **完了（2026-09-28）**。[実証記録](docs/validation/d1-preflight/README.md)に §27.3 の16画像・413,577 bytesの2コピー復元、再利用時の新規保存0、負の対照16件、全体 pytest 2,978 passed / 6 skipped、台帳の source / artifact 検査、release・独立数値検証の PASS を記録。Book は初回生成後の全ページ再ビルドで既存ハッシュに一致 |
 
 保管庫は環境変数 `PROJECTS_ARTIFACT_STORE`・`PROJECTS_ARTIFACT_MIRROR` で渡す（WSL では `/mnt/c/Users/<user>/ProjectArtifacts/projects`・`/mnt/f/ProjectArtifacts/projects-backup`）。未設定・未接続・marker なしは明示的なエラーで、空のフォルダーを自動作成しない。
 
