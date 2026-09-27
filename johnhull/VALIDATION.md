@@ -19,7 +19,7 @@ integration gate を満たすことだけを表す。実市場での予測力、
 - 同じ欧州価格面の潜在ボラ混合と局所ボラを同一乱数15万経路で比較。単一時点の上昇確率差は各3 paired SE以内、二時点同時確率の差は0.00854（17.8 paired SE）。局所ボラ経路のEuler誤差と標本誤差を含み、一般的なexotic誤差上界ではない。
 - 公開API1関数、vol06 §9.1–9.6の12セルとBook/portal共有4図。§9以外の58セルはM11基点`ad365fee`と本文・保存出力が同じ（後続2見出しの番号変更のみ）。4改変を拒否。
 - ChromiumでBook/portal×1440/1000pxの16状態・16画像、数値改変拒否、Book MathJaxエラー0、portal外部要求0を確認。既受入§26.9–§27.2の11節を個別テスト・両画面でM12再検証。
-- hullkit+report **2,762 passed / 6 skipped**（既存deprecation warning 2件）。19 core notebooks、`ruff check johnhull`、変更Pythonの`ruff format --check`、release contract、台帳`--check-artifacts`はPASS。M12はローカル未コミットで、strict tracked gateは未実行。
+- hullkit+report **2,762 passed / 6 skipped**（既存deprecation warning 2件）。19 core notebooks、`ruff check johnhull`、変更Pythonの`ruff format --check`、release contract、台帳`--check-artifacts`、commit後のstrict tracked gateはPASS。M12はローカルcommit `5d906f31`、remoteには未反映。
 - 実市場面の平滑化・較正、implied tree、エキゾチックの市場価格、ヘッジ成績は受入範囲外。
 
 ## Section 27.2 M11 — 2026-09-26
