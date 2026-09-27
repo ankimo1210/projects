@@ -35,7 +35,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 122 figures (34 exotics)
+make hull-report           # offline portal: 12 themes / 126 figures (34 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -96,3 +96,13 @@ accepted lessons (§26.9–§26.17, §27.1) are rechecked with
 vol06 headings retires the M10 notebook check's baseline comparison
 (`verify_alternative_models_notebook.py` now reports differences outside §7); the
 M11 notebook check covers the preserved §7 cells instead.
+
+The §27.3 (M12) checks are `scripts/build_local_volatility_reference.py --check`,
+`scripts/verify_local_volatility_numerics.py --check`,
+`scripts/verify_local_volatility_notebook.py --check` (fresh vol06, 58 preserved
+cells outside §9, four rejected mutations), and
+`scripts/verify_local_volatility_browser.cjs` (Book/portal at 1440/1000px,
+16 states and changed-value rejection). The eleven earlier lessons are rechecked
+with `scripts/recheck_accepted_m12.py` and `.cjs`; the integrated gate is
+`scripts/build_local_volatility_acceptance_record.py --check`. The M11 notebook
+baseline comparison predates the new §9 headings; the M12 check covers §8.

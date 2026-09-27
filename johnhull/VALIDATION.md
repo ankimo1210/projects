@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,18 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 27.3 M12 — 2026-09-27
+
+[受入ノート](docs/SECTION_27_3_ACCEPTANCE_2026-09-27.md)・[レビュー](docs/SECTION_27_3_REVIEW_2026-09-27.md)・[統合記録](docs/validation/section-27-3/m12-check.json)にIV01–IV06の5軸を集約。台帳は**accepted**（受入12・未評価294）。
+
+- Dupire式27.4の中央差分を混合BSM面の独立解析式33点と照合し、局所ボラ差は最大5.46e-7。定数BSM面と時変金利・配当の極限もPASS。
+- 独立の後退PDEは欧州コール9価格を最大0.00405通貨以内で再現。有限格子の誤差を含む。
+- 同じ欧州価格面の潜在ボラ混合と局所ボラを同一乱数15万経路で比較。単一時点の上昇確率差は各3 paired SE以内、二時点同時確率の差は0.00854（17.8 paired SE）。局所ボラ経路のEuler誤差と標本誤差を含み、一般的なexotic誤差上界ではない。
+- 公開API1関数、vol06 §9.1–9.6の12セルとBook/portal共有4図。§9以外の58セルはM11基点`ad365fee`と本文・保存出力が同じ（後続2見出しの番号変更のみ）。4改変を拒否。
+- ChromiumでBook/portal×1440/1000pxの16状態・16画像、数値改変拒否、Book MathJaxエラー0、portal外部要求0を確認。既受入§26.9–§27.2の11節を個別テスト・両画面でM12再検証。
+- hullkit+report **2,762 passed / 6 skipped**（既存deprecation warning 2件）。19 core notebooks、`ruff check johnhull`、変更Pythonの`ruff format --check`、release contract、台帳`--check-artifacts`はPASS。M12はローカル未コミットで、strict tracked gateは未実行。
+- 実市場面の平滑化・較正、implied tree、エキゾチックの市場価格、ヘッジ成績は受入範囲外。
 
 ## Section 27.2 M11 — 2026-09-26
 

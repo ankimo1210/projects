@@ -746,9 +746,118 @@ $\xi\to0$ では確率ボラの効果が消え、BSM（$\sqrt{E[\bar V]}$）に�
 **回答の手掛かり：** 分散の加法性、条件付き対数正規、BSM 価格の凹凸、下落時のボラ上昇、傾きと曲がり。""")
 )
 
+# Hull GE §27.3: IVF / Dupire local volatility (M12)
+cells.append(md(r"""## 9. IVF（局所ボラティリティ）モデル（§27.3）
+
+欧州バニラ価格面を日々合わせ、その価格面と整合する1因子の株価過程を作る。
+原典 pp.649–650 の式27.4と、**一時点の価格が合っても経路依存価格は保証されない**という限界を確認する。
+ここでは平滑で裁定のない合成市場を使う。現実の気配値をそのまま微分しない。"""))
+cells.append(md(r"""### 9.1 モデル：状態と時刻で変わるボラ
+
+$$dS_t=[r(t)-q(t)]S_t\,dt+\sigma_{\mathrm{loc}}(S_t,t)S_t\,dz_t.$$
+
+$r(t)$ は時刻 $t$ の瞬間フォワード金利、$q(t)$ は配当利回り。IV は**今日**の欧州オプション価格を
+BSM に逆算した価格面 $\sigma_{\mathrm{imp}}(K,T)$、局所ボラは**その時刻と株価状態**で使う拡散係数
+$\sigma_{\mathrm{loc}}(S,t)$。両者は一般に同じ値ではない。
+
+例は $S_0=100$、$r=3\%$、$q=1\%$。開始時に確率0.7でボラ15%、確率0.3で35%を選んで保持する
+合成モデルのコール価格を「市場」とする。価格面は2つのBSM価格の加重平均なので、平滑で裁定がない。"""))
+cells.append(code(r"""from hullkit import local_volatility as lv
+from hullkit._local_volatility_lesson import _figures as ivf_lesson_figures
+from hullkit._local_volatility_lesson import _load_reference as ivf_load_reference
+
+ivf_reference = ivf_load_reference()
+ivf_figures = ivf_lesson_figures()
+display(ivf_figures["ivf_smile"])
+ivf_p = ivf_reference["parameters"]
+print(f"合成市場: S0={ivf_p['spot']:.0f}, r={ivf_p['rate']:.0%}, q={ivf_p['dividend_yield']:.0%}, "
+      f"σ={ivf_p['component_volatilities']}、重み={ivf_p['weights']}")"""))
+cells.append(md(r"""### 9.2 Dupire の式 (27.4)
+
+欧州コール市場価格 $c_{\mathrm{mkt}}(K,T)$ から
+
+$$\sigma_{\mathrm{loc}}^2(K,T)=
+\frac{\partial_Tc_{\mathrm{mkt}}+q(T)c_{\mathrm{mkt}}+K[r(T)-q(T)]\partial_Kc_{\mathrm{mkt}}}
+{\tfrac12 K^2\partial_{KK}c_{\mathrm{mkt}}}. \tag{27.4}$$
+
+分母の $\partial_{KK}c$ は割引したリスク中立密度。価格面の小さな凹凸を2階微分すると誤差が増幅する。
+公開関数は平滑な価格関数を受け、中央差分の幅を呼び出し側が明示する。負の密度や局所分散を
+黙って切り上げず拒否する。定数ボラBSM面なら元のボラに戻り、時間変化する金利・配当では
+満期時点の瞬間値を使うことを別に確認した。"""))
+cells.append(code(r"""from hullkit import bsm as ivf_bsm
+
+def ivf_synthetic_call(strike, expiry):
+    return sum(weight * float(ivf_bsm.call_price(ivf_p["spot"], strike, ivf_p["rate"],
+                    vol, expiry, ivf_p["dividend_yield"]))
+               for weight, vol in zip(ivf_p["weights"], ivf_p["component_volatilities"], strict=True))
+
+ivf_k, ivf_t = 100.0, 1.0
+ivf_est = lv.dupire_local_vol(ivf_synthetic_call, ivf_k, ivf_t,
+                              ivf_p["rate"], ivf_p["dividend_yield"],
+                              strike_step=0.05, maturity_step=0.001)
+ivf_index = ivf_reference["strikes"].index(ivf_k)
+ivf_exact = ivf_reference["slices"]["1.0"]["local_vols"][ivf_index]
+print(f"K=100,T=1: 中央差分局所ボラ {ivf_est:.6f}, 独立解析式 {ivf_exact:.6f}, "
+      f"差 {ivf_est - ivf_exact:+.2e}")"""))
+cells.append(md(r"""### 9.3 IV 面と局所ボラ面
+
+合成市場のコールをBSMへ逆算した IV と、式27.4から得る局所ボラを同じ行使価格・満期で比べる。
+局所ボラの独立解析式は、各ボラ成分の**満期株価密度を条件付き重み**にした分散の平均である。
+したがって局所ボラは15%と35%の間に入るが、IV 曲線と一致する必要はない。
+図は3満期・11行使価格の保存値をBook/portalで共用する。"""))
+cells.append(code(r"""display(ivf_figures["ivf_local"])
+for maturity in ivf_reference["maturities"]:
+    row = ivf_reference["slices"][str(maturity)]
+    index = ivf_reference["strikes"].index(100.0)
+    print(f"T={maturity:g}: K=100 の IV={row['implied_vols'][index]:.4%}, "
+          f"局所ボラ={row['local_vols'][index]:.4%}")"""))
+cells.append(md(r"""### 9.4 欧州バニラ価格の再現
+
+独立参照は局所ボラの解析式を、式27.4の**価格微分とは別の後退PDE**の株価演算子へ入れる。
+元の混合BSM価格と $K=80,100,120$・$T=0.5,1,2$ の9価格で比較する。
+有限の株価格子・時間刻み・端点を使うため数値誤差は残る。合成価格面に対する理論上の
+適合と、格子での実測差を区別する。"""))
+cells.append(code(r"""display(ivf_figures["ivf_repricing"])
+ivf_rows = ivf_reference["pde_repricing"]
+ivf_max_error = max(abs(row["market_call"] - row["local_vol_pde_call"]) for row in ivf_rows)
+print(f"9価格の最大 |合成市場 − 後退PDE| = {ivf_max_error:.5f} 通貨")
+for row in ivf_rows:
+    if row["strike"] == 100.0:
+        print(f"T={row['maturity']:g}: 合成市場 {row['market_call']:.5f}, "
+              f"局所ボラPDE {row['local_vol_pde_call']:.5f}")"""))
+cells.append(md(r"""### 9.5 一時点の分布と二時点の結び付き
+
+すべての欧州コール価格が合えば、各満期のリスク中立限界分布も合う（§20 Appendix の
+Breeden–Litzenberger）。一時点だけのペイオフ、例えば現金・資産デジタルはこの分布で決まる。
+しかし二時点以上の**同時分布**は各限界分布だけでは定まらない。
+
+下図は**この合成市場そのもの**の比較。開始時にボラを選ぶ元の過程と、その欧州コール面から得た
+局所ボラ過程を同じ乱数で15万経路・200ステップ追跡した。$T=0.5,1$ の $S>100$ の確率差は
+それぞれ1.0・1.7 paired SEだが、両時点とも $S>100$ となる確率は0.854パーセントポイント異なる
+（17.8 paired SE）。局所ボラ経路にはEuler離散化誤差、双方にはMC標本誤差がある。
+経路依存のバリアや複合オプションの価格は、限界分布以外の仮定に左右される。"""))
+cells.append(code(r"""display(ivf_figures["ivf_joint"])
+ivf_joint = ivf_reference["two_date_models"]
+for name in ("half_year_up", "one_year_up", "both_dates_up"):
+    row = ivf_joint[name]
+    print(f"{name}: 潜在ボラ {row['latent_probability']:.4%}, 局所ボラ {row['local_probability']:.4%}, "
+          f"差 {row['paired_difference']:+.4%} ± {row['paired_standard_error']:.4%} paired SE")"""))
+cells.append(md(r"""### 9.6 適用条件と限界
+
+実務では欧州バニラの気配値を平滑な裁定のない価格面にし、局所ボラを日々再較正する。
+式27.4の分母は行使価格方向の2階微分なので、薄い板・離散気配・補間法に敏感。
+この教材では**平滑な合成価格面**のみを使い、市場気配値の補間、較正誤差、日次ヘッジ成績は検証していない。
+原典は、局所ボラが一時点の分布を合わせても、複合・バリアのような経路依存価格は正確とは限らないと述べる。
+
+1. BSMのIVと局所ボラを同一視できないのはなぜか。
+2. 式27.4の分母が負なら何を疑うべきか。
+3. 欧州コールが全行使価格で一致してもバリア価格の一致が保証されない理由は何か。
+
+**回答の手掛かり：** 価格への逆算と過程の係数、蝶型裁定または微分ノイズ、二時点以上の同時分布。"""))
+
 # Cell 22: LSM md
 cells.append(
-    md(r"""## 9. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
+    md(r"""## 10. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
 
 後ろ向きに各行使時点で:
 1. ITM パスについて「継続価値」を**将来キャッシュフローの回帰**（基底: $1, S, S^2$）で推定
@@ -873,7 +982,7 @@ print("\n全チェック合格")""")
 
 # Cell 27: exercises
 cells.append(
-    md(r"""## 10. 練習問題
+    md(r"""## 11. 練習問題
 
 **Q1.** CN と implicit、グリッドを倍に細かくしたとき誤差はそれぞれ何分の1になる？
 

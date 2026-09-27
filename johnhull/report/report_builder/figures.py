@@ -21,6 +21,7 @@ from hullkit._asian_lesson import _figures as asian_lesson_figures
 from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
+from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
 from hullkit._static_replication_lesson import _figures as static_replication_lesson_figures
@@ -275,6 +276,42 @@ FIGURES: list[FigureSpec] = [
         "Hullの近似式（β=0.5）。ρはスマイルの傾き、νは曲がりを決める。点はMCの逆算IV。",
         lambda: stochastic_volatility_lesson_figures()["stochvol_sabr"],
         practice="金利オプションの満期ごとにρ・σ₀・νを合わせるのが典型。近似式の誤差は深いOTMと長い満期で増える。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "ivf_smile",
+        "numerics",
+        "IVF：合成市場の IV 面",
+        "2つのBSM価格を混合した平滑な欧州コール市場。3満期の逆算IVを比べる（Hull §27.3）。",
+        lambda: local_volatility_lesson_figures()["ivf_smile"],
+        practice="IV は今日のバニラ価格を BSM に逆算した数値。局所ボラとは別の量。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "ivf_local",
+        "numerics",
+        "式27.4：Dupire 局所ボラ",
+        "合成市場の価格微分から得る状態・時刻依存の拡散係数。IV面との違いを見る。",
+        lambda: local_volatility_lesson_figures()["ivf_local"],
+        practice="2階行使価格微分はノイズを増幅するため、実務では平滑で裁定のない面が必要。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "ivf_repricing",
+        "numerics",
+        "局所ボラ PDE のバニラ再価格",
+        "独立の後退PDEで9つの欧州コールを合成市場価格と照合する。",
+        lambda: local_volatility_lesson_figures()["ivf_repricing"],
+        practice="理論上は合うバニラ価格にも、有限格子の数値誤差は残る。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "ivf_joint",
+        "numerics",
+        "一時点の一致と二時点の違い",
+        "同じ欧州コール面の潜在ボラ混合と局所ボラを同じ乱数で追跡し、二時点同時上昇を比べる。",
+        lambda: local_volatility_lesson_figures()["ivf_joint"],
+        practice="バリアや複合オプションには二時点以上の同時分布が必要。",
         is_new=True,
     ),
     # risk_credit --------------------------------------------------------

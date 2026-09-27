@@ -1,0 +1,149 @@
+{
+  "section": "27.3",
+  "milestone": "M12",
+  "status": "PASS",
+  "numerical": {
+    "method": "independent analytic latent-volatility mixture, Dupire finite differences, backward spot PDE",
+    "measured": {
+      "points": 33,
+      "max_local_vol_absolute_error": 5.456062361908209e-07,
+      "max_pde_repricing_currency_error": 0.004047111918636936,
+      "max_flat_bsm_vol_error": 2.494351695747632e-07,
+      "varying_carry_vol_error": 3.5622135463597715e-08,
+      "latent_vs_local_one_date_max_paired_z": 1.653823887393182,
+      "latent_vs_local_two_date_paired_z": 17.825923210574302,
+      "latent_vs_local_two_date_probability_gap": -0.00854
+    }
+  },
+  "notebook": {
+    "cells": 70,
+    "lesson_cells": 12,
+    "preserved_cells_outside_lesson": 58,
+    "renumbered_headings": {
+      "## 9. Longstaff-Schwartz（LSM）": "## 10. Longstaff-Schwartz（LSM）",
+      "## 10. 練習問題": "## 11. 練習問題"
+    },
+    "negative_controls_rejected": [
+      "§8.1 source changed",
+      "§27.3 saved local volatility changed",
+      "unlisted heading changed",
+      "§27.2 saved SABR changed"
+    ]
+  },
+  "browser": {
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "state_checks": 16,
+    "screenshots": 16,
+    "numeric_mutation_rejected": true,
+    "book_math": {
+      "rendered": 169,
+      "errors": 0
+    }
+  },
+  "regression": {
+    "sections": [
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "27.1",
+      "27.2"
+    ],
+    "tests_passed": {
+      "26-9": 91,
+      "26-10": 92,
+      "26-11": 144,
+      "26-12": 215,
+      "26-13": 274,
+      "26-14": 351,
+      "26-15": 65,
+      "26-16": 45,
+      "26-17": 16,
+      "27-1": 16,
+      "27-2": 27
+    },
+    "browser": "each accepted section's original verifier rerun on M12 Book/portal assets",
+    "vol10_notebook_unchanged": true
+  },
+  "source_sha256": {
+    "scripts/build_local_volatility_acceptance_record.py": "1e09bcb220b9692bbc6e4150116e53e5729f390856792d774bbf3b2e81b54862",
+    "scripts/build_local_volatility_reference.py": "cd40fc895ece0d1a7bd0fff4a2272817bfd290c4d5669e3bc0e9fe002d28a473",
+    "scripts/verify_local_volatility_numerics.py": "7ca1412cb163c3ebb665e6ad3e8e310a12468bef66c783014b4cb9d14c2a1d1f",
+    "scripts/verify_local_volatility_notebook.py": "83f65474268a0d39b363abe4e54d9a03e62c97df3a03796b8188755acf86c53c",
+    "scripts/verify_local_volatility_browser.cjs": "759efb1d856951d5abce2fb0d17c498da2771efbfcaf8345c8671234da5e10aa",
+    "scripts/recheck_accepted_m12.py": "8b5ec6be9916efcebf3bf3a8a46fd3a6d196327d30c4ff17640b2ebe5975f212",
+    "scripts/recheck_accepted_m12.cjs": "add9573de349b0c9dfbf8ac7b8254cbf5274763a40b94d168ae05b90e4fea2fc",
+    "hullkit/src/hullkit/local_volatility.py": "ce64a9a887b54199e9978c824371850498206f654c56d47fa7684eb0c6d9f303",
+    "hullkit/src/hullkit/_local_volatility_lesson.py": "f957ab42b0f9e60227b4cf37d42bfd25b7f608acd0c1126699cd88f5053fc76f",
+    "hullkit/tests/test_local_volatility.py": "681f23bd9e3d0f6076721b1239fcbfd8b8db8f67c800262f5182586e851f9193",
+    "hullkit/tests/test_local_volatility_lesson.py": "32e1cd2241ba9b8981959575a345639307c72c4f4c7725bb94c7ff67ed8779df",
+    "report/tests/test_local_volatility_notebook.py": "72bfe7657098782552a4c144721404301a7a2a05ccf0dd2c91ee5c50a2c5434b",
+    "report/tests/test_report_build.py": "166ea57009759776a26ee1a6abc166f79a972a68163c302f9bd4e83e0a2f9b75",
+    "report/report_builder/figures.py": "b6d335b21ef27b35f4e0e7b7efb2dc2218e80d70414114c801a0dd59b50d74b6",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "9323540c2646b3657a0dbf1d6cfe255fcf070165d88c93ce89a85c0ad216aea3",
+    "volumes/06_numerical_methods/numerical.ipynb": "cf079e90628a4f9f2fea2dced5f5258fe74a019d15dc25e75d8332cc2862846d",
+    "release_manifest.json": "bfe13957563c7ef6f2d6ed07529d0074eb65b8a1947b9621ee1bdf869cfe8385",
+    "docs/validation/section-27-3/numerical-check.json": "fc43d60930bd468d325d1991240b58022470a584e963c91a4aed641c4d0ed264",
+    "docs/validation/section-27-3/notebook-check.json": "dfb558ff4433557b539576e807e2819f23181cac706bc530000779b74d7bbbed",
+    "docs/validation/section-27-3/browser-check.json": "166e3ba3444a0c5f646ce69dd4dc6af00f94697bc7ed52b8cce244e59d530bd0",
+    "docs/validation/section-26-9/m12-recheck.json": "e7e83fc26032454c226a8f4a9180faf20401cc0e9169125179157aa598df1465",
+    "docs/validation/section-26-10/m12-recheck.json": "6cda85fe10f330a5553c2004b4f78fceacd67f14afe21e6f1e30ca686c3bc710",
+    "docs/validation/section-26-11/m12-recheck.json": "e7093c267c1891f8224a0e02e7264d6028ad8613a4857e7e7cca836047b2df77",
+    "docs/validation/section-26-12/m12-recheck.json": "75671f2ce7181e43fe999cd06ded191f1078ff1d16fa86bc5e960d7f90a1aae1",
+    "docs/validation/section-26-13/m12-recheck.json": "fc988d96ffaa2cc06e17a6f86fb212d69e28bcd3c9677c9dd4f4cf96b8ec0072",
+    "docs/validation/section-26-14/m12-recheck.json": "96844a6c1b411a4de081acc81b8f5a65e46d56a501a0660bf89d87c2bb294a21",
+    "docs/validation/section-26-15/m12-recheck.json": "a4b7148d02d4019e5c2304ce4c97d2596d87e1c25fcdace4d9c5c05af0acca7e",
+    "docs/validation/section-26-16/m12-recheck.json": "a3260a5d3ff00506df137ab531a52381155740bf4ed5a23c7872ca5954befd73",
+    "docs/validation/section-26-17/m12-recheck.json": "e8c390a49582f11f6c7ad5d3f68a48734ce809acf81815d0ab5d0390d0a1ff24",
+    "docs/validation/section-27-1/m12-recheck.json": "1f62d575a2566f56e7ba736ff42599027998ee0b2eff320bb005f112e866d0d4",
+    "docs/validation/section-27-2/m12-recheck.json": "e3ffffa50c41f06f02a5dca5287902f2307f0e5f07e26c4d6359c42f60fe32e8",
+    "docs/validation/section-26-9/browser-m12-recheck.json": "a64723cc498fbfc40ae37486e371efc047256d7f8ed4a5e5c54ee15aa561e32a",
+    "docs/validation/section-26-10/browser-m12-recheck.json": "24d92b3a937cde7984c775affc942ad333de9dd4694cf622fdca6b5460948bf5",
+    "docs/validation/section-26-11/browser-m12-recheck.json": "033054382d635e863b4000f51023e67f0d9beb8692c88c034f4699b54c132eaa",
+    "docs/validation/section-26-12/browser-m12-recheck.json": "537b3d0e97649271b56efe9e4046362adb6b6913c6da7695e9d07e92f4c0bf24",
+    "docs/validation/section-26-13/browser-m12-recheck.json": "5050240a368069743f1d48ca5013eaf9c12798203518bca79823ee6ce1eb12d8",
+    "docs/validation/section-26-14/browser-m12-recheck.json": "d9a42cd8c6baa20c4e82ae4e0afe884bf663638d2bb5009155c0ee13f407ebdb",
+    "docs/validation/section-26-15/browser-m12-recheck.json": "3981de396c2959fd27092d2c83bab405629a3e56cbf4e7fa3d6a7a3e8b76c957",
+    "docs/validation/section-26-16/browser-m12-recheck.json": "5b2ad5d13d303ad1544b37ee2410b1d486652e1fc728cecad1c50ba669c77124",
+    "docs/validation/section-26-17/browser-m12-recheck.json": "3d127abbb5670b4d24d72f87dc619c03fb87f381e17f8041c068c3159d83df9e",
+    "docs/validation/section-27-1/browser-m12-recheck.json": "893a3c11e2954320fa3f2075e7dde4bab0a3fc9dc5063dc6775a6c17fc3df7fd",
+    "docs/validation/section-27-2/browser-m12-recheck.json": "3668f7380637c69a40e4cfd5a5ed8c8c33341ac1e929b72063f72b86baf7f0de"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-27-3/reference.json": "70e1aef8b7f1dfa71e66744482f5886f5f06351cb1f988c907b3b1372dfbf36c",
+    "report/site/numerics.html": "731e2bcfe5b7dd9b40aec46ba270233be36155db6fda4d180a0cccdb5611c3dc",
+    "book/_build/html/notebooks/06_numerical.html": "21291f0b4ef67d1e14776ab0325869688f0c21b5445bebdc51bd0ef8162f6bdd",
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
+    "docs/validation/section-27-3/book-ivf_smile-1440.png": "f9aaaddb68eaa9b23706b3fee8639dae9936b726d3f3474ce7f1d12a8da35cf3",
+    "docs/validation/section-27-3/book-ivf_smile-1000.png": "6e062bc6a6be3d12cabf9804d5d4c049db1cdfa3d6470c4e61bacb74edb259a5",
+    "docs/validation/section-27-3/book-ivf_local-1440.png": "b257eb4af9d92fe3679dd0b65075e6e2c7b4c58cd9a077d8aad2890a727d6dd6",
+    "docs/validation/section-27-3/book-ivf_local-1000.png": "7dc272b4f5d131acb0a633fe1b916890132396cb1783492c4a6f00901d0e812b",
+    "docs/validation/section-27-3/book-ivf_repricing-1440.png": "0500acf78f5834eb1b213d2e1bc2a6c9517f8eab1ded7658442ea469ed16bdf8",
+    "docs/validation/section-27-3/book-ivf_repricing-1000.png": "b00ab01d9b4b2ee26748580620fe2ac6edbcfcd2de328a461617ab5614663e44",
+    "docs/validation/section-27-3/book-ivf_joint-1440.png": "da1d46ab7251889a4460c1492596a60d7e3371a667b0edb8d3bbe91d4eef51b9",
+    "docs/validation/section-27-3/book-ivf_joint-1000.png": "a39f1b210e90c74676a62808b6260d5fae2c7af3c5ab8849919b5765af9007cc",
+    "docs/validation/section-27-3/portal-ivf_smile-1440.png": "b32f4552194d3cde039c0eb339a6dcd48e38eb88dd555072594bd673d2cefbfc",
+    "docs/validation/section-27-3/portal-ivf_smile-1000.png": "449aedf06f5f60c86d3aac31fdb4a1db5f68217c368997d5184d8adab6c25ab9",
+    "docs/validation/section-27-3/portal-ivf_local-1440.png": "5149eaa66685f957501be91420f60759e33689fcbb516e04816a51c402750792",
+    "docs/validation/section-27-3/portal-ivf_local-1000.png": "53277ff62300c08c8f58d63cb41260239960525ba41cd13ce70e5b00c67adb73",
+    "docs/validation/section-27-3/portal-ivf_repricing-1440.png": "76d879517a5b5dee7a6bb2c084212440beae3a9c60843228df4dd5796dbd0a1e",
+    "docs/validation/section-27-3/portal-ivf_repricing-1000.png": "f270ca5132bf3767c9a3cd6bca89a54f7a0ff275ccc5ffae4ed61ee5cdda191c",
+    "docs/validation/section-27-3/portal-ivf_joint-1440.png": "1cdd2fc981d829a895f34b541a07610dceca19ba799425257be5d5a7d4128ee1",
+    "docs/validation/section-27-3/portal-ivf_joint-1000.png": "1291d9e707096c118a10e201f7a9dedbb3ccc2db935cb42b29fd253fafad7295"
+  }
+}
