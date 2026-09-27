@@ -45,6 +45,7 @@ def test_strategy_comparison_applies_one_lag_and_turnover_cost_once():
     zero = result.backtests["zero"]
     mean = result.backtests["mean"]
     ridge = result.backtests["ridge"]
+    tree = result.backtests["tree"]
     hold = result.backtests["buy_hold"]
     assert mean.held_weights.loc[T0 + timedelta(days=5), ASSET] == 0.0
     assert mean.held_weights.loc[T0 + timedelta(days=6), ASSET] == 1.0
@@ -52,6 +53,7 @@ def test_strategy_comparison_applies_one_lag_and_turnover_cost_once():
     assert mean.net_returns.loc[T0 + timedelta(days=6)] == pytest.approx(0.099)
     assert zero.net_returns.loc[T0 + timedelta(days=6)] == 0.0
     pd.testing.assert_series_equal(mean.net_returns, ridge.net_returns)
+    pd.testing.assert_series_equal(mean.net_returns, tree.net_returns)
     pd.testing.assert_series_equal(mean.net_returns, hold.net_returns)
     assert result.prediction_rule == "positive_one_step_return_long_else_cash"
 

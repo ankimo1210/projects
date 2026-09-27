@@ -37,6 +37,8 @@ def compare_model_strategies(
     expanding: bool = False,
     lockbox_start: datetime | None = None,
     ridge_alpha: float = 1.0,
+    tree_max_depth: int = 2,
+    tree_min_leaf: int = 2,
     commission_bps: float = 0.0,
     slippage_bps: float = 0.0,
 ) -> StrategyComparison:
@@ -55,6 +57,8 @@ def compare_model_strategies(
         expanding=expanding,
         lockbox_start=lockbox_start,
         ridge_alpha=ridge_alpha,
+        tree_max_depth=tree_max_depth,
+        tree_min_leaf=tree_min_leaf,
     )
     end_at = evaluation.table["label_available_at"].max()
     if lockbox_start is not None and end_at >= lockbox_start:
@@ -69,7 +73,7 @@ def compare_model_strategies(
     asset = dataset.instrument_id
     returns = closes.pct_change(fill_method=None).to_frame(asset)
     backtests: dict[str, BacktestResult] = {}
-    for model in ("zero", "mean", "ridge", "buy_hold"):
+    for model in ("zero", "mean", "ridge", "tree", "buy_hold"):
         targets = pd.DataFrame(0.0, index=closes.index, columns=[asset])
         if model == "buy_hold":
             targets.loc[evaluation.table.index.min() :, asset] = 1.0
