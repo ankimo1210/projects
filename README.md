@@ -86,7 +86,7 @@
 
 | 場所 | 役割 | 扱い |
 |---|---|---|
-| [models/](models/) | 教科書翻訳パイプラインの成果物 | 再生成可否・保存先は整理計画で検討 |
+| [models/](models/) | 教科書翻訳パイプラインの成果物 | 現行配置を維持。サイズのみを理由に移さない |
 | [reports/](reports/) | 共有の分析レポート | 生成物と原本を区別して参照 |
 | [papers/](papers/) | 論文・教科書などの参照資料 | 個々のライセンス・再配布条件に従う |
 
@@ -100,7 +100,7 @@
 | [docs/templates/](docs/templates/) | レポート等の共通テンプレート |
 | [_scratch/](_scratch/README.md) | 試行・実験の作業場所。4月の比較ノートは退避済み |
 | [_docs/](_docs/README.md) | 一時的な作業ログ・引き継ぎ。現在の仕様の正本ではない |
-| [_archive/](_archive/README.md) | 退避済みの6群。理由・後継・実行可能性は索引参照 |
+| [_archive/](_archive/README.md) | 退避済みの7群。理由・後継・実行可能性は索引参照 |
 
 ### 外部リポジトリ
 
@@ -144,7 +144,7 @@ make tree      # ヘビーディレクトリを除外したツリー表示
 ```
 
 `make test` の Python 対象は [pyproject.toml](pyproject.toml) の `testpaths` に登録した
-36ディレクトリです（market-research 追加後）。全プロジェクトを検証するものではありません。
+33ディレクトリです（2026-09-28 確認）。全プロジェクトを検証するものではありません。
 `johnhull/report/tests` は登録済み、`deep_hedge_price/tests` は未登録です。
 対象プロジェクトのテストを個別に実行してください。`npm` がなければ `sde-check` は省略されます。
 
