@@ -1,0 +1,6 @@
+# Local recordings and generated transcripts are private scratch data.
+*.m4a
+*.mp3
+*.wav
+*_result.json
+*_transcript.txt
