@@ -49,8 +49,9 @@ uv run --no-sync market-research fetch-macro \
 ALFREDには `FRED_API_KEY`、e-Statには `ESTAT_APP_ID`、SECには連絡先を含む
 `SEC_USER_AGENT` が必要です。入力例と時刻の精度は[データ取得ガイド](docs/DATA.md)を参照してください。
 
-日米株は確認済み取引時間表の `--calendar` 指定が必要です。
-新しいカレンダー依存の追加は確認中で、自動接続はまだ実装していません。
+東証 `XTKS`、NYSE `XNYS`、NASDAQ `XNAS` の日足は、`--calendar` を省くと
+`exchange-calendars` の取引時間表を自動で使います。明示した `--calendar` を優先します。
+その他の市場は確認済みの時間表を指定してください。詳しくは[データ取得ガイド](docs/DATA.md)。
 
 ## 実装済みの契約
 

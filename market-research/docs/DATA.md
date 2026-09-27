@@ -48,9 +48,12 @@ J-Quantsの正常な無約定・終日売買停止日のnull行は `gaps` に `n
 
 ## 日米株の取引時間表
 
-`--calendar /absolute/path/sessions.json` に次の形式を渡します。
-これは形式例です。利用する全日付の休日・短縮日・DSTを確認した時間表を用意してください。
-未登録日や市場不一致はエラーになり、通常取引日へ補完しません。
+東証 `XTKS`、NYSE `XNYS`、NASDAQ `XNAS` は `--calendar` 省略時に
+`exchange-calendars` の取引日・開始/終了時刻を利用します。`XNAS` は同ライブラリの
+`XNYS` カレンダーへの別名です。明示した `--calendar /absolute/path/sessions.json` は
+自動表より優先します。その他の株式市場とFXには明示スケジュールが必要です。
+次はJSONの形式例です。手動指定では休日・短縮日・DSTを確認してください。
+取得行の未登録日や市場不一致はエラーになり、通常取引日へ補完しません。
 
 ```json
 {
@@ -63,9 +66,11 @@ J-Quantsの正常な無約定・終日売買停止日のnull行は `gaps` に `n
 ```
 
 確認先は [JPX取引時間](https://www.jpx.co.jp/english/equities/trading/domestic/01.html)、
-[NYSE休日・取引時間](https://www.nyse.com/trade/hours-calendars)。
+[NYSE休日・取引時間](https://www.nyse.com/trade/hours-calendars)、
+[exchange-calendars](https://pypi.org/project/exchange_calendars/)。
 スケジュールの版・ハッシュ・使用期間の内容をsnapshotの `key.request_json` に保存します。
-自動カレンダー用の新規依存は確認待ちです。現状の株価取得にはファイル指定が必要です。
+対象範囲に取引日がなければ取得前にエラーにします。将来の臨時休場はライブラリの版に
+まだ反映されないことがあるため、公式情報を確認した明示スケジュールで上書きしてください。
 
 ## マクロ・財務の明示取得
 
@@ -150,6 +155,9 @@ MoFの履歴・当月CSV両方を取得しました。MoFの2026-09-24〜26・10
 CLIからの取得とオフライン読取も確認しました。資格情報が設定されていなかったため、
 ALFRED・e-Stat・SECのライブ疎通は未実施です。独立レビューの重要4件を修正した後、
 122件のmemberテストとESRI/MoFの同じ小範囲の公開疎通を再確認しました。
+その後、取引所カレンダー自動解決の7件を追加し、memberテストは129件成功。
+2026-09-24〜25の `IBM` と `7203.T` を手動JSONなしで各2足取得・再読込し、
+カレンダーの版をmanifestへ保存できました。
 レスポンス本体はGitに入れていません。
 
 ## 今回の検証

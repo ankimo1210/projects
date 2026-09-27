@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime, timedelta
 
-from .calendars import SessionCalendar
+from .calendars import AUTO_MARKETS, SessionCalendar, auto_session_calendar
 from .fetch import FetchError, HttpClient
 from .prices import PriceView
 from .providers import PriceRequest, fetch_prices
@@ -63,6 +63,8 @@ def ingest_prices(
     max_age: timedelta = timedelta(days=1),
     resume: bool = False,
 ) -> IngestResult:
+    if calendar is None and request.instrument.market in AUTO_MARKETS:
+        calendar = auto_session_calendar(request.instrument.market, request.start, request.end)
     key = cache_key(provider, request, calendar)
     resume_raw = None
     if resume:

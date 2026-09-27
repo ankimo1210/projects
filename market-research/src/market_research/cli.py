@@ -167,7 +167,9 @@ def main(argv: list[str] | None = None) -> int:
         fetch.add_argument("--" + name, required=True)
     fetch.add_argument("--start", type=date.fromisoformat, required=True)
     fetch.add_argument("--end", type=date.fromisoformat, required=True)
-    fetch.add_argument("--calendar", type=Path, help="Verified session schedule JSON")
+    fetch.add_argument(
+        "--calendar", type=Path, help="Override exchange schedule with verified JSON"
+    )
     fetch.add_argument(
         "--allow-stale", action="store_true", help="Expose cached data after a failed refresh"
     )
