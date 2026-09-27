@@ -1,8 +1,8 @@
 # ワークスペース整理計画
 
-更新日: 2026-09-27（工程1の実施・検証を反映）
+更新日: 2026-09-27（工程1のマージ、工程2の設計、D1・保管先、HSK3 の取込みを反映）
 
-状態: 工程0・工程1は完了。工程1は `codex/workspace-index` 上で完了し、main へのマージ待ち。工程2以降の移動・コード統合・削除・履歴変更は未実施。調査基準点は `5852c526`、工程1の開始点は main `22c204f3`。
+状態: 工程0・工程1は完了し、工程1は main `dd18befe` へ取込み済み。工程2の統合仕様と保管方針は `codex/workspace-design` で完了（設計 `a0e75edd`、main 反映待ち）。コード統合・ファイル移管・退避・履歴変更は未実施。別件の HSK3 は Xcode 検証後に main `6dd2e69f` へ取込み・push 済み。調査基準点は `5852c526`、工程1の開始点は main `22c204f3`。
 
 ## 目的と決まった方針
 
@@ -33,7 +33,7 @@
 | Windows タスク PortfolioPLTokyo・PortfolioDailyPL（`C:\Users\Kazumasa\Documents\pl-daily\run_daily_pl.cmd`） | `cd /home/kazumasa/projects && uv run --no-sync python portfolio-analyzer/scripts/daily_pl_report.py` | ルートや portfolio-analyzer を動かす、または共有 `.venv` を変えると日次レポートとメールが止まる。`--no-sync` なので依存の追加・削除は自動で同期されない。失敗は `run.log` にしか残らない |
 | Windows タスク reio-daily | `/home/kazumasa/re_invest_os/scripts/daily.sh` | このリポジトリの外。README のリンク整理だけなら影響しない |
 | GitHub Pages（gh-pages ブランチの crunote/・my-tianjin/） | App Store の必須 URL（アプリに埋め込み済み） | main のディレクトリ移動では壊れない。リポジトリの private 化や gh-pages の整理で壊れる |
-| CI（`.github/workflows/` の eagle.yml・gto-ts.yml・health.yml） | paths フィルタと working-directory | 移動後に CI が発火しない、または失敗する |
+| CI（`.github/workflows/` の eagle.yml・gto-ts.yml・health.yml・my-tianjin.yml） | paths フィルタと working-directory | 移動後に CI が発火しない、または失敗する |
 | ルート conftest.py | gto、health、jp_llm_lab、labor_ai_quadrant、macrokit、optimal_execution、quantkit、rough_volatility、timesfm_lab の import | 退避・改名で全体 pytest の収集が壊れる |
 | Makefile | パスを含む行が59行（johnhull、analytics、rough_volatility、optimal_execution、health、market_nn など） | ターゲットが存在しないパスを指す |
 | `~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、Claude の memory | リポジトリのルート、docs/knowledge、各プロジェクトのパス | エージェントが古いパスを案内する。移動後に更新する |
@@ -97,14 +97,14 @@ models、reports、papers はプロジェクト一覧から区別し、「成果
 
 ## 市場分析の統合設計
 
-第一候補は仮称 market-research という新しいプロジェクト。設計確定前に利用頻度、画面方式、名称を決める。新プロジェクトの中で、データ取得・時点管理・研究計算・表示の正本を各1つにする。単純なファイル移動やコードの全コピーはしない。
+新プロジェクト名は **market-research**、最初の入口は **Streamlit + Plotly** に決定。名称・入口・機能範囲の判断は本人から委任された。[統合仕様](../specs/2026-09-27-market-research-design.md) に機能の行き先 F01–F19、7画面、正本、データ契約、受入条件 Q01–Q13 を定義した。新プロジェクトの中で、データ取得・時点管理・研究計算・表示の正本を各1つにする。単純なファイル移動やコードの全コピーはしない。
 
 | 領域 | 現状の重なり | 正本を決めるための比較 |
 |---|---|---|
-| 市場データ | stockkit と quantkit に J-Quants v2（両方とも v2 の実装。ライブの疎通は今回確認していない）、yfinance、Stooq の取得器。market-viz に yfinance/ccxt 更新器。portfolio-analyzer も日次レポートとファクター推定で yfinance を直接取得し、桁のずれた終値の除去（`clean_closes`）と、取引中の足を終値扱いしない判定（`bar_is_final`）を持つ | 調整後価格、通貨、日付、欠損、取得元、キャッシュ、失敗時の挙動を fixture で比較。portfolio-analyzer の2つの規則は実データで見つかった品質問題なので、共通データ契約の要件に入れる |
+| 市場データ | stockkit と quantkit に J-Quants v2（両方とも v2 の実装。ライブの疎通は今回確認していない）、yfinance、Stooq の取得器。market-viz に yfinance/ccxt 更新器。portfolio-analyzer も日次レポートとファクター推定で yfinance を直接取得し、桁のずれた終値の除去（`clean_closes`）と、取引中の足を終値扱いしない判定（`bar_is_final`）を持つ | 調整後価格、通貨、日付、欠損、取得元、キャッシュ、失敗時の挙動を fixture で比較。両規則の問題意識を共通契約に入れる。ただし clean_closes は後続5観測を調べるため、当時の判定と後日訂正を分け、未来情報をバックテストに混ぜない |
 | マクロ時点管理 | quantkit.macro.store と macrokit.pit に as_of/latest/revisions。前者は DataFrame、後者は DuckDB で時刻帯付き公開日時などを扱う | リリース日の境界、ヴィンテージ、未来情報漏れ防止、既存データ移行 |
 | バックテスト | stockkit、quantkit、market_viz の各実装に BacktestResult と実行関数 | シグナル反映時点、取引コスト、調整後価格、指標定義、既存結果との照合 |
-| 表示 | stock は Dash、market-viz は Streamlit/FastAPI と任意の Next.js、quantkit は Jupyter/HTML | 実際に使う画面を選び、重複を整理。画面方式は追加質問の回答で決める |
+| 表示 | stock は Dash、market-viz は Streamlit/FastAPI と任意の Next.js、quantkit は Jupyter/HTML | 7画面へ集約。Streamlit を入口に、CLI・Jupyter と同じサービス層を使用。AIチャット・Next.js/FastAPI は初版に移さない |
 | 自動探索 | autostock の Mag7 戦略実験 | 後継の研究ワークフローに再現例として移せるか確認 |
 
 統合順は (1) 共通データ契約と fixture、(2) 正本となる取得・時点管理、(3) 計算とバックテスト、(4) 必要な画面とノートブック、(5) 旧入口の切替と退避。最初の設計成果物は機能対応表と各ソースの採否表にする。いまのコードには相互参照がなく（stock、quantkit、market-viz、macrokit、autostock、portfolio-analyzer の間に import なし）、同名関数でも契約が違うため、採用元を名前だけで決めない。
@@ -131,7 +131,7 @@ johnhull、portfolio-analyzer、housing-buy-vs-rent、quant-agent-benchmark は�
 | 対象 | 処置 |
 |---|---|
 | housing-inputs-20260918、johnhull-alternative-models、rates-vol-completion-20260927 の worktree | main にマージ済み・未変更を確認して削除し、ローカルブランチも削除 |
-| Codex の hsk3-course worktree（codex/hsk3-first-lesson） | 未マージの3コミット（My Tianjin の HSK 講座）を origin/codex/hsk3-first-lesson へ push したうえで、worktree とローカルブランチを削除。main へのマージは未判断（この環境には Xcode がなくビルド検証できない） |
+| Codex の hsk3-course worktree（codex/hsk3-first-lesson） | 未マージの3コミット（My Tianjin の HSK 講座）を origin/codex/hsk3-first-lesson へ push したうえで、worktree とローカルブランチを削除。当時は main 未マージ。その後、本人の承認と macOS CI の成功を経て `6dd2e69f` へ取込み済み（工程2の実施記録） |
 | Codex の atlas-project worktree | 未コミットの WSET Atlas UX 作業を一時 index で木にして main と比べたところ、2026-09-18 の `c03ef39c` で main に全部取り込み済みだった。差分の8ファイルは、その後の main 側の修正（1.0.1 build 2 など）による新しい内容。push するものがないため、ブランチは作らずに worktree を削除 |
 | stash@{0}（housing-buy-vs-rent/docs/STATUS.md） | 削除 |
 
@@ -139,37 +139,37 @@ Codex の作業ディレクトリ（`C:\Users\Kazumasa\Documents\Codex\2026-09-1
 
 ## 大容量ファイルの移管案
 
-追跡ファイルの種類を「原本・手動監査」「再生成できる派生物」「過去の再検査証跡」に分ける。移管先は回答待ちだが、どの方法でもファイルごとの出典、SHA-256、生成条件、復元手順、ライセンス、参照元を manifest に残す。リポジトリが公開なので、移管先の公開範囲はライセンス（papers の再配布条件など）と合わせて決める。先に移管先から復元してテストできることを確認し、その後に個別のファイル群を Git の現行ツリーから外す。過去の Git 履歴は別判断にする。
+追跡ファイルの種類を「原本・手動監査」「再生成できる派生物」「過去の再検査証跡」に分ける。[ADR 0004](../../decisions/0004-artifact-storage-and-evidence.md) で別 SSD のローカル保管庫と内蔵 SSD の第2コピーを選定した（未作成・未移管）。ファイルごとの出典、SHA-256、生成条件、復元手順、ライセンス、参照元を manifest に残す。リポジトリが公開なので、移管先の公開範囲はライセンス（papers の再配布条件など）と合わせて決める。先に移管先から復元してテストできることを確認し、その後に個別のファイル群を Git の現行ツリーから外す。過去の Git 履歴は別判断にする。
 
 | 群 | サイズの目安 | 暫定案と先に確認すること |
 |---|---:|---|
-| johnhull/docs/validation | 約103 MiB | 節の受入証跡と、再検査で撮り直した画像を分離。ROADMAP の D1 が再検査画像の増加を課題にしている。受入の最小証跡・ハッシュ・要約は Git に残し、再検査画像の保管先を決める |
+| johnhull/docs/validation | 約103 MiB | 節の受入証跡と、再検査で撮り直した画像を分離。ROADMAP の D1 が再検査画像の増加を課題にしている。受入の最小証跡・ハッシュ・要約は Git に残す。新しい再検査画像は ADR 0004 の不変保管庫へ。先に D1-preflight と復元を検証 |
 | johnhull/references/processed | 約287 MiB | 検索・引用と release gate が使う。原本 PDF・手動 gold・索引との依存を調べ、同一出力の再生成と復元後検証が通るまで現状維持 |
 | market_nn/corpus/papers | 約274 MiB | Docling 生成物だが、手動転記・意味レビューは manifests と連動する。原本・手動判断を Git に残し、派生画像と本文を分離できるか、既存 QA で試す |
 | models | 約151 MiB | 翻訳済み本文は再実行コストが高く、単なるキャッシュとして扱わない。版管理・閲覧・バックアップが保てる移管先だけ検討 |
 | quant-agent-benchmark | 約81 MiB | 保存済みモデル提出物と評価結果は同じ結果を再生成できない。監査記録として保持し、移すなら不変の成果物と照合可能な manifest が必要 |
 
-johnhull/ROADMAP.md の D1 によると、1マイルストーンで増える約13 MB の大半は受入済みの全節を撮り直した再検査画像で、この方式のまま306節まで続けると証跡は約45 GB になる。受入済みは306節中14節（4.6%）で、次の既定作業は M15（§27.6）。増加を止めるには既存ファイルの移管より先に、M15 に着手する前に再検査方針（影響のある節に絞る、画像はハッシュだけ残す等）を決めるのが効果的。既存ファイルの移管は小さな群で実証する。
+johnhull/ROADMAP.md の D1 によると、1マイルストーンで増える約13 MB の大半は受入済みの全節を撮り直した再検査画像で、この方式のまま306節まで続けると証跡は約45 GB になる。受入済みは306節中14節（4.6%）で、次の既定作業は M15（§27.6）。[D1 方針](../../../johnhull/docs/EVIDENCE_POLICY.md) は決定済み。影響のある節を再描画し、画像実体を不変保管庫で保持する。M15 の前に D1-preflight（依存指紋・参照互換・復元・負のテスト）を行う。数値・意味・受入検査は維持し、既存ファイルの移管は小さな群で実証する。
 
 Git LFS 等へ移しても、過去コミットの blob は履歴を書き換えない限り残る。現環境の WSL では `git lfs version` が実行できず、LFS は現時点で利用可能と確認できていない。GitHub の LFS 容量・転送量の上限は、実施時に公式文書で確認する。履歴変更はこの計画の実行範囲外とし、必要なら影響・バックアップ・クローン先を調べた別工程にする。
 
 ## 実施順と完了条件
 
 0. **基準点と作業ツリー**（2026-09-27 完了）: push 済みの基準点から始め、上の「作業ツリー・ブランチ・stash の整理」を本人の判断に沿って片付けた。以後の工程は工程ごとの worktree で行う。完了条件は、main がクリーンで origin と一致し、残る worktree・ブランチ・stash のすべてに残す理由があること。
-1. **入口と文書**（2026-09-27 完了、ブランチ `codex/workspace-index`、実装コミット `06849a7a`・`25606280`。main 未マージ）: ルート README をカテゴリ化し、欠けた3件、外部 re_invest_os、_archive 索引を加える。確認済みの矛盾を修正し、古い README は実装との照合結果に応じて更新する。完了条件は、48件すべてと成果物・資料・作業用ディレクトリが索引から到達でき、リンクと説明が実在すること。
-2. **統合仕様**: 新市場分析プロジェクトの対象機能、正本、データ契約（portfolio-analyzer のデータ品質規則を含む）、UI、旧プロジェクトごとの採否、個人口座との境界を設計文書に固定する。公開 API・依存関係の変更はこの段階で承認を得る。完了条件は、旧機能の行き先と検証方法が対応表で追えること。
+1. **入口と文書**（2026-09-27 完了、ブランチ `codex/workspace-index`、実装コミット `06849a7a`・`25606280`。main `dd18befe` へ取込み済み）: ルート README をカテゴリ化し、欠けた3件、外部 re_invest_os、_archive 索引を加える。確認済みの矛盾を修正し、古い README は実装との照合結果に応じて更新する。完了条件は、48件すべてと成果物・資料・作業用ディレクトリが索引から到達でき、リンクと説明が実在すること。
+2. **統合仕様**（2026-09-27 完了、`codex/workspace-design`・`a0e75edd`。main 反映待ち）: 新市場分析プロジェクトの対象機能、正本、データ契約（portfolio-analyzer のデータ品質規則を含む）、UI、旧プロジェクトごとの採否、個人口座との境界を設計文書に固定する。[統合仕様](../specs/2026-09-27-market-research-design.md) に新契約と既存依存の候補を明示。旧入口の一斉切替は承認済み。実装で新規 production 依存が必要なら具体的な差分で確認する。完了条件は、旧機能の行き先と検証方法が対応表で追えること。
 3. **統合実装**: 新しい workspace メンバーを追加し、fixture による価格・マクロ・バックテストの比較から段階的に移す。採用するアプリの主要操作を確認する。依存を変えたら portfolio-analyzer の日次レポートを確認する。完了条件は、採用機能のテストと代表画面が新入口で動き、未移行機能が明示され、定時タスクが動き続けること。
 4. **個別退避**: 候補ごとに差分・依存・ローカルデータ・復元方法を確認し、承認を受けて _archive へ移す。pyproject.toml、testpaths、conftest.py、Makefile、CI、README、プロジェクト内リンク、Git の外の依存（「実施の前提と外部依存」の表）を更新する。完了条件は、現役の入口に壊れた参照がなく、退避理由と後継を索引から確認できること。
-5. **容量整理**: johnhull の再検査方針（D1）を先に決め、再生成できる群から小さな移管実験を行い、manifest、復元、品質ゲートを確認して群単位で移す。原本・人手レビュー・評価提出物は別判断とする。完了条件は、復元可能性と監査可能性を失わず、新規生成分の増加方針が定まること。
+5. **容量整理**: 決定済みの johnhull D1 と保管先を基に、再生成できる群から小さな移管実験を行い、manifest、復元、品質ゲートを確認して群単位で移す。原本・人手レビュー・評価提出物は別判断とする。完了条件は、復元可能性と監査可能性を失わず、新規生成分の増加方針が定まること。
 6. **次の統合候補**: 市場分析が安定した後、ratesvol（rates_volatility_model、2026-09-27 にテスト付きパッケージ化）と hullkit の重なりなどを個別に調査する。ratesvol の SABR テストは hullkit.sabr を独立実装として照合に使っているため、統合するとこの独立照合を失う点も比較に入れる。johnhull と deep_hedge_price の既存の役割分担は尊重し、題材が近いという理由だけで統合しない。
 
 各工程の検証は変更範囲に合わせる。文書はリンクとコマンドの存在確認、Python の移動は対象 suite と uv workspace、画面は起動と主要操作、退避はルート設定・CI・参照元・定時タスク、容量移管は復元・ハッシュ・既存 QA を確認する。make test の成功だけを「全プロジェクト検証済み」とみなさない。
 
 ## 工程1の実施記録（2026-09-27）
 
-**完了（main 未マージ）**。ブランチは `codex/workspace-index`。
+**完了・main 取込み済み（`dd18befe`）**。実装時のブランチは `codex/workspace-index`。
 `06849a7a` は索引と共有文書、`25606280` は6件の README の実装照合による修正。
-この実施記録のコミットは上記2件に続く。工程2以降は未着手。
+本人側のレビューと fast-forward・push が完了し、同ブランチと worktree は削除済み。後続の工程2は次節に記す。
 
 ### 変更と根拠
 
@@ -226,18 +226,62 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 - アーカイブ内の旧 README は当時の起動手順を含む。新索引で注意点を明記し、本体の再実行や修復は行っていない。
   追跡外 tmp、個人データ、保存済み評価結果、大容量成果物も今回の整理対象外。
 
-工程2で先に決めるのは、新統合プロジェクトの名称・入口・残す機能と画面の範囲。
-公開 API・依存関係は統合仕様を具体化して確認する。保管先、D1、別ブランチのマージ、分類の最終確認、
-候補ごとの退避可否は、次節の未決事項として残す。
+## 工程2の実施記録（2026-09-27）
 
-## 残る決定
+本人から名称・入口・機能範囲・大容量保管先の判断を委任され、D1 の決定と HSK3 の
+検証後のマージも承認された。設計作業は `codex/workspace-design` の専用 worktree で行った。
+**工程2完了（main 反映待ち）**。`fc95f1b9` は索引と起動案内の補足、`a0e75edd` は統合設計・
+保管方針・D1 と ROADMAP、`866441dc` は HSK3 の検証記録。この計画書のコミットはその後に続く。
 
-- 新しい統合プロジェクトの名称、最初に使う入口、残す画面の範囲。
-- 大容量ファイルの保管先と、過去履歴の容量も対象にするか。
-- johnhull の再検査方針（D1）を M15 の前に決めるか。
-- origin/codex/hsk3-first-lesson を main へマージするか（Xcode のある環境でのビルドとテストが前提）。
-- 案内カテゴリの変更（market_nn、quant-agent-benchmark、rates-ui-lab）でよいか。
+### 決定・変更
+
+- [市場分析仕様](../specs/2026-09-27-market-research-design.md): `market-research` に名称を確定。
+  Streamlit の7画面、CLI / Jupyter / HTML を同じ計算基盤へ接続する。機能19群の初版・後続・非採用と、
+  価格・公開時点・バックテスト・口座側 export の契約、13群の受入条件を定義。
+- [ADR 0004](../../decisions/0004-artifact-storage-and-evidence.md): 大容量成果物は別 SSD のローカル正本と
+  内蔵 SSD の検証済み第2コピー。Git には manifest と最小証跡を残す。保管庫の作成・移管は未実施。
+- [johnhull D1](../../../johnhull/docs/EVIDENCE_POLICY.md) と [ROADMAP](../../../johnhull/ROADMAP.md):
+  影響のある節を再描画し、同一画像は実体を保持して参照。M15 前に D1-preflight を行う。
+  数値・意味・受入検査と14節の受入状態は維持。D3 の軽量化は未決。
+- [ルート README](../../../README.md) の48件にスタック列を復元し、
+  [stock README](../../../stock/README.md) に既存 start.sh の案内を戻した。
+  agentic-setup の同期、Makefile help、stock/akinator の指示ファイルは前節の残件のまま。
+
+設計時に、portfolio-analyzer の `clean_closes` が後続5観測を使うことを確認した。
+品質問題への対処は継承するが、当時利用可能なデータと後日訂正を分離する。
+また旧バックテストは close/open の収益期間が異なるため、旧3実装同士の一致ではなく
+新しい明示契約の手計算 fixture を受入の正本とする。
+
+### HSK3 の取込み（別ブランチの残件）
+
+- `origin/codex/hsk3-first-lesson` の3コミットを main 基準の `codex/hsk3-xcode-check` に統合し、
+  [macOS CI](../../../.github/workflows/my-tianjin.yml) を追加。
+- main へ取り込む正確な commit `6dd2e69f` を macOS 26 / Xcode 26.6 / iOS Simulator で検証。
+  ビルドと XCTest **57件**、Node の新単元テスト **8件**、既存教材検証・self-test が成功。
+  [GitHub Actions の記録](https://github.com/ankimo1210/projects/actions/runs/36301052893)。
+- main がクリーンで origin と同じ `dd18befe` であることを再確認し、`6dd2e69f` へ
+  fast-forward して push。直後に main / origin の一致とクリーンを確認した。
+- [HSK3 文書](../../../My%20Tianjin/Docs/HSK3FirstLesson.md) に検証結果を追記。
+  画面の手動操作、実機の音声・アクセシビリティ、教材の人手監修は未実施で、公開・配布は行っていない。
+
+### 検証と境界
+
+変更した文書と AGENTS・アーカイブ索引の相対リンク182件はすべて実在。
+`git ls-tree -d HEAD` と照合して48件・重複なし・分類件数 12 / 7 / 13 / 6 / 10 を確認した。
+48件のスタック、Make ターゲット、testpaths 35件、start.sh の構文と実装も照合。
+pre-commit と `git diff --check` は成功。Markdown の変更なので ruff 等は対象なしで skip。
+市場分析の全suiteや画面は未実施。文書の検証を市場分析の実行検証と混同しない。
+独立した読み取り専用レビューで重大・要修正の指摘なし。価格の単位表現を明確にする軽微な指摘を反映した。
+工程3の市場分析コード、新しい依存、データ移管、個別退避、履歴書換えはまだ行わない。
+D1 の方針決定と保管先の選定を、ツール対応やバックアップ完了とは扱わない。
+
+## 残る決定・次の作業
+
+- 工程3: 統合仕様の契約と fixture から実装する。新しい production 依存が具体的に必要になった場合だけ確認する。
+- johnhull: D1-preflight を実装・検証してから M15。D3（定性節の軽量化・受入単位）は別途判断。
+- 容量整理: 選定した保管庫を構築し、小群で2コピーと復元を実証。過去履歴の書換えは対象外。
 - アーカイブは候補ごとに、後継の検証結果を添えて最終確認する。
+- HSK3: 自動ビルド・テストは確認済み。主要画面の操作と教材監修を経て後続の製品判断をする。
 
 ## レビュー記録
 
@@ -248,4 +292,4 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 - 追記: portfolio-analyzer の独自取得とデータ品質規則、定時タスクと共有 `.venv` の関係、ratesvol と hullkit の独立照合、D1 を M15 の前に決める理由、公開リポジトリでの移管先の制約。
 - 変更: market_nn、quant-agent-benchmark、rates-ui-lab の案内カテゴリ。
 
-初版の作業は計画書の作成とレビュー反映まで。その後の工程1の変更・検証は上の実施記録に記す。工程2以降のコード統合・移動・削除・外部保存・履歴変更は行っていない。
+初版の作業は計画書の作成とレビュー反映まで。その後の工程1・工程2の変更と検証は上の実施記録に記す。市場分析コードの統合・移動・削除・外部保存・履歴変更は行っていない。
