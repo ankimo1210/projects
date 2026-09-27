@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 from market_research.cli import main
 from market_research.macro import as_of
+from market_research.prices import select_bars_as_of
 from market_research.services import build_demo_run
 from streamlit.testing.v1 import AppTest
 
@@ -49,9 +50,18 @@ def test_cli_json_uses_same_run_and_no_account_fields(capsys):
     assert "holdings" not in value and "account" not in value
 
 
-def test_streamlit_opens_seven_demo_views_without_exceptions():
+def test_streamlit_opens_seven_demo_views_without_exceptions(monkeypatch):
+    import socket
+    import urllib.request
+
+    def blocked(*_args, **_kwargs):
+        raise AssertionError("unexpected network access")
+
+    monkeypatch.setattr(socket, "create_connection", blocked)
+    monkeypatch.setattr(urllib.request, "urlopen", blocked)
     path = Path(__file__).resolve().parents[1] / "app" / "main.py"
     app = AppTest.from_file(str(path), default_timeout=15).run()
+    app.run()
     assert not app.exception
     assert [tab.label for tab in app.tabs] == [
         "市場概要",
@@ -73,3 +83,11 @@ def test_installed_market_research_command_runs_offline():
         [str(command), "demo", "--json"], capture_output=True, text=True, check=True
     )
     assert json.loads(result.stdout)["mode"] == "synthetic-demo"
+
+
+def test_demo_decisions_only_use_bars_available_by_that_time():
+    demo = build_demo_run()
+    for position, decision_at in enumerate(demo.prices.index, start=1):
+        known = select_bars_as_of(demo.bars, decision_at)
+        assert len(known) == 2 * position
+        assert max(bar.bar_end for bar in known) <= decision_at
