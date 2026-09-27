@@ -23,38 +23,40 @@ cd ~/projects && make install     # = uv sync --all-packages
 
 ## 実行例
 
+以下はワークスペースルートから実行します。`output` は説明用の出力先です。
+
 ```bash
 # 1. バックアップ一覧を確認
-python -m line_backup_exporter.cli list-backups
+uv run --no-sync python -m line_backup_exporter.cli list-backups
 
 # 2. LINE関連ファイルをスキャン
-python -m line_backup_exporter.cli scan-line \
+uv run --no-sync python -m line_backup_exporter.cli scan-line \
   --backup-dir "/path/to/backup/<backup_id>" \
   --out output
 
 # 3. SQLite候補ファイルをコピー
-python -m line_backup_exporter.cli extract-candidates \
+uv run --no-sync python -m line_backup_exporter.cli extract-candidates \
   --backup-dir "/path/to/backup/<backup_id>" \
   --manifest-csv output/manifest_line_files.csv \
   --out output
 
 # 4. DBスキーマを確認
-python -m line_backup_exporter.cli inspect-db \
+uv run --no-sync python -m line_backup_exporter.cli inspect-db \
   --db output/extracted/some_Line.sqlite \
   --out output
 
 # 5. テーブルを生CSVで出力
-python -m line_backup_exporter.cli export-raw-table \
+uv run --no-sync python -m line_backup_exporter.cli export-raw-table \
   --db output/extracted/some_Line.sqlite \
   --table ZMESSAGE --out output --limit 1000
 
 # 6. 正規化メッセージCSVを作成
-python -m line_backup_exporter.cli export-line-csv \
+uv run --no-sync python -m line_backup_exporter.cli export-line-csv \
   --db output/extracted/some_Line.sqlite \
   --message-table ZMESSAGE --out output
 
 # 7. HTMLで閲覧
-python -m line_backup_exporter.cli render-html \
+uv run --no-sync python -m line_backup_exporter.cli render-html \
   --messages-csv output/line_messages_normalized.csv \
   --out output
 ```
@@ -88,14 +90,14 @@ Windows での詳細手順は [`scripts/README_windows.md`](scripts/README_windo
 | `encrypted: YES` と表示される | iTunes で暗号化をオフにして再バックアップ |
 | `Manifest.db not found` | `--backup-dir` がバックアップIDフォルダを指しているか確認 |
 | LINEファイルが見つからない | バックアップが古い・または部分的の可能性。新しいバックアップを試す |
-| `inspect-db` が遅い | 大きなテーブルの行数計測に時間がかかる場合あり。`--sample-rows 0` は現時点非対応だが、通常は数分以内に完了 |
+| `inspect-db` が遅い | 大きなテーブルの行数計測に時間がかかる場合あり。`--sample-rows 0` でサンプル行の取得を省略できる。ただし全テーブルの行数計測は続く |
 
 ---
 
 ## テスト実行
 
 ```bash
-python -m unittest discover tests
+uv run --no-sync python -m unittest discover line_backup/tests -v
 ```
 
 ---

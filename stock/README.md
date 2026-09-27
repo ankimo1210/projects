@@ -40,10 +40,8 @@ uv sync --all-packages   # または: make install
 ### 2. Dash ダッシュボード起動
 
 ```bash
-cd /home/kazumasa/projects/stock
-./start.sh
-# または
-uv run python app/app.py
+cd /home/kazumasa/projects
+uv run --no-sync python stock/app/app.py
 ```
 
 → http://127.0.0.1:8050 を開く
@@ -80,7 +78,8 @@ res.metrics            # CAGR / Sharpe / MaxDD など
 ### 4. Jupyter Notebook
 
 ```bash
-uv run jupyter lab notebooks/
+cd /home/kazumasa/projects
+uv run --no-sync jupyter lab stock/notebooks/
 ```
 
 - `01_data_quickstart.ipynb`
@@ -140,10 +139,12 @@ projects/                    # ← uv workspace root (git管理単位)
 
 ## 技術スタック
 
+バージョンは [pyproject.toml](pyproject.toml) の依存下限です。
+
 - **Python 3.12** / **uv** （パッケージ管理）
-- **Dash 2.18** + **dash-bootstrap-components** （UI）
-- **Plotly 5.24** （可視化）
-- **DuckDB 1.1** （ローカルキャッシュ）
+- **Dash >=2.18** + **dash-bootstrap-components** （UI）
+- **Plotly >=5.24** （可視化）
+- **DuckDB >=1.1** （ローカルキャッシュ）
 - **yfinance / fredapi / requests** （データ取得）
 - **anthropic** （AI チャット、Claude Sonnet 4.6）
 - **Flask** （AI チャット用 API サーバー）

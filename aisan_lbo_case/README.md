@@ -12,8 +12,7 @@ The primary analytical output is an investment-committee style HTML report:
 
 Presentation deliverables live in `docs/`:
 
-- `docs/AISAN_4667_Take_Private_Case_Study.pptx` — case-study deck;
-  `python -m src.report.update_pptx_addendum` appends the valuation addendum slides
+- `docs/AISAN_4667_Take_Private_Case_Study.pptx` — ケーススタディ資料。追記用スクリプトは現在のツリーに含まれません。
 - `docs/AISAN_4667_LBO_Model.xlsx` — Excel model (not tracked in git)
 - Research logs: `docs/HANDOFF_Project_Measure_AISAN_4667.md` (handoff),
   `docs/FACT_CHECK_2026-06.md` (June 2026 fact check),
@@ -28,13 +27,13 @@ python3 -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-The scripts also run in a Python environment that already has `pandas`, `numpy`, `requests`, `beautifulsoup4`, `PyYAML` and `Jinja2`. `plotly` is loaded in the final HTML through CDN.
+The scripts also run in a Python environment that already has `pandas`, `numpy`, `requests`, `beautifulsoup4`, `PyYAML`, `Jinja2` and `yfinance`. `plotly` is loaded in the final HTML through CDN.
 
 If `python3-venv` is unavailable in the WSL image, use the workspace `uv` runner:
 
 ```bash
-uv run --with pandas --with numpy --with pyyaml --with jinja2 --with requests --with beautifulsoup4 --with pytest python -m src.report.render_html
-uv run --with pandas --with numpy --with pyyaml --with jinja2 --with requests --with beautifulsoup4 --with pytest pytest tests
+uv run --with pandas --with numpy --with pyyaml --with jinja2 --with requests --with beautifulsoup4 --with yfinance --with pytest python -m src.report.render_html
+uv run --with pandas --with numpy --with pyyaml --with jinja2 --with requests --with beautifulsoup4 --with yfinance --with pytest pytest tests
 ```
 
 ## Data Refresh
