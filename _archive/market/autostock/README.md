@@ -1,3 +1,8 @@
+> 2026-09-28に現役workspaceから退避した旧自律探索デモです。以下は退避前の説明です。
+> 現行の固定Mag7研究例は [market-research](../../../market-research/README.md) にあります。
+> 自律的な編集ループは移植せず、このディレクトリに保存しました。旧コマンドのパスは
+> 当時の構成を示し、移動後のtestsは17件成功。旧自律起動と価格取得は未検証です。
+
 # autostock
 
 Autonomous trading-strategy research, ported from

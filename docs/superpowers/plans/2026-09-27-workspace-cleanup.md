@@ -217,7 +217,7 @@ root `conftest.py` にも明示importがある。後継 `market-research` の工
 | stock | uv をルートから使う起動例、依存バージョンを固定値でなく下限として記載 | [起動コード](../../../stock/app/app.py)、[依存宣言](../../../stock/pyproject.toml) |
 | line_backup | 共有環境での CLI・テスト例、`--sample-rows 0` の説明 | [CLI](../../../line_backup/src/line_backup_exporter/cli.py)、[SQLite 検査](../../../line_backup/src/line_backup_exporter/sqlite_inspector.py) |
 | akinator | 同梱35件は手作り seed、ライブ Wikidata 取得と区別 | [seed 生成](../../../akinator/scripts/seed_data.py) と同梱データの ID・件数 |
-| autostock | ルート実行例と取得開始日、lockbox は指標非表示であって未来データへのアクセス制限ではないと訂正 | [戦略](../../../autostock/strategy.py)、[評価器](../../../autostock/prepare.py) |
+| autostock | ルート実行例と取得開始日、lockbox は指標非表示であって未来データへのアクセス制限ではないと訂正 | [戦略](../../../_archive/market/autostock/strategy.py)、[評価器](../../../_archive/market/autostock/prepare.py) |
 | aisan_lbo_case | 存在しない PPTX 追記コマンドを除去し、取得処理の yfinance 依存を補足 | [report モジュール群](../../../aisan_lbo_case/src/report/)、[peer 取得](../../../aisan_lbo_case/src/fetch/fetch_peer_multiples.py) |
 | deep_hedge_price | Python 3.12、共有環境の有効化、dev extra を明示 | [依存宣言](../../../deep_hedge_price/pyproject.toml)、[Makefile](../../../deep_hedge_price/Makefile) |
 
@@ -343,6 +343,21 @@ Stooqはブラウザ検証HTMLが返り、J-Quantsライブは未検証。
 環境ハンドオフの未完了事項を現在も未完了と断定せず、旧調査案の価格・仕様は再検証を要する
 と索引に明記した。AIセッション索引の相対リンクだけ移動後に直し、元記録の実施内容は変更していない。
 _docs/ は新しい一時メモの入口だけを残す。現役プロジェクトの移動や旧市場入口の切替とは別作業。
+
+## 工程4の個別退避: autostock（2026-09-28）
+
+本人の「判断を求めず整理を完了まで進める」という指示に従い、旧 autostock を
+[_archive/market](../../../_archive/market/README.md)へ退避した。後継の
+market-research は固定したMag7研究例で当時の戦略ウェイトと照合済みであり、
+各判断時点の価格prefixだけを戦略へ渡す。旧自律編集ループは後継へ移植せず、
+コード・プログラム・報告・画像を退避先に残した。退避前には stock、quantkit、
+market-viz、macrokit と合わせた旧suiteが410 passed・13 skippedだった。
+移動後のautostock testsは17件成功。旧自律起動と価格取得は未検証。ローカルの無視対象データはコピーも削除もしていない。
+
+root pyproject.toml のuvメンバー、testpaths、Ruff例外、uv.lock、
+READMEの現役一覧とメンバー案内、Makefileのhelp、AGENTSのtestpaths件数を更新した。
+退避先の旧READMEには当時の起動例であることを明記した。
+他4件は、旧機能の採否と参照元を照合するまで現役の場所に保つ。
 
 ## レビュー記録
 
