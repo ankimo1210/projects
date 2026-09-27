@@ -11,78 +11,78 @@
 
 ### 市場・投資・意思決定（12件）
 
-| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
-|---|---|---|---|---|
-| stock | 日米株・財務・マクロの取得と Dash 分析 | [README](stock/README.md) | 統合検討 | quantkit / market-viz / macrokit |
-| quantkit | マルチアセットの信号研究・バックテスト | [README](quantkit/README.md) | 統合検討 | stock / market-viz / macrokit |
-| market-viz | 市場データの対話的な可視化 | [README](market-viz/README.md) | MVP・統合検討 | stock / quantkit |
-| macrokit | 公表時点を再現するマクロ指標ストア | [README](macrokit/README.md) | 統合検討 | stock / quantkit |
-| autostock | Mag7 の自律戦略探索デモ | [README](autostock/README.md) | 実験・統合検討 | quantkit（評価基盤の候補） |
-| portfolio-analyzer | 資産配分・集中度などを確認するローカル分析 | [README](portfolio-analyzer/README.md) | 独立継続 | 市場分析基盤との連携を設計予定 |
-| JHRMBS | JHF MBS の償還・CF・価格リスク分析 | [README](JHRMBS/README.md) | 分析基盤 | 金利研究教材 |
-| aisan_lbo_case | 公開情報に基づく LBO ケーススタディ | [README](aisan_lbo_case/README.md) | 調査成果 | small_ma_search（関連テーマ） |
-| labor_ai_quadrant | 人手不足と AI 代替可能性の業種分析 | [README](labor_ai_quadrant/README.md) | 分析レポート | 市場分析基盤（接続候補） |
-| timesfm_lab | 時系列基盤モデルと古典手法の比較 | [README](timesfm_lab/README.md) | 研究ベンチ | quantkit（関連テーマ） |
-| small_ma_search | 小型 M&A の調査・実行計画 | [README](small_ma_search/README.md) | 意思決定資料 | aisan_lbo_case |
-| housing-buy-vs-rent | 住宅購入・賃貸・借上社宅の比較 | [README](housing-buy-vs-rent/README.md) | HTML シミュレーター | re_invest_os（別用途の不動産分析） |
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
+|---|---|---|---|---|---|
+| stock | 日米株・財務・マクロの取得と Dash 分析 | [README](stock/README.md) | 統合検討 | quantkit / market-viz / macrokit | Python / DuckDB / Dash |
+| quantkit | マルチアセットの信号研究・バックテスト | [README](quantkit/README.md) | 統合検討 | stock / market-viz / macrokit | Python / DuckDB / Plotly |
+| market-viz | 市場データの対話的な可視化 | [README](market-viz/README.md) | MVP・統合検討 | stock / quantkit | Streamlit / Plotly / DuckDB |
+| macrokit | 公表時点を再現するマクロ指標ストア | [README](macrokit/README.md) | 統合検討 | stock / quantkit | Python / DuckDB |
+| autostock | Mag7 の自律戦略探索デモ | [README](autostock/README.md) | 実験・統合検討 | quantkit（評価基盤の候補） | Python |
+| portfolio-analyzer | 資産配分・集中度などを確認するローカル分析 | [README](portfolio-analyzer/README.md) | 独立継続 | 市場分析基盤との連携を設計予定 | Python / Portable HTML |
+| JHRMBS | JHF MBS の償還・CF・価格リスク分析 | [README](JHRMBS/README.md) | 分析基盤 | 金利研究教材 | Python / Pandas / SciPy |
+| aisan_lbo_case | 公開情報に基づく LBO ケーススタディ | [README](aisan_lbo_case/README.md) | 調査成果 | small_ma_search（関連テーマ） | Python / Jupyter |
+| labor_ai_quadrant | 人手不足と AI 代替可能性の業種分析 | [README](labor_ai_quadrant/README.md) | 分析レポート | 市場分析基盤（接続候補） | Python / Plotly |
+| timesfm_lab | 時系列基盤モデルと古典手法の比較 | [README](timesfm_lab/README.md) | 研究ベンチ | quantkit（関連テーマ） | Python / PyTorch |
+| small_ma_search | 小型 M&A の調査・実行計画 | [README](small_ma_search/README.md) | 意思決定資料 | aisan_lbo_case | Markdown / HTML |
+| housing-buy-vs-rent | 住宅購入・賃貸・借上社宅の比較 | [README](housing-buy-vs-rent/README.md) | HTML シミュレーター | re_invest_os（別用途の不動産分析） | HTML / JavaScript / Node.js (stdlib) |
 
 ### 定量・数学の教材と研究（7件）
 
-| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
-|---|---|---|---|---|
-| johnhull | Hull の章別教材・現代デリバティブ研究・hullkit | [README](johnhull/README.md) | 継続開発 | 金利・ボラ・ヘッジ研究群 |
-| rates_volatility_model | 金利ボラモデルの教材と ratesvol | [README](rates_volatility_model/README.md) | 教材・合成データ | johnhull（統合方法を検討） |
-| rough_volatility | ラフボラと Hawkes 過程の可視化 | [README](rough_volatility/README.md) | 独立した研究ラボ | johnhull |
-| deep_hedge_price | Deep Hedging と別系統のニューラル価格近似 | [README](deep_hedge_price/README.md) | 独立した研究ラボ | johnhull の参照計算 |
-| optimal_execution | 最適執行・板モデル・強化学習の比較 | [README](optimal_execution/README.md) | 独立した研究ラボ | johnhull / market_nn |
-| market_nn | LOB 予測論文の構造再現 | [README](market_nn/README.md) | 研究・合成データ検証 | optimal_execution（関連テーマ） |
-| analytics | 数学・統計・ML の体験型教材群 | [README](analytics/README.md)・[統合ポータル](analytics/report/README.md) | 教材シリーズ | 10冊の Python メンバーと SDE Web 教材 |
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
+|---|---|---|---|---|---|
+| johnhull | Hull の章別教材・現代デリバティブ研究・hullkit | [README](johnhull/README.md) | 継続開発 | 金利・ボラ・ヘッジ研究群 | Python / Jupyter |
+| rates_volatility_model | 金利ボラモデルの教材と ratesvol | [README](rates_volatility_model/README.md) | 教材・合成データ | johnhull（統合方法を検討） | Python / Jupyter |
+| rough_volatility | ラフボラと Hawkes 過程の可視化 | [README](rough_volatility/README.md) | 独立した研究ラボ | johnhull | Python / Jupyter |
+| deep_hedge_price | Deep Hedging と別系統のニューラル価格近似 | [README](deep_hedge_price/README.md) | 独立した研究ラボ | johnhull の参照計算 | Python / PyTorch |
+| optimal_execution | 最適執行・板モデル・強化学習の比較 | [README](optimal_execution/README.md) | 独立した研究ラボ | johnhull / market_nn | Python / Jupyter |
+| market_nn | LOB 予測論文の構造再現 | [README](market_nn/README.md) | 研究・合成データ検証 | optimal_execution（関連テーマ） | Python / PyTorch |
+| analytics | 数学・統計・ML の体験型教材群 | [README](analytics/README.md)・[統合ポータル](analytics/report/README.md) | 教材シリーズ | 10冊の Python メンバーと SDE Web 教材 | Python / Jupyter Book / Plotly / TypeScript |
 
 ### ゲーム・シミュレーター・体験アプリ（13件）
 
-| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
-|---|---|---|---|---|
-| gto | ポーカーの GTO 分析・計算 | [README](gto/README.md) | Web アプリ | 独立 |
-| akinator | 確率更新による人物・キャラクター推測 | [README](akinator/README.md) | オフライン seed 付き試作 | Wikidata 取得機能 |
-| pokemon | オリジナル 3D モンスター収集ゲーム | [README](pokemon/README.md) | Web 試作 | 独立 |
-| monster_gate | カードと MP を使うローグライク | [README](monster_gate/README.md) | Web ゲーム | 独立 |
-| EitanQuest | iPhone 向け英単語クイズ | [README](EitanQuest/README.md) | iOS MVP | Xcode が必要 |
-| NeonThread | 発光ラインを操作する無限ランゲーム | [README](NeonThread/README.md) | iOS アプリ | Xcode が必要 |
-| WSET | CruNote: WSET のオフライン学習 | [README](WSET/README.md) | iOS アプリ | Xcode・独立 uv の問題コーパス |
-| My Tianjin | HSK の語彙・語順・読解・産出学習 | [README](My%20Tianjin/README.md) | iOS アプリ | Xcode が必要 |
-| b737-ops-sim | Boeing 737 の運航手順を学ぶ | [README](b737-ops-sim/README.md) | ローカル訓練用試作 | FlightGear / mock、認定訓練装置ではない |
-| eagle | Apollo AGC と月着陸のシミュレーション | [README](eagle/README.md) | プレイ可能な Alpha | yaAGC / Rust / Web |
-| komorebi-3d | 喫茶店ジオラマの 3D 制作 | [README](komorebi-3d/README.md) | Blender 描画確認・UE 確認待ち | Blender / Unreal Engine |
-| tokyo_subway_3d | 地下鉄の標高を再現する 3D ビューア | [README](tokyo_subway_3d/README.md) | 可視化作品 | 独立 |
-| nbody-gpu | GPU による N 体計算と 3D 可視化 | [README](nbody-gpu/README.md) | Phase 0–2 実装済み | NVIDIA CUDA が必要 |
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
+|---|---|---|---|---|---|
+| gto | ポーカーの GTO 分析・計算 | [README](gto/README.md) | Web アプリ | 独立 | Rust / FastAPI / Next.js |
+| akinator | 確率更新による人物・キャラクター推測 | [README](akinator/README.md) | オフライン seed 付き試作 | Wikidata 取得機能 | Python / FastAPI |
+| pokemon | オリジナル 3D モンスター収集ゲーム | [README](pokemon/README.md) | Web 試作 | 独立 | Vite / React Three Fiber |
+| monster_gate | カードと MP を使うローグライク | [README](monster_gate/README.md) | Web ゲーム | 独立 | TypeScript / pnpm / Vite |
+| EitanQuest | iPhone 向け英単語クイズ | [README](EitanQuest/README.md) | iOS MVP | Xcode が必要 | Swift / SwiftUI / SwiftData |
+| NeonThread | 発光ラインを操作する無限ランゲーム | [README](NeonThread/README.md) | iOS アプリ | Xcode が必要 | Swift / SwiftUI + SpriteKit |
+| WSET | CruNote: WSET のオフライン学習 | [README](WSET/README.md) | iOS アプリ | Xcode・独立 uv の問題コーパス | Swift / SwiftUI（問題コーパス生成は Python） |
+| My Tianjin | HSK の語彙・語順・読解・産出学習 | [README](My%20Tianjin/README.md) | iOS アプリ | Xcode が必要 | Swift / SwiftUI |
+| b737-ops-sim | Boeing 737 の運航手順を学ぶ | [README](b737-ops-sim/README.md) | ローカル訓練用試作 | FlightGear / mock、認定訓練装置ではない | TypeScript / pnpm / React / Babylon.js / Fastify |
+| eagle | Apollo AGC と月着陸のシミュレーション | [README](eagle/README.md) | プレイ可能な Alpha | yaAGC / Rust / Web | Rust / TypeScript / yaAGC |
+| komorebi-3d | 喫茶店ジオラマの 3D 制作 | [README](komorebi-3d/README.md) | Blender 描画確認・UE 確認待ち | Blender / Unreal Engine | Blender / Unreal Engine / Python |
+| tokyo_subway_3d | 地下鉄の標高を再現する 3D ビューア | [README](tokyo_subway_3d/README.md) | 可視化作品 | 独立 | Python / deck.gl / MapLibre |
+| nbody-gpu | GPU による N 体計算と 3D 可視化 | [README](nbody-gpu/README.md) | Phase 0–2 実装済み | NVIDIA CUDA が必要 | CuPy / VisPy |
 
 ### 個人データ・開発環境・AI 評価（6件）
 
-| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
-|---|---|---|---|---|
-| health | 本人の健康データをローカルで保存・閲覧 | [README](health/README.md) | Python CLI + Next.js ポータル | 独立 |
-| genequest | 検査結果のローカル保存・検証 | [README](genequest/README.md) | 個人利用 | 独立 |
-| line_backup | バックアップをオフラインで解析する CLI | [README](line_backup/README.md) | ローカル専用 | 独立 |
-| agent-profiler | エージェント実行の観測・保存・分析 | [README](agent-profiler/README.md) | TUI / CLI | Codex CLI / Claude Code |
-| agentic-setup | エージェント・端末設定の復元用バックアップ | [README](agentic-setup/README.md) | 稼働設定と差分あり・同期待ち | 共有知識は docs/knowledge |
-| quant-agent-benchmark | 定量研究・開発エージェントの評価 | [README](quant-agent-benchmark/README.md) | ベンチ・評価結果を保存 | agent-profiler（関連テーマ） |
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
+|---|---|---|---|---|---|
+| health | 本人の健康データをローカルで保存・閲覧 | [README](health/README.md) | Python CLI + Next.js ポータル | 独立 | Python / Next.js / TypeScript |
+| genequest | 検査結果のローカル保存・検証 | [README](genequest/README.md) | 個人利用 | 独立 | CSV / JSON / Markdown / Python |
+| line_backup | バックアップをオフラインで解析する CLI | [README](line_backup/README.md) | ローカル専用 | 独立 | Python |
+| agent-profiler | エージェント実行の観測・保存・分析 | [README](agent-profiler/README.md) | TUI / CLI | Codex CLI / Claude Code | Python / Textual |
+| agentic-setup | エージェント・端末設定の復元用バックアップ | [README](agentic-setup/README.md) | 稼働設定と差分あり・同期待ち | 共有知識は docs/knowledge | Markdown / Shell / JSON / TOML |
+| quant-agent-benchmark | 定量研究・開発エージェントの評価 | [README](quant-agent-benchmark/README.md) | ベンチ・評価結果を保存 | agent-profiler（関連テーマ） | Python |
 
 ### 学習ラボ・単発の成果（10件）
 
 完成した小さな作品も成果として見える位置に残します。更新日だけではアーカイブしません。
 
-| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 |
-|---|---|---|---|---|
-| jp_llm_lab | 日本語小型 LLM の内部・学習過程を学ぶ | [README](jp_llm_lab/README.md) | 教育ラボ | analytics（関連教材） |
-| cpp_algo_lab | C++ / CUDA のアルゴリズム実装と計測 | [README](cpp_algo_lab/README.md) | Phase 1–4 の学習成果 | shortest_path |
-| shortest_path | 最短経路探索の実装と可視化 | [README](shortest_path/README.md) | 学習成果 | cpp_algo_lab |
-| csharp_calc | WinForms 電卓 | [README](csharp_calc/README.md) | 学習サンプル | CsharpApp / .NET |
-| CsharpApp | WPF / MVVM の価格ティッカー | [README](CsharpApp/README.md) | 学習サンプル | csharp_calc / .NET |
-| ts-rosetta | 同じタスクアプリで TS 技術を比較 | [README](ts-rosetta/README.md) | 学習ラボ | 独立 |
-| kaggle | コンペの分析・実験記録 | [README](kaggle/README.md) | 実験成果 | 独立 |
-| notebooks | 単発の金融・不動産分析など | [README](notebooks/README.md) | 探索・試作 | stock / gto / re_invest_os |
-| interactive-email-demo | メール内で切り替える指標レポート | [README](interactive-email-demo/README.md) | 検証サンプル | AMP for Email |
-| rates-ui-lab | 金利データを題材に UI を比較 | [README](rates-ui-lab/README.md) | 合成データの UI 実験 | 市場分析の UI 候補 |
+| プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
+|---|---|---|---|---|---|
+| jp_llm_lab | 日本語小型 LLM の内部・学習過程を学ぶ | [README](jp_llm_lab/README.md) | 教育ラボ | analytics（関連教材） | Python / PyTorch |
+| cpp_algo_lab | C++ / CUDA のアルゴリズム実装と計測 | [README](cpp_algo_lab/README.md) | Phase 1–4 の学習成果 | shortest_path | C++20 / CUDA / make / doctest |
+| shortest_path | 最短経路探索の実装と可視化 | [README](shortest_path/README.md) | 学習成果 | cpp_algo_lab | Python / Jupyter / HTML |
+| csharp_calc | WinForms 電卓 | [README](csharp_calc/README.md) | 学習サンプル | CsharpApp / .NET | C# / .NET 9 |
+| CsharpApp | WPF / MVVM の価格ティッカー | [README](CsharpApp/README.md) | 学習サンプル | csharp_calc / .NET | C# / WPF / .NET 9 |
+| ts-rosetta | 同じタスクアプリで TS 技術を比較 | [README](ts-rosetta/README.md) | 学習ラボ | 独立 | TypeScript / pnpm |
+| kaggle | コンペの分析・実験記録 | [README](kaggle/README.md) | 実験成果 | 独立 | Python |
+| notebooks | 単発の金融・不動産分析など | [README](notebooks/README.md) | 探索・試作 | stock / gto / re_invest_os | Jupyter |
+| interactive-email-demo | メール内で切り替える指標レポート | [README](interactive-email-demo/README.md) | 検証サンプル | AMP for Email | Python (stdlib) / AMP for Email |
+| rates-ui-lab | 金利データを題材に UI を比較 | [README](rates-ui-lab/README.md) | 合成データの UI 実験 | 市場分析の UI 候補 | TypeScript / Next.js / React / pnpm |
 
 ### 成果物・資料
 
