@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": "docs/validation/section-27-4/book-cb_decisions-1000.png",
+      "ref": "artifact:sha256:b89bee53b90a2a1224c90b5761e1a1451a1cb286120962158f28252ffc84f9ae",
+      "bytes": 21008,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/section-27-4/portal-cb_decisions-1000.png",
+      "ref": "artifact:sha256:8cf1bbfb73eae535b919c386db447299bf1ba2d1b28f32fc7a8beef35ddb9e84",
+      "bytes": 16798,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/section-27-4/book-cb_decisions-1000-m14-recheck.png",
+      "ref": "artifact:sha256:b89bee53b90a2a1224c90b5761e1a1451a1cb286120962158f28252ffc84f9ae",
+      "bytes": 21008,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/section-27-4/portal-cb_decisions-1000-m14-recheck.png",
+      "ref": "artifact:sha256:8cf1bbfb73eae535b919c386db447299bf1ba2d1b28f32fc7a8beef35ddb9e84",
+      "bytes": 16798,
+      "mime": "image/png"
+    }
+  ]
+}
