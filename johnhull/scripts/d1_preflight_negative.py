@@ -445,6 +445,28 @@ def run_controls(
     }
 
 
+def public_report_paths(report: dict, project: Path, work: Path) -> dict:
+    """Keep local checkout and scratch paths out of committed control records."""
+    roots = sorted(
+        ((str(project.resolve()), ""), (str(work.resolve()), "<work>")),
+        key=lambda item: len(item[0]),
+        reverse=True,
+    )
+
+    def convert(value):
+        if isinstance(value, str):
+            for source, replacement in roots:
+                value = value.replace(source + "/", replacement + ("/" if replacement else ""))
+            return value
+        if isinstance(value, list):
+            return [convert(item) for item in value]
+        if isinstance(value, dict):
+            return {key: convert(item) for key, item in value.items()}
+        return value
+
+    return convert(report)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, default=compare.SCRIPTS.parent)
@@ -465,6 +487,7 @@ def main(argv: list[str] | None = None) -> int:
         args.reuse,
         work,
     )
+    report = public_report_paths(report, args.project_root, work)
     out = args.records_root.resolve() / args.out
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
