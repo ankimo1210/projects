@@ -143,7 +143,6 @@ ignore = [
 "**/download_*.py" = ["E402"]
 "**/recompute_*.py" = ["E402"]
 "**/build_*.py" = ["E402"]
-"rates_volatility_model/test_suite_validation.py" = ["E402"]
 # __init__.py commonly re-exports symbols; allow F401 there.
 "**/__init__.py" = ["F401"]
 # gto solver: low-level GPU code uses single-letter math notation.

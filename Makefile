@@ -8,7 +8,7 @@
 #
 # `johnhull/hullkit` is a workspace member (used by johnhull notebooks).
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;
-# `rates_volatility_model/`, `notebooks/` have no managed env.
+# `notebooks/` has no managed env.
 
 .PHONY: health-web-check help install sync lint fmt fmt-fix test clean tree report books sde-check hull-report hull-book hull-artifacts-check hull-notebooks-check hull-core-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
 
@@ -45,10 +45,10 @@ help:
 	@echo "  johnhull/hullkit"
 	@echo "  analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}"
 	@echo "  analytics/differential_equation/{ode-book,pde-book}"
-	@echo "  quantkit deep_hedge_price optimal_execution rough_volatility"
+	@echo "  quantkit deep_hedge_price optimal_execution rough_volatility rates_volatility_model"
 	@echo ""
 	@echo "Outside the workspace:"
-	@echo "  rates_volatility_model, notebooks, kaggle, shortest_path, cpp_algo_lab (manual envs)"
+	@echo "  notebooks, kaggle, shortest_path, cpp_algo_lab (manual envs)"
 
 install sync:
 	uv sync --all-packages
