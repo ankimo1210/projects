@@ -9,23 +9,28 @@
 
 | 経路 | ブラウザー・節テスト | 新規画像 | 保存・復元 |
 |---|---|---:|---|
-| [全再描画](section-27-3/d1pf-27.3-20260927T220449Z-redraw.json) | 16状態と14テスト PASS | 16枚・413,577 bytes | C: / F: の各コピーから復元・ハッシュ一致 |
-| [基準再利用](section-27-3/d1pf-27.3-20260927T220502Z-reuse.json) | 同じ16状態と14テスト PASS | 0枚 | 上記の画像へ直接参照し、両コピーから復元・ハッシュ一致 |
+| [全再描画](section-27-3/d1pf-27.3-20260927T225757Z-redraw-c8c3ec53f8aa485c9992f8d9f10cb255.json) | 16状態と14テスト PASS | 16枚・413,577 bytes | C: / F: の各コピーから復元・ハッシュ一致 |
+| [基準再利用](section-27-3/d1pf-27.3-20260927T225817Z-reuse-4e9dbc51db5f4d268670a7e678ad71d3.json) | 同じ16状態と14テスト PASS | 0枚 | 上記の画像へ直接参照し、両コピーから復元・ハッシュ一致 |
 
-両経路の[ブラウザー結果](section-27-3/d1pf-27.3-20260927T220449Z-redraw.browser.json)と
-[再利用時の結果](section-27-3/d1pf-27.3-20260927T220502Z-reuse.browser.json)は
+両経路の[ブラウザー結果](section-27-3/d1pf-27.3-20260927T225757Z-redraw-c8c3ec53f8aa485c9992f8d9f10cb255.browser.json)と
+[再利用時の結果](section-27-3/d1pf-27.3-20260927T225817Z-reuse-4e9dbc51db5f4d268670a7e678ad71d3.browser.json)は
 PASS。16枚は受入時と M14 再検査時の画像にもバイト一致した。
 基準再利用記録は全再描画記録を直接参照し、連鎖は作らない。
-両記録の schema 2 検査と、C: / F: の実体検査は PASS。
+両記録の schema 2 検査と、C: / F: の実体検査は PASS。依存指紋を現行入力から
+再計算して一致を確認した。描画環境には実使用フォントと MathJax JS の
+バイトハッシュを含め、元のブラウザー結果もハッシュで検証する。
+先行した 22:04 UTC の2記録は実装レビュー前の履歴として保持し、
+現在の受入判定には用いない。
 
-[負の対照](section-27-3/negative-controls.json)16件も PASS。
+[負の対照](section-27-3/negative-controls-20260928-final.json)17件も PASS。
 対象と無関係な節の追加は再利用可。本文・値・データ・共有 CSS / JS・
-描画環境・normalizer の変更、未宣言の依存、欠損・破損した blob は
+描画環境（フォントと MathJax JS の実バイトを含む）・normalizer の変更、
+未宣言の依存、欠損・破損した blob は
 再利用を拒否した。負の対照は一時 overlay と保管庫の一時コピーで実施した。
 
 ## 既存 gate
 
-- johnhull 全体の pytest: **2,978 passed、6 skipped**。
+- johnhull 全体の pytest: **2,995 passed、6 skipped**。
 - 台帳: source 検査と `--check-artifacts` がともに PASS
   （306節中14節受入）。
 - release 契約と §27.3 の独立した数値検証: PASS。
