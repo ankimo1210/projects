@@ -77,6 +77,31 @@ HTML は `src/portfolio_analyzer/manifest_html.py` が `dist/artifact.json` と�
 プラグイン 1.0.8（2026-09-13 導入）でその部品が削除され、`--artifact-only` までしか作れなくなったため
 置き換えました。
 
+## 市場価格exportの任意読取
+
+market-research export-portfolio が作る Git 管理外の manifest.json を
+portfolio_analyzer.market_export.load_market_quotes で明示的に読み込めます。
+契約版、ParquetのSHA-256、確定・品質・時刻、銘柄の一意性を検査し、
+価格と USD/JPY の古さを別々の上限で拒否します。戻り値は既存の
+mtm.Quote です。市場側へ口座データは渡しません。
+
+~~~python
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from portfolio_analyzer.market_export import load_market_quotes
+
+quotes, fx = load_market_quotes(
+    Path("/home/kazumasa/.local/share/market-research/exports/EXPORT_ID/manifest.json"),
+    now=datetime.now(UTC),
+    max_price_age=timedelta(days=4),
+    max_fx_age=timedelta(days=2),
+)
+~~~
+
+読取は任意操作です。下の日次レポートは引き続き従来の取得経路を使い、
+Windows の定時タスクも変更していません。上限は休日や市場ごとの終値時刻を
+考えて呼出側で指定します。
+
 ## 日次の損益ダッシュボード（mark-to-market）
 
 `scripts/daily_pl_report.py` は、スナップショットの保有数量に yfinance の直近終値と USD/JPY を
