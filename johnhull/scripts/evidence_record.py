@@ -23,7 +23,7 @@ except ImportError:  # executed as a script from johnhull/scripts
 
 KIND = "johnhull-section-recheck"
 DECISIONS = ("redrawn", "reused")
-RUNTIME_KEYS = ("browser_version", "mathjax_version", "fonts")
+RUNTIME_KEYS = ("browser_version", "mathjax_version", "mathjax_scripts", "fonts")
 REQUIRED_FIELDS = (
     "schema_version",
     "kind",
@@ -56,6 +56,8 @@ def _sha256_file(path: Path) -> str:
 def _local_problems(record: dict) -> list[str]:
     """Problems that can be judged from the record alone."""
     problems = []
+    if record.get("dirty") is True:
+        problems.append("dirty: uncommitted inputs cannot claim PASS")
     checks = record.get("checks")
     if not isinstance(checks, dict) or not checks:
         problems.append("checks: expected at least one named check")
@@ -162,6 +164,8 @@ def _schema_problems(record: dict) -> list[str]:
         problems.append("record.commit: expected a full 40-character commit")
     if not isinstance(record.get("dirty"), bool):
         problems.append("record.dirty: expected a boolean")
+    elif record["dirty"]:
+        problems.append("record.dirty: a dirty run cannot claim PASS without a diff digest")
     if record.get("decision") not in DECISIONS:
         problems.append(f"record.decision: expected one of {DECISIONS}")
     reasons = record.get("reasons")
@@ -178,6 +182,52 @@ def _schema_problems(record: dict) -> list[str]:
         record["environment"].get("runtime"), dict
     ):
         problems.append("environment.runtime: expected an object")
+    else:
+        components = (record.get("dependency_fingerprint") or {}).get("components") or {}
+        full_components = {"book_section", "portal_cards", "book_assets", "portal_assets"}
+        if full_components <= set(components):
+            config = record["environment"].get("fingerprint_config")
+            if config != "scripts/evidence_dependencies.json":
+                problems.append("environment.fingerprint_config: expected the declared D1 config")
+            elif config not in (record.get("source_sha256") or {}):
+                problems.append("source_sha256: fingerprint config must be hashed")
+        runtime = record["environment"]["runtime"]
+        for key in ("browser_version", "mathjax_version"):
+            if not isinstance(runtime.get(key), str) or not runtime[key]:
+                problems.append(f"environment.runtime.{key}: expected a non-empty string")
+        scripts = runtime.get("mathjax_scripts")
+        if (
+            not isinstance(scripts, list)
+            or not scripts
+            or any(
+                not isinstance(item, dict)
+                or not isinstance(item.get("url"), str)
+                or not item["url"]
+                or not isinstance(item.get("sha256"), str)
+                or not _DIGEST_RE.fullmatch(item["sha256"])
+                for item in scripts
+            )
+        ):
+            problems.append("environment.runtime.mathjax_scripts: expected URL and sha256 entries")
+        fonts = runtime.get("fonts")
+        if not isinstance(fonts, dict) or not fonts:
+            problems.append("environment.runtime.fonts: expected observed font files")
+        elif any(
+            not isinstance(entries, list)
+            or not entries
+            or any(
+                not isinstance(item, dict)
+                or not isinstance(item.get("family"), str)
+                or not item["family"]
+                or not isinstance(item.get("file"), str)
+                or not item["file"]
+                or not isinstance(item.get("sha256"), str)
+                or not _DIGEST_RE.fullmatch(item["sha256"])
+                for item in entries
+            )
+            for entries in fonts.values()
+        ):
+            problems.append("environment.runtime.fonts: expected file and sha256 per selector")
     try:
         evidence_store.validate_entries(record.get("images"), "images")
     except evidence_store.StoreError as exc:
@@ -249,6 +299,32 @@ def _artifact_problems(record: dict, stores) -> list[str]:
     return problems
 
 
+def _raw_record_problems(project: Path, record: dict) -> list[str]:
+    """Check the browser's unabridged observation when a digest is claimed."""
+    browser = (record.get("checks") or {}).get("browser")
+    if not isinstance(browser, dict) or "raw_record_sha256" not in browser:
+        return []
+    digest = browser["raw_record_sha256"]
+    if not isinstance(digest, str) or not _DIGEST_RE.fullmatch(digest):
+        return ["checks.browser.raw_record_sha256: expected a sha256 digest"]
+    try:
+        relative = evidence_store.validate_relative_path(browser.get("raw_record_path"))
+    except (evidence_store.StoreError, TypeError) as exc:
+        return [f"checks.browser.raw_record_path: {exc}"]
+    path = project.joinpath(*relative.parts)
+    if not path.resolve(strict=False).is_relative_to(project.resolve()) or not path.is_file():
+        return ["checks.browser.raw_record_path: file does not exist inside the project"]
+    if _sha256_file(path) != digest:
+        return ["checks.browser.raw_record_sha256: digest does not match raw browser record"]
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (UnicodeError, json.JSONDecodeError) as exc:
+        return [f"checks.browser.raw_record_path: invalid JSON: {exc}"]
+    if not isinstance(raw, dict):
+        return ["checks.browser.raw_record_path: expected a JSON object"]
+    return []
+
+
 def validate_record(
     project: Path | str, record: dict, *, check_artifacts: bool = False, stores=None
 ) -> list[str]:
@@ -260,6 +336,7 @@ def validate_record(
     local = _local_problems(record)
     problems.extend(local)
     problems.extend(_baseline_problems(project, record))
+    problems.extend(_raw_record_problems(project, record))
     expected = "FAIL" if local else "PASS"
     if record.get("status") != expected:
         problems.append(

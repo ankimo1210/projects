@@ -23,7 +23,10 @@ COMMIT = "a" * 40
 RUNTIME = {
     "browser_version": "145.0.7632.6",
     "mathjax_version": "3.2.2",
-    "fonts": {"portal_plot_text": ["Liberation Sans"]},
+    "mathjax_scripts": [{"url": "https://example.test/mathjax.js", "sha256": "f" * 64}],
+    "fonts": {
+        "portal_plot_text": [{"family": "Liberation Sans", "file": "font.ttf", "sha256": "e" * 64}]
+    },
 }
 
 
@@ -134,6 +137,32 @@ def test_build_record_marks_a_complete_run_as_pass(project):
     assert record["kind"] == "johnhull-section-recheck"
     assert record["status"] == "PASS"
     assert validate_record(project, record) == []
+
+
+def test_dirty_run_cannot_claim_pass_without_a_reproducible_diff(project):
+    record = _record(project, dirty=True)
+    assert record["status"] == "FAIL"
+    assert any("dirty" in error for error in validate_record(project, record))
+
+
+def test_raw_browser_record_is_hashed_and_must_remain_available(project):
+    raw_path = project / "docs/validation/d1-preflight/raw.browser.json"
+    _write(raw_path, {"status": "PASS"})
+    record = _record(
+        project,
+        checks={
+            "browser": {
+                "status": "PASS",
+                "raw_record_path": raw_path.relative_to(project).as_posix(),
+                "raw_record_sha256": _sha(raw_path.read_bytes()),
+            }
+        },
+    )
+    assert validate_record(project, record) == []
+    raw_path.write_text('{"status":"FAIL"}', encoding="utf-8")
+    assert any("raw_record_sha256" in error for error in validate_record(project, record))
+    raw_path.unlink()
+    assert any("raw_record_path" in error for error in validate_record(project, record))
 
 
 def test_a_failed_check_makes_the_record_fail(project):
@@ -344,6 +373,35 @@ def test_ledger_artifact_check_fails_for_a_missing_blob(project_fixture, stores)
         check_artifacts=True,
     )
     assert any("missing" in error for error in result["errors"])
+
+
+def test_ledger_artifact_check_recomputes_full_fingerprint(project_fixture, stores, monkeypatch):  # noqa: F811
+    from johnhull.scripts import verify_section_ledger
+
+    root = project_fixture.root
+    config = root / "scripts/evidence_dependencies.json"
+    _write(config, {"schema_version": 1, "sections": {"1.1": {}}})
+    record = _v2_for_fixture(project_fixture)
+    record["dependency_fingerprint"]["components"].update(
+        {
+            "book_section": "3" * 64,
+            "portal_cards": {},
+            "book_assets": {},
+            "portal_assets": {},
+        }
+    )
+    record["environment"]["fingerprint_config"] = "scripts/evidence_dependencies.json"
+    record["source_sha256"]["scripts/evidence_dependencies.json"] = _sha(config.read_bytes())
+    _swap_record(project_fixture, record)
+    monkeypatch.setattr(
+        verify_section_ledger.evidence_fingerprint,
+        "compute_fingerprint",
+        lambda *_args, **_kwargs: {"unknown": [], "digest": "9" * 64},
+    )
+    result = evaluate_ledger(
+        root, project_fixture.inventory, project_fixture.ledger, check_artifacts=True
+    )
+    assert any("current inputs differ" in error for error in result["errors"])
 
 
 def test_reuse_after_a_font_change_is_rejected(project):

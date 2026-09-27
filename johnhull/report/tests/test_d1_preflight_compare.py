@@ -93,6 +93,20 @@ def test_coverage_states_lists_surface_figure_and_width():
     ]
 
 
+def test_same_second_runs_receive_distinct_ids_and_outputs_are_write_once(tmp_path):
+    from johnhull.scripts.d1_preflight_compare import new_run_id, write_new
+
+    stamp = "20260928T000000Z"
+    first = new_run_id("27.3", "redraw", stamp)
+    second = new_run_id("27.3", "redraw", stamp)
+    assert first != second
+    path = tmp_path / f"{first}.json"
+    write_new(path, b"first")
+    with pytest.raises(FileExistsError):
+        write_new(path, b"second")
+    assert path.read_bytes() == b"first"
+
+
 # --- the Node wrapper ----------------------------------------------------------------
 
 WRAPPER = Path(__file__).resolve().parents[2] / "scripts/run_browser_verifier.cjs"
@@ -199,6 +213,14 @@ def test_source_hashes_pin_section_inputs_but_not_the_driver(tmp_path):
         "docs/validation/section-27-3/reference.json": b"{}",
         "scripts/verify.cjs": b"//",
         "hullkit/tests/test_lv.py": b"def test(): pass",
+        "scripts/evidence_dependencies.json": b"{}",
+        "scripts/evidence_fingerprint.py": b"# fingerprint",
+        "book/_config.yml": b"title: Book",
+        "book/_toc.yml": b"root: intro",
+        "book/_ext/book_runtime.py": b"# runtime",
+        "book/_static/require.min.js": b"// js",
+        "report/assets/style.css": b"body {}",
+        "report/report_builder/render.py": b"# render",
     }
     for name in DRIVER_FILES:
         files[name] = b"driver"
@@ -215,11 +237,18 @@ def test_source_hashes_pin_section_inputs_but_not_the_driver(tmp_path):
     }
     hashes = _source_hashes(root, spec, fingerprint)
     assert set(hashes) == {
-        "volumes/nb.ipynb",
         "hullkit/src/hullkit/lv.py",
         "docs/validation/section-27-3/reference.json",
         "scripts/verify.cjs",
         "hullkit/tests/test_lv.py",
+        "scripts/evidence_dependencies.json",
+        "scripts/evidence_fingerprint.py",
+        "book/_config.yml",
+        "book/_toc.yml",
+        "book/_ext/book_runtime.py",
+        "book/_static/require.min.js",
+        "report/assets/style.css",
+        "report/report_builder/render.py",
     }
     assert set(driver_provenance(root)) == set(DRIVER_FILES)
 

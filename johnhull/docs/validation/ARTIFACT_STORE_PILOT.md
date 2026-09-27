@@ -16,7 +16,7 @@ Git から外していない。保管庫の保存・復元を検証する目的�
 C: の内蔵 SSD と F: の別 SSD に、それぞれ2種類の blob、計37,806 bytesを保存。
 manifest の4論理ファイルは計75,612 bytes。両コピーを独立に一時領域へ復元し、
 4件すべてのサイズと SHA-256 が元ファイルと一致した。F: では hard link が
-`EPERM` となるため、保存器の排他的作成による代替経路も実機で確認した。
+`EPERM` となるため、保存器のロック付き一時ファイルからの原子的公開も実機で確認した。
 保管庫の読み出しでは常にハッシュを検査する。
 
 再検証する場合は、WSL の `PROJECTS_ARTIFACT_STORE` と
@@ -32,4 +32,6 @@ python johnhull/scripts/evidence_store.py verify   johnhull/docs/validation/arti
 台帳の `--check-artifacts` は FAIL。CSS 配置後に
 `jupyter-book build johnhull/book/ --all` で再ビルドすると、
 既存 M14 のハッシュと一致して PASS した。既存証跡は書き換えていない。
+補助記録の `pending` / `FAIL` は初回ビルド時点の履歴であり、後続の
+再ビルド結果は[実証記録](d1-preflight/README.md)に記した。
 D1 全体の判定は[実証記録](d1-preflight/README.md)に分ける。

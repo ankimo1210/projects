@@ -18,8 +18,9 @@ from datetime import date
 from pathlib import Path, PurePosixPath
 
 try:
-    from . import evidence_record
+    from . import evidence_fingerprint, evidence_record
 except ImportError:  # executed as a script from johnhull/scripts
+    import evidence_fingerprint
     import evidence_record
 
 STATUSES = (
@@ -267,6 +268,28 @@ def _validate_schema_2_record(
         project, record.get("source_sha256"), f"{evidence_label}.record.source_sha256", errors
     )
     if check_artifacts:
+        config_path = (record.get("environment") or {}).get("fingerprint_config")
+        if config_path is not None:
+            config_file = _safe_file(
+                project, config_path, f"{evidence_label}.record.fingerprint_config", errors
+            )
+            if config_file is not None:
+                try:
+                    config = evidence_fingerprint.load_config(config_file)
+                    current = evidence_fingerprint.compute_fingerprint(
+                        project,
+                        record["section_id"],
+                        config,
+                        environment=evidence_fingerprint.static_environment(),
+                    )
+                except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
+                    errors.append(f"{evidence_label}.record.dependency_fingerprint: {exc}")
+                else:
+                    saved = record.get("dependency_fingerprint") or {}
+                    if current["unknown"] or current["digest"] != saved.get("digest"):
+                        errors.append(
+                            f"{evidence_label}.record.dependency_fingerprint: current inputs differ or are unknown"
+                        )
         artifact_hashes = record.get("artifact_sha256")
         if not isinstance(artifact_hashes, dict) or not artifact_hashes:
             errors.append(
