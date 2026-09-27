@@ -13,9 +13,17 @@
       },
       "portal": {
         "page": "report/site/numerics.html",
-        "figures": ["ivf_smile", "ivf_local", "ivf_repricing", "ivf_joint"]
+        "figures": [
+          "ivf_smile",
+          "ivf_local",
+          "ivf_repricing",
+          "ivf_joint"
+        ]
       },
-      "python_modules": ["hullkit.local_volatility", "hullkit._local_volatility_lesson"],
+      "python_modules": [
+        "hullkit.local_volatility",
+        "hullkit._local_volatility_lesson"
+      ],
       "data": [
         "docs/validation/section-27-3/reference.json",
         "docs/validation/section-27-3/numerical-check.json"
@@ -30,7 +38,21 @@
         "'10. Longstaff-Schwartz'": "'12. Longstaff-Schwartz'",
         "'11. 練習問題'": "'13. 練習問題'"
       },
-      "viewports": [[1440, 1050], [1000, 1050]]
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_local_volatility.py",
+        "hullkit/tests/test_local_volatility_lesson.py",
+        "report/tests/test_local_volatility_notebook.py"
+      ]
     }
   }
 }

@@ -377,13 +377,21 @@ def test_compare_lists_changed_components(mini_project):
     assert compare_fingerprints(baseline, current) == ["data_files"]
 
 
-def test_runtime_mismatch_detects_browser_and_mathjax_versions():
-    baseline = {"browser_version": "145.0.7632.6", "mathjax_version": "3.2.2"}
+def test_runtime_mismatch_detects_browser_mathjax_and_font_changes():
+    baseline = {
+        "browser_version": "145.0.7632.6",
+        "mathjax_version": "3.2.2",
+        "fonts": {"portal_plot_text": ["Liberation Sans"]},
+    }
     assert runtime_mismatches(baseline, dict(baseline)) == []
     assert runtime_mismatches(baseline, baseline | {"browser_version": "146.0"}) == [
         "browser_version"
     ]
-    assert runtime_mismatches(baseline, {"browser_version": "145.0.7632.6"}) == ["mathjax_version"]
+    assert runtime_mismatches(baseline, baseline | {"fonts": {"portal_plot_text": ["X"]}}) == [
+        "fonts"
+    ]
+    partial = {key: value for key, value in baseline.items() if key != "mathjax_version"}
+    assert runtime_mismatches(baseline, partial) == ["mathjax_version"]
 
 
 def test_execute_result_counts_are_not_part_of_the_slice():

@@ -23,7 +23,7 @@ except ImportError:  # executed as a script from johnhull/scripts
 
 KIND = "johnhull-section-recheck"
 DECISIONS = ("redrawn", "reused")
-RUNTIME_KEYS = ("browser_version", "mathjax_version")
+RUNTIME_KEYS = ("browser_version", "mathjax_version", "fonts")
 REQUIRED_FIELDS = (
     "schema_version",
     "kind",

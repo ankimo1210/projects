@@ -30,7 +30,7 @@ NORMALIZATION_RULES = (
     "Notebook cell ids and execution counts are dropped (not rendered by Book or portal)",
     "Package __init__ modules are not followed when collecting hullkit sources",
 )
-RUNTIME_KEYS = ("browser_version", "mathjax_version")
+RUNTIME_KEYS = ("browser_version", "mathjax_version", "fonts")
 DEFAULT_CONFIG = Path(__file__).with_name("evidence_dependencies.json")
 
 _UUID_RE = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
