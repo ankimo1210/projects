@@ -29,7 +29,7 @@
 | プロジェクト | 目的 | 入口 | 状態 | 後継・関連 | スタック |
 |---|---|---|---|---|---|
 | johnhull | Hull の章別教材・現代デリバティブ研究・hullkit | [README](johnhull/README.md) | 継続開発 | 金利・ボラ・ヘッジ研究群 | Python / Jupyter |
-| rates_volatility_model | 金利ボラモデルの教材と ratesvol | [README](rates_volatility_model/README.md) | 教材・合成データ | johnhull（統合方法を検討） | Python / Jupyter |
+| rates_volatility_model | 金利ボラモデルの教材と ratesvol | [README](rates_volatility_model/README.md) | 教材・合成データ | johnhull（独立照合を維持） | Python / Jupyter |
 | rough_volatility | ラフボラと Hawkes 過程の可視化 | [README](rough_volatility/README.md) | 独立した研究ラボ | johnhull | Python / Jupyter |
 | deep_hedge_price | Deep Hedging と別系統のニューラル価格近似 | [README](deep_hedge_price/README.md) | 独立した研究ラボ | johnhull の参照計算 | Python / PyTorch |
 | optimal_execution | 最適執行・板モデル・強化学習の比較 | [README](optimal_execution/README.md) | 独立した研究ラボ | johnhull / market_nn | Python / Jupyter |
