@@ -20,19 +20,29 @@ App Store 版 1.0 を 2026-07-20 に提出済み（無料・日本のみ配信�
 - **復習** — 正誤に応じて次回復習日を更新する差し替え可能な `ReviewScheduler`
 - **発音** — `SpeechService` による読み上げ
 
+## 開発中：HSK 3級の1単元
+
+日本語話者向けの「今日の学習」を追加しています。時間・場所の語順20問を対象に、
+目安3分 / 10分の学習、選択肢ごとの日本語解説、期限付き復習、中断・再開を扱います。
+従来のホームは「学習メニュー」から開けます。単語・練習・読解・設定のタブは維持します。
+
+**教材は監修前の初稿で、試験形式との対応は確認中です。** 有料コースや公式模試ではありません。
+履歴の保存仕様、Macでのテスト、監修・公開前の確認は
+[`Docs/HSK3FirstLesson.md`](Docs/HSK3FirstLesson.md) を参照してください。
+
 ## 構成
 
 ```
 My Tianjin/
 ├── My Tianjin/            # アプリ本体 (SwiftUI)
 │   ├── Content/           # コンテンツのモデル・リポジトリ・検証
-│   ├── Core/              # Practice / StudySession / Conversation のドメイン
+│   ├── Core/              # Practice / StudySession / Conversation / Course
 │   ├── Data/              # 永続化 (学習履歴・進捗マッピング)
 │   ├── Features/          # 画面: Home / Vocabulary / Practice / Reading /
-│   │                      #       Advanced / Conversation / Settings
+│   │                      #       Advanced / Conversation / Settings / Course
 │   ├── Services/          # SpeechService ほか
 │   └── Resources/         # 同梱 JSON パック
-├── My TianjinTests/       # XCTest (8 スイート)
+├── My TianjinTests/       # XCTest
 ├── Tools/                 # コンテンツ生成・検証スクリプト
 ├── Docs/                  # 実装プラン・コンテンツ出典
 └── AppStoreAssets/        # スクリーンショット・メタデータ・配布サイト
@@ -63,6 +73,8 @@ Tools/extract_hsk_vocabulary.swift    # 公式PDF → 11,000語 JSON
 node Tools/generate_content_packs.mjs # 日本語語義とレベル別パック生成
 node Tools/enrich_hsk1_examples.mjs   # HSK 1 の例文補完
 node Tools/validate_content_packs.mjs # 収録前の全件検証
+node Tools/validate_first_lesson.mjs  # 新コース初稿の構造検証
+node --test Tools/validate_first_lesson.test.mjs
 ```
 
 再生成しても、確定済み（`human-reviewed` / `curated`）の項目は ID を変えずに
