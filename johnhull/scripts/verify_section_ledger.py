@@ -17,6 +17,11 @@ from collections import Counter, defaultdict
 from datetime import date
 from pathlib import Path, PurePosixPath
 
+try:
+    from . import evidence_record
+except ImportError:  # executed as a script from johnhull/scripts
+    import evidence_record
+
 STATUSES = (
     "unreviewed",
     "gaps_found",
@@ -224,6 +229,9 @@ def _validate_record_hashes(
     if not isinstance(record, dict):
         errors.append(f"{evidence_label}: record top level must be an object")
         return
+    if record.get("schema_version") == 2:
+        _validate_schema_2_record(project, record, evidence_label, check_artifacts, errors)
+        return
     if record.get("status") != "PASS":
         errors.append(f"{evidence_label}: record must have top-level status=PASS")
 
@@ -245,6 +253,33 @@ def _validate_record_hashes(
                 f"{evidence_label}.record.artifact_sha256",
                 errors,
             )
+
+
+def _validate_schema_2_record(
+    project: Path,
+    record: dict,
+    evidence_label: str,
+    check_artifacts: bool,
+    errors: list[str],
+) -> None:
+    """Schema-2 (D1) records: same freshness checks plus store-backed images."""
+    _validate_record_mapping(
+        project, record.get("source_sha256"), f"{evidence_label}.record.source_sha256", errors
+    )
+    if check_artifacts:
+        artifact_hashes = record.get("artifact_sha256")
+        if not isinstance(artifact_hashes, dict) or not artifact_hashes:
+            errors.append(
+                f"{evidence_label}.record.artifact_sha256: required with --check-artifacts"
+            )
+        else:
+            _validate_record_mapping(
+                project, artifact_hashes, f"{evidence_label}.record.artifact_sha256", errors
+            )
+    for problem in evidence_record.validate_record(
+        project, record, check_artifacts=check_artifacts
+    ):
+        errors.append(f"{evidence_label}.record: {problem}")
 
 
 def _validate_evidence(
