@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import nbformat
-import pytest
 from nbclient import NotebookClient
 
 NOTEBOOK = Path(__file__).resolve().parents[1] / "rates_volatility_models.ipynb"
@@ -31,7 +30,6 @@ _w.Output = _RaisingOutput
 """
 
 
-@pytest.mark.xfail(strict=True, reason="HJM chapter still calls np.trapz until Task 6")
 def test_notebook_executes_without_errors():
     nb = nbformat.read(NOTEBOOK, as_version=4)
     nb.cells.insert(0, nbformat.v4.new_code_cell(_PREAMBLE))
