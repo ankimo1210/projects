@@ -21,7 +21,6 @@ members = [
     "nbody-gpu",
     "line_backup",
     "akinator",
-    "autostock",
     "health",
     "johnhull/hullkit",
     "analytics/linear_algebra",
@@ -111,7 +110,6 @@ ignore = [
 # (S0, K, T, r, sigma, ...). Allow PEP-8 naming exceptions there.
 "rates_volatility_model/**/*.py" = ["N803", "N806", "N816", "E741"]
 "johnhull/**/*.py" = ["N803", "N806", "N816", "E741"]
-"autostock/**/*.py" = ["N803", "N806", "N816", "E741"]
 "quantkit/**/*.py" = ["N803", "N806", "N812", "N816", "E741"]
 "optimal_execution/**/*.py" = ["N803", "N806", "N816", "E741"]
 "rough_volatility/**/*.py" = ["N803", "N806", "N816", "E741"]
@@ -167,7 +165,6 @@ testpaths = [
     "nbody-gpu/tests",
     "line_backup/tests",
     "akinator/tests",
-    "autostock/tests",
     "health/tests",
     "johnhull/tests",
     "johnhull/hullkit/tests",

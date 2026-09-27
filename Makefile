@@ -38,7 +38,7 @@ help:
 	@echo ""
 	@echo "Workspace members:"
 	@echo "  agent-profiler JHRMBS gto market-viz stock nbody-gpu line_backup"
-	@echo "  akinator autostock health market_nn jp_llm_lab"
+	@echo "  akinator health market_nn jp_llm_lab"
 	@echo "  johnhull/hullkit"
 	@echo "  analytics/{linear_algebra,neural_net,bayesian,fourier,laplace,machine_learning,statistics,quant_research}"
 	@echo "  analytics/differential_equation/{ode-book,pde-book}"

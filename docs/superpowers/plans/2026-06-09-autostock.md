@@ -3,7 +3,7 @@
 > **履歴注記（2026-09-28）:** この文書の「cheat-proof」等の表現は実装の保証ではありません。
 > `generate_weights(prices)` にはlockboxを含む全期間の価格が渡ります。
 > `--reveal-lockbox` は指標の表示だけを制御します。
-> 現行の扱いは [autostock README](../../../autostock/README.md) を参照してください。
+> 現行の扱いは [autostock README](../../../_archive/market/autostock/README.md) を参照してください。
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
