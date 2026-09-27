@@ -24,6 +24,21 @@ except ImportError:  # executed as a script from johnhull/scripts
 KIND = "johnhull-section-recheck"
 DECISIONS = ("redrawn", "reused")
 RUNTIME_KEYS = ("browser_version", "mathjax_version", "mathjax_scripts", "fonts")
+FINGERPRINT_COMPONENTS = frozenset(
+    (
+        "notebook_slice",
+        "notebook_shared_assets",
+        "book_section",
+        "book_assets",
+        "portal_cards",
+        "portal_assets",
+        "python_sources",
+        "data_files",
+        "verifier",
+        "viewports",
+        "environment",
+    )
+)
 REQUIRED_FIELDS = (
     "schema_version",
     "kind",
@@ -81,8 +96,17 @@ def _local_problems(record: dict) -> list[str]:
     fingerprint = record.get("dependency_fingerprint")
     if not isinstance(fingerprint, dict):
         problems.append("dependency_fingerprint: expected an object")
-    elif record.get("decision") == "reused" and fingerprint.get("unknown"):
-        problems.append("dependency_fingerprint: unknown dependencies prevent reuse")
+    else:
+        components = fingerprint.get("components")
+        missing = (
+            FINGERPRINT_COMPONENTS - set(components)
+            if isinstance(components, dict)
+            else FINGERPRINT_COMPONENTS
+        )
+        if not isinstance(components, dict) or missing:
+            problems.append(f"dependency_fingerprint: missing components {sorted(missing)}")
+        if record.get("decision") == "reused" and fingerprint.get("unknown"):
+            problems.append("dependency_fingerprint: unknown dependencies prevent reuse")
     if record.get("decision") == "reused" and not isinstance(record.get("baseline"), dict):
         problems.append("baseline: a reused record needs a direct baseline reference")
     return problems
@@ -183,14 +207,11 @@ def _schema_problems(record: dict) -> list[str]:
     ):
         problems.append("environment.runtime: expected an object")
     else:
-        components = (record.get("dependency_fingerprint") or {}).get("components") or {}
-        full_components = {"book_section", "portal_cards", "book_assets", "portal_assets"}
-        if full_components <= set(components):
-            config = record["environment"].get("fingerprint_config")
-            if config != "scripts/evidence_dependencies.json":
-                problems.append("environment.fingerprint_config: expected the declared D1 config")
-            elif config not in (record.get("source_sha256") or {}):
-                problems.append("source_sha256: fingerprint config must be hashed")
+        config = record["environment"].get("fingerprint_config")
+        if config != "scripts/evidence_dependencies.json":
+            problems.append("environment.fingerprint_config: expected the declared D1 config")
+        elif config not in (record.get("source_sha256") or {}):
+            problems.append("source_sha256: fingerprint config must be hashed")
         runtime = record["environment"]["runtime"]
         for key in ("browser_version", "mathjax_version"):
             if not isinstance(runtime.get(key), str) or not runtime[key]:

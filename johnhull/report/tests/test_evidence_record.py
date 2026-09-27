@@ -40,10 +40,23 @@ def _write(path: Path, value: dict) -> None:
 
 
 def _fingerprint(digest: str = "1" * 64, unknown=None) -> dict:
+    components = {
+        "notebook_slice": "2" * 64,
+        "notebook_shared_assets": [],
+        "book_section": "3" * 64,
+        "book_assets": {},
+        "portal_cards": {},
+        "portal_assets": {},
+        "python_sources": {},
+        "data_files": {},
+        "verifier": {},
+        "viewports": [[1440, 1050]],
+        "environment": {},
+    }
     return {
         "section_id": "1.1",
         "rules": {"fingerprint_schema": 1, "normalizer_version": 1, "normalization": []},
-        "components": {"notebook_slice": "2" * 64},
+        "components": components,
         "unknown": list(unknown or []),
         "digest": digest,
     }
@@ -77,6 +90,7 @@ def project(tmp_path):
     (root / "src/lesson.py").write_text("VALUE = 1\n", encoding="utf-8")
     (root / "site").mkdir()
     (root / "site/page.html").write_text("<p>page</p>\n", encoding="utf-8")
+    _write(root / "scripts/evidence_dependencies.json", {"schema_version": 1})
     return root
 
 
@@ -100,9 +114,17 @@ def _record(project: Path, **overrides) -> dict:
         baseline=None,
         images=_images(),
         checks={"browser": {"status": "PASS"}, "pytest": {"status": "PASS"}},
-        environment={"runtime": dict(RUNTIME)},
+        environment={
+            "runtime": dict(RUNTIME),
+            "fingerprint_config": "scripts/evidence_dependencies.json",
+        },
         storage_verification=_storage(),
-        source_sha256={"src/lesson.py": _sha((project / "src/lesson.py").read_bytes())},
+        source_sha256={
+            "src/lesson.py": _sha((project / "src/lesson.py").read_bytes()),
+            "scripts/evidence_dependencies.json": _sha(
+                (project / "scripts/evidence_dependencies.json").read_bytes()
+            ),
+        },
         artifact_sha256={"site/page.html": _sha((project / "site/page.html").read_bytes())},
     )
     values.update(overrides)
@@ -200,6 +222,14 @@ def test_wrong_kind_is_rejected(project):
     assert any("kind" in error for error in validate_record(project, record))
 
 
+def test_missing_fingerprint_component_cannot_claim_pass(project):
+    fingerprint = _fingerprint()
+    del fingerprint["components"]["book_assets"]
+    record = _record(project, fingerprint=fingerprint)
+    assert record["status"] == "FAIL"
+    assert any("missing components" in error for error in validate_record(project, record))
+
+
 # --- reuse ---------------------------------------------------------------------------
 
 
@@ -295,6 +325,9 @@ def _swap_record(fixture: ProjectFixture, record: dict) -> None:
 
 def _v2_for_fixture(fixture: ProjectFixture) -> dict:
     root = fixture.root
+    _write(
+        root / "scripts/evidence_dependencies.json", {"schema_version": 1, "sections": {"1.1": {}}}
+    )
     return build_record(
         run_id="fixture-run",
         created_at="2026-09-28T00:00:00+00:00",
@@ -307,10 +340,16 @@ def _v2_for_fixture(fixture: ProjectFixture) -> dict:
         baseline=None,
         images=_images(),
         checks={"browser": {"status": "PASS"}},
-        environment={"runtime": dict(RUNTIME)},
+        environment={
+            "runtime": dict(RUNTIME),
+            "fingerprint_config": "scripts/evidence_dependencies.json",
+        },
         storage_verification=_storage(),
         source_sha256={
-            "src/implementation.py": _sha((root / "src/implementation.py").read_bytes())
+            "src/implementation.py": _sha((root / "src/implementation.py").read_bytes()),
+            "scripts/evidence_dependencies.json": _sha(
+                (root / "scripts/evidence_dependencies.json").read_bytes()
+            ),
         },
         artifact_sha256={
             "generated/render.html": _sha((root / "generated/render.html").read_bytes())
@@ -349,8 +388,21 @@ def test_ledger_rejects_an_invalid_schema_2_record(project_fixture):  # noqa: F8
     assert any("baseline" in error for error in result["errors"])
 
 
-def test_ledger_artifact_check_uses_the_store_for_schema_2(project_fixture, stores):  # noqa: F811
-    _swap_record(project_fixture, _v2_for_fixture(project_fixture))
+def test_ledger_artifact_check_uses_the_store_for_schema_2(project_fixture, stores, monkeypatch):  # noqa: F811
+    from johnhull.scripts import verify_section_ledger
+
+    monkeypatch.setattr(
+        verify_section_ledger.evidence_fingerprint,
+        "compute_fingerprint",
+        lambda *_args, **_kwargs: {"unknown": [], "digest": "1" * 64},
+    )
+    record = _v2_for_fixture(project_fixture)
+    monkeypatch.setattr(
+        verify_section_ledger.d1_preflight_compare,
+        "_source_hashes",
+        lambda *_args, **_kwargs: record["source_sha256"],
+    )
+    _swap_record(project_fixture, record)
     result = evaluate_ledger(
         project_fixture.root,
         project_fixture.inventory,
@@ -360,12 +412,25 @@ def test_ledger_artifact_check_uses_the_store_for_schema_2(project_fixture, stor
     assert result["status"] == "PASS", result["errors"]
 
 
-def test_ledger_artifact_check_fails_for_a_missing_blob(project_fixture, stores):  # noqa: F811
+def test_ledger_artifact_check_fails_for_a_missing_blob(project_fixture, stores, monkeypatch):  # noqa: F811
+    from johnhull.scripts import verify_section_ledger
+
+    monkeypatch.setattr(
+        verify_section_ledger.evidence_fingerprint,
+        "compute_fingerprint",
+        lambda *_args, **_kwargs: {"unknown": [], "digest": "1" * 64},
+    )
+    record = _v2_for_fixture(project_fixture)
+    monkeypatch.setattr(
+        verify_section_ledger.d1_preflight_compare,
+        "_source_hashes",
+        lambda *_args, **_kwargs: record["source_sha256"],
+    )
     primary, _ = stores
     blob = primary.blob_path(_sha(PNG_A))
     blob.chmod(0o644)
     blob.unlink()
-    _swap_record(project_fixture, _v2_for_fixture(project_fixture))
+    _swap_record(project_fixture, record)
     result = evaluate_ledger(
         project_fixture.root,
         project_fixture.inventory,
@@ -402,6 +467,36 @@ def test_ledger_artifact_check_recomputes_full_fingerprint(project_fixture, stor
         root, project_fixture.inventory, project_fixture.ledger, check_artifacts=True
     )
     assert any("current inputs differ" in error for error in result["errors"])
+
+
+def test_ledger_artifact_check_rejects_a_missing_source_mapping(
+    project_fixture,  # noqa: F811
+    stores,
+    monkeypatch,
+):
+    from johnhull.scripts import verify_section_ledger
+
+    record = _v2_for_fixture(project_fixture)
+    complete_sources = dict(record["source_sha256"])
+    del record["source_sha256"]["src/implementation.py"]
+    monkeypatch.setattr(
+        verify_section_ledger.evidence_fingerprint,
+        "compute_fingerprint",
+        lambda *_args, **_kwargs: {"unknown": [], "digest": "1" * 64},
+    )
+    monkeypatch.setattr(
+        verify_section_ledger.d1_preflight_compare,
+        "_source_hashes",
+        lambda *_args, **_kwargs: complete_sources,
+    )
+    _swap_record(project_fixture, record)
+    result = evaluate_ledger(
+        project_fixture.root,
+        project_fixture.inventory,
+        project_fixture.ledger,
+        check_artifacts=True,
+    )
+    assert any("source inventory differs" in error for error in result["errors"])
 
 
 def test_reuse_after_a_font_change_is_rejected(project):

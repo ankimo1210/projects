@@ -18,8 +18,9 @@ from datetime import date
 from pathlib import Path, PurePosixPath
 
 try:
-    from . import evidence_fingerprint, evidence_record
+    from . import d1_preflight_compare, evidence_fingerprint, evidence_record
 except ImportError:  # executed as a script from johnhull/scripts
+    import d1_preflight_compare
     import evidence_fingerprint
     import evidence_record
 
@@ -269,7 +270,9 @@ def _validate_schema_2_record(
     )
     if check_artifacts:
         config_path = (record.get("environment") or {}).get("fingerprint_config")
-        if config_path is not None:
+        if config_path is None:
+            errors.append(f"{evidence_label}.record.fingerprint_config: required")
+        else:
             config_file = _safe_file(
                 project, config_path, f"{evidence_label}.record.fingerprint_config", errors
             )
@@ -290,6 +293,17 @@ def _validate_schema_2_record(
                         errors.append(
                             f"{evidence_label}.record.dependency_fingerprint: current inputs differ or are unknown"
                         )
+                    try:
+                        expected_sources = d1_preflight_compare._source_hashes(
+                            project, config["sections"][record["section_id"]], current
+                        )
+                    except (OSError, KeyError, TypeError, ValueError) as exc:
+                        errors.append(f"{evidence_label}.record.source_sha256: {exc}")
+                    else:
+                        if expected_sources != record.get("source_sha256"):
+                            errors.append(
+                                f"{evidence_label}.record.source_sha256: source inventory differs from current declared inputs"
+                            )
         artifact_hashes = record.get("artifact_sha256")
         if not isinstance(artifact_hashes, dict) or not artifact_hashes:
             errors.append(
