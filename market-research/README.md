@@ -4,7 +4,7 @@
 工程3bの価格・マクロ・財務データの取得と保存は main に入っています。
 CLIで明示取得し、保存した版を通信なしで読めます。工程3cでは保存済みの価格・SEC開示値を使う
 市場概要、銘柄・バスケット、スクリーナー、マクロと公表、仮想配分・リスク、品質表示の画面を追加中です。
-個人口座の連携と旧プロジェクトからの切替は後続です。
+口座向けの一方向exportは明示操作で作れます。既存の日次レポートへの組込みと旧プロジェクトからの切替は後続です。
 [設計仕様](../docs/superpowers/specs/2026-09-27-market-research-design.md)と
 [進捗](docs/STATUS.md)を参照してください。
 
@@ -50,6 +50,28 @@ PAFを1とする手動の価格加重で、構成基準日をPAF仮定日とし�
 市場概要は順位と相関を表示し、相関の有効な共通リターン数を別表に示します。
 品質画面はsnapshotの出典、欠損・除外と画面内アラートを表示します。
 保存runと取得失敗履歴はまだ記録していません。通知の外部送信は行いません。
+
+## 口座側へ価格・FXを渡す（明示操作）
+
+保存済みの確定・品質合格・raw の日足snapshotを、通信なしで
+不変の prices.parquet と manifest.json に書き出します。
+株価は --snapshot-id を繰り返し、USD/JPY の保存済みsnapshotは
+--fx-snapshot-id で指定します。時刻はタイムゾーン付きで指定してください。
+
+~~~bash
+uv run --no-sync market-research --data-root /home/kazumasa/.local/share/market-research \
+  export-portfolio --snapshot-id PRICE_SNAPSHOT_ID \
+  --fx-snapshot-id FX_SNAPSHOT_ID \
+  --as-of 2026-09-26T00:00:00+00:00
+~~~
+
+既定の出力先は --data-root の下の exports/EXPORT_ID/（Git管理外）です。
+別の場所を使う場合だけ --destination に **WSLのパス**を指定します。
+manifestには契約版、元snapshot ID、基準時刻、ParquetのSHA-256を記録します。
+口座番号、保有数量、取引、損益は出力しません。
+[portfolio-analyzer側の任意読取](../portfolio-analyzer/README.md#市場価格exportの任意読取)では
+版・ハッシュ・時刻と価格・FXそれぞれの鮮度を検査します。定時タスクと現行の日次取得経路は
+このexportを自動では使用しません。
 
 ## Mag7 固定例（工程3c）
 
