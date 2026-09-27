@@ -938,9 +938,95 @@ cells.append(code(r"""display(cb_figures["cb_convergence"])
 for row in cb_reference["scenarios"]["convergence"]:
     print(f"N={row['steps']:>2}: {row['price']:.5f} $")"""))
 
+# Hull GE §27.5: path-dependent derivatives (M14)
+cells.append(md(r"""## 11. 経路依存デリバティブ（§27.5）
+
+終値だけでなく**経路で蓄積した量**にペイオフが依存する場合、通常の株価二項木の同じ節点へ
+複数の履歴が集まる。原典 pp.653–656 の Figure 27.3 に従い、算術平均を追加状態として持つ。"""))
+cells.append(md(r"""### 11.1 状態を一つ追加できる条件
+
+経路関数 $F$ に対し、(1)ペイオフが $F$ の値一つで決まり、(2)次の $F$ が現在の $F$ と
+次の株価から更新できるとき、代表値を使う拡張格子が組める。算術平均価格コールでは
+$A_i=(S_0+\cdots+S_i)/(i+1)$、$A_{i+1}=((i+1)A_i+S_{i+1})/(i+2)$、
+満期ペイオフは $(A_N-K)^+$。モンテカルロも欧州型は評価できるが、早期行使判定は
+各履歴での継続価値を別に求める必要がある。"""))
+cells.append(md(r"""### 11.2 各株価節点で平均の上下限を求める
+
+原典例は $S_0=K=50$、$r=10\%$、$\sigma=40\%$、$T=1$年、配当なし。
+20段では $\Delta t=0.05$、$u=1.0936$、$d=0.9144$、危険中立上昇確率0.5056。
+株価が同じでも、上昇が先か下落が先かで途中の平均が違う。
+平均の最小・最大を前向きに伝播し、各節点の範囲を固定する。
+図27.3の X は株価50、平均46.65–53.83。子節点 Y・Z の平均範囲も異なる。"""))
+cells.append(code(r"""from hullkit import path_dependent_tree as path_tree
+from hullkit._path_dependent_lesson import _figures as path_lesson_figures
+from hullkit._path_dependent_lesson import _load_reference as path_load_reference
+
+path_reference = path_load_reference()
+path_params = path_reference["parameters"]
+path_figures = path_lesson_figures()
+path_coarse = path_tree.arithmetic_average_call_tree(**path_params, steps=20, average_points=4)
+display(path_figures["path_grids"])
+for name, level, up in (("X", 4, 2), ("Y", 5, 3), ("Z", 5, 2)):
+    grid = path_coarse.average_grids[level][up]
+    print(f"{name}: 平均範囲 {grid[0]:.2f}–{grid[-1]:.2f} $")"""))
+cells.append(md(r"""### 11.3 代表平均と線形補間
+
+各節点の平均範囲に、最小・最大を含めた等間隔の代表値を置く。X では
+46.65、49.04、51.44、53.83ドル。X の平均51.44から上へ動けば、
+$A_Y=(5\times51.44+54.68)/6=51.98$。Y の51.12と54.26における価値8.101と8.635を
+線形補間して8.247ドル。下へ動けば $A_Z=50.49$、補間値は4.182ドル。
+割引期待値は $e^{-0.1\times0.05}(0.5056\times8.247+0.4944\times4.182)=6.206$ドル。
+表示値は原典の丸め済み数値で、公開関数は内部の非丸め値を使う。"""))
+cells.append(code(r"""display(path_figures["path_interpolation"])
+path_i = path_reference["interpolation"]
+print(f"Xの平均51.44 → Yで{path_i['up_average']:.2f} / {path_i['up_value']:.3f} $, "
+      f"Zで{path_i['down_average']:.2f} / {path_i['down_value']:.3f} $")
+print(f"割引期待値 {path_i['x_value']:.3f} $、公開ツリーのX代表値 "
+      f"{path_coarse.value_grids[4][2][2]:.3f} $")"""))
+cells.append(md(r"""### 11.4 欧州型の後退帰納と格子誤差
+
+満期の各代表平均で $(A_N-K)^+$ を計算し、子節点で必要になる中間平均の価値を
+線形補間しながら後退する。原典の20段×各節点4平均では欧州型7.17ドル。
+60段×100平均では5.58ドルで、Example 26.3 の**連続平均**解析近似5.62ドルに近づく。
+観測時点数と平均グリッド数が同時に変わるため、差を一方の離散化誤差だけには帰せない。"""))
+cells.append(code(r"""display(path_figures["path_prices"])
+path_fine = path_tree.arithmetic_average_call_tree(**path_params, steps=60, average_points=100)
+print(f"欧州型: 20段×4平均 {path_coarse.price:.4f} $、60段×100平均 {path_fine.price:.4f} $")"""))
+cells.append(md(r"""### 11.5 米国型：平均と株価の両方で行使を判定
+
+各株価節点の**各代表平均**で、継続価値と即時行使価値 $(A_i-K)^+$ を比較する。
+行使境界は平均だけでなく、その節点の株価にも依存する。
+原典の米国型は20段×4平均で7.77ドル、60段×100平均で6.17ドル。
+同じ格子の欧州型との差を早期行使プレミアムと呼ぶ。"""))
+cells.append(code(r"""path_am_coarse = path_tree.arithmetic_average_call_tree(
+    **path_params, steps=20, average_points=4, american=True)
+path_am_fine = path_tree.arithmetic_average_call_tree(
+    **path_params, steps=60, average_points=100, american=True)
+print(f"20×4: 米国型 {path_am_coarse.price:.4f} $、欧州型との差 "
+      f"{path_am_coarse.price - path_coarse.price:.4f} $")
+print(f"60×100: 米国型 {path_am_fine.price:.4f} $、欧州型との差 "
+      f"{path_am_fine.price - path_fine.price:.4f} $")"""))
+cells.append(md(r"""### 11.6 独立の全経路基準と適用限界
+
+4–12段では、平均の代表グリッドを使わず**すべての2進経路**を直接列挙して
+欧州型・米国型を独立に評価した。公開ツリーの100平均グリッドと比較し、補間誤差を測る。
+この全経路法は段数に対して指数的に増えるため、高段数の基準には使わない。
+一方、代表平均法にも平均グリッド補間と時間離散化の誤差が残る。
+状態を一つで更新できない経路依存ペイオフ、連続監視の補正、配当や市場較正は本例の対象外。
+
+1. 同じ株価節点へ達する二つの経路で、平均が違い得る理由は何か。
+2. X の51.44から子の代表平均そのものに着地しないとき、何を計算するか。
+3. 20×4の7.17ドルと60×100の5.58ドルを、どちらか一種類の誤差だけで説明できるか。
+
+**回答の手掛かり：** 経路順序、線形補間、時間と平均の二つの格子。"""))
+cells.append(code(r"""display(path_figures["path_exact"])
+for row in path_reference["exact_small_trees"]:
+    print(f"全経路 N={row['steps']:>2}: 欧州型 {row['european']:.5f} $, "
+          f"米国型 {row['american']:.5f} $")"""))
+
 # LSM md
 cells.append(
-    md(r"""## 11. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
+    md(r"""## 12. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
 
 後ろ向きに各行使時点で:
 1. ITM パスについて「継続価値」を**将来キャッシュフローの回帰**（基底: $1, S, S^2$）で推定
@@ -1065,7 +1151,7 @@ print("\n全チェック合格")""")
 
 # Cell 27: exercises
 cells.append(
-    md(r"""## 12. 練習問題
+    md(r"""## 13. 練習問題
 
 **Q1.** CN と implicit、グリッドを倍に細かくしたとき誤差はそれぞれ何分の1になる？
 

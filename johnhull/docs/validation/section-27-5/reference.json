@@ -1,0 +1,112 @@
+{
+  "section": "27.5",
+  "source": "Hull 11e Global Edition pp.653–656, Figure 27.3 and Example 26.3",
+  "units": "stock, strike, average and option value in dollars; maturity in years; annual continuous rates and volatility",
+  "parameters": {
+    "spot": 50.0,
+    "strike": 50.0,
+    "rate": 0.1,
+    "volatility": 0.4,
+    "maturity": 1.0,
+    "dividend_yield": 0.0
+  },
+  "figure_27_3": {
+    "X": {
+      "stock": 50.0,
+      "averages": [
+        46.65,
+        49.04,
+        51.44,
+        53.83
+      ],
+      "values": [
+        5.642,
+        5.923,
+        6.206,
+        6.492
+      ]
+    },
+    "Y": {
+      "stock": 54.68,
+      "averages": [
+        47.99,
+        51.12,
+        54.26,
+        57.39
+      ],
+      "values": [
+        7.575,
+        8.101,
+        8.635,
+        9.178
+      ]
+    },
+    "Z": {
+      "stock": 45.72,
+      "averages": [
+        43.88,
+        46.75,
+        49.61,
+        52.48
+      ],
+      "values": [
+        3.43,
+        3.75,
+        4.079,
+        4.416
+      ]
+    }
+  },
+  "printed": {
+    "x_average": 51.44,
+    "x_value": 6.206,
+    "coarse": {
+      "steps": 20,
+      "average_points": 4,
+      "european": 7.17,
+      "american": 7.77
+    },
+    "fine": {
+      "steps": 60,
+      "average_points": 100,
+      "european": 5.58,
+      "american": 6.17
+    },
+    "continuous_average_analytic_approximation": 5.62
+  },
+  "interpolation": {
+    "up_average": 51.98,
+    "down_average": 50.48666666666666,
+    "up_value": 8.247254777070065,
+    "down_value": 4.181939605110336,
+    "up_probability": 0.5056377325958349,
+    "x_value": 6.206406608361165
+  },
+  "exact_small_trees": [
+    {
+      "steps": 4,
+      "european": 5.48133415262796,
+      "american": 5.5420759581768895
+    },
+    {
+      "steps": 6,
+      "european": 5.509622855448315,
+      "american": 5.69572456381597
+    },
+    {
+      "steps": 8,
+      "european": 5.519879909970387,
+      "american": 5.793802215866407
+    },
+    {
+      "steps": 10,
+      "european": 5.526182241257183,
+      "american": 5.8466164534991885
+    },
+    {
+      "steps": 12,
+      "european": 5.531607393860547,
+      "american": 5.900191074239286
+    }
+  ]
+}

@@ -24,6 +24,7 @@ from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
+from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
 from hullkit._static_replication_lesson import _figures as static_replication_lesson_figures
 from hullkit._stochastic_volatility_lesson import (
@@ -349,6 +350,42 @@ FIGURES: list[FigureSpec] = [
         "3～96段でコール・転換境界の格子誤差を確認する。",
         lambda: convertible_bond_lesson_figures()["cb_convergence"],
         practice="3段の教科書値と高解像度の数値推定を混同しない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "path_grids",
+        "numerics",
+        "経路依存：代表平均グリッド",
+        "原著Figure 27.3のX・Y・Zで、到達可能な算術平均とオプション価値を比べる。",
+        lambda: path_dependent_lesson_figures()["path_grids"],
+        practice="同じ株価節点でも、履歴の順序によって平均と価値が変わる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "path_interpolation",
+        "numerics",
+        "子節点での補間と後退帰納",
+        "Xの平均51.44からY・Zの中間平均を補間し、割引期待値6.206を得る。",
+        lambda: path_dependent_lesson_figures()["path_interpolation"],
+        practice="代表平均に着地しない場合は子節点の価値を補間してから平均する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "path_prices",
+        "numerics",
+        "欧州型・米国型の平均価格コール",
+        "原著の20段×4平均と60段×100平均を比較し、早期行使と格子誤差を分ける。",
+        lambda: path_dependent_lesson_figures()["path_prices"],
+        practice="同じ格子の米国型と欧州型との差が早期行使プレミアム。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "path_exact",
+        "numerics",
+        "全経路列挙による小規模基準",
+        "補間を使わない4–12段の基準値で代表平均グリッドの誤差を測る。",
+        lambda: path_dependent_lesson_figures()["path_exact"],
+        practice="全経路列挙は指数的に増えるため、高段数では代表値法を用いる。",
         is_new=True,
     ),
     # risk_credit --------------------------------------------------------

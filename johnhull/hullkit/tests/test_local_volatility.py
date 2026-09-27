@@ -7,6 +7,11 @@ from hullkit import bsm
 from hullkit.local_volatility import dupire_local_vol
 
 
+def test_call_price_docstring_identifies_today_discounted_currency_price():
+    assert "discounted to today" in dupire_local_vol.__doc__
+    assert "undiscounted-spot" not in dupire_local_vol.__doc__
+
+
 def test_flat_bsm_surface_recovers_volatility_with_carry():
     def call(strike, expiry):
         return float(bsm.call_price(100, strike, 0.04, 0.23, expiry, 0.015))

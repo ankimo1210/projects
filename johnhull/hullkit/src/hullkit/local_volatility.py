@@ -18,8 +18,8 @@ def dupire_local_vol(
 ) -> float:
     """Estimate ``σ_loc(K,T)`` with central differences in Hull GE eq. (27.4).
 
-    ``call_price(K,T)`` supplies a *smooth*, undiscounted-spot European call
-    **price** in currency units (already discounted to today). ``rate`` and
+    ``call_price(K,T)`` supplies a *smooth* European call **price** in
+    currency units, discounted to today (its present value). ``rate`` and
     ``dividend_yield`` are instantaneous forward rates at ``T``, not averages.
     Both finite-difference steps are explicit because the second strike
     derivative amplifies quote noise. The caller must smooth and check the

@@ -1,0 +1,95 @@
+{
+  "section": "27.5",
+  "status": "PASS",
+  "base": "84387c5d",
+  "cells": 94,
+  "lesson_cells": 12,
+  "preserved_cells_outside_lesson": 82,
+  "renumbered_headings": {
+    "## 11. Longstaff-Schwartz（LSM）": "## 12. Longstaff-Schwartz（LSM）",
+    "## 12. 練習問題": "## 13. 練習問題"
+  },
+  "saved_figures": {
+    "27.1": [
+      "alternative_cev",
+      "alternative_merton",
+      "alternative_poisson",
+      "alternative_vg"
+    ],
+    "27.2": [
+      "stochvol_correlation",
+      "stochvol_mixing",
+      "stochvol_sabr",
+      "stochvol_term"
+    ],
+    "27.3": [
+      "ivf_joint",
+      "ivf_local",
+      "ivf_repricing",
+      "ivf_smile"
+    ],
+    "27.4": [
+      "cb_convergence",
+      "cb_credit",
+      "cb_decisions",
+      "cb_tree"
+    ],
+    "27.5": [
+      "path_exact",
+      "path_grids",
+      "path_interpolation",
+      "path_prices"
+    ]
+  },
+  "negative_controls": [
+    {
+      "mutation": "§10 source changed",
+      "rejected": true,
+      "findings": [
+        "§11以外のセル本文がM13基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§27.5 saved grid changed",
+      "rejected": true,
+      "findings": [
+        "path_grids.data が共有図と異なる"
+      ]
+    },
+    {
+      "mutation": "unlisted heading changed",
+      "rejected": true,
+      "findings": [
+        "§11以外のセル本文がM13基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§27.4 saved tree changed",
+      "rejected": true,
+      "findings": [
+        "cb_tree.data が共有図と異なる"
+      ]
+    }
+  ],
+  "checks": [
+    "fresh execution matches committed output signature",
+    "outside §11 source/output unchanged except two listed headings",
+    "saved §27.1–§27.5 Plotly values match shared figures"
+  ],
+  "source_sha256": {
+    "scripts/verify_path_dependent_notebook.py": "fa5bb4d0dbf1d1849a9892447d5bdb2b5b00d937c0918e9867c689e3c895f4f2",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_path_dependent_lesson.py": "b732e71477cce55dc942ce1fba58a37b9f125bba80716bcf37d4e86913d1aade",
+    "hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
+    "hullkit/src/hullkit/_local_volatility_lesson.py": "f957ab42b0f9e60227b4cf37d42bfd25b7f608acd0c1126699cd88f5053fc76f",
+    "hullkit/src/hullkit/_stochastic_volatility_lesson.py": "e3625860a42a20fc4daf6e5a8d9f4e660b553dc70d567fecf17bc2a0b6ecb666",
+    "hullkit/src/hullkit/_alternative_models_lesson.py": "a5c6b4e4e2ea5eab00d9af9f97932373705129fb8131bfcc92fa6657360aab37",
+    "docs/validation/section-27-5/reference.json": "444f76ffbb903fafd121d6fe5e79810b7b24b81a9fda7bea6972f374df918210",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "fb55bd48ac8807303ef3d4e4541c674b8cf80db7130d914d1e5eff322437c700",
+    "volumes/06_numerical_methods/numerical.ipynb": "21e56333b5d8c9879d9315fc54f9d4ca8e29b569d9752065c142b5930335e740"
+  },
+  "artifact_sha256": {
+    "volumes/06_numerical_methods/numerical.ipynb": "21e56333b5d8c9879d9315fc54f9d4ca8e29b569d9752065c142b5930335e740",
+    "book/_build/html/notebooks/06_numerical.html": "45f3ebbd10f14d69483ceed956a45fdede34f88ea30cb016768dceb87eab7912"
+  }
+}
