@@ -188,7 +188,7 @@ class FundamentalObservation:
     period_end: date
     filed: date
     available_at: datetime
-    observed_at: datetime
+    observed_at: datetime | None
     value: float
     form: str
     accession: str
@@ -208,9 +208,10 @@ class FundamentalObservation:
             type(self.period_start) is not date or self.period_start > self.period_end
         ):
             raise ValueError("invalid period_start")
-        for name in ("available_at", "observed_at"):
-            object.__setattr__(self, name, _utc(getattr(self, name), name))
-        if self.available_at > self.observed_at:
+        object.__setattr__(self, "available_at", _utc(self.available_at, "available_at"))
+        if self.observed_at is not None:
+            object.__setattr__(self, "observed_at", _utc(self.observed_at, "observed_at"))
+        if self.observed_at is not None and self.available_at > self.observed_at:
             raise ValueError("fundamental cannot be available after observation")
         if not math.isfinite(self.value):
             raise ValueError("value must be finite")
