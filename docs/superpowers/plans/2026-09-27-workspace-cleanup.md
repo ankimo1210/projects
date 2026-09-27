@@ -1,7 +1,8 @@
 # ワークスペース整理計画
 
-更新日: 2026-09-27（同日レビュー反映）  
-状態: 調査と計画。移動・統合・削除・履歴変更は未実施。基準点は origin へ push 済みの main `5852c526`。
+更新日: 2026-09-27（工程1の実施・検証を反映）
+
+状態: 工程0・工程1は完了。工程1は `codex/workspace-index` 上で完了し、main へのマージ待ち。工程2以降の移動・コード統合・削除・履歴変更は未実施。調査基準点は `5852c526`、工程1の開始点は main `22c204f3`。
 
 ## 目的と決まった方針
 
@@ -81,6 +82,8 @@ models、reports、papers はプロジェクト一覧から区別し、「成果
 
 ### 文書の修正候補
 
+以下は調査時のずれと計画。工程1での対応結果は後段の「工程1の実施記録」を参照。
+
 | 優先 | 対象 | 確認したずれ | 計画 |
 |---|---|---|---|
 | 高 | ルート README | agentic-setup、quant-agent-benchmark、rates-ui-lab が一覧にない | カテゴリ付き索引に追加 |
@@ -153,7 +156,7 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 ## 実施順と完了条件
 
 0. **基準点と作業ツリー**（2026-09-27 完了）: push 済みの基準点から始め、上の「作業ツリー・ブランチ・stash の整理」を本人の判断に沿って片付けた。以後の工程は工程ごとの worktree で行う。完了条件は、main がクリーンで origin と一致し、残る worktree・ブランチ・stash のすべてに残す理由があること。
-1. **入口と文書**: ルート README をカテゴリ化し、欠けた3件、外部 re_invest_os、_archive 索引を加える。確認済みの矛盾を修正し、古い README は実装との照合結果に応じて更新する。完了条件は、48件すべてと成果物・資料・作業用ディレクトリが索引から到達でき、リンクと説明が実在すること。
+1. **入口と文書**（2026-09-27 完了、ブランチ `codex/workspace-index`、実装コミット `06849a7a`・`25606280`。main 未マージ）: ルート README をカテゴリ化し、欠けた3件、外部 re_invest_os、_archive 索引を加える。確認済みの矛盾を修正し、古い README は実装との照合結果に応じて更新する。完了条件は、48件すべてと成果物・資料・作業用ディレクトリが索引から到達でき、リンクと説明が実在すること。
 2. **統合仕様**: 新市場分析プロジェクトの対象機能、正本、データ契約（portfolio-analyzer のデータ品質規則を含む）、UI、旧プロジェクトごとの採否、個人口座との境界を設計文書に固定する。公開 API・依存関係の変更はこの段階で承認を得る。完了条件は、旧機能の行き先と検証方法が対応表で追えること。
 3. **統合実装**: 新しい workspace メンバーを追加し、fixture による価格・マクロ・バックテストの比較から段階的に移す。採用するアプリの主要操作を確認する。依存を変えたら portfolio-analyzer の日次レポートを確認する。完了条件は、採用機能のテストと代表画面が新入口で動き、未移行機能が明示され、定時タスクが動き続けること。
 4. **個別退避**: 候補ごとに差分・依存・ローカルデータ・復元方法を確認し、承認を受けて _archive へ移す。pyproject.toml、testpaths、conftest.py、Makefile、CI、README、プロジェクト内リンク、Git の外の依存（「実施の前提と外部依存」の表）を更新する。完了条件は、現役の入口に壊れた参照がなく、退避理由と後継を索引から確認できること。
@@ -161,6 +164,71 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 6. **次の統合候補**: 市場分析が安定した後、ratesvol（rates_volatility_model、2026-09-27 にテスト付きパッケージ化）と hullkit の重なりなどを個別に調査する。ratesvol の SABR テストは hullkit.sabr を独立実装として照合に使っているため、統合するとこの独立照合を失う点も比較に入れる。johnhull と deep_hedge_price の既存の役割分担は尊重し、題材が近いという理由だけで統合しない。
 
 各工程の検証は変更範囲に合わせる。文書はリンクとコマンドの存在確認、Python の移動は対象 suite と uv workspace、画面は起動と主要操作、退避はルート設定・CI・参照元・定時タスク、容量移管は復元・ハッシュ・既存 QA を確認する。make test の成功だけを「全プロジェクト検証済み」とみなさない。
+
+## 工程1の実施記録（2026-09-27）
+
+**完了（main 未マージ）**。ブランチは `codex/workspace-index`。
+`06849a7a` は索引と共有文書、`25606280` は6件の README の実装照合による修正。
+この実施記録のコミットは上記2件に続く。工程2以降は未着手。
+
+### 変更と根拠
+
+- [ルート README](../../../README.md): 計画どおりの5分類・48件にし、目的・入口・状態・関連を記載。
+  成果物3群、作業用3群、共有文書、外部 re_invest_os を案内。health 等の説明も現行 README に照合。
+- [AGENTS.md](../../../AGENTS.md): `testpaths` 35件と登録済みの johnhull/report を明記。
+  deep_hedge_price の過去のテスト成功を現在の全件検証と混同しない説明に修正。
+- [notebooks/README.md](../../../notebooks/README.md): 外部リポジトリの区別と、旧ノート・旧アプリの別々の退避先を修正。
+- [Makefile](../../../Makefile): 冒頭の古いメンバー列挙のみを削除。ターゲット・レシピは変更なし。
+- [_archive/README.md](../../../_archive/README.md): 4群の退避日・理由・根拠コミット・後継・実行可能性と記録テンプレートを新設。
+- [ネットワーク監視ノート](../../knowledge/2026-09-27-network-monitor.md) と [共有知識索引](../../knowledge/README.md):
+  Windows PowerShell の実行方法、既定値、通信量、結果の読み方を追加。スクリプト本体は変更なし。
+
+| README | 明確なずれに対する修正 | 照合先 |
+|---|---|---|
+| stock | uv をルートから使う起動例、依存バージョンを固定値でなく下限として記載 | [起動コード](../../../stock/app/app.py)、[依存宣言](../../../stock/pyproject.toml) |
+| line_backup | 共有環境での CLI・テスト例、`--sample-rows 0` の説明 | [CLI](../../../line_backup/src/line_backup_exporter/cli.py)、[SQLite 検査](../../../line_backup/src/line_backup_exporter/sqlite_inspector.py) |
+| akinator | 同梱35件は手作り seed、ライブ Wikidata 取得と区別 | [seed 生成](../../../akinator/scripts/seed_data.py) と同梱データの ID・件数 |
+| autostock | ルート実行例と取得開始日、lockbox は指標非表示であって未来データへのアクセス制限ではないと訂正 | [戦略](../../../autostock/strategy.py)、[評価器](../../../autostock/prepare.py) |
+| aisan_lbo_case | 存在しない PPTX 追記コマンドを除去し、取得処理の yfinance 依存を補足 | [report モジュール群](../../../aisan_lbo_case/src/report/)、[peer 取得](../../../aisan_lbo_case/src/fetch/fetch_peer_multiples.py) |
+| deep_hedge_price | Python 3.12、共有環境の有効化、dev extra を明示 | [依存宣言](../../../deep_hedge_price/pyproject.toml)、[Makefile](../../../deep_hedge_price/Makefile) |
+
+### 検証と対象範囲
+
+- スクリプトで README・AGENTS・アーカイブ索引・本計画と変更した Markdown の相対リンク先の実在を確認。
+- `git ls-tree -d HEAD` のトップレベルから管理用ディレクトリと成果物を除いた48件が、重複なく索引から到達可能。
+  計画の分類と順序も一致（12 / 7 / 13 / 6 / 10）。
+- TOML を読み、testpaths 35件、johnhull/report の登録、deep_hedge_price の未登録を確認。
+  記載した Make ターゲット・モジュール・スクリプト・オプション・Python 要件を実装に照合。
+- 合成 SQLite のみで `sample_rows=0` がサンプルを省略し行数計測は続けることを確認。
+  ネットワーク監視の PowerShell 例は構文解析で確認し、通信は実行していない。
+- pre-commit の対象フックと `git diff --check` を実施。Python / TOML / YAML の変更がないため
+  ruff / ruff-format / check-toml / check-yaml は対象なしで skip。アプリ全体のテスト、実データ取得、UI 起動は未実施。
+- 別レビュアーによる読み取り専用レビューで重大・要修正の指摘なし。
+  退避日の明記もコミット日と照合して追加した。
+
+判断: 文書だけの工程なので環境の全体 sync と `make test` は行わず、文書の実在・実装との整合を検証した。
+アプリの実行可能性を再認定したものではない。アプリの worktree 作成機能は UNC の Git 所有権判定で失敗したため、
+既存設定を変更せず WSL の Git で専用 worktree を作った。共有 main には変更を加えていない。
+
+### 直さずに残したずれ・未検証事項
+
+- `agentic-setup/AGENTS.md` と稼働中の共通グローバル指示を比較した。バックアップには旧 wiki 保存方針と
+  「修正3回で停止」が残り、稼働版にはリポジトリ内の知識保存、既承認作業の自律継続、
+  新しい証拠が得られない時点での再評価、進捗・検証を含む自己完結した報告がある。
+  引き継ぎ指示どおり両方とも未編集。[同期手順](../../../agentic-setup/README.md#同期) に従う別作業が必要。
+- Makefile の `help` 出力にもメンバーの手書き一覧が残り、macrokit / timesfm_lab / portfolio-analyzer が抜けている。
+  今回の指定対象は冒頭コメントであり、help レシピは変更していない。正本は root pyproject.toml。
+- stock の AGENTS / CLAUDE に Streamlit チャットの説明が残るが、現行 `app/pages/chat.py` は Dash。
+  akinator の AGENTS / CLAUDE も冒頭の「no hand-built dataset」と下段の seed 説明が矛盾する。
+  今回は指定された README を修正し、これらのプロジェクト指示ファイルは未編集。
+- aisan_lbo_case の企業情報・モデル前提の最新性、外部 re_invest_os の移植機能の網羅性は未検証。
+  歴史的な調査前提を現在の事実と断定して書き換えてはいない。
+- アーカイブ内の旧 README は当時の起動手順を含む。新索引で注意点を明記し、本体の再実行や修復は行っていない。
+  追跡外 tmp、個人データ、保存済み評価結果、大容量成果物も今回の整理対象外。
+
+工程2で先に決めるのは、新統合プロジェクトの名称・入口・残す機能と画面の範囲。
+公開 API・依存関係は統合仕様を具体化して確認する。保管先、D1、別ブランチのマージ、分類の最終確認、
+候補ごとの退避可否は、次節の未決事項として残す。
 
 ## 残る決定
 
@@ -180,4 +248,4 @@ Git LFS 等へ移しても、過去コミットの blob は履歴を書き換え
 - 追記: portfolio-analyzer の独自取得とデータ品質規則、定時タスクと共有 `.venv` の関係、ratesvol と hullkit の独立照合、D1 を M15 の前に決める理由、公開リポジトリでの移管先の制約。
 - 変更: market_nn、quant-agent-benchmark、rates-ui-lab の案内カテゴリ。
 
-今回の作業は計画書の作成とレビュー反映まで。上記の実装・移動・削除・外部保存・履歴変更は行っていない。
+初版の作業は計画書の作成とレビュー反映まで。その後の工程1の変更・検証は上の実施記録に記す。工程2以降のコード統合・移動・削除・外部保存・履歴変更は行っていない。
