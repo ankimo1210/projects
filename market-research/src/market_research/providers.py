@@ -217,7 +217,11 @@ def fetch_prices(
             frame = (history or _history)(
                 request.provider_symbol, request.start, request.end + timedelta(days=1)
             )
-            raw = frame.to_json(orient="split", date_format="iso").encode()
+            raw = json.dumps(
+                frame.astype(object).where(pd.notna(frame), None).to_dict(orient="split"),
+                default=lambda value: value.isoformat(),
+                allow_nan=False,
+            ).encode()
         elif provider == "stooq":
             raw = client.get(
                 "https://stooq.com/q/d/l/",
@@ -229,6 +233,8 @@ def fetch_prices(
                 },
                 headers={"User-Agent": "market-research/0.1"},
             )
+            if raw.lstrip().lower().startswith((b"<!doctype html", b"<html")):
+                raise FetchError("provider_challenge")
             frame = pd.read_csv(io.BytesIO(raw)).set_index("Date")
         elif provider == "jquants":
             frame, raw = _jquants(request, client, resume_raw)

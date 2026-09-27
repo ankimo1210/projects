@@ -40,6 +40,7 @@ class CacheKey:
     currency: str
     adjustment: str
     schema_version: int = 1
+    request_json: str = ""
 
     def __post_init__(self):
         for name in ("provider", "dataset", "identity", "interval", "currency", "adjustment"):
@@ -47,6 +48,10 @@ class CacheKey:
                 raise ValueError(f"cache key {name} must be nonempty")
         if self.schema_version != 1:
             raise ValueError("unsupported cache schema version")
+        if not isinstance(self.request_json, str) or (
+            self.request_json and not isinstance(json.loads(self.request_json), dict)
+        ):
+            raise ValueError("request_json must encode an object")
 
     @property
     def encoded(self) -> str:
@@ -198,7 +203,7 @@ class ResearchStore:
             records.append(
                 (
                     "price",
-                    _hash(_json(row.key).encode()),
+                    _hash(_json([row.key, row.instrument.currency]).encode()),
                     key.identity,
                     row.provider,
                     row.adjustment,
@@ -300,7 +305,10 @@ class ResearchStore:
 
     def pending_snapshot(self, key: CacheKey) -> Snapshot:
         row = self.con.execute(
-            "SELECT * FROM snapshots WHERE key_hash=? AND NOT complete ORDER BY observed_at DESC, id DESC LIMIT 1",
+            """SELECT s.* FROM snapshots s WHERE s.key_hash=? AND NOT s.complete
+            AND NOT EXISTS (SELECT 1 FROM snapshots done WHERE done.key_hash=s.key_hash
+                AND done.complete AND done.observed_at>=s.observed_at)
+            ORDER BY s.observed_at DESC, s.id DESC LIMIT 1""",
             [key.digest],
         ).fetchone()
         if row is None:
@@ -308,6 +316,37 @@ class ResearchStore:
         snapshot = self._snapshot(row)
         self.read_raw(snapshot)
         return snapshot
+
+    def get_snapshot(self, snapshot_id: str) -> Snapshot:
+        row = self.con.execute("SELECT * FROM snapshots WHERE id=?", [snapshot_id]).fetchone()
+        if row is None:
+            raise CacheUnavailableError("snapshot unavailable")
+        snapshot = self._snapshot(row)
+        self.read_raw(snapshot)
+        return snapshot
+
+    def snapshots(self, limit: int = 50) -> tuple[Snapshot, ...]:
+        if not 1 <= limit <= 1000:
+            raise ValueError("limit must be between 1 and 1000")
+        rows = self.con.execute(
+            "SELECT * FROM snapshots ORDER BY observed_at DESC, id DESC LIMIT ?", [limit]
+        ).fetchall()
+        return tuple(self._snapshot(row) for row in rows)
+
+    def snapshot_price_view(self, snapshot: Snapshot, when: datetime) -> PriceView:
+        # Reload the manifest: callers cannot promote a partial snapshot via replace().
+        saved = self.get_snapshot(snapshot.snapshot_id)
+        if not saved.complete or saved.key.dataset != "prices":
+            raise CacheUnavailableError("complete price snapshot required")
+        rows = self.con.execute(
+            """SELECT e.payload FROM entries e JOIN snapshot_entries se
+            ON se.kind=e.kind AND se.row_key=e.row_key
+            WHERE se.snapshot_id=? AND e.kind='price' ORDER BY e.available_at, e.row_key""",
+            [saved.snapshot_id],
+        ).fetchall()
+        return price_view_as_of(
+            [_price_decode(row[0]) for row in rows], when, adjustment=saved.key.adjustment
+        )
 
     def _rows(self, kind: str, identity: str, provider: str):
         return self.con.execute(
@@ -322,9 +361,20 @@ class ResearchStore:
         ).fetchall()
 
     def price_view(
-        self, instrument_id: str, provider: str, when: datetime, adjustment: str
+        self,
+        instrument_id: str,
+        provider: str,
+        when: datetime,
+        adjustment: str,
+        *,
+        currency: str | None = None,
     ) -> PriceView:
         rows = [_price_decode(row[0]) for row in self._rows("price", instrument_id, provider)]
+        rows = [row for row in rows if row.adjustment == adjustment]
+        if currency is not None:
+            rows = [row for row in rows if row.instrument.currency == currency]
+        if len({row.instrument.currency for row in rows}) > 1:
+            raise ValueError("currency selection is required for multiple quote currencies")
         return price_view_as_of(rows, when, adjustment=adjustment)
 
     def macro_view(

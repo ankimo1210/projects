@@ -1,8 +1,9 @@
 # market-research
 
 市場データ・マクロ指標・バックテスト・可視化を1つの研究基盤にまとめるプロジェクトです。
-現在は工程3の**初期実装**で、合成データによるオフラインの一連の操作を確認できます。
-実市場の取得・個人口座の連携・旧プロジェクトからの切替はまだ行っていません。
+現在は工程3bの価格取得・保存部分を実装しています。CLIで日足を明示取得し、
+保存した版を通信なしで読めます。画面は引き続き合成デモです。
+外部マクロ・財務取得器の移植、個人口座の連携、旧プロジェクトからの切替は後続です。
 [設計仕様](../docs/superpowers/specs/2026-09-27-market-research-design.md)と
 [進捗](docs/STATUS.md)を参照してください。
 
@@ -22,6 +23,22 @@ uv run --no-sync pytest market-research/tests -q
 デモは架空の足終端から1時間後を判断時刻とし、その時点で利用可能な価格だけを使います。
 `demo --json` は同じ run の入力ハッシュと要約を標準出力へ出します。
 
+## 実データの取得・保存
+
+[データ取得ガイド](docs/DATA.md)に、CLI、カレンダー、再開・失敗時の扱いをまとめています。
+既定の保存先は WSL の `~/.local/share/market-research`（Git管理外）で、`--data-root` で変更できます。
+`prices` と `snapshots` は通信しません。`fetch-prices` だけが取得します。
+
+```bash
+uv run --no-sync market-research fetch-prices \
+  --provider binance --market CRYPTO --symbol BTCUSDT --provider-symbol BTCUSDT \
+  --currency USDT --timezone UTC --adjustment raw --start 2026-09-24 --end 2026-09-25
+uv run --no-sync market-research snapshots
+```
+
+日米株は確認済み取引時間表の `--calendar` 指定が必要です。
+新しいカレンダー依存の追加は確認中で、自動接続はまだ実装していません。
+
 ## 実装済みの契約
 
 - 銘柄IDは市場を含みます。価格はUTCの足終端・利用可能時刻・取得時刻と、
@@ -29,9 +46,11 @@ uv run --no-sync pytest market-research/tests -q
 - yfinance形式のスナップショット正規化は、取得時に使ったprovider symbolと、
   各行の確認済み開始・終了時刻および確定状態を明示入力として要求します。
   日付ラベルやタイムゾーンだけから終値の確定時刻を推測しません。`Adj Close` は方式未確認の
-  `unknown` として元終値から分離します。実APIからの取得・取引所カレンダー接続は後続です。
+  `unknown` として元終値から分離します。未確定足は保持し、時点別読取で理由付き除外します。
+- 取得元・期間・銘柄記号・通貨・調整方式・カレンダーを含むmanifestと、SHA256付き入力を保存。
+  DuckDBの行とmanifestはtransactionで結び、改定前の版を上書きしません。
 - マクロは公表日時以前に値を返さず、後の改定を別の版として保持します。
-  現段階はメモリ上の合成系列です。
+  DuckDBへの保存・再読込まで合成系列で検証済みです。外部マクロの取得は未接続です。
 - バックテストは意思決定時の目標ウェイトを1期遅らせる
   close-to-close **研究近似**です。保有中の欠損・非有限値・列の食い違い、
   基準通貨の未指定・異通貨のリターンを拒否します。FX換算そのものは未実装です。
