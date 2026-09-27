@@ -44,6 +44,14 @@ cd /home/kazumasa/projects
 uv run --no-sync python stock/app/app.py
 ```
 
+既存の [start.sh](start.sh)（stock ディレクトリ内では `./start.sh`）も利用できます。
+ワークスペースルートからのショートカットは次のとおりです。内部で stock ディレクトリへ移動し、
+`uv run python app/app.py` を実行します。
+
+```bash
+./stock/start.sh
+```
+
 → http://127.0.0.1:8050 を開く
 
 | URL | ページ |
