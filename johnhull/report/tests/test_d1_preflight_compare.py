@@ -244,3 +244,22 @@ def test_overlay_rejects_a_replacement_in_the_section_that_is_not_an_input(proje
             ["docs/validation/section-27-3/reference.json"],
             replacements={"docs/validation/section-27-3/numerical-check.json": b"{}"},
         )
+
+
+def test_worktree_state_ignores_preflight_outputs_but_not_inputs(tmp_path):
+    from johnhull.scripts.d1_preflight_compare import worktree_state
+
+    repo = tmp_path / "repo"
+    (repo / "docs/validation/d1-preflight").mkdir(parents=True)
+    (repo / "src.py").write_text("x = 1\n", encoding="utf-8")
+    for command in (
+        ["git", "init", "-q"],
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "add", "."],
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "init"],
+    ):
+        subprocess.run(command, cwd=repo, check=True)
+    (repo / "docs/validation/d1-preflight/run.json").write_text("{}", encoding="utf-8")
+    commit, dirty = worktree_state(repo)
+    assert len(commit) == 40 and dirty is False
+    (repo / "src.py").write_text("x = 2\n", encoding="utf-8")
+    assert worktree_state(repo)[1] is True
