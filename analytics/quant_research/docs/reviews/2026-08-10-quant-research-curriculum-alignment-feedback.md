@@ -330,7 +330,7 @@ B5-W18 の proximal も map が「coordinate descentまたはproximal update」�
 ## 追記4: SEC PIT contract レビュー（2026-08-11 07:39）
 
 対象コミット: `a7e16336 Add SEC PIT B9 contract and cache tooling`。
-前提として Claude 側が `_docs/2026-08-11-sec-baseline-gate.md` で SEC の
+前提として Claude 側が `./2026-08-11-sec-baseline-gate.md` で SEC の
 Baseline gate を実測し「pass」と報告していた。
 
 ### 機械的検証
@@ -404,7 +404,7 @@ naive datetime 拒否・unresolved accession 拒否など失敗系もテスト�
 ## 追記5: B9 M6 protocol レビュー（2026-08-11 11:03）
 
 `a7e16336` 以降の**未コミット**作業。Claude 側は
-`_docs/2026-08-11-sec-b9-panel-realdata-run.md` で panel builder を実データ
+`./2026-08-11-sec-b9-panel-realdata-run.md` で panel builder を実データ
 試走し、(1) accession 未解決の fail-closed が正しく動くこと、(2) 同日に複数
 四半期を提出する遅延提出者が **60社中14社（23.3%）**存在し例外停止することを
 報告していた。
@@ -704,7 +704,7 @@ medAE・company-macro MAE も同様に最良値を基準に「悪化しない」
 nominee manifest を凍結した後だと直せない。
 
 **自分の過去の指摘の訂正**: 私は
-`_docs/2026-08-11-sec-baseline-gate.md` §3(3) で「pooled drift が zero を安定して
+`./2026-08-11-sec-baseline-gate.md` §3(3) で「pooled drift が zero を安定して
 上回った（+2.14%）ので ladder に入れよ」と書いた。あれは frame `CY2015Q4I` から
 選んだ survivorship 込みの60社パネル上の測定で、**PIT で固定した cohort では
 その順位が成立しない**。「ladder に pooled drift を含めよ」は依然として正しいが、
@@ -860,7 +860,7 @@ Notebook 着手前に feasibility spike を1本入れるのが安い。
 
 ### 1. FINRA gate — 私のノートへの対応は期待以上
 
-`_docs/2026-08-11-b11-finra-access-gate-warning.md` に対し、GPT は Notebook 着手**前**に
+`./2026-08-11-b11-finra-access-gate-warning.md` に対し、GPT は Notebook 着手**前**に
 `docs/updates/2026-08-11-b11-finra-feasibility.md` を作り、**条件付き未承認**で止めた。
 私が最優先に挙げた「利用条件」を実際に読み、私が想定していなかった問題も見つけている。
 
