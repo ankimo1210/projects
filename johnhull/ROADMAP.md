@@ -30,7 +30,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 | 全節監査の是正 | 第 1〜5 便完了 | 残りは下の「全節監査と是正」の表 |
 | 節単位の受入 | M14（§27.5）まで。台帳は受入 14・未評価 292（4.6%） | 次は D1-preflight、その後 M15（§27.6）。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
-| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | ツール対応・復元検証は未着手。M15 より前に D1-preflight を行う |
+| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | D1-preflight 実施中（段階1 完了：保管庫 C:/F: を作成し2コピーの復元を確認）。M15 はその完了後 |
 | テスト | hullkit+report 2810 passed・6 skipped（M14、2026-09-27） | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
@@ -79,6 +79,16 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 2コピーからの復元と既存 gate が通るまで、過去の証跡や台帳の参照を移さない。
 数値・意味・release 検査と受入件数は変えず、D3 の軽量化は別判断とする。
 [実装計画](docs/prep/design/D1_PREFLIGHT_PLAN.md)に依存指紋、旧形式互換、全再描画との比較、負の検査、復元の順序を具体化した。計画作成はpreflightのPASSではない。
+
+| 段階 | 内容 | 状態 |
+|---|---|---|
+| 1 | 不変 blob の保存・復元器（`scripts/evidence_store.py`）と保管庫の実接続 | **完了（2026-09-28）**。C: `%USERPROFILE%\ProjectArtifacts\projects`（primary）と F: `F:\ProjectArtifacts\projects-backup`（mirror）を作成。§27.3 の画像2枚を両方に保存し、それぞれ別に復元してバイト一致。path traversal・欠損・1 byte 破損・切詰め・既存ファイル衝突・symlink 逸脱の拒否をテスト（47件） |
+| 2 | 依存指紋と v2 record、台帳検査の互換対応 | 未着手 |
+| 3 | §27.3 で全再描画と基準再利用を比較 | 未着手 |
+| 4 | 変更伝播の負の対照 | 未着手 |
+| 5 | 小群の保管・既存 gate・統合記録 | 未着手 |
+
+保管庫は環境変数 `PROJECTS_ARTIFACT_STORE`・`PROJECTS_ARTIFACT_MIRROR` で渡す（WSL では `/mnt/c/Users/<user>/ProjectArtifacts/projects`・`/mnt/f/ProjectArtifacts/projects-backup`）。未設定・未接続・marker なしは明示的なエラーで、空のフォルダーを自動作成しない。
 
 ### 本編の外の研究・拡張（完了条件に含めない）
 
