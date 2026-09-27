@@ -29,7 +29,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 58 public + 13 priva
 | Beyond Hull（vol 13–28） | すべて done | A1–A4（vol 13–17）、A5–A8 G8 release（vol 18–25）、vol 26・27・28 |
 | 全節監査の是正 | 第 1〜5 便完了 | 残りは下の「全節監査と是正」の表 |
 | 節単位の受入 | M13（§27.4）まで。台帳は受入 13・未評価 293 | 次は M14（§27.5 Path-Dependent Derivatives） |
-| テスト | hullkit+report 2786 passed・6 skipped（M13、2026-09-27）。deep_hedge_price 206 passed はM13以前の記録 | コマンドは `CLAUDE.md` |
+| テスト | hullkit+report 2786 passed・6 skipped、deep_hedge_price 206 passed（M13 の HEAD `4d59efbc`、2026-09-27） | コマンドは `CLAUDE.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -223,11 +223,11 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M9 | §26.17 Static options replication（pp.632–634） | 受入。Table 26.1と3/18/100点を独立再計算。[受入ノート](docs/SECTION_26_17_ACCEPTANCE_2026-09-25.md) |
 | M10 | §27.1 Alternatives to BSM（pp.641–646） | 受入。CEV・Merton・VG、Table 27.1とFigure 27.1。[受入ノート](docs/SECTION_27_1_ACCEPTANCE_2026-09-25.md) |
 | M11 | §27.2 Stochastic volatility models（pp.646–649） | 受入。式27.1・Hull–White混合公式・Heston COS・SABRを独立参照で照合。[受入ノート](docs/SECTION_27_2_ACCEPTANCE_2026-09-26.md) |
-| M12 | §27.3 The IVF Model（pp.649–650） | 受入。式27.4を独立解析式33点・後退PDE9価格・二時点paired MCで照合。[受入ノート](docs/SECTION_27_3_ACCEPTANCE_2026-09-27.md) |
-| M13 | §27.4 Convertible Bonds（pp.650–653） | 受入。Example 27.1／Figure 27.2の10節点、コール後再転換、信用・回収・利払いを照合。[受入ノート](docs/SECTION_27_4_ACCEPTANCE_2026-09-27.md) |
+| M12 | §27.3 The IVF Model（pp.649–650） | 受入。式27.4を独立解析式33点・後退PDE9価格・二時点paired MCで照合。[受入ノート](docs/SECTION_27_3_ACCEPTANCE_2026-09-27.md)・[レビュー](docs/SECTION_27_3_27_4_FEEDBACK_2026-09-27.md)（P3 2件） |
+| M13 | §27.4 Convertible Bonds（pp.650–653） | 受入。Example 27.1／Figure 27.2の10節点、コール後再転換、信用・回収・利払いを照合。[受入ノート](docs/SECTION_27_4_ACCEPTANCE_2026-09-27.md)・[レビュー](docs/SECTION_27_3_27_4_FEEDBACK_2026-09-27.md)（Example 27.1 を独立に再計算して一致） |
 | 以降 | §27.5 から台帳の未評価節へ順に展開 | 未着手 |
 
-現在地（2026-09-27）：M13まで受入、台帳は受入13・未評価293。M13はローカルcommit `ff3ada12`、追跡済みrelease gateもPASS（remote未反映）。統合記録は`docs/validation/section-27-4/m13-check.json`。次はM14 §27.5。
+現在地（2026-09-27）：M13まで受入、台帳は受入13・未評価293。M12・M13 はレビュー済み（受入を止める指摘なし、P3 2件）。統合記録は`docs/validation/section-27-4/m13-check.json`。次はM14 §27.5。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
@@ -237,3 +237,4 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 - 再検査のスクリーンショット差分は、文字のアンチエイリアスやmodebarツールチップと図の中身の変化を分けて判定する。前者ならコミット済み画像を戻す（M6b）。
 - 適用域の制限：§26.11の価格APIは$|r-q|<10^{-8}$に未対応（教材に適用域として明示）、§26.12のlookbackは$r=q$を欠測表示、putは原典外の独立拡張。
 - M5は修正後の状態を第三者が確認していない受入である。
+- 節ごとの notebook 検査は「自節以外は基点と同じ」を確かめるため、次の節が同じ巻に入ると HEAD では FAIL する（M10–M12 で確認）。既受入節の再検査は pytest とブラウザ検査が担う。M14 の前に規約を決める（[レビュー F1](docs/SECTION_27_3_27_4_FEEDBACK_2026-09-27.md)）。
