@@ -135,6 +135,15 @@ def _git(project: Path, *args: str) -> str:
     ).stdout.strip()
 
 
+RECORDS_DIR = "docs/validation/d1-preflight"
+
+
+def worktree_state(project: Path) -> tuple[str, bool]:
+    """HEAD commit and whether inputs are uncommitted (preflight outputs excluded)."""
+    status = _git(project, "status", "--porcelain", "--", ".", f":(exclude){RECORDS_DIR}")
+    return _git(project, "rev-parse", "HEAD"), bool(status)
+
+
 def _run(command: list[str], cwd: Path, env: dict) -> dict:
     started = time.monotonic()
     completed = subprocess.run(
@@ -303,6 +312,7 @@ def main(argv: list[str] | None = None) -> int:
     primary = evidence_store.store_from_env("PROJECTS_ARTIFACT_STORE", role="primary")
     mirror = evidence_store.store_from_env("PROJECTS_ARTIFACT_MIRROR", role="mirror")
 
+    commit, dirty = worktree_state(project)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     run_id = f"d1pf-{args.section}-{stamp}-{args.mode}"
     work = args.work.resolve() / run_id
@@ -311,7 +321,7 @@ def main(argv: list[str] | None = None) -> int:
     fingerprint = observed["fingerprint"]
     runtime = observed["runtime"]
 
-    record_dir_rel = f"docs/validation/d1-preflight/section-{args.section.replace('.', '-')}"
+    record_dir_rel = f"{RECORDS_DIR}/section-{args.section.replace('.', '-')}"
     record_dir = records_root / record_dir_rel
     record_dir.mkdir(parents=True, exist_ok=True)
     raw_path = record_dir / f"{run_id}.browser.json"
@@ -380,8 +390,8 @@ def main(argv: list[str] | None = None) -> int:
     record = evidence_record.build_record(
         run_id=run_id,
         created_at=datetime.now(UTC).isoformat(),
-        commit=_git(project, "rev-parse", "HEAD"),
-        dirty=bool(_git(project, "status", "--porcelain", "--", ".")),
+        commit=commit,
+        dirty=dirty,
         section_id=args.section,
         decision=decision,
         reasons=reasons,
