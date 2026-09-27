@@ -1,5 +1,5 @@
 import json
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 
 import pandas as pd
 import pytest
@@ -124,3 +124,31 @@ def test_binance_daily_bar_end_and_open_candle():
     )
     assert not batch.bars[0].is_final
     assert batch.bars[0].bar_end == datetime(2026, 9, 26, tzinfo=UTC)
+
+
+def test_response_spanning_market_close_retains_partial_state():
+    close = datetime(2026, 9, 25, 6, 30, tzinfo=UTC)
+    clock = [close - timedelta(seconds=1)]
+    frame = pd.DataFrame({"Close": [100]}, index=pd.DatetimeIndex(["2026-09-25"], tz="Asia/Tokyo"))
+
+    def history(*_):
+        clock[0] = close + timedelta(seconds=1)
+        return frame
+
+    request = PriceRequest(INST, "7203.T", date(2026, 9, 25), date(2026, 9, 25))
+    batch = fetch_prices("yfinance", request, calendar=CAL, now=lambda: clock[0], history=history)
+    assert not batch.bars[0].is_final
+    assert batch.bars[0].observed_at == close + timedelta(seconds=1)
+
+
+def test_crypto_session_date_matches_provider_daily_label():
+    inst = Instrument("CRYPTO", "BTCUSDT", "USDT", "UTC")
+    start = int(datetime(2026, 9, 24, tzinfo=UTC).timestamp() * 1000)
+    request = PriceRequest(inst, "BTCUSDT", date(2026, 9, 24), date(2026, 9, 24))
+    batch = fetch_prices(
+        "binance",
+        request,
+        now=lambda: NOW,
+        client=client_for([[[start, "100", "101", "99", "100.5", "20", start + 86400000 - 1]]], []),
+    )
+    assert batch.bars[0].session_date == request.start

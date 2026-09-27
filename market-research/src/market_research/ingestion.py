@@ -82,7 +82,9 @@ def ingest_prices(
     except FetchError as error:
         failure = error
     if failure is None:
-        snapshot = store.save(key, batch.raw, observed_at=batch.observed_at, prices=batch.bars)
+        snapshot = store.save(
+            key, batch.raw, observed_at=batch.observed_at, prices=batch.bars, gaps=batch.gaps
+        )
         return IngestResult(snapshot, store.snapshot_price_view(snapshot, batch.observed_at))
     observed = now()
     if failure.partial_raw:

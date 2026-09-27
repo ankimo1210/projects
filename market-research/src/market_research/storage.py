@@ -12,7 +12,7 @@ from pathlib import Path
 
 import duckdb
 
-from .contracts import Instrument, MacroObservation, PriceBar, _utc
+from .contracts import Instrument, MacroObservation, PriceBar, PriceGap, _utc
 from .macro import as_of
 from .prices import PriceView, price_view_as_of
 
@@ -100,6 +100,27 @@ def _macro_decode(payload: str) -> MacroObservation:
     return MacroObservation(**data)
 
 
+def _gap_decode(payload: str) -> PriceGap:
+    data = json.loads(payload)
+    data["instrument"] = Instrument(**data["instrument"])
+    data["session_date"] = date.fromisoformat(data["session_date"])
+    for name in ("available_at", "observed_at"):
+        data[name] = datetime.fromisoformat(data[name])
+    return PriceGap(**data)
+
+
+def _view_with_gaps(prices, gaps, when: datetime, adjustment: str) -> PriceView:
+    when = _utc(when, "when")
+    eligible = tuple(
+        gap for gap in gaps if gap.available_at <= when and gap.adjustment == adjustment
+    )
+    if eligible and not any(
+        bar.available_at <= when and bar.adjustment == adjustment for bar in prices
+    ):
+        return PriceView((), (), eligible)
+    return replace(price_view_as_of(prices, when, adjustment=adjustment), gaps=eligible)
+
+
 class ResearchStore:
     def __init__(self, root: Path):
         self.root = Path(root).expanduser().resolve()
@@ -170,6 +191,7 @@ class ResearchStore:
         *,
         observed_at: datetime,
         prices=(),
+        gaps=(),
         macro=(),
         complete: bool = True,
         cursor: str | None = None,
@@ -226,6 +248,38 @@ class ResearchStore:
                     "none",
                     row.release_at,
                     _json(asdict(row)),
+                )
+            )
+        for gap in gaps:
+            expected = (
+                gap.provider,
+                "prices",
+                gap.instrument.instrument_id,
+                gap.interval,
+                gap.instrument.currency,
+                gap.adjustment,
+            )
+            if expected != (
+                key.provider,
+                key.dataset,
+                key.identity,
+                key.interval,
+                key.currency,
+                key.adjustment,
+            ):
+                raise ValueError("price gap does not match cache key")
+            if gap.observed_at > observed:
+                raise ValueError("price gap observed after snapshot")
+            row_key = (*expected, gap.session_date, gap.observed_at)
+            records.append(
+                (
+                    "price_gap",
+                    _hash(_json(row_key).encode()),
+                    key.identity,
+                    gap.provider,
+                    gap.adjustment,
+                    gap.available_at,
+                    _json(asdict(gap)),
                 )
             )
         raw_hash = self._write_raw(raw)
@@ -339,13 +393,16 @@ class ResearchStore:
         if not saved.complete or saved.key.dataset != "prices":
             raise CacheUnavailableError("complete price snapshot required")
         rows = self.con.execute(
-            """SELECT e.payload FROM entries e JOIN snapshot_entries se
+            """SELECT e.kind, e.payload FROM entries e JOIN snapshot_entries se
             ON se.kind=e.kind AND se.row_key=e.row_key
-            WHERE se.snapshot_id=? AND e.kind='price' ORDER BY e.available_at, e.row_key""",
+            WHERE se.snapshot_id=? AND e.kind IN ('price','price_gap') ORDER BY e.available_at, e.row_key""",
             [saved.snapshot_id],
         ).fetchall()
-        return price_view_as_of(
-            [_price_decode(row[0]) for row in rows], when, adjustment=saved.key.adjustment
+        return _view_with_gaps(
+            [_price_decode(payload) for kind, payload in rows if kind == "price"],
+            [_gap_decode(payload) for kind, payload in rows if kind == "price_gap"],
+            when,
+            saved.key.adjustment,
         )
 
     def _rows(self, kind: str, identity: str, provider: str):
@@ -370,12 +427,15 @@ class ResearchStore:
         currency: str | None = None,
     ) -> PriceView:
         rows = [_price_decode(row[0]) for row in self._rows("price", instrument_id, provider)]
+        gaps = [_gap_decode(row[0]) for row in self._rows("price_gap", instrument_id, provider)]
         rows = [row for row in rows if row.adjustment == adjustment]
+        gaps = [gap for gap in gaps if gap.adjustment == adjustment]
         if currency is not None:
             rows = [row for row in rows if row.instrument.currency == currency]
-        if len({row.instrument.currency for row in rows}) > 1:
+            gaps = [gap for gap in gaps if gap.instrument.currency == currency]
+        if len({row.instrument.currency for row in [*rows, *gaps]}) > 1:
             raise ValueError("currency selection is required for multiple quote currencies")
-        return price_view_as_of(rows, when, adjustment=adjustment)
+        return _view_with_gaps(rows, gaps, when, adjustment)
 
     def macro_view(
         self, indicator: str, when: datetime, source: str

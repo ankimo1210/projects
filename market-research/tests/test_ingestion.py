@@ -164,3 +164,103 @@ def test_partial_jquants_fetch_can_resume_without_repeating_first_page(tmp_path,
         assert calls == [None, "next", "next", "next"]
         with pytest.raises(CacheUnavailableError):
             store.pending_snapshot(cache_key("jquants", request, calendar))
+
+
+@pytest.mark.parametrize("has_trade", [True, False])
+def test_no_trade_day_is_saved_as_gap_and_valid_days_remain_readable(
+    tmp_path, monkeypatch, has_trade
+):
+    from market_research.calendars import SessionCalendar
+
+    monkeypatch.setenv("JQUANTS_API_KEY", "fixture-token")
+    instrument = Instrument("XTKS", "7203", "JPY", "Asia/Tokyo")
+    request = PriceRequest(instrument, "7203", REQUEST.start, REQUEST.end)
+    calendar = SessionCalendar(
+        "XTKS",
+        "fixture",
+        {
+            date(2026, 9, day): (
+                datetime(2026, 9, day, tzinfo=UTC),
+                datetime(2026, 9, day, 6, 30, tzinfo=UTC),
+            )
+            for day in (24, 25)
+        },
+    )
+    gap = {
+        "Date": "2026-09-25",
+        "Code": "72030",
+        "O": None,
+        "H": None,
+        "L": None,
+        "C": None,
+        "Vo": None,
+    }
+    rows = [{"Date": "2026-09-24", "Code": "72030", "C": 100}, gap] if has_trade else [gap]
+    http = HttpClient(transport=lambda *_: (200, {}, json.dumps({"data": rows}).encode()))
+    with ResearchStore(tmp_path) as store:
+        result = ingest_prices(
+            store, "jquants", request, calendar=calendar, client=http, now=lambda: NOW
+        )
+        assert len(result.view.bars) == int(has_trade)
+        assert len(result.view.gaps) == 1 and result.view.gaps[0].reason == "no_trade"
+        assert result.view.gaps[0].session_date == date(2026, 9, 25)
+    with ResearchStore(tmp_path) as store:
+        assert store.snapshot_price_view(result.snapshot, NOW) == result.view
+
+
+def test_resume_keeps_original_page_observation_and_partial_state(tmp_path, monkeypatch):
+    from urllib.parse import parse_qs, urlsplit
+
+    from market_research.calendars import SessionCalendar
+
+    monkeypatch.setenv("JQUANTS_API_KEY", "fixture-token")
+    instrument = Instrument("XTKS", "7203", "JPY", "Asia/Tokyo")
+    request = PriceRequest(instrument, "7203", date(2026, 9, 25), date(2026, 9, 25))
+    calendar = SessionCalendar(
+        "XTKS",
+        "fixture",
+        {
+            date(2026, 9, 25): (
+                datetime(2026, 9, 25, tzinfo=UTC),
+                datetime(2026, 9, 25, 6, 30, tzinfo=UTC),
+            )
+        },
+    )
+    intraday = datetime(2026, 9, 25, 5, tzinfo=UTC)
+
+    def first(url, *_):
+        if "pagination_key" in parse_qs(urlsplit(url).query):
+            return 503, {}, b""
+        return (
+            200,
+            {},
+            json.dumps(
+                {
+                    "data": [{"Date": "2026-09-25", "Code": "72030", "C": 100}],
+                    "pagination_key": "next",
+                }
+            ).encode(),
+        )
+
+    with ResearchStore(tmp_path) as store:
+        with pytest.raises(FetchError):
+            ingest_prices(
+                store,
+                "jquants",
+                request,
+                calendar=calendar,
+                client=HttpClient(transport=first, sleep=lambda _: None),
+                now=lambda: intraday,
+            )
+        result = ingest_prices(
+            store,
+            "jquants",
+            request,
+            calendar=calendar,
+            client=HttpClient(transport=lambda *_: (200, {}, b'{"data": []}')),
+            now=lambda: intraday + timedelta(days=1),
+            resume=True,
+        )
+        assert result.view.bars == ()
+        assert result.view.exclusions[0].bar.observed_at == intraday
+        assert result.view.exclusions[0].reason == "non_final"

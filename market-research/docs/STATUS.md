@@ -20,10 +20,13 @@ F01–F19 の採否を実装と検証結果に結び、Q01–Q13 を満たす新
 
 ## 検証
 
-- 今回は81件成功、ruff check/format成功。価格取得CLIと保存後のオフライン読取を確認。
+- 今回は86件成功、ruff check/format・pre-commit・相対リンク122件・`uv lock --check` 成功。
+  価格取得CLIと保存後のオフライン読取を確認。
   [DATA](DATA.md)にライブ疎通を区別して記録（Binance/yfinance成功、Stooqは検証HTML、J-Quants未検証）。
   依存は既存workspaceのDuckDB/pytz/yfinanceをmemberに明示。専用worktreeだけをsyncし、
   共有mainの `.venv`・定時タスク・口座データには触れていない。全workspace `make test` は未実行。
+- 独立レビューの重要2件（正常なnull行で全期間拒否、取得完了時刻/再開による確定昇格）と、
+  暗号資産のセッション日を回帰テストで修正。[判断と検証記録](STAGE3B_REVIEW.md)。
 - 以下は工程3a時点の根拠。今回のライブ疎通とは分けて読む。
 - オフラインテスト44件、CLIの `demo --json`、Streamlit AppTestの7画面、ruff check/formatを確認。
   pre-commit、相対リンクと49件の索引（13 / 7 / 13 / 6 / 10）も確認済み。
