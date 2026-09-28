@@ -96,7 +96,7 @@
 |---|---|
 | [docs/knowledge/](docs/knowledge/README.md) | 共有する環境設定・トラブル解決の正本 |
 | [docs/decisions/](docs/decisions/) | ワークスペースの判断理由（ADR） |
-| [docs/superpowers/](docs/superpowers/) | 計画・仕様。今回の [整理計画](docs/superpowers/plans/2026-09-27-workspace-cleanup.md) |
+| [docs/superpowers/](docs/superpowers/README.md) | 計画・仕様。今回の [整理計画](docs/superpowers/plans/2026-09-27-workspace-cleanup.md) |
 | [docs/templates/](docs/templates/) | レポート等の共通テンプレート |
 | [_scratch/](_scratch/README.md) | 試行・実験の作業場所。4月の比較ノートと7月のWhisper検証は退避済み |
 | [_docs/](_docs/README.md) | 一時的な作業ログ・引き継ぎ。現在の仕様の正本ではない |
@@ -139,6 +139,7 @@ make install   # uv 管理プロジェクトを一括 sync
 make lint      # ruff check を全体に
 make fmt       # ruff format --check を全体に
 make test      # testpaths の34件を pytest で実行 + npm があれば sde-check
+make test-extra  # workspace 外の Python テスト（WSET・aisan・メールデモ・komorebi・地下鉄3D）
 make clean     # __pycache__ / .pytest_cache などを掃除
 make tree      # ヘビーディレクトリを除外したツリー表示
 ```

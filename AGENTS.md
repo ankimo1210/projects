@@ -11,7 +11,9 @@ Japanese-first; code, identifiers, and commit messages are English.
 
 Follow the target project's applicable `AGENTS.md` / `CLAUDE.md`. Consult
 its `README.md` for project context as needed; the project index is in the
-root [`README.md`](README.md).
+root [`README.md`](README.md). When a project has both files, `AGENTS.md` is
+the canonical text and `CLAUDE.md` only imports it (`@AGENTS.md`); never
+copy the guide into `CLAUDE.md`, or the two drift apart.
 
 ## Workspace Policy
 
@@ -65,7 +67,9 @@ dev tooling its own CI invokes; the shared `.venv` hides omissions that
 **That green is not full coverage.** `make test` runs only the `testpaths`
 list in the root `pyproject.toml` (34 directories as of 2026-09-28).
 `deep_hedge_price/tests` (206) joined on 2026-09-28 together with its root
-`conftest.py` import. Projects outside `testpaths` are still not run. Do not read
+`conftest.py` import. Python suites outside the uv workspace (WSET, the WSET
+corpus, aisan_lbo_case, interactive-email-demo, komorebi-3d, tokyo_subway_3d)
+run with `make test-extra`, each through the runner its README documents. Do not read
 "workspace green" as "every project verified"; run the suite you actually
 touched. `analytics/fourier/tests` (47) was in this list until 2026-08-16 and
 needed only the `testpaths` line, because its import name `fourier_book`
