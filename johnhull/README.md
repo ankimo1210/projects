@@ -169,3 +169,18 @@ cells outside §14, six rejected mutations), and
 states, changed-value rejection). The sixteen earlier lessons are rechecked
 through the D1 driver; the integrated gate is
 `scripts/build_american_mc_acceptance_record.py --check`.
+
+The §26.1 (M18) checks are `scripts/build_packages_reference.py --check`
+(Black-Scholes by `math.erfc`, the range forward's call strike by bisection,
+lognormal quadrature of every present value and loss probability, the
+N(σ√T/2)/N(−σ√T/2) limit of the strike slope and a seeded antithetic simulation,
+all without hullkit), `scripts/verify_packages_numerics.py --check` (hullkit
+against the reference and ten rejected inputs),
+`scripts/verify_packages_notebook.py --check` (fresh vol10, 125 preserved cells
+outside §4.8, six rejected mutations), and `scripts/verify_packages_browser.cjs`
+(Book/portal at 1440/1000px, 16 states, changed-value rejection). The seventeen
+earlier lessons are rechecked through the D1 driver; the integrated gate is
+`scripts/build_packages_acceptance_record.py --check`. The risk table of §4.8.5
+lives only in the saved reference, not in `hullkit.packages`. When running the
+D1 driver, pass `--records-dir docs/validation/d1-recheck`; the default
+directory is `docs/validation/d1-preflight`.
