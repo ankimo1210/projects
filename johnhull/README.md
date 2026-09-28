@@ -35,7 +35,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 138 figures (34 exotics)
+make hull-report           # offline portal: 12 themes / 142 figures (34 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -145,3 +145,14 @@ The fingerprint includes the browser runtime, so D1 runs and
 `PLAYWRIGHT_MODULE` (Playwright 1.56.0) and `CHROMIUM_BIN` (ms-playwright
 `chromium-1208`, Chromium 145.0.7632.6) as the records, plus
 `PROJECTS_ARTIFACT_STORE` and `PROJECTS_ARTIFACT_MIRROR`.
+
+The §27.7 (M16) checks are `scripts/build_two_asset_reference.py --check`
+(Stulz, Margrabe, a 1-D American exchange reduction and forward lattice
+induction without hullkit), `scripts/verify_two_asset_numerics.py --check`,
+`scripts/verify_two_asset_notebook.py --check` (fresh vol06, 107 preserved
+cells outside §13, four rejected mutations), and
+`scripts/verify_two_asset_browser.cjs` (Book/portal at 1440/1000px, 16 states,
+axis-title overlap and changed-value rejection). The fifteen earlier lessons are
+rechecked through the D1 driver; the integrated gate is
+`scripts/build_two_asset_acceptance_record.py --check`, which reads each
+section's latest D1 record and requires a reused record's baseline to exist.

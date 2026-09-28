@@ -1,7 +1,7 @@
 # 節受入・再検査の証跡方針（D1）
 
 更新日: 2026-09-28
-状態: **M15（§27.6）で本運用を開始。**
+状態: **M15（§27.6）で本運用を開始し、M16（§27.7）で2回目。**
 
 関連: [ROADMAP](../ROADMAP.md)、[節別台帳規約](SECTION_LEDGER_GUIDE.md)、
 [ワークスペースの保管先](../../docs/decisions/0004-artifact-storage-and-evidence.md)。
@@ -65,8 +65,16 @@ Book と portal の基準証跡は別に持つ。依存ハッシュが同じで�
 
 M15 は既受入14節を D1 の driver（`scripts/d1_preflight_compare.py --records-dir docs/validation/d1-recheck`）で再検査した。記録は `docs/validation/d1-recheck/section-*/`、画像は保管庫。
 
-- vol10 の9節は M15 途中の再描画を基準に**再利用**（新規保存0バイト）。vol06 の5節は §12 の追加で notebook と Book/portal が変わり**再描画**（2,338,282バイト）。
+- vol10 の9節は M15 途中の再描画を基準に**再利用**（新規保存0バイト）。vol06 の5節は初めての schema-2 記録だったので**再描画**（2,338,282バイト。記録の `reasons` は “first schema-2 record”。§12 の追加そのものは各節の slice を変えない。M16 で訂正）。
 - 依存指紋の `report/report_builder/*.py` は全節共通の入力。新しい節の図を登録すると全節の記録が古くなるので、節の追加ごとに全節の記録を作り直す。依存が変わっていなければ再利用で済み、画像は増えない。
 - 描画環境の Playwright の版は指紋に入る。標準は **Playwright 1.56.0 と Chromium 145.0.7632.6（ms-playwright chromium-1208）**。版が変わると再利用できず再描画になる（§27.3 は D1-preflight の 1.62.1 から 1.56.0 に替わって再描画、16画像は基準とバイト一致）。
 - 撮影は常にバイト一致するとは限らない（modebar や凡例の数画素）。再描画の判定は検証器の数値・配置検査で行い、バイト一致は要求しない。
 - `verify_section_ledger.py --check-artifacts` は現在の環境で指紋を計算し直すので、保管庫の2変数に加えて `PLAYWRIGHT_MODULE` と `CHROMIUM_BIN` も記録時と同じものを渡す。
+
+## M16 での運用（2026-09-28）
+
+M16 は既受入15節を同じ driver で再検査した。各節の最新の再描画記録を基点に reuse を試み、指紋か描画環境が違えば driver が自動で再描画する。
+
+- 14節（vol10 の9節と §27.1–§27.5）は**再利用**（新規保存0バイト）。vol06 に §13 を足し、後続2見出しの番号が変わっても、各節の notebook slice・Book 節・portal カードは変わらない。
+- §27.6 は M15 で受け入れた節で D1 記録がまだなく、初めての schema-2 記録として**再描画**（651,535バイト）。
+- 統合記録と台帳は各節の**最新の記録**を現行の証跡とする。再利用の記録は基点の記録ファイルが残っていることを要求し、古い記録は履歴として残す。記録名の `reuse`／`redraw` は要求した mode で、判定は記録の `decision` で読む。

@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **15**
+- accepted: **16**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 291 |
+| unreviewed | 290 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 15 |
+| accepted | 16 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -48,7 +48,7 @@
 | 24 | 9 | 9 | 0 | 0 | 0 | 0 |
 | 25 | 11 | 11 | 0 | 0 | 0 | 0 |
 | 26 | 17 | 8 | 0 | 0 | 9 | 0 |
-| 27 | 8 | 2 | 0 | 0 | 6 | 0 |
+| 27 | 8 | 1 | 0 | 0 | 7 | 0 |
 | 28 | 8 | 8 | 0 | 0 | 0 | 0 |
 | 29 | 4 | 4 | 0 | 0 | 0 | 0 |
 | 30 | 4 | 4 | 0 | 0 | 0 | 0 |
@@ -315,7 +315,7 @@
 | 27.4 | 27 | section | Convertible Bonds | accepted |
 | 27.5 | 27 | section | Path-Dependent Derivatives | accepted |
 | 27.6 | 27 | section | Barrier Options | accepted |
-| 27.7 | 27 | section | Options on Two Correlated Assets | unreviewed |
+| 27.7 | 27 | section | Options on Two Correlated Assets | accepted |
 | 27.8 | 27 | section | Monte Carlo Simulation and American Options | unreviewed |
 | 28.1 | 28 | section | The Market Price of Risk | unreviewed |
 | 28.2 | 28 | section | Several State Variables | unreviewed |
