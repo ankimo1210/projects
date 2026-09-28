@@ -51,7 +51,7 @@ def detect_frames(black: np.ndarray) -> list[dict]:
     A frame edge is a black run spanning most of the page width (top/bottom) or most
     of the frame height (left/right); nothing else on these pages is that long.
     """
-    h, w = black.shape
+    w = black.shape[1]
     rows = black.sum(1)
     groups: list[list[int]] = []
     for y in np.where(rows > w * 0.55)[0]:
@@ -61,7 +61,7 @@ def detect_frames(black: np.ndarray) -> list[dict]:
             groups.append([int(y)])
     edges = [int(np.mean(g)) for g in groups]
     frames = []
-    for top, bottom in zip(edges[0::2], edges[1::2]):
+    for top, bottom in zip(edges[0::2], edges[1::2], strict=False):
         cols = black[top + 5 : bottom - 5].sum(0)
         xs = np.where(cols > (bottom - top - 10) * 0.9)[0]
         frames.append(dict(x_left=int(xs[0]), x_right=int(xs[-1]), y_top=top, y_bottom=bottom))
@@ -95,7 +95,7 @@ def rail_profile(chart: Chart, label_chainages=(), half_width: int = 20, tol: fl
         if col.size:
             y[k] = col.max() + y0
     for cx in label_chainages:
-        c = int(round(chart.dist_to_x(cx))) - xs[0]
+        c = round(chart.dist_to_x(cx)) - xs[0]
         lo, hi = max(0, c - half_width), min(len(xs) - 1, c + half_width)
         left = [k for k in range(lo - 1, max(-1, lo - 60), -1) if not np.isnan(y[k])]
         right = [k for k in range(hi + 1, min(len(xs), hi + 60)) if not np.isnan(y[k])]

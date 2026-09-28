@@ -39,7 +39,7 @@ class Graph:
             if name is not None and osm_name not in name:
                 continue
             ids, geom = w["nodes"], w["geometry"]
-            for i, (nid, pt) in enumerate(zip(ids, geom)):
+            for i, (nid, pt) in enumerate(zip(ids, geom, strict=True)):
                 self.xy[nid] = (pt["lon"], pt["lat"])
                 if i:
                     a, b = ids[i - 1], nid
@@ -79,7 +79,7 @@ def track(graph: Graph, stops: list[dict], names: list[str]) -> list[tuple[float
     大江戸線 on the intended arc, and puts every station node on the path.
     """
     cands = [stop_nodes(stops, graph, n) for n in names]
-    for n, c in zip(names, cands):
+    for n, c in zip(names, cands, strict=True):
         if not c:
             raise RuntimeError(f"no stop node on the line for {n!r}")
     # First hop: try every start node, keep the shortest; later hops continue from the end.
@@ -91,7 +91,7 @@ def track(graph: Graph, stops: list[dict], names: list[str]) -> list[tuple[float
     if best is None:
         raise RuntimeError(f"no path from {names[0]!r} to {names[1]!r}")
     path = best
-    for goal_name, goals in zip(names[2:], cands[2:]):
+    for goal_name, goals in zip(names[2:], cands[2:], strict=True):
         hop = graph.shortest(path[-1], set(goals))
         if hop is None:
             raise RuntimeError(f"no path to {goal_name!r}")
