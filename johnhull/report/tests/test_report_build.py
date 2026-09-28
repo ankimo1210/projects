@@ -201,7 +201,6 @@ def test_path_dependent_registry_follows_convertible():
             assert figure.layout.meta["figure"] == spec.id
 
 
-
 def test_barrier_tree_registry_follows_path_dependent():
     expected = ["barrier_lattice", "barrier_convergence", "barrier_errors", "barrier_near"]
     ids = [spec.id for spec in figures_for("numerics")]

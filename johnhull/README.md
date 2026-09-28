@@ -140,3 +140,8 @@ the fourteen earlier lessons' own verifier and tests from the dependencies in
 `scripts/evidence_dependencies.json`, stores new recheck images only in the
 C:/F: artifact stores and writes schema-2 records to `docs/validation/d1-recheck/`.
 The integrated gate is `scripts/build_barrier_tree_acceptance_record.py --check`.
+The fingerprint includes the browser runtime, so D1 runs and
+`verify_section_ledger.py --check-artifacts` need the same
+`PLAYWRIGHT_MODULE` (Playwright 1.56.0) and `CHROMIUM_BIN` (ms-playwright
+`chromium-1208`, Chromium 145.0.7632.6) as the records, plus
+`PROJECTS_ARTIFACT_STORE` and `PROJECTS_ARTIFACT_MIRROR`.
