@@ -83,7 +83,7 @@ sde-check:
 	npm --prefix analytics/differential_equation/sde-book test
 
 hull-report:
-	PYTHONPATH=johnhull/report uv run --no-sync python -m analytics_portal.build
+	PYTHONPATH=johnhull/report uv run --no-sync python -m report_builder.build
 	@echo "Open johnhull/report/site/index.html in a browser (works offline)."
 
 hull-book:
