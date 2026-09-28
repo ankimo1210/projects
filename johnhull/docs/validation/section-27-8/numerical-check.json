@@ -1,0 +1,106 @@
+{
+  "section": "27.8",
+  "status": "PASS",
+  "method": "Hull's eight paths by numpy.polyfit and a direct boundary search; exact Bermudan values by lognormal quadrature and Crank-Nicolson; American limit by CRR and Crank-Nicolson; seeded fit/fresh simulations recomputed with hullkit",
+  "tolerances": {
+    "hullkit_currency": 1e-12,
+    "printed_coefficients": 0.001,
+    "printed_continuation_with_rounded_coefficients": 7e-05,
+    "printed_boundary_averages_half_unit": 5e-05,
+    "grid_half_spread_bermudan": 1e-06,
+    "grid_half_spread_american": 5e-06,
+    "bias_z": 2.0
+  },
+  "measured": {
+    "hand_gap": 5.861977570020827e-14,
+    "bias_gap": 0.0,
+    "dates_gap": 0.0,
+    "exchange_gap": 0.0,
+    "printed_rounding": {
+      "coefficients": 0.0005761829424135723,
+      "continuation_exact": 0.0005378705561829289,
+      "continuation_rounded": 5.829999999999724e-05,
+      "boundary_averages": 4.999999999995286e-05
+    },
+    "bermudan_half_spread": 1.909782919723435e-07,
+    "american_half_spread": 1.3014847205644609e-06,
+    "bias_z": {
+      "lsm_in": [
+        -0.7697195709775484,
+        -0.20562303920577363,
+        -0.9024925111108052,
+        -0.7386887754451789,
+        -0.09915331769106747,
+        1.46447517486661,
+        -0.8043930959991709
+      ],
+      "lsm_out": [
+        -7.408068577646154,
+        -4.132432203910423,
+        -2.7170480733972346,
+        -0.3026397392387072,
+        0.8218343869163196,
+        0.5707915377739635,
+        -1.763726239823857
+      ],
+      "boundary_in": [
+        3.9799825348129323,
+        4.271348412303613,
+        3.505486057702003,
+        3.4782230845650592,
+        3.3626863353489127,
+        4.211140930944202,
+        2.0821348897229
+      ],
+      "boundary_out": [
+        -10.642234317847828,
+        -7.8056118857171075,
+        -5.654828629887612,
+        -2.6902363468005115,
+        -1.1750356449795185,
+        -0.46223325342812843,
+        -2.258656307991039
+      ]
+    },
+    "dates_z": {
+      "lsm2": [
+        -0.43438210653815645,
+        1.2100526907515081,
+        -0.6749107520214296,
+        0.08404627869574798,
+        -1.952764788625531
+      ],
+      "lsm3": [
+        -0.30893168917421493,
+        1.2939969157387405,
+        -0.3154048341624878,
+        1.550078701900106,
+        -1.191987691047614
+      ],
+      "boundary": [
+        -0.4799557316853589,
+        1.1922685267251798,
+        -0.7405530079677838,
+        1.7818531550762298,
+        -1.748663009002539
+      ]
+    },
+    "exchange_z": -0.8015174874023883,
+    "claims": {
+      "boundary_in_sample_above_exact": true,
+      "boundary_out_of_sample_below_exact_to_1000_paths": true,
+      "lsm_out_of_sample_below_exact_to_1000_paths": true,
+      "lsm_in_sample_within_two_errors": true,
+      "out_of_sample_never_two_errors_above_exact": true,
+      "dates_within_two_errors": true,
+      "exchange_within_one_error": true,
+      "control_variate_tightens_exchange": true
+    }
+  },
+  "source_sha256": {
+    "scripts/build_american_mc_reference.py": "c2c566003ea1a7c8eea8697ec77729a78d29daa8231fc273583ca9ec83d5ae73",
+    "scripts/verify_american_mc_numerics.py": "7a4de9b0694583d00db00e7a598cc3fb95e850eef136871f26552d1edc4e4eda",
+    "hullkit/src/hullkit/american_mc.py": "92c3c61588a5abc5e1376b199e9d6e3c3c65677ad95d3a574ae71f6c2c084b86"
+  },
+  "artifact_sha256": "1410b84e425596fdf0219bc2414ad74e040f8cfc04efe87eb81b114e42bbac0e"
+}

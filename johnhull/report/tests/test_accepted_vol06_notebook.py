@@ -47,3 +47,10 @@ def test_accepted_barrier_tree_lesson_is_pinned_after_section_27_7():
     cell = next(c for c in altered.cells if c.source.startswith("### 12.3 内側と外側"))
     cell.source += " changed"
     assert any("27.6" in message for message in compare(altered))
+
+
+def test_accepted_two_asset_lesson_is_pinned_after_section_27_8():
+    altered = copy.deepcopy(load_current())
+    cell = next(c for c in altered.cells if c.source.startswith("### 13.3 Rubinstein"))
+    cell.source += " changed"
+    assert any("27.7" in message for message in compare(altered))

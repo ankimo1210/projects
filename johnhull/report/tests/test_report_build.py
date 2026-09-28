@@ -31,7 +31,7 @@ def test_registry_is_consistent():
     for f in FIGURES:
         assert f.book in BOOKS, f.id
     assert len(figures_for("options_core")) == 7
-    assert len(figures_for("numerics")) == 33
+    assert len(figures_for("numerics")) == 37
     assert len(figures_for("risk_credit")) == 12
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
@@ -42,7 +42,7 @@ def test_registry_is_consistent():
     assert len(figures_for("crypto_market")) == 4
     assert len(figures_for("climate_energy")) == 4
     assert len(figures_for("risk_management")) == 4
-    assert len(FIGURES) == 142
+    assert len(FIGURES) == 146
     assert {"shout_payoff", "shout_decision", "shout_boundary", "shout_comparison"} <= {
         figure.id for figure in figures_for("exotics")
     }
@@ -227,4 +227,22 @@ def test_two_asset_registry_follows_barrier_tree():
             assert spec.practice and spec.title and spec.blurb
             figure = spec.build()
             assert figure.layout.meta["section"] == "27.7"
+            assert figure.layout.meta["figure"] == spec.id
+
+
+def test_american_mc_registry_follows_two_asset():
+    expected = [
+        "american_mc_regression",
+        "american_mc_boundary",
+        "american_mc_bias",
+        "american_mc_dates",
+    ]
+    ids = [spec.id for spec in figures_for("numerics")]
+    start = ids.index("two_asset_correlation") + 1
+    assert ids[start : start + 4] == expected
+    for spec in figures_for("numerics"):
+        if spec.id in expected:
+            assert spec.practice and spec.title and spec.blurb
+            figure = spec.build()
+            assert figure.layout.meta["section"] == "27.8"
             assert figure.layout.meta["figure"] == spec.id
