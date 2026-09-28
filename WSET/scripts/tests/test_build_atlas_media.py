@@ -7,7 +7,10 @@ import unittest
 from pathlib import Path
 
 from scripts.build_atlas_media import (
-    AtlasMediaError, build_pack, check_existing_pack, write_pack_and_assets,
+    AtlasMediaError,
+    build_pack,
+    check_existing_pack,
+    write_pack_and_assets,
 )
 
 # A real 8x8 JPEG, so validation does not require imaging dependencies in CI.
