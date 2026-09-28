@@ -1,0 +1,122 @@
+{
+  "section": "26.1",
+  "status": "PASS",
+  "method": "range forward call strike by bisection on c(K2) - p(K1), leg-by-leg package payoffs and values, lognormal quadrature of every present value, N(vol/2)/N(-vol/2) limit of (K2 - F)/(F - K1), seeded antithetic simulation of present values and loss probabilities",
+  "tolerances": {
+    "strike_relative": 1e-10,
+    "premium_relative": 1e-11,
+    "quadrature_currency": 1e-11,
+    "hullkit_bsm_currency": 1e-12,
+    "deferred_amount_currency": 1e-12,
+    "probability_of_profit": 1e-09,
+    "local_slope_relative_at_1e-6": 1e-05,
+    "monte_carlo_sigmas": 4.0
+  },
+  "measured": {
+    "anchor_17_2": {
+      "call_strike": 1.3413686832386795,
+      "strike_error": 4.440892098500626e-16,
+      "printed_call_strike": 1.3414,
+      "premium": 0.027304825586731196,
+      "printed_premium": 0.0273
+    },
+    "formulas": {
+      "bsm_vs_quadrature": 1.7763568394002505e-14,
+      "hullkit_bsm_vs_reference": 1.4210854715202004e-14
+    },
+    "range_forwards": {
+      "rows": 36,
+      "strike_relative_gap": 5.373720148856054e-15,
+      "premium_relative_gap": 1.042445846715298e-12,
+      "cost_relative_to_premium": 6.218098033038619e-13,
+      "quadrature_net_pv": 2.5345843410759114e-14
+    },
+    "curve_and_slope": {
+      "curve_relative_gap": 7.522977292557202e-14,
+      "curve_points": 70,
+      "local_slopes": [
+        {
+          "label": "hull_17_2",
+          "limit": 1.0574443802324274,
+          "final_error": 6.546018740827939e-07
+        },
+        {
+          "label": "equity_1y",
+          "limit": 1.1730997244220782,
+          "final_error": 6.903746797887582e-07
+        },
+        {
+          "label": "high_yield_2y",
+          "limit": 1.4859201763732146,
+          "final_error": 7.899195350556112e-07
+        },
+        {
+          "label": "zero_rate_6m",
+          "limit": 1.0580442640047374,
+          "final_error": 6.54976603125338e-07
+        }
+      ]
+    },
+    "deferred_and_packages": {
+      "deferred_rows": 24,
+      "premium_gap": 1.7763568394002505e-14,
+      "amount_gap": 7.549516567451064e-15,
+      "payoff_gap": 1.0658141036401503e-14,
+      "quadrature_net_pv": 1.351778315240486e-14,
+      "breakeven_gap": 1.4210854715202004e-14,
+      "probability_of_profit_gap": 7.216449660063518e-16,
+      "package_payoff_gap": 5.684341886080802e-14,
+      "package_leg_value_sum": 1.4210854715202004e-14
+    },
+    "risk": {
+      "balance": 7.632783294297951e-17,
+      "expected_gain_pv": {
+        "forward": 0.03667092825288077,
+        "range_forward": 0.01210388843700596,
+        "break_forward": 0.02168666304074135
+      },
+      "probability_of_loss": {
+        "forward": 0.5139601295627583,
+        "range_forward": 0.24266322740214186,
+        "break_forward": 0.6658179322848155
+      },
+      "max_loss": {
+        "forward": 1.32,
+        "range_forward": 1.254,
+        "break_forward": 0.036854742045681926
+      },
+      "monte_carlo": {
+        "forward": {
+          "pv_z": -1.8209065722821824,
+          "loss_probability_z": -0.4809033333049677
+        },
+        "range_forward": {
+          "pv_z": -2.2130324728454935,
+          "loss_probability_z": 0.20217321736829108
+        },
+        "break_forward": {
+          "pv_z": -1.241479157986688,
+          "loss_probability_z": 0.34695440299017816
+        }
+      }
+    },
+    "figure_payoffs": {
+      "payoff_gaps": {
+        "forward": 0.0,
+        "range_forward": 4.440892098500626e-16,
+        "call": 0.0,
+        "break_forward": 0.0
+      },
+      "grid_points": 141
+    },
+    "rejections": {
+      "rejected_inputs": 5
+    }
+  },
+  "source_sha256": {
+    "scripts/build_packages_reference.py": "b5f694c0774ebd19f7c681d315218bb4cadef12781839e8747c9733b65113d57",
+    "scripts/verify_packages_numerics.py": "c0688601155db4db863b862e3d55f1217f42d34a2527d6bc7a0279e260b699f8",
+    "hullkit/src/hullkit/packages.py": "01f0daef09b19c6c1edfd4d15d912fac8ea7171226dcdd7842bfcd82231038dd"
+  },
+  "artifact_sha256": "8901720c4c8512b6f383344222e6648ba59e6cdddaaac103bd9a028a499789a3"
+}

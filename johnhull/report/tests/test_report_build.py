@@ -36,13 +36,13 @@ def test_registry_is_consistent():
     assert len(figures_for("stochastic")) == 3
     assert len(figures_for("volatility")) == 10
     assert len(figures_for("rates_swaps")) == 11
-    assert len(figures_for("exotics")) == 34
+    assert len(figures_for("exotics")) == 38
     assert len(figures_for("ml_derivatives")) == 12
     assert len(figures_for("volatility_frontiers")) == 8
     assert len(figures_for("crypto_market")) == 4
     assert len(figures_for("climate_energy")) == 4
     assert len(figures_for("risk_management")) == 4
-    assert len(FIGURES) == 146
+    assert len(FIGURES) == 150
     assert {"shout_payoff", "shout_decision", "shout_boundary", "shout_comparison"} <= {
         figure.id for figure in figures_for("exotics")
     }
@@ -139,6 +139,23 @@ def test_static_replication_registry_follows_variance_swaps():
         if spec.id in expected:
             figure = spec.build()
             assert figure.layout.meta["section"] == "26.17"
+            assert figure.layout.meta["figure"] == spec.id
+
+
+def test_packages_registry_follows_static_replication_in_lesson_order():
+    expected = [
+        "packages_range_forward",
+        "packages_strikes",
+        "packages_deferred",
+        "packages_risk",
+    ]
+    ids = [spec.id for spec in figures_for("exotics")]
+    assert ids[ids.index("static_convergence") + 1 :][:4] == expected
+    for spec in figures_for("exotics"):
+        if spec.id in expected:
+            assert spec.practice and spec.title and spec.blurb
+            figure = spec.build()
+            assert figure.layout.meta["section"] == "26.1"
             assert figure.layout.meta["figure"] == spec.id
 
 

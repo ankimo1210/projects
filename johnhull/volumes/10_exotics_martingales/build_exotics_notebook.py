@@ -1702,6 +1702,157 @@ $S_0<H$ かつ $K<H$ です。コールの満期と行使価格を自由に用�
 **回答の手掛かり：** 満期給付、満期済みの価値0、有限の境界照合、解消時の残差、売買の符号を区別します。""")
 )
 
+# Section 4.8: §26.1 packages
+cells.append(
+    md(r"""### 4.8 パッケージ（§26.1、GE pp.614–615）
+
+#### 4.8.1 パッケージとは何か
+
+**パッケージ**は、欧州コール・欧州プット・先渡し・現金・原資産そのものを組み合わせたポートフォリオです。
+満期の損益は各脚の損益の和で、現在価値も各脚の価値の和です。
+最も知られた例が**レンジ先渡し**（§17.2 の zero-cost collar）で、
+満期に原資産を買う側が、行使価格 $K_2$ のコールを買い、行使価格 $K_1<F$ のプットを売ります。
+満期の資産価格 $S_T$ に対する損益は
+$$(S_T-K_2)^+-(K_1-S_T)^+$$
+です。$K_1$ と $K_2$ の間は損益ゼロ、$K_2$ より上は先渡しと同じ傾きで儲かり、
+$K_1$ より下は先渡しと同じ傾きで損をします。
+
+ここで $F=S_0e^{(r-q)T}$ は先渡し価格です。原典 §17.2 の例は $S_0=1.32$、$r=r_f=2\%$、
+$\sigma=14\%$、$T=0.25$ 年、なので $F=1.32$ になります。図の青い折れ線が満期損益、
+灰色の破線が受渡価格 $F$ の先渡しの損益です。""")
+)
+cells.append(
+    code(r"""from hullkit import packages
+from hullkit._packages_lesson import _figures as packages_figures, _load_reference
+
+pkg_ref = _load_reference()
+pkg_figures = packages_figures()
+pkg_market = pkg_ref["parameters"]
+pkg_args = dict(
+    spot=pkg_market["spot"], r=pkg_market["rate"], sigma=pkg_market["sigma"],
+    T=pkg_market["maturity"], q=pkg_market["yield"],
+)
+pkg_range = packages.range_forward(1.30, **pkg_args)
+print(f"先渡し価格 F = {pkg_range.forward:.4f}")
+print(f"買いコール K2 = {pkg_range.call_strike:.4f}、売りプット K1 = {pkg_range.put_strike:.4f}")
+for spot_T in (1.10, 1.30, 1.32, 1.3414, 1.40, 1.50):
+    print(f"S_T={spot_T:.4f}: レンジ先渡し {float(pkg_range.payoff(spot_T)):+.4f}、先渡し {spot_T - pkg_range.forward:+.4f}")
+pkg_figures["packages_range_forward"].show()""")
+)
+cells.append(
+    md(r"""#### 4.8.2 ゼロコストの条件：$K_1$ から $K_2$ を決める
+
+買いコールの価値 $c(K_2)$ と売りプットの価値 $p(K_1)$ が等しければ、パッケージの初期費用は0です。
+$K_1$ を先に決めれば、条件 $c(K_2)=p(K_1)$ を満たす $K_2$ を1つ探せば足ります。
+$c$ は行使価格に対して単調に減り、$p$ は単調に増えます。しかも
+プット・コール・パリティ $c-p=S_0e^{-qT}-Ke^{-rT}$ から、$K=F$ では $c(F)=p(F)$ です。
+したがって $K_1<F$ なら $c(K_2)=p(K_1)>p(F)=c(F)$ となり、根は必ず $K_2>F$ に**ただ1つ**あります。
+
+原典は $K_1=1.3000$ に対して $K_2=1.3414$、費用ゼロと述べています。ここでは根を数値で求め、
+売りプットの価値 $p(1.30)=0.0273$ と買いコールの価値が一致することを確かめます。
+図の曲線は $K_1$ を動かしたときの $K_2$、赤いひし形が原典の点、丸が $K_1=F$（先渡しそのもの）です。""")
+)
+cells.append(
+    code(r"""anchor = pkg_ref["anchor_17_2"]
+print(f"K1 = {anchor['put_strike']:.4f} → K2 = {pkg_range.call_strike:.6f}（原典の丸め値 {anchor['printed']['call_strike']}）")
+print(f"売りプット p(K1) = {pkg_range.premium:.6f}（原典 {anchor['printed']['premium']}）")
+call_at_printed = bsm.call_price(pkg_range.spot, anchor["printed"]["call_strike"], pkg_range.r, pkg_range.sigma, pkg_range.T, pkg_range.q)
+print(f"丸め値 K2 = 1.3414 のコール = {call_at_printed:.6f}（根 {pkg_range.call_strike:.6f} では {pkg_range.premium:.6f}）")
+print(f"初期費用 c(K2) − p(K1) = {pkg_range.cost:.2e}")
+pkg_figures["packages_strikes"].show()""")
+)
+cells.append(
+    md(r"""#### 4.8.3 $K_1$ を動かすと $K_2$ はどう動くか
+
+$K_1$ を $F$ に近づけると $K_2$ も $F$ に近づき、$K_1=F$ で契約は先渡しに戻ります（$K_2=F$）。
+$K_1$ を $F$ から遠ざけるほど売りプットの価値は急速に小さくなるので、同じ価値のコールは
+ずっと遠い行使価格になります。図の曲線が右下がりで下に凸なのはそのためです（保存参照の70点で確認）。
+
+$K_1$ が $F$ に近いとき、$F$ から $K_2$ までの幅は $F$ から $K_1$ までの幅より広くなります。
+比 $(K_2-F)/(F-K_1)$ は $K_1\to F$ で $N(\sigma\sqrt T/2)/N(-\sigma\sqrt T/2)$ に近づき、これは1より大きい値です。
+つまり区間は**非対称**で、上側の方が広くなります。この極限は独立参照で別に導いて突き合わせた値です。
+$K_1\to0$ なら $K_2$ は際限なく大きくなり、$K_1=0.3F$ で $K_2$ は $3.35F$ にもなります。""")
+)
+cells.append(
+    code(r"""for fraction in (0.5, 0.8, 0.9, 0.95, 0.99):
+    rf = packages.range_forward(fraction * pkg_range.forward, **pkg_args)
+    slope = (rf.call_strike - rf.forward) / (rf.forward - rf.put_strike)
+    print(f"K1/F={fraction:.2f}: K1={rf.put_strike:.4f}, K2={rf.call_strike:.4f}, K2/F={rf.call_strike / rf.forward:.3f}, (K2-F)/(F-K1)={slope:.4f}")
+sigma_root_t = pkg_range.sigma * math.sqrt(pkg_range.T)
+print(f"K1→F の極限 N(σ√T/2)/N(−σ√T/2) = {norm.cdf(sigma_root_t / 2) / norm.cdf(-sigma_root_t / 2):.4f}")
+far = packages.range_forward(0.3 * pkg_range.forward, **pkg_args)
+print(f"K1=0.3F: K2={far.call_strike:.4f}（{far.call_strike / far.forward:.2f}F）")""")
+)
+cells.append(
+    md(r"""#### 4.8.4 プレミアムを満期に後払いする
+
+買いオプションのプレミアム $c$ を今日払う代わりに、満期にまとめて払う契約があります。
+今日の払いをやめる代わりに満期には元利合計の**後払い額** $A=c\,e^{rT}$ を払うので、今日の価値はゼロです。
+満期の正味損益は
+$$\max(S_T-K,0)-A=\max(S_T-K-A,\,-A)$$
+で、**最大損失は $A$**、**損益分岐は $K+A$** です（$K$ ではありません）。
+プットなら $\max(K-S_T,0)-A$ で、損益分岐は $K-A$ です。
+
+行使価格を $K=F$ に選んだ後払いコールが**ブレークフォワード**（Boston option、cancelable forward とも呼ばれる）です。
+満期に買う側の実効購入価格は $\min(S_T,F)+A$、つまり最悪でも $F+A$ に頭打ちになります。
+先渡しにプットを足して $A$ を引いた形にも書けます。$(S_T-F)+(F-S_T)^+=(S_T-F)^+$ だからです。
+図の赤い線が後払いコール、青緑の点線がプレミアム抜きのコールの満期価値です。""")
+)
+cells.append(
+    code(r"""pkg_call = packages.deferred_option("call", pkg_range.forward, **pkg_args)
+pkg_break = packages.break_forward(**pkg_args)
+print(f"コール c(F) = {pkg_break.premium:.6f}、後払い額 A = c·e^(rT) = {pkg_break.amount:.6f}")
+print(f"今日の価値 = c − A·e^(−rT) = {pkg_break.premium - pkg_break.amount * math.exp(-pkg_break.r * pkg_break.T):.2e}")
+print(f"最大損失 = {pkg_break.max_loss:.6f}、損益分岐 K + A = {pkg_break.breakeven:.6f}")
+grid = np.linspace(0.9, 1.8, 91)
+identity = (grid - pkg_break.strike) + np.maximum(pkg_break.strike - grid, 0.0) - pkg_break.amount
+print(f"先渡し + プット − A との最大差 = {np.max(np.abs(identity - pkg_break.payoff(grid))):.2e}")
+print(f"deferred_option(コール, K=F) は break_forward と同じ契約: {pkg_call == pkg_break}")
+pkg_figures["packages_deferred"].show()""")
+)
+cells.append(
+    md(r"""#### 4.8.5 費用ゼロでもリスクは同じではない
+
+先渡し、レンジ先渡し（$K_1=0.95F$）、ブレークフォワードは、どれも今日の費用がゼロです。
+リスク中立測度のもとで**期待利益の現在価値と期待損失の現在価値はどれも等しい**ので、正味の現在価値も0です。
+しかし中身は違います。
+
+- 期待損失（＝期待利益）の現在価値は先渡しが最大（0.0367）、レンジ先渡しが最小（0.0121）、ブレークフォワードは0.0217。
+- 損失になる確率（リスク中立）は先渡し51.4%、レンジ先渡し24.3%、ブレークフォワード66.6%。
+- 最大損失は先渡し1.32（$S_T\to0$）、レンジ先渡し1.254（$K_1$）、ブレークフォワード0.0369（$A$）。
+
+ブレークフォワードは損失の確率が最も高いのに、損失の**大きさ**は $A$ に抑えられます。
+「ゼロコスト」は現在価値がゼロだということで、損失の確率も大きさもゼロだという意味ではありません。
+これらの数値は、期待値を求積で、確率を解析式で求めた独立参照によるもので、
+シード固定の反対変量モンテカルロ（$2^{19}$ 組）とも4標準誤差以内で一致しました。""")
+)
+cells.append(
+    code(r"""labels = {"forward": "先渡し", "range_forward": "レンジ先渡し（K1=0.95F）", "break_forward": "ブレークフォワード"}
+for key, label in labels.items():
+    row = pkg_ref["risk_comparison"][key]
+    print(f"{label}: 正味PV={row['net_pv']:.1e}、期待損失PV={row['loss_pv_quadrature']:.5f}、損失確率={row['probability_of_loss']:.3f}、最大損失={row['max_loss']:.4f}")
+pkg_figures["packages_risk"].show()""")
+)
+cells.append(
+    md(r"""#### 4.8.6 適用範囲と理解の確認
+
+**前提。** 定数の $r,q,\sigma$ をもつ Black–Scholes–Merton、欧州オプション、すべての脚が同じ満期、
+行使価格を連続に選べることを仮定します。損失確率はリスク中立測度のもので、現実の確率ではありません。
+取引コスト、ビッド・アスク、後払いに伴う相手方の信用リスク、実際の市場で行使価格が離散であることは含みません。
+図と数値は合成した単一の市場（$S_0=1.32$、$\sigma=14\%$、$T=0.25$）の例で、
+$K_2$ の水準や損失確率の大小関係が任意の市場で同じだとは主張しません。
+
+1. $K_1$ を $F$ より大きく取ると、$c(K_2)=p(K_1)$ の根 $K_2$ はどちら側に来るか。それでもレンジ先渡しと呼べるか。
+2. $c(F)=p(F)$ と単調性から、根 $K_2$ の存在と一意性はどう導けるか。
+3. 後払い額が $c$ ではなく $c\,e^{rT}$ なのはなぜか。
+4. ブレークフォワードの損益分岐が $K$ ではなく $K+A$ なのはなぜか。
+5. 3つの契約の現在価値がどれもゼロなのに、損失確率が違うのは矛盾か。
+6. 図の損失確率を、実際に損をする確率と読んでよいか。
+
+**回答の手掛かり：** 根の位置と区間の順序、単調な関数の交点、満期価値への換算、後払いの上乗せ、
+現在価値と分布の形、測度の違いを区別します。""")
+)
+
 # ===========================================================================
 # Section 2: Ch.28 martingales and measures
 # ===========================================================================
