@@ -1156,9 +1156,170 @@ tail = barrier_reference["errors"]
 print(f"バリア上の誤差の次数 {tail['on_barrier_order']:.3f}、3200段の補間誤差 "
       f"{tail['interpolated'][-1]:+.5f} $")"""))
 
+cells.append(md(r"""## 13. 相関のある二資産のオプション（§27.7）
+
+二つの資産価格に依存する米国型オプションには解析式がない。原典 pp.658–661 は、相関のある
+二資産を**三次元ツリー**（時間と二つの株価）で表す三つの方法を示す。例は
+$S_1=S_2=K=100$ドル、$r=5\%$、$q_1=6\%$、$q_2=2\%$、$\sigma_1=20\%$、$\sigma_2=30\%$、$\rho=0.5$、$T=1$年。
+欧州型の基準は二つ。$\max(S_1,S_2)$ のコールは Stulz の式で15.9268ドル
+（第1資産で条件付けた数値積分と $5\times10^{-15}$ドル以内で一致）、$S_2$ を渡して $S_1$ を受け取る
+交換オプションは Margrabe の式（§26.14）で8.3066ドル。"""))
+cells.append(md(r"""### 13.1 無相関なら二つのツリーの積
+
+二つの変数が無相関なら、それぞれの二項ツリーを組み合わせて一つの三次元ツリーにできる（p.659）。
+各ノードから4本の枝が出て、確率は二つのツリーの確率の**積**になる：
+$p_1p_2$（ともに上昇）、$p_1(1-p_2)$、$(1-p_1)p_2$、$(1-p_1)(1-p_2)$。
+積の形なので $p_{uu}p_{dd}=p_{ud}p_{du}$ が成り立つ。$n$ 段目のノードは $(n+1)^2$ 個あり、
+後退帰納の計算量は段数の3乗で増える（800段で1本あたり約1秒）。
+以下の三つの方法は、いずれもこの4本の枝の形で書ける。"""))
+cells.append(code(r"""from hullkit import two_asset_tree as tat
+from hullkit._two_asset_tree_lesson import _figures as two_asset_lesson_figures
+from hullkit._two_asset_tree_lesson import _load_reference as two_asset_load_reference
+
+two_asset_reference = two_asset_load_reference()
+tp = two_asset_reference["parameters"]
+two_asset_market = dict(rate=tp["rate"], volatilities=tuple(tp["volatilities"]),
+                        dividend_yields=tuple(tp["dividend_yields"]))
+two_asset_figures = two_asset_lesson_figures()
+for method in ("transform", "rubinstein", "adjusted"):
+    uncorrelated = tat.two_asset_lattice(correlation=0.0, dt=0.01, method=method,
+                                         **two_asset_market)
+    p_uu, p_ud, p_du, p_dd = uncorrelated.probabilities
+    print(f"{method:>10} ρ=0: 確率 {p_uu:.4f} {p_ud:.4f} {p_du:.4f} {p_dd:.4f}、"
+          f"p_uu·p_dd−p_ud·p_du = {p_uu * p_dd - p_ud * p_du:+.1e}")"""))
+cells.append(md(r"""### 13.2 変数を変換して無相関にする
+
+一つ目の方法（Hull–White 1990）は、無相関な二つの変数を作ること（pp.659–660）：
+$x_1=\sigma_2\ln S_1+\sigma_1\ln S_2$、$x_2=\sigma_2\ln S_1-\sigma_1\ln S_2$。
+それぞれのボラティリティは $\sigma_1\sigma_2\sqrt{2(1\pm\rho)}$ で、ドリフトは
+$\sigma_2(r-q_1-\sigma_1^2/2)\pm\sigma_1(r-q_2-\sigma_2^2/2)$。
+$x_i$ を別々の二項ツリー（確率 $p_i$ で $+h_i$、$1-p_i$ で $-h_i$）で表し、積で組み合わせる。
+各ノードの株価は $S_1=\exp[(x_1+x_2)/(2\sigma_2)]$、$S_2=\exp[(x_1-x_2)/(2\sigma_1)]$ で戻す。
+原典は $h_i,p_i$ を「最初の二つのモーメントに合わせる」とだけ書く。ここでは1段の平均 $m_i$ と
+分散 $v_i$ に**正確に**合わせ、$h_i=\sqrt{v_i+m_i^2}$、$p_i=\tfrac12+m_i/(2h_i)$ とする。
+100段（$\Delta t=0.01$）では $h_1=0.01039$、$h_2=0.00600$、$p_1=0.4942$、$p_2=0.4950$。
+$\rho=\pm1$ ではどちらかの $x_i$ のボラティリティが0になり、その変数は確定的に動く。"""))
+cells.append(code(r"""transform = tat.two_asset_lattice(correlation=tp["correlation"], dt=0.01, method="transform",
+                                  **two_asset_market)
+s1v, s2v = tp["volatilities"]
+h1, h2 = 2 * s2v * transform.j_move[0], 2 * s2v * transform.k_move[0]
+p_uu, p_ud, p_du, _ = transform.probabilities
+print(f"h1={h1:.5f}, h2={h2:.5f}, p1={p_uu + p_ud:.4f}, p2={p_uu + p_du:.4f}")
+for (d1, d2), prob in transform.branches():
+    x1, x2 = s2v * d1 + s1v * d2, s2v * d1 - s1v * d2
+    print(f"Δx1={x1:+.5f}, Δx2={x2:+.5f} → Δln S1={d1:+.5f}, Δln S2={d2:+.5f}（確率 {prob:.4f}）")"""))
+cells.append(md(r"""### 13.3 Rubinstein の非矩形ツリー
+
+二つ目の方法（Rubinstein 1994）は、4本の枝の確率をすべて0.25にして、**ノードの位置**で相関を表す（p.660）。
+$(S_1,S_2)$ から $(S_1u_1,S_2A)$、$(S_1u_1,S_2B)$、$(S_1d_1,S_2C)$、$(S_1d_1,S_2D)$ へ動く：
+$u_1,d_1=\exp[(r-q_1-\sigma_1^2/2)\Delta t\pm\sigma_1\sqrt{\Delta t}]$、
+$A,D=\exp[(r-q_2-\sigma_2^2/2)\Delta t\pm\sigma_2\sqrt{\Delta t}(\rho+\sqrt{1-\rho^2})]$、
+$B,C=\exp[(r-q_2-\sigma_2^2/2)\Delta t\pm\sigma_2\sqrt{\Delta t}(\rho-\sqrt{1-\rho^2})]$。
+$S_2$ の動きは $S_1$ の上下に $\rho$ の分だけ引きずられるので、ノードは長方形に並ばない。
+$\rho=0$ では §21.4 の代替二項ツリーを二本並べたものと同じになる（原典）。価格を比べると、
+次の確率調整の方法とは $\rho=0$ だけでなく $\rho=\pm1$ でも一致する（差 $4\times10^{-15}$ドル以下）。
+$\rho=\pm1$ では $\sqrt{1-\rho^2}=0$ で $A=B$、$C=D$ となり、どちらの方法も二資産が同じ向きか逆向きにだけ動くからである。"""))
+cells.append(code(r"""rubinstein = tat.two_asset_lattice(correlation=tp["correlation"], dt=0.01, method="rubinstein",
+                                   **two_asset_market)
+for (d1, d2), name in zip((move for move, _ in rubinstein.branches()),
+                          ("u1, A", "u1, B", "d1, C", "d1, D")):
+    print(f"{name}: S1×{math.exp(d1):.5f}, S2×{math.exp(d2):.5f}（確率0.25）")
+
+
+def max_call(s1, s2):
+    return np.maximum(np.maximum(s1, s2) - tp["strike"], 0.0)
+
+
+for rho in (-1.0, 0.0, 0.5, 1.0):
+    prices = [tat.two_asset_tree(tuple(tp["spots"]), max_call, correlation=rho,
+                                 maturity=tp["maturity"], steps=100, method=m,
+                                 **two_asset_market).price for m in ("rubinstein", "adjusted")]
+    print(f"ρ={rho:+.1f}: Rubinstein {prices[0]:.6f} $、確率調整 {prices[1]:.6f} $"
+          f"（差 {prices[0] - prices[1]:+.1e}）")"""))
+cells.append(md(r"""### 13.4 確率を調整する（Tables 27.2・27.3）
+
+三つ目の方法（Hull–White 1994）は、まず無相関と仮定して §21.4 の代替二項ツリー（上下とも確率0.5）を
+組み合わせ（Table 27.2：4本とも0.25）、そのあと**確率だけ**を相関に合わせて変える（Table 27.3）：
+同じ向きの2本を $0.25(1+\rho)$、逆向きの2本を $0.25(1-\rho)$ にする。$\rho=0.5$ なら0.375と0.125。
+ノードは長方形のまま、一方の資産だけを見た上昇確率は0.5のままなので、$S_1$ だけ・$S_2$ だけに依存する
+ペイオフの価格は代替二項ツリーと一致する。$|\rho|\le1$ なら確率が負になることはない。
+三つの方法はどれも、1段の対数収益率の平均と共分散行列（$\rho\sigma_1\sigma_2\Delta t$ を含む）に正確に一致する。
+図は $\sigma_i\sqrt{\Delta t}$ で割った1段の枝で、点の大きさが確率を表す。
+変数変換は軸を回し、Rubinstein は点をずらし、確率の調整は四隅の重みを変えて、同じ相関を作っている。"""))
+cells.append(code(r"""display(two_asset_figures["two_asset_nodes"])
+adjusted = tat.two_asset_lattice(correlation=tp["correlation"], dt=0.01, method="adjusted",
+                                 **two_asset_market)
+print("Table 27.3（ρ=0.5）:", adjusted.probabilities)
+target = two_asset_reference["hand_example"]["target"]
+for method in ("transform", "rubinstein", "adjusted"):
+    mean, cov = tat.two_asset_lattice(correlation=tp["correlation"], dt=0.01, method=method,
+                                      **two_asset_market).log_moments()
+    gap = max(np.max(np.abs(mean - target["mean"])), np.max(np.abs(cov - target["covariance"])))
+    print(f"{method:>10}: 1段の平均・共分散と目標の差 {gap:.1e}")"""))
+cells.append(md(r"""### 13.5 米国型を評価する
+
+三つのツリーは各ノードで行使価値と継続価値を比べれば、そのまま米国型に使える。
+交換オプションは $S_2$ を単位にすると1次元に帰着する：価値は $S_2$ ×（$S_1/S_2$ の米国型コール、
+行使価格1、金利 $q_2$、配当利回り $q_1$）。これを CRR と Crank–Nicolson で別々に解くと8.7637ドルで、
+二つの外挿値の差は $1.4\times10^{-5}$ドル。欧州型との差、つまり早期行使の価値は0.457ドル（$q_1>q_2$ なので
+$S_1$ を早く受け取る意味がある）。200段では変数変換 +0.0035ドル、Rubinstein +0.0044ドル、確率調整 −0.0046ドル。
+20–200段で変数変換と Rubinstein は常に基準より上、確率の調整は常に下にあり、確率の調整は段数の偶奇で大きく振れる。
+max コールのように1次元に帰着できない場合は独立の基準がない。800段の三つの価格は0.0006ドルの幅に収まり、
+欧州型の誤差を差し引く（§21.3 のコントロール変量）と15.9726–15.9729ドルの0.0003ドルの幅に揃う。"""))
+cells.append(code(r"""display(two_asset_figures["two_asset_convergence"])
+
+
+def exchange(s1, s2):
+    return np.maximum(s1 - s2, 0.0)
+
+
+american_reference = two_asset_reference["analytic"]["american_exchange"]
+print(f"1次元の基準 {american_reference['value']:.5f} $（CRR {american_reference['crr_extrapolated']:.6f}, "
+      f"CN {american_reference['cn_extrapolated']:.6f}）")
+for method in ("transform", "rubinstein", "adjusted"):
+    tree = tat.two_asset_tree(tuple(tp["spots"]), exchange, correlation=tp["correlation"],
+                              maturity=tp["maturity"], steps=200, method=method,
+                              exercise="american", **two_asset_market)
+    print(f"{method:>10} 200段: {tree.price:.5f} $（基準との差 "
+          f"{tree.price - american_reference['value']:+.5f} $）")
+american_max = two_asset_reference["american_max_call"]
+for method in ("transform", "rubinstein", "adjusted"):
+    print(f"米国型 max コール 800段 {method:>10}: {american_max[method][-1]:.5f} $、"
+          f"コントロール変量 {american_max[method + '_control_variate'][-1]:.5f} $")"""))
+cells.append(md(r"""### 13.6 収束の違い・相関の端・適用限界
+
+欧州型 max コールの誤差を段数を倍々にして測ると、変数変換は25段から800段まで毎回ほぼ半分になる
+（100–800段の傾き0.96）。Rubinstein と確率の調整は CRR と同じく段数によって
+誤差が大きく振れる（Rubinstein は200段で $2\times10^{-4}$ドル、400段で $3.4\times10^{-3}$ドル）。
+800段ではどれも0.0012ドル未満。相関を $-1$ から $1$ まで動かすと（100段）、確率の調整の誤差は滑らかに変わり、
+Rubinstein は小刻みに振れる。変数変換は多くの $\rho$ で約0.008ドルだが、$\rho=0$ では−0.009ドルと符号が逆になり、
+$\rho=\pm0.6$ では0.002ドルに下がる。各 $\rho$ で誤差は段数に反比例して縮み、変わるのは係数である。
+$\rho=-1$ では $x_1$ の動きがなくなり、誤差は0.045ドルと $\rho=-0.5$ の約5倍になる。
+独立の基準は四つ：Stulz の式と条件付き積分、Margrabe の式、1次元に帰着した米国型、そして
+原典の係数からノードを組み、確率の質量を**前向き**に進めた欧州型の価格（公開関数との差 $10^{-12}$ドル未満）。
+対象は定数パラメータの二資産で、ペイオフは関数として渡す。三資産以上、確率ボラティリティ、
+市場での相関の推定、Hull–White 1994 の金利ツリーへの応用は範囲外。
+
+1. 変数変換の方法で $\rho=1$ のとき、$x_1$ と $x_2$ のどちらのツリーが動かなくなるか。
+2. 確率を調整する方法で、$S_1$ だけに依存するオプションの価格が相関によらないのはなぜか。
+3. 1次元に帰着できない米国型の二資産オプションを、独立の基準なしにどう確かめるか。
+
+**回答の手掛かり：** $\sigma_1\sigma_2\sqrt{2(1-\rho)}$、周辺の確率0.5、三つの構成とコントロール変量。"""))
+cells.append(code(r"""display(two_asset_figures["two_asset_errors"])
+display(two_asset_figures["two_asset_correlation"])
+errors = two_asset_reference["errors"]
+for method in ("transform", "rubinstein", "adjusted"):
+    row = ", ".join(f"{e:+.5f}" for e in errors[f"{method}_max_call"])
+    print(f"{method:>10} 25–800段の誤差: {row}")
+sweep = two_asset_reference["correlation"]
+for rho in (-1.0, -0.5, 0.0, 0.6):
+    i = sweep["rho"].index(rho)
+    print(f"ρ={rho:+.1f}（100段）: 変数変換 {sweep['transform'][i]:+.4f}、"
+          f"Rubinstein {sweep['rubinstein'][i]:+.4f}、確率調整 {sweep['adjusted'][i]:+.4f} $")"""))
+
 # LSM md
 cells.append(
-    md(r"""## 13. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
+    md(r"""## 14. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
 
 後ろ向きに各行使時点で:
 1. ITM パスについて「継続価値」を**将来キャッシュフローの回帰**（基底: $1, S, S^2$）で推定
@@ -1283,7 +1444,7 @@ print("\n全チェック合格")""")
 
 # Cell 27: exercises
 cells.append(
-    md(r"""## 14. 練習問題
+    md(r"""## 15. 練習問題
 
 **Q1.** CN と implicit、グリッドを倍に細かくしたとき誤差はそれぞれ何分の1になる？
 

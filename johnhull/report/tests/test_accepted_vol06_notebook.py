@@ -40,3 +40,10 @@ def test_accepted_path_dependent_lesson_is_pinned_after_section_27_6():
     cell = next(c for c in altered.cells if c.source.startswith("### 11.3 代表平均"))
     cell.source += " changed"
     assert any("27.5" in message for message in compare(altered))
+
+
+def test_accepted_barrier_tree_lesson_is_pinned_after_section_27_7():
+    altered = copy.deepcopy(load_current())
+    cell = next(c for c in altered.cells if c.source.startswith("### 12.3 内側と外側"))
+    cell.source += " changed"
+    assert any("27.6" in message for message in compare(altered))

@@ -539,8 +539,8 @@
       ],
       "verifier_output_dir": "docs/validation/section-27-2",
       "verifier_text_renames": {
-        "'9. Longstaff-Schwartz'": "'13. Longstaff-Schwartz'",
-        "'10. 練習問題'": "'14. 練習問題'"
+        "'9. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
+        "'10. 練習問題'": "'15. 練習問題'"
       },
       "viewports": [
         [
@@ -592,8 +592,8 @@
       ],
       "verifier_output_dir": "docs/validation/section-27-3",
       "verifier_text_renames": {
-        "'10. Longstaff-Schwartz'": "'13. Longstaff-Schwartz'",
-        "'11. 練習問題'": "'14. 練習問題'"
+        "'10. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
+        "'11. 練習問題'": "'15. 練習問題'"
       },
       "viewports": [
         [
@@ -644,8 +644,8 @@
       ],
       "verifier_output_dir": "docs/validation/section-27-4",
       "verifier_text_renames": {
-        "'11. Longstaff-Schwartz'": "'13. Longstaff-Schwartz'",
-        "'12. 練習問題'": "'14. 練習問題'"
+        "'11. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
+        "'12. 練習問題'": "'15. 練習問題'"
       },
       "viewports": [
         [
@@ -696,8 +696,8 @@
       ],
       "verifier_output_dir": "docs/validation/section-27-5",
       "verifier_text_renames": {
-        "'12. Longstaff-Schwartz'": "'13. Longstaff-Schwartz'",
-        "'13. 練習問題'": "'14. 練習問題'"
+        "'12. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
+        "'13. 練習問題'": "'15. 練習問題'"
       },
       "viewports": [
         [
@@ -747,6 +747,10 @@
         "docs/validation/section-27-6/numerical-check.json"
       ],
       "verifier_output_dir": "docs/validation/section-27-6",
+      "verifier_text_renames": {
+        "'13. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
+        "'14. 練習問題'": "'15. 練習問題'"
+      },
       "viewports": [
         [
           1440,
@@ -761,6 +765,54 @@
         "hullkit/tests/test_barrier_tree.py",
         "hullkit/tests/test_barrier_tree_lesson.py",
         "report/tests/test_barrier_tree_notebook.py"
+      ]
+    },
+    "27.7": {
+      "notebook": {
+        "path": "volumes/06_numerical_methods/numerical.ipynb",
+        "heading": "13. 相関のある二資産のオプション（§27.7）"
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/06_numerical.html",
+        "heading": "13. 相関のある二資産のオプション（§27.7）"
+      },
+      "portal": {
+        "page": "report/site/numerics.html",
+        "figures": [
+          "two_asset_nodes",
+          "two_asset_convergence",
+          "two_asset_errors",
+          "two_asset_correlation"
+        ]
+      },
+      "python_modules": [
+        "hullkit.two_asset_tree",
+        "hullkit._two_asset_tree_lesson"
+      ],
+      "data": [
+        "docs/validation/section-27-7/reference.json",
+        "docs/validation/section-27-7/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_two_asset_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-27-7/reference.json",
+        "docs/validation/section-27-7/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-27-7",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_two_asset_tree.py",
+        "hullkit/tests/test_two_asset_tree_lesson.py",
+        "report/tests/test_two_asset_notebook.py"
       ]
     }
   }

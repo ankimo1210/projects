@@ -1,0 +1,158 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "two_asset_nodes",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_convergence",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_errors",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_correlation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_nodes",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_convergence",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_errors",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_correlation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-7/portal-two_asset_nodes-1440.png",
+        "docs/validation/section-27-7/portal-two_asset_convergence-1440.png",
+        "docs/validation/section-27-7/portal-two_asset_errors-1440.png",
+        "docs/validation/section-27-7/portal-two_asset_correlation-1440.png",
+        "docs/validation/section-27-7/portal-two_asset_nodes-1000.png",
+        "docs/validation/section-27-7/portal-two_asset_convergence-1000.png",
+        "docs/validation/section-27-7/portal-two_asset_errors-1000.png",
+        "docs/validation/section-27-7/portal-two_asset_correlation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "two_asset_nodes",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_convergence",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_errors",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_correlation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_nodes",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_convergence",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_errors",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "two_asset_correlation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-7/book-two_asset_nodes-1440.png",
+        "docs/validation/section-27-7/book-two_asset_convergence-1440.png",
+        "docs/validation/section-27-7/book-two_asset_errors-1440.png",
+        "docs/validation/section-27-7/book-two_asset_correlation-1440.png",
+        "docs/validation/section-27-7/book-two_asset_nodes-1000.png",
+        "docs/validation/section-27-7/book-two_asset_convergence-1000.png",
+        "docs/validation/section-27-7/book-two_asset_errors-1000.png",
+        "docs/validation/section-27-7/book-two_asset_correlation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/two_asset_tree.py": "9ec6f1ecf7bf8af25716a95be028ea6f39d3f5bcc338fe0c8f61fe2ccac6da46",
+    "hullkit/src/hullkit/_two_asset_tree_lesson.py": "568dda1ef576485270990395db841eaf59763e49224c7a022fbdedf9a30d0139",
+    "scripts/build_two_asset_reference.py": "9954941bbf485d4f8503e18c62dc38f8a6c121911d51ace9ef2954df04c80a99",
+    "scripts/verify_two_asset_browser.cjs": "a304686fe834f96a96c9840ba6c7f8e52f9d82b694948915a59bb38e0ff0ed1f",
+    "docs/validation/section-27-7/reference.json": "75e61a77ff53d057ec245dbddf1e64c0490e6e48cf4394eb6b65802d8224bcd3",
+    "docs/validation/section-27-7/numerical-check.json": "9f76638bd0b804cb2335e23a3b7da64aac099c76347c1e388a774dfc9b5fe37f",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "3f5f0a7496a404fd773fe98045b7746d342b590de529e99a9b8f38d297e39b63",
+    "volumes/06_numerical_methods/numerical.ipynb": "a9a4b518e611b41fae834fbd7082e8f8640475f50c0fd5a3f21bc18b66e07f3d",
+    "report/report_builder/figures.py": "f625fee50c61368e25b68981da3d0685b020cf413b555560424e810633d79e99",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "94edb606c46be5d95d5ba40a1b77af166a95aeb5671d7853affa3476680db943",
+    "book/_build/html/notebooks/06_numerical.html": "0550000dd557ef9323f47f95a1c1ca3436b25cd037af0304fd05883f5f327395",
+    "docs/validation/section-27-7/portal-two_asset_nodes-1440.png": "fea68650d86f162697609c14835fa22e5e3e7f6db15c58ac6851da4a466ee343",
+    "docs/validation/section-27-7/portal-two_asset_convergence-1440.png": "94ae75c064db43f39298b71dbc1add2cfecfc6b929408bd6a6961cfb65ffc072",
+    "docs/validation/section-27-7/portal-two_asset_errors-1440.png": "c2c46c52bf24fa4862f8c9cefd01081ff606401d449b19f65ebcd1fb06ffc47c",
+    "docs/validation/section-27-7/portal-two_asset_correlation-1440.png": "12157c77af19b895b300ea1fdf47d128b756e1d636c7099a791a05437a083cce",
+    "docs/validation/section-27-7/portal-two_asset_nodes-1000.png": "9d254b7394b8c2c9c16e9a803cb01cecf120274b5ace6af434e450e79449a264",
+    "docs/validation/section-27-7/portal-two_asset_convergence-1000.png": "7a3fef06eab9cbaa0e41d791b454fdedf4f2a8034f20928930d4d6e92472f00b",
+    "docs/validation/section-27-7/portal-two_asset_errors-1000.png": "99f67d26e043f0aeb120a3bda87d21966a4668ca1bd038327555a06b36b68f07",
+    "docs/validation/section-27-7/portal-two_asset_correlation-1000.png": "3b658f4555b2b8d3fe6688e260bf5b8101ac6b8e9776ea8b78a69aa76a692c64",
+    "docs/validation/section-27-7/book-two_asset_nodes-1440.png": "e1aeedc90a45ba824f7216ee657e04ed3563caf77b2946211e379d1025538253",
+    "docs/validation/section-27-7/book-two_asset_convergence-1440.png": "78f1feb2346da1c0e5f4d73f4e070f85f92ca801f6ff298edcfaeda69f8194a1",
+    "docs/validation/section-27-7/book-two_asset_errors-1440.png": "a9227bb8e24d373624b60694a82910aca75aa61003ef0ba12e023415ec66dc93",
+    "docs/validation/section-27-7/book-two_asset_correlation-1440.png": "fed74f975c7c056f178379d89c082ee4d57aa10396f740c822b9fd9fe876dc6b",
+    "docs/validation/section-27-7/book-two_asset_nodes-1000.png": "a97f2531e024ca50ec38757e89596c51d4a27777248fb189832d9c5c1cdf133d",
+    "docs/validation/section-27-7/book-two_asset_convergence-1000.png": "85d382883686d99f893a05227178117240855922cb4cb5636a53cf057735b082",
+    "docs/validation/section-27-7/book-two_asset_errors-1000.png": "f1089dcc52e69f2493c6d627c16abb25230277dbc55a56a4d4ee77c817ba86aa",
+    "docs/validation/section-27-7/book-two_asset_correlation-1000.png": "5e39e01e6ef58c8ae9abfc5c52d92dd8a88d7f49db20bd2fd4fcd10f56a2f980"
+  },
+  "book_math": {
+    "rendered": 344,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

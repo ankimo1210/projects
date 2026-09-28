@@ -1,0 +1,76 @@
+{
+  "section": "27.7",
+  "status": "PASS",
+  "method": "forward lattice induction and a separately written backward induction on Hull's printed factors, Stulz and Margrabe formulas, 1-D American exchange reduction",
+  "tolerances": {
+    "lattice_currency": 1e-10,
+    "formula_currency": 1e-12,
+    "stulz_integration_currency": 1e-09,
+    "hand_factors": 1e-15,
+    "transform_order": [
+      0.9,
+      1.1
+    ],
+    "final_european_currency_800_steps": 0.0015,
+    "american_exchange_currency_200_steps": 0.005,
+    "one_dimensional_half_spread": 2.5e-05,
+    "control_variate_spread_800_steps": 0.0005
+  },
+  "measured": {
+    "max_lattice_error": 3.446132268436486e-13,
+    "formula_error": 0.0,
+    "stulz_integration_difference": -5.329070518200751e-15,
+    "hand_error": 6.938893903907228e-18,
+    "transform_max_call_order": 0.9568572795660658,
+    "transform_smooth": true,
+    "oscillating": {
+      "rubinstein": true,
+      "adjusted": true
+    },
+    "final_errors_800_steps": {
+      "transform_max_call": 0.0011031121236690922,
+      "transform_exchange": 0.0008392356515596333,
+      "rubinstein_max_call": 0.0005562706612192159,
+      "rubinstein_exchange": 0.0009059367378370098,
+      "adjusted_max_call": 0.0006797792104134004,
+      "adjusted_exchange": 0.00040711048330166477
+    },
+    "american_exchange_reference": 8.763682993644943,
+    "american_exchange_half_spread": 7.085976138299088e-06,
+    "early_exercise_premium": 0.45704144341027764,
+    "american_exchange_errors_200_steps": {
+      "transform": 0.003522096255474949,
+      "rubinstein": 0.004427183164045445,
+      "adjusted": -0.004608198359266069
+    },
+    "rubinstein_adjusted_gap": {
+      "-1.0": 3.552713678800501e-15,
+      "0.0": 0.0,
+      "1.0": 1.7763568394002505e-15,
+      "0.5": 0.0007302675889846455
+    },
+    "american_max_call_800_steps": {
+      "raw": [
+        15.973899808031712,
+        15.973470589988189,
+        15.973317649034467
+      ],
+      "control_variate": [
+        15.972796695908043,
+        15.97291431932697,
+        15.972637869824053
+      ]
+    },
+    "american_max_call_spreads": {
+      "raw": 0.0005821589972452301,
+      "control_variate": 0.0002764495029161651
+    },
+    "lattice_cases": 30
+  },
+  "source_sha256": {
+    "scripts/build_two_asset_reference.py": "9954941bbf485d4f8503e18c62dc38f8a6c121911d51ace9ef2954df04c80a99",
+    "scripts/verify_two_asset_numerics.py": "0b035498ab1f3c5c92516d3429e08ec2738c9ba31d2fffb0b0a2ba219e274b5a",
+    "hullkit/src/hullkit/two_asset_tree.py": "9ec6f1ecf7bf8af25716a95be028ea6f39d3f5bcc338fe0c8f61fe2ccac6da46"
+  },
+  "artifact_sha256": "75e61a77ff53d057ec245dbddf1e64c0490e6e48cf4394eb6b65802d8224bcd3"
+}
