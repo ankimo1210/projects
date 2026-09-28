@@ -115,8 +115,8 @@
   "source_sha256": {
     "scripts/verify_packages_notebook.py": "c1b294234c36b63ec112e70ea267f97b1e41cb9828e97245213481b4b8561a6b",
     "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
-    "hullkit/src/hullkit/_packages_lesson.py": "d4e5742cbf77fcb125dd1f79fc9bc35d54761af662f535897a376918306272ba",
-    "hullkit/src/hullkit/packages.py": "01f0daef09b19c6c1edfd4d15d912fac8ea7171226dcdd7842bfcd82231038dd",
+    "hullkit/src/hullkit/_packages_lesson.py": "ccba11cd21cf3a4a91b26de3623b0470b2392d8ee2574ba9abb2c770a8e1ea17",
+    "hullkit/src/hullkit/packages.py": "65e7e5d268ff1d5e3d2594d8c62c02e571d897781fc1db50b3eec5c3cc1cc15e",
     "hullkit/src/hullkit/_static_replication_lesson.py": "f8942fc7b7737fe13e819ba0e2cc29c7fa1acfed7f4cc9896f9513ab19f100eb",
     "hullkit/src/hullkit/_variance_swap_lesson.py": "5c4c82d63a7bdc0f656c04c3cdd1113f29e3537d99d91341dbcf818880cc0174",
     "hullkit/src/hullkit/_basket_lesson.py": "9756e01ac64ba426050e5560bc496ebc96f1a33444db72a7d9881519c67f96d5",
@@ -126,12 +126,12 @@
     "hullkit/src/hullkit/_lookback_lesson.py": "8f5e0a91131462995fd0b3afa8554795cfada8e723d5d1b77a26a4af1cee2630",
     "hullkit/src/hullkit/_binary_lesson.py": "80be5939c13e261dcbb3bb9befecc8b45fbb7b04c07b0ebe8d270f83ad900e19",
     "docs/validation/section-26-1/reference.json": "8901720c4c8512b6f383344222e6648ba59e6cdddaaac103bd9a028a499789a3",
-    "docs/validation/section-26-1/numerical-check.json": "5c95d922465bd866d2712285d8ba4f03c20eb8e4f5d9318c39b5e773030f4e00",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "da0da77975021622325d3c21caced006637648c31a84b3387a2b23038bb764c3",
-    "volumes/10_exotics_martingales/exotics.ipynb": "ad91b11fd529995e23c13010c05b4fae54c8527f42d8cc9099a48ff9fbbb6d46"
+    "docs/validation/section-26-1/numerical-check.json": "b127e2f6a87d0e392553a3eb2741450a8b8245be653c1873e8dd6c7e011a01c3",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "52ff3d829955c990dcc841d7bd4834312e39c799c78f1d6d67ba5832f52139e0",
+    "volumes/10_exotics_martingales/exotics.ipynb": "12f31ec4568c3ea35fc306f4a35964ec1f8116ba4aa449fb6ddffb425ff52cf4"
   },
   "artifact_sha256": {
-    "volumes/10_exotics_martingales/exotics.ipynb": "ad91b11fd529995e23c13010c05b4fae54c8527f42d8cc9099a48ff9fbbb6d46",
-    "book/_build/html/notebooks/10_exotics.html": "4b69be37ee17630a75f4b6fad4f3c48134907ef3db05d3d9d35ceacc4f9434e8"
+    "volumes/10_exotics_martingales/exotics.ipynb": "12f31ec4568c3ea35fc306f4a35964ec1f8116ba4aa449fb6ddffb425ff52cf4",
+    "book/_build/html/notebooks/10_exotics.html": "da046c794e1f15c43d74d379ac9fc30a15254bc8f5c01b122a4df47bca24e5d0"
   }
 }

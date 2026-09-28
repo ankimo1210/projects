@@ -106,7 +106,7 @@ def _strikes(data):
         y=[forward],
         mode="markers",
         name="K1 = F：先渡しそのもの（K2 = F）",
-        marker=dict(color=_COLORS["reference"], size=10, symbol="circle-open", line=dict(width=2)),
+        marker=dict(color=_COLORS["reference"], size=15, symbol="circle-open", line=dict(width=2)),
     )
     return _finish(
         fig,
@@ -229,7 +229,7 @@ def _risk(data):
     fig.update_xaxes(showticklabels=False)
     fig.update_layout(barmode="group", showlegend=True)
     fig.update_annotations(font_size=13)
-    _finish(fig, "packages_risk", "費用ゼロでもリスクは違う（σ = 14%、T = 0.25）")
+    _finish(fig, "packages_risk", "費用ゼロでもリスクは違う（買う側、σ = 14%、T = 0.25）")
     fig.update_layout(margin=dict(t=112))
     return fig
 

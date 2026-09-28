@@ -156,3 +156,48 @@ def test_deferred_option_rejects_bad_arguments():
         packages.deferred_option("call", -1.0, **SECTION_17_2)
     with pytest.raises(ValueError):
         packages.deferred_amount(-0.1, 0.02, 0.25)
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        dict(r=float("nan")),
+        dict(r=float("inf")),
+        dict(q=float("nan")),
+        dict(q=float("-inf")),
+        dict(r=800.0, T=1.0),
+        dict(T=-0.25),
+    ],
+)
+def test_every_public_entry_rejects_non_finite_or_overflowing_market_inputs(bad):
+    args = {**SECTION_17_2, **bad}
+    with pytest.raises(ValueError):
+        packages.range_forward(1.30, **args)
+    with pytest.raises(ValueError):
+        packages.deferred_option("call", 1.32, **args)
+    with pytest.raises(ValueError):
+        packages.break_forward(**args)
+
+
+@pytest.mark.parametrize(
+    "r, T",
+    [
+        (float("nan"), 1.0),
+        (float("inf"), 1.0),
+        (0.02, float("nan")),
+        (0.02, -1.0),
+        (0.02, 0.0),
+        (800.0, 1.0),
+    ],
+)
+def test_deferred_amount_rejects_bad_rate_and_maturity(r, T):
+    with pytest.raises(ValueError):
+        packages.deferred_amount(1.0, r, T)
+
+
+def test_range_forward_names_the_underflow_when_the_put_strike_is_too_low():
+    """At §17.2 the put premium underflows to zero far below F; that is a domain limit, not a search failure."""
+    with pytest.raises(ValueError, match="underflow"):
+        packages.range_forward(0.01, **SECTION_17_2)
+    deep = packages.range_forward(0.3 * 1.32, **SECTION_17_2)
+    assert deep.call_strike == pytest.approx(4.4215, abs=5e-5)
