@@ -1,8 +1,8 @@
 # ワークスペース整理計画
 
-更新日: 2026-09-28（容量を目的にしない整理方針を反映）
+更新日: 2026-09-28（整理後の保守を追記）
 
-状態: 工程0–4は初版の整理・統合・個別退避を完了。工程5の D1-preflight と小群の2コピー実証は完了。容量の増加は許容するため、大容量という理由だけの追加移管は行わない。工程6は ratesvol / hullkit / deep_hedge_price の個別調査を終え、独立継続を決定。
+状態: 工程0–4は初版の整理・統合・個別退避を完了。工程5の D1-preflight と小群の2コピー実証は完了。容量の増加は許容するため、大容量という理由だけの追加移管は行わない。工程6は ratesvol / hullkit / deep_hedge_price の個別調査を終え、独立継続を決定。整理後の保守（テスト名衝突・lint・案内文書）も同日に完了し、`make lint` 0件。全体 `make test` の残りは単独では再現しない1件のタイムアウトのみ。
 工程3c/3dの採用範囲は[受入記録](../../../market-research/docs/STAGE3_ACCEPTANCE.md)、工程4の退避は[旧市場索引](../../../_archive/market/README.md)を参照。quantkit・macrokitも固有機能のため独立継続。以下の初回調査の数値は5852c526時点。
 
 ## 目的と決まった方針
@@ -423,6 +423,36 @@ market_nn、models、quant-agent-benchmark の候補は、各群固有の復元�
 `_archive/scratch/whisper-2026-07/` へ `git mv` した。現役コードの参照と
 ローカル音声・文字起こし結果はなく、移動後の再実行は未検証。
 [退避記録](../../../_archive/scratch/README.md)に前提と再開時の注意を残した。
+
+## 整理後の保守（2026-09-28）
+
+整理の完了後に残っていた検証の穴と案内の重複を片付けた。すべて main（`049e1fb7`）へ push 済み。
+
+| 項目 | 変更 | コミット |
+|---|---|---|
+| テスト名衝突 | analytics のポータルを `report_builder` から `analytics_portal` へ改名。工程4の記録にある全体 make test の失敗10件はこれで解消 | `d5c9d3da` |
+| テスト対象 | `deep_hedge_price/tests`（206件）を testpaths とルート `conftest.py` に追加 | `f144ce35` |
+| 設定バックアップ | agentic-setup を動作中の設定と同期 | `6736253c` |
+| lint | benchmark の提出物・監査記録と agentic-setup を除外し、残りを修正して `ruff check .` 0件。benchmark の `input/`・`evaluator/` は v1.0.0 MANIFEST のハッシュで固定されているため除外のみ | `f0270275`・`b79b59b4`・`d6fd66cd`・`c740ff6a`・`dddfe75d` |
+| 案内の重複 | 9プロジェクトの `CLAUDE.md` を全文コピーから `@AGENTS.md` の読込みへ変更し、規則を AGENTS.md に追記 | `febc0594` |
+| 起動入口 | 改名時の置換で壊れていた `make hull-report` を johnhull の `report_builder` に戻した | `1f1976e4` |
+| workspace 外のテスト | `make test-extra` を追加（WSET・WSET corpus・aisan_lbo_case・interactive-email-demo・komorebi-3d・tokyo_subway_3d） | `e2bd1edb` |
+| 計画・仕様の索引 | [docs/superpowers/README.md](../README.md) に89件をプロジェクト別に索引化 | `049e1fb7` |
+
+検証: main で `ruff check .` 0件。全体 pytest は 6,665 passed・76 skipped・0 failed（`f144ce35` 時点）。
+`make test-extra` は 71・31・4・8・5・75件がすべて成功。market-research・johnhull/report・
+analytics/report の695件が成功し、`hull-report` と `analytics_portal` の import を確認した。
+`049e1fb7` での全体 `make test` は 6,684 passed・57 skipped・1 failed（19分31秒）。
+失敗は `rates_volatility_model/tests/test_notebook_executes.py` で、Vol Cube の数値を並べるだけの
+セルが応答を返さず600秒でタイムアウトした。単独では8.6秒で成功し、同日の先の全体実行でも成功しているため、
+全体実行中のカーネル応答停止とみて未修正。再発したら全体実行の条件で調べる。
+
+注意: ruff の isort 判定は git 管理外の `jp_llm_lab/data/snapshots/` の有無で変わるため、
+`known-third-party = ["jp_llm_lab"]` で固定した。lint は worktree だけでなく main の checkout でも確認する。
+worktree には `.venv` がないので、`make test-extra PY=/home/kazumasa/projects/.venv/bin/python` を使う。
+tokyo_subway_3d は raw PNG（git 管理外）がないと75件が skip になる。
+
+残り: 整理として未完の作業はない。開発側の次の作業は market-research の認証付き provider 疎通と johnhull M15。
 
 ## レビュー記録
 
