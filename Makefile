@@ -7,7 +7,7 @@
 # `aisan_lbo_case/` uses requirements.txt; `csharp_calc/` is .NET;
 # `notebooks/` has no managed env.
 
-.PHONY: health-web-check help install sync lint fmt fmt-fix test clean tree report books sde-check hull-report hull-book hull-artifacts-check hull-notebooks-check hull-core-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
+.PHONY: health-web-check help install sync lint fmt fmt-fix test test-extra clean tree report books sde-check hull-report hull-book hull-artifacts-check hull-notebooks-check hull-core-notebooks-check hull-paper-corpus-check hull-paper-corpus-gold-check hull-paper-corpus-v2-check hull-release-check hull-release rough-vol optimal-execution
 
 help:
 	@echo "Workspace targets (run from repo root):"
@@ -17,6 +17,7 @@ help:
 	@echo "  make fmt      - uv run ruff format --check ."
 	@echo "  make fmt-fix  - uv run ruff format ."
 	@echo "  make test     - uv run pytest"
+	@echo "  make test-extra - Python suites outside the workspace (WSET, aisan, email demo, komorebi, tokyo subway)"
 	@echo "  make clean    - remove pyc / __pycache__ / .pytest_cache / .ruff_cache"
 	@echo "  make tree     - print a project tree (depth 2, ignoring heavy dirs)"
 	@echo "  make report   - build the offline analytics portal (analytics/report/site/)"
@@ -60,6 +61,18 @@ test:
 	else \
 		echo "SKIP sde-check: npm is not on PATH"; \
 	fi
+
+# Python test suites that are not uv workspace members, so `make test` never
+# runs them. Each uses the runner its own README documents; the WSET corpus has
+# its own uv project and lock (uv creates its .venv on first run).
+PY := $(CURDIR)/.venv/bin/python
+test-extra:
+	cd WSET && $(MAKE) --no-print-directory test-python PYTHON=$(PY)
+	cd WSET/wset_l3_question_corpus && env -u VIRTUAL_ENV uv run --extra dev pytest -q
+	cd aisan_lbo_case && $(PY) -m pytest tests -q
+	cd interactive-email-demo && $(PY) -m unittest discover -s tests
+	$(PY) -m unittest discover -s komorebi-3d/tests
+	cd tokyo_subway_3d && PYTHONPATH=src $(PY) -m pytest tests -q
 
 report:
 	cd analytics/report && PYTHONPATH=. uv run --no-sync python -m analytics_portal.build
