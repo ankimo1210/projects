@@ -1,8 +1,10 @@
-# Record wired network health over time on Windows. Stop with Ctrl+C.
+# Record the default IPv4 adapter's network health over time on Windows. Stop with Ctrl+C.
 # Example:
 #   powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\network-monitor.ps1
 #   powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\network-monitor.ps1 -MaxSamples 5
 # The default download test transfers 10 MB every 30 minutes (about 480 MB/day).
+# A slow result also triggers a 10 MB check against Google (up to 960 MB/day total).
+# One-second, multi-target ping history is recorded by network-ping-monitor.ps1.
 # Set -DownloadEverySamples 0 to disable download tests.
 
 [CmdletBinding()]
@@ -11,7 +13,8 @@ param(
     [ValidateRange(0, 1000000)][int]$MaxSamples = 0,
     [ValidateRange(0, 1000000)][int]$DownloadEverySamples = 30,
     [ValidateRange(1000000, 100000000)][int]$DownloadBytes = 10000000,
-    [string]$OutputPath = (Join-Path $env:LOCALAPPDATA 'NetworkMonitor\network-history.csv')
+    [ValidateRange(1, 1000)][int]$LowSpeedThresholdMbps = 150,
+    [string]$OutputPath = (Join-Path $env:LOCALAPPDATA 'NetworkMonitor\network-history-detailed.csv')
 )
 
 $ErrorActionPreference = 'Stop'
@@ -68,14 +71,17 @@ function Measure-Dns {
 }
 
 function Invoke-CurlProbe {
-    param([string]$Url, [switch]$Head)
+    param([string]$Url, [switch]$Head, [int]$RangeBytes = 0)
 
     $curlArgs = @(
         '--location', '--silent', '--show-error', '--output', 'NUL',
         '--connect-timeout', '5', '--max-time', '25',
-        '--write-out', '%{http_code}|%{time_starttransfer}|%{time_total}|%{speed_download}'
+        '--write-out', '%{http_code}|%{time_namelookup}|%{time_connect}|%{time_appconnect}|%{time_starttransfer}|%{time_total}|%{speed_download}|%{size_download}'
     )
     if ($Head) { $curlArgs += '--head' }
+    if ($RangeBytes -gt 0) {
+        $curlArgs += @('--range', "0-$($RangeBytes - 1)", '--max-filesize', "$RangeBytes")
+    }
     $curlArgs += $Url
 
     $raw = $null
@@ -88,28 +94,49 @@ function Invoke-CurlProbe {
     }
 
     $parts = ([string]($raw -join '')).Trim() -split '\|'
-    if ($parts.Count -ne 4) {
-        return [pscustomobject]@{ ExitCode = $exitCode; HttpCode = $null; FirstByteMs = $null; TotalMs = $null; Mbps = $null }
+    if ($parts.Count -ne 8) {
+        return [pscustomobject]@{
+            ExitCode = $exitCode; HttpCode = $null; DnsMs = $null; TcpMs = $null
+            TlsMs = $null; WaitAfterTlsMs = $null; FirstByteMs = $null
+            BodyMs = $null; TotalMs = $null; Mbps = $null; Bytes = $null
+        }
     }
 
     $culture = [System.Globalization.CultureInfo]::InvariantCulture
     $styles = [System.Globalization.NumberStyles]::Float
-    $firstByte = [double]0
-    $total = [double]0
-    $bytesPerSecond = [double]0
-    $valid = [double]::TryParse($parts[1], $styles, $culture, [ref]$firstByte) -and
-        [double]::TryParse($parts[2], $styles, $culture, [ref]$total) -and
-        [double]::TryParse($parts[3], $styles, $culture, [ref]$bytesPerSecond)
+    $values = New-Object 'double[]' 7
+    $valid = $true
+    for ($i = 0; $i -lt 7; $i++) {
+        $parsed = [double]0
+        if (-not [double]::TryParse($parts[$i + 1], $styles, $culture, [ref]$parsed)) {
+            $valid = $false
+        } else {
+            $values[$i] = $parsed
+        }
+    }
     if (-not $valid) {
-        return [pscustomobject]@{ ExitCode = $exitCode; HttpCode = $parts[0]; FirstByteMs = $null; TotalMs = $null; Mbps = $null }
+        return [pscustomobject]@{
+            ExitCode = $exitCode; HttpCode = $parts[0]; DnsMs = $null; TcpMs = $null
+            TlsMs = $null; WaitAfterTlsMs = $null; FirstByteMs = $null
+            BodyMs = $null; TotalMs = $null; Mbps = $null; Bytes = $null
+        }
     }
 
+    $sizeMatchesRange = ($RangeBytes -eq 0 -or [int64]$values[6] -eq $RangeBytes)
     return [pscustomobject]@{
         ExitCode = $exitCode
         HttpCode = $parts[0]
-        FirstByteMs = [Math]::Round($firstByte * 1000, 1)
-        TotalMs = [Math]::Round($total * 1000, 1)
-        Mbps = if ($exitCode -eq 0 -and $parts[0] -eq '200') { [Math]::Round($bytesPerSecond * 8 / 1000000, 1) } else { $null }
+        DnsMs = [Math]::Round($values[0] * 1000, 1)
+        TcpMs = [Math]::Round(($values[1] - $values[0]) * 1000, 1)
+        TlsMs = [Math]::Round(($values[2] - $values[1]) * 1000, 1)
+        WaitAfterTlsMs = [Math]::Round(($values[3] - $values[2]) * 1000, 1)
+        FirstByteMs = [Math]::Round($values[3] * 1000, 1)
+        BodyMs = [Math]::Round(($values[4] - $values[3]) * 1000, 1)
+        TotalMs = [Math]::Round($values[4] * 1000, 1)
+        Mbps = if ($exitCode -eq 0 -and $parts[0] -in @('200', '206') -and $values[6] -gt 0 -and $sizeMatchesRange) {
+            [Math]::Round($values[5] * 8 / 1000000, 1)
+        } else { $null }
+        Bytes = [int64]$values[6]
     }
 }
 
@@ -136,6 +163,9 @@ Write-Host "Monitoring $($adapter.Name) through gateway $gateway. CSV: $OutputPa
 Write-Host 'Press Ctrl+C to stop.'
 
 $sample = 0
+$previousStatsAt = $null
+$previousReceivedBytes = $null
+$previousSentBytes = $null
 while ($true) {
     $started = Get-Date
     $sample++
@@ -143,16 +173,39 @@ while ($true) {
 
     $adapter = Get-NetAdapter | Where-Object { $_.ifIndex -eq $interfaceIndex } | Select-Object -First 1
     $statistics = $null
-    try { $statistics = Get-NetAdapterStatistics -Name $adapter.Name } catch { }
+    if ($adapter) {
+        try { $statistics = Get-NetAdapterStatistics -Name $adapter.Name } catch { }
+    }
+    $receivedMbps = $null
+    $sentMbps = $null
+    if ($statistics -and $previousStatsAt) {
+        $seconds = ($started - $previousStatsAt).TotalSeconds
+        $receivedDelta = [int64]$statistics.ReceivedBytes - $previousReceivedBytes
+        $sentDelta = [int64]$statistics.SentBytes - $previousSentBytes
+        if ($seconds -gt 0 -and $receivedDelta -ge 0 -and $sentDelta -ge 0) {
+            $receivedMbps = [Math]::Round($receivedDelta * 8 / $seconds / 1000000, 2)
+            $sentMbps = [Math]::Round($sentDelta * 8 / $seconds / 1000000, 2)
+        }
+    }
+    if ($statistics) {
+        $previousStatsAt = $started
+        $previousReceivedBytes = [int64]$statistics.ReceivedBytes
+        $previousSentBytes = [int64]$statistics.SentBytes
+    }
 
     $gatewayPing = Measure-Icmp -Target $gateway
     $internetPing = Measure-Icmp -Target '1.1.1.1'
     $dns = Measure-Dns
     $https = Invoke-CurlProbe -Url 'https://www.cloudflare.com/' -Head
+    $googleHttps = Invoke-CurlProbe -Url 'https://www.google.com/generate_204'
 
     $download = $null
+    $verifyDownload = $null
     if ($DownloadEverySamples -gt 0 -and (($sample - 1) % $DownloadEverySamples) -eq 0) {
         $download = Invoke-CurlProbe -Url "https://speed.cloudflare.com/__down?bytes=$DownloadBytes"
+        if ($null -eq $download.Mbps -or $download.Mbps -lt $LowSpeedThresholdMbps) {
+            $verifyDownload = Invoke-CurlProbe -Url 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb' -RangeBytes $DownloadBytes
+        }
     }
 
     $row = [pscustomobject][ordered]@{
@@ -171,12 +224,37 @@ while ($true) {
         dns_ms = $dns.Milliseconds
         https_http_code = $https.HttpCode
         https_exit_code = $https.ExitCode
+        https_dns_ms = $https.DnsMs
+        https_tcp_ms = $https.TcpMs
+        https_tls_ms = $https.TlsMs
+        https_wait_after_tls_ms = $https.WaitAfterTlsMs
         https_first_byte_ms = $https.FirstByteMs
         https_total_ms = $https.TotalMs
+        google_https_http_code = $googleHttps.HttpCode
+        google_https_exit_code = $googleHttps.ExitCode
+        google_https_first_byte_ms = $googleHttps.FirstByteMs
+        google_https_total_ms = $googleHttps.TotalMs
+        download_expected_bytes = $DownloadBytes
+        low_speed_threshold_mbps = $LowSpeedThresholdMbps
         download_http_code = if ($download) { $download.HttpCode } else { $null }
         download_exit_code = if ($download) { $download.ExitCode } else { $null }
+        download_dns_ms = if ($download) { $download.DnsMs } else { $null }
+        download_tcp_ms = if ($download) { $download.TcpMs } else { $null }
+        download_tls_ms = if ($download) { $download.TlsMs } else { $null }
+        download_wait_after_tls_ms = if ($download) { $download.WaitAfterTlsMs } else { $null }
+        download_first_byte_ms = if ($download) { $download.FirstByteMs } else { $null }
+        download_body_ms = if ($download) { $download.BodyMs } else { $null }
         download_mbps = if ($download) { $download.Mbps } else { $null }
+        download_bytes = if ($download) { $download.Bytes } else { $null }
         download_total_ms = if ($download) { $download.TotalMs } else { $null }
+        verify_http_code = if ($verifyDownload) { $verifyDownload.HttpCode } else { $null }
+        verify_exit_code = if ($verifyDownload) { $verifyDownload.ExitCode } else { $null }
+        verify_first_byte_ms = if ($verifyDownload) { $verifyDownload.FirstByteMs } else { $null }
+        verify_body_ms = if ($verifyDownload) { $verifyDownload.BodyMs } else { $null }
+        verify_mbps = if ($verifyDownload) { $verifyDownload.Mbps } else { $null }
+        verify_bytes = if ($verifyDownload) { $verifyDownload.Bytes } else { $null }
+        received_mbps = $receivedMbps
+        sent_mbps = $sentMbps
         received_packet_errors = if ($statistics) { $statistics.ReceivedPacketErrors } else { $null }
         outbound_packet_errors = if ($statistics) { $statistics.OutboundPacketErrors } else { $null }
         received_discarded_packets = if ($statistics) { $statistics.ReceivedDiscardedPackets } else { $null }
@@ -185,7 +263,7 @@ while ($true) {
     $row | Export-Csv -Path $OutputPath -NoTypeInformation -Append -Encoding UTF8
 
     $speedText = if ($download -and $null -ne $download.Mbps) { "$($download.Mbps) Mbps" } else { '-' }
-    Write-Host "$timestamp gateway loss=$($gatewayPing.LossPct)% internet loss=$($internetPing.LossPct)% HTTPS=$($https.HttpCode) download=$speedText"
+    Write-Host "$timestamp gateway loss=$($gatewayPing.LossPct)% internet loss=$($internetPing.LossPct)% HTTPS=$($https.HttpCode)/$($googleHttps.HttpCode) download=$speedText"
 
     if ($MaxSamples -gt 0 -and $sample -ge $MaxSamples) { break }
     $remaining = $IntervalSeconds - ((Get-Date) - $started).TotalSeconds
