@@ -12,7 +12,8 @@ def test_reference_holds_the_eight_paths_exact_values_and_studies():
     assert hand["least_squares"]["value"] == pytest.approx(0.1144343, abs=1e-7)
     assert hand["boundary"]["value"] == pytest.approx(0.1208506, abs=1e-7)
     assert [row["dates"] for row in data["exact"]["bermudan"]] == [3, 6, 12, 24, 48]
-    assert data["exact"]["american"]["value"] == pytest.approx(0.133843, abs=1e-5)
+    assert data["exact"]["american"]["value"] == pytest.approx(0.133844, abs=1e-6)
+    assert data["exact"]["bermudan"][0]["value"] == pytest.approx(0.1219882, abs=1e-7)
     assert data["bias"]["sizes"][0] == 250
     assert data["bias"]["replications"] == 200
     assert data["exchange"]["exact"] == pytest.approx(8.71903, abs=1e-5)
@@ -34,7 +35,9 @@ def test_four_figures_use_the_saved_reference():
     assert list(regression.data[0].y) == late["discounted_continuation"]
     a, b, c = late["coefficients"]
     assert regression.data[1].y[0] == pytest.approx(a + b * 0.74 + c * 0.74**2, abs=1e-15)
-    assert list(regression.data[5].x) == [0.97, 0.77, 0.84, 0.93, 0.76, 0.92, 0.88]
+    assert list(regression.data[5].x) == [0.97, 0.77, 0.84]
+    assert list(regression.data[6].x) == [0.93, 0.76, 0.92, 0.88]
+    assert regression.data[5].marker.color != regression.data[6].marker.color
     boundary = figures["american_mc_boundary"]
     step = data["hand_example"]["boundary"]["steps"]["2"]
     assert list(boundary.data[0].y) == [*step["averages"], step["averages"][-1]]
@@ -46,6 +49,9 @@ def test_four_figures_use_the_saved_reference():
     dates = figures["american_mc_dates"]
     assert list(dates.data[0].y) == data["dates"]["exact"]
     assert list(dates.data[2].y) == data["dates"]["lsm3"]["value"]
+    counts = data["dates"]["counts"]
+    assert list(dates.data[2].x) == counts and list(dates.data[2].customdata) == counts
+    assert dates.data[1].x[0] < counts[0] < dates.data[3].x[0]
 
 
 def test_hash_guard_rejects_a_changed_reference(tmp_path):

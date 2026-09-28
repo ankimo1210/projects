@@ -1,14 +1,17 @@
 {
   "section": "27.8",
   "status": "PASS",
-  "method": "Hull's eight paths by numpy.polyfit and a direct boundary search; exact Bermudan values by lognormal quadrature and Crank-Nicolson; American limit by CRR and Crank-Nicolson; seeded fit/fresh simulations recomputed with hullkit",
+  "method": "Hull's eight paths by numpy.polyfit and a direct boundary search; exact Bermudan values by lognormal quadrature, checked by Crank-Nicolson and (three dates) nested Black-Scholes integrals; American limit by CRR, checked by Crank-Nicolson; seeded fit/fresh simulations and paired policy differences recomputed with hullkit",
   "tolerances": {
     "hullkit_currency": 1e-12,
     "printed_coefficients": 0.001,
-    "printed_continuation_with_rounded_coefficients": 7e-05,
+    "printed_coefficients_half_unit_except_t2_c": 0.0005,
+    "printed_continuation_with_printed_coefficients": 7e-05,
     "printed_boundary_averages_half_unit": 5e-05,
-    "grid_half_spread_bermudan": 1e-06,
-    "grid_half_spread_american": 5e-06,
+    "quadrature_change": 1e-08,
+    "crank_nicolson_gap_bermudan": 1e-06,
+    "nested_three_dates_gap": 1e-08,
+    "crank_nicolson_gap_american": 5e-06,
     "bias_z": 2.0
   },
   "measured": {
@@ -18,89 +21,128 @@
     "exchange_gap": 0.0,
     "printed_rounding": {
       "coefficients": 0.0005761829424135723,
+      "coefficients_off_half_unit": [
+        "2:c"
+      ],
       "continuation_exact": 0.0005378705561829289,
       "continuation_rounded": 5.829999999999724e-05,
       "boundary_averages": 4.999999999995286e-05
     },
-    "bermudan_half_spread": 1.909782919723435e-07,
-    "american_half_spread": 1.3014847205644609e-06,
+    "exact_value_checks": {
+      "quadrature_change": 2.6854623941252598e-09,
+      "crank_nicolson_gap": 3.8994532960967554e-07,
+      "nested_three_dates_gap": 8.487334168805205e-10,
+      "american_crank_nicolson_gap": 2.6029694411289217e-06,
+      "section_15_quadrature_change": 1.2758722967021185e-07,
+      "section_15_crank_nicolson_gap": 1.4794617442248637e-07,
+      "section_15_american_crank_nicolson_gap": 2.3128464261112924e-05
+    },
     "bias_z": {
       "lsm_in": [
-        -0.7697195709775484,
-        -0.20562303920577363,
-        -0.9024925111108052,
-        -0.7386887754451789,
-        -0.09915331769106747,
-        1.46447517486661,
-        -0.8043930959991709
+        -0.7700149090372956,
+        -0.20604614313714129,
+        -0.9030997694261653,
+        -0.7396167382334045,
+        -0.10036787932396522,
+        1.4629544962627599,
+        -0.8068855692421877
       ],
       "lsm_out": [
-        -7.408068577646154,
-        -4.132432203910423,
-        -2.7170480733972346,
-        -0.3026397392387072,
-        0.8218343869163196,
-        0.5707915377739635,
-        -1.763726239823857
+        -7.409640865325663,
+        -4.13428416756335,
+        -2.718959107821056,
+        -0.30453409541148946,
+        0.8196504169262371,
+        0.568685661055812,
+        -1.7656074383230769
       ],
       "boundary_in": [
-        3.9799825348129323,
-        4.271348412303613,
-        3.505486057702003,
-        3.4782230845650592,
-        3.3626863353489127,
-        4.211140930944202,
-        2.0821348897229
+        3.9796824050494117,
+        4.270927429809804,
+        3.5048800948690846,
+        3.4773017710398406,
+        3.3614511429357226,
+        4.209632054891446,
+        2.0796305599122276
       ],
       "boundary_out": [
-        -10.642234317847828,
-        -7.8056118857171075,
-        -5.654828629887612,
-        -2.6902363468005115,
-        -1.1750356449795185,
-        -0.46223325342812843,
-        -2.258656307991039
+        -10.64356194604394,
+        -7.807229054916023,
+        -5.656534832798229,
+        -2.6920490567825186,
+        -1.1772278169837396,
+        -0.4643185876301638,
+        -2.260565047286107
       ]
     },
     "dates_z": {
       "lsm2": [
-        -0.43438210653815645,
-        1.2100526907515081,
-        -0.6749107520214296,
-        0.08404627869574798,
-        -1.952764788625531
+        -0.434999368093967,
+        1.210113417222678,
+        -0.6757186256720731,
+        0.08429707781782153,
+        -1.9530101597248564
       ],
       "lsm3": [
-        -0.30893168917421493,
-        1.2939969157387405,
-        -0.3154048341624878,
-        1.550078701900106,
-        -1.191987691047614
+        -0.30955283333849326,
+        1.2940583869980544,
+        -0.31622392253386283,
+        1.5503347984039344,
+        -1.1922348936055875
       ],
       "boundary": [
-        -0.4799557316853589,
-        1.1922685267251798,
-        -0.7405530079677838,
-        1.7818531550762298,
-        -1.748663009002539
+        -0.48058223821789814,
+        1.1923305132399684,
+        -0.7413605162793918,
+        1.7821122192329155,
+        -1.748912827915757
       ]
     },
-    "exchange_z": -0.8015174874023883,
+    "paired_z": {
+      "lsm3_minus_lsm2": [
+        1.1404183416210647,
+        0.4408275283621329,
+        1.690565530410561,
+        6.066982248059863,
+        2.6448599640888886
+      ],
+      "boundary_minus_lsm2": [
+        -0.22462739409388788,
+        -0.2064272202902579,
+        -0.24150820985956714,
+        5.86073212701644,
+        0.6977869889492972
+      ]
+    },
+    "european_z": [
+      -1.7790830219871716,
+      0.6971782508487434,
+      0.9435221993782533,
+      2.886112102408519,
+      -0.1487379541782605
+    ],
+    "exchange_z": -0.8014908700757398,
     "claims": {
       "boundary_in_sample_above_exact": true,
       "boundary_out_of_sample_below_exact_to_1000_paths": true,
       "lsm_out_of_sample_below_exact_to_1000_paths": true,
       "lsm_in_sample_within_two_errors": true,
       "out_of_sample_never_two_errors_above_exact": true,
+      "boundary_in_sample_above_out_of_sample": true,
       "dates_within_two_errors": true,
-      "exchange_within_one_error": true,
+      "cubic_and_quadratic_within_two_errors_to_12_dates": true,
+      "cubic_above_quadratic_at_24_and_48_dates": true,
+      "all_three_above_exact_at_24_dates": true,
+      "european_check_high_only_at_24_dates": true,
+      "exchange_within_two_errors": true,
+      "section_15_bermudan_below_american": true,
       "control_variate_tightens_exchange": true
     }
   },
   "source_sha256": {
-    "scripts/build_american_mc_reference.py": "c2c566003ea1a7c8eea8697ec77729a78d29daa8231fc273583ca9ec83d5ae73",
-    "scripts/verify_american_mc_numerics.py": "7a4de9b0694583d00db00e7a598cc3fb95e850eef136871f26552d1edc4e4eda",
-    "hullkit/src/hullkit/american_mc.py": "92c3c61588a5abc5e1376b199e9d6e3c3c65677ad95d3a574ae71f6c2c084b86"
+    "scripts/build_american_mc_reference.py": "a27a1f331d3c4cdb61983b7a89a2be0352fb4343041a71e69577304fb10012a8",
+    "scripts/verify_american_mc_numerics.py": "f94f06b88c7465daf45c40134b28d355defdef5001b7614a6f410991936ed6c9",
+    "hullkit/src/hullkit/american_mc.py": "ccd2bb5c38a2a5a193a807430bdd08ac310fbe69d9608b0fc1070ed826ebb2ba"
   },
-  "artifact_sha256": "1410b84e425596fdf0219bc2414ad74e040f8cfc04efe87eb81b114e42bbac0e"
+  "artifact_sha256": "329c26ffac462eecc89e06f487e7c3e1ffd6efa81a49848c4c02489ba53366d2"
 }

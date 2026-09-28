@@ -3,13 +3,16 @@
 Two ways to choose early exercise on simulated paths: the least-squares
 approach (Longstaff-Schwartz) and the exercise boundary parameterization
 (Andersen). Both fit a policy on one set of paths; ``apply_least_squares`` and
-``apply_boundary`` value that policy on new paths, as Hull recommends.
+``apply_boundary`` value that policy on new paths. Hull describes this two-pass
+practice for the boundary (p.665); his least-squares example values on the
+fitting paths.
 """
 
 from __future__ import annotations
 
 import itertools
 import math
+import operator
 from collections.abc import Callable
 from dataclasses import dataclass
 
@@ -65,6 +68,8 @@ class PolicyValue:
     undiscounted as in Hull's Table 27.7. ``continuation_value`` is their
     discounted mean, ``standard_error`` its Monte Carlo standard error,
     ``exercise_now`` the payoff at time zero and ``price`` the larger of the two.
+    ``price`` assumes the option may also be exercised at time zero; without that
+    right (a Bermudan whose first date is later) the value is ``continuation_value``.
     """
 
     price: float
@@ -154,6 +159,15 @@ def _value(cash_flows, times, rate, exercise_now):
     }
 
 
+def _check_times(fitted_times, grid):
+    """Applied exercise times must equal the fitted ones up to floating-point rounding."""
+    if len(fitted_times) != grid.size - 1 or not all(
+        math.isclose(a, b, rel_tol=1e-12, abs_tol=1e-12)
+        for a, b in zip(fitted_times, grid[:-1], strict=True)
+    ):
+        raise ValueError("times must match the fitted exercise times")
+
+
 def _first_exercise(exercise, payoffs):
     """Cash flows paying each path's payoff at the first time ``exercise`` is true."""
     cash_flows = np.zeros_like(payoffs)
@@ -182,10 +196,17 @@ def least_squares(
     flows of the in-the-money paths are regressed on all monomials of the
     states up to ``degree`` (Hull's ``V = a + bS + cS^2`` for one variable),
     and a path is exercised when its exercise value beats the fitted value of
-    continuing. ``rate`` is the continuously compounded risk-free rate.
+    continuing (strictly greater). ``rate`` is the continuously compounded
+    risk-free rate. A time with fewer in-the-money paths than monomials is
+    skipped: nothing is exercised there.
     """
-    if isinstance(degree, bool) or not isinstance(degree, int) or degree < 1:
+    try:
+        order = operator.index(degree)
+    except TypeError:
+        order = 0
+    if isinstance(degree, bool) or order < 1:
         raise ValueError("degree must be a positive integer")
+    degree = int(order)
     states, payoffs, grid, discounts = _inputs(paths, payoff, rate, times)
     powers = _powers(states.shape[2], degree)
     future = payoffs[:, -1].copy()
@@ -235,11 +256,11 @@ def apply_least_squares(fitted: LeastSquaresResult, paths, payoff, rate, times) 
     exercise value beats the fitted value of continuing. Applied to the paths
     it was fitted on, this reproduces ``fitted``; on new paths it removes the
     foresight of fitting and valuing on the same sample, the two-pass practice
-    Hull describes for the exercise boundary (p.665).
+    Hull describes for the exercise boundary (p.665). ``times`` must be the
+    fitted exercise times (up to floating-point rounding).
     """
     states, payoffs, grid, _ = _inputs(paths, payoff, rate, times)
-    if [step.time for step in fitted.steps] != [float(t) for t in grid[:-1]]:
-        raise ValueError("times must match the fitted exercise times")
+    _check_times([step.time for step in fitted.steps], grid)
     powers = _powers(states.shape[2], fitted.degree)
     exercise = payoffs[:, 1:] > 0
     for column, step in enumerate(fitted.steps, start=1):
@@ -292,9 +313,12 @@ def exercise_boundary(
     ``S*(t)``: a put is exercised when in the money and ``S <= S*(t)``, a call
     when ``S >= S*(t)``. Working backward from maturity, ``S*(t)`` is chosen
     among the in-the-money prices at ``t`` (or never exercising) to maximize
-    the average option value at ``t`` over all paths, as in Hull's example.
-    ``paths`` holds one state variable; the other inputs are as in
-    :func:`least_squares`.
+    the average option value at ``t`` over all paths, as in Hull's example;
+    on a tie the first maximum is kept (the lowest put price, the highest call
+    price). ``paths`` holds one state variable and the exercise region at each
+    time is one interval ending at ``S*(t)``; more complicated situations need
+    their own assumption about the shape of the boundary (Hull p.665). The
+    other inputs are as in :func:`least_squares`.
     """
     if kind not in _KINDS:
         raise ValueError(f"kind must be one of {_KINDS}, got {kind!r}")
@@ -344,11 +368,12 @@ def apply_boundary(fitted: BoundaryResult, paths, payoff, rate, times) -> Policy
     """Value a fitted exercise boundary on new ``paths`` (Hull p.665).
 
     Hull notes that the paths used to find the boundary are discarded and a
-    new simulation values the option; reusing them overstates the value.
+    new simulation values the option. (Valuing on the fitting paths biases the
+    value upward; §14.4 of vol06 measures this.) ``times`` must be the fitted
+    exercise times (up to floating-point rounding).
     """
     states, payoffs, grid, _ = _inputs(paths, payoff, rate, times)
-    if [step.time for step in fitted.steps] != [float(t) for t in grid[:-1]]:
-        raise ValueError("times must match the fitted exercise times")
+    _check_times([step.time for step in fitted.steps], grid)
     if states.shape[2] != 1:
         raise ValueError("the boundary parameterization needs one state variable")
     exercise = payoffs[:, 1:] > 0
