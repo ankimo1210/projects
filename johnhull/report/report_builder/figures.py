@@ -26,6 +26,7 @@ from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
+from hullkit._packages_lesson import _figures as packages_lesson_figures
 from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
 from hullkit._static_replication_lesson import _figures as static_replication_lesson_figures
@@ -1060,6 +1061,42 @@ FIGURES: list[FigureSpec] = [
         "初期価値0.73→0.38→0.32と、連続監視の解析価格0.3136を比較する。",
         lambda: static_replication_lesson_figures()["static_convergence"],
         practice="点数を増やすとこの市場では近づくが、節点間の完全複製や誤差上界は保証しない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "packages_range_forward",
+        "exotics",
+        "レンジ先渡しの満期損益",
+        "§26.1 のパッケージ。買いコール K2 と売りプット K1 の和で、K1 と K2 の間は損益ゼロ。",
+        lambda: packages_lesson_figures()["packages_range_forward"],
+        practice="S=1.32、σ=14%、T=0.25、K1=1.30 のとき K2=1.3414（原典 §17.2）。区間の外側では先渡しと同じ傾きで損益が動く。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "packages_strikes",
+        "exotics",
+        "ゼロコストになる K1 と K2 の組",
+        "c(K2)=p(K1) を満たす K2 を K1 の関数として描く。K1=F で先渡しに戻る。",
+        lambda: packages_lesson_figures()["packages_strikes"],
+        practice="K1 を F から離すほど K2 は急に遠ざかる。F 近くでは (K2−F)/(F−K1) が約1.057（1より大）で、上側の区間が広い。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "packages_deferred",
+        "exotics",
+        "プレミアム後払いのコール（ブレークフォワード）",
+        "行使価格 K=F のコールのプレミアムを満期に A=c·e^{rT} で払う。最大損失は A、損益分岐は K+A。",
+        lambda: packages_lesson_figures()["packages_deferred"],
+        practice="A=0.03686、損益分岐1.3569。先渡しにプットを足して A を引いた形と同じで、買い手の実効購入価格は最悪でも F+A。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "packages_risk",
+        "exotics",
+        "現在価値がゼロでもリスクは違う",
+        "先渡し・レンジ先渡し・ブレークフォワードの期待損失PV、損失確率、最大損失を並べる。",
+        lambda: packages_lesson_figures()["packages_risk"],
+        practice="どれも正味PVは0だが、損失確率は51%・24%・67%、最大損失は1.32・1.254・0.037。損失確率はリスク中立の値。",
         is_new=True,
     ),
     FigureSpec(

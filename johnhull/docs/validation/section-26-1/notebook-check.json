@@ -1,0 +1,137 @@
+{
+  "section": "26.1",
+  "status": "PASS",
+  "base": "811b1792",
+  "cells": 136,
+  "lesson_cells": 11,
+  "preserved_cells_outside_lesson": 125,
+  "saved_figures": {
+    "26.1": [
+      "packages_deferred",
+      "packages_range_forward",
+      "packages_risk",
+      "packages_strikes"
+    ],
+    "26.10": [
+      "binary_delta",
+      "binary_payoffs",
+      "binary_replication",
+      "binary_spreads"
+    ],
+    "26.11": [
+      "lookback_history",
+      "lookback_monitoring",
+      "lookback_payoffs",
+      "lookback_replication"
+    ],
+    "26.12": [
+      "shout_boundary",
+      "shout_comparison",
+      "shout_decision",
+      "shout_payoff"
+    ],
+    "26.13": [
+      "asian_distribution",
+      "asian_error",
+      "asian_observations",
+      "asian_payoff"
+    ],
+    "26.14": [
+      "exchange_american",
+      "exchange_correlation",
+      "exchange_payoff",
+      "exchange_rate"
+    ],
+    "26.15": [
+      "basket_comparison",
+      "basket_correlation",
+      "basket_error",
+      "basket_payoff"
+    ],
+    "26.16": [
+      "varswap_payoff",
+      "varswap_replication",
+      "varswap_strip",
+      "volswap_convexity"
+    ],
+    "26.17": [
+      "static_boundary",
+      "static_boundary_error",
+      "static_convergence",
+      "static_ladder"
+    ]
+  },
+  "negative_controls": [
+    {
+      "mutation": "§4.7 source changed",
+      "rejected": true,
+      "findings": [
+        "§4.8以外のセル本文がM17基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§5 heading changed",
+      "rejected": true,
+      "findings": [
+        "§4.8以外のセル本文がM17基点と異なる",
+        "§4.8以外の保存出力がM17基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§4.8.4 heading changed",
+      "rejected": true,
+      "findings": [
+        "§4.8.4 がない"
+      ]
+    },
+    {
+      "mutation": "§26.1 saved deferred changed",
+      "rejected": true,
+      "findings": [
+        "packages_deferred.data が共有図と異なる"
+      ]
+    },
+    {
+      "mutation": "§26.17 saved boundary changed",
+      "rejected": true,
+      "findings": [
+        "§4.8以外の保存Plotly図がM17基点と異なる",
+        "static_boundary.data が共有図と異なる"
+      ]
+    },
+    {
+      "mutation": "unlabeled saved figure changed",
+      "rejected": true,
+      "findings": [
+        "§4.8以外の保存Plotly図がM17基点と異なる"
+      ]
+    }
+  ],
+  "checks": [
+    "fresh execution matches committed output signature",
+    "outside §4.8 source, output signature and Plotly payloads equal M17",
+    "saved §26.1 and §26.10–§26.17 Plotly values match shared figures"
+  ],
+  "source_sha256": {
+    "scripts/verify_packages_notebook.py": "c1b294234c36b63ec112e70ea267f97b1e41cb9828e97245213481b4b8561a6b",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_packages_lesson.py": "d4e5742cbf77fcb125dd1f79fc9bc35d54761af662f535897a376918306272ba",
+    "hullkit/src/hullkit/packages.py": "01f0daef09b19c6c1edfd4d15d912fac8ea7171226dcdd7842bfcd82231038dd",
+    "hullkit/src/hullkit/_static_replication_lesson.py": "f8942fc7b7737fe13e819ba0e2cc29c7fa1acfed7f4cc9896f9513ab19f100eb",
+    "hullkit/src/hullkit/_variance_swap_lesson.py": "5c4c82d63a7bdc0f656c04c3cdd1113f29e3537d99d91341dbcf818880cc0174",
+    "hullkit/src/hullkit/_basket_lesson.py": "9756e01ac64ba426050e5560bc496ebc96f1a33444db72a7d9881519c67f96d5",
+    "hullkit/src/hullkit/_exchange_lesson.py": "b1dd20d413d7d23d6c888290547af89a0af687ff2ca63812eac57fd4cf525d91",
+    "hullkit/src/hullkit/_asian_lesson.py": "07667046a0cb616c30e237ebad024b72c601aed9286d8009850513f8d6a1061c",
+    "hullkit/src/hullkit/_shout_lesson.py": "14d388049bc47a1aa53e45dc730376f626f077b170194ced5d4c2e480191acc1",
+    "hullkit/src/hullkit/_lookback_lesson.py": "8f5e0a91131462995fd0b3afa8554795cfada8e723d5d1b77a26a4af1cee2630",
+    "hullkit/src/hullkit/_binary_lesson.py": "80be5939c13e261dcbb3bb9befecc8b45fbb7b04c07b0ebe8d270f83ad900e19",
+    "docs/validation/section-26-1/reference.json": "8901720c4c8512b6f383344222e6648ba59e6cdddaaac103bd9a028a499789a3",
+    "docs/validation/section-26-1/numerical-check.json": "5c95d922465bd866d2712285d8ba4f03c20eb8e4f5d9318c39b5e773030f4e00",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "da0da77975021622325d3c21caced006637648c31a84b3387a2b23038bb764c3",
+    "volumes/10_exotics_martingales/exotics.ipynb": "ad91b11fd529995e23c13010c05b4fae54c8527f42d8cc9099a48ff9fbbb6d46"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "ad91b11fd529995e23c13010c05b4fae54c8527f42d8cc9099a48ff9fbbb6d46",
+    "book/_build/html/notebooks/10_exotics.html": "4b69be37ee17630a75f4b6fad4f3c48134907ef3db05d3d9d35ceacc4f9434e8"
+  }
+}
