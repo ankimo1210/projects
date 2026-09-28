@@ -24,13 +24,36 @@ _AT_FORWARD_RTOL = 1e-12
 _MAX_BRACKET_DOUBLINGS = 200
 
 
-def _check_market(spot: float, sigma: float, T: float) -> None:
+def _exp(x: float, what: str) -> float:
+    """``exp(x)`` that reports an overflow as a ``ValueError`` about the named quantity."""
+    try:
+        return math.exp(x)
+    except OverflowError:
+        raise ValueError(f"{what} overflows: exp({x:g}) is not representable") from None
+
+
+def _check_rate_and_maturity(r: float, T: float) -> None:
+    if not math.isfinite(r):
+        raise ValueError("r must be finite")
+    if not (math.isfinite(T) and T > 0.0):
+        raise ValueError("T must be finite and > 0")
+
+
+def _check_market(spot: float, r: float, sigma: float, T: float, q: float) -> None:
     if not (math.isfinite(spot) and spot > 0.0):
         raise ValueError("spot must be finite and > 0")
     if not (math.isfinite(sigma) and sigma > 0.0):
         raise ValueError("sigma must be finite and > 0")
-    if not (math.isfinite(T) and T > 0.0):
-        raise ValueError("T must be finite and > 0")
+    _check_rate_and_maturity(r, T)
+    if not math.isfinite(q):
+        raise ValueError("q must be finite")
+
+
+def _forward(spot: float, r: float, T: float, q: float) -> float:
+    forward = spot * _exp((r - q) * T, "the forward price")
+    if not math.isfinite(forward):
+        raise ValueError("the forward price overflows")
+    return forward
 
 
 def _sign(side: str) -> float:
@@ -78,10 +101,12 @@ def range_forward(
     ``put_strike`` must lie in ``(0, F]`` with ``F = spot * exp((r - q) * T)``.
     ``c`` falls and ``p`` rises in the strike and ``c(F) = p(F)``, so the root is
     unique and satisfies ``put_strike < F < K2``. ``put_strike == F`` gives the
-    forward contract itself.
+    forward contract itself. ``ValueError`` is raised for non-finite or overflowing
+    market inputs and when the put premium underflows to zero (``put_strike`` far
+    below ``F``), where no premium can be matched.
     """
-    _check_market(spot, sigma, T)
-    forward = spot * math.exp((r - q) * T)
+    _check_market(spot, r, sigma, T, q)
+    forward = _forward(spot, r, T, q)
     if not (math.isfinite(put_strike) and put_strike > 0.0):
         raise ValueError("put_strike must be finite and > 0")
     if put_strike > forward * (1.0 + _AT_FORWARD_RTOL):
@@ -90,6 +115,11 @@ def range_forward(
         return RangeForward(spot, r, sigma, T, q, put_strike, forward, forward)
 
     target = float(bsm.put_price(spot, put_strike, r, sigma, T, q))
+    if target <= 0.0:
+        raise ValueError(
+            f"the put premium underflows to zero at put_strike={put_strike:g}; "
+            "choose a put_strike closer to the forward price"
+        )
 
     def excess(strike: float) -> float:
         return float(bsm.call_price(spot, strike, r, sigma, T, q)) - target
@@ -109,7 +139,11 @@ def deferred_amount(premium: float, r: float, T: float) -> float:
     """Amount ``A = premium * exp(r T)`` paid at maturity in place of ``premium`` today."""
     if not (math.isfinite(premium) and premium >= 0.0):
         raise ValueError("premium must be finite and >= 0")
-    return premium * math.exp(r * T)
+    _check_rate_and_maturity(r, T)
+    amount = premium * _exp(r * T, "the deferred amount")
+    if not math.isfinite(amount):
+        raise ValueError("the deferred amount overflows")
+    return amount
 
 
 @dataclass(frozen=True)
@@ -153,7 +187,7 @@ def deferred_option(
     """Option bought for the deferred amount ``A = c exp(r T)``, worth nothing today."""
     if kind not in _KINDS:
         raise ValueError(f"kind must be one of {_KINDS}, got {kind!r}")
-    _check_market(spot, sigma, T)
+    _check_market(spot, r, sigma, T, q)
     if not (math.isfinite(strike) and strike > 0.0):
         raise ValueError("strike must be finite and > 0")
     price = bsm.call_price if kind == "call" else bsm.put_price
@@ -165,5 +199,5 @@ def deferred_option(
 
 def break_forward(spot: float, r: float, sigma: float, T: float, q: float = 0.0) -> DeferredOption:
     """Deferred call struck at the forward price (Boston option, cancelable forward)."""
-    _check_market(spot, sigma, T)
-    return deferred_option("call", spot * math.exp((r - q) * T), spot, r, sigma, T, q)
+    _check_market(spot, r, sigma, T, q)
+    return deferred_option("call", _forward(spot, r, T, q), spot, r, sigma, T, q)

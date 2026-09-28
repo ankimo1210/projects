@@ -89,7 +89,9 @@ def test_packages_prose_numbers_follow_the_saved_reference():
         f"先渡しが最大（{loss_pv['forward']:.4f}）": loss_pv["forward"] == max(loss_pv.values()),
         f"レンジ先渡しが最小（{loss_pv['range_forward']:.4f}）": loss_pv["range_forward"]
         == min(loss_pv.values()),
-        f"ブレークフォワードは{loss_pv['break_forward']:.4f}。": True,
+        f"ブレークフォワードは{loss_pv['break_forward']:.4f}。": loss_pv["range_forward"]
+        < loss_pv["break_forward"]
+        < loss_pv["forward"],
         f"先渡し{loss_probability['forward']:.1%}、"
         f"レンジ先渡し{loss_probability['range_forward']:.1%}、"
         f"ブレークフォワード{loss_probability['break_forward']:.1%}": loss_probability[
@@ -114,3 +116,12 @@ def test_packages_prose_numbers_follow_the_saved_reference():
         assert phrase in text, phrase
         assert holds, phrase
     assert "$K_1=0.95F$" in text
+    assert "満期に原資産を買う側（ロング）" in text
+    assert "hullkit の関数には含まれません" in text
+
+
+def test_packages_zero_cost_root_argument_has_the_right_direction():
+    notebook = nbformat.read(NOTEBOOK, as_version=4)
+    text = "\n".join(c.source for c in _lesson(notebook) if c.cell_type == "markdown")
+    assert "$c(K_2)=p(K_1)<p(F)=c(F)$" in text
+    assert "$c(K_2)=p(K_1)>p(F)=c(F)$" not in text

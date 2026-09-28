@@ -380,12 +380,17 @@ def _check_rejections():
         lambda: packages.range_forward(1.30, **{**market, "sigma": 0.0}),
         lambda: packages.deferred_option("straddle", 1.32, **market),
         lambda: packages.deferred_option("call", -1.0, **market),
+        lambda: packages.range_forward(1.30, **{**market, "r": float("inf")}),
+        lambda: packages.break_forward(**{**market, "q": float("nan")}),
+        lambda: packages.deferred_option("call", 1.32, **{**market, "r": 800.0, "T": 1.0}),
+        lambda: packages.deferred_amount(1.0, 0.02, 0.0),
+        lambda: packages.range_forward(0.01, **market),
     ):
         try:
             call()
         except ValueError:
             rejected += 1
-    _require(rejected == 5, "invalid inputs are not rejected")
+    _require(rejected == 10, "invalid inputs are not rejected")
     return {"rejected_inputs": rejected}
 
 

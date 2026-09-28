@@ -110,13 +110,13 @@
       "grid_points": 141
     },
     "rejections": {
-      "rejected_inputs": 5
+      "rejected_inputs": 10
     }
   },
   "source_sha256": {
     "scripts/build_packages_reference.py": "b5f694c0774ebd19f7c681d315218bb4cadef12781839e8747c9733b65113d57",
-    "scripts/verify_packages_numerics.py": "c0688601155db4db863b862e3d55f1217f42d34a2527d6bc7a0279e260b699f8",
-    "hullkit/src/hullkit/packages.py": "01f0daef09b19c6c1edfd4d15d912fac8ea7171226dcdd7842bfcd82231038dd"
+    "scripts/verify_packages_numerics.py": "56587c4a1c0b29b62af1134be877ecde9a72459aadaa1dd0492a596d517753e7",
+    "hullkit/src/hullkit/packages.py": "65e7e5d268ff1d5e3d2594d8c62c02e571d897781fc1db50b3eec5c3cc1cc15e"
   },
   "artifact_sha256": "8901720c4c8512b6f383344222e6648ba59e6cdddaaac103bd9a028a499789a3"
 }

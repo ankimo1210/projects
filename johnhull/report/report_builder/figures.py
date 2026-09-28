@@ -1087,7 +1087,7 @@ FIGURES: list[FigureSpec] = [
         "プレミアム後払いのコール（ブレークフォワード）",
         "行使価格 K=F のコールのプレミアムを満期に A=c·e^{rT} で払う。最大損失は A、損益分岐は K+A。",
         lambda: packages_lesson_figures()["packages_deferred"],
-        practice="A=0.03686、損益分岐1.3569。先渡しにプットを足して A を引いた形と同じで、買い手の実効購入価格は最悪でも F+A。",
+        practice="A=0.03685、損益分岐1.3569。先渡しにプットを足して A を引いた形と同じで、買い手の実効購入価格は最悪でも F+A。",
         is_new=True,
     ),
     FigureSpec(
@@ -1096,7 +1096,7 @@ FIGURES: list[FigureSpec] = [
         "現在価値がゼロでもリスクは違う",
         "先渡し・レンジ先渡し・ブレークフォワードの期待損失PV、損失確率、最大損失を並べる。",
         lambda: packages_lesson_figures()["packages_risk"],
-        practice="どれも正味PVは0だが、損失確率は51%・24%・67%、最大損失は1.32・1.254・0.037。損失確率はリスク中立の値。",
+        practice="どれも正味PVは0だが、損失確率は51%・24%・67%、最大損失は1.32・1.254・0.037（いずれも買う側）。損失確率はリスク中立の値。",
         is_new=True,
     ),
     FigureSpec(
