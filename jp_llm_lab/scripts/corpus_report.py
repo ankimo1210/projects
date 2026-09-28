@@ -10,9 +10,8 @@ from __future__ import annotations
 from collections import Counter
 
 from jp_llm_lab.data.corpus_stats import class_counts, japanese_ratio
-from jp_llm_lab.utils.io import repo_root, save_json
-
 from jp_llm_lab.data.snapshots import iter_snapshot_docs, snapshot_summary
+from jp_llm_lab.utils.io import repo_root, save_json
 
 
 def analyze(name: str, max_docs: int = 6000) -> dict:

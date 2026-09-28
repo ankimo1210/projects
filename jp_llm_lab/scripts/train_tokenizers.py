@@ -16,12 +16,11 @@ import argparse
 import time
 
 from jp_llm_lab.data.sample_corpus import load_sample_corpus
+from jp_llm_lab.data.snapshots import iter_snapshot_docs, load_snapshot_text
 from jp_llm_lab.data.tokenized_cache import tokenize_snapshot
 from jp_llm_lab.tokenization.bpe_tokenizer import BPETokenizer
 from jp_llm_lab.tokenization.hf_bpe import HFBpeTokenizer
 from jp_llm_lab.utils.io import repo_root
-
-from jp_llm_lab.data.snapshots import iter_snapshot_docs, load_snapshot_text
 
 
 def main() -> None:
