@@ -2,12 +2,14 @@
 
 No hullkit imports. The eight-path example (Tables 27.4-27.7 and the exercise
 boundary example) is recomputed with numpy.polyfit and a direct search over the
-critical prices. Exact Bermudan values come from two grid methods: quadrature of
-the lognormal transition between exercise dates, and Crank-Nicolson with
-projection onto the exercise value at the dates. The American limit comes from
-CRR and Crank-Nicolson with projection at every step. Seeded simulations fit
-each exercise policy on one sample and value it on a fresh one; the
-least-squares and boundary code here is written separately from hullkit's.
+critical prices. Exact Bermudan values come from quadrature of the lognormal
+transition between exercise dates (spacing refined until the value moves by
+less than 1e-8), checked against Crank-Nicolson with projection at the dates
+and, for three dates, against nested integrals of the Black-Scholes formula.
+The American limit comes from CRR, checked against Crank-Nicolson with
+projection at every step. Seeded simulations fit each exercise policy on one
+sample and value it on a fresh one; the least-squares and boundary code here is
+written separately from hullkit's.
 """
 
 import argparse
@@ -16,7 +18,7 @@ import math
 from pathlib import Path
 
 import numpy as np
-from scipy import stats
+from scipy import integrate, optimize, stats
 from scipy.linalg import solve_banded
 from scipy.signal import fftconvolve
 
@@ -52,7 +54,7 @@ PRINTED = {
 # Hull's contract with a volatility we assume (the book gives none for the eight paths).
 PUT = {"spot": 1.0, "strike": 1.10, "rate": 0.06, "volatility": 0.20, "maturity": 3.0}
 DATE_COUNTS = [3, 6, 12, 24, 48]
-QUAD_SPACING = (64, 128)
+QUAD_SPACING = (512, 1024)
 CN_GRIDS = ((1200, 1200), (2400, 2400))
 CRR_STEPS = (20000, 40000)
 BIAS_SIZES = [250, 500, 1000, 2000, 4000, 8000, 16000]
@@ -61,6 +63,9 @@ BIAS_EVALUATION = 10_000
 DATES_FIT = 50_000
 DATES_EVALUATION = 200_000
 SEED = 2708
+# Section 15 of the notebook: hullkit.mc.price_american_lsm with 50 exercise dates.
+SECTION_15 = {"spot": 50.0, "strike": 50.0, "rate": 0.10, "volatility": 0.40, "maturity": 5 / 12}
+SECTION_15_DATES = 50
 EXCHANGE = {
     "spots": [100.0, 100.0],
     "rate": 0.05,
@@ -135,12 +140,13 @@ def hand_boundary(paths, strike, rate, times):
     for column in range(len(times) - 1, 0, -1):
         continuation = value * math.exp(-rate * (times[column] - times[column - 1]))
         exercise = np.maximum(strike - paths[:, column], 0.0)
-        candidates = [None, *sorted(set(paths[exercise > 0, column].tolist()))]
+        # "-inf" is the never-exercise candidate; "+inf" an interval open above.
+        candidates = ["-inf", *sorted(set(paths[exercise > 0, column].tolist()))]
         averages = []
         for c in candidates:
             chosen = (
                 (exercise > 0) & (paths[:, column] <= c)
-                if c is not None
+                if c != "-inf"
                 else np.zeros(len(paths), bool)
             )
             averages.append(float(np.mean(np.where(chosen, exercise, continuation))))
@@ -148,12 +154,12 @@ def hand_boundary(paths, strike, rate, times):
         threshold = candidates[best]
         chosen = (
             (exercise > 0) & (paths[:, column] <= threshold)
-            if threshold is not None
+            if threshold != "-inf"
             else np.zeros(len(paths), bool)
         )
         value = np.where(chosen, exercise, continuation)
         when = np.where(chosen, column, when)
-        following = candidates[best + 1] if best + 1 < len(candidates) else None
+        following = candidates[best + 1] if best + 1 < len(candidates) else "+inf"
         steps[str(column)] = {
             "time": times[column - 1],
             "candidates": candidates,
@@ -310,45 +316,110 @@ def crr_american_put(p, steps):
     return float(values[0])
 
 
-def exact_put(p):
+def bermudan(args, dates, call=False):
+    """Quadrature value on the finer spacing, with its refinement change and the CN gap.
+
+    Both must be small relative to the strike (1e-8 and 1e-6).
+    """
+    quad = [quad_bermudan(*args, dates, call, m) for m in QUAD_SPACING]
+    cn = [cn_bermudan(*args, dates, call, space, time) for space, time in CN_GRIDS]
+    cn_limit = (4 * cn[1] - cn[0]) / 3
+    row = {
+        "dates": dates,
+        "quadrature_spacing": list(QUAD_SPACING),
+        "quadrature": quad,
+        "quadrature_change": abs(quad[1] - quad[0]),
+        "crank_nicolson": cn,
+        "crank_nicolson_extrapolated": cn_limit,
+        "crank_nicolson_gap": abs(quad[1] - cn_limit),
+        "value": quad[1],
+    }
+    strike = args[1]
+    if row["quadrature_change"] >= 1e-8 * strike or row["crank_nicolson_gap"] >= 1e-6 * strike:
+        raise ValueError(f"quadrature is unconverged or disagrees with CN for {dates} dates")
+    return row
+
+
+def black_scholes_put(spot, strike, rate, sigma, maturity):
+    d1 = (math.log(spot / strike) + (rate + sigma**2 / 2) * maturity) / (
+        sigma * math.sqrt(maturity)
+    )
+    d2 = d1 - sigma * math.sqrt(maturity)
+    return strike * math.exp(-rate * maturity) * stats.norm.cdf(-d2) - spot * stats.norm.cdf(-d1)
+
+
+def nested_three_dates(p):
+    """Three yearly dates: Black-Scholes after the second date, integrals before it."""
+    k, r, s = p["strike"], p["rate"], p["volatility"]
+    dt = p["maturity"] / 3
+    drift = (r - s * s / 2) * dt
+
+    def step(value, spot, boundary):
+        """Discounted expectation over one date, split at the exercise boundary."""
+        edge = (math.log(boundary / spot) - drift) / (s * math.sqrt(dt))
+
+        def integrand(z):
+            return value(spot * math.exp(drift + s * math.sqrt(dt) * z)) * stats.norm.pdf(z)
+
+        options = {"epsabs": 1e-14, "epsrel": 1e-13, "limit": 200}
+        below = integrate.quad(integrand, -12, edge, **options)[0]
+        above = integrate.quad(integrand, edge, 12, **options)[0]
+        return math.exp(-r * dt) * (below + above)
+
+    second = optimize.brentq(
+        lambda x: k - x - black_scholes_put(x, k, r, s, dt), 0.3, k - 1e-4, xtol=1e-15
+    )
+
+    def at_second(x):
+        return k - x if x <= second else black_scholes_put(x, k, r, s, dt)
+
+    first = optimize.brentq(lambda x: k - x - step(at_second, x, second), 0.3, k - 1e-4, xtol=1e-13)
+
+    def at_first(x):
+        return k - x if x <= first else step(at_second, x, second)
+
+    return {"boundaries": [first, second], "value": step(at_first, p["spot"], first)}
+
+
+def american_put(p, crr_steps, cn_grids):
+    """CRR (average of N and N+1 steps, extrapolated), checked by CN with projection."""
     args = (p["spot"], p["strike"], p["rate"], 0.0, p["volatility"], p["maturity"])
-    rows = []
-    for dates in DATE_COUNTS:
-        quad = [quad_bermudan(*args, dates, False, m) for m in QUAD_SPACING]
-        cn = [cn_bermudan(*args, dates, False, space, time) for space, time in CN_GRIDS]
-        quad_limit = (4 * quad[1] - quad[0]) / 3
-        cn_limit = (4 * cn[1] - cn[0]) / 3
-        if abs(quad_limit - cn_limit) >= 2e-5:
-            raise ValueError(f"quadrature and Crank-Nicolson disagree for {dates} dates")
-        rows.append(
-            {
-                "dates": dates,
-                "quadrature": quad,
-                "quadrature_extrapolated": quad_limit,
-                "crank_nicolson": cn,
-                "crank_nicolson_extrapolated": cn_limit,
-                "value": (quad_limit + cn_limit) / 2,
-                "half_spread": abs(quad_limit - cn_limit) / 2,
-            }
-        )
-    crr = [(crr_american_put(p, n) + crr_american_put(p, n + 1)) / 2 for n in CRR_STEPS]
+    crr = [(crr_american_put(p, n) + crr_american_put(p, n + 1)) / 2 for n in crr_steps]
     cn = [
         cn_bermudan(*args, 1, False, space, time, exercise_every_step=True)
-        for space, time in ((2000, 4000), (4000, 8000))
+        for space, time in cn_grids
     ]
     crr_limit, cn_limit = 2 * crr[1] - crr[0], (4 * cn[1] - cn[0]) / 3
-    if abs(crr_limit - cn_limit) >= 5e-5:
-        raise ValueError("CRR and Crank-Nicolson American put references disagree")
-    american = {
-        "crr_steps": list(CRR_STEPS),
+    return {
+        "crr_steps": list(crr_steps),
         "crr_averaged": crr,
         "crr_extrapolated": crr_limit,
         "crank_nicolson": cn,
         "crank_nicolson_extrapolated": cn_limit,
-        "value": (crr_limit + cn_limit) / 2,
-        "half_spread": abs(crr_limit - cn_limit) / 2,
+        "crank_nicolson_gap": abs(crr_limit - cn_limit),
+        "value": crr_limit,
     }
-    return {"bermudan": rows, "american": american}
+
+
+def exact_put(p):
+    args = (p["spot"], p["strike"], p["rate"], 0.0, p["volatility"], p["maturity"])
+    rows = [bermudan(args, dates) for dates in DATE_COUNTS]
+    nested = nested_three_dates(p)
+    nested["gap"] = abs(nested["value"] - rows[0]["value"])
+    american = american_put(p, CRR_STEPS, ((2000, 4000), (4000, 8000)))
+    if nested["gap"] >= 1e-8 or american["crank_nicolson_gap"] >= 5e-6:
+        raise ValueError("the exact put references disagree")
+    return {"bermudan": rows, "nested_three_dates": nested, "american": american}
+
+
+def section_15(p=SECTION_15):
+    """The comparison put of notebook §15: its 50-date Bermudan floor and American value."""
+    args = (p["spot"], p["strike"], p["rate"], 0.0, p["volatility"], p["maturity"])
+    row = bermudan(args, SECTION_15_DATES)
+    american = american_put(p, (5000, 10000), ((2000, 4000), (4000, 8000)))
+    if american["crank_nicolson_gap"] >= 5e-5:
+        raise ValueError("the section 15 American references disagree")
+    return {"parameters": p, "bermudan": row, "american": american}
 
 
 # --- Seeded simulations ---------------------------------------------------------------
@@ -478,7 +549,7 @@ def margrabe(p):
 
 
 def _estimate(discounted, control, expected):
-    """Raw and control-variate means with standard errors (Hull §21.3)."""
+    """Raw and control-variate means with standard errors (Hull §21.7, eq. 21.20)."""
     n = discounted.size
     adjusted = discounted - (control - expected)
     return {
@@ -530,11 +601,21 @@ def bias_study(p, exact):
 
 
 def dates_study(p, exact_rows, american):
+    """Fit on one sample, value on a fresh one; pair the policies and check the sample.
+
+    The three policies are valued on the same fresh paths, so their differences
+    are measured path by path. The fresh paths' discounted European put payoff
+    against Black-Scholes shows how lucky each fresh sample is.
+    """
     payoff = _put(p["strike"])
     out = {"counts": DATE_COUNTS, "fit_paths": DATES_FIT, "evaluation_paths": DATES_EVALUATION}
     keys = ("lsm2", "lsm3", "boundary")
     for key in keys:
         out[key] = {"in_sample": [], "value": [], "standard_error": []}
+    pairs = {"lsm3_minus_lsm2": ("lsm3", "lsm2"), "boundary_minus_lsm2": ("boundary", "lsm2")}
+    out["paired"] = {name: {"mean": [], "standard_error": []} for name in pairs}
+    european = black_scholes_put(p["spot"], p["strike"], p["rate"], p["volatility"], p["maturity"])
+    out["european"] = {"value": european, "mean": [], "standard_error": []}
     for dates in DATE_COUNTS:
         times = [p["maturity"] * k / dates for k in range(1, dates + 1)]
         fit = put_paths(DATES_FIT, dates, [SEED, dates, 0], p)
@@ -554,6 +635,13 @@ def dates_study(p, exact_rows, american):
             out[key]["in_sample"].append(float(inside.mean()))
             out[key]["value"].append(mean)
             out[key]["standard_error"].append(error)
+        for name, (first, second) in pairs.items():
+            mean, error = _mean(results[first][1] - results[second][1])
+            out["paired"][name]["mean"].append(mean)
+            out["paired"][name]["standard_error"].append(error)
+        mean, error = _mean(payoff(fresh[:, -1]) * math.exp(-p["rate"] * p["maturity"]))
+        out["european"]["mean"].append(mean)
+        out["european"]["standard_error"].append(error)
     out["exact"] = [row["value"] for row in exact_rows]
     out["american"] = american["value"]
     return out
@@ -564,12 +652,9 @@ def exchange_study(p=EXCHANGE):
     q1, q2 = p["dividend_yields"]
     v1, v2 = p["volatilities"]
     ratio_vol = math.sqrt(v1**2 + v2**2 - 2 * p["correlation"] * v1 * v2)
-    ratio = (s1 / s2, 1.0, q2, q1, ratio_vol, p["maturity"], p["dates"], True)
-    quad = [s2 * quad_bermudan(*ratio, m) for m in QUAD_SPACING]
-    cn = [s2 * cn_bermudan(*ratio, space, time) for space, time in CN_GRIDS]
-    quad_limit, cn_limit = (4 * quad[1] - quad[0]) / 3, (4 * cn[1] - cn[0]) / 3
-    if abs(quad_limit - cn_limit) >= 2e-5:
-        raise ValueError("quadrature and Crank-Nicolson disagree for the Bermudan exchange option")
+    ratio = (s1 / s2, 1.0, q2, q1, ratio_vol, p["maturity"])
+    row = bermudan(ratio, p["dates"], call=True)
+    exact = s2 * row["value"]
     times = [p["maturity"] * k / p["dates"] for k in range(1, p["dates"] + 1)]
 
     def payoff(states):
@@ -584,12 +669,8 @@ def exchange_study(p=EXCHANGE):
     return {
         "parameters": p,
         "ratio_volatility": ratio_vol,
-        "quadrature": quad,
-        "quadrature_extrapolated": quad_limit,
-        "crank_nicolson": cn,
-        "crank_nicolson_extrapolated": cn_limit,
-        "exact": (quad_limit + cn_limit) / 2,
-        "half_spread": abs(quad_limit - cn_limit) / 2,
+        "ratio_bermudan": row,
+        "exact": exact,
         "european": euro,
         "fit_paths": DATES_FIT,
         "evaluation_paths": DATES_EVALUATION,
@@ -611,6 +692,7 @@ def build():
         "bias": bias_study(PUT, three),
         "dates": dates_study(PUT, exact["bermudan"], exact["american"]),
         "exchange": exchange_study(),
+        "section_15": section_15(),
     }
 
 

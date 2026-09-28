@@ -93,19 +93,19 @@ def _regression(data):
         name="即時行使の価値 K−S",
         line=dict(color=_COLORS["guide"], dash="dash", width=2),
     )
-    spots = [
-        s
-        for t in ("2", "1")
-        for s, i in zip(steps[t]["spots"], steps[t]["paths"], strict=True)
-        if i in steps[t]["exercised"]
-    ]
-    fig.add_scatter(
-        x=spots,
-        y=[strike - s for s in spots],
-        mode="markers",
-        name="行使する経路",
-        marker=dict(color=_COLORS["reference"], symbol="x", size=9),
-    )
+    for time, color in (("2", _COLORS["late"]), ("1", _COLORS["early"])):
+        spots = [
+            s
+            for s, i in zip(steps[time]["spots"], steps[time]["paths"], strict=True)
+            if i in steps[time]["exercised"]
+        ]
+        fig.add_scatter(
+            x=spots,
+            y=[strike - s for s in spots],
+            mode="markers",
+            name=f"{_TIMES[time]} で行使する経路",
+            marker=dict(color=color, symbol="x", size=10),
+        )
     return _finish(
         fig,
         "american_mc_regression",
@@ -192,13 +192,17 @@ def _dates(data):
         line=dict(color=_COLORS["reference"], width=2),
         marker=dict(size=7),
     )
-    for key, name, color, symbol in (
-        ("lsm2", "最小二乗法（2次）", _COLORS["late"], "circle-open"),
-        ("lsm3", "最小二乗法（3次）", _COLORS["cubic"], "square-open"),
-        ("boundary", "境界のパラメータ化", _COLORS["early"], "diamond-open"),
+    # The three policies share the dates; small offsets on the log axis keep the
+    # markers and error bars apart, and the hover shows the true count.
+    for key, name, color, symbol, shift in (
+        ("lsm2", "最小二乗法（2次）", _COLORS["late"], "circle-open", 0.93),
+        ("lsm3", "最小二乗法（3次）", _COLORS["cubic"], "square-open", 1.0),
+        ("boundary", "境界のパラメータ化", _COLORS["early"], "diamond-open", 1.075),
     ):
         fig.add_scatter(
-            x=counts,
+            x=[n * shift for n in counts],
+            customdata=counts,
+            hovertemplate="行使日 %{customdata} 回<br>%{y:.5f}<extra>" + name + "</extra>",
             y=dates[key]["value"],
             error_y=dict(
                 type="data", array=[2 * e for e in dates[key]["standard_error"]], thickness=1

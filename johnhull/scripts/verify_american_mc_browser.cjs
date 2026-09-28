@@ -38,12 +38,12 @@ async function numeric(plot, key) {
   const { meta, traces } = await plot.evaluate(el => ({ meta: el.layout.meta,
     traces: el._fullData.filter(t => t.visible === true)
       .map(t => ({ x: Array.from(t.x || []), y: Array.from(t.y || []),
-        error: Array.from(t.error_y?.array || []) })) }));
+        error: Array.from(t.error_y?.array || []), custom: Array.from(t.customdata || []) })) }));
   check(meta.section === '27.8' && meta.figure === key, `${key}: metadata`);
   const hand = data.hand_example;
   if (key === 'american_mc_regression') {
     const steps = hand.least_squares.steps, strike = hand.strike;
-    check(traces.length === 6, 'two regressions, the exercise value and the exercised paths');
+    check(traces.length === 7, 'two regressions, the exercise value and the exercised paths by date');
     const grid = Array.from({ length: 73 }, (_, i) => 0.74 + (1.10 - 0.74) * i / 72);
     ['2', '1'].forEach((time, index) => {
       const step = steps[time], [a, b, c] = step.coefficients;
@@ -53,10 +53,12 @@ async function numeric(plot, key) {
       arrayClose(traces[2 * index + 1].y, grid.map(s => a + b * s + c * s * s), `t=${time} regression`);
     });
     arrayClose(traces[4].y, [strike - 0.74, 0], 'exercise value');
-    const exercised = ['2', '1'].flatMap(time => steps[time].spots
-      .filter((_, i) => steps[time].exercised.includes(steps[time].paths[i])));
-    arrayClose(traces[5].x, exercised, 'exercised spots');
-    arrayClose(traces[5].y, exercised.map(s => strike - s), 'exercised values');
+    ['2', '1'].forEach((time, index) => {
+      const exercised = steps[time].spots
+        .filter((_, i) => steps[time].exercised.includes(steps[time].paths[i]));
+      arrayClose(traces[5 + index].x, exercised, `t=${time} exercised spots`);
+      arrayClose(traces[5 + index].y, exercised.map(s => strike - s), `t=${time} exercised values`);
+    });
   } else if (key === 'american_mc_boundary') {
     const steps = hand.boundary.steps;
     check(traces.length === 4, 'two average curves and two optimal intervals');
@@ -81,8 +83,10 @@ async function numeric(plot, key) {
     check(traces.length === 5, 'exact values, three estimates and the American limit');
     arrayClose(traces[0].x, dates.counts, 'exact dates');
     arrayClose(traces[0].y, dates.exact, 'exact Bermudan');
+    const shifts = [0.93, 1.0, 1.075];
     ['lsm2', 'lsm3', 'boundary'].forEach((name, index) => {
-      arrayClose(traces[index + 1].x, dates.counts, `${name} dates`);
+      arrayClose(traces[index + 1].x, dates.counts.map(n => n * shifts[index]), `${name} dates`);
+      arrayClose(traces[index + 1].custom, dates.counts, `${name} hover dates`);
       arrayClose(traces[index + 1].y, dates[name].value, `dates ${name}`);
       errorBars(traces[index + 1], dates[name].standard_error, `dates ${name}`);
     });

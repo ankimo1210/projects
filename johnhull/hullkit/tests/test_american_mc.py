@@ -59,7 +59,8 @@ def test_least_squares_reproduces_tables_27_5_to_27_7():
     assert first.coefficients == pytest.approx([2.037512, -3.335443, 1.356457], abs=1e-6)
     assert second.coefficients == pytest.approx([-1.070, 2.983, -1.813], abs=1e-3)
     assert first.coefficients == pytest.approx([2.038, -3.335, 1.356], abs=1e-3)
-    # Hull's continuation values use the rounded coefficients, so they differ by up to 5.4e-4.
+    # Hull's continuation values use the printed coefficients (c = -1.813, though -1.813576
+    # rounds to -1.814), so the unrounded fit differs from them by up to 5.4e-4.
     assert second.continuation == pytest.approx(
         [0.0367406, 0.0458983, 0.1175268, 0.1519692, 0.1564179], abs=1e-7
     )
@@ -79,11 +80,13 @@ def test_least_squares_reproduces_tables_27_5_to_27_7():
     assert result.cash_flows == pytest.approx(table_27_7, abs=1e-12)
     assert result.continuation_value == pytest.approx(0.1144343, abs=1e-7)
     assert round(result.continuation_value, 4) == 0.1144
+    discounted = result.cash_flows @ np.exp(-RATE * np.array(TIMES))
+    assert result.standard_error == pytest.approx(discounted.std(ddof=1) / math.sqrt(8), abs=1e-15)
     assert result.exercise_now == pytest.approx(0.10, abs=1e-12)
     assert result.price == result.continuation_value
 
 
-def test_rounded_coefficients_give_hulls_printed_continuation_values():
+def test_printed_coefficients_give_hulls_printed_continuation_values():
     rounded = {2: (-1.070, 2.983, -1.813), 1: (2.038, -3.335, 1.356)}
     printed = {
         2: [0.0369, 0.0461, 0.1176, 0.1520, 0.1565],
@@ -251,6 +254,154 @@ def test_degree_and_kind_are_validated():
     states = np.stack([PATHS, PATHS], axis=2)
     with pytest.raises(ValueError, match="one state variable"):
         exercise_boundary(states, lambda s: put(s[:, 0]), RATE, TIMES)
+
+
+UNEVEN = (0.25, 1.0, 1.1, 2.5, 3.0)
+
+
+def _gbm(n, times, seed, sigma=0.25):
+    rng = np.random.default_rng(seed)
+    dt = np.diff(np.concatenate([[0.0], times]))
+    steps = (RATE - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * rng.standard_normal(
+        (n, len(times))
+    )
+    return np.column_stack([np.ones(n), np.exp(np.cumsum(steps, axis=1))])
+
+
+def _direct_least_squares(paths, times):
+    """Path-by-path backward induction with each cash flow's own time and numpy.polyfit."""
+    cash, when = put(paths[:, -1]), np.full(len(paths), times[-1])
+    rules = []
+    for column in range(len(times) - 1, 0, -1):
+        now_time, spots = times[column - 1], paths[:, column]
+        exercise = put(spots)
+        itm = exercise > 0
+        c, b, a = np.polyfit(spots[itm], cash[itm] * np.exp(-RATE * (when[itm] - now_time)), 2)
+        rules.append((a, b, c))
+        now = itm & (exercise > a + b * spots + c * spots**2)
+        cash, when = np.where(now, exercise, cash), np.where(now, now_time, when)
+    return float((cash * np.exp(-RATE * when)).mean()), rules[::-1]
+
+
+def _direct_boundary(paths, times):
+    """Hull's boundary search, trying every critical price on the discounted path values."""
+    value, thresholds = put(paths[:, -1]), []
+    for column in range(len(times) - 1, 0, -1):
+        continuation = value * np.exp(-RATE * (times[column] - times[column - 1]))
+        spots = paths[:, column]
+        exercise = put(spots)
+        itm = exercise > 0
+        candidates = [-math.inf, *np.unique(spots[itm])]
+        averages = [np.where(itm & (spots <= c), exercise, continuation).mean() for c in candidates]
+        best = candidates[int(np.argmax(averages))]
+        thresholds.append(float(best))
+        value = np.where(itm & (spots <= best), exercise, continuation)
+    return float(value.mean() * np.exp(-RATE * times[0])), thresholds[::-1]
+
+
+def _direct_apply(paths, times, rule):
+    """First date where the path is in the money and ``rule`` says exercise, discounted to 0."""
+    value, alive = np.zeros(len(paths)), np.ones(len(paths), dtype=bool)
+    for column, time in enumerate(times, start=1):
+        exercise = put(paths[:, column])
+        now = alive & (exercise > 0) & rule(column, paths[:, column], exercise)
+        value[now] = exercise[now] * math.exp(-RATE * time)
+        alive &= ~now
+    return float(value.mean())
+
+
+def test_uneven_exercise_times_match_a_direct_backward_induction():
+    fit, fresh = _gbm(3000, UNEVEN, 31), _gbm(3000, UNEVEN, 32)
+    last = len(UNEVEN)
+    value, rules = _direct_least_squares(fit, UNEVEN)
+    lsm = least_squares(fit, put, RATE, UNEVEN)
+    assert lsm.continuation_value == pytest.approx(value, abs=1e-12)
+    for step, rule in zip(lsm.steps, rules, strict=True):
+        assert step.coefficients == pytest.approx(rule, rel=1e-8, abs=1e-8)
+
+    def regression(column, spots, exercise):
+        if column == last:
+            return np.ones_like(spots, dtype=bool)
+        a, b, c = lsm.steps[column - 1].coefficients
+        return exercise > a + b * spots + c * spots**2
+
+    applied = apply_least_squares(lsm, fresh, put, RATE, UNEVEN)
+    assert applied.continuation_value == pytest.approx(
+        _direct_apply(fresh, UNEVEN, regression), abs=1e-12
+    )
+
+    value, thresholds = _direct_boundary(fit, UNEVEN)
+    boundary = exercise_boundary(fit, put, RATE, UNEVEN)
+    assert list(boundary.boundary) == thresholds
+    assert boundary.continuation_value == pytest.approx(value, abs=1e-12)
+    critical = [*thresholds, math.inf]
+    applied = apply_boundary(boundary, fresh, put, RATE, UNEVEN)
+    assert applied.continuation_value == pytest.approx(
+        _direct_apply(fresh, UNEVEN, lambda column, spots, _: spots <= critical[column - 1]),
+        abs=1e-12,
+    )
+
+
+def test_tied_boundary_averages_keep_the_first_critical_price():
+    # With no discounting, exercising the second path gains exactly zero, so the
+    # critical prices 0.5 and 0.75 tie; the lower one (the first maximum) is kept.
+    paths = np.array([[1.0, 0.5, 1.5], [1.0, 0.75, 0.75], [1.0, 0.875, 0.25]])
+    put_result = exercise_boundary(paths, lambda s: np.maximum(1.0 - s, 0.0), 0.0, (1.0, 2.0))
+    step = put_result.steps[0]
+    assert list(step.averages) == pytest.approx([1 / 3, 0.5, 0.5, 0.875 / 3], abs=1e-15)
+    assert step.averages[1] == step.averages[2]
+    assert (step.threshold, step.interval) == (0.5, (0.5, 0.75))
+    call_result = exercise_boundary(
+        -paths, lambda s: np.maximum(s + 1.0, 0.0), 0.0, (1.0, 2.0), kind="call"
+    )
+    assert (call_result.steps[0].threshold, call_result.steps[0].interval) == (-0.5, (-0.75, -0.5))
+
+
+def test_problem_27_22_interval_is_unbounded_when_every_in_the_money_path_is_exercised():
+    put_result = exercise_boundary(PATHS, lambda s: np.maximum(1.13 - s, 0.0), RATE, TIMES)
+    assert put_result.steps[0].interval == (1.11, math.inf)
+    call_result = exercise_boundary(
+        -PATHS, lambda s: np.maximum(s + 1.13, 0.0), RATE, TIMES, kind="call"
+    )
+    assert call_result.steps[0].interval == (-math.inf, -1.11)
+
+
+def test_a_regression_needs_only_as_many_in_the_money_paths_as_coefficients():
+    result = least_squares(PATHS[:5], put, RATE, TIMES)
+    assert result.steps[1].paths.size == 3
+    assert result.steps[1].coefficients.size == 3
+
+
+def test_a_skipped_regression_never_exercises_on_new_paths():
+    fitted = least_squares(PATHS[[0, 1, 4]], put, RATE, TIMES)
+    applied = apply_least_squares(fitted, PATHS, put, RATE, TIMES)
+    assert not applied.cash_flows[:, :2].any()
+    assert applied.cash_flows[:, 2] == pytest.approx(put(PATHS[:, 3]), abs=1e-15)
+
+
+def test_numpy_integer_degree_is_accepted():
+    base = least_squares(PATHS, put, RATE, TIMES)
+    same = least_squares(PATHS, put, RATE, TIMES, degree=np.int64(2))
+    assert same.continuation_value == base.continuation_value
+    assert type(same.degree) is int and same.degree == 2
+    for bad in (True, 2.0, 0):
+        with pytest.raises(ValueError, match="degree"):
+            least_squares(PATHS, put, RATE, TIMES, degree=bad)
+
+
+def test_applied_times_may_differ_from_the_fitted_ones_only_by_rounding():
+    lsm = least_squares(PATHS, put, RATE, TIMES)
+    boundary = exercise_boundary(PATHS, put, RATE, TIMES)
+    nearly = (1.0 + 1e-15, 2.0, 3.0)
+    assert apply_least_squares(lsm, PATHS, put, RATE, nearly).continuation_value == pytest.approx(
+        lsm.continuation_value, abs=1e-14
+    )
+    assert apply_boundary(boundary, PATHS, put, RATE, nearly).continuation_value == pytest.approx(
+        boundary.continuation_value, abs=1e-14
+    )
+    for apply, fitted in ((apply_least_squares, lsm), (apply_boundary, boundary)):
+        with pytest.raises(ValueError, match="fitted exercise times"):
+            apply(fitted, PATHS, put, RATE, (1.0 + 1e-9, 2.0, 3.0))
 
 
 @pytest.mark.parametrize("kind", ["put", "call"])

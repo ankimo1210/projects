@@ -1,8 +1,9 @@
 """Fresh-check vol06 §27.8 and preserve every cell outside lesson 14.
 
 The old LSM demonstration heading becomes §15, a comparison of CRR, finite
-differences and LSM, with a new introduction pinned here; its other cells stay
-as they were at M16.
+differences and LSM, with a new introduction pinned here. Two sentences that
+§14 made inaccurate are revised (the chart note on LSM's error and the summary
+row on early exercise); every other cell stays as it was at M16.
 """
 
 import argparse
@@ -27,8 +28,16 @@ INTRODUCTION = """## 15. 三つの数値解法の比較（CRR・FD・LSM）
 
 同じアメリカン・プットを CRR ツリー、有限差分法（Crank–Nicolson）、最小二乗法モンテカルロ（LSM、§14）で評価し、
 計算時間と誤差を比べる。ここでの LSM（`hullkit.mc.price_american_lsm`）は回帰と評価に同じ経路を使う簡易版で、
-§14.4 の「推定に使った経路での評価」にあたる。"""
+§14.4 の「推定に使った経路での評価」にあたる。行使できるのは50回なので、その厳密値（バミューダン）4.2790でも
+連続行使の4.2842より0.0052低い。LSM にはさらに、2次の基底による行使の判断の劣化と、1回の実行のモンテカルロ誤差が加わる。"""
 RENUMBERED = {"## 15. 練習問題": "## 16. 練習問題"}
+REVISED = {
+    '"注: LSM はパス数で誤差が減るが分散が大きい／CRR は参照と同族でやや有利",': (
+        '"注: LSM は行使日50回と2次の基底のため、パス数を増やしても誤差は0にならない（§14.5）\\n"\n'
+        '         "CRR は参照と同族でやや有利",'
+    ),
+    "| 1/√N、早期行使は LSM 必要 |": "| 1/√N、早期行使は回帰（LSM）か境界のパラメータ化（§14） |",
+}
 KEYS = {"american_mc_regression", "american_mc_boundary", "american_mc_bias", "american_mc_dates"}
 EARLIER = {
     "27.1": {"alternative_cev", "alternative_merton", "alternative_poisson", "alternative_vg"},
@@ -71,8 +80,8 @@ def _base():
 
 
 def _renumber(cells):
-    """Base cells as M17 should keep them: the §15 introduction replaced, one heading renumbered."""
-    result = []
+    """Base cells as M17 should keep them: §15's introduction, one heading and two sentences."""
+    result, revised = [], dict.fromkeys(REVISED, 0)
     for original in cells:
         cell = copy.deepcopy(original)
         if cell.cell_type == "markdown" and cell.source.startswith(REPLACED):
@@ -80,7 +89,12 @@ def _renumber(cells):
         for old, new in RENUMBERED.items():
             if cell.cell_type == "markdown" and cell.source.startswith(old):
                 cell.source = new + cell.source[len(old) :]
+        for old, new in REVISED.items():
+            revised[old] += cell.source.count(old)
+            cell.source = cell.source.replace(old, new)
         result.append(cell)
+    if any(count != 1 for count in revised.values()):
+        raise ValueError(f"each revised sentence must occur once at M16: {revised}")
     return result
 
 
@@ -164,6 +178,9 @@ def negative_controls(current, base, fresh):
                     return
         raise ValueError(f"missing {key}")
 
+    def chart_note(nb):
+        next(c for c in nb.cells if "ax7.text(" in c.source).source += " "
+
     def heading(nb):
         cell = next(c for c in nb.cells if c.source.startswith("## まとめ"))
         cell.source = cell.source.replace("## まとめ", "## 17. まとめ", 1)
@@ -181,6 +198,7 @@ def negative_controls(current, base, fresh):
         ("§13 source changed", source),
         ("§27.8 saved bias changed", lambda nb: plot(nb, "american_mc_bias")),
         ("§15 introduction changed", introduction),
+        ("§15 chart note changed", chart_note),
         ("unlisted heading changed", heading),
         ("§27.7 saved nodes changed", prior_plot),
     ):

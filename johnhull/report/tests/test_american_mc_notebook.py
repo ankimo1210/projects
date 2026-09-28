@@ -82,6 +82,12 @@ def test_american_mc_prose_numbers_follow_the_saved_reference():
     american_exchange = two_asset["analytic"]["american_exchange"]["value"]
     problem = hand["problem_27_22"]
     out = exchange["out_of_sample"]
+    claims_run = measured["claims"]
+    paired = dates["paired"]["lsm3_minus_lsm2"]
+    at = {n: i for i, n in enumerate(dates["counts"])}
+    european = dates["european"]
+    european_z = (european["mean"][at[24]] - european["value"]) / european["standard_error"][at[24]]
+    exchange_z = (out["value"] - exchange["exact"]) / out["standard_error"]
     late_averages = "0.0636・0.0813・0.1032・0.0982・0.0938・0.0963"
     early_averages = "0.0972・0.1008・0.1283・0.1202・0.1215・0.1228"
     exact_values = "・".join(f"{row['value']:.4f}" for row in data["exact"]["bermudan"])
@@ -94,17 +100,22 @@ def test_american_mc_prose_numbers_follow_the_saved_reference():
         )
         == 0.00054,
         f"1年目の経路1は{lsm['steps']['1']['continuation'][0]:.4f}": True,
+        "2年目の $c$ は丸めれば −1.814 だが、印刷は −1.813": round(late[2], 3) == -1.814
+        and hand["printed"]["coefficients"]["2"][2] == -1.813
+        and measured["printed_rounding"]["coefficients_off_half_unit"] == ["2:c"],
         "10個とも $6\\times10^{-5}$ 以内": measured["printed_rounding"]["continuation_rounded"]
         < 6e-5,
         late_averages: _printed(boundary["steps"]["2"]["averages"], late_averages),
         early_averages: _printed(boundary["steps"]["1"]["averages"], early_averages),
         f"丸めない平均{boundary['value_at_1']:.6f}からは{boundary['value']:.5f}": True,
         f"厳密値は{exact3['value']:.6f}": exact3["dates"] == 3,
-        "$3\\times10^{-7}$ 以内で一致": 2 * exact3["half_spread"] < 3e-7,
+        "刻みを半分にしても変化は $10^{-8}$ 未満": exact3["quadrature_change"] < 1e-8,
+        "Crank–Nicolson とは $4\\times10^{-7}$ 以内で一致": exact3["crank_nicolson_gap"] < 4e-7,
         f"推定と評価を{bias['replications']}回": True,
         "評価は毎回新しい1万本": bias["evaluation_paths"] == 10_000,
         "7つの経路数すべて": len(bias["sizes"]) == 7
-        and measured["claims"]["boundary_in_sample_above_exact"],
+        and claims_run["boundary_in_sample_above_exact"],
+        "差はどれも標準誤差の2倍を超えた": claims_run["boundary_in_sample_above_exact"],
         f"250本で {_signed(bias['boundary_in']['mean'][0] - bias['exact'], 4)}": True,
         f"16000本でも {_signed(bias['boundary_in']['mean'][-1] - bias['exact'], 5)}": bias["sizes"][
             -1
@@ -126,7 +137,16 @@ def test_american_mc_prose_numbers_follow_the_saved_reference():
         ],
         f"{out['value']:.3f}±{out['standard_error']:.3f}": True,
         f"厳密値{exchange['exact']:.4f}": True,
-        "1標準誤差以内で一致": measured["claims"]["exchange_within_one_error"],
+        f"差は標準誤差の{abs(exchange_z):.1f}倍": claims_run["exchange_within_two_errors"],
+        "12回までは標準誤差の2倍に届かない": claims_run[
+            "cubic_and_quadratic_within_two_errors_to_12_dates"
+        ],
+        f"24回で {_signed(paired['mean'][at[24]], 5)}（差の標準誤差{paired['standard_error'][at[24]]:.5f}）、"
+        f"48回で {_signed(paired['mean'][at[48]], 5)}（同{paired['standard_error'][at[48]]:.5f}）": claims_run[
+            "cubic_above_quadratic_at_24_and_48_dates"
+        ],
+        "24回で三つとも厳密値を上回った": claims_run["all_three_above_exact_at_24_dates"],
+        f"標準誤差の{european_z:.1f}倍高い": claims_run["european_check_high_only_at_24_dates"],
         f"連続行使の{american_exchange:.4f}（§13.5）との差"
         f"{american_exchange - exchange['exact']:.3f}": True,
         f"最小二乗法{problem['least_squares']['value']:.4f}、境界{problem['boundary']['value']:.4f}": True,
@@ -139,3 +159,21 @@ def test_american_mc_prose_numbers_follow_the_saved_reference():
         assert phrase in text, phrase
         assert holds, phrase
     assert math.isclose(round(0.1283 * math.exp(-0.06), 4), 0.1208)
+
+
+def test_section_15_introduction_follows_the_saved_bermudan_floor():
+    root = PROJECT / "docs/validation"
+    data = json.loads((root / "section-27-8/reference.json").read_text(encoding="utf-8"))
+    floor = data["section_15"]
+    bermudan, american = floor["bermudan"]["value"], floor["american"]["value"]
+    notebook = nbformat.read(NOTEBOOK, as_version=4)
+    text = next(c.source for c in notebook.cells if c.source.startswith("## 15. "))
+    assert floor["bermudan"]["dates"] == 50 and "行使できるのは50回" in text
+    assert "n_steps=50" in "\n".join(
+        c.source for c in notebook.cells if "price_american_lsm" in c.source
+    )
+    phrase = (
+        f"その厳密値（バミューダン）{bermudan:.4f}でも\n"
+        f"連続行使の{american:.4f}より{american - bermudan:.4f}低い"
+    )
+    assert phrase in text
