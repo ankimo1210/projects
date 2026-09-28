@@ -1,0 +1,390 @@
+{
+  "section": "27.8",
+  "milestone": "M17",
+  "status": "PASS",
+  "numerical": {
+    "method": "Hull's eight paths by numpy.polyfit and a direct boundary search; exact Bermudan values by lognormal quadrature, checked by Crank-Nicolson and (three dates) nested Black-Scholes integrals; American limit by CRR, checked by Crank-Nicolson; seeded fit/fresh simulations and paired policy differences recomputed with hullkit",
+    "measured": {
+      "hand_gap": 5.861977570020827e-14,
+      "bias_gap": 0.0,
+      "dates_gap": 0.0,
+      "exchange_gap": 0.0,
+      "printed_rounding": {
+        "coefficients": 0.0005761829424135723,
+        "coefficients_off_half_unit": [
+          "2:c"
+        ],
+        "continuation_exact": 0.0005378705561829289,
+        "continuation_rounded": 5.829999999999724e-05,
+        "boundary_averages": 4.999999999995286e-05
+      },
+      "exact_value_checks": {
+        "quadrature_change": 2.6854623941252598e-09,
+        "crank_nicolson_gap": 3.8994532960967554e-07,
+        "nested_three_dates_gap": 8.487334168805205e-10,
+        "american_crank_nicolson_gap": 2.6029694411289217e-06,
+        "section_15_quadrature_change": 1.2758722967021185e-07,
+        "section_15_crank_nicolson_gap": 1.4794617442248637e-07,
+        "section_15_american_crank_nicolson_gap": 2.3128464261112924e-05
+      },
+      "bias_z": {
+        "lsm_in": [
+          -0.7700149090372956,
+          -0.20604614313714129,
+          -0.9030997694261653,
+          -0.7396167382334045,
+          -0.10036787932396522,
+          1.4629544962627599,
+          -0.8068855692421877
+        ],
+        "lsm_out": [
+          -7.409640865325663,
+          -4.13428416756335,
+          -2.718959107821056,
+          -0.30453409541148946,
+          0.8196504169262371,
+          0.568685661055812,
+          -1.7656074383230769
+        ],
+        "boundary_in": [
+          3.9796824050494117,
+          4.270927429809804,
+          3.5048800948690846,
+          3.4773017710398406,
+          3.3614511429357226,
+          4.209632054891446,
+          2.0796305599122276
+        ],
+        "boundary_out": [
+          -10.64356194604394,
+          -7.807229054916023,
+          -5.656534832798229,
+          -2.6920490567825186,
+          -1.1772278169837396,
+          -0.4643185876301638,
+          -2.260565047286107
+        ]
+      },
+      "dates_z": {
+        "lsm2": [
+          -0.434999368093967,
+          1.210113417222678,
+          -0.6757186256720731,
+          0.08429707781782153,
+          -1.9530101597248564
+        ],
+        "lsm3": [
+          -0.30955283333849326,
+          1.2940583869980544,
+          -0.31622392253386283,
+          1.5503347984039344,
+          -1.1922348936055875
+        ],
+        "boundary": [
+          -0.48058223821789814,
+          1.1923305132399684,
+          -0.7413605162793918,
+          1.7821122192329155,
+          -1.748912827915757
+        ]
+      },
+      "paired_z": {
+        "lsm3_minus_lsm2": [
+          1.1404183416210647,
+          0.4408275283621329,
+          1.690565530410561,
+          6.066982248059863,
+          2.6448599640888886
+        ],
+        "boundary_minus_lsm2": [
+          -0.22462739409388788,
+          -0.2064272202902579,
+          -0.24150820985956714,
+          5.86073212701644,
+          0.6977869889492972
+        ]
+      },
+      "european_z": [
+        -1.7790830219871716,
+        0.6971782508487434,
+        0.9435221993782533,
+        2.886112102408519,
+        -0.1487379541782605
+      ],
+      "exchange_z": -0.8014908700757398,
+      "claims": {
+        "boundary_in_sample_above_exact": true,
+        "boundary_out_of_sample_below_exact_to_1000_paths": true,
+        "lsm_out_of_sample_below_exact_to_1000_paths": true,
+        "lsm_in_sample_within_two_errors": true,
+        "out_of_sample_never_two_errors_above_exact": true,
+        "boundary_in_sample_above_out_of_sample": true,
+        "dates_within_two_errors": true,
+        "cubic_and_quadratic_within_two_errors_to_12_dates": true,
+        "cubic_above_quadratic_at_24_and_48_dates": true,
+        "all_three_above_exact_at_24_dates": true,
+        "european_check_high_only_at_24_dates": true,
+        "exchange_within_two_errors": true,
+        "section_15_bermudan_below_american": true,
+        "control_variate_tightens_exchange": true
+      }
+    }
+  },
+  "notebook": {
+    "cells": 133,
+    "replaced_introduction": {
+      "from": "## 14. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）",
+      "to": "## 15. 三つの数値解法の比較（CRR・FD・LSM）"
+    },
+    "lesson_cells": 13,
+    "preserved_cells_outside_lesson": 120,
+    "renumbered_headings": {
+      "## 15. 練習問題": "## 16. 練習問題"
+    },
+    "negative_controls_rejected": [
+      "§13 source changed",
+      "§27.8 saved bias changed",
+      "§15 introduction changed",
+      "§15 chart note changed",
+      "unlisted heading changed",
+      "§27.7 saved nodes changed"
+    ]
+  },
+  "browser": {
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "state_checks": 16,
+    "screenshots": 16,
+    "numeric_mutation_rejected": true,
+    "book_math": {
+      "rendered": 390,
+      "errors": 0
+    }
+  },
+  "regression": {
+    "sections": [
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5",
+      "27.6",
+      "27.7"
+    ],
+    "d1": {
+      "26.9": {
+        "decision": "reused",
+        "images": 10,
+        "stored_new_bytes": 0,
+        "tests_passed": 91,
+        "baseline": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260928T043551Z-redraw-bca2e4af908e4e448a824aa2bc2ed9d1.json"
+      },
+      "26.10": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 92,
+        "baseline": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260928T043611Z-redraw-0b8e0f0e0d9f4bb5bd9ae6fa199b0a9c.json"
+      },
+      "26.11": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 144,
+        "baseline": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260928T043634Z-redraw-b32ed33e98074a5a8e14241361a38588.json"
+      },
+      "26.12": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 215,
+        "baseline": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260928T043728Z-redraw-f89c6c3ed11f4dc2825e8ff3f4c611a1.json"
+      },
+      "26.13": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 274,
+        "baseline": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260928T043822Z-redraw-5812b96bc10d4097b0d255ec07a4d847.json"
+      },
+      "26.14": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 351,
+        "baseline": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260928T043908Z-redraw-78bafcc1c2e7446ba033dff0e12a58e3.json"
+      },
+      "26.15": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 65,
+        "baseline": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260928T043953Z-redraw-875c63fed8534fc68322d6b6ae0abfc3.json"
+      },
+      "26.16": {
+        "decision": "reused",
+        "images": 20,
+        "stored_new_bytes": 0,
+        "tests_passed": 45,
+        "baseline": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260928T044035Z-redraw-e972363281e04937b9997dae3bbab51c.json"
+      },
+      "26.17": {
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 16,
+        "baseline": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260928T044124Z-redraw-807edc61823b404ea344a04028a84024.json"
+      },
+      "27.1": {
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 16,
+        "baseline": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260928T044520Z-redraw-eed62664b3374e75aa9b6b5bd3035a5d.json"
+      },
+      "27.2": {
+        "decision": "reused",
+        "images": 20,
+        "stored_new_bytes": 0,
+        "tests_passed": 27,
+        "baseline": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260928T044536Z-redraw-d95c05de9caf4fb7b5b48192629d0ef0.json"
+      },
+      "27.3": {
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 14,
+        "baseline": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260928T044556Z-reuse-ed97248c73be46e4af7ccb1b75602b6a.json"
+      },
+      "27.4": {
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 15,
+        "baseline": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260928T044610Z-redraw-698f937dfd0c427e8b339cae7ba3609d.json"
+      },
+      "27.5": {
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 12,
+        "baseline": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260928T044624Z-redraw-c0c4400d66144df493765da4ee400b64.json"
+      },
+      "27.6": {
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 36,
+        "baseline": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260928T130000Z-redraw-c2e003883b3f485283987f90e288d3e5.json"
+      },
+      "27.7": {
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 637764,
+        "tests_passed": 75,
+        "baseline": null
+      }
+    },
+    "redrawn": [
+      "27.7"
+    ],
+    "reused": [
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "26.9",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5",
+      "27.6"
+    ],
+    "stored_new_bytes": 637764,
+    "browser": "each accepted section's original verifier rerun on M17 Book/portal assets through the D1 driver; new recheck images live in the C:/F: artifact stores",
+    "vol10_notebook_unchanged": true
+  },
+  "source_sha256": {
+    "scripts/build_american_mc_acceptance_record.py": "8228ee76a8141979ee587fb8440750dfce6f36078c2997b226e87604c0781b1e",
+    "scripts/build_american_mc_reference.py": "a27a1f331d3c4cdb61983b7a89a2be0352fb4343041a71e69577304fb10012a8",
+    "scripts/verify_american_mc_numerics.py": "f94f06b88c7465daf45c40134b28d355defdef5001b7614a6f410991936ed6c9",
+    "scripts/verify_american_mc_notebook.py": "daabd8be957ce3f0098db7938a98ba296420e389c734235c13da5eeeeca63d58",
+    "scripts/verify_american_mc_browser.cjs": "66dce24e03c96d24cc6254842bdf1ce5982955e4aa29a292bd8267c6ce480acc",
+    "scripts/verify_accepted_vol06_notebook.py": "e82c4b497ca6f30a7bb6d3a55ea66757285641d90de60ddbc0459de225a39640",
+    "scripts/evidence_dependencies.json": "dba38be936ec4710d6fed5e5a6f9e9030dfc960652e9348c826e64c7a2682c3b",
+    "hullkit/src/hullkit/american_mc.py": "ccd2bb5c38a2a5a193a807430bdd08ac310fbe69d9608b0fc1070ed826ebb2ba",
+    "hullkit/src/hullkit/_american_mc_lesson.py": "4e0d1328e13b7bce424a7c017b33dd43e1af995422e0668692994e47f46d893d",
+    "hullkit/tests/test_american_mc.py": "00d552e3fa9e86abcd7a75d333f2c4e16eeb6b25c1158e277df099f620ef8fa9",
+    "hullkit/tests/test_american_mc_lesson.py": "89b1af49447c49b2fa12a96281a4d8c4e499bf607e3160e1450a7a031918bbcf",
+    "report/tests/test_american_mc_notebook.py": "ad54a59a44b3f19f69d0d2e26b941e75ba295f0fc8b48046dda88d2261b36cc0",
+    "report/tests/test_report_build.py": "dbb22c840711fe9e19cc9f91901c8719f3f7b743ecff33080a8b24369253ca1a",
+    "report/report_builder/figures.py": "f816cc8ec3c6ac828e12259d21db88105c8730735596e872e62108791a722334",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "e032b2e058a589f08ad0c45027428e89ba717be5a9fb2f136327fd955e0618b0",
+    "volumes/06_numerical_methods/numerical.ipynb": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a",
+    "release_manifest.json": "05a86ccf1b3dca8dd4cf3d0ccd1864adc4fbe4235354568db3a1d8acafd62412",
+    "docs/validation/section-27-8/numerical-check.json": "94a014c99e4fc862461219c925473e14fb7d535b18d370035d05fb01a59f2ba2",
+    "docs/validation/section-27-8/notebook-check.json": "6e1a79e15ee17df013c0148546a274729d354c12d486660d2e56c2c92d4b111a",
+    "docs/validation/section-27-8/browser-check.json": "70bd11f298b788f90dfcf37d9087ca25f8f7b9648ed7c89b2fb88af636319644",
+    "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260928T151319Z-reuse-0cab036ad5e945fea5960fa781beac43.json": "cb4ddbe50c6f8f360d5e8efa3035ad0ca8374b3635246cb2a32e2c106600a02f",
+    "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260928T151338Z-reuse-60fd3d81ae854e1280c3ba29a914efee.json": "ce466362202fc996863bf1efcd5426d2e7fda17fc436b0d663bfe862611b4a98",
+    "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260928T151359Z-reuse-8deabdbf0ad644a1b0e49a45b062866c.json": "8a1166b63d3f558fe784f055861e70e26476cadd454399d59215b663f26f6372",
+    "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260928T151453Z-reuse-b4e18047f515400fb6dcb92bc89ca524.json": "3722c5e79354baacb58e1aef930806f57d4c3c9568d7a1378098e3ae7df94c96",
+    "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260928T151546Z-reuse-9a070d47167949039503a3aec2d8a591.json": "9e2a36dd52119c054d03ea4069428d74ffc06055065dcb00bf4f5818111a46bc",
+    "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260928T151632Z-reuse-4f9c8b00d4f4442a93a29515b09215a8.json": "41a0c8d997090c1ed8730d5202b80286f70c497870b2d959b4aa38a8bfabb495",
+    "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260928T151715Z-reuse-907f0f6c5bd6499ba356b3964e145e7c.json": "964996d224d3ad153b12b92a1689e1ca7c4a1a31e50ff1f8c20fa4fcae8fefca",
+    "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260928T151757Z-reuse-ffa09ae4442d40ae953416f29f1385d4.json": "63b0426721279b22dbdb07785bc25b1d244782fa5a71a0d60f3d21da09f51875",
+    "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260928T151845Z-reuse-f8ff623a72304a768d18522365278627.json": "d6515528112415cfbf3b419883eb166f335bc907590022198b86b47578ee51c0",
+    "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260928T151907Z-reuse-0d006d410ff346b7890a72467374062e.json": "111eb16be9e5796093af456974d99c88f2be954fa36155e3764c99b43f5d612e",
+    "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260928T151922Z-reuse-0caec1ab7df345aaa253c69819f6776d.json": "0e60b40fa7766ef5e75b2c7ed08ab2d85e32469091030fb8bbcb5fd1223189c6",
+    "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260928T151941Z-reuse-d70d8c2a1ed1411aba81d74d076d3d66.json": "3f41890deaf9be8d2de965b3b3d7fc3ea0141dc555a1e2c868eac23b68596514",
+    "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260928T151956Z-reuse-d18e4accd44f49d39a334c1e4468e70b.json": "3d7b0c516514db540217e3ba114ab9c8427da23294f49c390565054e45426603",
+    "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260928T152011Z-reuse-743dfad08f0c48649e93808891f705ce.json": "30c8949aa73adf54a19d09e221f99892837c144e342a5c19001d002e6cc89338",
+    "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260928T152026Z-reuse-b9dcbe66f6bd415a90b63aaf54dbdec5.json": "488516a82e743383af71ca84fe3db730cd178816664edf7eb20a4eeddec33cbd",
+    "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260928T152042Z-redraw-02d0c780f3f54ae2bfc0f322191a6726.json": "0ebad1e90fdea76bcf8f9b087b8dc88d9081cbb105682e5a9a00d5bbc4eb4ad3"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-27-8/reference.json": "329c26ffac462eecc89e06f487e7c3e1ffd6efa81a49848c4c02489ba53366d2",
+    "report/site/numerics.html": "f3a248d386180f6534b154b7d4c3980064f66d840dfce44dee4bc744e6d8ca93",
+    "book/_build/html/notebooks/06_numerical.html": "a254b058a75c9bfe9014d14cb1ec4810ad2cdc2dd0ba9c735d5ba74d8cb357ab",
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
+    "docs/validation/section-27-8/book-american_mc_regression-1440.png": "780ecd8471536a2f63a2bc3449b5aada990810eaaa7fe7c85d5016b5876dcda8",
+    "docs/validation/section-27-8/book-american_mc_regression-1000.png": "5167dfb1e2c8ea5e1792701071dd7e420168206d0b85ac2967a572af7e7d8933",
+    "docs/validation/section-27-8/book-american_mc_boundary-1440.png": "726d1c31fbdab0c0bf99b5af572984c5cc492871afe982256b0e6cc5ba668664",
+    "docs/validation/section-27-8/book-american_mc_boundary-1000.png": "459f5434965dc223302fc747e2b53c1748c4213a235b4fd82ee2fa201515af2a",
+    "docs/validation/section-27-8/book-american_mc_bias-1440.png": "f2c7615a0d2ab84ebb68e57df2f823ac6dda7c99e46b1d4350c7ebb7fe6ce7ff",
+    "docs/validation/section-27-8/book-american_mc_bias-1000.png": "5466580ef5d213fdf89d370d2bc562002bd43c4e3bb4c06012a87faa71433046",
+    "docs/validation/section-27-8/book-american_mc_dates-1440.png": "d1a541e7e84c3221a57f86e58bc1edf2854ae12e1524f7a30cb57c139c5ebc22",
+    "docs/validation/section-27-8/book-american_mc_dates-1000.png": "b8e5343f3dab8ff96763259dc5cd398d3ac81f03fd52802dcea7d24f707bf3d3",
+    "docs/validation/section-27-8/portal-american_mc_regression-1440.png": "ed5f9a03370ca50814bd9c5d46cabd8d3a93714564d327d979a3350363eb4187",
+    "docs/validation/section-27-8/portal-american_mc_regression-1000.png": "e0b6c1c1682e3dae124d59413f12c4ffd4efd63d17f66521df00f1b013e64d11",
+    "docs/validation/section-27-8/portal-american_mc_boundary-1440.png": "6382bd9190ecfb49929fcfef4bb3f4a37ae4720ce0502278e0f95f4560fa7b57",
+    "docs/validation/section-27-8/portal-american_mc_boundary-1000.png": "25833ca0b5c99e3c5869e82e045e92aaebebea7bf227389bc8629006e46501c6",
+    "docs/validation/section-27-8/portal-american_mc_bias-1440.png": "76e3163c5a2dbdf50814c5558aa6e46f97681b65cbb84caf262b701e391ee20e",
+    "docs/validation/section-27-8/portal-american_mc_bias-1000.png": "2d873412dfbdeddb6b65ee9e3a71e35c41881c26bd4c513c2af0712ecfdff101",
+    "docs/validation/section-27-8/portal-american_mc_dates-1440.png": "83f0b88cd82735d0a2a2b9ae801d838872ce45c2cec2d941a1a324f037f22587",
+    "docs/validation/section-27-8/portal-american_mc_dates-1000.png": "b359c129c7fce166379ae3792ec7a29ca4ac4a69a6d1f15fca49c5b178294053"
+  }
+}

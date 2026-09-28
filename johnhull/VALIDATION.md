@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,19 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 27.8 M17 — 2026-09-29
+
+[受入ノート](docs/SECTION_27_8_ACCEPTANCE_2026-09-29.md)・[レビュー](docs/SECTION_27_8_REVIEW_2026-09-28.md)・[統合記録](docs/validation/section-27-8/m17-check.json)にAM01–AM06の5軸を集約。台帳は**accepted**（受入17・未評価289）。P1（Ch 27 の残り）完了。
+
+- 原典の8経路（Tables 27.4–27.7）を `numpy.polyfit` と候補の直接探索で再現：係数、行使する経路、価値0.1144、境界の平均12個（半単位以内）、$S^*(2)=0.84$・$S^*(1)=0.88$、0.1208。公開API `hullkit.american_mc` との差5.9e-14。印刷された係数は2年目の $c$（−1.8136 → 印刷 −1.813）だけが丸めと合わない。問題27.15・27.22 も再現。
+- $\sigma=20\%$ を仮定した行使日の決まった put の厳密値は、対数正規の推移の数値積分（刻みを倍にして変化2.3e-9以下）。Crank–Nicolson との差3.9e-7以下、3回行使は Black–Scholes の入れ子積分と8.5e-10。連続行使は CRR（Crank–Nicolson との差2.6e-6）。
+- 推定と評価を200回くり返す実験（250–16000本）、行使日3–48回と2次・3次の基底、二資産の交換オプション（単項式6個、Margrabe のコントロール変量）を固定シードで行い、公開関数で同じ値を再計算（差0、ペア差を含む）。統計的な主張は「この実行では」と明記し、理論から導ける主張と分けて検証器が照合する。
+- vol06 §14.1–14.6 とBook/portal共有4図。旧 LSM 節は §15「三つの数値解法の比較」に組み替え、§14以外の120セルはM16基点`99792a84`から見出しの置き換え・既存2文の修正・番号変更のみ。6改変を拒否。Chromium 145.0.7632.6でBook/portal×1440/1000pxの16状態・16画像、数値改変拒否を確認。本文の数値約40か所をテストで保存値と照合。
+- 独立レビューのP1 0件・P2 3件・P3 11件を修正。レビューの25変異のうち単体テストを通っていた12件は、9件を単体テストで拒否するようになった（残る3件は実質的に等価）。
+- 既受入16節は[D1方針](docs/EVIDENCE_POLICY.md)で再検査（個別テスト計1,488件）。15節は基準再利用（新規保存0）、§27.7は初のD1記録で再描画（637,764 bytesをC:/F:へ）。
+- johnhull 全体の pytest **3,204 passed / 6 skipped**（既存 deprecation warning 2件）。`ruff check johnhull` と変更Pythonの`ruff format --check`、release contract、台帳の通常・`--check-artifacts`、`verify_accepted_vol06_notebook.py --check`（§27.1–§27.7）はPASS。
+- 決まった行使日の単項式の回帰と、状態変数1個の境界のパラメータ化のみ。Andersen–Broadie の上界、双対法、他の基底、経路依存の状態の自動生成、市場データでの校正は受入範囲外。
 
 ## Section 27.7 M16 — 2026-09-28
 
