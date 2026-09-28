@@ -35,7 +35,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 142 figures (34 exotics)
+make hull-report           # offline portal: 12 themes / 146 figures (34 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -156,3 +156,16 @@ axis-title overlap and changed-value rejection). The fifteen earlier lessons are
 rechecked through the D1 driver; the integrated gate is
 `scripts/build_two_asset_acceptance_record.py --check`, which reads each
 section's latest D1 record and requires a reused record's baseline to exist.
+
+The §27.8 (M17) checks are `scripts/build_american_mc_reference.py --check`
+(Hull's eight paths by numpy.polyfit, exact Bermudan puts by lognormal
+quadrature checked against Crank-Nicolson and nested Black-Scholes integrals,
+and seeded fit/fresh simulations, all without hullkit),
+`scripts/verify_american_mc_numerics.py --check` (hullkit against the reference,
+paired policy differences and the statistical claims made in the text),
+`scripts/verify_american_mc_notebook.py --check` (fresh vol06, 120 preserved
+cells outside §14, six rejected mutations), and
+`scripts/verify_american_mc_browser.cjs` (Book/portal at 1440/1000px, 16
+states, changed-value rejection). The sixteen earlier lessons are rechecked
+through the D1 driver; the integrated gate is
+`scripts/build_american_mc_acceptance_record.py --check`.

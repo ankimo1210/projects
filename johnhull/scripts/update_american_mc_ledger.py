@@ -84,7 +84,7 @@ def requirement(number, statement, locator, implementation, validation, figures,
 def register_american_mc(section):
     paths = {
         "review": ("docs/SECTION_27_8_REVIEW_2026-09-28.md", "note"),
-        "acceptance_note": ("docs/SECTION_27_8_ACCEPTANCE_2026-09-28.md", "note"),
+        "acceptance_note": ("docs/SECTION_27_8_ACCEPTANCE_2026-09-29.md", "note"),
         "textbook": ("options, futures and other derivatives 11th.pdf", "reference"),
         "pricing": ("hullkit/src/hullkit/american_mc.py", "source"),
         "pricing_tests": ("hullkit/tests/test_american_mc.py", "test"),
@@ -117,7 +117,7 @@ def register_american_mc(section):
     }
     section.update(
         status="accepted",
-        reviewed_at="2026-09-28",
+        reviewed_at="2026-09-29",
         source_pages=[660, 665],
         scope=(
             "Hull GE §27.8のモンテカルロ法によるアメリカン・オプション評価。最小二乗法（Longstaff–Schwartz）、"
@@ -133,7 +133,7 @@ def register_american_mc(section):
             "境界のパラメータ化は状態変数1個で、各時点の行使領域を臨界価格の片側とみなす。",
             "シミュレーションの主張は固定シードの標本に基づく統計的なもので、標準誤差とともに述べる。",
         ],
-        acceptance_note="docs/SECTION_27_8_ACCEPTANCE_2026-09-28.md",
+        acceptance_note="docs/SECTION_27_8_ACCEPTANCE_2026-09-29.md",
         evidence={name: item(path, kind) for name, (path, kind) in paths.items()},
         requirements=[
             requirement(

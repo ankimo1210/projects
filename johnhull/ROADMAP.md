@@ -19,19 +19,19 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 61 public + 16 private modules as of 2026-09-28; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 62 public + 17 private modules as of 2026-09-29; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-09-28、M16受入）
+## 現在地（2026-09-29、M17受入）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
 | 章単位（Hull 11e 全 37 章） | 上表の 14 行すべて done（2026-06-08） | 章に巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol 13–28） | すべて done | A1–A4（vol 13–17）、A5–A8 G8 release（vol 18–25）、vol 26・27・28 |
 | 全節監査の是正 | 第 1〜5 便完了 | 残りは下の「全節監査と是正」の表 |
-| 節単位の受入 | M16（§27.7）まで。台帳は受入 16・未評価 290（5.2%） | 次は M17（§27.8）。全体計画は下の「完了までの計画」 |
+| 節単位の受入 | M17（§27.8）まで。台帳は受入 17・未評価 289（5.6%） | P1（Ch 27 の残り）完了。次は P2（§26.1–§26.8、M18 以降）。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
-| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | [D1-preflight 完了](docs/validation/d1-preflight/README.md)。M15 から本運用。**M16**：既受入15節のうち14節は基準再利用（新規保存0）、§27.6 は初の D1 記録で再描画（0.65MB を C:/F: へ）。Git の増分は約1.9MB（§27.7 の証跡0.72MB＋D1 記録 JSON 1.2MB。M15 は約2.9MB、M14 は約13MB） |
-| テスト | johnhull 全体 3,155 passed・6 skipped（M16、2026-09-28） | 実行結果は `VALIDATION.md` |
+| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | [D1-preflight 完了](docs/validation/d1-preflight/README.md)。M15 から本運用。**M17**：既受入16節のうち15節は基準再利用（新規保存0）、§27.7 は初の D1 記録で再描画（0.64MB を C:/F: へ）。Git の増分は約1.9MB（§27.8 の証跡0.66MB＋D1 記録 JSON 1.25MB。M16 も約1.9MB、M15 は約2.9MB、M14 は約13MB） |
+| テスト | johnhull 全体 3,204 passed・6 skipped（M17、2026-09-29） | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -54,15 +54,15 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 61 public + 16 priva
 | 段階 | 範囲 | 台帳の項目 | 受入済み | うち定性 | 主な課題 | 状態 |
 |---|---|---:|---:|---:|---|---|
 | P0 | §26.9–§27.4（M1–M13） | 13 | 13 | 0 | — | 完了 |
-| P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 3 | 0 | — | 進行中。次は M17 §27.8 |
-| P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 0 | 0 | perpetual・Bermudan・forward start・cliquet・compound・chooser はコードがない（EX-03） | 下調べ済み・節受入未着手 |
+| P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 4 | 0 | — | 完了（M14–M17） |
+| P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 0 | 0 | perpetual・Bermudan・forward start・cliquet・compound・chooser はコードがない（EX-03） | 下調べ済み・節受入未着手。次の段階（M18 以降） |
 | P3 | 金利（Ch 28–34） | 37 | 0 | 3 | HW/BK 三項ツリー・Bermudan・LMM がない（EX-13〜15）。最も重い | 下調べ・設計済み、節受入未着手 |
 | P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 件数が最大。多くは実装済みで、印刷値での固定が中心 | 下調べ済み・節受入未着手 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | vol 27・28 の資産を流用できる | 下調べ済み・節受入未着手 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 軽いが件数が多い。定性が多い | 下調べ済み・節受入未着手 |
 | P7 | Ch 35–37 | 16 | 0 | 6 | §36.4 は本文にパラメータ σ(t)・η(t) がない（CR-23） | 下調べ済み・節受入未着手 |
 | P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表（R1–R4・R6・R11、保存値依存 5 項目、§7 の判断事項） | [再確認済み](docs/prep/design/P8_RECHECK.md)、製品の修正は未着手 |
-| **計** | | **306** | **16** | **63** | | **5.2%** |
+| **計** | | **306** | **17** | **63** | | **5.6%** |
 
 ### 先に決めること
 
@@ -97,7 +97,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 61 public + 16 priva
 本編に畳む（RB-F02→P1、RB-F03→P3、R11・§19.14・RB-H16→P4）、章の受入後のコラム、研究トラック（同時1本）、johnhull の外。
 研究トラック #1 は RB-F07。研究の置き場は `research/<RB-ID>/`、計算は hullkit の非公開モジュールに決定した（2026-09-27 本人承認。公開 API 昇格は別承認）。
 **実装再開は、johnhull に必要な保管庫と作業分離が整った時点**とし、ワークスペース全工程の完了は待たない。
-M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。RB-F07 は未着手。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。受入件数は変わらない。
+M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。M17（§27.8）は2026-09-29 に受入し、P1 を完了した（RB-F02 の推定経路と評価経路の分離を含む。上界の実装は拡張のまま）。RB-F07 は未着手。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。受入件数は変わらない。
 金利編は [P3設計](docs/prep/design/P3_DESIGN.md)でHW/BKの本文範囲と独立参照の条件を整理した。R11の原典成績は利息・割引を除外する規約で再現でき、現行の資金繰り計算を誤りとみなして置換しない。
 
 ## 可視化 & 深掘り(A1–A4) — 完了 (2026-06-14)
@@ -150,7 +150,7 @@ separate. No production dependency was added for G0/G1 core implementation.
 各巻に validation report、fingerprinted JSON/NPZ、artifact-only notebook、book
 symlinkがあり、各巻の `integration_and_reproducibility` gate は PASS。これは
 **model performance の承認ではない**。`release_manifest.json` の現行契約は portal
-**142 図/12 テーマ**で、監査第 4 便の 82 図に節単位受入 M2–M16 の共有 4 図×15 節が加わった（2026-09-28）。
+**146 図/12 テーマ**で、監査第 4 便の 82 図に節単位受入 M2–M17 の共有 4 図×16 節が加わった（2026-09-29）。
 Jupyter Book は `book/_toc.yml` の root + 30 entries = 31 ページで、ページ数自体は
 manifest の契約値ではなく `book_name` の掲載のみが検証される。G8 で fresh artifact/notebook/
 report/book/test/lint を再検証し、最終結果と model risk を `johnhull/VALIDATION.md`
@@ -262,7 +262,7 @@ model performance の承認ではない（deep_hedge_price の 206 tests も各�
 | 判断事項（§7） | 既定 seed の統一（VN-20）、大物の置き場所（新しい節単位の巻を足すか）、FRTB IMA（vol 29 候補）は継続。research trackは[研究計画](docs/superpowers/plans/2026-09-27-research-backlog.md)で置き場・順番・範囲・実装再開条件を決定 |
 | ゲートの限界 | core は PNG と Plotly の中身を、frontier は stderr と図を比べない（字形欠落の警告とローカルパスだけをテストで検出） |
 
-## 節単位の品質確認 — M1–M16（2026-09-15〜28）
+## 節単位の品質確認 — M1–M17（2026-09-15〜29）
 
 [台帳](docs/SECTION_LEDGER.md) ／ [更新手順](docs/SECTION_LEDGER_GUIDE.md) ／
 [実装計画](docs/superpowers/plans/2026-09-15-section-ledger-m1.md)。
@@ -294,9 +294,10 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M14 | §27.5 Path-Dependent Derivatives（pp.653–656） | 受入。Figure 27.3のX/Y/Z、20段・60段の欧州型/米国型4価格、独立全経路列挙を照合。[受入ノート](docs/SECTION_27_5_ACCEPTANCE_2026-09-27.md) |
 | M15 | §27.6 Barrier Options（pp.656–658） | 受入。素朴な二項・三項、内側・外側バリアと補間、バリア上のノード（Figures 27.4–27.5）を解析値・PDE・前向き格子で照合。D1 の本運用初回。[受入ノート](docs/SECTION_27_6_ACCEPTANCE_2026-09-28.md)・[レビュー](docs/SECTION_27_6_REVIEW_2026-09-28.md) |
 | M16 | §27.7 Options on Two Correlated Assets（pp.658–661） | 受入。変数変換・Rubinstein の非矩形ツリー・確率の調整（Tables 27.2–27.3）を Stulz・Margrabe の式、1次元に帰着した米国型、前向き格子で照合。[受入ノート](docs/SECTION_27_7_ACCEPTANCE_2026-09-28.md)・[レビュー](docs/SECTION_27_7_REVIEW_2026-09-28.md) |
-| 以降 | §27.8 から台帳の未評価節へ順に展開 | 未着手 |
+| M17 | §27.8 Monte Carlo Simulation and American Options（pp.660–665） | 受入。最小二乗法と行使境界のパラメータ化（Tables 27.4–27.7）を原典の8経路で再現し、推定と評価の分離による偏りを数値積分の厳密値と比較。P1 完了。[受入ノート](docs/SECTION_27_8_ACCEPTANCE_2026-09-29.md)・[レビュー](docs/SECTION_27_8_REVIEW_2026-09-28.md) |
+| 以降 | P2（§26.1–§26.8）から台帳の未評価節へ順に展開 | 未着手 |
 
-現在地（2026-09-28）：M16まで受入、台帳は受入16・未評価290。統合記録は`docs/validation/section-27-7/m16-check.json`。既受入15節の再検査はD1の記録（`docs/validation/d1-recheck/`、画像は保管庫）。次はM17 §27.8。
+現在地（2026-09-29）：M17まで受入、台帳は受入17・未評価289。P1（Ch 27）完了。統合記録は`docs/validation/section-27-8/m17-check.json`。既受入16節の再検査はD1の記録（`docs/validation/d1-recheck/`、画像は保管庫）。次はP2（§26.1–§26.8、M18以降）。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
@@ -306,4 +307,5 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 - 再検査のスクリーンショット差分は、文字のアンチエイリアスやmodebarツールチップと図の中身の変化を分けて判定する。前者ならコミット済み画像を戻す（M6b）。
 - 適用域の制限：§26.11の価格APIは$|r-q|<10^{-8}$に未対応（教材に適用域として明示）、§26.12のlookbackは$r=q$を欠測表示、putは原典外の独立拡張。
 - M5は修正後の状態を第三者が確認していない受入である。
-- 節ごとの notebook 検査は受入時点の基点との比較として保持する。現行HEADでは `verify_accepted_vol06_notebook.py --check` が§27.1–§27.6の自節セルを各受入commitと比較し、共有図と巻全体を再実行する（§27.6 はM16で追加）。M16の§27.7は直前M15基点の節外保持検査を持つ。後続節の追加時に現行HEAD用検査の対象を増やす（[レビュー F1 対応](docs/SECTION_27_3_27_4_FEEDBACK_2026-09-27.md)）。
+- 固定シードの1回の実行で偶然成り立つ統計的な主張は「この実行では」と書き、理論から導ける主張（新しい経路での評価は期待値で厳密値以下など）を別に検査する。同じ経路で評価した方策どうしはペア差で比べる（M17）。
+- 節ごとの notebook 検査は受入時点の基点との比較として保持する。現行HEADでは `verify_accepted_vol06_notebook.py --check` が§27.1–§27.7の自節セルを各受入commitと比較し、共有図と巻全体を再実行する（§27.7 はM17で追加）。M17の§27.8は直前M16基点の節外保持検査を持つ。後続節の追加時に現行HEAD用検査の対象を増やす（[レビュー F1 対応](docs/SECTION_27_3_27_4_FEEDBACK_2026-09-27.md)）。

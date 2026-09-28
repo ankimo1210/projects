@@ -573,10 +573,10 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert result["status"] == "PASS", result["errors"]
     assert result["inventory_total"] == 306
     assert result["counts"] == {
-        "unreviewed": 290,
+        "unreviewed": 289,
         "gaps_found": 0,
         "pending_validation": 0,
-        "accepted": 16,
+        "accepted": 17,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
@@ -694,6 +694,14 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert all(
         axis["state"] == "verified"
         for row in two_asset["requirements"]
+        for axis in row["coverage"].values()
+    )
+    american_mc = next(section for section in ledger["sections"] if section["id"] == "27.8")
+    assert american_mc["status"] == "accepted"
+    assert [row["id"] for row in american_mc["requirements"]] == [f"AM{i:02}" for i in range(1, 7)]
+    assert all(
+        axis["state"] == "verified"
+        for row in american_mc["requirements"]
         for axis in row["coverage"].values()
     )
     shout = next(section for section in ledger["sections"] if section["id"] == "26.12")
