@@ -15,7 +15,7 @@
     "outer_barrier_gap_from_100_steps": 0.05
   },
   "measured": {
-    "max_lattice_error": 6.639133687258436e-14,
+    "max_lattice_error": 9.414691248821327e-14,
     "formula_error": 0.0,
     "pde_error": -1.8752449832959428e-06,
     "max_simple_trinomial_error": 1.0622216186806546,
@@ -31,12 +31,31 @@
     "near_rejected": [
       "H=102.0, N=100",
       "H=102.8, N=100"
-    ]
+    ],
+    "lattice_cases": 9,
+    "bgk_error": 3.552713678800501e-15,
+    "monitoring": {
+      "steps": [
+        100,
+        400,
+        1600
+      ],
+      "tree_on_barrier": [
+        -0.027632939171861437,
+        -0.008595459366790292,
+        -0.002148299593670966
+      ],
+      "bgk_discrete": [
+        0.16680167349121078,
+        0.07896994531898471,
+        0.03839671518184673
+      ]
+    }
   },
   "source_sha256": {
-    "scripts/build_barrier_tree_reference.py": "af43c158ec8b8c363df2af1f713942cf23ed9b9e14df6239b72ccef435fb6122",
-    "scripts/verify_barrier_tree_numerics.py": "6b65e8eb2b457f33e65b9be70b462bbdcf9fb5d0ac326f06da685598b9686267",
-    "hullkit/src/hullkit/barrier_tree.py": "88adb1e5ebe9dd7579af0b6c71878037c200c05ab34a74e39db25cec1adbcf7a"
+    "scripts/build_barrier_tree_reference.py": "c0aa3ac3b109329b6a935db9f3b68629d592b6777a5f6953acd86f4955cddeb3",
+    "scripts/verify_barrier_tree_numerics.py": "4b11249d9408e5632733784db11681cf25eae828025aa8126e886648016755ad",
+    "hullkit/src/hullkit/barrier_tree.py": "d6604d51346dbf3bee61762e5bc10c0f1bde46b2dcde63aded914da3be96928f"
   },
-  "artifact_sha256": "33a9753eaba4951659ef8ea4470ec24d21dd5c08159e5a21043df3f87af778f2"
+  "artifact_sha256": "9ba15464abfd77844403e0f30d654ae9c288d9cca1cd33512579f9d7179bfaf3"
 }

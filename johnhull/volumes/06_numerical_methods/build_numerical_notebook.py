@@ -1035,9 +1035,10 @@ $1.9\times10^{-6}$ドル以内で一致する。"""))
 cells.append(md(r"""### 12.1 素朴な方法：バリアを越えたノードで0
 
 通常のオプションと同じツリーを組み、バリア以上のノードで価値を0にする（p.656）。
-CRR 二項と §21.4 の三項（$\ln u=\sigma\sqrt{3\Delta t}$）を $N=20$–300 段で比べると、
-三項のほうがまだよいが、どちらも解析値のまわりを**のこぎり状**に大きく振れる。
-300段でも誤差は0.3ドル近く残り、段数を増やせば単調に近づくわけでもない。"""))
+原典は三項のほうが二項よりよいとするが、どちらも収束は遅い。CRR 二項と §21.4 の三項
+（$\ln u=\sigma\sqrt{3\Delta t}$）を**同じ段数** $N=20$–300 で比べると、この例ではむしろ素朴な三項のほうが
+誤差が大きい（平均絶対誤差 三項0.205ドル・二項0.121ドル）。どちらも解析値のまわりを**のこぎり状**に振れ、
+段数を増やしても単調には近づかない。300段でも三項の誤差は0.27ドル残る。"""))
 cells.append(code(r"""from hullkit import barrier_tree as btree
 from hullkit._barrier_tree_lesson import _figures as barrier_lesson_figures
 from hullkit._barrier_tree_lesson import _load_reference as barrier_load_reference
@@ -1054,7 +1055,11 @@ print(f"連続監視の解析値 {barrier_analytic:.4f} $")
 for n in (100, 200, 300):
     binomial = btree.binomial_barrier(*barrier_args, n).price
     simple = btree.trinomial_barrier(*barrier_args, n, method="simple").price
-    print(f"N={n}: 二項 {binomial:.4f} $, 三項 {simple:.4f} $")"""))
+    print(f"N={n}: 二項 {binomial:.4f} $, 三項 {simple:.4f} $")
+barrier_rows = barrier_reference["convergence"]
+for key, name in (("binomial_simple", "二項"), ("trinomial_simple", "三項")):
+    mean_error = sum(abs(v - barrier_analytic) for v in barrier_rows[key]) / len(barrier_rows[key])
+    print(f"{name}・素朴: N=20–300 の平均絶対誤差 {mean_error:.3f} $")"""))
 cells.append(md(r"""### 12.2 ツリーが暗に使うのは外側バリア
 
 真のバリアのすぐ内側（ツリーの中心寄り）のノードの並びを**内側バリア**、すぐ外側の並びを
@@ -1062,13 +1067,14 @@ cells.append(md(r"""### 12.2 ツリーが暗に使うのは外側バリア
 ツリーは**外側バリアを真のバリアとして**評価している。ノードの縦の間隔は $\sqrt{\Delta t}$ の次数なので、
 その差から生じる誤差も $\sqrt{\Delta t}$ の次数になる。
 10段の三項ツリーでは内側117.86ドル・外側138.91ドルで、真の120ドルからずれる。
-さらに $N=25$、100、400 では $\ln u$ が半分ずつになっても外側バリアはいずれも123.10ドルで、
-段数を16倍にしてもこの位置の差は縮まない。"""))
+位置の差は0から1間隔（$\ln u$）の間のどこかにあり、段数を増やして縮むのはその上限だけである。
+$N=25$、100、400 では $\ln u$ が半分ずつになっても、真のバリアが格子の同じ相対位置に来るので
+外側バリアはいずれも123.10ドルのままで、この差は縮まない。1600段で121.51ドル、3200段で120.17ドルになって初めて近づく。"""))
 cells.append(code(r"""display(barrier_figures["barrier_lattice"])
 small = btree.trinomial_barrier(*barrier_args, 10, method="simple")
 small_inner = btree.trinomial_barrier(*barrier_args, 10, method="inner")
 print(f"10段: 内側バリア {small_inner.tree_barrier:.2f} $, 外側バリア {small.tree_barrier:.2f} $")
-for n in (25, 100, 400):
+for n in (25, 100, 400, 1600, 3200):
     outer = btree.trinomial_barrier(*barrier_args, n, method="simple").tree_barrier
     moved = barrier_call(*barrier_args[:2], outer, bp["rate"], bp["volatility"], bp["maturity"],
                          barrier="up-and-out")
@@ -1085,22 +1091,24 @@ print(f"内側 {mix.inner.tree_barrier:.2f} $ → {mix.inner.price:.4f} $、"
 print(f"外側への重み {mix.weight:.4f}、補間値 {mix.price:.4f} $（解析値 {barrier_analytic:.4f} $）")"""))
 cells.append(md(r"""### 12.4 ノードをバリアの上に置く（Figure 27.5）
 
-二つ目の対策は、ある段 $N$ で $H=S_0u^N$ となるよう $u$ を選ぶこと。標準の間隔に最も近い値として
-$\ln u=\dfrac{\ln H-\ln S_0}{N}$、$N=\operatorname{int}\!\left[\dfrac{\ln H-\ln S_0}{\sigma\sqrt{3\Delta t}}+0.5\right]$。
+二つ目の対策は、ある段 $N$ で $H=S_0u^N$ となるよう $u$ を選ぶこと。原典は $\ln u$ を標準の間隔に
+近づける規則として、$N$ を最も近い整数に丸める：$\ln u=\dfrac{\ln H-\ln S_0}{N}$、$N=\operatorname{int}\!\left[\dfrac{\ln H-\ln S_0}{\sigma\sqrt{3\Delta t}}+0.5\right]$。
 確率は対数収益率の最初の二つのモーメントに合わせる：
 $p_u,p_d=\pm\dfrac{(r-q-\sigma^2/2)\Delta t}{2\ln u}+\dfrac{\sigma^2\Delta t}{2(\ln u)^2}$、
 $p_m=1-\dfrac{\sigma^2\Delta t}{(\ln u)^2}$。
-平均 $(p_u-p_d)\ln u=(r-q-\sigma^2/2)\Delta t$ と二次の素のモーメント $(p_u+p_d)(\ln u)^2=\sigma^2\Delta t$ は
-正確に一致するが、分散は $\sigma^2\Delta t-(r-q-\sigma^2/2)^2\Delta t^2$ で、$\Delta t$ の一次まで一致する。
+平均 $(p_u-p_d)\ln u=(r-q-\sigma^2/2)\Delta t$ は正確に一致する。二次のモーメントは
+$(p_u+p_d)(\ln u)^2=\sigma^2\Delta t$ に置くが、対数収益率の真の値は $\sigma^2\Delta t+(r-q-\sigma^2/2)^2\Delta t^2$ なので、
+二次のモーメントと分散はどちらも $\Delta t$ の一次まで一致する。
 100段ではバリアまで標準の間隔で3.51段なので $N=4$、$\ln u=0.04558$。
 誤差を分けると、素朴な三項の誤差の大半は**外側バリアの位置**によるもので、残る**格子の誤差**は
-バリア上に置いた場合と同じく滑らかに縮む。400段から3200段までの傾きは1.00で、誤差は $1/N$ に比例する。"""))
+バリア上に置いた場合と同じく小さく規則的に縮む。ただし $N$ が変わる所で段差があり、同じ $N$ の区間では
+誤差がほとんど動かない。倍々に取った400段から3200段までの傾きは1.00で、誤差の包絡線が $1/N$ に比例する。"""))
 cells.append(code(r"""display(barrier_figures["barrier_errors"])
 dt = bp["maturity"] / 100
 levels, log_u = btree.barrier_log_spacing(bp["spot"], bp["barrier"], bp["volatility"], dt)
 p_u, p_m, p_d = btree.trinomial_probabilities(log_u, bp["rate"], bp["volatility"], dt)
 print(f"N={levels}, ln u={log_u:.5f}, p_u={p_u:.4f}, p_m={p_m:.4f}, p_d={p_d:.4f}")
-print(f"平均 {(p_u - p_d) * log_u:.2e}、二次の素のモーメント {(p_u + p_d) * log_u**2:.6f}")
+print(f"平均 {(p_u - p_d) * log_u:.2e}、二次のモーメント（置いた値） {(p_u + p_d) * log_u**2:.6f}")
 for n in (400, 800, 1600, 3200):
     on = btree.trinomial_barrier(*barrier_args, n, method="on_barrier").price
     print(f"バリア上 N={n:>4}: 誤差 {on - barrier_analytic:+.5f} $")"""))
@@ -1126,18 +1134,24 @@ cells.append(md(r"""### 12.6 独立の基準と適用限界
 基準は三つ。(1) §26.9 の式を hullkit を使わずに実装し、`hullkit.exotics` と一致させた。
 (2) 同じ連続監視の価格を Crank–Nicolson PDE で解いた。(3) ツリーの価格は、後ろ向きに価値を戻す
 公開関数とは別に、生き残る確率質量を**前向き**に進めて計算し、289通りの段数で差は $10^{-13}$ドル未満だった。
-ツリーは1段で1ノードしか動かないので、ノードの並びを飛び越えられない。そのため各段での監視は、
-格子の上では連続監視と同じになる（週次などの離散監視の BGK 補正とは別の問題）。
+ツリーの株価は1段で1レベルしか動かないので、バリアのレベルを飛び越えて戻ることがない。
+そのため各段での判定は格子の上では連続監視と同じで、離散監視で生じる行き過ぎ
+（§26.9 の BGK 補正 $0.5826\sigma\sqrt{\Delta t}$）は起きない。100・400・1600段で、バリア上のツリーと
+連続監視の差は−0.028・−0.009・−0.002ドル、同じ回数の離散監視（BGK 近似）と連続監視の差は
++0.167・+0.079・+0.038ドルで、符号も縮み方も違う。
 対象は定数パラメータ・水平な単一バリアの欧州型ノックアウトだけ。ノックインは $\text{in}+\text{out}=$ バニラから求められるが
 ツリーは実装していない。米国型、二重バリア、adaptive mesh、補間の変数の選び方の比較は範囲外。
 
 1. 素朴な三項ツリーで、段数を増やしても誤差が減らない区間があるのはなぜか。
-2. 補間法では内側バリアの価格を何回計算するか。バリアがノード上にあるとき補間値はどうなるか。
+2. 補間法ではツリーを何本計算するか。バリアがノード上にあるとき補間値はどうなるか。
 3. $H=102.8$ドル・100段で $p_m<0$ になる。段数を増やす以外の対策は何か。
 
-**回答の手掛かり：** 外側バリアの位置、重み1、バリア付近だけ細かい格子。"""))
+**回答の手掛かり：** 外側バリアの位置、2本と重み1、バリア付近だけ細かい格子。"""))
 cells.append(code(r"""pde = barrier_reference["analytic"]["pde"]
 print(f"§26.9 の式 {barrier_analytic:.6f} $、PDE {pde['value']:.6f} $（差 {pde['error']:+.1e} $）")
+watch = barrier_reference["monitoring"]
+for n, tree, bgk in zip(watch["steps"], watch["tree_on_barrier"], watch["bgk_discrete"]):
+    print(f"{n}段: バリア上ツリー {tree:+.3f} $、離散監視(BGK) {bgk:+.3f} $（連続監視との差）")
 tail = barrier_reference["errors"]
 print(f"バリア上の誤差の次数 {tail['on_barrier_order']:.3f}、3200段の補間誤差 "
       f"{tail['interpolated'][-1]:+.5f} $")"""))

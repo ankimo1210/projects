@@ -76,10 +76,11 @@ def trinomial_probabilities(
 ):
     """Hull §27.6 branch probabilities ``(p_up, p_middle, p_down)``.
 
-    They match the mean ``(r - q - sigma^2/2) dt`` and the second raw moment
-    ``sigma^2 dt`` of the log return over one step, so the variance is
-    ``sigma^2 dt`` only to first order in ``dt``. Values are returned even
-    when a branch is negative; tree pricing rejects such spacings.
+    The one-step log return has mean ``mu dt`` exactly, with
+    ``mu = r - q - sigma^2/2``, and second moment ``sigma^2 dt``. The true second
+    moment is ``sigma^2 dt + (mu dt)^2``, so the second moment and the variance
+    match only to first order in ``dt``. Values are returned even when a branch
+    is negative; tree pricing rejects such spacings.
     """
     drift = (rate - dividend_yield - volatility**2 / 2) * dt
     spread = volatility**2 * dt / log_spacing**2
@@ -102,7 +103,8 @@ def _validate(spot, strike, barrier, rate, volatility, maturity, steps, option, 
         raise ValueError(f"option must be one of {_OPTIONS}, got {option!r}")
     if barrier_type not in _BARRIERS:
         raise ValueError(f"barrier_type must be one of {_BARRIERS}, got {barrier_type!r}")
-    if (barrier_type == "up-and-out") != (barrier > spot):
+    inside = barrier > spot if barrier_type == "up-and-out" else barrier < spot
+    if not inside:
         raise ValueError("spot must be strictly inside the knock-out barrier")
 
 
@@ -150,8 +152,10 @@ def trinomial_barrier(
     nodes at or beyond the barrier, so the tree's barrier is the outer level.
     ``"inner"`` knocks out one level earlier, at the inner barrier.
     ``"on_barrier"`` chooses ``ln u`` so that a level lies exactly on the
-    barrier. The barrier is monitored at every node, which on a lattice that
-    moves one level per step is continuous monitoring of the tree's barrier.
+    barrier. The barrier is checked at every node. A lattice path moves one
+    level per step, so it cannot jump over the tree's barrier level: this is
+    continuous monitoring of that level, without the overshoot that the
+    Broadie-Glasserman-Kou correction describes for discrete monitoring.
     A spacing with a negative branch probability, or a barrier within half a
     step of the spot, is rejected: Hull's remedy is an adaptive mesh.
     Rates, dividend yield and volatility are annual continuous decimals;

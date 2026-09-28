@@ -33,7 +33,7 @@ def test_hull_rule_puts_the_barrier_on_the_nearest_level():
     assert down_spacing == pytest.approx(math.log(1.25) / abs(down_levels), rel=1e-15)
 
 
-def test_probabilities_match_mean_and_second_moment_of_the_log_return():
+def test_probabilities_match_the_mean_exactly_and_the_second_moment_to_first_order():
     rate, dividend, volatility, dt = 0.05, 0.02, 0.30, 0.01
     log_spacing = barrier_log_spacing(100.0, 120.0, volatility, dt)[1]
     p_up, p_mid, p_down = trinomial_probabilities(
@@ -196,6 +196,50 @@ def test_invalid_inputs_are_rejected(change):
         trinomial_barrier(**arguments)
 
 
-def test_down_barrier_above_spot_is_rejected():
+@pytest.mark.parametrize("barrier", [110.0, 100.0])
+def test_down_barrier_at_or_above_spot_is_rejected(barrier):
     with pytest.raises(ValueError):
-        binomial_barrier(**dict(UP, barrier=110.0), steps=20, barrier_type="down-and-out")
+        binomial_barrier(**dict(UP, barrier=barrier), steps=20, barrier_type="down-and-out")
+    with pytest.raises(ValueError):
+        trinomial_barrier(**dict(UP, barrier=barrier), steps=20, barrier_type="down-and-out")
+
+
+def test_binomial_down_barrier_knocks_out_a_node_exactly_on_it():
+    up = math.exp(0.30 * math.sqrt(1.0))
+    tree = binomial_barrier(
+        **dict(UP, barrier=100.0 / up), steps=1, option="put", barrier_type="down-and-out"
+    )
+    assert tree.barrier_level == -1
+    assert tree.price == pytest.approx(0.0, abs=1e-15)
+
+
+def test_binomial_put_and_dividend_match_black_scholes_when_unreachable():
+    from hullkit.bsm import put_price
+
+    far = binomial_barrier(
+        **dict(UP, barrier=1e-6),
+        steps=400,
+        option="put",
+        barrier_type="down-and-out",
+        dividend_yield=0.03,
+    )
+    assert far.price == pytest.approx(put_price(100.0, 100.0, 0.05, 0.30, 1.0, q=0.03), abs=0.01)
+    call = binomial_barrier(**dict(UP, barrier=1e9), steps=400, dividend_yield=0.03)
+    assert call.price == pytest.approx(call_price(100.0, 100.0, 0.05, 0.30, 1.0, q=0.03), abs=0.01)
+
+
+@pytest.mark.parametrize(
+    ("option", "barrier_type", "barrier"),
+    [("call", "up-and-out", 120.0), ("call", "down-and-out", 80.0), ("put", "up-and-out", 120.0)],
+)
+def test_dividend_yield_enters_the_barrier_aware_trees(option, barrier_type, barrier):
+    formula = barrier_call if option == "call" else barrier_put
+    analytic = formula(100.0, 100.0, barrier, 0.05, 0.30, 1.0, q=0.03, barrier=barrier_type)
+    arguments = dict(UP, barrier=barrier)
+    options = dict(option=option, barrier_type=barrier_type, dividend_yield=0.03)
+    errors = [
+        trinomial_barrier(**arguments, steps=n, method="on_barrier", **options).price - analytic
+        for n in (800, 1600)
+    ]
+    assert abs(errors[0]) < 0.006
+    assert errors[1] / errors[0] == pytest.approx(0.5, abs=0.1)
