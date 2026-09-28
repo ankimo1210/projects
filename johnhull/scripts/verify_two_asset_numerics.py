@@ -92,9 +92,16 @@ def evaluate():
     sweep = reference["correlation"]
     for index, rho in enumerate(sweep["rho"]):
         for method in METHODS:
-            found = _price(p, "max_call", method, sweep["steps"], rho=rho)
-            expected = sweep["reference"][index] + sweep[method][index]
-            lattice_error = max(lattice_error, abs(found - expected))
+            for steps, key in ((sweep["steps"], method), (sweep["odd_steps"], f"{method}_odd")):
+                found = _price(p, "max_call", method, steps, rho=rho)
+                expected = sweep["reference"][index] + sweep[key][index]
+                lattice_error = max(lattice_error, abs(found - expected))
+    parity = reference["parity"]
+    for rho, row in zip(parity["rho"], parity["transform"], strict=True):
+        index = sweep["rho"].index(rho)
+        for steps, error in zip(parity["steps"], row, strict=True):
+            found = _price(p, "max_call", "transform", steps, rho=rho)
+            lattice_error = max(lattice_error, abs(found - sweep["reference"][index] - error))
     for case in reference["cases"]:
         found = _price(p, case["payoff"], case["method"], case["steps"], rho=case["correlation"])
         lattice_error = max(lattice_error, abs(found - case["tree"]))
@@ -105,6 +112,37 @@ def evaluate():
             lattice_error = max(lattice_error, abs(found - american_max[method][index]))
     if lattice_error >= 1e-10:
         raise AssertionError("backward trees differ from the independent lattice computation")
+
+    recursion_error = 0.0
+    for case in reference["american_recursion"]:
+        q = dict(p, spots=case["spots"], dividend_yields=case["dividend_yields"])
+        found = _price(q, "exchange", case["method"], case["steps"], exercise="american")
+        recursion_error = max(recursion_error, abs(found - case["recursive"]))
+        if case["intrinsic"] > 0 and abs(found - case["intrinsic"]) >= 1e-9:
+            raise AssertionError("deep in-the-money American tree is not worth its intrinsic value")
+    if recursion_error >= 1e-12:
+        raise AssertionError("American roll-back differs from plain recursion")
+
+    by_rho = dict(zip(parity["rho"], parity["transform"], strict=True))
+    parity_claims = {
+        "rho_0_negative_at_99_100_101": all(e < 0 for e in by_rho[0.0]),
+        "rho_pm_0_6_dip_only_at_even_steps": all(
+            abs(row[1]) < 0.3 * min(abs(row[0]), abs(row[2])) for row in (by_rho[-0.6], by_rho[0.6])
+        ),
+        "rho_minus_1_sign_alternates": by_rho[-1.0][0] < 0 < by_rho[-1.0][1]
+        and by_rho[-1.0][2] < 0,
+        "rho_0_5_same_sign_and_size": all(e > 0 for e in by_rho[0.5])
+        and max(by_rho[0.5]) < 1.2 * min(by_rho[0.5]),
+    }
+    parity_gap = {
+        m: max(abs(a - b) for a, b in zip(sweep[m], sweep[f"{m}_odd"], strict=True))
+        for m in METHODS
+    }
+    if (
+        not all(parity_claims.values())
+        or not parity_gap["adjusted"] < 0.003 < parity_gap["rubinstein"]
+    ):
+        raise AssertionError("odd/even behaviour of the correlation sweep changed")
 
     hand = reference["hand_example"]
     hand_error = 0.0
@@ -172,8 +210,9 @@ def evaluate():
         "section": "27.7",
         "status": "PASS",
         "method": (
-            "forward lattice induction and a separately written backward induction on Hull's "
-            "printed factors, Stulz and Margrabe formulas, 1-D American exchange reduction"
+            "forward lattice induction on Hull's printed factors, a vectorised backward "
+            "induction (hullkit's algorithm) checked by a per-node recursion on 6-step cases, "
+            "Stulz and Margrabe formulas, 1-D American exchange reduction"
         ),
         "tolerances": {
             "lattice_currency": 1e-10,
@@ -185,6 +224,8 @@ def evaluate():
             "american_exchange_currency_200_steps": 0.005,
             "one_dimensional_half_spread": 2.5e-5,
             "control_variate_spread_800_steps": 5e-4,
+            "recursion_currency": 1e-12,
+            "deep_in_the_money_intrinsic_currency": 1e-9,
         },
         "measured": {
             "max_lattice_error": lattice_error,
@@ -203,6 +244,10 @@ def evaluate():
             "american_max_call_800_steps": {"raw": raw, "control_variate": controlled},
             "american_max_call_spreads": spreads,
             "lattice_cases": len(reference["cases"]),
+            "recursion_error": recursion_error,
+            "recursion_cases": len(reference["american_recursion"]),
+            "parity_claims": parity_claims,
+            "max_gap_100_vs_101_steps": parity_gap,
         },
         "source_sha256": {name: sha(PROJECT / name) for name in SOURCES},
         "artifact_sha256": sha(REF),

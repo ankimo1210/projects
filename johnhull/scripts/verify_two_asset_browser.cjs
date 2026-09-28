@@ -68,10 +68,12 @@ async function numeric(plot, key) {
     arrayClose(traces[3].y, [start, start * steps[0] / steps[steps.length - 1]], 'guide');
   } else {
     const sweep = data.correlation;
-    check(traces.length === 3, 'three correlation sweeps');
+    check(traces.length === 6, 'three correlation sweeps at two step counts');
     methods.forEach((name, index) => {
       arrayClose(traces[index].x, sweep.rho, `${name} rho`);
       arrayClose(traces[index].y, sweep[name], `correlation ${name}`);
+      arrayClose(traces[index + 3].x, sweep.rho, `${name} odd rho`);
+      arrayClose(traces[index + 3].y, sweep[`${name}_odd`], `correlation ${name} odd`);
     });
   }
 }
@@ -87,6 +89,18 @@ async function layout(page, plot, label) {
       const box = node.getBoundingClientRect();
       if (box.width && box.height && (box.left < frame.left - 3 || box.right > frame.right + 3 ||
           box.top < frame.top - 3 || box.bottom > frame.bottom + 3)) return `clipped ${node.textContent}`;
+    }
+    const gap = 4;
+    const meets = (a, b) => a.left < b.right + gap && b.left < a.right + gap &&
+      a.top < b.bottom + gap && b.top < a.bottom + gap;
+    for (const [title, ticks] of [['.ytitle', '.yaxislayer-above text'], ['.xtitle', '.xaxislayer-above text']]) {
+      const label = el.querySelector(title);
+      if (!label) continue;
+      const box = label.getBoundingClientRect();
+      for (const tick of el.querySelectorAll(ticks)) {
+        const mark = tick.getBoundingClientRect();
+        if (mark.width && mark.height && meets(box, mark)) return `overlap ${label.textContent} / ${tick.textContent}`;
+      }
     }
     return null;
   });

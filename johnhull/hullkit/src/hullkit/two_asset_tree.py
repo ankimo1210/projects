@@ -98,9 +98,11 @@ def two_asset_lattice(
 
     ``"transform"`` models ``x1 = sigma2 ln S1 + sigma1 ln S2`` and
     ``x2 = sigma2 ln S1 - sigma1 ln S2``, which are uncorrelated, on two binomial
-    trees. Hull only asks the trees to match the first two moments; here each
-    step ``+-h_i`` with probability ``p_i`` matches the mean and variance of
-    ``x_i`` exactly. ``"rubinstein"`` is the nonrectangular tree with four
+    trees. Hull asks each tree to match the first two moments; for a step
+    ``+-h_i`` with probability ``p_i`` that fixes ``h_i = sqrt(v_i + m_i^2)`` and
+    ``p_i = 1/2 + m_i / (2 h_i)`` for the one-step mean ``m_i`` and variance
+    ``v_i`` (the common shortcut ``h_i = sd_i sqrt(dt)`` matches the variance
+    only to first order). ``"rubinstein"`` is the nonrectangular tree with four
     branches of probability 0.25 and the factors ``u1, d1, A, B, C, D``.
     ``"adjusted"`` combines the §21.4 alternative binomial trees (probabilities
     0.5) and sets the joint probabilities to ``0.25(1 +- rho)`` (Table 27.3).

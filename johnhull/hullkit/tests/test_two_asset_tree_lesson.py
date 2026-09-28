@@ -41,6 +41,8 @@ def test_four_figures_use_the_saved_reference():
     assert list(errors.data[0].y) == [abs(e) for e in data["errors"]["transform_max_call"]]
     correlation = figures["two_asset_correlation"]
     assert list(correlation.data[2].y) == data["correlation"]["adjusted"]
+    assert list(correlation.data[3].y) == data["correlation"]["transform_odd"]
+    assert data["correlation"]["odd_steps"] == data["correlation"]["steps"] + 1
 
 
 def test_hash_guard_rejects_a_changed_reference(tmp_path):
