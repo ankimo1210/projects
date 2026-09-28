@@ -118,6 +118,12 @@ ignore = [
     "RUF003",
 ]
 
+[tool.ruff.lint.isort]
+# Pin the section: jp_llm_lab/data/snapshots/ is a local (git-ignored) data
+# directory, and ruff's first-party detection would otherwise sort
+# `jp_llm_lab.data.snapshots` differently in checkouts that have it.
+known-third-party = ["jp_llm_lab"]
+
 [tool.ruff.lint.per-file-ignores]
 # Math / finance code commonly uses single-letter and uppercase variables
 # (S0, K, T, r, sigma, ...). Allow PEP-8 naming exceptions there.

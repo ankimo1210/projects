@@ -21,10 +21,11 @@ and never hit the shadow).
 (2026-09-06) is the same case.
 """
 
+import jp_llm_lab  # noqa: F401
+
 import deep_hedge_price  # noqa: F401
 import gto  # noqa: F401
 import health  # noqa: F401
-import jp_llm_lab  # noqa: F401
 import labor_ai_quadrant  # noqa: F401
 import macrokit  # noqa: F401
 import optimal_execution  # noqa: F401
