@@ -161,6 +161,7 @@ testpaths = [
     "akinator/tests",
     "health/tests",
     "johnhull/tests",
+    "deep_hedge_price/tests",
     "johnhull/hullkit/tests",
     "johnhull/report/tests",
     "analytics/linear_algebra/tests",

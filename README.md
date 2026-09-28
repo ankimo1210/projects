@@ -138,14 +138,14 @@ make help      # ターゲット一覧
 make install   # uv 管理プロジェクトを一括 sync
 make lint      # ruff check を全体に
 make fmt       # ruff format --check を全体に
-make test      # testpaths の33件を pytest で実行 + npm があれば sde-check
+make test      # testpaths の34件を pytest で実行 + npm があれば sde-check
 make clean     # __pycache__ / .pytest_cache などを掃除
 make tree      # ヘビーディレクトリを除外したツリー表示
 ```
 
 `make test` の Python 対象は [pyproject.toml](pyproject.toml) の `testpaths` に登録した
-33ディレクトリです（2026-09-28 確認）。全プロジェクトを検証するものではありません。
-`johnhull/report/tests` は登録済み、`deep_hedge_price/tests` は未登録です。
+34ディレクトリです（2026-09-28 確認）。全プロジェクトを検証するものではありません。
+`deep_hedge_price/tests` も 2026-09-28 に登録しました。
 対象プロジェクトのテストを個別に実行してください。`npm` がなければ `sde-check` は省略されます。
 
 ## 環境前提

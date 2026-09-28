@@ -63,10 +63,9 @@ dev tooling its own CI invokes; the shared `.venv` hides omissions that
 `docs/decisions/0002-workspace-green-and-declared-dependencies.md`.
 
 **That green is not full coverage.** `make test` runs only the `testpaths`
-list in the root `pyproject.toml` (33 directories after 2026-09-28 archive).
-`deep_hedge_price/tests` is still missing; `johnhull/report/tests` is registered.
-A previous direct run of the deep-hedging suite passed, but `make test` does not
-invoke it. Do not read
+list in the root `pyproject.toml` (34 directories as of 2026-09-28).
+`deep_hedge_price/tests` (206) joined on 2026-09-28 together with its root
+`conftest.py` import. Projects outside `testpaths` are still not run. Do not read
 "workspace green" as "every project verified"; run the suite you actually
 touched. `analytics/fourier/tests` (47) was in this list until 2026-08-16 and
 needed only the `testpaths` line, because its import name `fourier_book`
@@ -74,6 +73,10 @@ differs from its directory; `deep_hedge_price` has dir name == package name
 and so needs a matching `import` in the root `conftest.py` as well —
 `testpaths` alone makes it fail with
 `ModuleNotFoundError: No module named 'deep_hedge_price.config'`.
+`analytics/report` and `johnhull/report` are not workspace members; their test
+conftests prepend their own directory to `sys.path`, so their top-level package
+names must stay distinct (`analytics_portal` vs `report_builder`) or one suite
+silently imports the other's package in a full run.
 
 `make test` also runs `sde-check` (typecheck + lint + build + 12 node tests
 for `analytics/differential_equation/sde-book`), skipping it with a printed
