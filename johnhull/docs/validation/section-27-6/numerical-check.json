@@ -1,0 +1,42 @@
+{
+  "section": "27.6",
+  "status": "PASS",
+  "method": "forward lattice induction, §26.9 continuous formula, Crank–Nicolson PDE, Hull spacing and moment identities",
+  "tolerances": {
+    "lattice_currency": 1e-10,
+    "formula_currency": 1e-12,
+    "pde_currency": 1e-05,
+    "on_barrier_order": [
+      0.9,
+      1.1
+    ],
+    "final_on_barrier_currency": 0.0015,
+    "final_interpolated_currency": 0.001,
+    "outer_barrier_gap_from_100_steps": 0.05
+  },
+  "measured": {
+    "max_lattice_error": 6.639133687258436e-14,
+    "formula_error": 0.0,
+    "pde_error": -1.8752449832959428e-06,
+    "max_simple_trinomial_error": 1.0622216186806546,
+    "max_outer_barrier_gap_from_100_steps": 0.04176932918507115,
+    "on_barrier_order": 1.004978679651881,
+    "final_errors_3200_steps": {
+      "interpolated": 0.0005148474271251535,
+      "on_barrier": 0.0010562474963747293
+    },
+    "hand_error": 2.236166980751353e-19,
+    "geometry_error": 0.0,
+    "near_probability_error": 0.0,
+    "near_rejected": [
+      "H=102.0, N=100",
+      "H=102.8, N=100"
+    ]
+  },
+  "source_sha256": {
+    "scripts/build_barrier_tree_reference.py": "af43c158ec8b8c363df2af1f713942cf23ed9b9e14df6239b72ccef435fb6122",
+    "scripts/verify_barrier_tree_numerics.py": "6b65e8eb2b457f33e65b9be70b462bbdcf9fb5d0ac326f06da685598b9686267",
+    "hullkit/src/hullkit/barrier_tree.py": "88adb1e5ebe9dd7579af0b6c71878037c200c05ab34a74e39db25cec1adbcf7a"
+  },
+  "artifact_sha256": "33a9753eaba4951659ef8ea4470ec24d21dd5c08159e5a21043df3f87af778f2"
+}

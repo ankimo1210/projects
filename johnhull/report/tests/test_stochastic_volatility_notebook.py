@@ -14,14 +14,15 @@ def test_stochastic_volatility_saved_cells_and_figures():
         for cell in notebook.cells
         if cell.cell_type == "markdown" and cell.source.startswith("## ")
     ]
-    assert headings[6:13] == [
+    assert headings[6:14] == [
         "## 7. Black–Scholes–Merton 以外のモデル（§27.1）",
         "## 8. 確率ボラティリティ・モデル（§27.2）",
         "## 9. IVF（局所ボラティリティ）モデル（§27.3）",
         "## 10. 転換社債（§27.4）",
         "## 11. 経路依存デリバティブ（§27.5）",
-        "## 12. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）",
-        "## 13. 練習問題",
+        "## 12. バリア・オプションのツリー評価（§27.6）",
+        "## 13. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）",
+        "## 14. 練習問題",
     ]
     text = "\n".join(cell.source for cell in notebook.cells)
     for title in (

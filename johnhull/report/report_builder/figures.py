@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from hullkit import plotly_viz as pv
 from hullkit._alternative_models_lesson import _figures as alternative_models_lesson_figures
 from hullkit._asian_lesson import _figures as asian_lesson_figures
+from hullkit._barrier_tree_lesson import _figures as barrier_tree_lesson_figures
 from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
@@ -386,6 +387,42 @@ FIGURES: list[FigureSpec] = [
         "補間を使わない4–12段の基準値で代表平均グリッドの誤差を測る。",
         lambda: path_dependent_lesson_figures()["path_exact"],
         practice="全経路列挙は指数的に増えるため、高段数では代表値法を用いる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "barrier_lattice",
+        "numerics",
+        "バリア・ツリー：内側・外側・真のバリア",
+        "10段の三項ツリーで、標準の間隔とバリア上に置く間隔のノードを比べる（原著Figure 27.4・27.5）。",
+        lambda: barrier_tree_lesson_figures()["barrier_lattice"],
+        practice="素朴なツリーは外側バリアを真のバリアとして評価してしまう。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "barrier_convergence",
+        "numerics",
+        "up-and-out コールの収束",
+        "二項・三項の素朴な方法、内側・外側の補間、バリア上のノードを20–300段で比べる。",
+        lambda: barrier_tree_lesson_figures()["barrier_convergence"],
+        practice="段数を増やしても素朴な方法はのこぎり状に振れ、単調には収束しない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "barrier_errors",
+        "numerics",
+        "誤差の分解：バリア位置と格子",
+        "素朴な三項の誤差を、外側バリアの位置の差と格子の誤差に分ける。",
+        lambda: barrier_tree_lesson_figures()["barrier_errors"],
+        practice="ノードをバリアに乗せると位置の差が消え、誤差は段数に反比例して縮む。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "barrier_near",
+        "numerics",
+        "バリアが近いときの中央の確率",
+        "100段と400段で、バリアを初期価格に近づけたときの中央の枝の確率を示す。",
+        lambda: barrier_tree_lesson_figures()["barrier_near"],
+        practice="近すぎると段がなくなるか確率が負になる。原著はadaptive meshを勧める。",
         is_new=True,
     ),
     # risk_credit --------------------------------------------------------

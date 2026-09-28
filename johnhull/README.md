@@ -35,7 +35,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 134 figures (34 exotics)
+make hull-report           # offline portal: 12 themes / 138 figures (34 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -127,4 +127,16 @@ rechecked with `scripts/recheck_accepted_m14.py` and `.cjs`; the integrated
 gate is `scripts/build_path_dependent_acceptance_record.py --check`.
 Historical notebook verifiers remain acceptance-time snapshots. For current
 HEAD, `scripts/verify_accepted_vol06_notebook.py --check` independently checks
-each accepted §27.1–§27.4 lesson against its own acceptance commit.
+each accepted §27.1–§27.5 lesson against its own acceptance commit.
+
+The §27.6 (M15) checks are `scripts/build_barrier_tree_reference.py --check`,
+`scripts/verify_barrier_tree_numerics.py --check`,
+`scripts/verify_barrier_tree_notebook.py --check` (fresh vol06, 94 preserved
+cells outside §12, four rejected mutations), and
+`scripts/verify_barrier_tree_browser.cjs` (Book/portal at 1440/1000px,
+16 states and changed-value rejection). M15 is the first milestone rechecked
+under the D1 evidence policy: `scripts/d1_preflight_compare.py` reruns each of
+the fourteen earlier lessons' own verifier and tests from the dependencies in
+`scripts/evidence_dependencies.json`, stores new recheck images only in the
+C:/F: artifact stores and writes schema-2 records to `docs/validation/d1-recheck/`.
+The integrated gate is `scripts/build_barrier_tree_acceptance_record.py --check`.
