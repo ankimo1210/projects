@@ -8,12 +8,11 @@ from __future__ import annotations
 
 import json
 import sys
+from itertools import pairwise
 
 import numpy as np
 
-from subway3d import alignment as A
-from subway3d import chart as C
-from subway3d import elevation as E
+from subway3d import alignment, chart, elevation
 from subway3d.lines import LINES, PAGES, LineSpec
 
 SOURCES = {
@@ -33,17 +32,17 @@ def rubber_sheet(chart_d: np.ndarray, anchors_chart, anchors_align) -> np.ndarra
 def build_line(spec: LineSpec, page: tuple, ways: list[dict], stops: list[dict],
                cache_path: str, step: float = 25.0, fetch_ground: bool = True) -> dict:
     black, _ = page
-    ch = C.chart_at(black, spec.chart, spec.axis)
-    markers = C.station_markers(ch)
-    chain = [C.snap(d, markers) for _, d in spec.stations]
-    cd, ce = C.rail_profile(ch, [*markers, *chain])
+    ch = chart.chart_at(black, spec.chart, spec.axis)
+    markers = chart.station_markers(ch)
+    chain = [chart.snap(d, markers) for _, d in spec.stations]
+    cd, ce = chart.rail_profile(ch, [*markers, *chain])
 
-    graph = A.Graph(ways, spec.osm_name)
-    poly = A.track(graph, stops, [name for name, _ in spec.stations])
-    cum = A.cumulative(poly)
-    anchors = [A.anchor(poly, stops, graph, name) for name, _ in spec.stations]
+    graph = alignment.Graph(ways, spec.osm_name)
+    poly = alignment.track(graph, stops, [name for name, _ in spec.stations])
+    cum = alignment.cumulative(poly)
+    anchors = [alignment.anchor(poly, stops, graph, name) for name, _ in spec.stations]
     anchors_align = [a[1] for a in anchors]
-    if any(b <= a for a, b in zip(anchors_align, anchors_align[1:])):
+    if any(b <= a for a, b in pairwise(anchors_align)):
         raise RuntimeError(f"{spec.key}: station anchors are not monotonic along the track: {anchors_align}")
 
     # Sample evenly along the alignment, then read the rail elevation for that point.
@@ -55,7 +54,7 @@ def build_line(spec: LineSpec, page: tuple, ways: list[dict], stops: list[dict],
     rail = np.interp(chart_s, cd, ce)
 
     if fetch_ground:
-        ground = E.ground_elevations(list(zip(lons, lats)), cache_path)
+        ground = elevation.ground_elevations(list(zip(lons, lats, strict=True)), cache_path)
         g = np.array([np.nan if v is None else v for v in ground], dtype=float)
         if np.isnan(g).any():  # DEM gaps: bridge them rather than drop the vertex
             idx = np.arange(len(g))
@@ -67,7 +66,7 @@ def build_line(spec: LineSpec, page: tuple, ways: list[dict], stops: list[dict],
                    if w.get("tags", {}).get("name") == spec.osm_name and "colour" in w["tags"]),
                   FALLBACK_COLOUR.get(spec.key))
     stations = []
-    for (name, _), (coord, a), d in zip(spec.stations, anchors, chain):
+    for (name, _), (coord, a), d in zip(spec.stations, anchors, chain, strict=True):
         j = int(np.argmin(abs(s - a)))
         stations.append({
             "name": name,
@@ -81,7 +80,7 @@ def build_line(spec: LineSpec, page: tuple, ways: list[dict], stops: list[dict],
     track = [
         {"lon": round(float(lo), 6), "lat": round(float(la), 6), "rail_tp_m": round(float(r), 2),
          "ground_tp_m": None if np.isnan(gg) else round(float(gg), 1)}
-        for lo, la, r, gg in zip(lons, lats, rail, g)
+        for lo, la, r, gg in zip(lons, lats, rail, g, strict=True)
     ]
     return {"key": spec.key, "name": spec.name, "colour": colour,
             "section": f"{spec.stations[0][0]}〜{spec.stations[-1][0]}",
@@ -92,7 +91,7 @@ def build_all(root: str = ".", cache_path: str = "data/raw/gsi_cache.json", keys
               fetch_ground: bool = True) -> dict:
     ways = json.load(open(f"{root}/data/raw/osm_ways.json"))["elements"]
     stops = json.load(open(f"{root}/data/raw/osm_stops.json"))["elements"]
-    pages = {p: C.load_page(f"{root}/{path}") for p, path in PAGES.items()}
+    pages = {p: chart.load_page(f"{root}/{path}") for p, path in PAGES.items()}
     lines = [build_line(LINES[k], pages[LINES[k].page], ways, stops, f"{root}/{cache_path}",
                         fetch_ground=fetch_ground) for k in (keys or LINES)]
     return {"title": "東京の地下鉄 都心部（実測の軌条面標高）", "sources": SOURCES, "lines": lines}

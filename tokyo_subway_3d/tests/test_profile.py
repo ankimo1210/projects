@@ -4,12 +4,11 @@ from __future__ import annotations
 import json
 import pathlib
 from collections import defaultdict
+from itertools import pairwise
 
 import numpy as np
 import pytest
-
-from subway3d import alignment as A
-from subway3d import chart as C
+from subway3d import alignment, chart
 from subway3d.lines import LINES, PAGES
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -25,7 +24,7 @@ pytestmark = pytest.mark.skipif(not (ROOT / PAGES[3]).exists(), reason="raw char
 
 @pytest.fixture(scope="module")
 def pages():
-    return {p: C.load_page(str(ROOT / path)) for p, path in PAGES.items()}
+    return {p: chart.load_page(str(ROOT / path)) for p, path in PAGES.items()}
 
 
 @pytest.fixture(scope="module")
@@ -38,7 +37,7 @@ def line(model, key):
 
 
 def test_every_page_has_its_charts(pages):
-    assert [len(C.detect_frames(pages[p][0])) for p in (3, 4, 5)] == [4, 4, 4]
+    assert [len(chart.detect_frames(pages[p][0])) for p in (3, 4, 5)] == [4, 4, 4]
 
 
 @pytest.mark.parametrize("key", KEYS)
@@ -46,8 +45,8 @@ def test_y_axis_calibration_matches_printed_gridlines(pages, key):
     """At least six printed 5 m gridlines must decode to a multiple of 5 m within 0.2 m."""
     sp = LINES[key]
     black, gray = pages[sp.page]
-    ch = C.chart_at(black, sp.chart, sp.axis)
-    errs = sorted(C.gridline_errors(gray, ch))
+    ch = chart.chart_at(black, sp.chart, sp.axis)
+    errs = sorted(chart.gridline_errors(gray, ch))
     assert errs[:6] == pytest.approx([0] * 6, abs=0.2), errs
 
 
@@ -55,7 +54,7 @@ def test_y_axis_calibration_matches_printed_gridlines(pages, key):
 def test_station_chainages_snap_to_detected_markers(pages, key):
     sp = LINES[key]
     black, _ = pages[sp.page]
-    markers = C.station_markers(C.chart_at(black, sp.chart, sp.axis))
+    markers = chart.station_markers(chart.chart_at(black, sp.chart, sp.axis))
     for name, d in sp.stations:
         if (key, name) in UNDETECTED:
             continue
@@ -67,9 +66,9 @@ def test_rail_profile_has_no_label_spikes(pages, key):
     """A hidden rail curve must be bridged, not replaced by the station label above it."""
     sp = LINES[key]
     black, _ = pages[sp.page]
-    ch = C.chart_at(black, sp.chart, sp.axis)
-    markers = C.station_markers(ch)
-    d, e = C.rail_profile(ch, [*markers, *(C.snap(c, markers) for _, c in sp.stations)])
+    ch = chart.chart_at(black, sp.chart, sp.axis)
+    markers = chart.station_markers(ch)
+    d, e = chart.rail_profile(ch, [*markers, *(chart.snap(c, markers) for _, c in sp.stations)])
     # Resample at 25 m: per-column values jitter by a pixel, a label spike is 10-27 m
     # (a grade above 0.3). The charts themselves draw straight lines between survey
     # points, so a real dive can look like 14 % (大江戸線 under 御徒町); 0.15 separates them.
@@ -93,7 +92,7 @@ def test_station_anchors_are_monotonic_and_on_track(model, key):
     a = [s["alignment_m"] for s in ln["stations"]]
     assert a == sorted(a) and len(set(a)) == len(a)
     for s in ln["stations"]:
-        assert min(A.haversine((p["lon"], p["lat"]), tuple(s["coord"])) for p in ln["track"]) < 20, s["name"]
+        assert min(alignment.haversine((p["lon"], p["lat"]), tuple(s["coord"])) for p in ln["track"]) < 20, s["name"]
 
 
 @pytest.mark.parametrize("key", KEYS)
@@ -106,9 +105,9 @@ def test_every_station_is_below_ground(model, key):
 def test_track_is_continuous_and_dense(model, key):
     track = line(model, key)["track"]
     assert len(track) > 100
-    steps = [A.haversine((a["lon"], a["lat"]), (b["lon"], b["lat"])) for a, b in zip(track, track[1:])]
+    steps = [alignment.haversine((a["lon"], a["lat"]), (b["lon"], b["lat"])) for a, b in pairwise(track)]
     assert max(steps) < 40.0
-    grades = [abs(a["rail_tp_m"] - b["rail_tp_m"]) / s for a, b, s in zip(track, track[1:], steps)]
+    grades = [abs(a["rail_tp_m"] - b["rail_tp_m"]) / s for (a, b), s in zip(pairwise(track), steps, strict=True)]
     assert max(grades) < 0.2  # chart V under 御徒町 reaches 0.19 after rubber-sheeting
 
 
