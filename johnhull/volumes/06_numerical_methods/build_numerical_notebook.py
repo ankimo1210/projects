@@ -1322,16 +1322,180 @@ for rho in (-1.0, -0.5, 0.0, 0.6):
           f"Rubinstein {sweep['rubinstein'][i]:+.4f}/{sweep['rubinstein_odd'][i]:+.4f}、"
           f"確率調整 {sweep['adjusted'][i]:+.4f}/{sweep['adjusted_odd'][i]:+.4f} $（100段/101段）")"""))
 
+cells.append(md(r"""## 14. モンテカルロ法とアメリカン・オプション（§27.8）
+
+モンテカルロ法は経路依存のオプションや確率変数の多いオプションに向くが、各時点で行使するか続けるかを
+決めるのは苦手である。原典 pp.660–665 は二つの方法を示す。最小二乗法（Longstaff–Schwartz）と
+行使境界のパラメータ化（Andersen）である。例は配当のない株式の3年のアメリカン・プットで、
+行使できるのは1・2・3年目の年末、$S_0=1.00$、$K=1.10$、$r=6\%$（連続複利）。
+Table 27.4 の8本の経路を使う（説明用で、実務でははるかに多くの経路を使う）。"""))
+cells.append(md(r"""### 14.1 8本の経路と満期のキャッシュフロー（Tables 27.4–27.5）
+
+3年目にしか行使できなければ、キャッシュフローは満期の本源的価値 $\max(K-S_3,0)$ で、
+経路3・4・6・7が0.07・0.18・0.20・0.09になる（Table 27.5）。経路番号は原典どおり1から数える
+（プログラムの添字は0からなので1ずれる）。"""))
+cells.append(code(r"""from hullkit import american_mc as amc
+from hullkit._american_mc_lesson import _figures as american_mc_lesson_figures
+from hullkit._american_mc_lesson import _load_reference as american_mc_load_reference
+
+american_mc_reference = american_mc_load_reference()
+american_mc_figures = american_mc_lesson_figures()
+mc_hand = american_mc_reference["hand_example"]
+mc_paths = np.array(mc_hand["paths"])
+mc_times = tuple(mc_hand["times"])
+
+
+def hull_put(s, strike=mc_hand["strike"]):
+    return np.maximum(strike - s, 0.0)
+
+
+table_27_4 = pd.DataFrame(mc_paths, columns=["t=0", "t=1", "t=2", "t=3"], index=range(1, 9))
+table_27_4["満期のキャッシュフロー"] = hull_put(mc_paths[:, 3]).round(2)
+display(table_27_4)"""))
+cells.append(md(r"""### 14.2 最小二乗法で継続価値を推定する（Tables 27.6–27.7）
+
+2年目に ITM の経路1・3・4・6・7について、2年目の株価 $S$ と、続けたときのキャッシュフローを
+2年目へ割り引いた値 $V$（0、$0.07e^{-0.06}$、$0.18e^{-0.06}$、$0.20e^{-0.06}$、$0.09e^{-0.06}$）を
+$V=a+bS+cS^2$ に最小二乗で当てはめる。係数は $a=-1.069988$、$b=2.983411$、$c=-1.813576$
+（原典の印刷は −1.070・2.983・−1.813）。当てはめた継続価値を即時行使の価値（0.02・0.03・0.13・0.33・0.26）と
+比べ、経路4・6・7で2年目に行使する（Table 27.6）。1年目は ITM の経路1・4・6・7・8で
+$V=2.037512-3.335443S+1.356457S^2$ となり、経路4・6・7・8で行使する（Table 27.7）。
+キャッシュフローを時点0へ割り引いた平均は0.1144で、即時行使の0.10より大きいので今は行使しない。
+
+原典の継続価値（2年目 0.0369・0.0461・0.1176・0.1520・0.1565、1年目 0.0139・0.1092・0.2866・0.1175・0.1533）は
+丸めた係数で計算されている。丸めない係数とは最大 $5.4\times10^{-4}$ 違い（1年目の経路1は0.0135）、
+丸めた係数なら10個とも $6\times10^{-5}$ 以内で一致する。行使の判断と0.1144は変わらない。
+図の点は割り引いた継続の実現値、曲線は回帰、×は行使する経路の即時行使の価値である。"""))
+cells.append(code(r"""display(american_mc_figures["american_mc_regression"])
+lsm_hand = amc.least_squares(mc_paths, hull_put, mc_hand["rate"], mc_times)
+for step in lsm_hand.steps:
+    a, b, c = step.coefficients
+    print(f"t={step.time:.0f}: V = {a:+.6f} {b:+.6f}S {c:+.6f}S²、ITM の経路 "
+          f"{[int(i) + 1 for i in step.paths]}、行使 {[int(i) + 1 for i in step.exercised]}")
+    print("  継続価値", np.round(step.continuation, 4), " 即時行使", np.round(step.exercise_values, 2))
+display(pd.DataFrame(lsm_hand.cash_flows, columns=["t=1", "t=2", "t=3"], index=range(1, 9)).round(2))
+print(f"価値 {lsm_hand.continuation_value:.7f}（即時行使 {lsm_hand.exercise_now:.2f}）")"""))
+cells.append(md(r"""### 14.3 行使境界をパラメータ化する
+
+二つ目の方法は、各時点の行使境界を臨界価格 $S^*(t)$ で表し、$S\le S^*(t)$ なら行使する（p.664）。
+満期は $S^*(3)=1.10$。2年目は $S^*(2)$ を ITM の株価（0.77・0.84・0.97・1.07・1.08）とそれ未満で動かし、
+8経路の2年目での平均価値が最大になる値を選ぶ。平均は 0.0636・0.0813・0.1032・0.0982・0.0938・0.0963 で、
+$S^*(2)=0.84$（$0.84\le S^*(2)<0.97$ ならどれも同じ）。1年目の平均は 0.0972・0.1008・0.1283・0.1202・0.1215・0.1228 で、
+$S^*(1)=0.88$（$0.88\le S^*(1)<0.92$）。時点0の価値は $0.1283e^{-0.06}=0.1208$。丸めない平均0.128324からは0.12085になる。
+
+同じ8経路で最小二乗法（0.1144）より高いのは、行使の決め方が違うからである（問題27.15）。
+最小二乗法は1年目に経路4（$S=0.93$）と経路7（$S=0.92$）を行使するが、境界では経路4は3年目に0.18、
+経路7は2年目に0.26を受け取る。ただし境界はこの8経路の平均を最大にするよう選んだので、
+同じ経路で測った価値は上に偏る（次の小節）。"""))
+cells.append(code(r"""display(american_mc_figures["american_mc_boundary"])
+boundary_hand = amc.exercise_boundary(mc_paths, hull_put, mc_hand["rate"], mc_times)
+for step in boundary_hand.steps:
+    low, high = step.interval
+    print(f"t={step.time:.0f}: 平均価値 {np.round(step.averages, 4)} → S*={step.threshold:.2f}"
+          f"（{low:.2f} 以上 {high:.2f} 未満）")
+print(f"価値 {boundary_hand.continuation_value:.7f}（丸めた 0.1283 から {0.1283 * math.exp(-0.06):.4f}）")
+for name, result in (("最小二乗法", lsm_hand), ("境界", boundary_hand)):
+    first = [int(i) + 1 for i in np.nonzero(result.cash_flows[:, 0])[0]]
+    print(f"{name}: 1年目に行使する経路 {first}")"""))
+cells.append(md(r"""### 14.4 推定に使った経路を捨てて評価する
+
+実務では数万本の経路で境界を決めたあと、その経路を捨て、新しい経路で境界に従って評価する（p.665）。
+境界を決めた経路でそのまま評価すると、その標本のたまたまの動きに合わせた分だけ価値が上に偏る。
+原典はボラティリティを与えていないので、ここでは $\sigma=20\%$ と置き、行使日が1・2・3年目の3回の put を調べた。
+行使日が決まった put（バミューダン）の厳密値は0.121988で、行使日のあいだの対数正規の推移を数値積分する方法と
+Crank–Nicolson が $3\times10^{-7}$ 以内で一致する。
+
+推定に使う経路数ごとに、推定と評価を200回くり返した（評価は毎回新しい1万本）。
+境界のパラメータ化は、推定に使った経路での評価が7つの経路数すべてで厳密値より高い
+（250本で +0.0023、16000本でも +0.00014。どれも標準誤差の2倍を超える）。新しい経路での評価は低く、
+250本で −0.0014、1000本で −0.0006。最小二乗法も新しい経路では250本で −0.0008 と低い。
+一方、最小二乗法を推定に使った経路で評価した値は、この例ではどの経路数でも厳密値との差が標準誤差の2倍以内である。
+下のコードは、250本の行を同じシードの経路で公開関数から計算し直し、保存値と一致することを確かめる。"""))
+cells.append(code(r"""display(american_mc_figures["american_mc_bias"])
+bias = american_mc_reference["bias"]
+for i, n in enumerate(bias["sizes"]):
+    row = "、".join(f"{name} {bias[key]['mean'][i] - bias['exact']:+.5f}±{bias[key]['standard_error'][i]:.5f}"
+                   for key, name in (("lsm_in", "LSM推定"), ("lsm_out", "LSM新"),
+                                     ("boundary_in", "境界推定"), ("boundary_out", "境界新")))
+    print(f"{n:>6}本: {row}")
+
+mc_put = american_mc_reference["parameters"]["put"]
+
+
+def gbm_put_paths(n, dates, rng):
+    dt = mc_put["maturity"] / dates
+    z = rng.standard_normal((n, dates))
+    steps = (mc_put["rate"] - mc_put["volatility"] ** 2 / 2) * dt + mc_put["volatility"] * math.sqrt(dt) * z
+    return np.column_stack([np.full(n, mc_put["spot"]), mc_put["spot"] * np.exp(np.cumsum(steps, axis=1))])
+
+
+runs = {"lsm_in": [], "lsm_out": [], "boundary_in": [], "boundary_out": []}
+for rep in range(bias["replications"]):
+    fit = gbm_put_paths(250, 3, np.random.default_rng([american_mc_reference["parameters"]["seed"], 3, 250, rep, 0]))
+    fresh = gbm_put_paths(bias["evaluation_paths"], 3,
+                          np.random.default_rng([american_mc_reference["parameters"]["seed"], 3, 250, rep, 1]))
+    lsm = amc.least_squares(fit, hull_put, mc_put["rate"], mc_times)
+    boundary = amc.exercise_boundary(fit, hull_put, mc_put["rate"], mc_times)
+    runs["lsm_in"].append(lsm.continuation_value)
+    runs["lsm_out"].append(amc.apply_least_squares(lsm, fresh, hull_put, mc_put["rate"], mc_times).continuation_value)
+    runs["boundary_in"].append(boundary.continuation_value)
+    runs["boundary_out"].append(amc.apply_boundary(boundary, fresh, hull_put, mc_put["rate"], mc_times).continuation_value)
+gap = max(abs(np.mean(values) - bias[key]["mean"][0]) for key, values in runs.items())
+print(f"hullkit で250本の行を同じシードで計算し直した差: {gap:.1e}")"""))
+cells.append(md(r"""### 14.5 行使日を増やす・基底を変える・状態変数を増やす
+
+いつでも行使できるオプションは、行使日を多くとれば近似できる（p.664）。同じ put で行使日を3・6・12・24・48回にすると、
+厳密値は0.1220・0.1285・0.1313・0.1326・0.1332と増え、連続行使の値0.1338（CRR と Crank–Nicolson）に近づく。
+5万本で推定し新しい20万本で評価すると、2次・3次の基底の最小二乗法と境界のパラメータ化は、
+どの行使日数でも厳密値との差が標準誤差（0.00023–0.00028）の2倍以内に収まる。この精度では2次と3次の違いは見分けられない。
+
+状態変数が複数あっても、関数の形を決めれば同じように回帰できる。§13 の交換オプション
+（$S_1$ を受け取り $S_2$ を渡す。$r=5\%$、$q_1=6\%$、$q_2=2\%$、$\sigma_1=20\%$、$\sigma_2=30\%$、$\rho=0.5$、1年）を
+月1回（12回）行使できるとし、$S_1,S_2$ の2次までの単項式6個で回帰した。新しい20万本での評価は、
+ヨーロピアン（Margrabe の式）をコントロール変量にして（§21.3）8.706±0.017で、1次元に帰着した厳密値8.7190と
+1標準誤差以内で一致する。連続行使の8.7637（§13.5）との差0.045は、行使を月1回に限った分である。"""))
+cells.append(code(r"""display(american_mc_figures["american_mc_dates"])
+mc_dates = american_mc_reference["dates"]
+for i, count in enumerate(mc_dates["counts"]):
+    print(f"{count:>2}回: 厳密値 {mc_dates['exact'][i]:.5f}、" + "、".join(
+        f"{name} {mc_dates[key]['value'][i]:.5f}±{mc_dates[key]['standard_error'][i]:.5f}"
+        for key, name in (("lsm2", "2次"), ("lsm3", "3次"), ("boundary", "境界"))))
+print(f"連続行使 {mc_dates['american']:.5f}")
+mc_exchange = american_mc_reference["exchange"]
+estimate = mc_exchange["out_of_sample"]
+print(f"交換オプション（12回）: 厳密値 {mc_exchange['exact']:.4f}、最小二乗法 {estimate['value']:.4f}"
+      f"±{estimate['standard_error']:.4f}（コントロール変量なし {estimate['raw']:.4f}±{estimate['raw_standard_error']:.4f}）")"""))
+cells.append(md(r"""### 14.6 下方バイアス・上界・適用限界
+
+どちらの方法も真の最適より劣る行使境界を使うので、新しい経路での評価は真の値より低くなりがちである（p.665）。
+14.4 の図では、推定に使う経路が少ないほど新しい経路での評価が下にずれる。Andersen–Broadie の方法は、
+下限を与える任意のアルゴリズムと組み合わせて価格の上界を与える（原典は紹介だけ）。本節では上界を実装していない。
+対象は、決まった行使日に状態変数で決まる行使価値を持つオプションで、経路は利用者が与える。
+平均価格のような経路依存の量は、状態変数に加えて渡す必要がある。回帰の基底は単項式だけで、
+Laguerre 多項式などは扱わない。
+
+1. 問題27.15：原典の8経路で、最小二乗法と境界のパラメータ化の行使の決め方はどう違うか。どちらの価格が高いか。
+2. 問題27.22：行使価格を1.13にして、両方の方法で同じ分析をせよ。
+3. 推定に使った経路で評価すると、この例では境界のパラメータ化だけがはっきり上に偏った。なぜか。
+
+**回答の手掛かり：** 1. 14.3 の経路4・7。2. 最小二乗法0.1364、境界0.1388（$S^*(1)=1.11$、$S^*(2)=0.84$）。
+3. 境界は標本の平均そのものを最大にする値を選ぶ。最小二乗法の判断は3つの係数を通してしか標本に合わせられない。"""))
+cells.append(code(r"""for strike in (mc_hand["strike"], mc_hand["problem_27_22"]["strike"]):
+    def payoff(s, strike=strike):
+        return hull_put(s, strike)
+
+    lsm = amc.least_squares(mc_paths, payoff, mc_hand["rate"], mc_times)
+    boundary = amc.exercise_boundary(mc_paths, payoff, mc_hand["rate"], mc_times)
+    print(f"K={strike:.2f}: 最小二乗法 {lsm.continuation_value:.4f}、境界 {boundary.continuation_value:.4f}"
+          f"（S* = {', '.join(f'{b:.2f}' for b in boundary.boundary)}）")"""))
+
 # LSM md
 cells.append(
-    md(r"""## 14. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）
+    md(r"""## 15. 三つの数値解法の比較（CRR・FD・LSM）
 
-後ろ向きに各行使時点で:
-1. ITM パスについて「継続価値」を**将来キャッシュフローの回帰**（基底: $1, S, S^2$）で推定
-2. 即時行使価値 > 推定継続価値 のパスはそこで行使
-3. 全パスの割引キャッシュフローを平均
-
-回帰がツリーの後退帰納を代替するため、パス依存・多資産でも早期行使を扱えます。""")
+同じアメリカン・プットを CRR ツリー、有限差分法（Crank–Nicolson）、最小二乗法モンテカルロ（LSM、§14）で評価し、
+計算時間と誤差を比べる。ここでの LSM（`hullkit.mc.price_american_lsm`）は回帰と評価に同じ経路を使う簡易版で、
+§14.4 の「推定に使った経路での評価」にあたる。""")
 )
 cells.append(
     md(r"""> **核心** — 回帰でアメリカンの継続価値を推定し、MC で早期行使を扱う(LSM)。<br>
@@ -1449,7 +1613,7 @@ print("\n全チェック合格")""")
 
 # Cell 27: exercises
 cells.append(
-    md(r"""## 15. 練習問題
+    md(r"""## 16. 練習問題
 
 **Q1.** CN と implicit、グリッドを倍に細かくしたとき誤差はそれぞれ何分の1になる？
 

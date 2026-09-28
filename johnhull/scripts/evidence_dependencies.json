@@ -539,8 +539,8 @@
       ],
       "verifier_output_dir": "docs/validation/section-27-2",
       "verifier_text_renames": {
-        "'9. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
-        "'10. 練習問題'": "'15. 練習問題'"
+        "'9. Longstaff-Schwartz'": "'15. 三つの数値解法の比較'",
+        "'10. 練習問題'": "'16. 練習問題'"
       },
       "viewports": [
         [
@@ -592,8 +592,8 @@
       ],
       "verifier_output_dir": "docs/validation/section-27-3",
       "verifier_text_renames": {
-        "'10. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
-        "'11. 練習問題'": "'15. 練習問題'"
+        "'10. Longstaff-Schwartz'": "'15. 三つの数値解法の比較'",
+        "'11. 練習問題'": "'16. 練習問題'"
       },
       "viewports": [
         [
@@ -644,8 +644,8 @@
       ],
       "verifier_output_dir": "docs/validation/section-27-4",
       "verifier_text_renames": {
-        "'11. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
-        "'12. 練習問題'": "'15. 練習問題'"
+        "'11. Longstaff-Schwartz'": "'15. 三つの数値解法の比較'",
+        "'12. 練習問題'": "'16. 練習問題'"
       },
       "viewports": [
         [
@@ -696,8 +696,8 @@
       ],
       "verifier_output_dir": "docs/validation/section-27-5",
       "verifier_text_renames": {
-        "'12. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
-        "'13. 練習問題'": "'15. 練習問題'"
+        "'12. Longstaff-Schwartz'": "'15. 三つの数値解法の比較'",
+        "'13. 練習問題'": "'16. 練習問題'"
       },
       "viewports": [
         [
@@ -748,8 +748,8 @@
       ],
       "verifier_output_dir": "docs/validation/section-27-6",
       "verifier_text_renames": {
-        "'13. Longstaff-Schwartz'": "'14. Longstaff-Schwartz'",
-        "'14. 練習問題'": "'15. 練習問題'"
+        "'13. Longstaff-Schwartz'": "'15. 三つの数値解法の比較'",
+        "'14. 練習問題'": "'16. 練習問題'"
       },
       "viewports": [
         [
@@ -799,6 +799,10 @@
         "docs/validation/section-27-7/numerical-check.json"
       ],
       "verifier_output_dir": "docs/validation/section-27-7",
+      "verifier_text_renames": {
+        "'14. Longstaff-Schwartz'": "'15. 三つの数値解法の比較'",
+        "'15. 練習問題'": "'16. 練習問題'"
+      },
       "viewports": [
         [
           1440,
@@ -813,6 +817,54 @@
         "hullkit/tests/test_two_asset_tree.py",
         "hullkit/tests/test_two_asset_tree_lesson.py",
         "report/tests/test_two_asset_notebook.py"
+      ]
+    },
+    "27.8": {
+      "notebook": {
+        "path": "volumes/06_numerical_methods/numerical.ipynb",
+        "heading": "14. モンテカルロ法とアメリカン・オプション（§27.8）"
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/06_numerical.html",
+        "heading": "14. モンテカルロ法とアメリカン・オプション（§27.8）"
+      },
+      "portal": {
+        "page": "report/site/numerics.html",
+        "figures": [
+          "american_mc_regression",
+          "american_mc_boundary",
+          "american_mc_bias",
+          "american_mc_dates"
+        ]
+      },
+      "python_modules": [
+        "hullkit.american_mc",
+        "hullkit._american_mc_lesson"
+      ],
+      "data": [
+        "docs/validation/section-27-8/reference.json",
+        "docs/validation/section-27-8/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_american_mc_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-27-8/reference.json",
+        "docs/validation/section-27-8/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-27-8",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_american_mc.py",
+        "hullkit/tests/test_american_mc_lesson.py",
+        "report/tests/test_american_mc_notebook.py"
       ]
     }
   }

@@ -43,6 +43,11 @@ ACCEPTED = {
         "42076f10",
         {"barrier_lattice", "barrier_convergence", "barrier_errors", "barrier_near"},
     ),
+    "27.7": (
+        13,
+        "99792a84",
+        {"two_asset_nodes", "two_asset_convergence", "two_asset_errors", "two_asset_correlation"},
+    ),
 }
 
 
@@ -104,8 +109,10 @@ def _fresh(section):
         from hullkit._convertible_bond_lesson import _figures
     elif section == "27.5":
         from hullkit._path_dependent_lesson import _figures
-    else:
+    elif section == "27.6":
         from hullkit._barrier_tree_lesson import _figures
+    else:
+        from hullkit._two_asset_tree_lesson import _figures
     return {key: json.loads(fig.to_json()) for key, fig in _figures().items()}
 
 
@@ -154,7 +161,7 @@ def main():
         for finding in findings:
             print("FAIL:", finding)
         raise SystemExit(1)
-    print("PASS: accepted vol06 §27.1–§27.6 slices, shared figures and fresh outputs")
+    print("PASS: accepted vol06 §27.1–§27.7 slices, shared figures and fresh outputs")
 
 
 if __name__ == "__main__":

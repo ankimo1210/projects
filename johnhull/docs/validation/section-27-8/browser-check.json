@@ -1,0 +1,158 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "american_mc_regression",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_boundary",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_bias",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_dates",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_regression",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_boundary",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_bias",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_dates",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-8/portal-american_mc_regression-1440.png",
+        "docs/validation/section-27-8/portal-american_mc_boundary-1440.png",
+        "docs/validation/section-27-8/portal-american_mc_bias-1440.png",
+        "docs/validation/section-27-8/portal-american_mc_dates-1440.png",
+        "docs/validation/section-27-8/portal-american_mc_regression-1000.png",
+        "docs/validation/section-27-8/portal-american_mc_boundary-1000.png",
+        "docs/validation/section-27-8/portal-american_mc_bias-1000.png",
+        "docs/validation/section-27-8/portal-american_mc_dates-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "american_mc_regression",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_boundary",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_bias",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_dates",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_regression",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_boundary",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_bias",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "american_mc_dates",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-8/book-american_mc_regression-1440.png",
+        "docs/validation/section-27-8/book-american_mc_boundary-1440.png",
+        "docs/validation/section-27-8/book-american_mc_bias-1440.png",
+        "docs/validation/section-27-8/book-american_mc_dates-1440.png",
+        "docs/validation/section-27-8/book-american_mc_regression-1000.png",
+        "docs/validation/section-27-8/book-american_mc_boundary-1000.png",
+        "docs/validation/section-27-8/book-american_mc_bias-1000.png",
+        "docs/validation/section-27-8/book-american_mc_dates-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/american_mc.py": "92c3c61588a5abc5e1376b199e9d6e3c3c65677ad95d3a574ae71f6c2c084b86",
+    "hullkit/src/hullkit/_american_mc_lesson.py": "41de1163a4db065582f650ec00cbb2026db84d7d7321f0b51163a6efa85f2659",
+    "scripts/build_american_mc_reference.py": "c2c566003ea1a7c8eea8697ec77729a78d29daa8231fc273583ca9ec83d5ae73",
+    "scripts/verify_american_mc_browser.cjs": "394597596e651a5d64e61a411511df9a80bbee0294c51bd697a30495c6d51ad0",
+    "docs/validation/section-27-8/reference.json": "1410b84e425596fdf0219bc2414ad74e040f8cfc04efe87eb81b114e42bbac0e",
+    "docs/validation/section-27-8/numerical-check.json": "8f2073485750ccad6c855464fc809963df8a9e03d54b520bc7d45db2a424c004",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "a3653b494dac6cff7a8b3075b50f3e1741d308bc31d69f0af735d81317758dc4",
+    "volumes/06_numerical_methods/numerical.ipynb": "d44699bba3325fe38ba5bae9cb4212567c9d5f0ac7021cfa078c37c2519d0aff",
+    "report/report_builder/figures.py": "b5b0b55d09700ccc15fe5cdca99a134167fccb2d2e76670fe268398109e212ca",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "f6fbfe74c530f9a370855b776bc1b331c415be3ceb682ddf73b04861b7bb078f",
+    "book/_build/html/notebooks/06_numerical.html": "65ce4c94382544ca19c56a71af3ec3b0d11bc811ee3a6c54f31ec69303989b4b",
+    "docs/validation/section-27-8/portal-american_mc_regression-1440.png": "5262895044cc91d082ec6f3cedbf07ae4fd0f9ee48092a5f467f1b1f709c29e6",
+    "docs/validation/section-27-8/portal-american_mc_boundary-1440.png": "6382bd9190ecfb49929fcfef4bb3f4a37ae4720ce0502278e0f95f4560fa7b57",
+    "docs/validation/section-27-8/portal-american_mc_bias-1440.png": "76e3163c5a2dbdf50814c5558aa6e46f97681b65cbb84caf262b701e391ee20e",
+    "docs/validation/section-27-8/portal-american_mc_dates-1440.png": "ee4cf6a44bc8d74b5406a594777f0a91954285422727038c8593696cf1abed6a",
+    "docs/validation/section-27-8/portal-american_mc_regression-1000.png": "4c6aabccf8f4af067d9925f235f54cbc4965ed099eb341ddf6419ee55d4768c3",
+    "docs/validation/section-27-8/portal-american_mc_boundary-1000.png": "25833ca0b5c99e3c5869e82e045e92aaebebea7bf227389bc8629006e46501c6",
+    "docs/validation/section-27-8/portal-american_mc_bias-1000.png": "2d873412dfbdeddb6b65ee9e3a71e35c41881c26bd4c513c2af0712ecfdff101",
+    "docs/validation/section-27-8/portal-american_mc_dates-1000.png": "3c537c0066a44eb954300cd7a2cc915dfeebcf17b1100b803c11ec7df47d264a",
+    "docs/validation/section-27-8/book-american_mc_regression-1440.png": "093436a89b2c6e0b38b2125f33af0bfbafc0911b28e82b59fa12a7bf8bf26cce",
+    "docs/validation/section-27-8/book-american_mc_boundary-1440.png": "be95bd298b8e02dd9eda3dab3730c38ff003d479bf3427246e62cbd3ccce43fb",
+    "docs/validation/section-27-8/book-american_mc_bias-1440.png": "cfb8c6359cf45bc775a4e0259ba2e71c8ab2b48ea2a29bcd6096d81ca3918365",
+    "docs/validation/section-27-8/book-american_mc_dates-1440.png": "231c112f59e313b12efcde8d53be12152b87b3860ebaee19896b0c7822131cc3",
+    "docs/validation/section-27-8/book-american_mc_regression-1000.png": "1ea7c07a701d1bed74ca963280ab299e9bbdba7f8518726c0f24ca9cea2a1908",
+    "docs/validation/section-27-8/book-american_mc_boundary-1000.png": "459f5434965dc223302fc747e2b53c1748c4213a235b4fd82ee2fa201515af2a",
+    "docs/validation/section-27-8/book-american_mc_bias-1000.png": "5466580ef5d213fdf89d370d2bc562002bd43c4e3bb4c06012a87faa71433046",
+    "docs/validation/section-27-8/book-american_mc_dates-1000.png": "3f3f8caecf8a8af4acc57bb79fbca36db30af5fa43426fd79917286d44cfec2c"
+  },
+  "book_math": {
+    "rendered": 386,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

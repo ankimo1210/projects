@@ -14,7 +14,7 @@ def test_path_dependent_saved_cells_and_figures():
         for cell in notebook.cells
         if cell.cell_type == "markdown" and cell.source.startswith("## ")
     ]
-    assert headings[6:15] == [
+    assert headings[6:16] == [
         "## 7. Black–Scholes–Merton 以外のモデル（§27.1）",
         "## 8. 確率ボラティリティ・モデル（§27.2）",
         "## 9. IVF（局所ボラティリティ）モデル（§27.3）",
@@ -22,8 +22,9 @@ def test_path_dependent_saved_cells_and_figures():
         "## 11. 経路依存デリバティブ（§27.5）",
         "## 12. バリア・オプションのツリー評価（§27.6）",
         "## 13. 相関のある二資産のオプション（§27.7）",
-        "## 14. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）",
-        "## 15. 練習問題",
+        "## 14. モンテカルロ法とアメリカン・オプション（§27.8）",
+        "## 15. 三つの数値解法の比較（CRR・FD・LSM）",
+        "## 16. 練習問題",
     ]
     text = "\n".join(cell.source for cell in notebook.cells)
     for number in range(1, 7):

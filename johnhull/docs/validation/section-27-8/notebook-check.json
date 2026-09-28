@@ -1,0 +1,128 @@
+{
+  "section": "27.8",
+  "status": "PASS",
+  "base": "99792a84",
+  "cells": 133,
+  "lesson_cells": 13,
+  "preserved_cells_outside_lesson": 120,
+  "replaced_introduction": {
+    "from": "## 14. Longstaff-Schwartz（LSM）— MC でアメリカン（Ch.27）",
+    "to": "## 15. 三つの数値解法の比較（CRR・FD・LSM）"
+  },
+  "renumbered_headings": {
+    "## 15. 練習問題": "## 16. 練習問題"
+  },
+  "saved_figures": {
+    "27.1": [
+      "alternative_cev",
+      "alternative_merton",
+      "alternative_poisson",
+      "alternative_vg"
+    ],
+    "27.2": [
+      "stochvol_correlation",
+      "stochvol_mixing",
+      "stochvol_sabr",
+      "stochvol_term"
+    ],
+    "27.3": [
+      "ivf_joint",
+      "ivf_local",
+      "ivf_repricing",
+      "ivf_smile"
+    ],
+    "27.4": [
+      "cb_convergence",
+      "cb_credit",
+      "cb_decisions",
+      "cb_tree"
+    ],
+    "27.5": [
+      "path_exact",
+      "path_grids",
+      "path_interpolation",
+      "path_prices"
+    ],
+    "27.6": [
+      "barrier_convergence",
+      "barrier_errors",
+      "barrier_lattice",
+      "barrier_near"
+    ],
+    "27.7": [
+      "two_asset_convergence",
+      "two_asset_correlation",
+      "two_asset_errors",
+      "two_asset_nodes"
+    ],
+    "27.8": [
+      "american_mc_bias",
+      "american_mc_boundary",
+      "american_mc_dates",
+      "american_mc_regression"
+    ]
+  },
+  "negative_controls": [
+    {
+      "mutation": "§13 source changed",
+      "rejected": true,
+      "findings": [
+        "§14以外のセル本文がM16基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§27.8 saved bias changed",
+      "rejected": true,
+      "findings": [
+        "american_mc_bias.data が共有図と異なる"
+      ]
+    },
+    {
+      "mutation": "§15 introduction changed",
+      "rejected": true,
+      "findings": [
+        "§14以外のセル本文がM16基点と異なる"
+      ]
+    },
+    {
+      "mutation": "unlisted heading changed",
+      "rejected": true,
+      "findings": [
+        "§14以外のセル本文がM16基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§27.7 saved nodes changed",
+      "rejected": true,
+      "findings": [
+        "two_asset_nodes.data が共有図と異なる"
+      ]
+    }
+  ],
+  "checks": [
+    "fresh execution matches committed output signature",
+    "outside §14 source/output unchanged except the §15 introduction and one heading",
+    "saved §27.1–§27.8 Plotly values match shared figures"
+  ],
+  "source_sha256": {
+    "scripts/verify_american_mc_notebook.py": "5a277fafefd280280ad0741d64a7ad2ae35f1f1f1660adf5e25a0126de7a1e2e",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_american_mc_lesson.py": "41de1163a4db065582f650ec00cbb2026db84d7d7321f0b51163a6efa85f2659",
+    "hullkit/src/hullkit/_two_asset_tree_lesson.py": "2d70c3d2e8bd7f457133fbd26d1ef89f3b08d8bc8ece90bbab938f10c37e32c3",
+    "hullkit/src/hullkit/_barrier_tree_lesson.py": "9292dd867ff817e0cd685f92d5a448c4f16f91a595c4d964fe56bcb509d4ab98",
+    "hullkit/src/hullkit/_path_dependent_lesson.py": "b732e71477cce55dc942ce1fba58a37b9f125bba80716bcf37d4e86913d1aade",
+    "hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
+    "hullkit/src/hullkit/_local_volatility_lesson.py": "f957ab42b0f9e60227b4cf37d42bfd25b7f608acd0c1126699cd88f5053fc76f",
+    "hullkit/src/hullkit/_stochastic_volatility_lesson.py": "e3625860a42a20fc4daf6e5a8d9f4e660b553dc70d567fecf17bc2a0b6ecb666",
+    "hullkit/src/hullkit/_alternative_models_lesson.py": "a5c6b4e4e2ea5eab00d9af9f97932373705129fb8131bfcc92fa6657360aab37",
+    "docs/validation/section-27-8/reference.json": "1410b84e425596fdf0219bc2414ad74e040f8cfc04efe87eb81b114e42bbac0e",
+    "docs/validation/section-27-7/reference.json": "a7ac63add2d7ed4c5fcda59f5a2313e2f0cd5abfe48be513f33e91d7a49b9ede",
+    "docs/validation/section-27-6/reference.json": "9ba15464abfd77844403e0f30d654ae9c288d9cca1cd33512579f9d7179bfaf3",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "a3653b494dac6cff7a8b3075b50f3e1741d308bc31d69f0af735d81317758dc4",
+    "volumes/06_numerical_methods/numerical.ipynb": "d44699bba3325fe38ba5bae9cb4212567c9d5f0ac7021cfa078c37c2519d0aff"
+  },
+  "artifact_sha256": {
+    "volumes/06_numerical_methods/numerical.ipynb": "d44699bba3325fe38ba5bae9cb4212567c9d5f0ac7021cfa078c37c2519d0aff",
+    "book/_build/html/notebooks/06_numerical.html": "65ce4c94382544ca19c56a71af3ec3b0d11bc811ee3a6c54f31ec69303989b4b"
+  }
+}

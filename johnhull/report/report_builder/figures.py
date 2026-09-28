@@ -17,6 +17,7 @@ from dataclasses import dataclass
 
 from hullkit import plotly_viz as pv
 from hullkit._alternative_models_lesson import _figures as alternative_models_lesson_figures
+from hullkit._american_mc_lesson import _figures as american_mc_lesson_figures
 from hullkit._asian_lesson import _figures as asian_lesson_figures
 from hullkit._barrier_tree_lesson import _figures as barrier_tree_lesson_figures
 from hullkit._basket_lesson import _figures as basket_lesson_figures
@@ -460,6 +461,42 @@ FIGURES: list[FigureSpec] = [
         "相関を−1から1まで動かし、三つの構成の誤差を100段（実線）と101段（点線）で比べる。",
         lambda: two_asset_tree_lesson_figures()["two_asset_correlation"],
         practice="ρ=0と±1ではRubinsteinと確率の調整が一致する。変数変換のρ=±0.6の小さな誤差は100段だけで、ρ=−1では偶奇で符号が変わる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "american_mc_regression",
+        "numerics",
+        "最小二乗法：継続価値の回帰",
+        "原著Table 27.4の8経路で、ITMの経路の継続価値をV=a+bS+cS²に当てはめ、即時行使の価値と比べる（Tables 27.5–27.7）。",
+        lambda: american_mc_lesson_figures()["american_mc_regression"],
+        practice="回帰で継続価値を推定すれば、モンテカルロでも各時点で行使するかを決められる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "american_mc_boundary",
+        "numerics",
+        "行使境界のパラメータ化",
+        "臨界価格S*(t)を動かしたときの8経路の平均価値。原著の例ではS*(2)=0.84、S*(1)=0.88が最大。",
+        lambda: american_mc_lesson_figures()["american_mc_boundary"],
+        practice="境界を少数のパラメータで表し、後ろから順に平均価値を最大にする。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "american_mc_bias",
+        "numerics",
+        "推定に使う経路と偏り",
+        "推定に使った経路で評価した値と新しい経路で評価した値を、厳密なバミューダン価格と比べる（σ=20%と仮定、200回の平均）。",
+        lambda: american_mc_lesson_figures()["american_mc_bias"],
+        practice="推定に使った経路は捨て、新しい経路で評価する。境界のパラメータ化はそのまま評価すると上に偏る。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "american_mc_dates",
+        "numerics",
+        "行使日の数と価格",
+        "行使日を3回から48回に増やすと、厳密なバミューダン価格が連続行使の値に近づく。三つの推定は新しい経路で評価。",
+        lambda: american_mc_lesson_figures()["american_mc_dates"],
+        practice="いつでも行使できるオプションは、行使日を多くとったバミューダンで近似する。",
         is_new=True,
     ),
     # risk_credit --------------------------------------------------------
