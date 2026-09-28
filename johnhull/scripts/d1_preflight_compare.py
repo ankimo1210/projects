@@ -117,13 +117,26 @@ def parse_json_lines(output: str) -> list[dict]:
 
 
 def coverage_states(browser_record: dict) -> list[list]:
+    """List [surface, figure, width, numeric_checked] for every checked state.
+
+    Older verifiers name their states ``views`` (with a contract ``label``) or
+    ``replication_states`` (with a ``kind``); those names stand in for the figure.
+    """
     states = []
     for surface, page in (browser_record.get("pages") or {}).items():
-        for state in page.get("states", []):
-            states.append(
-                [surface, state.get("figure"), state.get("width"), state.get("numeric_checked")]
-            )
+        items = page.get("states") or page.get("replication_states") or page.get("views") or []
+        for state in items:
+            figure = state.get("figure", state.get("label", state.get("kind")))
+            states.append([surface, figure, state.get("width"), state.get("numeric_checked")])
     return sorted(states, key=lambda item: [str(part) for part in item])
+
+
+def verifier_record_name(spec: dict) -> str:
+    """File name of the raw browser record the verifier writes in its output directory."""
+    name = spec.get("verifier_record", "browser-check.json")
+    if "/" in name or "\\" in name or name in ("", ".", "..") or not name.endswith(".json"):
+        raise ValueError(f"invalid verifier record name {name!r}")
+    return name
 
 
 def _sha256_file(path: Path) -> str:
@@ -204,7 +217,7 @@ def run_check(project: Path, config_path: Path, section_id: str, work: Path) -> 
     lines = parse_json_lines(verifier["stdout"])
     wrapper = next((item["wrapper"] for item in lines if "wrapper" in item), None)
     output_dir = overlay / spec["verifier_output_dir"]
-    raw_record_path = output_dir / "browser-check.json"
+    raw_record_path = output_dir / verifier_record_name(spec)
     browser = json.loads(raw_record_path.read_text(encoding="utf-8"))
     captures = {path.name: path.read_bytes() for path in sorted(output_dir.glob("*.png"))}
     probe = _run(
@@ -241,19 +254,65 @@ def run_check(project: Path, config_path: Path, section_id: str, work: Path) -> 
     }
 
 
-def _browser_check(observed: dict, record_sha256: str, record_path: str) -> dict:
+def _negative_control(page: dict, absent_reason: str | None) -> bool | str:
+    """True when the page's recorded negative controls were all rejected (and restored).
+
+    Newer verifiers record ``numeric_mutation_rejected``; §26.10–§26.16 record
+    ``negative_control`` or a ``negative_controls`` list. A verifier that records
+    none passes only with a declared reason, which is returned in place of True.
+    """
+    if "numeric_mutation_rejected" in page:
+        return page["numeric_mutation_rejected"] is True
+    controls = page.get("negative_controls", page.get("negative_control"))
+    if isinstance(controls, dict):
+        controls = [controls]
+    if isinstance(controls, list) and controls:
+        return all(
+            isinstance(control, dict)
+            and control.get("rejected") is True
+            and control.get("restored", True) is True
+            for control in controls
+        )
+    if controls is None and absent_reason:
+        return f"absent: {absent_reason}"
+    return False
+
+
+def _requests_allowed(page: dict, allowed_prefixes: list[str]) -> bool:
+    """External requests pass only on a page that allowed the network, by prefix."""
+    requests = list(page.get("external_requests") or []) + list(
+        page.get("attempted_external_requests") or []
+    )
+    if not requests:
+        return True
+    if page.get("external_network_blocked") is not False:
+        return False
+    return all(any(url.startswith(prefix) for prefix in allowed_prefixes) for url in requests)
+
+
+def _browser_check(
+    observed: dict,
+    record_sha256: str,
+    record_path: str,
+    *,
+    negative_control_absent: str | None = None,
+    allowed_requests: list[str] | tuple[str, ...] = (),
+) -> dict:
     browser = observed["browser"]
     pages = browser.get("pages") or {}
+    controls = {
+        surface: _negative_control(page, negative_control_absent) for surface, page in pages.items()
+    }
     passed = (
         observed["verifier_run"]["exit_code"] == 0
         and browser.get("status") == "PASS"
-        and all(page.get("numeric_mutation_rejected") for page in pages.values())
-        and not any(
-            page.get("page_errors") or page.get("external_requests") for page in pages.values()
-        )
+        and all(result is not False for result in controls.values())
+        and not any(page.get("page_errors") for page in pages.values())
+        and all(_requests_allowed(page, list(allowed_requests)) for page in pages.values())
     )
     return {
         "status": "PASS" if passed else "FAIL",
+        "negative_controls": dict(sorted(controls.items())),
         "browser_version": browser.get("browser_version"),
         "state_checks": browser.get("state_checks"),
         "screenshots": browser.get("screenshots"),
@@ -364,7 +423,13 @@ def main(argv: list[str] | None = None) -> int:
     write_new(raw_path, observed["raw_browser_record"])
     raw_relative = f"{record_dir_rel}/{run_id}.browser.json"
     checks = {
-        "browser": _browser_check(observed, _sha256_file(raw_path), raw_relative),
+        "browser": _browser_check(
+            observed,
+            _sha256_file(raw_path),
+            raw_relative,
+            negative_control_absent=spec.get("verifier_negative_control_absent"),
+            allowed_requests=config.get("allowed_request_prefixes", []),
+        ),
         "runtime_probe": {"status": runtime.get("status", "FAIL"), **observed["probe_run"]},
         "pytest": observed["pytest"],
     }

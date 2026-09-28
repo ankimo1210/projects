@@ -1,7 +1,564 @@
 {
   "schema_version": 1,
-  "description": "Declared inputs of accepted sections' browser evidence for D1 dependency fingerprints. A section without an entry is never reused.",
+  "description": "Declared inputs of accepted sections' browser evidence for D1 dependency fingerprints. A section without an entry is never reused. allowed_request_prefixes lists the only external URLs a page that allowed the network (the Book's MathJax CDN) may request; level 3 declares a ### subsection; verifier_record names an older verifier's raw record; verifier_negative_control_absent gives the reason a verifier records no negative control.",
+  "allowed_request_prefixes": [
+    "https://cdn.jsdelivr.net/npm/mathjax@3/es5/"
+  ],
   "sections": {
+    "26.9": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "3. バリア・オプション（§26.9、GE pp.620–622）"
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "3. バリア・オプション（§26.9、GE pp.620–622）"
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "barrier_knockout"
+        ]
+      },
+      "python_modules": [
+        "hullkit.exotics",
+        "hullkit.bsm",
+        "hullkit.plotly_viz"
+      ],
+      "data": [],
+      "verifier": "scripts/verify_barrier_pilot_browser.cjs",
+      "verifier_inputs": [],
+      "verifier_output_dir": "docs/validation/section-26-9",
+      "verifier_negative_control_absent": "the §26.9 pilot verifier records no mutation control; it pins all eight contracts to independent Brownian-bridge prices and checks parity, bounds and axes",
+      "viewports": [
+        [
+          1440,
+          1000
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_barrier_reference.py"
+      ]
+    },
+    "26.10": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "2. バイナリ・オプション（§26.10）"
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "2. バイナリ・オプション（§26.10）"
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "binary_payoffs",
+          "binary_replication",
+          "binary_spreads",
+          "binary_delta"
+        ]
+      },
+      "python_modules": [
+        "hullkit.exotics",
+        "hullkit.bsm",
+        "hullkit._binary_lesson"
+      ],
+      "data": [],
+      "verifier": "scripts/verify_binary_lesson_browser.cjs",
+      "verifier_inputs": [],
+      "verifier_output_dir": "docs/validation/section-26-10",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_binary_reference.py",
+        "hullkit/tests/test_binary_lesson.py"
+      ]
+    },
+    "26.11": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.1 ルックバック・オプション（§26.11）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.1 ルックバック・オプション（§26.11）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "lookback_payoffs",
+          "lookback_history",
+          "lookback_replication",
+          "lookback_monitoring"
+        ]
+      },
+      "python_modules": [
+        "hullkit.exotics",
+        "hullkit._lookback_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-11/browser-reference.json"
+      ],
+      "verifier": "scripts/verify_lookback_lesson_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-11/browser-reference.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-11",
+      "verifier_record": "browser-m3b-check.json",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_lookback_reference.py",
+        "hullkit/tests/test_lookback_lesson.py"
+      ]
+    },
+    "26.12": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.2 シャウト・オプション（§26.12）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.2 シャウト・オプション（§26.12）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "shout_payoff",
+          "shout_decision",
+          "shout_boundary",
+          "shout_comparison"
+        ]
+      },
+      "python_modules": [
+        "hullkit._shout",
+        "hullkit._shout_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-12/lesson-data.json",
+        "docs/validation/section-26-12/prices.json",
+        "docs/validation/section-26-12/numerical-check.json",
+        "docs/validation/section-26-12/browser-reference.json"
+      ],
+      "verifier": "scripts/verify_shout_lesson_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-12/lesson-data.json",
+        "docs/validation/section-26-12/prices.json",
+        "docs/validation/section-26-12/browser-reference.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-12",
+      "verifier_record": "browser-m4b-check.json",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_shout_reference.py",
+        "hullkit/tests/test_shout_tree.py",
+        "hullkit/tests/test_shout_lesson.py"
+      ]
+    },
+    "26.13": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.3 アジアン・オプション（§26.13）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.3 アジアン・オプション（§26.13）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "asian_payoff",
+          "asian_distribution",
+          "asian_observations",
+          "asian_error"
+        ]
+      },
+      "python_modules": [
+        "hullkit.exotics",
+        "hullkit._asian_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-13/lesson-data.json",
+        "docs/validation/section-26-13/prices.json",
+        "docs/validation/section-26-13/numerical-check.json",
+        "docs/validation/section-26-13/browser-reference.json"
+      ],
+      "verifier": "scripts/verify_asian_lesson_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-13/lesson-data.json",
+        "docs/validation/section-26-13/prices.json",
+        "docs/validation/section-26-13/numerical-check.json",
+        "docs/validation/section-26-13/browser-reference.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-13",
+      "verifier_record": "browser-m5b-check.json",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_asian_reference.py",
+        "hullkit/tests/test_asian_pricing.py",
+        "hullkit/tests/test_asian_lesson.py"
+      ]
+    },
+    "26.14": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.4 交換オプション（§26.14、GE pp.627–628）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.4 交換オプション（§26.14、GE pp.627–628）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "exchange_payoff",
+          "exchange_correlation",
+          "exchange_rate",
+          "exchange_american"
+        ]
+      },
+      "python_modules": [
+        "hullkit.exotics",
+        "hullkit.bsm",
+        "hullkit._exchange_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-14/lesson-data.json",
+        "docs/validation/section-26-14/prices.json",
+        "docs/validation/section-26-14/numerical-check.json",
+        "docs/validation/section-26-14/browser-reference.json"
+      ],
+      "verifier": "scripts/verify_exchange_lesson_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-14/lesson-data.json",
+        "docs/validation/section-26-14/prices.json",
+        "docs/validation/section-26-14/numerical-check.json",
+        "docs/validation/section-26-14/browser-reference.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-14",
+      "verifier_record": "browser-m6b-check.json",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_exchange_reference.py",
+        "hullkit/tests/test_exchange_pricing.py",
+        "hullkit/tests/test_exchange_lesson.py"
+      ]
+    },
+    "26.15": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.5 レインボーとバスケット（§26.15、GE pp.628–629）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.5 レインボーとバスケット（§26.15、GE pp.628–629）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "basket_payoff",
+          "basket_correlation",
+          "basket_comparison",
+          "basket_error"
+        ]
+      },
+      "python_modules": [
+        "hullkit.exotics",
+        "hullkit._basket_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-15/lesson-data.json",
+        "docs/validation/section-26-15/prices.json",
+        "docs/validation/section-26-15/numerical-check.json",
+        "docs/validation/section-26-15/browser-reference.json"
+      ],
+      "verifier": "scripts/verify_basket_lesson_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-15/lesson-data.json",
+        "docs/validation/section-26-15/prices.json",
+        "docs/validation/section-26-15/numerical-check.json",
+        "docs/validation/section-26-15/browser-reference.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-15",
+      "verifier_record": "browser-m7-check.json",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_basket_reference.py",
+        "hullkit/tests/test_basket_pricing.py",
+        "hullkit/tests/test_basket_lesson.py"
+      ]
+    },
+    "26.16": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.6 ボラティリティ・スワップとバリアンス・スワップ（§26.16、GE pp.629–632）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.6 ボラティリティ・スワップとバリアンス・スワップ（§26.16、GE pp.629–632）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "varswap_payoff",
+          "varswap_strip",
+          "varswap_replication",
+          "volswap_convexity"
+        ]
+      },
+      "python_modules": [
+        "hullkit.variance_swaps",
+        "hullkit.bsm",
+        "hullkit._variance_swap_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-16/lesson-data.json",
+        "docs/validation/section-26-16/reference.json",
+        "docs/validation/section-26-16/numerical-check.json",
+        "docs/validation/section-26-16/browser-reference.json"
+      ],
+      "verifier": "scripts/verify_variance_swap_lesson_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-16/lesson-data.json",
+        "docs/validation/section-26-16/reference.json",
+        "docs/validation/section-26-16/numerical-check.json",
+        "docs/validation/section-26-16/browser-reference.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-16",
+      "verifier_record": "browser-m8-check.json",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_variance_swap_reference.py",
+        "hullkit/tests/test_variance_swap_contracts.py",
+        "hullkit/tests/test_variance_swap_lesson.py"
+      ]
+    },
+    "26.17": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.7 静的オプション複製（§26.17）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.7 静的オプション複製（§26.17）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "static_boundary",
+          "static_ladder",
+          "static_boundary_error",
+          "static_convergence"
+        ]
+      },
+      "python_modules": [
+        "hullkit.static_replication",
+        "hullkit._static_replication_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-17/reference.json",
+        "docs/validation/section-26-17/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_static_replication_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-17/reference.json",
+        "docs/validation/section-26-17/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-17",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_static_replication.py",
+        "hullkit/tests/test_static_replication_reference.py",
+        "hullkit/tests/test_static_replication_lesson.py",
+        "report/tests/test_static_replication_notebook.py"
+      ]
+    },
+    "27.1": {
+      "notebook": {
+        "path": "volumes/06_numerical_methods/numerical.ipynb",
+        "heading": "7. Black–Scholes–Merton 以外のモデル（§27.1）"
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/06_numerical.html",
+        "heading": "7. Black–Scholes–Merton 以外のモデル（§27.1）"
+      },
+      "portal": {
+        "page": "report/site/numerics.html",
+        "figures": [
+          "alternative_cev",
+          "alternative_merton",
+          "alternative_poisson",
+          "alternative_vg"
+        ]
+      },
+      "python_modules": [
+        "hullkit.alternative_models",
+        "hullkit._alternative_models_lesson"
+      ],
+      "data": [
+        "docs/validation/section-27-1/reference.json",
+        "docs/validation/section-27-1/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_alternative_models_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-27-1/reference.json",
+        "docs/validation/section-27-1/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-27-1",
+      "viewports": [
+        [
+          1440,
+          1000
+        ],
+        [
+          1000,
+          1000
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_alternative_models.py",
+        "hullkit/tests/test_alternative_models_lesson.py",
+        "report/tests/test_alternative_models_notebook.py"
+      ]
+    },
+    "27.2": {
+      "notebook": {
+        "path": "volumes/06_numerical_methods/numerical.ipynb",
+        "heading": "8. 確率ボラティリティ・モデル（§27.2）"
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/06_numerical.html",
+        "heading": "8. 確率ボラティリティ・モデル（§27.2）"
+      },
+      "portal": {
+        "page": "report/site/numerics.html",
+        "figures": [
+          "stochvol_term",
+          "stochvol_mixing",
+          "stochvol_correlation",
+          "stochvol_sabr"
+        ]
+      },
+      "python_modules": [
+        "hullkit.stochastic_volatility",
+        "hullkit.sabr",
+        "hullkit._stochastic_volatility_lesson"
+      ],
+      "data": [
+        "docs/validation/section-27-2/reference.json",
+        "docs/validation/section-27-2/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_stochastic_volatility_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-27-2/reference.json",
+        "docs/validation/section-27-2/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-27-2",
+      "verifier_text_renames": {
+        "'9. Longstaff-Schwartz'": "'12. Longstaff-Schwartz'",
+        "'10. 練習問題'": "'13. 練習問題'"
+      },
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_stochastic_volatility.py",
+        "hullkit/tests/test_stochastic_volatility_reference.py",
+        "hullkit/tests/test_stochastic_volatility_lesson.py",
+        "report/tests/test_stochastic_volatility_notebook.py"
+      ]
+    },
     "27.3": {
       "notebook": {
         "path": "volumes/06_numerical_methods/numerical.ipynb",
@@ -52,6 +609,106 @@
         "hullkit/tests/test_local_volatility.py",
         "hullkit/tests/test_local_volatility_lesson.py",
         "report/tests/test_local_volatility_notebook.py"
+      ]
+    },
+    "27.4": {
+      "notebook": {
+        "path": "volumes/06_numerical_methods/numerical.ipynb",
+        "heading": "10. 転換社債（§27.4）"
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/06_numerical.html",
+        "heading": "10. 転換社債（§27.4）"
+      },
+      "portal": {
+        "page": "report/site/numerics.html",
+        "figures": [
+          "cb_tree",
+          "cb_decisions",
+          "cb_credit",
+          "cb_convergence"
+        ]
+      },
+      "python_modules": [
+        "hullkit.convertible_bond",
+        "hullkit._convertible_bond_lesson"
+      ],
+      "data": [
+        "docs/validation/section-27-4/reference.json",
+        "docs/validation/section-27-4/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_convertible_bond_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-27-4/reference.json",
+        "docs/validation/section-27-4/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-27-4",
+      "verifier_text_renames": {
+        "'11. Longstaff-Schwartz'": "'12. Longstaff-Schwartz'",
+        "'12. 練習問題'": "'13. 練習問題'"
+      },
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_convertible_bond.py",
+        "hullkit/tests/test_convertible_bond_lesson.py",
+        "report/tests/test_convertible_bond_notebook.py"
+      ]
+    },
+    "27.5": {
+      "notebook": {
+        "path": "volumes/06_numerical_methods/numerical.ipynb",
+        "heading": "11. 経路依存デリバティブ（§27.5）"
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/06_numerical.html",
+        "heading": "11. 経路依存デリバティブ（§27.5）"
+      },
+      "portal": {
+        "page": "report/site/numerics.html",
+        "figures": [
+          "path_grids",
+          "path_interpolation",
+          "path_prices",
+          "path_exact"
+        ]
+      },
+      "python_modules": [
+        "hullkit.path_dependent_tree",
+        "hullkit._path_dependent_lesson"
+      ],
+      "data": [
+        "docs/validation/section-27-5/reference.json",
+        "docs/validation/section-27-5/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_path_dependent_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-27-5/reference.json",
+        "docs/validation/section-27-5/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-27-5",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_path_dependent_tree.py",
+        "hullkit/tests/test_path_dependent_lesson.py",
+        "report/tests/test_path_dependent_notebook.py"
       ]
     }
   }

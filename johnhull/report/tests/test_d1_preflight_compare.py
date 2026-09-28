@@ -293,3 +293,120 @@ def test_worktree_state_ignores_preflight_outputs_but_not_inputs(tmp_path):
     assert len(commit) == 40 and dirty is False
     (repo / "src.py").write_text("x = 2\n", encoding="utf-8")
     assert worktree_state(repo)[1] is True
+
+
+# --- browser records of older verifiers (§26.9–§26.16) -------------------------------
+
+MATHJAX = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/"
+
+
+def _observed(pages, exit_code=0, status="PASS"):
+    return {
+        "browser": {"status": status, "pages": pages},
+        "verifier_run": {"exit_code": exit_code, "seconds": 1.0},
+        "wrapper": {"renames": []},
+    }
+
+
+def _check(pages, **policy):
+    from johnhull.scripts.d1_preflight_compare import _browser_check
+
+    return _browser_check(_observed(pages), "0" * 64, "raw.json", **policy)
+
+
+def test_browser_check_keeps_the_numeric_mutation_rule():
+    assert _check({"portal": {"numeric_mutation_rejected": True}})["status"] == "PASS"
+    assert _check({"portal": {"numeric_mutation_rejected": False}})["status"] == "FAIL"
+
+
+@pytest.mark.parametrize(
+    "page",
+    [
+        {"negative_control": {"type": "offset", "rejected": True}},
+        {"negative_controls": [{"rejected": True, "restored": True}, {"rejected": True}]},
+    ],
+)
+def test_browser_check_accepts_older_negative_control_records(page):
+    check = _check({"portal": page, "book": page})
+    assert check["status"] == "PASS"
+    assert check["negative_controls"] == {"book": True, "portal": True}
+
+
+@pytest.mark.parametrize(
+    "page",
+    [
+        {"negative_control": {"rejected": False}},
+        {"negative_controls": [{"rejected": True}, {"rejected": True, "restored": False}]},
+        {"negative_controls": []},
+        {},
+    ],
+)
+def test_browser_check_fails_an_unrejected_unrestored_or_missing_negative_control(page):
+    assert _check({"portal": page})["status"] == "FAIL"
+
+
+def test_a_verifier_without_negative_controls_needs_a_declared_reason():
+    reason = "pins eight independent prices instead"
+    check = _check({"portal": {}}, negative_control_absent=reason)
+    assert check["status"] == "PASS"
+    assert check["negative_controls"] == {"portal": f"absent: {reason}"}
+    rejected = {"portal": {"negative_control": {"rejected": False}}}
+    assert _check(rejected, negative_control_absent=reason)["status"] == "FAIL"
+
+
+def test_allowlisted_requests_pass_only_on_a_page_that_allowed_the_network():
+    requests = [MATHJAX + "tex-mml-chtml.js", MATHJAX + "output/chtml/fonts/woff-v2/Zero.woff"]
+    allowed = {
+        "book": {
+            "numeric_mutation_rejected": True,
+            "external_network_blocked": False,
+            "external_requests": requests,
+        }
+    }
+    assert _check(allowed, allowed_requests=[MATHJAX])["status"] == "PASS"
+    assert _check(allowed)["status"] == "FAIL"
+    foreign = {"book": {**allowed["book"], "external_requests": ["https://example.com/x.js"]}}
+    assert _check(foreign, allowed_requests=[MATHJAX])["status"] == "FAIL"
+    for flag in (True, None):
+        page = {**allowed["book"], "external_network_blocked": flag}
+        if flag is None:
+            del page["external_network_blocked"]
+        assert _check({"book": page}, allowed_requests=[MATHJAX])["status"] == "FAIL"
+
+
+def test_attempted_requests_on_a_blocked_page_fail():
+    page = {
+        "numeric_mutation_rejected": True,
+        "external_network_blocked": True,
+        "attempted_external_requests": [MATHJAX + "tex-mml-chtml.js"],
+    }
+    assert _check({"portal": page}, allowed_requests=[MATHJAX])["status"] == "FAIL"
+
+
+def test_page_errors_fail_the_browser_check():
+    page = {"numeric_mutation_rejected": True, "page_errors": ["TypeError"]}
+    assert _check({"portal": page})["status"] == "FAIL"
+
+
+def test_raw_record_name_defaults_to_browser_check():
+    from johnhull.scripts.d1_preflight_compare import verifier_record_name
+
+    assert verifier_record_name({}) == "browser-check.json"
+    assert verifier_record_name({"verifier_record": "browser-m3b-check.json"}) == (
+        "browser-m3b-check.json"
+    )
+    with pytest.raises(ValueError, match="record"):
+        verifier_record_name({"verifier_record": "../browser-check.json"})
+
+
+def test_coverage_falls_back_to_view_labels_and_state_kinds():
+    record = {
+        "pages": {
+            "portal": {"views": [{"label": "call / up-and-in"}]},
+            "book": {"replication_states": [{"kind": "call", "points": 3}]},
+        }
+    }
+    assert coverage_states(record) == [
+        ["book", "call", None, None],
+        ["portal", "call / up-and-in", None, None],
+    ]
