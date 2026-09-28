@@ -54,7 +54,12 @@
       "WebFetch(domain:api.github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:developers.openai.com)",
-      "WebFetch(domain:learn.chatgpt.com)"
+      "WebFetch(domain:learn.chatgpt.com)",
+      "Read(//home/kazumasa/re_invest_os/**)",
+      "Bash(sed -n 30,62p packages/financial-engine/src/re_engine/sensitivity.py)",
+      "Bash(sed -n 172,200p packages/financial-engine/src/re_engine/sensitivity.py)",
+      "Bash(sed -n 86,98p packages/financial-engine/src/re_engine/models.py)",
+      "Bash(grep -n \"def estimate_opex\\\\|vacancy\\\\|def apply_realistic_opex\" apps/api/src/api/services/screening/opex.py)"
     ],
     "deny": [
       "Read(./.env)",
