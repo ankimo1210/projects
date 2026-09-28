@@ -21,7 +21,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 private modules as of 2026-09-27; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-09-27、M14受入・実装再開前の準備文書完成）
+## 現在地（2026-09-28、M14受入・D1-preflight 完了）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 59 public + 14 priva
 | 節単位の受入 | M14（§27.5）まで。台帳は受入 14・未評価 292（4.6%） | 次は M15（§27.6）。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
 | 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | [D1-preflight 完了](docs/validation/d1-preflight/README.md)（保管庫 C:/F:、依存指紋、schema 2 記録、§27.3 の全再描画/基準再利用、負の対照 17 件、既存 gate）。次は M15 |
-| テスト | hullkit+report 2810 passed・6 skipped（M14、2026-09-27） | 実行結果は `VALIDATION.md` |
+| テスト | johnhull 全体 2,995 passed・6 skipped（D1-preflight、2026-09-28） | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -294,7 +294,7 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M14 | §27.5 Path-Dependent Derivatives（pp.653–656） | 受入。Figure 27.3のX/Y/Z、20段・60段の欧州型/米国型4価格、独立全経路列挙を照合。[受入ノート](docs/SECTION_27_5_ACCEPTANCE_2026-09-27.md) |
 | 以降 | §27.6 から台帳の未評価節へ順に展開 | 未着手 |
 
-現在地（2026-09-27）：M14まで受入、台帳は受入14・未評価292。M12・M13のレビューP3 2件はM14着手時に対応。統合記録は`docs/validation/section-27-5/m14-check.json`。次はM15 §27.6。
+現在地（2026-09-28）：M14まで受入、台帳は受入14・未評価292。M12・M13のレビューP3 2件はM14着手時に対応。統合記録は`docs/validation/section-27-5/m14-check.json`。M15の前提のD1-preflightは完了（[実証記録](docs/validation/d1-preflight/README.md)）。次はM15 §27.6。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
