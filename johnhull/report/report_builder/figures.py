@@ -31,6 +31,7 @@ from hullkit._static_replication_lesson import _figures as static_replication_le
 from hullkit._stochastic_volatility_lesson import (
     _figures as stochastic_volatility_lesson_figures,
 )
+from hullkit._two_asset_tree_lesson import _figures as two_asset_tree_lesson_figures
 from hullkit._variance_swap_lesson import _figures as variance_swap_lesson_figures
 
 from . import frontier_figures as ff
@@ -423,6 +424,42 @@ FIGURES: list[FigureSpec] = [
         "100段と400段で、バリアを初期価格に近づけたときの中央の枝の確率を示す。",
         lambda: barrier_tree_lesson_figures()["barrier_near"],
         practice="近すぎると段がなくなるか確率が負になる。原著はadaptive meshを勧める。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "two_asset_nodes",
+        "numerics",
+        "二資産ツリー：1ステップの4つの枝",
+        "変数変換・Rubinsteinの非矩形ツリー・確率の調整の枝を、σ√Δtで割った座標で比べる（原著Table 27.2・27.3）。",
+        lambda: two_asset_tree_lesson_figures()["two_asset_nodes"],
+        practice="軸を回す・点をずらす・四隅の重みを変える、の三通りで同じ相関を作る。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "two_asset_convergence",
+        "numerics",
+        "米国型交換オプションの収束",
+        "三つの構成の価格を20–200段で、1次元に帰着した基準と比べる。",
+        lambda: two_asset_tree_lesson_figures()["two_asset_convergence"],
+        practice="交換オプションは1次元に帰着でき、三次元ツリーの独立な確認に使える。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "two_asset_errors",
+        "numerics",
+        "欧州型 max コールの誤差",
+        "Stulzの式との差を25–800段の倍々で比べる。",
+        lambda: two_asset_tree_lesson_figures()["two_asset_errors"],
+        practice="変数変換は毎回ほぼ半分に縮み、他の二つは段数によって振れる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "two_asset_correlation",
+        "numerics",
+        "相関と誤差（100段）",
+        "相関を−1から1まで動かし、三つの構成の誤差を比べる。",
+        lambda: two_asset_tree_lesson_figures()["two_asset_correlation"],
+        practice="ρ=0と±1ではRubinsteinと確率の調整が一致し、ρ=−1では変数変換の誤差が大きい。",
         is_new=True,
     ),
     # risk_credit --------------------------------------------------------

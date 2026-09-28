@@ -1,4 +1,4 @@
-"""The §27.2 saved notebook contains the lesson and all four shared figures."""
+"""The saved vol06 §27.7 lesson has six subsections and four shared figures."""
 
 from pathlib import Path
 
@@ -7,7 +7,7 @@ import nbformat
 NOTEBOOK = Path(__file__).resolve().parents[2] / "volumes/06_numerical_methods/numerical.ipynb"
 
 
-def test_stochastic_volatility_saved_cells_and_figures():
+def test_two_asset_saved_cells_and_figures():
     notebook = nbformat.read(NOTEBOOK, as_version=4)
     headings = [
         cell.source.splitlines()[0]
@@ -26,20 +26,18 @@ def test_stochastic_volatility_saved_cells_and_figures():
         "## 15. 練習問題",
     ]
     text = "\n".join(cell.source for cell in notebook.cells)
-    for title in (
-        "### 8.1 時間で決まるボラ",
-        "### 8.2 確率ボラ",
-        "### 8.3 無相関なら",
-        "### 8.4 相関と Heston",
-        "### 8.5 SABR",
-        "### 8.6 GARCH",
-    ):
-        assert title in text
+    for number in range(1, 7):
+        assert f"### 13.{number} " in text
     keys = []
     for cell in notebook.cells:
         for output in cell.get("outputs", ()):
             assert output.output_type != "error"
             payload = output.get("data", {}).get("application/vnd.plotly.v1+json")
-            if payload and payload["layout"].get("meta", {}).get("section") == "27.2":
+            if payload and payload["layout"].get("meta", {}).get("section") == "27.7":
                 keys.append(payload["layout"]["meta"]["figure"])
-    assert keys == ["stochvol_term", "stochvol_mixing", "stochvol_correlation", "stochvol_sabr"]
+    assert keys == [
+        "two_asset_nodes",
+        "two_asset_convergence",
+        "two_asset_errors",
+        "two_asset_correlation",
+    ]
