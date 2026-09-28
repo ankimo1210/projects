@@ -128,6 +128,71 @@ def test_missing_heading_raises_lookup_error():
         notebook_slice(_notebook(), "99. Missing")
 
 
+# --- level-three slices (vol10 declares §26.11–§26.17 as ### subsections) --------
+
+
+def _subsection_notebook(lookback: str = "lookback text", shout: str = "shout text") -> dict:
+    def markdown(cell_id, source):
+        return {"cell_type": "markdown", "id": cell_id, "metadata": {}, "source": source}
+
+    def code(cell_id, source):
+        return {
+            "cell_type": "code",
+            "id": cell_id,
+            "execution_count": 1,
+            "metadata": {},
+            "source": [source],
+            "outputs": [],
+        }
+
+    cells = [
+        markdown("h3", ["## 3. Barrier\n", "barrier text"]),
+        markdown("h4", ["## 4. Paths\n", "\n", "### 4.1 Lookback\n", lookback]),
+        code("c41", "lookback()"),
+        markdown("h42", ["### 4.2 Shout\n", shout]),
+        code("c42", "shout()"),
+        markdown("h5", ["## 5. Martingales"]),
+    ]
+    return {"cells": cells, "metadata": {}, "nbformat": 4, "nbformat_minor": 5}
+
+
+def test_level_three_slice_starts_at_the_cell_holding_the_subsection_heading():
+    content, _ = notebook_slice(_subsection_notebook(), "4.1 Lookback", level=3)
+    assert [cell["source"] for cell in content] == [
+        "## 4. Paths\n\n### 4.1 Lookback\nlookback text",
+        "lookback()",
+    ]
+
+
+def test_level_three_slice_ignores_edits_to_the_next_subsection():
+    edited = _subsection_notebook(shout="shout text, edited")
+    assert _digest(notebook_slice(_subsection_notebook(), "4.1 Lookback", level=3)[0]) == _digest(
+        notebook_slice(edited, "4.1 Lookback", level=3)[0]
+    )
+
+
+def test_last_level_three_slice_stops_at_the_next_level_two_heading():
+    content, _ = notebook_slice(_subsection_notebook(), "4.2 Shout", level=3)
+    assert [cell["source"] for cell in content] == ["### 4.2 Shout\nshout text", "shout()"]
+
+
+def test_level_two_slice_keeps_its_subsections_and_ignores_later_lines():
+    content, _ = notebook_slice(_subsection_notebook(), "4. Paths")
+    assert len(content) == 4
+    with pytest.raises(LookupError, match="matched 0"):
+        notebook_slice(_subsection_notebook(), "4.1 Lookback")
+
+
+def test_level_three_heading_must_match_exactly_one_cell():
+    with pytest.raises(LookupError, match="matched 0"):
+        notebook_slice(_subsection_notebook(), "4.9 Missing", level=3)
+
+
+def test_unsupported_slice_level_is_rejected():
+    with pytest.raises(ValueError, match="level"):
+        notebook_slice(_subsection_notebook(), "4. Paths", level=4)
+
+
 # --- Book sections ----------------------------------------------------------------
 
 BOOK = """<html><head>
@@ -170,6 +235,17 @@ def test_book_section_changes_with_body_text():
     first = book_section(BOOK.replace("{uuid}", UUID_A), "9. IVF")
     second = book_section(BOOK.replace("{uuid}", UUID_A).replace("body", "body!"), "9. IVF")
     assert first != second
+
+
+def test_book_section_level_three_returns_only_the_subsection():
+    html = book_section(BOOK.replace("{uuid}", UUID_A), "9.1 Model", level=3)
+    assert html.startswith('<section id="auto-id-0">')
+    assert "9.1 Model" in html and "<p>body</p>" not in html
+
+
+def test_book_section_level_three_ignores_level_two_headings():
+    with pytest.raises(LookupError, match="matched 0"):
+        book_section(BOOK.replace("{uuid}", UUID_A), "9. IVF", level=3)
 
 
 # --- portal cards ----------------------------------------------------------------
@@ -327,6 +403,27 @@ def test_fingerprint_is_deterministic(mini_project):
     assert first == second
     assert first["rules"]["normalizer_version"] == NORMALIZER_VERSION
     assert len(first["digest"]) == 64
+
+
+def test_level_three_declaration_ignores_sibling_subsections(mini_project):
+    root, config = mini_project
+    spec = config["sections"]["27.3"]
+    spec["notebook"] = {"path": "volumes/06/numerical.ipynb", "heading": "4.1 Lookback", "level": 3}
+    spec["book"] = {
+        "page": "book/_build/html/notebooks/06.html",
+        "heading": "9.1 Model",
+        "level": 3,
+    }
+    notebook = root / "volumes/06/numerical.ipynb"
+    notebook.write_text(json.dumps(_subsection_notebook()), encoding="utf-8")
+    baseline = compute_fingerprint(root, "27.3", config, environment=_environment())
+    assert baseline["unknown"] == []
+    notebook.write_text(json.dumps(_subsection_notebook(shout="edited")), encoding="utf-8")
+    current = compute_fingerprint(root, "27.3", config, environment=_environment())
+    assert decide(baseline, current)["decision"] == "reuse"
+    notebook.write_text(json.dumps(_subsection_notebook(lookback="edited")), encoding="utf-8")
+    changed = compute_fingerprint(root, "27.3", config, environment=_environment())
+    assert compare_fingerprints(baseline, changed) == ["notebook_slice"]
 
 
 def test_unrelated_notebook_cells_allow_reuse(mini_project):

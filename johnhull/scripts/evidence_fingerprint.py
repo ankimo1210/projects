@@ -110,14 +110,45 @@ def _heading_cells(notebook: dict) -> list[tuple[int, str]]:
     return headings
 
 
-def notebook_slice(notebook: dict, heading: str) -> tuple[list[dict], list[str]]:
-    """Return the normalized cells of one ``## heading`` slice and its bundles."""
-    headings = _heading_cells(notebook)
-    starts = [index for index, text in headings if text.startswith(heading)]
+def _subsection_cells(notebook: dict) -> list[tuple[int, str, int]]:
+    """Cells holding a ``##`` or ``###`` heading on any line, with that line's level."""
+    headings = []
+    for index, cell in enumerate(notebook.get("cells", [])):
+        if cell.get("cell_type") == "markdown":
+            for line in _joined(cell.get("source")).split("\n"):
+                for level in (3, 2):
+                    marker = "#" * level + " "
+                    if line.startswith(marker):
+                        headings.append((index, line[len(marker) :].strip(), level))
+                        break
+    return headings
+
+
+def notebook_slice(notebook: dict, heading: str, level: int = 2) -> tuple[list[dict], list[str]]:
+    """Return the normalized cells of one heading's slice and its bundles.
+
+    Level 2 slices start at the cell whose first line is ``## heading`` and run
+    to the next such cell. Level 3 slices start at the cell holding a
+    ``### heading`` line anywhere (a subsection may share its cell with the
+    parent ``##`` heading) and run to the next cell holding a ``##`` or ``###``
+    line.
+    """
+    if level == 2:
+        headings = _heading_cells(notebook)
+        starts = [index for index, text in headings if text.startswith(heading)]
+        boundaries = [index for index, _ in headings]
+    elif level == 3:
+        found = _subsection_cells(notebook)
+        starts = sorted(
+            {index for index, text, depth in found if depth == 3 and text.startswith(heading)}
+        )
+        boundaries = [index for index, _, _ in found]
+    else:
+        raise ValueError(f"unsupported notebook slice level {level!r}")
     if len(starts) != 1:
         raise LookupError(f"notebook heading {heading!r} matched {len(starts)} cells")
     start = starts[0]
-    ends = [index for index, _ in headings if index > start]
+    ends = [index for index in boundaries if index > start]
     cells = notebook["cells"][start : ends[0] if ends else None]
     renamer = _Renamer()
     bundles: list[str] = []
@@ -155,9 +186,11 @@ def notebook_bundles(notebook: dict) -> list[str]:
     return sorted(set(bundles))
 
 
-def book_section(html: str, heading: str) -> str:
-    """Return the normalized ``<section>`` element whose ``<h2>`` starts with ``heading``."""
-    matches = list(re.finditer(r"<h2\b[^>]*>\s*" + re.escape(heading), html))
+def book_section(html: str, heading: str, level: int = 2) -> str:
+    """Return the normalized ``<section>`` whose ``<h{level}>`` starts with ``heading``."""
+    if level not in (2, 3):
+        raise ValueError(f"unsupported Book heading level {level!r}")
+    matches = list(re.finditer(rf"<h{level}\b[^>]*>\s*" + re.escape(heading), html))
     if len(matches) != 1:
         raise LookupError(f"Book heading {heading!r} matched {len(matches)} times")
     start = html.rfind("<section", 0, matches[0].start())
@@ -381,14 +414,22 @@ def compute_fingerprint(
 
     attempt(
         "notebook_slice",
-        lambda: _canonical_digest(notebook_slice(load_notebook(), notebook_spec["heading"])[0]),
+        lambda: _canonical_digest(
+            notebook_slice(
+                load_notebook(), notebook_spec["heading"], notebook_spec.get("level", 2)
+            )[0]
+        ),
     )
     attempt("notebook_shared_assets", lambda: notebook_bundles(load_notebook()))
     book = spec["book"]
     attempt(
         "book_section",
         lambda: _sha256_text(
-            book_section((project / book["page"]).read_text(encoding="utf-8"), book["heading"])
+            book_section(
+                (project / book["page"]).read_text(encoding="utf-8"),
+                book["heading"],
+                book.get("level", 2),
+            )
         ),
     )
     attempt(
