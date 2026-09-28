@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,14 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## D1-preflight — 2026-09-28
+
+[実証記録](docs/validation/d1-preflight/README.md)。M15の前提とした証跡方針D1の小群実証。受入件数（受入14・未評価292）と既受入14節の台帳・証跡は変更していない。
+
+- §27.3 の全再描画と基準再利用で、同じ16状態と節テスト14件がPASS。新規画像16枚・413,577 bytesはC:/F:の2コピーから復元しハッシュ一致。基準再利用の新規保存は0。16枚は受入時とM14再検査時の画像にもバイト一致。
+- 負の対照17件がPASS（無関係な節の追加は再利用可、本文・値・データ・共有CSS/JS・描画環境・normalizerの変更、未宣言の依存、欠損・破損blobは再利用を拒否）。
+- johnhull 全体の pytest **2,995 passed / 6 skipped**。台帳のsource検査と`--check-artifacts`、release contract、§27.3の独立数値検証はPASS。
 
 ## Section 27.5 M14 — 2026-09-27
 
