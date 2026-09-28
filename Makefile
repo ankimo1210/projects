@@ -62,7 +62,7 @@ test:
 	fi
 
 report:
-	cd analytics/report && PYTHONPATH=. uv run --no-sync python -m report_builder.build
+	cd analytics/report && PYTHONPATH=. uv run --no-sync python -m analytics_portal.build
 	@echo "Open analytics/report/site/index.html in a browser (works offline)."
 
 books:
@@ -83,7 +83,7 @@ sde-check:
 	npm --prefix analytics/differential_equation/sde-book test
 
 hull-report:
-	PYTHONPATH=johnhull/report uv run --no-sync python -m report_builder.build
+	PYTHONPATH=johnhull/report uv run --no-sync python -m analytics_portal.build
 	@echo "Open johnhull/report/site/index.html in a browser (works offline)."
 
 hull-book:

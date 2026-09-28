@@ -1,4 +1,4 @@
-"""report_builder — generate the offline, interactive analytics portal.
+"""analytics_portal — generate the offline, interactive analytics portal.
 
 This package imports the three textbook packages (``la_book``, ``nn_textbook``,
 ``bayes_textbook``) and calls their ``plotly_*`` figure builders to assemble a
