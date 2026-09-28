@@ -33,6 +33,11 @@ ACCEPTED = {
     ),
     "27.3": (9, "44272e45", {"ivf_smile", "ivf_local", "ivf_repricing", "ivf_joint"}),
     "27.4": (10, "ff3ada12", {"cb_tree", "cb_decisions", "cb_credit", "cb_convergence"}),
+    "27.5": (
+        11,
+        "e4288dc0",
+        {"path_grids", "path_interpolation", "path_prices", "path_exact"},
+    ),
 }
 
 
@@ -90,8 +95,10 @@ def _fresh(section):
         from hullkit._stochastic_volatility_lesson import _figures
     elif section == "27.3":
         from hullkit._local_volatility_lesson import _figures
-    else:
+    elif section == "27.4":
         from hullkit._convertible_bond_lesson import _figures
+    else:
+        from hullkit._path_dependent_lesson import _figures
     return {key: json.loads(fig.to_json()) for key, fig in _figures().items()}
 
 
@@ -140,7 +147,7 @@ def main():
         for finding in findings:
             print("FAIL:", finding)
         raise SystemExit(1)
-    print("PASS: accepted vol06 §27.1–§27.4 slices, shared figures and fresh outputs")
+    print("PASS: accepted vol06 §27.1–§27.5 slices, shared figures and fresh outputs")
 
 
 if __name__ == "__main__":

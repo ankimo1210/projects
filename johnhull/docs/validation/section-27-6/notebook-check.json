@@ -1,0 +1,102 @@
+{
+  "section": "27.6",
+  "status": "PASS",
+  "base": "e4288dc0",
+  "cells": 107,
+  "lesson_cells": 13,
+  "preserved_cells_outside_lesson": 94,
+  "renumbered_headings": {
+    "## 12. Longstaff-Schwartz（LSM）": "## 13. Longstaff-Schwartz（LSM）",
+    "## 13. 練習問題": "## 14. 練習問題"
+  },
+  "saved_figures": {
+    "27.1": [
+      "alternative_cev",
+      "alternative_merton",
+      "alternative_poisson",
+      "alternative_vg"
+    ],
+    "27.2": [
+      "stochvol_correlation",
+      "stochvol_mixing",
+      "stochvol_sabr",
+      "stochvol_term"
+    ],
+    "27.3": [
+      "ivf_joint",
+      "ivf_local",
+      "ivf_repricing",
+      "ivf_smile"
+    ],
+    "27.4": [
+      "cb_convergence",
+      "cb_credit",
+      "cb_decisions",
+      "cb_tree"
+    ],
+    "27.5": [
+      "path_exact",
+      "path_grids",
+      "path_interpolation",
+      "path_prices"
+    ],
+    "27.6": [
+      "barrier_convergence",
+      "barrier_errors",
+      "barrier_lattice",
+      "barrier_near"
+    ]
+  },
+  "negative_controls": [
+    {
+      "mutation": "§11 source changed",
+      "rejected": true,
+      "findings": [
+        "§12以外のセル本文がM14基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§27.6 saved convergence changed",
+      "rejected": true,
+      "findings": [
+        "barrier_convergence.data が共有図と異なる"
+      ]
+    },
+    {
+      "mutation": "unlisted heading changed",
+      "rejected": true,
+      "findings": [
+        "§12以外のセル本文がM14基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§27.5 saved grid changed",
+      "rejected": true,
+      "findings": [
+        "path_grids.data が共有図と異なる"
+      ]
+    }
+  ],
+  "checks": [
+    "fresh execution matches committed output signature",
+    "outside §12 source/output unchanged except two listed headings",
+    "saved §27.1–§27.6 Plotly values match shared figures"
+  ],
+  "source_sha256": {
+    "scripts/verify_barrier_tree_notebook.py": "da2665bed91d8ba7775522c93e5a1c96ea8970b37ec06544d8f0ccdcf97f7861",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_barrier_tree_lesson.py": "d33ecc91c7599f42d6aecf6c1418484b4ab715ac20b0e8d0a5c906e091ebcc16",
+    "hullkit/src/hullkit/_path_dependent_lesson.py": "b732e71477cce55dc942ce1fba58a37b9f125bba80716bcf37d4e86913d1aade",
+    "hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
+    "hullkit/src/hullkit/_local_volatility_lesson.py": "f957ab42b0f9e60227b4cf37d42bfd25b7f608acd0c1126699cd88f5053fc76f",
+    "hullkit/src/hullkit/_stochastic_volatility_lesson.py": "e3625860a42a20fc4daf6e5a8d9f4e660b553dc70d567fecf17bc2a0b6ecb666",
+    "hullkit/src/hullkit/_alternative_models_lesson.py": "a5c6b4e4e2ea5eab00d9af9f97932373705129fb8131bfcc92fa6657360aab37",
+    "docs/validation/section-27-6/reference.json": "33a9753eaba4951659ef8ea4470ec24d21dd5c08159e5a21043df3f87af778f2",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "8b86427c969270f462425d92f45302e8540f6182758849723c58dbf168ed90f1",
+    "volumes/06_numerical_methods/numerical.ipynb": "069dfaa0a23a2239fdb22440119336409ca689a73008c3ca99646b2700da7ec3"
+  },
+  "artifact_sha256": {
+    "volumes/06_numerical_methods/numerical.ipynb": "069dfaa0a23a2239fdb22440119336409ca689a73008c3ca99646b2700da7ec3",
+    "book/_build/html/notebooks/06_numerical.html": "b4bdaf330ae06185c3b645988d5b80588c4f56bc093a272116d65fcf05e19542"
+  }
+}

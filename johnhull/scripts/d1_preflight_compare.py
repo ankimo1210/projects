@@ -152,9 +152,9 @@ def _git(project: Path, *args: str) -> str:
 RECORDS_DIR = "docs/validation/d1-preflight"
 
 
-def worktree_state(project: Path) -> tuple[str, bool]:
-    """HEAD commit and whether inputs are uncommitted (preflight outputs excluded)."""
-    status = _git(project, "status", "--porcelain", "--", ".", f":(exclude){RECORDS_DIR}")
+def worktree_state(project: Path, records_dir: str = RECORDS_DIR) -> tuple[str, bool]:
+    """HEAD commit and whether inputs are uncommitted (the records directory excluded)."""
+    status = _git(project, "status", "--porcelain", "--", ".", f":(exclude){records_dir}")
     return _git(project, "rev-parse", "HEAD"), bool(status)
 
 
@@ -397,6 +397,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--config", type=Path, default=evidence_fingerprint.DEFAULT_CONFIG)
     parser.add_argument("--baseline", help="records-root relative path of a redrawn record")
+    parser.add_argument(
+        "--records-dir",
+        default=RECORDS_DIR,
+        help="records-root relative directory that receives section-*/ records",
+    )
+    parser.add_argument(
+        "--reason",
+        default="D1-preflight stage 3: full redraw",
+        help="reason recorded for a redraw that has no baseline",
+    )
     parser.add_argument("--work", type=Path, required=True, help="empty scratch directory")
     args = parser.parse_args(argv)
     project = args.project_root.resolve()
@@ -406,7 +416,7 @@ def main(argv: list[str] | None = None) -> int:
     primary = evidence_store.store_from_env("PROJECTS_ARTIFACT_STORE", role="primary")
     mirror = evidence_store.store_from_env("PROJECTS_ARTIFACT_MIRROR", role="mirror")
 
-    commit, dirty = worktree_state(project)
+    commit, dirty = worktree_state(project, args.records_dir)
     if dirty:
         raise SystemExit("D1-preflight requires a clean project worktree")
     run_id = new_run_id(args.section, args.mode)
@@ -416,7 +426,7 @@ def main(argv: list[str] | None = None) -> int:
     fingerprint = observed["fingerprint"]
     runtime = observed["runtime"]
 
-    record_dir_rel = f"{RECORDS_DIR}/section-{args.section.replace('.', '-')}"
+    record_dir_rel = f"{args.records_dir}/section-{args.section.replace('.', '-')}"
     record_dir = records_root / record_dir_rel
     record_dir.mkdir(parents=True, exist_ok=True)
     raw_path = record_dir / f"{run_id}.browser.json"
@@ -448,7 +458,7 @@ def main(argv: list[str] | None = None) -> int:
 
     baseline = None
     decision = "redrawn"
-    reasons = ["D1-preflight stage 3: full redraw"]
+    reasons = [args.reason]
     if args.mode == "reuse":
         if not args.baseline:
             raise SystemExit("reuse needs --baseline")

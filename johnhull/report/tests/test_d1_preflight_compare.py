@@ -295,6 +295,23 @@ def test_worktree_state_ignores_preflight_outputs_but_not_inputs(tmp_path):
     assert worktree_state(repo)[1] is True
 
 
+def test_worktree_state_ignores_a_named_records_directory(tmp_path):
+    from johnhull.scripts.d1_preflight_compare import worktree_state
+
+    repo = tmp_path / "repo"
+    (repo / "docs/validation/d1-recheck").mkdir(parents=True)
+    (repo / "src.py").write_text("x = 1\n", encoding="utf-8")
+    for command in (
+        ["git", "init", "-q"],
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "add", "."],
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "init"],
+    ):
+        subprocess.run(command, cwd=repo, check=True)
+    (repo / "docs/validation/d1-recheck/run.json").write_text("{}", encoding="utf-8")
+    assert worktree_state(repo)[1] is True
+    assert worktree_state(repo, "docs/validation/d1-recheck")[1] is False
+
+
 # --- browser records of older verifiers (§26.9–§26.16) -------------------------------
 
 MATHJAX = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/"

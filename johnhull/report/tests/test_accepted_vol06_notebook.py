@@ -33,3 +33,10 @@ def test_accepted_plot_value_mutation_is_rejected():
                 assert any("cb_tree" in message for message in compare(altered))
                 return
     raise AssertionError("missing saved cb_tree")
+
+
+def test_accepted_path_dependent_lesson_is_pinned_after_section_27_6():
+    altered = copy.deepcopy(load_current())
+    cell = next(c for c in altered.cells if c.source.startswith("### 11.3 代表平均"))
+    cell.source += " changed"
+    assert any("27.5" in message for message in compare(altered))
