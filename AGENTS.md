@@ -11,7 +11,9 @@ Japanese-first; code, identifiers, and commit messages are English.
 
 Follow the target project's applicable `AGENTS.md` / `CLAUDE.md`. Consult
 its `README.md` for project context as needed; the project index is in the
-root [`README.md`](README.md).
+root [`README.md`](README.md). When a project has both files, `AGENTS.md` is
+the canonical text and `CLAUDE.md` only imports it (`@AGENTS.md`); never
+copy the guide into `CLAUDE.md`, or the two drift apart.
 
 ## Workspace Policy
 
