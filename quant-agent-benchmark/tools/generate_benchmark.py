@@ -13,18 +13,16 @@ import argparse
 import hashlib
 import importlib.metadata
 import json
-import math
 import platform
 import shutil
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from typing import Callable, Iterable
 
 import numpy as np
 import pandas as pd
-
 
 VERSION = "1.0.0"
 SCHEMA_VERSION = "1.0"
@@ -88,7 +86,7 @@ def instantaneous_forward(t: np.ndarray | float, spec: CurveSpec) -> np.ndarray:
 
 
 def payment_times(maturity: float, frequency: int) -> np.ndarray:
-    n = max(1, int(round(maturity * frequency)))
+    n = max(1, round(maturity * frequency))
     return np.arange(1, n + 1, dtype=float) / frequency
 
 
@@ -201,7 +199,7 @@ def build_observations(
         obs.update({
             "obs_id": f"OBS{i + 1:04d}",
             "source": ["VENUE_A", "VENUE_B", "COMPOSITE"][i % 3],
-            "timestamp": (datetime(2026, 1, 15, 16, 0, tzinfo=timezone.utc) - timedelta(minutes=int(rng.integers(0, 90)))).isoformat().replace("+00:00", "Z"),
+            "timestamp": (datetime(2026, 1, 15, 16, 0, tzinfo=UTC) - timedelta(minutes=int(rng.integers(0, 90)))).isoformat().replace("+00:00", "Z"),
             "quote_value": quote,
             "bid": quote - spread / 2,
             "ask": quote + spread / 2,
@@ -258,12 +256,16 @@ def build_observations(
         visible.at[j, "bid"] += delta * (-1 if j % 2 else 1)
         visible.at[j, "ask"] += delta * (-1 if j % 2 else 1)
         label(j, "moderate_outlier", True, "medium", "downweight_or_exclude")
-    rate_pred = lambda r: r["instrument_type"] != "bond"
+    def rate_pred(r):
+        return r["instrument_type"] != "bond"
+
     for j in take(corruption_profile.get("rate_unit", 0), rate_pred):
         for col in ("quote_value", "bid", "ask"):
             visible.at[j, col] /= 100.0
         label(j, "rate_unit_error", True, "critical", "normalize")
-    price_pred = lambda r: r["instrument_type"] == "bond"
+    def price_pred(r):
+        return r["instrument_type"] == "bond"
+
     for j in take(corruption_profile.get("price_unit", 0), price_pred):
         for col in ("quote_value", "bid", "ask"):
             visible.at[j, col] /= 100.0
@@ -451,9 +453,12 @@ def generate_scenarios() -> int:
         rng = np.random.default_rng(MASTER_SEED + 1000 + i)
         universe = make_universe(rng, 96)
         profile = {"missing": 1, "stale": 1, "inversion": 1, "extreme": 1, "moderate": 2, "rate_unit": 1, "price_unit": 1, "valid_unusual": 2, "duplicates": 2}
-        if name == "multiple_large_outliers": profile["extreme"] = 10
-        if name == "duplicated_observations": profile["duplicates"] = 18
-        if name == "unit_errors": profile["rate_unit"], profile["price_unit"] = 10, 8
+        if name == "multiple_large_outliers":
+            profile["extreme"] = 10
+        if name == "duplicated_observations":
+            profile["duplicates"] = 18
+        if name == "unit_errors":
+            profile["rate_unit"], profile["price_unit"] = 10, 8
         if name == "noisy_but_valid":
             profile = {"missing": 0, "stale": 0, "inversion": 0, "extreme": 0, "moderate": 0, "rate_unit": 0, "price_unit": 0, "valid_unusual": 15, "duplicates": 0}
         visible, clean, labels = build_observations(universe, spec, rng, corruption_profile=profile)
@@ -461,7 +466,7 @@ def generate_scenarios() -> int:
             visible = visible[~((visible["maturity_years"] > 12) & (np.arange(len(visible)) % 4 != 0))].copy()
         elif name == "missing_liquid_benchmarks":
             anchors = np.array([2.0, 5.0, 10.0, 20.0])
-            visible = visible[~visible["maturity_years"].apply(lambda x: np.min(np.abs(anchors - x)) < 0.12)].copy()
+            visible = visible[~visible["maturity_years"].apply(lambda x, anchors=anchors: np.min(np.abs(anchors - x)) < 0.12)].copy()
         elif name == "illiquid_long_end":
             mask = visible["maturity_years"] > 15
             visible.loc[mask, "liquidity_score"] = np.minimum(visible.loc[mask, "liquidity_score"], 0.08)

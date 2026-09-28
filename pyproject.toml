@@ -99,6 +99,10 @@ extend-exclude = [
     "quant-agent-benchmark/dev",
     "quant-agent-benchmark/analysis",
     "quant-agent-benchmark/evaluations",
+    # Every file under input/ and evaluator/ is pinned by the v1.0.0
+    # MANIFEST.json hashes that recorded evaluations refer to.
+    "quant-agent-benchmark/input",
+    "quant-agent-benchmark/evaluator",
     # agentic-setup is a verbatim backup of the live ~/.claude and ~/.codex;
     # it is synced by copying, never edited here.
     "agentic-setup",
