@@ -91,6 +91,17 @@ extend-exclude = [
     "**/build_*_nb.py",
     "**/patch_*_nb.py",
     "**/generate_notebook_part*.py",
+    # quant-agent-benchmark keeps model submissions and dated audit records as
+    # evidence: linting or rewriting them would change what was evaluated.
+    "quant-agent-benchmark/results",
+    "quant-agent-benchmark/output",
+    "quant-agent-benchmark/feedback_runs",
+    "quant-agent-benchmark/dev",
+    "quant-agent-benchmark/analysis",
+    "quant-agent-benchmark/evaluations",
+    # agentic-setup is a verbatim backup of the live ~/.claude and ~/.codex;
+    # it is synced by copying, never edited here.
+    "agentic-setup",
 ]
 
 [tool.ruff.lint]
