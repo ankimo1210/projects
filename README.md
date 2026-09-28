@@ -139,6 +139,7 @@ make install   # uv 管理プロジェクトを一括 sync
 make lint      # ruff check を全体に
 make fmt       # ruff format --check を全体に
 make test      # testpaths の34件を pytest で実行 + npm があれば sde-check
+make test-extra  # workspace 外の Python テスト（WSET・aisan・メールデモ・komorebi・地下鉄3D）
 make clean     # __pycache__ / .pytest_cache などを掃除
 make tree      # ヘビーディレクトリを除外したツリー表示
 ```
