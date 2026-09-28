@@ -32,6 +32,14 @@ HAND_STEPS = 100
 NEAR_STEPS = (100, 400)
 NEAR_BARRIERS = [round(100.25 + 0.05 * i, 2) for i in range(116)]
 NEAR_CASES = (102.0, 102.8)
+CASE_STEPS = (50, 100, 200)
+CASES = (
+    ("call", "down-and-out", 80.0, 0.03),
+    ("put", "up-and-out", 120.0, 0.03),
+    ("put", "down-and-out", 80.0, 0.03),
+)
+MONITORING_STEPS = (100, 400, 1600)
+BGK_BETA = 0.5826
 
 
 def normal_cdf(x):
@@ -111,26 +119,82 @@ def probabilities(log_spacing, dt, p):
     )
 
 
-def forward_price(p, steps, log_spacing, branch, kill_level):
-    """Discounted payoff under surviving lattice mass, levels >= kill_level absorbed."""
+def forward_price(p, steps, log_spacing, branch, kill_level, *, up=True, call=True):
+    """Discounted payoff under surviving lattice mass; levels at or beyond kill_level absorbed."""
     p_up, p_mid, p_down = branch
     mass = np.zeros(2 * steps + 1)
     mass[steps] = 1.0
     levels = np.arange(-steps, steps + 1)
-    dead = levels >= kill_level
+    dead = levels >= kill_level if up else levels <= kill_level
     for _ in range(steps):
         moved = p_mid * mass
         moved[1:] += p_up * mass[:-1]
         moved[:-1] += p_down * mass[1:]
         moved[dead] = 0.0
         mass = moved
-    payoff = np.maximum(p["spot"] * np.exp(levels * log_spacing) - p["strike"], 0.0)
+    stock = p["spot"] * np.exp(levels * log_spacing)
+    payoff = np.maximum(stock - p["strike"], 0.0) if call else np.maximum(p["strike"] - stock, 0.0)
     return math.exp(-p["rate"] * p["maturity"]) * float(mass @ payoff)
 
 
-def outer_level(p, log_spacing):
+def outer_level(p, log_spacing, up=True):
     ratio = math.log(p["barrier"] / p["spot"]) / log_spacing
-    return round(ratio) if abs(ratio - round(ratio)) <= 1e-9 else math.ceil(ratio)
+    if abs(ratio - round(ratio)) <= 1e-9:
+        return round(ratio)
+    return math.ceil(ratio) if up else math.floor(ratio)
+
+
+def case_prices(p, steps, option, barrier_type):
+    """Binomial simple, trinomial simple/inner and nodes on the barrier for any knock-out."""
+    up, call = barrier_type == "up-and-out", option == "call"
+    dt = p["maturity"] / steps
+    binomial_spacing = p["volatility"] * math.sqrt(dt)
+    u = math.exp(binomial_spacing)
+    q = (math.exp((p["rate"] - p["dividend_yield"]) * dt) - 1 / u) / (u - 1 / u)
+    kind = dict(up=up, call=call)
+    binomial = forward_price(
+        p, steps, binomial_spacing, (q, 0.0, 1 - q), outer_level(p, binomial_spacing, up), **kind
+    )
+    spacing = p["volatility"] * math.sqrt(3 * dt)
+    branch = probabilities(spacing, dt, p)
+    outer = outer_level(p, spacing, up)
+    distance = math.log(p["barrier"] / p["spot"])
+    levels = int(abs(distance) / spacing + 0.5)
+    on_spacing = abs(distance) / levels
+    return {
+        "binomial_simple": binomial,
+        "trinomial_simple": forward_price(p, steps, spacing, branch, outer, **kind),
+        "trinomial_inner": forward_price(
+            p, steps, spacing, branch, outer - 1 if up else outer + 1, **kind
+        ),
+        "on_barrier": forward_price(
+            p,
+            steps,
+            on_spacing,
+            probabilities(on_spacing, dt, p),
+            levels if up else -levels,
+            **kind,
+        ),
+    }
+
+
+def lattice_cases():
+    """Forward-induction prices for down barriers, puts and a dividend yield."""
+    rows = []
+    for option, barrier_type, barrier, dividend in CASES:
+        p = dict(PARAMETERS, barrier=barrier, dividend_yield=dividend)
+        for steps in CASE_STEPS:
+            rows.append(
+                {
+                    "option": option,
+                    "barrier_type": barrier_type,
+                    "barrier": barrier,
+                    "dividend_yield": dividend,
+                    "steps": steps,
+                    **case_prices(p, steps, option, barrier_type),
+                }
+            )
+    return rows
 
 
 def tree_prices(p, steps):
@@ -295,6 +359,13 @@ def build():
     levels = int(ratio + 0.5)
     spacing = math.log(p["barrier"] / p["spot"]) / levels
     branch = probabilities(spacing, dt, p)
+    monitoring = {"steps": list(MONITORING_STEPS), "tree_on_barrier": [], "bgk_discrete": []}
+    for steps in MONITORING_STEPS:
+        monitoring["tree_on_barrier"].append(tree_prices(p, steps)["on_barrier"] - analytic)
+        shifted = p["barrier"] * math.exp(
+            BGK_BETA * p["volatility"] * math.sqrt(p["maturity"] / steps)
+        )
+        monitoring["bgk_discrete"].append(outer_analytic(shifted) - analytic)
     return {
         "section": "27.6",
         "source": "Hull 11e Global Edition pp.656–658, Figures 27.4–27.5; continuous formulas §26.9",
@@ -325,6 +396,8 @@ def build():
             "second_moment": (branch[0] + branch[2]) * spacing**2,
         },
         "near_barrier": near_barrier(p),
+        "cases": lattice_cases(),
+        "monitoring": monitoring,
     }
 
 

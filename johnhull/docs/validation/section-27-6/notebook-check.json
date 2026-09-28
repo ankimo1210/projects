@@ -85,18 +85,18 @@
   "source_sha256": {
     "scripts/verify_barrier_tree_notebook.py": "da2665bed91d8ba7775522c93e5a1c96ea8970b37ec06544d8f0ccdcf97f7861",
     "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
-    "hullkit/src/hullkit/_barrier_tree_lesson.py": "d33ecc91c7599f42d6aecf6c1418484b4ab715ac20b0e8d0a5c906e091ebcc16",
+    "hullkit/src/hullkit/_barrier_tree_lesson.py": "9292dd867ff817e0cd685f92d5a448c4f16f91a595c4d964fe56bcb509d4ab98",
     "hullkit/src/hullkit/_path_dependent_lesson.py": "b732e71477cce55dc942ce1fba58a37b9f125bba80716bcf37d4e86913d1aade",
     "hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
     "hullkit/src/hullkit/_local_volatility_lesson.py": "f957ab42b0f9e60227b4cf37d42bfd25b7f608acd0c1126699cd88f5053fc76f",
     "hullkit/src/hullkit/_stochastic_volatility_lesson.py": "e3625860a42a20fc4daf6e5a8d9f4e660b553dc70d567fecf17bc2a0b6ecb666",
     "hullkit/src/hullkit/_alternative_models_lesson.py": "a5c6b4e4e2ea5eab00d9af9f97932373705129fb8131bfcc92fa6657360aab37",
-    "docs/validation/section-27-6/reference.json": "33a9753eaba4951659ef8ea4470ec24d21dd5c08159e5a21043df3f87af778f2",
-    "volumes/06_numerical_methods/build_numerical_notebook.py": "8b86427c969270f462425d92f45302e8540f6182758849723c58dbf168ed90f1",
-    "volumes/06_numerical_methods/numerical.ipynb": "069dfaa0a23a2239fdb22440119336409ca689a73008c3ca99646b2700da7ec3"
+    "docs/validation/section-27-6/reference.json": "9ba15464abfd77844403e0f30d654ae9c288d9cca1cd33512579f9d7179bfaf3",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "6f9f2fa822e04dc91f2e6fda7188ddfa2899baad878df1d8c0f6cbde64c8d138",
+    "volumes/06_numerical_methods/numerical.ipynb": "4b5978ec3958bcd5475d8568a7af252e6096c2ea378369ee2cfd3681b35c0322"
   },
   "artifact_sha256": {
-    "volumes/06_numerical_methods/numerical.ipynb": "069dfaa0a23a2239fdb22440119336409ca689a73008c3ca99646b2700da7ec3",
-    "book/_build/html/notebooks/06_numerical.html": "b4bdaf330ae06185c3b645988d5b80588c4f56bc093a272116d65fcf05e19542"
+    "volumes/06_numerical_methods/numerical.ipynb": "4b5978ec3958bcd5475d8568a7af252e6096c2ea378369ee2cfd3681b35c0322",
+    "book/_build/html/notebooks/06_numerical.html": "488e7276964da048596a2d9fe129b7ab99866a1efcedc3cbec25e1f1e2907608"
   }
 }

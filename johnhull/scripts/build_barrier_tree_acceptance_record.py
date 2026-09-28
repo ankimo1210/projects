@@ -35,7 +35,7 @@ def check_d1(section_id):
     record = json.loads((PROJECT / name).read_text(encoding="utf-8"))
     if record.get("schema_version") != 2 or record.get("status") != "PASS":
         raise ValueError(f"D1 recheck not passing: {name}")
-    if record["section"] != section_id or record["decision"] not in ("redrawn", "reused"):
+    if record["section_id"] != section_id or record["decision"] not in ("redrawn", "reused"):
         raise ValueError(f"unexpected D1 recheck: {name}")
     for check, result in record["checks"].items():
         if result.get("status") != "PASS":

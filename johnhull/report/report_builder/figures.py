@@ -402,7 +402,7 @@ FIGURES: list[FigureSpec] = [
         "barrier_convergence",
         "numerics",
         "up-and-out コールの収束",
-        "二項・三項の素朴な方法、内側・外側の補間、バリア上のノードを20–300段で比べる。",
+        "二項・三項の素朴な方法、内側・外側の補間、バリア上のノードを同じ20–300段で比べる。",
         lambda: barrier_tree_lesson_figures()["barrier_convergence"],
         practice="段数を増やしても素朴な方法はのこぎり状に振れ、単調には収束しない。",
         is_new=True,
@@ -413,7 +413,7 @@ FIGURES: list[FigureSpec] = [
         "誤差の分解：バリア位置と格子",
         "素朴な三項の誤差を、外側バリアの位置の差と格子の誤差に分ける。",
         lambda: barrier_tree_lesson_figures()["barrier_errors"],
-        practice="ノードをバリアに乗せると位置の差が消え、誤差は段数に反比例して縮む。",
+        practice="ノードをバリアに乗せると位置の差が消え、誤差の包絡線は段数に反比例して縮む。",
         is_new=True,
     ),
     FigureSpec(

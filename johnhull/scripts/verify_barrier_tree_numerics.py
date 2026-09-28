@@ -84,8 +84,49 @@ def evaluate():
         row = _public(p, steps)
         for key in ("trinomial_simple", "interpolated", "on_barrier"):
             lattice_error = max(lattice_error, abs(row[key] - analytic - doubling[key][index]))
+    for case in reference["cases"]:
+        q = dict(p, barrier=case["barrier"], dividend_yield=case["dividend_yield"])
+        args = (q["spot"], q["strike"], q["barrier"], q["rate"], q["volatility"], q["maturity"])
+        options = dict(
+            option=case["option"],
+            barrier_type=case["barrier_type"],
+            dividend_yield=case["dividend_yield"],
+        )
+        found = {
+            "binomial_simple": binomial_barrier(*args, case["steps"], **options).price,
+            "trinomial_simple": trinomial_barrier(*args, case["steps"], **options).price,
+            "trinomial_inner": trinomial_barrier(
+                *args, case["steps"], method="inner", **options
+            ).price,
+            "on_barrier": trinomial_barrier(
+                *args, case["steps"], method="on_barrier", **options
+            ).price,
+        }
+        for key, value in found.items():
+            lattice_error = max(lattice_error, abs(value - case[key]))
     if lattice_error >= 1e-10:
         raise AssertionError("backward trees differ from forward lattice induction")
+
+    monitoring = reference["monitoring"]
+    bgk_error = 0.0
+    for index, steps in enumerate(monitoring["steps"]):
+        discrete = barrier_call(
+            p["spot"],
+            p["strike"],
+            p["barrier"],
+            p["rate"],
+            p["volatility"],
+            p["maturity"],
+            q=p["dividend_yield"],
+            barrier="up-and-out",
+            n_observations=steps,
+        )
+        bgk_error = max(bgk_error, abs(discrete - analytic - monitoring["bgk_discrete"][index]))
+        tree, bgk = monitoring["tree_on_barrier"][index], monitoring["bgk_discrete"][index]
+        if not tree < 0 < bgk or abs(tree) >= bgk:
+            raise AssertionError("tree monitoring behaves like discrete monitoring")
+    if bgk_error >= 1e-12:
+        raise AssertionError("BGK reference differs from hullkit.exotics")
 
     simple_error = max(abs(value - analytic) for value in dense["trinomial_simple"])
     late = [i for i, steps in enumerate(dense["steps"]) if steps >= 100]
@@ -203,6 +244,9 @@ def evaluate():
             "geometry_error": geometry_error,
             "near_probability_error": probability_error,
             "near_rejected": rejected,
+            "lattice_cases": len(reference["cases"]),
+            "bgk_error": bgk_error,
+            "monitoring": monitoring,
         },
         "source_sha256": {name: sha(PROJECT / name) for name in SOURCES},
         "artifact_sha256": sha(REF),

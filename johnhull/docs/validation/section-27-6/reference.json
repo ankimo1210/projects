@@ -3936,5 +3936,123 @@
         "p_middle": 0.7049557405108324
       }
     ]
+  },
+  "cases": [
+    {
+      "option": "call",
+      "barrier_type": "down-and-out",
+      "barrier": 80.0,
+      "dividend_yield": 0.03,
+      "steps": 50,
+      "binomial_simple": 11.861013443861822,
+      "trinomial_simple": 12.110511453751448,
+      "trinomial_inner": 11.459566866127451,
+      "on_barrier": 11.494870963543674
+    },
+    {
+      "option": "call",
+      "barrier_type": "down-and-out",
+      "barrier": 80.0,
+      "dividend_yield": 0.03,
+      "steps": 100,
+      "binomial_simple": 11.73163431833052,
+      "trinomial_simple": 11.913573381776393,
+      "trinomial_inner": 11.284550792321605,
+      "on_barrier": 11.510439010953048
+    },
+    {
+      "option": "call",
+      "barrier_type": "down-and-out",
+      "barrier": 80.0,
+      "dividend_yield": 0.03,
+      "steps": 200,
+      "binomial_simple": 11.661743817169759,
+      "trinomial_simple": 11.90274575666101,
+      "trinomial_inner": 11.488699606061271,
+      "on_barrier": 11.525905235258
+    },
+    {
+      "option": "put",
+      "barrier_type": "up-and-out",
+      "barrier": 120.0,
+      "dividend_yield": 0.03,
+      "steps": 50,
+      "binomial_simple": 9.535986906251736,
+      "trinomial_simple": 9.632692922939034,
+      "trinomial_inner": 8.171227107799412,
+      "on_barrier": 8.989127170206446
+    },
+    {
+      "option": "put",
+      "barrier_type": "up-and-out",
+      "barrier": 120.0,
+      "dividend_yield": 0.03,
+      "steps": 100,
+      "binomial_simple": 9.51735779046618,
+      "trinomial_simple": 9.479592626370799,
+      "trinomial_inner": 8.429287050422014,
+      "on_barrier": 9.046749355896106
+    },
+    {
+      "option": "put",
+      "barrier_type": "up-and-out",
+      "barrier": 120.0,
+      "dividend_yield": 0.03,
+      "steps": 200,
+      "binomial_simple": 9.213631312559912,
+      "trinomial_simple": 9.074556838288544,
+      "trinomial_inner": 8.1878540594257,
+      "on_barrier": 9.047251389243879
+    },
+    {
+      "option": "put",
+      "barrier_type": "down-and-out",
+      "barrier": 80.0,
+      "dividend_yield": 0.03,
+      "steps": 50,
+      "binomial_simple": 1.0827688805633577,
+      "trinomial_simple": 1.7852679393233586,
+      "trinomial_inner": 0.6874958175151393,
+      "on_barrier": 0.7162751666478138
+    },
+    {
+      "option": "put",
+      "barrier_type": "down-and-out",
+      "barrier": 80.0,
+      "dividend_yield": 0.03,
+      "steps": 100,
+      "binomial_simple": 0.9497677308454586,
+      "trinomial_simple": 1.2583934981944647,
+      "trinomial_inner": 0.5931776003802823,
+      "on_barrier": 0.75467241987303
+    },
+    {
+      "option": "put",
+      "barrier_type": "down-and-out",
+      "barrier": 80.0,
+      "dividend_yield": 0.03,
+      "steps": 200,
+      "binomial_simple": 0.9199614501593858,
+      "trinomial_simple": 1.242925577369741,
+      "trinomial_inner": 0.7492000011129439,
+      "on_barrier": 0.7801774716500982
+    }
+  ],
+  "monitoring": {
+    "steps": [
+      100,
+      400,
+      1600
+    ],
+    "tree_on_barrier": [
+      -0.027632939171861437,
+      -0.008595459366790292,
+      -0.002148299593670966
+    ],
+    "bgk_discrete": [
+      0.16680167349121078,
+      0.07896994531898471,
+      0.03839671518184673
+    ]
   }
 }
