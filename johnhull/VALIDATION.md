@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,18 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 27.7 M16 — 2026-09-28
+
+[受入ノート](docs/SECTION_27_7_ACCEPTANCE_2026-09-28.md)・[レビュー](docs/SECTION_27_7_REVIEW_2026-09-28.md)・[統合記録](docs/validation/section-27-7/m16-check.json)にTA01–TA06の5軸を集約。台帳は**accepted**（受入16・未評価290）。
+
+- 原典に数値例がないため、欧州型は Stulz の max コール15.926819ドル（条件付き積分との差 $10^{-14}$ドル未満）と Margrabe の交換オプション8.306642ドル、米国型は1次元に帰着した交換オプション8.763683ドル（CRR と Crank–Nicolson の外挿値の差1.4e-5ドル）を基準にした。`hullkit` を使わない前向き格子と公開API `hullkit.two_asset_tree` の差は3.4e-13ドル以下、米国型の後退帰納は6段の小例をノードごとの再帰で照合（3.1e-14ドル）。
+- 変数変換・Rubinstein・確率の調整の三構成とも1段の平均と共分散が目標に一致。この例の欧州型 max コールで変数変換の誤差は倍々で毎回ほぼ半分（傾き0.957）、他の二つは段数で振れる。相関の掃引は100段と101段で行い、変数変換の $\rho=\pm0.6$ の小さな誤差が偶数段だけのものであることを示した。
+- vol06 §13.1–13.6 とBook/portal共有4図。§13以外の107セルはM15基点`42076f10`と本文・保存出力が同じ（後続2見出しの番号変更のみ）。4改変を拒否。Chromium 145.0.7632.6でBook/portal×1440/1000pxの16状態・16画像、軸タイトルと目盛りの重なり、数値改変拒否を確認。本文の数値23か所をテストで保存値と照合。
+- 独立レビューのP1 1件・P2 3件・P3 8件を修正し、行使判定を外す変異3種をユニットテストと数値検証の両方で検出。
+- 既受入15節は[D1方針](docs/EVIDENCE_POLICY.md)で再検査（個別テスト計1,413件）。14節は基準再利用（新規保存0）、§27.6は初のD1記録で再描画（651,535 bytesをC:/F:へ）。
+- johnhull 全体の pytest **3,155 passed / 6 skipped**（既存 deprecation warning 2件）。`ruff check johnhull` と変更Pythonの`ruff format --check`、release contract、台帳の通常・`--check-artifacts`、`verify_accepted_vol06_notebook.py --check`（§27.1–§27.6）はPASS。
+- 定数パラメータの二資産のみ。三資産以上、確率ボラティリティ、時間で変わる相関、相関の推定、金利ツリーへの応用、1次元に帰着できない米国型の独立基準は受入範囲外。
 
 ## Section 27.6 M15 — 2026-09-28
 

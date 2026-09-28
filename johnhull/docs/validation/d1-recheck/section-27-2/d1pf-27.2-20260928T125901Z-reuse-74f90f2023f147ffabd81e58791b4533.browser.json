@@ -1,0 +1,206 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "stochvol_term",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_mixing",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_correlation",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_sabr",
+          "state": "rho",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_sabr",
+          "state": "nu",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_term",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_mixing",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_correlation",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_sabr",
+          "state": "rho",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_sabr",
+          "state": "nu",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-2/portal-stochvol_term-1440.png",
+        "docs/validation/section-27-2/portal-stochvol_mixing-1440.png",
+        "docs/validation/section-27-2/portal-stochvol_correlation-1440.png",
+        "docs/validation/section-27-2/portal-stochvol_sabr-1440.png",
+        "docs/validation/section-27-2/portal-stochvol_sabr-nu-1440.png",
+        "docs/validation/section-27-2/portal-stochvol_term-1000.png",
+        "docs/validation/section-27-2/portal-stochvol_mixing-1000.png",
+        "docs/validation/section-27-2/portal-stochvol_correlation-1000.png",
+        "docs/validation/section-27-2/portal-stochvol_sabr-1000.png",
+        "docs/validation/section-27-2/portal-stochvol_sabr-nu-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "stochvol_term",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_mixing",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_correlation",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_sabr",
+          "state": "rho",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_sabr",
+          "state": "nu",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_term",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_mixing",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_correlation",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_sabr",
+          "state": "rho",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "stochvol_sabr",
+          "state": "nu",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-2/book-stochvol_term-1440.png",
+        "docs/validation/section-27-2/book-stochvol_mixing-1440.png",
+        "docs/validation/section-27-2/book-stochvol_correlation-1440.png",
+        "docs/validation/section-27-2/book-stochvol_sabr-1440.png",
+        "docs/validation/section-27-2/book-stochvol_sabr-nu-1440.png",
+        "docs/validation/section-27-2/book-stochvol_term-1000.png",
+        "docs/validation/section-27-2/book-stochvol_mixing-1000.png",
+        "docs/validation/section-27-2/book-stochvol_correlation-1000.png",
+        "docs/validation/section-27-2/book-stochvol_sabr-1000.png",
+        "docs/validation/section-27-2/book-stochvol_sabr-nu-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+    "hullkit/src/hullkit/_stochastic_volatility_lesson.py": "e3625860a42a20fc4daf6e5a8d9f4e660b553dc70d567fecf17bc2a0b6ecb666",
+    "scripts/build_stochastic_volatility_reference.py": "c1f4ba86b3ef6487be7ca7ac6fbaed52a93256d5fb9de8eb06fa622ce55e0991",
+    "scripts/verify_stochastic_volatility_browser.cjs": "fcb743bf0030734cab861ec23582997307b49e7f15026e128fbad6ab3b851018",
+    "docs/validation/section-27-2/reference.json": "9e237ed9780699a3abfa5799197174c010fdc8b81b8f67d66f7fc7395fb38adb",
+    "docs/validation/section-27-2/numerical-check.json": "2b00a2293ced684cb9a2143c4acceae329349841b343b7e24927ef8188b79f6e",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "a9012bc2a89c1172461eba1c0904bf64acdad75a5cd7fd1a5076691f0d86ff93",
+    "volumes/06_numerical_methods/numerical.ipynb": "c701e56a1a87e640c4d7f4f6e4aca207db64a941a8675f11fe7e5247a2464243",
+    "report/report_builder/figures.py": "c984ea76a7048c1777918dc1d872a0804629cb0306c8b41b36e1d6c8717dc4a0",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "640a28cfcf9b44317d04bbc7eb232881001bd7dbb700f0fe5f6e6a46951ecc9a",
+    "book/_build/html/notebooks/06_numerical.html": "188bfd6a52fe0d0b11e437409e18278c8baae42b2f3c5db06f995c69aeb1d1ad",
+    "docs/validation/section-27-2/portal-stochvol_term-1440.png": "4517f0ba94b968fec1bf6f7a7228eda3d3787c0b1ee30510ab81f0c1d13eecf7",
+    "docs/validation/section-27-2/portal-stochvol_mixing-1440.png": "cd03617ec60dbc2302782051c8e5568d277e2682f6136c9be1cb739206694eb5",
+    "docs/validation/section-27-2/portal-stochvol_correlation-1440.png": "9a79e4d696ec5b354db4b77e500b5f9b98c3cf0cc974f32df91ed5f7e1dd9af2",
+    "docs/validation/section-27-2/portal-stochvol_sabr-1440.png": "00ced738dbf5d252dc9b3a6c3ea01ffcfd5b8da8e5225890d291b63fabff18b9",
+    "docs/validation/section-27-2/portal-stochvol_sabr-nu-1440.png": "2ce33f724cacf9b2f76b25634896d2285502e2deaf84dea754a36e2692a2f8c8",
+    "docs/validation/section-27-2/portal-stochvol_term-1000.png": "d6449d561ae617d033476615de381d54eeeb9d48dd540eb4a190203c4cb5feb9",
+    "docs/validation/section-27-2/portal-stochvol_mixing-1000.png": "20e427d2a751990af80a7e8c0b3d11812033ee3c2f2b233e1a727e83d779873d",
+    "docs/validation/section-27-2/portal-stochvol_correlation-1000.png": "2f15aaff17004c2e99a1b3c9977079833417b13917520db62f9afa51285e38fe",
+    "docs/validation/section-27-2/portal-stochvol_sabr-1000.png": "107347a472c9a19cded22f4e7f6744b941265718f548e88aaa14771c8da8ef8e",
+    "docs/validation/section-27-2/portal-stochvol_sabr-nu-1000.png": "9bd55bf0c0d8a03e2c487aa5c67e951235ecdc3aaf40ebef6421e497fc66e83b",
+    "docs/validation/section-27-2/book-stochvol_term-1440.png": "25bd5c1d0ef81e10b6c103dcd6368f5e19a0f23f5b88de8e56c75ebcaa2a455f",
+    "docs/validation/section-27-2/book-stochvol_mixing-1440.png": "48d9bbb97d11ddfe48e359b8edd710a1c6a141f1a1ed9b4eb19022d57968b6f9",
+    "docs/validation/section-27-2/book-stochvol_correlation-1440.png": "121ddf39a799bf08c3ce7698f1ecebf3b7c428ea1346c801055715821c30a766",
+    "docs/validation/section-27-2/book-stochvol_sabr-1440.png": "3f3fc6bf2ad17f8ac556d28b7f0181a948dc78d2d104e86ddbd4c4bfd2aa08fc",
+    "docs/validation/section-27-2/book-stochvol_sabr-nu-1440.png": "15e209ddb121691a6dd3c82385ab6147210cf4daf37bc24a988c3e1c9d0039f3",
+    "docs/validation/section-27-2/book-stochvol_term-1000.png": "95ea12b6459375dbcd53bf84ab9b298069b5a0bd23ec27a93ed63f360ad34599",
+    "docs/validation/section-27-2/book-stochvol_mixing-1000.png": "ea12382d42405e586c92b78007448aba5bd6849906e52d6b2eaf304d0f1b1923",
+    "docs/validation/section-27-2/book-stochvol_correlation-1000.png": "8eddae10eab97c16978edbcbe2542e40500682c50e3a90f2cf11dd560db51834",
+    "docs/validation/section-27-2/book-stochvol_sabr-1000.png": "23ef70bdb1812c3d13e8ac681c0328227700aa6cdcf26b33a8c037797452ed56",
+    "docs/validation/section-27-2/book-stochvol_sabr-nu-1000.png": "175471daeab19d4125dc89418deb357437c37f18ff42a641fa7f183495205867"
+  },
+  "book_math": {
+    "rendered": 346,
+    "errors": 0
+  },
+  "state_checks": 20,
+  "screenshots": 20
+}
