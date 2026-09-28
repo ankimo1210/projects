@@ -1,4 +1,4 @@
-"""Make ``report_builder`` importable when pytest collects this tree.
+"""Make ``analytics_portal`` importable when pytest collects this tree.
 
 The report package is not a uv workspace member (it only orchestrates the three
 book packages), so we add its directory to sys.path here.

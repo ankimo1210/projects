@@ -7,8 +7,8 @@ here) and checks the output is self-contained and offline-safe.
 import pathlib
 import re
 
-from report_builder.figures import BOOKS, FIGURES, LINK_BOOKS, figures_for
-from report_builder.render import render_site
+from analytics_portal.figures import BOOKS, FIGURES, LINK_BOOKS, figures_for
+from analytics_portal.render import render_site
 
 # Fixed pages plus one showcase page per book with figures. Derived rather than
 # listed so a newly registered book cannot slip past the offline checks below --

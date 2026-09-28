@@ -18,7 +18,7 @@ make report      # -> analytics/report/site/index.html
 または直接:
 
 ```bash
-cd analytics/report && PYTHONPATH=. uv run python -m report_builder.build
+cd analytics/report && PYTHONPATH=. uv run python -m analytics_portal.build
 ```
 
 出力された `site/index.html` をブラウザで開くだけ(オフラインで動作)。
@@ -35,10 +35,10 @@ make books       # 3冊の Jupyter Book を一括ビルド
 
 ```
 report/
-  report_builder/
+  analytics_portal/
     figures.py   # 図レジストリ: 各 plotly_* ビルダー + メタ(タイトル/所属書/解説/NEW)
     render.py    # 図 -> 埋め込み HTML 断片 -> jinja テンプレートでページ組立
-    build.py     # CLI: python -m report_builder.build [out_dir]
+    build.py     # CLI: python -m analytics_portal.build [out_dir]
   templates/     # base / index / gallery / book / integration (jinja2)
   assets/style.css
   tests/         # ビルドが完走し、外部参照ゼロ(オフライン)であることを検証
@@ -47,7 +47,7 @@ report/
 
 ## 図を追加する
 
-`report_builder/figures.py` の `FIGURES` に `FigureSpec` を1つ足すだけ。
+`analytics_portal/figures.py` の `FIGURES` に `FigureSpec` を1つ足すだけ。
 `build` には「`go.Figure` を返す関数」を渡す(教材の `plotly_*` を seed 固定のデモ入力で呼ぶ)。
 新しい教材図を本文に足したら、ここにも一行足せばギャラリーに載る。
 

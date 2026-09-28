@@ -2,7 +2,7 @@
 
 Run from the workspace with the report dir on the path, e.g.::
 
-    PYTHONPATH=analytics/report uv run python -m report_builder.build
+    PYTHONPATH=analytics/report uv run python -m analytics_portal.build
 
 or simply ``make report`` from the repo root.
 """
