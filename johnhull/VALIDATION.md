@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,19 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 26.1 M18 — 2026-09-29
+
+[受入ノート](docs/SECTION_26_1_ACCEPTANCE_2026-09-29.md)・[レビュー](docs/SECTION_26_1_REVIEW_2026-09-29.md)・[統合記録](docs/validation/section-26-1/m18-check.json)にPK01–PK06の5軸を集約。台帳は**accepted**（受入18・未評価288）。P2（Ch 26 の残り）の初回。
+
+- 原典が数値を挙げるのは§17.2の例だけ：$S_0=1.32$、$r=r_f=2\%$、$\sigma=14\%$、$T=0.25$、$K_1=1.30$ から $K_2=1.341369$（印刷1.3414）、$p(1.30)=0.027305$（印刷0.0273）、費用ゼロ。独立参照（`math.erfc` の Black–Scholes と二分法、`hullkit` を使わない）と公開API `hullkit.packages` の差は4.4e-16（$K_2$）。
+- 36本のレンジ先渡しの正味現在価値は求積で2.5e-14以内で0。$K_1\to F$ の傾きは $N(\sigma\sqrt T/2)/N(-\sigma\sqrt T/2)$（この市場で1.0574）に4市場で8e-7以内。後払い24行は1.8e-14以内、ブレークフォワードは $A=0.036855$、損益分岐1.356855。
+- リスク比較（買う側、$K_1=0.95F$）は期待損失PV 0.03667・0.01210・0.02169、損失確率51.4%・24.3%・66.6%、最大損失1.32・1.254・0.03685。$2^{19}$ 組の反対変量モンテカルロと全項目 $|z|<2.3$。この表は保存参照にだけあり、hullkit の関数にはない。
+- vol10 §4.8.1–4.8.6 とBook/portal共有4図。§4.8以外の125セルはM17基点`811b1792`から変更なし。6改変を拒否。Chromium 145.0.7632.6でBook/portal×1440/1000pxの16状態・16画像、Book の数式711個のエラー0、数値改変を拒否。
+- 独立レビューのP1 1件（§4.8.2 の不等号の向き）・P2 4件（$r,q,T$ の入口検証、プットの価値が0に丸められるときの `ValueError`、リスク表の所在、買う側の明示）・P3 5件をすべて修正。検証器の拒否は5から10件。
+- 既受入17節は[D1方針](docs/EVIDENCE_POLICY.md)で再検査（個別テスト計1,523件）。16節は基準再利用（新規保存0）、§27.8は初のD1記録で再描画（594,569 bytesをC:/F:へ）。
+- johnhull 全体の pytest **3,284 passed / 6 skipped**（既存 deprecation warning 2件）。
+- 定数 $r,q,\sigma$ の BSM、欧州オプション、同一満期、連続な行使価格のみ。取引コスト、ビッドアスク、後払いの信用リスク、離散の行使価格、実際の確率での損失確率は受入範囲外。
 
 ## Section 27.8 M17 — 2026-09-29
 
