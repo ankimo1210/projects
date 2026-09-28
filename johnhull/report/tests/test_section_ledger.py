@@ -573,10 +573,10 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert result["status"] == "PASS", result["errors"]
     assert result["inventory_total"] == 306
     assert result["counts"] == {
-        "unreviewed": 292,
+        "unreviewed": 291,
         "gaps_found": 0,
         "pending_validation": 0,
-        "accepted": 14,
+        "accepted": 15,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
@@ -678,6 +678,14 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert all(
         axis["state"] == "verified"
         for row in path_dependent["requirements"]
+        for axis in row["coverage"].values()
+    )
+    barrier_tree = next(section for section in ledger["sections"] if section["id"] == "27.6")
+    assert barrier_tree["status"] == "accepted"
+    assert [row["id"] for row in barrier_tree["requirements"]] == [f"BT{i:02}" for i in range(1, 7)]
+    assert all(
+        axis["state"] == "verified"
+        for row in barrier_tree["requirements"]
         for axis in row["coverage"].values()
     )
     shout = next(section for section in ledger["sections"] if section["id"] == "26.12")

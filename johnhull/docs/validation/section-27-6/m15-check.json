@@ -1,0 +1,278 @@
+{
+  "section": "27.6",
+  "milestone": "M15",
+  "status": "PASS",
+  "numerical": {
+    "method": "forward lattice induction, §26.9 continuous formula, Crank–Nicolson PDE, Hull spacing and moment identities",
+    "measured": {
+      "max_lattice_error": 9.414691248821327e-14,
+      "formula_error": 0.0,
+      "pde_error": -1.8752449832959428e-06,
+      "max_simple_trinomial_error": 1.0622216186806546,
+      "max_outer_barrier_gap_from_100_steps": 0.04176932918507115,
+      "on_barrier_order": 1.004978679651881,
+      "final_errors_3200_steps": {
+        "interpolated": 0.0005148474271251535,
+        "on_barrier": 0.0010562474963747293
+      },
+      "hand_error": 2.236166980751353e-19,
+      "geometry_error": 0.0,
+      "near_probability_error": 0.0,
+      "near_rejected": [
+        "H=102.0, N=100",
+        "H=102.8, N=100"
+      ],
+      "lattice_cases": 9,
+      "bgk_error": 3.552713678800501e-15,
+      "monitoring": {
+        "steps": [
+          100,
+          400,
+          1600
+        ],
+        "tree_on_barrier": [
+          -0.027632939171861437,
+          -0.008595459366790292,
+          -0.002148299593670966
+        ],
+        "bgk_discrete": [
+          0.16680167349121078,
+          0.07896994531898471,
+          0.03839671518184673
+        ]
+      }
+    }
+  },
+  "notebook": {
+    "cells": 107,
+    "lesson_cells": 13,
+    "preserved_cells_outside_lesson": 94,
+    "renumbered_headings": {
+      "## 12. Longstaff-Schwartz（LSM）": "## 13. Longstaff-Schwartz（LSM）",
+      "## 13. 練習問題": "## 14. 練習問題"
+    },
+    "negative_controls_rejected": [
+      "§11 source changed",
+      "§27.6 saved convergence changed",
+      "unlisted heading changed",
+      "§27.5 saved grid changed"
+    ]
+  },
+  "browser": {
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "state_checks": 16,
+    "screenshots": 16,
+    "numeric_mutation_rejected": true,
+    "book_math": {
+      "rendered": 250,
+      "errors": 0
+    }
+  },
+  "regression": {
+    "sections": [
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5"
+    ],
+    "d1": {
+      "26.9": {
+        "decision": "reused",
+        "images": 10,
+        "stored_new_bytes": 0,
+        "tests_passed": 91,
+        "baseline": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260928T043551Z-redraw-bca2e4af908e4e448a824aa2bc2ed9d1.json"
+      },
+      "26.10": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 92,
+        "baseline": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260928T043611Z-redraw-0b8e0f0e0d9f4bb5bd9ae6fa199b0a9c.json"
+      },
+      "26.11": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 144,
+        "baseline": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260928T043634Z-redraw-b32ed33e98074a5a8e14241361a38588.json"
+      },
+      "26.12": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 215,
+        "baseline": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260928T043728Z-redraw-f89c6c3ed11f4dc2825e8ff3f4c611a1.json"
+      },
+      "26.13": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 274,
+        "baseline": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260928T043822Z-redraw-5812b96bc10d4097b0d255ec07a4d847.json"
+      },
+      "26.14": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 351,
+        "baseline": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260928T043908Z-redraw-78bafcc1c2e7446ba033dff0e12a58e3.json"
+      },
+      "26.15": {
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 65,
+        "baseline": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260928T043953Z-redraw-875c63fed8534fc68322d6b6ae0abfc3.json"
+      },
+      "26.16": {
+        "decision": "reused",
+        "images": 20,
+        "stored_new_bytes": 0,
+        "tests_passed": 45,
+        "baseline": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260928T044035Z-redraw-e972363281e04937b9997dae3bbab51c.json"
+      },
+      "26.17": {
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 16,
+        "baseline": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260928T044124Z-redraw-807edc61823b404ea344a04028a84024.json"
+      },
+      "27.1": {
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 487040,
+        "tests_passed": 16,
+        "baseline": null
+      },
+      "27.2": {
+        "decision": "redrawn",
+        "images": 20,
+        "stored_new_bytes": 710043,
+        "tests_passed": 27,
+        "baseline": null
+      },
+      "27.3": {
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 413577,
+        "tests_passed": 14,
+        "baseline": "docs/validation/d1-preflight/section-27-3/d1pf-27.3-20260927T225757Z-redraw-c8c3ec53f8aa485c9992f8d9f10cb255.json"
+      },
+      "27.4": {
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 407715,
+        "tests_passed": 15,
+        "baseline": null
+      },
+      "27.5": {
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 319907,
+        "tests_passed": 12,
+        "baseline": null
+      }
+    },
+    "redrawn": [
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5"
+    ],
+    "reused": [
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "26.9"
+    ],
+    "stored_new_bytes": 2338282,
+    "browser": "each accepted section's original verifier rerun on M15 Book/portal assets through the D1 driver; new recheck images live in the C:/F: artifact stores",
+    "vol10_notebook_unchanged": true
+  },
+  "source_sha256": {
+    "scripts/build_barrier_tree_acceptance_record.py": "d567556ecd572e226bb45d0d48847031c5b04be7b3548fcbee73b09e807e8c35",
+    "scripts/build_barrier_tree_reference.py": "c0aa3ac3b109329b6a935db9f3b68629d592b6777a5f6953acd86f4955cddeb3",
+    "scripts/verify_barrier_tree_numerics.py": "4b11249d9408e5632733784db11681cf25eae828025aa8126e886648016755ad",
+    "scripts/verify_barrier_tree_notebook.py": "da2665bed91d8ba7775522c93e5a1c96ea8970b37ec06544d8f0ccdcf97f7861",
+    "scripts/verify_barrier_tree_browser.cjs": "f1fa1b0bafa475fa38233bae733c38aa48076afb1c05a79c6fa4ee890e25b7fe",
+    "scripts/verify_accepted_vol06_notebook.py": "0c4d8b7000b015e84094b73a0c28eaf92ff37c401d5c965a4e9e7a4b62874e47",
+    "scripts/evidence_dependencies.json": "5cecd85ce37a95bf0688ccf495e2e2f1302281f17c32d5809a472771af9843fc",
+    "hullkit/src/hullkit/barrier_tree.py": "d6604d51346dbf3bee61762e5bc10c0f1bde46b2dcde63aded914da3be96928f",
+    "hullkit/src/hullkit/_barrier_tree_lesson.py": "9292dd867ff817e0cd685f92d5a448c4f16f91a595c4d964fe56bcb509d4ab98",
+    "hullkit/tests/test_barrier_tree.py": "e54b3c63719b7aaac6f93d4d4faa750b14a6ecf0f1f19eec9b9c9f030d7af6cf",
+    "hullkit/tests/test_barrier_tree_lesson.py": "e0b506181d3f6353f6009668c7f055ea8214f36a3f04ed738030a6c8f4196ec4",
+    "report/tests/test_barrier_tree_notebook.py": "17a797d74e8111f0a7c3b09354a54e09a81ba21c55b56b78f0ab584c057dabba",
+    "report/tests/test_report_build.py": "e922eed9a55172233220ed0cb590d44a25f72831b3dcced617dedefc42f48294",
+    "report/report_builder/figures.py": "8767ab16d81ce04d6eb831b1ac2002b6c2e4f357a00a2d204e604553f2c7e9dc",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "6f9f2fa822e04dc91f2e6fda7188ddfa2899baad878df1d8c0f6cbde64c8d138",
+    "volumes/06_numerical_methods/numerical.ipynb": "4b5978ec3958bcd5475d8568a7af252e6096c2ea378369ee2cfd3681b35c0322",
+    "release_manifest.json": "ef23bb7c4436ffb170fad2de622b9d47b0ace670524efded86a8cf7f42c8b177",
+    "docs/validation/section-27-6/numerical-check.json": "a943b8e3babb493108c777097f28f380c04a8ed5bb1999dab40194f212f853d0",
+    "docs/validation/section-27-6/notebook-check.json": "66aa04df3454374c3798c03a0f9b6f3c9381974bdbed905e131530db5f31dfbc",
+    "docs/validation/section-27-6/browser-check.json": "19b7110b71c3dc3c00a3297d367c1a9ad6b3d6a5be4c7e135f9a5bbb9168a8d9",
+    "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260928T084145Z-reuse-4555cbcc6ae34139b024b506aa957c43.json": "68b15f35416e7b84942652b29ccfffd562ff73e669bc51eb7327624e1ac7808d",
+    "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260928T084205Z-reuse-752865bb1f9040c0a08ade19d93b06f6.json": "e73d6886c9f24512a615f45246c28e3e6e9454013511733910287171533b6115",
+    "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260928T084227Z-reuse-29248858b8b14b7888ba0a9b08a516dd.json": "5bec410c6f3da43e4365215692f05bea2faa2665403e843bfc8afa37b8045b5c",
+    "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260928T084322Z-reuse-a344dd754ef84f1184152b141c10b263.json": "e538da895734983330839058051aeacf15c6e76ca3eca43f2addd749a634d3b4",
+    "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260928T084417Z-reuse-414b705513e3431fb62d401e55fec99c.json": "504e6289af239f48aaa344d8e0bf07b7785c15f7d4327e1be001eb0d6e09c3de",
+    "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260928T084506Z-reuse-4c340664e9b74fa480a3b63fd6d117d5.json": "6dfbedcadc9ce34b607e858a1ba771b52da95997f8cd27b9d64780418f4ded23",
+    "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260928T084555Z-reuse-079fd3f1155148e28675042f6a7fdaea.json": "d989a4dec42f3da6129de81ccf975b6dddbdb02bff0edb6c06d844263bbbcaef",
+    "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260928T084638Z-reuse-bf8191c84f3f4a0b87d3ff076c25ee1d.json": "0c5741404b4ee4b3820b587f452960f4976865cfbd1b0cf79a6d8e7e2a9aa8ad",
+    "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260928T084728Z-reuse-35d0d0fc5e994ba1a84fede9c4e0cbee.json": "fe549e453c93bd19cb799b5aa0c8047ce6793e2994927b4e83bcfd507dd957f8",
+    "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260928T044520Z-redraw-eed62664b3374e75aa9b6b5bd3035a5d.json": "23706b40afcd106909fb2c93dd2f1103402429a5d4be7d93a16e3f85568d72e1",
+    "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260928T044536Z-redraw-d95c05de9caf4fb7b5b48192629d0ef0.json": "b1a33743d02064d0ab5ac1dc27e7485a6a86e0c0fd62c45954f3464fc05e127e",
+    "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260928T044556Z-reuse-ed97248c73be46e4af7ccb1b75602b6a.json": "d96bbaa6f3911104e007e8a5cd3f1b86935e7932c6e76417f9b24ebae4f5b4a3",
+    "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260928T044610Z-redraw-698f937dfd0c427e8b339cae7ba3609d.json": "b6533c245270ed5cf993bd9073e22b443dab335060b04bf5220962931a059abe",
+    "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260928T044624Z-redraw-c0c4400d66144df493765da4ee400b64.json": "fe10193fc46c7b962e27380b7018d7b1bffae48f9403be2c7e33ffb692a280cb"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-27-6/reference.json": "9ba15464abfd77844403e0f30d654ae9c288d9cca1cd33512579f9d7179bfaf3",
+    "report/site/numerics.html": "58f94b2fc391d313e426db0f0cf7adf4c5ab3c2332cd4d9f1f55e7585365642f",
+    "book/_build/html/notebooks/06_numerical.html": "488e7276964da048596a2d9fe129b7ab99866a1efcedc3cbec25e1f1e2907608",
+    "report/site/exotics.html": "b295e7eebbdfd938ff61260f453b7c7692cf2ac183f779008e26770c12f2f1c0",
+    "book/_build/html/notebooks/10_exotics.html": "383f074d5771107d966b3c9e870faf39ec355e481517ec97ed50c757fe3a1790",
+    "docs/validation/section-27-6/book-barrier_lattice-1440.png": "e78ca0935da38ac39cad7ee7c39b2fdeb21493328e3cefc3441e027d2ea9009a",
+    "docs/validation/section-27-6/book-barrier_lattice-1000.png": "843955eab077d589eccc6e8c9bf52a54a7f66942c9cf2b29ab30416b3ea580af",
+    "docs/validation/section-27-6/book-barrier_convergence-1440.png": "c683dbf533790606088e916d14a11c23640db7c164a83b63f6dc498b3758b44d",
+    "docs/validation/section-27-6/book-barrier_convergence-1000.png": "307aeb9c27b6f9f4a3ed7c7396e4a80a254048fd47b9646c28de06d4976b475a",
+    "docs/validation/section-27-6/book-barrier_errors-1440.png": "aeb097e648ea2fc6f62795092a7005fdcf906e529dbe26d577c3f6ca7d8ac600",
+    "docs/validation/section-27-6/book-barrier_errors-1000.png": "91997ec22907a1a0836da39ac533765ff8a0c7eecfa7952f6373893b8671f896",
+    "docs/validation/section-27-6/book-barrier_near-1440.png": "fef3bffc272b390f351dcca79aef3e221bbee3a97738466b21f0b33c7464a4b0",
+    "docs/validation/section-27-6/book-barrier_near-1000.png": "8c88b127300ad14fc84eb2d1efea0063d20f89f9ecedd29a552bfeb8b2af2b63",
+    "docs/validation/section-27-6/portal-barrier_lattice-1440.png": "ff00753d05a436b2460fb8de3b1957b316f65b8730dc16c35974727b468e4863",
+    "docs/validation/section-27-6/portal-barrier_lattice-1000.png": "18ba83ee6510cc4d70f638e22d67deb4fad206e1b32254a83ea2b4f295241c9a",
+    "docs/validation/section-27-6/portal-barrier_convergence-1440.png": "54d0494017013572791f4a06093d6469c89164afd87b7fec0692b08279a44ab8",
+    "docs/validation/section-27-6/portal-barrier_convergence-1000.png": "24a6e8241c5b8f865b8c4f4515c0af6e219a89b5cae110eb15497efd878ff738",
+    "docs/validation/section-27-6/portal-barrier_errors-1440.png": "be99e843fa0b34c18176749d61d25f7badf19e10d60034014e830f1936da78cc",
+    "docs/validation/section-27-6/portal-barrier_errors-1000.png": "f31157b847ed39cbcb9c07d14215062413c0a6239971b6f2821a0029b5ba53f5",
+    "docs/validation/section-27-6/portal-barrier_near-1440.png": "e7faadcd412f773fc2cc20d9dae2e1d8a08c0292d6312c3b2cb5fda08b1fcddb",
+    "docs/validation/section-27-6/portal-barrier_near-1000.png": "22ff578abbf22e4a511fed2e97bc5483e81e992aed1f455f67d14b21d1f38a12"
+  }
+}

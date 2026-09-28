@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,18 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 27.6 M15 — 2026-09-28
+
+[受入ノート](docs/SECTION_27_6_ACCEPTANCE_2026-09-28.md)・[レビュー](docs/SECTION_27_6_REVIEW_2026-09-28.md)・[統合記録](docs/validation/section-27-6/m15-check.json)にBT01–BT06の5軸を集約。台帳は**accepted**（受入15・未評価291）。
+
+- 原典に印刷値がないため、§26.9 の連続監視 up-and-out コールの解析値0.432155ドルを基準にした。`hullkit` を使わない Crank–Nicolson PDE との差は1.9e-6ドル。同じ格子で前向きに進めた独立価格と公開API `hullkit.barrier_tree` の差は、289通りの段数と down/put・配当3%の9ケースで9.4e-14ドル以下。
+- 素朴な三項は外側バリアでの価格に一致し、この例の20–300段では素朴な二項より誤差が大きい（平均絶対誤差0.205対0.121ドル）。バリア上のノードの包絡線の次数1.005、3200段の誤差はバリア上−0.00106ドル・補間−0.00051ドル。近いバリアの2種の破綻（段なし、$p_m<0$）は公開関数が拒否する。
+- vol06 §12.1–12.6 とBook/portal共有4図。§12以外の94セルはM14基点`e4288dc0`と本文・保存出力が同じ（後続2見出しの番号変更のみ）。4改変を拒否。Chromium 145.0.7632.6でBook/portal×1440/1000pxの16状態・16画像、数値改変拒否を確認。
+- 独立レビューのP1 1件・P2 2件・P3 7件を修正し、レビューの変異7種をユニットテストと数値検証の両方で検出。
+- 既受入14節は[D1方針](docs/EVIDENCE_POLICY.md)で再検査（個別テスト計1,377件）。vol10の9節は基準再利用（新規保存0）、vol06の5節は再描画（2,338,282 bytesをC:/F:へ）。記録は`docs/validation/d1-recheck/`。
+- johnhull 全体の pytest **3,069 passed / 6 skipped**（既存 deprecation warning 2件）。`ruff check johnhull` と変更Pythonの`ruff format --check`、release contract、台帳の通常・`--check-artifacts`、`verify_accepted_vol06_notebook.py --check`はPASS。
+- 定数パラメータ・水平な単一バリアの欧州型ノックアウトのみ。ノックイン・米国型・二重バリアのツリー、adaptive mesh、市場較正・ヘッジは受入範囲外。
 
 ## D1-preflight — 2026-09-28
 
