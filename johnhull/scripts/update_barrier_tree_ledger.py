@@ -24,14 +24,19 @@ def covered(refs, locator):
 
 
 def m15_record(section_id):
-    """The one schema-2 D1 record written for this section in M15."""
+    """The section's latest M15 D1 record; earlier ones are only reuse baselines."""
     folder = PROJECT / RECHECK_DIR / f"section-{section_id.replace('.', '-')}"
     records = sorted(
         path for path in folder.glob("*.json") if not path.name.endswith(".browser.json")
     )
-    if len(records) != 1:
-        raise ValueError(f"expected one M15 D1 record for §{section_id}, found {len(records)}")
-    return records[0].relative_to(PROJECT).as_posix()
+    if not records:
+        raise ValueError(f"no M15 D1 record for §{section_id}")
+    latest = json.loads(records[-1].read_text(encoding="utf-8"))
+    earlier = {path.relative_to(PROJECT).as_posix() for path in records[:-1]}
+    baseline = (latest.get("baseline") or {}).get("record")
+    if earlier - {baseline}:
+        raise ValueError(f"§{section_id}: records other than the latest and its baseline")
+    return records[-1].relative_to(PROJECT).as_posix()
 
 
 def refresh_earlier(section):
