@@ -1,7 +1,7 @@
 {
   "section": "27.7",
   "status": "PASS",
-  "method": "forward lattice induction and a separately written backward induction on Hull's printed factors, Stulz and Margrabe formulas, 1-D American exchange reduction",
+  "method": "forward lattice induction on Hull's printed factors, a vectorised backward induction (hullkit's algorithm) checked by a per-node recursion on 6-step cases, Stulz and Margrabe formulas, 1-D American exchange reduction",
   "tolerances": {
     "lattice_currency": 1e-10,
     "formula_currency": 1e-12,
@@ -14,7 +14,9 @@
     "final_european_currency_800_steps": 0.0015,
     "american_exchange_currency_200_steps": 0.005,
     "one_dimensional_half_spread": 2.5e-05,
-    "control_variate_spread_800_steps": 0.0005
+    "control_variate_spread_800_steps": 0.0005,
+    "recursion_currency": 1e-12,
+    "deep_in_the_money_intrinsic_currency": 1e-09
   },
   "measured": {
     "max_lattice_error": 3.446132268436486e-13,
@@ -65,12 +67,25 @@
       "raw": 0.0005821589972452301,
       "control_variate": 0.0002764495029161651
     },
-    "lattice_cases": 30
+    "lattice_cases": 30,
+    "recursion_error": 3.064215547965432e-14,
+    "recursion_cases": 6,
+    "parity_claims": {
+      "rho_0_negative_at_99_100_101": true,
+      "rho_pm_0_6_dip_only_at_even_steps": true,
+      "rho_minus_1_sign_alternates": true,
+      "rho_0_5_same_sign_and_size": true
+    },
+    "max_gap_100_vs_101_steps": {
+      "transform": 0.09295866277285114,
+      "rubinstein": 0.012729463471117697,
+      "adjusted": 0.002158081360530417
+    }
   },
   "source_sha256": {
-    "scripts/build_two_asset_reference.py": "9954941bbf485d4f8503e18c62dc38f8a6c121911d51ace9ef2954df04c80a99",
-    "scripts/verify_two_asset_numerics.py": "0b035498ab1f3c5c92516d3429e08ec2738c9ba31d2fffb0b0a2ba219e274b5a",
-    "hullkit/src/hullkit/two_asset_tree.py": "9ec6f1ecf7bf8af25716a95be028ea6f39d3f5bcc338fe0c8f61fe2ccac6da46"
+    "scripts/build_two_asset_reference.py": "8cdad7f33adba031caf25a714c496d2d00ac23f07897713f81646fac3b7d165c",
+    "scripts/verify_two_asset_numerics.py": "62396c9bdda3f63db3a44cf133866bb5765b5833c1cfb10effe230cb94ad109f",
+    "hullkit/src/hullkit/two_asset_tree.py": "faec3890b72f2a5b07d91d00f326e4cbfa35f2e7009f84e30fe3ffbfb98d2f90"
   },
-  "artifact_sha256": "75e61a77ff53d057ec245dbddf1e64c0490e6e48cf4394eb6b65802d8224bcd3"
+  "artifact_sha256": "a7ac63add2d7ed4c5fcda59f5a2313e2f0cd5abfe48be513f33e91d7a49b9ede"
 }

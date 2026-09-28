@@ -91,20 +91,20 @@
   "source_sha256": {
     "scripts/verify_two_asset_notebook.py": "a15482a145f96a9cc867ae0a5fa526e2e49312ee17f5635f77a59a431598eaa7",
     "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
-    "hullkit/src/hullkit/_two_asset_tree_lesson.py": "568dda1ef576485270990395db841eaf59763e49224c7a022fbdedf9a30d0139",
+    "hullkit/src/hullkit/_two_asset_tree_lesson.py": "2d70c3d2e8bd7f457133fbd26d1ef89f3b08d8bc8ece90bbab938f10c37e32c3",
     "hullkit/src/hullkit/_barrier_tree_lesson.py": "9292dd867ff817e0cd685f92d5a448c4f16f91a595c4d964fe56bcb509d4ab98",
     "hullkit/src/hullkit/_path_dependent_lesson.py": "b732e71477cce55dc942ce1fba58a37b9f125bba80716bcf37d4e86913d1aade",
     "hullkit/src/hullkit/_convertible_bond_lesson.py": "030c0d2b8513c8b5bb0e008e6a0f118807068eec9f9e58c270a08a151157fd38",
     "hullkit/src/hullkit/_local_volatility_lesson.py": "f957ab42b0f9e60227b4cf37d42bfd25b7f608acd0c1126699cd88f5053fc76f",
     "hullkit/src/hullkit/_stochastic_volatility_lesson.py": "e3625860a42a20fc4daf6e5a8d9f4e660b553dc70d567fecf17bc2a0b6ecb666",
     "hullkit/src/hullkit/_alternative_models_lesson.py": "a5c6b4e4e2ea5eab00d9af9f97932373705129fb8131bfcc92fa6657360aab37",
-    "docs/validation/section-27-7/reference.json": "75e61a77ff53d057ec245dbddf1e64c0490e6e48cf4394eb6b65802d8224bcd3",
+    "docs/validation/section-27-7/reference.json": "a7ac63add2d7ed4c5fcda59f5a2313e2f0cd5abfe48be513f33e91d7a49b9ede",
     "docs/validation/section-27-6/reference.json": "9ba15464abfd77844403e0f30d654ae9c288d9cca1cd33512579f9d7179bfaf3",
-    "volumes/06_numerical_methods/build_numerical_notebook.py": "3f5f0a7496a404fd773fe98045b7746d342b590de529e99a9b8f38d297e39b63",
-    "volumes/06_numerical_methods/numerical.ipynb": "a9a4b518e611b41fae834fbd7082e8f8640475f50c0fd5a3f21bc18b66e07f3d"
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "a9012bc2a89c1172461eba1c0904bf64acdad75a5cd7fd1a5076691f0d86ff93",
+    "volumes/06_numerical_methods/numerical.ipynb": "c701e56a1a87e640c4d7f4f6e4aca207db64a941a8675f11fe7e5247a2464243"
   },
   "artifact_sha256": {
-    "volumes/06_numerical_methods/numerical.ipynb": "a9a4b518e611b41fae834fbd7082e8f8640475f50c0fd5a3f21bc18b66e07f3d",
-    "book/_build/html/notebooks/06_numerical.html": "0550000dd557ef9323f47f95a1c1ca3436b25cd037af0304fd05883f5f327395"
+    "volumes/06_numerical_methods/numerical.ipynb": "c701e56a1a87e640c4d7f4f6e4aca207db64a941a8675f11fe7e5247a2464243",
+    "book/_build/html/notebooks/06_numerical.html": "188bfd6a52fe0d0b11e437409e18278c8baae42b2f3c5db06f995c69aeb1d1ad"
   }
 }

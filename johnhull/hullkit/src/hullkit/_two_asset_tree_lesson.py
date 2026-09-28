@@ -61,6 +61,8 @@ def _finish(fig, key, title, x_title, y_title):
             "source": "Hull GE §27.7 Tables 27.2–27.3; saved independent two-asset reference",
         },
     )
+    fig.update_xaxes(title_standoff=12, automargin=True)
+    fig.update_yaxes(title_standoff=12, automargin=True)
     return fig
 
 
@@ -183,15 +185,23 @@ def _correlation(data):
             x=rows["rho"],
             y=rows[method],
             mode="lines+markers",
-            name=_NAMES[method],
+            name=f"{_NAMES[method]}（{rows['steps']}段）",
             line=dict(color=_COLORS[method], width=2),
             marker=dict(symbol=_SYMBOLS[method], size=6),
+        )
+    for method in _METHODS:
+        fig.add_scatter(
+            x=rows["rho"],
+            y=rows[f"{method}_odd"],
+            mode="lines",
+            name=f"{_NAMES[method]}（{rows['odd_steps']}段）",
+            line=dict(color=_COLORS[method], width=1.2, dash="dot"),
         )
     fig.add_hline(y=0, line=dict(color=_COLORS["reference"], width=1))
     return _finish(
         fig,
         "two_asset_correlation",
-        f"欧州型 max コール：相関と誤差（{rows['steps']}段）",
+        f"欧州型 max コール：相関と誤差（{rows['steps']}段・{rows['odd_steps']}段）",
         "相関 ρ",
         "Stulz の式との差 ($)",
     )

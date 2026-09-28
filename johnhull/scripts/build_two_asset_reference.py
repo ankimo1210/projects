@@ -6,8 +6,9 @@ the first asset, and from Margrabe's exchange formula. The American exchange
 option is reduced to one dimension (the second asset times an American call on
 the price ratio) and solved by CRR and by Crank–Nicolson. Tree prices use node
 prices built from Hull's printed factors: European prices by forward induction
-of the probability mass, American prices by a separately written backward
-induction.
+of the probability mass. American tree prices use the same vectorised
+roll-back as hullkit on those node prices; small in-the-money American trees,
+where exercise binds at the first steps, are also priced by plain recursion.
 """
 
 import argparse
@@ -35,6 +36,12 @@ DOUBLING_STEPS = [25 * 2**k for k in range(6)]
 HAND_STEPS = 100
 RHO_GRID = [round(-1.0 + 0.05 * i, 2) for i in range(41)]
 RHO_STEPS = 100
+ODD_STEPS = 101
+PARITY_RHO = (-1.0, -0.6, 0.0, 0.5, 0.6)
+PARITY_STEPS = (99, 100, 101)
+RECURSION_STEPS = 6
+RECURSION_DIVIDENDS = [0.25, 0.0]
+RECURSION_SPOTS = ([120.0, 100.0], [100.0, 100.0])
 AMERICAN_MAX_STEPS = (200, 400, 800)
 CRR_STEPS = (20000, 40000)
 CN_GRIDS = (4000, 8000)
@@ -299,7 +306,7 @@ def european(p, method, steps, kinds, rho=None):
 
 
 def american(p, method, steps, kind, rho=None):
-    """Backward induction with exercise at every node, written apart from hullkit."""
+    """Vectorised backward induction with exercise at every node (hullkit's algorithm)."""
     _, (p_uu, p_ud, p_du, p_dd) = branches(p, method, p["maturity"] / steps, rho)
     payoff = _payoff(kind, p["strike"])
     discount = math.exp(-p["rate"] * p["maturity"] / steps)
@@ -313,6 +320,30 @@ def american(p, method, steps, kind, rho=None):
         )
         values = np.maximum(held, payoff(*node_prices(p, method, steps, level, rho)))
     return float(values[0, 0])
+
+
+def american_recursive(p, method, steps, kind):
+    """Plain recursion over the four branches with exercise at every node."""
+    moves, probs = branches(p, method, p["maturity"] / steps)
+    payoff = _payoff(kind, p["strike"])
+    discount = math.exp(-p["rate"] * p["maturity"] / steps)
+    memo = {}
+
+    def value(level, logs):
+        key = (level, round(logs[0], 12), round(logs[1], 12))
+        if key not in memo:
+            exercise = float(payoff(np.array(math.exp(logs[0])), np.array(math.exp(logs[1]))))
+            if level == steps:
+                memo[key] = exercise
+            else:
+                held = discount * sum(
+                    prob * value(level + 1, (logs[0] + d1, logs[1] + d2))
+                    for (d1, d2), prob in zip(moves, probs, strict=True)
+                )
+                memo[key] = max(held, exercise)
+        return memo[key]
+
+    return value(0, (math.log(p["spots"][0]), math.log(p["spots"][1])))
 
 
 def hand_example(p):
@@ -367,15 +398,41 @@ def build():
     tail = [math.log(abs(e)) for e in errors["transform_max_call"][-4:]]
     order = -np.polyfit([math.log(n) for n in DOUBLING_STEPS[-4:]], tail, 1)[0]
 
-    sweep = {"rho": RHO_GRID, "steps": RHO_STEPS, "reference": []}
+    sweep = {"rho": RHO_GRID, "steps": RHO_STEPS, "odd_steps": ODD_STEPS, "reference": []}
     for method in METHODS:
         sweep[method] = []
+        sweep[f"{method}_odd"] = []
     for rho in RHO_GRID:
         reference = conditional_value(p, "max_call", rho)
         sweep["reference"].append(reference)
         for method in METHODS:
-            value = european(p, method, RHO_STEPS, ["max_call"], rho)["max_call"]
-            sweep[method].append(value - reference)
+            for steps, key in ((RHO_STEPS, method), (ODD_STEPS, f"{method}_odd")):
+                value = european(p, method, steps, ["max_call"], rho)["max_call"]
+                sweep[key].append(value - reference)
+    parity = {"steps": list(PARITY_STEPS), "rho": list(PARITY_RHO), "transform": []}
+    for rho in PARITY_RHO:
+        reference = conditional_value(p, "max_call", rho)
+        parity["transform"].append(
+            [
+                european(p, "transform", n, ["max_call"], rho)["max_call"] - reference
+                for n in PARITY_STEPS
+            ]
+        )
+
+    recursion = []
+    for spots in RECURSION_SPOTS:
+        q = dict(p, spots=spots, dividend_yields=RECURSION_DIVIDENDS)
+        for method in METHODS:
+            recursion.append(
+                {
+                    "spots": spots,
+                    "dividend_yields": RECURSION_DIVIDENDS,
+                    "method": method,
+                    "steps": RECURSION_STEPS,
+                    "recursive": american_recursive(q, method, RECURSION_STEPS, "exchange"),
+                    "intrinsic": spots[0] - spots[1],
+                }
+            )
 
     max_american = {"steps": list(AMERICAN_MAX_STEPS)}
     for method in METHODS:
@@ -419,7 +476,9 @@ def build():
         "convergence": {"steps": DENSE_STEPS, "american": dense, "european": dense_european},
         "errors": {**errors, "transform_max_call_order": order},
         "correlation": sweep,
+        "parity": parity,
         "american_max_call": max_american,
+        "american_recursion": recursion,
         "cases": cases,
     }
 

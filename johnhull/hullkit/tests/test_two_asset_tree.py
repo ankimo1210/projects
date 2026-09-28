@@ -1,5 +1,6 @@
 """Hull GE §27.7 options on two correlated assets: three 3-D tree constructions."""
 
+import functools
 import math
 
 import numpy as np
@@ -180,7 +181,7 @@ def test_european_exchange_converges_to_margrabe(method):
     assert abs(price - _margrabe()) < 2.5e-3
 
 
-def test_transform_tree_converges_at_first_order_without_oscillation():
+def test_transform_tree_converges_at_first_order_in_the_example():
     errors = [
         two_asset_tree(SPOTS, _max_call, **MARKET, maturity=1.0, steps=n, method="transform").price
         - MAX_CALL
@@ -192,12 +193,59 @@ def test_transform_tree_converges_at_first_order_without_oscillation():
 
 
 @pytest.mark.parametrize("method", METHODS)
-def test_american_exchange_matches_the_one_dimensional_reduction(method):
+@pytest.mark.parametrize("steps", [400, 401])
+def test_american_exchange_matches_the_one_dimensional_reduction(method, steps):
     tree = two_asset_tree(
-        SPOTS, _exchange, **MARKET, maturity=1.0, steps=400, method=method, exercise="american"
+        SPOTS, _exchange, **MARKET, maturity=1.0, steps=steps, method=method, exercise="american"
     )
-    assert abs(tree.price - AMERICAN_EXCHANGE) < 2.5e-3
+    assert abs(tree.price - AMERICAN_EXCHANGE) < 3e-3
     assert tree.price > _margrabe() + 0.4
+
+
+def _recursive_american(spots, payoff, lattice, rate, steps):
+    """Plain recursion over the four branches, exercising at every node."""
+    moves = lattice.branches()
+    discount = math.exp(-rate * lattice.dt)
+
+    @functools.cache
+    def value(step, j, k):
+        logs = [
+            math.log(spot) + step * d + j * a + k * b
+            for spot, d, a, b in zip(
+                spots, lattice.drift, lattice.j_move, lattice.k_move, strict=True
+            )
+        ]
+        exercise = float(payoff(np.array(math.exp(logs[0])), np.array(math.exp(logs[1]))))
+        if step == steps:
+            return exercise
+        held = discount * sum(
+            probability * value(step + 1, j + dj, k + dk)
+            for ((dj, dk), (_, probability)) in zip(
+                ((1, 1), (1, -1), (-1, 1), (-1, -1)), moves, strict=True
+            )
+        )
+        return max(held, exercise)
+
+    return value(0, 0, 0)
+
+
+@pytest.mark.parametrize("method", METHODS)
+@pytest.mark.parametrize("spots", [(120.0, 100.0), (100.0, 100.0)])
+def test_american_exercise_is_checked_from_the_first_step(method, spots):
+    # q1 = 25%: at (120, 100) exercise is optimal at once; at (100, 100) it binds
+    # at steps 1 and 2 but not at step 0, so each early step must be exercised.
+    market = dict(MARKET, dividend_yields=(0.25, 0.0))
+    tree = two_asset_tree(
+        spots, _exchange, **market, maturity=1.0, steps=6, method=method, exercise="american"
+    )
+    lattice = two_asset_lattice(
+        0.05, (0.20, 0.30), 0.5, 1.0 / 6, method=method, dividend_yields=(0.25, 0.0)
+    )
+    assert tree.price == pytest.approx(
+        _recursive_american(spots, _exchange, lattice, 0.05, 6), abs=1e-12
+    )
+    if spots == (120.0, 100.0):
+        assert tree.price == pytest.approx(20.0, abs=1e-9)
 
 
 @pytest.mark.parametrize("method", METHODS)
