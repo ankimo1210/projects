@@ -235,7 +235,8 @@ function bookPhrases() {
       }
       const result = await inspect(page, surface);
       check(errors.length === 0 && unapproved.length === 0, `${surface}: page errors or unapproved external requests`);
-      record.pages[surface] = { ...result, page_errors: errors, external_requests: requests,
+      record.pages[surface] = { ...result, external_network_blocked: surface === 'portal',
+        page_errors: errors, external_requests: requests,
         unapproved_requests: unapproved };
       await page.close();
     }

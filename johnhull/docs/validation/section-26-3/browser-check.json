@@ -56,6 +56,7 @@
         "docs/validation/section-26-3/portal-scheduled_frequency-1000.png"
       ],
       "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
       "page_errors": [],
       "external_requests": [],
       "unapproved_requests": []
@@ -114,6 +115,7 @@
         "docs/validation/section-26-3/book-scheduled_frequency-1000.png"
       ],
       "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
       "page_errors": [],
       "external_requests": [
         "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
@@ -130,12 +132,12 @@
     }
   },
   "source_sha256": {
-    "hullkit/src/hullkit/nonstandard_american.py": "1e7bffc6f36d79f641beb8c4423f9222d5c4416d1ebee9eb481cb266833a9538",
-    "hullkit/src/hullkit/_nonstandard_american_lesson.py": "318f9d109f7c407857905a02f5b30ad00eed239d67ee38ad8f2c345c40800577",
-    "scripts/build_nonstandard_reference.py": "ddde09ae58f9370b61643dae08b00053b3c947fe1c92d4351c810166cd597304",
-    "scripts/verify_nonstandard_browser.cjs": "afb4aa6e4aae0c682ab84ba22ba3d58723ddfe1dd08445ba6105f4d54a5636ac",
+    "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+    "hullkit/src/hullkit/_nonstandard_american_lesson.py": "5bd7b70af71b0eddb55281c971d7c0d869fde43a427cfccbc629a1ef7ebd1ae8",
+    "scripts/build_nonstandard_reference.py": "e70bb72032e5d8662f2f6f81ee67f5b674da14d5cff0191022e60a2ade65a462",
+    "scripts/verify_nonstandard_browser.cjs": "1c06cbac246c6f9b16dfc20f36555fbf8ce16717b05393554248dd9cbad6c262",
     "docs/validation/section-26-3/reference.json": "9486b33c803227e72076fabaa96b63b8393bd3547882d8fbc2ecba1f70603b14",
-    "docs/validation/section-26-3/numerical-check.json": "ae25305aa099c4b329068b393f6ff0f8a9ee82436c7e4164e1f637b1f839c34c",
+    "docs/validation/section-26-3/numerical-check.json": "6b88fd999ee847afca523a450c5b6f9977082b96923180b6cf1da0688ccf72c7",
     "volumes/10_exotics_martingales/build_exotics_notebook.py": "aa9965fe6702ef5adaa2eb606e99b08c5cb040e8f8e7e231f4b74131acc3678e",
     "volumes/10_exotics_martingales/exotics.ipynb": "ed13212d79181c5196a148a7c44e9b5d12bd95bbf342478f40addcb17150863f",
     "report/report_builder/figures.py": "502755201f61378be3484555fb9febc34cf6036ad2296ee08fdbe1c75f9836e2",
