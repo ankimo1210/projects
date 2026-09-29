@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import importlib
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -53,6 +54,35 @@ def test_browser_record_uses_hashes_without_a_section_field(tmp_path: Path, monk
     _write(tmp_path / name, json.dumps(record))
 
     assert gate.check_record(name) == record
+
+
+def test_record_rejects_missing_required_artifact_hash(tmp_path: Path, monkeypatch) -> None:
+    gate = _gate()
+    monkeypatch.setattr(gate, "PROJECT", tmp_path)
+    source = "scripts/browser.cjs"
+    artifact = "report/site/exotics.html"
+    record = {
+        "status": "PASS",
+        "source_sha256": {source: _write(tmp_path / source, "browser source\n")},
+        "artifact_sha256": {artifact: _write(tmp_path / artifact, "<html/>\n")},
+    }
+    name = "docs/browser-check.json"
+    _write(tmp_path / name, json.dumps(record))
+
+    with pytest.raises(ValueError, match="missing artifact_sha256"):
+        gate.check_record(
+            name,
+            required_sources={source},
+            required_artifacts={artifact, "book/_build/html/notebooks/10_exotics.html"},
+        )
+
+
+def test_integrated_record_fingerprints_the_vol06_verifier_it_runs() -> None:
+    gate = _gate()
+    record = json.loads(gate.OUT.read_text(encoding="utf-8"))
+
+    assert "scripts/verify_american_mc_notebook.py" in record["source_sha256"]
+    assert "scripts/verify_accepted_vol06_notebook.py" not in record["source_sha256"]
 
 
 def test_browser_matrix_rejects_missing_width_state() -> None:
@@ -111,3 +141,35 @@ def test_d1_reuse_rejects_missing_baseline(tmp_path: Path, monkeypatch) -> None:
 
     with pytest.raises(ValueError, match="baseline"):
         gate.check_d1("26.1")
+
+
+@pytest.mark.parametrize(
+    ("field", "expected"),
+    [
+        ("checks", "runtime_probe"),
+        ("images", "images"),
+        ("source_sha256", "source_sha256"),
+        ("artifact_sha256", "artifact_sha256"),
+        ("mirror", "mirror"),
+    ],
+)
+def test_d1_payload_rejects_incomplete_record(field: str, expected: str) -> None:
+    gate = _gate()
+    folder = gate.PROJECT / "docs/validation/d1-recheck/section-26-1"
+    path = sorted(
+        file for file in folder.glob("*.json") if not file.name.endswith(".browser.json")
+    )[-1]
+    record = deepcopy(json.loads(path.read_text(encoding="utf-8")))
+    if field == "checks":
+        del record["checks"]["runtime_probe"]
+    elif field == "images":
+        record["images"] = []
+    elif field == "source_sha256":
+        record["source_sha256"] = {}
+    elif field == "artifact_sha256":
+        record["artifact_sha256"] = {}
+    else:
+        del record["storage_verification"]["mirror"]
+
+    with pytest.raises(ValueError, match=expected):
+        gate.check_d1_payload("26.1", path.relative_to(gate.PROJECT).as_posix(), record)

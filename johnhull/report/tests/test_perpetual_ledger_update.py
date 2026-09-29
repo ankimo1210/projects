@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib
 import json
 from pathlib import Path
@@ -34,7 +35,8 @@ def test_refresh_earlier_replaces_m18_links_with_m19(tmp_path: Path, monkeypatch
     for relative in (
         "docs/validation/section-26-1/m18-check.json",
         "docs/validation/section-26-2/m19-check.json",
-        "docs/validation/d1-recheck/section-26-1/latest.json",
+        "docs/validation/d1-recheck/section-26-1/selected.json",
+        "docs/validation/d1-recheck/section-26-1/zz-later.json",
     ):
         file = tmp_path / relative
         file.parent.mkdir(parents=True, exist_ok=True)
@@ -72,15 +74,25 @@ def test_refresh_earlier_replaces_m18_links_with_m19(tmp_path: Path, monkeypatch
             }
         ],
     }
-    d1 = tmp_path / "docs/validation/d1-recheck/section-26-1/latest.json"
+    selected = "docs/validation/d1-recheck/section-26-1/selected.json"
+    d1 = tmp_path / selected
     d1.write_text(json.dumps({"section_id": "26.1", "status": "PASS"}), encoding="utf-8")
+    (tmp_path / "docs/validation/section-26-2/m19-check.json").write_text(
+        json.dumps(
+            {
+                "regression": {"d1": {"26.1": {"record": selected}}},
+                "source_sha256": {selected: hashlib.sha256(d1.read_bytes()).hexdigest()},
+            }
+        ),
+        encoding="utf-8",
+    )
 
     updater.refresh_earlier(section)
 
     assert "m18_check" not in section["evidence"]
     assert "m18_recheck" not in section["evidence"]
     assert section["evidence"]["m19_check"]["path"].endswith("m19-check.json")
-    assert section["evidence"]["m19_recheck"]["path"].endswith("latest.json")
+    assert section["evidence"]["m19_recheck"]["path"] == selected
     assert section["requirements"][0]["coverage"]["independent_validation"]["refs"] == [
         "m19_check",
         "m19_recheck",

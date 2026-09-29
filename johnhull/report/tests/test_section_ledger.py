@@ -573,10 +573,10 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert result["status"] == "PASS", result["errors"]
     assert result["inventory_total"] == 306
     assert result["counts"] == {
-        "unreviewed": 288,
+        "unreviewed": 287,
         "gaps_found": 0,
         "pending_validation": 0,
-        "accepted": 18,
+        "accepted": 19,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
@@ -710,6 +710,15 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert all(
         axis["state"] == "verified"
         for row in packages["requirements"]
+        for axis in row["coverage"].values()
+    )
+    perpetual = next(section for section in ledger["sections"] if section["id"] == "26.2")
+    assert perpetual["status"] == "accepted"
+    assert [row["id"] for row in perpetual["requirements"]] == [f"PA{i:02}" for i in range(1, 7)]
+    assert perpetual["evidence"]["numerical"]["kind"] == "reference"
+    assert all(
+        axis["state"] == "verified"
+        for row in perpetual["requirements"]
         for axis in row["coverage"].values()
     )
     shout = next(section for section in ledger["sections"] if section["id"] == "26.12")
