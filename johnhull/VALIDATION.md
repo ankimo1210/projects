@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,15 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 26.3 M20 — 2026-09-30
+
+[受入ノート](docs/SECTION_26_3_ACCEPTANCE_2026-09-30.md)・[レビュー](docs/SECTION_26_3_REVIEW_2026-09-30.md)・[統合記録](docs/validation/section-26-3/m20-check.json)にNA01–NA06の5軸を集約。台帳は**accepted**（受入20・未評価286）。P2の3節目。
+
+- Hull 11e Global Edition p.616 の行使日制限、ロックアウト、可変行使価格、7年ワラントの契約条件を実装。原典に数値価格はなく、独立参照11例はすべて合成市場。公開APIとの最大価格差は5.87e-14。
+- vol10 §4.10.1–4.10.6とBook/portal共有4図。M19基点の旧147セルを保持し、参照4改変・notebook4改変を拒否。Chromium 145.0.7632.6で16状態・16画像、Book数式833個、表示エラー0。
+- 既受入19節のD1再描画で、browser・runtime probe・個別pytest計1,635件・画像の両保管庫復元がPASS。追加保存15,976,320バイト。採用記録は統合記録と台帳のハッシュで固定。
+- johnhull全体のpytest **3,356 passed / 6 skipped**（既存deprecation warning 2件）。ruff、release contract、節台帳の通常検査・`--check-artifacts`はPASS。
 
 ## Section 26.2 M19 — 2026-09-29
 

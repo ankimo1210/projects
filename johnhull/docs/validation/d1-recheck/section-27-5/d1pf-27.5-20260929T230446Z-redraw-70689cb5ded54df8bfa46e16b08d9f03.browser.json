@@ -1,0 +1,158 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "path_grids",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_interpolation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_prices",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_exact",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_grids",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_interpolation",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_prices",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_exact",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-5/portal-path_grids-1440.png",
+        "docs/validation/section-27-5/portal-path_interpolation-1440.png",
+        "docs/validation/section-27-5/portal-path_prices-1440.png",
+        "docs/validation/section-27-5/portal-path_exact-1440.png",
+        "docs/validation/section-27-5/portal-path_grids-1000.png",
+        "docs/validation/section-27-5/portal-path_interpolation-1000.png",
+        "docs/validation/section-27-5/portal-path_prices-1000.png",
+        "docs/validation/section-27-5/portal-path_exact-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "path_grids",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_interpolation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_prices",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_exact",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_grids",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_interpolation",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_prices",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "path_exact",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-5/book-path_grids-1440.png",
+        "docs/validation/section-27-5/book-path_interpolation-1440.png",
+        "docs/validation/section-27-5/book-path_prices-1440.png",
+        "docs/validation/section-27-5/book-path_exact-1440.png",
+        "docs/validation/section-27-5/book-path_grids-1000.png",
+        "docs/validation/section-27-5/book-path_interpolation-1000.png",
+        "docs/validation/section-27-5/book-path_prices-1000.png",
+        "docs/validation/section-27-5/book-path_exact-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/path_dependent_tree.py": "b87b22ea2c34e6d9a2dddbb197563100d26400100de990e36db322421bad5854",
+    "hullkit/src/hullkit/_path_dependent_lesson.py": "b732e71477cce55dc942ce1fba58a37b9f125bba80716bcf37d4e86913d1aade",
+    "scripts/build_path_dependent_reference.py": "d37fe27991805f83dafa6240d1e53c84c45bdfe9a8081c3c25e17c0207976a79",
+    "scripts/verify_path_dependent_browser.cjs": "ada9aa9c2e36e57faad829e89d988b6aca92fd091143c8aacde17e6010c70bd9",
+    "docs/validation/section-27-5/reference.json": "444f76ffbb903fafd121d6fe5e79810b7b24b81a9fda7bea6972f374df918210",
+    "docs/validation/section-27-5/numerical-check.json": "4a93d5241dcb26326a8c52c9d84b6706c3ff6737877a8dd25c1172795143794f",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "e032b2e058a589f08ad0c45027428e89ba717be5a9fb2f136327fd955e0618b0",
+    "volumes/06_numerical_methods/numerical.ipynb": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a",
+    "report/report_builder/figures.py": "502755201f61378be3484555fb9febc34cf6036ad2296ee08fdbe1c75f9836e2",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "f3a248d386180f6534b154b7d4c3980064f66d840dfce44dee4bc744e6d8ca93",
+    "book/_build/html/notebooks/06_numerical.html": "96d51dd719d438b7fc854ca9d685784b21a90e2e45de22efa59c76ed0adaed46",
+    "docs/validation/section-27-5/portal-path_grids-1440.png": "792d0d560b18ca7e8b009744bad87b6f748bee402e4c29a48063d6b228a4c26b",
+    "docs/validation/section-27-5/portal-path_interpolation-1440.png": "0844bc3f0e8abccc92b1a52027eab00b4849fc340c7d6470bd4b035efb51c401",
+    "docs/validation/section-27-5/portal-path_prices-1440.png": "f9bc5340309e1c38e69a7a2941b5e93b335096d5b73c2cc44770f917efd764e7",
+    "docs/validation/section-27-5/portal-path_exact-1440.png": "54e2272e7ad69cfb455dc59cf508440e9b6cb5a92f860475a07e58ecc4a77a82",
+    "docs/validation/section-27-5/portal-path_grids-1000.png": "e7abc056bfb4e96ede7ce1cc3e2ac26e422a5b05fa9f7bdf8b42bc24ac9017fa",
+    "docs/validation/section-27-5/portal-path_interpolation-1000.png": "5bf491c0ff0135ce629145eeff0def77a0bccf339de1bcfaeccaff8124644a74",
+    "docs/validation/section-27-5/portal-path_prices-1000.png": "0e75bb1a2421b46cf1345d340d693596d772eb74f7143d86576fa9012c910c84",
+    "docs/validation/section-27-5/portal-path_exact-1000.png": "1dae89f494f94f5a3013fbef430acbd0adb23bdc463b926c2ed29f629270789c",
+    "docs/validation/section-27-5/book-path_grids-1440.png": "85d0474bdc20b230fceb7bef3be7eeb1af7e92d916e6f2d5c54d77173de3cc15",
+    "docs/validation/section-27-5/book-path_interpolation-1440.png": "21fa40acf8f345769a420c662f7f2141bc816bd2ecbd849f497dd715d5bd423b",
+    "docs/validation/section-27-5/book-path_prices-1440.png": "403ec58fbd7c8c44d1151e80b43ac5e7319b80439e69e26118441674a96db2b1",
+    "docs/validation/section-27-5/book-path_exact-1440.png": "fd960d59537d575cbbc589eaae5ab4ff0ca955feaf83cbf10a6481e38d5e27b5",
+    "docs/validation/section-27-5/book-path_grids-1000.png": "00a9712a28d1fd6794068292b68925ef228ff9299fddbb58da0677ad809ff170",
+    "docs/validation/section-27-5/book-path_interpolation-1000.png": "28537f0433d8a23991087cdc1c5db088376406e665ed2599ca36f12e2cbcd419",
+    "docs/validation/section-27-5/book-path_prices-1000.png": "1d268befd3c3d25ef564801ae542a439f94bda47b8df9dcd8650ca8d8a76d905",
+    "docs/validation/section-27-5/book-path_exact-1000.png": "8d8f00a381737ce44a76aa1c2e1471fcfb545478c1adc95b4c0ba75cafc35e09"
+  },
+  "book_math": {
+    "rendered": 390,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}
