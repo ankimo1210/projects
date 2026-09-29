@@ -1,0 +1,319 @@
+{
+  "section": "26.3",
+  "milestone": "M20",
+  "status": "PASS",
+  "numerical": {
+    "method": "independent full-path two-step and scalar CRR backward induction",
+    "cases": 11,
+    "max_abs_error": 5.861977570020827e-14,
+    "forbidden_exercise_count": 0,
+    "negative_controls_rejected": [
+      "price",
+      "exercise_date",
+      "warrant_strike",
+      "label"
+    ]
+  },
+  "notebook": {
+    "cells": 158,
+    "lesson_cells": 11,
+    "preserved_cells_outside_lesson": 147,
+    "negative_controls_rejected": [
+      "old prose",
+      "new heading",
+      "saved plot",
+      "post heading"
+    ]
+  },
+  "browser": {
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "state_checks": 16,
+    "screenshots": 16,
+    "numeric_mutation_rejected": true,
+    "book_math": {
+      "rendered": 833,
+      "errors": 0
+    }
+  },
+  "regression": {
+    "sections": [
+      "26.1",
+      "26.2",
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5",
+      "27.6",
+      "27.7",
+      "27.8"
+    ],
+    "d1": {
+      "26.1": {
+        "record": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260929T225244Z-redraw-5378c4eaf4564bd3bfd0eec30efd9dd4.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 509487,
+        "tests_passed": 68,
+        "baseline": null
+      },
+      "26.2": {
+        "record": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 509537,
+        "tests_passed": 44,
+        "baseline": null
+      },
+      "26.9": {
+        "record": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260929T225656Z-redraw-1457fcdba28f4a0a88990ebd1f7eb05f.json",
+        "decision": "redrawn",
+        "images": 10,
+        "stored_new_bytes": 370698,
+        "tests_passed": 91,
+        "baseline": null
+      },
+      "26.10": {
+        "record": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260929T225718Z-redraw-82fa88ba08e84c5699acfaa0159e59f8.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1287696,
+        "tests_passed": 92,
+        "baseline": null
+      },
+      "26.11": {
+        "record": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260929T225744Z-redraw-716a76e16e274f6aa4a27945fa9186b6.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1301348,
+        "tests_passed": 144,
+        "baseline": null
+      },
+      "26.12": {
+        "record": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260929T225850Z-redraw-ed1cc78aa89049b7bf91234a4063a85d.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1333335,
+        "tests_passed": 215,
+        "baseline": null
+      },
+      "26.13": {
+        "record": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260929T225949Z-redraw-e7b07b2c4cd748db9dd06e0146873b31.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1387220,
+        "tests_passed": 274,
+        "baseline": null
+      },
+      "26.14": {
+        "record": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260929T230041Z-redraw-4311ec20659a427b954934afc2544566.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1482187,
+        "tests_passed": 351,
+        "baseline": null
+      },
+      "26.15": {
+        "record": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260929T230130Z-redraw-5b351d45cfb74ac0bb09a4acf5f5e694.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1295066,
+        "tests_passed": 65,
+        "baseline": null
+      },
+      "26.16": {
+        "record": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260929T230216Z-redraw-bfdb7fb4f6bf4b228ed59662c5d9a80b.json",
+        "decision": "redrawn",
+        "images": 20,
+        "stored_new_bytes": 1904867,
+        "tests_passed": 45,
+        "baseline": null
+      },
+      "26.17": {
+        "record": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260929T230309Z-redraw-f18042175ac940ebb8bc298f5edfe83a.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 376492,
+        "tests_passed": 16,
+        "baseline": null
+      },
+      "27.1": {
+        "record": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260929T230336Z-redraw-f0eb7d0dfa25458da89b21e0b68b5bca.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 487040,
+        "tests_passed": 16,
+        "baseline": null
+      },
+      "27.2": {
+        "record": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260929T230352Z-redraw-a17f3c119aa643738341435707094e6d.json",
+        "decision": "redrawn",
+        "images": 20,
+        "stored_new_bytes": 706280,
+        "tests_passed": 27,
+        "baseline": null
+      },
+      "27.3": {
+        "record": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260929T230413Z-redraw-51e5b39ba3ff43af87a75e32b22bfb4c.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 413577,
+        "tests_passed": 14,
+        "baseline": null
+      },
+      "27.4": {
+        "record": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260929T230430Z-redraw-f257ee72e2be4b81a58dd5d963470412.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 407715,
+        "tests_passed": 15,
+        "baseline": null
+      },
+      "27.5": {
+        "record": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260929T230446Z-redraw-70689cb5ded54df8bfa46e16b08d9f03.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 319907,
+        "tests_passed": 12,
+        "baseline": null
+      },
+      "27.6": {
+        "record": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260929T230502Z-redraw-fb39db4c72954171a98d6b5299649bd4.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 651535,
+        "tests_passed": 36,
+        "baseline": null
+      },
+      "27.7": {
+        "record": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260929T230519Z-redraw-4f75990657ac4996a9e1f622f9021299.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 637764,
+        "tests_passed": 75,
+        "baseline": null
+      },
+      "27.8": {
+        "record": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260929T230538Z-redraw-8e924476eaaa49e29595d8b1bfc84564.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 594569,
+        "tests_passed": 35,
+        "baseline": null
+      }
+    },
+    "redrawn": [
+      "26.1",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "26.2",
+      "26.9",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5",
+      "27.6",
+      "27.7",
+      "27.8"
+    ],
+    "reused": [],
+    "stored_new_bytes": 15976320,
+    "browser": "each accepted section's verifier rerun on M20 Book/portal assets through the D1 driver; new images live in the C:/F: artifact stores"
+  },
+  "source_sha256": {
+    "scripts/build_nonstandard_acceptance_record.py": "62fd649abd0922b62cc356cc42dd40b565fe1a3688ff31450df647e1754a77eb",
+    "scripts/build_nonstandard_reference.py": "e70bb72032e5d8662f2f6f81ee67f5b674da14d5cff0191022e60a2ade65a462",
+    "scripts/verify_nonstandard_numerics.py": "dd2e7be3fcc51e3e84409e8ba2b1886c924202597a0851f191270904738361f4",
+    "scripts/verify_nonstandard_notebook.py": "346dcff269aefe1627629f35dafb5286f65cd3ed0c37d7cb21acfe7d87ed2b70",
+    "scripts/verify_nonstandard_browser.cjs": "1c06cbac246c6f9b16dfc20f36555fbf8ce16717b05393554248dd9cbad6c262",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "scripts/evidence_dependencies.json": "bce5051b154dd2cd1baf2f2a8782728a93fdfd6c59beb9db26049834b6c898b3",
+    "scripts/update_nonstandard_ledger.py": "24ab5c07fbf9b04164edc9a3b1451aa3908a10609f6b80bd66b06dac7216d73c",
+    "scripts/verify_section_ledger.py": "06a81a1e26630a5030fe80375b7ccf706f63f6cac26206502b645ffa49c629c9",
+    "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+    "hullkit/src/hullkit/_nonstandard_american_lesson.py": "5bd7b70af71b0eddb55281c971d7c0d869fde43a427cfccbc629a1ef7ebd1ae8",
+    "hullkit/tests/test_nonstandard_american.py": "f50021111ccfd0f06eeb6dd2fd22506e1d43d7ca6b653d1cfad5a56bc2b8ba70",
+    "hullkit/tests/test_nonstandard_reference_builder.py": "67ed11afbdd7953a0e348d64e6fb7c53cbce9fdac08cce899bb09623d6bf4292",
+    "hullkit/tests/test_nonstandard_numerics.py": "61413988796eba8f1e3da3e2b2deb135545b4f8121da1a7dde502df98d9ee381",
+    "hullkit/tests/test_nonstandard_lesson.py": "2c16e0518970343f22416fd65e7d80c16abec02459b74b02e468683896eb5358",
+    "report/tests/test_nonstandard_american_notebook.py": "86d01f256067ef4357182e1eeab38cce32f9b7bd55e951f55806fbec8ded976f",
+    "report/tests/test_nonstandard_acceptance_record.py": "e47d6dcbcf9e0886b9c651dadf4410954b16f22a5e765d2ad839bbdba6d34a19",
+    "report/tests/test_nonstandard_ledger_update.py": "bad4222c4a9f61f49cb92492221980221dc0fe3f5ec3410aac7c074002bfe323",
+    "report/tests/test_nonstandard_registry.py": "b1cd36b7ea1da7a861a8373fcbab3e133c772c784be04789cf3e4dbadd7f4c5a",
+    "report/tests/test_nonstandard_notebook_gate.py": "4569bc2ae41616b3105f334339c3228c937a78c59b682244b9c8a0ed0730e68a",
+    "report/tests/test_section_ledger.py": "2d5c54bf30de6d0550f7f6659d6e68584148c469d8f5a5c783cd44b8c0d4a877",
+    "report/tests/test_report_build.py": "34420e65f0862dad80b9b7450cb082c007974393e9dc17342ae6432b4b631797",
+    "report/report_builder/figures.py": "502755201f61378be3484555fb9febc34cf6036ad2296ee08fdbe1c75f9836e2",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "aa9965fe6702ef5adaa2eb606e99b08c5cb040e8f8e7e231f4b74131acc3678e",
+    "volumes/10_exotics_martingales/exotics.ipynb": "ed13212d79181c5196a148a7c44e9b5d12bd95bbf342478f40addcb17150863f",
+    "release_manifest.json": "33723870ab03dd4ad0b636f5ed34385b7d2c634ad07708b93f4ef03e1743b833",
+    "docs/validation/section-26-3/numerical-check.json": "6b88fd999ee847afca523a450c5b6f9977082b96923180b6cf1da0688ccf72c7",
+    "docs/validation/section-26-3/notebook-check.json": "f18288cf9c9ccf5f2702615cc9f2a2a4aa794ba81a003a3a8710b551538d02e1",
+    "docs/validation/section-26-3/browser-check.json": "830d35183671c84997dd13dfd84d152993446cf547231489eb6f82db8cda932d",
+    "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260929T225244Z-redraw-5378c4eaf4564bd3bfd0eec30efd9dd4.json": "fec3c2990515df0f5cd669035aebc4a1bfebe9e11f17816d3b2713d47a61c9c7",
+    "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405.json": "224f54c70c94e84ef0a5b961d5385325f782726c4a548fca1b4a188a9eebc5bf",
+    "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260929T225656Z-redraw-1457fcdba28f4a0a88990ebd1f7eb05f.json": "509d0896105af81dd4b14a5e5e4f179b1d4c0244bf95cbc1bef00b961d006b42",
+    "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260929T225718Z-redraw-82fa88ba08e84c5699acfaa0159e59f8.json": "1d67842759ff2aa7300b1e7b654f6ea882a5506d7d0a18ad6f4c2512417a2339",
+    "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260929T225744Z-redraw-716a76e16e274f6aa4a27945fa9186b6.json": "71795b03f96b469f84a7fd8eb369b840ce4ec19b580b63526de60954e69b1b1c",
+    "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260929T225850Z-redraw-ed1cc78aa89049b7bf91234a4063a85d.json": "0bb409a14f730542456db23234ec1684b3b031a94835b7339c0335354d56c9bd",
+    "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260929T225949Z-redraw-e7b07b2c4cd748db9dd06e0146873b31.json": "0a74b767f4c58f5f351e42b9dee4360b71c1824b1a9eefcef6503ffc6218175a",
+    "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260929T230041Z-redraw-4311ec20659a427b954934afc2544566.json": "f7fd170b001577c5ea5f1d6245f89f4b8c59f1fd02e99bd2b40b8fcd538314f2",
+    "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260929T230130Z-redraw-5b351d45cfb74ac0bb09a4acf5f5e694.json": "3baf263c2d801dfb9da7169eaf4119a55a7646a520f33f8ae6a7a7af03c60ace",
+    "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260929T230216Z-redraw-bfdb7fb4f6bf4b228ed59662c5d9a80b.json": "998715d9592a9cd883eb132ca156335d202c5c65ef8d066f9d57159513d4fb24",
+    "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260929T230309Z-redraw-f18042175ac940ebb8bc298f5edfe83a.json": "45295e88aae59be3d42c3d01038d9b9bb4e74e5338a11d271bacf182d378c170",
+    "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260929T230336Z-redraw-f0eb7d0dfa25458da89b21e0b68b5bca.json": "27fdf2725d8a6be46422de56275639909505996dea5bc46be0b45376786c65d7",
+    "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260929T230352Z-redraw-a17f3c119aa643738341435707094e6d.json": "058a8e0bce22874c55ef73510aaaea7ee99bf682a60c81eabf3b35ac4c36a09c",
+    "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260929T230413Z-redraw-51e5b39ba3ff43af87a75e32b22bfb4c.json": "140334f069a5fa66a87da77a8c50ae6f116e363cd287e695ebf27b760821f4da",
+    "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260929T230430Z-redraw-f257ee72e2be4b81a58dd5d963470412.json": "ba934e397127bee5e473b134833617427b8669c10b91087fbeab02d7b20f1084",
+    "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260929T230446Z-redraw-70689cb5ded54df8bfa46e16b08d9f03.json": "0f1670b0e6ea77a0f52f25a73dbabb7f29f04b333117806d5ffd5ad55b1e255b",
+    "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260929T230502Z-redraw-fb39db4c72954171a98d6b5299649bd4.json": "47becf3e94417326811cb2b08b7b33dbb90411ca5e6a2cc48b4f9aa6d4081389",
+    "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260929T230519Z-redraw-4f75990657ac4996a9e1f622f9021299.json": "3ebf14def02eef1075a2926877a84db7fda92a95754e1117f0782c584e353ae8",
+    "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260929T230538Z-redraw-8e924476eaaa49e29595d8b1bfc84564.json": "a17f33fb1af9fa4657db5fcdc66beed91a4c99ade92c5c09b2c11f890d666245"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-3/reference.json": "9486b33c803227e72076fabaa96b63b8393bd3547882d8fbc2ecba1f70603b14",
+    "report/site/exotics.html": "0df8497f3c0562f086fda6348a845a52541f333c626c8cba8e863a4bed70cab7",
+    "book/_build/html/notebooks/10_exotics.html": "80549bfcd37b04d897edb78b484ed55e19c1bb6b06abba023ca4fd741beec9db",
+    "docs/validation/section-26-3/book-scheduled_ordering-1440.png": "e9f2fd4c317cb120575db1efcf8ea1e48c28b8bc6ad0df48bda80de675ea1c70",
+    "docs/validation/section-26-3/book-scheduled_ordering-1000.png": "996a1241d459f79df1d4cc53a0eff6a2462ca29267861aa1bc865532bc53c51e",
+    "docs/validation/section-26-3/book-scheduled_exercise-1440.png": "d857104ff2be0372b7fdcc308a52804fe817cd1c8727f10696cbe531fbb50f23",
+    "docs/validation/section-26-3/book-scheduled_exercise-1000.png": "03b6dd8c29d4c122e5297223118a8d7d105979b4b060751d1c85738600153d28",
+    "docs/validation/section-26-3/book-scheduled_warrant-1440.png": "10993226d222f181f7f8fc3e50d2ca314fe755a3b96d2ede6ea71fca0b54d5e3",
+    "docs/validation/section-26-3/book-scheduled_warrant-1000.png": "b4b63c18227905114ddecbc7e0a9a916a26036b0427543cf14e154c1bcfa33e1",
+    "docs/validation/section-26-3/book-scheduled_frequency-1440.png": "fa78bbe148f570fde8dc44e5ef6d6d3a2cae6962253ca8b823a8f6209bf44b29",
+    "docs/validation/section-26-3/book-scheduled_frequency-1000.png": "8eafbf5e32f78145060d1df8ce85090592a92a73ac0efd2bbd984a343076a3df",
+    "docs/validation/section-26-3/portal-scheduled_ordering-1440.png": "fe5c073a1579300d970d84c6d4ea321a6d37bc14b7099efccf99222d9f428aa3",
+    "docs/validation/section-26-3/portal-scheduled_ordering-1000.png": "d67a984a638063ec93b501533933a1e3eba8832d0e1e0e805e6b7d9d51f1c459",
+    "docs/validation/section-26-3/portal-scheduled_exercise-1440.png": "1a2d2231793bf1c89226125e43c82d46970e30cf01e676f993fdb76d4af2e61f",
+    "docs/validation/section-26-3/portal-scheduled_exercise-1000.png": "3926876145c9ed9d6f7c7845ce76380bb29debc640073a1432febf07969a1807",
+    "docs/validation/section-26-3/portal-scheduled_warrant-1440.png": "fa162b5eb729333096627328295c4b57e3f6821ca1f8046cebdfffefee51d8e1",
+    "docs/validation/section-26-3/portal-scheduled_warrant-1000.png": "1d5cbca772c30ced5aef7786ff6b97a1dc89185164b70a654b5e1417eed2a9aa",
+    "docs/validation/section-26-3/portal-scheduled_frequency-1440.png": "9a02f2485867e7784c9cc9c0d7848443e3be943dc8b21b23385f0431b8d5e563",
+    "docs/validation/section-26-3/portal-scheduled_frequency-1000.png": "af55b9de05e9cbf53a8a5f85d7525c8dc2d2ea933559ce0f40e8ab80be39f51d"
+  }
+}

@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **19**
+- accepted: **20**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 287 |
+| unreviewed | 286 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 19 |
+| accepted | 20 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -47,7 +47,7 @@
 | 23 | 7 | 7 | 0 | 0 | 0 | 0 |
 | 24 | 9 | 9 | 0 | 0 | 0 | 0 |
 | 25 | 11 | 11 | 0 | 0 | 0 | 0 |
-| 26 | 17 | 6 | 0 | 0 | 11 | 0 |
+| 26 | 17 | 5 | 0 | 0 | 12 | 0 |
 | 27 | 8 | 0 | 0 | 0 | 8 | 0 |
 | 28 | 8 | 8 | 0 | 0 | 0 | 0 |
 | 29 | 4 | 4 | 0 | 0 | 0 | 0 |
@@ -294,7 +294,7 @@
 | 25.11 | 25 | section | Alternatives to the Standard Market Model | unreviewed |
 | 26.1 | 26 | section | Packages | accepted |
 | 26.2 | 26 | section | Perpetual American Call and Put Options | accepted |
-| 26.3 | 26 | section | Nonstandard American Options | unreviewed |
+| 26.3 | 26 | section | Nonstandard American Options | accepted |
 | 26.4 | 26 | section | Gap Options | unreviewed |
 | 26.5 | 26 | section | Forward Start Options | unreviewed |
 | 26.6 | 26 | section | Cliquet Options | unreviewed |
