@@ -8,6 +8,11 @@ import json
 import sys
 from pathlib import Path
 
+try:
+    from . import evidence_record
+except ImportError:  # executed as a script from johnhull/scripts
+    import evidence_record
+
 PROJECT = Path(__file__).resolve().parents[1]
 SECTION = "docs/validation/section-26-2/"
 OUT = PROJECT / SECTION / "m19-check.json"
@@ -19,13 +24,63 @@ KEYS = (
     "perpetual_zero_dividend",
     "perpetual_convergence",
 )
+RECORD_SOURCES = {
+    "numerical-check.json": {
+        "scripts/build_perpetual_reference.py",
+        "scripts/verify_perpetual_numerics.py",
+        "hullkit/src/hullkit/perpetual_american.py",
+    },
+    "notebook-check.json": {
+        "scripts/verify_perpetual_notebook.py",
+        "scripts/verify_core_notebooks.py",
+        "hullkit/src/hullkit/_perpetual_american_lesson.py",
+        "hullkit/src/hullkit/perpetual_american.py",
+        SECTION + "reference.json",
+        SECTION + "numerical-check.json",
+        "volumes/10_exotics_martingales/build_exotics_notebook.py",
+        "volumes/10_exotics_martingales/exotics.ipynb",
+    },
+    "browser-check.json": {
+        "hullkit/src/hullkit/perpetual_american.py",
+        "hullkit/src/hullkit/_perpetual_american_lesson.py",
+        "scripts/build_perpetual_reference.py",
+        "scripts/verify_perpetual_browser.cjs",
+        SECTION + "reference.json",
+        SECTION + "numerical-check.json",
+        "volumes/10_exotics_martingales/build_exotics_notebook.py",
+        "volumes/10_exotics_martingales/exotics.ipynb",
+        "report/report_builder/figures.py",
+        "report/assets/style.css",
+    },
+}
+RECORD_ARTIFACTS = {
+    "notebook-check.json": {
+        "volumes/10_exotics_martingales/exotics.ipynb",
+        "book/_build/html/notebooks/10_exotics.html",
+    },
+    "browser-check.json": {
+        "report/site/exotics.html",
+        "book/_build/html/notebooks/10_exotics.html",
+        *(
+            SECTION + f"{surface}-{key}-{width}.png"
+            for surface in ("book", "portal")
+            for key in KEYS
+            for width in (1440, 1000)
+        ),
+    },
+}
 
 
 def digest(name: str) -> str:
     return hashlib.sha256((PROJECT / name).read_bytes()).hexdigest()
 
 
-def check_record(name: str) -> dict:
+def check_record(
+    name: str,
+    *,
+    required_sources: set[str] | frozenset[str] = frozenset(),
+    required_artifacts: set[str] | frozenset[str] = frozenset(),
+) -> dict:
     """Require a PASS record whose hashed inputs and outputs are still current."""
     record = json.loads((PROJECT / name).read_text(encoding="utf-8"))
     section = record.get("section")
@@ -36,10 +91,20 @@ def check_record(name: str) -> dict:
     sources = record.get("source_sha256")
     if not isinstance(sources, dict) or not sources:
         raise ValueError(f"missing source_sha256: {name}")
+    missing = required_sources - sources.keys()
+    if missing:
+        raise ValueError(f"missing source_sha256: {name}: {sorted(missing)}")
+    artifacts = record.get("artifact_sha256")
+    if isinstance(artifacts, dict):
+        missing = required_artifacts - artifacts.keys()
+        if missing:
+            raise ValueError(f"missing artifact_sha256: {name}: {sorted(missing)}")
     for category in ("source_sha256", "artifact_sha256"):
         hashes = record.get(category)
         if not isinstance(hashes, dict):
             if category == "artifact_sha256" and name.endswith("numerical-check.json"):
+                if hashes != digest(SECTION + "reference.json"):
+                    raise ValueError("numerical reference digest changed")
                 continue  # The numerical verifier stores the reference digest as one string.
             raise ValueError(f"missing {category}: {name}")
         if not hashes:
@@ -82,17 +147,8 @@ def check_browser(browser: dict) -> None:
             raise ValueError(f"browser checks failed: {surface}")
 
 
-def check_d1(section_id: str) -> tuple[str, dict]:
-    """Check the newest PASS schema-2 D1 record and every file it fingerprints."""
-    folder = PROJECT / RECHECK_DIR / f"section-{section_id.replace('.', '-')}"
-    records = sorted(
-        path for path in folder.glob("*.json") if not path.name.endswith(".browser.json")
-    )
-    if not records:
-        raise ValueError(f"no M19 D1 record for §{section_id}")
-    path = records[-1]
-    name = path.relative_to(PROJECT).as_posix()
-    record = json.loads(path.read_text(encoding="utf-8"))
+def check_d1_payload(section_id: str, name: str, record: dict) -> None:
+    """Reject incomplete schema-2 records before checking current files and stores."""
     if (
         record.get("schema_version") != 2
         or record.get("status") != "PASS"
@@ -104,21 +160,58 @@ def check_d1(section_id: str) -> tuple[str, dict]:
     if record["decision"] == "reused" and not (PROJECT / str(baseline)).is_file():
         raise ValueError(f"§{section_id}: reused D1 record without its baseline")
     checks = record.get("checks", {})
-    if not checks or any(row.get("status") != "PASS" for row in checks.values()):
+    for key in ("browser", "runtime_probe", "pytest"):
+        if not isinstance(checks.get(key), dict) or checks[key].get("status") != "PASS":
+            raise ValueError(f"D1 {key} check failed: {name}")
+    if any(row.get("status") != "PASS" for row in checks.values()):
         raise ValueError(f"D1 checks failed: {name}")
-    if record.get("storage_verification", {}).get("status") != "PASS":
-        raise ValueError(f"D1 storage verification failed: {name}")
+    storage = record.get("storage_verification", {})
+    for key in ("status", "primary", "mirror"):
+        status = storage.get(key)
+        if key != "status":
+            status = status.get("status") if isinstance(status, dict) else None
+        if status != "PASS":
+            raise ValueError(f"D1 storage {key} verification failed: {name}")
+    if not isinstance(record.get("images"), list) or not record["images"]:
+        raise ValueError(f"D1 images missing: {name}")
+    if record.get("dependency_fingerprint", {}).get("unknown"):
+        raise ValueError(f"D1 unknown dependencies: {name}")
     for category in ("source_sha256", "artifact_sha256"):
-        hashes = record.get(category, {})
+        hashes = record.get(category)
+        if not isinstance(hashes, dict) or not hashes:
+            raise ValueError(f"D1 {category} missing: {name}")
+    problems = evidence_record.validate_record(PROJECT, record)
+    if problems:
+        raise ValueError(f"D1 record invalid: {name}: {problems[:2]}")
+
+
+def check_d1(section_id: str) -> tuple[str, dict]:
+    """Check the newest PASS schema-2 D1 record and both artifact-store copies."""
+    folder = PROJECT / RECHECK_DIR / f"section-{section_id.replace('.', '-')}"
+    records = sorted(
+        path for path in folder.glob("*.json") if not path.name.endswith(".browser.json")
+    )
+    if not records:
+        raise ValueError(f"no M19 D1 record for §{section_id}")
+    path = records[-1]
+    name = path.relative_to(PROJECT).as_posix()
+    record = json.loads(path.read_text(encoding="utf-8"))
+    check_d1_payload(section_id, name, record)
+    problems = evidence_record.validate_record(PROJECT, record, check_artifacts=True)
+    if problems:
+        raise ValueError(f"D1 artifact store invalid: {name}: {problems[:2]}")
+    for category in ("source_sha256", "artifact_sha256"):
+        hashes = record[category]
         for file, expected in hashes.items():
             if digest(file) != expected:
                 raise ValueError(f"stale D1 {category}: {name}: {file}")
     return name, {
+        "record": name,
         "decision": record["decision"],
         "images": len(record["images"]),
         "stored_new_bytes": record["observations"]["stored_new_bytes"],
-        "tests_passed": checks["pytest"]["passed"],
-        "baseline": baseline,
+        "tests_passed": record["checks"]["pytest"]["passed"],
+        "baseline": (record.get("baseline") or {}).get("record"),
     }
 
 
@@ -151,9 +244,14 @@ def main() -> None:
         SECTION + name
         for name in ("numerical-check.json", "notebook-check.json", "browser-check.json")
     ]
-    numerical, notebook, browser = (check_record(name) for name in record_names)
-    if numerical.get("artifact_sha256") != digest(SECTION + "reference.json"):
-        raise ValueError("numerical reference digest changed")
+    numerical, notebook, browser = (
+        check_record(
+            name,
+            required_sources=RECORD_SOURCES[Path(name).name],
+            required_artifacts=RECORD_ARTIFACTS.get(Path(name).name, frozenset()),
+        )
+        for name in record_names
+    )
     if not notebook.get("negative_controls") or any(
         not row.get("rejected") for row in notebook["negative_controls"]
     ):
@@ -171,7 +269,7 @@ def main() -> None:
         "scripts/verify_perpetual_numerics.py",
         "scripts/verify_perpetual_notebook.py",
         "scripts/verify_perpetual_browser.cjs",
-        "scripts/verify_accepted_vol06_notebook.py",
+        "scripts/verify_american_mc_notebook.py",
         "scripts/evidence_dependencies.json",
         "hullkit/src/hullkit/perpetual_american.py",
         "hullkit/src/hullkit/_perpetual_american_lesson.py",

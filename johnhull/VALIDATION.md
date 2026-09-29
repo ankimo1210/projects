@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,18 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 26.2 M19 — 2026-09-29
+
+[受入ノート](docs/SECTION_26_2_ACCEPTANCE_2026-09-29.md)・[レビュー](docs/SECTION_26_2_REVIEW_2026-09-29.md)・[統合記録](docs/validation/section-26-2/m19-check.json)にPA01–PA06の5軸を集約。台帳は**accepted**（受入19・未評価287）。P2 の2節目。
+
+- Hull 11e Global Edition pp.615–616 の特性方程式、初回到達価値、最適行使境界、価値一致、滑らかな接続を照合。印刷数値例はないため独立参照の合成6市場を使用。公開 API と参照の価格差は最大7.2e-15、境界差5.7e-14、指数差2.3e-16。対称例は $S_0=K=100$、$r=q=4\%$、$\sigma=20\%$ で境界200/50、コール・プットとも25。$q=0$ コールは有限境界を持たず価値 $S$。
+- `hullkit` を使わない CRR 後退帰納を20/40/80/160年・年10ステップで再計算し、保存した価格と差の改変を拒否。永久解析値25へ近づくことを示すが、固定ステップの離散化誤差を含むため連続行使解への厳密な誤差上界とはしない。
+- vol10 §4.9.1–4.9.6 と Book/portal 共通4図。全147セルのうち新節外136セルはM18基点`116ace00`と照合。notebook の6改変と数値参照の4改変を拒否。Chromium 145.0.7632.6でBook/portal×1440/1000pxの16状態・16画像を確認し、数値改変を拒否。Book数式802個のエラー0。
+- 独立レビューのP2極端入力3類型と保存CRR価格の改変検出に対応。P3の有限格子誤差は参照と教材に明記。
+- 既受入18節は[D1方針](docs/EVIDENCE_POLICY.md)で再検査（個別テスト計1,591件）。§26.1は初回記録、残り17節は共有ソース変更により再描画。browser・runtime probe・pytest、画像の両保管庫復元が全節でPASS。追加保存15,465,169バイト。
+- johnhull 全体の pytest **3,309 passed / 6 skipped**（既存 deprecation warning 2件）。節別台帳は通常・`--check-artifacts` ともPASS。
+- 定数 $r,q,\sigma$ のGBM、$S,K,r,\sigma>0$、$q\ge0$、連続行使・無限期間を対象とする。$r=0$、負の金利・配当、時間依存パラメータ、離散配当、取引費用、信用リスク、市場データでの性能は受入範囲外。
 
 ## Section 26.1 M18 — 2026-09-29
 

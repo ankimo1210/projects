@@ -6,12 +6,11 @@ import hashlib
 import json
 import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 PROJECT = Path(__file__).resolve().parents[1]
 LEDGER = PROJECT / "docs/section_ledger.json"
 M19_CHECK = "docs/validation/section-26-2/m19-check.json"
-RECHECK_DIR = "docs/validation/d1-recheck"
 EARLIER = ["26.1", *[f"26.{n}" for n in range(9, 18)], *[f"27.{n}" for n in range(1, 9)]]
 
 
@@ -46,13 +45,27 @@ def require_m19_gate() -> None:
 
 
 def m19_record(section_id: str) -> str:
-    folder = PROJECT / RECHECK_DIR / f"section-{section_id.replace('.', '-')}"
-    records = sorted(
-        path for path in folder.glob("*.json") if not path.name.endswith(".browser.json")
-    )
-    if not records:
-        raise ValueError(f"no M19 D1 record for §{section_id}")
-    return records[-1].relative_to(PROJECT).as_posix()
+    integrated = json.loads((PROJECT / M19_CHECK).read_text(encoding="utf-8"))
+    try:
+        selected = integrated["regression"]["d1"][section_id]["record"]
+        expected = integrated["source_sha256"][selected]
+    except (KeyError, TypeError) as exc:
+        raise ValueError(f"M19 selected D1 record missing for §{section_id}") from exc
+    if not isinstance(selected, str):
+        raise ValueError(f"M19 selected D1 path is invalid for §{section_id}: {selected!r}")
+    relative = PurePosixPath(selected)
+    folder = f"docs/validation/d1-recheck/section-{section_id.replace('.', '-')}/"
+    if (
+        not selected.startswith(folder)
+        or relative.is_absolute()
+        or ".." in relative.parts
+        or "\\" in selected
+        or not selected.endswith(".json")
+    ):
+        raise ValueError(f"M19 selected D1 path is invalid for §{section_id}: {selected!r}")
+    if digest(selected) != expected:
+        raise ValueError(f"M19 selected D1 record changed for §{section_id}: {selected}")
+    return selected
 
 
 def refresh_earlier(section: dict) -> None:
@@ -111,7 +124,7 @@ def register_perpetual(section: dict) -> None:
         "reference": ("docs/validation/section-26-2/reference.json", "reference"),
         "numerical_script": ("scripts/verify_perpetual_numerics.py", "source"),
         "numerical_tests": ("hullkit/tests/test_perpetual_numerics_gate.py", "test"),
-        "numerical": ("docs/validation/section-26-2/numerical-check.json", "record"),
+        "numerical": ("docs/validation/section-26-2/numerical-check.json", "reference"),
         "lesson": ("hullkit/src/hullkit/_perpetual_american_lesson.py", "source"),
         "lesson_tests": ("hullkit/tests/test_perpetual_american_lesson.py", "test"),
         "notebook": ("volumes/10_exotics_martingales/exotics.ipynb", "source"),

@@ -15,6 +15,7 @@ final gate evidence.
 - `notebooks/` — Ch.15 BSM notebook (legacy location)
 - `interest_rate_models/` — Ch.31–33 notebook (legacy location)
 - `volumes/18_*` … `volumes/28_*` — artifact-only beyond-Hull teaching notebooks
+- vol 10 §26.2 — perpetual American calls and puts: hitting-time values, exercise boundaries, smooth pasting, the zero-yield call limit, and finite-horizon CRR comparisons; six teaching subsections and four shared Book/portal figures.
 - vol 10 §26.12 — one-shout call: payoff decomposition, CRR decisions, boundary resolution, and same-market comparisons; saved synthetic artifacts power four shared Book/portal figures. Put prices are an extension beyond the original call lesson.
 - vol 10 §26.15 — basket payoff, exact moments versus approximate Black pricing, correlation, independent references and measured errors; six teaching subsections and four saved-data Book/portal figures. MC sign uncertainty is separate from deterministic-reference error.
 - vol 10 §26.17 — static call ladders for a continuously monitored up-and-out call: Hull Table 26.1, 3/18/100 matching nodes, an independent absorbed-density price, and four shared Book/portal figures. Finite nodes leave boundary risk between nodes.
@@ -35,7 +36,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 150 figures (38 exotics)
+make hull-report           # offline portal: 12 themes / 154 figures (42 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -184,3 +185,16 @@ earlier lessons are rechecked through the D1 driver; the integrated gate is
 lives only in the saved reference, not in `hullkit.packages`. When running the
 D1 driver, pass `--records-dir docs/validation/d1-recheck`; the default
 directory is `docs/validation/d1-preflight`.
+
+The §26.2 (M19) checks are `scripts/build_perpetual_reference.py --check`
+(independent closed-form hitting-time values and finite-horizon CRR),
+`scripts/verify_perpetual_numerics.py --check` (six synthetic markets, boundary
+and smooth-pasting identities, and rejected mutations),
+`scripts/verify_perpetual_notebook.py --check` (fresh vol10, 136 preserved cells
+outside §4.9, six rejected mutations), and `scripts/verify_perpetual_browser.cjs`
+(Book/portal at 1440/1000px, 16 states and changed-value rejection). The
+eighteen earlier lessons were rechecked with the D1 driver; the integrated gate
+is `scripts/build_perpetual_acceptance_record.py --check`. The fixed ten-step
+annual CRR grid illustrates convergence toward the perpetual values but does
+not establish a strict continuous-exercise error bound. See the
+[acceptance note](docs/SECTION_26_2_ACCEPTANCE_2026-09-29.md).
