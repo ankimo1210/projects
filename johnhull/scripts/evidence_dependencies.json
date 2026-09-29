@@ -109,6 +109,51 @@
         "report/tests/test_perpetual_registry.py"
       ]
     },
+    "26.3": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.10 非標準アメリカン・オプション（§26.3、GE p.616）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.10 非標準アメリカン・オプション（§26.3、GE p.616）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "scheduled_ordering",
+          "scheduled_exercise",
+          "scheduled_warrant",
+          "scheduled_frequency"
+        ]
+      },
+      "python_modules": [
+        "hullkit.nonstandard_american",
+        "hullkit._nonstandard_american_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-3/reference.json",
+        "docs/validation/section-26-3/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_nonstandard_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-3/reference.json",
+        "docs/validation/section-26-3/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-3",
+      "viewports": [[1440, 1050], [1000, 1050]],
+      "tests": [
+        "hullkit/tests/test_nonstandard_american.py",
+        "hullkit/tests/test_nonstandard_reference_builder.py",
+        "hullkit/tests/test_nonstandard_numerics.py",
+        "hullkit/tests/test_nonstandard_lesson.py",
+        "report/tests/test_nonstandard_american_notebook.py",
+        "report/tests/test_nonstandard_notebook_gate.py",
+        "report/tests/test_nonstandard_registry.py"
+      ]
+    },
     "26.9": {
       "notebook": {
         "path": "volumes/10_exotics_martingales/exotics.ipynb",

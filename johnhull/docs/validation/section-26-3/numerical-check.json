@@ -1,0 +1,31 @@
+{
+  "artifact_sha256": "9486b33c803227e72076fabaa96b63b8393bd3547882d8fbc2ecba1f70603b14",
+  "case_count": 11,
+  "forbidden_exercise_count": 0,
+  "max_price_error": 5.861977570020827e-14,
+  "negative_controls": [
+    {
+      "mutation": "price",
+      "rejected": true
+    },
+    {
+      "mutation": "exercise_date",
+      "rejected": true
+    },
+    {
+      "mutation": "warrant_strike",
+      "rejected": true
+    },
+    {
+      "mutation": "label",
+      "rejected": true
+    }
+  ],
+  "section": "26.3",
+  "source_sha256": {
+    "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+    "scripts/build_nonstandard_reference.py": "e70bb72032e5d8662f2f6f81ee67f5b674da14d5cff0191022e60a2ade65a462",
+    "scripts/verify_nonstandard_numerics.py": "dd2e7be3fcc51e3e84409e8ba2b1886c924202597a0851f191270904738361f4"
+  },
+  "status": "PASS"
+}

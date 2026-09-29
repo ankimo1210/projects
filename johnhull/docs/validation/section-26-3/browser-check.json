@@ -1,0 +1,170 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "scheduled_ordering",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_exercise",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_warrant",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_frequency",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_ordering",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_exercise",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_warrant",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_frequency",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-3/portal-scheduled_ordering-1440.png",
+        "docs/validation/section-26-3/portal-scheduled_exercise-1440.png",
+        "docs/validation/section-26-3/portal-scheduled_warrant-1440.png",
+        "docs/validation/section-26-3/portal-scheduled_frequency-1440.png",
+        "docs/validation/section-26-3/portal-scheduled_ordering-1000.png",
+        "docs/validation/section-26-3/portal-scheduled_exercise-1000.png",
+        "docs/validation/section-26-3/portal-scheduled_warrant-1000.png",
+        "docs/validation/section-26-3/portal-scheduled_frequency-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "scheduled_ordering",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_exercise",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_warrant",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_frequency",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_ordering",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_exercise",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_warrant",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "scheduled_frequency",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-3/book-scheduled_ordering-1440.png",
+        "docs/validation/section-26-3/book-scheduled_exercise-1440.png",
+        "docs/validation/section-26-3/book-scheduled_warrant-1440.png",
+        "docs/validation/section-26-3/book-scheduled_frequency-1440.png",
+        "docs/validation/section-26-3/book-scheduled_ordering-1000.png",
+        "docs/validation/section-26-3/book-scheduled_exercise-1000.png",
+        "docs/validation/section-26-3/book-scheduled_warrant-1000.png",
+        "docs/validation/section-26-3/book-scheduled_frequency-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/nonstandard_american.py": "1e7bffc6f36d79f641beb8c4423f9222d5c4416d1ebee9eb481cb266833a9538",
+    "hullkit/src/hullkit/_nonstandard_american_lesson.py": "318f9d109f7c407857905a02f5b30ad00eed239d67ee38ad8f2c345c40800577",
+    "scripts/build_nonstandard_reference.py": "ddde09ae58f9370b61643dae08b00053b3c947fe1c92d4351c810166cd597304",
+    "scripts/verify_nonstandard_browser.cjs": "afb4aa6e4aae0c682ab84ba22ba3d58723ddfe1dd08445ba6105f4d54a5636ac",
+    "docs/validation/section-26-3/reference.json": "9486b33c803227e72076fabaa96b63b8393bd3547882d8fbc2ecba1f70603b14",
+    "docs/validation/section-26-3/numerical-check.json": "ae25305aa099c4b329068b393f6ff0f8a9ee82436c7e4164e1f637b1f839c34c",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "aa9965fe6702ef5adaa2eb606e99b08c5cb040e8f8e7e231f4b74131acc3678e",
+    "volumes/10_exotics_martingales/exotics.ipynb": "ed13212d79181c5196a148a7c44e9b5d12bd95bbf342478f40addcb17150863f",
+    "report/report_builder/figures.py": "502755201f61378be3484555fb9febc34cf6036ad2296ee08fdbe1c75f9836e2",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "0df8497f3c0562f086fda6348a845a52541f333c626c8cba8e863a4bed70cab7",
+    "book/_build/html/notebooks/10_exotics.html": "80549bfcd37b04d897edb78b484ed55e19c1bb6b06abba023ca4fd741beec9db",
+    "docs/validation/section-26-3/portal-scheduled_ordering-1440.png": "fe5c073a1579300d970d84c6d4ea321a6d37bc14b7099efccf99222d9f428aa3",
+    "docs/validation/section-26-3/portal-scheduled_exercise-1440.png": "1a2d2231793bf1c89226125e43c82d46970e30cf01e676f993fdb76d4af2e61f",
+    "docs/validation/section-26-3/portal-scheduled_warrant-1440.png": "fa162b5eb729333096627328295c4b57e3f6821ca1f8046cebdfffefee51d8e1",
+    "docs/validation/section-26-3/portal-scheduled_frequency-1440.png": "9a02f2485867e7784c9cc9c0d7848443e3be943dc8b21b23385f0431b8d5e563",
+    "docs/validation/section-26-3/portal-scheduled_ordering-1000.png": "d67a984a638063ec93b501533933a1e3eba8832d0e1e0e805e6b7d9d51f1c459",
+    "docs/validation/section-26-3/portal-scheduled_exercise-1000.png": "3926876145c9ed9d6f7c7845ce76380bb29debc640073a1432febf07969a1807",
+    "docs/validation/section-26-3/portal-scheduled_warrant-1000.png": "1d5cbca772c30ced5aef7786ff6b97a1dc89185164b70a654b5e1417eed2a9aa",
+    "docs/validation/section-26-3/portal-scheduled_frequency-1000.png": "af55b9de05e9cbf53a8a5f85d7525c8dc2d2ea933559ce0f40e8ab80be39f51d",
+    "docs/validation/section-26-3/book-scheduled_ordering-1440.png": "e9f2fd4c317cb120575db1efcf8ea1e48c28b8bc6ad0df48bda80de675ea1c70",
+    "docs/validation/section-26-3/book-scheduled_exercise-1440.png": "d857104ff2be0372b7fdcc308a52804fe817cd1c8727f10696cbe531fbb50f23",
+    "docs/validation/section-26-3/book-scheduled_warrant-1440.png": "10993226d222f181f7f8fc3e50d2ca314fe755a3b96d2ede6ea71fca0b54d5e3",
+    "docs/validation/section-26-3/book-scheduled_frequency-1440.png": "fa78bbe148f570fde8dc44e5ef6d6d3a2cae6962253ca8b823a8f6209bf44b29",
+    "docs/validation/section-26-3/book-scheduled_ordering-1000.png": "996a1241d459f79df1d4cc53a0eff6a2462ca29267861aa1bc865532bc53c51e",
+    "docs/validation/section-26-3/book-scheduled_exercise-1000.png": "03b6dd8c29d4c122e5297223118a8d7d105979b4b060751d1c85738600153d28",
+    "docs/validation/section-26-3/book-scheduled_warrant-1000.png": "b4b63c18227905114ddecbc7e0a9a916a26036b0427543cf14e154c1bcfa33e1",
+    "docs/validation/section-26-3/book-scheduled_frequency-1000.png": "8eafbf5e32f78145060d1df8ce85090592a92a73ac0efd2bbd984a343076a3df"
+  },
+  "book_math": {
+    "rendered": 833,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

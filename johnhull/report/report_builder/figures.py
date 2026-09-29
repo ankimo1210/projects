@@ -26,6 +26,7 @@ from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
+from hullkit._nonstandard_american_lesson import _figures as nonstandard_american_lesson_figures
 from hullkit._packages_lesson import _figures as packages_lesson_figures
 from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
 from hullkit._perpetual_american_lesson import _figures as perpetual_american_lesson_figures
@@ -1134,6 +1135,42 @@ FIGURES: list[FigureSpec] = [
         "20・40・80・160年の American CRR 価格を永久コール・プットの解析価格と比較する。",
         lambda: perpetual_american_lesson_figures()["perpetual_convergence"],
         practice="長い有限満期の格子は独立した数値照合になる。残差は離散化も含み、厳密な誤差上界ではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "scheduled_ordering",
+        "exotics",
+        "行使日程とオプション価値",
+        "§26.3。欧州型、指定日、ロックアウト、米国型を同じ50段格子で比較する。",
+        lambda: nonstandard_american_lesson_figures()["scheduled_ordering"],
+        practice="同じ行使価格と格子では、欧州型≤バミューダン≤米国型。ロックアウトとは行使集合が異なる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "scheduled_exercise",
+        "exotics",
+        "指定日での行使判定",
+        "20段の合成プットで、許可された節点と実際に行使する節点を分けて示す。",
+        lambda: nonstandard_american_lesson_figures()["scheduled_exercise"],
+        practice="行使不可日には本源的価値が高くても継続価値を採用する。満期の正ペイオフは早期行使ではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "scheduled_warrant",
+        "exotics",
+        "7年ワラントの変動行使価格",
+        "原典の年3・4は$30、年5・6は$32、最終年は$33。行使日と市場入力は合成例。",
+        lambda: nonstandard_american_lesson_figures()["scheduled_warrant"],
+        practice="年別の価格と実際の行使日を契約で固定する。ここでの8.6197は印刷値ではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "scheduled_frequency",
+        "exotics",
+        "同じ格子で行使日を増やす",
+        "64段のプットで日数を1・2・4・8・16・64と増やし、行使機会の価値を分離する。",
+        lambda: nonstandard_american_lesson_figures()["scheduled_frequency"],
+        practice="行使集合が包含関係にあるときに価格は単調。格子自体も変える比較にはこの理由を適用できない。",
         is_new=True,
     ),
     FigureSpec(

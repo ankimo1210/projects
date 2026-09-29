@@ -1,0 +1,45 @@
+{
+  "section": "26.3",
+  "status": "PASS",
+  "base": "894f7dd5",
+  "cells": 158,
+  "lesson_cells": 11,
+  "preserved_cells_outside_lesson": 147,
+  "saved_figures": [
+    "scheduled_exercise",
+    "scheduled_frequency",
+    "scheduled_ordering",
+    "scheduled_warrant"
+  ],
+  "negative_controls": [
+    {
+      "mutation": "old prose",
+      "rejected": true
+    },
+    {
+      "mutation": "new heading",
+      "rejected": true
+    },
+    {
+      "mutation": "saved plot",
+      "rejected": true
+    },
+    {
+      "mutation": "post heading",
+      "rejected": true
+    }
+  ],
+  "source_sha256": {
+    "scripts/verify_nonstandard_notebook.py": "346dcff269aefe1627629f35dafb5286f65cd3ed0c37d7cb21acfe7d87ed2b70",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_nonstandard_american_lesson.py": "5bd7b70af71b0eddb55281c971d7c0d869fde43a427cfccbc629a1ef7ebd1ae8",
+    "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+    "docs/validation/section-26-3/reference.json": "9486b33c803227e72076fabaa96b63b8393bd3547882d8fbc2ecba1f70603b14",
+    "docs/validation/section-26-3/numerical-check.json": "6b88fd999ee847afca523a450c5b6f9977082b96923180b6cf1da0688ccf72c7",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "aa9965fe6702ef5adaa2eb606e99b08c5cb040e8f8e7e231f4b74131acc3678e",
+    "volumes/10_exotics_martingales/exotics.ipynb": "ed13212d79181c5196a148a7c44e9b5d12bd95bbf342478f40addcb17150863f"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "ed13212d79181c5196a148a7c44e9b5d12bd95bbf342478f40addcb17150863f"
+  }
+}

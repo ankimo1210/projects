@@ -14,7 +14,7 @@ PLOTLY = "application/vnd.plotly.v1+json"
 def _lesson(notebook):
     cells = notebook.cells
     start = next(i for i, cell in enumerate(cells) if cell.source.startswith("### 4.9 "))
-    end = next(i for i, cell in enumerate(cells) if cell.source.startswith("## 5. "))
+    end = next(i for i, cell in enumerate(cells) if cell.source.startswith("### 4.10 "))
     return cells[start:end]
 
 
@@ -25,10 +25,12 @@ def test_saved_lesson_has_six_subsections_and_four_executed_figures():
         for cell in notebook.cells
         if cell.cell_type == "markdown" and cell.source.startswith("### 4.")
     ]
-    assert headings[-2:] == [
+    expected = [
         "### 4.8 パッケージ（§26.1、GE pp.614–615）",
         "### 4.9 永久アメリカン・コールとプット（§26.2、GE pp.615–616）",
     ]
+    start = headings.index(expected[0])
+    assert headings[start : start + 2] == expected
     lesson = _lesson(notebook)
     numbers = [
         line.split(" ", 2)[1]

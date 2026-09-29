@@ -2060,6 +2060,143 @@ CRR ツリーは有限満期の別計算ですが、時間と価格の格子も�
 **回答の手掛かり：** 特性方程式と端点条件、境界での価値と傾き、有限水準の上限、
 有限満期と離散格子の二つの近似、行使域での本源的価値を区別します。""")
 )
+# Section 4.10: §26.3 nonstandard American exercise contracts
+cells.append(
+    md(r"""### 4.10 非標準アメリカン・オプション（§26.3、GE p.616）
+
+#### 4.10.1 行使規則も契約の一部
+
+標準的なアメリカンでは満期までいつでも同じ行使価格で行使できます。§26.3 は
+**指定日だけ**のバミューダン、当初の**行使禁止期間**（ロックアウト）、
+期間中に**行使価格が変わる**契約を挙げます。いずれも二項木の節点で行使判定を
+変えることで評価できます。
+
+この教材は $N$ 段の CRR 木で $i=0,\ldots,N$、$t_i=iT/N$ とします。
+行使できる格子ステップの集合を $E$、そのときの行使価格を $K_i$ と明示します。
+満期 $N\in E$ は必須です。行使可能な節点では
+
+$$V_{i,j}=\max\{e^{-r\Delta t}[pV_{i+1,j}+(1-p)V_{i+1,j+1}],\ (S_{i,j}-K_i)^+\}$$
+
+をコールに使い、プットは $(K_i-S_{i,j})^+$ に替えます。
+$i\notin E$ では最大値を取らず、継続価値だけです。日付は整数ステップで指定し、
+グリッドに合わない実日付を**暗黙に丸め**ません。ここから先の価格はすべて合成市場です。""")
+)
+cells.append(
+    code(r"""from hullkit import nonstandard_american
+from hullkit._nonstandard_american_lesson import (
+    _figures as make_scheduled_figures,
+    _load_reference as load_scheduled_reference,
+)
+
+scheduled_ref = load_scheduled_reference()
+scheduled_figures = make_scheduled_figures()
+small = {row["label"]: row for row in scheduled_ref["small_hand_check"]}
+for label in ("european_put", "bermudan_put", "high_early_strike"):
+    row = small[label]
+    schedule = {int(i): k for i, k in row["exercise_strikes"].items()}
+    actual = nonstandard_american.scheduled_option(
+        row["kind"], row["spot"], row["r"], row["sigma"],
+        row["maturity"], row["steps"], schedule, q=row["q"]
+    )
+    print(f"{label}: API={actual.price:.6f}, 独立全経路={row['exhaustive_price']:.6f}")""")
+)
+
+cells.append(
+    md(r"""#### 4.10.2 行使日の集合が価値を変える
+
+同じ $S_0=K=100$、$r=5\%$、$q=2\%$、$\sigma=25\%$、$T=1$ 年、50段の
+合成プットでは、満期のみの欧州型は **8.1786**、10・20・30・40・50段だけの
+バミューダンは **8.4521**、全節点で行使可能な米国型は **8.5391** です。
+同じ格子・同じ満期・同じ行使価格なら行使機会が増えるため、
+欧州型 $\le$ バミューダン $\le$ 米国型です。右隣の比較で使う
+半期ロックアウトは25段目から行使でき、価格は **8.5108** です。
+行使可能日集合が異なるため、バミューダンとロックアウトの間には
+一般の大小関係を置けません。""")
+)
+cells.append(
+    code(r"""for row in scheduled_ref["cases"][:4]:
+    print(f"{row['label']}: {row['price']:.6f}")
+scheduled_figures["scheduled_ordering"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.10.3 ロックアウトと行使節点
+
+行使禁止期間は $E$ からその期間のステップを外すだけです。灰色の点は指定日に
+行使を**判定できる**節点、赤い点は即時行使価値が継続価値を**厳密に上回る**節点です。
+図は20段の合成プットで4・8・12・16・20段のみを許した例です。
+許可日の節点でも $S$ が高くプットの本源的価値がゼロなら行使しません。
+逆に行使禁止日で本源的価値が高くても、そこで行使フラグを立てません。
+満期の赤い点は終端ペイオフが正という意味で、早期行使ではありません。""")
+)
+cells.append(
+    code(r"""lattice = scheduled_ref["figure"]["exercise_lattice"]
+print("許可ステップ:", lattice["allowed_steps"])
+print("行使節点:", len(lattice["points"]), "/ 判定可能節点:", len(lattice["candidates"]))
+scheduled_figures["scheduled_exercise"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.10.4 7年ワラント：行使価格が期間で変わる
+
+Hull の契約説明では7年ワラントの行使価格は、**3・4年目が $30**、
+**5・6年目が $32**、**最終年が $33** です。本文は「特定の日に行使できる」
+と述べますが、正確な日付、株価、金利、ボラティリティや**価格は示しません**。
+
+ここでは年3・4・5・6・7の各年末に一度だけ行使できると仮定し、
+$S_0=30$、$r=4\%$、$q=1\%$、$\sigma=25\%$、$T=7$ 年、70段を置きました。
+行使ステップ30・40・50・60・70にそれぞれ $30,30,32,32,33$ を結び、
+独立参照と公開APIの合成価格は **8.6197** です。**原典に価格はない**ので、
+これは印刷値の再現ではありません。日付を変えれば価格も変わります。""")
+)
+cells.append(
+    code(r"""warrant = scheduled_ref["warrant"]
+warrant_result = nonstandard_american.scheduled_option(
+    "call", warrant["spot"], warrant["r"], warrant["sigma"],
+    warrant["maturity"], warrant["steps"],
+    {int(i): k for i, k in warrant["exercise_strikes"].items()}, q=warrant["q"]
+)
+print("原典の年と行使価格:", list(zip(scheduled_ref["figure"]["warrant_years"],
+                           scheduled_ref["figure"]["warrant_strikes"], strict=True)))
+print(f"合成価格: API={warrant_result.price:.6f}, 独立参照={warrant['price']:.6f}")
+scheduled_figures["scheduled_warrant"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.10.5 同じ格子で行使日を増やす
+
+行使日を増やしたときの効果を、格子の粗さと混ぜずに見るため、右図は**同じ64段**
+の合成プットで行使日数を1・2・4・8・16・64と増やしています。
+各集合は前の集合を含むので、価格は単調に増え、64回がその格子での米国型です。
+一般の連続行使の解析値と等しいという主張ではありません。
+特に行使日を追加するとき、以前の集合を含まないなら価格の単調性は保証されません。""")
+)
+cells.append(
+    code(r"""frequency = scheduled_ref["figure"]["exercise_frequency"]
+for dates, price in zip(frequency["date_counts"], frequency["prices"], strict=True):
+    print(f"行使日 {dates:2d} 回: {price:.6f}")
+scheduled_figures["scheduled_frequency"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.10.6 適用範囲と理解の確認
+
+ここでの $r,q,\sigma$ は一定、株価は配当利回り $q$ を持つ GBM、行使は**指定した
+CRR 格子上のみ**とします。企業ワラントに特有の発行済株式の希薄化、信用リスク、
+譲渡制限、税務、カレンダー日付の取引停止はモデル化していません。
+7年例の年別行使価格は原典、行使日・市場入力・価格は教材用の合成例です。
+金利・配当・ボラティリティを変えると CRR の確率を再計算し、$0<p<1$ を確認します。
+
+1. 行使禁止日の高い本源的価値を価格にそのまま使えないのはなぜですか。
+2. 固定行使価格なら、欧州型 $\le$ バミューダン $\le$ 米国型を同じ格子で説明してください。
+3. 年5の行使価格を $30$ のままにすると、7年例の価値はどう変わり得ますか。
+4. 年2.9の行使日を70段格子へ暗黙に丸めると何が不明確になりますか。
+5. ロックアウト契約と指定日契約の価格を一般には並べられない理由は何ですか。
+
+**回答の手掛かり：** 行使可能集合の包含、各節点の継続価値、価格スケジュール、
+年をステップに写す契約規約を分けて考えます。""")
+)
+
 # ===========================================================================
 # Section 2: Ch.28 martingales and measures
 # ===========================================================================
