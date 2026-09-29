@@ -15,7 +15,7 @@ PLOTLY = "application/vnd.plotly.v1+json"
 def _lesson(notebook):
     cells = notebook.cells
     start = next(i for i, c in enumerate(cells) if c.source.startswith("### 4.8 "))
-    end = next(i for i, c in enumerate(cells) if c.source.startswith("## 5. "))
+    end = next(i for i, c in enumerate(cells) if c.source.startswith("### 4.9 "))
     return cells[start:end]
 
 
@@ -26,7 +26,7 @@ def test_packages_saved_cells_and_figures():
         for cell in notebook.cells
         if cell.cell_type == "markdown" and cell.source.startswith("### 4.")
     ]
-    assert headings[-2:] == [
+    assert headings[-3:-1] == [
         "### 4.7 静的オプション複製（§26.17）",
         "### 4.8 パッケージ（§26.1、GE pp.614–615）",
     ]

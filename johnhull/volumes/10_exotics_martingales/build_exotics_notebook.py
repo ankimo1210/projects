@@ -1856,6 +1856,210 @@ $K_2$ の水準や損失確率の大小関係が任意の市場で同じだと�
 現在価値と分布の形、測度の違いを区別します。""")
 )
 
+# Section 4.9: §26.2 perpetual American calls and puts
+cells.append(
+    md(r"""### 4.9 永久アメリカン・コールとプット（§26.2、GE pp.615–616）
+
+#### 4.9.1 満期がないと時間項が消える
+
+永久アメリカンには固定満期がありません。定数の金利 $r$、連続配当利回り $q$、
+ボラティリティ $\sigma$ の Black–Scholes–Merton モデルで、継続領域の価値 $f(S)$ は
+
+$$
+\tfrac12\sigma^2S^2f_{SS}+(r-q)Sf_S-rf=0
+$$
+
+を満たします。$f(S)=S^a$ を代入すると、特性方程式は
+
+$$
+\tfrac12\sigma^2a(a-1)+(r-q)a-r=0.
+$$
+
+$w=r-q-\sigma^2/2$ と置き、正の根を $a_1$、負の根を $-a_2$ と書くと
+
+$$
+a_1=\frac{-w+\sqrt{w^2+2\sigma^2r}}{\sigma^2},
+\qquad
+a_2=\frac{w+\sqrt{w^2+2\sigma^2r}}{\sigma^2}.
+$$
+
+以下は $S,K>0$、$r,\sigma>0$、$q\ge0$ を扱います。$q>0$ なら $a_1>1$ で
+コールの有限行使境界が存在します。$q=0$ では $a_1=1$ になる特例を後で分けます。
+保存した独立参照の対称例 $S_0=K=100$、$r=q=4\%$、$\sigma=20\%$ では
+$a_1=2$、$a_2=1$ です。両根の特性方程式の残差を次のセルで確かめます。""")
+)
+cells.append(
+    code(r"""from hullkit import perpetual_american
+from hullkit._perpetual_american_lesson import (
+    _figures as make_perpetual_figures,
+    _load_reference as load_perpetual_reference,
+)
+
+perp_ref = load_perpetual_reference()
+perp_cases = {row["label"]: row for row in perp_ref["cases"]}
+perp_sym = perp_cases["symmetric"]
+perpetual_figures = make_perpetual_figures()
+
+def perp_market_args(case):
+    market = case["parameters"]
+    return dict(strike=market["strike"], r=market["rate"],
+                q=market["yield"], sigma=market["sigma"])
+
+print(f"w={perp_sym['w']:.6f}, a₁={perp_sym['a1']:.6f}, a₂={perp_sym['a2']:.6f}")
+print("特性方程式の残差:",
+      perp_sym["characteristic_residuals"]["positive"],
+      perp_sym["characteristic_residuals"]["negative"])""")
+)
+
+cells.append(
+    md(r"""#### 4.9.2 初回到達時の支払からオプション価値へ
+
+水準 $H$ に**初めて**到達した時刻を $\tau_H$ とし、到達時に $Q$ を支払う契約を考えます。
+価値は $Q E^{\mathbb Q}[e^{-r\tau_H}1_{\{\tau_H<\infty\}}]$ です。
+出発価格が $S<H$ なら $f(H)=Q, f(0)=0$ を満たす正根の解、$S>H$ なら
+$f(H)=Q, f(\infty)=0$ を満たす負根の解を選びます：
+
+$$
+f_{\uparrow}(S)=Q(S/H)^{a_1}\quad(S<H),\qquad
+f_{\downarrow}(S)=Q(S/H)^{-a_2}\quad(S>H).
+$$
+
+コールは $H>K$ に上からではなく**下から**到達して $H-K$ を受け取り、
+プットは $H<K$ に**上から下へ**到達して $K-H$ を受け取ります。
+したがって行使前の価値はそれぞれ
+$(H-K)(S/H)^{a_1}$、$(K-H)(S/H)^{-a_2}$ です。
+行使領域では待たずに $S-K$ または $K-S$ を受け取ります。
+図の実線が価値、破線が即時行使価値、ひし形が最適境界です。""")
+)
+cells.append(
+    code(r"""perp_call = perpetual_american.perpetual_option(
+    "call", perp_sym["parameters"]["spot"], **perp_market_args(perp_sym)
+)
+perp_put = perpetual_american.perpetual_option(
+    "put", perp_sym["parameters"]["spot"], **perp_market_args(perp_sym)
+)
+print(f"対称例：コール API={perp_call.price:.6f}／独立参照={perp_sym['call']['value']:.6f}")
+print(f"対称例：プット API={perp_put.price:.6f}／独立参照={perp_sym['put']['value']:.6f}")
+perpetual_figures["perpetual_value"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.9.3 行使水準の最適化と接続条件
+
+コールの候補価値 $(H-K)S^{a_1}H^{-a_1}$ を $H$ で最大化すると
+$H_1=Ka_1/(a_1-1)$、プットの候補価値 $(K-H)H^{a_2}S^{-a_2}$ を
+最大化すると $H_2=Ka_2/(a_2+1)$ です。よって
+
+$$
+C(S)=
+\begin{cases}
+(H_1-K)(S/H_1)^{a_1},&S<H_1,\\
+S-K,&S\ge H_1,
+\end{cases}
+\qquad
+P(S)=
+\begin{cases}
+K-S,&S\le H_2,\\
+(K-H_2)(S/H_2)^{-a_2},&S>H_2.
+\end{cases}
+$$
+
+境界では**価値が一致**（value matching）し、左右の傾きも一致します
+（smooth pasting：コールは $+1$、プットは $-1$）。
+保存参照の対称例は $H_1=200$、$H_2=50$、$S_0=100$ で両価格とも **25**。
+6つの合成市場について境界を $K$ で割って比較します。無配当コールの棒だけがないのは、
+境界を有限値として描けないためです。条件を複数変えた比較なので、棒の並びだけから
+$q$ や $\sigma$ 単独の効果を推定してはいけません。""")
+)
+cells.append(
+    code(r"""rows = []
+for case in perp_ref["cases"]:
+    market = case["parameters"]
+    h_call = case["call"]["boundary"]
+    h_put = case["put"]["boundary"]
+    rows.append({
+        "市場": case["label"],
+        "H₁/K": "∞" if h_call is None else f"{h_call / market['strike']:.3f}",
+        "H₂/K": f"{h_put / market['strike']:.3f}",
+        "C(S₀)": f"{case['call']['value']:.4f}",
+        "P(S₀)": f"{case['put']['value']:.4f}",
+    })
+display(pd.DataFrame(rows).set_index("市場"))
+print("対称例の value matching / smooth pasting の最大残差:",
+      max(abs(perp_sym[kind][key]) for kind in ("call", "put")
+          for key in ("matching_residual", "smooth_pasting_residual")))
+perpetual_figures["perpetual_boundaries"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.9.4 $q=0$：コールの有限境界が消える
+
+$r>0$ で配当利回り $q=0$ なら $a_1=1$ です。
+$H_1=Ka_1/(a_1-1)$ は有限には定まらず、任意の有限な行使水準 $H>K$ の候補価値は
+$(H-K)S/H=S(1-K/H)$。$H\to\infty$ の極限で **$C(S)=S$** になります。
+どの有限水準でもこの上限には届かず、最適な**有限の**行使境界はありません。
+普通の満期付き無配当コールの「早期行使しない」とも整合します。
+$S-K$ を今受け取ると、権利を保持したときの価値 $S$ より $K$ 低くなります。
+
+無配当でもプットは $H_2=Ka_2/(a_2+1)$ に有限境界を持ちます。
+保存参照の例は $S_0=K=100$、$r=5\%$、$\sigma=20\%$ で、
+コール価値100、プット境界71.4286、プット価値12.3200です。
+図の青線は $C(S)=S$、破線は即時行使価値です。""")
+)
+cells.append(
+    code(r"""perp_zero = perp_cases["zero_yield"]
+zero_call = perpetual_american.perpetual_option(
+    "call", perp_zero["parameters"]["spot"], **perp_market_args(perp_zero)
+)
+print(f"q=0: a₁={perp_zero['a1']:.6f}, H₁=∞: {math.isinf(zero_call.boundary)}")
+print(f"コール V={zero_call.price:.6f}（独立参照 {perp_zero['call']['value']:.6f}）")
+print(f"プット H₂={perp_zero['put']['boundary']:.6f}, P={perp_zero['put']['value']:.6f}")
+perpetual_figures["perpetual_zero_dividend"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.9.5 有限満期のアメリカン価格は永久価値へ近づく
+
+独立参照では満期に本源的価値を置き、各節点で継続価値と即時行使価値の大きい方を
+選ぶ **CRR 二項ツリー**を別実装で後ろ向きに計算しました。対称例で1年につき10ステップ、
+満期20・40・80・160年と延ばすと、コール・プットとも
+22.6442、24.4426、24.9375、24.9800と永久値25へ近づきます。
+160年・1600ステップでも差は約0.0200残ります。
+
+右図は保存参照の「永久値 − 有限満期のツリー価格」を対数目盛にしています。
+この差には**満期を有限にした効果とツリー格子の誤差の両方**が含まれます。
+従って列の差を厳密な満期切断誤差や一般的な誤差上界とは呼べません。
+無配当コールも同じ計算で160年の価格99.9669と、永久値100に近づきます。""")
+)
+cells.append(
+    code(r"""for row in perp_sym["lattice"]["rows"]:
+    print(f"T={row['maturity']:5.0f} 年、{row['steps']:4d} steps: "
+          f"call={row['call']:.6f}, put={row['put']:.6f}, "
+          f"永久との差 call={row['call_gap']:.6f}, put={row['put_gap']:.6f}")
+print(f"q=0・T=160 年の call = {perp_zero['lattice']['rows'][-1]['call']:.6f}")
+perpetual_figures["perpetual_convergence"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.9.6 適用範囲と理解の確認
+
+**前提。** 定数 $r,q,\sigma$ の連続配当付き GBM、連続的な行使判断、無限の契約期間、
+取引費用・信用リスクなしを仮定します。ここでの実装領域は有限な $S,K>0$、
+$r,\sigma>0$、$q\ge0$ で、$q=0$ のコールのみ有限境界を持ちません。
+$r=0$、負の金利・配当、時間依存パラメータにはこの教材の境界式を外挿しません。
+CRR ツリーは有限満期の別計算ですが、時間と価格の格子も有限です。
+原典 §26.2 に数値例はないため、上の市場・数値は**合成例と独立参照**です。
+
+1. $f(S)=S^a$ を PDE に代入し、$a_1$ と $-a_2$ がそれぞれ根であることを示してください。
+2. 下から $H$ に到達する契約に負根を使うと、$S\to0$ の境界条件はどうなりますか。
+3. コールの $H_1$ とプットの $H_2$ で、価値と一次導関数が接続することを確かめてください。
+4. $q=0$ のコールで $H_1=\infty$ と表す理由と、$C(S)=S$ になる極限を説明してください。
+5. 満期160年ツリーの価格と永久値の差を、厳密な満期切断誤差と呼べないのはなぜですか。
+6. $S_0>H_1$ のコール、$S_0<H_2$ のプットはそれぞれ幾らで、すぐ行使しますか。
+
+**回答の手掛かり：** 特性方程式と端点条件、境界での価値と傾き、有限水準の上限、
+有限満期と離散格子の二つの近似、行使域での本源的価値を区別します。""")
+)
 # ===========================================================================
 # Section 2: Ch.28 martingales and measures
 # ===========================================================================
