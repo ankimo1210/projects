@@ -28,6 +28,7 @@ from hullkit._local_volatility_lesson import _figures as local_volatility_lesson
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._packages_lesson import _figures as packages_lesson_figures
 from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
+from hullkit._perpetual_american_lesson import _figures as perpetual_american_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
 from hullkit._static_replication_lesson import _figures as static_replication_lesson_figures
 from hullkit._stochastic_volatility_lesson import (
@@ -1097,6 +1098,42 @@ FIGURES: list[FigureSpec] = [
         "先渡し・レンジ先渡し・ブレークフォワードの期待損失PV、損失確率、最大損失を並べる。",
         lambda: packages_lesson_figures()["packages_risk"],
         practice="どれも正味PVは0だが、損失確率は51%・24%・67%、最大損失は1.32・1.254・0.037（いずれも買う側）。損失確率はリスク中立の値。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "perpetual_value",
+        "exotics",
+        "永久アメリカン・オプションの価値と行使価値",
+        "§26.2。コールとプットの継続価値を、即時行使の価値と最適行使境界とともに見る。",
+        lambda: perpetual_american_lesson_figures()["perpetual_value"],
+        practice="一定の金利・配当利回り・ボラティリティでは、価値と滑らかな接続が行使時点の判断を決める。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "perpetual_boundaries",
+        "exotics",
+        "配当とボラティリティで変わる行使境界",
+        "6市場の H1/K と H2/K を比べる。無配当コールには有限の行使境界がない。",
+        lambda: perpetual_american_lesson_figures()["perpetual_boundaries"],
+        practice="境界は契約の行使価格だけでなく市場入力にも依存する。境界を一律に扱わず、無配当の例外も確認する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "perpetual_zero_dividend",
+        "exotics",
+        "無配当コールの極限",
+        "q=0 の永久コール価値 V=S と即時行使価値を比べ、保存参照の S=100 を示す。",
+        lambda: perpetual_american_lesson_figures()["perpetual_zero_dividend"],
+        practice="無配当の永久コールには有限の最適行使点がない。有限満期コールの結論と混同しない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "perpetual_convergence",
+        "exotics",
+        "有限満期ツリーから永久価格への収束",
+        "20・40・80・160年の American CRR 価格を永久コール・プットの解析価格と比較する。",
+        lambda: perpetual_american_lesson_figures()["perpetual_convergence"],
+        practice="長い有限満期の格子は独立した数値照合になる。残差は離散化も含み、厳密な誤差上界ではない。",
         is_new=True,
     ),
     FigureSpec(

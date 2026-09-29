@@ -1,0 +1,59 @@
+{
+  "section": "26.2",
+  "status": "PASS",
+  "cases": [
+    "symmetric",
+    "standard_dividend",
+    "dividend_stock",
+    "high_yield_call_exercise",
+    "high_vol_put_exercise",
+    "zero_yield"
+  ],
+  "max_abs_error": 7.105427357601002e-15,
+  "max_boundary_error": 5.684341886080802e-14,
+  "max_exponent_error": 2.220446049250313e-16,
+  "negative_controls": [
+    {
+      "mutation": "call value",
+      "rejected": true,
+      "findings": [
+        "symmetric call value differs"
+      ]
+    },
+    {
+      "mutation": "put boundary",
+      "rejected": true,
+      "findings": [
+        "symmetric put boundary differs",
+        "symmetric put value matching differs"
+      ]
+    },
+    {
+      "mutation": "zero-yield call boundary",
+      "rejected": true,
+      "findings": [
+        "zero_yield zero-yield call boundary must be infinite"
+      ]
+    },
+    {
+      "mutation": "finite-maturity lattice value",
+      "rejected": true,
+      "findings": [
+        "symmetric call lattice value differs",
+        "symmetric call lattice gap differs"
+      ]
+    }
+  ],
+  "checks": [
+    "public prices, exponents and boundaries equal the independent reference",
+    "characteristic residuals, value matching and smooth pasting",
+    "zero-dividend call has no finite exercise boundary",
+    "saved finite-maturity lattice prices and gaps equal independent CRR rollback"
+  ],
+  "source_sha256": {
+    "scripts/build_perpetual_reference.py": "ccf182d43b979fa5b1a4f4905051919abc306ca2953c0df02c9fc03b774f7919",
+    "scripts/verify_perpetual_numerics.py": "610c56e3cf952cb340e7ac52819520e2779e25b93bafa964505e8b453a8d665b",
+    "hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235"
+  },
+  "artifact_sha256": "b351eded0338866a7cc90770830c7a2ac1d31955ca4fb9c5b89038c6085d06cc"
+}

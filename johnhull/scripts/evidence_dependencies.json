@@ -56,6 +56,59 @@
         "report/tests/test_packages_notebook.py"
       ]
     },
+    "26.2": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.9 永久アメリカン・コールとプット（§26.2、GE pp.615–616）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.9 永久アメリカン・コールとプット（§26.2、GE pp.615–616）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "perpetual_value",
+          "perpetual_boundaries",
+          "perpetual_zero_dividend",
+          "perpetual_convergence"
+        ]
+      },
+      "python_modules": [
+        "hullkit.perpetual_american",
+        "hullkit._perpetual_american_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-2/reference.json",
+        "docs/validation/section-26-2/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_perpetual_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-2/reference.json",
+        "docs/validation/section-26-2/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-2",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_perpetual_american.py",
+        "hullkit/tests/test_perpetual_reference_builder.py",
+        "hullkit/tests/test_perpetual_numerics_gate.py",
+        "hullkit/tests/test_perpetual_american_lesson.py",
+        "report/tests/test_perpetual_american_notebook.py",
+        "report/tests/test_perpetual_registry.py"
+      ]
+    },
     "26.9": {
       "notebook": {
         "path": "volumes/10_exotics_martingales/exotics.ipynb",

@@ -1,0 +1,78 @@
+{
+  "section": "26.2",
+  "status": "PASS",
+  "base": "116ace00",
+  "cells": 147,
+  "lesson_cells": 11,
+  "preserved_cells_outside_lesson": 136,
+  "saved_figures": [
+    "perpetual_boundaries",
+    "perpetual_convergence",
+    "perpetual_value",
+    "perpetual_zero_dividend"
+  ],
+  "negative_controls": [
+    {
+      "mutation": "§4.8 source changed",
+      "rejected": true,
+      "findings": [
+        "§4.9以外のセル本文がM18基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§5 heading changed",
+      "rejected": true,
+      "findings": [
+        "§4.9以外のセル本文がM18基点と異なる",
+        "§4.9以外の保存出力がM18基点と異なる"
+      ]
+    },
+    {
+      "mutation": "§4.9.4 heading changed",
+      "rejected": true,
+      "findings": [
+        "§4.9.4 がない"
+      ]
+    },
+    {
+      "mutation": "§26.2 saved value changed",
+      "rejected": true,
+      "findings": [
+        "perpetual_value.data が共有図と異なる"
+      ]
+    },
+    {
+      "mutation": "§26.1 saved risk changed",
+      "rejected": true,
+      "findings": [
+        "§4.9以外の保存Plotly図がM18基点と異なる"
+      ]
+    },
+    {
+      "mutation": "unlabeled saved figure changed",
+      "rejected": true,
+      "findings": [
+        "§4.9以外の保存Plotly図がM18基点と異なる"
+      ]
+    }
+  ],
+  "checks": [
+    "fresh execution matches committed output signature",
+    "outside §4.9 source, output signature and Plotly payloads equal M18",
+    "saved §26.2 Plotly values match shared figures"
+  ],
+  "source_sha256": {
+    "scripts/verify_perpetual_notebook.py": "93d3a69a43cdd8feb935c482065f999ec8e2be8e14d6fc8ad4785a45e5d003a3",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_perpetual_american_lesson.py": "bf5f07a49bf544163706eb08d9cd58449f48086763a20fe657c1fbb8939637ab",
+    "hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+    "docs/validation/section-26-2/reference.json": "b351eded0338866a7cc90770830c7a2ac1d31955ca4fb9c5b89038c6085d06cc",
+    "docs/validation/section-26-2/numerical-check.json": "15b19d229248c43993cc7603ad82d2da8c33e7073cccb44858982e3e69d93e9e",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "131be715382835f6cd7b97520680445a0e4a9fe88f0cfa5ff1510b779c27952c",
+    "volumes/10_exotics_martingales/exotics.ipynb": "af350e8f880fc6270272d15cb91d18832c03f5983744f632434718bcae659be5"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "af350e8f880fc6270272d15cb91d18832c03f5983744f632434718bcae659be5",
+    "book/_build/html/notebooks/10_exotics.html": "4d9f86d75b329fb795e439ed1d8932f65d40a307db286d90f932484b469963c0"
+  }
+}
