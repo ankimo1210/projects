@@ -1077,6 +1077,60 @@
         "report/tests/test_gap_notebook.py",
         "report/tests/test_gap_registry.py"
       ]
+    },
+    "26.5": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.12 フォワード・スタート・オプション（§26.5、GE p.618）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.12 フォワード・スタート・オプション（§26.5、GE p.618）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "forward_contract",
+          "forward_homogeneity",
+          "forward_start_delay",
+          "forward_fixed_expiry"
+        ]
+      },
+      "python_modules": [
+        "hullkit.forward_start",
+        "hullkit.bsm",
+        "hullkit._forward_start_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-5/reference.json",
+        "docs/validation/section-26-5/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_forward_start_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-5/reference.json",
+        "docs/validation/section-26-5/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-5",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_forward_start.py",
+        "hullkit/tests/test_forward_start_reference.py",
+        "hullkit/tests/test_forward_start_numerics.py",
+        "hullkit/tests/test_forward_start_lesson.py",
+        "report/tests/test_forward_start_notebook.py",
+        "report/tests/test_forward_start_registry.py"
+      ]
     }
   }
 }
