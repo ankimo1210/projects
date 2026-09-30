@@ -2196,6 +2196,178 @@ CRR 格子上のみ**とします。企業ワラントに特有の発行済株�
 **回答の手掛かり：** 行使可能集合の包含、各節点の継続価値、価格スケジュール、
 年をステップに写す契約規約を分けて考えます。""")
 )
+# Section 4.11: §26.4 gap options
+cells.append(
+    md(r"""### 4.11 ギャップ・オプション（§26.4、GE p.617）
+
+#### 4.11.1 支払が起きる条件と支払額を分ける
+
+ギャップ・コールは、満期に $S_T>K_2$ なら $S_T-K_1$ を支払います。$K_2$ は
+支払が**起きるかどうか**を決める水準（トリガー）、$K_1$ は**支払額**を決める
+行使価格です。ギャップ・プットは $S_T<K_2$ なら $K_1-S_T$ を支払います。
+
+行使価格 $K_2$ の通常のコールと比べると、支払が起きたときの額が $K_2-K_1$ だけ
+違います。$K_2>K_1$ なら増え、$K_1>K_2$ なら減ります。支払は $\max(\cdot,0)$ で
+抑えません。$K_1>K_2$ のコールでは $K_2<S_T<K_1$ で支払が**負**になり、
+保有者が払います。支払は $K_2$ で $|K_2-K_1|$ だけ不連続に跳びます。
+
+下のコードは公開 API `hullkit.gap_options.gap_option` の価格を、`hullkit` を
+使わない独立参照（対数正規密度の求積）と並べます。""")
+)
+cells.append(
+    code(r"""from hullkit import gap_options
+from hullkit._gap_lesson import _figures as make_gap_figures
+from hullkit._gap_lesson import _load_reference as load_gap_reference
+
+gap_ref = load_gap_reference()
+gap_figures = make_gap_figures()
+gap_cases = {row["label"]: row for row in gap_ref["cases"]}
+for label in ("base_call_K1_90_K2_100", "base_call_K1_110_K2_100", "base_put_K1_110_K2_100"):
+    row = gap_cases[label]
+    quote = gap_options.gap_option(
+        row["kind"], row["spot"], row["K1"], row["K2"], row["r"], row["sigma"], row["T"], row["q"]
+    )
+    print(f"{label}: API={quote.price:.6f}, 独立求積={row['quadrature_price']:.6f}")
+gap_figures["gap_payoff"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.11.2 価格式（26.1）（26.2）と分解
+
+BSM の記号で、ギャップ・コールとギャップ・プットの価格は
+
+$$c_{\text{gap}}=S_0e^{-qT}N(d_1)-K_1e^{-rT}N(d_2),\qquad
+p_{\text{gap}}=K_1e^{-rT}N(-d_2)-S_0e^{-qT}N(-d_1)$$
+
+$$d_1=\frac{\ln(S_0/K_2)+(r-q+\sigma^2/2)T}{\sigma\sqrt T},\qquad d_2=d_1-\sigma\sqrt T$$
+
+です。$d_1,d_2$ には**トリガー $K_2$** を使い、$K_1$ は現金の項にだけ入ります。
+行使価格 $K_2$ の通常のコール $c(K_2)$ と比べると
+
+$$c_{\text{gap}}=c(K_2)+(K_2-K_1)e^{-rT}N(d_2)$$
+
+で、差は $K_2-K_1$ 単位のキャッシュ・オア・ナッシング・コール（§26.10）です。
+$N(d_2)$ は支払が起きるリスク中立確率です。原典も直前の括弧書きで断っているとおり、
+この増分は $K_2>K_1$ なら正、$K_1>K_2$ なら負で、差の符号は $K_2-K_1$ に従います。
+プットでは $p_{\text{gap}}=p(K_2)+(K_1-K_2)e^{-rT}N(-d_2)$ です。
+
+コールとプットの組はどの状態でも $S_T-K_1$ を支払うので、
+$c_{\text{gap}}-p_{\text{gap}}=S_0e^{-qT}-K_1e^{-rT}$ が成り立ちます。
+$K_1=0$ ならギャップ・コールは資産・オア・ナッシング・コールです。""")
+)
+cells.append(
+    code(r"""base = gap_cases["base_call_K1_90_K2_100"]
+quote = gap_options.gap_option(
+    "call", base["spot"], base["K1"], base["K2"], base["r"], base["sigma"], base["T"], base["q"]
+)
+print(f"通常のコール c(K2)        = {quote.regular_price:.6f}")
+print(f"(K2-K1)e^(-rT)N(d2)      = {quote.trigger_adjustment:+.6f}")
+print(f"ギャップ・コール          = {quote.price:.6f}")
+print(f"支払が起きる確率 N(d2)    = {quote.trigger_probability:.6f}")
+
+import math
+
+parity, pairs = 0.0, 0
+for row in gap_ref["cases"]:
+    if row["kind"] != "call":
+        continue
+    args = (row["spot"], row["K1"], row["K2"], row["r"], row["sigma"], row["T"], row["q"])
+    difference = gap_options.gap_option("call", *args).price - gap_options.gap_option("put", *args).price
+    target = row["spot"] * math.exp(-row["q"] * row["T"]) - row["K1"] * math.exp(-row["r"] * row["T"])
+    parity, pairs = max(parity, abs(difference - target)), pairs + 1
+print(f"API のコール−プット・パリティ誤差（{pairs}組の最大）: {parity:.1e}")""")
+)
+
+cells.append(
+    md(r"""#### 4.11.3 K1 だけ動かすと価格は直線
+
+$K_2=100$ を固定すると、価格は $K_1$ の一次式です。傾きはコールが
+$-e^{-rT}N(d_2)$、プットが $e^{-rT}N(-d_2)$ です。合成市場 $S_0=100$、$r=5\%$、
+$q=2\%$、$\sigma=25\%$、$T=1$ では、コールの傾きは **−0.4737**、
+$K_1=90$ で **15.8609**、$K_1=K_2=100$ で通常のコールの **11.1238** です。
+
+価格がゼロになる $K_1$ は、支払が起きたときの $S_T$ のリスク中立平均
+$E[S_T\mid S_T>K_2]=S_0e^{(r-q)T}N(d_1)/N(d_2)$ です。この市場ではコールが
+**123.4819**、プットは $E[S_T\mid S_T<K_2]$ の **82.7715** です。
+独立参照は、この平均を求積でも計算して一致を確かめています。""")
+)
+cells.append(
+    code(r"""line = gap_ref["figure"]["settlement_line"]
+for kind in ("call", "put"):
+    level = gap_options.gap_option(
+        kind, 100.0, 90.0, 100.0, 0.05, 0.25, 1.0, 0.02
+    ).zero_value_settlement
+    print(f"{kind}: 傾き={line[kind + '_slope']:+.6f}, 価値ゼロの K1={level:.4f}, "
+          f"独立求積={gap_ref['conditional_mean'][kind]['quadrature']:.4f}")
+gap_figures["gap_settlement_line"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.11.4 例題26.1：保険会社が負う費用
+
+資産価値 $S_0=500{,}000$、$\sigma=20\%$、$r=5\%$、配当なし、$T=1$ 年です。
+1年後の価値が400,000を下回れば、保険会社が400,000で買い取ります。
+これは行使価格400,000の通常のプットで、原典の値は **3,436** です
+（独立計算 3,435.95）。
+
+資産の移転費用50,000を契約者が負担すると、契約者が請求するのは
+$S_T<350{,}000$ のときだけです。保険会社の費用は $400{,}000-S_T$ のままなので、
+$K_1=400{,}000$、$K_2=350{,}000$ のギャップ・プットです。原典の値は **1,896**
+（独立計算 1,895.69）で、費用は **約45%**（44.83%）下がります。""")
+)
+cells.append(
+    code(r"""example = gap_ref["example_26_1"]
+for label, K1, K2 in (("通常のプット", 400_000.0, 400_000.0), ("ギャップ・プット", 400_000.0, 350_000.0)):
+    value = gap_options.gap_option(
+        "put", example["spot"], K1, K2, example["r"], example["sigma"], example["T"], example["q"]
+    ).price
+    print(f"{label}: {value:,.2f}（四捨五入 {round(value):,}）")
+print(f"費用の減少率: {example['reduction']:.4%}（原典：約{example['printed']['reduction_percent']}%）")
+gap_figures["gap_insurance"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.11.5 保険会社の費用と契約者の価値は違う
+
+請求すると契約者は $400{,}000-S_T-50{,}000=350{,}000-S_T$ を受け取ります。
+原典はここまで扱いませんが、契約者にとっての価値は行使価格350,000の通常のプットで
+**630.79** です（この節の補足）。保険会社の費用 **1,895.69** との差 **1,264.90** は
+$50{,}000\,e^{-rT}N(-d_2)$、つまり請求時の移転費用の現在価値です。$N(-d_2)=2.66\%$ は
+請求のリスク中立確率です。原典は移転費用の支払先を書いていませんが、保険会社も
+契約者もこの額を受け取らないので、取引の外に出ていく費用と読めます。
+
+下の図は、同じ市場で移転費用を0から150,000まで動かした合成の延長です。
+原典の数値は費用0（3,436）と50,000（1,896）の2点だけです。""")
+)
+cells.append(
+    code(r"""rows = {row["transfer_cost"]: row for row in gap_ref["figure"]["transfer_cost"]["rows"]}
+for cost in (0.0, 50_000.0):
+    row = rows[cost]
+    print(f"移転費用 {cost:>9,.0f}: 保険会社 {row['insurer_cost']:9,.2f} = 契約者 "
+          f"{row['policyholder_value']:9,.2f} + 移転費用PV {row['transfer_cost_present_value']:9,.2f}")
+gap_figures["gap_transfer_cost"].show()""")
+)
+
+cells.append(
+    md(r"""#### 4.11.6 適用範囲と理解の確認
+
+$r,q,\sigma$ は一定、資産は GBM、支払の条件は満期にだけ判定する欧州型です。
+例題26.1 の契約者は、満期に手取りが正なら必ず請求すると仮定しています。
+移転費用以外の取引費用、保険会社の信用リスク、離散配当は扱いません。
+$K_2$ の近くでは支払が跳ぶため、満期直前のデルタが大きく振れます
+（二値オプションと同じ性質）。この節ではヘッジは検証しません。
+例題26.1 以外の市場はすべて教材用の合成例です。
+
+1. $K_1>K_2$ のギャップ・コールで支払が負になる区間はどこですか。保有者が
+   それを避けられないのはなぜですか。
+2. 式（26.1）から通常のコールとの差 $(K_2-K_1)e^{-rT}N(d_2)$ を導き、符号を説明してください。
+3. ギャップ・コールとギャップ・プットの価格差が $S_0e^{-qT}-K_1e^{-rT}$ になるのはなぜですか。
+4. 例題26.1 で移転費用が100,000なら、保険会社の費用はいくらですか。図から読んでください。
+5. 保険会社の費用と契約者にとっての価値の差は、誰にとっての価値ですか。
+
+**回答の手掛かり：** 支払の条件（$K_2$）と支払額（$K_1$）を分け、
+キャッシュ・オア・ナッシングへの分解と請求のリスク中立確率を使います。""")
+)
 
 # ===========================================================================
 # Section 2: Ch.28 martingales and measures

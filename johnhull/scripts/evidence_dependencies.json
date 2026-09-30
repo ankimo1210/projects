@@ -154,6 +154,53 @@
         "report/tests/test_nonstandard_registry.py"
       ]
     },
+    "26.4": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.11 ギャップ・オプション（§26.4、GE p.617）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.11 ギャップ・オプション（§26.4、GE p.617）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "gap_payoff",
+          "gap_settlement_line",
+          "gap_insurance",
+          "gap_transfer_cost"
+        ]
+      },
+      "python_modules": [
+        "hullkit.gap_options",
+        "hullkit._gap_lesson",
+        "hullkit.exotics",
+        "hullkit.bsm"
+      ],
+      "data": [
+        "docs/validation/section-26-4/reference.json",
+        "docs/validation/section-26-4/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_gap_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-4/reference.json",
+        "docs/validation/section-26-4/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-4",
+      "viewports": [[1440, 1050], [1000, 1050]],
+      "tests": [
+        "hullkit/tests/test_gap_options.py",
+        "hullkit/tests/test_gap_reference_builder.py",
+        "hullkit/tests/test_gap_numerics.py",
+        "hullkit/tests/test_gap_lesson.py",
+        "report/tests/test_gap_notebook.py",
+        "report/tests/test_gap_notebook_gate.py",
+        "report/tests/test_gap_registry.py"
+      ]
+    },
     "26.9": {
       "notebook": {
         "path": "volumes/10_exotics_martingales/exotics.ipynb",
