@@ -1,0 +1,1495 @@
+{
+  "section": "26.6",
+  "source": "Hull GE p.618; no printed numeric example",
+  "cases": [
+    {
+      "label": "market-0-schedule-0-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "call",
+      "price": 16.126779724978622,
+      "quadrature_error": 5.515903546427888e-11,
+      "components": [
+        16.126779724978622
+      ]
+    },
+    {
+      "label": "market-0-schedule-0-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "put",
+      "price": 6.610521528574577,
+      "quadrature_error": 4.330613173097977e-11,
+      "components": [
+        6.610521528574577
+      ]
+    },
+    {
+      "label": "market-0-schedule-1-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "call",
+      "price": 20.90116714437114,
+      "quadrature_error": 1.1824062844015637e-10,
+      "components": [
+        10.450583572185572,
+        10.450583572185568
+      ]
+    },
+    {
+      "label": "market-0-schedule-1-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "put",
+      "price": 11.147052044513938,
+      "quadrature_error": 1.2045668721883308e-10,
+      "components": [
+        5.57352602225697,
+        5.573526022256969
+      ]
+    },
+    {
+      "label": "market-0-schedule-2-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 27.554914310722474,
+      "quadrature_error": 1.3549636194466418e-10,
+      "components": [
+        6.88872857768062,
+        6.888728577680619,
+        6.888728577680618,
+        6.8887285776806175
+      ]
+    },
+    {
+      "label": "market-0-schedule-2-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 17.678879122055548,
+      "quadrature_error": 2.8032516312081385e-10,
+      "components": [
+        4.419719780513888,
+        4.419719780513887,
+        4.419719780513886,
+        4.419719780513885
+      ]
+    },
+    {
+      "label": "market-0-schedule-3-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "call",
+      "price": 27.047196090106866,
+      "quadrature_error": 1.3416579850798576e-10,
+      "components": [
+        4.068966195561905,
+        6.8887285776806175,
+        8.41534053803483,
+        7.6741607788295125
+      ]
+    },
+    {
+      "label": "market-0-schedule-3-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "put",
+      "price": 17.1882656484644,
+      "quadrature_error": 2.7422120740553325e-10,
+      "components": [
+        3.07394957047871,
+        4.419719780513887,
+        4.975882163791476,
+        4.718714133680329
+      ]
+    },
+    {
+      "label": "market-0-schedule-4-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 21.07309901647665,
+      "quadrature_error": 1.553714663640799e-10,
+      "components": [
+        0.8229148471651648,
+        6.807279356726153,
+        13.442904812585333
+      ]
+    },
+    {
+      "label": "market-0-schedule-4-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.0,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 11.377229039089599,
+      "quadrature_error": 1.4949646420372634e-10,
+      "components": [
+        0.7729273450820912,
+        4.387048248566887,
+        6.217253445440621
+      ]
+    },
+    {
+      "label": "market-1-schedule-0-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "call",
+      "price": 12.333025780204999,
+      "quadrature_error": 5.518936382116222e-11,
+      "components": [
+        12.333025780204999
+      ]
+    },
+    {
+      "label": "market-1-schedule-0-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "put",
+      "price": 8.640314225376084,
+      "quadrature_error": 1.5936292495114132e-11,
+      "components": [
+        8.640314225376084
+      ]
+    },
+    {
+      "label": "market-1-schedule-1-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "call",
+      "price": 17.049336243017358,
+      "quadrature_error": 6.878458373086689e-11,
+      "components": [
+        8.652528553942718,
+        8.396807689074642
+      ]
+    },
+    {
+      "label": "market-1-schedule-1-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "put",
+      "price": 13.262906618476649,
+      "quadrature_error": 2.8175995421561175e-11,
+      "components": [
+        6.7309176491633,
+        6.531988969313349
+      ]
+    },
+    {
+      "label": "market-1-schedule-2-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 23.584835778168923,
+      "quadrature_error": 8.76665102395565e-11,
+      "components": [
+        6.0295294453459505,
+        5.939761446798529,
+        5.851329919635191,
+        5.764214966389255
+      ]
+    },
+    {
+      "label": "market-1-schedule-2-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 19.750718825285777,
+      "quadrature_error": 4.6422401939591365e-11,
+      "components": [
+        5.049326687872951,
+        4.974152007180032,
+        4.9000965316735865,
+        4.827143598559207
+      ]
+    },
+    {
+      "label": "market-1-schedule-3-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "call",
+      "price": 23.130798435520987,
+      "quadrature_error": 8.622074129476033e-11,
+      "components": [
+        3.740585824206896,
+        5.993460583466033,
+        7.0377989420812925,
+        6.358953085766764
+      ]
+    },
+    {
+      "label": "market-1-schedule-3-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "put",
+      "price": 19.30321801018777,
+      "quadrature_error": 4.507037713864074e-11,
+      "components": [
+        3.3437727937301744,
+        5.019121434122669,
+        5.704734473872463,
+        5.235589308462464
+      ]
+    },
+    {
+      "label": "market-1-schedule-4-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 17.275484436830375,
+      "quadrature_error": 1.504119859238276e-10,
+      "components": [
+        0.8075880589940665,
+        5.9644659454471105,
+        10.503430432389198
+      ]
+    },
+    {
+      "label": "market-1-schedule-4-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 13.511462995412666,
+      "quadrature_error": 5.852007287922281e-11,
+      "components": [
+        0.7875960573609603,
+        5.00377133696455,
+        7.720095601087156
+      ]
+    },
+    {
+      "label": "market-2-schedule-0-call",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "call",
+      "price": 10.794377675203279,
+      "quadrature_error": 1.4329749938994541e-11,
+      "components": [
+        10.794377675203279
+      ]
+    },
+    {
+      "label": "market-2-schedule-0-put",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "put",
+      "price": 22.123254456519135,
+      "quadrature_error": 6.656375112650047e-11,
+      "components": [
+        22.123254456519135
+      ]
+    },
+    {
+      "label": "market-2-schedule-1-call",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "call",
+      "price": 17.182399417543365,
+      "quadrature_error": 2.96251141573925e-11,
+      "components": [
+        8.848858407062806,
+        8.33354101048056
+      ]
+    },
+    {
+      "label": "market-2-schedule-1-put",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "put",
+      "price": 28.45294222663881,
+      "quadrature_error": 1.4930275496662586e-10,
+      "components": [
+        14.65313725455595,
+        13.799804972082862
+      ]
+    },
+    {
+      "label": "market-2-schedule-2-call",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 26.328628493132527,
+      "quadrature_error": 5.4756926400615975e-11,
+      "components": [
+        6.88124843184765,
+        6.677876805924227,
+        6.480515719896346,
+        6.288987535464304
+      ]
+    },
+    {
+      "label": "market-2-schedule-2-put",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 37.57057346346278,
+      "quadrature_error": 1.7746424660144644e-10,
+      "components": [
+        9.819442353273546,
+        9.529233973671364,
+        9.247602547888079,
+        8.97429458862979
+      ]
+    },
+    {
+      "label": "market-2-schedule-3-call",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "call",
+      "price": 25.78204917552374,
+      "quadrature_error": 5.257389507148789e-11,
+      "components": [
+        4.70504890871843,
+        6.799166924684179,
+        7.492701327478352,
+        6.7851320146427785
+      ]
+    },
+    {
+      "label": "market-2-schedule-3-put",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "put",
+      "price": 37.02781274536347,
+      "quadrature_error": 1.7483577361960483e-10,
+      "components": [
+        5.889123428844356,
+        9.702313225347977,
+        11.417504941285905,
+        10.018871149885232
+      ]
+    },
+    {
+      "label": "market-2-schedule-4-call",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 17.705802418423477,
+      "quadrature_error": 7.16446495620695e-11,
+      "components": [
+        1.1569908226301535,
+        6.823075903902943,
+        9.725735691890382
+      ]
+    },
+    {
+      "label": "market-2-schedule-4-put",
+      "S": 85.0,
+      "r": -0.01,
+      "sigma": 0.35,
+      "q": 0.06,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 28.989981892736967,
+      "quadrature_error": 1.5621273667677576e-10,
+      "components": [
+        1.2164759507038616,
+        9.701492504840783,
+        18.07201343719232
+      ]
+    },
+    {
+      "label": "market-3-schedule-0-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "call",
+      "price": 5.595202111636363,
+      "quadrature_error": 0.0,
+      "components": [
+        5.595202111636363
+      ]
+    },
+    {
+      "label": "market-3-schedule-0-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "put",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0
+      ]
+    },
+    {
+      "label": "market-3-schedule-1-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "call",
+      "price": 5.736486805241628,
+      "quadrature_error": 0.0,
+      "components": [
+        2.89692488060413,
+        2.8395619246374983
+      ]
+    },
+    {
+      "label": "market-3-schedule-1-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "put",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "label": "market-3-schedule-2-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 5.808552168427182,
+      "quadrature_error": 0.0,
+      "components": [
+        1.4739921720835385,
+        1.4593257049188824,
+        1.444805171540827,
+        1.4304291198839338
+      ]
+    },
+    {
+      "label": "market-3-schedule-2-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "label": "market-3-schedule-3-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "call",
+      "price": 5.798596420934724,
+      "quadrature_error": 0.0,
+      "components": [
+        0.5958155594823419,
+        1.4681079796257077,
+        2.020723710274204,
+        1.7139491715524702
+      ]
+    },
+    {
+      "label": "market-3-schedule-3-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "put",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "label": "market-3-schedule-4-call",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 5.702433462425494,
+      "quadrature_error": 0.0,
+      "components": [
+        0.029989501949746276,
+        1.444728485389162,
+        4.227715475086586
+      ]
+    },
+    {
+      "label": "market-3-schedule-4-put",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.0,
+      "q": 0.02,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "label": "market-4-schedule-0-call",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "call",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0
+      ]
+    },
+    {
+      "label": "market-4-schedule-0-put",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "put",
+      "price": 7.536125527079572,
+      "quadrature_error": 0.0,
+      "components": [
+        7.536125527079572
+      ]
+    },
+    {
+      "label": "market-4-schedule-1-call",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "call",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "label": "market-4-schedule-1-put",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "put",
+      "price": 7.574752479674317,
+      "quadrature_error": 0.0,
+      "components": [
+        3.882040924845404,
+        3.692711554828913
+      ]
+    },
+    {
+      "label": "market-4-schedule-2-call",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "label": "market-4-schedule-2-put",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 7.5939266187751,
+      "quadrature_error": 0.0,
+      "components": [
+        1.9702567164349647,
+        1.921610904779417,
+        1.8741661624930976,
+        1.8278928350676211
+      ]
+    },
+    {
+      "label": "market-4-schedule-3-call",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "call",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "label": "market-4-schedule-3-put",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "put",
+      "price": 7.5913437453620185,
+      "quadrature_error": 0.0,
+      "components": [
+        0.7952164918165013,
+        1.9506523345496178,
+        2.6475960666536325,
+        2.1978788523422668
+      ]
+    },
+    {
+      "label": "market-4-schedule-4-call",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 0.0,
+      "quadrature_error": 0.0,
+      "components": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "label": "market-4-schedule-4-put",
+      "S": 100.0,
+      "r": 0.01,
+      "sigma": 0.0,
+      "q": 0.05,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 7.565654290008619,
+      "quadrature_error": 0.0,
+      "components": [
+        0.039988002066406694,
+        1.93046417630585,
+        5.595202111636363
+      ]
+    },
+    {
+      "label": "market-5-schedule-0-call",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "call",
+      "price": 14.28493909489069,
+      "quadrature_error": 8.432414836972897e-11,
+      "components": [
+        14.28493909489069
+      ]
+    },
+    {
+      "label": "market-5-schedule-0-put",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        2.0
+      ],
+      "kind": "put",
+      "price": 7.011486988614738,
+      "quadrature_error": 6.340469641430099e-11,
+      "components": [
+        7.011486988614738
+      ]
+    },
+    {
+      "label": "market-5-schedule-1-call",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "call",
+      "price": 18.512227448454396,
+      "quadrature_error": 9.500688488670846e-11,
+      "components": [
+        9.163555672232759,
+        9.348671776221636
+      ]
+    },
+    {
+      "label": "market-5-schedule-1-put",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        1.0,
+        2.0
+      ],
+      "kind": "put",
+      "price": 11.202773842157445,
+      "quadrature_error": 1.5550960455716592e-10,
+      "components": [
+        5.545374918922227,
+        5.657398923235217
+      ]
+    },
+    {
+      "label": "market-5-schedule-2-call",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 24.531472217033947,
+      "quadrature_error": 1.098594904642062e-10,
+      "components": [
+        6.04118396381223,
+        6.101898872034741,
+        6.163223975229386,
+        6.225165405957592
+      ]
+    },
+    {
+      "label": "market-5-schedule-2-put",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 17.203836609282213,
+      "quadrature_error": 3.289478885348485e-10,
+      "components": [
+        4.2366614168339405,
+        4.27924057195217,
+        4.322247654693639,
+        4.365686965802464
+      ]
+    },
+    {
+      "label": "market-5-schedule-3-call",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "call",
+      "price": 24.047667813108767,
+      "quadrature_error": 1.0875885071543402e-10,
+      "components": [
+        3.5872517436604623,
+        6.065397093642975,
+        7.477914177540862,
+        6.917104798264468
+      ]
+    },
+    {
+      "label": "market-5-schedule-3-put",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "put",
+      "price": 16.722617254110446,
+      "quadrature_error": 3.1923458385266445e-10,
+      "components": [
+        2.8665303024594055,
+        4.25364200102889,
+        4.9133789189916826,
+        4.689066031630468
+      ]
+    },
+    {
+      "label": "market-5-schedule-4-call",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 18.661449763340595,
+      "quadrature_error": 1.2864988700224216e-10,
+      "components": [
+        0.736269803739269,
+        5.9714251241132486,
+        11.953754835488077
+      ]
+    },
+    {
+      "label": "market-5-schedule-4-put",
+      "S": 120.0,
+      "r": 0.01,
+      "sigma": 0.15,
+      "q": -0.02,
+      "payment_times": [
+        0.01,
+        0.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 11.360955839073261,
+      "quadrature_error": 1.7829258361901362e-10,
+      "components": [
+        0.700268003559261,
+        4.202728399990632,
+        6.457959435523367
+      ]
+    }
+  ],
+  "example": {
+    "call": {
+      "label": "synthetic-example",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "call",
+      "price": 23.584835778168923,
+      "quadrature_error": 8.76665102395565e-11,
+      "components": [
+        6.0295294453459505,
+        5.939761446798529,
+        5.851329919635191,
+        5.764214966389255
+      ]
+    },
+    "put": {
+      "label": "synthetic-example",
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "put",
+      "price": 19.750718825285777,
+      "quadrature_error": 4.6422401939591365e-11,
+      "components": [
+        5.049326687872951,
+        4.974152007180032,
+        4.9000965316735865,
+        4.827143598559207
+      ]
+    }
+  },
+  "mc": [
+    {
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "call",
+      "seed": 260600,
+      "paths": 524288,
+      "price": 23.617118552806577,
+      "standard_error": 0.02846707824432025,
+      "ci95": [
+        23.561324104702624,
+        23.67291300091053
+      ],
+      "components": [
+        6.0275717215544855,
+        5.95115766908815,
+        5.852725636398764,
+        5.785663525765402
+      ],
+      "reference_price": 23.584835778168923,
+      "quadrature_error": 8.76665102395565e-11,
+      "payoff": "stock-price differences; random previous fixing strike; paid at each t_i"
+    },
+    {
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "kind": "put",
+      "seed": 260601,
+      "paths": 524288,
+      "price": 19.740628103192307,
+      "standard_error": 0.017434486189815426,
+      "ci95": [
+        19.70645713817131,
+        19.774799068213305
+      ],
+      "components": [
+        5.0539082318939235,
+        4.966734758811689,
+        4.8931464732849985,
+        4.826838639201736
+      ],
+      "reference_price": 19.750718825285777,
+      "quadrature_error": 4.6422401939591365e-11,
+      "payoff": "stock-price differences; random previous fixing strike; paid at each t_i"
+    },
+    {
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "call",
+      "seed": 260602,
+      "paths": 524288,
+      "price": 23.146982082084595,
+      "standard_error": 0.028028492674688585,
+      "ci95": [
+        23.09204724590126,
+        23.20191691826793
+      ],
+      "components": [
+        3.744987217691086,
+        6.009419893682906,
+        7.041019749036022,
+        6.351555221674623
+      ],
+      "reference_price": 23.130798435520987,
+      "quadrature_error": 8.622074129476033e-11,
+      "payoff": "stock-price differences; random previous fixing strike; paid at each t_i"
+    },
+    {
+      "S": 100.0,
+      "r": 0.05,
+      "sigma": 0.2,
+      "q": 0.03,
+      "payment_times": [
+        0.2,
+        0.7,
+        1.4,
+        2.0
+      ],
+      "kind": "put",
+      "seed": 260603,
+      "paths": 524288,
+      "price": 19.313227811160246,
+      "standard_error": 0.017579397421525728,
+      "ci95": [
+        19.278772825344138,
+        19.347682796976354
+      ],
+      "components": [
+        3.350704285760528,
+        5.021954391543696,
+        5.701980279321613,
+        5.238588854534391
+      ],
+      "reference_price": 19.30321801018777,
+      "quadrature_error": 4.507037713864074e-11,
+      "payoff": "stock-price differences; random previous fixing strike; paid at each t_i"
+    }
+  ],
+  "complex": {
+    "market": {
+      "S": 100.0,
+      "r": 0.0,
+      "sigma": 0.2,
+      "q": 0.0
+    },
+    "payment_times": [
+      0.5,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "paths": 524288,
+    "seed": 260699,
+    "global_floor": 5,
+    "global_cap": 20,
+    "local_cap": 5,
+    "termination_range": [
+      95,
+      105
+    ],
+    "settlement": "r=q=0; current payment precedes termination; global bound applies to total",
+    "contracts": [
+      {
+        "key": "simple",
+        "label": "単純和",
+        "price": 22.508872176755627,
+        "standard_error": 0.028206204104359894,
+        "ci95": [
+          22.453589032570495,
+          22.56415532094076
+        ]
+      },
+      {
+        "key": "global",
+        "label": "総額 floor 5 / cap 20",
+        "price": 14.346168212230122,
+        "standard_error": 0.0086586651884016,
+        "ci95": [
+          14.329197540306664,
+          14.36313888415358
+        ]
+      },
+      {
+        "key": "local",
+        "label": "各期 cap 5",
+        "price": 8.033525051418213,
+        "standard_error": 0.0066043352975334296,
+        "ci95": [
+          8.02058079209322,
+          8.046469310743205
+        ]
+      },
+      {
+        "key": "termination",
+        "label": "95–105で期末終了",
+        "price": 16.076820218294195,
+        "standard_error": 0.027835025471585544,
+        "ci95": [
+          16.022264570861132,
+          16.131375865727257
+        ]
+      }
+    ],
+    "reference_price": 22.548791118806665,
+    "quadrature_error": 6.72731217317801e-11
+  },
+  "figure": {
+    "reset": {
+      "market": {
+        "S": 100.0,
+        "r": 0.05,
+        "sigma": 0.2,
+        "q": 0.03
+      },
+      "time": [
+        0,
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "stock": [
+        100.0,
+        96.90667933723446,
+        116.91101286655446,
+        131.6716530281431,
+        145.68155038067945
+      ],
+      "strikes": [
+        100.0,
+        96.90667933723446,
+        116.91101286655446,
+        131.6716530281431
+      ],
+      "call_payoffs": [
+        0.0,
+        20.004333529319993,
+        14.760640161588654,
+        14.009897352536342
+      ],
+      "put_payoffs": [
+        3.093320662765535,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "seed": 260618,
+      "selection": "one illustrative GBM path; not an expectation"
+    },
+    "frequency": {
+      "market": {
+        "S": 100.0,
+        "r": 0.05,
+        "sigma": 0.2,
+        "q": 0.03
+      },
+      "expiry": 2.0,
+      "periods": [
+        1,
+        2,
+        4,
+        8,
+        12,
+        24
+      ],
+      "call": [
+        12.333025780204999,
+        17.049336243017358,
+        23.584835778168923,
+        32.73849621138808,
+        39.734995527306594,
+        55.49371578040477
+      ],
+      "put": [
+        8.640314225376084,
+        13.262906618476649,
+        19.750718825285777,
+        28.88032591530073,
+        35.868776201112325,
+        51.61943175300588
+      ]
+    }
+  }
+}
