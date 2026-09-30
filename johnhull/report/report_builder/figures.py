@@ -24,6 +24,7 @@ from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
+from hullkit._gap_lesson import _figures as gap_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._nonstandard_american_lesson import _figures as nonstandard_american_lesson_figures
@@ -1171,6 +1172,42 @@ FIGURES: list[FigureSpec] = [
         "64段のプットで日数を1・2・4・8・16・64と増やし、行使機会の価値を分離する。",
         lambda: nonstandard_american_lesson_figures()["scheduled_frequency"],
         practice="行使集合が包含関係にあるときに価格は単調。格子自体も変える比較にはこの理由を適用できない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "gap_payoff",
+        "exotics",
+        "トリガーと決済額：給付の跳び",
+        "§26.4。K₂=100、call K₁=120・put K₁=80の合成給付。負の区間とトリガー点0を示す。",
+        lambda: gap_lesson_figures()["gap_payoff"],
+        practice="K₂で行使イベントを判定し、K₁で金額を決める。白抜きの片側極限と境界点を区別する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "gap_decomposition",
+        "exotics",
+        "ギャップ価格＝バニラ＋バイナリ",
+        "式26.1–26.2。独立密度求積で、K₁を変えたcall価格と現金バイナリ調整を比較する。",
+        lambda: gap_lesson_figures()["gap_decomposition"],
+        practice="K₁=K₂でバニラに戻る。負給付をゼロに切り上げると分解の契約が変わる。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "gap_insurance",
+        "exotics",
+        "Example 26.1：保険会社と契約者",
+        "移転費用50,000ドルは契約者が負担。資産340,000ドルで支出60,000・手取り10,000ドル。",
+        lambda: gap_lesson_figures()["gap_insurance"],
+        practice="買い取り総額、資産取得分を引いた経済的支出、費用控除後の手取りを分ける。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "gap_premium",
+        "exotics",
+        "移転費用と保険料",
+        "Example26.1の印刷値3,436→1,896ドルを独立求積で再現。費用曲線は教材上の展開。",
+        lambda: gap_lesson_figures()["gap_premium"],
+        practice="保険料は44.83%減。1,895.69は保険会社の支出価値、契約者の手取り価値は630.79ドル。",
         is_new=True,
     ),
     FigureSpec(
