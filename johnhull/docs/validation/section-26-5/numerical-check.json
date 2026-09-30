@@ -30,7 +30,7 @@
   "section": "26.5",
   "source_sha256": {
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
-    "hullkit/src/hullkit/forward_start.py": "0e44e107e61b849db795ad83b40a0d9c0d9849c7f7141018f6fda53c21df9317",
+    "hullkit/src/hullkit/forward_start.py": "3590dfcd279b47f3c755dcdc3297d1a0b2b35a0a16e3eb9cee647f64f3729613",
     "scripts/build_forward_start_reference.py": "6b7cdaf47e00e6f93010ce6e38655be449babff7f86ed7b92e50018c77bd3ddf",
     "scripts/verify_forward_start_numerics.py": "353806a3fbc37e7889ee9ebdcc2334ea5f125fa3c87bfc8f72321637b8f9be4e"
   },

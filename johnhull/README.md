@@ -18,6 +18,7 @@ final gate evidence.
 - vol 10 §26.2 — perpetual American calls and puts: hitting-time values, exercise boundaries, smooth pasting, the zero-yield call limit, and finite-horizon CRR comparisons; six teaching subsections and four shared Book/portal figures.
 - vol 10 §26.3 — Bermudan exercise dates, lockout periods, and changing exercise strikes on an exact CRR step grid; Hull's seven-year warrant terms are shown with explicitly synthetic market inputs and four shared Book/portal figures.
 - vol 10 §26.4 — gap calls and puts with separate payoff amounts and triggers, signed payoffs, vanilla/binary decomposition, and Hull Example 26.1 insurance costs; four shared Book/portal figures distinguish insurer expenditure from policyholder net proceeds.
+- vol 10 §26.5 — ATM European forward-start calls, future strike fixing, spot homogeneity, dividend adjustment, and fixed-life versus fixed-expiry comparisons; independent two-increment quadrature and two-time MC.
 - vol 10 §26.12 — one-shout call: payoff decomposition, CRR decisions, boundary resolution, and same-market comparisons; saved synthetic artifacts power four shared Book/portal figures. Put prices are an extension beyond the original call lesson.
 - vol 10 §26.15 — basket payoff, exact moments versus approximate Black pricing, correlation, independent references and measured errors; six teaching subsections and four saved-data Book/portal figures. MC sign uncertainty is separate from deterministic-reference error.
 - vol 10 §26.17 — static call ladders for a continuously monitored up-and-out call: Hull Table 26.1, 3/18/100 matching nodes, an independent absorbed-density price, and four shared Book/portal figures. Finite nodes leave boundary risk between nodes.
@@ -38,7 +39,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 162 figures (50 exotics)
+make hull-report           # offline portal: 12 themes / 166 figures (54 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -223,5 +224,16 @@ integrated gate; the [acceptance note](docs/SECTION_26_4_ACCEPTANCE_2026-10-01.m
 records the 3,436/1,896 dollar printed prices and the separate transfer-cost
 expectation. Existing public pricing APIs and production dependencies are unchanged.
 
+The §26.5 (M22) checks are `scripts/build_forward_start_reference.py --check`
+(36 independent two-increment density quadratures and three 524288-path MC runs),
+`scripts/verify_forward_start_numerics.py --check` (pricing and rejected tenor,
+fixing and discount mutations), `scripts/verify_forward_start_notebook.py --check`
+(169 preserved cells outside §4.12), and `scripts/verify_forward_start_browser.cjs`
+(16 Book/portal states, trace values and MC error bars). Twenty-one earlier
+lessons passed D1, with twenty baseline reuses and §26.4's first capture.
+`scripts/build_forward_start_acceptance_record.py --check` is the integrated
+gate; the [acceptance note](docs/SECTION_26_5_ACCEPTANCE_2026-10-01.md) records
+the constant-GBM assumptions and the absence of a printed numerical example.
+
 Older notebook gates with fixed earlier baselines are historical gates; the
-M21 notebook and D1 records provide the current preservation check.
+M22 notebook and D1 records provide the current preservation check.

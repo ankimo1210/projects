@@ -1170,11 +1170,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.8.1：パッケージとは何か"
             },
@@ -1219,11 +1219,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.8.2：ゼロコストの条件"
             },
@@ -1268,10 +1268,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.8.3：K1を動かすとK2はどう動くか"
             },
@@ -1316,11 +1316,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.8.4：プレミアムを満期に後払いする"
             },
@@ -1365,10 +1365,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.8.5：費用ゼロでもリスクは同じではない"
             },
@@ -1415,10 +1415,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.8：136セル、両面2幅16状態"
             },
@@ -1518,12 +1518,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "notebook_tests": {
           "path": "report/tests/test_packages_notebook.py",
@@ -1536,14 +1536,14 @@
           "sha256": "c1b294234c36b63ec112e70ea267f97b1e41cb9828e97245213481b4b8561a6b"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -1556,9 +1556,9 @@
           "sha256": "e06a98447e790f447e5e95f001218321856d7894e2525b0b8bb2583a91e4fa4e"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260930T151723Z-reuse-f0b640a63a494b2e90b8064ea8758d91.json",
+          "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260930T224854Z-reuse-19b2be843ce743ab8aeb621b9a9f16e5.json",
           "kind": "record",
-          "sha256": "f24738bf45e9cb3b18c17ae433d42f855968105fa9c535a272e420f6cb95f389"
+          "sha256": "dc953205992468eb99543063618cf20ba57d06b1e760354e461a5e5a6b5fb4c9"
         },
         "strikes_image": {
           "path": "docs/validation/section-26-1/portal-packages_strikes-1000.png",
@@ -1580,15 +1580,15 @@
           "kind": "image",
           "sha256": "06ed2cd0eb7a9cfdd6e0fb0c6182ac4f8b4f142ddfaa2cbdb96f6d7aa64de8a3"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260930T151723Z-reuse-f0b640a63a494b2e90b8064ea8758d91.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260930T224854Z-reuse-19b2be843ce743ab8aeb621b9a9f16e5.json",
           "kind": "record",
-          "sha256": "f24738bf45e9cb3b18c17ae433d42f855968105fa9c535a272e420f6cb95f389"
+          "sha256": "dc953205992468eb99543063618cf20ba57d06b1e760354e461a5e5a6b5fb4c9"
         }
       }
     },
@@ -1620,11 +1620,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.9.1：永久オプションの前提と指数"
             },
@@ -1669,11 +1669,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.9.2–4.9.3：コールとプットの境界"
             },
@@ -1719,11 +1719,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.9.4：無配当コールの極限"
             },
@@ -1768,11 +1768,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
                 "numerical_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.9.5：有限満期からの接近"
             },
@@ -1817,10 +1817,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.9.6：条件と限界"
             },
@@ -1868,10 +1868,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.9とBook/portalの共有図"
             },
@@ -1980,12 +1980,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "notebook_tests": {
           "path": "report/tests/test_perpetual_american_notebook.py",
@@ -1998,14 +1998,14 @@
           "sha256": "93d3a69a43cdd8feb935c482065f999ec8e2be8e14d6fc8ad4785a45e5d003a3"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -2018,9 +2018,9 @@
           "sha256": "8babc0dcbd8133e7227755e237feb6ff95ecd7582feffeb8edcc3cba62f919a8"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260930T151749Z-reuse-8d911b895bc4486bbc1ba416cd4d74b1.json",
+          "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260930T224915Z-reuse-cefde15cf514458ba079063dcebc99ff.json",
           "kind": "record",
-          "sha256": "22a49eafe109df66c59a6783c3021cfb9b849f1c1b220f6865e9a4fcc3d21b35"
+          "sha256": "c381d1daf30f6f3057d35b240992ee8887011884b9de50ea38c314df0e222896"
         },
         "value_image": {
           "path": "docs/validation/section-26-2/portal-perpetual_value-1000.png",
@@ -2042,15 +2042,15 @@
           "kind": "image",
           "sha256": "1e9079f9dc659bcce01b933d396ab716cfc7e2ce80f59ffed25b75e9ade9955e"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260930T151749Z-reuse-8d911b895bc4486bbc1ba416cd4d74b1.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260930T224915Z-reuse-cefde15cf514458ba079063dcebc99ff.json",
           "kind": "record",
-          "sha256": "22a49eafe109df66c59a6783c3021cfb9b849f1c1b220f6865e9a4fcc3d21b35"
+          "sha256": "c381d1daf30f6f3057d35b240992ee8887011884b9de50ea38c314df0e222896"
         }
       }
     },
@@ -2082,11 +2082,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.10.1–4.10.2：行使日とロックアウト"
             },
@@ -2132,11 +2132,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.10.3：可変行使価格"
             },
@@ -2182,11 +2182,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.10.4：7年ワラント"
             },
@@ -2231,11 +2231,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
                 "numerical_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.10.5：独立計算"
             },
@@ -2280,10 +2280,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.10.6：前提と限界"
             },
@@ -2330,11 +2330,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
                 "notebook_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.10とBook/portalの共有図"
             },
@@ -2444,12 +2444,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "notebook_tests": {
           "path": "report/tests/test_nonstandard_american_notebook.py",
@@ -2462,14 +2462,14 @@
           "sha256": "346dcff269aefe1627629f35dafb5286f65cd3ed0c37d7cb21acfe7d87ed2b70"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "browser_script": {
           "path": "scripts/verify_nonstandard_browser.cjs",
@@ -2477,9 +2477,9 @@
           "sha256": "1c06cbac246c6f9b16dfc20f36555fbf8ce16717b05393554248dd9cbad6c262"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20260930T152903Z-redraw-9e76c3cee6654e6d8f43637a22ab1dcf.json",
+          "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20260930T224938Z-reuse-793c733353fd466ea8e94bb19da56bc6.json",
           "kind": "record",
-          "sha256": "388e7d289f7b8ec1681e95a5601ec5e23d5388394934c2b1c03230a5c53c0b08"
+          "sha256": "63e208f93a7178e45255a2e6173010ecf22982eaff428a117914edb93cbd433b"
         },
         "ordering_image": {
           "path": "docs/validation/section-26-3/portal-scheduled_ordering-1000.png",
@@ -2501,15 +2501,15 @@
           "kind": "image",
           "sha256": "af55b9de05e9cbf53a8a5f85d7525c8dc2d2ea933559ce0f40e8ab80be39f51d"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20260930T152903Z-redraw-9e76c3cee6654e6d8f43637a22ab1dcf.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20260930T224938Z-reuse-793c733353fd466ea8e94bb19da56bc6.json",
           "kind": "record",
-          "sha256": "388e7d289f7b8ec1681e95a5601ec5e23d5388394934c2b1c03230a5c53c0b08"
+          "sha256": "63e208f93a7178e45255a2e6173010ecf22982eaff428a117914edb93cbd433b"
         }
       }
     },
@@ -2542,10 +2542,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
-                "reference_tests"
+                "reference_tests",
+                "m22_recheck"
               ],
               "locator": "vol10 §4.11.1–4.11.2：契約と給付"
             },
@@ -2591,10 +2592,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
-                "numerical_tests"
+                "numerical_tests",
+                "m22_recheck"
               ],
               "locator": "vol10 §4.11.3：価格公式と分解"
             },
@@ -2641,10 +2643,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
-                "reference_tests"
+                "reference_tests",
+                "m22_recheck"
               ],
               "locator": "vol10 §4.11.4：保険契約の原典例"
             },
@@ -2691,10 +2694,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
-                "numerical_tests"
+                "numerical_tests",
+                "m22_recheck"
               ],
               "locator": "vol10 §4.11.4–4.11.5：移転費用と両当事者"
             },
@@ -2740,10 +2744,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference",
                 "numerical",
-                "numerical_tests"
+                "numerical_tests",
+                "m22_recheck"
               ],
               "locator": "vol10 §4.11.6：独立検証と前提"
             },
@@ -2789,10 +2794,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "notebook_tests"
+                "notebook_tests",
+                "m22_recheck"
               ],
               "locator": "vol10 §4.11とBook/portalの共有図"
             },
@@ -2907,12 +2913,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "notebook_tests": {
           "path": "report/tests/test_gap_notebook.py",
@@ -2925,14 +2931,14 @@
           "sha256": "566ebc46b6990feacdb9d02709ecd7ada2acddbc21927cdb0a67ae17ea82810c"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/notebook-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "e210b2f3904e760e43fdfcaaf043eda4ede592f86946cfcdcb497ceeb16fc447"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "browser_script": {
           "path": "scripts/verify_gap_browser.cjs",
@@ -2940,14 +2946,9 @@
           "sha256": "497aca6e97ab72aefd50d39c6695ce840bae1bda6ceb03a1454ce1743ce6fa9d"
         },
         "browser_run": {
-          "path": "docs/validation/section-26-4/browser-check.json",
+          "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20260930T225857Z-redraw-7212d9a355d24f53b23872464b30c2f7.json",
           "kind": "record",
-          "sha256": "380a6612fa033a23fde124d21dd5a755ba4d58ef3c44f04d22b54373e5fdfca0"
-        },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
-          "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "44f6388a88ae9a083e0fdfeb4b73f91810b10b46afbd49d5ccfa25aaca71c9d8"
         },
         "payoff_image": {
           "path": "docs/validation/section-26-4/portal-gap_payoff-1000.png",
@@ -2968,13 +2969,476 @@
           "path": "docs/validation/section-26-4/portal-gap_premium-1000.png",
           "kind": "image",
           "sha256": "fc16aa5a841398d392d7b098c76c8bd5193829cc233059fc3d375b2fc53b26bc"
+        },
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
+          "kind": "record",
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
+        },
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20260930T225857Z-redraw-7212d9a355d24f53b23872464b30c2f7.json",
+          "kind": "record",
+          "sha256": "44f6388a88ae9a083e0fdfeb4b73f91810b10b46afbd49d5ccfa25aaca71c9d8"
         }
       }
     },
     {
       "id": "26.5",
-      "status": "unreviewed",
-      "requirements": []
+      "status": "accepted",
+      "requirements": [
+        {
+          "id": "FS01",
+          "statement": "今契約し開始日にK=S(T1)を確定する二時点契約と、将来ATMのESOとの関係を説明する。",
+          "coverage": {
+            "explanation": {
+              "state": "verified",
+              "refs": [
+                "builder",
+                "review",
+                "acceptance_note"
+              ],
+              "locator": "vol10 §4.12.1–4.12.2"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "builder",
+                "lesson"
+              ],
+              "locator": "vol10 §4.12.1–4.12.2"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "m22_check",
+                "reference",
+                "numerical",
+                "reference_tests"
+              ],
+              "locator": "vol10 §4.12.1–4.12.2"
+            },
+            "visualization": {
+              "state": "verified",
+              "refs": [
+                "contract_image"
+              ],
+              "locator": "vol10 §4.12.1–4.12.2"
+            },
+            "rendered": {
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "Book/portalの開始点と確定後のstrikeを確認"
+            }
+          }
+        },
+        {
+          "id": "FS02",
+          "statement": "開始時点の価値cS(T1)/S0と株価に対する一次同次性を示す。",
+          "coverage": {
+            "explanation": {
+              "state": "verified",
+              "refs": [
+                "builder",
+                "review",
+                "acceptance_note"
+              ],
+              "locator": "vol10 §4.12.3"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "bsm",
+                "lesson"
+              ],
+              "locator": "vol10 §4.12.3"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "m22_check",
+                "reference",
+                "numerical",
+                "pricing_tests"
+              ],
+              "locator": "vol10 §4.12.3"
+            },
+            "visualization": {
+              "state": "verified",
+              "refs": [
+                "homogeneity_image"
+              ],
+              "locator": "vol10 §4.12.3"
+            },
+            "rendered": {
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "Book/portalで条件付き価格の比例関係を照合"
+            }
+          }
+        },
+        {
+          "id": "FS03",
+          "statement": "今日の価格c exp(−qT1)、q=0の同期間価格不変、T1=0・ゼロσ・ゼロ長境界を照合する。",
+          "coverage": {
+            "explanation": {
+              "state": "verified",
+              "refs": [
+                "builder",
+                "review",
+                "acceptance_note"
+              ],
+              "locator": "vol10 §4.12.4・4.12.6"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "bsm",
+                "builder"
+              ],
+              "locator": "vol10 §4.12.4・4.12.6"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "m22_check",
+                "reference",
+                "numerical",
+                "pricing_tests"
+              ],
+              "locator": "vol10 §4.12.4・4.12.6"
+            },
+            "visualization": {
+              "state": "verified",
+              "refs": [
+                "delay_image",
+                "expiry_image"
+              ],
+              "locator": "vol10 §4.12.4・4.12.6"
+            },
+            "rendered": {
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "Book/portalの合成例と期間固定曲線を照合"
+            }
+          }
+        },
+        {
+          "id": "FS04",
+          "statement": "期間固定と満期固定の掃引を区別し、二時点MCの95%区間と独立求積を比較する。",
+          "coverage": {
+            "explanation": {
+              "state": "verified",
+              "refs": [
+                "builder",
+                "review",
+                "acceptance_note"
+              ],
+              "locator": "vol10 §4.12.4–4.12.5"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "reference_builder",
+                "lesson",
+                "builder"
+              ],
+              "locator": "vol10 §4.12.4–4.12.5"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "m22_check",
+                "reference",
+                "numerical",
+                "numerical_tests"
+              ],
+              "locator": "vol10 §4.12.4–4.12.5"
+            },
+            "visualization": {
+              "state": "verified",
+              "refs": [
+                "delay_image",
+                "expiry_image"
+              ],
+              "locator": "vol10 §4.12.4–4.12.5"
+            },
+            "rendered": {
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "Book/portalのMC誤差棒とゼロ長終点を確認"
+            }
+          }
+        },
+        {
+          "id": "FS05",
+          "statement": "独立二増分求積36ケースとMC3例で価格を照合し、価格・tenor・fixing・割引の改変を拒否する。",
+          "coverage": {
+            "explanation": {
+              "state": "verified",
+              "refs": [
+                "builder",
+                "review",
+                "acceptance_note"
+              ],
+              "locator": "vol10 §4.12.5–4.12.6"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "pricing",
+                "reference_builder"
+              ],
+              "locator": "vol10 §4.12.5–4.12.6"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "m22_check",
+                "reference",
+                "numerical",
+                "numerical_tests"
+              ],
+              "locator": "vol10 §4.12.5–4.12.6"
+            },
+            "visualization": {
+              "state": "verified",
+              "refs": [
+                "expiry_image"
+              ],
+              "locator": "vol10 §4.12.5–4.12.6"
+            },
+            "rendered": {
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "Book/portalの全traceを参照値と比較し数値改変を拒否"
+            }
+          }
+        },
+        {
+          "id": "FS06",
+          "statement": "6小節・共有4図、旧169セル、既受入21節、両画面の16状態を再検証する。",
+          "coverage": {
+            "explanation": {
+              "state": "verified",
+              "refs": [
+                "builder",
+                "review",
+                "acceptance_note"
+              ],
+              "locator": "vol10 §4.12とBook/portal"
+            },
+            "implementation": {
+              "state": "verified",
+              "refs": [
+                "builder",
+                "lesson",
+                "portal"
+              ],
+              "locator": "vol10 §4.12とBook/portal"
+            },
+            "independent_validation": {
+              "state": "verified",
+              "refs": [
+                "m22_check",
+                "numerical",
+                "notebook_check",
+                "notebook_tests"
+              ],
+              "locator": "vol10 §4.12とBook/portal"
+            },
+            "visualization": {
+              "state": "verified",
+              "refs": [
+                "contract_image",
+                "homogeneity_image",
+                "delay_image",
+                "expiry_image"
+              ],
+              "locator": "vol10 §4.12とBook/portal"
+            },
+            "rendered": {
+              "state": "verified",
+              "refs": [
+                "browser_run",
+                "notebook_check"
+              ],
+              "locator": "16状態・改変拒否・既受入21節のD1再検査"
+            }
+          }
+        }
+      ],
+      "reviewed_at": "2026-10-01",
+      "source_pages": [
+        618,
+        618
+      ],
+      "scope": "Hull GE §26.5のATM欧州型フォワード・スタート・コール。行使価格の開始日確定、一次同次性、配当調整、期間固定と満期固定、ESOとの関係をvol10 §4.12とBook/portalで照合する。",
+      "assumptions": [
+        "定数r,q,σのGBM、ATM欧州型コール。S>0、σ≥0、0≤T1≤T2、有限実数入力。",
+        "原典に印刷数値はない。全価格・経路は合成例。独立密度求積と二時点MCで検証する。",
+        "契約期間τ=T2−T1。行使価格S(T1)は開始日に確定し、給付を満期T2から割り引く。"
+      ],
+      "limitations": [
+        "put・一般moneyness・cliquet・実市場smile・確率的金利/変動率は対象外。",
+        "将来ATMで付与されるESOとの関係を説明するが、権利確定や早期行使を評価するモデルではない。",
+        "95%区間はMC平均の標本誤差。検査の6標準誤差閾値と求積誤差は別に記録する。"
+      ],
+      "acceptance_note": "docs/SECTION_26_5_ACCEPTANCE_2026-10-01.md",
+      "evidence": {
+        "review": {
+          "path": "docs/SECTION_26_5_REVIEW_2026-10-01.md",
+          "kind": "note",
+          "sha256": "3aa8fa58c5a437f88ecc8535a967c4260c0971cc88edf3e9a5dd1f25b877bb52"
+        },
+        "acceptance_note": {
+          "path": "docs/SECTION_26_5_ACCEPTANCE_2026-10-01.md",
+          "kind": "note",
+          "sha256": "3a42c28e05c55aab9c9e0c7bbb5ac5268289b827c6b931f32f57f60cf9b0effd"
+        },
+        "textbook": {
+          "path": "options, futures and other derivatives 11th.pdf",
+          "kind": "reference",
+          "sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482"
+        },
+        "pricing": {
+          "path": "hullkit/src/hullkit/forward_start.py",
+          "kind": "source",
+          "sha256": "3590dfcd279b47f3c755dcdc3297d1a0b2b35a0a16e3eb9cee647f64f3729613"
+        },
+        "bsm": {
+          "path": "hullkit/src/hullkit/bsm.py",
+          "kind": "source",
+          "sha256": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d"
+        },
+        "pricing_tests": {
+          "path": "hullkit/tests/test_forward_start.py",
+          "kind": "test",
+          "sha256": "96d879cbff9301a12f41a784ae53e4dccbf0231a2ed02e9b40ae68459ee39559"
+        },
+        "reference_builder": {
+          "path": "scripts/build_forward_start_reference.py",
+          "kind": "source",
+          "sha256": "6b7cdaf47e00e6f93010ce6e38655be449babff7f86ed7b92e50018c77bd3ddf"
+        },
+        "reference_tests": {
+          "path": "hullkit/tests/test_forward_start_reference.py",
+          "kind": "test",
+          "sha256": "f1e55712d0b7e2972e4eca736df916374bb79a7fe4e68cfe9518cdb599b59b61"
+        },
+        "reference": {
+          "path": "docs/validation/section-26-5/reference.json",
+          "kind": "reference",
+          "sha256": "74a597bcf73d48485389a6e6f9991dec10648204100904de26b91ebf24a67b9e"
+        },
+        "numerical_script": {
+          "path": "scripts/verify_forward_start_numerics.py",
+          "kind": "source",
+          "sha256": "353806a3fbc37e7889ee9ebdcc2334ea5f125fa3c87bfc8f72321637b8f9be4e"
+        },
+        "numerical_tests": {
+          "path": "hullkit/tests/test_forward_start_numerics.py",
+          "kind": "test",
+          "sha256": "243939cd01e3f4af91954ae0dbfb38e9af7735df15d0c87b1c19c4271636dcfd"
+        },
+        "numerical": {
+          "path": "docs/validation/section-26-5/numerical-check.json",
+          "kind": "reference",
+          "sha256": "dc3b3628658165529b9700e32d06a7c8dc1ce46a55f1e8f78df55de46927626d"
+        },
+        "lesson": {
+          "path": "hullkit/src/hullkit/_forward_start_lesson.py",
+          "kind": "source",
+          "sha256": "8b4337c3ea479ef4343f7a66f5c0161a49da0bac9ed0f1fcf924f70722d4e632"
+        },
+        "lesson_tests": {
+          "path": "hullkit/tests/test_forward_start_lesson.py",
+          "kind": "test",
+          "sha256": "b12c55a3fcce681d20af55af1a03e17a5131a224d16caefac68b3e12ac25597f"
+        },
+        "notebook": {
+          "path": "volumes/10_exotics_martingales/exotics.ipynb",
+          "kind": "source",
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
+        },
+        "builder": {
+          "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
+          "kind": "source",
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
+        },
+        "notebook_tests": {
+          "path": "report/tests/test_forward_start_notebook.py",
+          "kind": "test",
+          "sha256": "71a18278ab79fd652ffbb305a9706159e513566d882dfb0e2dcaf7edfca21505"
+        },
+        "notebook_script": {
+          "path": "scripts/verify_forward_start_notebook.py",
+          "kind": "source",
+          "sha256": "df12641d142a4857e7b62241781211637fe911ac3cdbd61aa8037fa4c2231673"
+        },
+        "notebook_check": {
+          "path": "docs/validation/section-26-5/notebook-check.json",
+          "kind": "record",
+          "sha256": "08c6e68aa60233bf66ede96a4abbf94e342d93da1441f962b6c8f854389d2369"
+        },
+        "portal": {
+          "path": "report/report_builder/figures.py",
+          "kind": "source",
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
+        },
+        "browser_script": {
+          "path": "scripts/verify_forward_start_browser.cjs",
+          "kind": "source",
+          "sha256": "0e00cde223124aa3feb10da1f6d1cc8d5978b03f2531dd75f890f2a2fcee20af"
+        },
+        "browser_run": {
+          "path": "docs/validation/section-26-5/browser-check.json",
+          "kind": "record",
+          "sha256": "0c237ce8bf7c6ab303ffbdaf82d43b2c58d47ae25dfb904b26ab9f1acf92e257"
+        },
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
+          "kind": "record",
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
+        },
+        "contract_image": {
+          "path": "docs/validation/section-26-5/portal-forward_contract-1000.png",
+          "kind": "image",
+          "sha256": "d285f9ba22097f664e6359137223fd4546aa7e925f28c76aa86402219331de80"
+        },
+        "homogeneity_image": {
+          "path": "docs/validation/section-26-5/portal-forward_homogeneity-1000.png",
+          "kind": "image",
+          "sha256": "bbbf636439313076cc151ff2cc164bd6828a7db90f7f17bbb74c077ada4483b5"
+        },
+        "delay_image": {
+          "path": "docs/validation/section-26-5/portal-forward_start_delay-1000.png",
+          "kind": "image",
+          "sha256": "194ab6a1f67d8cc8c01c43d698cb8c2c7958eb3bdd523fd72ec7763184636d7b"
+        },
+        "expiry_image": {
+          "path": "docs/validation/section-26-5/portal-forward_fixed_expiry-1000.png",
+          "kind": "image",
+          "sha256": "980d14f40c3da388ebcbe932a09f2f79e7aa1c1a362d66913a332bca2f129807"
+        }
+      }
     },
     {
       "id": "26.6",
@@ -3016,12 +3480,12 @@
       "evidence": {
         "lesson_builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce",
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32",
           "kind": "source"
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882",
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4",
           "kind": "source"
         },
         "pricing": {
@@ -3095,24 +3559,24 @@
           "kind": "image"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260930T151817Z-reuse-05af8d8e0c454c998345d39023e164ce.json",
+          "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260930T224959Z-reuse-f6856638e0134e40954e74e51766b83a.json",
           "kind": "record",
-          "sha256": "64c9a15ebe50d65be9078cc20870759016a818f6d7c15605e5b99aaaa207015a"
+          "sha256": "13f050bd62f387e8f75952c13061ab2b5fbefc283ea7a42be152aa1e26abbacb"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260930T151817Z-reuse-05af8d8e0c454c998345d39023e164ce.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260930T224959Z-reuse-f6856638e0134e40954e74e51766b83a.json",
           "kind": "record",
-          "sha256": "64c9a15ebe50d65be9078cc20870759016a818f6d7c15605e5b99aaaa207015a"
+          "sha256": "13f050bd62f387e8f75952c13061ab2b5fbefc283ea7a42be152aa1e26abbacb"
         }
       },
       "requirements": [
@@ -3141,7 +3605,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ]
             },
             "visualization": {
@@ -3188,7 +3652,7 @@
               "refs": [
                 "reference_tests",
                 "numerical",
-                "m21_recheck"
+                "m22_recheck"
               ]
             },
             "visualization": {
@@ -3235,7 +3699,7 @@
               "refs": [
                 "reference_tests",
                 "numerical",
-                "m21_recheck"
+                "m22_recheck"
               ]
             },
             "visualization": {
@@ -3281,7 +3745,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ]
             },
             "visualization": {
@@ -3328,7 +3792,7 @@
               "refs": [
                 "reference_tests",
                 "notebook",
-                "m21_recheck"
+                "m22_recheck"
               ]
             },
             "visualization": {
@@ -3373,7 +3837,7 @@
               "state": "verified",
               "refs": [
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ]
             },
             "visualization": {
@@ -3417,7 +3881,7 @@
               "state": "verified",
               "refs": [
                 "notebook",
-                "m21_recheck"
+                "m22_recheck"
               ]
             },
             "visualization": {
@@ -3465,7 +3929,7 @@
                 "reference_tests",
                 "plot_tests",
                 "browser_run",
-                "m21_recheck"
+                "m22_recheck"
               ]
             },
             "visualization": {
@@ -3513,7 +3977,7 @@
                 "reference_tests",
                 "numerical",
                 "browser_run",
-                "m21_recheck"
+                "m22_recheck"
               ]
             },
             "visualization": {
@@ -3580,12 +4044,12 @@
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882",
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4",
           "kind": "source"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce",
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32",
           "kind": "source"
         },
         "review": {
@@ -3610,7 +4074,7 @@
         },
         "portal": {
           "path": "report/report_builder/figures.py",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804",
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891",
           "kind": "source"
         },
         "browser_script": {
@@ -3654,24 +4118,24 @@
           "kind": "note"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260930T151842Z-reuse-66b5c4eea7dc41068b2676988ee99cd1.json",
+          "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260930T225020Z-reuse-adff1f1ac0d64f2aa65682686de8dbe9.json",
           "kind": "record",
-          "sha256": "b399d5b0e412f4c3c19fc14189548403166adf02a260810f16819ce7673cb204"
+          "sha256": "753103f0f76352af92856ad180667ab43725f1a1ebb6793cac49813ddad4619f"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260930T151842Z-reuse-66b5c4eea7dc41068b2676988ee99cd1.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260930T225020Z-reuse-adff1f1ac0d64f2aa65682686de8dbe9.json",
           "kind": "record",
-          "sha256": "b399d5b0e412f4c3c19fc14189548403166adf02a260810f16819ce7673cb204"
+          "sha256": "753103f0f76352af92856ad180667ab43725f1a1ebb6793cac49813ddad4619f"
         }
       },
       "requirements": [
@@ -3701,7 +4165,7 @@
               "state": "verified",
               "refs": [
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§2.1"
             },
@@ -3750,7 +4214,7 @@
               "refs": [
                 "tests",
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§2.2"
             },
@@ -3799,7 +4263,7 @@
               "refs": [
                 "tests",
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§2.3"
             },
@@ -3842,7 +4306,7 @@
             "independent_validation": {
               "state": "not_applicable",
               "refs": [
-                "m21_recheck"
+                "m22_recheck"
               ],
               "reason": "定性的な契約・決済リスクの説明。価格モデルや市場操作の実演を実装せず、原典との内容照合で確認する。"
             },
@@ -3890,7 +4354,7 @@
               "state": "verified",
               "refs": [
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§2.5–2.6"
             },
@@ -3940,7 +4404,7 @@
               "refs": [
                 "lesson_tests",
                 "final_review",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§2.1–2.6"
             },
@@ -4000,7 +4464,7 @@
               "refs": [
                 "tests",
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§4.1.1"
             },
@@ -4049,7 +4513,7 @@
               "refs": [
                 "tests",
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§4.1.2"
             },
@@ -4098,7 +4562,7 @@
               "refs": [
                 "tests",
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§4.1.3–4.1.4"
             },
@@ -4148,7 +4612,7 @@
               "refs": [
                 "tests",
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§4.1.5"
             },
@@ -4192,7 +4656,7 @@
               "state": "verified",
               "refs": [
                 "tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§4.1.6"
             },
@@ -4239,7 +4703,7 @@
               "refs": [
                 "tests",
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "§4.1.1–4.1.6"
             },
@@ -4304,12 +4768,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "review": {
           "path": "docs/SECTION_26_11_REVIEW_2026-09-15.md",
@@ -4339,7 +4803,7 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "browser_script": {
           "path": "scripts/verify_lookback_lesson_browser.cjs",
@@ -4387,24 +4851,24 @@
           "sha256": "7b01ebf8490e67a1bdf6fd4ea76ad2a309630070a628ca59373865880c12bd9e"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260930T151914Z-reuse-4f877aedf8424d3ebea1c97e15ed8a19.json",
+          "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260930T225046Z-reuse-3954ff1b70594ff8adacf17eccf20e3a.json",
           "kind": "record",
-          "sha256": "a0a858703d9e413d940ddc8b2bd3d934c6f68ffdcf12320057f2407e1daa46d1"
+          "sha256": "1ab339da6deaee8c359a865b6d384b57f3185ab731d8559d26f093205fa357e8"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260930T151914Z-reuse-4f877aedf8424d3ebea1c97e15ed8a19.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260930T225046Z-reuse-3954ff1b70594ff8adacf17eccf20e3a.json",
           "kind": "record",
-          "sha256": "a0a858703d9e413d940ddc8b2bd3d934c6f68ffdcf12320057f2407e1daa46d1"
+          "sha256": "1ab339da6deaee8c359a865b6d384b57f3185ab731d8559d26f093205fa357e8"
         }
       },
       "acceptance_note": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md"
@@ -4443,7 +4907,7 @@
                 "lesson_tests",
                 "tree_check",
                 "browser_reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -4495,7 +4959,7 @@
                 "lesson_tests",
                 "tree_check",
                 "browser_reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -4548,7 +5012,7 @@
                 "lesson_tests",
                 "tree_check",
                 "browser_reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -4601,7 +5065,7 @@
                 "lesson_tests",
                 "tree_check",
                 "browser_reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -4653,7 +5117,7 @@
                 "lesson_tests",
                 "tree_check",
                 "browser_reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -4705,7 +5169,7 @@
                 "lesson_tests",
                 "tree_check",
                 "browser_reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "42frozenprices,independent payoff/node integration,Bboundary and renderednumeric pins"
             },
@@ -4779,12 +5243,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "pricing": {
           "path": "hullkit/src/hullkit/_shout.py",
@@ -4824,7 +5288,7 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "browser_script": {
           "path": "scripts/verify_shout_lesson_browser.cjs",
@@ -4867,24 +5331,24 @@
           "sha256": "396f8c15d85e51f8c02acebc9e588b1b04cc6359286acb1a9ec2053b97b23414"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260930T152038Z-reuse-943b2d54612b44b2b8ae4fe56e9af554.json",
+          "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260930T225154Z-reuse-6f9ccd395a7149108d77bb34a56e2ea6.json",
           "kind": "record",
-          "sha256": "1a0059c77a87c83414981a97c185031d9e09f43f649f84c4825f124e9b500c6a"
+          "sha256": "65c716e56be34b11958a22ddfab43f9bb80013a0b90e1a7de6b7a35f622a9599"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260930T152038Z-reuse-943b2d54612b44b2b8ae4fe56e9af554.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260930T225154Z-reuse-6f9ccd395a7149108d77bb34a56e2ea6.json",
           "kind": "record",
-          "sha256": "1a0059c77a87c83414981a97c185031d9e09f43f649f84c4825f124e9b500c6a"
+          "sha256": "65c716e56be34b11958a22ddfab43f9bb80013a0b90e1a7de6b7a35f622a9599"
         }
       },
       "acceptance_note": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md"
@@ -4919,7 +5383,7 @@
               "refs": [
                 "tests",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "観測規約の再現と印刷値12/52/250"
             },
@@ -4967,7 +5431,7 @@
                 "tests",
                 "hull_pins",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "M1=52.59・M2=2,922.76・23.54%・5.62、独立実装と1e-8一致、パリティ残差1e-10以下"
             },
@@ -5014,7 +5478,7 @@
               "refs": [
                 "tests",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "12/52/250で6.00/5.70/5.63、独立参照との差は近似誤差として記録"
             },
@@ -5061,7 +5525,7 @@
               "refs": [
                 "pricing_tests",
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "恒等式を2通りで検算し、K*<0の行で両式の一致を確認"
             },
@@ -5106,7 +5570,7 @@
               "refs": [
                 "tests",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "幾何平均を制御変量にした独立参照に対し −1.83%〜+18.23%"
             },
@@ -5152,7 +5616,7 @@
               "refs": [
                 "tests",
                 "lesson_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "144行の符号付き誤差と両端を記録に固定"
             },
@@ -5246,12 +5710,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "lesson": {
           "path": "hullkit/src/hullkit/_asian_lesson.py",
@@ -5276,7 +5740,7 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -5329,24 +5793,24 @@
           "sha256": "67a10c460f8d8dd4bbc12d71176fcec4a3f0a52fbe9d5e66e4a7699f4b69a20d"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260930T152146Z-reuse-d3f93bed2f664c728c99519c30da1045.json",
+          "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260930T225255Z-reuse-8ef10f0a3bda430d98ed8d89faa8cd59.json",
           "kind": "record",
-          "sha256": "b657555bf5c126d13a0aab32940ecfe599126a878150210cdad2e87b9d7d9c6c"
+          "sha256": "df4d47a0abad03e8b2754fe4f170d03416b830d432ce0181f7efa5bec31886ec"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260930T152146Z-reuse-d3f93bed2f664c728c99519c30da1045.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260930T225255Z-reuse-8ef10f0a3bda430d98ed8d89faa8cd59.json",
           "kind": "record",
-          "sha256": "b657555bf5c126d13a0aab32940ecfe599126a878150210cdad2e87b9d7d9c6c"
+          "sha256": "df4d47a0abad03e8b2754fe4f170d03416b830d432ce0181f7efa5bec31886ec"
         }
       },
       "acceptance_note": "docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md"
@@ -5380,7 +5844,7 @@
               "refs": [
                 "tests",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "条件付き求積・比の求積・制御変量MCの3経路で24価格"
             },
@@ -5426,7 +5890,7 @@
               "refs": [
                 "tests",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "2求積が1.776e-14で一致。交差項を落とす誤りは相関のある21行すべてで検出"
             },
@@ -5473,7 +5937,7 @@
                 "tests",
                 "pricing_tests",
                 "browser_reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "r∈{-5%,-2%,0,2%,5%,8%,12%}で最大差1.6e-14。24行×3レートの記録は1.776e-14"
             },
@@ -5519,7 +5983,7 @@
               "refs": [
                 "tests",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "24行で一致、図の3市場で残差最大2.842e-14"
             },
@@ -5565,7 +6029,7 @@
               "refs": [
                 "tests",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "分解の残差8.527e-14。q_V=0のプレミアムは1.208e-13（同一格子）、q_V=6%で最大7.951"
             },
@@ -5611,7 +6075,7 @@
               "refs": [
                 "lesson_tests",
                 "browser_reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "test_exchange_lesson.py 34件が式26.5をテスト側で書き直して全点照合。価格関数を塞いだ状態でも図が構築できる"
             },
@@ -5695,12 +6159,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md",
@@ -5735,7 +6199,7 @@
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -5783,24 +6247,24 @@
           "sha256": "92e3173d29f6b9936026895cfb0ae8f262bd4f063d4a0e89b6b63d81cdd75447"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260930T152248Z-reuse-0a190a3ccded4e9e889eec545829d172.json",
+          "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260930T225349Z-reuse-d710a232dbef4915bc97dc1f5aa7af8b.json",
           "kind": "record",
-          "sha256": "f4d04af38e32e20bfa5562eca6d98b8ee59eda9c4e1c88404725e6e250cc87c5"
+          "sha256": "dfe1b5660fd8ab8dadc2a4c829103fb64c235fdd75be78ecaefbf254401d44c4"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260930T152248Z-reuse-0a190a3ccded4e9e889eec545829d172.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260930T225349Z-reuse-d710a232dbef4915bc97dc1f5aa7af8b.json",
           "kind": "record",
-          "sha256": "f4d04af38e32e20bfa5562eca6d98b8ee59eda9c4e1c88404725e6e250cc87c5"
+          "sha256": "dfe1b5660fd8ab8dadc2a4c829103fb64c235fdd75be78ecaefbf254401d44c4"
         }
       },
       "acceptance_note": "docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md"
@@ -5835,7 +6299,7 @@
                 "reference_tests",
                 "pricing_tests",
                 "numerical",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "解析アンカーと直接給付でcall/put・単位・parityを確認"
             },
@@ -5883,7 +6347,7 @@
                 "pricing_tests",
                 "browser_reference",
                 "numerical",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "72行の直接モーメント、1資産・完全相関・確定給付アンカー"
             },
@@ -5932,7 +6396,7 @@
                 "numerical",
                 "reference_tests",
                 "browser_reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "54確率的行の最大2.404841SE、有限tail上界を別記録"
             },
@@ -5982,7 +6446,7 @@
                 "lesson_tests",
                 "browser_reference",
                 "numerical",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "ρ=-0.65/0.35/0.9で直接二重和と交差共分散を再計算"
             },
@@ -6029,7 +6493,7 @@
                 "pricing_tests",
                 "reference_tests",
                 "numerical",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "max絶対6.41739463、63行の相対範囲、MCだけ4SE規則"
             },
@@ -6077,8 +6541,8 @@
               "refs": [
                 "lesson_tests",
                 "browser_reference",
-                "m21_recheck",
-                "m21_check",
+                "m22_recheck",
+                "m22_check",
                 "browser_run"
               ],
               "locator": "basket関連65件をM8最終ビルドで再実行、独立browser oracle、数値改変拒否"
@@ -6098,8 +6562,8 @@
               "refs": [
                 "browser_run",
                 "notebook_check",
-                "m21_recheck",
-                "m21_check"
+                "m22_recheck",
+                "m22_check"
               ],
               "locator": "両面×2幅×10状態=40、MathJax/JS/network/overflowを検査"
             }
@@ -6176,17 +6640,17 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -6204,9 +6668,9 @@
           "sha256": "7aa23b3418cf81b71ad1fb003b083b73c8ab9266b830baa1c49f01c44298ea2f"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260930T152347Z-reuse-b3213a0b8abd4ae8938f7725a882dc50.json",
+          "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260930T225440Z-reuse-eadf6ff58970495291cd29aa4b200c7b.json",
           "kind": "record",
-          "sha256": "dbe7fa13ef68af9ce5c5efaf1ce6275bb90ed110733d2f6ea1c8e1aa0aec146f"
+          "sha256": "256503241d57b6855c690ae40b6c576cebae14b5ba865fb696c27c94c7c063f1"
         },
         "notebook_script": {
           "path": "scripts/verify_basket_notebook.py",
@@ -6214,9 +6678,9 @@
           "sha256": "adb840c569723e9987236c9c6b047670ca50bae918291435680a3ddbbd71e525"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_15_ACCEPTANCE_2026-09-19.md",
@@ -6243,15 +6707,15 @@
           "kind": "image",
           "sha256": "105d4578ccdc6ad268fbc945ae241b0fa4556ef0e13467ddba8874d12fb038cf"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260930T152347Z-reuse-b3213a0b8abd4ae8938f7725a882dc50.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260930T225440Z-reuse-eadf6ff58970495291cd29aa4b200c7b.json",
           "kind": "record",
-          "sha256": "dbe7fa13ef68af9ce5c5efaf1ce6275bb90ed110733d2f6ea1c8e1aa0aec146f"
+          "sha256": "256503241d57b6855c690ae40b6c576cebae14b5ba865fb696c27c94c7c063f1"
         }
       },
       "assumptions": [
@@ -6299,7 +6763,7 @@
                 "pricing_tests",
                 "reference_tests",
                 "numerical",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "GBM日次推定量の厳密期待値（n-2で+0.00101、n-1で+5.0e-7）とMC、API契約"
             },
@@ -6347,7 +6811,7 @@
               "refs": [
                 "numerical",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "平坦BSMでS*/F0=0.8–1.25の最大差8.3e-17、Heston3市場で閉形式E(V)との最大差1.51e-12"
             },
@@ -6396,7 +6860,7 @@
                 "numerical",
                 "reference_tests",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "印刷Q 9本を2桁で一致、strip 0.00813874、E(V) 0.06210083、価値1.69307"
             },
@@ -6446,7 +6910,7 @@
                 "numerical",
                 "reference_tests",
                 "existing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "ξ=0.3/1.0で近似誤差-1.9e-5/-4.6e-3、MCは最大1.08SE、E(σ)=0.24839097"
             },
@@ -6495,7 +6959,7 @@
                 "numerical",
                 "reference_tests",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "Example 26.4で累積分散差1.385e-5（3次主要項1.414e-5）、補間誤差-3.24e-4"
             },
@@ -6547,9 +7011,9 @@
               "refs": [
                 "lesson_tests",
                 "browser_reference",
-                "m21_check",
+                "m22_check",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "保存図は_figures()と完全一致、§4.6外は出力まで基準と一致、改変3種を拒否、独立browser oracle、§4.6.5は表示中の出力の数値を照合"
             },
@@ -6570,7 +7034,7 @@
               "refs": [
                 "browser_run",
                 "notebook_check",
-                "m21_check"
+                "m22_check"
               ],
               "locator": "両面×2幅×4図×2状態=32、MathJax 112式・JS/overflowを検査"
             }
@@ -6657,17 +7121,17 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -6690,9 +7154,9 @@
           "sha256": "5adc156b823a2a4ba39da52c190c31cee3abf8b2c79fac7bb0dea593bf685cb5"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260930T152444Z-reuse-9df9a7f34f754feeb562de71d84b9426.json",
+          "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260930T225527Z-reuse-98b32617633c4c5d8cea1f13ad95731f.json",
           "kind": "record",
-          "sha256": "6b2f29ad9280f3faf3c0e754eb34d4b89cc19dbff86eebe614ae1ece7403b7e9"
+          "sha256": "89dfbaaf71281be673427acb8513b8d58616cb2d5b22cd8edb700431ad42fbc9"
         },
         "notebook_script": {
           "path": "scripts/verify_variance_swap_notebook.py",
@@ -6700,9 +7164,9 @@
           "sha256": "fdd62eef5a527271e7f150b25144f9b646ad9f3d953f29679b4d1920428423f1"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "payoff_image": {
           "path": "docs/validation/section-26-16/book-varswap_payoff-1000.png",
@@ -6744,15 +7208,15 @@
           "kind": "note",
           "sha256": "9a2c8e9e3d97742c8d7d6581fd4562fdefba9555503cbabed50d58255db471fa"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260930T152444Z-reuse-9df9a7f34f754feeb562de71d84b9426.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260930T225527Z-reuse-98b32617633c4c5d8cea1f13ad95731f.json",
           "kind": "record",
-          "sha256": "6b2f29ad9280f3faf3c0e754eb34d4b89cc19dbff86eebe614ae1ece7403b7e9"
+          "sha256": "89dfbaaf71281be673427acb8513b8d58616cb2d5b22cd8edb700431ad42fbc9"
         }
       },
       "assumptions": [
@@ -6796,9 +7260,9 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.7.1：2境界とFigure 26.1"
             },
@@ -6843,10 +7307,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "pricing_tests",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.7.2–3：4脚とw_j=-A_j/C_j"
             },
@@ -6891,9 +7355,9 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.7.3・4.7.5：有限節点と解消"
             },
@@ -6938,9 +7402,9 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.7.4：0.73/0.38/0.32と解析0.31"
             },
@@ -6985,9 +7449,9 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.7.5–6：エキゾチックの保有/売却で反対符号"
             },
@@ -7034,9 +7498,9 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol10 §4.7.1–6：共有4図と125セル"
             },
@@ -7136,12 +7600,12 @@
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
           "kind": "source",
-          "sha256": "95dc09e0c885ad7d2228bf81d9fcf6d7c0967c581429e6d3f337bb4d9f9f9882"
+          "sha256": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4"
         },
         "builder": {
           "path": "volumes/10_exotics_martingales/build_exotics_notebook.py",
           "kind": "source",
-          "sha256": "7a5fe16ca334f081b208292bf05a49c3c157aa5472a32d1ec4e855500ab019ce"
+          "sha256": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32"
         },
         "notebook_script": {
           "path": "scripts/verify_static_replication_notebook.py",
@@ -7149,14 +7613,14 @@
           "sha256": "ef5fa1dc6d77764e7f1947896a6480f30ae6addf83d9e49beef3620b46fecf08"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -7169,9 +7633,9 @@
           "sha256": "8af43d56d57c81590cd35e63e6829eb963894b78a98cf3fdbfa32de4c9811c4d"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260930T152549Z-reuse-535708e97bd84e9986472bdb428a8dbe.json",
+          "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260930T225622Z-reuse-45a57fecaa6a4ecf85ee58ae27f89cbe.json",
           "kind": "record",
-          "sha256": "269e20888b92727bafde5e6682630a043a51f02a7d2ed47e24245a5a977c7ef6"
+          "sha256": "2eb1535fbec4dd58367075002bfc2f0192869715b0fad22ad04f3d0ce0ebaabf"
         },
         "boundary_image": {
           "path": "docs/validation/section-26-17/portal-static_boundary-1000.png",
@@ -7193,15 +7657,15 @@
           "kind": "image",
           "sha256": "d17aac9e8e0c4b0e45be9cf42f23942fba2367f7429c2031077cb587d0439fd2"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260930T152549Z-reuse-535708e97bd84e9986472bdb428a8dbe.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260930T225622Z-reuse-45a57fecaa6a4ecf85ee58ae27f89cbe.json",
           "kind": "record",
-          "sha256": "269e20888b92727bafde5e6682630a043a51f02a7d2ed47e24245a5a977c7ef6"
+          "sha256": "2eb1535fbec4dd58367075002bfc2f0192869715b0fad22ad04f3d0ce0ebaabf"
         }
       }
     },
@@ -7233,10 +7697,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §7.1：β=0.7/1/1.3の局所ボラ、β=0.8の独立PDE3価格"
             },
@@ -7281,10 +7745,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §7.2：元のPoisson回数による条件付き期待値と26価格"
             },
@@ -7329,10 +7793,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §7.3–7.4：λT=1、m=0–8、複数対数ジャンプの和"
             },
@@ -7377,10 +7841,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §7.5：独立ガンマ密度積分26価格、満期株価分布"
             },
@@ -7425,10 +7889,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §7.6：β=1、λ=0、ν=0と市場較正・ヘッジの限界"
             },
@@ -7476,10 +7940,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
-                "m21_check",
+                "m22_check",
+                "m22_check",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §7.1–7.6：46セル、4図、両面2幅16状態"
             },
@@ -7588,14 +8052,14 @@
           "sha256": "daabd8be957ce3f0098db7938a98ba296420e389c734235c13da5eeeeca63d58"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -7608,9 +8072,9 @@
           "sha256": "362c1d6ca5e7ca9b8a93e26e128de1ed38fea38530f1851e581641ecc1c9efad"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260930T152621Z-reuse-bed8cb02983649a180b0bb666ee25d69.json",
+          "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260930T225649Z-reuse-acf6c7cba40f410f8df09d3504975ec7.json",
           "kind": "record",
-          "sha256": "ebbe4506d2fb8dd0b1e574db314cad3d9c95fc42e6654d242bcf772f7d1cff5b"
+          "sha256": "6b1b8a402288f5a8a82346545b0ad940d55b722bd4718ec8c12f34637558d91b"
         },
         "cev_image": {
           "path": "docs/validation/section-27-1/portal-alternative_cev-1000.png",
@@ -7632,15 +8096,15 @@
           "kind": "image",
           "sha256": "905f75e3f7ec7517e582422e52c9a098ce5e2d6447c90cad9a2480fe561cc89c"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260930T152621Z-reuse-bed8cb02983649a180b0bb666ee25d69.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260930T225649Z-reuse-acf6c7cba40f410f8df09d3504975ec7.json",
           "kind": "record",
-          "sha256": "ebbe4506d2fb8dd0b1e574db314cad3d9c95fc42e6654d242bcf772f7d1cff5b"
+          "sha256": "6b1b8a402288f5a8a82346545b0ad940d55b722bd4718ec8c12f34637558d91b"
         }
       }
     },
@@ -7672,11 +8136,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §8.1：独立CN PDE（3行使価格）と単純平均25%との差"
             },
@@ -7721,10 +8185,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §8.2：厳密CIR遷移の条件付きMCと独立Gil-Pelaez（26価格）"
             },
@@ -7769,10 +8233,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §8.3：過大評価帯K=88–128、ρ=0の対称性"
             },
@@ -7817,10 +8281,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §8.4：COSと独立Gil-Pelaez（78価格）、ATMの傾き"
             },
@@ -7865,10 +8329,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §8.5：原典式の独立転記（216値）とEuler MC（7行使価格）"
             },
@@ -7916,10 +8380,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §8.1–8.6：58セル、4図、両面2幅20状態、ξ→0と決定的分散の極限"
             },
@@ -8042,14 +8506,14 @@
           "sha256": "daabd8be957ce3f0098db7938a98ba296420e389c734235c13da5eeeeca63d58"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -8062,9 +8526,9 @@
           "sha256": "fcb743bf0030734cab861ec23582997307b49e7f15026e128fbad6ab3b851018"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260930T152640Z-reuse-35e742d7938f45ada621ff41467a1c31.json",
+          "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260930T225704Z-reuse-0b8241d4812a45f4b59049edfeb16c57.json",
           "kind": "record",
-          "sha256": "0310dddc91d15d22bb68d5a0f1acc2fb2fa5bd0f91ac74d25a9d6956fe84efd7"
+          "sha256": "9431f6a2865110a096b886e7f6b2f3db408aa5083a20d93091998e26b5ba7b56"
         },
         "term_image": {
           "path": "docs/validation/section-27-2/portal-stochvol_term-1000.png",
@@ -8091,15 +8555,15 @@
           "kind": "image",
           "sha256": "9bd55bf0c0d8a03e2c487aa5c67e951235ecdc3aaf40ebef6421e497fc66e83b"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260930T152640Z-reuse-35e742d7938f45ada621ff41467a1c31.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260930T225704Z-reuse-0b8241d4812a45f4b59049edfeb16c57.json",
           "kind": "record",
-          "sha256": "0310dddc91d15d22bb68d5a0f1acc2fb2fa5bd0f91ac74d25a9d6956fe84efd7"
+          "sha256": "9431f6a2865110a096b886e7f6b2f3db408aa5083a20d93091998e26b5ba7b56"
         }
       }
     },
@@ -8131,10 +8595,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §9.1：平滑な混合BSMの3満期IV面"
             },
@@ -8179,10 +8643,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §9.2：定数BSMと時変carryの極限"
             },
@@ -8227,10 +8691,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §9.3：密度重みの解析式と33点"
             },
@@ -8276,10 +8740,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §9.4：3満期×3行使価格の9価格"
             },
@@ -8324,10 +8788,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §9.5：潜在ボラ混合と局所ボラのpaired MC"
             },
@@ -8374,10 +8838,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §9.1–9.6：70セル、両面2幅16状態"
             },
@@ -8495,14 +8959,14 @@
           "sha256": "daabd8be957ce3f0098db7938a98ba296420e389c734235c13da5eeeeca63d58"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -8515,9 +8979,9 @@
           "sha256": "759efb1d856951d5abce2fb0d17c498da2771efbfcaf8345c8671234da5e10aa"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260930T152704Z-reuse-19d4af655a5d4f8cb7dbd2f3afc79896.json",
+          "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260930T225723Z-reuse-b00cd855f5ba4f559139927f8de5cad6.json",
           "kind": "record",
-          "sha256": "ca9ac61f1f81b3456fde45ac4ac60968526879fddd7eeb08c3bd0171fef6ea1b"
+          "sha256": "f36d6a114c3e87b6996a12bafdbf4fc525e53708500a376f5fc54167085b72cc"
         },
         "smile_image": {
           "path": "docs/validation/section-27-3/portal-ivf_smile-1000.png",
@@ -8539,15 +9003,15 @@
           "kind": "image",
           "sha256": "1291d9e707096c118a10e201f7a9dedbb3ccc2db935cb42b29fd253fafad7295"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260930T152704Z-reuse-19d4af655a5d4f8cb7dbd2f3afc79896.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260930T225723Z-reuse-b00cd855f5ba4f559139927f8de5cad6.json",
           "kind": "record",
-          "sha256": "ca9ac61f1f81b3456fde45ac4ac60968526879fddd7eeb08c3bd0171fef6ea1b"
+          "sha256": "f36d6a114c3e87b6996a12bafdbf4fc525e53708500a376f5fc54167085b72cc"
         }
       }
     },
@@ -8579,10 +9043,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §10.1：継続・転換・コール価値"
             },
@@ -8627,10 +9091,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §10.2：生存確率と株価マルチンゲール"
             },
@@ -8675,10 +9139,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §10.3：原典10節点、初期107.44ドル"
             },
@@ -8723,10 +9187,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §10.4：B・D・Eの継続と判断"
             },
@@ -8771,10 +9235,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §10.5：信用・回収感応度と利付債恒等式"
             },
@@ -8820,10 +9284,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §10.1–10.6：82セル、両面2幅16状態"
             },
@@ -8940,14 +9404,14 @@
           "sha256": "daabd8be957ce3f0098db7938a98ba296420e389c734235c13da5eeeeca63d58"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -8960,9 +9424,9 @@
           "sha256": "ce6fd5536c7fb80b67f598b417470d0fb51e648dfd59e43233a4150ada157755"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260930T152723Z-reuse-16e54510ff8d48f580d7c7840d269144.json",
+          "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260930T225738Z-reuse-f6b9fbdbaf894bfba7f21b9de65e007e.json",
           "kind": "record",
-          "sha256": "777da1797f14610078be535568b4b4da4cecba04e858aea98a5fdbc93e838fe5"
+          "sha256": "e0d1cc92246863c3950638dd80830b2610480d773421d94fdbd01ad8e8650781"
         },
         "tree_image": {
           "path": "docs/validation/section-27-4/portal-cb_tree-1000.png",
@@ -8984,15 +9448,15 @@
           "kind": "image",
           "sha256": "4ae7afa3d9f8d6af1123f6819bb4c8eb1563a1f7ee5bafd9c8554e2992909211"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260930T152723Z-reuse-16e54510ff8d48f580d7c7840d269144.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260930T225738Z-reuse-f6b9fbdbaf894bfba7f21b9de65e007e.json",
           "kind": "record",
-          "sha256": "777da1797f14610078be535568b4b4da4cecba04e858aea98a5fdbc93e838fe5"
+          "sha256": "e0d1cc92246863c3950638dd80830b2610480d773421d94fdbd01ad8e8650781"
         }
       }
     },
@@ -9024,10 +9488,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §11.1：経路状態と離散平均"
             },
@@ -9072,10 +9536,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §11.2：平均の上下限"
             },
@@ -9120,10 +9584,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §11.3：Figure 27.3のX・Y・Z"
             },
@@ -9168,10 +9632,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §11.4：欧州型の価格と格子誤差"
             },
@@ -9216,10 +9680,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §11.5：米国型の早期行使"
             },
@@ -9265,10 +9729,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §11.1–11.6：94セル、両面2幅16状態"
             },
@@ -9385,14 +9849,14 @@
           "sha256": "daabd8be957ce3f0098db7938a98ba296420e389c734235c13da5eeeeca63d58"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -9405,9 +9869,9 @@
           "sha256": "ada9aa9c2e36e57faad829e89d988b6aca92fd091143c8aacde17e6010c70bd9"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260930T152741Z-reuse-617cce9baf8242d48e115d931abc9902.json",
+          "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260930T225753Z-reuse-b64331df15674b4ca6b5058b3b7bfc82.json",
           "kind": "record",
-          "sha256": "22c92010622446d68860531a42a00739052ad60482d22f23b75315c4659d2fd3"
+          "sha256": "ab043f355dce9b18714578eecc35ec2d32d236ab84e5d2fe9a822aa851a41369"
         },
         "grids_image": {
           "path": "docs/validation/section-27-5/portal-path_grids-1000.png",
@@ -9429,15 +9893,15 @@
           "kind": "image",
           "sha256": "1dae89f494f94f5a3013fbef430acbd0adb23bdc463b926c2ed29f629270789c"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260930T152741Z-reuse-617cce9baf8242d48e115d931abc9902.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260930T225753Z-reuse-b64331df15674b4ca6b5058b3b7bfc82.json",
           "kind": "record",
-          "sha256": "22c92010622446d68860531a42a00739052ad60482d22f23b75315c4659d2fd3"
+          "sha256": "ab043f355dce9b18714578eecc35ec2d32d236ab84e5d2fe9a822aa851a41369"
         }
       }
     },
@@ -9469,10 +9933,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §12.1：素朴な方法"
             },
@@ -9517,10 +9981,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §12.2：Figure 27.4と外側バリア"
             },
@@ -9565,10 +10029,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §12.3：内側と外側の補間"
             },
@@ -9613,10 +10077,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §12.4：Figure 27.5と確率"
             },
@@ -9661,10 +10125,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §12.4：誤差の分解と収束次数"
             },
@@ -9711,10 +10175,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §12.5–12.6：107セル、両面2幅16状態"
             },
@@ -9831,14 +10295,14 @@
           "sha256": "daabd8be957ce3f0098db7938a98ba296420e389c734235c13da5eeeeca63d58"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -9851,9 +10315,9 @@
           "sha256": "f1fa1b0bafa475fa38233bae733c38aa48076afb1c05a79c6fa4ee890e25b7fe"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260930T152801Z-reuse-b0db62078888497d826666b70dc4bc92.json",
+          "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260930T225808Z-reuse-16a9e760c1bb4649898de32882be839f.json",
           "kind": "record",
-          "sha256": "42868fb4f6dd8ac8aae3af2c039a4469ed167df07a70a4219dca95e291023404"
+          "sha256": "69b40c19462ce12412e840bce53dbe36b7f5abf976ef8a5c8045c3f2b997f1ef"
         },
         "lattice_image": {
           "path": "docs/validation/section-27-6/portal-barrier_lattice-1000.png",
@@ -9875,15 +10339,15 @@
           "kind": "image",
           "sha256": "22ff578abbf22e4a511fed2e97bc5483e81e992aed1f455f67d14b21d1f38a12"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260930T152801Z-reuse-b0db62078888497d826666b70dc4bc92.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260930T225808Z-reuse-16a9e760c1bb4649898de32882be839f.json",
           "kind": "record",
-          "sha256": "42868fb4f6dd8ac8aae3af2c039a4469ed167df07a70a4219dca95e291023404"
+          "sha256": "69b40c19462ce12412e840bce53dbe36b7f5abf976ef8a5c8045c3f2b997f1ef"
         }
       }
     },
@@ -9915,10 +10379,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §13.1：無相関なら二つのツリーの積"
             },
@@ -9963,10 +10427,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §13.2：変数を変換して無相関にする"
             },
@@ -10011,10 +10475,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §13.3：Rubinsteinの非矩形ツリー"
             },
@@ -10060,10 +10524,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §13.4：確率を調整する"
             },
@@ -10108,10 +10572,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §13.5：米国型を評価する"
             },
@@ -10158,10 +10622,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §13.5–13.6：120セル、両面2幅16状態"
             },
@@ -10278,14 +10742,14 @@
           "sha256": "daabd8be957ce3f0098db7938a98ba296420e389c734235c13da5eeeeca63d58"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -10298,9 +10762,9 @@
           "sha256": "19de6e887a6c66b5faf2ac829abe15b55c615517762789e2f360a755e785e0e6"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260930T152821Z-reuse-0ac7dc54c6684a239b47f7aaf68f9f0b.json",
+          "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260930T225824Z-reuse-794cc0b023cc4cf9a9a758cf15280702.json",
           "kind": "record",
-          "sha256": "b912ff6d2199a9eba2e95777f6cd876c67d41ca81364e59751d1cee403503c46"
+          "sha256": "0010a4beea561a068a019a83654eec9044a022426d9ca9aef74649888b3c30e0"
         },
         "nodes_image": {
           "path": "docs/validation/section-27-7/portal-two_asset_nodes-1000.png",
@@ -10322,15 +10786,15 @@
           "kind": "image",
           "sha256": "60a39f741a3a9db9bd834f4dba910be182771793c4fac6c8c65d1ca4e17e7c6b"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260930T152821Z-reuse-0ac7dc54c6684a239b47f7aaf68f9f0b.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260930T225824Z-reuse-794cc0b023cc4cf9a9a758cf15280702.json",
           "kind": "record",
-          "sha256": "b912ff6d2199a9eba2e95777f6cd876c67d41ca81364e59751d1cee403503c46"
+          "sha256": "0010a4beea561a068a019a83654eec9044a022426d9ca9aef74649888b3c30e0"
         }
       }
     },
@@ -10362,11 +10826,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §14.1–14.2：8本の経路と最小二乗法"
             },
@@ -10411,11 +10875,11 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
                 "pricing_tests",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §14.3：行使境界をパラメータ化する"
             },
@@ -10460,10 +10924,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §14.4：推定に使った経路を捨てて評価する"
             },
@@ -10508,10 +10972,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §14.5：行使日・基底・状態変数"
             },
@@ -10556,10 +11020,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "reference",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §14.6：下方バイアス・上界・適用限界"
             },
@@ -10607,10 +11071,10 @@
             "independent_validation": {
               "state": "verified",
               "refs": [
-                "m21_check",
+                "m22_check",
                 "numerical",
                 "notebook_check",
-                "m21_recheck"
+                "m22_recheck"
               ],
               "locator": "vol06 §14–15：133セル、両面2幅16状態"
             },
@@ -10728,14 +11192,14 @@
           "sha256": "daabd8be957ce3f0098db7938a98ba296420e389c734235c13da5eeeeca63d58"
         },
         "notebook_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
           "kind": "source",
-          "sha256": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804"
+          "sha256": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891"
         },
         "styles": {
           "path": "report/assets/style.css",
@@ -10748,9 +11212,9 @@
           "sha256": "66dce24e03c96d24cc6254842bdf1ce5982955e4aa29a292bd8267c6ce480acc"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260930T152844Z-reuse-be20800abe8e4cf29c22fbc02709f494.json",
+          "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260930T225842Z-reuse-d7adb66552db4960b5dc23153e9e6acd.json",
           "kind": "record",
-          "sha256": "80aeccdc891ffb883de130e7df711aea85481c84182c0e1ae7a198db1616c2ec"
+          "sha256": "710010b397d36de837d9f126e6c96712571fab0f3611fd318836f1aebced277b"
         },
         "regression_image": {
           "path": "docs/validation/section-27-8/portal-american_mc_regression-1000.png",
@@ -10772,15 +11236,15 @@
           "kind": "image",
           "sha256": "b359c129c7fce166379ae3792ec7a29ca4ac4a69a6d1f15fca49c5b178294053"
         },
-        "m21_check": {
-          "path": "docs/validation/section-26-4/m21-check.json",
+        "m22_check": {
+          "path": "docs/validation/section-26-5/m22-check.json",
           "kind": "record",
-          "sha256": "561d719e0547e647316e3376a4b3d6d31d7299091444dfb3d6b87aab4e13cd0a"
+          "sha256": "ef70d44082c21cdef271191abc8c319030ec686a025cd312b2ff6c90dfb902ff"
         },
-        "m21_recheck": {
-          "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260930T152844Z-reuse-be20800abe8e4cf29c22fbc02709f494.json",
+        "m22_recheck": {
+          "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260930T225842Z-reuse-d7adb66552db4960b5dc23153e9e6acd.json",
           "kind": "record",
-          "sha256": "80aeccdc891ffb883de130e7df711aea85481c84182c0e1ae7a198db1616c2ec"
+          "sha256": "710010b397d36de837d9f126e6c96712571fab0f3611fd318836f1aebced277b"
         }
       }
     },

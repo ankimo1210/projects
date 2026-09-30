@@ -111,3 +111,9 @@ M20 は共有 `hullkit.__init__` の変更により既受入19節（§26.1–§2
 M21は既受入20節のbrowser・runtime probe・個別pytest計1,670件・画像の一次/ミラー保管庫復元を再検査し、すべてPASSした。公開価格計算と`hullkit.__init__`を維持して教材を追加したため、19節の依存指紋と実行環境は不変で、基準画像を再利用した。§26.3は初のD1記録として描画し、追加保存326,803バイト。[M21統合記録](validation/section-26-4/m21-check.json)が採用した20件のD1記録パスとSHA-256を固定する。
 
 driverには`--records-dir docs/validation/d1-recheck`を明示する。今回も初回試行の指定漏れを検出し、作成した試行記録をscratchへ保全して正しい保存先で再実行した。採用記録は統合記録に列挙されたものだけで、保管庫の内容アドレス画像と過去の受入記録に変更はない。
+
+## M22 での運用（2026-10-01）
+
+既受入21節のbrowser・runtime probe・個別pytest計1,687件と両保管庫復元がPASS。専用forward-start APIを直接importし、既存pricingとhullkit.__init__を維持したため、20節の依存指紋・実行環境は不変。redrawn基点を直接参照し、reuseの連鎖は作らない。§26.4を初回描画し追加保存538,589バイト。[M22統合記録](validation/section-26-5/m22-check.json)が21件の採用パスとSHA-256を固定する。
+
+M21をmainへ統合した際、BookのSphinxキャッシュによりvol06のHTMLに既存mystnb.cssへのqueryだけが加わり、厳密な成果物ハッシュが不一致になった。CSS本体が一致し、そのqueryを除いたHTMLが検証済みM21成果物の全バイトと一致することを確認して、mainの生成HTMLだけを復元した。台帳・releaseは再照合PASS。新しいM22では実際のbuild成果物をD1で照合し、旧ハッシュを無条件に更新しない。
