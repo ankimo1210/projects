@@ -15,10 +15,11 @@ integration gate を満たすことだけを表す。実市場での予測力、
 [受入ノート](docs/SECTION_26_4_ACCEPTANCE_2026-09-30.md)・[レビュー](docs/SECTION_26_4_REVIEW_2026-09-30.md)・[統合記録](docs/validation/section-26-4/m21-check.json)にGP01–GP06の5軸を集約。台帳は**accepted**（受入21・未評価285）。P2の4節目。
 
 - Hull 11e Global Edition p.617 の式26.1・26.2と例題26.1を実装。通常のプット3,435.95・ギャップ・プット1,895.69・減少44.83%が印刷値3,436・1,896・約45%に一致。それ以外の市場は合成。
-- 独立参照（erfc閉形式、対数正規の求積、別シードの反対変量MC）と38ケースで照合し、公開APIとの相対差は4.2e-15以下。保存データの改変5件と公開API側の改変3件を拒否。
+- 独立参照（erfc閉形式、対数正規の求積、別シードの反対変量MC）と38ケースで照合し、公開APIとの相対差は4.3e-15以下。保存データの改変5件と公開API側の改変3件を拒否。
 - vol10 §4.11.1–4.11.6とBook/portal共有4図。M20基点の158セルを保持し、notebook4改変を拒否。Chromium 145.0.7632.6で16状態・16画像、Book数式898個、表示エラー0。
-- 既受入20節のD1再検査で、19節はM20の記録を基点にreused（新規保存0バイト）、§26.3は初のD1記録としてredrawn（326,803バイト）。個別pytest計1,670件と画像の両保管庫照合がPASS。
-- johnhull全体のpytest **3,425 passed / 6 skipped**（既存deprecation warning 2件）。ruff、release contract、節台帳の通常検査・`--check-artifacts`はPASS。
+- 既受入20節のD1再検査。最初の実行で§26.3が初のD1記録としてredrawn（326,803バイト）、最終レビュー修正後の再実行で20節ともreused（新規保存0バイト）。個別pytest計1,670件と画像の両保管庫照合がPASS。
+- 受入後の最終レビューはP1・P2が0件、P3の9件（先渡し価格の桁あふれ、portalカードの文言、台帳GP02の言い過ぎなど）をすべて修正。
+- johnhull全体のpytest **3,428 passed / 6 skipped**（既存deprecation warning 2件）。ruff、release contract、節台帳の通常検査・`--check-artifacts`はPASS。
 
 ## Section 26.3 M20 — 2026-09-30
 

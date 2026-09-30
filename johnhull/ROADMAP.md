@@ -19,7 +19,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 65 public + 20 private modules as of 2026-09-30; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 66 public + 21 private modules as of 2026-09-30; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
 ## 現在地（2026-09-30、M21受入）
 
@@ -30,8 +30,8 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 65 public + 20 priva
 | 全節監査の是正 | 第 1〜5 便完了 | 残りは下の「全節監査と是正」の表 |
 | 節単位の受入 | M21（§26.4）まで。台帳は受入 21・未評価 285（6.9%） | P1（Ch 27 の残り）完了、P2（§26.1–§26.8）は §26.1–§26.4 を受入。次は §26.5。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
-| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | [D1-preflight 完了](docs/validation/d1-preflight/README.md)。M15 から本運用。**M21**：既受入20節を再検査。19節は依存指紋が不変で reused（新規0バイト）、§26.3 は初の D1 記録で redrawn（326,803バイト）。`hullkit/__init__.py` を変えなければ全節再描画は起きない。過去の受入記録は保持 |
-| テスト | johnhull 全体 3,425 passed・6 skipped（M21、2026-09-30） | 実行結果は `VALIDATION.md` |
+| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。影響のある節を再描画し、不変の画像実体をハッシュで参照 | [D1-preflight 完了](docs/validation/d1-preflight/README.md)。M15 から本運用。**M21**：既受入20節を再検査。最初の実行で §26.3 が初の D1 記録として redrawn（326,803バイト）、最終レビュー修正後の再実行で20節とも reused（新規0バイト）。`hullkit/__init__.py` と `exotics.py` を変えなければ全節再描画は起きない。過去の受入記録は保持 |
+| テスト | johnhull 全体 3,428 passed・6 skipped（M21、2026-09-30） | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -313,7 +313,7 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 - M5は修正後の状態を第三者が確認していない受入である。
 - 固定シードの1回の実行で偶然成り立つ統計的な主張は「この実行では」と書き、理論から導ける主張（新しい経路での評価は期待値で厳密値以下など）を別に検査する。同じ経路で評価した方策どうしはペア差で比べる（M17）。
 - 不等号の向きは、単調性と境界の値から導いて検査する。§26.1 の独立レビューで、$c(K_2)=p(K_1)>p(F)=c(F)$（$c$ は行使価格の減少関数なので $K_2<F$ になる向き）が本文に残っていた。正しい式があり逆向きの式がないことを本文の検査にした（M18）。
-- `hullkit/__init__.py` は既受入全節の D1 依存指紋に入る。新しい公開モジュールを登録すると全節の再描画（約16MB）になる（M19・M20）。節の教材は `from hullkit import <module>` で使い、登録しない（M18・M21）。既存の `exotics.py` も既受入4節の保存データがハッシュで固定しているので、入力検証などは新しいモジュールに置く（M21）。
+- `hullkit/__init__.py` は既受入全節の D1 依存指紋に入る。新しい公開モジュールを登録すると全節の再描画（約16MB）になる（M19・M20）。節の教材は `from hullkit import <module>` で使い、登録しない（M18・M21）。既存の `exotics.py` も、既受入4節の保存データがハッシュで固定し、`__init__` 経由で全節の依存指紋に入るので、入力検証などは新しいモジュールに置く（M21）。
 - 数値ゲートの負の対照は、保存データの改変だけでなく公開 API 側の改変でも作る。データ改変は再計算照合で先に落ちるので、API と参照の許容差の判定を試さない（M21 の独立レビュー）。
 - D1 driver は `--records-dir docs/validation/d1-recheck` を必ず付ける。既定の `docs/validation/d1-preflight` に書かれると記録の置き場所が変わるので、付け忘れたら移してやり直す（M18）。
 - Book の html ハッシュは build の履歴に依存する。M17 のコミットを新しい worktree で作り直した Book は、M17 の記録が持つ `06_numerical.html`・`10_exotics.html` のハッシュと一致せず、`verify_section_ledger.py --check-artifacts` は M17 の時点でも新規 build では通らなかった。M18 は §27.1–§27.8 の `notebook_check` を現行の統合記録（`section-26-1/m18-check.json`）へ付け替えて通した（原因の特定は未了）。
