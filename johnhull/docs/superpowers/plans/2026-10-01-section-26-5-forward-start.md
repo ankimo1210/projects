@@ -65,8 +65,8 @@
 
 **Interfaces:** 既受入21節のD1記録と新節の検査を`m22-check.json`で固定。台帳accepted22/unreviewed284、FS01–FS06の5軸。
 
-- [ ] Step 1: 古い入力・不完全なブラウザ状態・ミラー欠落・ゲート欠落時の台帳不変を先にテスト。Expected: 新ゲートがなくFAIL。
-- [ ] Step 2: クリーンcommit上でD1を実行。旧20節はM21で採用したredrawn基点を使いreuseを要求する（reuseの連鎖は作らない）。§26.4は初回D1描画。`--records-dir docs/validation/d1-recheck`を必ず指定。
-- [ ] Step 3: 統合ゲートで数値・notebook・browser・D1両保管庫を照合し、選択した記録パスとSHA-256を固定する。台帳・ROADMAPを更新する。
-- [ ] Step 4: 全hullkit+report pytest、ruff、4本の`--check`、台帳`--check-artifacts`、releaseを実行。独立最終レビューを1本依頼し、重要指摘はRED→GREENで修正する。
-- [ ] Step 5: 受入をローカルcommitし、`verify_release.py --require-tracked`とclean treeを確認する。Expected: 22/284、全ゲートPASS。
+- [x] Step 1: 古い入力・不完全なブラウザ状態・ミラー欠落・ゲート欠落時の台帳不変を先にテスト。Expected: 新ゲートがなくFAIL。
+- [x] Step 2: クリーンcommit上でD1を実行。旧20節はM21で採用したredrawn基点を使いreuseを要求する（reuseの連鎖は作らない）。§26.4は初回D1描画。`--records-dir docs/validation/d1-recheck`を必ず指定。
+- [x] Step 3: 統合ゲートで数値・notebook・browser・D1両保管庫を照合し、選択した記録パスとSHA-256を固定する。台帳・ROADMAPを更新する。
+- [x] Step 4: 全hullkit+report pytest、ruff、4本の`--check`、台帳`--check-artifacts`、releaseを実行。独立最終レビューを1本依頼し、重要指摘はRED→GREENで修正する。
+- [x] Step 5: 受入をローカルcommitし、`verify_release.py --require-tracked`とclean treeを確認する。Expected: 22/284、全ゲートPASS。

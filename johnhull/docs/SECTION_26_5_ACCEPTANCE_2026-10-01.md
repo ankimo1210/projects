@@ -1,6 +1,6 @@
 # §26.5 フォワード・スタート・オプション：受入記録
 
-**判定：統合検証中。** 日付：2026-10-01。Hull 11e Global Edition p.618のFS01–FS06を対象とする。[原典照合とレビュー](SECTION_26_5_REVIEW_2026-10-01.md)、[M22統合記録](validation/section-26-5/m22-check.json)を参照。
+**判定：accepted。** 日付：2026-10-01。Hull 11e Global Edition p.618のFS01–FS06を照合した。[原典照合とレビュー](SECTION_26_5_REVIEW_2026-10-01.md)、[M22統合記録](validation/section-26-5/m22-check.json)を参照。独立最終レビューは統合可能と判定。Critical/Importantなし、Minor 1件を保留した。
 
 **実装と原典。** ATM欧州型コールの給付max(S(T2)−S(T1),0)を新しい専用APIで評価する。期間τ=T2−T1の今日のATMコール価格cを用い、開始日の価値cS(T1)/S0、今日の価値c exp(−qT1)を照合した。q=0の同期間価格不変、T1=0のvanilla、ゼロ変動率の決定的給付、ゼロ長契約、配列broadcastと無効入力の拒否を検査した。既存価格APIとhullkit.__init__は維持し、production依存は追加しない。
 
@@ -10,6 +10,8 @@
 
 **回帰と保管。** 既受入21節のbrowser・runtime probe・個別pytest計1,687件・画像の一次/ミラー保管庫復元はPASS。20節はredrawn基点を直接参照して再利用し、§26.4は初のD1描画。追加保存538,589バイト。採用D1記録のパスとSHA-256を統合記録・節台帳で固定する。
 
-**全体ゲート。** hullkit+reportのpytestは3,435 passed・6 skipped（既存deprecation warning 2件）、ruff、参照・数値・notebook・統合の照合、release、台帳の通常検査と成果物照合はPASS。台帳の成果物照合にはD1と同じPlaywright/Chromiumの環境変数を指定した。独立最終レビューとコミット後のtracked-file検査を残す。
+**全体ゲート。** hullkit+reportのpytestは3,435 passed・6 skipped（既存deprecation warning 2件）、ruff、参照・数値・notebook・統合の照合、release（コミット後のtracked-file検査を含む）、台帳の通常検査と成果物照合はPASS。台帳の成果物照合にはD1と同じPlaywright/Chromiumの環境変数を指定した。独立レビュー担当も関連47テスト・統合ゲート・台帳成果物検査を再実行してPASSした。
+
+**保留した軽微な指摘（P3）。** 経路図だけT1=0.75,T2=1.75で、価格例のT1=1,T2=2との違いが§4.12.2に明記されていない。価格・図の数値は正しく、開始日は図から確認できるが、読者の対応付けを助ける文言が不足している。executing-plansの「Minorは修正パスへ入れず記録して保留する」規約に従い、この受入では未修正とする。
 
 **適用範囲。** 定数r,q,σのGBM、ATM欧州型コール。put・一般moneyness・cliquet・実市場smile・確率的金利/変動率、ESOの権利確定/早期行使は対象外。

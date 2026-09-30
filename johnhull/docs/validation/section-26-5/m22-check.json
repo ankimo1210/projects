@@ -279,7 +279,7 @@
     "scripts/verify_forward_start_browser.cjs": "0e00cde223124aa3feb10da1f6d1cc8d5978b03f2531dd75f890f2a2fcee20af",
     "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
     "scripts/evidence_dependencies.json": "ed341c88c8ec771c33d90882e1860c09ff24e9c0d1c8b081f873f3dfeda7d1f9",
-    "scripts/update_forward_start_ledger.py": "83f06319763f8bc0665cc78ff8cdc694314877bc343cf79a09bfc000a7c9aaf9",
+    "scripts/update_forward_start_ledger.py": "7356d08f1f39d74143bd6a5af1083380a4b6a2ba124c8252a475261097df05bf",
     "scripts/verify_section_ledger.py": "06a81a1e26630a5030fe80375b7ccf706f63f6cac26206502b645ffa49c629c9",
     "hullkit/src/hullkit/forward_start.py": "3590dfcd279b47f3c755dcdc3297d1a0b2b35a0a16e3eb9cee647f64f3729613",
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
