@@ -177,6 +177,7 @@ testpaths = [
     "JHRMBS/tests",
     "gto/tests",
     "market-research/tests",
+    "market-research/scripts/analysis/tests",
     "nbody-gpu/tests",
     "line_backup/tests",
     "akinator/tests",
