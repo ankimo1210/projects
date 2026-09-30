@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,15 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 26.4 M21 — 2026-10-01
+
+[受入ノート](docs/SECTION_26_4_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_4_REVIEW_2026-10-01.md)・[統合記録](docs/validation/section-26-4/m21-check.json)にGP01–GP06の5軸を集約。台帳は**accepted**（受入21・未評価285）。P2の4節目。
+
+- Hull GE p.617の符号付き給付、トリガーと決済額、式26.1–26.2、バニラ＋現金バイナリ分解を照合。Example26.1は3435.947019924421・1895.6889443966245ドルで印刷3436・1896、減少率44.8278%で約45%と一致。契約者の費用控除後手取りと移転費用の割引期待額を別々に示した。
+- 独立対数正規求積の30合成call/putケース（負の価格9例）で公開API差は最大6.2301e-11。数値4改変・notebook4改変を拒否。vol10 §4.11.1–4.11.6の11セル、M20旧158セル保持、Book/portal共有4図。16状態・16画像、Book数式873個、表示エラー0。給付の跳びと境界点は狭い画面でも確認した。
+- 既受入20節のD1再検査はbrowser・runtime probe・個別pytest計1,670件・両保管庫復元がPASS。19節は基準画像を再利用、§26.3は初のD1描画。追加保存326,803バイト。統合記録と台帳が採用パスとSHA-256を固定する。
+- johnhull全体のpytest **3,383 passed / 6 skipped**（既存deprecation warning 2件）。ruff、参照・数値・notebook・統合`--check`、release contract、台帳の通常検査・`--check-artifacts`はPASS。既存公開APIとproduction依存に変更はない。
 
 ## Section 26.3 M20 — 2026-09-30
 
