@@ -1,0 +1,644 @@
+{
+  "schema_version": 2,
+  "kind": "johnhull-section-recheck",
+  "status": "PASS",
+  "run_id": "d1pf-26.2-20260930T151749Z-reuse-8d911b895bc4486bbc1ba416cd4d74b1",
+  "created_at": "2026-09-30T15:18:17.463723+00:00",
+  "commit": "1074d2226fa1ecad366ec6124cb077fe2731ced7",
+  "dirty": false,
+  "section_id": "26.2",
+  "decision": "reused",
+  "reasons": [
+    "dependency fingerprint and runtime facts equal the baseline"
+  ],
+  "dependency_fingerprint": {
+    "section_id": "26.2",
+    "rules": {
+      "fingerprint_schema": 1,
+      "normalizer_version": 1,
+      "normalization": [
+        "Plotly div UUIDs are renamed by order of first appearance within a slice",
+        "Sphinx auto-generated anchor ids (id<N>) are renamed by order of first appearance",
+        "An inline plotly.js bundle is replaced by its sha256 and fingerprinted as a shared asset",
+        "Notebook cell ids and execution counts are dropped (not rendered by Book or portal)",
+        "Imported package __init__ modules and their static imports are included"
+      ]
+    },
+    "components": {
+      "notebook_slice": "5abdecacf0bd8057398cbe135821f8dbcc6ab47e8902306aa71a07998393635e",
+      "notebook_shared_assets": [
+        "cef0e322ca434b712776e98b2709050fd54c53187afdbf4bfd04722041c2f3ee"
+      ],
+      "book_section": "8b58edf5c33cb2dde44252ee4fc789c3cc0446cb38af96433d17181ecfddfaa2",
+      "book_assets": {
+        "local": {
+          "book/_build/html/_static/clipboard.min.js": "261ffa06f381039cf7d18984d1364c59f3c2b9b60b1fa05d5f9c8c152e4d5be5",
+          "book/_build/html/_static/copybutton.css": "0f7c9f303bd3058bdc9db7263fe560c0a41f3526729ce1f00ccab527724c5476",
+          "book/_build/html/_static/copybutton.js": "89ee4163ba2fdd47404883ebc81bf93f696f6ab02aa5795331a8ff7161e9e256",
+          "book/_build/html/_static/design-tabs.js": "de2467cfca5bb555043369f1eea82c9cd794e70fa0444f216aa4ebb18cefc9f0",
+          "book/_build/html/_static/doctools.js": "81cb2da3c284e429a1a63ab28a20b7e30bceb8eb1556a154c8cbac0b4ce7795b",
+          "book/_build/html/_static/documentation_options.js": "47b8afcb442c0349307d7c464ed881d903dba4271c8428d44c3c3f78aa1af20c",
+          "book/_build/html/_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css": "11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e",
+          "book/_build/html/_static/pygments.css": "66f472fe9022ecdf197c5abc2b437f123c349c85f8741219a42963c77eb14920",
+          "book/_build/html/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+          "book/_build/html/_static/scripts/bootstrap.js": "f4b2b6f5d4bf7ebd727eec8f512a3b419ba97dfa5a361f8a419e8ab087f77352",
+          "book/_build/html/_static/scripts/fontawesome.js": "3255175d1c4cfe78e9f5e8fab69afc6a7002e6e793c2c669c12bb9cacad33b9a",
+          "book/_build/html/_static/scripts/pydata-sphinx-theme.js": "f264bd85cd58f330ce33afffc7839c247a93498680ab7968d7d2d1ddecf955fe",
+          "book/_build/html/_static/scripts/sphinx-book-theme.js": "20f5c4379fa2fa1af248209415a03ef275f18d4dc56fd2db6c3f6ae2c87ab18b",
+          "book/_build/html/_static/sphinx-design.min.css": "eb53d5c272ecc4d93a04605b3d42aa6942858e634bb9686d32d576203a0033ba",
+          "book/_build/html/_static/sphinx-thebe.css": "da591f8cfbc259361ee704d861877be843aaee54f67aed9bda27be1a0f3d3a80",
+          "book/_build/html/_static/sphinx-thebe.js": "bbdfa292b3885f2c3af48ee6d3ea13658afac228ac35d45b39ffa2ed902a1334",
+          "book/_build/html/_static/sphinx_highlight.js": "096231e9c87df80ec3273da9c5b71bc81503206726a07a4dd4de44c256ff859c",
+          "book/_build/html/_static/styles/pydata-sphinx-theme.css": "218db1720af3aa73ee8b997003ae097f87cb997cec296426ef2885d01a1eaa02",
+          "book/_build/html/_static/styles/sphinx-book-theme.css": "dcc916931d8a6e224a4584c5a89f8c3a6e741f048960f91662f5a9a1281cef99",
+          "book/_build/html/_static/styles/theme.css": "c5ad46e4d126fbddecf0ece57fc8345279fac39110306ac7e643f0d4505423f7",
+          "book/_build/html/_static/togglebutton.css": "33f384087b19f23dc8e64faa0b88c6d5c37ddefa9d89dc60a66efd3da2edd0b7",
+          "book/_build/html/_static/togglebutton.js": "a8995912efab60a1a4277dc13d269fb8de05d6b82f49a1981ac557fbcad0bb55"
+        },
+        "external": [
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+        ],
+        "inline_bundles": [
+          "cef0e322ca434b712776e98b2709050fd54c53187afdbf4bfd04722041c2f3ee"
+        ]
+      },
+      "portal_cards": {
+        "perpetual_value": "a825dd6df43ed0fe0ed341c0cea4e104f036ec9231990d82422a9ba47a4b0d15",
+        "perpetual_boundaries": "56c13717632ea7d9f719268612f7ef02c0eff5d65cf19a595b5379ab5a9c2476",
+        "perpetual_zero_dividend": "dc927fab43387a62f7150562801d475b3fd86c4e2c03465edbff2be0932a7d1f",
+        "perpetual_convergence": "216b2ab487cf735b6792dfa267a2f59d272fec88ac2cb8b88eca017837552374"
+      },
+      "portal_assets": {
+        "local": {
+          "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+          "report/site/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+        },
+        "external": []
+      },
+      "python_sources": {
+        "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+        "hullkit/src/hullkit/_perpetual_american_lesson.py": "bf5f07a49bf544163706eb08d9cd58449f48086763a20fe657c1fbb8939637ab",
+        "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+        "hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+        "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+        "hullkit/src/hullkit/carbon.py": "7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+        "hullkit/src/hullkit/cds.py": "77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+        "hullkit/src/hullkit/copula.py": "79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+        "hullkit/src/hullkit/credit.py": "5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+        "hullkit/src/hullkit/credit_curve.py": "b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+        "hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+        "hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+        "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+        "hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+        "hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+        "hullkit/src/hullkit/frontier_reference.py": "03d759a023ddff5736ce8173ac24e353b7003298654a70e816afebf1fd9fa7a1",
+        "hullkit/src/hullkit/hedging.py": "d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+        "hullkit/src/hullkit/heston.py": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+        "hullkit/src/hullkit/hull_white.py": "706a0f1aa61381ac5aec332ac0c4e8ba3d17e7d920c7759b262d1218a6573652",
+        "hullkit/src/hullkit/inflation.py": "f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+        "hullkit/src/hullkit/ir_options.py": "c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+        "hullkit/src/hullkit/jarrow_yildirim.py": "4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+        "hullkit/src/hullkit/jgbi.py": "0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+        "hullkit/src/hullkit/liquidation.py": "7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+        "hullkit/src/hullkit/mc.py": "abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+        "hullkit/src/hullkit/mc_advanced.py": "8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+        "hullkit/src/hullkit/nbplot.py": "ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+        "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+        "hullkit/src/hullkit/payoffs.py": "b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+        "hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+        "hullkit/src/hullkit/perpetuals.py": "bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+        "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+        "hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+        "hullkit/src/hullkit/ppa.py": "74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+        "hullkit/src/hullkit/rates.py": "e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+        "hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+        "hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+        "hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+        "hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+        "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+        "hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+        "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+        "hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+        "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+        "hullkit/src/hullkit/surrogate_data.py": "1c34d1a9208369f265e53bbd1b182f25de91fef7a025d294d4c4cdb280ef3de4",
+        "hullkit/src/hullkit/surrogate_validation.py": "938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+        "hullkit/src/hullkit/swaps.py": "8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+        "hullkit/src/hullkit/tail_risk.py": "bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+        "hullkit/src/hullkit/teaching.py": "69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+        "hullkit/src/hullkit/trees.py": "b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+        "hullkit/src/hullkit/var_backtest.py": "617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+        "hullkit/src/hullkit/vol_surface.py": "849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+        "hullkit/src/hullkit/volatility.py": "4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+        "hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+        "hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+        "hullkit/src/hullkit/zero_dte.py": "5a32189a9403af1b8d69a9ff9304315547564c852ce602cf22b9e6fcec5b7a48"
+      },
+      "data_files": {
+        "docs/validation/section-26-2/reference.json": "b351eded0338866a7cc90770830c7a2ac1d31955ca4fb9c5b89038c6085d06cc",
+        "docs/validation/section-26-2/numerical-check.json": "15b19d229248c43993cc7603ad82d2da8c33e7073cccb44858982e3e69d93e9e"
+      },
+      "verifier": {
+        "scripts/verify_perpetual_browser.cjs": "8babc0dcbd8133e7227755e237feb6ff95ecd7582feffeb8edcc3cba62f919a8"
+      },
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "environment": {
+        "node": "v26.7.0",
+        "playwright": "1.56.0",
+        "chromium_bin": "chrome",
+        "fonts": {
+          "Noto Sans JP": {
+            "file": "NotoSans-Regular.ttf",
+            "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+          },
+          "sans-serif": {
+            "file": "NotoSans-Regular.ttf",
+            "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+          }
+        },
+        "locale": "C.UTF-8",
+        "timezone": null
+      }
+    },
+    "unknown": [],
+    "digest": "53ca7867469016f25523c79c39a5a47c079c75ab5ba231b796b2251bf3286640"
+  },
+  "baseline": {
+    "record": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405.json",
+    "record_sha256": "224f54c70c94e84ef0a5b961d5385325f782726c4a548fca1b4a188a9eebc5bf",
+    "run_id": "d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405"
+  },
+  "images": [
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/book-perpetual_boundaries-1000.png",
+      "ref": "artifact:sha256:76ef98b233b25faa1d23108af61fcb22a07a0ea7701aa75fc2aabee617c74584",
+      "bytes": 26709,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/book-perpetual_boundaries-1440.png",
+      "ref": "artifact:sha256:aa12ad313fed440179540b2d8701f399a5e5b3e00faa7749e744a9aec436340c",
+      "bytes": 26654,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/book-perpetual_convergence-1000.png",
+      "ref": "artifact:sha256:2b52b9d968fe18f98648982c197d90e04238454ad4167065c506f78474c8838f",
+      "bytes": 36768,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/book-perpetual_convergence-1440.png",
+      "ref": "artifact:sha256:dff2ae64b5d087609881c868a401155b74401ff8d483404b3c02104df0dea741",
+      "bytes": 39229,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/book-perpetual_value-1000.png",
+      "ref": "artifact:sha256:81146e85caa0e6fce31a2a07ee69e5605846157f9ac562435ddec1eea09564d5",
+      "bytes": 39468,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/book-perpetual_value-1440.png",
+      "ref": "artifact:sha256:5063130e817c378e72576a25ca8ab4f156010bbfa37994b9f1f0537e2f420d67",
+      "bytes": 39774,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/book-perpetual_zero_dividend-1000.png",
+      "ref": "artifact:sha256:104d49e4ddb8e6fdb9c944094432bc6c63b1fdebdfe06251b76ee26b99b6add1",
+      "bytes": 38260,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/book-perpetual_zero_dividend-1440.png",
+      "ref": "artifact:sha256:17cf68bd2767cbbdeca2e0ec209c4b6e7bb05440575de481f5b1cfbc378907d2",
+      "bytes": 37520,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/portal-perpetual_boundaries-1000.png",
+      "ref": "artifact:sha256:5603ef3a6c3130fc0d5e96452e3da974ed3a44dbe0857526e06fafa7d94356b0",
+      "bytes": 22443,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/portal-perpetual_boundaries-1440.png",
+      "ref": "artifact:sha256:f2fcaf2de20300e3e71dfef11e5487351841f4f531bd2d918f5988d38cb69d2f",
+      "bytes": 22983,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/portal-perpetual_convergence-1000.png",
+      "ref": "artifact:sha256:1e9079f9dc659bcce01b933d396ab716cfc7e2ce80f59ffed25b75e9ade9955e",
+      "bytes": 31476,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/portal-perpetual_convergence-1440.png",
+      "ref": "artifact:sha256:2ecdf46de438cd4c9b0cf16df87d8a0f4fc87422f9d077a4ec98c4182a171dc7",
+      "bytes": 31526,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/portal-perpetual_value-1000.png",
+      "ref": "artifact:sha256:4191757f272b622cfe96f222588a78c11c2d9a1eef29abdebcbb7ed0879b41e9",
+      "bytes": 28632,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/portal-perpetual_value-1440.png",
+      "ref": "artifact:sha256:0bdb0f40819143fff668117d1b283e5ef92a2e6c866555b085404d2c262b6ad5",
+      "bytes": 32227,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/portal-perpetual_zero_dividend-1000.png",
+      "ref": "artifact:sha256:898b9fe62270197935e3a61b72e8d39481bfce40f09e4f5cba67882d81c06e22",
+      "bytes": 27680,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405/portal-perpetual_zero_dividend-1440.png",
+      "ref": "artifact:sha256:5744118ee6f89ab82fc26ccd36d24330c9b7884c67b25b89ff2b45949798e443",
+      "bytes": 28188,
+      "mime": "image/png"
+    }
+  ],
+  "checks": {
+    "browser": {
+      "status": "PASS",
+      "negative_controls": {
+        "book": true,
+        "portal": true
+      },
+      "browser_version": "145.0.7632.6",
+      "state_checks": 16,
+      "screenshots": 16,
+      "coverage": [
+        [
+          "book",
+          "perpetual_boundaries",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "perpetual_boundaries",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "perpetual_convergence",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "perpetual_convergence",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "perpetual_value",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "perpetual_value",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "perpetual_zero_dividend",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "perpetual_zero_dividend",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "perpetual_boundaries",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "perpetual_boundaries",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "perpetual_convergence",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "perpetual_convergence",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "perpetual_value",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "perpetual_value",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "perpetual_zero_dividend",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "perpetual_zero_dividend",
+          1440,
+          true
+        ]
+      ],
+      "book_math": {
+        "rendered": 873,
+        "errors": 0
+      },
+      "numeric_mutation_rejected": {
+        "portal": true,
+        "book": true
+      },
+      "raw_record_sha256": "2e17e461e55bdf4dc46effa229441ddddd04f3140df6b85411af3f0a55c5a8cc",
+      "raw_record_path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260930T151749Z-reuse-8d911b895bc4486bbc1ba416cd4d74b1.browser.json",
+      "wrapper": {
+        "verifier": "scripts/verify_perpetual_browser.cjs",
+        "original_sha256": "8babc0dcbd8133e7227755e237feb6ff95ecd7582feffeb8edcc3cba62f919a8",
+        "executed_sha256": "8babc0dcbd8133e7227755e237feb6ff95ecd7582feffeb8edcc3cba62f919a8",
+        "wrapper_sha256": "562ed6b693760c0c35a96c328bcdd5db3771e39f995989847a0fe21d99739509",
+        "renames": [],
+        "overlay_root_redirect": true
+      },
+      "seconds": 12.79
+    },
+    "runtime_probe": {
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 7.6
+    },
+    "pytest": {
+      "status": "PASS",
+      "passed": 44,
+      "exit_code": 0,
+      "summary": "44 passed in 6.15s",
+      "seconds": 7.55,
+      "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_perpetual_american.py hullkit/tests/test_perpetual_reference_builder.py hullkit/tests/test_perpetual_numerics_gate.py hullkit/tests/test_perpetual_american_lesson.py report/tests/test_perpetual_american_notebook.py report/tests/test_perpetual_registry.py"
+    },
+    "reuse": {
+      "status": "PASS",
+      "fingerprint": "equal",
+      "runtime": "equal",
+      "coverage_equal_to_baseline": true
+    }
+  },
+  "environment": {
+    "runtime": {
+      "browser_version": "145.0.7632.6",
+      "mathjax_version": "3.2.2",
+      "mathjax_scripts": [
+        {
+          "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+          "sha256": "300480069078b5892d2363a2b65e2dfbbf30fe5c80f83edbfecf4610fd093862"
+        }
+      ],
+      "fonts": {
+        "book_heading": [
+          {
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+          },
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans",
+            "file": "LiberationSans-Regular.ttf",
+            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+          }
+        ],
+        "book_body": [
+          {
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+          },
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans",
+            "file": "LiberationSans-Regular.ttf",
+            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+          }
+        ],
+        "portal_heading": [
+          {
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+          },
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans-Bold",
+            "file": "LiberationSans-Bold.ttf",
+            "sha256": "3973aa5054fb467dd5627245d3dc82e37bf16fe075756156a570455871351582"
+          }
+        ],
+        "portal_plot_text": [
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans",
+            "file": "LiberationSans-Regular.ttf",
+            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+          }
+        ]
+      }
+    },
+    "static": {
+      "node": "v26.7.0",
+      "playwright": "1.56.0",
+      "chromium_bin": "chrome",
+      "fonts": {
+        "Noto Sans JP": {
+          "file": "NotoSans-Regular.ttf",
+          "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+        },
+        "sans-serif": {
+          "file": "NotoSans-Regular.ttf",
+          "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+        }
+      },
+      "locale": "C.UTF-8",
+      "timezone": null
+    },
+    "fingerprint_config": "scripts/evidence_dependencies.json",
+    "records_commit": "1074d2226fa1ecad366ec6124cb077fe2731ced7",
+    "driver_sha256": {
+      "scripts/d1_preflight_compare.py": "d693d8c7c2e9f22f611d6c87ba78cbfc23c7a242b42f00a2cced6f243f68452d",
+      "scripts/run_browser_verifier.cjs": "562ed6b693760c0c35a96c328bcdd5db3771e39f995989847a0fe21d99739509",
+      "scripts/probe_render_runtime.cjs": "efab3367ef20b53bd353e6ecaf867a811d92aca3e71756fc5cc29cde3537a016",
+      "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+      "scripts/evidence_record.py": "264dbf9e3d4ff4c6f7bba4e6b320e1b8a71d21d1ff231adec1b92a22bba379f3",
+      "scripts/evidence_store.py": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+      "scripts/evidence_dependencies.json": "23963f7ca2d2f3a806563cfe8aedfeeeb1b54e4f3385d3ca5b348c6a28e6363e"
+    }
+  },
+  "storage_verification": {
+    "status": "PASS",
+    "primary": {
+      "status": "PASS",
+      "entries": 16,
+      "bytes": 509537
+    },
+    "mirror": {
+      "status": "PASS",
+      "entries": 16,
+      "bytes": 509537
+    },
+    "checked_at": "2026-09-30T15:18:17.463708+00:00"
+  },
+  "source_sha256": {
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+    "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
+    "docs/validation/section-26-2/numerical-check.json": "15b19d229248c43993cc7603ad82d2da8c33e7073cccb44858982e3e69d93e9e",
+    "docs/validation/section-26-2/reference.json": "b351eded0338866a7cc90770830c7a2ac1d31955ca4fb9c5b89038c6085d06cc",
+    "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+    "hullkit/src/hullkit/_perpetual_american_lesson.py": "bf5f07a49bf544163706eb08d9cd58449f48086763a20fe657c1fbb8939637ab",
+    "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+    "hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/carbon.py": "7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+    "hullkit/src/hullkit/cds.py": "77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+    "hullkit/src/hullkit/copula.py": "79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+    "hullkit/src/hullkit/credit.py": "5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+    "hullkit/src/hullkit/credit_curve.py": "b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+    "hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+    "hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+    "hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+    "hullkit/src/hullkit/frontier_reference.py": "03d759a023ddff5736ce8173ac24e353b7003298654a70e816afebf1fd9fa7a1",
+    "hullkit/src/hullkit/hedging.py": "d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+    "hullkit/src/hullkit/heston.py": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+    "hullkit/src/hullkit/hull_white.py": "706a0f1aa61381ac5aec332ac0c4e8ba3d17e7d920c7759b262d1218a6573652",
+    "hullkit/src/hullkit/inflation.py": "f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+    "hullkit/src/hullkit/ir_options.py": "c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+    "hullkit/src/hullkit/jarrow_yildirim.py": "4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+    "hullkit/src/hullkit/jgbi.py": "0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+    "hullkit/src/hullkit/liquidation.py": "7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+    "hullkit/src/hullkit/mc.py": "abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+    "hullkit/src/hullkit/mc_advanced.py": "8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+    "hullkit/src/hullkit/nbplot.py": "ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+    "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+    "hullkit/src/hullkit/payoffs.py": "b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+    "hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+    "hullkit/src/hullkit/perpetuals.py": "bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+    "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+    "hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+    "hullkit/src/hullkit/ppa.py": "74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+    "hullkit/src/hullkit/rates.py": "e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+    "hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+    "hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+    "hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+    "hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+    "hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+    "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+    "hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+    "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+    "hullkit/src/hullkit/surrogate_data.py": "1c34d1a9208369f265e53bbd1b182f25de91fef7a025d294d4c4cdb280ef3de4",
+    "hullkit/src/hullkit/surrogate_validation.py": "938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+    "hullkit/src/hullkit/swaps.py": "8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+    "hullkit/src/hullkit/tail_risk.py": "bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+    "hullkit/src/hullkit/teaching.py": "69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+    "hullkit/src/hullkit/trees.py": "b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+    "hullkit/src/hullkit/var_backtest.py": "617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+    "hullkit/src/hullkit/vol_surface.py": "849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+    "hullkit/src/hullkit/volatility.py": "4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+    "hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+    "hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+    "hullkit/src/hullkit/zero_dte.py": "5a32189a9403af1b8d69a9ff9304315547564c852ce602cf22b9e6fcec5b7a48",
+    "hullkit/tests/test_perpetual_american.py": "d097ea5cc892a7def63dfc4a039e0e22d9f90a318a5cc35a9097a448ee071557",
+    "hullkit/tests/test_perpetual_american_lesson.py": "a1fb2246735c85486c588455cbfad4a9dbcaa7e04875e2aa0dc97c4714efca76",
+    "hullkit/tests/test_perpetual_numerics_gate.py": "fd78e78ed04e33e7d32acc3abf01328f978cfc4e861366dc80c5a9140c84daef",
+    "hullkit/tests/test_perpetual_reference_builder.py": "1f61253e3f60c73427cb9bc989220bd38eaed6799923ef7ff5bc127194d4abbb",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "report/report_builder/__init__.py": "e6bd9f43a533654074564fec7ef4ee7324379dfc28f693cc324af7cc0a910db9",
+    "report/report_builder/build.py": "12e280a3c47a2aa952f135ba8b459effcd308d519cc317170c8b0c0f11754cbf",
+    "report/report_builder/figures.py": "0c919a34bc196686fb190aa2c5bf3a39c489918b833983a66be0b4ea47e13804",
+    "report/report_builder/frontier_figures.py": "abc2a1f1596482b043bcb3709f8d6daca9d7f2f0edad6cc8dfe0df0246c0eb92",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/report_builder/theme.py": "db43b679941eff1c165fdf6181a995eff7d076d8f9300f7136d306961d27bf5b",
+    "report/tests/test_perpetual_american_notebook.py": "d2634a495ade62fb4d99823a5f0d37be2912d6decb40a99b3588caf5ab74096b",
+    "report/tests/test_perpetual_registry.py": "866678d6166ab643b7e8c5d37b2866226ad21c4939d069139b1cc1136cc1a847",
+    "scripts/evidence_dependencies.json": "23963f7ca2d2f3a806563cfe8aedfeeeb1b54e4f3385d3ca5b348c6a28e6363e",
+    "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+    "scripts/verify_perpetual_browser.cjs": "8babc0dcbd8133e7227755e237feb6ff95ecd7582feffeb8edcc3cba62f919a8"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "7c1dff7fe2d5d7f7b302fe927f3d2c37ad67b18679449f85c1132a67286bf34f",
+    "book/_build/html/notebooks/10_exotics.html": "9e44ff985f9ac11a11e3d25c1eec276b09d3456dd2d04a515478b262ce647c20"
+  },
+  "observations": {
+    "capture_sha256": {
+      "book-perpetual_boundaries-1000.png": "76ef98b233b25faa1d23108af61fcb22a07a0ea7701aa75fc2aabee617c74584",
+      "book-perpetual_boundaries-1440.png": "aa12ad313fed440179540b2d8701f399a5e5b3e00faa7749e744a9aec436340c",
+      "book-perpetual_convergence-1000.png": "2b52b9d968fe18f98648982c197d90e04238454ad4167065c506f78474c8838f",
+      "book-perpetual_convergence-1440.png": "dff2ae64b5d087609881c868a401155b74401ff8d483404b3c02104df0dea741",
+      "book-perpetual_value-1000.png": "81146e85caa0e6fce31a2a07ee69e5605846157f9ac562435ddec1eea09564d5",
+      "book-perpetual_value-1440.png": "5063130e817c378e72576a25ca8ab4f156010bbfa37994b9f1f0537e2f420d67",
+      "book-perpetual_zero_dividend-1000.png": "104d49e4ddb8e6fdb9c944094432bc6c63b1fdebdfe06251b76ee26b99b6add1",
+      "book-perpetual_zero_dividend-1440.png": "17cf68bd2767cbbdeca2e0ec209c4b6e7bb05440575de481f5b1cfbc378907d2",
+      "portal-perpetual_boundaries-1000.png": "5603ef3a6c3130fc0d5e96452e3da974ed3a44dbe0857526e06fafa7d94356b0",
+      "portal-perpetual_boundaries-1440.png": "f2fcaf2de20300e3e71dfef11e5487351841f4f531bd2d918f5988d38cb69d2f",
+      "portal-perpetual_convergence-1000.png": "1e9079f9dc659bcce01b933d396ab716cfc7e2ce80f59ffed25b75e9ade9955e",
+      "portal-perpetual_convergence-1440.png": "2ecdf46de438cd4c9b0cf16df87d8a0f4fc87422f9d077a4ec98c4182a171dc7",
+      "portal-perpetual_value-1000.png": "4191757f272b622cfe96f222588a78c11c2d9a1eef29abdebcbb7ed0879b41e9",
+      "portal-perpetual_value-1440.png": "0bdb0f40819143fff668117d1b283e5ef92a2e6c866555b085404d2c262b6ad5",
+      "portal-perpetual_zero_dividend-1000.png": "898b9fe62270197935e3a61b72e8d39481bfce40f09e4f5cba67882d81c06e22",
+      "portal-perpetual_zero_dividend-1440.png": "5744118ee6f89ab82fc26ccd36d24330c9b7884c67b25b89ff2b45949798e443"
+    },
+    "stored_new_bytes": 0,
+    "seconds": {
+      "verifier": 12.79,
+      "probe": 7.6,
+      "pytest": 7.55
+    },
+    "identical_to_baseline": 16,
+    "baseline_images": 16,
+    "coverage_equal_to_baseline": true
+  }
+}
