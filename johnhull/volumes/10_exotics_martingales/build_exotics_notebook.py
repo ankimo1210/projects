@@ -857,9 +857,7 @@ $$V_i(S)=\max\{J(S,T-i\Delta t),C_i(S)\}.$$
 終端では分解を計算せず通常の内在価値のみを示します。N=3 は手順の説明で、細格子の価格精度ではありません。""")
 )
 
-cells.append(
-    code(r"""shout_figures["shout_decision"].show()""")
-)
+cells.append(code(r"""shout_figures["shout_decision"].show()"""))
 
 cells.append(
     md(r"""#### 4.2.4 境界と収束を読む
@@ -875,9 +873,7 @@ long-high-vol の幅は約13.8〜40.4と粗く、59の疎な層だけを表示�
 右図は左と同一市場の ATM call の価格残差です。境界幅と価格残差は異なる量です。""")
 )
 
-cells.append(
-    code(r"""shout_figures["shout_boundary"].show()""")
-)
+cells.append(code(r"""shout_figures["shout_boundary"].show()"""))
 
 cells.append(
     md(r"""#### 4.2.5 欧州・ルックバックとの比較条件
@@ -897,9 +893,7 @@ lookback は事後の全期間最高値を選べますが、shout は将来最�
 比較可能な ATM 6市場での上乗せ比 $(C_{\rm Shout}-C_{\rm European})/(C_{\rm lookback}-C_{\rm European})$ は約20〜31%という実測値で、普遍則ではありません。""")
 )
 
-cells.append(
-    code(r"""shout_figures["shout_comparison"].show()""")
-)
+cells.append(code(r"""shout_figures["shout_comparison"].show()"""))
 
 cells.append(
     md(r"""#### 4.2.6 適用域・限界と理解の確認
@@ -982,9 +976,7 @@ cells.append(
 実測の歪度は当てはめた対数正規より**大きく**、右裾が厚いままです。このズレが価格の誤差になります。""")
 )
 
-cells.append(
-    code(r"""asian_figures["asian_distribution"].show()""")
-)
+cells.append(code(r"""asian_figures["asian_distribution"].show()"""))
 
 cells.append(
     md(r"""#### 4.3.4 観測数と価格
@@ -1135,9 +1127,7 @@ $q_U,q_V$ は $d_1$ では差 $q_U-q_V$ としてのみ効き、係数では各�
 （独立参照との比較で、$\rho\neq0$ の 21 行すべてが拒否されました）。""")
 )
 
-cells.append(
-    code(r"""exchange_figures["exchange_correlation"].show()""")
-)
+cells.append(code(r"""exchange_figures["exchange_correlation"].show()"""))
 
 cells.append(
     md(r"""#### 4.4.3 なぜ $r$ に依存しないのか
@@ -2319,6 +2309,87 @@ cells.append(
 # ===========================================================================
 
 # Cell 14: numeraire md
+cells.append(
+    md(r"""### 4.12 フォワード・スタート・オプション（§26.5、GE p.618）
+
+#### 4.12.1 二つの時点と将来のATM契約
+
+今契約し、開始日 $T_1$ に株価 $S_{T_1}$ と等しい行使価格を決め、満期 $T_2$ に
+$\max(S_{T_2}-S_{T_1},0)$ を受け取る欧州型コールです。契約期間は $\tau=T_2-T_1$。
+行使価格は開始日に初めて確定します。将来ATMで付与する従業員ストック・オプションとの
+関係をHullは説明しますが、ここでは権利確定・早期行使の制度をモデル化しません。
+
+以下は $S_0=100,r=5\%,\sigma=20\%,q=3\%,T_1=1,T_2=2$ の合成例です。
+原典にはこの節の印刷数値はありません。""")
+)
+cells.append(
+    code(r"""from hullkit.forward_start import forward_start_call
+from hullkit._forward_start_lesson import _figures as forward_figures, _load_reference as forward_reference
+forward_data = forward_reference()
+forward_plots = forward_figures()
+forward_price = forward_start_call(100, .05, .2, 1, 2, .03)
+same_life_atm = forward_start_call(100, .05, .2, 0, 1, .03)
+print(f"forward={forward_price:.6f} same_life_atm={same_life_atm:.6f}")""")
+)
+cells.append(
+    md(r"""#### 4.12.2 株価の経路と行使価格の確定
+
+図は合成GBMの12経路から、正給付2本とゼロ給付1本を選んだ例示です。
+頻度の推定には使いません。丸印が開始日の株価、破線が確定後の行使価格です。
+開始前の株価が同じでも、開始日の株価に応じて行使価格は変わります。""")
+)
+cells.append(code('forward_plots["forward_contract"].show()'))
+cells.append(
+    md(r"""#### 4.12.3 開始時点の価値と一次同次性
+
+$c$ を今日の株価 $S_0$ で評価した、期間 $\tau$ のATM欧州型コール価格とすると、
+定数パラメータのBlack–Scholesモデルで開始時点の価値は
+$cS_{T_1}/S_0$ です。株価と行使価格を同じ倍率で変えると価格もその倍率になります。
+図は開始時点の条件付き価値であり、今日までの割引を含みません。""")
+)
+cells.append(code('forward_plots["forward_homogeneity"].show()'))
+cells.append(
+    md(r"""#### 4.12.4 今日の価格と契約期間固定の掃引
+
+リスク中立測度で $E[S_{T_1}]=S_0e^{(r-q)T_1}$ なので、
+
+$$V_0=e^{-rT_1}E\left[c\frac{S_{T_1}}{S_0}\right]=c e^{-qT_1}.$$
+
+$q=0$ では、今日開始する同じ期間のATMコールと同じ価格です。
+図は $\tau=1$ 年を保ち、開始日とともに満期も後ろへ動かします。
+正の配当利回りでは開始を遅らせるほど価格が下がります。""")
+)
+cells.append(code('forward_plots["forward_start_delay"].show()'))
+cells.append(
+    md(r"""#### 4.12.5 満期固定の掃引と独立Monte Carlo
+
+次の図では $T_2=2$ 年を固定するため、開始を遅らせると残り期間が短くなります。
+$T_1=T_2$ の給付と価格は0です。先の期間固定の図とは契約の比較条件が異なります。
+
+独立参照は二つのGBM増分の密度を求積します。MCは各524,288経路、3例で
+開始日の株価を行使価格にし、満期給付を $e^{-rT_2}$ で割り引きます。
+棒はMC平均の95%信頼区間（標準誤差の1.959964倍）です。数値ゲートは6標準誤差以内を
+要求し、求積誤差とMCの標本誤差を別々に記録します。""")
+)
+cells.append(
+    code(r"""for row in forward_data["mc"]:
+    print(f'T1={row["T1"]:.2f} paths={row["paths"]:,} MC={row["price"]:.6f} SE={row["standard_error"]:.6f}')
+forward_plots["forward_fixed_expiry"].show()""")
+)
+cells.append(
+    md(r"""#### 4.12.6 適用範囲と理解の確認
+
+定数 $r,q,\sigma$ のGBM、ATM・欧州型コールに限定します。ゼロ変動率は決定的給付、
+ゼロ長契約は0、$T_1=0$ は通常のATMコールへ戻ります。APIは配列をbroadcastします。
+実市場のsmile、確率的金利・変動率、一般moneyness、put、cliquetは対象外です。
+
+1. 満期株価から今日の株価を引くMCは、どの契約を評価してしまいますか。
+2. なぜ残り期間のBSM価格に $e^{-rT_1}$ をそのまま掛けるだけでは不十分ですか。
+3. $q=0$ で開始の遅延に価格が不変なのは、どちらの掃引ですか。
+4. 従業員オプション全体をこの公式だけで評価できない理由は何ですか。
+
+**回答の手掛かり：** 将来の行使価格、株価の期待成長、二つの比較条件、早期行使を区別します。""")
+)
 cells.append(
     md(r"""## 5. マルチンゲールと測度（Ch.28）
 
