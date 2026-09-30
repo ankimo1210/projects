@@ -1,0 +1,364 @@
+{
+  "section": "26.4",
+  "milestone": "M21",
+  "status": "PASS",
+  "numerical": {
+    "method": {
+      "monte_carlo": "seeds 20260930+i per case, 524288 antithetic pairs, |z| <= 4",
+      "normal_cdf": "0.5*erfc(-x/sqrt(2))",
+      "quadrature": "Gauss-Legendre 32 nodes x 96 panels over the trigger region, +/-16 sd"
+    },
+    "cases": 38,
+    "max_relative_error": {
+      "price": 4.235197790880706e-15,
+      "regular_price": 4.235197790880706e-15,
+      "trigger_adjustment": 7.190257839457498e-16,
+      "trigger_probability": 1.1102230246251565e-16
+    },
+    "zero_value_settlement_error": 0.0,
+    "example_26_1": {
+      "printed": {
+        "gap_put": 1896,
+        "reduction_percent": 45,
+        "regular_put": 3436
+      },
+      "reproduced": {
+        "regular_put": 3436,
+        "gap_put": 1896,
+        "reduction_percent": 45
+      },
+      "regular_put": 3435.9470199243733,
+      "gap_put": 1895.688944396592,
+      "reduction": 0.4482775975869625
+    },
+    "negative_controls_rejected": [
+      "price",
+      "settlement_strike",
+      "trigger",
+      "printed_value",
+      "seed"
+    ],
+    "api_negative_controls_rejected": [
+      "d_at_settlement_strike",
+      "swapped_put_strikes",
+      "relative_bias_1e-9"
+    ]
+  },
+  "notebook": {
+    "cells": 169,
+    "lesson_cells": 11,
+    "preserved_cells_outside_lesson": 158,
+    "negative_controls_rejected": [
+      "old prose",
+      "new heading",
+      "saved plot",
+      "post heading"
+    ]
+  },
+  "browser": {
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "state_checks": 16,
+    "screenshots": 16,
+    "numeric_mutation_rejected": true,
+    "book_math": {
+      "rendered": 898,
+      "errors": 0
+    }
+  },
+  "regression": {
+    "sections": [
+      "26.1",
+      "26.2",
+      "26.3",
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5",
+      "27.6",
+      "27.7",
+      "27.8"
+    ],
+    "d1": {
+      "26.1": {
+        "record": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260930T005540Z-reuse-ed3cd073bb344d02a12a709a3f647062.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 68,
+        "baseline": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260929T225244Z-redraw-5378c4eaf4564bd3bfd0eec30efd9dd4.json"
+      },
+      "26.2": {
+        "record": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260930T005601Z-reuse-5e888f40d469433eb84cbeb2103fb660.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 44,
+        "baseline": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405.json"
+      },
+      "26.3": {
+        "record": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20260930T010513Z-redraw-bb0d122906854a72b19929b9737623d2.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 326803,
+        "tests_passed": 35,
+        "baseline": null
+      },
+      "26.9": {
+        "record": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260930T005625Z-reuse-6c44b40cd669446f9a83e4a78cd5b8c1.json",
+        "decision": "reused",
+        "images": 10,
+        "stored_new_bytes": 0,
+        "tests_passed": 91,
+        "baseline": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260929T225656Z-redraw-1457fcdba28f4a0a88990ebd1f7eb05f.json"
+      },
+      "26.10": {
+        "record": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260930T005646Z-reuse-0af986d0eeb645a18d9092e4631449ee.json",
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 92,
+        "baseline": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260929T225718Z-redraw-82fa88ba08e84c5699acfaa0159e59f8.json"
+      },
+      "26.11": {
+        "record": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260930T005711Z-reuse-dbb539364c2c4f9f8025aacee4aaa67e.json",
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 144,
+        "baseline": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260929T225744Z-redraw-716a76e16e274f6aa4a27945fa9186b6.json"
+      },
+      "26.12": {
+        "record": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260930T005818Z-reuse-7fc5fd1165be45e28be42cc8874bc62b.json",
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 215,
+        "baseline": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260929T225850Z-redraw-ed1cc78aa89049b7bf91234a4063a85d.json"
+      },
+      "26.13": {
+        "record": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260930T005917Z-reuse-be3a620c67e64628be4a10f56f56a1e8.json",
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 274,
+        "baseline": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260929T225949Z-redraw-e7b07b2c4cd748db9dd06e0146873b31.json"
+      },
+      "26.14": {
+        "record": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260930T010009Z-reuse-8f5dfe0103e749d2becbc0954d404a7e.json",
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 351,
+        "baseline": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260929T230041Z-redraw-4311ec20659a427b954934afc2544566.json"
+      },
+      "26.15": {
+        "record": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260930T010059Z-reuse-3ae5b42125a04f68ac67b6309ff13776.json",
+        "decision": "reused",
+        "images": 18,
+        "stored_new_bytes": 0,
+        "tests_passed": 65,
+        "baseline": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260929T230130Z-redraw-5b351d45cfb74ac0bb09a4acf5f5e694.json"
+      },
+      "26.16": {
+        "record": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260930T010146Z-reuse-a8126d6934504676b002f7ecaca80f99.json",
+        "decision": "reused",
+        "images": 20,
+        "stored_new_bytes": 0,
+        "tests_passed": 45,
+        "baseline": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260929T230216Z-redraw-bfdb7fb4f6bf4b228ed59662c5d9a80b.json"
+      },
+      "26.17": {
+        "record": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260930T010240Z-reuse-8f3142ce25d04e7092c14fd86a67ceef.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 16,
+        "baseline": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260929T230309Z-redraw-f18042175ac940ebb8bc298f5edfe83a.json"
+      },
+      "27.1": {
+        "record": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260930T010305Z-reuse-ae0da96c67294ec6a8e3f24651974b21.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 16,
+        "baseline": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260929T230336Z-redraw-f0eb7d0dfa25458da89b21e0b68b5bca.json"
+      },
+      "27.2": {
+        "record": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260930T010321Z-reuse-49cc8c21c13d4d13bfa391e1834289df.json",
+        "decision": "reused",
+        "images": 20,
+        "stored_new_bytes": 0,
+        "tests_passed": 27,
+        "baseline": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260929T230352Z-redraw-a17f3c119aa643738341435707094e6d.json"
+      },
+      "27.3": {
+        "record": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260930T010339Z-reuse-2da9d9c05e7846468fc017a4a0acac0d.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 14,
+        "baseline": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260929T230413Z-redraw-51e5b39ba3ff43af87a75e32b22bfb4c.json"
+      },
+      "27.4": {
+        "record": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260930T010354Z-reuse-bdda5266816b40a9a8de299a120f0f18.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 15,
+        "baseline": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260929T230430Z-redraw-f257ee72e2be4b81a58dd5d963470412.json"
+      },
+      "27.5": {
+        "record": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260930T010409Z-reuse-f1bb0c4f9fda44f898837654949ba626.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 12,
+        "baseline": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260929T230446Z-redraw-70689cb5ded54df8bfa46e16b08d9f03.json"
+      },
+      "27.6": {
+        "record": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260930T010425Z-reuse-ebea3d5331f34e06abb9e27e49e95392.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 36,
+        "baseline": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260929T230502Z-redraw-fb39db4c72954171a98d6b5299649bd4.json"
+      },
+      "27.7": {
+        "record": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260930T010440Z-reuse-45c316cf74474930a7a2cea6620d0105.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 75,
+        "baseline": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260929T230519Z-redraw-4f75990657ac4996a9e1f622f9021299.json"
+      },
+      "27.8": {
+        "record": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260930T010458Z-reuse-d2ee3356534f441b85935ff3d282a177.json",
+        "decision": "reused",
+        "images": 16,
+        "stored_new_bytes": 0,
+        "tests_passed": 35,
+        "baseline": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260929T230538Z-redraw-8e924476eaaa49e29595d8b1bfc84564.json"
+      }
+    },
+    "redrawn": [
+      "26.3"
+    ],
+    "reused": [
+      "26.1",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "26.2",
+      "26.9",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5",
+      "27.6",
+      "27.7",
+      "27.8"
+    ],
+    "stored_new_bytes": 326803,
+    "browser": "each accepted section's verifier rerun on M21 Book/portal assets through the D1 driver; new images live in the C:/F: artifact stores"
+  },
+  "source_sha256": {
+    "scripts/build_gap_acceptance_record.py": "07700de75b4dc66fc7e3367c5d17b1cd6d83e08c940608dca95c1d2ac3def105",
+    "scripts/build_gap_reference.py": "a6d523464a24e730cf0f3d6f4f2d2dc0986212acc50eb19974316ea583391e51",
+    "scripts/verify_gap_numerics.py": "97a22269f984a3f4c61bb56268e205a2b4cca00109935a07f714e2ad4f659c64",
+    "scripts/verify_gap_notebook.py": "b2b1ff71cd376279f3a5c12c6c6d297e454c85435e3ae116d9e7ad7e238e987e",
+    "scripts/verify_gap_browser.cjs": "1170c31221a703a284f241713802df64fa7fb3fd3de7413aa7a812842a53df20",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "scripts/evidence_dependencies.json": "5c774450cdaad9ea2a1045929d66adae7d8e89f618e8c8a9f43f5e3928667839",
+    "scripts/update_gap_ledger.py": "5f1dad514835facf9dd4356ea17c9deb60208d42239116265b49b24fecf44a11",
+    "scripts/verify_section_ledger.py": "06a81a1e26630a5030fe80375b7ccf706f63f6cac26206502b645ffa49c629c9",
+    "hullkit/src/hullkit/gap_options.py": "6842f4fafa8f7882321314dcca4d3aa0bf77a092d05620293c11260d6ae821e3",
+    "hullkit/src/hullkit/_gap_lesson.py": "26ed4e89a51b8f380b8dce09fb1607edf732af3497835c01c1f6e7950ec6b4bb",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/tests/test_gap_options.py": "17d3ee47bbab01852a3c8c3bc2b01d00f573e6b536e92d67092effe32ea9bae5",
+    "hullkit/tests/test_gap_reference_builder.py": "ce5ad010b3fc3dc2bfa053c8a2293f299df7dab0843ebc984827d512bd23f7c3",
+    "hullkit/tests/test_gap_numerics.py": "cead764a9a599a86f43325d106dba71e50f143222fdcf00fc54ec28529352bd2",
+    "hullkit/tests/test_gap_lesson.py": "f256ac3da98b1f8de9dcbb8418f5e52da08a8245b3d49f3331e0b3bd32d80ec9",
+    "report/tests/test_gap_notebook.py": "4f8f11f9ee8134524800dc7ba47d7be6b8f19a263a29330cfac1a54be386be1b",
+    "report/tests/test_gap_acceptance_record.py": "9b311cc45ae4c1dc95b457b209e2a97874a79e16d4853226adb136399916cc2e",
+    "report/tests/test_gap_ledger_update.py": "f95b08d5d38641dde148abe28779f624151e01fbd6a26c1990b08f7372e46b92",
+    "report/tests/test_gap_registry.py": "ac94c0e7a4555c952fd70dd91d3fdcf6f87512a0c308359d001a0346b4d802e2",
+    "report/tests/test_gap_notebook_gate.py": "80d82677d9894b780fd8a591857eeeb640da62ff507d5a697de09b8b2eef5481",
+    "report/tests/test_nonstandard_american_notebook.py": "86d01f256067ef4357182e1eeab38cce32f9b7bd55e951f55806fbec8ded976f",
+    "report/tests/test_section_ledger.py": "769afae314dab0a66715191670743a1120a441630227bbbf44114cf7474f1c65",
+    "report/tests/test_report_build.py": "be11ec400acdace56dfafe947e80edfbc0e510f80df44fb5f3be5f9870219747",
+    "report/report_builder/figures.py": "e73350d565d07f1b9275ac08d0715a0bac0c6dc23f5e52f37be6a4ffa0da7843",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "52545a716fdbe98587df5211ff8f0123b3c72d7093de5cd80b9fb9568e8283bf",
+    "volumes/10_exotics_martingales/exotics.ipynb": "6a0755d53774cc49fac6cdf2978d34c98fb26ec6de24381f9c3dc35e9d50cf94",
+    "release_manifest.json": "7dd2b2a1b41b1b9d5e7f8b53391fe4ff1cf410fd9a69ddba4454202f84a8734b",
+    "docs/validation/section-26-4/numerical-check.json": "203d4622cda3b94819de0fab7335e87ea2a420a0968ab41b03197a2151815d92",
+    "docs/validation/section-26-4/notebook-check.json": "8d122da4d94da3aec313c676c81d4900ae62211e2c00bf70de06b8db7e3498ff",
+    "docs/validation/section-26-4/browser-check.json": "79872dc994d9fdd5cb166eb8695060b3b72a17f7f1574688ddf98b083f1607c6",
+    "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260930T005540Z-reuse-ed3cd073bb344d02a12a709a3f647062.json": "8aabee8cddc978335ab0c8d9693494dae325f1986a684a06469ff0a89013b11c",
+    "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260930T005601Z-reuse-5e888f40d469433eb84cbeb2103fb660.json": "21beb42f820bd157f7c7cd32857c73629573f4abc5719a05c307b801d4f4d0ca",
+    "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20260930T010513Z-redraw-bb0d122906854a72b19929b9737623d2.json": "9cd47596f6cc65dcd2fad9820790dc4ebc70b344a87de18922217e3f03fc3c34",
+    "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260930T005625Z-reuse-6c44b40cd669446f9a83e4a78cd5b8c1.json": "503433dcb542e4f7b299bb78cc873accfaf83c0190394179675d3ceb9765eb19",
+    "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260930T005646Z-reuse-0af986d0eeb645a18d9092e4631449ee.json": "4b848f6c42504c7effb476b6aef504d75053337939d6341539c4ccd3093d578d",
+    "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260930T005711Z-reuse-dbb539364c2c4f9f8025aacee4aaa67e.json": "5ce3f8b1e73f53bd285f9b6a7509f0d232f9be53cc955149d6a576465c6fa712",
+    "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260930T005818Z-reuse-7fc5fd1165be45e28be42cc8874bc62b.json": "3ee2e11d990f5daa720cfb3bbe003d08aad7336f62da2926cdfe4fcd094d0b63",
+    "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260930T005917Z-reuse-be3a620c67e64628be4a10f56f56a1e8.json": "d40a0980f42359d334a5ffd176216eba5cfd7e1cea2fe4c6ef0a0c0ee9ebe021",
+    "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260930T010009Z-reuse-8f5dfe0103e749d2becbc0954d404a7e.json": "29f281d474d5d2d8226304350547fea99e7c06b9c3bfe55b4489b75cb4510287",
+    "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260930T010059Z-reuse-3ae5b42125a04f68ac67b6309ff13776.json": "02fcbbc25d84a4121fa1f0a82887912d84fbc2f94171668867bc991ea91b3829",
+    "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260930T010146Z-reuse-a8126d6934504676b002f7ecaca80f99.json": "ee584f1fc17c391d7cba8bea5a56e0376c05bad9d2d92f2de9669d494cc5dd03",
+    "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260930T010240Z-reuse-8f3142ce25d04e7092c14fd86a67ceef.json": "f7083ef08bfd24190564d453a4cd2f929730740c2aa864cf87c7615c10ab77bb",
+    "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260930T010305Z-reuse-ae0da96c67294ec6a8e3f24651974b21.json": "ba9477cabe45158a7b3dc1c73a58e19a7a89cac171fcd2deabcdfcadf2272e80",
+    "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260930T010321Z-reuse-49cc8c21c13d4d13bfa391e1834289df.json": "8df114d9f824c22e7b5f480fe84c310248c82c26dd5478845ff90ac9d5e5b4fd",
+    "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260930T010339Z-reuse-2da9d9c05e7846468fc017a4a0acac0d.json": "a4fc33b815865a694684a2b3408e118a469f44ee2490f7ae5050f012e0d9860f",
+    "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260930T010354Z-reuse-bdda5266816b40a9a8de299a120f0f18.json": "92ef8861105cc5f404d959904692e3e0d3112b1200b7d4f59013e46cc465a067",
+    "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260930T010409Z-reuse-f1bb0c4f9fda44f898837654949ba626.json": "54604fec11faea70efd383bcbabd3e9a253dbdbd646bd4d4ddec47f5be2241a5",
+    "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260930T010425Z-reuse-ebea3d5331f34e06abb9e27e49e95392.json": "dad09892879bb3f414f2f6a01f460eda2baeb13d11ddc48c461462e1e6d25d3e",
+    "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260930T010440Z-reuse-45c316cf74474930a7a2cea6620d0105.json": "a7e82a599d042f4fab86db60d21507707a164df0fcc9e137de078d06411f437c",
+    "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260930T010458Z-reuse-d2ee3356534f441b85935ff3d282a177.json": "524741e2bd5edf3d1433269faf906f7d527af273cb2bad1faf285c3c7a1a52e2"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-26-4/reference.json": "4ea3aab72950f963d2c3e8fc2aab9eb98832722d28e0208ac8ea1cefda7e5d6a",
+    "report/site/exotics.html": "e2787b48510d354b55b41b1be4b6dc3831505473da742b9c72f32b652ff162dc",
+    "book/_build/html/notebooks/10_exotics.html": "ce6e05675096448d2396c234fec774b3336d54b1e0e1c8330eea40baf837115b",
+    "docs/validation/section-26-4/book-gap_payoff-1440.png": "002075a4762d03d8b91ac7b013ab8fdc26262984f6163aad3e378b8dec6e29ee",
+    "docs/validation/section-26-4/book-gap_payoff-1000.png": "baecc5bd0c5807383448a9833240f5db27935edab9b641bf8f5f30a5c59a0a54",
+    "docs/validation/section-26-4/book-gap_settlement_line-1440.png": "f43b6fddcbd529ea4f76503088f58812ba644093e97ca7b0cfc15de450a91206",
+    "docs/validation/section-26-4/book-gap_settlement_line-1000.png": "92ccb0b17c98ab411ef61fe33656ab19fa912eb93f8a26e808a38fcaab9a8483",
+    "docs/validation/section-26-4/book-gap_insurance-1440.png": "ce0ce7397d9e97e3b438d48ba464685089c3435845b8b1cbd5912d138cf7c10f",
+    "docs/validation/section-26-4/book-gap_insurance-1000.png": "9b80625a82b8327ea59dbd405ddcdd88d8c4ff715628885c469f4ae9b118afde",
+    "docs/validation/section-26-4/book-gap_transfer_cost-1440.png": "d0bc539822e21c879328d9f051ede32d0ecbc0964fba4ef64f252e4380186db7",
+    "docs/validation/section-26-4/book-gap_transfer_cost-1000.png": "7913042b8ad456972ff6389a3f6467c7c569411559df9782f9ff47b469b23b8c",
+    "docs/validation/section-26-4/portal-gap_payoff-1440.png": "2c00f6d0f229cfa46a127bbe23dc814c708d71965de985b31904aab8790c5790",
+    "docs/validation/section-26-4/portal-gap_payoff-1000.png": "145a75e2054cad5b1c4dcf325750bb0e19652f77e4d8679eab2a4f4a02a35a4f",
+    "docs/validation/section-26-4/portal-gap_settlement_line-1440.png": "f132a3b45dc360c96a928600dd8da6a79a26d3b64c042fa9861610f5cb06a2a3",
+    "docs/validation/section-26-4/portal-gap_settlement_line-1000.png": "0739559d6dc77ae016c7e6ec6a9c627d86880ffa80c055406745b5ee1c3ea3b7",
+    "docs/validation/section-26-4/portal-gap_insurance-1440.png": "91959311325da5aae8f050b712f28cc7e0ce626812762c54bf8aad5018b11cc4",
+    "docs/validation/section-26-4/portal-gap_insurance-1000.png": "9b07673f621b4162aea61ea25e5a8b3fa141de6e50e5c891aa66b067ae8cb24e",
+    "docs/validation/section-26-4/portal-gap_transfer_cost-1440.png": "c4a79f72a9c48bd0b90ef3f41191871a789c8d65cc6e6e94b772bd4701e0019b",
+    "docs/validation/section-26-4/portal-gap_transfer_cost-1000.png": "ef8bf7fbccd697b601d4f24c271016fc7ee3f64dfc4479bc9a5767ec513f8338"
+  }
+}
