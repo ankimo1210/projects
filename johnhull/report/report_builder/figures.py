@@ -24,6 +24,7 @@ from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
+from hullkit._forward_start_lesson import _figures as forward_start_lesson_figures
 from hullkit._gap_lesson import _figures as gap_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
@@ -1208,6 +1209,42 @@ FIGURES: list[FigureSpec] = [
         "Example26.1の印刷値3,436→1,896ドルを独立求積で再現。費用曲線は教材上の展開。",
         lambda: gap_lesson_figures()["gap_premium"],
         practice="保険料は44.83%減。1,895.69は保険会社の支出価値、契約者の手取り価値は630.79ドル。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "forward_contract",
+        "exotics",
+        "開始日に決まる行使価格",
+        "§26.5。合成GBM経路で開始日の株価を行使価格にする。例示用に正給付2本・ゼロ給付1本を選択。",
+        lambda: forward_start_lesson_figures()["forward_contract"],
+        practice="開始前と開始後を区別し、満期株価と確定済み行使価格の差を見る。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "forward_homogeneity",
+        "exotics",
+        "開始時点の価値と株価",
+        "期間1年のATMコール価値は株価に比例する。図は開始時点の条件付き価値。",
+        lambda: forward_start_lesson_figures()["forward_homogeneity"],
+        practice="株価と行使価格を同時に2倍にすると価格も2倍になる理由を説明する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "forward_start_delay",
+        "exotics",
+        "期間固定で開始を遅らせる",
+        "τ=1年を固定。配当なしでは価格は不変、正の配当では開始の遅延に応じて下がる。",
+        lambda: forward_start_lesson_figures()["forward_start_delay"],
+        practice="開始日と満期を同じだけ後ろへ動かす比較であることを確認する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "forward_fixed_expiry",
+        "exotics",
+        "満期固定と残り期間",
+        "T₂=2年固定。二時点MC各524,288経路の95%区間と独立密度求積を比較する。",
+        lambda: forward_start_lesson_figures()["forward_fixed_expiry"],
+        practice="開始が満期へ近づくと給付が0になる。MC標本誤差と求積誤差を区別する。",
         is_new=True,
     ),
     FigureSpec(
