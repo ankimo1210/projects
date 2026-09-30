@@ -84,7 +84,7 @@ def _payoff(data):
         x=[trigger, trigger],
         y=[trigger - 90.0, trigger - 110.0],
         mode="markers",
-        name="S_T が K2 を上から近づく極限（K2 自体の支払は0）",
+        name="S_T が K2 に上から近づくときの極限（K2 自体の支払は0）",
         marker=dict(
             color="white", size=10, symbol="circle", line=dict(color=[_BLUE, _RED], width=2)
         ),
@@ -165,7 +165,7 @@ def _insurance(data):
         x=[example["K2"]],
         y=[example["K1"] - example["K2"]],
         mode="markers",
-        name="S_T が 350,000 に下から近づく極限（350,000 では請求なし）",
+        name="S_T が 350,000 に下から近づくときの極限（350,000 では請求なし）",
         marker=dict(color="white", size=10, symbol="circle", line=dict(color=_RED, width=2)),
     )
     figure.add_scatter(
