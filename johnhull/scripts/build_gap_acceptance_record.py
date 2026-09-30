@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -17,6 +18,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 SECTION = "docs/validation/section-26-4/"
 OUT = PROJECT / SECTION / "m21-check.json"
 RECHECK_DIR = "docs/validation/d1-recheck"
+BASE = "f941a0bc"
 EARLIER = [
     "26.1",
     "26.2",
@@ -192,6 +194,29 @@ def check_d1_payload(section_id: str, name: str, record: dict) -> None:
         raise ValueError(f"D1 record invalid: {name}: {problems[:2]}")
 
 
+def _revision(commit: str) -> str | None:
+    result = subprocess.run(
+        ["git", "rev-parse", "--verify", f"{commit}^{{commit}}"],
+        cwd=PROJECT,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout.strip() if result.returncode == 0 else None
+
+
+def created_after_base(commit: object) -> bool:
+    """True only for a commit that descends from the M20 base and is not the base itself."""
+    if not isinstance(commit, str) or not commit:
+        return False
+    revision, base = _revision(commit), _revision(BASE)
+    if revision is None or base is None or revision == base:
+        return False
+    ancestry = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", base, revision], cwd=PROJECT, capture_output=True
+    )
+    return ancestry.returncode == 0
+
+
 def check_d1(section_id: str) -> tuple[str, dict]:
     """Check the newest PASS schema-2 D1 record and both artifact-store copies."""
     folder = PROJECT / RECHECK_DIR / f"section-{section_id.replace('.', '-')}"
@@ -204,6 +229,8 @@ def check_d1(section_id: str) -> tuple[str, dict]:
     name = path.relative_to(PROJECT).as_posix()
     record = json.loads(path.read_text(encoding="utf-8"))
     check_d1_payload(section_id, name, record)
+    if not created_after_base(record.get("commit")):
+        raise ValueError(f"§{section_id}: newest D1 record predates M21: {name}")
     problems = evidence_record.validate_record(PROJECT, record, check_artifacts=True)
     if problems:
         raise ValueError(f"D1 artifact store invalid: {name}: {problems[:2]}")

@@ -125,3 +125,14 @@ def test_price_overflow_is_a_value_error():
 def test_non_real_inputs_name_the_expected_type():
     with pytest.raises(ValueError, match="finite real number"):
         _gap("call", K1="90")
+
+
+def test_small_spot_with_large_carry_keeps_a_finite_forward():
+    quote = gap_options.gap_option("call", 0.5, 1.0, 1.0, 710.0, 0.2, 1.0)
+    assert math.isfinite(quote.forward)
+    assert quote.price == pytest.approx(0.5, rel=1e-12)
+
+
+def test_forward_overflow_is_a_value_error():
+    with pytest.raises(ValueError, match="forward"):
+        gap_options.gap_option("call", 1e300, 1.0, 1.0, 100.0, 0.2, 1.0)

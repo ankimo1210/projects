@@ -96,3 +96,11 @@ def test_integrated_record_covers_twenty_sections() -> None:
     }
     assert len(gate.EARLIER) == 20
     assert record["browser"]["state_checks"] == 16
+
+
+def test_d1_record_must_come_from_a_commit_after_the_base() -> None:
+    gate = _gate()
+    assert not gate.created_after_base(gate.BASE)
+    assert not gate.created_after_base("894f7dd5")
+    assert not gate.created_after_base(None)
+    assert gate.created_after_base("e02e0a1b")

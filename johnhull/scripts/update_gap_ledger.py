@@ -195,7 +195,7 @@ def register_gap(section: dict) -> None:
                 ["pricing", "formula"],
                 ["reference", "numerical", "reference_tests"],
                 ["settlement_image"],
-                "Book/portalで価格と独立求積の一致を確認",
+                "Book/portalで K1 と価格の直線が保存参照と一致することを確認",
             ),
             requirement(
                 3,

@@ -106,7 +106,7 @@ def gap_option(
     if math.log(spot) + (r - q) * T > _LOG_MAX:
         raise ValueError("the forward price overflows")
     discount = math.exp(-r * T)
-    forward = spot * math.exp((r - q) * T)
+    forward = math.exp(math.log(spot) + (r - q) * T)
 
     d2 = float(bsm.d2(spot, K2, r, sigma, T, q))
     if kind == "call":

@@ -58,10 +58,10 @@
   "source_sha256": {
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
     "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
-    "hullkit/src/hullkit/gap_options.py": "6842f4fafa8f7882321314dcca4d3aa0bf77a092d05620293c11260d6ae821e3",
+    "hullkit/src/hullkit/gap_options.py": "1c59401faf01b34a309ce736b75ceebbc67264ed88eead2b48e78780a0386664",
     "scripts/build_gap_reference.py": "a6d523464a24e730cf0f3d6f4f2d2dc0986212acc50eb19974316ea583391e51",
     "scripts/verify_gap_numerics.py": "97a22269f984a3f4c61bb56268e205a2b4cca00109935a07f714e2ad4f659c64"
   },
   "status": "PASS",
-  "zero_value_settlement_error": 0.0
+  "zero_value_settlement_error": 7.105427357601002e-14
 }
