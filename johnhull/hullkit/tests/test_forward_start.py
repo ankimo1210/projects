@@ -80,3 +80,13 @@ def test_incompatible_shapes_are_rejected():
 def test_unrepresentable_price_is_rejected_without_warning():
     with pytest.raises(ValueError):
         price(1e308, 0.05, 0.2, 1, 2, -100)
+
+
+@pytest.mark.parametrize(
+    "spot",
+    [np.array([1 + 2j], dtype=object), object(), 10**400],
+    ids=["object-complex", "nonreal-object", "huge-integer"],
+)
+def test_nonreal_or_unrepresentable_spot_raises_value_error(spot):
+    with pytest.raises(ValueError):
+        price(spot, 0.05, 0.2, 1, 2)

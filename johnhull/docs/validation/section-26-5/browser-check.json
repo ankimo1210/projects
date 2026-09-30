@@ -132,13 +132,13 @@
     }
   },
   "source_sha256": {
-    "hullkit/src/hullkit/forward_start.py": "0e44e107e61b849db795ad83b40a0d9c0d9849c7f7141018f6fda53c21df9317",
+    "hullkit/src/hullkit/forward_start.py": "3590dfcd279b47f3c755dcdc3297d1a0b2b35a0a16e3eb9cee647f64f3729613",
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
     "hullkit/src/hullkit/_forward_start_lesson.py": "8b4337c3ea479ef4343f7a66f5c0161a49da0bac9ed0f1fcf924f70722d4e632",
     "scripts/build_forward_start_reference.py": "6b7cdaf47e00e6f93010ce6e38655be449babff7f86ed7b92e50018c77bd3ddf",
     "scripts/verify_forward_start_browser.cjs": "0e00cde223124aa3feb10da1f6d1cc8d5978b03f2531dd75f890f2a2fcee20af",
     "docs/validation/section-26-5/reference.json": "74a597bcf73d48485389a6e6f9991dec10648204100904de26b91ebf24a67b9e",
-    "docs/validation/section-26-5/numerical-check.json": "bccb6bc7b211d930e74d3d1e0c349e8115bb104cf7926f46ad2d9b06b5216b76",
+    "docs/validation/section-26-5/numerical-check.json": "dc3b3628658165529b9700e32d06a7c8dc1ce46a55f1e8f78df55de46927626d",
     "volumes/10_exotics_martingales/build_exotics_notebook.py": "23d953fb79a237097f05b7d322a59787ddc80a0086da6e5738c99122350e9c32",
     "volumes/10_exotics_martingales/exotics.ipynb": "f4a4d50ee22b9d5f6e4b9f0550a83c8d0e17b10cc4e9627ae06b5ac6db851ed4",
     "report/report_builder/figures.py": "2934a79116c48b7160ec8deeea9028437a3d64f26571f0b56529da879d935891",

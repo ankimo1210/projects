@@ -31,11 +31,11 @@
 
 **Interfaces:** `forward_start_call(S,r,sigma,T1,T2,q=0)` → float/ndarray。参照`integrate_forward_start(S,r,sigma,T1,T2,q=0)` → (price,error)、`build()` → cases/example/mc/figure。`verify(data)` → 数値結果。
 
-- [ ] Step 1: T1=0、q=0の遅延不変、一次同次性、零長・零σ混在、無効要素・shapeのテストを先に追加する。`forward_start_call(100,.05,.2,0,1)`の期待値は10.450583572185565。Expected: 関数がなくFAIL。
-- [ ] Step 2: 正規化したspot=strike=1のBSM価格にS exp(−qT1)を掛ける。τ=0要素は計算を避ける。公開APIを直接importする。Expected: API tests PASS。
-- [ ] Step 3: 二つの独立GBM増分の密度を積分し、満期T2で割り引く参照を作る。固定seed・524288経路の二時点MCを3例作り、標準誤差と95%区間を保存する。Expected: 36ケースと全図用配列が再計算一致。
-- [ ] Step 4: 求積/API差、MCの6標準誤差内、同次性・q=0・T1=0・零境界を確認し、価格・tenor・fixing・割引の4改変を拒否する。APIを誤ったtenor/配当因子へ変異させるtestも実行。Expected: `--check`と関連tests PASS。
-- [ ] Step 5: ローカルcommit `Implement Hull ATM forward-start call and independent reference`。
+- [x] Step 1: T1=0、q=0の遅延不変、一次同次性、零長・零σ混在、無効要素・shapeのテストを先に追加する。`forward_start_call(100,.05,.2,0,1)`の期待値は10.450583572185565。Expected: 関数がなくFAIL。
+- [x] Step 2: 正規化したspot=strike=1のBSM価格にS exp(−qT1)を掛ける。τ=0要素は計算を避ける。公開APIを直接importする。Expected: API tests PASS。
+- [x] Step 3: 二つの独立GBM増分の密度を積分し、満期T2で割り引く参照を作る。固定seed・524288経路の二時点MCを3例作り、標準誤差と95%区間を保存する。Expected: 36ケースと全図用配列が再計算一致。
+- [x] Step 4: 求積/API差、MCの6標準誤差内、同次性・q=0・T1=0・零境界を確認し、価格・tenor・fixing・割引の4改変を拒否する。APIを誤ったtenor/配当因子へ変異させるtestも実行。Expected: `--check`と関連tests PASS。
+- [x] Step 5: ローカルcommit `Implement Hull ATM forward-start call and independent reference`。
 
 ### Task 2: 共有4図と保存notebook
 
@@ -43,10 +43,10 @@
 
 **Interfaces:** 保存参照から`_figures()` → `forward_contract`, `forward_homogeneity`, `forward_start_delay`, `forward_fixed_expiry`。notebook区間`### 4.12 `から`## 5. `まで。
 
-- [ ] Step 1: 経路のstrike fixing、同次性、q=0の定長曲線と零長終点を検査するtestsを追加。Expected: 新教材モジュールがなくFAIL。
-- [ ] Step 2: 4図と6小節・11セルを追加する。定長と固定満期の違い、MC error bar、ESOとの関係、合成例の前提を明示。旧169セルを保持して実行する。
-- [ ] Step 3: 自節の保存図、旧本文、見出し、終端見出しの4改変をnotebookゲートで拒否し、共有図と実行出力を確認。Expected: notebookゲートとtests PASS。
-- [ ] Step 4: ローカルcommit `Teach Hull forward-start fixing and valuation`。
+- [x] Step 1: 経路のstrike fixing、同次性、q=0の定長曲線と零長終点を検査するtestsを追加。Expected: 新教材モジュールがなくFAIL。
+- [x] Step 2: 4図と6小節・11セルを追加する。定長と固定満期の違い、MC error bar、ESOとの関係、合成例の前提を明示。旧169セルを保持して実行する。
+- [x] Step 3: 自節の保存図、旧本文、見出し、終端見出しの4改変をnotebookゲートで拒否し、共有図と実行出力を確認。Expected: notebookゲートとtests PASS。
+- [x] Step 4: ローカルcommit `Teach Hull forward-start fixing and valuation`。
 
 ### Task 3: Portal・Book・ブラウザ
 
@@ -54,10 +54,10 @@
 
 **Interfaces:** 4図を§26.4直後に登録。合計166図/exotics54図。browser-checkは両画面×2幅×4図、16状態・16画像と現行ハッシュ。
 
-- [ ] Step 1: 4カードを要求するregistry testを先に実行。Expected: 未登録でFAIL。
-- [ ] Step 2: 図登録と件数・公開APIの索引・§26.5のD1依存宣言を更新する。
-- [ ] Step 3: Book/portalをbuildし、Playwrightで本文・数式・全trace配列・MC誤差帯・配置・数値改変拒否を確認する。1000pxの契約図と固定満期図を目視する。Expected: 16状態PASS。
-- [ ] Step 4: ローカルcommit `Verify Hull forward-start lesson on Book and portal`。
+- [x] Step 1: 4カードを要求するregistry testを先に実行。Expected: 未登録でFAIL。
+- [x] Step 2: 図登録と件数・公開APIの索引・§26.5のD1依存宣言を更新する。
+- [x] Step 3: Book/portalをbuildし、Playwrightで本文・数式・全trace配列・MC誤差帯・配置・数値改変拒否を確認する。1000pxの契約図と固定満期図を目視する。Expected: 16状態PASS。
+- [x] Step 4: ローカルcommit `Verify Hull forward-start lesson on Book and portal`。
 
 ### Task 4: D1回帰・統合記録・台帳
 

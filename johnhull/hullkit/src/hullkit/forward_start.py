@@ -27,7 +27,10 @@ def forward_start_call(S, r, sigma, T1, T2, q=0.0):
     ):
         if np.iscomplexobj(value):
             raise ValueError(f"{name} must be real")
-        array = np.asarray(value, dtype=float)
+        try:
+            array = np.asarray(value, dtype=float)
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ValueError(f"{name} must be a representable real number") from exc
         if np.any(~np.isfinite(array)):
             raise ValueError(f"{name} must be finite")
         values.append(array)

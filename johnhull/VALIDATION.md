@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,15 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 26.5 M22 — 2026-10-01
+
+[受入ノート](docs/SECTION_26_5_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_5_REVIEW_2026-10-01.md)・[統合記録](docs/validation/section-26-5/m22-check.json)にFS01–FS06の5軸を集約。台帳はaccepted（受入22・未評価284）。P2の5節目。
+
+- Hull GE p.618の開始日ATM、一次同次性、今日の価格c exp(−qT1)を照合。原典に印刷例はなく全数値は合成。独立二増分求積36ケースでAPI差最大2.8422e-14、二時点MC各524,288経路×3例で最大0.898570標準誤差。MC95%区間と求積誤差は別々に記録。
+- vol10 §4.12.1–4.12.6、共有4図、旧169セル保持（計180）。数値・notebook各4改変を拒否。Book/portalの16状態・16画像、数式894個、数式エラー0。全traceとMC誤差棒、1000pxの配置を確認。
+- 既受入21節のbrowser・runtime probe・個別pytest計1,687件・C:/F:復元がPASS。20節再利用・§26.4初回描画、追加保存538,589バイト。統合記録が採用D1パスとSHA-256を固定。
+- 全pytest **3,435 passed / 6 skipped**（既存warning 2件）、ruff、参照・数値・notebook・統合の照合、台帳とreleaseを確認。独立最終レビューの結果はレビュー記録に記載する。
 
 ## Section 26.4 M21 — 2026-10-01
 
