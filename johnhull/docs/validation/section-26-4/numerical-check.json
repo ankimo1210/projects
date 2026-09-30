@@ -1,0 +1,67 @@
+{
+  "api_negative_controls": [
+    {
+      "mutation": "d_at_settlement_strike",
+      "rejected": true
+    },
+    {
+      "mutation": "swapped_put_strikes",
+      "rejected": true
+    },
+    {
+      "mutation": "relative_bias_1e-9",
+      "rejected": true
+    }
+  ],
+  "artifact_sha256": "4ea3aab72950f963d2c3e8fc2aab9eb98832722d28e0208ac8ea1cefda7e5d6a",
+  "case_count": 38,
+  "example_26_1_error": 1.4551915228366852e-11,
+  "example_26_1_printed": {
+    "gap_put": 1896,
+    "reduction_percent": 45,
+    "regular_put": 3436
+  },
+  "max_relative_error": {
+    "price": 4.235197790880706e-15,
+    "regular_price": 4.235197790880706e-15,
+    "trigger_adjustment": 7.190257839457498e-16,
+    "trigger_probability": 1.1102230246251565e-16
+  },
+  "method": {
+    "monte_carlo": "seeds 20260930+i per case, 524288 antithetic pairs, |z| <= 4",
+    "normal_cdf": "0.5*erfc(-x/sqrt(2))",
+    "quadrature": "Gauss-Legendre 32 nodes x 96 panels over the trigger region, +/-16 sd"
+  },
+  "negative_controls": [
+    {
+      "mutation": "price",
+      "rejected": true
+    },
+    {
+      "mutation": "settlement_strike",
+      "rejected": true
+    },
+    {
+      "mutation": "trigger",
+      "rejected": true
+    },
+    {
+      "mutation": "printed_value",
+      "rejected": true
+    },
+    {
+      "mutation": "seed",
+      "rejected": true
+    }
+  ],
+  "section": "26.4",
+  "source_sha256": {
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/src/hullkit/gap_options.py": "6842f4fafa8f7882321314dcca4d3aa0bf77a092d05620293c11260d6ae821e3",
+    "scripts/build_gap_reference.py": "a6d523464a24e730cf0f3d6f4f2d2dc0986212acc50eb19974316ea583391e51",
+    "scripts/verify_gap_numerics.py": "97a22269f984a3f4c61bb56268e205a2b4cca00109935a07f714e2ad4f659c64"
+  },
+  "status": "PASS",
+  "zero_value_settlement_error": 0.0
+}

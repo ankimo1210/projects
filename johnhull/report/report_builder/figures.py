@@ -24,6 +24,7 @@ from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
+from hullkit._gap_lesson import _figures as gap_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._nonstandard_american_lesson import _figures as nonstandard_american_lesson_figures
@@ -1171,6 +1172,42 @@ FIGURES: list[FigureSpec] = [
         "64段のプットで日数を1・2・4・8・16・64と増やし、行使機会の価値を分離する。",
         lambda: nonstandard_american_lesson_figures()["scheduled_frequency"],
         practice="行使集合が包含関係にあるときに価格は単調。格子自体も変える比較にはこの理由を適用できない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "gap_payoff",
+        "exotics",
+        "ギャップ・オプションの満期の支払",
+        "§26.4。K2 = 100 を超えたら S_T − K1 を支払う。K1 = 90 と 110 を通常のコールと比べる。",
+        lambda: gap_lesson_figures()["gap_payoff"],
+        practice="支払は0で下から抑えない。K1 > K2 なら K2 < S_T < K1 で保有者が受け取る額は負（保有者が払う）。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "gap_settlement_line",
+        "exotics",
+        "決済の行使価格 K1 と価格",
+        "K2 = 100 を固定し K1 だけ動かすと価格は直線。傾きはコールが −e^{−rT}N(d2)、プットが +e^{−rT}N(−d2)。",
+        lambda: gap_lesson_figures()["gap_settlement_line"],
+        practice="K1 を行使条件付きの S_T の平均に置くと価値はゼロ。合成市場の例で、原典の数値ではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "gap_insurance",
+        "exotics",
+        "例題26.1：保険会社の費用",
+        "原典の例題。移転費用50,000を契約者が負担すると、請求は S_T < 350,000 のときだけになる。",
+        lambda: gap_lesson_figures()["gap_insurance"],
+        practice="保険会社の費用は K1 = 400,000、K2 = 350,000 のギャップ・プット。契約者の手取りは行使価格350,000の通常のプット。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "gap_transfer_cost",
+        "exotics",
+        "移転費用と保険会社の費用",
+        "移転費用を0から150,000まで動かす。原典の数値は0（3,436）と50,000（1,896、約45%減）の2点で、ほかは同じ市場の合成。",
+        lambda: gap_lesson_figures()["gap_transfer_cost"],
+        practice="保険会社の費用と契約者の価値の差は、第三者に払われる移転費用の現在価値。",
         is_new=True,
     ),
     FigureSpec(
