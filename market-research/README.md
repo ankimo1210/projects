@@ -82,6 +82,8 @@ manifestには契約版、元snapshot ID、基準時刻、ParquetのSHA-256を�
 
 ## 研究ノート
 
+[不動産市場の国際比較・地価調査](docs/REAL_ESTATE_BENCHMARK.md)では、福岡・東京と海外都市の公的系列、原本の配置、再計算方法、比較の限界をまとめています。
+
 [合成デモの5本のノート](notebooks/README.md)は取得済みデータの来歴、
 PIT信号、同条件の戦略比較、retrospective仮想リスク、HTML出力を共通APIで再実行します。
 各ノートは独立に動き、保存済みセル出力はありません。HTMLノートは同一合成runを描画し、

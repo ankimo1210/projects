@@ -2852,10 +2852,12 @@ source = { editable = "market-research" }
 dependencies = [
     { name = "duckdb" },
     { name = "exchange-calendars" },
+    { name = "matplotlib" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "plotly" },
     { name = "pytz" },
+    { name = "requests" },
     { name = "streamlit" },
     { name = "yfinance" },
 ]
@@ -2870,10 +2872,12 @@ dev = [
 requires-dist = [
     { name = "duckdb", specifier = ">=1.0" },
     { name = "exchange-calendars", specifier = ">=4.13.2,<5" },
+    { name = "matplotlib", specifier = ">=3.8" },
     { name = "numpy", specifier = ">=1.26" },
     { name = "pandas", specifier = ">=2.2" },
     { name = "plotly", specifier = ">=5.22" },
     { name = "pytz", specifier = ">=2024.1" },
+    { name = "requests", specifier = ">=2.31" },
     { name = "streamlit", specifier = ">=1.51" },
     { name = "yfinance", specifier = ">=0.2.50" },
 ]
