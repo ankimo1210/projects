@@ -1,0 +1,40 @@
+{
+  "artifact_sha256": "f8a89a3190ebf2854831508d1f47c627303f29c41391949e4ca76a120be8b536",
+  "case_count": 30,
+  "max_decomposition_error": 1.4210854715202004e-14,
+  "max_parity_error": 7.460698725481052e-14,
+  "max_price_error": 6.230038707144558e-11,
+  "max_quadrature_error": 8.268086063859401e-10,
+  "negative_controls": [
+    {
+      "mutation": "price",
+      "rejected": true
+    },
+    {
+      "mutation": "trigger",
+      "rejected": true
+    },
+    {
+      "mutation": "insurer_as_holder",
+      "rejected": true
+    },
+    {
+      "mutation": "clipped_payoff",
+      "rejected": true
+    }
+  ],
+  "negative_price_cases": 9,
+  "printed_prices": [
+    3436,
+    1896
+  ],
+  "reduction_percent": 44.827759758696075,
+  "section": "26.4",
+  "source_sha256": {
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "scripts/build_gap_reference.py": "6579ceee8d22e1e224e6f5814d1cda243d1066f646e99fad2a9863293c3f6641",
+    "scripts/verify_gap_numerics.py": "63316f32d69ca63f40e0d5248af2f3bbb8a3c0e62c572530e0c3ade232a6c600"
+  },
+  "status": "PASS"
+}
