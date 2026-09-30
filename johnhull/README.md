@@ -211,8 +211,8 @@ and changed-value rejection). Nineteen earlier lessons were rechecked with the
 D1 driver; `scripts/build_nonstandard_acceptance_record.py --check` is the
 integrated gate. The [acceptance note](docs/SECTION_26_3_ACCEPTANCE_2026-09-30.md)
 distinguishes Hull's warrant terms from the synthetic pricing assumptions.
-Older notebook gates with fixed pre-M20 baselines are historical gates; the
-M20 notebook and D1 records provide the current preservation check.
+Older notebook gates with fixed pre-M20 baselines were historical gates at
+M20; the M20 notebook and D1 records provided the preservation check then.
 
 The §26.4 (M21) checks are `scripts/build_gap_reference.py --check` (erfc
 closed form, Gauss–Legendre lognormal quadrature over the trigger region and
@@ -222,8 +222,12 @@ mutations and three rejected public-API mutations),
 `scripts/verify_gap_notebook.py --check` (fresh vol10, 158 preserved cells
 outside §4.11), and `scripts/verify_gap_browser.cjs` (Book/portal at
 1440/1000px, 16 states and changed-value rejection). Twenty earlier lessons were
-rechecked with the D1 driver (19 reused, §26.3 redrawn for its first record);
-`scripts/build_gap_acceptance_record.py --check` is the integrated gate. The
+rechecked with the D1 driver: §26.3 was redrawn once for its first record, and
+after the final review all twenty were rechecked again and reused at zero new
+bytes; `scripts/build_gap_acceptance_record.py --check` is the integrated gate.
+Notebook gates with fixed pre-M21 baselines, including M20's, are now
+historical; `scripts/verify_gap_notebook.py --check` and the D1 records provide
+the current preservation check. The
 validated entry point is `hullkit.gap_options`; it is imported as
 `from hullkit import gap_options` and deliberately not registered in
 `hullkit/__init__.py`, which is part of every accepted section's D1

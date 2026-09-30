@@ -108,6 +108,6 @@ M20 は共有 `hullkit.__init__` の変更により既受入19節（§26.1–§2
 
 ## M21 での運用（2026-09-30）
 
-M21 は `hullkit/__init__.py` と `hullkit/exotics.py` を変えず、新しい公開モジュール `hullkit.gap_options` を `from hullkit import gap_options` で使った。既受入20節のうち19節（§26.1–§26.2、§26.9–§26.17、§27.1–§27.8）は依存指紋が M20 の記録と一致し、reused（新規保存0バイト）。§26.3 は初めての D1 記録として redrawn（326,803バイト）。個別pytest計1,670件と画像の一次/ミラー保管庫照合がPASS。[M21統合記録](validation/section-26-4/m21-check.json)は採用した20件のD1記録パスとSHA-256を固定し、節台帳も同じ記録を参照する。
+M21 は `hullkit/__init__.py` と `hullkit/exotics.py` を変えず、新しい公開モジュール `hullkit.gap_options` を `from hullkit import gap_options` で使った。最初の実行では、既受入20節のうち19節（§26.1–§26.2、§26.9–§26.17、§27.1–§27.8）の依存指紋が M20 の記録と一致して reused（新規保存0バイト）、§26.3 は初めての D1 記録として redrawn（326,803バイト）。最終レビューの修正で `figures.py`（D1 記録の source_sha256 に入る）が変わったので20節を再実行し、§26.3 も含めて全節 reused（新規保存0バイト）。個別pytest計1,670件と画像の一次/ミラー保管庫照合がPASS。[M21統合記録](validation/section-26-4/m21-check.json)は最終実行の20件のD1記録パスとSHA-256を固定し、M20 基点より後のコミットで作られた記録であることも確かめる。節台帳も同じ記録を参照する。
 
-`hullkit/__init__.py` は全節の依存指紋に入る（「Imported package __init__ modules」）。M19・M20 の全節再描画（各約16MB）はこの登録が原因だった。新しい節の公開モジュールは `__init__` に登録しない。
+`hullkit/__init__.py` と、それが静的に import するモジュール（`exotics.py` を含む）は全節の依存指紋に入る（「Imported package __init__ modules and their static imports」）。M19・M20 の全節再描画（各約16MB）は新モジュールを `__init__` に登録したことが原因だった。新しい節の公開モジュールは `__init__` に登録しない。
