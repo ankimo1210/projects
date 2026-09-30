@@ -1,0 +1,40 @@
+{
+  "artifact_sha256": "62336bd5cf7f24aa4d69c4c292ea08934aeb6f268a0c74f183953f4d35c933b7",
+  "case_count": 60,
+  "example_call": 23.584835778168923,
+  "example_put": 19.750718825285777,
+  "max_component_sum_error": 5.684341886080802e-14,
+  "max_linearity_error": 7.105427357601002e-15,
+  "max_mc_standard_errors": 1.4152539598501959,
+  "max_parity_error": 5.595524044110789e-14,
+  "max_price_error": 9.947598300641403e-14,
+  "max_quadrature_error": 3.289478885348485e-10,
+  "mc_paths": 524288,
+  "negative_controls": [
+    {
+      "mutation": "price",
+      "rejected": true
+    },
+    {
+      "mutation": "reset",
+      "rejected": true
+    },
+    {
+      "mutation": "discount",
+      "rejected": true
+    },
+    {
+      "mutation": "cap",
+      "rejected": true
+    }
+  ],
+  "section": "26.6",
+  "source_sha256": {
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/cliquet.py": "e745f7805b029e65a2bd890a3fe6d48a08881be668782339ab2cb9e98eb41d90",
+    "hullkit/src/hullkit/forward_start.py": "3590dfcd279b47f3c755dcdc3297d1a0b2b35a0a16e3eb9cee647f64f3729613",
+    "scripts/build_cliquet_reference.py": "f5c43c90afb1a31dd71cb1a5a212a7a00f0392622b03ea10828b5de9dce6c4f6",
+    "scripts/verify_cliquet_numerics.py": "666e75974e29b23fab1f959a22cc34f12921aa3fab9d18aea26091317df0f983"
+  },
+  "status": "PASS"
+}
