@@ -1,0 +1,43 @@
+{
+  "artifact_sha256": "71b993070e35a7c2b6b535738d96cbf8522c9c04dfba4e379997650fbc43795b",
+  "case_count": 104,
+  "example_prices": {
+    "call_on_call": 3.2568270197743985,
+    "call_on_put": 1.299803100157507,
+    "put_on_call": 3.7829206319037,
+    "put_on_put": 4.722821592890921
+  },
+  "max_linearity_error": 3.552713678800501e-14,
+  "max_mc_standard_errors": 1.737655920814405,
+  "max_parity_error": 2.842170943040401e-14,
+  "max_price_error": 5.5706550483591855e-12,
+  "max_quadrature_error": 9.639635300379666e-11,
+  "max_root_residual": 7.815970093361102e-13,
+  "mc_paths": 524288,
+  "negative_controls": [
+    {
+      "mutation": "price",
+      "rejected": true
+    },
+    {
+      "mutation": "critical",
+      "rejected": true
+    },
+    {
+      "mutation": "strike",
+      "rejected": true
+    },
+    {
+      "mutation": "mc_error",
+      "rejected": true
+    }
+  ],
+  "section": "26.7",
+  "source_sha256": {
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/compound.py": "6fceb8083b2593fff2c0c3755de6f61f6371e49d5279eada5dbb890cea2c1b19",
+    "scripts/build_compound_reference.py": "3be7d7855177d40fcbe4587b563e9423051f5b261dedcd620fd224b1b84e523a",
+    "scripts/verify_compound_numerics.py": "7686ae7aa6d2ae5a05c9bc69f4c2658a2acb173a2bd0508919ad155067163761"
+  },
+  "status": "PASS"
+}
