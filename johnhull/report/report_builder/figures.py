@@ -22,6 +22,7 @@ from hullkit._asian_lesson import _figures as asian_lesson_figures
 from hullkit._barrier_tree_lesson import _figures as barrier_tree_lesson_figures
 from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
+from hullkit._cliquet_lesson import _figures as cliquet_lesson_figures
 from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._forward_start_lesson import _figures as forward_start_lesson_figures
@@ -1245,6 +1246,42 @@ FIGURES: list[FigureSpec] = [
         "T₂=2年固定。二時点MC各524,288経路の95%区間と独立密度求積を比較する。",
         lambda: forward_start_lesson_figures()["forward_fixed_expiry"],
         practice="開始が満期へ近づくと給付が0になる。MC標本誤差と求積誤差を区別する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "cliquet_reset",
+        "exotics",
+        "Cliquetのresetと各期給付",
+        "§26.6。各期の開始株価がstrike、期末に株価差を通貨で支払う。",
+        lambda: cliquet_lesson_figures()["cliquet_reset"],
+        practice="S=100,r=5%,q=3%,σ=20%; .5/1/1.5/2年のGBM例示1経路。hoverのcall/put給付を確認する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "cliquet_components",
+        "exotics",
+        "Cliquetを各期の価格へ分解",
+        "最初のATM vanillaと後続forward-startの和。call23.584836、put19.750719。",
+        lambda: cliquet_lesson_figures()["cliquet_components"],
+        practice="S=100,r=5%,q=3%,σ=20%; .5/1/1.5/2年。各給付を支払日から割り引く。満期一括支払とは違う。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "cliquet_frequency",
+        "exotics",
+        "満期固定とresetの回数",
+        "満期2年固定、等間隔n=1/2/4/8/12/24。n=1は通常ATM vanilla。",
+        lambda: cliquet_lesson_figures()["cliquet_frequency"],
+        practice="S=100,r=5%,q=3%,σ=20%。株価差の通貨給付と固定notional returnを区別する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "cliquet_limits",
+        "exotics",
+        "総額制約・各期制約・終了",
+        "総額floor 5/cap 20、各期cap 5、95–105で期末終了を共通MCで比較。",
+        lambda: cliquet_lesson_figures()["cliquet_limits"],
+        practice="別市場S=100,r=q=0,σ=20%; .5/1/1.5/2年、524288経路、95%平均区間。当期支払後の終了。公開APIは単純型のみ。",
         is_new=True,
     ),
     FigureSpec(
