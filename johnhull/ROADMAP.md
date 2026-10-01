@@ -19,7 +19,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 68 public + 24 private modules as of 2026-10-01; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 69 public + 24 private modules as of 2026-10-01; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
 ## 現在地（2026-10-01、M24受入）
 
@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 68 public + 24 priva
 | 節単位の受入 | M24（§26.7）まで。台帳は受入24・未評価282（7.8%） | P1（Ch27）完了、P2（§26.1–§26.8）は7/8節受入。次はM25（§26.8 Chooser）。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
 | 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。不変画像はハッシュで参照 | **M24**：既受入23節の全検査PASS（22節再利用・1節再描画）、追加保存373,236バイト。採用記録と両保管庫復元を照合。レビュー修正後は旧15節を再検査（新規保存0）、最終記録は23節reuse |
-| テスト | hullkit+report 3,602 passed・6 skipped（M24修正後、2026-10-01） | 実行結果は `VALIDATION.md` |
+| テスト | hullkit+report 3,644 passed・6 skipped（M24とGap追加のmain統合後、2026-10-01） | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。

@@ -45,6 +45,8 @@ compound_price(100,.0001,100,.05,.2,.999999999999,1,.02)はIntegrationWarningの
 - M23のNaNゲート保留、M22の時点説明：未変更の既存保留。M24 specの範囲に従い保持する。判断を誤ると歴史ゲートのNaN見逃しや旧時点説明の誤解が残るため、既存保留として追跡を続ける。
 - 並行更新されたmainのGap追加：指定範囲外。mainはレビュー中に60eb0d3cへ進み、新しいgap_options/APIテスト等5ファイルが加わった。後の統合で保持し、差分/モジュール数/全体テストを照合する。判断を誤ると統合時の競合や件数の欠落が起きる。本ブランチの基点はcb3665fdのまま。
 
-再レビューは行わず、ImportantのRED→GREENと修正後の全体テストで修正を確認した。Critical/Importantの未解消指摘はない。Minor1件を保留して受入・ローカル統合可能と判断した。mainとの統合はユーザーの次の選択待ちで、pushは行っていない。
+再レビューは行わず、ImportantのRED→GREENと修正後の全体テストで修正を確認した。Critical/Importantの未解消指摘はない。Minor1件を保留して受入・ローカル統合可能と判断した。
+
+2026-10-01、ユーザーの選択1によりmainへローカル統合した（76c820f7）。並行追加されたGapの5ファイルを保持し、統合後全pytestは3,644 passed・6 skipped・既存warning2件（124.35秒）。Book/portal再構築、4--check、台帳成果物、tracked release、ruffがPASS。public69/private24 module。M24最終証跡のハッシュはmainの生成物とも一致し、追加のD1描画は不要だった。pushは行っていない。
 
 二変量正規CDFの定義と符号恒等式は[Hull Technical Note 5](https://www-2.rotman.utoronto.ca/~hull/TechnicalNotes/TechnicalNote5.pdf)を参照。本文の4桁近似を転記せず、相関角度積分を独立条件付き求積と照合した。

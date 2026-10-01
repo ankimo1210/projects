@@ -58,3 +58,7 @@ M23のNaN gate保留とM22の時点説明P3は旧節の保留として保持し�
 修正後、変更されたexoticsページに関係する旧15節をD1で再検査し全PASS（画像の新規保存0バイト）。他8節のページ/入力ハッシュは不変。最終統合記録は23節すべてreusedで、初回の§26.6 redrawnを直接参照している。初回保存373,236バイトと全旧記録は保持した。
 
 **Minor保留：** T1/T2=.999999999999・K1=.0001等では二変量積分が警告後ValueErrorで停止する。約32マイクロ秒の残存期間における数値制限で、誤った有限価格を返す挙動ではない。公開条件0<T1<T2の全域を処理できる意味ではない。
+
+## mainへのローカル統合（2026-10-01）
+
+ユーザーの選択1により、Gap追加を含むmain（60eb0d3c）へM24ブランチfc7bd5b6をマージした（76c820f7）。競合なし、Gapの追加5ファイルとmarket-researchの未コミット変更を保持。統合後の全hullkit+report pytestは3,644 passed・6 skipped・既存warning2件（124.35秒）。Book/portalをmainのソースで再構築し、参照/数値/notebook/統合の4--check、台帳--check-artifacts、tracked release、ruffがPASS。受入24・未評価282、P2は7/8のまま。pushは行っていない。

@@ -4255,12 +4255,12 @@
         "review": {
           "path": "docs/SECTION_26_7_REVIEW_2026-10-01.md",
           "kind": "note",
-          "sha256": "cff12d6bb5dee931e89bfb829f0c91f4713d8d06fea8d558096f315db2c4bef6"
+          "sha256": "37f232e5c6aa58b01e0754fa785238359f2d17cd596f124a15679643e610e752"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md",
           "kind": "note",
-          "sha256": "37bc2ec2b1a94931b6a252aea3f0f5e9d9998d4ebf193d9519f5bdaf3f6e77c8"
+          "sha256": "176a4cdebcf277a3ea9714a084ac76ae5f9149f7cb3d210520eb175c9c812edf"
         },
         "textbook": {
           "path": "options, futures and other derivatives 11th.pdf",
