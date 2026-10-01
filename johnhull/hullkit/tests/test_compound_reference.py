@@ -43,3 +43,13 @@ def test_threshold_payoffs_and_curve_limits():
     assert strikes["call_on_put"][-1] == 0
     assert strikes["put_on_call"][0] == 0
     assert data["figure"]["timing"]["T1"][-1] == 0.9999
+
+
+def test_near_expiry_inner_transition_is_resolved():
+    # Independent review found that a tiny reported QUADPACK error could hide
+    # an unresolved inner vanilla transition. Pin its separately split integral.
+    value, error = reference().integrate_compound(
+        100, 0.01, 100, 0.05, 0.2, 0.999999, 1, 0.02, "put_on_call"
+    )
+    assert value == pytest.approx(0.004564661869643963, abs=1e-10)
+    assert error < 1e-9
