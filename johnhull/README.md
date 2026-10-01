@@ -238,7 +238,7 @@ gate; the [acceptance note](docs/SECTION_26_5_ACCEPTANCE_2026-10-01.md) records
 the constant-GBM assumptions and the absence of a printed numerical example.
 
 Older notebook gates with fixed earlier baselines are historical gates; the
-M23 notebook and D1 records provide the current preservation check.
+M24 notebook and D1 records provide the current preservation check.
 
 The §26.6 (M23) checks are `scripts/build_cliquet_reference.py --check`
 (60 independent density quadratures, four 524288-path multitime MC runs),
@@ -249,3 +249,13 @@ random reset strikes, parity, and reference mutations),
 `scripts/build_cliquet_acceptance_record.py --check` pins the current artifacts
 and all 22 earlier D1 records. The [acceptance note](docs/SECTION_26_6_ACCEPTANCE_2026-10-01.md)
 distinguishes stock-price cashflows from fixed-notional returns and constrained contracts.
+
+The §26.7 (M24) checks are `scripts/build_compound_reference.py --check`
+(104 independent conditional payoff integrals and four 524288-path conditional MC runs),
+`scripts/verify_compound_numerics.py --check` (four formulas, critical spots,
+put-call parity, homogeneity, finite values and rejected strike/correlation/root/NaN mutants),
+`scripts/verify_compound_notebook.py --check` (191 preserved predecessor cells),
+and `scripts/verify_compound_browser.cjs` (16 states, critical spots and MC intervals).
+`scripts/build_compound_acceptance_record.py --check` pins the current artifacts
+and all 23 earlier D1 records, requiring the hash inventory derived from current declarations.
+See the [acceptance note](docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md) for the four contracts and no-root limits.
