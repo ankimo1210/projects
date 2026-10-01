@@ -14,6 +14,8 @@ integration gate を満たすことだけを表す。実市場での予測力、
 
 [受入ノート](docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_7_REVIEW_2026-10-01.md)・[統合記録](docs/validation/section-26-7/m24-check.json)にCO01–CO06の5軸を集約。台帳accepted24・unreviewed282、P2は7/8節。
 
+mainへのローカル統合76c820f7で、並行Gap追加5ファイルを保持。統合後全pytestは**3,644 passed / 6 skipped**・既存warning2件（124.35秒）。mainからBook/portalを再構築し、4--check・台帳--check-artifacts・tracked release・ruffがPASS。M24最終証跡の生成物ハッシュとも一致した。以下の3,602件はM24ブランチ修正後の結果で、統合後にはGap側の42件が加わる。
+
 - Hull GE pp.618–619の4契約・2strike/行使日、T1給付、内側vanilla臨界株価と4Geske公式を照合。原典に印刷例なし、全数値合成。独立条件付き求積104例でAPI差4.26e-14、根残差7.82e-13、MC4例×524288経路で最大1.737656SE。
 - call-on-call3.25682701977440、put-on-call3.78292063190370、call-on-put1.29980310015751、put-on-put4.72282159289092（S100/K1=10/K2=100/r5%/q2%/σ20%/T1=.5/T2=1）。根105.772962280276/90.7302199250643。K1=0/σ=0/内側put根なし、parity/同次性/近接時点を照合。
 - 参照4改変・実API4変異（strike入替、相関0、根変更、NaN）を拒否。vol10 §4.14・11セル・4共有図、旧191セル保持で全202セルfresh一致。Book/portal16状態/16画像、根/MC誤差棒/価格改変拒否。Book数式971個・エラー0。
