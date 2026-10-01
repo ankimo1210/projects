@@ -128,3 +128,12 @@ driverの`--records-dir docs/validation/d1-recheck`を明示し、cleanな4d19ef
 独立レビュー後、D1記録の自己申告キーではなく、現行の依存宣言・Python閉包・生成側collectorから必須ハッシュ集合を再構成するよう統合検査を修正した。§26.5の81ハッシュを1件ずつ削除して拒否するテスト2件がRED→GREEN、修正後の全pytestは3,524 passed・6 skipped。
 M22 pytestの基点固定比較では後続§4.13だけを除き、現在の全体保存はM23 gateで旧180セルすべてを照合する。
 過去の受入記録・画像は保持した。
+
+## M24での運用（2026-10-01）
+
+既受入23節のbrowser・runtime probe・個別pytest計1,803件・C:/F:復元はPASS。22節再利用・1節再描画、追加保存373,236バイト。採用D1パスとSHA-256を固定した。
+既存pricingとroot exportsを維持し、compoundを専用moduleで追加した。§26.6が初回描画で、旧22節はredrawn基点への直接参照を使った。
+driverの`--records-dir docs/validation/d1-recheck`を明示し、cleanな6947fc30から実行。
+[M24統合記録](validation/section-26-7/m24-check.json)は採用23件と全必須source/artifact hashesを固定する。
+必須hash集合は現行依存宣言/Python閉包と生成側collectorから決め、記録の自己申告を使わない。
+歴史M23 pytestは後続§4.14だけを除き、M24 gateで旧191セル全体を照合する。過去記録と画像は保持した。

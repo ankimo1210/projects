@@ -56,7 +56,7 @@
 
 **Interfaces:** 4カードをcliquet_limits直後に追加。174図/exotics62図。browserは16状態/16画像、両surfaceの全trace/誤差棒/根、数式/文字切れ/数値改変拒否、source/artifact hashes。
 
-- [ ] Step 1: 4registry keyを要求するtestを先に実行。`assert KEYS <= {fig.key for fig in FIGURES}`。Expected:未登録でFAIL。
+- [ ] Step 1: 4registry keyを要求するtestを先に実行。`assert KEYS <= {fig.id for fig in FIGURES}`。Expected:未登録でFAIL。
 - [ ] Step 2: registry/件数/API索引/§26.7依存（compound,bsm,_compound_lesson）を追加。Expected: registry/build tests PASS。
 - [ ] Step 3: `jupyter-book build johnhull/book`と`python -m report_builder.build`を実行、node browser検査で全16状態/画像を確認。1000px閾値/検証図を目視。Expected:全PASS。
 - [ ] Step 4: `git commit -m "Verify Hull compound lesson on Book and portal"`。task-doneはregistryとreport build tests。Expected:全PASS。
