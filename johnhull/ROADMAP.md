@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 67 public + 23 priva
 | 節単位の受入 | M23（§26.6）まで。台帳は受入23・未評価283（7.5%） | P1（Ch27）完了、P2（§26.1–§26.8）は6/8節受入。次はM24（§26.7 Compound）。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
 | 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。不変画像はハッシュで参照 | **M23**：既受入22節の全検査PASS（21節再利用・1節再描画）、追加保存481,959バイト。採用記録と両保管庫復元を照合 |
-| テスト | hullkit+report 3,522 passed・6 skipped（M23、2026-10-01） | 実行結果は `VALIDATION.md` |
+| テスト | hullkit+report 3,524 passed・6 skipped（M23レビュー修正後、2026-10-01） | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。

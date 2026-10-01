@@ -90,3 +90,18 @@ def test_integrated_record_covers_twenty_two_sections() -> None:
     assert set(record["regression"]["d1"]) == set(gate.EARLIER)
     assert record["numerical"]["cases"] == 60
     assert record["browser"]["state_checks"] == 16
+
+
+@pytest.mark.parametrize("category", ["source_sha256", "artifact_sha256"])
+def test_d1_rejects_each_missing_required_hash(category) -> None:
+    gate = _gate()
+    integrated = json.loads(gate.OUT.read_text(encoding="utf-8"))
+    name = integrated["regression"]["d1"]["26.5"]["record"]
+    record = json.loads((gate.PROJECT / name).read_text(encoding="utf-8"))
+    # Every hash emitted by the D1 producer is required, independently of the
+    # reduced inventory an incomplete record might claim for itself.
+    for source in record[category]:
+        changed = deepcopy(record)
+        del changed[category][source]
+        with pytest.raises(ValueError, match=f"missing {category}"):
+            gate.check_d1_payload("26.5", name, changed)

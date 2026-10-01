@@ -1,7 +1,7 @@
 # §26.6 Cliquet：受入記録
 
 **判定：accepted。** 日付：2026-10-01。Hull 11e Global Edition p.618のCQ01–CQ06を照合した。
-[原典照合とレビュー](SECTION_26_6_REVIEW_2026-10-01.md)、[M23統合記録](validation/section-26-6/m23-check.json)を参照。独立最終レビューはこれから実施する。
+[原典照合とレビュー](SECTION_26_6_REVIEW_2026-10-01.md)、[M23統合記録](validation/section-26-6/m23-check.json)を参照。独立最終レビューはCriticalなし、Important1件を修正、Minor1件を保留。修正後の全体再検証はPASS。
 
 ## 実装と原典
 
@@ -35,11 +35,23 @@ notebook4改変を拒否、fresh全文実行を照合。Book/portal×1440/1000px
 ## 回帰とゲート
 
 既受入22節のbrowser・runtime probe・個別pytest計1,728件・C:/F:復元はPASS。21節再利用・1節再描画、追加保存481,959バイト。採用D1パスとSHA-256を固定した。
-参照・数値・notebook・統合の4照合、ruff、全hullkit+report pytest、台帳の成果物照合、releaseを実行する。
-全hullkit+report pytestは3,522 passed・6 skipped（既存warning2件）。その他の全ゲートもPASS。独立最終レビューの確定結果は最終更新で記載する。
+参照・数値・notebook・統合の4照合、ruff、全hullkit+report pytest、台帳の成果物照合、releaseを検査した。
+レビュー修正後の全hullkit+report pytestは3,524 passed・6 skipped（既存warning2件、108.43秒）。その他の全ゲートもPASS。独立レビューのImportantは81必須ハッシュを個別削除するテスト2件のRED→GREENで修正した。
 
 ## 適用範囲
 
 公開APIは定数GBM・株価差の単純ATM call／put列。global/local制約と終了は教材用MC診断で公開APIには含めない。
 固定notional return、実市場smile、確率的金利・変動率、取引費用は対象外。
 M22のP3（図の時点と価格例の時点の本文対応）は前節の保留事項として維持する。
+
+## 独立最終レビューと保留
+
+Important1（D1必須ハッシュ欠落）は、記録が自己申告するキー集合を信頼せず、
+現行の依存宣言とPython閉包から生成側の必須集合を再構成して拒否するよう修正した。
+source全項目／Book・portal artifactを個別削除するテスト2件のRED→GREENを確認。
+採用パス/SHA固定と、現行成果物・両保管庫の照合は維持する。
+
+**P3保留：** 数値verify単独はcall/putをNaNにした変異を拒否しない。
+現行公開APIの有限値チェックと価格ピンテストは正常で、現行の価格欠陥ではない。
+executing-plansのMinor保留規約に従い、改善を記録してこの修正パスから除外した。
+別担当の83テスト・統合ゲート・台帳証跡の確認、46ハッシュ削除の拒否、判断範囲の詳細はレビュー記録を参照。

@@ -125,5 +125,6 @@ M21をmainへ統合した際、BookのSphinxキャッシュによりvol06のHTML
 §26.5は初のD1描画。再利用はredrawn基点への直接参照で、reuse連鎖を作らない。
 driverの`--records-dir docs/validation/d1-recheck`を明示し、cleanな4d19ef8fから実行。
 [M23統合記録](validation/section-26-6/m23-check.json)が採用22件と全必須source/artifact hashesを固定する。
+独立レビュー後、D1記録の自己申告キーではなく、現行の依存宣言・Python閉包・生成側collectorから必須ハッシュ集合を再構成するよう統合検査を修正した。§26.5の81ハッシュを1件ずつ削除して拒否するテスト2件がRED→GREEN、修正後の全pytestは3,524 passed・6 skipped。
 M22 pytestの基点固定比較では後続§4.13だけを除き、現在の全体保存はM23 gateで旧180セルすべてを照合する。
 過去の受入記録・画像は保持した。

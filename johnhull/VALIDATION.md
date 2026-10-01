@@ -18,7 +18,7 @@ integration gate を満たすことだけを表す。実市場での予測力、
 - call23.58483577816892、put19.75071882528578（S100/r5%/q3%/σ20%/支払.5,1,1.5,2）。成分和・同次性・call−put差、参照4改変と実API3変異を検査。
 - vol10 §4.13、11セル・共有4図、旧180セル保持（計191）。全文fresh出力一致、notebook4改変拒否。Book/portal16状態・16画像、customdata・誤差棒、数式919個・エラー0を照合。
 - 既受入22節のbrowser・runtime probe・個別pytest計1,728件・C:/F:復元はPASS。21節再利用・1節再描画、追加保存481,959バイト。採用D1パスとSHA-256を固定した。
-- 全pytest **3,522 passed / 6 skipped**（既存warning2件）、ruff、4本--check、台帳成果物照合・releaseを検査。独立最終レビューはレビュー記録へ記載する。
+- レビュー修正後の全pytest **3,524 passed / 6 skipped**（既存warning2件）、ruff、4本--check、台帳成果物照合・releaseを検査。独立最終レビューのImportant1件はD1の81必須ハッシュを個別削除するテスト2件のRED→GREENで修正し、Minor1件はP3として保留した。
 
 ## Section 26.5 M22 — 2026-10-01
 
