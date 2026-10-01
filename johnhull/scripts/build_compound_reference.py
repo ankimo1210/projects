@@ -76,7 +76,14 @@ def integrate_compound(S, K1, K2, r, sigma, T1, T2, q=0.0, kind="call_on_call"):
     if root is not None:
         z = (math.log(root / S) - drift) / vol
         if -12 < z < 12:
-            points.insert(1, z)
+            points.append(z)
+    # The inner vanilla has its own narrow transition near forward moneyness
+    # zero. An outer exercise root alone can leave that transition invisible
+    # to adaptive quadrature when tau << T1, despite a tiny error estimate.
+    center = (math.log(K2 / S) - (r - q) * tau - drift) / vol
+    width = math.sqrt(tau / T1)
+    points.extend(center + n * width for n in (-10, -3, 0, 3, 10) if -12 < center + n * width < 12)
+    points = sorted(set(points))
 
     def integrand(z):
         s1 = S * math.exp(drift + vol * z)

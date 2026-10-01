@@ -175,6 +175,7 @@ def register_compound(section: dict) -> None:
         limitations=[
             "欧州型・定数GBMのみ。American exercise、smile、確率的金利/変動率、取引費用は対象外。",
             "T1をT2と同日にする契約は対象外。T1/T2=.9999までの参照を含む。",
+            "極端に近い有効日付（例T1/T2=.999999999999）では二変量積分が警告後ValueErrorで停止することがある。独立レビューのMinorとして保留。",
             "MCはT1 spot samplingと内側vanilla条件付き価値。二重MCではない。95%区間は平均の標本誤差で、求積/モデル誤差を含まない。",
         ],
         acceptance_note="docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md",
