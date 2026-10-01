@@ -2465,6 +2465,94 @@ global／local制約・終了の図は教材用MC診断で、公開の制約型p
 
 **回答の手掛かり：** vanilla、支払日、random reset元本、非線形制約、終了順序を区別します。"""))
 
+cells.append(md(r"""### 4.14 コンパウンド・オプション：二つの行使日（§26.7、GE pp.618–619）
+
+#### 4.14.1 オプションを原資産にする4契約
+
+外側/内側はcall/call、put/call、call/put、put/putの4種類です。
+$T_1$ で内側欧州optionの価値 $V_1$ を受け取る権利を判断し、外側callの給付は
+$\max(V_1-K_1,0)$、外側putは $\max(K_1-V_1,0)$。
+内側のstrikeは $K_2$、満期は $T_2>T_1$。二つのstrikeと日付は別です。
+外側の価値はこの $T_1$ 給付を割り引いた期待値で、$T_2$ の株価給付そのものではありません。
+
+以下は共通の合成市場 $S_0=100,K_1=10,K_2=100,r=5\%,q=2\%,\sigma=20\%,T_1=0.5,T_2=1$。
+原典には印刷数値例がなく、下の価格は独立求積で作った参照です。"""))
+cells.append(code(r"""from hullkit.compound import compound_price
+from hullkit._compound_lesson import _figures as compound_figures, _load_reference as compound_reference
+compound_data = compound_reference()
+compound_plots = compound_figures()
+compound_market = dict(S=100,K1=10,K2=100,r=.05,sigma=.2,T1=.5,T2=1,q=.02)
+for kind in ('call_on_call','put_on_call','call_on_put','put_on_put'):
+    print(f'{kind}={compound_price(**compound_market,kind=kind):.6f}')"""))
+cells.append(md(r"""#### 4.14.2 臨界株価と根が存在しない領域
+
+各内側optionについて $V(S^*,T_2-T_1)=K_1$ を解きます。基準市場の根は
+callが105.772962280276、putが90.7302199250643。
+内側callは株価とともに増え、外側callは $S_1>S^*$、内側putなら $S_1<S^*$ で行使します。
+図の点線は内側価値、実線は外側4給付、縦破線は二つの $S^*$、水平線は $K_1=10$。
+この図の値は $T_1$ 価値で、今日の現在価値ではありません。
+
+内側putには上限 $K_2e^{-r(T_2-T_1)}$ があります。$K_1$ がこの上限以上なら有限の根はなく、
+call-on-putは0、put-on-putは $K_1e^{-rT_1}-p_0$。
+契約の価格は有効なので、根探索のエラーにしません。"""))
+cells.append(code('compound_plots["compound_threshold"].show()'))
+cells.append(md(r"""#### 4.14.3 二変量正規による4公式
+
+$M(a,b;\rho)$ は標準二変量正規で両変数がそれぞれ $a,b$ 以下になる確率です。
+各内側option自身の $S^*$ を使い、
+
+$$a_1=\frac{\ln(S_0/S^*)+(r-q+\sigma^2/2)T_1}{\sigma\sqrt{T_1}},\quad a_2=a_1-\sigma\sqrt{T_1},$$
+$$b_1=\frac{\ln(S_0/K_2)+(r-q+\sigma^2/2)T_2}{\sigma\sqrt{T_2}},\quad b_2=b_1-\sigma\sqrt{T_2},\quad \rho=\sqrt{T_1/T_2}.$$
+
+$X=S_0e^{-qT_2},Y=K_2e^{-rT_2},Z=K_1e^{-rT_1}$ と置くとHull p.619の4式は
+
+$$C_C=XM(a_1,b_1;\rho)-YM(a_2,b_2;\rho)-ZN(a_2),$$
+$$P_C=YM(-a_2,b_2;-\rho)-XM(-a_1,b_1;-\rho)+ZN(-a_2),$$
+$$C_P=YM(-a_2,-b_2;\rho)-XM(-a_1,-b_1;\rho)-ZN(-a_2),$$
+$$P_P=XM(a_1,-b_1;-\rho)-YM(a_2,-b_2;-\rho)+ZN(a_2).$$
+
+下の図だけ $K_1$ を0〜110へ変えます。縦線は内側put上限97.530991。
+外側call−putは常に内側vanilla現在価値−$K_1e^{-rT_1}$。
+$K_1=0$ では外側callが内側vanillaと一致し、外側putは0です。"""))
+cells.append(code('compound_plots["compound_strikes"].show()'))
+cells.append(md(r"""#### 4.14.4 二つの日付と相関
+
+この図だけ $T_2=1$ を固定して $T_1=0.01,0.1,0.25,0.5,0.75,0.9,0.99,0.9999$ を変えます。
+相関の絶対値は $\sqrt{T_1/T_2}$、符号は4式によって変わります。
+APIは $0<T_1<T_2$ を要求し、同じ日付へ置き換えた式の除算は行いません。
+$T_1$ が $T_2$ に近いケースも独立求積と照合します。
+二変量CDFは相関角度の1次元積分で決定的に評価し、ランダムなCDF推定は使いません。"""))
+cells.append(code('compound_plots["compound_timing"].show()'))
+cells.append(md(r"""#### 4.14.5 独立求積と条件付きMonte Carlo
+
+独立参照は $T_1$ の対数正規密度に対して外側の正の給付を1次元積分します。
+内側vanillaには独自のerfc実装を使い、hullkitと二変量CDFを使いません。
+104契約でAPI差 $10^{-8}$ 以内、根残差 $10^{-9}$、parityと通貨同次性を照合し、
+strike入替・相関0・誤った臨界株価・NaN結果を検出します。
+
+MCは4契約それぞれ524,288経路、共通seedで $S_1$ をsamplingし内側vanilla条件付き価値を使います。
+$T_2$ の内側給付をさらにsamplingする二重MCではありません。
+外側給付は $e^{-rT_1}$ で割り引きます。図は共通の基準市場です。
+95%信頼区間は平均の標本誤差（1.959964×標準誤差）で、求積やモデル誤差を含みません。
+求積との差を6標準誤差以内で検査します。"""))
+cells.append(code(r"""for row in compound_data["mc"]:
+    print(f'{row["kind"]}: paths={row["paths"]:,} MC={row["price"]:.6f} SE={row["standard_error"]:.6f}')
+compound_plots["compound_validation"].show()"""))
+cells.append(md(r"""#### 4.14.6 適用範囲と理解の確認
+
+公開APIは欧州型・定数 $r,q,\sigma$ のGBMです。市場入力をbroadcastし、有限実数、
+$S,K_2>0,K_1\ge0,\sigma\ge0,0<T_1<T_2$ を要求します。
+ゼロ変動率は決定的な $T_1$ 給付を割り引きます。
+American exercise、smile、確率的金利・変動率、取引費用は含みません。
+
+1. 外側給付を $T_2$ から割り引くと、どの契約を評価したことになりますか。
+2. 内側callとputで外側callの行使領域はどちら向きですか。
+3. なぜ $a$ に $K_2$ を使うと価格が変わりますか。
+4. 内側putの上限以上の $K_1$ で有限根がなくても、put-on-putが有効な理由は何ですか。
+5. MC平均の95%区間は、GBMモデル誤差の範囲ですか。
+
+**回答の手掛かり：** $T_1$ 給付、内側の単調性、$S^*$、常時外側put行使、標本誤差を区別します。"""))
+
 cells.append(
     md(r"""## 5. マルチンゲールと測度（Ch.28）
 

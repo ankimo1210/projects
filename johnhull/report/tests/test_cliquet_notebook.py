@@ -39,6 +39,13 @@ def test_saved_notebook_has_cliquet_output_and_four_figures():
 def test_notebook_gate_preserves_old_lesson_and_rejects_changed_plot():
     gate = importlib.import_module("johnhull.scripts.verify_cliquet_notebook")
     notebook = nbformat.read(gate.NOTEBOOK, as_version=4)
+    start = next(i for i, c in enumerate(notebook.cells) if c.source.startswith("### 4.14 "))
+    end = next(
+        i
+        for i in range(start + 1, len(notebook.cells))
+        if notebook.cells[i].source.startswith("## 5. ")
+    )
+    notebook.cells = notebook.cells[:start] + notebook.cells[end:]
     base, fresh = gate._base(), gate._fresh()
     assert gate.compare(notebook, base, fresh) == []
     assert len(gate._outside(notebook)) == 180

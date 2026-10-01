@@ -1,0 +1,46 @@
+{
+  "section": "26.7",
+  "status": "PASS",
+  "base": "cb3665fd",
+  "cells": 202,
+  "lesson_cells": 11,
+  "preserved_cells_outside_lesson": 191,
+  "saved_figures": [
+    "compound_strikes",
+    "compound_threshold",
+    "compound_timing",
+    "compound_validation"
+  ],
+  "negative_controls": [
+    {
+      "mutation": "old prose",
+      "rejected": true
+    },
+    {
+      "mutation": "new heading",
+      "rejected": true
+    },
+    {
+      "mutation": "saved plot",
+      "rejected": true
+    },
+    {
+      "mutation": "post heading",
+      "rejected": true
+    }
+  ],
+  "source_sha256": {
+    "scripts/verify_compound_notebook.py": "2356bf8c44996821b891cb49dfe054f9bc88c2c0d5df68d4f00094b3bc15d67a",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_compound_lesson.py": "7f2b06356f240fd67bbd843f5f14319ce5f5ed7a0943c2578f4afdf4491c8626",
+    "hullkit/src/hullkit/compound.py": "6fceb8083b2593fff2c0c3755de6f61f6371e49d5279eada5dbb890cea2c1b19",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "docs/validation/section-26-7/reference.json": "71b993070e35a7c2b6b535738d96cbf8522c9c04dfba4e379997650fbc43795b",
+    "docs/validation/section-26-7/numerical-check.json": "1bfe175796b543ca96c57559a80e66e298a02df57cca0af58cf29916287527ad",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "f33dae43b4185e838ade8336dcb8e5704a3dac2ae9d166be5531d93cab561e8d",
+    "volumes/10_exotics_martingales/exotics.ipynb": "1fe85e0e4b5af3d98eb0f9af1ce4375b7f085f74012bfbb008ab42136941744c"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "1fe85e0e4b5af3d98eb0f9af1ce4375b7f085f74012bfbb008ab42136941744c"
+  }
+}
