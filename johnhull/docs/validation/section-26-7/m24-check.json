@@ -5,9 +5,9 @@
   "numerical": {
     "method": "independent T1 conditional payoff quadrature and seeded conditional Monte Carlo",
     "cases": 104,
-    "max_abs_error": 5.5706550483591855e-12,
-    "max_quadrature_error": 9.639635300379666e-11,
-    "max_mc_standard_errors": 1.737655920814405,
+    "max_abs_error": 4.263256414560601e-14,
+    "max_quadrature_error": 6.538489927950863e-11,
+    "max_mc_standard_errors": 1.7376559208142266,
     "mc_paths": 524288,
     "max_parity_error": 2.842170943040401e-14,
     "max_linearity_error": 3.552713678800501e-14,
@@ -82,7 +82,7 @@
     ],
     "d1": {
       "26.1": {
-        "record": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261001T101355Z-reuse-9e558b006fad4918bed8f9cb825a57aa.json",
+        "record": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261001T104303Z-reuse-32a1af5659174102879a7ef22ed8ec79.json",
         "decision": "reused",
         "images": 16,
         "stored_new_bytes": 0,
@@ -90,7 +90,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260929T225244Z-redraw-5378c4eaf4564bd3bfd0eec30efd9dd4.json"
       },
       "26.2": {
-        "record": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261001T101418Z-reuse-e8fb16c3d1d8449cbcc5455921c12e26.json",
+        "record": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261001T104325Z-reuse-941f109bb6734843aba1999c91740b5a.json",
         "decision": "reused",
         "images": 16,
         "stored_new_bytes": 0,
@@ -98,7 +98,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405.json"
       },
       "26.3": {
-        "record": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261001T101445Z-reuse-96fc0566897f43379ff3db3504557ded.json",
+        "record": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261001T104350Z-reuse-76d2c709edc94138b34d0beeee02274b.json",
         "decision": "reused",
         "images": 16,
         "stored_new_bytes": 0,
@@ -106,7 +106,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20260930T152903Z-redraw-9e76c3cee6654e6d8f43637a22ab1dcf.json"
       },
       "26.4": {
-        "record": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261001T101507Z-reuse-fa2f805df944421b81796306da54a187.json",
+        "record": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261001T104411Z-reuse-d1389ec7c18040019d6f60c4e5647e66.json",
         "decision": "reused",
         "images": 16,
         "stored_new_bytes": 0,
@@ -114,7 +114,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20260930T225857Z-redraw-7212d9a355d24f53b23872464b30c2f7.json"
       },
       "26.5": {
-        "record": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261001T101531Z-reuse-f198cea802ab4d97a26970cd51e37474.json",
+        "record": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261001T104433Z-reuse-1110f67f2f36412c9085d57ae50994f7.json",
         "decision": "reused",
         "images": 16,
         "stored_new_bytes": 0,
@@ -122,15 +122,15 @@
         "baseline": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261001T000753Z-redraw-f6c666bc1d1b44c8a661893d4aee6084.json"
       },
       "26.6": {
-        "record": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261001T101557Z-redraw-2788a1558e054a7c81124df2ef008185.json",
-        "decision": "redrawn",
+        "record": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261001T104457Z-reuse-4df92b41c3734eafb33e291c2af88d94.json",
+        "decision": "reused",
         "images": 16,
-        "stored_new_bytes": 373236,
+        "stored_new_bytes": 0,
         "tests_passed": 75,
-        "baseline": null
+        "baseline": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261001T101557Z-redraw-2788a1558e054a7c81124df2ef008185.json"
       },
       "26.9": {
-        "record": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261001T101632Z-reuse-c630a662f46942809ca8f9e301bbc6a3.json",
+        "record": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261001T104526Z-reuse-252d18f90ce7471b9c84824c488dce9c.json",
         "decision": "reused",
         "images": 10,
         "stored_new_bytes": 0,
@@ -138,7 +138,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260929T225656Z-redraw-1457fcdba28f4a0a88990ebd1f7eb05f.json"
       },
       "26.10": {
-        "record": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261001T101655Z-reuse-be4517cf21ce4baf8e4e44899b96f75f.json",
+        "record": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261001T104549Z-reuse-8406c3e7139c470ab58dfc7952ac205f.json",
         "decision": "reused",
         "images": 18,
         "stored_new_bytes": 0,
@@ -146,7 +146,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260929T225718Z-redraw-82fa88ba08e84c5699acfaa0159e59f8.json"
       },
       "26.11": {
-        "record": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261001T101723Z-reuse-0962ce5d7e114c07abebded5de37ee92.json",
+        "record": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261001T104617Z-reuse-6d5fa01fed924944a315ac749f435190.json",
         "decision": "reused",
         "images": 18,
         "stored_new_bytes": 0,
@@ -154,7 +154,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260929T225744Z-redraw-716a76e16e274f6aa4a27945fa9186b6.json"
       },
       "26.12": {
-        "record": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261001T101839Z-reuse-ae344986c3b84e3aad9b9468dec7b1fc.json",
+        "record": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261001T104732Z-reuse-168b23b04de141408305996081b2fc37.json",
         "decision": "reused",
         "images": 18,
         "stored_new_bytes": 0,
@@ -162,7 +162,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260929T225850Z-redraw-ed1cc78aa89049b7bf91234a4063a85d.json"
       },
       "26.13": {
-        "record": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261001T101943Z-reuse-0a23bebdbe174b498e54e5259cec8c87.json",
+        "record": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261001T104840Z-reuse-0c5d5b05dc5545b3ba4f1ee9a64171e0.json",
         "decision": "reused",
         "images": 18,
         "stored_new_bytes": 0,
@@ -170,7 +170,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260929T225949Z-redraw-e7b07b2c4cd748db9dd06e0146873b31.json"
       },
       "26.14": {
-        "record": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261001T102038Z-reuse-c1a3d451426f41c4951caa8aff375ab3.json",
+        "record": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261001T104936Z-reuse-eff4bb5ed2574257bb1a8e21094642c6.json",
         "decision": "reused",
         "images": 18,
         "stored_new_bytes": 0,
@@ -178,7 +178,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260929T230041Z-redraw-4311ec20659a427b954934afc2544566.json"
       },
       "26.15": {
-        "record": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261001T102133Z-reuse-69a225de3dbc48c3b295d2f87ec5c46d.json",
+        "record": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261001T105032Z-reuse-297083803120498bbdaac99db33c6afd.json",
         "decision": "reused",
         "images": 18,
         "stored_new_bytes": 0,
@@ -186,7 +186,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260929T230130Z-redraw-5b351d45cfb74ac0bb09a4acf5f5e694.json"
       },
       "26.16": {
-        "record": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261001T102224Z-reuse-051f84826e264592b6b0f75864e1bc0f.json",
+        "record": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261001T105124Z-reuse-ff538e9110e642298047848e2ae6a5dc.json",
         "decision": "reused",
         "images": 20,
         "stored_new_bytes": 0,
@@ -194,7 +194,7 @@
         "baseline": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260929T230216Z-redraw-bfdb7fb4f6bf4b228ed59662c5d9a80b.json"
       },
       "26.17": {
-        "record": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261001T102321Z-reuse-3096dadf5c774e62ac9dc8ebd660b225.json",
+        "record": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261001T105221Z-reuse-0d9096c97fcb4f10a0d2140950cd72a5.json",
         "decision": "reused",
         "images": 16,
         "stored_new_bytes": 0,
@@ -266,9 +266,7 @@
         "baseline": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260929T230538Z-redraw-8e924476eaaa49e29595d8b1bfc84564.json"
       }
     },
-    "redrawn": [
-      "26.6"
-    ],
+    "redrawn": [],
     "reused": [
       "26.1",
       "26.10",
@@ -283,6 +281,7 @@
       "26.3",
       "26.4",
       "26.5",
+      "26.6",
       "26.9",
       "27.1",
       "27.2",
@@ -293,12 +292,12 @@
       "27.7",
       "27.8"
     ],
-    "stored_new_bytes": 373236,
+    "stored_new_bytes": 0,
     "browser": "each accepted section's verifier rerun on M24 Book/portal assets through the D1 driver; new images live in the C:/F: artifact stores"
   },
   "source_sha256": {
     "scripts/build_compound_acceptance_record.py": "c8c8400b0cec6434290a1dc63a372d9fb4055adb7a12a50206e06728afcfdbcb",
-    "scripts/build_compound_reference.py": "3be7d7855177d40fcbe4587b563e9423051f5b261dedcd620fd224b1b84e523a",
+    "scripts/build_compound_reference.py": "e55b6ef6c1d9fb8bbdfd0695e3109db701114811c3779a8287112cd6a75881dc",
     "scripts/verify_compound_numerics.py": "7686ae7aa6d2ae5a05c9bc69f4c2658a2acb173a2bd0508919ad155067163761",
     "scripts/verify_compound_notebook.py": "2356bf8c44996821b891cb49dfe054f9bc88c2c0d5df68d4f00094b3bc15d67a",
     "scripts/verify_compound_browser.cjs": "af523db705de59ac723d66ad43f8c0345007b1274f3fe0788171503162a8cdc4",
@@ -308,13 +307,13 @@
     "scripts/evidence_record.py": "264dbf9e3d4ff4c6f7bba4e6b320e1b8a71d21d1ff231adec1b92a22bba379f3",
     "scripts/evidence_store.py": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
     "scripts/evidence_dependencies.json": "6c1e96a407123343d45e20c604d6872922c0e3db850bb48228d47f6dd6a7c90d",
-    "scripts/update_compound_ledger.py": "e0227981877cb2b418bb51709913e05c185af32e4c0486389491b4ce2177d349",
+    "scripts/update_compound_ledger.py": "f3d73a2c694d5b94991272e9da907bdeb23f5fbe5c7a42510e60bba57ceb551f",
     "scripts/verify_section_ledger.py": "06a81a1e26630a5030fe80375b7ccf706f63f6cac26206502b645ffa49c629c9",
     "hullkit/src/hullkit/compound.py": "6fceb8083b2593fff2c0c3755de6f61f6371e49d5279eada5dbb890cea2c1b19",
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
     "hullkit/src/hullkit/_compound_lesson.py": "7f2b06356f240fd67bbd843f5f14319ce5f5ed7a0943c2578f4afdf4491c8626",
     "hullkit/tests/test_compound.py": "b2a450f59d4136eb49b92e35277f02a3605e02eca5370cfb0811ef97792f99eb",
-    "hullkit/tests/test_compound_reference.py": "9be1f9247c3a571ce64733f42a80b49635c5bb1140b0edb8c681100fd701b197",
+    "hullkit/tests/test_compound_reference.py": "de7143ff3c326882715e4d5e5d019806b52909b33b702837b1886d92ad89b0f4",
     "hullkit/tests/test_compound_numerics.py": "e24dcc9537348abd4ee1189893e38f26bebbfaadc0329b7ab2bb0b65e981c5dd",
     "hullkit/tests/test_compound_lesson.py": "43212b9f02dddd7ecd683861e5ec70356665768141b67bc98fc48a6e3233e071",
     "report/tests/test_compound_notebook.py": "f07d829988542f37e421ff7cd580d31e649e738955f1f13cefd653c4140407f0",
@@ -326,26 +325,26 @@
     "report/report_builder/figures.py": "b67c021f5ea016c7d0145085db8b88be4432142b6595b3c3b4926c2b3c85251f",
     "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
     "volumes/10_exotics_martingales/build_exotics_notebook.py": "f33dae43b4185e838ade8336dcb8e5704a3dac2ae9d166be5531d93cab561e8d",
-    "volumes/10_exotics_martingales/exotics.ipynb": "1fe85e0e4b5af3d98eb0f9af1ce4375b7f085f74012bfbb008ab42136941744c",
+    "volumes/10_exotics_martingales/exotics.ipynb": "03d48fcf69744d83c9e7d68b6865b897606bb1efc883be2fc578b0d8dbd99313",
     "release_manifest.json": "f193b9ff8517bc7dd08f19b56512d7267b9e92829531fbd204b23627449f3a14",
-    "docs/validation/section-26-7/numerical-check.json": "1bfe175796b543ca96c57559a80e66e298a02df57cca0af58cf29916287527ad",
-    "docs/validation/section-26-7/notebook-check.json": "b465ddcb6c5b52474ab343a9db3f4d94fd6f399fef93eda84d9ee3e8ffedd704",
-    "docs/validation/section-26-7/browser-check.json": "8b0379526b5be0026a047066def3f9c15f22bdeaf7609d0fb3a02869892244e5",
-    "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261001T101355Z-reuse-9e558b006fad4918bed8f9cb825a57aa.json": "e7816fed5ec948edeac4d38c73594ad675c651895e7bdd53850fe8a27ebcd5ca",
-    "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261001T101418Z-reuse-e8fb16c3d1d8449cbcc5455921c12e26.json": "b6a89bb3af04eb13402a102256bad20879c554c88db3cca73dca6aec482c08be",
-    "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261001T101445Z-reuse-96fc0566897f43379ff3db3504557ded.json": "22d0efe539d2056cd417f9c56a9c54b460e8b3a2018760bb2c39a8cfe7169cb0",
-    "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261001T101507Z-reuse-fa2f805df944421b81796306da54a187.json": "9b61b7ff4119f8c28107aed38e27b7f0737487d604bd4448f292b660d447a581",
-    "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261001T101531Z-reuse-f198cea802ab4d97a26970cd51e37474.json": "7b12ee9d55618c1a44700a4c99ce5afcaf879a208ddb0d6bb76a8b3a2f748579",
-    "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261001T101557Z-redraw-2788a1558e054a7c81124df2ef008185.json": "c75569e1c80c052ca53626a7a0c3c81060cf5ed1a2a8b28e06969ed108501e0a",
-    "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261001T101632Z-reuse-c630a662f46942809ca8f9e301bbc6a3.json": "41265d60d56af42374ba1cd37fb0be74efdda89aa204887a1ae4c44ed6ef95f0",
-    "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261001T101655Z-reuse-be4517cf21ce4baf8e4e44899b96f75f.json": "4405d979de08db1ddc2baf7584d98909743d6512c73649dd13dfc595b50fb8ac",
-    "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261001T101723Z-reuse-0962ce5d7e114c07abebded5de37ee92.json": "a6ffba208bdccc6f57be59dbf171a00105b1cb89b9e2a72649c0df4fa818cb18",
-    "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261001T101839Z-reuse-ae344986c3b84e3aad9b9468dec7b1fc.json": "d3538097bad6e65de1de53afe97d8898090b38c895c72148bdf882ff3b7f5864",
-    "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261001T101943Z-reuse-0a23bebdbe174b498e54e5259cec8c87.json": "770b27ab9ca501fd97c65950bf48eb7e4523153cd26943b9f38497adf0d82312",
-    "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261001T102038Z-reuse-c1a3d451426f41c4951caa8aff375ab3.json": "66684a777b5954773e4983b25ab783233eff60a6650ecd238ea6876b0ab0b2fb",
-    "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261001T102133Z-reuse-69a225de3dbc48c3b295d2f87ec5c46d.json": "0997f36e4a076219f992bc6cd9cbefed37decbf22d26de0e9fa8da7822034dda",
-    "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261001T102224Z-reuse-051f84826e264592b6b0f75864e1bc0f.json": "c5ad5191bf735e2a26bd9065ca68d5cdde97d8a9cc141c21a6e23ef40dded82b",
-    "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261001T102321Z-reuse-3096dadf5c774e62ac9dc8ebd660b225.json": "963054a8369970026b70d1a8fc693afad6c66df345b2b3004a35cb0c27c7f7b7",
+    "docs/validation/section-26-7/numerical-check.json": "63e652be3280747439d1e10df6b48e5d346a56f83342c7214aa93239f3c40da3",
+    "docs/validation/section-26-7/notebook-check.json": "4edcaf5f7e96c12b572e822157d14e7d068335d26816d5f8bcb6465d013f1746",
+    "docs/validation/section-26-7/browser-check.json": "fef96203ab14c1194266fa69bcd7aa0e998bfbbadbf8dd7dccec355c2457c834",
+    "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261001T104303Z-reuse-32a1af5659174102879a7ef22ed8ec79.json": "b1a87beae2cf200cec611576c0d05c370b8772d5863444427849cf41e6e59da4",
+    "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261001T104325Z-reuse-941f109bb6734843aba1999c91740b5a.json": "dd63ed464a5526332c3b79d5ae1dc0723818499f7009f65d7c86b858f017ecc5",
+    "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261001T104350Z-reuse-76d2c709edc94138b34d0beeee02274b.json": "64e296401fc62c5b3c5190f19fdea3b268c58fc0ddc9763f8c7f67a3f9108dbc",
+    "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261001T104411Z-reuse-d1389ec7c18040019d6f60c4e5647e66.json": "7342c06b68a0f8a9dead29abb544775bcf847e8533fc7f2abaa3b506e947c14e",
+    "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261001T104433Z-reuse-1110f67f2f36412c9085d57ae50994f7.json": "e4cafc07fbd4c5d6ce3f75167a95ef27ba077961bc49805f8a6c7e6593e93f3f",
+    "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261001T104457Z-reuse-4df92b41c3734eafb33e291c2af88d94.json": "a16056e2f51fe10da543743c2250810df2837687f54d52d51edbbe0538dd78ff",
+    "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261001T104526Z-reuse-252d18f90ce7471b9c84824c488dce9c.json": "179e923c3476a921a043b6c01a48414c94557c7f2d3aa6048905b5140be80744",
+    "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261001T104549Z-reuse-8406c3e7139c470ab58dfc7952ac205f.json": "9fd6d4aa06fc7a470badcababa0ff0198fe5b00566be678277a11d1010d816cf",
+    "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261001T104617Z-reuse-6d5fa01fed924944a315ac749f435190.json": "f0b52c66aec4951aa3e29b863b03f116b3da96b84895b3ba4ba8e181e601a2de",
+    "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261001T104732Z-reuse-168b23b04de141408305996081b2fc37.json": "411fabd1540c8073e2dbab64644f95568f40e7280297207f1d8f264efbb5ef18",
+    "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261001T104840Z-reuse-0c5d5b05dc5545b3ba4f1ee9a64171e0.json": "a5138ddfb675e88dcb3f27d2337d600bf13d063bae274711d326d0dba69aba73",
+    "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261001T104936Z-reuse-eff4bb5ed2574257bb1a8e21094642c6.json": "60055d34f9be90dff83284198edeac2778d7a6de93683b386a2e457c2b099b88",
+    "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261001T105032Z-reuse-297083803120498bbdaac99db33c6afd.json": "364cbc92daced66730daa28e43357153a4a96b872fe9c73e23b93bdb01959a1c",
+    "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261001T105124Z-reuse-ff538e9110e642298047848e2ae6a5dc.json": "b8593c8d3d7fbcb48758bf4f8c9dbbcc8fbaafcd18ae755e76528fe3832105c7",
+    "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261001T105221Z-reuse-0d9096c97fcb4f10a0d2140950cd72a5.json": "e6f1926682b993cfecd7ef75e6e0f23fa64d57f3d9d93e0f6e0e85ffe752a3fe",
     "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261001T102349Z-reuse-bb88ac555b40406f81d00971799901e5.json": "119aea1fd11c94f3a58639f448917ca4d86ea51c0962c814697fceb35124285a",
     "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261001T102405Z-reuse-9d1a1f8d228c4d6ea3a34a3245332e77.json": "bc33e42bda3c795228c606f040de6dc71d2f1264455c866e5e51cc1ca43b8d85",
     "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261001T102424Z-reuse-76d16cee0db24968a51568573b0b1e5b.json": "55aaf55d2640179805061bd21be404311411eb99ac10377af3bdabaf350ca7ec",
@@ -356,9 +355,9 @@
     "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261001T102545Z-reuse-db3ac201d1c447a1b87abaa7d97d6aaa.json": "f5b95ae13c21539d890d0f5d12677253773181e585fc29d67e78984bae9bdab1"
   },
   "artifact_sha256": {
-    "docs/validation/section-26-7/reference.json": "71b993070e35a7c2b6b535738d96cbf8522c9c04dfba4e379997650fbc43795b",
-    "report/site/exotics.html": "db8bda8e3ee9460081f56967d7fd60acb7167bcf9ec3bea6997ae4c450c1ce75",
-    "book/_build/html/notebooks/10_exotics.html": "610c3588f2b63ceb73400ca0e53adef9c59528ab90da044d941377a12f475867",
+    "docs/validation/section-26-7/reference.json": "2114b3c8b3fa61ab518be0849d7b10d3646ed3a50d93cdca1f7d7600e072f3e4",
+    "report/site/exotics.html": "ac2d0c56ffd415a1c5a6211d6060d87894dda10492c481961539ba63201f61ed",
+    "book/_build/html/notebooks/10_exotics.html": "4bef0ad5e766075b1f39ea8509d00c382cf043280753a4438acb82accc1f3288",
     "docs/validation/section-26-7/book-compound_threshold-1440.png": "c78e028fe7552eee73609890bf7beda7303aee1e95805d1813e2157ba8f68dab",
     "docs/validation/section-26-7/book-compound_threshold-1000.png": "4f147e41f407a2153658441a372f85e9c0f2a557c520e6c5ff020c88d2efa1bc",
     "docs/validation/section-26-7/book-compound_strikes-1440.png": "7960926a803b740947a50315a1be73ff53ab75170fa634dd06c2efc39816f781",

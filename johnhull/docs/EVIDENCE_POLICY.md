@@ -137,3 +137,7 @@ driverの`--records-dir docs/validation/d1-recheck`を明示し、cleanな6947fc
 [M24統合記録](validation/section-26-7/m24-check.json)は採用23件と全必須source/artifact hashesを固定する。
 必須hash集合は現行依存宣言/Python閉包と生成側collectorから決め、記録の自己申告を使わない。
 歴史M23 pytestは後続§4.14だけを除き、M24 gateで旧191セル全体を照合する。過去記録と画像は保持した。
+
+### M24最終レビュー後の再検査
+
+修正後、変更されたexoticsページに関係する旧15節をD1で再検査し全PASS（画像の新規保存0バイト）。他8節のページ/入力ハッシュは不変。最終統合記録は23節すべてreusedで、初回の§26.6 redrawnを直接参照している。初回保存373,236バイトと全旧記録は保持した。

@@ -51,5 +51,5 @@ def test_near_expiry_inner_transition_is_resolved():
     value, error = reference().integrate_compound(
         100, 0.01, 100, 0.05, 0.2, 0.999999, 1, 0.02, "put_on_call"
     )
-    assert value == pytest.approx(0.004564661869643963, abs=1e-10)
+    assert value == pytest.approx(0.004564661869643963, rel=0, abs=1e-10)
     assert error < 1e-9
