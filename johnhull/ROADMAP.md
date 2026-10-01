@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 68 public + 24 priva
 | 節単位の受入 | M24（§26.7）まで。台帳は受入24・未評価282（7.8%） | P1（Ch27）完了、P2（§26.1–§26.8）は7/8節受入。次はM25（§26.8 Chooser）。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
 | 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。不変画像はハッシュで参照 | **M24**：既受入23節の全検査PASS（22節再利用・1節再描画）、追加保存373,236バイト。採用記録と両保管庫復元を照合。レビュー修正後は旧15節を再検査（新規保存0）、最終記録は23節reuse |
-| テスト | hullkit+report 3,601 passed・6 skipped（M24、2026-10-01） | 実行結果は `VALIDATION.md` |
+| テスト | hullkit+report 3,602 passed・6 skipped（M24修正後、2026-10-01） | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -301,7 +301,7 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M21 | §26.4 Gap options（p.617） | 受入。符号付き給付・トリガーと決済額・バニラ＋現金バイナリ分解を独立求積で照合。Example26.1の3436・1896ドル、約45%減、保険会社支出と契約者手取りを分離。P2の4節目。[受入ノート](docs/SECTION_26_4_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_4_REVIEW_2026-10-01.md) |
 | M22 | §26.5 Forward start options（p.618） | 受入。ATM欧州型の二時点契約・一次同次性・配当調整、期間固定/満期固定を独立求積36例とMC3例で照合。P2の5節目。[受入ノート](docs/SECTION_26_5_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_5_REVIEW_2026-10-01.md) |
 | M23 | §26.6 Cliquet options（p.618） | 受入。単純ATM call/put列と各期支払を独立求積60例・多時点MC4例で照合、制約型はMC診断。P2の6節目。[受入ノート](docs/SECTION_26_6_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_6_REVIEW_2026-10-01.md) |
-| M24 | §26.7 Compound options（pp.618–619） | 受入。欧州型4契約、臨界株価と内側put根なし領域、独立条件付き求積104例・MC4例。P2の7節目。[受入ノート](docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_7_REVIEW_2026-10-01.md) |
+| M24 | §26.7 Compound options（pp.618–619） | 受入。欧州型4契約、臨界株価と内側put根なし領域、独立条件付き求積104例・MC4例。独立レビューI1修正・M1保留、全体検査PASS。P2の7節目。[受入ノート](docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_7_REVIEW_2026-10-01.md) |
 | 以降 | P2の残り（§26.8）から台帳の未評価節へ順に展開 | 未着手 |
 
 現在地（2026-10-01）：M24まで受入、台帳24/282。P1完了、P2は7/8。統合記録は`docs/validation/section-26-7/m24-check.json`。旧23節のD1は初回22節再利用・1節再描画、修正後15節再検査で最終記録は23節再利用。次はM25（§26.8 Chooser options）。

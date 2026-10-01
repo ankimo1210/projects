@@ -32,7 +32,7 @@ fresh-context gpt-6-astra担当がcb3665fd..8b8e1912を一度レビューした�
 
 独立参照が近接日付の内側vanilla遷移を取り逃した。S100/K1=.01/K2=100/r5%/q2%/σ20%/T1=.999999/T2=1、put-on-callで参照0.004567195759380046（報告誤差3.83e-15）に対し、追加分割積分0.004564661869643963、API0.004564661869956796。許容差1e-8を超えて正しいAPIを不合格にするため、実装者もImportantと判断。
 
-test_near_expiry_inner_transition_is_resolvedがFAILすることを確認後、内側forward moneyness=0とその周囲±3/±10遷移幅を分割点へ加え、PASSを確認した。既存104例の最大API差は4.263256e-14。production APIは変更していない。最終全体テスト待ち。
+test_near_expiry_inner_transition_is_resolvedがFAILすることを確認後、内側forward moneyness=0とその周囲±3/±10遷移幅を分割点へ加え、PASSを確認した。既存104例の最大API差は4.263256e-14。production APIは変更していない。修正後の全hullkit+report pytestは3,602 passed・6 skipped・既存warning2件（120.83秒）でPASS。
 
 修正後、変更されたexoticsページに関係する旧15節をD1で再検査し全PASS（画像の新規保存0バイト）。他8節のページ/入力ハッシュは不変。最終統合記録は23節すべてreusedで、初回の§26.6 redrawnを直接参照している。初回保存373,236バイトと全旧記録は保持した。
 
@@ -45,6 +45,6 @@ compound_price(100,.0001,100,.05,.2,.999999999999,1,.02)はIntegrationWarningの
 - M23のNaNゲート保留、M22の時点説明：未変更の既存保留。M24 specの範囲に従い保持する。判断を誤ると歴史ゲートのNaN見逃しや旧時点説明の誤解が残るため、既存保留として追跡を続ける。
 - 並行更新されたmainのGap追加：指定範囲外。mainはレビュー中に60eb0d3cへ進み、新しいgap_options/APIテスト等5ファイルが加わった。後の統合で保持し、差分/モジュール数/全体テストを照合する。判断を誤ると統合時の競合や件数の欠落が起きる。本ブランチの基点はcb3665fdのまま。
 
-再レビューは行わず、ImportantのRED→GREENと最終全体テストで修正を確認する。
+再レビューは行わず、ImportantのRED→GREENと修正後の全体テストで修正を確認した。Critical/Importantの未解消指摘はない。Minor1件を保留して受入・ローカル統合可能と判断した。mainとの統合はユーザーの次の選択待ちで、pushは行っていない。
 
 二変量正規CDFの定義と符号恒等式は[Hull Technical Note 5](https://www-2.rotman.utoronto.ca/~hull/TechnicalNotes/TechnicalNote5.pdf)を参照。本文の4桁近似を転記せず、相関角度積分を独立条件付き求積と照合した。

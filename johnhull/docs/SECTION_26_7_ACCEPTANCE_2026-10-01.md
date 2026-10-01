@@ -1,7 +1,7 @@
 # §26.7 Compound：受入記録
 
 **判定：accepted。** 日付2026-10-01。Hull 11e Global Edition pp.618–619のCO01–CO06を照合。
-[原典照合・レビュー](SECTION_26_7_REVIEW_2026-10-01.md)、[M24統合記録](validation/section-26-7/m24-check.json)を参照。独立最終レビューはCritical0・Important1・Minor1。Importantは再現テストRED→GREENで修正済み。最終全体テスト待ち。
+[原典照合・レビュー](SECTION_26_7_REVIEW_2026-10-01.md)、[M24統合記録](validation/section-26-7/m24-check.json)を参照。独立最終レビューはCritical0・Important1・Minor1。Importantは再現テストRED→GREENで修正済み。修正後全体テストは3,602 passed・6 skipped・既存warning2件（120.83秒）。重要指摘は解消、Minor1件を保留して受入を確定した。
 
 ## 実装・契約
 
@@ -41,7 +41,7 @@ Book数式971個・エラー0。portal閾値/MC図の1000px画像を目視した
 
 既受入23節のbrowser・runtime probe・個別pytest計1,803件・C:/F:復元はPASS。22節再利用・1節再描画、追加保存373,236バイト。採用D1パスとSHA-256を固定した。
 参照/数値/notebook/統合の4--check、ruff、台帳--check-artifacts、releaseと全hullkit+report pytestを検証する。
-修正前の全hullkit+report pytestは3,601 passed・6 skipped・既存warning2件。参照求積の重要指摘は再現テストRED→GREENで解消し、最終全体テストを実行する。
+全hullkit+report pytestは3,602 passed・6 skipped・既存warning2件（120.83秒）。参照求積の重要指摘を再現テストRED→GREENで解消し、修正後の全体テストもPASS。ruff、参照/数値/notebook/統合・台帳成果物・tracked releaseもPASS。
 
 ## 適用範囲・判断
 
