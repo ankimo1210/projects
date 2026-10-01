@@ -125,6 +125,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | Nonstandard American exercise schedules | Hull 11e GE §26.3 (p.616) | `hullkit.nonstandard_american:scheduled_option`, `hullkit.nonstandard_american:ScheduledOption` | `test_nonstandard_american.py`, `test_nonstandard_reference_builder.py`, `test_nonstandard_numerics.py` | vol 10 §4.10 | Exercise date and strike keyed by exact integer CRR step; full-path enumeration checks hand examples, scalar rollback checks five 50-step cases and a synthetic seven-year warrant with Hull's $30/$32/$33 strike years; source-backed Book/portal figures and 16 browser states; `docs/validation/section-26-3/` |
 | Gap options | Hull 11e GE §26.4 (p.617) | `hullkit.exotics:gap_call`, `hullkit.exotics:gap_put` | `test_gap_reference.py`, `test_gap_numerics.py`, `test_gap_lesson.py` | vol 10 §4.11 | Independent signed-payoff lognormal quadrature; vanilla/binary decomposition and parity; Example26.1 integer-dollar pins 3,436/1,896; insurer payment versus policyholder net and expected transfer cost; four shared plots and 16 Book/portal states; `docs/validation/section-26-4/` |
 | ATM forward-start call | Hull 11e GE §26.5 (p.618) | `hullkit.forward_start:forward_start_call` | `test_forward_start.py`, `test_forward_start_reference.py`, `test_forward_start_numerics.py` | vol 10 §4.12 | 36 independent two-increment GBM quadrature cases, three 524288-path MC checks, spot homogeneity and same-life delay limits; four shared plots and 16 Book/portal states; `docs/validation/section-26-5/` |
+| Simple stock-price cliquet calls and puts | Hull 11e GE §26.6 (p.618) | `hullkit.cliquet:cliquet_call`, `hullkit.cliquet:cliquet_put` | `test_cliquet.py`, `test_cliquet_reference.py`, `test_cliquet_numerics.py` | vol 10 §4.13 | 60 independent GBM density quadrature cases; four 524288-path multitime MC checks; per-date settlement, reset-strike and fixed-notional mutations rejected; four shared plots and 16 Book/portal states; `docs/validation/section-26-6/` |
 
 ## 8. ML surrogates & differential machine learning
 
@@ -208,6 +209,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._nonstandard_american_lesson` | Hull §26.3 の行使日程別価格、ワラントの行使価格、行使節点、日数別価値を保存済み独立参照から共有する内部 Plotly 図ビルダー（`test_nonstandard_lesson.py`） |
 | `hullkit._gap_lesson` | Hull §26.4 の符号付き給付・バニラ/バイナリ分解・保険会社/契約者の給付・費用別価格を独立密度求積から共有する内部 Plotly 図ビルダー（`test_gap_lesson.py`） |
 | `hullkit._forward_start_lesson` | Hull §26.5 の行使価格確定・開始時点の同次性・期間固定/満期固定の掃引とMC誤差棒を保存済み二時点GBM参照から共有する内部Plotly図（`test_forward_start_lesson.py`） |
+| `hullkit._cliquet_lesson` | Hull §26.6の株価reset・各期PV・回数掃引・global/local制約と終了のMC診断を保存済み独立参照から共有する内部Plotly図（`test_cliquet_lesson.py`） |
 | `hullkit._exchange_lesson` | Hull §26.14 の給付と分解・相関と σ̂・$r$ 非依存と $V/U$ 読み替え・米国型の早期行使を保存済みデータから共有する内部 Plotly 図ビルダー（`test_exchange_lesson.py`） |
 | `hullkit._lookback_lesson` | Hull §26.11 の経路給付・履歴極値・評価時点の複製・離散 fixing を共有する内部 Plotly 図ビルダー |
 | `hullkit._shout_lesson` | Hull §26.12 の給付・宣言木・実ノード境界・合成価格比較を保存済みデータから共有する内部 Plotly 図ビルダー（`test_shout_lesson.py`） |
