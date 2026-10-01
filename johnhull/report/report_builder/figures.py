@@ -23,6 +23,7 @@ from hullkit._barrier_tree_lesson import _figures as barrier_tree_lesson_figures
 from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
 from hullkit._cliquet_lesson import _figures as cliquet_lesson_figures
+from hullkit._compound_lesson import _figures as compound_lesson_figures
 from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
 from hullkit._forward_start_lesson import _figures as forward_start_lesson_figures
@@ -1282,6 +1283,42 @@ FIGURES: list[FigureSpec] = [
         "総額floor 5/cap 20、各期cap 5、95–105で期末終了を共通MCで比較。",
         lambda: cliquet_lesson_figures()["cliquet_limits"],
         practice="別市場S=100,r=q=0,σ=20%; .5/1/1.5/2年、524288経路、95%平均区間。当期支払後の終了。公開APIは単純型のみ。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "compound_threshold",
+        "exotics",
+        "コンパウンドの4給付と臨界株価",
+        "§26.7。T1での内側価値・外側給付と二つのS*を比較。",
+        lambda: compound_lesson_figures()["compound_threshold"],
+        practice="S100/K1=10/K2=100/r5%/q2%/σ20%/T1=.5/T2=1。call根105.772962、put根90.730220。外側callの行使領域は逆向き。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "compound_strikes",
+        "exotics",
+        "二つのstrikeと内側putの上限",
+        "外側K1を0から110へ変える4価格。put上限以上ではcall-on-put=0。",
+        lambda: compound_lesson_figures()["compound_strikes"],
+        practice="他の入力は基準市場のまま。K1=0では内側vanillaと一致。call−putと内側価格−K1のPVの関係を確認。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "compound_timing",
+        "exotics",
+        "二つの行使日と相関",
+        "T2=1固定でT1を.01〜.9999へ変更。相関の絶対値はsqrt(T1/T2)。",
+        lambda: compound_lesson_figures()["compound_timing"],
+        practice="S100/K1=10/K2=100/r5%/q2%/σ20%。二変量CDFは決定的求積で、T1は厳密にT2より前。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "compound_validation",
+        "exotics",
+        "独立求積と条件付きMC",
+        "104独立求積ケース、4契約×524288経路。平均の95%区間を比較。",
+        lambda: compound_lesson_figures()["compound_validation"],
+        practice="基準市場S100/K1=10/K2=100/r5%/q2%/σ20%/T1=.5/T2=1。MCはT1 spotと条件付き内側vanilla価値を使い、標本誤差とモデル誤差を区別。",
         is_new=True,
     ),
     FigureSpec(

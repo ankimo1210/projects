@@ -18,6 +18,7 @@ final gate evidence.
 - vol 10 §26.2 — perpetual American calls and puts: hitting-time values, exercise boundaries, smooth pasting, the zero-yield call limit, and finite-horizon CRR comparisons; six teaching subsections and four shared Book/portal figures.
 - vol 10 §26.3 — Bermudan exercise dates, lockout periods, and changing exercise strikes on an exact CRR step grid; Hull's seven-year warrant terms are shown with explicitly synthetic market inputs and four shared Book/portal figures.
 - vol 10 §26.4 — gap calls and puts with separate payoff amounts and triggers, signed payoffs, vanilla/binary decomposition, and Hull Example 26.1 insurance costs; four shared Book/portal figures distinguish insurer expenditure from policyholder net proceeds.
+- vol 10 §26.7 — Four European compound options, critical spots, inner-put no-root bounds, deterministic bivariate normal formulas and independent conditional payoff integrals/MC; four shared Book/portal figures.
 - vol 10 §26.6 — Simple stock-price cliquet calls/puts, per-date settlement, reset strikes, independent density quadrature and multitime MC; global/local bounds and termination are separate teaching diagnostics.
 - vol 10 §26.5 — ATM European forward-start calls, future strike fixing, spot homogeneity, dividend adjustment, and fixed-life versus fixed-expiry comparisons; independent two-increment quadrature and two-time MC.
 - vol 10 §26.12 — one-shout call: payoff decomposition, CRR decisions, boundary resolution, and same-market comparisons; saved synthetic artifacts power four shared Book/portal figures. Put prices are an extension beyond the original call lesson.
@@ -40,7 +41,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 170 figures (58 exotics)
+make hull-report           # offline portal: 12 themes / 174 figures (62 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
@@ -237,7 +238,7 @@ gate; the [acceptance note](docs/SECTION_26_5_ACCEPTANCE_2026-10-01.md) records
 the constant-GBM assumptions and the absence of a printed numerical example.
 
 Older notebook gates with fixed earlier baselines are historical gates; the
-M23 notebook and D1 records provide the current preservation check.
+M24 notebook and D1 records provide the current preservation check.
 
 The §26.6 (M23) checks are `scripts/build_cliquet_reference.py --check`
 (60 independent density quadratures, four 524288-path multitime MC runs),
@@ -248,3 +249,13 @@ random reset strikes, parity, and reference mutations),
 `scripts/build_cliquet_acceptance_record.py --check` pins the current artifacts
 and all 22 earlier D1 records. The [acceptance note](docs/SECTION_26_6_ACCEPTANCE_2026-10-01.md)
 distinguishes stock-price cashflows from fixed-notional returns and constrained contracts.
+
+The §26.7 (M24) checks are `scripts/build_compound_reference.py --check`
+(104 independent conditional payoff integrals and four 524288-path conditional MC runs),
+`scripts/verify_compound_numerics.py --check` (four formulas, critical spots,
+put-call parity, homogeneity, finite values and rejected strike/correlation/root/NaN mutants),
+`scripts/verify_compound_notebook.py --check` (191 preserved predecessor cells),
+and `scripts/verify_compound_browser.cjs` (16 states, critical spots and MC intervals).
+`scripts/build_compound_acceptance_record.py --check` pins the current artifacts
+and all 23 earlier D1 records, requiring the hash inventory derived from current declarations.
+See the [acceptance note](docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md) for the four contracts and no-root limits.

@@ -1186,6 +1186,60 @@
         "report/tests/test_cliquet_notebook.py",
         "report/tests/test_cliquet_registry.py"
       ]
+    },
+    "26.7": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.14 コンパウンド・オプション：二つの行使日（§26.7、GE pp.618–619）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.14 コンパウンド・オプション：二つの行使日（§26.7、GE pp.618–619）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "compound_threshold",
+          "compound_strikes",
+          "compound_timing",
+          "compound_validation"
+        ]
+      },
+      "python_modules": [
+        "hullkit.compound",
+        "hullkit.bsm",
+        "hullkit._compound_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-7/reference.json",
+        "docs/validation/section-26-7/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_compound_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-7/reference.json",
+        "docs/validation/section-26-7/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-7",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_compound.py",
+        "hullkit/tests/test_compound_reference.py",
+        "hullkit/tests/test_compound_numerics.py",
+        "hullkit/tests/test_compound_lesson.py",
+        "report/tests/test_compound_notebook.py",
+        "report/tests/test_compound_registry.py"
+      ]
     }
   }
 }
