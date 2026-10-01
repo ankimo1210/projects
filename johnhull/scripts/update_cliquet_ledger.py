@@ -173,6 +173,7 @@ def register_cliquet(section: dict) -> None:
             "制約図のみr=q=0。総額floor 5/cap 20、各期cap 5、95–105で当期支払後に終了する診断。",
         ],
         limitations=[
+            "P3保留：数値verify単独ではNaNを返すAPI変異を拒否しない。現行APIの有限値チェックと価格ピンテストはPASS。最終レビュー記録を参照。",
             "公開APIは単純ATM stock-price cliquet call/putのみ。global/local制約・終了は教材用MC診断。",
             "固定notional return、実市場smile、確率的金利/変動率、取引費用は対象外。",
             "95%区間はMC平均の標本誤差。求積誤差と6標準誤差の検査閾値とは異なる。",

@@ -9,8 +9,10 @@ import sys
 from pathlib import Path
 
 try:
-    from . import evidence_record
+    from . import d1_preflight_compare, evidence_fingerprint, evidence_record
 except ImportError:  # executed as a script from johnhull/scripts
+    import d1_preflight_compare
+    import evidence_fingerprint
     import evidence_record
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -160,6 +162,33 @@ def check_browser(browser: dict) -> None:
             raise ValueError(f"browser checks failed: {surface}")
 
 
+def required_d1_hashes(section_id: str) -> dict[str, set[str]]:
+    """Derive the producer's mandatory inputs from current declarations/code.
+
+    The inventory must not come from the record being checked: deleting both
+    a source hash and its recorded fingerprint entry must not hide a source.
+    The D1 collector consumes these three component inventories plus current
+    shared files. Reconstruct them without re-reading/rendering HTML merely
+    to identify required keys; page bytes are checked separately below.
+    """
+    config = evidence_fingerprint.load_config(PROJECT / "scripts/evidence_dependencies.json")
+    try:
+        spec = config["sections"][section_id]
+    except KeyError as exc:
+        raise ValueError(f"D1 dependency declaration missing: §{section_id}") from exc
+    fingerprint = {
+        "components": {
+            "python_sources": evidence_fingerprint.python_closure(PROJECT, spec["python_modules"]),
+            "data_files": dict.fromkeys(spec["data"]),
+            "verifier": {spec["verifier"]: None},
+        }
+    }
+    return {
+        "source_sha256": set(d1_preflight_compare._source_hashes(PROJECT, spec, fingerprint)),
+        "artifact_sha256": {spec["portal"]["page"], spec["book"]["page"]},
+    }
+
+
 def check_d1_payload(section_id: str, name: str, record: dict) -> None:
     """Reject incomplete schema-2 records before checking current files and stores."""
     if (
@@ -189,10 +218,14 @@ def check_d1_payload(section_id: str, name: str, record: dict) -> None:
         raise ValueError(f"D1 images missing: {name}")
     if record.get("dependency_fingerprint", {}).get("unknown"):
         raise ValueError(f"D1 unknown dependencies: {name}")
+    required = required_d1_hashes(section_id)
     for category in ("source_sha256", "artifact_sha256"):
         hashes = record.get(category)
         if not isinstance(hashes, dict) or not hashes:
             raise ValueError(f"D1 {category} missing: {name}")
+        missing = required[category] - hashes.keys()
+        if missing:
+            raise ValueError(f"D1 missing {category}: {name}: {sorted(missing)}")
     problems = evidence_record.validate_record(PROJECT, record)
     if problems:
         raise ValueError(f"D1 record invalid: {name}: {problems[:2]}")
@@ -303,6 +336,10 @@ def main() -> None:
         "scripts/verify_cliquet_notebook.py",
         "scripts/verify_cliquet_browser.cjs",
         "scripts/verify_core_notebooks.py",
+        "scripts/d1_preflight_compare.py",
+        "scripts/evidence_fingerprint.py",
+        "scripts/evidence_record.py",
+        "scripts/evidence_store.py",
         "scripts/evidence_dependencies.json",
         "scripts/update_cliquet_ledger.py",
         "scripts/verify_section_ledger.py",
