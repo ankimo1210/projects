@@ -2390,6 +2390,81 @@ cells.append(
 
 **回答の手掛かり：** 将来の行使価格、株価の期待成長、二つの比較条件、早期行使を区別します。""")
 )
+cells.append(md(r"""### 4.13 Cliquet：strikeのresetと各期の支払（§26.6、GE p.618）
+
+#### 4.13.1 Vanillaとforward-startの列
+
+Cliquet（ratchet／strike-reset）はcallまたはputの列です。$t_0=0<t_1<\cdots<t_n$ とし、
+最初のstrikeは $S_0$、以後は直前の株価 $S_{t_{i-1}}$ にresetします。
+callは $\max(S_{t_i}-S_{t_{i-1}},0)$、putは逆の差の正部分を**各 $t_i$ に支払います**。
+単位は1株当たりの通貨で、固定notionalに各期returnを掛ける契約とは違います。
+通常のATM vanilla 1本と $n-1$ 本のforward-startへの分解がHullの説明です。
+
+合成例は $S_0=100,r=5\%,q=3\%,\sigma=20\%$、支払日 $0.5,1,1.5,2$ 年。
+原典にはこの節の印刷数値はありません。call=23.584836、put=19.750719です。"""))
+cells.append(code(r"""from hullkit.cliquet import cliquet_call, cliquet_put
+from hullkit._cliquet_lesson import _figures as cliquet_figures, _load_reference as cliquet_reference
+cliquet_data = cliquet_reference()
+cliquet_plots = cliquet_figures()
+dates = [.5, 1, 1.5, 2]
+print(f'call={cliquet_call(100,.05,.2,dates,.03):.6f} put={cliquet_put(100,.05,.2,dates,.03):.6f}')"""))
+cells.append(md(r"""#### 4.13.2 経路・reset・給付
+
+図は上記市場・4支払日のGBM例示経路1本です。平均価格や発生頻度を表しません。
+緑の丸印は各期開始のATM fixing、破線はその期のstrike、赤い菱形は期末支払です。
+菱形のhoverにcall／put給付（通貨）を示します。上昇期にはcall、下降期にはputが正です。
+strikeを全期間 $S_0$ に固定すると別の契約になります。"""))
+cells.append(code('cliquet_plots["cliquet_reset"].show()'))
+cells.append(md(r"""#### 4.13.3 各支払日の価格分解
+
+$c_{ATM}(\tau),p_{ATM}(\tau)$ を今日の $S_0$ をstrikeにする期間 $\tau$ の価格とすると、
+
+$$V^{call}_0=\sum_{i=1}^n e^{-q t_{i-1}}c_{ATM}(t_i-t_{i-1}),\qquad
+V^{put}_0=\sum_{i=1}^n e^{-q t_{i-1}}p_{ATM}(t_i-t_{i-1}).$$
+
+各成分は $e^{-rt_i}$ でその期の給付を割り引いた現在価値です。
+全給付を満期 $t_n$ で一括割引する契約ではありません。棒の和は先の合成価格と一致します。
+非等間隔の支払日でも、各期の長さと支払日を分けて扱います。
+call−putは $\sum_i S_0e^{-qt_{i-1}}(e^{-q\Delta t_i}-e^{-r\Delta t_i})$ です。"""))
+cells.append(code('cliquet_plots["cliquet_components"].show()'))
+cells.append(md(r"""#### 4.13.4 満期固定でreset回数を変える
+
+この図は $S_0=100,r=5\%,q=3\%,\sigma=20\%$、満期2年を固定し、
+等間隔の期間数 $n=1,2,4,8,12,24$ を比較します。$n=1$ は通常の2年ATM call／putです。
+callの水平線はそのvanilla価格。reset回数が変わると短いオプションを複数保有する
+契約へ変わります。この定数GBMの図から他の市場・制約型の単調性は主張しません。"""))
+cells.append(code('cliquet_plots["cliquet_frequency"].show()'))
+cells.append(md(r"""#### 4.13.5 総額制約・各期制約・範囲終了と独立MC
+
+**ここだけ別市場：** $S_0=100,r=q=0,\sigma=20\%$、同じ4支払日です。
+単純call給付和、総額floor 5／cap 20、各期cap 5、株価95–105で期末終了を、
+共通の524,288経路で比較します。終了判定は当期の支払後に行い、以後の給付を0にします。
+総額制約は全給付和に適用します。$r=0$ なので総額の精算時点による割引差はありません。
+総額capと各期capは同じ契約ではなく、総額制約・終了には単純な価格和を使えません。
+Hullはこうした複雑な条項ではMonte Carloが適することが多いと説明します。
+
+独立参照は各期の二つのGBM増分密度を求積し、API／求積差を $10^{-9}$ 以内で照合します。
+単純型MCはcall／put×等間隔／非等間隔の4例、各524,288経路。
+各支払をその $t_i$ から割り引き、求積との差が6標準誤差以内か確認します。
+図の棒は平均の95%信頼区間（1.959964×標準誤差）で、モデル誤差の範囲ではありません。"""))
+cells.append(code(r"""for row in cliquet_data["mc"]:
+    print(f'{row["kind"]} dates={row["payment_times"]} paths={row["paths"]:,} MC={row["price"]:.6f} SE={row["standard_error"]:.6f}')
+cliquet_plots["cliquet_limits"].show()"""))
+cells.append(md(r"""#### 4.13.6 適用範囲と理解の確認
+
+公開APIは定数GBM・株価差の単純ATM call／put列のみ。市場配列はbroadcast、
+共通支払日は非空・1次元・正・厳密増加です。ゼロ変動率は決定的cashflowへ戻ります。
+global／local制約・終了の図は教材用MC診断で、公開の制約型pricing APIではありません。
+実市場のsmile、変動率・金利の確率性、固定notional return、取引費用は扱いません。
+
+1. $n=1$ は何の契約になりますか。
+2. なぜ全給付を $t_n$ で割り引くと価格が変わりますか。
+3. 固定notional returnと株価差給付で、各期の元本はどう違いますか。
+4. 総額cap 20と各期cap 5が4期で同じ価格にならない理由は何ですか。
+5. 終了判定と当期支払の順を変えると、どのcashflowが変わりますか。
+
+**回答の手掛かり：** vanilla、支払日、random reset元本、非線形制約、終了順序を区別します。"""))
+
 cells.append(
     md(r"""## 5. マルチンゲールと測度（Ch.28）
 
