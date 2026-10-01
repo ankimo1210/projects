@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22、§26.6 M23)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22、§26.6 M23、§26.7 M24)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,18 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 26.7 M24 — 2026-10-01
+
+[受入ノート](docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_7_REVIEW_2026-10-01.md)・[統合記録](docs/validation/section-26-7/m24-check.json)にCO01–CO06の5軸を集約。台帳accepted24・unreviewed282、P2は7/8節。
+
+- Hull GE pp.618–619の4契約・2strike/行使日、T1給付、内側vanilla臨界株価と4Geske公式を照合。原典に印刷例なし、全数値合成。独立条件付き求積104例でAPI差4.26e-14、根残差7.82e-13、MC4例×524288経路で最大1.737656SE。
+- call-on-call3.25682701977440、put-on-call3.78292063190370、call-on-put1.29980310015751、put-on-put4.72282159289092（S100/K1=10/K2=100/r5%/q2%/σ20%/T1=.5/T2=1）。根105.772962280276/90.7302199250643。K1=0/σ=0/内側put根なし、parity/同次性/近接時点を照合。
+- 参照4改変・実API4変異（strike入替、相関0、根変更、NaN）を拒否。vol10 §4.14・11セル・4共有図、旧191セル保持で全202セルfresh一致。Book/portal16状態/16画像、根/MC誤差棒/価格改変拒否。Book数式971個・エラー0。
+- 既受入23節のbrowser・runtime probe・個別pytest計1,803件・C:/F:復元はPASS。22節再利用・1節再描画、追加保存373,236バイト。採用D1パスとSHA-256を固定した。
+- 修正後全pytest **3,602 passed / 6 skipped**（既存warning2件）、ruff、4本--check、台帳成果物・releaseを検査。独立レビューI1は近接日付の参照求積をRED→GREENで修正。M1は極端な日付差でAPIが警告後拒否する数値制限として保留。修正後の全体検査は120.83秒でPASS。Critical/Importantの未解消指摘なし。
+
+- 修正後、変更されたexoticsページに関係する旧15節をD1で再検査し全PASS（画像の新規保存0バイト）。他8節のページ/入力ハッシュは不変。最終統合記録は23節すべてreusedで、初回の§26.6 redrawnを直接参照している。初回保存373,236バイトと全旧記録は保持した。
 
 ## Section 26.6 M23 — 2026-10-01
 
