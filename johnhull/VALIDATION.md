@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22、§26.6 M23)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,16 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 26.6 M23 — 2026-10-01
+
+[受入ノート](docs/SECTION_26_6_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_6_REVIEW_2026-10-01.md)・[統合記録](docs/validation/section-26-6/m23-check.json)へCQ01–CQ06の5軸を集約。台帳accepted23・unreviewed283、P2は6/8節。
+
+- Hull GE p.618の単純ATM vanilla + forward-start列、各期支払、global制約・範囲終了を照合。原典に印刷例なし、全数値は合成。独立求積60ケース/API差9.95e-14、4例×524288経路の多時点MC、診断の単純型も含め最大1.415254SE。
+- call23.58483577816892、put19.75071882528578（S100/r5%/q3%/σ20%/支払.5,1,1.5,2）。成分和・同次性・call−put差、参照4改変と実API3変異を検査。
+- vol10 §4.13、11セル・共有4図、旧180セル保持（計191）。全文fresh出力一致、notebook4改変拒否。Book/portal16状態・16画像、customdata・誤差棒、数式919個・エラー0を照合。
+- 既受入22節のbrowser・runtime probe・個別pytest計1,728件・C:/F:復元はPASS。21節再利用・1節再描画、追加保存481,959バイト。採用D1パスとSHA-256を固定した。
+- 全pytest **3,522 passed / 6 skipped**（既存warning2件）、ruff、4本--check、台帳成果物照合・releaseを検査。独立最終レビューはレビュー記録へ記載する。
 
 ## Section 26.5 M22 — 2026-10-01
 

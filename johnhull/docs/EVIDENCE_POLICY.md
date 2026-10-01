@@ -117,3 +117,13 @@ driverには`--records-dir docs/validation/d1-recheck`を明示する。今回�
 既受入21節のbrowser・runtime probe・個別pytest計1,687件と両保管庫復元がPASS。専用forward-start APIを直接importし、既存pricingとhullkit.__init__を維持したため、20節の依存指紋・実行環境は不変。redrawn基点を直接参照し、reuseの連鎖は作らない。§26.4を初回描画し追加保存538,589バイト。[M22統合記録](validation/section-26-5/m22-check.json)が21件の採用パスとSHA-256を固定する。
 
 M21をmainへ統合した際、BookのSphinxキャッシュによりvol06のHTMLに既存mystnb.cssへのqueryだけが加わり、厳密な成果物ハッシュが不一致になった。CSS本体が一致し、そのqueryを除いたHTMLが検証済みM21成果物の全バイトと一致することを確認して、mainの生成HTMLだけを復元した。台帳・releaseは再照合PASS。新しいM22では実際のbuild成果物をD1で照合し、旧ハッシュを無条件に更新しない。
+
+## M23での運用（2026-10-01）
+
+既受入22節のbrowser・runtime probe・個別pytest計1,728件・C:/F:復元はPASS。21節再利用・1節再描画、追加保存481,959バイト。採用D1パスとSHA-256を固定した。
+既存pricingとroot exportsを維持し、単純cliquetを専用moduleとして直接importした。
+§26.5は初のD1描画。再利用はredrawn基点への直接参照で、reuse連鎖を作らない。
+driverの`--records-dir docs/validation/d1-recheck`を明示し、cleanな4d19ef8fから実行。
+[M23統合記録](validation/section-26-6/m23-check.json)が採用22件と全必須source/artifact hashesを固定する。
+M22 pytestの基点固定比較では後続§4.13だけを除き、現在の全体保存はM23 gateで旧180セルすべてを照合する。
+過去の受入記録・画像は保持した。
