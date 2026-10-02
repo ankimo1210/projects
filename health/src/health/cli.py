@@ -124,6 +124,10 @@ def _parser() -> argparse.ArgumentParser:
     hp_sync.add_argument(
         "--export-dir", type=Path, help="各取得後に更新するローカルWebデータの保存先"
     )
+    rebuild = commands.add_parser(
+        "rebuild-intraday", help="保存済み原本から日内データを復元（通信なし）"
+    )
+    rebuild.add_argument("--through", type=_history_date, default=date.today())
     export = commands.add_parser("export-web", help="一貫したWebデータを生成")
     export.add_argument("--out-dir", type=Path, default=_PROJECT / "web" / "public" / "data")
     return parser
@@ -698,6 +702,20 @@ def main(argv: Sequence[str] | None = None) -> int:
         command = args.command
         if command in {"auth-healthplanet", "sync-healthplanet"}:
             code, summary = _healthplanet(args)
+        elif command == "rebuild-intraday":
+            from health.intraday_rebuild import rebuild_intraday
+
+            with _open_store(args.data_dir) as (store, backed_up):
+                report = rebuild_intraday(
+                    store, Archive(args.data_dir / "archive"), through=args.through
+                )
+                summary = {
+                    "command": command,
+                    "backup_created": backed_up,
+                    **report,
+                    "status": "partial" if report["failed_days"] else "complete",
+                }
+            code = 2 if report["failed_days"] else 0
         elif command == "export-web":
             with _open_store(args.data_dir) as (store, backed_up):
                 manifest = export_web(store, args.out_dir)
