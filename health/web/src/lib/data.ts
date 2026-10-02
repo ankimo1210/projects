@@ -105,19 +105,27 @@ export function isIntraday(v: unknown): v is Intraday {
     !text(v.metric) ||
     !safePath(v.metric) ||
     v.metric.includes("/") ||
-    v.timeBasis !== "civil" ||
-    v.timeUnit !== "microseconds_since_local_midnight" ||
     !Array.isArray(v.points)
   )
     return false;
-  let previous = -1;
+  const physical = v.timeBasis === "physical" && v.timeUnit === "microseconds_since_unix_epoch";
+  const civil = v.timeBasis === "civil" && v.timeUnit === "microseconds_since_local_midnight";
+  if (!physical && !civil) return false;
+  if (physical && (
+    !Array.isArray(v.civilTimes) || v.civilTimes.length !== v.points.length ||
+    !v.civilTimes.every((t) => count(t) && t < 86400000000) ||
+    !Array.isArray(v.utcOffsets) || v.utcOffsets.length !== v.points.length ||
+    !v.utcOffsets.every((t) => t === null || (finite(t) && Math.abs(t) < 86400))
+  )) return false;
+  let previous = -Infinity;
   return v.points.every((p) => {
     if (
       !Array.isArray(p) ||
       p.length !== 2 ||
-      !count(p[0]) ||
-      p[0] >= 86400000000 ||
-      p[0] < previous ||
+      !finite(p[0]) || !Number.isSafeInteger(p[0]) ||
+      (civil && (!count(p[0]) || p[0] >= 86400000000)) ||
+      (physical && !Number.isFinite(new Date(p[0] / 1000).getTime())) ||
+      (physical ? p[0] <= previous : p[0] < previous) ||
       !nullableNumber(p[1])
     )
       return false;

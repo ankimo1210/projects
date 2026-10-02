@@ -43,10 +43,12 @@ export type SleepSession = {
 };
 export type Sleep = { sessions: SleepSession[]; timeBasis: "civil" };
 export type Intraday = {
-  date: string; metric: string; timeBasis: "civil";
-  timeUnit: "microseconds_since_local_midnight";
-  points: [number, number | null][];
-};
+  date: string; metric: string; points: [number, number | null][];
+} & (
+  | { timeBasis: "civil"; timeUnit: "microseconds_since_local_midnight" }
+  | { timeBasis: "physical"; timeUnit: "microseconds_since_unix_epoch";
+      civilTimes: number[]; utcOffsets: (number | null)[] }
+);
 export type IntradayIndex = {
   metrics: Record<string, { unit: string; days: {
     date: string; path: string; count: number;
@@ -122,6 +124,17 @@ loader は最初に meta を読み、`basePath + files[key]` から同じ genera
 睡眠ページは `sleep.json`、棚卸しページは `inventory.json`。日内 `hr` は bpm、
 `steps` は steps。未知の typed metric も保持し、単位不明は `unknown` とする。
 日内データは型付き projection の全点。source-level raw archive の代用ではない。
+UTC が全点で判明する日は `timeBasis: "physical"`、
+`timeUnit: "microseconds_since_unix_epoch"` とし、
+`points` の横軸を UTC epoch microseconds にする。実時間の昇順で重複なし。
+`civilTimes: number[]`（現地の午前0時からの microseconds）と
+`utcOffsets: (number | null)[]`（秒）を points と同じ長さ・順序で保持する。
+同じ現地時計でも異なる UTC の点は別々に保持する。offset が未提供なら null。
+UTC が一部不明の旧データは civil 形式のままで、横軸は非減少（同値を許可）。
+
+schemaVersion は1を維持する。この追加形式は対応した読み手が必要で、旧 Web を使う場合は
+旧 generation を保持する。現用 Web と exporter は一緒に更新する。
+
 同時刻 source の統合は既存 Store の責務で、export は独自の集約・間引きをしない。
 
 ## 分析と睡眠の意味
