@@ -6,13 +6,13 @@ import json
 import os
 from collections.abc import Sequence
 from dataclasses import dataclass
-from datetime import date
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 import duckdb
 import pandas as pd
 
-from health.endpoints import Metric, ParsedRows
+from health.endpoints import IntradayTime, Metric, ParsedRows
 from health.privacy import ensure_private_dir
 
 SYNC_OK = "ok"
@@ -29,14 +29,18 @@ CREATE TABLE IF NOT EXISTS sleep_sessions(
     provider_id VARCHAR PRIMARY KEY, date DATE, start_ts TIMESTAMP, end_ts TIMESTAMP,
     minutes_asleep INTEGER, minutes_deep INTEGER, minutes_light INTEGER,
     minutes_rem INTEGER, minutes_wake INTEGER, efficiency INTEGER, is_main BOOLEAN);
-CREATE TABLE IF NOT EXISTS intraday(
-    metric VARCHAR, ts TIMESTAMP, value DOUBLE, PRIMARY KEY(metric, ts));
 CREATE TABLE IF NOT EXISTS sync_state(
     metric VARCHAR PRIMARY KEY, last_synced_date DATE, status VARCHAR,
     updated_at TIMESTAMP, backfilled_from DATE);
 CREATE TABLE IF NOT EXISTS sync_history_policy(
     metric VARCHAR, floor DATE, repaired_at TIMESTAMP,
     PRIMARY KEY(metric, floor));
+"""
+
+_INTRADAY_SCHEMA = """
+CREATE TABLE intraday(
+    metric VARCHAR, ts TIMESTAMP NOT NULL, value DOUBLE, sample_key VARCHAR,
+    utc_ts TIMESTAMP, utc_offset_seconds DOUBLE, PRIMARY KEY(metric, sample_key));
 """
 
 # Applied after _SCHEMA on every open. Each statement must be idempotent: an
@@ -87,8 +91,34 @@ class Store:
                 self.con.execute(stmt)
         for stmt in _MIGRATIONS:
             self.con.execute(stmt)
+        self._migrate_intraday()
         self.con.execute(_SEED_BACKFILL_FROM_RAW)
         self._restrict_permissions(path)
+
+    def _migrate_intraday(self) -> None:
+        columns = self.con.execute(
+            "SELECT column_name FROM information_schema.columns WHERE table_name='intraday'"
+        ).fetchall()
+        if ("sample_key",) in columns:
+            return
+        self.con.execute("BEGIN TRANSACTION")
+        try:
+            if columns:
+                # Keep the original projection, including every old value, until
+                # an operator explicitly decides to retire it. Never invent UTC.
+                self.con.execute("ALTER TABLE intraday RENAME TO intraday_legacy")
+            self.con.execute(_INTRADAY_SCHEMA)
+            if columns:
+                self.con.execute(
+                    "INSERT INTO intraday SELECT metric, ts, value, "
+                    "'civil:' || strftime(ts, '%Y-%m-%dT%H:%M:%S.%f'), NULL, NULL "
+                    "FROM intraday_legacy"
+                )
+            self.con.execute("COMMIT")
+        except Exception:
+            self.con.execute("ROLLBACK")
+            self.con.close()
+            raise
 
     @staticmethod
     def _restrict_permissions(path: Path) -> None:
@@ -130,11 +160,56 @@ class Store:
     def upsert_intraday(self, rows) -> None:
         rows = list(rows)
         if rows:
-            self.con.executemany(
-                "INSERT INTO intraday VALUES (?, ?, ?) "
-                "ON CONFLICT DO UPDATE SET value = excluded.value",
-                rows,
+            self._insert_intraday(ParsedRows(intraday=tuple(rows)), upsert=True)
+
+    def _insert_intraday(self, rows: ParsedRows, *, upsert: bool = False) -> None:
+        if rows.intraday_times and len(rows.intraday_times) != len(rows.intraday):
+            raise ValueError("intraday time metadata must align with observations")
+        timings = rows.intraday_times or (IntradayTime(),) * len(rows.intraday)
+        records = []
+        for (metric, ts, value), timing in zip(rows.intraday, timings, strict=True):
+            civil = datetime.fromisoformat(ts) if isinstance(ts, str) else ts
+            utc = timing.utc_ts
+            if utc is not None:
+                if utc.tzinfo is None:
+                    raise ValueError("intraday UTC timestamp must be timezone-aware")
+                utc = utc.astimezone(UTC).replace(tzinfo=None)
+            key_time = utc if utc is not None else civil
+            key = ("utc:" if utc is not None else "civil:") + key_time.isoformat(
+                timespec="microseconds"
             )
+            records.append((metric, civil, value, key, utc, timing.utc_offset_seconds))
+        if not records:
+            return
+        frame = pd.DataFrame(
+            records, columns=["metric", "ts", "value", "sample_key", "utc_ts", "utc_offset_seconds"]
+        )
+        self.con.register("_intraday_insert", frame)
+        try:
+            sql = "INSERT INTO intraday SELECT * FROM _intraday_insert"
+            if upsert:
+                sql += " ON CONFLICT DO UPDATE SET value=excluded.value"
+            self.con.execute(sql)
+        finally:
+            self.con.unregister("_intraday_insert")
+
+    def replace_intraday(self, metric: Metric, day: date, rows: ParsedRows) -> None:
+        """Rebuild just one typed day; preserve raw observations and checkpoints."""
+        if metric.storage_tables != ("intraday",):
+            raise ValueError("only intraday metrics can be rebuilt")
+        if any(m not in metric.series_names or ts.date() != day for m, ts, _ in rows.intraday):
+            raise ValueError("intraday observations are outside their requested day")
+        self.con.execute("BEGIN TRANSACTION")
+        try:
+            self.con.execute(
+                "DELETE FROM intraday WHERE metric = ? AND CAST(ts AS DATE) = ?",
+                [metric.series_names[0], day],
+            )
+            self._insert_intraday(rows)
+            self.con.execute("COMMIT")
+        except Exception:
+            self.con.execute("ROLLBACK")
+            raise
 
     # -- transactional chunk replacement --------------------------------------
     def replace_chunk(
@@ -240,7 +315,7 @@ class Store:
             if "daily_series" in metric.storage_tables and rows.daily:
                 con.executemany("INSERT INTO daily_series VALUES (?, ?, ?)", list(rows.daily))
             if "intraday" in metric.storage_tables and rows.intraday:
-                con.executemany("INSERT INTO intraday VALUES (?, ?, ?)", list(rows.intraday))
+                self._insert_intraday(rows)
             if "sleep_sessions" in metric.storage_tables and rows.sleep:
                 for r in rows.sleep:
                     con.execute(
@@ -374,5 +449,12 @@ class Store:
     def intraday_frame(self, metric: str, day: date) -> pd.DataFrame:
         return self.con.execute(
             "SELECT ts, value FROM intraday WHERE metric = ? AND CAST(ts AS DATE) = ? ORDER BY ts",
+            [metric, day],
+        ).df()
+
+    def intraday_time_frame(self, metric: str, day: date) -> pd.DataFrame:
+        return self.con.execute(
+            "SELECT ts, value, utc_ts, utc_offset_seconds FROM intraday "
+            "WHERE metric = ? AND CAST(ts AS DATE) = ? ORDER BY utc_ts NULLS LAST, ts, sample_key",
             [metric, day],
         ).df()
