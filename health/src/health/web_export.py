@@ -394,22 +394,40 @@ def export_web(
             _safe_id(metric)
             day_string = day.isoformat()
             relative = f"intraday/{metric}/{day_string}.json"
-            frame = store.intraday_frame(metric, day)
+            frame = store.intraday_time_frame(metric, day)
+            physical = frame.utc_ts.notna().all()
+            if not physical:
+                frame = frame.sort_values("ts", kind="stable")
             points = []
-            for ts, value in frame.itertuples(index=False, name=None):
+            civil_times = []
+            offsets = []
+            epoch = datetime(1970, 1, 1)
+            for ts, value, utc_ts, offset in frame.itertuples(index=False, name=None):
                 # Integer arithmetic retains DuckDB TIMESTAMP microseconds,
                 # including the final microsecond before local midnight.
                 micros = ((ts.hour * 60 + ts.minute) * 60 + ts.second) * 1_000_000 + ts.microsecond
+                civil_times.append(micros)
+                offsets.append(None if pd.isna(offset) else float(offset))
+                if physical:
+                    delta = utc_ts - epoch
+                    micros = (delta.days * 86400 + delta.seconds) * 1_000_000 + delta.microseconds
                 points.append([micros, value])
+            detail = {
+                "date": day_string,
+                "metric": metric,
+                "timeBasis": "physical" if physical else "civil",
+                "timeUnit": (
+                    "microseconds_since_unix_epoch"
+                    if physical
+                    else "microseconds_since_local_midnight"
+                ),
+                "points": points,
+            }
+            if physical:
+                detail.update(civilTimes=civil_times, utcOffsets=offsets)
             write(
                 relative,
-                {
-                    "date": day_string,
-                    "metric": metric,
-                    "timeBasis": "civil",
-                    "timeUnit": "microseconds_since_local_midnight",
-                    "points": points,
-                },
+                detail,
             )
             entry = intraday.setdefault(
                 metric,

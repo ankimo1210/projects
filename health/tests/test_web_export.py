@@ -27,6 +27,32 @@ def read_export(path, filename):
     return snapshot["data"]
 
 
+def test_intraday_export_preserves_physical_identity_and_civil_clock(store, tmp_path):
+    from datetime import date
+
+    from health.endpoints import IntradayTime, ParsedRows
+
+    rows = ParsedRows(
+        intraday=(("hr", datetime(2025, 1, 1, 14), 65), ("hr", datetime(2025, 1, 1, 14), 72)),
+        intraday_times=(
+            IntradayTime(datetime(2025, 1, 1, 5, tzinfo=UTC), 32400),
+            IntradayTime(datetime(2025, 1, 1, 6, tzinfo=UTC), 28800),
+        ),
+    )
+    store._insert_intraday(rows)
+    path = export_web(store, tmp_path / "web")
+    detail = read_export(path, "intraday/hr/2025-01-01.json")
+    assert detail == {
+        "date": date(2025, 1, 1).isoformat(),
+        "metric": "hr",
+        "timeBasis": "physical",
+        "timeUnit": "microseconds_since_unix_epoch",
+        "points": [[1735707600000000, 65], [1735711200000000, 72]],
+        "civilTimes": [50400000000, 50400000000],
+        "utcOffsets": [32400, 28800],
+    }
+
+
 def test_empty_export_lists_pending_inventory_without_mutating_legacy_db(store, tmp_path):
     before = store.con.execute("SHOW TABLES").fetchall()
     path = export_web(store, tmp_path / "web", generation_id="empty")

@@ -29,13 +29,16 @@ export type SleepSession = {
   is_main: boolean | null;
 };
 export type Sleep = { sessions: SleepSession[]; timeBasis: "civil" };
-export type Intraday = {
+type IntradayBase = {
   date: string;
   metric: string;
-  timeBasis: "civil";
-  timeUnit: "microseconds_since_local_midnight";
   points: [number, number | null][];
 };
+export type Intraday = IntradayBase & (
+  | { timeBasis: "civil"; timeUnit: "microseconds_since_local_midnight" }
+  | { timeBasis: "physical"; timeUnit: "microseconds_since_unix_epoch";
+      civilTimes: number[]; utcOffsets: (number | null)[] }
+);
 export type IntradayIndex = {
   metrics: Record<
     string,

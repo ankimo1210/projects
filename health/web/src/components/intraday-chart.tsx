@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { isIntraday, isIntradayIndex, type Intraday } from "@/lib/data";
 import { sampleWindow } from "@/lib/downsample";
+import { axisTime, inputTime, parseInputTime, observationTime } from "@/lib/intraday-time";
 import { formatValue, units } from "@/lib/presentation";
 import { useSnapshot } from "./data-provider";
 import { DataState } from "./data-state";
@@ -24,10 +25,6 @@ import {
   CardDescription,
 } from "./ui/card";
 import { Button } from "./ui/button";
-function clock(value: number) {
-  const seconds = Math.floor(value / 1000000);
-  return `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(Math.floor((seconds % 3600) / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
-}
 function Detail({ data, unit }: { data: Intraday; unit: string }) {
   const original = useMemo(
     () => data.points.map(([x, y]) => ({ x, y })),
@@ -80,7 +77,7 @@ function Detail({ data, unit }: { data: Intraday; unit: string }) {
               dataKey="x"
               type="number"
               domain={range}
-              tickFormatter={clock}
+              tickFormatter={(v) => axisTime(data, v)}
               tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
               minTickGap={45}
             />
@@ -89,9 +86,7 @@ function Detail({ data, unit }: { data: Intraday; unit: string }) {
               tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
             />
             <Tooltip
-              labelFormatter={(v) =>
-                `${data.date} ${clock(Number(v))}（現地時計）`
-              }
+              labelFormatter={(v) => observationTime(data, Number(v))}
               formatter={(v) => [
                 `${v} ${unit}`,
                 data.metric === "hr" ? "心拍" : "歩数",
@@ -124,29 +119,27 @@ function Detail({ data, unit }: { data: Intraday; unit: string }) {
       </div>
       <div className="zoom-controls">
         <label>
-          開始
+          開始{data.timeBasis === "physical" ? "（UTC）" : ""}
           <input
             aria-label="ズーム開始"
-            type="time"
+            type={data.timeBasis === "physical" ? "datetime-local" : "time"}
             step="1"
-            value={clock(range[0])}
+            value={inputTime(data, range[0])}
             onChange={(e) => {
-              const [h, m, s = 0] = e.target.value.split(":").map(Number);
-              const x = (h * 3600 + m * 60 + s) * 1000000;
+              const x = parseInputTime(data, e.target.value);
               if (Number.isFinite(x) && x < range[1]) setRange([x, range[1]]);
             }}
           />
         </label>
         <label>
-          終了
+          終了{data.timeBasis === "physical" ? "（UTC）" : ""}
           <input
             aria-label="ズーム終了"
-            type="time"
+            type={data.timeBasis === "physical" ? "datetime-local" : "time"}
             step="1"
-            value={clock(range[1])}
+            value={inputTime(data, range[1])}
             onChange={(e) => {
-              const [h, m, s = 0] = e.target.value.split(":").map(Number);
-              const x = (h * 3600 + m * 60 + s) * 1000000;
+              const x = parseInputTime(data, e.target.value);
               if (Number.isFinite(x) && x > range[0]) setRange([range[0], x]);
             }}
           />
@@ -174,7 +167,7 @@ function Detail({ data, unit }: { data: Intraday; unit: string }) {
               key={`${range[0]}:${range[1]}`}
               dataKey="x"
               height={28}
-              tickFormatter={clock}
+              tickFormatter={(v) => axisTime(data, v)}
               stroke="var(--chart-axis)"
               fill="var(--chart-surface)"
               startIndex={Math.max(
@@ -195,8 +188,10 @@ function Detail({ data, unit }: { data: Intraday; unit: string }) {
         </ResponsiveContainer>
       </div>
       <p className="chart-note">
-        範囲を選ぶと全点から再描画します。5分を超える時刻の飛びは線を接続しません。現地時計の値で、UTC
-        offset は未提供です。描画の間引きは保存データを変更しません。
+        範囲を選ぶと全点から再描画します。5分を超える時刻の飛びは線を接続しません。{data.timeBasis === "physical"
+          ? "時間軸はUTCです。詳細表示には元の現地時計と提供されたUTC offsetを使います。"
+          : "現地時計の値です。この日のUTC時刻は全点で確認できていません。"}
+        描画の間引きは保存データを変更しません。
       </p>
     </>
   );

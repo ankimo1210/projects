@@ -92,6 +92,24 @@ CLIは取得カタログの読み取り専用scopeを要求し、ブラウザで
 ブラウザが開かない場合は`health auth --no-browser`で表示されるURLを手動で開いてください。
 scope不足や認可期限切れの場合も`health auth`で再認可します。
 
+## 日内データの原本からの復元
+
+workspace root で実行します。Google への通信や再認可は不要です。
+
+```bash
+uv run --no-sync health rebuild-intraday
+uv run --no-sync health export-web --out-dir health/web/public/data
+```
+
+コマンドは DB を private にバックアップしてから、保存済みの完全な日ごとのレスポンスを
+再解析します。不完全・破損・重複した実時間を含む原本は、その日の既存行を保持して
+`failed_days` に数え、終了コード2を返します。checkpoint は連続して復元できた範囲だけ
+進みます。全履歴の取得完了を意味しません。`--through YYYY-MM-DD` で復元の上限日を指定できます。
+
+日内データは UTC の実時間を識別子とし、現地時計と提供された UTC offset も保存します。
+旧3列テーブルは `intraday_legacy` として保持し、UTC が復元できない行には推測値を入れません。
+画面の新形式は UTC を横軸とし、詳細に現地時計・offset を表示します。旧 civil 形式も読めます。
+
 ## 同期・再開
 
 ```bash
