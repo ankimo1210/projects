@@ -14,9 +14,10 @@ export function axisTime(data: Intraday, value: number) {
 }
 export function parseInputTime(data: Intraday, value: string) {
   if (data.timeBasis === "physical") {
-    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(value)) return NaN;
-    const millis = Date.parse(`${value}Z`);
-    return Number.isFinite(millis) && new Date(millis).toISOString().slice(0, 19) === value
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/.test(value)) return NaN;
+    const normalized = value.length === 16 ? `${value}:00` : value;
+    const millis = Date.parse(`${normalized}Z`);
+    return Number.isFinite(millis) && new Date(millis).toISOString().slice(0, 19) === normalized
       ? millis * 1000 : NaN;
   }
   if (!/^\d{2}:\d{2}(:\d{2})?$/.test(value)) return NaN;
