@@ -8,9 +8,10 @@ filters use the full snake_case data-type path, never a bare field name.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 DAILY_ROLLUP = "daily_rollup"
 RECONCILE = "reconcile"
@@ -30,10 +31,19 @@ class PayloadError(ValueError):
 
 
 @dataclass(frozen=True)
+class IntradayTime:
+    """Explicit UTC instant and offset; None means the source did not supply it."""
+
+    utc_ts: datetime | None = None
+    utc_offset_seconds: float | None = None
+
+
+@dataclass(frozen=True)
 class ParsedRows:
     daily: tuple[DailyRow, ...] = ()
     sleep: tuple[SleepRow, ...] = ()
     intraday: tuple[IntradayRow, ...] = ()
+    intraday_times: tuple[IntradayTime, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -193,7 +203,7 @@ def _duration_seconds(text: str) -> float:
 def _physical_to_local_datetime(physical_time: str, utc_offset: str) -> datetime:
     """RFC3339 UTC instant + a UTC-offset duration -> naive local datetime."""
     utc_dt = datetime.fromisoformat(physical_time.replace("Z", "+00:00"))
-    local_dt = utc_dt + timedelta(seconds=_duration_seconds(utc_offset))
+    local_dt = utc_dt.astimezone(UTC) + timedelta(seconds=_duration_seconds(utc_offset))
     return local_dt.replace(tzinfo=None)
 
 
@@ -549,11 +559,32 @@ def parse_sleep_reconcile(pages: Sequence[dict]) -> ParsedRows:
 # actual bpm/count value is an optional measurement that skips only its row.
 
 
+def _intraday_time(
+    ts: datetime, physical: str | None, offset: str | None, metric: str
+) -> IntradayTime:
+    try:
+        seconds = _duration_seconds(offset) if offset is not None else None
+        if seconds is not None and (not math.isfinite(seconds) or abs(seconds) >= 86400):
+            raise ValueError("invalid UTC offset")
+        utc = None
+        if physical:
+            utc = datetime.fromisoformat(physical.replace("Z", "+00:00"))
+            if utc.tzinfo is None:
+                raise ValueError("physical time requires a timezone")
+            utc = utc.astimezone(UTC)
+        elif seconds is not None:
+            utc = (ts - timedelta(seconds=seconds)).replace(tzinfo=UTC)
+        return IntradayTime(utc, seconds)
+    except (ValueError, TypeError, OverflowError) as exc:
+        raise PayloadError(metric, "invalid intraday physical time/offset") from exc
+
+
 def parse_intraday_hr_reconcile(pages: Sequence[dict]) -> ParsedRows:
     metric = _metric("intraday_hr")
     series_name = metric.series_names[0]
-    seen: set[datetime] = set()
+    seen: set[tuple[str, datetime]] = set()
     out: list[IntradayRow] = []
+    times: list[IntradayTime] = []
     for page in pages:
         for point in response_points(metric, page):
             hr = point.get("heartRate")
@@ -569,18 +600,24 @@ def parse_intraday_hr_reconcile(pages: Sequence[dict]) -> ParsedRows:
             )
             if "beatsPerMinute" not in hr:
                 continue
-            if ts in seen:
+            timing = _intraday_time(
+                ts, sample_time.get("physicalTime"), sample_time.get("utcOffset"), metric.name
+            )
+            identity = ("utc", timing.utc_ts) if timing.utc_ts else ("civil", ts)
+            if identity in seen:
                 raise PayloadError(metric.name, f"duplicate hr timestamp: {ts}")
-            seen.add(ts)
+            seen.add(identity)
             out.append((series_name, ts, _to_float(hr["beatsPerMinute"])))
-    return ParsedRows(intraday=tuple(out))
+            times.append(timing)
+    return ParsedRows(intraday=tuple(out), intraday_times=tuple(times))
 
 
 def parse_intraday_steps_reconcile(pages: Sequence[dict]) -> ParsedRows:
     metric = _metric("intraday_steps")
     series_name = metric.series_names[0]
-    seen: set[datetime] = set()
+    seen: set[tuple[str, datetime]] = set()
     out: list[IntradayRow] = []
+    times: list[IntradayTime] = []
     for page in pages:
         for point in response_points(metric, page):
             steps = point.get("steps")
@@ -596,11 +633,16 @@ def parse_intraday_steps_reconcile(pages: Sequence[dict]) -> ParsedRows:
             )
             if "count" not in steps:
                 continue
-            if ts in seen:
+            timing = _intraday_time(
+                ts, interval.get("startTime"), interval.get("startUtcOffset"), metric.name
+            )
+            identity = ("utc", timing.utc_ts) if timing.utc_ts else ("civil", ts)
+            if identity in seen:
                 raise PayloadError(metric.name, f"duplicate steps timestamp: {ts}")
-            seen.add(ts)
+            seen.add(identity)
             out.append((series_name, ts, _to_float(steps["count"])))
-    return ParsedRows(intraday=tuple(out))
+            times.append(timing)
+    return ParsedRows(intraday=tuple(out), intraday_times=tuple(times))
 
 
 # -- 14-entry metric catalog ---------------------------------------------------

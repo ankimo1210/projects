@@ -184,7 +184,10 @@ def test_export_uses_one_database_snapshot_with_concurrent_writer(store, tmp_pat
     def read_then_update(metrics):
         result = original(metrics)
         writer.execute("INSERT INTO daily_series VALUES ('steps', '2025-01-02', 200)")
-        writer.execute("INSERT INTO intraday VALUES ('hr', '2025-01-02T00:00:00', 70)")
+        writer.execute(
+            "INSERT INTO intraday(metric, ts, value, sample_key) VALUES "
+            "('hr', '2025-01-02T00:00:00', 70, 'civil:2025-01-02T00:00:00.000000')"
+        )
         return result
 
     monkeypatch.setattr(store, "daily_frame", read_then_update)
