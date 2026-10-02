@@ -102,21 +102,21 @@ def _record_replay(store, index, name, candidate, refs, pages, metric):
 def rebuild_intraday(store: Store, archive: Archive, *, through: date) -> dict:
     """Rebuild each saved one-day response; return counts, never health values."""
     index = ArchiveIndex(store.con)
-    candidates: dict[tuple[str, date], _Candidate] = {}
+    candidates: dict[tuple[str, date], list[_Candidate]] = {}
     for name, day, observed in store.con.execute(
         "SELECT metric, range_start, max(fetched_at) FROM raw_json "
         "WHERE metric IN ('intraday_hr','intraday_steps') AND range_start=range_end "
         "AND range_start<=? GROUP BY metric,range_start",
         [through],
     ).fetchall():
-        candidates[name, day] = _Candidate(observed)
+        candidates.setdefault((name, day), []).append(_Candidate(observed))
     for attempt, stream, encoded, observed in store.con.execute(
         "SELECT id,stream_id,request_json,started_at FROM archive_attempts "
         "WHERE stream_id IN ('projection:intraday_hr','projection:intraday_steps') "
-        "AND finished_at IS NOT NULL ORDER BY started_at,id"
+        "ORDER BY started_at,id"
     ).fetchall():
         request = _json(encoded)
-        if request.get("replayed_from"):
+        if not isinstance(request, dict) or request.get("replayed_from"):
             continue
         try:
             start = date.fromisoformat(request["range_start"])
@@ -126,25 +126,32 @@ def rebuild_intraday(store: Store, archive: Archive, *, through: date) -> dict:
         if end != start + timedelta(days=1) or start > through:
             continue
         key = stream.removeprefix("projection:"), start
-        if key not in candidates or observed > candidates[key].observed_at:
-            candidates[key] = _Candidate(observed, attempt, request)
+        candidates.setdefault(key, []).append(_Candidate(observed, attempt, request))
     catalog = {m.name: m for m in CATALOG}
     successful: dict[str, set[date]] = {"intraday_hr": set(), "intraday_steps": set()}
     report = {"rebuilt_days": 0, "rebuilt_points": 0, "failed_days": 0, "checkpoints_advanced": 0}
-    for (name, day), candidate in sorted(candidates.items()):
-        try:
-            pages, refs = _pages(store, archive, name, day, candidate)
-            metric = catalog[name]
-            parsed = metric.parse_pages(pages)
-            store.replace_intraday(metric, day, parsed)
-            if candidate.attempt_id:
-                _record_replay(store, index, name, candidate, refs, pages, metric)
-        except (ArchiveError, PayloadError, ValueError, KeyError, TypeError):
+    report["skipped_inputs"] = 0
+    for (name, day), choices in sorted(candidates.items()):
+        # Preserve the newest COMPLETE observation, including newer raw_json.
+        # A later network interruption must not hide a usable saved version.
+        choices.sort(key=lambda c: (c.observed_at, c.attempt_id is None), reverse=True)
+        for candidate in choices:
+            try:
+                pages, refs = _pages(store, archive, name, day, candidate)
+                metric = catalog[name]
+                parsed = metric.parse_pages(pages)
+                store.replace_intraday(metric, day, parsed)
+                if candidate.attempt_id:
+                    _record_replay(store, index, name, candidate, refs, pages, metric)
+            except (ArchiveError, PayloadError, ValueError, KeyError, TypeError):
+                report["skipped_inputs"] += 1
+                continue
+            successful[name].add(day)
+            report["rebuilt_days"] += 1
+            report["rebuilt_points"] += len(parsed.intraday)
+            break
+        else:
             report["failed_days"] += 1
-            continue
-        successful[name].add(day)
-        report["rebuilt_days"] += 1
-        report["rebuilt_points"] += len(parsed.intraday)
     for name, days in successful.items():
         checkpoint = store.get_sync_checkpoint(name)
         if checkpoint is None or checkpoint.status != "in_progress":

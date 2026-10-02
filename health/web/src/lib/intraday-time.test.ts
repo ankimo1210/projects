@@ -25,6 +25,8 @@ describe("physical intraday time", () => {
     expect(observationTime(data, 1735711200000000)).toBe("2025-01-01 14:00:00（UTC+08:00）");
     expect(inputTime(data, 1735707600000000)).toBe("2025-01-01T05:00:00");
     expect(parseInputTime(data, "2025-01-01T06:00:00")).toBe(1735711200000000);
+    expect(parseInputTime(data, "2025-01-01T06:00")).toBe(1735711200000000);
+    expect(parseInputTime(data, "2025-02-30T06:00")).toBeNaN();
     expect(parseInputTime(data, "")).toBeNaN();
   });
   it("keeps legacy civil data readable", () => {

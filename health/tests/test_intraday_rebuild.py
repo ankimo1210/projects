@@ -130,3 +130,60 @@ def test_corrupt_archive_cannot_replace_day(tmp_path):
         assert store.intraday_frame("hr", DAY).empty
     finally:
         store.close()
+
+
+def test_incomplete_new_attempt_does_not_hide_complete_archive(tmp_path):
+    store = Store(tmp_path / "health.duckdb")
+    archive = Archive(tmp_path / "archive")
+    try:
+        complete = capture(store, archive)
+        capture(store, archive, terminal=False)
+        store.set_sync_state("intraday_hr", DAY - timedelta(days=1), "in_progress")
+        report = rebuild_intraday(store, archive, through=DAY)
+        assert report["rebuilt_days"] == 1
+        assert report["failed_days"] == 0
+        assert store.intraday_frame("hr", DAY).value.tolist() == [65, 72]
+        assert store.get_sync_checkpoint("intraday_hr").last_synced == DAY
+        assert store.con.execute(
+            "SELECT count(*) FROM archive_attempts WHERE "
+            "json_extract_string(request_json, '$.replayed_from')=?",
+            [complete],
+        ).fetchone() == (1,)
+    finally:
+        store.close()
+
+
+def test_latest_complete_raw_is_preferred_over_old_archive_and_new_partial(tmp_path):
+    store = Store(tmp_path / "health.duckdb")
+    archive = Archive(tmp_path / "archive")
+    try:
+        older = capture(store, archive)
+        store.con.execute("UPDATE archive_attempts SET started_at='2024-01-01' WHERE id=?", [older])
+        page = payload("intraday_hr")
+        page["dataPoints"][0]["heartRate"]["beatsPerMinute"] = 80
+        m = metric("intraday_hr")
+        store.replace_chunk(m, DAY, DAY, [page], m.parse_pages([page]))
+        capture(store, archive, terminal=False)
+        assert rebuild_intraday(store, archive, through=DAY)["failed_days"] == 0
+        assert store.intraday_frame("hr", DAY).value.tolist() == [80, 72]
+    finally:
+        store.close()
+
+
+def test_crash_after_final_page_before_attempt_finish_is_recoverable(tmp_path):
+    store = Store(tmp_path / "health.duckdb")
+    archive = Archive(tmp_path / "archive")
+    try:
+        original = capture(store, archive)
+        store.con.execute(
+            "UPDATE archive_attempts SET finished_at=NULL,status='partial' WHERE id=?",
+            [original],
+        )
+        work = store.con.execute("SELECT * FROM archive_work").fetchall()
+        assert rebuild_intraday(store, archive, through=DAY)["rebuilt_days"] == 1
+        assert store.con.execute(
+            "SELECT finished_at FROM archive_attempts WHERE id=?", [original]
+        ).fetchone() == (None,)
+        assert store.con.execute("SELECT * FROM archive_work").fetchall() == work
+    finally:
+        store.close()
