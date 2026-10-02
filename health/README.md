@@ -94,6 +94,8 @@ scope不足や認可期限切れの場合も`health auth`で再認可します�
 
 ## 日内データの原本からの復元
 
+[同期・修復の状態と検証](docs/STATUS.md)を参照できます。
+
 workspace root で実行します。Google への通信や再認可は不要です。
 
 ```bash

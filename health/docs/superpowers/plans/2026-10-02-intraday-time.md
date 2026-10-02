@@ -16,11 +16,11 @@ UTC と civil の食い違い、offset 欠落・非整数 offset、日跨ぎ、�
 
 **Interfaces:** `ParsedRows.intraday` の 3 要素 tuple を維持し、整列した `intraday_times` を追加する。Store は sample_key を主キーにし、`intraday_time_frame` と typed-only `replace_intraday` を提供する。
 
-- [ ] 同じ civil・異なる UTC を両方保存し、同じ UTC の重複を拒否するテストを書く。旧 3 列 DB の移行と再 open、原本を触らない置換も確認する。
-- [ ] 新テストを実行する。Expected: 未実装の契約で失敗する。
-- [ ] parser と transactional migration / bulk insert を実装する。
-- [ ] Python 一式を実行する。Expected: 既存 526 件と新規テストが通る。
-- [ ] `fix(health): preserve physical identity of intraday observations` を commit する。
+- [x] 同じ civil・異なる UTC を両方保存し、同じ UTC の重複を拒否するテストを書く。旧 3 列 DB の移行と再 open、原本を触らない置換も確認する。
+- [x] 新テストを実行する。Expected: 未実装の契約で失敗する。
+- [x] parser と transactional migration / bulk insert を実装する。
+- [x] Python 一式を実行する。Expected: 既存 526 件と新規テストが通る。
+- [x] `fix(health): preserve physical identity of intraday observations` を commit する。
 
 ### Task 2: Offline recovery
 
@@ -28,11 +28,11 @@ UTC と civil の食い違い、offset 欠落・非整数 offset、日跨ぎ、�
 
 **Interfaces:** Task 1 の typed-only replacement を使い、`rebuild-intraday` は保存済み raw と hash 検証済み archive だけを読む。派生 replay attempt と連続範囲の checkpoint 更新を記録する。
 
-- [ ] 完全・不完全な archive、raw の置換、再実行、checkpoint の穴を合成データでテストする。
-- [ ] 新テストを実行する。Expected: recovery module が未実装で失敗する。
-- [ ] 再構築 module と CLI を実装する。
-- [ ] Python 一式を実行する。Expected: 全件通る。
-- [ ] `feat(health): rebuild intraday projections from saved responses` を commit する。
+- [x] 完全・不完全な archive、raw の置換、再実行、checkpoint の穴を合成データでテストする。
+- [x] 新テストを実行する。Expected: recovery module が未実装で失敗する。
+- [x] 再構築 module と CLI を実装する。
+- [x] Python 一式を実行する。Expected: 全件通る。
+- [x] `feat(health): rebuild intraday projections from saved responses` を commit する。
 
 ### Task 3: Export and display
 
@@ -40,11 +40,11 @@ UTC と civil の食い違い、offset 欠落・非整数 offset、日跨ぎ、�
 
 **Interfaces:** `timeBasis=physical`, `timeUnit=microseconds_since_unix_epoch`, `civilTimes`, `utcOffsets` を追加。civil 旧形式の互換性を維持する。
 
-- [ ] UTC 横軸・重複 civil・旧形式・metadata 整列と formatter の回帰テストを書く。
-- [ ] 新テストを実行する。Expected: 新形式の export/validation が失敗する。
-- [ ] export、validator、UTC zoom / tooltip、契約文書を実装する。
-- [ ] Python 一式と Web の typecheck/lint/test/build を実行する。Expected: 全件通る。
-- [ ] `fix(health): display intraday data on its physical timeline` を commit する。
+- [x] UTC 横軸・重複 civil・旧形式・metadata 整列と formatter の回帰テストを書く。
+- [x] 新テストを実行する。Expected: 新形式の export/validation が失敗する。
+- [x] export、validator、UTC zoom / tooltip、契約文書を実装する。
+- [x] Python 一式と Web の typecheck/lint/test/build を実行する。Expected: 全件通る。
+- [x] `fix(health): display intraday data on its physical timeline` を commit する。
 
 ### Task 4: Verify and restore the local sync
 
@@ -52,7 +52,13 @@ UTC と civil の食い違い、offset 欠落・非整数 offset、日跨ぎ、�
 
 **Interfaces:** Tasks 1–3 の全契約。現用 DB には修正済み現用コードだけを接続する。
 
-- [ ] private なコピー DB で移行・replay・再実行を検証する。Expected: 原本保持、旧行保持、完全な観測だけを復元する。
-- [ ] 実装全体の fresh review を依頼し、重要な指摘は RED→GREEN で修正する。
-- [ ] 現用 health コードへローカル統合し、バックアップ後に本番の offline rebuild と export を行う。Expected: 欠落日が復元され、checkpoint は連続した範囲だけ進む。private JSON の件数が DB と一致する。
-- [ ] 検証と残る制約を STATUS に記録して commit する。Expected: health のみ変更、個人値なし、リモート変更なし。
+- [x] private なコピー DB で移行・replay・再実行を検証する。Expected: 原本保持、旧行保持、完全な観測だけを復元する。
+- [x] 実装全体の fresh review を依頼し、重要な指摘は RED→GREEN で修正する。
+- [x] 現用 health コードへローカル統合し、バックアップ後に本番の offline rebuild と export を行う。Expected: 欠落日が復元され、checkpoint は連続した範囲だけ進む。private JSON の件数が DB と一致する。
+- [x] 検証と残る制約を STATUS に記録して commit する。Expected: health のみ変更、個人値なし、リモート変更なし。
+
+## 完了
+
+2026-10-02: 専用ブランチ `codex/health-intraday-time` の実装をローカル main に統合。
+主要実装 `3cbef8a6`〜`335f87cc`。コピー DB・実 DB・当日取得・両 export の検証を完了。
+詳細と維持する制約は [STATUS](../../STATUS.md) を参照。
