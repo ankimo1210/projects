@@ -66,6 +66,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | Brownian paths & quadratic variation | Hull ch.14; Ito calculus | `hullkit.sde:brownian_paths`, `hullkit.sde:quadratic_variation`, `hullkit.sde:ito_riemann_sum` | `test_sde.py` | vol 13 | QV -> t; Ito correction = half QV |
 | Euler-Maruyama discretization | Kloeden & Platen | `hullkit.sde:euler_maruyama` | `test_sde.py` | vol 13 | Moment match vs exact GBM |
 | Girsanov measure change | Hull ch.28 | `hullkit.sde:girsanov_weights` | `test_sde.py` | vol 13 | Reweighted drift recovery |
+| Market price of risk, signed loadings and the riskless two-derivative portfolio | Hull 11e GE §28.1 (pp.671–674) | `hullkit.market_price_of_risk:market_price_of_risk`, `required_growth`, `riskless_holdings`, `ito_growth_and_loading` | `test_market_price_of_risk.py`, `test_market_price_of_risk_reference.py`, `test_market_price_of_risk_numerics.py` | vol 10 §6.1–6.6 | Examples 28.1–28.2 printed values; 38 claims in two markets (λ=0.35, −0.1) against independent real-world Gauss–Hermite growth/loading; riskless pairs earn r; five λ worlds keep loadings; convenience-yield caveat; seeded 524288-path direct and likelihood-ratio MC; four shared plots; `docs/validation/section-28-1/` |
 
 ## 4. Numerical methods (variance reduction, QMC, AAD)
 
@@ -214,6 +215,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._cliquet_lesson` | Hull §26.6の株価reset・各期PV・回数掃引・global/local制約と終了のMC診断を保存済み独立参照から共有する内部Plotly図（`test_cliquet_lesson.py`） |
 | `hullkit._compound_lesson` | Hull §26.7の4給付・臨界株価・外側strike・行使日・独立求積/条件付きMCを保存参照から共有する内部Plotly図（`test_compound_lesson.py`） |
 | `hullkit._chooser_lesson` | Hull §26.8の選択境界・配当調整複製・選択時期・独立求積/条件付きMCを共有する内部Plotly図（`test_chooser_lesson.py`） |
+| `hullkit._market_price_of_risk_lesson` | Hull §28.1の符号付きloadingと共通λ・無リスクportfolioの残差・λ別の世界・直接/尤度比MCを保存参照から共有する内部Plotly図（`test_market_price_of_risk_lesson.py`） |
 | `hullkit._exchange_lesson` | Hull §26.14 の給付と分解・相関と σ̂・$r$ 非依存と $V/U$ 読み替え・米国型の早期行使を保存済みデータから共有する内部 Plotly 図ビルダー（`test_exchange_lesson.py`） |
 | `hullkit._lookback_lesson` | Hull §26.11 の経路給付・履歴極値・評価時点の複製・離散 fixing を共有する内部 Plotly 図ビルダー |
 | `hullkit._shout_lesson` | Hull §26.12 の給付・宣言木・実ノード境界・合成価格比較を保存済みデータから共有する内部 Plotly 図ビルダー（`test_shout_lesson.py`） |

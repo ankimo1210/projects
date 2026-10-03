@@ -19,7 +19,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 70 public + 25 private modules as of 2026-10-03; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 71 public + 26 private modules as of 2026-10-03; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
 ## 現在地（2026-10-03、M25受入）
 
@@ -28,7 +28,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 70 public + 25 priva
 | 章単位（Hull 11e 全 37 章） | 上表の 14 行すべて done（2026-06-08） | 章に巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol 13–28） | すべて done | A1–A4（vol 13–17）、A5–A8 G8 release（vol 18–25）、vol 26・27・28 |
 | 全節監査の是正 | 第 1〜5 便完了 | 残りは下の「全節監査と是正」の表 |
-| 節単位の受入 | M25（§26.8）まで。受入25・未評価281（8.2%） | P0/P1/P2完了。Ch26/27の25節を受入。次はP3金利37節。全体計画は下の「完了までの計画」 |
+| 節単位の受入 | M25（§26.8）まで。受入25・未評価281（8.2%） | P0/P1/P2完了。Ch26/27の25節を受入。P3着手：M26（§28.1）は実装・教材・Book/portal検査まで、D1と台帳受入は未実施。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
 | 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。不変画像はハッシュで参照 | **M25**：既受入24節のbrowser・runtime probe・個別pytest計1,868件・C:/F:両保管庫復元はPASS。23節再利用・1節再描画、追加保存505,902バイト。採用D1パスとSHA-256を固定。 |
 | テスト | hullkit+report 3,757 passed・6 skipped（2026-10-03）、独立レビューI1修正・M1保留 | 実行結果は `VALIDATION.md` |
@@ -56,7 +56,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 70 public + 25 priva
 | P0 | §26.9–§27.4（M1–M13） | 13 | 13 | 0 | — | 完了 |
 | P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 4 | 0 | — | 完了（M14–M17） |
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
-| P3 | 金利（Ch 28–34） | 37 | 0 | 3 | HW/BK 三項ツリー・Bermudan・LMM がない（EX-13〜15）。最も重い | 下調べ・設計済み、節受入未着手 |
+| P3 | 金利（Ch 28–34） | 37 | 0 | 3 | HW/BK 三項ツリー・Bermudan・LMM がない（EX-13〜15）。最も重い | 着手。M26 §28.1は実装・教材・実画面検査済み、D1・台帳受入待ち |
 | P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 件数が最大。多くは実装済みで、印刷値での固定が中心 | 下調べ済み・節受入未着手 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | vol 27・28 の資産を流用できる | 下調べ済み・節受入未着手 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 軽いが件数が多い。定性が多い | 下調べ済み・節受入未着手 |

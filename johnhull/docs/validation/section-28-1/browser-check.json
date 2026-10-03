@@ -1,0 +1,174 @@
+{
+  "status": "PASS",
+  "browser_version": "141.0.7390.37",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "mpr_line",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_riskless",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_worlds",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_line",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_riskless",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_worlds",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-1/portal-mpr_line-1440.png",
+        "docs/validation/section-28-1/portal-mpr_riskless-1440.png",
+        "docs/validation/section-28-1/portal-mpr_worlds-1440.png",
+        "docs/validation/section-28-1/portal-mpr_validation-1440.png",
+        "docs/validation/section-28-1/portal-mpr_line-1000.png",
+        "docs/validation/section-28-1/portal-mpr_riskless-1000.png",
+        "docs/validation/section-28-1/portal-mpr_worlds-1000.png",
+        "docs/validation/section-28-1/portal-mpr_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "mpr_line",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_riskless",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_worlds",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_line",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_riskless",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_worlds",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "mpr_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-1/book-mpr_line-1440.png",
+        "docs/validation/section-28-1/book-mpr_riskless-1440.png",
+        "docs/validation/section-28-1/book-mpr_worlds-1440.png",
+        "docs/validation/section-28-1/book-mpr_validation-1440.png",
+        "docs/validation/section-28-1/book-mpr_line-1000.png",
+        "docs/validation/section-28-1/book-mpr_riskless-1000.png",
+        "docs/validation/section-28-1/book-mpr_worlds-1000.png",
+        "docs/validation/section-28-1/book-mpr_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/market_price_of_risk.py": "3cd5b2efe89760967c828263e7859470f9f232285fcaf52e363a845343994c7a",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/_market_price_of_risk_lesson.py": "c0234637cf8b034ac913432029c919e18a78439bfa1fd1994e643549b66db85b",
+    "scripts/build_market_price_of_risk_reference.py": "e618fab81e44bcbb0179bbc238c9df537c618af8df5191d27e41e57eee32d4a0",
+    "scripts/verify_market_price_of_risk_browser.cjs": "68e603ec1ce20a822bcacf8941836e7eac3a7be9e7d714f218977b1991af15d2",
+    "docs/validation/section-28-1/reference.json": "4b6895352fff6f77b8ae0c003fe1ebb1cd715b44477b0c671b72719914e0fac8",
+    "docs/validation/section-28-1/numerical-check.json": "1909574087b21b8b440e26dae6f913508c97bb38a00042396d86323ead70ecfd",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "4fedee1a500cf85b4a4d3a8a1e57263c8092dd7b0abd220e65cf321999403ce4",
+    "volumes/10_exotics_martingales/exotics.ipynb": "9466dc64bb2d6c130bd92ee4e25dc7cc71caea1b2ef5f5a950d85ee54dc04979",
+    "report/report_builder/figures.py": "8f801c822edb26a1e7e0416f73bba39020a1f94426d80101f979a8979841efe4",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "f700a65a9800351ebe888bab74a6ba61fb56fdc942e84ad0d6b4418e38a9d439",
+    "book/_build/html/notebooks/10_exotics.html": "17637fb64819b5e6175b95cebe0da90e02618b4190ffeae6a83a3e1eee4b1092",
+    "docs/validation/section-28-1/portal-mpr_line-1440.png": "00f36daa4c2b2afe11daee54049408fe375fab4ba94bf93ce029234dabbce185",
+    "docs/validation/section-28-1/portal-mpr_riskless-1440.png": "998609ab22f5c883d0938848ecf011f1a4f6cad37607ba5fd1586ea3c729c279",
+    "docs/validation/section-28-1/portal-mpr_worlds-1440.png": "f4872d8244e39826bb73e506caa625a1c03231207fc6e69be3fbad87ab8f0af0",
+    "docs/validation/section-28-1/portal-mpr_validation-1440.png": "27ba2e4ae70829112d1fd1c6d850c724a37aa0038f563e016fdd311615fbf264",
+    "docs/validation/section-28-1/portal-mpr_line-1000.png": "68025d5f126bffa9ec9a268cf874622fb7f09afe1963666c4b01c079aef86462",
+    "docs/validation/section-28-1/portal-mpr_riskless-1000.png": "42fb6e5de7ff7dc5f1eac21933397e3360e2e1300a50e9dc6ea3c84a67b7f8ab",
+    "docs/validation/section-28-1/portal-mpr_worlds-1000.png": "ec60c0e62d1e0626fb7817e910612f45ed5049e69e75a8bf7b3dc45cb3c4425f",
+    "docs/validation/section-28-1/portal-mpr_validation-1000.png": "72e3d1e6498b455a55be378b700bbf7fe21263500ca0a4a3bb4a7418097888ea",
+    "docs/validation/section-28-1/book-mpr_line-1440.png": "5b9074469e30956b98c88d5b8cc4decae83b4ef6902fd4171546c10a9fba2404",
+    "docs/validation/section-28-1/book-mpr_riskless-1440.png": "68e7ff913f710abbd3846460f98f770d1cd3fc06ca3f2a78fd742b91d278f261",
+    "docs/validation/section-28-1/book-mpr_worlds-1440.png": "818c44da0c236417f7ef43f4739d59245db232216933a98aec6f1fe457dfc51f",
+    "docs/validation/section-28-1/book-mpr_validation-1440.png": "83b4e94af394929263e6f48d87e00d037d761713b0bca987016ac362dcf41c34",
+    "docs/validation/section-28-1/book-mpr_line-1000.png": "aec6f705b544949f6c63fb9412aef0b04f03d1658d853185be8580ddaf49b566",
+    "docs/validation/section-28-1/book-mpr_riskless-1000.png": "7668e025230f3e5fbc560aac09f8c691153c9ddca526e5128aba29c08daae498",
+    "docs/validation/section-28-1/book-mpr_worlds-1000.png": "284094fdc7e089886e0f9e7f0829789c71c131ae89a61f06417972583fbe2028",
+    "docs/validation/section-28-1/book-mpr_validation-1000.png": "1631a3b427ef28b94347183d1661c1cd591cf6e4f0970dec4b2ec32a020689c0"
+  },
+  "mathjax_source": "local npm mathjax@3 es5 (MATHJAX_ES5_DIR)",
+  "book_math": {
+    "rendered": 1092,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

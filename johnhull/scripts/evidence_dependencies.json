@@ -1294,6 +1294,60 @@
         "report/tests/test_chooser_notebook.py",
         "report/tests/test_chooser_registry.py"
       ]
+    },
+    "28.1": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "6. 市場リスクの価格 λ（§28.1）",
+        "level": 2
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "6. 市場リスクの価格 λ（§28.1）",
+        "level": 2
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "mpr_line",
+          "mpr_riskless",
+          "mpr_worlds",
+          "mpr_validation"
+        ]
+      },
+      "python_modules": [
+        "hullkit.market_price_of_risk",
+        "hullkit.bsm",
+        "hullkit._market_price_of_risk_lesson"
+      ],
+      "data": [
+        "docs/validation/section-28-1/reference.json",
+        "docs/validation/section-28-1/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_market_price_of_risk_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-28-1/reference.json",
+        "docs/validation/section-28-1/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-28-1",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_market_price_of_risk.py",
+        "hullkit/tests/test_market_price_of_risk_reference.py",
+        "hullkit/tests/test_market_price_of_risk_numerics.py",
+        "hullkit/tests/test_market_price_of_risk_lesson.py",
+        "report/tests/test_market_price_of_risk_notebook.py",
+        "report/tests/test_market_price_of_risk_registry.py"
+      ]
     }
   }
 }

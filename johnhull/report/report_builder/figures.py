@@ -31,6 +31,7 @@ from hullkit._forward_start_lesson import _figures as forward_start_lesson_figur
 from hullkit._gap_lesson import _figures as gap_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
+from hullkit._market_price_of_risk_lesson import _figures as market_price_of_risk_lesson_figures
 from hullkit._nonstandard_american_lesson import _figures as nonstandard_american_lesson_figures
 from hullkit._packages_lesson import _figures as packages_lesson_figures
 from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
@@ -1356,6 +1357,42 @@ FIGURES: list[FigureSpec] = [
         "64独立求積ケース、選択時期4例×524288経路。95%区間を比較。",
         lambda: chooser_lesson_figures()["chooser_validation"],
         practice="基準市場のT1=.1/.5/.9/.999999。MCはT1 spotと選ばれる条件付きvanilla価値、区間は平均の標本誤差。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "mpr_line",
+        "exotics",
+        "市場リスクの価格：m−r=λs",
+        "§28.1。同じdzに依存する請求権の超過成長率は符号付きloadingに比例する。",
+        lambda: market_price_of_risk_lesson_figures()["mpr_line"],
+        practice="S=100/r5%/σ20%/μ12%（λ=0.35）とμ2%/σ30%（λ=−0.1）の38請求権。putはs<0。Example 28.2の2点も表示。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "mpr_riskless",
+        "exotics",
+        "dzを消す2証券のportfolio",
+        "f1をs2f2単位、f2を−s1f1単位。保有期間hの残差は√hで縮む。",
+        lambda: market_price_of_risk_lesson_figures()["mpr_riskless"],
+        practice="call＋put（K=100,T=1）とcash call＋asset put。h→0の成長率は独立求積でr=5%に一致。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "mpr_worlds",
+        "exotics",
+        "λを選ぶと平均だけが動く",
+        "式28.10とGirsanov。driftはr+λσ、ln S_Tの幅σ√Tは共通。",
+        lambda: market_price_of_risk_lesson_figures()["mpr_worlds"],
+        practice="λ=−0.3/0/0.35/0.6、T=1の解析密度。λ=0が伝統的なリスク中立の世界。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "mpr_validation",
+        "exotics",
+        "世界ごとのE[S_T]：直接標本と尤度比",
+        "seed281・524288経路。実世界Pの標本を各λへ再重み付けし、解析値と比べる。",
+        lambda: market_price_of_risk_lesson_figures()["mpr_validation"],
+        practice="95%区間は平均の標本誤差だけ。全行が6標準誤差以内。",
         is_new=True,
     ),
     FigureSpec(
