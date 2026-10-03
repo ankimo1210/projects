@@ -46,10 +46,10 @@
 
 **Files:** registry/counts/manifest/index/README、evidence_dependencies.json、verify_factor_risk_browser.cjs、16画像。
 **Interfaces:** risk_premium_validation直後4cards、186図/exotics74、28.2親6A全体の依存宣言。
-- [ ] Step 1: `assert KEYS <= {s.id for s in FIGURES}`登録test。Expected: 未登録FAIL。
-- [ ] Step 2: 4FigureSpec登録と件数/閉包を更新。Expected: registry/build tests PASS。
-- [ ] Step 3: `jupyter-book build johnhull/book`、`python -m report_builder.build`、`node johnhull/scripts/verify_factor_risk_browser.cjs`、1000px画像目視。Expected: 16状態/MathJax/全trace/配置/改変拒否PASS。
-- [ ] Step 4: commit `Verify factor risk on Book and offline portal`、task-done registry/build tests。Expected: 全PASS。
+- [x] Step 1: `assert KEYS <= {s.id for s in FIGURES}`登録test。Expected: 未登録FAIL。
+- [x] Step 2: 4FigureSpec登録と件数/閉包を更新。Expected: registry/build tests PASS。
+- [x] Step 3: `jupyter-book build johnhull/book`、`python -m report_builder.build`、`node johnhull/scripts/verify_factor_risk_browser.cjs`、1000px画像目視。Expected: 16状態/MathJax/全trace/配置/改変拒否PASS。
+- [x] Step 4: commit `Verify factor risk on Book and offline portal`、task-done registry/build tests。Expected: 全PASS。
 
 ### Task 4: D1・台帳・最終レビュー・統合
 
