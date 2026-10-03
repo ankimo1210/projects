@@ -23,8 +23,8 @@
 - [x] notebookゲートと負の対照。歴史M19–M25 pytestは新§6.xだけを除く。
 
 ### Task 3: Portal・Book・実画面
-- [ ] registry・件数・API索引・依存を更新。
-- [ ] Book/portal×1440/1000の実画面検査。
+- [x] registry・件数・API索引・依存を更新。
+- [x] Book/portal×1440/1000の実画面検査（16状態・16画像、MathJaxはCDN遮断のためローカルnpm mathjax@3）。
 
 ### Task 4: D1・台帳受入（所有者環境）
 - [ ] 既受入25節のD1再検査とC:/F:両保管庫の復元。
