@@ -21,9 +21,12 @@ def chooser_price(S, K, r, sigma, T1, T2, q=0.0):
     arrays = []
     for value in (S, K, r, sigma, T1, T2, q):
         try:
-            if np.iscomplexobj(value):
+            array = np.asarray(value)
+            if np.iscomplexobj(array) or (
+                array.dtype.kind == "O" and any(np.iscomplexobj(item) for item in array.flat)
+            ):
                 raise ValueError("chooser inputs must be real")
-            array = np.asarray(value, dtype=float)
+            array = np.asarray(array, dtype=float)
         except (TypeError, ValueError, OverflowError) as exc:
             raise ValueError("chooser inputs must be finite real values") from exc
         if np.any(~np.isfinite(array)):
