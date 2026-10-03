@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:36:58.636120+00:00",
+  "label": "WSL-ext4-on-C",
+  "section": "storage",
+  "environment": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3",
+    "numpy": "2.4.6",
+    "logical_cpus": 20,
+    "blas": [
+      {
+        "internal_api": "openblas",
+        "num_threads": 20,
+        "version": "0.3.31.188.0",
+        "architecture": "Haswell"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": {
+    "results": [
+      {
+        "name": "sequential_write",
+        "unit": "MB/s",
+        "median": 2733.2162393826743,
+        "samples": [
+          1230.786541048276,
+          2937.635277771336,
+          2733.2162393826743
+        ],
+        "parameters": {
+          "file_MiB": 1024,
+          "block_MiB": 8,
+          "queue_depth": 1,
+          "direct_io": true,
+          "durable_write": true
+        }
+      },
+      {
+        "name": "sequential_read",
+        "unit": "MB/s",
+        "median": 5184.897053222827,
+        "samples": [
+          5405.675371535724,
+          5184.897053222827,
+          4940.807497508089
+        ],
+        "parameters": {
+          "file_MiB": 1024,
+          "block_MiB": 8,
+          "queue_depth": 1,
+          "direct_io": true,
+          "durable_write": true
+        }
+      },
+      {
+        "name": "random_read_4KiB_QD1",
+        "unit": "IOPS",
+        "median": 13109.349346003022,
+        "samples": [
+          13109.349346003022,
+          12839.372416995973,
+          13553.938596887816
+        ],
+        "parameters": {
+          "reads": 2048,
+          "file_MiB": 1024,
+          "queue_depth": 1,
+          "direct_io": true
+        }
+      }
+    ],
+    "temporary_file_removed": true,
+    "write_volume_GiB": 3
+  },
+  "status": "ok",
+  "wall_seconds": 2.746119330999136
+}

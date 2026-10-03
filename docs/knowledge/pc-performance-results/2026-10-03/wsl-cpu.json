@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:35:17.940457+00:00",
+  "label": "WSL-Ubuntu",
+  "section": "cpu",
+  "environment": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3",
+    "numpy": "2.4.6",
+    "logical_cpus": 20,
+    "blas": [
+      {
+        "internal_api": "openblas",
+        "num_threads": 20,
+        "version": "0.3.31.188.0",
+        "architecture": "Haswell"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": [
+    {
+      "name": "GEMM_float64_1t",
+      "unit": "GFLOP/s",
+      "median": 75.7707319675232,
+      "samples": [
+        75.7707319675232,
+        76.91177541090481,
+        78.10626377190373,
+        75.62920836900973,
+        75.23880810473071
+      ],
+      "parameters": {
+        "n": 2048,
+        "threads": 1
+      }
+    },
+    {
+      "name": "GEMM_float64_20t",
+      "unit": "GFLOP/s",
+      "median": 838.7899861181488,
+      "samples": [
+        825.0992484344006,
+        848.7753498604372,
+        849.1095271178535,
+        829.8146854483984,
+        838.7899861181488
+      ],
+      "parameters": {
+        "n": 2048,
+        "threads": 20
+      }
+    },
+    {
+      "name": "GEMM_float32_1t",
+      "unit": "GFLOP/s",
+      "median": 160.58274655072208,
+      "samples": [
+        151.86537030672375,
+        160.78419018481907,
+        162.00586652405593,
+        160.58274655072208,
+        159.9216692858603
+      ],
+      "parameters": {
+        "n": 2048,
+        "threads": 1
+      }
+    },
+    {
+      "name": "GEMM_float32_20t",
+      "unit": "GFLOP/s",
+      "median": 1649.1785707570739,
+      "samples": [
+        1697.425997177701,
+        1676.8342206311097,
+        1648.655829933268,
+        1624.041631749712,
+        1649.1785707570739
+      ],
+      "parameters": {
+        "n": 2048,
+        "threads": 20
+      }
+    },
+    {
+      "name": "sha256_1t",
+      "unit": "MiB/s",
+      "median": 4176.559891815936,
+      "samples": [
+        4374.8263742149575,
+        1365.7370378882704,
+        4176.559891815936
+      ],
+      "parameters": {
+        "payload_MiB": 8,
+        "threads": 1
+      }
+    },
+    {
+      "name": "zlib_level6_1t",
+      "unit": "MiB/s",
+      "median": 78.95719651464869,
+      "samples": [
+        77.21521027648065,
+        78.95719651464869,
+        80.34713416843745
+      ],
+      "parameters": {
+        "payload_MiB": 8,
+        "threads": 1
+      }
+    },
+    {
+      "name": "sha256_20t",
+      "unit": "MiB/s",
+      "median": 41481.32937992464,
+      "samples": [
+        34136.79980934698,
+        41481.32937992464,
+        41680.24530526697
+      ],
+      "parameters": {
+        "payload_MiB": 8,
+        "threads": 20
+      }
+    },
+    {
+      "name": "zlib_level6_20t",
+      "unit": "MiB/s",
+      "median": 1154.7737063969344,
+      "samples": [
+        796.6685710364035,
+        1157.4869092740457,
+        1154.7737063969344
+      ],
+      "parameters": {
+        "payload_MiB": 8,
+        "threads": 20
+      }
+    }
+  ],
+  "status": "ok",
+  "wall_seconds": 3.5621618799996213
+}

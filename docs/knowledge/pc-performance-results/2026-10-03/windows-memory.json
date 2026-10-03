@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:35:41.990956+00:00",
+  "label": "Windows-Anaconda",
+  "section": "memory",
+  "environment": {
+    "os": "Windows",
+    "kernel": "11",
+    "python": "3.12.12",
+    "numpy": "1.26.4",
+    "logical_cpus": 24,
+    "blas": [
+      {
+        "internal_api": "mkl",
+        "num_threads": 24,
+        "version": "2023.1-Product"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": [
+    {
+      "name": "copy_1t",
+      "unit": "GB/s",
+      "median": 43.85109077749542,
+      "samples": [
+        44.87769034086392,
+        43.581075583078615,
+        42.33890879762046,
+        44.12110597191223
+      ],
+      "parameters": {
+        "array_MiB": 256,
+        "copies": 5,
+        "counted_bytes": "read+write"
+      }
+    },
+    {
+      "name": "copy_4t",
+      "unit": "GB/s",
+      "median": 65.37724013522964,
+      "samples": [
+        65.62508091922356,
+        65.51568629898705,
+        65.23879397147223,
+        62.63017983983891
+      ],
+      "parameters": {
+        "array_MiB": 256,
+        "copies": 5,
+        "counted_bytes": "read+write"
+      }
+    },
+    {
+      "name": "copy_8t",
+      "unit": "GB/s",
+      "median": 71.31132900443407,
+      "samples": [
+        70.53177083914649,
+        71.39316801195334,
+        71.22948999691482,
+        71.67453166801309
+      ],
+      "parameters": {
+        "array_MiB": 256,
+        "copies": 5,
+        "counted_bytes": "read+write"
+      }
+    },
+    {
+      "name": "copy_24t",
+      "unit": "GB/s",
+      "median": 70.94884730247355,
+      "samples": [
+        70.81702022246674,
+        70.58240037823337,
+        71.39202876701869,
+        71.08067438248035
+      ],
+      "parameters": {
+        "array_MiB": 256,
+        "copies": 5,
+        "counted_bytes": "read+write"
+      }
+    },
+    {
+      "name": "dependent_pointer_chase",
+      "unit": "ns/load",
+      "median": 130.66868782048851,
+      "samples": [
+        130.66868782048851,
+        132.47864246368133,
+        130.26680946350706
+      ],
+      "parameters": {
+        "footprint_MiB": 256,
+        "cache_line_stride": 64,
+        "loads": 4194304
+      }
+    }
+  ],
+  "status": "ok",
+  "wall_seconds": 4.39112010000008
+}
