@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:37:01.685123+00:00",
+  "label": "WSL-DrvFs-C",
+  "section": "filesystem",
+  "environment": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3",
+    "numpy": "2.4.6",
+    "logical_cpus": 20,
+    "blas": [
+      {
+        "internal_api": "openblas",
+        "num_threads": 20,
+        "version": "0.3.31.188.0",
+        "architecture": "Haswell"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": {
+    "results": [
+      {
+        "name": "create_small_files",
+        "unit": "files/s",
+        "median": 454.853878555651,
+        "samples": [
+          454.853878555651
+        ],
+        "parameters": {
+          "files": 200,
+          "bytes_each": 1024,
+          "fsync": false
+        }
+      },
+      {
+        "name": "stat_warm",
+        "unit": "files/s",
+        "median": 975.1079417666863,
+        "samples": [
+          975.1079417666863,
+          1044.9609987339727,
+          1030.6704383884862,
+          904.9463862684755,
+          944.4276171051239
+        ],
+        "parameters": {
+          "files": 200,
+          "warm_cache": true
+        }
+      }
+    ],
+    "temporary_files_removed": true
+  },
+  "status": "ok",
+  "wall_seconds": 1.9092248459992334
+}

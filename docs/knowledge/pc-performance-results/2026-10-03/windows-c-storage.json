@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:36:36.683770+00:00",
+  "label": "Windows-C-990PRO",
+  "section": "storage",
+  "environment": {
+    "os": "Windows",
+    "kernel": "11",
+    "python": "3.12.12",
+    "numpy": "1.26.4",
+    "logical_cpus": 24,
+    "blas": [
+      {
+        "internal_api": "mkl",
+        "num_threads": 24,
+        "version": "2023.1-Product"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": {
+    "results": [
+      {
+        "name": "sequential_write",
+        "unit": "MB/s",
+        "median": 6239.88433099082,
+        "samples": [
+          5646.2297831795695,
+          6239.88433099082,
+          6249.275829282158
+        ],
+        "parameters": {
+          "file_MiB": 1024,
+          "block_MiB": 8,
+          "queue_depth": 1,
+          "direct_io": true,
+          "durable_write": true
+        }
+      },
+      {
+        "name": "sequential_read",
+        "unit": "MB/s",
+        "median": 6007.377445773348,
+        "samples": [
+          6012.891199279774,
+          6007.377445773348,
+          5892.745044016728
+        ],
+        "parameters": {
+          "file_MiB": 1024,
+          "block_MiB": 8,
+          "queue_depth": 1,
+          "direct_io": true,
+          "durable_write": true
+        }
+      },
+      {
+        "name": "random_read_4KiB_QD1",
+        "unit": "IOPS",
+        "median": 19880.233243360155,
+        "samples": [
+          21891.87253533883,
+          18754.115054015256,
+          19880.233243360155
+        ],
+        "parameters": {
+          "reads": 2048,
+          "file_MiB": 1024,
+          "queue_depth": 1,
+          "direct_io": true
+        }
+      }
+    ],
+    "temporary_file_removed": true,
+    "write_volume_GiB": 3
+  },
+  "status": "ok",
+  "wall_seconds": 1.392780700000003
+}

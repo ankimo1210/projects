@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:35:37.975200+00:00",
+  "label": "Windows-Anaconda",
+  "section": "cpu",
+  "environment": {
+    "os": "Windows",
+    "kernel": "11",
+    "python": "3.12.12",
+    "numpy": "1.26.4",
+    "logical_cpus": 24,
+    "blas": [
+      {
+        "internal_api": "mkl",
+        "num_threads": 24,
+        "version": "2023.1-Product"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": [
+    {
+      "name": "GEMM_float64_1t",
+      "unit": "GFLOP/s",
+      "median": 78.29302222498964,
+      "samples": [
+        78.38157327341797,
+        78.29302222498964,
+        76.78785287368899,
+        79.0549647125805,
+        77.41295115022324
+      ],
+      "parameters": {
+        "n": 2048,
+        "threads": 1
+      }
+    },
+    {
+      "name": "GEMM_float64_24t",
+      "unit": "GFLOP/s",
+      "median": 1053.0429485046404,
+      "samples": [
+        1053.0429485046404,
+        1055.4171438761762,
+        1063.6504404769553,
+        825.9234829445173,
+        1045.029634783511
+      ],
+      "parameters": {
+        "n": 2048,
+        "threads": 24
+      }
+    },
+    {
+      "name": "GEMM_float32_1t",
+      "unit": "GFLOP/s",
+      "median": 154.00399251675523,
+      "samples": [
+        154.00399251675523,
+        152.51012614673604,
+        152.29043890681862,
+        156.5791941677268,
+        156.63301356764683
+      ],
+      "parameters": {
+        "n": 2048,
+        "threads": 1
+      }
+    },
+    {
+      "name": "GEMM_float32_24t",
+      "unit": "GFLOP/s",
+      "median": 1868.9819718514445,
+      "samples": [
+        1868.9819718514445,
+        2058.9982003038767,
+        1930.1705689273474,
+        1841.3381619193726,
+        1747.4489070227794
+      ],
+      "parameters": {
+        "n": 2048,
+        "threads": 24
+      }
+    },
+    {
+      "name": "sha256_1t",
+      "unit": "MiB/s",
+      "median": 4566.731363303188,
+      "samples": [
+        4566.731363303188,
+        4678.909814439937,
+        4263.483266569827
+      ],
+      "parameters": {
+        "payload_MiB": 8,
+        "threads": 1
+      }
+    },
+    {
+      "name": "zlib_level6_1t",
+      "unit": "MiB/s",
+      "median": 64.161635993588,
+      "samples": [
+        64.45785705005618,
+        63.84513723537351,
+        64.161635993588
+      ],
+      "parameters": {
+        "payload_MiB": 8,
+        "threads": 1
+      }
+    },
+    {
+      "name": "sha256_24t",
+      "unit": "MiB/s",
+      "median": 43866.66362595617,
+      "samples": [
+        45769.86339918857,
+        43866.66362595617,
+        41247.74426375768
+      ],
+      "parameters": {
+        "payload_MiB": 8,
+        "threads": 24
+      }
+    },
+    {
+      "name": "zlib_level6_24t",
+      "unit": "MiB/s",
+      "median": 996.2531541502741,
+      "samples": [
+        1038.8890812749396,
+        996.2531541502741,
+        968.0190699770134
+      ],
+      "parameters": {
+        "payload_MiB": 8,
+        "threads": 24
+      }
+    }
+  ],
+  "status": "ok",
+  "wall_seconds": 3.652254300000095
+}

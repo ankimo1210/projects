@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:45:03.1302777Z",
+  "power_plan": "GameTurbo (High Performance)",
+  "cpu_load_percent_before": 0,
+  "memory_speed_MTs": [
+    4800,
+    4800
+  ],
+  "network_adapters": [
+    {
+      "InterfaceDescription": "Intel(R) Wi-Fi 7 BE200 320MHz",
+      "Status": "Not Present",
+      "LinkSpeed": "0 bps"
+    },
+    {
+      "InterfaceDescription": "Intel(R) Wi-Fi 7 BE200 320MHz",
+      "Status": "Not Present",
+      "LinkSpeed": "0 bps"
+    },
+    {
+      "InterfaceDescription": "Intel(R) Wi-Fi 7 BE200 320MHz",
+      "Status": "Disconnected",
+      "LinkSpeed": "0 bps"
+    },
+    {
+      "InterfaceDescription": "Intel(R) Ethernet Controller I226-V",
+      "Status": "Up",
+      "LinkSpeed": "1 Gbps"
+    }
+  ],
+  "powershell_version": "7.6.6",
+  "script_sha256": "b40b7abb40e3c64f9a7df75c1a19f4dfc31f6a5c9aac3397278f341f1826ba41",
+  "measurements": [
+    {
+      "name": "ping_default_gateway",
+      "unit": "ms",
+      "samples": [
+        0,
+        1,
+        0,
+        0,
+        2
+      ],
+      "lost": 0,
+      "sent": 5,
+      "timer_resolution_ms": 1
+    },
+    {
+      "name": "ping_cloudflare",
+      "unit": "ms",
+      "samples": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "lost": 0,
+      "sent": 5,
+      "timer_resolution_ms": 1
+    },
+    {
+      "name": "ping_google",
+      "unit": "ms",
+      "samples": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "lost": 0,
+      "sent": 5,
+      "timer_resolution_ms": 1
+    },
+    {
+      "name": "cloudflare_10MB_download",
+      "samples": [
+        {
+          "bytes": 10000000,
+          "megabytes_per_second": 54.627793,
+          "megabits_per_second": 437.022344,
+          "connect_s": 0.010455,
+          "TLS_s": 0.019557,
+          "TTFB_s": 0.077111,
+          "total_s": 0.183059
+        },
+        {
+          "bytes": 10000000,
+          "megabytes_per_second": 58.225519,
+          "megabits_per_second": 465.804152,
+          "connect_s": 0.010886,
+          "TLS_s": 0.020455,
+          "TTFB_s": 0.055637,
+          "total_s": 0.171748
+        },
+        {
+          "bytes": 10000000,
+          "megabytes_per_second": 65.336417,
+          "megabits_per_second": 522.691336,
+          "connect_s": 0.011997,
+          "TLS_s": 0.021072,
+          "TTFB_s": 0.052237,
+          "total_s": 0.153057
+        }
+      ],
+      "requested_total_bytes": 30000000
+    },
+    {
+      "name": "launch_native_cmd",
+      "unit": "ms",
+      "samples": [
+        9.2013,
+        9.7624,
+        9.9463,
+        9.3077,
+        9.4818
+      ],
+      "warmups": 2,
+      "wsl_already_running": true
+    },
+    {
+      "name": "launch_wsl_true",
+      "unit": "ms",
+      "samples": [
+        69.2155,
+        75.5511,
+        67.6173,
+        70.9659,
+        70.3331
+      ],
+      "warmups": 2,
+      "wsl_already_running": true
+    }
+  ],
+  "unavailable": [
+    "Ollama local API unavailable; no model tokens/s measured"
+  ],
+  "gpu_idle_snapshot_after": "36, 21.54 W, 5, 16",
+  "completed_at_utc": "2026-10-03T03:45:08.2975115Z",
+  "status": "ok"
+}
