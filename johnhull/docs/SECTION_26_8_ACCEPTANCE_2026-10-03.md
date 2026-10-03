@@ -2,7 +2,7 @@
 
 日付2026-10-03。Hull 11e Global Edition pp.619–620、CH01–CH06の5軸。
 [原典照合・レビュー](SECTION_26_8_REVIEW_2026-10-03.md)・[M25統合記録](validation/section-26-8/m25-check.json)。
-独立最終レビューと全体検査の確定結果は後段で記録する。
+独立最終レビューのImportant I1を修正し、Minor M1を保留。全体検査を完了した。
 
 ## 実装・契約
 
@@ -44,11 +44,12 @@ Book数式983個・エラー0。portalのchoice/validationの1000px画像を目�
 
 既受入24節のbrowser・runtime probe・個別pytest計1,868件・C:/F:両保管庫復元はPASS。23節再利用・1節再描画、追加保存505,902バイト。採用D1パスとSHA-256を固定。
 参照/数値/notebook/受入の4--check、ruff、台帳--check-artifacts、全hullkit+report pytest、tracked releaseを検査する。
-全hullkit+report pytestは3,738 passed・6 skipped・既存warning2件（144.35秒）。4--check、ruff、台帳--check-artifacts、releaseがPASS。独立最終レビュー待ち。
+全hullkit+report pytestは3,757 passed・6 skipped・既存warning2件（144.27s (0:02:24)）。4--check、変更Python20ファイルのruff、台帳--check-artifacts、tracked releaseがPASS。独立最終レビューI1を修正し、M1を保留した。
 
 ## 適用範囲と統合
 
 Simple European chooser、定数GBM・連続配当。
 異なるstrike/満期のcomplex chooser、American、smile、確率的金利/変動率、離散配当、取引費用は対象外。
+M1保留：空batchでは有限だが不正なK/σ/時点設定がbroadcast後に消えて空配列を返す。誤った価格の返却はない。
 既存M22/M23/M24の保留は変更しない。
 本ブランチで受入25・未評価281、P2 8/8完了。次はP3金利37節。main統合・pushは別の選択。

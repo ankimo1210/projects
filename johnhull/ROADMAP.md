@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 70 public + 25 priva
 | 節単位の受入 | M25（§26.8）まで。受入25・未評価281（8.2%） | P0/P1/P2完了。Ch26/27の25節を受入。次はP3金利37節。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
 | 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。不変画像はハッシュで参照 | **M25**：既受入24節のbrowser・runtime probe・個別pytest計1,868件・C:/F:両保管庫復元はPASS。23節再利用・1節再描画、追加保存505,902バイト。採用D1パスとSHA-256を固定。 |
-| テスト | hullkit+report 3,738 passed・6 skipped（2026-10-03）、独立最終レビュー待ち | 実行結果は `VALIDATION.md` |
+| テスト | hullkit+report 3,757 passed・6 skipped（2026-10-03）、独立レビューI1修正・M1保留 | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -302,13 +302,15 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M22 | §26.5 Forward start options（p.618） | 受入。ATM欧州型の二時点契約・一次同次性・配当調整、期間固定/満期固定を独立求積36例とMC3例で照合。P2の5節目。[受入ノート](docs/SECTION_26_5_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_5_REVIEW_2026-10-01.md) |
 | M23 | §26.6 Cliquet options（p.618） | 受入。単純ATM call/put列と各期支払を独立求積60例・多時点MC4例で照合、制約型はMC診断。P2の6節目。[受入ノート](docs/SECTION_26_6_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_6_REVIEW_2026-10-01.md) |
 | M24 | §26.7 Compound options（pp.618–619） | 受入。欧州型4契約、臨界株価と内側put根なし領域、独立条件付き求積104例・MC4例。独立レビューI1修正・M1保留、全体検査PASS。P2の7節目。[受入ノート](docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_7_REVIEW_2026-10-01.md) |
-| M25 | §26.8 Chooser options（pp.619–620） | 受入。配当調整複製・選択/決済時点・端点、独立求積64例・MC4例・16表示状態。最終レビュー待ち。P2完了。[受入ノート](docs/SECTION_26_8_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_26_8_REVIEW_2026-10-03.md) |
+| M25 | §26.8 Chooser options（pp.619–620） | 受入。配当調整複製・選択/決済時点・端点、独立求積64例・MC4例・16表示状態。独立レビューI1修正・M1保留、全体検査PASS。P2完了。[受入ノート](docs/SECTION_26_8_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_26_8_REVIEW_2026-10-03.md) |
 | 以降 | P3金利（Ch28–34、37節）から未評価節へ展開 | 節受入未着手 |
 
 現在地（2026-10-03）：M25まで受入、台帳25/281。P0/P1/P2完了。統合記録は`docs/validation/section-26-8/m25-check.json`。既受入24節のbrowser・runtime probe・個別pytest計1,868件・C:/F:両保管庫復元はPASS。23節再利用・1節再描画、追加保存505,902バイト。採用D1パスとSHA-256を固定。次はP3金利37節。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
+
+- §26.8のM1保留：空batchと不正な有限市場条件の組でValueErrorにならず空配列を返す。価格の誤返却はない。[レビュー](docs/SECTION_26_8_REVIEW_2026-10-03.md)。
 
 - 既存のhullkit実装や説明なしのコードセルは受入の根拠にしない。NumPy/SciPyだけの独立参照を先に作り、既存実装はその誤差を測ってから教材に載せる（M5・M8）。
 - 早期行使プレミアムは閉形式ではなく、同じ格子で行使判定を外した価格と比べて測る。閉形式と比べると離散化誤差が混ざる（M6）。

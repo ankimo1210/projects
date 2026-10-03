@@ -61,5 +61,5 @@
 - [x] Step 1: stale source/browser欠落/mirror欠落/D1必須hash個別削除/採用path改変/missing gateで台帳不変を先にテスト。`del changed[category][name]`。Expected:missing gate/updater FAIL。
 - [x] Step 2: clean Task3 commitからD1旧23節direct redrawn reuseと§26.7初回redraw。`--records-dir docs/validation/d1-recheck`、C:/F:環境を指定。Expected:24browser/runtime/pytest/復元PASS。
 - [x] Step 3: 必須hash再構成、ゲート/台帳/状況docsを更新、ruff/全suite/4--check/台帳--check-artifacts。Expected:25/281/P2complete、全PASS。
-- [ ] Step 4: commit `Accept Hull chooser options and complete P2`、task-done全suite。fresh最終review一本、Important/Criticalは一度RED→GREEN+全suite、Minor保留、DeclinedすべてRuling。Expected:重要指摘解消。
-- [ ] Step 5: reviewを保存commit、release--require-tracked/clean treeを確認しown workspaceだけ削除。Expected:本branchで完了、統合3選択肢を提示。
+- [x] Step 4: commit `Accept Hull chooser options and complete P2`、task-done全suite。fresh最終review一本、Important/Criticalは一度RED→GREEN+全suite、Minor保留、DeclinedすべてRuling。Expected:重要指摘解消。
+- [x] Step 5: reviewを保存commit、release--require-tracked/clean treeを確認しown workspaceだけ削除。Expected:本branchで完了、統合3選択肢を提示。

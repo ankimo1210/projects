@@ -40,7 +40,10 @@ object配列に含まれるNumPy complex scalarの虚部がfloat変換で捨て�
 
 complex64/complex128×全7入力と、0次元/mixed・虚部ゼロの4例、計18例の拒否テストは修正前にすべてFAIL、修正後にPASS。実数object配列の回帰例も含め、APIは45 passed。
 修正後の数値/notebook記録を再生成し、16表示状態のbrowser検査を再実行した。実数の教材曲線と価格は不変で、既存HTMLの全traceを現行計算と比較した。旧24節のD1依存は変更されていないことを統合ゲートで照合する。
-全suite・最終commit/releaseの結果は検証完了後に追記する。
+全hullkit+report pytestは3,757 passed・6 skipped・既存warning2件（144.27s (0:02:24)）。4--check、変更Python20ファイルのruff、台帳--check-artifacts、tracked releaseがPASS。独立最終レビューI1を修正し、M1を保留した。
+I1修正commitは499a6538。
+最初の修正後全suiteは、レビュー文書更新後の台帳hashが古かったため台帳検査だけFAIL（3,756 passed/1 failed）。文書を固定して台帳に再登録し、全suiteを再実行して上記PASSを確認した。旧24節のD1は現行依存/成果物hashを全件照合できたため再採用した。
+[実行台帳](validation/section-26-8/execution-ledger.md)にtask/判断/RED→GREEN/最終検証を保存した。
 
 ### Deferred minors
 
