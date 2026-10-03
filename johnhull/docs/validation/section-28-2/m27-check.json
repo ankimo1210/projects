@@ -1,0 +1,422 @@
+{
+  "section": "28.2",
+  "milestone": "M27",
+  "status": "PASS",
+  "numerical": {
+    "method": "independent math.fsum factor premiums, signed final-axis API, SVD local hedge and orthogonal bases",
+    "cases": 12,
+    "section": "28.2",
+    "status": "PASS",
+    "case_count": 12,
+    "max_api_error": 6.938893903907228e-18,
+    "max_hedge_error": 2.7755575615628914e-17,
+    "max_rotation_error": 2.7755575615628914e-17,
+    "api_excess_returns": [
+      0.06,
+      -0.06,
+      0.0,
+      0.0,
+      -0.06,
+      0.06,
+      0.06,
+      -0.06,
+      0.0,
+      0.0,
+      -0.06,
+      0.06
+    ],
+    "negative_controls_rejected": [
+      "printed excess",
+      "case total",
+      "hedge money fraction",
+      "rotated loading",
+      "API absolute loading",
+      "API drop last factor",
+      "API sum all axes",
+      "API add rate twice"
+    ]
+  },
+  "notebook": {
+    "cells": 235,
+    "lesson_cells": 11,
+    "preserved_cells_outside_lesson": 224,
+    "negative_controls_rejected": [
+      "old prose",
+      "new heading",
+      "saved plot",
+      "post heading"
+    ]
+  },
+  "browser": {
+    "chromium": "145.0.7632.6",
+    "surfaces": [
+      "book",
+      "portal"
+    ],
+    "widths": [
+      1440,
+      1000
+    ],
+    "state_checks": 16,
+    "screenshots": 16,
+    "numeric_mutation_rejected": true,
+    "book_math": {
+      "rendered": 1030,
+      "errors": 0
+    }
+  },
+  "regression": {
+    "sections": [
+      "26.1",
+      "26.2",
+      "26.3",
+      "26.4",
+      "26.5",
+      "26.6",
+      "26.7",
+      "26.8",
+      "26.9",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5",
+      "27.6",
+      "27.7",
+      "27.8",
+      "28.1"
+    ],
+    "d1": {
+      "26.1": {
+        "record": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261003T072637Z-reuse-5a33ebd8f4784860b929350a2b0e0b3f.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 509487,
+        "tests_passed": 68,
+        "baseline": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20260929T225244Z-redraw-5378c4eaf4564bd3bfd0eec30efd9dd4.json"
+      },
+      "26.2": {
+        "record": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261003T072637Z-reuse-206fc2459fe24333ae35450163e912f9.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 509537,
+        "tests_passed": 44,
+        "baseline": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20260929T225621Z-redraw-74be4cf3e23d4839a8343a0a75884405.json"
+      },
+      "26.3": {
+        "record": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261003T072702Z-reuse-0447861153894943962e9707b0e6996f.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 326803,
+        "tests_passed": 35,
+        "baseline": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20260930T152903Z-redraw-9e76c3cee6654e6d8f43637a22ab1dcf.json"
+      },
+      "26.4": {
+        "record": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261003T072705Z-reuse-d4709f97c0e6412db2be5b4e3fdb9532.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 538589,
+        "tests_passed": 17,
+        "baseline": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20260930T225857Z-redraw-7212d9a355d24f53b23872464b30c2f7.json"
+      },
+      "26.5": {
+        "record": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261003T072727Z-reuse-34404853458243929cd569e475a6272a.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 481959,
+        "tests_passed": 41,
+        "baseline": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261001T000753Z-redraw-f6c666bc1d1b44c8a661893d4aee6084.json"
+      },
+      "26.6": {
+        "record": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261003T072730Z-reuse-7e6fa61d96a348f198a15b8c3e7b4999.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 373236,
+        "tests_passed": 75,
+        "baseline": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261001T101557Z-redraw-2788a1558e054a7c81124df2ef008185.json"
+      },
+      "26.7": {
+        "record": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261003T072755Z-reuse-2582947bfde44daf8d0d1d8850c379b7.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 505902,
+        "tests_passed": 65,
+        "baseline": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261003T041310Z-redraw-1209eaa2ac594cc98b047298bfb620f4.json"
+      },
+      "26.8": {
+        "record": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261003T072803Z-reuse-e492ea4309934d01bf58f7819e768dc4.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 456055,
+        "tests_passed": 63,
+        "baseline": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261003T061204Z-redraw-38814a1b5add4295ac85d55987696810.json"
+      },
+      "26.9": {
+        "record": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261003T072822Z-reuse-f440a4b76a4c41ec85482dbabf6acfa7.json",
+        "decision": "redrawn",
+        "images": 10,
+        "stored_new_bytes": 370698,
+        "tests_passed": 91,
+        "baseline": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20260929T225656Z-redraw-1457fcdba28f4a0a88990ebd1f7eb05f.json"
+      },
+      "26.10": {
+        "record": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261003T072830Z-reuse-a3fe5ed858e34696aa0641b9c7a4603b.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1287711,
+        "tests_passed": 92,
+        "baseline": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20260929T225718Z-redraw-82fa88ba08e84c5699acfaa0159e59f8.json"
+      },
+      "26.11": {
+        "record": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261003T072847Z-reuse-e429097bc9054430bad7311f33fd661b.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1301929,
+        "tests_passed": 144,
+        "baseline": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20260929T225744Z-redraw-716a76e16e274f6aa4a27945fa9186b6.json"
+      },
+      "26.12": {
+        "record": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261003T072903Z-reuse-1ec4d50a4c3c4cb8a41d8d47e5c16c85.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1332470,
+        "tests_passed": 215,
+        "baseline": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20260929T225850Z-redraw-ed1cc78aa89049b7bf91234a4063a85d.json"
+      },
+      "26.13": {
+        "record": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261003T073012Z-reuse-cb8f6da7d3b948b79d3791b994e32a28.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1387220,
+        "tests_passed": 274,
+        "baseline": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20260929T225949Z-redraw-e7b07b2c4cd748db9dd06e0146873b31.json"
+      },
+      "26.14": {
+        "record": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261003T073014Z-reuse-8d6f5d5e32364492939bd5bca607f4ec.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1482187,
+        "tests_passed": 351,
+        "baseline": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20260929T230041Z-redraw-4311ec20659a427b954934afc2544566.json"
+      },
+      "26.15": {
+        "record": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261003T073114Z-reuse-0b70b59cdfce4c37bcd01729635cfd8e.json",
+        "decision": "redrawn",
+        "images": 18,
+        "stored_new_bytes": 1295066,
+        "tests_passed": 65,
+        "baseline": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20260929T230130Z-redraw-5b351d45cfb74ac0bb09a4acf5f5e694.json"
+      },
+      "26.16": {
+        "record": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261003T073115Z-reuse-0e8f1aaf5ddf4cad999a4cf516a9d8a7.json",
+        "decision": "redrawn",
+        "images": 20,
+        "stored_new_bytes": 1904867,
+        "tests_passed": 45,
+        "baseline": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20260929T230216Z-redraw-bfdb7fb4f6bf4b228ed59662c5d9a80b.json"
+      },
+      "26.17": {
+        "record": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261003T073211Z-reuse-2af406d07af34b60aae28cf8c07a11b6.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 375212,
+        "tests_passed": 16,
+        "baseline": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20260929T230309Z-redraw-f18042175ac940ebb8bc298f5edfe83a.json"
+      },
+      "27.1": {
+        "record": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261003T073219Z-reuse-5eeafd9e4908444db7842e63763679da.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 487040,
+        "tests_passed": 16,
+        "baseline": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20260929T230336Z-redraw-f0eb7d0dfa25458da89b21e0b68b5bca.json"
+      },
+      "27.2": {
+        "record": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261003T073236Z-reuse-6b38883a458b4ff89b04d2000b15b34b.json",
+        "decision": "redrawn",
+        "images": 20,
+        "stored_new_bytes": 706883,
+        "tests_passed": 27,
+        "baseline": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20260929T230352Z-redraw-a17f3c119aa643738341435707094e6d.json"
+      },
+      "27.3": {
+        "record": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261003T073244Z-reuse-c212e4e8c7c1445096706757cb433176.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 413577,
+        "tests_passed": 14,
+        "baseline": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20260929T230413Z-redraw-51e5b39ba3ff43af87a75e32b22bfb4c.json"
+      },
+      "27.4": {
+        "record": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261003T073257Z-reuse-36e9582536ee4008a0479e66f2391ffb.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 407715,
+        "tests_passed": 15,
+        "baseline": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20260929T230430Z-redraw-f257ee72e2be4b81a58dd5d963470412.json"
+      },
+      "27.5": {
+        "record": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261003T073300Z-reuse-94040271b2c8454481ecd4cdcf6feaf2.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 319907,
+        "tests_passed": 12,
+        "baseline": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20260929T230446Z-redraw-70689cb5ded54df8bfa46e16b08d9f03.json"
+      },
+      "27.6": {
+        "record": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261003T073313Z-reuse-cf0ae856a76f49e7a4f80d349de637dc.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 651535,
+        "tests_passed": 36,
+        "baseline": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20260929T230502Z-redraw-fb39db4c72954171a98d6b5299649bd4.json"
+      },
+      "27.7": {
+        "record": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261003T073317Z-reuse-bca4f744abeb4464a0fa7ec647307b9d.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 637764,
+        "tests_passed": 75,
+        "baseline": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20260929T230519Z-redraw-4f75990657ac4996a9e1f622f9021299.json"
+      },
+      "27.8": {
+        "record": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261003T073330Z-reuse-725dcb8e46c6469e9555d10fbd67b6e1.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 594569,
+        "tests_passed": 35,
+        "baseline": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20260929T230538Z-redraw-8e924476eaaa49e29595d8b1bfc84564.json"
+      },
+      "28.1": {
+        "record": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261003T073336Z-redraw-738a93cfa25e4f678a6a1da08d167029.json",
+        "decision": "redrawn",
+        "images": 16,
+        "stored_new_bytes": 468555,
+        "tests_passed": 64,
+        "baseline": null
+      }
+    },
+    "redrawn": [
+      "26.1",
+      "26.10",
+      "26.11",
+      "26.12",
+      "26.13",
+      "26.14",
+      "26.15",
+      "26.16",
+      "26.17",
+      "26.2",
+      "26.3",
+      "26.4",
+      "26.5",
+      "26.6",
+      "26.7",
+      "26.8",
+      "26.9",
+      "27.1",
+      "27.2",
+      "27.3",
+      "27.4",
+      "27.5",
+      "27.6",
+      "27.7",
+      "27.8",
+      "28.1"
+    ],
+    "reused": [],
+    "stored_new_bytes": 19126473,
+    "browser": "each accepted section's verifier rerun on M27 Book/portal assets through the D1 driver; new images live in the C:/F: artifact stores"
+  },
+  "source_sha256": {
+    "scripts/build_factor_risk_acceptance_record.py": "7796b5aed70070531a5215cb7a95fb671598b91f4537584cfccffbba77446645",
+    "scripts/build_factor_risk_reference.py": "48d137cf1489e5b1d72fb62faddfa42fa8ea8c4ea0af438dd8cd66e3e5e71d41",
+    "scripts/verify_factor_risk_numerics.py": "cf24ebb58ec82a4ef2a9cf089860b913d634d54ce87a3b61a14bd9bd11fc14c1",
+    "scripts/verify_factor_risk_notebook.py": "ad939ec67f2e555b8c2107f21cbe0dd2d90eac61f05d038f4d82ce5c37ff5a6e",
+    "scripts/verify_factor_risk_browser.cjs": "a964706835f02542efe3303e61b976bc5aedaa4d1545794e00b41be4bf4195de",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "scripts/d1_preflight_compare.py": "d693d8c7c2e9f22f611d6c87ba78cbfc23c7a242b42f00a2cced6f243f68452d",
+    "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+    "scripts/evidence_record.py": "264dbf9e3d4ff4c6f7bba4e6b320e1b8a71d21d1ff231adec1b92a22bba379f3",
+    "scripts/evidence_store.py": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+    "scripts/evidence_dependencies.json": "9a53a622a8a19975515ace3934b89a85cb3b41fd5ee850127e955459f6544390",
+    "scripts/update_factor_risk_ledger.py": "4c186ef71454f730c81aab66df27a26e586d041ad6d359daa43db43289236e8e",
+    "scripts/verify_section_ledger.py": "06a81a1e26630a5030fe80375b7ccf706f63f6cac26206502b645ffa49c629c9",
+    "hullkit/src/hullkit/factor_risk.py": "efa2391d2f722c94f0be244764245c3870c8fd121a16de937f44f7158774eb34",
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
+    "hullkit/src/hullkit/_factor_risk_lesson.py": "0fe88e08d9e398def9073e6cedc6656f784ada6d77bcbf9edf8fa58bb5ca6319",
+    "hullkit/tests/test_factor_risk.py": "9557d5bb4502fb5c97953e3d2764384b6166239d8b6abb6b9b3dacfcd2870787",
+    "hullkit/tests/test_factor_risk_reference.py": "d9bce6980515d492ded436574935655e2cea8bf37e89d91d1047d2df38719484",
+    "hullkit/tests/test_factor_risk_numerics.py": "17363c27a932eba05ba74b97f71473319249ebcf8189fb80c2dfd374c17bf754",
+    "hullkit/tests/test_factor_risk_lesson.py": "ef92972ac21c5b336af00a73325c6f3781fcdc7cd89fd7e82af032664a2b2349",
+    "report/tests/test_factor_risk_notebook.py": "9691b47186208fce79a9363e6c250f89ce83f66387c80946a59b2314b0d2ce62",
+    "report/tests/test_factor_risk_acceptance_record.py": "41c0e4ce204f978539248df45a172772bab605ad7a9fdeb4557a011fa275d11d",
+    "report/tests/test_factor_risk_ledger_update.py": "151c6c23b213a405be39598dfddb2620869003f88402f9c385a0479b883af2c9",
+    "report/tests/test_factor_risk_registry.py": "3e4e4b9f8bbc83b52706e74c4a3bf3ef7545ea476857862bd83b4c3313ac4173",
+    "report/tests/test_section_ledger.py": "b7841b344c70a8c672d6bc8fad01167701326cb94a9f1b9a712fe635d0cb30f8",
+    "report/tests/test_report_build.py": "35b4f5306b25c23508493dcdf7b5a0e481f47932aa7c797ad76ee8916b921490",
+    "report/report_builder/figures.py": "5a5296e99bb3e91f59039da5feb19675b1c107a96a6cb65e931cace580965ffd",
+    "report/assets/style.css": "3a87b721a773c74aa8ac660f17b7dd71ee11081fdb88996e61392970daafe635",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "1789658e883e2314bc239dcfd8abad8dc55beb59e844aaa1e6e1e7fa3bc0c878",
+    "volumes/10_exotics_martingales/exotics.ipynb": "4255516cb6fe6f75281c1f995dcfd6a49d319a1257340269185e58c419f86b09",
+    "release_manifest.json": "936a84429ee723034e8bbb30cea43d4afb92723fbcf28ceec43b72b5bd18a400",
+    "docs/validation/section-28-2/numerical-check.json": "0a3849aa41e74583fc9dd2b7e2ee5e81ba7d7f09c0613733994bac03609f87fa",
+    "docs/validation/section-28-2/notebook-check.json": "3b6a054f9532f19b428a1b3ec4cc7965e2413315aa5b6181ad840946aa4f37e2",
+    "docs/validation/section-28-2/browser-check.json": "819784457c507be0ec6ca907cf8850959450f719d3584690096e406c5e98c682",
+    "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261003T072637Z-reuse-5a33ebd8f4784860b929350a2b0e0b3f.json": "c1e92f45f10083fd579f46c753c8517dfcf89049c07aeccae58435eb238a456e",
+    "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261003T072637Z-reuse-206fc2459fe24333ae35450163e912f9.json": "3b4a6d214f530ec0c5cd2e6bac8c66176769ad36fec5672d27a60e68438fe285",
+    "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261003T072702Z-reuse-0447861153894943962e9707b0e6996f.json": "564a8ff76940e8c808d0f235b296d14bffcb26a9dde7abae0e3efe622c7fb4fd",
+    "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261003T072705Z-reuse-d4709f97c0e6412db2be5b4e3fdb9532.json": "a4f9dbefc857dfd730d10335cd4cb078a1386ef040c59b5308a20a9b79926aca",
+    "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261003T072727Z-reuse-34404853458243929cd569e475a6272a.json": "f89a35edb6acba4dfa36467b084edfa26bf35431976ffeebecfef4aeaf43009f",
+    "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261003T072730Z-reuse-7e6fa61d96a348f198a15b8c3e7b4999.json": "89ed2ee985936e592fe49ec44740992c9718020ec03c8a18134dc4e1c7feb5f3",
+    "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261003T072755Z-reuse-2582947bfde44daf8d0d1d8850c379b7.json": "7073abcc6a27b8acadf890bf9238dfdc26982b682cd4cf06de85536950097d9f",
+    "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261003T072803Z-reuse-e492ea4309934d01bf58f7819e768dc4.json": "467d4f8bf46768559fb7cd2bb0a93567677bae671b2291131cf64ea2243f51ec",
+    "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261003T072822Z-reuse-f440a4b76a4c41ec85482dbabf6acfa7.json": "13311eac8266cea323a17657df235a9a0997ef3da57d64448ecc8d301b693025",
+    "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261003T072830Z-reuse-a3fe5ed858e34696aa0641b9c7a4603b.json": "b1e7ff1cdab52ad276f0ecf66b3b50cfd0b2edf821744ca0f455325471c2b5dc",
+    "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261003T072847Z-reuse-e429097bc9054430bad7311f33fd661b.json": "ba72eb016162b8948a1f926d274f1b11a7db2eddb08228b72b74948d9aba5d4f",
+    "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261003T072903Z-reuse-1ec4d50a4c3c4cb8a41d8d47e5c16c85.json": "bcb1d05d925b2a36850eef654449037cae8a9e7f24bafc7ece54b7471bad2509",
+    "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261003T073012Z-reuse-cb8f6da7d3b948b79d3791b994e32a28.json": "f14db5825ee3909e13da30a37a14024ce295a6f2bdd98665b5725f0f142ce4fa",
+    "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261003T073014Z-reuse-8d6f5d5e32364492939bd5bca607f4ec.json": "917aa5cfd27e0bc3fe02dda50a451a19a3dd3bc8c8b404c8d4bcbb4d2f710160",
+    "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261003T073114Z-reuse-0b70b59cdfce4c37bcd01729635cfd8e.json": "73b626f2e02c9863a51b7187f7232fae868ddf9142e263f3204ffafb2978f014",
+    "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261003T073115Z-reuse-0e8f1aaf5ddf4cad999a4cf516a9d8a7.json": "662e4adbdfd57de040dde56ef41927260b58567bdee6d0ae7c0109b6e3e8096e",
+    "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261003T073211Z-reuse-2af406d07af34b60aae28cf8c07a11b6.json": "e5ac2f5c46137c2f124c59f5eff4ae78ea55d8ced81ffd8c353892fa665ff700",
+    "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261003T073219Z-reuse-5eeafd9e4908444db7842e63763679da.json": "5ca611c0bd1e20ecd05a60de26f3d01306bd697163489df9c6e6c74cccdbb956",
+    "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261003T073236Z-reuse-6b38883a458b4ff89b04d2000b15b34b.json": "41a45f0bddc68f43b63b16bef7203ca666ab294d6a085dbadb2dc15d3df120f6",
+    "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261003T073244Z-reuse-c212e4e8c7c1445096706757cb433176.json": "c5ed3f923f11ffa63ab3b76f2385d2eb1a7e73b284827e0ce8f82a869eaaf082",
+    "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261003T073257Z-reuse-36e9582536ee4008a0479e66f2391ffb.json": "01e5e14d8c33c9d3e6a8ec87c1ea571461fe3c128b6ae4cf9cdc5fb531817209",
+    "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261003T073300Z-reuse-94040271b2c8454481ecd4cdcf6feaf2.json": "3eaee907aee916127100647912319cdd677c59fffd3b3a77b629759dccf4bf64",
+    "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261003T073313Z-reuse-cf0ae856a76f49e7a4f80d349de637dc.json": "5a15e8cfdf92c19b27841fa02479e28883dc48e0272ff9da4586f9f245a65b31",
+    "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261003T073317Z-reuse-bca4f744abeb4464a0fa7ec647307b9d.json": "4f65477d47ee69cb7081d2d748d59a26eb481a017bd4ee081305bfe5309a7266",
+    "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261003T073330Z-reuse-725dcb8e46c6469e9555d10fbd67b6e1.json": "2d758e897d17f198a35ad4e76fc41fb7dd3da0e4bde16c5ce62ef79ac656bb95",
+    "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261003T073336Z-redraw-738a93cfa25e4f678a6a1da08d167029.json": "dbd5a4aa02ae451737e8f1f5c469f26e734877d22d5d89eae00f6ab76558d8ba"
+  },
+  "artifact_sha256": {
+    "docs/validation/section-28-2/reference.json": "297b9d2c20ccba75b81c12ea59e6e2b292269e7f3a3dcd0421d17fc0dff335bb",
+    "report/site/exotics.html": "857431335008599ee886ee7068b5ae2d0839925f14c9b81a4e92d95d50f434c2",
+    "book/_build/html/notebooks/10_exotics.html": "cc15004955e1f6ea3571c284e09ef7efcf0bfbb93c789ad10419c988e9c18f65",
+    "docs/validation/section-28-2/book-factor_risk_contributions-1440.png": "1810114bd5ab1f18d87c1e7a4c6161a634e64576c48a293058c26e1e2d10c652",
+    "docs/validation/section-28-2/book-factor_risk_contributions-1000.png": "7d29c778c80998be217ffba1c2964789101623ecc71727254d5bfa1963840924",
+    "docs/validation/section-28-2/book-factor_risk_loading-1440.png": "1c128cb0f4f5f06fe7fa55781e3ceb0c39c4724a6952a06231dafc5259c97a06",
+    "docs/validation/section-28-2/book-factor_risk_loading-1000.png": "90cd3e682ad3741b7e57917d31a4c77bf4aff362c1b4fc8b45be1b7daa6aaf17",
+    "docs/validation/section-28-2/book-factor_risk_hedge-1440.png": "88076a5a1ed1df9a008d6ef2f348129c7b2e9f38fc50cc5e497386016ba6ae6b",
+    "docs/validation/section-28-2/book-factor_risk_hedge-1000.png": "68b84fdb2060de981d5c5883580f73464ae055bfa597457c62bbace6341bd6e7",
+    "docs/validation/section-28-2/book-factor_risk_validation-1440.png": "4e58979c2d7b239ad0146fadacf4a8236262a256981c5f000b65ca4d01eca0e6",
+    "docs/validation/section-28-2/book-factor_risk_validation-1000.png": "6264189c9ab1bd196680c6679cc32e82153bc04580d186afb242f56cf69ae687",
+    "docs/validation/section-28-2/portal-factor_risk_contributions-1440.png": "33a84b4f54d3692f3ec0c85691157771adfa04918ff5f2a95ea0ae6193e29ca8",
+    "docs/validation/section-28-2/portal-factor_risk_contributions-1000.png": "55730f97d1ef24ceacb05a3c83a053176f947d66edbfb986bef0ccc8a46ade94",
+    "docs/validation/section-28-2/portal-factor_risk_loading-1440.png": "f232e325b733d504be44e52df843544d4e759fb446f23c4db72ecc2011e3dd8d",
+    "docs/validation/section-28-2/portal-factor_risk_loading-1000.png": "5c12e4b5315f756a92e5e1a781d658dabbf84cd4bf68a4fbfd247fcac1f44e8f",
+    "docs/validation/section-28-2/portal-factor_risk_hedge-1440.png": "c16f9144f33bb4bf25e95de50995b00db7f7ccb874abcd1752fd9786b041a9c0",
+    "docs/validation/section-28-2/portal-factor_risk_hedge-1000.png": "c4865b7005840ea765f259c488f418b7ce5a53a720be4476a435bec78c8110b9",
+    "docs/validation/section-28-2/portal-factor_risk_validation-1440.png": "53dd4c560db2aea0043dfb2d1194f2855bb066eed74a51f424d76aabe4fea634",
+    "docs/validation/section-28-2/portal-factor_risk_validation-1000.png": "650986a43366458e790bebc96d9b1520edba79b0ca1cbd0733307a853f011a47"
+  }
+}
