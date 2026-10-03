@@ -11,27 +11,27 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 3 | `volumes/03_greeks` | 19 | done |
 | 4 | `volumes/04_futures_forwards_rates` | 2, 3, 4, 5, 6 | done |
 | 5 | `volumes/05_vol_smile_estimation` | 20, 23 | done |
-| 6 | `volumes/06_numerical_methods` | 21, 27 | done（§27.1–§27.5 は節単位で受入済み） |
+| 6 | `volumes/06_numerical_methods` | 21, 27 | done（§27.1–§27.8 は節単位で受入済み） |
 | 7 | `volumes/07_swaps` | 7, 34 | done |
 | 8 | `volumes/08_risk_var` | 22 | done |
 | 9 | `volumes/09_credit_xva` | 9, 24, 25 | done（数値例のある節は vol 28 と hullkit のテストで実装・固定。残りは `docs/SECTION_AUDIT_2026-09-14.md` §4.5） |
-| 10 | `volumes/10_exotics_martingales` | 26, 28 | done（§26.9–§26.17 は節単位で受入済み） |
+| 10 | `volumes/10_exotics_martingales` | 26, 28 | done（§26.1–§26.17 は節単位で受入済み） |
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 69 public + 24 private modules as of 2026-10-01; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 70 public + 25 private modules as of 2026-10-03; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-10-01、M24受入）
+## 現在地（2026-10-03、M25受入）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
 | 章単位（Hull 11e 全 37 章） | 上表の 14 行すべて done（2026-06-08） | 章に巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol 13–28） | すべて done | A1–A4（vol 13–17）、A5–A8 G8 release（vol 18–25）、vol 26・27・28 |
 | 全節監査の是正 | 第 1〜5 便完了 | 残りは下の「全節監査と是正」の表 |
-| 節単位の受入 | M24（§26.7）まで。台帳は受入24・未評価282（7.8%） | P1（Ch27）完了、P2（§26.1–§26.8）は7/8節受入。次はM25（§26.8 Chooser）。全体計画は下の「完了までの計画」 |
+| 節単位の受入 | M25（§26.8）まで。受入25・未評価281（8.2%） | P0/P1/P2完了。Ch26/27の25節を受入。次はP3金利37節。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
-| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。不変画像はハッシュで参照 | **M24**：既受入23節の全検査PASS（22節再利用・1節再描画）、追加保存373,236バイト。採用記録と両保管庫復元を照合。レビュー修正後は旧15節を再検査（新規保存0）、最終記録は23節reuse |
-| テスト | hullkit+report 3,644 passed・6 skipped（M24とGap追加のmain統合後、2026-10-01） | 実行結果は `VALIDATION.md` |
+| 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。不変画像はハッシュで参照 | **M25**：既受入24節のbrowser・runtime probe・個別pytest計1,868件・C:/F:両保管庫復元はPASS。23節再利用・1節再描画、追加保存505,902バイト。採用D1パスとSHA-256を固定。 |
+| テスト | hullkit+report 3,738 passed・6 skipped（2026-10-03）、独立最終レビュー待ち | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -55,14 +55,14 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 69 public + 24 priva
 |---|---|---:|---:|---:|---|---|
 | P0 | §26.9–§27.4（M1–M13） | 13 | 13 | 0 | — | 完了 |
 | P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 4 | 0 | — | 完了（M14–M17） |
-| P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 7 | 0 | chooser の実装と受入（EX-03） | §26.1–§26.7 受入（M18–M24）。次は §26.8 |
+| P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
 | P3 | 金利（Ch 28–34） | 37 | 0 | 3 | HW/BK 三項ツリー・Bermudan・LMM がない（EX-13〜15）。最も重い | 下調べ・設計済み、節受入未着手 |
 | P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 件数が最大。多くは実装済みで、印刷値での固定が中心 | 下調べ済み・節受入未着手 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | vol 27・28 の資産を流用できる | 下調べ済み・節受入未着手 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 軽いが件数が多い。定性が多い | 下調べ済み・節受入未着手 |
 | P7 | Ch 35–37 | 16 | 0 | 6 | §36.4 は本文にパラメータ σ(t)・η(t) がない（CR-23） | 下調べ済み・節受入未着手 |
 | P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表（R1–R4・R6・R11、保存値依存 5 項目、§7 の判断事項） | [再確認済み](docs/prep/design/P8_RECHECK.md)、製品の修正は未着手 |
-| **計** | | **306** | **24** | **63** | | **7.8%** |
+| **計** | | **306** | **25** | **63** | | **8.2%** |
 
 ### 先に決めること
 
@@ -97,7 +97,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 69 public + 24 priva
 本編に畳む（RB-F02→P1、RB-F03→P3、R11・§19.14・RB-H16→P4）、章の受入後のコラム、研究トラック（同時1本）、johnhull の外。
 研究トラック #1 は RB-F07。研究の置き場は `research/<RB-ID>/`、計算は hullkit の非公開モジュールに決定した（2026-09-27 本人承認。公開 API 昇格は別承認）。
 **実装再開は、johnhull に必要な保管庫と作業分離が整った時点**とし、ワークスペース全工程の完了は待たない。
-M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。M17（§27.8）は2026-09-29 に受入し、P1 を完了した（RB-F02 の推定経路と評価経路の分離を含む。上界の実装は拡張のまま）。M18（§26.1 Packages）で P2 に入り、M19（§26.2 永久アメリカン）も同日に受入。M20（§26.3 非標準アメリカン）は2026-09-30に受入。M21（§26.4 ギャップ）とM22（§26.5 フォワード・スタート）、M23（§26.6 Cliquet）、M24（§26.7 Compound）は2026-10-01に受入。RB-F07 は未着手。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。
+M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。M17（§27.8）は2026-09-29 に受入し、P1 を完了した（RB-F02 の推定経路と評価経路の分離を含む。上界の実装は拡張のまま）。M18（§26.1 Packages）で P2 に入り、M19（§26.2 永久アメリカン）も同日に受入。M20（§26.3 非標準アメリカン）は2026-09-30に受入。M21（§26.4 ギャップ）とM22（§26.5 フォワード・スタート）、M23（§26.6 Cliquet）、M24（§26.7 Compound）は2026-10-01に受入。M25（§26.8 Chooser）は2026-10-03に受入しP2を完了。RB-F07 は未着手。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。
 金利編は [P3設計](docs/prep/design/P3_DESIGN.md)でHW/BKの本文範囲と独立参照の条件を整理した。R11の原典成績は利息・割引を除外する規約で再現でき、現行の資金繰り計算を誤りとみなして置換しない。
 
 ## 可視化 & 深掘り(A1–A4) — 完了 (2026-06-14)
@@ -150,7 +150,7 @@ separate. No production dependency was added for G0/G1 core implementation.
 各巻に validation report、fingerprinted JSON/NPZ、artifact-only notebook、book
 symlinkがあり、各巻の `integration_and_reproducibility` gate は PASS。これは
 **model performance の承認ではない**。`release_manifest.json` の現行契約は portal
-**174 図/12 テーマ**で、監査第 4 便の 82 図に節単位受入 M2–M24 の共有 4 図×23 節が加わった（2026-10-01）。
+**178 図/12 テーマ**で、監査第 4 便の 82 図に節単位受入 M2–M25 の共有 4 図×24 節が加わった（2026-10-03）。
 Jupyter Book は `book/_toc.yml` の root + 30 entries = 31 ページで、ページ数自体は
 manifest の契約値ではなく `book_name` の掲載のみが検証される。G8 で fresh artifact/notebook/
 report/book/test/lint を再検証し、最終結果と model risk を `johnhull/VALIDATION.md`
@@ -256,13 +256,13 @@ model performance の承認ではない（deep_hedge_price の 206 tests も各�
 | 区分 | 内容 |
 |---|---|
 | 保存値依存 | 根拠になる配列がない 5 項目（vol 18・19・21・22）。原始データか実行時情報の保存が要る。vol 26 の 3 項目は 2026-09-25 に配列からの再計算へ移した（監査文書 §11.4） |
-| 節カバレッジ | [節別台帳](docs/SECTION_LEDGER.md)の306項目。§26.1–§26.7、§26.9–§26.17、§27.1–§27.8の24項目受入、282項目未評価。最終判定は各受入ノートと統合記録を参照 |
+| 節カバレッジ | [節別台帳](docs/SECTION_LEDGER.md)の306項目。§26.1–§26.17、§27.1–§27.8の25項目受入、281項目未評価。最終判定は各受入ノートと統合記録を参照 |
 | 再確認済み・製品対応待ち | [P8再確認](docs/prep/design/P8_RECHECK.md)：R1（分散更新・補償項）、R2（Log-HAR再変換）、R3（予測→ヘッジ未接続）、R4（共通乱数のずれ）、R6（gross/netの分離）。R11はTables19.1/19.4の利息・割引規約差を特定し、P4の受入fixture化待ち |
-| 未実装の節（§4） | Ch 26 の残り（EX-03 のうち §26.8 chooser。§26.4–§26.7 はM21–M24で受入済み。EX-04 は M5–M7 の公開 API で、§26.12 の shout は M4 の非公開モジュールで対応）、金利ツリー・Bermudan・LMM（EX-13〜15）、Ch 2–7 の節単位実装（FR 系）、信用の残り（CR-05〜07・09〜11・13）、Ch 35–36 のツリー（CR-19・21・22）、深掘り巻の予告の回収（DD-04〜06）など |
+| 未実装の節（§4） | Ch26 EX-03/04はM4–M7・M21–M25で対応済み。残りは金利ツリー・Bermudan・LMM（EX-13〜15）、Ch 2–7 の節単位実装（FR 系）、信用の残り（CR-05〜07・09〜11・13）、Ch 35–36 のツリー（CR-19・21・22）、深掘り巻の予告の回収（DD-04〜06）など |
 | 判断事項（§7） | 既定 seed の統一（VN-20）、大物の置き場所（新しい節単位の巻を足すか）、FRTB IMA（vol 29 候補）は継続。research trackは[研究計画](docs/superpowers/plans/2026-09-27-research-backlog.md)で置き場・順番・範囲・実装再開条件を決定 |
 | ゲートの限界 | core は PNG と Plotly の中身を、frontier は stderr と図を比べない（字形欠落の警告とローカルパスだけをテストで検出） |
 
-## 節単位の品質確認 — M1–M24（2026-09-15〜2026-10-01）
+## 節単位の品質確認 — M1–M25（2026-09-15〜2026-10-03）
 
 [台帳](docs/SECTION_LEDGER.md) ／ [更新手順](docs/SECTION_LEDGER_GUIDE.md) ／
 [実装計画](docs/superpowers/plans/2026-09-15-section-ledger-m1.md)。
@@ -302,9 +302,10 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M22 | §26.5 Forward start options（p.618） | 受入。ATM欧州型の二時点契約・一次同次性・配当調整、期間固定/満期固定を独立求積36例とMC3例で照合。P2の5節目。[受入ノート](docs/SECTION_26_5_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_5_REVIEW_2026-10-01.md) |
 | M23 | §26.6 Cliquet options（p.618） | 受入。単純ATM call/put列と各期支払を独立求積60例・多時点MC4例で照合、制約型はMC診断。P2の6節目。[受入ノート](docs/SECTION_26_6_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_6_REVIEW_2026-10-01.md) |
 | M24 | §26.7 Compound options（pp.618–619） | 受入。欧州型4契約、臨界株価と内側put根なし領域、独立条件付き求積104例・MC4例。独立レビューI1修正・M1保留、全体検査PASS。P2の7節目。[受入ノート](docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_7_REVIEW_2026-10-01.md) |
-| 以降 | P2の残り（§26.8）から台帳の未評価節へ順に展開 | 未着手 |
+| M25 | §26.8 Chooser options（pp.619–620） | 受入。配当調整複製・選択/決済時点・端点、独立求積64例・MC4例・16表示状態。最終レビュー待ち。P2完了。[受入ノート](docs/SECTION_26_8_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_26_8_REVIEW_2026-10-03.md) |
+| 以降 | P3金利（Ch28–34、37節）から未評価節へ展開 | 節受入未着手 |
 
-現在地（2026-10-01）：M24まで受入、台帳24/282。P1完了、P2は7/8。統合記録は`docs/validation/section-26-7/m24-check.json`。旧23節のD1は初回22節再利用・1節再描画、修正後15節再検査で最終記録は23節再利用。次はM25（§26.8 Chooser options）。
+現在地（2026-10-03）：M25まで受入、台帳25/281。P0/P1/P2完了。統合記録は`docs/validation/section-26-8/m25-check.json`。既受入24節のbrowser・runtime probe・個別pytest計1,868件・C:/F:両保管庫復元はPASS。23節再利用・1節再描画、追加保存505,902バイト。採用D1パスとSHA-256を固定。次はP3金利37節。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
