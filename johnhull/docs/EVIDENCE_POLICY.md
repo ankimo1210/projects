@@ -149,3 +149,9 @@ driverの`--records-dir docs/validation/d1-recheck`を明示し、cleanな6947fc
 cleanなa5279b29から実行、旧23節はredrawn基点への直接参照、§26.7は初回D1描画。`--records-dir docs/validation/d1-recheck`を明示。現行依存宣言/Python閉包とcollectorで必須hashを決め、採用24記録を[M25統合記録](validation/section-26-8/m25-check.json)で固定する。歴史M24 pytestは後続§4.15だけを除き、M25が旧202セル全体を照合。
 
 初回§26.7のF: publicationはWSL環境PATHからpowershell.exeが外れたため失敗。既存のWindows no-overwrite fallbackが使えるようPATHを補い、同節から再実行し両コピー復元を確認した。保存器のコードやtrust設定は変更していない。
+
+## M26での運用（2026-10-03）
+
+既受入25節のbrowser・runtime probe・個別pytest計1,931件・C:/F:両保管庫復元はPASS。24節再利用・1節再描画。採用記録の再描画画像は456,055バイト（保管庫の実際の増加容量とは区別）。採用D1パスとSHA-256を固定。
+
+親§6全体を宣言する修正の後、cleanな60d11f85から25節を実行。修正前の部分記録も保持。旧24節はredrawn基点を直接参照、§26.8は初回D1描画。`--records-dir docs/validation/d1-recheck`を明示し、既存記録/画像を保持。[M26統合記録](validation/section-28-1/m26-check.json)が採用パス/hashを固定する。必須hash集合は現行依存宣言/Python閉包/生成collectorから再構成。歴史Ch26 pytestから新6.1–6.6だけを除き、M26が旧213セル全体を照合する。`stored_new_bytes`は現行driverでは再描画payloadの合計で、既存blobとの重複排除後の追加容量を測った値ではない。

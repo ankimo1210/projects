@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22、§26.6 M23、§26.7 M24)、2026-10-03 (§26.8 M25)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22、§26.6 M23、§26.7 M24)、2026-10-03 (§26.8 M25、§28.1 M26)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,16 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 28.1 M26 — 2026-10-03
+
+[受入ノート](docs/SECTION_28_1_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_1_REVIEW_2026-10-03.md)・[統合記録](docs/validation/section-28-1/m26-check.json)。RP01–RP06の5軸、本ブランチaccepted26/unreviewed280、P3は1/37。mainはM25。
+
+- GE pp.671–674、単因子・無配当取引証券、signed loading/単位、局所portfolio、消費財の注意、.2/−.15/1.5%の印刷値を照合。
+- 独立12市場/6power給付、Gaussian求積・raw RN/直接Qの262144標本×4。最大API差5.55e−17、密度差2.22e−16、MC最大2.762972SE。保存4改変/API4変異を拒否。
+- 新11セル/計224、旧213本文/出力保存、fresh実行、notebook4改変。両画面16状態/16画像・全trace/基準線/95%誤差棒、1000pxの2画像目視を確認。
+- 既受入25節のbrowser・runtime probe・個別pytest計1,931件・C:/F:両保管庫復元はPASS。24節再利用・1節再描画。採用記録の再描画画像は456,055バイト（保管庫の実際の増加容量とは区別）。採用D1パスとSHA-256を固定。
+- 4--check/ruff/台帳成果物照合を実施。全suiteと独立最終レビューは最終確認中。
 
 ## Section 26.8 M25 — 2026-10-03
 

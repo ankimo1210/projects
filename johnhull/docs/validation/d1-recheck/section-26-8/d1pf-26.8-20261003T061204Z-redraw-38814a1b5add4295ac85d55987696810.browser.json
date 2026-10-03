@@ -1,0 +1,173 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "chooser_choice",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_package",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_timing",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_choice",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_package",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_timing",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-8/portal-chooser_choice-1440.png",
+        "docs/validation/section-26-8/portal-chooser_package-1440.png",
+        "docs/validation/section-26-8/portal-chooser_timing-1440.png",
+        "docs/validation/section-26-8/portal-chooser_validation-1440.png",
+        "docs/validation/section-26-8/portal-chooser_choice-1000.png",
+        "docs/validation/section-26-8/portal-chooser_package-1000.png",
+        "docs/validation/section-26-8/portal-chooser_timing-1000.png",
+        "docs/validation/section-26-8/portal-chooser_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "chooser_choice",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_package",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_timing",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_choice",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_package",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_timing",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "chooser_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-8/book-chooser_choice-1440.png",
+        "docs/validation/section-26-8/book-chooser_package-1440.png",
+        "docs/validation/section-26-8/book-chooser_timing-1440.png",
+        "docs/validation/section-26-8/book-chooser_validation-1440.png",
+        "docs/validation/section-26-8/book-chooser_choice-1000.png",
+        "docs/validation/section-26-8/book-chooser_package-1000.png",
+        "docs/validation/section-26-8/book-chooser_timing-1000.png",
+        "docs/validation/section-26-8/book-chooser_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/chooser.py": "b40a21b71746d58c7fc0b838c648820beb4c66f228ba45d9ccaffdb7b9ec55fe",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/_chooser_lesson.py": "09a2ca4135f5d313bdd38138093c25453fbd912784c70145f3df6198189f21a5",
+    "scripts/build_chooser_reference.py": "e0e9171742567db97f01f01d951fbccd1dc17133117b8990db4b9aac3a1e715d",
+    "scripts/verify_chooser_browser.cjs": "50bff369b9e3d60f2d61bfbf0ce5931e40b33da5a002306e33d3ae7e9bcf2cdf",
+    "docs/validation/section-26-8/reference.json": "fd77ee53473293ecb1b0479f97904204f42b8490f35814d65b8395d795e79ef6",
+    "docs/validation/section-26-8/numerical-check.json": "85b7455a554ba51917ae8e1cc06df34c5bcddc908455bdf2a0d6b303a387a075",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "1d91d933d75b7ebf65e14a2555f91da782ccb1d08958bf1515825a922ed1880d",
+    "volumes/10_exotics_martingales/exotics.ipynb": "e157759725b2470b568eb29e4f5a40728a2d7dbecfba74cec3e27f7c5ec65fa8",
+    "report/report_builder/figures.py": "0862d42a1e2097d2e74efa22ad95b50123322e1d468505f97fa3c67cefb69048",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "ad2fbaaad054ff046f035e5c821e8fe359080ed2a5adb04eb4b57147eaedb833",
+    "book/_build/html/notebooks/10_exotics.html": "1d8f5cd58d93ec6b8a02b67239b30a7e880ae8ad9554f0f3ce84123090e0d93f",
+    "docs/validation/section-26-8/portal-chooser_choice-1440.png": "237811b99383193dcb8aef1127e319674e2cf1433ef4b4de4dd82e1b9c9bd35b",
+    "docs/validation/section-26-8/portal-chooser_package-1440.png": "08d7c57e25d7af971a9d737889d032e5c53df29044155b87499d07f0c75f0314",
+    "docs/validation/section-26-8/portal-chooser_timing-1440.png": "924445a95f4043b183bac85480521001683686f481eeb26d29a0e91229c5b28e",
+    "docs/validation/section-26-8/portal-chooser_validation-1440.png": "fe35644e4cc8d0bf08c763fb01e97bfdc960322dcde99d2ee63e182135d30a7c",
+    "docs/validation/section-26-8/portal-chooser_choice-1000.png": "3a9aaa193eadb87c64546d5fd7d3965dd742a514bfed4b47486306ecfe8791bc",
+    "docs/validation/section-26-8/portal-chooser_package-1000.png": "21e82eb8b6758de9cc1aa3feaec081df1edd78372ca5b10a9fff4a5905c5195e",
+    "docs/validation/section-26-8/portal-chooser_timing-1000.png": "6aedb068e04b29b37f965d441ae21586711d98266e6f72bc890871da6628cc9c",
+    "docs/validation/section-26-8/portal-chooser_validation-1000.png": "f8ed8315689b6175f671ab35e3be433e956a08e0f95c404a92e49ad97cb6e0f2",
+    "docs/validation/section-26-8/book-chooser_choice-1440.png": "e74e0f2124e2a5093d39b42bd1aa01ba5b36e8ce9ffe6a5b500b5c4b792de968",
+    "docs/validation/section-26-8/book-chooser_package-1440.png": "674a6c9870832553090ec963f5cf982cf1a9144163e41933872aaa233c487afb",
+    "docs/validation/section-26-8/book-chooser_timing-1440.png": "5928f177ed7653d511b3c12ea334787b0dde7aa1bd6d31ea0b80d018cca8b2cd",
+    "docs/validation/section-26-8/book-chooser_validation-1440.png": "50fef1685586069e0253a675e9469e123e3cab05cb0690eb552481650df754fc",
+    "docs/validation/section-26-8/book-chooser_choice-1000.png": "ed15fd4f4816360bfaf3365e159f60d905a3c927fc0df38e3b5934247ff6fe93",
+    "docs/validation/section-26-8/book-chooser_package-1000.png": "b0181f06ce45180906162141bad06999ac70c86bc1ce93d0e9213891832ae78b",
+    "docs/validation/section-26-8/book-chooser_timing-1000.png": "5bd90b06f98c7188dd3b83482e20ba25dbc4f29b7cf19263c61333354caccb4d",
+    "docs/validation/section-26-8/book-chooser_validation-1000.png": "02ac25f8e4606b4e8f1de3981b8d81bf8ffe65614b9862f10e4595a25eab2c9e"
+  },
+  "book_math": {
+    "rendered": 995,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}
