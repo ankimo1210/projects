@@ -2625,6 +2625,119 @@ print(f"原資産の λ = (μ−r)/σ = {lam_underlying:.4f} ← すべて一致
 
 # Cell 17: risk-neutral & forward measure md
 cells.append(
+    md(r"""### 6.1 符号付きのリスク係数と市場リスクの価格（§28.1、GE pp.671–674）
+
+直前の式のσは共通Wienerリスクの**符号付き**係数です。通常のvolatilityとは区別し、以下ではsと書きます。
+同じ一因子に依存し、保有中の収入がない取引可能な証券について
+$$df/f=\mu\,dt+s\,dW,\qquad\lambda=(\mu-r)/s,\qquad\mu=r+\lambda s.$$
+volatilityは$|s|$。μ,rは年$^{-1}$、sとλは年$^{-1/2}$です。
+s<0は同じリスク源に逆向きに反応する証券を表します。
+Wの向きを反転するとsとλが共に反転し、λsと期待収益は変わりません。
+s=0の証券からλは特定できず、逆算APIはValueError。μの計算ではs=0ならrです。
+""")
+)
+
+cells.append(
+    code(r"""from hullkit.risk_premium import market_price_of_risk, required_return
+from hullkit._risk_premium_lesson import _figures as premium_figures
+premium_plots = premium_figures()
+premium_plots["risk_premium_loading"].show()
+""")
+)
+
+cells.append(
+    md(r"""### 6.2 共通リスクを消す局所ポートフォリオ
+
+原典の保有株数は$h_1=s_2f_2,\ h_2=-s_1f_1$。
+価値$\Pi=f_1f_2(s_2-s_1)$に対し、拡散項はゼロで
+$$d\Pi=(\mu_1s_2-\mu_2s_1)f_1f_2\,dt=r\Pi\,dt.$$
+これから$(\mu_1-r)/s_1=(\mu_2-r)/s_2$を得ます。係数が等しい場合の零価値portfolioから利回りを割り算しません。
+図のw=(.6,.4)は**現在の金額比率**です。株数は$w_i/f_i$。
+r=4%, λ=.25, s=(.2,−.3), μ=(.09,−.035)で、リスク寄与は.12−.12=0、収益寄与は.054−.014=.04。
+これは瞬間の**局所**的な相殺です。長期間ずっと固定した株数で無リスクになるという主張ではありません。
+独立検証では、正負のpower給付のQ求積価格をItô微分し、共通λを確かめます。
+""")
+)
+
+cells.append(
+    code(r"""premium_plots["risk_premium_hedge"].show()
+""")
+)
+
+cells.append(
+    md(r"""### 6.3 Examples 28.1・28.2と消費財の注意
+
+Example28.1の無配当デリバティブはμ=12%, volatility=20%, r=8%、正係数なのでλ=.2。
+oilは**消費財**です。oil spotの成長率・volatilityを代入して同じ式でλを求めることはできません。
+Example28.2はμ₁=3%, s₁=.2, r=6%からλ=−.15、s₂=.3ならμ₂=1.5%。
+負のλを0に置き換えたりsを絶対値にして逆算したりすると、原典の関係を失います。
+負係数s₂=−.3という別の合成例ではμ₂=10.5%です。
+""")
+)
+
+cells.append(
+    code(r"""lambda_oil_claim = market_price_of_risk(.12, .08, .2)
+lambda_rate = market_price_of_risk(.03, .06, .2)
+mu_second = required_return(.06, lambda_rate, .3)
+print(f"Example 28.1: lambda={lambda_oil_claim:.6f}")
+print(f"Example 28.2: lambda={lambda_rate:.6f}, mu2={mu_second:.6%}")
+assert abs(lambda_oil_claim - .2) < 1e-14
+assert abs(lambda_rate + .15) < 1e-14 and abs(mu_second - .015) < 1e-14
+""")
+)
+
+cells.append(
+    md(r"""### 6.4 測度変更はドリフトを変え、拡散を保つ
+
+定数GBM実演では、Pの市場リスク価格λからQの0へ移すと、μP=r+λsからμQ=rに変わります。
+$$W_T^Q=W_T^P+\lambda T,\qquad
+L_T={dQ\over dP}=\exp(-\lambda W_T^P-\tfrac12\lambda^2T).$$
+図はr=6%, λ=−.15, s=.3, T=2。log(fT/f0)の平均はPで−.06、Qで.03、分散は両方.18。
+価格の算術成長率μと、対数収益のドリフトμ−s²/2を区別します。
+P密度×LはQ密度と重なります。実世界の予測を価格測度の期待値に読み替えた図です。
+既存sdeの重み関数にはvolatility |s|を渡します。s<0ならその関数の復元Brownianは−Wなので、λもその座標では反転します。
+""")
+)
+
+cells.append(
+    code(r"""premium_plots["risk_premium_density"].show()
+""")
+)
+
+cells.append(
+    md(r"""### 6.5 独立求積・非正規化重み・ペアMC
+
+12市場例・6種類のpower給付のQ Gaussian求積とItô微分はhullkitを使わずに計算しました。
+seed281、262144標本×4ケースでP再重み付けとQ直接標本を比較します。
+Lは標本平均で**正規化しない**生のRN重みです。$E^P[L]=1$もSE付きで別に検査します。
+同じ正規標本を使うため、二つの推定値の差のSEはペア差から計算し、独立標本としてSEを足しません。
+図の95%区間はそれぞれの標本平均の誤差です。モデル誤差・求積誤差を含みません。
+無配当GBM証券f0=100なので$E^Q[e^{-rT}f_T]=100$。
+API/保存データの符号誤り・λ省略・bias・NaNを負の対照として拒否しています。
+""")
+)
+
+cells.append(
+    code(r"""premium_plots["risk_premium_validation"].show()
+""")
+)
+
+cells.append(
+    md(r"""### 6.6 範囲と理解の確認
+
+共通の一因子、無配当の取引可能な投資証券が原典の対象。μ,s,λは一般には状態と時刻に依存し、APIはその瞬間の関係を計算します。
+ここでのMCは定数GBMの実演です。多因子（§28.2）、martingaleの条件付き定義（§28.3）、確率金利のnumeraire（§28.4）は後続節。
+λの実データ推定、消費財spotへの適用、配当・収入付き証券への無調整適用は対象外です。
+
+1. 同じvolatilityでも、sの符号が異なると要求収益が変わる理由は何ですか。
+2. s=0でλを逆算できないのに、μはrと計算できるのはなぜですか。
+3. portfolioの金額比率と株数はどう違いますか。
+4. P→Qでλが負のとき、期待成長率はどちらへ動きますか。
+5. 重みを標本平均で正規化すると、検査している推定量はどう変わりますか。
+""")
+)
+
+cells.append(
     md(r"""## 7. ニュメレールの選択（§28.4）
 
 | ニュメレール $g$ | 測度 | 公式 |
