@@ -42,4 +42,4 @@ Book136warnings（M26時132に新4Plotly MIME警告）。HTML全4図を実表示
 ## 範囲と次
 
 P0/P1/P2完了、M27受入でaccepted27/unreviewed279（8.8%）、P3は2/37。次はM28 §28.3 Martingales（GE pp.675–676）。
-本人のmainへのpush指示に従い、独立最終レビューと統合後ゲートを完了して統合・pushする。
+本人のmainへのpush指示に従い、fast-forward統合・pushを完了（受入commit cb4497fe）。mainで統合gate/台帳--check-artifacts/両保管庫/tracked releaseと全suite3,925 passed・6 skipped・既存warning2件（167.61s）を再検証した。次はM28 §28.3。

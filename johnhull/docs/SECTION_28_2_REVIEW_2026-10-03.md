@@ -78,3 +78,7 @@ math.fsumの独立参照12市場、SVD局所hedge、4直交回転、単因子縮
 **Ready to merge? With fixes**
 
 数値API、原典との整合、既存教材の保持、統合受入ゲートは良好です。通常の教材生成で保存API結果の改変を受け入れるImportant 1件を修正してから統合してください。
+
+## main統合
+
+受入commit cb4497feをmainへfast-forward統合・pushし、live origin/mainとの一致を確認。mainで全suite3,925 passed・6 skipped・既存warning2件（167.61s）、統合gate/台帳成果物/両保管庫/tracked release PASS。Important1修正済み、M27のMinor/Declinedなし。次はM28 §28.3。

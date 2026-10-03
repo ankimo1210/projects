@@ -21,17 +21,17 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 27 private modules as of 2026-10-03; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-10-03、M27受入・最終検証済/統合待ち）
+## 現在地（2026-10-03、M27 main統合済）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
 | 章単位（Hull 11e 全37章） | 上表14行すべてdone | 巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol13–28） | すべてdone | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 全節監査の是正 | 第1–5便完了 | 残りは「全節監査と是正」の表 |
-| 節単位の受入 | 本ブランチM27まで、受入27・未評価279（8.8%）、mainはM26まで | P0/P1/P2完了、P3金利2/37。次はM28 §28.3。全体計画は下表 |
+| 節単位の受入 | mainでM27まで受入27・未評価279（8.8%） | P0/P1/P2完了、P3金利2/37。次はM28 §28.3。全体計画は下表 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。M27：旧26節再検査PASS | 既受入26節のbrowser・runtime probe・個別pytest計1,995件・C:/F:両保管庫復元はPASS。0節再利用・26節再描画。共有CSS変更による保守的な再描画。採用記録の再描画画像payloadは19,126,473バイトで、重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。 |
-| テスト・レビュー | hullkit+report 3,925 passed/6 skipped。M27独立レビューImportant1修正済み | 数値/notebook/browser/統合4--check、台帳--check-artifactsはPASS。結果はVALIDATION.md |
+| テスト・レビュー | main再検証3,925 passed/6 skipped（167.61s）。M27独立レビューImportant1修正済み | 数値/notebook/browser/統合4--check、台帳--check-artifactsはPASS。結果はVALIDATION.md |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -99,7 +99,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 27 priva
 本編に畳む（RB-F02→P1、RB-F03→P3、R11・§19.14・RB-H16→P4）、章の受入後のコラム、研究トラック（同時1本）、johnhull の外。
 研究トラック #1 は RB-F07。研究の置き場は `research/<RB-ID>/`、計算は hullkit の非公開モジュールに決定した（2026-09-27 本人承認。公開 API 昇格は別承認）。
 **実装再開は、johnhull に必要な保管庫と作業分離が整った時点**とし、ワークスペース全工程の完了は待たない。
-M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。M17（§27.8）は2026-09-29 に受入し、P1 を完了した（RB-F02 の推定経路と評価経路の分離を含む。上界の実装は拡張のまま）。M18（§26.1 Packages）で P2 に入り、M19（§26.2 永久アメリカン）も同日に受入。M20（§26.3 非標準アメリカン）は2026-09-30に受入。M21（§26.4 ギャップ）とM22（§26.5 フォワード・スタート）、M23（§26.6 Cliquet）、M24（§26.7 Compound）は2026-10-01に受入。M25（§26.8 Chooser）は2026-10-03に受入しP2を完了。M26（§28.1 市場リスクの価格）は同日受入・main統合済み。M27（§28.2 複数状態変数）も同日に受入しP3は2/37、独立最終レビュー/修正検証済み・統合待ち。次はM28 §28.3。RB-F07 は未着手。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。
+M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。M17（§27.8）は2026-09-29 に受入し、P1 を完了した（RB-F02 の推定経路と評価経路の分離を含む。上界の実装は拡張のまま）。M18（§26.1 Packages）で P2 に入り、M19（§26.2 永久アメリカン）も同日に受入。M20（§26.3 非標準アメリカン）は2026-09-30に受入。M21（§26.4 ギャップ）とM22（§26.5 フォワード・スタート）、M23（§26.6 Cliquet）、M24（§26.7 Compound）は2026-10-01に受入。M25（§26.8 Chooser）は2026-10-03に受入しP2を完了。M26（§28.1 市場リスクの価格）は同日受入・main統合済み。M27（§28.2 複数状態変数）も同日に受入しP3は2/37、独立最終レビューと修正後検証、main統合/push済み。次はM28 §28.3。RB-F07 は未着手。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。
 金利編は [P3設計](docs/prep/design/P3_DESIGN.md)でHW/BKの本文範囲と独立参照の条件を整理した。R11の原典成績は利息・割引を除外する規約で再現でき、現行の資金繰り計算を誤りとみなして置換しない。
 
 ## 可視化 & 深掘り(A1–A4) — 完了 (2026-06-14)
