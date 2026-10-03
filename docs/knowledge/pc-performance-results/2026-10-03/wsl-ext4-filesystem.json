@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:37:01.503051+00:00",
+  "label": "WSL-ext4",
+  "section": "filesystem",
+  "environment": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3",
+    "numpy": "2.4.6",
+    "logical_cpus": 20,
+    "blas": [
+      {
+        "internal_api": "openblas",
+        "num_threads": 20,
+        "version": "0.3.31.188.0",
+        "architecture": "Haswell"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": {
+    "results": [
+      {
+        "name": "create_small_files",
+        "unit": "files/s",
+        "median": 26424.327397245623,
+        "samples": [
+          26424.327397245623
+        ],
+        "parameters": {
+          "files": 200,
+          "bytes_each": 1024,
+          "fsync": false
+        }
+      },
+      {
+        "name": "stat_warm",
+        "unit": "files/s",
+        "median": 1601075.928793691,
+        "samples": [
+          1013977.682339156,
+          1586168.5999556454,
+          1609243.4960846985,
+          1601075.928793691,
+          1618935.0582237688
+        ],
+        "parameters": {
+          "files": 200,
+          "warm_cache": true
+        }
+      }
+    ],
+    "temporary_files_removed": true
+  },
+  "status": "ok",
+  "wall_seconds": 0.009716442000353709
+}

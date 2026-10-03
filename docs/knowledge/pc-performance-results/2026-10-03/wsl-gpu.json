@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:35:53.428747+00:00",
+  "label": "WSL-PyTorch-CUDA",
+  "section": "gpu",
+  "environment": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3",
+    "numpy": "2.4.6",
+    "logical_cpus": 20,
+    "blas": [
+      {
+        "internal_api": "openblas",
+        "num_threads": 20,
+        "version": "0.3.31.188.0",
+        "architecture": "Haswell"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": {
+    "torch": "2.11.0+cu128",
+    "runtime_cuda": "12.8",
+    "device": "NVIDIA GeForce RTX 5080",
+    "compute_capability": [
+      12,
+      0
+    ],
+    "results": [
+      {
+        "name": "FP32_IEEE",
+        "unit": "TFLOP/s",
+        "median": 37.89032998601173,
+        "samples": [
+          40.504039768092824,
+          38.16269866102391,
+          37.7657891730305,
+          37.6176028057884,
+          37.89032998601173
+        ],
+        "parameters": {
+          "loops": 10,
+          "n": 4096,
+          "precision": "ieee"
+        },
+        "relative_error_one_element": 8.490492184261606e-07
+      },
+      {
+        "name": "TF32",
+        "unit": "TFLOP/s",
+        "median": 59.10146051583693,
+        "samples": [
+          59.24716103048439,
+          59.05675205533778,
+          59.07919470378897,
+          59.10146051583693,
+          59.10929994232257
+        ],
+        "parameters": {
+          "loops": 10,
+          "n": 8192,
+          "precision": "tf32"
+        },
+        "relative_error_one_element": 0.00010990919437640411
+      },
+      {
+        "name": "FP16",
+        "unit": "TFLOP/s",
+        "median": 118.34465679754008,
+        "samples": [
+          119.27151577115215,
+          118.83344413599039,
+          118.33145118505028,
+          118.262012341327,
+          118.34465679754008
+        ],
+        "parameters": {
+          "loops": 10,
+          "n": 8192,
+          "precision": "ieee"
+        },
+        "relative_error_one_element": 0.00018365011765381924
+      },
+      {
+        "name": "BF16",
+        "unit": "TFLOP/s",
+        "median": 118.96612907996443,
+        "samples": [
+          120.14919613223378,
+          119.52872664799627,
+          118.96612907996443,
+          118.38612933176378,
+          118.66878041924107
+        ],
+        "parameters": {
+          "loops": 10,
+          "n": 8192,
+          "precision": "ieee"
+        },
+        "relative_error_one_element": 0.0006134949576103067
+      },
+      {
+        "name": "VRAM_copy",
+        "unit": "GB/s",
+        "median": 819.0875025763349,
+        "samples": [
+          819.2909874874005,
+          819.3190088521419,
+          818.6982782412565,
+          819.0875025763349,
+          818.9440987087202
+        ],
+        "parameters": {
+          "loops": 20,
+          "array_MiB": 1024,
+          "counted_bytes": "read+write"
+        }
+      },
+      {
+        "name": "pinned_H2D",
+        "unit": "GB/s",
+        "median": 52.995052761153275,
+        "samples": [
+          52.995052761153275,
+          53.035729156811826,
+          53.068474544599205,
+          52.87033424509853,
+          52.671022522195834
+        ],
+        "parameters": {
+          "loops": 10,
+          "buffer_MiB": 128
+        }
+      },
+      {
+        "name": "pinned_D2H",
+        "unit": "GB/s",
+        "median": 39.129219576760754,
+        "samples": [
+          39.046894830116614,
+          39.45582409512898,
+          39.51135545158854,
+          39.129219576760754,
+          39.068825195874496
+        ],
+        "parameters": {
+          "loops": 10,
+          "buffer_MiB": 128
+        }
+      }
+    ]
+  },
+  "status": "ok",
+  "wall_seconds": 16.192768772000818
+}
