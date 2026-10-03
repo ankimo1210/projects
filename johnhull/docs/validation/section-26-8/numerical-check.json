@@ -1,0 +1,38 @@
+{
+  "artifact_sha256": "fd77ee53473293ecb1b0479f97904204f42b8490f35814d65b8395d795e79ef6",
+  "case_count": 64,
+  "example_price": 13.34428044806922,
+  "max_bound_violation": 2.842170943040401e-14,
+  "max_linearity_error": 4.263256414560601e-14,
+  "max_mc_standard_errors": 1.5059553230586347,
+  "max_price_error": 4.263256414560601e-14,
+  "max_quadrature_error": 4.86740903116724e-11,
+  "max_replication_error": 1.4210854715202004e-14,
+  "mc_paths": 524288,
+  "negative_controls": [
+    {
+      "mutation": "price",
+      "rejected": true
+    },
+    {
+      "mutation": "boundary",
+      "rejected": true
+    },
+    {
+      "mutation": "weight",
+      "rejected": true
+    },
+    {
+      "mutation": "mc_error",
+      "rejected": true
+    }
+  ],
+  "section": "26.8",
+  "source_sha256": {
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/chooser.py": "a7f60a74d119e5effc4cfbd28c8d226cd87b243599d571b8375d989e98261425",
+    "scripts/build_chooser_reference.py": "e0e9171742567db97f01f01d951fbccd1dc17133117b8990db4b9aac3a1e715d",
+    "scripts/verify_chooser_numerics.py": "36ad7566203483c37df70c44a3193ddb73775ef42c3bd44bf5b02dc829ce7733"
+  },
+  "status": "PASS"
+}
