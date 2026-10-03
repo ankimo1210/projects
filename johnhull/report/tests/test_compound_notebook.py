@@ -61,4 +61,16 @@ def _without_chooser(notebook):
         if notebook.cells[i].source.startswith("## 5. ")
     )
     notebook.cells = notebook.cells[:start] + notebook.cells[end:]
+    return _without_market_price_of_risk(notebook)
+
+
+def _without_market_price_of_risk(notebook):
+    # M26 owns vol10 §6.1–6.6 and verifies every predecessor cell.
+    start = next(i for i, c in enumerate(notebook.cells) if c.source.startswith("### 6.1 "))
+    end = next(
+        i
+        for i in range(start + 1, len(notebook.cells))
+        if notebook.cells[i].source.startswith("## 7. ")
+    )
+    notebook.cells = notebook.cells[:start] + notebook.cells[end:]
     return notebook
