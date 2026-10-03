@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import math
 from pathlib import Path
 
 import plotly.graph_objects as go
@@ -23,7 +24,8 @@ def _load_reference(record_path=None):
     record = json.loads(Path(record_path or _RECORD).read_text(encoding="utf-8"))
     if record.get("status") != "PASS" or record.get("section") != "28.2":
         raise ValueError("risk premium requires a passing numerical record")
-    if hashlib.sha256(_DATA.read_bytes()).hexdigest() != record.get("artifact_sha256"):
+    reference_bytes = _DATA.read_bytes()
+    if hashlib.sha256(reference_bytes).hexdigest() != record.get("artifact_sha256"):
         raise ValueError("risk premium reference hash mismatch")
     hashes = record.get("source_sha256", {})
     if not _SOURCES <= hashes.keys():
@@ -31,7 +33,24 @@ def _load_reference(record_path=None):
     for name, expected in hashes.items():
         if hashlib.sha256((_PROJECT / name).read_bytes()).hexdigest() != expected:
             raise ValueError(f"risk premium source hash mismatch: {name}")
-    return json.loads(_DATA.read_text(encoding="utf-8"))
+    data = json.loads(reference_bytes)
+    values = record.get("api_excess_returns")
+    expected = [row["excess"] for row in data["cases"]]
+    if not isinstance(values, list) or len(values) != len(expected):
+        raise ValueError("risk premium API results shape mismatch")
+    checked = []
+    for value, reference in zip(values, expected, strict=True):
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError("risk premium API results must be finite real numbers")
+        try:
+            value = float(value)
+        except OverflowError as exc:
+            raise ValueError("risk premium API results must be finite real numbers") from exc
+        if not math.isfinite(value) or abs(value - reference) > 1e-12:
+            raise ValueError("risk premium API results differ from the independent reference")
+        checked.append(value)
+    data["api_excess_returns"] = checked
+    return data
 
 
 def _finish(fig, key, title, market):
@@ -109,11 +128,10 @@ def _figures():
 
     validation = go.Figure()
     xs = [f"市場{i + 1}" for i in range(len(data["cases"]))]
-    record = json.loads(_RECORD.read_text(encoding="utf-8"))
     for i, (role, values, name) in enumerate(
         (
             ("reference", [r["excess"] for r in data["cases"]], "独立math.fsum"),
-            ("api", record["api_excess_returns"], "factor API"),
+            ("api", data["api_excess_returns"], "factor API"),
         )
     ):
         validation.add_bar(x=xs, y=values, name=name, marker_color=_COLORS[i], meta=dict(role=role))

@@ -134,7 +134,7 @@
   "source_sha256": {
     "hullkit/src/hullkit/factor_risk.py": "efa2391d2f722c94f0be244764245c3870c8fd121a16de937f44f7158774eb34",
     "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
-    "hullkit/src/hullkit/_factor_risk_lesson.py": "0fe88e08d9e398def9073e6cedc6656f784ada6d77bcbf9edf8fa58bb5ca6319",
+    "hullkit/src/hullkit/_factor_risk_lesson.py": "8151ca3b562e61596859a0f36858b019e7d2ba29890f9e217bc61271cfc46a22",
     "scripts/build_factor_risk_reference.py": "48d137cf1489e5b1d72fb62faddfa42fa8ea8c4ea0af438dd8cd66e3e5e71d41",
     "scripts/verify_factor_risk_browser.cjs": "a964706835f02542efe3303e61b976bc5aedaa4d1545794e00b41be4bf4195de",
     "docs/validation/section-28-2/reference.json": "297b9d2c20ccba75b81c12ea59e6e2b292269e7f3a3dcd0421d17fc0dff335bb",

@@ -37,7 +37,7 @@ Book136warnings（M26時132に新4Plotly MIME警告）。HTML全4図を実表示
 ## 回帰・ゲート
 
 既受入26節のbrowser・runtime probe・個別pytest計1,995件・C:/F:両保管庫復元はPASS。0節再利用・26節再描画。共有CSS変更による保守的な再描画。採用記録の再描画画像payloadは19,126,473バイトで、重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。
-全hullkit+report **3,913 passed・6 skipped・既存warning2件（170.57s）**。変更Python20ファイルruff、4--check、台帳--check-artifactsはPASS。独立最終レビューとtracked releaseを実行してからmainへ統合。
+全hullkit+report **3,925 passed・6 skipped・既存warning2件（167.04s）**。変更Python20ファイルruff、4--check、台帳--check-artifactsはPASS。独立レビューImportant1は消費時検査の回帰12件で修正済み（17 passed）、Minor/Declinedなし。
 
 ## 範囲と次
 
