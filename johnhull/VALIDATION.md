@@ -19,7 +19,7 @@ integration gate を満たすことだけを表す。実市場での予測力、
 - MC4例×524288経路、seed268、最大1.505955SE。95%区間は平均の標本誤差。保存4改変・実API4変異拒否。全reference-builder到達可能importのAST検査とproductionを禁じた参照再計算を確認。
 - vol10 §4.15.1–6、旧202セルを保持して213セルfresh検査、4共有図。Book/portal×2幅の16状態/16画像、全trace/境界/誤差棒/価格改変拒否。Book数式983個・エラー0、1000px2図目視。
 - 既受入24節のbrowser・runtime probe・個別pytest計1,868件・C:/F:両保管庫復元はPASS。23節再利用・1節再描画、追加保存505,902バイト。採用D1パスとSHA-256を固定。
-- 全hullkit+report pytestは3,738 passed・6 skipped・既存warning2件（144.35秒）。4--check、ruff、台帳--check-artifacts、releaseがPASS。独立最終レビュー待ち。 main統合/push待ち。
+- 全hullkit+report pytestは3,757 passed・6 skipped・既存warning2件（144.27s (0:02:24)）。4--check、変更Python20ファイルのruff、台帳--check-artifacts、tracked releaseがPASS。独立最終レビューI1を修正し、M1を保留した。 main統合/push待ち。
 
 ## Section 26.7 M24 — 2026-10-01
 
