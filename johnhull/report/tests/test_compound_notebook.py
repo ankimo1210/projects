@@ -15,7 +15,9 @@ def test_gate_writes_to_compound_evidence_directory():
 
 def test_saved_notebook_has_four_compound_figures_and_prices():
     notebook = _without_chooser(
-        nbformat.read(PROJECT / "volumes/10_exotics_martingales/exotics.ipynb", as_version=4)
+        _without_market_risk_extension(
+            nbformat.read(PROJECT / "volumes/10_exotics_martingales/exotics.ipynb", as_version=4)
+        )
     )
     start = next(i for i, c in enumerate(notebook.cells) if c.source.startswith("### 4.14 "))
     end = next(
@@ -45,7 +47,9 @@ def test_saved_notebook_has_four_compound_figures_and_prices():
 
 def test_notebook_gate_preserves_all_m23_cells_and_rejects_mutations():
     gate = importlib.import_module("johnhull.scripts.verify_compound_notebook")
-    notebook = _without_chooser(nbformat.read(gate.NOTEBOOK, as_version=4))
+    notebook = _without_chooser(
+        _without_market_risk_extension(nbformat.read(gate.NOTEBOOK, as_version=4))
+    )
     base, fresh = gate._base(), gate._fresh()
     assert gate.compare(notebook, base, fresh) == []
     assert len(gate._outside(notebook)) == 191
@@ -59,6 +63,18 @@ def _without_chooser(notebook):
         i
         for i in range(start + 1, len(notebook.cells))
         if notebook.cells[i].source.startswith("## 5. ")
+    )
+    notebook.cells = notebook.cells[:start] + notebook.cells[end:]
+    return notebook
+
+
+def _without_market_risk_extension(notebook):
+    # Historical acceptance is preserved; M26 verifies all 213 predecessor cells.
+    start = next(i for i, c in enumerate(notebook.cells) if c.source.startswith("### 6.1 "))
+    end = next(
+        i
+        for i in range(start + 1, len(notebook.cells))
+        if notebook.cells[i].source.startswith("## 7. ")
     )
     notebook.cells = notebook.cells[:start] + notebook.cells[end:]
     return notebook

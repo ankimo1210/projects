@@ -33,20 +33,20 @@
 **Files:** hullkit/src/hullkit/risk_premium.py; hullkit/tests/test_risk_premium{,_reference,_numerics}.py; scripts/build_risk_premium_reference.py/verify_risk_premium_numerics.py; docs/validation/section-28-1/reference.json/numerical-check.json。
 **Interfaces:** market_price_of_risk(mu,r,loading)とrequired_return(r,risk_price,loading)、参照figure keys loading/hedge/densityとmc、数値source hash。
 
-- [ ] Step 1: 印刷ピン/負s/座標反転/empty-zero/complex/overflowのテストを先に実行。`assert market_price_of_risk(.03,.06,.2)==approx(-.15)`、`with raises(ValueError): market_price_of_risk([], .06, 0)`。Expected:missing API FAIL。
-- [ ] Step 2: 有限実数変換、入力のzeroをbroadcast前に検査し、`(mu-r)/loading` と `r+risk_price*loading` をerrstateで計算。Expected:API tests PASS。
-- [ ] Step 3: 参照・数値gateの失敗を確認。power給付の独立求積/Itô、非正規化RNとQ直接MCを実装。保存改変4件、実API変異（abs loading/drop λ/bias/NaN）を拒否。Expected:reference/numeric/AST独立性testsと2--check PASS。
-- [ ] Step 4: commit `Implement Hull market price of risk and independent references`、task-done:3新tests+test_reference_builders_independent.py。Expected:全PASS。
+- [x] Step 1: 印刷ピン/負s/座標反転/empty-zero/complex/overflowのテストを先に実行。`assert market_price_of_risk(.03,.06,.2)==approx(-.15)`、`with raises(ValueError): market_price_of_risk([], .06, 0)`。Expected:missing API FAIL。
+- [x] Step 2: 有限実数変換、入力のzeroをbroadcast前に検査し、`(mu-r)/loading` と `r+risk_price*loading` をerrstateで計算。Expected:API tests PASS。
+- [x] Step 3: 参照・数値gateの失敗を確認。power給付の独立求積/Itô、非正規化RNとQ直接MCを実装。保存改変4件、実API変異（abs loading/drop λ/bias/NaN）を拒否。Expected:reference/numeric/AST独立性testsと2--check PASS。
+- [x] Step 4: commit `Implement Hull market price of risk and independent references`、task-done:3新tests+test_reference_builders_independent.py。Expected:全PASS。
 
 ### Task 2: 共有教材・旧213セル保持
 
 **Files:** hullkit/src/hullkit/_risk_premium_lesson.py/tests; volumes/10_exotics_martingales/build_exotics_notebook.py/exotics.ipynb; scripts/verify_risk_premium_notebook.py; report/tests/test_risk_premium_notebook.pyと歴史notebook tests。
 **Interfaces:** risk_premium_loading/hedge/density/validation、START='### 6.1 ', END='## 7. '、224セル、保存4図、旧213セル。
 
-- [ ] Step 1: figure keys/数値/hash拒否とnotebook旧213保存/本文4改変testsを先に実行。`assert set(_figures())==KEYS`。Expected:missing lesson FAIL。
-- [ ] Step 2: 6.1 signed係数、6.2 portfolio、6.3印刷例、6.4密度、6.5独立検査、6.6限界の11セルを追加し、その新セルだけ実行。Expected:224セル、旧213不変。
-- [ ] Step 3: `compare(current,base,fresh)`、旧本文/新見出し/保存図/末尾見出し4改変、fresh全文の出力一致を検査。歴史pytestから新6.1だけを除く。Expected:notebook/legacy tests/--check PASS。
-- [ ] Step 4: commit `Teach signed risk loadings and measure changes`、task-done:lesson/notebook/歴史6ファイル。Expected:全PASS。
+- [x] Step 1: figure keys/数値/hash拒否とnotebook旧213保存/本文4改変testsを先に実行。`assert set(_figures())==KEYS`。Expected:missing lesson FAIL。
+- [x] Step 2: 6.1 signed係数、6.2 portfolio、6.3印刷例、6.4密度、6.5独立検査、6.6限界の11セルを追加し、その新セルだけ実行。Expected:224セル、旧213不変。
+- [x] Step 3: `compare(current,base,fresh)`、旧本文/新見出し/保存図/末尾見出し4改変、fresh全文の出力一致を検査。歴史pytestから新6.1だけを除く。Expected:notebook/legacy tests/--check PASS。
+- [x] Step 4: commit `Teach signed risk loadings and measure changes`、task-done:lesson/notebook/歴史6ファイル。Expected:全PASS。
 
 ### Task 3: Book・portal・16実画面
 
