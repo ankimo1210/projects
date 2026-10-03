@@ -22,6 +22,6 @@ Final: Ruling: reviewer did not rerun every browser state or visually inspect ev
 Final: Ruling: reviewer did not rerun the entire suite — require author's fresh whole-suite run after I1; reviewer's 57 checks are supplementary — cost if wrong: independent review may miss interactions beyond its subset.
 
 Final: fixed I1 — test_numpy_complex_market_inputs_in_object_arrays_are_rejected + test_object_complex_scalar_and_mixed_zero_imaginary_inputs_are_rejected 18 RED→GREEN; valid real-object regression passed; API 45 passed.
-Final: whole suite — 3757 passed, 6 skipped, 2 warnings in 144.27s (0:02:24) passed, 6 skipped, 2 existing warnings in 144.27s (0:02:24); first run 3756 passed/1 failed was stale review-document ledger hash, fixed by re-registration without production changes.
+Final: whole suite — 3757 passed, 6 skipped, 2 existing warnings in 144.27s (0:02:24); first run 3756 passed/1 failed was stale review-document ledger hash, fixed by re-registration without production changes.
 Final: source/numeric/notebook refresh, 16 browser states/16 screenshots, 24 unchanged D1 dependencies/artifacts/C:/F: copies, four --check, ledger --check-artifacts, ruff 20 files, tracked release PASS.
 Final: review clean for Critical/Important after one fix pass; Minor M1 deferred; no re-review. Branch is complete; main integration and push await choice.
