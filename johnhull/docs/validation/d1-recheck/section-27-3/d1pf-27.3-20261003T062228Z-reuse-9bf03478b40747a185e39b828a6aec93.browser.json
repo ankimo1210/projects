@@ -1,0 +1,158 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "ivf_smile",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_local",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_repricing",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_joint",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_smile",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_local",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_repricing",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_joint",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-3/portal-ivf_smile-1440.png",
+        "docs/validation/section-27-3/portal-ivf_local-1440.png",
+        "docs/validation/section-27-3/portal-ivf_repricing-1440.png",
+        "docs/validation/section-27-3/portal-ivf_joint-1440.png",
+        "docs/validation/section-27-3/portal-ivf_smile-1000.png",
+        "docs/validation/section-27-3/portal-ivf_local-1000.png",
+        "docs/validation/section-27-3/portal-ivf_repricing-1000.png",
+        "docs/validation/section-27-3/portal-ivf_joint-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "ivf_smile",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_local",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_repricing",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_joint",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_smile",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_local",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_repricing",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "ivf_joint",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-3/book-ivf_smile-1440.png",
+        "docs/validation/section-27-3/book-ivf_local-1440.png",
+        "docs/validation/section-27-3/book-ivf_repricing-1440.png",
+        "docs/validation/section-27-3/book-ivf_joint-1440.png",
+        "docs/validation/section-27-3/book-ivf_smile-1000.png",
+        "docs/validation/section-27-3/book-ivf_local-1000.png",
+        "docs/validation/section-27-3/book-ivf_repricing-1000.png",
+        "docs/validation/section-27-3/book-ivf_joint-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/local_volatility.py": "c6ac1f3fe096ed5761b47649366975b4dfd529f7e9f27522491e1744f785eb8d",
+    "hullkit/src/hullkit/_local_volatility_lesson.py": "f957ab42b0f9e60227b4cf37d42bfd25b7f608acd0c1126699cd88f5053fc76f",
+    "scripts/build_local_volatility_reference.py": "cd40fc895ece0d1a7bd0fff4a2272817bfd290c4d5669e3bc0e9fe002d28a473",
+    "scripts/verify_local_volatility_browser.cjs": "759efb1d856951d5abce2fb0d17c498da2771efbfcaf8345c8671234da5e10aa",
+    "docs/validation/section-27-3/reference.json": "70e1aef8b7f1dfa71e66744482f5886f5f06351cb1f988c907b3b1372dfbf36c",
+    "docs/validation/section-27-3/numerical-check.json": "3b003c323cd11716b9b1c1122066c901f65534c496c4af753e1a37c8601744bd",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "e032b2e058a589f08ad0c45027428e89ba717be5a9fb2f136327fd955e0618b0",
+    "volumes/06_numerical_methods/numerical.ipynb": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a",
+    "report/report_builder/figures.py": "0862d42a1e2097d2e74efa22ad95b50123322e1d468505f97fa3c67cefb69048",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "f3a248d386180f6534b154b7d4c3980064f66d840dfce44dee4bc744e6d8ca93",
+    "book/_build/html/notebooks/06_numerical.html": "a254b058a75c9bfe9014d14cb1ec4810ad2cdc2dd0ba9c735d5ba74d8cb357ab",
+    "docs/validation/section-27-3/portal-ivf_smile-1440.png": "b32f4552194d3cde039c0eb339a6dcd48e38eb88dd555072594bd673d2cefbfc",
+    "docs/validation/section-27-3/portal-ivf_local-1440.png": "5149eaa66685f957501be91420f60759e33689fcbb516e04816a51c402750792",
+    "docs/validation/section-27-3/portal-ivf_repricing-1440.png": "76d879517a5b5dee7a6bb2c084212440beae3a9c60843228df4dd5796dbd0a1e",
+    "docs/validation/section-27-3/portal-ivf_joint-1440.png": "1cdd2fc981d829a895f34b541a07610dceca19ba799425257be5d5a7d4128ee1",
+    "docs/validation/section-27-3/portal-ivf_smile-1000.png": "449aedf06f5f60c86d3aac31fdb4a1db5f68217c368997d5184d8adab6c25ab9",
+    "docs/validation/section-27-3/portal-ivf_local-1000.png": "53277ff62300c08c8f58d63cb41260239960525ba41cd13ce70e5b00c67adb73",
+    "docs/validation/section-27-3/portal-ivf_repricing-1000.png": "f270ca5132bf3767c9a3cd6bca89a54f7a0ff275ccc5ffae4ed61ee5cdda191c",
+    "docs/validation/section-27-3/portal-ivf_joint-1000.png": "1291d9e707096c118a10e201f7a9dedbb3ccc2db935cb42b29fd253fafad7295",
+    "docs/validation/section-27-3/book-ivf_smile-1440.png": "f9aaaddb68eaa9b23706b3fee8639dae9936b726d3f3474ce7f1d12a8da35cf3",
+    "docs/validation/section-27-3/book-ivf_local-1440.png": "b257eb4af9d92fe3679dd0b65075e6e2c7b4c58cd9a077d8aad2890a727d6dd6",
+    "docs/validation/section-27-3/book-ivf_repricing-1440.png": "0500acf78f5834eb1b213d2e1bc2a6c9517f8eab1ded7658442ea469ed16bdf8",
+    "docs/validation/section-27-3/book-ivf_joint-1440.png": "da1d46ab7251889a4460c1492596a60d7e3371a667b0edb8d3bbe91d4eef51b9",
+    "docs/validation/section-27-3/book-ivf_smile-1000.png": "6e062bc6a6be3d12cabf9804d5d4c049db1cdfa3d6470c4e61bacb74edb259a5",
+    "docs/validation/section-27-3/book-ivf_local-1000.png": "7dc272b4f5d131acb0a633fe1b916890132396cb1783492c4a6f00901d0e812b",
+    "docs/validation/section-27-3/book-ivf_repricing-1000.png": "b00ab01d9b4b2ee26748580620fe2ac6edbcfcd2de328a461617ab5614663e44",
+    "docs/validation/section-27-3/book-ivf_joint-1000.png": "a39f1b210e90c74676a62808b6260d5fae2c7af3c5ab8849919b5765af9007cc"
+  },
+  "book_math": {
+    "rendered": 390,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

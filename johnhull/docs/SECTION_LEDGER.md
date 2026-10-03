@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **25**
+- accepted: **26**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 281 |
+| unreviewed | 280 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 25 |
+| accepted | 26 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -49,7 +49,7 @@
 | 25 | 11 | 11 | 0 | 0 | 0 | 0 |
 | 26 | 17 | 0 | 0 | 0 | 17 | 0 |
 | 27 | 8 | 0 | 0 | 0 | 8 | 0 |
-| 28 | 8 | 8 | 0 | 0 | 0 | 0 |
+| 28 | 8 | 7 | 0 | 0 | 1 | 0 |
 | 29 | 4 | 4 | 0 | 0 | 0 | 0 |
 | 30 | 4 | 4 | 0 | 0 | 0 | 0 |
 | 31 | 5 | 5 | 0 | 0 | 0 | 0 |
@@ -317,7 +317,7 @@
 | 27.6 | 27 | section | Barrier Options | accepted |
 | 27.7 | 27 | section | Options on Two Correlated Assets | accepted |
 | 27.8 | 27 | section | Monte Carlo Simulation and American Options | accepted |
-| 28.1 | 28 | section | The Market Price of Risk | unreviewed |
+| 28.1 | 28 | section | The Market Price of Risk | accepted |
 | 28.2 | 28 | section | Several State Variables | unreviewed |
 | 28.3 | 28 | section | Martingales | unreviewed |
 | 28.4 | 28 | section | Alternative Choices for the Numeraire | unreviewed |
