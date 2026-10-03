@@ -58,7 +58,7 @@ Book buildは132warnings（M25基点128、追加4はPlotly MIMEの重複出力�
 
 λの実市場推定、多因子、income補正、確率的金利/numeraire比較は後続範囲。
 P0/P1/P2完了、本ブランチ受入26・未評価280、P3は1/37。
-次はM27 §28.2 Several State Variables。M26のmain統合・pushは別の選択。
+M26はmainへ統合・push済み（010a2bc3）。mainで全hullkit+reportを再検証し3,843 passed・6 skipped（153.55s）、台帳成果物/releaseもPASS。次のM27 §28.2を継続。
 
 ## 独立最終レビューの結論
 

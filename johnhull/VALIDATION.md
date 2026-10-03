@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22、§26.6 M23、§26.7 M24)、2026-10-03 (§26.8 M25、§28.1 M26)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22、§26.6 M23、§26.7 M24)、2026-10-03 (§26.8 M25、§28.1 M26、§28.2 M27)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -10,9 +10,19 @@
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
+## Section 28.2 M27 — 2026-10-03
+
+[受入ノート](docs/SECTION_28_2_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_2_REVIEW_2026-10-03.md)・[統合記録](docs/validation/section-28-2/m27-check.json)。FR01–FR06の5軸、accepted27/unreviewed279、P3は2/37。mainはM26まで。
+
+- GE pp.674–675、式28.11–28.13、同じ基底のsigned loadingとλ、単位、APT/CAPMの条件付き関係を照合。Example28.3の6%は超過収益で、合成r=4%の総収益10%と区別。
+- 独立math.fsum12市場、SVD局所hedge、4直交回転、無価格追加因子と単因子縮約、条件付きCAPM。保存4/API4変異拒否、数値差1e−12以下。
+- 新11セル/計235、旧224本文/出力/Plotly保持とfresh全文検査。両画面16状態/16画像、全trace/r線/数式/改変拒否、1000px目視。portal4図はfull row（幅700px以上）。Book136warningsは既存132＋新4Plotly MIME警告で全図をHTML実表示。
+- 既受入26節のbrowser・runtime probe・個別pytest計1,995件・C:/F:両保管庫復元はPASS。0節再利用・26節再描画。共有CSS変更による保守的な再描画。採用記録の再描画画像payloadは19,126,473バイトで、重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。
+- 数値/notebook/browser/台帳成果物・4--check PASS。全hullkit+report suite・独立最終レビュー・tracked releaseは最終実行待ち。
+
 ## Section 28.1 M26 — 2026-10-03
 
-[受入ノート](docs/SECTION_28_1_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_1_REVIEW_2026-10-03.md)・[統合記録](docs/validation/section-28-1/m26-check.json)。RP01–RP06の5軸、本ブランチaccepted26/unreviewed280、P3は1/37。mainはM25。
+[受入ノート](docs/SECTION_28_1_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_1_REVIEW_2026-10-03.md)・[統合記録](docs/validation/section-28-1/m26-check.json)。RP01–RP06の5軸、受入時accepted26/unreviewed280、P3は1/37。main統合・push済み（010a2bc3）、main再検証3,843 passed/6 skipped（153.55s）。
 
 - GE pp.671–674、単因子・無配当取引証券、signed loading/単位、局所portfolio、消費財の注意、.2/−.15/1.5%の印刷値を照合。
 - 独立12市場/6power給付、Gaussian求積・raw RN/直接Qの262144標本×4。最大API差5.55e−17、密度差2.22e−16、MC最大2.762972SE。保存4改変/API4変異を拒否。
