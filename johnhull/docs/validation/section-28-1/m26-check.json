@@ -343,7 +343,7 @@
     "report/tests/test_risk_premium_acceptance_record.py": "a4f7a8aa319afa09d2feeb25d4dc1cf8f8437b6078f4a7c98a4dfba2549c31c1",
     "report/tests/test_risk_premium_ledger_update.py": "891251965fe3c35eff7ed0781bd9e429408e7c8f2c583de56d7de40e3a53b91b",
     "report/tests/test_risk_premium_registry.py": "9566160481658048f76243fdf03d55fc10e1ea97975f8021f0b5997cce5eebcc",
-    "report/tests/test_section_ledger.py": "3bc4d2700cdf181bcad5960c7867a8a967db7baa00e2d34e8609c1202bafe4ff",
+    "report/tests/test_section_ledger.py": "0b4987e29fe91baf18bd7054d02b35b42ea689edc6db19021b2b78f657ac3a5f",
     "report/tests/test_report_build.py": "0b0fd4f8e1b76de190d1bce8b3e5e9141c7b1b82c4f6b8e334e3c09f326478a8",
     "report/report_builder/figures.py": "0862d42a1e2097d2e74efa22ad95b50123322e1d468505f97fa3c67cefb69048",
     "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d",
