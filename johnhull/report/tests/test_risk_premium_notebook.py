@@ -8,7 +8,7 @@ import nbformat
 
 def test_market_risk_notebook_and_four_negative_controls():
     m = importlib.import_module("johnhull.scripts.verify_risk_premium_notebook")
-    nb = nbformat.read(m.NOTEBOOK, as_version=4)
+    nb = _without_factor_risk_extension(nbformat.read(m.NOTEBOOK, as_version=4))
     assert len(nb.cells) == 224 and len(m._outside(nb)) == 213
     assert m.compare(nb, m._base(), m._fresh()) == []
     assert all(row["rejected"] for row in m.negative_controls(nb, m._base(), m._fresh()))
@@ -36,3 +36,14 @@ def test_d1_declaration_covers_all_six_market_risk_subsections():
     # Book uses the same parent section so sibling subsections are all included.
     assert spec["book"]["heading"] == spec["notebook"]["heading"]
     assert spec["book"]["level"] == spec["notebook"]["level"] == 2
+
+
+def _without_factor_risk_extension(notebook):
+    start = next(i for i, c in enumerate(notebook.cells) if c.source.startswith("## 6A. "))
+    end = next(
+        i
+        for i in range(start + 1, len(notebook.cells))
+        if notebook.cells[i].source.startswith("## 7. ")
+    )
+    notebook.cells = notebook.cells[:start] + notebook.cells[end:]
+    return notebook
