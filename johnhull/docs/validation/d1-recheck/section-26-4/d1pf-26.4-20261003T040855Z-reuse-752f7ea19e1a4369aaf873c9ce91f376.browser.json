@@ -1,0 +1,173 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "gap_payoff",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_decomposition",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_insurance",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_premium",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_payoff",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_decomposition",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_insurance",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_premium",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-4/portal-gap_payoff-1440.png",
+        "docs/validation/section-26-4/portal-gap_decomposition-1440.png",
+        "docs/validation/section-26-4/portal-gap_insurance-1440.png",
+        "docs/validation/section-26-4/portal-gap_premium-1440.png",
+        "docs/validation/section-26-4/portal-gap_payoff-1000.png",
+        "docs/validation/section-26-4/portal-gap_decomposition-1000.png",
+        "docs/validation/section-26-4/portal-gap_insurance-1000.png",
+        "docs/validation/section-26-4/portal-gap_premium-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "gap_payoff",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_decomposition",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_insurance",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_premium",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_payoff",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_decomposition",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_insurance",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "gap_premium",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-4/book-gap_payoff-1440.png",
+        "docs/validation/section-26-4/book-gap_decomposition-1440.png",
+        "docs/validation/section-26-4/book-gap_insurance-1440.png",
+        "docs/validation/section-26-4/book-gap_premium-1440.png",
+        "docs/validation/section-26-4/book-gap_payoff-1000.png",
+        "docs/validation/section-26-4/book-gap_decomposition-1000.png",
+        "docs/validation/section-26-4/book-gap_insurance-1000.png",
+        "docs/validation/section-26-4/book-gap_premium-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/_gap_lesson.py": "1e25fb3df64a43827f2c8bb08348663aaf3ad593d7872a753c3d381d7fa2448c",
+    "scripts/build_gap_reference.py": "6579ceee8d22e1e224e6f5814d1cda243d1066f646e99fad2a9863293c3f6641",
+    "scripts/verify_gap_browser.cjs": "497aca6e97ab72aefd50d39c6695ce840bae1bda6ceb03a1454ce1743ce6fa9d",
+    "docs/validation/section-26-4/reference.json": "f8a89a3190ebf2854831508d1f47c627303f29c41391949e4ca76a120be8b536",
+    "docs/validation/section-26-4/numerical-check.json": "40ae4dc226a7368aa1ed729421ff2f3a651daf98c745ba79805786168ec6ecdd",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "c52a4facd1148992e67d916d6b98accc667e0245e7e2f197af87a261b4becadf",
+    "volumes/10_exotics_martingales/exotics.ipynb": "5e7981a7ce6cd653e3678ea186f003bdf54ef13637600ca5a74d381971f02949",
+    "report/report_builder/figures.py": "c0c5938ec9db085bf6c039c1136643ca1996d6212a9db3755e8b0cf9603c9b17",
+    "report/assets/style.css": "9f86869054a0d8e8a40042d0f76d8ba659b14b127a6fc5f72d552ea310c1043d"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "5576fa6b5dd4f2dcbb1b28d6545efccb1ff1189a66b8fd6b57588c35a4a3778f",
+    "book/_build/html/notebooks/10_exotics.html": "42edf99f1a72bccd5094aeddb406d829ade3fdb333e92c0592a2baa3f62eaf79",
+    "docs/validation/section-26-4/portal-gap_payoff-1440.png": "73c8a9aaccafeb1ff8750e55ef62394bb5fde5fd83e3ecde349a1b92ecb8ec28",
+    "docs/validation/section-26-4/portal-gap_decomposition-1440.png": "fc68d270bc00c54a0623af3fe9290d06afdd8c669706111d938f16afdae91666",
+    "docs/validation/section-26-4/portal-gap_insurance-1440.png": "fe06282fd22ca0c1d92872f6a6d0be156cfb60188c154659530e7ef7678a694a",
+    "docs/validation/section-26-4/portal-gap_premium-1440.png": "76d660299a538eb23721fd04c2e5f8edf3c72138aad082be866d81355ebc0c6b",
+    "docs/validation/section-26-4/portal-gap_payoff-1000.png": "67fd1502a44775a78f67e926c5dbd9296fb47825c58e395a2020694eff90935a",
+    "docs/validation/section-26-4/portal-gap_decomposition-1000.png": "412a403dc6c44091bbb6262849afe20ee93ed96c95f79e353c09b7eaeb99071e",
+    "docs/validation/section-26-4/portal-gap_insurance-1000.png": "c26ac71ce0174f01f2adf3fffc37d8688a8960546adecf9bbe137c44d527f2ad",
+    "docs/validation/section-26-4/portal-gap_premium-1000.png": "fc16aa5a841398d392d7b098c76c8bd5193829cc233059fc3d375b2fc53b26bc",
+    "docs/validation/section-26-4/book-gap_payoff-1440.png": "cb7f8ba0b5329f1faaf2dbacd00a6647ab3bf50045b20953e72d61ea2c9825e3",
+    "docs/validation/section-26-4/book-gap_decomposition-1440.png": "35bcab66bdfd9b09d1130ade7e72648fc91a1bdeaa1ea8eed7f58340405cced7",
+    "docs/validation/section-26-4/book-gap_insurance-1440.png": "0cea8147bfd9ad18b60cf7e7e12d9ef2ad7d90cfa0119f58d2459ac7f43e89f1",
+    "docs/validation/section-26-4/book-gap_premium-1440.png": "6d8593d2c92a83eec086f9af6d8bda5f0bfbec440db805ce240baca6419defc6",
+    "docs/validation/section-26-4/book-gap_payoff-1000.png": "23b6b37576822e133d118eafa50bf1ad3aff0844a097ab5df873a4d6a83a24b5",
+    "docs/validation/section-26-4/book-gap_decomposition-1000.png": "fea8662db87f8235b1cab9ef374efabd57a5d679ddf1be0b772ec1d63395ef00",
+    "docs/validation/section-26-4/book-gap_insurance-1000.png": "72ff42840abf4bfa518b138a5716938f701c589fe33b1e7ed9b23620860651f2",
+    "docs/validation/section-26-4/book-gap_premium-1000.png": "025c8c8801c20893ced113d9c93e80b76acb1f2b0651ae341ac60c279e833611"
+  },
+  "book_math": {
+    "rendered": 983,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

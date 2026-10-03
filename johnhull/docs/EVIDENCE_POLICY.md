@@ -141,3 +141,11 @@ driverの`--records-dir docs/validation/d1-recheck`を明示し、cleanな6947fc
 ### M24最終レビュー後の再検査
 
 修正後、変更されたexoticsページに関係する旧15節をD1で再検査し全PASS（画像の新規保存0バイト）。他8節のページ/入力ハッシュは不変。最終統合記録は23節すべてreusedで、初回の§26.6 redrawnを直接参照している。初回保存373,236バイトと全旧記録は保持した。
+
+## M25での運用（2026-10-03）
+
+既受入24節のbrowser・runtime probe・個別pytest計1,868件・C:/F:両保管庫復元はPASS。23節再利用・1節再描画、追加保存505,902バイト。採用D1パスとSHA-256を固定。
+
+cleanなa5279b29から実行、旧23節はredrawn基点への直接参照、§26.7は初回D1描画。`--records-dir docs/validation/d1-recheck`を明示。現行依存宣言/Python閉包とcollectorで必須hashを決め、採用24記録を[M25統合記録](validation/section-26-8/m25-check.json)で固定する。歴史M24 pytestは後続§4.15だけを除き、M25が旧202セル全体を照合。
+
+初回§26.7のF: publicationはWSL環境PATHからpowershell.exeが外れたため失敗。既存のWindows no-overwrite fallbackが使えるようPATHを補い、同節から再実行し両コピー復元を確認した。保存器のコードやtrust設定は変更していない。

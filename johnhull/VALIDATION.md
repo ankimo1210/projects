@@ -1,6 +1,6 @@
 # johnhull Beyond-Hull vol 18–28 — Final Validation
 
-- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22、§26.6 M23、§26.7 M24)
+- Date: 2026-07-18 (A5–A8 / vol 18–25)、2026-07-20 (vol 26–27 review-fix run)、2026-09-02 (vol 27 Kupiec-flag recomputation)、2026-09-14 (vol 28 credit-desk run、section-audit fixes)、2026-09-15 (section-audit fourth run)、2026-09-25 (vol 26 stored-evidence run、§26.16 M8、§26.17 M9、§27.1 M10)、2026-09-26 (§27.2 M11)、2026-09-27 (§27.3 M12、§27.4 M13、§27.5 M14)、2026-09-28 (D1-preflight、§27.6 M15、§27.7 M16)、2026-09-29 (§27.8 M17、§26.1 M18、§26.2 M19)、2026-09-30 (§26.3 M20)、2026-10-01 (§26.4 M21、§26.5 M22、§26.6 M23、§26.7 M24)、2026-10-03 (§26.8 M25)
 - Overall gate: **PASS**
 - Model performance approved: **NO**
 - Scope: integration, numerical identities, reproducibility, and offline delivery
@@ -9,6 +9,17 @@
 `PASS` は vol 18–28 の教材・実装・成果物が再現可能で、定義した数値恒等式と
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
+
+## Section 26.8 M25 — 2026-10-03
+
+[受入ノート](docs/SECTION_26_8_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_26_8_REVIEW_2026-10-03.md)・[統合記録](docs/validation/section-26-8/m25-check.json)。CH01–CH06の5軸、accepted25/unreviewed281、P2 8/8完了。
+
+- Hull GE pp.619–620のsimple chooser。同じK/T2のcall/putをT1で選びT2で給付決済。put枚数wとstrike Hを配当調整。印刷数値例なし、全数値合成。
+- 基準価格13.34428044806922、H=98.5111939603063、w=0.990049833749168。独立erfc vanillaとmax(c1,p1)のT1密度求積64例、最大API差4.263256e−14。境界・狭い遷移を分割し近接満期、負r/q、zeroσ/満期と端点を確認。
+- MC4例×524288経路、seed268、最大1.505955SE。95%区間は平均の標本誤差。保存4改変・実API4変異拒否。全reference-builder到達可能importのAST検査とproductionを禁じた参照再計算を確認。
+- vol10 §4.15.1–6、旧202セルを保持して213セルfresh検査、4共有図。Book/portal×2幅の16状態/16画像、全trace/境界/誤差棒/価格改変拒否。Book数式983個・エラー0、1000px2図目視。
+- 既受入24節のbrowser・runtime probe・個別pytest計1,868件・C:/F:両保管庫復元はPASS。23節再利用・1節再描画、追加保存505,902バイト。採用D1パスとSHA-256を固定。
+- 全hullkit+report pytestは3,738 passed・6 skipped・既存warning2件（144.35秒）。4--check、ruff、台帳--check-artifacts、releaseがPASS。独立最終レビュー待ち。 main統合/push待ち。
 
 ## Section 26.7 M24 — 2026-10-01
 
