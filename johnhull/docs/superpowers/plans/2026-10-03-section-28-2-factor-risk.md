@@ -59,4 +59,4 @@
 - [x] Step 2: clean Task3 commitから26D1、既存は直接redrawnへreuse、28.1初回redraw。Expected: browser/runtime/pytest/復元PASS。
 - [x] Step 3: mandatory hash再構成、台帳とdocs更新、4--check/ruff/全suite/台帳--check-artifacts。Expected: 27/279、全PASS。
 - [x] Step 4: commit `Accept Hull multi-factor risk premiums`、task-done全suite、fresh最終review一度、重要指摘はRED→GREENと全suite、Minor記録。Expected: 受入を止める指摘なし。
-- [ ] Step 5: review/実行台帳をcommit、tracked release、clean tree、mainへ統合後検証とpush。Expected: live remote一致、末尾にP0–P8。
+- [x] Step 5: review/実行台帳をcommit、tracked release、clean tree、mainへ統合後検証とpush。Expected: live remote一致、末尾にP0–P8。
