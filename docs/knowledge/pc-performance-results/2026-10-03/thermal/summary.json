@@ -1,0 +1,92 @@
+{
+  "phases": [
+    {
+      "phase": "idle",
+      "samples": 30,
+      "tail_samples": 10,
+      "duration_s": 30.000179736000064,
+      "tail_temperature_mean_C": 40.0,
+      "peak_temperature_C": 41.0,
+      "tail_gpu_utilization_mean_percent": 0.0,
+      "tail_power_mean_W": 35.246,
+      "tail_fan_command_mean_percent": 0.0
+    },
+    {
+      "phase": "load_25",
+      "samples": 45,
+      "tail_samples": 10,
+      "duration_s": 45.00009498600048,
+      "tail_temperature_mean_C": 47.2,
+      "peak_temperature_C": 48.0,
+      "tail_gpu_utilization_mean_percent": 25.9,
+      "tail_power_mean_W": 113.638,
+      "tail_fan_command_mean_percent": 0.0
+    },
+    {
+      "phase": "cool_25",
+      "samples": 45,
+      "tail_samples": 10,
+      "duration_s": 45.00009717799912,
+      "tail_temperature_mean_C": 44.0,
+      "peak_temperature_C": 48.0,
+      "tail_gpu_utilization_mean_percent": 0.0,
+      "tail_power_mean_W": 37.491,
+      "tail_fan_command_mean_percent": 0.0
+    },
+    {
+      "phase": "load_50",
+      "samples": 45,
+      "tail_samples": 10,
+      "duration_s": 45.00023465999948,
+      "tail_temperature_mean_C": 53.3,
+      "peak_temperature_C": 54.0,
+      "tail_gpu_utilization_mean_percent": 50.4,
+      "tail_power_mean_W": 200.039,
+      "tail_fan_command_mean_percent": 32.0
+    },
+    {
+      "phase": "cool_50",
+      "samples": 45,
+      "tail_samples": 10,
+      "duration_s": 45.00010093400124,
+      "tail_temperature_mean_C": 39.4,
+      "peak_temperature_C": 54.0,
+      "tail_gpu_utilization_mean_percent": 0.0,
+      "tail_power_mean_W": 36.797,
+      "tail_fan_command_mean_percent": 0.0
+    },
+    {
+      "phase": "load_100",
+      "samples": 60,
+      "tail_samples": 10,
+      "duration_s": 60.000776491999204,
+      "tail_temperature_mean_C": 68.3,
+      "peak_temperature_C": 69.0,
+      "tail_gpu_utilization_mean_percent": 98.0,
+      "tail_power_mean_W": 321.536,
+      "tail_fan_command_mean_percent": 46.7
+    },
+    {
+      "phase": "cool_100",
+      "samples": 90,
+      "tail_samples": 10,
+      "duration_s": 90.0001767800004,
+      "tail_temperature_mean_C": 40.5,
+      "peak_temperature_C": 69.0,
+      "tail_gpu_utilization_mean_percent": 1.2,
+      "tail_power_mean_W": 42.864,
+      "tail_fan_command_mean_percent": 0.0
+    }
+  ],
+  "baseline_C": 40.0,
+  "peak_C": 69.0,
+  "return_to_baseline_plus_5_C_seconds": 9.334602053999333,
+  "active_flag_samples": {
+    "hw_thermal_slowdown": 0,
+    "sw_thermal_slowdown": 0,
+    "sw_power_cap": 11
+  },
+  "samples": 361,
+  "sample_interval_median_s": 0.9999992170005498,
+  "sample_interval_max_s": 1.000966427000094
+}

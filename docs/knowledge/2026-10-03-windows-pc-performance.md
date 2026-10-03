@@ -89,6 +89,7 @@ GPU は非同期に動くため、CUDA Event と同期によってデバイス�
 設定の意味は [PyTorch CUDA semantics](https://docs.pytorch.org/docs/2.11/notes/cuda.html) を参照。
 これらは dense 行列積とコピーの値で、FP4 / sparsity の広告値や LLM の tokens/s とは別の指標。
 クロック / 電力制限は変更せず、負荷中の温度やスロットリングは計測していない。
+後続の[GPU の負荷と温度](2026-10-03-gpu-thermal.md)で、別の6分間の試験として温度・電力・ファン指令値・制限フラグを記録した。
 
 ## SSD
 
