@@ -21,3 +21,6 @@ Final: Ruling: Keep dividend/income adjustment outside M26 — no-income conditi
 Final: Ruling: Keep stochastic-rate numeraire comparisons for later sections — users receive a reproducible constant-GBM measure-change experiment — cost if wrong: transfer to stochastic rates can use an inappropriate pricing measure.
 Final verification:44ec2e5a — integrated--check/ledger--check-artifacts PASS,accepted26/280;post-document ledger/updater tests10 passed in0.91s;release--require-tracked PASS;working tree clean.
 Finish: M25 is merged/pushed, main and remote32751a0d verified equal. M26 is complete on codex/m26-market-price-of-risk; integration choices remain for user. M27 §28.2 is next.
+
+Integration: mainへfast-forward。mainでも台帳/両保管庫/releaseと全hullkit+reportを再検証してpush。
+Ruling: M26の統合メニューを再提示せずmainへ統合・pushする — 本人が今回「push to main」「move to next」と明示しており、その指示がskillの選択メニューより優先する — 誤りなら統合先の再調整が必要。
