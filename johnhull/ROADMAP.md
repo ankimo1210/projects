@@ -21,7 +21,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 71 public + 26 private modules as of 2026-10-03; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-10-03、M26受入・最終確認中）
+## 現在地（2026-10-03、M26受入・統合待ち）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 71 public + 26 priva
 | 節単位の受入 | M26（§28.1）まで。本ブランチ受入26・未評価280（8.5%）、mainはM25まで | P0/P1/P2完了。P3金利1/37。次はM27 §28.2。全体計画は下の「完了までの計画」 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成。未評価292/292節、65/65出典、設計・再確認9本 | 件数・参照・YAML・台帳検査PASS、独立レビュー指摘を反映。文書と独立試算の成果であり、受入・製品実装は進めていない |
 | 証跡の増加方針 D1 | [方針決定](docs/EVIDENCE_POLICY.md)。不変画像はハッシュで参照 | **M26**：既受入25節のbrowser・runtime probe・個別pytest計1,931件・C:/F:両保管庫復元はPASS。24節再利用・1節再描画。採用記録の再描画画像は456,055バイト（保管庫の実際の増加容量とは区別）。採用D1パスとSHA-256を固定。 |
-| テスト | 直前M25はhullkit+report 3,757 passed・6 skipped。M26は全suite/独立レビューの最終確認中 | 実行結果は `VALIDATION.md` |
+| テスト | hullkit+report 3,843 passed・6 skipped（2026-10-03）、独立最終レビュー完了 | 実行結果は `VALIDATION.md` |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -58,7 +58,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 71 public + 26 priva
 | P0 | §26.9–§27.4（M1–M13） | 13 | 13 | 0 | — | 完了 |
 | P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 4 | 0 | — | 完了（M14–M17） |
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
-| P3 | 金利（Ch 28–34） | 37 | 1 | 3 | HW/BK 三項ツリー・Bermudan・LMM がない（EX-13〜15）。最も重い | M26（§28.1）受入ゲートPASS・最終確認中。次はM27 §28.2 |
+| P3 | 金利（Ch 28–34） | 37 | 1 | 3 | HW/BK 三項ツリー・Bermudan・LMM がない（EX-13〜15）。最も重い | M26（§28.1）受入。次はM27 §28.2 |
 | P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 件数が最大。多くは実装済みで、印刷値での固定が中心 | 下調べ済み・節受入未着手 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | vol 27・28 の資産を流用できる | 下調べ済み・節受入未着手 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 軽いが件数が多い。定性が多い | 下調べ済み・節受入未着手 |
@@ -305,11 +305,11 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M23 | §26.6 Cliquet options（p.618） | 受入。単純ATM call/put列と各期支払を独立求積60例・多時点MC4例で照合、制約型はMC診断。P2の6節目。[受入ノート](docs/SECTION_26_6_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_6_REVIEW_2026-10-01.md) |
 | M24 | §26.7 Compound options（pp.618–619） | 受入。欧州型4契約、臨界株価と内側put根なし領域、独立条件付き求積104例・MC4例。独立レビューI1修正・M1保留、全体検査PASS。P2の7節目。[受入ノート](docs/SECTION_26_7_ACCEPTANCE_2026-10-01.md)・[レビュー](docs/SECTION_26_7_REVIEW_2026-10-01.md) |
 | M25 | §26.8 Chooser options（pp.619–620） | 受入。配当調整複製・選択/決済時点・端点、独立求積64例・MC4例・16表示状態。独立レビューI1修正・M1保留、全体検査PASS。P2完了。[受入ノート](docs/SECTION_26_8_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_26_8_REVIEW_2026-10-03.md) |
-| M26 | §28.1 The Market Price of Risk（pp.671–674） | 数値・教材・両画面・25D1の受入ゲートPASS。全suite/独立最終レビューを確認中。[受入ノート](docs/SECTION_28_1_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_1_REVIEW_2026-10-03.md) |
+| M26 | §28.1 The Market Price of Risk（pp.671–674） | 受入。単因子signed係数・局所portfolio・印刷値・P→Q、独立12市場/6power/4MC・16表示状態・25D1。全suiteと独立最終レビューを完了。[受入ノート](docs/SECTION_28_1_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_1_REVIEW_2026-10-03.md) |
 | M27（次） | §28.2 Several State Variables（pp.674–675） | 未着手。因子別loading/λの内積、Example28.3の6%、CAPM/systematicリスク |
 | 以降 | P3金利の残り35節から未評価節へ展開 | 節受入未着手 |
 
-現在地（2026-10-03）：本ブランチM26まで受入、台帳26/280。P0/P1/P2完了、P3は1/37。統合記録は`docs/validation/section-28-1/m26-check.json`。既受入25節のbrowser・runtime probe・個別pytest計1,931件・C:/F:両保管庫復元はPASS。24節再利用・1節再描画。採用記録の再描画画像は456,055バイト（保管庫の実際の増加容量とは区別）。採用D1パスとSHA-256を固定。全suite/最終レビューは確認中、mainはM25。次はM27 §28.2。
+現在地（2026-10-03）：本ブランチM26まで受入、台帳26/280。P0/P1/P2完了、P3は1/37。統合記録は`docs/validation/section-28-1/m26-check.json`。既受入25節のbrowser・runtime probe・個別pytest計1,931件・C:/F:両保管庫復元はPASS。24節再利用・1節再描画。採用記録の再描画画像は456,055バイト（保管庫の実際の増加容量とは区別）。採用D1パスとSHA-256を固定。全suite/最終レビューを完了、mainはM25。次はM27 §28.2。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
