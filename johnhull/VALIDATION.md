@@ -18,7 +18,7 @@ integration gate を満たすことだけを表す。実市場での予測力、
 - 独立math.fsum12市場、SVD局所hedge、4直交回転、無価格追加因子と単因子縮約、条件付きCAPM。保存4/API4変異拒否、数値差1e−12以下。
 - 新11セル/計235、旧224本文/出力/Plotly保持とfresh全文検査。両画面16状態/16画像、全trace/r線/数式/改変拒否、1000px目視。portal4図はfull row（幅700px以上）。Book136warningsは既存132＋新4Plotly MIME警告で全図をHTML実表示。
 - 既受入26節のbrowser・runtime probe・個別pytest計1,995件・C:/F:両保管庫復元はPASS。0節再利用・26節再描画。共有CSS変更による保守的な再描画。採用記録の再描画画像payloadは19,126,473バイトで、重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。
-- 数値/notebook/browser/台帳成果物・4--check PASS。全hullkit+report **3,913 passed/6 skipped/既存warning2件（170.57s）**。変更Python20ファイルruffはPASS。独立最終レビュー/tracked releaseを実行中。
+- 数値/notebook/browser/台帳成果物・4--check PASS。修正後全hullkit+report **3,925 passed/6 skipped/既存warning2件（167.04s）**。変更Python20ファイルruff PASS。独立レビューImportant1を1回の修正で解決（回帰12件RED→GREEN、lesson計17 passed）、Minor/Declinedなし。4--check/16画面/26D1の現在hashもPASS。tracked release/統合を実行する。
 
 ## Section 28.1 M26 — 2026-10-03
 
