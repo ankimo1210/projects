@@ -1,0 +1,43 @@
+{
+  "artifact_sha256": "4b6895352fff6f77b8ae0c003fe1ebb1cd715b44477b0c671b72719914e0fac8",
+  "claim_count": 38,
+  "example_28_1": 0.19999999999999996,
+  "example_28_2_growth": 0.015,
+  "example_28_2_lambda": -0.15,
+  "max_ito_error": 2.9905411480513067e-11,
+  "max_lambda_error": 1.1292766721737735e-10,
+  "max_mc_standard_errors": 2.095547691621511,
+  "max_riskless_error": 6.3441821240850516e-12,
+  "max_world_error": 5.1873616513375964e-11,
+  "mc_paths": 524288,
+  "negative_controls": [
+    {
+      "mutation": "example",
+      "rejected": true
+    },
+    {
+      "mutation": "loading_sign",
+      "rejected": true
+    },
+    {
+      "mutation": "world_loading",
+      "rejected": true
+    },
+    {
+      "mutation": "mc_error",
+      "rejected": true
+    },
+    {
+      "mutation": "consumption",
+      "rejected": true
+    }
+  ],
+  "section": "28.1",
+  "source_sha256": {
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/market_price_of_risk.py": "3cd5b2efe89760967c828263e7859470f9f232285fcaf52e363a845343994c7a",
+    "scripts/build_market_price_of_risk_reference.py": "e618fab81e44bcbb0179bbc238c9df537c618af8df5191d27e41e57eee32d4a0",
+    "scripts/verify_market_price_of_risk_numerics.py": "d1662dc3e4890e86a05032a6e846690ebedc398ceeac53828c3b292e0d8d09f8"
+  },
+  "status": "PASS"
+}
