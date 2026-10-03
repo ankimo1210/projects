@@ -1240,6 +1240,60 @@
         "report/tests/test_compound_notebook.py",
         "report/tests/test_compound_registry.py"
       ]
+    },
+    "26.8": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "4.15 Chooser：後からcallかputを選ぶ（§26.8、GE pp.619–620）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "4.15 Chooser：後からcallかputを選ぶ（§26.8、GE pp.619–620）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "chooser_choice",
+          "chooser_package",
+          "chooser_timing",
+          "chooser_validation"
+        ]
+      },
+      "python_modules": [
+        "hullkit.chooser",
+        "hullkit.bsm",
+        "hullkit._chooser_lesson"
+      ],
+      "data": [
+        "docs/validation/section-26-8/reference.json",
+        "docs/validation/section-26-8/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_chooser_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-26-8/reference.json",
+        "docs/validation/section-26-8/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-26-8",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_chooser.py",
+        "hullkit/tests/test_chooser_reference.py",
+        "hullkit/tests/test_chooser_numerics.py",
+        "hullkit/tests/test_chooser_lesson.py",
+        "report/tests/test_chooser_notebook.py",
+        "report/tests/test_chooser_registry.py"
+      ]
     }
   }
 }

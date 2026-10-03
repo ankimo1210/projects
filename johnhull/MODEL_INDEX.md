@@ -127,6 +127,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | ATM forward-start call | Hull 11e GE §26.5 (p.618) | `hullkit.forward_start:forward_start_call` | `test_forward_start.py`, `test_forward_start_reference.py`, `test_forward_start_numerics.py` | vol 10 §4.12 | 36 independent two-increment GBM quadrature cases, three 524288-path MC checks, spot homogeneity and same-life delay limits; four shared plots and 16 Book/portal states; `docs/validation/section-26-5/` |
 | Simple stock-price cliquet calls and puts | Hull 11e GE §26.6 (p.618) | `hullkit.cliquet:cliquet_call`, `hullkit.cliquet:cliquet_put` | `test_cliquet.py`, `test_cliquet_reference.py`, `test_cliquet_numerics.py` | vol 10 §4.13 | 60 independent GBM density quadrature cases; four 524288-path multitime MC checks; per-date settlement, reset-strike and fixed-notional mutations rejected; four shared plots and 16 Book/portal states; `docs/validation/section-26-6/` |
 | European compound calls and puts | Hull 11e GE §26.7 (pp.618–619) | `hullkit.compound:compound_price` | `test_compound.py`, `test_compound_reference.py`, `test_compound_numerics.py`, `test_compound_numerics_api_controls.py`, `test_reference_builders_independent.py` | vol 10 §4.14 | Four Geske formulas; critical spots and inner-put no-root bound; 104 independent conditional payoff integrals; seeded 524288-path conditional MC; finite-value/strike/correlation/root mutations, plus guard-passing strike/correlation/root/1e-9 mutants that only the independent comparison rejects; four shared plots and 16 Book/portal states; `docs/validation/section-26-7/` |
+| Simple European chooser | Hull 11e GE §26.8 (pp.619–620) | `hullkit.chooser:chooser_price` | `test_chooser.py`, `test_chooser_reference.py`, `test_chooser_numerics.py` | vol 10 §4.15 | Same K/T2 call or put chosen at T1; dividend-adjusted package; exact endpoints/zero volatility/broadcast; 64 independent conditional integrals, 4 seeded MC, four shared plots and 16 Book/portal states; `docs/validation/section-26-8/` |
 
 ## 8. ML surrogates & differential machine learning
 
@@ -212,6 +213,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._forward_start_lesson` | Hull §26.5 の行使価格確定・開始時点の同次性・期間固定/満期固定の掃引とMC誤差棒を保存済み二時点GBM参照から共有する内部Plotly図（`test_forward_start_lesson.py`） |
 | `hullkit._cliquet_lesson` | Hull §26.6の株価reset・各期PV・回数掃引・global/local制約と終了のMC診断を保存済み独立参照から共有する内部Plotly図（`test_cliquet_lesson.py`） |
 | `hullkit._compound_lesson` | Hull §26.7の4給付・臨界株価・外側strike・行使日・独立求積/条件付きMCを保存参照から共有する内部Plotly図（`test_compound_lesson.py`） |
+| `hullkit._chooser_lesson` | Hull §26.8の選択境界・配当調整複製・選択時期・独立求積/条件付きMCを共有する内部Plotly図（`test_chooser_lesson.py`） |
 | `hullkit._exchange_lesson` | Hull §26.14 の給付と分解・相関と σ̂・$r$ 非依存と $V/U$ 読み替え・米国型の早期行使を保存済みデータから共有する内部 Plotly 図ビルダー（`test_exchange_lesson.py`） |
 | `hullkit._lookback_lesson` | Hull §26.11 の経路給付・履歴極値・評価時点の複製・離散 fixing を共有する内部 Plotly 図ビルダー |
 | `hullkit._shout_lesson` | Hull §26.12 の給付・宣言木・実ノード境界・合成価格比較を保存済みデータから共有する内部 Plotly 図ビルダー（`test_shout_lesson.py`） |
