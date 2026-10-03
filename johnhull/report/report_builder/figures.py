@@ -22,6 +22,7 @@ from hullkit._asian_lesson import _figures as asian_lesson_figures
 from hullkit._barrier_tree_lesson import _figures as barrier_tree_lesson_figures
 from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
+from hullkit._chooser_lesson import _figures as chooser_lesson_figures
 from hullkit._cliquet_lesson import _figures as cliquet_lesson_figures
 from hullkit._compound_lesson import _figures as compound_lesson_figures
 from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
@@ -1319,6 +1320,42 @@ FIGURES: list[FigureSpec] = [
         "104独立求積ケース、4契約×524288経路。平均の95%区間を比較。",
         lambda: compound_lesson_figures()["compound_validation"],
         practice="基準市場S100/K1=10/K2=100/r5%/q2%/σ20%/T1=.5/T2=1。MCはT1 spotと条件付き内側vanilla価値を使い、標本誤差とモデル誤差を区別。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "chooser_choice",
+        "exotics",
+        "Chooserの選択境界",
+        "§26.8。T1でのcall/put価値とmaxを比較。決済はT2。",
+        lambda: chooser_lesson_figures()["chooser_choice"],
+        practice="S=K=100/r5%/q2%/σ20%/T1=.5/T2=1。H=98.511194、Hより上でcall・下でputを選ぶ。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "chooser_package",
+        "exotics",
+        "配当調整を含むChooser複製",
+        "T2 call一枚と、満期T1・strike Hのputをw枚持つ。",
+        lambda: chooser_lesson_figures()["chooser_package"],
+        practice="基準市場、現在株価S0を変更。w=0.990050、q≠0では枚数とstrikeを両方調整する。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "chooser_timing",
+        "exotics",
+        "選択を遅らせる価値",
+        "T1=0のmax(c0,p0)とT1=T2のstraddleを含む時期比較。",
+        lambda: chooser_lesson_figures()["chooser_timing"],
+        practice="基準市場でT2=1固定。今すぐ選択と満期選択の間の値となり、選択の延期で価値は減らない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "chooser_validation",
+        "exotics",
+        "Chooserの独立求積と条件付きMC",
+        "64独立求積ケース、選択時期4例×524288経路。95%区間を比較。",
+        lambda: chooser_lesson_figures()["chooser_validation"],
+        practice="基準市場のT1=.1/.5/.9/.999999。MCはT1 spotと選ばれる条件付きvanilla価値、区間は平均の標本誤差。",
         is_new=True,
     ),
     FigureSpec(

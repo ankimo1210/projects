@@ -18,6 +18,7 @@ final gate evidence.
 - vol 10 §26.2 — perpetual American calls and puts: hitting-time values, exercise boundaries, smooth pasting, the zero-yield call limit, and finite-horizon CRR comparisons; six teaching subsections and four shared Book/portal figures.
 - vol 10 §26.3 — Bermudan exercise dates, lockout periods, and changing exercise strikes on an exact CRR step grid; Hull's seven-year warrant terms are shown with explicitly synthetic market inputs and four shared Book/portal figures.
 - vol 10 §26.4 — gap calls and puts with separate payoff amounts and triggers, signed payoffs, vanilla/binary decomposition, and Hull Example 26.1 insurance costs; four shared Book/portal figures distinguish insurer expenditure from policyholder net proceeds.
+- vol 10 §26.8 — Simple European chooser, dividend-adjusted call/put replication, decision/settlement timing and exact limits; independent conditional integrals/MC and four shared Book/portal figures.
 - vol 10 §26.7 — Four European compound options, critical spots, inner-put no-root bounds, deterministic bivariate normal formulas and independent conditional payoff integrals/MC; four shared Book/portal figures.
 - vol 10 §26.6 — Simple stock-price cliquet calls/puts, per-date settlement, reset strikes, independent density quadrature and multitime MC; global/local bounds and termination are separate teaching diagnostics.
 - vol 10 §26.5 — ATM European forward-start calls, future strike fixing, spot homogeneity, dividend adjustment, and fixed-life versus fixed-expiry comparisons; independent two-increment quadrature and two-time MC.
@@ -41,7 +42,7 @@ Run release checks from the workspace root:
 make hull-artifacts-check  # rebuild vol. 19–28 in /tmp and compare references
 make hull-notebooks-check  # fresh execution of vol. 18-28 in /tmp
 make hull-core-notebooks-check  # fresh execution of vol. 01-17 + the 2 legacy notebooks
-make hull-report           # offline portal: 12 themes / 174 figures (62 exotics)
+make hull-report           # offline portal: 12 themes / 178 figures (66 exotics)
 make hull-book             # Jupyter Book
 make hull-release-check    # cross-artifact release contract
 make hull-release          # project tests/lint + all checks and builds above
