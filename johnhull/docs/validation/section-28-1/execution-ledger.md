@@ -19,3 +19,5 @@ Final: Ruling: Keep real-market lambda estimation for later research — users r
 Final: Ruling: Keep multi-factor validity for §28.2 onward — users receive the explicitly scoped single-factor model — cost if wrong: applying it to several risks can miscalculate excess returns.
 Final: Ruling: Keep dividend/income adjustment outside M26 — no-income conditions are explicit in API,lesson and ledger — cost if wrong: income-bearing security expected returns can be miscalculated.
 Final: Ruling: Keep stochastic-rate numeraire comparisons for later sections — users receive a reproducible constant-GBM measure-change experiment — cost if wrong: transfer to stochastic rates can use an inappropriate pricing measure.
+Final verification:44ec2e5a — integrated--check/ledger--check-artifacts PASS,accepted26/280;post-document ledger/updater tests10 passed in0.91s;release--require-tracked PASS;working tree clean.
+Finish: M25 is merged/pushed, main and remote32751a0d verified equal. M26 is complete on codex/m26-market-price-of-risk; integration choices remain for user. M27 §28.2 is next.
