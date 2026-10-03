@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:35:21.666113+00:00",
+  "label": "WSL-Ubuntu",
+  "section": "memory",
+  "environment": {
+    "os": "Linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2",
+    "python": "3.12.3",
+    "numpy": "2.4.6",
+    "logical_cpus": 20,
+    "blas": [
+      {
+        "internal_api": "openblas",
+        "num_threads": 20,
+        "version": "0.3.31.188.0",
+        "architecture": "Haswell"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": [
+    {
+      "name": "copy_1t",
+      "unit": "GB/s",
+      "median": 46.71502333954297,
+      "samples": [
+        45.968995268299224,
+        49.61445126168992,
+        46.18946563625484,
+        47.24058104283109
+      ],
+      "parameters": {
+        "array_MiB": 256,
+        "copies": 5,
+        "counted_bytes": "read+write"
+      }
+    },
+    {
+      "name": "copy_4t",
+      "unit": "GB/s",
+      "median": 65.03096177589134,
+      "samples": [
+        64.17758796689293,
+        64.843573221908,
+        65.33079972247093,
+        65.21835032987467
+      ],
+      "parameters": {
+        "array_MiB": 256,
+        "copies": 5,
+        "counted_bytes": "read+write"
+      }
+    },
+    {
+      "name": "copy_8t",
+      "unit": "GB/s",
+      "median": 69.80514710126393,
+      "samples": [
+        69.35593741959195,
+        70.22186235842256,
+        70.48838374032917,
+        69.3884318441053
+      ],
+      "parameters": {
+        "array_MiB": 256,
+        "copies": 5,
+        "counted_bytes": "read+write"
+      }
+    },
+    {
+      "name": "copy_20t",
+      "unit": "GB/s",
+      "median": 59.15528117965458,
+      "samples": [
+        59.16156000938831,
+        59.35305621310455,
+        59.149002349920856,
+        59.06624984811953
+      ],
+      "parameters": {
+        "array_MiB": 256,
+        "copies": 5,
+        "counted_bytes": "read+write"
+      }
+    },
+    {
+      "name": "dependent_pointer_chase",
+      "unit": "ns/load",
+      "median": 129.19888758649265,
+      "samples": [
+        129.19888758649265,
+        129.1581826210527,
+        129.80948686596403
+      ],
+      "parameters": {
+        "footprint_MiB": 256,
+        "cache_line_stride": 64,
+        "loads": 4194304
+      }
+    }
+  ],
+  "status": "ok",
+  "wall_seconds": 4.547270011999899
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:36:38.427082+00:00",
+  "label": "Windows-F-USB-NVMe",
+  "section": "storage",
+  "environment": {
+    "os": "Windows",
+    "kernel": "11",
+    "python": "3.12.12",
+    "numpy": "1.26.4",
+    "logical_cpus": 24,
+    "blas": [
+      {
+        "internal_api": "mkl",
+        "num_threads": 24,
+        "version": "2023.1-Product"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": {
+    "results": [
+      {
+        "name": "sequential_write",
+        "unit": "MB/s",
+        "median": 958.3775140920721,
+        "samples": [
+          956.2850596360904,
+          959.5307927951147,
+          958.3775140920721
+        ],
+        "parameters": {
+          "file_MiB": 1024,
+          "block_MiB": 8,
+          "queue_depth": 1,
+          "direct_io": true,
+          "durable_write": true
+        }
+      },
+      {
+        "name": "sequential_read",
+        "unit": "MB/s",
+        "median": 951.1636520635035,
+        "samples": [
+          951.1636520635035,
+          951.063648454574,
+          952.2676150009984
+        ],
+        "parameters": {
+          "file_MiB": 1024,
+          "block_MiB": 8,
+          "queue_depth": 1,
+          "direct_io": true,
+          "durable_write": true
+        }
+      },
+      {
+        "name": "random_read_4KiB_QD1",
+        "unit": "IOPS",
+        "median": 9437.53577092671,
+        "samples": [
+          9437.53577092671,
+          9460.781641645015,
+          9111.649742476351
+        ],
+        "parameters": {
+          "reads": 2048,
+          "file_MiB": 1024,
+          "queue_depth": 1,
+          "direct_io": true
+        }
+      }
+    ],
+    "temporary_file_removed": true,
+    "write_volume_GiB": 3
+  },
+  "status": "ok",
+  "wall_seconds": 7.421261500000583
+}

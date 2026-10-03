@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-03T03:37:19.865152+00:00",
+  "label": "Windows-NTFS-C",
+  "section": "filesystem",
+  "environment": {
+    "os": "Windows",
+    "kernel": "11",
+    "python": "3.12.12",
+    "numpy": "1.26.4",
+    "logical_cpus": 24,
+    "blas": [
+      {
+        "internal_api": "mkl",
+        "num_threads": 24,
+        "version": "2023.1-Product"
+      }
+    ]
+  },
+  "script_sha256": "cf5ce00172903675fdf5b91f12113fa19f1bc36df1f0c7d57c50d519ca2a9409",
+  "measurement": {
+    "results": [
+      {
+        "name": "create_small_files",
+        "unit": "files/s",
+        "median": 4424.397009976791,
+        "samples": [
+          4424.397009976791
+        ],
+        "parameters": {
+          "files": 200,
+          "bytes_each": 1024,
+          "fsync": false
+        }
+      },
+      {
+        "name": "stat_warm",
+        "unit": "files/s",
+        "median": 28670.135753850085,
+        "samples": [
+          26809.651475213825,
+          28558.781109286498,
+          28670.135753850085,
+          28885.454731389214,
+          29249.60147512903
+        ],
+        "parameters": {
+          "files": 200,
+          "warm_cache": true
+        }
+      }
+    ],
+    "temporary_files_removed": true
+  },
+  "status": "ok",
+  "wall_seconds": 0.11245030000009137
+}
