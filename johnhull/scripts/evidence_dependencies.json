@@ -1294,6 +1294,60 @@
         "report/tests/test_chooser_notebook.py",
         "report/tests/test_chooser_registry.py"
       ]
+    },
+    "28.1": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "6.1 符号付きのリスク係数と市場リスクの価格（§28.1、GE pp.671–674）",
+        "level": 3
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "6.1 符号付きのリスク係数と市場リスクの価格（§28.1、GE pp.671–674）",
+        "level": 3
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "risk_premium_loading",
+          "risk_premium_hedge",
+          "risk_premium_density",
+          "risk_premium_validation"
+        ]
+      },
+      "python_modules": [
+        "hullkit.risk_premium",
+        "hullkit.sde",
+        "hullkit._risk_premium_lesson"
+      ],
+      "data": [
+        "docs/validation/section-28-1/reference.json",
+        "docs/validation/section-28-1/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_risk_premium_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-28-1/reference.json",
+        "docs/validation/section-28-1/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-28-1",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_risk_premium.py",
+        "hullkit/tests/test_risk_premium_reference.py",
+        "hullkit/tests/test_risk_premium_numerics.py",
+        "hullkit/tests/test_risk_premium_lesson.py",
+        "report/tests/test_risk_premium_notebook.py",
+        "report/tests/test_risk_premium_registry.py"
+      ]
     }
   }
 }

@@ -53,10 +53,10 @@
 **Files:** registry/tests/counts/manifest/MODEL_INDEX/README; scripts/evidence_dependencies.json/verify_risk_premium_browser.cjs; browser証跡。
 **Interfaces:** chooser_validation直後4cards、182図/exotics70、28.1閉包risk_premium/sde/_risk_premium_lesson、fulltrace/密度/portfolio/印刷値/誤差棒。
 
-- [ ] Step 1: `assert KEYS <= {f.id for f in FIGURES}` の登録testを先に実行。Expected:未登録FAIL。
-- [ ] Step 2: registry/counts/dependency/API索引を更新。Expected:registry/report build tests PASS。
-- [ ] Step 3: `jupyter-book build johnhull/book`、`python -m report_builder.build`、`node johnhull/scripts/verify_risk_premium_browser.cjs`、1000px density/validationを目視。Expected:16states/16images、MathJax/数値/配置/改変拒否PASS。
-- [ ] Step 4: commit `Verify market risk lesson on Book and offline portal`、task-done:registry/report build tests。Expected:全PASS。
+- [x] Step 1: `assert KEYS <= {f.id for f in FIGURES}` の登録testを先に実行。Expected:未登録FAIL。
+- [x] Step 2: registry/counts/dependency/API索引を更新。Expected:registry/report build tests PASS。
+- [x] Step 3: `jupyter-book build johnhull/book`、`python -m report_builder.build`、`node johnhull/scripts/verify_risk_premium_browser.cjs`、1000px density/validationを目視。Expected:16states/16images、MathJax/数値/配置/改変拒否PASS。
+- [x] Step 4: commit `Verify market risk lesson on Book and offline portal`、task-done:registry/report build tests。Expected:全PASS。
 
 ### Task 4: D1・台帳・レビュー
 

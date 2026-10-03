@@ -35,6 +35,7 @@ from hullkit._nonstandard_american_lesson import _figures as nonstandard_america
 from hullkit._packages_lesson import _figures as packages_lesson_figures
 from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
 from hullkit._perpetual_american_lesson import _figures as perpetual_american_lesson_figures
+from hullkit._risk_premium_lesson import _figures as risk_premium_lesson_figures
 from hullkit._shout_lesson import _figures as shout_lesson_figures
 from hullkit._static_replication_lesson import _figures as static_replication_lesson_figures
 from hullkit._stochastic_volatility_lesson import (
@@ -1356,6 +1357,42 @@ FIGURES: list[FigureSpec] = [
         "64独立求積ケース、選択時期4例×524288経路。95%区間を比較。",
         lambda: chooser_lesson_figures()["chooser_validation"],
         practice="基準市場のT1=.1/.5/.9/.999999。MCはT1 spotと選ばれる条件付きvanilla価値、区間は平均の標本誤差。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "risk_premium_loading",
+        "exotics",
+        "符号付きリスクと期待収益",
+        "§28.1。μ=r+λsを負の係数も含めて比較。",
+        lambda: risk_premium_lesson_figures()["risk_premium_loading"],
+        practice="r=6%、λ=-.15/0/.2。sは符号付き、通常のvolatilityは|s|。単位は年^(-1/2)。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "risk_premium_hedge",
+        "exotics",
+        "共通リスクの局所的な相殺",
+        "同じBrownian因子の二証券のリスクと年率収益を金額比率で合算。",
+        lambda: risk_premium_lesson_figures()["risk_premium_hedge"],
+        practice="r=4%、λ=.25、w=(.6,.4)、s=(.2,-.3)。瞬間的な相殺で、満期までの固定hedgeではない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "risk_premium_density",
+        "exotics",
+        "P→Qのドリフト変更",
+        "P密度×dQ/dPがQ密度と一致。対数収益の分散は保存。",
+        lambda: risk_premium_lesson_figures()["risk_premium_density"],
+        practice="r=6%、λ=-.15、s=.3、T=2。対数収益平均P=-.06/Q=.03、分散=.18。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "risk_premium_validation",
+        "exotics",
+        "非正規化RNと直接Q標本",
+        "4市場×262144標本の割引終値、95%区間と独立Gaussian求積。",
+        lambda: risk_premium_lesson_figures()["risk_premium_validation"],
+        practice="f0=100、r=6%、T=2、seed281。重みは非正規化、区間は平均の標本誤差。",
         is_new=True,
     ),
     FigureSpec(

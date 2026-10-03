@@ -19,7 +19,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 70 public + 25 private modules as of 2026-10-03; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 71 public + 26 private modules as of 2026-10-03; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
 ## 現在地（2026-10-03、M25受入）
 
@@ -152,7 +152,7 @@ separate. No production dependency was added for G0/G1 core implementation.
 各巻に validation report、fingerprinted JSON/NPZ、artifact-only notebook、book
 symlinkがあり、各巻の `integration_and_reproducibility` gate は PASS。これは
 **model performance の承認ではない**。`release_manifest.json` の現行契約は portal
-**178 図/12 テーマ**で、監査第 4 便の 82 図に節単位受入 M2–M25 の共有 4 図×24 節が加わった（2026-10-03）。
+**182 図/12 テーマ**。監査第4便82図＋M2–M25共有4図×24節＋M26実装中の4図（2026-10-03、M26は受入検査前）。
 Jupyter Book は `book/_toc.yml` の root + 30 entries = 31 ページで、ページ数自体は
 manifest の契約値ではなく `book_name` の掲載のみが検証される。G8 で fresh artifact/notebook/
 report/book/test/lint を再検証し、最終結果と model risk を `johnhull/VALIDATION.md`
