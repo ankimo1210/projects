@@ -197,3 +197,6 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(1.1rem, 4vw, 2re
 .fig-card:has([id^="fig-static_"]) { grid-column: 1 / -1; min-width: 0; }
 .fig-card:has([id^="fig-alternative_"]) { grid-column: 1 / -1; min-width: 0; }
 .fig-card:has([id^="fig-stochvol_"]) { grid-column: 1 / -1; min-width: 0; }
+
+/* Factor risk: three hedge panels and twelve market labels need the full row. */
+.fig-card:has([id^="fig-factor_risk_"]) { grid-column: 1 / -1; min-width: 0; }

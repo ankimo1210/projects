@@ -27,6 +27,7 @@ from hullkit._cliquet_lesson import _figures as cliquet_lesson_figures
 from hullkit._compound_lesson import _figures as compound_lesson_figures
 from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
 from hullkit._exchange_lesson import _figures as exchange_lesson_figures
+from hullkit._factor_risk_lesson import _figures as factor_risk_lesson_figures
 from hullkit._forward_start_lesson import _figures as forward_start_lesson_figures
 from hullkit._gap_lesson import _figures as gap_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
@@ -1393,6 +1394,42 @@ FIGURES: list[FigureSpec] = [
         "4市場×262144標本の割引終値、95%区間と独立Gaussian求積。",
         lambda: risk_premium_lesson_figures()["risk_premium_validation"],
         practice="f0=100、r=6%、T=2、seed281。重みは非正規化、区間は平均の標本誤差。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "factor_risk_contributions",
+        "exotics",
+        "三因子の超過収益",
+        "§28.2 Example28.3の正負の寄与と、金利を含まない超過収益6%。",
+        lambda: factor_risk_lesson_figures()["factor_risk_contributions"],
+        practice="石油・金・指数：λ=(.2,-.1,.4)、s=(.05,.1,.15)。+1%-1%+6%=6%/年。総収益はr+6%。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "factor_risk_loading",
+        "exotics",
+        "符号付き係数と総期待収益",
+        "因子2の符号付きloadingと、正負のリスク価格で傾きが反転。",
+        lambda: factor_risk_lesson_figures()["factor_risk_loading"],
+        practice="r=4%は合成設定。その他の寄与7%にλ₂s₂を加える。係数を絶対値にしない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "factor_risk_hedge",
+        "exotics",
+        "二因子の局所的な相殺",
+        "三証券の金額比率で両因子を相殺し、瞬間的な収益をrへ揃える。",
+        lambda: factor_risk_lesson_figures()["factor_risk_hedge"],
+        practice="金額比率(.25,.25,.5)、r=4%。株数はwᵢ/fᵢで、固定株数の満期までの無リスク性は主張しない。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "factor_risk_validation",
+        "exotics",
+        "独立算術とAPIの照合",
+        "12合成市場の独立math.fsumと最終因子軸のAPIを比較。",
+        lambda: factor_risk_lesson_figures()["factor_risk_validation"],
+        practice="許容差1e-12。単因子縮約、無価格因子、SVD局所hedge、4直交回転、保存4改変とAPI4変異を検査。",
         is_new=True,
     ),
     FigureSpec(
