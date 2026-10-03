@@ -2553,6 +2553,18 @@ American exercise、smile、確率的金利・変動率、取引費用は含み�
 
 **回答の手掛かり：** $T_1$ 給付、内側の単調性、$S^*$、常時外側put行使、標本誤差を区別します。"""))
 
+cells.append(md('### 4.15 Chooser：後からcallかputを選ぶ（§26.8、GE pp.619–620）\n\n#### 4.15.1 選択時点と決済時点\n\nT₁で、同じ行使価格K・満期T₂の欧州call/putのどちらを保有するか選びます。\nT₁の価値は $\\max(c_1,p_1)$、選んだオプションの給付はT₂に決済します。\nT₁に価値max(c₁,p₁)を現金として受け取る契約ではありません。\n定数r,q,σのリスク中立GBM、連続配当利回りqを仮定します。\n原典には印刷数値例がなく、以下はすべて合成例です。\n'))
+cells.append(code('from hullkit.chooser import chooser_price\nfrom hullkit._chooser_lesson import _figures as chooser_figures\nchooser_plots = chooser_figures()\nchooser_value = chooser_price(100, 100, .05, .2, .5, 1, .02)\nprint(f"chooser={chooser_value:.6f}; S=K=100, r=5%, q=2%, σ=20%, T1=.5, T2=1")\nassert abs(chooser_value - 13.344280448069238) < 1e-9\n'))
+cells.append(md('#### 4.15.2 Put–call parityと選択境界\n\n$\\tau=T_2-T_1$ とし、parityから\n$$p_1=c_1+Ke^{-r\\tau}-S_1e^{-q\\tau},\\qquad\n\\max(c_1,p_1)=c_1+e^{-q\\tau}\\max(H-S_1,0),\\quad H=Ke^{-(r-q)\\tau}.$$\nS₁>Hならcall、S₁<Hならput、等号なら両者同価値です。\nHはKと区別し、このモデルではσに依存しません。基準例H=98.511194。\n図の縦軸はT₁の条件付き価値であり、T₂の給付とは異なります。\n'))
+cells.append(code('chooser_plots["chooser_choice"].show()'))
+cells.append(md('#### 4.15.3 配当調整を含む複製\n\n現在価値は、満期T₂・strike Kのcall一枚と、満期T₁・strike Hのputを\n$w=e^{-q\\tau}$ 枚持つパッケージです。\n$$V_0=c(S_0,K,T_2)+e^{-q\\tau}p(S_0,H,T_1).$$\nq=0ならput一枚、q≠0では枚数もstrikeも調整します。基準例w=0.990050。\n図の追加put脚は独立chooser求積からcall価値を引いた残差で計算し、複製の価格と数値照合しました。\n通貨S,Kをともにa倍すると価格もa倍です。\n'))
+cells.append(code('chooser_plots["chooser_package"].show()'))
+cells.append(md('#### 4.15.4 選択を遅らせる権利\n\n$T_1=0$ では $\\max(c_0,p_0)$、$T_1=T_2$ ではstraddle $c_0+p_0$。\n同じT₂の二つのclaimを比較するので、選択を遅らせるほど価値は減りません。\n$$\\max(c_0,p_0)\\le V_0\\le c_0+p_0.$$\nσ=0では将来株価が決定的で、T₁に関わらず今の大きいvanilla価値。\nT₂=0ならT₁=0でもあり、$|S_0-K|$ です。APIはこれらの境界と市場broadcastを含みます。\n'))
+cells.append(code('chooser_plots["chooser_timing"].show()'))
+cells.append(md('#### 4.15.5 独立条件付き求積とMonte Carlo\n\nhullkitを呼ばないerfc vanillaでT₁の条件付きcall/putを計算し、\n$$V_0=e^{-rT_1}E^Q[\\max(c_1(S_1),p_1(S_1))]$$\nを対数正規密度で積分します。選択境界とinner vanillaの狭い遷移を区間分割し、\nT₁/T₂=.999999や低σ、負のr/q、端点を含む64ケースを検証します。\nMCはseed268・524288経路×4、T₁株価を標本化し条件付きvanilla価値を平均する方法です。\n二時点のnested MCではありません。95%区間は平均の標本誤差であり、求積誤差・モデル誤差を含みません。\n'))
+cells.append(code('for chooser_t1 in (.1, .5, .9, .999999):\n    print(f"T1={chooser_t1}: chooser={chooser_price(100,100,.05,.2,chooser_t1,1,.02):.6f}")\nchooser_plots["chooser_validation"].show()\n'))
+cells.append(md('#### 4.15.6 範囲と理解の確認\n\n有限実数S,K>0、σ≥0、0≤T₁≤T₂。無効入力・表現不能な計算はValueError。\n原典が最後に触れる、callとputのstrikeや満期が異なるcomplex chooserはこのパッケージにならず、対象外です。\nAmerican exercise、smile、確率的金利/変動率、離散配当、取引費用も対象外。\n\n1. T₁の選択価値とT₂の給付の違いは何ですか。\n2. q≠0でstrikeだけを調整してput一枚を持つと、どの係数が欠けますか。\n3. 選択境界がKではないのはなぜですか。\n4. 今すぐ選択と満期選択の価格は何に一致しますか。\n5. MCの95%区間はどの不確実性を測っていますか。\n\n**回答の手掛かり：** 時点、w、parity、max/straddle、標本誤差を区別します。\n'))
+
 cells.append(
     md(r"""## 5. マルチンゲールと測度（Ch.28）
 
