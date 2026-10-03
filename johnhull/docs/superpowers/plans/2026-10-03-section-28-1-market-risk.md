@@ -63,8 +63,8 @@
 **Files:** build_risk_premium_acceptance_record.py/update_risk_premium_ledger.py/tests; 25D1; SECTION_28_1_ACCEPTANCE/REVIEW_2026-10-03.md; ledger/summary/ROADMAP/VALIDATION/EVIDENCE_POLICY。
 **Interfaces:** m26-check.json、25採用D1path/hash、RP01–RP06、26/280/P3 1/37。
 
-- [ ] Step 1: gate/台帳不変、stale source/不完全browser/mirror欠落/必須hash個別削除/採用path改変testsを先に実行。`del changed[category][name]`。Expected:missing gate FAIL。
-- [ ] Step 2: clean Task3 commitから25節をD1再検査。旧24節はdirect redrawnを基準、26.8は初回redraw。`--records-dir docs/validation/d1-recheck`、C:/F:接続。Expected:browser/runtime/pytest/復元PASS。
-- [ ] Step 3: 現行依存から必須集合を導き、gate/台帳/状況docsを更新。4--check、ruff、全suite、台帳--check-artifacts。Expected:受入26/280、全PASS。
-- [ ] Step 4: commit `Accept Hull market price of risk and start P3`、task-done全suite。fresh最終review一本、重要指摘は一度RED→GREEN+全suite、Minor保留、Declinedを全件Ruling。Expected:重要指摘解消。
-- [ ] Step 5: review/実行台帳を保存commit、release--require-trackedとclean treeを確認しown workspaceだけ削除。Expected:統合3選択肢とターン末尾のP0–P8ロードマップ。
+- [x] Step 1: gate/台帳不変、stale source/不完全browser/mirror欠落/必須hash個別削除/採用path改変testsを先に実行。`del changed[category][name]`。Expected:missing gate FAIL。
+- [x] Step 2: clean Task3 commitから25節をD1再検査。旧24節はdirect redrawnを基準、26.8は初回redraw。`--records-dir docs/validation/d1-recheck`、C:/F:接続。Expected:browser/runtime/pytest/復元PASS。
+- [x] Step 3: 現行依存から必須集合を導き、gate/台帳/状況docsを更新。4--check、ruff、全suite、台帳--check-artifacts。Expected:受入26/280、全PASS。
+- [x] Step 4: commit `Accept Hull market price of risk and start P3`、task-done全suite。fresh最終review一本、重要指摘は一度RED→GREEN+全suite、Minor保留、Declinedを全件Ruling。Expected:重要指摘解消。
+- [x] Step 5: review/実行台帳を保存commit、release--require-trackedとclean treeを確認しown workspaceだけ削除。Expected:統合3選択肢とターン末尾のP0–P8ロードマップ。
