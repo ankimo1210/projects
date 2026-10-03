@@ -1,0 +1,44 @@
+{
+  "artifact_sha256": "dfa6005d6504ea55a9139ed9b9c07ec0ac30e535e32fdb0bbbd8da8865d8fdbe",
+  "case_count": 12,
+  "max_api_error": 5.551115123125783e-17,
+  "max_density_error": 2.220446049250313e-16,
+  "max_mc_standard_errors": 2.7629722872829916,
+  "max_portfolio_error": 0.0,
+  "max_production_weight_error": 0.0,
+  "max_quadrature_error": 6.8836575903643855e-09,
+  "max_weight_normalization_error": 2.220446049250313e-16,
+  "mc_paths": 262144,
+  "negative_controls": [
+    {
+      "mutation": "printed pin",
+      "rejected": true
+    },
+    {
+      "mutation": "power drift",
+      "rejected": true
+    },
+    {
+      "mutation": "RN normalization",
+      "rejected": true
+    },
+    {
+      "mutation": "measure density",
+      "rejected": true
+    }
+  ],
+  "power_count": 6,
+  "printed_pins": {
+    "example_28_1_lambda": 0.19999999999999996,
+    "example_28_2_lambda": -0.15,
+    "example_28_2_return": 0.015
+  },
+  "section": "28.1",
+  "source_sha256": {
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
+    "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+    "scripts/build_risk_premium_reference.py": "bb7ed0067e6153b566e0fb66a526a934a513a107872a9091a2c24c14f70df5d6",
+    "scripts/verify_risk_premium_numerics.py": "599d19d28c04cc1c2ea7faf8504447c1d2df8eb7face74e0965413533542c60a"
+  },
+  "status": "PASS"
+}
