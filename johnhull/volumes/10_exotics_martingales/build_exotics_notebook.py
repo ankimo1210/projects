@@ -2737,6 +2737,74 @@ cells.append(
 """)
 )
 
+# M27: several state variables in their chosen risk basis.
+cells.extend([
+    md(r"""## 6A. 複数状態変数（§28.2）
+
+### 6A.1 最後の軸は因子、合計は超過収益
+
+Hull GE pp.674–675、式28.11–28.13。状態変数と時刻に依存する係数でも、瞬間ごとに
+\[
+\frac{df}{f}=\mu\,dt+\sum_{i=1}^{n}s_i\,dz_i,\qquad
+\mu-r=\sum_{i=1}^{n}\lambda_i s_i.
+\]
+$s_i$ は証券の**符号付き**拡散係数。$\lambda_i,s_i$ は年$^{-1/2}$、積と$\mu,r$は年$^{-1}$。
+同じリスク基底の$\lambda$と$s$を渡す。因子が1本なら前節の$\lambda s$へ縮約する。
+APIの最後の軸は因子で、先行軸が合成市場のbatch。寄与は因子軸を保持し、超過収益はその軸だけを合計する。"""),
+    code(r"""from hullkit.factor_risk import factor_contributions, factor_excess_return, factor_required_return
+from hullkit._factor_risk_lesson import _figures as factor_figures, _load_reference as factor_reference
+factor_plots = factor_figures()
+factor_data = factor_reference()
+print(f"One-factor reduction: excess={factor_excess_return([.2], [-.3]):.6%}")"""),
+    md(r"""### 6A.2 Example 28.3：6%を総期待収益としない
+
+石油・金・株価指数のリスク価格は$(.2,-.1,.4)$、証券の係数は$(.05,.1,.15)$。
+\[
+(.2)(.05)+(-.1)(.1)+(.4)(.15)=.01-.01+.06=.06.
+\]
+印刷値は**無リスク金利に対する超過収益6%/年**。金の寄与は−1%で、他のリスクを減らす依存には低い要求収益が対応する。
+総期待収益は$r+6\%$。ここで追加する$r=4\%$なら10%という計算は**教材の合成例**であり、Hullの印刷金利ではない。
+他の変数が影響しても、そのリスク価格がすべてゼロなら6%のまま。追加因子の価格がゼロでなければ結論は変わる。"""),
+    code(r"""factor_plots["factor_risk_contributions"].show()
+print(f"Example 28.3: excess={factor_excess_return([.2,-.1,.4],[.05,.1,.15]):.6%}")
+print(f"Synthetic r=4%: total={factor_required_return(.04,[.2,-.1,.4],[.05,.1,.15]):.6%}")"""),
+    md(r"""### 6A.3 正・負・ゼロの寄与
+
+$\lambda_i s_i>0$なら要求超過収益を増やし、負なら減らし、ゼロなら寄与しない。
+負のloadingを絶対値に置き換えてはいけない。総volatilityは、独立Brownian基底なら$\sqrt{\sum s_i^2}$。
+以下では他の2因子を固定し$s_2$を変える。$\lambda_2$の符号で傾きが反転し、$s_2=0$では両曲線が一致する。
+無価格の因子は拡散が大きくても超過収益に寄与しないが、volatilityをゼロにするわけではない。"""),
+    code(r"""factor_plots["factor_risk_loading"].show()"""),
+    md(r"""### 6A.4 二因子を相殺する局所ポートフォリオ
+
+独立2因子の3証券A/B/Cに、係数$(.2,0),(0,.2),(-.1,-.1)$を設定する。
+**現在の金額比率**$w=(.25,.25,.5)$なら両因子とも$.25(.2)-.5(.1)=0$。
+$r=4\%,\lambda=(.3,-.2)$で各証券の期待収益は$(10\%,0\%,3\%)$、金額加重収益は4%。
+これは瞬間的な自己金融hedge。株数は$w_i/f_i$であり、固定した株数が満期まで無リスクであるとは言わない。
+独立参照の手計算weightsを、数値検査では拡散行列のSVD零空間から解き直す。"""),
+    code(r"""factor_plots["factor_risk_hedge"].show()"""),
+    md(r"""### 6A.5 基底の規約と独立検査
+
+教材の線形代数は独立Brownian基底。直交行列$Q$で$s'=Qs,\lambda'=Q\lambda$と**両方**を回転すれば
+$\lambda'^Ts'=\lambda^Ts$、$\|s'\|=\|s\|$。因子別の配分は基底に依存するが合計は不変。
+相関状態変数の各spot volatilityをそのまま$s$としない。$\lambda$と$s$は同一の規約で較正した係数で、相関を内積へ二重に掛けない。
+一般の相関行列の白色化・推定・多因子の測度変更は§28.5以降で扱う。
+
+独立参照はhullkitを呼ばず`math.fsum`で12合成市場を再計算。APIと差$10^{-12}$以下、4直交回転、二因子hedge、無価格の追加因子、単因子縮約を照合する。
+保存値4改変と実API4変異（絶対値化・因子欠落・全batch合計・金利二重加算）を拒否する。通常の教材ビルドでは検証計算を再実行しない。"""),
+    code(r"""factor_plots["factor_risk_validation"].show()
+for row in factor_data["rotations"]:
+    print(f"Orthogonal basis angle={row['angle']:.6f}: excess={row['excess']:.6%}, volatility={row['volatility']:.8f}")"""),
+    md(r"""### 6A.6 APT・CAPMと適用の限界
+
+式28.13はAPTと関係し、連続時間CAPMはその特殊例。**CAPMが成り立つなら**市場の収益リスクと相関するsystematic riskに超過収益が要求され、無相関のnonsystematic riskの価格はゼロ。
+一般の多因子モデルで「市場と無相関なら必ず無価格」と断定しない。合成CAPM例は市場因子の価格$.3$、独立な固有因子の価格0、volatility$.2$で、超過収益$.06\rho$となる。
+
+APIは無配当・無収入の取引証券の瞬間的なドリフト関係。実市場の期待収益や$\lambda$の推定器ではない。
+因子数は正整数で一致させ、非有限・非実数・overflowを拒否する。空batchは可、空因子やscalar因子は不可。
+市場較正、多因子測度変更、確率金利・配当補正を本節の受入とはしない。"""),
+])
+
 cells.append(
     md(r"""## 7. ニュメレールの選択（§28.4）
 

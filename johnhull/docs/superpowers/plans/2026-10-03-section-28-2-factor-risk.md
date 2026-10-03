@@ -37,10 +37,10 @@
 
 **Files:** _factor_risk_lesson.py/test、build_exotics_notebook.py/exotics.ipynb、verify_factor_risk_notebook.py/report test、歴史notebook tests。
 **Interfaces:** 4factor_risk figures、START='## 6A. ',END='## 7. '、235セル。
-- [ ] Step 1: `assert set(_figures())==KEYS`とhash/保存図不変tests。Expected: missing lesson FAIL。
-- [ ] Step 2: 6A.1式/単位、6A.2印刷例、6A.3正負loading、6A.4局所hedge、6A.5基底/独立検査、6A.6CAPM/限界の11セルを挿入し新セルのみ実行。Expected: 235セル、旧224一致。
-- [ ] Step 3: 4notebook改変を拒否、fresh全文出力を照合。歴史pytestは新6A範囲を除く。Expected: notebook/lesson/歴史tests、--check PASS。
-- [ ] Step 4: commit `Teach factor contributions and local risk cancellation`、task-done対象tests。Expected: 全PASS。
+- [x] Step 1: `assert set(_figures())==KEYS`とhash/保存図不変tests。Expected: missing lesson FAIL。
+- [x] Step 2: 6A.1式/単位、6A.2印刷例、6A.3正負loading、6A.4局所hedge、6A.5基底/独立検査、6A.6CAPM/限界の11セルを挿入し新セルのみ実行。Expected: 235セル、旧224一致。
+- [x] Step 3: 4notebook改変を拒否、fresh全文出力を照合。歴史pytestは新6A範囲を除く。Expected: notebook/lesson/歴史tests、--check PASS。
+- [x] Step 4: commit `Teach factor contributions and local risk cancellation`、task-done対象tests。Expected: 全PASS。
 
 ### Task 3: Book・portal・実画面
 

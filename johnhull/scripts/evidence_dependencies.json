@@ -1348,6 +1348,60 @@
         "report/tests/test_risk_premium_notebook.py",
         "report/tests/test_risk_premium_registry.py"
       ]
+    },
+    "28.2": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "6A. 複数状態変数（§28.2）",
+        "level": 2
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "6A. 複数状態変数（§28.2）",
+        "level": 2
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "factor_risk_contributions",
+          "factor_risk_loading",
+          "factor_risk_hedge",
+          "factor_risk_validation"
+        ]
+      },
+      "python_modules": [
+        "hullkit.factor_risk",
+        "hullkit.risk_premium",
+        "hullkit._factor_risk_lesson"
+      ],
+      "data": [
+        "docs/validation/section-28-2/reference.json",
+        "docs/validation/section-28-2/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_factor_risk_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-28-2/reference.json",
+        "docs/validation/section-28-2/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-28-2",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_factor_risk.py",
+        "hullkit/tests/test_factor_risk_reference.py",
+        "hullkit/tests/test_factor_risk_numerics.py",
+        "hullkit/tests/test_factor_risk_lesson.py",
+        "report/tests/test_factor_risk_notebook.py",
+        "report/tests/test_factor_risk_registry.py"
+      ]
     }
   }
 }

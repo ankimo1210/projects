@@ -1,0 +1,46 @@
+{
+  "section": "28.2",
+  "status": "PASS",
+  "base": "010a2bc3",
+  "cells": 235,
+  "lesson_cells": 11,
+  "preserved_cells_outside_lesson": 224,
+  "saved_figures": [
+    "factor_risk_contributions",
+    "factor_risk_hedge",
+    "factor_risk_loading",
+    "factor_risk_validation"
+  ],
+  "negative_controls": [
+    {
+      "mutation": "old prose",
+      "rejected": true
+    },
+    {
+      "mutation": "new heading",
+      "rejected": true
+    },
+    {
+      "mutation": "saved plot",
+      "rejected": true
+    },
+    {
+      "mutation": "post heading",
+      "rejected": true
+    }
+  ],
+  "source_sha256": {
+    "scripts/verify_factor_risk_notebook.py": "ad939ec67f2e555b8c2107f21cbe0dd2d90eac61f05d038f4d82ce5c37ff5a6e",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_factor_risk_lesson.py": "0fe88e08d9e398def9073e6cedc6656f784ada6d77bcbf9edf8fa58bb5ca6319",
+    "hullkit/src/hullkit/factor_risk.py": "efa2391d2f722c94f0be244764245c3870c8fd121a16de937f44f7158774eb34",
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
+    "docs/validation/section-28-2/reference.json": "297b9d2c20ccba75b81c12ea59e6e2b292269e7f3a3dcd0421d17fc0dff335bb",
+    "docs/validation/section-28-2/numerical-check.json": "0a3849aa41e74583fc9dd2b7e2ee5e81ba7d7f09c0613733994bac03609f87fa",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "1789658e883e2314bc239dcfd8abad8dc55beb59e844aaa1e6e1e7fa3bc0c878",
+    "volumes/10_exotics_martingales/exotics.ipynb": "4255516cb6fe6f75281c1f995dcfd6a49d319a1257340269185e58c419f86b09"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "4255516cb6fe6f75281c1f995dcfd6a49d319a1257340269185e58c419f86b09"
+  }
+}
