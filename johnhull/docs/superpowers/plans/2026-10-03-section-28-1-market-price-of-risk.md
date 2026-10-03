@@ -18,9 +18,9 @@
 - [x] commit `Implement Hull market price of risk API and independent references`。
 
 ### Task 2: 4共有図・教材
-- [ ] `_market_price_of_risk_lesson._figures()` とhashガード。
-- [ ] vol10 §6.1–6.6を挿入して新セルを実行。旧213セル保存。
-- [ ] notebookゲートと負の対照。歴史M24/M25 pytestは新§6.xだけを除く。
+- [x] `_market_price_of_risk_lesson._figures()` とhashガード。
+- [x] vol10 §6.1–6.6を挿入して新セルを実行。旧213セル保存。
+- [x] notebookゲートと負の対照。歴史M19–M25 pytestは新§6.xだけを除く。
 
 ### Task 3: Portal・Book・実画面
 - [ ] registry・件数・API索引・依存を更新。
