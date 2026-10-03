@@ -30,7 +30,7 @@
   "section": "26.8",
   "source_sha256": {
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
-    "hullkit/src/hullkit/chooser.py": "a7f60a74d119e5effc4cfbd28c8d226cd87b243599d571b8375d989e98261425",
+    "hullkit/src/hullkit/chooser.py": "b40a21b71746d58c7fc0b838c648820beb4c66f228ba45d9ccaffdb7b9ec55fe",
     "scripts/build_chooser_reference.py": "e0e9171742567db97f01f01d951fbccd1dc17133117b8990db4b9aac3a1e715d",
     "scripts/verify_chooser_numerics.py": "36ad7566203483c37df70c44a3193ddb73775ef42c3bd44bf5b02dc829ce7733"
   },

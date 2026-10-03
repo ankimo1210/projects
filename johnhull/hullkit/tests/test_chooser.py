@@ -93,3 +93,28 @@ def test_incompatible_broadcast_is_rejected():
 
 def test_representable_large_positive_rate_limit():
     assert api()(**{**MARKET, "r": 10000}) == pytest.approx(100 * math.exp(-0.02), abs=1e-10)
+
+
+@pytest.mark.parametrize("field", MARKET)
+@pytest.mark.parametrize("complex_type", [np.complex64, np.complex128])
+def test_numpy_complex_market_inputs_in_object_arrays_are_rejected(field, complex_type):
+    value = np.array([complex_type(MARKET[field] + 0.3j)], dtype=object)
+    with pytest.raises(ValueError):
+        api()(**{**MARKET, field: value})
+
+
+@pytest.mark.parametrize("complex_type", [np.complex64, np.complex128])
+@pytest.mark.parametrize("mixed", [False, True])
+def test_object_complex_scalar_and_mixed_zero_imaginary_inputs_are_rejected(complex_type, mixed):
+    value = complex_type(100 + 0j)
+    value = np.array([100, value] if mixed else value, dtype=object)
+    with pytest.raises(ValueError):
+        api()(**{**MARKET, "K": value})
+
+
+def test_real_object_inputs_keep_broadcast_prices():
+    values = api()(**{**MARKET, "S": np.array([[80], [120]], dtype=object), "K": [90, 100]})
+    assert values.shape == (2, 2)
+    for i, s in enumerate((80, 120)):
+        for j, k in enumerate((90, 100)):
+            assert values[i, j] == pytest.approx(api()(**{**MARKET, "S": s, "K": k}))
