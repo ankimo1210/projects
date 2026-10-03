@@ -1298,13 +1298,13 @@
     "28.1": {
       "notebook": {
         "path": "volumes/10_exotics_martingales/exotics.ipynb",
-        "heading": "6.1 符号付きのリスク係数と市場リスクの価格（§28.1、GE pp.671–674）",
-        "level": 3
+        "heading": "6. 市場リスクの価格 λ（§28.1）",
+        "level": 2
       },
       "book": {
         "page": "book/_build/html/notebooks/10_exotics.html",
-        "heading": "6.1 符号付きのリスク係数と市場リスクの価格（§28.1、GE pp.671–674）",
-        "level": 3
+        "heading": "6. 市場リスクの価格 λ（§28.1）",
+        "level": 2
       },
       "portal": {
         "page": "report/site/exotics.html",
