@@ -1,0 +1,63 @@
+{
+  "api_excess_returns": [
+    0.06,
+    -0.06,
+    0.0,
+    0.0,
+    -0.06,
+    0.06,
+    0.06,
+    -0.06,
+    0.0,
+    0.0,
+    -0.06,
+    0.06
+  ],
+  "artifact_sha256": "297b9d2c20ccba75b81c12ea59e6e2b292269e7f3a3dcd0421d17fc0dff335bb",
+  "case_count": 12,
+  "max_api_error": 6.938893903907228e-18,
+  "max_hedge_error": 2.7755575615628914e-17,
+  "max_rotation_error": 2.7755575615628914e-17,
+  "negative_controls": [
+    {
+      "mutation": "printed excess",
+      "rejected": true
+    },
+    {
+      "mutation": "case total",
+      "rejected": true
+    },
+    {
+      "mutation": "hedge money fraction",
+      "rejected": true
+    },
+    {
+      "mutation": "rotated loading",
+      "rejected": true
+    },
+    {
+      "mutation": "API absolute loading",
+      "rejected": true
+    },
+    {
+      "mutation": "API drop last factor",
+      "rejected": true
+    },
+    {
+      "mutation": "API sum all axes",
+      "rejected": true
+    },
+    {
+      "mutation": "API add rate twice",
+      "rejected": true
+    }
+  ],
+  "section": "28.2",
+  "source_sha256": {
+    "hullkit/src/hullkit/factor_risk.py": "efa2391d2f722c94f0be244764245c3870c8fd121a16de937f44f7158774eb34",
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
+    "scripts/build_factor_risk_reference.py": "48d137cf1489e5b1d72fb62faddfa42fa8ea8c4ea0af438dd8cd66e3e5e71d41",
+    "scripts/verify_factor_risk_numerics.py": "cf24ebb58ec82a4ef2a9cf089860b913d634d54ce87a3b61a14bd9bd11fc14c1"
+  },
+  "status": "PASS"
+}

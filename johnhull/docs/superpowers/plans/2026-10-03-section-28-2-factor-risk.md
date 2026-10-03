@@ -28,10 +28,10 @@
 
 **Files:** hullkit/src/hullkit/factor_risk.py、hullkit/tests/test_factor_risk{,_reference,_numerics}.py、scripts/build_factor_risk_reference.py/verify_factor_risk_numerics.py、section-28-2 reference/numerical-check。
 **Interfaces:** 3factor APIと参照printed_pins/cases/hedge/rotations/figure、数値hash。
-- [ ] Step 1: `assert factor_excess_return([.2,-.1,.4],[.05,.1,.15])==approx(.06)`、因子不一致、complex/overflow/空因子/batch testsを作る。Run `pytest johnhull/hullkit/tests/test_factor_risk.py -q`。Expected: missing API FAIL。
-- [ ] Step 2: `_real_inputs`で検査しfactor長を一致、最後の軸の積を返し、np.sum(axis=-1)、rを加える。Expected: API tests PASS。
-- [ ] Step 3: `math.fsum`と独立参照12例・3証券hedge・4回転を保存、数値gateはAPIとSVD局所hedgeを検査する。Expected: reference/numeric/AST独立性tests、2--check PASS。
-- [ ] Step 4: commit `Implement multi-factor signed risk premiums`、task-done 3tests+reference independence。Expected: 全PASS。
+- [x] Step 1: `assert factor_excess_return([.2,-.1,.4],[.05,.1,.15])==approx(.06)`、因子不一致、complex/overflow/空因子/batch testsを作る。Run `pytest johnhull/hullkit/tests/test_factor_risk.py -q`。Expected: missing API FAIL。
+- [x] Step 2: `_real_inputs`で検査しfactor長を一致、最後の軸の積を返し、np.sum(axis=-1)、rを加える。Expected: API tests PASS。
+- [x] Step 3: `math.fsum`と独立参照12例・3証券hedge・4回転を保存、数値gateはAPIとSVD局所hedgeを検査する。Expected: reference/numeric/AST独立性tests、2--check PASS。
+- [x] Step 4: commit `Implement multi-factor signed risk premiums`、task-done 3tests+reference independence。Expected: 全PASS。
 
 ### Task 2: 共有教材・旧224セル保持
 
