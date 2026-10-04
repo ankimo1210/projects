@@ -48,7 +48,7 @@
 ### Task 4: 28D1・台帳・最終レビュー・統合
 
 **Files:** 統合gate/ledger updaterとtests、28D1、受入/review/ROADMAP/P3_STATUS。
-- [ ] Step 1: fail-before-write/source/artifact/両保管庫/path/matrix tests。Expected: gate未存在FAIL。
-- [ ] Step 2: cleancommitから28D1、source12要点をNC01–06/5軸へ照合、全suite。Expected: 29/277/P3 4/37。
-- [ ] Step 3: 1fresh finalreview、重要RED→GREEN+全suite、minor/ruling保存。Expected: merge阻害なし。
-- [ ] Step 4: main統合後検証/push、次§28.5へ。Expected: live remote一致、P3全体active。
+- [x] Step 1: fail-before-write/source/artifact/両保管庫/path/matrix tests。Expected: gate未存在FAIL。
+- [x] Step 2: cleancommitから28D1、source12要点をNC01–06/5軸へ照合、全suite。Expected: 29/277/P3 4/37。
+- [x] Step 3: 1fresh finalreview、重要RED→GREEN+全suite、minor/ruling保存。Expected: merge阻害なし。
+- [x] Step 4: main統合後検証/push、次§28.5へ。Expected: live remote一致、P3全体active。

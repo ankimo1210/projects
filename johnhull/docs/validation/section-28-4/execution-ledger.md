@@ -18,3 +18,4 @@ Final: Ruling: 全16新表示/旧28節の再描画・両保管庫復元はexecut
 Final: Ruling: 全suite/release/lintはexecutorのfresh出力を採用する — 全4125/6・ruff21・strictreleaseをrootが実行し、独立96tests/4checks/probesで補強 — 誤りなら広い回帰を見逃す。
 Final: Ruling: M30/TN14/TN19/元XLS/LMM/flexicapは後続P3の準備・未受入として保持する — 取得と独立scratchを正式五軸受入へ昇格させない — 誤りなら未完実装/原典入力の受入を水増しする。
 Final: Ruling: main統合後の一致とremote到達はexecutorがFF後にfresh検証して判断する — reviewerの固定HEAD/readonlyを統合完了の証拠に使わない — 誤りなら未到達commitや現行配布物差を見逃す。
+Task 4: complete (commits c81160b..f8d57ef, tests: pytest -q /home/kazumasa/projects/johnhull/report/tests/test_numeraire_acceptance_record.py /home/kazumasa/projects/johnhull/report/tests/test_numeraire_ledger_update.py /home/kazumasa/projects/johnhull/report/tests/test_section_ledger.py → 55 passed in 13.36s)

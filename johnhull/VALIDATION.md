@@ -815,3 +815,7 @@ HW Q状態のintegral/tower RED→GREEN・既存option/較正影響確認、63�
 全hullkit+report 4,125 passed・6 skipped・既存warnings2（213.52s）。15 gate/ledger tests PASS、受入29/未評価277、P3 4/37。freshレビュー・main統合は後続。
 
 M29独立最終レビューCritical0/Important0/Minor3、96tests/4--check/100条件付きprobe/42不正入力/4画像 PASS。Minor3は再現条件と限界をレビュー文書に保存。main統合は後続。
+
+## main統合（2026-10-04）
+
+M29受入commit f8d57ef4をmainへfast-forward統合・pushし、live origin/main一致を確認。main fresh全suite4,125 passed/6 skipped/既存warnings2（222.54s）、Book/portal再build・統合gate/台帳成果物/両保管庫/tracked release PASS。Minor3を記録。次はM30 §28.5、P3 4/37、残33節。
