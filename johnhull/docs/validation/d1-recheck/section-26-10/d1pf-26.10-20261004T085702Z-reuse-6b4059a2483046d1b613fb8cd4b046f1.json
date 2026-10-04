@@ -1,0 +1,568 @@
+{
+  "schema_version": 2,
+  "kind": "johnhull-section-recheck",
+  "status": "PASS",
+  "run_id": "d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1",
+  "created_at": "2026-10-04T08:57:36.753858+00:00",
+  "commit": "39f47b32bc84116c4c0b31bd9e8668ba5f19a13c",
+  "dirty": false,
+  "section_id": "26.10",
+  "decision": "redrawn",
+  "reasons": [
+    "portal_assets changed"
+  ],
+  "dependency_fingerprint": {
+    "section_id": "26.10",
+    "rules": {
+      "fingerprint_schema": 1,
+      "normalizer_version": 1,
+      "normalization": [
+        "Plotly div UUIDs are renamed by order of first appearance within a slice",
+        "Sphinx auto-generated anchor ids (id<N>) are renamed by order of first appearance",
+        "An inline plotly.js bundle is replaced by its sha256 and fingerprinted as a shared asset",
+        "Notebook cell ids and execution counts are dropped (not rendered by Book or portal)",
+        "Imported package __init__ modules and their static imports are included"
+      ]
+    },
+    "components": {
+      "notebook_slice": "d8f94ea741cfc385b4b92179da19e136ecfdc562cd9446506e89dd478684765d",
+      "notebook_shared_assets": [
+        "cef0e322ca434b712776e98b2709050fd54c53187afdbf4bfd04722041c2f3ee"
+      ],
+      "book_section": "46a6018b0d98ea515745c661cf7ca8854120e8f306af242b3f93c27a7b9a3ee2",
+      "book_assets": {
+        "local": {
+          "book/_build/html/_static/clipboard.min.js": "261ffa06f381039cf7d18984d1364c59f3c2b9b60b1fa05d5f9c8c152e4d5be5",
+          "book/_build/html/_static/copybutton.css": "0f7c9f303bd3058bdc9db7263fe560c0a41f3526729ce1f00ccab527724c5476",
+          "book/_build/html/_static/copybutton.js": "89ee4163ba2fdd47404883ebc81bf93f696f6ab02aa5795331a8ff7161e9e256",
+          "book/_build/html/_static/design-tabs.js": "de2467cfca5bb555043369f1eea82c9cd794e70fa0444f216aa4ebb18cefc9f0",
+          "book/_build/html/_static/doctools.js": "81cb2da3c284e429a1a63ab28a20b7e30bceb8eb1556a154c8cbac0b4ce7795b",
+          "book/_build/html/_static/documentation_options.js": "47b8afcb442c0349307d7c464ed881d903dba4271c8428d44c3c3f78aa1af20c",
+          "book/_build/html/_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css": "11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e",
+          "book/_build/html/_static/pygments.css": "66f472fe9022ecdf197c5abc2b437f123c349c85f8741219a42963c77eb14920",
+          "book/_build/html/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+          "book/_build/html/_static/scripts/bootstrap.js": "f4b2b6f5d4bf7ebd727eec8f512a3b419ba97dfa5a361f8a419e8ab087f77352",
+          "book/_build/html/_static/scripts/fontawesome.js": "3255175d1c4cfe78e9f5e8fab69afc6a7002e6e793c2c669c12bb9cacad33b9a",
+          "book/_build/html/_static/scripts/pydata-sphinx-theme.js": "f264bd85cd58f330ce33afffc7839c247a93498680ab7968d7d2d1ddecf955fe",
+          "book/_build/html/_static/scripts/sphinx-book-theme.js": "20f5c4379fa2fa1af248209415a03ef275f18d4dc56fd2db6c3f6ae2c87ab18b",
+          "book/_build/html/_static/sphinx-design.min.css": "eb53d5c272ecc4d93a04605b3d42aa6942858e634bb9686d32d576203a0033ba",
+          "book/_build/html/_static/sphinx-thebe.css": "da591f8cfbc259361ee704d861877be843aaee54f67aed9bda27be1a0f3d3a80",
+          "book/_build/html/_static/sphinx-thebe.js": "bbdfa292b3885f2c3af48ee6d3ea13658afac228ac35d45b39ffa2ed902a1334",
+          "book/_build/html/_static/sphinx_highlight.js": "096231e9c87df80ec3273da9c5b71bc81503206726a07a4dd4de44c256ff859c",
+          "book/_build/html/_static/styles/pydata-sphinx-theme.css": "218db1720af3aa73ee8b997003ae097f87cb997cec296426ef2885d01a1eaa02",
+          "book/_build/html/_static/styles/sphinx-book-theme.css": "dcc916931d8a6e224a4584c5a89f8c3a6e741f048960f91662f5a9a1281cef99",
+          "book/_build/html/_static/styles/theme.css": "c5ad46e4d126fbddecf0ece57fc8345279fac39110306ac7e643f0d4505423f7",
+          "book/_build/html/_static/togglebutton.css": "33f384087b19f23dc8e64faa0b88c6d5c37ddefa9d89dc60a66efd3da2edd0b7",
+          "book/_build/html/_static/togglebutton.js": "a8995912efab60a1a4277dc13d269fb8de05d6b82f49a1981ac557fbcad0bb55"
+        },
+        "external": [
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+        ],
+        "inline_bundles": [
+          "cef0e322ca434b712776e98b2709050fd54c53187afdbf4bfd04722041c2f3ee"
+        ]
+      },
+      "portal_cards": {
+        "binary_payoffs": "530971444f21db5ec637aa84894a6f50b0321266a7c7b823e5fdc6f9835931e3",
+        "binary_replication": "f235ff48515c44957678c53758dd613191c793787bb718273004655a67d126bc",
+        "binary_spreads": "9ebaad3691f451e48e86c8329c66de898169e22bc86c8a61b262ac638f34dcf6",
+        "binary_delta": "c12d6b4060f48e81a93bf0ff7e6b66c32cd5bd6b386fb4586fcd67640cd3dc5a"
+      },
+      "portal_assets": {
+        "local": {
+          "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+          "report/site/assets/style.css": "4e6f90526f72e870c02a1580fefd6cb7f104956bed56fbd4e7199b1d431052a8"
+        },
+        "external": []
+      },
+      "python_sources": {
+        "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+        "hullkit/src/hullkit/_binary_lesson.py": "80be5939c13e261dcbb3bb9befecc8b45fbb7b04c07b0ebe8d270f83ad900e19",
+        "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+        "hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+        "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+        "hullkit/src/hullkit/carbon.py": "7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+        "hullkit/src/hullkit/cds.py": "77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+        "hullkit/src/hullkit/copula.py": "79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+        "hullkit/src/hullkit/credit.py": "5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+        "hullkit/src/hullkit/credit_curve.py": "b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+        "hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+        "hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+        "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+        "hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+        "hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+        "hullkit/src/hullkit/frontier_reference.py": "03d759a023ddff5736ce8173ac24e353b7003298654a70e816afebf1fd9fa7a1",
+        "hullkit/src/hullkit/hedging.py": "d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+        "hullkit/src/hullkit/heston.py": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+        "hullkit/src/hullkit/hull_white.py": "706a0f1aa61381ac5aec332ac0c4e8ba3d17e7d920c7759b262d1218a6573652",
+        "hullkit/src/hullkit/inflation.py": "f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+        "hullkit/src/hullkit/ir_options.py": "c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+        "hullkit/src/hullkit/jarrow_yildirim.py": "4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+        "hullkit/src/hullkit/jgbi.py": "0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+        "hullkit/src/hullkit/liquidation.py": "7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+        "hullkit/src/hullkit/mc.py": "abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+        "hullkit/src/hullkit/mc_advanced.py": "8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+        "hullkit/src/hullkit/nbplot.py": "ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+        "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+        "hullkit/src/hullkit/payoffs.py": "b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+        "hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+        "hullkit/src/hullkit/perpetuals.py": "bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+        "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+        "hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+        "hullkit/src/hullkit/ppa.py": "74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+        "hullkit/src/hullkit/rates.py": "e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+        "hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+        "hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+        "hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+        "hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+        "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+        "hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+        "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+        "hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+        "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+        "hullkit/src/hullkit/surrogate_data.py": "1c34d1a9208369f265e53bbd1b182f25de91fef7a025d294d4c4cdb280ef3de4",
+        "hullkit/src/hullkit/surrogate_validation.py": "938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+        "hullkit/src/hullkit/swaps.py": "8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+        "hullkit/src/hullkit/tail_risk.py": "bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+        "hullkit/src/hullkit/teaching.py": "69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+        "hullkit/src/hullkit/trees.py": "b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+        "hullkit/src/hullkit/var_backtest.py": "617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+        "hullkit/src/hullkit/vol_surface.py": "849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+        "hullkit/src/hullkit/volatility.py": "4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+        "hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+        "hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+        "hullkit/src/hullkit/zero_dte.py": "5a32189a9403af1b8d69a9ff9304315547564c852ce602cf22b9e6fcec5b7a48"
+      },
+      "data_files": {},
+      "verifier": {
+        "scripts/verify_binary_lesson_browser.cjs": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71"
+      },
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "environment": {
+        "node": "v26.7.0",
+        "playwright": "1.56.0",
+        "chromium_bin": "chrome",
+        "fonts": {
+          "Noto Sans JP": {
+            "file": "NotoSans-Regular.ttf",
+            "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+          },
+          "sans-serif": {
+            "file": "NotoSans-Regular.ttf",
+            "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+          }
+        },
+        "locale": "C.UTF-8",
+        "timezone": null
+      }
+    },
+    "unknown": [],
+    "digest": "7743ce23991b909897ad0965115e6b3950624ab21efb5f69c73b02cfe8dc0145"
+  },
+  "baseline": {
+    "record": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261003T072830Z-reuse-a3fe5ed858e34696aa0641b9c7a4603b.json",
+    "record_sha256": "b1e7ff1cdab52ad276f0ecf66b3b50cfd0b2edf821744ca0f455325471c2b5dc",
+    "run_id": "d1pf-26.10-20261003T072830Z-reuse-a3fe5ed858e34696aa0641b9c7a4603b"
+  },
+  "images": [
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary-prices-1000.png",
+      "ref": "artifact:sha256:d8f976a1684a5f586b3927061de044b112f45772e3ad8f36aa24f7e5e8412adb",
+      "bytes": 192256,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary-prices-1440.png",
+      "ref": "artifact:sha256:8343a3d9cf1392a7da648f9a21b979bea952cc123b87bdda68cb3c0b6fbfb113",
+      "bytes": 189731,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary_delta-1000.png",
+      "ref": "artifact:sha256:6a589e8fb32b0ea3e2890a477df47654a87771f8adb49d742b457dfb35df5432",
+      "bytes": 53815,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary_delta-1440.png",
+      "ref": "artifact:sha256:33db2eeb0a5aaea405ecdcbb8aa3e140315fd76450557bfc4b2e13fde524f377",
+      "bytes": 52611,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary_payoffs-1000.png",
+      "ref": "artifact:sha256:a95725c34a093f991c4bdaa4d616e71a42e80c3caeac5c537b4234437d6e9907",
+      "bytes": 80774,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary_payoffs-1440.png",
+      "ref": "artifact:sha256:341d35cc9eb576382e4424afac561fec8b2bddba263ba63faa3e13f41609ed70",
+      "bytes": 67737,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary_replication-1000.png",
+      "ref": "artifact:sha256:0837a36e6f546d0e89507aca7bce0a60e753a106491b81114ec6b90efd963b9b",
+      "bytes": 45778,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary_replication-1440.png",
+      "ref": "artifact:sha256:43f91c2a08d64f59992a2de73f6619ef0c96f5a6563172298cecd6973a77a8dc",
+      "bytes": 45217,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary_spreads-1000.png",
+      "ref": "artifact:sha256:1b11f3a425b8738516922c2a0c0dbad5cb26d1a255b51944d4900a48dce19afa",
+      "bytes": 67660,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/book-binary_spreads-1440.png",
+      "ref": "artifact:sha256:daea71832b7bdfcfaddf233dd064f960c39116920f03e87a8681bbead54a5037",
+      "bytes": 61739,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/portal-binary_delta-1000.png",
+      "ref": "artifact:sha256:2ebe79dfcd625a651070f6df9d9f5a01fbc7b4fe4a808cd99c283f4889b4384a",
+      "bytes": 49232,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/portal-binary_delta-1440.png",
+      "ref": "artifact:sha256:fd1451b0a61e81a43c997313127430511dcfbbd309b20cfe868b94ac5510d17c",
+      "bytes": 50028,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/portal-binary_payoffs-1000.png",
+      "ref": "artifact:sha256:14cc13b281f3518cac209a1ef3035e1c1bd610ed9db908f5c4065b6c34a2e3ed",
+      "bytes": 63279,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/portal-binary_payoffs-1440.png",
+      "ref": "artifact:sha256:bcb75350a2b770e750a6f739214e1c234dd7b9c6b07b8ce24cc03873435dd0b6",
+      "bytes": 64835,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/portal-binary_replication-1000.png",
+      "ref": "artifact:sha256:492d7499286c5762251ac028db9e03961dc284099ad64ac3e759a80b19bd798f",
+      "bytes": 41838,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/portal-binary_replication-1440.png",
+      "ref": "artifact:sha256:4ce3ed930e482a97b6b3a8ab7f36da0235476ae9ca8e244524e8d233bd73330c",
+      "bytes": 42811,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/portal-binary_spreads-1000.png",
+      "ref": "artifact:sha256:9abb2b779c04c73ca6aaf42a23e0f7794c2ea9f4c12033fd9e0cd4511130b7ef",
+      "bytes": 58818,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1/portal-binary_spreads-1440.png",
+      "ref": "artifact:sha256:301218fe6ce754c60fa980345e4f9c7e4d94374132e06b10d3f3067621a723ce",
+      "bytes": 59536,
+      "mime": "image/png"
+    }
+  ],
+  "checks": {
+    "browser": {
+      "status": "PASS",
+      "negative_controls": {
+        "book": true,
+        "portal": true
+      },
+      "browser_version": "145.0.7632.6",
+      "state_checks": null,
+      "screenshots": null,
+      "coverage": [
+        [
+          "book",
+          "call",
+          null,
+          null
+        ],
+        [
+          "book",
+          "put",
+          null,
+          null
+        ],
+        [
+          "portal",
+          "call",
+          null,
+          null
+        ],
+        [
+          "portal",
+          "put",
+          null,
+          null
+        ]
+      ],
+      "book_math": null,
+      "numeric_mutation_rejected": {
+        "portal": null,
+        "book": null
+      },
+      "raw_record_sha256": "fa49b55dd999592dad9353830e3bcdbb2b150c15c3841993d572b39a26a0cba6",
+      "raw_record_path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T085702Z-reuse-6b4059a2483046d1b613fb8cd4b046f1.browser.json",
+      "wrapper": {
+        "verifier": "scripts/verify_binary_lesson_browser.cjs",
+        "original_sha256": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71",
+        "executed_sha256": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71",
+        "wrapper_sha256": "562ed6b693760c0c35a96c328bcdd5db3771e39f995989847a0fe21d99739509",
+        "renames": [],
+        "overlay_root_redirect": true
+      },
+      "seconds": 22.39
+    },
+    "runtime_probe": {
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 8.07
+    },
+    "pytest": {
+      "status": "PASS",
+      "passed": 92,
+      "exit_code": 0,
+      "summary": "92 passed in 0.94s",
+      "seconds": 1.72,
+      "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_binary_reference.py hullkit/tests/test_binary_lesson.py"
+    }
+  },
+  "environment": {
+    "runtime": {
+      "browser_version": "145.0.7632.6",
+      "mathjax_version": "3.2.2",
+      "mathjax_scripts": [
+        {
+          "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+          "sha256": "300480069078b5892d2363a2b65e2dfbbf30fe5c80f83edbfecf4610fd093862"
+        }
+      ],
+      "fonts": {
+        "book_heading": [
+          {
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+          },
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans",
+            "file": "LiberationSans-Regular.ttf",
+            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+          }
+        ],
+        "book_body": [
+          {
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+          },
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans",
+            "file": "LiberationSans-Regular.ttf",
+            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+          }
+        ],
+        "portal_heading": [
+          {
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+          },
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans-Bold",
+            "file": "LiberationSans-Bold.ttf",
+            "sha256": "3973aa5054fb467dd5627245d3dc82e37bf16fe075756156a570455871351582"
+          }
+        ],
+        "portal_plot_text": [
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans",
+            "file": "LiberationSans-Regular.ttf",
+            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+          }
+        ]
+      }
+    },
+    "static": {
+      "node": "v26.7.0",
+      "playwright": "1.56.0",
+      "chromium_bin": "chrome",
+      "fonts": {
+        "Noto Sans JP": {
+          "file": "NotoSans-Regular.ttf",
+          "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+        },
+        "sans-serif": {
+          "file": "NotoSans-Regular.ttf",
+          "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+        }
+      },
+      "locale": "C.UTF-8",
+      "timezone": null
+    },
+    "fingerprint_config": "scripts/evidence_dependencies.json",
+    "records_commit": "39f47b32bc84116c4c0b31bd9e8668ba5f19a13c",
+    "driver_sha256": {
+      "scripts/d1_preflight_compare.py": "d693d8c7c2e9f22f611d6c87ba78cbfc23c7a242b42f00a2cced6f243f68452d",
+      "scripts/run_browser_verifier.cjs": "562ed6b693760c0c35a96c328bcdd5db3771e39f995989847a0fe21d99739509",
+      "scripts/probe_render_runtime.cjs": "efab3367ef20b53bd353e6ecaf867a811d92aca3e71756fc5cc29cde3537a016",
+      "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+      "scripts/evidence_record.py": "264dbf9e3d4ff4c6f7bba4e6b320e1b8a71d21d1ff231adec1b92a22bba379f3",
+      "scripts/evidence_store.py": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+      "scripts/evidence_dependencies.json": "97b8bc8100c0f8f0f7222b6f20c8d99bb0e8d1976b951fd81cdc9fb0a28a2305"
+    }
+  },
+  "storage_verification": {
+    "status": "PASS",
+    "primary": {
+      "status": "PASS",
+      "entries": 18,
+      "bytes": 1287695
+    },
+    "mirror": {
+      "status": "PASS",
+      "entries": 18,
+      "bytes": 1287695
+    },
+    "checked_at": "2026-10-04T08:57:36.753844+00:00"
+  },
+  "source_sha256": {
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+    "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
+    "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+    "hullkit/src/hullkit/_binary_lesson.py": "80be5939c13e261dcbb3bb9befecc8b45fbb7b04c07b0ebe8d270f83ad900e19",
+    "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+    "hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/carbon.py": "7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+    "hullkit/src/hullkit/cds.py": "77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+    "hullkit/src/hullkit/copula.py": "79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+    "hullkit/src/hullkit/credit.py": "5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+    "hullkit/src/hullkit/credit_curve.py": "b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+    "hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+    "hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+    "hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+    "hullkit/src/hullkit/frontier_reference.py": "03d759a023ddff5736ce8173ac24e353b7003298654a70e816afebf1fd9fa7a1",
+    "hullkit/src/hullkit/hedging.py": "d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+    "hullkit/src/hullkit/heston.py": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+    "hullkit/src/hullkit/hull_white.py": "706a0f1aa61381ac5aec332ac0c4e8ba3d17e7d920c7759b262d1218a6573652",
+    "hullkit/src/hullkit/inflation.py": "f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+    "hullkit/src/hullkit/ir_options.py": "c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+    "hullkit/src/hullkit/jarrow_yildirim.py": "4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+    "hullkit/src/hullkit/jgbi.py": "0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+    "hullkit/src/hullkit/liquidation.py": "7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+    "hullkit/src/hullkit/mc.py": "abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+    "hullkit/src/hullkit/mc_advanced.py": "8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+    "hullkit/src/hullkit/nbplot.py": "ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+    "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+    "hullkit/src/hullkit/payoffs.py": "b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+    "hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+    "hullkit/src/hullkit/perpetuals.py": "bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+    "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+    "hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+    "hullkit/src/hullkit/ppa.py": "74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+    "hullkit/src/hullkit/rates.py": "e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+    "hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+    "hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+    "hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+    "hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+    "hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+    "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+    "hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+    "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+    "hullkit/src/hullkit/surrogate_data.py": "1c34d1a9208369f265e53bbd1b182f25de91fef7a025d294d4c4cdb280ef3de4",
+    "hullkit/src/hullkit/surrogate_validation.py": "938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+    "hullkit/src/hullkit/swaps.py": "8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+    "hullkit/src/hullkit/tail_risk.py": "bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+    "hullkit/src/hullkit/teaching.py": "69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+    "hullkit/src/hullkit/trees.py": "b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+    "hullkit/src/hullkit/var_backtest.py": "617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+    "hullkit/src/hullkit/vol_surface.py": "849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+    "hullkit/src/hullkit/volatility.py": "4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+    "hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+    "hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+    "hullkit/src/hullkit/zero_dte.py": "5a32189a9403af1b8d69a9ff9304315547564c852ce602cf22b9e6fcec5b7a48",
+    "hullkit/tests/test_binary_lesson.py": "ac3152dab1e15fcfbc8408f4a6efa91a722954421eaac9ab4870b6ab03b68182",
+    "hullkit/tests/test_binary_reference.py": "b97312eb1d0e950fb8378c0ee5c293abc2be8b9d25d50074e68de1f56e7bd3b1",
+    "report/assets/style.css": "4e6f90526f72e870c02a1580fefd6cb7f104956bed56fbd4e7199b1d431052a8",
+    "report/report_builder/__init__.py": "e6bd9f43a533654074564fec7ef4ee7324379dfc28f693cc324af7cc0a910db9",
+    "report/report_builder/build.py": "12e280a3c47a2aa952f135ba8b459effcd308d519cc317170c8b0c0f11754cbf",
+    "report/report_builder/figures.py": "4a1706ec106b504c96bb9dcb848edcfd7b6552a0d7c3c86ee0fcb855230981db",
+    "report/report_builder/frontier_figures.py": "abc2a1f1596482b043bcb3709f8d6daca9d7f2f0edad6cc8dfe0df0246c0eb92",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/report_builder/theme.py": "db43b679941eff1c165fdf6181a995eff7d076d8f9300f7136d306961d27bf5b",
+    "scripts/evidence_dependencies.json": "97b8bc8100c0f8f0f7222b6f20c8d99bb0e8d1976b951fd81cdc9fb0a28a2305",
+    "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+    "scripts/verify_binary_lesson_browser.cjs": "831ec19a88441fcbffbd20d121a2e5d5400499669510dda314762d6fe25d7c71"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b1480e30e408b40c4e4baa51e7126b9767325df74ed0a4b722e9ec8d20ac58ee",
+    "book/_build/html/notebooks/10_exotics.html": "2dd343b59da6e4613f416d33efa415a9086ebd33bec46cb2929536ceb9d199fd"
+  },
+  "observations": {
+    "capture_sha256": {
+      "book-binary-prices-1000.png": "d8f976a1684a5f586b3927061de044b112f45772e3ad8f36aa24f7e5e8412adb",
+      "book-binary-prices-1440.png": "8343a3d9cf1392a7da648f9a21b979bea952cc123b87bdda68cb3c0b6fbfb113",
+      "book-binary_delta-1000.png": "6a589e8fb32b0ea3e2890a477df47654a87771f8adb49d742b457dfb35df5432",
+      "book-binary_delta-1440.png": "33db2eeb0a5aaea405ecdcbb8aa3e140315fd76450557bfc4b2e13fde524f377",
+      "book-binary_payoffs-1000.png": "a95725c34a093f991c4bdaa4d616e71a42e80c3caeac5c537b4234437d6e9907",
+      "book-binary_payoffs-1440.png": "341d35cc9eb576382e4424afac561fec8b2bddba263ba63faa3e13f41609ed70",
+      "book-binary_replication-1000.png": "0837a36e6f546d0e89507aca7bce0a60e753a106491b81114ec6b90efd963b9b",
+      "book-binary_replication-1440.png": "43f91c2a08d64f59992a2de73f6619ef0c96f5a6563172298cecd6973a77a8dc",
+      "book-binary_spreads-1000.png": "1b11f3a425b8738516922c2a0c0dbad5cb26d1a255b51944d4900a48dce19afa",
+      "book-binary_spreads-1440.png": "daea71832b7bdfcfaddf233dd064f960c39116920f03e87a8681bbead54a5037",
+      "portal-binary_delta-1000.png": "2ebe79dfcd625a651070f6df9d9f5a01fbc7b4fe4a808cd99c283f4889b4384a",
+      "portal-binary_delta-1440.png": "fd1451b0a61e81a43c997313127430511dcfbbd309b20cfe868b94ac5510d17c",
+      "portal-binary_payoffs-1000.png": "14cc13b281f3518cac209a1ef3035e1c1bd610ed9db908f5c4065b6c34a2e3ed",
+      "portal-binary_payoffs-1440.png": "bcb75350a2b770e750a6f739214e1c234dd7b9c6b07b8ce24cc03873435dd0b6",
+      "portal-binary_replication-1000.png": "492d7499286c5762251ac028db9e03961dc284099ad64ac3e759a80b19bd798f",
+      "portal-binary_replication-1440.png": "4ce3ed930e482a97b6b3a8ab7f36da0235476ae9ca8e244524e8d233bd73330c",
+      "portal-binary_spreads-1000.png": "9abb2b779c04c73ca6aaf42a23e0f7794c2ea9f4c12033fd9e0cd4511130b7ef",
+      "portal-binary_spreads-1440.png": "301218fe6ce754c60fa980345e4f9c7e4d94374132e06b10d3f3067621a723ce"
+    },
+    "stored_new_bytes": 1287695,
+    "seconds": {
+      "verifier": 22.39,
+      "probe": 8.07,
+      "pytest": 1.72
+    },
+    "identical_to_baseline": 13,
+    "baseline_images": 18,
+    "coverage_equal_to_baseline": true
+  }
+}

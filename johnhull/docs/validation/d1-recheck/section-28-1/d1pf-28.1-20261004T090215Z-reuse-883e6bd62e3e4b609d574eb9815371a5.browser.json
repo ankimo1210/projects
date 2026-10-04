@@ -1,0 +1,174 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "risk_premium_loading",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_hedge",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_density",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_loading",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_hedge",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_density",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-1/portal-risk_premium_loading-1440.png",
+        "docs/validation/section-28-1/portal-risk_premium_hedge-1440.png",
+        "docs/validation/section-28-1/portal-risk_premium_density-1440.png",
+        "docs/validation/section-28-1/portal-risk_premium_validation-1440.png",
+        "docs/validation/section-28-1/portal-risk_premium_loading-1000.png",
+        "docs/validation/section-28-1/portal-risk_premium_hedge-1000.png",
+        "docs/validation/section-28-1/portal-risk_premium_density-1000.png",
+        "docs/validation/section-28-1/portal-risk_premium_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "risk_premium_loading",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_hedge",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_density",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_loading",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_hedge",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_density",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "risk_premium_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-1/book-risk_premium_loading-1440.png",
+        "docs/validation/section-28-1/book-risk_premium_hedge-1440.png",
+        "docs/validation/section-28-1/book-risk_premium_density-1440.png",
+        "docs/validation/section-28-1/book-risk_premium_validation-1440.png",
+        "docs/validation/section-28-1/book-risk_premium_loading-1000.png",
+        "docs/validation/section-28-1/book-risk_premium_hedge-1000.png",
+        "docs/validation/section-28-1/book-risk_premium_density-1000.png",
+        "docs/validation/section-28-1/book-risk_premium_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
+    "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+    "hullkit/src/hullkit/_risk_premium_lesson.py": "dc698112a60be384817bc70875fa560da75f9b3c8e851d1d275d5951cec5810d",
+    "scripts/build_risk_premium_reference.py": "bb7ed0067e6153b566e0fb66a526a934a513a107872a9091a2c24c14f70df5d6",
+    "scripts/verify_risk_premium_browser.cjs": "1c4fdb28e92c30736f69306b4f8491b4df385185280bb7a5cd681f6f8718b210",
+    "docs/validation/section-28-1/reference.json": "dfa6005d6504ea55a9139ed9b9c07ec0ac30e535e32fdb0bbbd8da8865d8fdbe",
+    "docs/validation/section-28-1/numerical-check.json": "d28a28d42a132d08add52e3c6a32a011e9e8f256c2118219b2045be947a87160",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "74cd91911c83ac662c223515ab7e701106420dc341453d064ba891ffeb7eec00",
+    "volumes/10_exotics_martingales/exotics.ipynb": "8e3edb5b5ddf2c0f85442e9180311905adf68255796cd3375b1dca92fbbca60c",
+    "report/report_builder/figures.py": "4a1706ec106b504c96bb9dcb848edcfd7b6552a0d7c3c86ee0fcb855230981db",
+    "report/assets/style.css": "4e6f90526f72e870c02a1580fefd6cb7f104956bed56fbd4e7199b1d431052a8"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b1480e30e408b40c4e4baa51e7126b9767325df74ed0a4b722e9ec8d20ac58ee",
+    "book/_build/html/notebooks/10_exotics.html": "2dd343b59da6e4613f416d33efa415a9086ebd33bec46cb2929536ceb9d199fd",
+    "docs/validation/section-28-1/portal-risk_premium_loading-1440.png": "a800bfe503b43a9e777c16b622ba7278d3b59474712532f5be249395661ccebd",
+    "docs/validation/section-28-1/portal-risk_premium_hedge-1440.png": "3b7629485a5fe45218deb687a2045820758c7fed91f13d2fc02518931d45e249",
+    "docs/validation/section-28-1/portal-risk_premium_density-1440.png": "9974261f46084fd8b9af292710e1c2d7deb63ce85e7f28b07f2bbb1b65288d61",
+    "docs/validation/section-28-1/portal-risk_premium_validation-1440.png": "bf569170acfd7b3af51cc4a7469cebaea3394302862a1a30bc333d43b693448d",
+    "docs/validation/section-28-1/portal-risk_premium_loading-1000.png": "3f2c8203ee3e10cfbc6e236f42156f6a32bbdca946ac55dd456a071fdb16526d",
+    "docs/validation/section-28-1/portal-risk_premium_hedge-1000.png": "fc866cc7ba88e2503044c992685b7c23b5b8472c8e666fe11ce6ad788d3c15b1",
+    "docs/validation/section-28-1/portal-risk_premium_density-1000.png": "c7f640e417a51fb8467b93af121e124c95f1f54e410ec30883afdc7b32a1a4e9",
+    "docs/validation/section-28-1/portal-risk_premium_validation-1000.png": "6c367c34e3c5898f44f66562aa4e2cbe027d9d7428ae463143aebe80dcdb4fac",
+    "docs/validation/section-28-1/book-risk_premium_loading-1440.png": "edb1539c4174de09dc2f9f87db60439d228429091febf24697ac5fbb60e8eba4",
+    "docs/validation/section-28-1/book-risk_premium_hedge-1440.png": "241f3d5532243c2db2f4d4ededfde56e15b7dd33407c0e1dbe52bb9e4ff070df",
+    "docs/validation/section-28-1/book-risk_premium_density-1440.png": "e8b4fe948855054cb445fd00e1830c755ffc040cb4888f951b5a163682390a63",
+    "docs/validation/section-28-1/book-risk_premium_validation-1440.png": "01b6043d1e723fcf3b893cc05fc1cff4c533202f8ef12f1b607c116b7b2b7dd5",
+    "docs/validation/section-28-1/book-risk_premium_loading-1000.png": "9f1e9c594985f7413ad4548171021c47f7ccc4a78313ea20baeb7b20f116b8a2",
+    "docs/validation/section-28-1/book-risk_premium_hedge-1000.png": "c7d345138cd5903851be4fc3060ff6f80c7d6b1a1d240270cb03b47e1e8659cf",
+    "docs/validation/section-28-1/book-risk_premium_density-1000.png": "43daffe75938f7e27f34cdd31559ced0dc7eecbe18693ecd4fe4cdccbe7c3da3",
+    "docs/validation/section-28-1/book-risk_premium_validation-1000.png": "4d640cca22712e7897143dd0b90978bd8dac9c608d70b4a3194e2761c9b63fe2"
+  },
+  "book_math": {
+    "rendered": 1071,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

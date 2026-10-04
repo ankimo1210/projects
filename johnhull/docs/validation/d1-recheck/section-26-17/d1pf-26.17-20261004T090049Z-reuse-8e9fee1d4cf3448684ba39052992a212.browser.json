@@ -1,0 +1,223 @@
+{
+  "checked_at": "2026-10-04T09:00:49.832Z",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "static_boundary",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_ladder",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "3",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "18",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "100",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_convergence",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_ladder",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "3",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "18",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "100",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_convergence",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-17/portal-static_boundary-1440.png",
+        "docs/validation/section-26-17/portal-static_ladder-1440.png",
+        "docs/validation/section-26-17/portal-static_boundary_error-1440.png",
+        "docs/validation/section-26-17/portal-static_convergence-1440.png",
+        "docs/validation/section-26-17/portal-static_boundary-1000.png",
+        "docs/validation/section-26-17/portal-static_ladder-1000.png",
+        "docs/validation/section-26-17/portal-static_boundary_error-1000.png",
+        "docs/validation/section-26-17/portal-static_convergence-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "layout_errors": 0,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "static_boundary",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_ladder",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "3",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "18",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "100",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_convergence",
+          "state": "default",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_ladder",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "3",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "18",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_boundary_error",
+          "state": "100",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "static_convergence",
+          "state": "default",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-17/book-static_boundary-1440.png",
+        "docs/validation/section-26-17/book-static_ladder-1440.png",
+        "docs/validation/section-26-17/book-static_boundary_error-1440.png",
+        "docs/validation/section-26-17/book-static_convergence-1440.png",
+        "docs/validation/section-26-17/book-static_boundary-1000.png",
+        "docs/validation/section-26-17/book-static_ladder-1000.png",
+        "docs/validation/section-26-17/book-static_boundary_error-1000.png",
+        "docs/validation/section-26-17/book-static_convergence-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "layout_errors": 0,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/static_replication.py": "67d27c75e8cf1f591010672501434962cb194fa87d04a4a7772b268793d5a02b",
+    "hullkit/src/hullkit/_static_replication_lesson.py": "f8942fc7b7737fe13e819ba0e2cc29c7fa1acfed7f4cc9896f9513ab19f100eb",
+    "scripts/build_static_replication_reference.py": "ead61a4df54c1f64d6dda7411c3d295b4f2a454c7894c23a1c3e0da6ef013ac6",
+    "scripts/verify_static_replication_browser.cjs": "8af43d56d57c81590cd35e63e6829eb963894b78a98cf3fdbfa32de4c9811c4d",
+    "docs/validation/section-26-17/reference.json": "059f33cc340feefb84afb2158efaa526efd31e9411d01226347aa4273d5d3f28",
+    "docs/validation/section-26-17/numerical-check.json": "c6294dc6c8c57e73941f77ba01341c19c9763bb03298bef5a183de2b16269a28",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "74cd91911c83ac662c223515ab7e701106420dc341453d064ba891ffeb7eec00",
+    "volumes/10_exotics_martingales/exotics.ipynb": "8e3edb5b5ddf2c0f85442e9180311905adf68255796cd3375b1dca92fbbca60c",
+    "report/report_builder/figures.py": "4a1706ec106b504c96bb9dcb848edcfd7b6552a0d7c3c86ee0fcb855230981db"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "b1480e30e408b40c4e4baa51e7126b9767325df74ed0a4b722e9ec8d20ac58ee",
+    "book/_build/html/notebooks/10_exotics.html": "2dd343b59da6e4613f416d33efa415a9086ebd33bec46cb2929536ceb9d199fd",
+    "docs/validation/section-26-17/portal-static_boundary-1440.png": "951e853b1070e78980543033ce20d2c33b28509a51d4423064c04f907d984660",
+    "docs/validation/section-26-17/portal-static_ladder-1440.png": "05dcdb4920806db4604537e566cd547c7663ee5cb9d43ad926d23d43102b06d9",
+    "docs/validation/section-26-17/portal-static_boundary_error-1440.png": "c08d15bdc7396c21148ee0cc012e2a0e8448a106074a38594f8408a8ceb13d24",
+    "docs/validation/section-26-17/portal-static_convergence-1440.png": "64e70306dd6ae198b6e9834a869c3c306239404b6c66f71f81eac7777dc319b0",
+    "docs/validation/section-26-17/portal-static_boundary-1000.png": "dd478a60474c56fb859a9097844f4c2067ccb2fa925dceff5d6a3af978bcb3ac",
+    "docs/validation/section-26-17/portal-static_ladder-1000.png": "64e62bf96845ade468a270b8afc4478e49ddc5cc2ce02d1c9a77821d6ea2c388",
+    "docs/validation/section-26-17/portal-static_boundary_error-1000.png": "0366a01f471bf2efd88e1e1e1b1c0fe808fe7bc130130c2da92d405f5cee4046",
+    "docs/validation/section-26-17/portal-static_convergence-1000.png": "1e24a2e1e878be1fbc0e066ad51b939177da56c9c3fbf0f65ef9e58b27794da9",
+    "docs/validation/section-26-17/book-static_boundary-1440.png": "61e6eb1b40fc18760e8e5403cb66104d0b5803e765216e5e3320cef28d22d95d",
+    "docs/validation/section-26-17/book-static_ladder-1440.png": "3aab37e0575c6a64020e55cefd35fb986f4a8e22aeec10af9fb4b1ddda30c308",
+    "docs/validation/section-26-17/book-static_boundary_error-1440.png": "d65910bed7d61437b1611adad6fb2d3f3476e0f543a8f040b5e11051ab1cf723",
+    "docs/validation/section-26-17/book-static_convergence-1440.png": "84337cd8c8ae5f8f3c2064332f54b9e87030a54d3df27bc70b12e31c0cf5bb99",
+    "docs/validation/section-26-17/book-static_boundary-1000.png": "9de5145dda4c721fa30ae7a19b31bfc75698044eee26fe91e208e97cb2c1240d",
+    "docs/validation/section-26-17/book-static_ladder-1000.png": "f8bfa8a7ec4bdf2528ec7352d4a2eab3cfd6f935e90d94286f9191a8f5dceef1",
+    "docs/validation/section-26-17/book-static_boundary_error-1000.png": "ea4bde3cca2a9207b078959871f5821e1fad6de8ef57adc798b629e608cb1efd",
+    "docs/validation/section-26-17/book-static_convergence-1000.png": "4a235cb9241f00964eeac7503b6e5a4dcf2eb2525a6849957f04d7ce6f6ee6c9"
+  },
+  "browser_version": "145.0.7632.6",
+  "book_math": {
+    "typeset": 1071,
+    "errors": 0
+  },
+  "status": "PASS",
+  "state_checks": 24
+}

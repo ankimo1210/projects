@@ -793,3 +793,10 @@ merging, so `main` — not the branch refs — is the reproducible record.
 
 `PASS` denotes the tracked integration and reproducibility release; it does not approve
 model performance or production readiness.
+
+## M28 §28.3（2026-10-04）
+
+6市場/9条件付きMC/同一call Q・G Gaussian求積、保存4/API4/notebook4/両表示変異PASS。新11セル/246、旧235本文/出力/Plotly保持、16表示状態/16画像/MathJax/700px。既受入27節のbrowser・runtime probe・個別pytest計2,056件・C:/F:両保管庫復元はPASS。0節再利用・27節再描画。共有CSS変更による保守的な再描画。採用記録の再描画画像payloadは19,514,628バイトで、重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。
+台帳成果物28/278 PASS。全suite/最終レビュー/main検証は実行中。
+
+全hullkit+report 3,986 passed・6 skipped・既存warnings2件（186.50s）。変更Python20ファイルruff、4--check、台帳成果物28/278 PASS。独立最終レビュー/main統合は検証中。

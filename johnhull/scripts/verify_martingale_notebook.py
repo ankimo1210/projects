@@ -165,6 +165,7 @@ def main():
         "hullkit/src/hullkit/_martingale_lesson.py",
         "hullkit/src/hullkit/_martingales.py",
         "hullkit/src/hullkit/risk_premium.py",
+        "hullkit/src/hullkit/bsm.py",
         "docs/validation/section-28-3/reference.json",
         "docs/validation/section-28-3/numerical-check.json",
         "volumes/10_exotics_martingales/build_exotics_notebook.py",
