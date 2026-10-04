@@ -10,7 +10,7 @@
 
 notebook全268／旧257、独立teacher／数値／統合、fresh browser16/16、ruff19を確認。Book／portal HTMLの値は変更していない。既受入29D1の現行必須source／artifact／両保管庫は統合gateで再検証してPASS。既存D1の対象producerは今回のprivate consumer変更で変わらない。証跡を手動再署名していない。
 
-I1の1回のfix passは4回帰RED→lesson20GREEN、修正後全suite4223 passed／6 skipped／従来warnings2（293.49s）で完了。Critical0／未解消Important0、Minor2保留。4 --check、ruff19、16表示、29D1現行hash／両保管庫／台帳成果物／tracked release PASS。main統合はこれから。 再レビューは行わない。
+I1の1回のfix passは4回帰RED→lesson20GREEN、修正後全suite4223 passed／6 skipped／従来warnings2（293.49s）で完了。Critical0／未解消Important0、Minor2保留。4 --check、ruff19、16表示、29D1現行hash／両保管庫／台帳成果物／tracked release PASS。main FF／fresh検証／push済み。 再レビューは行わない。
 
 ## Deferred minors
 
@@ -22,3 +22,7 @@ I1の1回のfix passは4回帰RED→lesson20GREEN、修正後全suite4223 passed
 raw reportのDeclined to judge全8項目は [executor ledger](validation/section-28-5/execution-ledger.md) にroot判断と誤りの費用を記録。一般SDEのtrue保証、確率金利engine、極端float精度、大規模因子、replay費用、将来prep、既存AGENTS循環、main統合を区別する。
 
 極端入力の観測限界：value=1e-300／drift710／h1は中間expで拒否。value1e308／drift−745は数学上約2.82235e−16に対して4.940656e−16を返す。通常教材のfixtureに影響しないが、全float域精度を保証しない。
+
+## main統合（2026-10-04）
+
+M30受入commit `5c8bcbde` をmainへfast-forward統合・pushし、HEAD／origin/main／live remote一致を確認。main fresh全suite4223 passed・6 skipped・既存warnings2（291.74s）、Book全build148 warnings／portal再build、統合gate／台帳成果物／両保管庫／ruff19／tracked release PASS。Critical0／未解消Important0、Minor2保留。main受入30／未評価276、P3 5/37（残32）。次はM31 §28.6。

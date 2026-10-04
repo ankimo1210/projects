@@ -40,4 +40,4 @@
 - [x] Step 1: missing/stale/resigned-source/artifact/path/store/matrix fail-before-write tests。Expected: gate missing FAIL。
 - [x] Step 2: cleancommitから29D1/両保管庫、MF01–06全5軸、30/276/P3 5/37、全suite/ruff/release。Expected: 全PASS。
 - [x] Step 3: 1fresh finalreview/重要RED→GREEN+whole、minor/ruling保存。Expected: merge阻害なし。
-- [ ] Step 4: mainFF/検証/push/task-done、次M31。Expected: live remote一致、全P3active。
+- [x] Step 4: mainFF/検証/push/task-done、次M31。Expected: live remote一致、全P3active。
