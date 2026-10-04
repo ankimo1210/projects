@@ -22,6 +22,7 @@ from hullkit._asian_lesson import _figures as asian_lesson_figures
 from hullkit._barrier_tree_lesson import _figures as barrier_tree_lesson_figures
 from hullkit._basket_lesson import _figures as basket_lesson_figures
 from hullkit._binary_lesson import _figures as binary_lesson_figures
+from hullkit._chapter28_lesson import _figures as chapter28_lesson_figures
 from hullkit._chooser_lesson import _figures as chooser_lesson_figures
 from hullkit._cliquet_lesson import _figures as cliquet_lesson_figures
 from hullkit._compound_lesson import _figures as compound_lesson_figures
@@ -1510,6 +1511,36 @@ FIGURES: list[FigureSpec] = [
         "factor_measure_price", "exotics", "多因子の同じ給付価格", "同じcallのQ/g直接MCと独立求積価格との差。",
         lambda: multifactor_lesson_figures()["factor_measure_price"],
         practice="相関f市場を固定しgを正・負・ゼロloadingへ変更しても価格は同じ。区間±1.96SE。", is_new=True,
+    ),
+    FigureSpec(
+        'martingale_black_forward_market', "exotics", 'forwardとfuturesの期待値', '§28.6: T測度とQ測度で同じspotの平均が異なる。',
+        lambda: chapter28_lesson_figures()['martingale_black_forward_market'],
+        practice='合成Ho–Lee市場、σFはspotのσとは別。相関を変えて確認。', is_new=True,
+    ),
+    FigureSpec(
+        'martingale_black_forward_prices', "exotics", 'Blackの測度と確率金利', '§28.6: T測度のBlackとQで割引を分離した誤用を比較。',
+        lambda: chapter28_lesson_figures()['martingale_black_forward_prices'],
+        practice='満期とforwardの決済日を一致させる。原典に印刷例はなく、数値は合成例。', is_new=True,
+    ),
+    FigureSpec(
+        'martingale_exchange_ratio_means', "exotics", '交換契約の比と配当', '§28.7: 再投資Uを基準にV/Uを評価。',
+        lambda: chapter28_lesson_figures()['martingale_exchange_ratio_means'],
+        practice='qU−qVの向きとQ/U driftの違い。無配当の別市場では平均を保存。', is_new=True,
+    ),
+    FigureSpec(
+        'martingale_exchange_measure_prices', "exotics", '資産交換の相関と価格', '§28.7: strike 1の比のcall。',
+        lambda: chapter28_lesson_figures()['martingale_exchange_measure_prices'],
+        practice='共通通貨の金利は相殺。U0=100,V0=110、1.5年の合成例を独立求積と照合。', is_new=True,
+    ),
+    FigureSpec(
+        'martingale_numeraire_drift_shift', "exotics", '新／旧ニュメレールのdrift補正', '§28.8: bᵀC(sh−sg)を加え、逆変換で元へ戻る。',
+        lambda: chapter28_lesson_figures()['martingale_numeraire_drift_shift'],
+        practice='相関因子を同じbasisで扱う。Brownianの補正は逆符号、PSDの端点も表示。', is_new=True,
+    ),
+    FigureSpec(
+        'martingale_numeraire_absolute_shift', "exotics", '非取引変数の絶対drift', '§28.8: ゼロ・負状態にも絶対loadingを使う。',
+        lambda: chapter28_lesson_figures()['martingale_numeraire_absolute_shift'],
+        practice='状態単位/年。P→QはμP−bᵀCλで、非取引変数を金利rへ置き換えない。', is_new=True,
     ),
     FigureSpec(
         "asian_vs_european",
