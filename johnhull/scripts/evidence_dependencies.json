@@ -1457,6 +1457,61 @@
         "report/tests/test_martingale_notebook.py",
         "report/tests/test_martingale_registry.py"
       ]
+    },
+    "28.4": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "6C. ニュメレールの選択（§28.4）",
+        "level": 2
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "6C. ニュメレールの選択（§28.4）",
+        "level": 2
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "martingale_numeraire_pricing",
+          "martingale_numeraire_forward",
+          "martingale_numeraire_payment",
+          "martingale_numeraire_annuity"
+        ]
+      },
+      "python_modules": [
+        "hullkit._numeraire_choices",
+        "hullkit.hull_white",
+        "hullkit.rates",
+        "hullkit._numeraire_lesson"
+      ],
+      "data": [
+        "docs/validation/section-28-4/reference.json",
+        "docs/validation/section-28-4/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_numeraire_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-28-4/reference.json",
+        "docs/validation/section-28-4/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-28-4",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_numeraire_hw_state.py",
+        "hullkit/tests/test_numeraire_choices.py",
+        "hullkit/tests/test_numeraire_numerics.py",
+        "hullkit/tests/test_numeraire_lesson.py",
+        "report/tests/test_numeraire_notebook.py",
+        "report/tests/test_numeraire_registry.py"
+      ]
     }
   }
 }

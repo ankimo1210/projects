@@ -3,7 +3,7 @@
 更新2026-10-04。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。残り要件をN/Aへ置き換えたり、簡易モデルだけで完了としない。
 
 - main：§28.1–28.3受入、P3 3/37。M28全suite4046/6・台帳成果物/release/両保管庫を確認、main統合push済み。
-- 現在：M29 §28.4をcodex/m29-numeraire-choicesで着手。原典12要求/独立Gaussian教師/仕様・計画を準備し、Task1のQ状態/条件付きbond/towerで4件RED→新旧11件GREEN。Jamshidian/較正は数学的に不変、vol26の丸め差3点とnotebookを再生成。全suite初回4049 passed/1 failed（28既受入節の旧HW source hash）；28D1更新をTask4で実施するまで全体受入はpending。Task2はprivate Gaussian/条件付き支払・annuity、独立63fixture/10 direct MC/8変異がPASS、対象40 tests PASS。次は6C教材/4共有図。M28はmain受入・独立レビュー修正・push完了。
+- 現在：M29 §28.4をcodex/m29-numeraire-choicesで着手。原典12要求/独立Gaussian教師/仕様・計画を準備し、Task1のQ状態/条件付きbond/towerで4件RED→新旧11件GREEN。Jamshidian/較正は数学的に不変、vol26の丸め差3点とnotebookを再生成。全suite初回4049 passed/1 failed（28既受入節の旧HW source hash）；28D1更新をTask4で実施するまで全体受入はpending。Task2はprivate Gaussian/条件付き支払・annuity、独立63fixture/10 direct MC/8変異がPASS、対象40 tests PASS。Task3は6C教材11セル/4共有図・旧246セル保持・257全文freshとBook/portal16表示状態がPASS。図は合計194、Book144 warnings（旧140+新Plotly4）。次は28D1・5軸台帳・最終レビュー。M28はmain受入・独立レビュー修正・push完了。
 - 未完了：§28.4–28.8、Ch29–34（計34節）。確率金利/複数測度、市場式、convexity/timing/quanto、短期金利、HW/BK木/曲線fit/時間依存σ/Bermudan/較正、HJM/LMM、非標準swapの本文要件。
 - 並行準備：全35未受入節の要求照合、M28独立math参照、HW/BK/LMM実装仕様を読み取り専用agentで確認。
 - 受入ゲートは節ごとに既存D1/両保管庫を維持。D3規約の軽量化は未承認で今回変更しない。

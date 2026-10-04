@@ -1,0 +1,329 @@
+FFFFFFFFFFF                                                              [100%]
+=================================== FAILURES ===================================
+______ test_four_figures_consume_checked_values_and_monte_carlo_intervals ______
+
+    def test_four_figures_consume_checked_values_and_monte_carlo_intervals():
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_consumer_rejects_corrupted_and_resigned_results[status] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7080640b7830>
+mutation = 'status'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____ test_consumer_rejects_corrupted_and_resigned_results[reference hash] _____
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x70806412f800>
+mutation = 'reference hash'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____ test_consumer_rejects_corrupted_and_resigned_results[source missing] _____
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x70806412f9b0>
+mutation = 'source missing'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_consumer_rejects_corrupted_and_resigned_results[joint] __________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x70806412ec90>
+mutation = 'joint'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_consumer_rejects_corrupted_and_resigned_results[stock] __________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x708064114980>
+mutation = 'stock'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_consumer_rejects_corrupted_and_resigned_results[rates] __________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x70806412f920>
+mutation = 'rates'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+________ test_consumer_rejects_corrupted_and_resigned_results[annuity] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x70806412e990>
+mutation = 'annuity'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+________ test_consumer_rejects_corrupted_and_resigned_results[weights] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7080640b6570>
+mutation = 'weights'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+___________ test_consumer_rejects_corrupted_and_resigned_results[mc] ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x708064116900>
+mutation = 'mc'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______ test_consumer_rejects_corrupted_and_resigned_results[result hash] _______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3161/test_consumer_rejects_corrupte9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7080641176b0>
+mutation = 'result hash'
+
+    @pytest.mark.parametrize('mutation',['status','reference hash','source missing','joint','stock','rates','annuity','weights','mc','result hash'])
+    def test_consumer_rejects_corrupted_and_resigned_results(tmp_path,monkeypatch,mutation):
+>       lesson=importlib.import_module('hullkit._numeraire_lesson')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_numeraire_lesson.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._numeraire_lesson'
+import_ = <function _gcd_import at 0x7080ddd580e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_four_figures_consume_checked_values_and_monte_carlo_intervals
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[status]
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[reference hash]
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[source missing]
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[joint]
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[stock]
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[rates]
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[annuity]
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[weights]
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[mc]
+FAILED johnhull/hullkit/tests/test_numeraire_lesson.py::test_consumer_rejects_corrupted_and_resigned_results[result hash]
+11 failed in 0.53s

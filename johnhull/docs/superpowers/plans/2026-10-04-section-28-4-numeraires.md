@@ -40,10 +40,10 @@
 ### Task 3: 6C教材・4共有図・Book/portal
 
 **Files:** private lesson、builder/notebook、保存/消費/registry/browsertests、source declarations。
-- [ ] Step 1: source12要点を6小節へ割当、消費結果/旧246保持tests。Expected: 新lesson未存在FAIL。
-- [ ] Step 2: 新教材/4図とfresh全文、既存sectiontests適応。Expected: source/output/plot保持。
-- [ ] Step 3: registry/count/Book/portal/16状態/MathJax/700px/目視。Expected: 全PASS。
-- [ ] Step 4: commit/task-done。Expected: 全PASS。
+- [x] Step 1: source12要点を6小節へ割当、消費結果/旧246保持tests。Expected: 新lesson未存在FAIL。
+- [x] Step 2: 新教材/4図とfresh全文、既存sectiontests適応。Expected: source/output/plot保持。
+- [x] Step 3: registry/count/Book/portal/16状態/MathJax/700px/目視。Expected: 全PASS。
+- [x] Step 4: commit/task-done。Expected: 全PASS。
 
 ### Task 4: 28D1・台帳・最終レビュー・統合
 

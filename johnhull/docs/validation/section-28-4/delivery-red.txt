@@ -1,0 +1,122 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+______________ test_numeraire_notebook_and_four_negative_controls ______________
+
+fp = PosixPath('/home/kazumasa/worktrees/m29/johnhull/volumes/10_exotics_numeraire_choices/exotics.ipynb')
+as_version = 4, capture_validation_error = None, kwargs = {}
+
+    def read(fp, as_version, capture_validation_error=None, **kwargs):
+        """Read a notebook from a file as a NotebookNode of the given version.
+    
+        The string can contain a notebook of any version.
+        The notebook will be returned `as_version`, converting, if necessary.
+    
+        Notebook format errors will be logged.
+    
+        Parameters
+        ----------
+        fp : file or str
+            A file-like object with a read method that returns unicode (use
+            ``io.open()`` in Python 2), or a path to a file.
+        as_version : int
+            The version of the notebook format to return.
+            The notebook will be converted, if necessary.
+            Pass nbformat.NO_CONVERT to prevent conversion.
+        capture_validation_error : dict, optional
+            If provided, a key of "ValidationError" with a
+            value of the ValidationError instance will be added
+            to the dictionary.
+    
+        Returns
+        -------
+        nb : NotebookNode
+            The notebook that was read.
+        """
+    
+        try:
+>           buf = fp.read()
+                  ^^^^^^^
+E           AttributeError: 'PosixPath' object has no attribute 'read'
+
+../../projects/.venv/lib/python3.12/site-packages/nbformat/__init__.py:169: AttributeError
+
+During handling of the above exception, another exception occurred:
+
+    def test_numeraire_notebook_and_four_negative_controls():
+        m = importlib.import_module("johnhull.scripts.verify_numeraire_notebook")
+        assert m.RECORD.parent.name == "section-28-4"
+>       nb = nbformat.read(m.NOTEBOOK, as_version=4)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/report/tests/test_numeraire_notebook.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fp = PosixPath('/home/kazumasa/worktrees/m29/johnhull/volumes/10_exotics_numeraire_choices/exotics.ipynb')
+as_version = 4, capture_validation_error = None, kwargs = {}
+
+    def read(fp, as_version, capture_validation_error=None, **kwargs):
+        """Read a notebook from a file as a NotebookNode of the given version.
+    
+        The string can contain a notebook of any version.
+        The notebook will be returned `as_version`, converting, if necessary.
+    
+        Notebook format errors will be logged.
+    
+        Parameters
+        ----------
+        fp : file or str
+            A file-like object with a read method that returns unicode (use
+            ``io.open()`` in Python 2), or a path to a file.
+        as_version : int
+            The version of the notebook format to return.
+            The notebook will be converted, if necessary.
+            Pass nbformat.NO_CONVERT to prevent conversion.
+        capture_validation_error : dict, optional
+            If provided, a key of "ValidationError" with a
+            value of the ValidationError instance will be added
+            to the dictionary.
+    
+        Returns
+        -------
+        nb : NotebookNode
+            The notebook that was read.
+        """
+    
+        try:
+            buf = fp.read()
+        except AttributeError:
+>           with open(fp, encoding="utf8") as f:  # noqa: PTH123
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: '/home/kazumasa/worktrees/m29/johnhull/volumes/10_exotics_numeraire_choices/exotics.ipynb'
+
+../../projects/.venv/lib/python3.12/site-packages/nbformat/__init__.py:171: FileNotFoundError
+____________ test_numeraire_dependency_covers_whole_parent_section _____________
+
+    def test_numeraire_dependency_covers_whole_parent_section():
+        m = importlib.import_module("johnhull.scripts.verify_numeraire_notebook")
+        f = importlib.import_module("johnhull.scripts.evidence_fingerprint")
+>       spec = json.loads((m.PROJECT / "scripts/evidence_dependencies.json").read_text())["sections"][
+            "28.4"
+        ]
+E       KeyError: '28.4'
+
+johnhull/report/tests/test_numeraire_notebook.py:25: KeyError
+___________ test_numeraire_cards_follow_martingale_and_share_figures ___________
+
+    def test_numeraire_cards_follow_martingale_and_share_figures():
+        specs=figures_for('exotics')
+        start=next(i for i,s in enumerate(specs) if s.id=='martingale_pricing')+1
+        selected=specs[start:start+4]
+>       assert [s.id for s in selected]==['martingale_numeraire_pricing','martingale_numeraire_forward','martingale_numeraire_payment','martingale_numeraire_annuity']
+E       AssertionError: assert ['asian_vs_european'] == ['martingale_...aire_annuity']
+E         
+E         At index 0 diff: 'asian_vs_european' != 'martingale_numeraire_pricing'
+E         Right contains 3 more items, first extra item: 'martingale_numeraire_forward'
+E         Use -v to get more diff
+
+johnhull/report/tests/test_numeraire_registry.py:9: AssertionError
+=========================== short test summary info ============================
+FAILED johnhull/report/tests/test_numeraire_notebook.py::test_numeraire_notebook_and_four_negative_controls
+FAILED johnhull/report/tests/test_numeraire_notebook.py::test_numeraire_dependency_covers_whole_parent_section
+FAILED johnhull/report/tests/test_numeraire_registry.py::test_numeraire_cards_follow_martingale_and_share_figures
+3 failed in 2.90s

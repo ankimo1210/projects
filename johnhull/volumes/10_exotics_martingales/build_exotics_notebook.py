@@ -2862,6 +2862,11 @@ print(f"Same synthetic call: {martingale_data['pricing'][0]['price']:.10f}")""")
 確率金利でのQ/満期債/annuity測度は§28.4、複数因子は§28.5で続ける。"""),
 ])
 
+# M29 §28.4: shared synthetic numeraire teaching cells.
+from hullkit._numeraire_lesson import _cells as numeraire_lesson_cells
+
+cells.extend(numeraire_lesson_cells())
+
 cells.append(
     md(r"""## 7. ニュメレールの選択（§28.4）
 

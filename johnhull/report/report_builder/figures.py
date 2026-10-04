@@ -34,6 +34,7 @@ from hullkit._local_volatility_lesson import _figures as local_volatility_lesson
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._martingale_lesson import _figures as martingale_lesson_figures
 from hullkit._nonstandard_american_lesson import _figures as nonstandard_american_lesson_figures
+from hullkit._numeraire_lesson import _figures as numeraire_lesson_figures
 from hullkit._packages_lesson import _figures as packages_lesson_figures
 from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
 from hullkit._perpetual_american_lesson import _figures as perpetual_american_lesson_figures
@@ -1468,6 +1469,26 @@ FIGURES: list[FigureSpec] = [
         lambda: martingale_lesson_figures()["martingale_pricing"],
         practice="S0=K=100、G0=80、r=4%、T=1.5。G_Tは確率的な分母、独立価格17.2494832790。",
         is_new=True,
+    ),
+    FigureSpec(
+        "martingale_numeraire_pricing", "exotics", "口座と支払日債券で同じ給付を評価", "確率金利では経路内割引と測度をそろえる。",
+        lambda: numeraire_lesson_figures()["martingale_numeraire_pricing"],
+        practice="合成stock call、符号付きloading。QとTの価格差に95%MC区間を表示。", is_new=True,
+    ),
+    FigureSpec(
+        "martingale_numeraire_forward", "exotics", "futuresとforwardの期待値", "Qと支払日T測度で期待spotが違う。",
+        lambda: numeraire_lesson_figures()["martingale_numeraire_forward"],
+        practice="同じstock・金利因子でloadingの符号を変え、差の向きと定数金利極限を確認。", is_new=True,
+    ),
+    FigureSpec(
+        "martingale_numeraire_payment", "exotics", "金利の支払日測度", "termの固定とovernightの実現は別時点、どちらも支払日U測度を使う。",
+        lambda: numeraire_lesson_figures()["martingale_numeraire_payment"],
+        practice="四半期・半期の年率金利。固定日T測度を誤用した平均との差も比較。", is_new=True,
+    ),
+    FigureSpec(
+        "martingale_numeraire_annuity", "exotics", "annuity測度と二つのcurve", "OIS割引のAとprojectionクーポンのVからswap rateを作る。",
+        lambda: numeraire_lesson_figures()["martingale_numeraire_annuity"],
+        practice="複数時刻・状態の条件付き平均。合成additive basisでprojectionが変わってもOIS annuityは同じ。", is_new=True,
     ),
     FigureSpec(
         "asian_vs_european",
