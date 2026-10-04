@@ -32,6 +32,7 @@ from hullkit._forward_start_lesson import _figures as forward_start_lesson_figur
 from hullkit._gap_lesson import _figures as gap_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
+from hullkit._martingale_lesson import _figures as martingale_lesson_figures
 from hullkit._nonstandard_american_lesson import _figures as nonstandard_american_lesson_figures
 from hullkit._packages_lesson import _figures as packages_lesson_figures
 from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
@@ -1430,6 +1431,42 @@ FIGURES: list[FigureSpec] = [
         "12合成市場の独立math.fsumと最終因子軸のAPIを比較。",
         lambda: factor_risk_lesson_figures()["factor_risk_validation"],
         practice="許容差1e-12。単因子縮約、無価格因子、SVD局所hedge、4直交回転、保存4改変とAPI4変異を検査。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "martingale_ito",
+        "exotics",
+        "比のItô driftの相殺",
+        "同じWiener過程の符号付き係数と、比の二次変動補正。",
+        lambda: martingale_lesson_figures()["martingale_ito"],
+        practice="sf=.3、sg=−.2。−10%+4%+6%=0%/年。対数driftとは区別。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "martingale_conditional",
+        "exotics",
+        "条件付き期待値と測度",
+        "観測比1.25からの条件付き平均と、選ぶ測度による変化。",
+        lambda: martingale_lesson_figures()["martingale_conditional"],
+        practice="λ=sgのg測度で平均を保存。定数GBMの有限時間・可積分性が前提。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "martingale_conditional_mc",
+        "exotics",
+        "複数時刻・状態の条件付きMC",
+        "9組の条件付き平均と独立解析値の差、95%区間。",
+        lambda: martingale_lesson_figures()["martingale_conditional_mc"],
+        practice="262144標本/組、seed20261004。t=0の別状態は別初期市場。受入境界5SEと95%区間を区別。",
+        is_new=True,
+    ),
+    FigureSpec(
+        "martingale_pricing",
+        "exotics",
+        "同じ給付のQ/G価格",
+        "同じcall給付の価格をQ/G測度で求積・MC照合。",
+        lambda: martingale_lesson_figures()["martingale_pricing"],
+        practice="S0=K=100、G0=80、r=4%、T=1.5。G_Tは確率的な分母、独立価格17.2494832790。",
         is_new=True,
     ),
     FigureSpec(
