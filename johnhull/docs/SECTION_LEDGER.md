@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **27**
+- accepted: **28**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 279 |
+| unreviewed | 278 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 27 |
+| accepted | 28 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -49,7 +49,7 @@
 | 25 | 11 | 11 | 0 | 0 | 0 | 0 |
 | 26 | 17 | 0 | 0 | 0 | 17 | 0 |
 | 27 | 8 | 0 | 0 | 0 | 8 | 0 |
-| 28 | 8 | 6 | 0 | 0 | 2 | 0 |
+| 28 | 8 | 5 | 0 | 0 | 3 | 0 |
 | 29 | 4 | 4 | 0 | 0 | 0 | 0 |
 | 30 | 4 | 4 | 0 | 0 | 0 | 0 |
 | 31 | 5 | 5 | 0 | 0 | 0 | 0 |
@@ -319,7 +319,7 @@
 | 27.8 | 27 | section | Monte Carlo Simulation and American Options | accepted |
 | 28.1 | 28 | section | The Market Price of Risk | accepted |
 | 28.2 | 28 | section | Several State Variables | accepted |
-| 28.3 | 28 | section | Martingales | unreviewed |
+| 28.3 | 28 | section | Martingales | accepted |
 | 28.4 | 28 | section | Alternative Choices for the Numeraire | unreviewed |
 | 28.5 | 28 | section | Extension to Several Factors | unreviewed |
 | 28.6 | 28 | section | Black’s Model Revisited | unreviewed |
