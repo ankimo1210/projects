@@ -1,0 +1,174 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "compound_threshold",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_strikes",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_timing",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_threshold",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_strikes",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_timing",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-7/portal-compound_threshold-1440.png",
+        "docs/validation/section-26-7/portal-compound_strikes-1440.png",
+        "docs/validation/section-26-7/portal-compound_timing-1440.png",
+        "docs/validation/section-26-7/portal-compound_validation-1440.png",
+        "docs/validation/section-26-7/portal-compound_threshold-1000.png",
+        "docs/validation/section-26-7/portal-compound_strikes-1000.png",
+        "docs/validation/section-26-7/portal-compound_timing-1000.png",
+        "docs/validation/section-26-7/portal-compound_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "compound_threshold",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_strikes",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_timing",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_threshold",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_strikes",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_timing",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "compound_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-7/book-compound_threshold-1440.png",
+        "docs/validation/section-26-7/book-compound_strikes-1440.png",
+        "docs/validation/section-26-7/book-compound_timing-1440.png",
+        "docs/validation/section-26-7/book-compound_validation-1440.png",
+        "docs/validation/section-26-7/book-compound_threshold-1000.png",
+        "docs/validation/section-26-7/book-compound_strikes-1000.png",
+        "docs/validation/section-26-7/book-compound_timing-1000.png",
+        "docs/validation/section-26-7/book-compound_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/compound.py": "6fceb8083b2593fff2c0c3755de6f61f6371e49d5279eada5dbb890cea2c1b19",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/_compound_lesson.py": "7f2b06356f240fd67bbd843f5f14319ce5f5ed7a0943c2578f4afdf4491c8626",
+    "scripts/build_compound_reference.py": "e55b6ef6c1d9fb8bbdfd0695e3109db701114811c3779a8287112cd6a75881dc",
+    "scripts/verify_compound_browser.cjs": "af523db705de59ac723d66ad43f8c0345007b1274f3fe0788171503162a8cdc4",
+    "docs/validation/section-26-7/reference.json": "2114b3c8b3fa61ab518be0849d7b10d3646ed3a50d93cdca1f7d7600e072f3e4",
+    "docs/validation/section-26-7/numerical-check.json": "63e652be3280747439d1e10df6b48e5d346a56f83342c7214aa93239f3c40da3",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "d599a83083474b85ae6dbccb81e22dfb46f95dedcc4ba9a64058d7bdb39f31f1",
+    "volumes/10_exotics_martingales/exotics.ipynb": "213c00f83d433badc76dec3bdd2f8914a04039244d1b6a99d34295aa1fa60c55",
+    "report/report_builder/figures.py": "6ef53cf7266ffd4d1b6d8e732ae3ccffdb82073f7860331b41a2891aaf87decf",
+    "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "4135c50f06f332ed888ec06b2f8a3d9831051f56765adf0c325c3210d2765562",
+    "book/_build/html/notebooks/10_exotics.html": "b88192909b7bf66d9845095f823d13af7311f8ff3b3d0842dab9d8410225e354",
+    "docs/validation/section-26-7/portal-compound_threshold-1440.png": "557f77dc16aa11501a06c0153aa5b432ec88ff09eddd6b892049cc75429caebf",
+    "docs/validation/section-26-7/portal-compound_strikes-1440.png": "0bb4f04ac48898297b192d2076559211fdc5030f6ca2f5bc1379bb44d6979a53",
+    "docs/validation/section-26-7/portal-compound_timing-1440.png": "8890f6bffb16df6cf5c929146b113e2e99e836e19d663b9621a59e06f83ec1a5",
+    "docs/validation/section-26-7/portal-compound_validation-1440.png": "54156a6ae021c6403f781ce133db35cc9d7d8a6900a82f1028de147a4af55218",
+    "docs/validation/section-26-7/portal-compound_threshold-1000.png": "efb2b7cf99172a4305368b330f6f1eb6d4f2fcec3a73af4e1b2ff9021d647893",
+    "docs/validation/section-26-7/portal-compound_strikes-1000.png": "ed77e5711f53b9685988ac2ba47a61f5c3900695080583a48ddeb72df3dfa769",
+    "docs/validation/section-26-7/portal-compound_timing-1000.png": "d6b7afc43b9b7f4c192d065b1ac94a0912419a2624e0f946e23bc0a0f235a84f",
+    "docs/validation/section-26-7/portal-compound_validation-1000.png": "6e7ba64e26f87930b9bd8ec5140ae3ba63b9428f47f091dfcc67c48497bc6a6c",
+    "docs/validation/section-26-7/book-compound_threshold-1440.png": "c78e028fe7552eee73609890bf7beda7303aee1e95805d1813e2157ba8f68dab",
+    "docs/validation/section-26-7/book-compound_strikes-1440.png": "7960926a803b740947a50315a1be73ff53ab75170fa634dd06c2efc39816f781",
+    "docs/validation/section-26-7/book-compound_timing-1440.png": "2f0855f60806f1daad2030fdafa1e1fcfcf4bc983e919d04babbbf03c7bf0e38",
+    "docs/validation/section-26-7/book-compound_validation-1440.png": "a1051170f0bf98530702a7c46c0738926354761e76d81bc4bc1826f865e52955",
+    "docs/validation/section-26-7/book-compound_threshold-1000.png": "4f147e41f407a2153658441a372f85e9c0f2a557c520e6c5ff020c88d2efa1bc",
+    "docs/validation/section-26-7/book-compound_strikes-1000.png": "5e39f7123f1a4162ee2400491b2c669ecec19158db574b6c4461407d0c010f7c",
+    "docs/validation/section-26-7/book-compound_timing-1000.png": "3391e68c1552ecd8f845431225cb39b2e02bff3b8cc231b1cf560d7e880742f4",
+    "docs/validation/section-26-7/book-compound_validation-1000.png": "f2be26f2fa3cf3bd5cac5185d1c60f720d34ac17e89426c1a7deaf3e1db8627b"
+  },
+  "book_math": {
+    "rendered": 1156,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

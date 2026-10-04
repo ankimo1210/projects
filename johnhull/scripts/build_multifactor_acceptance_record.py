@@ -343,7 +343,7 @@ def main() -> None:
         "hullkit/src/hullkit/_multi_factor_lesson.py",
         "hullkit/tests/test_multi_factor_martingales.py",
         "hullkit/tests/test_multifactor_numerics.py",
-        "hullkit/tests/test_multi_factor_lesson.py",
+        "hullkit/tests/test_multifactor_lesson.py",
         "report/tests/test_multifactor_notebook.py",
         "report/tests/test_multifactor_acceptance_record.py",
         "report/tests/test_multifactor_ledger_update.py",

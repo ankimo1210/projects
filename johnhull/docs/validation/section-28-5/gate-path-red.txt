@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/home/kazumasa/worktrees/m29/johnhull/scripts/build_multifactor_acceptance_record.py", line 419, in <module>
+    main()
+  File "/home/kazumasa/worktrees/m29/johnhull/scripts/build_multifactor_acceptance_record.py", line 406, in main
+    "source_sha256": {name: digest(name) for name in sources},
+                            ^^^^^^^^^^^^
+  File "/home/kazumasa/worktrees/m29/johnhull/scripts/build_multifactor_acceptance_record.py", line 94, in digest
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+                          ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1021, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/kazumasa/worktrees/m29/johnhull/hullkit/tests/test_multi_factor_lesson.py'

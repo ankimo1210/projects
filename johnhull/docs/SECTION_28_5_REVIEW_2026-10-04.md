@@ -11,3 +11,9 @@ Task2:16 lesson consumer（re-signed teacher/resultsを含む）、4共有図、
 ## 未完了の受入工程
 
 clean commitから29既受入節のD1/個別pytest/browser/runtime/両保管庫を確認する。統合gate/台帳30受入276未評価/P3 5/37・全suite/ruff/tracked release・1fresh最終review・main FF/pushは未完了。現時点のmainは29/277/P3 4/37。この文書は工程途中の記録であり、上記未完工程のPASSを主張しない。
+
+## 現在の受入ゲート（2026-10-04）
+
+29既受入節をclean6d7cf486から再描画し、個別pytest計2,215件、browser/runtime/両保管庫復元PASS。全478画像のpayload合計20,387,859バイト。重複排除後の実増加容量は未測定。採用29パス/SHAはm30-checkで固定。
+
+統合gate/台帳--check-artifactsはPASS。作業ブランチ台帳30受入/276未評価、P3 5/37。前段の未完工程記述はその時点の記録で、D1/統合/五軸台帳はこの追記により完了。全suite/最終review/main統合・pushはまだpending。mainは29/277/P3 4/37。
