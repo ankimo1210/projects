@@ -19,10 +19,14 @@
 
 ## 最終工程
 
-初回全suite4219 passed・6 skipped、従来warnings2（279.33秒）、ruff19／tracked release PASS。最終source hash更新後の全suiteは4219 passed・6 skipped・従来warnings2（272.81秒）。4 --check／ruff19／tracked release／台帳成果物／29D1の現行hash・両保管庫がPASS。fresh最終レビュー／main FF・pushはpending。1名のfresh最終レビューとmain FF／pushはpending。mainはまだM29までの29/277・P3 4/37。
+初回全suite4219 passed・6 skipped、従来warnings2（279.33秒）、ruff19／tracked release PASS。最終source hash更新後の全suiteは4219 passed・6 skipped・従来warnings2（272.81秒）。4 --check／ruff19／tracked release／台帳成果物／29D1の現行hash・両保管庫がPASS。fresh最終レビュー／main FF・pushはpending。1名のfreshレビューを完了し、Important1を4回帰RED→lesson20GREENで修正。固定seed再生成の消費時完全照合を追加。修正後全suiteとmain FF／pushはpending。mainはまだM29までの29/277・P3 4/37。
 
 ## 範囲と制約
 
 一般の局所martingaleを真のmartingaleと断定しない。一定GBM価格例をM29の確率金利教材の代替にしない。時刻0や決定論の場合に異なる観測値を置いた例は別の初期市場。丸め域を超えた非PSD、不正domain／型／非有限、表現不能なoverflow／正の条件付き平均underflowは拒否。全実数領域の浮動小数点精度を保証しない。
 
 次はM31 §28.6。後続Ch29–34の原典調査／独立scratchは準備資料で、正式受入ではない。P3全37節の完了目標はactive。
+
+## 最終レビュー
+
+Critical0／Important1／Minor2。Importantの再署名MC消費ガードを修正し、全4回帰RED→lesson20GREEN。M1/M2は現在数値への影響なく保留。詳細は [レビュー](SECTION_28_5_REVIEW_2026-10-04.md)。全suite修正後再実行とmain統合は次工程。

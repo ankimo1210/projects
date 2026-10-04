@@ -1538,7 +1538,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -1583,7 +1583,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T121030Z-reuse-b70ae3bd156848878c9f51962eeda0fc.json",
@@ -2000,7 +2000,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -2045,7 +2045,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T121030Z-reuse-bf8abd8149984f1ea7702416835d7724.json",
@@ -2464,7 +2464,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -2504,7 +2504,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T121100Z-reuse-74a08474692d4e59a642446bcc0839f6.json",
@@ -2933,7 +2933,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -2973,7 +2973,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T121104Z-reuse-204c9424396a4c6d8d8d2dfa50911406.json",
@@ -3403,7 +3403,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -3443,7 +3443,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T121136Z-reuse-6faf30d0bdfc49b3a604a72e92bea346.json",
@@ -3879,7 +3879,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -3919,7 +3919,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T121140Z-reuse-3c0d5288a9a846c696c57c3795b49aa9.json",
@@ -4351,7 +4351,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -4391,7 +4391,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T121214Z-reuse-5f6afb3c6efa4084874d28604cba210c.json",
@@ -4821,7 +4821,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -4861,7 +4861,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T121224Z-reuse-7b61dae861a84a0ab4ab58886be54178.json",
@@ -4981,12 +4981,12 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T121251Z-reuse-a8173edcfc6746c18d1bd6f9a126dfae.json",
@@ -5540,12 +5540,12 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T121300Z-reuse-952e7ba9d71f45d29b996fc13ffed32a.json",
@@ -6273,12 +6273,12 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T121324Z-reuse-5191c578e0ee4760bd84af21900dad35.json",
@@ -6753,12 +6753,12 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T121343Z-reuse-dc277fc5e9494aa4a209c87674c9968b.json",
@@ -7215,12 +7215,12 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T121514Z-reuse-38ca5e1721f3443cb67df81525f336f9.json",
@@ -7669,12 +7669,12 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T121528Z-reuse-58d25760fe6c4edbb67ec5bd98738148.json",
@@ -8095,7 +8095,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "acceptance_note": {
           "path": "docs/SECTION_26_15_ACCEPTANCE_2026-09-19.md",
@@ -8125,7 +8125,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T121627Z-reuse-4ca04ff74aca4f4b8a758e3d902ae191.json",
@@ -8581,7 +8581,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "payoff_image": {
           "path": "docs/validation/section-26-16/book-varswap_payoff-1000.png",
@@ -8626,7 +8626,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T121637Z-reuse-6c49eec0dbbf4599bdfbd434fb6d1d96.json",
@@ -9030,7 +9030,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -9075,7 +9075,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T121739Z-reuse-afe5452d0d9f42cb9bf13e169ea6bc18.json",
@@ -9469,7 +9469,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -9514,7 +9514,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T121758Z-reuse-68f9e1fa8ca0469f9c9842efdd9a690f.json",
@@ -9923,7 +9923,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -9973,7 +9973,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T121819Z-reuse-af091caa08214c17a61053c3b9d88292.json",
@@ -10376,7 +10376,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -10421,7 +10421,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T121823Z-reuse-6e2020d128eb4311875fb966a8629297.json",
@@ -10821,7 +10821,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -10866,7 +10866,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T121844Z-reuse-d4ea4e20ff6e4837a698ea3499453b70.json",
@@ -11266,7 +11266,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -11311,7 +11311,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T121844Z-reuse-0183fcf8c20d41148f16f8a0e216ad0f.json",
@@ -11712,7 +11712,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -11757,7 +11757,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T121904Z-reuse-0db7cf3349014c268b43835df0012fca.json",
@@ -12159,7 +12159,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -12204,7 +12204,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T121904Z-reuse-fbbda0efd3c1486aa1bdb2b5c2b60053.json",
@@ -12609,7 +12609,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -12654,7 +12654,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T121924Z-reuse-a248e819419540b0bdba569e03a9dd4a.json",
@@ -13086,7 +13086,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -13126,7 +13126,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T121927Z-reuse-c40abd663d914d0dbbd173d104ba24ff.json",
@@ -13559,7 +13559,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -13599,7 +13599,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261004T121944Z-reuse-33bea867ed454538bfe751314ce5849e.json",
@@ -14031,7 +14031,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -14071,7 +14071,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T122002Z-reuse-87e325002dbf477993e102f16bb79338.json",
@@ -14506,7 +14506,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -14546,7 +14546,7 @@
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "m30_recheck": {
           "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T122021Z-reuse-b2714a79d4a74d33bce8873b24c15871.json",
@@ -14880,12 +14880,12 @@
         "review": {
           "path": "docs/SECTION_28_5_REVIEW_2026-10-04.md",
           "kind": "note",
-          "sha256": "8b7fc7e3fd92606db5d21092353acf0897c5c04644920524567478f0208e3e2f"
+          "sha256": "eee9a58b3999c6d7bc98f9496ba8da126f9a78d886f11788bbc96fdb9f0a935b"
         },
         "acceptance_note": {
           "path": "docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md",
           "kind": "note",
-          "sha256": "a1c76abe3ff4edf4a6133ff83761f005005bf296cde582a1452d132b66165855"
+          "sha256": "99ca7bf237410f064a95f520b60070bdf6d18eab5dffd690ee60dc2dbfe5a4d9"
         },
         "textbook": {
           "path": "options, futures and other derivatives 11th.pdf",
@@ -14930,12 +14930,12 @@
         "lesson": {
           "path": "hullkit/src/hullkit/_multi_factor_lesson.py",
           "kind": "source",
-          "sha256": "351ba4f4f9753312119ba905beaf9a9a9165035aba444ce44103a7a9e7bac01c"
+          "sha256": "aa8fa44d629b1fd57525563dc2418be20d03c3280dda2a871aed3023ca732ec6"
         },
         "lesson_tests": {
           "path": "hullkit/tests/test_multifactor_lesson.py",
           "kind": "test",
-          "sha256": "01d0abea49f68ac5be42fe47850df1604aa1afa6517d51fccb9265050ffcc0ce"
+          "sha256": "44c78dfd24e9179f23924ab601ed4ee13e3b94bb9099529f8ff49cd6cc0b084b"
         },
         "notebook": {
           "path": "volumes/10_exotics_martingales/exotics.ipynb",
@@ -14960,7 +14960,7 @@
         "notebook_check": {
           "path": "docs/validation/section-28-5/notebook-check.json",
           "kind": "record",
-          "sha256": "726838404a3f4d290c301b8668566257c6b94b87d284b41c0e13f4be6fe39ba9"
+          "sha256": "93bd22609d57b02e779c9e7f493ac0ffac1a46a7253412cbc73107426429b799"
         },
         "portal": {
           "path": "report/report_builder/figures.py",
@@ -14975,12 +14975,12 @@
         "browser_run": {
           "path": "docs/validation/section-28-5/browser-check.json",
           "kind": "record",
-          "sha256": "5f9cc3a0c5b5eccc9bde35553249f6f1d50542de0a8966ea92d8a809865d4ec6"
+          "sha256": "14fb19af80aaee2eba8a1a35d3c24d55eb766b087881f0712dff81952a804538"
         },
         "m30_check": {
           "path": "docs/validation/section-28-5/m30-check.json",
           "kind": "record",
-          "sha256": "bfc99452a273e8c7bc72e3e7378e8d729e28e25018fb6dce75e60380ad036124"
+          "sha256": "8f40f0d933d5ecfc117f21e695996bdc3063639204b2e961cd98ecfa27f37d94"
         },
         "factor_ratio_ito_image": {
           "path": "docs/validation/section-28-5/portal-factor_ratio_ito-1000.png",

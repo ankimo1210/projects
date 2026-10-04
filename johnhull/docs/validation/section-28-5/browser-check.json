@@ -134,7 +134,7 @@
   },
   "source_sha256": {
     "hullkit/src/hullkit/_multi_factor_martingales.py": "17615d592dd4757db4c8ca2e1adfabb0018988e433f6378c7a622bae55658bec",
-    "hullkit/src/hullkit/_multi_factor_lesson.py": "351ba4f4f9753312119ba905beaf9a9a9165035aba444ce44103a7a9e7bac01c",
+    "hullkit/src/hullkit/_multi_factor_lesson.py": "aa8fa44d629b1fd57525563dc2418be20d03c3280dda2a871aed3023ca732ec6",
     "scripts/build_multifactor_reference.py": "56794e4d06078d4b302ee6fecb9389523c09826db3c227ba00db2059e93413b9",
     "scripts/verify_multifactor_browser.cjs": "0c1202da149d78cd4484c5edcbc303821a7acf648fdcc44a2e89731ca87817c1",
     "scripts/verify_multifactor_numerics.py": "36b948bcd6486842cfbadad2a9e4959337975569dea3bdfba983a5e415f2aa34",

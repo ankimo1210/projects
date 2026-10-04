@@ -309,11 +309,11 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M27 | §28.2 Several State Variables（pp.674–675） | 受入/main統合済み。[受入](docs/SECTION_28_2_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_2_REVIEW_2026-10-03.md) |
 | M28 | §28.3 Martingales（pp.675–676） | 受入。条件付き定義/signed Itô/同一給付Q・G価格、9条件付きMC/旧235保持/16状態/27D1。[受入](docs/SECTION_28_3_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_3_REVIEW_2026-10-04.md) |
 | M29 | §28.4 Alternative Choices for the Numeraire（pp.676–679） | 受入。HW Q状態/同一給付Q・T/支払・annuity、63独立fixture/旧246保持/16状態/28D1。[受入](docs/SECTION_28_4_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_4_REVIEW_2026-10-04.md) |
-| M30 | §28.5 Extension to Several Factors（pp.679–680） | 受入ゲートPASS。MF01–06/11市場132状態/旧257/16状態/29D1。最終全suite4219/6 PASS（272.81s）、finalreview/main統合はpending。[受入](docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md) |
+| M30 | §28.5 Extension to Several Factors（pp.679–680） | 受入ゲートPASS。MF01–06/11市場132状態/旧257/16状態/29D1。最終全suite4219/6 PASS（272.81s）、独立レビューImportant1修正・Minor2保留。修正後全suite/main統合はpending。[受入](docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md) |
 | M31（次） | §28.6 Black’s Model Revisited（pp.680–681） | 原典/独立7市場42価格・zero-hit importanceを準備。M30統合後に正式実装 |
 | 以降 | M31を含むP3金利の未受入32節から未評価節へ展開 | 節受入未着手 |
 
-現在地（2026-10-04）：M30受入ゲートPASS、台帳30/276、P3 5/37。統合記録`docs/validation/section-28-5/m30-check.json`、29D1/両保管庫/台帳成果物PASS。最終全suite4219/6 PASS（272.81s）、finalreview/main統合はpending。mainはM29まで受入29/277。次はM31 §28.6。
+現在地（2026-10-04）：M30受入ゲートPASS、台帳30/276、P3 5/37。統合記録`docs/validation/section-28-5/m30-check.json`、29D1/両保管庫/台帳成果物PASS。最終全suite4219/6 PASS（272.81s）、独立レビューImportant1修正・Minor2保留。修正後全suite/main統合はpending。mainはM29まで受入29/277。次はM31 §28.6。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
@@ -333,3 +333,5 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 - 節ごとの notebook 検査は受入時点の基点との比較として保持する。現行HEADでは `verify_accepted_vol06_notebook.py --check` が§27.1–§27.7の自節セルを各受入commitと比較し、共有図と巻全体を再実行する（§27.7 はM17で追加）。M17の§27.8は直前M16基点の節外保持検査を持つ。M18の§26.1は直前M17基点`811b1792`に対する vol10 の節外125セルの保持検査を持つ（vol10 は §4.8 の追加のみ）。後続節の追加時に現行HEAD用検査の対象を増やす（[レビュー F1 対応](docs/SECTION_27_3_27_4_FEEDBACK_2026-09-27.md)）。
 
 - §28.4 Minor3保留：portal案内の状態不一致、δ≈1e−12年で金利の桁落ち、a*h=1e16でsampler X分散消失。通常教材fixtureへの影響なし。[レビュー](docs/SECTION_28_4_REVIEW_2026-10-04.md)。
+
+- §28.5 Minor2保留：独立条件付き求積の自動判定接続、missing-RN変異の追加。現在の数値は正しい。Importantの再署名MCガードは4回帰RED→lesson20GREENで修正。[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md)。

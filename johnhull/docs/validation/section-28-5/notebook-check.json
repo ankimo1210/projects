@@ -32,7 +32,7 @@
   "source_sha256": {
     "scripts/verify_multifactor_notebook.py": "9306d77f8e278e66fea8f861f2fbed0e22b5c3de642a32931d19e3edd130138f",
     "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
-    "hullkit/src/hullkit/_multi_factor_lesson.py": "351ba4f4f9753312119ba905beaf9a9a9165035aba444ce44103a7a9e7bac01c",
+    "hullkit/src/hullkit/_multi_factor_lesson.py": "aa8fa44d629b1fd57525563dc2418be20d03c3280dda2a871aed3023ca732ec6",
     "hullkit/src/hullkit/_multi_factor_martingales.py": "17615d592dd4757db4c8ca2e1adfabb0018988e433f6378c7a622bae55658bec",
     "docs/validation/section-28-5/reference.json": "d9fd931575ab9ae5bbb2b9cbc54a5000357684910b7bbd5ff77a2c887584b706",
     "docs/validation/section-28-5/numerical-check.json": "b74fd6de90cbeee58ad6c9e9e110bedc51f2abb7deabf564ac71d17ab368f9d8",

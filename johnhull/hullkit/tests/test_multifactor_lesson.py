@@ -112,3 +112,31 @@ def test_price_figure_holds_f_market_fixed_while_choosing_three_g_loadings():
     assert [r["price_q"] for r in record["pricing"][1:4]] == pytest.approx(
         [record["pricing"][1]["price_q"]] * 3
     )
+
+
+@pytest.mark.parametrize(
+    "target,field,mean",
+    [
+        ("pricing_mc", "call_g", -100.0),
+        ("pricing_mc", "call_g", 109.05207105830452),
+        ("pricing_mc", "density", 101.0),
+        ("api_conditional_means", "mc", 101.25),
+    ],
+)
+def test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries(
+    tmp_path, monkeypatch, target, field, mean
+):
+    m = importlib.import_module("hullkit._multi_factor_lesson")
+    record = json.loads(m._RECORD.read_text())
+    item = record[target][1 if target == "pricing_mc" else 13][field]
+    item["mean"], item["se"] = mean, 100.0
+    item["z"] = abs(item["mean"] - item["reference"]) / item["se"]
+    summaries = [v for row in record["pricing_mc"] for v in row.values() if isinstance(v, dict)]
+    summaries += [row["mc"] for row in record["api_conditional_means"]]
+    record["max_mc_se"] = max(row["z"] for row in summaries)
+    record["result_sha256"] = m._result_digest(record)
+    path = tmp_path / "jointly-resigned.json"
+    path.write_text(json.dumps(record))
+    monkeypatch.setattr(m, "_RECORD", path)
+    with pytest.raises(ValueError):
+        m._figures()

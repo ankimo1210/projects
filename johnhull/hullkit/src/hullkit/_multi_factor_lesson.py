@@ -4,6 +4,9 @@ import hashlib
 import importlib.util
 import json
 import math
+import sys
+import uuid
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -31,6 +34,31 @@ def _result_digest(record):
     return hashlib.sha256(
         json.dumps({k: record[k] for k in _RESULT_KEYS}, sort_keys=True, allow_nan=False).encode()
     ).hexdigest()
+
+
+@lru_cache(maxsize=1)
+def _replayed_result_digest(reference_bytes, source_inventory):
+    """Replay fixed seeds once per independently checked reference/producer.
+
+    source_inventory is part of the cache key, after current-file SHA checks.
+    The temporary package gives the verifier its relative teacher import
+    without adding a scripts directory to the process-wide Python path.
+    """
+    name = "_hull_multifactor_replay_" + uuid.uuid4().hex
+    spec = importlib.util.spec_from_file_location(
+        name,
+        _PROJECT / "scripts/verify_multifactor_numerics.py",
+        submodule_search_locations=[str(_PROJECT / "scripts")],
+    )
+    verifier = importlib.util.module_from_spec(spec)
+    sys.modules[name] = verifier
+    try:
+        spec.loader.exec_module(verifier)
+        return _result_digest(verifier.verify(json.loads(reference_bytes)))
+    finally:
+        for key in tuple(sys.modules):
+            if key == name or key.startswith(name + "."):
+                del sys.modules[key]
 
 
 def _close(actual, expected, tolerance=2e-12):
@@ -96,6 +124,11 @@ def _load_reference():
             raise ValueError("independent multifactor teacher changed")
         if _result_digest(record) != record["result_sha256"]:
             raise ValueError("multifactor result hash mismatch")
+        # A self-consistent mean/SE/z/digest is not evidence of a real sample.
+        # Replay the producer's fixed seeds and samples before displaying it.
+        expected_digest = _replayed_result_digest(raw, tuple(sorted(hashes.items())))
+        if record["result_sha256"] != expected_digest:
+            raise ValueError("multifactor saved results differ from fixed-seed replay")
         if (
             [len(record[k]) for k in _RESULT_KEYS] != [11, 132, 11, 11]
             or record["samples"] != 262144

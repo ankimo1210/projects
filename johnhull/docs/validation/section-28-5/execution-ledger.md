@@ -20,3 +20,17 @@ Task3 initial whole suite4219/6/oldwarnings2 PASS279.33s, strictreleasePASS. Ruf
 Task3 provenance refresh: registry import order corrected without HTML byte changes; fresh own browser16/16 PASS. All29 D1 rerun from cleanabc68f37 through eligible reuse: 2215 tests/478 images, stored_new_bytes0, current producer hashes and bothstores PASS. First redraw payload20,387,859B remains the turn's image payload; deduplicated physical growth unmeasured. Gate/updater/ledger --check-artifacts30/276 PASS. Mistyped CLI --summary stopped the command chain; correct --write-summary PASS before finalwhole started, no false suite claim.
 
 Task3 final pre-review verification: 最終source hash更新後の全suiteは4219 passed・6 skipped・従来warnings2（272.81秒）。4 --check／ruff19／tracked release／台帳成果物／29D1の現行hash・両保管庫がPASS。fresh最終レビュー／main FF・pushはpending。
+
+Final review: sole fresh gpt-6-astra/high 7ac2f470..4c2ce9ff, Critical0/Important1/Minor2; independent88tests/4checks/160 randomcases/132 quadmoments/4images. I1 mean+SE+z+digest joint corruption changes direct consumer plot despite formal gate refusal; Important stands. One TDD fix pass begins; no re-review.
+Final: minor (deferred): M1 independent conditional first/second-moment quadrature and tail bounds are correct, but not wired to acceptance comparison. Future verifier mutation should cover quadrature-only corruption.
+Final: minor (deferred): M2 missing-RN mutation named in spec is absent from actual8 controls; normal raw RN and current pricing are correct. Add explicit omit/invert density in future control update.
+Final: Ruling: 一般状態依存SDEのtrue martingale保証をM30で追加しない — 有限一定GBMに明示限定しlocal/trueを区別、一般モデルは後続本文で評価する — 誤りなら一般モデル利用者の期待と受入範囲の手戻り。
+Final: Ruling: 新しい確率金利多因子価格engineはM30へ追加しない — 一定rの合成価格と点ごとの相殺を区別し、M29確率金利教材を保持する — 誤りなら確率割引を要する利用で機能不足が残る。
+Final: Ruling: 極端なexp/subnormal入力は全float域精度の保証対象にしない — reviewerのvalue1e-300/drift710拒否とvalue1e308/drift-745誤差を境界として記録し通常fixtureを確認する — 誤りなら有効な極端入力の拒否・大きな相対誤差が残る。
+Final: Ruling: 任意巨大因子数の疎行列/scale専用APIは追加しない — private小因子教材で実害なく公開変更も未承認 — 誤りなら大規模入力で時間・メモリ費用が増す。
+Final: Ruling: 消費時MC再生成の費用はsource/referenceで検証したキーによるcacheで抑える — I1を固定seed/samples再計算の完全照合で直し同一producerの再利用に限る — 誤りなら教材生成の遅延や不正なcache再利用が残る。
+Final: Ruling: 将来M31以降/Ch29–34のprepは未受入として保持する — 取得/独立scratchの全導出を本節review承認に数えず各節五軸で再検証する — 誤りなら未検証数値や実装の受入を水増しする。
+Final: Ruling: 既存AGENTS→CLAUDE→AGENTS循環は本節で修正しない — BASEから同じで本人提示workspace指示とspecを今回の権威として採用する — 誤りなら後続のproject指示解釈が曖昧になる。
+Final: Ruling: main FF/push/live一致はexecutorの実行後に判断する — readonly reviewer固定HEADを未実行のmain統合の証拠にしない — 誤りなら未到達commitや現行成果物の差を見逃す。
+
+Final I1 TDD: 4 jointly re-signed MC regressions RED4 (negative/positivecall,density,conditional), then fixed-seed/sample producer replay digest with validated source/reference cache key and temporary private import package; lesson20 GREEN6.77s. Fresh notebook268/old257/16browser/4checks/ruff19/29D1 current mandatory hash+bothstores PASS; HTML unchanged. Whole fix-pass regression pending.

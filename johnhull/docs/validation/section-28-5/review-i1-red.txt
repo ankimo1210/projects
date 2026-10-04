@@ -1,0 +1,124 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_ test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries[pricing_mc-call_g--100.0] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3259/test_consumer_rejects_jointly_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b5c9a9179e0>
+target = 'pricing_mc', field = 'call_g', mean = -100.0
+
+    @pytest.mark.parametrize("target,field,mean", [
+        ("pricing_mc", "call_g", -100.0),
+        ("pricing_mc", "call_g", 109.05207105830452),
+        ("pricing_mc", "density", 101.0),
+        ("api_conditional_means", "mc", 101.25),
+    ])
+    def test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries(tmp_path, monkeypatch, target, field, mean):
+        m = importlib.import_module("hullkit._multi_factor_lesson")
+        record = json.loads(m._RECORD.read_text())
+        item = record[target][1 if target == "pricing_mc" else 13][field]
+        item["mean"], item["se"] = mean, 100.0
+        item["z"] = abs(item["mean"] - item["reference"]) / item["se"]
+        summaries = [v for row in record["pricing_mc"] for v in row.values() if isinstance(v, dict)]
+        summaries += [row["mc"] for row in record["api_conditional_means"]]
+        record["max_mc_se"] = max(row["z"] for row in summaries)
+        record["result_sha256"] = m._result_digest(record)
+        path = tmp_path / "jointly-resigned.json"
+        path.write_text(json.dumps(record))
+        monkeypatch.setattr(m, "_RECORD", path)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:136: Failed
+_ test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries[pricing_mc-call_g-109.05207105830452] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3259/test_consumer_rejects_jointly_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b5c63451e80>
+target = 'pricing_mc', field = 'call_g', mean = 109.05207105830452
+
+    @pytest.mark.parametrize("target,field,mean", [
+        ("pricing_mc", "call_g", -100.0),
+        ("pricing_mc", "call_g", 109.05207105830452),
+        ("pricing_mc", "density", 101.0),
+        ("api_conditional_means", "mc", 101.25),
+    ])
+    def test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries(tmp_path, monkeypatch, target, field, mean):
+        m = importlib.import_module("hullkit._multi_factor_lesson")
+        record = json.loads(m._RECORD.read_text())
+        item = record[target][1 if target == "pricing_mc" else 13][field]
+        item["mean"], item["se"] = mean, 100.0
+        item["z"] = abs(item["mean"] - item["reference"]) / item["se"]
+        summaries = [v for row in record["pricing_mc"] for v in row.values() if isinstance(v, dict)]
+        summaries += [row["mc"] for row in record["api_conditional_means"]]
+        record["max_mc_se"] = max(row["z"] for row in summaries)
+        record["result_sha256"] = m._result_digest(record)
+        path = tmp_path / "jointly-resigned.json"
+        path.write_text(json.dumps(record))
+        monkeypatch.setattr(m, "_RECORD", path)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:136: Failed
+_ test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries[pricing_mc-density-101.0] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3259/test_consumer_rejects_jointly_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b5c60144ce0>
+target = 'pricing_mc', field = 'density', mean = 101.0
+
+    @pytest.mark.parametrize("target,field,mean", [
+        ("pricing_mc", "call_g", -100.0),
+        ("pricing_mc", "call_g", 109.05207105830452),
+        ("pricing_mc", "density", 101.0),
+        ("api_conditional_means", "mc", 101.25),
+    ])
+    def test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries(tmp_path, monkeypatch, target, field, mean):
+        m = importlib.import_module("hullkit._multi_factor_lesson")
+        record = json.loads(m._RECORD.read_text())
+        item = record[target][1 if target == "pricing_mc" else 13][field]
+        item["mean"], item["se"] = mean, 100.0
+        item["z"] = abs(item["mean"] - item["reference"]) / item["se"]
+        summaries = [v for row in record["pricing_mc"] for v in row.values() if isinstance(v, dict)]
+        summaries += [row["mc"] for row in record["api_conditional_means"]]
+        record["max_mc_se"] = max(row["z"] for row in summaries)
+        record["result_sha256"] = m._result_digest(record)
+        path = tmp_path / "jointly-resigned.json"
+        path.write_text(json.dumps(record))
+        monkeypatch.setattr(m, "_RECORD", path)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:136: Failed
+_ test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries[api_conditional_means-mc-101.25] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3259/test_consumer_rejects_jointly_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b5c601448f0>
+target = 'api_conditional_means', field = 'mc', mean = 101.25
+
+    @pytest.mark.parametrize("target,field,mean", [
+        ("pricing_mc", "call_g", -100.0),
+        ("pricing_mc", "call_g", 109.05207105830452),
+        ("pricing_mc", "density", 101.0),
+        ("api_conditional_means", "mc", 101.25),
+    ])
+    def test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries(tmp_path, monkeypatch, target, field, mean):
+        m = importlib.import_module("hullkit._multi_factor_lesson")
+        record = json.loads(m._RECORD.read_text())
+        item = record[target][1 if target == "pricing_mc" else 13][field]
+        item["mean"], item["se"] = mean, 100.0
+        item["z"] = abs(item["mean"] - item["reference"]) / item["se"]
+        summaries = [v for row in record["pricing_mc"] for v in row.values() if isinstance(v, dict)]
+        summaries += [row["mc"] for row in record["api_conditional_means"]]
+        record["max_mc_se"] = max(row["z"] for row in summaries)
+        record["result_sha256"] = m._result_digest(record)
+        path = tmp_path / "jointly-resigned.json"
+        path.write_text(json.dumps(record))
+        monkeypatch.setattr(m, "_RECORD", path)
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:136: Failed
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries[pricing_mc-call_g--100.0]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries[pricing_mc-call_g-109.05207105830452]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries[pricing_mc-density-101.0]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries[api_conditional_means-mc-101.25]
+4 failed, 16 deselected in 2.64s
