@@ -1,0 +1,46 @@
+{
+  "section": "28.3",
+  "status": "PASS",
+  "base": "0aa51b13",
+  "cells": 246,
+  "lesson_cells": 11,
+  "preserved_cells_outside_lesson": 235,
+  "saved_figures": [
+    "martingale_conditional",
+    "martingale_conditional_mc",
+    "martingale_ito",
+    "martingale_pricing"
+  ],
+  "negative_controls": [
+    {
+      "mutation": "old prose",
+      "rejected": true
+    },
+    {
+      "mutation": "new heading",
+      "rejected": true
+    },
+    {
+      "mutation": "saved plot",
+      "rejected": true
+    },
+    {
+      "mutation": "post heading",
+      "rejected": true
+    }
+  ],
+  "source_sha256": {
+    "scripts/verify_martingale_notebook.py": "0536acb48aff792b6abe9fd841a900cea1caec072085a7643b862216b1f4f049",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_martingale_lesson.py": "39bf96fc2a5b9c5e532f4959c640d12c02e3dac9bfac78394067103c2c1ce8a4",
+    "hullkit/src/hullkit/_martingales.py": "feb385795fc66ab55974e1d88fabf0077d36ed0b32931d91cd71f059814ab1a9",
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
+    "docs/validation/section-28-3/reference.json": "99555dbc83933478ede25a4f3612fa72ce01abc9275b5d2ba573b02a2c597dd9",
+    "docs/validation/section-28-3/numerical-check.json": "8b4fdf5e17a2ff7fe703b940399473570a6519389bfe87975b892732a6dca909",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "74cd91911c83ac662c223515ab7e701106420dc341453d064ba891ffeb7eec00",
+    "volumes/10_exotics_martingales/exotics.ipynb": "8e3edb5b5ddf2c0f85442e9180311905adf68255796cd3375b1dca92fbbca60c"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "8e3edb5b5ddf2c0f85442e9180311905adf68255796cd3375b1dca92fbbca60c"
+  }
+}

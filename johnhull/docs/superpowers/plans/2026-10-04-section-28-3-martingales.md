@@ -45,10 +45,10 @@
 
 **Files:** registry/count/index/README/manifest、verify_martingale_browser.cjs、16画像。
 **Interfaces:** 新4cards、190図/exotics78、全trace/MathJax/16matrix。
-- [ ] Step 1: 4図registry test。Expected: 未登録FAIL。
-- [ ] Step 2: 登録/件数、4図full rowと幅保証。Expected: registry/build tests PASS。
-- [ ] Step 3: Book/portal build、browser16状態、1000px目視。Expected: 全PASS。
-- [ ] Step 4: commit `Verify martingale lessons on both surfaces`、task-done。Expected: 全PASS。
+- [x] Step 1: 4図registry test。Expected: 未登録FAIL。
+- [x] Step 2: 登録/件数、4図full rowと幅保証。Expected: registry/build tests PASS。
+- [x] Step 3: Book/portal build、browser16状態、1000px目視。Expected: 全PASS。
+- [x] Step 4: commit `Verify martingale lessons on both surfaces`、task-done。Expected: 全PASS。
 
 ### Task 4: 27D1・台帳・最終レビュー・統合
 

@@ -1,15 +1,15 @@
 {
-  "section": "28.3",
+  "section": "28.2",
   "status": "PASS",
-  "base": "0aa51b13",
-  "cells": 246,
+  "base": "010a2bc3",
+  "cells": 235,
   "lesson_cells": 11,
-  "preserved_cells_outside_lesson": 235,
+  "preserved_cells_outside_lesson": 224,
   "saved_figures": [
-    "martingale_conditional",
-    "martingale_conditional_mc",
-    "martingale_ito",
-    "martingale_pricing"
+    "factor_risk_contributions",
+    "factor_risk_hedge",
+    "factor_risk_loading",
+    "factor_risk_validation"
   ],
   "negative_controls": [
     {
@@ -30,17 +30,17 @@
     }
   ],
   "source_sha256": {
-    "scripts/verify_martingale_notebook.py": "eaf6dc5db9335b824a533455d7c2773babd0d61b0db7cdaed550ec9975c2e68b",
+    "scripts/verify_factor_risk_notebook.py": "ad939ec67f2e555b8c2107f21cbe0dd2d90eac61f05d038f4d82ce5c37ff5a6e",
     "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
-    "hullkit/src/hullkit/_martingale_lesson.py": "39bf96fc2a5b9c5e532f4959c640d12c02e3dac9bfac78394067103c2c1ce8a4",
-    "hullkit/src/hullkit/_martingales.py": "feb385795fc66ab55974e1d88fabf0077d36ed0b32931d91cd71f059814ab1a9",
+    "hullkit/src/hullkit/_factor_risk_lesson.py": "8151ca3b562e61596859a0f36858b019e7d2ba29890f9e217bc61271cfc46a22",
+    "hullkit/src/hullkit/factor_risk.py": "efa2391d2f722c94f0be244764245c3870c8fd121a16de937f44f7158774eb34",
     "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
     "docs/validation/section-28-2/reference.json": "297b9d2c20ccba75b81c12ea59e6e2b292269e7f3a3dcd0421d17fc0dff335bb",
     "docs/validation/section-28-2/numerical-check.json": "0a3849aa41e74583fc9dd2b7e2ee5e81ba7d7f09c0613733994bac03609f87fa",
-    "volumes/10_exotics_martingales/build_exotics_notebook.py": "74cd91911c83ac662c223515ab7e701106420dc341453d064ba891ffeb7eec00",
-    "volumes/10_exotics_martingales/exotics.ipynb": "8e3edb5b5ddf2c0f85442e9180311905adf68255796cd3375b1dca92fbbca60c"
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "1789658e883e2314bc239dcfd8abad8dc55beb59e844aaa1e6e1e7fa3bc0c878",
+    "volumes/10_exotics_martingales/exotics.ipynb": "4255516cb6fe6f75281c1f995dcfd6a49d319a1257340269185e58c419f86b09"
   },
   "artifact_sha256": {
-    "volumes/10_exotics_martingales/exotics.ipynb": "8e3edb5b5ddf2c0f85442e9180311905adf68255796cd3375b1dca92fbbca60c"
+    "volumes/10_exotics_martingales/exotics.ipynb": "4255516cb6fe6f75281c1f995dcfd6a49d319a1257340269185e58c419f86b09"
   }
 }

@@ -8,6 +8,7 @@ import nbformat
 
 def test_martingale_notebook_and_four_negative_controls():
     m = importlib.import_module("johnhull.scripts.verify_martingale_notebook")
+    assert m.RECORD.parent.name == "section-28-3"
     nb = nbformat.read(m.NOTEBOOK, as_version=4)
     assert len(nb.cells) == 246 and len(m._outside(nb)) == 235
     assert m.compare(nb, m._base(), m._fresh()) == []

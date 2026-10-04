@@ -218,6 +218,8 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._chooser_lesson` | Hull §26.8の選択境界・配当調整複製・選択時期・独立求積/条件付きMCを共有する内部Plotly図（`test_chooser_lesson.py`） |
 | `hullkit._risk_premium_lesson` | Evidence-checked §28.1 signed loading, local hedge, P/Q densities and raw likelihood MC; four identical Book/portal figures (`test_risk_premium_lesson.py`) |
 | `hullkit._factor_risk_lesson` | Evidence-checked §28.2 factor contributions, signed-loading slopes, two-factor local hedge and independent arithmetic/API comparison; four shared Book/portal figures (`test_factor_risk_lesson.py`) |
+| `hullkit._martingales` | Private signed one-Wiener ratio drift, conditional GBM mean and numeraire drifts; finite real/broadcast/empty-batch contracts (`test_martingales.py`) |
+| `hullkit._martingale_lesson` | Evidence-checked §28.3 Itô drift, conditional means, nine conditional MC states and same-payoff Q/G pricing; four shared Book/portal figures (`test_martingale_lesson.py`) |
 | `hullkit._exchange_lesson` | Hull §26.14 の給付と分解・相関と σ̂・$r$ 非依存と $V/U$ 読み替え・米国型の早期行使を保存済みデータから共有する内部 Plotly 図ビルダー（`test_exchange_lesson.py`） |
 | `hullkit._lookback_lesson` | Hull §26.11 の経路給付・履歴極値・評価時点の複製・離散 fixing を共有する内部 Plotly 図ビルダー |
 | `hullkit._shout_lesson` | Hull §26.12 の給付・宣言木・実ノード境界・合成価格比較を保存済みデータから共有する内部 Plotly 図ビルダー（`test_shout_lesson.py`） |

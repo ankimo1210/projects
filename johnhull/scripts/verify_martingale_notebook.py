@@ -17,7 +17,7 @@ except ImportError:
 PROJECT = Path(__file__).resolve().parents[1]
 ROOT = PROJECT.parent
 NOTEBOOK = PROJECT / "volumes/10_exotics_martingales/exotics.ipynb"
-RECORD = PROJECT / "docs/validation/section-28-2/notebook-check.json"
+RECORD = PROJECT / "docs/validation/section-28-3/notebook-check.json"
 BASE = "0aa51b13"
 START = "## 6B. "
 END = "## 7. "
@@ -165,8 +165,8 @@ def main():
         "hullkit/src/hullkit/_martingale_lesson.py",
         "hullkit/src/hullkit/_martingales.py",
         "hullkit/src/hullkit/risk_premium.py",
-        "docs/validation/section-28-2/reference.json",
-        "docs/validation/section-28-2/numerical-check.json",
+        "docs/validation/section-28-3/reference.json",
+        "docs/validation/section-28-3/numerical-check.json",
         "volumes/10_exotics_martingales/build_exotics_notebook.py",
         "volumes/10_exotics_martingales/exotics.ipynb",
     )
