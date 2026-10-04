@@ -1,0 +1,174 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "forward_contract",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_homogeneity",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_start_delay",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_fixed_expiry",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_contract",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_homogeneity",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_start_delay",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_fixed_expiry",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-5/portal-forward_contract-1440.png",
+        "docs/validation/section-26-5/portal-forward_homogeneity-1440.png",
+        "docs/validation/section-26-5/portal-forward_start_delay-1440.png",
+        "docs/validation/section-26-5/portal-forward_fixed_expiry-1440.png",
+        "docs/validation/section-26-5/portal-forward_contract-1000.png",
+        "docs/validation/section-26-5/portal-forward_homogeneity-1000.png",
+        "docs/validation/section-26-5/portal-forward_start_delay-1000.png",
+        "docs/validation/section-26-5/portal-forward_fixed_expiry-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "forward_contract",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_homogeneity",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_start_delay",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_fixed_expiry",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_contract",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_homogeneity",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_start_delay",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "forward_fixed_expiry",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-26-5/book-forward_contract-1440.png",
+        "docs/validation/section-26-5/book-forward_homogeneity-1440.png",
+        "docs/validation/section-26-5/book-forward_start_delay-1440.png",
+        "docs/validation/section-26-5/book-forward_fixed_expiry-1440.png",
+        "docs/validation/section-26-5/book-forward_contract-1000.png",
+        "docs/validation/section-26-5/book-forward_homogeneity-1000.png",
+        "docs/validation/section-26-5/book-forward_start_delay-1000.png",
+        "docs/validation/section-26-5/book-forward_fixed_expiry-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/forward_start.py": "3590dfcd279b47f3c755dcdc3297d1a0b2b35a0a16e3eb9cee647f64f3729613",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/_forward_start_lesson.py": "8b4337c3ea479ef4343f7a66f5c0161a49da0bac9ed0f1fcf924f70722d4e632",
+    "scripts/build_forward_start_reference.py": "6b7cdaf47e00e6f93010ce6e38655be449babff7f86ed7b92e50018c77bd3ddf",
+    "scripts/verify_forward_start_browser.cjs": "0e00cde223124aa3feb10da1f6d1cc8d5978b03f2531dd75f890f2a2fcee20af",
+    "docs/validation/section-26-5/reference.json": "74a597bcf73d48485389a6e6f9991dec10648204100904de26b91ebf24a67b9e",
+    "docs/validation/section-26-5/numerical-check.json": "dc3b3628658165529b9700e32d06a7c8dc1ce46a55f1e8f78df55de46927626d",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "d599a83083474b85ae6dbccb81e22dfb46f95dedcc4ba9a64058d7bdb39f31f1",
+    "volumes/10_exotics_martingales/exotics.ipynb": "213c00f83d433badc76dec3bdd2f8914a04039244d1b6a99d34295aa1fa60c55",
+    "report/report_builder/figures.py": "c248f59aa93dd0f8ea135ed46f7d089e88b943be818acc37f614bd929bd7acc3",
+    "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "4135c50f06f332ed888ec06b2f8a3d9831051f56765adf0c325c3210d2765562",
+    "book/_build/html/notebooks/10_exotics.html": "b88192909b7bf66d9845095f823d13af7311f8ff3b3d0842dab9d8410225e354",
+    "docs/validation/section-26-5/portal-forward_contract-1440.png": "b75b535b9f5d6fdabb42de3c7376b8e436ccfb3ce5456646cc3f19241ab4d686",
+    "docs/validation/section-26-5/portal-forward_homogeneity-1440.png": "1d2037a4fea2f795f5af17ab685f97eb479fa3355f4f1f502a2af5b4cfa85b8f",
+    "docs/validation/section-26-5/portal-forward_start_delay-1440.png": "4807a68ad0b037ca9a3137b58c123906e14ddbad851a170029662b8cf296a948",
+    "docs/validation/section-26-5/portal-forward_fixed_expiry-1440.png": "d49712c9c02716f1445a64f4b7ac58a70135b96072f78f4b9ec8c99f84e194b3",
+    "docs/validation/section-26-5/portal-forward_contract-1000.png": "d285f9ba22097f664e6359137223fd4546aa7e925f28c76aa86402219331de80",
+    "docs/validation/section-26-5/portal-forward_homogeneity-1000.png": "bbbf636439313076cc151ff2cc164bd6828a7db90f7f17bbb74c077ada4483b5",
+    "docs/validation/section-26-5/portal-forward_start_delay-1000.png": "194ab6a1f67d8cc8c01c43d698cb8c2c7958eb3bdd523fd72ec7763184636d7b",
+    "docs/validation/section-26-5/portal-forward_fixed_expiry-1000.png": "980d14f40c3da388ebcbe932a09f2f79e7aa1c1a362d66913a332bca2f129807",
+    "docs/validation/section-26-5/book-forward_contract-1440.png": "79cb87c9f89de9e4794d073e88079036191a7471ef5bca37fe50978cfe7644b9",
+    "docs/validation/section-26-5/book-forward_homogeneity-1440.png": "73e139ef774f6364e56f5ec093dd136fd24c93f5855a1eb79c1f3e448dcd86c5",
+    "docs/validation/section-26-5/book-forward_start_delay-1440.png": "5856876cc4b1050f67a593a636eb967cc6a23dcfd65b5020e51c6d1f1384190f",
+    "docs/validation/section-26-5/book-forward_fixed_expiry-1440.png": "257eda6ae0c49266080d6042ff30fc57751de21dec84758eb56e1e069e321ab7",
+    "docs/validation/section-26-5/book-forward_contract-1000.png": "bd7a134757bfecf95105f745ec8b3d663608f02691281ab67456e7ba9da24fda",
+    "docs/validation/section-26-5/book-forward_homogeneity-1000.png": "2c46f61e74cae0449a7fc1cad0f259695451155cb1cce9e61cd75f3c601a899e",
+    "docs/validation/section-26-5/book-forward_start_delay-1000.png": "d822fe4384bd270b9af575be3199718f376a99962486009d0be8413f32b30a57",
+    "docs/validation/section-26-5/book-forward_fixed_expiry-1000.png": "52c6eb3e9e37e8a7942c7147330787eb7d4886df7360d243e118929560fb7381"
+  },
+  "book_math": {
+    "rendered": 1156,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

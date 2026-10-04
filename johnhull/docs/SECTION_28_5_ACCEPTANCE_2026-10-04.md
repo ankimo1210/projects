@@ -1,19 +1,28 @@
-# §28.5 Extension to Several Factors — M30受入工程
+# §28.5 Extension to Several Factors — M30受入
 
-2026-10-04、原典Hull GE pp679–680/脚注7を直接画像照合。main基点7ac2f470。原典に印刷数値pin/追加式番号はなく、全数値はsynthetic。
+更新2026-10-04。原典 Hull GE pp.679–680／脚注7を直接画像照合。基点main `7ac2f470`。MF01–06を全5軸へ対応。印刷数値pinはなく、以下の数値例は合成市場。
 
-MF01–06は独立因子のQ/一般world drift、比の相対Itô/log drift、条件付き可積分GBM/局所条件、同一給付Q/g価格、相関C=L Lᵀ/同一risk basis、PSD退化/単位/入力domainを全五軸へ対応する。新private計算とprivate教材を追加し、公開API/production依存は保持。
+## 実装と独立検証
 
-Task1:46 API＋4 numerical＋model index473=523 PASS。独立11市場/132状態、262144標本/187 raw MC集計、maxAPI1.4210854715202004e−14/maxMC2.545394734466418SE、8変異拒否。追加mixedboolのRED3→GREENを記録。
+- private因子計算とprivate教材を追加。C=L Lᵀ、同じbasisのsigned loading／risk vector、比の相対Itô drift／log drift、可積分な有限GBMの条件付き平均、同じ給付のQ/g価格を扱う。PSD退化でinverseは不要。
+- API46＋numerical4＋model index473＝523 tests PASS。混合boolの入力昇格をRED3→GREEN46で拒否。独立math.fsum／Gaussian求積11市場・132条件付き状態、262144標本・187 raw MC集計。最大API差1.4210854715202004e−14、最大MC差2.545394734466418 SE、8変異を拒否。
+- lesson consumer16 tests。再署名した教師／保存結果も消費時に拒否。4共有図、新11セル／全268セルfresh実行、旧257セルの本文・保存出力・Plotly保持。価格図のsame-f契約はRED1→GREENで3種類のgを固定。
+- Book／portal×1440／1000pxの16状態／16画像、数値・SE・表示変異・MathJax・図幅700px以上を確認。executorはportal1000全4図とBook1440全4図を目視。全198図、exotics86、public72／private33。Book warnings148＝従来144＋新Plotly4。
 
-Task2:16 lesson consumer（re-signed teacher/resultsを含む）、4共有図、11新セル/全268 fresh、旧257本文/保存出力/Plotly保持。Book/portal×1440/1000=16状態/16画像、MathJax/幅700px/trace/SE/表示変異PASS。rootはportal1000全4とBook1440全4を目視。価格図のsame-f contractはRED1→GREENで三つのgを固定。全198図/12テーマ/exotics86、public72/private33。fullBook148 warnings=旧144＋新Plotly4。
+## 既受入29節と五軸台帳
 
-## 未完了の受入工程
+初回はclean `6d7cf486` から29節を再描画。個別pytest計2215件、478画像のpayload合計20,387,859バイト、browser／runtime／C・F両保管庫の復元PASS。重複排除後の物理的な増加容量は未測定。
 
-clean commitから29既受入節のD1/個別pytest/browser/runtime/両保管庫を確認する。統合gate/台帳30受入276未評価/P3 5/37・全suite/ruff/tracked release・1fresh最終review・main FF/pushは未完了。現時点のmainは29/277/P3 4/37。この文書は工程途中の記録であり、上記未完工程のPASSを主張しない。
+共有registryのimport整列後、HTMLは整列前と同じSHA-256。clean `abc68f37` から29節をD1 driverで再実行し、全29節を適格な既存画像から再利用した。個別pytest2215件／478画像／新規画像保存0バイト。採用パス・SHA・現行producer inventory・両保管庫は `m30-check.json` に固定した。証跡の手動再署名は行っていない。
 
-## 現在の受入ゲート（2026-10-04）
+統合gate、更新前拒否20 tests、全五軸台帳と `verify_section_ledger.py --check-artifacts` はPASS。作業ブランチ30受入／276未評価、P3 5/37（残32節）。
 
-29既受入節をclean6d7cf486から再描画し、個別pytest計2,215件、browser/runtime/両保管庫復元PASS。全478画像のpayload合計20,387,859バイト。重複排除後の実増加容量は未測定。採用29パス/SHAはm30-checkで固定。
+## 最終工程
 
-統合gate/台帳--check-artifactsはPASS。作業ブランチ台帳30受入/276未評価、P3 5/37。前段の未完工程記述はその時点の記録で、D1/統合/五軸台帳はこの追記により完了。全suite/最終review/main統合・pushはまだpending。mainは29/277/P3 4/37。
+初回全suite4219 passed・6 skipped、従来warnings2（279.33秒）、ruff19／tracked release PASS。最終producer hash更新後の全suiteを再実行中。1名のfresh最終レビューとmain FF／pushはpending。mainはまだM29までの29/277・P3 4/37。
+
+## 範囲と制約
+
+一般の局所martingaleを真のmartingaleと断定しない。一定GBM価格例をM29の確率金利教材の代替にしない。時刻0や決定論の場合に異なる観測値を置いた例は別の初期市場。丸め域を超えた非PSD、不正domain／型／非有限、表現不能なoverflow／正の条件付き平均underflowは拒否。全実数領域の浮動小数点精度を保証しない。
+
+次はM31 §28.6。後続Ch29–34の原典調査／独立scratchは準備資料で、正式受入ではない。P3全37節の完了目標はactive。
