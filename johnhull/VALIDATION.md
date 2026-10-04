@@ -800,3 +800,5 @@ model performance or production readiness.
 台帳成果物28/278 PASS。全suite/最終レビュー/main検証は実行中。
 
 全hullkit+report 3,986 passed・6 skipped・既存warnings2件（186.50s）。変更Python20ファイルruff、4--check、台帳成果物28/278 PASS。独立最終レビュー/main統合は検証中。
+
+M28最終レビューI1修正後：datetime/timedelta拒否60追加、RED52→GREEN83、全suite4,046 passed/6 skipped/既存warnings2（179.21s）。16browser/fresh全文/27D1現行hash/台帳成果物PASS。公開helperは不変、Minor1deferred。

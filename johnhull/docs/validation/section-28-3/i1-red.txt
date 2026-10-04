@@ -1,0 +1,1228 @@
+.......................FFFFFFFFFFFFFFFFFFFF..F..F.FFFFFFFFFFFFFFFFFFFFFF [ 86%]
+FF.F.FF.FFF                                                              [100%]
+=================================== FAILURES ===================================
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad0] _
+
+bad = np.datetime64('2026-10-04'), entry = 'ratio_drift', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad1] _
+
+bad = np.datetime64('NaT','generic'), entry = 'ratio_drift', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad2] _
+
+bad = np.timedelta64(365,'D'), entry = 'ratio_drift', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad3] _
+
+bad = np.timedelta64('NaT'), entry = 'ratio_drift', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad4] _
+
+bad = array(['2026-10-04'], dtype='datetime64[D]'), entry = 'ratio_drift'
+empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad5] _
+
+bad = array([365], dtype='timedelta64[D]'), entry = 'ratio_drift', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad6] _
+
+bad = array([0.04, np.datetime64('NaT','generic')], dtype=object)
+entry = 'ratio_drift', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad7] _
+
+bad = array([0.04, np.timedelta64(365,'D')], dtype=object)
+entry = 'ratio_drift', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad8] _
+
+bad = array([], dtype='datetime64[D]'), entry = 'ratio_drift', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad9] _
+
+bad = array([], dtype='timedelta64[D]'), entry = 'ratio_drift', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad0] _
+
+bad = np.datetime64('2026-10-04'), entry = 'numeraire_drifts', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad1] _
+
+bad = np.datetime64('NaT','generic'), entry = 'numeraire_drifts', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad2] _
+
+bad = np.timedelta64(365,'D'), entry = 'numeraire_drifts', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad3] _
+
+bad = np.timedelta64('NaT'), entry = 'numeraire_drifts', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad4] _
+
+bad = array(['2026-10-04'], dtype='datetime64[D]'), entry = 'numeraire_drifts'
+empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad5] _
+
+bad = array([365], dtype='timedelta64[D]'), entry = 'numeraire_drifts'
+empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad6] _
+
+bad = array([0.04, np.datetime64('NaT','generic')], dtype=object)
+entry = 'numeraire_drifts', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad7] _
+
+bad = array([0.04, np.timedelta64(365,'D')], dtype=object)
+entry = 'numeraire_drifts', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad8] _
+
+bad = array([], dtype='datetime64[D]'), entry = 'numeraire_drifts'
+empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad9] _
+
+bad = array([], dtype='timedelta64[D]'), entry = 'numeraire_drifts'
+empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad2] _
+
+bad = np.timedelta64(365,'D'), entry = 'ratio_conditional_mean', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad5] _
+
+bad = array([365], dtype='timedelta64[D]'), entry = 'ratio_conditional_mean'
+empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad7] _
+
+bad = array([0.04, np.timedelta64(365,'D')], dtype=object)
+entry = 'ratio_conditional_mean', empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad8] _
+
+bad = array([], dtype='datetime64[D]'), entry = 'ratio_conditional_mean'
+empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad9] _
+
+bad = array([], dtype='timedelta64[D]'), entry = 'ratio_conditional_mean'
+empty = False
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad0] _
+
+bad = np.datetime64('2026-10-04'), entry = 'ratio_drift', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad1] _
+
+bad = np.datetime64('NaT','generic'), entry = 'ratio_drift', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad2] _
+
+bad = np.timedelta64(365,'D'), entry = 'ratio_drift', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad3] _
+
+bad = np.timedelta64('NaT'), entry = 'ratio_drift', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad4] _
+
+bad = array(['2026-10-04'], dtype='datetime64[D]'), entry = 'ratio_drift'
+empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad5] _
+
+bad = array([365], dtype='timedelta64[D]'), entry = 'ratio_drift', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad6] _
+
+bad = array([0.04, np.datetime64('NaT','generic')], dtype=object)
+entry = 'ratio_drift', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad7] _
+
+bad = array([0.04, np.timedelta64(365,'D')], dtype=object)
+entry = 'ratio_drift', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad8] _
+
+bad = array([], dtype='datetime64[D]'), entry = 'ratio_drift', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad9] _
+
+bad = array([], dtype='timedelta64[D]'), entry = 'ratio_drift', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad0] _
+
+bad = np.datetime64('2026-10-04'), entry = 'numeraire_drifts', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad1] _
+
+bad = np.datetime64('NaT','generic'), entry = 'numeraire_drifts', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad2] _
+
+bad = np.timedelta64(365,'D'), entry = 'numeraire_drifts', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad3] _
+
+bad = np.timedelta64('NaT'), entry = 'numeraire_drifts', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad4] _
+
+bad = array(['2026-10-04'], dtype='datetime64[D]'), entry = 'numeraire_drifts'
+empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad5] _
+
+bad = array([365], dtype='timedelta64[D]'), entry = 'numeraire_drifts'
+empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad6] _
+
+bad = array([0.04, np.datetime64('NaT','generic')], dtype=object)
+entry = 'numeraire_drifts', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad7] _
+
+bad = array([0.04, np.timedelta64(365,'D')], dtype=object)
+entry = 'numeraire_drifts', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad8] _
+
+bad = array([], dtype='datetime64[D]'), entry = 'numeraire_drifts', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad9] _
+
+bad = array([], dtype='timedelta64[D]'), entry = 'numeraire_drifts'
+empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad0] _
+
+bad = np.datetime64('2026-10-04'), entry = 'ratio_conditional_mean'
+empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad2] _
+
+bad = np.timedelta64(365,'D'), entry = 'ratio_conditional_mean', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad4] _
+
+bad = array(['2026-10-04'], dtype='datetime64[D]')
+entry = 'ratio_conditional_mean', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad5] _
+
+bad = array([365], dtype='timedelta64[D]'), entry = 'ratio_conditional_mean'
+empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad7] _
+
+bad = array([0.04, np.timedelta64(365,'D')], dtype=object)
+entry = 'ratio_conditional_mean', empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad8] _
+
+bad = array([], dtype='datetime64[D]'), entry = 'ratio_conditional_mean'
+empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+_ test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad9] _
+
+bad = array([], dtype='timedelta64[D]'), entry = 'ratio_conditional_mean'
+empty = True
+
+    @pytest.mark.parametrize("bad", [
+        np.datetime64("2026-10-04"), np.datetime64("NaT"),
+        np.timedelta64(365,"D"), np.timedelta64("NaT"),
+        np.array(["2026-10-04"],dtype="datetime64[D]"),
+        np.array([365],dtype="timedelta64[D]"),
+        np.array([0.04,np.datetime64("NaT")],dtype=object),
+        np.array([0.04,np.timedelta64(365,"D")],dtype=object),
+        np.empty(0,dtype="datetime64[D]"), np.empty(0,dtype="timedelta64[D]"),
+    ])
+    @pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+    @pytest.mark.parametrize("empty", [False,True])
+    def test_temporal_inputs_rejected_before_float_conversion(bad,entry,empty):
+        m=api()
+        other=np.empty((0,1)) if empty else 0.04
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_martingales.py:112: Failed
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad0]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad1]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad2]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad3]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad4]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad5]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad6]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad7]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad8]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_drift-bad9]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad0]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad1]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad2]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad3]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad4]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad5]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad6]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad7]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad8]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-numeraire_drifts-bad9]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad2]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad5]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad7]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad8]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[False-ratio_conditional_mean-bad9]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad0]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad1]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad2]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad3]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad4]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad5]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad6]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad7]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad8]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_drift-bad9]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad0]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad1]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad2]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad3]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad4]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad5]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad6]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad7]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad8]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-numeraire_drifts-bad9]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad0]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad2]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad4]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad5]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad7]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad8]
+FAILED johnhull/hullkit/tests/test_martingales.py::test_temporal_inputs_rejected_before_float_conversion[True-ratio_conditional_mean-bad9]
+52 failed, 31 passed in 0.69s
