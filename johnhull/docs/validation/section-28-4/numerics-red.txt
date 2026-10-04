@@ -1,0 +1,13 @@
+
+==================================== ERRORS ====================================
+______ ERROR collecting johnhull/hullkit/tests/test_numeraire_numerics.py ______
+ImportError while importing test module '/home/kazumasa/worktrees/m29/johnhull/hullkit/tests/test_numeraire_numerics.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+johnhull/hullkit/tests/test_numeraire_numerics.py:11: in <module>
+    import verify_numeraire_numerics as gate
+E   ModuleNotFoundError: No module named 'verify_numeraire_numerics'
+=========================== short test summary info ============================
+ERROR johnhull/hullkit/tests/test_numeraire_numerics.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.50s
