@@ -73,7 +73,12 @@ def _check_numbers(actual, expected, label):
         if not isinstance(actual, dict) or actual.keys() != expected.keys():
             raise ValueError(label + " structure differs")
         for key in expected:
-            _check_numbers(actual[key], expected[key], label)
+            if key == "z" and "se" in expected:
+                # z=(mean-reference)/se amplifies mean roundoff by 1/se, which
+                # reaches 1e10 in near-singular cases; compare z*se instead.
+                _check_numbers(actual[key] * actual["se"], expected[key] * expected["se"], label)
+            else:
+                _check_numbers(actual[key], expected[key], label)
     elif isinstance(expected, list):
         if not isinstance(actual, list) or len(actual) != len(expected):
             raise ValueError(label + " structure differs")
