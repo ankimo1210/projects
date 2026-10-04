@@ -1,0 +1,678 @@
+FFFFFFFFFFFFFFFFFFFF                                                     [100%]
+=================================== FAILURES ===================================
+_______________________ test_record_rejects_stale_source _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_record_rejects_stale_sour0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55b51340>
+
+    def test_record_rejects_stale_source(tmp_path: Path, monkeypatch) -> None:
+>       gate = _gate()
+               ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________________ test_browser_matrix_rejects_missing_state ___________________
+
+    def test_browser_matrix_rejects_missing_state() -> None:
+>       gate = _gate()
+               ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____________________ test_d1_payload_rejects_missing_mirror ____________________
+
+    def test_d1_payload_rejects_missing_mirror() -> None:
+>       gate = _gate()
+               ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________ test_integrated_record_covers_twenty_nine_sections ______________
+
+    def test_integrated_record_covers_twenty_nine_sections() -> None:
+>       gate = _gate()
+               ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_d1_rejects_each_missing_required_hash[source_sha256] ___________
+
+category = 'source_sha256'
+
+    @pytest.mark.parametrize("category", ["source_sha256", "artifact_sha256"])
+    def test_d1_rejects_each_missing_required_hash(category) -> None:
+>       gate = _gate()
+               ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_d1_rejects_each_missing_required_hash[artifact_sha256] __________
+
+category = 'artifact_sha256'
+
+    @pytest.mark.parametrize("category", ["source_sha256", "artifact_sha256"])
+    def test_d1_rejects_each_missing_required_hash(category) -> None:
+>       gate = _gate()
+               ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____ test_own_record_rejects_paths_outside_canonical_project[../outside.py] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_own_record_rejects_paths_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55249b80>
+source = '../outside.py'
+
+    @pytest.mark.parametrize("source", ["../outside.py", "/tmp/outside.py", "scripts/../source.py", "scripts\\outside.py"])
+    def test_own_record_rejects_paths_outside_canonical_project(tmp_path, monkeypatch, source):
+>       gate=_gate()
+             ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+___ test_own_record_rejects_paths_outside_canonical_project[/tmp/outside.py] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_own_record_rejects_paths_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c553eb2f0>
+source = '/tmp/outside.py'
+
+    @pytest.mark.parametrize("source", ["../outside.py", "/tmp/outside.py", "scripts/../source.py", "scripts\\outside.py"])
+    def test_own_record_rejects_paths_outside_canonical_project(tmp_path, monkeypatch, source):
+>       gate=_gate()
+             ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_own_record_rejects_paths_outside_canonical_project[scripts/../source.py] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_own_record_rejects_paths_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55214170>
+source = 'scripts/../source.py'
+
+    @pytest.mark.parametrize("source", ["../outside.py", "/tmp/outside.py", "scripts/../source.py", "scripts\\outside.py"])
+    def test_own_record_rejects_paths_outside_canonical_project(tmp_path, monkeypatch, source):
+>       gate=_gate()
+             ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_own_record_rejects_paths_outside_canonical_project[scripts\\outside.py] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_own_record_rejects_paths_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c5524ad50>
+source = 'scripts\\outside.py'
+
+    @pytest.mark.parametrize("source", ["../outside.py", "/tmp/outside.py", "scripts/../source.py", "scripts\\outside.py"])
+    def test_own_record_rejects_paths_outside_canonical_project(tmp_path, monkeypatch, source):
+>       gate=_gate()
+             ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_own_numerical_record_requires_current_reference_digest __________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_own_numerical_record_requ0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55248050>
+
+    def test_own_numerical_record_requires_current_reference_digest(tmp_path, monkeypatch):
+>       gate=_gate()
+             ^^^^^^^
+
+johnhull/report/tests/test_multifactor_acceptance_record.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_acceptance_record.py:15: in _gate
+    return importlib.import_module("johnhull.scripts.build_multifactor_acceptance_record")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_acceptance_record'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_acceptance_record'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_registered_source_pages_use_the_ledger_range_contract __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55248d40>
+
+    def test_registered_source_pages_use_the_ledger_range_contract(monkeypatch):
+        section = {"id": "28.5"}
+>       updater = _updater()
+                  ^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_ledger_update.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_ledger_update.py:15: in _updater
+    return importlib.import_module("johnhull.scripts.update_multifactor_ledger")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.update_multifactor_ledger'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.update_multifactor_ledger'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________________ test_missing_gate_leaves_ledger_untouched ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_missing_gate_leaves_ledge0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55281ca0>
+
+    def test_missing_gate_leaves_ledger_untouched(tmp_path: Path, monkeypatch) -> None:
+>       updater = _updater()
+                  ^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_ledger_update.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_ledger_update.py:15: in _updater
+    return importlib.import_module("johnhull.scripts.update_multifactor_ledger")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.update_multifactor_ledger'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.update_multifactor_ledger'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____________ test_failed_integrated_check_leaves_ledger_untouched _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_failed_integrated_check_l0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c5524aa80>
+
+    def test_failed_integrated_check_leaves_ledger_untouched(tmp_path, monkeypatch):
+>       updater = _updater()
+                  ^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_ledger_update.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_ledger_update.py:15: in _updater
+    return importlib.import_module("johnhull.scripts.update_multifactor_ledger")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.update_multifactor_ledger'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.update_multifactor_ledger'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+________________ test_m30_record_rejects_changed_selected_file _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_m30_record_rejects_change0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c553eb380>
+
+    def test_m30_record_rejects_changed_selected_file(tmp_path: Path, monkeypatch) -> None:
+>       updater = _updater()
+                  ^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_ledger_update.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_ledger_update.py:15: in _updater
+    return importlib.import_module("johnhull.scripts.update_multifactor_ledger")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.update_multifactor_ledger'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.update_multifactor_ledger'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_selected_path_cannot_escape_its_section[docs/validation/d1-recheck/section-26-2/../section-26-3/selected.json] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_selected_path_cannot_esca0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55282c90>
+selected = 'docs/validation/d1-recheck/section-26-2/../section-26-3/selected.json'
+
+    @pytest.mark.parametrize(
+        "selected",
+        [
+            "docs/validation/d1-recheck/section-26-2/../section-26-3/selected.json",
+            "/docs/validation/d1-recheck/section-26-2/selected.json",
+            "docs/validation/d1-recheck/section-26-3/selected.json",
+            "docs/validation/d1-recheck/section-26-2/selected.txt",
+            "docs/validation/d1-recheck/section-26-2/..\\selected.json",
+        ],
+    )
+    def test_selected_path_cannot_escape_its_section(tmp_path, monkeypatch, selected):
+>       updater = _updater()
+                  ^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_ledger_update.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_ledger_update.py:15: in _updater
+    return importlib.import_module("johnhull.scripts.update_multifactor_ledger")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.update_multifactor_ledger'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.update_multifactor_ledger'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_selected_path_cannot_escape_its_section[/docs/validation/d1-recheck/section-26-2/selected.json] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_selected_path_cannot_esca1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55283f80>
+selected = '/docs/validation/d1-recheck/section-26-2/selected.json'
+
+    @pytest.mark.parametrize(
+        "selected",
+        [
+            "docs/validation/d1-recheck/section-26-2/../section-26-3/selected.json",
+            "/docs/validation/d1-recheck/section-26-2/selected.json",
+            "docs/validation/d1-recheck/section-26-3/selected.json",
+            "docs/validation/d1-recheck/section-26-2/selected.txt",
+            "docs/validation/d1-recheck/section-26-2/..\\selected.json",
+        ],
+    )
+    def test_selected_path_cannot_escape_its_section(tmp_path, monkeypatch, selected):
+>       updater = _updater()
+                  ^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_ledger_update.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_ledger_update.py:15: in _updater
+    return importlib.import_module("johnhull.scripts.update_multifactor_ledger")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.update_multifactor_ledger'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.update_multifactor_ledger'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_selected_path_cannot_escape_its_section[docs/validation/d1-recheck/section-26-3/selected.json] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_selected_path_cannot_esca2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55281a90>
+selected = 'docs/validation/d1-recheck/section-26-3/selected.json'
+
+    @pytest.mark.parametrize(
+        "selected",
+        [
+            "docs/validation/d1-recheck/section-26-2/../section-26-3/selected.json",
+            "/docs/validation/d1-recheck/section-26-2/selected.json",
+            "docs/validation/d1-recheck/section-26-3/selected.json",
+            "docs/validation/d1-recheck/section-26-2/selected.txt",
+            "docs/validation/d1-recheck/section-26-2/..\\selected.json",
+        ],
+    )
+    def test_selected_path_cannot_escape_its_section(tmp_path, monkeypatch, selected):
+>       updater = _updater()
+                  ^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_ledger_update.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_ledger_update.py:15: in _updater
+    return importlib.import_module("johnhull.scripts.update_multifactor_ledger")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.update_multifactor_ledger'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.update_multifactor_ledger'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_selected_path_cannot_escape_its_section[docs/validation/d1-recheck/section-26-2/selected.txt] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_selected_path_cannot_esca3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c552f97f0>
+selected = 'docs/validation/d1-recheck/section-26-2/selected.txt'
+
+    @pytest.mark.parametrize(
+        "selected",
+        [
+            "docs/validation/d1-recheck/section-26-2/../section-26-3/selected.json",
+            "/docs/validation/d1-recheck/section-26-2/selected.json",
+            "docs/validation/d1-recheck/section-26-3/selected.json",
+            "docs/validation/d1-recheck/section-26-2/selected.txt",
+            "docs/validation/d1-recheck/section-26-2/..\\selected.json",
+        ],
+    )
+    def test_selected_path_cannot_escape_its_section(tmp_path, monkeypatch, selected):
+>       updater = _updater()
+                  ^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_ledger_update.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_ledger_update.py:15: in _updater
+    return importlib.import_module("johnhull.scripts.update_multifactor_ledger")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.update_multifactor_ledger'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.update_multifactor_ledger'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_ test_selected_path_cannot_escape_its_section[docs/validation/d1-recheck/section-26-2/..\\selected.json] _
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3202/test_selected_path_cannot_esca4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x775c55283440>
+selected = 'docs/validation/d1-recheck/section-26-2/..\\selected.json'
+
+    @pytest.mark.parametrize(
+        "selected",
+        [
+            "docs/validation/d1-recheck/section-26-2/../section-26-3/selected.json",
+            "/docs/validation/d1-recheck/section-26-2/selected.json",
+            "docs/validation/d1-recheck/section-26-3/selected.json",
+            "docs/validation/d1-recheck/section-26-2/selected.txt",
+            "docs/validation/d1-recheck/section-26-2/..\\selected.json",
+        ],
+    )
+    def test_selected_path_cannot_escape_its_section(tmp_path, monkeypatch, selected):
+>       updater = _updater()
+                  ^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_ledger_update.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/report/tests/test_multifactor_ledger_update.py:15: in _updater
+    return importlib.import_module("johnhull.scripts.update_multifactor_ledger")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.update_multifactor_ledger'
+import_ = <function _gcd_import at 0x775c939a40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.update_multifactor_ledger'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_record_rejects_stale_source
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_browser_matrix_rejects_missing_state
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_d1_payload_rejects_missing_mirror
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_integrated_record_covers_twenty_nine_sections
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_d1_rejects_each_missing_required_hash[source_sha256]
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_d1_rejects_each_missing_required_hash[artifact_sha256]
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_own_record_rejects_paths_outside_canonical_project[../outside.py]
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_own_record_rejects_paths_outside_canonical_project[/tmp/outside.py]
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_own_record_rejects_paths_outside_canonical_project[scripts/../source.py]
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_own_record_rejects_paths_outside_canonical_project[scripts\\outside.py]
+FAILED johnhull/report/tests/test_multifactor_acceptance_record.py::test_own_numerical_record_requires_current_reference_digest
+FAILED johnhull/report/tests/test_multifactor_ledger_update.py::test_registered_source_pages_use_the_ledger_range_contract
+FAILED johnhull/report/tests/test_multifactor_ledger_update.py::test_missing_gate_leaves_ledger_untouched
+FAILED johnhull/report/tests/test_multifactor_ledger_update.py::test_failed_integrated_check_leaves_ledger_untouched
+FAILED johnhull/report/tests/test_multifactor_ledger_update.py::test_m30_record_rejects_changed_selected_file
+FAILED johnhull/report/tests/test_multifactor_ledger_update.py::test_selected_path_cannot_escape_its_section[docs/validation/d1-recheck/section-26-2/../section-26-3/selected.json]
+FAILED johnhull/report/tests/test_multifactor_ledger_update.py::test_selected_path_cannot_escape_its_section[/docs/validation/d1-recheck/section-26-2/selected.json]
+FAILED johnhull/report/tests/test_multifactor_ledger_update.py::test_selected_path_cannot_escape_its_section[docs/validation/d1-recheck/section-26-3/selected.json]
+FAILED johnhull/report/tests/test_multifactor_ledger_update.py::test_selected_path_cannot_escape_its_section[docs/validation/d1-recheck/section-26-2/selected.txt]
+FAILED johnhull/report/tests/test_multifactor_ledger_update.py::test_selected_path_cannot_escape_its_section[docs/validation/d1-recheck/section-26-2/..\\selected.json]
+20 failed in 0.23s
