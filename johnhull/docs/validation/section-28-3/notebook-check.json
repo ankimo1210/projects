@@ -33,11 +33,11 @@
     "scripts/verify_martingale_notebook.py": "4eb2663f0aeed1e5c0b9191e591d9e93a445dfcc015b4720cbe7c325ef0dd45a",
     "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
     "hullkit/src/hullkit/_martingale_lesson.py": "39bf96fc2a5b9c5e532f4959c640d12c02e3dac9bfac78394067103c2c1ce8a4",
-    "hullkit/src/hullkit/_martingales.py": "feb385795fc66ab55974e1d88fabf0077d36ed0b32931d91cd71f059814ab1a9",
+    "hullkit/src/hullkit/_martingales.py": "1d79be81c6d50f73d23c3a38b5e29d4338fa7b5c9536f7c37e8ed0c03600f83f",
     "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
     "docs/validation/section-28-3/reference.json": "99555dbc83933478ede25a4f3612fa72ce01abc9275b5d2ba573b02a2c597dd9",
-    "docs/validation/section-28-3/numerical-check.json": "8b4fdf5e17a2ff7fe703b940399473570a6519389bfe87975b892732a6dca909",
+    "docs/validation/section-28-3/numerical-check.json": "55951d54df2631613a9d1e8b40e809710ee667974e5bbb9f6ec252f544587d55",
     "volumes/10_exotics_martingales/build_exotics_notebook.py": "74cd91911c83ac662c223515ab7e701106420dc341453d064ba891ffeb7eec00",
     "volumes/10_exotics_martingales/exotics.ipynb": "8e3edb5b5ddf2c0f85442e9180311905adf68255796cd3375b1dca92fbbca60c"
   },

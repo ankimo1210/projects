@@ -10,9 +10,26 @@ import numpy as np
 from .risk_premium import _real_inputs, _result
 
 
+def _numeric_inputs(*values):
+    """Reject temporal values before NumPy can discard their units."""
+    try:
+        arrays = [np.asarray(value) for value in values]
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise ValueError("martingale inputs must be finite real numbers") from exc
+    for array in arrays:
+        if array.dtype.kind in "Mm" or (
+            array.dtype.kind == "O"
+            and any(isinstance(item, (np.datetime64, np.timedelta64)) for item in array.flat)
+        ):
+            raise ValueError(
+                "martingale inputs must be real numbers; convert durations to years explicitly"
+            )
+    return _real_inputs(*arrays)
+
+
 def ratio_drift(mu_f, mu_g, s_f, s_g):
     """Return relative Ito drift mu_f-mu_g+s_g*(s_g-s_f), not log drift."""
-    mf, mg, sf, sg = np.broadcast_arrays(*_real_inputs(mu_f, mu_g, s_f, s_g))
+    mf, mg, sf, sg = np.broadcast_arrays(*_numeric_inputs(mu_f, mu_g, s_f, s_g))
     try:
         with np.errstate(over="raise", invalid="raise", under="ignore"):
             return _result(mf - mg + sg * (sg - sf))
@@ -22,7 +39,7 @@ def ratio_drift(mu_f, mu_g, s_f, s_g):
 
 def numeraire_drifts(r, s_f, s_g):
     """Return (mu_f,mu_g) under positive no-income g's measure: lambda=s_g."""
-    rate, sf, sg = np.broadcast_arrays(*_real_inputs(r, s_f, s_g))
+    rate, sf, sg = np.broadcast_arrays(*_numeric_inputs(r, s_f, s_g))
     try:
         with np.errstate(over="raise", invalid="raise", under="ignore"):
             return _result(rate + sg * sf), _result(rate + sg * sg)
@@ -39,7 +56,7 @@ def ratio_conditional_mean(value, mu_f, mu_g, s_f, s_g, horizon):
     unrepresentable results (including a positive mean underflowing to zero)
     raise ValueError. Scalars return float, other results ndarray.
     """
-    inputs = _real_inputs(value, mu_f, mu_g, s_f, s_g, horizon)
+    inputs = _numeric_inputs(value, mu_f, mu_g, s_f, s_g, horizon)
     if np.any(inputs[0] <= 0) or np.any(inputs[-1] < 0):
         raise ValueError("positive ratio and nonnegative horizon required")
     observed, mf, mg, sf, sg, h = np.broadcast_arrays(*inputs)

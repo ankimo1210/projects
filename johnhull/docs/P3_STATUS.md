@@ -12,3 +12,6 @@
 - [要求監査表](P3_REQUIREMENT_AUDIT_2026-10-04.md)：残35節の118草稿要求を全件保持。Technical Note14/19の完全PDFは未取得、31.4/33.2/34.4の不足原典入力は未完了扱い。HWのQ OUとbond式の測度整合候補を後続の独立検証で調査。
 
 - [M29設計](prep/design/M29_NUMERAIRE_SOURCE_DESIGN_2026-10-04.md)：原典12要求/式28.16–28.25、確率金利の同一給付価格・条件付き支払測度・annuity2曲線、既存HW state/bond式の整合検査。
+
+- M28最終レビューI1：datetime/timedeltaの単位喪失を新private入口で拒否。60回帰RED52→GREEN83、全suite4046/6。Minor1（ROADMAP旧段落の残35）は記録し、現在段階表の未受入34を優先。
+- [不足原典の調査](prep/design/P3_SOURCE_GAPS_2026-10-04.md)：TN14/19 PDF未取得、flexicapのstrike/対象期間、Table31.1の完全較正入力はpending。合成例で代替受入しない。

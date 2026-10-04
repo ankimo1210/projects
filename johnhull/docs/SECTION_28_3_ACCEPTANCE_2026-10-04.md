@@ -24,3 +24,5 @@ clean39f47b32からD1を実行。§28.2は初回redraw、旧26節は直接redraw
 受入28/未評価278、P3 3/37。統合記録は[ m28-check](validation/section-28-3/m28-check.json)、台帳成果物PASS。全suite/独立最終レビュー/main統合は検証中。
 
 全hullkit+report 3,986 passed・6 skipped・既存warnings2件（186.50s）。変更Python20ファイルruff、4--check、台帳成果物28/278 PASS。独立最終レビュー/main統合は検証中。
+
+最終レビューImportant I1をprivate入力境界に限定してRED→GREENで修正。全suite4,046 passed/6 skipped/既存warnings2（179.21s）。Minor M1は残件数の旧段落表記として記録。レビュー原文/判断はレビュー文書に保存。main統合は次工程。

@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 29 priva
 | 節単位の受入 | M28まで受入28・未評価278（9.2%） | P0/P1/P2完了、P3金利3/37。次はM29 §28.4。全体計画は下表 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。M28：旧27節再検査PASS | 既受入27節のbrowser・runtime probe・個別pytest計2,056件・C:/F:両保管庫復元はPASS。0節再利用・27節再描画。共有CSS変更による保守的な再描画。採用記録の再描画画像payloadは19,514,628バイトで、重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。 |
-| テスト・レビュー | M28全suite3,986 passed/6 skipped（186.50s）、独立レビュー待ち | 4--check/ruff20Python/台帳成果物PASS。main統合前。結果はVALIDATION.md |
+| テスト・レビュー | M28修正後全suite4,046 passed/6 skipped（179.21s）、独立レビューI1修正済み | 4図/16表示/27D1/両保管庫/台帳成果物PASS。Minor1記録、main統合前。結果はVALIDATION.md |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。

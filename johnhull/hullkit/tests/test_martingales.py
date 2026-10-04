@@ -93,3 +93,32 @@ def test_incompatible_shapes_rejected():
 def test_overflow_and_loss_of_positive_mean_rejected(call):
     with pytest.raises(ValueError):
         call(api())
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        np.datetime64("2026-10-04"),
+        np.datetime64("NaT"),
+        np.timedelta64(365, "D"),
+        np.timedelta64("NaT"),
+        np.array(["2026-10-04"], dtype="datetime64[D]"),
+        np.array([365], dtype="timedelta64[D]"),
+        np.array([0.04, np.datetime64("NaT")], dtype=object),
+        np.array([0.04, np.timedelta64(365, "D")], dtype=object),
+        np.empty(0, dtype="datetime64[D]"),
+        np.empty(0, dtype="timedelta64[D]"),
+    ],
+)
+@pytest.mark.parametrize("entry", ["ratio_drift", "numeraire_drifts", "ratio_conditional_mean"])
+@pytest.mark.parametrize("empty", [False, True])
+def test_temporal_inputs_rejected_before_float_conversion(bad, entry, empty):
+    m = api()
+    other = np.empty((0, 1)) if empty else 0.04
+    with pytest.raises(ValueError):
+        if entry == "ratio_drift":
+            m.ratio_drift(other, 0.04, bad, 0.15)
+        elif entry == "numeraire_drifts":
+            m.numeraire_drifts(bad, other, 0.15)
+        else:
+            m.ratio_conditional_mean(1, other, 0.04, 0.3, -0.2, bad)

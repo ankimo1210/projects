@@ -148,7 +148,7 @@
   "samples": 262144,
   "section": "28.3",
   "source_sha256": {
-    "hullkit/src/hullkit/_martingales.py": "feb385795fc66ab55974e1d88fabf0077d36ed0b32931d91cd71f059814ab1a9",
+    "hullkit/src/hullkit/_martingales.py": "1d79be81c6d50f73d23c3a38b5e29d4338fa7b5c9536f7c37e8ed0c03600f83f",
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
     "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
     "scripts/build_martingale_reference.py": "229b1fc8fb527c698db210a20c488760ca8bdfa6c9ff308d63c4da35043572e0",

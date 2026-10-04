@@ -54,8 +54,8 @@
 
 **Files:** build_martingale_acceptance_record.py/update_martingale_ledger.py/tests、27D1、SECTION_28_3_ACCEPTANCE/REVIEW、ROADMAP/VALIDATION/EVIDENCE_POLICY/台帳。
 **Interfaces:** m28-check、27採用D1path/hash、MT01–MT06/28件。
-- [ ] Step 1: mandatory source/artifact/hash/両保管庫/path/更新失敗台帳不変tests。Expected: missing gate FAIL。
-- [ ] Step 2: cleanTask3から27D1再検査、直接redrawn基準reuse、28.2初回redraw。Expected: runtime/browser/pytest/復元PASS。
-- [ ] Step 3: 現行hashの統合gateと台帳/受入/docs更新、4--check/ruff/全suite/台帳成果物。Expected: 28/278/全PASS。
-- [ ] Step 4: commit受入/task-done、1名fresh review、重要指摘RED→GREEN+全suite、minor/ruling記録。Expected: mergeを止める指摘なし。
+- [x] Step 1: mandatory source/artifact/hash/両保管庫/path/更新失敗台帳不変tests。Expected: missing gate FAIL。
+- [x] Step 2: cleanTask3から27D1再検査、直接redrawn基準reuse、28.2初回redraw。Expected: runtime/browser/pytest/復元PASS。
+- [x] Step 3: 現行hashの統合gateと台帳/受入/docs更新、4--check/ruff/全suite/台帳成果物。Expected: 28/278/全PASS。
+- [x] Step 4: commit受入/task-done、1名fresh review、重要指摘RED→GREEN+全suite、minor/ruling記録。Expected: mergeを止める指摘なし。
 - [ ] Step 5: 記録保存、tracked release/main統合後検証/push、P3次§28.4へ継続。Expected: live remote一致、P3目標active、末尾P0–P8。
