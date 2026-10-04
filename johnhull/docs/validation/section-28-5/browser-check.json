@@ -142,7 +142,7 @@
     "docs/validation/section-28-5/numerical-check.json": "b74fd6de90cbeee58ad6c9e9e110bedc51f2abb7deabf564ac71d17ab368f9d8",
     "volumes/10_exotics_martingales/build_exotics_notebook.py": "d599a83083474b85ae6dbccb81e22dfb46f95dedcc4ba9a64058d7bdb39f31f1",
     "volumes/10_exotics_martingales/exotics.ipynb": "213c00f83d433badc76dec3bdd2f8914a04039244d1b6a99d34295aa1fa60c55",
-    "report/report_builder/figures.py": "6ef53cf7266ffd4d1b6d8e732ae3ccffdb82073f7860331b41a2891aaf87decf",
+    "report/report_builder/figures.py": "c248f59aa93dd0f8ea135ed46f7d089e88b943be818acc37f614bd929bd7acc3",
     "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210"
   },
   "artifact_sha256": {
