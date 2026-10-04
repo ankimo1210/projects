@@ -28,7 +28,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 31 priva
 | 章単位（Hull 11e 全37章） | 上表14行すべてdone | 巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol13–28） | すべてdone | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 全節監査の是正 | 第1–5便完了 | 残りは「全節監査と是正」の表 |
-| 節単位の受入 | M29まで受入29・未評価277（9.5%） | P0/P1/P2完了、P3金利4/37。次はM30 §28.5。全体計画は下表 |
+| 節単位の受入 | M29まで受入29・未評価277（9.5%） | P0/P1/P2完了、P3金利4/37。現在M30 §28.5を実装中。全体計画は下表 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。M29：旧28節再検査PASS | 既受入28節のbrowser・runtime probe・個別pytest計2,157件・C:/F:両保管庫復元はPASS。0節再利用・28節再描画。HW/共有registryの依存変更による再描画。採用画像payloadは19,960,718バイト、全462画像。重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。 |
 | テスト・レビュー | main全suite4,125 passed/6 skipped（222.54s）、独立Critical0/Important0 | 4--check/ruff21/16表示/28D1/両保管庫/台帳成果物/tracked release PASS。Minor3記録、main統合push済み |
@@ -58,7 +58,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 31 priva
 | P0 | §26.9–§27.4（M1–M13） | 13 | 13 | 0 | — | 完了 |
 | P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 4 | 0 | — | 完了（M14–M17） |
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
-| P3 | 金利（Ch 28–34） | 37 | 4 | 3 | HW/BK 三項ツリー・Bermudan・LMM がない（EX-13〜15）。最も重い | M29（§28.4）受入。次はM30 §28.5 |
+| P3 | 金利（Ch 28–34） | 37 | 4 | 3 | HW/BK 三項ツリー・Bermudan・LMM がない（EX-13〜15）。最も重い | M29（§28.4）受入。M30 §28.5を実装中 |
 | P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 件数が最大。多くは実装済みで、印刷値での固定が中心 | 下調べ済み・節受入未着手 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | vol 27・28 の資産を流用できる | 下調べ済み・節受入未着手 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 軽いが件数が多い。定性が多い | 下調べ済み・節受入未着手 |
@@ -309,7 +309,7 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M27 | §28.2 Several State Variables（pp.674–675） | 受入/main統合済み。[受入](docs/SECTION_28_2_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_2_REVIEW_2026-10-03.md) |
 | M28 | §28.3 Martingales（pp.675–676） | 受入。条件付き定義/signed Itô/同一給付Q・G価格、9条件付きMC/旧235保持/16状態/27D1。[受入](docs/SECTION_28_3_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_3_REVIEW_2026-10-04.md) |
 | M29 | §28.4 Alternative Choices for the Numeraire（pp.676–679） | 受入。HW Q状態/同一給付Q・T/支払・annuity、63独立fixture/旧246保持/16状態/28D1。[受入](docs/SECTION_28_4_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_4_REVIEW_2026-10-04.md) |
-| M30（次） | §28.5 Extension to Several Factors（pp.679–680） | 原典と独立因子/相関basisの導出・条件付きfixtureを準備 |
+| M30（現在） | §28.5 Extension to Several Factors（pp.679–680） | 原典と独立因子/相関basisの導出・条件付きfixtureを準備、仕様/計画を確定して実装着手 |
 | 以降 | M30を含むP3金利の未受入33節から未評価節へ展開 | 節受入未着手 |
 
 現在地（2026-10-04）：M29まで受入、台帳29/277、P3は4/37。統合記録`docs/validation/section-28-4/m29-check.json`、28D1/両保管庫/台帳成果物PASS。全hullkit+report 4,125 passed・6 skipped・既存warnings2（213.52s）。独立レビュー完了、Minor3記録。main統合・push済み。次はM30 §28.5。
