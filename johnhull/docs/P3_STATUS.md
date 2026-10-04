@@ -3,7 +3,7 @@
 更新2026-10-04。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。残り要件をN/Aへ置き換えたり、簡易モデルだけで完了としない。
 
 - main：§28.1–28.4受入、P3 4/37、全29/277。M29 f8d57ef4をFF統合/push、main fresh 4125/6・台帳成果物/release/両保管庫確認済み。
-- 現在：M30 §28.5をcodex/m30-multifactor-martingalesで着手。M29のworktreeを再利用。原典/独立11市場132条件付きfixture、相関PSD/基底保存の仕様とテスト案を準備。M29はCritical0/Important0/Minor3記録・main統合済み。
+- 現在：M30 §28.5をcodex/m30-multifactor-martingalesで着手。M29のworktreeを再利用。原典pp679–680/脚注7を画像照合し、private多因子計算・独立11市場132条件付きfixture・8変異拒否を実装。Task1は523tests PASS（新50＋model index473）、MC262144標本/187集計の最大2.5454SE。次は6D教材/4図/旧257保存/29D1。M29はCritical0/Important0/Minor3記録・main統合済み。
 - 未完了：§28.5–28.8、Ch29–34（計33節）。多因子測度、市場式、convexity/timing/quanto、短期金利、HW/BK木/curve fit/時間依存sigma/Bermudan/較正、HJM/LMM、非標準swapの本文要件。
 - 並行準備：M30多因子の原典/独立132条件付きfixture、TN14/TN19完全PDF/元XLSの回収、31.4回帰と全9点の独立再現。正式受入とは区別する。
 - 受入ゲートは節ごとに既存D1/両保管庫を維持。D3規約の軽量化は未承認で今回変更しない。

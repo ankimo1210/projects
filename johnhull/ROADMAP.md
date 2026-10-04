@@ -19,7 +19,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 31 private modules as of 2026-10-04; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 32 private modules as of 2026-10-04; the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
 ## 現在地（2026-10-04、M29 main統合済）
 

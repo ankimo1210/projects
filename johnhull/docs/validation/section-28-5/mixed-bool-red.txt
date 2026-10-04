@@ -1,0 +1,37 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+____ test_mixed_bool_sequences_rejected_before_numpy_promotes_them[loading] ____
+
+where = 'loading'
+
+    @pytest.mark.parametrize("where", ["loading", "drift", "correlation"])
+    def test_mixed_bool_sequences_rejected_before_numpy_promotes_them(where):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_multi_factor_martingales.py:135: Failed
+_____ test_mixed_bool_sequences_rejected_before_numpy_promotes_them[drift] _____
+
+where = 'drift'
+
+    @pytest.mark.parametrize("where", ["loading", "drift", "correlation"])
+    def test_mixed_bool_sequences_rejected_before_numpy_promotes_them(where):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_multi_factor_martingales.py:135: Failed
+__ test_mixed_bool_sequences_rejected_before_numpy_promotes_them[correlation] __
+
+where = 'correlation'
+
+    @pytest.mark.parametrize("where", ["loading", "drift", "correlation"])
+    def test_mixed_bool_sequences_rejected_before_numpy_promotes_them(where):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+johnhull/hullkit/tests/test_multi_factor_martingales.py:135: Failed
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_multi_factor_martingales.py::test_mixed_bool_sequences_rejected_before_numpy_promotes_them[loading]
+FAILED johnhull/hullkit/tests/test_multi_factor_martingales.py::test_mixed_bool_sequences_rejected_before_numpy_promotes_them[drift]
+FAILED johnhull/hullkit/tests/test_multi_factor_martingales.py::test_mixed_bool_sequences_rejected_before_numpy_promotes_them[correlation]
+3 failed, 43 deselected in 0.56s

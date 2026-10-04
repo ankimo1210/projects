@@ -1,0 +1,117 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+__________ test_all_factor_source_requirements_and_conditioned_states __________
+
+    def test_all_factor_source_requirements_and_conditioned_states():
+>       b, m = modules()
+               ^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_numerics.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_multifactor_numerics.py:11: in modules
+    return (importlib.import_module("johnhull.scripts.build_multifactor_reference"),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_reference'
+import_ = <function _gcd_import at 0x78454054c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_reference'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________________ test_executable_and_saved_mutations_rejected _________________
+
+    def test_executable_and_saved_mutations_rejected():
+>       b,m=modules()
+            ^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_numerics.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_multifactor_numerics.py:11: in modules
+    return (importlib.import_module("johnhull.scripts.build_multifactor_reference"),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_reference'
+import_ = <function _gcd_import at 0x78454054c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_reference'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______________ test_missing_correlated_basis_cannot_match_teacher ______________
+
+    def test_missing_correlated_basis_cannot_match_teacher():
+        from hullkit import _multi_factor_martingales as api
+>       b,m=modules()
+            ^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_numerics.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_multifactor_numerics.py:11: in modules
+    return (importlib.import_module("johnhull.scripts.build_multifactor_reference"),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_reference'
+import_ = <function _gcd_import at 0x78454054c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_reference'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________________ test_modified_independent_result_rejected ___________________
+
+    def test_modified_independent_result_rejected():
+>       b,m=modules()
+            ^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_numerics.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/hullkit/tests/test_multifactor_numerics.py:11: in modules
+    return (importlib.import_module("johnhull.scripts.build_multifactor_reference"),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.build_multifactor_reference'
+import_ = <function _gcd_import at 0x78454054c0e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.build_multifactor_reference'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_multifactor_numerics.py::test_all_factor_source_requirements_and_conditioned_states
+FAILED johnhull/hullkit/tests/test_multifactor_numerics.py::test_executable_and_saved_mutations_rejected
+FAILED johnhull/hullkit/tests/test_multifactor_numerics.py::test_missing_correlated_basis_cannot_match_teacher
+FAILED johnhull/hullkit/tests/test_multifactor_numerics.py::test_modified_independent_result_rejected
+4 failed in 0.56s
