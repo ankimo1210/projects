@@ -2805,6 +2805,63 @@ APIは無配当・無収入の取引証券の瞬間的なドリフト関係。�
 市場較正、多因子測度変更、確率金利・配当補正を本節の受入とはしない。"""),
 ])
 
+cells.extend([
+    md(r"""## 6B. マルチンゲール（§28.3）
+
+### 6B.1 履歴に条件付けた定義と追加条件
+
+原典GE pp.675–676、脚注3の定義は$E[X_T\mid\mathcal F_t]=X_t$（$t<T$）。時点0の平均一致だけではこの条件全体を検査できない。
+本文は零driftの過程を導入するが、一般の零driftは局所martingaleの条件であり、真のmartingaleへの追加条件を省略しない。
+本教材の実演は有限時間・定数係数GBM。独立な将来増分から条件付き期待値を導き、全モーメントが有限になる。
+正値取引numeraire・無収入と可積分性の議論は数学的な補足で、原典の印刷値ではない。"""),
+    code(r"""from hullkit import _martingales as mt
+from hullkit._martingale_lesson import _figures as martingale_figures, _load_reference as martingale_reference
+martingale_data, martingale_numbers = martingale_reference()
+martingale_plots = martingale_figures()
+print("Conditional API: 9 states/time combinations")"""),
+    md(r"""### 6B.2 比のItô補正と測度
+
+同じWiener源、符号付き係数$s_f,s_g$で$df/f=\mu_fdt+s_fdz$、$dg/g=\mu_gdt+s_gdz$。
+$$dX/X=a\,dt+(s_f-s_g)dz,\quad a=\mu_f-\mu_g+s_g^2-s_fs_g.$$
+$g$測度では$\lambda=s_g$、$\mu_f=r+s_gs_f$、$\mu_g=r+s_g^2$、したがって$a=0$（式28.14）。
+log ratioのdriftは$-(s_f-s_g)^2/2$であり、比そのもののdrift0と混同しない。
+合成例$r=.04,s_f=.3,s_g=-.2$では$\mu_f=-.02,\mu_g=.08$、補正$+.04+.06$が$-.10$を相殺する。"""),
+    code(r"""martingale_plots["martingale_ito"].show()
+print("Signed g drifts:", mt.numeraire_drifts(.04, .3, -.2))"""),
+    md(r"""### 6B.3 条件付き解析値と二乗モーメント
+
+$$E[X_{t+h}\mid\mathcal F_t]=X_t e^{ah},\quad E[X_{t+h}^2\mid\mathcal F_t]=X_t^2e^{(2a+(s_f-s_g)^2)h}.$$
+$g$測度では全$h$で平均$X_t$、有限$h$で二乗モーメントも有限。これは定数GBM内の条件付き検証。
+同じ係数でも別測度$\lambda=0$では例の$a=.10$で比はmartingaleにならない。
+率の単位は年$^{-1}$、係数/$\lambda$は年$^{-1/2}$、$h$は年。"""),
+    code(r"""martingale_plots["martingale_conditional"].show()
+print("Wrong measure conditional mean:", mt.ratio_conditional_mean(.7, .04, .04, .3, -.2, 1.25))"""),
+    md(r"""### 6B.4 複数の観測時刻・状態で独立MC
+
+$t=(0,.3,.7),T=1.5$、観測比$x=(.5,1.25,2)$の9組、各262144標本の独立将来増分を生成。
+$t=0$の3状態は別初期市場。固定$S_0=100,G_0=80$の時点0比は1.25のみで、そのcall市場とは分ける。
+図はMC平均−条件付き解析値と95%区間。固定seedの受入は5SE以内で、すべての95%区間が解析値を含むとは要求しない。
+raw平均を使い自己正規化しない。可積分性と解析式が証明、MCは有限標本の数値検証。"""),
+    code(r"""martingale_plots["martingale_conditional_mc"].show()
+print(f"Maximum conditional/pricing error: {martingale_numbers['max_mc_se']:.6f} SE")"""),
+    md(r"""### 6B.5 同一給付の価格恒等式（式28.15）
+
+$$f_0=g_0E^g[f_T/g_T].$$
+合成call $H=(S_T-100)^+$、$S_0=100,G_0=80,r=.04,s_f=.3,T=1.5$を両測度で直接求積/標本化。
+$$C_0=e^{-rT}E^Q[H]=G_0E^G[H/G_T].$$
+$s_g=\pm .15$の両方で独立価格17.2494832790。分母$G_T$は確率変数で、Qの分布のままGで割ると誤価格になる。
+$G>0$、$0\le H/G_T\le S_T/G_T$、右辺の条件付き期待値は有限。$G\ne S$では$H/G_T\le1$とは限らない。"""),
+    code(r"""martingale_plots["martingale_pricing"].show()
+print(f"Same synthetic call: {martingale_data['pricing'][0]['price']:.10f}")"""),
+    md(r"""### 6B.6 原典の範囲と後続の検証
+
+原典は状態依存係数も説明する。定数係数GBMの数値実演を一般の確率積分全体の証明としない。
+一般の局所martingaleでは適切な真のmartingale条件が必要で、有限期待値だけでも十分とは限らない。
+計算は正値比/非負時間をbroadcast前に検査し、非実数/非有限/overflowを拒否する。
+保存結果digestと独立参照/hashを描画前に検査。印刷数値例はなく、数値は全て合成例。
+確率金利でのQ/満期債/annuity測度は§28.4、複数因子は§28.5で続ける。"""),
+])
+
 cells.append(
     md(r"""## 7. ニュメレールの選択（§28.4）
 

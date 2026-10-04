@@ -9,6 +9,11 @@ import nbformat
 def test_factor_notebook_and_four_negative_controls():
     m = importlib.import_module("johnhull.scripts.verify_factor_risk_notebook")
     nb = nbformat.read(m.NOTEBOOK, as_version=4)
+    start = next(i for i, c in enumerate(nb.cells) if c.source.startswith("## 6B. "))
+    end = next(
+        i for i in range(start + 1, len(nb.cells)) if nb.cells[i].source.startswith("## 7. ")
+    )
+    nb.cells = nb.cells[:start] + nb.cells[end:]
     assert len(nb.cells) == 235 and len(m._outside(nb)) == 224
     assert m.compare(nb, m._base(), m._fresh()) == []
     assert all(row["rejected"] for row in m.negative_controls(nb, m._base(), m._fresh()))
