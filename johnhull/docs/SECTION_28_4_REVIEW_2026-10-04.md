@@ -112,3 +112,7 @@ Final: Ruling: main統合後の一致とremote到達はexecutorがFF後にfresh�
 4. **main統合後のsource/成果物一致、remote push到達性**: 対象HEADは統合前の固定branchであり、read-onlyレビューではmain/remoteを変更しない。親実行者の後続統合検証対象。
 
 これら以外に、M29 Review Focusの4領域について判定を留保した挙動はない。Minorの極端入力を全通常入力の不具合へ一般化せず、教材の合成モデルを一般多曲線市場・全実数域に対する数値保証へ一般化しない。
+
+## main統合（2026-10-04）
+
+M29受入commit f8d57ef4をmainへfast-forward統合・pushし、live origin/main一致を確認。main fresh全suite4,125 passed/6 skipped/既存warnings2（222.54s）、Book/portal再build・統合gate/台帳成果物/両保管庫/tracked release PASS。Minor3を記録。次はM30 §28.5、P3 4/37、残33節。

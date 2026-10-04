@@ -31,3 +31,7 @@
 ## 独立最終レビュー
 
 Critical0/Important0/Minor3、対象96tests/4checks/100条件付きprobe/42不正入力/4画像を独立確認。Minor3はレビュー文書の再現例と限界を保存してdeferred。受入を止める問題はなく、main統合は次工程。
+
+## main統合（2026-10-04）
+
+M29受入commit f8d57ef4をmainへfast-forward統合・pushし、live origin/main一致を確認。main fresh全suite4,125 passed/6 skipped/既存warnings2（222.54s）、Book/portal再build・統合gate/台帳成果物/両保管庫/tracked release PASS。Minor3を記録。次はM30 §28.5、P3 4/37、残33節。
