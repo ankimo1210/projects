@@ -3,7 +3,7 @@
 更新2026-10-05。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。残り要件をN/Aへ置き換えたり、簡易モデルだけで完了としない。
 
 - main：§28.1–28.5受入、P3 5/37、全30/276。M30 `5c8bcbde` をFF統合/push、main fresh4223/6・台帳成果物/release/両保管庫PASS。Important1を固定seed消費時replayで4回帰RED→GREEN修正、Minor2保留。
-- 現在：本人指示（2026-10-04）でロジック先行へ変更。`codex/p3-logic` に節ごとに実装・本文数値再現・独立検証をcommit/pushし、受入は章末にまとめる。Ch28のロジック8/8（既受入5＋今回3）完了・章末まとめ受入待ち。Ch29のロジック4/4完了・章末まとめ受入待ち。Ch30のロジック4/4完了・章末まとめ受入待ち。Ch31のロジック5/5完了・章末まとめ受入待ち。§32.1–32.5のロジック完了、次は§32.6。P3ロジック26/37、正式受入5/37。
+- 現在：本人指示（2026-10-04）でロジック先行へ変更。`codex/p3-logic` に節ごとに実装・本文数値再現・独立検証をcommit/pushし、受入は章末にまとめる。Ch28のロジック8/8（既受入5＋今回3）完了・章末まとめ受入待ち。Ch29のロジック4/4完了・章末まとめ受入待ち。Ch30のロジック4/4完了・章末まとめ受入待ち。Ch31のロジック5/5完了・章末まとめ受入待ち。§32.1–32.6のロジック完了、次は§32.7。P3ロジック27/37、正式受入5/37。
 - 正式受入未完了：§28.6–28.8、Ch29–34（計32節）。多因子測度、市場式、convexity/timing/quanto、短期金利、HW/BK木/curve fit/時間依存sigma/Bermudan/較正、HJM/LMM、非標準swapの本文要件。
 - 並行準備：M30多因子の原典/独立132条件付きfixture、TN14/TN19完全PDF/元XLSの回収、31.4回帰と全9点の独立再現。正式受入とは区別する。
 - 章末：D3軽量受入（本人承認2026-10-03、PR #11は反映用のopen PR）。共通設定ツールで5軸受入、explanation/rendered必須、章内build/画面確認共有、依存変更節だけD1、全suite1回。節ごとは変更モジュールのtests/ruffのみ。
@@ -48,3 +48,4 @@
 | §32.3 | `_forward_rate_volatility.py` | Fig32.3は印刷数値なし。同一3か月tenorでflat/低下/hump、独立block指数・bond比shock MC | ロジック完了。normal/Black換算/瞬間forward/implied capの単位を区別、教材・受入は章末 |
 | §32.4 | `_rate_tree.py` | Fig32.4: B1.11/C0.23/A0.35、独立9経路列挙、3branchのmoment・原確率・exercise obstacle | ロジック完了。節点の期間rateで割引、後継indexは昇順、教材・受入は章末 |
 | §32.5 | `_calibrated_rate_tree.py` | Fig32.6–8全node/Q、Table32.3全6価格・解析1.8093、Fig32.9全75項目/0.671933/0.703、小木経路列挙・HW解析/期間変換 | ロジック完了。DG201の1日終端/別rate-date、actual coupon/accrual、shifted BKのfloorを明示、教材・受入は章末 |
+| §32.6 | `_short_rate_calibration.py` | 5×5/6×4/7×3/8×2/9×1、σ(t)/a回復・penalty・独立Gaussian求積/held-out、Black→HW σ往復、Bermudan行使順序 | ロジック完了。市場価格は本文にないため合成例、single curve/last σ flat延長、教材・受入は章末 |
