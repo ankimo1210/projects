@@ -22,9 +22,9 @@
 
 **Files:** private module/tests、build_multifactor_reference.py/verify_multifactor_numerics.py、section-28-5 JSON。
 **Interfaces:** Specの4private signatures、C singleNxN/loadingfinalN、observedratio/finiteconditionalh、独立11市場132状態と同一call Q/G/rotation。
-- [ ] Step 1: 独立教師を固定しinput/moment/covariance/rotation testsを先に実行。Expected: missing module FAIL。
-- [ ] Step 2: private実装/厳密GBM conditional moments、price同一給付/直接MCを照合。Expected: 閾値内PASS。
-- [ ] Step 3: API/保存変異拒否と63fixtureのような元要求数誤流用を防ぐsource manifest、commit/task-done。Expected: 全controls/対象tests PASS。
+- [x] Step 1: 独立教師を固定しinput/moment/covariance/rotation testsを先に実行。Expected: missing module FAIL。
+- [x] Step 2: private実装/厳密GBM conditional moments、price同一給付/直接MCを照合。Expected: 閾値内PASS。
+- [x] Step 3: API/保存変異拒否と63fixtureのような元要求数誤流用を防ぐsource manifest、commit/task-done。Expected: 全controls/対象tests PASS。
 
 ### Task 2: lesson and Book/portal
 

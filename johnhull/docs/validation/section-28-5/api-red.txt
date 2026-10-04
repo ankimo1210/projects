@@ -1,0 +1,13 @@
+
+==================================== ERRORS ====================================
+___ ERROR collecting johnhull/hullkit/tests/test_multi_factor_martingales.py ___
+ImportError while importing test module '/home/kazumasa/worktrees/m29/johnhull/hullkit/tests/test_multi_factor_martingales.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+johnhull/hullkit/tests/test_multi_factor_martingales.py:6: in <module>
+    from hullkit._multi_factor_martingales import (
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_martingales'
+=========================== short test summary info ============================
+ERROR johnhull/hullkit/tests/test_multi_factor_martingales.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.57s
