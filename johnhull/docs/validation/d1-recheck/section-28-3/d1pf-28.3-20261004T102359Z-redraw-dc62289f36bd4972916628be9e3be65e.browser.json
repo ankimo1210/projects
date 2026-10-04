@@ -1,0 +1,176 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "martingale_ito",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_conditional",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_conditional_mc",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_pricing",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_ito",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_conditional",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_conditional_mc",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_pricing",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-3/portal-martingale_ito-1440.png",
+        "docs/validation/section-28-3/portal-martingale_conditional-1440.png",
+        "docs/validation/section-28-3/portal-martingale_conditional_mc-1440.png",
+        "docs/validation/section-28-3/portal-martingale_pricing-1440.png",
+        "docs/validation/section-28-3/portal-martingale_ito-1000.png",
+        "docs/validation/section-28-3/portal-martingale_conditional-1000.png",
+        "docs/validation/section-28-3/portal-martingale_conditional_mc-1000.png",
+        "docs/validation/section-28-3/portal-martingale_pricing-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "martingale_ito",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_conditional",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_conditional_mc",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_pricing",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_ito",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_conditional",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_conditional_mc",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "martingale_pricing",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-3/book-martingale_ito-1440.png",
+        "docs/validation/section-28-3/book-martingale_conditional-1440.png",
+        "docs/validation/section-28-3/book-martingale_conditional_mc-1440.png",
+        "docs/validation/section-28-3/book-martingale_pricing-1440.png",
+        "docs/validation/section-28-3/book-martingale_ito-1000.png",
+        "docs/validation/section-28-3/book-martingale_conditional-1000.png",
+        "docs/validation/section-28-3/book-martingale_conditional_mc-1000.png",
+        "docs/validation/section-28-3/book-martingale_pricing-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/_martingales.py": "1d79be81c6d50f73d23c3a38b5e29d4338fa7b5c9536f7c37e8ed0c03600f83f",
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
+    "hullkit/src/hullkit/_martingale_lesson.py": "39bf96fc2a5b9c5e532f4959c640d12c02e3dac9bfac78394067103c2c1ce8a4",
+    "scripts/build_martingale_reference.py": "229b1fc8fb527c698db210a20c488760ca8bdfa6c9ff308d63c4da35043572e0",
+    "scripts/verify_martingale_browser.cjs": "ef248401f3b468aec56776b225929a193b20af8f2b0adb0ea9866bd44d6b0432",
+    "scripts/verify_martingale_numerics.py": "079047abc5ca2e6b2c005f1d4f298d1d37e9a4509bb6d8529dd5eaad6db56d26",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "docs/validation/section-28-3/reference.json": "99555dbc83933478ede25a4f3612fa72ce01abc9275b5d2ba573b02a2c597dd9",
+    "docs/validation/section-28-3/numerical-check.json": "55951d54df2631613a9d1e8b40e809710ee667974e5bbb9f6ec252f544587d55",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "08b2a34d3453f31c36c509b7fb38fba803b787a3e3f7b9db6524a2feb9e3cae2",
+    "volumes/10_exotics_martingales/exotics.ipynb": "79fb183704d1af31ecc77fcc9a6183b5b15481a49a1cde6185bc3f813fc4ec24",
+    "report/report_builder/figures.py": "23d052490459ee65554d29dacc14e4557c3c1b92774a585814bb8d4e5ea16d47",
+    "report/assets/style.css": "4e6f90526f72e870c02a1580fefd6cb7f104956bed56fbd4e7199b1d431052a8"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "ac9f11f23246bf647641ee261de09d19db3688f48d8a02bdf5de73fe7568a71e",
+    "book/_build/html/notebooks/10_exotics.html": "4313de0e919e022b68c9ac6a7477e02571f2dff7cc26ec5e4bcd938841ffc4cf",
+    "docs/validation/section-28-3/portal-martingale_ito-1440.png": "152685236b0150aa7a99be7a09f07499bd3b82f085a592dbc50a739e3e92f9e1",
+    "docs/validation/section-28-3/portal-martingale_conditional-1440.png": "dfe40ceffd05d10891cf70adf9259fd86278c6ae9e5f7a43fe23cff25669e9b4",
+    "docs/validation/section-28-3/portal-martingale_conditional_mc-1440.png": "eafbd7eb6b76749e8fe4f7adc7e61d020a2f2aa1712eda1fbec5f1d1dcfc304a",
+    "docs/validation/section-28-3/portal-martingale_pricing-1440.png": "50216591aebd8dd53f392f246b2998f952dbb4e750d4c5f266c204a6a82f0770",
+    "docs/validation/section-28-3/portal-martingale_ito-1000.png": "d05d6700c56571b47576d6110c318ab80cb626d8c3a60e844374cf5840bb11c1",
+    "docs/validation/section-28-3/portal-martingale_conditional-1000.png": "9c4ff29234713cb0b12cf837625aaf955375cc1e4d8c984a97259e062ec30af4",
+    "docs/validation/section-28-3/portal-martingale_conditional_mc-1000.png": "832457ca17ce26983c78a0963312e07b1d63f18a924e67b10878e002a04702d8",
+    "docs/validation/section-28-3/portal-martingale_pricing-1000.png": "a7ecfdc926eca190d115f6dfe17d118a56983a18de39d3931c1fa85ee598a1e1",
+    "docs/validation/section-28-3/book-martingale_ito-1440.png": "c4d6e3b355b1766bcd86f8a96b6d8894015307d9c7fc5b673d3621b481d9d780",
+    "docs/validation/section-28-3/book-martingale_conditional-1440.png": "c1668640c2c4092e92cf3d3fd46cbc77c189b5bb799d4725dd46a768b2d6a287",
+    "docs/validation/section-28-3/book-martingale_conditional_mc-1440.png": "3e92ddf35b385639891e4b8f6c04db493828f81e0a59356cb4d277366784ca2a",
+    "docs/validation/section-28-3/book-martingale_pricing-1440.png": "24eea6c7fbf391cb03e9f690f46120e3db4b4bccac104e7db4cd8cd4b780be69",
+    "docs/validation/section-28-3/book-martingale_ito-1000.png": "fffcb427f25e8ba4db09e9a462c61d051b5be93047cad520f217fc3249fe1a2f",
+    "docs/validation/section-28-3/book-martingale_conditional-1000.png": "0c7f3a05e6751d542d7f855ab84371e7385726637948fcb5d0908fc58939fcc6",
+    "docs/validation/section-28-3/book-martingale_conditional_mc-1000.png": "a84e6a4103037a70a4fa684695a37e1decbee3a624900bcd4b5a751f18694627",
+    "docs/validation/section-28-3/book-martingale_pricing-1000.png": "2379b64f4da38643795c1b2126c1c6dc98a2aa5e1ce2dc407d6a6ae7fca0a16c"
+  },
+  "book_math": {
+    "rendered": 1125,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

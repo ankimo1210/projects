@@ -806,3 +806,10 @@ M28最終レビューI1修正後：datetime/timedelta拒否60追加、RED52→GR
 ## main統合（2026-10-04）
 
 M28受入commit ea935c76をmainへfast-forward統合・pushし、live origin/main一致を確認。main再検証4,046 passed/6 skipped/既存warnings2（186.36s）、統合gate/台帳成果物/両保管庫/tracked release PASS。次はM29 §28.4、P3は3/37、残34節を継続。
+
+## M29 §28.4（2026-10-04、統合前）
+
+HW Q状態のintegral/tower RED→GREEN・既存option/較正影響確認、63独立fixture/10 raw MC/8変異、旧246保持/257fresh、4図/16状態/16画像PASS。
+既受入28節のbrowser・runtime probe・個別pytest計2,157件・C:/F:両保管庫復元はPASS。0節再利用・28節再描画。HW/共有registryの依存変更による再描画。採用画像payloadは19,960,718バイト、全462画像。重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。
+
+全hullkit+report 4,125 passed・6 skipped・既存warnings2（213.52s）。15 gate/ledger tests PASS、受入29/未評価277、P3 4/37。freshレビュー・main統合は後続。

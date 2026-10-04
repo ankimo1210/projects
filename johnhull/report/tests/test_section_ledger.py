@@ -573,10 +573,10 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert result["status"] == "PASS", result["errors"]
     assert result["inventory_total"] == 306
     assert result["counts"] == {
-        "unreviewed": 278,
+        "unreviewed": 277,
         "gaps_found": 0,
         "pending_validation": 0,
-        "accepted": 28,
+        "accepted": 29,
         "out_of_scope": 0,
     }
     assert "26.17" in section_26_ids
@@ -724,7 +724,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     scheduled = next(section for section in ledger["sections"] if section["id"] == "26.3")
     assert scheduled["status"] == "accepted"
     assert [row["id"] for row in scheduled["requirements"]] == [f"NA{i:02}" for i in range(1, 7)]
-    assert scheduled["evidence"]["m28_check"]["path"].endswith("m28-check.json")
+    assert scheduled["evidence"]["m29_check"]["path"].endswith("m29-check.json")
     assert all(
         axis["state"] == "verified"
         for row in scheduled["requirements"]
@@ -733,7 +733,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     gap = next(section for section in ledger["sections"] if section["id"] == "26.4")
     assert gap["status"] == "accepted"
     assert [row["id"] for row in gap["requirements"]] == [f"GP{i:02}" for i in range(1, 7)]
-    assert gap["evidence"]["m28_check"]["path"].endswith("m28-check.json")
+    assert gap["evidence"]["m29_check"]["path"].endswith("m29-check.json")
     assert all(
         axis["state"] == "verified"
         for row in gap["requirements"]
@@ -742,7 +742,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     forward = next(section for section in ledger["sections"] if section["id"] == "26.5")
     assert forward["status"] == "accepted"
     assert [row["id"] for row in forward["requirements"]] == [f"FS{i:02}" for i in range(1, 7)]
-    assert forward["evidence"]["m28_check"]["path"].endswith("m28-check.json")
+    assert forward["evidence"]["m29_check"]["path"].endswith("m29-check.json")
     assert all(
         axis["state"] == "verified"
         for row in forward["requirements"]
@@ -751,7 +751,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     cliquet = next(section for section in ledger["sections"] if section["id"] == "26.6")
     assert cliquet["status"] == "accepted"
     assert [row["id"] for row in cliquet["requirements"]] == [f"CQ{i:02}" for i in range(1, 7)]
-    assert cliquet["evidence"]["m28_check"]["path"].endswith("m28-check.json")
+    assert cliquet["evidence"]["m29_check"]["path"].endswith("m29-check.json")
     assert all(
         axis["state"] == "verified"
         for row in cliquet["requirements"]
@@ -760,7 +760,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     compound = next(section for section in ledger["sections"] if section["id"] == "26.7")
     assert compound["status"] == "accepted"
     assert [row["id"] for row in compound["requirements"]] == [f"CO{i:02}" for i in range(1, 7)]
-    assert compound["evidence"]["m28_check"]["path"].endswith("m28-check.json")
+    assert compound["evidence"]["m29_check"]["path"].endswith("m29-check.json")
     assert all(
         axis["state"] == "verified"
         for row in compound["requirements"]
@@ -769,7 +769,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     chooser = next(section for section in ledger["sections"] if section["id"] == "26.8")
     assert chooser["status"] == "accepted"
     assert [r["id"] for r in chooser["requirements"]] == [f"CH{i:02}" for i in range(1, 7)]
-    assert chooser["evidence"]["m28_check"]["path"].endswith("m28-check.json")
+    assert chooser["evidence"]["m29_check"]["path"].endswith("m29-check.json")
     assert all(
         a["state"] == "verified" for r in chooser["requirements"] for a in r["coverage"].values()
     )
@@ -777,7 +777,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert market_risk["status"] == "accepted"
     assert market_risk["source_pages"] == [671, 674]
     assert [r["id"] for r in market_risk["requirements"]] == [f"RP{i:02}" for i in range(1, 7)]
-    assert market_risk["evidence"]["m28_check"]["path"].endswith("m28-check.json")
+    assert market_risk["evidence"]["m29_check"]["path"].endswith("m29-check.json")
     assert all(
         a["state"] == "verified"
         for r in market_risk["requirements"]
@@ -787,7 +787,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert factor_risk["status"] == "accepted"
     assert factor_risk["source_pages"] == [674, 675]
     assert [r["id"] for r in factor_risk["requirements"]] == [f"FR{i:02}" for i in range(1, 7)]
-    assert factor_risk["evidence"]["m28_check"]["path"].endswith("m28-check.json")
+    assert factor_risk["evidence"]["m29_check"]["path"].endswith("m29-check.json")
     assert all(
         a["state"] == "verified"
         for r in factor_risk["requirements"]
@@ -797,7 +797,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert martingale["status"] == "accepted"
     assert martingale["source_pages"] == [675, 676]
     assert [r["id"] for r in martingale["requirements"]] == [f"MT{i:02}" for i in range(1, 7)]
-    assert martingale["evidence"]["m28_check"]["path"].endswith("m28-check.json")
+    assert martingale["evidence"]["m29_check"]["path"].endswith("m29-check.json")
     assert all(
         axis["state"] == "verified"
         for need in martingale["requirements"]
@@ -828,3 +828,13 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
         "B08",
         "B09",
     ]
+
+
+def test_numeraire_section_has_all_five_acceptance_axes() -> None:
+    ledger = json.loads((REPO_ROOT / "johnhull/docs/section_ledger.json").read_text())
+    section = next(row for row in ledger["sections"] if row["id"] == "28.4")
+    assert section["status"] == "accepted"
+    assert [row["id"] for row in section["requirements"]] == [f"NC{i:02}" for i in range(1, 7)]
+    assert all(part["state"] == "verified" for row in section["requirements"] for part in row["coverage"].values())
+    assert any("term金利はTで固定" in text for text in section["assumptions"])
+    assert any("印刷価格pinはない" in text for text in section["assumptions"])
