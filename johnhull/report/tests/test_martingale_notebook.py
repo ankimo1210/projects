@@ -1,4 +1,4 @@
-"""M27 protects all M26 cells and the complete new factor lesson."""
+"""M28 protects all M27 cells and the complete conditional martingale lesson."""
 
 import importlib
 import json
@@ -6,34 +6,29 @@ import json
 import nbformat
 
 
-def test_factor_notebook_and_four_negative_controls():
-    m = importlib.import_module("johnhull.scripts.verify_factor_risk_notebook")
+def test_martingale_notebook_and_four_negative_controls():
+    m = importlib.import_module("johnhull.scripts.verify_martingale_notebook")
     nb = nbformat.read(m.NOTEBOOK, as_version=4)
-    start = next(i for i, c in enumerate(nb.cells) if c.source.startswith("## 6B. "))
-    end = next(
-        i for i in range(start + 1, len(nb.cells)) if nb.cells[i].source.startswith("## 7. ")
-    )
-    nb.cells = nb.cells[:start] + nb.cells[end:]
-    assert len(nb.cells) == 235 and len(m._outside(nb)) == 224
+    assert len(nb.cells) == 246 and len(m._outside(nb)) == 235
     assert m.compare(nb, m._base(), m._fresh()) == []
     assert all(row["rejected"] for row in m.negative_controls(nb, m._base(), m._fresh()))
     assert set(m._saved(nb)) == m.KEYS
     outputs = "".join(o.get("text", "") for c in nb.cells for o in c.get("outputs", []))
-    assert "Example 28.3: excess=6.000000%" in outputs
-    assert "Synthetic r=4%: total=10.000000%" in outputs
+    assert "Conditional API: 9 states/time combinations" in outputs
+    assert "Same synthetic call: 17.2494832790" in outputs
 
 
-def test_factor_dependency_covers_whole_parent_section():
-    m = importlib.import_module("johnhull.scripts.verify_factor_risk_notebook")
+def test_martingale_dependency_covers_whole_parent_section():
+    m = importlib.import_module("johnhull.scripts.verify_martingale_notebook")
     f = importlib.import_module("johnhull.scripts.evidence_fingerprint")
     spec = json.loads((m.PROJECT / "scripts/evidence_dependencies.json").read_text())["sections"][
-        "28.2"
+        "28.3"
     ]
     cells, _ = f.notebook_slice(
         json.loads(m.NOTEBOOK.read_text()), spec["notebook"]["heading"], spec["notebook"]["level"]
     )
     text = "\n".join(c["source"] for c in cells)
     for n in range(1, 7):
-        assert f"### 6A.{n} " in text
+        assert f"### 6B.{n} " in text
     assert spec["book"]["level"] == spec["notebook"]["level"] == 2
     assert spec["book"]["heading"] == spec["notebook"]["heading"]

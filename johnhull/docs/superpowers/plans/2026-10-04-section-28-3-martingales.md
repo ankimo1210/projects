@@ -36,10 +36,10 @@
 
 **Files:** _martingale_lesson.py/tests、build_exotics_notebook.py/exotics.ipynb、verify_martingale_notebook.py/tests、歴史notebook tests、依存宣言。
 **Interfaces:** 4martingale_*keys、START##6B/END##7、親6B/6小節、246cells。
-- [ ] Step 1: 4図/結果改変hash/旧235保持tests。Expected: missing lesson/gate FAIL。
-- [ ] Step 2: 6B.1定義/追加条件、6B.2Itô導出、6B.3条件付き解析、6B.4条件付きMC、6B.5価格恒等式、6B.6限界/後続の11cellsと共有4図。Expected: 旧235保持/保存4図一致。
-- [ ] Step 3: fresh全文実行/notebook4改変/旧節pytest除去は新6Bのみ。Expected: lesson/notebook/歴史tests PASS。
-- [ ] Step 4: commit `Teach conditional martingales and numeraire identity`、task-done。Expected: 全PASS。
+- [x] Step 1: 4図/結果改変hash/旧235保持tests。Expected: missing lesson/gate FAIL。
+- [x] Step 2: 6B.1定義/追加条件、6B.2Itô導出、6B.3条件付き解析、6B.4条件付きMC、6B.5価格恒等式、6B.6限界/後続の11cellsと共有4図。Expected: 旧235保持/保存4図一致。
+- [x] Step 3: fresh全文実行/notebook4改変/旧節pytest除去は新6Bのみ。Expected: lesson/notebook/歴史tests PASS。
+- [x] Step 4: commit `Teach conditional martingales and numeraire identity`、task-done。Expected: 全PASS。
 
 ### Task 3: Book・portal・実画面
 

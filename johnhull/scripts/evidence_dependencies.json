@@ -1402,6 +1402,61 @@
         "report/tests/test_factor_risk_notebook.py",
         "report/tests/test_factor_risk_registry.py"
       ]
+    },
+    "28.3": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "6B. マルチンゲール（§28.3）",
+        "level": 2
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "6B. マルチンゲール（§28.3）",
+        "level": 2
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "martingale_ito",
+          "martingale_conditional",
+          "martingale_conditional_mc",
+          "martingale_pricing"
+        ]
+      },
+      "python_modules": [
+        "hullkit._martingales",
+        "hullkit.risk_premium",
+        "hullkit.bsm",
+        "hullkit._martingale_lesson"
+      ],
+      "data": [
+        "docs/validation/section-28-3/reference.json",
+        "docs/validation/section-28-3/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_martingale_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-28-3/reference.json",
+        "docs/validation/section-28-3/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-28-3",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_martingales.py",
+        "hullkit/tests/test_martingale_reference.py",
+        "hullkit/tests/test_martingale_numerics.py",
+        "hullkit/tests/test_martingale_lesson.py",
+        "report/tests/test_martingale_notebook.py",
+        "report/tests/test_martingale_registry.py"
+      ]
     }
   }
 }
