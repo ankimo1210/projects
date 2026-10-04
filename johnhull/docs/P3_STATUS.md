@@ -3,7 +3,7 @@
 更新2026-10-04。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。残り要件をN/Aへ置き換えたり、簡易モデルだけで完了としない。
 
 - main：§28.1–28.5受入、P3 5/37、全30/276。M30 `5c8bcbde` をFF統合/push、main fresh4223/6・台帳成果物/release/両保管庫PASS。Important1を固定seed消費時replayで4回帰RED→GREEN修正、Minor2保留。
-- 現在：本人指示（2026-10-04）でロジック先行へ変更。`codex/p3-logic` に節ごとに実装・本文数値再現・独立検証をcommit/pushし、受入は章末にまとめる。Ch28のロジック8/8（既受入5＋今回3）完了・章末まとめ受入待ち。Ch29のロジック4/4完了・章末まとめ受入待ち。Ch30のロジック4/4完了・章末まとめ受入待ち。§31.1–31.2のロジック完了、次は§31.3。P3ロジック18/37、正式受入5/37。
+- 現在：本人指示（2026-10-04）でロジック先行へ変更。`codex/p3-logic` に節ごとに実装・本文数値再現・独立検証をcommit/pushし、受入は章末にまとめる。Ch28のロジック8/8（既受入5＋今回3）完了・章末まとめ受入待ち。Ch29のロジック4/4完了・章末まとめ受入待ち。Ch30のロジック4/4完了・章末まとめ受入待ち。§31.1–31.3のロジック完了、次は§31.4。P3ロジック19/37、正式受入5/37。
 - 正式受入未完了：§28.6–28.8、Ch29–34（計32節）。多因子測度、市場式、convexity/timing/quanto、短期金利、HW/BK木/curve fit/時間依存sigma/Bermudan/較正、HJM/LMM、非標準swapの本文要件。
 - 並行準備：M30多因子の原典/独立132条件付きfixture、TN14/TN19完全PDF/元XLSの回収、31.4回帰と全9点の独立再現。正式受入とは区別する。
 - 章末：D3軽量受入（本人承認2026-10-03、PR #11は反映用のopen PR）。共通設定ツールで5軸受入、explanation/rendered必須、章内build/画面確認共有、依存変更節だけD1、全suite1回。節ごとは変更モジュールのtests/ruffのみ。
@@ -40,3 +40,4 @@
 | Ch30付録 | `_yield_convexity.py` | 印刷例なし。E[(y−yF)²]=Var+bias²、price平均・Taylor一次/二次/省略項を独立逆価格求積で検証 | ロジック完了。vol/time縮小の高次残差収束、Ch30受入は章末 |
 | §31.1 | `_short_rate_pde.py` | 印刷例なし。式31.1–5、定数rate/terminal、Gaussian割引MC・独立PDE微分、flat stochastic curve残差 | ロジック完了。経路積分は台形近似、教材・受入は章末 |
 | §31.2 | `_short_rate_models.py` | Ex31.1: 3.30/0.33%、CIR vol0.05、Vas Gaussian求積/CIR Riccati・χ²求積/厳密時点MC/RB独立PDE | ロジック完了。CIR zero atom・Feller/Euler反射bias、RB/CIR経路割引は時間近似、教材・受入は章末 |
+| §31.3 | `_short_rate_measure.py` | 印刷例なし。式31.13・CIR ab不変、P/Q往復、独立Gaussian求積/raw MC・P bond returnの有限差分PDE | ロジック完了。a=0はconstant driftで保持、risk price符号は本文の仮定、教材・受入は章末 |
