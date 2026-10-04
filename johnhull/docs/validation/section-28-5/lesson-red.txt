@@ -1,0 +1,489 @@
+FFFFFFFFFFFFFFFFF                                                        [100%]
+=================================== FAILURES ===================================
+____ test_four_figures_preserve_correlated_arithmetic_and_raw_mc_intervals _____
+
+    def test_four_figures_preserve_correlated_arithmetic_and_raw_mc_intervals():
+>       m = importlib.import_module("hullkit._multi_factor_lesson")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+___________ test_consumer_rejects_resigned_result_mutations[status] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b301cd0>
+mutation = 'status'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_______ test_consumer_rejects_resigned_result_mutations[reference hash] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b303620>
+mutation = 'reference hash'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_______ test_consumer_rejects_resigned_result_mutations[source missing] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b3353a0>
+mutation = 'source missing'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+________ test_consumer_rejects_resigned_result_mutations[source escape] ________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b337740>
+mutation = 'source escape'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+____________ test_consumer_rejects_resigned_result_mutations[cases] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b337b90>
+mutation = 'cases'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_consumer_rejects_resigned_result_mutations[conditional] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b303650>
+mutation = 'conditional'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+___________ test_consumer_rejects_resigned_result_mutations[pricing] ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b302b70>
+mutation = 'pricing'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____________ test_consumer_rejects_resigned_result_mutations[mc] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b337d10>
+mutation = 'mc'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_consumer_rejects_resigned_result_mutations[mc se zero] __________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b3347a0>
+mutation = 'mc se zero'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+__________ test_consumer_rejects_resigned_result_mutations[truncated] __________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b337200>
+mutation = 'truncated'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_________ test_consumer_rejects_resigned_result_mutations[result hash] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned10')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b1e1a90>
+mutation = 'result hash'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+___________ test_consumer_rejects_resigned_result_mutations[max mc] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned11')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b337b60>
+mutation = 'max mc'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+______ test_consumer_rejects_resigned_result_mutations[negative control] _______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned12')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b335dc0>
+mutation = 'negative control'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_____ test_consumer_rejects_resigned_result_mutations[reference resigned] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3197/test_consumer_rejects_resigned13')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79902b3038c0>
+mutation = 'reference resigned'
+
+    @pytest.mark.parametrize("mutation", ["status", "reference hash", "source missing", "source escape", "cases", "conditional", "pricing", "mc", "mc se zero", "truncated", "result hash", "max mc", "negative control", "reference resigned"])
+    def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutation):
+>       m=importlib.import_module("hullkit._multi_factor_lesson")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hullkit._multi_factor_lesson'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'hullkit._multi_factor_lesson'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+_______ test_multifactor_cards_follow_numeraire_and_use_checked_figures ________
+
+    def test_multifactor_cards_follow_numeraire_and_use_checked_figures():
+        specs=figures_for("exotics")
+        start=next(i for i,s in enumerate(specs) if s.id=="martingale_numeraire_annuity")+1
+        selected=specs[start:start+4]
+>       assert [s.id for s in selected]==["factor_ratio_ito","factor_ratio_conditional","factor_basis_covariance","factor_measure_price"]
+E       AssertionError: assert ['asian_vs_european'] == ['factor_rati...easure_price']
+E         
+E         At index 0 diff: 'asian_vs_european' != 'factor_ratio_ito'
+E         Right contains 3 more items, first extra item: 'factor_ratio_conditional'
+E         Use -v to get more diff
+
+johnhull/report/tests/test_multifactor_registry.py:9: AssertionError
+______________ test_multifactor_lesson_and_old_notebook_preserved ______________
+
+    def test_multifactor_lesson_and_old_notebook_preserved():
+>       m=importlib.import_module("johnhull.scripts.verify_multifactor_notebook")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+johnhull/report/tests/test_multifactor_notebook.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'johnhull.scripts.verify_multifactor_notebook'
+import_ = <function _gcd_import at 0x7990a5fa40e0>
+
+>   ???
+E   ModuleNotFoundError: No module named 'johnhull.scripts.verify_multifactor_notebook'
+
+<frozen importlib._bootstrap>:1324: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_four_figures_preserve_correlated_arithmetic_and_raw_mc_intervals
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[status]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[reference hash]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[source missing]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[source escape]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[cases]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[conditional]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[pricing]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[mc]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[mc se zero]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[truncated]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[result hash]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[max mc]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[negative control]
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_consumer_rejects_resigned_result_mutations[reference resigned]
+FAILED johnhull/report/tests/test_multifactor_registry.py::test_multifactor_cards_follow_numeraire_and_use_checked_figures
+FAILED johnhull/report/tests/test_multifactor_notebook.py::test_multifactor_lesson_and_old_notebook_preserved
+17 failed in 1.87s

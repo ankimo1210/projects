@@ -1512,6 +1512,58 @@
         "report/tests/test_numeraire_notebook.py",
         "report/tests/test_numeraire_registry.py"
       ]
+    },
+    "28.5": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "6D. 複数因子への拡張（§28.5）",
+        "level": 2
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "6D. 複数因子への拡張（§28.5）",
+        "level": 2
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "factor_ratio_ito",
+          "factor_ratio_conditional",
+          "factor_basis_covariance",
+          "factor_measure_price"
+        ]
+      },
+      "python_modules": [
+        "hullkit._multi_factor_martingales",
+        "hullkit._multi_factor_lesson"
+      ],
+      "data": [
+        "docs/validation/section-28-5/reference.json",
+        "docs/validation/section-28-5/numerical-check.json"
+      ],
+      "verifier": "scripts/verify_multifactor_browser.cjs",
+      "verifier_inputs": [
+        "docs/validation/section-28-5/reference.json",
+        "docs/validation/section-28-5/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/section-28-5",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_multi_factor_martingales.py",
+        "hullkit/tests/test_multifactor_numerics.py",
+        "hullkit/tests/test_multifactor_lesson.py",
+        "report/tests/test_multifactor_notebook.py",
+        "report/tests/test_multifactor_registry.py"
+      ]
     }
   }
 }

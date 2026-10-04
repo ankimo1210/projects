@@ -35,6 +35,7 @@ from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._martingale_lesson import _figures as martingale_lesson_figures
 from hullkit._nonstandard_american_lesson import _figures as nonstandard_american_lesson_figures
 from hullkit._numeraire_lesson import _figures as numeraire_lesson_figures
+from hullkit._multi_factor_lesson import _figures as multifactor_lesson_figures
 from hullkit._packages_lesson import _figures as packages_lesson_figures
 from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
 from hullkit._perpetual_american_lesson import _figures as perpetual_american_lesson_figures
@@ -1489,6 +1490,26 @@ FIGURES: list[FigureSpec] = [
         "martingale_numeraire_annuity", "exotics", "annuity測度と二つのcurve", "OIS割引のAとprojectionクーポンのVからswap rateを作る。",
         lambda: numeraire_lesson_figures()["martingale_numeraire_annuity"],
         practice="複数時刻・状態の条件付き平均。合成additive basisでprojectionが変わってもOIS annuityは同じ。", is_new=True,
+    ),
+    FigureSpec(
+        "factor_ratio_ito", "exotics", "多因子の比とItô補正", "g測度で相関共分散を含む三つの相対driftが相殺。",
+        lambda: multifactor_lesson_figures()["factor_ratio_ito"],
+        practice="相関三因子：−.06684+.06904−.0022=0/年。log driftは別。", is_new=True,
+    ),
+    FigureSpec(
+        "factor_ratio_conditional", "exotics", "多因子の条件付き平均", "現在の観測比からのg/Q平均、直接MCと95%区間。",
+        lambda: multifactor_lesson_figures()["factor_ratio_conditional"],
+        practice="現在比.65/1.25/2、未来.25/2.5年。真のmartingaleは有限GBMの可積分性を確認。", is_new=True,
+    ),
+    FigureSpec(
+        "factor_basis_covariance", "exotics", "相関因子を独立basisへ", "sfᵀ C sgと(sf L)・(sg L)、ρ=±1のPSDも一致。",
+        lambda: multifactor_lesson_figures()["factor_basis_covariance"],
+        practice="C=L Lᵀ。loadingとrisk vectorを同じbasisで変換し、Cを二重に掛けない。", is_new=True,
+    ),
+    FigureSpec(
+        "factor_measure_price", "exotics", "多因子の同じ給付価格", "同じcallのQ/g直接MCと独立求積価格との差。",
+        lambda: multifactor_lesson_figures()["factor_measure_price"],
+        practice="相関f市場を固定しgを正・負・ゼロloadingへ変更しても価格は同じ。区間±1.96SE。", is_new=True,
     ),
     FigureSpec(
         "asian_vs_european",

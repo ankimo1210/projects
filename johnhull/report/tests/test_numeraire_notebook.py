@@ -11,6 +11,8 @@ def test_numeraire_notebook_and_four_negative_controls():
     assert m.RECORD.parent.name == "section-28-4"
     assert m.NOTEBOOK.parent.name == "10_exotics_martingales"
     nb = nbformat.read(m.NOTEBOOK, as_version=4)
+    # M30 protects all257; this historical M29 check omits only6D.
+    nb.cells = importlib.import_module("johnhull.scripts.verify_multifactor_notebook")._outside(nb)
     assert len(nb.cells) == 257 and len(m._outside(nb)) == 246
     assert m.compare(nb, m._base(), m._fresh()) == []
     assert all(row["rejected"] for row in m.negative_controls(nb, m._base(), m._fresh()))

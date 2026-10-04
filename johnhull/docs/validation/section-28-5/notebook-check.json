@@ -1,0 +1,45 @@
+{
+  "section": "28.5",
+  "status": "PASS",
+  "base": "7ac2f470",
+  "cells": 268,
+  "lesson_cells": 11,
+  "preserved_cells_outside_lesson": 257,
+  "saved_figures": [
+    "factor_basis_covariance",
+    "factor_measure_price",
+    "factor_ratio_conditional",
+    "factor_ratio_ito"
+  ],
+  "negative_controls": [
+    {
+      "mutation": "old prose",
+      "rejected": true
+    },
+    {
+      "mutation": "new heading",
+      "rejected": true
+    },
+    {
+      "mutation": "saved plot",
+      "rejected": true
+    },
+    {
+      "mutation": "post heading",
+      "rejected": true
+    }
+  ],
+  "source_sha256": {
+    "scripts/verify_multifactor_notebook.py": "9306d77f8e278e66fea8f861f2fbed0e22b5c3de642a32931d19e3edd130138f",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "hullkit/src/hullkit/_multi_factor_lesson.py": "351ba4f4f9753312119ba905beaf9a9a9165035aba444ce44103a7a9e7bac01c",
+    "hullkit/src/hullkit/_multi_factor_martingales.py": "17615d592dd4757db4c8ca2e1adfabb0018988e433f6378c7a622bae55658bec",
+    "docs/validation/section-28-5/reference.json": "d9fd931575ab9ae5bbb2b9cbc54a5000357684910b7bbd5ff77a2c887584b706",
+    "docs/validation/section-28-5/numerical-check.json": "b74fd6de90cbeee58ad6c9e9e110bedc51f2abb7deabf564ac71d17ab368f9d8",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "d599a83083474b85ae6dbccb81e22dfb46f95dedcc4ba9a64058d7bdb39f31f1",
+    "volumes/10_exotics_martingales/exotics.ipynb": "213c00f83d433badc76dec3bdd2f8914a04039244d1b6a99d34295aa1fa60c55"
+  },
+  "artifact_sha256": {
+    "volumes/10_exotics_martingales/exotics.ipynb": "213c00f83d433badc76dec3bdd2f8914a04039244d1b6a99d34295aa1fa60c55"
+  }
+}

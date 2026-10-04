@@ -1,0 +1,17 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_price_figure_holds_f_market_fixed_while_choosing_three_g_loadings ____
+
+    def test_price_figure_holds_f_market_fixed_while_choosing_three_g_loadings():
+        m=importlib.import_module("hullkit._multi_factor_lesson")
+        fig=m._figures()["factor_measure_price"]
+>       assert list(fig.data[0].x)==["correlated_3","correlated_3_negative_g","correlated_3_zero_g"]
+E       AssertionError: assert ['independent...3_negative_g'] == ['correlated_...ted_3_zero_g']
+E         
+E         At index 0 diff: 'independent_3' != 'correlated_3'
+E         Use -v to get more diff
+
+johnhull/hullkit/tests/test_multifactor_lesson.py:103: AssertionError
+=========================== short test summary info ============================
+FAILED johnhull/hullkit/tests/test_multifactor_lesson.py::test_price_figure_holds_f_market_fixed_while_choosing_three_g_loadings
+1 failed, 15 deselected in 0.90s
