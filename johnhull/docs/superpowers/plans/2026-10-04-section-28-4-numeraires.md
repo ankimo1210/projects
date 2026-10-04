@@ -27,15 +27,15 @@
 - [x] Step 1: 定数曲線4%、a=.2/σ=.02、(.25,2,-.015)/(.75,4,0)/(2,5,.01)の独立integral priceとQ tower tests。Expected: 現行式FAIL。
 - [x] Step 2: bond exponentへ-B*c(t)を追加し、Q状態のdocstringとcurve-fitを照合。Expected: 新4+既存HW tests PASS。
 - [x] Step 3: Jamshidian/ZCB option/較正の独立整合と既存利用箇所への影響を確認。Expected: 既存のdocumented Q契約を維持。
-- [ ] Step 4: commitとtask-done。Expected: 対象tests PASS、M29未受入を明示。
+- [x] Step 4: commitとtask-done。Expected: 対象tests PASS、M29未受入を明示。
 
 ### Task 2: 独立joint Gaussian・測度数値gate
 
 **Files:** private _numeraire_choices.py/tests、build_numeraire_reference.py/verify_numeraire_numerics.pyとsection-28-4 JSON。
 **Interfaces:** 状態/積分率/stock driverのmoments、tilted mean/cov、same payoffとconditional payment/annuity mixtures。詳細API/fixture/許容差はTask1結果とsource designからpre-flightで確定し記録。
-- [ ] Step 1: 独立source12要求/求積fixture、入力/単位/退化/条件付き・wrongmeasure tests。Expected: missing module FAIL。
-- [ ] Step 2: exact moments/private APIs/Q・T・payment・annuity数値照合。Expected: synthetic独立求積/MCとAPI許容差PASS。
-- [ ] Step 3: 実API/保存変異拒否、commit/task-done。Expected: 全controls PASS。
+- [x] Step 1: 独立source12要求/求積fixture、入力/単位/退化/条件付き・wrongmeasure tests。Expected: missing module FAIL。
+- [x] Step 2: exact moments/private APIs/Q・T・payment・annuity数値照合。Expected: synthetic独立求積/MCとAPI許容差PASS。
+- [x] Step 3: 実API/保存変異拒否、commit/task-done。Expected: 全controls PASS。
 
 ### Task 3: 6C教材・4共有図・Book/portal
 

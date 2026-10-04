@@ -1,0 +1,13 @@
+
+==================================== ERRORS ====================================
+______ ERROR collecting johnhull/hullkit/tests/test_numeraire_choices.py _______
+ImportError while importing test module '/home/kazumasa/worktrees/m29/johnhull/hullkit/tests/test_numeraire_choices.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+johnhull/hullkit/tests/test_numeraire_choices.py:7: in <module>
+    from hullkit._numeraire_choices import (
+E   ModuleNotFoundError: No module named 'hullkit._numeraire_choices'
+=========================== short test summary info ============================
+ERROR johnhull/hullkit/tests/test_numeraire_choices.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.54s
