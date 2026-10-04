@@ -1,0 +1,174 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "factor_risk_contributions",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_loading",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_hedge",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_contributions",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_loading",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_hedge",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-2/portal-factor_risk_contributions-1440.png",
+        "docs/validation/section-28-2/portal-factor_risk_loading-1440.png",
+        "docs/validation/section-28-2/portal-factor_risk_hedge-1440.png",
+        "docs/validation/section-28-2/portal-factor_risk_validation-1440.png",
+        "docs/validation/section-28-2/portal-factor_risk_contributions-1000.png",
+        "docs/validation/section-28-2/portal-factor_risk_loading-1000.png",
+        "docs/validation/section-28-2/portal-factor_risk_hedge-1000.png",
+        "docs/validation/section-28-2/portal-factor_risk_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "factor_risk_contributions",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_loading",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_hedge",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_validation",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_contributions",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_loading",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_hedge",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_risk_validation",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-2/book-factor_risk_contributions-1440.png",
+        "docs/validation/section-28-2/book-factor_risk_loading-1440.png",
+        "docs/validation/section-28-2/book-factor_risk_hedge-1440.png",
+        "docs/validation/section-28-2/book-factor_risk_validation-1440.png",
+        "docs/validation/section-28-2/book-factor_risk_contributions-1000.png",
+        "docs/validation/section-28-2/book-factor_risk_loading-1000.png",
+        "docs/validation/section-28-2/book-factor_risk_hedge-1000.png",
+        "docs/validation/section-28-2/book-factor_risk_validation-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/factor_risk.py": "efa2391d2f722c94f0be244764245c3870c8fd121a16de937f44f7158774eb34",
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
+    "hullkit/src/hullkit/_factor_risk_lesson.py": "8151ca3b562e61596859a0f36858b019e7d2ba29890f9e217bc61271cfc46a22",
+    "scripts/build_factor_risk_reference.py": "48d137cf1489e5b1d72fb62faddfa42fa8ea8c4ea0af438dd8cd66e3e5e71d41",
+    "scripts/verify_factor_risk_browser.cjs": "a964706835f02542efe3303e61b976bc5aedaa4d1545794e00b41be4bf4195de",
+    "docs/validation/section-28-2/reference.json": "297b9d2c20ccba75b81c12ea59e6e2b292269e7f3a3dcd0421d17fc0dff335bb",
+    "docs/validation/section-28-2/numerical-check.json": "0a3849aa41e74583fc9dd2b7e2ee5e81ba7d7f09c0613733994bac03609f87fa",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "08b2a34d3453f31c36c509b7fb38fba803b787a3e3f7b9db6524a2feb9e3cae2",
+    "volumes/10_exotics_martingales/exotics.ipynb": "79fb183704d1af31ecc77fcc9a6183b5b15481a49a1cde6185bc3f813fc4ec24",
+    "report/report_builder/figures.py": "23d052490459ee65554d29dacc14e4557c3c1b92774a585814bb8d4e5ea16d47",
+    "report/assets/style.css": "4e6f90526f72e870c02a1580fefd6cb7f104956bed56fbd4e7199b1d431052a8"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "ac9f11f23246bf647641ee261de09d19db3688f48d8a02bdf5de73fe7568a71e",
+    "book/_build/html/notebooks/10_exotics.html": "4313de0e919e022b68c9ac6a7477e02571f2dff7cc26ec5e4bcd938841ffc4cf",
+    "docs/validation/section-28-2/portal-factor_risk_contributions-1440.png": "33a84b4f54d3692f3ec0c85691157771adfa04918ff5f2a95ea0ae6193e29ca8",
+    "docs/validation/section-28-2/portal-factor_risk_loading-1440.png": "f232e325b733d504be44e52df843544d4e759fb446f23c4db72ecc2011e3dd8d",
+    "docs/validation/section-28-2/portal-factor_risk_hedge-1440.png": "c16f9144f33bb4bf25e95de50995b00db7f7ccb874abcd1752fd9786b041a9c0",
+    "docs/validation/section-28-2/portal-factor_risk_validation-1440.png": "53dd4c560db2aea0043dfb2d1194f2855bb066eed74a51f424d76aabe4fea634",
+    "docs/validation/section-28-2/portal-factor_risk_contributions-1000.png": "55730f97d1ef24ceacb05a3c83a053176f947d66edbfb986bef0ccc8a46ade94",
+    "docs/validation/section-28-2/portal-factor_risk_loading-1000.png": "5c12e4b5315f756a92e5e1a781d658dabbf84cd4bf68a4fbfd247fcac1f44e8f",
+    "docs/validation/section-28-2/portal-factor_risk_hedge-1000.png": "c4865b7005840ea765f259c488f418b7ce5a53a720be4476a435bec78c8110b9",
+    "docs/validation/section-28-2/portal-factor_risk_validation-1000.png": "650986a43366458e790bebc96d9b1520edba79b0ca1cbd0733307a853f011a47",
+    "docs/validation/section-28-2/book-factor_risk_contributions-1440.png": "1810114bd5ab1f18d87c1e7a4c6161a634e64576c48a293058c26e1e2d10c652",
+    "docs/validation/section-28-2/book-factor_risk_loading-1440.png": "1c128cb0f4f5f06fe7fa55781e3ceb0c39c4724a6952a06231dafc5259c97a06",
+    "docs/validation/section-28-2/book-factor_risk_hedge-1440.png": "88076a5a1ed1df9a008d6ef2f348129c7b2e9f38fc50cc5e497386016ba6ae6b",
+    "docs/validation/section-28-2/book-factor_risk_validation-1440.png": "4e58979c2d7b239ad0146fadacf4a8236262a256981c5f000b65ca4d01eca0e6",
+    "docs/validation/section-28-2/book-factor_risk_contributions-1000.png": "7d29c778c80998be217ffba1c2964789101623ecc71727254d5bfa1963840924",
+    "docs/validation/section-28-2/book-factor_risk_loading-1000.png": "90cd3e682ad3741b7e57917d31a4c77bf4aff362c1b4fc8b45be1b7daa6aaf17",
+    "docs/validation/section-28-2/book-factor_risk_hedge-1000.png": "68b84fdb2060de981d5c5883580f73464ae055bfa597457c62bbace6341bd6e7",
+    "docs/validation/section-28-2/book-factor_risk_validation-1000.png": "6264189c9ab1bd196680c6679cc32e82153bc04580d186afb242f56cf69ae687"
+  },
+  "book_math": {
+    "rendered": 1125,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

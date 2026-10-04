@@ -1,0 +1,158 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "barrier_lattice",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_convergence",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_errors",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_near",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_lattice",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_convergence",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_errors",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_near",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-6/portal-barrier_lattice-1440.png",
+        "docs/validation/section-27-6/portal-barrier_convergence-1440.png",
+        "docs/validation/section-27-6/portal-barrier_errors-1440.png",
+        "docs/validation/section-27-6/portal-barrier_near-1440.png",
+        "docs/validation/section-27-6/portal-barrier_lattice-1000.png",
+        "docs/validation/section-27-6/portal-barrier_convergence-1000.png",
+        "docs/validation/section-27-6/portal-barrier_errors-1000.png",
+        "docs/validation/section-27-6/portal-barrier_near-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "barrier_lattice",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_convergence",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_errors",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_near",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_lattice",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_convergence",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_errors",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "barrier_near",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-27-6/book-barrier_lattice-1440.png",
+        "docs/validation/section-27-6/book-barrier_convergence-1440.png",
+        "docs/validation/section-27-6/book-barrier_errors-1440.png",
+        "docs/validation/section-27-6/book-barrier_near-1440.png",
+        "docs/validation/section-27-6/book-barrier_lattice-1000.png",
+        "docs/validation/section-27-6/book-barrier_convergence-1000.png",
+        "docs/validation/section-27-6/book-barrier_errors-1000.png",
+        "docs/validation/section-27-6/book-barrier_near-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/barrier_tree.py": "d6604d51346dbf3bee61762e5bc10c0f1bde46b2dcde63aded914da3be96928f",
+    "hullkit/src/hullkit/_barrier_tree_lesson.py": "9292dd867ff817e0cd685f92d5a448c4f16f91a595c4d964fe56bcb509d4ab98",
+    "scripts/build_barrier_tree_reference.py": "c0aa3ac3b109329b6a935db9f3b68629d592b6777a5f6953acd86f4955cddeb3",
+    "scripts/verify_barrier_tree_browser.cjs": "f1fa1b0bafa475fa38233bae733c38aa48076afb1c05a79c6fa4ee890e25b7fe",
+    "docs/validation/section-27-6/reference.json": "9ba15464abfd77844403e0f30d654ae9c288d9cca1cd33512579f9d7179bfaf3",
+    "docs/validation/section-27-6/numerical-check.json": "a943b8e3babb493108c777097f28f380c04a8ed5bb1999dab40194f212f853d0",
+    "volumes/06_numerical_methods/build_numerical_notebook.py": "e032b2e058a589f08ad0c45027428e89ba717be5a9fb2f136327fd955e0618b0",
+    "volumes/06_numerical_methods/numerical.ipynb": "9bb5b6a88e52f6bf136b3abd2eb5c9f11ddda42169a371d52731aa20ba4e8c2a",
+    "report/report_builder/figures.py": "23d052490459ee65554d29dacc14e4557c3c1b92774a585814bb8d4e5ea16d47",
+    "report/assets/style.css": "4e6f90526f72e870c02a1580fefd6cb7f104956bed56fbd4e7199b1d431052a8"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "f3a248d386180f6534b154b7d4c3980064f66d840dfce44dee4bc744e6d8ca93",
+    "book/_build/html/notebooks/06_numerical.html": "a254b058a75c9bfe9014d14cb1ec4810ad2cdc2dd0ba9c735d5ba74d8cb357ab",
+    "docs/validation/section-27-6/portal-barrier_lattice-1440.png": "ff00753d05a436b2460fb8de3b1957b316f65b8730dc16c35974727b468e4863",
+    "docs/validation/section-27-6/portal-barrier_convergence-1440.png": "54d0494017013572791f4a06093d6469c89164afd87b7fec0692b08279a44ab8",
+    "docs/validation/section-27-6/portal-barrier_errors-1440.png": "be99e843fa0b34c18176749d61d25f7badf19e10d60034014e830f1936da78cc",
+    "docs/validation/section-27-6/portal-barrier_near-1440.png": "e7faadcd412f773fc2cc20d9dae2e1d8a08c0292d6312c3b2cb5fda08b1fcddb",
+    "docs/validation/section-27-6/portal-barrier_lattice-1000.png": "18ba83ee6510cc4d70f638e22d67deb4fad206e1b32254a83ea2b4f295241c9a",
+    "docs/validation/section-27-6/portal-barrier_convergence-1000.png": "24a6e8241c5b8f865b8c4f4515c0af6e219a89b5cae110eb15497efd878ff738",
+    "docs/validation/section-27-6/portal-barrier_errors-1000.png": "f31157b847ed39cbcb9c07d14215062413c0a6239971b6f2821a0029b5ba53f5",
+    "docs/validation/section-27-6/portal-barrier_near-1000.png": "22ff578abbf22e4a511fed2e97bc5483e81e992aed1f455f67d14b21d1f38a12",
+    "docs/validation/section-27-6/book-barrier_lattice-1440.png": "e78ca0935da38ac39cad7ee7c39b2fdeb21493328e3cefc3441e027d2ea9009a",
+    "docs/validation/section-27-6/book-barrier_convergence-1440.png": "c683dbf533790606088e916d14a11c23640db7c164a83b63f6dc498b3758b44d",
+    "docs/validation/section-27-6/book-barrier_errors-1440.png": "aeb097e648ea2fc6f62795092a7005fdcf906e529dbe26d577c3f6ca7d8ac600",
+    "docs/validation/section-27-6/book-barrier_near-1440.png": "fef3bffc272b390f351dcca79aef3e221bbee3a97738466b21f0b33c7464a4b0",
+    "docs/validation/section-27-6/book-barrier_lattice-1000.png": "843955eab077d589eccc6e8c9bf52a54a7f66942c9cf2b29ab30416b3ea580af",
+    "docs/validation/section-27-6/book-barrier_convergence-1000.png": "307aeb9c27b6f9f4a3ed7c7396e4a80a254048fd47b9646c28de06d4976b475a",
+    "docs/validation/section-27-6/book-barrier_errors-1000.png": "91997ec22907a1a0836da39ac533765ff8a0c7eecfa7952f6373893b8671f896",
+    "docs/validation/section-27-6/book-barrier_near-1000.png": "8c88b127300ad14fc84eb2d1efea0063d20f89f9ecedd29a552bfeb8b2af2b63"
+  },
+  "book_math": {
+    "rendered": 390,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}

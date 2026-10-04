@@ -1,6 +1,11 @@
 # P3 原資料不足の調査引継ぎ — 2026-10-04
 
-## 範囲と結論
+
+## 更新：公式保存庫による回収（M29準備時点）
+
+初回調査の取得不足は[回収記録](P3_PRIMARY_INPUT_RECOVERY_2026-10-04.md)の固定commit/hashで更新。TN14全4頁/TN19全1頁/VasicekCIR元XLSを取得し、§31.4の8664元観測/8663回帰組と全9較正点を独立再計算。OLS最大差3.08e−15、元lambdaでzero rate差6.77e−16。取得不足は解消、正式実装/五軸受入は未完。外部series IDは未同定、原worksheetをcanonicalとする。flexicapのstrike/eligible datesは引き続き未確定。下の初回調査は過去時点の結果として保持する。
+
+## 初回調査の範囲と結論
 
 読み取り専用の対象は `/home/kazumasa/worktrees/m28/johnhull`。プロジェクト/Gitファイルを変更していない。監査記録 `docs/P3_REQUIREMENT_AUDIT_2026-10-04.md` と prep Ch31/33/34、ローカル原典の関連頁、著者公式検索索引を照合した。調査は親エージェントの指示でこの時点に終了し、追加検索・新しい検査を行っていない。
 
