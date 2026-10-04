@@ -83,3 +83,36 @@ def cms_par_yield_approximation(discounts, accruals, times, frequency=1):
         "cashflows": cash,
         **bond_value_derivatives(y, t, cash, frequency),
     }
+
+
+def convexity_taylor_decomposition(
+    y, first, second, mean_y, variance, mean_price, forward_price, vol, expiry
+):
+    """Budget of the Ch30 appendix approximations, using supplied moments.
+
+    E[(y_T-y_F)^2] is variance plus squared bias, not exactly variance.
+    E[G(y_T)]-G(y_F) equals G'*bias + G''*second_moment/2 plus
+    the omitted Taylor remainder. Hull's formula sets the mean-price change
+    to zero, discards the remainder/bias squared, and substitutes the local
+    lognormal yield variance y_F^2*sigma_y^2*T. Actual moments may come from
+    independent quadrature or simulation; no terminal yield law is imposed.
+    """
+    if variance < 0:
+        raise ValueError("nonnegative yield variance required")
+    approximate = convexity_adjusted_yield(y, vol, expiry, first, second)
+    bias = mean_y - y
+    second_moment = variance + bias * bias
+    linear = first * bias
+    quadratic = 0.5 * second * second_moment
+    price_change = mean_price - forward_price
+    return {
+        "bias": bias,
+        "second_moment": second_moment,
+        "variance_plus_bias_squared": variance + bias * bias,
+        "local_second_moment": y * y * vol * vol * expiry,
+        "linear_term": linear,
+        "quadratic_term": quadratic,
+        "mean_price_minus_forward": price_change,
+        "omitted_price_remainder": price_change - linear - quadratic,
+        "approximated_yield": approximate,
+    }
