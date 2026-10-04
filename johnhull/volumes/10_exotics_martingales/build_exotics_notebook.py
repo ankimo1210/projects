@@ -2872,6 +2872,11 @@ from hullkit._multi_factor_lesson import _cells as multifactor_lesson_cells
 
 cells.extend(multifactor_lesson_cells())
 
+# D3: remaining chapter-28 lessons share the chapter acceptance run.
+from hullkit._chapter28_lesson import _cells as chapter28_lesson_cells
+
+cells.extend(chapter28_lesson_cells())
+
 cells.append(
     md(r"""## 7. ニュメレールの選択（§28.4）
 
