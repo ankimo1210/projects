@@ -3,8 +3,8 @@
 更新2026-10-04。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。残り要件をN/Aへ置き換えたり、簡易モデルだけで完了としない。
 
 - main：§28.1–28.5受入、P3 5/37、全30/276。M30 `5c8bcbde` をFF統合/push、main fresh4223/6・台帳成果物/release/両保管庫PASS。Important1を固定seed消費時replayで4回帰RED→GREEN修正、Minor2保留。
-- 現在：本人指示（2026-10-04）でロジック先行へ変更。`codex/p3-logic` に節ごとに実装・本文数値再現・独立検証をcommit/pushし、受入は章末にまとめる。Ch28のロジック8/8（既受入5＋今回3）完了・章末まとめ受入待ち。次はCh29。P3ロジック8/37、正式受入5/37。
-- 未完了：§28.6–28.8、Ch29–34（計32節）。多因子測度、市場式、convexity/timing/quanto、短期金利、HW/BK木/curve fit/時間依存sigma/Bermudan/較正、HJM/LMM、非標準swapの本文要件。
+- 現在：本人指示（2026-10-04）でロジック先行へ変更。`codex/p3-logic` に節ごとに実装・本文数値再現・独立検証をcommit/pushし、受入は章末にまとめる。Ch28のロジック8/8（既受入5＋今回3）完了・章末まとめ受入待ち。§29.1のロジック完了、次は§29.2。P3ロジック9/37、正式受入5/37。
+- 正式受入未完了：§28.6–28.8、Ch29–34（計32節）。多因子測度、市場式、convexity/timing/quanto、短期金利、HW/BK木/curve fit/時間依存sigma/Bermudan/較正、HJM/LMM、非標準swapの本文要件。
 - 並行準備：M30多因子の原典/独立132条件付きfixture、TN14/TN19完全PDF/元XLSの回収、31.4回帰と全9点の独立再現。正式受入とは区別する。
 - 章末：D3軽量受入（本人承認2026-10-03、PR #11は反映用のopen PR）。共通設定ツールで5軸受入、explanation/rendered必須、章内build/画面確認共有、依存変更節だけD1、全suite1回。節ごとは変更モジュールのtests/ruffのみ。
 - 公開API/production依存の追加は避け、計算をprivate moduleへ置く。既存公開契約を保持。
@@ -30,3 +30,4 @@
 | §28.6 | `_forward_black.py` | 印刷例なし。式28.26–29、7市場42価格のQ/T求積・raw MC、rare call 7.1683521394e-8 | ロジック完了。教材・正式受入は章末 |
 | §28.7 | `_exchange_measure.py` | 印刷例なし。式28.30–32、33ケース独立求積、配当再投資密度と確率金利4条件MC | ロジック完了。教材・正式受入は章末 |
 | §28.8 | `_numeraire_change.py` | 印刷例なし。式28.33–35、9相関条件、TN20 chain rule、独立求積・raw密度MC | ロジック完了。Ch28の章末まとめ受入待ち |
+| §29.1 | `_bond_market.py` | Ex29.1: 9.49/7.97、Ex29.2: 122.82/2.36/1.74、独立求積・OU分散MC | ロジック完了。半年複利＋修正duration規約、教材・受入は章末 |
