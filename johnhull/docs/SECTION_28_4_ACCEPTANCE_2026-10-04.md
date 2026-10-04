@@ -27,3 +27,7 @@
 既受入28節のbrowser・runtime probe・個別pytest計2,157件・C:/F:両保管庫復元はPASS。0節再利用・28節再描画。HW/共有registryの依存変更による再描画。採用画像payloadは19,960,718バイト、全462画像。重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。
 
 全hullkit+report 4,125 passed・6 skipped・既存warnings2（213.52s）。15 gate/ledger tests PASS、4--check/ruff/台帳成果物/tracked releaseを確認してfresh独立レビューへ渡す。main統合は後続工程。
+
+## 独立最終レビュー
+
+Critical0/Important0/Minor3、対象96tests/4checks/100条件付きprobe/42不正入力/4画像を独立確認。Minor3はレビュー文書の再現例と限界を保存してdeferred。受入を止める問題はなく、main統合は次工程。

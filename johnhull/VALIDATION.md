@@ -813,3 +813,5 @@ HW Q状態のintegral/tower RED→GREEN・既存option/較正影響確認、63�
 既受入28節のbrowser・runtime probe・個別pytest計2,157件・C:/F:両保管庫復元はPASS。0節再利用・28節再描画。HW/共有registryの依存変更による再描画。採用画像payloadは19,960,718バイト、全462画像。重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。
 
 全hullkit+report 4,125 passed・6 skipped・既存warnings2（213.52s）。15 gate/ledger tests PASS、受入29/未評価277、P3 4/37。freshレビュー・main統合は後続。
+
+M29独立最終レビューCritical0/Important0/Minor3、96tests/4--check/100条件付きprobe/42不正入力/4画像 PASS。Minor3は再現条件と限界をレビュー文書に保存。main統合は後続。

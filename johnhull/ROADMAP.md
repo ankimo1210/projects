@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 31 priva
 | 節単位の受入 | M29まで受入29・未評価277（9.5%） | P0/P1/P2完了、P3金利4/37。次はM30 §28.5。全体計画は下表 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。M29：旧28節再検査PASS | 既受入28節のbrowser・runtime probe・個別pytest計2,157件・C:/F:両保管庫復元はPASS。0節再利用・28節再描画。HW/共有registryの依存変更による再描画。採用画像payloadは19,960,718バイト、全462画像。重複排除後の保管庫の実増加容量は未測定。採用D1パスとSHA-256を固定。 |
-| テスト・レビュー | 全hullkit+report 4,125 passed・6 skipped・既存warnings2（213.52s） | 4--check/16表示/28D1/両保管庫/台帳成果物PASS。fresh独立レビュー・main統合は進行中 |
+| テスト・レビュー | 全hullkit+report 4,125 passed・6 skipped・既存warnings2（213.52s） | 4--check/16表示/28D1/両保管庫/台帳成果物PASS。独立レビューCritical0/Important0、Minor3を記録。main統合は次工程 |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -99,7 +99,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 31 priva
 本編に畳む（RB-F02→P1、RB-F03→P3、R11・§19.14・RB-H16→P4）、章の受入後のコラム、研究トラック（同時1本）、johnhull の外。
 研究トラック #1 は RB-F07。研究の置き場は `research/<RB-ID>/`、計算は hullkit の非公開モジュールに決定した（2026-09-27 本人承認。公開 API 昇格は別承認）。
 **実装再開は、johnhull に必要な保管庫と作業分離が整った時点**とし、ワークスペース全工程の完了は待たない。
-M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。M17（§27.8）は2026-09-29 に受入し、P1 を完了した（RB-F02 の推定経路と評価経路の分離を含む。上界の実装は拡張のまま）。M18（§26.1 Packages）で P2 に入り、M19（§26.2 永久アメリカン）も同日に受入。M20（§26.3 非標準アメリカン）は2026-09-30に受入。M21（§26.4 ギャップ）とM22（§26.5 フォワード・スタート）、M23（§26.6 Cliquet）、M24（§26.7 Compound）は2026-10-01に受入。M25（§26.8 Chooser）は2026-10-03に受入しP2を完了。M26（§28.1 市場リスクの価格）は同日受入・main統合済み。M27（§28.2 複数状態変数）も同日に受入しP3は2/37、独立最終レビューと修正後検証、main統合/push済み。M28（§28.3）は2026-10-04受入、P3 3/37。独立最終レビューI1修正済み、main統合/push済み。M29（§28.4）は受入、P3 4/37、独立レビュー/main統合を進める。次はM30 §28.5。RB-F07 は未着手。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。
+M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。M17（§27.8）は2026-09-29 に受入し、P1 を完了した（RB-F02 の推定経路と評価経路の分離を含む。上界の実装は拡張のまま）。M18（§26.1 Packages）で P2 に入り、M19（§26.2 永久アメリカン）も同日に受入。M20（§26.3 非標準アメリカン）は2026-09-30に受入。M21（§26.4 ギャップ）とM22（§26.5 フォワード・スタート）、M23（§26.6 Cliquet）、M24（§26.7 Compound）は2026-10-01に受入。M25（§26.8 Chooser）は2026-10-03に受入しP2を完了。M26（§28.1 市場リスクの価格）は同日受入・main統合済み。M27（§28.2 複数状態変数）も同日に受入しP3は2/37、独立最終レビューと修正後検証、main統合/push済み。M28（§28.3）は2026-10-04受入、P3 3/37。独立最終レビューI1修正済み、main統合/push済み。M29（§28.4）は受入、P3 4/37、独立レビューCritical0/Important0、Minor3記録。main統合を進める。次はM30 §28.5。RB-F07 は未着手。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。
 金利編は [P3設計](docs/prep/design/P3_DESIGN.md)でHW/BKの本文範囲と独立参照の条件を整理した。R11の原典成績は利息・割引を除外する規約で再現でき、現行の資金繰り計算を誤りとみなして置換しない。
 
 ## 可視化 & 深掘り(A1–A4) — 完了 (2026-06-14)
@@ -312,7 +312,7 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M30（次） | §28.5 Extension to Several Factors（pp.679–680） | 原典と独立因子/相関basisの導出・条件付きfixtureを準備 |
 | 以降 | M30を含むP3金利の未受入33節から未評価節へ展開 | 節受入未着手 |
 
-現在地（2026-10-04）：M29まで受入、台帳29/277、P3は4/37。統合記録`docs/validation/section-28-4/m29-check.json`、28D1/両保管庫/台帳成果物PASS。全hullkit+report 4,125 passed・6 skipped・既存warnings2（213.52s）。freshレビュー・main統合は進行中。次はM30 §28.5。
+現在地（2026-10-04）：M29まで受入、台帳29/277、P3は4/37。統合記録`docs/validation/section-28-4/m29-check.json`、28D1/両保管庫/台帳成果物PASS。全hullkit+report 4,125 passed・6 skipped・既存warnings2（213.52s）。独立レビュー完了、Minor3記録。main統合は次工程。次はM30 §28.5。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
@@ -330,3 +330,5 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 - D1 driver は `--records-dir docs/validation/d1-recheck` を必ず付ける。既定の `docs/validation/d1-preflight` に書かれると記録の置き場所が変わるので、付け忘れたら移してやり直す（M18）。
 - Book の html ハッシュは build の履歴に依存する。M17 のコミットを新しい worktree で作り直した Book は、M17 の記録が持つ `06_numerical.html`・`10_exotics.html` のハッシュと一致せず、`verify_section_ledger.py --check-artifacts` は M17 の時点でも新規 build では通らなかった。M18 は §27.1–§27.8 の `notebook_check` を現行の統合記録（`section-26-1/m18-check.json`）へ付け替えて通した（原因の特定は未了）。
 - 節ごとの notebook 検査は受入時点の基点との比較として保持する。現行HEADでは `verify_accepted_vol06_notebook.py --check` が§27.1–§27.7の自節セルを各受入commitと比較し、共有図と巻全体を再実行する（§27.7 はM17で追加）。M17の§27.8は直前M16基点の節外保持検査を持つ。M18の§26.1は直前M17基点`811b1792`に対する vol10 の節外125セルの保持検査を持つ（vol10 は §4.8 の追加のみ）。後続節の追加時に現行HEAD用検査の対象を増やす（[レビュー F1 対応](docs/SECTION_27_3_27_4_FEEDBACK_2026-09-27.md)）。
+
+- §28.4 Minor3保留：portal案内の状態不一致、δ≈1e−12年で金利の桁落ち、a*h=1e16でsampler X分散消失。通常教材fixtureへの影響なし。[レビュー](docs/SECTION_28_4_REVIEW_2026-10-04.md)。
