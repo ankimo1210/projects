@@ -19,7 +19,7 @@
 
 ## 最終工程
 
-初回全suite4219 passed・6 skipped、従来warnings2（279.33秒）、ruff19／tracked release PASS。最終source hash更新後の全suiteは4219 passed・6 skipped・従来warnings2（272.81秒）。4 --check／ruff19／tracked release／台帳成果物／29D1の現行hash・両保管庫がPASS。fresh最終レビュー／main FF・pushはpending。1名のfreshレビューを完了し、Important1を4回帰RED→lesson20GREENで修正。固定seed再生成の消費時完全照合を追加。修正後全suiteとmain FF／pushはpending。mainはまだM29までの29/277・P3 4/37。
+初回全suite4219 passed・6 skipped、従来warnings2（279.33秒）、ruff19／tracked release PASS。最終source hash更新後の全suiteは4219 passed・6 skipped・従来warnings2（272.81秒）。4 --check／ruff19／tracked release／台帳成果物／29D1の現行hash・両保管庫がPASS。fresh最終レビュー／main FF・pushはpending。1名のfreshレビューを完了し、Important1を4回帰RED→lesson20GREENで修正。固定seed再生成の消費時完全照合を追加。修正後全suite4223/6 PASS。main FF／pushはこれから。mainはまだM29までの29/277・P3 4/37。
 
 ## 範囲と制約
 
@@ -29,4 +29,4 @@
 
 ## 最終レビュー
 
-Critical0／Important1／Minor2。Importantの再署名MC消費ガードを修正し、全4回帰RED→lesson20GREEN。M1/M2は現在数値への影響なく保留。詳細は [レビュー](SECTION_28_5_REVIEW_2026-10-04.md)。全suite修正後再実行とmain統合は次工程。
+Critical0／Important1／Minor2。Importantの再署名MC消費ガードを修正し、全4回帰RED→lesson20GREEN。M1/M2は現在数値への影響なく保留。詳細は [レビュー](SECTION_28_5_REVIEW_2026-10-04.md)。I1の1回のfix passは4回帰RED→lesson20GREEN、修正後全suite4223 passed／6 skipped／従来warnings2（293.49s）で完了。Critical0／未解消Important0、Minor2保留。4 --check、ruff19、16表示、29D1現行hash／両保管庫／台帳成果物／tracked release PASS。main統合はこれから。

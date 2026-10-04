@@ -34,3 +34,5 @@ Final: Ruling: 既存AGENTS→CLAUDE→AGENTS循環は本節で修正しない �
 Final: Ruling: main FF/push/live一致はexecutorの実行後に判断する — readonly reviewer固定HEADを未実行のmain統合の証拠にしない — 誤りなら未到達commitや現行成果物の差を見逃す。
 
 Final I1 TDD: 4 jointly re-signed MC regressions RED4 (negative/positivecall,density,conditional), then fixed-seed/sample producer replay digest with validated source/reference cache key and temporary private import package; lesson20 GREEN6.77s. Fresh notebook268/old257/16browser/4checks/ruff19/29D1 current mandatory hash+bothstores PASS; HTML unchanged. Whole fix-pass regression pending.
+
+Final: fixed I1 — 4 jointly-resigned MC regression cases RED4→lesson20GREEN, suite4223/6 green293.49s. Fixed-seed cached replay performance first1.9508s/repeat.4327s, one immutable cache entry, temporary import modules cleaned. Minor2 deferred; no re-review.

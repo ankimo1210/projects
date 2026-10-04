@@ -3,7 +3,7 @@
 更新2026-10-04。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。残り要件をN/Aへ置き換えたり、簡易モデルだけで完了としない。
 
 - main：§28.1–28.4受入、P3 4/37、全29/277。M29 f8d57ef4をFF統合/push、main fresh 4125/6・台帳成果物/release/両保管庫確認済み。
-- 現在：M30 §28.5が全五軸/統合gate/29D1/両保管庫を通過し、作業ブランチ30/276・P3 5/37。新268/旧257保持・16表示PASS。29既受入節をclean6d7cf486から再描画し、個別pytest計2,215件、browser/runtime/両保管庫復元PASS。全478画像のpayload合計20,387,859バイト。重複排除後の実増加容量は未測定。採用29パス/SHAはm30-checkで固定。最終hash更新後29D1を全再実行し29reuse／新規保存0B、2215 tests／478画像／両保管庫PASS。初回全suite4219/6 PASS、最終全suite4219/6 PASS（272.81s）／独立レビューImportant1を4回帰RED→lesson20GREENで修正、Minor2保留。修正後全suite／main統合はpending。
+- 現在：M30 §28.5が全五軸/統合gate/29D1/両保管庫を通過し、作業ブランチ30/276・P3 5/37。新268/旧257保持・16表示PASS。29既受入節をclean6d7cf486から再描画し、個別pytest計2,215件、browser/runtime/両保管庫復元PASS。全478画像のpayload合計20,387,859バイト。重複排除後の実増加容量は未測定。採用29パス/SHAはm30-checkで固定。最終hash更新後29D1を全再実行し29reuse／新規保存0B、2215 tests／478画像／両保管庫PASS。初回全suite4219/6 PASS、最終全suite4219/6 PASS（272.81s）／独立レビューImportant1を4回帰RED→lesson20GREENで修正、Minor2保留。修正後全suite4223/6 PASS（293.49s）。main統合は次工程。
 - 未完了：§28.6–28.8、Ch29–34（計32節）。多因子測度、市場式、convexity/timing/quanto、短期金利、HW/BK木/curve fit/時間依存sigma/Bermudan/較正、HJM/LMM、非標準swapの本文要件。
 - 並行準備：M30多因子の原典/独立132条件付きfixture、TN14/TN19完全PDF/元XLSの回収、31.4回帰と全9点の独立再現。正式受入とは区別する。
 - 受入ゲートは節ごとに既存D1/両保管庫を維持。D3規約の軽量化は未承認で今回変更しない。
