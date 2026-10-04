@@ -14880,12 +14880,12 @@
         "review": {
           "path": "docs/SECTION_28_5_REVIEW_2026-10-04.md",
           "kind": "note",
-          "sha256": "2847ed2e4ce6780e6f7854d1a26b2e3474224a8b3bcfdb9561f0887417aa812f"
+          "sha256": "53c4510d489e770b3d8f235d8707390b6c3fcd34f3d058463af671d8de2c4c4b"
         },
         "acceptance_note": {
           "path": "docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md",
           "kind": "note",
-          "sha256": "d1aaccf2b48f52f6815d75d4f219133c5460398bd215a9b85f2b0c953d02f77d"
+          "sha256": "acfdde9765151dbad853622fe0edda704e83002d2f23bd306bbf900ebde8acb1"
         },
         "textbook": {
           "path": "options, futures and other derivatives 11th.pdf",
