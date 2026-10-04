@@ -26,3 +26,7 @@ clean39f47b32からD1を実行。§28.2は初回redraw、旧26節は直接redraw
 全hullkit+report 3,986 passed・6 skipped・既存warnings2件（186.50s）。変更Python20ファイルruff、4--check、台帳成果物28/278 PASS。独立最終レビュー/main統合は検証中。
 
 最終レビューImportant I1をprivate入力境界に限定してRED→GREENで修正。全suite4,046 passed/6 skipped/既存warnings2（179.21s）。Minor M1は残件数の旧段落表記として記録。レビュー原文/判断はレビュー文書に保存。main統合は次工程。
+
+## main統合（2026-10-04）
+
+M28受入commit ea935c76をmainへfast-forward統合・pushし、live origin/main一致を確認。main再検証4,046 passed/6 skipped/既存warnings2（186.36s）、統合gate/台帳成果物/両保管庫/tracked release PASS。次はM29 §28.4、P3は3/37、残34節を継続。

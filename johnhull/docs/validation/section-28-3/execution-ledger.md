@@ -22,3 +22,4 @@ Final: Ruling: 残34節の市場較正/価格精度/未取得原典入力はM28�
 Final: Ruling: 既存HWの状態/bond修正と公開入口への影響はM29の独立REDで判断する — M28はHWを使用せず、独立tower不一致を次節の先行検査へ置く — 誤りなら次節の測度価格と既存利用箇所に誤差が残る。
 Final: Ruling: reviewer未再実行の全suite/16browser/27D1 producer/main統合pushはexecutorのfresh実行で判断する — reviewerは現行hash/storeを独立検証、executorは全検査を実行する — 誤りなら記録と現行配布物の不一致を見逃す。
 Final: fixed I1 temporal inputs — test_temporal_inputs_rejected_before_float_conversion RED52/GREEN83, whole suite4046/6/2warnings179.21s. New16browser/freshnotebook/current27D1 andbothstores/ledgerartifacts PASS. No re-review.
+Final integration: M28受入commit ea935c76をmainへfast-forward統合・pushし、live origin/main一致を確認。main再検証4,046 passed/6 skipped/既存warnings2（186.36s）、統合gate/台帳成果物/両保管庫/tracked release PASS。次はM29 §28.4、P3は3/37、残34節を継続。
