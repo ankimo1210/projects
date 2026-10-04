@@ -14,7 +14,7 @@ private hullkit._martingales: ratio_drift(mu_f,mu_g,s_f,s_g)はa=mu_f−mu_g+s_g
 
 ## 独立参照・教材
 
-mathのみの参照：符号付き6市場、各市場のlambda=s_g/誤lambda、Itô drift項とlog drift、9条件付きfixture(t=0,.3,.7,T=1.5;state=.5,1.25,2)、複数horizon条件付き曲線、finite第二モーメント。r=.04,s_f=.3,s_g=.15/−.2、S0=100,G0=80等の追加例は全てsynthetic、印刷数値なし。
+mathのみの参照：符号付き6市場、各市場のlambda=s_g/誤lambda、Itô drift項とlog drift、9条件付きfixture(t=0,.3,.7,T=1.5;state=.5,1.25,2)、複数horizon条件付き曲線、finite第二モーメント。時点0の比.5/2は別初期市場で、固定S0=100/G0=80の時点0は1.25のみ。call市場はこの条件付きfixtureとは別の例。r=.04,s_f=.3,s_g=.15/−.2、S0=100,G0=80等の追加例は全てsynthetic、印刷数値なし。
 同一call給付K=100,T=1.5をcash/QとG測度で直接Gaussian求積、閉形式、固定seedの直接標本/SEで照合。条件付きMCは262144標本×9状態時刻、future incrementを独立生成し解析値との差/SE<=5、raw値を自己正規化しない。価格求積誤差1e−9、解析API差1e−12、保存4改変/実API4変異を拒否。
 新親##6B. マルチンゲール（§28.3）、6B.1–6B.6の11セルを##7前へ追加し旧235セル本文/出力/Plotlyを保持（計246）。4共有図martingale_ito/conditional/conditional_mc/pricing。lessonはhashと結果配列のshape/有限性/独立参照一致を検査してから描画。
 

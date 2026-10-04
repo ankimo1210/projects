@@ -27,10 +27,10 @@
 
 **Files:** _martingales.py/test_martingales.py、build_martingale_reference.py/verify_martingale_numerics.pyとtests、section-28-3/reference/numerical-check。
 **Interfaces:** ratio_drift/ratio_conditional_mean/numeraire_drifts、cases/conditional/pricing/figure、APIとMC結果hash。
-- [ ] Step 1: `ratio_drift(-.02,.08,.3,-.2)==approx(0)`、誤measure/条件付きstate/batch/不正値/空batch拒否tests。Expected: missing module FAIL。
-- [ ] Step 2: 3計算を実装。Expected: 全API tests PASS。
-- [ ] Step 3: math参照/9MC/2求積/結果hash、保存/実API変異検査。Expected: 数値/独立buildertestsと2--check PASS。
-- [ ] Step 4: commit `Implement conditional GBM martingale checks`、task-done。Expected: 対象tests PASS。
+- [x] Step 1: `ratio_drift(-.02,.08,.3,-.2)==approx(0)`、誤measure/条件付きstate/batch/不正値/空batch拒否tests。Expected: missing module FAIL。
+- [x] Step 2: 3計算を実装。Expected: 全API tests PASS。
+- [x] Step 3: math参照/9MC/2求積/結果hash、保存/実API変異検査。Expected: 数値/独立buildertestsと2--check PASS。
+- [x] Step 4: commit `Implement conditional GBM martingale checks`、task-done。Expected: 対象tests PASS。
 
 ### Task 2: 共有教材と旧235セル保持
 

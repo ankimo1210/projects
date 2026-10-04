@@ -1,0 +1,158 @@
+{
+  "api_conditional_means": [
+    0.5,
+    1.25,
+    2.0,
+    0.5,
+    1.25,
+    2.0,
+    0.5,
+    1.25,
+    2.0
+  ],
+  "artifact_sha256": "99555dbc83933478ede25a4f3612fa72ce01abc9275b5d2ba573b02a2c597dd9",
+  "case_count": 6,
+  "conditional_count": 9,
+  "conditional_mc": [
+    {
+      "mean": 0.4998563551455946,
+      "reference": 0.5,
+      "se": 0.0001808965552651302,
+      "z": 0.7940718063693678
+    },
+    {
+      "mean": 1.250454382409628,
+      "reference": 1.25,
+      "se": 0.00045072031935101557,
+      "z": 1.0081249726708028
+    },
+    {
+      "mean": 2.000792102803093,
+      "reference": 2,
+      "se": 0.0007240488028119812,
+      "z": 1.0939909022935324
+    },
+    {
+      "mean": 0.5000310063365909,
+      "reference": 0.5,
+      "se": 0.00016184944994930025,
+      "z": 0.19157517434031876
+    },
+    {
+      "mean": 1.249212265267047,
+      "reference": 1.25,
+      "se": 0.00040443598292729357,
+      "z": 1.9477365175359014
+    },
+    {
+      "mean": 2.000653541452574,
+      "reference": 2,
+      "se": 0.0006468748420030579,
+      "z": 1.0103058739313828
+    },
+    {
+      "mean": 0.49991321607996525,
+      "reference": 0.5,
+      "se": 0.00013120735765269491,
+      "z": 0.6614257126072631
+    },
+    {
+      "mean": 1.2500899375752033,
+      "reference": 1.25,
+      "se": 0.0003291689715490805,
+      "z": 0.273226163389608
+    },
+    {
+      "mean": 2.001048217361632,
+      "reference": 2,
+      "se": 0.0005266573841373702,
+      "z": 1.9903212092033933
+    }
+  ],
+  "max_api_error": 7.105427357601002e-15,
+  "max_mc_se": 1.9903212092033933,
+  "max_quadrature_error": 4.4007170449362294e-11,
+  "negative_controls": [
+    {
+      "mutation": "drift",
+      "rejected": true
+    },
+    {
+      "mutation": "conditional state",
+      "rejected": true
+    },
+    {
+      "mutation": "second moment",
+      "rejected": true
+    },
+    {
+      "mutation": "call price",
+      "rejected": true
+    },
+    {
+      "mutation": "API zero drift",
+      "rejected": true
+    },
+    {
+      "mutation": "API omit Ito",
+      "rejected": true
+    },
+    {
+      "mutation": "API ignore horizon",
+      "rejected": true
+    },
+    {
+      "mutation": "API wrong measure",
+      "rejected": true
+    }
+  ],
+  "pricing": [
+    {
+      "mean": 17.210392813902878,
+      "measure": "Q",
+      "quadrature": 17.24948327902953,
+      "reference": 17.249483279029526,
+      "s_g": 0.15,
+      "se": 0.05585784191222469,
+      "z": 0.6998205406516621
+    },
+    {
+      "mean": 17.31933396960163,
+      "measure": "G",
+      "quadrature": 17.24948327902953,
+      "reference": 17.249483279029526,
+      "s_g": 0.15,
+      "se": 0.0448311889397929,
+      "z": 1.5580824917650717
+    },
+    {
+      "mean": 17.28237585960999,
+      "measure": "Q",
+      "quadrature": 17.24948327902953,
+      "reference": 17.249483279029526,
+      "s_g": -0.15,
+      "se": 0.055829640223963875,
+      "z": 0.5891598163361215
+    },
+    {
+      "mean": 17.317014225036083,
+      "measure": "G",
+      "quadrature": 17.24948327902953,
+      "reference": 17.249483279029526,
+      "s_g": -0.15,
+      "se": 0.07110579675532055,
+      "z": 0.9497249041303124
+    }
+  ],
+  "result_sha256": "1a8137a42cb8a01731b7e5c5a8f3a8be27bf253d1db73af2a86919c16c035cf0",
+  "samples": 262144,
+  "section": "28.3",
+  "source_sha256": {
+    "hullkit/src/hullkit/_martingales.py": "feb385795fc66ab55974e1d88fabf0077d36ed0b32931d91cd71f059814ab1a9",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
+    "scripts/build_martingale_reference.py": "229b1fc8fb527c698db210a20c488760ca8bdfa6c9ff308d63c4da35043572e0",
+    "scripts/verify_martingale_numerics.py": "079047abc5ca2e6b2c005f1d4f298d1d37e9a4509bb6d8529dd5eaad6db56d26"
+  },
+  "status": "PASS"
+}
