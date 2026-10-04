@@ -259,3 +259,9 @@ synthetic-data method demonstrations, not market-performance claims.
 | Almgren-Chriss, Obizhaeva-Wang, reactive LOB, PPO execution | `~/projects/optimal_execution` | execution/RL is out of johnhull scope |
 | Portfolio construction, leakage-safe backtests, market data connectors | `~/projects/quantkit` | research platform; johnhull stays education-first |
 | Deep hedging training engine (torch) | `deep_hedge_price` (this index, sections 8-10) | hullkit stays torch-free by contract |
+
+## P3 logic-first private models
+
+| Module | Contracts | Verification |
+|---|---|---|
+| `hullkit._forward_black` | `hullkit._forward_black:forward_black_price`, `hullkit._forward_black:gaussian_forward_statistics` | §28.6; independent Q/T quadrature, fixed-seed raw MC, rare-event importance; tests/test_forward_black*.py |
