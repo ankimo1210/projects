@@ -37,7 +37,7 @@ def _result_digest(record):
 
 
 @lru_cache(maxsize=1)
-def _replayed_result_digest(reference_bytes, source_inventory):
+def _replayed_results(reference_bytes, source_inventory):
     """Replay fixed seeds once per independently checked reference/producer.
 
     source_inventory is part of the cache key, after current-file SHA checks.
@@ -54,11 +54,41 @@ def _replayed_result_digest(reference_bytes, source_inventory):
     sys.modules[name] = verifier
     try:
         spec.loader.exec_module(verifier)
-        return _result_digest(verifier.verify(json.loads(reference_bytes)))
+        fresh = verifier.verify(verifier.build())
+        return json.dumps({k: fresh[k] for k in _RESULT_KEYS}, allow_nan=False)
     finally:
         for key in tuple(sys.modules):
             if key == name or key.startswith(name + "."):
                 del sys.modules[key]
+
+
+def _check_numbers(actual, expected, label):
+    """Keep structure/order exact, accept finite roundoff at atol/rtol 2e-12.
+
+    Numerical truth and fixed-seed summaries are compared as numbers rather
+    than cross-platform digests. The cache stores immutable JSON, and source
+    file identities remain part of its key.
+    """
+    if isinstance(expected, dict):
+        if not isinstance(actual, dict) or actual.keys() != expected.keys():
+            raise ValueError(label + " structure differs")
+        for key in expected:
+            _check_numbers(actual[key], expected[key], label)
+    elif isinstance(expected, list):
+        if not isinstance(actual, list) or len(actual) != len(expected):
+            raise ValueError(label + " structure differs")
+        for a, b in zip(actual, expected, strict=True):
+            _check_numbers(a, b, label)
+    elif isinstance(expected, (int, float)) and not isinstance(expected, bool):
+        if (
+            isinstance(actual, bool)
+            or not isinstance(actual, (int, float))
+            or not math.isfinite(actual)
+            or not math.isclose(actual, expected, abs_tol=2e-12, rel_tol=2e-12)
+        ):
+            raise ValueError(label + " numerical values differ")
+    elif actual != expected:
+        raise ValueError(label + " metadata differs")
 
 
 def _close(actual, expected, tolerance=2e-12):
@@ -120,15 +150,13 @@ def _load_reference():
         )
         teacher = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(teacher)
-        if data != teacher.build():
-            raise ValueError("independent multifactor teacher changed")
+        _check_numbers(data, teacher.build(), "independent multifactor teacher")
         if _result_digest(record) != record["result_sha256"]:
             raise ValueError("multifactor result hash mismatch")
         # A self-consistent mean/SE/z/digest is not evidence of a real sample.
         # Replay the producer's fixed seeds and samples before displaying it.
-        expected_digest = _replayed_result_digest(raw, tuple(sorted(hashes.items())))
-        if record["result_sha256"] != expected_digest:
-            raise ValueError("multifactor saved results differ from fixed-seed replay")
+        expected = json.loads(_replayed_results(raw, tuple(sorted(hashes.items()))))
+        _check_numbers({k: record[k] for k in _RESULT_KEYS}, expected, "fixed-seed replay")
         if (
             [len(record[k]) for k in _RESULT_KEYS] != [11, 132, 11, 11]
             or record["samples"] != 262144
