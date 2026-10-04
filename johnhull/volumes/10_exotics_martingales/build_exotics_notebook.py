@@ -2867,6 +2867,11 @@ from hullkit._numeraire_lesson import _cells as numeraire_lesson_cells
 
 cells.extend(numeraire_lesson_cells())
 
+# M30 §28.5: checked correlated-factor cells.
+from hullkit._multi_factor_lesson import _cells as multifactor_lesson_cells
+
+cells.extend(multifactor_lesson_cells())
+
 cells.append(
     md(r"""## 7. ニュメレールの選択（§28.4）
 

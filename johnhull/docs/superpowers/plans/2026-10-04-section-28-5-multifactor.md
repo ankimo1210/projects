@@ -30,9 +30,9 @@
 
 **Files:** private lesson/tests、builder/notebook/source contracts、registry/browser/notebook verifiers。
 **Interfaces:** numeric recordのsource/result shape/digest/independentvalueを消費時検査。
-- [ ] Step 1: lesson/new4fig/旧257 tests。Expected: missing lesson FAIL。
-- [ ] Step 2: 6D6小節/11cellsと4図を実装しfresh全文。Expected: 旧source/output/Plotly保存。
-- [ ] Step 3: registrycount/16状態/MathJax/700px/目視、commit/task-done。Expected: 全PASS。
+- [x] Step 1: lesson/new4fig/旧257 tests。Expected: missing lesson FAIL。
+- [x] Step 2: 6D6小節/11cellsと4図を実装しfresh全文。Expected: 旧source/output/Plotly保存。
+- [x] Step 3: registrycount/16状態/MathJax/700px/目視、commit/task-done。Expected: 全PASS。
 
 ### Task 3: acceptance, regression, review and main
 

@@ -4,7 +4,7 @@ johnhull の Hull 11e ノートで学ぶ価格付け・リスク管理を束ね�
 **オフライン自己完結のインタラクティブ静的サイト**を生成するジェネレータ。
 `analytics/report` と同じ設計(jinja2 + plotly)。
 
-- ランディング + コンセプトギャラリー + 12テーマ別ショーケース（全194図、exotics 82図）+ 統合(背骨)ページ
+- ランディング + コンセプトギャラリー + 12テーマ別ショーケース（全198図、exotics 86図）+ 統合(背骨)ページ
 - 図は `hullkit.plotly_viz`、内部教材モジュール `hullkit._binary_lesson` / `hullkit._lookback_lesson` / `hullkit._shout_lesson` / `hullkit._asian_lesson` / `hullkit._exchange_lesson` / `hullkit._basket_lesson` / `hullkit._variance_swap_lesson`、またはvol 18–28のversioned reference artifactから生成。共有ソースに加え、値・操作・実画面を検査する
 - **カーネル不要・ネット不要**: plotly はローカル同梱、図はブラウザ内で動く(スライダー/ホバー/ズーム)
 
@@ -54,3 +54,5 @@ Portal の HTTP(S) は遮断し、Book の既存 MathJax リクエストは許�
 新鮮な実行結果と4図の data/layout を照合する。通常ビルドは求積・MCを実行しない。
 
 §28.4の4図は条件付きQ/T同一給付・futures/forward・支払日測度・OIS annuityを共有数値から表示。`scripts/verify_numeraire_browser.cjs`で16状態とMathJax/幅/値を検査する。
+
+§28.5の4図は相関多因子の比drift・条件付き平均・独立basis・同一給付Q/g価格。`scripts/verify_multifactor_browser.cjs`で16状態/値/95%区間/幅/MathJaxを検査する。
