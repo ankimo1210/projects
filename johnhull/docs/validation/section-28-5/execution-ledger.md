@@ -18,3 +18,5 @@ Task3 gate/ledger result: 29既受入節をclean6d7cf486から再描画し、個
 Task3 initial whole suite4219/6/oldwarnings2 PASS279.33s, strictreleasePASS. Ruff19 found one import-order I001 in sharedregistry; sort only, regenerate own browser sourceSHA and rerun all29 D1 through eligible reuse, never manually re-sign oldrecords. Portal re-render is bytechecked; finalsourcehash/ledger/suite follow refreshedrecords.
 
 Task3 provenance refresh: registry import order corrected without HTML byte changes; fresh own browser16/16 PASS. All29 D1 rerun from cleanabc68f37 through eligible reuse: 2215 tests/478 images, stored_new_bytes0, current producer hashes and bothstores PASS. First redraw payload20,387,859B remains the turn's image payload; deduplicated physical growth unmeasured. Gate/updater/ledger --check-artifacts30/276 PASS. Mistyped CLI --summary stopped the command chain; correct --write-summary PASS before finalwhole started, no false suite claim.
+
+Task3 final pre-review verification: 最終source hash更新後の全suiteは4219 passed・6 skipped・従来warnings2（272.81秒）。4 --check／ruff19／tracked release／台帳成果物／29D1の現行hash・両保管庫がPASS。fresh最終レビュー／main FF・pushはpending。
