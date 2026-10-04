@@ -101,7 +101,12 @@ def hw_phi(t, curve, params):
 
 
 def hw_discount_bond(t, maturity, state, curve, params):
-    r"""Price ``P(t,T)`` conditional on the zero-mean factor ``x_t=state``."""
+    r"""Price ``P(t,T)`` conditional on the Q zero-mean OU factor ``x_t=state``.
+
+    With ``r_t=x_t+phi(t)`` and ``phi=f(0,t)+c(t)``, the curve-ratio
+    exponent includes ``-B(t,T)*c(t)`` as well as the Gaussian variance.
+    ``state`` is the Q OU coordinate, not the T=t-forward-centered coordinate.
+    """
     params.validate()
     t = float(t)
     maturity = float(maturity)
@@ -116,7 +121,10 @@ def hw_discount_bond(t, maturity, state, curve, params):
     sigma = params.volatility
     b = hw_b(t, maturity, a)
     variance_adjustment = sigma**2 * (-math.expm1(-2.0 * a * t)) * b**2 / (4.0 * a)
-    return rates.forward_discount(t, maturity, curve) * math.exp(-b * state - variance_adjustment)
+    state_shift = sigma**2 * (-math.expm1(-a * t)) ** 2 / (2.0 * a**2)
+    return rates.forward_discount(t, maturity, curve) * math.exp(
+        -b * (state + state_shift) - variance_adjustment
+    )
 
 
 def hw_exact_transition(state, start, end, params, *, normal=0.0):
