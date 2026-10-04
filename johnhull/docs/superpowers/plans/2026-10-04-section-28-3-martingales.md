@@ -58,4 +58,4 @@
 - [x] Step 2: cleanTask3から27D1再検査、直接redrawn基準reuse、28.2初回redraw。Expected: runtime/browser/pytest/復元PASS。
 - [x] Step 3: 現行hashの統合gateと台帳/受入/docs更新、4--check/ruff/全suite/台帳成果物。Expected: 28/278/全PASS。
 - [x] Step 4: commit受入/task-done、1名fresh review、重要指摘RED→GREEN+全suite、minor/ruling記録。Expected: mergeを止める指摘なし。
-- [ ] Step 5: 記録保存、tracked release/main統合後検証/push、P3次§28.4へ継続。Expected: live remote一致、P3目標active、末尾P0–P8。
+- [x] Step 5: 記録保存、tracked release/main統合後検証/push、P3次§28.4へ継続。Expected: live remote一致、P3目標active、末尾P0–P8。

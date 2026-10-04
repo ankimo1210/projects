@@ -120,3 +120,7 @@ I1をprivate入力境界に限定してRED→GREENで修正し、仕様で要求
 - 既存`hull_white.py`の状態/bond整合候補の修正要否と公開APIへの影響は、M29で独立REDを追加して判断すべき。今回の差分で変更も使用もしていない。
 - 全16状態を新規browser操作で再観察すること、全3分suite、全旧節D1 producer再実行、主ブランチ統合後release/pushの結果は今回判定していない。指定された読み取り専用レビュー範囲と既存証跡に従い、current hash/store gateを独立再実行した。
 - 上記以外に、検討した具体的な不具合候補を「仕様にない」だけで判定から外したものはない。
+
+## main統合（2026-10-04）
+
+M28受入commit ea935c76をmainへfast-forward統合・pushし、live origin/main一致を確認。main再検証4,046 passed/6 skipped/既存warnings2（186.36s）、統合gate/台帳成果物/両保管庫/tracked release PASS。次はM29 §28.4、P3は3/37、残34節を継続。
