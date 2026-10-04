@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 33 priva
 | 節単位の受入 | M30まで受入30・未評価276（9.8%） | P0/P1/P2完了、P3金利5/37。M30の全suite/最終review/main統合を検証中。全体計画は下表 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。M30：旧29節再検査PASS | 29既受入節をclean6d7cf486から再描画し、個別pytest計2,215件、browser/runtime/両保管庫復元PASS。全478画像のpayload合計20,387,859バイト。重複排除後の実増加容量は未測定。採用29パス/SHAはm30-checkで固定。 |
-| テスト・レビュー | M30 Task1 523/Task2 74/gate20 PASS | 全suite・finalreview・main統合はpending。M29 mainは4125/6、Minor3記録 |
+| テスト・レビュー | 作業ブランチ全suite4219 passed/6 skipped（272.81s）、最終レビューpending | 4--check/ruff19/16表示/29D1/両保管庫/台帳成果物/tracked release PASS。main統合はレビュー後 |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -309,11 +309,11 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M27 | §28.2 Several State Variables（pp.674–675） | 受入/main統合済み。[受入](docs/SECTION_28_2_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_2_REVIEW_2026-10-03.md) |
 | M28 | §28.3 Martingales（pp.675–676） | 受入。条件付き定義/signed Itô/同一給付Q・G価格、9条件付きMC/旧235保持/16状態/27D1。[受入](docs/SECTION_28_3_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_3_REVIEW_2026-10-04.md) |
 | M29 | §28.4 Alternative Choices for the Numeraire（pp.676–679） | 受入。HW Q状態/同一給付Q・T/支払・annuity、63独立fixture/旧246保持/16状態/28D1。[受入](docs/SECTION_28_4_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_4_REVIEW_2026-10-04.md) |
-| M30 | §28.5 Extension to Several Factors（pp.679–680） | 受入ゲートPASS。MF01–06/11市場132状態/旧257/16状態/29D1。全suite/finalreview/main統合はpending。[受入](docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md) |
+| M30 | §28.5 Extension to Several Factors（pp.679–680） | 受入ゲートPASS。MF01–06/11市場132状態/旧257/16状態/29D1。最終全suite4219/6 PASS（272.81s）、finalreview/main統合はpending。[受入](docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md) |
 | M31（次） | §28.6 Black’s Model Revisited（pp.680–681） | 原典/独立7市場42価格・zero-hit importanceを準備。M30統合後に正式実装 |
 | 以降 | M31を含むP3金利の未受入32節から未評価節へ展開 | 節受入未着手 |
 
-現在地（2026-10-04）：M30受入ゲートPASS、台帳30/276、P3 5/37。統合記録`docs/validation/section-28-5/m30-check.json`、29D1/両保管庫/台帳成果物PASS。全suite/finalreview/main統合はpending。mainはM29まで受入29/277。次はM31 §28.6。
+現在地（2026-10-04）：M30受入ゲートPASS、台帳30/276、P3 5/37。統合記録`docs/validation/section-28-5/m30-check.json`、29D1/両保管庫/台帳成果物PASS。最終全suite4219/6 PASS（272.81s）、finalreview/main統合はpending。mainはM29まで受入29/277。次はM31 §28.6。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:

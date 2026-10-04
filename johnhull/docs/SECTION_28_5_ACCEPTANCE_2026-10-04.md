@@ -19,7 +19,7 @@
 
 ## 最終工程
 
-初回全suite4219 passed・6 skipped、従来warnings2（279.33秒）、ruff19／tracked release PASS。最終producer hash更新後の全suiteを再実行中。1名のfresh最終レビューとmain FF／pushはpending。mainはまだM29までの29/277・P3 4/37。
+初回全suite4219 passed・6 skipped、従来warnings2（279.33秒）、ruff19／tracked release PASS。最終source hash更新後の全suiteは4219 passed・6 skipped・従来warnings2（272.81秒）。4 --check／ruff19／tracked release／台帳成果物／29D1の現行hash・両保管庫がPASS。fresh最終レビュー／main FF・pushはpending。1名のfresh最終レビューとmain FF／pushはpending。mainはまだM29までの29/277・P3 4/37。
 
 ## 範囲と制約
 
