@@ -461,7 +461,7 @@
     }
   },
   "companions": {
-    "inflation_scenarios.npz": "629f79997a413c7630a797b6fb1f53160bae758742ac7d92f3b1defbe70b6f5f"
+    "inflation_scenarios.npz": "7967ceb1ac3c00e0e6e39498c8fb54adb6b11ff492467d4a7f5c795605ac3365"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
