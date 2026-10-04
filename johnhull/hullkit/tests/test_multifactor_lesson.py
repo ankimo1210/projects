@@ -140,3 +140,39 @@ def test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries(
     monkeypatch.setattr(m, "_RECORD", path)
     with pytest.raises(ValueError):
         m._figures()
+
+
+def test_consumer_accepts_teacher_roundoff_at_portable_numerical_tolerance(tmp_path, monkeypatch):
+    import hashlib
+
+    m = importlib.import_module("hullkit._multi_factor_lesson")
+    data = json.loads(m._DATA.read_text())
+    data["cases"][0]["g_drifts"][0] += 1e-15
+    reference = tmp_path / "rounded-reference.json"
+    reference.write_text(json.dumps(data))
+    record = json.loads(m._RECORD.read_text())
+    record["reference_sha256"] = hashlib.sha256(reference.read_bytes()).hexdigest()
+    target = tmp_path / "record.json"
+    target.write_text(json.dumps(record))
+    monkeypatch.setattr(m, "_DATA", reference)
+    monkeypatch.setattr(m, "_RECORD", target)
+    assert set(m._figures()) == KEYS
+
+
+def test_consumer_accepts_fixed_seed_mean_and_se_roundoff(tmp_path, monkeypatch):
+    import math
+
+    m = importlib.import_module("hullkit._multi_factor_lesson")
+    record = json.loads(m._RECORD.read_text())
+    item = record["pricing_mc"][1]["call_g"]
+    item["mean"] = math.nextafter(item["mean"], math.inf)
+    item["se"] = math.nextafter(item["se"], math.inf)
+    item["z"] = abs(item["mean"] - item["reference"]) / item["se"]
+    summaries = [v for row in record["pricing_mc"] for v in row.values() if isinstance(v, dict)]
+    summaries += [row["mc"] for row in record["api_conditional_means"]]
+    record["max_mc_se"] = max(row["z"] for row in summaries)
+    record["result_sha256"] = m._result_digest(record)
+    target = tmp_path / "rounded-results.json"
+    target.write_text(json.dumps(record))
+    monkeypatch.setattr(m, "_RECORD", target)
+    assert set(m._figures()) == KEYS
