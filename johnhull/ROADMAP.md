@@ -31,7 +31,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 33 priva
 | 節単位の受入 | M30まで受入30・未評価276（9.8%） | P0/P1/P2完了、P3金利5/37。M30の全suite/最終review/main統合を検証中。全体計画は下表 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。M30：旧29節再検査PASS | 29既受入節をclean6d7cf486から再描画し、個別pytest計2,215件、browser/runtime/両保管庫復元PASS。全478画像のpayload合計20,387,859バイト。重複排除後の実増加容量は未測定。採用29パス/SHAはm30-checkで固定。 |
-| テスト・レビュー | 修正後全suite4223 passed/6 skipped（293.49s） | sole review Important1を4回帰RED→GREENで修正、Minor2保留。4--check/ruff19/16表示/29D1/両保管庫/台帳成果物/release PASS、main統合pending |
+| テスト・レビュー | main全suite4223 passed/6 skipped（291.74s） | sole review Important1を4回帰RED→GREENで修正、Minor2保留。4--check/ruff19/16表示/29D1/両保管庫/台帳成果物/release PASS、main統合push済み |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -258,13 +258,13 @@ model performance の承認ではない（deep_hedge_price の 206 tests も各�
 | 区分 | 内容 |
 |---|---|
 | 保存値依存 | 根拠になる配列がない 5 項目（vol 18・19・21・22）。原始データか実行時情報の保存が要る。vol 26 の 3 項目は 2026-09-25 に配列からの再計算へ移した（監査文書 §11.4） |
-| 節カバレッジ | [節別台帳](docs/SECTION_LEDGER.md)の306項目。§26.1–§26.17、§27.1–§27.8、§28.1の26項目受入、280項目未評価。最終判定は各受入ノートと統合記録を参照 |
+| 節カバレッジ | [節別台帳](docs/SECTION_LEDGER.md)の306項目。§26.1–§26.17、§27.1–§27.8、§28.1–§28.5の30項目受入、276項目未評価。最終判定は各受入ノートと統合記録を参照 |
 | 再確認済み・製品対応待ち | [P8再確認](docs/prep/design/P8_RECHECK.md)：R1（分散更新・補償項）、R2（Log-HAR再変換）、R3（予測→ヘッジ未接続）、R4（共通乱数のずれ）、R6（gross/netの分離）。R11はTables19.1/19.4の利息・割引規約差を特定し、P4の受入fixture化待ち |
 | 未実装の節（§4） | Ch26 EX-03/04はM4–M7・M21–M25で対応済み。残りは金利ツリー・Bermudan・LMM（EX-13〜15）、Ch 2–7 の節単位実装（FR 系）、信用の残り（CR-05〜07・09〜11・13）、Ch 35–36 のツリー（CR-19・21・22）、深掘り巻の予告の回収（DD-04〜06）など |
 | 判断事項（§7） | 既定 seed の統一（VN-20）、大物の置き場所（新しい節単位の巻を足すか）、FRTB IMA（vol 29 候補）は継続。research trackは[研究計画](docs/superpowers/plans/2026-09-27-research-backlog.md)で置き場・順番・範囲・実装再開条件を決定 |
 | ゲートの限界 | core は PNG と Plotly の中身を、frontier は stderr と図を比べない（字形欠落の警告とローカルパスだけをテストで検出） |
 
-## 節単位の品質確認 — M1–M26（2026-09-15〜2026-10-03）
+## 節単位の品質確認 — M1–M30（2026-09-15〜2026-10-04）
 
 [台帳](docs/SECTION_LEDGER.md) ／ [更新手順](docs/SECTION_LEDGER_GUIDE.md) ／
 [実装計画](docs/superpowers/plans/2026-09-15-section-ledger-m1.md)。
@@ -309,11 +309,11 @@ Book/portal両面2幅の実画面 → 受入ノート、の順で受け入れる
 | M27 | §28.2 Several State Variables（pp.674–675） | 受入/main統合済み。[受入](docs/SECTION_28_2_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_2_REVIEW_2026-10-03.md) |
 | M28 | §28.3 Martingales（pp.675–676） | 受入。条件付き定義/signed Itô/同一給付Q・G価格、9条件付きMC/旧235保持/16状態/27D1。[受入](docs/SECTION_28_3_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_3_REVIEW_2026-10-04.md) |
 | M29 | §28.4 Alternative Choices for the Numeraire（pp.676–679） | 受入。HW Q状態/同一給付Q・T/支払・annuity、63独立fixture/旧246保持/16状態/28D1。[受入](docs/SECTION_28_4_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_4_REVIEW_2026-10-04.md) |
-| M30 | §28.5 Extension to Several Factors（pp.679–680） | 受入ゲートPASS。MF01–06/11市場132状態/旧257/16状態/29D1。最終全suite4219/6 PASS（272.81s）、独立レビューImportant1修正・Minor2保留。修正後全suite4223/6 PASS、main統合は次工程。[受入](docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md) |
+| M30 | §28.5 Extension to Several Factors（pp.679–680） | 受入/main統合push済み。MF01–06/11市場132状態/旧257/16状態/29D1。Important1を4回帰RED→GREENで修正、Minor2保留。[受入](docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md) |
 | M31（次） | §28.6 Black’s Model Revisited（pp.680–681） | 原典/独立7市場42価格・zero-hit importanceを準備。M30統合後に正式実装 |
 | 以降 | M31を含むP3金利の未受入32節から未評価節へ展開 | 節受入未着手 |
 
-現在地（2026-10-04）：M30受入ゲートPASS、台帳30/276、P3 5/37。統合記録`docs/validation/section-28-5/m30-check.json`、29D1/両保管庫/台帳成果物PASS。最終全suite4219/6 PASS（272.81s）、独立レビューImportant1修正・Minor2保留。修正後全suite4223/6 PASS、main統合は次工程。mainはM29まで受入29/277。次はM31 §28.6。
+現在地（2026-10-04）：M30 main統合・push済み、台帳30/276、P3 5/37。main fresh全suite4223/6 PASS（291.74s）、29D1/両保管庫/台帳成果物/release PASS。Important1修正・Minor2保留。次はM31 §28.6。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
