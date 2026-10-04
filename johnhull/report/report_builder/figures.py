@@ -33,9 +33,9 @@ from hullkit._gap_lesson import _figures as gap_lesson_figures
 from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
 from hullkit._lookback_lesson import _figures as lookback_lesson_figures
 from hullkit._martingale_lesson import _figures as martingale_lesson_figures
+from hullkit._multi_factor_lesson import _figures as multifactor_lesson_figures
 from hullkit._nonstandard_american_lesson import _figures as nonstandard_american_lesson_figures
 from hullkit._numeraire_lesson import _figures as numeraire_lesson_figures
-from hullkit._multi_factor_lesson import _figures as multifactor_lesson_figures
 from hullkit._packages_lesson import _figures as packages_lesson_figures
 from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
 from hullkit._perpetual_american_lesson import _figures as perpetual_american_lesson_figures

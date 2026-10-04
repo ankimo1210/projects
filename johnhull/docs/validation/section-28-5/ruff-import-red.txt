@@ -1,0 +1,57 @@
+Changed Python files: 19
+I001 [*] Import block is un-sorted or un-formatted
+  --> johnhull/report/report_builder/figures.py:13:1
+   |
+11 |   """
+12 |
+13 | / from __future__ import annotations
+14 | |
+15 | | from collections.abc import Callable
+16 | | from dataclasses import dataclass
+17 | |
+18 | | from hullkit import plotly_viz as pv
+19 | | from hullkit._alternative_models_lesson import _figures as alternative_models_lesson_figures
+20 | | from hullkit._american_mc_lesson import _figures as american_mc_lesson_figures
+21 | | from hullkit._asian_lesson import _figures as asian_lesson_figures
+22 | | from hullkit._barrier_tree_lesson import _figures as barrier_tree_lesson_figures
+23 | | from hullkit._basket_lesson import _figures as basket_lesson_figures
+24 | | from hullkit._binary_lesson import _figures as binary_lesson_figures
+25 | | from hullkit._chooser_lesson import _figures as chooser_lesson_figures
+26 | | from hullkit._cliquet_lesson import _figures as cliquet_lesson_figures
+27 | | from hullkit._compound_lesson import _figures as compound_lesson_figures
+28 | | from hullkit._convertible_bond_lesson import _figures as convertible_bond_lesson_figures
+29 | | from hullkit._exchange_lesson import _figures as exchange_lesson_figures
+30 | | from hullkit._factor_risk_lesson import _figures as factor_risk_lesson_figures
+31 | | from hullkit._forward_start_lesson import _figures as forward_start_lesson_figures
+32 | | from hullkit._gap_lesson import _figures as gap_lesson_figures
+33 | | from hullkit._local_volatility_lesson import _figures as local_volatility_lesson_figures
+34 | | from hullkit._lookback_lesson import _figures as lookback_lesson_figures
+35 | | from hullkit._martingale_lesson import _figures as martingale_lesson_figures
+36 | | from hullkit._nonstandard_american_lesson import _figures as nonstandard_american_lesson_figures
+37 | | from hullkit._numeraire_lesson import _figures as numeraire_lesson_figures
+38 | | from hullkit._multi_factor_lesson import _figures as multifactor_lesson_figures
+39 | | from hullkit._packages_lesson import _figures as packages_lesson_figures
+40 | | from hullkit._path_dependent_lesson import _figures as path_dependent_lesson_figures
+41 | | from hullkit._perpetual_american_lesson import _figures as perpetual_american_lesson_figures
+42 | | from hullkit._risk_premium_lesson import _figures as risk_premium_lesson_figures
+43 | | from hullkit._shout_lesson import _figures as shout_lesson_figures
+44 | | from hullkit._static_replication_lesson import _figures as static_replication_lesson_figures
+45 | | from hullkit._stochastic_volatility_lesson import (
+46 | |     _figures as stochastic_volatility_lesson_figures,
+47 | | )
+48 | | from hullkit._two_asset_tree_lesson import _figures as two_asset_tree_lesson_figures
+49 | | from hullkit._variance_swap_lesson import _figures as variance_swap_lesson_figures
+50 | |
+51 | | from . import frontier_figures as ff
+   | |____________________________________^
+   |
+help: Organize imports
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.
+Traceback (most recent call last):
+  File "/tmp/m30-lint.py", line 6, in <module>
+    subprocess.run(['ruff','check',*files],cwd=p,check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['ruff', 'check', 'johnhull/hullkit/src/hullkit/_multi_factor_lesson.py', 'johnhull/hullkit/src/hullkit/_multi_factor_martingales.py', 'johnhull/hullkit/tests/test_multi_factor_martingales.py', 'johnhull/hullkit/tests/test_multifactor_lesson.py', 'johnhull/hullkit/tests/test_multifactor_numerics.py', 'johnhull/report/report_builder/figures.py', 'johnhull/report/tests/test_multifactor_acceptance_record.py', 'johnhull/report/tests/test_multifactor_ledger_update.py', 'johnhull/report/tests/test_multifactor_notebook.py', 'johnhull/report/tests/test_multifactor_registry.py', 'johnhull/report/tests/test_numeraire_notebook.py', 'johnhull/report/tests/test_report_build.py', 'johnhull/report/tests/test_section_ledger.py', 'johnhull/scripts/build_multifactor_acceptance_record.py', 'johnhull/scripts/build_multifactor_reference.py', 'johnhull/scripts/update_multifactor_ledger.py', 'johnhull/scripts/verify_multifactor_notebook.py', 'johnhull/scripts/verify_multifactor_numerics.py', 'johnhull/volumes/10_exotics_martingales/build_exotics_notebook.py']' returned non-zero exit status 1.
