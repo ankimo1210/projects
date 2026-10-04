@@ -123,7 +123,7 @@ TN14物理/印刷頁一致1–4。`TechnicalNote14.txt`と実PDF保存。p3/p4�
 - p2: y=f(r)+u/(b−a)へ変数変換、sigma3とcorrelation、2D state tree。a≠b前提。
 - **p3: lnA、eta、gamma1–gamma6、bond-option varianceの積分式、U/V定義**をすべて取得。gamma/etaのマイナス符号は画像と照合済み。
 - **p4: option varianceの3閉形式成分、theta、phi**を取得。
-- units: t/T年、short rate annual decimal、a/b年−1、sigma annual-decimal/√year、rho無次元、Pが1 currency支払のPV、bond-option principal L/strike Kは同一currency。
+- units: t/Tは年、rはannual-rate decimal、a/bは年−1。dr=(theta+u−a*r)dtよりu/thetaはannual-rate decimal/year、sigma1はannual-rate decimal/√year、sigma2はannual-rate decimal/(year*√year)。Bは年、Cは年²なのでB*r/C*uは無次元。rhoは無次元、Pは1 currency支払のPV、bond-option principal L/strike Kは同一currency。このuはG2++の加法short-rate factorと単位が異なる。
 
 残る実装/数理確認:
 
