@@ -56,3 +56,42 @@ def brownian_path_length_mean(maturity, steps):
     if not math.isfinite(maturity) or maturity < 0 or steps < 1 or int(steps) != steps:
         raise ValueError("nonnegative time and positive integer steps required")
     return math.sqrt(2*maturity*steps/math.pi)
+
+
+def _stock_inputs(spot, drift, sigma, time):
+    if not all(math.isfinite(x) for x in (spot, drift, sigma, time)) or spot <= 0 or sigma < 0 or time < 0:
+        raise ValueError("positive spot, nonnegative volatility/time and finite drift required")
+
+
+def stock_paths(spot, drift, sigma, dt, normals, *, scheme="euler", step_coefficients=None):
+    """Replay supplied shocks by stock Euler (14.8) or exact log increments.
+
+    Euler may create negative stocks and does not clip them. Optional step
+    coefficients explicitly reproduce the printed .00288/.0416 Table 14.1
+    track; accumulation keeps full precision, with rounding left to display.
+    """
+    _stock_inputs(spot, drift, sigma, dt)
+    normals = np.atleast_2d(np.asarray(normals, dtype=float))
+    if normals.ndim != 2 or not np.all(np.isfinite(normals)):
+        raise ValueError("finite one- or two-dimensional shocks required")
+    if scheme == "euler":
+        a, b = (drift*dt, sigma*math.sqrt(dt)) if step_coefficients is None else step_coefficients
+        if not math.isfinite(a) or not math.isfinite(b):
+            raise ValueError("finite step coefficients required")
+        multipliers = 1+a+b*normals
+    elif scheme == "exact" and step_coefficients is None:
+        multipliers = np.exp((drift-sigma*sigma/2)*dt+sigma*math.sqrt(dt)*normals)
+    else:
+        raise ValueError("scheme must be euler or exact; step coefficients are Euler-only")
+    return spot*np.column_stack((np.ones(len(normals)), np.cumprod(multipliers, axis=1)))
+
+
+def euler_stock_moments(spot, drift, sigma, maturity, steps):
+    """Exact first two moments of the discrete iid Euler-product process."""
+    _stock_inputs(spot, drift, sigma, maturity)
+    if steps < 1 or int(steps) != steps:
+        raise ValueError("positive integer steps required")
+    dt = maturity/steps
+    mean = spot*(1+drift*dt)**steps
+    second = spot**2*((1+drift*dt)**2+sigma*sigma*dt)**steps
+    return mean, max(second-mean*mean, 0.0)
