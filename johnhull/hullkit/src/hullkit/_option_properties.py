@@ -105,3 +105,52 @@ def bound_arbitrage(terminal_spot, spot, strike, rate, maturity, option_price, *
         raise ValueError("kind must be call or put")
     return dict(initial_bank=initial_bank, terminal_bank=terminal_bank, profit=profit,
                 minimum_profit=minimum_profit)
+
+
+def parity_arbitrage(terminal_spot, spot, strike, rate, maturity, call_price, put_price):
+    """European, no-dividend Table 11.3 replication with zero initial net cash.
+
+    Buy the cheap portfolio and sell the dear one. ``call_quantity`` is +1
+    for long call/short put/short share, -1 for the reversed trade.
+    Cash profits are nominal at maturity; bank proceeds can be negative debt.
+    """
+    _market(spot, strike, rate, 0, maturity)
+    _market(call_price, put_price, rate, 0, maturity)
+    terminal = np.asarray(terminal_spot, dtype=float)
+    if not np.all(np.isfinite(terminal)) or np.any(terminal < 0):
+        raise ValueError("terminal stock prices must be finite and nonnegative")
+    portfolio_a = call_price + strike * math.exp(-rate*maturity)
+    portfolio_c = put_price + spot
+    direction = float(np.sign(portfolio_c-portfolio_a))
+    initial_bank = direction*(spot+put_price-call_price)
+    terminal_bank = initial_bank*math.exp(rate*maturity)
+    call_payoff = np.maximum(terminal-strike, 0)
+    put_payoff = np.maximum(strike-terminal, 0)
+    profit = terminal_bank + direction*(call_payoff-put_payoff-terminal)
+    return dict(portfolio_a=portfolio_a, portfolio_c=portfolio_c, call_quantity=direction,
+                initial_bank=initial_bank, terminal_bank=terminal_bank, profit=profit)
+
+
+def american_put_interval(call_price, spot, strike, rate, maturity, *, dividend_pv=0):
+    """Hull (11.7)/(11.11), expressed as a put interval conditional on C.
+
+    These American parity inequalities assume r >= 0; unlike European
+    parity they must not be extended to negative rates without rederivation.
+    """
+    _market(spot, strike, rate, 0, maturity)
+    if rate < 0:
+        raise ValueError("Hull American parity interval assumes nonnegative rate")
+    if not math.isfinite(call_price) or call_price < 0 or not math.isfinite(dividend_pv) or dividend_pv < 0:
+        raise ValueError("call price and dividend PV must be finite and nonnegative")
+    lower = strike*math.exp(-rate*maturity)-spot
+    upper = strike+dividend_pv-spot
+    return dict(put_minus_call_lower=lower, put_minus_call_upper=upper,
+                put_lower=max(call_price+lower, 0), put_upper=call_price+upper)
+
+
+def capital_structure_payoffs(terminal_assets, face_value):
+    """Business Snapshot 11.1: equity is a call, debt is min(A_T,K)."""
+    assets = np.asarray(terminal_assets, dtype=float)
+    if not np.all(np.isfinite(assets)) or np.any(assets < 0) or not math.isfinite(face_value) or face_value < 0:
+        raise ValueError("assets and face value must be finite and nonnegative")
+    return dict(equity=np.maximum(assets-face_value, 0), debt=np.minimum(assets, face_value))
