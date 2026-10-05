@@ -182,3 +182,21 @@ def exercise_comparison(spot, strike, rate, volatility, maturity, *, kind="call"
                 exercise_gap=american-intrinsic,
                 exercise_now=intrinsic > 0 and american <= intrinsic+1e-9,
                 interest_deferral=strike*(1-math.exp(-rate*maturity)), put_insurance=put)
+
+
+def exercise_profile(spots, strike, rate, volatility, maturity, *, kind="put", steps=400):
+    """Current-spot price curves, with numerical root exercise decisions.
+
+    A (American immediate-exercise level) and B (European/intrinsic crossing)
+    must be read from distinct columns. This does not return a time-varying
+    free boundary or assign printed numbers to Hull's schematic A/B labels.
+    """
+    axis = np.asarray(spots, dtype=float)
+    if axis.ndim != 1 or not np.all(np.isfinite(axis)) or np.any(axis < 0):
+        raise ValueError("spots must be a finite nonnegative one-dimensional axis")
+    rows = [exercise_comparison(float(spot), strike, rate, volatility, maturity,
+                                kind=kind, steps=steps) for spot in axis]
+    keys = ("european", "tree_european", "american", "intrinsic", "exercise_now", "early_exercise_premium")
+    result = {key: np.asarray([row[key] for row in rows], dtype=bool if key == "exercise_now" else float)
+              for key in keys}
+    return dict(spots=axis.copy(), **result)
