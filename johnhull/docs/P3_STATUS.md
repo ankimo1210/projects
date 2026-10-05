@@ -2,11 +2,12 @@
 
 更新2026-10-05。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。残り要件をN/Aへ置き換えたり、簡易モデルだけで完了としない。
 
-- main：§28.1–28.5受入、P3 5/37、全30/276。M30 `5c8bcbde` をFF統合/push、main fresh4223/6・台帳成果物/release/両保管庫PASS。Important1を固定seed消費時replayで4回帰RED→GREEN修正、Minor2保留。
-- 現在：本人指示（2026-10-04）でロジック先行へ変更。`codex/p3-logic` に節ごとに実装・本文数値再現・独立検証をcommit/pushし、受入は章末にまとめる。Ch28のロジック8/8（既受入5＋今回3）完了・章末まとめ受入待ち。Ch29のロジック4/4完了・章末まとめ受入待ち。Ch30のロジック4/4完了・章末まとめ受入待ち。Ch31のロジック5/5完了・章末まとめ受入待ち。Ch32のロジック7/7完了・章末まとめ受入待ち。Ch33は§33.1/33.3のロジック完了、§33.2は入力不足で保留。Ch34のロジック6/6完了・章末まとめ受入待ち。P3ロジック36/37（97.3%）、§33.2は入力不足で保留。次はCh28からD3章末まとめ受入。P3正式受入5/37。
-- 正式受入未完了：§28.6–28.8、Ch29–34（計32節）。多因子測度、市場式、convexity/timing/quanto、短期金利、HW/BK木/curve fit/時間依存sigma/Bermudan/較正、HJM/LMM、非標準swapの本文要件。
-- 並行準備：M30多因子の原典/独立132条件付きfixture、TN14/TN19完全PDF/元XLSの回収、31.4回帰と全9点の独立再現。正式受入とは区別する。
-- 章末：D3軽量受入（本人承認2026-10-03、PR #11は反映用のopen PR）。共通設定ツールで5軸受入、explanation/rendered必須、章内build/画面確認共有、依存変更節だけD1、全suite1回。節ごとは変更モジュールのtests/ruffのみ。
+- 正式受入：Ch28全8節、P3 8/37（21.6%）、全33受入・273未評価。§28.6–28.8を[D3章末まとめ受入](CHAPTER_28_ACCEPTANCE_2026-10-05.md)。42価格の独立求積、共有6図/24表示状態、依存変更2節（28.2/28.5）のD1、28不変節の直接基点再利用、両保管庫復元、台帳成果物検査を確認。
+- ロジック：`codex/p3-logic`に36/37（97.3%）を節ごとcommit/push済み。Ch28 8/8、Ch29 4/4、Ch30 4/4、Ch31 5/5、Ch32 7/7、Ch33 2/3、Ch34 6/6。新計算はprivate moduleで、本文の数値例＋独立検証を対象tests/ruffで確認。§33.2はflexicap strike/reset・payment日とsticky K0不足で保留。
+- 次：Ch29全4節の章末まとめ受入。共通設定ツールで説明・rendered必須の5軸を確認し、build/画面巡回を章内共有、依存変更節だけD1、全suiteは章ごと1回。Ch29–34の教材・台帳・正式受入は未完了（29節、うち入力不足1節）。mainには章受入後に統合する。
+- Ch28検証：全suite1回は4,436 passed・6 skipped・3 failed（234.02s）。3件は索引/図件数/台帳の更新漏れで、修正後の対象70 testsがPASS。全体4,439件を初回＋修正対象の再検査で確認し、最初の失敗記録も保持。[記録](validation/chapter-28/full-suite.json)。検証環境はLinux/Python 3.12。Python 3.13での新規実行はしていない。
+- 既知の互換修正：§28.5のteacher/固定seed MCを許容誤差付きで比較し、数値digest照合を廃止。誤値の拒否は独立参照・固定seed再計算で保持。公開APIへの追加なし。
+- 章末：D3本人承認2026-10-03、PR #11。設定は`docs/acceptance/chapters/ch28.json`、共通ツールは`scripts/chapter_acceptance.py`。Claudeによる数式レビューは後追いで、今回新しい独立レビューパッケージを作成していない。
 - 公開API/production依存の追加は避け、計算をprivate moduleへ置く。既存公開契約を保持。
 
 - [要求監査表](P3_REQUIREMENT_AUDIT_2026-10-04.md)：残35節の118草稿要求を全件保持。TN14/19と31.4元worksheetの取得不足は回収記録で解消。正式数理/実装受入は未完、flexicapのstrike/date不足は保持。HW Q OU/bond式整合はM29で独立RED→GREEN。
@@ -20,16 +21,18 @@
 
 - 後続準備：Black再訪/交換契約の原典名・独立求積・zero-hit MCのimportance sampling、TN14のequilibrium/curve fit/全Appendix・a=b/rho端/u0/微分方向をscratch照合。正式受入とは区別。
 
-- 後続Ch29–30/Ch32/Ch34の原典全要求と独立scratchをdocs/prep/designへ保存。Ch32は著者DG201の終端1日規約でTable32.3とFig32.9を再現しsigma_R補正案を撤回。正式製品tree/較正/Bermudanは未完、Ch33 flexicap入力不足は保持。
+- 後続Ch29–30/Ch32/Ch34の原典全要求と独立scratchをdocs/prep/designへ保存。Ch32は著者DG201の終端1日規約でTable32.3とFig32.9を再現しsigma_R補正案を撤回。tree/較正/Bermudanのロジックはbranchで完了、正式受入は未完、Ch33 flexicap入力不足は保持。
 
-## ロジック先行の進捗（正式受入とは別）
+## ロジック先行の進捗
+
+Ch28は正式受入済み。Ch29–34の実装ファイルは`codex/p3-logic`上のもの。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 |
 |---|---|---|---|
-| §28.5 互換修正 | `_multi_factor_lesson.py` | teacher/固定seed MCの1e-15差を許容、既存の数値改変拒否も保持 | 章末に配布画面・依存節を再確認 |
-| §28.6 | `_forward_black.py` | 印刷例なし。式28.26–29、7市場42価格のQ/T求積・raw MC、rare call 7.1683521394e-8 | ロジック完了。教材・正式受入は章末 |
-| §28.7 | `_exchange_measure.py` | 印刷例なし。式28.30–32、33ケース独立求積、配当再投資密度と確率金利4条件MC | ロジック完了。教材・正式受入は章末 |
-| §28.8 | `_numeraire_change.py` | 印刷例なし。式28.33–35、9相関条件、TN20 chain rule、独立求積・raw密度MC | ロジック完了。Ch28の章末まとめ受入待ち |
+| §28.5 互換修正 | `_multi_factor_lesson.py` | teacher/固定seed MCの1e-15差を許容、既存の数値改変拒否も保持 | 修正・章末再検査完了 |
+| §28.6 | `_forward_black.py` | 印刷例なし。式28.26–29、7市場42価格のQ/T求積・raw MC、rare call 7.1683521394e-8 | 正式受入済み（Ch28共通記録） |
+| §28.7 | `_exchange_measure.py` | 印刷例なし。式28.30–32、33ケース独立求積、配当再投資密度と確率金利4条件MC | 正式受入済み（Ch28共通記録） |
+| §28.8 | `_numeraire_change.py` | 印刷例なし。式28.33–35、9相関条件、TN20 chain rule、独立求積・raw密度MC | 正式受入済み（Ch28共通記録） |
 | §29.1 | `_bond_market.py` | Ex29.1: 9.49/7.97、Ex29.2: 122.82/2.36/1.74、独立求積・OU分散MC | ロジック完了。半年複利＋修正duration規約、教材・受入は章末 |
 | §29.2 | `_cap_floor_market.py` | Ex29.3: 0.00519百万ドル、d1/d2、25,000/12,500、6支払期間、92/360、独立求積・flat strip・支払測度/日次RFR MC | ロジック完了。RFR midpointのモデル依存バイアスを明示、教材・受入は章末 |
 | §29.3 | `_swaption_market.py` | Ex29.4: 2.19百万ドル、A=2.0035（切捨て）、6.194%、d1/d2、184/365、独立求積・annuity測度Q MC | ロジック完了。forwardと割引カーブを分離、教材・受入は章末 |

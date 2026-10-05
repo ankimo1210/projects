@@ -1,0 +1,3197 @@
+{
+  "status": "PASS",
+  "scope": "verified five-axis section evidence; full_suite is a separate final release gate",
+  "chapter": 28,
+  "sections": [
+    "28.6",
+    "28.7",
+    "28.8"
+  ],
+  "full_suite": {
+    "status": "PASS",
+    "passed": 4439,
+    "summary": "initial: 3 failed, 4436 passed, 6 skipped, 2 warnings in 234.02s; targeted repairs: 70 passed in 3.30s",
+    "seconds": 234.02
+  },
+  "browser": {
+    "state_checks": 24,
+    "screenshots": 24
+  },
+  "d1": {
+    "26.1": {
+      "record": "docs/validation/chapter-28/section-26-1.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.2": {
+      "record": "docs/validation/chapter-28/section-26-2.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.3": {
+      "record": "docs/validation/chapter-28/section-26-3.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.4": {
+      "record": "docs/validation/chapter-28/section-26-4.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.5": {
+      "record": "docs/validation/chapter-28/section-26-5.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.6": {
+      "record": "docs/validation/chapter-28/section-26-6.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.7": {
+      "record": "docs/validation/chapter-28/section-26-7.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.8": {
+      "record": "docs/validation/chapter-28/section-26-8.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.9": {
+      "record": "docs/validation/chapter-28/section-26-9.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.10": {
+      "record": "docs/validation/chapter-28/section-26-10.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.11": {
+      "record": "docs/validation/chapter-28/section-26-11.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.12": {
+      "record": "docs/validation/chapter-28/section-26-12.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.13": {
+      "record": "docs/validation/chapter-28/section-26-13.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.14": {
+      "record": "docs/validation/chapter-28/section-26-14.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.15": {
+      "record": "docs/validation/chapter-28/section-26-15.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.16": {
+      "record": "docs/validation/chapter-28/section-26-16.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "26.17": {
+      "record": "docs/validation/chapter-28/section-26-17.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "27.1": {
+      "record": "docs/validation/chapter-28/section-27-1.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "27.2": {
+      "record": "docs/validation/chapter-28/section-27-2.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "27.3": {
+      "record": "docs/validation/chapter-28/section-27-3.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "27.4": {
+      "record": "docs/validation/chapter-28/section-27-4.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "27.5": {
+      "record": "docs/validation/chapter-28/section-27-5.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "27.6": {
+      "record": "docs/validation/chapter-28/section-27-6.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "27.7": {
+      "record": "docs/validation/chapter-28/section-27-7.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "27.8": {
+      "record": "docs/validation/chapter-28/section-27-8.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "28.1": {
+      "record": "docs/validation/chapter-28/section-28-1.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "28.2": {
+      "record": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9.json",
+      "method": "dependency_changed_rechecked"
+    },
+    "28.3": {
+      "record": "docs/validation/chapter-28/section-28-3.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "28.4": {
+      "record": "docs/validation/chapter-28/section-28-4.json",
+      "method": "unchanged_dependency_binding"
+    },
+    "28.5": {
+      "record": "docs/validation/d1-recheck/section-28-5/d1pf-28.5-20261005T003842Z-redraw-a50d10f8f8884d0b803f14e9de872dc3.json",
+      "method": "dependency_changed_rechecked"
+    },
+    "28.6": {
+      "record": "docs/validation/chapter-28/section-28-6.json",
+      "method": "new_chapter_section"
+    },
+    "28.7": {
+      "record": "docs/validation/chapter-28/section-28-7.json",
+      "method": "new_chapter_section"
+    },
+    "28.8": {
+      "record": "docs/validation/chapter-28/section-28-8.json",
+      "method": "new_chapter_section"
+    }
+  },
+  "storage_verification": {
+    "status": "PASS",
+    "primary": {
+      "status": "PASS",
+      "entries": 486,
+      "bytes": 20719171
+    },
+    "mirror": {
+      "status": "PASS",
+      "entries": 486,
+      "bytes": 20719171
+    }
+  },
+  "images": [
+    {
+      "path": "docs/validation/chapter-28/book-martingale_black_forward_market-1440.png",
+      "ref": "artifact:sha256:86441ec3639e30b2e0c3d0b45d303eb51179f9da9b10783db6b177ede20844e9",
+      "bytes": 25193,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_black_forward_prices-1440.png",
+      "ref": "artifact:sha256:51003d558ad1d2bb149c62ee8c24b502b38072d07346ba2f4e3ed3a3151f0485",
+      "bytes": 37188,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_exchange_ratio_means-1440.png",
+      "ref": "artifact:sha256:860898a7c5d8f09c675128086db4b95e0840f0de581c75d112a800c8dac9e5d1",
+      "bytes": 32377,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_exchange_measure_prices-1440.png",
+      "ref": "artifact:sha256:73dbc8df6e617d445369cdedfba539b23f732b3a3d4f707ef0708dd70f66bddc",
+      "bytes": 33106,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_numeraire_drift_shift-1440.png",
+      "ref": "artifact:sha256:1ab139bcbb12be7403e579398d7e46bd11169ab1b39f9225b9773b86ce0454b5",
+      "bytes": 23200,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_numeraire_absolute_shift-1440.png",
+      "ref": "artifact:sha256:3c5c301d6ac6cc2b756bd7631a4bc6f01cad914d3adc63a0c39bca52d12d56e6",
+      "bytes": 36319,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_black_forward_market-1000.png",
+      "ref": "artifact:sha256:d52fc67325316eac3e9d9babcc7b8cf2454d2f7667c7593a514ff7dbfb62ab33",
+      "bytes": 24783,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_black_forward_prices-1000.png",
+      "ref": "artifact:sha256:5269b12f808ffe117e302cafc2608d367103b4358f60d49afad5e10553c47947",
+      "bytes": 35329,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_exchange_ratio_means-1000.png",
+      "ref": "artifact:sha256:495219530cfeb07c9da53d31f53b3acae142f1a8cda2a02178a37eee46587406",
+      "bytes": 32232,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_exchange_measure_prices-1000.png",
+      "ref": "artifact:sha256:7cbf2303ccc41481d66b7996dff1f61202e5218a0560c3379eb236c730581fa7",
+      "bytes": 32529,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_numeraire_drift_shift-1000.png",
+      "ref": "artifact:sha256:714c78de7055526c6621173a0b76c44b45e7aa569d77ca3a5384312375b340fe",
+      "bytes": 22746,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/book-martingale_numeraire_absolute_shift-1000.png",
+      "ref": "artifact:sha256:1e72e5f6da9250fd0f39631d1d5b5592e64209b0aae8c8c5b558d2794bd72015",
+      "bytes": 34859,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_black_forward_market-1440.png",
+      "ref": "artifact:sha256:253a5b31545fb5d2c97671f6d785638fbad4951d4042c1accde60245fc7a5877",
+      "bytes": 23240,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_black_forward_prices-1440.png",
+      "ref": "artifact:sha256:f06b45bfbe565cfca3ee77a61da9782e569d0267f7684af8c5fd9dd0aebed3f6",
+      "bytes": 35291,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_exchange_ratio_means-1440.png",
+      "ref": "artifact:sha256:1ef637fbbf131a396de9a9f23acb2156d0034a5f63673d84f449e8365dad898a",
+      "bytes": 30806,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_exchange_measure_prices-1440.png",
+      "ref": "artifact:sha256:f252dd478d7b810f2f3ba0e1c760cfc3ed329973f49ded98c0cb52408d050205",
+      "bytes": 30703,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_numeraire_drift_shift-1440.png",
+      "ref": "artifact:sha256:a191e1fee99d38d5a208c01abb571161a6e1b22a497efd7706528bf0deabb997",
+      "bytes": 21504,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_numeraire_absolute_shift-1440.png",
+      "ref": "artifact:sha256:1d868abdc23486695b58c2d97023dfa502dbcee523f84783780b519419c96b4d",
+      "bytes": 34731,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_black_forward_market-1000.png",
+      "ref": "artifact:sha256:0854750bd5c829b85d686a8d9ecdb7a202cfe593cb46e78a6ac7cd4505637494",
+      "bytes": 22775,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_black_forward_prices-1000.png",
+      "ref": "artifact:sha256:65d8776f39226054d5ec78a3d4d6ac1c0a03c293b06835b42b1454fb70f5ef18",
+      "bytes": 34514,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_exchange_ratio_means-1000.png",
+      "ref": "artifact:sha256:4c8b28989f475505d2b124e1ce79b1d2bde463d814009bd6ce16752faaf8a448",
+      "bytes": 30068,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_exchange_measure_prices-1000.png",
+      "ref": "artifact:sha256:9e4906e42597c968d91afda28f7ebed7a67c1582d106adf0611e220e6b1632c0",
+      "bytes": 29664,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_numeraire_drift_shift-1000.png",
+      "ref": "artifact:sha256:ba4f7832f57dade2a779ada4277805072ebc18c25f4c5881b200d58c1124afef",
+      "bytes": 21030,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-28/portal-martingale_numeraire_absolute_shift-1000.png",
+      "ref": "artifact:sha256:094c09ac91107e936da407e8cdfe34028faa393a9a2c8c39c2318f4d04f4d01d",
+      "bytes": 33116,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/book-packages_deferred-1000.png",
+      "ref": "artifact:sha256:0614f2efac76d7bcb38c4e31e9a91544861cf47d532314c856f4bf91b89a3853",
+      "bytes": 36656,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/book-packages_deferred-1440.png",
+      "ref": "artifact:sha256:9491aea598bc34117bc4338cc0160b6c9462d82277e7f32e33f932a3c89dc2c8",
+      "bytes": 37643,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/book-packages_range_forward-1000.png",
+      "ref": "artifact:sha256:78670c91f62969093306d55a47939f8b0ebaa85313034cdd33f9ce45d9bba656",
+      "bytes": 38377,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/book-packages_range_forward-1440.png",
+      "ref": "artifact:sha256:add107ab3db2fa89000712699284fb395da0b48df6dfbbb54a80831fabc4ed32",
+      "bytes": 38946,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/book-packages_risk-1000.png",
+      "ref": "artifact:sha256:26d6a01b6b760296455291cc27f308f8b7b950f2ffd876d90e10e84e83471052",
+      "bytes": 28036,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/book-packages_risk-1440.png",
+      "ref": "artifact:sha256:2f3aeca94490faedbffe7a95791734cb21f91dd811888a63a3ea5acab502d4c9",
+      "bytes": 27588,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/book-packages_strikes-1000.png",
+      "ref": "artifact:sha256:0d45a4f2d101b81b06feb4ac5bcef47dadd813191151eec9a7dbdd7a983cdf64",
+      "bytes": 39045,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/book-packages_strikes-1440.png",
+      "ref": "artifact:sha256:b2d69841c65b293b9faf49a88a6620e8efb20415cccc011b6f82e75ba659abf6",
+      "bytes": 39530,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/portal-packages_deferred-1000.png",
+      "ref": "artifact:sha256:5c32acf706ce18f3139e6b6d8161e0b776257e6b9ce2f13c2998539b04168b4c",
+      "bytes": 27969,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/portal-packages_deferred-1440.png",
+      "ref": "artifact:sha256:d026f862f1483bf6d299ec143be1904ea398fc1e1db2a882f2c8d799a525efc8",
+      "bytes": 28974,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/portal-packages_range_forward-1000.png",
+      "ref": "artifact:sha256:7a8146f62a5e2eb0a67310f3f071140038afadb0210be4914aea88f3dfa83181",
+      "bytes": 28760,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/portal-packages_range_forward-1440.png",
+      "ref": "artifact:sha256:006a3598e79bdf61d96f5c81d87485f0326914389f46ea3cd6f8163d681b1cd6",
+      "bytes": 29193,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/portal-packages_risk-1000.png",
+      "ref": "artifact:sha256:06ed2cd0eb7a9cfdd6e0fb0c6182ac4f8b4f142ddfaa2cbdb96f6d7aa64de8a3",
+      "bytes": 24130,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/portal-packages_risk-1440.png",
+      "ref": "artifact:sha256:0ee7104e827c2174616a0407762047ff20c6ca383e3885c4c586774fc09f7139",
+      "bytes": 24837,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/portal-packages_strikes-1000.png",
+      "ref": "artifact:sha256:298138079d6718ef59f0afe3a02d9b0750cd41f0e925a3598fe33dfb984cc6db",
+      "bytes": 29167,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3/portal-packages_strikes-1440.png",
+      "ref": "artifact:sha256:60ca62e4617024f1aa94aab09251538c2849264b236560a01f846ae88e706917",
+      "bytes": 30636,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/book-perpetual_boundaries-1000.png",
+      "ref": "artifact:sha256:76ef98b233b25faa1d23108af61fcb22a07a0ea7701aa75fc2aabee617c74584",
+      "bytes": 26709,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/book-perpetual_boundaries-1440.png",
+      "ref": "artifact:sha256:aa12ad313fed440179540b2d8701f399a5e5b3e00faa7749e744a9aec436340c",
+      "bytes": 26654,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/book-perpetual_convergence-1000.png",
+      "ref": "artifact:sha256:2b52b9d968fe18f98648982c197d90e04238454ad4167065c506f78474c8838f",
+      "bytes": 36768,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/book-perpetual_convergence-1440.png",
+      "ref": "artifact:sha256:dff2ae64b5d087609881c868a401155b74401ff8d483404b3c02104df0dea741",
+      "bytes": 39229,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/book-perpetual_value-1000.png",
+      "ref": "artifact:sha256:81146e85caa0e6fce31a2a07ee69e5605846157f9ac562435ddec1eea09564d5",
+      "bytes": 39468,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/book-perpetual_value-1440.png",
+      "ref": "artifact:sha256:5063130e817c378e72576a25ca8ab4f156010bbfa37994b9f1f0537e2f420d67",
+      "bytes": 39774,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/book-perpetual_zero_dividend-1000.png",
+      "ref": "artifact:sha256:104d49e4ddb8e6fdb9c944094432bc6c63b1fdebdfe06251b76ee26b99b6add1",
+      "bytes": 38260,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/book-perpetual_zero_dividend-1440.png",
+      "ref": "artifact:sha256:17cf68bd2767cbbdeca2e0ec209c4b6e7bb05440575de481f5b1cfbc378907d2",
+      "bytes": 37520,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/portal-perpetual_boundaries-1000.png",
+      "ref": "artifact:sha256:5603ef3a6c3130fc0d5e96452e3da974ed3a44dbe0857526e06fafa7d94356b0",
+      "bytes": 22443,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/portal-perpetual_boundaries-1440.png",
+      "ref": "artifact:sha256:f2fcaf2de20300e3e71dfef11e5487351841f4f531bd2d918f5988d38cb69d2f",
+      "bytes": 22983,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/portal-perpetual_convergence-1000.png",
+      "ref": "artifact:sha256:1e9079f9dc659bcce01b933d396ab716cfc7e2ce80f59ffed25b75e9ade9955e",
+      "bytes": 31476,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/portal-perpetual_convergence-1440.png",
+      "ref": "artifact:sha256:2ecdf46de438cd4c9b0cf16df87d8a0f4fc87422f9d077a4ec98c4182a171dc7",
+      "bytes": 31526,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/portal-perpetual_value-1000.png",
+      "ref": "artifact:sha256:4191757f272b622cfe96f222588a78c11c2d9a1eef29abdebcbb7ed0879b41e9",
+      "bytes": 28632,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/portal-perpetual_value-1440.png",
+      "ref": "artifact:sha256:0bdb0f40819143fff668117d1b283e5ef92a2e6c866555b085404d2c262b6ad5",
+      "bytes": 32227,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/portal-perpetual_zero_dividend-1000.png",
+      "ref": "artifact:sha256:898b9fe62270197935e3a61b72e8d39481bfce40f09e4f5cba67882d81c06e22",
+      "bytes": 27680,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103/portal-perpetual_zero_dividend-1440.png",
+      "ref": "artifact:sha256:5744118ee6f89ab82fc26ccd36d24330c9b7884c67b25b89ff2b45949798e443",
+      "bytes": 28188,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/book-scheduled_exercise-1000.png",
+      "ref": "artifact:sha256:03b6dd8c29d4c122e5297223118a8d7d105979b4b060751d1c85738600153d28",
+      "bytes": 25855,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/book-scheduled_exercise-1440.png",
+      "ref": "artifact:sha256:d857104ff2be0372b7fdcc308a52804fe817cd1c8727f10696cbe531fbb50f23",
+      "bytes": 25902,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/book-scheduled_frequency-1000.png",
+      "ref": "artifact:sha256:8eafbf5e32f78145060d1df8ce85090592a92a73ac0efd2bbd984a343076a3df",
+      "bytes": 25686,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/book-scheduled_frequency-1440.png",
+      "ref": "artifact:sha256:fa78bbe148f570fde8dc44e5ef6d6d3a2cae6962253ca8b823a8f6209bf44b29",
+      "bytes": 25132,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/book-scheduled_ordering-1000.png",
+      "ref": "artifact:sha256:996a1241d459f79df1d4cc53a0eff6a2462ca29267861aa1bc865532bc53c51e",
+      "bytes": 18403,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/book-scheduled_ordering-1440.png",
+      "ref": "artifact:sha256:e9f2fd4c317cb120575db1efcf8ea1e48c28b8bc6ad0df48bda80de675ea1c70",
+      "bytes": 17791,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/book-scheduled_warrant-1000.png",
+      "ref": "artifact:sha256:b4b63c18227905114ddecbc7e0a9a916a26036b0427543cf14e154c1bcfa33e1",
+      "bytes": 19872,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/book-scheduled_warrant-1440.png",
+      "ref": "artifact:sha256:10993226d222f181f7f8fc3e50d2ca314fe755a3b96d2ede6ea71fca0b54d5e3",
+      "bytes": 20243,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/portal-scheduled_exercise-1000.png",
+      "ref": "artifact:sha256:3926876145c9ed9d6f7c7845ce76380bb29debc640073a1432febf07969a1807",
+      "bytes": 21323,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/portal-scheduled_exercise-1440.png",
+      "ref": "artifact:sha256:1a2d2231793bf1c89226125e43c82d46970e30cf01e676f993fdb76d4af2e61f",
+      "bytes": 22515,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/portal-scheduled_frequency-1000.png",
+      "ref": "artifact:sha256:af55b9de05e9cbf53a8a5f85d7525c8dc2d2ea933559ce0f40e8ab80be39f51d",
+      "bytes": 19474,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/portal-scheduled_frequency-1440.png",
+      "ref": "artifact:sha256:9a02f2485867e7784c9cc9c0d7848443e3be943dc8b21b23385f0431b8d5e563",
+      "bytes": 20051,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/portal-scheduled_ordering-1000.png",
+      "ref": "artifact:sha256:d67a984a638063ec93b501533933a1e3eba8832d0e1e0e805e6b7d9d51f1c459",
+      "bytes": 16876,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/portal-scheduled_ordering-1440.png",
+      "ref": "artifact:sha256:fe5c073a1579300d970d84c6d4ea321a6d37bc14b7099efccf99222d9f428aa3",
+      "bytes": 15073,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/portal-scheduled_warrant-1000.png",
+      "ref": "artifact:sha256:1d5cbca772c30ced5aef7786ff6b97a1dc89185164b70a654b5e1417eed2a9aa",
+      "bytes": 16219,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54/portal-scheduled_warrant-1440.png",
+      "ref": "artifact:sha256:fa162b5eb729333096627328295c4b57e3f6821ca1f8046cebdfffefee51d8e1",
+      "bytes": 16388,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/book-gap_decomposition-1000.png",
+      "ref": "artifact:sha256:fea8662db87f8235b1cab9ef374efabd57a5d679ddf1be0b772ec1d63395ef00",
+      "bytes": 36739,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/book-gap_decomposition-1440.png",
+      "ref": "artifact:sha256:35bcab66bdfd9b09d1130ade7e72648fc91a1bdeaa1ea8eed7f58340405cced7",
+      "bytes": 31576,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/book-gap_insurance-1000.png",
+      "ref": "artifact:sha256:72ff42840abf4bfa518b138a5716938f701c589fe33b1e7ed9b23620860651f2",
+      "bytes": 40767,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/book-gap_insurance-1440.png",
+      "ref": "artifact:sha256:0cea8147bfd9ad18b60cf7e7e12d9ef2ad7d90cfa0119f58d2459ac7f43e89f1",
+      "bytes": 41639,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/book-gap_payoff-1000.png",
+      "ref": "artifact:sha256:23b6b37576822e133d118eafa50bf1ad3aff0844a097ab5df873a4d6a83a24b5",
+      "bytes": 33243,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/book-gap_payoff-1440.png",
+      "ref": "artifact:sha256:cb7f8ba0b5329f1faaf2dbacd00a6647ab3bf50045b20953e72d61ea2c9825e3",
+      "bytes": 33886,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/book-gap_premium-1000.png",
+      "ref": "artifact:sha256:025c8c8801c20893ced113d9c93e80b76acb1f2b0651ae341ac60c279e833611",
+      "bytes": 48127,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/book-gap_premium-1440.png",
+      "ref": "artifact:sha256:6d8593d2c92a83eec086f9af6d8bda5f0bfbec440db805ce240baca6419defc6",
+      "bytes": 48854,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/portal-gap_decomposition-1000.png",
+      "ref": "artifact:sha256:412a403dc6c44091bbb6262849afe20ee93ed96c95f79e353c09b7eaeb99071e",
+      "bytes": 25635,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/portal-gap_decomposition-1440.png",
+      "ref": "artifact:sha256:fc68d270bc00c54a0623af3fe9290d06afdd8c669706111d938f16afdae91666",
+      "bytes": 27737,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/portal-gap_insurance-1000.png",
+      "ref": "artifact:sha256:c26ac71ce0174f01f2adf3fffc37d8688a8960546adecf9bbe137c44d527f2ad",
+      "bytes": 28033,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/portal-gap_insurance-1440.png",
+      "ref": "artifact:sha256:fe06282fd22ca0c1d92872f6a6d0be156cfb60188c154659530e7ef7678a694a",
+      "bytes": 28079,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/portal-gap_payoff-1000.png",
+      "ref": "artifact:sha256:67fd1502a44775a78f67e926c5dbd9296fb47825c58e395a2020694eff90935a",
+      "bytes": 22306,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/portal-gap_payoff-1440.png",
+      "ref": "artifact:sha256:73c8a9aaccafeb1ff8750e55ef62394bb5fde5fd83e3ecde349a1b92ecb8ec28",
+      "bytes": 22192,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/portal-gap_premium-1000.png",
+      "ref": "artifact:sha256:fc16aa5a841398d392d7b098c76c8bd5193829cc233059fc3d375b2fc53b26bc",
+      "bytes": 33762,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da/portal-gap_premium-1440.png",
+      "ref": "artifact:sha256:76d660299a538eb23721fd04c2e5f8edf3c72138aad082be866d81355ebc0c6b",
+      "bytes": 36014,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/book-forward_contract-1000.png",
+      "ref": "artifact:sha256:bd7a134757bfecf95105f745ec8b3d663608f02691281ab67456e7ba9da24fda",
+      "bytes": 55234,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/book-forward_contract-1440.png",
+      "ref": "artifact:sha256:79cb87c9f89de9e4794d073e88079036191a7471ef5bca37fe50978cfe7644b9",
+      "bytes": 57820,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/book-forward_fixed_expiry-1000.png",
+      "ref": "artifact:sha256:52c6eb3e9e37e8a7942c7147330787eb7d4886df7360d243e118929560fb7381",
+      "bytes": 36131,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/book-forward_fixed_expiry-1440.png",
+      "ref": "artifact:sha256:257eda6ae0c49266080d6042ff30fc57751de21dec84758eb56e1e069e321ab7",
+      "bytes": 35710,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/book-forward_homogeneity-1000.png",
+      "ref": "artifact:sha256:2c46f61e74cae0449a7fc1cad0f259695451155cb1cce9e61cd75f3c601a899e",
+      "bytes": 23873,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/book-forward_homogeneity-1440.png",
+      "ref": "artifact:sha256:73e139ef774f6364e56f5ec093dd136fd24c93f5855a1eb79c1f3e448dcd86c5",
+      "bytes": 27905,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/book-forward_start_delay-1000.png",
+      "ref": "artifact:sha256:d822fe4384bd270b9af575be3199718f376a99962486009d0be8413f32b30a57",
+      "bytes": 22164,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/book-forward_start_delay-1440.png",
+      "ref": "artifact:sha256:5856876cc4b1050f67a593a636eb967cc6a23dcfd65b5020e51c6d1f1384190f",
+      "bytes": 22434,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/portal-forward_contract-1000.png",
+      "ref": "artifact:sha256:d285f9ba22097f664e6359137223fd4546aa7e925f28c76aa86402219331de80",
+      "bytes": 38021,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/portal-forward_contract-1440.png",
+      "ref": "artifact:sha256:b75b535b9f5d6fdabb42de3c7376b8e436ccfb3ce5456646cc3f19241ab4d686",
+      "bytes": 39376,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/portal-forward_fixed_expiry-1000.png",
+      "ref": "artifact:sha256:980d14f40c3da388ebcbe932a09f2f79e7aa1c1a362d66913a332bca2f129807",
+      "bytes": 26245,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/portal-forward_fixed_expiry-1440.png",
+      "ref": "artifact:sha256:d49712c9c02716f1445a64f4b7ac58a70135b96072f78f4b9ec8c99f84e194b3",
+      "bytes": 28303,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/portal-forward_homogeneity-1000.png",
+      "ref": "artifact:sha256:bbbf636439313076cc151ff2cc164bd6828a7db90f7f17bbb74c077ada4483b5",
+      "bytes": 17543,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/portal-forward_homogeneity-1440.png",
+      "ref": "artifact:sha256:1d2037a4fea2f795f5af17ab685f97eb479fa3355f4f1f502a2af5b4cfa85b8f",
+      "bytes": 19608,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/portal-forward_start_delay-1000.png",
+      "ref": "artifact:sha256:194ab6a1f67d8cc8c01c43d698cb8c2c7958eb3bdd523fd72ec7763184636d7b",
+      "bytes": 15571,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a/portal-forward_start_delay-1440.png",
+      "ref": "artifact:sha256:4807a68ad0b037ca9a3137b58c123906e14ddbad851a170029662b8cf296a948",
+      "bytes": 16021,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/book-cliquet_components-1000.png",
+      "ref": "artifact:sha256:eaa56f86c2d0e12ada07d3d7564787eed76056ab26dc39abb74f66b028f04557",
+      "bytes": 17921,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/book-cliquet_components-1440.png",
+      "ref": "artifact:sha256:820de501fd4584f19cb6f138923fcd365ecbe2d8ecb65d8d718dfd664a2ac808",
+      "bytes": 18163,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/book-cliquet_frequency-1000.png",
+      "ref": "artifact:sha256:50ce53732c1318f73866653cff8073c394477aa69da0f1ef476930c4d935d697",
+      "bytes": 33977,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/book-cliquet_frequency-1440.png",
+      "ref": "artifact:sha256:bdd023f28a29ab33aee4266fa14eeed919563acfe61c0ee518524aaba660e7b6",
+      "bytes": 34343,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/book-cliquet_limits-1000.png",
+      "ref": "artifact:sha256:30c2b732ad41c55975f7516faa4b3d877f3b67ed334d37d8e80ea9236c447993",
+      "bytes": 26194,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/book-cliquet_limits-1440.png",
+      "ref": "artifact:sha256:ae4ca99e5e64a6800f63bd12bb8b1aec26aee17833e1a68e486914547a0b1c63",
+      "bytes": 26491,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/book-cliquet_reset-1000.png",
+      "ref": "artifact:sha256:01b68f69744b747da0c7b2e819d839ad24ff97ad63e6942851f379f6a2c34549",
+      "bytes": 28274,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/book-cliquet_reset-1440.png",
+      "ref": "artifact:sha256:a611b098049587042b794ed49b7f2c15ba98d5d2ef5fce26dad16e57446a1649",
+      "bytes": 28321,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/portal-cliquet_components-1000.png",
+      "ref": "artifact:sha256:0c47e844a40a2bca4a5172021e1fcfb1ea4204cb75cda1bc9c3b76d5e1962ff6",
+      "bytes": 12990,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/portal-cliquet_components-1440.png",
+      "ref": "artifact:sha256:72bc86f8f2172a37db95d4d91bedce00680b674f7baea80f02e8fd89ea7223e9",
+      "bytes": 13290,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/portal-cliquet_frequency-1000.png",
+      "ref": "artifact:sha256:b4a1b26375f0c0be755a84c742de193664fb8e91f78a7ee8e63693e190daa6e8",
+      "bytes": 24410,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/portal-cliquet_frequency-1440.png",
+      "ref": "artifact:sha256:660b10f6426373f462bbb4beeaeac96d071209ffb2dbb3bdce4e6720e6f5b250",
+      "bytes": 23626,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/portal-cliquet_limits-1000.png",
+      "ref": "artifact:sha256:9bb289926019999d04a5e24f8ebd1a04a59484c3d6aa5cbab468ba0c4f1120bc",
+      "bytes": 20758,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/portal-cliquet_limits-1440.png",
+      "ref": "artifact:sha256:648844337dce11c64e981a48437e28065a57917f6e3371d67aead9d9500ca746",
+      "bytes": 20948,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/portal-cliquet_reset-1000.png",
+      "ref": "artifact:sha256:fa8139a4fe7a5adff742985abac87b41d34550657628ec4ec7f40081bdf0ed0a",
+      "bytes": 21489,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de/portal-cliquet_reset-1440.png",
+      "ref": "artifact:sha256:de2b1086d2f6551ed61f09a58d6c735ee17e55be1f5d3c22271e8e6264b75a9c",
+      "bytes": 22041,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/book-compound_strikes-1000.png",
+      "ref": "artifact:sha256:5e39f7123f1a4162ee2400491b2c669ecec19158db574b6c4461407d0c010f7c",
+      "bytes": 38966,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/book-compound_strikes-1440.png",
+      "ref": "artifact:sha256:7960926a803b740947a50315a1be73ff53ab75170fa634dd06c2efc39816f781",
+      "bytes": 39627,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/book-compound_threshold-1000.png",
+      "ref": "artifact:sha256:4f147e41f407a2153658441a372f85e9c0f2a557c520e6c5ff020c88d2efa1bc",
+      "bytes": 46505,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/book-compound_threshold-1440.png",
+      "ref": "artifact:sha256:c78e028fe7552eee73609890bf7beda7303aee1e95805d1813e2157ba8f68dab",
+      "bytes": 48403,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/book-compound_timing-1000.png",
+      "ref": "artifact:sha256:3391e68c1552ecd8f845431225cb39b2e02bff3b8cc231b1cf560d7e880742f4",
+      "bytes": 39149,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/book-compound_timing-1440.png",
+      "ref": "artifact:sha256:2f0855f60806f1daad2030fdafa1e1fcfcf4bc983e919d04babbbf03c7bf0e38",
+      "bytes": 40022,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/book-compound_validation-1000.png",
+      "ref": "artifact:sha256:f2be26f2fa3cf3bd5cac5185d1c60f720d34ac17e89426c1a7deaf3e1db8627b",
+      "bytes": 22023,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/book-compound_validation-1440.png",
+      "ref": "artifact:sha256:a1051170f0bf98530702a7c46c0738926354761e76d81bc4bc1826f865e52955",
+      "bytes": 22306,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/portal-compound_strikes-1000.png",
+      "ref": "artifact:sha256:ed77e5711f53b9685988ac2ba47a61f5c3900695080583a48ddeb72df3dfa769",
+      "bytes": 27050,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/portal-compound_strikes-1440.png",
+      "ref": "artifact:sha256:0bb4f04ac48898297b192d2076559211fdc5030f6ca2f5bc1379bb44d6979a53",
+      "bytes": 26271,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/portal-compound_threshold-1000.png",
+      "ref": "artifact:sha256:efb2b7cf99172a4305368b330f6f1eb6d4f2fcec3a73af4e1b2ff9021d647893",
+      "bytes": 31172,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/portal-compound_threshold-1440.png",
+      "ref": "artifact:sha256:557f77dc16aa11501a06c0153aa5b432ec88ff09eddd6b892049cc75429caebf",
+      "bytes": 32786,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/portal-compound_timing-1000.png",
+      "ref": "artifact:sha256:d6b7afc43b9b7f4c192d065b1ac94a0912419a2624e0f946e23bc0a0f235a84f",
+      "bytes": 28029,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/portal-compound_timing-1440.png",
+      "ref": "artifact:sha256:8890f6bffb16df6cf5c929146b113e2e99e836e19d663b9621a59e06f83ec1a5",
+      "bytes": 28804,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/portal-compound_validation-1000.png",
+      "ref": "artifact:sha256:6e7ba64e26f87930b9bd8ec5140ae3ba63b9428f47f091dfcc67c48497bc6a6c",
+      "bytes": 17174,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f/portal-compound_validation-1440.png",
+      "ref": "artifact:sha256:54156a6ae021c6403f781ce133db35cc9d7d8a6900a82f1028de147a4af55218",
+      "bytes": 17615,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/book-chooser_choice-1000.png",
+      "ref": "artifact:sha256:ed15fd4f4816360bfaf3365e159f60d905a3c927fc0df38e3b5934247ff6fe93",
+      "bytes": 36226,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/book-chooser_choice-1440.png",
+      "ref": "artifact:sha256:e74e0f2124e2a5093d39b42bd1aa01ba5b36e8ce9ffe6a5b500b5c4b792de968",
+      "bytes": 36606,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/book-chooser_package-1000.png",
+      "ref": "artifact:sha256:b0181f06ce45180906162141bad06999ac70c86bc1ce93d0e9213891832ae78b",
+      "bytes": 41201,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/book-chooser_package-1440.png",
+      "ref": "artifact:sha256:674a6c9870832553090ec963f5cf982cf1a9144163e41933872aaa233c487afb",
+      "bytes": 42493,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/book-chooser_timing-1000.png",
+      "ref": "artifact:sha256:5bd90b06f98c7188dd3b83482e20ba25dbc4f29b7cf19263c61333354caccb4d",
+      "bytes": 30771,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/book-chooser_timing-1440.png",
+      "ref": "artifact:sha256:5928f177ed7653d511b3c12ea334787b0dde7aa1bd6d31ea0b80d018cca8b2cd",
+      "bytes": 30337,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/book-chooser_validation-1000.png",
+      "ref": "artifact:sha256:02ac25f8e4606b4e8f1de3981b8d81bf8ffe65614b9862f10e4595a25eab2c9e",
+      "bytes": 23702,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/book-chooser_validation-1440.png",
+      "ref": "artifact:sha256:50fef1685586069e0253a675e9469e123e3cab05cb0690eb552481650df754fc",
+      "bytes": 23907,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/portal-chooser_choice-1000.png",
+      "ref": "artifact:sha256:3a9aaa193eadb87c64546d5fd7d3965dd742a514bfed4b47486306ecfe8791bc",
+      "bytes": 25089,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/portal-chooser_choice-1440.png",
+      "ref": "artifact:sha256:237811b99383193dcb8aef1127e319674e2cf1433ef4b4de4dd82e1b9c9bd35b",
+      "bytes": 25714,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/portal-chooser_package-1000.png",
+      "ref": "artifact:sha256:21e82eb8b6758de9cc1aa3feaec081df1edd78372ca5b10a9fff4a5905c5195e",
+      "bytes": 28285,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/portal-chooser_package-1440.png",
+      "ref": "artifact:sha256:08d7c57e25d7af971a9d737889d032e5c53df29044155b87499d07f0c75f0314",
+      "bytes": 29227,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/portal-chooser_timing-1000.png",
+      "ref": "artifact:sha256:6aedb068e04b29b37f965d441ae21586711d98266e6f72bc890871da6628cc9c",
+      "bytes": 22717,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/portal-chooser_timing-1440.png",
+      "ref": "artifact:sha256:924445a95f4043b183bac85480521001683686f481eeb26d29a0e91229c5b28e",
+      "bytes": 23511,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/portal-chooser_validation-1000.png",
+      "ref": "artifact:sha256:f8ed8315689b6175f671ab35e3be433e956a08e0f95c404a92e49ad97cb6e0f2",
+      "bytes": 18040,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab/portal-chooser_validation-1440.png",
+      "ref": "artifact:sha256:fe35644e4cc8d0bf08c763fb01e97bfdc960322dcde99d2ee63e182135d30a7c",
+      "bytes": 18229,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-bgk.png",
+      "ref": "artifact:sha256:daab28b566b8e36272a2cee57f0f47657ede588b40f984f84ce02526623f0660",
+      "bytes": 38764,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-eight.png",
+      "ref": "artifact:sha256:db53cc9ebd235f957a9b42efc52411087b2b8d9d948598cbf4b60997b918c5cb",
+      "bytes": 82048,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-explorer-initial.png",
+      "ref": "artifact:sha256:6db04be21223e2653ec855178b4382e832c12bfaf2fcd230d5657363ca5f063c",
+      "bytes": 36321,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-explorer-put-up-in.png",
+      "ref": "artifact:sha256:24791168bc242e9cf98827481297b99e6c26af57e0208d3cb074069a970d4405",
+      "bytes": 35464,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-formulas.png",
+      "ref": "artifact:sha256:36a5f6faada5e189706e0ee30cb4407689e0431583f56bc5e30c76a38edaaf80",
+      "bytes": 27530,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-parisian.png",
+      "ref": "artifact:sha256:c3faefdd96d11fff326b441e65ca30c2abc729cab3fb69a98cec700a897f1a00",
+      "bytes": 27806,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-path.png",
+      "ref": "artifact:sha256:8f31247caf4970c001568644eaa8332fc3b10c666e8d6246afc02f02f1490472",
+      "bytes": 33894,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-vega.png",
+      "ref": "artifact:sha256:74458fbdcd61408b19297f2e91a41480a2f2fe09543407677b0c50568f711e25",
+      "bytes": 33169,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/portal-initial.png",
+      "ref": "artifact:sha256:24cdabd9a4033f1bdc0ae5bb4a42272b59371ddb19f3aacf519688872750f67c",
+      "bytes": 28147,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/portal-put-up-in.png",
+      "ref": "artifact:sha256:e899d38ae7683de34737ef58056d695a65a37a32129b0c453922b1b0b7846918",
+      "bytes": 27556,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary-prices-1000.png",
+      "ref": "artifact:sha256:d8f976a1684a5f586b3927061de044b112f45772e3ad8f36aa24f7e5e8412adb",
+      "bytes": 192256,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary-prices-1440.png",
+      "ref": "artifact:sha256:8343a3d9cf1392a7da648f9a21b979bea952cc123b87bdda68cb3c0b6fbfb113",
+      "bytes": 189731,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary_delta-1000.png",
+      "ref": "artifact:sha256:6a589e8fb32b0ea3e2890a477df47654a87771f8adb49d742b457dfb35df5432",
+      "bytes": 53815,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary_delta-1440.png",
+      "ref": "artifact:sha256:33db2eeb0a5aaea405ecdcbb8aa3e140315fd76450557bfc4b2e13fde524f377",
+      "bytes": 52611,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary_payoffs-1000.png",
+      "ref": "artifact:sha256:a95725c34a093f991c4bdaa4d616e71a42e80c3caeac5c537b4234437d6e9907",
+      "bytes": 80774,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary_payoffs-1440.png",
+      "ref": "artifact:sha256:341d35cc9eb576382e4424afac561fec8b2bddba263ba63faa3e13f41609ed70",
+      "bytes": 67737,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary_replication-1000.png",
+      "ref": "artifact:sha256:0837a36e6f546d0e89507aca7bce0a60e753a106491b81114ec6b90efd963b9b",
+      "bytes": 45778,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary_replication-1440.png",
+      "ref": "artifact:sha256:43f91c2a08d64f59992a2de73f6619ef0c96f5a6563172298cecd6973a77a8dc",
+      "bytes": 45217,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary_spreads-1000.png",
+      "ref": "artifact:sha256:51806e82f49031027e225cde7b3ecec68488ba76dd9fd06fb44f6d5a235e04e1",
+      "bytes": 67656,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/book-binary_spreads-1440.png",
+      "ref": "artifact:sha256:daea71832b7bdfcfaddf233dd064f960c39116920f03e87a8681bbead54a5037",
+      "bytes": 61739,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/portal-binary_delta-1000.png",
+      "ref": "artifact:sha256:2ebe79dfcd625a651070f6df9d9f5a01fbc7b4fe4a808cd99c283f4889b4384a",
+      "bytes": 49232,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/portal-binary_delta-1440.png",
+      "ref": "artifact:sha256:fd1451b0a61e81a43c997313127430511dcfbbd309b20cfe868b94ac5510d17c",
+      "bytes": 50028,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/portal-binary_payoffs-1000.png",
+      "ref": "artifact:sha256:14cc13b281f3518cac209a1ef3035e1c1bd610ed9db908f5c4065b6c34a2e3ed",
+      "bytes": 63279,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/portal-binary_payoffs-1440.png",
+      "ref": "artifact:sha256:bcb75350a2b770e750a6f739214e1c234dd7b9c6b07b8ce24cc03873435dd0b6",
+      "bytes": 64835,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/portal-binary_replication-1000.png",
+      "ref": "artifact:sha256:cc654da1864c28739944bbd762d30f39fd0163fcdaa3b1e4c4c3a025763761be",
+      "bytes": 41856,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/portal-binary_replication-1440.png",
+      "ref": "artifact:sha256:f1b72aadb1ab4c11811c243435a8b603c277c14a28265e74f7cc9ffefe5309fa",
+      "bytes": 42886,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/portal-binary_spreads-1000.png",
+      "ref": "artifact:sha256:a94901b38908c3b9921a266902afce257bdb523a18860bac1e965c62d9e96361",
+      "bytes": 58794,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01/portal-binary_spreads-1440.png",
+      "ref": "artifact:sha256:301218fe6ce754c60fa980345e4f9c7e4d94374132e06b10d3f3067621a723ce",
+      "bytes": 59536,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback-example-1000.png",
+      "ref": "artifact:sha256:9d0f7500370ec1ea0c2a3de0a4dbef0dffb91189f5c472e45f50d2e618429ced",
+      "bytes": 190504,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback-example-1440.png",
+      "ref": "artifact:sha256:c9bc1d1e2f2c7b9de8bcb568258fb63f28d601d84acd61143d2c5916f43818be",
+      "bytes": 191255,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback_history-1000.png",
+      "ref": "artifact:sha256:27bb6c4178e8711c93207bebad4cbbbdf65d943e175f97af5ba9ba9dae5dc882",
+      "bytes": 58493,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback_history-1440.png",
+      "ref": "artifact:sha256:5ee8b2562a06fc7054b04925a0023d978ed98b25d04763f1e68e47c055f65716",
+      "bytes": 62779,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback_monitoring-1000.png",
+      "ref": "artifact:sha256:016a5c2af98522127534a1dd16a347f92fecdb5e4e78ce7e02afbf1033895b65",
+      "bytes": 63742,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback_monitoring-1440.png",
+      "ref": "artifact:sha256:49510285def0b9a97216c215f18470fbef62c11ba8a1e84d0ad0283c8b052f10",
+      "bytes": 65434,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback_payoffs-1000.png",
+      "ref": "artifact:sha256:6c8d942b3169a4c3ad3c6dbfad62972979b5c647916381e5ec195b93cfad55b4",
+      "bytes": 59201,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback_payoffs-1440.png",
+      "ref": "artifact:sha256:6622c5ce4e3c80a1ed7061ba5796bf59eee8373069e9a4af00fe177b8185ba07",
+      "bytes": 62569,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback_replication-1000.png",
+      "ref": "artifact:sha256:b66f21bc63018441550a44fabdbbb56653438b3b5d5a3fc960d7fed90d6a93a7",
+      "bytes": 48744,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/book-lookback_replication-1440.png",
+      "ref": "artifact:sha256:e4e485b36c129826fee506b216bf86655d9cf60f1a24f4581dcdecd17a63514a",
+      "bytes": 52707,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/portal-lookback_history-1000.png",
+      "ref": "artifact:sha256:324a30871549721351dbd482ada8afa75806f1bda3e50c96a708bf28173973b6",
+      "bytes": 55434,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/portal-lookback_history-1440.png",
+      "ref": "artifact:sha256:f20f8d39f672a067f95d7a58d9cfa11d88155246dc1817aa03d1dc2f195b13ea",
+      "bytes": 58095,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/portal-lookback_monitoring-1000.png",
+      "ref": "artifact:sha256:2fe15f603a4c93e6d499e703fef39eedf65df345c91c0818a58c5e14db86bcc2",
+      "bytes": 59194,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/portal-lookback_monitoring-1440.png",
+      "ref": "artifact:sha256:d2249fdb9219df6cc47532cf3e588e1ceb088178221bfd63078685c7806e5aaf",
+      "bytes": 62168,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/portal-lookback_payoffs-1000.png",
+      "ref": "artifact:sha256:e8b105eb31200fd203d333d2e9840e244e56db190b6171f6e623719e40f12cde",
+      "bytes": 57569,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/portal-lookback_payoffs-1440.png",
+      "ref": "artifact:sha256:28c0d50045af230944b9a0d9f3d0ac21964596adebca5e13fb3272b0195a0909",
+      "bytes": 60484,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/portal-lookback_replication-1000.png",
+      "ref": "artifact:sha256:e0f4505cd84bb41786317a9e773be31dbc3d12d8267cd548fd772e9f6844e673",
+      "bytes": 45606,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883/portal-lookback_replication-1440.png",
+      "ref": "artifact:sha256:05cc732088fec8ae908ada51323b5f5dc9433dd46a91fa593e3e2251273773ec",
+      "bytes": 47853,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout-example-1000.png",
+      "ref": "artifact:sha256:e5aba0f7ca18c0d8cfe2c0a18478aedea9690d825912e6ffe3598407793f886b",
+      "bytes": 118398,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout-example-1440.png",
+      "ref": "artifact:sha256:7ba18439af31c4701e269cb56870eb8fdd51a8946fe12670291708331ca82327",
+      "bytes": 115951,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout_boundary-1000.png",
+      "ref": "artifact:sha256:e07ca3d448a61905fae10b0909c2e5b3b1a56ac57ed46fe2115d17970f25664e",
+      "bytes": 90590,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout_boundary-1440.png",
+      "ref": "artifact:sha256:a7a39dee562e525d76fdf86e42f5075b5d142e6e18f100ea0cdbb58b19cb14ad",
+      "bytes": 90398,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout_comparison-1000.png",
+      "ref": "artifact:sha256:0db910c379a6c3baaa3f428362d415f0e62bc3d61c7f2777305edd4911189a2a",
+      "bytes": 47612,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout_comparison-1440.png",
+      "ref": "artifact:sha256:6dcce0d560840a44f747893e8a6e10e543d0c191e9c46dd8b189cda17f0ba24e",
+      "bytes": 47939,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout_decision-1000.png",
+      "ref": "artifact:sha256:7e65918529773112db8066a81eebbd8655d45f03e3d030f5f7d8c23331ec1114",
+      "bytes": 88087,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout_decision-1440.png",
+      "ref": "artifact:sha256:8da867564590c2ff57d326798edef164efc22ba88ec4f6e0f7bcc301e37cc303",
+      "bytes": 90245,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout_payoff-1000.png",
+      "ref": "artifact:sha256:d2ea979cacdf8d2217ee7d58d7ba8f1ba3a1b9f5a16067dc573d837395906a72",
+      "bytes": 54292,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/book-shout_payoff-1440.png",
+      "ref": "artifact:sha256:1e8a9e9dade1ee56050277993acfd196547c5e5476b4ce18ca5206ff6efa5b3a",
+      "bytes": 54578,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/portal-shout_boundary-1000.png",
+      "ref": "artifact:sha256:1499deeb1fcbf1bad6423b1577d953c9418a4b10aab3a0d232a2135f2ce4654b",
+      "bytes": 84466,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/portal-shout_boundary-1440.png",
+      "ref": "artifact:sha256:a9c7e19bb67dc634c93225a321467bd151ea0dd0a75df0c147216268a12f2641",
+      "bytes": 86282,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/portal-shout_comparison-1000.png",
+      "ref": "artifact:sha256:2b0678e43685f4e05f312d3658c2320be184d80e045b1f3c51ac524af3e222b1",
+      "bytes": 43506,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/portal-shout_comparison-1440.png",
+      "ref": "artifact:sha256:cef6d12426957cfdda489f199592143a45a474434b9758d5ee4ab63b97993e01",
+      "bytes": 44111,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/portal-shout_decision-1000.png",
+      "ref": "artifact:sha256:840ef31ebfe7fada83213e5d3e006084ee5895478a61624ee9fcc92a41f52f2b",
+      "bytes": 87491,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/portal-shout_decision-1440.png",
+      "ref": "artifact:sha256:3a2b58b6e516b6b2275bb192023a2d6db2854e4328bd4c82a5a0b4ea75d85812",
+      "bytes": 87499,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/portal-shout_payoff-1000.png",
+      "ref": "artifact:sha256:bdf78d7f3c745997928f0227fbb880e188cc536ea84d37f23087bb132d883aeb",
+      "bytes": 50583,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870/portal-shout_payoff-1440.png",
+      "ref": "artifact:sha256:40da97153c4d2f48973011a24b9502264f6ed9fd9b23317457516a787d41ff5d",
+      "bytes": 51307,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian-domain-1000.png",
+      "ref": "artifact:sha256:a3948331d9fc4c8eb17697400a931989b01b8f314178ef1aafaf3c90f81f5c43",
+      "bytes": 146728,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian-domain-1440.png",
+      "ref": "artifact:sha256:dbd221afb1404cbf8ff486c1ec167935e64f26edb94e1fa731f565da727046ae",
+      "bytes": 147287,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian_distribution-1000.png",
+      "ref": "artifact:sha256:366bfe0b74d3fd869f64f26f02d475087d8d6a7d6b660e92847adcbfe80afbb0",
+      "bytes": 70373,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian_distribution-1440.png",
+      "ref": "artifact:sha256:6725dacd854062042756d9db25a045c17b18c3fdbf13a14f5bac1238c2b9cd90",
+      "bytes": 72227,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian_error-1000.png",
+      "ref": "artifact:sha256:9cebc4694e97eff6f1dee30067201871cfeb3bd4ea6df02e9473eaeb9b1e6652",
+      "bytes": 70523,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian_error-1440.png",
+      "ref": "artifact:sha256:c02999bffb8f04ff09ebdd3ef5214ff7516ecf0c1550c9f1538744949900105f",
+      "bytes": 71706,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian_observations-1000.png",
+      "ref": "artifact:sha256:6927c36ee53d5ebb2733c6a4be2748e3d3fceddc5233e14869f717a981320004",
+      "bytes": 68356,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian_observations-1440.png",
+      "ref": "artifact:sha256:b9bbf5b7cf3b9d234832da99f14442cd74469589562e1b4468178d486d4e3d62",
+      "bytes": 69680,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian_payoff-1000.png",
+      "ref": "artifact:sha256:6a26798ea51742f7e53ee7a193ffe90cae981b752f703d4c63064f632cabf81a",
+      "bytes": 66792,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/book-asian_payoff-1440.png",
+      "ref": "artifact:sha256:b7ecc70752b117a0f758ae603dbdf18c99382be167f50acd925f824bc62f87b8",
+      "bytes": 68261,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/portal-asian_distribution-1000.png",
+      "ref": "artifact:sha256:8030b27390cfc39a9884f5c55efc15e88669c58197cb0d963ce363986487351b",
+      "bytes": 68402,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/portal-asian_distribution-1440.png",
+      "ref": "artifact:sha256:8c88c57e50ecb146e8f62351346127cb2cd8222ae80ba3f2f0e8e4dd8f4b7b87",
+      "bytes": 69328,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/portal-asian_error-1000.png",
+      "ref": "artifact:sha256:30c3aedf0dd5637dcd1d4801c06881b1e449496e0256888ef37e2a92c821b1ab",
+      "bytes": 66806,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/portal-asian_error-1440.png",
+      "ref": "artifact:sha256:49fd0b44464cf9200229d84a6c822233c3726b91b624462df67c2c08ce1db2af",
+      "bytes": 68065,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/portal-asian_observations-1000.png",
+      "ref": "artifact:sha256:7dfaf5bac34cf7ea57728179e393b23b5236f1883f53acbc96047d920051836b",
+      "bytes": 68367,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/portal-asian_observations-1440.png",
+      "ref": "artifact:sha256:d66f33c8a6c17f7b2888c410550d5ed84edab2dfc8771d6a498e522fffa961f3",
+      "bytes": 69175,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/portal-asian_payoff-1000.png",
+      "ref": "artifact:sha256:59b4e19b22b951389c3a5649f4a02e22a04db0368a90ef6ca83bc302c28ac755",
+      "bytes": 61725,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982/portal-asian_payoff-1440.png",
+      "ref": "artifact:sha256:9a40804610ec250dff8bdcb3543ed81a5671a6205e388c96d6b23976aca907b5",
+      "bytes": 63419,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange-domain-1000.png",
+      "ref": "artifact:sha256:92e3173d29f6b9936026895cfb0ae8f262bd4f063d4a0e89b6b63d81cdd75447",
+      "bytes": 128903,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange-domain-1440.png",
+      "ref": "artifact:sha256:45ee74e61304a4a9f661af4383608c05d93610e2d350a911ea9b7616ce1b4a6d",
+      "bytes": 128704,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange_american-1000.png",
+      "ref": "artifact:sha256:82decfea1b9c1c06216131a795b05745229e3d7adec3de018bfb2823b0defffc",
+      "bytes": 99591,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange_american-1440.png",
+      "ref": "artifact:sha256:525055182d145cf21dc26d7268b5d3e5659b06658058675126acc2e2cced7f71",
+      "bytes": 104144,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange_correlation-1000.png",
+      "ref": "artifact:sha256:150b4bfe9f3b094efb8d0d4ae715185b306ae84f07226121a2b7d6f76f65d0cf",
+      "bytes": 73818,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange_correlation-1440.png",
+      "ref": "artifact:sha256:dd90eae7e7d848e9e65c6153c9fc4beb5f9bb0d4e28d87c0a813f06dd9f1f50f",
+      "bytes": 75088,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange_payoff-1000.png",
+      "ref": "artifact:sha256:a069a31108a28c03209d4d2da9eaf4ca623636dcea9741b414d2bf54c8d20638",
+      "bytes": 62881,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange_payoff-1440.png",
+      "ref": "artifact:sha256:b647f40b9d3242aa0a049d20b9e6b2a97116843d0507b227db1ed533e5b6cc8e",
+      "bytes": 63772,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange_rate-1000.png",
+      "ref": "artifact:sha256:32dd077ad143b13deafee5abf681fff8630dbfddc050abc26d6d3f0dba8b4cd0",
+      "bytes": 76486,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/book-exchange_rate-1440.png",
+      "ref": "artifact:sha256:16f71fd16509f5fa3784d340c5c0594c27f8abfd22b6ef1d45af11b2d4c45e91",
+      "bytes": 77464,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/portal-exchange_american-1000.png",
+      "ref": "artifact:sha256:6cfe9bb3c6f0b9c3c58dbd9a459c12b7863f4e10d729af2b096b51340e9c8c90",
+      "bytes": 96485,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/portal-exchange_american-1440.png",
+      "ref": "artifact:sha256:3e654b2fb91f2a898fdb296d7d7f2cbad7302d92e91993697569a573eca44656",
+      "bytes": 98347,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/portal-exchange_correlation-1000.png",
+      "ref": "artifact:sha256:c7ed42445181867779f61cd37b7484820c35a9d96bb54abed3296f10acb2d675",
+      "bytes": 67741,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/portal-exchange_correlation-1440.png",
+      "ref": "artifact:sha256:51d9c503d1fd493aea6cabfcf9f4fa7090ae7879c4e2985b9569a2a2ec2dfdc1",
+      "bytes": 68747,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/portal-exchange_payoff-1000.png",
+      "ref": "artifact:sha256:88af35345c1591d076f4abbcad59c3facdd4075b4d9e224ce80e43550a61154f",
+      "bytes": 59443,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/portal-exchange_payoff-1440.png",
+      "ref": "artifact:sha256:46c34ee15967ae88cfbd7420be252a07587306690bc9dfc5e3a15ad00c81224f",
+      "bytes": 60636,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/portal-exchange_rate-1000.png",
+      "ref": "artifact:sha256:c8a30a76c266519087e59aae4041f30de94ffe0e9a06e5389ba09c2a5c75197f",
+      "bytes": 69488,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025/portal-exchange_rate-1440.png",
+      "ref": "artifact:sha256:bd607996757ccf5ab7ffee77da002ac12e53b4aa0c04352e67c324df1a8c4c46",
+      "bytes": 70449,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket-formula-example-1000.png",
+      "ref": "artifact:sha256:14436491573372a787c20b77fdfc4de3db445d957f02e2ad36442ee4af88a0be",
+      "bytes": 236464,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket-formula-example-1440.png",
+      "ref": "artifact:sha256:4385da25d7c1e4ab04c2cc0cf67e516df290ea1d6c1403d90cecdc464a78c7b9",
+      "bytes": 234956,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket_comparison-1000.png",
+      "ref": "artifact:sha256:3014b7651ef65ad9da4510713b008521e8c8cdc9ddc34794f750cb8b28e041d7",
+      "bytes": 49463,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket_comparison-1440.png",
+      "ref": "artifact:sha256:f8c81b1a6bf3a0ed2a1102fdeb12f8e43ca647faea6708e06c274388f4e4b37a",
+      "bytes": 50699,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket_correlation-1000.png",
+      "ref": "artifact:sha256:856c8ac317cb42bbf33d78e6756fcec97d0aea4d96897b6a336907c0181ae33d",
+      "bytes": 61457,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket_correlation-1440.png",
+      "ref": "artifact:sha256:c0bbba941df85ba3a13e89f8bf739d000d9c7ca7c15da608acf2006e1738b296",
+      "bytes": 62006,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket_error-1000.png",
+      "ref": "artifact:sha256:105d4578ccdc6ad268fbc945ae241b0fa4556ef0e13467ddba8874d12fb038cf",
+      "bytes": 55724,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket_error-1440.png",
+      "ref": "artifact:sha256:d4fcf52842a7ff0a4f7fbb741cb4378388e16ce547906667f91514c3fde7ab94",
+      "bytes": 55260,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket_payoff-1000.png",
+      "ref": "artifact:sha256:eb71fcdba46a22a94cf077298f234be6232342a90d44f2048c581fdb8b02e3e2",
+      "bytes": 46818,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/book-basket_payoff-1440.png",
+      "ref": "artifact:sha256:6f2a00b18d9e1781cf035267b646afa1fb4f6e6ed2914a5afe7aadff27dd8aec",
+      "bytes": 47727,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/portal-basket_comparison-1000.png",
+      "ref": "artifact:sha256:66017fc7c14815a0c2047a373100c5fa0e2ab9cdf107498a129d6a91279cab0e",
+      "bytes": 46779,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/portal-basket_comparison-1440.png",
+      "ref": "artifact:sha256:bba286fbcd2a87bdc6a361640aacbd44e08f1bffd70549cfec09ff88f3492171",
+      "bytes": 47737,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/portal-basket_correlation-1000.png",
+      "ref": "artifact:sha256:3eae2118e010426fbd9fc2eba4972562fcdde0bc6a3e46bad16833bf1f2c77d9",
+      "bytes": 55701,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/portal-basket_correlation-1440.png",
+      "ref": "artifact:sha256:fb09eb06fe27117de1ec80e59947e51456693c92496738279532790f78748182",
+      "bytes": 57270,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/portal-basket_error-1000.png",
+      "ref": "artifact:sha256:abe6d2dc1b0331d351918262eeae16ab70bdee7fb41a62256157446c3dbd2825",
+      "bytes": 48458,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/portal-basket_error-1440.png",
+      "ref": "artifact:sha256:f6a9b01a2cf2544dbf1b80c611dbe2594a38f16c33475e4070ed2f755e078457",
+      "bytes": 49062,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/portal-basket_payoff-1000.png",
+      "ref": "artifact:sha256:8b5efdc1690391dada608b45e5de2ce0db2330a90ec6b0eab5c5340668ccc159",
+      "bytes": 44416,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be/portal-basket_payoff-1440.png",
+      "ref": "artifact:sha256:cd5307c7d2b060d8322c94dd99a06ae87a7989e12348a15b376da04a941eda17",
+      "bytes": 45069,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-varswap_payoff-1000.png",
+      "ref": "artifact:sha256:d337e1b781275d651296b6b3ec0c844b946f75058451823008993c6f0ee0c4a0",
+      "bytes": 55641,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-varswap_payoff-1440.png",
+      "ref": "artifact:sha256:25600beca08da2276bbd236d71cb6cae77fc5606502525acf0659182ca67c83a",
+      "bytes": 56111,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-varswap_replication-1000.png",
+      "ref": "artifact:sha256:4b85a1cf07351483f413744a383367ec83fcdf64351f46521aa7d8485653fe3f",
+      "bytes": 75351,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-varswap_replication-1440.png",
+      "ref": "artifact:sha256:ff1bf10ade21c79cb793dd948417d40e1bda6437a64de524412bf31fb65e3011",
+      "bytes": 73850,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-varswap_strip-1000.png",
+      "ref": "artifact:sha256:ee8826252144c3a898bf9d515e90dc49e19d8ed5eee8a9ad471232d898b9540c",
+      "bytes": 48407,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-varswap_strip-1440.png",
+      "ref": "artifact:sha256:7f5ef177ac816fc377f87c952398c3f794b26670a88923a4c3e44cf80199d540",
+      "bytes": 48906,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-vix-example-1000.png",
+      "ref": "artifact:sha256:3fb86107b604932e3a1e1d211bcca2a5c94ddfdb70abdba5d3a36b09e381408f",
+      "bytes": 173155,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-vix-example-1440.png",
+      "ref": "artifact:sha256:2f9af1cd0b9998ad9c3200d1305934575d26ae894af70248114cb7a0c75341bb",
+      "bytes": 173427,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-volswap-formula-example-1000.png",
+      "ref": "artifact:sha256:6e66733bb488f76acc7f1002139702d3159daab0e36138aa44d630b7de467062",
+      "bytes": 289959,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-volswap-formula-example-1440.png",
+      "ref": "artifact:sha256:c389c19581692de07a1e1d6b9803f1b6c05bb667d24956a222c63c820d15e708",
+      "bytes": 291155,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-volswap_convexity-1000.png",
+      "ref": "artifact:sha256:e4e7fdc9fb350475e039fa6883c41db0bd07c7b5dcdbf5a643c5747abc0e31cc",
+      "bytes": 71198,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/book-volswap_convexity-1440.png",
+      "ref": "artifact:sha256:fd3aa7dbc4ab1c271991c6817e5da0339197cc40b960ba1fd6985d8accbf31d5",
+      "bytes": 72016,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/portal-varswap_payoff-1000.png",
+      "ref": "artifact:sha256:b2db8d96c8b38ab3c2a47e2f7d08a57e9792723581a29d65e3728aa0ae7b5a95",
+      "bytes": 54352,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/portal-varswap_payoff-1440.png",
+      "ref": "artifact:sha256:b0e3231248c559da33415717859ed182875237d1b155bc0cb68285d41bd30512",
+      "bytes": 55743,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/portal-varswap_replication-1000.png",
+      "ref": "artifact:sha256:f37e2a46ae7c9226f76e4b750a2fa857d3e85b9f43c940bb54e4b03fe497ccc3",
+      "bytes": 69454,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/portal-varswap_replication-1440.png",
+      "ref": "artifact:sha256:f82f0b8a6e17bd97f25c34fcd46b03597ecb3d6eed6cdc30851cf2193d63d253",
+      "bytes": 70545,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/portal-varswap_strip-1000.png",
+      "ref": "artifact:sha256:74f6399fd8fe9f8a699df917662e79cb3405db2fe011e6f593e4c4ef637c411f",
+      "bytes": 43811,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/portal-varswap_strip-1440.png",
+      "ref": "artifact:sha256:363dd2e0d9f20295991dbacfdf9e650be1ba1135af612eb156c9c1984a6aec03",
+      "bytes": 44990,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/portal-volswap_convexity-1000.png",
+      "ref": "artifact:sha256:adfd65089a494fedd7378a63366b73bf775301ad56c812437db5c4d72e5dac3c",
+      "bytes": 68055,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c/portal-volswap_convexity-1440.png",
+      "ref": "artifact:sha256:6d5a594ada297e8676fd2956a39ec0ea48c6869c05056bf75d7c5ec066ad60e0",
+      "bytes": 68741,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/book-static_boundary-1000.png",
+      "ref": "artifact:sha256:9de5145dda4c721fa30ae7a19b31bfc75698044eee26fe91e208e97cb2c1240d",
+      "bytes": 23093,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/book-static_boundary-1440.png",
+      "ref": "artifact:sha256:61e6eb1b40fc18760e8e5403cb66104d0b5803e765216e5e3320cef28d22d95d",
+      "bytes": 23262,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/book-static_boundary_error-1000.png",
+      "ref": "artifact:sha256:ea4bde3cca2a9207b078959871f5821e1fad6de8ef57adc798b629e608cb1efd",
+      "bytes": 22882,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/book-static_boundary_error-1440.png",
+      "ref": "artifact:sha256:d65910bed7d61437b1611adad6fb2d3f3476e0f543a8f040b5e11051ab1cf723",
+      "bytes": 23275,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/book-static_convergence-1000.png",
+      "ref": "artifact:sha256:ac6050b2db8cc9872c1178b79fb3fc0d27875ab8c477b00908d5293106fa0d4d",
+      "bytes": 32153,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/book-static_convergence-1440.png",
+      "ref": "artifact:sha256:82d9c7f5fa4c13ab732653f09d450cfc59616bd79d74edfe85ba02716e597909",
+      "bytes": 32701,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/book-static_ladder-1000.png",
+      "ref": "artifact:sha256:f8bfa8a7ec4bdf2528ec7352d4a2eab3cfd6f935e90d94286f9191a8f5dceef1",
+      "bytes": 20368,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/book-static_ladder-1440.png",
+      "ref": "artifact:sha256:3aab37e0575c6a64020e55cefd35fb986f4a8e22aeec10af9fb4b1ddda30c308",
+      "bytes": 19793,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/portal-static_boundary-1000.png",
+      "ref": "artifact:sha256:dd478a60474c56fb859a9097844f4c2067ccb2fa925dceff5d6a3af978bcb3ac",
+      "bytes": 19699,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/portal-static_boundary-1440.png",
+      "ref": "artifact:sha256:951e853b1070e78980543033ce20d2c33b28509a51d4423064c04f907d984660",
+      "bytes": 20025,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/portal-static_boundary_error-1000.png",
+      "ref": "artifact:sha256:d0bd752c443919630f1f9da9daed8d33c95e4559c21e883c229f6092955bc84b",
+      "bytes": 21049,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/portal-static_boundary_error-1440.png",
+      "ref": "artifact:sha256:39c748074a78fa4bce6eeac6445f317784590a6f770cc27757b92b87116274a5",
+      "bytes": 21430,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/portal-static_convergence-1000.png",
+      "ref": "artifact:sha256:1e24a2e1e878be1fbc0e066ad51b939177da56c9c3fbf0f65ef9e58b27794da9",
+      "bytes": 28664,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/portal-static_convergence-1440.png",
+      "ref": "artifact:sha256:64e70306dd6ae198b6e9834a869c3c306239404b6c66f71f81eac7777dc319b0",
+      "bytes": 29331,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/portal-static_ladder-1000.png",
+      "ref": "artifact:sha256:64e62bf96845ade468a270b8afc4478e49ddc5cc2ce02d1c9a77821d6ea2c388",
+      "bytes": 18927,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b/portal-static_ladder-1440.png",
+      "ref": "artifact:sha256:05dcdb4920806db4604537e566cd547c7663ee5cb9d43ad926d23d43102b06d9",
+      "bytes": 19188,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/book-alternative_cev-1000.png",
+      "ref": "artifact:sha256:87603587e8adb775fdeb13ae9da294d4170d5b1d7354357dcb15f8645c8e1b97",
+      "bytes": 32694,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/book-alternative_cev-1440.png",
+      "ref": "artifact:sha256:b2b393e7682964bd6d052d2f473bd1365faa4b06e09973b7195f7932b72f0621",
+      "bytes": 33940,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/book-alternative_merton-1000.png",
+      "ref": "artifact:sha256:3aec4ee83818ec2ccd0d05fe99bd0445f5eb35579a9c442e6194365a110af2dd",
+      "bytes": 24953,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/book-alternative_merton-1440.png",
+      "ref": "artifact:sha256:3aab46be8d0b8f6a960b0b581e36901229a38eb1bbaffcba6623c1c14df26853",
+      "bytes": 25614,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/book-alternative_poisson-1000.png",
+      "ref": "artifact:sha256:a43982cecba6af03c309fb8914cefb642be87533a366ea267ee0bb2222135317",
+      "bytes": 31167,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/book-alternative_poisson-1440.png",
+      "ref": "artifact:sha256:eba5acbf3c9ac5fd16a985579a41ace211b2e293c744c9c59214b364b71b6efa",
+      "bytes": 30975,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/book-alternative_vg-1000.png",
+      "ref": "artifact:sha256:68261bd23b455daf6d58f3fcf8a0b9a70a21c144f72aeaadda671f2475a99735",
+      "bytes": 35609,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/book-alternative_vg-1440.png",
+      "ref": "artifact:sha256:1db3827f552008350125a6acfb6618b3e7f831e4ec4b7fc43a1ef6ffcc603f10",
+      "bytes": 36879,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/portal-alternative_cev-1000.png",
+      "ref": "artifact:sha256:4e5ee23618c99b300753ea14769bfa879217c8ac0cd7dbb69dbe4a4d3d2cdf0d",
+      "bytes": 31292,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/portal-alternative_cev-1440.png",
+      "ref": "artifact:sha256:eb75c717bb90aba532a9d039fc61ae61049a911639fd93f5f531e0a12d11653b",
+      "bytes": 31565,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/portal-alternative_merton-1000.png",
+      "ref": "artifact:sha256:c32907970ddab35cd9eedbb514071da761ec55901fc3571c00fc86ee0278020a",
+      "bytes": 23160,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/portal-alternative_merton-1440.png",
+      "ref": "artifact:sha256:6a5d19bbe79d7055a391c886fa47218395652adb6b25cd15619abad944bc19b2",
+      "bytes": 23986,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/portal-alternative_poisson-1000.png",
+      "ref": "artifact:sha256:f66c74ae86c0a0b8cd606516dbf85ef96426dea409f4da6ca0e5ae905320d385",
+      "bytes": 28103,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/portal-alternative_poisson-1440.png",
+      "ref": "artifact:sha256:8b7ceb4041b27daeed8a0268258af692ea9f4ce7e48cd021584f6ddebb4ef952",
+      "bytes": 28981,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/portal-alternative_vg-1000.png",
+      "ref": "artifact:sha256:905f75e3f7ec7517e582422e52c9a098ce5e2d6447c90cad9a2480fe561cc89c",
+      "bytes": 33587,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a/portal-alternative_vg-1440.png",
+      "ref": "artifact:sha256:1c5db41df37e351a6f2495ee5c0f0d472f0079e94bc3a07317497704c5517a89",
+      "bytes": 34535,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_correlation-1000.png",
+      "ref": "artifact:sha256:8eddae10eab97c16978edbcbe2542e40500682c50e3a90f2cf11dd560db51834",
+      "bytes": 38381,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_correlation-1440.png",
+      "ref": "artifact:sha256:121ddf39a799bf08c3ce7698f1ecebf3b7c428ea1346c801055715821c30a766",
+      "bytes": 39255,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_mixing-1000.png",
+      "ref": "artifact:sha256:ea12382d42405e586c92b78007448aba5bd6849906e52d6b2eaf304d0f1b1923",
+      "bytes": 35143,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_mixing-1440.png",
+      "ref": "artifact:sha256:48d9bbb97d11ddfe48e359b8edd710a1c6a141f1a1ed9b4eb19022d57968b6f9",
+      "bytes": 35424,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_sabr-1000.png",
+      "ref": "artifact:sha256:f2dbe08a2551010a560e2be2358fb25f486d0aea56fc32e5b4b14aee30569940",
+      "bytes": 40231,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_sabr-1440.png",
+      "ref": "artifact:sha256:e032b7c8d711ef3b2f4dc3a103e5a5154663563da56ee1a0fb0dbe4aa89d2e92",
+      "bytes": 42911,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_sabr-nu-1000.png",
+      "ref": "artifact:sha256:175471daeab19d4125dc89418deb357437c37f18ff42a641fa7f183495205867",
+      "bytes": 39666,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_sabr-nu-1440.png",
+      "ref": "artifact:sha256:15e209ddb121691a6dd3c82385ab6147210cf4daf37bc24a988c3e1c9d0039f3",
+      "bytes": 40167,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_term-1000.png",
+      "ref": "artifact:sha256:95ea12b6459375dbcd53bf84ab9b298069b5a0bd23ec27a93ed63f360ad34599",
+      "bytes": 27466,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/book-stochvol_term-1440.png",
+      "ref": "artifact:sha256:25bd5c1d0ef81e10b6c103dcd6368f5e19a0f23f5b88de8e56c75ebcaa2a455f",
+      "bytes": 27752,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_correlation-1000.png",
+      "ref": "artifact:sha256:2f15aaff17004c2e99a1b3c9977079833417b13917520db62f9afa51285e38fe",
+      "bytes": 36789,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_correlation-1440.png",
+      "ref": "artifact:sha256:9a79e4d696ec5b354db4b77e500b5f9b98c3cf0cc974f32df91ed5f7e1dd9af2",
+      "bytes": 36959,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_mixing-1000.png",
+      "ref": "artifact:sha256:20e427d2a751990af80a7e8c0b3d11812033ee3c2f2b233e1a727e83d779873d",
+      "bytes": 32354,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_mixing-1440.png",
+      "ref": "artifact:sha256:cd03617ec60dbc2302782051c8e5568d277e2682f6136c9be1cb739206694eb5",
+      "bytes": 33326,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_sabr-1000.png",
+      "ref": "artifact:sha256:ee033170d1487e634fb5964143a8efc75eb8d2bcd038776fc30cd29f4e3795d8",
+      "bytes": 36489,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_sabr-1440.png",
+      "ref": "artifact:sha256:15e9419831fb96d6c15fb11c0fdecb75de6475f6b6bda0396e8beef0538984c7",
+      "bytes": 38749,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_sabr-nu-1000.png",
+      "ref": "artifact:sha256:7edf94ce33b070d17c478efd3c86def2b88343765a12eca7dcc245f48247dff0",
+      "bytes": 37566,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_sabr-nu-1440.png",
+      "ref": "artifact:sha256:99c67c5651a6a8565caf1043a8018440574a7b4ca6e0f5c0770467dedbef6e31",
+      "bytes": 38385,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_term-1000.png",
+      "ref": "artifact:sha256:d6449d561ae617d033476615de381d54eeeb9d48dd540eb4a190203c4cb5feb9",
+      "bytes": 24773,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761/portal-stochvol_term-1440.png",
+      "ref": "artifact:sha256:4517f0ba94b968fec1bf6f7a7228eda3d3787c0b1ee30510ab81f0c1d13eecf7",
+      "bytes": 25315,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/book-ivf_joint-1000.png",
+      "ref": "artifact:sha256:a39f1b210e90c74676a62808b6260d5fae2c7af3c5ab8849919b5765af9007cc",
+      "bytes": 18659,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/book-ivf_joint-1440.png",
+      "ref": "artifact:sha256:da1d46ab7251889a4460c1492596a60d7e3371a667b0edb8d3bbe91d4eef51b9",
+      "bytes": 18762,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/book-ivf_local-1000.png",
+      "ref": "artifact:sha256:7dc272b4f5d131acb0a633fe1b916890132396cb1783492c4a6f00901d0e812b",
+      "bytes": 36136,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/book-ivf_local-1440.png",
+      "ref": "artifact:sha256:b257eb4af9d92fe3679dd0b65075e6e2c7b4c58cd9a077d8aad2890a727d6dd6",
+      "bytes": 38168,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/book-ivf_repricing-1000.png",
+      "ref": "artifact:sha256:b00ab01d9b4b2ee26748580620fe2ac6edbcfcd2de328a461617ab5614663e44",
+      "bytes": 24493,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/book-ivf_repricing-1440.png",
+      "ref": "artifact:sha256:0500acf78f5834eb1b213d2e1bc2a6c9517f8eab1ded7658442ea469ed16bdf8",
+      "bytes": 24296,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/book-ivf_smile-1000.png",
+      "ref": "artifact:sha256:6e062bc6a6be3d12cabf9804d5d4c049db1cdfa3d6470c4e61bacb74edb259a5",
+      "bytes": 38483,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/book-ivf_smile-1440.png",
+      "ref": "artifact:sha256:f9aaaddb68eaa9b23706b3fee8639dae9936b726d3f3474ce7f1d12a8da35cf3",
+      "bytes": 38789,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/portal-ivf_joint-1000.png",
+      "ref": "artifact:sha256:1291d9e707096c118a10e201f7a9dedbb3ccc2db935cb42b29fd253fafad7295",
+      "bytes": 14409,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/portal-ivf_joint-1440.png",
+      "ref": "artifact:sha256:1cdd2fc981d829a895f34b541a07610dceca19ba799425257be5d5a7d4128ee1",
+      "bytes": 14405,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/portal-ivf_local-1000.png",
+      "ref": "artifact:sha256:53277ff62300c08c8f58d63cb41260239960525ba41cd13ce70e5b00c67adb73",
+      "bytes": 26895,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/portal-ivf_local-1440.png",
+      "ref": "artifact:sha256:5149eaa66685f957501be91420f60759e33689fcbb516e04816a51c402750792",
+      "bytes": 27795,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/portal-ivf_repricing-1000.png",
+      "ref": "artifact:sha256:f270ca5132bf3767c9a3cd6bca89a54f7a0ff275ccc5ffae4ed61ee5cdda191c",
+      "bytes": 17745,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/portal-ivf_repricing-1440.png",
+      "ref": "artifact:sha256:76d879517a5b5dee7a6bb2c084212440beae3a9c60843228df4dd5796dbd0a1e",
+      "bytes": 18037,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/portal-ivf_smile-1000.png",
+      "ref": "artifact:sha256:449aedf06f5f60c86d3aac31fdb4a1db5f68217c368997d5184d8adab6c25ab9",
+      "bytes": 27857,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d/portal-ivf_smile-1440.png",
+      "ref": "artifact:sha256:b32f4552194d3cde039c0eb339a6dcd48e38eb88dd555072594bd673d2cefbfc",
+      "bytes": 28648,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/book-cb_convergence-1000.png",
+      "ref": "artifact:sha256:66b6012d2484615f40ee6c2c46a84dce635be56743a16330e738a15d89c9bf3a",
+      "bytes": 21910,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/book-cb_convergence-1440.png",
+      "ref": "artifact:sha256:871727dd9d355c0a30d1f21a83e9b3d20a61152aad1388bfaa9e268f7307e534",
+      "bytes": 23631,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/book-cb_credit-1000.png",
+      "ref": "artifact:sha256:3c68805b1a840fdd7c2189bb184a3a775ec2f884e4f9a489baca104ae6899696",
+      "bytes": 31050,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/book-cb_credit-1440.png",
+      "ref": "artifact:sha256:861c35eacdd25b62f991141af40fa8ae7d3e6af6a1aa431f3e4f8a1b1d22d2ed",
+      "bytes": 32654,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/book-cb_decisions-1000.png",
+      "ref": "artifact:sha256:b89bee53b90a2a1224c90b5761e1a1451a1cb286120962158f28252ffc84f9ae",
+      "bytes": 21008,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/book-cb_decisions-1440.png",
+      "ref": "artifact:sha256:0c348018bb10de4bc5d9463a80777605cf8fced4198095517ccf15b2ade87cb9",
+      "bytes": 21050,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/book-cb_tree-1000.png",
+      "ref": "artifact:sha256:ade74d17152f1e3aad8d3e90f88ed3473ccd7d9ace0c371910c094d328603978",
+      "bytes": 37358,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/book-cb_tree-1440.png",
+      "ref": "artifact:sha256:f5a5938513d13a68c60c791ee541c70f1a20ff48ea70683c9eea195c43c8feee",
+      "bytes": 38146,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/portal-cb_convergence-1000.png",
+      "ref": "artifact:sha256:4ae7afa3d9f8d6af1123f6819bb4c8eb1563a1f7ee5bafd9c8554e2992909211",
+      "bytes": 16826,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/portal-cb_convergence-1440.png",
+      "ref": "artifact:sha256:3e5bc3e503be610d0219ba5e5e9381279408604ec3404af9e0d6b46bb711c3ee",
+      "bytes": 17023,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/portal-cb_credit-1000.png",
+      "ref": "artifact:sha256:f8999ddaf54c95335f3cfd3aa811774f68753cd7eef3eca09d5bb31fe87fa76d",
+      "bytes": 23820,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/portal-cb_credit-1440.png",
+      "ref": "artifact:sha256:2847be665fabf6f80c0c1903a19dddde618f9dd759eb2a7da66110093d381a3a",
+      "bytes": 24348,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/portal-cb_decisions-1000.png",
+      "ref": "artifact:sha256:8cf1bbfb73eae535b919c386db447299bf1ba2d1b28f32fc7a8beef35ddb9e84",
+      "bytes": 16798,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/portal-cb_decisions-1440.png",
+      "ref": "artifact:sha256:e0630e90a5ec1c3a4ea78f8533d24558f3c9ece9f7181564bbfabca98f7e2b8d",
+      "bytes": 16924,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/portal-cb_tree-1000.png",
+      "ref": "artifact:sha256:ff59edf9d2a25e4b81d966ef539cb2f2a95d168dd5015e52e4eba85a32e7bf17",
+      "bytes": 32169,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2/portal-cb_tree-1440.png",
+      "ref": "artifact:sha256:7e012d8e1e1a4dca0f9251d0f07fc62d0b7e6d5386b92ddb605e6eef69895ac6",
+      "bytes": 33000,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/book-path_exact-1000.png",
+      "ref": "artifact:sha256:8d8f00a381737ce44a76aa1c2e1471fcfb545478c1adc95b4c0ba75cafc35e09",
+      "bytes": 26576,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/book-path_exact-1440.png",
+      "ref": "artifact:sha256:fd960d59537d575cbbc589eaae5ab4ff0ca955feaf83cbf10a6481e38d5e27b5",
+      "bytes": 27683,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/book-path_grids-1000.png",
+      "ref": "artifact:sha256:00a9712a28d1fd6794068292b68925ef228ff9299fddbb58da0677ad809ff170",
+      "bytes": 26254,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/book-path_grids-1440.png",
+      "ref": "artifact:sha256:85d0474bdc20b230fceb7bef3be7eeb1af7e92d916e6f2d5c54d77173de3cc15",
+      "bytes": 26761,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/book-path_interpolation-1000.png",
+      "ref": "artifact:sha256:28537f0433d8a23991087cdc1c5db088376406e665ed2599ca36f12e2cbcd419",
+      "bytes": 18595,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/book-path_interpolation-1440.png",
+      "ref": "artifact:sha256:21fa40acf8f345769a420c662f7f2141bc816bd2ecbd849f497dd715d5bd423b",
+      "bytes": 18494,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/book-path_prices-1000.png",
+      "ref": "artifact:sha256:1d268befd3c3d25ef564801ae542a439f94bda47b8df9dcd8650ca8d8a76d905",
+      "bytes": 18420,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/book-path_prices-1440.png",
+      "ref": "artifact:sha256:403ec58fbd7c8c44d1151e80b43ac5e7319b80439e69e26118441674a96db2b1",
+      "bytes": 18499,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/portal-path_exact-1000.png",
+      "ref": "artifact:sha256:1dae89f494f94f5a3013fbef430acbd0adb23bdc463b926c2ed29f629270789c",
+      "bytes": 20501,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/portal-path_exact-1440.png",
+      "ref": "artifact:sha256:54e2272e7ad69cfb455dc59cf508440e9b6cb5a92f860475a07e58ecc4a77a82",
+      "bytes": 20569,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/portal-path_grids-1000.png",
+      "ref": "artifact:sha256:e7abc056bfb4e96ede7ce1cc3e2ac26e422a5b05fa9f7bdf8b42bc24ac9017fa",
+      "bytes": 19605,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/portal-path_grids-1440.png",
+      "ref": "artifact:sha256:792d0d560b18ca7e8b009744bad87b6f748bee402e4c29a48063d6b228a4c26b",
+      "bytes": 19881,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/portal-path_interpolation-1000.png",
+      "ref": "artifact:sha256:5bf491c0ff0135ce629145eeff0def77a0bccf339de1bcfaeccaff8124644a74",
+      "bytes": 14463,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/portal-path_interpolation-1440.png",
+      "ref": "artifact:sha256:0844bc3f0e8abccc92b1a52027eab00b4849fc340c7d6470bd4b035efb51c401",
+      "bytes": 14590,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/portal-path_prices-1000.png",
+      "ref": "artifact:sha256:0e75bb1a2421b46cf1345d340d693596d772eb74f7143d86576fa9012c910c84",
+      "bytes": 14439,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388/portal-path_prices-1440.png",
+      "ref": "artifact:sha256:f9bc5340309e1c38e69a7a2941b5e93b335096d5b73c2cc44770f917efd764e7",
+      "bytes": 14577,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/book-barrier_convergence-1000.png",
+      "ref": "artifact:sha256:307aeb9c27b6f9f4a3ed7c7396e4a80a254048fd47b9646c28de06d4976b475a",
+      "bytes": 59883,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/book-barrier_convergence-1440.png",
+      "ref": "artifact:sha256:c683dbf533790606088e916d14a11c23640db7c164a83b63f6dc498b3758b44d",
+      "bytes": 61260,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/book-barrier_errors-1000.png",
+      "ref": "artifact:sha256:91997ec22907a1a0836da39ac533765ff8a0c7eecfa7952f6373893b8671f896",
+      "bytes": 49589,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/book-barrier_errors-1440.png",
+      "ref": "artifact:sha256:aeb097e648ea2fc6f62795092a7005fdcf906e529dbe26d577c3f6ca7d8ac600",
+      "bytes": 51519,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/book-barrier_lattice-1000.png",
+      "ref": "artifact:sha256:843955eab077d589eccc6e8c9bf52a54a7f66942c9cf2b29ab30416b3ea580af",
+      "bytes": 40448,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/book-barrier_lattice-1440.png",
+      "ref": "artifact:sha256:e78ca0935da38ac39cad7ee7c39b2fdeb21493328e3cefc3441e027d2ea9009a",
+      "bytes": 42596,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/book-barrier_near-1000.png",
+      "ref": "artifact:sha256:8c88b127300ad14fc84eb2d1efea0063d20f89f9ecedd29a552bfeb8b2af2b63",
+      "bytes": 37936,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/book-barrier_near-1440.png",
+      "ref": "artifact:sha256:fef3bffc272b390f351dcca79aef3e221bbee3a97738466b21f0b33c7464a4b0",
+      "bytes": 39819,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/portal-barrier_convergence-1000.png",
+      "ref": "artifact:sha256:24a6e8241c5b8f865b8c4f4515c0af6e219a89b5cae110eb15497efd878ff738",
+      "bytes": 35142,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/portal-barrier_convergence-1440.png",
+      "ref": "artifact:sha256:54d0494017013572791f4a06093d6469c89164afd87b7fec0692b08279a44ab8",
+      "bytes": 39230,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/portal-barrier_errors-1000.png",
+      "ref": "artifact:sha256:f31157b847ed39cbcb9c07d14215062413c0a6239971b6f2821a0029b5ba53f5",
+      "bytes": 36474,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/portal-barrier_errors-1440.png",
+      "ref": "artifact:sha256:be99e843fa0b34c18176749d61d25f7badf19e10d60034014e830f1936da78cc",
+      "bytes": 37190,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/portal-barrier_lattice-1000.png",
+      "ref": "artifact:sha256:18ba83ee6510cc4d70f638e22d67deb4fad206e1b32254a83ea2b4f295241c9a",
+      "bytes": 31065,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/portal-barrier_lattice-1440.png",
+      "ref": "artifact:sha256:ff00753d05a436b2460fb8de3b1957b316f65b8730dc16c35974727b468e4863",
+      "bytes": 32808,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/portal-barrier_near-1000.png",
+      "ref": "artifact:sha256:22ff578abbf22e4a511fed2e97bc5483e81e992aed1f455f67d14b21d1f38a12",
+      "bytes": 27838,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4/portal-barrier_near-1440.png",
+      "ref": "artifact:sha256:e7faadcd412f773fc2cc20d9dae2e1d8a08c0292d6312c3b2cb5fda08b1fcddb",
+      "bytes": 28738,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/book-two_asset_convergence-1000.png",
+      "ref": "artifact:sha256:c8d1c58ca80e319f0141f2ee2e72a857aca6c58edcfb3cced08de3720f55fa59",
+      "bytes": 48218,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/book-two_asset_convergence-1440.png",
+      "ref": "artifact:sha256:370865071214561788e1ede481825522143f97eaf2b7ebbf85427ad524d55c48",
+      "bytes": 50918,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/book-two_asset_correlation-1000.png",
+      "ref": "artifact:sha256:3dd59ffbc910e9d3c6370ad9334aa509187272fb79049228f3918eebbc025a59",
+      "bytes": 50753,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/book-two_asset_correlation-1440.png",
+      "ref": "artifact:sha256:68d84b9decdae67ac67fdadab77b19a3c7b372fa7ed57bbdb386ea3136b81f83",
+      "bytes": 51929,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/book-two_asset_errors-1000.png",
+      "ref": "artifact:sha256:c91f36dab99f2b1a917aa38aaa4d78339edab5298cf6d3289fdbf1ff7a325bee",
+      "bytes": 46817,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/book-two_asset_errors-1440.png",
+      "ref": "artifact:sha256:65fde444431988475cebb8885a9ba17aba1291a00d0826e397421aab4fa3a86c",
+      "bytes": 48500,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/book-two_asset_nodes-1000.png",
+      "ref": "artifact:sha256:b7f7149f12fe2183f8132e7ec71c6743669c272f5cedf050a9e5c204177b9bc8",
+      "bytes": 35300,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/book-two_asset_nodes-1440.png",
+      "ref": "artifact:sha256:69a2c3e6ad1729d3626a1818b425b90f40bcde0d9c1ecdf80d92e0912088028b",
+      "bytes": 37357,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/portal-two_asset_convergence-1000.png",
+      "ref": "artifact:sha256:2d073f94ef22ff9a2d6f031b8bb9b01091e62b147bede1cd687bd2787ad96b9b",
+      "bytes": 31322,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/portal-two_asset_convergence-1440.png",
+      "ref": "artifact:sha256:1eef02a28436b2393dd2d5d11dc7e71353a11312c3dabc403e295ed06a131f3a",
+      "bytes": 32884,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/portal-two_asset_correlation-1000.png",
+      "ref": "artifact:sha256:60a39f741a3a9db9bd834f4dba910be182771793c4fac6c8c65d1ca4e17e7c6b",
+      "bytes": 37253,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/portal-two_asset_correlation-1440.png",
+      "ref": "artifact:sha256:36f42818a258544e7be2e171e14b74edb61a095bf502d070f999f4917ac79dec",
+      "bytes": 38232,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/portal-two_asset_errors-1000.png",
+      "ref": "artifact:sha256:30a7c5bb060ab69be82c926f51e5d901188f83dcb12960d9731486a3f6bf7ab9",
+      "bytes": 34994,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/portal-two_asset_errors-1440.png",
+      "ref": "artifact:sha256:5d0caad5ef2c0fb2b9899c23a1c248eda243ba4ba9334ab9b93e5595c22e0cc4",
+      "bytes": 36338,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/portal-two_asset_nodes-1000.png",
+      "ref": "artifact:sha256:590c1a4ca7ef4ce4c39411fad114e3f3b89f91fe4369a9ce205d146c7c69d48a",
+      "bytes": 28084,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e/portal-two_asset_nodes-1440.png",
+      "ref": "artifact:sha256:abedb2b1be68d18e84f9e3f0e34f68a995c4761d1c2c59b419d7565a1e224b4a",
+      "bytes": 28865,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/book-american_mc_bias-1000.png",
+      "ref": "artifact:sha256:5466580ef5d213fdf89d370d2bc562002bd43c4e3bb4c06012a87faa71433046",
+      "bytes": 46181,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/book-american_mc_bias-1440.png",
+      "ref": "artifact:sha256:f2c7615a0d2ab84ebb68e57df2f823ac6dda7c99e46b1d4350c7ebb7fe6ce7ff",
+      "bytes": 46081,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/book-american_mc_boundary-1000.png",
+      "ref": "artifact:sha256:459f5434965dc223302fc747e2b53c1748c4213a235b4fd82ee2fa201515af2a",
+      "bytes": 33032,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/book-american_mc_boundary-1440.png",
+      "ref": "artifact:sha256:726d1c31fbdab0c0bf99b5af572984c5cc492871afe982256b0e6cc5ba668664",
+      "bytes": 33335,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/book-american_mc_dates-1000.png",
+      "ref": "artifact:sha256:b8e5343f3dab8ff96763259dc5cd398d3ac81f03fd52802dcea7d24f707bf3d3",
+      "bytes": 44374,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/book-american_mc_dates-1440.png",
+      "ref": "artifact:sha256:d1a541e7e84c3221a57f86e58bc1edf2854ae12e1524f7a30cb57c139c5ebc22",
+      "bytes": 45120,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/book-american_mc_regression-1000.png",
+      "ref": "artifact:sha256:5167dfb1e2c8ea5e1792701071dd7e420168206d0b85ac2967a572af7e7d8933",
+      "bytes": 50051,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/book-american_mc_regression-1440.png",
+      "ref": "artifact:sha256:780ecd8471536a2f63a2bc3449b5aada990810eaaa7fe7c85d5016b5876dcda8",
+      "bytes": 51359,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/portal-american_mc_bias-1000.png",
+      "ref": "artifact:sha256:2d873412dfbdeddb6b65ee9e3a71e35c41881c26bd4c513c2af0712ecfdff101",
+      "bytes": 34385,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/portal-american_mc_bias-1440.png",
+      "ref": "artifact:sha256:76e3163c5a2dbdf50814c5558aa6e46f97681b65cbb84caf262b701e391ee20e",
+      "bytes": 35079,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/portal-american_mc_boundary-1000.png",
+      "ref": "artifact:sha256:25833ca0b5c99e3c5869e82e045e92aaebebea7bf227389bc8629006e46501c6",
+      "bytes": 22650,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/portal-american_mc_boundary-1440.png",
+      "ref": "artifact:sha256:6382bd9190ecfb49929fcfef4bb3f4a37ae4720ce0502278e0f95f4560fa7b57",
+      "bytes": 23121,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/portal-american_mc_dates-1000.png",
+      "ref": "artifact:sha256:b359c129c7fce166379ae3792ec7a29ca4ac4a69a6d1f15fca49c5b178294053",
+      "bytes": 31431,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/portal-american_mc_dates-1440.png",
+      "ref": "artifact:sha256:83f0b88cd82735d0a2a2b9ae801d838872ce45c2cec2d941a1a324f037f22587",
+      "bytes": 31760,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/portal-american_mc_regression-1000.png",
+      "ref": "artifact:sha256:e0b6c1c1682e3dae124d59413f12c4ffd4efd63d17f66521df00f1b013e64d11",
+      "bytes": 32915,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1/portal-american_mc_regression-1440.png",
+      "ref": "artifact:sha256:ed5f9a03370ca50814bd9c5d46cabd8d3a93714564d327d979a3350363eb4187",
+      "bytes": 33695,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/book-risk_premium_density-1000.png",
+      "ref": "artifact:sha256:43daffe75938f7e27f34cdd31559ced0dc7eecbe18693ecd4fe4cdccbe7c3da3",
+      "bytes": 46029,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/book-risk_premium_density-1440.png",
+      "ref": "artifact:sha256:e8b4fe948855054cb445fd00e1830c755ffc040cb4888f951b5a163682390a63",
+      "bytes": 47446,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/book-risk_premium_hedge-1000.png",
+      "ref": "artifact:sha256:c7d345138cd5903851be4fc3060ff6f80c7d6b1a1d240270cb03b47e1e8659cf",
+      "bytes": 24998,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/book-risk_premium_hedge-1440.png",
+      "ref": "artifact:sha256:241f3d5532243c2db2f4d4ededfde56e15b7dd33407c0e1dbe52bb9e4ff070df",
+      "bytes": 24372,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/book-risk_premium_loading-1000.png",
+      "ref": "artifact:sha256:9f1e9c594985f7413ad4548171021c47f7ccc4a78313ea20baeb7b20f116b8a2",
+      "bytes": 33181,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/book-risk_premium_loading-1440.png",
+      "ref": "artifact:sha256:edb1539c4174de09dc2f9f87db60439d228429091febf24697ac5fbb60e8eba4",
+      "bytes": 28597,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/book-risk_premium_validation-1000.png",
+      "ref": "artifact:sha256:4d640cca22712e7897143dd0b90978bd8dac9c608d70b4a3194e2761c9b63fe2",
+      "bytes": 32948,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/book-risk_premium_validation-1440.png",
+      "ref": "artifact:sha256:01b6043d1e723fcf3b893cc05fc1cff4c533202f8ef12f1b607c116b7b2b7dd5",
+      "bytes": 33097,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/portal-risk_premium_density-1000.png",
+      "ref": "artifact:sha256:c7f640e417a51fb8467b93af121e124c95f1f54e410ec30883afdc7b32a1a4e9",
+      "bytes": 32243,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/portal-risk_premium_density-1440.png",
+      "ref": "artifact:sha256:9974261f46084fd8b9af292710e1c2d7deb63ce85e7f28b07f2bbb1b65288d61",
+      "bytes": 33231,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/portal-risk_premium_hedge-1000.png",
+      "ref": "artifact:sha256:fc866cc7ba88e2503044c992685b7c23b5b8472c8e666fe11ce6ad788d3c15b1",
+      "bytes": 19680,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/portal-risk_premium_hedge-1440.png",
+      "ref": "artifact:sha256:3b7629485a5fe45218deb687a2045820758c7fed91f13d2fc02518931d45e249",
+      "bytes": 20840,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/portal-risk_premium_loading-1000.png",
+      "ref": "artifact:sha256:3f2c8203ee3e10cfbc6e236f42156f6a32bbdca946ac55dd456a071fdb16526d",
+      "bytes": 22136,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/portal-risk_premium_loading-1440.png",
+      "ref": "artifact:sha256:a800bfe503b43a9e777c16b622ba7278d3b59474712532f5be249395661ccebd",
+      "bytes": 22525,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/portal-risk_premium_validation-1000.png",
+      "ref": "artifact:sha256:6c367c34e3c5898f44f66562aa4e2cbe027d9d7428ae463143aebe80dcdb4fac",
+      "bytes": 23194,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2/portal-risk_premium_validation-1440.png",
+      "ref": "artifact:sha256:bf569170acfd7b3af51cc4a7469cebaea3394302862a1a30bc333d43b693448d",
+      "bytes": 24038,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/book-martingale_conditional-1000.png",
+      "ref": "artifact:sha256:0c7f3a05e6751d542d7f855ab84371e7385726637948fcb5d0908fc58939fcc6",
+      "bytes": 33985,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/book-martingale_conditional-1440.png",
+      "ref": "artifact:sha256:c1668640c2c4092e92cf3d3fd46cbc77c189b5bb799d4725dd46a768b2d6a287",
+      "bytes": 33674,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/book-martingale_conditional_mc-1000.png",
+      "ref": "artifact:sha256:a84e6a4103037a70a4fa684695a37e1decbee3a624900bcd4b5a751f18694627",
+      "bytes": 37867,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/book-martingale_conditional_mc-1440.png",
+      "ref": "artifact:sha256:3e92ddf35b385639891e4b8f6c04db493828f81e0a59356cb4d277366784ca2a",
+      "bytes": 34553,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/book-martingale_ito-1000.png",
+      "ref": "artifact:sha256:fffcb427f25e8ba4db09e9a462c61d051b5be93047cad520f217fc3249fe1a2f",
+      "bytes": 18272,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/book-martingale_ito-1440.png",
+      "ref": "artifact:sha256:c4d6e3b355b1766bcd86f8a96b6d8894015307d9c7fc5b673d3621b481d9d780",
+      "bytes": 18210,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/book-martingale_pricing-1000.png",
+      "ref": "artifact:sha256:2379b64f4da38643795c1b2126c1c6dc98a2aa5e1ce2dc407d6a6ae7fca0a16c",
+      "bytes": 28225,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/book-martingale_pricing-1440.png",
+      "ref": "artifact:sha256:24eea6c7fbf391cb03e9f690f46120e3db4b4bccac104e7db4cd8cd4b780be69",
+      "bytes": 27330,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/portal-martingale_conditional-1000.png",
+      "ref": "artifact:sha256:9c4ff29234713cb0b12cf837625aaf955375cc1e4d8c984a97259e062ec30af4",
+      "bytes": 30396,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/portal-martingale_conditional-1440.png",
+      "ref": "artifact:sha256:dfe40ceffd05d10891cf70adf9259fd86278c6ae9e5f7a43fe23cff25669e9b4",
+      "bytes": 31058,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/portal-martingale_conditional_mc-1000.png",
+      "ref": "artifact:sha256:832457ca17ce26983c78a0963312e07b1d63f18a924e67b10878e002a04702d8",
+      "bytes": 27999,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/portal-martingale_conditional_mc-1440.png",
+      "ref": "artifact:sha256:eafbd7eb6b76749e8fe4f7adc7e61d020a2f2aa1712eda1fbec5f1d1dcfc304a",
+      "bytes": 28988,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/portal-martingale_ito-1000.png",
+      "ref": "artifact:sha256:d05d6700c56571b47576d6110c318ab80cb626d8c3a60e844374cf5840bb11c1",
+      "bytes": 15490,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/portal-martingale_ito-1440.png",
+      "ref": "artifact:sha256:152685236b0150aa7a99be7a09f07499bd3b82f085a592dbc50a739e3e92f9e1",
+      "bytes": 15686,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/portal-martingale_pricing-1000.png",
+      "ref": "artifact:sha256:a7ecfdc926eca190d115f6dfe17d118a56983a18de39d3931c1fa85ee598a1e1",
+      "bytes": 23966,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c/portal-martingale_pricing-1440.png",
+      "ref": "artifact:sha256:50216591aebd8dd53f392f246b2998f952dbb4e750d4c5f266c204a6a82f0770",
+      "bytes": 24208,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/book-martingale_numeraire_annuity-1000.png",
+      "ref": "artifact:sha256:e669f61b3b4e194eea625c7528bd6b8a3b0f48f1124af3ef90b8d0419d60eedb",
+      "bytes": 31519,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/book-martingale_numeraire_annuity-1440.png",
+      "ref": "artifact:sha256:c28e18d5d85cbccd241850a3c53afe6d905b5877361e2dc14ebf2c752b3087fd",
+      "bytes": 31672,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/book-martingale_numeraire_forward-1000.png",
+      "ref": "artifact:sha256:d29819ef77b7e92843b02d6046260a39b44b79693b1f0fcd79885d3b8cc6171f",
+      "bytes": 26405,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/book-martingale_numeraire_forward-1440.png",
+      "ref": "artifact:sha256:e6d463a3f14cc8323b18e4575fabf456e761dbcf8cb80b5d27e38e50f6821769",
+      "bytes": 26511,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/book-martingale_numeraire_payment-1000.png",
+      "ref": "artifact:sha256:b1ef240f4fee0ce91338e3b27022e3b69b89c7be6797a6ebbfd21acb64371c27",
+      "bytes": 25767,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/book-martingale_numeraire_payment-1440.png",
+      "ref": "artifact:sha256:847ce38641301f1fb1fe938e9316e925b1290669ab442863881c7bce68a2761b",
+      "bytes": 25962,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/book-martingale_numeraire_pricing-1000.png",
+      "ref": "artifact:sha256:d2574de1bd2d3c3c4a3981fb79c736b3439790518765746cdbe8098cc5eb0faf",
+      "bytes": 36916,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/book-martingale_numeraire_pricing-1440.png",
+      "ref": "artifact:sha256:6adc99c30acf59e0746b416ec53d6fce6ec08f8113c70aa926d8e4d2ba805af7",
+      "bytes": 37885,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/portal-martingale_numeraire_annuity-1000.png",
+      "ref": "artifact:sha256:3be0d205eb98b4757964a1bd0b28ef8c36273fd5b953e774c8ad5a2f2b95758e",
+      "bytes": 26157,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/portal-martingale_numeraire_annuity-1440.png",
+      "ref": "artifact:sha256:ad14da4f106a017c923aac305b0e1930ed71217af77e2c7d06f6fd447dd630c4",
+      "bytes": 26421,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/portal-martingale_numeraire_forward-1000.png",
+      "ref": "artifact:sha256:0a461ebd7459fd0a115778ed6e9549cd255f6483cb0daabb814ec9a47588b83a",
+      "bytes": 21572,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/portal-martingale_numeraire_forward-1440.png",
+      "ref": "artifact:sha256:5f778dbddc6e81d8217a246d1b67305915376e72b52b6e921134653728c6b138",
+      "bytes": 21840,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/portal-martingale_numeraire_payment-1000.png",
+      "ref": "artifact:sha256:bdb375a2fcc9922e615f84a2b8791bed10980174fa51a8672a3c66ffd134b316",
+      "bytes": 22343,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/portal-martingale_numeraire_payment-1440.png",
+      "ref": "artifact:sha256:252feb97ebe7389efe66da0d8ead323d5de93e132aec4000d48b54c6eee4c07b",
+      "bytes": 22597,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/portal-martingale_numeraire_pricing-1000.png",
+      "ref": "artifact:sha256:9147762c4e6d6bd1bdaa9140691f41e621191e1fea0819f121184e0ab7b88616",
+      "bytes": 30169,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d/portal-martingale_numeraire_pricing-1440.png",
+      "ref": "artifact:sha256:9e7f63e3addd4e7ebb1c1ebcf6c76f65140ae21bee4ae1bcbac7cdb42da87cf5",
+      "bytes": 30089,
+      "mime": "image/png"
+    }
+  ],
+  "source_sha256": {
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+    "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
+    "docs/CHAPTER_28_ACCEPTANCE_2026-10-05.md": "56c28a28641cdd416e297eea2a2915455bf886f9fd0ac537f44cdf40eadb9904",
+    "docs/acceptance/chapters/ch28.json": "556e59cafe8235059bf38b48ed02203e7bfcdd49420f9b05d60147db1155cdec",
+    "hullkit/src/hullkit/_chapter28_lesson.py": "f9800998f05b2d8a363537ab84ca05cd0b3383d56303a84a2afd1c6e949a4a3d",
+    "hullkit/src/hullkit/_exchange_measure.py": "4282288c3f280f0b9914946b3062a3d827a1948cfa86293ffec871c16deafe8b",
+    "hullkit/src/hullkit/_forward_black.py": "1600d38091668f3609a985192009759c3c76196203ea4435b3bdd20fbf945128",
+    "hullkit/src/hullkit/_numeraire_change.py": "cf22a9bc717b7860b1a241cd4a6ce407bcca653934e2cf3d036bba2ffae3bfa6",
+    "hullkit/tests/_chapter28_reference.py": "df6a6ba85a5215d32b5555008957b877f000734f8888a27746f20c9ee23c0d46",
+    "hullkit/tests/_forward_black_reference.py": "ff28965898484b7a9c9c97113402b48b612466fe6191ed95e242969ce7665271",
+    "hullkit/tests/_forward_black_validation.py": "497eff49fe364fe3eabd535c76ff6828bd058f93d2fa4de08d3c63d9310e7c31",
+    "hullkit/tests/test_chapter28_lesson.py": "19468be8972f4dca42de1f342976639ad485b8b32537e9b658a36f7a1c117429",
+    "hullkit/tests/test_exchange_measure.py": "121455d99100b9a7554e192157413535f0d1f5591a3f43f31f335cd50dfb3037",
+    "hullkit/tests/test_forward_black.py": "27678022b80f98250efb9dd7e2e113822891494cd8f7902829dd5cee7fa1fc1b",
+    "hullkit/tests/test_forward_black_numerics.py": "bf409853ccadce0bdfbc884ff8bf02a5487ef8f39fa91507198dca7bd0db3bd9",
+    "hullkit/tests/test_numeraire_change.py": "9c61b255a2cc8dc0779947840e5ea1e7d3d749295549fd5b2de9babe950217e5",
+    "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210",
+    "report/report_builder/__init__.py": "e6bd9f43a533654074564fec7ef4ee7324379dfc28f693cc324af7cc0a910db9",
+    "report/report_builder/build.py": "12e280a3c47a2aa952f135ba8b459effcd308d519cc317170c8b0c0f11754cbf",
+    "report/report_builder/figures.py": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898",
+    "report/report_builder/frontier_figures.py": "abc2a1f1596482b043bcb3709f8d6daca9d7f2f0edad6cc8dfe0df0246c0eb92",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/report_builder/theme.py": "db43b679941eff1c165fdf6181a995eff7d076d8f9300f7136d306961d27bf5b",
+    "report/tests/test_chapter_acceptance.py": "d42d57e438ab41c90a086ac848e72ba6d8ff77f1ec5b8e7caa0e7de8b348132e",
+    "scripts/chapter_acceptance.py": "e5a3b211f4b3bfab48a778a220a3bc3998c84295fd89a8de9cb41c02bc050f65",
+    "scripts/d1_preflight_compare.py": "d693d8c7c2e9f22f611d6c87ba78cbfc23c7a242b42f00a2cced6f243f68452d",
+    "scripts/evidence_dependencies.json": "bbbfbf79526584fba10425c0278af8e38ce23e8ee95c862d759d35a4575c86f8",
+    "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+    "scripts/evidence_record.py": "264dbf9e3d4ff4c6f7bba4e6b320e1b8a71d21d1ff231adec1b92a22bba379f3",
+    "scripts/evidence_store.py": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+    "scripts/probe_render_runtime.cjs": "efab3367ef20b53bd353e6ecaf867a811d92aca3e71756fc5cc29cde3537a016",
+    "scripts/run_browser_verifier.cjs": "68f743a20e5ca659ca087558b71d4e679e64239f29cd8b832a28b9d5d26f88a1",
+    "scripts/verify_chapter_browser.cjs": "c352c4a846c4a75908094b9f88fb589bd5f033d3716bd26e379a70cb5205e2de",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "313acdfe78f2f016ad01b2a1d17901988edbeb95f2357d1f89fb4bf68541aa9c",
+    "volumes/10_exotics_martingales/exotics.ipynb": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb",
+    "docs/validation/chapter-28/reference.json": "cb48df62b74a7908a922b9ccec86f7a26c84f453290f9e143ca92e244f53abeb",
+    "docs/validation/chapter-28/numerical-check.json": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed",
+    "docs/validation/chapter-28/browser-check.json": "0d2093f8dfd89315c7fe081f3a3c0747908b2a7e9a586a75f091b93833678b61",
+    "docs/validation/chapter-28/full-suite.json": "bf31848f7196d941159ff8d30e99cac5875f312c4917a33517fed6ec6ad457c9",
+    "docs/validation/chapter-28/build-check.json": "253b84867dab965685eeca6f2b442bafeb7bd7aae5f54c78db018912207f5cfb",
+    "docs/validation/chapter-28/runtime.json": "5b55fc53e48404bf5d1ad9665bdb8c7e39302637d763e07ab24d2a7e3076c1a4",
+    "docs/validation/chapter-28/dependency-plan.json": "06679f2e48946fd7f60fb3bd2690b3cfe48703b28153bb8e20911da8deb8f4b3",
+    "docs/validation/d1-recheck/section-26-1/d1pf-26.1-20261004T114738Z-reuse-f1ac29ec29f74835abb5eb53eefc31e3.json": "0fdb15a6e288f52fabc1e2b679163acf04de2da504d9975a543f2fc12cffe24b",
+    "docs/validation/d1-recheck/section-26-2/d1pf-26.2-20261004T114738Z-reuse-bd4bfa226e904b8bbee8c355aeeae103.json": "bebc36a887480e9761a75435f5a3f3b6c1e83d1434c57408dc29c3c88b4e8ce9",
+    "docs/validation/d1-recheck/section-26-3/d1pf-26.3-20261004T114806Z-reuse-3bc95ecf0acd42d99b4149772c104c54.json": "e7a5c1976e4357032462252dd08218509f7840f46a89af48152ed3ccda978e61",
+    "docs/validation/d1-recheck/section-26-4/d1pf-26.4-20261004T114809Z-reuse-c9123de3b98447b593d8130328de82da.json": "a315d4c32d2aa08808a966296aed4a5e84c3ab2b4f0c3c75044e42137a4c7eb4",
+    "docs/validation/d1-recheck/section-26-5/d1pf-26.5-20261004T114834Z-reuse-5cfe5e2223874235a36782ce4977f89a.json": "0f9de8ebc8034e8f3fa604852393cd56dde9c00bb75cc47ae99c4e3f1d027dff",
+    "docs/validation/d1-recheck/section-26-6/d1pf-26.6-20261004T114837Z-reuse-8880903ed2274ac090ef26d3bb9e97de.json": "1a64721bcdd9762949b68e2309a09e791a3b272788dcdf62b63f0f074a401669",
+    "docs/validation/d1-recheck/section-26-7/d1pf-26.7-20261004T114903Z-reuse-6475f227f9534bdababbaccd0789511f.json": "56f0bd082b4cee2839bd7d4ed5b002b8ba1828e78350e29f6e9bf1b239f0bf16",
+    "docs/validation/d1-recheck/section-26-8/d1pf-26.8-20261004T114912Z-reuse-59ca9e1e8c0743868277a7b830da90ab.json": "872994e6be81cab1435804f6300ecf79c4a40a8c34a755795129fe45de8d59a5",
+    "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3.json": "5c11353116505a802ebf24ae09ec8d641fe385c181e3f638a30bcc9170445673",
+    "docs/validation/d1-recheck/section-26-10/d1pf-26.10-20261004T114940Z-reuse-b74bb36d2dec4ee9bec39239ecdd1d01.json": "8733935d27c2569121d7556ac1472b7c86cf462b20bf4ea634becf7ac193668c",
+    "docs/validation/d1-recheck/section-26-11/d1pf-26.11-20261004T115000Z-reuse-7730ac5f23e14b10bcfc61bba3b79883.json": "f494f97da103b9dc016872347838b50a4712fbbd9ecd5255799091f4718c8068",
+    "docs/validation/d1-recheck/section-26-12/d1pf-26.12-20261004T115016Z-reuse-24f93b1acf76444781730672cce3d870.json": "c7e0396788ece3cf5c61db50312db20f4672abc3e43866a4a0cdb562cb9fa65c",
+    "docs/validation/d1-recheck/section-26-13/d1pf-26.13-20261004T115132Z-reuse-3e8fa2b93fcf4e71838a08c41f362982.json": "449296385d2f3934f8fd11d25d6f554eef9c22a2e40de96ea9bfce2436cdb9fa",
+    "docs/validation/d1-recheck/section-26-14/d1pf-26.14-20261004T115135Z-reuse-b852aa0d1c934ff49ee0092463c52025.json": "85eee8c6ee4abd7890f81da5bcc69bdd973833b0069f2f2f530a9729a16b6aff",
+    "docs/validation/d1-recheck/section-26-15/d1pf-26.15-20261004T115239Z-reuse-583830b4ac2c4878b73dc154064182be.json": "f77f3954cdb4ac90868f844f7ea8c1194edd2438d84a8d50baafa3eb236524b6",
+    "docs/validation/d1-recheck/section-26-16/d1pf-26.16-20261004T115239Z-reuse-ff89c5f6fbfb4521b8059160ead1635c.json": "8e06afea3d7c2b97c65b2ab6b335f0c5941b750e7816a71d95237ae456f0f8f6",
+    "docs/validation/d1-recheck/section-26-17/d1pf-26.17-20261004T115341Z-reuse-f4be8d3a4b324639b71d2ac515f2962b.json": "ad509575040b79242c102d8e4d1a20c34ae75f1844621fbde75ba4656d406939",
+    "docs/validation/d1-recheck/section-27-1/d1pf-27.1-20261004T115349Z-reuse-25f1eb42512e4aedbd889bc103796d1a.json": "0bd653b187027e87df399850ae2ee3034a934597087472b5fa58981dd80dc11d",
+    "docs/validation/d1-recheck/section-27-2/d1pf-27.2-20261004T115406Z-reuse-fb17c668f48f47618fd1533f6e614761.json": "c0221480753a25d99cc303a9836bb0924f473853abdb0aac49202d7387118893",
+    "docs/validation/d1-recheck/section-27-3/d1pf-27.3-20261004T115416Z-reuse-96162cc282ab4f06aa6f5da72127911d.json": "7dc1bf5d30a29f1871460dd8f5ecfd9f69d72e70c193bbc3c58e77396788f20e",
+    "docs/validation/d1-recheck/section-27-4/d1pf-27.4-20261004T115427Z-reuse-cd2941f0c2e0412588f2eec4f788d3d2.json": "e7c95eb1dbb912561e47e5d66ab3307230653c4c2bb92d65468e34322f35ea55",
+    "docs/validation/d1-recheck/section-27-5/d1pf-27.5-20261004T115434Z-reuse-0b0e566bbe5c4959865baded24ac0388.json": "bc0487b2c755aab4ffbbb868f90e69f2bb77d1410d0b64fc60c787829629d159",
+    "docs/validation/d1-recheck/section-27-6/d1pf-27.6-20261004T115444Z-reuse-42630777b9164616a287c848883f74e4.json": "bd498669862b4d35458c1c996c96c6ef48fbb343ea3a6cf71719b80e34bb7f53",
+    "docs/validation/d1-recheck/section-27-7/d1pf-27.7-20261004T115451Z-reuse-7a23d7a8ca1f45f9891a4f29793afd1e.json": "0c299007a623cd190173043590d5e8522fc200d2f70bce319a9d8f16b7bee41a",
+    "docs/validation/d1-recheck/section-27-8/d1pf-27.8-20261004T115502Z-reuse-ddeb2a10256c4ab7a7ae99ba88a27df1.json": "4c1a549075db7d602dcfd328e15b438688dcfea2611ba7ca653f68f3121b9d9c",
+    "docs/validation/d1-recheck/section-28-1/d1pf-28.1-20261004T115511Z-reuse-64e94a323c40466399ce506ca12801b2.json": "a21d7916904d4f281fbd367b1bccd41c714894c847af8bf7afec24ad10a54a48",
+    "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9.json": "2999cb9e66dbe90d83a977b6875364899cea873b350a9b0710b2fd6e40396cdb",
+    "docs/validation/d1-recheck/section-28-3/d1pf-28.3-20261004T115539Z-reuse-992b279d84904bef898c4b390534d54c.json": "8e418979cb3e293060471932c5bd46c9007ab0c7ff20dcd4d226008f08199765",
+    "docs/validation/d1-recheck/section-28-4/d1pf-28.4-20261004T115548Z-redraw-78e41f9bb7d94034ab829fe4a1478c0d.json": "6189e0d6b51914366a4bc57a9522f0bc4e162f028e9647d046fea96c9ab8c54b",
+    "docs/validation/d1-recheck/section-28-5/d1pf-28.5-20261005T003842Z-redraw-a50d10f8f8884d0b803f14e9de872dc3.json": "eaa4614e428d29a045e6f43b078f7bed69ba34dfef141b943eeb61c40be0de64",
+    "docs/validation/chapter-28/section-26-1.json": "12c340cf5e9ac3240ff70077fc3e072a7e0be4b5329e0851ee2fbb61e105092a",
+    "docs/validation/chapter-28/section-26-2.json": "ee58099ab7ba87f98628704e0cc561f3e8e788623d0e42c7743035bcb4d3439e",
+    "docs/validation/chapter-28/section-26-3.json": "70ec442f8af4a5a79ae3ebd4e25b081b0d0321a906ff783a346d3c4c002e3fb3",
+    "docs/validation/chapter-28/section-26-4.json": "6fd4c793f8d6d76ab23d22f810dd856b13d54d53f4519418566a01488aad8e9f",
+    "docs/validation/chapter-28/section-26-5.json": "945e001e4617e1b5006b1c694e6539ba748146a84f4ac4aeb344b762721f6ff4",
+    "docs/validation/chapter-28/section-26-6.json": "14ac5b80030db2bf41388d5015dae45219eb2976982ba298a3dd53b88a8485c4",
+    "docs/validation/chapter-28/section-26-7.json": "690db84c4ef62053f07f7a8e168eabdbde92c775c9ceb607f912cbeec54af0a1",
+    "docs/validation/chapter-28/section-26-8.json": "44f43ee0ba774140e58e3b7949972f182adbea36d4b5aa463cea65150db79516",
+    "docs/validation/chapter-28/section-26-9.json": "9d76fad78024ec096d25ff3d414a9a55737558c816b5eada8c1727b9b37b7460",
+    "docs/validation/chapter-28/section-26-10.json": "220814b5717b981f13f71f970e1ef187b4cc3ce21f919bab9361f4bd81d24a65",
+    "docs/validation/chapter-28/section-26-11.json": "6c0b7fe55f3ecd2adb7d48ad305854267575d0b06002ecf1f7c4d86f43868402",
+    "docs/validation/chapter-28/section-26-12.json": "a81ad5433b0e120dc8746c4463ecc447f99dccf9b5c4a0e3449e682198aca67f",
+    "docs/validation/chapter-28/section-26-13.json": "3c0d78c800e9bcd4174097a6b9a9220b0400495590934e316abcb24ff5a840d0",
+    "docs/validation/chapter-28/section-26-14.json": "99ccbbf6a4804ff41db7de0dcce7d502ad69804974597daf63e93154811685aa",
+    "docs/validation/chapter-28/section-26-15.json": "0716bec4559fd63b82fbc65d6d332e82b27ab31923fb238c786bbcf000a7a026",
+    "docs/validation/chapter-28/section-26-16.json": "bd7d797d1012421b169b2f82cec2a993d3f7dcf1eb316d7a42f359e75a8b7be7",
+    "docs/validation/chapter-28/section-26-17.json": "8bd5f724884cbdc3bb5568cc4f6b7efd886afef9b7972826e55a93976104b0e7",
+    "docs/validation/chapter-28/section-27-1.json": "b2fce5d5eac707b68785fd278ba3fa7c771e230d4eefd2929428311e9207a0e9",
+    "docs/validation/chapter-28/section-27-2.json": "abcacd5b7a8458d0a76cdbd9c39fae322334471d38e166737b2c2d0038d92154",
+    "docs/validation/chapter-28/section-27-3.json": "9c72d2ea84e5bae1498a39599407de1784e9b52eacd4519f2990aa927d584033",
+    "docs/validation/chapter-28/section-27-4.json": "97e35d7457b93d6a412ced5a2569959dcc9010a05b2d48175a6c22f9ede0af63",
+    "docs/validation/chapter-28/section-27-5.json": "47535a75b88fd38f75cc1ee45475bd5535040bc8a4f9bc235d3802af469edcf2",
+    "docs/validation/chapter-28/section-27-6.json": "1da9bed6f0841118d56257f072999f1b284131adc9b3d3e219a8b661667c1a35",
+    "docs/validation/chapter-28/section-27-7.json": "e4925162479037dfb38a1387a823feeb2632842c91ad0b87a3ce0d97b70e0563",
+    "docs/validation/chapter-28/section-27-8.json": "26fa18f68f60096cdf7d81c72d176a5601bc94cb5f7f82a71225e028a0648ac6",
+    "docs/validation/chapter-28/section-28-1.json": "94502c97d3032306a5a10eea2bdf770b978e31527f45e090318ba04a36581ff4",
+    "docs/validation/chapter-28/section-28-3.json": "98c1db5137b3f0eae6cc1d09616fa43e71db382fe80c096922fa13dc94fc19c4",
+    "docs/validation/chapter-28/section-28-4.json": "856d09c0518dc37fa72aaec1b75ed19023e090ff069a30fbbf7c4480f091b3cf",
+    "docs/validation/chapter-28/section-28-6.json": "cee59058d49a01443274de077b52927903f87660e3571a64e1a734ae96cd8a04",
+    "docs/validation/chapter-28/section-28-7.json": "a2e577897cac5292b80ed4e0a1fa2f110256de41a240cf6ea404ee68fb0ba744",
+    "docs/validation/chapter-28/section-28-8.json": "e6d6610dba992172d15b407389b881ae77c17ce6fd5e36c7fbb80343012f1fd4"
+  },
+  "artifact_sha256": {
+    "book/_build/html/notebooks/10_exotics.html": "0560bae03ccca2246440f825138a0f2bcbc634291e82fc16fa21d1cf7f1d4dea",
+    "report/site/exotics.html": "9a3abf9ae363ade735ec937308319d2785e4ffadd85378e341f4804be75258ed"
+  }
+}

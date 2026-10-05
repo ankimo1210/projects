@@ -1,0 +1,2222 @@
+{
+  "status": "PASS",
+  "chapter": 28,
+  "black": {
+    "section": "28.6",
+    "case_count": 7,
+    "price_count": 42,
+    "samples": 262144,
+    "max_api_error": 8.526512829121202e-14,
+    "max_quadrature_error": 8.526512829121202e-14,
+    "max_moment_error": 8.526512829121202e-14,
+    "max_mc_se": 1.7575034441185464,
+    "cases": [
+      {
+        "id": "constant_rate",
+        "statistics": {
+          "discount": 0.9231163463866358,
+          "forward": 108.32870676749586,
+          "futures": 108.32870676749586,
+          "forward_sigma": 0.25,
+          "terminal_variance": 0.125,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.622670185988092,
+          "cov_integral_log_spot": 0.0
+        },
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.3818557529355,
+            "call": {
+              "api": 36.84920301317127,
+              "reference": 36.849203013171305,
+              "direct_Q": {
+                "mean": 36.88214411820148,
+                "se": 0.06769884135195792,
+                "hit_count": 224240,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 36.88214411820148,
+                "se": 0.06769884135195792,
+                "hit_count": 224240,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 36.88214411820148,
+                "se": 0.06769884135195792,
+                "z": 0.48658299569587965,
+                "reference": 36.849203013171305,
+                "hit_count": 224240,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 36.88214411820148,
+                "se": 0.06769884135195792,
+                "z": 0.48658299569587965,
+                "reference": 36.849203013171305,
+                "hit_count": 224240,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 1.4673472602357727,
+              "reference": 1.4673472602357611,
+              "direct_Q": {
+                "mean": 1.4571846273337283,
+                "se": 0.008956360075425463,
+                "hit_count": 37904,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 1.4571846273337283,
+                "se": 0.008956360075425463,
+                "hit_count": 37904,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 1.4571846273337283,
+                "se": 0.008956360075425463,
+                "z": 1.1346833776722651,
+                "reference": 1.4673472602357611,
+                "hit_count": 37904,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 1.4571846273337283,
+                "se": 0.008956360075425463,
+                "z": 1.1346833776722651,
+                "reference": 1.4673472602357611,
+                "hit_count": 37904,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 3.0727836294032462,
+            "call": {
+              "api": 15.405663527594674,
+              "reference": 15.405663527594688,
+              "direct_Q": {
+                "mean": 15.429738903408417,
+                "se": 0.05179002726751524,
+                "hit_count": 121616,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 15.429738903408417,
+                "se": 0.05179002726751524,
+                "hit_count": 121616,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 15.429738903408417,
+                "se": 0.05179002726751524,
+                "z": 0.46486509245052005,
+                "reference": 15.405663527594688,
+                "hit_count": 121616,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 15.429738903408417,
+                "se": 0.05179002726751524,
+                "z": 0.46486509245052005,
+                "reference": 15.405663527594688,
+                "hit_count": 121616,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 12.332879898191427,
+              "reference": 12.3328798981914,
+              "direct_Q": {
+                "mean": 12.313851536072912,
+                "se": 0.030685375262254316,
+                "hit_count": 140528,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 12.313851536072912,
+                "se": 0.030685375262254316,
+                "hit_count": 140528,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 12.313851536072912,
+                "se": 0.030685375262254316,
+                "z": 0.6201117619016091,
+                "reference": 12.3328798981914,
+                "hit_count": 140528,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 12.313851536072912,
+                "se": 0.030685375262254316,
+                "z": 0.6201117619016091,
+                "reference": 12.3328798981914,
+                "hit_count": 140528,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.236288494129006,
+            "call": {
+              "api": 5.450730589062246,
+              "reference": 5.450730589062241,
+              "direct_Q": {
+                "mean": 5.472711153205403,
+                "se": 0.032946831179421446,
+                "hit_count": 48316,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 5.472711153205403,
+                "se": 0.032946831179421446,
+                "hit_count": 48316,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 5.472711153205403,
+                "se": 0.032946831179421446,
+                "z": 0.6671526018226467,
+                "reference": 5.450730589062241,
+                "hit_count": 48316,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 5.472711153205403,
+                "se": 0.032946831179421446,
+                "z": 0.6671526018226467,
+                "reference": 5.450730589062241,
+                "hit_count": 48316,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 34.68701908319125,
+              "reference": 34.68701908319122,
+              "direct_Q": {
+                "mean": 34.665895909402145,
+                "se": 0.05040302792070478,
+                "hit_count": 213828,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 34.665895909402145,
+                "se": 0.05040302792070478,
+                "hit_count": 213828,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 34.665895909402145,
+                "se": 0.05040302792070478,
+                "z": 0.41908541332681104,
+                "reference": 34.68701908319122,
+                "hit_count": 213828,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 34.665895909402145,
+                "se": 0.05040302792070478,
+                "z": 0.41908541332681104,
+                "reference": 34.68701908319122,
+                "hit_count": 213828,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          }
+        ],
+        "mc_moments": {
+          "density": {
+            "mean": 1.0,
+            "se": 0.0,
+            "z": 0.0,
+            "reference": 1.0,
+            "hit_count": 262144,
+            "stochastic": false,
+            "samples": 262144
+          },
+          "discounted_spot": {
+            "mean": 100.04310373793226,
+            "se": 0.07122770502326627,
+            "z": 0.6051541028617503,
+            "reference": 100.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "forward_mean": {
+            "mean": 108.37540048936633,
+            "se": 0.07716005171187103,
+            "z": 0.6051541028618156,
+            "reference": 108.32870676749586,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "mean_integral": {
+            "mean": 0.08,
+            "se": 0.0,
+            "z": 0.0,
+            "reference": 0.08,
+            "hit_count": 262144,
+            "stochastic": false,
+            "samples": 262144
+          },
+          "log_mean_Q": {
+            "mean": 4.623195420733808,
+            "se": 0.0006899348810899236,
+            "z": 0.7612816225295418,
+            "reference": 4.622670185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_T": {
+            "mean": 4.623195420733808,
+            "se": 0.0006899348810899236,
+            "z": 0.7612816225295418,
+            "reference": 4.622670185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          }
+        }
+      },
+      {
+        "id": "stochastic_positive",
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 109.68582972743445,
+          "forward_sigma": 0.27376997644007645,
+          "terminal_variance": 0.14990000000000003,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.609020185988092,
+          "cov_integral_log_spot": 0.013649999999999999
+        },
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "api": 37.313629140699405,
+              "reference": 37.313629140699426,
+              "direct_Q": {
+                "mean": 37.26184829635489,
+                "se": 0.07043460331016729,
+                "hit_count": 218214,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 37.264563331916854,
+                "se": 0.07399816308448576,
+                "hit_count": 215838,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 37.26184829635489,
+                "se": 0.07043460331016729,
+                "z": 0.7351620071814909,
+                "reference": 37.313629140699426,
+                "hit_count": 218214,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 37.264563331916854,
+                "se": 0.07399816308448576,
+                "z": 0.6630679294910654,
+                "reference": 37.313629140699426,
+                "hit_count": 215838,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 2.0093617045398524,
+              "reference": 2.009361704539847,
+              "direct_Q": {
+                "mean": 2.0251480349266586,
+                "se": 0.01148451245405147,
+                "hit_count": 43930,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 2.0245471257879237,
+                "se": 0.011010155166275258,
+                "hit_count": 46306,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 2.0251480349266586,
+                "se": 0.01148451245405147,
+                "z": 1.3745755816776088,
+                "reference": 2.009361704539847,
+                "hit_count": 43930,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 2.0245471257879237,
+                "se": 0.011010155166275258,
+                "z": 1.379219549474695,
+                "reference": 2.009361704539847,
+                "hit_count": 46306,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "api": 16.646020956477145,
+              "reference": 16.646020956477162,
+              "direct_Q": {
+                "mean": 16.61258004188043,
+                "se": 0.055196213358213585,
+                "hit_count": 122588,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 16.613960800656656,
+                "se": 0.05763131149981845,
+                "hit_count": 118984,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 16.61258004188043,
+                "se": 0.055196213358213585,
+                "z": 0.6058552310410462,
+                "reference": 16.646020956477162,
+                "hit_count": 122588,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 16.613960800656656,
+                "se": 0.05763131149981845,
+                "z": 0.5562975227556161,
+                "reference": 16.646020956477162,
+                "hit_count": 118984,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 13.689619802237816,
+              "reference": 13.689619802237797,
+              "direct_Q": {
+                "mean": 13.724482741599811,
+                "se": 0.03474672512651219,
+                "hit_count": 139556,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 13.721810876447952,
+                "se": 0.03334470586625546,
+                "hit_count": 143160,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 13.724482741599811,
+                "se": 0.03474672512651219,
+                "z": 1.0033446097460703,
+                "reference": 13.689619802237797,
+                "hit_count": 139556,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 13.721810876447952,
+                "se": 0.03334470586625546,
+                "z": 0.9654028540324451,
+                "reference": 13.689619802237797,
+                "hit_count": 143160,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "api": 6.59901317576455,
+              "reference": 6.599013175764581,
+              "direct_Q": {
+                "mean": 6.568138359195178,
+                "se": 0.037295118353035873,
+                "hit_count": 53397,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 6.572121871039236,
+                "se": 0.03900705594618649,
+                "hit_count": 50776,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 6.568138359195178,
+                "se": 0.037295118353035873,
+                "z": 0.8278514168299937,
+                "reference": 6.599013175764581,
+                "hit_count": 53397,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 6.572121871039236,
+                "se": 0.03900705594618649,
+                "z": 0.6893959073056763,
+                "reference": 6.599013175764581,
+                "hit_count": 50776,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 35.99047830344544,
+              "reference": 35.99047830344544,
+              "direct_Q": {
+                "mean": 36.028644020062174,
+                "se": 0.05604593312596959,
+                "hit_count": 208747,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 36.02783822875076,
+                "se": 0.05333389659851806,
+                "hit_count": 211368,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 36.028644020062174,
+                "se": 0.05604593312596959,
+                "z": 0.6809720971359285,
+                "reference": 35.99047830344544,
+                "hit_count": 208747,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 36.02783822875076,
+                "se": 0.05333389659851806,
+                "z": 0.70049120143146,
+                "reference": 35.99047830344544,
+                "hit_count": 211368,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          }
+        ],
+        "mc_moments": {
+          "density": {
+            "mean": 1.0000227736574945,
+            "se": 9.588449523712246e-05,
+            "z": 0.23751136654742727,
+            "reference": 1.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "discounted_spot": {
+            "mean": 99.93390618372345,
+            "se": 0.07125133974825314,
+            "z": 0.9276150667492451,
+            "reference": 100.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "forward_mean": {
+            "mean": 108.12927123121815,
+            "se": 0.08500696926471003,
+            "z": 0.8178041663829848,
+            "reference": 108.19879028485443,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "mean_integral": {
+            "mean": 0.07998069764084685,
+            "se": 9.582029062234841e-05,
+            "z": 0.2014433376039933,
+            "reference": 0.08,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_Q": {
+            "mean": 4.621918942616342,
+            "se": 0.0007568050509316451,
+            "z": 0.9926511072102248,
+            "reference": 4.622670185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_T": {
+            "mean": 4.608268942616342,
+            "se": 0.0007568050509316451,
+            "z": 0.9926511072102248,
+            "reference": 4.609020185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          }
+        }
+      },
+      {
+        "id": "stochastic_negative",
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 107.24545571857666,
+          "forward_sigma": 0.22901964981197576,
+          "terminal_variance": 0.10490000000000001,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.631520185988092,
+          "cov_integral_log_spot": -0.00885
+        },
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "api": 36.37250200136619,
+              "reference": 36.372502001366215,
+              "direct_Q": {
+                "mean": 36.425900416613956,
+                "se": 0.06502442913730475,
+                "hit_count": 229823,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 36.42765978551205,
+                "se": 0.06232154253182697,
+                "hit_count": 231321,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 36.425900416613956,
+                "se": 0.06502442913730475,
+                "z": 0.8212054447257996,
+                "reference": 36.372502001366215,
+                "hit_count": 229823,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 36.42765978551205,
+                "se": 0.06232154253182697,
+                "z": 0.8850516515643917,
+                "reference": 36.372502001366215,
+                "hit_count": 231321,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 1.0682345652066412,
+              "reference": 1.0682345652066307,
+              "direct_Q": {
+                "mean": 1.0630816878916218,
+                "se": 0.007136408895555066,
+                "hit_count": 32321,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 1.062682271305037,
+                "se": 0.007366463829749301,
+                "hit_count": 30823,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 1.0630816878916218,
+                "se": 0.007136408895555066,
+                "z": 0.7220546622851717,
+                "reference": 1.0682345652066307,
+                "hit_count": 32321,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 1.062682271305037,
+                "se": 0.007366463829749301,
+                "z": 0.7537258079203368,
+                "reference": 1.0682345652066307,
+                "hit_count": 30823,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "api": 14.206718609369466,
+              "reference": 14.206718609369501,
+              "direct_Q": {
+                "mean": 14.244647656046602,
+                "se": 0.048528263597651965,
+                "hit_count": 121125,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 14.245522787677551,
+                "se": 0.04688706778150767,
+                "hit_count": 123977,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 14.244647656046602,
+                "se": 0.048528263597651965,
+                "z": 0.7815867262750483,
+                "reference": 14.206718609369501,
+                "hit_count": 121125,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 14.245522787677551,
+                "se": 0.04688706778150767,
+                "z": 0.8276094058360879,
+                "reference": 14.206718609369501,
+                "hit_count": 123977,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 11.250317455130139,
+              "reference": 11.25031745513014,
+              "direct_Q": {
+                "mean": 11.23138582252361,
+                "se": 0.027721987328430217,
+                "hit_count": 141019,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 11.22841155539076,
+                "se": 0.028545118874876103,
+                "hit_count": 138167,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 11.23138582252361,
+                "se": 0.027721987328430217,
+                "z": 0.6829103693845094,
+                "reference": 11.25031745513014,
+                "hit_count": 141019,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 11.22841155539076,
+                "se": 0.028545118874876103,
+                "z": 0.7674131551317722,
+                "reference": 11.25031745513014,
+                "hit_count": 138167,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "api": 4.4289969275350725,
+              "reference": 4.428996927535076,
+              "direct_Q": {
+                "mean": 4.455549062681009,
+                "se": 0.029140332971114957,
+                "hit_count": 42653,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 4.455614259976746,
+                "se": 0.028125489131634575,
+                "hit_count": 44391,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 4.455549062681009,
+                "se": 0.029140332971114957,
+                "z": 0.9111815974186966,
+                "reference": 4.428996927535076,
+                "hit_count": 42653,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 4.455614259976746,
+                "se": 0.028125489131634575,
+                "z": 0.9463775835895201,
+                "reference": 4.428996927535076,
+                "hit_count": 44391,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 33.82046205521597,
+              "reference": 33.82046205521595,
+              "direct_Q": {
+                "mean": 33.791844124357354,
+                "se": 0.04620598997968203,
+                "hit_count": 219491,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 33.78636930961018,
+                "se": 0.04789585705231491,
+                "hit_count": 217753,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 33.791844124357354,
+                "se": 0.04620598997968203,
+                "z": 0.6193554314316903,
+                "reference": 33.82046205521595,
+                "hit_count": 219491,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 33.78636930961018,
+                "se": 0.04789585705231491,
+                "z": 0.7118099080789013,
+                "reference": 33.82046205521595,
+                "hit_count": 217753,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          }
+        ],
+        "mc_moments": {
+          "density": {
+            "mean": 1.0000522635176112,
+            "se": 9.571095543775274e-05,
+            "z": 0.546055750589795,
+            "reference": 1.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "discounted_spot": {
+            "mean": 100.061932519121,
+            "se": 0.07136473008050834,
+            "z": 0.8678309166325344,
+            "reference": 100.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "forward_mean": {
+            "mean": 108.26447785488277,
+            "se": 0.07040060768139425,
+            "z": 0.9330540202951286,
+            "reference": 108.19879028485443,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "mean_integral": {
+            "mean": 0.07994690831193486,
+            "se": 9.565114469181944e-05,
+            "z": 0.5550554385542907,
+            "reference": 0.08,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_Q": {
+            "mean": 4.623231203171152,
+            "se": 0.0006327090233948831,
+            "z": 0.8866906624001544,
+            "reference": 4.622670185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_T": {
+            "mean": 4.632081203171152,
+            "se": 0.0006327090233948831,
+            "z": 0.8866906624001544,
+            "reference": 4.631520185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          }
+        }
+      },
+      {
+        "id": "stochastic_zero_stock_correlation",
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 108.45877924349377,
+          "forward_sigma": 0.25238858928247926,
+          "terminal_variance": 0.1274,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.620270185988092,
+          "cov_integral_log_spot": 0.0024
+        },
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "api": 36.83322283272169,
+              "reference": 36.833222832721745,
+              "direct_Q": {
+                "mean": 36.867668555983656,
+                "se": 0.06769841765930121,
+                "hit_count": 223705,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 36.86729174026409,
+                "se": 0.06816596506690875,
+                "hit_count": 223285,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 36.867668555983656,
+                "se": 0.06769841765930121,
+                "z": 0.5088113497018801,
+                "reference": 36.833222832721745,
+                "hit_count": 223705,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 36.86729174026409,
+                "se": 0.06816596506690875,
+                "z": 0.4997935187876796,
+                "reference": 36.833222832721745,
+                "hit_count": 223285,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 1.5289553965621336,
+              "reference": 1.5289553965621252,
+              "direct_Q": {
+                "mean": 1.528815296253934,
+                "se": 0.009332196650464152,
+                "hit_count": 38439,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 1.5284538589671886,
+                "se": 0.009241479693908766,
+                "hit_count": 38859,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 1.528815296253934,
+                "se": 0.009332196650464152,
+                "z": 0.01501257564950129,
+                "reference": 1.5289553965621252,
+                "hit_count": 38439,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 1.5284538589671886,
+                "se": 0.009241479693908766,
+                "z": 0.05427026964818467,
+                "reference": 1.5289553965621252,
+                "hit_count": 38859,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "api": 15.481866085024661,
+              "reference": 15.481866085024674,
+              "direct_Q": {
+                "mean": 15.469053682005123,
+                "se": 0.05187496225926818,
+                "hit_count": 122357,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 15.467847912465647,
+                "se": 0.0521908298295192,
+                "hit_count": 121668,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 15.469053682005123,
+                "se": 0.05187496225926818,
+                "z": 0.24698626199504042,
+                "reference": 15.481866085024674,
+                "hit_count": 122357,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 15.467847912465647,
+                "se": 0.0521908298295192,
+                "z": 0.268594552047111,
+                "reference": 15.481866085024674,
+                "hit_count": 121668,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 12.525464930785336,
+              "reference": 12.52546493078527,
+              "direct_Q": {
+                "mean": 12.477269673346566,
+                "se": 0.031375290741596874,
+                "hit_count": 139787,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 12.476876313088963,
+                "se": 0.03107463570032324,
+                "hit_count": 140476,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 12.477269673346566,
+                "se": 0.031375290741596874,
+                "z": 1.5360895883207948,
+                "reference": 12.52546493078527,
+                "hit_count": 139787,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 12.476876313088963,
+                "se": 0.03107463570032324,
+                "z": 1.5636102113918473,
+                "reference": 12.52546493078527,
+                "hit_count": 140476,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "api": 5.538318957374091,
+              "reference": 5.53831895737412,
+              "direct_Q": {
+                "mean": 5.523027209173305,
+                "se": 0.03322307214205166,
+                "hit_count": 48588,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 5.5211299745908295,
+                "se": 0.033422190495463536,
+                "hit_count": 48136,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 5.523027209173305,
+                "se": 0.03322307214205166,
+                "z": 0.4602749599865948,
+                "reference": 5.53831895737412,
+                "hit_count": 48588,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 5.5211299745908295,
+                "se": 0.033422190495463536,
+                "z": 0.5142985103152764,
+                "reference": 5.53831895737412,
+                "hit_count": 48136,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 34.92978408505499,
+              "reference": 34.92978408505495,
+              "direct_Q": {
+                "mean": 34.87831245158592,
+                "se": 0.05139544142356878,
+                "hit_count": 213556,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 34.87802465713437,
+                "se": 0.05075145500651296,
+                "hit_count": 214008,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 34.87831245158592,
+                "se": 0.05139544142356878,
+                "z": 1.0014824669921796,
+                "reference": 34.92978408505495,
+                "hit_count": 213556,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 34.87802465713437,
+                "se": 0.05075145500651296,
+                "z": 1.0198609658370823,
+                "reference": 34.92978408505495,
+                "hit_count": 214008,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          }
+        ],
+        "mc_moments": {
+          "density": {
+            "mean": 0.9999753606360893,
+            "se": 9.569276636223202e-05,
+            "z": 0.2574840800135182,
+            "reference": 1.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "discounted_spot": {
+            "mean": 100.03299176187207,
+            "se": 0.07114832584783083,
+            "z": 0.4637039800856311,
+            "reference": 100.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "forward_mean": {
+            "mean": 108.23619508828914,
+            "se": 0.07773705780424524,
+            "z": 0.481170814682782,
+            "reference": 108.19879028485443,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "mean_integral": {
+            "mean": 0.0800234149694952,
+            "se": 9.563282528450355e-05,
+            "z": 0.24484238989628626,
+            "reference": 0.08,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_Q": {
+            "mean": 4.623212106053703,
+            "se": 0.0006963317504946924,
+            "z": 0.7782498288012638,
+            "reference": 4.622670185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_T": {
+            "mean": 4.6208121060537035,
+            "se": 0.0006963317504946924,
+            "z": 0.7782498288012638,
+            "reference": 4.620270185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          }
+        }
+      },
+      {
+        "id": "negative_rates",
+        "statistics": {
+          "discount": 1.04206049680502,
+          "forward": 95.96371833171122,
+          "futures": 96.91847740261416,
+          "forward_sigma": 0.2668332812825267,
+          "terminal_variance": 0.14240000000000003,
+          "mean_integral": -0.04,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.502670185988092,
+          "mean_log_spot_T": 4.492770185988092,
+          "cov_integral_log_spot": 0.009899999999999999
+        },
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 27.0557652236486,
+            "call": {
+              "api": 30.65161750068036,
+              "reference": 30.651617500680388,
+              "direct_Q": {
+                "mean": 30.659192955723608,
+                "se": 0.06679983076273986,
+                "hit_count": 196480,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 30.663495280755455,
+                "se": 0.06910227140179724,
+                "hit_count": 194205,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 30.659192955723608,
+                "se": 0.06679983076273986,
+                "z": 0.11340530292848586,
+                "reference": 30.651617500680388,
+                "hit_count": 196480,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 30.663495280755455,
+                "se": 0.06910227140179724,
+                "z": 0.1718869703429006,
+                "reference": 30.651617500680388,
+                "hit_count": 194205,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 3.5958522770317605,
+              "reference": 3.595852277031743,
+              "direct_Q": {
+                "mean": 3.590809791047901,
+                "se": 0.015922221215760146,
+                "hit_count": 65664,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 3.5915768924864917,
+                "se": 0.015443363673852156,
+                "hit_count": 67939,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 3.590809791047901,
+                "se": 0.015922221215760146,
+                "z": 0.316694882925687,
+                "reference": 3.595852277031743,
+                "hit_count": 65664,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 3.5915768924864917,
+                "se": 0.015443363673852156,
+                "z": 0.2768428326589428,
+                "reference": 3.595852277031743,
+                "hit_count": 67939,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": -9.416352164527101,
+            "call": {
+              "api": 11.399911504934256,
+              "reference": 11.399911504934273,
+              "direct_Q": {
+                "mean": 11.4227685035059,
+                "se": 0.047052395803232956,
+                "hit_count": 90293,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 11.42631013668404,
+                "se": 0.048544825632300996,
+                "hit_count": 87702,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 11.4227685035059,
+                "se": 0.047052395803232956,
+                "z": 0.4857775716078578,
+                "reference": 11.399911504934273,
+                "hit_count": 90293,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 11.42631013668404,
+                "se": 0.048544825632300996,
+                "z": 0.5437990847823851,
+                "reference": 11.399911504934273,
+                "hit_count": 87702,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 20.81626366946136,
+              "reference": 20.816263669461318,
+              "direct_Q": {
+                "mean": 20.8256252858995,
+                "se": 0.042384494866956925,
+                "hit_count": 171851,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 20.826509136590772,
+                "se": 0.04100825423313368,
+                "hit_count": 174442,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 20.8256252858995,
+                "se": 0.042384494866956925,
+                "z": 0.2208736111534744,
+                "reference": 20.816263669461318,
+                "hit_count": 171851,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 20.826509136590772,
+                "se": 0.04100825423313368,
+                "z": 0.24983914387597658,
+                "reference": 20.816263669461318,
+                "hit_count": 174442,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -45.8884695527028,
+            "call": {
+              "api": 3.7488692362134355,
+              "reference": 3.748869236213452,
+              "direct_Q": {
+                "mean": 3.7727485251362296,
+                "se": 0.028476739966370936,
+                "hit_count": 32212,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 3.774177101633301,
+                "se": 0.029450247755160436,
+                "hit_count": 30820,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 3.7727485251362296,
+                "se": 0.028476739966370936,
+                "z": 0.8385541656445744,
+                "reference": 3.748869236213452,
+                "hit_count": 32212,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 3.774177101633301,
+                "se": 0.029450247755160436,
+                "z": 0.8593430394966466,
+                "reference": 3.748869236213452,
+                "hit_count": 30820,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 49.63733878891623,
+              "reference": 49.637338788916196,
+              "direct_Q": {
+                "mean": 49.646845254599135,
+                "se": 0.06228430388735533,
+                "hit_count": 229932,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 49.64649348971574,
+                "se": 0.05964037535456823,
+                "hit_count": 231324,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 49.646845254599135,
+                "se": 0.06228430388735533,
+                "z": 0.15263019877579934,
+                "reference": 49.637338788916196,
+                "hit_count": 229932,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 49.64649348971574,
+                "se": 0.05964037535456823,
+                "z": 0.1534983766469605,
+                "reference": 49.637338788916196,
+                "hit_count": 231324,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          }
+        ],
+        "mc_moments": {
+          "density": {
+            "mean": 0.999975942139661,
+            "se": 9.564874347339583e-05,
+            "z": 0.25152301499580126,
+            "reference": 1.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "discounted_spot": {
+            "mean": 100.01086305881432,
+            "se": 0.07134006357806845,
+            "z": 0.15227150453034308,
+            "reference": 100.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "forward_mean": {
+            "mean": 95.97921950910917,
+            "se": 0.07342229253301286,
+            "z": 0.21112358199631523,
+            "reference": 95.96371833171122,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "mean_integral": {
+            "mean": -0.03997809019913831,
+            "se": 9.559939721265817e-05,
+            "z": 0.22918346245376675,
+            "reference": -0.04,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_Q": {
+            "mean": 4.502746460425016,
+            "se": 0.0007372489997627033,
+            "z": 0.10345817620419699,
+            "reference": 4.502670185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_T": {
+            "mean": 4.492846460425016,
+            "se": 0.0007372489997627033,
+            "z": 0.10345817620419699,
+            "reference": 4.492770185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          }
+        }
+      },
+      {
+        "id": "zero_convexity_covariance",
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 108.19879028485443,
+          "forward_sigma": 0.24758836806279894,
+          "terminal_variance": 0.1226,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.622670185988092,
+          "cov_integral_log_spot": 0.0
+        },
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "api": 36.73279432537793,
+              "reference": 36.732794325377974,
+              "direct_Q": {
+                "mean": 36.735042726173575,
+                "se": 0.06711183393256476,
+                "hit_count": 224982,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 36.733729778568346,
+                "se": 0.06694479593982162,
+                "hit_count": 224982,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 36.735042726173575,
+                "se": 0.06711183393256476,
+                "z": 0.033502300024466525,
+                "reference": 36.732794325377974,
+                "hit_count": 224982,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 36.733729778568346,
+                "se": 0.06694479593982162,
+                "z": 0.013973501259356636,
+                "reference": 36.732794325377974,
+                "hit_count": 224982,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 1.4285268892183784,
+              "reference": 1.4285268892183665,
+              "direct_Q": {
+                "mean": 1.4171112649771627,
+                "se": 0.008824330292754458,
+                "hit_count": 37162,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 1.4172651172164084,
+                "se": 0.008813759074193689,
+                "hit_count": 37162,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 1.4171112649771627,
+                "se": 0.008824330292754458,
+                "z": 1.2936533269359842,
+                "reference": 1.4285268892183665,
+                "hit_count": 37162,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 1.4172651172164084,
+                "se": 0.008813759074193689,
+                "z": 1.2777490180021023,
+                "reference": 1.4285268892183665,
+                "hit_count": 37162,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "api": 15.22015654229822,
+              "reference": 15.220156542298268,
+              "direct_Q": {
+                "mean": 15.200165776815354,
+                "se": 0.05113837867917653,
+                "hit_count": 121726,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 15.200608705470742,
+                "se": 0.05106058908242634,
+                "hit_count": 121726,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 15.200165776815354,
+                "se": 0.05113837867917653,
+                "z": 0.3909151208787648,
+                "reference": 15.220156542298268,
+                "hit_count": 121726,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 15.200608705470742,
+                "se": 0.05106058908242634,
+                "z": 0.38283610077372826,
+                "reference": 15.220156542298268,
+                "hit_count": 121726,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 12.263755388058891,
+              "reference": 12.2637553880589,
+              "direct_Q": {
+                "mean": 12.231393421354573,
+                "se": 0.030562692218876277,
+                "hit_count": 140418,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 12.232010326039031,
+                "se": 0.03050792936988899,
+                "hit_count": 140418,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 12.231393421354573,
+                "se": 0.030562692218876277,
+                "z": 1.0588715965388533,
+                "reference": 12.2637553880589,
+                "hit_count": 140418,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 12.232010326039031,
+                "se": 0.03050792936988899,
+                "z": 1.0405511837588426,
+                "reference": 12.2637553880589,
+                "hit_count": 140418,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "api": 5.305780812485406,
+              "reference": 5.3057808124854136,
+              "direct_Q": {
+                "mean": 5.282548914236587,
+                "se": 0.03234131734982366,
+                "hit_count": 47321,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 5.2829694107059115,
+                "se": 0.032303030182686425,
+                "hit_count": 47321,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 5.282548914236587,
+                "se": 0.03234131734982366,
+                "z": 0.7183349397161494,
+                "reference": 5.3057808124854136,
+                "hit_count": 47321,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 5.2829694107059115,
+                "se": 0.032303030182686425,
+                "z": 0.7061691008705536,
+                "reference": 5.3057808124854136,
+                "hit_count": 47321,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 34.697245940166304,
+              "reference": 34.69724594016626,
+              "direct_Q": {
+                "mean": 34.662935664511444,
+                "se": 0.0503230605362386,
+                "hit_count": 214823,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 34.662237313194424,
+                "se": 0.05015879269951694,
+                "hit_count": 214823,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 34.662935664511444,
+                "se": 0.0503230605362386,
+                "z": 0.6818002579574868,
+                "reference": 34.69724594016626,
+                "hit_count": 214823,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 34.662237313194424,
+                "se": 0.05015879269951694,
+                "z": 0.6979559333008954,
+                "reference": 34.69724594016626,
+                "hit_count": 214823,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          }
+        ],
+        "mc_moments": {
+          "density": {
+            "mean": 1.0000399662779653,
+            "se": 9.549588735381309e-05,
+            "z": 0.41851308022558514,
+            "reference": 1.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "discounted_spot": {
+            "mean": 100.0162496726677,
+            "se": 0.07112684971719394,
+            "z": 0.2284604580732554,
+            "reference": 100.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "forward_mean": {
+            "mean": 108.21198753496091,
+            "se": 0.07617445953212024,
+            "z": 0.17325032809614743,
+            "reference": 108.19879028485443,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "mean_integral": {
+            "mean": 0.07995365016269851,
+            "se": 9.542540244897443e-05,
+            "z": 0.48571801755069516,
+            "reference": 0.08,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_Q": {
+            "mean": 4.623041848335328,
+            "se": 0.0006824806540848379,
+            "z": 0.5445756520885461,
+            "reference": 4.622670185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_T": {
+            "mean": 4.623041848335328,
+            "se": 0.0006824806540848379,
+            "z": 0.5445756520885461,
+            "reference": 4.622670185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          }
+        }
+      },
+      {
+        "id": "zero_spot_vol_stochastic_rate",
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 108.45877924349377,
+          "forward_sigma": 0.034641016151377546,
+          "terminal_variance": 0.0024,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.685170185988092,
+          "mean_log_spot_T": 4.682770185988092,
+          "cov_integral_log_spot": 0.0024
+        },
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "api": 35.30426743615955,
+              "reference": 35.304267436159634,
+              "direct_Q": {
+                "mean": 35.2937954470876,
+                "se": 0.006200878733241424,
+                "hit_count": 262144,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 35.288469996634504,
+                "se": 0.00957908261208041,
+                "hit_count": 262144,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 35.2937954470876,
+                "se": 0.006200878733241424,
+                "z": 1.6887911411490244,
+                "reference": 35.304267436159634,
+                "hit_count": 262144,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 35.288469996634504,
+                "se": 0.00957908261208041,
+                "z": 1.6491599628974494,
+                "reference": 35.304267436159634,
+                "hit_count": 262144,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 1.3325676921379776e-19,
+              "reference": 1.3325676921399326e-19,
+              "direct_Q": {
+                "mean": 0.0,
+                "se": 0.0,
+                "hit_count": 0,
+                "zero_hit": true
+              },
+              "direct_T": {
+                "mean": 0.0,
+                "se": 0.0,
+                "hit_count": 0,
+                "zero_hit": true
+              },
+              "importance": {
+                "normal_shift": -9.864600172713876,
+                "seed": 287081,
+                "samples": 262144,
+                "likelihood": "exp(-theta*Z-theta^2/2); raw, never self-normalized",
+                "likelihood_mean": 1.7383817257787096e-05,
+                "likelihood_se": 1.7336474682798413e-05
+              },
+              "mc_Q": {
+                "mean": 1.3262749690333266e-19,
+                "se": 6.831381503922349e-22,
+                "z": 0.9211494194831541,
+                "reference": 1.3325676921399326e-19,
+                "hit_count": 217592,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 1.3273751977821607e-19,
+                "se": 6.988785805233709e-22,
+                "z": 0.7429751751560857,
+                "reference": 1.3325676921399326e-19,
+                "hit_count": 220788,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "api": 3.7537748961715116,
+              "reference": 3.7537748961715707,
+              "direct_Q": {
+                "mean": 3.744525133289695,
+                "se": 0.007074396971959686,
+                "hit_count": 193112,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 3.7439698373207393,
+                "se": 0.007535634352661997,
+                "hit_count": 188905,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 3.744525133289695,
+                "se": 0.007074396971959686,
+                "z": 1.307498422627141,
+                "reference": 3.7537748961715707,
+                "hit_count": 193112,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 3.7439698373207393,
+                "se": 0.007535634352661997,
+                "z": 1.3011590520402176,
+                "reference": 3.7537748961715707,
+                "hit_count": 188905,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 0.7973737419321842,
+              "reference": 0.7973737419321667,
+              "direct_Q": {
+                "mean": 0.8038319626583255,
+                "se": 0.003674656085466619,
+                "hit_count": 69032,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 0.8033661226064592,
+                "se": 0.0034677690199078166,
+                "hit_count": 73239,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 0.8038319626583255,
+                "se": 0.003674656085466619,
+                "z": 1.7575034441185464,
+                "reference": 0.7973737419321667,
+                "hit_count": 69032,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 0.8033661226064592,
+                "se": 0.0034677690199078166,
+                "z": 1.728021860709692,
+                "reference": 0.7973737419321667,
+                "hit_count": 73239,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "api": 7.168352139442229e-08,
+              "reference": 7.168352139439199e-08,
+              "direct_Q": {
+                "mean": 0.0,
+                "se": 0.0,
+                "hit_count": 0,
+                "zero_hit": true
+              },
+              "direct_T": {
+                "mean": 0.0,
+                "se": 0.0,
+                "hit_count": 0,
+                "zero_hit": true
+              },
+              "importance": {
+                "normal_shift": 6.284207402458322,
+                "seed": 287150,
+                "samples": 262144,
+                "likelihood": "exp(-theta*Z-theta^2/2); raw, never self-normalized",
+                "likelihood_mean": 0.025661445123459407,
+                "likelihood_se": 0.006743851984979065
+              },
+              "mc_Q": {
+                "mean": 7.148245261821297e-08,
+                "se": 2.795857842539829e-10,
+                "z": 0.7191666654852777,
+                "reference": 7.168352139439199e-08,
+                "hit_count": 223486,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 7.149485704065721e-08,
+                "se": 2.731622198936362e-10,
+                "z": 0.690667815660011,
+                "reference": 7.168352139439199e-08,
+                "hit_count": 220430,
+                "stochastic": true,
+                "samples": 262144
+              }
+            },
+            "put": {
+              "api": 29.39146519936442,
+              "reference": 29.391465199364344,
+              "direct_Q": {
+                "mean": 29.412409105824857,
+                "se": 0.012401757466482848,
+                "hit_count": 262144,
+                "zero_hit": false
+              },
+              "direct_T": {
+                "mean": 29.407262567205947,
+                "se": 0.00957908261208041,
+                "hit_count": 262144,
+                "zero_hit": false
+              },
+              "importance": null,
+              "mc_Q": {
+                "mean": 29.412409105824857,
+                "se": 0.012401757466482848,
+                "z": 1.6887853610358114,
+                "reference": 29.391465199364344,
+                "hit_count": 262144,
+                "stochastic": true,
+                "samples": 262144
+              },
+              "mc_T": {
+                "mean": 29.407262567205947,
+                "se": 0.00957908261208041,
+                "z": 1.6491524795580135,
+                "reference": 29.391465199364344,
+                "hit_count": 262144,
+                "stochastic": true,
+                "samples": 262144
+              }
+            }
+          }
+        ],
+        "mc_moments": {
+          "density": {
+            "mean": 1.0001618652213524,
+            "se": 9.584679680568609e-05,
+            "z": 1.6887911411434569,
+            "reference": 1.0,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "discounted_spot": {
+            "mean": 100.00000000000003,
+            "se": 5.743949938984239e-17,
+            "z": 0.0,
+            "reference": 100.0,
+            "hit_count": 262144,
+            "stochastic": false,
+            "samples": 262144
+          },
+          "forward_mean": {
+            "mean": 108.18169764639234,
+            "se": 0.01036445150665784,
+            "z": 1.6491599628893603,
+            "reference": 108.19879028485443,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "mean_integral": {
+            "mean": 0.07984018657967316,
+            "se": 9.576028624868291e-05,
+            "z": 1.6688903781241111,
+            "reference": 0.08,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_Q": {
+            "mean": 4.685010372567765,
+            "se": 9.576028624868292e-05,
+            "z": 1.6688903781223718,
+            "reference": 4.685170185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          },
+          "log_mean_T": {
+            "mean": 4.6826103725677655,
+            "se": 9.576028624868292e-05,
+            "z": 1.6688903781223718,
+            "reference": 4.682770185988092,
+            "hit_count": 262144,
+            "stochastic": true,
+            "samples": 262144
+          }
+        }
+      }
+    ],
+    "external_forward": [
+      {
+        "call": 8.16725604255123,
+        "put": 10.027256042551231
+      },
+      {
+        "call": 8.16725604255123,
+        "put": 10.027256042551231
+      },
+      {
+        "call": 9.447874017743125,
+        "put": 7.367874017743124
+      }
+    ],
+    "limits": [
+      {
+        "call": 0.0,
+        "put": 20.0
+      },
+      {
+        "call": 0.0,
+        "put": 0.0
+      },
+      {
+        "call": 25.0,
+        "put": 0.0
+      },
+      {
+        "call": 0.0,
+        "put": 19.215788783046463
+      },
+      {
+        "call": 0.0,
+        "put": 0.0
+      },
+      {
+        "call": 24.01973597880808,
+        "put": 0.0
+      },
+      {
+        "call": 0.0,
+        "put": 19.999999992
+      },
+      {
+        "call": 0.0009973557005786666,
+        "put": 0.0009973557005786666
+      },
+      {
+        "call": 24.99999999,
+        "put": 0.0
+      },
+      {
+        "call": 0.0,
+        "put": 19.215788783046463
+      },
+      {
+        "call": 3.832995298410414e-07,
+        "put": 3.832995298410414e-07
+      },
+      {
+        "call": 24.01973597880808,
+        "put": 0.0
+      }
+    ]
+  },
+  "max_display_error": 7.460698725481052e-14,
+  "price_count": 42,
+  "max_mc_se": 1.7575034441185464,
+  "sections": {
+    "28.6": {
+      "source_equations": "28.26–28.29",
+      "independent": "Q/T quadrature, raw fixed-seed MC",
+      "printed_values": []
+    },
+    "28.7": {
+      "source_equations": "28.30–28.32",
+      "independent": "ratio quadrature; stochastic-rate MC in full suite",
+      "printed_values": []
+    },
+    "28.8": {
+      "source_equations": "28.33–28.35",
+      "independent": "covariance sum; Gaussian tilt/MC and TN20 in full suite",
+      "printed_values": []
+    }
+  },
+  "source_sha256": {
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+    "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
+    "docs/CHAPTER_28_ACCEPTANCE_2026-10-05.md": "56c28a28641cdd416e297eea2a2915455bf886f9fd0ac537f44cdf40eadb9904",
+    "docs/acceptance/chapters/ch28.json": "556e59cafe8235059bf38b48ed02203e7bfcdd49420f9b05d60147db1155cdec",
+    "hullkit/src/hullkit/_chapter28_lesson.py": "f9800998f05b2d8a363537ab84ca05cd0b3383d56303a84a2afd1c6e949a4a3d",
+    "hullkit/src/hullkit/_exchange_measure.py": "4282288c3f280f0b9914946b3062a3d827a1948cfa86293ffec871c16deafe8b",
+    "hullkit/src/hullkit/_forward_black.py": "1600d38091668f3609a985192009759c3c76196203ea4435b3bdd20fbf945128",
+    "hullkit/src/hullkit/_numeraire_change.py": "cf22a9bc717b7860b1a241cd4a6ce407bcca653934e2cf3d036bba2ffae3bfa6",
+    "hullkit/tests/_chapter28_reference.py": "df6a6ba85a5215d32b5555008957b877f000734f8888a27746f20c9ee23c0d46",
+    "hullkit/tests/_forward_black_reference.py": "ff28965898484b7a9c9c97113402b48b612466fe6191ed95e242969ce7665271",
+    "hullkit/tests/_forward_black_validation.py": "497eff49fe364fe3eabd535c76ff6828bd058f93d2fa4de08d3c63d9310e7c31",
+    "hullkit/tests/test_chapter28_lesson.py": "19468be8972f4dca42de1f342976639ad485b8b32537e9b658a36f7a1c117429",
+    "hullkit/tests/test_exchange_measure.py": "121455d99100b9a7554e192157413535f0d1f5591a3f43f31f335cd50dfb3037",
+    "hullkit/tests/test_forward_black.py": "27678022b80f98250efb9dd7e2e113822891494cd8f7902829dd5cee7fa1fc1b",
+    "hullkit/tests/test_forward_black_numerics.py": "bf409853ccadce0bdfbc884ff8bf02a5487ef8f39fa91507198dca7bd0db3bd9",
+    "hullkit/tests/test_numeraire_change.py": "9c61b255a2cc8dc0779947840e5ea1e7d3d749295549fd5b2de9babe950217e5",
+    "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210",
+    "report/report_builder/__init__.py": "e6bd9f43a533654074564fec7ef4ee7324379dfc28f693cc324af7cc0a910db9",
+    "report/report_builder/build.py": "12e280a3c47a2aa952f135ba8b459effcd308d519cc317170c8b0c0f11754cbf",
+    "report/report_builder/figures.py": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898",
+    "report/report_builder/frontier_figures.py": "abc2a1f1596482b043bcb3709f8d6daca9d7f2f0edad6cc8dfe0df0246c0eb92",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/report_builder/theme.py": "db43b679941eff1c165fdf6181a995eff7d076d8f9300f7136d306961d27bf5b",
+    "report/tests/test_chapter_acceptance.py": "d42d57e438ab41c90a086ac848e72ba6d8ff77f1ec5b8e7caa0e7de8b348132e",
+    "scripts/chapter_acceptance.py": "e5a3b211f4b3bfab48a778a220a3bc3998c84295fd89a8de9cb41c02bc050f65",
+    "scripts/d1_preflight_compare.py": "d693d8c7c2e9f22f611d6c87ba78cbfc23c7a242b42f00a2cced6f243f68452d",
+    "scripts/evidence_dependencies.json": "bbbfbf79526584fba10425c0278af8e38ce23e8ee95c862d759d35a4575c86f8",
+    "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+    "scripts/evidence_record.py": "264dbf9e3d4ff4c6f7bba4e6b320e1b8a71d21d1ff231adec1b92a22bba379f3",
+    "scripts/evidence_store.py": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+    "scripts/probe_render_runtime.cjs": "efab3367ef20b53bd353e6ecaf867a811d92aca3e71756fc5cc29cde3537a016",
+    "scripts/run_browser_verifier.cjs": "68f743a20e5ca659ca087558b71d4e679e64239f29cd8b832a28b9d5d26f88a1",
+    "scripts/verify_chapter_browser.cjs": "c352c4a846c4a75908094b9f88fb589bd5f033d3716bd26e379a70cb5205e2de",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "313acdfe78f2f016ad01b2a1d17901988edbeb95f2357d1f89fb4bf68541aa9c",
+    "volumes/10_exotics_martingales/exotics.ipynb": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+  },
+  "artifact_sha256": {
+    "docs/validation/chapter-28/reference.json": "cb48df62b74a7908a922b9ccec86f7a26c84f453290f9e143ca92e244f53abeb"
+  }
+}
