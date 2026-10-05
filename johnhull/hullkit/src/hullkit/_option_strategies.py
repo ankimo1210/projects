@@ -214,3 +214,51 @@ def combination_profile(terminal_spot, name, strikes, premiums, *, reverse=False
                 minimum_profit=-math.inf if reverse else -cost,
                 maximum_profit=cost if reverse else math.inf,
                 zero_stock_profit=direction*(put_weight*put_strike-cost))
+
+
+def butterfly_spike(terminal_spot, center, width, *, height=None):
+    """Figure 12.13: unit butterfly height h, scaled by height/h."""
+    height = width if height is None else height
+    if not all(math.isfinite(v) for v in (center, width, height)) or width <= 0 or center < width:
+        raise ValueError("positive width and nonnegative outer strikes required")
+    legs = [(quantity*height/width, kind, strike) for quantity, kind, strike in
+            spread_legs("call_butterfly", [center-width, center, center+width])]
+    result = strategy_profit(terminal_spot, legs, [0, 0, 0])
+    return dict(legs=legs, payoff=result["payoff"])
+
+
+def replicate_payoff(terminal_spot, knots, values):
+    """Finite butterfly-hat interpolation, with explicit padded zero tails.
+
+    Add a zero-valued knot one local spacing beyond each endpoint. The
+    original node values interpolate exactly, including nonzero endpoints;
+    the padding describes behavior outside the requested approximation range.
+    Nonuniform knots use unequal wing weights. A negative computational
+    padding strike is translated into stock plus terminal cash, never a
+    traded negative-strike call. Cash here is payable at terminal time.
+    """
+    k, y = np.asarray(knots, dtype=float), np.asarray(values, dtype=float)
+    if k.ndim != 1 or y.shape != k.shape or len(k) < 2 or not np.all(np.isfinite(k)) or not np.all(np.isfinite(y)) or np.any(k < 0) or np.any(np.diff(k) <= 0):
+        raise ValueError("finite nonnegative increasing knots and matching node values required")
+    terminal = np.asarray(terminal_spot, dtype=float)
+    if not np.all(np.isfinite(terminal)) or np.any(terminal < 0):
+        raise ValueError("terminal stock prices must be finite and nonnegative")
+    padded = np.concatenate(([k[0]-(k[1]-k[0])], k, [k[-1]+(k[-1]-k[-2])]))
+    weights = {}
+    for i, height in enumerate(y, start=1):
+        left, center, right = padded[i-1:i+2]
+        left_weight, right_weight = height/(center-left), height/(right-center)
+        for strike, weight in ((left, left_weight), (center, -left_weight-right_weight), (right, right_weight)):
+            weights[strike] = weights.get(strike, 0.)+weight
+    cash, stock = 0., 0.
+    legs = []
+    for strike, quantity in sorted(weights.items()):
+        if strike < 0:
+            stock += quantity
+            cash -= quantity*strike
+        elif quantity != 0:
+            legs.append((float(quantity), "call", float(strike)))
+    if stock != 0:
+        legs.append((float(stock), "stock", None))
+    payoff = payoffs.strategy_payoff(terminal, legs)+cash
+    return dict(legs=legs, cash=float(cash), payoff=payoff, padded_knots=padded)
