@@ -60,7 +60,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 4 | 0 | — | 完了（M14–M17） |
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
 | P3 | 金利（Ch 28–34） | 37 | 8 | 3 | ロジック36/37、§33.2は原典入力不足 | Ch28全8節受入、Ch29–34受入29節を保留。本人指示2026-10-05でP4実装へ |
-| P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 既存実装を利用し、本文数値・不足計算をprivateで補う | codex/p4-logicで6節実装、Ch10から進行。教材・正式受入は保留 |
+| P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 既存実装を利用し、本文数値・不足計算をprivateで補う | codex/p4-logicでCh10の計算6節を実装。次はCh11。教材・正式受入は保留 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | vol 27・28 の資産を流用できる | 下調べ済み・節受入未着手 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 軽いが件数が多い。定性が多い | 下調べ済み・節受入未着手 |
 | P7 | Ch 35–37 | 16 | 0 | 6 | §36.4 は本文にパラメータ σ(t)・η(t) がない（CR-23） | 下調べ済み・節受入未着手 |
@@ -312,10 +312,10 @@ private計算を先行し、D3の共通設定ツールで説明とrenderedを含
 | M28 | §28.3 Martingales（pp.675–676） | 受入。条件付き定義/signed Itô/同一給付Q・G価格、9条件付きMC/旧235保持/16状態/27D1。[受入](docs/SECTION_28_3_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_3_REVIEW_2026-10-04.md) |
 | M29 | §28.4 Alternative Choices for the Numeraire（pp.676–679） | 受入。HW Q状態/同一給付Q・T/支払・annuity、63独立fixture/旧246保持/16状態/28D1。[受入](docs/SECTION_28_4_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_4_REVIEW_2026-10-04.md) |
 | M30 | §28.5 Extension to Several Factors（pp.679–680） | 受入/main統合push済み。MF01–06/11市場132状態/旧257/16状態/29D1。Important1を4回帰RED→GREENで修正、Minor2保留。[受入](docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md) |
-| M31 | §28.6 Black’s Model Revisited（pp.680–681） | privateロジック完了。独立7市場42価格・zero-hit importance検証済み。Ch28まとめ正式受入待ち |
-| 以降 | Ch29–34の未受入29節から未評価節へ展開 | ロジックは28節完了、§33.2は原典入力不足。正式受入は章ごとに実施 |
+| M31 | §28.6 Black’s Model Revisited（pp.680–681） | Ch28まとめで正式受入・main統合済み。独立7市場42価格・zero-hit importance検証済み |
+| 以降 | Ch29–34の未受入29節から未評価節へ展開 | ロジックは28節完了、§33.2は原典入力不足。正式受入を保留しP4の実装へ |
 
-現在地（2026-10-05）：Ch28章末受入、台帳33/273、P3正式8/37。codex/p3-logicはロジック36/37、§33.2のflexicap strike/reset・payment日とsticky K0を保留。Ch28の全suiteは1回（4,436 PASS/6skip/3FAIL）、更新漏れ3件を修正して対象70 tests PASS。章check/台帳成果物/release/24表示状態/2D1/両保管庫PASS。受入はCh28で区切り、P4のCh10からロジックを先行（現在1節）。
+現在地（2026-10-05）：Ch28章末受入、台帳33/273、P3正式8/37。codex/p3-logicはロジック36/37、§33.2のflexicap strike/reset・payment日とsticky K0を保留。Ch28の全suiteは1回（4,436 PASS/6skip/3FAIL）、更新漏れ3件を修正して対象70 tests PASS。章check/台帳成果物/release/24表示状態/2D1/両保管庫PASS。受入はCh28で区切り、P4のCh10の計算6節を実装。次はCh11の価格の性質・上下限・パリティ。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
