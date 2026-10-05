@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 30 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -48,9 +48,10 @@
 | §14.6 | `_stochastic_foundations.py` | 数値例なし。式14.12の局所係数、式14.15–16のF=S exp(r(T−t))、dF=(μ−r)Fdt+σFdz。独立正規積分・GBM経路のF変換とMC/SEで確認 | 計算部分完了。扱うのは無配当・一定金利のforward価格。契約価値とは区別。Qでlevel drift0、log drift−σ²/2。説明・図・受入は保留 | 19 passed・ruff PASS |
 | §14.7 | `_stochastic_foundations.py` | 数値pinなし。式14.17–19のlog平均・分散とstockモーメント。独立stock Euler（8/512段・2万経路）でlog分散収束・平均/分散/3CDF点をMC6SE判定 | 計算部分完了。独立検証はlog生成器を使わずstock Eulerからlogを測定。負Euler標本を除外せず全標本の正値を確認。説明・図・受入は保留 | 22 passed・ruff PASS |
 | §14.8 | `_stochastic_foundations.py` | 数値pinなし。式14.20、H0.9/0.5/0.1・100段fBM経路、H0.5→min(s,t)、隣接増分相関2^(2H−1)−1。独立fGn積分/固有値サンプル・MC6SE、Gaussian条件付き共分散 | 計算部分完了。Gaussian条件付き共分散でも非Markov性を区別。dense Choleskyは小格子向け、jitterなし。Figureの乱数軌跡を印刷pinにしない。説明・図・受入は保留 | 30 passed・ruff PASS |
+| §14.appendix | `_stochastic_foundations.py` | Eε²=1/Varε²=2、累積二次変分Var=2b⁴TΔt、式14A.10–11の相関cross項。独立χ²法則/MC、2GBM積の期待値と多driverの等価分散 | 計算部分完了。単一ε²を1と置かず累積の分散収束を検証。多変量はB C Bᵀの共分散で扱う。説明・図・受入は保留 | 36 passed・ruff PASS |
 
 ## 次の実装
 
 - Ch11の計算6節（§11.1・11.3–11.7）を実装・push。本文28数値＋4式、独立求積/資金会計/木/PDEを対象78 tests・ruffで確認。§11.2の仮定・記号、説明・描画・正式受入は保留。
-- 次はCh14付録（二次変分・多変量Itô）。P4の計算は合計35節、正式受入は0/112のまま。
+- 次はCh15 §15.1（株価の対数正規分布）。P4の計算は合計36節、正式受入は0/112のまま。
 - Ch10の§10.5・10.8–10.12の説明要求は保留。§10.10の説明用の損失20ドルは下調べで算術確認済みだが、今回の新テストには含めていない。Ch10全12節の完了や正式受入を表すものではない。
