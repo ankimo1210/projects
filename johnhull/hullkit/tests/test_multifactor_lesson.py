@@ -45,7 +45,7 @@ def test_four_figures_preserve_correlated_arithmetic_and_raw_mc_intervals():
         "mc",
         "mc se zero",
         "truncated",
-        "result hash",
+        "different fixed seed",
         "max mc",
         "negative control",
         "reference resigned",
@@ -74,8 +74,10 @@ def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutat
         record["pricing_mc"][0]["call_g"]["se"] = 0
     elif mutation == "truncated":
         record["api_conditional_means"].pop()
-    elif mutation == "result hash":
-        record["result_sha256"] = "0" * 64
+    elif mutation == "different fixed seed":
+        item = record["pricing_mc"][1]["call_g"]
+        item["mean"] += 1e-4
+        item["z"] = abs(item["mean"] - item["reference"]) / item["se"]
     elif mutation == "max mc":
         record["max_mc_se"] = 0
     elif mutation == "negative control":
@@ -89,8 +91,6 @@ def test_consumer_rejects_resigned_result_mutations(tmp_path, monkeypatch, mutat
         p.write_text(json.dumps(data))
         monkeypatch.setattr(m, "_DATA", p)
         record["reference_sha256"] = hashlib.sha256(p.read_bytes()).hexdigest()
-    if mutation not in ["result hash", "truncated"]:
-        record["result_sha256"] = m._result_digest(record)
     p = tmp_path / "record.json"
     p.write_text(json.dumps(record))
     monkeypatch.setattr(m, "_RECORD", p)
@@ -134,7 +134,6 @@ def test_consumer_rejects_jointly_resigned_mc_mean_se_and_summaries(
     summaries = [v for row in record["pricing_mc"] for v in row.values() if isinstance(v, dict)]
     summaries += [row["mc"] for row in record["api_conditional_means"]]
     record["max_mc_se"] = max(row["z"] for row in summaries)
-    record["result_sha256"] = m._result_digest(record)
     path = tmp_path / "jointly-resigned.json"
     path.write_text(json.dumps(record))
     monkeypatch.setattr(m, "_RECORD", path)
@@ -171,8 +170,17 @@ def test_consumer_accepts_fixed_seed_mean_and_se_roundoff(tmp_path, monkeypatch)
     summaries = [v for row in record["pricing_mc"] for v in row.values() if isinstance(v, dict)]
     summaries += [row["mc"] for row in record["api_conditional_means"]]
     record["max_mc_se"] = max(row["z"] for row in summaries)
-    record["result_sha256"] = m._result_digest(record)
     target = tmp_path / "rounded-results.json"
     target.write_text(json.dumps(record))
     monkeypatch.setattr(m, "_RECORD", target)
+    assert set(m._figures()) == KEYS
+
+
+def test_legacy_numeric_digest_does_not_define_acceptance(tmp_path, monkeypatch):
+    m = importlib.import_module("hullkit._multi_factor_lesson")
+    record = json.loads(m._RECORD.read_text())
+    record["result_sha256"] = "unused legacy metadata"
+    path = tmp_path / "legacy-digest.json"
+    path.write_text(json.dumps(record))
+    monkeypatch.setattr(m, "_RECORD", path)
     assert set(m._figures()) == KEYS
