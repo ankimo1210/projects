@@ -4,7 +4,7 @@ import math
 
 import numpy as np
 
-from . import bsm
+from . import bsm, trees
 
 
 def _market(spot, strike, rate, volatility, maturity):
@@ -154,3 +154,31 @@ def capital_structure_payoffs(terminal_assets, face_value):
     if not np.all(np.isfinite(assets)) or np.any(assets < 0) or not math.isfinite(face_value) or face_value < 0:
         raise ValueError("assets and face value must be finite and nonnegative")
     return dict(equity=np.maximum(assets-face_value, 0), debt=np.minimum(assets, face_value))
+
+
+def exercise_comparison(spot, strike, rate, volatility, maturity, *, kind="call", steps=400):
+    """No-dividend price/intrinsic comparison for sections 11.5 and 11.6.
+
+    American minus European *on the same CRR grid* isolates the exercise
+    premium; the analytic European price is also returned as a convergence
+    reference. ``exercise_now`` is a numerical root decision, not a precise
+    continuous-time free boundary. Zero inputs use deterministic limits.
+    """
+    _market(spot, strike, rate, volatility, maturity)
+    if kind not in ("call", "put") or steps < 1 or int(steps) != steps:
+        raise ValueError("call/put kind and a positive integer step count required")
+    call, put = _european_pair(spot, strike, rate, volatility, maturity)
+    european = call if kind == "call" else put
+    intrinsic = max(spot-strike, 0) if kind == "call" else max(strike-spot, 0)
+    if maturity == 0 or volatility == 0 or spot == 0 or strike == 0:
+        tree_european = european
+        american = max(european, intrinsic)
+    else:
+        args = (spot, strike, rate, volatility, maturity, int(steps))
+        tree_european = trees.crr_price(*args, kind=kind)
+        american = trees.crr_price(*args, kind=kind, american=True)
+    return dict(european=european, tree_european=tree_european, american=american,
+                intrinsic=intrinsic, early_exercise_premium=american-tree_european,
+                exercise_gap=american-intrinsic,
+                exercise_now=intrinsic > 0 and american <= intrinsic+1e-9,
+                interest_deferral=strike*(1-math.exp(-rate*maturity)), put_insurance=put)
