@@ -1564,6 +1564,151 @@
         "report/tests/test_multifactor_notebook.py",
         "report/tests/test_multifactor_registry.py"
       ]
+    },
+    "28.6": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "6E. Blackのモデルを測度から再訪（§28.6）",
+        "level": 2
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "6E. Blackのモデルを測度から再訪（§28.6）",
+        "level": 2
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "martingale_black_forward_market",
+          "martingale_black_forward_prices"
+        ]
+      },
+      "python_modules": [
+        "hullkit._chapter28_lesson"
+      ],
+      "data": [
+        "docs/validation/chapter-28/reference.json",
+        "docs/validation/chapter-28/numerical-check.json",
+        "docs/acceptance/chapters/ch28.json"
+      ],
+      "verifier": "scripts/verify_chapter_browser.cjs",
+      "chapter_config": "docs/acceptance/chapters/ch28.json",
+      "verifier_inputs": [
+        "docs/validation/chapter-28/reference.json",
+        "docs/validation/chapter-28/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/chapter-28",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_forward_black.py",
+        "hullkit/tests/test_forward_black_numerics.py",
+        "hullkit/tests/test_chapter28_lesson.py"
+      ]
+    },
+    "28.7": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "6F. 一つの資産を別の資産と交換（§28.7）",
+        "level": 2
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "6F. 一つの資産を別の資産と交換（§28.7）",
+        "level": 2
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "martingale_exchange_ratio_means",
+          "martingale_exchange_measure_prices"
+        ]
+      },
+      "python_modules": [
+        "hullkit._chapter28_lesson"
+      ],
+      "data": [
+        "docs/validation/chapter-28/reference.json",
+        "docs/validation/chapter-28/numerical-check.json",
+        "docs/acceptance/chapters/ch28.json"
+      ],
+      "verifier": "scripts/verify_chapter_browser.cjs",
+      "chapter_config": "docs/acceptance/chapters/ch28.json",
+      "verifier_inputs": [
+        "docs/validation/chapter-28/reference.json",
+        "docs/validation/chapter-28/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/chapter-28",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_exchange_measure.py",
+        "hullkit/tests/test_chapter28_lesson.py"
+      ]
+    },
+    "28.8": {
+      "notebook": {
+        "path": "volumes/10_exotics_martingales/exotics.ipynb",
+        "heading": "6G. ニュメレール変更の共分散補正（§28.8）",
+        "level": 2
+      },
+      "book": {
+        "page": "book/_build/html/notebooks/10_exotics.html",
+        "heading": "6G. ニュメレール変更の共分散補正（§28.8）",
+        "level": 2
+      },
+      "portal": {
+        "page": "report/site/exotics.html",
+        "figures": [
+          "martingale_numeraire_drift_shift",
+          "martingale_numeraire_absolute_shift"
+        ]
+      },
+      "python_modules": [
+        "hullkit._chapter28_lesson"
+      ],
+      "data": [
+        "docs/validation/chapter-28/reference.json",
+        "docs/validation/chapter-28/numerical-check.json",
+        "docs/acceptance/chapters/ch28.json"
+      ],
+      "verifier": "scripts/verify_chapter_browser.cjs",
+      "chapter_config": "docs/acceptance/chapters/ch28.json",
+      "verifier_inputs": [
+        "docs/validation/chapter-28/reference.json",
+        "docs/validation/chapter-28/numerical-check.json"
+      ],
+      "verifier_output_dir": "docs/validation/chapter-28",
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "tests": [
+        "hullkit/tests/test_numeraire_change.py",
+        "hullkit/tests/test_chapter28_lesson.py"
+      ]
     }
   }
 }

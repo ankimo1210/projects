@@ -1,0 +1,63 @@
+{
+  "browser_version": "145.0.7632.6",
+  "mathjax_version": "3.2.2",
+  "mathjax_scripts": [
+    {
+      "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+      "sha256": "300480069078b5892d2363a2b65e2dfbbf30fe5c80f83edbfecf4610fd093862"
+    }
+  ],
+  "fonts": {
+    "book_heading": [
+      {
+        "family": "Droid Sans Fallback",
+        "postscript": "DroidSansFallback",
+        "file": "DroidSansFallbackFull.ttf",
+        "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+      },
+      {
+        "family": "Liberation Sans",
+        "postscript": "LiberationSans",
+        "file": "LiberationSans-Regular.ttf",
+        "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+      }
+    ],
+    "book_body": [
+      {
+        "family": "Droid Sans Fallback",
+        "postscript": "DroidSansFallback",
+        "file": "DroidSansFallbackFull.ttf",
+        "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+      },
+      {
+        "family": "Liberation Sans",
+        "postscript": "LiberationSans",
+        "file": "LiberationSans-Regular.ttf",
+        "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+      }
+    ],
+    "portal_heading": [
+      {
+        "family": "Droid Sans Fallback",
+        "postscript": "DroidSansFallback",
+        "file": "DroidSansFallbackFull.ttf",
+        "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+      },
+      {
+        "family": "Liberation Sans",
+        "postscript": "LiberationSans-Bold",
+        "file": "LiberationSans-Bold.ttf",
+        "sha256": "3973aa5054fb467dd5627245d3dc82e37bf16fe075756156a570455871351582"
+      }
+    ],
+    "portal_plot_text": [
+      {
+        "family": "Liberation Sans",
+        "postscript": "LiberationSans",
+        "file": "LiberationSans-Regular.ttf",
+        "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+      }
+    ]
+  },
+  "status": "PASS"
+}
