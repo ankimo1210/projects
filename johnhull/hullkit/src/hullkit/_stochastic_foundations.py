@@ -95,3 +95,15 @@ def euler_stock_moments(spot, drift, sigma, maturity, steps):
     mean = spot*(1+drift*dt)**steps
     second = spot**2*((1+drift*dt)**2+sigma*sigma*dt)**steps
     return mean, max(second-mean*mean, 0.0)
+
+
+def correlated_wiener_increments(normals, rho, dt=1):
+    """Hull's u, rho*u+sqrt(1-rho**2)*v construction, scaled by sqrt(dt).
+
+    Caller normals' final dimension is the independent pair (u,v). Endpoints
+    rho = +/-1 are permitted and give singular, perfectly correlated pairs.
+    """
+    normals = np.asarray(normals, dtype=float)
+    if not math.isfinite(rho) or abs(rho) > 1 or not math.isfinite(dt) or dt < 0 or normals.ndim < 1 or normals.shape[-1] != 2 or not np.all(np.isfinite(normals)):
+        raise ValueError("finite paired normals, rho in [-1,1] and nonnegative dt required")
+    return math.sqrt(dt)*np.stack((normals[..., 0], rho*normals[..., 0]+math.sqrt(1-rho*rho)*normals[..., 1]), axis=-1)
