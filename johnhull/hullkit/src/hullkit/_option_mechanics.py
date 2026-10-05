@@ -19,6 +19,7 @@ def option_cashflows(spot, strike, premium, *, kind="call", quantity=1, multipli
     ``multiplier`` converts one contract to underlying units. Interest on
     the initial premium is excluded, as in Hull's terminal-profit figures.
     The exercise value is per underlying unit before the position sign.
+    With zero premium, the payoff is index/futures exercise cash (§10.3).
     Inputs broadcast; signed underlying/strike values remain valid arithmetic.
     """
     if kind not in ("call", "put"):
