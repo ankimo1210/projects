@@ -1534,12 +1534,14 @@
         ]
       },
       "python_modules": [
-        "hullkit._multi_factor_martingales",
-        "hullkit._multi_factor_lesson"
+        "hullkit._multi_factor_martingales"
       ],
       "data": [
         "docs/validation/section-28-5/reference.json",
-        "docs/validation/section-28-5/numerical-check.json"
+        "docs/validation/section-28-5/numerical-check.json",
+        "hullkit/src/hullkit/_multi_factor_lesson.py",
+        "scripts/build_multifactor_reference.py",
+        "scripts/verify_multifactor_numerics.py"
       ],
       "verifier": "scripts/verify_multifactor_browser.cjs",
       "verifier_inputs": [
@@ -1563,7 +1565,8 @@
         "hullkit/tests/test_multifactor_lesson.py",
         "report/tests/test_multifactor_notebook.py",
         "report/tests/test_multifactor_registry.py"
-      ]
+      ],
+      "dynamic_source_declaration": "Lesson loads these fixed local teacher/verifier paths; all three files are hashed explicitly rather than weakening dynamic-import rejection."
     },
     "28.6": {
       "notebook": {

@@ -145,6 +145,7 @@ def prepare(cfg, config_name):
             ),
         )
     write(cfg["output_dir"] + "/reference.json", reference)
+    numerical["artifact_sha256"] = hashes([cfg["output_dir"] + "/reference.json"])
     write(cfg["output_dir"] + "/numerical-check.json", numerical)
     return {
         "status": "PASS",
@@ -706,7 +707,11 @@ def test_repairs(cfg):
         for t in initial["failed_tests"]
     ):
         raise ValueError("unclassified suite failures require investigation")
-    tests = initial["failed_tests"] + ["johnhull/" + n for n in cfg["common_tests"]]
+    tests = (
+        initial["failed_tests"]
+        + ["johnhull/" + n for n in cfg["common_tests"]]
+        + ["johnhull/report/tests/test_evidence_fingerprint.py"]
+    )
     command = [sys.executable, "-m", "pytest", "-q", *tests]
     output, seconds = run(command)
     summary = output.strip().splitlines()[-1]
@@ -714,6 +719,7 @@ def test_repairs(cfg):
     changed = [n for n in current if current[n] != initial["source_sha256"][n]]
     allowed = {
         "scripts/chapter_acceptance.py",
+        "scripts/evidence_dependencies.json",
         *(t.split("::", 1)[0].removeprefix("johnhull/") for t in initial["failed_tests"]),
     }
     if set(changed) - allowed:
