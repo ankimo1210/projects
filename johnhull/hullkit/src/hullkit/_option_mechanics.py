@@ -13,7 +13,7 @@ def _finite_values(*values):
 
 
 def option_cashflows(spot, strike, premium, *, kind="call", quantity=1, multiplier=1):
-    """Signed terminal payoff, initial premium cashflow and profit (Hull §10.1).
+    """Signed terminal payoff, initial premium cashflow and profit (Hull §10.1–10.2).
 
     ``quantity`` is positive for a buyer and negative for a writer;
     ``multiplier`` converts one contract to underlying units. Interest on
