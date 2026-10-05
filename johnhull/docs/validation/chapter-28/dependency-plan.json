@@ -4304,11 +4304,11 @@
       }
     },
     "28.2": {
-      "decision": "redraw",
+      "decision": "reuse",
       "reasons": [
-        "notebook_slice changed"
+        "Book change already rechecked in this chapter; the other section declaration does not change this fingerprint"
       ],
-      "baseline": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261004T115519Z-reuse-66a29bfab75f4d098ab040b4dfca2168.json",
+      "baseline": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T001235Z-redraw-37a3237f71074869a3df9deaa2330368.json",
       "fingerprint": {
         "section_id": "28.2",
         "rules": {
@@ -4808,7 +4808,7 @@
     "28.5": {
       "decision": "redraw",
       "reasons": [
-        "first schema-2 record required"
+        "explicit fixed dynamic source inventory"
       ],
       "baseline": null,
       "fingerprint": {
@@ -4875,10 +4875,70 @@
             },
             "external": []
           },
-          "python_sources": null,
+          "python_sources": {
+            "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+            "hullkit/src/hullkit/_multi_factor_martingales.py": "17615d592dd4757db4c8ca2e1adfabb0018988e433f6378c7a622bae55658bec",
+            "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+            "hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+            "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+            "hullkit/src/hullkit/carbon.py": "7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+            "hullkit/src/hullkit/cds.py": "77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+            "hullkit/src/hullkit/copula.py": "79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+            "hullkit/src/hullkit/credit.py": "5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+            "hullkit/src/hullkit/credit_curve.py": "b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+            "hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+            "hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+            "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+            "hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+            "hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+            "hullkit/src/hullkit/frontier_reference.py": "03d759a023ddff5736ce8173ac24e353b7003298654a70e816afebf1fd9fa7a1",
+            "hullkit/src/hullkit/hedging.py": "d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+            "hullkit/src/hullkit/heston.py": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+            "hullkit/src/hullkit/hull_white.py": "09e6fa5140b3a0958c854c25f1893d4a293e0832c21e33f89c29490930040ba5",
+            "hullkit/src/hullkit/inflation.py": "f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+            "hullkit/src/hullkit/ir_options.py": "c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+            "hullkit/src/hullkit/jarrow_yildirim.py": "4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+            "hullkit/src/hullkit/jgbi.py": "0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+            "hullkit/src/hullkit/liquidation.py": "7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+            "hullkit/src/hullkit/mc.py": "abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+            "hullkit/src/hullkit/mc_advanced.py": "8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+            "hullkit/src/hullkit/nbplot.py": "ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+            "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+            "hullkit/src/hullkit/payoffs.py": "b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+            "hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+            "hullkit/src/hullkit/perpetuals.py": "bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+            "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+            "hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+            "hullkit/src/hullkit/ppa.py": "74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+            "hullkit/src/hullkit/rates.py": "e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+            "hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+            "hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+            "hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+            "hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+            "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+            "hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+            "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+            "hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+            "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+            "hullkit/src/hullkit/surrogate_data.py": "1c34d1a9208369f265e53bbd1b182f25de91fef7a025d294d4c4cdb280ef3de4",
+            "hullkit/src/hullkit/surrogate_validation.py": "938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+            "hullkit/src/hullkit/swaps.py": "8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+            "hullkit/src/hullkit/tail_risk.py": "bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+            "hullkit/src/hullkit/teaching.py": "69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+            "hullkit/src/hullkit/trees.py": "b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+            "hullkit/src/hullkit/var_backtest.py": "617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+            "hullkit/src/hullkit/vol_surface.py": "849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+            "hullkit/src/hullkit/volatility.py": "4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+            "hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+            "hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+            "hullkit/src/hullkit/zero_dte.py": "5a32189a9403af1b8d69a9ff9304315547564c852ce602cf22b9e6fcec5b7a48"
+          },
           "data_files": {
             "docs/validation/section-28-5/reference.json": "d9fd931575ab9ae5bbb2b9cbc54a5000357684910b7bbd5ff77a2c887584b706",
-            "docs/validation/section-28-5/numerical-check.json": "b74fd6de90cbeee58ad6c9e9e110bedc51f2abb7deabf564ac71d17ab368f9d8"
+            "docs/validation/section-28-5/numerical-check.json": "b74fd6de90cbeee58ad6c9e9e110bedc51f2abb7deabf564ac71d17ab368f9d8",
+            "hullkit/src/hullkit/_multi_factor_lesson.py": "000d4196c1ac338fffd388934c736c04470e6e411de1114881013489b866d1c1",
+            "scripts/build_multifactor_reference.py": "56794e4d06078d4b302ee6fecb9389523c09826db3c227ba00db2059e93413b9",
+            "scripts/verify_multifactor_numerics.py": "36b948bcd6486842cfbadad2a9e4959337975569dea3bdfba983a5e415f2aa34"
           },
           "verifier": {
             "scripts/verify_multifactor_browser.cjs": "0c1202da149d78cd4484c5edcbc303821a7acf648fdcc44a2e89731ca87817c1"
@@ -4911,11 +4971,13 @@
             "timezone": null
           }
         },
-        "unknown": [
-          "python_sources: dynamic import machinery in hullkit._multi_factor_lesson"
-        ],
-        "digest": "7704bcc0c33324970ad2019b2ca4b15e65e3e741bb0c30d7c33d009023981b03"
+        "unknown": [],
+        "digest": "dcd80116644cbbd28cb5e382f02072eb55dc26ebc678d33b1d1d1ebd5154af09"
       }
     }
-  }
+  },
+  "prior_changed_rechecks": [
+    "28.2",
+    "28.5"
+  ]
 }
