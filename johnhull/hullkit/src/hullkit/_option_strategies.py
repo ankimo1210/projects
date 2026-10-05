@@ -185,3 +185,32 @@ def short_expiry_spread(spots, short_strike, long_strike, rate, sigma, short_mat
     cost = direction*(long_premium-short_premium)
     return dict(remaining_long_value=marks, short_payoff=short_payoff,
                 initial_cost=cost, value=value, profit=value-cost)
+
+
+def combination_profile(terminal_spot, name, strikes, premiums, *, reverse=False):
+    """Section 12.4 combinations, nominal profits, tail slopes and breakevens.
+
+    Breakeven points are restricted to nonnegative stock prices. With a free
+    strangle the whole strike interval has zero profit, so its endpoints do
+    not describe two isolated roots. Short downside at S=0 is finite.
+    """
+    if name not in ("straddle", "strip", "strap", "strangle"):
+        raise ValueError("unknown combination")
+    k = np.asarray(strikes, dtype=float)
+    if k.ndim != 1 or len(k) != (2 if name == "strangle" else 1) or not np.all(np.isfinite(k)) or np.any(k < 0):
+        raise ValueError("finite nonnegative combination strikes required")
+    if name == "strangle" and k[0] >= k[1]:
+        raise ValueError("strangle requires put strike below call strike")
+    base = payoffs.STRATEGIES[name](*k.tolist())
+    direction = -1 if reverse else 1
+    result = strategy_profit(terminal_spot, [(direction*q, kind, strike) for q, kind, strike in base], premiums)
+    cost = direction*result["initial_cost"]
+    call_weight, call_strike = next((q, strike) for q, kind, strike in base if kind == "call")
+    put_weight, put_strike = next((q, strike) for q, kind, strike in base if kind == "put")
+    points = sorted({value for value in (put_strike-cost/put_weight, call_strike+cost/call_weight) if value >= 0})
+    return dict(**result, break_evens=np.asarray(points),
+                zero_profit_interval=(put_strike, call_strike) if cost == 0 else None,
+                left_slope=-direction*put_weight, right_slope=direction*call_weight,
+                minimum_profit=-math.inf if reverse else -cost,
+                maximum_profit=cost if reverse else math.inf,
+                zero_stock_profit=direction*(put_weight*put_strike-cost))
