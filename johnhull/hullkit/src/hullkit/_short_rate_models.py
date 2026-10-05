@@ -19,6 +19,7 @@ def _parameters(rate, a, b, sigma, horizon, *, cir=False):
 
 
 def mean_reversion_loading(a, horizon):
+    """B=(1-exp(-a*T))/a, with the a=0 limit T."""
     if min(a, horizon) < 0:
         raise ValueError("nonnegative mean reversion and time required")
     return horizon if a == 0 else -math.expm1(-a * horizon) / a
@@ -132,6 +133,7 @@ def cir_transition_laplace(argument, rate, a, b, sigma, delta):
 
 
 def matching_cir_volatility(vasicek_volatility, rate):
+    """CIR sigma giving the Vasicek instantaneous rate volatility at rate r."""
     if vasicek_volatility < 0 or rate <= 0:
         raise ValueError("nonnegative vol and positive rate required")
     return vasicek_volatility / math.sqrt(rate)
