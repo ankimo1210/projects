@@ -140,3 +140,80 @@ def option_exit_cashflows(intrinsic, bid, *, units=100, sale_fee=0, exercise_fee
     sale = units * bid - np.where(units > 0, sale_fee, 0)
     exercise = units * intrinsic - np.where(units > 0, exercise_fee, 0)
     return dict(sale=sale, exercise=exercise, sale_minus_exercise=sale - exercise)
+
+
+def legacy_short_option_margin(
+    spot, strike, option_mark, *, kind="call", contracts=1, multiplier=100,
+    risk_rate=0.20, floor_rate=0.10,
+):
+    """Hull §10.7 historical naked-option collateral formula, in currency units.
+
+    option_mark is the opening premium or the current mark on later dates.
+    risk_rate=0.15 is the book's index example. Broker-specific/current rules
+    are caller inputs rather than assertions made by this educational helper.
+    """
+    if kind not in ("call", "put"):
+        raise ValueError("kind must be call or put")
+    spot, strike, option_mark, contracts, multiplier, risk_rate, floor_rate = _finite_values(
+        spot, strike, option_mark, contracts, multiplier, risk_rate, floor_rate
+    )
+    if any(np.any(v < 0) for v in (spot, strike, option_mark, contracts, risk_rate, floor_rate)):
+        raise ValueError("stock margin inputs must be nonnegative")
+    if np.any(multiplier <= 0):
+        raise ValueError("contract multiplier must be positive")
+    otm = np.maximum(strike - spot if kind == "call" else spot - strike, 0)
+    units = contracts * multiplier
+    primary = units * (option_mark + risk_rate * spot - otm)
+    floor = units * (option_mark + floor_rate * (spot if kind == "call" else strike))
+    return dict(
+        primary=primary, floor=floor, required=np.maximum(primary, floor),
+        mark_value=units * option_mark,
+    )
+
+
+def legacy_margin_cashflows(
+    spot, strike, option_mark, *, initial_cash, withdraw_excess=True, **margin_parameters,
+):
+    """Recompute historical margin along one path and adjust cash collateral.
+
+    initial_cash includes credited sale proceeds. Positive top_up is an
+    additional deposit; withdrawal releases excess collateral. The account
+    has no interest, fees or position-closing cashflows in this calculation.
+    """
+    required = np.atleast_1d(
+        legacy_short_option_margin(spot, strike, option_mark, **margin_parameters)["required"]
+    )
+    if required.ndim != 1:
+        raise ValueError("cash account requires one time path")
+    cash = float(initial_cash)
+    if not np.isfinite(cash):
+        raise ValueError("initial cash must be finite")
+    top_up, withdrawal, balance = (np.zeros_like(required) for _ in range(3))
+    for i, target in enumerate(required):
+        top_up[i] = max(float(target) - cash, 0)
+        cash += top_up[i]
+        if withdraw_excess:
+            withdrawal[i] = max(cash - float(target), 0)
+            cash -= withdrawal[i]
+        balance[i] = cash
+    return dict(required=required, top_up=top_up, withdrawal=withdrawal, balance=balance)
+
+
+def legacy_covered_call_loan_limit(spot, strike, *, units=100):
+    """Book's covered-call stock borrowing limit: units × 0.5 × min(S,K)."""
+    spot, strike, units = _finite_values(spot, strike, units)
+    if any(np.any(v < 0) for v in (spot, strike, units)):
+        raise ValueError("stock values and covered units must be nonnegative")
+    return units * 0.5 * np.minimum(spot, strike)
+
+
+def legacy_long_option_loan_limit(option_mark, expiry_months, *, units=100):
+    """Book's 25% borrowing limit only for more than nine months to expiry.
+
+    Exactly nine months follows the fully paid side of this explicitly
+    historical convention; this is not a current regulation lookup.
+    """
+    option_mark, expiry_months, units = _finite_values(option_mark, expiry_months, units)
+    if any(np.any(v < 0) for v in (option_mark, expiry_months, units)):
+        raise ValueError("option mark, expiry and units must be nonnegative")
+    return np.where(expiry_months > 9, 0.25 * units * option_mark, 0)

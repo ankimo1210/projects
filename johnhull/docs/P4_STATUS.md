@@ -18,3 +18,4 @@
 | §10.3 | `_option_mechanics.py` | 指数992・行使980・乗数100の現金決済1200（売り手−1200）。独立した市場価値と行使cash leg、符号付き先物価格の合成検証 | 計算部分完了。原資産の取引形態・行使後建玉の説明は保留 | 19 passed・ruff PASS |
 | §10.4 | `_option_mechanics.py` | 40契約、2対1分割200株/15、20%株式配当5/6、25%配当125株/12、原典3限月列。Fractionの独立算術とdatetimeの独立暦列挙、本質価値/時間価値 | 計算部分完了。重複限月は近い2月より後のcycle月を採用した解釈。現行市場仕様・権利落ち・建玉制限の説明は保留 | 33 passed・ruff PASS |
 | §10.6 | `_option_mechanics.py` | bid4/ask4.5→中値4.25・隠れコスト0.25/単位・25/契約。Decimalによる独立fill会計、固定＋契約fee、売却/行使の合成cash比較 | 計算部分完了。手数料はcaller入力。本文にない参照例は補わず、現行broker制度・説明は保留 | 42 passed・ruff PASS |
+| §10.7 | `_option_mechanics.py` | Ex10.3：4240/3520/5040、premium credit2000→追加2240。独立Fraction/区分解析式、20%/15%切替境界、日次markと追証/引出cash保存、covered call/長期option借入限度 | 計算部分完了。原典時点の規則として実装、丁度9か月は全額払側。現行broker規制・本文説明は保留 | 56 passed・ruff PASS |
