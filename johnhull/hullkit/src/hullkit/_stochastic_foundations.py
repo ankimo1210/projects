@@ -134,3 +134,16 @@ def forward_ito(spot, drift, sigma, rate, time, expiry):
     forward = spot*math.exp(rate*(expiry-time))
     a, b = ito_coefficients(drift*spot, sigma*spot, -rate*forward, forward/spot, 0)
     return dict(forward=forward, drift=float(a), diffusion=float(b), log_drift=drift-rate-sigma*sigma/2)
+
+
+def gbm_log_law(spot, drift, sigma, maturity):
+    """Lognormal and log-normal moments from equations 14.17–14.19.
+
+    The mean/variance for stock are separate from those of log stock; an
+    Euler stock simulation approaches this law as its grid is refined.
+    """
+    _stock_inputs(spot, drift, sigma, maturity)
+    mean = spot*math.exp(drift*maturity)
+    variance = mean*mean*math.expm1(sigma*sigma*maturity)
+    return dict(log_mean=math.log(spot)+(drift-sigma*sigma/2)*maturity,
+                log_variance=sigma*sigma*maturity, mean=mean, variance=variance)

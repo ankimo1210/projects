@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 19 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 22 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -46,9 +46,10 @@
 | §14.3 | `_stochastic_foundations.py` | Ex14.3のdt0.0192/係数0.00288・0.0416、Table14.1の全22計算セルと10週終値111.54。独立Decimalループ、Euler積モーメントとMC、厳密GBMとの収束 | 計算部分完了。丸め係数＋全精度累積を明示。11行目の変化12.20は次週で10週終値に含めない。Eulerの負株価を切り捨てない。説明・図・受入は保留 | 10 passed・ruff PASS |
 | §14.5 | `_stochastic_foundations.py` | 数値例なし。本文u/ρu+√(1−ρ²)v構成、分散Δt/共分散ρΔtを独立Choleskyと固定seed MC/Wishart SEで照合（ρ±1含む） | 計算部分完了。2変量の相関生成を追加。多変量は既存Choleskyを後続Ch21で確認。説明・図・受入は保留 | 16 passed・ruff PASS |
 | §14.6 | `_stochastic_foundations.py` | 数値例なし。式14.12の局所係数、式14.15–16のF=S exp(r(T−t))、dF=(μ−r)Fdt+σFdz。独立正規積分・GBM経路のF変換とMC/SEで確認 | 計算部分完了。扱うのは無配当・一定金利のforward価格。契約価値とは区別。Qでlevel drift0、log drift−σ²/2。説明・図・受入は保留 | 19 passed・ruff PASS |
+| §14.7 | `_stochastic_foundations.py` | 数値pinなし。式14.17–19のlog平均・分散とstockモーメント。独立stock Euler（8/512段・2万経路）でlog分散収束・平均/分散/3CDF点をMC6SE判定 | 計算部分完了。独立検証はlog生成器を使わずstock Eulerからlogを測定。負Euler標本を除外せず全標本の正値を確認。説明・図・受入は保留 | 22 passed・ruff PASS |
 
 ## 次の実装
 
 - Ch11の計算6節（§11.1・11.3–11.7）を実装・push。本文28数値＋4式、独立求積/資金会計/木/PDEを対象78 tests・ruffで確認。§11.2の仮定・記号、説明・描画・正式受入は保留。
-- 次は§14.7（対数正規性の独立Euler検証）。P4の計算は合計33節、正式受入は0/112のまま。
+- 次は§14.8（fractional Brownian motion）。P4の計算は合計34節、正式受入は0/112のまま。
 - Ch10の§10.5・10.8–10.12の説明要求は保留。§10.10の説明用の損失20ドルは下調べで算術確認済みだが、今回の新テストには含めていない。Ch10全12節の完了や正式受入を表すものではない。
