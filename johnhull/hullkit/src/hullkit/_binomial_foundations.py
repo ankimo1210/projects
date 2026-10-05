@@ -77,3 +77,33 @@ def terminal_binomial_value(spot, strike, rate, maturity, steps, up, down, *, ki
     payoffs = np.maximum(stock-strike, 0) if kind == "call" else np.maximum(strike-stock, 0)
     price = math.exp(-rate*maturity)*float(weights @ payoffs)
     return dict(stock=stock, weights=weights, payoffs=payoffs, probability=p, price=price)
+
+
+def small_tree_stopping_values(spot, strike, rate, maturity, steps, up, down, *, kind="call", q=0, probability=None):
+    """Enumerate every exercise mask on recombining pre-expiry nodes (N <= 5).
+
+    This independent American reference sums first-exercise cashflows over
+    all 2**N paths rather than recursively maximizing continuation values.
+    Markov payoffs have an optimum among these node-dependent policies.
+    Bits order nodes by time, then number of down moves; root is bit 0.
+    Probability overrides have the same rounding meaning as terminal sums.
+    """
+    steps, dt, p = _binomial_spec(spot, strike, rate, maturity, steps, up, down, q, kind, probability)
+    if steps > 5:
+        raise ValueError("exhaustive policy method is limited to five steps")
+    down_moves = (np.arange(2**steps)[:, None] >> np.arange(steps)) & 1
+    downs = np.column_stack((np.zeros(2**steps, dtype=int), down_moves.cumsum(axis=1)))
+    times = np.arange(steps+1)
+    stock = np.exp(math.log(spot)+(times-downs)*math.log(up)+downs*math.log(down))
+    payoffs = np.maximum(stock-strike, 0) if kind == "call" else np.maximum(strike-stock, 0)
+    discounted = payoffs*np.exp(-rate*dt*times)
+    path_weights = p**(steps-downs[:, -1])*(1-p)**downs[:, -1]
+    node_ids = times[:-1]*(times[:-1]+1)//2+downs[:, :-1]
+    masks = np.arange(2**(steps*(steps+1)//2))
+    selected = ((masks[:, None, None] >> node_ids[None, :, :]) & 1).astype(bool)
+    exercise = np.concatenate((selected, np.ones((*selected.shape[:2], 1), dtype=bool)), axis=2)
+    first = exercise.argmax(axis=2)
+    policy_values = discounted[np.arange(len(path_weights))[None, :], first] @ path_weights
+    best = int(policy_values.argmax())
+    return dict(price=float(policy_values[best]), best_mask=best,
+                policy_values=policy_values, probability=p)
