@@ -297,3 +297,9 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._other_swap_payoffs` | `hullkit._other_swap_payoffs:commodity_fixed_unit_price`, `hullkit._other_swap_payoffs:commodity_swap_cashflows`, `hullkit._other_swap_payoffs:pg_spread`, `hullkit._other_swap_payoffs:pg_swap_coupons`, `hullkit._other_swap_payoffs:index_amortizing_notionals` | §34.6; source 50 USD/bbl and 15.25% payment rate, independent Gaussian positive-part expectation/MC and adapted principal conservation; test_other_swap_payoffs.py |
 
 | `hullkit._chapter28_lesson` | Shared private §28.6–28.8 cells and six figures | Independent Q/T/ratio quadrature and covariance trace checks; test_chapter28_lesson.py |
+
+## P4 logic-first private models
+
+| Module | Contracts | Verification |
+|---|---|---|
+| `hullkit._option_mechanics` | Private Ch10 terminal cashflows and contract mechanics | Printed examples and independent exercise accounting; test_option_mechanics_*.py |
