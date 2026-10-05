@@ -8,6 +8,9 @@ import nbformat
 def test_multifactor_lesson_and_old_notebook_preserved():
     m = importlib.import_module("johnhull.scripts.verify_multifactor_notebook")
     nb = nbformat.read(m.NOTEBOOK, as_version=4)
+    chapter = importlib.import_module("johnhull.scripts.chapter_acceptance")
+    cfg = chapter.load_config("docs/acceptance/chapters/ch28.json")
+    nb.cells = chapter.without_chapter_sections(nb, cfg)
     assert len(nb.cells) == 268 and len(m._outside(nb)) == 257
     assert m.compare(nb, m._base(), m._fresh()) == []
     assert all(row["rejected"] for row in m.negative_controls(nb, m._base(), m._fresh()))

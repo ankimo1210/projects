@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "chapter": 28,
+  "reviewed_at": "2026-10-05",
+  "output_dir": "docs/validation/chapter-28",
+  "acceptance_note": "docs/CHAPTER_28_ACCEPTANCE_2026-10-05.md",
+  "reference_adapter": "johnhull.hullkit.tests._chapter28_reference",
+  "notebook": "volumes/10_exotics_martingales/exotics.ipynb",
+  "notebook_builder": "volumes/10_exotics_martingales/build_exotics_notebook.py",
+  "lesson": "hullkit/src/hullkit/_chapter28_lesson.py",
+  "reference_sources": [
+    "hullkit/tests/_chapter28_reference.py",
+    "hullkit/tests/_forward_black_reference.py",
+    "hullkit/tests/_forward_black_validation.py"
+  ],
+  "common_tests": [
+    "hullkit/tests/test_chapter28_lesson.py",
+    "report/tests/test_chapter_acceptance.py"
+  ],
+  "book_page": "book/_build/html/notebooks/10_exotics.html",
+  "portal_page": "report/site/exotics.html",
+  "viewports": [
+    [
+      1440,
+      1050
+    ],
+    [
+      1000,
+      1050
+    ]
+  ],
+  "sections": [
+    {
+      "id": "28.6",
+      "heading": "6E. Blackのモデルを測度から再訪（§28.6）",
+      "source_pages": [
+        680,
+        681
+      ],
+      "implementation": "hullkit/src/hullkit/_forward_black.py",
+      "tests": [
+        "hullkit/tests/test_forward_black.py",
+        "hullkit/tests/test_forward_black_numerics.py"
+      ],
+      "figures": [
+        "martingale_black_forward_market",
+        "martingale_black_forward_prices"
+      ],
+      "assumptions": [
+        "T測度で同じ満期のforwardが対数正規。価格USD、年、年率変動率。",
+        "Ho–Lee joint Gaussianは合成説明例、本文の印刷数値なし。"
+      ],
+      "limitations": [
+        "一般の確率金利で対数正規性を保証しない。負forwardのnormal/shiftedは別モデル。"
+      ],
+      "requirements": [
+        {
+          "id": "D28.6-01",
+          "statement": "式28.26–29: T測度の給付期待値、Black call/put、実効分散とparity。",
+          "locator": "6E. Blackのモデルを測度から再訪（§28.6）"
+        },
+        {
+          "id": "D28.6-02",
+          "statement": "optionとforwardの満期一致、forward volatility、futures代用の条件、確率割引の相関。",
+          "locator": "6E. Blackのモデルを測度から再訪（§28.6）"
+        }
+      ],
+      "scope": "Hull GE §28.6の全要求を5観点でCh28共通build/画面巡回へ対応。",
+      "images": [
+        "docs/validation/chapter-28/portal-martingale_black_forward_market-1000.png",
+        "docs/validation/chapter-28/portal-martingale_black_forward_prices-1000.png"
+      ]
+    },
+    {
+      "id": "28.7",
+      "heading": "6F. 一つの資産を別の資産と交換（§28.7）",
+      "source_pages": [
+        681,
+        682
+      ],
+      "implementation": "hullkit/src/hullkit/_exchange_measure.py",
+      "tests": [
+        "hullkit/tests/test_exchange_measure.py"
+      ],
+      "figures": [
+        "martingale_exchange_ratio_means",
+        "martingale_exchange_measure_prices"
+      ],
+      "assumptions": [
+        "同じ通貨で渡すU/受け取るV。定数vol、連続配当、再投資Uをnumeraireとする。",
+        "相関±1と比の分散ゼロを含む。本文の印刷例なし、数値は合成。"
+      ],
+      "limitations": [
+        "離散配当や通貨別の金利口座は対象外。§26.14の式とは別に測度の導出を検証。"
+      ],
+      "requirements": [
+        {
+          "id": "D28.7-01",
+          "statement": "式28.30–32: strike 1のV/U call、無配当U測度で比の平均保存とlog drift/分散。",
+          "locator": "6F. 一つの資産を別の資産と交換（§28.7）"
+        },
+        {
+          "id": "D28.7-02",
+          "statement": "配当差qU−qVによる平均比、再投資numeraireのraw密度、§26.14への接続。",
+          "locator": "6F. 一つの資産を別の資産と交換（§28.7）"
+        }
+      ],
+      "scope": "Hull GE §28.7の全要求を5観点でCh28共通build/画面巡回へ対応。",
+      "images": [
+        "docs/validation/chapter-28/portal-martingale_exchange_ratio_means-1000.png",
+        "docs/validation/chapter-28/portal-martingale_exchange_measure_prices-1000.png"
+      ]
+    },
+    {
+      "id": "28.8",
+      "heading": "6G. ニュメレール変更の共分散補正（§28.8）",
+      "source_pages": [
+        682,
+        684
+      ],
+      "implementation": "hullkit/src/hullkit/_numeraire_change.py",
+      "tests": [
+        "hullkit/tests/test_numeraire_change.py"
+      ],
+      "figures": [
+        "martingale_numeraire_drift_shift",
+        "martingale_numeraire_absolute_shift"
+      ],
+      "assumptions": [
+        "ratio=h/g（新/旧）、signed loadingを同じ相関basisで扱う。",
+        "絶対/相対係数の単位を統一。raw有限時間密度は定数Gaussian loading。"
+      ],
+      "limitations": [
+        "局所係数の恒等式から一般の真のmartingale性や対数正規分布を断定しない。本文印刷数値なし。"
+      ],
+      "requirements": [
+        {
+          "id": "D28.8-01",
+          "statement": "式28.33–35: 新/旧のcovariance drift補正、Brownian逆符号、逆変換と相関PSD。",
+          "locator": "6G. ニュメレール変更の共分散補正（§28.8）"
+        },
+        {
+          "id": "D28.8-02",
+          "statement": "P→Qは−bᵀCλ。非取引変数のQ driftをrへ置き換えない。",
+          "locator": "6G. ニュメレール変更の共分散補正（§28.8）"
+        },
+        {
+          "id": "D28.8-03",
+          "statement": "相対と絶対のdrift/loadingの単位、ゼロ/負状態、TN20 chain rule。",
+          "locator": "6G. ニュメレール変更の共分散補正（§28.8）"
+        }
+      ],
+      "scope": "Hull GE §28.8の全要求を5観点でCh28共通build/画面巡回へ対応。",
+      "images": [
+        "docs/validation/chapter-28/portal-martingale_numeraire_drift_shift-1000.png",
+        "docs/validation/chapter-28/portal-martingale_numeraire_absolute_shift-1000.png"
+      ]
+    }
+  ]
+}
