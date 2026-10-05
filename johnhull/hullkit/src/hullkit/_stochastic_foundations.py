@@ -107,3 +107,30 @@ def correlated_wiener_increments(normals, rho, dt=1):
     if not math.isfinite(rho) or abs(rho) > 1 or not math.isfinite(dt) or dt < 0 or normals.ndim < 1 or normals.shape[-1] != 2 or not np.all(np.isfinite(normals)):
         raise ValueError("finite paired normals, rho in [-1,1] and nonnegative dt required")
     return math.sqrt(dt)*np.stack((normals[..., 0], rho*normals[..., 0]+math.sqrt(1-rho*rho)*normals[..., 1]), axis=-1)
+
+
+def ito_coefficients(drift, diffusion, g_time, g_x, g_xx):
+    """Local drift/diffusion of G(X,t) from supplied derivatives (14.12).
+
+    The returned diffusion multiplies the same Brownian increment as X.
+    Derivatives are caller inputs; this helper performs no differentiation.
+    """
+    a, b, gt, gx, gxx = np.broadcast_arrays(*[np.asarray(x, dtype=float) for x in (drift, diffusion, g_time, g_x, g_xx)])
+    if not all(np.all(np.isfinite(x)) for x in (a, b, gt, gx, gxx)):
+        raise ValueError("finite coefficients and derivatives required")
+    return gx*a+gt+.5*gxx*b*b, gx*b
+
+
+def forward_ito(spot, drift, sigma, rate, time, expiry):
+    """Constant-rate, no-dividend forward F=S*exp(r*(T-t)) (14.15–16).
+
+    Forward PRICE, rather than the value of an existing forward contract.
+    Its physical growth rate is mu-r; under Q its level drift is zero while
+    its log drift still contains the -sigma**2/2 correction.
+    """
+    _stock_inputs(spot, drift, sigma, time)
+    if not math.isfinite(rate) or not math.isfinite(expiry) or expiry < time:
+        raise ValueError("finite rate and expiry at or after current time required")
+    forward = spot*math.exp(rate*(expiry-time))
+    a, b = ito_coefficients(drift*spot, sigma*spot, -rate*forward, forward/spot, 0)
+    return dict(forward=forward, drift=float(a), diffusion=float(b), log_drift=drift-rate-sigma*sigma/2)
