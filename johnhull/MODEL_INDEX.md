@@ -267,3 +267,5 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._forward_black` | `hullkit._forward_black:forward_black_price`, `hullkit._forward_black:gaussian_forward_statistics` | §28.6; independent Q/T quadrature, fixed-seed raw MC, rare-event importance; tests/test_forward_black*.py |
 | `hullkit._exchange_measure` | `hullkit._exchange_measure:exchange_measure_price`, `hullkit._exchange_measure:exchange_ratio_statistics`, `hullkit._exchange_measure:exchange_numeraire_density` | §28.7; ratio quadrature, total-return density and stochastic-rate Q MC; test_exchange_measure.py |
 | `hullkit._numeraire_change` | `hullkit._numeraire_change:numeraire_drift_change`, `hullkit._numeraire_change:physical_to_q_drift`, `hullkit._numeraire_change:new_measure_brownian_increment`, `hullkit._numeraire_change:numeraire_density` | §28.8; signed covariance, absolute loadings, independent Gaussian tilt and fixed-seed MC; test_numeraire_change.py |
+
+| `hullkit._chapter28_lesson` | Shared private §28.6–28.8 cells and six figures; independent Q/T/ratio quadrature and covariance trace checks; test_chapter28_lesson.py |

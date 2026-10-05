@@ -1,0 +1,95 @@
+{
+  "status": "PASS",
+  "commands": [
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "/home/kazumasa/worktrees/p3-ch28/johnhull/volumes/10_exotics_martingales/build_exotics_notebook.py"
+      ],
+      "seconds": 0.5,
+      "status": "PASS"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-c",
+        "from johnhull.scripts.verify_core_notebooks import write_outputs; from pathlib import Path; errors=write_outputs(Path('/home/kazumasa/worktrees/p3-ch28/johnhull/volumes/10_exotics_martingales/exotics.ipynb')); assert not errors, errors"
+      ],
+      "seconds": 7.42,
+      "status": "PASS"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "report_builder.build"
+      ],
+      "seconds": 8.71,
+      "status": "PASS"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/jupyter-book",
+        "build",
+        "/home/kazumasa/worktrees/p3-ch28/johnhull/book"
+      ],
+      "seconds": 6.9,
+      "status": "PASS"
+    },
+    {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/jupyter-book",
+        "build",
+        "/home/kazumasa/worktrees/p3-ch28/johnhull/book"
+      ],
+      "status": "PASS",
+      "seconds": 3.12,
+      "reason": "preserve original notebook language metadata; avoid an unrelated lexer change"
+    }
+  ],
+  "source_sha256": {
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+    "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
+    "docs/CHAPTER_28_ACCEPTANCE_2026-10-05.md": "56c28a28641cdd416e297eea2a2915455bf886f9fd0ac537f44cdf40eadb9904",
+    "docs/acceptance/chapters/ch28.json": "556e59cafe8235059bf38b48ed02203e7bfcdd49420f9b05d60147db1155cdec",
+    "hullkit/src/hullkit/_chapter28_lesson.py": "f9800998f05b2d8a363537ab84ca05cd0b3383d56303a84a2afd1c6e949a4a3d",
+    "hullkit/src/hullkit/_exchange_measure.py": "4282288c3f280f0b9914946b3062a3d827a1948cfa86293ffec871c16deafe8b",
+    "hullkit/src/hullkit/_forward_black.py": "1600d38091668f3609a985192009759c3c76196203ea4435b3bdd20fbf945128",
+    "hullkit/src/hullkit/_numeraire_change.py": "cf22a9bc717b7860b1a241cd4a6ce407bcca653934e2cf3d036bba2ffae3bfa6",
+    "hullkit/tests/_chapter28_reference.py": "df6a6ba85a5215d32b5555008957b877f000734f8888a27746f20c9ee23c0d46",
+    "hullkit/tests/_forward_black_reference.py": "ff28965898484b7a9c9c97113402b48b612466fe6191ed95e242969ce7665271",
+    "hullkit/tests/_forward_black_validation.py": "497eff49fe364fe3eabd535c76ff6828bd058f93d2fa4de08d3c63d9310e7c31",
+    "hullkit/tests/test_chapter28_lesson.py": "19468be8972f4dca42de1f342976639ad485b8b32537e9b658a36f7a1c117429",
+    "hullkit/tests/test_exchange_measure.py": "121455d99100b9a7554e192157413535f0d1f5591a3f43f31f335cd50dfb3037",
+    "hullkit/tests/test_forward_black.py": "27678022b80f98250efb9dd7e2e113822891494cd8f7902829dd5cee7fa1fc1b",
+    "hullkit/tests/test_forward_black_numerics.py": "bf409853ccadce0bdfbc884ff8bf02a5487ef8f39fa91507198dca7bd0db3bd9",
+    "hullkit/tests/test_numeraire_change.py": "9c61b255a2cc8dc0779947840e5ea1e7d3d749295549fd5b2de9babe950217e5",
+    "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210",
+    "report/report_builder/__init__.py": "e6bd9f43a533654074564fec7ef4ee7324379dfc28f693cc324af7cc0a910db9",
+    "report/report_builder/build.py": "12e280a3c47a2aa952f135ba8b459effcd308d519cc317170c8b0c0f11754cbf",
+    "report/report_builder/figures.py": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898",
+    "report/report_builder/frontier_figures.py": "abc2a1f1596482b043bcb3709f8d6daca9d7f2f0edad6cc8dfe0df0246c0eb92",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/report_builder/theme.py": "db43b679941eff1c165fdf6181a995eff7d076d8f9300f7136d306961d27bf5b",
+    "report/tests/test_chapter_acceptance.py": "d42d57e438ab41c90a086ac848e72ba6d8ff77f1ec5b8e7caa0e7de8b348132e",
+    "scripts/chapter_acceptance.py": "1d093a58f790827167b150e376ec1a872938c8a88a5b6602ec8abfd297f14e15",
+    "scripts/d1_preflight_compare.py": "d693d8c7c2e9f22f611d6c87ba78cbfc23c7a242b42f00a2cced6f243f68452d",
+    "scripts/evidence_dependencies.json": "1b118cb7b79cb32ae2d8b8f64f9327029606c128028fd67030e7ab5f9897b650",
+    "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+    "scripts/evidence_record.py": "264dbf9e3d4ff4c6f7bba4e6b320e1b8a71d21d1ff231adec1b92a22bba379f3",
+    "scripts/evidence_store.py": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+    "scripts/probe_render_runtime.cjs": "efab3367ef20b53bd353e6ecaf867a811d92aca3e71756fc5cc29cde3537a016",
+    "scripts/run_browser_verifier.cjs": "68f743a20e5ca659ca087558b71d4e679e64239f29cd8b832a28b9d5d26f88a1",
+    "scripts/verify_chapter_browser.cjs": "c352c4a846c4a75908094b9f88fb589bd5f033d3716bd26e379a70cb5205e2de",
+    "scripts/verify_core_notebooks.py": "70dea68ecdad62ab57d23c174fb816a2dcb1f0f86673b55972e4102f378bdec7",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "313acdfe78f2f016ad01b2a1d17901988edbeb95f2357d1f89fb4bf68541aa9c",
+    "volumes/10_exotics_martingales/exotics.ipynb": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb"
+  },
+  "artifact_sha256": {
+    "book/_build/html/notebooks/10_exotics.html": "0560bae03ccca2246440f825138a0f2bcbc634291e82fc16fa21d1cf7f1d4dea",
+    "report/site/exotics.html": "9a3abf9ae363ade735ec937308319d2785e4ffadd85378e341f4804be75258ed"
+  },
+  "tooling_checks": "11 targeted tests PASS; calculation and layout unchanged"
+}

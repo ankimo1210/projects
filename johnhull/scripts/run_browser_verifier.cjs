@@ -27,6 +27,11 @@ console.log(JSON.stringify({ wrapper: {
   wrapper_sha256: digest(fs.readFileSync(__filename)), renames,
   overlay_root_redirect: true } }));
 
+if (spec.chapter_config) {
+  process.env.JOHNHULL_CHAPTER_CONFIG = spec.chapter_config;
+  process.env.JOHNHULL_SECTION_ID = sectionId;
+}
+
 const filename = path.join(overlayRoot, spec.verifier);
 const compiled = new Module(filename, module);
 compiled.filename = filename;

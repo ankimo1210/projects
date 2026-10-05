@@ -1,0 +1,1218 @@
+{
+  "chapter": 28,
+  "synthetic": true,
+  "printed_values": [],
+  "figures": {
+    "martingale_black_forward_market": [
+      {
+        "role": "forward",
+        "x": [
+          -1,
+          -0.75,
+          -0.5,
+          -0.25,
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1
+        ],
+        "y": [
+          108.19879028485443,
+          108.19879028485443,
+          108.19879028485443,
+          108.19879028485443,
+          108.19879028485443,
+          108.19879028485443,
+          108.19879028485443,
+          108.19879028485443,
+          108.19879028485443
+        ]
+      },
+      {
+        "role": "futures",
+        "x": [
+          -1,
+          -0.75,
+          -0.5,
+          -0.25,
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1
+        ],
+        "y": [
+          106.84403838753853,
+          107.24545571857666,
+          107.6483811906032,
+          108.05282046976421,
+          108.45877924349377,
+          108.86626322059374,
+          109.27527813131432,
+          109.68582972743445,
+          110.09792378234266
+        ]
+      }
+    ],
+    "martingale_black_forward_prices": [
+      {
+        "role": "black_T",
+        "x": [
+          70,
+          80,
+          90,
+          100,
+          105,
+          110,
+          120,
+          130,
+          140
+        ],
+        "y": [
+          37.313629140699426,
+          30.162654229789194,
+          24.005154444520148,
+          18.857922140172956,
+          16.646020956477155,
+          14.65918525708637,
+          11.300921693201754,
+          8.656381763375139,
+          6.599013175764579
+        ]
+      },
+      {
+        "role": "outer_Q",
+        "x": [
+          70,
+          80,
+          90,
+          100,
+          105,
+          110,
+          120,
+          130,
+          140
+        ],
+        "y": [
+          38.56321964422454,
+          31.315982785568337,
+          25.04131035733585,
+          19.7661548419407,
+          17.489345461300243,
+          15.438370477852649,
+          11.957344361385642,
+          9.20108416673289,
+          7.045437211419129
+        ]
+      }
+    ],
+    "martingale_exchange_ratio_means": [
+      {
+        "role": "mean_given",
+        "x": [
+          0,
+          0.25,
+          0.5,
+          1,
+          1.5,
+          2
+        ],
+        "y": [
+          1.1,
+          1.1110551837925848,
+          1.1222214740294314,
+          1.144891851611627,
+          1.1680202011998957,
+          1.1916157744424547
+        ]
+      },
+      {
+        "role": "mean_Q",
+        "x": [
+          0,
+          0.25,
+          0.5,
+          1,
+          1.5,
+          2
+        ],
+        "y": [
+          1.1,
+          1.1155083048323415,
+          1.1312352528635676,
+          1.1633574521102725,
+          1.1963917831897088,
+          1.2303641467095499
+        ]
+      },
+      {
+        "role": "no_income",
+        "x": [
+          0,
+          0.25,
+          0.5,
+          1,
+          1.5,
+          2
+        ],
+        "y": [
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1,
+          1.1
+        ]
+      }
+    ],
+    "martingale_exchange_measure_prices": [
+      {
+        "role": "income",
+        "x": [
+          -1,
+          -0.5,
+          0,
+          0.4,
+          0.5,
+          1
+        ],
+        "y": [
+          34.4705645778984,
+          31.217587659274695,
+          27.360337362756287,
+          23.5521877865774,
+          22.43989558167499,
+          15.366715727178887
+        ]
+      },
+      {
+        "role": "no_income",
+        "x": [
+          -1,
+          -0.5,
+          0,
+          0.4,
+          0.5,
+          1
+        ],
+        "y": [
+          32.95845569797912,
+          29.43768044027339,
+          25.23018786488208,
+          21.012341530203887,
+          19.759247537687543,
+          10.165252499009283
+        ]
+      }
+    ],
+    "martingale_numeraire_drift_shift": [
+      {
+        "role": "old",
+        "x": [
+          -1,
+          -0.5,
+          0,
+          0.45,
+          1
+        ],
+        "y": [
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08
+        ]
+      },
+      {
+        "role": "new",
+        "x": [
+          -1,
+          -0.5,
+          0,
+          0.45,
+          1
+        ],
+        "y": [
+          -0.009999999999999995,
+          0.009499999999999995,
+          0.028999999999999998,
+          0.04655,
+          0.068
+        ]
+      },
+      {
+        "role": "restored",
+        "x": [
+          -1,
+          -0.5,
+          0,
+          0.45,
+          1
+        ],
+        "y": [
+          0.08,
+          0.08,
+          0.08,
+          0.08,
+          0.08
+        ]
+      }
+    ],
+    "martingale_numeraire_absolute_shift": [
+      {
+        "role": "old",
+        "x": [
+          -20,
+          0,
+          50
+        ],
+        "y": [
+          2.3,
+          0.7,
+          -3.3
+        ]
+      },
+      {
+        "role": "new",
+        "x": [
+          -20,
+          0,
+          50
+        ],
+        "y": [
+          2.1839899999999997,
+          0.5559999999999999,
+          -3.513975
+        ]
+      }
+    ]
+  },
+  "black": {
+    "schema": 1,
+    "section": "28.6",
+    "source_pages": [
+      680,
+      681
+    ],
+    "source_equations": [
+      "28.26",
+      "28.27",
+      "28.28",
+      "28.29"
+    ],
+    "source_requirements": [
+      "BF01",
+      "BF02",
+      "BF03",
+      "BF04",
+      "BF05",
+      "BF06"
+    ],
+    "source_printed_pins": [],
+    "synthetic": true,
+    "n_paths": 262144,
+    "quadrature_cutoff": 12.0,
+    "cases": [
+      {
+        "id": "constant_rate",
+        "inputs": {
+          "spot": 100.0,
+          "rate": 0.04,
+          "rate_volatility": 0.0,
+          "stock_volatility": 0.25,
+          "correlation": 0.5,
+          "horizon": 2.0
+        },
+        "statistics": {
+          "discount": 0.9231163463866358,
+          "forward": 108.32870676749586,
+          "futures": 108.32870676749592,
+          "forward_sigma": 0.25,
+          "terminal_variance": 0.125,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.622670185988092,
+          "cov_integral_log_spot": 0.0
+        },
+        "moments": {
+          "density_quad": 1.0000000000000002,
+          "discounted_spot_quad": 100.00000000000003,
+          "forward_quad": 108.32870676749592,
+          "log_first_Q": 4.622670185988091,
+          "log_second_Q": 21.49407964842318,
+          "log_first_T": 4.622670185988091,
+          "log_second_T": 21.49407964842318,
+          "integrated_forward_variance": 0.125
+        },
+        "seed": 286310,
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.3818557529355,
+            "call": {
+              "q_quad": 36.849203013171305,
+              "t_quad": 36.849203013171305,
+              "closed": 36.849203013171255,
+              "q_tail_bound": 1.1963705483789712e-29,
+              "t_tail_bound": 1.1963705483789712e-29,
+              "wrong_outer_discount_Q": 36.849203013171305,
+              "wrong_futures": 36.849203013171305,
+              "wrong_spot_vol": 36.849203013171255
+            },
+            "put": {
+              "q_quad": 1.4673472602357611,
+              "t_quad": 1.4673472602357611,
+              "closed": 1.467347260235764,
+              "q_tail_bound": 2.2958595474113352e-31,
+              "t_tail_bound": 2.2958595474113352e-31,
+              "wrong_outer_discount_Q": 1.4673472602357611,
+              "wrong_futures": 1.4673472602357573,
+              "wrong_spot_vol": 1.467347260235764
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 3.0727836294032462,
+            "call": {
+              "q_quad": 15.405663527594692,
+              "t_quad": 15.405663527594688,
+              "closed": 15.405663527594662,
+              "q_tail_bound": 1.1963705483789712e-29,
+              "t_tail_bound": 1.1963705483789712e-29,
+              "wrong_outer_discount_Q": 15.405663527594688,
+              "wrong_futures": 15.405663527594694,
+              "wrong_spot_vol": 15.405663527594662
+            },
+            "put": {
+              "q_quad": 12.332879898191399,
+              "t_quad": 12.3328798981914,
+              "closed": 12.332879898191422,
+              "q_tail_bound": 3.4437893211170024e-31,
+              "t_tail_bound": 3.4437893211170024e-31,
+              "wrong_outer_discount_Q": 12.3328798981914,
+              "wrong_futures": 12.332879898191395,
+              "wrong_spot_vol": 12.332879898191422
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.236288494129006,
+            "call": {
+              "q_quad": 5.450730589062243,
+              "t_quad": 5.450730589062241,
+              "closed": 5.450730589062238,
+              "q_tail_bound": 1.1963705483789712e-29,
+              "t_tail_bound": 1.1963705483789712e-29,
+              "wrong_outer_discount_Q": 5.450730589062241,
+              "wrong_futures": 5.450730589062242,
+              "wrong_spot_vol": 5.450730589062238
+            },
+            "put": {
+              "q_quad": 34.68701908319121,
+              "t_quad": 34.68701908319122,
+              "closed": 34.687019083191245,
+              "q_tail_bound": 4.5917190948226704e-31,
+              "t_tail_bound": 4.5917190948226704e-31,
+              "wrong_outer_discount_Q": 34.68701908319122,
+              "wrong_futures": 34.68701908319121,
+              "wrong_spot_vol": 34.687019083191245
+            }
+          }
+        ]
+      },
+      {
+        "id": "stochastic_positive",
+        "inputs": {
+          "spot": 100.0,
+          "rate": 0.04,
+          "rate_volatility": 0.03,
+          "stock_volatility": 0.25,
+          "correlation": 0.75,
+          "horizon": 2.0
+        },
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 109.68582972743454,
+          "forward_sigma": 0.27376997644007645,
+          "terminal_variance": 0.1499,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.609020185988092,
+          "cov_integral_log_spot": 0.013649999999999999
+        },
+        "moments": {
+          "density_quad": 1.0000000000000002,
+          "discounted_spot_quad": 100.00000000000004,
+          "forward_quad": 108.19879028485448,
+          "log_first_Q": 4.622670185988091,
+          "log_second_Q": 21.51897964842318,
+          "log_first_T": 4.6090201859880935,
+          "log_second_T": 21.392967074845714,
+          "integrated_forward_variance": 0.1499
+        },
+        "seed": 286311,
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "q_quad": 37.31362914069945,
+              "t_quad": 37.313629140699426,
+              "closed": 37.313629140699405,
+              "q_tail_bound": 1.1735801747358237e-29,
+              "t_tail_bound": 1.773532387233379e-29,
+              "wrong_outer_discount_Q": 38.56321964422454,
+              "wrong_futures": 38.56321964422456,
+              "wrong_spot_vol": 36.78289142487704
+            },
+            "put": {
+              "q_quad": 2.0093617045398457,
+              "t_quad": 2.009361704539847,
+              "closed": 2.0093617045398484,
+              "q_tail_bound": 2.508781282482433e-31,
+              "t_tail_bound": 2.298616232548509e-31,
+              "wrong_outer_discount_Q": 1.8845935496500796,
+              "wrong_futures": 1.8845935496500759,
+              "wrong_spot_vol": 1.478623988717471
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "q_quad": 16.646020956477173,
+              "t_quad": 16.646020956477162,
+              "closed": 16.646020956477145,
+              "q_tail_bound": 1.1735801747358237e-29,
+              "t_tail_bound": 1.773532387233379e-29,
+              "wrong_outer_discount_Q": 17.489345461300243,
+              "wrong_futures": 17.489345461300253,
+              "wrong_spot_vol": 15.351654561793541
+            },
+            "put": {
+              "q_quad": 13.689619802237797,
+              "t_quad": 13.689619802237797,
+              "closed": 13.689619802237816,
+              "q_tail_bound": 3.7631719237236497e-31,
+              "t_tail_bound": 3.447924348822763e-31,
+              "wrong_outer_discount_Q": 13.158585648646012,
+              "wrong_futures": 13.158585648646005,
+              "wrong_spot_vol": 12.395253407554215
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "q_quad": 6.599013175764583,
+              "t_quad": 6.599013175764581,
+              "closed": 6.599013175764565,
+              "q_tail_bound": 1.1735801747358237e-29,
+              "t_tail_bound": 1.773532387233379e-29,
+              "wrong_outer_discount_Q": 7.045437211419128,
+              "wrong_futures": 7.045437211419139,
+              "wrong_spot_vol": 5.4223289598522895
+            },
+            "put": {
+              "q_quad": 35.990478303445435,
+              "t_quad": 35.99047830344544,
+              "closed": 35.990478303445464,
+              "q_tail_bound": 5.017562564964866e-31,
+              "t_tail_bound": 4.597232465097018e-31,
+              "wrong_outer_discount_Q": 35.06254368068512,
+              "wrong_futures": 35.06254368068511,
+              "wrong_spot_vol": 34.813794087533175
+            }
+          }
+        ]
+      },
+      {
+        "id": "stochastic_negative",
+        "inputs": {
+          "spot": 100.0,
+          "rate": 0.04,
+          "rate_volatility": 0.03,
+          "stock_volatility": 0.25,
+          "correlation": -0.75,
+          "horizon": 2.0
+        },
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 107.24545571857675,
+          "forward_sigma": 0.22901964981197576,
+          "terminal_variance": 0.10490000000000002,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.631520185988092,
+          "cov_integral_log_spot": -0.00885
+        },
+        "moments": {
+          "density_quad": 1.0000000000000002,
+          "discounted_spot_quad": 100.00000000000004,
+          "forward_quad": 108.19879028485448,
+          "log_first_Q": 4.622670185988093,
+          "log_second_Q": 21.47397964842318,
+          "log_first_T": 4.631520185988093,
+          "log_second_T": 21.55587923321517,
+          "integrated_forward_variance": 0.10490000000000002
+        },
+        "seed": 286312,
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "q_quad": 36.37250200136624,
+              "t_quad": 36.372502001366215,
+              "closed": 36.372502001366186,
+              "q_tail_bound": 1.1639042286175642e-29,
+              "t_tail_bound": 8.44500438031405e-30,
+              "wrong_outer_discount_Q": 35.55109644199894,
+              "wrong_futures": 35.55109644199898,
+              "wrong_spot_vol": 36.78289142487704
+            },
+            "put": {
+              "q_quad": 1.0682345652066292,
+              "t_quad": 1.0682345652066307,
+              "closed": 1.0682345652066307,
+              "q_tail_bound": 2.4241271939337827e-31,
+              "t_tail_bound": 2.298616232548509e-31,
+              "wrong_outer_discount_Q": 1.1279244078932151,
+              "wrong_futures": 1.1279244078932142,
+              "wrong_spot_vol": 1.478623988717471
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "q_quad": 14.206718609369522,
+              "t_quad": 14.206718609369501,
+              "closed": 14.206718609369478,
+              "q_tail_bound": 1.1639042286175642e-29,
+              "t_tail_bound": 8.44500438031405e-30,
+              "wrong_outer_discount_Q": 13.68228855800175,
+              "wrong_futures": 13.68228855800176,
+              "wrong_spot_vol": 15.351654561793541
+            },
+            "put": {
+              "q_quad": 11.250317455130137,
+              "t_quad": 11.25031745513014,
+              "closed": 11.250317455130158,
+              "q_tail_bound": 3.6361907909006743e-31,
+              "t_tail_bound": 3.447924348822763e-31,
+              "wrong_outer_discount_Q": 11.606982805816234,
+              "wrong_futures": 11.606982805816223,
+              "wrong_spot_vol": 12.395253407554215
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "q_quad": 4.428996927535087,
+              "t_quad": 4.428996927535076,
+              "closed": 4.428996927535071,
+              "q_tail_bound": 1.1639042286175642e-29,
+              "t_tail_bound": 8.44500438031405e-30,
+              "wrong_outer_discount_Q": 4.201027620348147,
+              "wrong_futures": 4.201027620348146,
+              "wrong_spot_vol": 5.4223289598522895
+            },
+            "put": {
+              "q_quad": 33.820462055215934,
+              "t_quad": 33.82046205521595,
+              "closed": 33.82046205521596,
+              "q_tail_bound": 4.8482543878675655e-31,
+              "t_tail_bound": 4.597232465097018e-31,
+              "wrong_outer_discount_Q": 34.47358815008286,
+              "wrong_futures": 34.47358815008283,
+              "wrong_spot_vol": 34.813794087533175
+            }
+          }
+        ]
+      },
+      {
+        "id": "stochastic_zero_stock_correlation",
+        "inputs": {
+          "spot": 100.0,
+          "rate": 0.04,
+          "rate_volatility": 0.03,
+          "stock_volatility": 0.25,
+          "correlation": 0.0,
+          "horizon": 2.0
+        },
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 108.4587792434938,
+          "forward_sigma": 0.25238858928247926,
+          "terminal_variance": 0.1274,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.620270185988092,
+          "cov_integral_log_spot": 0.0024
+        },
+        "moments": {
+          "density_quad": 1.0000000000000002,
+          "discounted_spot_quad": 100.00000000000001,
+          "forward_quad": 108.19879028485451,
+          "log_first_Q": 4.622670185988091,
+          "log_second_Q": 21.496479648423183,
+          "log_first_T": 4.620270185988091,
+          "log_second_T": 21.474296591530443,
+          "integrated_forward_variance": 0.12739999999999999
+        },
+        "seed": 286313,
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "q_quad": 36.83322283272173,
+              "t_quad": 36.833222832721745,
+              "closed": 36.83322283272168,
+              "q_tail_bound": 1.1503324411666883e-29,
+              "t_tail_bound": 1.2447053353865913e-29,
+              "wrong_outer_discount_Q": 37.05417369125674,
+              "wrong_futures": 37.054173691256736,
+              "wrong_spot_vol": 36.78289142487704
+            },
+            "put": {
+              "q_quad": 1.5289553965621256,
+              "t_quad": 1.5289553965621252,
+              "closed": 1.5289553965621288,
+              "q_tail_bound": 2.3061540914905344e-31,
+              "t_tail_bound": 2.298616232548509e-31,
+              "wrong_outer_discount_Q": 1.5096180245588375,
+              "wrong_futures": 1.5096180245588373,
+              "wrong_spot_vol": 1.478623988717471
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "q_quad": 15.481866085024665,
+              "t_quad": 15.481866085024674,
+              "closed": 15.481866085024627,
+              "q_tail_bound": 1.1503324411666883e-29,
+              "t_tail_bound": 1.2447053353865913e-29,
+              "wrong_outer_discount_Q": 15.62720301290904,
+              "wrong_futures": 15.627203012909034,
+              "wrong_spot_vol": 15.351654561793541
+            },
+            "put": {
+              "q_quad": 12.525464930785287,
+              "t_quad": 12.52546493078527,
+              "closed": 12.525464930785308,
+              "q_tail_bound": 3.459231137235802e-31,
+              "t_tail_bound": 3.447924348822763e-31,
+              "wrong_outer_discount_Q": 12.43051362813136,
+              "wrong_futures": 12.430513628131358,
+              "wrong_spot_vol": 12.395253407554215
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "q_quad": 5.538318957374117,
+              "t_quad": 5.53831895737412,
+              "closed": 5.538318957374112,
+              "q_tail_bound": 1.1503324411666883e-29,
+              "t_tail_bound": 1.2447053353865913e-29,
+              "wrong_outer_discount_Q": 5.609100908140507,
+              "wrong_futures": 5.609100908140498,
+              "wrong_spot_vol": 5.4223289598522895
+            },
+            "put": {
+              "q_quad": 34.92978408505497,
+              "t_quad": 34.92978408505495,
+              "closed": 34.929784085055005,
+              "q_tail_bound": 4.612308182981069e-31,
+              "t_tail_bound": 4.597232465097018e-31,
+              "wrong_outer_discount_Q": 34.76027780528305,
+              "wrong_futures": 34.76027780528305,
+              "wrong_spot_vol": 34.813794087533175
+            }
+          }
+        ]
+      },
+      {
+        "id": "negative_rates",
+        "inputs": {
+          "spot": 100.0,
+          "rate": -0.02,
+          "rate_volatility": 0.03,
+          "stock_volatility": 0.25,
+          "correlation": 0.5,
+          "horizon": 2.0
+        },
+        "statistics": {
+          "discount": 1.04206049680502,
+          "forward": 95.96371833171122,
+          "futures": 96.91847740261422,
+          "forward_sigma": 0.2668332812825267,
+          "terminal_variance": 0.14240000000000003,
+          "mean_integral": -0.04,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.502670185988092,
+          "mean_log_spot_T": 4.492770185988092,
+          "cov_integral_log_spot": 0.009899999999999999
+        },
+        "moments": {
+          "density_quad": 1.0,
+          "discounted_spot_quad": 100.00000000000003,
+          "forward_quad": 95.96371833171129,
+          "log_first_Q": 4.502670185988093,
+          "log_second_Q": 20.416438803786036,
+          "log_first_T": 4.492770185988093,
+          "log_second_T": 20.327383944103474,
+          "integrated_forward_variance": 0.1424
+        },
+        "seed": 286314,
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 27.0557652236486,
+            "call": {
+              "q_quad": 30.651617500680388,
+              "t_quad": 30.651617500680388,
+              "closed": 30.651617500680352,
+              "q_tail_bound": 1.1627703318056032e-29,
+              "t_tail_bound": 1.581216427169452e-29,
+              "wrong_outer_discount_Q": 31.497612550762412,
+              "wrong_futures": 31.497612550762433,
+              "wrong_spot_vol": 30.102215029271854
+            },
+            "put": {
+              "q_quad": 3.595852277031745,
+              "t_quad": 3.595852277031743,
+              "closed": 3.5958522770317467,
+              "q_tail_bound": 2.7220439765066826e-31,
+              "t_tail_bound": 2.59168256518769e-31,
+              "wrong_outer_discount_Q": 3.4469306153595514,
+              "wrong_futures": 3.4469306153595523,
+              "wrong_spot_vol": 3.046449805623254
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": -9.416352164527101,
+            "call": {
+              "q_quad": 11.399911504934266,
+              "t_quad": 11.399911504934273,
+              "closed": 11.399911504934243,
+              "q_tail_bound": 1.1627703318056032e-29,
+              "t_tail_bound": 1.581216427169452e-29,
+              "wrong_outer_discount_Q": 11.88282475184229,
+              "wrong_futures": 11.882824751842303,
+              "wrong_spot_vol": 10.452144855943457
+            },
+            "put": {
+              "q_quad": 20.816263669461335,
+              "t_quad": 20.816263669461318,
+              "closed": 20.816263669461353,
+              "q_tail_bound": 4.083065964760023e-31,
+              "t_tail_bound": 3.8875238477815347e-31,
+              "wrong_outer_discount_Q": 20.30426020461514,
+              "wrong_futures": 20.30426020461513,
+              "wrong_spot_vol": 19.868497020470574
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -45.8884695527028,
+            "call": {
+              "q_quad": 3.7488692362134497,
+              "t_quad": 3.748869236213452,
+              "closed": 3.7488692362134417,
+              "q_tail_bound": 1.1627703318056032e-29,
+              "t_tail_bound": 1.581216427169452e-29,
+              "wrong_outer_discount_Q": 3.9599395742004035,
+              "wrong_futures": 3.9599395742004084,
+              "wrong_spot_vol": 3.087748687436378
+            },
+            "put": {
+              "q_quad": 49.6373387889162,
+              "t_quad": 49.637338788916196,
+              "closed": 49.63733878891625,
+              "q_tail_bound": 5.444087953013365e-31,
+              "t_tail_bound": 5.18336513037538e-31,
+              "wrong_outer_discount_Q": 48.85349241514894,
+              "wrong_futures": 48.85349241514894,
+              "wrong_spot_vol": 48.976218240139175
+            }
+          }
+        ]
+      },
+      {
+        "id": "zero_convexity_covariance",
+        "inputs": {
+          "spot": 100.0,
+          "rate": 0.04,
+          "rate_volatility": 0.03,
+          "stock_volatility": 0.25,
+          "correlation": -0.16,
+          "horizon": 2.0
+        },
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 108.1987902848545,
+          "forward_sigma": 0.24758836806279896,
+          "terminal_variance": 0.12260000000000001,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.622670185988092,
+          "mean_log_spot_T": 4.622670185988092,
+          "cov_integral_log_spot": 0.0
+        },
+        "moments": {
+          "density_quad": 1.0000000000000002,
+          "discounted_spot_quad": 100.00000000000004,
+          "forward_quad": 108.1987902848545,
+          "log_first_Q": 4.622670185988091,
+          "log_second_Q": 21.491679648423183,
+          "log_first_T": 4.622670185988091,
+          "log_second_T": 21.491679648423183,
+          "integrated_forward_variance": 0.1226
+        },
+        "seed": 286315,
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "q_quad": 36.732794325377974,
+              "t_quad": 36.732794325377974,
+              "closed": 36.73279432537793,
+              "q_tail_bound": 1.1494617379582426e-29,
+              "t_tail_bound": 1.1494617379582427e-29,
+              "wrong_outer_discount_Q": 36.732794325377974,
+              "wrong_futures": 36.73279432537798,
+              "wrong_spot_vol": 36.78289142487704
+            },
+            "put": {
+              "q_quad": 1.4285268892183667,
+              "t_quad": 1.4285268892183665,
+              "closed": 1.4285268892183733,
+              "q_tail_bound": 2.298616232548509e-31,
+              "t_tail_bound": 2.298616232548509e-31,
+              "wrong_outer_discount_Q": 1.4285268892183665,
+              "wrong_futures": 1.4285268892183667,
+              "wrong_spot_vol": 1.478623988717471
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "q_quad": 15.220156542298266,
+              "t_quad": 15.220156542298268,
+              "closed": 15.220156542298248,
+              "q_tail_bound": 1.1494617379582426e-29,
+              "t_tail_bound": 1.1494617379582427e-29,
+              "wrong_outer_discount_Q": 15.220156542298268,
+              "wrong_futures": 15.220156542298282,
+              "wrong_spot_vol": 15.351654561793541
+            },
+            "put": {
+              "q_quad": 12.263755388058904,
+              "t_quad": 12.2637553880589,
+              "closed": 12.263755388058915,
+              "q_tail_bound": 3.447924348822763e-31,
+              "t_tail_bound": 3.447924348822763e-31,
+              "wrong_outer_discount_Q": 12.2637553880589,
+              "wrong_futures": 12.263755388058888,
+              "wrong_spot_vol": 12.395253407554215
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "q_quad": 5.305780812485412,
+              "t_quad": 5.3057808124854136,
+              "closed": 5.305780812485404,
+              "q_tail_bound": 1.1494617379582426e-29,
+              "t_tail_bound": 1.1494617379582427e-29,
+              "wrong_outer_discount_Q": 5.3057808124854136,
+              "wrong_futures": 5.305780812485416,
+              "wrong_spot_vol": 5.4223289598522895
+            },
+            "put": {
+              "q_quad": 34.69724594016627,
+              "t_quad": 34.69724594016626,
+              "closed": 34.697245940166304,
+              "q_tail_bound": 4.597232465097018e-31,
+              "t_tail_bound": 4.597232465097018e-31,
+              "wrong_outer_discount_Q": 34.69724594016626,
+              "wrong_futures": 34.69724594016624,
+              "wrong_spot_vol": 34.813794087533175
+            }
+          }
+        ]
+      },
+      {
+        "id": "zero_spot_vol_stochastic_rate",
+        "inputs": {
+          "spot": 100.0,
+          "rate": 0.04,
+          "rate_volatility": 0.03,
+          "stock_volatility": 0.0,
+          "correlation": 0.0,
+          "horizon": 2.0
+        },
+        "statistics": {
+          "discount": 0.9242247509120064,
+          "forward": 108.19879028485443,
+          "futures": 108.4587792434938,
+          "forward_sigma": 0.034641016151377546,
+          "terminal_variance": 0.0024,
+          "mean_integral": 0.08,
+          "variance_integral": 0.0024,
+          "mean_log_spot_Q": 4.685170185988092,
+          "mean_log_spot_T": 4.682770185988092,
+          "cov_integral_log_spot": 0.0024
+        },
+        "moments": {
+          "density_quad": 1.0000000000000002,
+          "discounted_spot_quad": 100.00000000000007,
+          "forward_quad": 108.19879028485451,
+          "log_first_Q": 4.685170185988092,
+          "log_second_Q": 21.953219671671697,
+          "log_first_T": 4.682770185988092,
+          "log_second_T": 21.930736614778958,
+          "integrated_forward_variance": 0.0024000000000000002
+        },
+        "seed": 286316,
+        "prices": [
+          {
+            "strike": 70.0,
+            "parity": 35.30426743615955,
+            "call": {
+              "q_quad": 35.304267436159606,
+              "t_quad": 35.304267436159634,
+              "closed": 35.30426743615955,
+              "q_tail_bound": 3.5529642241554053e-31,
+              "t_tail_bound": 4.18874689754246e-31,
+              "wrong_outer_discount_Q": 35.54455566669792,
+              "wrong_futures": 35.544555666697896,
+              "wrong_spot_vol": 35.30426743615955
+            },
+            "put": {
+              "q_quad": 1.3325676921397798e-19,
+              "t_quad": 1.3325676921399326e-19,
+              "closed": 1.332567692138046e-19,
+              "q_tail_bound": 2.7099404906102316e-31,
+              "t_tail_bound": 2.298616232548509e-31,
+              "wrong_outer_discount_Q": 8.530158984663535e-20,
+              "wrong_futures": 8.530158984650934e-20,
+              "wrong_spot_vol": 0.0
+            }
+          },
+          {
+            "strike": 105.0,
+            "parity": 2.956401154239327,
+            "call": {
+              "q_quad": 3.7537748961715516,
+              "t_quad": 3.7537748961715707,
+              "closed": 3.753774896171515,
+              "q_tail_bound": 3.5529642241554053e-31,
+              "t_tail_bound": 4.18874689754246e-31,
+              "wrong_outer_discount_Q": 3.9329953806441256,
+              "wrong_futures": 3.9329953806441122,
+              "wrong_spot_vol": 2.956401154239327
+            },
+            "put": {
+              "q_quad": 0.7973737419321757,
+              "t_quad": 0.7973737419321667,
+              "closed": 0.7973737419321878,
+              "q_tail_bound": 4.064910735915347e-31,
+              "t_tail_bound": 3.447924348822763e-31,
+              "wrong_outer_discount_Q": 0.7363059958664441,
+              "wrong_futures": 0.7363059958664461,
+              "wrong_spot_vol": 0.0
+            }
+          },
+          {
+            "strike": 140.0,
+            "parity": -29.391465127680895,
+            "call": {
+              "q_quad": 7.168352139439326e-08,
+              "t_quad": 7.168352139439199e-08,
+              "closed": 7.168352139439878e-08,
+              "q_tail_bound": 3.5529642241554053e-31,
+              "t_tail_bound": 4.18874689754246e-31,
+              "wrong_outer_discount_Q": 9.434812276233104e-08,
+              "wrong_futures": 9.43481227623417e-08,
+              "wrong_spot_vol": 0.0
+            },
+            "put": {
+              "q_quad": 29.39146519936437,
+              "t_quad": 29.391465199364344,
+              "closed": 29.391465199364415,
+              "q_tail_bound": 5.419880981220463e-31,
+              "t_tail_bound": 4.597232465097018e-31,
+              "wrong_outer_discount_Q": 29.15117699149065,
+              "wrong_futures": 29.151176991490683,
+              "wrong_spot_vol": 29.391465127680895
+            }
+          }
+        ]
+      }
+    ],
+    "external_forward": [
+      {
+        "market_type": "investment",
+        "forward": 98.0,
+        "strike": 100.0,
+        "discount": 0.93,
+        "volatility": 0.35,
+        "horizon": 0.5,
+        "call": 8.167256042551259,
+        "put": 10.027256042551187
+      },
+      {
+        "market_type": "consumption",
+        "forward": 98.0,
+        "strike": 100.0,
+        "discount": 0.93,
+        "volatility": 0.35,
+        "horizon": 0.5,
+        "call": 8.167256042551259,
+        "put": 10.027256042551187
+      },
+      {
+        "market_type": "negative_rate_discount",
+        "forward": 102.0,
+        "strike": 100.0,
+        "discount": 1.04,
+        "volatility": 0.2,
+        "horizon": 1.0,
+        "call": 9.447874017743077,
+        "put": 7.367874017743074
+      }
+    ],
+    "limits": [
+      {
+        "discount": 1.0,
+        "forward": 80.0,
+        "strike": 100.0,
+        "volatility": 0.25,
+        "horizon": 0.0,
+        "call": 0.0,
+        "put": 20.0
+      },
+      {
+        "discount": 1.0,
+        "forward": 100.0,
+        "strike": 100.0,
+        "volatility": 0.25,
+        "horizon": 0.0,
+        "call": 0.0,
+        "put": 0.0
+      },
+      {
+        "discount": 1.0,
+        "forward": 125.0,
+        "strike": 100.0,
+        "volatility": 0.25,
+        "horizon": 0.0,
+        "call": 25.0,
+        "put": 0.0
+      },
+      {
+        "discount": 0.9607894391523232,
+        "forward": 80.0,
+        "strike": 100.0,
+        "volatility": 0.0,
+        "horizon": 1.0,
+        "call": 0.0,
+        "put": 19.215788783046463
+      },
+      {
+        "discount": 0.9607894391523232,
+        "forward": 100.0,
+        "strike": 100.0,
+        "volatility": 0.0,
+        "horizon": 1.0,
+        "call": 0.0,
+        "put": 0.0
+      },
+      {
+        "discount": 0.9607894391523232,
+        "forward": 125.0,
+        "strike": 100.0,
+        "volatility": 0.0,
+        "horizon": 1.0,
+        "call": 24.01973597880808,
+        "put": 0.0
+      },
+      {
+        "discount": 0.9999999996,
+        "forward": 80.0,
+        "strike": 100.0,
+        "volatility": 0.25,
+        "horizon": 1e-08,
+        "call": 0.0,
+        "put": 19.999999992
+      },
+      {
+        "discount": 0.9999999996,
+        "forward": 100.0,
+        "strike": 100.0,
+        "volatility": 0.25,
+        "horizon": 1e-08,
+        "call": 0.0009973557005786666,
+        "put": 0.0009973557005786666
+      },
+      {
+        "discount": 0.9999999996,
+        "forward": 125.0,
+        "strike": 100.0,
+        "volatility": 0.25,
+        "horizon": 1e-08,
+        "call": 24.99999999,
+        "put": 0.0
+      },
+      {
+        "discount": 0.9607894391523232,
+        "forward": 80.0,
+        "strike": 100.0,
+        "volatility": 1e-08,
+        "horizon": 1.0,
+        "call": 0.0,
+        "put": 19.215788783046463
+      },
+      {
+        "discount": 0.9607894391523232,
+        "forward": 100.0,
+        "strike": 100.0,
+        "volatility": 1e-08,
+        "horizon": 1.0,
+        "call": 3.8329952984104134e-07,
+        "put": 3.8329952984104134e-07
+      },
+      {
+        "discount": 0.9607894391523232,
+        "forward": 125.0,
+        "strike": 100.0,
+        "volatility": 1e-08,
+        "horizon": 1.0,
+        "call": 24.01973597880808,
+        "put": 0.0
+      }
+    ]
+  },
+  "physical_to_q": -0.052
+}
