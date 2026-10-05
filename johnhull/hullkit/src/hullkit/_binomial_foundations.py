@@ -129,3 +129,25 @@ def replication_grid(stock_tree, option_tree, rate, dt):
         banks.append(np.array([r["bank"] for r in rows]))
         continuations.append(np.array([r["price"] for r in rows]))
     return dict(deltas=deltas, bank=banks, continuation=continuations)
+
+
+def crr_moments(sigma, dt, drift):
+    """Two-point return moments versus exact lognormal return moments.
+
+    CRR matches the mean exactly and the variance only to first order in dt.
+    Changing P/Q changes probability and finite-step variance; the volatility
+    parameter, moves and limiting variance/dt remain the same.
+    """
+    if not all(math.isfinite(x) for x in (sigma, dt, drift)) or sigma <= 0 or dt <= 0:
+        raise ValueError("positive volatility/time and finite drift required")
+    up = math.exp(sigma*math.sqrt(dt))
+    down = 1/up
+    mean = math.exp(drift*dt)
+    p = (mean-down)/(up-down)
+    if not 0 < p < 1:
+        raise ValueError("mean growth must lie between the two moves")
+    variance = p*(1-p)*(up-down)**2
+    exact = math.exp(2*drift*dt)*math.expm1(sigma*sigma*dt)
+    return dict(up=up, down=down, probability=p, mean=mean, variance=variance,
+                first_order_variance=sigma*sigma*dt, lognormal_variance=exact,
+                variance_error=variance-exact)
