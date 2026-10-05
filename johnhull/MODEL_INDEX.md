@@ -305,3 +305,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._option_mechanics` | Private Ch10 terminal cashflows and contract mechanics | Printed examples and independent exercise accounting; test_option_mechanics_*.py |
 | `hullkit._option_properties` | Private Ch11 factor curves, arbitrage cashflows, exercise comparisons and escrowed cash-dividend lattice | Printed values and independent integration/tree/PDE/accounting; test_option_properties_*.py |
 | `hullkit._option_strategies` | Private Ch12 note funding, strategy profits, residual calendar valuation and finite payoff replication | Printed examples and independent integration/accounting/piecewise/PDE references; test_option_strategies_*.py |
+| `hullkit._binomial_foundations` | Private Ch13 stock-bank replication and direct discrete valuation | Printed GE values and independent linear solves/state sums/stopping policies/PDE; test_binomial_foundations_*.py |
