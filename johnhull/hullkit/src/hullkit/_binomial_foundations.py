@@ -107,3 +107,25 @@ def small_tree_stopping_values(spot, strike, rate, maturity, steps, up, down, *,
     best = int(policy_values.argmax())
     return dict(price=float(policy_values[best]), best_mask=best,
                 policy_values=policy_values, probability=p)
+
+
+def replication_grid(stock_tree, option_tree, rate, dt):
+    """No-dividend stock-bank continuation hedges at every pre-expiry node.
+
+    Levels use trees.binomial_tree's descending stock ordering. If given an
+    American tree, the hedge replicates the two next-step option values; its
+    continuation value may be below the current immediate exercise value.
+    Finite-tree secant deltas are not spot-bump derivatives.
+    """
+    if len(stock_tree) != len(option_tree) or len(stock_tree) < 2:
+        raise ValueError("matching trees with at least one transition required")
+    deltas, banks, continuations = [], [], []
+    for t in range(len(stock_tree)-1):
+        if len(stock_tree[t]) != t+1 or len(stock_tree[t+1]) != t+2 or len(option_tree[t+1]) != t+2:
+            raise ValueError("recombining levels must contain time index plus one nodes")
+        rows = [one_step_replication(stock_tree[t][j], stock_tree[t+1][j], stock_tree[t+1][j+1],
+                                     option_tree[t+1][j], option_tree[t+1][j+1], rate, dt) for j in range(t+1)]
+        deltas.append(np.array([r["delta"] for r in rows]))
+        banks.append(np.array([r["bank"] for r in rows]))
+        continuations.append(np.array([r["price"] for r in rows]))
+    return dict(deltas=deltas, bank=banks, continuation=continuations)
