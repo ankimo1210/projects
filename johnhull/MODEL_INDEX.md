@@ -303,3 +303,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | Module | Contracts | Verification |
 |---|---|---|
 | `hullkit._option_mechanics` | Private Ch10 terminal cashflows and contract mechanics | Printed examples and independent exercise accounting; test_option_mechanics_*.py |
+| `hullkit._option_properties` | Private Ch11 factor curves, arbitrage cashflows and exercise comparisons | Printed values and independent integration/tree/PDE/accounting; test_option_properties_*.py |
