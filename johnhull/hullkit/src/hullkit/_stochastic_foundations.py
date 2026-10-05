@@ -147,3 +147,40 @@ def gbm_log_law(spot, drift, sigma, maturity):
     variance = mean*mean*math.expm1(sigma*sigma*maturity)
     return dict(log_mean=math.log(spot)+(drift-sigma*sigma/2)*maturity,
                 log_variance=sigma*sigma*maturity, mean=mean, variance=variance)
+
+
+def fractional_brownian_covariance(s, t, hurst, scale=1):
+    """Hull fBM level covariance, including zero times (equation 14.20)."""
+    s, t = np.broadcast_arrays(np.asarray(s, dtype=float), np.asarray(t, dtype=float))
+    if not math.isfinite(hurst) or not 0 < hurst < 1 or not math.isfinite(scale) or scale < 0 or np.any(s < 0) or np.any(t < 0) or not np.all(np.isfinite(s)) or not np.all(np.isfinite(t)):
+        raise ValueError("H in (0,1), nonnegative scale and finite nonnegative times required")
+    return .5*scale*scale*(s**(2*hurst)+t**(2*hurst)-np.abs(t-s)**(2*hurst))
+
+
+def fractional_brownian_correlation(s, t, hurst):
+    """Scale-independent level correlation; undefined when either time is zero."""
+    covariance = fractional_brownian_covariance(s, t, hurst)
+    s, t = np.asarray(s, dtype=float), np.asarray(t, dtype=float)
+    if np.any(s <= 0) or np.any(t <= 0):
+        raise ValueError("correlation requires strictly positive times")
+    return covariance/(s**hurst*t**hurst)
+
+
+def fractional_brownian_paths(times, hurst, n_paths=1, *, scale=1, rng=None):
+    """Dense Cholesky fBM level paths, with the deterministic zero node removed.
+
+    The source Figure 14.3 uses 100 steps. This method stores a dense
+    covariance and costs O(N**3); it is intended for similarly small grids.
+    No diagonal jitter changes the specified covariance. Floating-point
+    ill-conditioning is reported by the factorization if it occurs.
+    """
+    times = _time_grid(times)
+    if n_paths < 1 or int(n_paths) != n_paths:
+        raise ValueError("positive integer path count required")
+    covariance = fractional_brownian_covariance(times[1:, None], times[None, 1:], hurst)
+    if not math.isfinite(scale) or scale < 0:
+        raise ValueError("nonnegative finite scale required")
+    factor = np.linalg.cholesky(covariance)
+    rng = np.random.default_rng(42) if rng is None else rng
+    values = scale*(rng.standard_normal((int(n_paths), len(times)-1)) @ factor.T)
+    return np.column_stack((np.zeros(int(n_paths)), values))
