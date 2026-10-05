@@ -460,7 +460,19 @@ def bind(cfg, config_name):
         storage = evidence_store.verify_copies(primary, mirror, manifest, work)
     if storage["status"] != "PASS":
         raise ValueError("both artifact copies must restore")
-    commit, dirty = d1.worktree_state(PROJECT, "docs/validation")
+    commit = d1._git(PROJECT, "rev-parse", "HEAD")
+    # The ledger and validation records are outputs of this staged chapter run.
+    dirty = bool(
+        d1._git(
+            PROJECT,
+            "status",
+            "--porcelain",
+            "--",
+            ".",
+            ":(exclude)docs/validation",
+            ":(exclude)docs/section_ledger.json",
+        )
+    )
     if dirty:
         raise ValueError("commit chapter delivery inputs before binding")
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
@@ -700,7 +712,10 @@ def test_repairs(cfg):
     summary = output.strip().splitlines()[-1]
     current = hashes(initial["source_sha256"])
     changed = [n for n in current if current[n] != initial["source_sha256"][n]]
-    allowed = {"scripts/chapter_acceptance.py", "report/tests/test_report_build.py"}
+    allowed = {
+        "scripts/chapter_acceptance.py",
+        *(t.split("::", 1)[0].removeprefix("johnhull/") for t in initial["failed_tests"]),
+    }
     if set(changed) - allowed:
         raise ValueError("additional changed source needs its affected tests: " + str(changed))
     result = dict(initial)

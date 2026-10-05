@@ -2203,7 +2203,7 @@
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/report_builder/theme.py": "db43b679941eff1c165fdf6181a995eff7d076d8f9300f7136d306961d27bf5b",
     "report/tests/test_chapter_acceptance.py": "d42d57e438ab41c90a086ac848e72ba6d8ff77f1ec5b8e7caa0e7de8b348132e",
-    "scripts/chapter_acceptance.py": "1d093a58f790827167b150e376ec1a872938c8a88a5b6602ec8abfd297f14e15",
+    "scripts/chapter_acceptance.py": "1128481a4dfdd7e4139f3bcdf7af04dc03c2fb52d25a64322a03c975a6021947",
     "scripts/d1_preflight_compare.py": "d693d8c7c2e9f22f611d6c87ba78cbfc23c7a242b42f00a2cced6f243f68452d",
     "scripts/evidence_dependencies.json": "1b118cb7b79cb32ae2d8b8f64f9327029606c128028fd67030e7ab5f9897b650",
     "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",

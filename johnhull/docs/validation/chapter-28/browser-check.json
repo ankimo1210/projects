@@ -252,7 +252,7 @@
   "source_sha256": {
     "docs/acceptance/chapters/ch28.json": "556e59cafe8235059bf38b48ed02203e7bfcdd49420f9b05d60147db1155cdec",
     "docs/validation/chapter-28/reference.json": "cb48df62b74a7908a922b9ccec86f7a26c84f453290f9e143ca92e244f53abeb",
-    "docs/validation/chapter-28/numerical-check.json": "0d4976961811a96e9c103b48c50d28f8324213c6ee81f4f501d24d65f5802cae",
+    "docs/validation/chapter-28/numerical-check.json": "f18cfe7390fe7a155490f185b3818c96f363e4bb9762273740f06992510e7ded",
     "scripts/verify_chapter_browser.cjs": "c352c4a846c4a75908094b9f88fb589bd5f033d3716bd26e379a70cb5205e2de",
     "hullkit/src/hullkit/_chapter28_lesson.py": "f9800998f05b2d8a363537ab84ca05cd0b3383d56303a84a2afd1c6e949a4a3d",
     "volumes/10_exotics_martingales/exotics.ipynb": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb",
