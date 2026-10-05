@@ -8,7 +8,7 @@ import math
 
 import numpy as np
 
-from . import bsm, payoffs, volatility
+from . import bsm, payoffs, trees, volatility
 
 
 def _price(spot, strike, rate, sigma, maturity, *, q=0, kind="call"):
@@ -115,3 +115,73 @@ def strategy_profit(terminal_spot, legs, premiums, *, maturity=None,
     total_cash = payoff+dividend_cash
     return dict(payoff=payoff, initial_cost=float(cost), dividend_cash=dividend_cash,
                 total_cash=total_cash, profit=total_cash-cost)
+
+
+def spread_legs(name, strikes, *, reverse=False):
+    """Canonical Ch12 same-maturity spreads without changing the registry."""
+    k = np.asarray(strikes, dtype=float)
+    butterfly = name in ("call_butterfly", "put_butterfly")
+    if k.ndim != 1 or len(k) != (3 if butterfly else 2) or not np.all(np.isfinite(k)) or np.any(k < 0) or np.any(np.diff(k) <= 0):
+        raise ValueError("finite nonnegative strictly increasing spread strikes required")
+    if butterfly:
+        if not math.isclose(k[0]+k[2], 2*k[1], rel_tol=1e-12, abs_tol=1e-12):
+            raise ValueError("canonical butterfly strikes must be equally spaced")
+        kind = "call" if name == "call_butterfly" else "put"
+        legs = [(1, kind, k[0]), (-2, kind, k[1]), (1, kind, k[2])]
+    elif name in ("bull_call_spread", "bear_call_spread"):
+        sign = 1 if name == "bull_call_spread" else -1
+        legs = [(sign, "call", k[0]), (-sign, "call", k[1])]
+    elif name in ("bear_put_spread", "bull_put_spread"):
+        sign = 1 if name == "bear_put_spread" else -1
+        legs = [(sign, "put", k[1]), (-sign, "put", k[0])]
+    elif name == "box":
+        legs = [(1, "call", k[0]), (-1, "call", k[1]), (1, "put", k[1]), (-1, "put", k[0])]
+    else:
+        raise ValueError("unknown spread")
+    return [(-q if reverse else q, kind, float(strike)) for q, kind, strike in legs]
+
+
+def spread_value(spot, strikes, rate, sigma, maturity, *, name, american=False, steps=1000):
+    """Sum standalone no-dividend option values; American legs are not a bond.
+
+    This does not simulate early assignment on a short American leg. Its sum
+    differs from the European box's discounted fixed terminal payoff.
+    """
+    legs = spread_legs(name, strikes)
+    prices = []
+    for _, kind, strike in legs:
+        price = _price(spot, strike, rate, sigma, maturity, kind=kind)
+        if american:
+            if steps < 1 or int(steps) != steps:
+                raise ValueError("positive integer American tree steps required")
+            if min(spot, strike, sigma, maturity) == 0:
+                intrinsic = max(spot-strike, 0) if kind == "call" else max(strike-spot, 0)
+                price = max(price, intrinsic)
+            else:
+                price = trees.crr_price(spot, strike, rate, sigma, maturity, int(steps), kind=kind, american=True)
+        prices.append(price)
+    return dict(legs=legs, leg_prices=np.asarray(prices), price=sum(q*p for (q, _, _), p in zip(legs, prices, strict=True)))
+
+
+def short_expiry_spread(spots, short_strike, long_strike, rate, sigma, short_maturity, long_maturity,
+                        *, kind="call", short_premium=0, long_premium=0, reverse=False, q=0):
+    """Calendar/diagonal value at T1: long remaining option minus short payoff.
+
+    Caller premiums determine nominal profit; they are not inferred from the
+    observed T1 spot. The residual term is T2-T1, not the original T2.
+    """
+    if not all(math.isfinite(v) for v in (short_maturity, long_maturity, short_premium, long_premium)) or min(short_maturity, short_premium, long_premium) < 0 or long_maturity < short_maturity:
+        raise ValueError("nonnegative premiums and 0 <= T1 <= T2 required")
+    if not math.isfinite(short_strike) or short_strike < 0:
+        raise ValueError("short strike must be finite and nonnegative")
+    axis = np.asarray(spots, dtype=float)
+    if axis.ndim != 1:
+        raise ValueError("spots must be a one-dimensional short-expiry curve")
+    remaining = long_maturity-short_maturity
+    marks = np.array([_price(float(s), long_strike, rate, sigma, remaining, q=q, kind=kind) for s in axis])
+    short_payoff = payoffs.leg_payoff(axis, 1, kind, short_strike)
+    direction = -1 if reverse else 1
+    value = direction*(marks-short_payoff)
+    cost = direction*(long_premium-short_premium)
+    return dict(remaining_long_value=marks, short_payoff=short_payoff,
+                initial_cost=cost, value=value, profit=value-cost)
