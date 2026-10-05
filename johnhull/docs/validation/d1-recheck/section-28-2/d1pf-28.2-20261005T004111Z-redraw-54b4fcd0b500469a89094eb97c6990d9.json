@@ -2,17 +2,17 @@
   "schema_version": 2,
   "kind": "johnhull-section-recheck",
   "status": "PASS",
-  "run_id": "ch28-26.9-20261005T004217Z",
-  "created_at": "2026-10-05T00:42:21.521374+00:00",
+  "run_id": "d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9",
+  "created_at": "2026-10-05T00:41:37.420215+00:00",
   "commit": "8b5a4d7474c10d5bc2419938e949dd1966925f74",
   "dirty": false,
-  "section_id": "26.9",
-  "decision": "reused",
+  "section_id": "28.2",
+  "decision": "redrawn",
   "reasons": [
-    "chapter: unchanged dependency fingerprint and observed runtime"
+    "D1-preflight stage 3: full redraw"
   ],
   "dependency_fingerprint": {
-    "section_id": "26.9",
+    "section_id": "28.2",
     "rules": {
       "fingerprint_schema": 1,
       "normalizer_version": 1,
@@ -25,11 +25,11 @@
       ]
     },
     "components": {
-      "notebook_slice": "a29a7cdc4d900e6c33a3ec41a1bb1f74cfc52776cbd57287688a283a13f9a1d5",
+      "notebook_slice": "fa9fef8c7cd874be8c60b6939780d5a886821d68fcee08ad4e92226988c5da6e",
       "notebook_shared_assets": [
         "cef0e322ca434b712776e98b2709050fd54c53187afdbf4bfd04722041c2f3ee"
       ],
-      "book_section": "a39c0369b71dd63cb2aa45dc6310845ffbb103890d50556a6d660ccf17fce108",
+      "book_section": "ee8de1d47362eb9208f8390df1dacae50b240401e27f2a0a1f5d2b7ade0e4add",
       "book_assets": {
         "local": {
           "book/_build/html/_static/clipboard.min.js": "261ffa06f381039cf7d18984d1364c59f3c2b9b60b1fa05d5f9c8c152e4d5be5",
@@ -63,7 +63,10 @@
         ]
       },
       "portal_cards": {
-        "barrier_knockout": "2c592cd8f74371bc6697f417470fb56498cf34be795a1874d64227993806783e"
+        "factor_risk_contributions": "1c48931e6dc4f22d418a22ae9bdb4581502093ba3a1e8f88b82f54984f401aef",
+        "factor_risk_loading": "558f4a12cc40190ee8682dfd73746ca833ccebded91559bcd8f83e5fbc43122d",
+        "factor_risk_hedge": "9a26dc61e48fd038d88e3034ec68a16fd12387e8bebc17452c5e99b39256e6d3",
+        "factor_risk_validation": "0944ece92ecc6208ca96dc0d7f0e52bbf0cb8bf41a8ecd435b1e73b948acc351"
       },
       "portal_assets": {
         "local": {
@@ -74,6 +77,7 @@
       },
       "python_sources": {
         "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+        "hullkit/src/hullkit/_factor_risk_lesson.py": "8151ca3b562e61596859a0f36858b019e7d2ba29890f9e217bc61271cfc46a22",
         "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
         "hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
         "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
@@ -85,6 +89,7 @@
         "hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
         "hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
         "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+        "hullkit/src/hullkit/factor_risk.py": "efa2391d2f722c94f0be244764245c3870c8fd121a16de937f44f7158774eb34",
         "hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
         "hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
         "hullkit/src/hullkit/frontier_reference.py": "03d759a023ddff5736ce8173ac24e353b7003298654a70e816afebf1fd9fa7a1",
@@ -111,6 +116,7 @@
         "hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
         "hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
         "hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+        "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
         "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
         "hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
         "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
@@ -129,14 +135,21 @@
         "hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
         "hullkit/src/hullkit/zero_dte.py": "5a32189a9403af1b8d69a9ff9304315547564c852ce602cf22b9e6fcec5b7a48"
       },
-      "data_files": {},
+      "data_files": {
+        "docs/validation/section-28-2/reference.json": "297b9d2c20ccba75b81c12ea59e6e2b292269e7f3a3dcd0421d17fc0dff335bb",
+        "docs/validation/section-28-2/numerical-check.json": "0a3849aa41e74583fc9dd2b7e2ee5e81ba7d7f09c0613733994bac03609f87fa"
+      },
       "verifier": {
-        "scripts/verify_barrier_pilot_browser.cjs": "98db63058156d3e66b45f822cb66b7e02a31afbfd1292e9aa78952ed6302f087"
+        "scripts/verify_factor_risk_browser.cjs": "a964706835f02542efe3303e61b976bc5aedaa4d1545794e00b41be4bf4195de"
       },
       "viewports": [
         [
           1440,
-          1000
+          1050
+        ],
+        [
+          1000,
+          1050
         ]
       ],
       "environment": {
@@ -158,86 +171,247 @@
       }
     },
     "unknown": [],
-    "digest": "50d8a47b9a81a20625f53807bbb6f6658876a4904d272534331dadafcff718f8"
+    "digest": "39339a5dcc0e3915534780ef944a0075f78bac1b109b36345f3523a60eedff70"
   },
-  "baseline": {
-    "record": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3.json",
-    "record_sha256": "5c11353116505a802ebf24ae09ec8d641fe385c181e3f638a30bcc9170445673",
-    "run_id": "d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3"
-  },
+  "baseline": null,
   "images": [
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-bgk.png",
-      "ref": "artifact:sha256:daab28b566b8e36272a2cee57f0f47657ede588b40f984f84ce02526623f0660",
-      "bytes": 38764,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/book-factor_risk_contributions-1000.png",
+      "ref": "artifact:sha256:7d29c778c80998be217ffba1c2964789101623ecc71727254d5bfa1963840924",
+      "bytes": 20948,
       "mime": "image/png"
     },
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-eight.png",
-      "ref": "artifact:sha256:db53cc9ebd235f957a9b42efc52411087b2b8d9d948598cbf4b60997b918c5cb",
-      "bytes": 82048,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/book-factor_risk_contributions-1440.png",
+      "ref": "artifact:sha256:1810114bd5ab1f18d87c1e7a4c6161a634e64576c48a293058c26e1e2d10c652",
+      "bytes": 21074,
       "mime": "image/png"
     },
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-explorer-initial.png",
-      "ref": "artifact:sha256:6db04be21223e2653ec855178b4382e832c12bfaf2fcd230d5657363ca5f063c",
-      "bytes": 36321,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/book-factor_risk_hedge-1000.png",
+      "ref": "artifact:sha256:68b84fdb2060de981d5c5883580f73464ae055bfa597457c62bbace6341bd6e7",
+      "bytes": 20708,
       "mime": "image/png"
     },
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-explorer-put-up-in.png",
-      "ref": "artifact:sha256:24791168bc242e9cf98827481297b99e6c26af57e0208d3cb074069a970d4405",
-      "bytes": 35464,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/book-factor_risk_hedge-1440.png",
+      "ref": "artifact:sha256:88076a5a1ed1df9a008d6ef2f348129c7b2e9f38fc50cc5e497386016ba6ae6b",
+      "bytes": 21676,
       "mime": "image/png"
     },
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-formulas.png",
-      "ref": "artifact:sha256:36a5f6faada5e189706e0ee30cb4407689e0431583f56bc5e30c76a38edaaf80",
-      "bytes": 27530,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/book-factor_risk_loading-1000.png",
+      "ref": "artifact:sha256:90cd3e682ad3741b7e57917d31a4c77bf4aff362c1b4fc8b45be1b7daa6aaf17",
+      "bytes": 35662,
       "mime": "image/png"
     },
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-parisian.png",
-      "ref": "artifact:sha256:c3faefdd96d11fff326b441e65ca30c2abc729cab3fb69a98cec700a897f1a00",
-      "bytes": 27806,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/book-factor_risk_loading-1440.png",
+      "ref": "artifact:sha256:1c128cb0f4f5f06fe7fa55781e3ceb0c39c4724a6952a06231dafc5259c97a06",
+      "bytes": 30853,
       "mime": "image/png"
     },
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-path.png",
-      "ref": "artifact:sha256:8f31247caf4970c001568644eaa8332fc3b10c666e8d6246afc02f02f1490472",
-      "bytes": 33894,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/book-factor_risk_validation-1000.png",
+      "ref": "artifact:sha256:6264189c9ab1bd196680c6679cc32e82153bc04580d186afb242f56cf69ae687",
+      "bytes": 25270,
       "mime": "image/png"
     },
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/book-vega.png",
-      "ref": "artifact:sha256:74458fbdcd61408b19297f2e91a41480a2f2fe09543407677b0c50568f711e25",
-      "bytes": 33169,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/book-factor_risk_validation-1440.png",
+      "ref": "artifact:sha256:4e58979c2d7b239ad0146fadacf4a8236262a256981c5f000b65ca4d01eca0e6",
+      "bytes": 25523,
       "mime": "image/png"
     },
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/portal-initial.png",
-      "ref": "artifact:sha256:24cdabd9a4033f1bdc0ae5bb4a42272b59371ddb19f3aacf519688872750f67c",
-      "bytes": 28147,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/portal-factor_risk_contributions-1000.png",
+      "ref": "artifact:sha256:55730f97d1ef24ceacb05a3c83a053176f947d66edbfb986bef0ccc8a46ade94",
+      "bytes": 17741,
       "mime": "image/png"
     },
     {
-      "path": "docs/validation/d1-recheck/section-26-9/d1pf-26.9-20261004T114932Z-reuse-f232977d16424ee4bcadfd15d9ddf6b3/portal-put-up-in.png",
-      "ref": "artifact:sha256:e899d38ae7683de34737ef58056d695a65a37a32129b0c453922b1b0b7846918",
-      "bytes": 27556,
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/portal-factor_risk_contributions-1440.png",
+      "ref": "artifact:sha256:33a84b4f54d3692f3ec0c85691157771adfa04918ff5f2a95ea0ae6193e29ca8",
+      "bytes": 17978,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/portal-factor_risk_hedge-1000.png",
+      "ref": "artifact:sha256:c4865b7005840ea765f259c488f418b7ce5a53a720be4476a435bec78c8110b9",
+      "bytes": 20527,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/portal-factor_risk_hedge-1440.png",
+      "ref": "artifact:sha256:c16f9144f33bb4bf25e95de50995b00db7f7ccb874abcd1752fd9786b041a9c0",
+      "bytes": 18258,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/portal-factor_risk_loading-1000.png",
+      "ref": "artifact:sha256:5c12e4b5315f756a92e5e1a781d658dabbf84cd4bf68a4fbfd247fcac1f44e8f",
+      "bytes": 31119,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/portal-factor_risk_loading-1440.png",
+      "ref": "artifact:sha256:f232e325b733d504be44e52df843544d4e759fb446f23c4db72ecc2011e3dd8d",
+      "bytes": 35348,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/portal-factor_risk_validation-1000.png",
+      "ref": "artifact:sha256:650986a43366458e790bebc96d9b1520edba79b0ca1cbd0733307a853f011a47",
+      "bytes": 21516,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9/portal-factor_risk_validation-1440.png",
+      "ref": "artifact:sha256:53dd4c560db2aea0043dfb2d1194f2855bb066eed74a51f424d76aabe4fea634",
+      "bytes": 21790,
       "mime": "image/png"
     }
   ],
   "checks": {
-    "numerical_reference": {
+    "browser": {
       "status": "PASS",
-      "record": "docs/validation/chapter-28/numerical-check.json"
+      "negative_controls": {
+        "book": true,
+        "portal": true
+      },
+      "browser_version": "145.0.7632.6",
+      "state_checks": 16,
+      "screenshots": 16,
+      "coverage": [
+        [
+          "book",
+          "factor_risk_contributions",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "factor_risk_contributions",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "factor_risk_hedge",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "factor_risk_hedge",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "factor_risk_loading",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "factor_risk_loading",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "factor_risk_validation",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "factor_risk_validation",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "factor_risk_contributions",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "factor_risk_contributions",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "factor_risk_hedge",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "factor_risk_hedge",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "factor_risk_loading",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "factor_risk_loading",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "factor_risk_validation",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "factor_risk_validation",
+          1440,
+          true
+        ]
+      ],
+      "book_math": {
+        "rendered": 1224,
+        "errors": 0
+      },
+      "numeric_mutation_rejected": {
+        "portal": true,
+        "book": true
+      },
+      "raw_record_sha256": "5c26bd19c14461e675d622558996c0d834b8b2cff5e8995e4b3c0aec8ecd7670",
+      "raw_record_path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9.browser.json",
+      "wrapper": {
+        "verifier": "scripts/verify_factor_risk_browser.cjs",
+        "original_sha256": "a964706835f02542efe3303e61b976bc5aedaa4d1545794e00b41be4bf4195de",
+        "executed_sha256": "a964706835f02542efe3303e61b976bc5aedaa4d1545794e00b41be4bf4195de",
+        "wrapper_sha256": "68f743a20e5ca659ca087558b71d4e679e64239f29cd8b832a28b9d5d26f88a1",
+        "renames": [],
+        "overlay_root_redirect": true
+      },
+      "seconds": 13.59
     },
     "runtime_probe": {
-      "status": "PASS"
-    },
-    "dependencies": {
       "status": "PASS",
-      "method": "equal direct baseline"
+      "exit_code": 0,
+      "seconds": 8.3
+    },
+    "pytest": {
+      "status": "PASS",
+      "passed": 61,
+      "exit_code": 0,
+      "summary": "61 passed in 2.82s",
+      "seconds": 3.63,
+      "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_factor_risk.py hullkit/tests/test_factor_risk_reference.py hullkit/tests/test_factor_risk_numerics.py hullkit/tests/test_factor_risk_lesson.py report/tests/test_factor_risk_notebook.py report/tests/test_factor_risk_registry.py"
     }
   },
   "environment": {
@@ -295,10 +469,10 @@
         ],
         "portal_plot_text": [
           {
-            "family": "Liberation Sans",
-            "postscript": "LiberationSans",
-            "file": "LiberationSans-Regular.ttf",
-            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
           }
         ]
       }
@@ -320,27 +494,41 @@
       "locale": "C.UTF-8",
       "timezone": null
     },
-    "fingerprint_config": "scripts/evidence_dependencies.json"
+    "fingerprint_config": "scripts/evidence_dependencies.json",
+    "records_commit": "8b5a4d7474c10d5bc2419938e949dd1966925f74",
+    "driver_sha256": {
+      "scripts/d1_preflight_compare.py": "d693d8c7c2e9f22f611d6c87ba78cbfc23c7a242b42f00a2cced6f243f68452d",
+      "scripts/run_browser_verifier.cjs": "68f743a20e5ca659ca087558b71d4e679e64239f29cd8b832a28b9d5d26f88a1",
+      "scripts/probe_render_runtime.cjs": "efab3367ef20b53bd353e6ecaf867a811d92aca3e71756fc5cc29cde3537a016",
+      "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+      "scripts/evidence_record.py": "264dbf9e3d4ff4c6f7bba4e6b320e1b8a71d21d1ff231adec1b92a22bba379f3",
+      "scripts/evidence_store.py": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+      "scripts/evidence_dependencies.json": "bbbfbf79526584fba10425c0278af8e38ce23e8ee95c862d759d35a4575c86f8"
+    }
   },
   "storage_verification": {
     "status": "PASS",
     "primary": {
       "status": "PASS",
-      "entries": 486,
-      "bytes": 20719171
+      "entries": 16,
+      "bytes": 385991
     },
     "mirror": {
       "status": "PASS",
-      "entries": 486,
-      "bytes": 20719171
-    }
+      "entries": 16,
+      "bytes": 385991
+    },
+    "checked_at": "2026-10-05T00:41:37.420203+00:00"
   },
   "source_sha256": {
     "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
     "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
     "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
     "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
+    "docs/validation/section-28-2/numerical-check.json": "0a3849aa41e74583fc9dd2b7e2ee5e81ba7d7f09c0613733994bac03609f87fa",
+    "docs/validation/section-28-2/reference.json": "297b9d2c20ccba75b81c12ea59e6e2b292269e7f3a3dcd0421d17fc0dff335bb",
     "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+    "hullkit/src/hullkit/_factor_risk_lesson.py": "8151ca3b562e61596859a0f36858b019e7d2ba29890f9e217bc61271cfc46a22",
     "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
     "hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
     "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
@@ -352,6 +540,7 @@
     "hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
     "hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
     "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/src/hullkit/factor_risk.py": "efa2391d2f722c94f0be244764245c3870c8fd121a16de937f44f7158774eb34",
     "hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
     "hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
     "hullkit/src/hullkit/frontier_reference.py": "03d759a023ddff5736ce8173ac24e353b7003298654a70e816afebf1fd9fa7a1",
@@ -378,6 +567,7 @@
     "hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
     "hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
     "hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+    "hullkit/src/hullkit/risk_premium.py": "4acf9c0dd6a971d83c51ee22158d3d753ab2bc70b31cce508e116e8ab4ea351f",
     "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
     "hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
     "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
@@ -395,7 +585,10 @@
     "hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
     "hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
     "hullkit/src/hullkit/zero_dte.py": "5a32189a9403af1b8d69a9ff9304315547564c852ce602cf22b9e6fcec5b7a48",
-    "hullkit/tests/test_barrier_reference.py": "7275a9504617dd194018795f7b878ab1da68f755ca3ad551bac6c7879ee554ff",
+    "hullkit/tests/test_factor_risk.py": "9557d5bb4502fb5c97953e3d2764384b6166239d8b6abb6b9b3dacfcd2870787",
+    "hullkit/tests/test_factor_risk_lesson.py": "0d6beb9a98c5e557ddcc424c2fa8afef85a685a57539dec00de72400012a684d",
+    "hullkit/tests/test_factor_risk_numerics.py": "17363c27a932eba05ba74b97f71473319249ebcf8189fb80c2dfd374c17bf754",
+    "hullkit/tests/test_factor_risk_reference.py": "d9bce6980515d492ded436574935655e2cea8bf37e89d91d1047d2df38719484",
     "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210",
     "report/report_builder/__init__.py": "e6bd9f43a533654074564fec7ef4ee7324379dfc28f693cc324af7cc0a910db9",
     "report/report_builder/build.py": "12e280a3c47a2aa952f135ba8b459effcd308d519cc317170c8b0c0f11754cbf",
@@ -403,12 +596,40 @@
     "report/report_builder/frontier_figures.py": "abc2a1f1596482b043bcb3709f8d6daca9d7f2f0edad6cc8dfe0df0246c0eb92",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/report_builder/theme.py": "db43b679941eff1c165fdf6181a995eff7d076d8f9300f7136d306961d27bf5b",
+    "report/tests/test_factor_risk_notebook.py": "ebc3ba621ac25fb3686d76dcb973c2f33d20f1a4ec61e46f1cbcbbc903b8cdb6",
+    "report/tests/test_factor_risk_registry.py": "3e4e4b9f8bbc83b52706e74c4a3bf3ef7545ea476857862bd83b4c3313ac4173",
     "scripts/evidence_dependencies.json": "bbbfbf79526584fba10425c0278af8e38ce23e8ee95c862d759d35a4575c86f8",
     "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
-    "scripts/verify_barrier_pilot_browser.cjs": "98db63058156d3e66b45f822cb66b7e02a31afbfd1292e9aa78952ed6302f087"
+    "scripts/verify_factor_risk_browser.cjs": "a964706835f02542efe3303e61b976bc5aedaa4d1545794e00b41be4bf4195de"
   },
   "artifact_sha256": {
-    "book/_build/html/notebooks/10_exotics.html": "0560bae03ccca2246440f825138a0f2bcbc634291e82fc16fa21d1cf7f1d4dea",
-    "report/site/exotics.html": "9a3abf9ae363ade735ec937308319d2785e4ffadd85378e341f4804be75258ed"
+    "report/site/exotics.html": "9a3abf9ae363ade735ec937308319d2785e4ffadd85378e341f4804be75258ed",
+    "book/_build/html/notebooks/10_exotics.html": "0560bae03ccca2246440f825138a0f2bcbc634291e82fc16fa21d1cf7f1d4dea"
+  },
+  "observations": {
+    "capture_sha256": {
+      "book-factor_risk_contributions-1000.png": "7d29c778c80998be217ffba1c2964789101623ecc71727254d5bfa1963840924",
+      "book-factor_risk_contributions-1440.png": "1810114bd5ab1f18d87c1e7a4c6161a634e64576c48a293058c26e1e2d10c652",
+      "book-factor_risk_hedge-1000.png": "68b84fdb2060de981d5c5883580f73464ae055bfa597457c62bbace6341bd6e7",
+      "book-factor_risk_hedge-1440.png": "88076a5a1ed1df9a008d6ef2f348129c7b2e9f38fc50cc5e497386016ba6ae6b",
+      "book-factor_risk_loading-1000.png": "90cd3e682ad3741b7e57917d31a4c77bf4aff362c1b4fc8b45be1b7daa6aaf17",
+      "book-factor_risk_loading-1440.png": "1c128cb0f4f5f06fe7fa55781e3ceb0c39c4724a6952a06231dafc5259c97a06",
+      "book-factor_risk_validation-1000.png": "6264189c9ab1bd196680c6679cc32e82153bc04580d186afb242f56cf69ae687",
+      "book-factor_risk_validation-1440.png": "4e58979c2d7b239ad0146fadacf4a8236262a256981c5f000b65ca4d01eca0e6",
+      "portal-factor_risk_contributions-1000.png": "55730f97d1ef24ceacb05a3c83a053176f947d66edbfb986bef0ccc8a46ade94",
+      "portal-factor_risk_contributions-1440.png": "33a84b4f54d3692f3ec0c85691157771adfa04918ff5f2a95ea0ae6193e29ca8",
+      "portal-factor_risk_hedge-1000.png": "c4865b7005840ea765f259c488f418b7ce5a53a720be4476a435bec78c8110b9",
+      "portal-factor_risk_hedge-1440.png": "c16f9144f33bb4bf25e95de50995b00db7f7ccb874abcd1752fd9786b041a9c0",
+      "portal-factor_risk_loading-1000.png": "5c12e4b5315f756a92e5e1a781d658dabbf84cd4bf68a4fbfd247fcac1f44e8f",
+      "portal-factor_risk_loading-1440.png": "f232e325b733d504be44e52df843544d4e759fb446f23c4db72ecc2011e3dd8d",
+      "portal-factor_risk_validation-1000.png": "650986a43366458e790bebc96d9b1520edba79b0ca1cbd0733307a853f011a47",
+      "portal-factor_risk_validation-1440.png": "53dd4c560db2aea0043dfb2d1194f2855bb066eed74a51f424d76aabe4fea634"
+    },
+    "stored_new_bytes": 385991,
+    "seconds": {
+      "verifier": 13.59,
+      "probe": 8.3,
+      "pytest": 3.63
+    }
   }
 }

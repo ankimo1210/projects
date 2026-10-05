@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **30**
+- accepted: **33**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 276 |
+| unreviewed | 273 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 30 |
+| accepted | 33 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -49,7 +49,7 @@
 | 25 | 11 | 11 | 0 | 0 | 0 | 0 |
 | 26 | 17 | 0 | 0 | 0 | 17 | 0 |
 | 27 | 8 | 0 | 0 | 0 | 8 | 0 |
-| 28 | 8 | 3 | 0 | 0 | 5 | 0 |
+| 28 | 8 | 0 | 0 | 0 | 8 | 0 |
 | 29 | 4 | 4 | 0 | 0 | 0 | 0 |
 | 30 | 4 | 4 | 0 | 0 | 0 | 0 |
 | 31 | 5 | 5 | 0 | 0 | 0 | 0 |
@@ -322,9 +322,9 @@
 | 28.3 | 28 | section | Martingales | accepted |
 | 28.4 | 28 | section | Alternative Choices for the Numeraire | accepted |
 | 28.5 | 28 | section | Extension to Several Factors | accepted |
-| 28.6 | 28 | section | Black’s Model Revisited | unreviewed |
-| 28.7 | 28 | section | Option to Exchange One Asset for Another | unreviewed |
-| 28.8 | 28 | section | Change of Numeraire | unreviewed |
+| 28.6 | 28 | section | Black’s Model Revisited | accepted |
+| 28.7 | 28 | section | Option to Exchange One Asset for Another | accepted |
+| 28.8 | 28 | section | Change of Numeraire | accepted |
 | 29.1 | 29 | section | Bond Options | unreviewed |
 | 29.2 | 29 | section | Interest Rate Caps and Floors | unreviewed |
 | 29.3 | 29 | section | European Swap Options | unreviewed |

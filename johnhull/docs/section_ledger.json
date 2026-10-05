@@ -1566,12 +1566,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-1.json",
           "kind": "record",
-          "sha256": "ce90df149e9fc62ab4cd0104efd25f5e1c7cbaf6a74f079da6c94b5322a75cd1"
+          "sha256": "12c340cf5e9ac3240ff70077fc3e072a7e0be4b5329e0851ee2fbb61e105092a"
         }
       }
     },
@@ -2011,12 +2011,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-2.json",
           "kind": "record",
-          "sha256": "2823ecf362fd7645b2be34d4dbe85cdca8be29f527eed995d29535758c53a8e3"
+          "sha256": "ee58099ab7ba87f98628704e0cc561f3e8e788623d0e42c7743035bcb4d3439e"
         }
       }
     },
@@ -2453,12 +2453,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-3.json",
           "kind": "record",
-          "sha256": "5996d2e0768d83f2bb8901de301178f0b4acbd114dbf162aa804c6d4c90692d7"
+          "sha256": "70ec442f8af4a5a79ae3ebd4e25b081b0d0321a906ff783a346d3c4c002e3fb3"
         }
       }
     },
@@ -2905,12 +2905,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-4.json",
           "kind": "record",
-          "sha256": "b3f2bcc3653ab793214604a602675a016eb18e023a0c7f8aefb021597d3e6314"
+          "sha256": "6fd4c793f8d6d76ab23d22f810dd856b13d54d53f4519418566a01488aad8e9f"
         }
       }
     },
@@ -3358,12 +3358,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-5.json",
           "kind": "record",
-          "sha256": "d826dda5d4c6ad806ffa2f3e8c5afc9c70920e8934c8f701b674fdcc2d298231"
+          "sha256": "945e001e4617e1b5006b1c694e6539ba748146a84f4ac4aeb344b762721f6ff4"
         }
       }
     },
@@ -3817,12 +3817,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-6.json",
           "kind": "record",
-          "sha256": "c225e2c1935d5fb2067fe7a1f0362eb904c645d871bd7bde0d63b3c0eb3a4f7f"
+          "sha256": "14ac5b80030db2bf41388d5015dae45219eb2976982ba298a3dd53b88a8485c4"
         }
       }
     },
@@ -4272,12 +4272,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-7.json",
           "kind": "record",
-          "sha256": "8b66be1ce64b65b2389c50616c2da2c19aa4bdbcbdef1cad5ef088faf4d6f419"
+          "sha256": "690db84c4ef62053f07f7a8e168eabdbde92c775c9ceb607f912cbeec54af0a1"
         }
       }
     },
@@ -4725,12 +4725,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-8.json",
           "kind": "record",
-          "sha256": "e857bce60df1f2c366df95ad1ed33b77a150dfcd1748d43cc151981226b8f767"
+          "sha256": "44f43ee0ba774140e58e3b7949972f182adbea36d4b5aa463cea65150db79516"
         }
       }
     },
@@ -4840,12 +4840,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-9.json",
           "kind": "record",
-          "sha256": "16575db3849daf4f7e0d07ddecbfdfc5c6c3287dd0e3028b072c0eb83515c421"
+          "sha256": "9d76fad78024ec096d25ff3d414a9a55737558c816b5eada8c1727b9b37b7460"
         }
       },
       "requirements": [
@@ -5389,12 +5389,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-10.json",
           "kind": "record",
-          "sha256": "1b3078ac89e3b785a41b1c6d1b0572a309f7b58286d4bfd7cafd8982824c5657"
+          "sha256": "220814b5717b981f13f71f970e1ef187b4cc3ce21f919bab9361f4bd81d24a65"
         }
       },
       "requirements": [
@@ -6112,12 +6112,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-11.json",
           "kind": "record",
-          "sha256": "52c82d25c055f1ca25d8f078bb1d33bfd0db142aa9253154ee961ac68dba221b"
+          "sha256": "6c0b7fe55f3ecd2adb7d48ad305854267575d0b06002ecf1f7c4d86f43868402"
         }
       },
       "acceptance_note": "docs/SECTION_26_11_ACCEPTANCE_2026-09-16.md"
@@ -6582,12 +6582,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-12.json",
           "kind": "record",
-          "sha256": "3538ead25926920557e276bc071578815ae237fe2040c36068a4048c475422a8"
+          "sha256": "a81ad5433b0e120dc8746c4463ecc447f99dccf9b5c4a0e3449e682198aca67f"
         }
       },
       "acceptance_note": "docs/SECTION_26_12_ACCEPTANCE_2026-09-16.md"
@@ -7034,12 +7034,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-13.json",
           "kind": "record",
-          "sha256": "168e625b4b966046b2bc69229d934ccf214208b85f61b3d696ea14b7ab5468ee"
+          "sha256": "3c0d78c800e9bcd4174097a6b9a9220b0400495590934e316abcb24ff5a840d0"
         }
       },
       "acceptance_note": "docs/SECTION_26_13_ACCEPTANCE_2026-09-16.md"
@@ -7478,12 +7478,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-14.json",
           "kind": "record",
-          "sha256": "86f352aab5442b8aac04a80fdf2f0581ce974d0db106dba637529f72b053f170"
+          "sha256": "99ccbbf6a4804ff41db7de0dcce7d502ad69804974597daf63e93154811685aa"
         }
       },
       "acceptance_note": "docs/SECTION_26_14_ACCEPTANCE_2026-09-17.md"
@@ -7906,12 +7906,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-15.json",
           "kind": "record",
-          "sha256": "01911081e5730edb8c2e2ef221291aaf274d9dc91fed58b10831f147f94e59a3"
+          "sha256": "0716bec4559fd63b82fbc65d6d332e82b27ab31923fb238c786bbcf000a7a026"
         }
       },
       "assumptions": [
@@ -8384,12 +8384,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-16.json",
           "kind": "record",
-          "sha256": "e65aaac6533a38eb626ec064060b19f5b0f043b43e28197bf3b59ac3d96c3f89"
+          "sha256": "bd7d797d1012421b169b2f82cec2a993d3f7dcf1eb316d7a42f359e75a8b7be7"
         }
       },
       "assumptions": [
@@ -8816,12 +8816,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-26-17.json",
           "kind": "record",
-          "sha256": "7b37a2927c2e7ed75aa93bbe80110f7c80811efe54f5616fe09ab140e89e1221"
+          "sha256": "8bd5f724884cbdc3bb5568cc4f6b7efd886afef9b7972826e55a93976104b0e7"
         }
       }
     },
@@ -9237,12 +9237,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-27-1.json",
           "kind": "record",
-          "sha256": "64158bd8811a90286c6c121ec24f5000574564acb0730ff18e83bc625e12d02e"
+          "sha256": "b2fce5d5eac707b68785fd278ba3fa7c771e230d4eefd2929428311e9207a0e9"
         }
       }
     },
@@ -9679,12 +9679,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-27-2.json",
           "kind": "record",
-          "sha256": "1fbba7d95f76539e4970f9d34e1940552441b457b9aa27b2fb1be460510f4bcd"
+          "sha256": "abcacd5b7a8458d0a76cdbd9c39fae322334471d38e166737b2c2d0038d92154"
         }
       }
     },
@@ -10110,12 +10110,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-27-3.json",
           "kind": "record",
-          "sha256": "fa1ce84c53a000d893377d38020df411ae9a64ddc178a3d5fa3afa6faed443e5"
+          "sha256": "9c72d2ea84e5bae1498a39599407de1784e9b52eacd4519f2990aa927d584033"
         }
       }
     },
@@ -10538,12 +10538,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-27-4.json",
           "kind": "record",
-          "sha256": "c63a1bc8cb568537ee0611e7821882dc082e3eb0744e652e1b4772dd7d84ddd2"
+          "sha256": "97e35d7457b93d6a412ced5a2569959dcc9010a05b2d48175a6c22f9ede0af63"
         }
       }
     },
@@ -10966,12 +10966,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-27-5.json",
           "kind": "record",
-          "sha256": "fdd3d518fef8dbc5355f2214a4c586ea67285731beab1b0f169158c852b70553"
+          "sha256": "47535a75b88fd38f75cc1ee45475bd5535040bc8a4f9bc235d3802af469edcf2"
         }
       }
     },
@@ -11395,12 +11395,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-27-6.json",
           "kind": "record",
-          "sha256": "18aab9ca77d2a757ce594e50d45525cb8fa0bd46eb873b9a7afd7b4021130afb"
+          "sha256": "1da9bed6f0841118d56257f072999f1b284131adc9b3d3e219a8b661667c1a35"
         }
       }
     },
@@ -11825,12 +11825,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-27-7.json",
           "kind": "record",
-          "sha256": "a779cba6438db314070e124d9a65e56015b47032ca1cbf6cce5e099067f604ff"
+          "sha256": "e4925162479037dfb38a1387a823feeb2632842c91ad0b87a3ce0d97b70e0563"
         }
       }
     },
@@ -12258,12 +12258,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-27-8.json",
           "kind": "record",
-          "sha256": "7b6b38402cce1b12af927e31bbbb889510c7722937a48989433e108aa3753947"
+          "sha256": "26fa18f68f60096cdf7d81c72d176a5601bc94cb5f7f82a71225e028a0648ac6"
         }
       }
     },
@@ -12713,12 +12713,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-28-1.json",
           "kind": "record",
-          "sha256": "e81488f2360e109d7904aa5b19fe7c93d087ad32395bad786b7aff4244791325"
+          "sha256": "94502c97d3032306a5a10eea2bdf770b978e31527f45e090318ba04a36581ff4"
         }
       }
     },
@@ -13169,12 +13169,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T001235Z-redraw-37a3237f71074869a3df9deaa2330368.json",
+          "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9.json",
           "kind": "record",
-          "sha256": "0521ea494feb26d3b9739b25a3d2cc94762825757e0f3e7d8432bd3308d2e5bb"
+          "sha256": "2999cb9e66dbe90d83a977b6875364899cea873b350a9b0710b2fd6e40396cdb"
         }
       }
     },
@@ -13624,12 +13624,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-28-3.json",
           "kind": "record",
-          "sha256": "c74e2033f185475841edaafb7e4c98b7e8d385d36c00caa14d21f36e3125af44"
+          "sha256": "98c1db5137b3f0eae6cc1d09616fa43e71db382fe80c096922fa13dc94fc19c4"
         }
       }
     },
@@ -14082,12 +14082,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
           "path": "docs/validation/chapter-28/section-28-4.json",
           "kind": "record",
-          "sha256": "eea9e2ac44cee1f4d8004e56b2706782c640c5301d5d9f8201fc398d45733238"
+          "sha256": "856d09c0518dc37fa72aaec1b75ed19023e090ff069a30fbbf7c4480f091b3cf"
         }
       }
     },
@@ -14525,12 +14525,12 @@
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "browser_run": {
-          "path": "docs/validation/d1-recheck/section-28-5/d1pf-28.5-20261005T001305Z-redraw-9891543a600b41b1a4c4f5f5a4be06f3.json",
+          "path": "docs/validation/d1-recheck/section-28-5/d1pf-28.5-20261005T003842Z-redraw-a50d10f8f8884d0b803f14e9de872dc3.json",
           "kind": "record",
-          "sha256": "8f9e997e3ee9f4cb0467153982a93ac4e56714df4f362a90de0c63dd9b87fff2"
+          "sha256": "eaa4614e428d29a045e6f43b078f7bed69ba34dfef141b943eeb61c40be0de64"
         }
       }
     },
@@ -14669,7 +14669,7 @@
         "numerical": {
           "path": "docs/validation/chapter-28/numerical-check.json",
           "kind": "record",
-          "sha256": "f18cfe7390fe7a155490f185b3818c96f363e4bb9762273740f06992510e7ded"
+          "sha256": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_28_ACCEPTANCE_2026-10-05.md",
@@ -14679,12 +14679,12 @@
         "browser_run": {
           "path": "docs/validation/chapter-28/section-28-6.json",
           "kind": "record",
-          "sha256": "5e1873b308bb6e0d21a78b4c538580d6c75b7aad86f90b581fccf95d2c94d38e"
+          "sha256": "cee59058d49a01443274de077b52927903f87660e3571a64e1a734ae96cd8a04"
         },
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "figure_0": {
           "path": "docs/validation/chapter-28/portal-martingale_black_forward_market-1000.png",
@@ -14843,7 +14843,7 @@
         "numerical": {
           "path": "docs/validation/chapter-28/numerical-check.json",
           "kind": "record",
-          "sha256": "f18cfe7390fe7a155490f185b3818c96f363e4bb9762273740f06992510e7ded"
+          "sha256": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_28_ACCEPTANCE_2026-10-05.md",
@@ -14853,12 +14853,12 @@
         "browser_run": {
           "path": "docs/validation/chapter-28/section-28-7.json",
           "kind": "record",
-          "sha256": "a3dbedd0963e700affe846ae8c1a1187cd6bf387313bcd6681b198b882334d73"
+          "sha256": "a2e577897cac5292b80ed4e0a1fa2f110256de41a240cf6ea404ee68fb0ba744"
         },
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "figure_0": {
           "path": "docs/validation/chapter-28/portal-martingale_exchange_ratio_means-1000.png",
@@ -15058,7 +15058,7 @@
         "numerical": {
           "path": "docs/validation/chapter-28/numerical-check.json",
           "kind": "record",
-          "sha256": "f18cfe7390fe7a155490f185b3818c96f363e4bb9762273740f06992510e7ded"
+          "sha256": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_28_ACCEPTANCE_2026-10-05.md",
@@ -15068,12 +15068,12 @@
         "browser_run": {
           "path": "docs/validation/chapter-28/section-28-8.json",
           "kind": "record",
-          "sha256": "0029f2e7a44f999386400c3503c77938b659c4c4688623aee30081e7cd79e481"
+          "sha256": "e6d6610dba992172d15b407389b881ae77c17ce6fd5e36c7fbb80343012f1fd4"
         },
         "chapter_check": {
           "path": "docs/validation/chapter-28/acceptance-check.json",
           "kind": "record",
-          "sha256": "2fb6b80d0b9140665f9e51bf1896b250d8f8837107b0396d37be1754178ad823"
+          "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
         },
         "figure_0": {
           "path": "docs/validation/chapter-28/portal-martingale_numeraire_drift_shift-1000.png",
