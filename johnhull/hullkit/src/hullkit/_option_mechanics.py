@@ -98,3 +98,45 @@ def option_value_components(spot, strike, option_value, *, kind="call"):
     difference = spot - strike if kind == "call" else strike - spot
     moneyness = np.where(difference > 0, "ITM", np.where(difference < 0, "OTM", "ATM"))
     return dict(intrinsic=intrinsic, time_value=option_value - intrinsic, moneyness=moneyness)
+
+
+def option_trade_costs(bid, ask, *, contracts=1, multiplier=100, fixed_fee=0, fee_per_contract=0):
+    """Bid/ask half-spread cost and order cashflows (Hull §10.6).
+
+    Fees are caller inputs, not current broker rates. The fixed commission
+    is charged once for a nonempty order; fee_per_contract scales with count.
+    """
+    bid, ask, contracts, multiplier, fixed_fee, fee_per_contract = _finite_values(
+        bid, ask, contracts, multiplier, fixed_fee, fee_per_contract
+    )
+    if np.any(ask < bid) or np.any(contracts < 0) or np.any(multiplier <= 0):
+        raise ValueError("quotes must be ordered, contracts nonnegative and multiplier positive")
+    midpoint = (bid + ask) / 2
+    half_spread = (ask - bid) / 2
+    units = contracts * multiplier
+    commission = np.where(contracts > 0, fixed_fee, 0) + contracts * fee_per_contract
+    return dict(
+        midpoint=midpoint,
+        half_spread=half_spread,
+        cost_per_contract=half_spread * multiplier,
+        commission=commission,
+        buy_cashflow=-units * ask - commission,
+        sell_cashflow=units * bid - commission,
+        total_cost=units * half_spread + commission,
+    )
+
+
+def option_exit_cashflows(intrinsic, bid, *, units=100, sale_fee=0, exercise_fee=0):
+    """Long holder's sale/exercise cash after caller-supplied total fees.
+
+    These are alternative exit cashflows; the sunk initial premium is common
+    to both, and a future stock position after physical exercise is separate.
+    """
+    intrinsic, bid, units, sale_fee, exercise_fee = _finite_values(
+        intrinsic, bid, units, sale_fee, exercise_fee
+    )
+    if np.any(intrinsic < 0) or np.any(units < 0):
+        raise ValueError("intrinsic value and holder units must be nonnegative")
+    sale = units * bid - np.where(units > 0, sale_fee, 0)
+    exercise = units * intrinsic - np.where(units > 0, exercise_fee, 0)
+    return dict(sale=sale, exercise=exercise, sale_minus_exercise=sale - exercise)
