@@ -151,3 +151,35 @@ def crr_moments(sigma, dt, drift):
     return dict(up=up, down=down, probability=p, mean=mean, variance=variance,
                 first_order_variance=sigma*sigma*dt, lognormal_variance=exact,
                 variance_error=variance-exact)
+
+
+def binomial_call_tails(spot, strike, rate, sigma, maturity, steps, *, q=0):
+    """Ch13 appendix: cash and stock-numeraire binomial tails, without a tree.
+
+    Exercise uses the strict j > a threshold. Values within 16 ulps of an
+    integer up-count are snapped to that boundary before flooring, preventing
+    floating-point reconstruction from counting a zero-payoff strike tie.
+    The stock-numeraire probability is distinct from the physical probability
+    in section 13.2. With q != 0, U1's factor is exp((r-q)T).
+    """
+    if not math.isfinite(sigma) or sigma <= 0 or maturity <= 0 or steps < 1:
+        raise ValueError("positive volatility/time/steps required")
+    log_move = sigma*math.sqrt(maturity/steps)
+    up, down = math.exp(log_move), math.exp(-log_move)
+    steps, _, p = _binomial_spec(spot, strike, rate, maturity, steps, up, down, q, "call", None)
+    if strike == 0:
+        threshold, first = -math.inf, 0
+    else:
+        threshold = steps/2-math.log(spot/strike)/(2*log_move)
+        nearest = round(threshold)
+        if abs(threshold-nearest) <= 16*math.ulp(max(abs(threshold), 1.0)):
+            threshold = float(nearest)
+        first = min(max(math.floor(threshold)+1, 0), steps+1)
+    stock_p = p*up/(p*up+(1-p)*down)
+    cash_tail = float(binom.sf(first-1, steps, p))
+    stock_tail = float(binom.sf(first-1, steps, stock_p))
+    u1 = math.exp((rate-q)*maturity)*stock_tail
+    price = spot*math.exp(-q*maturity)*stock_tail-strike*math.exp(-rate*maturity)*cash_tail
+    return dict(price=price, threshold=threshold, first_in_the_money_up_moves=first,
+                probability=p, stock_probability=stock_p, cash_tail=cash_tail,
+                stock_tail=stock_tail, u1=u1, u2=cash_tail)
