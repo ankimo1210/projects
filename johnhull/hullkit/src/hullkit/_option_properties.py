@@ -58,3 +58,50 @@ def factor_prices(values, *, factor, spot=50, strike=50, rate=.05, volatility=.3
         call.append(c)
         put.append(p)
     return dict(values=axis.copy(), call=np.asarray(call), put=np.asarray(put))
+
+
+def no_dividend_bounds(spot, strike, rate, maturity, *, american=False):
+    """Hull (11.1)-(11.5), with immediate exercise included for Americans.
+
+    For negative rates, use max(K, discounted K) as the American put upper
+    bound. Positive-rate Hull examples recover P <= K and intrinsic lowers.
+    """
+    _market(spot, strike, rate, 0, maturity)
+    discounted_strike = strike * math.exp(-rate * maturity)
+    call_lower = max(spot-discounted_strike, 0)
+    put_lower = max(discounted_strike-spot, 0)
+    if american:
+        call_lower = max(call_lower, spot-strike)
+        put_lower = max(put_lower, strike-spot)
+    return dict(call_lower=call_lower, call_upper=spot, put_lower=put_lower,
+                put_upper=max(strike, discounted_strike) if american else discounted_strike)
+
+
+def bound_arbitrage(terminal_spot, spot, strike, rate, maturity, option_price, *, kind):
+    """Self-financing lower-bound portfolios from Hull pp.252-254.
+
+    Call: long call, short one share, invest spot minus option premium.
+    Put: long put and one share, borrow spot plus option premium.
+    Positive ``minimum_profit`` means the quote violates the lower bound;
+    other quotes still return portfolio cashflows without claiming arbitrage.
+    """
+    _market(spot, strike, rate, 0, maturity)
+    terminal = np.asarray(terminal_spot, dtype=float)
+    if not np.all(np.isfinite(terminal)) or np.any(terminal < 0):
+        raise ValueError("terminal stock prices must be finite and nonnegative")
+    if not math.isfinite(option_price) or option_price < 0:
+        raise ValueError("option price must be finite and nonnegative")
+    if kind == "call":
+        initial_bank = spot-option_price
+        terminal_bank = initial_bank * math.exp(rate*maturity)
+        profit = terminal_bank - np.minimum(terminal, strike)
+        minimum_profit = terminal_bank-strike
+    elif kind == "put":
+        initial_bank = -(spot+option_price)
+        terminal_bank = initial_bank * math.exp(rate*maturity)
+        profit = np.maximum(terminal, strike) + terminal_bank
+        minimum_profit = strike+terminal_bank
+    else:
+        raise ValueError("kind must be call or put")
+    return dict(initial_bank=initial_bank, terminal_bank=terminal_bank, profit=profit,
+                minimum_profit=minimum_profit)
