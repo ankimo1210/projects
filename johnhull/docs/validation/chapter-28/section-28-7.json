@@ -2,9 +2,9 @@
   "schema_version": 2,
   "kind": "johnhull-section-recheck",
   "status": "PASS",
-  "run_id": "ch28-28.7-20261005T002245Z",
-  "created_at": "2026-10-05T00:22:58.122753+00:00",
-  "commit": "17486361f7509d2936d8a3052415d5b0e3897b11",
+  "run_id": "ch28-28.7-20261005T004217Z",
+  "created_at": "2026-10-05T00:42:30.497898+00:00",
+  "commit": "8b5a4d7474c10d5bc2419938e949dd1966925f74",
   "dirty": false,
   "section_id": "28.7",
   "decision": "redrawn",
@@ -137,7 +137,7 @@
       },
       "data_files": {
         "docs/validation/chapter-28/reference.json": "cb48df62b74a7908a922b9ccec86f7a26c84f453290f9e143ca92e244f53abeb",
-        "docs/validation/chapter-28/numerical-check.json": "f18cfe7390fe7a155490f185b3818c96f363e4bb9762273740f06992510e7ded",
+        "docs/validation/chapter-28/numerical-check.json": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed",
         "docs/acceptance/chapters/ch28.json": "556e59cafe8235059bf38b48ed02203e7bfcdd49420f9b05d60147db1155cdec"
       },
       "verifier": {
@@ -172,7 +172,7 @@
       }
     },
     "unknown": [],
-    "digest": "14ed8c6840dc917bd8d36e82fbd30966215d2ec4032bd6b65db6723418896fe5"
+    "digest": "5f9ced5fca86657bed832dbb459369c22aea9c8a1b245323b3ccd4a128cc6841"
   },
   "baseline": null,
   "images": [
@@ -240,7 +240,7 @@
     "browser": {
       "status": "PASS",
       "raw_record_path": "docs/validation/chapter-28/browser-check.json",
-      "raw_record_sha256": "6afff5d012d02fca5c99ce26b2a07604a04c070de468392f4894729810f2eb2f"
+      "raw_record_sha256": "0d2093f8dfd89315c7fe081f3a3c0747908b2a7e9a586a75f091b93833678b61"
     }
   },
   "environment": {
@@ -344,7 +344,7 @@
     "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
     "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
     "docs/acceptance/chapters/ch28.json": "556e59cafe8235059bf38b48ed02203e7bfcdd49420f9b05d60147db1155cdec",
-    "docs/validation/chapter-28/numerical-check.json": "f18cfe7390fe7a155490f185b3818c96f363e4bb9762273740f06992510e7ded",
+    "docs/validation/chapter-28/numerical-check.json": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed",
     "docs/validation/chapter-28/reference.json": "cb48df62b74a7908a922b9ccec86f7a26c84f453290f9e143ca92e244f53abeb",
     "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
     "hullkit/src/hullkit/_chapter28_lesson.py": "f9800998f05b2d8a363537ab84ca05cd0b3383d56303a84a2afd1c6e949a4a3d",
@@ -415,7 +415,7 @@
     "report/report_builder/frontier_figures.py": "abc2a1f1596482b043bcb3709f8d6daca9d7f2f0edad6cc8dfe0df0246c0eb92",
     "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
     "report/report_builder/theme.py": "db43b679941eff1c165fdf6181a995eff7d076d8f9300f7136d306961d27bf5b",
-    "scripts/evidence_dependencies.json": "1b118cb7b79cb32ae2d8b8f64f9327029606c128028fd67030e7ab5f9897b650",
+    "scripts/evidence_dependencies.json": "bbbfbf79526584fba10425c0278af8e38ce23e8ee95c862d759d35a4575c86f8",
     "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
     "scripts/verify_chapter_browser.cjs": "c352c4a846c4a75908094b9f88fb589bd5f033d3716bd26e379a70cb5205e2de"
   },
