@@ -4304,9 +4304,9 @@
       }
     },
     "28.2": {
-      "decision": "reuse",
+      "decision": "redraw",
       "reasons": [
-        "Book change already rechecked in this chapter; the other section declaration does not change this fingerprint"
+        "original chapter dependency change; refresh declared-source binding after shared configuration update"
       ],
       "baseline": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T001235Z-redraw-37a3237f71074869a3df9deaa2330368.json",
       "fingerprint": {
