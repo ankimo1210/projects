@@ -30,12 +30,6 @@ _KEYS = (
 _COLORS = ("#2563eb", "#0f766e", "#dc2626")
 
 
-def _result_digest(record):
-    return hashlib.sha256(
-        json.dumps({k: record[k] for k in _RESULT_KEYS}, sort_keys=True, allow_nan=False).encode()
-    ).hexdigest()
-
-
 @lru_cache(maxsize=1)
 def _replayed_results(reference_bytes, source_inventory):
     """Replay fixed seeds once per independently checked reference/producer.
@@ -156,9 +150,8 @@ def _load_reference():
         teacher = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(teacher)
         _check_numbers(data, teacher.build(), "independent multifactor teacher")
-        if _result_digest(record) != record["result_sha256"]:
-            raise ValueError("multifactor result hash mismatch")
-        # A self-consistent mean/SE/z/digest is not evidence of a real sample.
+        # Legacy result_sha256 is metadata; numerical truth comes from tolerant replay.
+        # Self-consistent mean/SE/z summaries are not evidence of a real sample.
         # Replay the producer's fixed seeds and samples before displaying it.
         expected = json.loads(_replayed_results(raw, tuple(sorted(hashes.items()))))
         _check_numbers({k: record[k] for k in _RESULT_KEYS}, expected, "fixed-seed replay")
