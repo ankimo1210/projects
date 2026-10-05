@@ -66,3 +66,52 @@ def principal_note_volatility_limit(spot, principal, investment, rate, maturity,
     if math.isclose(target, note["option_price"], rel_tol=1e-12, abs_tol=1e-12):
         return 0.
     return float(volatility.implied_vol(target, spot, strike, rate, maturity, q=q))
+
+
+def stock_option_legs(name, strike):
+    """Figure 12.1's covered/protective positions and their exact reversals."""
+    if not math.isfinite(strike) or strike < 0:
+        raise ValueError("strike must be finite and nonnegative")
+    reverse = name.startswith("reverse_")
+    base = name.removeprefix("reverse_")
+    if base not in ("covered_call", "protective_put"):
+        raise ValueError("unknown stock-option position")
+    direction = -1 if reverse else 1
+    return [(direction*qty, kind, k) for qty, kind, k in payoffs.STRATEGIES[base](strike)]
+
+
+def strategy_profit(terminal_spot, legs, premiums, *, maturity=None,
+                    dividend_times=(), dividend_amounts=(), reinvest_rate=0):
+    """Terminal payoff, signed initial cost and Hull's nominal profit.
+
+    Premiums are per unit, in leg order; quantities supply the buy/sell sign.
+    Stock dividends are separate dated cashflows; shorts owe these payments.
+    A schedule requires a terminal horizon. Default reinvestment rate 0 means
+    raw received cash; a supplied rate explicitly accrues dividend receipts.
+    Initial financing costs are excluded from the displayed profit.
+    """
+    terminal = np.asarray(terminal_spot, dtype=float)
+    legs = tuple(legs)
+    prices = np.asarray(premiums, dtype=float)
+    if prices.ndim != 1 or len(prices) != len(legs) or np.any(prices < 0) or not np.all(np.isfinite(prices)):
+        raise ValueError("finite nonnegative per-unit premiums must align with legs")
+    if not np.all(np.isfinite(terminal)) or np.any(terminal < 0):
+        raise ValueError("terminal stock prices must be finite and nonnegative")
+    stock_quantity = 0.
+    cost = 0.
+    for (quantity, kind, strike), price in zip(legs, prices, strict=True):
+        if not math.isfinite(quantity):
+            raise ValueError("leg quantity must be finite")
+        if kind == "stock":
+            stock_quantity += quantity
+        elif strike is None or not math.isfinite(strike) or strike < 0:
+            raise ValueError("option strikes must be finite and nonnegative")
+        cost += quantity*price
+    if len(dividend_times) and maturity is None:
+        raise ValueError("a dividend schedule requires the terminal maturity")
+    dividends = bsm.pv_dividends(dividend_times, dividend_amounts, reinvest_rate, maturity)
+    dividend_cash = stock_quantity*dividends*math.exp(reinvest_rate*(maturity or 0))
+    payoff = payoffs.strategy_payoff(terminal, legs)
+    total_cash = payoff+dividend_cash
+    return dict(payoff=payoff, initial_cost=float(cost), dividend_cash=dividend_cash,
+                total_cash=total_cash, profit=total_cash-cost)
