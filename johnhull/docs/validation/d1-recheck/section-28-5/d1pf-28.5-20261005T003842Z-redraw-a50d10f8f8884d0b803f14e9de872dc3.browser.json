@@ -1,0 +1,174 @@
+{
+  "status": "PASS",
+  "browser_version": "145.0.7632.6",
+  "pages": {
+    "portal": {
+      "states": [
+        {
+          "figure": "factor_ratio_ito",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_ratio_conditional",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_basis_covariance",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_measure_price",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_ratio_ito",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_ratio_conditional",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_basis_covariance",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_measure_price",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-5/portal-factor_ratio_ito-1440.png",
+        "docs/validation/section-28-5/portal-factor_ratio_conditional-1440.png",
+        "docs/validation/section-28-5/portal-factor_basis_covariance-1440.png",
+        "docs/validation/section-28-5/portal-factor_measure_price-1440.png",
+        "docs/validation/section-28-5/portal-factor_ratio_ito-1000.png",
+        "docs/validation/section-28-5/portal-factor_ratio_conditional-1000.png",
+        "docs/validation/section-28-5/portal-factor_basis_covariance-1000.png",
+        "docs/validation/section-28-5/portal-factor_measure_price-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": []
+    },
+    "book": {
+      "states": [
+        {
+          "figure": "factor_ratio_ito",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_ratio_conditional",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_basis_covariance",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_measure_price",
+          "width": 1440,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_ratio_ito",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_ratio_conditional",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_basis_covariance",
+          "width": 1000,
+          "numeric_checked": true
+        },
+        {
+          "figure": "factor_measure_price",
+          "width": 1000,
+          "numeric_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/section-28-5/book-factor_ratio_ito-1440.png",
+        "docs/validation/section-28-5/book-factor_ratio_conditional-1440.png",
+        "docs/validation/section-28-5/book-factor_basis_covariance-1440.png",
+        "docs/validation/section-28-5/book-factor_measure_price-1440.png",
+        "docs/validation/section-28-5/book-factor_ratio_ito-1000.png",
+        "docs/validation/section-28-5/book-factor_ratio_conditional-1000.png",
+        "docs/validation/section-28-5/book-factor_basis_covariance-1000.png",
+        "docs/validation/section-28-5/book-factor_measure_price-1000.png"
+      ],
+      "numeric_mutation_rejected": true,
+      "external_network_blocked": false,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff"
+      ],
+      "unapproved_requests": []
+    }
+  },
+  "source_sha256": {
+    "hullkit/src/hullkit/_multi_factor_martingales.py": "17615d592dd4757db4c8ca2e1adfabb0018988e433f6378c7a622bae55658bec",
+    "hullkit/src/hullkit/_multi_factor_lesson.py": "000d4196c1ac338fffd388934c736c04470e6e411de1114881013489b866d1c1",
+    "scripts/build_multifactor_reference.py": "56794e4d06078d4b302ee6fecb9389523c09826db3c227ba00db2059e93413b9",
+    "scripts/verify_multifactor_browser.cjs": "0c1202da149d78cd4484c5edcbc303821a7acf648fdcc44a2e89731ca87817c1",
+    "scripts/verify_multifactor_numerics.py": "36b948bcd6486842cfbadad2a9e4959337975569dea3bdfba983a5e415f2aa34",
+    "docs/validation/section-28-5/reference.json": "d9fd931575ab9ae5bbb2b9cbc54a5000357684910b7bbd5ff77a2c887584b706",
+    "docs/validation/section-28-5/numerical-check.json": "b74fd6de90cbeee58ad6c9e9e110bedc51f2abb7deabf564ac71d17ab368f9d8",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "313acdfe78f2f016ad01b2a1d17901988edbeb95f2357d1f89fb4bf68541aa9c",
+    "volumes/10_exotics_martingales/exotics.ipynb": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb",
+    "report/report_builder/figures.py": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898",
+    "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210"
+  },
+  "artifact_sha256": {
+    "report/site/exotics.html": "9a3abf9ae363ade735ec937308319d2785e4ffadd85378e341f4804be75258ed",
+    "book/_build/html/notebooks/10_exotics.html": "0560bae03ccca2246440f825138a0f2bcbc634291e82fc16fa21d1cf7f1d4dea",
+    "docs/validation/section-28-5/portal-factor_ratio_ito-1440.png": "33d321d16ed1c7b161843f975ca0ff6c38921e1060293818a74436a1e45c862d",
+    "docs/validation/section-28-5/portal-factor_ratio_conditional-1440.png": "883f0b66c9a740e7b2d10827881864ea37ecace1bf0b7b175149054c148e0325",
+    "docs/validation/section-28-5/portal-factor_basis_covariance-1440.png": "6faab42ea26ea731ec2af73fd1291b2ee82ff724419bdf521db8bb85bafc996c",
+    "docs/validation/section-28-5/portal-factor_measure_price-1440.png": "8e92fd2499f2154d56a85bab5b79ecdec52b6c0f50b1e9a097ccf1a94a40a2aa",
+    "docs/validation/section-28-5/portal-factor_ratio_ito-1000.png": "0399b63ddc28db022e5567829e438ca6c51e9961f2de94f5050654aedf187285",
+    "docs/validation/section-28-5/portal-factor_ratio_conditional-1000.png": "9a656e9d53077e8886de55ef3af8a7b6b8bb15669d0bfb3fc3d0248913c5c918",
+    "docs/validation/section-28-5/portal-factor_basis_covariance-1000.png": "edec0777fbed9164dd1c9a4c5e7a4f3589502a26457b6ef16b9f2f5198c0fbb9",
+    "docs/validation/section-28-5/portal-factor_measure_price-1000.png": "2fa90c0cf065a4fba1d7608d498cb37eaf2fc935f01406ec0b77ded374bf5c94",
+    "docs/validation/section-28-5/book-factor_ratio_ito-1440.png": "1f01923e70442842e4a4e6fd90fedb866316c73d959b8e8320e5106a310d9a9e",
+    "docs/validation/section-28-5/book-factor_ratio_conditional-1440.png": "7ea0c24440f96f853b787369e4f287c83bd9c8dbfb938bda8f440e13939c9d07",
+    "docs/validation/section-28-5/book-factor_basis_covariance-1440.png": "3251e362f4473935cf532fc41787917166f41c9b43377765f3f761b23a2c73a6",
+    "docs/validation/section-28-5/book-factor_measure_price-1440.png": "d717db52b0f73e06c9d3e0de1fb4ae4f8da1a80850dad593b0bcd0a3c5298b60",
+    "docs/validation/section-28-5/book-factor_ratio_ito-1000.png": "4caeacd08308fd656a09128d3d97f031ebefa56abb8a1689200236fabd17a5c9",
+    "docs/validation/section-28-5/book-factor_ratio_conditional-1000.png": "864eae04ec5337bdca3987e77076a40875f602450458b9065e37e7b2fb90d9f9",
+    "docs/validation/section-28-5/book-factor_basis_covariance-1000.png": "e9296664ae9e4ce953116ead4f506619d00b2137fe106bab91060ce125ae8970",
+    "docs/validation/section-28-5/book-factor_measure_price-1000.png": "07338ad19d19d22c478751bf65b34068a153f2e55823e7bd3606589b5e611e34"
+  },
+  "book_math": {
+    "rendered": 1224,
+    "errors": 0
+  },
+  "state_checks": 16,
+  "screenshots": 16
+}
