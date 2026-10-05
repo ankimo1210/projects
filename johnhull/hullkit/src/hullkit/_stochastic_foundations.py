@@ -184,3 +184,36 @@ def fractional_brownian_paths(times, hurst, n_paths=1, *, scale=1, rng=None):
     rng = np.random.default_rng(42) if rng is None else rng
     values = scale*(rng.standard_normal((int(n_paths), len(times)-1)) @ factor.T)
     return np.column_stack((np.zeros(int(n_paths)), values))
+
+
+def brownian_quadratic_variation_moments(maturity, steps, diffusion=1):
+    """Mean/variance of sum (b*dW)**2 on a uniform grid, for constant b.
+
+    The scaled chi-square variance is 2*b**4*T*dt and tends to zero, while
+    a single standardized squared increment retains variance two.
+    """
+    if not math.isfinite(diffusion) or not math.isfinite(maturity) or maturity < 0 or steps < 1 or int(steps) != steps:
+        raise ValueError("finite diffusion, nonnegative time and integer positive steps required")
+    return diffusion*diffusion*maturity, 2*diffusion**4*maturity*maturity/steps
+
+
+def multivariate_ito_coefficients(drift, diffusion, g_time, gradient, hessian, *, driver_covariance=None):
+    """Equations 14A.10–11 with state-by-driver diffusion matrix B.
+
+    Driver increments have covariance C*dt (identity by default). State
+    covariance rate is B*C*B.T, and the result retains each driver loading.
+    A covariance input may be singular but must be positive semidefinite.
+    """
+    a = np.asarray(drift, dtype=float)
+    b = np.asarray(diffusion, dtype=float)
+    gradient = np.asarray(gradient, dtype=float)
+    hessian = np.asarray(hessian, dtype=float)
+    if a.ndim != 1 or len(a) < 1 or b.ndim != 2 or b.shape[0] != len(a) or b.shape[1] < 1 or gradient.shape != a.shape or hessian.shape != (len(a), len(a)):
+        raise ValueError("matching state drift/gradient/Hessian and state-by-driver diffusion required")
+    c = np.eye(b.shape[1]) if driver_covariance is None else np.asarray(driver_covariance, dtype=float)
+    if c.shape != (b.shape[1], b.shape[1]) or not math.isfinite(g_time) or not all(np.all(np.isfinite(x)) for x in (a, b, gradient, hessian, c)):
+        raise ValueError("finite coefficients and matching driver covariance required")
+    if not np.allclose(c, c.T, atol=1e-12, rtol=0) or np.linalg.eigvalsh(c).min() < -1e-12:
+        raise ValueError("driver covariance must be symmetric and positive semidefinite")
+    state_covariance = b @ c @ b.T
+    return float(gradient @ a+g_time+.5*np.sum(hessian*state_covariance)), gradient @ b
