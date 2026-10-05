@@ -200,3 +200,83 @@ def exercise_profile(spots, strike, rate, volatility, maturity, *, kind="put", s
     result = {key: np.asarray([row[key] for row in rows], dtype=bool if key == "exercise_now" else float)
               for key in keys}
     return dict(spots=axis.copy(), **result)
+
+
+def cash_dividend_tree(spot, strike, rate, volatility, maturity, dividend_times, dividend_amounts,
+                       *, kind="call", american=False, steps=400):
+    """Escrowed-dividend lattice for section 11.7, not a general cash-jump GBM.
+
+    Y=S-PV(remaining dividends) follows GBM with volatility applied to Y.
+    The physical stock is Y plus the remaining dividend reserve: it drops by
+    each known cash amount on its ex-date. Dates in life must align with this
+    uniform time grid. European expiry is after any maturity dividend;
+    Americans can exercise before or after each payment, including at expiry.
+    ``exercise_times`` reports levels where exercise strictly improves value.
+    """
+    _market(spot, strike, rate, volatility, maturity)
+    if kind not in ("call", "put") or steps < 1 or int(steps) != steps:
+        raise ValueError("call/put kind and positive integer steps required")
+    pv = bsm.pv_dividends(dividend_times, dividend_amounts, rate, maturity)
+    risky_spot = spot-pv
+    if risky_spot < 0:
+        raise ValueError("dividend PV cannot exceed spot in the escrowed model")
+    times = np.asarray(dividend_times, dtype=float)
+    amounts = np.asarray(dividend_amounts, dtype=float)
+    in_life = times <= maturity
+    times, amounts = times[in_life], amounts[in_life]
+
+    def payoff(stock):
+        return np.maximum(stock-strike, 0) if kind == "call" else np.maximum(strike-stock, 0)
+
+    if maturity == 0:
+        european = float(payoff(risky_spot))
+        immediate = float(payoff(spot))
+        return dict(price=max(european, immediate) if american else european,
+                    exercise_times=(0.,) if american and immediate > european else ())
+    steps = int(steps)
+    dt = maturity/steps
+    indices = np.rint(times/dt).astype(int)
+    if np.any(np.abs(indices*dt-times) > 1e-10*max(1, maturity)):
+        raise ValueError("in-life ex-dates must align with the chosen time grid")
+    cash = np.zeros(steps+1)
+    np.add.at(cash, indices, amounts)
+    discount = math.exp(-rate*dt)
+    reserve = np.zeros(steps+1)
+    for i in range(steps-1, -1, -1):
+        reserve[i] = discount*(cash[i+1]+reserve[i+1])
+    if volatility == 0 or risky_spot == 0:
+        european = float(payoff(risky_spot*math.exp(rate*maturity))) * math.exp(-rate*maturity)
+        if not american:
+            return dict(price=european, exercise_times=())
+        candidates = sorted({0, steps, *indices.tolist()})
+        values = []
+        for i in candidates:
+            after = risky_spot*math.exp(rate*i*dt)+reserve[i]
+            immediate = max(float(payoff(after)), float(payoff(after+cash[i])))
+            values.append(immediate*math.exp(-rate*i*dt))
+        price = max(european, *values)
+        optimal = tuple(i*dt for i, value in zip(candidates, values, strict=True)
+                        if value > european+1e-9 and abs(value-price) < 1e-9)
+        return dict(price=price, exercise_times=optimal)
+    log_up = volatility*math.sqrt(dt)
+    up = math.exp(log_up)
+    probability = trees.risk_neutral_p(up, 1/up, rate, dt)
+    risky_terminal = risky_spot*np.exp(log_up*(steps-2*np.arange(steps+1)))
+    value = payoff(risky_terminal)
+    exercised = []
+    if american:
+        before = payoff(risky_terminal+cash[-1])
+        if np.any(before > value+1e-9):
+            exercised.append(steps)
+        value = np.maximum(value, before)
+    for i in range(steps-1, -1, -1):
+        continuation = discount*(probability*value[:-1]+(1-probability)*value[1:])
+        if american:
+            after = risky_spot*np.exp(log_up*(i-2*np.arange(i+1)))+reserve[i]
+            immediate = np.maximum(payoff(after), payoff(after+cash[i]))
+            if np.any(immediate > continuation+1e-9):
+                exercised.append(i)
+            value = np.maximum(continuation, immediate)
+        else:
+            value = continuation
+    return dict(price=float(value[0]), exercise_times=tuple(i*dt for i in sorted(exercised)))
