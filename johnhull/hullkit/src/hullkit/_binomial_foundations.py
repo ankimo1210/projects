@@ -2,6 +2,9 @@
 
 import math
 
+import numpy as np
+from scipy.stats import binom
+
 
 def one_step_replication(spot, up_stock, down_stock, up_payoff, down_payoff, rate, maturity):
     """Stock and signed present bank account replicating two terminal states.
@@ -45,3 +48,32 @@ def physical_comparison(spot, up_stock, down_stock, up_payoff, down_payoff, rate
                 price=price, risk_free_discounted_physical_payoff=expectation*math.exp(-rate*maturity),
                 q_stock_expectation=q_probability*up_stock+(1-q_probability)*down_stock,
                 p_stock_expectation=physical_probability*up_stock+(1-physical_probability)*down_stock)
+
+
+def _binomial_spec(spot, strike, rate, maturity, steps, up, down, q, kind, probability):
+    if not all(math.isfinite(x) for x in (spot, strike, rate, maturity, up, down, q)) or spot <= 0 or strike < 0 or maturity <= 0 or steps < 1 or int(steps) != steps or not up > down > 0:
+        raise ValueError("positive spot/time/steps, nonnegative strike and ordered positive moves required")
+    if kind not in ("call", "put"):
+        raise ValueError("kind must be call or put")
+    dt = maturity/steps
+    p = (math.exp((rate-q)*dt)-down)/(up-down) if probability is None else probability
+    if (probability is None and not 0 < p < 1) or not 0 <= p <= 1:
+        raise ValueError("growth must lie strictly between moves, or explicit weight in [0, 1]")
+    return int(steps), dt, p
+
+
+def terminal_binomial_value(spot, strike, rate, maturity, steps, up, down, *, kind="call", q=0, probability=None):
+    """European value from terminal state probabilities, without backward induction.
+
+    States run in ascending number of UP moves, unlike trees.binomial_tree.
+    An explicit probability is for reproducing rounded source weights; then
+    the weighted value need not satisfy exact martingale growth or parity.
+    It does not change the domestic discount rate.
+    """
+    steps, _, p = _binomial_spec(spot, strike, rate, maturity, steps, up, down, q, kind, probability)
+    ups = np.arange(steps+1)
+    stock = np.exp(math.log(spot)+ups*math.log(up)+(steps-ups)*math.log(down))
+    weights = binom.pmf(ups, steps, p)
+    payoffs = np.maximum(stock-strike, 0) if kind == "call" else np.maximum(strike-stock, 0)
+    price = math.exp(-rate*maturity)*float(weights @ payoffs)
+    return dict(stock=stock, weights=weights, payoffs=payoffs, probability=p, price=price)
