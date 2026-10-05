@@ -20,3 +20,28 @@ def one_step_replication(spot, up_stock, down_stock, up_payoff, down_payoff, rat
     bank = terminal_bank/growth
     return dict(delta=delta, bank=bank, terminal_bank=terminal_bank,
                 price=delta*spot+bank, probability=probability)
+
+
+def physical_comparison(spot, up_stock, down_stock, up_payoff, down_payoff, rate, maturity, *, physical_drift):
+    """Contrast actual-world expectation with the replicated, drift-free price.
+
+    The option's inferred required return is defined only when both its price
+    and actual-world payoff expectation are positive. It is not the stock's
+    drift or a generally reusable discount rate for other payoffs.
+    """
+    if maturity <= 0 or not math.isfinite(physical_drift):
+        raise ValueError("positive maturity and finite physical drift required")
+    replica = one_step_replication(spot, up_stock, down_stock, up_payoff, down_payoff, rate, maturity)
+    physical_probability = (spot*math.exp(physical_drift*maturity)-down_stock)/(up_stock-down_stock)
+    if not 0 <= physical_probability <= 1:
+        raise ValueError("physical drift must fit the two stock outcomes")
+    expectation = physical_probability*up_payoff+(1-physical_probability)*down_payoff
+    price = replica["price"]
+    required = math.log(expectation/price)/maturity if expectation > 0 and price > 0 else None
+    q_probability = replica["probability"]
+    return dict(physical_probability=physical_probability,
+                physical_payoff_expectation=expectation,
+                required_discount_rate=required, risk_neutral_probability=q_probability,
+                price=price, risk_free_discounted_physical_payoff=expectation*math.exp(-rate*maturity),
+                q_stock_expectation=q_probability*up_stock+(1-q_probability)*down_stock,
+                p_stock_expectation=physical_probability*up_stock+(1-physical_probability)*down_stock)
