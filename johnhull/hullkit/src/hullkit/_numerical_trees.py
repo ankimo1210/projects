@@ -179,3 +179,112 @@ def carry_lattice(
         american=american,
     )
     return {**result, "asset": asset, "effective_yield": effective_yield}
+
+
+def dividend_lattice(
+    spot,
+    strike,
+    rate,
+    sigma,
+    maturity,
+    steps,
+    dividend_times=(),
+    dividends=(),
+    *,
+    model="cash",
+    kind="put",
+    american=False,
+):
+    """Hull21.3 recombining cash-S* or proportional-dividend lattice.
+
+    Cash sigma applies to S*=S-PV(D), not total S. Fractions compound as
+    product(1-f). Exercise is on the chosen grid; off-grid ex-dates are reported
+    and are not silently represented as exact exercise dates. At aligned dates
+    an American can exercise immediately before or after the dividend.
+    """
+    steps = _tree_inputs(spot, strike, rate, sigma, maturity, steps, 0, kind)
+    ex = np.asarray(dividend_times, dtype=float)
+    amounts = np.asarray(dividends, dtype=float)
+    if (
+        model not in {"cash", "fraction"}
+        or ex.ndim != 1
+        or ex.shape != amounts.shape
+        or np.any(~np.isfinite(ex))
+        or np.any(ex < 0)
+        or np.any(~np.isfinite(amounts))
+        or np.any(amounts < 0)
+        or (model == "fraction" and np.any(amounts >= 1))
+    ):
+        raise ValueError("matching nonnegative dates/dividends; fractions must be below one")
+    inside = ex <= maturity
+    ex, amounts = ex[inside], amounts[inside]
+    pv = float(amounts @ np.exp(-rate * ex)) if model == "cash" else 0.0
+    risky_spot = spot - pv
+    if risky_spot < 0:
+        raise ValueError("cash dividend PV exceeds spot in the S* model")
+    dt = maturity / steps
+    up, down = trees.crr_params(sigma, dt)
+    probability = trees.risk_neutral_p(up, down, rate, dt)
+    epsilon = 1e-12 * max(1, maturity)
+    stock, before_stock = [], []
+    for i in range(steps + 1):
+        time = i * dt
+        base = risky_spot * up ** (i - np.arange(i + 1)) * down ** np.arange(i + 1)
+        after_mask, before_mask = ex > time + epsilon, ex >= time - epsilon
+        if model == "cash":
+            reserve = float(amounts[after_mask] @ np.exp(-rate * (ex[after_mask] - time)))
+            before_reserve = float(amounts[before_mask] @ np.exp(-rate * (ex[before_mask] - time)))
+            stock.append(base + reserve)
+            before_stock.append(base + before_reserve)
+        else:
+            stock.append(base * np.prod(1 - amounts[~after_mask]))
+            before_stock.append(base * np.prod(1 - amounts[~before_mask]))
+    result = _backward(
+        stock, strike, math.exp(-rate * dt), probability, kind, american, before_stock
+    )
+    off_grid = tuple(float(t) for t in ex if abs(t - dt * round(t / dt)) > epsilon)
+    return {
+        **result,
+        "before_stock": before_stock,
+        "risky_spot": risky_spot,
+        "dividend_pv": pv,
+        "terminal_scale": float(np.prod(1 - amounts)) if model == "fraction" else 1.0,
+        "off_grid_dividend_times": off_grid,
+        "model": model,
+    }
+
+
+def dividend_control_variate(
+    spot,
+    strike,
+    rate,
+    sigma,
+    maturity,
+    steps,
+    dividend_times=(),
+    dividends=(),
+    *,
+    model="cash",
+    kind="put",
+):
+    """Same-model, same-N American-European correction; improvement is not guaranteed."""
+    from .bsm import call_price, put_price
+
+    arguments = (spot, strike, rate, sigma, maturity, steps, dividend_times, dividends)
+    american = dividend_lattice(*arguments, model=model, kind=kind, american=True)
+    european = dividend_lattice(*arguments, model=model, kind=kind)
+    adjusted_spot = european["risky_spot"] * european["terminal_scale"]
+    if adjusted_spot == 0:
+        reference = strike * math.exp(-rate * maturity) if kind == "put" else 0.0
+    else:
+        reference = float(
+            (call_price if kind == "call" else put_price)(
+                adjusted_spot, strike, rate, sigma, maturity
+            )
+        )
+    return {
+        "american": american["price"],
+        "european_tree": european["price"],
+        "european_reference": reference,
+        "corrected": american["price"] + reference - european["price"],
+    }
