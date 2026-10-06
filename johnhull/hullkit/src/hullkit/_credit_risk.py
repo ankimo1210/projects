@@ -493,3 +493,80 @@ def incremental_credit_adjustment(base_values, added_values, times, interval_pd,
         np.concatenate([base, added], axis=2), times, interval_pd, **kwargs
     )
     return {key: after[key] - before[key] for key in ("cva", "dva", "adjustment")}
+
+
+def default_thresholds(cumulative_pd):
+    """Normal thresholds for an increasing cumulative default-time distribution."""
+    q = _vector(cumulative_pd)
+    if np.any(q < 0) or np.any(q > 1) or np.any(np.diff(q) < 0):
+        raise ValueError("increasing cumulative probabilities in [0,1] required")
+    return norm.ppf(q)
+
+
+def default_years(latent_normals, cumulative_pd):
+    """Year 1..k for default in a band; 0 means survival beyond this horizon."""
+    thresholds = default_thresholds(cumulative_pd)
+    x = np.asarray(latent_normals, dtype=float)
+    if not np.isfinite(x).all():
+        raise ValueError("finite latent normals required")
+    years = np.searchsorted(thresholds, x, side="right") + 1
+    return np.where(years <= thresholds.size, years, 0)
+
+
+def one_factor_latents(loadings, *, samples=10000, seed=0, factor=None, idiosyncratic=None):
+    """x_i=a_i F+sqrt(1-a_i^2) Z_i; pairwise latent correlation a_i*a_j."""
+    a = _vector(loadings)
+    if np.any(abs(a) > 1):
+        raise ValueError("factor loadings must be within [-1,1]")
+    if factor is None and idiosyncratic is None:
+        if samples < 1 or int(samples) != samples:
+            raise ValueError("positive integer sample count required")
+        rng = np.random.default_rng(seed)
+        f = rng.normal(size=int(samples))
+        z = rng.normal(size=(int(samples), a.size))
+    elif factor is not None and idiosyncratic is not None:
+        f, z = _vector(factor), np.asarray(idiosyncratic, dtype=float)
+        if z.shape != (f.size, a.size) or not np.isfinite(z).all():
+            raise ValueError("matching finite factor/idiosyncratic arrays required")
+    else:
+        raise ValueError("supply factor and idiosyncratic normals together")
+    return f[:, None] * a + z * np.sqrt(1 - a * a)
+
+
+def joint_default_probability(first_pd, second_pd, first_loading, second_loading):
+    """Two-obligor PD by deterministic integration over their common Gaussian F."""
+    from scipy.integrate import quad
+
+    if (
+        not np.isfinite([first_pd, second_pd, first_loading, second_loading]).all()
+        or not 0 <= first_pd <= 1
+        or not 0 <= second_pd <= 1
+        or max(abs(first_loading), abs(second_loading)) >= 1
+    ):
+        raise ValueError("PDs in [0,1] and interior loadings required")
+    if min(first_pd, second_pd) == 0:
+        return 0.0
+    if max(first_pd, second_pd) == 1:
+        return float(min(first_pd, second_pd))
+    first, second = norm.ppf(first_pd), norm.ppf(second_pd)
+
+    def integrand(factor):
+        p1 = norm.cdf((first - first_loading * factor) / math.sqrt(1 - first_loading**2))
+        p2 = norm.cdf((second - second_loading * factor) / math.sqrt(1 - second_loading**2))
+        return p1 * p2 * norm.pdf(factor)
+
+    return float(quad(integrand, -np.inf, np.inf, epsabs=1e-11)[0])
+
+
+def default_indicator_correlation(first_pd, second_pd, joint_pd):
+    if (
+        not np.isfinite([first_pd, second_pd, joint_pd]).all()
+        or not 0 < first_pd < 1
+        or not 0 < second_pd < 1
+        or not max(0, first_pd + second_pd - 1) <= joint_pd <= min(first_pd, second_pd)
+    ):
+        raise ValueError("nondegenerate marginal PDs and joint PD within Frechet bounds required")
+    return float(
+        (joint_pd - first_pd * second_pd)
+        / math.sqrt(first_pd * (1 - first_pd) * second_pd * (1 - second_pd))
+    )
