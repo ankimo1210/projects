@@ -87,3 +87,126 @@ def clean_dirty(clean_price, accrued_interest, *, face=100000):
         raise ValueError("finite prices and positive face required")
     dirty = clean_price + accrued_interest
     return {"dirty_price": dirty, "cash_price": dirty * face / 100}
+
+
+def conversion_factor(annual_coupon, remaining_months, *, rounding_months=3):
+    """Hull's 6%-semiannual conversion-factor illustration, per 100 face.
+
+    Three-month rule floors remaining months; Note month rule uses nearest month
+    (half up). Stub accrued interest is deducted from discounted coupon/principal.
+    Exchange-specific eligibility/day rules beyond Hull are not inferred.
+    """
+    if (
+        not np.isfinite([annual_coupon, remaining_months]).all()
+        or annual_coupon < 0
+        or remaining_months <= 0
+        or rounding_months not in (1, 3)
+    ):
+        raise ValueError("valid coupon/maturity and Hull one/three-month rule required")
+    months = (
+        np.floor(remaining_months / 3) * 3
+        if rounding_months == 3
+        else np.floor(remaining_months + 0.5)
+    )
+    if months <= 0:
+        raise ValueError("positive rounded maturity required")
+    stub = months % 6
+    first = stub / 12 if stub else 0.5
+    times = np.arange(first, months / 12 + 1e-9, 0.5)
+    coupon = 50 * annual_coupon
+    cash = np.full(len(times), coupon)
+    cash[-1] += 100
+    dirty = float(np.dot(cash, 1.03 ** (-2 * times)))
+    accrued = coupon * (0.5 - first) / 0.5
+    clean = dirty - accrued
+    return {
+        "factor": clean / 100,
+        "dirty_price": dirty,
+        "clean_price": clean,
+        "accrued": accrued,
+        "first_coupon_value": dirty * 1.03 ** (2 * first),
+        "rounded_months": months,
+    }
+
+
+def treasury_invoice(settlement_quote, factor, accrued, *, face=100000):
+    """Treasury futures invoice per 100 face and total delivery cash."""
+    if not np.isfinite([settlement_quote, factor, accrued, face]).all() or min(factor, face) <= 0:
+        raise ValueError("finite quote/accrual and positive factor/face required")
+    price = settlement_quote * factor + accrued
+    return {"price": price, "cash": price * face / 100}
+
+
+def cheapest_delivery(clean_prices, factors, settlement_quote):
+    """Choose smallest clean-price minus futures-invoice component, ties first."""
+    prices = np.asarray(clean_prices, dtype=float)
+    cf = np.asarray(factors, dtype=float)
+    if (
+        prices.ndim != 1
+        or prices.shape != cf.shape
+        or not len(prices)
+        or not np.isfinite(prices).all()
+        or not np.isfinite(cf).all()
+        or np.any(cf <= 0)
+        or not np.isfinite(settlement_quote)
+    ):
+        raise ValueError("paired bond prices/positive factors required")
+    costs = prices - settlement_quote * cf
+    return {"costs": costs, "index": int(np.argmin(costs))}
+
+
+def bond_futures_quote(
+    clean_spot,
+    coupon_cash,
+    elapsed_days,
+    next_coupon_days,
+    delivery_days,
+    delivery_elapsed_days,
+    delivery_remaining_days,
+    rate,
+    factor,
+    *,
+    basis=365,
+):
+    """Known CTD/date bond future with one coupon before delivery, Hull Example6.2.
+
+    Day fractions for accrued coupons and the continuous rate's year basis differ.
+    Caller supplies actual interval counts; no contract delivery option is valued.
+    """
+    if (
+        not np.isfinite(
+            [
+                clean_spot,
+                coupon_cash,
+                elapsed_days,
+                next_coupon_days,
+                delivery_days,
+                delivery_elapsed_days,
+                delivery_remaining_days,
+                rate,
+                factor,
+                basis,
+            ]
+        ).all()
+        or min(elapsed_days, delivery_elapsed_days) < 0
+        or min(next_coupon_days, delivery_remaining_days, factor, basis) <= 0
+        or delivery_days < next_coupon_days
+    ):
+        raise ValueError("valid coupon interval/delivery days and positive factor/basis required")
+    cash_spot = clean_spot + coupon_cash * elapsed_days / (elapsed_days + next_coupon_days)
+    coupon_time = next_coupon_days / basis
+    delivery_time = delivery_days / basis
+    pv = coupon_cash * np.exp(-rate * coupon_time)
+    dirty = (cash_spot - pv) * np.exp(rate * delivery_time)
+    clean = dirty - coupon_cash * delivery_elapsed_days / (
+        delivery_elapsed_days + delivery_remaining_days
+    )
+    return {
+        "cash_spot": cash_spot,
+        "coupon_time": coupon_time,
+        "income_pv": pv,
+        "delivery_time": delivery_time,
+        "cash_forward": dirty,
+        "clean_forward": clean,
+        "futures_quote": clean / factor,
+    }
