@@ -176,3 +176,27 @@ def futures_exercise_comparison(forward, strike, rate, sigma, maturity, steps=50
     from ._index_currency import carry_exercise_comparison
 
     return carry_exercise_comparison(forward, strike, rate, rate, sigma, maturity, steps, kind=kind)
+
+
+def american_spot_futures_comparison(spot, strike, rate, yield_rate, sigma, maturity, steps=500, *, futures_maturity=None):
+    """Compare corresponding American contracts with deterministic carry.
+
+    Futures expiry may follow option expiry. European equality requires equal
+    expiries; Hull's normal/inverted-market ordering assumes positive r.
+    """
+    from ._index_currency import carry_exercise_comparison
+
+    if futures_maturity is None:
+        futures_maturity = maturity
+    if not math.isfinite(maturity) or maturity < 0 or futures_maturity < maturity:
+        raise ValueError("futures must expire at or after nonnegative option maturity")
+    forward = futures_at_option_expiry(spot, rate, yield_rate, 0, futures_maturity)
+    result = {"forward": forward, "futures_maturity": futures_maturity}
+    for kind in ("call", "put"):
+        spot_values = carry_exercise_comparison(spot, strike, rate, yield_rate, sigma, maturity, steps, kind=kind)
+        future_values = futures_exercise_comparison(forward, strike, rate, sigma, maturity, steps, kind=kind)
+        result["spot_"+kind] = spot_values["american"]
+        result["futures_"+kind] = future_values["american"]
+        result["spot_european_"+kind] = spot_values["european"]
+        result["futures_european_"+kind] = future_values["european"]
+    return result
