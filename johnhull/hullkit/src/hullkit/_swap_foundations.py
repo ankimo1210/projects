@@ -83,3 +83,21 @@ def effective_rate(legs):
         "floating_loading": float(values[:, 0].sum()),
         "fixed_spread": float(values[:, 1].sum()),
     }
+
+
+def dealer_swap_quotes(bids, asks):
+    """Dealer pays fixed at bid, receives fixed at ask; mid and spread in rate bp."""
+    b = np.asarray(bids, dtype=float)
+    a = np.asarray(asks, dtype=float)
+    if b.shape != a.shape or not np.isfinite(b).all() or not np.isfinite(a).all() or np.any(a < b):
+        raise ValueError("finite paired bid<=ask quotes required")
+    return {"mid": (b + a) / 2, "spread_bp": (a - b) * 1e4}
+
+
+def dated_interest(notional, annual_rate, start, end, *, basis=360):
+    """Simple interest using actual calendar days on a caller-supplied annual basis."""
+    from ._rate_futures import day_count
+
+    if not np.isfinite([notional, annual_rate, basis]).all() or notional < 0 or basis <= 0:
+        raise ValueError("finite rate, nonnegative notional and positive basis required")
+    return notional * annual_rate * day_count(start, end) / basis
