@@ -187,3 +187,38 @@ def standard_normal_probability(x, *, upper=False):
     if math.isnan(x):
         raise ValueError("normal probability is undefined for NaN")
     return math.erfc((x if upper else -x)/math.sqrt(2))/2
+
+
+def _share_counts(old_shares, new_rights):
+    if not all(math.isfinite(x) for x in (old_shares, new_rights)) or old_shares <= 0 or new_rights < 0:
+        raise ValueError("positive existing shares and nonnegative new rights required")
+
+
+def new_warrant_issue(spot, strike, rate, sigma, maturity, old_shares, new_rights):
+    """Hull Ex15.7 planned-issue cost with unaffected pre-announcement spot.
+
+    Each right purchases one new share. The source assumes no offsetting
+    benefit from the issue; this is not another haircut to an announced spot.
+    """
+    _share_counts(old_shares, new_rights)
+    call = bsm_call_decomposition(spot, strike, rate, sigma, maturity)["price"]
+    factor = old_shares/(old_shares+new_rights)
+    warrant = factor*call
+    cost = new_rights*warrant
+    return {"ordinary_call": call, "dilution_factor": factor, "warrant_price": warrant, "issue_cost": cost, "post_issue_spot": spot-cost/old_shares}
+
+
+def new_issue_terminal_allocation(unaffected_spot, strike, old_shares, new_rights):
+    """Terminal assets/capital allocation in the planned-issue model.
+
+    unaffected_spot means assets before exercise divided by old shares,
+    excluding the warrant liability. It is not an already-announced quote.
+    """
+    _share_counts(old_shares, new_rights)
+    if not all(math.isfinite(x) for x in (unaffected_spot, strike)) or unaffected_spot <= 0 or strike < 0:
+        raise ValueError("positive unaffected stock value and nonnegative strike required")
+    exercise = unaffected_spot > strike
+    proceeds = new_rights*strike if exercise else 0.0
+    shares = old_shares+new_rights if exercise else old_shares
+    stock = (old_shares*unaffected_spot+proceeds)/shares
+    return {"post_exercise_spot": stock, "warrant_payoff": max(stock-strike, 0), "exercise_proceeds": proceeds}
