@@ -32,7 +32,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | ロジック先行 | P3 36/37、P4計算95/95、P5計算32/32 | codex/p5-logicでCh22–25の初回実装・対象検証完了。次の実装段階はP6。教材・正式受入は保留。[P4状態](docs/P4_STATUS.md)・[P5状態](docs/P5_STATUS.md) |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。Ch28：依存変更2節を再検査 | §28.2/28.5のbrowser/runtime/pytest・両保管庫PASS。他28節は完全指紋とruntimeが同じ直接のredrawn基点を再利用。新6図/24表示状態と基点画像の両コピー復元PASS。[章記録](docs/validation/chapter-28/acceptance-check.json) |
-| テスト・レビュー | P5対象196 passed、docstring156 passed、追加モジュール索引6 passed、ruff check/format PASS | R1–R4は独立レビュー確認済み、R5–R7も本chatで修正・検証済み。レビューchatの全suite報告と本chatの対象検証を区別。[P5状態](docs/P5_STATUS.md)。正式受入の直近全suiteは[Ch28記録](docs/validation/chapter-28/full-suite.json) |
+| テスト・レビュー | P5対象196 passed、docstring156 passed、追加モジュール索引6 passed、ruff check/format PASS | R1–R7は独立レビュー確認済みとしてclose。計算32項目まで追加重要指摘なし。レビューchatの全suite報告と本chatの対象検証を区別。[P5状態](docs/P5_STATUS.md)。正式受入の直近全suiteは[Ch28記録](docs/validation/chapter-28/full-suite.json) |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
