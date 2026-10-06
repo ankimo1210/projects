@@ -36,3 +36,20 @@ def return_distribution(drift, sigma, maturity):
     law = gbm_log_law(1, drift, sigma, maturity)
     variance = law["log_variance"]/maturity**2
     return {"mean": law["log_mean"]/maturity, "variance": variance, "sd": math.sqrt(variance)}
+
+
+def realized_return_summary(initial, simple_returns):
+    """Annual simple returns with reinvestment and no external cashflows."""
+    returns = tuple(simple_returns)
+    if not math.isfinite(initial) or initial <= 0 or not returns or any(not math.isfinite(r) or r < -1 for r in returns):
+        raise ValueError("positive initial wealth and nonempty finite returns >= -1 required")
+    balances = [initial]
+    for r in returns:
+        balances.append(balances[-1]*(1+r))
+    arithmetic = math.fsum(returns)/len(returns)
+    return {
+        "balances": balances,
+        "arithmetic_mean": arithmetic,
+        "geometric_mean": math.prod(1+r for r in returns)**(1/len(returns))-1,
+        "constant_mean_final": initial*(1+arithmetic)**len(returns),
+    }
