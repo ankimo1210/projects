@@ -182,3 +182,157 @@ def common_random_greek(
         kind=kind,
     )
     return iid_summary((shifted["discounted_payoffs"] - base["discounted_payoffs"]) / bump)
+
+
+def antithetic_mc(spot, strike, rate, sigma, maturity, normals, *, yield_rate=0, kind="call"):
+    """One independent trial is a +/- shock pair, costing two payoff evaluations."""
+    z = np.asarray(normals, dtype=float)
+    forward = european_mc_from_normals(
+        spot, strike, rate, sigma, maturity, z, yield_rate=yield_rate, kind=kind
+    )["discounted_payoffs"]
+    reverse = european_mc_from_normals(
+        spot, strike, rate, sigma, maturity, -z, yield_rate=yield_rate, kind=kind
+    )["discounted_payoffs"]
+    result = iid_summary((forward + reverse) / 2)
+    return {**result, "price": result["estimate"], "payoff_evaluations": 2 * len(forward)}
+
+
+def control_adjustment(target, control, control_expectation, *, beta=1):
+    """Eq21.20 with default beta=1, using paired discounted trial values.
+
+    Beta is a caller-supplied fixed coefficient or an independent-pilot estimate.
+    Fitting it on these same trials may introduce finite-sample bias.
+    """
+    target, control = np.asarray(target, dtype=float), np.asarray(control, dtype=float)
+    if target.shape != control.shape or not all(
+        math.isfinite(x) for x in (control_expectation, beta)
+    ):
+        raise ValueError("paired trial arrays and finite control expectation/coefficient required")
+    return iid_summary(target - beta * (control - control_expectation))
+
+
+def conditional_call_from_uniforms(spot, strike, rate, sigma, maturity, uniforms, *, yield_rate=0):
+    """Hull21.7 tail-conditional sampling: sample S_T>K, then multiply payoff by Q(tail).
+
+    Stable inverse survival probabilities avoid subtracting tiny tails from one.
+    This is the textbook conditioning method, not drift-shift importance sampling.
+    """
+    from scipy.stats import norm
+
+    if (
+        not all(math.isfinite(x) for x in (spot, strike, rate, sigma, maturity, yield_rate))
+        or min(spot, strike, sigma, maturity) <= 0
+    ):
+        raise ValueError("positive spot/strike/vol/time and finite rates required")
+    u = np.asarray(uniforms, dtype=float)
+    if u.ndim != 1 or np.any(~np.isfinite(u)) or np.any(u <= 0) or np.any(u >= 1):
+        raise ValueError("open-unit-interval uniforms required for finite tail quantiles")
+    width = sigma * math.sqrt(maturity)
+    mean = math.log(spot) + (rate - yield_rate - sigma**2 / 2) * maturity
+    cutoff = (math.log(strike) - mean) / width
+    tail = float(norm.sf(cutoff))
+    if tail == 0:
+        raise ValueError("tail probability underflows at the supplied inputs")
+    terminal = np.exp(mean + width * norm.isf(tail * (1 - u)))
+    samples = tail * math.exp(-rate * maturity) * np.maximum(terminal - strike, 0)
+    result = iid_summary(samples)
+    return {
+        **result,
+        "price": result["estimate"],
+        "tail_probability": tail,
+        "terminal_stock": terminal,
+    }
+
+
+def stratified_normal(count, *, uniforms=None):
+    """Normal median representatives, or one randomized point in each equal-probability stratum.
+
+    Returns points only. IID SE is inappropriate for distinct strata; use
+    independent randomized batches when a statistical error estimate is needed.
+    """
+    from scipy.stats import norm
+
+    if count < 1 or int(count) != count:
+        raise ValueError("positive integer stratum count required")
+    count = int(count)
+    within = np.full(count, 0.5) if uniforms is None else np.asarray(uniforms, dtype=float)
+    if (
+        within.shape != (count,)
+        or np.any(~np.isfinite(within))
+        or np.any(within <= 0)
+        or np.any(within >= 1)
+    ):
+        raise ValueError("one open-unit-interval uniform per stratum required")
+    return norm.ppf((np.arange(count) + within) / count)
+
+
+def moment_match(normals, *, ddof=1):
+    """Match column-wise sample mean 0/SD 1 (ddof=1); ddof=0 selects population moments.
+
+    Adjusted rows are dependent and not exactly normal at finite batch size.
+    This transform may bias a nonlinear payoff; no IID SE is returned.
+    """
+    z = np.asarray(normals, dtype=float)
+    if z.ndim < 1 or ddof < 0 or int(ddof) != ddof or z.shape[0] <= ddof or np.any(~np.isfinite(z)):
+        raise ValueError(
+            "finite sample rows and enough observations for the SD convention required"
+        )
+    sd = z.std(axis=0, ddof=ddof)
+    if np.any(sd == 0):
+        raise ValueError("zero sample variance cannot be scaled")
+    return (z - z.mean(axis=0)) / sd
+
+
+def sobol_normal_points(power, *, dimension=1, scramble=False, seed=None):
+    """2**power Sobol points and normal transforms; no IID error estimate.
+
+    Uniform endpoints are retained in the returned sequence. Only the inverse
+    normal transform moves 0/1 to the nearest representable interior float.
+    """
+    from scipy.stats import norm, qmc
+
+    if power < 0 or int(power) != power or dimension < 1 or int(dimension) != dimension:
+        raise ValueError("nonnegative integer power and positive integer dimension required")
+    uniforms = qmc.Sobol(d=int(dimension), scramble=scramble, seed=seed).random_base2(int(power))
+    interior = np.clip(uniforms, np.nextafter(0.0, 1.0), np.nextafter(1.0, 0.0))
+    return {"uniforms": uniforms, "normals": norm.ppf(interior)}
+
+
+def randomized_qmc_price(
+    spot,
+    strike,
+    rate,
+    sigma,
+    maturity,
+    *,
+    power=10,
+    scrambles=16,
+    seed=0,
+    yield_rate=0,
+    kind="call",
+):
+    """European RQMC with one independent statistical unit per full scramble.
+
+    Error is assessed across independently scrambled estimates, not across the
+    correlated Sobol points. No universal 1/N error-rate claim is made.
+    """
+    if scrambles < 2 or int(scrambles) != scrambles or kind not in {"call", "put"}:
+        raise ValueError("at least two independent scrambles and call/put required")
+    children = np.random.SeedSequence(seed).spawn(int(scrambles))
+    estimates = []
+    sign = 1 if kind == "call" else -1
+    for child in children:
+        points = sobol_normal_points(power, scramble=True, seed=int(child.generate_state(1)[0]))
+        terminal = gbm_paths_from_normals(
+            spot, rate, sigma, maturity, points["normals"], yield_rate=yield_rate
+        )[:, -1]
+        estimates.append(
+            float(math.exp(-rate * maturity) * np.maximum(sign * (terminal - strike), 0).mean())
+        )
+    result = iid_summary(estimates)
+    return {
+        **result,
+        "price": result["estimate"],
+        "points_per_scramble": 2 ** int(power),
+        "payoff_evaluations": int(scrambles) * 2 ** int(power),
+    }
