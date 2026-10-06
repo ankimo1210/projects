@@ -64,3 +64,34 @@ def spot_futures_equivalence(spot, strike, rate, yield_rate, sigma, maturity, *,
     return {"forward": spot_values["forward"],
             "spot_call": spot_values["call"], "spot_put": spot_values["put"],
             "futures_call": future_values["call"], "futures_put": future_values["put"]}
+
+
+def futures_parity(forward, strike, rate, maturity, *, call=None, put=None):
+    """European futures quote recovery and residual, Hull 18.1.
+
+    The textbook cash replication simplifies futures to terminal settlement;
+    this is not a daily variation-margin/reinvestment cash simulator.
+    """
+    from ._index_currency import carry_bounds
+
+    difference = carry_bounds(forward, strike, rate, rate, maturity)["call_minus_put"]
+    if call is None and put is None:
+        raise ValueError("at least one option quote required")
+    if any(not math.isfinite(x) or x < 0 for x in (call, put) if x is not None):
+        raise ValueError("nonnegative finite option quotes required")
+    if call is None:
+        call = put+difference
+    if put is None:
+        put = call-difference
+    if min(call, put) < -1e-12:
+        raise ValueError("given quote implies a negative opposite option price")
+    call, put = max(call, 0), max(put, 0)
+    return {"call": call, "put": put, "call_minus_put": difference,
+            "residual": call-put-difference}
+
+
+def futures_american_difference_bounds(forward, strike, rate, maturity):
+    """Hull 18.2 American C-P interval, assuming nonnegative interest."""
+    from ._index_currency import carry_american_difference_bounds
+
+    return carry_american_difference_bounds(forward, strike, rate, rate, maturity)
