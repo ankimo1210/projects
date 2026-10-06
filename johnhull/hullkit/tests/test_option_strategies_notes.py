@@ -74,3 +74,15 @@ def test_zero_vol_call_and_negative_rate_funding_are_reported():
 def test_undefined_note_inputs(maturity, participation):
     with pytest.raises(ValueError):
         strategies.principal_note(np.array([1000]), 1000, 1000, 1000, .06, .15, maturity, participation=participation)
+
+
+def test_no_dividend_note_is_unaffordable_at_every_volatility_while_the_yield_funds_it():
+    # Hull's claim rests on c >= S-K*exp(-rT), which equals the budget when K=S=principal.
+    for rate in (.02, .06):
+        for maturity in (1, 3, 10):
+            for vol in (1e-4, .05, .25, .6):
+                note = strategies.principal_note([1000], 1000, 1000, 1000, rate, vol, maturity)
+                assert note["option_price"] >= note["option_budget"]-1e-9
+                assert note["affordable_participation"] <= 1+1e-12
+    assert strategies.principal_note_volatility_limit(1000, 1000, 1000, .06, 3) == 0
+    assert strategies.principal_note([1000], 1000, 1000, 1000, .06, .10, 3, q=.015)["affordable_participation"] > 1
