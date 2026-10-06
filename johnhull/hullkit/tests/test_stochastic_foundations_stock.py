@@ -53,3 +53,17 @@ def test_euler_moments_converge_and_zero_volatility_exact_scheme_matches_source_
     assert np.all(errors[-1] < errors[0]/40)
     paths = stochastic.stock_paths(100, .14, 0, .25, [0, 0, 0, 0], scheme="exact")
     assert paths[0] == pytest.approx(100*np.exp(.14*np.arange(5)*.25), abs=1e-12)
+
+
+@pytest.mark.parametrize("steps", [1, 2, 3])
+def test_euler_moments_against_gauss_hermite_product_expectation(steps):
+    # Independent of the closed form: integrate the Euler product over each normal draw.
+    spot, drift, sigma, maturity = 100, .15, .3, .4
+    dt = maturity/steps
+    nodes, weights = np.polynomial.hermite_e.hermegauss(12)
+    weights = weights/weights.sum()
+    factor = 1+drift*dt+sigma*math.sqrt(dt)*nodes
+    first, second = (spot*float(weights@factor)**steps), spot**2*float(weights@factor**2)**steps
+    mean, variance = stochastic.euler_stock_moments(spot, drift, sigma, maturity, steps)
+    assert mean == pytest.approx(first, rel=1e-13)
+    assert variance == pytest.approx(second-first**2, rel=1e-11)
