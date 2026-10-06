@@ -93,6 +93,10 @@ def zero_cost_range_forward(spot, lower_strike, domestic_rate, foreign_rate, sig
     forward = spot*math.exp((domestic_rate-foreign_rate)*maturity)
     if lower_strike > forward:
         raise ValueError("lower strike above forward cannot give an ordered zero-cost collar")
+    if math.isclose(lower_strike, forward, rel_tol=1e-13, abs_tol=1e-14):
+        # At the forward, parity gives equal call/put; tiny CDF rounding must
+        # not determine the sign of a root bracket whose solution is its end.
+        return {"upper_strike": lower_strike, **range_forward_prices(spot, lower_strike, lower_strike, domestic_rate, foreign_rate, sigma, maturity)}
     def residual(strike):
         return range_forward_prices(spot, lower_strike, strike, domestic_rate, foreign_rate, sigma, maturity)["premium"]
     high = max(2*spot, 2*lower_strike)

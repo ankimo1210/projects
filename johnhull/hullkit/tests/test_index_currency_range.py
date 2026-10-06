@@ -55,9 +55,10 @@ def test_zero_cost_upper_strike_prices_against_independent_payoff_integration():
     assert put == pytest.approx(call, abs=2e-12)
 
 
-def test_zero_cost_at_forward_collapses_to_single_strike():
-    forward = 1.32*math.exp((.03-.01)*.5)
-    result = index.zero_cost_range_forward(1.32, forward, .03, .01, .2, .5)
+@pytest.mark.parametrize("rate,yield_rate,time", [(0, 0, 1), (.03, .01, .5), (.05, .03, .8), (-.02, .03, 1)])
+def test_zero_cost_at_forward_collapses_to_single_strike(rate, yield_rate, time):
+    forward = 1.32*math.exp((rate-yield_rate)*time)
+    result = index.zero_cost_range_forward(1.32, forward, rate, yield_rate, .2, time)
     assert result["upper_strike"] == pytest.approx(forward, abs=1e-12)
 
 
