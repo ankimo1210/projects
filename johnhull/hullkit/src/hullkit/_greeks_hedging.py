@@ -373,3 +373,66 @@ def scenario_reprice(book, spot, rate, spot_changes, vol_changes, *, elapsed=0, 
         "pnl": pnl,
         "worst": scenario_extremes(dx, dv, pnl),
     }
+
+
+def option_greek_details(spot, strike, rate, sigma, maturity, *, kind="call", yield_rate=0):
+    """Table19.6 European Greeks, per unit shock; rho_yield is foreign rho for FX.
+
+    Spot and q are held fixed for rho_domestic; spot and r for rho_yield.
+    Theta uses calendar years, vega uses absolute IV 1.0, gamma spot units^2.
+    """
+    from . import bsm
+    from ._index_currency import carry_option_details
+
+    if (
+        not all(math.isfinite(x) for x in (spot, strike, rate, sigma, maturity, yield_rate))
+        or min(spot, strike, sigma, maturity) <= 0
+        or kind not in ("call", "put")
+    ):
+        raise ValueError("positive spot/strike/diffusive IV/time and finite rates required")
+    delta = bsm.call_delta if kind == "call" else bsm.put_delta
+    args = (spot, strike, rate, sigma, maturity)
+    d = float(delta(*args, q=yield_rate))
+    return {
+        "value": carry_option_details(spot, strike, rate, yield_rate, sigma, maturity)[kind],
+        "delta": d,
+        "gamma": float(bsm.gamma(*args, q=yield_rate)),
+        "theta": theta_units(*args, kind=kind, yield_rate=yield_rate)["annual"],
+        "vega": vega_units(*args, yield_rate=yield_rate)["per_unit_volatility"],
+        "rho_domestic": rho_units(*args, kind=kind, yield_rate=yield_rate)["per_unit_rate"],
+        "rho_yield": -maturity * spot * d,
+    }
+
+
+def futures_option_greeks(future, strike, rate, sigma, maturity, *, kind="call"):
+    """Black futures Greeks at fixed F; rho moves r and q=r together."""
+    result = option_greek_details(future, strike, rate, sigma, maturity, kind=kind, yield_rate=rate)
+    result["rho_domestic"] = -maturity * result["value"]
+    result.pop("rho_yield")
+    return result
+
+
+def futures_hedge_units(asset_hedge, rate, yield_rate, maturity, *, contract_size=1):
+    """Signed desired asset hedge converted using immediate futures price delta.
+
+    The input is the hedge itself (already opposite to portfolio delta).
+    Contract counts retain the sign. Rounded counts leave residual exposure.
+    Forward delta is the derivative of PV, futures delta of its settled quote.
+    """
+    if (
+        not all(math.isfinite(x) for x in (asset_hedge, rate, yield_rate, maturity, contract_size))
+        or maturity < 0
+        or contract_size <= 0
+    ):
+        raise ValueError("finite units/rates, nonnegative time and positive contract size required")
+    futures_delta = math.exp((rate - yield_rate) * maturity)
+    units = asset_hedge / futures_delta
+    contracts = units / contract_size
+    return {
+        "asset_units": asset_hedge,
+        "futures_units": units,
+        "contracts": contracts,
+        "rounded_contracts": round(contracts),
+        "futures_delta": futures_delta,
+        "forward_delta": math.exp(-yield_rate * maturity),
+    }
