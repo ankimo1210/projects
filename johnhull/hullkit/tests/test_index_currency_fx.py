@@ -53,3 +53,22 @@ def test_reciprocal_and_implied_vol_require_positive_strike_and_maturity():
         index.currency_inversion(1.6, 0, .08, .11, .2, 4/12)
     with pytest.raises(ValueError):
         index.carry_implied_vol(.043, 1.6, 1.6, .08, .11, 0)
+
+
+@pytest.mark.parametrize("strike,sigma", [(200, .3), (150, .2)])
+def test_tiny_positive_fx_call_retains_volatility_against_independent_density(strike, sigma):
+    width = sigma*math.sqrt(.1)
+    log_mean = math.log(100)+(.05-.03-.5*sigma**2)*.1
+    cutoff = (math.log(strike)-log_mean)/width
+    price = math.exp(-.05*.1)*quad(lambda z: (math.exp(log_mean+width*z)-strike)*norm.pdf(z), cutoff, 15, epsabs=1e-26, epsrel=1e-11)[0]
+    assert 0 < price < 1e-8
+    assert index.carry_implied_vol(price, 100, strike, .05, .03, .1) == pytest.approx(sigma, abs=1e-9)
+
+
+def test_exact_deterministic_bound_has_zero_iv_but_upper_bound_has_no_finite_iv():
+    from hullkit.bsm import call_price
+
+    lower = float(call_price(1.6, 1.5, .08, 0, .5, q=.11))
+    assert index.carry_implied_vol(lower, 1.6, 1.5, .08, .11, .5) == pytest.approx(0)
+    with pytest.raises(ValueError):
+        index.carry_implied_vol(1.6*math.exp(-.11*.5), 1.6, 1.5, .08, .11, .5)
