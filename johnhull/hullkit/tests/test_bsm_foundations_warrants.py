@@ -42,7 +42,6 @@ def test_issue_cost_against_independent_terminal_payoff_density_integral():
 
 
 def test_snapshot_15_3_announced_options_have_no_second_dilution():
-    assert (50-45)*100000 == pytest.approx(500000)
     payoff = float(option_cashflows(100, 50, 0)["per_unit_payoff"])
     assert payoff == pytest.approx(50)
     # Market spot 100 already values option obligations. Reconstruct assets:

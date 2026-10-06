@@ -95,16 +95,16 @@ def test_hull_11_8_to_11_11_with_actual_american_cash_dividend_prices():
         assert american[kind] == pytest.approx(reference, abs=.003)
 
 
-def test_dividend_parity_independent_state_cash_ledger():
+def test_dividend_parity_holds_on_the_european_cash_dividend_tree():
     times, amounts = [.25, .75, 1.2], [2, 3, 100]
     rate, maturity, strike = .05, 1., 50.
     # Share dividends are reinvested; the matching portfolio funds each payment date.
     funded_payments = sum(d*math.exp(rate*(maturity-t)) for t, d in zip(times, amounts, strict=True) if t <= maturity)
-    for terminal_stock in [0, 20, 50, 80, 100]:
-        call_and_bond_and_payments = max(terminal_stock-strike, 0)+strike+funded_payments
-        put_and_stock_with_payments = max(strike-terminal_stock, 0)+terminal_stock+funded_payments
-        assert call_and_bond_and_payments == pytest.approx(put_and_stock_with_payments)
-    assert bsm.pv_dividends(times, amounts, rate, maturity) == pytest.approx(funded_payments*math.exp(-rate*maturity), abs=1e-12)
+    pv = bsm.pv_dividends(times, amounts, rate, maturity)
+    assert pv == pytest.approx(funded_payments*math.exp(-rate*maturity), abs=1e-12)
+    pair = [props.cash_dividend_tree(50, strike, rate, .3, maturity, times[:2], amounts[:2], kind=kind, steps=400)["price"]
+            for kind in ("call", "put")]
+    assert pair[0]-pair[1] == pytest.approx(50-pv-strike*math.exp(-rate*maturity), abs=1e-10)
 
 
 def test_call_early_exercise_only_at_ex_dates_and_positive_premium():

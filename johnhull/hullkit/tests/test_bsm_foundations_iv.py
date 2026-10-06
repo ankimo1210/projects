@@ -57,7 +57,6 @@ def test_example_15_8_quote_units_and_independent_fraction_futures_ledger():
     assert pnl == pytest.approx(float(expected), abs=1e-10)
     assert pnl == pytest.approx(800, abs=1e-10)
     assert foundations.quoted_futures_pnl(18.5, 19.3, 1000, quantity=-1) == pytest.approx(-800, abs=1e-10)
-    assert 15/100 == pytest.approx(.15)
     assert foundations.quoted_futures_pnl(.185, .193, 100000) == pytest.approx(pnl, abs=1e-10)
 
 
