@@ -182,3 +182,26 @@ def bootstrap_piecewise_zero(instruments):
         nodes.append(maturity)
         zeros.append(zero)
     return np.array(nodes), np.array(zeros)
+
+
+def curve_forward(start, end, curve):
+    """Continuous forward and growth of the two zero-bond replication cash amounts."""
+    from .rates import discount_factor
+
+    if not np.isfinite([start, end]).all() or start < 0 or end <= start:
+        raise ValueError("0<=start<end required")
+    p1 = discount_factor(start, curve)
+    p2 = discount_factor(end, curve)
+    return {
+        "continuous_rate": np.log(p1 / p2) / (end - start),
+        "start_growth": 1 / p1,
+        "end_growth": 1 / p2,
+        "forward_discount": p2 / p1,
+    }
+
+
+def instantaneous_curve_forward(time, curve, *, bump=1e-5):
+    """Instantaneous forward following supplied linear zeros, averaged at a knot."""
+    from .rates import instantaneous_forward
+
+    return instantaneous_forward(time, curve, bump=bump)
