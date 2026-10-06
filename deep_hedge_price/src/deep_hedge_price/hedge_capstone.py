@@ -169,3 +169,95 @@ def synthetic_hedge_capstone(
         turnover=turnover,
         metrics=metrics,
     )
+
+
+def _forecast_hedge_case(
+    *,
+    forecast_volatility,
+    path_volatility,
+    maturity=1.0,
+    n_paths=512,
+    n_steps=12,
+    seed=0,
+    deep_policy_positions=None,
+):
+    """Private forecast evaluation on common true-vol paths and an oracle fair premium.
+
+    Forecast vol selects primary delta/gamma only. The traded secondary option
+    uses observable fair prices/Greeks at true scenario vol. End-point stock
+    liquidation is charged, expiry option cash settlement is not a new trade.
+    """
+    if min(forecast_volatility, path_volatility, maturity) <= 0:
+        raise ValueError("positive scenario/forecast vol and maturity required")
+    dt = maturity / n_steps
+    shocks = np.random.default_rng(seed).standard_normal((n_paths, n_steps))
+    increments = -0.5 * path_volatility**2 * dt + path_volatility * np.sqrt(dt) * shocks
+    spot = 100 * np.exp(np.column_stack([np.zeros(n_paths), np.cumsum(increments, axis=1)]))
+    tau = maturity - np.arange(n_steps) * dt
+    premium = float(_bsm_call_state(np.array(100.0), 100.0, np.array(maturity), path_volatility)[0])
+    _, delta, gamma = _bsm_call_state(spot[:, :-1], 100, tau, forecast_volatility)
+    secondary, secondary_delta, secondary_gamma = _bsm_call_state(
+        spot, 105, maturity - np.arange(n_steps + 1) * dt, path_volatility
+    )
+    units = np.divide(
+        gamma,
+        secondary_gamma[:, :-1],
+        out=np.zeros_like(gamma),
+        where=secondary_gamma[:, :-1] > 1e-10,
+    )
+    units = np.clip(units, 0, 5.0)
+    no_trade = delta.copy()
+    for t in range(1, n_steps):
+        no_trade[:, t] = np.where(
+            np.abs(delta[:, t] - no_trade[:, t - 1]) > DEFAULT_NO_TRADE_WIDTH,
+            delta[:, t],
+            no_trade[:, t - 1],
+        )
+    positions = {
+        "delta": delta,
+        "delta-gamma": delta - units * secondary_delta[:, :-1],
+        "no hedge": np.zeros_like(delta),
+        "no-trade": no_trade,
+    }
+    if deep_policy_positions is not None:
+        positions["deep-policy"] = np.asarray(deep_policy_positions)
+    names = sorted(positions)
+    stocks = np.stack([positions[name] for name in names])
+    options = np.stack([units if name == "delta-gamma" else np.zeros_like(units) for name in names])
+    stock_trades = np.diff(
+        np.concatenate([np.zeros((len(names), n_paths, 1)), stocks], axis=2), axis=2
+    )
+    option_trades = np.diff(
+        np.concatenate([np.zeros((len(names), n_paths, 1)), options], axis=2), axis=2
+    )
+    turnover = (np.abs(stock_trades) * spot[:, :-1]).sum(axis=2)
+    turnover += (np.abs(option_trades) * secondary[:, :-1]).sum(axis=2)
+    turnover += np.abs(stocks[:, :, -1]) * spot[:, -1]
+    gains = (stocks * np.diff(spot, axis=1)).sum(axis=2) + (
+        options * np.diff(secondary, axis=1)
+    ).sum(axis=2)
+    pnl = premium + gains - np.maximum(spot[:, -1] - 100, 0) - DEFAULT_TRANSACTION_COST * turnover
+    metrics = {name: _risk_metrics(pnl[i], turnover[i]) for i, name in enumerate(names)}
+    for i, name in enumerate(names):
+        metrics[name]["no_change_fraction"] = float(
+            np.mean(
+                (np.abs(np.diff(stocks[i], axis=1)) <= 1e-12)
+                & (np.abs(np.diff(options[i], axis=1)) <= 1e-12)
+            )
+        )
+    comparison = HedgeComparison(
+        np.arange(n_paths),
+        dict(zip(names, pnl, strict=True)),
+        dict(zip(names, turnover, strict=True)),
+        metrics,
+    )
+    evidence = {
+        "spot": spot,
+        "shocks": shocks,
+        "premium": premium,
+        "secondary_price": secondary,
+        "stock_positions": stocks,
+        "option_positions": options,
+        "strategy_names": names,
+    }
+    return comparison, evidence

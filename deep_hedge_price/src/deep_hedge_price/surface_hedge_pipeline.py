@@ -6,9 +6,9 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .hedge_capstone import HedgeComparison, synthetic_hedge_capstone
+from .hedge_capstone import HedgeComparison, _forecast_hedge_case
 from .pricing_calibration import CalibrationResult, calibrate_parameters
-from .walk_forward import fit_regularized_linear, har_features
+from .walk_forward import _mean_log_forecast, fit_regularized_linear, har_features
 
 
 @dataclass(frozen=True)
@@ -68,13 +68,22 @@ def run_synthetic_surface_hedge_pipeline(
     split = int(0.8 * len(features))
     forecaster = fit_regularized_linear(features[:split], targets[:split], ridge=1e-3)
     predicted_log_variance = float(forecaster.predict(features[-1:])[0])
-    forecast_variance = float(np.clip(np.exp(predicted_log_variance), 0.0025, 0.36))
+    forecast_variance = float(
+        np.clip(
+            _mean_log_forecast(
+                targets[:split], forecaster.predict(features[:split]), predicted_log_variance
+            )[0],
+            0.0025,
+            0.36,
+        )
+    )
     forecast_volatility = float(np.sqrt(forecast_variance))
-    hedge = synthetic_hedge_capstone(
+    hedge, _ = _forecast_hedge_case(
         n_paths=n_paths,
         n_steps=n_steps,
         seed=seed + 2,
-        volatility=forecast_volatility,
+        forecast_volatility=forecast_volatility,
+        path_volatility=float(truth[0]),
         deep_policy_positions=deep_policy_positions,
     )
     return SurfaceHedgePipelineResult(
