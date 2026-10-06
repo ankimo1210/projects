@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算8/54。次は§2.11（forward/futures）。Ch1→9を順に継続する。
+- 現在：計算9/54。次は§3.1（long/short hedge）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -21,6 +21,7 @@
 | §2.4 | `_futures_market.py` | Table2.1全53値。独立当初＋累積損益＋累積入金で全日を検算 | 計算完了。利息/余剰引出しなし、最後のcallはpendingで未入金。説明・受入保留 | 2 passed・ruff check/format PASS |
 | §2.6 | `_futures_market.py` | 金(1725.5−1752.1)×100=−2660。独立Decimal購入/売却収支とcents換算 | 計算完了。low1713.3/1715.3の原典不一致は採用せず。2020market表は入力、現行情報ではない。説明・受入保留 | 4 passed・ruff check/format PASS |
 | §2.10 | `_futures_market.py` | 2020/2021通常1000/500、hedge2021に1500。独立最終売買収支と期間配分 | 計算完了。hedge指定はこの歴史的例の配分規約、実際の資格判定/税法を実装しない。説明・受入保留 | 6 passed・ruff check/format PASS |
+| §2.11 | `_futures_market.py` | 16契約・200000・1.3333。独立望遠鏡和と区分金利の解析cash終価 | 計算完了。日次経路はsynthetic、終価差は利益実現時点の効果で価格のconvexityモデルではない。説明・受入保留 | 8 passed・ruff check/format PASS |
 
 ## 残りと検証
 
