@@ -1,0 +1,793 @@
+{
+  "status": "PASS",
+  "scope": "existing 33 accepted sections; no new acceptance",
+  "sections": {
+    "26.1": {
+      "run_id": "d1pf-26.1-20261006T225318Z-redraw-827c48575ec947328bcc11541dafb025",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-1/d1pf-26.1-20261006T225318Z-redraw-827c48575ec947328bcc11541dafb025.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 509487,
+        "seconds": {
+          "verifier": 16.27,
+          "probe": 10.3,
+          "pytest": 3.28
+        }
+      }
+    },
+    "26.4": {
+      "run_id": "d1pf-26.4-20261006T225318Z-redraw-f5cbc4bde69b433cbb4de44db59284cf",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-4/d1pf-26.4-20261006T225318Z-redraw-f5cbc4bde69b433cbb4de44db59284cf.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 538589,
+        "seconds": {
+          "verifier": 16.36,
+          "probe": 10.23,
+          "pytest": 3.46
+        }
+      }
+    },
+    "26.3": {
+      "run_id": "d1pf-26.3-20261006T225318Z-redraw-2993644982ad4c478ed8006c996a425c",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-3/d1pf-26.3-20261006T225318Z-redraw-2993644982ad4c478ed8006c996a425c.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 326803,
+        "seconds": {
+          "verifier": 16.32,
+          "probe": 10.21,
+          "pytest": 3.77
+        }
+      }
+    },
+    "26.2": {
+      "run_id": "d1pf-26.2-20261006T225318Z-redraw-cf777fea25554ecbb46a1833e91dd908",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-2/d1pf-26.2-20261006T225318Z-redraw-cf777fea25554ecbb46a1833e91dd908.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 509537,
+        "seconds": {
+          "verifier": 16.12,
+          "probe": 10.53,
+          "pytest": 6.48
+        }
+      }
+    },
+    "26.7": {
+      "run_id": "d1pf-26.7-20261006T225349Z-redraw-44cd20db4d644056af75b976190b7fff",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-7/d1pf-26.7-20261006T225349Z-redraw-44cd20db4d644056af75b976190b7fff.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 505902,
+        "seconds": {
+          "verifier": 16.7,
+          "probe": 9.6,
+          "pytest": 4.73
+        }
+      }
+    },
+    "26.5": {
+      "run_id": "d1pf-26.5-20261006T225349Z-redraw-9c264c6067e84aa09476923b7d3b3814",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-5/d1pf-26.5-20261006T225349Z-redraw-9c264c6067e84aa09476923b7d3b3814.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 481959,
+        "seconds": {
+          "verifier": 16.61,
+          "probe": 9.6,
+          "pytest": 5.86
+        }
+      }
+    },
+    "26.8": {
+      "run_id": "d1pf-26.8-20261006T225352Z-redraw-1b30bb2d90794275b5f0bf38e56dedd9",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-8/d1pf-26.8-20261006T225352Z-redraw-1b30bb2d90794275b5f0bf38e56dedd9.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 456055,
+        "seconds": {
+          "verifier": 16.59,
+          "probe": 9.63,
+          "pytest": 4.56
+        }
+      }
+    },
+    "26.6": {
+      "run_id": "d1pf-26.6-20261006T225349Z-redraw-a301bd13f5344bd48e60b10f401c2cda",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-6/d1pf-26.6-20261006T225349Z-redraw-a301bd13f5344bd48e60b10f401c2cda.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 373236,
+        "seconds": {
+          "verifier": 16.46,
+          "probe": 9.59,
+          "pytest": 11.05
+        }
+      }
+    },
+    "26.11": {
+      "run_id": "d1pf-26.11-20261006T230014Z-redraw-52c3c5a00516464b91b7a53e1d0c8525",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-11/d1pf-26.11-20261006T230014Z-redraw-52c3c5a00516464b91b7a53e1d0c8525.json",
+      "reasons": [
+        "Retry of browser startup crash; unchanged final P8 source revision"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 1301878,
+        "seconds": {
+          "verifier": 81.8,
+          "probe": 8.39,
+          "pytest": 1.91
+        }
+      }
+    },
+    "26.9": {
+      "run_id": "d1pf-26.9-20261006T225421Z-redraw-5cb6811c138c485292418c2399a5da32",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-9/d1pf-26.9-20261006T225421Z-redraw-5cb6811c138c485292418c2399a5da32.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 370699,
+        "seconds": {
+          "verifier": 17.49,
+          "probe": 9.56,
+          "pytest": 2.13
+        }
+      }
+    },
+    "26.10": {
+      "run_id": "d1pf-26.10-20261006T225421Z-redraw-6239ee0f91274f3d83fe4721d05464a3",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-10/d1pf-26.10-20261006T225421Z-redraw-6239ee0f91274f3d83fe4721d05464a3.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 1287881,
+        "seconds": {
+          "verifier": 25.68,
+          "probe": 10.15,
+          "pytest": 1.84
+        }
+      }
+    },
+    "26.12": {
+      "run_id": "d1pf-26.12-20261006T225427Z-redraw-77558c7649904e7596ed18518e1cd896",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-12/d1pf-26.12-20261006T225427Z-redraw-77558c7649904e7596ed18518e1cd896.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 1350469,
+        "seconds": {
+          "verifier": 64.79,
+          "probe": 10.12,
+          "pytest": 10.33
+        }
+      }
+    },
+    "26.13": {
+      "run_id": "d1pf-26.13-20261006T225436Z-redraw-9854fb1054254e5490081b4883d6e4a5",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-13/d1pf-26.13-20261006T225436Z-redraw-9854fb1054254e5490081b4883d6e4a5.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 1387220,
+        "seconds": {
+          "verifier": 62.43,
+          "probe": 10.27,
+          "pytest": 3.15
+        }
+      }
+    },
+    "26.14": {
+      "run_id": "d1pf-26.14-20261006T225451Z-redraw-ed0489e3c6eb4b8595b1073f72b025bb",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-14/d1pf-26.14-20261006T225451Z-redraw-ed0489e3c6eb4b8595b1073f72b025bb.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 1482187,
+        "seconds": {
+          "verifier": 61.51,
+          "probe": 11.02,
+          "pytest": 2.17
+        }
+      }
+    },
+    "26.15": {
+      "run_id": "d1pf-26.15-20261006T225500Z-redraw-4cc778bcfcad445d953c4ee809954ea3",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-15/d1pf-26.15-20261006T225500Z-redraw-4cc778bcfcad445d953c4ee809954ea3.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 1295066,
+        "seconds": {
+          "verifier": 56.99,
+          "probe": 10.83,
+          "pytest": 1.76
+        }
+      }
+    },
+    "27.1": {
+      "run_id": "d1pf-27.1-20261006T225606Z-redraw-725611a433704a1a8d73ebe5f952df9d",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-27-1/d1pf-27.1-20261006T225606Z-redraw-725611a433704a1a8d73ebe5f952df9d.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 487040,
+        "seconds": {
+          "verifier": 9.07,
+          "probe": 5.37,
+          "pytest": 3.4
+        }
+      }
+    },
+    "27.2": {
+      "run_id": "d1pf-27.2-20261006T225610Z-redraw-8a3669fcc4dd4f38b2692a327196ea8b",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-27-2/d1pf-27.2-20261006T225610Z-redraw-8a3669fcc4dd4f38b2692a327196ea8b.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 705388,
+        "seconds": {
+          "verifier": 11.88,
+          "probe": 5.4,
+          "pytest": 3.75
+        }
+      }
+    },
+    "26.17": {
+      "run_id": "d1pf-26.17-20261006T225553Z-redraw-9af171b60aa34f99ab28c5a5a60ea0b4",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-17/d1pf-26.17-20261006T225553Z-redraw-9af171b60aa34f99ab28c5a5a60ea0b4.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 375486,
+        "seconds": {
+          "verifier": 25.04,
+          "probe": 10.0,
+          "pytest": 4.26
+        }
+      }
+    },
+    "27.3": {
+      "run_id": "d1pf-27.3-20261006T225625Z-redraw-6df349c800dd4afeba2806d1faf7678b",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-27-3/d1pf-27.3-20261006T225625Z-redraw-6df349c800dd4afeba2806d1faf7678b.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 413577,
+        "seconds": {
+          "verifier": 8.5,
+          "probe": 5.52,
+          "pytest": 3.4
+        }
+      }
+    },
+    "27.4": {
+      "run_id": "d1pf-27.4-20261006T225633Z-redraw-4b010aa11bcb450ca7a9f6f17c07e3f0",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-27-4/d1pf-27.4-20261006T225633Z-redraw-4b010aa11bcb450ca7a9f6f17c07e3f0.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 407715,
+        "seconds": {
+          "verifier": 8.75,
+          "probe": 5.52,
+          "pytest": 3.46
+        }
+      }
+    },
+    "27.5": {
+      "run_id": "d1pf-27.5-20261006T225634Z-redraw-8d061b0cdee74fef84cc2aa561083a30",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-27-5/d1pf-27.5-20261006T225634Z-redraw-8d061b0cdee74fef84cc2aa561083a30.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 319907,
+        "seconds": {
+          "verifier": 8.8,
+          "probe": 5.4,
+          "pytest": 3.69
+        }
+      }
+    },
+    "27.6": {
+      "run_id": "d1pf-27.6-20261006T225643Z-redraw-f1ddcd81abce4f31815d54e48843180b",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-27-6/d1pf-27.6-20261006T225643Z-redraw-f1ddcd81abce4f31815d54e48843180b.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 651535,
+        "seconds": {
+          "verifier": 8.87,
+          "probe": 5.51,
+          "pytest": 3.55
+        }
+      }
+    },
+    "26.16": {
+      "run_id": "d1pf-26.16-20261006T225553Z-redraw-378714ee8c674976be84c3f9ce424600",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-16/d1pf-26.16-20261006T225553Z-redraw-378714ee8c674976be84c3f9ce424600.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 1904867,
+        "seconds": {
+          "verifier": 57.56,
+          "probe": 10.22,
+          "pytest": 9.41
+        }
+      }
+    },
+    "27.8": {
+      "run_id": "d1pf-27.8-20261006T225653Z-redraw-b0459335695e4943983b0d0a60517691",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-27-8/d1pf-27.8-20261006T225653Z-redraw-b0459335695e4943983b0d0a60517691.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 594569,
+        "seconds": {
+          "verifier": 8.92,
+          "probe": 5.33,
+          "pytest": 3.45
+        }
+      }
+    },
+    "27.7": {
+      "run_id": "d1pf-27.7-20261006T225651Z-redraw-3f364bd6650f41f8b41a0c53c652fbd9",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-27-7/d1pf-27.7-20261006T225651Z-redraw-3f364bd6650f41f8b41a0c53c652fbd9.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 637764,
+        "seconds": {
+          "verifier": 8.99,
+          "probe": 5.4,
+          "pytest": 6.19
+        }
+      }
+    },
+    "28.1": {
+      "run_id": "d1pf-28.1-20261006T225702Z-redraw-17c975c06e104bac8cddd6ea52acdaf7",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-28-1/d1pf-28.1-20261006T225702Z-redraw-17c975c06e104bac8cddd6ea52acdaf7.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 468555,
+        "seconds": {
+          "verifier": 16.48,
+          "probe": 10.08,
+          "pytest": 4.97
+        }
+      }
+    },
+    "28.2": {
+      "run_id": "d1pf-28.2-20261006T225711Z-redraw-d9a57adc0c004ab79c291c34a7f9189b",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-28-2/d1pf-28.2-20261006T225711Z-redraw-d9a57adc0c004ab79c291c34a7f9189b.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 385991,
+        "seconds": {
+          "verifier": 16.59,
+          "probe": 9.75,
+          "pytest": 4.34
+        }
+      }
+    },
+    "28.3": {
+      "run_id": "d1pf-28.3-20261006T225711Z-redraw-79d47985d63f4491bf06e740c2ce2885",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-28-3/d1pf-28.3-20261006T225711Z-redraw-79d47985d63f4491bf06e740c2ce2885.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 429907,
+        "seconds": {
+          "verifier": 16.63,
+          "probe": 9.74,
+          "pytest": 4.35
+        }
+      }
+    },
+    "28.4": {
+      "run_id": "d1pf-28.4-20261006T225712Z-redraw-fcabc94c852347e4aa5133b74b16cc83",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-28-4/d1pf-28.4-20261006T225712Z-redraw-fcabc94c852347e4aa5133b74b16cc83.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 443825,
+        "seconds": {
+          "verifier": 16.55,
+          "probe": 9.73,
+          "pytest": 13.31
+        }
+      }
+    },
+    "28.7": {
+      "run_id": "d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-28-7/d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 269745,
+        "seconds": {
+          "verifier": 13.81,
+          "probe": 9.74,
+          "pytest": 1.79
+        }
+      }
+    },
+    "28.6": {
+      "run_id": "d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-28-6/d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 257719,
+        "seconds": {
+          "verifier": 13.9,
+          "probe": 9.67,
+          "pytest": 2.48
+        }
+      }
+    },
+    "28.5": {
+      "run_id": "d1pf-28.5-20261006T225734Z-redraw-9b179a198784446d82bfe35691b47eb7",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-28-5/d1pf-28.5-20261006T225734Z-redraw-9b179a198784446d82bfe35691b47eb7.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 419506,
+        "seconds": {
+          "verifier": 15.86,
+          "probe": 9.95,
+          "pytest": 14.14
+        }
+      }
+    },
+    "28.8": {
+      "run_id": "d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192",
+      "status": "PASS",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-28-8/d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "PASS",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 248990,
+        "seconds": {
+          "verifier": 14.41,
+          "probe": 9.33,
+          "pytest": 1.37
+        }
+      }
+    }
+  },
+  "count": 33,
+  "commit": "6fc9f194282f1fcb7a59105a435a8a59dcaeb3cd",
+  "created_at": "2026-10-06T22:58:18.867206+00:00",
+  "prior_failed_attempts": [
+    {
+      "run_id": "d1pf-26.11-20261006T225423Z-redraw-34861225dfdf4343af5c9eba270abed2",
+      "status": "FAIL",
+      "decision": "redrawn",
+      "record": "docs/validation/p8-2026-10-07/section-26-11/d1pf-26.11-20261006T225423Z-redraw-34861225dfdf4343af5c9eba270abed2.json",
+      "reasons": [
+        "Final P8 source revision; existing accepted section coverage unchanged"
+      ],
+      "checks": {
+        "browser": "FAIL",
+        "runtime_probe": "PASS",
+        "pytest": "PASS"
+      },
+      "storage": "PASS",
+      "observations": {
+        "stored_new_bytes": 0,
+        "seconds": {
+          "verifier": 1.08,
+          "probe": 9.45,
+          "pytest": 2.08
+        }
+      }
+    }
+  ]
+}

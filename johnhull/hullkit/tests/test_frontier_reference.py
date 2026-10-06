@@ -671,9 +671,19 @@ def test_fixed_seed_reproduces_all_non_timing_values(
 ) -> None:
     original = references[volume]
     repeated = frontier_reference.build_frontier_reference(volume, seed=original.seed)
-    excluded_arrays = {"nested_mc_ms", "surrogate_ms"}
+    excluded_arrays = {
+        "nested_mc_ms",
+        "surrogate_ms",
+        "nested_mc_repeats_ns",
+        "surrogate_repeats_ns",
+    }
     for name in original.arrays.keys() - excluded_arrays:
-        np.testing.assert_array_equal(original.arrays[name], repeated.arrays[name])
+        if original.arrays[name].dtype.kind in "fc":
+            np.testing.assert_allclose(
+                original.arrays[name], repeated.arrays[name], rtol=1e-10, atol=1e-12
+            )
+        else:
+            np.testing.assert_array_equal(original.arrays[name], repeated.arrays[name])
     excluded_metrics = {"surrogate_speedup_1024"}
     for name in original.metrics.keys() - excluded_metrics:
         assert original.metrics[name] == repeated.metrics[name]

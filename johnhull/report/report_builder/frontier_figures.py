@@ -10,6 +10,8 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+from .theme import COLORWAY
+
 VOLUMES = Path(__file__).resolve().parents[2] / "volumes"
 
 
@@ -223,8 +225,71 @@ def _vol20_pnl() -> go.Figure:
 
 
 def _vol20_economics() -> go.Figure:
-    data = _vol20_view()
-    return _bar(data, "hedge_names", ("cvar95", "turnover"), "CVaR and turnover")
+    data = _load("20_surface_dynamics", "forecast_paths.npz")
+    meta = _metrics("20_surface_dynamics")["forecast_economic_evaluation"]
+    labels = [
+        "Persistence",
+        "EWMA",
+        "GARCH",
+        "Log-HAR",
+        "Linear",
+        "PCA ridge",
+        "HARNet",
+        "TCN",
+        "LSTM",
+        "Transformer",
+    ]
+    fig = go.Figure()
+    horizons = [1, 5, 21]
+    for horizon in horizons:
+        selected = data["economic_horizon"] == horizon
+        for index, strategy in enumerate(meta["strategies"]):
+            pnl = data["economic_pnl"][selected, :, index].transpose(1, 0, 2).reshape(10, -1)
+            turnover = data["economic_turnover"][selected, :, index].mean(axis=(0, 2))
+            losses = -pnl
+            quantile = np.quantile(losses, 0.95, axis=1)
+            cvar = np.array(
+                [row[row >= cut].mean() for row, cut in zip(losses, quantile, strict=True)]
+            )
+            fig.add_trace(
+                go.Bar(
+                    x=labels,
+                    y=np.sqrt(np.mean(pnl**2, axis=1)),
+                    name=strategy,
+                    marker_color=COLORWAY[index],
+                    visible=horizon == 1,
+                    customdata=np.column_stack([cvar, turnover]),
+                    hovertemplate="%{x}<br>RMSE %{y:.4f}<br>CVaR95 %{customdata[0]:.4f}"
+                    "<br>Turnover %{customdata[1]:.2f}<extra>%{fullData.name}</extra>",
+                )
+            )
+    fig.update_layout(
+        title="Forecast-driven hedging — 1 day",
+        height=500,
+        margin=dict(l=60, r=24, t=100, b=100),
+        xaxis_tickangle=-45,
+        barmode="group",
+        yaxis_title="Hedging RMSE (synthetic USD)",
+        updatemenus=[
+            {
+                "buttons": [
+                    {
+                        "label": f"{horizon} day",
+                        "method": "update",
+                        "args": [
+                            {"visible": [j // 4 == i for j in range(12)]},
+                            {"title.text": f"Forecast-driven hedging — {horizon} day"},
+                        ],
+                    }
+                    for i, horizon in enumerate(horizons)
+                ],
+                "x": 1.0,
+                "xanchor": "right",
+                "y": 1.16,
+            }
+        ],
+    )
+    return fig
 
 
 def _vol21_spx() -> go.Figure:

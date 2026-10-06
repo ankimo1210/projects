@@ -34,7 +34,7 @@
       {
         "criterion": "< raw-price MAE",
         "name": "residual_baseline",
-        "observed": 0.0006117290429284944,
+        "observed": 0.0006116779078851522,
         "passed": true
       },
       {
@@ -98,6 +98,143 @@
           29
         ],
         "unit": "absolute d2(C/K)/d(S/K)2 error"
+      },
+      "hard_derived_puts": {
+        "dtype": "float64",
+        "shape": [
+          61
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_maturity_grid": {
+        "dtype": "float64",
+        "shape": [
+          50
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_maturity_inputs": {
+        "dtype": "float64",
+        "shape": [
+          50,
+          5
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_maturity_prices": {
+        "dtype": "float64",
+        "shape": [
+          50
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_n_checked": {
+        "dtype": "int64",
+        "shape": [
+          8
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_spot_delta": {
+        "dtype": "float64",
+        "shape": [
+          81
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_spot_gamma": {
+        "dtype": "float64",
+        "shape": [
+          81
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_spot_grid": {
+        "dtype": "float64",
+        "shape": [
+          81
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_spot_inputs": {
+        "dtype": "float64",
+        "shape": [
+          81,
+          5
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_spot_prices": {
+        "dtype": "float64",
+        "shape": [
+          81
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_strike_grid": {
+        "dtype": "float64",
+        "shape": [
+          61
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_strike_inputs": {
+        "dtype": "float64",
+        "shape": [
+          61,
+          5
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_strike_prices": {
+        "dtype": "float64",
+        "shape": [
+          61
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "hard_tolerance": {
+        "dtype": "float64",
+        "shape": [
+          8
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "heston_raw_prediction": {
+        "dtype": "float64",
+        "shape": [
+          256
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "heston_residual_prediction": {
+        "dtype": "float64",
+        "shape": [
+          256
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "heston_test_inputs": {
+        "dtype": "float64",
+        "shape": [
+          256,
+          5
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "heston_test_row_key": {
+        "dtype": "uint64",
+        "shape": [
+          256
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
+      },
+      "heston_test_teacher": {
+        "dtype": "float64",
+        "shape": [
+          256
+        ],
+        "unit": "normalized pricing probe/held-out evidence"
       },
       "maturity": {
         "dtype": "float64",
@@ -255,7 +392,7 @@
     }
   },
   "companions": {
-    "pricing_slices.npz": "578084fb2a8b89cf3bc30bb6f5f32af61a04b833357ee149609d4ab9e1d1c720"
+    "pricing_slices.npz": "af780a9a7d6ae7b74e1642cc9220ed2b4cea2ffd3707948c4c0864614605ea30"
   },
   "data_policy": "synthetic-offline",
   "engine_evidence": {
@@ -287,8 +424,8 @@
     "delta_mae": 0.0017494819891811248,
     "dml_improved_a_greek_without_price_degradation": true,
     "hard_violation_rate": 0.0,
-    "heston_bsm_residual_mae": 0.0006117290429284944,
-    "heston_raw_price_mae": 0.012620526620790065,
+    "heston_bsm_residual_mae": 0.0006116779078851522,
+    "heston_raw_price_mae": 0.012620475485746721,
     "ood_delta_mae": 0.0021547001010709587,
     "ood_price_mae_normalized": 1.6064324659893392,
     "ood_price_worst_absolute_error": 261.85164803734585,

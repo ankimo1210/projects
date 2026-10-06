@@ -73,7 +73,7 @@ VOLUME_META = {
     20: {
         "title": "Surface Dynamics, Forecasting & Hedging Decisions",
         "question": "予測誤差の小ささは、leakage-freeな下流ヘッジ改善につながるか。",
-        "focus": "purged walk-forwardとtrain-only scaler/PCAを固定し、persistence・EWMA・HAR ridge・PCA ridge challengerを比較する。最後にsurrogate→calibration→forecast→hedgeをcommon pathsで評価し、Phase-1 policy未提供時は未評価と明記する。",
+        "focus": "purged walk-forwardとtrain-only scaler/PCAを固定し、10モデル×1/5/21日を比較。log回帰は訓練残差のDuan補正で平均へ戻す。各fold最初のheld-out起点の予測volを4戦略へ渡し、同じ経路・同じoracle公正premiumで評価する。実現volは評価用経路にだけ使う条件付き合成診断で、市場予測力を示さない。Phase-1 policy未提供時は未評価。",
         "sections": [
             (
                 "actual_variance",
@@ -82,7 +82,7 @@ VOLUME_META = {
             ),
             ("qlike", "forecast metricとblock-bootstrap CI", "bar:model_names:rmse"),
             ("hedge_pnl", "common-path hedge P&L", "histrows:hedge_names"),
-            ("cvar95", "CVaRとturnover", "bar:hedge_names:turnover"),
+            ("economic_pnl", "モデル別ヘッジRMSE（1/5/21日）", "economics"),
         ],
         "citations": "Corsi (2009), HAR-RV; Patton (2011), volatility forecast comparison.",
         "gate": "G3",
@@ -137,7 +137,7 @@ VOLUME_META = {
     24: {
         "title": "Crypto Perpetuals, Liquidation & AMMs",
         "question": "funding、margin waterfall、oracle、AMM LVRを同じcash-flow ledgerで追えるか。",
-        "focus": "linear/inverse/quanto、index/mark/last、funding cap、marginとbankruptcy、insurance→ADL→socialized lossを一つのledgerで保存する。CPMM/concentrated liquidityのLVRとfee compensationを別指標にする。cascadeはsynthetic fixtureである。",
+        "focus": "linear/inverse/quanto、index/mark/last、funding cap、marginとbankruptcy、insurance→ADL→socialized lossを一つのledgerで保存する。CPMM/concentrated liquidityのLVRとfee compensationを別指標にする。固定/dynamic feeは同じno-fee裁定終点を使うためgross LVR不変は構成上の恒等式。fee-aware在庫経路の実験ではない。cascadeはsynthetic fixtureである。",
         "sections": [
             ("index_price", "index/mark/last price states", "line3:step:mark_price:last_price"),
             ("insurance_fund", "insurance fund and ADL waterfall", "line2:step:adl_notional"),
@@ -461,6 +461,21 @@ def _plot_code(key: str, title: str, kind: str) -> str:
             f'ax.plot(data["{x}"], data["{key}"], label="{key}")\n'
             f'ax.plot(data["{x}"], data["{other1}"], label="{other1}")\n'
             f'ax.plot(data["{x}"], data["{other2}"], label="{other2}")\nax.legend()'
+        )
+    elif mode == "economics":
+        body = (
+            "labels = ['Persistence','EWMA','GARCH','Log-HAR','Linear','PCA ridge','HARNet','TCN','LSTM','Transformer']\n"
+            "ax.remove()\nfig, axes = plt.subplots(3, 1, figsize=(10, 9))\n"
+            "for ax, horizon in zip(axes, [1,5,21], strict=True):\n"
+            "    mask = data['economic_horizon'] == horizon\n"
+            "    for i, strategy in enumerate(manifest['metrics']['forecast_economic_evaluation']['strategies']):\n"
+            "        rmse = np.sqrt(np.mean(data['economic_pnl'][mask,:,i]**2, axis=(0,2)))\n"
+            "        ax.plot(labels, rmse, marker='o', label=strategy)\n"
+            "    ax.set_title(f'{horizon} trading days — shared paths and oracle premium')\n"
+            "    ax.set_ylabel('RMSE (synthetic USD)')\n"
+            "    ax.legend(ncol=4)\n"
+            "    ax.grid(alpha=.2)\n"
+            "fig.tight_layout()"
         )
     elif mode == "bar":
         labels = parts[1]

@@ -52,7 +52,7 @@ def bucket_metrics(inputs, prediction, target):
     }
 
 
-def _hard_report(model, device):
+def _hard_probe(model, device):
     try:
         from hullkit.surrogate_validation import (
             check_calendar_monotonicity,
@@ -136,7 +136,7 @@ def _hard_report(model, device):
             tolerance=2e-2,
         ),
     )
-    return validation_report(
+    report = validation_report(
         *checks,
         applicable_checks=(
             "price_bounds",
@@ -154,6 +154,28 @@ def _hard_report(model, device):
             "put_call_parity_is_identity_by_construction": True,
         },
     ).to_dict()
+
+    return report, {
+        "hard_strike_grid": strikes,
+        "hard_strike_inputs": strike_inputs,
+        "hard_strike_prices": strike_prices,
+        "hard_derived_puts": derived_puts,
+        "hard_maturity_grid": maturities,
+        "hard_maturity_inputs": maturity_inputs,
+        "hard_maturity_prices": maturity_prices,
+        "hard_spot_grid": spots,
+        "hard_spot_inputs": spot_inputs,
+        "hard_spot_prices": spot_prices,
+        "hard_spot_delta": auto["delta"].cpu().numpy(),
+        "hard_spot_gamma": auto["gamma"].cpu().numpy(),
+        "hard_n_checked": np.array([r["n_checked"] for r in report["checks"]]),
+        "hard_tolerance": np.array([r["tolerance"] for r in report["checks"]]),
+    }
+
+
+def _hard_report(model, device):
+    """Existing aggregate hard report, computed from the same saved probe arrays."""
+    return _hard_probe(model, device)[0]
 
 
 def evaluate_pricing_run(
