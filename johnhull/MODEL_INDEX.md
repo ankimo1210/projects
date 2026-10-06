@@ -311,3 +311,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._employee_options` | Private Ch16 equity awards, expected-life approximation and employee-option lattice | Printed source values and independent accounting/density/path enumeration; test_employee_options_*.py |
 | `hullkit._index_currency` | Private Ch17 index insurance, currency cashflows and carry pricing identities | Printed source values and independent accounting/integration/tree/PDE; test_index_currency_*.py |
 | `hullkit._futures_options` | Private Ch18 futures option cashflows, Black pricing, replication and futures-style quotes | Printed values and independent cash/integration/tree/PDE; test_futures_options_*.py |
+| `hullkit._greeks_hedging` | Private Ch19 Greek units, hedge cash replay, scenarios and portfolio insurance | Printed source values and independent density/stopping/hedge-gains/PDE checks; test_greeks_hedging_*.py |
