@@ -318,3 +318,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._numerical_fd` | Private Ch21 uniform-S/log-S finite difference grids, source-table instability replay, CN/hopscotch and grid Greeks/control variate | Printed Tables21.4/5; independent dense derivatives, payoff integration, trinomial/CRR and analytic Greeks; test_numerical_fd_*.py |
 | `hullkit._market_risk` | Private Ch22 loss risk definitions, historical scenarios, nonlinear approximations and factor exposures | Textbook values and independent integration/cashflow/simulation references; test_market_risk_*.py |
 | `hullkit._volatility_estimation` | Ch23 return/variance・ARCH・EWMA/GARCH推定/予測/共分散 | P5_STATUSの本文数値/独立検証。日次/年率とP予測/Q価格を区別 |
+| `hullkit._credit_risk` | Ch24 P/Q PD・bond信用curve・Merton・derivative exposure・copula/VaR | P5_STATUSの本文数値/独立ODE・求積・MC。各契約の単位とdefault timingを明示 |
