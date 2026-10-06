@@ -137,3 +137,17 @@ def futures_pde_residual(forward, rate, sigma, value, f_time, gamma):
     from ._bsm_foundations import bsm_pde_residual
 
     return bsm_pde_residual(forward, rate, sigma, value, f_time, 0, gamma)
+
+
+def black_from_discount(forward, strike, discount_factor, sigma, maturity):
+    """Forward-price Black with an explicit maturity-bond discount.
+
+    With stochastic rates this requires lognormal forward under the
+    maturity-bond measure; replacing it with futures is not justified here.
+    """
+    if not math.isfinite(discount_factor) or discount_factor <= 0 or (maturity == 0 and not math.isclose(discount_factor, 1, abs_tol=1e-12, rel_tol=1e-12)):
+        raise ValueError("positive maturity discount, equal to one at expiry, required")
+    result = black_details(forward, strike, 0, sigma, maturity)
+    return {**result, "call": result["call"]*discount_factor,
+            "put": result["put"]*discount_factor, "discount": discount_factor,
+            "prepaid_spot": forward*discount_factor}
