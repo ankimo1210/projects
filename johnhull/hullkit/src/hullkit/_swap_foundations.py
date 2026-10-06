@@ -203,3 +203,74 @@ def swap_roll_schedule(notional, pay_times, curve, *, fixed_rate=None, receive="
     initial = float(pv.sum())
     rolls = np.r_[initial, (initial - np.cumsum(pv)) / df]
     return {"fixed_rate": fixed, "net_cash": cash, "initial_value": initial, "roll_values": rolls}
+
+
+def currency_swap_cash(
+    domestic_notional, foreign_notional, domestic_rate, foreign_rate, accruals, *, receive="foreign"
+):
+    """Two-currency fixed swap including inception/final principal, retaining currencies."""
+    tau = np.atleast_1d(np.asarray(accruals, dtype=float))
+    if (
+        not np.isfinite([domestic_notional, foreign_notional, domestic_rate, foreign_rate]).all()
+        or min(domestic_notional, foreign_notional) < 0
+        or not len(tau)
+        or not np.isfinite(tau).all()
+        or np.any(tau <= 0)
+        or receive not in ("domestic", "foreign")
+    ):
+        raise ValueError("valid notionals, accruals and receive currency required")
+    sign = 1 if receive == "foreign" else -1
+    domestic = np.r_[sign * domestic_notional, -sign * domestic_notional * domestic_rate * tau]
+    foreign = np.r_[-sign * foreign_notional, sign * foreign_notional * foreign_rate * tau]
+    domestic[-1] -= sign * domestic_notional
+    foreign[-1] += sign * foreign_notional
+    return {"domestic": domestic, "foreign": foreign}
+
+
+def currency_comparative_cash(
+    a_domestic,
+    b_domestic,
+    a_foreign,
+    b_foreign,
+    a_effective_foreign,
+    b_effective_domestic,
+    domestic_notional,
+    foreign_notional,
+):
+    """Illustrative borrowing gains and unhedged dealer cash in each currency.
+
+    Dealer domestic positive/foreign negative interest cannot be subtracted as a
+    guaranteed cash profit without a supplied FX-forward curve and date schedule.
+    """
+    if (
+        not np.isfinite(
+            [
+                a_domestic,
+                b_domestic,
+                a_foreign,
+                b_foreign,
+                a_effective_foreign,
+                b_effective_domestic,
+                domestic_notional,
+                foreign_notional,
+            ]
+        ).all()
+        or min(domestic_notional, foreign_notional) < 0
+    ):
+        raise ValueError("finite rates and nonnegative notionals required")
+    d = b_effective_domestic - a_domestic
+    f = a_effective_foreign - b_foreign
+    gd = b_domestic - a_domestic
+    gf = b_foreign - a_foreign
+    return {
+        "domestic_gap": gd,
+        "foreign_gap": gf,
+        "joint_gain": gd - gf,
+        "a_gain": a_foreign - a_effective_foreign,
+        "b_gain": b_domestic - b_effective_domestic,
+        "dealer_domestic_rate": d,
+        "dealer_foreign_rate": f,
+        "naive_rate_difference": d + f,
+        "dealer_domestic_cash": domestic_notional * d,
+        "dealer_foreign_cash": foreign_notional * f,
+    }

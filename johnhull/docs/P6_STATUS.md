@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算46/54。次は§7.8（通貨swap cash）。Ch1→9を順に継続する。
+- 現在：計算47/54。次は§7.9（通貨swap valuation）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -59,6 +59,7 @@
 | §7.5 | `_swap_foundations.py` | a1.2/b.7/total.5%、direct AAA−.35/BBB4.95/各.25、dealer AAA−.33/BBB4.97/bank.04/各.23、悪化BBB5.97%。独立当事者CF保存 | 計算完了。長期固定/短期信用条件が異なり無リスク裁定とはしない。説明・受入保留 | 10 passed・ruff check/format PASS |
 | §7.6 | `_swap_foundations.py` | continuous2.50/3.36/3.68%、semiannual2.516/3.388/3.714%、Table固定/変動/net/DF/PV各3＋.292M。独立floating/fixed bond | 計算完了。単curveOIS、LIBOR初回presetと混同しない。丸め前value.291845813M。説明・受入保留 | 12 passed・ruff check/format PASS |
 | §7.7 | `_swap_foundations.py` | 印刷数値なし。10交換/4符号case、par合計0、独立残存PV−終了済CFとroll DF | 計算完了。initial curveに沿うdeterministic rollで確率的期待を主張しない。説明・受入保留 | 16 passed・ruff check/format PASS |
+| §7.8 | `_swap_foundations.py` | USD15/−.45×4/−15.45、GBP−10/.4×4/10.4M、spread2/.4/joint1.6/各.7/dealer1.3/−1.1/差.2%、USD195000/AUD−220000/残余1.1×2。独立通貨CF | 計算完了。dealer差.2%は2通貨を無視した説明、forward curveなくhedged利益PVは未特定。説明・受入保留 | 18 passed・ruff check/format PASS |
 
 ## 残りと検証
 
