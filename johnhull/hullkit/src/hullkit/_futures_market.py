@@ -94,3 +94,44 @@ def recognized_futures_profit(
         recognized[:] = 0
         recognized[-1] = cash.sum()
     return {"cash_profit": cash, "recognized": recognized}
+
+
+def settlement_timing(quotes, *, units, contract_size, deposit_growth=None):
+    """Aggregate daily futures P&L and its reinvested terminal value versus a forward.
+
+    deposit_growth[i] is positive cash-account growth from quote i to i+1.
+    Daily cash at i+1 earns only later growth. Paths beyond printed endpoints
+    are caller-supplied illustrative data, not a futures convexity adjustment.
+    """
+    prices = np.asarray(quotes, dtype=float)
+    if (
+        prices.ndim != 1
+        or len(prices) < 2
+        or not np.isfinite(prices).all()
+        or not np.isfinite([units, contract_size]).all()
+        or units < 0
+        or contract_size <= 0
+    ):
+        raise ValueError("price path, nonnegative units and positive contract size required")
+    growth = (
+        np.ones(len(prices) - 1)
+        if deposit_growth is None
+        else np.asarray(deposit_growth, dtype=float)
+    )
+    if growth.shape != (len(prices) - 1,) or not np.isfinite(growth).all() or np.any(growth <= 0):
+        raise ValueError("one positive cash growth factor per interval required")
+    cash = units * np.diff(prices)
+    terminal = float(sum(value * np.prod(growth[i + 1 :]) for i, value in enumerate(cash)))
+    return {
+        "contracts": units / contract_size,
+        "daily_profit": cash,
+        "forward_terminal": units * (prices[-1] - prices[0]),
+        "futures_terminal": terminal,
+    }
+
+
+def inverse_quote(quote):
+    """Reverse a positive FX quote, exchanging its cash and underlying currency units."""
+    if not np.isfinite(quote) or quote <= 0:
+        raise ValueError("positive quote required")
+    return 1 / quote
