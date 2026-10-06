@@ -288,3 +288,64 @@ def dividend_control_variate(
         "european_reference": reference,
         "corrected": american["price"] + reference - european["price"],
     }
+
+
+def equal_probability_lattice(
+    spot, strike, rate, sigma, maturity, steps, *, yield_rate=0, kind="call", american=False
+):
+    """Hull21.4 p=1/2 matches log mean/variance exactly, stock growth approximately."""
+    steps = _tree_inputs(spot, strike, rate, sigma, maturity, steps, yield_rate, kind)
+    dt = maturity / steps
+    drift = (rate - yield_rate - sigma**2 / 2) * dt
+    width = sigma * math.sqrt(dt)
+    up, down = math.exp(drift + width), math.exp(drift - width)
+    stock = [
+        spot * np.exp(i * drift + (i - 2 * np.arange(i + 1)) * width) for i in range(steps + 1)
+    ]
+    result = _backward(stock, strike, math.exp(-rate * dt), 0.5, kind, american)
+    return {**result, "up": up, "down": down, "probability": 0.5, "dt": dt}
+
+
+def trinomial_lattice(
+    spot, strike, rate, sigma, maturity, steps, *, yield_rate=0, kind="call", american=False
+):
+    """Hull21.4 log-grid trinomial: p_mid=2/3 and dx=sigma*sqrt(3dt).
+
+    Log mean and raw second moment match; the log variance differs by the
+    squared mean at finite dt. Arithmetic growth is also an approximation.
+    Negative probabilities raise rather than being clipped or normalized.
+    """
+    steps = _tree_inputs(spot, strike, rate, sigma, maturity, steps, yield_rate, kind)
+    dt = maturity / steps
+    dx = sigma * math.sqrt(3 * dt)
+    tilt = (rate - yield_rate - sigma**2 / 2) * math.sqrt(dt / (12 * sigma**2))
+    pu, pm, pd = 1 / 6 + tilt, 2 / 3, 1 / 6 - tilt
+    if min(pu, pm, pd) < 0 or max(pu, pm, pd) > 1:
+        raise ValueError("negative trinomial probability; refine the time grid")
+    stock = [spot * np.exp(dx * (i - np.arange(2 * i + 1))) for i in range(steps + 1)]
+    sign = 1 if kind == "call" else -1
+    option, continuation, exercise = (
+        [None] * (steps + 1),
+        [None] * (steps + 1),
+        [None] * (steps + 1),
+    )
+    option[-1] = np.maximum(sign * (stock[-1] - strike), 0)
+    continuation[-1] = option[-1].copy()
+    exercise[-1] = np.zeros(2 * steps + 1, dtype=bool)
+    for i in range(steps - 1, -1, -1):
+        continuation[i] = math.exp(-rate * dt) * (
+            pu * option[i + 1][:-2] + pm * option[i + 1][1:-1] + pd * option[i + 1][2:]
+        )
+        intrinsic = np.maximum(sign * (stock[i] - strike), 0)
+        exercise[i] = intrinsic > continuation[i] if american else np.zeros(2 * i + 1, dtype=bool)
+        option[i] = np.maximum(intrinsic, continuation[i]) if american else continuation[i]
+    return {
+        "price": float(option[0][0]),
+        "stock": stock,
+        "option": option,
+        "continuation": continuation,
+        "exercise": exercise,
+        "probabilities": (pu, pm, pd),
+        "dx": dx,
+        "dt": dt,
+    }
