@@ -1,0 +1,840 @@
+{
+  "status": "PASS",
+  "chapter": 1,
+  "source_sha256": {
+    "docs/acceptance/chapters/ch01.json": "f6fc789f023475acf8bc84f51f2b7a8ceb286e8b2b53952e33ebd46298ddddf5",
+    "hullkit/src/hullkit/_chapter01_lesson.py": "02e2224e3f437ab742758f457305e1789a362a9d5fc0d145508bb6039df5e4e6",
+    "hullkit/src/hullkit/_intro_contracts.py": "9325271320661b633109c62974ab48f05eebc3dbc4468dcb644a27c117269673",
+    "volumes/12_qualitative_summary/build_summary_notebook.py": "1e904558fecb3f3af1258975fb0069d80f47c7fdcad38805040dabc5b78ac2f1",
+    "volumes/12_qualitative_summary/qualitative_summary.ipynb": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2",
+    "scripts/build_chapter01_portal.py": "566953564e50844b3c7caa4d59d8a7aeaec79a140f6a406ba437b06ef9d0c0f7",
+    "scripts/verify_chapter01_browser.cjs": "8f12ab2a0f508f8775c2b5497384feb655e59d4cedeb05e7b108e371b1432844",
+    "docs/validation/chapter-01/reference.json": "c065a9484479731aaa2f4d0c2e8d7bab6541560a19bb10c6a8787271c8188326"
+  },
+  "artifact_sha256": {
+    "book/_build/html/notebooks/12_qualitative_summary.html": "a89e4ea68c41327fca1b008adb1edbfceb108c684dcd87f60f27b18a23d0bc4e",
+    "report/site/chapters/ch01.html": "3ff9c252f9553c96b64653173916c087f8d499c82e6e3efab8b485ebfdb6f0d5"
+  },
+  "sections": {
+    "1.1": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      }
+    ],
+    "1.2": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      }
+    ],
+    "1.3": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 9,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_forward"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 9,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_forward"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 9,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_forward"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 9,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_forward"
+        ],
+        "layout_checked": true
+      }
+    ],
+    "1.4": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      }
+    ],
+    "1.5": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 6,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_options"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 6,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_options"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 6,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_options"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 6,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_options"
+        ],
+        "layout_checked": true
+      }
+    ],
+    "1.6": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      }
+    ],
+    "1.7": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 8,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_protection"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 8,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_protection"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 8,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_protection"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 8,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_protection"
+        ],
+        "layout_checked": true
+      }
+    ],
+    "1.8": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 13,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_speculation"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 13,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_speculation"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 13,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_speculation"
+        ],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 13,
+        "figure_values_checked": true,
+        "checked_figures": [
+          "intro_speculation"
+        ],
+        "layout_checked": true
+      }
+    ],
+    "1.9": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 1,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 1,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 1,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": true,
+        "printed_value_count": 1,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      }
+    ],
+    "1.10": [
+      {
+        "surface": "book",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "book",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1440,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      },
+      {
+        "surface": "portal",
+        "width": 1000,
+        "explanation_checked": true,
+        "printed_values_checked": false,
+        "printed_value_count": 0,
+        "figure_values_checked": false,
+        "checked_figures": [],
+        "layout_checked": true
+      }
+    ]
+  },
+  "captures": [
+    {
+      "path": "docs/validation/chapter-01/book-section-1-1-1440.png",
+      "section": "1.1",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "f3a0e6dfab0dc52781810fce648262a2acf227ed6848a2bb9466be2047b6884f"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-2-1440.png",
+      "section": "1.2",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "2da5aac211f0ea975dea0d16414489f2d5567592c38ccd5fcebbcd56d8f2f692"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-3-1440.png",
+      "section": "1.3",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1932,
+      "sha256": "ce256657cee4edd6f2b7b7f44d16ec3ff5b01815e554091f8f4a5c1247d53edb"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-4-1440.png",
+      "section": "1.4",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "1f562cec27c0416ca8add6e4470ac403cf2e5665f24f0f6d49271e3d6a5864f8"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-5-1440.png",
+      "section": "1.5",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1548,
+      "sha256": "11b17b96a33c05859f32fde5c439642a5bd45b13b446ef87138630baa859e3f8"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-6-1440.png",
+      "section": "1.6",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "c621337dd14134c2a2a4c73642a4a3f547c37275ea829b410234b731e0470f8e"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-7-1440.png",
+      "section": "1.7",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1538,
+      "sha256": "840ba86931fb3b2f22f99bcb797278453b20c299936ef265b10661bbba403421"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-8-1440.png",
+      "section": "1.8",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1799,
+      "sha256": "cfc0da2a878391195d9556a509d0733dfea51577e44d801a578c02ad8368b078"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-9-1440.png",
+      "section": "1.9",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "faca9feab74c63ca30692b7c57a4fcf0f7ae7fc33dadac90aa366cf50890bd83"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-10-1440.png",
+      "section": "1.10",
+      "surface": "book",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "e713a32bba473efdbb85e5e5873e7ea0c878c30b70a43cddc23dc5708f5c0e03"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-1-1000.png",
+      "section": "1.1",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "c811f8c892cb50614e6cdd625ef710eb055ae6a191b16b3baeff578d526873ab"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-2-1000.png",
+      "section": "1.2",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "17bad5495af363eb1d46a6ee6fe29a06260eb8e049d6a27907c29d048214e14d"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-3-1000.png",
+      "section": "1.3",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1958,
+      "sha256": "68e43c7bce3b8ad4781a8589abd6090e7d891f2ae2a4010c2643a00b1c95bad4"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-4-1000.png",
+      "section": "1.4",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "22850369ce5f30664c73a37472033692308c0bb9121c4b9c149df39e5ae5bf3f"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-5-1000.png",
+      "section": "1.5",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1575,
+      "sha256": "e6bbabbc92a1bb78f526986cd99c999a1da2c598e85222f4bfe753a85f6a27d6"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-6-1000.png",
+      "section": "1.6",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "59b13af8bbc33cba6769a6d0f759b079fd1475db6f7511fef31707facd9c78d6"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-7-1000.png",
+      "section": "1.7",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1538,
+      "sha256": "86f2cdb7ad799ba763174d32db7a445190fe134a009cfce0121cfdb90cd389d4"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-8-1000.png",
+      "section": "1.8",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1799,
+      "sha256": "0e97aa67dd0a8815fbfcbc08f62cf8c5344eceb398afa0557aa64369256ff674"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-9-1000.png",
+      "section": "1.9",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "1af773c79534d35b42a36e5536095d5f738f257298acb979d7929d7d4ffa76a2"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-10-1000.png",
+      "section": "1.10",
+      "surface": "book",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "5c7e8b35997cf01454da7e257a7b0cd9d6e4c8d9cae3ae2b1931af53e5882c9a"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-1-1440.png",
+      "section": "1.1",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "f8d50df156feac459a56309b098105ceffc3c5e71ead254d2e73c3fab5292539"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-2-1440.png",
+      "section": "1.2",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "5bb88899b1fe3a2590192f90844d198388f023eb0fa8e88aea7de7ca20c322b7"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-3-1440.png",
+      "section": "1.3",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1823,
+      "sha256": "305384bddaaf79a52f95c108ad803a0568df3a1fed973b663de3dc67f55d61b5"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-4-1440.png",
+      "section": "1.4",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "2c02445445ac642c63a2a83e25f00cf61ac3ef0b96f179aba63eb6674287e712"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-5-1440.png",
+      "section": "1.5",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1469,
+      "sha256": "1e421c84ed2438e6768ee26e292383cc5fd77d87fea482f7d1ea5067395831c8"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-6-1440.png",
+      "section": "1.6",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "5c46ea5df3e8d58e1f940ee99d37f8cb79f98fee3da99c3a8dff100ad4a6d608"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-7-1440.png",
+      "section": "1.7",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1474,
+      "sha256": "5c97e950d91ce0cf5d8eb57ac88ccf5d45bd94fcced73d7a2c80cabe84b17948"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-8-1440.png",
+      "section": "1.8",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1726,
+      "sha256": "1a1e7a9992b6f55a9f85a02c6f27d7b9cc113d2d1e48ba5a1ff619beeddc1923"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-9-1440.png",
+      "section": "1.9",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "13aba8a7221d35aecb8fc64842efc9cf5c97db5f715cd2650ccd8f4d21bbf897"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-10-1440.png",
+      "section": "1.10",
+      "surface": "portal",
+      "width": 1440,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "10b4d173841aebeb42de58bd2ddacb8394e5a3035ee99de35110333db0e5135a"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-1-1000.png",
+      "section": "1.1",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "32e6c8277f0f42441d12486190517620a936352a6a7e04dac5aa9989a6914715"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-2-1000.png",
+      "section": "1.2",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "fb012979221935fda2e56e5e6d10458a5c39dbe03d47307db24c5b76879c238d"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-3-1000.png",
+      "section": "1.3",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1853,
+      "sha256": "150a671726e372be121ea027f894eb1a2cba8be4b4159735eedb0ea86e44ae10"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-4-1000.png",
+      "section": "1.4",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "942a83f86ff45548fc258e8461686ec2de5929164b7d4b23ccafb0b72e450378"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-5-1000.png",
+      "section": "1.5",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1530,
+      "sha256": "80b2511dd57daba7419ee362921663c44eb1058282dcc543a3f3ebf89ffdf2cd"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-6-1000.png",
+      "section": "1.6",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "624fbe1077c4b1b351db693bbbd827bf1b27d7c37f95701ce33b9c2ca415ae2c"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-7-1000.png",
+      "section": "1.7",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1505,
+      "sha256": "b88837bbd1907f3b98086022f8029b5ee439f18fc11fdb88cdb0404d49149495"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-8-1000.png",
+      "section": "1.8",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1756,
+      "sha256": "97520101d7dee9d8912d95badd9f76f7421eeee346307c2c5bbfd44a8ed22af6"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-9-1000.png",
+      "section": "1.9",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "92a002ade1386c4c56d40d2573b299b2ce531ff23d056b7b0215f893bfb25d1b"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-10-1000.png",
+      "section": "1.10",
+      "surface": "portal",
+      "width": 1000,
+      "checked_height": 1050,
+      "capture_height": 1050,
+      "sha256": "b48c50d6cc7eefb6609ef97425a20c5cdf8bfa393c005f596a5aa970fd555ae6"
+    }
+  ],
+  "browser_version": "145.0.7632.6",
+  "book_link": "file:///home/kazumasa/worktrees/johnhull-acceptance/johnhull/report/site/chapters/ch01.html",
+  "book_mutation_rejected": true,
+  "portal_link": "file:///home/kazumasa/worktrees/johnhull-acceptance/johnhull/book/_build/html/notebooks/12_qualitative_summary.html",
+  "portal_mutation_rejected": true,
+  "state_checks": 40
+}
