@@ -30,8 +30,8 @@ def test_example_19_8_currency_futures_contract_units_and_source_rounding():
     assert result["futures_units"] == pytest.approx(-468421.81, abs=0.01)
     assert result["contracts"] == pytest.approx(-7.494749, abs=1e-6)
     assert result["rounded_contracts"] == -7
-    # Printed 468442 follows a four-decimal rounded exponential factor,
-    # rather than the full-precision exponential above.
+    # Printed 468442 can be recovered using a four-decimal exponential
+    # factor; the source does not specify its intermediate precision.
     assert -458000 * round(math.exp(-(0.04 - 0.07) * 0.75), 4) == pytest.approx(-468442, abs=0.5)
 
 
