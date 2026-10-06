@@ -204,3 +204,32 @@ def forward_rate_differential(front_quote, back_quote, maturity_gap):
     ):
         raise ValueError("positive quotes and maturity gap required")
     return np.log(back_quote / front_quote) / maturity_gap
+
+
+def storage_forward(
+    spot, storage_dates, storage_cash, storage_zeros, rate, maturity, *, consumption=False
+):
+    """Known-storage investment forward equality or consumption cash-and-carry upper bound.
+
+    Storage is cash cost, not a proportional yield. Consumption inventories can
+    have nontraded convenience benefits, so the bound is not their unique price.
+    """
+    cash = np.asarray(storage_cash, dtype=float)
+    if np.any(cash < 0):
+        raise ValueError("nonnegative storage cash required")
+    a = known_income_forward(spot, storage_dates, -cash, storage_zeros, rate, maturity)
+    return {
+        "storage_pv": -a["income_pv"],
+        "carry_forward": a["forward"],
+        "relation": "upper_bound" if consumption else "equality",
+    }
+
+
+def implied_convenience_yield(spot, forward_quote, rate, storage_yield, maturity):
+    """Implied continuous convenience yield under a stated proportional storage cost."""
+    if (
+        not np.isfinite([spot, forward_quote, rate, storage_yield, maturity]).all()
+        or min(spot, forward_quote, maturity) <= 0
+    ):
+        raise ValueError("positive spot/forward/time required")
+    return rate + storage_yield - np.log(forward_quote / spot) / maturity
