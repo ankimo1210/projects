@@ -274,3 +274,52 @@ def currency_comparative_cash(
         "dealer_domestic_cash": domestic_notional * d,
         "dealer_foreign_cash": foreign_notional * f,
     }
+
+
+def currency_swap_value_details(
+    times, domestic_cash, foreign_cash, domestic_zeros, foreign_zeros, spot, *, receive="foreign"
+):
+    """Same-date fixed currency legs via FX forwards, with independent bond PV fields.
+
+    Cash inputs are positive payments/principal of each currency leg. Default
+    receives foreign/pays domestic; spot is domestic cash per foreign unit.
+    Exact Hull7.2/7.3 value .9627879765M rounds .9628M, not printed .9629M.
+    """
+    t = np.asarray(times, dtype=float)
+    d = np.asarray(domestic_cash, dtype=float)
+    f = np.asarray(foreign_cash, dtype=float)
+    zd = np.broadcast_to(np.asarray(domestic_zeros, dtype=float), t.shape)
+    zf = np.broadcast_to(np.asarray(foreign_zeros, dtype=float), t.shape)
+    if (
+        t.ndim != 1
+        or d.shape != t.shape
+        or f.shape != t.shape
+        or not np.isfinite(t).all()
+        or not np.isfinite(d).all()
+        or not np.isfinite(f).all()
+        or not np.isfinite(zd).all()
+        or not np.isfinite(zf).all()
+        or np.any(t < 0)
+        or not np.isfinite(spot)
+        or spot <= 0
+        or receive not in ("domestic", "foreign")
+    ):
+        raise ValueError("aligned finite currency payments/rates and positive FX required")
+    sign = 1 if receive == "foreign" else -1
+    dd = np.exp(-zd * t)
+    df = np.exp(-zf * t)
+    forwards = spot * df / dd
+    converted = sign * f * forwards
+    net = converted - sign * d
+    pv = net * dd
+    return {
+        "domestic_cash": -sign * d,
+        "foreign_cash": sign * f,
+        "fx_forwards": forwards,
+        "foreign_converted": converted,
+        "net_domestic_cash": net,
+        "present_values": pv,
+        "domestic_bond_pvs": d * dd,
+        "foreign_bond_pvs": f * df,
+        "value": float(pv.sum()),
+    }
