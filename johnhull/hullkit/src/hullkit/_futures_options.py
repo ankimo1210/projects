@@ -95,3 +95,12 @@ def futures_american_difference_bounds(forward, strike, rate, maturity):
     from ._index_currency import carry_american_difference_bounds
 
     return carry_american_difference_bounds(forward, strike, rate, rate, maturity)
+
+
+def futures_option_bounds(forward, strike, rate, maturity):
+    """European discounted intrinsic vs American immediate intrinsic, 18.3/4."""
+    from ._index_currency import carry_bounds
+
+    return {**carry_bounds(forward, strike, rate, rate, maturity),
+            "american_call_lower": max(forward-strike, 0),
+            "american_put_lower": max(strike-forward, 0)}
