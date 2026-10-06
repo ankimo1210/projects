@@ -21,11 +21,8 @@ def test_hedge_cashflow_against_independent_fraction_ledger():
     trade = -option_units*delta_after-stock_units
     bank_before = Fraction(700)
     bank_after = bank_before-trade*50
-    before = bank_before+stock_units*50
-    after = bank_after+(stock_units+trade)*50
     result = foundations.delta_hedge_cash(-100, .4, .10, .04, 50, .5)
     assert result["rebalance_cash"] == pytest.approx(float(bank_after-bank_before))
-    assert float(after-before) == pytest.approx(0)
     assert result["rebalance_units"]*50+result["rebalance_cash"] == pytest.approx(0)
 
 
