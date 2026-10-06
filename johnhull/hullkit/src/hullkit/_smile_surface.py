@@ -277,3 +277,53 @@ def minimum_variance_delta(
         "vega_correction": correction,
         "minimum_variance_delta": delta + correction,
     }
+
+
+def single_jump_details(spot, down_price, up_price, rate, maturity, strikes, *, yield_rate=0):
+    """Hull 20.8 two terminal states: exact Q prices and a common European IV.
+
+    Prices retain full precision. Inversion uses the OTM member of each parity
+    pair, so zero-payoff endpoints yield IV=0 without subtracting intrinsic
+    value. Printed rounded quotes must be inverted separately. This is a
+    one-event terminal model, not a continuous-time jump process.
+    """
+    from ._index_currency import carry_implied_vol
+
+    forward = _market_forward(spot, rate, yield_rate, maturity)
+    strikes = np.asarray(strikes, dtype=float)
+    if (
+        not all(math.isfinite(x) for x in (down_price, up_price))
+        or maturity <= 0
+        or down_price <= 0
+        or not down_price < forward < up_price
+        or np.any(~np.isfinite(strikes))
+        or np.any(strikes <= 0)
+    ):
+        raise ValueError(
+            "positive time/strikes and terminal states bracketing the forward required"
+        )
+    probability = (forward - down_price) / (up_price - down_price)
+    discount = math.exp(-rate * maturity)
+    calls = discount * (
+        probability * np.maximum(up_price - strikes, 0)
+        + (1 - probability) * np.maximum(down_price - strikes, 0)
+    )
+    puts = discount * (
+        probability * np.maximum(strikes - up_price, 0)
+        + (1 - probability) * np.maximum(strikes - down_price, 0)
+    )
+    iv = np.empty_like(strikes)
+    for index in np.ndindex(strikes.shape):
+        strike = float(strikes[index])
+        kind = "put" if strike < forward else "call"
+        price = float(puts[index] if kind == "put" else calls[index])
+        iv[index] = carry_implied_vol(price, spot, strike, rate, yield_rate, maturity, kind=kind)
+    return {
+        "up_factor": up_price / spot,
+        "down_factor": down_price / spot,
+        "growth_factor": forward / spot,
+        "up_probability": probability,
+        "call_prices": calls,
+        "put_prices": puts,
+        "implied_volatility": iv,
+    }
