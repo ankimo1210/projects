@@ -62,3 +62,13 @@ def test_zero_strike_and_outside_terminal_support():
     assert high["price"] == pytest.approx(0, abs=1e-12)
     low = foundations.binomial_call_tails(50, .01, .05, .3, 2, 10)
     assert low["price"] == pytest.approx(50-.01*math.exp(-.1), abs=1e-12)
+
+
+def test_strike_equal_to_a_tree_node_is_not_in_the_money():
+    # Strikes rebuilt from node values carry rounding error that grows with n/(sigma*sqrt(dt)).
+    for n in range(1, 60):
+        log_move = .3*math.sqrt(1/n)
+        up, down = math.exp(log_move), math.exp(-log_move)
+        for j in range(n+1):
+            result = foundations.binomial_call_tails(100, 100*up**j*down**(n-j), .05, .3, 1, n)
+            assert result["first_in_the_money_up_moves"] == j+1, (n, j)
