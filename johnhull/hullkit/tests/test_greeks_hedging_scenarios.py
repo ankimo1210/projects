@@ -112,7 +112,7 @@ def test_scenarios_reject_nonpositive_spot_negative_vol_and_expired_book(dx, dv,
 
 
 def test_elapsed_time_equal_to_maturity_up_to_rounding_is_accepted():
-    book = [(1, "call", 50, 7/52, .2)]
-    exact = greeks.scenario_reprice(book, 49, .05, [0], [0], elapsed=7/52)
-    rounded = greeks.scenario_reprice(book, 49, .05, [0], [0], elapsed=7*(1/52))
+    book = [(1, "call", 50, 7 / 52, 0.2)]
+    exact = greeks.scenario_reprice(book, 49, 0.05, [0], [0], elapsed=7 / 52)
+    rounded = greeks.scenario_reprice(book, 49, 0.05, [0], [0], elapsed=7 * (1 / 52))
     assert rounded["pnl"] == pytest.approx(exact["pnl"], abs=1e-12)

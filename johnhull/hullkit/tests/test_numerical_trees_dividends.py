@@ -186,13 +186,19 @@ def test_cash_control_uses_same_dividend_deducted_european_reference():
     )
 
 
-def independent_dividend_tree(spot, strike, rate, sigma, maturity, steps, times, amounts, *, model, kind):
+def independent_dividend_tree(
+    spot, strike, rate, sigma, maturity, steps, times, amounts, *, model, kind
+):
     # Node-index alignment, so it does not share the module's float time comparisons.
     dt = maturity / steps
     up = math.exp(sigma * math.sqrt(dt))
     p = (math.exp(rate * dt) - 1 / up) / (up - 1 / up)
     index = [round(t / dt) for t in times]
-    risky = spot - sum(d * math.exp(-rate * t) for t, d in zip(times, amounts, strict=True)) if model == "cash" else spot
+    risky = (
+        spot - sum(d * math.exp(-rate * t) for t, d in zip(times, amounts, strict=True))
+        if model == "cash"
+        else spot
+    )
 
     def payoff(stock):
         return np.maximum(stock - strike, 0) if kind == "call" else np.maximum(strike - stock, 0)
@@ -200,7 +206,11 @@ def independent_dividend_tree(spot, strike, rate, sigma, maturity, steps, times,
     def prices(i):
         base = risky * up ** (i - 2 * np.arange(i + 1))
         if model == "cash":
-            after = base + sum(d * math.exp(-rate * (k - i) * dt) for k, d in zip(index, amounts, strict=True) if k > i)
+            after = base + sum(
+                d * math.exp(-rate * (k - i) * dt)
+                for k, d in zip(index, amounts, strict=True)
+                if k > i
+            )
             return after, after + sum(d for k, d in zip(index, amounts, strict=True) if k == i)
         after = base * math.prod(1 - f for k, f in zip(index, amounts, strict=True) if k <= i)
         return after, base * math.prod(1 - f for k, f in zip(index, amounts, strict=True) if k < i)
@@ -209,7 +219,10 @@ def independent_dividend_tree(spot, strike, rate, sigma, maturity, steps, times,
     value = np.maximum(payoff(after), payoff(before))
     for i in range(steps - 1, -1, -1):
         after, before = prices(i)
-        value = np.maximum(math.exp(-rate * dt) * (p * value[:-1] + (1 - p) * value[1:]), np.maximum(payoff(after), payoff(before)))
+        value = np.maximum(
+            math.exp(-rate * dt) * (p * value[:-1] + (1 - p) * value[1:]),
+            np.maximum(payoff(after), payoff(before)),
+        )
     return float(value[0])
 
 
@@ -221,9 +234,12 @@ def independent_dividend_tree(spot, strike, rate, sigma, maturity, steps, times,
         ((60, 50, 0.05, 0.1, 0.3, 7), [5 * 0.3 / 7], [3], "cash", "call"),
     ],
 )
-def test_american_aligned_dividend_lattice_matches_an_independent_node_index_tree(args, times, amounts, model, kind):
-    result = numerical.dividend_lattice(*args, times, amounts, model=model, kind=kind, american=True)
+def test_american_aligned_dividend_lattice_matches_an_independent_node_index_tree(
+    args, times, amounts, model, kind
+):
+    result = numerical.dividend_lattice(
+        *args, times, amounts, model=model, kind=kind, american=True
+    )
     assert not result["off_grid_dividend_times"]
     expected = independent_dividend_tree(*args, times, amounts, model=model, kind=kind)
     assert result["price"] == pytest.approx(expected, abs=1e-10)
-

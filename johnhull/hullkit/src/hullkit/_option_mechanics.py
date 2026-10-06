@@ -143,8 +143,15 @@ def option_exit_cashflows(intrinsic, bid, *, units=100, sale_fee=0, exercise_fee
 
 
 def legacy_short_option_margin(
-    spot, strike, option_mark, *, kind="call", contracts=1, multiplier=100,
-    risk_rate=0.20, floor_rate=0.10,
+    spot,
+    strike,
+    option_mark,
+    *,
+    kind="call",
+    contracts=1,
+    multiplier=100,
+    risk_rate=0.20,
+    floor_rate=0.10,
 ):
     """Hull §10.7 historical naked-option collateral formula, in currency units.
 
@@ -166,13 +173,21 @@ def legacy_short_option_margin(
     primary = units * (option_mark + risk_rate * spot - otm)
     floor = units * (option_mark + floor_rate * (spot if kind == "call" else strike))
     return dict(
-        primary=primary, floor=floor, required=np.maximum(primary, floor),
+        primary=primary,
+        floor=floor,
+        required=np.maximum(primary, floor),
         mark_value=units * option_mark,
     )
 
 
 def legacy_margin_cashflows(
-    spot, strike, option_mark, *, initial_cash, withdraw_excess=True, **margin_parameters,
+    spot,
+    strike,
+    option_mark,
+    *,
+    initial_cash,
+    withdraw_excess=True,
+    **margin_parameters,
 ):
     """Recompute historical margin along one path and adjust cash collateral.
 
