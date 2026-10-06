@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算39/54。次は§7.1（swap cash）。Ch1→9を順に継続する。
+- 現在：計算40/54。次は§7.2（OIS bootstrap）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -52,6 +52,7 @@
 | §6.2 | `_rate_futures.py` | 32nds全5例、168.60/168600、CF146.23/1.4623/125.8323/1.4889%/123.99/121.99/1.2199、CTD2.69/1.87/2.12、Ex6.2全7値。独立年金/loan ledger | 計算完了。Hullの3月切捨て/Note月丸め規約、CTD/受渡日既知、Ex6.2は365基準。説明・受入保留 | 4 passed・ruff check/format PASS |
 | §6.3 | `_rate_futures.py` | 99.250/25bp/100損失、Table6.2 −12.5/−125/25/225、475/700/999300、May.0475%/June-July.055%/41.67、Ex6.3 79/197500/700000/502500・41/102500/400000/502500、2.916%/3.033%/2.75%。独立cash/DF chain | 計算完了。July.55%/197000/102250/502250は原典誤記。convexity cの数値入力/Technical Note不足、減算構造のみ。説明・受入保留 | 8 passed・ruff check/format PASS |
 | §6.4 | `_rate_futures.py` | 93.0625/93062.50/79.42/79short。独立±1bp full repricing、CTD duration変更 | 計算完了。Dのquote座標を一致、Pはforward期間価値、CTD9.20は原典入力で推測再計算しない。説明・受入保留 | 10 passed・ruff check/format PASS |
+| §7.1 | `_swap_foundations.py` | floating550/650/700/775/825/850/900/950k、fixed750k×8、net−200/−100/−50/25/75/100/150/200k。独立双方cash | 計算完了。daycount省略とfixing時点を分離、LIBOR記述は原典時点。説明・受入保留 | 2 passed・ruff check/format PASS |
 
 ## 残りと検証
 
