@@ -54,3 +54,28 @@ def test_invalid_probability_correlation_and_name_count():
     for args in [(0, 0.1, 0.3), (10, -0.1, 0.3), (10, 0.1, 1.01)]:
         with pytest.raises(ValueError):
             e.default_count_distribution(*args)
+
+
+@pytest.mark.parametrize("rho", [0.9, 0.99])
+def test_review_r6_high_correlation_count_tail_against_split_adaptive_binomial(rho):
+    from scipy.integrate import quad
+    from scipy.stats import binom
+
+    threshold = norm.ppf(0.02)
+    center = threshold / math.sqrt(rho)
+    width = math.sqrt(1 - rho) / math.sqrt(rho)
+    anchors = [v for v in center + np.array([-8, -4, -1, 0, 1, 4, 8]) * width if -12 < v < 12]
+    exact = quad(
+        lambda f: (
+            norm.pdf(f)
+            * binom.sf(9, 100, norm.cdf((threshold - math.sqrt(rho) * f) / math.sqrt(1 - rho)))
+        ),
+        -12,
+        12,
+        points=anchors,
+        epsabs=1e-11,
+        epsrel=1e-11,
+    )[0]
+    pmf = e.default_count_distribution(100, 0.02, rho)
+    assert pmf[10:].sum() == pytest.approx(exact, abs=2e-10)
+    assert np.arange(101) @ pmf == pytest.approx(2, abs=2e-9)
