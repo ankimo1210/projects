@@ -233,3 +233,62 @@ def fixed_coupon_quote(
         "price_per_100": price,
         "buyer_upfront": cds.upfront_payment(annual_spread, annual_coupon, duration, notional),
     }
+
+
+def forward_cds_contract(curve, recovery, rate, start, maturity, contract_spread, *, frequency=4):
+    """Knockout forward CDS value per notional; annuity includes survival from time zero."""
+    if not np.isfinite(contract_spread) or contract_spread < 0:
+        raise ValueError("nonnegative finite contract spread required")
+    legs = cds_leg_table(curve, recovery, rate, maturity, frequency=frequency, start=start)
+    return {
+        "start": start,
+        "maturity": maturity,
+        "contract_spread": contract_spread,
+        "forward_spread": legs["par_spread"],
+        "risky_annuity": legs["risky_duration"],
+        "buyer_value": legs["protection"] - contract_spread * legs["risky_duration"],
+    }
+
+
+def cds_option_value(curve, recovery, rate, expiry, maturity, strike, volatility, *, frequency=4):
+    """Black spread options per notional under the forward-annuity measure.
+
+    Spread volatility is external; A already contains unconditional survival and
+    discounting, so multiplying by survival again would count knockout twice.
+    No front-end protection is included.
+    """
+    from . import cds
+
+    forward = forward_cds_contract(
+        curve, recovery, rate, expiry, maturity, strike, frequency=frequency
+    )
+    f, a = forward["forward_spread"], forward["risky_annuity"]
+    return {
+        "forward_spread": f,
+        "risky_annuity": a,
+        "payer": cds.cds_option(f, strike, volatility, expiry, a, kind="payer"),
+        "receiver": cds.cds_option(f, strike, volatility, expiry, a, kind="receiver"),
+    }
+
+
+def knockout_spread_payoff(default_times, start, spreads, strike, annuity, *, kind="payer"):
+    """Expiry spread payoff with default at/before start knocking out; amounts share annuity units."""
+    default, spread, a = np.broadcast_arrays(default_times, spreads, annuity)
+    if (
+        not np.isfinite([start, strike]).all()
+        or min(start, strike) < 0
+        or np.isnan(default).any()
+        or np.any(default < 0)
+        or not np.isfinite(spread).all()
+        or np.any(spread < 0)
+        or not np.isfinite(a).all()
+        or np.any(a < 0)
+        or kind not in ("payer", "receiver", "forward")
+    ):
+        raise ValueError("nonnegative times/spreads/annuities and supported payoff kind required")
+    payoff = a * (spread - strike)
+    if kind == "payer":
+        payoff = np.maximum(payoff, 0)
+    elif kind == "receiver":
+        payoff = np.maximum(-payoff, 0)
+    return np.where(default > start, payoff, 0)
