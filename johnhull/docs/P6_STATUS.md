@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算24/54。次は§4.11（convexity）。Ch1→9を順に継続する。
+- 現在：計算25/54。次は§5.2（short売りcash）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -37,6 +37,7 @@
 | §4.8 | `_rates_foundations.py` | 5.0/5.8/6.2/6.5%、6.2%例、103.05/108.33/114.80/122.14、curve play2.3%。独立cash/解析微分 | 計算完了。linear zeroの柱で微分は平均、期待将来金利とforwardを同一視しない。説明・受入保留 | 13 passed・ruff check/format PASS |
 | §4.9 | `_rates_foundations.py` | 125000（2.25年）/Ex4.3 369200（369246.54、表示丸め）。独立2債券replication/前払再投資 | 計算完了。fixed/forwardは期間単利、discountだけcontinuous。前払額は補足。説明・受入保留 | 15 passed・ruff check/format PASS |
 | §4.10 | `_rates_foundations.py` | Table4.6全22値＋Ex4.4三値/Ex4.5八値。独立continuous/periodic価格差分とportfolio PV重み | 計算完了。丸め前のduration使用、1bpはquote軸に対する感応度。説明・受入保留 | 18 passed・ruff check/format PASS |
+| §4.11 | `_rates_foundations.py` | 印刷数値なし。Table4.6補足C7.570/2%価格変化と独立2階差分、同Dの分散CF、3moment免疫 | 計算完了。補足例はsynthetic、平行yield quoteでの小変化、非平行riskは残る。説明・受入保留 | 20 passed・ruff check/format PASS |
 
 ## 残りと検証
 
