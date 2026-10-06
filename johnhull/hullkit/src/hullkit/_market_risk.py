@@ -679,3 +679,80 @@ def backtest_summary(pnl, forecasts, confidence=0.99):
         "independence": var_backtest.christoffersen_independence(flags),
         "realized_tail_mean": float((-profits)[flags.astype(bool)].mean()) if count else None,
     }
+
+
+def pca_fit(changes, *, ddof=1):
+    """PCA of absolute changes (e.g. yield bp), without standardizing tenors."""
+    x = np.asarray(changes, dtype=float)
+    if x.ndim != 2 or x.shape[0] < 2 or x.shape[1] < 1 or not np.isfinite(x).all():
+        raise ValueError("finite observations-by-variables matrix required")
+    if ddof < 0 or int(ddof) != ddof or ddof >= x.shape[0]:
+        raise ValueError("integer covariance ddof below observation count required")
+    mean = x.mean(axis=0)
+    centered = x - mean
+    covariance = centered.T @ centered / (x.shape[0] - ddof)
+    values, vectors = np.linalg.eigh(covariance)
+    values, vectors = np.maximum(values[::-1], 0), vectors[:, ::-1]
+    pivots = np.argmax(abs(vectors), axis=0)
+    signs = np.where(vectors[pivots, np.arange(x.shape[1])] < 0, -1, 1)
+    vectors = vectors * signs
+    total = float(values.sum())
+    return {
+        "mean": mean,
+        "loadings": vectors,
+        "factor_sd": np.sqrt(values),
+        "scores": centered @ vectors,
+        "covariance": covariance,
+        "explained_fraction": values / total if total else np.zeros_like(values),
+    }
+
+
+def factor_scores(changes, loadings):
+    """Solve the complete factor basis, including published rounded loadings.
+
+    Unlike transpose projection, solving also reconstructs nonexactly orthogonal
+    rounded tables. This does not turn their factors into a refitted PCA model.
+    """
+    loading = np.asarray(loadings, dtype=float)
+    x = np.asarray(changes, dtype=float)
+    if (
+        loading.ndim != 2
+        or loading.shape[0] != loading.shape[1]
+        or x.ndim not in (1, 2)
+        or x.shape[-1] != loading.shape[0]
+        or not np.isfinite(loading).all()
+        or not np.isfinite(x).all()
+    ):
+        raise ValueError("finite complete square basis and matching changes required")
+    return np.linalg.solve(loading, x.T).T
+
+
+def pca_book(exposures, loadings, factor_sd, *, components=None, confidence=0.99, horizon=1):
+    """Linear book risk given uncorrelated factor scores in the supplied units.
+
+    Dollar/bp exposures times bp/day factor SD give dollars/day book SD.
+    Rounded loadings are used as supplied. Market variance fractions are based
+    on factor variances; the retained book fraction can be entirely different.
+    """
+    amounts = _loss_vector(exposures)
+    sd = _loss_vector(factor_sd)
+    loading = np.asarray(loadings, dtype=float)
+    if loading.shape != (amounts.size, sd.size) or not np.isfinite(loading).all() or np.any(sd < 0):
+        raise ValueError("matching finite loadings/nonnegative factor SD required")
+    keep = sd.size if components is None else components
+    if int(keep) != keep or not 0 <= keep <= sd.size:
+        raise ValueError("component count must lie in the factor basis")
+    factor_exposure = amounts @ loading
+    contributions = (factor_exposure * sd) ** 2
+    retained = float(contributions[: int(keep)].sum())
+    full = float(contributions.sum())
+    market = float(sd @ sd)
+    return {
+        "factor_exposures": factor_exposure,
+        "variance_contributions": contributions,
+        "full_variance": full,
+        "residual_variance": max(full - retained, 0),
+        "market_variance": market,
+        "market_fraction": sd**2 / market if market else np.zeros_like(sd),
+        "risk": normal_loss_risk(math.sqrt(retained), confidence, horizon=horizon),
+    }
