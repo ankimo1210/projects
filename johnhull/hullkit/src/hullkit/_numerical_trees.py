@@ -349,3 +349,99 @@ def trinomial_lattice(
         "dx": dx,
         "dt": dt,
     }
+
+
+def variance_clock(curve_times, variance_rates, steps):
+    """Equal integrated forward-variance steps for a piecewise constant curve.
+
+    Nonnegative rates may contain flat intervals; use the earliest inverse
+    crossing inside the curve and retain calendar endpoints 0/T. The diffusive
+    clock requires positive total variance. Zero-variance periods can still make
+    the later tree's arithmetic branch probabilities infeasible.
+    """
+    edges = np.asarray(curve_times, dtype=float)
+    variance = np.asarray(variance_rates, dtype=float)
+    if (
+        edges.ndim != 1
+        or edges.size < 2
+        or edges[0] != 0
+        or variance.shape != (edges.size - 1,)
+        or np.any(~np.isfinite(edges))
+        or np.any(np.diff(edges) <= 0)
+        or np.any(~np.isfinite(variance))
+        or np.any(variance < 0)
+        or steps < 1
+        or int(steps) != steps
+    ):
+        raise ValueError(
+            "increasing times starting at zero and nonnegative interval variance rates required"
+        )
+    steps = int(steps)
+    cumulative = np.r_[0, np.cumsum(variance * np.diff(edges))]
+    total = float(cumulative[-1])
+    if total <= 0:
+        raise ValueError("positive total variance required for a diffusive clock")
+    target = np.linspace(0, total, steps + 1)
+    segment = np.searchsorted(cumulative, target[1:], side="left") - 1
+    times = np.zeros(steps + 1)
+    times[1:] = edges[segment] + (target[1:] - cumulative[segment]) / variance[segment]
+    times[-1] = edges[-1]
+    return {"times": times, "total_variance": total, "variance_per_step": total / steps}
+
+
+def time_dependent_lattice(
+    spot,
+    strike,
+    curve_times,
+    variance_rates,
+    rate_forwards,
+    yield_forwards,
+    steps,
+    *,
+    kind="call",
+    american=False,
+):
+    """Hull21.5 constant u/d on a variance clock; calendar forward r/q are integrated.
+
+    Each input curve is piecewise constant on curve_times intervals. Input sigma
+    is represented by the forward variance rate, not term-average IV. Clock
+    exercise is Bermudan; convergence to continuous exercise needs refinement.
+    """
+    clock = variance_clock(curve_times, variance_rates, steps)
+    edges = np.asarray(curve_times, dtype=float)
+    rates, yields = np.asarray(rate_forwards, dtype=float), np.asarray(yield_forwards, dtype=float)
+    if (
+        rates.shape != (edges.size - 1,)
+        or yields.shape != rates.shape
+        or np.any(~np.isfinite(rates))
+        or np.any(~np.isfinite(yields))
+    ):
+        raise ValueError("one finite forward rate/yield per curve interval required")
+    maturity = float(edges[-1])
+    steps = _tree_inputs(
+        spot, strike, 0, math.sqrt(clock["total_variance"] / maturity), maturity, steps, 0, kind
+    )
+    cumulative_r = np.r_[0, np.cumsum(rates * np.diff(edges))]
+    cumulative_q = np.r_[0, np.cumsum(yields * np.diff(edges))]
+    integrated_r = np.diff(np.interp(clock["times"], edges, cumulative_r))
+    integrated_q = np.diff(np.interp(clock["times"], edges, cumulative_q))
+    up, down = (
+        math.exp(math.sqrt(clock["variance_per_step"])),
+        math.exp(-math.sqrt(clock["variance_per_step"])),
+    )
+    growth = np.exp(integrated_r - integrated_q)
+    probabilities = (growth - down) / (up - down)
+    discounts = np.exp(-integrated_r)
+    stock = [
+        spot * up ** (i - np.arange(i + 1)) * down ** np.arange(i + 1) for i in range(steps + 1)
+    ]
+    result = _backward(stock, strike, discounts, probabilities, kind, american)
+    return {
+        **result,
+        **clock,
+        "up": up,
+        "down": down,
+        "probabilities": probabilities,
+        "discounts": discounts,
+        "growth_factors": growth,
+    }
