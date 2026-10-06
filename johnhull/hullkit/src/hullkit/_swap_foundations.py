@@ -323,3 +323,67 @@ def currency_swap_value_details(
         "foreign_bond_pvs": f * df,
         "value": float(pv.sum()),
     }
+
+
+def currency_coupon_leg(notional, pay_times, curve, *, fixed_rate=None, first_fixing=None):
+    """Positive currency bond-equivalent coupon/principal leg on reset-date accruals.
+
+    None fixed rate means period-simple forwards. A supplied first fixing replaces
+    only the first forward; inception principal is excluded from a seasoned value.
+    """
+    from .rates import discount_factor
+
+    t = np.asarray(pay_times, dtype=float)
+    if (
+        t.ndim != 1
+        or not len(t)
+        or np.any(np.diff(np.r_[0, t]) <= 0)
+        or not np.isfinite(notional)
+        or notional < 0
+    ):
+        raise ValueError("ordered positive payments and nonnegative notional required")
+    tau = np.diff(np.r_[0, t])
+    df = np.array([discount_factor(float(time), curve) for time in t])
+    rates = (
+        (np.r_[1, df[:-1]] / df - 1) / tau if fixed_rate is None else np.full(len(t), fixed_rate)
+    )
+    if fixed_rate is None and first_fixing is not None:
+        rates[0] = first_fixing
+    if not np.isfinite(rates).all():
+        raise ValueError("finite coupon/fixing rates required")
+    cash = notional * rates * tau
+    cash[-1] += notional
+    return cash
+
+
+def mixed_currency_value(
+    pay_times,
+    domestic_notional,
+    foreign_notional,
+    domestic_curve,
+    foreign_curve,
+    spot,
+    *,
+    dom_fixed=None,
+    for_fixed=None,
+    first_dom=None,
+    first_for=None,
+    receive="domestic",
+):
+    """Fixed/float currency swap valued by currency-specific forwards and discount curves.
+
+    This reset-date single-curve-per-currency foundation has no cross-currency basis
+    or inception principal. A later model may supply basis-adjusted forecasts.
+    """
+    from .rates import zero_interp
+
+    t = np.asarray(pay_times, dtype=float)
+    d = currency_coupon_leg(
+        domestic_notional, t, domestic_curve, fixed_rate=dom_fixed, first_fixing=first_dom
+    )
+    f = currency_coupon_leg(
+        foreign_notional, t, foreign_curve, fixed_rate=for_fixed, first_fixing=first_for
+    )
+    zd = np.array([zero_interp(float(time), *domestic_curve) for time in t])
+    zf = np.array([zero_interp(float(time), *foreign_curve) for time in t])
+    return currency_swap_value_details(t, d, f, zd, zf, spot, receive=receive)
