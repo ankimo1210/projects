@@ -18,6 +18,7 @@ def _vector(values):
 
 
 def price_returns(prices, *, kind="simple"):
+    """Daily simple or logarithmic returns from consecutive strictly positive prices."""
     p = _vector(prices)
     if p.size < 2 or np.any(p <= 0):
         raise ValueError("at least two positive prices required")
@@ -120,6 +121,7 @@ def garch_expanded(history, omega, alpha, beta, *, initial):
 
 
 def bernoulli_mle(successes, observations):
+    """Bernoulli success-probability MLE from integer success and observation counts."""
     if (
         int(observations) != observations
         or observations < 1

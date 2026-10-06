@@ -13,6 +13,7 @@ from ._credit_risk import _recovery
 
 
 def basis_points_to_rate(basis_points):
+    """Convert signed basis points to a rate fraction; one bp equals 0.0001."""
     if not np.isfinite(basis_points):
         raise ValueError("finite basis points required")
     return basis_points / 10000
@@ -63,6 +64,7 @@ def cds_contract_cashflows(
 
 
 def cds_bond_basis(cds_spread, bond_yield, risk_free_rate):
+    """CDS minus bond-yield spread, and yield after buying protection; all rates fractions."""
     if not np.isfinite([cds_spread, bond_yield, risk_free_rate]).all():
         raise ValueError("finite rates required")
     return {

@@ -26,6 +26,7 @@ def _recovery(recovery):
 
 
 def constant_pd(hazard, maturity):
+    """Survival and cumulative PD for a nonnegative annual hazard over maturity years."""
     if not np.isfinite([hazard, maturity]).all() or min(hazard, maturity) < 0:
         raise ValueError("nonnegative finite hazard/maturity required")
     return {"survival": math.exp(-hazard * maturity), "pd": -math.expm1(-hazard * maturity)}
@@ -64,6 +65,7 @@ def historical_pd(times, cumulative_pd, *, measure="P"):
 
 
 def spread_hazards(times, spreads, recovery):
+    """Approximate annual Q average/forward hazards from yield-spread fractions and recovery."""
     _recovery(recovery)
     t, s = _vector(times), _vector(spreads)
     if recovery == 1 or t.shape != s.shape or np.any(s < 0):
@@ -559,6 +561,7 @@ def joint_default_probability(first_pd, second_pd, first_loading, second_loading
 
 
 def default_indicator_correlation(first_pd, second_pd, joint_pd):
+    """Pearson correlation of default indicators from marginal/joint PD fractions."""
     if (
         not np.isfinite([first_pd, second_pd, joint_pd]).all()
         or not 0 < first_pd < 1
