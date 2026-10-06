@@ -233,3 +233,15 @@ def implied_convenience_yield(spot, forward_quote, rate, storage_yield, maturity
     ):
         raise ValueError("positive spot/forward/time required")
     return rate + storage_yield - np.log(forward_quote / spot) / maturity
+
+
+def cost_of_carry(spot, rate, maturity, *, income_yield=0, storage_yield=0, convenience_yield=0):
+    """Conditional continuous carry formula; convenience yield is subtracted once.
+
+    carry=r+storage-income excludes convenience. With a consumption asset this
+    uses supplied convenience yield; setting it to zero gives the carry bound.
+    """
+    if not np.isfinite([income_yield, storage_yield, convenience_yield]).all():
+        raise ValueError("finite proportional yield inputs required")
+    carry = rate + storage_yield - income_yield
+    return {"carry": carry, "forward": no_income_forward(spot, carry - convenience_yield, maturity)}
