@@ -128,3 +128,53 @@ def protected_holding(units, terminal_spot, strike, premium, *, multiplier=100):
         "terminal_value": value,
         "value_after_premium": value + puts["premium_cash"],
     }
+
+
+def speculation_comparison(spot_entry, futures_entry, terminal_spot, *, units, initial_margin):
+    """Compare equal underlying exposures; margin is collateral, not a purchase cost.
+
+    Profits ignore interest and fees as in Hull Table1.4. Units and quotes must
+    share one underlying/cash convention; losses may exceed initial margin.
+    """
+    terminal = np.asarray(terminal_spot, dtype=float)
+    if (
+        not np.isfinite([spot_entry, futures_entry, units, initial_margin]).all()
+        or not np.isfinite(terminal).all()
+        or min(units, initial_margin) < 0
+    ):
+        raise ValueError("finite prices and nonnegative units/margin required")
+    return {
+        "spot_outlay": units * spot_entry,
+        "initial_margin": initial_margin,
+        "spot_profit": units * (terminal - spot_entry),
+        "futures_profit": units * (terminal - futures_entry),
+    }
+
+
+def stock_option_speculation(
+    spot_entry, terminal_spot, strike, premium, capital, *, multiplier=100
+):
+    """Spend equal capital on stock or calls, allowing theoretical fractional lots.
+
+    Outputs are terminal profits after initial purchase/premium, without funding
+    interest or fees. Option quantities and exchange contract counts are distinct.
+    """
+    if (
+        not np.isfinite([spot_entry, premium, capital, multiplier]).all()
+        or min(spot_entry, premium, multiplier) <= 0
+        or capital < 0
+    ):
+        raise ValueError("positive entry/premium/multiplier and nonnegative capital required")
+    stock_units = capital / spot_entry
+    option_units = capital / premium
+    options = option_contract_cashflows(
+        terminal_spot, strike, premium, contracts=option_units / multiplier, multiplier=multiplier
+    )
+    return {
+        "stock_units": stock_units,
+        "option_units": option_units,
+        "option_contracts": option_units / multiplier,
+        "stock_profit": stock_units * (np.asarray(terminal_spot, dtype=float) - spot_entry),
+        "option_payoff": options["payoff"],
+        "option_profit": options["profit"],
+    }
