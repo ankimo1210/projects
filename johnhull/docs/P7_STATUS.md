@@ -5,7 +5,7 @@
 - 完了条件：既存節メモの式/例を確認、計画を数行追記、private計算部品と本文/独立検証をそろえ、変更モジュールのtests/ruffを通す。入力不足は明示して次の節へ進む。
 - 1節1コミット（P7 §xx.y）、codex/p7-logicへ節ごとpush。公開API・依存・台帳を変更しない。教材・画面・章受入・全suite・D1/保管庫は保留。
 - 正式受入：P7 0/16、全体33/306。Ch1からの正式受入は別チャットの専用worktreeで進むため、この作業ではその台帳/教材を編集しない。
-- 現在：計算6/11、入力不足0。次は§36.2の賃料option。
+- 現在：計算7/11、入力不足0。次は§36.3のCAPMリスク価格。
 
 ## 節別の実装
 
@@ -19,6 +19,7 @@
 | §35.7 | `_commodity_foundations.py` | d1 .2376/d2 .1676、250900/243400、mean697→180400/175100。独立密度積分/MCと支払割引 | 計算完了。非取引指数・系統リスク0の本文仮定に条件付き、trend原データはなく697を本文入力として使う。log-SDへ√年数を掛けない。 | ロジック完了・12 passed・ruff check/format PASS |
 | §35.8 | `_commodity_foundations.py` | 本文にデータ/数値なし。合成a+bP+cT、独立共分散正規方程式とtrain/holdoutの単独/共同hedge | 計算完了。rank不足では一意な契約数が出ないため拒否。train推定をholdoutで固定し、Q pricing/完全hedgeを主張しない。 | ロジック完了・14 passed・ruff check/format PASS |
 | §36.1 | `_real_options_foundations.py` | NPV−11.53M、call.545、要求call55.96%/put−70.4%。独立cash再投資/線形replication/root | 計算完了。P期待CFをrequired rateで割引、optionとbaseの割引率を同一視しない。比較企業betaの推定は本文データなし。 | ロジック完了・2 passed・ruff check/format PASS |
+| §36.2 | `_real_options_foundations.py` | A4.5355/Q drift6%/E rent33.82/expected1.5015M/PV1.3586M。独立lognormal密度/前払CF | 計算完了。λはcaller仮定/推定、非取引資産から無裁定だけでは一意でない。annuityはt=2時点、optionと二重割引しない。 | ロジック完了・5 passed・ruff check/format PASS |
 
 ## 残りと検証
 
