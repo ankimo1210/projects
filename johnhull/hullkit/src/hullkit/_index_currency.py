@@ -155,3 +155,14 @@ def carry_pde_residual(spot, rate, yield_rate, sigma, value, f_time, delta, gamm
     if not math.isfinite(yield_rate):
         raise ValueError("finite yield required")
     return bsm_pde_residual(spot, rate, sigma, value, f_time, delta, gamma)-yield_rate*spot*delta
+
+
+def carry_from_option_quotes(spot, strike, rate, maturity, call, put):
+    """Hull 17.8-10: forward and continuous yield from same-K/T European quotes."""
+    _carry_inputs(spot, strike, rate, 0, maturity)
+    if not all(math.isfinite(x) for x in (call, put)) or min(call, put) < 0 or maturity <= 0:
+        raise ValueError("nonnegative option quotes and positive maturity required")
+    forward = strike+(call-put)*math.exp(rate*maturity)
+    if forward <= 0:
+        raise ValueError("quotes imply a nonpositive lognormal forward")
+    return {"forward": forward, "yield_rate": rate-math.log(forward/spot)/maturity}
