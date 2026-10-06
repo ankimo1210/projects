@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 15 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 26 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -67,10 +67,11 @@
 | §16.5 | `_employee_options.py` | 本文4/30の株価50・4/3の42をstrikeにする例のintrinsic差8。既存award/cash関数を再利用し独立Fractionの行使支払・売却cash ledgerで照合 | 算術部分のみ完了。決定日と表示日・研究の論証・法制度は説明/受入へ保留。Ch16の計算3節完了、§16.1–2と会計史の説明は未実施 | 26 passed・ruff PASS |
 | §17.1 | `_index_currency.py` | β1で5枚/K900/880時440000＋10000=450000。Table17.1全return、Table17.2全6価値570000–370000、β2で10枚/K960/補填80000、配当込K955。独立Fraction/CAPM cash ledger | 計算部分完了。CAPMは条件付き期待シナリオで、betaだけの確定保証を主張しない。premium/基差残差は別cash入力、契約倍率は原典例。説明・図・受入は保留 | 7 passed・ruff PASS |
 | §17.2 | `_index_currency.py` | EUR call50000/AUD put300000、GBP forward1320000。range put0.027304826/call0.027292496（印刷0.0273、上strike丸めの残差を保持）、zero-cost上strike探索。独立Fractionの3領域cash・lognormal payoff求積 | 計算部分完了。外貨受取/支払の符号とnotionalを明示、印刷strikeの小さな費用と厳密zero-costを区別。市場説明・図・受入は保留 | 15 passed・ruff PASS |
+| §17.3 | `_index_currency.py` | 式17.1–5の下限/parity/配当spot変換、配当込みPDEと米国差額不等式。本文に数値例なし。独立lognormal payoff求積、再投資台帳、数値微分PDE・CRRで照合 | 計算部分完了。spot縮小は欧州限定、米国差額不等式は本文のr/q非負前提を明示。説明・図・受入は保留 | 26 passed・ruff PASS |
 
 ## 次の実装
 
 - Ch10–16の計算52項目を実装・push（Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3）。Ch16.5は算術部分のみ。
 - 今回（2026-10-06）の追加は16項目：Ch15の13項目とCh16の3項目。対象Ch15 90/Ch16 26 tests・ruff PASS。Ch10–14は今回再実行していない。
-- 次はCh17 §17.3（配当利回りとcarry価格）。P4の計算は合計54節、正式受入は0/112のまま。
+- 次はCh17 §17.4（指数価格・implied carry）。P4の計算は合計55節、正式受入は0/112のまま。
 - 定性・説明要求は保留：Ch16 §16.1–2・会計史/研究の説明、Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済みだが、今回の新テストには含めていない。Ch10全12節の完了や正式受入を表すものではない。
