@@ -66,3 +66,49 @@ def zero_investment(principal, zero_rate, maturity):
     if not np.isfinite(principal) or principal < 0:
         raise ValueError("nonnegative principal required")
     return principal / discount_factor(maturity, ([maturity], [zero_rate]))
+
+
+def _cash_vectors(times, cashflows):
+    """Validate aligned finite cash dates with at least one nonzero payment."""
+    t = np.asarray(times, dtype=float)
+    cf = np.asarray(cashflows, dtype=float)
+    if (
+        t.ndim != 1
+        or t.shape != cf.shape
+        or not len(t)
+        or not np.isfinite(t).all()
+        or not np.isfinite(cf).all()
+        or np.any(t < 0)
+        or np.all(cf == 0)
+    ):
+        raise ValueError("aligned finite cash dates/payments required")
+    return t, cf
+
+
+def bond_quote(times, cashflows, zeros, *, face=100, frequency=2):
+    """Cashflow PV/YTM and par annual coupon in cash per stated face amount.
+
+    Par coupon uses equal coupon periods on the supplied dates; no irregular
+    accrual schedule/day count is inferred in this Ch4 illustration.
+    """
+    from .rates import bond_price, bond_yield
+
+    t, cf = _cash_vectors(times, cashflows)
+    z = np.broadcast_to(np.asarray(zeros, dtype=float), t.shape)
+    if (
+        not np.isfinite(z).all()
+        or not np.isfinite([face, frequency]).all()
+        or min(face, frequency) <= 0
+        or np.any(cf < 0)
+        or t[-1] <= 0
+    ):
+        raise ValueError("positive face/frequency and positive bond payments required")
+    df = np.exp(-z * t)
+    price = bond_price(t, cf, z)
+    return {
+        "price": price,
+        "yield": bond_yield(t, cf, price),
+        "final_discount": df[-1],
+        "coupon_annuity": df.sum(),
+        "par_annual_coupon": frequency * face * (1 - df[-1]) / df.sum(),
+    }
