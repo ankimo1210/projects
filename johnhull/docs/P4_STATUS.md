@@ -5,11 +5,11 @@
 - 本人指示（2026-10-05）：受入作業はCh28を区切りに一時停止。P3はロジック36/37、正式受入8/37で保持し、次段階P4の実装を先行する。§33.2の入力不足は保留。
 - 実装ブランチ：`codex/p4-logic`。既存`codex/p3-logic`の完成済み計算を引き継ぐ。新計算の公開API追加なし。節ごとにcommit/pushする。
 - 正式受入：P4 0/112、全体33/306。説明・可視化・配布画面・台帳は受入再開時に確認する。
-- 検証：変更モジュールのテストとruff。全suite・画面巡回・D1・保管庫復元は今回の実装段階の実行対象に含めない。
+- 検証：変更モジュールのテストとruff check（lint）。全suite・画面巡回・D1・保管庫復元は今回の実装段階の実行対象に含めない。
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 48 passed・Ch18 78 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -66,10 +66,10 @@
 | §16.4 | `_employee_options.py` | Ex16.1 unit6.31/1百万権利6.31百万。Ex16.2全15株価/option節点・根14.97/通常call17.98、D/G/H行使.43/.81/.335・継続11.05/106.64/24.95。独立全経路cash列挙/MC6SE/密度積分、倍率45・市場連動20/25 | 計算部分完了。原典の根を含む離職タイミングを明示。倍率は整列CRR格子を検証、一般格子では境界離散化誤差あり。倍率∞/離職0は欧州保持、無配当r≥0のcallではAmericanと同値。期待寿命BSMを理論的等価としない。説明・図・受入は保留 | 24 passed・ruff PASS |
 | §16.5 | `_employee_options.py` | 本文4/30の株価50・4/3の42をstrikeにする例のintrinsic差8。既存award/cash関数を再利用し独立Fractionの行使支払・売却cash ledgerで照合 | 算術部分のみ完了。決定日と表示日・研究の論証・法制度は説明/受入へ保留。Ch16の計算3節完了、§16.1–2と会計史の説明は未実施 | 26 passed・ruff PASS |
 | §17.1 | `_index_currency.py` | β1で5枚/K900/880時440000＋10000=450000。Table17.1全return、Table17.2全6価値570000–370000、β2で10枚/K960/補填80000、配当込K955。独立Fraction/CAPM cash ledger | 計算部分完了。CAPMは条件付き期待シナリオで、betaだけの確定保証を主張しない。premium/基差残差は別cash入力、契約倍率は原典例。説明・図・受入は保留 | 7 passed・ruff PASS |
-| §17.2 | `_index_currency.py` | EUR call50000/AUD put300000、GBP forward1320000。range put0.027304826/call0.027292496（印刷0.0273、上strike丸めの残差を保持）、zero-cost上strike探索。独立Fractionの3領域cash・lognormal payoff求積 | 計算部分完了。外貨受取/支払の符号とnotionalを明示、印刷strikeの小さな費用と厳密zero-costを区別。市場説明・図・受入は保留 | 15 passed・ruff PASS |
+| §17.2 | `_index_currency.py` | EUR call50000/AUD put300000、GBP forward1320000。range put0.027304826/call0.027292496（印刷0.0273、上strike丸めの残差を保持）、zero-cost上strike探索。独立Fractionの3領域cash・lognormal payoff求積 | 計算部分完了。外貨受取/支払の符号とnotionalを明示、印刷strikeの小さな費用と厳密zero-costを区別。forward一致境界の求根丸めを修正。市場説明・図・受入は保留 | 15 passed・ruff PASS |
 | §17.3 | `_index_currency.py` | 式17.1–5の下限/parity/配当spot変換、配当込みPDEと米国差額不等式。本文に数値例なし。独立lognormal payoff求積、再投資台帳、数値微分PDE・CRRで照合 | 計算部分完了。spot縮小は欧州限定、米国差額不等式は本文のr/q非負前提を明示。説明・図・受入は保留 | 26 passed・ruff PASS |
 | §17.4 | `_index_currency.py` | Ex17.1 c51.83/契約5183、d1印刷0.5444は切捨て相当（未丸め0.544478575）、d2/N再現。Snapshot put169.7、forward/配当利回り逆算。独立CRR・payoff積分 | 計算部分完了。契約5183は丸めた価格の100倍で未丸め5183.2957と区別、同一満期の理論quotesを逆算。説明・図・受入は保留 | 32 passed・ruff PASS |
-| §17.5 | `_index_currency.py` | Ex17.2 σ20%→0.0639、10%→0.0285、c0.043→IV14.1%（未丸め14.111938%）。通貨反転call/putの数量Kと価格係数S×K。独立payoff積分によるIV求根・満期換算台帳 | 計算部分完了。国内/外貨の単位とnumeraire反転を明示、T=.3333は4/12の表示丸め。説明・図・受入は保留 | 39 passed・ruff PASS |
+| §17.5 | `_index_currency.py` | Ex17.2 σ20%→0.0639、10%→0.0285、c0.043→IV14.1%（未丸め14.111938%）。通貨反転call/putの数量Kと価格係数S×K。独立payoff積分によるIV求根・満期換算台帳、微小価格の回帰 | 計算部分完了。国内/外貨の単位とnumeraire反転を明示、T=.3333は4/12の表示丸め。微小価格をゼロIVにしないBrent幅収束へ修正。説明・図・受入は保留 | 54 passed・ruff check PASS（境界回帰後） |
 | §17.6 | `_index_currency.py` | Ch13参照の米国為替call0.019・全option節点、成長a0.9983/p0.4673。独立停止方針列挙・CN-PDE、外国金利別の行使premium、ゼロvol/満期境界 | 計算部分完了。国内rで割引しr−qで成長、米国>=欧州、行使判定は指定格子上の厳密優越。説明・図・受入は保留 | 48 passed・ruff PASS |
 | §18.1 | `_futures_options.py` | 銅2500+250=2750、corn1050−50=1000、SOFR0.65%/premium125/payoff500/profit375、国債96-09/1-04/利益937.50。独立Fractionの2脚決済・符号付き価格cash | 計算部分完了。先物建玉と清算cashを分離、倍率は本文例のcaller入力。市場の現行制度・定性説明・図・受入は保留 | 8 passed・ruff PASS |
 | §18.3 | `_futures_options.py` | 本文に数値例なし。満期一致ならF_T=S_T、spotと先物の欧州call/put一致。独立spot payoff求積・terminal cashと満期ずれの反例 | 計算部分完了。確定carryと満期一致を明示、米国型へ等価性を拡張しない。§18.2定性・説明・図・受入は保留 | 15 passed・ruff PASS |
@@ -84,7 +84,19 @@
 
 ## 次の実装
 
-- Ch10–16の計算52項目を実装・push（Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3）。Ch16.5は算術部分のみ。
-- 今回（2026-10-06）の追加は16項目：Ch15の13項目とCh16の3項目。対象Ch15 90/Ch16 26 tests・ruff PASS。Ch10–14は今回再実行していない。
-- 次はCh19 §19.1（Greeksの初期例）。P4の計算は合計68節、正式受入は0/112のまま。
-- 定性・説明要求は保留：Ch16 §16.1–2・会計史/研究の説明、Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済みだが、今回の新テストには含めていない。Ch10全12節の完了や正式受入を表すものではない。
+- Ch10–18の計算68項目を実装・push。Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3、Ch17：6、Ch18：10。Ch16.5は算術部分のみ。
+- 直近のまとまりはCh17/18の16項目。対象Ch17 54・Ch18 78、合計132 tests PASS、ruff check PASS（2026-10-06）。Ch10–16と全suiteはこのまとまりでは再実行していない。
+- 次のまとまりはCh19前半（§19.1–§19.7）：通し例・stop-loss・delta・theta・gamma・PDE関係の6計算項目。§19.3は定性説明として保留。P4全体は112節、正式受入は0/112のまま。計算項目には付録を含み、定性を除くため、68/112を完了率には使わない。
+- 定性・説明要求は保留：Ch18 §18.2、Ch16 §16.1–2・会計史/研究の説明、Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済み。計算完了は章の正式受入を表さない。
+- [Claudeの既存Ch10–16レビュー](P4_REVIEW_NOTES.md)は別管理。今回の新規為替IVはR-07の問題を引き継がない求根へ変更し、独立積分の微小価格回帰を追加した。既存Ch15のR-07、権利確定日R-02、tail境界R-08、docstring R-01等は未修正。ruff format・全suite・正式受入も再開時の確認事項。
+
+## 再現コマンド
+
+今回の132 testsとlint。Python/ruffはルートの共有venvを使い、PYTHONPATHでロジックworktreeを明示する。`ruff PASS`は以下の`ruff check`の結果であり、format/release/全suiteのPASSを意味しない。
+
+```bash
+cd /home/kazumasa/worktrees/m29
+export PYTHONPATH="$PWD/johnhull/hullkit/src:$PWD/johnhull/report:$PWD"
+/home/kazumasa/projects/.venv/bin/python -m pytest -q   johnhull/hullkit/tests/test_index_currency_*.py   johnhull/hullkit/tests/test_futures_options_*.py
+/home/kazumasa/projects/.venv/bin/ruff check   johnhull/hullkit/src/hullkit/_index_currency.py   johnhull/hullkit/src/hullkit/_futures_options.py   johnhull/hullkit/tests/test_index_currency_*.py   johnhull/hullkit/tests/test_futures_options_*.py
+```
