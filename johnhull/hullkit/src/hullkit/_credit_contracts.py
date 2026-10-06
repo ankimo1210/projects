@@ -69,3 +69,82 @@ def cds_bond_basis(cds_spread, bond_yield, risk_free_rate):
         "basis": cds_spread - (bond_yield - risk_free_rate),
         "protected_yield": bond_yield - cds_spread,
     }
+
+
+def cds_leg_table(curve, recovery, rate, maturity, *, frequency=1, start=0):
+    """All row coefficients in Hull Tables25.1–5, per unit notional/spread."""
+    from . import cds
+
+    _recovery(recovery)
+    if not np.isfinite([rate, maturity, start]).all() or start < 0:
+        raise ValueError("finite rate/times and nonnegative start required")
+    hazard = cds._as_curve(curve)
+    times = cds._grid(start, maturity, frequency)
+    dt = 1 / frequency
+    mid = times - dt / 2
+    survival = hazard.survival(times)
+    pd = hazard.survival(times - dt) - survival
+    end_df, mid_df = np.exp(-rate * times), np.exp(-rate * mid)
+    annuity = dt * survival * end_df
+    accrual_expected = dt / 2 * pd
+    accrual = accrual_expected * mid_df
+    protection_expected = (1 - recovery) * pd
+    protection = protection_expected * mid_df
+    binary = pd * mid_df
+    duration = float(annuity.sum() + accrual.sum())
+    return {
+        "times": times,
+        "mid_times": mid,
+        "survival": survival,
+        "interval_pd": pd,
+        "end_discount": end_df,
+        "mid_discount": mid_df,
+        "annuity_rows": annuity,
+        "accrual_expected": accrual_expected,
+        "accrual_rows": accrual,
+        "protection_expected": protection_expected,
+        "protection_rows": protection,
+        "binary_rows": binary,
+        "annuity": float(annuity.sum()),
+        "accrual": float(accrual.sum()),
+        "protection": float(protection.sum()),
+        "binary_protection": float(binary.sum()),
+        "risky_duration": duration,
+        "par_spread": float(protection.sum() / duration),
+    }
+
+
+def calibrated_cds(spread, recovery, rate, maturity, *, frequency=1):
+    """Existing implied-hazard calibration with explicit row/leg output."""
+    from . import cds
+
+    if not np.isfinite(spread) or spread < 0:
+        raise ValueError("nonnegative finite par spread required")
+    _recovery(recovery)
+    if recovery == 1:
+        raise ValueError("spread-to-hazard calibration requires recovery below one")
+    hazard = 0.0 if spread == 0 else cds.implied_hazard(spread, recovery, rate, maturity, frequency)
+    result = cds_leg_table(hazard, recovery, rate, maturity, frequency=frequency)
+    result["hazard"] = hazard
+    return result
+
+
+def recovery_recalibration(
+    spread, recoveries, rate, maturity, *, frequency=1, contract_spread=None
+):
+    """Recalibrate hazard for each R at fixed market quote before comparing MTM."""
+    from ._credit_risk import _vector
+
+    recovery = _vector(recoveries)
+    coupon = spread if contract_spread is None else contract_spread
+    if not np.isfinite(coupon) or coupon < 0:
+        raise ValueError("nonnegative contract premium required")
+    tables = [
+        calibrated_cds(spread, float(r), rate, maturity, frequency=frequency) for r in recovery
+    ]
+    return {
+        "hazards": np.array([t["hazard"] for t in tables]),
+        "par_spreads": np.array([t["par_spread"] for t in tables]),
+        "binary_spreads": np.array([t["binary_protection"] / t["risky_duration"] for t in tables]),
+        "buyer_values": np.array([t["protection"] - coupon * t["risky_duration"] for t in tables]),
+    }
