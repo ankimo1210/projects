@@ -13,8 +13,8 @@ def test_source_carry_ordering_and_four_prices_against_independent_cn_pde(yield_
     for kind in ["call", "put"]:
         spot_pde = fd_vanilla(100, 100, .06, .25, 1, q=yield_rate, kind=kind, american=True, n_s=400, n_t=700)
         futures_pde = fd_vanilla(forward, 100, .06, .25, 1, q=.06, kind=kind, american=True, n_s=400, n_t=700)
-        assert result["spot_"+kind] == pytest.approx(spot_pde, abs=.02)
-        assert result["futures_"+kind] == pytest.approx(futures_pde, abs=.02)
+        assert result["spot_"+kind] == pytest.approx(spot_pde, abs=.005)
+        assert result["futures_"+kind] == pytest.approx(futures_pde, abs=.005)
         assert result["spot_european_"+kind] == pytest.approx(result["futures_european_"+kind], abs=1e-11)
     if yield_rate < .06:
         assert result["futures_call"] > result["spot_call"]

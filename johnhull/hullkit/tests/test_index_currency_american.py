@@ -28,8 +28,8 @@ def test_small_carry_tree_against_independent_full_stopping_policy_enumeration(k
 def test_american_carry_against_independent_cn_pde(spot, yield_rate, kind):
     result = index.carry_exercise_comparison(spot, 100, .04, yield_rate, .2, 1, 1000, kind=kind)
     reference = fd_vanilla(spot, 100, .04, .2, 1, q=yield_rate, kind=kind, american=True, n_s=400, n_t=600)
-    assert result["american"] == pytest.approx(reference, abs=.025)
-    assert result["european_tree_value"] == pytest.approx(result["european"], abs=.02)
+    assert result["american"] == pytest.approx(reference, abs=.006)
+    assert result["european_tree_value"] == pytest.approx(result["european"], abs=.002)
     assert result["american"] >= result["european_tree_value"]-1e-10
 
 

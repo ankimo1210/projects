@@ -36,7 +36,7 @@ def test_business_snapshot_long_term_guarantee_against_payoff_density():
 def test_index_example_against_independent_crr(kind):
     result = index.carry_option_details(930, 900, .08, .03, .2, 2/12)
     reference = crr_price(930, 900, .08, .2, 2/12, 1600, q=.03, kind=kind)
-    assert result[kind] == pytest.approx(reference, abs=.025)
+    assert result[kind] == pytest.approx(reference, abs=.01)
 
 
 def test_forward_and_yield_from_multiple_strikes_including_negative_yield():
