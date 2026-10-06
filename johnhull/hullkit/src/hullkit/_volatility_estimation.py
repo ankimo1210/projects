@@ -141,7 +141,12 @@ def conditional_likelihood(returns, variances):
 
 
 def fit_ewma(returns, *, initial):
-    """Conditional normal MLE with explicit positive initial variance."""
+    """Conditional normal MLE candidate from multiple extrema and both endpoints.
+
+    Uniform and logarithmic endpoint grids locate extrema for bounded refinement.
+    This numerical multistart search does not prove uniqueness of an optimum.
+    The best converged candidate/endpoints are compared by the same likelihood.
+    """
     from scipy.optimize import minimize_scalar
 
     u = _vector(returns)
@@ -150,16 +155,46 @@ def fit_ewma(returns, *, initial):
         raise ValueError("positive initial variance required for normal likelihood")
 
     def objective(decay):
-        return -float(
-            conditional_likelihood(u, ewma_forecasts(u, initial=initial, decay=decay)[:-1]).sum()
-        )
+        variance = ewma_forecasts(u, initial=initial, decay=decay)[:-1]
+        if np.any(variance <= 0):
+            return np.inf
+        return -float(conditional_likelihood(u, variance).sum())
 
-    fit = minimize_scalar(objective, bounds=(1e-8, 1), method="bounded", options={"xatol": 1e-10})
-    if not fit.success:
-        raise ValueError("EWMA fit failed to converge")
-    candidates = [(fit.x, fit.fun), (1.0, objective(1.0))]
+    near = np.geomspace(1e-12, 0.01, 81)
+    grid = np.unique(np.r_[np.linspace(0, 1, 513), near, 1 - near])
+    variance = np.full(grid.shape, initial)
+    scores = np.zeros(grid.shape)
+    for move in u:
+        valid = variance > 0
+        term = np.full(grid.shape, np.inf)
+        term[valid] = np.log(variance[valid]) + move * move / variance[valid]
+        scores += term
+        variance = grid * variance + (1 - grid) * move * move
+    candidates = [(0.0, objective(0.0)), (1.0, objective(1.0))]
+    for i in range(1, grid.size - 1):
+        if (
+            np.isfinite(scores[i])
+            and scores[i] <= scores[i - 1]
+            and scores[i] <= scores[i + 1]
+            and (scores[i] < scores[i - 1] or scores[i] < scores[i + 1])
+        ):
+            fit = minimize_scalar(
+                objective,
+                bounds=(grid[i - 1], grid[i + 1]),
+                method="bounded",
+                options={"xatol": 1e-12},
+            )
+            if fit.success and np.isfinite(fit.fun):
+                candidates.append((float(fit.x), float(fit.fun)))
     decay, score = min(candidates, key=lambda point: point[1])
-    return {"decay": float(decay), "measure": -float(score), "success": True}
+    if not np.isfinite(score):
+        raise ValueError("EWMA fit has no finite converged likelihood candidate")
+    return {
+        "decay": float(decay),
+        "measure": -float(score),
+        "success": True,
+        "search_grid_size": int(grid.size),
+    }
 
 
 def fit_garch(returns, *, initial, target_variance=None, hull_start=False):

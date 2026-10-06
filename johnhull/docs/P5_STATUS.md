@@ -49,3 +49,4 @@
 
 - 2026-10-06 R1：既存docstringゲートの3失敗を再現し、7関数に意味・単位・規約を追記。ゲート変更なし。P5の変更4モジュール123 tests PASS、test_docstrings.py 154 passed、ruff check/format PASS。全suiteは再実行していない。
 - 2026-10-06 R2：小gammaの巨大noncentralityでNaN/誤値を再現。遠い第2根のtail massが浮動小数の範囲外となる領域では正規分位点を単調枝へ直接写す。正負gamma/linearの16回帰を追加し、market risk 76 passed・docstring対象1 passed・ruff PASS。
+- 2026-10-06 R3：EWMA尤度の単峰仮定による局所解を4観測/seed918で再現。uniform+endpoint対数gridで複数極値を探索・精密化し両端と比較。独立20001点grid/ゼロ端点の3回帰、volatility estimation 29 passed・docstring対象1 passed・ruff PASS。数値探索は最適解の一意性の証明ではない。

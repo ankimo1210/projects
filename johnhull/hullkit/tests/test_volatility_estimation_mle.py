@@ -156,3 +156,34 @@ def test_three_parameter_fit_reports_convergence_and_explicit_hull_start():
     assert fit["measure"] == pytest.approx(v.conditional_likelihood(u[1:], forecasts[:-1]).sum())
     with pytest.raises(ValueError):
         v.conditional_likelihood([0.01], [0])
+
+
+@pytest.mark.parametrize("case", ["four_observations", "seed_918", "zero_endpoint"])
+def test_review_r3_multiple_ewma_extrema_and_endpoints_against_dense_grid(case):
+    if case == "four_observations":
+        u = np.array([0.1, 0.03, 0, 0.001])
+    elif case == "seed_918":
+        rng = np.random.default_rng(918)
+        for _ in range(6):
+            u = rng.normal(size=20) * np.exp(rng.normal(scale=1.5, size=20)) * 0.01
+    else:
+        u = np.array([0.01, 0.03, 0.1, 0.3])
+    initial = 0.0001
+    grid = np.linspace(0, 1, 20001)
+    variance = np.full(grid.shape, initial)
+    measures = np.zeros(grid.shape)
+    # Independent vectorized recurrence, evaluating both boundaries explicitly.
+    for move in u:
+        valid = variance > 0
+        term = np.full(grid.shape, -np.inf)
+        term[valid] = -np.log(variance[valid]) - move * move / variance[valid]
+        measures += term
+        variance = grid * variance + (1 - grid) * move * move
+    result = v.fit_ewma(u, initial=initial)
+    assert result["measure"] >= np.max(measures) - 1e-5
+    if case == "four_observations":
+        assert result["decay"] == pytest.approx(0.0010883953, abs=1e-7)
+    elif case == "seed_918":
+        assert result["decay"] == pytest.approx(grid[np.argmax(measures)], abs=1 / 20000)
+    else:
+        assert result["decay"] == 0
