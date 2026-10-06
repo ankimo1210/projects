@@ -245,3 +245,14 @@ def cost_of_carry(spot, rate, maturity, *, income_yield=0, storage_yield=0, conv
         raise ValueError("finite proportional yield inputs required")
     carry = rate + storage_yield - income_yield
     return {"carry": carry, "forward": no_income_forward(spot, carry - convenience_yield, maturity)}
+
+
+def expected_spot_forward(expected_spot, rate, required_return, maturity):
+    """Nominal forward implied by a physical expectation and stated required return.
+
+    This illustrative discounted-return relation neglects daily settlement and
+    does not identify physical expectations or risk premia from quotes alone.
+    """
+    if not np.isfinite(required_return):
+        raise ValueError("finite required return required")
+    return no_income_forward(expected_spot, rate - required_return, maturity)
