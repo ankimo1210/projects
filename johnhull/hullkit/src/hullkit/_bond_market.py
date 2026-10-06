@@ -13,10 +13,12 @@ def _value(x):
 
 
 def bond_clean_price(cash_price, accrued_interest):
+    """Quoted (clean) price: cash (dirty) price less accrued interest, Hull §29.1."""
     return _value(np.asarray(cash_price, dtype=float) - np.asarray(accrued_interest, dtype=float))
 
 
 def cash_bond_strike(quoted_strike, expiry_accrued_interest):
+    """Cash strike: quoted strike plus accrued interest at option expiry, Hull §29.1."""
     return _value(
         np.asarray(quoted_strike, dtype=float) + np.asarray(expiry_accrued_interest, dtype=float)
     )
@@ -92,6 +94,7 @@ def bond_price_volatility(modified_duration, forward_yield, yield_volatility):
 
 
 def cash_bond_option(discount, cash_forward, cash_strike, bond_volatility, expiry, kind="call"):
+    """Black price on the cash forward and cash strike, Hull 29.1/29.2."""
     return forward_black_price(discount, cash_forward, cash_strike, bond_volatility, expiry, kind)
 
 
