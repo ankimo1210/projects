@@ -278,3 +278,18 @@ def gamma_vega_delta_hedge(
     stock = -residual[0]
     residual[0] += stock
     return {"option_quantities": weights, "stock_quantity": float(stock), "residuals": residual}
+
+
+def rho_units(spot, strike, rate, sigma, maturity, *, kind="call", yield_rate=0):
+    """Domestic rho at fixed spot/q, per absolute rate 1.0, 0.01 and 1bp."""
+    from . import bsm
+
+    if kind not in ("call", "put") or sigma <= 0 or maturity <= 0:
+        raise ValueError("call/put and positive diffusive time/volatility required")
+    function = bsm.call_rho if kind == "call" else bsm.put_rho
+    value = float(function(spot, strike, rate, sigma, maturity, q=yield_rate))
+    return {
+        "per_unit_rate": value,
+        "per_rate_point": 0.01 * value,
+        "per_basis_point": 0.0001 * value,
+    }
