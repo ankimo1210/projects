@@ -35,3 +35,32 @@ def rate_from_futures_quote(quote):
     if not math.isfinite(quote):
         raise ValueError("finite quote required")
     return (100-quote)/100
+
+
+def black_details(forward, strike, rate, sigma, maturity):
+    """Ordinary European premium with deterministic discount and lognormal F."""
+    from ._index_currency import carry_option_details
+
+    return carry_option_details(forward, strike, rate, rate, sigma, maturity)
+
+
+def futures_at_option_expiry(terminal_spot, rate, yield_rate, option_maturity, futures_maturity):
+    """Terminal futures/spot basis under deterministic continuous carry."""
+    if not all(math.isfinite(x) for x in (terminal_spot, rate, yield_rate, option_maturity, futures_maturity)) or terminal_spot <= 0 or option_maturity < 0 or futures_maturity < option_maturity:
+        raise ValueError("positive spot and futures maturity at or after option expiry required")
+    return terminal_spot*math.exp((rate-yield_rate)*(futures_maturity-option_maturity))
+
+
+def spot_futures_equivalence(spot, strike, rate, yield_rate, sigma, maturity, *, futures_maturity=None):
+    """Hull 18.3 European equal-maturity comparison; deterministic carry only."""
+    from ._index_currency import carry_option_details
+
+    spot_values = carry_option_details(spot, strike, rate, yield_rate, sigma, maturity)
+    if futures_maturity is None:
+        futures_maturity = maturity
+    if not math.isfinite(futures_maturity) or not math.isclose(futures_maturity, maturity, rel_tol=1e-12, abs_tol=1e-12):
+        raise ValueError("spot/futures payoff equivalence requires matching maturities")
+    future_values = black_details(spot_values["forward"], strike, rate, sigma, maturity)
+    return {"forward": spot_values["forward"],
+            "spot_call": spot_values["call"], "spot_put": spot_values["put"],
+            "futures_call": future_values["call"], "futures_put": future_values["put"]}
