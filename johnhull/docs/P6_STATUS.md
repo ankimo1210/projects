@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算52/54。次は§9.2（funding/IM）。Ch1→9を順に継続する。
+- 現在：計算53/54。次は§9.4（incremental XVA）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -65,6 +65,7 @@
 | §7.12 | `_swap_foundations.py` | 100M/120bp→1.2M/year、40%回収→60M。独立bond recovery＋protection=元本 | 計算完了。5年は契約条件、premium schedule/hazard/価格はCh25、此節で推測しない。説明・受入保留 | 25 passed・ruff check/format PASS |
 | §8.1 | `_securitization_foundations.py` | ABS mezz33.3/53.3/80/100%、CDO equity100×4、mezz93.3/100/100/100、senior0/28.2/69.2/100の全16値、AAA89.75≈90・開始10.25・ABS5.25/35・12/80・45/65→69.2の7関係。独立ドル台帳 | 計算完了。全ABS同じ損失率、PD/格付けモデルではない。説明・受入保留 | 2 passed・ruff check/format PASS |
 | §9.1 | `_xva_foundations.py` | 2.2/2.1/2.35%→10/15bp。独立定数EE hazard積分、fixed seed default-time MC6SE、CVA/DVA反転 | 計算完了。qはunconditional区間PD、vはdefault条件付きdiscount/LGD込loss、金額の原典価格表なし。説明・受入保留 | 3 passed・ruff check/format PASS |
+| §9.2 | `_xva_foundations.py` | 10bp/120bp/30bp/平均2.75%。独立constant cash fundingとdiscount利息積分、IM増分負値 | 計算完了。原典にEE/IM価格表なし、node台形積分のillustration、費用を無条件に価格へ足さない。説明・受入保留 | 6 passed・ruff check/format PASS |
 
 ## 残りと検証
 
