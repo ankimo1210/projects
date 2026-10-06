@@ -101,3 +101,38 @@ def dated_interest(notional, annual_rate, start, end, *, basis=360):
     if not np.isfinite([notional, annual_rate, basis]).all() or notional < 0 or basis <= 0:
         raise ValueError("finite rate, nonnegative notional and positive basis required")
     return notional * annual_rate * day_count(start, end) / basis
+
+
+def comparative_irs(
+    fixed_a, fixed_b, floating_spread_a, floating_spread_b, fixed_paid_to_a, fixed_received_from_b
+):
+    """Illustrative gains: A borrows fixed then pays float; B does the opposite.
+
+    Dealer receives B's fixed and pays A's fixed. Credit-spread rollover and
+    counterparty risk prevent interpreting the static gains as riskless arbitrage.
+    """
+    if not np.isfinite(
+        [
+            fixed_a,
+            fixed_b,
+            floating_spread_a,
+            floating_spread_b,
+            fixed_paid_to_a,
+            fixed_received_from_b,
+        ]
+    ).all():
+        raise ValueError("finite rate quotes required")
+    aa = fixed_a - fixed_paid_to_a
+    bb = floating_spread_b + fixed_received_from_b
+    gap = fixed_b - fixed_a
+    float_gap = floating_spread_b - floating_spread_a
+    return {
+        "fixed_gap": gap,
+        "floating_gap": float_gap,
+        "joint_gain": gap - float_gap,
+        "a_effective_spread": aa,
+        "b_effective_fixed": bb,
+        "a_gain": floating_spread_a - aa,
+        "b_gain": fixed_b - bb,
+        "dealer_gain": fixed_received_from_b - fixed_paid_to_a,
+    }
