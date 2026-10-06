@@ -42,7 +42,7 @@ def test_hull_other_assets_all_nodes_against_direct_state_or_stopping_sums(spot,
 def test_index_european_refinement_converges_to_dividend_bsm():
     up, down = crr_params(.2, .5/2000)
     direct = foundations.terminal_binomial_value(810, 800, .05, .5, 2000, up, down, q=.02)
-    assert direct["price"] == pytest.approx(float(call_price(810, 800, .05, .2, .5, q=.02)), abs=.02)
+    assert direct["price"] == pytest.approx(float(call_price(810, 800, .05, .2, .5, q=.02)), abs=.012)
     assert direct["price"] == pytest.approx(crr_price(810, 800, .05, .2, .5, 2000, q=.02), abs=1e-9)
     assert direct["weights"] @ direct["stock"] == pytest.approx(810*math.exp(.03*.5), abs=1e-8)
 

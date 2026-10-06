@@ -43,7 +43,7 @@ def test_both_tail_terms_converge_to_their_correct_normal_limits():
     assert result["cash_tail"] == pytest.approx(norm.cdf(d2(spot, strike, rate, sigma, maturity, q=q)), abs=.012)
     assert result["stock_tail"] == pytest.approx(norm.cdf(d1(spot, strike, rate, sigma, maturity, q=q)), abs=.012)
     assert result["u1"] == pytest.approx(math.exp((rate-q)*maturity)*result["stock_tail"], abs=1e-12)
-    assert result["price"] == pytest.approx(float(call_price(spot, strike, rate, sigma, maturity, q=q)), abs=.003)
+    assert result["price"] == pytest.approx(float(call_price(spot, strike, rate, sigma, maturity, q=q)), abs=.001)
 
 
 def test_stock_numeraire_probability_is_not_actual_world_probability():

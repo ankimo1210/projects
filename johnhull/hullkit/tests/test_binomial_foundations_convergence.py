@@ -34,5 +34,5 @@ def test_even_and_odd_european_trees_converge_to_independent_payoff_integral(par
         backward = crr_price(50, 52, .05, .3, 2, n, kind="put")
         assert direct == pytest.approx(backward, abs=2e-10)
         errors.append(abs(direct-integral))
-    assert errors[-1] < .006
+    assert errors[-1] < .002
     assert errors[-1] < errors[0]
