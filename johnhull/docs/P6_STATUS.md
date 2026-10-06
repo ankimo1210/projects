@@ -25,7 +25,7 @@
 | §3.1 | `_futures_hedging.py` | 原油1000枚/4/4M/49M/−6、銅4枚/5000/325000/320000/−15000/305000。独立cash状態列挙 | 計算完了。終了時S=F、日次資金繰りなし、銅cents換算。説明・受入保留 | 2 passed・ruff check/format PASS |
 | §3.2 | `_futures_hedging.py` | 原油49→59のshort損失10M。独立売上/原料/先物cash、転嫁あり/なしの符号 | 計算完了。転嫁率は合成の経済条件、事後利益と事前risk削減を区別。説明・受入保留 | 4 passed・ruff check/format PASS |
 | §3.3 | `_futures_hedging.py` | .30/.10/2.30、JPY4枚/.055/−.005/1.075c/537500、原油20枚/1.10/.90/48.90/978000。独立cash/交差basis分解 | 計算完了。basis=S−F、JPY quoteはcents、sell/buyのcash符号を明示。説明・受入保留 | 6 passed・ruff check/format PASS |
-| §3.4 | `_futures_hedging.py` | 全9値: SD .0313/.0263、rho .928、h .78、37枚、VA2.2M/VF54600/32.23/32枚。独立OLS/分散min、tailingは補足 | 計算完了。ddof1、日次例.8をhと解釈するためSD比1を仮定。tailing30.70は原典外。説明・受入保留 | 8 passed・ruff check/format PASS |
+| §3.4 | `_futures_hedging.py` | 全9値: SD .0313/.0263、rho .928、h .78、37枚、VA2.2M/VF54600/32.23/32枚。独立OLS/分散min、tailingは補足 | 計算完了。ddof1、日次例.8をhと解釈するためSD比1を仮定。tailing30.70は原典外。SD/rho/hの許容差を各表示桁の半単位に分けて確認。説明・受入保留 | 14 passed・ruff check/format PASS |
 | §3.5 | `_futures_hedging.py` | Table3.4全25値＋252500/20/30/15short/10long、stock picking2M/105000/20.95/21/−200000/262500/62500。独立CAPM factorとcash | 計算完了。ドル値±1、market table日付混在は留保。beta0に残差riskがない保証はしない。説明・受入保留 | 10 passed・ruff check/format PASS |
 | §3.6 | `_futures_hedging.py` | 100枚/.80/.50/.40/1.70/現物下落3.00。独立全6売買cash列、47.70は導出値 | 計算完了。利息/roll費用なし、信用/流動性riskと価格hedgeを区別。説明・受入保留 | 12 passed・ruff check/format PASS |
 | §3.appendix | `_futures_hedging.py` | beta0→5%、beta.75→11%。独立OLS/2状態期待、portfolio covariance線形性 | 計算完了。期待marketと実現marketを区別しCAPMの1期仮定を記録。説明・受入保留 | 14 passed・ruff check/format PASS |

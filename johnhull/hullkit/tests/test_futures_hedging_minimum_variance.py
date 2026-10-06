@@ -47,9 +47,9 @@ S = np.array(
 
 def test_source_all_nine_values():
     a = h.minimum_variance_hedge(S, F, exposure_units=2e6, contract_units=42000)
-    assert [a["sd_future"], a["sd_spot"], a["rho"], a["ratio"]] == pytest.approx(
-        [0.0313, 0.0263, 0.928, 0.78], abs=0.0024
-    )
+    assert [a["sd_future"], a["sd_spot"]] == pytest.approx([0.0313, 0.0263], rel=0, abs=0.00005)
+    assert a["rho"] == pytest.approx(0.928, rel=0, abs=0.0005)
+    assert a["ratio"] == pytest.approx(0.78, rel=0, abs=0.005)
     assert a["contracts"] == pytest.approx(37, abs=0.5)
     day = h.hedge_contracts(0.8, 2e6 * 1.1, 42000 * 1.3)
     assert [
