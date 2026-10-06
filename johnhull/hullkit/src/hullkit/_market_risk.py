@@ -263,3 +263,229 @@ def lognormal_position_risk(value, daily_vol, days=1, confidence=0.99, *, growth
     cutoff = value * math.exp((growth - daily_vol**2 / 2) * days + vol * z)
     conditional = value * math.exp(growth * days) * norm.cdf(z - vol) / (1 - confidence)
     return {"var": float(value - cutoff), "es": float(value - conditional)}
+
+
+def covariance_risk(exposures, covariance, confidence=0.99, *, horizon=1, daily_profit_mean=None):
+    """Linear money risk from a covariance matrix of fractional daily changes."""
+    a = _loss_vector(exposures)
+    cov = _covariance(covariance, len(a))
+    mean = (
+        np.zeros_like(a)
+        if daily_profit_mean is None
+        else np.asarray(daily_profit_mean, dtype=float)
+    )
+    if mean.shape != a.shape or not np.isfinite(mean).all():
+        raise ValueError("profit means must match exposures")
+    sigma = math.sqrt(max(float(a @ cov @ a), 0))
+    result = normal_loss_risk(sigma, confidence, loss_mean=-float(a @ mean), horizon=horizon)
+    result["daily_sigma"] = sigma
+    return result
+
+
+def delta_exposures(spots, deltas):
+    """S_i delta_i maps fractional stock changes to money P&L, eq22.6."""
+    s = np.asarray(spots, dtype=float)
+    d = np.asarray(deltas, dtype=float)
+    if s.ndim != 1 or d.shape != s.shape or not np.isfinite(s).all() or not np.isfinite(d).all():
+        raise ValueError("matching finite spots and deltas required")
+    return s * d
+
+
+def bond_cashflows(principal, coupon_rate, maturity, *, frequency=2):
+    """Remaining regular coupons counted backward from maturity.
+
+    The first remaining payment may be sooner than a full coupon period; its
+    coupon is unchanged (this is an existing bond, not a newly issued stub).
+    """
+    if (
+        not np.isfinite([principal, coupon_rate, maturity, frequency]).all()
+        or maturity <= 0
+        or frequency < 1
+        or int(frequency) != frequency
+    ):
+        raise ValueError("finite bond terms, positive maturity/integer frequency required")
+    count = math.ceil(maturity * frequency - 1e-12)
+    times = maturity - np.arange(count - 1, -1, -1) / frequency
+    cash = np.full(count, principal * coupon_rate / frequency)
+    cash[-1] += principal
+    return {"times": times, "cashflows": cash}
+
+
+def bond_parallel_risk(
+    times,
+    cashflows,
+    rate,
+    rate_sigma,
+    *,
+    confidence=0.99,
+    horizon=1,
+    compounding="continuous",
+    frequency=2,
+):
+    """Money duration exposure to parallel daily rate changes.
+
+    Periodic compounding returns modified duration. Zero-net-PV books still
+    have a dollar duration; their normalized duration is undefined (None).
+    """
+    times = np.asarray(times, dtype=float)
+    cash = np.asarray(cashflows, dtype=float)
+    if (
+        times.ndim != 1
+        or cash.shape != times.shape
+        or not np.isfinite(times).all()
+        or not np.isfinite(cash).all()
+        or np.any(times < 0)
+        or not np.isfinite(rate)
+    ):
+        raise ValueError("finite matching future times/cashflows and rate required")
+    if compounding == "continuous":
+        discounted = cash * np.exp(-rate * times)
+        duration_terms = times
+    elif compounding == "periodic":
+        if frequency <= 0 or 1 + rate / frequency <= 0:
+            raise ValueError("positive compounding base/frequency required")
+        discounted = cash * (1 + rate / frequency) ** (-frequency * times)
+        duration_terms = times / (1 + rate / frequency)
+    else:
+        raise ValueError("unknown compounding convention")
+    value = float(discounted.sum())
+    dollar_duration = float(discounted @ duration_terms)
+    result = normal_loss_risk(abs(dollar_duration) * rate_sigma, confidence, horizon=horizon)
+    result.update(
+        value=value,
+        dollar_duration=dollar_duration,
+        daily_sigma=abs(dollar_duration) * rate_sigma,
+        modified_duration=dollar_duration / value if value != 0 else None,
+    )
+    return result
+
+
+def cashflow_map(
+    cashflow,
+    maturity,
+    standard_times,
+    zero_rates,
+    bond_vols,
+    correlation,
+    *,
+    compounding="continuous",
+):
+    """Map a cashflow to adjacent standard tenors, preserving PV and its variance.
+
+    Interpolate zero rates and daily bond-price SD linearly in maturity. Solve
+    the quadratic variance equation for a long weight in [0,1]. If two such
+    weights exist choose the one closest to the linear maturity weight.
+    This preserves each cashflow's variance, not every book cross covariance.
+    """
+    grid = np.asarray(standard_times, dtype=float)
+    rates = np.asarray(zero_rates, dtype=float)
+    vols = np.asarray(bond_vols, dtype=float)
+    if (
+        grid.ndim != 1
+        or len(grid) < 2
+        or rates.shape != grid.shape
+        or vols.shape != grid.shape
+        or not np.isfinite([cashflow, maturity]).all()
+        or not np.isfinite(grid).all()
+        or not np.isfinite(rates).all()
+        or not np.isfinite(vols).all()
+        or np.any(np.diff(grid) <= 0)
+        or grid[0] < 0
+        or np.any(vols < 0)
+        or not grid[0] <= maturity <= grid[-1]
+    ):
+        raise ValueError("finite ordered standard tenors bracketing the cashflow required")
+    corr = _covariance(correlation, len(grid))
+    if not np.allclose(np.diag(corr), 1):
+        raise ValueError("unit-diagonal correlation required")
+    if compounding == "annual":
+        if np.any(rates <= -1):
+            raise ValueError("annual rate must exceed -1")
+        discount = (1 + rates) ** (-grid)
+        rate = float(np.interp(maturity, grid, rates))
+        pv = cashflow * (1 + rate) ** (-maturity)
+    elif compounding == "continuous":
+        discount = np.exp(-rates * grid)
+        pv = cashflow * math.exp(-float(np.interp(maturity, grid, rates)) * maturity)
+    else:
+        raise ValueError("unknown mapping compounding convention")
+    target_vol = float(np.interp(maturity, grid, vols))
+    weights = np.zeros_like(grid)
+    node = int(np.argmin(abs(grid - maturity)))
+    if abs(grid[node] - maturity) <= 8 * np.finfo(float).eps * max(1, abs(maturity)):
+        weights[node] = 1
+    else:
+        high = int(np.searchsorted(grid, maturity))
+        low = high - 1
+        time_weight = (grid[high] - maturity) / (grid[high] - grid[low])
+        v1, v2, rho = vols[low], vols[high], corr[low, high]
+        coefficients = np.array(
+            [
+                v1 * v1 + v2 * v2 - 2 * rho * v1 * v2,
+                2 * rho * v1 * v2 - 2 * v2 * v2,
+                v2 * v2 - target_vol**2,
+            ]
+        )
+        scale = max(float(np.abs(coefficients).max()), v1 * v1, v2 * v2, target_vol**2)
+        if scale == 0:
+            weight = time_weight
+        else:
+            normalized = coefficients / scale
+            if abs(normalized[0]) < 1e-14:
+                if abs(normalized[1]) < 1e-14:
+                    roots = [time_weight] if abs(normalized[2]) < 1e-14 else []
+                else:
+                    roots = [-normalized[2] / normalized[1]]
+            else:
+                roots = np.roots(normalized)
+            candidates = [
+                float(np.real(root))
+                for root in roots
+                if abs(np.imag(root)) < 1e-12 and -1e-12 <= np.real(root) <= 1 + 1e-12
+            ]
+            if not candidates:
+                raise ValueError("no variance-preserving weight in [0,1]")
+            weight = min(candidates, key=lambda w: abs(w - time_weight))
+            weight = min(max(weight, 0), 1)
+        weights[low], weights[high] = weight, 1 - weight
+    present = pv * weights
+    return {
+        "value": float(pv),
+        "target_vol": target_vol,
+        "weights": weights,
+        "present_values": present,
+        "principals": present / discount,
+    }
+
+
+def fx_forward_bond_legs(spot, foreign_notional, strike, domestic_df, foreign_df):
+    """Buy-foreign FX forward = foreign zero bond - domestic zero bond."""
+    if (
+        not np.isfinite([spot, foreign_notional, strike, domestic_df, foreign_df]).all()
+        or spot <= 0
+        or domestic_df <= 0
+        or foreign_df <= 0
+    ):
+        raise ValueError("finite terms and positive spot/discounts required")
+    foreign = spot * foreign_notional * foreign_df
+    domestic = -strike * foreign_notional * domestic_df
+    return {"foreign": foreign, "domestic": domestic, "value": foreign + domestic}
+
+
+def ois_bond_legs(fixed_cashflows, discounts, floating_value, *, receive_fixed=True):
+    """Fixed bond minus known floating-bond value; principal is in both bonds."""
+    cash = _loss_vector(fixed_cashflows)
+    df = np.asarray(discounts, dtype=float)
+    if (
+        df.shape != cash.shape
+        or not np.isfinite(df).all()
+        or np.any(df <= 0)
+        or not np.isfinite(floating_value)
+    ):
+        raise ValueError("finite matching cashflows/positive discounts and float value required")
+    fixed = float(cash @ df)
+    return {
+        "fixed": fixed,
+        "floating": float(floating_value),
+        "value": (1 if receive_fixed else -1) * (fixed - floating_value),
+    }
