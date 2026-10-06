@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算14/32。次はCh24 §24.2（historical PDとhazard）。Ch22→23→24→25まで継続する。
+- 現在：計算15/32。次は§24.4（bond信用curve）。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -28,6 +28,7 @@
 | §23.5 | `_volatility_estimation.py` | p1/10=.1、Table23.1先頭4variance/尤度、VL.0001391、Table23.2全30ACFからQ2139.60985/12.94915・閾値25。独立normal密度・別optimizer・grid | 計算完了。1259価格未保有で原系列fit/全尤度10837.4227は保留。尤度第三行8.6333とACF統計2170/13.2との不一致を保持。自由度補正は明示。説明・受入保留 | 17 passed・ruff check/format PASS |
 | §23.6 | `_volatility_estimation.py` | 10/100日v.0002594/.0001479、Table23.3 26.5/24.9/23.8/22.0/19.5%、Table23.4 +1point→.90/.74/.61/.41/.10point。独立quad・反復期待値・中心差分 | 計算完了。sqrt(E[v])とE[sqrt(v)]、P予測とQ IVを区別。ショックは相対1%でなく1percentage point。説明・受入保留 | 21 passed・ruff check/format PASS |
 | §23.7 | `_volatility_estimation.py` | Ex23.3 variance.00009625/.00041125/cov.00012025→rho.6044。式23.17 book variance−.6・最小eigen−.2727922。独立outer-product幾何和・matrix反復・PSD特異例 | 計算完了。ゼロvarianceの相関はNaN、PSD特異行列は許容。ペア別範囲内でもglobal PSDとは限らない。説明・受入保留 | 26 passed・ruff check/format PASS |
+| §24.2 | `_credit_risk.py` | Table24.1 BBB2年.29%/CCC3年4.77%/2年生存63.36%/条件付き7.53%。独立ODEと生存比・確率積 | 計算完了。Table24.1は観測入力で再推定しない。累積/区間/条件付きPDと年率hazard、P/Qを明示。説明・受入保留 | 4 passed・ruff check/format PASS |
 
 ## 残りと検証
 
