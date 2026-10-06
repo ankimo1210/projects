@@ -222,3 +222,41 @@ def new_issue_terminal_allocation(unaffected_spot, strike, old_shares, new_right
     shares = old_shares+new_rights if exercise else old_shares
     stock = (old_shares*unaffected_spot+proceeds)/shares
     return {"post_exercise_spot": stock, "warrant_payoff": max(stock-strike, 0), "exercise_proceeds": proceeds}
+
+
+def implied_vol_bisection(price, spot, strike, rate, maturity, *, kind="call", price_tolerance=1e-10):
+    """Scalar BSM IV by bisection, with finite-root arbitrage bounds.
+
+    At the deterministic lower bound choose sigma=0; at the upper bound no
+    finite root exists. Expiry and zero strike do not identify volatility.
+    """
+    gbm_log_law(spot, rate, 0, maturity)
+    if maturity <= 0 or not math.isfinite(strike) or strike <= 0 or kind not in ("call", "put") or not math.isfinite(price) or not math.isfinite(price_tolerance) or price_tolerance <= 0:
+        raise ValueError("positive expiry/strike/tolerance and finite call or put price required")
+    pricing = bsm.call_price if kind == "call" else bsm.put_price
+    lower = float(pricing(spot, strike, rate, 0, maturity))
+    upper = spot if kind == "call" else strike*math.exp(-rate*maturity)
+    if price < lower or price >= upper:
+        raise ValueError("price outside finite-IV arbitrage bounds")
+    if price-lower <= price_tolerance:
+        return 0.0
+    lo, hi = 0.0, .5
+    while float(pricing(spot, strike, rate, hi, maturity)) < price:
+        hi *= 2
+    for _ in range(160):
+        mid = (lo+hi)/2
+        error = float(pricing(spot, strike, rate, mid, maturity))-price
+        if abs(error) <= price_tolerance or mid == lo or mid == hi:
+            return mid
+        if error < 0:
+            lo = mid
+        else:
+            hi = mid
+    return (lo+hi)/2
+
+
+def quoted_futures_pnl(entry_quote, exit_quote, multiplier, *, quantity=1):
+    """Futures quote difference times currency per quote point and position."""
+    if not all(math.isfinite(x) for x in (entry_quote, exit_quote, multiplier, quantity)) or multiplier <= 0:
+        raise ValueError("finite quotes/position and positive quote multiplier required")
+    return quantity*multiplier*(exit_quote-entry_quote)
