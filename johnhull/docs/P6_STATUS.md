@@ -28,7 +28,7 @@
 | §3.4 | `_futures_hedging.py` | 全9値: SD .0313/.0263、rho .928、h .78、37枚、VA2.2M/VF54600/32.23/32枚。独立OLS/分散min、tailingは補足 | 計算完了。ddof1、日次例.8をhと解釈するためSD比1を仮定。tailing30.70は原典外。SD/rho/hの許容差を各表示桁の半単位に分けて確認。説明・受入保留 | 14 passed・ruff check/format PASS |
 | §3.5 | `_futures_hedging.py` | Table3.4全25値＋252500/20/30/15short/10long、stock picking2M/105000/20.95/21/−200000/262500/62500。独立CAPM factorとcash | 計算完了。ドル値±1、market table日付混在は留保。beta0に残差riskがない保証はしない。説明・受入保留 | 10 passed・ruff check/format PASS |
 | §3.6 | `_futures_hedging.py` | 100枚/.80/.50/.40/1.70/現物下落3.00。独立全6売買cash列、47.70は導出値 | 計算完了。利息/roll費用なし、信用/流動性riskと価格hedgeを区別。説明・受入保留 | 12 passed・ruff check/format PASS |
-| §3.appendix | `_futures_hedging.py` | beta0→5%、beta.75→11%。独立OLS/2状態期待、portfolio covariance線形性 | 計算完了。期待marketと実現marketを区別しCAPMの1期仮定を記録。説明・受入保留 | 14 passed・ruff check/format PASS |
+| §3.appendix | `_futures_hedging.py` | beta0→5%、beta.75→11%。独立OLS/2状態期待、portfolio covariance線形性、定率assetのbeta0を独立OLSでRED→GREEN | 計算完了。期待marketと実現marketを区別しCAPMの1期仮定を記録。説明・受入保留 | 15 passed・ruff check/format PASS |
 | §4.2 | `_rates_foundations.py` | 原典に印刷数値なし。式の日数1/3/1手計算と定率閉形式、独立Decimal再投資 | 計算完了。day weightsはcaller指定、制度/最新参照金利は対象外。説明・受入保留 | 2 passed・ruff check/format PASS |
 | §4.4 | `_rates_foundations.py` | Table4.1六値、連続110.52、10.25%/5.96%、9.758%/8.08%/20.20の全12値。独立成長係数 | 計算完了。年率quoteと支払frequencyを分離、Ch1単利と混ぜない。説明・受入保留 | 4 passed・ruff check/format PASS |
 | §4.5 | `_rates_foundations.py` | 100/5年zero5%→128.40。独立現金成長ODE、DF積の無裁定 | 計算完了。連続複利、Ch4はday countなし。説明・受入保留 | 6 passed・ruff check/format PASS |

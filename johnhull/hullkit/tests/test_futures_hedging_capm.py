@@ -25,3 +25,13 @@ def test_independent_regression_and_two_state_portfolio_expectation():
     assert h.capm_expected_return(0.05, expected_market, beta) == pytest.approx(
         probs @ cash_returns
     )
+
+
+def test_independent_constant_asset_has_zero_ols_beta():
+    market = np.array([-0.1, 0, 0.1, 0.2])
+    asset = np.full(4, 0.05)
+    ols = np.linalg.lstsq(np.c_[np.ones(4), market], asset, rcond=None)[0][1]
+    assert h.regression_beta(asset, market) == pytest.approx(ols, rel=0, abs=1e-14)
+    assert h.regression_beta(asset, market) == pytest.approx(0, abs=1e-14)
+    with pytest.raises(ValueError, match="market variance"):
+        h.regression_beta(asset, np.full(4, 0.03))

@@ -309,10 +309,25 @@ def capm_expected_return(risk_free, expected_market, beta):
 
 
 def regression_beta(asset_returns, market_returns):
-    """Sample covariance beta, equivalent to a regression slope with intercept."""
-    return minimum_variance_hedge(
-        asset_returns, market_returns, exposure_units=1, contract_units=1
-    )["ratio"]
+    """Sample covariance beta, equivalent to a regression slope with intercept.
+
+    Constant asset returns have beta zero even though correlation is undefined.
+    Only the market variance must be positive for the slope to be identified.
+    """
+    asset = np.asarray(asset_returns, dtype=float)
+    market = np.asarray(market_returns, dtype=float)
+    if (
+        asset.ndim != 1
+        or asset.shape != market.shape
+        or len(asset) < 2
+        or not np.isfinite(asset).all()
+        or not np.isfinite(market).all()
+    ):
+        raise ValueError("finite paired return samples required")
+    variance = np.var(market, ddof=1)
+    if variance <= 0:
+        raise ValueError("positive market variance required")
+    return float(np.cov(asset, market, ddof=1)[0, 1] / variance)
 
 
 def portfolio_beta(weights, betas):
