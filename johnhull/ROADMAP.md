@@ -19,20 +19,20 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 private modules on main as of 2026-10-05 (later P3–P6 logic is on `codex/p6-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 private modules on main as of 2026-10-05 (later P3–P7 logic is on `codex/p7-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` / `codex/p6-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-10-06、P7ロジック実装・正式受入保留）
+## 現在地（2026-10-06、P7の実装可能な計算を完了・正式受入保留）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
 | 章単位（Hull 11e 全37章） | 上表14行すべてdone | 巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol13–28） | すべてdone | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 全節監査の是正 | 第1–5便完了 | 残りは「全節監査と是正」の表 |
-| 節単位の受入 | Ch28まで受入33・未評価273（10.8%） | P0/P1/P2完了、P3正式8/37・ロジック36/37。§33.2は入力不足。教材・正式受入を保留し、P4/P5/P6の計算を先行して完了。[P3状態](docs/P3_STATUS.md) |
-| ロジック先行 | P3 36/37、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11 | codex/p7-logicでCh35–37を実装中、入力不足1。教材・正式受入保留。[P6状態](docs/P6_STATUS.md)・[P7状態](docs/P7_STATUS.md) |
+| 節単位の受入 | Ch28まで受入33・未評価273（10.8%） | P0/P1/P2完了、P3正式8/37・ロジック36/37。§33.2は入力不足。教材・正式受入を保留し、P4/P5/P6とP7の実装可能な計算を先行して完了。[P3状態](docs/P3_STATUS.md) |
+| ロジック先行 | P3 36/37、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11 | codex/p7-logicで実装可能なCh35–37計算を完了。§33.2/§36.4は入力不足。次はP8残指摘の現コード照合、教材・正式受入は保留。[P6状態](docs/P6_STATUS.md)・[P7状態](docs/P7_STATUS.md) |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。Ch28：依存変更2節を再検査 | §28.2/28.5のbrowser/runtime/pytest・両保管庫PASS。他28節は完全指紋とruntimeが同じ直接のredrawn基点を再利用。新6図/24表示状態と基点画像の両コピー復元PASS。[章記録](docs/validation/chapter-28/acceptance-check.json) |
-| テスト・レビュー | P6対象124 passed、9モジュールのdocstring/索引18 passed、ruff check/format PASS | 本文例/独立参照、80項目の下調べ/台帳と計算54行を照合。[P6状態](docs/P6_STATUS.md)。P5の196対象testsとレビュー側5311 passed・6 skippedは[P5状態](docs/P5_STATUS.md)に保持。正式受入の直近全suiteは[Ch28記録](docs/validation/chapter-28/full-suite.json) |
+| テスト・レビュー | P7対象28 passed、3モジュールのdocstring/索引6 passed、ruff check/format PASS | 本文例/独立参照、16項目の下調べ/台帳と計算11行（10実装/1入力不足）を照合。[P7状態](docs/P7_STATUS.md)。P6対象124・索引等18は[P6状態](docs/P6_STATUS.md)、P5対象196とレビュー側5311 passed・6 skippedは[P5状態](docs/P5_STATUS.md)に保持。正式受入の直近全suiteは[Ch28記録](docs/validation/chapter-28/full-suite.json) |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -62,9 +62,9 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | P3 | 金利（Ch 28–34） | 37 | 8 | 3 | ロジック36/37、§33.2は原典入力不足 | Ch28全8節受入、Ch29–34受入29節を保留。本人指示2026-10-05でP4実装へ |
 | P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 計算95/95項目の初回実装・対象検証完了、説明中心17項目は保留（下調べの分類） | codex/p4-logicへpush。Ch21対象112 tests・ruff check/format check PASS。教材・正式受入は保留 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | 計算32/32の初回実装・対象検証完了、説明中心4項目は保留 | codex/p5-logicへ節ごとpush。P5対象196 tests・docstring156・索引6・ruff PASS。入力不足・モデル範囲は[P5状態](docs/P5_STATUS.md)に記録。教材・正式受入は保留 |
-| P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 下調べは計算54・説明中心26（旧監査と分類が異なる） | 計算54/54の初回実装・対象検証・一覧照合完了。codex/p6-logicへpush。対象124 tests・9モジュールのdocstring/索引18・ruff PASS。次はP7。入力不足/原典差は[P6状態](docs/P6_STATUS.md)、教材・正式受入は保留 |
-| P7 | Ch 35–37 | 16 | 0 | 6 | 下調べは計算11・説明中心5（旧監査と分類が異なる）。§36.4はモデル入力不足 | 計算10/11、入力不足1。codex/p7-logicへ節ごとpush。次はP7対象検証・進捗文書のmain反映、P8の既存計画確認。教材・正式受入保留。[P7状態](docs/P7_STATUS.md) |
-| P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表（R1–R4・R6・R11、保存値依存 5 項目、§7 の判断事項） | [再確認済み](docs/prep/design/P8_RECHECK.md)、製品の修正は未着手 |
+| P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 下調べは計算54・説明中心26（旧監査と分類が異なる） | 計算54/54の初回実装・対象検証・一覧照合完了。codex/p6-logicへpush。対象124 tests・9モジュールのdocstring/索引18・ruff PASS。入力不足/原典差は[P6状態](docs/P6_STATUS.md)、教材・正式受入は保留 |
+| P7 | Ch 35–37 | 16 | 0 | 6 | 下調べは計算11・説明中心5（旧監査と分類が異なる）。§36.4はモデル入力不足 | 計算10/11の実装・対象検証・一覧照合完了。codex/p7-logicへ節ごとpush。対象28 tests・docstring/索引6・ruff PASS。§35.4/§36.5の原典差は[P7状態](docs/P7_STATUS.md)。次はP8。教材・正式受入保留 |
+| P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表（R1–R4・R6・R11、保存値依存5項目、§7の判断事項） | 次段階。[旧再確認](docs/prep/design/P8_RECHECK.md)をP3–P7の現コードへ照合して残る修正を確定。成果物・既定出力・受入判定の変更は別途 |
 | **計** | | **306** | **33** | **63** | | **10.8%** |
 
 ### 先に決めること
@@ -313,9 +313,9 @@ private計算を先行し、D3の共通設定ツールで説明とrenderedを含
 | M29 | §28.4 Alternative Choices for the Numeraire（pp.676–679） | 受入。HW Q状態/同一給付Q・T/支払・annuity、63独立fixture/旧246保持/16状態/28D1。[受入](docs/SECTION_28_4_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_4_REVIEW_2026-10-04.md) |
 | M30 | §28.5 Extension to Several Factors（pp.679–680） | 受入/main統合push済み。MF01–06/11市場132状態/旧257/16状態/29D1。Important1を4回帰RED→GREENで修正、Minor2保留。[受入](docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md) |
 | M31 | §28.6 Black’s Model Revisited（pp.680–681） | Ch28まとめで正式受入・main統合済み。独立7市場42価格・zero-hit importance検証済み |
-| 以降 | Ch29–34の未受入29節から未評価節へ展開 | ロジックは28節完了、§33.2は原典入力不足。正式受入を保留しP4/P5/P6の計算を完了、次はP7 |
+| 以降 | Ch29–34の未受入29節から未評価節へ展開 | ロジックは28節完了、§33.2は原典入力不足。正式受入を保留しP4/P5/P6の計算とP7の実装可能な計算を完了、次はP8 |
 
-現在地（2026-10-06）：正式受入はCh28まででaccepted33/unreviewed273、P3正式8/37。ロジックはP3 36/37（§33.2の入力不足）、P4計算95/95、P5計算32/32、P6計算54/54の初回実装・対象検証を完了。P5の原系列不足・近似・高相関/低PDの求積修正は[P5状態](docs/P5_STATUS.md)に保持。P6はCh1–9のprivate計算9モジュールと本文例・独立参照を追加し、対象124 tests、9モジュールのdocstring/索引18、ruff check/format checkがPASS。SOFRの週末単利係数、定率asset beta0と表示桁ごとの許容差を最終照合で確認した。入力不足・原典の誤記/丸め差・範囲・検証操作の失敗は[P6状態](docs/P6_STATUS.md)に保存。P3–P6コードを継承する作業先はcodex/p6-logic、mainは進捗文書のみ反映する。次の実装段階はP7（Ch35–37）。教材・説明・正式受入は保留。
+現在地（2026-10-06）：正式受入はCh28までaccepted33/unreviewed273、P3正式8/37。ロジックはP3 36/37（§33.2入力不足）、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11（§36.4入力不足）の初回実装と対象検証を完了。P7は3 privateモジュールと10 testsファイル、対象28 tests・docstring/索引6・ruffがPASS。本文差は[P7状態](docs/P7_STATUS.md)に記録。P5/P6の入力不足/原典差/範囲/検証は各状態文書に保持。P3–P7コードを継承する作業先はcodex/p7-logic、mainは進捗文書のみ反映する。次はP8の旧監査を現コードへ照合して残る修正を確定。教材・説明・正式受入は保留し、Ch1からの受入は別の専用worktreeで進行中。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:

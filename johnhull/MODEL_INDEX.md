@@ -331,6 +331,6 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._swap_foundations` | Private Ch7swap実現CF・OIS curve・外部調達/比較優位・IRS/通貨swap価格/roll・CDS基本CF | GE全表/例のCFと独立当事者cash・同時root・債券/FX forward分解・補助coupon不変性 |
 | `hullkit._securitization_foundations` | Private Ch8受払優先順と2段ABS/CDO損失waterfall | GE Table8.1全16値＋7関係、独立ドル損失吸収/保存 |
 | `hullkit._xva_foundations` | Private Ch9条件付きCVA/DVA・cash funding/IM費用・book前後の増分CVA | GE6算術値と独立hazard積分/MC・funding利息積分・少数状態列挙/共通シナリオMC |
-| `hullkit._commodity_foundations` | Private Ch35商品先物の成長/投資/季節補間・futures較正Euler三項木/行使・OU/ジャンプ期待・拡張SDE係数 | GE例/全節点と独立非再結合path・連続OU求積・jump MC・Itô generator。test_commodity_foundations_*.py |
+| `hullkit._commodity_foundations` | Private Ch35商品先物/季節補間・futures較正木/行使・OU/jump/SDE係数・HDD/CDD・再保険/CAT・条件付きweather価格・energy/weather共同hedge | GE例/全節点と独立path/OU求積/jump MC/Itô・cash台帳/call spread・密度/MC・共分散/holdout。test_commodity_foundations_*.py |
 | `hullkit._real_options_foundations` | Private Ch36 NPV・P/Q risk adjustment・賃料option・CAPMリスク価格・商品事業CF/撤退/拡張状態 | GE数値/節点と独立replication・密度積分・OLS・全方策/状態path列挙。test_real_options_foundations_*.py |
 | `hullkit._mishap_foundations` | Private Ch37 条件付き連勝確率/期待人数と等相関等weight portfolio分散（組織統制ではない） | GE p818–819の1/16・1人・14.7%、独立二項列挙/共分散/固定seed MC6SE。test_mishap_foundations_*.py |
