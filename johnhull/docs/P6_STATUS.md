@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算7/54。次は§2.10（期間認識）。Ch1→9を順に継続する。
+- 現在：計算8/54。次は§2.11（forward/futures）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -20,6 +20,7 @@
 | §1.9 | `_intro_contracts.py` | NY120/London100GBP/FX1.23/100株→300。独立USD/GBP収支の線形方程式、手数料とGBP/pence座標変更 | 計算完了。同一株・同時執行と入力quoteの売買方向を仮定、現行裁定機会の判定ではない。説明・受入保留 | 15 passed・ruff check/format PASS |
 | §2.4 | `_futures_market.py` | Table2.1全53値。独立当初＋累積損益＋累積入金で全日を検算 | 計算完了。利息/余剰引出しなし、最後のcallはpendingで未入金。説明・受入保留 | 2 passed・ruff check/format PASS |
 | §2.6 | `_futures_market.py` | 金(1725.5−1752.1)×100=−2660。独立Decimal購入/売却収支とcents換算 | 計算完了。low1713.3/1715.3の原典不一致は採用せず。2020market表は入力、現行情報ではない。説明・受入保留 | 4 passed・ruff check/format PASS |
+| §2.10 | `_futures_market.py` | 2020/2021通常1000/500、hedge2021に1500。独立最終売買収支と期間配分 | 計算完了。hedge指定はこの歴史的例の配分規約、実際の資格判定/税法を実装しない。説明・受入保留 | 6 passed・ruff check/format PASS |
 
 ## 残りと検証
 

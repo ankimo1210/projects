@@ -67,3 +67,30 @@ def quote_cash_change(previous, current, *, contracts=1, multiplier=100, price_u
     change = current - previous
     cash = (1 if side == "long" else -1) * change * price_unit * contracts * multiplier
     return {"quote_change": change, "cash_change": cash}
+
+
+def recognized_futures_profit(
+    quotes, *, units, price_unit=0.01, hedge_accounting=False, side="long"
+):
+    """Illustrative period recognition of futures profits; cash timing stays separate.
+
+    quotes contain entry then period-end/close prices. The historical hedge example
+    defers all recognition to the final period; this is not an eligibility/tax engine.
+    """
+    prices = np.asarray(quotes, dtype=float)
+    if (
+        prices.ndim != 1
+        or len(prices) < 2
+        or not np.isfinite(prices).all()
+        or not np.isfinite([units, price_unit]).all()
+        or units < 0
+        or price_unit <= 0
+        or side not in ("long", "short")
+    ):
+        raise ValueError("at least two prices and valid quantity/unit scales required")
+    cash = (1 if side == "long" else -1) * units * price_unit * np.diff(prices)
+    recognized = cash.copy()
+    if hedge_accounting:
+        recognized[:] = 0
+        recognized[-1] = cash.sum()
+    return {"cash_profit": cash, "recognized": recognized}
