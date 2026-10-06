@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算31/32。次は§25.11（モデル拡張と独立検証）。Ch22→23→24→25まで継続する。
+- 現在：計算32/32。次はP5対象全計算の確認と進捗文書の反映。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -45,6 +45,7 @@
 | §25.8 | `_credit_portfolio_extensions.py` | 本文100mの5/15/80mトランシェ、loss2mでequity3m、loss6mでequity0/mezz14m。1000/100/10bpの残存元本premium。独立優先順位cash allocationと総損失保存 | 計算完了。整数default件数に変換せず任意金額lossを配分。Table25.6は2007–2009年観測quote入力で再推定しない。既存vol12境界5/15%との差は据置。説明・受入保留 | 7 passed・ruff check/format PASS |
 | §25.9 | `_credit_portfolio_extensions.py` | 100社5年PD2%：独立>=1 86.74%、>=10 .0034%、完全相関100社2%/0社98%。独立組合せ和・latent-normal MC6SE、総期待loss保存とtranche再配分 | 計算完了。2%は5年累積PD。rho=1は解析2状態。全層同riskは回収0条件、40%に一般化せず明示。説明・受入保留 | 11 passed・ruff check/format PASS |
 | §25.10 | `_credit_portfolio_extensions.py` | Ex25.2/Table25.7/Ex25.3/Table25.8の113印刷値、348/153bp。独立Gaussian default時刻MC6SE、標準quote再価格と単調凹loss curveの4–8%補間 | 計算完了。源60点・未丸めhazard、midpoint default規約。非標準区間はcompound較正の全標準leg/time curveを保存した区分線形補間、PV loss単独からannuityは推測しない。市場無裁定の普遍保証ではなく入力curve制約を検査。説明・受入保留 | 18 passed・ruff check/format PASS |
+| §25.11 | `_credit_alternatives.py` | 原典計算結果なし、double-t自由度4。ASB countを独立2^n状態積分、t潜在変数MC、因子依存PD/terminal loss MC、hazard混合を独立default年CF列挙・既知weights回復 | 計算範囲完了。因子依存モデルはPDを再較正した明示合成例、著者の全市場モデル再現ではない。mixtureはfixed hazard gridの静的同質版でquote不足時非一意。CR-11動的モデル・その他全copula・市場parameter不足は研究項目、説明・受入保留 | 8 passed・ruff check/format PASS |
 
 ## 残りと検証
 
@@ -59,3 +60,5 @@
 - 2026-10-06 R2：小gammaの巨大noncentralityでNaN/誤値を再現。遠い第2根のtail massが浮動小数の範囲外となる領域では正規分位点を単調枝へ直接写す。正負gamma/linearの16回帰を追加し、market risk 76 passed・docstring対象1 passed・ruff PASS。
 - 2026-10-06 R3：EWMA尤度の単峰仮定による局所解を4観測/seed918で再現。uniform+endpoint対数gridで複数極値を探索・精密化し両端と比較。独立20001点grid/ゼロ端点の3回帰、volatility estimation 29 passed・docstring対象1 passed・ruff PASS。数値探索は最適解の一意性の証明ではない。
 - 2026-10-06 R4：alpha=beta=0の有効な定数variance推定を予測側が拒否することを再現。day0は初期値、正のhorizonはomega（連続補間のp=0極限）として処理。解析Gaussian MLE→forecast/term vol回帰を追加、volatility estimation 30 passed・docstring対象1 passed・ruff PASS。
+
+- 2026-10-06 レビューchatからの報告：R1–R4は独立再検証済みとしてclose。Ch25.1–25.3（8160c4b6まで）に追加重大指摘なし。同chatが実行したhullkit全suiteは5257 passed・6 skipped・2既存warnings（開始HEAD8160c4b6、実行中の開発継続あり）。この件数は後続全HEADの保証とせず、本chatはP5変更対象のみ再検証する。
