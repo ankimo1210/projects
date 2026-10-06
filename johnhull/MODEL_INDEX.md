@@ -330,3 +330,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._rate_futures` | Private Ch6日数/32nds・bill・conversion factor/CTD・rate futures/SOFR・duration hedge | GE日数/価格/受渡全例と独立Fraction/年金閉形式/融資台帳/DF chain/再評価 |
 | `hullkit._swap_foundations` | Private Ch7swap実現CF・OIS curve・外部調達/比較優位・IRS/通貨swap価格/roll・CDS基本CF | GE全表/例のCFと独立当事者cash・同時root・債券/FX forward分解・補助coupon不変性 |
 | `hullkit._securitization_foundations` | Private Ch8受払優先順と2段ABS/CDO損失waterfall | GE Table8.1全16値＋7関係、独立ドル損失吸収/保存 |
+| `hullkit._xva_foundations` | Private Ch9条件付きCVA/DVA・cash funding/IM費用・book前後の増分CVA | GE6算術値と独立hazard積分/MC・funding利息積分・少数状態列挙/共通シナリオMC |
