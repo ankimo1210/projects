@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算50/54。次は§8.1（2段waterfall）。Ch1→9を順に継続する。
+- 現在：計算51/54。次は§9.1（CVA/DVA）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -63,6 +63,7 @@
 | §7.9 | `_swap_foundations.py` | CF6/spot/FXforward3/converted3/net3/PV3、domPV3/forPV3/leg合計2。value .9627879765→.9628M。独立2通貨bond/forward CF | 計算完了。.9629Mは2箇所とも表示精度で不一致、許容幅を緩めない。説明・受入保留 | 20 passed・ruff check/format PASS |
 | §7.10 | `_swap_foundations.py` | 印刷価格なし。GBP7M/USD10M、3%/補助4%/半年10年のCF構成、独立1/2 IRS分解と補助率不変 | 計算完了。曲線/spot/初回fixingはsynthetic入力、通貨basisモデルは範囲外。説明・受入保留 | 23 passed・ruff check/format PASS |
 | §7.12 | `_swap_foundations.py` | 100M/120bp→1.2M/year、40%回収→60M。独立bond recovery＋protection=元本 | 計算完了。5年は契約条件、premium schedule/hazard/価格はCh25、此節で推測しない。説明・受入保留 | 25 passed・ruff check/format PASS |
+| §8.1 | `_securitization_foundations.py` | ABS mezz33.3/53.3/80/100%、CDO equity100×4、mezz93.3/100/100/100、senior0/28.2/69.2/100の全16値、AAA89.75≈90・開始10.25・ABS5.25/35・12/80・45/65→69.2の7関係。独立ドル台帳 | 計算完了。全ABS同じ損失率、PD/格付けモデルではない。説明・受入保留 | 2 passed・ruff check/format PASS |
 
 ## 残りと検証
 
