@@ -25,3 +25,27 @@ def stock_trade_cash(units, entry, exit_price, income_per_unit, *, side="long", 
         "exit_cash": final,
         "profit": initial + income + final - borrow_fee,
     }
+
+
+def no_income_forward(spot, rate, maturity):
+    """No-income/no-storage investment-asset forward price with continuous zero rate."""
+    from ._rates_foundations import compound_amount
+
+    return compound_amount(spot, rate, maturity)
+
+
+def carry_cash(spot, rate, maturity, delivery_quote):
+    """Nominal terminal profits of ideal cash/reverse carry with zero entry cash.
+
+    Reverse carry assumes borrowing stock or substituting existing inventory;
+    symmetric funding, no income/storage/fees and feasible simultaneous trades.
+    """
+    if not np.isfinite(delivery_quote):
+        raise ValueError("finite delivery quote required")
+    financed = no_income_forward(spot, rate, maturity)
+    return {
+        "fair_forward": financed,
+        "entry_cash": spot - spot,
+        "carry_profit": delivery_quote - financed,
+        "reverse_profit": financed - delivery_quote,
+    }
