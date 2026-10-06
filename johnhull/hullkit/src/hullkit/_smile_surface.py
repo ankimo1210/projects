@@ -116,3 +116,75 @@ def mixture_lognormal_option(
             price, spot, strike, rate, yield_rate, maturity, kind=kind
         ),
     }
+
+
+def _market_forward(spot, rate, yield_rate, maturity):
+    if (
+        not all(math.isfinite(x) for x in (spot, rate, yield_rate, maturity))
+        or spot <= 0
+        or maturity < 0
+    ):
+        raise ValueError("positive spot, nonnegative time and finite rates required")
+    return spot * math.exp((rate - yield_rate) * maturity)
+
+
+def smile_coordinates(strikes, spot, rate, yield_rate, volatilities, maturity, *, kind="call"):
+    """Same smile on K, K/S, K/F and unadjusted spot-delta axes."""
+    from .volatility import delta_from_strike
+
+    forward = _market_forward(spot, rate, yield_rate, maturity)
+    strikes = np.asarray(strikes, dtype=float)
+    vols = np.asarray(volatilities, dtype=float)
+    if (
+        maturity <= 0
+        or np.any(~np.isfinite(strikes))
+        or np.any(strikes <= 0)
+        or np.any(~np.isfinite(vols))
+        or np.any(vols <= 0)
+    ):
+        raise ValueError("positive strikes/IV/time required for the smooth delta axis")
+    delta = delta_from_strike(strikes, spot, rate, vols, maturity, q=yield_rate, kind=kind)
+    return {
+        "strike": strikes,
+        "spot_moneyness": strikes / spot,
+        "forward_moneyness": strikes / forward,
+        "spot_delta": delta,
+        "delta_convention": "spot, not premium-adjusted",
+    }
+
+
+def strike_from_smile_axis(
+    axis, coordinate, spot, rate, yield_rate, sigma, maturity, *, kind="call"
+):
+    """Invert one coordinate at its supplied IV; this does not solve a smile fixed point."""
+    from .volatility import strike_from_delta
+
+    forward = _market_forward(spot, rate, yield_rate, maturity)
+    values = np.asarray(coordinate, dtype=float)
+    if axis == "spot_delta":
+        return strike_from_delta(values, spot, rate, sigma, maturity, q=yield_rate, kind=kind)
+    if np.any(~np.isfinite(values)) or np.any(values <= 0):
+        raise ValueError("positive finite strike/moneyness coordinates required")
+    if axis == "strike":
+        return values
+    if axis == "spot_moneyness":
+        return values * spot
+    if axis == "forward_moneyness":
+        return values * forward
+    raise ValueError("axis must be strike, spot_moneyness, forward_moneyness or spot_delta")
+
+
+def atm_definitions(spot, rate, yield_rate, sigma, maturity):
+    """ATM spot, ATM forward and call/put 50 spot-delta strikes, when attainable."""
+    return {
+        "spot_strike": spot,
+        "forward_strike": _market_forward(spot, rate, yield_rate, maturity),
+        "call_50_delta_strike": float(
+            strike_from_smile_axis("spot_delta", 0.5, spot, rate, yield_rate, sigma, maturity)
+        ),
+        "put_50_delta_strike": float(
+            strike_from_smile_axis(
+                "spot_delta", -0.5, spot, rate, yield_rate, sigma, maturity, kind="put"
+            )
+        ),
+    }
