@@ -2,6 +2,8 @@
 
 import math
 
+import numpy as np
+
 from ._stochastic_foundations import gbm_log_law
 
 
@@ -52,4 +54,31 @@ def realized_return_summary(initial, simple_returns):
         "arithmetic_mean": arithmetic,
         "geometric_mean": math.prod(1+r for r in returns)**(1/len(returns))-1,
         "constant_mean_final": initial*(1+arithmetic)**len(returns),
+    }
+
+
+def historical_volatility(prices, interval_years, *, dividends=None):
+    """Sample log-return volatility (n-1) and Hull's approximate sigma SE.
+
+    Dividend cash belongs to each ending interval. The caller chooses time
+    units and which observations to retain; adjustment never removes a row.
+    """
+    prices = np.asarray(prices, dtype=float)
+    if prices.ndim != 1 or len(prices) < 3 or not np.all(np.isfinite(prices)) or np.any(prices <= 0) or not math.isfinite(interval_years) or interval_years <= 0:
+        raise ValueError("at least three positive prices and positive interval required")
+    cash = np.zeros(len(prices)-1) if dividends is None else np.asarray(dividends, dtype=float)
+    if cash.shape != (len(prices)-1,) or not np.all(np.isfinite(cash)) or np.any(cash < 0):
+        raise ValueError("one nonnegative dividend per return interval required")
+    relatives = (prices[1:]+cash)/prices[:-1]
+    returns = np.log(relatives)
+    sd = float(returns.std(ddof=1))
+    annual = sd/math.sqrt(interval_years)
+    return {
+        "price_relatives": relatives,
+        "log_returns": returns,
+        "sum_returns": float(returns.sum()),
+        "sum_squares": float(returns@returns),
+        "interval_sd": sd,
+        "annual_vol": annual,
+        "vol_se": annual/math.sqrt(2*len(returns)),
     }
