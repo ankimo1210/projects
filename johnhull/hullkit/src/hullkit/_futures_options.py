@@ -151,3 +151,28 @@ def black_from_discount(forward, strike, discount_factor, sigma, maturity):
     return {**result, "call": result["call"]*discount_factor,
             "put": result["put"]*discount_factor, "discount": discount_factor,
             "prepaid_spot": forward*discount_factor}
+
+
+def futures_one_step_replication(initial, up_price, down_price, up_payoff, down_payoff, rate, maturity):
+    """Hull 18.9-10 zero-entry-value futures and bank replication.
+
+    Payoffs can represent a general derivative. Futures cash is approximated
+    at the step end as in the text; daily settlement is not simulated.
+    """
+    if not all(math.isfinite(x) for x in (initial, up_price, down_price, up_payoff, down_payoff, rate, maturity)) or initial <= 0 or not down_price < initial < up_price or maturity < 0:
+        raise ValueError("two states bracketing positive initial futures and nonnegative time required")
+    delta = (up_payoff-down_payoff)/(up_price-down_price)
+    up_cash = delta*(up_price-initial)-up_payoff
+    down_cash = delta*(down_price-initial)-down_payoff
+    price = -up_cash*math.exp(-rate*maturity)
+    probability = (initial-down_price)/(up_price-down_price)
+    return {"delta": delta, "up_cash": up_cash, "down_cash": down_cash,
+            "price": price, "initial_portfolio": -price, "futures_entry_value": 0.0,
+            "probability": probability, "up": up_price/initial, "down": down_price/initial}
+
+
+def futures_exercise_comparison(forward, strike, rate, sigma, maturity, steps=500, *, kind="call"):
+    """Domestic discount with zero-growth futures tree, including American exercise."""
+    from ._index_currency import carry_exercise_comparison
+
+    return carry_exercise_comparison(forward, strike, rate, rate, sigma, maturity, steps, kind=kind)

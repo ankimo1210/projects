@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 48 passed・Ch18 53 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 48 passed・Ch18 62 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -78,10 +78,11 @@
 | §18.6 | `_futures_options.py` | 本文に数値例なし。式18.5/18.6のQ drift0・log drift−σ²/2・条件付き平均F・先物PDE。独立密度求積/stock Euler MC固定seed6SE・価格数値微分 | 計算部分完了。futuresはmoney-market測度、forwardは満期債測度と区別。Black/PDE価格検証は確定r。説明・図・受入は保留 | 39 passed・ruff PASS |
 | §18.7 | `_futures_options.py` | Ex18.6 put1.12（未丸め1.116641457）、d1印刷0.07216は切捨て相当/d2−0.07216/N−d1=0.4712/N−d2=0.5288。独立payoff積分・先物CRRとゼロvol/満期境界 | 計算部分完了。既存の共通Black入口を使用、正のlognormal Fのみ。負価格モデルRB-H18は範囲外。説明・図・受入は保留 | 47 passed・ruff PASS |
 | §18.8 | `_futures_options.py` | Ex18.7 gold call88.37、d1=0.3026/d2=0.1611。spot/carryとforward/満期discountの入力一致、独立spot/forward payoff積分 | 計算部分完了。市場discount入力は満期債測度でforwardがlognormalという仮定が必要。確率金利でfuturesへ置換する主張なし。説明・図・受入は保留 | 53 passed・ruff PASS |
+| §18.9 | `_futures_options.py` | F30→33/28、Δ0.8、確定cash−1.6/PV−1.592、p0.4、option1.592019967。Ch13参照の米国put2.84。独立2×2複製連立解・全停止方針 | 計算部分完了。先物entry価値0/初期portfolio−f、清算をステップ末へ近似する本文の留保を明示。説明・図・受入は保留 | 62 passed・ruff PASS |
 
 ## 次の実装
 
 - Ch10–16の計算52項目を実装・push（Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3）。Ch16.5は算術部分のみ。
 - 今回（2026-10-06）の追加は16項目：Ch15の13項目とCh16の3項目。対象Ch15 90/Ch16 26 tests・ruff PASS。Ch10–14は今回再実行していない。
-- 次はCh18 §18.9（先物二項複製）。P4の計算は合計65節、正式受入は0/112のまま。
+- 次はCh18 §18.10（米国spot/先物の比較）。P4の計算は合計66節、正式受入は0/112のまま。
 - 定性・説明要求は保留：Ch16 §16.1–2・会計史/研究の説明、Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済みだが、今回の新テストには含めていない。Ch10全12節の完了や正式受入を表すものではない。
