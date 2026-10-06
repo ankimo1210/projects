@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算20/32。次は§24.9（信用VaR・格付再評価）。Ch22→23→24→25まで継続する。
+- 現在：計算21/32。次はCh25 §25.1（CDS契約CF）。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -34,6 +34,7 @@
 | §24.6 | `_credit_risk.py` | Ex24.3全7値 asset12.40/vol.2123/d2 1.1408/PD12.7%/debt9.40/riskfree9.51/loss約1.2%。独立payoff/delta求積+log root（T1/2.5）、固定seed default6SE | 計算完了。N(−d2)はQ PD。指定P driftの構造PDは非公開EDFの較正ではない。単一満期/満期default仮定。説明・受入保留 | 14 passed・ruff check/format PASS |
 | §24.7 | `_credit_risk.py` | Ex24.4 5/0/0/5、40→15・10000中250位、Ex24.5 2.91、Ex24.6全7値CVA5.77/調整84.71。独立lognormal求積・共通GBM MC6SE・担保lag恒等式・factor求積 | 計算完了。1oz単位と1m oz総額を区別。PDは無条件区間、LGD/割引各1回。wrong-wayは明示したGaussian factor例で一般契約/first-to-default解ではない。担保lagは指定grid段数。説明・受入保留 | 21 passed・ruff check/format PASS |
 | §24.8 | `_credit_risk.py` | 5/10%とEx24.7全5threshold（計7値）、10社rho.2/5年PD15%を固定seed MC6SE。独立正規CDF逆積分・条件付き2latent積分・factor積分 | 計算完了。latent相関、indicator相関、default時刻相関を区別。year0は年限後生存でnever defaultではない。TN26の詳細原文は未取得。説明・受入保留 | 25 passed・ruff check/format PASS |
+| §24.9 | `_credit_risk.py` | Ex24.8 PD12.8%/VaR5.13m、Table24.4全7threshold。独立factor/5000社有限pool MC6SE、bond cashflow再評価・2社状態列挙 | 計算完了。total loss VaRとEL控除capitalを分離。格付再評価は渡したspread曲線のflat例、default回収は額面。BBB→A原典区間逆転/既存docstring残差記述の問題は未変更。説明・受入保留 | 30 passed・ruff check/format PASS |
 
 ## 残りと検証
 
