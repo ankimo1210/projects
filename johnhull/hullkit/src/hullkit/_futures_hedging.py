@@ -67,3 +67,45 @@ def business_hedge_profit(
         "hedge_cash": hedge_cash,
         "hedged_profit": operating + hedge_cash,
     }
+
+
+def basis_hedge(
+    initial_spot,
+    terminal_spot,
+    futures_entry,
+    futures_exit,
+    *,
+    units,
+    contract_size,
+    price_unit=1,
+    obligation="sell",
+    proxy_spot=None,
+):
+    """Hull S-F basis with maturity and cross-asset components, in quoted price units.
+
+    Cash/effective_price use price_unit conversion; basis fields retain quote units.
+    proxy_spot is the spot of the futures underlying when cross hedging.
+    """
+    if not np.isfinite(initial_spot):
+        raise ValueError("finite initial spot required")
+    a = asset_hedge(
+        terminal_spot,
+        futures_entry,
+        futures_exit,
+        units=units,
+        contract_size=contract_size,
+        price_unit=price_unit,
+        obligation=obligation,
+    )
+    s = np.asarray(terminal_spot, dtype=float)
+    f = np.asarray(futures_exit, dtype=float)
+    proxy = s if proxy_spot is None else np.asarray(proxy_spot, dtype=float)
+    if not np.isfinite(proxy).all():
+        raise ValueError("finite proxy spot required")
+    return dict(
+        a,
+        initial_basis=initial_spot - futures_entry,
+        final_basis=s - f,
+        maturity_basis=proxy - f,
+        asset_basis=s - proxy,
+    )
