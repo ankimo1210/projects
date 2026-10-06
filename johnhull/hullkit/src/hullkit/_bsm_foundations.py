@@ -260,3 +260,43 @@ def quoted_futures_pnl(entry_quote, exit_quote, multiplier, *, quantity=1):
     if not all(math.isfinite(x) for x in (entry_quote, exit_quote, multiplier, quantity)) or multiplier <= 0:
         raise ValueError("finite quotes/position and positive quote multiplier required")
     return quantity*multiplier*(exit_quote-entry_quote)
+
+
+def cash_dividend_call_details(spot, strike, rate, sigma, maturity, dividend_times, dividend_amounts):
+    """Source cash-dividend BSM intermediates and Black/exercise diagnostics.
+
+    Sigma belongs to S-PV(D). Black's legs use different risky components;
+    the approximation is not a bound on a single escrowed-dividend model.
+    """
+    pv = bsm.pv_dividends(dividend_times, dividend_amounts, rate, maturity)
+    details = bsm_call_decomposition(spot-pv, strike, rate, sigma, maturity)
+    details.update({
+        "dividend_pv": pv,
+        "risky_spot": spot-pv,
+        "black_approx": float(bsm.black_american_call_approx(spot, strike, rate, sigma, maturity, dividend_times, dividend_amounts)),
+        "exercise_thresholds": bsm.call_early_exercise_thresholds(strike, rate, maturity, dividend_times),
+        "exercise_possible": bsm.call_early_exercise_can_be_optimal(strike, rate, maturity, dividend_times, dividend_amounts),
+    })
+    return details
+
+
+def escrowed_fixed_call_value(spot, strike, rate, sigma, maturity, dividend_times, dividend_amounts, exercise_time):
+    """Expected exercise payoff at a caller-fixed date in one escrowed model.
+
+    X=S-PV(remaining dividends) is GBM. Exercise is cum-dividend at the given
+    date, including a maturity dividend; European expiry is normally ex-div.
+    This value holds the original X volatility fixed across exercise dates.
+    """
+    bsm._validate_price_inputs(spot, strike, sigma, maturity)
+    if not math.isfinite(exercise_time) or not 0 <= exercise_time <= maturity:
+        raise ValueError("exercise time must be within the contract life")
+    times, amounts = bsm._validate_dividend_schedule(dividend_times, dividend_amounts)
+    pv = bsm.pv_dividends(times, amounts, rate, maturity)
+    risky = spot-pv
+    gbm_log_law(risky, rate, sigma, maturity)
+    keep = (times >= exercise_time) & (times <= maturity)
+    reserve = float(np.sum(amounts[keep]*np.exp(-rate*(times[keep]-exercise_time))))
+    adjusted_strike = strike-reserve
+    if adjusted_strike <= 0:
+        return risky-adjusted_strike*math.exp(-rate*exercise_time)
+    return float(bsm.call_price(risky, adjusted_strike, rate, sigma, exercise_time))
