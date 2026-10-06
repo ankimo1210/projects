@@ -201,3 +201,35 @@ def cds_index_value(
             raise ValueError("nonnegative finite index contract rate required")
         result["buyer_value"] = protection - contract_spread * duration
     return result
+
+
+def fixed_coupon_quote(
+    spread, coupon, recovery, rate, maturity, *, frequency=4, notional=100, quote_basis="actual360"
+):
+    """Ex25.1 quote calibration and fixed-coupon price/upfront, preserving unrounded rates.
+
+    actual360 means the example's fixed 365/360 conversion, not a date-driven
+    day count. buyer_upfront<0 means the buyer receives cash. D is risky premium
+    annuity, not a bond-duration measure.
+    """
+    from . import cds
+
+    if (
+        not np.isfinite([spread, coupon, notional]).all()
+        or min(spread, coupon, notional) < 0
+        or quote_basis not in ("actual360", "year")
+    ):
+        raise ValueError("nonnegative spread/coupon/notional and supported quote basis required")
+    multiplier = 365 / 360 if quote_basis == "actual360" else 1
+    annual_spread, annual_coupon = spread * multiplier, coupon * multiplier
+    result = calibrated_cds(annual_spread, recovery, rate, maturity, frequency=frequency)
+    duration = result["risky_duration"]
+    price = cds.fixed_coupon_price(annual_spread, annual_coupon, duration)
+    return {
+        "annual_spread": annual_spread,
+        "annual_coupon": annual_coupon,
+        "hazard": result["hazard"],
+        "risky_duration": duration,
+        "price_per_100": price,
+        "buyer_upfront": cds.upfront_payment(annual_spread, annual_coupon, duration, notional),
+    }
