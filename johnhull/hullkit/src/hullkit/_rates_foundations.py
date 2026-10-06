@@ -31,3 +31,29 @@ def compounded_reference_rate(rates, days, *, basis=360):
         "days": float(days.sum()),
         "annualized_rate": (growth - 1) * basis / days.sum(),
     }
+
+
+def compound_amount(principal, rate, years, *, frequency=None):
+    """Growth under a continuous quote (None) or positive payments per year."""
+    if not np.isfinite([principal, rate, years]).all() or min(principal, years) < 0:
+        raise ValueError("finite rate and nonnegative principal/time required")
+    if frequency is None:
+        return float(principal * np.exp(rate * years))
+    if not np.isfinite(frequency) or frequency <= 0 or 1 + rate / frequency <= 0:
+        raise ValueError("positive frequency and periodic growth required")
+    return float(principal * (1 + rate / frequency) ** (frequency * years))
+
+
+def convert_rate(rate, source_frequency, target_frequency):
+    """Convert annual quote frequency; None denotes continuous compounding."""
+    from .rates import from_continuous, to_continuous
+
+    if not np.isfinite(rate):
+        raise ValueError("finite rate required")
+    for frequency in [source_frequency, target_frequency]:
+        if frequency is not None and (not np.isfinite(frequency) or frequency <= 0):
+            raise ValueError("positive frequency required")
+    if source_frequency is not None and 1 + rate / source_frequency <= 0:
+        raise ValueError("positive source growth required")
+    continuous = rate if source_frequency is None else to_continuous(rate, source_frequency)
+    return continuous if target_frequency is None else from_continuous(continuous, target_frequency)

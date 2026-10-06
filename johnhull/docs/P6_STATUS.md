@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算17/54。次は§4.4（複利単位）。Ch1→9を順に継続する。
+- 現在：計算18/54。次は§4.5（zero投資）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -30,6 +30,7 @@
 | §3.6 | `_futures_hedging.py` | 100枚/.80/.50/.40/1.70/現物下落3.00。独立全6売買cash列、47.70は導出値 | 計算完了。利息/roll費用なし、信用/流動性riskと価格hedgeを区別。説明・受入保留 | 12 passed・ruff check/format PASS |
 | §3.appendix | `_futures_hedging.py` | beta0→5%、beta.75→11%。独立OLS/2状態期待、portfolio covariance線形性 | 計算完了。期待marketと実現marketを区別しCAPMの1期仮定を記録。説明・受入保留 | 14 passed・ruff check/format PASS |
 | §4.2 | `_rates_foundations.py` | 原典に印刷数値なし。式の日数1/3/1手計算と定率閉形式、独立Decimal再投資 | 計算完了。day weightsはcaller指定、制度/最新参照金利は対象外。説明・受入保留 | 2 passed・ruff check/format PASS |
+| §4.4 | `_rates_foundations.py` | Table4.1六値、連続110.52、10.25%/5.96%、9.758%/8.08%/20.20の全12値。独立成長係数 | 計算完了。年率quoteと支払frequencyを分離、Ch1単利と混ぜない。説明・受入保留 | 4 passed・ruff check/format PASS |
 
 ## 残りと検証
 
