@@ -21,8 +21,8 @@ def test_source_rate_futures_table_and_monthly_quote_amounts():
         [475, 700, 999300], abs=0.5
     )
     assert [
-        100 - f.rate_futures_quote(0.000475),
-        100 - f.rate_futures_quote(0.00055),
+        100 * f.rate_futures_cash(99, 99.9525)["implied_rate"],
+        100 * f.rate_futures_cash(99, 99.945)["implied_rate"],
     ] == pytest.approx([0.0475, 0.055])
     assert f.rate_futures_cash(99, 99, notional=5e6, accrual=1 / 12)["bp_value"] == pytest.approx(
         41.67, abs=0.005
@@ -71,9 +71,22 @@ def test_independent_daily_sofr_window_excludes_end_and_carries_weekend():
     a = f.sofr_fixing_window("2020-06-18", "2020-06-23", fixings)
     daily = np.array([0.01, 0.02, 0.02, 0.02, 0.03])
     assert a["arithmetic"] == pytest.approx((0.01 + 3 * 0.02 + 0.03) / 5)
+    # Interest is credited at the end of each fixing interval. Friday's
+    # interest accrues for three days without reinvestment on Saturday/Sunday.
     capital = 1.0
-    for rate in daily:
-        capital += capital * rate / 360
-    assert a["growth"] == pytest.approx(capital, abs=1e-14)
+    for rate, days in [(0.01, 1), (0.02, 3), (0.03, 1)]:
+        capital += capital * rate * days / 360
+    assert a["growth"] == pytest.approx(capital, rel=0, abs=1e-14)
     assert a["compounded"] == pytest.approx((capital - 1) * 360 / 5)
     assert a["daily_rates"] == pytest.approx(daily)
+
+
+def test_independent_equal_fixings_remain_separate_interest_intervals():
+    fixings = {"2020-06-18": 0.02, "2020-06-19": 0.02, "2020-06-22": 0.02}
+    result = f.sofr_fixing_window("2020-06-18", "2020-06-23", fixings)
+    # Equal rates do not merge the actual Thursday, Friday and Monday loans.
+    principal = 1000000.0
+    for days in [1, 3, 1]:
+        principal += principal * 0.02 * days / 360
+    assert result["growth"] == pytest.approx(principal / 1000000, rel=0, abs=1e-14)
+    assert result["arithmetic"] == pytest.approx(0.02)
