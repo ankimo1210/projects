@@ -108,3 +108,45 @@ def rental_option(
         "expected_payoff": payoff,
         "value": payoff * math.exp(-rate * option_maturity),
     }
+
+
+def capm_market_price(correlation, market_excess_return, market_volatility):
+    """CAPM lambda=rho*market excess return/market volatility, in matching annual units."""
+    if (
+        not np.isfinite([correlation, market_excess_return, market_volatility]).all()
+        or abs(correlation) > 1
+        or market_volatility <= 0
+    ):
+        raise ValueError("valid correlation and positive market volatility required")
+    return correlation * market_excess_return / market_volatility
+
+
+def capm_risk_price_from_samples(
+    variable_changes, market_returns, market_excess_return, *, periods_per_year=1
+):
+    """Estimate source correlation/annual volatility using synchronized supplied observations.
+
+    Annual market premium is a separate caller input. This does not identify a
+    proxy, establish causality or use the fitted sample as out-of-sample evidence.
+    """
+    x = np.asarray(variable_changes, dtype=float)
+    m = np.asarray(market_returns, dtype=float)
+    if (
+        x.ndim != 1
+        or x.shape != m.shape
+        or len(x) < 2
+        or not np.isfinite(x).all()
+        or not np.isfinite(m).all()
+        or periods_per_year <= 0
+    ):
+        raise ValueError("matching finite samples and positive annualization required")
+    covariance = np.cov(x, m, ddof=1)
+    if min(covariance[0, 0], covariance[1, 1]) <= 0:
+        raise ValueError("positive sample variances required for correlation")
+    rho = float(covariance[0, 1] / math.sqrt(covariance[0, 0] * covariance[1, 1]))
+    vol = math.sqrt(covariance[1, 1] * periods_per_year)
+    return {
+        "correlation": rho,
+        "market_volatility": vol,
+        "lambda": capm_market_price(rho, market_excess_return, vol),
+    }
