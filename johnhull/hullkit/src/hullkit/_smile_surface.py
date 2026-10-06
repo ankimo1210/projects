@@ -161,6 +161,10 @@ def strike_from_smile_axis(
 
     forward = _market_forward(spot, rate, yield_rate, maturity)
     values = np.asarray(coordinate, dtype=float)
+    if axis == "scaled_log_forward_moneyness":
+        if maturity <= 0 or np.any(~np.isfinite(values)):
+            raise ValueError("finite scaled log coordinates and positive time required")
+        return forward * np.exp(values * math.sqrt(maturity))
     if axis == "spot_delta":
         return strike_from_delta(values, spot, rate, sigma, maturity, q=yield_rate, kind=kind)
     if np.any(~np.isfinite(values)) or np.any(values <= 0):
@@ -188,3 +192,55 @@ def atm_definitions(spot, rate, yield_rate, sigma, maturity):
             )
         ),
     }
+
+
+def scaled_log_forward_moneyness(strikes, spot, rate, yield_rate, maturity):
+    """Hull 20.5's ln(K/F)/sqrt(T), not standardized by an implied volatility."""
+    forward = _market_forward(spot, rate, yield_rate, maturity)
+    strikes = np.asarray(strikes, dtype=float)
+    if maturity <= 0 or np.any(~np.isfinite(strikes)) or np.any(strikes <= 0):
+        raise ValueError("positive strikes/time required for scaled log moneyness")
+    return np.log(strikes / forward) / math.sqrt(maturity)
+
+
+def interpolate_iv(maturities, moneyness, volatilities, time, relative_strike):
+    """Table20.2 bilinear IV (decimal scale), rows T in years, columns K/S.
+
+    Supports broadcast query arrays; outside-grid queries raise. There is no
+    extrapolation, total-variance substitution or arbitrage repair. Convexity
+    in call prices and calendar consistency must be checked separately.
+    """
+    t = np.asarray(maturities, dtype=float)
+    m = np.asarray(moneyness, dtype=float)
+    vol = np.asarray(volatilities, dtype=float)
+    if t.ndim != 1 or m.ndim != 1 or min(t.size, m.size) < 2 or vol.shape != (t.size, m.size):
+        raise ValueError("two increasing axes and a matching rectangular IV grid required")
+    if (
+        any(np.any(~np.isfinite(x)) for x in (t, m, vol))
+        or np.any(t <= 0)
+        or np.any(m <= 0)
+        or np.any(vol < 0)
+        or np.any(np.diff(t) <= 0)
+        or np.any(np.diff(m) <= 0)
+    ):
+        raise ValueError("positive increasing time/moneyness and nonnegative finite IV required")
+    qt, qm = np.broadcast_arrays(
+        np.asarray(time, dtype=float), np.asarray(relative_strike, dtype=float)
+    )
+    if (
+        np.any(~np.isfinite(qt))
+        or np.any(~np.isfinite(qm))
+        or np.any(qt < t[0])
+        or np.any(qt > t[-1])
+        or np.any(qm < m[0])
+        or np.any(qm > m[-1])
+    ):
+        raise ValueError("query outside IV grid; no extrapolation is performed")
+    i = np.clip(np.searchsorted(t, qt, side="right") - 1, 0, t.size - 2)
+    j = np.clip(np.searchsorted(m, qm, side="right") - 1, 0, m.size - 2)
+    tw = (qt - t[i]) / (t[i + 1] - t[i])
+    mw = (qm - m[j]) / (m[j + 1] - m[j])
+    value = (1 - tw) * ((1 - mw) * vol[i, j] + mw * vol[i, j + 1]) + tw * (
+        (1 - mw) * vol[i + 1, j] + mw * vol[i + 1, j + 1]
+    )
+    return float(value) if value.ndim == 0 else value
