@@ -47,3 +47,9 @@ def test_early_default_knockout_and_payer_receiver_exercise_direction():
     assert receiver == pytest.approx([0, 0, 0.032])
     assert obligation == pytest.approx(payer - receiver)
     assert np.all(payer >= 0)
+
+
+@pytest.mark.parametrize("volatility", [np.nan, np.inf, -np.inf, -0.1])
+def test_review_r7_rejects_nonfinite_or_negative_external_option_volatility(volatility):
+    with pytest.raises(ValueError, match="volatility"):
+        c.cds_option_value(0.02, 0.4, 0.05, 1, 6, 0.028, volatility)
