@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 85 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 92 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -92,6 +92,7 @@
 | §19.11 | `_greeks_hedging.py` | Table19.5の21表示値・最大損失−90mを読取り（再価格計算ではない）。2週・7×3の合成FX bookを独立Q密度積分で完全再評価、short butterflyの内点最大損失、IV10%→12% | 計算部品完了。Table19.5はbook/strike/maturity不明のため価格再現は入力不足で飛ばす。合成book検証と引用値読取りを区別。説明・受入は保留 | 64 passed・ruff PASS |
 | §19.12 | `_greeks_hedging.py` | Table19.6全Greeks/qと外国rhoを独立密度差分、固定F futures rho=−TV、forward/futures delta差。Ex19.8精密468421.81GBP・factor表示丸め468442GBP、契約7枚 | 計算部分完了。futures rhoはq=rを連動させ固定Fを保持、通貨rhoは国内/外国を分離。Ex19.8の21GBP差はfactor丸めとして注記。説明・受入は保留 | 77 passed・ruff PASS |
 | §19.13 | `_greeks_hedging.py` | Ex19.9 d1.4499・売却32.15%・表示差4.64/4.28%、Ex19.10 122.96→123 short futures。独立密度put delta、同一初期premiumの離散replication帳簿とgap-floor破れ | 計算部分完了。Ex19.9の88mは符号欠落/残存.5で一致、92mは1日経過で一致：同一時間規約での厳密一致は保留。index-mirror/beta1限定。説明・歴史・受入は保留 | 85 passed・ruff PASS |
+| §19.appendix | `_greeks_hedging.py` | Eq19A.1とspot/IV二変数Taylor（vega/vanna/vomma）。独立payoff求積の混合微分2経路・vol二階差分、完全再評価との差の三次縮小、ΔS∝√Δt時のgamma/θ次数（数値例なし） | 計算部分完了。並行IV shock・金利/q固定、時間cross項など高次は省略。定性・説明/図/受入は保留 | 92 passed・ruff PASS |
 
 ## 次の実装
 
