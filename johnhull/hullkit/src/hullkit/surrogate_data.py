@@ -281,6 +281,43 @@ def heston_cos_price(S0, K, r, T, *, v0, kappa, theta, xi, rho, N=256):
     return fourier.cos_price(cf, S0, K, r, T, N=N)
 
 
+def _rbergomi_paths(S0, r, T, *, xi0, eta, hurst, rho, n_steps, n_paths, seed):
+    """Left-point stock updates with the variance of the actual discrete Volterra kernel."""
+    rng = np.random.default_rng(seed)
+    dt = T / n_steps
+    half = (n_paths + 1) // 2
+    z1 = rng.standard_normal((half, n_steps))
+    z2 = rng.standard_normal((half, n_steps))
+    z1 = np.concatenate([z1, -z1], axis=0)[:n_paths]
+    z2 = np.concatenate([z2, -z2], axis=0)[:n_paths]
+    d_w = np.sqrt(dt) * z1
+    d_b = np.sqrt(dt) * (rho * z1 + np.sqrt(1 - rho**2) * z2)
+    rough = np.zeros((n_paths, n_steps))
+    kernel_variance = np.zeros(n_steps)
+    for index in range(1, n_steps):
+        lags = np.arange(index, 0, -1) * dt
+        kernel = np.sqrt(2 * hurst) * lags ** (hurst - 0.5)
+        rough[:, index] = d_w[:, :index] @ kernel
+        kernel_variance[index] = dt * np.dot(kernel, kernel)
+    variance = xi0 * np.exp(eta * rough - 0.5 * eta**2 * kernel_variance)
+    log_terminal = np.log(S0) + np.sum((r - 0.5 * variance) * dt + np.sqrt(variance) * d_b, axis=1)
+    return np.exp(log_terminal), variance
+
+
+def _antithetic_standard_error(values):
+    """Cluster SE: one independent draw is a pair, with an odd singleton if present."""
+    values = np.asarray(values)
+    half = (len(values) + 1) // 2
+    pairs = len(values) // 2
+    totals = values[:pairs] + values[half:]
+    sizes = np.full(pairs, 2.0)
+    if len(values) % 2:
+        totals = np.r_[totals, values[pairs]]
+        sizes = np.r_[sizes, 1.0]
+    centered = totals - sizes * values.mean()
+    return float(np.sqrt(len(totals) / (len(totals) - 1) * (centered @ centered)) / len(values))
+
+
 def rbergomi_call_price(
     S0,
     K,
@@ -295,7 +332,10 @@ def rbergomi_call_price(
     n_paths=20_000,
     seed=0,
 ):
-    """Seeded rough-Bergomi Monte-Carlo call teacher with a Volterra kernel."""
+    """Seeded rough-Bergomi teacher with adapted left-point variance and pair-cluster SE.
+
+    The compensation uses the discrete Volterra-kernel variance. This is a
+    finite-grid approximation, not an exact continuous-time rBergomi sampler."""
     if (
         min(S0, K, T, xi0) <= 0
         or eta < 0
@@ -305,30 +345,21 @@ def rbergomi_call_price(
         or n_paths < 100
     ):
         raise ValueError("invalid rough-Bergomi inputs")
-    rng = np.random.default_rng(seed)
-    dt = T / n_steps
-    half = (n_paths + 1) // 2
-    z1 = rng.standard_normal((half, n_steps))
-    z2 = rng.standard_normal((half, n_steps))
-    z1 = np.concatenate([z1, -z1], axis=0)[:n_paths]
-    z2 = np.concatenate([z2, -z2], axis=0)[:n_paths]
-    d_w = np.sqrt(dt) * z1
-    d_b = np.sqrt(dt) * (rho * z1 + np.sqrt(1 - rho**2) * z2)
-    times = np.arange(1, n_steps + 1) * dt
-    rough = np.zeros((n_paths, n_steps))
-    normalizer = np.sqrt(2 * hurst)
-    for index in range(n_steps):
-        lags = (np.arange(index, -1, -1) + 1) * dt
-        kernel = normalizer * lags ** (hurst - 0.5)
-        rough[:, index] = d_w[:, : index + 1] @ kernel
-    variance = xi0 * np.exp(eta * rough - 0.5 * eta**2 * times[np.newaxis, :] ** (2 * hurst))
-    log_terminal = np.log(S0) + np.sum(
-        (r - 0.5 * variance) * dt + np.sqrt(variance) * d_b,
-        axis=1,
+    terminal, _ = _rbergomi_paths(
+        S0,
+        r,
+        T,
+        xi0=xi0,
+        eta=eta,
+        hurst=hurst,
+        rho=rho,
+        n_steps=n_steps,
+        n_paths=n_paths,
+        seed=seed,
     )
-    payoff = np.exp(-r * T) * np.maximum(np.exp(log_terminal) - K, 0.0)
+    payoff = np.exp(-r * T) * np.maximum(terminal - K, 0.0)
     estimate = float(payoff.mean())
-    se = float(payoff.std(ddof=1) / np.sqrt(n_paths))
+    se = _antithetic_standard_error(payoff)
     width = 1.959963984540054 * se
     return MonteCarloEstimate(
         estimate=estimate,
