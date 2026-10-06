@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 56 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 64 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -89,6 +89,7 @@
 | §19.7 | `_greeks_hedging.py` | Eq19.4 theta+rSdelta+σ²S²gamma/2=rΠ、q版・stock/bank込みdelta中立book。独立CN grid/time差分の残差2e−6以内・格子倍密で縮小（数値例なし） | 計算部分完了。thetaはcalendar-timeで、stock/bankもbook価値と時間微分へ算入。説明・図・受入は保留 | 40 passed・ruff PASS |
 | §19.8 | `_greeks_hedging.py` | Ex19.5 vegaのみ4000 options/−2400株・残Γ−3000、同時中立400/6000 options/−3240株。Ex19.6 vega12.1/単位・.121/vol point。独立有理数消去とQ密度vol差分 | 計算部分完了。vega中立はparallel IV shiftを前提、vol surfaceの個別変化は未ヘッジ。説明・図・受入は保留 | 48 passed・ruff PASS |
 | §19.9 | `_greeks_hedging.py` | Ex19.7 rho8.91/金利単位・.0891/1% point。spot/q固定の独立Q密度国内金利差分4例、rho parity・完全再評価の二次誤差 | 計算部分完了。金利の絶対変化1.0/.01/.0001を区別、先物固定Fのrhoは§19.12で別扱い。説明・受入は保留 | 56 passed・ruff PASS |
+| §19.11 | `_greeks_hedging.py` | Table19.5の21表示値・最大損失−90mを読取り（再価格計算ではない）。2週・7×3の合成FX bookを独立Q密度積分で完全再評価、short butterflyの内点最大損失、IV10%→12% | 計算部品完了。Table19.5はbook/strike/maturity不明のため価格再現は入力不足で飛ばす。合成book検証と引用値読取りを区別。説明・受入は保留 | 64 passed・ruff PASS |
 
 ## 次の実装
 
