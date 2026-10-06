@@ -1,15 +1,16 @@
 # P4 ロジック先行の実装状態
 
-更新2026-10-06。範囲：Ch10–21（台帳112項目）。原典の節メモに沿い、計算をprivate moduleへ実装し、本文数値と独立検証を対象テスト・ruffで確認する。
+更新2026-10-06。範囲：Ch10–21（台帳112項目）。**計算対象95/95項目の初回実装・対象検証を完了。** 原典の節メモに沿い、計算をprivate moduleへ実装した。説明中心の17項目と章末の教材・正式受入は保留。
 
 - 本人指示（2026-10-05）：受入作業はCh28を区切りに一時停止。P3はロジック36/37、正式受入8/37で保持し、次段階P4の実装を先行する。§33.2の入力不足は保留。
 - 実装ブランチ：`codex/p4-logic`。既存`codex/p3-logic`の完成済み計算を引き継ぐ。新計算の公開API追加なし。節ごとにcommit/pushする。
 - 正式受入：P4 0/112、全体33/306。説明・可視化・配布画面・台帳は受入再開時に確認する。
 - 検証：変更モジュールのテストとruff check（lint）。全suite・画面巡回・D1・保管庫復元は今回の実装段階の実行対象に含めない。
+- 完了条件：Ch10–21の下調べ112項目と下表を照合し、計算対象95項目の部品と節の対象テスト・lintをそろえる。2026-10-06に95/95を確認。残る17項目はすべて下調べで定性と分類されている。旧監査の定性19とは分類基準が異なる。入力不足・丸め差・近似の適用範囲は各行に保持する。
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 92 passed・Ch20 84 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。各行の検証件数は、その節を完了した時点のモジュール累計で、合算しない。2026-10-06のCh21は木61・MC30・FD21の計112 tests PASS、各モジュールと対象テストのruff check/format check PASS（Linux/Python 3.12）。Ch10–20の記録は各節時点の値で、今回再実行していない。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -100,29 +101,41 @@
 | §20.6 | `_smile_surface.py` | ΔMV=ΔBSM+vega×条件付きIV応答。独立Q payoff完全再評価の連鎖微分、合成2因子4状態Cov(ΔV,ΔS)/Var(ΔS)と最小分散、非線形再評価の局所極限（本文数値例なし） | 計算部分完了。応答は条件付き時間方向の入力で横断smile傾きと別。実データ推定/モデル較正はRB-H20、局所一次式の精度を超える保証なし。説明・受入は保留 | 57 passed・ruff PASS |
 | §20.8 | `_smile_surface.py` | Table20.3 call/put全9行、p=.53140677、端点IV=0とfrown。印刷callから内点IV58.85004/66.62438/69.51882/69.16508/66.09182/59.97265/49.88574%、独立2状態複製・Q密度再評価 | 計算部分完了。K56印刷IV49.0%は丸めcallから49.88574%、未丸めモデルから49.93360%で不一致を保存。本文数値を改変せず誤植候補として記録、説明・受入は保留 | 69 passed・ruff PASS |
 | §20.appendix | `_smile_surface.py` | Ex20A.1 call4.045/3.549/3.055、全8密度.0057/.0444/.1545/.2781/.2813/.1659/.0573/.0113、面積.998473283/残差.001526717、平坦26%区間確率.0031/.0167。独立payoff/三角butterfly積分・対数正規密度への二次収束 | 計算部分完了。丸めた3価格ではg1≈.00806になり、未丸め価格を使用。区間質量は中点則の推定で尾部を直接観測したものではない。負密度・質量残差を保存し正規化/修復はしない。説明・受入は保留 | 84 passed・ruff PASS |
+| §21.1 | `_numerical_trees.py` | Ex21.1 N5価格4.49、N30/50/100/500は4.263/4.272/4.278/4.283、Fig21.3全21節点。Ex21.2 Δ−.415/Γ.034/Θ−.0117日、vega.123/rho−.072 per point。独立全停止方針/FD/欧州BSM | 計算部分完了。Greekの推定時点Δt/2Δtと単位を明示。bump固定N・Δσ/Δr=1e−4、元のDerivaGem bump幅は不明。説明・受入は保留 | 12 passed・ruff PASS |
+| §21.2 | `_numerical_trees.py` | Ex21.3 futures19.16/20.18/20.22、Ex21.4 FX.0710/.0738、Figs21.5/6全30節点。q=r/q=rf/q=dividend yield、独立全停止方針・FD・欧州BSM | 計算部分完了。先物成長0でも国内金利割引を保持。定性説明・教材・受入は保留 | 26 passed・ruff PASS |
+| §21.3 | `_numerical_trees.py` | Ex21.5 4.44/4.208/4.214、Fig21.9全21節点、S*=49.999218/PV2.000782。CV未丸め4.2454208/表示4.25。独立全停止方針・配当PDE・欧州BSM、割合配当の複合縮小 | 計算部分完了。σはS*へ適用。N5のex日3.5月は格子外で行使は月次のみと明示し、aligned時はex前後を比較。CV改善の普遍保証なし。説明・受入は保留 | 37 passed・ruff PASS |
+| §21.4 | `_numerical_trees.py` | Ex21.6 u1.0098/d.9703/price.0026・Fig21.11全10節点。p=.5 log平均/分散、三項pU/pM/pD・独立log陽解法行列/BSM/米国FD | 計算部分完了。p=.5のstock成長と三項のlog分散は有限dt近似。負の三項確率は拒否。adaptive meshは概念説明として保留、教材・受入は保留 | 50 passed・ruff PASS |
+| §21.5 | `_numerical_trees.py` | 本文式21.11/12・等分散clockを実装（固有数値例なし）。定数CRRへの退化、区間DF/forward成長、独立全パス/停止方針・積分BSM・時変CN-PDE | 計算部分完了。曲線はcallerのpiecewise forward rate/variance rate。負分散と負branch確率を拒否、ゼロ分散区間を含む場合も確率条件を要求。説明・受入は保留 | 61 passed・ruff PASS |
+| §21.6 | `_numerical_mc.py` | Ex21.7 SE.169/CI2.71–3.37、Ex21.8 raw CI4.503989–5.456011/先丸め4.51–5.45、Table21.2 BSM4.817、Table21.3全10平均/payoffと6.78705→6.79。独立32経路・Gauss-Hermiteモーメント・BSM/解析Greekを固定seed6SE | 計算部分完了。Tables21.1/2の全乱数標本は不足で再現を飛ばす。掲載10経路は方法例で真値と区別。SEは独立trialを仮定、共通乱数Greekはpaired差分のSE。説明・受入は保留 | 17 passed・ruff PASS |
+| §21.7 | `_numerical_mc.py` | 本文4層Φ⁻¹(.125/.375/.625/.875)、6方式（antithetic/control/tail conditional/stratification/moment matching/Sobol）。独立Q payoff求積・解析BSMを固定seed6SE、1024 Sobol点の分割均等性 | 計算部分完了。antiはpair平均、層化/moment matchingは独立batch、QMCは独立scrambleのSE。決定的点へiid SEは付けない。有限sample moment matchingはbiasedになり得る、普遍的分散改善/1M収束は主張しない。説明・受入は保留 | 30 passed・ruff PASS |
+| §21.8 | `_numerical_fd.py` | Tables21.4/5全462格子値、米国4.067186/欧州3.911208/BSM4.075981、explicit4.256804と負価格。独立Q payoff求積/CRR・空間時間領域の収束・解析Greek | 計算部分完了。source projectionは負の不安定値を再生するopt-in。S75/t0・S60/t2は丸め境界、T=.4167なら全表が印刷丸め内（原著規約は未確定）。CV未丸め4.231959、表示値の加算4.24を分離。Americanはpost-step projection、厳密LCPとは区別。説明・受入は保留 | 21 passed・ruff PASS |
 
-## 次の実装
+## 全体の完了範囲と残り
 
-- Ch10–20の計算87項目の部品を実装・push。Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3、Ch17：6、Ch18：10、Ch19：11節＋付録、Ch20：6節＋付録。Ch16.5は算術部分のみ、§19.11は合成bookの計算部品まで。
-- 直近はCh20の7計算項目（§20.1/2/4/5/6/8/付録）。対象84 tests・ruff check/format check PASS（2026-10-06）。Ch10–19と全suiteはこのまとまりでは再実行していない。
-- 次はCh21 §21.1–21.4（木・配当・三項木）。P4の計算は合計87項目、正式受入は0/112のまま。
-- Ch20の保留：2005–2015の実測FX列は原データなし。Table20.3 K56のIV49.0%は印刷callから49.88574%で不一致。付録の価格3桁丸めはg1を.0057から約.00806へ変えるため未丸め価格を使う。surfaceの無裁定修復と条件付きIV応答の実データ推定は別研究、§20.3/7の定性説明・章の受入は保留。
+- 計算95項目：Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3、Ch17：6、Ch18：10、Ch19：11節＋付録、Ch20：6節＋付録、Ch21：8。Ch16.5は算術部分、§19.11は合成bookの計算部品まで。
+- このまとまりでCh21の全8節を実装・節ごとpush。CRR/配当/三項/時変木、MC統計/6方式の分散削減、S/log FDの4方式・Greek/CVを追加した。本文10 Asian経路とFD2表462セルを照合。対象112 tests・ruff check/format check PASS。全suite・教材・章の受入は未実施。
+- Ch21の保留：Tables21.1/2の全乱数標本は不明。FDのS75/t0・S60/t2の2セルは丸め境界で、T=.4167なら全表の印刷丸め内になるが原著の中間精度は未確定。CVは未丸め4.231959、表示値加算4.24。American FDは単純projection。現金配当S*モデル、格子に非整列の配当日、QMC/層化/moment matchingのSE単位とbiasは各行の制限を引き継ぐ。
+- Ch20の保留：2005–2015の実測FX列は原データなし。Table20.3 K56のIV49.0%は印刷callから49.88574%で不一致。付録の価格3桁丸めはg1を.0057から約.00806へ変えるため未丸め価格を使う。surfaceの無裁定修復と条件付きIV応答の実データ推定は別研究。
 - Ch19の保留：Table19.3の精密再計算256337.59と印刷256600の差262.41ドル、Table19.5のbook入力欠落、Ex19.9の88/92百万で厳密な時間規約が揃わないこと。Ex19.8の21GBP差は係数4桁丸めで再現可能だが原著の中間精度は不明。成績Tables19.1/4は無利息・無割引の規約を固定seed MC/6SEで確認し、資金口座付き費用と区別する。
-- 定性・説明要求は保留：Ch19 §19.3/10/14、Ch18 §18.2、Ch16 §16.1–2・会計史/研究の説明、Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済み。計算部品の完成は章の正式受入を表さない。
-- [Claudeの既存Ch10–16レビュー](P4_REVIEW_NOTES.md)は別管理。Ch17の為替IVはR-07を引き継がない求根へ変更済み。既存Ch15のR-07、権利確定日R-02、tail境界R-08、docstring R-01等は未修正。既存ファイルのformat・全suite・正式受入は再開時の確認事項。
+- 説明中心の保留17項目：Ch10 §10.5・10.8–10.12、Ch11 §11.2、Ch14 §14.1/14.4、Ch16 §16.1–2、Ch18 §18.2、Ch19 §19.3/10/14、Ch20 §20.3/7。§10.10の説明用損失20ドルは下調べで算術確認済み。
+- [Claudeレビュー](P4_REVIEW_NOTES.md)：R-01はP3修正のmerge `06bff3ca`、R-02/R-07/R-08は `3a75aed7`/`e1acc40d`/`171a8227` で修正済み。修正とR3記録を保持した。R3の全suite 5,037 PASS/6skip/0FAILは当時の記録で、今回HEADの再実行結果ではない。R-03の既存format、R-09–12の検証の強さ、R-13/15等の記述と章末ゲートは後続。
+- 次の実装段階：P5（Ch22–25、台帳36項目）。計算を同じロジック先行の流れで進める。P4の説明・教材・正式受入0/112は保留のまま保持する。
 
 ## 再現コマンド
 
-今回のCh20対象84 testsとlint/format確認。Python/ruffはルートの共有venvを使い、PYTHONPATHでロジックworktreeを明示する。release/全suite/正式受入は未実行。
+Ch21の木61・MC30・FD21 testsとlint/format確認。Python/ruffはルートの共有venvを使い、PYTHONPATHでロジックworktreeを明示する。実装時は変更したモジュールごとに実行した。release/全suite/正式受入は未実行。
 
 ```bash
 cd /home/kazumasa/worktrees/m29
 export PYTHONPATH="$PWD/johnhull/hullkit/src:$PWD/johnhull/report:$PWD"
-/home/kazumasa/projects/.venv/bin/python -m pytest -q johnhull/hullkit/tests/test_smile_surface_*.py
+/home/kazumasa/projects/.venv/bin/python -m pytest -q \
+  johnhull/hullkit/tests/test_numerical_trees_*.py \
+  johnhull/hullkit/tests/test_numerical_mc_*.py \
+  johnhull/hullkit/tests/test_numerical_fd_*.py
 /home/kazumasa/projects/.venv/bin/ruff check \
-  johnhull/hullkit/src/hullkit/_smile_surface.py \
-  johnhull/hullkit/tests/test_smile_surface_*.py
+  johnhull/hullkit/src/hullkit/_numerical_{trees,mc,fd}.py \
+  johnhull/hullkit/tests/test_numerical_{trees,mc,fd}_*.py
 /home/kazumasa/projects/.venv/bin/ruff format --check \
-  johnhull/hullkit/src/hullkit/_smile_surface.py \
-  johnhull/hullkit/tests/test_smile_surface_*.py
+  johnhull/hullkit/src/hullkit/_numerical_{trees,mc,fd}.py \
+  johnhull/hullkit/tests/test_numerical_{trees,mc,fd}_*.py
 ```
