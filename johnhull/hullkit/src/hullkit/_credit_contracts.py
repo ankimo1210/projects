@@ -292,3 +292,44 @@ def knockout_spread_payoff(default_times, start, spreads, strike, annuity, *, ki
     elif kind == "receiver":
         payoff = np.maximum(-payoff, 0)
     return np.where(default > start, payoff, 0)
+
+
+def total_return_swap_cashflows(
+    notional, price_marks, coupons, floating_rates, year_fractions, *, spread=0.0025
+):
+    """Fixed initial-notional TRS: receiver gets price change + cash coupons minus financing.
+
+    price_marks are asset value/initial notional (including the initial mark);
+    coupons are cash amounts, rates annual fractions and intervals years. The
+    caller supplies default/recovery marks; no fair-spread/CVA model is assumed.
+    """
+    marks = np.asarray(price_marks, dtype=float)
+    dt = np.asarray(year_fractions, dtype=float)
+    coupon = np.asarray(coupons, dtype=float)
+    floating = np.asarray(floating_rates, dtype=float)
+    if (
+        dt.ndim != 1
+        or dt.size == 0
+        or marks.shape != (dt.size + 1,)
+        or coupon.shape != dt.shape
+        or floating.shape != dt.shape
+        or not np.isfinite([notional, spread]).all()
+        or notional < 0
+        or not all(np.isfinite(v).all() for v in (marks, dt, coupon, floating))
+        or np.any(dt <= 0)
+        or np.any(marks < 0)
+    ):
+        raise ValueError(
+            "matching finite periodic inputs, nonnegative notional/marks and positive periods required"
+        )
+    capital = notional * np.diff(marks)
+    financing = notional * (floating + spread) * dt
+    received = capital + coupon - financing
+    return {
+        "times": np.cumsum(dt),
+        "capital_change": capital,
+        "coupons": coupon,
+        "financing": financing,
+        "receiver_cashflows": received,
+        "payer_cashflows": -received,
+    }
