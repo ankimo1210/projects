@@ -29,6 +29,24 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _assert_chapter_record(section: dict) -> None:
+    """Accept current D1 evidence by its checks, without pinning a file name."""
+    item = section["evidence"]["chapter_check"]
+    assert item["kind"] == "record"
+    path = REPO_ROOT / "johnhull" / item["path"]
+    record = json.loads(path.read_text())
+    assert record["status"] == "PASS"
+    if record.get("schema_version") == 2:
+        assert record["section_id"] == section["id"]
+        assert all(
+            record["checks"][name]["status"] == "PASS"
+            for name in ("browser", "runtime_probe", "pytest")
+        )
+        assert record["storage_verification"]["status"] == "PASS"
+    else:
+        assert path.name == "acceptance-check.json"
+
+
 def _write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -724,7 +742,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     scheduled = next(section for section in ledger["sections"] if section["id"] == "26.3")
     assert scheduled["status"] == "accepted"
     assert [row["id"] for row in scheduled["requirements"]] == [f"NA{i:02}" for i in range(1, 7)]
-    assert scheduled["evidence"]["chapter_check"]["path"].endswith("acceptance-check.json")
+    _assert_chapter_record(scheduled)
     assert all(
         axis["state"] == "verified"
         for row in scheduled["requirements"]
@@ -733,7 +751,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     gap = next(section for section in ledger["sections"] if section["id"] == "26.4")
     assert gap["status"] == "accepted"
     assert [row["id"] for row in gap["requirements"]] == [f"GP{i:02}" for i in range(1, 7)]
-    assert gap["evidence"]["chapter_check"]["path"].endswith("acceptance-check.json")
+    _assert_chapter_record(gap)
     assert all(
         axis["state"] == "verified"
         for row in gap["requirements"]
@@ -742,7 +760,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     forward = next(section for section in ledger["sections"] if section["id"] == "26.5")
     assert forward["status"] == "accepted"
     assert [row["id"] for row in forward["requirements"]] == [f"FS{i:02}" for i in range(1, 7)]
-    assert forward["evidence"]["chapter_check"]["path"].endswith("acceptance-check.json")
+    _assert_chapter_record(forward)
     assert all(
         axis["state"] == "verified"
         for row in forward["requirements"]
@@ -751,7 +769,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     cliquet = next(section for section in ledger["sections"] if section["id"] == "26.6")
     assert cliquet["status"] == "accepted"
     assert [row["id"] for row in cliquet["requirements"]] == [f"CQ{i:02}" for i in range(1, 7)]
-    assert cliquet["evidence"]["chapter_check"]["path"].endswith("acceptance-check.json")
+    _assert_chapter_record(cliquet)
     assert all(
         axis["state"] == "verified"
         for row in cliquet["requirements"]
@@ -760,7 +778,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     compound = next(section for section in ledger["sections"] if section["id"] == "26.7")
     assert compound["status"] == "accepted"
     assert [row["id"] for row in compound["requirements"]] == [f"CO{i:02}" for i in range(1, 7)]
-    assert compound["evidence"]["chapter_check"]["path"].endswith("acceptance-check.json")
+    _assert_chapter_record(compound)
     assert all(
         axis["state"] == "verified"
         for row in compound["requirements"]
@@ -769,7 +787,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     chooser = next(section for section in ledger["sections"] if section["id"] == "26.8")
     assert chooser["status"] == "accepted"
     assert [r["id"] for r in chooser["requirements"]] == [f"CH{i:02}" for i in range(1, 7)]
-    assert chooser["evidence"]["chapter_check"]["path"].endswith("acceptance-check.json")
+    _assert_chapter_record(chooser)
     assert all(
         a["state"] == "verified" for r in chooser["requirements"] for a in r["coverage"].values()
     )
@@ -777,7 +795,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert market_risk["status"] == "accepted"
     assert market_risk["source_pages"] == [671, 674]
     assert [r["id"] for r in market_risk["requirements"]] == [f"RP{i:02}" for i in range(1, 7)]
-    assert market_risk["evidence"]["chapter_check"]["path"].endswith("acceptance-check.json")
+    _assert_chapter_record(market_risk)
     assert all(
         a["state"] == "verified"
         for r in market_risk["requirements"]
@@ -787,7 +805,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert factor_risk["status"] == "accepted"
     assert factor_risk["source_pages"] == [674, 675]
     assert [r["id"] for r in factor_risk["requirements"]] == [f"FR{i:02}" for i in range(1, 7)]
-    assert factor_risk["evidence"]["chapter_check"]["path"].endswith("acceptance-check.json")
+    _assert_chapter_record(factor_risk)
     assert all(
         a["state"] == "verified"
         for r in factor_risk["requirements"]
@@ -797,7 +815,7 @@ def test_real_inventory_and_accepted_sections_are_complete() -> None:
     assert martingale["status"] == "accepted"
     assert martingale["source_pages"] == [675, 676]
     assert [r["id"] for r in martingale["requirements"]] == [f"MT{i:02}" for i in range(1, 7)]
-    assert martingale["evidence"]["chapter_check"]["path"].endswith("acceptance-check.json")
+    _assert_chapter_record(martingale)
     assert all(
         axis["state"] == "verified"
         for need in martingale["requirements"]

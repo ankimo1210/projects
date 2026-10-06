@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "chapter": 28,
+  "pages": {
+    "book": {
+      "states": [
+        {
+          "section": "28.8",
+          "figure": "martingale_numeraire_drift_shift",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.8",
+          "figure": "martingale_numeraire_absolute_shift",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.8",
+          "figure": "martingale_numeraire_drift_shift",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.8",
+          "figure": "martingale_numeraire_absolute_shift",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/chapter-28/book-martingale_numeraire_drift_shift-1440.png",
+        "docs/validation/chapter-28/book-martingale_numeraire_absolute_shift-1440.png",
+        "docs/validation/chapter-28/book-martingale_numeraire_drift_shift-1000.png",
+        "docs/validation/chapter-28/book-martingale_numeraire_absolute_shift-1000.png"
+      ],
+      "headings": [
+        {
+          "section": "28.8",
+          "heading": "6G. ニュメレール変更の共分散補正（§28.8）",
+          "explanation_checked": true,
+          "math_checked": true
+        }
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff"
+      ],
+      "unapproved_requests": [],
+      "external_network_blocked": false
+    },
+    "portal": {
+      "states": [
+        {
+          "section": "28.8",
+          "figure": "martingale_numeraire_drift_shift",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.8",
+          "figure": "martingale_numeraire_absolute_shift",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.8",
+          "figure": "martingale_numeraire_drift_shift",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.8",
+          "figure": "martingale_numeraire_absolute_shift",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/chapter-28/portal-martingale_numeraire_drift_shift-1440.png",
+        "docs/validation/chapter-28/portal-martingale_numeraire_absolute_shift-1440.png",
+        "docs/validation/chapter-28/portal-martingale_numeraire_drift_shift-1000.png",
+        "docs/validation/chapter-28/portal-martingale_numeraire_absolute_shift-1000.png"
+      ],
+      "headings": [],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": [],
+      "external_network_blocked": true
+    }
+  },
+  "source_sha256": {
+    "docs/acceptance/chapters/ch28.json": "556e59cafe8235059bf38b48ed02203e7bfcdd49420f9b05d60147db1155cdec",
+    "docs/validation/chapter-28/reference.json": "cb48df62b74a7908a922b9ccec86f7a26c84f453290f9e143ca92e244f53abeb",
+    "docs/validation/chapter-28/numerical-check.json": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed",
+    "scripts/verify_chapter_browser.cjs": "c352c4a846c4a75908094b9f88fb589bd5f033d3716bd26e379a70cb5205e2de",
+    "hullkit/src/hullkit/_chapter28_lesson.py": "f9800998f05b2d8a363537ab84ca05cd0b3383d56303a84a2afd1c6e949a4a3d",
+    "volumes/10_exotics_martingales/exotics.ipynb": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "313acdfe78f2f016ad01b2a1d17901988edbeb95f2357d1f89fb4bf68541aa9c",
+    "report/report_builder/figures.py": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+  },
+  "artifact_sha256": {
+    "book/_build/html/notebooks/10_exotics.html": "0560bae03ccca2246440f825138a0f2bcbc634291e82fc16fa21d1cf7f1d4dea",
+    "report/site/exotics.html": "9a3abf9ae363ade735ec937308319d2785e4ffadd85378e341f4804be75258ed"
+  },
+  "browser_version": "145.0.7632.6",
+  "book_math": {
+    "rendered": 1224,
+    "errors": 0
+  },
+  "state_checks": 8,
+  "screenshots": 8,
+  "capture_sha256": {
+    "docs/validation/chapter-28/book-martingale_numeraire_drift_shift-1440.png": "1ab139bcbb12be7403e579398d7e46bd11169ab1b39f9225b9773b86ce0454b5",
+    "docs/validation/chapter-28/book-martingale_numeraire_absolute_shift-1440.png": "3c5c301d6ac6cc2b756bd7631a4bc6f01cad914d3adc63a0c39bca52d12d56e6",
+    "docs/validation/chapter-28/book-martingale_numeraire_drift_shift-1000.png": "714c78de7055526c6621173a0b76c44b45e7aa569d77ca3a5384312375b340fe",
+    "docs/validation/chapter-28/book-martingale_numeraire_absolute_shift-1000.png": "1e72e5f6da9250fd0f39631d1d5b5592e64209b0aae8c8c5b558d2794bd72015",
+    "docs/validation/chapter-28/portal-martingale_numeraire_drift_shift-1440.png": "a191e1fee99d38d5a208c01abb571161a6e1b22a497efd7706528bf0deabb997",
+    "docs/validation/chapter-28/portal-martingale_numeraire_absolute_shift-1440.png": "1d868abdc23486695b58c2d97023dfa502dbcee523f84783780b519419c96b4d",
+    "docs/validation/chapter-28/portal-martingale_numeraire_drift_shift-1000.png": "47a1e908419d3d46c8744d661fa3ac193f9ee8b46b19d47bd224db087746c30d",
+    "docs/validation/chapter-28/portal-martingale_numeraire_absolute_shift-1000.png": "094c09ac91107e936da407e8cdfe34028faa393a9a2c8c39c2318f4d04f4d01d"
+  }
+}

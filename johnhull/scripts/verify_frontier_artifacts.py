@@ -62,6 +62,8 @@ def _json_values(path: Path, *, timing=False) -> dict:
     value = _normalized_volume21_json(path) if timing else json.loads(path.read_text())
     # The on-disk SHA binds exact bytes for integrity, not a numerical oracle.
     value["companions"] = {name: "<content compared separately>" for name in value["companions"]}
+    if "array_fingerprint" in value.get("metrics", {}):
+        value["metrics"]["array_fingerprint"] = "<arrays compared with numerical tolerance>"
     return value
 
 

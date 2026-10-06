@@ -1,0 +1,630 @@
+{
+  "schema_version": 2,
+  "kind": "johnhull-section-recheck",
+  "status": "PASS",
+  "run_id": "d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174",
+  "created_at": "2026-10-06T22:46:18.070061+00:00",
+  "commit": "1eea23dd82830bfbaf919ea11193a7818c828884",
+  "dirty": false,
+  "section_id": "27.8",
+  "decision": "redrawn",
+  "reasons": [
+    "P8 shared numerical/portal sources changed; preserve accepted section coverage"
+  ],
+  "dependency_fingerprint": {
+    "section_id": "27.8",
+    "rules": {
+      "fingerprint_schema": 1,
+      "normalizer_version": 1,
+      "normalization": [
+        "Plotly div UUIDs are renamed by order of first appearance within a slice",
+        "Sphinx auto-generated anchor ids (id<N>) are renamed by order of first appearance",
+        "An inline plotly.js bundle is replaced by its sha256 and fingerprinted as a shared asset",
+        "Notebook cell ids and execution counts are dropped (not rendered by Book or portal)",
+        "Imported package __init__ modules and their static imports are included"
+      ]
+    },
+    "components": {
+      "notebook_slice": "4987a4aa1fa5cd3bb72ebe341ebe5b9980459eaf1dfdadc588142a044f5de2ac",
+      "notebook_shared_assets": [
+        "cef0e322ca434b712776e98b2709050fd54c53187afdbf4bfd04722041c2f3ee"
+      ],
+      "book_section": "0048457c39c88b12cd94f0c860c835c44406be0484c072dc270c4ebe4ad42005",
+      "book_assets": {
+        "local": {
+          "book/_build/html/_static/clipboard.min.js": "261ffa06f381039cf7d18984d1364c59f3c2b9b60b1fa05d5f9c8c152e4d5be5",
+          "book/_build/html/_static/copybutton.css": "0f7c9f303bd3058bdc9db7263fe560c0a41f3526729ce1f00ccab527724c5476",
+          "book/_build/html/_static/copybutton.js": "89ee4163ba2fdd47404883ebc81bf93f696f6ab02aa5795331a8ff7161e9e256",
+          "book/_build/html/_static/design-tabs.js": "de2467cfca5bb555043369f1eea82c9cd794e70fa0444f216aa4ebb18cefc9f0",
+          "book/_build/html/_static/doctools.js": "81cb2da3c284e429a1a63ab28a20b7e30bceb8eb1556a154c8cbac0b4ce7795b",
+          "book/_build/html/_static/documentation_options.js": "47b8afcb442c0349307d7c464ed881d903dba4271c8428d44c3c3f78aa1af20c",
+          "book/_build/html/_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css": "11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e",
+          "book/_build/html/_static/pygments.css": "66f472fe9022ecdf197c5abc2b437f123c349c85f8741219a42963c77eb14920",
+          "book/_build/html/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+          "book/_build/html/_static/scripts/bootstrap.js": "f4b2b6f5d4bf7ebd727eec8f512a3b419ba97dfa5a361f8a419e8ab087f77352",
+          "book/_build/html/_static/scripts/fontawesome.js": "3255175d1c4cfe78e9f5e8fab69afc6a7002e6e793c2c669c12bb9cacad33b9a",
+          "book/_build/html/_static/scripts/pydata-sphinx-theme.js": "f264bd85cd58f330ce33afffc7839c247a93498680ab7968d7d2d1ddecf955fe",
+          "book/_build/html/_static/scripts/sphinx-book-theme.js": "20f5c4379fa2fa1af248209415a03ef275f18d4dc56fd2db6c3f6ae2c87ab18b",
+          "book/_build/html/_static/sphinx-design.min.css": "eb53d5c272ecc4d93a04605b3d42aa6942858e634bb9686d32d576203a0033ba",
+          "book/_build/html/_static/sphinx-thebe.css": "da591f8cfbc259361ee704d861877be843aaee54f67aed9bda27be1a0f3d3a80",
+          "book/_build/html/_static/sphinx-thebe.js": "bbdfa292b3885f2c3af48ee6d3ea13658afac228ac35d45b39ffa2ed902a1334",
+          "book/_build/html/_static/sphinx_highlight.js": "096231e9c87df80ec3273da9c5b71bc81503206726a07a4dd4de44c256ff859c",
+          "book/_build/html/_static/styles/pydata-sphinx-theme.css": "218db1720af3aa73ee8b997003ae097f87cb997cec296426ef2885d01a1eaa02",
+          "book/_build/html/_static/styles/sphinx-book-theme.css": "dcc916931d8a6e224a4584c5a89f8c3a6e741f048960f91662f5a9a1281cef99",
+          "book/_build/html/_static/styles/theme.css": "c5ad46e4d126fbddecf0ece57fc8345279fac39110306ac7e643f0d4505423f7",
+          "book/_build/html/_static/togglebutton.css": "33f384087b19f23dc8e64faa0b88c6d5c37ddefa9d89dc60a66efd3da2edd0b7",
+          "book/_build/html/_static/togglebutton.js": "a8995912efab60a1a4277dc13d269fb8de05d6b82f49a1981ac557fbcad0bb55"
+        },
+        "external": [
+          "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+        ],
+        "inline_bundles": [
+          "cef0e322ca434b712776e98b2709050fd54c53187afdbf4bfd04722041c2f3ee"
+        ]
+      },
+      "portal_cards": {
+        "american_mc_regression": "43f64e7607a3856c9c54c1a8043927fff4a1aba56f14a9964e6463ad44c7c7c0",
+        "american_mc_boundary": "2e6f626e3a6e6361191f9a759ab34ae2f28ba15f9763c008d70cf6228b7b2154",
+        "american_mc_bias": "9070e1ed89d7d5a0ff0764aff5b8e8e45ed569f13aa897c00bcc3c5dc82fce3a",
+        "american_mc_dates": "d4885d72d325c6318fe358a8ee836175abf2570f9b58cbbc3a2af46aedf62ea4"
+      },
+      "portal_assets": {
+        "local": {
+          "report/site/assets/plotly.min.js": "8ef4c6ab1369f0019611cbcd2d5b8aafef23e5d19ef58c39d4b4249831fe2180",
+          "report/site/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210"
+        },
+        "external": []
+      },
+      "python_sources": {
+        "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+        "hullkit/src/hullkit/_american_mc_lesson.py": "4e0d1328e13b7bce424a7c017b33dd43e1af995422e0668692994e47f46d893d",
+        "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+        "hullkit/src/hullkit/american_mc.py": "ccd2bb5c38a2a5a193a807430bdd08ac310fbe69d9608b0fc1070ed826ebb2ba",
+        "hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+        "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+        "hullkit/src/hullkit/carbon.py": "7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+        "hullkit/src/hullkit/cds.py": "77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+        "hullkit/src/hullkit/copula.py": "79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+        "hullkit/src/hullkit/credit.py": "5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+        "hullkit/src/hullkit/credit_curve.py": "b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+        "hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+        "hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+        "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+        "hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+        "hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+        "hullkit/src/hullkit/frontier_reference.py": "c306605c2cb0e3745f4e542260b88a40a9406f77d54c984b5be40433fc7c960e",
+        "hullkit/src/hullkit/hedging.py": "d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+        "hullkit/src/hullkit/heston.py": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+        "hullkit/src/hullkit/hull_white.py": "09e6fa5140b3a0958c854c25f1893d4a293e0832c21e33f89c29490930040ba5",
+        "hullkit/src/hullkit/inflation.py": "f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+        "hullkit/src/hullkit/ir_options.py": "c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+        "hullkit/src/hullkit/jarrow_yildirim.py": "4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+        "hullkit/src/hullkit/jgbi.py": "0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+        "hullkit/src/hullkit/liquidation.py": "7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+        "hullkit/src/hullkit/mc.py": "abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+        "hullkit/src/hullkit/mc_advanced.py": "8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+        "hullkit/src/hullkit/nbplot.py": "ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+        "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+        "hullkit/src/hullkit/payoffs.py": "b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+        "hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+        "hullkit/src/hullkit/perpetuals.py": "bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+        "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+        "hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+        "hullkit/src/hullkit/ppa.py": "74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+        "hullkit/src/hullkit/rates.py": "e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+        "hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+        "hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+        "hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+        "hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+        "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+        "hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+        "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+        "hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+        "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+        "hullkit/src/hullkit/surrogate_data.py": "251a883394722e33e38259c133681166c7444c5c570d8100e08d9f9a2f969459",
+        "hullkit/src/hullkit/surrogate_validation.py": "938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+        "hullkit/src/hullkit/swaps.py": "8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+        "hullkit/src/hullkit/tail_risk.py": "bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+        "hullkit/src/hullkit/teaching.py": "69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+        "hullkit/src/hullkit/trees.py": "b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+        "hullkit/src/hullkit/var_backtest.py": "617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+        "hullkit/src/hullkit/vol_surface.py": "849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+        "hullkit/src/hullkit/volatility.py": "4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+        "hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+        "hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+        "hullkit/src/hullkit/zero_dte.py": "e8f99291613b17e0ffb6a29535d9ea08a2ab604e7116513164e91eca6dc07265"
+      },
+      "data_files": {
+        "docs/validation/section-27-8/reference.json": "329c26ffac462eecc89e06f487e7c3e1ffd6efa81a49848c4c02489ba53366d2",
+        "docs/validation/section-27-8/numerical-check.json": "94a014c99e4fc862461219c925473e14fb7d535b18d370035d05fb01a59f2ba2"
+      },
+      "verifier": {
+        "scripts/verify_american_mc_browser.cjs": "66dce24e03c96d24cc6254842bdf1ce5982955e4aa29a292bd8267c6ce480acc"
+      },
+      "viewports": [
+        [
+          1440,
+          1050
+        ],
+        [
+          1000,
+          1050
+        ]
+      ],
+      "environment": {
+        "node": "v26.7.0",
+        "playwright": "1.56.0",
+        "chromium_bin": "chrome",
+        "fonts": {
+          "Noto Sans JP": {
+            "file": "NotoSans-Regular.ttf",
+            "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+          },
+          "sans-serif": {
+            "file": "NotoSans-Regular.ttf",
+            "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+          }
+        },
+        "locale": "C.UTF-8",
+        "timezone": null
+      }
+    },
+    "unknown": [],
+    "digest": "f9452f87f3f0094f44cf1bac6eedae4725bc7ebc5f09aba91ffe655bad74d6a7"
+  },
+  "baseline": null,
+  "images": [
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/book-american_mc_bias-1000.png",
+      "ref": "artifact:sha256:5466580ef5d213fdf89d370d2bc562002bd43c4e3bb4c06012a87faa71433046",
+      "bytes": 46181,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/book-american_mc_bias-1440.png",
+      "ref": "artifact:sha256:f2c7615a0d2ab84ebb68e57df2f823ac6dda7c99e46b1d4350c7ebb7fe6ce7ff",
+      "bytes": 46081,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/book-american_mc_boundary-1000.png",
+      "ref": "artifact:sha256:459f5434965dc223302fc747e2b53c1748c4213a235b4fd82ee2fa201515af2a",
+      "bytes": 33032,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/book-american_mc_boundary-1440.png",
+      "ref": "artifact:sha256:726d1c31fbdab0c0bf99b5af572984c5cc492871afe982256b0e6cc5ba668664",
+      "bytes": 33335,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/book-american_mc_dates-1000.png",
+      "ref": "artifact:sha256:b8e5343f3dab8ff96763259dc5cd398d3ac81f03fd52802dcea7d24f707bf3d3",
+      "bytes": 44374,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/book-american_mc_dates-1440.png",
+      "ref": "artifact:sha256:d1a541e7e84c3221a57f86e58bc1edf2854ae12e1524f7a30cb57c139c5ebc22",
+      "bytes": 45120,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/book-american_mc_regression-1000.png",
+      "ref": "artifact:sha256:5167dfb1e2c8ea5e1792701071dd7e420168206d0b85ac2967a572af7e7d8933",
+      "bytes": 50051,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/book-american_mc_regression-1440.png",
+      "ref": "artifact:sha256:780ecd8471536a2f63a2bc3449b5aada990810eaaa7fe7c85d5016b5876dcda8",
+      "bytes": 51359,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/portal-american_mc_bias-1000.png",
+      "ref": "artifact:sha256:2d873412dfbdeddb6b65ee9e3a71e35c41881c26bd4c513c2af0712ecfdff101",
+      "bytes": 34385,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/portal-american_mc_bias-1440.png",
+      "ref": "artifact:sha256:76e3163c5a2dbdf50814c5558aa6e46f97681b65cbb84caf262b701e391ee20e",
+      "bytes": 35079,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/portal-american_mc_boundary-1000.png",
+      "ref": "artifact:sha256:25833ca0b5c99e3c5869e82e045e92aaebebea7bf227389bc8629006e46501c6",
+      "bytes": 22650,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/portal-american_mc_boundary-1440.png",
+      "ref": "artifact:sha256:6382bd9190ecfb49929fcfef4bb3f4a37ae4720ce0502278e0f95f4560fa7b57",
+      "bytes": 23121,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/portal-american_mc_dates-1000.png",
+      "ref": "artifact:sha256:b359c129c7fce166379ae3792ec7a29ca4ac4a69a6d1f15fca49c5b178294053",
+      "bytes": 31431,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/portal-american_mc_dates-1440.png",
+      "ref": "artifact:sha256:83f0b88cd82735d0a2a2b9ae801d838872ce45c2cec2d941a1a324f037f22587",
+      "bytes": 31760,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/portal-american_mc_regression-1000.png",
+      "ref": "artifact:sha256:e0b6c1c1682e3dae124d59413f12c4ffd4efd63d17f66521df00f1b013e64d11",
+      "bytes": 32915,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174/portal-american_mc_regression-1440.png",
+      "ref": "artifact:sha256:ed5f9a03370ca50814bd9c5d46cabd8d3a93714564d327d979a3350363eb4187",
+      "bytes": 33695,
+      "mime": "image/png"
+    }
+  ],
+  "checks": {
+    "browser": {
+      "status": "PASS",
+      "negative_controls": {
+        "book": true,
+        "portal": true
+      },
+      "browser_version": "145.0.7632.6",
+      "state_checks": 16,
+      "screenshots": 16,
+      "coverage": [
+        [
+          "book",
+          "american_mc_bias",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "american_mc_bias",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "american_mc_boundary",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "american_mc_boundary",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "american_mc_dates",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "american_mc_dates",
+          1440,
+          true
+        ],
+        [
+          "book",
+          "american_mc_regression",
+          1000,
+          true
+        ],
+        [
+          "book",
+          "american_mc_regression",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "american_mc_bias",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "american_mc_bias",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "american_mc_boundary",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "american_mc_boundary",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "american_mc_dates",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "american_mc_dates",
+          1440,
+          true
+        ],
+        [
+          "portal",
+          "american_mc_regression",
+          1000,
+          true
+        ],
+        [
+          "portal",
+          "american_mc_regression",
+          1440,
+          true
+        ]
+      ],
+      "book_math": {
+        "rendered": 390,
+        "errors": 0
+      },
+      "numeric_mutation_rejected": {
+        "portal": true,
+        "book": true
+      },
+      "raw_record_sha256": "ab7573f20afe5cc47c7b233a8bb63ceb0a0eac071b22950eaf710b4b51605130",
+      "raw_record_path": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174.browser.json",
+      "wrapper": {
+        "verifier": "scripts/verify_american_mc_browser.cjs",
+        "original_sha256": "66dce24e03c96d24cc6254842bdf1ce5982955e4aa29a292bd8267c6ce480acc",
+        "executed_sha256": "66dce24e03c96d24cc6254842bdf1ce5982955e4aa29a292bd8267c6ce480acc",
+        "wrapper_sha256": "68f743a20e5ca659ca087558b71d4e679e64239f29cd8b832a28b9d5d26f88a1",
+        "renames": [],
+        "overlay_root_redirect": true
+      },
+      "seconds": 8.2
+    },
+    "runtime_probe": {
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 4.96
+    },
+    "pytest": {
+      "status": "PASS",
+      "passed": 35,
+      "exit_code": 0,
+      "summary": "35 passed in 2.16s",
+      "seconds": 3.31,
+      "command": "python -m pytest -q -p no:cacheprovider hullkit/tests/test_american_mc.py hullkit/tests/test_american_mc_lesson.py report/tests/test_american_mc_notebook.py"
+    }
+  },
+  "environment": {
+    "runtime": {
+      "browser_version": "145.0.7632.6",
+      "mathjax_version": "3.2.2",
+      "mathjax_scripts": [
+        {
+          "url": "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+          "sha256": "300480069078b5892d2363a2b65e2dfbbf30fe5c80f83edbfecf4610fd093862"
+        }
+      ],
+      "fonts": {
+        "book_heading": [
+          {
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+          },
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans",
+            "file": "LiberationSans-Regular.ttf",
+            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+          }
+        ],
+        "book_body": [
+          {
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+          },
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans",
+            "file": "LiberationSans-Regular.ttf",
+            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+          }
+        ],
+        "portal_heading": [
+          {
+            "family": "Droid Sans Fallback",
+            "postscript": "DroidSansFallback",
+            "file": "DroidSansFallbackFull.ttf",
+            "sha256": "acb6440a713d880a13a21b468ba7cd43f5a2b2934972e51be791c880730777b8"
+          },
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans-Bold",
+            "file": "LiberationSans-Bold.ttf",
+            "sha256": "3973aa5054fb467dd5627245d3dc82e37bf16fe075756156a570455871351582"
+          }
+        ],
+        "portal_plot_text": [
+          {
+            "family": "Liberation Sans",
+            "postscript": "LiberationSans",
+            "file": "LiberationSans-Regular.ttf",
+            "sha256": "4659bc0c58c5028dd488ec928d41d9265db43d9b669fc14ca8b0832daca7b144"
+          }
+        ]
+      }
+    },
+    "static": {
+      "node": "v26.7.0",
+      "playwright": "1.56.0",
+      "chromium_bin": "chrome",
+      "fonts": {
+        "Noto Sans JP": {
+          "file": "NotoSans-Regular.ttf",
+          "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+        },
+        "sans-serif": {
+          "file": "NotoSans-Regular.ttf",
+          "sha256": "89c3c497f618fdaa0b2d1e98fef93582f28c71debd2c4a8cdf41f190ced2909d"
+        }
+      },
+      "locale": "C.UTF-8",
+      "timezone": null
+    },
+    "fingerprint_config": "scripts/evidence_dependencies.json",
+    "records_commit": "1eea23dd82830bfbaf919ea11193a7818c828884",
+    "driver_sha256": {
+      "scripts/d1_preflight_compare.py": "d693d8c7c2e9f22f611d6c87ba78cbfc23c7a242b42f00a2cced6f243f68452d",
+      "scripts/run_browser_verifier.cjs": "68f743a20e5ca659ca087558b71d4e679e64239f29cd8b832a28b9d5d26f88a1",
+      "scripts/probe_render_runtime.cjs": "efab3367ef20b53bd353e6ecaf867a811d92aca3e71756fc5cc29cde3537a016",
+      "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+      "scripts/evidence_record.py": "264dbf9e3d4ff4c6f7bba4e6b320e1b8a71d21d1ff231adec1b92a22bba379f3",
+      "scripts/evidence_store.py": "acec175b94d8e032599ad3089c248cace6d3174762bc656b22bafdcdebe5b6d3",
+      "scripts/evidence_dependencies.json": "bbbfbf79526584fba10425c0278af8e38ce23e8ee95c862d759d35a4575c86f8"
+    }
+  },
+  "storage_verification": {
+    "status": "PASS",
+    "primary": {
+      "status": "PASS",
+      "entries": 16,
+      "bytes": 594569
+    },
+    "mirror": {
+      "status": "PASS",
+      "entries": 16,
+      "bytes": 594569
+    },
+    "checked_at": "2026-10-06T22:46:18.070049+00:00"
+  },
+  "source_sha256": {
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_ext/book_runtime.py": "ef76bf55b99b24cdd5b8883991e8ddc015f2800b924c531e4cf4e8239559b4d3",
+    "book/_static/require.min.js": "4da0ce5a233163cb1cfd539c467bf75323e11c646634d2531f82fd6b22b6885d",
+    "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
+    "docs/validation/section-27-8/numerical-check.json": "94a014c99e4fc862461219c925473e14fb7d535b18d370035d05fb01a59f2ba2",
+    "docs/validation/section-27-8/reference.json": "329c26ffac462eecc89e06f487e7c3e1ffd6efa81a49848c4c02489ba53366d2",
+    "hullkit/src/hullkit/__init__.py": "f07e1650b1c1ab09f21c397489a3e059c0cf5105ea54545f900321532eb709e9",
+    "hullkit/src/hullkit/_american_mc_lesson.py": "4e0d1328e13b7bce424a7c017b33dd43e1af995422e0668692994e47f46d893d",
+    "hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+    "hullkit/src/hullkit/american_mc.py": "ccd2bb5c38a2a5a193a807430bdd08ac310fbe69d9608b0fc1070ed826ebb2ba",
+    "hullkit/src/hullkit/amm.py": "a9f1578f3f0f4ecd499c52d13530a84be8f6013d6cda51453ba17a5088faa621",
+    "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+    "hullkit/src/hullkit/carbon.py": "7c48f441679f075eda0b118eba73b225120fbba1002708c7dfa053ee6b1dea65",
+    "hullkit/src/hullkit/cds.py": "77c2e8866a76cfde54299268f82e562fc8f29eb639b9958b8b78c3e23da6936c",
+    "hullkit/src/hullkit/copula.py": "79aad8fca34960f4e1ad5358c496d5b8ae847982dbf5750dff3313a73b9b999b",
+    "hullkit/src/hullkit/credit.py": "5b278583bd0025224ed255b785b26d9f50cd05442f876e8c24dee8ff8ee0e50d",
+    "hullkit/src/hullkit/credit_curve.py": "b7a77e8e65f5a379e03a33ae5fab156bc6174119a6153e0dd76ce678df08b4e4",
+    "hullkit/src/hullkit/credit_metrics.py": "c100515f86ad5c8c6ac17e3a608ca438bb908fd486e0371d2cb305d2c8a3fe48",
+    "hullkit/src/hullkit/credit_portfolio.py": "10e85610a259999cca5859eefd0f63b556d3d12caee15696e2486d4d719bb2b6",
+    "hullkit/src/hullkit/exotics.py": "83245cb8dec12836f5f745237d367ee2bcff3ef21ae0c39849cc220684f50556",
+    "hullkit/src/hullkit/fd.py": "7d5e7df87f672947322322ad2fc198bd49ed2f7931e038b07a5fb03d8e961c24",
+    "hullkit/src/hullkit/fourier.py": "8a711d0d5c3c552c2ff5d92079eba40ca12afeab7c3b1d4ea771ddcad58c4a57",
+    "hullkit/src/hullkit/frontier_reference.py": "c306605c2cb0e3745f4e542260b88a40a9406f77d54c984b5be40433fc7c960e",
+    "hullkit/src/hullkit/hedging.py": "d019a75ac53c0f35db92359a5b3ca25f6fec14b58a0042eb22f6ed2dbcbd9447",
+    "hullkit/src/hullkit/heston.py": "cfea2b5bffbbf17782398db3474e0bc8b6bb36945d8caa875173f6283a204b5f",
+    "hullkit/src/hullkit/hull_white.py": "09e6fa5140b3a0958c854c25f1893d4a293e0832c21e33f89c29490930040ba5",
+    "hullkit/src/hullkit/inflation.py": "f7b30df76bbc63645a280eb6f51126c86b632f943b2734e6d882cf88e9b9a46a",
+    "hullkit/src/hullkit/ir_options.py": "c0fe4c19c95e66597dd709be41a74d870eb1f39de3931bf98fd4100636b5b4fb",
+    "hullkit/src/hullkit/jarrow_yildirim.py": "4a697ee3337c1f686224897428067dba2fad3f018020788b4aa6ae9e795de01e",
+    "hullkit/src/hullkit/jgbi.py": "0cb8eb805aed6afb7fc80b61a32c5b62bf1c1b9f8c6fbb1b69d011b0cf0db5ba",
+    "hullkit/src/hullkit/liquidation.py": "7c06faa9a4e65f8f1286a5c24ae8c7b0d13be69dfc7a105482ffd209187f5024",
+    "hullkit/src/hullkit/mc.py": "abc2a84020b63a4faa4f3928c9d84c81e9a677d8ef14ea0337fbb239f5f6e922",
+    "hullkit/src/hullkit/mc_advanced.py": "8e2938c3a2e3437d2274b904bde6467a3362c2b6589518ae06c1ca007a5125ff",
+    "hullkit/src/hullkit/nbplot.py": "ed55a9403c054bb4866d38b61445cd054a5169951b1848637510592e95bb6144",
+    "hullkit/src/hullkit/nonstandard_american.py": "ec33847edab72e482e86afd26f50de3b7860febd579f3fcd9f87245d25a55c39",
+    "hullkit/src/hullkit/payoffs.py": "b8b0a73a357a2149ac8b1bfdda4bff99577ff865c3c5dc6ec796272c078568a9",
+    "hullkit/src/hullkit/perpetual_american.py": "cff95cedc6ce71ab122636d054e2feb40706c57cbf2a1b4e0b07056016ff6235",
+    "hullkit/src/hullkit/perpetuals.py": "bb4ea974fa5e8b9e94b9fb43bc6ce47793ce2d1a2a1ab2af185925e5f52fea7f",
+    "hullkit/src/hullkit/plotly_viz.py": "c5980105006b8202fdf7899b832678259981ba2fa6de14585482703123c50c7f",
+    "hullkit/src/hullkit/pnl_explain.py": "802571af3aadbfb0e48a1acdf6e72ffab65fe4898ce94926cca58d33abe7329e",
+    "hullkit/src/hullkit/ppa.py": "74d1b649d2cb4056714d228ad6361959276647df3fc4034d5543455783152320",
+    "hullkit/src/hullkit/rates.py": "e2912698d692da5979d80728d1fec90c56d86744af5fca863ef4c1c16840ecf5",
+    "hullkit/src/hullkit/rfr.py": "36f81c1f2f49dc98f45dbc19c74128bc69c73fa552d76bfd4f69b7338cab1737",
+    "hullkit/src/hullkit/rfr_options.py": "d131cdfb5211aded97e37f3dacd3a9cb20103347bb4e18e4f427f247c0f09e62",
+    "hullkit/src/hullkit/risk.py": "42eecf81fed1efbdfa7401e0ad8088a504b7d1d5da0d315e9557ad27c7007ffc",
+    "hullkit/src/hullkit/risk_allocation.py": "a5db3af5415cc4c51af3d3182d2f981c1bfed7fb18259a40758674c2d2ab0232",
+    "hullkit/src/hullkit/sabr.py": "e4e86a37fc722c20159bd5241b493ea8f126aaa9cd97fce23374fb09a9f146d6",
+    "hullkit/src/hullkit/sabr_normal.py": "3feada360c8f7aad9b28cd66412defa7951038514962ba4d66c28f6669fbe8df",
+    "hullkit/src/hullkit/sde.py": "998d2408483ebaba16d936a11390387d2ba477b211271f17fdf57f7eb758856b",
+    "hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472",
+    "hullkit/src/hullkit/stochastic_volatility.py": "7b0be7b85daec15da8e16d6330421e2ecd38f0d1d15a1eed760173e761f66a63",
+    "hullkit/src/hullkit/surrogate_data.py": "251a883394722e33e38259c133681166c7444c5c570d8100e08d9f9a2f969459",
+    "hullkit/src/hullkit/surrogate_validation.py": "938c8da86dde56278ec6a584524eeaff731105a499b793d32a1e4c1756312147",
+    "hullkit/src/hullkit/swaps.py": "8688dd06573ade6d9a93d21c5c8c8da78ed60f25c9accd4613b85aaa1d017035",
+    "hullkit/src/hullkit/tail_risk.py": "bbaaf7579741d9621e0911ebde7d6f62759c56b2c88ed6aa6de800e971f26128",
+    "hullkit/src/hullkit/teaching.py": "69a2c11bdf0583ee208a16a75dbf5e781282d4ee1f58033c0130b4f2d21a2724",
+    "hullkit/src/hullkit/trees.py": "b21a1f7896bd8fd144becf5776f2e20b8b5c82d2e4bf8d292381a960c22201ee",
+    "hullkit/src/hullkit/var_backtest.py": "617be582584df7b60f2a142ca5285672fcbdb52b9cb718c46b98bc0a8236b515",
+    "hullkit/src/hullkit/vol_surface.py": "849e3cb14a87d13acfbad5a43c239f18219fa0812d1165ed1807af68089e3e9c",
+    "hullkit/src/hullkit/volatility.py": "4a955552641c86effabd016c7c4118b999955165826b457fe1175d34043193a6",
+    "hullkit/src/hullkit/weather.py": "b68fde4dedfebe5d4cd4a72016c7b6579c294b0b59d651fd220b4f4ba064f970",
+    "hullkit/src/hullkit/xva.py": "a97ea610b440cee29111636a298f29282e05ea7c1c03190e0e8736508aef95d3",
+    "hullkit/src/hullkit/zero_dte.py": "e8f99291613b17e0ffb6a29535d9ea08a2ab604e7116513164e91eca6dc07265",
+    "hullkit/tests/test_american_mc.py": "00d552e3fa9e86abcd7a75d333f2c4e16eeb6b25c1158e277df099f620ef8fa9",
+    "hullkit/tests/test_american_mc_lesson.py": "89b1af49447c49b2fa12a96281a4d8c4e499bf607e3160e1450a7a031918bbcf",
+    "report/assets/style.css": "71751f665a6551c07c15113864dc2e385d16774a9877a57b66fa220db4125210",
+    "report/report_builder/__init__.py": "e6bd9f43a533654074564fec7ef4ee7324379dfc28f693cc324af7cc0a910db9",
+    "report/report_builder/build.py": "12e280a3c47a2aa952f135ba8b459effcd308d519cc317170c8b0c0f11754cbf",
+    "report/report_builder/figures.py": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3",
+    "report/report_builder/frontier_figures.py": "71da3b8f6a4cea00af6bbf862ab072dbf209dc1f88971cb5461729074363b5c0",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/report_builder/theme.py": "db43b679941eff1c165fdf6181a995eff7d076d8f9300f7136d306961d27bf5b",
+    "report/tests/test_american_mc_notebook.py": "ad54a59a44b3f19f69d0d2e26b941e75ba295f0fc8b48046dda88d2261b36cc0",
+    "scripts/evidence_dependencies.json": "bbbfbf79526584fba10425c0278af8e38ce23e8ee95c862d759d35a4575c86f8",
+    "scripts/evidence_fingerprint.py": "611c8767c6c0b12b58bf51d80e1402f3165fcd84541d59094a11c2e4a2c93a32",
+    "scripts/verify_american_mc_browser.cjs": "66dce24e03c96d24cc6254842bdf1ce5982955e4aa29a292bd8267c6ce480acc"
+  },
+  "artifact_sha256": {
+    "report/site/numerics.html": "f3a248d386180f6534b154b7d4c3980064f66d840dfce44dee4bc744e6d8ca93",
+    "book/_build/html/notebooks/06_numerical.html": "a254b058a75c9bfe9014d14cb1ec4810ad2cdc2dd0ba9c735d5ba74d8cb357ab"
+  },
+  "observations": {
+    "capture_sha256": {
+      "book-american_mc_bias-1000.png": "5466580ef5d213fdf89d370d2bc562002bd43c4e3bb4c06012a87faa71433046",
+      "book-american_mc_bias-1440.png": "f2c7615a0d2ab84ebb68e57df2f823ac6dda7c99e46b1d4350c7ebb7fe6ce7ff",
+      "book-american_mc_boundary-1000.png": "459f5434965dc223302fc747e2b53c1748c4213a235b4fd82ee2fa201515af2a",
+      "book-american_mc_boundary-1440.png": "726d1c31fbdab0c0bf99b5af572984c5cc492871afe982256b0e6cc5ba668664",
+      "book-american_mc_dates-1000.png": "b8e5343f3dab8ff96763259dc5cd398d3ac81f03fd52802dcea7d24f707bf3d3",
+      "book-american_mc_dates-1440.png": "d1a541e7e84c3221a57f86e58bc1edf2854ae12e1524f7a30cb57c139c5ebc22",
+      "book-american_mc_regression-1000.png": "5167dfb1e2c8ea5e1792701071dd7e420168206d0b85ac2967a572af7e7d8933",
+      "book-american_mc_regression-1440.png": "780ecd8471536a2f63a2bc3449b5aada990810eaaa7fe7c85d5016b5876dcda8",
+      "portal-american_mc_bias-1000.png": "2d873412dfbdeddb6b65ee9e3a71e35c41881c26bd4c513c2af0712ecfdff101",
+      "portal-american_mc_bias-1440.png": "76e3163c5a2dbdf50814c5558aa6e46f97681b65cbb84caf262b701e391ee20e",
+      "portal-american_mc_boundary-1000.png": "25833ca0b5c99e3c5869e82e045e92aaebebea7bf227389bc8629006e46501c6",
+      "portal-american_mc_boundary-1440.png": "6382bd9190ecfb49929fcfef4bb3f4a37ae4720ce0502278e0f95f4560fa7b57",
+      "portal-american_mc_dates-1000.png": "b359c129c7fce166379ae3792ec7a29ca4ac4a69a6d1f15fca49c5b178294053",
+      "portal-american_mc_dates-1440.png": "83f0b88cd82735d0a2a2b9ae801d838872ce45c2cec2d941a1a324f037f22587",
+      "portal-american_mc_regression-1000.png": "e0b6c1c1682e3dae124d59413f12c4ffd4efd63d17f66521df00f1b013e64d11",
+      "portal-american_mc_regression-1440.png": "ed5f9a03370ca50814bd9c5d46cabd8d3a93714564d327d979a3350363eb4187"
+    },
+    "stored_new_bytes": 594569,
+    "seconds": {
+      "verifier": 8.2,
+      "probe": 4.96,
+      "pytest": 3.31
+    }
+  }
+}
