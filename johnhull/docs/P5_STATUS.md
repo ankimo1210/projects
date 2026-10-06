@@ -62,3 +62,5 @@
 - 2026-10-06 R4：alpha=beta=0の有効な定数variance推定を予測側が拒否することを再現。day0は初期値、正のhorizonはomega（連続補間のp=0極限）として処理。解析Gaussian MLE→forecast/term vol回帰を追加、volatility estimation 30 passed・docstring対象1 passed・ruff PASS。
 
 - 2026-10-06 レビューchatからの報告：R1–R4は独立再検証済みとしてclose。Ch25.1–25.3（8160c4b6まで）に追加重大指摘なし。同chatが実行したhullkit全suiteは5257 passed・6 skipped・2既存warnings（開始HEAD8160c4b6、実行中の開発継続あり）。この件数は後続全HEADの保証とせず、本chatはP5変更対象のみ再検証する。
+
+- 2026-10-06 R6：rho=.9/.99で100社PD2%の>=10 tailを固定60点求積が約19–22%誤ることを独立binomial.sf積分で再現。新private件数分布を全PMFの適応積分に変更し、transition付近を分割、誤差不足は拒否。2回帰を含むextensions 20 passed・ruff PASS。平均件数だけの確認ではtailの精度を保証できない。

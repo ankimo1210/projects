@@ -100,11 +100,51 @@ def loss_waterfall(losses, notional, boundaries, *, spreads=None):
     return result
 
 
-def default_count_distribution(names, cumulative_pd, rho, *, nodes=60):
-    """Homogeneous count PMF at one horizon; PD is cumulative, not an annual hazard.
+def _factor_integral(integrand, *, points=(), bounds=(-12.0, 12.0), density=None):
+    """Adaptive vector expectation; finite normal tails are below 4e-33."""
+    from scipy.integrate import quad_vec
+    from scipy.stats import norm
 
-    rho=1 is the exact all/none limit. Interior correlations use Gaussian factor
-    quadrature, and rho=0 the existing stable binomial formula.
+    lo, hi = bounds
+    if density is None:
+        density = norm.pdf
+    anchors = np.asarray(points, dtype=float).ravel()
+    anchors = anchors[np.isfinite(anchors) & (anchors > lo) & (anchors < hi)]
+    if bounds == (-12.0, 12.0):
+        anchors = np.r_[anchors, np.linspace(lo, hi, 65)[1:-1]]
+    value, error, info = quad_vec(
+        lambda f: density(f) * np.asarray(integrand(f)),
+        lo,
+        hi,
+        points=np.unique(anchors),
+        epsabs=1e-12,
+        epsrel=1e-11,
+        norm="max",
+        full_output=True,
+    )
+    if (
+        not info.success
+        or not np.isfinite(value).all()
+        or error > 5e-11 * max(1, float(np.max(abs(value))))
+    ):
+        raise ValueError("factor integration did not achieve requested accuracy")
+    return value, float(error)
+
+
+def _normal_transition_points(thresholds, loadings):
+    threshold, a = np.broadcast_arrays(thresholds, loadings)
+    useful = np.isfinite(threshold) & (abs(a) > 1e-12)
+    center = threshold[useful] / a[useful]
+    width = np.sqrt(1 - a[useful] ** 2) / abs(a[useful])
+    return (center[:, None] + width[:, None] * np.array([-8, -4, -1, 0, 1, 4, 8])).ravel()
+
+
+def default_count_distribution(names, cumulative_pd, rho, *, nodes=60):
+    """Homogeneous horizon count PMF with adaptive Gaussian factor integration.
+
+    PD is cumulative, not an annual hazard. rho=0/1 have exact analytic limits.
+    nodes supplies a pilot grid; adaptive integration controls full-PMF accuracy,
+    including high-correlation tails that a correct mean alone does not verify.
     """
     if (
         not np.isfinite([names, cumulative_pd, rho]).all()
@@ -121,9 +161,17 @@ def default_count_distribution(names, cumulative_pd, rho, *, nodes=60):
         return result
     if rho == 0:
         return cp.binomial_pmf(n, cumulative_pd)
-    factor, weights = cp.gauss_hermite_factor(nodes)
-    conditional = cp.conditional_default_prob(cumulative_pd, rho, factor)
-    return weights @ cp.binomial_pmf(n, conditional)
+    from scipy.stats import norm
+
+    pilot, _ = cp.gauss_hermite_factor(nodes)
+    a = np.sqrt(rho)
+    threshold = norm.ppf(cumulative_pd)
+    anchors = np.r_[pilot, _normal_transition_points([threshold], [a])]
+    pmf, _ = _factor_integral(
+        lambda f: cp.binomial_pmf(n, norm.cdf((threshold - a * f) / np.sqrt(1 - rho))),
+        points=anchors,
+    )
+    return pmf
 
 
 def cdo_valuation_table(
