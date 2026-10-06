@@ -49,3 +49,21 @@ def net_contracts(long_contracts, short_contracts):
     ):
         raise ValueError("nonnegative contract quantities required")
     return long_contracts - short_contracts
+
+
+def quote_cash_change(previous, current, *, contracts=1, multiplier=100, price_unit=1, side="long"):
+    """Quote change and cash P&L; price_unit converts quoted cents to cash units.
+
+    multiplier is underlying units per contract, not a currency conversion.
+    No fees, interest or collateral flows are part of this trading P&L.
+    """
+    if (
+        not np.isfinite([previous, current, contracts, multiplier, price_unit]).all()
+        or contracts < 0
+        or min(multiplier, price_unit) <= 0
+        or side not in ("long", "short")
+    ):
+        raise ValueError("finite prices, nonnegative contracts and positive unit scales required")
+    change = current - previous
+    cash = (1 if side == "long" else -1) * change * price_unit * contracts * multiplier
+    return {"quote_change": change, "cash_change": cash}
