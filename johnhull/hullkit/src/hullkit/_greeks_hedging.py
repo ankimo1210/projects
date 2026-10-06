@@ -170,3 +170,14 @@ def delta_holdings(paths, times, strike, rate, sigma, *, kind="call"):
         )
         delta = ndtr(d1)
     return delta if kind == "call" else delta - 1
+
+
+def theta_units(spot, strike, rate, sigma, maturity, *, kind="call", yield_rate=0):
+    """Calendar-time theta per year/calendar day/trading day, T in years."""
+    from . import bsm
+
+    if kind not in ("call", "put") or sigma <= 0 or maturity <= 0:
+        raise ValueError("call/put and positive diffusive time/volatility required")
+    function = bsm.call_theta if kind == "call" else bsm.put_theta
+    annual = float(function(spot, strike, rate, sigma, maturity, q=yield_rate))
+    return {"annual": annual, "per_calendar_day": annual / 365, "per_trading_day": annual / 252}
