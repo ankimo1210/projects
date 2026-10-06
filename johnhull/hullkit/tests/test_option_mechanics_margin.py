@@ -30,13 +30,23 @@ def test_independent_piecewise_analytic_margin_and_fraction_arithmetic(kind, ris
     expected = []
     for stock in map(Fraction, spots):
         if kind == "call":
-            primary = mark + (risk_rate + 1) * stock - strike if stock < strike else mark + risk_rate * stock
+            primary = (
+                mark + (risk_rate + 1) * stock - strike
+                if stock < strike
+                else mark + risk_rate * stock
+            )
             floor = mark + floor_rate * stock
             use_floor = stock < strike / (1 + risk_rate - floor_rate)
         else:
-            primary = mark + risk_rate * stock if stock <= strike else mark + strike - (1 - risk_rate) * stock
+            primary = (
+                mark + risk_rate * stock
+                if stock <= strike
+                else mark + strike - (1 - risk_rate) * stock
+            )
             floor = mark + floor_rate * strike
-            use_floor = stock < floor_rate * strike / risk_rate or stock > strike * (1 - floor_rate) / (1 - risk_rate)
+            use_floor = stock < floor_rate * strike / risk_rate or stock > strike * (
+                1 - floor_rate
+            ) / (1 - risk_rate)
         expected.append(float(400 * (floor if use_floor else primary)))
     actual = model().legacy_short_option_margin(
         spots, float(strike), float(mark), kind=kind, contracts=4, risk_rate=float(risk_rate)
@@ -75,12 +85,15 @@ def test_historical_long_option_loan_limit_uses_strictly_more_than_nine_months()
     assert actual == pytest.approx([0, 0, 250])
 
 
-@pytest.mark.parametrize("call", [
-    lambda m: m.legacy_short_option_margin(38, 40, 5, multiplier=0),
-    lambda m: m.legacy_short_option_margin(38, 40, 5, contracts=-1),
-    lambda m: m.legacy_short_option_margin(38, 40, -5),
-    lambda m: m.legacy_long_option_loan_limit(10, -1),
-])
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda m: m.legacy_short_option_margin(38, 40, 5, multiplier=0),
+        lambda m: m.legacy_short_option_margin(38, 40, 5, contracts=-1),
+        lambda m: m.legacy_short_option_margin(38, 40, -5),
+        lambda m: m.legacy_long_option_loan_limit(10, -1),
+    ],
+)
 def test_undefined_margin_quantity_or_expiry_rejected(call):
     with pytest.raises(ValueError):
         call(model())

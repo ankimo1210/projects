@@ -44,11 +44,12 @@ def test_printed_legacy_expiry_cycles_and_contract_count():
     first = m.legacy_option_expiries(2026, 1, 1)
     assert first == [(2026, 1), (2026, 2), (2026, 4), (2026, 7)]
     assert m.legacy_option_expiries(2026, 1, 1, after_current_expiry=True) == [
-        (2026, 2), (2026, 3), (2026, 4), (2026, 7)
+        (2026, 2),
+        (2026, 3),
+        (2026, 4),
+        (2026, 7),
     ]
-    assert m.legacy_option_expiries(2026, 5, 1) == [
-        (2026, 5), (2026, 6), (2026, 7), (2026, 10)
-    ]
+    assert m.legacy_option_expiries(2026, 5, 1) == [(2026, 5), (2026, 6), (2026, 7), (2026, 10)]
     assert len(first) * 5 * 2 == pytest.approx(40)
 
 
@@ -59,7 +60,10 @@ def test_legacy_cycle_calendar_against_independent_date_enumeration():
                 for expired in (False, True):
                     start = date(year, month, 15) + timedelta(days=31 * expired)
                     following = start + timedelta(days=31)
-                    near = [date(start.year, start.month, 1), date(following.year, following.month, 1)]
+                    near = [
+                        date(start.year, start.month, 1),
+                        date(following.year, following.month, 1),
+                    ]
                     quarterlies = sorted(
                         date(y, mo, 1)
                         for y in range(year, year + 3)
@@ -67,12 +71,18 @@ def test_legacy_cycle_calendar_against_independent_date_enumeration():
                         if date(y, mo, 1) > near[1]
                     )
                     expected = [(d.year, d.month) for d in [*near, *quarterlies[:2]]]
-                    assert model().legacy_option_expiries(
-                        year, month, cycle, after_current_expiry=expired
-                    ) == expected
+                    assert (
+                        model().legacy_option_expiries(
+                            year, month, cycle, after_current_expiry=expired
+                        )
+                        == expected
+                    )
     # Adopt the next two cycle months strictly after the two near months.
     assert model().legacy_option_expiries(2026, 3, 1) == [
-        (2026, 3), (2026, 4), (2026, 7), (2026, 10)
+        (2026, 3),
+        (2026, 4),
+        (2026, 7),
+        (2026, 10),
     ]
 
 
@@ -84,16 +94,21 @@ def test_intrinsic_time_value_and_spot_moneyness(kind, spot):
     assert row["moneyness"].tolist() == ["OTM", "ATM", "ITM"]
     assert np.allclose(row["intrinsic"] + row["time_value"], [4, 7, 12], atol=1e-12, rtol=1e-12)
     # A decomposition also exposes a price below the American intrinsic bound.
-    assert model().option_value_components(spot[-1], 100, 5, kind=kind)["time_value"] == pytest.approx(-5)
+    assert model().option_value_components(spot[-1], 100, 5, kind=kind)[
+        "time_value"
+    ] == pytest.approx(-5)
 
 
-@pytest.mark.parametrize("call", [
-    lambda m: m.adjust_stock_option(30, 100, 0, 1),
-    lambda m: m.adjust_stock_option(30, 100, 2, 0),
-    lambda m: m.stock_dividend_adjustment(30, 100, -1),
-    lambda m: m.legacy_option_expiries(2026, 0, 1),
-    lambda m: m.legacy_option_expiries(2026, 1, 4),
-])
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda m: m.adjust_stock_option(30, 100, 0, 1),
+        lambda m: m.adjust_stock_option(30, 100, 2, 0),
+        lambda m: m.stock_dividend_adjustment(30, 100, -1),
+        lambda m: m.legacy_option_expiries(2026, 0, 1),
+        lambda m: m.legacy_option_expiries(2026, 1, 4),
+    ],
+)
 def test_undefined_contract_adjustment_or_calendar_rejected(call):
     with pytest.raises(ValueError):
         call(model())
