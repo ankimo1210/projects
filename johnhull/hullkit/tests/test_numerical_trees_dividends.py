@@ -143,7 +143,7 @@ def test_source_cash_dividend_independent_pde_on_same_s_star_model():
     reference = independent_dividend_pde(
         52, 50, 0.1, 0.4, 5 / 12, [3.5 / 12], [2.06], kind="put", american=True
     )
-    assert result["price"] == pytest.approx(reference, abs=0.007)
+    assert result["price"] == pytest.approx(reference, abs=0.003)
 
 
 def test_proportional_dividends_compound_and_european_terminal_law():
@@ -151,7 +151,7 @@ def test_proportional_dividends_compound_and_european_terminal_law():
         52, 50, 0.05, 0.3, 1, 1000, [0.3, 0.6], [0.04, 0.07], model="fraction", kind="call"
     )
     reference = bsm.call_price(52 * (1 - 0.04) * (1 - 0.07), 50, 0.05, 0.3, 1)
-    assert result["price"] == pytest.approx(reference, abs=0.003)
+    assert result["price"] == pytest.approx(reference, abs=0.002)
     assert result["terminal_scale"] == pytest.approx(0.96 * 0.93, abs=1e-12)
 
 
