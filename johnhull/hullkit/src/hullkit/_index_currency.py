@@ -101,3 +101,57 @@ def zero_cost_range_forward(spot, lower_strike, domestic_rate, foreign_rate, sig
     upper = brentq(residual, lower_strike, high, xtol=1e-13)
     result = range_forward_prices(spot, lower_strike, upper, domestic_rate, foreign_rate, sigma, maturity)
     return {"upper_strike": upper, **result}
+
+
+def _carry_inputs(spot, strike, rate, yield_rate, maturity):
+    if not all(math.isfinite(x) for x in (spot, strike, rate, yield_rate, maturity)) or spot <= 0 or strike < 0 or maturity < 0:
+        raise ValueError("positive spot and nonnegative strike/time required")
+
+
+def carry_option_details(spot, strike, rate, yield_rate, sigma, maturity):
+    """European lognormal pricing, Hull 17.1-5; continuous deterministic carry."""
+    from ._bsm_foundations import lognormal_call_moments, standard_normal_probability
+
+    _carry_inputs(spot, strike, rate, yield_rate, maturity)
+    if not math.isfinite(sigma) or sigma < 0:
+        raise ValueError("nonnegative finite volatility required")
+    forward = spot*math.exp((rate-yield_rate)*maturity)
+    discount = math.exp(-rate*maturity)
+    moments = lognormal_call_moments(forward, sigma*math.sqrt(maturity), strike)
+    call = discount*moments["payoff_mean"]
+    if moments["d1"] is None:
+        put = discount*max(strike-forward, 0)
+    else:
+        # Direct lower tails avoid subtracting nearly equal ITM call/parity terms.
+        put = discount*max(strike*standard_normal_probability(-moments["d2"])-forward*standard_normal_probability(-moments["d1"]), 0)
+    return {"call": call, "put": put, "forward": forward, "discount": discount,
+            "prepaid_spot": spot*math.exp(-yield_rate*maturity),
+            "d1": moments["d1"], "d2": moments["d2"],
+            "N_d1": moments["stock_weight"], "N_d2": moments["exercise_probability"]}
+
+
+def carry_bounds(spot, strike, rate, yield_rate, maturity):
+    """European bounds and parity; valid also for negative rates/yields."""
+    _carry_inputs(spot, strike, rate, yield_rate, maturity)
+    prepaid = spot*math.exp(-yield_rate*maturity)
+    bond = strike*math.exp(-rate*maturity)
+    return {"call_lower": max(prepaid-bond, 0), "call_upper": prepaid,
+            "put_lower": max(bond-prepaid, 0), "put_upper": bond,
+            "call_minus_put": prepaid-bond}
+
+
+def carry_american_difference_bounds(spot, strike, rate, yield_rate, maturity):
+    """Hull's American C-P interval under its nonnegative r and q assumptions."""
+    _carry_inputs(spot, strike, rate, yield_rate, maturity)
+    if min(rate, yield_rate) < 0:
+        raise ValueError("Hull's stated American interval assumes nonnegative rate/yield")
+    return spot*math.exp(-yield_rate*maturity)-strike, spot-strike*math.exp(-rate*maturity)
+
+
+def carry_pde_residual(spot, rate, yield_rate, sigma, value, f_time, delta, gamma):
+    """Dividend self-financing PDE; f_time means calendar-time derivative."""
+    from ._bsm_foundations import bsm_pde_residual
+
+    if not math.isfinite(yield_rate):
+        raise ValueError("finite yield required")
+    return bsm_pde_residual(spot, rate, sigma, value, f_time, delta, gamma)-yield_rate*spot*delta
