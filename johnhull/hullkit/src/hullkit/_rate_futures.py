@@ -323,3 +323,21 @@ def sofr_fixing_window(start, end, fixings, *, basis=360):
         "compounded": a["annualized_rate"],
         "arithmetic": float(rates.mean()),
     }
+
+
+def duration_futures_hedge(portfolio_value, portfolio_duration, contract_value, contract_duration):
+    """Short count cancelling first-order parallel-yield risk in matching duration units.
+
+    contract_value is quoted futures notional value, not CTD spot value. Durations
+    refer to hedge maturity, and a CTD switch can require rebalancing.
+    """
+    if (
+        not np.isfinite(
+            [portfolio_value, portfolio_duration, contract_value, contract_duration]
+        ).all()
+        or portfolio_value < 0
+        or min(contract_value, contract_duration) <= 0
+    ):
+        raise ValueError("valid portfolio value and positive contract risk scale required")
+    count = portfolio_value * portfolio_duration / (contract_value * contract_duration)
+    return {"short_contracts": count, "rounded": np.rint(count)}
