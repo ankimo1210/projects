@@ -1,0 +1,277 @@
+{
+  "status": "PASS",
+  "pages": [
+    {
+      "surface": "portal",
+      "page_errors": [],
+      "external_requests": []
+    },
+    {
+      "surface": "book",
+      "volume": 18,
+      "page_errors": []
+    },
+    {
+      "surface": "book",
+      "volume": 19,
+      "page_errors": []
+    },
+    {
+      "surface": "book",
+      "volume": 20,
+      "page_errors": []
+    },
+    {
+      "surface": "book",
+      "volume": 21,
+      "page_errors": []
+    },
+    {
+      "surface": "book",
+      "volume": 22,
+      "page_errors": []
+    },
+    {
+      "surface": "book",
+      "volume": 24,
+      "page_errors": []
+    }
+  ],
+  "states": [
+    {
+      "surface": "portal",
+      "horizon": 1,
+      "width": 1440,
+      "numeric_checked": true
+    },
+    {
+      "surface": "portal",
+      "horizon": 5,
+      "width": 1440,
+      "numeric_checked": true
+    },
+    {
+      "surface": "portal",
+      "horizon": 21,
+      "width": 1440,
+      "numeric_checked": true
+    },
+    {
+      "surface": "portal",
+      "horizon": 1,
+      "width": 1000,
+      "numeric_checked": true
+    },
+    {
+      "surface": "portal",
+      "horizon": 5,
+      "width": 1000,
+      "numeric_checked": true
+    },
+    {
+      "surface": "portal",
+      "horizon": 21,
+      "width": 1000,
+      "numeric_checked": true
+    },
+    {
+      "surface": "book",
+      "volume": 18,
+      "width": 1440,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 18,
+      "width": 1000,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 19,
+      "width": 1440,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 19,
+      "width": 1000,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 20,
+      "width": 1440,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 20,
+      "width": 1000,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 21,
+      "width": 1440,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 21,
+      "width": 1000,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 22,
+      "width": 1440,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 22,
+      "width": 1000,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 24,
+      "width": 1440,
+      "mathjax_errors": 0
+    },
+    {
+      "surface": "book",
+      "volume": 24,
+      "width": 1000,
+      "mathjax_errors": 0
+    }
+  ],
+  "images": [
+    {
+      "path": "p8/portal-economics-1-1440.png",
+      "ref": "artifact:sha256:031fc5def28b539a6386a77e8fd9f6ed1db7bfade635fe413a2b30077f1d7dfd",
+      "bytes": 23354,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/portal-economics-5-1440.png",
+      "ref": "artifact:sha256:b8e84f42d412568e95619e0fe50ac2527e8186c97b9f27d4ce777d5fb2af6b0b",
+      "bytes": 23429,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/portal-economics-21-1440.png",
+      "ref": "artifact:sha256:6a8e704ac60d92a33404d0213f3ae514bd90deea863500a2308de1750398b613",
+      "bytes": 22400,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/portal-economics-1-1000.png",
+      "ref": "artifact:sha256:402e881682a24219d08fdc42a855509edc392b1b3a274ff656a45d155acaa914",
+      "bytes": 23057,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/portal-economics-5-1000.png",
+      "ref": "artifact:sha256:79d638dbb5ebc87e141272d67d1fc449efd2fd7e590ce9ba4d87494715312b98",
+      "bytes": 23453,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/portal-economics-21-1000.png",
+      "ref": "artifact:sha256:703cfb14e412d13717e05ea05e553575f02a93d87a893ca41f6d27a188d313f7",
+      "bytes": 22335,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-18-1440.png",
+      "ref": "artifact:sha256:28711d41de289995a3a8f7504fcc6a2bae2f1f47eb3f804b46b9e655d8f5cd87",
+      "bytes": 345788,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-18-1000.png",
+      "ref": "artifact:sha256:94c1faaeb664b6b45de951bc68203e40fdf2b7573044e434c5dc7b7d61dfb553",
+      "bytes": 307492,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-19-1440.png",
+      "ref": "artifact:sha256:7f36b8dfe91c61c1703f6ffd7017d1a6431c104660548f6e423a3f3263078d12",
+      "bytes": 354629,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-19-1000.png",
+      "ref": "artifact:sha256:845420834b87130bb53e31eb0763cb4a1b72562faa4908eed07cb7b6e82b5ea4",
+      "bytes": 311467,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-20-1440.png",
+      "ref": "artifact:sha256:d65917a507a9248402b6977648b7199128b632f4d2fab899698ae6546afa5369",
+      "bytes": 91474,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-20-1000.png",
+      "ref": "artifact:sha256:f91fe04c5b17dd3fce86f9df9a66abcd4269655286a780ca1623d603bbcb5612",
+      "bytes": 80683,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-21-1440.png",
+      "ref": "artifact:sha256:7711e45345bf4e27f9b723b88bf519f6dce763ee9d8b79ffb08a4428c92157b4",
+      "bytes": 345972,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-21-1000.png",
+      "ref": "artifact:sha256:1ed3b54949c2e0677cce6ac1a24de6b11b5df78c409cc3dcb615c9fd3046bc6c",
+      "bytes": 310140,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-22-1440.png",
+      "ref": "artifact:sha256:33f13631156f43da302b36fd3f98442edd2f5cc3f589e6fe2e2e9701f60d2e67",
+      "bytes": 340498,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-22-1000.png",
+      "ref": "artifact:sha256:fc29d21ae1a9236b4e2697985dd6534e23cf656442c5592b67cd23549746158e",
+      "bytes": 313083,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-24-1440.png",
+      "ref": "artifact:sha256:2f7a4cfdf6a0764d5b9e81a75ec318fb133f29bde1a9c7c49600671a5710caad",
+      "bytes": 354223,
+      "mime": "image/png"
+    },
+    {
+      "path": "p8/book-24-1000.png",
+      "ref": "artifact:sha256:f665b7f74f1be7cc13f8200d74ee465e36061156884a20c2a98d2835456e6d20",
+      "bytes": 323509,
+      "mime": "image/png"
+    }
+  ],
+  "browser_version": "145.0.7632.6",
+  "numeric_mutation_rejected": true,
+  "storage_verification": {
+    "status": "PASS",
+    "primary": {
+      "status": "PASS",
+      "entries": 18,
+      "bytes": 3616986
+    },
+    "mirror": {
+      "status": "PASS",
+      "entries": 18,
+      "bytes": 3616986
+    }
+  },
+  "scope": "P8 affected teaching: vol18-22 and24; existing figure ids",
+  "numeric_reference": "Independent RMSE from economic_pnl; 3 horizons, 10 models, 4 strategies"
+}

@@ -8,7 +8,7 @@
 |---|---|---|
 | R1 | rough varianceの左端点更新/離散補償、antithetic組のSE、独立BSM/マルチンゲール検証 | 実装/参照成果物再生成・対象21 tests PASS |
 | R2 | 訓練残差のみのDuan smearing、10モデル/3 horizonの既存集合を維持 | 実装/参照成果物再生成・対象10 tests PASS |
-| R3 | 予測volと経路vol・共通公正premiumを分離し、walk-forward予測を同一経路の経済指標へ接続 | 9 held-outケース×10モデル×4戦略生成、独立P&L/gate再計算PASS・画面検査待ち |
+| R3 | 予測volと経路vol・共通公正premiumを分離し、walk-forward予測を同一経路の経済指標へ接続 | 9 held-outケース×10モデル×4戦略生成、独立P&L/gate再計算PASS・18画面状態の検査PASS |
 | R4 | 正規/Poisson streamを分離、周辺価格/CRN対応/paired SE | Brownian対応回帰・13起点のpaired payoff/SE再計算PASS |
 | R6 | 補償分解は正しい。gross不変は構成上の恒等式と説明修正。fee-aware在庫モデルは研究拡張へ | negative result/教材の解釈を修正、API/数値は保持 |
 | R11 | Ch19ロジック側で無利息/無割引表規約を検証済み、教材/章受入はP4側で扱う | 既存対応の照合済み |
@@ -33,4 +33,8 @@
 - 残り：notebook/portal/book再生成、画面/リリース検査、最終レビュー、main統合。
 
 - 最終レビュー：Critical/Importantなし。外部policyの有限値検査が抜けた既存API互換性を回復（回帰RED→GREEN、対象7 tests PASS）。型拒否は広げていない。
-- 初回D1の33節はbrowser/runtime/pytest/両コピー復元PASS。新予測図のタイトル切替/ラベル/単位を画面から修正し、最終版のD1へ更新する。
+- 最終D1の33節はbrowser/runtime/pytest/両コピー復元PASS。新予測図のタイトル切替/ラベル/単位も確認した。§26.11のブラウザ起動クラッシュは単独再試行でPASS、失敗した記録も保持。
+
+- 最終deep_hedge_price全suite 209 passed。数値配列の1 ULP差をSHA違いで落とす再生成検査を、配列の許容誤差で判定するよう修正（RED→GREEN、2 tests）。台帳--check-artifacts PASS、受入33件・要件・範囲は保持し証跡参照だけ更新。
+
+- 統合suite再実行は4,465 passed/6 skipped/1 failure。残る1件は旧acceptance-check.jsonというファイル名への固定で、再確認したD1 v2のsection_id・browser/runtime/pytest・保存復元PASSを確認するテストへ更新し、最終suiteを実行する。

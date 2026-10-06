@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "chapter": 28,
+  "pages": {
+    "book": {
+      "states": [
+        {
+          "section": "28.6",
+          "figure": "martingale_black_forward_market",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.6",
+          "figure": "martingale_black_forward_prices",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.6",
+          "figure": "martingale_black_forward_market",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.6",
+          "figure": "martingale_black_forward_prices",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/chapter-28/book-martingale_black_forward_market-1440.png",
+        "docs/validation/chapter-28/book-martingale_black_forward_prices-1440.png",
+        "docs/validation/chapter-28/book-martingale_black_forward_market-1000.png",
+        "docs/validation/chapter-28/book-martingale_black_forward_prices-1000.png"
+      ],
+      "headings": [
+        {
+          "section": "28.6",
+          "heading": "6E. Blackのモデルを測度から再訪（§28.6）",
+          "explanation_checked": true,
+          "math_checked": true
+        }
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff"
+      ],
+      "unapproved_requests": [],
+      "external_network_blocked": false
+    },
+    "portal": {
+      "states": [
+        {
+          "section": "28.6",
+          "figure": "martingale_black_forward_market",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.6",
+          "figure": "martingale_black_forward_prices",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.6",
+          "figure": "martingale_black_forward_market",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.6",
+          "figure": "martingale_black_forward_prices",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/chapter-28/portal-martingale_black_forward_market-1440.png",
+        "docs/validation/chapter-28/portal-martingale_black_forward_prices-1440.png",
+        "docs/validation/chapter-28/portal-martingale_black_forward_market-1000.png",
+        "docs/validation/chapter-28/portal-martingale_black_forward_prices-1000.png"
+      ],
+      "headings": [],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": [],
+      "external_network_blocked": true
+    }
+  },
+  "source_sha256": {
+    "docs/acceptance/chapters/ch28.json": "556e59cafe8235059bf38b48ed02203e7bfcdd49420f9b05d60147db1155cdec",
+    "docs/validation/chapter-28/reference.json": "cb48df62b74a7908a922b9ccec86f7a26c84f453290f9e143ca92e244f53abeb",
+    "docs/validation/chapter-28/numerical-check.json": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed",
+    "scripts/verify_chapter_browser.cjs": "c352c4a846c4a75908094b9f88fb589bd5f033d3716bd26e379a70cb5205e2de",
+    "hullkit/src/hullkit/_chapter28_lesson.py": "f9800998f05b2d8a363537ab84ca05cd0b3383d56303a84a2afd1c6e949a4a3d",
+    "volumes/10_exotics_martingales/exotics.ipynb": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "313acdfe78f2f016ad01b2a1d17901988edbeb95f2357d1f89fb4bf68541aa9c",
+    "report/report_builder/figures.py": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+  },
+  "artifact_sha256": {
+    "book/_build/html/notebooks/10_exotics.html": "0560bae03ccca2246440f825138a0f2bcbc634291e82fc16fa21d1cf7f1d4dea",
+    "report/site/exotics.html": "9a3abf9ae363ade735ec937308319d2785e4ffadd85378e341f4804be75258ed"
+  },
+  "browser_version": "145.0.7632.6",
+  "book_math": {
+    "rendered": 1224,
+    "errors": 0
+  },
+  "state_checks": 8,
+  "screenshots": 8,
+  "capture_sha256": {
+    "docs/validation/chapter-28/book-martingale_black_forward_market-1440.png": "86441ec3639e30b2e0c3d0b45d303eb51179f9da9b10783db6b177ede20844e9",
+    "docs/validation/chapter-28/book-martingale_black_forward_prices-1440.png": "51003d558ad1d2bb149c62ee8c24b502b38072d07346ba2f4e3ed3a3151f0485",
+    "docs/validation/chapter-28/book-martingale_black_forward_market-1000.png": "d52fc67325316eac3e9d9babcc7b8cf2454d2f7667c7593a514ff7dbfb62ab33",
+    "docs/validation/chapter-28/book-martingale_black_forward_prices-1000.png": "5269b12f808ffe117e302cafc2608d367103b4358f60d49afad5e10553c47947",
+    "docs/validation/chapter-28/portal-martingale_black_forward_market-1440.png": "253a5b31545fb5d2c97671f6d785638fbad4951d4042c1accde60245fc7a5877",
+    "docs/validation/chapter-28/portal-martingale_black_forward_prices-1440.png": "f06b45bfbe565cfca3ee77a61da9782e569d0267f7684af8c5fd9dd0aebed3f6",
+    "docs/validation/chapter-28/portal-martingale_black_forward_market-1000.png": "007336f2f1c8b8e0704bac2d762368951d1dbd2ce96847c121e4b29640270847",
+    "docs/validation/chapter-28/portal-martingale_black_forward_prices-1000.png": "65d8776f39226054d5ec78a3d4d6ac1c0a03c293b06835b42b1454fb70f5ef18"
+  }
+}
