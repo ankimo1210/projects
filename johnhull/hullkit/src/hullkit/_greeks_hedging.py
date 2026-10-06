@@ -181,3 +181,37 @@ def theta_units(spot, strike, rate, sigma, maturity, *, kind="call", yield_rate=
     function = bsm.call_theta if kind == "call" else bsm.put_theta
     annual = float(function(spot, strike, rate, sigma, maturity, q=yield_rate))
     return {"annual": annual, "per_calendar_day": annual / 365, "per_trading_day": annual / 252}
+
+
+def gamma_delta_hedge(portfolio_delta, portfolio_gamma, option_delta, option_gamma):
+    """One option position then stock position to neutralize gamma and delta."""
+    if (
+        not all(
+            math.isfinite(x) for x in (portfolio_delta, portfolio_gamma, option_delta, option_gamma)
+        )
+        or option_gamma == 0
+    ):
+        raise ValueError("finite Greeks and nonzero option gamma required")
+    weight = -portfolio_gamma / option_gamma
+    stock = -(portfolio_delta + weight * option_delta)
+    return {
+        "option_quantity": weight,
+        "stock_quantity": stock,
+        "delta_residual": portfolio_delta + weight * option_delta + stock,
+        "gamma_residual": portfolio_gamma + weight * option_gamma,
+    }
+
+
+def taylor_pnl(delta, gamma, theta, spot_change, elapsed):
+    """Second-order spot P&L with calendar theta and elapsed time in years."""
+    if (
+        not all(math.isfinite(x) for x in (delta, gamma, theta, spot_change, elapsed))
+        or elapsed < 0
+    ):
+        raise ValueError("finite Greeks/shock and nonnegative elapsed years required")
+    terms = {
+        "delta": delta * spot_change,
+        "gamma": 0.5 * gamma * spot_change**2,
+        "theta": theta * elapsed,
+    }
+    return {**terms, "total": sum(terms.values())}
