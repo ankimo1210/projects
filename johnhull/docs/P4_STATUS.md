@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 92 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -81,22 +81,40 @@
 | §18.9 | `_futures_options.py` | F30→33/28、Δ0.8、確定cash−1.6/PV−1.592、p0.4、option1.592019967。Ch13参照の米国put2.84。独立2×2複製連立解・全停止方針 | 計算部分完了。先物entry価値0/初期portfolio−f、清算をステップ末へ近似する本文の留保を明示。説明・図・受入は保留 | 62 passed・ruff PASS |
 | §18.10 | `_futures_options.py` | 本文に数値例なし。normal/inverted/zero carryの米国call/put大小関係、満期一致の欧州等価と後月先物の差。独立CN-PDEで4契約・ゼロvol境界を検証 | 計算部分完了。大小関係は確定carry/r>0の本文前提、後月ほど差が広がる点は合成例の確認で普遍単調性を主張しない。説明・図・受入は保留 | 69 passed・ruff PASS |
 | §18.11 | `_futures_options.py` | 本文に数値例なし。無割引Black気配=e^(rT)×通常価格、p+F=c+K、金利独立、早期行使の優越なし。独立求積/全停止方針/Fraction清算cash、1.1506は合成値と明示 | 計算部分完了。気配は先払いpremiumではなく清算基準、initial premium0/担保と清算cash利息は範囲外。§18.2定性・説明・図・受入は保留 | 78 passed・ruff PASS |
+| §19.1 | `_greeks_hedging.py` | 通し例call2.40・理論総額約240000・売却300000との差約60000（未丸め2.400461/240046/59954）。独立Q payoff積分、P drift13%と価格r5%を区別 | 計算部分完了。売却差額は時点0の理論価値との差で将来の確定利益ではない。定性説明・図・受入は保留 | 5 passed・ruff PASS |
+| §19.2 | `_greeks_hedging.py` | naked S60支払1000000、covered49→40の株式損失900000、閾値1往復2ε。Table19.1全6成績を固定seed MC/6SE＋表示丸め幅で確認。同一パスの無利息/資金口座会計と独立discounted gains | 計算部分完了。本文の成績は利息/割引を除外し、資金繰り付きPV費用と別欄。MCの印刷値一致は統計的確認。説明・図・受入は保留 | 12 passed・ruff PASS |
+| §19.4 | `_greeks_hedging.py` | Ex19.1 delta0.522、1200株＋再調整100株、book hedge14900株。Tables19.2/3全21行の取引/利息/表示帳簿、19.2費用263338.49、Table19.4全6成績(MC6SE)、週9価格414.5k・純変化−4.1k。独立density delta/discounted gains | 計算部分完了。Table19.3表示S/Δの精密会計256337.59と本文256600に262.41差、元の非丸め入力不明として保留。原典成績は無利息費用。定性/受入は保留 | 20 passed・ruff PASS |
+| §19.5 | `_greeks_hedging.py` | Ex19.2 theta−4.31/年、−.0118/暦日、−.0171/営業日。独立Q payoff積分のremaining-time中央差分、call/put parity、正thetaの本文例外 | 計算部分完了。thetaは暦時間微分でremaining T微分の負号、365/252単位を明記。説明・図・受入は保留 | 27 passed・ruff PASS |
+| §19.6 | `_greeks_hedging.py` | Ex19.3 ±2の二次損失−20000、gamma hedge2000 options/−1240株、Ex19.4 Γ.066。独立Q密度価格二階差分とdelta hedge残差の三次収束 | 計算部分完了。株式gammaは0、gamma0のヘッジ商品は不可。説明・図・受入は保留 | 35 passed・ruff PASS |
+| §19.7 | `_greeks_hedging.py` | Eq19.4 theta+rSdelta+σ²S²gamma/2=rΠ、q版・stock/bank込みdelta中立book。独立CN grid/time差分の残差2e−6以内・格子倍密で縮小（数値例なし） | 計算部分完了。thetaはcalendar-timeで、stock/bankもbook価値と時間微分へ算入。説明・図・受入は保留 | 40 passed・ruff PASS |
+| §19.8 | `_greeks_hedging.py` | Ex19.5 vegaのみ4000 options/−2400株・残Γ−3000、同時中立400/6000 options/−3240株。Ex19.6 vega12.1/単位・.121/vol point。独立有理数消去とQ密度vol差分 | 計算部分完了。vega中立はparallel IV shiftを前提、vol surfaceの個別変化は未ヘッジ。説明・図・受入は保留 | 48 passed・ruff PASS |
+| §19.9 | `_greeks_hedging.py` | Ex19.7 rho8.91/金利単位・.0891/1% point。spot/q固定の独立Q密度国内金利差分4例、rho parity・完全再評価の二次誤差 | 計算部分完了。金利の絶対変化1.0/.01/.0001を区別、先物固定Fのrhoは§19.12で別扱い。説明・受入は保留 | 56 passed・ruff PASS |
+| §19.11 | `_greeks_hedging.py` | Table19.5の21表示値・最大損失−90mを読取り（再価格計算ではない）。2週・7×3の合成FX bookを独立Q密度積分で完全再評価、short butterflyの内点最大損失、IV10%→12% | 計算部品完了。Table19.5はbook/strike/maturity不明のため価格再現は入力不足で飛ばす。合成book検証と引用値読取りを区別。説明・受入は保留 | 64 passed・ruff PASS |
+| §19.12 | `_greeks_hedging.py` | Table19.6全Greeks/qと外国rhoを独立密度差分、固定F futures rho=−TV、forward/futures delta差。Ex19.8精密468421.81GBP・factor表示丸め468442GBP、契約7枚 | 計算部分完了。futures rhoはq=rを連動させ固定Fを保持、通貨rhoは国内/外国を分離。Ex19.8の21GBP差はfactor4桁丸めで再現可能と注記（原著の中間精度は不明）。説明・受入は保留 | 77 passed・ruff PASS |
+| §19.13 | `_greeks_hedging.py` | Ex19.9 d1.4499・売却32.15%・表示差4.64/4.28%、Ex19.10 122.96→123 short futures。独立密度put delta、同一初期premiumの離散replication帳簿とgap-floor破れ | 計算部分完了。Ex19.9の88mは符号欠落/残存.5で一致、92mは1日経過で一致：同一時間規約での厳密一致は保留。index-mirror/beta1限定。説明・歴史・受入は保留 | 85 passed・ruff PASS |
+| §19.appendix | `_greeks_hedging.py` | Eq19A.1とspot/IV二変数Taylor（vega/vanna/vomma）。独立payoff求積の混合微分2経路・vol二階差分、完全再評価との差の三次縮小、ΔS∝√Δt時のgamma/θ次数（数値例なし） | 計算部分完了。並行IV shock・金利/q固定、時間cross項など高次は省略。定性・説明/図/受入は保留 | 92 passed・ruff PASS |
 
 ## 次の実装
 
-- Ch10–18の計算68項目を実装・push。Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3、Ch17：6、Ch18：10。Ch16.5は算術部分のみ。
-- 直近のまとまりはCh17/18の16項目。対象Ch17 54・Ch18 78、合計132 tests PASS、ruff check PASS（2026-10-06）。Ch10–16と全suiteはこのまとまりでは再実行していない。
-- 次のまとまりはCh19前半（§19.1–§19.7）：通し例・stop-loss・delta・theta・gamma・PDE関係の6計算項目。§19.3は定性説明として保留。P4全体は112節、正式受入は0/112のまま。計算項目には付録を含み、定性を除くため、68/112を完了率には使わない。
-- 定性・説明要求は保留：Ch18 §18.2、Ch16 §16.1–2・会計史/研究の説明、Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済み。計算完了は章の正式受入を表さない。
-- [Claudeの既存Ch10–16レビュー](P4_REVIEW_NOTES.md)は別管理。今回の新規為替IVはR-07の問題を引き継がない求根へ変更し、独立積分の微小価格回帰を追加した。既存Ch15のR-07、権利確定日R-02、tail境界R-08、docstring R-01等は未修正。ruff format・全suite・正式受入も再開時の確認事項。
+- Ch10–19の計算80項目の部品を実装・push。Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3、Ch17：6、Ch18：10、Ch19：11節＋付録。Ch16.5は算術部分のみ、§19.11は合成bookの計算部品まで。
+- 直近はCh19の12計算項目。対象92 tests・ruff check/format check PASS（2026-10-06）。Ch10–18と全suiteはこのまとまりでは再実行していない。
+- 次はCh20の7計算項目（§20.1/2/4/5/6/8・付録）：call/put IV、smileの尾部、軸変換、surface補間、IV応答delta、大きなjump、暗黙Q分布。§20.3/7は定性説明として保留。P4は台帳112項目で、付録を含み定性を除く計算80項目との比を完了率に使わない。
+- Ch19の保留：Table19.3の精密再計算256337.59と印刷256600の差262.41ドル、Table19.5のbook入力欠落、Ex19.9の88/92百万で厳密な時間規約が揃わないこと。Ex19.8の21GBP差は係数4桁丸めで再現可能だが原著の中間精度は不明。成績Tables19.1/4は無利息・無割引の規約を固定seed MC/6SEで確認し、資金口座付き費用と区別する。
+- 定性・説明要求は保留：Ch19 §19.3/10/14、Ch18 §18.2、Ch16 §16.1–2・会計史/研究の説明、Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済み。計算部品の完成は章の正式受入を表さない。
+- [Claudeの既存Ch10–16レビュー](P4_REVIEW_NOTES.md)は別管理。Ch17の為替IVはR-07を引き継がない求根へ変更済み。既存Ch15のR-07、権利確定日R-02、tail境界R-08、docstring R-01等は未修正。既存ファイルのformat・全suite・正式受入は再開時の確認事項。
 
 ## 再現コマンド
 
-今回の132 testsとlint。Python/ruffはルートの共有venvを使い、PYTHONPATHでロジックworktreeを明示する。`ruff PASS`は以下の`ruff check`の結果であり、format/release/全suiteのPASSを意味しない。
+今回のCh19対象92 testsとlint/format確認。Python/ruffはルートの共有venvを使い、PYTHONPATHでロジックworktreeを明示する。release/全suite/正式受入は未実行。
 
 ```bash
 cd /home/kazumasa/worktrees/m29
 export PYTHONPATH="$PWD/johnhull/hullkit/src:$PWD/johnhull/report:$PWD"
-/home/kazumasa/projects/.venv/bin/python -m pytest -q   johnhull/hullkit/tests/test_index_currency_*.py   johnhull/hullkit/tests/test_futures_options_*.py
-/home/kazumasa/projects/.venv/bin/ruff check   johnhull/hullkit/src/hullkit/_index_currency.py   johnhull/hullkit/src/hullkit/_futures_options.py   johnhull/hullkit/tests/test_index_currency_*.py   johnhull/hullkit/tests/test_futures_options_*.py
+/home/kazumasa/projects/.venv/bin/python -m pytest -q johnhull/hullkit/tests/test_greeks_hedging_*.py
+/home/kazumasa/projects/.venv/bin/ruff check \
+  johnhull/hullkit/src/hullkit/_greeks_hedging.py \
+  johnhull/hullkit/tests/test_greeks_hedging_*.py
+/home/kazumasa/projects/.venv/bin/ruff format --check \
+  johnhull/hullkit/src/hullkit/_greeks_hedging.py \
+  johnhull/hullkit/tests/test_greeks_hedging_*.py
 ```
