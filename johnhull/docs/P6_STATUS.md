@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算34/54。次は§5.14（P期待とforward）。Ch1→9を順に継続する。
+- 現在：計算35/54。次は§6.1（day count/quote）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -47,6 +47,7 @@
 | §5.10 | `_forward_pricing.py` | F.7206、1061.84/743.29/765.15/21.87、1333.33/1075.99/1020.20/55.79、概算.8%。独立2通貨借入/換算 | 計算完了。AUD1415.79は正確値1415.782062→1415.78と1cent差。中間丸めを再投入しない。説明・受入保留 | 14 passed・ruff check/format PASS |
 | §5.11 | `_forward_pricing.py` | U1.865/F484.63。独立S終価+期末2cash、便益yieldの上限/逆算 | 計算完了。consumptionではcash carry値は上限、convenience推定は入力依存。説明・受入保留 | 16 passed・ruff check/format PASS |
 | §5.12 | `_forward_pricing.py` | 印刷数値なし。無収入/index/FX/storage/consumptionの全式、独立cash/数量終価と価値 | 計算完了。consumption式はconvenience input条件付き、上限と区別。説明・受入保留 | 18 passed・ruff check/format PASS |
+| §5.14 | `_forward_pricing.py` | 印刷数値なし。k=r/正負systematic premiumの3式。独立DCF root/固定seed期待MC6SE | 計算完了。P期待とQ価格を区別、日次決済なし、Fから真の期待を一意推定しない。説明・受入保留 | 20 passed・ruff check/format PASS |
 
 ## 残りと検証
 
