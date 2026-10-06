@@ -108,3 +108,17 @@ def test_deterministic_quadratic_and_mathematical_invalid_input():
         m.quadratic_moments([1, 2], [[0, 1], [0, 0]], np.eye(2))
     with pytest.raises(ValueError):
         m.cornish_fisher_pnl_quantile(0, -1, 0, 0.99)
+
+
+@pytest.mark.parametrize("linear", [1, -1, 2, -2])
+@pytest.mark.parametrize("quadratic", [1e-6, -1e-6, 1e-12, -1e-12])
+def test_review_r2_small_gamma_finite_and_continuous_linear_limit(linear, quadratic):
+    probability = 0.01
+    # On the relevant monotone branch the other root lies >500000 SD away:
+    # its probability is negligible. Direct mapped normal quantile is independent
+    # of ncx2's large noncentrality computation and quadratic root subtraction.
+    z = norm.ppf(probability)
+    reference = abs(linear) * z + quadratic * z * z
+    actual = m.quadratic_normal_quantile(linear, quadratic, probability)
+    assert np.isfinite(actual)
+    assert actual == pytest.approx(reference, abs=2e-11)

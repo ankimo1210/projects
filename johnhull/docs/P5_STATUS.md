@@ -48,3 +48,4 @@
 ## レビュー対応
 
 - 2026-10-06 R1：既存docstringゲートの3失敗を再現し、7関数に意味・単位・規約を追記。ゲート変更なし。P5の変更4モジュール123 tests PASS、test_docstrings.py 154 passed、ruff check/format PASS。全suiteは再実行していない。
+- 2026-10-06 R2：小gammaの巨大noncentralityでNaN/誤値を再現。遠い第2根のtail massが浮動小数の範囲外となる領域では正規分位点を単調枝へ直接写す。正負gamma/linearの16回帰を追加し、market risk 76 passed・docstring対象1 passed・ruff PASS。

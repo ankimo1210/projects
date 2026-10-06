@@ -560,7 +560,14 @@ def quadratic_normal_quantile(linear, quadratic, probability, *, constant=0):
         raise ValueError("finite coefficients and interior probability required")
     if quadratic == 0:
         return float(constant + abs(linear) * norm.ppf(probability))
-    noncentrality = (linear / (2 * quadratic)) ** 2
+    # Here the second normal root is at least ~2000 standard deviations away;
+    # its tail mass is below the smallest representable normal probability.
+    # Map the relevant monotone branch directly instead of subtracting enormous
+    # noncentral chi-square values. This is continuous at quadratic=0.
+    if abs(linear) > 2000 * abs(quadratic):
+        z = float(norm.ppf(probability))
+        return float(constant + abs(linear) * z + quadratic * z * z)
+    noncentrality = (linear / quadratic / 2) ** 2
     point = (
         ncx2.ppf(probability, 1, noncentrality)
         if quadratic > 0
