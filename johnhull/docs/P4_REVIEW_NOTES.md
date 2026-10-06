@@ -13,20 +13,25 @@ P4（Ch10–21）のロジック先行実装を、Claude が後追いで確認�
 |---|---|---|---|---|---|
 | R-01 | 中 | P3 の docstring 修正 `e4bc9d7b` が未マージ。hullkit 全 suite が `test_docstrings` で3 failed | `codex/p3-logic` → `codex/p4-logic` | R1 | 解決（R3 `06bff3ca`、push 済み） |
 | R-02 | 中 | 有効な入力で権利確定の判定を誤る（下記 R2-1） | `_employee_options.py:78` | R2 | 解決（R3 `3a75aed7`） |
-| R-03 | 低 | 「ruff PASS」は `ruff check` だけ。`ruff format --check` は P4 新規の56ファイル全部が不合格（main 既存13は別件）。`make hull-release` は format を含む | P4 全ファイル | R1 | 未対応・拡大（R1 5件→R2 56件） |
-| R-04 | 低 | 節ごとの確認に hullkit 全 suite（約100秒）を入れていない。R-01 を見逃した原因 | P4_STATUS「検証」 | R1 | 未対応 |
-| R-05 | 低 | P4_STATUS にテスト実行コマンドがない | P4_STATUS | R1 | 未対応 |
-| R-06 | 低 | ロジック進捗の分母がない（P3 は36/37、P4 は「52節」のみ） | P4_STATUS | R1 | 未対応 |
+| R-03 | 低 | 「ruff PASS」は `ruff check` だけ。`ruff format --check` は P4 新規の56ファイル全部が不合格（main 既存13は別件）。`make hull-release` は format を含む | P4 全ファイル | R1 | 解決（R4 `00d8a651`。P4 の79ファイル。main 既存13は別件） |
+| R-04 | 低 | 節ごとの確認に hullkit 全 suite（約100秒）を入れていない。R-01 を見逃した原因 | P4_STATUS「検証」 | R1 | P4 では終了。P5 以降へ引き継ぎ（下記 R4） |
+| R-05 | 低 | P4_STATUS にテスト実行コマンドがない | P4_STATUS | R1 | 解決（R4 `c89f749d`） |
+| R-06 | 低 | ロジック進捗の分母がない（P3 は36/37、P4 は「52節」のみ） | P4_STATUS | R1 | 解決（Codex が計算対象95/95を明記） |
 | R-07 | 低 | IV 二分法が絶対価格許容 1e-10 のため、小さいが正の価格で σ=0 や早期停止を返す（R2-2） | `_bsm_foundations.py:218,226` | R2 | 解決（R3 `e1acc40d`。深い ITM の早期停止も同根で修正） |
 | R-08 | 低 | 二項 tail の strike 一致の丸め窓が狭く、節点と同値の strike を ITM に数える（R2-3） | `_binomial_foundations.py:173-177` | R2 | 解決（R3 `171a8227`） |
-| R-09 | 低 | 配当付き木のテストに検出力がない（R2-4） | `test_option_properties_dividends.py` | R2 | 未対応 |
-| R-10 | 低 | モジュールを呼ばない・恒等式のテストを「独立検証」と数えている（R2-5） | 複数 | R1 | 未対応・拡大 |
-| R-11 | 低 | Euler 積モーメントの式をどのテストも検証していない（R2-6） | `test_stochastic_foundations_stock.py:41-53` | R2 | 未対応 |
-| R-12 | 低 | §12.1「無配当の採算不能」の検証が配当の効果を分離していない（R2-7） | `test_option_strategies_notes.py:47-54` | R2 | 未対応 |
-| R-13 | 低 | §13.8/13.10/13.11 の印刷値は既存 `trees` が計算しており、新モジュールの寄与は係数・5段方針列挙・終端和 | P4_STATUS | R2 | 未対応（記述の修正） |
-| R-14 | nit | 許容幅が実誤差の5–170倍（R2-8）。誤りは隠していない | 複数 | R2 | 任意 |
-| R-15 | nit | 記述の誤り：fBM 共分散を「equation 14.20」（14.20 は相関）、§11.3「本文11値」（列挙は12値） | `_stochastic_foundations.py:153`、P4_STATUS | R2 | 任意 |
-| R-16 | nit | `american_put_interval` が P≥max(K−S,0)・P≤K で絞らず、`no_dividend_bounds` と扱いが不揃い。C≤S も未検証 | `_option_properties.py:145-148` | R2 | 任意 |
+| R-09 | 低 | 配当付き木のテストに検出力がない（R2-4） | `test_option_properties_dividends.py` | R2 | 解決（R4 `a0e03774`） |
+| R-10 | 低 | モジュールを呼ばない・恒等式のテストを「独立検証」と数えている（R2-5） | 複数 | R1 | 解決（R4 `cc36b2ff`・`c89f749d`・`ddf143d0`） |
+| R-11 | 低 | Euler 積モーメントの式をどのテストも検証していない（R2-6） | `test_stochastic_foundations_stock.py:41-53` | R2 | 解決（R4 `2ea730b7`） |
+| R-12 | 低 | §12.1「無配当の採算不能」の検証が配当の効果を分離していない（R2-7） | `test_option_strategies_notes.py:47-54` | R2 | 解決（R4 `2aaa64f4`） |
+| R-13 | 低 | §13.8/13.10/13.11 の印刷値は既存 `trees` が計算しており、新モジュールの寄与は係数・5段方針列挙・終端和 | P4_STATUS | R2 | 解決（R4 `c89f749d`） |
+| R-14 | nit | 許容幅が実誤差の5–170倍（R2-8）。誤りは隠していない | 複数 | R2 | 解決（R4 `3353c856`・`be443143`） |
+| R-15 | nit | 記述の誤り：fBM 共分散を「equation 14.20」（14.20 は相関）、§11.3「本文11値」（列挙は12値） | `_stochastic_foundations.py:153`、P4_STATUS | R2 | 解決（R4 `c89f749d`） |
+| R-16 | nit | `american_put_interval` が P≥max(K−S,0)・P≤K で絞らず、`no_dividend_bounds` と扱いが不揃い。C≤S も未検証 | `_option_properties.py:145-148` | R2 | 解決（R4 `a1e02606`） |
+| R-17 | 低 | 絶対許容・厳密比較の同型バグ3件：先物 parity が正しい deep ITM call を拒否、早期行使の引き分けを「厳密に有利」と判定、経過時間＝満期を丸めで拒否 | `_futures_options.py:86`、`_index_currency.py:243,254`、`_greeks_hedging.py:365` | R4 | 解決（R4 `10f20d7c`・`36ae6523`・`64d1850f`） |
+| R-18 | 低 | 値を変える変異が既存テストを全件通過：Ch17/18（金利・利回りの入替え、根の継続価値、先物満期）、Ch19 σ=0 の forward、Ch21（配当日直前の行使・割合配当のマスク・時刻許容・CN/hopscotch） | Ch17–21 のテスト | R4 | 解決（R4 `c0f8372c`・`0eca4540`・`387ac0b4`・`4155cea1`） |
+| R-19 | 低 | 記述の誤り：Ex19.9 は88m/92mとも残存0.5年で一致（「同一規約で不一致」は誤り）、Table 20.3 K44 の58.8は丸めputと一致（tol .06 が隠していた）、§21.3 の S*/PV の数値 | P4_STATUS §19.13/§20.8/§21.3 | R4 | 解決（R4 `d76491a5`・`ddf143d0`） |
+| R-20 | nit | contracts の `round()` が偶数丸め（−6.5→−6）。Hull は「最も近い整数」とだけ書き .5 の扱いは未定 | `_greeks_hedging.py:449` | R4 | 変更せず（原典が .5 を定めない） |
+| R-21 | nit | P4_STATUS の §17.5（54）と §17.6（48）の件数が節順と逆。各節の完了時点の値なので改変しない | P4_STATUS | R4 | 記録のみ |
 
 ## R1 2026-10-05（Ch10、`010507a6`）
 
@@ -115,4 +120,17 @@ P4（Ch10–21）のロジック先行実装を、Claude が後追いで確認�
 - hullkit 全 suite：5,037 passed／6 skipped／0 failed（`171a8227`）。変更ファイルの `ruff check` PASS。整形（R-03）は P4 全体の一括作業として触れていない。
 - 参考：Ch18 の `_index_currency.carry_implied_vol` は当初から σ 側の収束判定で、Ch20 の smile もこちらを使うため R-07 の誤りは後続章に波及していなかった。
 - 運用メモ：修正中、P4 セッションが同じ m29 で §21.1–21.4 をコミット・push した。私の未コミット変更を含めずにコミットされており衝突はなかったが、同一 worktree の同時作業は危険。次回の直接修正は P4 セッションの停止を確認してから行う。
+
+## R4 2026-10-06（P4 完了後の全体レビューと修正、`00d8a651`）
+
+Codex が Ch10–21 の計算95/95を完了して P5 へ移った後、Ch17–21 の新7モジュールを照合し、残りの指摘をまとめて修正した。作業は `claude/p4-review` worktree で行い、`codex/p4-logic` へ fast-forward で push した（`d9461273..00d8a651`、18コミット）。
+
+- 原典照合：Ch17–21 の印刷値は全件再現（Ex17.1–17.2、Table 17.1/17.2、Ex18.5–18.7、§18.9、Ex19.1–19.10、Table 19.2/19.3、Ex20.1、Table 20.1–20.3、Ex20A.1、Ex21.1–21.8、Table 21.3–21.5）。数式の誤りはなし。
+- バグ（R-17）：3件とも R-02/R-07 と同じ型。回帰テストが修正前に失敗することを確認してから修正した。
+- テストの検出力（R-09・R-11・R-12・R-18）：実在しうる変異を入れ、強化後のテストで全件が落ちることを確認した。独立参照は GK 式、Fraction の CAPM、小さい木、Black、節点番号で揃える配当木、密行列の CN、節点ループの hopscotch、Gauss–Hermite。
+- 記述（R-10・R-13・R-15・R-19）：恒等式・自己比較のテストは削除せず、P4_STATUS で「整合確認」「既存モジュール」と明記した。
+- 整形（R-03）：P4 で追加・変更した79ファイルに `ruff format`。`ruff check`・`format --check` は P4 分で PASS（main 既存13ファイルのみ残る）。
+- 検証：hullkit＋report のテスト一式 5,753 passed／6 skipped／0 failed（`00d8a651`、AGENTS.md の scoped コマンド相当）。修正前の基準は 5,728 passed。
+- P5/P6 への影響：`codex/p5-logic`・`codex/p6-logic` は修正前の `d9461273` から分岐し、P4 のファイルに触れていない。`origin/codex/p4-logic` のマージは競合なしを確認済み。
+- 引き継ぎ（R-04）：P5 以降も節ごとの確認に hullkit 全 suite（約100秒）を入れること、新規ファイルは `ruff format` まで通すことを推奨する。今回の同型バグ（浮動小数の時刻比較・絶対許容・引き分け判定）は P5/P6 でも確認対象にする。
 
