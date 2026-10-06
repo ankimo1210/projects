@@ -80,3 +80,10 @@ def known_income_forward(spot, income_dates, income_amounts, income_zeros, rate,
         "net_spot": spot - pv,
         "forward": (spot - pv) * np.exp(rate * maturity),
     }
+
+
+def known_yield_forward(spot, rate, income_yield, maturity):
+    """Forward price for deterministic continuously compounded reinvested income yield."""
+    if not np.isfinite(income_yield):
+        raise ValueError("finite yield required")
+    return no_income_forward(spot, rate - income_yield, maturity)
