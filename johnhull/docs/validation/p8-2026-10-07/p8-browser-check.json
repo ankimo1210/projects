@@ -273,5 +273,28 @@
     }
   },
   "scope": "P8 affected teaching: vol18-22 and24; existing figure ids",
-  "numeric_reference": "Independent RMSE from economic_pnl; 3 horizons, 10 models, 4 strategies"
+  "numeric_reference": "Independent RMSE from economic_pnl; 3 horizons, 10 models, 4 strategies",
+  "artifact_sha256": {
+    "report/site/ml_derivatives.html": "1b3d585f90b2e3ce5e94f07c23b9883a98eee805d0d0f1a3f4f6df9a6cc313bd",
+    "book/_build/html/notebooks/18_ml_surrogates.html": "232b08a1e48a400417fc9cb322549a916a5c48fed777955cd9ca9d3179027b38",
+    "book/_build/html/notebooks/19_inverse_surfaces.html": "82a0b435fda9653b2588af8ec7710d687e3a10b4bd425e63ef4a914aea33d351",
+    "book/_build/html/notebooks/20_surface_dynamics.html": "72aa6f201d793f76520661a40bdc5e7e6b9906c8c978d67f2654c5e709152b38",
+    "book/_build/html/notebooks/21_spx_vix.html": "9a7a9c23d8f15d7f44f74898e7fe731879611639d3ee0bbdc966c2b55c4b6a96",
+    "book/_build/html/notebooks/22_zero_dte.html": "b6ee23f5e2b780579eb3c990552a1c1e645116282736bcae4083fca4ada8725b",
+    "book/_build/html/notebooks/24_crypto_market_structure.html": "965d17473b65d935d7643d11300c5b4d7a78c25a1df2ca1456b5fc30a7544cbe"
+  },
+  "validation_programs": [
+    {
+      "path": "p8-validation/browser-check.cjs",
+      "ref": "artifact:sha256:80391ca4126da582c7baa102d2b8b3db08ed48f6ce045ef808dc1fdc40c74e88",
+      "bytes": 5626,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/browser-reference.py",
+      "ref": "artifact:sha256:24847f6456a5a0e8e74d5b4a182648171bef673f0e3052fd8094ca74915a67d8",
+      "bytes": 460,
+      "mime": "application/octet-stream"
+    }
+  ]
 }

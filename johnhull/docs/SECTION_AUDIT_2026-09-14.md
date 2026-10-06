@@ -808,11 +808,11 @@ vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成�
 | 確認済み欠陥 | D9 | 対応済み | 第 3 便 `15634200` / `e7ed438e`。出力の本文の鮮度は第 4 便の core gate で照合（PNG・Plotly の中身は対象外） |
 | 監査報告 | R5、R9、R10 | 対応済み | `9347f14d` |
 | 監査報告 | R7、R8 | 対応済み | R7 は BA-03（`1eabb8c5`）、R8 は D4 と同時（`c4654c9a`） |
-| 監査報告 | R1、R2、R3、R4、R6、R11 | 実装/判断済み、P8最終検証中 | [P8状態](P8_STATUS.md)。R1左端点/離散補償/組SE、R2訓練残差補正、R3予測と経済評価接続、R4 stream分離/paired SE。R6は構成恒等式として説明訂正、fee-awareモデルは研究拡張。R11無利息/割引表規約はP4計算で対応、教材は章受入に回す |
+| 監査報告 | R1、R2、R3、R4、R6、R11 | 対応/判断済み、P8最終検証PASS | [P8状態](P8_STATUS.md)。R1左端点/離散補償/組SE、R2訓練残差補正、R3予測と経済評価接続、R4 stream分離/paired SE。R6は構成恒等式として説明訂正、fee-awareモデルは研究拡張。R11無利息/割引表規約はP4計算で対応、教材は章受入に回す |
 | acceptance | BA-04、BB-04、BB-09、BB-14、BB-18 | 対応済み | 全 11 巻を配列から再計算（`b74ee335`、`c745efc5`、`b7eb9ba7`、`f812e8ef`、`1eabb8c5`）。退化入力は第 4 便で FAIL 記録化 |
 | acceptance | 保存値依存の残り5件 | 根拠配列/gate/改竄PASS | vol18教師・予測MAE/8 hard probes、vol19 scipy停止/残差/予算、vol21生ns/warmup/median/来歴、vol22 holiday/weekday/session入力から再計算。[P8状態](P8_STATUS.md) |
 | vol 21・23 | BA-09、BB-02、BA-10 | 対応済み | `c4654c9a`、`3db10647`、BA-10 は第 4 便（計測の来歴） |
-| vol 22 | BA-11 | P8実装済み | D3/R5に加えR4 stream分離とpaired payoff/SEを保存・検証 |
+| vol 22 | BA-11 | P8対応済み・最終検証PASS | D3/R5に加えR4 stream分離とpaired payoff/SEを保存・検証 |
 | 出力照合 | DD-17、BB-13 | 対応済み | frontier は `8580546f`、core の本文照合は第 4 便 |
 | 印刷値ピン | OP-03、OP-11、OP-13、OP-14、VN-01、VN-03、VN-07、VN-12、EX-01、CR-02、CR-03、CR-04、CR-20 | 対応済み | `2a3e25e8` |
 | 印刷値ピン | CR-01 | 対応済み | `90e903ea`（Ex 24.8） |
@@ -823,4 +823,4 @@ vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成�
 | book | DD-01、DD-02 | 対応済み | D9 |
 | 基盤 | DD-15 | 据え置き | `AGENTS.md` の記述どおり `deep_hedge_price/tests` は root の testpaths にない |
 | 節カバレッジ | 節別台帳・全 306 節の再集計 | 未対応 | 第 3 便の関数追加を含む最新の分類は未検証。完了率は確定値として使わない |
-| その他 | §4 の上記以外の ID | 未対応 | §4 の表のまま。§7 の判断事項（seed 統一 VN-20、大物の置き場所など）と §8 の blocked も未決 |
+| その他 | §4 の上記以外の ID | 本編/研究の後続 | §4の監査時点の表を保持。ロジック先行のP3–P7は各状態文書を参照。§7の採用方針は[P8状態](P8_STATUS.md)で記録済み、§8の外部入力不足は維持 |
