@@ -50,3 +50,12 @@ def test_missing_quote_infeasible_quote_and_american_negative_rate():
         futures.futures_parity(8, 8.5, .1, .5, put=0)
     with pytest.raises(ValueError):
         futures.futures_american_difference_bounds(8, 8.5, -.02, .5)
+
+
+def test_parity_accepts_a_model_call_whose_put_rounds_one_ulp_below_zero():
+    # Deep ITM: call minus the 28,000 parity difference is -3.6e-12 from rounding alone.
+    call = futures.black_details(30000, 1000, .03, .2, 1)["call"]
+    result = futures.futures_parity(30000, 1000, .03, 1, call=call)
+    assert result["put"] == pytest.approx(0, abs=1e-9)
+    with pytest.raises(ValueError):
+        futures.futures_parity(30000, 1000, .03, 1, call=call-1e-3)

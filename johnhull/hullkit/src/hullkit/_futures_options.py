@@ -1,6 +1,7 @@
 """Private Hull GE Ch18: futures cashflows, Black pricing and exercise."""
 
 import math
+import sys
 
 
 def futures_exercise_cash(current, last_settlement, strike, *, quantity=1, multiplier=1, kind="call", premium=0):
@@ -83,7 +84,7 @@ def futures_parity(forward, strike, rate, maturity, *, call=None, put=None):
         call = put+difference
     if put is None:
         put = call-difference
-    if min(call, put) < -1e-12:
+    if min(call, put) < -16*sys.float_info.epsilon*max(1.0, abs(call), abs(put), abs(difference)):
         raise ValueError("given quote implies a negative opposite option price")
     call, put = max(call, 0), max(put, 0)
     return {"call": call, "put": put, "call_minus_put": difference,
