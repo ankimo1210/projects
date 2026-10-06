@@ -327,3 +327,67 @@ def single_jump_details(spot, down_price, up_price, rate, maturity, strikes, *, 
         "put_prices": puts,
         "implied_volatility": iv,
     }
+
+
+def implied_density_grid(strikes, call_prices, rate, maturity):
+    """Eq20A.2 finite-wing density, in inverse price units, at interior strikes.
+
+    Keep unrounded prices. Negative density is reported, not clipped; this
+    estimate does not repair arbitrage or specify tails outside the grid.
+    """
+    from .volatility import breeden_litzenberger_density
+
+    centers, density = breeden_litzenberger_density(strikes, call_prices, rate, maturity)
+    return {
+        "strikes": centers,
+        "density": density,
+        "has_negative_density": bool(np.any(density < 0)),
+    }
+
+
+def smile_density_grid(spot, rate, yield_rate, maturity, strikes, volatilities):
+    """Convert a supplied smile to unrounded calls and finite-wing Q density.
+
+    Volatilities are decimal, one per equally spaced strike. The caller supplies
+    any intermediate smile points; there is no implicit smile interpolation.
+    """
+    from .bsm import call_price
+
+    _market_forward(spot, rate, yield_rate, maturity)
+    strikes = np.asarray(strikes, dtype=float)
+    vols = np.asarray(volatilities, dtype=float)
+    if maturity <= 0 or vols.shape != strikes.shape:
+        raise ValueError("positive time and one IV per strike required")
+    prices = call_price(spot, strikes, rate, vols, maturity, q=yield_rate)
+    result = implied_density_grid(strikes, prices, rate, maturity)
+    return {**result, "call_prices": prices}
+
+
+def density_bin_summary(bin_edges, midpoint_density):
+    """Midpoint-rule interval masses; raw sum and 1-sum are estimates.
+
+    Supply one density at each bin midpoint. The residual includes discretization
+    error and unobserved tails; it is not independently measured tail probability.
+    No normalization or positivity repair is applied, even if the sum exceeds 1.
+    """
+    edges = np.asarray(bin_edges, dtype=float)
+    density = np.asarray(midpoint_density, dtype=float)
+    if (
+        edges.ndim != 1
+        or density.ndim != 1
+        or edges.size < 2
+        or density.size != edges.size - 1
+        or np.any(~np.isfinite(edges))
+        or np.any(~np.isfinite(density))
+        or np.any(np.diff(edges) <= 0)
+    ):
+        raise ValueError("increasing finite edges and one finite density per interval required")
+    masses = density * np.diff(edges)
+    total = math.fsum(masses)
+    return {
+        "midpoints": (edges[:-1] + edges[1:]) / 2,
+        "interval_masses": masses,
+        "mass_sum": total,
+        "mass_residual": 1 - total,
+        "has_negative_density": bool(np.any(density < 0)),
+    }
