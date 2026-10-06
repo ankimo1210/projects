@@ -82,3 +82,25 @@ def historical_volatility(prices, interval_years, *, dividends=None):
         "annual_vol": annual,
         "vol_se": annual/math.sqrt(2*len(returns)),
     }
+
+
+def delta_hedge_cash(option_units, delta, stock_change, option_change, rebalance_spot, next_delta):
+    """Mark-to-market P&L and instantaneous, self-financing hedge trade.
+
+    Negative option_units denotes sold options. P&L excludes financing over
+    time; a finite move need not cancel. Rebalance cash is a transfer, not P&L.
+    """
+    if not all(math.isfinite(x) for x in (option_units, delta, stock_change, option_change, rebalance_spot, next_delta)) or rebalance_spot <= 0:
+        raise ValueError("finite positions/moves and positive rebalance spot required")
+    stock_units = -option_units*delta
+    option_pnl = option_units*option_change
+    stock_pnl = stock_units*stock_change
+    trade = -option_units*next_delta-stock_units
+    return {
+        "stock_units": stock_units,
+        "option_pnl": option_pnl,
+        "stock_pnl": stock_pnl,
+        "pnl": option_pnl+stock_pnl,
+        "rebalance_units": trade,
+        "rebalance_cash": -trade*rebalance_spot,
+    }
