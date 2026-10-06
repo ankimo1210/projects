@@ -172,12 +172,32 @@ def carry_from_option_quotes(spot, strike, rate, maturity, call, put):
     return {"forward": forward, "yield_rate": rate-math.log(forward/spot)/maturity}
 
 
-def carry_implied_vol(price, spot, strike, rate, yield_rate, maturity, *, kind="call", price_tolerance=1e-10):
-    """European IV via the no-yield bisection at the prepaid spot."""
-    from ._bsm_foundations import implied_vol_bisection
+def carry_implied_vol(price, spot, strike, rate, yield_rate, maturity, *, kind="call"):
+    """European carry IV using Brent convergence in volatility, not price.
+
+    Only the exact deterministic price selects sigma=0. An absolute price
+    tolerance would erase the volatility in very small but positive OTM quotes.
+    """
+    from scipy.optimize import brentq
+
+    from .bsm import call_price, put_price
 
     _carry_inputs(spot, strike, rate, yield_rate, maturity)
-    return implied_vol_bisection(price, spot*math.exp(-yield_rate*maturity), strike, rate, maturity, kind=kind, price_tolerance=price_tolerance)
+    if strike <= 0 or maturity <= 0 or not math.isfinite(price) or kind not in ("call", "put"):
+        raise ValueError("finite price and positive strike/time required to identify IV")
+    pricing = call_price if kind == "call" else put_price
+    lower = float(pricing(spot, strike, rate, 0, maturity, q=yield_rate))
+    upper = carry_bounds(spot, strike, rate, yield_rate, maturity)[kind+"_upper"]
+    if price < lower or price >= upper:
+        raise ValueError("price outside finite-IV arbitrage bounds")
+    if price == lower:
+        return 0.0
+    def objective(sigma):
+        return float(pricing(spot, strike, rate, sigma, maturity, q=yield_rate))-price
+    high = .5
+    while objective(high) < 0:
+        high *= 2
+    return brentq(objective, 0, high, xtol=1e-12)
 
 
 def currency_inversion(spot, strike, domestic_rate, foreign_rate, sigma, maturity, *, kind="call"):
