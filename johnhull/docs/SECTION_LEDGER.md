@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **33**
+- accepted: **43**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,17 +12,17 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 273 |
+| unreviewed | 263 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 33 |
+| accepted | 43 |
 | out_of_scope | 0 |
 
 ## 章別件数
 
 | 章 | 登録 | unreviewed | gaps_found | pending_validation | accepted | out_of_scope |
 |---:|---:|---:|---:|---:|---:|---:|
-| 1 | 10 | 10 | 0 | 0 | 0 | 0 |
+| 1 | 10 | 0 | 0 | 0 | 10 | 0 |
 | 2 | 11 | 11 | 0 | 0 | 0 | 0 |
 | 3 | 7 | 7 | 0 | 0 | 0 | 0 |
 | 4 | 12 | 12 | 0 | 0 | 0 | 0 |
@@ -64,16 +64,16 @@
 
 | ID | 章 | 種別 | タイトル | 状態 |
 |---|---:|---|---|---|
-| 1.1 | 1 | section | Exchange-Traded Markets | unreviewed |
-| 1.2 | 1 | section | Over-the-Counter Markets | unreviewed |
-| 1.3 | 1 | section | Forward Contracts | unreviewed |
-| 1.4 | 1 | section | Futures Contracts | unreviewed |
-| 1.5 | 1 | section | Options | unreviewed |
-| 1.6 | 1 | section | Types of Traders | unreviewed |
-| 1.7 | 1 | section | Hedgers | unreviewed |
-| 1.8 | 1 | section | Speculators | unreviewed |
-| 1.9 | 1 | section | Arbitrageurs | unreviewed |
-| 1.10 | 1 | section | Dangers | unreviewed |
+| 1.1 | 1 | section | Exchange-Traded Markets | accepted |
+| 1.2 | 1 | section | Over-the-Counter Markets | accepted |
+| 1.3 | 1 | section | Forward Contracts | accepted |
+| 1.4 | 1 | section | Futures Contracts | accepted |
+| 1.5 | 1 | section | Options | accepted |
+| 1.6 | 1 | section | Types of Traders | accepted |
+| 1.7 | 1 | section | Hedgers | accepted |
+| 1.8 | 1 | section | Speculators | accepted |
+| 1.9 | 1 | section | Arbitrageurs | accepted |
+| 1.10 | 1 | section | Dangers | accepted |
 | 2.1 | 2 | section | Background | unreviewed |
 | 2.2 | 2 | section | Specification of a Futures Contract | unreviewed |
 | 2.3 | 2 | section | Convergence of Futures Price to Spot Price | unreviewed |

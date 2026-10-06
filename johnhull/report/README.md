@@ -4,7 +4,7 @@ johnhull の Hull 11e ノートで学ぶ価格付け・リスク管理を束ね�
 **オフライン自己完結のインタラクティブ静的サイト**を生成するジェネレータ。
 `analytics/report` と同じ設計(jinja2 + plotly)。
 
-- ランディング + コンセプトギャラリー + 12テーマ別ショーケース（全198図、exotics 86図）+ 統合(背骨)ページ
+- ランディング + コンセプトギャラリー + 12テーマ別ショーケース（全204図、exotics 92図）+ 統合(背骨)ページ
 - 図は `hullkit.plotly_viz`、内部教材モジュール `hullkit._binary_lesson` / `hullkit._lookback_lesson` / `hullkit._shout_lesson` / `hullkit._asian_lesson` / `hullkit._exchange_lesson` / `hullkit._basket_lesson` / `hullkit._variance_swap_lesson`、またはvol 18–28のversioned reference artifactから生成。共有ソースに加え、値・操作・実画面を検査する
 - **カーネル不要・ネット不要**: plotly はローカル同梱、図はブラウザ内で動く(スライダー/ホバー/ズーム)
 
@@ -17,13 +17,20 @@ make hull-report   # -> johnhull/report/site/index.html
 make hull-book     # johnhull の Jupyter Book(教科書本体)をビルド
 ```
 
-または直接:
+または直接（Ch1ページを含めて両方を実行）:
 
 ```bash
-PYTHONPATH=johnhull/report uv run --no-sync python -m report_builder.build
+PYTHONPATH=johnhull/hullkit/src:johnhull/report uv run --no-sync python -m report_builder.build
+PYTHONPATH=johnhull/hullkit/src uv run --no-sync python johnhull/scripts/build_chapter01_portal.py
 ```
 
 出力された `site/index.html` をブラウザで開くだけ(オフラインで動作)。`site/` は gitignore 済み。
+
+通常のportalビルドはCh1の10節・4共有図も `site/chapters/ch01.html` に生成する。
+`make hull-book` のvol12 Ch1から到達でき、上の両コマンドでリンク先まで再生成する。
+Ch1は章別教材として追加し、既存の204図/12テーマとは別に数える。
+[Ch1の受入記録](../docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md) に、原典範囲と
+数値・画面の再検証手順を記す。
 
 ## 図を追加する
 
