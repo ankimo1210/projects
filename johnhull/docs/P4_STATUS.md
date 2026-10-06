@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 92 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 92 passed・Ch20 10 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -93,12 +93,13 @@
 | §19.12 | `_greeks_hedging.py` | Table19.6全Greeks/qと外国rhoを独立密度差分、固定F futures rho=−TV、forward/futures delta差。Ex19.8精密468421.81GBP・factor表示丸め468442GBP、契約7枚 | 計算部分完了。futures rhoはq=rを連動させ固定Fを保持、通貨rhoは国内/外国を分離。Ex19.8の21GBP差はfactor4桁丸めで再現可能と注記（原著の中間精度は不明）。説明・受入は保留 | 77 passed・ruff PASS |
 | §19.13 | `_greeks_hedging.py` | Ex19.9 d1.4499・売却32.15%・表示差4.64/4.28%、Ex19.10 122.96→123 short futures。独立密度put delta、同一初期premiumの離散replication帳簿とgap-floor破れ | 計算部分完了。Ex19.9の88mは符号欠落/残存.5で一致、92mは1日経過で一致：同一時間規約での厳密一致は保留。index-mirror/beta1限定。説明・歴史・受入は保留 | 85 passed・ruff PASS |
 | §19.appendix | `_greeks_hedging.py` | Eq19A.1とspot/IV二変数Taylor（vega/vanna/vomma）。独立payoff求積の混合微分2経路・vol二階差分、完全再評価との差の三次縮小、ΔS∝√Δt時のgamma/θ次数（数値例なし） | 計算部分完了。並行IV shock・金利/q固定、時間cross項など高次は省略。定性・説明/図/受入は保留 | 92 passed・ruff PASS |
+| §20.1 | `_smile_surface.py` | Ex20.1 put.0419・IV14.5%（未丸め.04192291/.14511006）、Eq20.2 dollar誤差3例。独立Q payoff積分＋二分逆算、丸めquoteのIV差と微小正価格 | 計算部分完了。欧州parity前提、丸めputの残差とIV差を消さない。有限IV arb bounds、極端ITM側の価格桁落ちによる識別限界を区別。説明・受入は保留 | 10 passed・ruff PASS |
 
 ## 次の実装
 
 - Ch10–19の計算80項目の部品を実装・push。Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3、Ch17：6、Ch18：10、Ch19：11節＋付録。Ch16.5は算術部分のみ、§19.11は合成bookの計算部品まで。
 - 直近はCh19の12計算項目。対象92 tests・ruff check/format check PASS（2026-10-06）。Ch10–18と全suiteはこのまとまりでは再実行していない。
-- 次はCh20の7計算項目（§20.1/2/4/5/6/8・付録）：call/put IV、smileの尾部、軸変換、surface補間、IV応答delta、大きなjump、暗黙Q分布。§20.3/7は定性説明として保留。P4は台帳112項目で、付録を含み定性を除く計算80項目との比を完了率に使わない。
+- 次はCh20 §20.2（平均/分散を揃えたQ厚尾とsmile）。P4の計算は合計81節、正式受入は0/112のまま。
 - Ch19の保留：Table19.3の精密再計算256337.59と印刷256600の差262.41ドル、Table19.5のbook入力欠落、Ex19.9の88/92百万で厳密な時間規約が揃わないこと。Ex19.8の21GBP差は係数4桁丸めで再現可能だが原著の中間精度は不明。成績Tables19.1/4は無利息・無割引の規約を固定seed MC/6SEで確認し、資金口座付き費用と区別する。
 - 定性・説明要求は保留：Ch19 §19.3/10/14、Ch18 §18.2、Ch16 §16.1–2・会計史/研究の説明、Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済み。計算部品の完成は章の正式受入を表さない。
 - [Claudeの既存Ch10–16レビュー](P4_REVIEW_NOTES.md)は別管理。Ch17の為替IVはR-07を引き継がない求根へ変更済み。既存Ch15のR-07、権利確定日R-02、tail境界R-08、docstring R-01等は未修正。既存ファイルのformat・全suite・正式受入は再開時の確認事項。
