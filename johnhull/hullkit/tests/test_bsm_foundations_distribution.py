@@ -51,3 +51,29 @@ def test_degenerate_interval_and_negative_standard_deviation():
     assert foundations.lognormal_interval(math.log(40), 0) == pytest.approx([40, 40], abs=1e-12)
     with pytest.raises(ValueError):
         foundations.lognormal_interval(3, -.1)
+
+
+def test_example_15_3_annualized_continuous_return_and_interval():
+    law = foundations.return_distribution(.17, .2, 3)
+    assert [law["mean"], law["sd"]] == pytest.approx([.15, .1155], abs=.00005)
+    assert [law["mean"]-1.96*law["sd"], law["mean"]+1.96*law["sd"]] == pytest.approx([-.076, .376], abs=.0005)
+    density = lognorm(s=.2*math.sqrt(3), scale=20*math.exp(.15*3))
+    mean = quad(lambda s: math.log(s/20)/3*density.pdf(s), 0, math.inf)[0]
+    variance = quad(lambda s: (math.log(s/20)/3-mean)**2*density.pdf(s), 0, math.inf)[0]
+    assert law["mean"] == pytest.approx(mean, abs=1e-10)
+    assert law["variance"] == pytest.approx(variance, abs=1e-10)
+
+
+def test_average_return_distribution_against_stock_euler_reference():
+    paths = euler_maruyama(lambda x, t: .17*x, lambda x, t: .2*x, 20, 3, 800, 20000, rng=np.random.default_rng(152))
+    assert np.all(paths[:, -1] > 0)
+    returns = np.log(paths[:, -1]/20)/3
+    law = foundations.return_distribution(.17, .2, 3)
+    assert abs(returns.mean()-law["mean"]) < 6*returns.std(ddof=1)/math.sqrt(len(returns))
+    squares = (returns-law["mean"])**2
+    assert abs(squares.mean()-law["variance"]) < 6*squares.std(ddof=1)/math.sqrt(len(squares))
+
+
+def test_average_rate_requires_positive_horizon():
+    with pytest.raises(ValueError):
+        foundations.return_distribution(.17, .2, 0)
