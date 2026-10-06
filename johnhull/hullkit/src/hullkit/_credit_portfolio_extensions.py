@@ -63,3 +63,38 @@ def basket_valuation(k, names, hazard, recovery, rate, maturity, rho, *, frequen
     return cp.kth_to_default_valuation(
         k, names, hazard, recovery, rate, maturity, rho, freq=frequency, m=nodes
     )
+
+
+def loss_waterfall(losses, notional, boundaries, *, spreads=None):
+    """Allocate cumulative dollar losses junior first; optional annual remaining-notional premiums.
+
+    Boundaries partition the full pool from 0 to 1. Losses may have arbitrary
+    leading shape; the final result axis is tranche. No integer-name assumption.
+    """
+    bounds = np.asarray(boundaries, dtype=float)
+    loss = np.asarray(losses, dtype=float)
+    if (
+        not np.isfinite(notional)
+        or notional <= 0
+        or bounds.ndim != 1
+        or bounds.size < 2
+        or not np.isfinite(bounds).all()
+        or bounds[0] != 0
+        or bounds[-1] != 1
+        or np.any(np.diff(bounds) <= 0)
+        or not np.isfinite(loss).all()
+        or np.any((loss < 0) | (loss > notional))
+    ):
+        raise ValueError(
+            "positive notional, full increasing boundaries and loss in [0,notional] required"
+        )
+    initial = notional * np.diff(bounds)
+    allocated = np.clip(loss[..., None] - notional * bounds[:-1], 0, initial)
+    remaining = initial - allocated
+    result = {"initial": initial, "allocated_loss": allocated, "remaining": remaining}
+    if spreads is not None:
+        rates = np.broadcast_to(np.asarray(spreads, dtype=float), initial.shape)
+        if not np.isfinite(rates).all() or np.any(rates < 0):
+            raise ValueError("nonnegative finite annual premium rates required")
+        result["annual_premium"] = remaining * rates
+    return result
