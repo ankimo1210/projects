@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算28/32。次は§25.8（CDO waterfall）。Ch22→23→24→25まで継続する。
+- 現在：計算29/32。次は§25.9（相関と損失分布）。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -42,6 +42,7 @@
 | §25.5 | `_credit_contracts.py` | 原典1年開始/5年保護/280bpの契約設定と期前default KO。価格印刷なし。明示した合成vol等で独立lognormal payoff求積・parity・ゼロvol | 計算完了。原典価格/vol入力不足で価格pinなし。Blackはforward annuity測度のspread lognormal仮定、Aは時点0の無条件生存/割引込み。front-end protectionは別範囲。説明・受入保留 | 16 passed・ruff check/format PASS |
 | §25.6 | `_credit_portfolio_extensions.py` | 本文に価格印刷なし。3社のadd-up/first/second/kth発動と終了。独立27default年状態CF列挙による3順位のprice | 計算完了。例のnotional/回収・hazardは明示合成入力。本文価格Ex25.3は§25.10で扱う。法的netting/同時defaultの契約規約は別範囲、同時刻は入力順。説明・受入保留 | 5 passed・ruff check/format PASS |
 | §25.7 | `_credit_contracts.py` | 本文100m・5年・floating+25bp、+10%→10m/−15%→−15m。独立借入購入のcash accountでcoupon/financing/priceの全CFを照合 | 計算完了。固定initial notionalベースのprice marks、couponは金額。fair spread/信用調整の本文入力なし。calendar/periodic notional resetは別規約。説明・受入保留 | 19 passed・ruff check/format PASS |
+| §25.8 | `_credit_portfolio_extensions.py` | 本文100mの5/15/80mトランシェ、loss2mでequity3m、loss6mでequity0/mezz14m。1000/100/10bpの残存元本premium。独立優先順位cash allocationと総損失保存 | 計算完了。整数default件数に変換せず任意金額lossを配分。Table25.6は2007–2009年観測quote入力で再推定しない。既存vol12境界5/15%との差は据置。説明・受入保留 | 7 passed・ruff check/format PASS |
 
 ## 残りと検証
 
