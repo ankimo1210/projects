@@ -322,3 +322,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._credit_contracts` | Ch25 CDS契約CF/leg・index・fixed coupon・forward/option・TRS | P5_STATUSの原典全表と独立cashflow列挙・payoff求積・MC。年分数/額面単位を明示 |
 | `hullkit._credit_portfolio_extensions` | Ch25 basket・CDOの契約CFと計算検証（非公開） | 本文契約設定・独立状態列挙、後続節の表/直接default-time MC |
 | `hullkit._credit_alternatives` | Ch25.11 heterogeneous loading/count、double-t、因子依存terminal loss、単純hazard mixtureの非公開部品 | 全default状態列挙、独立t/normal MC6SE、適応積分で高loading/rare PDを確認、既知hazard混合の較正/再価格/非一意性 |
+| `hullkit._intro_contracts` | Private Ch1契約payoff・premium・ヘッジ・投機・通貨別cashflow | GE本文金額と独立状態replication・受払列挙・Decimal計算 |
