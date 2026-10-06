@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算43/54。次は§7.5（比較優位）。Ch1→9を順に継続する。
+- 現在：計算44/54。次は§7.6（OIS valuation）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -56,6 +56,7 @@
 | §7.2 | `_swap_foundations.py` | 1M1.7987/3M1.9950/6M2.1880/1Y2.4693/2Y2.9994/5Y4.0401%、最終100950/100750k。独立全node nonlinear root | 計算完了。長期zero線形補間、quarterly coupon。100000の本文単位は100Mと解釈。説明・受入保留 | 4 passed・ruff check/format PASS |
 | §7.3 | `_swap_foundations.py` | 3.1%、floating+.23%、floating−.30%、2.77%。独立外部3CFでfloating相殺 | 計算完了。spreadは年率、PV評価と実効支払率を分離。説明・受入保留 | 6 passed・ruff check/format PASS |
 | §7.4 | `_swap_foundations.py` | mid2.985/3.065/3.170/3.280/3.420/3.500%、spread3/3/4/4/4/4bp、562222。独立quote2経路/actual利息 | 計算完了。confirm/calendar制度は説明へ、全祝日engineは追加せず。説明・受入保留 | 8 passed・ruff check/format PASS |
+| §7.5 | `_swap_foundations.py` | a1.2/b.7/total.5%、direct AAA−.35/BBB4.95/各.25、dealer AAA−.33/BBB4.97/bank.04/各.23、悪化BBB5.97%。独立当事者CF保存 | 計算完了。長期固定/短期信用条件が異なり無リスク裁定とはしない。説明・受入保留 | 10 passed・ruff check/format PASS |
 
 ## 残りと検証
 
