@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 5 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed・Ch17 54 passed・Ch18 78 passed・Ch19 12 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -82,6 +82,7 @@
 | §18.10 | `_futures_options.py` | 本文に数値例なし。normal/inverted/zero carryの米国call/put大小関係、満期一致の欧州等価と後月先物の差。独立CN-PDEで4契約・ゼロvol境界を検証 | 計算部分完了。大小関係は確定carry/r>0の本文前提、後月ほど差が広がる点は合成例の確認で普遍単調性を主張しない。説明・図・受入は保留 | 69 passed・ruff PASS |
 | §18.11 | `_futures_options.py` | 本文に数値例なし。無割引Black気配=e^(rT)×通常価格、p+F=c+K、金利独立、早期行使の優越なし。独立求積/全停止方針/Fraction清算cash、1.1506は合成値と明示 | 計算部分完了。気配は先払いpremiumではなく清算基準、initial premium0/担保と清算cash利息は範囲外。§18.2定性・説明・図・受入は保留 | 78 passed・ruff PASS |
 | §19.1 | `_greeks_hedging.py` | 通し例call2.40・理論総額約240000・売却300000との差約60000（未丸め2.400461/240046/59954）。独立Q payoff積分、P drift13%と価格r5%を区別 | 計算部分完了。売却差額は時点0の理論価値との差で将来の確定利益ではない。定性説明・図・受入は保留 | 5 passed・ruff PASS |
+| §19.2 | `_greeks_hedging.py` | naked S60支払1000000、covered49→40の株式損失900000、閾値1往復2ε。Table19.1全6成績を固定seed MC/6SE＋表示丸め幅で確認。同一パスの無利息/資金口座会計と独立discounted gains | 計算部分完了。本文の成績は利息/割引を除外し、資金繰り付きPV費用と別欄。MCの印刷値一致は統計的確認。説明・図・受入は保留 | 12 passed・ruff PASS |
 
 ## 次の実装
 
