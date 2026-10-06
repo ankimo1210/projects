@@ -327,3 +327,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._futures_hedging` | Private Ch3現物/先物cash・basis・分散最小hedge・beta/CAPM・stack roll | GE全例/表、独立cash ledger・OLS/分散最小化・CAPM factor・回帰 |
 | `hullkit._rates_foundations` | Private Ch4複利・CF価格/par yield・piecewise zero較正・FRA・金利感応度 | GE全76表示値と独立ODE/成長率/根/線形・同時非線形solve/replication/差分 |
 | `hullkit._forward_pricing` | Private Ch5short cash・carry forward価格/既存契約価値・income/yield/FX/storage/risk premium | GE全例と独立借入/cash/数量replication・DCF root。入力不足/丸め差はP6_STATUS |
+| `hullkit._rate_futures` | Private Ch6日数/32nds・bill・conversion factor/CTD・rate futures/SOFR・duration hedge | GE日数/価格/受渡全例と独立Fraction/年金閉形式/融資台帳/DF chain/再評価 |
