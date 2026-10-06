@@ -52,6 +52,7 @@ def rate_option_price(
 
 
 def black_rate_d(forward, strike, volatility, expiry, shift=0.0):
+    """Black (or shifted Black) d1, d2 for a rate option, Hull 29.7."""
     F, K, s, T = np.broadcast_arrays(
         *[
             np.asarray(x, dtype=float)
@@ -72,6 +73,7 @@ def _kind(kind):
 
 
 def caplet_payment(notional, accrual, rate, strike, kind="cap"):
+    """Caplet/floorlet payment L*alpha*max(±(R-K), 0) at the period end, Hull 29.5."""
     sign = 1 if _kind(kind) == "call" else -1
     L, a, R, K = np.broadcast_arrays(
         *[np.asarray(x, dtype=float) for x in (notional, accrual, rate, strike)]
@@ -105,6 +107,7 @@ def caplet_price(
     model="black",
     shift=0.0,
 ):
+    """Caplet/floorlet value, Hull 29.7/29.8; fixing sets the volatility time."""
     L, a = np.asarray(notional, dtype=float), np.asarray(accrual, dtype=float)
     if np.any(L < 0) or np.any(a <= 0):
         raise ValueError("nonnegative notional and positive accrual required")
@@ -202,6 +205,7 @@ def flat_cap_vols_to_spot(notional, accruals, discounts, forwards, strike, fixin
 def zero_cost_collar_floor_strike(
     notional, accruals, discounts, forwards, cap_strike, volatilities, fixings
 ):
+    """Floor strike whose floor value equals the cap value (zero-cost collar)."""
     target = cap_floor_price(
         notional, accruals, discounts, forwards, cap_strike, volatilities, fixings
     )
@@ -231,12 +235,14 @@ def backward_cap_schedule(start, end, tenor):
 
 
 def actual_year_fraction(start, end, basis=360):
+    """Actual/basis day-count fraction between two dates (default actual/360)."""
     if basis <= 0 or end < start:
         raise ValueError("positive day-count basis and nonnegative date interval required")
     return (end - start).days / basis
 
 
 def simple_forward_from_discounts(fixing_discount, payment_discount, accrual):
+    """Simple forward rate (P_fixing/P_payment - 1)/accrual."""
     p, q, a = np.broadcast_arrays(
         *[np.asarray(x, dtype=float) for x in (fixing_discount, payment_discount, accrual)]
     )
@@ -246,12 +252,14 @@ def simple_forward_from_discounts(fixing_discount, payment_discount, accrual):
 
 
 def rfr_forward_from_ois(known_factor, fixing_discount, payment_discount, total_accrual):
+    """Backward-looking RFR forward including the observed compounded factor."""
     if known_factor <= 0 or fixing_discount <= 0 or payment_discount <= 0 or total_accrual <= 0:
         raise ValueError("positive observed factor/discounts/accrual required")
     return (known_factor * fixing_discount / payment_discount - 1) / total_accrual
 
 
 def compound_observed_rate(daily_rates, daily_accruals):
+    """Annualized compounded rate (prod(1+r*alpha) - 1)/sum(alpha) of daily fixings."""
     r, a = np.broadcast_arrays(
         np.asarray(daily_rates, dtype=float), np.asarray(daily_accruals, dtype=float)
     )
