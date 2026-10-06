@@ -30,6 +30,6 @@ def test_five_hundred_step_prices_against_independent_pde_continuous_limit():
     european = crr_price(50, 52, .05, .3, 2, 500, kind="put")
     # PDE and CRR discretize the continuous stopping problem differently.
     pde = fd_vanilla(50, 52, .05, .3, 2, kind="put", american=True, n_s=800, n_t=1600)
-    assert american == pytest.approx(pde, abs=.01)
+    assert american == pytest.approx(pde, abs=.002)
     assert european == pytest.approx(float(put_price(50, 52, .05, .3, 2)), abs=.005)
     assert american-european > .7
