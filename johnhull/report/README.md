@@ -32,6 +32,20 @@ Ch1は章別教材として追加し、既存の204図/12テーマとは別に�
 [Ch1の受入記録](../docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md) に、原典範囲と
 数値・画面の再検証手順を記す。
 
+## Ch2–9の節別補足教材
+
+承認済みfast-v1の配布先は`site/chapters/ch02.html`〜`ch09.html`。
+通常のportal生成とは別に、repo rootの既存Python環境で実行する。
+
+```bash
+python johnhull/scripts/fast_acceptance.py build
+```
+
+全70節・206要件を含む補足教材で、既存Book本文は改訂していない。
+数式描画はMathJax CDNを利用するためオンライン接続が必要。
+[受入記録と省略した確認](../docs/CHAPTERS_02_09_ACCEPTANCE_2026-10-07.md)、
+[再検証コマンド](../docs/FAST_ACCEPTANCE.md)を参照。
+
 ## 図を追加する
 
 `report_builder/figures.py` の `FIGURES` に `FigureSpec` を1つ足すだけ

@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **43**
+- accepted: **113**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 263 |
+| unreviewed | 193 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 43 |
+| accepted | 113 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -23,14 +23,14 @@
 | 章 | 登録 | unreviewed | gaps_found | pending_validation | accepted | out_of_scope |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 10 | 0 | 0 | 0 | 10 | 0 |
-| 2 | 11 | 11 | 0 | 0 | 0 | 0 |
-| 3 | 7 | 7 | 0 | 0 | 0 | 0 |
-| 4 | 12 | 12 | 0 | 0 | 0 | 0 |
-| 5 | 14 | 14 | 0 | 0 | 0 | 0 |
-| 6 | 5 | 5 | 0 | 0 | 0 | 0 |
-| 7 | 13 | 13 | 0 | 0 | 0 | 0 |
-| 8 | 4 | 4 | 0 | 0 | 0 | 0 |
-| 9 | 4 | 4 | 0 | 0 | 0 | 0 |
+| 2 | 11 | 0 | 0 | 0 | 11 | 0 |
+| 3 | 7 | 0 | 0 | 0 | 7 | 0 |
+| 4 | 12 | 0 | 0 | 0 | 12 | 0 |
+| 5 | 14 | 0 | 0 | 0 | 14 | 0 |
+| 6 | 5 | 0 | 0 | 0 | 5 | 0 |
+| 7 | 13 | 0 | 0 | 0 | 13 | 0 |
+| 8 | 4 | 0 | 0 | 0 | 4 | 0 |
+| 9 | 4 | 0 | 0 | 0 | 4 | 0 |
 | 10 | 12 | 12 | 0 | 0 | 0 | 0 |
 | 11 | 7 | 7 | 0 | 0 | 0 | 0 |
 | 12 | 5 | 5 | 0 | 0 | 0 | 0 |
@@ -74,76 +74,76 @@
 | 1.8 | 1 | section | Speculators | accepted |
 | 1.9 | 1 | section | Arbitrageurs | accepted |
 | 1.10 | 1 | section | Dangers | accepted |
-| 2.1 | 2 | section | Background | unreviewed |
-| 2.2 | 2 | section | Specification of a Futures Contract | unreviewed |
-| 2.3 | 2 | section | Convergence of Futures Price to Spot Price | unreviewed |
-| 2.4 | 2 | section | The Operation of Margin Accounts | unreviewed |
-| 2.5 | 2 | section | OTC Markets | unreviewed |
-| 2.6 | 2 | section | Market Quotes | unreviewed |
-| 2.7 | 2 | section | Delivery | unreviewed |
-| 2.8 | 2 | section | Types of Traders and Types of Orders | unreviewed |
-| 2.9 | 2 | section | Regulation | unreviewed |
-| 2.10 | 2 | section | Accounting and Tax | unreviewed |
-| 2.11 | 2 | section | Forward vs. Futures Contracts | unreviewed |
-| 3.1 | 3 | section | Basic Principles | unreviewed |
-| 3.2 | 3 | section | Arguments for and Against Hedging | unreviewed |
-| 3.3 | 3 | section | Basis Risk | unreviewed |
-| 3.4 | 3 | section | Cross Hedging | unreviewed |
-| 3.5 | 3 | section | Stock Index Futures | unreviewed |
-| 3.6 | 3 | section | Stack and Roll | unreviewed |
-| 3.appendix | 3 | appendix | Capital Asset Pricing Model | unreviewed |
-| 4.1 | 4 | section | Types of Rates | unreviewed |
-| 4.2 | 4 | section | Reference Rates | unreviewed |
-| 4.3 | 4 | section | The Risk-Free Rate | unreviewed |
-| 4.4 | 4 | section | Measuring Interest Rates | unreviewed |
-| 4.5 | 4 | section | Zero Rates | unreviewed |
-| 4.6 | 4 | section | Bond Pricing | unreviewed |
-| 4.7 | 4 | section | Determining Zero Rates | unreviewed |
-| 4.8 | 4 | section | Forward Rates | unreviewed |
-| 4.9 | 4 | section | Forward Rate Agreements | unreviewed |
-| 4.10 | 4 | section | Duration | unreviewed |
-| 4.11 | 4 | section | Convexity | unreviewed |
-| 4.12 | 4 | section | Theories of the Term Structure of Interest Rates | unreviewed |
-| 5.1 | 5 | section | Investment Assets vs. Consumption Assets | unreviewed |
-| 5.2 | 5 | section | Short Selling | unreviewed |
-| 5.3 | 5 | section | Assumptions and Notation | unreviewed |
-| 5.4 | 5 | section | Forward Price for an Investment Asset | unreviewed |
-| 5.5 | 5 | section | Known Income | unreviewed |
-| 5.6 | 5 | section | Known Yield | unreviewed |
-| 5.7 | 5 | section | Valuing Forward Contracts | unreviewed |
-| 5.8 | 5 | section | Are Forward Prices and Futures Prices Equal? | unreviewed |
-| 5.9 | 5 | section | Futures Prices of Stock Indices | unreviewed |
-| 5.10 | 5 | section | Forward and Futures Contracts on Currencies | unreviewed |
-| 5.11 | 5 | section | Futures on Commodities | unreviewed |
-| 5.12 | 5 | section | The Cost of Carry | unreviewed |
-| 5.13 | 5 | section | Delivery Options | unreviewed |
-| 5.14 | 5 | section | Futures Prices and Expected Future Spot Prices | unreviewed |
-| 6.1 | 6 | section | Day Count and Quotation Conventions | unreviewed |
-| 6.2 | 6 | section | Treasury Bond Futures | unreviewed |
-| 6.3 | 6 | section | Eurodollar and SOFR Futures | unreviewed |
-| 6.4 | 6 | section | Duration-Based Hedging Strategies Using Futures | unreviewed |
-| 6.5 | 6 | section | Hedging Portfolios of Assets and Liabilities | unreviewed |
-| 7.1 | 7 | section | Mechanics of Interest Rate Swaps | unreviewed |
-| 7.2 | 7 | section | Determining Risk-Free Rates | unreviewed |
-| 7.3 | 7 | section | Reasons for Trading Interest Rate Swaps | unreviewed |
-| 7.4 | 7 | section | The Organization of Trading | unreviewed |
-| 7.5 | 7 | section | The Comparative-Advantage Argument | unreviewed |
-| 7.6 | 7 | section | Valuation of Interest Rate Swaps | unreviewed |
-| 7.7 | 7 | section | How the Value Changes Through Time | unreviewed |
-| 7.8 | 7 | section | Fixed-for-Fixed Currency Swaps | unreviewed |
-| 7.9 | 7 | section | Valuation of Fixed-for-Fixed Currency Swaps | unreviewed |
-| 7.10 | 7 | section | Other Currency Swaps | unreviewed |
-| 7.11 | 7 | section | Credit Risk | unreviewed |
-| 7.12 | 7 | section | Credit Default Swaps | unreviewed |
-| 7.13 | 7 | section | Other Types of Swaps | unreviewed |
-| 8.1 | 8 | section | Securitization | unreviewed |
-| 8.2 | 8 | section | The U.S. Housing Market | unreviewed |
-| 8.3 | 8 | section | What went Wrong? | unreviewed |
-| 8.4 | 8 | section | The Aftermath | unreviewed |
-| 9.1 | 9 | section | CVA and DVA | unreviewed |
-| 9.2 | 9 | section | FVA and MVA | unreviewed |
-| 9.3 | 9 | section | KVA | unreviewed |
-| 9.4 | 9 | section | Calculation Issues | unreviewed |
+| 2.1 | 2 | section | Background | accepted |
+| 2.2 | 2 | section | Specification of a Futures Contract | accepted |
+| 2.3 | 2 | section | Convergence of Futures Price to Spot Price | accepted |
+| 2.4 | 2 | section | The Operation of Margin Accounts | accepted |
+| 2.5 | 2 | section | OTC Markets | accepted |
+| 2.6 | 2 | section | Market Quotes | accepted |
+| 2.7 | 2 | section | Delivery | accepted |
+| 2.8 | 2 | section | Types of Traders and Types of Orders | accepted |
+| 2.9 | 2 | section | Regulation | accepted |
+| 2.10 | 2 | section | Accounting and Tax | accepted |
+| 2.11 | 2 | section | Forward vs. Futures Contracts | accepted |
+| 3.1 | 3 | section | Basic Principles | accepted |
+| 3.2 | 3 | section | Arguments for and Against Hedging | accepted |
+| 3.3 | 3 | section | Basis Risk | accepted |
+| 3.4 | 3 | section | Cross Hedging | accepted |
+| 3.5 | 3 | section | Stock Index Futures | accepted |
+| 3.6 | 3 | section | Stack and Roll | accepted |
+| 3.appendix | 3 | appendix | Capital Asset Pricing Model | accepted |
+| 4.1 | 4 | section | Types of Rates | accepted |
+| 4.2 | 4 | section | Reference Rates | accepted |
+| 4.3 | 4 | section | The Risk-Free Rate | accepted |
+| 4.4 | 4 | section | Measuring Interest Rates | accepted |
+| 4.5 | 4 | section | Zero Rates | accepted |
+| 4.6 | 4 | section | Bond Pricing | accepted |
+| 4.7 | 4 | section | Determining Zero Rates | accepted |
+| 4.8 | 4 | section | Forward Rates | accepted |
+| 4.9 | 4 | section | Forward Rate Agreements | accepted |
+| 4.10 | 4 | section | Duration | accepted |
+| 4.11 | 4 | section | Convexity | accepted |
+| 4.12 | 4 | section | Theories of the Term Structure of Interest Rates | accepted |
+| 5.1 | 5 | section | Investment Assets vs. Consumption Assets | accepted |
+| 5.2 | 5 | section | Short Selling | accepted |
+| 5.3 | 5 | section | Assumptions and Notation | accepted |
+| 5.4 | 5 | section | Forward Price for an Investment Asset | accepted |
+| 5.5 | 5 | section | Known Income | accepted |
+| 5.6 | 5 | section | Known Yield | accepted |
+| 5.7 | 5 | section | Valuing Forward Contracts | accepted |
+| 5.8 | 5 | section | Are Forward Prices and Futures Prices Equal? | accepted |
+| 5.9 | 5 | section | Futures Prices of Stock Indices | accepted |
+| 5.10 | 5 | section | Forward and Futures Contracts on Currencies | accepted |
+| 5.11 | 5 | section | Futures on Commodities | accepted |
+| 5.12 | 5 | section | The Cost of Carry | accepted |
+| 5.13 | 5 | section | Delivery Options | accepted |
+| 5.14 | 5 | section | Futures Prices and Expected Future Spot Prices | accepted |
+| 6.1 | 6 | section | Day Count and Quotation Conventions | accepted |
+| 6.2 | 6 | section | Treasury Bond Futures | accepted |
+| 6.3 | 6 | section | Eurodollar and SOFR Futures | accepted |
+| 6.4 | 6 | section | Duration-Based Hedging Strategies Using Futures | accepted |
+| 6.5 | 6 | section | Hedging Portfolios of Assets and Liabilities | accepted |
+| 7.1 | 7 | section | Mechanics of Interest Rate Swaps | accepted |
+| 7.2 | 7 | section | Determining Risk-Free Rates | accepted |
+| 7.3 | 7 | section | Reasons for Trading Interest Rate Swaps | accepted |
+| 7.4 | 7 | section | The Organization of Trading | accepted |
+| 7.5 | 7 | section | The Comparative-Advantage Argument | accepted |
+| 7.6 | 7 | section | Valuation of Interest Rate Swaps | accepted |
+| 7.7 | 7 | section | How the Value Changes Through Time | accepted |
+| 7.8 | 7 | section | Fixed-for-Fixed Currency Swaps | accepted |
+| 7.9 | 7 | section | Valuation of Fixed-for-Fixed Currency Swaps | accepted |
+| 7.10 | 7 | section | Other Currency Swaps | accepted |
+| 7.11 | 7 | section | Credit Risk | accepted |
+| 7.12 | 7 | section | Credit Default Swaps | accepted |
+| 7.13 | 7 | section | Other Types of Swaps | accepted |
+| 8.1 | 8 | section | Securitization | accepted |
+| 8.2 | 8 | section | The U.S. Housing Market | accepted |
+| 8.3 | 8 | section | What went Wrong? | accepted |
+| 8.4 | 8 | section | The Aftermath | accepted |
+| 9.1 | 9 | section | CVA and DVA | accepted |
+| 9.2 | 9 | section | FVA and MVA | accepted |
+| 9.3 | 9 | section | KVA | accepted |
+| 9.4 | 9 | section | Calculation Issues | accepted |
 | 10.1 | 10 | section | Types of Options | unreviewed |
 | 10.2 | 10 | section | Option Positions | unreviewed |
 | 10.3 | 10 | section | Underlying Assets | unreviewed |
