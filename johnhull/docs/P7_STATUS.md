@@ -5,7 +5,7 @@
 - 完了条件：既存節メモの式/例を確認、計画を数行追記、private計算部品と本文/独立検証をそろえ、変更モジュールのtests/ruffを通す。入力不足は明示して次の節へ進む。
 - 1節1コミット（P7 §xx.y）、codex/p7-logicへ節ごとpush。公開API・依存・台帳を変更しない。教材・画面・章受入・全suite・D1/保管庫は保留。
 - 正式受入：P7 0/16、全体33/306。Ch1からの正式受入は別チャットの専用worktreeで進むため、この作業ではその台帳/教材を編集しない。
-- 現在：計算9/11、入力不足1。次は§37.1の教訓の算術、P7対象検証。
+- 現在：計算10/11、入力不足1。次はP7対象検証・進捗文書のmain反映、P8の既存計画確認。
 
 ## 節別の実装
 
@@ -23,6 +23,7 @@
 | §36.3 | `_real_options_foundations.py` | ρ.3/market vol20%/premium5%→λ.075。独立OLSと共分散、quarterly→annual4 | 計算完了。sales原データ/proxy推定の検証ではない。market premiumとvolの年率/期間単位を合わせる。 | ロジック完了・7 passed・ruff check/format PASS |
 | §36.4 | — | BS36.1 sales356M/cash906M/loss carry559M/tax35%/25年/terminal pretax×10を原典確認。株価12.42は入力不足で未再現 | σ(t), η(t), κ, 長期/初期growth, revenueのλ, r, 株数, 転換・従業員option/会計条件が未提示。12.42への逆合わせ・代替値の仮定をしない。 | 入力不足・実装保留 |
 | §36.5 | `_real_options_foundations.py` | CF4/6/8M、PV14.46M/NPV−.54M、撤退1.94M/NPV1.40M、拡張1.06M/NPV.52Mと全節点。独立512方策×27経路、複合4状態。共同option3.217896Mは追加検算 | 計算完了。当年CF後/不可逆4状態/非比例費用を明示。単独印刷値は一致。共同3.217896M・初期拡張は独立方策でも一致し、p812脚注の相互作用なしを再現できない。縮小/延期/寿命延長は本文入力なし。 | ロジック完了・11 passed・ruff check/format PASS |
+| §37.1 | `_mishap_foundations.py` | 4連勝1/16・16人の期待人数1、20株平均10%/vol14.7%。追加any-success .64392587、独立二項列挙/共分散行列/MC6SE | 計算完了。独立trial/等相関・同vol・等weightの条件付き。期待人数1は成功者1人の保証ではない。歴史的損失/和解/支援は集計せず、§37.2–3の統制説明は保留。 | ロジック完了・3 passed・ruff check/format PASS |
 
 ## 残りと検証
 
