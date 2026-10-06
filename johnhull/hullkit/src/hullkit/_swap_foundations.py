@@ -387,3 +387,18 @@ def mixed_currency_value(
     zd = np.array([zero_interp(float(time), *domestic_curve) for time in t])
     zf = np.array([zero_interp(float(time), *foreign_curve) for time in t])
     return currency_swap_value_details(t, d, f, zd, zf, spot, receive=receive)
+
+
+def intro_cds_cash(notional, annual_spread, recovery):
+    """Annual CDS premium and default protection cash under a stated recovery fraction.
+
+    Payment scheduling/accrued premium and default probabilities are intentionally
+    caller/model inputs in Ch25; these two cash amounts are not a CDS price.
+    """
+    if (
+        not np.isfinite([notional, annual_spread, recovery]).all()
+        or min(notional, annual_spread) < 0
+        or not 0 <= recovery <= 1
+    ):
+        raise ValueError("nonnegative notional/spread and recovery in [0,1] required")
+    return {"annual_premium": notional * annual_spread, "protection": notional * (1 - recovery)}
