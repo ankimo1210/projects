@@ -192,3 +192,41 @@ def currency_inversion(spot, strike, domestic_rate, foreign_rate, sigma, maturit
     return {"inverse_spot": 1/spot, "inverse_strike": 1/strike,
             "inverse_kind": opposite, "inverse_notional": strike,
             "foreign_unit_value": unit_value, "domestic_value": spot*strike*unit_value}
+
+
+def carry_exercise_comparison(spot, strike, rate, yield_rate, sigma, maturity, steps=500, *, kind="call"):
+    """European/American carry prices and strict root exercise on a CRR grid.
+
+    Zero volatility uses the same exercise dates on a deterministic path.
+    Returned premium compares two identical trees, avoiding analytic/tree error.
+    """
+    from .trees import binomial_tree, crr_params, risk_neutral_p
+
+    analytic = carry_option_details(spot, strike, rate, yield_rate, sigma, maturity)
+    if steps < 1 or int(steps) != steps or kind not in ("call", "put"):
+        raise ValueError("positive integer steps and call/put kind required")
+    steps = int(steps)
+    sign = 1 if kind == "call" else -1
+    intrinsic = max(sign*(spot-strike), 0)
+    dt = maturity/steps
+    growth = math.exp((rate-yield_rate)*dt)
+    if maturity == 0 or sigma == 0:
+        cash = [math.exp(-rate*j*dt)*max(sign*(spot*math.exp((rate-yield_rate)*j*dt)-strike), 0) for j in range(steps+1)]
+        american = max(cash)
+        continuation = max(cash[1:])
+        return {"american": american, "european": analytic[kind], "european_tree_value": cash[-1],
+                "early_exercise_premium": american-cash[-1],
+                "exercise_now": maturity > 0 and intrinsic > continuation+1e-12,
+                "root_continuation": continuation, "growth": growth, "probability": None,
+                "underlying_tree": None, "american_tree": None, "european_tree": None}
+    up, down = crr_params(sigma, dt)
+    probability = risk_neutral_p(up, down, rate, dt, q=yield_rate)
+    stock, american_tree = binomial_tree(spot, strike, rate, maturity, steps, up, down, q=yield_rate, kind=kind, american=True)
+    _, european_tree = binomial_tree(spot, strike, rate, maturity, steps, up, down, q=yield_rate, kind=kind)
+    american, european = float(american_tree[0][0]), float(european_tree[0][0])
+    continuation = math.exp(-rate*dt)*float(probability*american_tree[1][0]+(1-probability)*american_tree[1][1])
+    return {"american": american, "european": analytic[kind], "european_tree_value": european,
+            "early_exercise_premium": max(american-european, 0),
+            "exercise_now": intrinsic > continuation+1e-12,
+            "root_continuation": continuation, "growth": growth, "probability": probability,
+            "underlying_tree": stock, "american_tree": american_tree, "european_tree": european_tree}
