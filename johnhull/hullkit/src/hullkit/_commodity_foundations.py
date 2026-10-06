@@ -234,3 +234,48 @@ def stochastic_variance_coefficients(log_spot, variance, a, b, c, d, e, correlat
         "drift": np.array([a * (b - log_spot) - variance / 2, c * (d - variance)]),
         "covariance": covariance,
     }
+
+
+def degree_days_from_extremes(highs, lows, *, base=65):
+    """Daily mean and period HDD/CDD; default temperatures/base are Fahrenheit.
+
+    Sum over the last (day) axis using the existing weather index kernel. Celsius
+    requires converting the base and cash tick together, not using 18C as 65F.
+    """
+    from .weather import degree_day_index
+
+    high = np.atleast_1d(np.asarray(highs, dtype=float))
+    low = np.atleast_1d(np.asarray(lows, dtype=float))
+    if high.shape != low.shape or np.any(high < low) or not np.isfinite(base):
+        raise ValueError("matching high/low observations with high>=low required")
+    average = (high + low) / 2
+    return {
+        "average": average,
+        "hdd": degree_day_index(average, base=base, kind="hdd"),
+        "cdd": degree_day_index(average, base=base, kind="cdd"),
+    }
+
+
+def index_call_cash(index, strike, tick, *, cap=None, side="long", premium=0):
+    """Cumulative-index call cash and same-unit premium net; a cap makes a call spread."""
+    observed = np.asarray(index, dtype=float)
+    if (
+        not np.isfinite(observed).all()
+        or np.any(observed < 0)
+        or min(strike, premium) < 0
+        or tick <= 0
+        or side not in ["long", "short"]
+        or (cap is not None and cap < 0)
+    ):
+        raise ValueError(
+            "nonnegative index/strike/cap/premium, positive tick and valid side required"
+        )
+    payoff = tick * np.maximum(observed - strike, 0)
+    if cap is not None:
+        payoff = np.minimum(payoff, cap)
+    sign = 1 if side == "long" else -1
+    return {
+        "gross": sign * payoff,
+        "net": sign * (payoff - premium),
+        "upper_strike": None if cap is None else strike + cap / tick,
+    }
