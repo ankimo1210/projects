@@ -167,8 +167,8 @@ def bsm_call_decomposition(spot, strike, rate, sigma, maturity):
     else:
         d_first = float(bsm.d1(spot, strike, rate, sigma, maturity))
         d_second = float(bsm.d2(spot, strike, rate, sigma, maturity))
-        probability = math.erfc(-d_second/math.sqrt(2))/2
-        weight = math.erfc(-d_first/math.sqrt(2))/2
+        probability = standard_normal_probability(d_second)
+        weight = standard_normal_probability(d_first)
         price = float(bsm.call_price(spot, strike, rate, sigma, maturity))
     truncated = mean*weight
     return {
@@ -180,3 +180,10 @@ def bsm_call_decomposition(spot, strike, rate, sigma, maturity):
         "truncated_mean": truncated,
         "conditional_mean": truncated/probability if probability > 0 else None,
     }
+
+
+def standard_normal_probability(x, *, upper=False):
+    """Standard normal CDF or direct upper tail; infinities give limits."""
+    if math.isnan(x):
+        raise ValueError("normal probability is undefined for NaN")
+    return math.erfc((x if upper else -x)/math.sqrt(2))/2
