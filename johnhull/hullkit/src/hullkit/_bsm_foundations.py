@@ -154,33 +154,10 @@ def bsm_call_decomposition(spot, strike, rate, sigma, maturity):
     at zero time/volatility/strike are represented by None.
     """
     law = gbm_log_law(spot, rate, sigma, maturity)
-    if not math.isfinite(strike) or strike < 0:
-        raise ValueError("nonnegative finite strike required")
-    mean = law["mean"]
-    d_first = d_second = None
-    if strike == 0:
-        probability = weight = 1.0
-        price = spot
-    elif sigma == 0 or maturity == 0:
-        probability = weight = float(mean > strike)
-        price = math.exp(-rate*maturity)*max(mean-strike, 0)
-    else:
-        d_first = float(bsm.d1(spot, strike, rate, sigma, maturity))
-        d_second = float(bsm.d2(spot, strike, rate, sigma, maturity))
-        probability = standard_normal_probability(d_second)
-        weight = standard_normal_probability(d_first)
-        price = float(bsm.call_price(spot, strike, rate, sigma, maturity))
-    truncated = mean*weight
-    return {
-        "price": price,
-        "d1": d_first,
-        "d2": d_second,
-        "exercise_probability": probability,
-        "stock_weight": weight,
-        "truncated_mean": truncated,
-        "conditional_mean": truncated/probability if probability > 0 else None,
-    }
-
+    moments = lognormal_call_moments(law["mean"], math.sqrt(law["log_variance"]), strike)
+    result = {key: moments[key] for key in ("d1", "d2", "exercise_probability", "stock_weight", "truncated_mean", "conditional_mean")}
+    result["price"] = spot if strike == 0 else float(bsm.call_price(spot, strike, rate, sigma, maturity))
+    return result
 
 def standard_normal_probability(x, *, upper=False):
     """Standard normal CDF or direct upper tail; infinities give limits."""
@@ -300,3 +277,36 @@ def escrowed_fixed_call_value(spot, strike, rate, sigma, maturity, dividend_time
     if adjusted_strike <= 0:
         return risky-adjusted_strike*math.exp(-rate*exercise_time)
     return float(bsm.call_price(risky, adjusted_strike, rate, sigma, exercise_time))
+
+
+def lognormal_call_moments(mean, log_sd, strike):
+    """Undiscounted (V-K)+ and truncated moments for a general lognormal V.
+
+    mean is E[V], and log_sd is the SD of log V, not annual volatility.
+    The strict event V>K follows the same deterministic boundary convention
+    as the BSM decomposition. No rate or discount is implied by this law.
+    """
+    if not all(math.isfinite(x) for x in (mean, log_sd, strike)) or mean <= 0 or log_sd < 0 or strike < 0:
+        raise ValueError("positive mean and nonnegative log SD/strike required")
+    log_mean = math.log(mean)-log_sd**2/2
+    d_first = d_second = None
+    if strike == 0:
+        probability = weight = 1.0
+    elif log_sd == 0:
+        probability = weight = float(mean > strike)
+    else:
+        d_first = (math.log(mean)-math.log(strike)+log_sd**2/2)/log_sd
+        d_second = d_first-log_sd
+        probability = standard_normal_probability(d_second)
+        weight = standard_normal_probability(d_first)
+    truncated = mean*weight
+    return {
+        "log_mean": log_mean,
+        "d1": d_first,
+        "d2": d_second,
+        "exercise_probability": probability,
+        "stock_weight": weight,
+        "truncated_mean": truncated,
+        "conditional_mean": truncated/probability if probability > 0 else None,
+        "payoff_mean": max(truncated-strike*probability, 0),
+    }
