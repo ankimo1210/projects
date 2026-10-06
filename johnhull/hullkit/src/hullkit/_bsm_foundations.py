@@ -4,6 +4,7 @@ import math
 
 import numpy as np
 
+from . import bsm
 from ._stochastic_foundations import gbm_log_law, ito_coefficients
 
 
@@ -143,3 +144,39 @@ def perpetual_hit_value(spot, barrier, payment, rate, sigma):
     if not all(math.isfinite(x) for x in (spot, barrier, payment, rate, sigma)) or min(spot, barrier, rate, sigma) <= 0 or payment < 0:
         raise ValueError("positive spot/barrier/rate/volatility and nonnegative payment required")
     return payment*spot/barrier if spot <= barrier else payment*(spot/barrier)**(-2*rate/sigma**2)
+
+
+def bsm_call_decomposition(spot, strike, rate, sigma, maturity):
+    """No-dividend call, Q exercise probability and truncated first moment.
+
+    The event is S_T>K. N(d1) is a stock weight, not its Q probability.
+    Conditional mean is None for a zero-probability event. Singular d values
+    at zero time/volatility/strike are represented by None.
+    """
+    law = gbm_log_law(spot, rate, sigma, maturity)
+    if not math.isfinite(strike) or strike < 0:
+        raise ValueError("nonnegative finite strike required")
+    mean = law["mean"]
+    d_first = d_second = None
+    if strike == 0:
+        probability = weight = 1.0
+        price = spot
+    elif sigma == 0 or maturity == 0:
+        probability = weight = float(mean > strike)
+        price = math.exp(-rate*maturity)*max(mean-strike, 0)
+    else:
+        d_first = float(bsm.d1(spot, strike, rate, sigma, maturity))
+        d_second = float(bsm.d2(spot, strike, rate, sigma, maturity))
+        probability = math.erfc(-d_second/math.sqrt(2))/2
+        weight = math.erfc(-d_first/math.sqrt(2))/2
+        price = float(bsm.call_price(spot, strike, rate, sigma, maturity))
+    truncated = mean*weight
+    return {
+        "price": price,
+        "d1": d_first,
+        "d2": d_second,
+        "exercise_probability": probability,
+        "stock_weight": weight,
+        "truncated_mean": truncated,
+        "conditional_mean": truncated/probability if probability > 0 else None,
+    }
