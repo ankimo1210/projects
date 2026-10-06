@@ -567,3 +567,74 @@ def quadratic_normal_quantile(linear, quadratic, probability, *, constant=0):
         else ncx2.isf(probability, 1, noncentrality)
     )
     return float(constant + quadratic * (point - noncentrality))
+
+
+def quantile_standard_error(samples, confidence, density):
+    """Asymptotic quantile SE; density is the loss density at the true quantile."""
+    if (
+        samples < 1
+        or int(samples) != samples
+        or not 0 < confidence < 1
+        or not np.isfinite(density)
+        or density <= 0
+    ):
+        raise ValueError("positive count/density and interior confidence required")
+    return float(math.sqrt(confidence * (1 - confidence) / samples) / density)
+
+
+def simulation_risk(
+    spots,
+    covariance,
+    book,
+    confidence=0.99,
+    *,
+    normals=None,
+    samples=5000,
+    seed=0,
+    horizon=1,
+    future_book=None,
+    linear=None,
+    beta=None,
+    constant=0,
+):
+    """Full revaluation under zero-mean Gaussian arithmetic returns.
+
+    book/future_book accept an (n, assets) array and return n book values.
+    A future_book callback explicitly controls maturity shortening and carry;
+    using book for both callbacks holds valuation time fixed. No clipping of
+    negative shocked prices is applied. covariance is per-day return covariance.
+    Optional linear/beta produce a partial simulation using identical shocks.
+    """
+    spot = _loss_vector(spots)
+    cov = _covariance(covariance, spot.size)
+    _risk_inputs(0, confidence, horizon=horizon)
+    if normals is None:
+        if samples < 1 or int(samples) != samples:
+            raise ValueError("positive integer sample count required")
+        z = np.random.default_rng(seed).normal(size=(int(samples), spot.size))
+    else:
+        z = np.asarray(normals, dtype=float)
+        if z.ndim != 2 or z.shape[1] != spot.size or z.shape[0] < 1 or not np.isfinite(z).all():
+            raise ValueError("finite (samples, assets) normals required")
+    values, vectors = np.linalg.eigh(cov)
+    factor = vectors * np.sqrt(np.maximum(values, 0) * horizon)
+    changes = z @ factor.T
+    shocked = spot * (1 + changes)
+    initial = _loss_vector(book(spot[None, :]))
+    future = _loss_vector((book if future_book is None else future_book)(shocked))
+    if initial.size != 1 or future.size != z.shape[0]:
+        raise ValueError("book callback must return one value per scenario")
+    pnl = future - initial[0]
+    result = {
+        "changes": changes,
+        "spots": shocked,
+        "pnl": pnl,
+        "risk": empirical_risk(pnl, confidence),
+        "initial_value": float(initial[0]),
+    }
+    if (linear is None) != (beta is None):
+        raise ValueError("linear and beta must be specified together")
+    if linear is not None:
+        partial = quadratic_pnl(changes, linear, beta, constant=constant)
+        result.update(partial_pnl=partial, partial_risk=empirical_risk(partial, confidence))
+    return result
