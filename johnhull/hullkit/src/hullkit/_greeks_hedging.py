@@ -222,3 +222,59 @@ def greek_pde_residual(spot, rate, sigma, value, theta, delta, gamma, *, yield_r
     from ._index_currency import carry_pde_residual
 
     return carry_pde_residual(spot, rate, yield_rate, sigma, value, theta, delta, gamma)
+
+
+def vega_units(spot, strike, rate, sigma, maturity, *, yield_rate=0):
+    """European call/put vega per absolute volatility 1.0 and 0.01 point."""
+    from .bsm import vega
+
+    if sigma <= 0 or maturity <= 0:
+        raise ValueError("positive diffusive time/volatility required")
+    value = float(vega(spot, strike, rate, sigma, maturity, q=yield_rate))
+    return {"per_unit_volatility": value, "per_volatility_point": 0.01 * value}
+
+
+def vega_delta_hedge(
+    portfolio_delta, portfolio_gamma, portfolio_vega, option_delta, option_gamma, option_vega
+):
+    """One option and stock hedge for a parallel IV move; gamma generally remains."""
+    if (
+        not all(
+            math.isfinite(x)
+            for x in (
+                portfolio_delta,
+                portfolio_gamma,
+                portfolio_vega,
+                option_delta,
+                option_gamma,
+                option_vega,
+            )
+        )
+        or option_vega == 0
+    ):
+        raise ValueError("finite Greeks and nonzero option vega required")
+    weight = -portfolio_vega / option_vega
+    return {
+        "option_quantity": weight,
+        "stock_quantity": -(portfolio_delta + weight * option_delta),
+        "vega_residual": portfolio_vega + weight * option_vega,
+        "gamma_after": portfolio_gamma + weight * option_gamma,
+    }
+
+
+def gamma_vega_delta_hedge(
+    portfolio_delta, portfolio_gamma, portfolio_vega, option_deltas, option_gammas, option_vegas
+):
+    """Two traded options for gamma/parallel-vega, then stock for delta."""
+    data = np.asarray([option_deltas, option_gammas, option_vegas], dtype=float)
+    book = np.asarray([portfolio_delta, portfolio_gamma, portfolio_vega], dtype=float)
+    if data.shape != (3, 2) or np.any(~np.isfinite(data)) or np.any(~np.isfinite(book)):
+        raise ValueError("two options with finite delta/gamma/vega required")
+    try:
+        weights = np.linalg.solve(data[1:], -book[1:])
+    except np.linalg.LinAlgError as exc:
+        raise ValueError("option gamma/vega exposures must be linearly independent") from exc
+    residual = book + data @ weights
+    stock = -residual[0]
+    residual[0] += stock
+    return {"option_quantities": weights, "stock_quantity": float(stock), "residuals": residual}
