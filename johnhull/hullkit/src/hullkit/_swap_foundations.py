@@ -180,3 +180,26 @@ def ois_swap_value(
         "present_values": pv,
         "value": float(pv.sum()),
     }
+
+
+def swap_roll_schedule(notional, pay_times, curve, *, fixed_rate=None, receive="fixed"):
+    """PV of remaining exchanges rolled along the initial deterministic discount curve.
+
+    Value at a payment time excludes that just-settled payment. Forward rates are
+    those implied initially; this is not a claim about real stochastic expected PV.
+    """
+    from .rates import discount_factor
+    from .swaps import swap_rate
+
+    t = np.asarray(pay_times, dtype=float)
+    if t.ndim != 1 or not len(t) or np.any(np.diff(np.r_[0, t]) <= 0):
+        raise ValueError("ordered positive payment times required")
+    df = np.array([discount_factor(float(time), curve) for time in t])
+    tau = np.diff(np.r_[0, t])
+    simple = (np.r_[1, df[:-1]] / df - 1) / tau
+    fixed = swap_rate(t, curve) if fixed_rate is None else fixed_rate
+    cash = interest_swap_cash(notional, fixed, simple, tau, receive=receive)["net"]
+    pv = cash * df
+    initial = float(pv.sum())
+    rolls = np.r_[initial, (initial - np.cumsum(pv)) / df]
+    return {"fixed_rate": fixed, "net_cash": cash, "initial_value": initial, "roll_values": rolls}
