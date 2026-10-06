@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算8/32。次はCh23 §23.1（vol推定）。Ch22→23→24→25まで継続する。
+- 現在：計算9/32。次は§23.2（EWMA）。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -22,6 +22,7 @@
 | §22.6 | `_market_risk.py` | 5000標本99%50位/95%250位。独立線形正規と単調BSM分位点を固定seed MC6SEで照合、full/partial同一shock・実際の10日maturity再評価 | 計算完了。Gaussian arithmetic return、future_bookがtheta/carryの扱いを決める。sqrt(N)はoptionに厳密でない。説明・受入保留 | 50 passed・ruff check/format PASS |
 | §22.8 | `_market_risk.py` | 本文1%/7%（100日を明示した合成例）。独立二項和・尤度式・遷移表、将来値を変えても事前予測が変わらないこと | 計算完了。超過頻度だけでESやモデル全体の妥当性は判定しない。本文の標本数は未指定。説明・受入保留 | 55 passed・ruff check/format PASS |
 | §22.9 | `_market_risk.py` | 全64loading/8SD、総分散152.5185、87.3%/95.6%/.96bp/2.42bp。Table22.11露出−1.998/−3.067→sigma25.49837/VaR59.31808。独立SVD/固有分解・trace・符号不変 | 計算完了。2631観測は未保有。印刷sigma25.45/VaR59.2は丸め表から一致しないため補正せず記録。市場説明率とbook残余riskを区別。説明・受入保留 | 60 passed・ruff check/format PASS |
+| §23.1 | `_volatility_estimation.py` | 固有印刷価格なし。式23.1–6のlog/sample mean/m−1とsimple/zero mean/m、ARCH重みを独立小標本算術と解析MLEで照合 | 計算完了。日次分散を返し年率換算は別。ARCH historyは予測日前までのchronological履歴。説明・受入保留 | 4 passed・ruff check/format PASS |
 
 ## 残りと検証
 
