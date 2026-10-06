@@ -178,3 +178,30 @@ def stock_option_speculation(
         "option_payoff": options["payoff"],
         "option_profit": options["profit"],
     }
+
+
+def cross_market_cashflows(
+    units, domestic_buy, foreign_sell, fx_quote, *, fee_domestic=0, fee_foreign=0
+):
+    """Simultaneous same-stock purchase/sale, converted to domestic cash currency.
+
+    fx_quote is domestic cash per foreign unit. Fees are total cash fees in their
+    named currencies. Quotes are actionable buy/sell inputs selected by the caller.
+    """
+    if (
+        not np.isfinite(
+            [units, domestic_buy, foreign_sell, fx_quote, fee_domestic, fee_foreign]
+        ).all()
+        or min(units, domestic_buy, foreign_sell, fee_domestic, fee_foreign) < 0
+        or fx_quote <= 0
+    ):
+        raise ValueError("nonnegative stock amounts/fees and positive FX quote required")
+    purchase = -units * domestic_buy - fee_domestic
+    proceeds = units * foreign_sell - fee_foreign
+    converted = fx_quote * proceeds
+    return {
+        "domestic_purchase": purchase,
+        "foreign_proceeds": proceeds,
+        "converted_proceeds": converted,
+        "net_cash": purchase + converted,
+    }
