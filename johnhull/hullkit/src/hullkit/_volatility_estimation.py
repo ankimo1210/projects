@@ -336,3 +336,64 @@ def garch_vol_sensitivity(initial, days, omega, alpha, beta, *, trading_days=252
     return float(
         result["initial_weight"] * math.sqrt(trading_days * initial) / result["annual_vol"]
     )
+
+
+def covariance_diagnostics(covariance):
+    """Diagnose a symmetric finite matrix without silently repairing negative eigenvalues."""
+    matrix = np.asarray(covariance, dtype=float)
+    if (
+        matrix.ndim != 2
+        or matrix.shape[0] != matrix.shape[1]
+        or matrix.shape[0] < 1
+        or not np.isfinite(matrix).all()
+        or not np.allclose(matrix, matrix.T, atol=1e-14, rtol=1e-12)
+    ):
+        raise ValueError("finite symmetric nonempty square covariance required")
+    eigenvalues = np.linalg.eigvalsh(matrix)
+    tolerance = 1e-12 * max(float(abs(matrix).max()), 1e-30)
+    return {
+        "eigenvalues": eigenvalues,
+        "minimum_eigenvalue": float(eigenvalues[0]),
+        "is_psd": bool(eigenvalues[0] >= -tolerance),
+    }
+
+
+def correlation_from_covariance(covariance):
+    """Correlation of a PSD covariance; every zero-variance row/column is NaN."""
+    report = covariance_diagnostics(covariance)
+    if not report["is_psd"]:
+        raise ValueError("covariance is not positive semidefinite")
+    matrix = np.asarray(covariance, dtype=float)
+    scales = np.sqrt(np.maximum(np.diag(matrix), 0))
+    divisor = np.outer(scales, scales)
+    result = np.full_like(matrix, np.nan)
+    np.divide(matrix, divisor, out=result, where=divisor > 0)
+    return result
+
+
+def covariance_forecasts(returns, initial, *, decay=0.94, omega=None, alpha=None, beta=None):
+    """n+1 matrix forecasts using identical weights for all aligned return pairs.
+
+    EWMA is the default. Passing omega/alpha/beta together selects a GARCH
+    matrix recursion. A PSD intercept and common nonnegative coefficients
+    preserve PSD; fitting separate pair coefficients offers no such guarantee.
+    """
+    from ._market_risk import _covariance
+
+    x = np.asarray(returns, dtype=float)
+    if x.ndim != 2 or min(x.shape) < 1 or not np.isfinite(x).all():
+        raise ValueError("finite observations-by-assets returns required")
+    matrix = _covariance(initial, x.shape[1])
+    if omega is None and alpha is None and beta is None:
+        _ewma_inputs(decay, 0)
+        intercept, a, b = np.zeros_like(matrix), 1 - decay, decay
+    elif omega is not None and alpha is not None and beta is not None:
+        _garch_inputs(0, alpha, beta)
+        intercept, a, b = _covariance(omega, x.shape[1]), alpha, beta
+    else:
+        raise ValueError("specify all GARCH covariance parameters together")
+    result = np.empty((x.shape[0] + 1, x.shape[1], x.shape[1]))
+    result[0] = matrix
+    for i, move in enumerate(x):
+        result[i + 1] = intercept + a * np.outer(move, move) + b * result[i]
+    return result
