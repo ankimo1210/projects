@@ -29,7 +29,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | Beyond Hull（vol13–28） | すべてdone | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 全節監査の是正 | 第1–5便完了 | 残りは「全節監査と是正」の表 |
 | 節単位の受入 | Ch28まで受入33・未評価273（10.8%） | P0/P1/P2完了、P3正式8/37・ロジック36/37。§33.2は入力不足で保留。受入を一時停止し、次段階P4の計算を先行する。[P3状態](docs/P3_STATUS.md) |
-| ロジック先行 | P3 36/37、P4 84節実装 | 受入はCh28を区切りに保留。codex/p4-logicでCh10–20の計算を先行、対象tests/ruffを節ごと確認。[P4状態](docs/P4_STATUS.md) |
+| ロジック先行 | P3 36/37、P4 85節実装 | 受入はCh28を区切りに保留。codex/p4-logicでCh10–20の計算を先行、対象tests/ruffを節ごと確認。[P4状態](docs/P4_STATUS.md) |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。Ch28：依存変更2節を再検査 | §28.2/28.5のbrowser/runtime/pytest・両保管庫PASS。他28節は完全指紋とruntimeが同じ直接のredrawn基点を再利用。新6図/24表示状態と基点画像の両コピー復元PASS。[章記録](docs/validation/chapter-28/acceptance-check.json) |
 | テスト・レビュー | Ch28全suite1回4,436 passed・6 skipped・3 failed、修正対象70 tests PASS | 3件は索引/図件数/台帳の更新漏れ。初回＋修正対象で4,439件を確認（全suite再実行なし）。台帳成果物/章check/release PASS。数式レビューはClaudeが後追い。[全suite記録](docs/validation/chapter-28/full-suite.json) |
@@ -60,7 +60,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 4 | 0 | — | 完了（M14–M17） |
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
 | P3 | 金利（Ch 28–34） | 37 | 8 | 3 | ロジック36/37、§33.2は原典入力不足 | Ch28全8節受入、Ch29–34受入29節を保留。本人指示2026-10-05でP4実装へ |
-| P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 既存実装を利用し、本文数値・不足計算をprivateで補う | codex/p4-logicで計算84節を実装。次はCh20 §20.6（条件付きIV応答delta）。教材・正式受入は保留 |
+| P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 既存実装を利用し、本文数値・不足計算をprivateで補う | codex/p4-logicで計算85節を実装。次はCh20 §20.8（single jumpとfrown）。教材・正式受入は保留 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | vol 27・28 の資産を流用できる | 下調べ済み・節受入未着手 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 軽いが件数が多い。定性が多い | 下調べ済み・節受入未着手 |
 | P7 | Ch 35–37 | 16 | 0 | 6 | §36.4 は本文にパラメータ σ(t)・η(t) がない（CR-23） | 下調べ済み・節受入未着手 |

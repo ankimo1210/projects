@@ -244,3 +244,36 @@ def interpolate_iv(maturities, moneyness, volatilities, time, relative_strike):
         (1 - mw) * vol[i + 1, j] + mw * vol[i + 1, j + 1]
     )
     return float(value) if value.ndim == 0 else value
+
+
+def minimum_variance_delta(
+    spot, strike, rate, yield_rate, sigma, maturity, iv_response, *, kind="call"
+):
+    """Hull 20.6 local delta: BSM delta + vega * dE[IV]/dS.
+
+    IV and its conditional response use decimal volatility; vega is per 1.0
+    volatility and the response is per spot-price unit. The response describes
+    time-series co-movement, not the cross-sectional smile slope dIV/dK.
+    This first-order hedge does not claim an exact finite-move variance minimum.
+    """
+    from .bsm import call_delta, put_delta, vega
+
+    if (
+        not all(
+            math.isfinite(x) for x in (spot, strike, rate, yield_rate, sigma, maturity, iv_response)
+        )
+        or min(spot, strike, sigma, maturity) <= 0
+        or kind not in {"call", "put"}
+    ):
+        raise ValueError("positive spot/strike/vol/time, finite IV response and call/put required")
+    delta_fn = call_delta if kind == "call" else put_delta
+    delta = float(delta_fn(spot, strike, rate, sigma, maturity, q=yield_rate))
+    vol_sensitivity = float(vega(spot, strike, rate, sigma, maturity, q=yield_rate))
+    correction = vol_sensitivity * iv_response
+    return {
+        "bsm_delta": delta,
+        "vega": vol_sensitivity,
+        "iv_response": iv_response,
+        "vega_correction": correction,
+        "minimum_variance_delta": delta + correction,
+    }
