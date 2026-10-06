@@ -205,3 +205,35 @@ def instantaneous_curve_forward(time, curve, *, bump=1e-5):
     from .rates import instantaneous_forward
 
     return instantaneous_forward(time, curve, bump=bump)
+
+
+def fra_settlement(notional, fixed_rate, observed_rate, accrual, *, receive="fixed"):
+    """FRA cash at period end or prepaid at the observed simple-rate discount.
+
+    observed_rate is known at fixing; this realized cashflow is distinct from a
+    pre-fixing model value. Principal is not exchanged by the FRA.
+    """
+    if (
+        not np.isfinite([notional, fixed_rate, observed_rate, accrual]).all()
+        or notional < 0
+        or accrual <= 0
+        or 1 + observed_rate * accrual <= 0
+        or receive not in ("fixed", "floating")
+    ):
+        raise ValueError("valid notional/accrual/simple growth and receive direction required")
+    cash = (1 if receive == "fixed" else -1) * notional * accrual * (fixed_rate - observed_rate)
+    return {"end_payment": cash, "advance_payment": cash / (1 + observed_rate * accrual)}
+
+
+def fra_contract_value(
+    notional, fixed_rate, forward_rate, start, end, discount_zero, *, receive="fixed"
+):
+    """Pre-fixing FRA PV with period-simple rates and a continuous payment-date zero."""
+    from .rates import fra_value
+
+    if not np.isfinite([start, end, discount_zero]).all() or start < 0 or end <= start:
+        raise ValueError("0<=start<end and finite discount zero required")
+    fra_settlement(notional, fixed_rate, forward_rate, end - start, receive=receive)
+    return (1 if receive == "fixed" else -1) * fra_value(
+        notional, fixed_rate, forward_rate, start, end, discount_zero
+    )
