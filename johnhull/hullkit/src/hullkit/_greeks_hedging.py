@@ -215,3 +215,10 @@ def taylor_pnl(delta, gamma, theta, spot_change, elapsed):
         "theta": theta * elapsed,
     }
     return {**terms, "total": sum(terms.values())}
+
+
+def greek_pde_residual(spot, rate, sigma, value, theta, delta, gamma, *, yield_rate=0):
+    """Eq19.4 residual; theta is calendar-time, value includes the whole book."""
+    from ._index_currency import carry_pde_residual
+
+    return carry_pde_residual(spot, rate, yield_rate, sigma, value, theta, delta, gamma)
