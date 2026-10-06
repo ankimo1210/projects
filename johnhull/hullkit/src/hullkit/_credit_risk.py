@@ -8,8 +8,9 @@ appropriate inputs. Exposure amounts inherit the supplied contract's money unit.
 import math
 
 import numpy as np
+from scipy.stats import norm
 
-from . import credit_curve
+from . import credit, credit_curve
 
 
 def _vector(values):
@@ -197,4 +198,38 @@ def hazard_comparison(historical, pricing, *, recovery=0.4, total_spreads=None):
         result.update(
             excess_spread=spreads - compensation, display_excess_bp=spreads * 10000 - rounded
         )
+    return result
+
+
+def merton_values(equity, equity_vol, debt, rate, maturity, *, physical_drift=None):
+    """Existing Merton Q calibration plus debt/expected-loss accounting.
+
+    An optional caller-specified P asset drift gives a structural P probability,
+    not the proprietary empirical KMV EDF mapping. Default occurs only at T.
+    """
+    if not np.isfinite([equity, equity_vol, debt, rate, maturity]).all():
+        raise ValueError("finite Merton terms required")
+    asset, vol, pd = credit.merton_default_prob(equity, equity_vol, debt, rate, maturity)
+    sd = vol * math.sqrt(maturity)
+    d1 = (math.log(asset / debt) + (rate + 0.5 * vol * vol) * maturity) / sd
+    d2 = d1 - sd
+    risk_free = debt * math.exp(-rate * maturity)
+    bond = asset - equity
+    result = {
+        "asset_value": asset,
+        "asset_vol": vol,
+        "d1": d1,
+        "d2": d2,
+        "pricing_pd": pd,
+        "debt_value": bond,
+        "risk_free_debt": risk_free,
+        "expected_loss_rate": (risk_free - bond) / risk_free,
+        "physical_pd": None,
+        "edf": None,
+    }
+    if physical_drift is not None:
+        if not np.isfinite(physical_drift):
+            raise ValueError("finite physical asset drift required")
+        distance = (math.log(asset / debt) + (physical_drift - 0.5 * vol * vol) * maturity) / sd
+        result["physical_pd"] = float(norm.cdf(-distance))
     return result
