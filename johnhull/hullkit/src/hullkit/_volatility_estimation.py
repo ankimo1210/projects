@@ -117,3 +117,169 @@ def garch_expanded(history, omega, alpha, beta, *, initial):
     _garch_inputs(omega, alpha, beta, initial)
     powers = beta ** np.arange(u.size - 1, -1, -1)
     return float(beta**u.size * initial + omega * powers.sum() + alpha * (powers @ u**2))
+
+
+def bernoulli_mle(successes, observations):
+    if (
+        int(observations) != observations
+        or observations < 1
+        or int(successes) != successes
+        or not 0 <= successes <= observations
+    ):
+        raise ValueError("integer counts 0 <= successes <= observations required")
+    return float(successes / observations)
+
+
+def conditional_likelihood(returns, variances):
+    """Per-observation Hull eq23.12 measure -log(v)-u^2/v, twice log PDF sans constant."""
+    u, variance = _vector(returns), _vector(variances)
+    if u.shape != variance.shape or np.any(variance <= 0):
+        raise ValueError("matching returns and strictly positive conditional variances required")
+    return -np.log(variance) - u * u / variance
+
+
+def fit_ewma(returns, *, initial):
+    """Conditional normal MLE with explicit positive initial variance."""
+    from scipy.optimize import minimize_scalar
+
+    u = _vector(returns)
+    _ewma_inputs(0.94, initial)
+    if initial == 0:
+        raise ValueError("positive initial variance required for normal likelihood")
+
+    def objective(decay):
+        return -float(
+            conditional_likelihood(u, ewma_forecasts(u, initial=initial, decay=decay)[:-1]).sum()
+        )
+
+    fit = minimize_scalar(objective, bounds=(1e-8, 1), method="bounded", options={"xatol": 1e-10})
+    if not fit.success:
+        raise ValueError("EWMA fit failed to converge")
+    candidates = [(fit.x, fit.fun), (1.0, objective(1.0))]
+    decay, score = min(candidates, key=lambda point: point[1])
+    return {"decay": float(decay), "measure": -float(score), "success": True}
+
+
+def fit_garch(returns, *, initial, target_variance=None, hull_start=False):
+    """Stationary Gaussian GARCH MLE using three scaled, constrained starts.
+
+    initial is supplied explicitly. hull_start drops the first supplied return:
+    it is the observation used to set initial=u[0]^2 in Table23.1. Variance
+    targeting fixes omega=(1-alpha-beta)*target_variance. No original-data fit
+    can be inferred from a successful synthetic-data fit.
+    """
+    from scipy.optimize import minimize
+
+    original = _vector(returns)
+    u = original[1:] if hull_start else original
+    if u.size < 2 or not np.isfinite(initial) or initial <= 0:
+        raise ValueError(
+            "at least two likelihood observations and positive initial variance required"
+        )
+    scale = float(np.mean(u * u))
+    if scale <= 0 or (
+        target_variance is not None and (not np.isfinite(target_variance) or target_variance <= 0)
+    ):
+        raise ValueError("positive sample/target variance required")
+    scaled = u / math.sqrt(scale)
+    init = initial / scale
+    targeted = target_variance is not None
+    target = target_variance / scale if targeted else None
+
+    def parameters(point):
+        if targeted:
+            alpha, beta = point
+            return (1 - alpha - beta) * target, alpha, beta
+        return tuple(point)
+
+    def objective(point):
+        omega, alpha, beta = parameters(point)
+        if omega <= 0 or alpha < 0 or beta < 0 or alpha + beta >= 1:
+            return 1e100
+        variances = garch_forecasts(scaled, omega, alpha, beta, initial=init)[:-1]
+        return -float(conditional_likelihood(scaled, variances).sum()) / scaled.size
+
+    bounds = [(0, 1), (0, 1)] if targeted else [(1e-10, 100), (0, 1), (0, 1)]
+
+    def stationary(point):
+        _, alpha, beta = parameters(point)
+        return 0.999999 - alpha - beta
+
+    results = []
+    for alpha, beta in [(0.1, 0.8), (0.2, 0.6), (0.05, 0.93)]:
+        start = [alpha, beta] if targeted else [1 - alpha - beta, alpha, beta]
+        result = minimize(
+            objective,
+            start,
+            method="SLSQP",
+            bounds=bounds,
+            constraints=[{"type": "ineq", "fun": stationary}],
+            options={"ftol": 1e-12, "maxiter": 1000},
+        )
+        if result.success and np.isfinite(result.fun) and result.fun < 1e90:
+            results.append(result)
+    if not results:
+        raise ValueError("GARCH fit failed to converge from all starts")
+    chosen = min(results, key=lambda result: result.fun)
+    omega, alpha, beta = parameters(chosen.x)
+    omega *= scale
+    variances = garch_forecasts(u, omega, alpha, beta, initial=initial)[:-1]
+    return {
+        "omega": float(omega),
+        "alpha": float(alpha),
+        "beta": float(beta),
+        "measure": float(conditional_likelihood(u, variances).sum()),
+        "success": True,
+        "target_variance": target_variance,
+        "hull_start": hull_start,
+    }
+
+
+def autocorrelations(series, lags, *, convention="hull"):
+    """Hull pairwise Pearson correlations, or globally-centered classical ACF."""
+    x = _vector(series)
+    if int(lags) != lags or not 1 <= lags <= x.size - 2:
+        raise ValueError("positive integer lags leaving at least two pairs required")
+    if convention not in ("hull", "global"):
+        raise ValueError("ACF convention must be hull or global")
+    centered = x - x.mean()
+    denominator = float(centered @ centered)
+    if denominator == 0:
+        raise ValueError("autocorrelation is undefined for a constant series")
+    result = []
+    for lag in range(1, int(lags) + 1):
+        if convention == "global":
+            result.append(float(centered[:-lag] @ centered[lag:] / denominator))
+        else:
+            left, right = x[:-lag], x[lag:]
+            left, right = left - left.mean(), right - right.mean()
+            divisor = math.sqrt(float(left @ left) * float(right @ right))
+            if divisor == 0:
+                raise ValueError("pairwise autocorrelation has a zero-variance slice")
+            result.append(float(left @ right / divisor))
+    return np.array(result)
+
+
+def ljung_box_from_acf(acf, observations, *, estimated_parameters=0):
+    """Ljung–Box Q with explicit observations and optional degrees-of-freedom reduction."""
+    from scipy.stats import chi2
+
+    coefficients = _vector(acf)
+    if (
+        int(observations) != observations
+        or observations <= coefficients.size
+        or np.any(abs(coefficients) > 1)
+        or int(estimated_parameters) != estimated_parameters
+        or not 0 <= estimated_parameters < coefficients.size
+    ):
+        raise ValueError("valid ACF, sample length and positive residual test degrees required")
+    lags = np.arange(1, coefficients.size + 1)
+    statistic = float(
+        observations * (observations + 2) * np.sum(coefficients**2 / (observations - lags))
+    )
+    degrees = coefficients.size - int(estimated_parameters)
+    return {
+        "statistic": statistic,
+        "degrees": degrees,
+        "p_value": float(chi2.sf(statistic, degrees)),
+    }
