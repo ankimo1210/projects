@@ -82,10 +82,22 @@ UNITS_BY_VOLUME: dict[int, dict[str, str]] = {
         "ood_radius": "normalized Euclidean distance",
         "ood_error": "synthetic monetary units",
         "batch_size": "rows",
+        "nested_mc_repeats_ns": "nanoseconds, five repetitions per batch",
+        "surrogate_repeats_ns": "nanoseconds, five repetitions per batch",
+        "timing_warmup_count": "warmup calls",
         "nested_mc_ms": "milliseconds median",
         "surrogate_ms": "milliseconds median",
     },
     22: {
+        "event_effect_payoff": "discounted paired event-minus-baseline payoff",
+        "event_effect_paired_se": "standard error of paired event effect",
+        "calendar_probe_ordinal": "Gregorian date ordinal",
+        "calendar_probe_trading": "boolean trading-day observation",
+        "calendar_holiday_ordinal": "Gregorian holiday ordinals",
+        "calendar_session_ordinal": "Gregorian session ordinal",
+        "calendar_open_close_minute": "New York wall-clock minutes since midnight",
+        "calendar_probe_minute": "New York wall-clock minutes since midnight",
+        "calendar_probe_seconds": "trading seconds to settlement",
         "minute": "trading minutes",
         "variance_weight": "normalized variance weight",
         "variance_clock": "cumulative variance fraction",
@@ -578,6 +590,8 @@ def _benchmark_contract(volume: int, arrays: dict[str, np.ndarray]) -> dict[str,
         "nondeterministic_fields": [
             "nested_mc_ms",
             "surrogate_ms",
+            "nested_mc_repeats_ns",
+            "surrogate_repeats_ns",
             "metrics.surrogate_speedup_1024",
             "benchmark.measurement",
         ],
@@ -619,7 +633,13 @@ def _preserve_vol21_timing_reference(
             archive["batch_size"], arrays["batch_size"]
         ):
             return
-        for name in ("nested_mc_ms", "surrogate_ms"):
+        for name in (
+            "nested_mc_ms",
+            "surrogate_ms",
+            "nested_mc_repeats_ns",
+            "surrogate_repeats_ns",
+            "timing_warmup_count",
+        ):
             if name not in archive.files or archive[name].shape != arrays[name].shape:
                 raise ValueError(f"committed volume 21 timing schema changed for {name}")
             arrays[name] = archive[name].copy()

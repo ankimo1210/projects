@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "chapter": 28,
+  "pages": {
+    "book": {
+      "states": [
+        {
+          "section": "28.7",
+          "figure": "martingale_exchange_ratio_means",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.7",
+          "figure": "martingale_exchange_measure_prices",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.7",
+          "figure": "martingale_exchange_ratio_means",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.7",
+          "figure": "martingale_exchange_measure_prices",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/chapter-28/book-martingale_exchange_ratio_means-1440.png",
+        "docs/validation/chapter-28/book-martingale_exchange_measure_prices-1440.png",
+        "docs/validation/chapter-28/book-martingale_exchange_ratio_means-1000.png",
+        "docs/validation/chapter-28/book-martingale_exchange_measure_prices-1000.png"
+      ],
+      "headings": [
+        {
+          "section": "28.7",
+          "heading": "6F. 一つの資産を別の資産と交換（§28.7）",
+          "explanation_checked": true,
+          "math_checked": true
+        }
+      ],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": [
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Zero.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff",
+        "https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff"
+      ],
+      "unapproved_requests": [],
+      "external_network_blocked": false
+    },
+    "portal": {
+      "states": [
+        {
+          "section": "28.7",
+          "figure": "martingale_exchange_ratio_means",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.7",
+          "figure": "martingale_exchange_measure_prices",
+          "width": 1440,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.7",
+          "figure": "martingale_exchange_ratio_means",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        },
+        {
+          "section": "28.7",
+          "figure": "martingale_exchange_measure_prices",
+          "width": 1000,
+          "numeric_checked": true,
+          "layout_checked": true
+        }
+      ],
+      "screenshots": [
+        "docs/validation/chapter-28/portal-martingale_exchange_ratio_means-1440.png",
+        "docs/validation/chapter-28/portal-martingale_exchange_measure_prices-1440.png",
+        "docs/validation/chapter-28/portal-martingale_exchange_ratio_means-1000.png",
+        "docs/validation/chapter-28/portal-martingale_exchange_measure_prices-1000.png"
+      ],
+      "headings": [],
+      "numeric_mutation_rejected": true,
+      "page_errors": [],
+      "external_requests": [],
+      "unapproved_requests": [],
+      "external_network_blocked": true
+    }
+  },
+  "source_sha256": {
+    "docs/acceptance/chapters/ch28.json": "556e59cafe8235059bf38b48ed02203e7bfcdd49420f9b05d60147db1155cdec",
+    "docs/validation/chapter-28/reference.json": "cb48df62b74a7908a922b9ccec86f7a26c84f453290f9e143ca92e244f53abeb",
+    "docs/validation/chapter-28/numerical-check.json": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed",
+    "scripts/verify_chapter_browser.cjs": "c352c4a846c4a75908094b9f88fb589bd5f033d3716bd26e379a70cb5205e2de",
+    "hullkit/src/hullkit/_chapter28_lesson.py": "f9800998f05b2d8a363537ab84ca05cd0b3383d56303a84a2afd1c6e949a4a3d",
+    "volumes/10_exotics_martingales/exotics.ipynb": "95cb0b8b00694598dd95c8b64308bb69e4a6fe7701c6ee13827bf6c394829eeb",
+    "volumes/10_exotics_martingales/build_exotics_notebook.py": "313acdfe78f2f016ad01b2a1d17901988edbeb95f2357d1f89fb4bf68541aa9c",
+    "report/report_builder/figures.py": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+  },
+  "artifact_sha256": {
+    "book/_build/html/notebooks/10_exotics.html": "0560bae03ccca2246440f825138a0f2bcbc634291e82fc16fa21d1cf7f1d4dea",
+    "report/site/exotics.html": "9a3abf9ae363ade735ec937308319d2785e4ffadd85378e341f4804be75258ed"
+  },
+  "browser_version": "145.0.7632.6",
+  "book_math": {
+    "rendered": 1224,
+    "errors": 0
+  },
+  "state_checks": 8,
+  "screenshots": 8,
+  "capture_sha256": {
+    "docs/validation/chapter-28/book-martingale_exchange_ratio_means-1440.png": "860898a7c5d8f09c675128086db4b95e0840f0de581c75d112a800c8dac9e5d1",
+    "docs/validation/chapter-28/book-martingale_exchange_measure_prices-1440.png": "73dbc8df6e617d445369cdedfba539b23f732b3a3d4f707ef0708dd70f66bddc",
+    "docs/validation/chapter-28/book-martingale_exchange_ratio_means-1000.png": "495219530cfeb07c9da53d31f53b3acae142f1a8cda2a02178a37eee46587406",
+    "docs/validation/chapter-28/book-martingale_exchange_measure_prices-1000.png": "7cbf2303ccc41481d66b7996dff1f61202e5218a0560c3379eb236c730581fa7",
+    "docs/validation/chapter-28/portal-martingale_exchange_ratio_means-1440.png": "1ef637fbbf131a396de9a9f23acb2156d0034a5f63673d84f449e8365dad898a",
+    "docs/validation/chapter-28/portal-martingale_exchange_measure_prices-1440.png": "f252dd478d7b810f2f3ba0e1c760cfc3ed329973f49ded98c0cb52408d050205",
+    "docs/validation/chapter-28/portal-martingale_exchange_ratio_means-1000.png": "ae3ebd86263d8e1fe84146a2b526a0d911eccd67b09507faf4d07ab900b29fdd",
+    "docs/validation/chapter-28/portal-martingale_exchange_measure_prices-1000.png": "9e4906e42597c968d91afda28f7ebed7a67c1582d106adf0611e220e6b1632c0"
+  }
+}

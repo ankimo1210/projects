@@ -323,3 +323,10 @@ def block_bootstrap_metric_ci(
         float(np.quantile(means, tail)),
         float(np.quantile(means, 1 - tail)),
     )
+
+
+def _mean_log_forecast(training_log_target, training_fitted_log, fitted_log):
+    """Duan empirical mean retransformation using only the fitted training residuals."""
+    residual = np.asarray(training_log_target) - np.asarray(training_fitted_log)
+    factor = float(np.mean(np.exp(residual)))
+    return np.exp(fitted_log) * factor, factor

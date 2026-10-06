@@ -32,7 +32,7 @@
         "passed": true
       },
       {
-        "criterion": "positive measured samples",
+        "criterion": "warmup + 5 positive raw perf_counter_ns samples; medians recomputed",
         "name": "measured_cpu_timing",
         "observed": "perf_counter_ns warm-cache median of 5",
         "passed": true
@@ -40,7 +40,7 @@
       {
         "criterion": "> 1 at batch 1024, recomputed from the timing samples",
         "name": "surrogate_speedup",
-        "observed": 786.9539451405351,
+        "observed": 759.280153587713,
         "passed": true
       },
       {
@@ -84,19 +84,21 @@
         "scipy": "1.17.1"
       },
       "sources": {
-        "johnhull/hullkit/src/hullkit/frontier_reference.py": "98134aac2691ad540160566cf89931d3ea991c3b1d3b2db5c6f54d584a9a2a65",
+        "johnhull/hullkit/src/hullkit/frontier_reference.py": "c306605c2cb0e3745f4e542260b88a40a9406f77d54c984b5be40433fc7c960e",
         "johnhull/hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472"
       }
     },
     "nondeterministic_fields": [
       "nested_mc_ms",
       "surrogate_ms",
+      "nested_mc_repeats_ns",
+      "surrogate_repeats_ns",
       "metrics.surrogate_speedup_1024",
       "benchmark.measurement"
     ],
     "schema_version": 2,
     "sources": {
-      "johnhull/hullkit/src/hullkit/frontier_reference.py": "03d759a023ddff5736ce8173ac24e353b7003298654a70e816afebf1fd9fa7a1",
+      "johnhull/hullkit/src/hullkit/frontier_reference.py": "c306605c2cb0e3745f4e542260b88a40a9406f77d54c984b5be40433fc7c960e",
       "johnhull/hullkit/src/hullkit/spx_vix.py": "610509c60cb59bcbad89b335cf8088fee6a2b2816aa590ed28bd4bde46baa472"
     },
     "timing_method": "perf_counter_ns warm-cache median of 5"
@@ -145,6 +147,14 @@
           3
         ],
         "unit": "milliseconds median"
+      },
+      "nested_mc_repeats_ns": {
+        "dtype": "int64",
+        "shape": [
+          3,
+          5
+        ],
+        "unit": "nanoseconds, five repetitions per batch"
       },
       "ood_error": {
         "dtype": "float64",
@@ -280,6 +290,14 @@
         ],
         "unit": "synthetic monetary units"
       },
+      "surrogate_repeats_ns": {
+        "dtype": "int64",
+        "shape": [
+          3,
+          5
+        ],
+        "unit": "nanoseconds, five repetitions per batch"
+      },
       "surrogate_scale_price": {
         "dtype": "float64",
         "shape": [
@@ -330,6 +348,13 @@
           24
         ],
         "unit": "discounted index-point option price"
+      },
+      "timing_warmup_count": {
+        "dtype": "int64",
+        "shape": [
+          1
+        ],
+        "unit": "warmup calls"
       },
       "variance_rmse": {
         "dtype": "float64",
@@ -428,7 +453,7 @@
     }
   },
   "companions": {
-    "joint_surface.npz": "be75f14b4f95d60bdb7c5dce80fd25fa5c38c791e8f717d2aec22faabff7214e"
+    "joint_surface.npz": "3e00c39350bb57be53d927453a4147ef34568178d94247a67a122f8786af66e8"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -452,7 +477,7 @@
     "surrogate_delta_rmse": 5.043078088519851,
     "surrogate_gamma_rmse": 35.50726161092219,
     "surrogate_price_rmse": 0.4123722655252687,
-    "surrogate_speedup_1024": 786.9539451405351,
+    "surrogate_speedup_1024": 759.2801535877129,
     "surrogate_spot_monotonicity_violations": 32,
     "teacher": "hullkit.spx_vix.nested_vix_teacher",
     "teacher_bound_violations": 0,
