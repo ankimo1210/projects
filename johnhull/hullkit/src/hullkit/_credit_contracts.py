@@ -150,3 +150,54 @@ def recovery_recalibration(
         "binary_spreads": np.array([t["binary_protection"] / t["risky_duration"] for t in tables]),
         "buyer_values": np.array([t["protection"] - coupon * t["risky_duration"] for t in tables]),
     }
+
+
+def index_premium(notional_per_name, spread, names, *, defaults=0):
+    """Annual premium on equal live name notionals; integer default count reduces notional."""
+    if (
+        not np.isfinite([notional_per_name, spread, names, defaults]).all()
+        or min(notional_per_name, spread) < 0
+        or int(names) != names
+        or int(defaults) != defaults
+        or not 0 <= defaults <= names
+    ):
+        raise ValueError("nonnegative amounts/rate and integer name/default counts required")
+    remaining = notional_per_name * (names - defaults)
+    return {"remaining_notional": remaining, "annual_payment": remaining * spread}
+
+
+def cds_index_value(
+    curves, recoveries, notionals, rate, maturity, *, frequency=4, contract_spread=None
+):
+    """Sum individual protection/annuity legs; index spread is annuity-weighted.
+
+    Curves are caller-supplied constituent pricing curves, not observed/current
+    index constituents. Dependence is unnecessary for expected additive legs.
+    """
+    from ._credit_risk import _vector
+
+    n = _vector(notionals)
+    r = np.broadcast_to(np.asarray(recoveries, dtype=float), n.shape)
+    if len(curves) != n.size or np.any(n < 0) or n.sum() <= 0:
+        raise ValueError(
+            "matching curves and nonnegative constituent notionals with positive sum required"
+        )
+    tables = [
+        cds_leg_table(curve, float(recovery), rate, maturity, frequency=frequency)
+        for curve, recovery in zip(curves, r, strict=True)
+    ]
+    annuity = n * np.array([t["risky_duration"] for t in tables])
+    protection = float(n @ np.array([t["protection"] for t in tables]))
+    duration = float(annuity.sum())
+    par = protection / duration
+    result = {
+        "risky_duration": duration,
+        "protection": protection,
+        "par_spread": par,
+        "annuity_weights": annuity / duration,
+    }
+    if contract_spread is not None:
+        if not np.isfinite(contract_spread) or contract_spread < 0:
+            raise ValueError("nonnegative finite index contract rate required")
+        result["buyer_value"] = protection - contract_spread * duration
+    return result

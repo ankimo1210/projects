@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算23/32。次は§25.3（index加重）。Ch22→23→24→25まで継続する。
+- 現在：計算24/32。次は§25.4（fixed coupon）。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -37,6 +37,7 @@
 | §24.9 | `_credit_risk.py` | Ex24.8 PD12.8%/VaR5.13m、Table24.4全7threshold。独立factor/5000社有限pool MC6SE、bond cashflow再評価・2社状態列挙 | 計算完了。total loss VaRとEL控除capitalを分離。格付再評価は渡したspread曲線のflat例、default回収は額面。BBB→A原典区間逆転/既存docstring残差記述の問題は未変更。説明・受入保留 | 30 passed・ruff check/format PASS |
 | §25.1 | `_credit_contracts.py` | 90bp→四半期22.5bp/225000、回収35%→65m・2か月経過150000、250/260bp→2.5/2.6%、保護付きyield5%の全7値。独立Decimal cash・生存/default CF列挙 | 計算完了。年分数の概算規約でcalendar dates/auction CTD/legal契約モデルは対象外。信用事由と取引相手defaultを区別。説明・受入保留 | 3 passed・ruff check/format PASS |
 | §25.2 | `_credit_contracts.py` | Tables25.1–5全54cell/合計+7結果=61値、par123bp/MTM±.0111/100bp→hazard1.63%/binary205bp。独立default年CF列挙・指数時刻MC6SE・回収再較正 | 計算完了。中央default/元本1・spread1の係数。quote固定でhazard再較正、通常CDS回収近似不感応を厳密不変としない。説明・受入保留 | 7 passed・ruff check/format PASS |
+| §25.3 | `_credit_contracts.py` | 125社800000×65/66bp→650000/660000、1社減少5280、1000/10bp単純平均505bp。独立2社default状態CF・zero NPV求根でindex加重 | 計算完了。実際の加重priceは原典入力不足でpinなし、合成r/T/Rを明記。観測125社指数の現在仕様は扱わない。説明・受入保留 | 10 passed・ruff check/format PASS |
 
 ## 残りと検証
 
