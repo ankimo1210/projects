@@ -98,3 +98,29 @@ def loss_waterfall(losses, notional, boundaries, *, spreads=None):
             raise ValueError("nonnegative finite annual premium rates required")
         result["annual_premium"] = remaining * rates
     return result
+
+
+def default_count_distribution(names, cumulative_pd, rho, *, nodes=60):
+    """Homogeneous count PMF at one horizon; PD is cumulative, not an annual hazard.
+
+    rho=1 is the exact all/none limit. Interior correlations use Gaussian factor
+    quadrature, and rho=0 the existing stable binomial formula.
+    """
+    if (
+        not np.isfinite([names, cumulative_pd, rho]).all()
+        or int(names) != names
+        or names < 1
+        or not 0 <= cumulative_pd <= 1
+        or not 0 <= rho <= 1
+    ):
+        raise ValueError("positive integer names and probability/correlation in [0,1] required")
+    n = int(names)
+    if rho == 1 or cumulative_pd in (0, 1):
+        result = np.zeros(n + 1)
+        result[0], result[-1] = 1 - cumulative_pd, cumulative_pd
+        return result
+    if rho == 0:
+        return cp.binomial_pmf(n, cumulative_pd)
+    factor, weights = cp.gauss_hermite_factor(nodes)
+    conditional = cp.conditional_default_prob(cumulative_pd, rho, factor)
+    return weights @ cp.binomial_pmf(n, conditional)
