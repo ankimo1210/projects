@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算2/54。次は§1.7（FX・protective putヘッジ）。Ch1→9を順に継続する。
+- 現在：計算3/54。次は§1.8（投機と投入資金）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -15,6 +15,7 @@
 |---|---|---|---|---|
 | §1.3 | `_intro_contracts.py` | £1m ask1.2230→支払1,223,000、long77,000/−23,000・単位.077/−.023。$60年5%→63/利息3・forward67/58→gain4/5の全9値。独立1期木のQ期待/2状態replication | 計算完了。年5%は1年単利/年複利、連続複利を混ぜない。満期payoffと現時点価値を区別。逆carryはinventory/shortingの仮定。市場quoteは2020年入力。説明・受入保留 | 3 passed・ruff check/format PASS |
 | §1.5 | `_intro_contracts.py` | Apple call premium2030/payoff6000/profit3970、short put premium1270/支払4000/損失2730の6値。独立lognormal payoff積分と解析call/put期待値 | 計算完了。premium込みprofitとpayoffを区別。2020年の72market quotesはモデル出力の正解表にしない。数量=契約数×倍率、金利/手数料は原典で無視。説明・受入保留 | 7 passed・ruff check/format PASS |
+| §1.7 | `_intro_contracts.py` | FX支払12,225,000/受取36,660,000、無ヘッジ12m/13m。put1契約100・10契約1000、最低27,500・費用後26,500の全8値。独立受払と解析lognormal保有価値 | 計算完了。pay/receiveのcash符号、保有価値と購入時からの利益を分離。FX bid/askとquantity単位、金利なしのpremium費用。説明・受入保留 | 10 passed・ruff check/format PASS |
 
 ## 残りと検証
 
