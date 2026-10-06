@@ -49,3 +49,34 @@ def carry_cash(spot, rate, maturity, delivery_quote):
         "carry_profit": delivery_quote - financed,
         "reverse_profit": financed - delivery_quote,
     }
+
+
+def known_income_forward(spot, income_dates, income_amounts, income_zeros, rate, maturity):
+    """Known cash-income forward; each income uses its own continuous zero quote.
+
+    Income at 0<=date<=maturity is deducted. Cash after maturity is excluded.
+    Positive amounts denote received income; negative cash denotes a known cost.
+    """
+    dates = np.asarray(income_dates, dtype=float)
+    cash = np.asarray(income_amounts, dtype=float)
+    zeros = np.broadcast_to(np.asarray(income_zeros, dtype=float), dates.shape)
+    if (
+        dates.ndim != 1
+        or dates.shape != cash.shape
+        or not np.isfinite(dates).all()
+        or not np.isfinite(cash).all()
+        or not np.isfinite(zeros).all()
+        or np.any(dates < 0)
+        or not np.isfinite([spot, rate, maturity]).all()
+        or min(spot, maturity) < 0
+    ):
+        raise ValueError(
+            "aligned finite income cash/dates/rates and nonnegative spot/time required"
+        )
+    use = dates <= maturity
+    pv = float(np.dot(cash[use], np.exp(-zeros[use] * dates[use])))
+    return {
+        "income_pv": pv,
+        "net_spot": spot - pv,
+        "forward": (spot - pv) * np.exp(rate * maturity),
+    }
