@@ -119,3 +119,54 @@ def hedge_cash_replay(paths, times, strike, rate, holdings, *, kind="call", quan
         "present_cost": terminal * math.exp(-rate * times[-1]),
         "no_interest_cost": trade_cash.sum(axis=1) + close + payoff,
     }
+
+
+def delta_stock_hedge(quantities, deltas):
+    """Stock units required to neutralize an option book's weighted delta."""
+    quantities = np.asarray(quantities, dtype=float)
+    deltas = np.asarray(deltas, dtype=float)
+    if (
+        quantities.ndim != 1
+        or quantities.shape != deltas.shape
+        or np.any(~np.isfinite(quantities))
+        or np.any(~np.isfinite(deltas))
+    ):
+        raise ValueError("matching finite vectors of quantities and per-unit deltas required")
+    return -float(np.dot(quantities, deltas))
+
+
+def delta_holdings(paths, times, strike, rate, sigma, *, kind="call"):
+    """Nondividend European deltas at pre-expiry observations, per written option.
+
+    At zero volatility use the deterministic payoff slope, with half-delta at
+    the forward-strike kink as a convention (a two-sided derivative is absent).
+    """
+    from scipy.special import ndtr
+
+    prices = _path_matrix(paths)
+    times = np.asarray(times, dtype=float)
+    if (
+        times.shape != (prices.shape[1],)
+        or np.any(~np.isfinite(times))
+        or times[0] != 0
+        or np.any(np.diff(times) <= 0)
+    ):
+        raise ValueError("increasing grid starting at zero and matching prices required")
+    if (
+        not all(math.isfinite(x) for x in (strike, rate, sigma))
+        or min(strike, sigma) < 0
+        or kind not in ("call", "put")
+    ):
+        raise ValueError("finite rate, nonnegative strike/volatility and call/put required")
+    remaining = times[-1] - times[:-1]
+    if strike == 0:
+        delta = np.ones_like(prices[:, :-1])
+    elif sigma == 0:
+        forward = prices[:, :-1] * np.exp(rate * remaining)
+        delta = np.where(forward > strike, 1.0, np.where(forward < strike, 0.0, 0.5))
+    else:
+        d1 = (np.log(prices[:, :-1] / strike) + (rate + sigma * sigma / 2) * remaining) / (
+            sigma * np.sqrt(remaining)
+        )
+        delta = ndtr(d1)
+    return delta if kind == "call" else delta - 1
