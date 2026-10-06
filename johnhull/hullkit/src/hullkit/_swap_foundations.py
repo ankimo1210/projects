@@ -136,3 +136,47 @@ def comparative_irs(
         "b_gain": fixed_b - bb,
         "dealer_gain": fixed_received_from_b - fixed_paid_to_a,
     }
+
+
+def ois_swap_value(
+    notional, fixed_rate, pay_times, zero_rates, *, observed_rate, elapsed, receive="floating"
+):
+    """Seasoned single-curve OIS value using observed plus forward log-growth.
+
+    elapsed is already observed portion of the first full accrual. Later floating
+    payments telescope using the curve; fixed coupons use full period accruals.
+    This is an OIS conditional forecast, not a LIBOR preset fixing assumption.
+    """
+    t = np.asarray(pay_times, dtype=float)
+    z = np.asarray(zero_rates, dtype=float)
+    if (
+        t.ndim != 1
+        or t.shape != z.shape
+        or not len(t)
+        or not np.isfinite(t).all()
+        or not np.isfinite(z).all()
+        or np.any(np.diff(np.r_[0, t]) <= 0)
+        or not np.isfinite([notional, fixed_rate, observed_rate, elapsed]).all()
+        or min(notional, elapsed) < 0
+        or receive not in ("fixed", "floating")
+    ):
+        raise ValueError("ordered payment dates, finite rates and valid observed accrual required")
+    tau = np.diff(np.r_[0, t])
+    tau[0] += elapsed
+    logs = np.diff(np.r_[0, z * t])
+    logs[0] += observed_rate * elapsed
+    continuous = logs / tau
+    simple = np.expm1(logs) / tau
+    cash = interest_swap_cash(notional, fixed_rate, simple, tau, receive=receive)
+    df = np.exp(-t * z)
+    pv = cash["net"] * df
+    return {
+        "continuous_rates": continuous,
+        "simple_rates": simple,
+        "fixed_cash": cash["fixed"],
+        "floating_cash": cash["floating"],
+        "net_cash": cash["net"],
+        "discounts": df,
+        "present_values": pv,
+        "value": float(pv.sum()),
+    }
