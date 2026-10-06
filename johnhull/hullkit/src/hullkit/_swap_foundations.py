@@ -72,3 +72,14 @@ def ois_bootstrap(maturities, par_rates, *, frequency=4, single_exchange_until=1
             cash[-1] += 100
         inst.append((dates, cash, 100))
     return bootstrap_piecewise_zero(inst)
+
+
+def effective_rate(legs):
+    """Sum signed rate legs (floating loading, fixed spread), retaining benchmark units."""
+    values = np.asarray(legs, dtype=float)
+    if values.ndim != 2 or values.shape[1] != 2 or not len(values) or not np.isfinite(values).all():
+        raise ValueError("finite pairs of floating loading and spread required")
+    return {
+        "floating_loading": float(values[:, 0].sum()),
+        "fixed_spread": float(values[:, 1].sum()),
+    }
