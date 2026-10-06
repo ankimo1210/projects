@@ -301,3 +301,43 @@ def test_stable_explicit_and_hopscotch_american_exercise_matches_stopping_tree(m
     assert grid["weights_nonnegative"]
     assert grid["price"] == pytest.approx(tree["price"], abs=0.008)
     assert np.all(grid["values"] >= np.maximum(50 - grid["stock"], 0) - 1e-12)
+
+
+def independent_european_put(scheme, spot=50, strike=50, rate=0.1, vol=0.4, maturity=5 / 12, m=20, n=10, s_max=100):
+    # Dense matrices and a node loop, sharing only Hull's spot-grid coefficients.
+    dt, j = maturity / n, np.arange(m + 1)
+    a = 0.5 * vol**2 * j**2 - 0.5 * rate * j
+    c = 0.5 * vol**2 * j**2 + 0.5 * rate * j
+    b = -(vol**2) * j**2
+    operator = np.zeros((m + 1, m + 1))
+    for k in range(1, m):
+        operator[k, k - 1 : k + 2] = a[k], b[k] - rate, c[k]
+    value = np.maximum(strike - j * s_max / m, 0.0)
+    for i in range(n - 1, -1, -1):
+        low = strike * math.exp(-rate * (n - i) * dt)
+        if scheme == "cn":
+            left = np.eye(m + 1) - 0.5 * dt * operator
+            rhs = (np.eye(m + 1) + 0.5 * dt * operator) @ value
+            left[0], left[m] = np.eye(m + 1)[0], np.eye(m + 1)[m]
+            rhs[0], rhs[m] = low, 0.0
+            value = np.linalg.solve(left, rhs)
+            continue
+        new = np.empty(m + 1)
+        new[0], new[m] = low, 0.0
+        for k in range(1, m):
+            if (i + k) % 2 == 0:
+                new[k] = (dt * a[k] * value[k - 1] + (1 + dt * b[k]) * value[k] + dt * c[k] * value[k + 1]) / (1 + rate * dt)
+        for k in range(1, m):
+            if (i + k) % 2 == 1:
+                new[k] = (value[k] + dt * a[k] * new[k - 1] + dt * c[k] * new[k + 1]) / (1 - dt * (b[k] - rate))
+        value = new
+    return float(np.interp(spot, j * s_max / m, value))
+
+
+@pytest.mark.parametrize("method,other", [("cn", "implicit"), ("hopscotch", "explicit")])
+def test_cn_and_hopscotch_match_independent_schemes_on_the_source_grid(method, other):
+    def price(name):
+        return numerical.fd_grid(50, 50, 0.1, 0.4, 5 / 12, 20, 10, s_max=100, method=name, kind="put")["price"]
+
+    assert price(method) == pytest.approx(independent_european_put(method), abs=1e-10)
+    assert abs(price(method) - price(other)) > 0.03
