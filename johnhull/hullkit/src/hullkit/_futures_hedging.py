@@ -109,3 +109,60 @@ def basis_hedge(
         maturity_basis=proxy - f,
         asset_basis=s - proxy,
     )
+
+
+def minimum_variance_hedge(spot_changes, future_changes, *, exposure_units, contract_units):
+    """Sample price-change hedge, with ddof=1 deviations and unrounded contract count.
+
+    ratio is covariance/variance, not correlation. The in-sample effectiveness
+    rho squared is an explanatory sample identity, not future hedging performance.
+    """
+    s = np.asarray(spot_changes, dtype=float)
+    f = np.asarray(future_changes, dtype=float)
+    if (
+        s.ndim != 1
+        or s.shape != f.shape
+        or len(s) < 2
+        or not np.isfinite(s).all()
+        or not np.isfinite(f).all()
+        or not np.isfinite([exposure_units, contract_units]).all()
+        or exposure_units < 0
+        or contract_units <= 0
+    ):
+        raise ValueError("paired samples and valid quantity scales required")
+    vf = np.var(f, ddof=1)
+    vs = np.var(s, ddof=1)
+    if min(vf, vs) <= 0:
+        raise ValueError("positive sample variances required")
+    covariance = np.cov(s, f, ddof=1)[0, 1]
+    ratio = covariance / vf
+    rho = covariance / np.sqrt(vf * vs)
+    return {
+        "sd_spot": np.sqrt(vs),
+        "sd_future": np.sqrt(vf),
+        "rho": rho,
+        "ratio": ratio,
+        "contracts": ratio * exposure_units / contract_units,
+        "effectiveness": rho**2,
+    }
+
+
+def hedge_contracts(ratio, exposure_value, contract_value, *, growth=1):
+    """Value-based futures count, divided by positive cash growth for optional tailing.
+
+    rounded uses nearest integer, with ties to even; contract count sign is retained.
+    Rates/cash convention are caller inputs, and growth=1 omits tailing.
+    """
+    if (
+        not np.isfinite([ratio, exposure_value, contract_value, growth]).all()
+        or exposure_value < 0
+        or min(contract_value, growth) <= 0
+    ):
+        raise ValueError("valid exposure and positive contract value/growth required")
+    count = ratio * exposure_value / (contract_value * growth)
+    return {
+        "exposure_value": exposure_value,
+        "contract_value": contract_value,
+        "contracts": count,
+        "rounded": np.rint(count),
+    }
