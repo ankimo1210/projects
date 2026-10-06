@@ -42,3 +42,12 @@ def test_forecast_vol_changes_the_hedge_without_changing_paths_or_fair_premium()
         cash -= np.maximum(a["spot"][:, -1] - 100, 0) + h.DEFAULT_TRANSACTION_COST * turnover
         assert low.pnl[name] == pytest.approx(cash, abs=1e-11)
         assert low.turnover[name] == pytest.approx(turnover, abs=1e-11)
+
+
+def test_public_pipeline_preserves_finite_policy_validation():
+    from deep_hedge_price.surface_hedge_pipeline import run_synthetic_surface_hedge_pipeline
+
+    with pytest.raises(ValueError, match="finite"):
+        run_synthetic_surface_hedge_pipeline(
+            n_paths=100, n_steps=2, deep_policy_positions=np.full((100, 2), np.nan)
+        )

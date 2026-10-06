@@ -91,42 +91,42 @@
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "SABR alpha,beta,rho,nu"
       },
       "calibration_bounds_upper": {
         "dtype": "float64",
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "SABR alpha,beta,rho,nu"
       },
       "calibration_max_evaluations": {
         "dtype": "int64",
         "shape": [
           1
         ],
-        "unit": "dimensionless"
+        "unit": "function evaluations"
       },
       "calibration_optimizer_gtol": {
         "dtype": "float64",
         "shape": [
           1
         ],
-        "unit": "dimensionless"
+        "unit": "scaled gradient infinity norm tolerance"
       },
       "calibration_optimizer_nfev": {
         "dtype": "int64",
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "function evaluations"
       },
       "calibration_optimizer_optimality": {
         "dtype": "float64",
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "scaled gradient infinity norm"
       },
       "calibration_optimizer_residuals": {
         "dtype": "float64",
@@ -134,14 +134,14 @@
           4,
           12
         ],
-        "unit": "dimensionless"
+        "unit": "annualized_volatility"
       },
       "calibration_optimizer_status": {
         "dtype": "int64",
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "scipy termination code"
       },
       "calibration_parameter_dispersion": {
         "dtype": "float64",
@@ -412,42 +412,42 @@
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "SABR alpha,beta,rho,nu"
       },
       "calibration_bounds_upper": {
         "dtype": "<f8",
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "SABR alpha,beta,rho,nu"
       },
       "calibration_max_evaluations": {
         "dtype": "<i8",
         "shape": [
           1
         ],
-        "unit": "dimensionless"
+        "unit": "function evaluations"
       },
       "calibration_optimizer_gtol": {
         "dtype": "<f8",
         "shape": [
           1
         ],
-        "unit": "dimensionless"
+        "unit": "scaled gradient infinity norm tolerance"
       },
       "calibration_optimizer_nfev": {
         "dtype": "<i8",
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "function evaluations"
       },
       "calibration_optimizer_optimality": {
         "dtype": "<f8",
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "scaled gradient infinity norm"
       },
       "calibration_optimizer_residuals": {
         "dtype": "<f8",
@@ -455,14 +455,14 @@
           4,
           12
         ],
-        "unit": "dimensionless"
+        "unit": "annualized_volatility"
       },
       "calibration_optimizer_status": {
         "dtype": "<i8",
         "shape": [
           4
         ],
-        "unit": "dimensionless"
+        "unit": "scipy termination code"
       },
       "calibration_parameter_dispersion": {
         "dtype": "<f8",
