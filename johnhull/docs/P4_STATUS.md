@@ -1,6 +1,6 @@
 # P4 ロジック先行の実装状態
 
-更新2026-10-05。範囲：Ch10–21（台帳112項目）。原典の節メモに沿い、計算をprivate moduleへ実装し、本文数値と独立検証を対象テスト・ruffで確認する。
+更新2026-10-06。範囲：Ch10–21（台帳112項目）。原典の節メモに沿い、計算をprivate moduleへ実装し、本文数値と独立検証を対象テスト・ruffで確認する。
 
 - 本人指示（2026-10-05）：受入作業はCh28を区切りに一時停止。P3はロジック36/37、正式受入8/37で保持し、次段階P4の実装を先行する。§33.2の入力不足は保留。
 - 実装ブランチ：`codex/p4-logic`。既存`codex/p3-logic`の完成済み計算を引き継ぐ。新計算の公開API追加なし。節ごとにcommit/pushする。
@@ -9,7 +9,7 @@
 
 ## 節別の実装
 
-「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed、ruff PASS（Linux/Python 3.12）。
+「ロジック完了」は表に記した計算範囲と対象検証の完了を示す。定性要求の説明・正式受入は後続。対象検証の件数は各モジュールのその時点の累計で、合算しない。最新はCh10 56 passed・Ch11 78 passed・Ch12 50 passed・Ch13 43 passed・Ch14 36 passed・Ch15 90 passed・Ch16 26 passed、ruff PASS（Linux/Python 3.12）。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 | 対象検証 |
 |---|---|---|---|---|
@@ -49,9 +49,26 @@
 | §14.7 | `_stochastic_foundations.py` | 数値pinなし。式14.17–19のlog平均・分散とstockモーメント。独立stock Euler（8/512段・2万経路）でlog分散収束・平均/分散/3CDF点をMC6SE判定 | 計算部分完了。独立検証はlog生成器を使わずstock Eulerからlogを測定。負Euler標本を除外せず全標本の正値を確認。説明・図・受入は保留 | 22 passed・ruff PASS |
 | §14.8 | `_stochastic_foundations.py` | 数値pinなし。式14.20、H0.9/0.5/0.1・100段fBM経路、H0.5→min(s,t)、隣接増分相関2^(2H−1)−1。独立fGn積分/固有値サンプル・MC6SE、Gaussian条件付き共分散 | 計算部分完了。Gaussian条件付き共分散でも非Markov性を区別。dense Choleskyは小格子向け、jitterなし。Figureの乱数軌跡を印刷pinにしない。説明・図・受入は保留 | 30 passed・ruff PASS |
 | §14.appendix | `_stochastic_foundations.py` | Eε²=1/Varε²=2、累積二次変分Var=2b⁴TΔt、式14A.10–11の相関cross項。独立χ²法則/MC、2GBM積の期待値と多driverの等価分散 | 計算部分完了。単一ε²を1と置かず累積の分散収束を検証。多変量はB C Bᵀの共分散で扱う。説明・図・受入は保留 | 36 passed・ruff PASS |
+| §15.1 | `_bsm_foundations.py` | Ex15.1 log平均3.759/分散0.02/SD0.141、印刷中間丸めの95%区間32.55–56.56（未丸め32.514742–56.603188）。Ex15.2価格平均24.43/分散103.54/SD10.18。独立密度積分とstock Euler/6SE | 計算部分完了。logのモーメントと価格のモーメント、中間丸めと未丸めを区別。z1.96は近似95%。説明・図・受入は保留 | 6 passed・ruff PASS |
+| §15.2 | `_bsm_foundations.py` | Ex15.3：3年の平均連続複利年率15%/SD11.55%/95%区間−7.6%–37.6%。独立lognormal密度の変数変換積分とstock Euler/6SE | 計算部分完了。累積log収益のSDは√T、平均年率のSDは1/√T。T=0の平均年率は未定義として拒否。説明・図・受入は保留 | 9 passed・ruff PASS |
+| §15.3 | `_bsm_foundations.py` | 本文5年return15/20/30/−20/25%：算術平均14%、100→179.40、14%固定なら192.54、幾何平均12.4%。独立Fractionの年次cash ledgerとGBMのJensen差の密度積分 | 計算部分完了。株価の期待成長率・実現連続年率・幾何平均を区別。投資額は自己資金、年ごとの単純return入力。説明・図・受入は保留 | 13 passed・ruff PASS |
+| §15.4 | `_bsm_foundations.py` | Table15.1の全20相対価格/log return、Σu.09531/Σu².00326/s.01216/年率19.3%/SE3.1%、週次4.16%・2.08ドル。独立Decimalログ/展開標本分散、配当調整と時間規約 | 計算部分完了。n−1標本SD、SEは近似。時間はcallerの年単位、本文は252営業日。配当調整と観測除外を同一視しない。説明・図・受入は保留 | 19 passed・ruff PASS |
+| §15.5 | `_bsm_foundations.py` | 本文100call売り/40株買い：株+.10/call+.04の損益−4/+4/0、delta.4→.5で10株追加。独立Fraction cash ledger、BSM曲率の有限変動残差 | 計算部分完了。rebalance cashと時価を分け、同時刻の売買は自己資金保存。有限変動のgamma残差はゼロとしない。説明・図・受入は保留 | 23 passed・ruff PASS |
+| §15.6 | `_bsm_foundations.py` | 数値pinなし。本文forward S−Kexp(−rτ)、永久到達QS/H・Q(S/H)^(−2r/σ²)、逆数株価exp((σ²−2r)τ)/Sと不適なexp(S)。独立有限差分、first-passage/負モーメント密度積分、μ消去 | 計算部分完了。f_tは暦時刻微分、入力は残存τ。永久到達はr>0・σ>0、境界条件も確認。説明・図・受入は保留 | 34 passed・ruff PASS |
+| §15.7 | `_bsm_foundations.py` | 数値pinなし。式15.18–19のexp(−rT)E_Q[ST−K]=S−Kexp(−rT)。独立lognormal積分/stock Euler 6SE・現物＋債券cash複製、Pの誤割引との対照 | 計算部分完了。§15.1/15.6の分布とforward価値を再利用。μとrを区別し、P期待値のr割引を価格としない。説明・図・受入は保留 | 39 passed・ruff PASS |
+| §15.8 | `_bsm_foundations.py` | 数値pinなし。式15.20–22のcall価格、Q行使確率N(d2)、切断一次モーメントSexp(rT)N(d1)、条件付き期待値を分離。独立密度求積/1600段CRRとσ0/T0/K0境界 | 計算部分完了。N(d1)はstock weight。行使事象はST>K、退化ATMは確率0、条件付き期待値は事象確率0でNone。説明・図・受入は保留 | 49 passed・ruff PASS |
+| §15.9 | `_bsm_foundations.py` | Ex15.6 d1.7693/d2.6278/PVK38.049、CDF.7791/.7349/補数.2209/.2651、call4.76/put.81、損益分岐変化+2.76/−2.81。独立正規密度積分（8σ tail含む）・既存cashflow | 計算部分完了。upper tailは1−CDFで差し引かず直接計算。分岐は印刷premium4.76/.81で、金利無視の名目損益。説明・図・受入は保留 | 55 passed・ruff PASS |
+| §15.10 | `_bsm_foundations.py` | Ex15.7 call7.04/warrant5.87/費用1.17百万/発表後株38.83。Snapshot15.3 50→45/費用50万、満期100ならpayoff50。独立Fraction資本台帳・terminal payoff密度積分 | 計算部分完了。新規発行の非希薄化spotと発行発表済み市場spotを区別、二重希薄化なし。Ex15.7はHullの無便益の発行費用計算。ESO固有の条件はCh16、説明・図・受入は保留 | 62 passed・ruff PASS |
+| §15.11 | `_bsm_foundations.py` | 本文σ20/30/25%でcall1.76/2.10/1.926831、価格1.875のIV23.5%（未丸め23.451291%）。独立Brent/1200段CRR再価格、Ex15.8 VIX18.5→19.3×1000=800・15points=15% | 計算部分完了。無裁定下限でIV0、上限は有限IVなし、T0のIVは未定義。VIX倍率は原典例の規約。説明・図・受入は保留 | 73 passed・ruff PASS |
+| §15.12 | `_bsm_foundations.py` | Ex15.9 PV.9742/リスク株39.0258/d1.2020/d2−.0102/CDF.5800/.4959/call3.67。独立Decimal PV/密度積分/1000段配当木、本文の早期行使条件・Black2leg恒等式 | 計算部分完了。σはS−PV(D)のvol。同一escrowedモデルの固定行使日価値とBlack近似を分離。Blackは異なるrisk componentを使い単一モデルAmericanの下限とは主張しない。説明・図・受入は保留 | 81 passed・ruff PASS |
+| §15.appendix | `_bsm_foundations.py` | 数値pinなし。15A.1–6の一般lognormal payoff・切断モーメント、m=lnE[V]−w²/2、Q平均Sexp(rT)/w=σ√TのBSM代入。独立株価密度/正規変換積分・4000段二項tail | 計算部分完了。wはlogのSD、E[V]は価格平均、payoff_meanは割引前。σ0/K0境界も検証。Ch15全13計算項目完了、説明・図・受入は保留 | 90 passed・ruff PASS |
+| §16.3 | `_employee_options.py` | 本文指数2000→2200でstrike30→33、1700なら25.50。RSU1株、MSU株数ST/S0・価値ST²/S0。独立Fraction資本台帳とlognormal MSU期待値の求積 | 計算部分完了。指数連動strike/RSU/MSUの定義を実装。会計史・現行基準・IAS 2記載の確認、§16.1–2の説明・図・受入は保留 | 6 passed・ruff PASS |
+| §16.4 | `_employee_options.py` | Ex16.1 unit6.31/1百万権利6.31百万。Ex16.2全15株価/option節点・根14.97/通常call17.98、D/G/H行使.43/.81/.335・継続11.05/106.64/24.95。独立全経路cash列挙/MC6SE/密度積分、倍率45・市場連動20/25 | 計算部分完了。原典の根を含む離職タイミングを明示。倍率は整列CRR格子を検証、一般格子では境界離散化誤差あり。倍率∞/離職0は欧州保持、無配当r≥0のcallではAmericanと同値。期待寿命BSMを理論的等価としない。説明・図・受入は保留 | 24 passed・ruff PASS |
+| §16.5 | `_employee_options.py` | 本文4/30の株価50・4/3の42をstrikeにする例のintrinsic差8。既存award/cash関数を再利用し独立Fractionの行使支払・売却cash ledgerで照合 | 算術部分のみ完了。決定日と表示日・研究の論証・法制度は説明/受入へ保留。Ch16の計算3節完了、§16.1–2と会計史の説明は未実施 | 26 passed・ruff PASS |
 
 ## 次の実装
 
-- Ch10–14の計算36節を実装・push（Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7）。Ch12–14は対象50/43/36 tests・ruff PASS。Ch10/11の56/78件は前回の結果で、今回再実行していない。
-- 次はCh15 §15.1（株価の対数正規分布）。P4の計算は合計36節、正式受入は0/112のまま。
-- 定性・説明要求は保留：Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済みだが、今回の新テストには含めていない。Ch10全12節の完了や正式受入を表すものではない。
+- Ch10–16の計算52項目を実装・push（Ch10：6、Ch11：6、Ch12：5、Ch13：11節＋付録、Ch14：7、Ch15：12節＋付録、Ch16：3）。Ch16.5は算術部分のみ。
+- 今回（2026-10-06）の追加は16項目：Ch15の13項目とCh16の3項目。対象Ch15 90/Ch16 26 tests・ruff PASS。Ch10–14は今回再実行していない。
+- 次はCh17 §17.1（指数putによるポートフォリオ保険）。P4の計算は合計52節、正式受入は0/112のまま。
+- 定性・説明要求は保留：Ch16 §16.1–2・会計史/研究の説明、Ch11 §11.2、Ch14 §14.1/14.4、Ch10 §10.5・10.8–10.12。§10.10の説明用の損失20ドルは下調べで算術確認済みだが、今回の新テストには含めていない。Ch10全12節の完了や正式受入を表すものではない。
