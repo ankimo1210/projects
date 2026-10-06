@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算36/54。次は§6.2（CF/CTD）。Ch1→9を順に継続する。
+- 現在：計算37/54。次は§6.3（rate futures/SOFR）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -49,6 +49,7 @@
 | §5.12 | `_forward_pricing.py` | 印刷数値なし。無収入/index/FX/storage/consumptionの全式、独立cash/数量終価と価値 | 計算完了。consumption式はconvenience input条件付き、上限と区別。説明・受入保留 | 18 passed・ruff check/format PASS |
 | §5.14 | `_forward_pricing.py` | 印刷数値なし。k=r/正負systematic premiumの3式。独立DCF root/固定seed期待MC6SE | 計算完了。P期待とQ価格を区別、日次決済なし、Fから真の期待を一意推定しない。説明・受入保留 | 20 passed・ruff check/format PASS |
 | §6.1 | `_rate_futures.py` | 124/184/122/180、2.6957/2.7111、1/3日、bill2.0222/2.064%/4、120156.25、54/181/1.64/157.14/157140。独立月表/Fraction | 計算完了。30/360はFeb EOMなしのbond basis、現金157140はprice小数2桁からの表示。説明・受入保留 | 2 passed・ruff check/format PASS |
+| §6.2 | `_rate_futures.py` | 32nds全5例、168.60/168600、CF146.23/1.4623/125.8323/1.4889%/123.99/121.99/1.2199、CTD2.69/1.87/2.12、Ex6.2全7値。独立年金/loan ledger | 計算完了。Hullの3月切捨て/Note月丸め規約、CTD/受渡日既知、Ex6.2は365基準。説明・受入保留 | 4 passed・ruff check/format PASS |
 
 ## 残りと検証
 
