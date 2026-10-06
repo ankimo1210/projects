@@ -638,3 +638,44 @@ def simulation_risk(
         partial = quadratic_pnl(changes, linear, beta, constant=constant)
         result.update(partial_pnl=partial, partial_risk=empirical_risk(partial, confidence))
     return result
+
+
+def rolling_var(pnl, window, forecast):
+    """Forecast day t using pnl[t-window:t] only, then align to pnl[t]."""
+    profits = _loss_vector(pnl)
+    if window < 1 or int(window) != window or window >= profits.size:
+        raise ValueError("positive integer window shorter than the series required")
+    indices = np.arange(int(window), profits.size)
+    predictions = np.array([forecast(profits[t - window : t].copy()) for t in indices], dtype=float)
+    if predictions.shape != indices.shape or not np.isfinite(predictions).all():
+        raise ValueError("forecast must return one finite VaR per day")
+    return {"indices": indices, "forecasts": predictions, "pnl": profits[indices].copy()}
+
+
+def backtest_summary(pnl, forecasts, confidence=0.99):
+    """Exception count, exact one-sided binomial tail and existing LR tests.
+
+    realized_tail_mean is descriptive: it is not an ES calibration test.
+    """
+    from scipy.stats import binom
+
+    from . import var_backtest
+
+    _risk_inputs(0, confidence)
+    profits = _loss_vector(pnl)
+    if profits.size < 2:
+        raise ValueError("at least two observations for transition tests required")
+    flags = var_backtest.exceedance_series(profits, forecasts)
+    count, n = int(flags.sum()), flags.size
+    transitions = np.zeros((2, 2), dtype=int)
+    np.add.at(transitions, (flags[:-1], flags[1:]), 1)
+    return {
+        "exceedances": flags,
+        "count": count,
+        "exceedance_rate": count / n,
+        "binomial_upper_tail": float(binom.sf(count - 1, n, 1 - confidence)),
+        "transitions": transitions,
+        "kupiec": var_backtest.kupiec_pof(count, n, confidence),
+        "independence": var_backtest.christoffersen_independence(flags),
+        "realized_tail_mean": float((-profits)[flags.astype(bool)].mean()) if count else None,
+    }
