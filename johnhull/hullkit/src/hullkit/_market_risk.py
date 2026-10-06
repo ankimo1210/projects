@@ -489,3 +489,81 @@ def ois_bond_legs(fixed_cashflows, discounts, floating_value, *, receive_fixed=T
         "floating": float(floating_value),
         "value": (1 if receive_fixed else -1) * (fixed - floating_value),
     }
+
+
+def _quadratic_inputs(linear, beta, constant):
+    a = _loss_vector(linear)
+    b = np.asarray(beta, dtype=float)
+    if (
+        b.shape != (a.size, a.size)
+        or not np.isfinite(b).all()
+        or not np.allclose(b, b.T, atol=1e-14, rtol=1e-12)
+        or not np.isfinite(constant)
+    ):
+        raise ValueError("finite symmetric quadratic coefficients and constant required")
+    return a, b
+
+
+def quadratic_pnl(changes, linear, beta, *, constant=0):
+    """a'x + x'Bx + constant; B includes one-half the spot-scaled Hessian.
+
+    Full cross terms are included. The constant may represent a separately
+    chosen theta/carry shift; Hull's default short-horizon example omits it.
+    """
+    a, b = _quadratic_inputs(linear, beta, constant)
+    x = np.asarray(changes, dtype=float)
+    if x.ndim not in (1, 2) or x.shape[-1] != a.size or not np.isfinite(x).all():
+        raise ValueError("finite scenario returns matching the coefficients required")
+    return constant + x @ a + np.einsum("...i,ij,...j->...", x, b, x)
+
+
+def quadratic_moments(linear, beta, covariance, *, constant=0):
+    """First three moments of a'x+x'Bx for zero-mean Gaussian x (TN10).
+
+    skewness=0 is a reporting convention when variance is zero.
+    """
+    a, b = _quadratic_inputs(linear, beta, constant)
+    cov = _covariance(covariance, a.size)
+    bc = b @ cov
+    mean = float(constant + np.trace(bc))
+    variance = max(float(a @ cov @ a + 2 * np.trace(bc @ bc)), 0)
+    third = float(6 * a @ cov @ b @ cov @ a + 8 * np.trace(bc @ bc @ bc))
+    return {
+        "mean": mean,
+        "variance": variance,
+        "sigma": math.sqrt(variance),
+        "central_third": third,
+        "skewness": third / variance**1.5 if variance > 0 else 0.0,
+        "raw_second": variance + mean**2,
+        "raw_third": third + 3 * mean * variance + mean**3,
+    }
+
+
+def cornish_fisher_pnl_quantile(mean, sigma, skewness, probability, *, z=None):
+    """TN10 third-moment correction, not an exact or always-monotone quantile.
+
+    z optionally replays a rounded printed normal quantile. With z omitted the
+    exact normal quantile at probability is used. No kurtosis term is included.
+    """
+    _risk_inputs(sigma, probability, mean)
+    if not np.isfinite(skewness) or (z is not None and not np.isfinite(z)):
+        raise ValueError("finite skewness/normal quantile required")
+    normal_z = float(norm.ppf(probability)) if z is None else z
+    return float(mean + sigma * (normal_z + (normal_z**2 - 1) * skewness / 6))
+
+
+def quadratic_normal_quantile(linear, quadratic, probability, *, constant=0):
+    """Exact quantile of bZ+cZ^2+constant for one standard normal Z."""
+    from scipy.stats import ncx2
+
+    if not np.isfinite([linear, quadratic, constant, probability]).all() or not 0 < probability < 1:
+        raise ValueError("finite coefficients and interior probability required")
+    if quadratic == 0:
+        return float(constant + abs(linear) * norm.ppf(probability))
+    noncentrality = (linear / (2 * quadratic)) ** 2
+    point = (
+        ncx2.ppf(probability, 1, noncentrality)
+        if quadratic > 0
+        else ncx2.isf(probability, 1, noncentrality)
+    )
+    return float(constant + quadratic * (point - noncentrality))
