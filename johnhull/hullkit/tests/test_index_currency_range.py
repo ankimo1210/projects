@@ -67,3 +67,18 @@ def test_mathematically_infeasible_ordered_collar_and_reversed_strikes():
         index.zero_cost_range_forward(1.32, 1.4, .02, .02, .14, .25)
     with pytest.raises(ValueError):
         index.range_forward_cash(1.32, 1.4, 1.3, 1000000)
+
+
+def test_zero_cost_range_forward_uses_domestic_discounting_and_foreign_carry():
+    # Distinct rates: swapping r and rf moves the upper strike from 1.3691 to 1.3142.
+    spot, lower, r, rf, sigma, t = 1.32, 1.30, .05, .01, .14, .25
+
+    def gk(strike, sign):
+        d1 = (math.log(spot/strike)+(r-rf+sigma**2/2)*t)/(sigma*math.sqrt(t))
+        d2 = d1-sigma*math.sqrt(t)
+        return sign*(spot*math.exp(-rf*t)*norm.cdf(sign*d1)-strike*math.exp(-r*t)*norm.cdf(sign*d2))
+
+    from scipy.optimize import brentq
+    upper = brentq(lambda k: gk(k, 1)-gk(lower, -1), lower, 3*spot, xtol=1e-14)
+    assert index.zero_cost_range_forward(spot, lower, r, rf, sigma, t)["upper_strike"] == pytest.approx(upper, abs=1e-10)
+    assert upper == pytest.approx(1.3691, abs=5e-5)

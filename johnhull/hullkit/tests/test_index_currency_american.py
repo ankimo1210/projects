@@ -68,3 +68,30 @@ def test_rounding_tie_between_intrinsic_and_continuation_is_not_exercise():
     flat = index.carry_exercise_comparison(27000, 1000, 0, 0, 0, .25, 3)
     assert tree["exercise_now"] is False
     assert flat["exercise_now"] is False
+
+
+def independent_root_continuation(spot, strike, rate, yield_rate, sigma, maturity, steps, kind):
+    dt = maturity/steps
+    up = math.exp(sigma*math.sqrt(dt))
+    p = (math.exp((rate-yield_rate)*dt)-1/up)/(up-1/up)
+    sign = 1 if kind == "call" else -1
+    value = [max(sign*(spot*up**(steps-2*j)-strike), 0) for j in range(steps+1)]
+    for i in range(steps-1, 0, -1):
+        value = [max(math.exp(-rate*dt)*(p*value[j]+(1-p)*value[j+1]), sign*(spot*up**(i-2*j)-strike)) for j in range(i+1)]
+    return math.exp(-rate*dt)*(p*value[0]+(1-p)*value[1])
+
+
+@pytest.mark.parametrize("spot,kind,expected_now", [(40, "put", True), (100, "put", False), (100, "call", False)])
+def test_root_continuation_is_the_discounted_american_one_step_value(spot, kind, expected_now):
+    result = index.carry_exercise_comparison(spot, 100, .1, .02, .2, 1, 6, kind=kind)
+    continuation = independent_root_continuation(spot, 100, .1, .02, .2, 1, 6, kind)
+    assert result["root_continuation"] == pytest.approx(continuation, abs=1e-12)
+    assert result["exercise_now"] is expected_now
+
+
+def test_deterministic_continuation_is_the_best_later_exercise_date():
+    # sigma=0 put with r>q: the best later date is the first step, not maturity.
+    result = index.carry_exercise_comparison(60, 100, .1, 0, 0, 1, 4, kind="put")
+    later = [math.exp(-.1*j/4)*max(100-60*math.exp(.1*j/4), 0) for j in range(1, 5)]
+    assert result["root_continuation"] == pytest.approx(max(later), abs=1e-12)
+    assert result["exercise_now"] is True

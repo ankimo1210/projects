@@ -61,3 +61,16 @@ def test_basis_residual_and_cost_reduce_actual_floor():
 def test_put_insurance_plan_requires_positive_put_exposure():
     with pytest.raises(ValueError):
         index.index_put_insurance(500000, 1000, 0, .12, .25, .04, .04, 450000)
+
+
+def test_capm_and_put_strike_keep_index_and_portfolio_yields_apart():
+    value, index0, beta, rate, t, q_index, q_port = 500000, 1000, 1.5, Fraction(4, 100), Fraction(1, 4), Fraction(3, 100), Fraction(1, 100)
+    scenario = index.capm_portfolio_scenario(value, index0, 1080, beta, float(rate), float(t), float(q_index), float(q_port))
+    total = rate*t+Fraction(3, 2)*(Fraction(80, 1000)+q_index*t-rate*t)
+    assert scenario["portfolio_total_return"] == pytest.approx(float(total), abs=1e-14)
+    assert scenario["price_value"] == pytest.approx(float(value*(1+total-q_port*t)), abs=1e-8)
+    # The designed strike must deliver the floor in the same CAPM scenario.
+    floor = 450000
+    strike = index.index_put_insurance(value, index0, beta, float(rate), float(t), float(q_index), float(q_port), floor)["strike"]
+    at_strike = index.capm_portfolio_scenario(value, index0, strike, beta, float(rate), float(t), float(q_index), float(q_port))
+    assert at_strike["price_value"] == pytest.approx(floor, abs=1e-6)

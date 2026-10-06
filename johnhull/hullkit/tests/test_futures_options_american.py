@@ -48,3 +48,15 @@ def test_deterministic_boundary_agrees_with_discounted_grid_cash():
 def test_futures_cannot_expire_before_the_option():
     with pytest.raises(ValueError):
         futures.american_spot_futures_comparison(100, 100, .06, 0, .25, 1, futures_maturity=.5)
+
+
+def test_later_futures_expiry_changes_only_the_futures_leg():
+    same = futures.american_spot_futures_comparison(100, 100, .06, .02, .25, 1, 400)
+    later = futures.american_spot_futures_comparison(100, 100, .06, .02, .25, 1, 400, futures_maturity=1.5)
+    assert later["spot_call"] == pytest.approx(same["spot_call"], abs=1e-12)
+    assert later["forward"] == pytest.approx(100*math.exp(.04*1.5), abs=1e-12)
+    from scipy.stats import norm
+    f0 = 100*math.exp(.04*1.5)
+    d1 = (math.log(f0/100)+.25**2/2)/.25
+    black = math.exp(-.06)*(f0*norm.cdf(d1)-100*norm.cdf(d1-.25))
+    assert later["futures_european_call"] == pytest.approx(black, abs=1e-12)
