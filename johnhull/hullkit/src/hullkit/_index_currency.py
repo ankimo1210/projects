@@ -166,3 +166,29 @@ def carry_from_option_quotes(spot, strike, rate, maturity, call, put):
     if forward <= 0:
         raise ValueError("quotes imply a nonpositive lognormal forward")
     return {"forward": forward, "yield_rate": rate-math.log(forward/spot)/maturity}
+
+
+def carry_implied_vol(price, spot, strike, rate, yield_rate, maturity, *, kind="call", price_tolerance=1e-10):
+    """European IV via the no-yield bisection at the prepaid spot."""
+    from ._bsm_foundations import implied_vol_bisection
+
+    _carry_inputs(spot, strike, rate, yield_rate, maturity)
+    return implied_vol_bisection(price, spot*math.exp(-yield_rate*maturity), strike, rate, maturity, kind=kind, price_tolerance=price_tolerance)
+
+
+def currency_inversion(spot, strike, domestic_rate, foreign_rate, sigma, maturity, *, kind="call"):
+    """European reciprocal quote with swapped rates and opposite option.
+
+    Per one original foreign unit, the inverse option notional is K domestic
+    units. Its foreign-currency price is converted at today's S, giving S*K.
+    This uses the foreign numeraire, not an inverted path under the old measure.
+    """
+    _carry_inputs(spot, strike, domestic_rate, foreign_rate, maturity)
+    if strike <= 0 or kind not in ("call", "put"):
+        raise ValueError("positive reciprocal strike and call/put kind required")
+    opposite = "put" if kind == "call" else "call"
+    inverse = carry_option_details(1/spot, 1/strike, foreign_rate, domestic_rate, sigma, maturity)
+    unit_value = inverse[opposite]
+    return {"inverse_spot": 1/spot, "inverse_strike": 1/strike,
+            "inverse_kind": opposite, "inverse_notional": strike,
+            "foreign_unit_value": unit_value, "domestic_value": spot*strike*unit_value}
