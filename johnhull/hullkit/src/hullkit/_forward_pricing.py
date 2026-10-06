@@ -142,3 +142,65 @@ def converted_index_value(index_value, multiplier, fx_quote):
     if not np.isfinite([index_value, multiplier, fx_quote]).all() or min(multiplier, fx_quote) <= 0:
         raise ValueError("finite index and positive multiplier/FX quote required")
     return multiplier * index_value * fx_quote
+
+
+def currency_carry_cash(
+    spot,
+    domestic_rate,
+    foreign_rate,
+    maturity,
+    delivery_quote,
+    *,
+    foreign_principal=1000,
+    domestic_principal=1000,
+):
+    """Covered FX cash in both financing directions, quote domestic per foreign unit.
+
+    All rates are continuous. Cheap/rich labels denote candidate trade directions,
+    and profits can be negative when that direction is not an arbitrage opportunity.
+    """
+    if (
+        not np.isfinite(
+            [
+                spot,
+                domestic_rate,
+                foreign_rate,
+                maturity,
+                delivery_quote,
+                foreign_principal,
+                domestic_principal,
+            ]
+        ).all()
+        or min(spot, delivery_quote) <= 0
+        or min(maturity, foreign_principal, domestic_principal) < 0
+    ):
+        raise ValueError("positive FX quotes and valid time/principal required")
+    gd = np.exp(domestic_rate * maturity)
+    gf = np.exp(foreign_rate * maturity)
+    foreign_debt = foreign_principal * gf
+    domestic_asset = foreign_principal * spot * gd
+    foreign_bought = domestic_principal / spot
+    foreign_asset = foreign_bought * gf
+    domestic_debt = domestic_principal * gd
+    return {
+        "fair_forward": spot * gd / gf,
+        "foreign_repayment": foreign_debt,
+        "domestic_investment": domestic_asset,
+        "cheap_forward_cost": foreign_debt * delivery_quote,
+        "cheap_profit": domestic_asset - foreign_debt * delivery_quote,
+        "foreign_bought": foreign_bought,
+        "foreign_investment": foreign_asset,
+        "domestic_repayment": domestic_debt,
+        "rich_forward_receipt": foreign_asset * delivery_quote,
+        "rich_profit": foreign_asset * delivery_quote - domestic_debt,
+    }
+
+
+def forward_rate_differential(front_quote, back_quote, maturity_gap):
+    """Continuous funding-rate difference inferred from two covered-FX forward quotes."""
+    if (
+        not np.isfinite([front_quote, back_quote, maturity_gap]).all()
+        or min(front_quote, back_quote, maturity_gap) <= 0
+    ):
+        raise ValueError("positive quotes and maturity gap required")
+    return np.log(back_quote / front_quote) / maturity_gap
