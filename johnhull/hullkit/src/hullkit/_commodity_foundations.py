@@ -354,3 +354,50 @@ def lognormal_weather_call(mean, log_sd, strike, tick, rate, maturity, *, cap=No
         "d1": d1,
         "d2": d2,
     }
+
+
+def joint_energy_weather_hedge(profits, energy_index, weather_index, *, ticks=(1, 1)):
+    """Fit Y=a+bP+cT on a supplied training sample; signed contracts are (-b/tickP,-c/tickT).
+
+    Rank deficiency makes the individual positions unidentified and is rejected.
+    Fitted historical coefficients are P regression exposures, not Q model drift.
+    """
+    y = np.asarray(profits, dtype=float)
+    P = np.asarray(energy_index, dtype=float)
+    T = np.asarray(weather_index, dtype=float)
+    tick = np.asarray(ticks, dtype=float)
+    if (
+        y.ndim != 1
+        or y.shape != P.shape
+        or y.shape != T.shape
+        or len(y) < 3
+        or not np.isfinite(np.r_[y, P, T]).all()
+        or tick.shape != (2,)
+        or np.any(tick <= 0)
+    ):
+        raise ValueError("matching finite observations and two positive contract ticks required")
+    X = np.column_stack([np.ones(len(y)), P, T])
+    beta, _, rank, _ = np.linalg.lstsq(X, y, rcond=None)
+    if rank < 3:
+        raise ValueError("full regression rank required for unique hedge positions")
+    residual = y - X @ beta
+    return {
+        "intercept": float(beta[0]),
+        "coefficients": beta[1:],
+        "positions": -beta[1:] / tick,
+        "ticks": tick,
+        "training_residual": residual,
+    }
+
+
+def energy_weather_hedge_cash(
+    model, profits, energy_index, weather_index, *, energy_entry, weather_entry
+):
+    """Realized profit plus frozen positions' forward cash on a separate evaluation sample."""
+    y = np.asarray(profits, dtype=float)
+    P = np.asarray(energy_index, dtype=float)
+    T = np.asarray(weather_index, dtype=float)
+    if y.shape != P.shape or y.shape != T.shape:
+        raise ValueError("matching evaluation cash/index shapes required")
+    changes = np.stack([P - energy_entry, T - weather_entry], axis=-1)
+    return y + changes @ (model["positions"] * model["ticks"])

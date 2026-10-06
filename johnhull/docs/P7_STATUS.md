@@ -5,7 +5,7 @@
 - 完了条件：既存節メモの式/例を確認、計画を数行追記、private計算部品と本文/独立検証をそろえ、変更モジュールのtests/ruffを通す。入力不足は明示して次の節へ進む。
 - 1節1コミット（P7 §xx.y）、codex/p7-logicへ節ごとpush。公開API・依存・台帳を変更しない。教材・画面・章受入・全suite・D1/保管庫は保留。
 - 正式受入：P7 0/16、全体33/306。Ch1からの正式受入は別チャットの専用worktreeで進むため、この作業ではその台帳/教材を編集しない。
-- 現在：計算4/11、入力不足0。次は§35.8の共同hedge。
+- 現在：計算5/11、入力不足0。次はCh36の投資評価/実物option。
 
 ## 節別の実装
 
@@ -17,6 +17,7 @@
 | §35.5 | `_commodity_foundations.py` | 56°F/HDD9/CDD0、HDD820→1.2M/cap1.5M/upper850。独立日別台帳とcall spread/温度換算 | 計算完了。観測期間/stationはcaller入力、Celsius換算ではbase/tickも変える。市場仕様は原典時点。 | ロジック完了・8 passed・ruff check/format PASS |
 | §35.6 | `_commodity_foundations.py` | 100M exposure→retained30M、loss50M→15M、30–40M layer10MとCAT principal10M。独立3領域台帳/call spread | 計算完了。原典reinsurerのlong/short文は不整合、protection買い手の受取とwriterの逆符号を固定。triggerはcaller入力。 | ロジック完了・10 passed・ruff check/format PASS |
 | §35.7 | `_commodity_foundations.py` | d1 .2376/d2 .1676、250900/243400、mean697→180400/175100。独立密度積分/MCと支払割引 | 計算完了。非取引指数・系統リスク0の本文仮定に条件付き、trend原データはなく697を本文入力として使う。log-SDへ√年数を掛けない。 | ロジック完了・12 passed・ruff check/format PASS |
+| §35.8 | `_commodity_foundations.py` | 本文にデータ/数値なし。合成a+bP+cT、独立共分散正規方程式とtrain/holdoutの単独/共同hedge | 計算完了。rank不足では一意な契約数が出ないため拒否。train推定をholdoutで固定し、Q pricing/完全hedgeを主張しない。 | ロジック完了・14 passed・ruff check/format PASS |
 
 ## 残りと検証
 
