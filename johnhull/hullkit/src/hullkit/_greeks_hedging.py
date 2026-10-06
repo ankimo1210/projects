@@ -436,3 +436,78 @@ def futures_hedge_units(asset_hedge, rate, yield_rate, maturity, *, contract_siz
         "futures_delta": futures_delta,
         "forward_delta": math.exp(-yield_rate * maturity),
     }
+
+
+def portfolio_insurance_target(value, floor, rate, yield_rate, sigma, maturity):
+    """Eq19.8 put-delta sale fraction; original portfolio value is the underlying.
+
+    A target holding is not a guarantee under gaps or discrete rebalancing.
+    The put's cost is not removed by creating it synthetically.
+    """
+    from scipy.special import ndtr
+
+    from .bsm import d1
+
+    if (
+        not all(math.isfinite(x) for x in (value, floor, rate, yield_rate, sigma, maturity))
+        or min(value, floor, sigma, maturity) <= 0
+    ):
+        raise ValueError("positive portfolio/floor/diffusive IV/time and finite rates required")
+    first = float(d1(value, floor, rate, sigma, maturity, q=yield_rate))
+    fraction = math.exp(-yield_rate * maturity) * float(ndtr(-first))
+    return {
+        "d1": first,
+        "put_delta": -fraction,
+        "sell_fraction": fraction,
+        "sale_value": value * fraction,
+        "target_risky_value": value * (1 - fraction),
+    }
+
+
+def insurance_futures_target(
+    value, floor, rate, yield_rate, sigma, maturity, index_spot, multiplier, futures_maturity
+):
+    """Ex19.10 short index futures for a portfolio that mirrors the index (beta=1)."""
+    result = portfolio_insurance_target(value, floor, rate, yield_rate, sigma, maturity)
+    if not math.isfinite(index_spot) or index_spot <= 0:
+        raise ValueError("positive finite index required")
+    futures = futures_hedge_units(
+        -result["sale_value"] / index_spot,
+        rate,
+        yield_rate,
+        futures_maturity,
+        contract_size=multiplier,
+    )
+    return {
+        **result,
+        "contracts_to_short": -futures["contracts"],
+        "rounded_contracts_to_short": -futures["rounded_contracts"],
+    }
+
+
+def synthetic_put_replay(paths, times, strike, rate, sigma):
+    """Nondividend synthetic put cash replay, initially funded with fair premium.
+
+    The bank initially holds put_value - delta*S0. The insured benchmark and
+    synthetic strategy both start with S0 + put_value capital; no free floor
+    is implied. There are no dividends, transaction costs or intermediate gaps
+    observed between the caller's grid points.
+    """
+    from ._index_currency import carry_option_details
+
+    prices = _path_matrix(paths)
+    targets = delta_holdings(prices, times, strike, rate, sigma, kind="put")
+    times = np.asarray(times, dtype=float)
+    replay = hedge_cash_replay(prices, times, strike, rate, targets, kind="put")
+    initial = np.array(
+        [carry_option_details(s, strike, rate, 0, sigma, times[-1])["put"] for s in prices[:, 0]]
+    )
+    payoff = np.maximum(strike - prices[:, -1], 0)
+    synthetic = initial * math.exp(rate * times[-1]) - replay["terminal_cost"] + payoff
+    return {
+        "initial_put_value": initial,
+        "synthetic_put_terminal": synthetic,
+        "insured_terminal": prices[:, -1] + synthetic,
+        "true_put_insured_terminal": prices[:, -1] + payoff,
+        "terminal_replication_error": synthetic - payoff,
+    }
