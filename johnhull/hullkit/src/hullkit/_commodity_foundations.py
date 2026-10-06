@@ -279,3 +279,39 @@ def index_call_cash(index, strike, tick, *, cap=None, side="long", premium=0):
         "net": sign * (payoff - premium),
         "upper_strike": None if cap is None else strike + cap / tick,
     }
+
+
+def proportional_reinsurance(losses, ceded_share):
+    """Gross indemnity/retained losses under a stated proportional cession; no premium."""
+    loss = np.asarray(losses, dtype=float)
+    if np.any(loss < 0) or not np.isfinite(loss).all() or not 0 <= ceded_share <= 1:
+        raise ValueError("nonnegative losses and cession in [0,1] required")
+    return {"ceded_loss": loss * ceded_share, "retained_loss": loss * (1 - ceded_share)}
+
+
+def reinsurance_layer(losses, attachment, width, *, premium=0):
+    """Protection buyer's positive layer indemnity and writer's opposite net cash.
+
+    Hull's prose about the reinsurer holding a long spread conflicts with its
+    writer role. The long lower/short upper call pays the protection buyer.
+    """
+    loss = np.asarray(losses, dtype=float)
+    if np.any(loss < 0) or not np.isfinite(loss).all() or min(attachment, width, premium) < 0:
+        raise ValueError("nonnegative loss/layer/premium inputs required")
+    paid = np.minimum(np.maximum(loss - attachment, 0), width)
+    return {
+        "indemnity": paid,
+        "retained_loss": loss - paid,
+        "buyer_net": paid - premium,
+        "writer_net": premium - paid,
+    }
+
+
+def cat_bond_principal(principal, trigger_loss, attachment):
+    """Principal split for a supplied loss-index layer whose width equals principal.
+
+    trigger_loss follows the term sheet; it need not be the insurer's actual loss.
+    Coupons/other trigger rules are separate contractual inputs, not guessed here.
+    """
+    paid = reinsurance_layer(trigger_loss, attachment, principal)["indemnity"]
+    return {"released_principal": paid, "remaining_principal": principal - paid}
