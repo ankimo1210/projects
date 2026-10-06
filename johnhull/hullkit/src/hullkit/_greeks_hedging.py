@@ -293,3 +293,83 @@ def rho_units(spot, strike, rate, sigma, maturity, *, kind="call", yield_rate=0)
         "per_rate_point": 0.01 * value,
         "per_basis_point": 0.0001 * value,
     }
+
+
+def scenario_extremes(spot_changes, vol_changes, pnl):
+    """Read the worst cell; rows are absolute IV shocks, columns spot shocks."""
+    dx = np.asarray(spot_changes, dtype=float)
+    dv = np.asarray(vol_changes, dtype=float)
+    values = np.asarray(pnl, dtype=float)
+    if (
+        dx.ndim != 1
+        or dv.ndim != 1
+        or min(dx.size, dv.size) == 0
+        or values.shape != (dv.size, dx.size)
+        or any(np.any(~np.isfinite(x)) for x in (dx, dv, values))
+    ):
+        raise ValueError("finite nonempty axes and matching P&L grid required")
+    row, column = np.unravel_index(np.argmin(values), values.shape)
+    return {
+        "worst_pnl": float(values[row, column]),
+        "spot_change": float(dx[column]),
+        "vol_change": float(dv[row]),
+    }
+
+
+def scenario_reprice(book, spot, rate, spot_changes, vol_changes, *, elapsed=0, yield_rate=0):
+    """Mark-to-market change for a synthetic European book, not Table19.5's book.
+
+    Each book item is (underlying quantity, kind, strike, remaining years, IV).
+    Spot shocks and parallel IV shocks are absolute, not relative percentages.
+    All maturities must cover the horizon; value changes exclude funding,
+    hedging and dividends paid during the horizon. Yield q stays fixed.
+    """
+    from ._index_currency import carry_option_details
+
+    dx = np.asarray(spot_changes, dtype=float)
+    dv = np.asarray(vol_changes, dtype=float)
+    book = tuple(book)
+    if (
+        not all(math.isfinite(x) for x in (spot, rate, elapsed, yield_rate))
+        or spot <= 0
+        or elapsed < 0
+        or not book
+    ):
+        raise ValueError("finite market, positive spot and nonnegative horizon required")
+    if (
+        dx.ndim != 1
+        or dv.ndim != 1
+        or min(dx.size, dv.size) == 0
+        or np.any(~np.isfinite(dx))
+        or np.any(~np.isfinite(dv))
+        or np.any(spot + dx <= 0)
+    ):
+        raise ValueError("finite nonempty shocks with positive resulting spots required")
+    for quantity, kind, strike, maturity, sigma in book:
+        if (
+            not all(math.isfinite(x) for x in (quantity, strike, maturity, sigma))
+            or kind not in ("call", "put")
+            or min(strike, sigma) < 0
+            or maturity < elapsed
+            or np.any(sigma + dv < 0)
+        ):
+            raise ValueError("finite European book with nonnegative resulting time/IV required")
+
+    def value(current_spot, vol_shock, time_passed):
+        return sum(
+            quantity
+            * carry_option_details(
+                current_spot, strike, rate, yield_rate, sigma + vol_shock, maturity - time_passed
+            )[kind]
+            for quantity, kind, strike, maturity, sigma in book
+        )
+
+    initial = value(spot, 0, 0)
+    values = np.array([[value(spot + x, v, elapsed) for x in dx] for v in dv])
+    pnl = values - initial
+    return {
+        "initial_value": initial,
+        "scenario_values": values,
+        "pnl": pnl,
+        "worst": scenario_extremes(dx, dv, pnl),
+    }
