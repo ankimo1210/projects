@@ -57,3 +57,12 @@ def convert_rate(rate, source_frequency, target_frequency):
         raise ValueError("positive source growth required")
     continuous = rate if source_frequency is None else to_continuous(rate, source_frequency)
     return continuous if target_frequency is None else from_continuous(continuous, target_frequency)
+
+
+def zero_investment(principal, zero_rate, maturity):
+    """Terminal amount for a continuous zero-rate investment, without coupons."""
+    from .rates import discount_factor
+
+    if not np.isfinite(principal) or principal < 0:
+        raise ValueError("nonnegative principal required")
+    return principal / discount_factor(maturity, ([maturity], [zero_rate]))
