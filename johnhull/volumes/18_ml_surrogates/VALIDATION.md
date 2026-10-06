@@ -14,8 +14,8 @@
 | `delta_mae` | 0.0017494819891811248 |
 | `dml_improved_a_greek_without_price_degradation` | True |
 | `hard_violation_rate` | 0.0 |
-| `heston_bsm_residual_mae` | 0.0006117290429284944 |
-| `heston_raw_price_mae` | 0.012620526620790065 |
+| `heston_bsm_residual_mae` | 0.0006116779078851522 |
+| `heston_raw_price_mae` | 0.012620475485746721 |
 | `ood_delta_mae` | 0.0021547001010709587 |
 | `ood_price_mae_normalized` | 1.6064324659893392 |
 | `ood_price_worst_absolute_error` | 261.85164803734585 |
@@ -36,7 +36,7 @@
 | `delta_mae` | 0.0017494819891811248 | < 0.002 as the mean of the test-split per-row errors | PASS |
 | `hard_check_set` | 8 | exact documented 8-check set | PASS |
 | `hard_check_violations` | 0 | == 0 | PASS |
-| `residual_baseline` | 0.0006117290429284944 | < raw-price MAE | PASS |
+| `residual_baseline` | 0.0006116779078851522 | < raw-price MAE | PASS |
 | `mc_ci_coverage` | 0.9 | each estimand in [0.80, 1.00], recomputed from the 20 seeded intervals | PASS |
 | `mc_standard_error_scaling` | 0.5036523091029843 | each 4x-path ratio in [0.40, 0.60], recomputed from the paired standard errors | PASS |
 

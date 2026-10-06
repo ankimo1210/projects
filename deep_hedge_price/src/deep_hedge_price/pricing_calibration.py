@@ -59,7 +59,7 @@ def _finite_vector(values: np.ndarray, name: str) -> np.ndarray:
     return array
 
 
-def calibrate_parameters(
+def _calibrate_with_evidence(
     forward: ForwardModel,
     targets: np.ndarray,
     initial: np.ndarray,
@@ -68,8 +68,8 @@ def calibrate_parameters(
     n_starts: int = 5,
     seed: int = 0,
     weights: np.ndarray | None = None,
-) -> CalibrationResult:
-    """Fit a forward teacher/surrogate and retain initial-value sensitivity."""
+) -> tuple[CalibrationResult, dict[str, np.ndarray]]:
+    """Retain optimizer evidence as well as the public calibration result."""
     targets = _finite_vector(targets, "targets")
     initial = _finite_vector(initial, "initial")
     lower, upper = (_finite_vector(bound, "bounds") for bound in bounds)
@@ -104,6 +104,7 @@ def calibrate_parameters(
     initials = [initial]
     initials.extend(rng.uniform(lower, upper) for _ in range(n_starts - 1))
     starts: list[CalibrationStart] = []
+    raw = []
     for point in initials:
         result = least_squares(
             residual,
@@ -111,6 +112,7 @@ def calibrate_parameters(
             bounds=(lower, upper),
             max_nfev=2_000,
         )
+        raw.append(result)
         fitted = np.asarray(forward(result.x), dtype=float)
         starts.append(
             CalibrationStart(
@@ -126,12 +128,39 @@ def calibrate_parameters(
         raise RuntimeError("all calibration starts failed")
     best = min(successful, key=lambda item: item.repricing_rmse)
     matrix = np.stack([item.parameters for item in starts])
-    return CalibrationResult(
+    calibration = CalibrationResult(
         parameters=best.parameters,
         repricing_rmse=best.repricing_rmse,
         starts=tuple(starts),
         parameter_dispersion=np.std(matrix, axis=0),
     )
+
+    return calibration, {
+        "calibration_optimizer_status": np.array([r.status for r in raw]),
+        "calibration_optimizer_nfev": np.array([r.nfev for r in raw]),
+        "calibration_optimizer_optimality": np.array([r.optimality for r in raw]),
+        "calibration_optimizer_residuals": np.stack([r.fun for r in raw]),
+        "calibration_bounds_lower": lower,
+        "calibration_bounds_upper": upper,
+        "calibration_max_evaluations": np.array([2000]),
+        "calibration_optimizer_gtol": np.array([1e-8]),
+    }
+
+
+def calibrate_parameters(
+    forward: ForwardModel,
+    targets: np.ndarray,
+    initial: np.ndarray,
+    bounds: tuple[np.ndarray, np.ndarray],
+    *,
+    n_starts: int = 5,
+    seed: int = 0,
+    weights: np.ndarray | None = None,
+) -> CalibrationResult:
+    """Fit a forward teacher/surrogate and retain initial-value sensitivity."""
+    return _calibrate_with_evidence(
+        forward, targets, initial, bounds, n_starts=n_starts, seed=seed, weights=weights
+    )[0]
 
 
 def calibration_error_metrics(

@@ -29,7 +29,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | Beyond Hull（vol13–28） | すべてdone | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 全節監査の是正 | 第1–5便完了 | 残りは「全節監査と是正」の表 |
 | 節単位の受入 | Ch28まで受入33・未評価273（10.8%） | P0/P1/P2完了、P3正式8/37・ロジック36/37。§33.2は入力不足。教材・正式受入を保留し、P4/P5/P6とP7の実装可能な計算を先行して完了。[P3状態](docs/P3_STATUS.md) |
-| ロジック先行 | P3 36/37、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11 | codex/p7-logicで実装可能なCh35–37計算を完了。§33.2/§36.4は入力不足。次はP8残指摘の現コード照合、教材・正式受入は保留。[P6状態](docs/P6_STATUS.md)・[P7状態](docs/P7_STATUS.md) |
+| ロジック先行 | P3 36/37、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11 | codex/p7-logicで実装可能なCh35–37計算を完了。§33.2/§36.4は入力不足。P8の計算修正/根拠配列/改竄検証を完了、製品とリリースの確認中。教材・正式受入は保留。[P6状態](docs/P6_STATUS.md)・[P7状態](docs/P7_STATUS.md) |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。Ch28：依存変更2節を再検査 | §28.2/28.5のbrowser/runtime/pytest・両保管庫PASS。他28節は完全指紋とruntimeが同じ直接のredrawn基点を再利用。新6図/24表示状態と基点画像の両コピー復元PASS。[章記録](docs/validation/chapter-28/acceptance-check.json) |
 | テスト・レビュー | P7対象28 passed、3モジュールのdocstring/索引6 passed、ruff check/format PASS | 本文例/独立参照、16項目の下調べ/台帳と計算11行（10実装/1入力不足）を照合。[P7状態](docs/P7_STATUS.md)。P6対象124・索引等18は[P6状態](docs/P6_STATUS.md)、P5対象196とレビュー側5311 passed・6 skippedは[P5状態](docs/P5_STATUS.md)に保持。正式受入の直近全suiteは[Ch28記録](docs/validation/chapter-28/full-suite.json) |

@@ -798,7 +798,7 @@ vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成�
 
 改竄テストを 8 件追加（未調整クーポンの拡大、最終クーポンに床を当てる、満期前の元本、YoY 比・始点調整項・共分散・終点フォワードの改変）。既存の vol 26 配列 46 本は byte 単位で不変、追加 7 本。`frontier_reference.py` を編集したので vol 21 の SHA 契約により vol 21 の reference を再生成した（1 行の diff）。
 
-## 12. 現在の状態（第 4 便の後、ID 別）
+## 12. 現在の状態（2026-10-07、P8是正を反映、ID 別）
 
 §0–§10 は初回監査時点の記述。現在どうなっているかはこの表で判断する。「対応済み」は commit の変更とそのテスト・ゲートで確認したもので、節単位の完全性を意味しない。
 
@@ -808,11 +808,11 @@ vol 21 は `frontier_reference.py` の SHA 契約のため各変更で再生成�
 | 確認済み欠陥 | D9 | 対応済み | 第 3 便 `15634200` / `e7ed438e`。出力の本文の鮮度は第 4 便の core gate で照合（PNG・Plotly の中身は対象外） |
 | 監査報告 | R5、R9、R10 | 対応済み | `9347f14d` |
 | 監査報告 | R7、R8 | 対応済み | R7 は BA-03（`1eabb8c5`）、R8 は D4 と同時（`c4654c9a`） |
-| 監査報告 | R1、R2、R3、R4、R6、R11 | 未対応（未再確認） | 研究・設計課題。§7 の判断事項を含む |
+| 監査報告 | R1、R2、R3、R4、R6、R11 | 実装/判断済み、P8最終検証中 | [P8状態](P8_STATUS.md)。R1左端点/離散補償/組SE、R2訓練残差補正、R3予測と経済評価接続、R4 stream分離/paired SE。R6は構成恒等式として説明訂正、fee-awareモデルは研究拡張。R11無利息/割引表規約はP4計算で対応、教材は章受入に回す |
 | acceptance | BA-04、BB-04、BB-09、BB-14、BB-18 | 対応済み | 全 11 巻を配列から再計算（`b74ee335`、`c745efc5`、`b7eb9ba7`、`f812e8ef`、`1eabb8c5`）。退化入力は第 4 便で FAIL 記録化 |
-| acceptance | 保存値依存の残り | 未対応（根拠配列なし） | vol 18 `residual_baseline`・`hard_violation_rate`、vol 19 `multi_start_calibration`、vol 21 timing フラグ、vol 22 `calendar_violations`（vol 26 の 3 件は §11.4 で対応済み） |
+| acceptance | 保存値依存の残り5件 | 根拠配列/gate/改竄PASS | vol18教師・予測MAE/8 hard probes、vol19 scipy停止/残差/予算、vol21生ns/warmup/median/来歴、vol22 holiday/weekday/session入力から再計算。[P8状態](P8_STATUS.md) |
 | vol 21・23 | BA-09、BB-02、BA-10 | 対応済み | `c4654c9a`、`3db10647`、BA-10 は第 4 便（計測の来歴） |
-| vol 22 | BA-11 | 一部 | D3（`2db3e49c`）と R5 は対応、乱数ストリームの分離（R4）は未対応 |
+| vol 22 | BA-11 | P8実装済み | D3/R5に加えR4 stream分離とpaired payoff/SEを保存・検証 |
 | 出力照合 | DD-17、BB-13 | 対応済み | frontier は `8580546f`、core の本文照合は第 4 便 |
 | 印刷値ピン | OP-03、OP-11、OP-13、OP-14、VN-01、VN-03、VN-07、VN-12、EX-01、CR-02、CR-03、CR-04、CR-20 | 対応済み | `2a3e25e8` |
 | 印刷値ピン | CR-01 | 対応済み | `90e903ea`（Ex 24.8） |
