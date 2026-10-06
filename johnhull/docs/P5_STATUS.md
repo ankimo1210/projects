@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算2/32。次はCh22 §22.3（正規モデル・対数正規比較）。Ch22→23→24→25まで継続する。
+- 現在：計算3/32。次はCh22 §22.4（共分散・cash-flow mapping・債券分解）。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -16,6 +16,7 @@
 |---|---|---|---|---|
 | §22.1 | `_market_risk.py` | 固有の印刷価格なし。正常/tの同じVaR・異なるES、sqrt(N)とAR(1)集計分散。独立裾積分・共分散和、固定seed MCの分位点6SE | 計算部分完了。loss_meanは正が損失。AR(1)はstationary日次SD。規制・説明/教材/正式受入は保留 | 8 passed・ruff check/format PASS |
 | §22.2 | `_market_risk.py` | Table22.3の4行（印刷丸め許容.06千ドル）、Table22.4 VaR422.291/ES669.391、BRW VaR653.541/ES約833.2。独立Decimal cash、整数重複分布・分位関数の裾積分 | 計算部分完了。501日原系列は未保有、既知15最悪損失の下側はテスト用合成補完。p521累積.004833は誤植。Hull/Excel/stressedのVaR規約を分離し、250点ESはfractional tail mass。説明・受入保留 | 17 passed・ruff check/format PASS |
+| §22.3 | `_market_risk.py` | MSFT/AT&T/相関.3のVaR1,471,300/367,800/1,620,100、ESの厳密値。印刷MSFT ES1,687,000はz2.326で再現。独立正規/対数正規裾積分・固定seed相関MC6SE | 計算部分完了。MSFT印刷ESと厳密ES1,685,629.5の丸め規約差を分離。正規はloss_mean/利益平均の符号を明示、lognormalにsqrt(N)を仮定しない。説明・受入保留 | 27 passed・ruff check/format PASS |
 
 ## 残りと検証
 

@@ -7,7 +7,7 @@ use positive profits for mu; wrappers below explicitly reverse that sign.
 import math
 
 import numpy as np
-from scipy.stats import t
+from scipy.stats import norm, t
 
 from . import risk
 
@@ -154,7 +154,7 @@ def empirical_risk(pnl, confidence=0.99, *, var_rule="hull", es_rule="hull"):
     loss = np.sort(-_loss_vector(pnl))[::-1]
     mass = (1 - confidence) * len(loss)
     nearest = round(mass)
-    if abs(mass - nearest) <= 16 * np.finfo(float).eps * len(loss):
+    if nearest >= 1 and abs(mass - nearest) <= 16 * np.finfo(float).eps * len(loss):
         mass = float(nearest)
     k = max(1, min(math.ceil(mass), len(loss)))
     a, b = loss[k - 1], loss[min(k, len(loss) - 1)]
@@ -178,3 +178,88 @@ def empirical_risk(pnl, confidence=0.99, *, var_rule="hull", es_rule="hull"):
     else:
         raise ValueError("unknown finite-sample ES convention")
     return {"var": float(value), "es": es, "tail_rank": k, "sample_size": len(loss)}
+
+
+def _covariance(covariance, dimension):
+    cov = np.asarray(covariance, dtype=float)
+    if (
+        cov.shape != (dimension, dimension)
+        or not np.isfinite(cov).all()
+        or not np.allclose(cov, cov.T, atol=1e-14, rtol=1e-12)
+    ):
+        raise ValueError("finite symmetric covariance of matching dimension required")
+    if np.linalg.eigvalsh(cov).min() < -1e-12 * max(float(np.abs(cov).max()), 1e-30):
+        raise ValueError("covariance must be positive semidefinite")
+    return cov
+
+
+def normal_portfolio_risk(
+    amounts, daily_vols, correlation, confidence=0.99, *, horizon=1, daily_mean_returns=None
+):
+    """Money risk of a linear portfolio; means are positive-profit returns."""
+    a = np.asarray(amounts, dtype=float)
+    vol = np.asarray(daily_vols, dtype=float)
+    corr = np.asarray(correlation, dtype=float)
+    if (
+        a.ndim != 1
+        or not len(a)
+        or vol.shape != a.shape
+        or not np.isfinite(a).all()
+        or not np.isfinite(vol).all()
+        or np.any(vol < 0)
+    ):
+        raise ValueError("matching finite amounts and nonnegative daily volatilities required")
+    if corr.shape != (len(a), len(a)) or not np.allclose(np.diag(corr), 1):
+        raise ValueError("correlation must have matching dimensions and unit diagonal")
+    cov = _covariance(corr * np.outer(vol, vol), len(a))
+    mean = (
+        np.zeros_like(a)
+        if daily_mean_returns is None
+        else np.asarray(daily_mean_returns, dtype=float)
+    )
+    if mean.shape != a.shape or not np.isfinite(mean).all():
+        raise ValueError("daily profit means must match amounts")
+    sd = math.sqrt(max(float(a @ cov @ a), 0))
+    result = normal_loss_risk(sd, confidence, loss_mean=-float(a @ mean), horizon=horizon)
+    result["daily_sigma"] = sd
+    return result
+
+
+def source_normal_es(sigma, density_z, confidence=0.99, *, horizon=1):
+    """Evaluate the source ES formula with an explicitly rounded density z.
+
+    This is a display-formula replay, not an exact normal ES when density_z
+    differs from the confidence quantile. Hull's MSFT example uses 2.326.
+    """
+    _risk_inputs(sigma, confidence, horizon=horizon)
+    if not np.isfinite(density_z):
+        raise ValueError("finite density quantile required")
+    return float(sigma * math.sqrt(horizon) * norm.pdf(density_z) / (1 - confidence))
+
+
+def volatility_units(daily_vol, trading_days=252):
+    """Daily/annual SD conversion under equal independent trading days."""
+    if not np.isfinite([daily_vol, trading_days]).all() or daily_vol < 0 or trading_days <= 0:
+        raise ValueError("nonnegative daily SD and positive trading-day count required")
+    ratio = 1 / math.sqrt(trading_days)
+    return {
+        "daily": float(daily_vol),
+        "annual": float(daily_vol / ratio),
+        "daily_to_annual_ratio": ratio,
+    }
+
+
+def lognormal_position_risk(value, daily_vol, days=1, confidence=0.99, *, growth=0):
+    """Exact GBM loss VaR/ES for one long asset, with daily expected growth.
+
+    This returns the full horizon distribution, not square-root scaled VaR.
+    Positive growth is the asset's arithmetic expected growth rate.
+    """
+    _risk_inputs(daily_vol, confidence, growth, days)
+    if not np.isfinite(value) or value <= 0:
+        raise ValueError("positive finite asset value required")
+    vol = daily_vol * math.sqrt(days)
+    z = norm.ppf(1 - confidence)
+    cutoff = value * math.exp((growth - daily_vol**2 / 2) * days + vol * z)
+    conditional = value * math.exp(growth * days) * norm.cdf(z - vol) / (1 - confidence)
+    return {"var": float(value - cutoff), "es": float(value - conditional)}
