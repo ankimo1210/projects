@@ -27,7 +27,10 @@
 
 ## 検証の現在地
 
-- raw根拠の改竄/欠損22 tests PASS。deep_hedge_price全suite 208 passed。hullkit/report全suiteは実行中。
+- raw根拠の改竄/欠損22 tests PASS。deep_hedge_price全suite 208 passed。hullkit/report初回は4455 passed・6 skipped、9 failures（強化した依存宣言6、旧timing fixture、旧教材、証跡の鮮度）。前8件は修正/対象PASS、D1更新後に最終suite。
 - vol19–28の独立再生成と二度目の通常再生成が数値許容差付きで一致。SHAは配布ファイルの完全性だけに使い、数値の合否には使わない。
 - vol18 residual MAEは古い評価JSONと約5.1e-8異なったため、保存した今回の教師/予測から再計算。改善関係は不変。
 - 残り：notebook/portal/book再生成、画面/リリース検査、最終レビュー、main統合。
+
+- 最終レビュー：Critical/Importantなし。外部policyの有限値検査が抜けた既存API互換性を回復（回帰RED→GREEN、対象7 tests PASS）。型拒否は広げていない。
+- 初回D1の33節はbrowser/runtime/pytest/両コピー復元PASS。新予測図のタイトル切替/ラベル/単位を画面から修正し、最終版のD1へ更新する。

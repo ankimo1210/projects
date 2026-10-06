@@ -177,7 +177,7 @@
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "fold index"
       },
       "economic_forecast_volatility": {
         "dtype": "float64",
@@ -185,14 +185,14 @@
           9,
           10
         ],
-        "unit": "dimensionless"
+        "unit": "annualized_volatility"
       },
       "economic_horizon": {
         "dtype": "int64",
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "trading days"
       },
       "economic_option_positions": {
         "dtype": "float64",
@@ -203,7 +203,7 @@
           128,
           12
         ],
-        "unit": "dimensionless"
+        "unit": "option contracts"
       },
       "economic_pnl": {
         "dtype": "float64",
@@ -213,21 +213,21 @@
           4,
           128
         ],
-        "unit": "dimensionless"
+        "unit": "currency_units"
       },
       "economic_premium": {
         "dtype": "float64",
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "currency_units"
       },
       "economic_row": {
         "dtype": "int64",
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "held-out prediction row index"
       },
       "economic_secondary_price": {
         "dtype": "float64",
@@ -236,7 +236,7 @@
           128,
           13
         ],
-        "unit": "dimensionless"
+        "unit": "currency_units"
       },
       "economic_shocks": {
         "dtype": "float64",
@@ -245,7 +245,7 @@
           128,
           12
         ],
-        "unit": "dimensionless"
+        "unit": "standard normal shock"
       },
       "economic_spot": {
         "dtype": "float64",
@@ -254,7 +254,7 @@
           128,
           13
         ],
-        "unit": "dimensionless"
+        "unit": "currency_units"
       },
       "economic_stock_positions": {
         "dtype": "float64",
@@ -265,14 +265,14 @@
           128,
           12
         ],
-        "unit": "dimensionless"
+        "unit": "underlying units"
       },
       "economic_true_volatility": {
         "dtype": "float64",
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "annualized_volatility"
       },
       "economic_turnover": {
         "dtype": "float64",
@@ -282,7 +282,7 @@
           4,
           128
         ],
-        "unit": "dimensionless"
+        "unit": "currency_notional"
       },
       "integrated_gradients_importance": {
         "dtype": "float32",
@@ -1466,7 +1466,7 @@
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "fold index"
       },
       "economic_forecast_volatility": {
         "dtype": "<f8",
@@ -1474,14 +1474,14 @@
           9,
           10
         ],
-        "unit": "dimensionless"
+        "unit": "annualized_volatility"
       },
       "economic_horizon": {
         "dtype": "<i8",
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "trading days"
       },
       "economic_option_positions": {
         "dtype": "<f8",
@@ -1492,7 +1492,7 @@
           128,
           12
         ],
-        "unit": "dimensionless"
+        "unit": "option contracts"
       },
       "economic_pnl": {
         "dtype": "<f8",
@@ -1502,21 +1502,21 @@
           4,
           128
         ],
-        "unit": "dimensionless"
+        "unit": "currency_units"
       },
       "economic_premium": {
         "dtype": "<f8",
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "currency_units"
       },
       "economic_row": {
         "dtype": "<i8",
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "held-out prediction row index"
       },
       "economic_secondary_price": {
         "dtype": "<f8",
@@ -1525,7 +1525,7 @@
           128,
           13
         ],
-        "unit": "dimensionless"
+        "unit": "currency_units"
       },
       "economic_shocks": {
         "dtype": "<f8",
@@ -1534,7 +1534,7 @@
           128,
           12
         ],
-        "unit": "dimensionless"
+        "unit": "standard normal shock"
       },
       "economic_spot": {
         "dtype": "<f8",
@@ -1543,7 +1543,7 @@
           128,
           13
         ],
-        "unit": "dimensionless"
+        "unit": "currency_units"
       },
       "economic_stock_positions": {
         "dtype": "<f8",
@@ -1554,14 +1554,14 @@
           128,
           12
         ],
-        "unit": "dimensionless"
+        "unit": "underlying units"
       },
       "economic_true_volatility": {
         "dtype": "<f8",
         "shape": [
           9
         ],
-        "unit": "dimensionless"
+        "unit": "annualized_volatility"
       },
       "economic_turnover": {
         "dtype": "<f8",
@@ -1571,7 +1571,7 @@
           4,
           128
         ],
-        "unit": "dimensionless"
+        "unit": "currency_notional"
       },
       "integrated_gradients_importance": {
         "dtype": "<f4",

@@ -10,6 +10,8 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+from .theme import COLORWAY
+
 VOLUMES = Path(__file__).resolve().parents[2] / "volumes"
 
 
@@ -254,6 +256,7 @@ def _vol20_economics() -> go.Figure:
                     x=labels,
                     y=np.sqrt(np.mean(pnl**2, axis=1)),
                     name=strategy,
+                    marker_color=COLORWAY[index],
                     visible=horizon == 1,
                     customdata=np.column_stack([cvar, turnover]),
                     hovertemplate="%{x}<br>RMSE %{y:.4f}<br>CVaR95 %{customdata[0]:.4f}"
@@ -261,7 +264,10 @@ def _vol20_economics() -> go.Figure:
                 )
             )
     fig.update_layout(
-        title="Forecast-driven hedging — 1 trading day",
+        title="Forecast-driven hedging — 1 day",
+        height=500,
+        margin=dict(l=60, r=24, t=100, b=100),
+        xaxis_tickangle=-45,
         barmode="group",
         yaxis_title="Hedging RMSE (synthetic USD)",
         updatemenus=[
@@ -272,7 +278,7 @@ def _vol20_economics() -> go.Figure:
                         "method": "update",
                         "args": [
                             {"visible": [j // 4 == i for j in range(12)]},
-                            {"title": f"Forecast-driven hedging — {horizon} trading days"},
+                            {"title.text": f"Forecast-driven hedging — {horizon} day"},
                         ],
                     }
                     for i, horizon in enumerate(horizons)

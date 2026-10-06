@@ -187,7 +187,7 @@ def _forecast_hedge_case(
     uses observable fair prices/Greeks at true scenario vol. End-point stock
     liquidation is charged, expiry option cash settlement is not a new trade.
     """
-    if min(forecast_volatility, path_volatility, maturity) <= 0:
+    if min(forecast_volatility, path_volatility, maturity, n_paths, n_steps) <= 0:
         raise ValueError("positive scenario/forecast vol and maturity required")
     dt = maturity / n_steps
     shocks = np.random.default_rng(seed).standard_normal((n_paths, n_steps))
@@ -220,7 +220,10 @@ def _forecast_hedge_case(
         "no-trade": no_trade,
     }
     if deep_policy_positions is not None:
-        positions["deep-policy"] = np.asarray(deep_policy_positions)
+        deep_positions = np.asarray(deep_policy_positions, dtype=float)
+        if deep_positions.shape != delta.shape or np.any(~np.isfinite(deep_positions)):
+            raise ValueError("deep_policy_positions must be finite and match [path, trade time]")
+        positions["deep-policy"] = deep_positions
     names = sorted(positions)
     stocks = np.stack([positions[name] for name in names])
     options = np.stack([units if name == "delta-gamma" else np.zeros_like(units) for name in names])
