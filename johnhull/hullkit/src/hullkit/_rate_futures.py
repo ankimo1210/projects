@@ -299,7 +299,10 @@ def sofr_fixing_window(start, end, fixings, *, basis=360):
     """Arithmetic/compounded rates on [start,end), carrying the latest supplied fixing.
 
     Caller provides business-day fixings/holidays; each carried calendar day is
-    counted once. End-date observations are excluded, not charged for another day.
+    counted once. A carried fixing uses one simple factor 1+r*days/basis before
+    reinvestment at the next fixing, including across weekends and holidays.
+    Equal rates on distinct fixing dates still create separate factors.
+    End-date observations are excluded, not charged for another day.
     """
     from ._rates_foundations import compounded_reference_rate
 
@@ -308,15 +311,24 @@ def sofr_fixing_window(start, end, fixings, *, basis=360):
     if end <= start or not observations or observations[0][0] > start:
         raise ValueError("positive window and an opening/prior fixing required")
     daily = []
+    fixing_rates, fixing_days = [], []
     index = 0
+    previous_index = None
     day = start
     while day < end:
         while index + 1 < len(observations) and observations[index + 1][0] <= day:
             index += 1
-        daily.append(observations[index][1])
+        rate = observations[index][1]
+        daily.append(rate)
+        if index == previous_index:
+            fixing_days[-1] += 1
+        else:
+            fixing_rates.append(rate)
+            fixing_days.append(1)
+            previous_index = index
         day += timedelta(days=1)
     rates = np.array(daily)
-    a = compounded_reference_rate(rates, np.ones(len(rates)), basis=basis)
+    a = compounded_reference_rate(fixing_rates, fixing_days, basis=basis)
     return {
         "daily_rates": rates,
         "growth": a["growth"],
