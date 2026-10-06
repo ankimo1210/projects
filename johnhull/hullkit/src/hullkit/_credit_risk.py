@@ -167,3 +167,34 @@ def bond_curve_from_yields(
         "loss_pv": np.array(result.expected_loss_pv),
         "measure": "Q",
     }
+
+
+def hazard_comparison(historical, pricing, *, recovery=0.4, total_spreads=None):
+    """Compare observed P/Q hazards; no measure conversion is inferred.
+
+    Display columns replay Tables24.2/3: positive half-up rounding, then subtract
+    the displayed compensation bp from the observed total spread bp.
+    """
+    h, q = _vector(historical), _vector(pricing)
+    _recovery(recovery)
+    if h.shape != q.shape or np.any(h < 0) or np.any(q < 0):
+        raise ValueError("matching nonnegative annual hazards required")
+    ratio = np.full_like(h, np.nan)
+    np.divide(q, h, out=ratio, where=h > 0)
+    compensation = h * (1 - recovery)
+    rounded = np.floor(compensation * 10000 + 0.5)
+    result = {
+        "ratio": ratio,
+        "display_ratio": np.floor(ratio * 10 + 0.5) / 10,
+        "difference": q - h,
+        "compensation_spread": compensation,
+        "display_compensation_bp": rounded,
+    }
+    if total_spreads is not None:
+        spreads = _vector(total_spreads)
+        if spreads.shape != h.shape:
+            raise ValueError("total spread vector must match hazards")
+        result.update(
+            excess_spread=spreads - compensation, display_excess_bp=spreads * 10000 - rounded
+        )
+    return result
