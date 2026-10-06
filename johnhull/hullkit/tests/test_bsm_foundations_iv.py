@@ -59,3 +59,18 @@ def test_example_15_8_quote_units_and_independent_fraction_futures_ledger():
     assert foundations.quoted_futures_pnl(18.5, 19.3, 1000, quantity=-1) == pytest.approx(-800, abs=1e-10)
     assert 15/100 == pytest.approx(.15)
     assert foundations.quoted_futures_pnl(.185, .193, 100000) == pytest.approx(pnl, abs=1e-10)
+
+
+@pytest.mark.parametrize("strike,sigma", [(200, .3), (150, .2)])
+def test_tiny_positive_otm_price_keeps_its_volatility(strike, sigma):
+    price = float(bsm.call_price(100, strike, .05, sigma, .1))
+    assert 0 < price < 1e-9
+    assert foundations.implied_vol_bisection(price, 100, strike, .05, .1) == pytest.approx(sigma, abs=1e-8)
+
+
+@pytest.mark.parametrize("kind,strike,sigma,maturity", [("call", 50, .6, .05), ("call", 80, .2, .05), ("put", 200, .6, .05)])
+def test_deep_in_the_money_quote_with_small_time_value_keeps_its_volatility(kind, strike, sigma, maturity):
+    pricing = bsm.call_price if kind == "call" else bsm.put_price
+    price = float(pricing(100, strike, .03, sigma, maturity))
+    assert price-float(pricing(100, strike, .03, 0, maturity)) < 1e-6
+    assert foundations.implied_vol_bisection(price, 100, strike, .03, maturity, kind=kind) == pytest.approx(sigma, abs=1e-6)

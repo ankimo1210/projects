@@ -204,8 +204,10 @@ def new_issue_terminal_allocation(unaffected_spot, strike, old_shares, new_right
 def implied_vol_bisection(price, spot, strike, rate, maturity, *, kind="call", price_tolerance=1e-10):
     """Scalar BSM IV by bisection, with finite-root arbitrage bounds.
 
-    At the deterministic lower bound choose sigma=0; at the upper bound no
-    finite root exists. Expiry and zero strike do not identify volatility.
+    Only the exact deterministic lower bound selects sigma=0; at the upper
+    bound no finite root exists. price_tolerance is relative to the time
+    value price-lower, so tiny OTM prices and deep ITM quotes keep their
+    volatility. Expiry and zero strike do not identify volatility.
     """
     gbm_log_law(spot, rate, 0, maturity)
     if maturity <= 0 or not math.isfinite(strike) or strike <= 0 or kind not in ("call", "put") or not math.isfinite(price) or not math.isfinite(price_tolerance) or price_tolerance <= 0:
@@ -215,7 +217,7 @@ def implied_vol_bisection(price, spot, strike, rate, maturity, *, kind="call", p
     upper = spot if kind == "call" else strike*math.exp(-rate*maturity)
     if price < lower or price >= upper:
         raise ValueError("price outside finite-IV arbitrage bounds")
-    if price-lower <= price_tolerance:
+    if price == lower:
         return 0.0
     lo, hi = 0.0, .5
     while float(pricing(spot, strike, rate, hi, maturity)) < price:
@@ -223,7 +225,7 @@ def implied_vol_bisection(price, spot, strike, rate, maturity, *, kind="call", p
     for _ in range(160):
         mid = (lo+hi)/2
         error = float(pricing(spot, strike, rate, mid, maturity))-price
-        if abs(error) <= price_tolerance or mid == lo or mid == hi:
+        if abs(error) <= price_tolerance*(price-lower) or mid == lo or mid == hi:
             return mid
         if error < 0:
             lo = mid
