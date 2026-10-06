@@ -156,9 +156,9 @@ def crr_moments(sigma, dt, drift):
 def binomial_call_tails(spot, strike, rate, sigma, maturity, steps, *, q=0):
     """Ch13 appendix: cash and stock-numeraire binomial tails, without a tree.
 
-    Exercise uses the strict j > a threshold. Values within 16 ulps of an
-    integer up-count are snapped to that boundary before flooring, preventing
-    floating-point reconstruction from counting a zero-payoff strike tie.
+    Exercise uses the strict j > a threshold. A strike whose log distance to
+    the nearest terminal node is within 64 eps * max(1, |ln(K/S)|, n) is a
+    tie, so strikes rebuilt from node values do not count a zero payoff.
     The stock-numeraire probability is distinct from the physical probability
     in section 13.2. With q != 0, U1's factor is exp((r-q)T).
     """
@@ -172,7 +172,9 @@ def binomial_call_tails(spot, strike, rate, sigma, maturity, steps, *, q=0):
     else:
         threshold = steps/2-math.log(spot/strike)/(2*log_move)
         nearest = round(threshold)
-        if abs(threshold-nearest) <= 16*math.ulp(max(abs(threshold), 1.0)):
+        log_strike = math.log(strike/spot)
+        log_gap = (2*nearest-steps)*log_move-log_strike
+        if abs(log_gap) <= 64*np.finfo(float).eps*max(1.0, abs(log_strike), steps):
             threshold = float(nearest)
         first = min(max(math.floor(threshold)+1, 0), steps+1)
     stock_p = p*up/(p*up+(1-p)*down)
