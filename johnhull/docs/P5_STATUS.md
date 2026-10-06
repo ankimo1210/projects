@@ -77,4 +77,6 @@
 - 台帳は変更していない。実体は306項目中accepted33/unreviewed273、P5 accepted0/36。公開APIと依存も変更していない。コードと章メモ/索引はcodex/p5-logic、mainへの反映は本状態文書とROADMAPのみ。
 - 次はP6のロジック先行（Ch1–9、80台帳項目）。P3–P5の正式受入は保留を継続し、教材/説明/受入は再開時に章ごとまとめる。
 
-- 2026-10-06 レビュー側の修正後確認：R5 cbae4911・R6 5d8544ee・R7 5a243ff8を独立参照で確認、対象3suite 30 passed・ruff PASS。loading±.999のPD/.012全pool loss、rho .9/.99の>=10 tail（参照誤差6e-16未満）、rare/high-rho double-tのt畳み込み、nonfinite vol拒否を確認し、R1–R7をclose。計算32項目まで追加重要指摘なし。レビュー側の5a243ff8開始の全suite再実行は報告時点で進行中で、完了の件数として扱わない。
+- 2026-10-06 レビュー側の修正後確認：R5 cbae4911・R6 5d8544ee・R7 5a243ff8を独立参照で確認、対象3suite 30 passed・ruff PASS。loading±.999のPD/.012全pool loss、rho .9/.99の>=10 tail（参照誤差6e-16未満）、rare/high-rho double-tのt畳み込み、nonfinite vol拒否を確認し、R1–R7をclose。計算32項目まで追加重要指摘なし。レビュー側の5a243ff8開始の全suite再実行は、後続報告で5311 passed・6 skipped・2既存warnings、exit0（121.73秒）と確認。
+
+- 2026-10-06 レビュー側の最終全体回帰：クリーンな5a243ff8開始のhullkit全suiteが5311 passed・6 skipped・2既存warnings、121.73秒・exit0。skipは既存lookbackのr=q除外、warningsは既存distutils非推奨。本chatの対象196件と別実行。R1–R7を含むコードのレビュー・修正・独立確認は完了し、教材・正式受入・未指定動的モデル研究は保留のまま。
