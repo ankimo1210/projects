@@ -324,3 +324,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._credit_alternatives` | Ch25.11 heterogeneous loading/count、double-t、因子依存terminal loss、単純hazard mixtureの非公開部品 | 全default状態列挙、独立t/normal MC6SE、適応積分で高loading/rare PDを確認、既知hazard混合の較正/再価格/非一意性 |
 | `hullkit._intro_contracts` | Private Ch1契約payoff・premium・ヘッジ・投機・通貨別cashflow | GE本文金額と独立状態replication・受払列挙・Decimal計算 |
 | `hullkit._futures_market` | Private Ch2証拠金の翌日入金・quote倍率・会計認識・決済時点 | GE Table2.1全列と独立累積収支/Decimal/終価cash ledger |
+| `hullkit._futures_hedging` | Private Ch3現物/先物cash・basis・分散最小hedge・beta/CAPM・stack roll | GE全例/表、独立cash ledger・OLS/分散最小化・CAPM factor・回帰 |
