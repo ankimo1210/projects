@@ -150,7 +150,7 @@ def gbm_log_law(spot, drift, sigma, maturity):
 
 
 def fractional_brownian_covariance(s, t, hurst, scale=1):
-    """Hull fBM level covariance, including zero times (equation 14.20)."""
+    """Hull fBM level covariance, including zero times (equation 14.20 is its correlation)."""
     s, t = np.broadcast_arrays(np.asarray(s, dtype=float), np.asarray(t, dtype=float))
     if not math.isfinite(hurst) or not 0 < hurst < 1 or not math.isfinite(scale) or scale < 0 or np.any(s < 0) or np.any(t < 0) or not np.all(np.isfinite(s)) or not np.all(np.isfinite(t)):
         raise ValueError("H in (0,1), nonnegative scale and finite nonnegative times required")
