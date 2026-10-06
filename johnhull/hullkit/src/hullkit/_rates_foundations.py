@@ -112,3 +112,73 @@ def bond_quote(times, cashflows, zeros, *, face=100, frequency=2):
         "coupon_annuity": df.sum(),
         "par_annual_coupon": frequency * face * (1 - df[-1]) / df.sum(),
     }
+
+
+def periodic_bond_yield(times, cashflows, price, *, frequency):
+    """Positive-cashflow bond yield as an annual quote at a specified frequency."""
+    from scipy.optimize import brentq
+
+    t, cf = _cash_vectors(times, cashflows)
+    if (
+        not np.isfinite([price, frequency]).all()
+        or min(price, frequency) <= 0
+        or np.any(cf < 0)
+        or np.any(t <= 0)
+    ):
+        raise ValueError("positive price/frequency and future nonnegative payments required")
+
+    def error(y):
+        return np.dot(cf, (1 + y / frequency) ** (-frequency * t)) - price
+
+    upper = 1.0
+    while error(upper) > 0:
+        upper = 2 * upper + 1
+    return brentq(error, -frequency + frequency * 1e-8, upper, xtol=1e-13)
+
+
+def bootstrap_piecewise_zero(instruments):
+    """Sequential bond calibration with linear zeros and flat endpoint extrapolation.
+
+    Each instrument is (cash_dates,cash_amounts,price), sorted by its last date.
+    Coupons between the last known node and the new node depend on the new zero
+    and are solved jointly for that segment. All cash payments are nonnegative.
+    """
+    from scipy.optimize import brentq
+
+    parsed = []
+    for times, cashflows, price in instruments:
+        t, cf = _cash_vectors(times, cashflows)
+        if (
+            np.any(np.diff(t) <= 0)
+            or t[0] <= 0
+            or np.any(cf < 0)
+            or not np.isfinite(price)
+            or price <= 0
+        ):
+            raise ValueError(
+                "ordered future cash dates, nonnegative payments and positive price required"
+            )
+        parsed.append((t, cf, price))
+    nodes = []
+    zeros = []
+    for t, cf, price in sorted(parsed, key=lambda item: item[0][-1]):
+        maturity = float(t[-1])
+        if nodes and maturity <= nodes[-1]:
+            raise ValueError("distinct instrument maturity nodes required")
+
+        def error(z, t=t, cf=cf, price=price, maturity=maturity):
+            rates = np.interp(t, [*nodes, maturity], [*zeros, z])
+            return np.dot(cf, np.exp(-rates * t)) - price
+
+        lo, hi = -0.25, 0.25
+        for _ in range(12):
+            if error(lo) * error(hi) <= 0:
+                break
+            lo *= 2
+            hi *= 2
+        else:
+            raise ValueError("no positive-discount curve fits this segment")
+        zero = brentq(error, lo, hi, xtol=1e-13)
+        nodes.append(maturity)
+        zeros.append(zero)
+    return np.array(nodes), np.array(zeros)
