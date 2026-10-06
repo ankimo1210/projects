@@ -63,3 +63,10 @@ def test_daily_quote_changes_against_independent_fraction_settlement_ledger():
     independent = [float(2*100*(b-a)) for a, b in pairwise(quotes)]
     assert cash == pytest.approx(independent)
     assert sum(cash) == pytest.approx(float(2*100*(quotes[-1]-quotes[0])))
+
+
+def test_deep_in_the_money_futures_style_tie_is_not_strict_early_exercise():
+    # Every node is in the money, so continuation equals intrinsic up to rounding.
+    result = futures.futures_style_exercise_comparison(27000, 1000, .25, .25, 3)
+    assert result["american_quote"] == pytest.approx(result["european_tree_quote"], rel=1e-14)
+    assert result["exercise_now"] is False
