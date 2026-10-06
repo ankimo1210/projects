@@ -570,3 +570,106 @@ def default_indicator_correlation(first_pd, second_pd, joint_pd):
         (joint_pd - first_pd * second_pd)
         / math.sqrt(first_pd * (1 - first_pd) * second_pd * (1 - second_pd))
     )
+
+
+def large_pool_risk(pd, rho, confidence, notional, recovery):
+    """Homogeneous asymptotic Vasicek total-loss VaR and EL-subtracted capital."""
+    _recovery(recovery)
+    if (
+        not np.isfinite([pd, rho, confidence, notional]).all()
+        or not 0 <= pd <= 1
+        or not 0 <= rho < 1
+        or not 0 < confidence < 1
+        or notional < 0
+    ):
+        raise ValueError("valid PD/rho/confidence and nonnegative notional required")
+    worst = credit.vasicek_credit_var(pd, rho, confidence)
+    var = notional * (1 - recovery) * worst
+    expected = notional * (1 - recovery) * pd
+    return {
+        "worst_default_fraction": worst,
+        "var": var,
+        "expected_loss": expected,
+        "capital": var - expected,
+    }
+
+
+def rating_bond_values(
+    face, coupon_rate, remaining_maturity, rate, rating_spreads, recovery, *, frequency=1
+):
+    """State-contingent coupon-bond marks under supplied flat rating spreads.
+
+    The last state is immediate default and pays recovery*face, once. All other
+    marks are promised cashflows discounted at rate+state spread. This simple
+    curve example extends the existing value-ratio CreditMetrics illustration.
+    """
+    _recovery(recovery)
+    spreads = _vector(rating_spreads)
+    if not np.isfinite([face, coupon_rate, remaining_maturity, rate]).all() or face < 0:
+        raise ValueError("finite bond terms and nonnegative face required")
+    live = [
+        credit_curve.bond_price_from_yield(
+            face, coupon_rate, remaining_maturity, rate + spread, frequency
+        )
+        for spread in spreads
+    ]
+    return np.array([*live, recovery * face])
+
+
+def migration_losses(migrations, initial_values, state_values, *, positions=None):
+    """Horizon-aligned initial marks minus state marks, including negative upgrade losses.
+
+    initial_values must use the same horizon/carry convention as state_values.
+    positions are bond counts; default recovery is already in state_values.
+    """
+    states = np.asarray(migrations, dtype=float)
+    initial, values = _vector(initial_values), np.asarray(state_values, dtype=float)
+    if (
+        states.ndim != 2
+        or states.shape[1] != initial.size
+        or not np.isfinite(states).all()
+        or values.ndim != 2
+        or values.shape[0] != initial.size
+        or not np.isfinite(values).all()
+        or np.any(states != np.floor(states))
+        or np.any(states < 0)
+        or np.any(states >= values.shape[1])
+    ):
+        raise ValueError("integer state indices and matching finite horizon marks required")
+    counts = np.ones_like(initial) if positions is None else _vector(positions)
+    if counts.shape != initial.shape:
+        raise ValueError("bond positions must match obligors")
+    new_values = values[np.arange(initial.size)[None, :], states.astype(int)]
+    return ((initial[None, :] - new_values) * counts).sum(axis=1)
+
+
+def rating_loss_distribution(
+    matrix,
+    initial_ratings,
+    initial_values,
+    state_values,
+    *,
+    rho=0,
+    samples=10000,
+    seed=0,
+    confidence=0.99,
+    positions=None,
+):
+    """Existing correlated migration sampler with actual state-contingent marks."""
+    from . import credit_metrics
+
+    if not 0 < confidence < 1:
+        raise ValueError("interior confidence required")
+    states = credit_metrics.simulate_rating_migrations(
+        matrix, initial_ratings, rho, samples, rng=np.random.default_rng(seed)
+    )
+    losses = migration_losses(states, initial_values, state_values, positions=positions)
+    var = credit_metrics.credit_var(losses, confidence)
+    expected = float(losses.mean())
+    return {
+        "migrations": states,
+        "losses": losses,
+        "var": var,
+        "expected_loss": expected,
+        "capital": var - expected,
+    }
