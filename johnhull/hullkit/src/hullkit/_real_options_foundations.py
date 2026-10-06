@@ -52,3 +52,59 @@ def two_state_required_returns(spot, up, down, strike, rate, physical_growth, ma
             "cash_bond": math.exp(-rate * maturity) * (cash[1] - delta * down),
         }
     return result
+
+
+def risk_adjusted_drift(physical_drift, factor_loadings, risk_prices):
+    """P drift minus L*lambda in a common independent-Brownian factor coordinate system."""
+    mu = np.atleast_1d(np.asarray(physical_drift, dtype=float))
+    L = np.asarray(factor_loadings, dtype=float)
+    lam = np.atleast_1d(np.asarray(risk_prices, dtype=float))
+    if (
+        mu.ndim != 1
+        or lam.ndim != 1
+        or L.shape != (len(mu), len(lam))
+        or not np.isfinite(mu).all()
+        or not np.isfinite(L).all()
+        or not np.isfinite(lam).all()
+    ):
+        raise ValueError("matching finite drifts/loadings/risk prices required")
+    return mu - L @ lam
+
+
+def rental_option(
+    current_rent,
+    physical_growth,
+    volatility,
+    market_price,
+    rate,
+    option_maturity,
+    strike,
+    area,
+    lease_years,
+):
+    """Hull's option on a five-year-style level rent paid annually in advance.
+
+    Annual rent is set on exercise, then held fixed through the lease. The annuity
+    is valued at exercise and the option expectation is discounted once to today.
+    The supplied market price of risk selects Q drift for a nontraded rent process.
+    """
+    from .bsm import call_price
+
+    if (
+        min(current_rent, strike) <= 0
+        or min(volatility, option_maturity, area) < 0
+        or lease_years < 1
+        or int(lease_years) != lease_years
+    ):
+        raise ValueError("positive rent/strike/lease length and nonnegative vol/time/area required")
+    growth = float(risk_adjusted_drift([physical_growth], [[volatility]], [market_price])[0])
+    expected = current_rent * math.exp(growth * option_maturity)
+    annuity = float(np.exp(-rate * np.arange(int(lease_years))).sum())
+    payoff = float(area * annuity * call_price(expected, strike, 0, volatility, option_maturity))
+    return {
+        "annuity": annuity,
+        "q_growth": growth,
+        "expected_rent": expected,
+        "expected_payoff": payoff,
+        "value": payoff * math.exp(-rate * option_maturity),
+    }
