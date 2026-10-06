@@ -315,3 +315,42 @@ def cat_bond_principal(principal, trigger_loss, attachment):
     """
     paid = reinsurance_layer(trigger_loss, attachment, principal)["indemnity"]
     return {"released_principal": paid, "remaining_principal": principal - paid}
+
+
+def lognormal_weather_call(mean, log_sd, strike, tick, rate, maturity, *, cap=None):
+    """Discounted expectation for a nontraded lognormal cumulative weather index.
+
+    Hull assumes zero priced systematic risk. log_sd is the SD of log(period
+    index), not an annual volatility. Payment maturity only discounts the supplied
+    index distribution. These assumptions do not establish a unique market price.
+    """
+    from scipy.special import ndtr
+
+    if (
+        not np.isfinite([mean, log_sd, strike, tick, rate, maturity]).all()
+        or min(mean, log_sd, strike, maturity) < 0
+        or tick <= 0
+        or (cap is not None and (not np.isfinite(cap) or cap < 0))
+    ):
+        raise ValueError("nonnegative index/distribution/strike/time and positive tick required")
+
+    def expected_call(K):
+        """Call expectation under this period's supplied mean/log-SD."""
+        if mean == 0 or log_sd == 0:
+            return max(mean - K, 0), None, None
+        if K == 0:
+            return mean, None, None
+        d1 = math.log(mean / K) / log_sd + log_sd / 2
+        d2 = d1 - log_sd
+        return mean * ndtr(d1) - K * ndtr(d2), d1, d2
+
+    expected, d1, d2 = expected_call(strike)
+    if cap is not None:
+        expected -= expected_call(strike + cap / tick)[0]
+    cash = tick * expected
+    return {
+        "expected_payoff": float(cash),
+        "value": float(cash * math.exp(-rate * maturity)),
+        "d1": d1,
+        "d2": d2,
+    }
