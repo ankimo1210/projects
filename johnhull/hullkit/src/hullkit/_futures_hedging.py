@@ -166,3 +166,100 @@ def hedge_contracts(ratio, exposure_value, contract_value, *, growth=1):
         "contracts": count,
         "rounded": np.rint(count),
     }
+
+
+def beta_contracts(exposure_value, contract_value, beta, *, target=0):
+    """Signed short-contract count to move systematic beta to a stated target.
+
+    Positive counts sell futures; negative counts buy. Residual stock risk remains.
+    """
+    return hedge_contracts(beta - target, exposure_value, contract_value)
+
+
+def index_hedge_scenarios(
+    portfolio_value,
+    beta,
+    index_entry,
+    futures_entry,
+    terminal_index,
+    terminal_futures,
+    *,
+    multiplier,
+    rate,
+    dividend_yield,
+    maturity,
+    short_contracts=None,
+):
+    """Hull's deterministic CAPM scenario approximation with simple period returns.
+
+    Market return includes q*T. Full correlation/constant beta is illustrative;
+    resulting beta neutrality does not eliminate unsystematic risk in real holdings.
+    Dollar outputs retain decimals; source tables may truncate below one dollar.
+    """
+    index = np.asarray(terminal_index, dtype=float)
+    future = np.asarray(terminal_futures, dtype=float)
+    if (
+        not np.isfinite(
+            [
+                portfolio_value,
+                beta,
+                index_entry,
+                futures_entry,
+                multiplier,
+                rate,
+                dividend_yield,
+                maturity,
+            ]
+        ).all()
+        or not np.isfinite(index).all()
+        or not np.isfinite(future).all()
+        or min(index_entry, futures_entry, multiplier) <= 0
+        or min(portfolio_value, maturity) < 0
+    ):
+        raise ValueError("finite scenarios and positive index/future/multiplier required")
+    value = futures_entry * multiplier
+    n = (
+        beta_contracts(portfolio_value, value, beta)["contracts"]
+        if short_contracts is None
+        else short_contracts
+    )
+    if not np.isfinite(n):
+        raise ValueError("finite contract count required")
+    market = index / index_entry - 1 + dividend_yield * maturity
+    returns = rate * maturity + beta * (market - rate * maturity)
+    stock = portfolio_value * (1 + returns)
+    profit = n * multiplier * (futures_entry - future)
+    return {
+        "market_return": market,
+        "portfolio_return": returns,
+        "portfolio_value": stock,
+        "futures_profit": profit,
+        "total_value": stock + profit,
+        "contract_value": value,
+        "short_contracts": n,
+    }
+
+
+def stock_picking_profit(
+    shares, stock_entry, stock_exit, futures_entry, futures_exit, *, short_contracts, multiplier
+):
+    """Separate stock P&L and index hedge P&L, ignoring dividend/funding cash."""
+    if (
+        not np.isfinite(
+            [
+                shares,
+                stock_entry,
+                stock_exit,
+                futures_entry,
+                futures_exit,
+                short_contracts,
+                multiplier,
+            ]
+        ).all()
+        or shares < 0
+        or multiplier <= 0
+    ):
+        raise ValueError("finite cashflow inputs and valid quantities required")
+    stock = shares * (stock_exit - stock_entry)
+    future = short_contracts * multiplier * (futures_entry - futures_exit)
+    return {"stock_profit": stock, "futures_profit": future, "total_profit": stock + future}
