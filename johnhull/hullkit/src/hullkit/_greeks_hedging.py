@@ -202,17 +202,29 @@ def gamma_delta_hedge(portfolio_delta, portfolio_gamma, option_delta, option_gam
     }
 
 
-def taylor_pnl(delta, gamma, theta, spot_change, elapsed):
-    """Second-order spot P&L with calendar theta and elapsed time in years."""
+def taylor_pnl(
+    delta, gamma, theta, spot_change, elapsed, *, vega=0, vol_change=0, vanna=0, vomma=0
+):
+    """Ch19 appendix spot/parallel-IV expansion with calendar time in years.
+
+    Rate/q are fixed. Vanna's mixed term has no half factor; gamma and
+    vomma's square terms do. Time-cross and higher-order terms are omitted.
+    """
     if (
-        not all(math.isfinite(x) for x in (delta, gamma, theta, spot_change, elapsed))
+        not all(
+            math.isfinite(x)
+            for x in (delta, gamma, theta, spot_change, elapsed, vega, vol_change, vanna, vomma)
+        )
         or elapsed < 0
     ):
-        raise ValueError("finite Greeks/shock and nonnegative elapsed years required")
+        raise ValueError("finite Greeks/shocks and nonnegative elapsed years required")
     terms = {
         "delta": delta * spot_change,
         "gamma": 0.5 * gamma * spot_change**2,
         "theta": theta * elapsed,
+        "vega": vega * vol_change,
+        "vanna": vanna * spot_change * vol_change,
+        "vomma": 0.5 * vomma * vol_change**2,
     }
     return {**terms, "total": sum(terms.values())}
 
@@ -401,6 +413,8 @@ def option_greek_details(spot, strike, rate, sigma, maturity, *, kind="call", yi
         "vega": vega_units(*args, yield_rate=yield_rate)["per_unit_volatility"],
         "rho_domestic": rho_units(*args, kind=kind, yield_rate=yield_rate)["per_unit_rate"],
         "rho_yield": -maturity * spot * d,
+        "vanna": float(bsm.vanna(*args, q=yield_rate)),
+        "vomma": float(bsm.vomma(*args, q=yield_rate)),
     }
 
 
