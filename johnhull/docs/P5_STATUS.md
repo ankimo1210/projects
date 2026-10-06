@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算26/32。次は§25.6（basket発動CF）。Ch22→23→24→25まで継続する。
+- 現在：計算27/32。次は§25.7（TRS受払）。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -40,6 +40,7 @@
 | §25.3 | `_credit_contracts.py` | 125社800000×65/66bp→650000/660000、1社減少5280、1000/10bp単純平均505bp。独立2社default状態CF・zero NPV求根でindex加重 | 計算完了。実際の加重priceは原典入力不足でpinなし、合成r/T/Rを明記。観測125社指数の現在仕様は扱わない。説明・受入保留 | 10 passed・ruff check/format PASS |
 | §25.4 | `_credit_contracts.py` | Ex25.1年率.345/.406%・hazard.5717%・D4.447・price100.27の5値。独立default時刻別CF+upfront NPV0・受払符号 | 計算完了。365/360固定例で閏年/任意calendar日数一般化なし。Dはpremium PV係数でbond durationと異なる。説明・受入保留 | 13 passed・ruff check/format PASS |
 | §25.5 | `_credit_contracts.py` | 原典1年開始/5年保護/280bpの契約設定と期前default KO。価格印刷なし。明示した合成vol等で独立lognormal payoff求積・parity・ゼロvol | 計算完了。原典価格/vol入力不足で価格pinなし。Blackはforward annuity測度のspread lognormal仮定、Aは時点0の無条件生存/割引込み。front-end protectionは別範囲。説明・受入保留 | 16 passed・ruff check/format PASS |
+| §25.6 | `_credit_portfolio_extensions.py` | 本文に価格印刷なし。3社のadd-up/first/second/kth発動と終了。独立27default年状態CF列挙による3順位のprice | 計算完了。例のnotional/回収・hazardは明示合成入力。本文価格Ex25.3は§25.10で扱う。法的netting/同時defaultの契約規約は別範囲、同時刻は入力順。説明・受入保留 | 5 passed・ruff check/format PASS |
 
 ## 残りと検証
 

@@ -320,3 +320,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._volatility_estimation` | Ch23 return/variance・ARCH・EWMA/GARCH推定/予測/共分散 | P5_STATUSの本文数値/独立検証。日次/年率とP予測/Q価格を区別 |
 | `hullkit._credit_risk` | Ch24 P/Q PD・bond信用curve・Merton・derivative exposure・copula/VaR | P5_STATUSの本文数値/独立ODE・求積・MC。各契約の単位とdefault timingを明示 |
 | `hullkit._credit_contracts` | Ch25 CDS契約CF/leg・index・fixed coupon・forward/option・TRS | P5_STATUSの原典全表と独立cashflow列挙・payoff求積・MC。年分数/額面単位を明示 |
+| `hullkit._credit_portfolio_extensions` | Ch25 basket・CDOの契約CFと計算検証（非公開） | 本文契約設定・独立状態列挙、後続節の表/直接default-time MC |
