@@ -1,6 +1,6 @@
 """Private Hull Ch6 calendar/quotation and interest-rate futures calculations."""
 
-from datetime import date
+from datetime import date, timedelta
 
 import numpy as np
 
@@ -209,4 +209,117 @@ def bond_futures_quote(
         "cash_forward": dirty,
         "clean_forward": clean,
         "futures_quote": clean / factor,
+    }
+
+
+def rate_futures_quote(rate):
+    """100 minus annual interest percent, with rate supplied as a decimal fraction."""
+    if not np.isfinite(rate):
+        raise ValueError("finite annual rate required")
+    return 100 - 100 * rate
+
+
+def rate_futures_cash(
+    entry_quote, settlement_quote, *, notional=1e6, accrual=0.25, contracts=1, side="long"
+):
+    """Linear futures settlement P&L and cash per rate bp, excluding timing corrections."""
+    if (
+        not np.isfinite([entry_quote, settlement_quote, notional, accrual, contracts]).all()
+        or min(notional, accrual) <= 0
+        or contracts < 0
+        or side not in ("long", "short")
+    ):
+        raise ValueError("finite quotes and valid notional/accrual/count required")
+    bp = notional * accrual * 1e-4
+    profit = (
+        (1 if side == "long" else -1)
+        * contracts
+        * notional
+        * accrual
+        * (settlement_quote - entry_quote)
+        / 100
+    )
+    return {"bp_value": bp, "profit": profit, "implied_rate": (100 - settlement_quote) / 100}
+
+
+def rate_futures_borrow_hedge(
+    notional, spread, accrual, entry_quote, settlement_quote, *, contracts, contract_notional=1e6
+):
+    """Short rate-futures borrow hedge; negative-rate case still fixes Example6.3 cost.
+
+    Source 197000/102250/502250 are arithmetic typos; exact ledger gives
+    197500/102500/502500. Daily reinvestment/convexity is outside this approximation.
+    """
+    a = rate_futures_cash(
+        entry_quote,
+        settlement_quote,
+        notional=contract_notional,
+        accrual=accrual,
+        contracts=contracts,
+        side="short",
+    )
+    if not np.isfinite([notional, spread]).all() or notional < 0:
+        raise ValueError("nonnegative borrow amount and finite spread required")
+    interest = notional * accrual * (a["implied_rate"] + spread)
+    return {
+        "change_bp": 100 * (entry_quote - settlement_quote),
+        "futures_profit": a["profit"],
+        "interest_cash": interest,
+        "net_interest": interest - a["profit"],
+    }
+
+
+def extend_zero(start, current_zero, forward_rate, end):
+    """Extend continuous zero via a forward over start..end in any consistent time unit."""
+    if not np.isfinite([start, current_zero, forward_rate, end]).all() or start < 0 or end <= start:
+        raise ValueError("0<=start<end and finite rates required")
+    return (current_zero * start + forward_rate * (end - start)) / end
+
+
+def remaining_zero(full_zero, full_period, observed_zero, observed_period):
+    """Residual continuous rate after removing observed log-growth, as in Example6.5."""
+    if (
+        not np.isfinite([full_zero, full_period, observed_zero, observed_period]).all()
+        or not 0 <= observed_period < full_period
+    ):
+        raise ValueError("0<=observed period<full period required")
+    return (full_zero * full_period - observed_zero * observed_period) / (
+        full_period - observed_period
+    )
+
+
+def adjust_forward_rate(futures_rate, convexity_adjustment):
+    """Forward=futures-c with supplied nonnegative c; no absent model parameters guessed."""
+    if not np.isfinite([futures_rate, convexity_adjustment]).all() or convexity_adjustment < 0:
+        raise ValueError("finite rates and nonnegative convexity adjustment required")
+    return futures_rate - convexity_adjustment
+
+
+def sofr_fixing_window(start, end, fixings, *, basis=360):
+    """Arithmetic/compounded rates on [start,end), carrying the latest supplied fixing.
+
+    Caller provides business-day fixings/holidays; each carried calendar day is
+    counted once. End-date observations are excluded, not charged for another day.
+    """
+    from ._rates_foundations import compounded_reference_rate
+
+    start, end = _date(start), _date(end)
+    observations = sorted((_date(key), float(value)) for key, value in fixings.items())
+    if end <= start or not observations or observations[0][0] > start:
+        raise ValueError("positive window and an opening/prior fixing required")
+    daily = []
+    index = 0
+    day = start
+    while day < end:
+        while index + 1 < len(observations) and observations[index + 1][0] <= day:
+            index += 1
+        daily.append(observations[index][1])
+        day += timedelta(days=1)
+    rates = np.array(daily)
+    a = compounded_reference_rate(rates, np.ones(len(rates)), basis=basis)
+    return {
+        "daily_rates": rates,
+        "growth": a["growth"],
+        "compounded": a["annualized_rate"],
+        "arithmetic": float(rates.mean()),
     }
