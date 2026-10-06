@@ -4,7 +4,7 @@ import math
 
 import numpy as np
 
-from ._stochastic_foundations import gbm_log_law
+from ._stochastic_foundations import gbm_log_law, ito_coefficients
 
 
 def stock_distribution(spot, drift, sigma, maturity):
@@ -104,3 +104,42 @@ def delta_hedge_cash(option_units, delta, stock_change, option_change, rebalance
         "rebalance_units": trade,
         "rebalance_cash": -trade*rebalance_spot,
     }
+
+
+def bsm_pde_residual(spot, rate, sigma, value, f_time, f_spot, f_spot_spot):
+    """Left minus right of (15.16); f_time is the calendar-time derivative."""
+    if not all(math.isfinite(x) for x in (spot, rate, sigma, value, f_time, f_spot, f_spot_spot)) or spot <= 0 or sigma < 0:
+        raise ValueError("finite derivatives, positive spot and nonnegative volatility required")
+    return f_time+rate*spot*f_spot+.5*sigma**2*spot**2*f_spot_spot-rate*value
+
+
+def delta_hedged_coefficients(spot, drift, sigma, f_time, delta, gamma):
+    """Itô drift/diffusion of df-delta*dS, holding delta locally fixed."""
+    gbm_log_law(spot, drift, sigma, 0)
+    a, b = ito_coefficients(drift*spot, sigma*spot, f_time, delta, gamma)
+    return float(a-delta*drift*spot), float(b-delta*sigma*spot)
+
+
+def forward_contract_value(spot, strike, rate, maturity):
+    """No-dividend forward contract value, distinct from the delivery price."""
+    gbm_log_law(spot, rate, 0, maturity)
+    if not math.isfinite(strike):
+        raise ValueError("finite delivery price required")
+    return spot-strike*math.exp(-rate*maturity)
+
+
+def inverse_stock_value(spot, rate, sigma, maturity):
+    """Risk-neutral present value of the terminal payment 1/S_T."""
+    gbm_log_law(spot, rate, sigma, maturity)
+    return math.exp((sigma**2-2*rate)*maturity)/spot
+
+
+def perpetual_hit_value(spot, barrier, payment, rate, sigma):
+    """Payment at the first continuous hit of H, no yield, r>0 and sigma>0.
+
+    Boundary values are zero at S=0/infinity and payment at S=H; a contract
+    that never hits pays nothing. Negative rates are outside this solution.
+    """
+    if not all(math.isfinite(x) for x in (spot, barrier, payment, rate, sigma)) or min(spot, barrier, rate, sigma) <= 0 or payment < 0:
+        raise ValueError("positive spot/barrier/rate/volatility and nonnegative payment required")
+    return payment*spot/barrier if spot <= barrier else payment*(spot/barrier)**(-2*rate/sigma**2)
