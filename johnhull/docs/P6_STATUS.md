@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算30/54。次は§5.9（index forward）。Ch1→9を順に継続する。
+- 現在：計算31/54。次は§5.10（currency carry）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -43,6 +43,7 @@
 | §5.5 | `_forward_pricing.py` | I39.60/残860.40/F886.60/益23.40/16.60、配当PV2.162/F51.14。独立coupon充当借入solve | 計算完了。満期後income除外、途中丸めなし、known額とyieldを分離。説明・受入保留 | 6 passed・ruff check/format PASS |
 | §5.6 | `_forward_pricing.py` | q=2log1.02=3.96%、F25.77。独立借入額/再投資数量、単位carry | 計算完了。q=.04直入れを避けcontinuous換算、税/貸借料なし。説明・受入保留 | 8 passed・ruff check/format PASS |
 | §5.7 | `_forward_pricing.py` | F26.28/f2.17、16契約/満期4000。独立spot/割引債と反対forwardの確定cash | 計算完了。BS5.2 ±3900は金利がなく再現対象外、PV4000の構造のみ。fとFを分離。説明・受入保留 | 10 passed・ruff check/format PASS |
+| §5.9 | `_forward_pricing.py` | Ex5.5 1313.07。独立満期basket数量とfunding、symbolic5S/5QSの通貨換算 | 計算完了。qは期間平均continuous、quanto価格はCh30既存機能の範囲。説明・受入保留 | 12 passed・ruff check/format PASS |
 
 ## 残りと検証
 

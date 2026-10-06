@@ -121,3 +121,24 @@ def offset_forward_cash(units, contract_size, entry_price, offset_price):
         "contracts": units / contract_size,
         "locked_terminal_cash": units * (offset_price - entry_price),
     }
+
+
+def index_delivery_replication(index_spot, rate, dividend_yield, maturity, *, multiplier=1):
+    """Initial reinvested index units and funding for one futures delivery basket."""
+    if not np.isfinite(multiplier) or multiplier <= 0:
+        raise ValueError("positive multiplier required")
+    forward = known_yield_forward(index_spot, rate, dividend_yield, maturity)
+    initial = multiplier * np.exp(-dividend_yield * maturity)
+    return {
+        "forward": forward,
+        "initial_units": initial,
+        "delivery_units": multiplier,
+        "funding_terminal": multiplier * forward,
+    }
+
+
+def converted_index_value(index_value, multiplier, fx_quote):
+    """Basket value converted at observed FX; this is not a fixed-FX quanto price."""
+    if not np.isfinite([index_value, multiplier, fx_quote]).all() or min(multiplier, fx_quote) <= 0:
+        raise ValueError("finite index and positive multiplier/FX quote required")
+    return multiplier * index_value * fx_quote
