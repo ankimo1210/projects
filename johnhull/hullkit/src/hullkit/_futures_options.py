@@ -200,3 +200,29 @@ def american_spot_futures_comparison(spot, strike, rate, yield_rate, sigma, matu
         result["spot_european_"+kind] = spot_values["european"]
         result["futures_european_"+kind] = future_values["european"]
     return result
+
+
+def futures_style_details(forward, strike, sigma, maturity):
+    """Undiscounted payoff quotes, Hull 18.11; not an up-front premium.
+
+    Collateral deposits and interest on variation cash are excluded. For fixed
+    input F and sigma, deterministic interest rates do not enter the quote.
+    """
+    values = black_details(forward, strike, 0, sigma, maturity)
+    return {"call_quote": values["call"], "put_quote": values["put"],
+            "d1": values["d1"], "d2": values["d2"], "initial_premium_cash": 0.0}
+
+
+def futures_style_exercise_comparison(forward, strike, sigma, maturity, steps=500, *, kind="call"):
+    """Zero-discount convex-payoff stopping: early exercise cannot improve quote."""
+    values = futures_exercise_comparison(forward, strike, 0, sigma, maturity, steps, kind=kind)
+    return {"american_quote": values["american"], "european_quote": values["european"],
+            "european_tree_quote": values["european_tree_value"],
+            "exercise_now": values["exercise_now"]}
+
+
+def futures_style_variation_cash(previous_quote, new_quote, *, quantity=1, multiplier=1):
+    """Signed change in settlement quote; excludes collateral/cash interest."""
+    from ._bsm_foundations import quoted_futures_pnl
+
+    return quoted_futures_pnl(previous_quote, new_quote, multiplier, quantity=quantity)
