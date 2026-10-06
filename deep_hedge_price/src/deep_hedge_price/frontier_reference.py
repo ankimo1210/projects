@@ -29,6 +29,7 @@ from .hedge_capstone import (
 )
 from .pricing_calibration import (
     CalibrationResult,
+    _calibrate_with_evidence,
     calibrate_parameters,
     calibration_error_metrics,
     fit_direct_inverse_ridge,
@@ -397,7 +398,7 @@ def build_vol19_reference(*, seed: int = 1900, rbergomi_paths: int = 2_048) -> R
     def sabr_forward(values: np.ndarray) -> np.ndarray:
         return _sabr_forward(strikes, maturities, values)
 
-    calibration = calibrate_parameters(
+    calibration, calibration_evidence = _calibrate_with_evidence(
         sabr_forward,
         teacher_iv[1].reshape(-1),
         np.array([0.18, 0.60, -0.10, 0.35]),
@@ -427,6 +428,7 @@ def build_vol19_reference(*, seed: int = 1900, rbergomi_paths: int = 2_048) -> R
     )
     starts = calibration.starts
     arrays = {
+        **calibration_evidence,
         "teacher_model_code": np.arange(len(definitions), dtype=np.int16),
         "teacher_strikes": strikes,
         "teacher_maturities": maturities,
@@ -1147,7 +1149,7 @@ def _forecast_economic_reference(walk, arrays, seed, steps):
             forecasts = np.array(
                 [
                     np.clip(
-                        np.sqrt(252 * arrays[prefix + "prediction_" + name][row] / horizon),
+                        np.sqrt(252 * float(arrays[prefix + "prediction_" + name][row]) / horizon),
                         0.05,
                         1.0,
                     )

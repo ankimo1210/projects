@@ -85,16 +85,20 @@ class FrontierReference:
                 raise ValueError(f"non-finite reference metric: {name}")
 
 
-def _timed_ms(work: Callable[[], object], *, repeats: int = 5) -> float:
-    """Return a warm-cache median wall-clock measurement in milliseconds."""
-
+def _timed_samples(work, *, repeats=5):
+    """Warm-up then retain each raw perf_counter_ns duration."""
     work()
-    samples: list[float] = []
+    samples = []
     for _ in range(repeats):
         started = perf_counter_ns()
         work()
-        samples.append((perf_counter_ns() - started) * 1e-6)
-    return max(float(np.median(samples)), np.finfo(float).eps)
+        samples.append(perf_counter_ns() - started)
+    return np.asarray(samples, dtype=np.int64)
+
+
+def _timed_ms(work: Callable[[], object], *, repeats: int = 5) -> float:
+    """Return a warm-cache median wall-clock measurement in milliseconds."""
+    return max(float(np.median(_timed_samples(work, repeats=repeats))) * 1e-6, np.finfo(float).eps)
 
 
 def _vix_factors(seed: int, shape: tuple[int, int, int] = (48, 8, 6)) -> np.ndarray:
@@ -298,6 +302,8 @@ def volume21_reference(*, seed: int = 20260739) -> FrontierReference:
     batch_size = np.asarray([16, 128, 1024])
     teacher_ms: list[float] = []
     surrogate_ms: list[float] = []
+    teacher_repeats = []
+    surrogate_repeats = []
     for size in batch_size:
         benchmark = np.column_stack(
             [
@@ -306,8 +312,12 @@ def volume21_reference(*, seed: int = 20260739) -> FrontierReference:
                 rng.uniform(0.84, 1.16, size),
             ]
         )
-        teacher_ms.append(_timed_ms(lambda values=benchmark: _vix_prices(values, factors)))
-        surrogate_ms.append(_timed_ms(lambda values=benchmark: surrogate.predict(values)))
+        raw_teacher = _timed_samples(lambda values=benchmark: _vix_prices(values, factors))
+        raw_surrogate = _timed_samples(lambda values=benchmark: surrogate.predict(values))
+        teacher_repeats.append(raw_teacher)
+        surrogate_repeats.append(raw_surrogate)
+        teacher_ms.append(float(np.median(raw_teacher)) * 1e-6)
+        surrogate_ms.append(float(np.median(raw_surrogate)) * 1e-6)
     comparison = spx_vix.compare_teacher_surrogate(
         teacher_price,
         surrogate_price,
@@ -406,6 +416,9 @@ def volume21_reference(*, seed: int = 20260739) -> FrontierReference:
         "ood_radius": np.linalg.norm(evaluation - np.asarray([1.0, 0.045, 1.0]), axis=1),
         "ood_error": np.abs(teacher_price - surrogate_price),
         "batch_size": batch_size,
+        "nested_mc_repeats_ns": np.stack(teacher_repeats),
+        "surrogate_repeats_ns": np.stack(surrogate_repeats),
+        "timing_warmup_count": np.array([1]),
         "nested_mc_ms": np.asarray(teacher_ms),
         "surrogate_ms": np.asarray(surrogate_ms),
     }
@@ -480,6 +493,7 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
 
     teacher_price: list[float] = []
     baseline_price: list[float] = []
+    event_effect_payoff: list[np.ndarray] = []
     delta: list[float] = []
     gamma: list[float] = []
     baseline_delta: list[float] = []
@@ -536,6 +550,13 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
             rho=-0.55,
             n_paths=3_000,
             seed=seed + index,
+        )
+        event_effect_payoff.append(
+            np.exp(-0.02 * total_years)
+            * (
+                np.maximum(result.terminal_spot - 100.0, 0.0)
+                - np.maximum(baseline.terminal_spot - 100.0, 0.0)
+            )
         )
         teacher_price.append(result.price)
         baseline_price.append(baseline.price)
@@ -594,6 +615,26 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
         zero_dte.trading_seconds_to_settlement(closing, trading_day, session) == 0.0,
     )
     arrays: ArrayMap = {
+        "calendar_probe_ordinal": np.array(
+            [date(2026, 7, 3).toordinal(), date(2026, 7, 4).toordinal()]
+        ),
+        "calendar_probe_trading": np.array(
+            [session.is_trading_day(date(2026, 7, 3)), session.is_trading_day(date(2026, 7, 4))]
+        ),
+        "calendar_holiday_ordinal": np.array([day.toordinal() for day in sorted(session.holidays)]),
+        "calendar_session_ordinal": np.array([trading_day.toordinal()]),
+        "calendar_open_close_minute": np.array(
+            [opening.hour * 60 + opening.minute, closing.hour * 60 + closing.minute]
+        ),
+        "calendar_probe_minute": np.array(
+            [opening.hour * 60 + opening.minute, closing.hour * 60 + closing.minute]
+        ),
+        "calendar_probe_seconds": np.array(
+            [
+                zero_dte.trading_seconds_to_settlement(opening, trading_day, session),
+                zero_dte.trading_seconds_to_settlement(closing, trading_day, session),
+            ]
+        ),
         "minute": minute,
         "variance_weight": variance_weight,
         "variance_clock": variance_clock,
@@ -604,6 +645,8 @@ def volume22_reference(*, seed: int = 20260740) -> FrontierReference:
         "event_mask": event_mask,
         "time_of_day": tod_bucket,
         "seconds_to_settlement": np.asarray(seconds_to_settlement),
+        "event_effect_payoff": np.stack(event_effect_payoff),
+        "event_effect_paired_se": np.std(event_effect_payoff, axis=1, ddof=1) / np.sqrt(3000),
         "teacher_price": teacher_price_array,
         "baseline_price": baseline_price_array,
         "teacher_standard_error": np.asarray(standard_error),

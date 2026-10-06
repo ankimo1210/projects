@@ -30,6 +30,9 @@ GENERATOR = {
 def _arrays(nested: float, surrogate: float) -> dict[str, np.ndarray]:
     return {
         "batch_size": np.array([16, 128, 1024]),
+        "nested_mc_repeats_ns": np.full((3, 5), nested * 1e6),
+        "surrogate_repeats_ns": np.full((3, 5), surrogate * 1e6),
+        "timing_warmup_count": np.array([1]),
         "nested_mc_ms": np.full(3, nested),
         "surrogate_ms": np.full(3, surrogate),
     }

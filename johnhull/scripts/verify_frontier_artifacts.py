@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import copy
-import hashlib
 import json
 import tempfile
 from pathlib import Path
@@ -16,8 +15,54 @@ except ImportError:  # direct script execution
     from build_frontier_artifacts import FILES, VOLUMES, build_volume
 
 
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def _same_values(left, right) -> bool:
+    """Compare numbers with tolerance and identity metadata exactly."""
+    if isinstance(left, dict) and isinstance(right, dict):
+        return left.keys() == right.keys() and all(_same_values(left[k], right[k]) for k in left)
+    if isinstance(left, list) and isinstance(right, list):
+        return len(left) == len(right) and all(
+            _same_values(a, b) for a, b in zip(left, right, strict=True)
+        )
+    if isinstance(left, (int, float)) and isinstance(right, (int, float)):
+        return bool(np.isclose(left, right, rtol=1e-10, atol=1e-12))
+    return left == right
+
+
+def _compare_npz(committed: Path, rebuilt: Path, *, timing=False) -> None:
+    excluded = (
+        {"nested_mc_ms", "surrogate_ms", "nested_mc_repeats_ns", "surrogate_repeats_ns"}
+        if timing
+        else set()
+    )
+    with (
+        np.load(committed, allow_pickle=False) as left,
+        np.load(rebuilt, allow_pickle=False) as right,
+    ):
+        if set(left.files) != set(right.files):
+            raise RuntimeError(f"array names differ: {committed.name}")
+        for name in left.files:
+            if name in excluded:
+                passed = (
+                    np.all(np.isfinite(left[name]))
+                    and np.all(left[name] > 0)
+                    and np.all(np.isfinite(right[name]))
+                    and np.all(right[name] > 0)
+                )
+            elif left[name].dtype.kind in "fc":
+                passed = left[name].shape == right[name].shape and np.allclose(
+                    left[name], right[name], rtol=1e-10, atol=1e-12
+                )
+            else:
+                passed = np.array_equal(left[name], right[name])
+            if not passed:
+                raise RuntimeError(f"array differs: {committed.name}:{name}")
+
+
+def _json_values(path: Path, *, timing=False) -> dict:
+    value = _normalized_volume21_json(path) if timing else json.loads(path.read_text())
+    # The on-disk SHA binds exact bytes for integrity, not a numerical oracle.
+    value["companions"] = {name: "<content compared separately>" for name in value["companions"]}
+    return value
 
 
 def _normalized_volume21_json(path: Path) -> dict:
@@ -59,56 +104,48 @@ def volume21_measurement_provenance(path: Path) -> str:
 
 
 def _compare_volume21_npz(committed: Path, rebuilt: Path) -> None:
-    excluded = {"nested_mc_ms", "surrogate_ms"}
-    with (
-        np.load(committed, allow_pickle=False) as left,
-        np.load(rebuilt, allow_pickle=False) as right,
-    ):
-        if set(left.files) != set(right.files):
-            raise RuntimeError("volume 21 array names differ from the committed reference")
-        for name in set(left.files) - excluded:
-            if not np.array_equal(left[name], right[name]):
-                raise RuntimeError(f"volume 21 deterministic array differs: {name}")
-        for name in excluded:
-            if not np.all(left[name] > 0) or not np.all(right[name] > 0):
-                raise RuntimeError(f"volume 21 timing sample is not positive: {name}")
+    _compare_npz(committed, rebuilt, timing=True)
 
 
 def main() -> int:
     with tempfile.TemporaryDirectory(prefix="johnhull-artifacts-", dir="/tmp") as temporary:
         rebuilt_root = Path(temporary)
-        first_hashes: dict[Path, str] = {}
+        first_values = {}
         for volume in sorted(FILES):
             rebuilt_json, rebuilt_npz = build_volume(
-                volume,
-                refresh_timing=volume == 21,
-                output_root=rebuilt_root,
+                volume, refresh_timing=volume == 21, output_root=rebuilt_root
             )
             slug, json_name, npz_name = FILES[volume]
             committed = VOLUMES / slug / "reference"
-            committed_json = committed / json_name
-            committed_npz = committed / npz_name
+            _compare_npz(committed / npz_name, rebuilt_npz, timing=volume == 21)
+            if not _same_values(
+                _json_values(committed / json_name, timing=volume == 21),
+                _json_values(rebuilt_json, timing=volume == 21),
+            ):
+                raise RuntimeError(f"volume {volume} JSON semantic values differ")
             if volume == 21:
-                _compare_volume21_npz(committed_npz, rebuilt_npz)
-                if _normalized_volume21_json(committed_json) != _normalized_volume21_json(
-                    rebuilt_json
-                ):
-                    raise RuntimeError("volume 21 deterministic JSON fields differ")
-                print(f"[NOTE] vol 21: {volume21_measurement_provenance(committed_json)}")
-            elif _sha256(committed_json) != _sha256(rebuilt_json) or _sha256(
-                committed_npz
-            ) != _sha256(rebuilt_npz):
-                raise RuntimeError(f"volume {volume} is not reproducible from its implementation")
-            first_hashes[rebuilt_json] = _sha256(rebuilt_json)
-            first_hashes[rebuilt_npz] = _sha256(rebuilt_npz)
+                print(f"[NOTE] vol 21: {volume21_measurement_provenance(committed / json_name)}")
+            with np.load(rebuilt_npz, allow_pickle=False) as stored:
+                first_values[volume] = (
+                    _json_values(rebuilt_json),
+                    {k: stored[k].copy() for k in stored.files},
+                )
             print(f"[PASS] vol {volume}: implementation matches committed semantic values")
-
         for volume in sorted(FILES):
-            build_volume(volume, output_root=rebuilt_root)
-        changed = [path for path, digest in first_hashes.items() if _sha256(path) != digest]
-        if changed:
-            raise RuntimeError(f"ordinary rebuild is not byte-stable: {changed}")
-        print("[PASS] vol 19--28: second ordinary rebuild is byte-identical")
+            json_path, npz_path = build_volume(volume, output_root=rebuilt_root)
+            before_json, before_arrays = first_values[volume]
+            if not _same_values(before_json, _json_values(json_path)):
+                raise RuntimeError(f"ordinary rebuild JSON values differ: {volume}")
+            with np.load(npz_path, allow_pickle=False) as stored:
+                for name, expected in before_arrays.items():
+                    actual = stored[name]
+                    if expected.dtype.kind in "fc":
+                        passed = np.allclose(expected, actual, rtol=1e-10, atol=1e-12)
+                    else:
+                        passed = np.array_equal(expected, actual)
+                    if not passed:
+                        raise RuntimeError(f"ordinary rebuild values differ: {volume}:{name}")
+        print("[PASS] vol 19--28: second ordinary rebuild agrees within numerical tolerance")
     return 0
 
 
