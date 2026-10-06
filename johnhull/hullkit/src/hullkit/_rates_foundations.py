@@ -277,3 +277,33 @@ def bond_sensitivities(times, cashflows, yield_quote, *, frequency=None):
         "convexity": convexity,
         "price_gamma": price * convexity,
     }
+
+
+def bond_taylor_change(times, cashflows, yield_quote, change, *, frequency=None):
+    """First/second-order price change in one parallel yield quote coordinate."""
+    if not np.isfinite(change):
+        raise ValueError("finite yield change required")
+    a = bond_sensitivities(times, cashflows, yield_quote, frequency=frequency)
+    first = -a["dollar_duration"] * change
+    return {"first_order": first, "second_order": first + 0.5 * a["price_gamma"] * change**2}
+
+
+def immunization_weights(asset_times, liability_time):
+    """Price weights matching PV, duration and convexity of a zero-coupon liability.
+
+    Three distinct asset dates are required. Signed weights may imply borrowing
+    or short positions. Immunity is local to a parallel continuous-zero shift.
+    """
+    t = np.asarray(asset_times, dtype=float)
+    if (
+        t.shape != (3,)
+        or not np.isfinite(t).all()
+        or np.any(t < 0)
+        or not np.isfinite(liability_time)
+        or liability_time < 0
+        or len(np.unique(t)) != 3
+    ):
+        raise ValueError("three distinct nonnegative dates and liability time required")
+    return np.linalg.solve(
+        np.vstack([np.ones(3), t, t * t]), [1, liability_time, liability_time**2]
+    )
