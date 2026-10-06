@@ -104,3 +104,36 @@ def futures_option_bounds(forward, strike, rate, maturity):
     return {**carry_bounds(forward, strike, rate, rate, maturity),
             "american_call_lower": max(forward-strike, 0),
             "american_put_lower": max(strike-forward, 0)}
+
+
+def futures_risk_neutral_law(forward, sigma, maturity):
+    """Lognormal dF=sigma*F*dW under the money-market numeraire (18.5).
+
+    Forward prices generally use the maturity-bond numeraire instead.
+    """
+    from ._stochastic_foundations import gbm_log_law
+
+    return gbm_log_law(forward, 0, sigma, maturity)
+
+
+def futures_tree_transition(forward, rate, sigma, dt):
+    """One-step conditional martingale and discounted settlement expectation."""
+    from .trees import crr_params, risk_neutral_p
+
+    futures_risk_neutral_law(forward, sigma, dt)
+    if not math.isfinite(rate):
+        raise ValueError("finite rate required")
+    up, down = crr_params(sigma, dt)
+    if sigma == 0 or dt == 0:
+        return {"up": up, "down": down, "probability": None, "discounted_settlement_mean": 0.0}
+    probability = risk_neutral_p(up, down, rate, dt, q=rate)
+    expected_change = forward*(probability*up+(1-probability)*down-1)
+    return {"up": up, "down": down, "probability": probability,
+            "discounted_settlement_mean": math.exp(-rate*dt)*expected_change}
+
+
+def futures_pde_residual(forward, rate, sigma, value, f_time, gamma):
+    """Hull 18.6: calendar f_t + .5*sigma^2*F^2*f_FF - r*f."""
+    from ._bsm_foundations import bsm_pde_residual
+
+    return bsm_pde_residual(forward, rate, sigma, value, f_time, 0, gamma)
