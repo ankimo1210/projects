@@ -27,3 +27,12 @@ def lognormal_interval(log_mean, log_sd, *, z=1.96):
     if not all(math.isfinite(x) for x in (log_mean, log_sd, z)) or log_sd < 0 or z < 0:
         raise ValueError("finite log mean and nonnegative standard deviation/z required")
     return math.exp(log_mean-z*log_sd), math.exp(log_mean+z*log_sd)
+
+
+def return_distribution(drift, sigma, maturity):
+    """Law of log(S_T/S_0)/T, an annualized realized rate, not stock drift."""
+    if maturity <= 0:
+        raise ValueError("average return requires positive maturity")
+    law = gbm_log_law(1, drift, sigma, maturity)
+    variance = law["log_variance"]/maturity**2
+    return {"mean": law["log_mean"]/maturity, "variance": variance, "sd": math.sqrt(variance)}
