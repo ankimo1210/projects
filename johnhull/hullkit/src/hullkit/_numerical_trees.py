@@ -154,3 +154,28 @@ def tree_greek_details(
         "delta_time": result["dt"],
         "gamma_time": 2 * result["dt"],
     }
+
+
+def carry_lattice(
+    spot, strike, rate, sigma, maturity, steps, *, asset, yield_rate=0, kind="call", american=False
+):
+    """Hull21.2 q: index dividend yield, currency foreign rate, or futures r.
+
+    The futures forward growth is one per step; option continuation is still
+    discounted at the domestic rate. Yield is ignored for futures by definition.
+    """
+    if asset not in {"index", "currency", "futures"}:
+        raise ValueError("asset must be index, currency or futures")
+    effective_yield = rate if asset == "futures" else yield_rate
+    result = crr_lattice(
+        spot,
+        strike,
+        rate,
+        sigma,
+        maturity,
+        steps,
+        yield_rate=effective_yield,
+        kind=kind,
+        american=american,
+    )
+    return {**result, "asset": asset, "effective_yield": effective_yield}
