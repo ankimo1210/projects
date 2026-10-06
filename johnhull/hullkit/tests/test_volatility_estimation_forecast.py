@@ -60,3 +60,20 @@ def test_zero_horizon_ewma_limit_and_near_unit_persistence():
     near = v.garch_term_vol(0.0003, 20, (1 - p) * 0.0002, 0.1, p - 0.1)
     assert near["average_variance"] == pytest.approx(0.0003, rel=1e-9)
     assert v.garch_vol_sensitivity(0, 10, 0, 0.1, 0.8) > 0
+
+
+def test_review_r4_zero_persistence_constant_variance_and_mle_forecast_connection():
+    assert v.expected_variance(0.0003, 10, 0.0001, 0, 0) == pytest.approx(0.0001)
+    assert v.expected_variance(0.0003, 0, 0.0001, 0, 0) == pytest.approx(0.0003)
+    term = v.garch_term_vol(0.0003, 10, 0.0001, 0, 0)
+    assert term["average_variance"] == pytest.approx(0.0001)
+    assert term["annual_vol"] == pytest.approx(np.sqrt(252 * 0.0001))
+    assert v.garch_vol_sensitivity(0.0003, 10, 0.0001, 0, 0) == 0
+    u = np.random.default_rng(8).normal(size=80) * 0.01
+    fit = v.fit_garch(u, initial=0.0001)
+    assert fit["alpha"] == pytest.approx(0, abs=1e-8)
+    assert fit["beta"] == pytest.approx(0, abs=1e-8)
+    # initial variance is fixed, so remaining observations determine omega's MLE.
+    assert fit["omega"] == pytest.approx(np.mean(u[1:] ** 2), rel=1e-5)
+    predicted = v.expected_variance(0.0001, 10, fit["omega"], fit["alpha"], fit["beta"])
+    assert predicted == pytest.approx(fit["omega"], rel=1e-7)

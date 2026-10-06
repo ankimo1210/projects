@@ -325,7 +325,7 @@ def ljung_box_from_acf(acf, observations, *, estimated_parameters=0):
 def _forecast_inputs(initial, days, omega, alpha, beta):
     _garch_inputs(omega, alpha, beta, initial)
     p = alpha + beta
-    if not np.isfinite(days) or days < 0 or not 0 < p <= 1 or (p == 1 and omega != 0):
+    if not np.isfinite(days) or days < 0 or not 0 <= p <= 1 or (p == 1 and omega != 0):
         raise ValueError("nonnegative horizon and stationary GARCH (or driftless EWMA) required")
     return p
 
@@ -333,8 +333,10 @@ def _forecast_inputs(initial, days, omega, alpha, beta):
 def expected_variance(initial, days, omega, alpha, beta):
     """E[v(day)] under GARCH; real days use the exponential interpolation in §23.6."""
     p = _forecast_inputs(initial, days, omega, alpha, beta)
-    if p == 1:
+    if days == 0 or p == 1:
         return float(initial)
+    if p == 0:
+        return float(omega)
     long = omega / (1 - p)
     return float(long + math.exp(math.log(p) * days) * (initial - long))
 
@@ -350,6 +352,9 @@ def garch_term_vol(initial, days, omega, alpha, beta, *, trading_days=252):
         raise ValueError("positive trading days per year required")
     if days == 0 or p == 1:
         weight, average = 1.0, float(initial)
+    elif p == 0:
+        # Continuous interpolation limit: v(t)=omega at every t>0.
+        weight, average = 0.0, float(omega)
     else:
         rate = -math.log(p)
         weight = -math.expm1(-rate * days) / (rate * days)
