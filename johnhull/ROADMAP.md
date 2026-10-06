@@ -21,7 +21,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 private modules on main as of 2026-10-05 (later P3–P7 logic is on `codex/p7-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` / `codex/p6-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-10-06、P7の実装可能な計算を完了・正式受入保留）
+## 現在地（2026-10-06、P8監査是正を実装中・正式受入保留）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
@@ -64,7 +64,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | 計算32/32の初回実装・対象検証完了、説明中心4項目は保留 | codex/p5-logicへ節ごとpush。P5対象196 tests・docstring156・索引6・ruff PASS。入力不足・モデル範囲は[P5状態](docs/P5_STATUS.md)に記録。教材・正式受入は保留 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 下調べは計算54・説明中心26（旧監査と分類が異なる） | 計算54/54の初回実装・対象検証・一覧照合完了。codex/p6-logicへpush。対象124 tests・9モジュールのdocstring/索引18・ruff PASS。入力不足/原典差は[P6状態](docs/P6_STATUS.md)、教材・正式受入は保留 |
 | P7 | Ch 35–37 | 16 | 0 | 6 | 下調べは計算11・説明中心5（旧監査と分類が異なる）。§36.4はモデル入力不足 | 計算10/11の実装・対象検証・一覧照合完了。codex/p7-logicへ節ごとpush。対象28 tests・docstring/索引6・ruff PASS。§35.4/§36.5の原典差は[P7状態](docs/P7_STATUS.md)。次はP8。教材・正式受入保留 |
-| P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表（R1–R4・R6・R11、保存値依存5項目、§7の判断事項） | 次段階。[旧再確認](docs/prep/design/P8_RECHECK.md)をP3–P7の現コードへ照合して残る修正を確定。成果物・既定出力・受入判定の変更は別途 |
+| P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表（R1–R4・R6・R11、保存値依存5項目、§7の判断事項） | 実装中。origin/main基点のcodex/p8-auditでR1–R4/R6と保存値依存5項目を是正。R11の計算はP4対応済み。公開API/依存は維持。[P8状態](docs/P8_STATUS.md) |
 | **計** | | **306** | **33** | **63** | | **10.8%** |
 
 ### 先に決めること
