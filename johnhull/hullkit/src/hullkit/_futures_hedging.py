@@ -42,3 +42,28 @@ def asset_hedge(
         "net_cash": spot_cash + profit,
         "effective_price": (s + futures_entry - f) * price_unit,
     }
+
+
+def business_hedge_profit(
+    base_sales, input_units, baseline_price, terminal_price, *, pass_through, hedge_cash
+):
+    """Attribute operating profits and separate derivative cash under stated cost transfer.
+
+    Sales change by pass_through times the raw-material price change. This is a
+    scenario accounting identity, not an estimated corporate pricing model.
+    """
+    if (
+        not np.isfinite(
+            [base_sales, input_units, baseline_price, terminal_price, pass_through, hedge_cash]
+        ).all()
+        or input_units < 0
+    ):
+        raise ValueError("finite scenario inputs and nonnegative input units required")
+    sales = base_sales + pass_through * input_units * (terminal_price - baseline_price)
+    operating = sales - input_units * terminal_price
+    return {
+        "sales": sales,
+        "unhedged_profit": operating,
+        "hedge_cash": hedge_cash,
+        "hedged_profit": operating + hedge_cash,
+    }
