@@ -237,3 +237,43 @@ def fra_contract_value(
     return (1 if receive == "fixed" else -1) * fra_value(
         notional, fixed_rate, forward_rate, start, end, discount_zero
     )
+
+
+def bond_sensitivities(times, cashflows, yield_quote, *, frequency=None):
+    """PV weights, duration, dollar risk and convexity in the supplied yield quote.
+
+    None is continuous; positive frequency gives a periodic annual quote.
+    dv01 is positive -dB/dy times 1bp, not an actual nonlinear 1bp price move.
+    Cashflow dates may be unordered; positive total PV is needed for normalization.
+    """
+    t, cf = _cash_vectors(times, cashflows)
+    if not np.isfinite(yield_quote):
+        raise ValueError("finite yield required")
+    if frequency is None:
+        growth = 1.0
+        pv = cf * np.exp(-yield_quote * t)
+        second = t**2
+    else:
+        if not np.isfinite(frequency) or frequency <= 0 or 1 + yield_quote / frequency <= 0:
+            raise ValueError("positive frequency and growth required")
+        growth = 1 + yield_quote / frequency
+        pv = cf * growth ** (-frequency * t)
+        second = (t**2 + t / frequency) / growth**2
+    price = float(pv.sum())
+    if price <= 0:
+        raise ValueError("positive total present value required")
+    weights = pv / price
+    duration = float(t @ weights)
+    modified = duration / growth
+    convexity = float(second @ weights)
+    return {
+        "price": price,
+        "cash_present_values": pv,
+        "weights": weights,
+        "macaulay": duration,
+        "modified": modified,
+        "dollar_duration": price * modified,
+        "dv01": price * modified * 1e-4,
+        "convexity": convexity,
+        "price_gamma": price * convexity,
+    }
