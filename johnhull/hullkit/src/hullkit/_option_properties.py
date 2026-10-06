@@ -136,16 +136,20 @@ def american_put_interval(call_price, spot, strike, rate, maturity, *, dividend_
 
     These American parity inequalities assume r >= 0; unlike European
     parity they must not be extended to negative rates without rederivation.
+    The put interval is also clipped to max(K-S, 0) <= P <= K, and an
+    American call above the stock price is rejected.
     """
     _market(spot, strike, rate, 0, maturity)
     if rate < 0:
         raise ValueError("Hull American parity interval assumes nonnegative rate")
     if not math.isfinite(call_price) or call_price < 0 or not math.isfinite(dividend_pv) or dividend_pv < 0:
         raise ValueError("call price and dividend PV must be finite and nonnegative")
+    if call_price > spot:
+        raise ValueError("an American call cannot exceed the stock price")
     lower = strike*math.exp(-rate*maturity)-spot
     upper = strike+dividend_pv-spot
     return dict(put_minus_call_lower=lower, put_minus_call_upper=upper,
-                put_lower=max(call_price+lower, 0), put_upper=call_price+upper)
+                put_lower=max(call_price+lower, strike-spot, 0), put_upper=min(call_price+upper, strike))
 
 
 def capital_structure_payoffs(terminal_assets, face_value):

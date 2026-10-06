@@ -101,3 +101,15 @@ def test_business_snapshot_11_1_state_and_present_value_conservation():
 def test_american_hull_interval_rejects_negative_rate_premise():
     with pytest.raises(ValueError, match="nonnegative rate"):
         props.american_put_interval(1, 19, 20, -.1, .5)
+
+
+def test_american_put_interval_respects_intrinsic_and_strike_bounds():
+    # (11.7) alone gives 0.284 here, below the American put's intrinsic value 1.
+    low = props.american_put_interval(.1, 19, 20, .1, 5/12)
+    assert low["put_lower"] == pytest.approx(1, abs=1e-12)
+    assert low["put_minus_call_lower"] == pytest.approx(20*math.exp(-.1*5/12)-19, abs=1e-12)
+    # (11.11) with a large dividend PV exceeds K, which caps any American put.
+    high = props.american_put_interval(3.5, 4, 20, .05, .5, dividend_pv=1)
+    assert high["put_upper"] == pytest.approx(20, abs=1e-12)
+    with pytest.raises(ValueError):
+        props.american_put_interval(30, 19, 20, .1, 5/12)
