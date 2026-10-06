@@ -49,3 +49,37 @@ def simple_carry_comparison(spot, delivery_price, rate, maturity, *, quantity=1)
         "relative_gain": quantity * abs(difference),
         "direction": "cash_and_carry" if difference >= 0 else "reverse_carry",
     }
+
+
+def option_contract_cashflows(
+    terminal_spot, strike, premium, *, kind="call", side="long", contracts=1, multiplier=100
+):
+    """Signed terminal payoff and profit after entry premium, without interest/fees.
+
+    premium is cash per underlying unit; quantity=contracts*multiplier. Contract
+    fractions are allowed for mathematical portfolios; no lot-size rounding.
+    """
+    from .payoffs import leg_payoff
+
+    spot = np.asarray(terminal_spot, dtype=float)
+    if (
+        not np.isfinite([strike, premium, contracts, multiplier]).all()
+        or min(premium, contracts) < 0
+        or multiplier <= 0
+        or not np.isfinite(spot).all()
+        or kind not in ("call", "put")
+        or side not in ("long", "short")
+    ):
+        raise ValueError(
+            "finite prices, nonnegative premium/contracts, positive multiplier and supported kind/side required"
+        )
+    direction = 1 if side == "long" else -1
+    quantity = contracts * multiplier
+    payoff = leg_payoff(spot, direction * quantity, kind, strike)
+    premium_cash = -direction * quantity * premium
+    return {
+        "quantity": quantity,
+        "premium_cash": premium_cash,
+        "payoff": payoff,
+        "profit": payoff + premium_cash,
+    }
