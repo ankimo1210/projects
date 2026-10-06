@@ -283,3 +283,56 @@ def ljung_box_from_acf(acf, observations, *, estimated_parameters=0):
         "degrees": degrees,
         "p_value": float(chi2.sf(statistic, degrees)),
     }
+
+
+def _forecast_inputs(initial, days, omega, alpha, beta):
+    _garch_inputs(omega, alpha, beta, initial)
+    p = alpha + beta
+    if not np.isfinite(days) or days < 0 or not 0 < p <= 1 or (p == 1 and omega != 0):
+        raise ValueError("nonnegative horizon and stationary GARCH (or driftless EWMA) required")
+    return p
+
+
+def expected_variance(initial, days, omega, alpha, beta):
+    """E[v(day)] under GARCH; real days use the exponential interpolation in §23.6."""
+    p = _forecast_inputs(initial, days, omega, alpha, beta)
+    if p == 1:
+        return float(initial)
+    long = omega / (1 - p)
+    return float(long + math.exp(math.log(p) * days) * (initial - long))
+
+
+def garch_term_vol(initial, days, omega, alpha, beta, *, trading_days=252):
+    """Annualized sqrt of average expected daily variance, Hull eq23.14.
+
+    This is a historical P-variance term structure. It is not a Q market
+    calibration, nor is sqrt(E[v]) the expectation of sqrt(v).
+    """
+    p = _forecast_inputs(initial, days, omega, alpha, beta)
+    if not np.isfinite(trading_days) or trading_days <= 0:
+        raise ValueError("positive trading days per year required")
+    if days == 0 or p == 1:
+        weight, average = 1.0, float(initial)
+    else:
+        rate = -math.log(p)
+        weight = -math.expm1(-rate * days) / (rate * days)
+        long = omega / (1 - p)
+        average = long + (initial - long) * weight
+    return {
+        "average_variance": float(average),
+        "annual_vol": math.sqrt(trading_days * max(average, 0)),
+        "initial_weight": weight,
+    }
+
+
+def garch_vol_sensitivity(initial, days, omega, alpha, beta, *, trading_days=252):
+    """Derivative of term annual vol with respect to instantaneous annual vol.
+
+    Multiplying by .01 propagates one percentage point, not a relative 1%.
+    """
+    result = garch_term_vol(initial, days, omega, alpha, beta, trading_days=trading_days)
+    if result["annual_vol"] == 0:
+        return math.sqrt(result["initial_weight"])
+    return float(
+        result["initial_weight"] * math.sqrt(trading_days * initial) / result["annual_vol"]
+    )
