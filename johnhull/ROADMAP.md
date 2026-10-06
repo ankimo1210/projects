@@ -21,7 +21,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 private modules on main as of 2026-10-05 (later P3–P7 logic is on `codex/p7-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` / `codex/p6-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-10-06、P8監査是正を実装中・正式受入保留）
+## 現在地（2026-10-07、P8監査是正を実装中・正式受入保留）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
