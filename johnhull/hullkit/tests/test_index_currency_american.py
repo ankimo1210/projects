@@ -61,3 +61,10 @@ def test_expiry_has_intrinsic_value_and_no_waiting_decision():
 def test_tree_requires_positive_integer_steps():
     with pytest.raises(ValueError):
         index.carry_exercise_comparison(120, 100, .04, .12, .2, 1, 0)
+
+
+def test_rounding_tie_between_intrinsic_and_continuation_is_not_exercise():
+    tree = index.carry_exercise_comparison(27000, 1000, 0, 0, .25, .25, 3)
+    flat = index.carry_exercise_comparison(27000, 1000, 0, 0, 0, .25, 3)
+    assert tree["exercise_now"] is False
+    assert flat["exercise_now"] is False

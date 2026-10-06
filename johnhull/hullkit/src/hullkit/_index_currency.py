@@ -1,6 +1,7 @@
 """Private Hull GE Ch17: index insurance, currency cashflows and carry pricing."""
 
 import math
+import sys
 
 from ._option_mechanics import option_cashflows
 
@@ -218,6 +219,11 @@ def currency_inversion(spot, strike, domestic_rate, foreign_rate, sigma, maturit
             "foreign_unit_value": unit_value, "domestic_value": spot*strike*unit_value}
 
 
+def _strictly_better(intrinsic, continuation):
+    """Immediate exercise beats continuation by more than rounding error."""
+    return intrinsic > continuation+16*sys.float_info.epsilon*max(1.0, abs(intrinsic), abs(continuation))
+
+
 def carry_exercise_comparison(spot, strike, rate, yield_rate, sigma, maturity, steps=500, *, kind="call"):
     """European/American carry prices and strict root exercise on a CRR grid.
 
@@ -240,7 +246,7 @@ def carry_exercise_comparison(spot, strike, rate, yield_rate, sigma, maturity, s
         continuation = max(cash[1:])
         return {"american": american, "european": analytic[kind], "european_tree_value": cash[-1],
                 "early_exercise_premium": american-cash[-1],
-                "exercise_now": maturity > 0 and intrinsic > continuation+1e-12,
+                "exercise_now": maturity > 0 and _strictly_better(intrinsic, continuation),
                 "root_continuation": continuation, "growth": growth, "probability": None,
                 "underlying_tree": None, "american_tree": None, "european_tree": None}
     up, down = crr_params(sigma, dt)
@@ -251,6 +257,6 @@ def carry_exercise_comparison(spot, strike, rate, yield_rate, sigma, maturity, s
     continuation = math.exp(-rate*dt)*float(probability*american_tree[1][0]+(1-probability)*american_tree[1][1])
     return {"american": american, "european": analytic[kind], "european_tree_value": european,
             "early_exercise_premium": max(american-european, 0),
-            "exercise_now": intrinsic > continuation+1e-12,
+            "exercise_now": _strictly_better(intrinsic, continuation),
             "root_continuation": continuation, "growth": growth, "probability": probability,
             "underlying_tree": stock, "american_tree": american_tree, "european_tree": european_tree}
