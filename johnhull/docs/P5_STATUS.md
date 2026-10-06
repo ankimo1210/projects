@@ -64,3 +64,5 @@
 - 2026-10-06 レビューchatからの報告：R1–R4は独立再検証済みとしてclose。Ch25.1–25.3（8160c4b6まで）に追加重大指摘なし。同chatが実行したhullkit全suiteは5257 passed・6 skipped・2既存warnings（開始HEAD8160c4b6、実行中の開発継続あり）。この件数は後続全HEADの保証とせず、本chatはP5変更対象のみ再検証する。
 
 - 2026-10-06 R6：rho=.9/.99で100社PD2%の>=10 tailを固定60点求積が約19–22%誤ることを独立binomial.sf積分で再現。新private件数分布を全PMFの適応積分に変更し、transition付近を分割、誤差不足は拒否。2回帰を含むextensions 20 passed・ruff PASS。平均件数だけの確認ではtailの精度を保証できない。
+
+- 2026-10-06 R5：loading .999のGaussian count/terminal lossと、PD .0001/rho .99のdouble-t閾値で固定求積のbiasを再現。Gaussian PMF/PD/terminal lossを適応積分、double-tをfactor CDF空間の適応積分で再較正・再評価。正負loading .995/.999・PD .02/.001とrare double-tの9回帰、alternatives 17 passed・ruff PASS。固定nodeはpilotとし、積分不収束やPD保存不足は拒否。

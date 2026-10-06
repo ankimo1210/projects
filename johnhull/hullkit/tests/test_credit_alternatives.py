@@ -198,3 +198,35 @@ def test_invalid_probability_loading_nu_weights_and_infeasible_quotes():
         a.hazard_mixture_legs(HAZARDS, [0.2, 0.5, 0.4], 0.4, 0.03, 2, BOUNDS, 4)
     with pytest.raises(ValueError):
         a.calibrate_hazard_mixture(HAZARDS, [100, 100, 100], 0.4, 0.03, 2, BOUNDS, 4)
+
+
+@pytest.mark.parametrize("loading", [0.999, -0.999, 0.995, -0.995])
+@pytest.mark.parametrize("pd", [0.02, 0.001])
+def test_review_r5_near_perfect_factor_preserves_pd_mean_count_and_pool_loss(loading, pd):
+    count = a.heterogeneous_factor_counts([pd] * 10, loading)
+    assert np.arange(11) @ count["pmf"] == pytest.approx(10 * pd, abs=2e-10)
+    assert count["pmf"].sum() == pytest.approx(1, abs=2e-11)
+    pool = a.factor_dependent_pool(10, pd, lambda f: loading, lambda f: 0.4, 0, 1)
+    assert pool["marginal_pd"] == pytest.approx(pd, abs=2e-11)
+    assert pool["expected_tranche_loss"] == pytest.approx(0.6 * pd, abs=2e-11)
+    assert pool["threshold"] == pytest.approx(norm.ppf(pd), abs=2e-8)
+
+
+def test_review_r5_double_t_rare_pd_high_loading_preserves_actual_marginal():
+    result = a.double_t_counts(10, 0.0001, 0.99)
+    scale = math.sqrt(0.5)
+    threshold = result["threshold"]
+    actual = quad(
+        lambda f: (
+            t.pdf(f / scale, 4)
+            / scale
+            * t.cdf((threshold - math.sqrt(0.99) * f) / (math.sqrt(0.01) * scale), 4)
+        ),
+        -np.inf,
+        np.inf,
+        epsabs=1e-11,
+        epsrel=1e-11,
+    )[0]
+    assert actual == pytest.approx(0.0001, abs=2e-10)
+    assert result["marginal_pd"] == pytest.approx(actual, abs=2e-10)
+    assert np.arange(11) @ result["pmf"] == pytest.approx(0.001, abs=2e-9)

@@ -6,22 +6,21 @@ not a reproduction of every parameterization in Andersen/Sidenius. Dynamic
 structural, jump-intensity and top-down models require separate research design.
 """
 
-import math
 from itertools import pairwise
 
 import numpy as np
-from scipy.integrate import quad
 from scipy.optimize import brentq, linprog
 from scipy.stats import norm
 
 from . import credit_portfolio as cp
+from ._credit_portfolio_extensions import _factor_integral, _normal_transition_points
 
 
 def heterogeneous_factor_counts(cumulative_pds, loadings, *, nodes=60):
-    """ASB count recursion with individual signed loadings and PDs; equal-sized names.
+    """ASB count recursion with individual signed loadings and adaptive factor integration.
 
-    Conditional Gaussian residuals are nondegenerate: |a_i|<1. Arbitrary loss
-    severities/notional weights would need a loss-grid recursion, not this count PMF.
+    Equal-sized names and nondegenerate Gaussian residuals |a_i|<1. Returned
+    factor/weights are a diagnostic pilot grid, not the final integration weights.
     """
     pd = np.asarray(cumulative_pds, dtype=float)
     a = np.broadcast_to(np.asarray(loadings, dtype=float), pd.shape)
@@ -35,25 +34,89 @@ def heterogeneous_factor_counts(cumulative_pds, loadings, *, nodes=60):
     ):
         raise ValueError("PD vector in [0,1] and loadings strictly in (-1,1) required")
     factor, weights = cp.gauss_hermite_factor(nodes)
-    conditional = norm.cdf((norm.ppf(pd) - factor[:, None] * a) / np.sqrt(1 - a * a))
-    pmf = weights @ cp.heterogeneous_default_pmf(conditional)
-    return {"pmf": pmf, "conditional_pds": conditional, "factor": factor, "weights": weights}
+    threshold = norm.ppf(pd)
+
+    def conditional(f):
+        return norm.cdf((threshold - a * f) / np.sqrt(1 - a * a))
+
+    def integrand(f):
+        probabilities = conditional(f)
+        return np.r_[cp.heterogeneous_default_pmf(probabilities), probabilities]
+
+    values, error = _factor_integral(
+        integrand, points=np.r_[factor, _normal_transition_points(threshold, a)]
+    )
+    integrated = values[pd.size + 1 :]
+    if np.max(abs(integrated - pd)) > 5e-10:
+        raise ValueError("factor integration failed to preserve marginal default probabilities")
+    return {
+        "pmf": values[: pd.size + 1],
+        "conditional_pds": conditional(factor[:, None]),
+        "factor": factor,
+        "weights": weights,
+        "integrated_pds": integrated,
+        "integration_error": error,
+    }
 
 
 def double_t_counts(names, cumulative_pd, rho, *, nu=4, nodes=200, threshold_nodes=240):
-    """Existing double-t threshold/count quadrature, not a shared-scale multivariate t copula."""
-    if not np.isfinite(names) or int(names) != names or names < 1:
-        raise ValueError("positive integer names required")
-    threshold = cp.double_t_threshold(cumulative_pd, rho, nu, m=threshold_nodes)
-    factor, weights = cp.double_t_factor_quadrature(nu, nodes)
-    conditional = cp.standardized_t_cdf(
-        (threshold - math.sqrt(rho) * factor) / math.sqrt(1 - rho), nu
-    )
-    return {
-        "threshold": threshold,
-        "pmf": weights @ cp.binomial_pmf(int(names), conditional),
-        "marginal_pd": float(weights @ conditional),
-    }
+    """Double-t threshold and full count PMF with adaptive integration in factor CDF space.
+
+    Factor and residual t variables have independent scales and unit variance.
+    Node parameters set pilot partitions; fixed-node threshold biases are avoided.
+    """
+    if (
+        not np.isfinite([names, cumulative_pd, rho, nu, nodes, threshold_nodes]).all()
+        or int(names) != names
+        or names < 1
+        or not 0 < cumulative_pd < 1
+        or not 0 <= rho < 1
+        or nu <= 2
+        or min(nodes, threshold_nodes) < 1
+        or int(nodes) != nodes
+        or int(threshold_nodes) != threshold_nodes
+    ):
+        raise ValueError(
+            "positive integer grids/names, interior PD, rho in [0,1) and nu>2 required"
+        )
+    if rho == 0:
+        return {
+            "threshold": cp.standardized_t_ppf(cumulative_pd, nu),
+            "pmf": cp.binomial_pmf(int(names), cumulative_pd),
+            "marginal_pd": cumulative_pd,
+        }
+    a, noise = np.sqrt(rho), np.sqrt(1 - rho)
+
+    def integrate(threshold, count=False):
+        pilot, _ = np.polynomial.legendre.leggauss(
+            min(int(nodes if count else threshold_nodes), 32)
+        )
+        anchors = np.r_[
+            (pilot + 1) / 2,
+            cp.standardized_t_cdf(
+                threshold / a + np.array([-12, -4, -1, 0, 1, 4, 12]) * noise / a, nu
+            ),
+        ]
+
+        def integrand(u):
+            factor = cp.standardized_t_ppf(u, nu)
+            pd = cp.standardized_t_cdf((threshold - a * factor) / noise, nu)
+            return np.r_[cp.binomial_pmf(int(names), pd), pd] if count else pd
+
+        return _factor_integral(
+            integrand, points=anchors, bounds=(0.0, 1.0), density=lambda _: 1.0
+        )[0]
+
+    lower, upper = -8.0, 8.0
+    while integrate(lower) > cumulative_pd:
+        lower *= 2
+    while integrate(upper) < cumulative_pd:
+        upper *= 2
+    threshold = brentq(lambda x: float(integrate(x)) - cumulative_pd, lower, upper, xtol=1e-12)
+    values = integrate(threshold, count=True)
+    if abs(values[-1] - cumulative_pd) > 5e-10:
+        raise ValueError("double-t integration failed to preserve the marginal PD")
+    return {"threshold": threshold, "pmf": values[:-1], "marginal_pd": float(values[-1])}
 
 
 def _factor_loading(factor, loading_function):
@@ -70,7 +133,7 @@ def factor_dependent_pool(
 
     X=a(F)F+sqrt(1-a(F)^2)Z is generally not standard normal. Recalibrate its
     threshold to the supplied marginal PD using adaptive integration before
-    integrating conditional count losses. Recovery_given_default is PD-weighted;
+    adaptively integrating conditional count losses. Recovery_given_default is PD-weighted;
     preserving PD alone does not preserve single-name CDS quotes when R changes.
     """
     if (
@@ -81,20 +144,39 @@ def factor_dependent_pool(
         or not 0 <= attach < detach <= 1
     ):
         raise ValueError("positive integer names, interior PD and a valid tranche required")
-    factor, weights = cp.gauss_hermite_factor(nodes)
-    a = _factor_loading(factor, loading_function)
+    factor, _weights = cp.gauss_hermite_factor(nodes)
+    _factor_loading(factor, loading_function)
     recovery = np.broadcast_to(np.asarray(recovery_function(factor), dtype=float), factor.shape)
     if not np.isfinite(recovery).all() or np.any((recovery < 0) | (recovery > 1)):
         raise ValueError("factor-dependent recoveries must lie in [0,1]")
 
-    def cdf(threshold):
-        def integrand(f):
-            loading = float(_factor_loading(f, loading_function))
-            return norm.pdf(f) * norm.cdf(
-                (threshold - loading * f) / math.sqrt(1 - loading * loading)
-            )
+    def transitions(threshold):
+        grid = np.linspace(-12, 12, 65)
 
-        return quad(integrand, -np.inf, np.inf, epsabs=1e-11, epsrel=1e-11)[0]
+        def residual(f):
+            return float(_factor_loading(f, loading_function)) * f - threshold
+
+        difference = np.array([residual(float(f)) for f in grid])
+        anchors = []
+        for lo, hi, dlo, dhi in zip(
+            grid[:-1], grid[1:], difference[:-1], difference[1:], strict=True
+        ):
+            if dlo * dhi < 0:
+                center = brentq(residual, lo, hi)
+                load = float(_factor_loading(center, loading_function))
+                derivative = (residual(center + 1e-5) - residual(center - 1e-5)) / 2e-5
+                width = np.sqrt(1 - load * load) / max(abs(derivative), 1e-8)
+                anchors.extend(center + width * np.array([-8, -4, -1, 0, 1, 4, 8]))
+        return anchors
+
+    def conditional(f, threshold):
+        load = _factor_loading(f, loading_function)
+        return norm.cdf((threshold - load * f) / np.sqrt(1 - load * load))
+
+    def cdf(threshold):
+        return float(
+            _factor_integral(lambda f: conditional(f, threshold), points=transitions(threshold))[0]
+        )
 
     lower, upper = -8.0, 8.0
     while cdf(lower) > cumulative_pd:
@@ -102,18 +184,26 @@ def factor_dependent_pool(
     while cdf(upper) < cumulative_pd:
         upper *= 2
     threshold = brentq(lambda x: cdf(x) - cumulative_pd, lower, upper, xtol=1e-12)
-    conditional = norm.cdf((threshold - a * factor) / np.sqrt(1 - a * a))
-    pmf = cp.binomial_pmf(int(names), conditional)
     count = np.arange(int(names) + 1)
-    loss = np.clip(
-        (count[None, :] * (1 - recovery[:, None]) / names - attach) / (detach - attach), 0, 1
-    )
-    marginal = float(weights @ conditional)
+
+    def integrand(f):
+        probability = float(conditional(f, threshold))
+        r = float(recovery_function(f))
+        if not np.isfinite(r) or not 0 <= r <= 1:
+            raise ValueError("factor-dependent recoveries must lie in [0,1]")
+        pmf = cp.binomial_pmf(int(names), probability)
+        loss = np.clip((count * (1 - r) / names - attach) / (detach - attach), 0, 1)
+        return np.array([probability, probability * r, pmf @ loss])
+
+    values, error = _factor_integral(integrand, points=transitions(threshold))
+    if abs(values[0] - cumulative_pd) > 5e-10:
+        raise ValueError("factor integration failed to preserve the marginal PD")
     return {
         "threshold": threshold,
-        "marginal_pd": marginal,
-        "expected_tranche_loss": float(weights @ np.sum(pmf * loss, axis=1)),
-        "recovery_given_default": float(weights @ (conditional * recovery) / marginal),
+        "marginal_pd": float(values[0]),
+        "expected_tranche_loss": float(values[2]),
+        "recovery_given_default": float(values[1] / values[0]),
+        "integration_error": error,
     }
 
 
