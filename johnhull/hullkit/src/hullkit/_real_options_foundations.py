@@ -150,3 +150,115 @@ def capm_risk_price_from_samples(
         "market_volatility": vol,
         "lambda": capm_market_price(rho, market_excess_return, vol),
     }
+
+
+def operating_cashflows(tree, annual_units, variable_cost, fixed_cost):
+    """Interval-end operating cash, using annual output/fixed cost times tree dt.
+
+    Root cash is zero. At later nodes revenue uses that interval's endpoint spot;
+    values computed below are AFTER that cash has been paid. Units and monetary
+    scale are caller supplied; expansion need not scale fixed costs proportionally.
+    """
+    if annual_units < 0 or not np.isfinite([annual_units, variable_cost, fixed_cost]).all():
+        raise ValueError("nonnegative output and finite costs required")
+    return [np.zeros_like(tree["levels"][0]["spot"])] + [
+        (annual_units * (level["spot"] - variable_cost) - fixed_cost) * tree["dt"]
+        for level in tree["levels"][1:]
+    ]
+
+
+def _project_cashflows(tree, cashflows):
+    if len(cashflows) != len(tree["levels"]):
+        raise ValueError("one cashflow vector per tree layer required")
+    arrays = [np.asarray(x, dtype=float) for x in cashflows]
+    if any(
+        x.shape != level["spot"].shape or not np.isfinite(x).all()
+        for x, level in zip(arrays, tree["levels"], strict=True)
+    ):
+        raise ValueError("finite cashflow vectors matching tree nodes required")
+    return arrays
+
+
+def project_value_tree(tree, cashflows, rate):
+    """Q PV of subsequent operating cash, after current-node payment; no terminal value.
+
+    Supply all layer vectors including root (already paid, hence not counted).
+    Initial investment is separate and is not subtracted from operating project PV.
+    """
+    cash = _project_cashflows(tree, cashflows)
+    if not np.isfinite(rate):
+        raise ValueError("finite discount rate required")
+    values = [np.zeros_like(x) for x in cash]
+    discount = math.exp(-rate * tree["dt"])
+    for t in range(len(values) - 2, -1, -1):
+        level = tree["levels"][t]
+        future = cash[t + 1] + values[t + 1]
+        values[t] = discount * np.sum(level["probabilities"] * future[level["successors"]], axis=1)
+    return values
+
+
+def investment_options(
+    tree,
+    cashflows,
+    rate,
+    *,
+    allow_abandon=False,
+    salvage=0,
+    expanded_cashflows=None,
+    expansion_cost=None,
+):
+    """Irreversible expansion/abandonment, with four exercise states per node.
+
+    States: alive/unexpanded, alive/expanded, abandoned/unexpanded, abandoned/expanded.
+    Decisions occur after current cash, so only later cash changes on exercise.
+    Expansion is paid immediately once; abandoned states are absorbing and have no
+    future operating cash. Salvage is the same net exit receipt in both live states,
+    including at horizon end; it may be negative. Expanded cash vectors explicitly
+    specify costs/revenues, avoiding an assumed proportional expansion. All values
+    exclude initial investment, which is subtracted once outside this function.
+    """
+    base = _project_cashflows(tree, cashflows)
+    if (expanded_cashflows is None) != (expansion_cost is None):
+        raise ValueError("expanded cashflows and expansion cost must be supplied together")
+    can_expand = expanded_cashflows is not None
+    enlarged = _project_cashflows(tree, expanded_cashflows) if can_expand else base
+    if not np.isfinite([rate, salvage]).all() or (
+        can_expand and (not np.isfinite(expansion_cost) or expansion_cost < 0)
+    ):
+        raise ValueError("finite rate/salvage and nonnegative finite expansion cost required")
+    values = [np.zeros((4, len(x))) for x in base]
+    decisions = [np.full(x.shape, "continue", dtype="<U10") for x in values]
+    for decision in decisions:
+        decision[2:] = "absorbed"
+    decisions[-1][:2] = "complete"
+    if allow_abandon and salvage > 0:
+        values[-1][:2] = salvage
+        decisions[-1][:2] = "abandon"
+    discount = math.exp(-rate * tree["dt"])
+    for t in range(len(base) - 2, -1, -1):
+        level = tree["levels"][t]
+        for state, cash in [(1, enlarged), (0, base)]:
+            future = cash[t + 1] + values[t + 1][state]
+            continuation = discount * np.sum(
+                level["probabilities"] * future[level["successors"]], axis=1
+            )
+            values[t][state] = continuation
+            if allow_abandon:
+                exercise = salvage > values[t][state]
+                values[t][state, exercise] = salvage
+                decisions[t][state, exercise] = "abandon"
+            if state == 0 and can_expand:
+                expanded = values[t][1] - expansion_cost
+                exercise = expanded > values[t][0]
+                values[t][0, exercise] = expanded[exercise]
+                decisions[t][0, exercise] = "expand"
+    base_values = project_value_tree(tree, base, rate)
+    return {
+        "value": float(values[0][0, 0]),
+        "state_values": values,
+        "decisions": decisions,
+        "base_values": base_values,
+        "option_values": [
+            states[0] - plain for states, plain in zip(values, base_values, strict=True)
+        ],
+    }
