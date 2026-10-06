@@ -332,3 +332,4 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._securitization_foundations` | Private Ch8受払優先順と2段ABS/CDO損失waterfall | GE Table8.1全16値＋7関係、独立ドル損失吸収/保存 |
 | `hullkit._xva_foundations` | Private Ch9条件付きCVA/DVA・cash funding/IM費用・book前後の増分CVA | GE6算術値と独立hazard積分/MC・funding利息積分・少数状態列挙/共通シナリオMC |
 | `hullkit._commodity_foundations` | Private Ch35商品先物の成長/投資/季節補間・futures較正Euler三項木/行使・OU/ジャンプ期待・拡張SDE係数 | GE例/全節点と独立非再結合path・連続OU求積・jump MC・Itô generator。test_commodity_foundations_*.py |
+| `hullkit._real_options_foundations` | Private Ch36 NPV・P/Q risk adjustment・賃料option・CAPMリスク価格・商品事業CF/撤退/拡張状態 | GE数値/節点と独立replication・密度積分・OLS・全方策/状態path列挙。test_real_options_foundations_*.py |
