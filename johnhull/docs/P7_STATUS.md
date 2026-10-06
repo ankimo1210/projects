@@ -5,7 +5,7 @@
 - 完了条件：既存節メモの式/例を確認、計画を数行追記、private計算部品と本文/独立検証をそろえ、変更モジュールのtests/ruffを通す。入力不足は明示して次の節へ進む。
 - 1節1コミット（P7 §xx.y）、codex/p7-logicへ節ごとpush。公開API・依存・台帳を変更しない。教材・画面・章受入・全suite・D1/保管庫は保留。
 - 正式受入：P7 0/16、全体33/306。Ch1からの正式受入は別チャットの専用worktreeで進むため、この作業ではその台帳/教材を編集しない。
-- 現在：計算2/11、入力不足0。次は§35.6のinsurance layer。
+- 現在：計算3/11、入力不足0。次は§35.7の期待payoff/割引。
 
 ## 節別の実装
 
@@ -15,6 +15,7 @@
 |---|---|---|---|---|
 | §35.4 | `_commodity_foundations.py` | Ex35.1 .034/20.4%、Ex35.2 17.729k、季節6値、Fig35.1/2の分岐/shift/価格、Fig35.3中間値とD/H/I行使。独立全経路とOU密度積分・jump MC | 計算完了。原典root1.48対1.501100501、年2最下11.10対11.094790584、I8.90対8.905209416は表示精度で不一致。複雑モデルの全面較正は範囲外。 | ロジック完了・6 passed・ruff check/format PASS |
 | §35.5 | `_commodity_foundations.py` | 56°F/HDD9/CDD0、HDD820→1.2M/cap1.5M/upper850。独立日別台帳とcall spread/温度換算 | 計算完了。観測期間/stationはcaller入力、Celsius換算ではbase/tickも変える。市場仕様は原典時点。 | ロジック完了・8 passed・ruff check/format PASS |
+| §35.6 | `_commodity_foundations.py` | 100M exposure→retained30M、loss50M→15M、30–40M layer10MとCAT principal10M。独立3領域台帳/call spread | 計算完了。原典reinsurerのlong/short文は不整合、protection買い手の受取とwriterの逆符号を固定。triggerはcaller入力。 | ロジック完了・10 passed・ruff check/format PASS |
 
 ## 残りと検証
 
