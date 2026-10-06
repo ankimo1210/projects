@@ -159,3 +159,8 @@ def test_delta_holdings_zero_volatility_limit_and_invalid_maturity_grid():
     )
     with pytest.raises(ValueError):
         greeks.delta_holdings([[49, 50]], [0, -1], 50, 0.05, 0.2)
+
+
+def test_zero_volatility_delta_uses_the_forward_with_positive_rate():
+    # S=49.5 < K=50 today, but the forward 49.5*exp(.05*.3846) > 50, so delta is 1.
+    assert greeks.delta_holdings([[49.5, 49.5]], [0, .3846], 50, .05, 0) == pytest.approx(np.array([[1.0]]))
