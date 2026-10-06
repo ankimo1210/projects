@@ -51,3 +51,53 @@ def insurance_cash_value(portfolio_terminal, index_terminal, strike, contracts, 
         raise ValueError("finite portfolio, income and terminal cost required")
     payoff = float(option_cashflows(index_terminal, strike, 0, kind="put", quantity=contracts, multiplier=multiplier)["payoff"])
     return {"portfolio": portfolio_terminal, "put_payoff": payoff, "total": portfolio_terminal+payoff+cash_income-terminal_cost}
+
+
+def currency_option_cash(terminal_rate, strike, foreign_notional, *, kind="call"):
+    """Domestic cash payoff; rates are domestic currency per foreign unit."""
+    return float(option_cashflows(terminal_rate, strike, 0, kind=kind, quantity=foreign_notional, multiplier=1)["payoff"])
+
+
+def range_forward_cash(terminal_rate, lower_strike, upper_strike, foreign_notional, *, exposure="receive"):
+    """Signed domestic cash: positive receipt, negative payment; no premium."""
+    if not all(math.isfinite(x) for x in (terminal_rate, lower_strike, upper_strike, foreign_notional)) or min(terminal_rate, lower_strike) < 0 or upper_strike < lower_strike or foreign_notional <= 0:
+        raise ValueError("nonnegative ordered rates/strikes and positive foreign notional required")
+    if exposure not in ("receive", "pay"):
+        raise ValueError("exposure must be receive or pay")
+    sign = 1 if exposure == "receive" else -1
+    conversion = sign*foreign_notional*terminal_rate
+    derivatives = sign*(currency_option_cash(terminal_rate, lower_strike, foreign_notional, kind="put")-currency_option_cash(terminal_rate, upper_strike, foreign_notional))
+    cash = conversion+derivatives
+    return {"conversion": conversion, "derivatives": derivatives, "cash": cash,
+            "effective_rate": sign*cash/foreign_notional}
+
+
+def range_forward_prices(spot, lower_strike, upper_strike, domestic_rate, foreign_rate, sigma, maturity):
+    """Per-foreign-unit put/call costs and receive-collar premium, Hull 17.2."""
+    from .bsm import call_price, put_price
+
+    if not all(math.isfinite(x) for x in (domestic_rate, foreign_rate, lower_strike, upper_strike)) or upper_strike < lower_strike:
+        raise ValueError("finite rates and ordered strikes required")
+    put = float(put_price(spot, lower_strike, domestic_rate, sigma, maturity, q=foreign_rate))
+    call = float(call_price(spot, upper_strike, domestic_rate, sigma, maturity, q=foreign_rate))
+    return {"put": put, "call": call, "premium": put-call}
+
+
+def zero_cost_range_forward(spot, lower_strike, domestic_rate, foreign_rate, sigma, maturity):
+    """Solve the unique upper strike for an ordered, diffusive zero-cost collar."""
+    from scipy.optimize import brentq
+
+    range_forward_prices(spot, lower_strike, lower_strike, domestic_rate, foreign_rate, sigma, maturity)
+    if sigma <= 0 or maturity <= 0:
+        raise ValueError("positive volatility/time required for a unique strike")
+    forward = spot*math.exp((domestic_rate-foreign_rate)*maturity)
+    if lower_strike > forward:
+        raise ValueError("lower strike above forward cannot give an ordered zero-cost collar")
+    def residual(strike):
+        return range_forward_prices(spot, lower_strike, strike, domestic_rate, foreign_rate, sigma, maturity)["premium"]
+    high = max(2*spot, 2*lower_strike)
+    while residual(high) < 0:
+        high *= 2
+    upper = brentq(residual, lower_strike, high, xtol=1e-13)
+    result = range_forward_prices(spot, lower_strike, upper, domestic_rate, foreign_rate, sigma, maturity)
+    return {"upper_strike": upper, **result}
