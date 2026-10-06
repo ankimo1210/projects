@@ -174,3 +174,18 @@ def test_source_market_based_mirrored_exercise_cash(stock, fraction, payoff):
 def test_undefined_or_conflicting_tree_inputs(kwargs):
     with pytest.raises(ValueError):
         employee.employee_option_tree(40, 40, .05, .3, 8, 4, **kwargs)
+
+
+def test_vesting_on_a_rounded_node_time_is_vested():
+    # dt=0.3/3 rounds below 0.1; the node at t=0.1 is still the vesting date.
+    leaver = employee.employee_option_tree(100, 40, .05, .3, .3, 3, vesting=.1, departure_probability=[0, 1, 0])
+    assert leaver["price"] == pytest.approx(100-40*math.exp(-.05*.1), abs=1e-12)
+    chosen = employee.employee_option_tree(100, 40, .05, .3, .3, 3, vesting=.1, exercise_probabilities={(1, 0): 1, (1, 1): 1})
+    assert np.allclose(chosen["exercise_probability"][1], 1)
+
+
+@pytest.mark.parametrize("maturity,steps,vesting", [(1, 98, .5), (3, 94, 1.5), (.3, 3, .1)])
+def test_on_node_vesting_matches_a_vesting_date_just_before_the_node(maturity, steps, vesting):
+    exact = employee.employee_option_tree(40, 40, .05, .3, maturity, steps, vesting=vesting, departure_probability=.05)
+    earlier = employee.employee_option_tree(40, 40, .05, .3, maturity, steps, vesting=vesting*(1-1e-9), departure_probability=.05)
+    assert exact["price"] == pytest.approx(earlier["price"], abs=1e-12)

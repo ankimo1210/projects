@@ -75,7 +75,8 @@ def employee_option_tree(spot, strike, rate, sigma, maturity, steps, *, vesting=
         time = i*dt
         continuation[i] = discount*(p*values[i+1][:-1]+(1-p)*values[i+1][1:])
         intrinsic = np.maximum(stock[i]-strike, 0)
-        eligible = (time >= vesting) & (intrinsic > 0)
+        vested = time >= vesting or math.isclose(time, vesting, rel_tol=8*np.finfo(float).eps, abs_tol=0)
+        eligible = vested & (intrinsic > 0)
         voluntary = np.array([probabilities.get((i, j), 0) for j in range(i+1)], dtype=float)
         if optimal_exercise:
             voluntary = (intrinsic > continuation[i]).astype(float)
