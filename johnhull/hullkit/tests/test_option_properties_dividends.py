@@ -67,12 +67,12 @@ def test_cash_dividend_tree_independent_pde_and_grid_convergence(kind, american)
     coarse = props.cash_dividend_tree(*args, kind=kind, american=american, steps=400)
     fine = props.cash_dividend_tree(*args, kind=kind, american=american, steps=800)
     pde = independent_dividend_pde(*args, kind=kind, american=american)
-    assert coarse["price"] == pytest.approx(fine["price"], abs=.015)
-    assert fine["price"] == pytest.approx(pde, abs=.012)
+    assert coarse["price"] == pytest.approx(fine["price"], abs=.006)
+    assert fine["price"] == pytest.approx(pde, abs=.003)
     if not american:
         prepaid = 50-2*math.exp(-.05*.25)-2*math.exp(-.05*.75)
         closed = bsm.call_price(prepaid, 50, .05, .3, 1) if kind == "call" else bsm.put_price(prepaid, 50, .05, .3, 1)
-        assert fine["price"] == pytest.approx(closed, abs=.012)
+        assert fine["price"] == pytest.approx(closed, abs=.001)
 
 
 def test_hull_11_8_to_11_11_with_actual_american_cash_dividend_prices():
@@ -92,7 +92,7 @@ def test_hull_11_8_to_11_11_with_actual_american_cash_dividend_prices():
     assert interval["put_lower"] <= american["put"] <= interval["put_upper"]
     for kind in ("call", "put"):
         reference = independent_dividend_pde(spot, strike, rate, .3, maturity, times, amounts, kind=kind, american=True)
-        assert american[kind] == pytest.approx(reference, abs=.012)
+        assert american[kind] == pytest.approx(reference, abs=.003)
 
 
 def test_dividend_parity_independent_state_cash_ledger():
@@ -128,7 +128,7 @@ def test_american_dividend_factor_direction_tree_and_pde(kind, sign):
         references.append(independent_dividend_pde(*args, kind=kind, american=True))
     assert sign*(prices[1]-prices[0]) > 0
     assert sign*(references[1]-references[0]) > 0
-    assert prices == pytest.approx(references, abs=.015)
+    assert prices == pytest.approx(references, abs=.008)
 
 
 def test_maturity_dividend_paid_before_european_exercise_with_american_pre_ex_right():
@@ -142,10 +142,27 @@ def test_after_maturity_dividends_ignored_and_no_dividend_limit():
     base = props.cash_dividend_tree(50, 50, .05, .3, 1, [], [], steps=600)
     later = props.cash_dividend_tree(50, 50, .05, .3, 1, [1.2], [100], steps=600)
     assert later["price"] == pytest.approx(base["price"], abs=1e-12)
-    assert base["price"] == pytest.approx(bsm.call_price(50, 50, .05, .3, 1), abs=.012)
+    assert base["price"] == pytest.approx(bsm.call_price(50, 50, .05, .3, 1), abs=.006)
 
 
 @pytest.mark.parametrize("times,amounts", [([.251], [2]), ([.25], [60])])
 def test_tree_unrepresentable_date_or_negative_risky_component(times, amounts):
     with pytest.raises(ValueError):
         props.cash_dividend_tree(50, 50, .05, .3, 1, times, amounts, steps=400)
+
+
+@pytest.mark.parametrize("volatility", [0, .2])
+def test_discounted_dividend_reserve_rebuilds_the_cum_dividend_stock(volatility):
+    # D > K: an undiscounted reserve would overstate early exercise by D(1-exp(-r*t_ex)).
+    args = (50, 10, .1, volatility, 1, [.5], [20])
+    price = props.cash_dividend_tree(*args, american=True, steps=400)["price"]
+    expected = 50-10*math.exp(-.05) if volatility == 0 else independent_dividend_pde(*args, kind="call", american=True)
+    assert price == pytest.approx(expected, abs=1e-3)
+
+
+def test_put_can_exercise_just_after_a_large_ex_dividend_drop():
+    args = (50, 60, .1, .2, 1, [.5], [15])
+    tree = props.cash_dividend_tree(*args, kind="put", american=True, steps=800)
+    assert tree["price"] == pytest.approx(independent_dividend_pde(*args, kind="put", american=True), abs=.002)
+    assert .5 in tree["exercise_times"]
+
