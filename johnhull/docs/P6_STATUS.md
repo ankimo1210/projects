@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算5/54。次は§2.4（証拠金台帳）。Ch1→9を順に継続する。
+- 現在：計算6/54。次は§2.6（quoteと倍率）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -18,6 +18,7 @@
 | §1.7 | `_intro_contracts.py` | FX支払12,225,000/受取36,660,000、無ヘッジ12m/13m。put1契約100・10契約1000、最低27,500・費用後26,500の全8値。独立受払と解析lognormal保有価値 | 計算完了。pay/receiveのcash符号、保有価値と購入時からの利益を分離。FX bid/askとquantity単位、金利なしのpremium費用。説明・受入保留 | 10 passed・ruff check/format PASS |
 | §1.8 | `_intro_contracts.py` | Table1.4/1.5の全13値（305500/20000、19500/19425、−5500/−5575、700/−500、4.5/9000/7000/−2000、10倍）。独立解析lognormal期待と固定seed MC6SE | 計算完了。金利/手数料なし、marginは費用ではない。fractional数量は理論上の比較。説明・受入保留 | 13 passed・ruff check/format PASS |
 | §1.9 | `_intro_contracts.py` | NY120/London100GBP/FX1.23/100株→300。独立USD/GBP収支の線形方程式、手数料とGBP/pence座標変更 | 計算完了。同一株・同時執行と入力quoteの売買方向を仮定、現行裁定機会の判定ではない。説明・受入保留 | 15 passed・ruff check/format PASS |
+| §2.4 | `_futures_market.py` | Table2.1全53値。独立当初＋累積損益＋累積入金で全日を検算 | 計算完了。利息/余剰引出しなし、最後のcallはpendingで未入金。説明・受入保留 | 2 passed・ruff check/format PASS |
 
 ## 残りと検証
 
