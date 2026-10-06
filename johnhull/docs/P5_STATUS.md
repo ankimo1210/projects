@@ -73,6 +73,8 @@
 
 - 下調べ36項目と実装表を照合：計算32/32、説明中心4項目（§22.7/23.4/24.1/24.3）保留。§25.11は表に明記した静的計算範囲で、未指定の動的モデル研究を完了に数えない。
 - P5変更6モジュールの対象テスト196 passed（market76・volatility30・credit30・contracts23・portfolio20・alternatives17）、docstringゲート156 passed、追加6モジュールのMODEL_INDEXゲート6 passed。ruff check/format checkは38ファイルPASS。全suite・教材・画面・受入・D1・保管庫検査はこのchatで実行していない。
-- R1–R4はレビュー側が独立確認済み。R5–R7は本chatで再現・修正・対象検証済みで、レビュー側の修正後確認は別途。許容誤差付きの本文例/独立検証・固定seed MCの標準誤差判定を使用した。
+- R1–R7はレビュー側が独立確認済みとしてclose。計算32項目/§25.11までレビュー完了、追加重要指摘なし。許容誤差付きの本文例/独立検証・固定seed MCの標準誤差判定を使用した。
 - 台帳は変更していない。実体は306項目中accepted33/unreviewed273、P5 accepted0/36。公開APIと依存も変更していない。コードと章メモ/索引はcodex/p5-logic、mainへの反映は本状態文書とROADMAPのみ。
 - 次はP6のロジック先行（Ch1–9、80台帳項目）。P3–P5の正式受入は保留を継続し、教材/説明/受入は再開時に章ごとまとめる。
+
+- 2026-10-06 レビュー側の修正後確認：R5 cbae4911・R6 5d8544ee・R7 5a243ff8を独立参照で確認、対象3suite 30 passed・ruff PASS。loading±.999のPD/.012全pool loss、rho .9/.99の>=10 tail（参照誤差6e-16未満）、rare/high-rho double-tのt畳み込み、nonfinite vol拒否を確認し、R1–R7をclose。計算32項目まで追加重要指摘なし。レビュー側の5a243ff8開始の全suite再実行は報告時点で進行中で、完了の件数として扱わない。
