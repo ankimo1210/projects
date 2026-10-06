@@ -5,7 +5,7 @@
 - 完了条件：本文の式・数値例を既存節メモで確認し、private計算部品、本文再現と別方法の独立検証をそろえ、変更モジュールのtests/ruffを通す。本文入力が足りない部分は不足と計算範囲を明記する。
 - 計画は節メモの数行、1節1コミット（P6 §xx.y）。新公開API・依存追加なし。コード・節メモ/索引はcodex/p6-logicへ節ごとpush、mainは進捗文書のみ。
 - 正式受入：P6 0/80、全体33/306。説明・教材・画面・台帳更新・章受入・全suite・D1・両保管庫は保留。
-- 現在：計算27/54。次は§5.5（known income）。Ch1→9を順に継続する。
+- 現在：計算28/54。次は§5.6（known yield）。Ch1→9を順に継続する。
 
 ## 節別の実装
 
@@ -40,6 +40,7 @@
 | §4.11 | `_rates_foundations.py` | 印刷数値なし。Table4.6補足C7.570/2%価格変化と独立2階差分、同Dの分散CF、3moment免疫 | 計算完了。補足例はsynthetic、平行yield quoteでの小変化、非平行riskは残る。説明・受入保留 | 20 passed・ruff check/format PASS |
 | §5.2 | `_forward_pricing.py` | 60000/500/50000/9500。独立3CFとlong符号反転 | 計算完了。借株料は原典0、呼戻し/証拠金は説明範囲。説明・受入保留 | 2 passed・ruff check/format PASS |
 | §5.4 | `_forward_pricing.py` | 40.50/2.50/1.50、bond948.79、strip70.70/.70。独立借入ODEと2方向cash carry | 計算完了。金利はforward満期のzero、負金利でF>Sを仮定しない。説明・受入保留 | 4 passed・ruff check/format PASS |
+| §5.5 | `_forward_pricing.py` | I39.60/残860.40/F886.60/益23.40/16.60、配当PV2.162/F51.14。独立coupon充当借入solve | 計算完了。満期後income除外、途中丸めなし、known額とyieldを分離。説明・受入保留 | 6 passed・ruff check/format PASS |
 
 ## 残りと検証
 
