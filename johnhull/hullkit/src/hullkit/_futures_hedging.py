@@ -295,3 +295,36 @@ def stack_roll(entries, exits, *, units, contract_size, initial_spot, terminal_s
         "effective_sale_price": terminal_spot + total,
         "net_cash": units * (terminal_spot + total),
     }
+
+
+def capm_expected_return(risk_free, expected_market, beta):
+    """One-period CAPM expected return with consistent simple-return units.
+
+    expected_market is an expectation, not automatically a realized index return.
+    """
+    b = np.asarray(beta, dtype=float)
+    if not np.isfinite([risk_free, expected_market]).all() or not np.isfinite(b).all():
+        raise ValueError("finite returns/betas required")
+    return risk_free + b * (expected_market - risk_free)
+
+
+def regression_beta(asset_returns, market_returns):
+    """Sample covariance beta, equivalent to a regression slope with intercept."""
+    return minimum_variance_hedge(
+        asset_returns, market_returns, exposure_units=1, contract_units=1
+    )["ratio"]
+
+
+def portfolio_beta(weights, betas):
+    """Linear beta of a fully allocated portfolio; negative asset weights are allowed."""
+    w = np.asarray(weights, dtype=float)
+    b = np.asarray(betas, dtype=float)
+    if (
+        w.ndim != 1
+        or w.shape != b.shape
+        or not np.isfinite(w).all()
+        or not np.isfinite(b).all()
+        or not np.isclose(w.sum(), 1)
+    ):
+        raise ValueError("finite matching weights/betas summing to one required")
+    return float(w @ b)
