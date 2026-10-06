@@ -93,7 +93,12 @@ def test_rounded_call_quote_ivs_retain_printed_k56_discrepancy():
     )
     printed = np.array([58.8, 66.6, 69.5, 69.2, 66.1, 60.0])
     # Quotes rounded to cents do not carry the model's full-precision IV.
-    assert iv[:-1] * 100 == pytest.approx(printed, abs=0.06)
+    # K44: the rounded call gives 58.850 (58.9 at one decimal); the printed
+    # 58.8 matches the rounded put 0.93 instead.
+    assert iv[1:-1] * 100 == pytest.approx(printed[1:], abs=0.05)
+    assert iv[0] * 100 == pytest.approx(58.85004, abs=0.00001)
+    put_iv = carry_implied_vol(float(PUT_QUOTES[1]), 50, 44.0, 0.12, 0, 1 / 12, kind="put")
+    assert put_iv * 100 == pytest.approx(printed[0], abs=0.05)
     assert iv[-1] * 100 == pytest.approx(49.88574, abs=0.00001)
     assert abs(iv[-1] * 100 - 49.0) > 0.8
     assert example()["implied_volatility"][-2] * 100 == pytest.approx(49.93360, abs=0.00001)
