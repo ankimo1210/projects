@@ -55,3 +55,25 @@ def arch_forecast(history, weights, *, long_variance=0, long_weight=0):
     ):
         raise ValueError("nonnegative normalized weights/variance and sufficient history required")
     return float(w @ u[-w.size :] ** 2 + long_weight * long_variance)
+
+
+def _ewma_inputs(decay, initial):
+    if not np.isfinite([decay, initial]).all() or not 0 <= decay <= 1 or initial < 0:
+        raise ValueError("decay in [0,1] and nonnegative finite initial variance required")
+
+
+def ewma_forecasts(returns, *, initial, decay=0.94):
+    """n+1 forecasts; forecast[0]=initial, forecast[i+1] incorporates return[i]."""
+    from .volatility import ewma_variance
+
+    u = _vector(returns)
+    _ewma_inputs(decay, initial)
+    return ewma_variance(np.append(u, 0), lam=decay, init=initial)
+
+
+def ewma_expanded(history, *, initial, decay=0.94):
+    """Next variance from the finite weighted history, including decay^m initial."""
+    u = _vector(history)
+    _ewma_inputs(decay, initial)
+    powers = decay ** np.arange(u.size - 1, -1, -1)
+    return float(decay**u.size * initial + (1 - decay) * (powers @ u**2))
