@@ -257,6 +257,8 @@ def cds_option_value(curve, recovery, rate, expiry, maturity, strike, volatility
     discounting, so multiplying by survival again would count knockout twice.
     No front-end protection is included.
     """
+    if not np.isfinite(volatility) or volatility < 0:
+        raise ValueError("finite nonnegative volatility required")
     from . import cds
 
     forward = forward_cds_contract(
