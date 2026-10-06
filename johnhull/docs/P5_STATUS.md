@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算30/32。次は§25.10（CDO全表・独立MC・非標準区間）。Ch22→23→24→25まで継続する。
+- 現在：計算31/32。次は§25.11（モデル拡張と独立検証）。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -44,6 +44,7 @@
 | §25.7 | `_credit_contracts.py` | 本文100m・5年・floating+25bp、+10%→10m/−15%→−15m。独立借入購入のcash accountでcoupon/financing/priceの全CFを照合 | 計算完了。固定initial notionalベースのprice marks、couponは金額。fair spread/信用調整の本文入力なし。calendar/periodic notional resetは別規約。説明・受入保留 | 19 passed・ruff check/format PASS |
 | §25.8 | `_credit_portfolio_extensions.py` | 本文100mの5/15/80mトランシェ、loss2mでequity3m、loss6mでequity0/mezz14m。1000/100/10bpの残存元本premium。独立優先順位cash allocationと総損失保存 | 計算完了。整数default件数に変換せず任意金額lossを配分。Table25.6は2007–2009年観測quote入力で再推定しない。既存vol12境界5/15%との差は据置。説明・受入保留 | 7 passed・ruff check/format PASS |
 | §25.9 | `_credit_portfolio_extensions.py` | 100社5年PD2%：独立>=1 86.74%、>=10 .0034%、完全相関100社2%/0社98%。独立組合せ和・latent-normal MC6SE、総期待loss保存とtranche再配分 | 計算完了。2%は5年累積PD。rho=1は解析2状態。全層同riskは回収0条件、40%に一般化せず明示。説明・受入保留 | 11 passed・ruff check/format PASS |
+| §25.10 | `_credit_portfolio_extensions.py` | Ex25.2/Table25.7/Ex25.3/Table25.8の113印刷値、348/153bp。独立Gaussian default時刻MC6SE、標準quote再価格と単調凹loss curveの4–8%補間 | 計算完了。源60点・未丸めhazard、midpoint default規約。非標準区間はcompound較正の全標準leg/time curveを保存した区分線形補間、PV loss単独からannuityは推測しない。市場無裁定の普遍保証ではなく入力curve制約を検査。説明・受入保留 | 18 passed・ruff check/format PASS |
 
 ## 残りと検証
 
