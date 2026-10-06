@@ -131,3 +131,61 @@ def funding_cash_costs(
     totals = [float(np.sum((value[:-1] + value[1:]) * 0.5 * np.diff(t))) for value in integrands]
     fca, fba, mva = totals
     return {"fca": fca, "fba": fba, "fva": fca - fba, "mva": mva}
+
+
+def incremental_cva(
+    book_values,
+    trade_values,
+    interval_default_probs,
+    discounts,
+    *,
+    loss_given_default=1,
+    scenario_weights=None,
+):
+    """CVA(book+trade)-CVA(book) on matched scenario/interval representative values.
+
+    Each row is a scenario of one netting set, each column an interval valuation.
+    Default probabilities/discounts are independent of scenario values here; use
+    conditional losses for wrong-way risk. Subtract common path losses before
+    averaging to preserve paired-MC uncertainty. This is not an IM/capital engine.
+    """
+    book = np.asarray(book_values, dtype=float)
+    trade = np.asarray(trade_values, dtype=float)
+    q = np.asarray(interval_default_probs, dtype=float)
+    df = np.asarray(discounts, dtype=float)
+    if (
+        book.ndim != 2
+        or book.shape != trade.shape
+        or not book.shape[0]
+        or q.shape != (book.shape[1],)
+        or df.shape != q.shape
+        or not all(np.isfinite(value).all() for value in [book, trade, q, df])
+        or np.any(q < 0)
+        or q.sum() > 1 + 1e-10
+        or np.any(df <= 0)
+        or not np.isfinite(loss_given_default)
+        or not 0 <= loss_given_default <= 1
+    ):
+        raise ValueError("matched scenarios and valid probability/discount/LGD inputs required")
+    weights = (
+        np.full(book.shape[0], 1 / book.shape[0])
+        if scenario_weights is None
+        else np.asarray(scenario_weights, dtype=float)
+    )
+    if (
+        weights.shape != (book.shape[0],)
+        or not np.isfinite(weights).all()
+        or np.any(weights < 0)
+        or not np.isclose(weights.sum(), 1)
+    ):
+        raise ValueError("nonnegative scenario weights summing to one required")
+    scale = q * df * loss_given_default
+    before = np.maximum(book, 0) @ scale
+    after = np.maximum(book + trade, 0) @ scale
+    return {
+        "before": float(weights @ before),
+        "after": float(weights @ after),
+        "increment": float(weights @ (after - before)),
+        "path_loss_before": before,
+        "path_loss_after": after,
+    }
