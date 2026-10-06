@@ -87,3 +87,37 @@ def known_yield_forward(spot, rate, income_yield, maturity):
     if not np.isfinite(income_yield):
         raise ValueError("finite yield required")
     return no_income_forward(spot, rate - income_yield, maturity)
+
+
+def forward_value(forward_price, delivery_price, rate, remaining, *, side="long", units=1):
+    """Existing forward contract PV with fixed delivery price and current forward quote.
+
+    The input forward_price already includes any income/storage/currency carry;
+    neither it nor a terminal payoff is the current contract value by itself.
+    """
+    if (
+        not np.isfinite([forward_price, delivery_price, rate, remaining, units]).all()
+        or min(remaining, units) < 0
+        or side not in ("long", "short")
+    ):
+        raise ValueError("finite quotes/rate and nonnegative remaining time/units required")
+    return (
+        (1 if side == "long" else -1)
+        * units
+        * (forward_price - delivery_price)
+        * np.exp(-rate * remaining)
+    )
+
+
+def offset_forward_cash(units, contract_size, entry_price, offset_price):
+    """Opposite forwards lock terminal nominal cash; no missing discount rate is guessed."""
+    if (
+        not np.isfinite([units, contract_size, entry_price, offset_price]).all()
+        or units < 0
+        or contract_size <= 0
+    ):
+        raise ValueError("finite quotes and valid unit/contract amounts required")
+    return {
+        "contracts": units / contract_size,
+        "locked_terminal_cash": units * (offset_price - entry_price),
+    }
