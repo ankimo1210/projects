@@ -77,3 +77,43 @@ def ewma_expanded(history, *, initial, decay=0.94):
     _ewma_inputs(decay, initial)
     powers = decay ** np.arange(u.size - 1, -1, -1)
     return float(decay**u.size * initial + (1 - decay) * (powers @ u**2))
+
+
+def _garch_inputs(omega, alpha, beta, initial=0):
+    if not np.isfinite([omega, alpha, beta, initial]).all() or min(omega, alpha, beta, initial) < 0:
+        raise ValueError("nonnegative finite GARCH parameters/initial variance required")
+
+
+def garch_characteristics(omega, alpha, beta):
+    """Discrete persistence and Hull's approximate continuous variance coefficients."""
+    _garch_inputs(omega, alpha, beta)
+    persistence = alpha + beta
+    gamma = 1 - persistence
+    return {
+        "persistence": persistence,
+        "long_weight": gamma,
+        "long_variance": omega / gamma if gamma > 0 else None,
+        "diffusion_mean_reversion": gamma,
+        "diffusion_vol_of_variance": alpha * math.sqrt(2),
+    }
+
+
+def garch_forecasts(returns, omega, alpha, beta, *, initial):
+    """n+1 conditional forecasts with an explicit initial variance.
+
+    Positivity is required; stationarity is required only when using a finite
+    long-run variance, not for a finite conditional forecast recursion.
+    """
+    from .volatility import garch11_variance
+
+    u = _vector(returns)
+    _garch_inputs(omega, alpha, beta, initial)
+    return garch11_variance(np.append(u, 0), omega, alpha, beta, init=initial)
+
+
+def garch_expanded(history, omega, alpha, beta, *, initial):
+    """Finite beta-weighted return history, intercept and initial variance."""
+    u = _vector(history)
+    _garch_inputs(omega, alpha, beta, initial)
+    powers = beta ** np.arange(u.size - 1, -1, -1)
+    return float(beta**u.size * initial + omega * powers.sum() + alpha * (powers @ u**2))

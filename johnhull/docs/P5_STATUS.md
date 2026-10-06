@@ -6,7 +6,7 @@
 - 本人承認のロジック先行方針を継続。計画は既存節メモに数行、1節1コミット/P5 §xx.y、節ごとpush。新公開API・依存追加なし。
 - 実装ブランチ：`codex/p5-logic`。P4の計算を引き継ぐ。mainは進捗文書のみ反映する。
 - 正式受入：P5 0/36、全体33/306。説明・教材・章受入・全suite・D1・保管庫復元は保留。
-- 現在：計算10/32。次は§23.3（GARCH）。Ch22→23→24→25まで継続する。
+- 現在：計算11/32。次は§23.5（MLE・診断）。Ch22→23→24→25まで継続する。
 
 ## 節別の実装
 
@@ -24,6 +24,7 @@
 | §22.9 | `_market_risk.py` | 全64loading/8SD、総分散152.5185、87.3%/95.6%/.96bp/2.42bp。Table22.11露出−1.998/−3.067→sigma25.49837/VaR59.31808。独立SVD/固有分解・trace・符号不変 | 計算完了。2631観測は未保有。印刷sigma25.45/VaR59.2は丸め表から一致しないため補正せず記録。市場説明率とbook残余riskを区別。説明・受入保留 | 60 passed・ruff check/format PASS |
 | §23.1 | `_volatility_estimation.py` | 固有印刷価格なし。式23.1–6のlog/sample mean/m−1とsimple/zero mean/m、ARCH重みを独立小標本算術と解析MLEで照合 | 計算完了。日次分散を返し年率換算は別。ARCH historyは予測日前までのchronological履歴。説明・受入保留 | 4 passed・ruff check/format PASS |
 | §23.2 | `_volatility_estimation.py` | Ex23.1 lambda.9/vol.01/return.02→variance.00013・vol1.14%。独立幾何重み和+lambda^m初期項、予測への当日return不混入 | 計算完了。n+1 forecastsで最後は翌日予測、initial必須。RiskMetrics.94を普遍最適としない。説明・受入保留 | 7 passed・ruff check/format PASS |
+| §23.3 | `_volatility_estimation.py` | Ex23.2 gamma.01/VL.0002・更新.00023516→vol1.53%。独立beta幾何和と再帰・EWMA極限、連続近似a.01/xi=.13sqrt2 | 計算完了。betaは履歴重み、alpha+betaは予測持続性。非定常時はVLなし。連続対応は原典の近似。説明・受入保留 | 10 passed・ruff check/format PASS |
 
 ## 残りと検証
 
