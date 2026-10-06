@@ -263,3 +263,35 @@ def stock_picking_profit(
     stock = shares * (stock_exit - stock_entry)
     future = short_contracts * multiplier * (futures_entry - futures_exit)
     return {"stock_profit": stock, "futures_profit": future, "total_profit": stock + future}
+
+
+def stack_roll(entries, exits, *, units, contract_size, initial_spot, terminal_spot):
+    """Short successive futures then sell spot; each pair is one closed contract.
+
+    All cash is nominal, without interest, transaction costs or tailing adjustments.
+    Price gaps between expiry contracts are not themselves profits of a trade.
+    """
+    starts = np.asarray(entries, dtype=float)
+    ends = np.asarray(exits, dtype=float)
+    if (
+        starts.ndim != 1
+        or starts.shape != ends.shape
+        or not len(starts)
+        or not np.isfinite(starts).all()
+        or not np.isfinite(ends).all()
+        or not np.isfinite([units, contract_size, initial_spot, terminal_spot]).all()
+        or units < 0
+        or contract_size <= 0
+    ):
+        raise ValueError("paired trade prices and valid quantity scales required")
+    gains = starts - ends
+    total = float(gains.sum())
+    return {
+        "contracts": units / contract_size,
+        "per_unit_profit": gains,
+        "cash_profit": units * gains,
+        "total_per_unit": total,
+        "spot_decline": initial_spot - terminal_spot,
+        "effective_sale_price": terminal_spot + total,
+        "net_cash": units * (terminal_spot + total),
+    }
