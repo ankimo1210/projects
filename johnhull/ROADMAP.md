@@ -30,7 +30,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 101 priv
 | P8監査の是正 | 完了 | [P8状態](docs/P8_STATUS.md)。P8時点の33節D1・両保管庫復元・影響画面の記録を保持し、統合時に全306節native artifactsを検査 |
 | 統合検証 | 全体suite・数値・台帳PASS | 全体run 6,640 passed・索引2件FAIL・6 skipped、索引修正764件と導線/render検査16件がPASS。重複を除く6,650 passed・6 skipped（hullkit + report + deep_hedge_price）。変更Python300ファイルruff/format PASS。影響4便の数値検査、Ch1の37値/40状態、最終45節のfresh画面検査PASS |
 | 配布生成 | 通常`make hull-report`で全補足教材を再生成 | Ch1・Ch2–25・Ch29–37の補足教材を生成し、入口から全34章への到達を確認。Ch1の古いBookキャッシュは同一入力の受入済み出力から復元 |
-| main反映 | 独立レビュー修正済み・push段階 | 実測結果・判断・反映結果は[最終統合記録](docs/FINAL_INTEGRATION_2026-10-08.md)。rootの未公開履歴・別プロジェクト変更・受入worktreeを保持 |
+| main反映 | 独立レビュー修正・main反映・root同期完了 | 実測結果・判断・反映結果は[最終統合記録](docs/FINAL_INTEGRATION_2026-10-08.md)。rootの未公開履歴・別プロジェクト変更・受入worktreeを保持 |
 | Beyond Hull（vol13–28） | 完了 | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 研究track #1 | RB-F07 v1完了 | [研究資料](research/RB-F07/README.md)。private単一曲線・解析Jacobian・随伴リスク、独立レビュー済み。v2/v3は別承認 |
 | 研究track #2 | RB-F05 digital v1完了 | [研究資料](research/RB-F05/README.md)。DMLは全seed改善、解析・補間には精度/費用で劣り、速度昇格は不採用。次は離散バリアの契約/独立参照を固定 |
@@ -50,7 +50,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 
 最終統合（2026-10-08）：集約開発`9dd53804`と正式受入`cef7cea1`を合流し、P4 `00d8a651`・P8 `ce801e48`・RB-F07/F05 v1と補完2モデルを保持。全306節native artifactsと統合suiteを確認。過去の受入記録を保持し、変更した入力・表示に関わる証跡だけ実測から更新した。
 
-**完了の定義：** (1) 節別台帳306項目がacceptedまたはout_of_scope、(2) P8の監査是正・判断が完了、(3) 統合構成の検証・配布生成・独立レビュー・main反映を確認。本編(1)(2)と統合検証は完了し、反映結果を[最終統合記録](docs/FINAL_INTEGRATION_2026-10-08.md)で確認する。
+**完了の定義：** (1) 節別台帳306項目がacceptedまたはout_of_scope、(2) P8の監査是正・判断が完了、(3) 統合構成の検証・配布生成・独立レビュー・main反映を確認。本編(1)(2)と統合検証・独立レビュー修正・main反映を完了し、反映結果を[最終統合記録](docs/FINAL_INTEGRATION_2026-10-08.md)で確認する。
 
 ### 段階
 
@@ -69,7 +69,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 | P6 | 基礎（Ch1–9） | 80 | 80 | 31 | 完了。Ch1 D3、Ch2–9 fast-v1。分類と原典差は[P6状態](docs/P6_STATUS.md) |
 | P7 | Ch35–37 | 16 | 16 | 6 | 完了。§36.4 caller会計条件と原著未再現値、§35.4/§36.5の原典差を保持 |
 | P8 | 監査の残り | — | — | — | 完了。[P8状態](docs/P8_STATUS.md) |
-| **計** | | **306** | **306（100%）** | **63** | **未評価0。本編完了、main反映は最終統合記録を参照** |
+| **計** | | **306** | **306（100%）** | **63** | **未評価0。本編・統合・main反映完了** |
 
 ### 先に決めること
 
