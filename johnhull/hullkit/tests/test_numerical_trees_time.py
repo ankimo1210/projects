@@ -143,7 +143,7 @@ def test_american_time_curves_independent_cn_pde():
         100, 105, EDGES, VARIANCE, RATES, YIELDS, 1200, kind="put", american=True
     )
     independent = independent_time_pde(100, 105, EDGES, VARIANCE, RATES, YIELDS)
-    assert result["price"] == pytest.approx(independent, abs=0.02)
+    assert result["price"] == pytest.approx(independent, abs=0.009)
 
 
 def test_negative_forward_variance_is_not_clipped():

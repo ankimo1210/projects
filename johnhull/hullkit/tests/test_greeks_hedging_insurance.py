@@ -41,11 +41,16 @@ def test_example_19_9_displayed_delta_changes_and_explicit_time_conventions():
     assert down_fixed["put_delta"] == pytest.approx(-0.3679, abs=0.00005)
     assert down_day["put_delta"] == pytest.approx(-0.36811261, abs=5e-9)
     assert up_day["put_delta"] == pytest.approx(-0.2787, abs=0.00005)
-    assert 100 * (0.3679 - 0.3215) == pytest.approx(4.64, abs=1e-12)
-    assert 100 * (0.3215 - 0.2787) == pytest.approx(4.28, abs=1e-12)
+    up_fixed = greeks.portfolio_insurance_target(92e6, 87e6, 0.09, 0.03, 0.25, 0.5)
+    base = greeks.portfolio_insurance_target(90e6, 87e6, 0.09, 0.03, 0.25, 0.5)
+    assert up_fixed["put_delta"] == pytest.approx(-0.2787, abs=0.00005)
+    # The printed differences use deltas rounded to four decimals.
+    shown = [round(-row["put_delta"], 4) for row in (down_fixed, base, up_fixed)]
+    assert 100 * (shown[0] - shown[1]) == pytest.approx(4.64, abs=1e-9)
+    assert 100 * (shown[1] - shown[2]) == pytest.approx(4.28, abs=1e-9)
     assert down_fixed["put_delta"] < 0  # Minus sign is absent in source's 88m sentence.
-    # 88m printed delta uses unchanged .5 years, 92m matches one-day decay;
-    # they are not claimed to agree under a single exact time convention.
+    # Both printed deltas match the unchanged .5 years; after one day 88m
+    # gives -0.3681 while 92m still rounds to -0.2787.
 
 
 def test_example_19_10_index_futures_12296_rounded_to_123_short():

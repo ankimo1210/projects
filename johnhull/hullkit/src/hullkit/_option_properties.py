@@ -10,7 +10,9 @@ from . import bsm, trees
 def _market(spot, strike, rate, volatility, maturity):
     values = np.asarray([spot, strike, rate, volatility, maturity], dtype=float)
     if not np.all(np.isfinite(values)) or min(spot, strike, volatility, maturity) < 0:
-        raise ValueError("finite inputs and nonnegative spot, strike, volatility, maturity required")
+        raise ValueError(
+            "finite inputs and nonnegative spot, strike, volatility, maturity required"
+        )
 
 
 def _european_pair(spot, strike, rate, volatility, maturity, times=(), amounts=()):
@@ -27,12 +29,24 @@ def _european_pair(spot, strike, rate, volatility, maturity, times=(), amounts=(
     if prepaid == 0 or strike == 0:
         difference = prepaid - strike * math.exp(-rate * maturity)
         return max(difference, 0), max(-difference, 0)
-    return (float(bsm.call_price(prepaid, strike, rate, volatility, maturity)),
-            float(bsm.put_price(prepaid, strike, rate, volatility, maturity)))
+    return (
+        float(bsm.call_price(prepaid, strike, rate, volatility, maturity)),
+        float(bsm.put_price(prepaid, strike, rate, volatility, maturity)),
+    )
 
 
-def factor_prices(values, *, factor, spot=50, strike=50, rate=.05, volatility=.3,
-                  maturity=1, dividend_times=(), dividend_amounts=()):
+def factor_prices(
+    values,
+    *,
+    factor,
+    spot=50,
+    strike=50,
+    rate=0.05,
+    volatility=0.3,
+    maturity=1,
+    dividend_times=(),
+    dividend_amounts=(),
+):
     """European call/put curves for Hull Figures 11.1/11.2 and Table 11.1.
 
     ``dividend_scale`` multiplies the caller's cash amounts at unchanged dates.
@@ -68,13 +82,17 @@ def no_dividend_bounds(spot, strike, rate, maturity, *, american=False):
     """
     _market(spot, strike, rate, 0, maturity)
     discounted_strike = strike * math.exp(-rate * maturity)
-    call_lower = max(spot-discounted_strike, 0)
-    put_lower = max(discounted_strike-spot, 0)
+    call_lower = max(spot - discounted_strike, 0)
+    put_lower = max(discounted_strike - spot, 0)
     if american:
-        call_lower = max(call_lower, spot-strike)
-        put_lower = max(put_lower, strike-spot)
-    return dict(call_lower=call_lower, call_upper=spot, put_lower=put_lower,
-                put_upper=max(strike, discounted_strike) if american else discounted_strike)
+        call_lower = max(call_lower, spot - strike)
+        put_lower = max(put_lower, strike - spot)
+    return dict(
+        call_lower=call_lower,
+        call_upper=spot,
+        put_lower=put_lower,
+        put_upper=max(strike, discounted_strike) if american else discounted_strike,
+    )
 
 
 def bound_arbitrage(terminal_spot, spot, strike, rate, maturity, option_price, *, kind):
@@ -92,19 +110,23 @@ def bound_arbitrage(terminal_spot, spot, strike, rate, maturity, option_price, *
     if not math.isfinite(option_price) or option_price < 0:
         raise ValueError("option price must be finite and nonnegative")
     if kind == "call":
-        initial_bank = spot-option_price
-        terminal_bank = initial_bank * math.exp(rate*maturity)
+        initial_bank = spot - option_price
+        terminal_bank = initial_bank * math.exp(rate * maturity)
         profit = terminal_bank - np.minimum(terminal, strike)
-        minimum_profit = terminal_bank-strike
+        minimum_profit = terminal_bank - strike
     elif kind == "put":
-        initial_bank = -(spot+option_price)
-        terminal_bank = initial_bank * math.exp(rate*maturity)
+        initial_bank = -(spot + option_price)
+        terminal_bank = initial_bank * math.exp(rate * maturity)
         profit = np.maximum(terminal, strike) + terminal_bank
-        minimum_profit = strike+terminal_bank
+        minimum_profit = strike + terminal_bank
     else:
         raise ValueError("kind must be call or put")
-    return dict(initial_bank=initial_bank, terminal_bank=terminal_bank, profit=profit,
-                minimum_profit=minimum_profit)
+    return dict(
+        initial_bank=initial_bank,
+        terminal_bank=terminal_bank,
+        profit=profit,
+        minimum_profit=minimum_profit,
+    )
 
 
 def parity_arbitrage(terminal_spot, spot, strike, rate, maturity, call_price, put_price):
@@ -119,16 +141,22 @@ def parity_arbitrage(terminal_spot, spot, strike, rate, maturity, call_price, pu
     terminal = np.asarray(terminal_spot, dtype=float)
     if not np.all(np.isfinite(terminal)) or np.any(terminal < 0):
         raise ValueError("terminal stock prices must be finite and nonnegative")
-    portfolio_a = call_price + strike * math.exp(-rate*maturity)
+    portfolio_a = call_price + strike * math.exp(-rate * maturity)
     portfolio_c = put_price + spot
-    direction = float(np.sign(portfolio_c-portfolio_a))
-    initial_bank = direction*(spot+put_price-call_price)
-    terminal_bank = initial_bank*math.exp(rate*maturity)
-    call_payoff = np.maximum(terminal-strike, 0)
-    put_payoff = np.maximum(strike-terminal, 0)
-    profit = terminal_bank + direction*(call_payoff-put_payoff-terminal)
-    return dict(portfolio_a=portfolio_a, portfolio_c=portfolio_c, call_quantity=direction,
-                initial_bank=initial_bank, terminal_bank=terminal_bank, profit=profit)
+    direction = float(np.sign(portfolio_c - portfolio_a))
+    initial_bank = direction * (spot + put_price - call_price)
+    terminal_bank = initial_bank * math.exp(rate * maturity)
+    call_payoff = np.maximum(terminal - strike, 0)
+    put_payoff = np.maximum(strike - terminal, 0)
+    profit = terminal_bank + direction * (call_payoff - put_payoff - terminal)
+    return dict(
+        portfolio_a=portfolio_a,
+        portfolio_c=portfolio_c,
+        call_quantity=direction,
+        initial_bank=initial_bank,
+        terminal_bank=terminal_bank,
+        profit=profit,
+    )
 
 
 def american_put_interval(call_price, spot, strike, rate, maturity, *, dividend_pv=0):
@@ -136,24 +164,42 @@ def american_put_interval(call_price, spot, strike, rate, maturity, *, dividend_
 
     These American parity inequalities assume r >= 0; unlike European
     parity they must not be extended to negative rates without rederivation.
+    The put interval is also clipped to max(K-S, 0) <= P <= K, and an
+    American call above the stock price is rejected.
     """
     _market(spot, strike, rate, 0, maturity)
     if rate < 0:
         raise ValueError("Hull American parity interval assumes nonnegative rate")
-    if not math.isfinite(call_price) or call_price < 0 or not math.isfinite(dividend_pv) or dividend_pv < 0:
+    if (
+        not math.isfinite(call_price)
+        or call_price < 0
+        or not math.isfinite(dividend_pv)
+        or dividend_pv < 0
+    ):
         raise ValueError("call price and dividend PV must be finite and nonnegative")
-    lower = strike*math.exp(-rate*maturity)-spot
-    upper = strike+dividend_pv-spot
-    return dict(put_minus_call_lower=lower, put_minus_call_upper=upper,
-                put_lower=max(call_price+lower, 0), put_upper=call_price+upper)
+    if call_price > spot:
+        raise ValueError("an American call cannot exceed the stock price")
+    lower = strike * math.exp(-rate * maturity) - spot
+    upper = strike + dividend_pv - spot
+    return dict(
+        put_minus_call_lower=lower,
+        put_minus_call_upper=upper,
+        put_lower=max(call_price + lower, strike - spot, 0),
+        put_upper=min(call_price + upper, strike),
+    )
 
 
 def capital_structure_payoffs(terminal_assets, face_value):
     """Business Snapshot 11.1: equity is a call, debt is min(A_T,K)."""
     assets = np.asarray(terminal_assets, dtype=float)
-    if not np.all(np.isfinite(assets)) or np.any(assets < 0) or not math.isfinite(face_value) or face_value < 0:
+    if (
+        not np.all(np.isfinite(assets))
+        or np.any(assets < 0)
+        or not math.isfinite(face_value)
+        or face_value < 0
+    ):
         raise ValueError("assets and face value must be finite and nonnegative")
-    return dict(equity=np.maximum(assets-face_value, 0), debt=np.minimum(assets, face_value))
+    return dict(equity=np.maximum(assets - face_value, 0), debt=np.minimum(assets, face_value))
 
 
 def exercise_comparison(spot, strike, rate, volatility, maturity, *, kind="call", steps=400):
@@ -169,7 +215,7 @@ def exercise_comparison(spot, strike, rate, volatility, maturity, *, kind="call"
         raise ValueError("call/put kind and a positive integer step count required")
     call, put = _european_pair(spot, strike, rate, volatility, maturity)
     european = call if kind == "call" else put
-    intrinsic = max(spot-strike, 0) if kind == "call" else max(strike-spot, 0)
+    intrinsic = max(spot - strike, 0) if kind == "call" else max(strike - spot, 0)
     if maturity == 0 or volatility == 0 or spot == 0 or strike == 0:
         tree_european = european
         american = max(european, intrinsic)
@@ -177,11 +223,17 @@ def exercise_comparison(spot, strike, rate, volatility, maturity, *, kind="call"
         args = (spot, strike, rate, volatility, maturity, int(steps))
         tree_european = trees.crr_price(*args, kind=kind)
         american = trees.crr_price(*args, kind=kind, american=True)
-    return dict(european=european, tree_european=tree_european, american=american,
-                intrinsic=intrinsic, early_exercise_premium=american-tree_european,
-                exercise_gap=american-intrinsic,
-                exercise_now=intrinsic > 0 and american <= intrinsic+1e-9,
-                interest_deferral=strike*(1-math.exp(-rate*maturity)), put_insurance=put)
+    return dict(
+        european=european,
+        tree_european=tree_european,
+        american=american,
+        intrinsic=intrinsic,
+        early_exercise_premium=american - tree_european,
+        exercise_gap=american - intrinsic,
+        exercise_now=intrinsic > 0 and american <= intrinsic + 1e-9,
+        interest_deferral=strike * (1 - math.exp(-rate * maturity)),
+        put_insurance=put,
+    )
 
 
 def exercise_profile(spots, strike, rate, volatility, maturity, *, kind="put", steps=400):
@@ -194,16 +246,38 @@ def exercise_profile(spots, strike, rate, volatility, maturity, *, kind="put", s
     axis = np.asarray(spots, dtype=float)
     if axis.ndim != 1 or not np.all(np.isfinite(axis)) or np.any(axis < 0):
         raise ValueError("spots must be a finite nonnegative one-dimensional axis")
-    rows = [exercise_comparison(float(spot), strike, rate, volatility, maturity,
-                                kind=kind, steps=steps) for spot in axis]
-    keys = ("european", "tree_european", "american", "intrinsic", "exercise_now", "early_exercise_premium")
-    result = {key: np.asarray([row[key] for row in rows], dtype=bool if key == "exercise_now" else float)
-              for key in keys}
+    rows = [
+        exercise_comparison(float(spot), strike, rate, volatility, maturity, kind=kind, steps=steps)
+        for spot in axis
+    ]
+    keys = (
+        "european",
+        "tree_european",
+        "american",
+        "intrinsic",
+        "exercise_now",
+        "early_exercise_premium",
+    )
+    result = {
+        key: np.asarray([row[key] for row in rows], dtype=bool if key == "exercise_now" else float)
+        for key in keys
+    }
     return dict(spots=axis.copy(), **result)
 
 
-def cash_dividend_tree(spot, strike, rate, volatility, maturity, dividend_times, dividend_amounts,
-                       *, kind="call", american=False, steps=400):
+def cash_dividend_tree(
+    spot,
+    strike,
+    rate,
+    volatility,
+    maturity,
+    dividend_times,
+    dividend_amounts,
+    *,
+    kind="call",
+    american=False,
+    steps=400,
+):
     """Escrowed-dividend lattice for section 11.7, not a general cash-jump GBM.
 
     Y=S-PV(remaining dividends) follows GBM with volatility applied to Y.
@@ -217,7 +291,7 @@ def cash_dividend_tree(spot, strike, rate, volatility, maturity, dividend_times,
     if kind not in ("call", "put") or steps < 1 or int(steps) != steps:
         raise ValueError("call/put kind and positive integer steps required")
     pv = bsm.pv_dividends(dividend_times, dividend_amounts, rate, maturity)
-    risky_spot = spot-pv
+    risky_spot = spot - pv
     if risky_spot < 0:
         raise ValueError("dividend PV cannot exceed spot in the escrowed model")
     times = np.asarray(dividend_times, dtype=float)
@@ -226,57 +300,64 @@ def cash_dividend_tree(spot, strike, rate, volatility, maturity, dividend_times,
     times, amounts = times[in_life], amounts[in_life]
 
     def payoff(stock):
-        return np.maximum(stock-strike, 0) if kind == "call" else np.maximum(strike-stock, 0)
+        return np.maximum(stock - strike, 0) if kind == "call" else np.maximum(strike - stock, 0)
 
     if maturity == 0:
         european = float(payoff(risky_spot))
         immediate = float(payoff(spot))
-        return dict(price=max(european, immediate) if american else european,
-                    exercise_times=(0.,) if american and immediate > european else ())
+        return dict(
+            price=max(european, immediate) if american else european,
+            exercise_times=(0.0,) if american and immediate > european else (),
+        )
     steps = int(steps)
-    dt = maturity/steps
-    indices = np.rint(times/dt).astype(int)
-    if np.any(np.abs(indices*dt-times) > 1e-10*max(1, maturity)):
+    dt = maturity / steps
+    indices = np.rint(times / dt).astype(int)
+    if np.any(np.abs(indices * dt - times) > 1e-10 * max(1, maturity)):
         raise ValueError("in-life ex-dates must align with the chosen time grid")
-    cash = np.zeros(steps+1)
+    cash = np.zeros(steps + 1)
     np.add.at(cash, indices, amounts)
-    discount = math.exp(-rate*dt)
-    reserve = np.zeros(steps+1)
-    for i in range(steps-1, -1, -1):
-        reserve[i] = discount*(cash[i+1]+reserve[i+1])
+    discount = math.exp(-rate * dt)
+    reserve = np.zeros(steps + 1)
+    for i in range(steps - 1, -1, -1):
+        reserve[i] = discount * (cash[i + 1] + reserve[i + 1])
     if volatility == 0 or risky_spot == 0:
-        european = float(payoff(risky_spot*math.exp(rate*maturity))) * math.exp(-rate*maturity)
+        european = float(payoff(risky_spot * math.exp(rate * maturity))) * math.exp(
+            -rate * maturity
+        )
         if not american:
             return dict(price=european, exercise_times=())
         candidates = sorted({0, steps, *indices.tolist()})
         values = []
         for i in candidates:
-            after = risky_spot*math.exp(rate*i*dt)+reserve[i]
-            immediate = max(float(payoff(after)), float(payoff(after+cash[i])))
-            values.append(immediate*math.exp(-rate*i*dt))
+            after = risky_spot * math.exp(rate * i * dt) + reserve[i]
+            immediate = max(float(payoff(after)), float(payoff(after + cash[i])))
+            values.append(immediate * math.exp(-rate * i * dt))
         price = max(european, *values)
-        optimal = tuple(i*dt for i, value in zip(candidates, values, strict=True)
-                        if value > european+1e-9 and abs(value-price) < 1e-9)
+        optimal = tuple(
+            i * dt
+            for i, value in zip(candidates, values, strict=True)
+            if value > european + 1e-9 and abs(value - price) < 1e-9
+        )
         return dict(price=price, exercise_times=optimal)
-    log_up = volatility*math.sqrt(dt)
+    log_up = volatility * math.sqrt(dt)
     up = math.exp(log_up)
-    probability = trees.risk_neutral_p(up, 1/up, rate, dt)
-    risky_terminal = risky_spot*np.exp(log_up*(steps-2*np.arange(steps+1)))
+    probability = trees.risk_neutral_p(up, 1 / up, rate, dt)
+    risky_terminal = risky_spot * np.exp(log_up * (steps - 2 * np.arange(steps + 1)))
     value = payoff(risky_terminal)
     exercised = []
     if american:
-        before = payoff(risky_terminal+cash[-1])
-        if np.any(before > value+1e-9):
+        before = payoff(risky_terminal + cash[-1])
+        if np.any(before > value + 1e-9):
             exercised.append(steps)
         value = np.maximum(value, before)
-    for i in range(steps-1, -1, -1):
-        continuation = discount*(probability*value[:-1]+(1-probability)*value[1:])
+    for i in range(steps - 1, -1, -1):
+        continuation = discount * (probability * value[:-1] + (1 - probability) * value[1:])
         if american:
-            after = risky_spot*np.exp(log_up*(i-2*np.arange(i+1)))+reserve[i]
-            immediate = np.maximum(payoff(after), payoff(after+cash[i]))
-            if np.any(immediate > continuation+1e-9):
+            after = risky_spot * np.exp(log_up * (i - 2 * np.arange(i + 1))) + reserve[i]
+            immediate = np.maximum(payoff(after), payoff(after + cash[i]))
+            if np.any(immediate > continuation + 1e-9):
                 exercised.append(i)
             value = np.maximum(continuation, immediate)
         else:
             value = continuation
-    return dict(price=float(value[0]), exercise_times=tuple(i*dt for i in sorted(exercised)))
+    return dict(price=float(value[0]), exercise_times=tuple(i * dt for i in sorted(exercised)))
