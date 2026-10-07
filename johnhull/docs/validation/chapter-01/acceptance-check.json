@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "chapter": 1,
+  "sections": [
+    "1.1",
+    "1.2",
+    "1.3",
+    "1.4",
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10"
+  ],
+  "requirements": 23,
+  "state_checks": 40,
+  "storage_verification": {
+    "status": "PASS",
+    "primary": {
+      "status": "PASS",
+      "entries": 40,
+      "bytes": 8471743
+    },
+    "mirror": {
+      "status": "PASS",
+      "entries": 40,
+      "bytes": 8471743
+    }
+  },
+  "source_sha256": {
+    "docs/acceptance/chapters/ch01.json": "f6fc789f023475acf8bc84f51f2b7a8ceb286e8b2b53952e33ebd46298ddddf5",
+    "hullkit/src/hullkit/_chapter01_lesson.py": "02e2224e3f437ab742758f457305e1789a362a9d5fc0d145508bb6039df5e4e6",
+    "hullkit/src/hullkit/_intro_contracts.py": "9325271320661b633109c62974ab48f05eebc3dbc4468dcb644a27c117269673",
+    "hullkit/tests/_chapter01_reference.py": "2a1c935117a35fd61bdfe7dcb878122fd08013e307855c53eb9d21f3505bdcd6",
+    "hullkit/tests/test_chapter01_lesson.py": "ad83ba49ce465eb8ccdd8e554693ab96bd251672ce61a2b05a375c5deeec6d93",
+    "report/tests/test_chapter01_acceptance.py": "9fb3faeb9cc6e13a6a6087c618a6335fe4ab9e5a14c5a71e87cd0a873ccf568d",
+    "report/report_builder/build.py": "12e280a3c47a2aa952f135ba8b459effcd308d519cc317170c8b0c0f11754cbf",
+    "report/tests/test_report_build.py": "9ddd72f901636b5b96e24552110efc0c0e76479b6ecae1944774a2800c4569bb",
+    "volumes/12_qualitative_summary/build_summary_notebook.py": "1e904558fecb3f3af1258975fb0069d80f47c7fdcad38805040dabc5b78ac2f1",
+    "volumes/12_qualitative_summary/qualitative_summary.ipynb": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2",
+    "scripts/build_chapter01_portal.py": "566953564e50844b3c7caa4d59d8a7aeaec79a140f6a406ba437b06ef9d0c0f7",
+    "scripts/verify_chapter01_browser.cjs": "8f12ab2a0f508f8775c2b5497384feb655e59d4cedeb05e7b108e371b1432844",
+    "scripts/verify_chapter01_acceptance.py": "869d5805c6460eea300598c128ae5a1b72ad309346e7c0e3bd644d012081505e",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c",
+    "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md": "ce591ca910e4b6c725c3efe0dcc436eea0bd0b12a80c24f48991429f360ce17a",
+    "docs/validation/chapter-01/numerical-check.json": "0cf60dce92eb254520d34ad4a408781048b1614b145e13f2e7677f299421e470",
+    "docs/validation/chapter-01/browser-check.json": "21f9d480e414dc7f841241b3c2e9aee3902bfe9c15173b9c5200be2afe8f449a",
+    "docs/validation/chapter-01/full-suite.json": "b126cf8c38ad03688898a46c40659618b2a4968a454d24b0e2efe7218ff71f14",
+    "docs/validation/chapter-01/image-manifest.json": "1ba577168f0584574940ef3d2f58964c5c70de0e8c3efabfc7e8d453f245a97f"
+  },
+  "artifact_sha256": {
+    "book/_build/html/notebooks/12_qualitative_summary.html": "a89e4ea68c41327fca1b008adb1edbfceb108c684dcd87f60f27b18a23d0bc4e",
+    "report/site/chapters/ch01.html": "3ff9c252f9553c96b64653173916c087f8d499c82e6e3efab8b485ebfdb6f0d5"
+  }
+}

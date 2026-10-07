@@ -1,0 +1,646 @@
+{
+  "status": "PASS",
+  "profile": "fast-v1",
+  "sections": {
+    "22.1": {
+      "requirements": [
+        "D22.1-01",
+        "D22.1-02",
+        "D22.1-03",
+        "D22.1-04"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "d0bd4a497560d4665c5a8aa720f740962e5ca80a986e0c764b5ae6ca4c517935",
+      "math": 12,
+      "tables": 0,
+      "paragraphs": 17
+    },
+    "22.2": {
+      "requirements": [
+        "D22.2-01",
+        "D22.2-02",
+        "D22.2-03",
+        "D22.2-04",
+        "D22.2-05",
+        "D22.2-06",
+        "D22.2-07",
+        "D22.2-08"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "c24c69c665bd9a0706c05fe2a04fa548c2562b99b90c42b83ec7fe9e4d89b3d9",
+      "math": 8,
+      "tables": 0,
+      "paragraphs": 21
+    },
+    "22.3": {
+      "requirements": [
+        "D22.3-01",
+        "D22.3-02",
+        "D22.3-03",
+        "D22.3-04",
+        "D22.3-05",
+        "D22.3-06",
+        "D22.3-07"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "cfe49d3854bdc7d05d4f73a2c3349c2910277796b80a3842b4da57c55ccfd8f9",
+      "math": 9,
+      "tables": 0,
+      "paragraphs": 18
+    },
+    "22.4": {
+      "requirements": [
+        "D22.4-01",
+        "D22.4-02",
+        "D22.4-03",
+        "D22.4-04",
+        "D22.4-05",
+        "D22.4-06",
+        "D22.4-07"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "940b6d28d5138721a2fec1faa9d823bf0045f80215e4328b0fe954c403c419ef",
+      "math": 20,
+      "tables": 0,
+      "paragraphs": 20
+    },
+    "22.5": {
+      "requirements": [
+        "D22.5-01",
+        "D22.5-02",
+        "D22.5-03",
+        "D22.5-04"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "f98701781b9242c584f783f7e687ec5ce121972bbf59dc9d5f40718995106b6d",
+      "math": 23,
+      "tables": 0,
+      "paragraphs": 17
+    },
+    "22.6": {
+      "requirements": [
+        "D22.6-01",
+        "D22.6-02",
+        "D22.6-03",
+        "D22.6-04",
+        "D22.6-05"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "381b4ff395c9e0ac85f1158cfb06f2f93fabe8f3c9c8e8b4906c72e4c6140e21",
+      "math": 11,
+      "tables": 0,
+      "paragraphs": 19
+    },
+    "22.7": {
+      "requirements": [
+        "D22.7-01",
+        "D22.7-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "7cf9b23cc8db439d21607d0c7a69cd298d6baabaf401d68b6e6c338b32918b0d",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 11
+    },
+    "22.8": {
+      "requirements": [
+        "D22.8-01",
+        "D22.8-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "6cd30755980f56c1e9e40d33097a20f48f9ddf27f669b7944473fdc6f21c77fb",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 13
+    },
+    "22.9": {
+      "requirements": [
+        "D22.9-01",
+        "D22.9-02",
+        "D22.9-03"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "1d9ff8518cad5d23a5f23b97967f50ee52dc0e80927be0fae570bd4cfb61fdd9",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 15
+    },
+    "23.1": {
+      "requirements": [
+        "D23.1-01",
+        "D23.1-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "9733b8cdddb825e785eb56d75d7891112981565a25760ad206c746e3b5cfd808",
+      "math": 3,
+      "tables": 0,
+      "paragraphs": 13
+    },
+    "23.2": {
+      "requirements": [
+        "D23.2-01",
+        "D23.2-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "85165aaa6838c0e5d3a9506358eac3304fde18dfb10d7f53e26874cf18acdfb3",
+      "math": 2,
+      "tables": 0,
+      "paragraphs": 12
+    },
+    "23.3": {
+      "requirements": [
+        "D23.3-01",
+        "D23.3-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "995eabfcda0ed17d4ce7cf2b4fcddcea5be14b715db53218b5878c83a1557fe0",
+      "math": 2,
+      "tables": 0,
+      "paragraphs": 13
+    },
+    "23.4": {
+      "requirements": [
+        "D23.4-01"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "0d337b171a797cafaf2cf90190ad1096907fa818ed3879e41d64e4269c676bfe",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 9
+    },
+    "23.5": {
+      "requirements": [
+        "D23.5-01",
+        "D23.5-02",
+        "D23.5-03",
+        "D23.5-04"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "ea571a5af7ea4dcb59bd88cc5df916eed9b6e6a7b3e4b8216f3adeaf01905efb",
+      "math": 3,
+      "tables": 0,
+      "paragraphs": 17
+    },
+    "23.6": {
+      "requirements": [
+        "D23.6-01",
+        "D23.6-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "e75454fcf30cd3dd105560233c8d3e0fcffb544712e1c2cf0f81ee69d8cfa821",
+      "math": 5,
+      "tables": 0,
+      "paragraphs": 13
+    },
+    "23.7": {
+      "requirements": [
+        "D23.7-01",
+        "D23.7-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "c35c81c978198704f66121ec0aca3effa1e37436a9fbdec124d874b3737f2606",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 13
+    },
+    "24.1": {
+      "requirements": [
+        "D24.1-01",
+        "D24.1-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "209b02409a18ffc48cbe8cef57a0a2bbc44413cefae18f00d2a0dbec1e38d9cf",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 11
+    },
+    "24.2": {
+      "requirements": [
+        "D24.2-01",
+        "D24.2-02",
+        "D24.2-03"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "4b2c76a1a2d983d5352bc3fed16bb89279eaa491f59a405b5bb50603135a12b2",
+      "math": 3,
+      "tables": 0,
+      "paragraphs": 15
+    },
+    "24.3": {
+      "requirements": [
+        "D24.3-01",
+        "D24.3-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "82f218bb10a769fa9c273226292cb6ed92e7f1c70ad5768737cd4eaceaabdbd4",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 11
+    },
+    "24.4": {
+      "requirements": [
+        "D24.4-01",
+        "D24.4-02",
+        "D24.4-03",
+        "D24.4-04"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "791ac068cd2aa74e4f6e0da7ebdd0ccb94e791b3934d20e3337176a09b2811df",
+      "math": 3,
+      "tables": 0,
+      "paragraphs": 17
+    },
+    "24.5": {
+      "requirements": [
+        "D24.5-01",
+        "D24.5-02",
+        "D24.5-03"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "124476969fc94395acc6b9f2f7dc51be55d1f14faa083d575dd836f0967cc8f4",
+      "math": 1,
+      "tables": 0,
+      "paragraphs": 15
+    },
+    "24.6": {
+      "requirements": [
+        "D24.6-01",
+        "D24.6-02",
+        "D24.6-03"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "43c386af5fe54a651ccaeb05472a3ffe05f28562c898040db520214d7d3386bd",
+      "math": 10,
+      "tables": 0,
+      "paragraphs": 15
+    },
+    "24.7": {
+      "requirements": [
+        "D24.7-01",
+        "D24.7-02",
+        "D24.7-03",
+        "D24.7-04",
+        "D24.7-05"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "a0edb0707d120d53abfb7bb1f3eeed1f5f10538489a211fda6eb42bc3c763c7d",
+      "math": 8,
+      "tables": 0,
+      "paragraphs": 19
+    },
+    "24.8": {
+      "requirements": [
+        "D24.8-01",
+        "D24.8-02",
+        "D24.8-03",
+        "D24.8-04"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "eaffe7528b9ee070cc52e074d500d131dc951f6ace6e9ceacd62616fcc4f2b5a",
+      "math": 5,
+      "tables": 0,
+      "paragraphs": 17
+    },
+    "24.9": {
+      "requirements": [
+        "D24.9-01",
+        "D24.9-02",
+        "D24.9-03",
+        "D24.9-04"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "4fbfe5767011cf86d822d40080426cf3ed2ccc66793b9ada1fd713508841052a",
+      "math": 3,
+      "tables": 0,
+      "paragraphs": 17
+    },
+    "25.1": {
+      "requirements": [
+        "D25.1-01",
+        "D25.1-02",
+        "D25.1-03",
+        "D25.1-04"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "bed2b5e64b47eb25b80824543d72993a57b0c1a53f860c00c264ebf2dc0daf25",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 17
+    },
+    "25.2": {
+      "requirements": [
+        "D25.2-01",
+        "D25.2-02",
+        "D25.2-03",
+        "D25.2-04"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "d702d162fcf870ddbad79ee77aa1447c5d26279004ff184fcdddd8a3dc99dd65",
+      "math": 2,
+      "tables": 1,
+      "paragraphs": 17
+    },
+    "25.3": {
+      "requirements": [
+        "D25.3-01",
+        "D25.3-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "cfee4ddd7ea5b2a19afbb421cc0dcf778f238341fbd451d39de3ae13bd7409e6",
+      "math": 2,
+      "tables": 0,
+      "paragraphs": 13
+    },
+    "25.4": {
+      "requirements": [
+        "D25.4-01",
+        "D25.4-02",
+        "D25.4-03"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "652d5f5c9989c09f84498d8cbe51869d94131983442ad6d6bc70f34ef2226337",
+      "math": 2,
+      "tables": 0,
+      "paragraphs": 15
+    },
+    "25.5": {
+      "requirements": [
+        "D25.5-01",
+        "D25.5-02",
+        "D25.5-03"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "70d0e2c7cdd7e50d690d94985dc5c1d22d0d7f243ff7ca6814d1f34f93602609",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 15
+    },
+    "25.6": {
+      "requirements": [
+        "D25.6-01",
+        "D25.6-02"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "d609314d27ac48c0eb3516c56533ccc198a3de492cafbc5e7a9459ebbeead6e8",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 13
+    },
+    "25.7": {
+      "requirements": [
+        "D25.7-01",
+        "D25.7-02",
+        "D25.7-03"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "e5ff7890633ba114293e67d67556bc6129d0125ad15b20cf3e107969aa65c1b3",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 15
+    },
+    "25.8": {
+      "requirements": [
+        "D25.8-01",
+        "D25.8-02",
+        "D25.8-03"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "aaa3e82c20ef51a67033bbd42b1857121620819590738fa192c985e18b07cd7f",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 15
+    },
+    "25.9": {
+      "requirements": [
+        "D25.9-01",
+        "D25.9-02",
+        "D25.9-03"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "fc1532fac084e69b25fac2d30f6cc5792fe3d40d531b5d74d6aeb9b92d5b39e9",
+      "math": 1,
+      "tables": 0,
+      "paragraphs": 15
+    },
+    "25.10": {
+      "requirements": [
+        "D25.10-01",
+        "D25.10-02",
+        "D25.10-03",
+        "D25.10-04",
+        "D25.10-05",
+        "D25.10-06"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "ca34fedda9ca4b056fefe541dd218b8d784ee8fbf4d16ee531f751cd765cc174",
+      "math": 7,
+      "tables": 1,
+      "paragraphs": 22
+    },
+    "25.11": {
+      "requirements": [
+        "D25.11-01",
+        "D25.11-02",
+        "D25.11-03",
+        "D25.11-04",
+        "D25.11-05"
+      ],
+      "width": 1280,
+      "explanation_checked": true,
+      "math_checked": true,
+      "layout_checked": true,
+      "links_checked": true,
+      "text_sha256": "d8e89f1735571651f238eedc96af4c7307139de3c1e7f17929150e575f7394a2",
+      "math": 0,
+      "tables": 0,
+      "paragraphs": 19
+    }
+  },
+  "captures": [
+    {
+      "section": "22.2",
+      "path": "docs/validation/fast-ch22-25/chapter-22-representative.png",
+      "sha256": "65f1f2a536d22de69db7cd5d9488023449540fd5143847ea9731c0cee1502bac",
+      "width": 1280
+    },
+    {
+      "section": "23.5",
+      "path": "docs/validation/fast-ch22-25/chapter-23-representative.png",
+      "sha256": "3ecede80cae2ae67f7c9eb745d1497a93d4fed13f0adeec5bac794803592acee",
+      "width": 1280
+    },
+    {
+      "section": "24.7",
+      "path": "docs/validation/fast-ch22-25/chapter-24-representative.png",
+      "sha256": "b983f63b7abb0e79b6760d45f93c8629b3358abbc787abeb511bc0bf2dd65063",
+      "width": 1280
+    },
+    {
+      "section": "25.10",
+      "path": "docs/validation/fast-ch22-25/chapter-25-representative.png",
+      "sha256": "c114214b03b74640be34a208e52216ce69f1f07aa5649f92f2dec8f9822467ad",
+      "width": 1280
+    }
+  ],
+  "source_sha256": {
+    "docs/lessons/ch22.md": "791b4def7bd18881a7fa88351ad93598b529af2bce71407c2e46756c8fdcb1b4",
+    "docs/lessons/ch23.md": "f55cf2bb19cb8042c1b18cd38cdc469d93ea1894fa8fd4caa38613458fa33f7e",
+    "docs/lessons/ch24.md": "693e6bc236b317324b3c9f9a7f368908f4d9e2a3c167a4e287f3780651b554ee",
+    "docs/lessons/ch25.md": "0cb068c5fae5d697d60046dc1971166832fc66e264108057f166b6a0359cfd9a",
+    "docs/acceptance/fast-ch22-25.json": "d882c7519cdab532a5047c218ef8cd15b1ecf722ec5466eed5217721b9432d28",
+    "scripts/verify_fast_acceptance_options_browser.cjs": "1a3e8f7a8525f2a87c653a94543f6ca3f9974c2898d44d9f9a557aa354c658fd"
+  },
+  "artifact_sha256": {
+    "report/site/chapters/ch22.html": "7bc7e70190668d5b18f54dc9d30fd22450c35fd2de0fb648607ceebc65680072",
+    "report/site/chapters/ch23.html": "a16fa27e57d79c0cf2fc66d126cd2fa91fdf877d4636cd03153f0aac796bc794",
+    "report/site/chapters/ch24.html": "ee315510d8b3a81a9842edc65b869261adf853b925629b38772d95a4ee1fa372",
+    "report/site/chapters/ch25.html": "d819ab0227a4f9c0904f46ab92c3b4587097062db9b5bc2133264aa5178857a9",
+    "docs/validation/fast-ch22-25/chapter-22-representative.png": "65f1f2a536d22de69db7cd5d9488023449540fd5143847ea9731c0cee1502bac",
+    "docs/validation/fast-ch22-25/chapter-23-representative.png": "3ecede80cae2ae67f7c9eb745d1497a93d4fed13f0adeec5bac794803592acee",
+    "docs/validation/fast-ch22-25/chapter-24-representative.png": "b983f63b7abb0e79b6760d45f93c8629b3358abbc787abeb511bc0bf2dd65063",
+    "docs/validation/fast-ch22-25/chapter-25-representative.png": "c114214b03b74640be34a208e52216ce69f1f07aa5649f92f2dec8f9822467ad"
+  },
+  "browser_version": "145.0.7632.6",
+  "missing_requirement_rejected": true,
+  "mutated_requirement_rejected": true
+}
