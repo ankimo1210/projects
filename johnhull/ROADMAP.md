@@ -19,9 +19,9 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 private modules on main as of 2026-10-05 (later P3–P7 logic is on `codex/p7-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` / `codex/p6-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 38 private modules including RB-F07 v1 as of 2026-10-07 (later P3–P7 logic is on `codex/p7-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` / `codex/p6-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-10-07、P8監査是正完了・後続教材の正式受入待ち）
+## 現在地（2026-10-07、開発修正を集約・RB-F07 v1完了）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
@@ -29,7 +29,8 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | Beyond Hull（vol13–28） | すべてdone | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 全節監査の是正 | 第1–6便完了 | P8の指定是正・判断・最終検証完了。[P8状態](docs/P8_STATUS.md)。残りの節受入は各段階で進める |
 | 節単位の受入 | Ch28まで受入33・未評価273（10.8%） | P0/P1/P2完了、P3正式8/37・ロジック36/37。§33.2は入力不足。教材・正式受入を保留し、P4/P5/P6とP7の実装可能な計算を先行して完了。[P3状態](docs/P3_STATUS.md) |
-| ロジック先行 | P3 36/37、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11 | codex/p7-logicで実装可能なCh35–37計算を完了。§33.2/§36.4は入力不足。P8の計算修正/根拠配列/改竄検証、教材・リリースの確認を完了。教材・正式受入は保留。[P6状態](docs/P6_STATUS.md)・[P7状態](docs/P7_STATUS.md) |
+| ロジック先行 | P3 36/37、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11 | codex/p7-logicで実装可能なCh35–37計算を完了。P4レビュー修正18コミットとP8を合流、影響1,727 tests・Python108ファイルruff/format PASS。RB-F07 v1を実装・対象検証・独立レビューまで完了。§33.2/§36.4は入力不足。P8の計算修正/根拠配列/改竄検証、教材・リリースの確認を完了。教材・正式受入は保留。[P6状態](docs/P6_STATUS.md)・[P7状態](docs/P7_STATUS.md) |
+| 研究track（本編とは別枠） | RB-F07 v1完了（計算・独立検証・研究notebook3図） | [研究資料](research/RB-F07/README.md)。private単一曲線・正方Newton/解析Jacobian・随伴リスク。24 tests、関連rates/swaps/docstring/索引649 tests、ruff/数値再生成/notebook/3図目視PASS。独立レビューCritical/Important/Minor 0、tracked releaseと33節台帳check-artifacts PASS。次は承認済みRB-F05、v2/v3は別承認 |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。P8で既受入33節を再検査 | browser/runtime/pytest・C:/F:両保管庫復元PASS。共有計算・表示コード変更を反映し、台帳を現行証跡へ更新。[最終D1](docs/validation/p8-2026-10-07/d1-final-check.json) |
 | テスト・レビュー | P8最終hullkit+report 4,466 passed・6 skipped、deep 209 passed、変更Python25ファイルruff PASS | 最終33節D1・影響18画面状態・tracked release PASS。Critical/Importantなし、Minor1修正済み。[P8状態](docs/P8_STATUS.md)。P3–P7の検証は各状態文書に保持 |
@@ -44,6 +45,8 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 件数は `docs/SECTION_LEDGER.md` の生成値に合わせ、手で数えない。規約は `AGENTS.md`／`CLAUDE.md` の「ROADMAP の更新」。
 
 ユーザー指定（2026-10-03）：各ターンの最終応答の末尾に、P0–P8の全体ロードマップと現在の作業を表示する。
+
+開発branchへの修正反映（2026-10-07）：P4 `00d8a651`・P8 `ce801e48`を`codex/p7-logic`へ合流済み。正式受入の別branch `codex/johnhull-acceptance` は `99476dbc` 時点で171/306（P4 58/112、P6 80/80）。その成果のmain統合はまだで、以下の受入件数はこのbranchの台帳33/306を示す。
 
 **完了の定義：** (1) 節別台帳の 306 項目がすべて `accepted` か `out_of_scope`、
 (2) 下の P8（監査の残り）が対応済みか、判断を記録済み。
@@ -60,7 +63,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 4 | 0 | — | 完了（M14–M17） |
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
 | P3 | 金利（Ch 28–34） | 37 | 8 | 3 | ロジック36/37、§33.2は原典入力不足 | Ch28全8節受入、Ch29–34受入29節を保留。本人指示2026-10-05でP4実装へ |
-| P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 計算95/95項目の初回実装・対象検証完了、説明中心17項目は保留（下調べの分類） | codex/p4-logicへpush。Ch21対象112 tests・ruff check/format check PASS。教材・正式受入は保留 |
+| P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 計算95/95項目の初回実装・対象検証完了、説明中心17項目は保留（下調べの分類） | codex/p4-logicへpush。レビュー修正18コミットをcodex/p7-logicへ反映済み。Ch21対象112 tests・ruff check/format check PASS。教材・正式受入は別worktreeで進行 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | 計算32/32の初回実装・対象検証完了、説明中心4項目は保留 | codex/p5-logicへ節ごとpush。P5対象196 tests・docstring156・索引6・ruff PASS。入力不足・モデル範囲は[P5状態](docs/P5_STATUS.md)に記録。教材・正式受入は保留 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 31 | 下調べは計算54・説明中心26（旧監査と分類が異なる） | 計算54/54の初回実装・対象検証・一覧照合完了。codex/p6-logicへpush。対象124 tests・9モジュールのdocstring/索引18・ruff PASS。入力不足/原典差は[P6状態](docs/P6_STATUS.md)、教材・正式受入は保留 |
 | P7 | Ch 35–37 | 16 | 0 | 6 | 下調べは計算11・説明中心5（旧監査と分類が異なる）。§36.4はモデル入力不足 | 計算10/11の実装・対象検証・一覧照合完了。codex/p7-logicへ節ごとpush。対象28 tests・docstring/索引6・ruff PASS。§35.4/§36.5の原典差は[P7状態](docs/P7_STATUS.md)。次は教材・章まとめ受入。教材・正式受入保留 |
