@@ -1,6 +1,6 @@
 # RB-F05：不連続payoffの微分教師とDML（軽い設計メモ）
 
-- 日付：2026-09-27。更新2026-10-07。状態：v1 digitalの実装・数値/学習比較・研究3図まで完成。最終レビュー待ち。
+- 日付：2026-09-27。更新2026-10-07。状態：v1 digitalの実装・数値/学習比較・研究3図まで完成。独立レビューImportant1修正済み（Critical/Minor0）。
 - 順序：RB-F07の採否記録後。第2段階の離散バリアはM15受入後、0DTEはR4解決後。
 - 置き場：`research/RB-F05/`。teacherはhullkit非公開モジュール、学習はdeep_hedge_price。公開API・依存追加は別承認。
 - 問い：正しいGreek教師を作る費用を含めても、price-only学習・積分・補間よりDMLに利点があるか。
@@ -69,6 +69,6 @@ S002 v2 の原PDFには、式(3)のGBMドリフトの1/2欠落、式(18)の密�
 
 ## 6. v1の実測（2026-10-07）
 
-- 新規31 tests、既存aad/exotics/quote-risk/pricing-lossと両packageの索引/docstringを含む806 tests PASS。変更Python7ファイルruff/format、独立積分・MC再生成・保存重みからのNumPy推論・4種改竄検査PASS。artifact-only notebook3図をfresh実行し目視確認。
+- 新規32 tests、既存aad/exotics/quote-risk/pricing-lossと両packageの索引/docstringを含む807 tests PASS。変更Python7ファイルruff/format、独立積分・MC再生成・保存重みからのNumPy推論・4種改竄検査PASS。artifact-only notebook3図をfresh実行し目視確認。
 - 3seedすべてでDMLの価格/delta RMSE改善、deltaは約32–71%減。解析約0.12µs/件、ネット約1.3µs/件、補間もより高精度/高速。速度での標準採用は不採用、教師と教育比較は採用。入力・全seedの誤差/SE/重み/総費用は[研究資料](../../../research/RB-F05/README.md)に保存。
-- 本編台帳/教材/既存vol18配列には変更なし。最終レビュー後にv1をmainへ反映する。離散バリアの監視日/精度は次段階、0DTE/roughは後続。
+- 本編台帳/教材/既存vol18配列には変更なし。レビュー修正の検証後にv1をmainへ反映する。離散バリアの監視日/精度は次段階、0DTE/roughは後続。
