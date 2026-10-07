@@ -1,7 +1,7 @@
 # johnhull 可視化ポータル(インタラクティブ HTML)
 
 johnhull の Hull 11e ノートで学ぶ価格付け・リスク管理を束ねる、
-**オフライン自己完結のインタラクティブ静的サイト**を生成するジェネレータ。
+**本体の図をオフラインで操作できる静的サイト**を生成するジェネレータ。
 `analytics/report` と同じ設計(jinja2 + plotly)。
 
 - ランディング + コンセプトギャラリー + 12テーマ別ショーケース（全204図、exotics 92図）+ 統合(背骨)ページ
@@ -17,18 +17,12 @@ make hull-report   # -> johnhull/report/site/index.html
 make hull-book     # johnhull の Jupyter Book(教科書本体)をビルド
 ```
 
-または直接（Ch1ページを含めて両方を実行）:
-
-```bash
-PYTHONPATH=johnhull/hullkit/src:johnhull/report uv run --no-sync python -m report_builder.build
-PYTHONPATH=johnhull/hullkit/src uv run --no-sync python johnhull/scripts/build_chapter01_portal.py
-```
-
-出力された `site/index.html` をブラウザで開くだけ(オフラインで動作)。`site/` は gitignore 済み。
+通常は `make hull-report` で本体と全補足教材を生成し、`site/index.html` を開く。
+本体の図はオフラインで動作し、Ch2–25・Ch29–37の補足数式表示にはオンライン接続が必要。`site/` は原則gitignore。
 
 通常のportalビルド `make hull-report` はCh1の10節・4共有図を `site/chapters/ch01.html` に、
 受入済みのCh2–25・Ch29–37の補足教材を各 `site/chapters/chXX.html` に生成する。
-`make hull-book` のvol12 Ch1から到達でき、上の両コマンドでリンク先まで再生成する。
+入口の「節別補足教材」一覧から全34章へ到達でき、Ch1は`make hull-book`のvol12からも開ける。
 Ch1は章別教材として追加し、既存の204図/12テーマとは別に数える。
 [Ch1の受入記録](../docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md) に、原典範囲と
 数値・画面の再検証手順を記す。
@@ -59,7 +53,7 @@ python johnhull/scripts/fast_acceptance_options.py build
 数式表示はMathJax CDNを利用し、オンライン接続が必要。
 [受入記録](../docs/CHAPTERS_10_15_ACCEPTANCE_2026-10-07.md)、
 [省略した確認と再検証手順](../docs/FAST_ACCEPTANCE_GUIDE.md)を参照。
-既存Book本文の改訂・main統合は未実施。登録後の再確認には`verify`を使い、証跡を生成し直さない。
+既存Book本文の改訂は別工程。統合構成の記録は[最終統合](../docs/FINAL_INTEGRATION_2026-10-08.md)。登録後の再確認には`verify`を使い、証跡を生成し直さない。
 
 ## Ch16–21の節別補足教材
 
@@ -72,7 +66,7 @@ python johnhull/scripts/fast_acceptance_advanced_options.py build
 
 共通venvのPythonとPYTHONPATHを使う。数式表示にはオンライン接続が必要。
 [受入範囲・制限・再検証](../docs/CHAPTERS_16_21_ACCEPTANCE_2026-10-07.md)を参照。
-登録後は`verify`でread-only確認する。既存Book改訂/main統合は未実施。
+登録後は`verify`でread-only確認する。既存Book改訂は別工程。
 
 ## Ch22–25の節別補足教材
 
@@ -85,7 +79,7 @@ python johnhull/scripts/fast_acceptance_risk_credit.py build
 
 共通venv/PYTHONPATHを使用し、数式表示にはオンライン接続が必要。
 [受入範囲・省略・再検証](../docs/CHAPTERS_22_25_ACCEPTANCE_2026-10-07.md)を参照。
-登録後は`verify`で証跡を生成し直さず確認する。既存Book改訂/main統合は未実施。
+登録後は`verify`で証跡を生成し直さず確認する。既存Book改訂は別工程。
 
 ## Ch29–37の節別補足教材
 
@@ -99,7 +93,7 @@ python johnhull/scripts/fast_acceptance_final.py build
 
 共通venv/PYTHONPATHを使用し、数式表示にはオンライン接続が必要。
 [受入範囲・制限・再検証](../docs/CHAPTERS_29_37_ACCEPTANCE_2026-10-08.md)を参照。
-登録後は`verify`で証跡を生成し直さず確認する。既存Book改訂/main統合は別工程。
+登録後は`verify`で証跡を生成し直さず確認する。既存Book改訂は別工程。
 
 ## 図を追加する
 

@@ -1,0 +1,288 @@
+{
+  "status": "PASS",
+  "scope": "homepage chapter navigation at width1280; chapter math rendering retained from acceptance",
+  "browser_version": "145.0.7632.6",
+  "chapters": [
+    {
+      "chapter": 1,
+      "path": "report/site/chapters/ch01.html",
+      "title": "Ch1 デリバティブ入門",
+      "heading": "デリバティブの全体像",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 2,
+      "path": "report/site/chapters/ch02.html",
+      "title": "Hull Ch2 補足教材",
+      "heading": "Ch2 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 3,
+      "path": "report/site/chapters/ch03.html",
+      "title": "Hull Ch3 補足教材",
+      "heading": "Ch3 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 4,
+      "path": "report/site/chapters/ch04.html",
+      "title": "Hull Ch4 補足教材",
+      "heading": "Ch4 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 5,
+      "path": "report/site/chapters/ch05.html",
+      "title": "Hull Ch5 補足教材",
+      "heading": "Ch5 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 6,
+      "path": "report/site/chapters/ch06.html",
+      "title": "Hull Ch6 補足教材",
+      "heading": "Ch6 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 7,
+      "path": "report/site/chapters/ch07.html",
+      "title": "Hull Ch7 補足教材",
+      "heading": "Ch7 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 8,
+      "path": "report/site/chapters/ch08.html",
+      "title": "Hull Ch8 補足教材",
+      "heading": "Ch8 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 9,
+      "path": "report/site/chapters/ch09.html",
+      "title": "Hull Ch9 補足教材",
+      "heading": "Ch9 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 10,
+      "path": "report/site/chapters/ch10.html",
+      "title": "Hull Ch10 補足教材",
+      "heading": "Ch10 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 11,
+      "path": "report/site/chapters/ch11.html",
+      "title": "Hull Ch11 補足教材",
+      "heading": "Ch11 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 12,
+      "path": "report/site/chapters/ch12.html",
+      "title": "Hull Ch12 補足教材",
+      "heading": "Ch12 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 13,
+      "path": "report/site/chapters/ch13.html",
+      "title": "Hull Ch13 補足教材",
+      "heading": "Ch13 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 14,
+      "path": "report/site/chapters/ch14.html",
+      "title": "Hull Ch14 補足教材",
+      "heading": "Ch14 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 15,
+      "path": "report/site/chapters/ch15.html",
+      "title": "Hull Ch15 補足教材",
+      "heading": "Ch15 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 16,
+      "path": "report/site/chapters/ch16.html",
+      "title": "Hull Ch16 補足教材",
+      "heading": "Ch16 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 17,
+      "path": "report/site/chapters/ch17.html",
+      "title": "Hull Ch17 補足教材",
+      "heading": "Ch17 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 18,
+      "path": "report/site/chapters/ch18.html",
+      "title": "Hull Ch18 補足教材",
+      "heading": "Ch18 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 19,
+      "path": "report/site/chapters/ch19.html",
+      "title": "Hull Ch19 補足教材",
+      "heading": "Ch19 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 20,
+      "path": "report/site/chapters/ch20.html",
+      "title": "Hull Ch20 補足教材",
+      "heading": "Ch20 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 21,
+      "path": "report/site/chapters/ch21.html",
+      "title": "Hull Ch21 補足教材",
+      "heading": "Ch21 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 22,
+      "path": "report/site/chapters/ch22.html",
+      "title": "Hull Ch22 補足教材",
+      "heading": "Ch22 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 23,
+      "path": "report/site/chapters/ch23.html",
+      "title": "Hull Ch23 補足教材",
+      "heading": "Ch23 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 24,
+      "path": "report/site/chapters/ch24.html",
+      "title": "Hull Ch24 補足教材",
+      "heading": "Ch24 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 25,
+      "path": "report/site/chapters/ch25.html",
+      "title": "Hull Ch25 補足教材",
+      "heading": "Ch25 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 29,
+      "path": "report/site/chapters/ch29.html",
+      "title": "Hull Ch29 補足教材",
+      "heading": "Ch29 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 30,
+      "path": "report/site/chapters/ch30.html",
+      "title": "Hull Ch30 補足教材",
+      "heading": "Ch30 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 31,
+      "path": "report/site/chapters/ch31.html",
+      "title": "Hull Ch31 補足教材",
+      "heading": "Ch31 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 32,
+      "path": "report/site/chapters/ch32.html",
+      "title": "Hull Ch32 補足教材",
+      "heading": "Ch32 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 33,
+      "path": "report/site/chapters/ch33.html",
+      "title": "Hull Ch33 補足教材",
+      "heading": "Ch33 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 34,
+      "path": "report/site/chapters/ch34.html",
+      "title": "Hull Ch34 補足教材",
+      "heading": "Ch34 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 35,
+      "path": "report/site/chapters/ch35.html",
+      "title": "Hull Ch35 補足教材",
+      "heading": "Ch35 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 36,
+      "path": "report/site/chapters/ch36.html",
+      "title": "Hull Ch36 補足教材",
+      "heading": "Ch36 節別補足教材",
+      "reached_by_homepage_click": true
+    },
+    {
+      "chapter": 37,
+      "path": "report/site/chapters/ch37.html",
+      "title": "Hull Ch37 補足教材",
+      "heading": "Ch37 節別補足教材",
+      "reached_by_homepage_click": true
+    }
+  ],
+  "source_sha256": {
+    "report/templates/index.html.j2": "4b377fea22331afb519cb4d804a33f23032e36afbef2f50a641f7ad03d9cf406",
+    "report/report_builder/render.py": "efbf277b3a8b6b697ebe25b381dd97b797d64fc0e2cee4ee940e718d227c0f4f",
+    "report/tests/test_supplement_navigation.py": "277bb9ebd8c19bf144dfafc4a043cf820a6c6cad3521fe0f67dba23a57264ce1"
+  },
+  "artifact_sha256": {
+    "report/site/index.html": "a837431a6b07d4d8835fb846b4be0bb73e6f231f59f6b48e4686e1ccf4912e42",
+    "docs/validation/final-integration/navigation.png": "99ecaebf08149ba9c1f53f42fe7ccb43be2ab0534cd598d54ef31c6fc6d2753e",
+    "report/site/chapters/ch01.html": "3ff9c252f9553c96b64653173916c087f8d499c82e6e3efab8b485ebfdb6f0d5",
+    "report/site/chapters/ch02.html": "7d8f3afb1116ac9b106981bcb72d8101dbc4d8f59e29325986178b93920053b0",
+    "report/site/chapters/ch03.html": "4cdcdc455729c1715e7e97643c5b64fdc4d2c491607e2d642fe246a3af487307",
+    "report/site/chapters/ch04.html": "de974013595dcc011bb4564d4e3cbfd2989d2a277cb6ff6092f8b891cd594d63",
+    "report/site/chapters/ch05.html": "a7026338ba21a61c0e1ce48af281d728e32ca7a5c9e824af0e8baa21ed35f434",
+    "report/site/chapters/ch06.html": "9830f259b004c7b0898656f87416aa8867116fadf95251c9b3c4607f71deb728",
+    "report/site/chapters/ch07.html": "fec2a65a52fe6676bd27988b0a812c8133023a5adfbe7e89a3625815bb129be7",
+    "report/site/chapters/ch08.html": "d424d17a99d9b9ba62ffe744afea1a6a1dd0cde0e7ea04b55727ff23acec17e4",
+    "report/site/chapters/ch09.html": "932e5025b51fb4ecff4fda38042408c3840abf15c122d0c0ebe6334fda917612",
+    "report/site/chapters/ch10.html": "e21756cae66fe942b6c0344d1dfe69e02a681dbf7c1caca751a335e323a80b8f",
+    "report/site/chapters/ch11.html": "b99f45109debf4590f8ec07ac6e45e16214d5647e141e003ff44911c93b79f36",
+    "report/site/chapters/ch12.html": "27c4bf2f9509066d9c85ec1caaea28f438547b8a1bc8f68dc46be6149ae6e4f1",
+    "report/site/chapters/ch13.html": "a11cfc14a68c22c80f1e2b60160ef8b375108943a20050c9453f72774ef16e9d",
+    "report/site/chapters/ch14.html": "48e5aaa3dbf0b7e6a3069a15dcf92a2cab9ebb92bef3615530bc6cf29cd449a4",
+    "report/site/chapters/ch15.html": "9bcf2c0c8750679e579808e1da179701cce823dddb3362d0a19eb538029c76f6",
+    "report/site/chapters/ch16.html": "4e2559bf5b7fc0ad6a2cd7b0130af81ce746f9bdd2d80bf03085640a2e65535d",
+    "report/site/chapters/ch17.html": "c4411052e4a34044b2ab1d8a68ae428a9e6a8a0802ecc5993540b76ee39fe414",
+    "report/site/chapters/ch18.html": "925560201e17eab7512c3574c97b9db1fb08c09f4cf20b60deb57d7bbca1fd10",
+    "report/site/chapters/ch19.html": "2bab50045b8017d0f0c671ee1555e1d3fb675247f65c94a773938363eb4dc2e7",
+    "report/site/chapters/ch20.html": "e1a867c095da8777a6130178f8f5f53befe0e3b4222c0e02a3d9240417ecca06",
+    "report/site/chapters/ch21.html": "ddab725e68e2eae4973aed7c81b1612192781704883b99b154cb394575d4dd92",
+    "report/site/chapters/ch22.html": "7bc7e70190668d5b18f54dc9d30fd22450c35fd2de0fb648607ceebc65680072",
+    "report/site/chapters/ch23.html": "a16fa27e57d79c0cf2fc66d126cd2fa91fdf877d4636cd03153f0aac796bc794",
+    "report/site/chapters/ch24.html": "ee315510d8b3a81a9842edc65b869261adf853b925629b38772d95a4ee1fa372",
+    "report/site/chapters/ch25.html": "d819ab0227a4f9c0904f46ab92c3b4587097062db9b5bc2133264aa5178857a9",
+    "report/site/chapters/ch29.html": "5cf99173d89db7d92ae9e78a25f1d2af476b163cdb1a31df67d770734ff0caed",
+    "report/site/chapters/ch30.html": "387a7024387f549c2ee68bda99f734ca31c97773d5c63503b893dde55bdb4a31",
+    "report/site/chapters/ch31.html": "1e1a144e5a721a76fd3296ab170ceac938bea5004126d398cf6183df9c43f692",
+    "report/site/chapters/ch32.html": "d57405a05eed1086f3b10c3647f4c548e0f026068352cb1aa169144e4cb112b8",
+    "report/site/chapters/ch33.html": "aa58465b55993802273041cbb82cdb4243c6e2f332954fc6a3c0f41fdc6cee9c",
+    "report/site/chapters/ch34.html": "1db6dd6318acbd6ae4e3c528974e66bb76af455d8f2d89edfbd98da2d932879b",
+    "report/site/chapters/ch35.html": "b5fb64a92174cd809bd26cac720e97221f4ad5231d829dc798bcc1fea4000e65",
+    "report/site/chapters/ch36.html": "d3a00336d08e350cc81565af1862713823b2e1900922fac092d14316faabc698",
+    "report/site/chapters/ch37.html": "af064c263f6d5f11f52b8faceede672b5a87e8f90952fd06b945eedf9da4fde6"
+  }
+}

@@ -47,7 +47,7 @@
     "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md": "ce591ca910e4b6c725c3efe0dcc436eea0bd0b12a80c24f48991429f360ce17a",
     "docs/validation/chapter-01/numerical-check.json": "0cf60dce92eb254520d34ad4a408781048b1614b145e13f2e7677f299421e470",
     "docs/validation/chapter-01/browser-check.json": "21f9d480e414dc7f841241b3c2e9aee3902bfe9c15173b9c5200be2afe8f449a",
-    "docs/validation/chapter-01/full-suite.json": "3fa76d5c2646d1a31203658dca2fc4c93dd126e3c8cf502d50d4cdca91906d0c",
+    "docs/validation/chapter-01/full-suite.json": "b126cf8c38ad03688898a46c40659618b2a4968a454d24b0e2efe7218ff71f14",
     "docs/validation/chapter-01/image-manifest.json": "1ba577168f0584574940ef3d2f58964c5c70de0e8c3efabfc7e8d453f245a97f"
   },
   "artifact_sha256": {

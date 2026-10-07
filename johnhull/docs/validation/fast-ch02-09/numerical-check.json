@@ -58,7 +58,7 @@
     "--junitxml=/home/kazumasa/worktrees/m29/johnhull/docs/validation/fast-ch02-09/targeted-tests.xml"
   ],
   "exit_code": 0,
-  "seconds": 2.62,
+  "seconds": 2.72,
   "tests": [
     "johnhull/hullkit/tests/test_forward_pricing_carry.py",
     "johnhull/hullkit/tests/test_forward_pricing_commodity.py",
@@ -111,11 +111,11 @@
     "johnhull/hullkit/tests/test_xva_foundations_incremental.py",
     "johnhull/report/tests/test_fast_acceptance.py"
   ],
-  "summary": "130 passed in 2.12s",
+  "summary": "130 passed in 2.21s",
   "source_sha256": {
     "docs/CHAPTERS_02_09_ACCEPTANCE_2026-10-07.md": "1a02fead69c9f9c166e01c19b0c5b5c6e4d6b17092aba05de42c944aeca787e3",
     "docs/FAST_ACCEPTANCE.md": "fbb79ce2c6be4c36d1e785f4ba12675d3ee41ea61a670b38d16ff3e1360be46f",
-    "docs/P6_STATUS.md": "8d2486f9542dabe49eb304d879c2e29fd1f8d42a38cae58f7fdda33cc5e78197",
+    "docs/P6_STATUS.md": "ebe308db9707ccdb6797a29a41ef3f004e234ecf966ba732de7628026cee69d6",
     "docs/acceptance/fast-ch02-09.json": "b7885e081ed99a582d56fb7df2d758b56c1a87e016c3cb61547a26dd9d1ac753",
     "docs/lessons/ch02.md": "4484bf169334bbbf47234884a1e3cf9aa369643dccb6a769d779c35c571ad78a",
     "docs/lessons/ch03.md": "090f0a04b0340e7beb7c8aa841e4eba2325f8977e10c2bbc49e6d991bdec4ef4",
@@ -200,7 +200,7 @@
     "scripts/verify_fast_acceptance_browser.cjs": "d1e2ca2ff7c85bf72a33473fb3679d6648c36b250496c5212577b384a267db3c"
   },
   "artifact_sha256": {
-    "docs/validation/fast-ch02-09/targeted-tests.log": "bfd44e34b9825906e4fed08a6e0b479b150b80e44439e4e2524d60cf450c6096",
-    "docs/validation/fast-ch02-09/targeted-tests.xml": "2c748caf9c84b94d8eed93bb52447cee73b8af9fe2bf8758fdf58e877c979b95"
+    "docs/validation/fast-ch02-09/targeted-tests.log": "56abb8b5f420fc56fe81a351b99c08a54b18b8a7225f40ca001f26ba8eba785d",
+    "docs/validation/fast-ch02-09/targeted-tests.xml": "cb06341fef970aa9d8f2d1e5152ebc2b1cf920e5e59b9ec4cc45b03ebecd8f99"
   }
 }

@@ -12,8 +12,8 @@
   ],
   "exit_code": 0,
   "seconds": 307.89,
-  "summary": "full run: 6640 passed, 2 catalogue failures, 6 skipped; catalogue-only repair: 764 passed; combined unique checks: 6649 passed, 6 skipped",
-  "passed": 6649,
+  "summary": "full run: 6640 passed, 2 catalogue failures, 6 skipped; catalogue repair: 764 passed; navigation/render repair: 16 passed; combined unique checks: 6650 passed, 6 skipped",
+  "passed": 6650,
   "failed": 0,
   "skipped": 6,
   "source_sha256": {
@@ -921,7 +921,9 @@
     "scripts/verify_two_asset_numerics.py": "62396c9bdda3f63db3a44cf133866bb5765b5833c1cfb10effe230cb94ad109f",
     "scripts/verify_variance_swap_lesson_browser.cjs": "5adc156b823a2a4ba39da52c190c31cee3abf8b2c79fac7bb0dea593bf685cb5",
     "scripts/verify_variance_swap_notebook.py": "fdd62eef5a527271e7f150b25144f9b646ad9f3d953f29679b4d1920428423f1",
-    "MODEL_INDEX.md": "30628e50a7c9fcc15d1818f26610f5bedc3ead521c97a1e6ecbe5b3e166219ac"
+    "MODEL_INDEX.md": "30628e50a7c9fcc15d1818f26610f5bedc3ead521c97a1e6ecbe5b3e166219ac",
+    "report/templates/index.html.j2": "4b377fea22331afb519cb4d804a33f23032e36afbef2f50a641f7ad03d9cf406",
+    "report/tests/test_supplement_navigation.py": "277bb9ebd8c19bf144dfafc4a043cf820a6c6cad3521fe0f67dba23a57264ce1"
   },
   "deep_source_sha256": {
     "deep_hedge_price/src/deep_hedge_price/pricing_residuals.py": "136d28a0c9079d3e90270cd6bca5835a7198e6b31b8a5b60b28458f846eee8f3",
@@ -1010,7 +1012,7 @@
   },
   "full_run_exit_code": 1,
   "full_run_summary": "2 failed, 6640 passed, 6 skipped, 2 warnings in 305.24s (0:05:05)",
-  "scope": "one full run plus fresh affected catalogue guards; calculation and test source bytes unchanged",
+  "scope": "one full run plus fresh affected catalogue and navigation/render guards; original calculation/test sources unchanged",
   "calculation_and_test_sources_unchanged": true,
   "repair": {
     "status": "PASS",
@@ -1038,6 +1040,28 @@
     "docs/validation/final-integration/full-run.log": "9362a2238f79e90c585a523e03c3756465c4857c7fca38e90c5708cb1127482d",
     "docs/validation/final-integration/full-run.xml": "e730b17f518cbb4fa167b05c1960fe1ed3bb7e6e4abd48a6c592710f8a66bbab",
     "docs/validation/final-integration/index-repair-run.log": "ddbc93ebf9bf3af2e7e0352e165eae231c0ed570eb6080cef61cfc3888858d74",
-    "docs/validation/final-integration/index-repair-run.xml": "5f7ae6319ef21e8e835100a0734fb94bdaee89a22f29ce40e314b087eb796d9a"
+    "docs/validation/final-integration/index-repair-run.xml": "5f7ae6319ef21e8e835100a0734fb94bdaee89a22f29ce40e314b087eb796d9a",
+    "docs/validation/final-integration/navigation-run.xml": "438640bd9446bfd59f4aff432d5b00235c7ca1d26c22d4286ab26bc2319b8d54",
+    "docs/validation/final-integration/navigation-run.log": "2729f25ab2a7c5ba2f455a70d857be4ba4fc2a2880b5a59fbda215225c6ad314",
+    "docs/validation/final-integration/navigation-red.log": "65952d290dab13724f4f55076b94385b038e332b360bec342c6b7f173dbdd853",
+    "docs/validation/final-integration/navigation-check.json": "7bd43cc948afe6d3e47ec36d1593f4d965b283200e9b468e3aba6f05d97e095a"
+  },
+  "navigation_repair": {
+    "status": "PASS",
+    "passed": 16,
+    "exit_code": 0,
+    "new_tests": 1,
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "johnhull/report/tests/test_supplement_navigation.py",
+      "johnhull/report/tests/test_report_build.py",
+      "--junitxml=/tmp/hull-integration-navigation.xml"
+    ],
+    "browser_chapters": 34,
+    "original_calculation_and_test_sources_unchanged": true,
+    "red_log_normalization": "trailing whitespace removed per line; result retained"
   }
 }
