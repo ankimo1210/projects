@@ -1,0 +1,414 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-08",
+  "scope": "一次資料の回収記録。企業価値モデルの入力と、原典価格/契約の未指定条件を区別する。実装・数値受入の正本は今回の検証記録。",
+  "sources": {
+    "hull_11e": {
+      "path": "options, futures and other derivatives 11th.pdf",
+      "sha256": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482",
+      "physical_equals_printed_pages": true,
+      "pages_33_2": [
+        758,
+        759,
+        760,
+        761,
+        762,
+        763,
+        764,
+        765,
+        766,
+        767,
+        768,
+        772
+      ],
+      "pages_36_4": [
+        806,
+        807,
+        813
+      ]
+    },
+    "schwartz_moon_2000_author": {
+      "title": "Rational Pricing of Internet Companies",
+      "authors": [
+        "Eduardo S. Schwartz",
+        "Mark Moon"
+      ],
+      "journal": "Financial Analysts Journal 56(3), 62–75, May/June 2000",
+      "url": "https://www.anderson.ucla.edu/faculty/eduardo.schwartz/articles/70.pdf",
+      "path": "docs/prep/sources/schwartz-moon-2000.pdf",
+      "sha256": "cbfa663fa0c915ef0ed397d077152dd779403e23b7a32dece41db17196171b05",
+      "pages": 14,
+      "type": "Scanned publication PDF from the author's official UCLA faculty site",
+      "visual_checks": [
+        {
+          "physical": 3,
+          "printed": 64,
+          "image": "/tmp/jh-sm-eq.png"
+        },
+        {
+          "physical": 8,
+          "printed": 69,
+          "image": "/tmp/jh-sm-param.png"
+        },
+        {
+          "physical": 11,
+          "printed": 72,
+          "image": "/tmp/jh-sm-shares.png"
+        }
+      ]
+    },
+    "schwartz_moon_2000_text": {
+      "url": "https://www.kellogg.northwestern.edu/faculty/mcdonald/ftp/practicum/papers/rationalpriceintco.pdf",
+      "path": "docs/prep/sources/schwartz-moon-2000-text.pdf",
+      "sha256": "ebd8f138d32f8327a812293bdc4cc3abd9a6035693ce662fc18f7b42ccfceaa3",
+      "type": "Text-bearing copy of the same published primary paper on a Northwestern faculty site",
+      "physical_to_printed_page": "printed = physical + 61",
+      "text_extracted_physical_pages": [
+        2,
+        3,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    "amazon_1998_10k": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/0000891020-99-000375.txt",
+      "accession": "0000891020-99-000375",
+      "period": "1998-12-31",
+      "filed": "1999-03-05",
+      "relevant_printed_page": 42,
+      "relevant_web_lines": [
+        2935,
+        2962
+      ]
+    },
+    "amazon_1999_10k": {
+      "url": "https://www.sec.gov/Archives/edgar/data/1018724/000089102000000622/0000891020-00-000622.txt",
+      "accession": "0000891020-00-000622",
+      "period": "1999-12-31",
+      "relevant_printed_page": 50,
+      "relevant_web_lines": [
+        3524,
+        3562
+      ]
+    },
+    "amazon_stock_split": {
+      "url": "https://ir.aboutamazon.com/faqs/default.aspx",
+      "fact": "2-for-1 split effective September 1, 1999; 3-for-1 split effective January 5, 1999"
+    }
+  },
+  "section_33_2": {
+    "existing_evidence": {
+      "script": "/tmp/p3-ch33-lmm-mc.py",
+      "sha256": "b0ebcd8d4a5fc59b19242e482f481db38ee447a97e5797424a8c4dd5247ad361",
+      "result": "/tmp/p3-ch33-lmm-mc.json",
+      "result_sha256": "152a72d8501a1e63f0b9c441bfe292af12a3d0e27083559cf48abfe94ca72026",
+      "notes": "/tmp/p3-ch33-lmm-mc-notes.md",
+      "implemented_in_scratch": [
+        "Spot-vol bootstrap",
+        "Raw 1/2/3-factor loadings and norm-rounding intervals",
+        "Spot and terminal relative drifts",
+        "Simultaneous fixing-aware joint log Euler and predictor-corrector",
+        "Rolling and terminal discount estimators",
+        "Black vanilla caplet oracle",
+        "Ratchet",
+        "Sticky with explicit assumed K0 >= R0",
+        "Paired PC1/4/16 refinement",
+        "Antithetic-pair SE",
+        "Numeraire and last-forward martingale diagnostics"
+      ],
+      "not_implemented_in_this_scratch": [
+        "Flexicap",
+        "European swaption/frozen-forward approximation/different tenors",
+        "PCA/calibration",
+        "CEV",
+        "Bermudan/LSM/boundary pricing"
+      ],
+      "quoted_scratch_results_only": {
+        "pooled_max_combined_standardized_error_60_table_cells": 1.957234,
+        "pc4_minus_pc16_max_total_abs_ratchet": 7.32e-07,
+        "pc4_minus_pc16_max_total_abs_sticky": 7.48e-06,
+        "classification": "Conditional independent numerical preparation; not product acceptance or deterministic last-digit reproduction"
+      }
+    },
+    "source_contract": {
+      "ratchet_sticky": {
+        "notional": 100,
+        "continuous_flat_zero_rate": 0.05,
+        "accrual_years": 1,
+        "fixings_years": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "payments_years": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "spread_simple_annual": 0.0025,
+        "initial_rate_rule": "R0=exp(0.05)-1",
+        "ratchet_rule": "K[j+1]=R[j]+s",
+        "sticky_rule": "K[j+1]=min(R[j],K[j])+s",
+        "sticky_initial_K0": "Not specified by the recovered primary sources",
+        "source_simulations": 100000,
+        "source_antithetic": true,
+        "source_caplet_standard_error": "About 0.001; source simulation-count convention, seed and price covariance not provided"
+      },
+      "flexicap": {
+        "notional": 100,
+        "annual_pay": true,
+        "flat_term_structure": 0.05,
+        "exercise_rule": "First five chronologically in-the-money caplets are required to be exercised; no exercise after five, clarified by Problem 33.14",
+        "printed_prices_1_2_3_factors": [
+          3.43,
+          3.58,
+          3.61
+        ],
+        "fixed_strike": "Missing",
+        "rate_compounding_of_strike": "Missing",
+        "first_last_eligible_fixing_payment_dates": "Missing; do not transfer ratchet/sticky schedule as a source fact",
+        "calculation_status": "Printed-price reproduction not possible without invented or back-fitted contract inputs"
+      }
+    },
+    "bootstrap_fixture": {
+      "example_spot": [
+        0.24,
+        0.22,
+        0.2
+      ],
+      "example_forward": [
+        0.24,
+        0.1979898987322333,
+        0.15231546211727817
+      ],
+      "table33_1_spot_percent": [
+        15.5,
+        18.25,
+        17.91,
+        17.74,
+        17.27,
+        16.79,
+        16.3,
+        16.01,
+        15.76,
+        15.54
+      ],
+      "table33_1_forward_percent": [
+        15.5,
+        20.64,
+        17.21,
+        17.22,
+        15.25,
+        14.15,
+        12.98,
+        13.81,
+        13.6,
+        13.4
+      ],
+      "equation_equal_annual": "Lambda[k-1]^2 = k*sigma[k]^2-(k-1)*sigma[k-1]^2",
+      "negative_increment_rule": "Reject incompatible inputs; do not clip silently"
+    },
+    "source_formula_caveats": [
+      "Eq33.19 printed lower sum index n is undefined in the local T0..TN notation; mapping to 0 is a mathematical inference, not an official erratum.",
+      "Printed gamma denominator product ends at N whereas the author's solution uses N-1; direct swap product/Jacobian derivation should justify implemented domain.",
+      "Table33.4 raw component norms at rows 1 and 9 do not round exactly to the listed total, but component-rounding norm intervals intersect the total interval. No evidence of an irreconcilable typo."
+    ],
+    "closure_boundary": "Model, caller-specified contracts, bootstrap and independent numerical checks can be completed. Original flexicap three prices and unconditional sticky table reproduction must remain explicitly unverified. Introduction-only CEV/Bermudan discussion may be explanation evidence if the accepted scope explicitly classifies it that way; do not claim a numerical CEV/Bermudan engine from explanations.",
+    "baseline_existing_status": "No private LMM production module found in the investigated checkout; independent /tmp scratch and design exist."
+  },
+  "section_36_4": {
+    "parameters": {
+      "source_printed_page": 69,
+      "original_time_unit": "Quarter; original table prints all rate/volatility labels as /quarter except r=/year. SDE dimensions require distinction between drift per-quarter and diffusion per-sqrt-quarter; retain quarter time for the original dt=1 fixture.",
+      "currency_unit": "USD million; revenue and fixed expenses per quarter; cash and loss carry-forward stocks in USD million",
+      "R0": 356,
+      "L0": 559,
+      "X0": 906,
+      "mu0": 0.11,
+      "sigma0": 0.1,
+      "eta0": 0.03,
+      "rho": 0,
+      "mu_long": 0.015,
+      "sigma_long": 0.05,
+      "corporate_tax_rate": 0.35,
+      "r_annual": 0.05,
+      "r_per_quarter": 0.0125,
+      "kappa": 0.07,
+      "kappa1": 0.07,
+      "kappa2": 0.07,
+      "cogs_alpha": 0.75,
+      "fixed_cost_per_quarter": 75,
+      "other_variable_beta": 0.19,
+      "lambda_revenue": 0.01,
+      "lambda_growth": 0,
+      "horizon_years": 25,
+      "horizon_quarters": 100,
+      "dt_quarters": 1,
+      "terminal_ebitda_multiple": 10,
+      "source_simulations": 100000
+    },
+    "equations_and_accounting": {
+      "process_source_printed_pages": [
+        62,
+        63,
+        64
+      ],
+      "revenue_Q": "dR/R = (mu-lambda_revenue*sigma(t))dt + sigma(t)dW1",
+      "growth_Q": "dmu = [kappa*(mu_long-mu)-lambda_growth*eta(t)]dt + eta(t)dW2; dW1*dW2=rho*dt",
+      "sigma": "sigma(t)=sigma_long+(sigma0-sigma_long)*exp(-kappa1*t)",
+      "eta": "eta(t)=eta0*exp(-kappa2*t)",
+      "revenue_discrete_eq17": "R_next=R*exp((mu-lambda_revenue*sigma-sigma^2/2)*dt+sigma*sqrt(dt)*eps1), using old mu and sigma",
+      "growth_discrete_mean_eq18": "exp(-kappa*dt)*mu + (1-exp(-kappa*dt))*(mu_long-lambda_growth*eta/kappa)",
+      "growth_discrete_noise_printed_eq18": "sqrt((1-exp(-2*kappa*dt))/(2*kappa))*eta*sqrt(dt)*eps2",
+      "growth_discrete_noise_caveat": "Author scanned PDF confirms the extra sqrt(dt) outside the OU variance square-root. For original dt=1 quarter it has no effect. For substeps, exact frozen-eta OU variance is eta^2*(1-exp(-2*kappa*dt))/(2*kappa), with no further dt factor; do not claim the printed arbitrary-dt formula is exact.",
+      "cost": "Cost=(alpha+beta)*R+F",
+      "operating_ebitda": "R-Cost=(1-alpha-beta)*R-F, before cash interest and tax",
+      "retained_cash_interest": "Operating cash is retained and earns the risk-free rate; the paper says to add cash interest to revenues in Eq6.",
+      "pretax_budget": "Operating EBITDA plus interest on retained cash (source does not spell out exact discrete simple/continuous interest timing).",
+      "tax": "Eq6 uses (1-tax_rate); paper sets the effective tax rate to zero while loss carry-forward is positive.",
+      "loss_carry": "dL=-Y*dt if L>0; if L=0, dL=max(-Y*dt,0). In continuous time this preserves L>=0; discrete crossing/partial taxation convention is not explicitly specified.",
+      "cash": "dX=Y*dt; a survivor's terminal distribution includes retained cash. Do not both distribute all intermediate operating cash and count it again in terminal retained cash.",
+      "bankruptcy": "Paper defines bankruptcy at first hit X=0; Hull BS36.1 states cash<0. With discrete simulation, use an explicit convention and stop after default; forced cash exhaustion differs from optimal abandonment.",
+      "terminal": "Paper Eq10 values retained cash at horizon; later adds terminal value equal to 10 times pretax operating profit (EBITDA). Source does not explicitly state quarterly-to-annual EBITDA conversion or whether negative survivor terminal EBITDA is floored.",
+      "net_company_PV": "E_Q[exp(-r_annual*25)*(retained_cash_T+terminal_business_value_T)*survival_indicator] is the bookkeeping construction implied by cash retention plus terminal business value; exact terminal annualization is a stated implementation convention, not an explicit source fixture."
+    },
+    "original_paper_comparison_values": {
+      "enterprise_value_usd_million": 5457,
+      "bankruptcy_probability": 0.279,
+      "source_printed_page": 67,
+      "annual_bankruptcy_percent": [
+        0,
+        0,
+        0,
+        0,
+        3.9,
+        9,
+        6.2,
+        3.5,
+        2,
+        1.1,
+        0.7,
+        0.5,
+        0.3,
+        0.2,
+        0.2,
+        0.1,
+        0.1,
+        0.1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "table4_mean_revenue_usd_million_by_year": {
+        "1": 533,
+        "3": 1017,
+        "5": 1692,
+        "7": 2507,
+        "10": 3810
+      },
+      "share_price_usd": 12.42,
+      "market_price_usd": 76.125,
+      "share_price_source_printed_page": 72,
+      "statement": "Values recovered from source, not recomputed in this investigation. Original MC seed/SE and discrete accounting order are not given."
+    },
+    "capital_structure_recovered": {
+      "source_printed_pages": [
+        70,
+        71,
+        72
+      ],
+      "common_shares_million": 339,
+      "convertible": {
+        "face_usd_million": 1250,
+        "coupon_annual": 0.0475,
+        "maturity": "February 2009",
+        "conversion_shares_million": 16
+      },
+      "senior_discount_note": {
+        "face_usd_million": 265,
+        "maturity": "May 2008"
+      },
+      "employee_options": {
+        "total_million": 76,
+        "low_strike_count_million": 60,
+        "low_strike_average_cap_usd": 7.5,
+        "full_strike_maturity_buckets": "Not listed in the paper"
+      },
+      "exercise_rule": "All ESO/convertibles are assumed exercised/converted at their maturities on survival paths, even when not economically optimal. This is the base-case approximation, not LSM optimal exercise.",
+      "equity_cash": "Subtract principal and after-tax coupon payments to debt holders and add option exercise receipts; include issued shares.",
+      "debt_refinancing_assumption": "Equivalent debt is issued when debt is paid so that enterprise cash/bankruptcy dynamics remain unchanged; capital structure does not alter the simulated total-securityholder cashflows."
+    },
+    "sec_reconciliation": {
+      "actual_1999": {
+        "option_count_million": 80.342,
+        "weighted_average_exercise_usd": 27.755,
+        "source_printed_page": 50
+      },
+      "actual_1998": {
+        "option_count_million": 38.005,
+        "weighted_average_exercise_usd": 13.375,
+        "source_printed_page": 42,
+        "first_five_bucket_option_count_million": 29.905,
+        "first_five_bucket_max_weighted_average_strike_usd": 14.599
+      },
+      "split_adjusted_1998_inference": {
+        "option_count_million": 76.01,
+        "weighted_average_exercise_usd": 6.6875,
+        "first_five_buckets_million": 59.81,
+        "max_first_five_weighted_average_strike_usd": 7.2995,
+        "statement": "1998 table after the Sept1999 2-for-1 split matches the paper's rounded 76M/60M under7.50 statement. This suggests the source-date sentence in the paper may be inconsistent; this is not author-confirmed, and the original ESO input or maturity-offset rule has not been recovered."
+      },
+      "unresolved": [
+        "The paper names December31 1999 ESO data but its aggregate aligns with split-adjusted 1998 data and not the actual 1999 10-K.",
+        "Whether the calculation used the 1998 table or other private input and how remaining lives were advanced to valuation date.",
+        "Exact ESO strike/maturity buckets used by the original run; quarter alignment of debt coupon/maturity dates.",
+        "Exact equity-cashallocation/refinancing schedule from the original code."
+      ]
+    },
+    "closure_boundary": "The stochastic business/accounting model, explicit units and reproducible conventions can be implemented and independently checked, and source enterprise/bankruptcy values can be reported as comparison targets. Original stock $12.42 is not verified until the missing/inconsistent ESO input and equity cash allocation are resolved. Do not back-fit parameters, silently replace the paper's data by true 1999 values, or call unverified original prices N/A.",
+    "baseline_existing_status": "No private Schwartz–Moon/business-state implementation found; this is implementation work as well as source-input work."
+  },
+  "baseline_commit": "0d07def7",
+  "current_implementation_scope": {
+    "33.2": {
+      "implementation": "hullkit/src/hullkit/_bgm_lesson.py",
+      "tests": [
+        "hullkit/tests/test_bgm_lesson.py"
+      ],
+      "status": "independently_reviewed_declared_scope",
+      "limitation": "単一curve・正の単利forwardのLMM。rolling/terminal/payment-bond drift、reset freeze、割引、caplet/ratchet/sticky/最初の5回のITM flexicap、frozen-forward swaption/PCAをcallerが固定した契約で検証する。sticky K0とflexicap strike/対象fixing/payment不足により原典3.43/3.58/3.61等の価格は未再現。CEV/Bermudanは紹介のみで、市場fitや多curve拡張は対象外。"
+    },
+    "36.4": {
+      "implementation": "hullkit/src/hullkit/_business_valuation_lesson.py",
+      "tests": [
+        "hullkit/tests/test_business_valuation_lesson.py"
+      ],
+      "status": "independently_reviewed_declared_scope",
+      "limitation": "原論文から回収した四半期パラメータを用い、売上log Euler・成長率OU・税損失繰越・現金・倒産・終価と希薄化を検証する。会計の売上時点/終価利益期間と資本構成はcaller入力。dt=1の原著OUと細分時の正しい分散を区別。原典5457M/27.9%/株価12.42はaccounting・従業員optionの基準日/満期等が確定せず未再現。合成契約/補助入力を原典価格の再現としない。"
+    }
+  }
+}

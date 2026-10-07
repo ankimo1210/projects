@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **261**
+- accepted: **306**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 45 |
+| unreviewed | 0 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 261 |
+| accepted | 306 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -50,15 +50,15 @@
 | 26 | 17 | 0 | 0 | 0 | 17 | 0 |
 | 27 | 8 | 0 | 0 | 0 | 8 | 0 |
 | 28 | 8 | 0 | 0 | 0 | 8 | 0 |
-| 29 | 4 | 4 | 0 | 0 | 0 | 0 |
-| 30 | 4 | 4 | 0 | 0 | 0 | 0 |
-| 31 | 5 | 5 | 0 | 0 | 0 | 0 |
-| 32 | 7 | 7 | 0 | 0 | 0 | 0 |
-| 33 | 3 | 3 | 0 | 0 | 0 | 0 |
-| 34 | 6 | 6 | 0 | 0 | 0 | 0 |
-| 35 | 8 | 8 | 0 | 0 | 0 | 0 |
-| 36 | 5 | 5 | 0 | 0 | 0 | 0 |
-| 37 | 3 | 3 | 0 | 0 | 0 | 0 |
+| 29 | 4 | 0 | 0 | 0 | 4 | 0 |
+| 30 | 4 | 0 | 0 | 0 | 4 | 0 |
+| 31 | 5 | 0 | 0 | 0 | 5 | 0 |
+| 32 | 7 | 0 | 0 | 0 | 7 | 0 |
+| 33 | 3 | 0 | 0 | 0 | 3 | 0 |
+| 34 | 6 | 0 | 0 | 0 | 6 | 0 |
+| 35 | 8 | 0 | 0 | 0 | 8 | 0 |
+| 36 | 5 | 0 | 0 | 0 | 5 | 0 |
+| 37 | 3 | 0 | 0 | 0 | 3 | 0 |
 
 ## 全登録項目
 
@@ -325,48 +325,48 @@
 | 28.6 | 28 | section | Black’s Model Revisited | accepted |
 | 28.7 | 28 | section | Option to Exchange One Asset for Another | accepted |
 | 28.8 | 28 | section | Change of Numeraire | accepted |
-| 29.1 | 29 | section | Bond Options | unreviewed |
-| 29.2 | 29 | section | Interest Rate Caps and Floors | unreviewed |
-| 29.3 | 29 | section | European Swap Options | unreviewed |
-| 29.4 | 29 | section | Hedging Interest Rate Derivatives | unreviewed |
-| 30.1 | 30 | section | Convexity Adjustments | unreviewed |
-| 30.2 | 30 | section | Timing Adjustments | unreviewed |
-| 30.3 | 30 | section | Quantos | unreviewed |
-| 30.appendix | 30 | appendix | Proof of the Convexity Adjustment Formula | unreviewed |
-| 31.1 | 31 | section | Background | unreviewed |
-| 31.2 | 31 | section | One-Factor Models | unreviewed |
-| 31.3 | 31 | section | Real-World vs. Risk-Neutral Processes | unreviewed |
-| 31.4 | 31 | section | Estimating Parameters | unreviewed |
-| 31.5 | 31 | section | More Sophisticated Models | unreviewed |
-| 32.1 | 32 | section | Extensions of Equilibrium Models | unreviewed |
-| 32.2 | 32 | section | Options on Bonds | unreviewed |
-| 32.3 | 32 | section | Volatility Structures | unreviewed |
-| 32.4 | 32 | section | Interest Rate Trees | unreviewed |
-| 32.5 | 32 | section | A General Tree-Building Procedure | unreviewed |
-| 32.6 | 32 | section | Calibration | unreviewed |
-| 32.7 | 32 | section | Hedging Using a One-Factor Model | unreviewed |
-| 33.1 | 33 | section | The Heath, Jarrow, and Morton Model | unreviewed |
-| 33.2 | 33 | section | The BGM Model | unreviewed |
-| 33.3 | 33 | section | Agency Mortgage-Backed Securities | unreviewed |
-| 34.1 | 34 | section | Variations on the Vanilla Deal | unreviewed |
-| 34.2 | 34 | section | Compounding Swaps | unreviewed |
-| 34.3 | 34 | section | Currency and Nonstandard Swaps | unreviewed |
-| 34.4 | 34 | section | Equity Swaps | unreviewed |
-| 34.5 | 34 | section | Swaps with Embedded Options | unreviewed |
-| 34.6 | 34 | section | Other Swaps | unreviewed |
-| 35.1 | 35 | section | Agricultural Commodities | unreviewed |
-| 35.2 | 35 | section | Metals | unreviewed |
-| 35.3 | 35 | section | Energy Products | unreviewed |
-| 35.4 | 35 | section | Modeling Commodity Prices | unreviewed |
-| 35.5 | 35 | section | Weather Derivatives | unreviewed |
-| 35.6 | 35 | section | Insurance Derivatives | unreviewed |
-| 35.7 | 35 | section | Pricing Weather and Insurance Derivatives | unreviewed |
-| 35.8 | 35 | section | How an Energy Producer can Hedge Risks | unreviewed |
-| 36.1 | 36 | section | Capital Investment Appraisal | unreviewed |
-| 36.2 | 36 | section | Extension of the Risk-Neutral Valuation Framework | unreviewed |
-| 36.3 | 36 | section | Estimating the Market Price of Risk | unreviewed |
-| 36.4 | 36 | section | Application to the Valuation of a Business | unreviewed |
-| 36.5 | 36 | section | Evaluating Options in an Investment Opportunity | unreviewed |
-| 37.1 | 37 | section | Lessons for All Users of Derivatives | unreviewed |
-| 37.2 | 37 | section | Lessons for Financial Institutions | unreviewed |
-| 37.3 | 37 | section | Lessons for Nonfinancial Corporations | unreviewed |
+| 29.1 | 29 | section | Bond Options | accepted |
+| 29.2 | 29 | section | Interest Rate Caps and Floors | accepted |
+| 29.3 | 29 | section | European Swap Options | accepted |
+| 29.4 | 29 | section | Hedging Interest Rate Derivatives | accepted |
+| 30.1 | 30 | section | Convexity Adjustments | accepted |
+| 30.2 | 30 | section | Timing Adjustments | accepted |
+| 30.3 | 30 | section | Quantos | accepted |
+| 30.appendix | 30 | appendix | Proof of the Convexity Adjustment Formula | accepted |
+| 31.1 | 31 | section | Background | accepted |
+| 31.2 | 31 | section | One-Factor Models | accepted |
+| 31.3 | 31 | section | Real-World vs. Risk-Neutral Processes | accepted |
+| 31.4 | 31 | section | Estimating Parameters | accepted |
+| 31.5 | 31 | section | More Sophisticated Models | accepted |
+| 32.1 | 32 | section | Extensions of Equilibrium Models | accepted |
+| 32.2 | 32 | section | Options on Bonds | accepted |
+| 32.3 | 32 | section | Volatility Structures | accepted |
+| 32.4 | 32 | section | Interest Rate Trees | accepted |
+| 32.5 | 32 | section | A General Tree-Building Procedure | accepted |
+| 32.6 | 32 | section | Calibration | accepted |
+| 32.7 | 32 | section | Hedging Using a One-Factor Model | accepted |
+| 33.1 | 33 | section | The Heath, Jarrow, and Morton Model | accepted |
+| 33.2 | 33 | section | The BGM Model | accepted |
+| 33.3 | 33 | section | Agency Mortgage-Backed Securities | accepted |
+| 34.1 | 34 | section | Variations on the Vanilla Deal | accepted |
+| 34.2 | 34 | section | Compounding Swaps | accepted |
+| 34.3 | 34 | section | Currency and Nonstandard Swaps | accepted |
+| 34.4 | 34 | section | Equity Swaps | accepted |
+| 34.5 | 34 | section | Swaps with Embedded Options | accepted |
+| 34.6 | 34 | section | Other Swaps | accepted |
+| 35.1 | 35 | section | Agricultural Commodities | accepted |
+| 35.2 | 35 | section | Metals | accepted |
+| 35.3 | 35 | section | Energy Products | accepted |
+| 35.4 | 35 | section | Modeling Commodity Prices | accepted |
+| 35.5 | 35 | section | Weather Derivatives | accepted |
+| 35.6 | 35 | section | Insurance Derivatives | accepted |
+| 35.7 | 35 | section | Pricing Weather and Insurance Derivatives | accepted |
+| 35.8 | 35 | section | How an Energy Producer can Hedge Risks | accepted |
+| 36.1 | 36 | section | Capital Investment Appraisal | accepted |
+| 36.2 | 36 | section | Extension of the Risk-Neutral Valuation Framework | accepted |
+| 36.3 | 36 | section | Estimating the Market Price of Risk | accepted |
+| 36.4 | 36 | section | Application to the Valuation of a Business | accepted |
+| 36.5 | 36 | section | Evaluating Options in an Investment Opportunity | accepted |
+| 37.1 | 37 | section | Lessons for All Users of Derivatives | accepted |
+| 37.2 | 37 | section | Lessons for Financial Institutions | accepted |
+| 37.3 | 37 | section | Lessons for Nonfinancial Corporations | accepted |

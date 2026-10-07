@@ -1,0 +1,283 @@
+{
+  "section_contracts": {
+    "35.4": {
+      "implementation": "hullkit/src/hullkit/_commodity_foundations.py",
+      "tests": [
+        "hullkit/tests/test_commodity_foundations_models.py"
+      ]
+    },
+    "35.5": {
+      "implementation": "hullkit/src/hullkit/_commodity_foundations.py",
+      "tests": [
+        "hullkit/tests/test_commodity_foundations_weather_cash.py"
+      ]
+    },
+    "35.6": {
+      "implementation": "hullkit/src/hullkit/_commodity_foundations.py",
+      "tests": [
+        "hullkit/tests/test_commodity_foundations_insurance.py"
+      ]
+    },
+    "35.7": {
+      "implementation": "hullkit/src/hullkit/_commodity_foundations.py",
+      "tests": [
+        "hullkit/tests/test_commodity_foundations_weather_value.py"
+      ]
+    },
+    "35.8": {
+      "implementation": "hullkit/src/hullkit/_commodity_foundations.py",
+      "tests": [
+        "hullkit/tests/test_commodity_foundations_joint_hedge.py"
+      ]
+    },
+    "36.1": {
+      "implementation": "hullkit/src/hullkit/_real_options_foundations.py",
+      "tests": [
+        "hullkit/tests/test_real_options_foundations_appraisal.py"
+      ]
+    },
+    "36.2": {
+      "implementation": "hullkit/src/hullkit/_real_options_foundations.py",
+      "tests": [
+        "hullkit/tests/test_real_options_foundations_rental.py"
+      ]
+    },
+    "36.3": {
+      "implementation": "hullkit/src/hullkit/_real_options_foundations.py",
+      "tests": [
+        "hullkit/tests/test_real_options_foundations_risk_price.py"
+      ]
+    },
+    "36.5": {
+      "implementation": "hullkit/src/hullkit/_real_options_foundations.py",
+      "tests": [
+        "hullkit/tests/test_real_options_foundations_investment.py"
+      ]
+    },
+    "37.1": {
+      "implementation": "hullkit/src/hullkit/_mishap_foundations.py",
+      "tests": [
+        "hullkit/tests/test_mishap_foundations_lessons.py"
+      ]
+    },
+    "36.4": {
+      "implementation": "hullkit/src/hullkit/_business_valuation_lesson.py",
+      "tests": [
+        "hullkit/tests/test_business_valuation_lesson.py"
+      ]
+    }
+  },
+  "calculation_rows": {
+    "35.4": [
+      "§35.4",
+      "`_commodity_foundations.py`",
+      "Ex35.1 .034/20.4%、Ex35.2 17.729k、季節6値、Fig35.1/2の分岐/shift/価格、Fig35.3中間値とD/H/I行使。独立全経路とOU密度積分・jump MC",
+      "計算完了。原典root1.48対1.501100501、年2最下11.10対11.094790584、I8.90対8.905209416は表示精度で不一致。複雑モデルの全面較正は範囲外。"
+    ],
+    "35.5": [
+      "§35.5",
+      "`_commodity_foundations.py`",
+      "56°F/HDD9/CDD0、HDD820→1.2M/cap1.5M/upper850。独立日別台帳とcall spread/温度換算",
+      "計算完了。観測期間/stationはcaller入力、Celsius換算ではbase/tickも変える。市場仕様は原典時点。"
+    ],
+    "35.6": [
+      "§35.6",
+      "`_commodity_foundations.py`",
+      "100M exposure→retained30M、loss50M→15M、30–40M layer10MとCAT principal10M。独立3領域台帳/call spread",
+      "計算完了。原典reinsurerのlong/short文は不整合、protection買い手の受取とwriterの逆符号を固定。triggerはcaller入力。"
+    ],
+    "35.7": [
+      "§35.7",
+      "`_commodity_foundations.py`",
+      "d1 .2376/d2 .1676、250900/243400、mean697→180400/175100。独立密度積分/MCと支払割引",
+      "計算完了。非取引指数・系統リスク0の本文仮定に条件付き、trend原データはなく697を本文入力として使う。log-SDへ√年数を掛けない。"
+    ],
+    "35.8": [
+      "§35.8",
+      "`_commodity_foundations.py`",
+      "本文にデータ/数値なし。合成a+bP+cT、独立共分散正規方程式とtrain/holdoutの単独/共同hedge",
+      "計算完了。rank不足では一意な契約数が出ないため拒否。train推定をholdoutで固定し、Q pricing/完全hedgeを主張しない。"
+    ],
+    "36.1": [
+      "§36.1",
+      "`_real_options_foundations.py`",
+      "NPV−11.53M、call.545、要求call55.96%/put−70.4%。独立cash再投資/線形replication/root",
+      "計算完了。P期待CFをrequired rateで割引、optionとbaseの割引率を同一視しない。比較企業betaの推定は本文データなし。"
+    ],
+    "36.2": [
+      "§36.2",
+      "`_real_options_foundations.py`",
+      "A4.5355/Q drift6%/E rent33.82/expected1.5015M/PV1.3586M。独立lognormal密度/前払CF",
+      "計算完了。λはcaller仮定/推定、非取引資産から無裁定だけでは一意でない。annuityはt=2時点、optionと二重割引しない。"
+    ],
+    "36.3": [
+      "§36.3",
+      "`_real_options_foundations.py`",
+      "ρ.3/market vol20%/premium5%→λ.075。独立OLSと共分散、quarterly→annual4",
+      "計算完了。sales原データ/proxy推定の検証ではない。market premiumとvolの年率/期間単位を合わせる。"
+    ],
+    "36.4": [
+      "§36.4",
+      "—",
+      "BS36.1 sales356M/cash906M/loss carry559M/tax35%/25年/terminal pretax×10を原典確認。株価12.42は入力不足で未再現",
+      "σ(t), η(t), κ, 長期/初期growth, revenueのλ, r, 株数, 転換・従業員option/会計条件が未提示。12.42への逆合わせ・代替値の仮定をしない。"
+    ],
+    "36.5": [
+      "§36.5",
+      "`_real_options_foundations.py`",
+      "CF4/6/8M、PV14.46M/NPV−.54M、撤退1.94M/NPV1.40M、拡張1.06M/NPV.52Mと全節点。独立512方策×27経路、複合4状態。共同option3.217896Mは追加検算",
+      "計算完了。当年CF後/不可逆4状態/非比例費用を明示。単独印刷値は一致。共同3.217896M・初期拡張は独立方策でも一致し、p812脚注の相互作用なしを再現できない。縮小/延期/寿命延長は本文入力なし。"
+    ],
+    "37.1": [
+      "§37.1",
+      "`_mishap_foundations.py`",
+      "4連勝1/16・16人の期待人数1、20株平均10%/vol14.7%。追加any-success .64392587、独立二項列挙/共分散行列/MC6SE",
+      "計算完了。独立trial/等相関・同vol・等weightの条件付き。期待人数1は成功者1人の保証ではない。歴史的損失/和解/支援は集計せず、§37.2–3の統制説明は保留。"
+    ]
+  },
+  "numerical_requirements": {
+    "35.1": [],
+    "35.2": [],
+    "35.3": [],
+    "35.4": [
+      "D35.4-01",
+      "D35.4-02",
+      "D35.4-03",
+      "D35.4-04",
+      "D35.4-05"
+    ],
+    "35.5": [
+      "D35.5-01",
+      "D35.5-02"
+    ],
+    "35.6": [
+      "D35.6-01",
+      "D35.6-02"
+    ],
+    "35.7": [
+      "D35.7-01",
+      "D35.7-02"
+    ],
+    "35.8": [
+      "D35.8-01",
+      "D35.8-02"
+    ],
+    "36.1": [
+      "D36.1-01",
+      "D36.1-02"
+    ],
+    "36.2": [
+      "D36.2-01",
+      "D36.2-02"
+    ],
+    "36.3": [
+      "D36.3-01",
+      "D36.3-02"
+    ],
+    "36.4": [
+      "D36.4-01",
+      "D36.4-02"
+    ],
+    "36.5": [
+      "D36.5-02",
+      "D36.5-03",
+      "D36.5-04"
+    ],
+    "37.1": [
+      "D37.1-02"
+    ],
+    "37.2": [],
+    "37.3": []
+  },
+  "non_numerical_reasons": {
+    "D35.1-01": "在庫比率の単位と短期価格感応度の経済的理由を説明する要求。通常20–40%は刊行時点の記述統計で、在庫・価格系列によるvol推定や価格pinは原典にない。",
+    "D35.1-02": "収穫暦、貯蔵、予期しない天候jump、需給による平均回帰、飼料と家畜の連関の説明要求。確率モデルのparameterや価格計算入力を与えた要求ではない。",
+    "D35.2-01": "investment/consumption assetの分類、在庫・保管・recyclingとcarry/便益の役割を説明する要求。20年10%は仮想回収率で、金属固有の価格再計算を要求しない。",
+    "D35.2-02": "無裁定の主張を測度・carry・取引制約付きで読む説明要求。Pの統計的平均回帰を全面禁止する数値モデルや実証データは原典にない。",
+    "D35.3-01": "grade、location、時刻、受渡期間と数量単位の契約比較を説明する要求。原典時点の需要・lotの仕様を現在の市場価格pinにしない。",
+    "D35.3-02": "5×8/5×16/7×24の受渡時間とdaily/monthly行使、swingの日次/月次/変更回数制約を説明する要求。swing価格に必要な契約・市場入力はなく、追加pricing実装は原典受入範囲外。",
+    "D35.3-03": "需給、平均回帰、季節性、貯蔵制約、jumpの異なる機構を説明する要求。原典の変動例や制度史は記述で、negative priceやspikeの較正parameterはない。",
+    "D35.7-03": "historical mean、trend、forecast変更と推定/予測時点の区別を説明する要求。50年の原観測列・回帰条件は未保有のためtrend推定は数値verifiedにしない。本文697を入力とした期待payoff/PVはD35.7-02で検証する。",
+    "D36.3-03": "traded price、initial rate curve、futures curveからQを推定・較正する代替経路の説明要求。Pのsales回帰とQ較正の違いを確認し、新しい共通価格モデルの実装完了とはしない。",
+    "D36.4-03": "回収した原論文の入力と、未確定の会計・株数/転換・従業員optionの基準日を説明する要求。12.42の逆合わせをせず、数値モデルD36.4-01/02の検証と原典株価の再現を区別する。",
+    "D36.5-01": "5種類の実物option、負となりうるstrike、費用/行使時点の対応を説明する要求。原典で数値入力がある撤退/拡張はD36.5-02/03で検証し、入力のない縮小/延期/延長を実装済みとはしない。",
+    "D37.1-01": "risk limit、日次risk/P&L照合、利益を出した違反の一貫した扱いを説明する組織統制要求。事故額の再推定や本番統制APIの数値検証を要求しない。",
+    "D37.1-03": "VaR/ESを価格・basis・liquidity・fundingのstressで補完し、長期履歴/proxyの限界を説明する要求。共通stress入力や単一の印刷価格はなく、一般VaR実装を統制の実証へ読み替えない。",
+    "D37.2-01": "職務分離、position照合、model/system validationと高収益への例外禁止を説明するガバナンス要求。数値価格の再現や組織運用の実装要件ではない。",
+    "D37.2-02": "初日利益のmodel依存、valuation reserve/認識/報酬/適合性/hidden riskを区別する説明要求。仮想10Mには価格モデル入力がなく、初日利益を計算pinや現行会計判断にしない。",
+    "D37.2-03": "LTCMの取引符号からbasis・市場liquidity・margin・funding rolloverの因果経路を説明する要求。事件の因果を独立実証したものではなく、損失価格の再推定はしない。",
+    "D37.2-04": "透明性、証券化の誘因、deferred/clawback報酬、独立risk部門と意思決定経路の説明要求。歴史的損失/制度を現在の規制適用や数値モデル検証へ置換しない。",
+    "D37.3-01": "payoff、取引理由、独立valuationを承認可能な単位・時点で説明する要求。事故契約を再価格する入力は原典にない。",
+    "D37.3-02": "exposure/notional/limitでhedgeからspeculationへの変化とdouble-upを監視する説明要求。損失回復の賭けをrisk減少とせず、契約単体の利益を数値受入判定にしない。",
+    "D37.3-03": "treasuryのprofit目標と本業込みrisk減少の目的の衝突を説明する要求。約50%は対称的変化の説明用目安で、全分布の確率定理や観測標本のpinではない。"
+  },
+  "limitations": {
+    "35.1": "stocks-to-useは同じ重量単位の在庫/年使用量で無次元。20–40%は原典時点の記述で、現在の市場や全商品の固定基準ではない。価格/在庫系列の実証やvol推定は未実施。",
+    "35.2": "投資/消費金属、取引制約、carry、P/Qを区別する。20年10%は説明用仮想回収率で年率化しない。原典の無裁定論をPの平均回帰の普遍的禁止へ広げず、現行市場/規制の確認を行ったとはしない。",
+    "35.3": "数量、grade、場所、時刻、受渡期間を固定する。需要・lot・control areas等は原典時点の仕様/統計。swing価格、負価格モデル、全蓄電技術の評価は対象外で、説明を計算verifiedにしない。",
+    "35.4": "決定論的金利でfuture=Q期待spotとし、普通到達確率で較正する。印刷root1.48対計算1.501100501、年2最下11.10対11.094790584、I8.90対8.905209416は不一致を明示。log modelは非正価格を扱えない。jump期待倍率/複雑SDEの係数検証までで、全面市場較正・jump木・非負variance simulatorは未実施。",
+    "35.5": "入力温度/baseはFahrenheit、Celsiusでは65°F=18.333…°Cとtickの9/5換算が必要。station/観測期間/支払日はcaller入力。OTC/CMEの仕様は原典時点。payoff算術の検証で、市場premiumや所在地basisの消滅は主張しない。",
+    "35.6": "protection買い手の受取とwriterの逆符号を固定し、原典のlong/short文章不整合を残す。binary境界、CAT trigger/couponはterm sheet入力で、実装は元本layerの保存まで。歴史的災害損失・premium・想定を現在価格へ再推定しない。",
+    "35.7": "nontraded指数の系統リスク0という本文仮定付き。log-SD.07は対象月累計の分布で、余分な√年数を掛けない。trend原系列なし、697は本文入力でtrend推定未verified。期待値から丸め前に割引し、Feb2018/2019条件を現在値としない。",
+    "35.8": "原典に実データ/推定係数/印刷価格はなく合成回帰と独立holdout検証である。rank不足を拒否し、係数はtrainingで推定後固定する。単位/tick/entryを合わせ、P回帰をQ pricingや完全hedgeへ読み替えない。",
+    "36.1": "P期待cashを指定連続required rateで割引し、初期投資を別に引く。optionと基礎事業のrateを同一視しない。二状態call/putはCh13のr4%・T3か月に条件付きで、比較企業betaの実データ推定は未実施。",
+    "36.2": "非取引賃料のλはcaller仮定/推定で無裁定だけでは一意でない。独立Brownian因子とloadings/λを同じ座標に置く。annuityはt=2時点で年払いadvance、行使後賃料固定、t=0への割引は一度。",
+    "36.3": "premiumとmarket volは同じ年率/期間単位で、四半期→年率SDはiid仮定の√4換算。合成相関/OLSの検証で、sales原データ/proxy推定は未検証。λ=0は選んだ仮定であり、P推定とQ較正を区別する。",
+    "36.4": "原論文から回収した四半期パラメータを用い、売上log Euler・成長率OU・税損失繰越・現金・倒産・終価と希薄化を検証する。会計の売上時点/終価利益期間と資本構成はcaller入力。dt=1の原著OUと細分時の正しい分散を区別。原典5457M/27.9%/株価12.42はaccounting・従業員optionの基準日/満期等が確定せず未再現。合成契約/補助入力を原典価格の再現としない。",
+    "36.5": "当年CF支払後の価値/行使、初期投資、不可逆4状態、即時拡張費用を分離する。単独印刷値と行使集合は一致。共同追加価値3.217896081Mは追加検算で、p812脚注の干渉なしはこの4状態条件では未再現。非比例CFを別入力とし、縮小/延期/延長・一般LSMは説明まで。",
+    "37.1": "連勝はtrial/manager独立、分散効果は同vol・等weight・等相関に条件付き。期待人数1は必ず1人の保証ではない。歴史的損失/和解/支援を足さず、統制の実証や将来の相関安定性を数値pinで証明しない。",
+    "37.2": "因果経路と取引符号の原典照合までで、事件因果の独立実証は未実施。仮想初日利益10Mにpricing入力なし。損失/和解/支援・市場liquidity/fundingを区別し、現行Basel/会計/販売/報酬規制の適用助言は対象外。",
+    "37.3": "本業exposureとhedgeの数量/通貨/時点をそろえ、契約単体のprofitで判定しない。約50%は対称的変化の説明用目安で全分布の確率定理ではない。事故の再価格・実組織統制・現行制度の検証は対象外。"
+  },
+  "samples": {
+    "35": "35.4",
+    "36": "36.5",
+    "37": "37.1"
+  },
+  "baseline_pending_scope": {
+    "36.4": {
+      "status": "unverified_missing_inputs",
+      "numerical_requirements": [
+        "D36.4-01",
+        "D36.4-02"
+      ],
+      "reason": "Schwartz–Moonの原典モデルと同じ会計・希薄化条件を固定できず、確率過程と会計pathの数値検証は未実施。説明の完成で数値verifiedへ変更しない。",
+      "printed_value": {
+        "value": 12.42,
+        "unit": "USD/share",
+        "as_of": "1999年末",
+        "status": "not_reproduced"
+      },
+      "missing_inputs": [
+        "σ(t)とη(t)の関数形・初期値・長期値",
+        "κと初期/長期growth",
+        "売上のmarket price of risk λR",
+        "risk-free rateと時間単位",
+        "株数と転換債・従業員optionの条件",
+        "四半期会計/資金調達/倒産/terminal equityの更新規約"
+      ],
+      "preserved_scope": "D36.4-01/02は数値要求として保持し、12.42へ逆合わせしない。D36.4-03は入力列挙・原論文版/条件の説明として扱う。"
+    }
+  },
+  "current_calculation_rows": {
+    "36.4": [
+      "§36.4",
+      "`_business_valuation_lesson.py`",
+      "原著quarterパラメータ、売上/成長率のmoment、四半期budget/損失繰越/税/cash/吸収倒産、割引終価/明示資本構成、antithetic標準誤差の独立検証",
+      "原論文から回収した四半期パラメータを用い、売上log Euler・成長率OU・税損失繰越・現金・倒産・終価と希薄化を検証する。会計の売上時点/終価利益期間と資本構成はcaller入力。dt=1の原著OUと細分時の正しい分散を区別。原典5457M/27.9%/株価12.42はaccounting・従業員optionの基準日/満期等が確定せず未再現。合成契約/補助入力を原典価格の再現としない。"
+    ]
+  },
+  "completed_model_scope": {
+    "36.4": {
+      "status": "verified_declared_model_scope",
+      "numerical_requirements": [
+        "D36.4-01",
+        "D36.4-02"
+      ],
+      "tests_passed": 20,
+      "independent_review": "PASS; Critical 0 / Important 0",
+      "original_prices": "not_reproduced_unconditionally",
+      "limitation": "原論文から回収した四半期パラメータを用い、売上log Euler・成長率OU・税損失繰越・現金・倒産・終価と希薄化を検証する。会計の売上時点/終価利益期間と資本構成はcaller入力。dt=1の原著OUと細分時の正しい分散を区別。原典5457M/27.9%/株価12.42はaccounting・従業員optionの基準日/満期等が確定せず未再現。合成契約/補助入力を原典価格の再現としない。"
+    }
+  }
+}

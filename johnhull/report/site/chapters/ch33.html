@@ -1,0 +1,401 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hull Ch33 補足教材</title><style>/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+.lesson{margin:2rem 0;padding:1.4rem;background:var(--surface);border-radius:10px}
+    .requirement{padding:.6rem 0;border-bottom:1px solid var(--rule)}
+    .caution{padding:.8rem;border-left:3px solid var(--series-2)}
+    p,li{line-height:1.85} table{width:100%;border-collapse:collapse}
+    th,td{padding:.5rem;text-align:left;border-bottom:1px solid var(--rule)}
+    pre{overflow-x:auto} .lesson{overflow-wrap:anywhere} mjx-container{overflow-x:auto;max-width:100%}
+    nav{line-height:2} .wrap{max-width:1060px;margin:auto;padding:1.3rem}
+    </style><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><body><main class="wrap"><nav><a href="ch01.html">Ch1</a> · <a href="ch02.html">Ch2</a> · <a href="ch03.html">Ch3</a> · <a href="ch04.html">Ch4</a> · <a href="ch05.html">Ch5</a> · <a href="ch06.html">Ch6</a> · <a href="ch07.html">Ch7</a> · <a href="ch08.html">Ch8</a> · <a href="ch09.html">Ch9</a> · <a href="ch10.html">Ch10</a> · <a href="ch11.html">Ch11</a> · <a href="ch12.html">Ch12</a> · <a href="ch13.html">Ch13</a> · <a href="ch14.html">Ch14</a> · <a href="ch15.html">Ch15</a> · <a href="ch16.html">Ch16</a> · <a href="ch17.html">Ch17</a> · <a href="ch18.html">Ch18</a> · <a href="ch19.html">Ch19</a> · <a href="ch20.html">Ch20</a> · <a href="ch21.html">Ch21</a> · <a href="ch22.html">Ch22</a> · <a href="ch23.html">Ch23</a> · <a href="ch24.html">Ch24</a> · <a href="ch25.html">Ch25</a> · <a href="../exotics.html">Ch26</a> · <a href="../numerics.html">Ch27</a> · <a href="../exotics.html">Ch28</a> · <a href="ch29.html">Ch29</a> · <a href="ch30.html">Ch30</a> · <a href="ch31.html">Ch31</a> · <a href="ch32.html">Ch32</a> · <a href="ch33.html">Ch33</a> · <a href="ch34.html">Ch34</a> · <a href="ch35.html">Ch35</a> · <a href="ch36.html">Ch36</a> · <a href="ch37.html">Ch37</a> · <a href="../index.html">ポータル</a> · <a href="../../../book/_build/html/index.html">Book</a></nav><nav><a href="#section-33-1">§33.1</a>　<a href="#section-33-2">§33.2</a>　<a href="#section-33-3">§33.3</a></nav><h1>Ch33 節別補足教材</h1>
+<p>刊行時点の原典本文を学ぶ。現在の市場条件や法令の適用はこの教材の対象に含めない。</p>
+<section class="lesson" id="section-33-1">
+<h2>§33.1 The Heath, Jarrow, and Morton Model</h2>
+<p>出典: Hull 11e Global Edition pp.755–758。</p>
+<p>満期別債券ボラティリティから瞬間フォワードのドリフトを無裁定で決める。多因子では各因子の寄与を足し合わせる。一般の履歴依存モデルは非Markovであり、少数の状態だけで木を再結合できるとは限らない。Ho–LeeとHull–Whiteはボラ構造を制限した特殊例になる。</p>
+<h3>要点の読み方</h3>
+<p>HJMは満期別の瞬間forward <span class="math inline"><span data-source-tex="f(t,T)=-\partial_T\log P(t,T)">\(f(t,T)=-\partial_T\log P(t,T)\)</span></span>を状態とする。Bondのsigned diffusionを<span class="math inline"><span data-source-tex="v(t,T)">\(v(t,T)\)</span></span>と書けば</p>
+<div class="math block">
+<span data-source-tex="dP/P=r\,dt+v^\top dW,\quad v(t,t)=0,\quad
+v(t,T)=-\int_t^T\sigma(t,u)du,\quad \sigma=-\partial_Tv.">\(dP/P=r\,dt+v^\top dW,\quad v(t,t)=0,\quad
+v(t,T)=-\int_t^T\sigma(t,u)du,\quad \sigma=-\partial_Tv.\)</span>
+</div>
+<p>因子相関行列を<span class="math inline"><span data-source-tex="\rho">\(\rho\)</span></span>とするとQ driftは</p>
+<div class="math block">
+<span data-source-tex="\mu(t,T)=\sigma(t,T)^\top\rho\int_t^T\sigma(t,u)du.">\(\mu(t,T)=\sigma(t,T)^\top\rho\int_t^T\sigma(t,u)du.\)</span>
+</div>
+<p>独立因子なら各因子の<span class="math inline"><span data-source-tex="\sigma_k\int\sigma_k">\(\sigma_k\int\sigma_k\)</span></span>の和であり、bond拡散の負符号をforward拡散へそのまま持ち込まない。</p>
+<p>Finite continuous forward <span class="math inline"><span data-source-tex="F(t;S,U)=\log[P(t,S)/P(t,U)]/(U-S)">\(F(t;S,U)=\log[P(t,S)/P(t,U)]/(U-S)\)</span></span>では</p>
+<div class="math block">
+<span data-source-tex="\mu_F=\frac{v_U^\top\rho v_U-v_S^\top\rho v_S}{2(U-S)},\quad
+\sigma_F=\frac{v_S-v_U}{U-S}.">\(\mu_F=\frac{v_U^\top\rho v_U-v_S^\top\rho v_S}{2(U-S)},\quad
+\sigma_F=\frac{v_S-v_U}{U-S}.\)</span>
+</div>
+<p>これは§33.2のfinite-tenor<strong>単利</strong>forwardとは異なる。区間を縮めた瞬間forwardの極限も別に確認する。Timeは年、normal forward diffusionは年率金利／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>である。</p>
+<p><span class="math inline"><span data-source-tex="\sigma(t,T)">\(\sigma(t,T)\)</span></span>がconstantならHo–Lee、<span class="math inline"><span data-source-tex="\sigma e^{-a(T-t)}">\(\sigma e^{-a(T-t)}\)</span></span>ならHWの特殊例に対応し、独立Gaussian短期金利のbond／option解析と割引MCを比較する。Path計算では時間Euler／left-time割引と、満期方向のbond再構成求積に別の誤差がある。刻みを減らして収束を確認する。</p>
+<p>一般HJMは履歴依存で、有限Brownian因子数がscalar Markov short rateを保証しない。同じ<span class="math inline"><span data-source-tex="r_t">\(r_t\)</span></span>でもforward slopeの履歴が違えば次のdriftが変わる例を示す。一般二分岐の30段<span class="math inline"><span data-source-tex="\,2^{30}">\(\,2^{30}\)</span></span>は約10億状態となり、少数stateの再結合木が常に可能とはしない。Batched実装はdeterministic volに限定し、一般の履歴依存volはper-path callbackの範囲とする。本文に価格の印刷pinはない。</p>
+<div class="requirement" id="D33.1-01">
+<p>債券 dP/P=r dt+v(t,T)dW から有限期間forwardと瞬間forwardの式を導く。v(t,t)=0、F=-∂T log P（755–757）。</p>
+<p>Itôの交差項と満期微分の符号を確認。債券拡散をvと置くとforward拡散は−∂Tv。</p>
+</div>
+<div class="requirement" id="D33.1-02">
+<p>独立因子のforward拡散をσkと書けば μ(t,T)=Σk σk(t,T)∫t^Tσk(t,u)du（757）。</p>
+<p>債券を数値積分して構成し、割引価格の平均ドリフトが0になることをMCで比較。</p>
+</div>
+<div class="requirement" id="D33.1-03">
+<p>σ一定→Ho–Lee、σ exp[−a(T−t)]→HW。一般HJMの非Markov性と計算量を説明（757–758）。</p>
+<p>同じ初期曲線・ボラで解析ZCB/optionと比較し、有限因子数とMarkov性を同一視しない。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>数値価格の例題・校正表はない。30段の二分岐木がおよそ10億状態になる説明は計算量の例（2^30）、価格説明用の条件・歴史的記述。Figure33.1はforward定義の図。</p>
+<h3>計算の読み方</h3>
+<p>印刷例なし。signed v/瞬間・有限forward drift、独立Gaussian解析対HJM MC、時間刻み収束、同じrの2履歴で異なるdrift</p>
+<p>Batched HJM pathはdeterministic vol。一般履歴依存volはper-path callbackで、有限因子数によるscalar Markov性／少数state再結合は保証しない。時間Euler割引と満期求積の誤差を分ける。</p>
+<div class="caution">
+<p>Batched HJM pathはdeterministic vol。一般履歴依存volはper-path callbackで、有限因子数によるscalar Markov性／少数state再結合は保証しない。時間Euler割引と満期求積の誤差を分ける。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-33-2">
+<h2>§33.2 The BGM Model</h2>
+<p>出典: Hull 11e Global Edition pp.758–768。</p>
+<p>期間ごとに実際に観測する単利forwardを状態とし、対応する支払日のforward測度でlognormalにする。共通測度ではforward間の共分散からドリフトが決まる。Capletの周辺分布が同じでも因子数・相関を変えるとratchet、sticky、flexicapやswaption価格は変わる。本文はLIBORだけでなくOISのforwardにも適用すると説明する。</p>
+<h3>要点の読み方</h3>
+<p>BGM／LMMはtenor grid <span class="math inline"><span data-source-tex="t_k">\(t_k\)</span></span>上の単利forwardを用いる。</p>
+<div class="math block">
+<span data-source-tex="\delta_k=t_{k+1}-t_k,\quad
+F_k(t)=\frac{P(t,t_k)/P(t,t_{k+1})-1}{\delta_k}.">\(\delta_k=t_{k+1}-t_k,\quad
+F_k(t)=\frac{P(t,t_k)/P(t,t_{k+1})-1}{\delta_k}.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="t_{k+1}">\(t_{k+1}\)</span></span>債券をnumeraireとする測度で<span class="math inline"><span data-source-tex="F_k">\(F_k\)</span></span>はmartingaleになるが、同じforward群を共通測度で動かすにはcovariance driftが必要である。多因子loading <span class="math inline"><span data-source-tex="\boldsymbol\zeta_k">\(\boldsymbol\zeta_k\)</span></span>の積は内積である。Terminal測度なら後ろのforwardからの負の和、rolling numeraireなら次の支払bondから当該forwardまでの正の和となり、同一のdriftを全測度へ使わない。リセット済みrateはfreezeし、volの観測日とcashの支払日を分ける。</p>
+<p>Capletのspot分散からstep loadingを復元する式は</p>
+<div class="math block">
+<span data-source-tex="\sigma_k^2t_k=\sum_{i=1}^{k}\Lambda_{k-i}^2\delta_{i-1}.">\(\sigma_k^2t_k=\sum_{i=1}^{k}\Lambda_{k-i}^2\delta_{i-1}.\)</span>
+</div>
+<p>Ex33.1のspot24／22／20%からforward loading24／19.79898987／15.23154621%（印刷24／19.80／15.23%）を得る。負の差分分散を無言で0へ切り上げない。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">年</th>
+<th style="text-align:right">Table33.1 spot（%）</th>
+<th style="text-align:right">Forward表示（%）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">15.50</td>
+<td style="text-align:right">15.50</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">18.25</td>
+<td style="text-align:right">20.64</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">17.91</td>
+<td style="text-align:right">17.21</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">17.74</td>
+<td style="text-align:right">17.22</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">17.27</td>
+<td style="text-align:right">15.25</td>
+</tr>
+<tr>
+<td style="text-align:right">6</td>
+<td style="text-align:right">16.79</td>
+<td style="text-align:right">14.15</td>
+</tr>
+<tr>
+<td style="text-align:right">7</td>
+<td style="text-align:right">16.30</td>
+<td style="text-align:right">12.98</td>
+</tr>
+<tr>
+<td style="text-align:right">8</td>
+<td style="text-align:right">16.01</td>
+<td style="text-align:right">13.81</td>
+</tr>
+<tr>
+<td style="text-align:right">9</td>
+<td style="text-align:right">15.76</td>
+<td style="text-align:right">13.60</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">15.54</td>
+<td style="text-align:right">13.40</td>
+</tr>
+</tbody>
+</table>
+<p>Table33.4の2因子成分normは、年1の15.50524105%と年9の13.59014717%が上の表示15.50／13.60と最終桁で一致しない。最大差.00985284 percentage pointで、成分の表示丸め範囲を保持する。3因子Table33.5の最大差は.004400 percentage point。因子の符号を一括反転しても内積／相関は変わらないが、成分normを都合よく価格へ逆合わせしない。</p>
+<p>Ratchetは前回rateから次のstrikeを更新し、stickyは過去strikeも状態として持つ。表のannual reset、元本100、flat5%連続（年単利5.127%）、spread25bpという入力と、callerが指定する初期<span class="math inline"><span data-source-tex="K_0">\(K_0\)</span></span>を区別する。リセット後にfuture rateを参照してstrikeを決めない。Flexicapはcaller-strikeのcaplet群で最初の5回のITMを時間順に必ず行使し、それ以降は給付しない契約として定義できるが、原典3.43／3.58／3.61はstrikeと最初／最後の対象reset・payment日が確定しない。最大5回という記述だけから価格へ契約を逆推定しない。</p>
+<p>Frozen-forward swaptionは時点0のforwardとswap-rateのforward感応度（Jacobian）を凍結し、loadingの共分散を集計する近似である。annuity自体もforwardに依存するため、単純なannuity重みだけとは一般に異なる。Capとswapのtenorが違う場合は期間の対応を明示し、別tenorへ単純にvolを流用しない。Factor PCAは相関・共分散の近似として読む。Caplet周辺価格が一致しても、相関変更でratchet／sticky／flexicap／swaptionが変わり得る。</p>
+<p>CEVは<span class="math inline"><span data-source-tex="\alpha=1">\(\alpha=1\)</span></span>でlognormalへ戻るskewモデル、BermudanのLSM／境界近似と因子数は本文の紹介として説明する。未指定の市場価格へ較正したBermudanや多curve動的研究をここで実装済みとしない。数値要求D01–04はcallerが指定した単一curve契約と式の検証を対象とする。原典の未指定strike/dateから印刷価格を再現したとはしない。</p>
+<div class="requirement" id="D33.2-01">
+<p>δk=tk+1−tk と単利Fkを定義し、tk+1債券numeraireではFkがmartingale、rolling numeraireでは式33.12/33.16のドリフトを持つ（758–765）。</p>
+<p>numeraireごとの割引方法を明記。多因子のζiζkはベクトル内積になり、符号は使用測度による。</p>
+</div>
+<div class="requirement" id="D33.2-02">
+<p>spot caplet variance σk²tk=Σi=1..k Λk−i²δi−1 からΛを逐次復元（760–761）。</p>
+<p>Ex33.1/Table33.1を手計算。負の差分分散を無言で0へ切り上げない。</p>
+</div>
+<div class="requirement" id="D33.2-03">
+<p>対数Euler更新、各リセット後の固定・割引、ratchet/sticky/flexicapのpayoffを分ける（761–765）。</p>
+<p>同じcaplet価格を維持し相関だけを変更する対照実験。先読みせずpathごとにstrike/resetを更新。</p>
+</div>
+<div class="requirement" id="D33.2-04">
+<p>frozen-forward近似によるswaption variance、capとswapの異なるtenor、因子PCAと校正（765–767）。</p>
+<p>MCと近似価格を比較。式33.19はOCRが崩れているためPDF上で積・添字を再確認してから実装。</p>
+</div>
+<div class="requirement" id="D33.2-05">
+<p>CEV skew、BermudanのLSM/境界近似、因子数の実務上の論点を区別（767–768）。</p>
+<p>α=1のlognormal極限。単一因子でもBermudanが一般に正確になるとは要求しない。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<ul>
+<li>Ex33.1 p760：spot vol 24/22/20%からΛ=24/19.80/15.23%。独立計算24/19.79898987/15.23154621%、。</li>
+<li>Table33.1 p761（年1–10、すべて%）spot：15.50,18.25,17.91,17.74,17.27,16.79,16.30,16.01,15.76,15.54。forward：15.50,20.64,17.21,17.22,15.25,14.15,12.98,13.81,13.60,13.40。forward列の10値は差分分散から （表示丸め内）。</li>
+<li>Table33.2 p763、ratchet 1–10年capletの1因子列：.196,.207,.201,.194,.187,.180,.172,.167,.160,.153。2因子：.194,.207,.205,.198,.193,.189,.180,.174,.168,.162。3因子：.195,.209,.210,.205,.201,.193,.188,.182,.175,.169。Table33.3 sticky：1因子 .196,.336,.412,.458,.484,.498,.502,.501,.497,.488、2因子 .194,.334,.413,.462,.492,.512,.520,.523,.523,.519、3因子 .195,.336,.418,.472,.506,.524,.533,.537,.537,.534。<strong>60値未検証</strong>。想定元本100、連続複利flat 5%（年単利5.127%）、annual reset、spread25bp、100,000 antithetic simulations、SE約.001。seed/離散化を含め同一末尾桁を固定しない。</li>
+<li>Table33.4 p764、2因子Λ成分（%）：第1因子14.10,19.52,16.78,17.11,15.25,14.06,12.65,13.06,12.36,11.63、第2因子−6.45,−6.70,−3.84,−1.96,0,1.61,2.89,4.48,5.65,6.65。成分normをTable33.1と比較し8行は表示丸め内、<strong>✗2行は表示桁完全一致なし</strong>：年1は15.50524105対15.50、年9は13.59014717対13.60。最大差.00985284 percentage point。各成分の丸めで説明できる範囲であり誤植とは断定しない。価格校正には丸め前原値または明示した許容差が必要。</li>
+<li>Table33.5 p765、3因子第1列13.65,19.28,16.72,16.98,14.85,13.95,12.61,12.90,11.97,10.97、第2列−6.62,−7.02,−4.06,−2.06,0,1.69,3.06,4.70,5.81,6.66、第3列3.19,2.25,0,−1.98,−3.47,−1.63,0,1.51,2.80,3.84。norm10値はTable33.1に対し （最大差.004400 percentage point）。</li>
+<li>Flexicap p765：最大5回exercise、1/2/3因子価格3.43/3.58/3.61、<strong>未検証</strong>。当該段落だけではstrikeの明示が不足するので初期strikeと最初/最後の対象期間を要確認。価格に合わせて契約条件を推定しない。</li>
+</ul>
+<h3>計算の読み方</h3>
+<p>Ex33.1/33.1表forward vol bootstrap、多因子norm/covariance、measure drift、reset/discount、log Euler/PC、Black caplet・ratchet/sticky/chronological flexicap、frozen-forward swaption/PCAの独立検証</p>
+<p>単一curve・正の単利forwardのLMM。rolling/terminal/payment-bond drift、reset freeze、割引、caplet/ratchet/sticky/最初の5回のITM flexicap、frozen-forward swaption/PCAをcallerが固定した契約で検証する。sticky K0とflexicap strike/対象fixing/payment不足により原典3.43/3.58/3.61等の価格は未再現。CEV/Bermudanは紹介のみで、市場fitや多curve拡張は対象外。</p>
+<div class="caution">
+<p>単一curve・正の単利forwardのLMM。rolling/terminal/payment-bond drift、reset freeze、割引、caplet/ratchet/sticky/最初の5回のITM flexicap、frozen-forward swaption/PCAをcallerが固定した契約で検証する。sticky K0とflexicap strike/対象fixing/payment不足により原典3.43/3.58/3.61等の価格は未再現。CEV/Bermudanは紹介のみで、市場fitや多curve拡張は対象外。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-33-3">
+<h2>§33.3 Agency Mortgage-Backed Securities</h2>
+<p>出典: Hull 11e Global Edition pp.768–770。</p>
+<p>Agency保証があっても住宅ローンの繰上返済オプションが残る。金利の履歴と借り手の行動に依存する返済を、金利モデルだけで決定できるとは限らない。Pass-through、優先順位を持つCMO、IO/POを区別し、OASは仮定した返済モデルの下で市場価格を一致させるspreadとして求める。</p>
+<h3>要点の読み方</h3>
+<p>Agency保証の信用リスクの説明と、借り手の期限前返済optionを分ける。Pass-throughはpoolの利息・元本を通す、sequential CMOは元本を優先順に配る、IOは利息のみ、POは元本のみを受け取る。刊行時点の制度説明を現在の保証範囲の判断にしない。</p>
+<p>年coupon <span class="math inline"><span data-source-tex="c">\(c\)</span></span>の均質poolを<span class="math inline"><span data-source-tex="n">\(n\)</span></span>か月で償却し、<span class="math inline"><span data-source-tex="i=c/12">\(i=c/12\)</span></span>とすると、prepaymentなしの月払は</p>
+<div class="math block">
+<span data-source-tex="A=\frac{Li}{1-(1+i)^{-n}},\quad B_m=B_{m-1}(1+i)-A.">\(A=\frac{Li}{1-(1+i)^{-n}},\quad B_m=B_{m-1}(1+i)-A.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="i=0">\(i=0\)</span></span>は<span class="math inline"><span data-source-tex="L/n">\(L/n\)</span></span>。SMMはscheduled principalを払った後の残高に適用し、比例してloanが消えるpoolでは将来scheduled paymentも生存率に応じて減る。一件のloanが部分返済しても毎月固定額を払い続けるモデルとは異なる。Prepayment callbackには当月までのrate履歴だけを渡し、future pathを先読みしない。</p>
+<p>原典のCMO元本400／300／100と100／200／500はともに800。毎月のpool principalを優先順位へ配り、tranche合計とpool principal、最終残高を保存する。Tranche利息には別の契約couponが必要であり、principal配分だけから推測しない。固定curveの検証例ではprepayment増加でIOが下がりPOが上がるが、全curve／全poolの普遍法則とはしない。</p>
+<p>Monthly path <span class="math inline"><span data-source-tex="r_m">\(r_m\)</span></span>にspread <span class="math inline"><span data-source-tex="s">\(s\)</span></span>を足して</p>
+<div class="math block">
+<span data-source-tex="V(s)=E\!\left[\sum_mCF_m\exp\{-\tfrac1{12}\sum_{j\le m}(r_j+s)\}\right]">\(V(s)=E\!\left[\sum_mCF_m\exp\{-\tfrac1{12}\sum_{j\le m}(r_j+s)\}\right]\)</span>
+</div>
+<p>を計算し、市場価格と一致する<span class="math inline"><span data-source-tex="s">\(s\)</span></span>をOASとして逆算する。Positiveな固定cashflowなら<span class="math inline"><span data-source-tex="V&#x27;(s)&lt;0">\(V&#x27;(s)&lt;0\)</span></span>。独立30年償却閉形式・PV等比級数・Gaussian割引MCとspread求根を照合する。</p>
+<p>本文はpool、prepayment関数、市場価格を指定しない。SMM・coupon・curveは明示した合成例で、OASの逆算中はcashflow／返済pathを固定する。実証的な借り手行動の較正や市場MBS価格の再現をしたとはしない。</p>
+<div class="requirement" id="D33.3-01">
+<p>信用保証と繰上返済リスク、pass-through/CMO/IO/POのcashflowを説明（768–769）。</p>
+<p>繰上返済増加に対するIOとPOの方向性、tranche間のprincipal保存。</p>
+</div>
+<div class="requirement" id="D33.3-02">
+<p>月次金利path→履歴依存prepayment→cashflow→Treasury曲線＋spreadで割引する評価手順（769–770）。</p>
+<p>σ=0かつprepaymentなしの極限を通常の償却表と比較。</p>
+</div>
+<div class="requirement" id="D33.3-03">
+<p>OASを市場価格への逆算とし、返済モデル・担保pool特性・rate modelに依存すると明記（770）。</p>
+<p>固定cashflowではspreadと価格が単調逆向き。異なるprepayment仮定の価格/OAS感応度。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>30年住宅ローンと、CMOのA/B/Cを400/300/100対100/200/500に配分する例（p768–769）は構造説明。どちらも合計800だが価格固定値はない。市場・制度の説明は <strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong>。prepayment関数・poolデータ・価格は指定されないためOAS数値は再計算対象なし。</p>
+<h3>計算の読み方</h3>
+<p>本文CMO 400/300/100・100/200/500（計800）、独立30年償却/PV閉形式、IO/PO方向性・principal保存・Gaussian割引MC・OAS逆算</p>
+<p>Homogeneous pool生存モデルとcaller SMMであり実証prepayment／保証制度の検証ではない。原pool／市場価格なし。Sequential CMOはprincipal配分のみでtranche couponは別。OAS逆算中は返済CFを固定。</p>
+<div class="caution">
+<p>Homogeneous pool生存モデルとcaller SMMであり実証prepayment／保証制度の検証ではない。原pool／市場価格なし。Sequential CMOはprincipal配分のみでtranche couponは別。OAS逆算中は返済CFを固定。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+</main></body></html>

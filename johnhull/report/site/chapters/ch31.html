@@ -1,0 +1,460 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hull Ch31 補足教材</title><style>/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+.lesson{margin:2rem 0;padding:1.4rem;background:var(--surface);border-radius:10px}
+    .requirement{padding:.6rem 0;border-bottom:1px solid var(--rule)}
+    .caution{padding:.8rem;border-left:3px solid var(--series-2)}
+    p,li{line-height:1.85} table{width:100%;border-collapse:collapse}
+    th,td{padding:.5rem;text-align:left;border-bottom:1px solid var(--rule)}
+    pre{overflow-x:auto} .lesson{overflow-wrap:anywhere} mjx-container{overflow-x:auto;max-width:100%}
+    nav{line-height:2} .wrap{max-width:1060px;margin:auto;padding:1.3rem}
+    </style><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><body><main class="wrap"><nav><a href="ch01.html">Ch1</a> · <a href="ch02.html">Ch2</a> · <a href="ch03.html">Ch3</a> · <a href="ch04.html">Ch4</a> · <a href="ch05.html">Ch5</a> · <a href="ch06.html">Ch6</a> · <a href="ch07.html">Ch7</a> · <a href="ch08.html">Ch8</a> · <a href="ch09.html">Ch9</a> · <a href="ch10.html">Ch10</a> · <a href="ch11.html">Ch11</a> · <a href="ch12.html">Ch12</a> · <a href="ch13.html">Ch13</a> · <a href="ch14.html">Ch14</a> · <a href="ch15.html">Ch15</a> · <a href="ch16.html">Ch16</a> · <a href="ch17.html">Ch17</a> · <a href="ch18.html">Ch18</a> · <a href="ch19.html">Ch19</a> · <a href="ch20.html">Ch20</a> · <a href="ch21.html">Ch21</a> · <a href="ch22.html">Ch22</a> · <a href="ch23.html">Ch23</a> · <a href="ch24.html">Ch24</a> · <a href="ch25.html">Ch25</a> · <a href="../exotics.html">Ch26</a> · <a href="../numerics.html">Ch27</a> · <a href="../exotics.html">Ch28</a> · <a href="ch29.html">Ch29</a> · <a href="ch30.html">Ch30</a> · <a href="ch31.html">Ch31</a> · <a href="ch32.html">Ch32</a> · <a href="ch33.html">Ch33</a> · <a href="ch34.html">Ch34</a> · <a href="ch35.html">Ch35</a> · <a href="ch36.html">Ch36</a> · <a href="ch37.html">Ch37</a> · <a href="../index.html">ポータル</a> · <a href="../../../book/_build/html/index.html">Book</a></nav><nav><a href="#section-31-1">§31.1</a>　<a href="#section-31-2">§31.2</a>　<a href="#section-31-3">§31.3</a>　<a href="#section-31-4">§31.4</a>　<a href="#section-31-5">§31.5</a></nav><h1>Ch31 節別補足教材</h1>
+<p>刊行時点の原典本文を学ぶ。現在の市場条件や法令の適用はこの教材の対象に含めない。</p>
+<section class="lesson" id="section-31-1">
+<h2>§31.1 Background</h2>
+<p>出典: Hull 11e Global Edition pp.719–721。</p>
+<p>Q測度の short rate 過程から割引期待値、債券価格、zero curve を決める。Markov な1因子では <span class="math inline"><span data-source-tex="f_t+m f_r+\frac12s^2f_{rr}=rf">\(f_t+m f_r+\frac12s^2f_{rr}=rf\)</span></span>。常に flat で確率変動する zero curve を単純に仮定することはこの PDE と両立しない。</p>
+<h3>要点の読み方</h3>
+<p>Q測度の瞬間short rate <span class="math inline"><span data-source-tex="r_t">\(r_t\)</span></span>から、給付<span class="math inline"><span data-source-tex="H_T">\(H_T\)</span></span>の現在価値は</p>
+<div class="math block">
+<span data-source-tex="V_t=E^Q_t\!\left[e^{-\int_t^Tr_s\,ds}H_T\right],\quad
+P(t,T)=E^Q_t\!\left[e^{-\int_t^Tr_s\,ds}\right],\quad
+R(t,T)=-\frac{\log P(t,T)}{T-t}.">\(V_t=E^Q_t\!\left[e^{-\int_t^Tr_s\,ds}H_T\right],\quad
+P(t,T)=E^Q_t\!\left[e^{-\int_t^Tr_s\,ds}\right],\quad
+R(t,T)=-\frac{\log P(t,T)}{T-t}.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="r">\(r\)</span></span>は連続年率の小数、時刻は年。経路割引の平均と平均金利の指数は一般に異なる。<span class="math inline"><span data-source-tex="P(T,T)=1">\(P(T,T)=1\)</span></span>、定数4%・3年なら<span class="math inline"><span data-source-tex="P=e^{-.12}">\(P=e^{-.12}\)</span></span>、zero yield4%である。実装の経路積分は台形近似なので、endpointの厳密標本化と割引積分の精度を区別する。</p>
+<p>Markovな1因子<span class="math inline"><span data-source-tex="dr=m\,dt+s\,dW">\(dr=m\,dt+s\,dW\)</span></span>の無収入claimは</p>
+<div class="math block">
+<span data-source-tex="V_t+mV_r+\frac12s^2V_{rr}-rV=0.">\(V_t+mV_r+\frac12s^2V_{rr}-rV=0.\)</span>
+</div>
+<p>定数Gaussian <span class="math inline"><span data-source-tex="dr=m\,dt+\sigma\,dW">\(dr=m\,dt+\sigma\,dW\)</span></span>では、積分rateのGaussian分布から<span class="math inline"><span data-source-tex="P=\exp[-r\tau-m\tau^2/2+\sigma^2\tau^3/6]">\(P=\exp[-r\tau-m\tau^2/2+\sigma^2\tau^3/6]\)</span></span>を独立に構成できる。Gaussian割引MCと別の有限差分PDEを照合する。</p>
+<p>全ての将来curveがflatで<span class="math inline"><span data-source-tex="P=e^{-r_t\tau}">\(P=e^{-r_t\tau}\)</span></span>だと仮定するとPDE残差は</p>
+<div class="math block">
+<span data-source-tex="e^{-r\tau}\left[-m\tau+\frac12s^2\tau^2\right].">\(e^{-r\tau}\left[-m\tau+\frac12s^2\tau^2\right].\)</span>
+</div>
+<p>これが全満期で0になるには<span class="math inline"><span data-source-tex="m=s=0">\(m=s=0\)</span></span>が必要である。今日の入力curveがflatであることとは別の命題であり、flatな初期curveを確率金利モデルへfitできないという意味ではない。本文に価格の印刷例はない。</p>
+<div class="requirement" id="D31.1-01">
+<p>式31.1–31.4、経路割引からzero rate（720）</p>
+<p>定数rの極限と MC 債券価格</p>
+</div>
+<div class="requirement" id="D31.1-02">
+<p>式31.5、<span class="math inline"><span data-source-tex="P=e^{-r(t)(T-t)}">\(P=e^{-r(t)(T-t)}\)</span></span> の矛盾（720–721）</p>
+<p>全満期で PDE を満たすには drift / diffusion がゼロ</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>なし。</p>
+<h3>計算の読み方</h3>
+<p>印刷例なし。式31.1–5、定数rate/terminal、Gaussian割引MC・独立PDE微分、flat stochastic curve残差</p>
+<p>Instantaneous rとperiod zero Rを区別。経路割引は台形積分近似。全ての将来curveがstochastic flatという仮定のPDE矛盾と、初期flat curve fitは別命題。</p>
+<div class="caution">
+<p>Instantaneous rとperiod zero Rを区別。経路割引は台形積分近似。全ての将来curveがstochastic flatという仮定のPDE矛盾と、初期flat curve fitは別命題。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-31-2">
+<h2>§31.2 One-Factor Models</h2>
+<p>出典: Hull 11e Global Edition pp.721–726。</p>
+<p>RB は short rate の GBM、Vasicek は加法 OU、CIR は square-root diffusion。後2者の <span class="math inline"><span data-source-tex="P=Ae^{-Br}">\(P=Ae^{-Br}\)</span></span>、境界条件、債券の short-rate duration <span class="math inline"><span data-source-tex="\hat D=B">\(\hat D=B\)</span></span>、債券価格過程を導く。1因子でも curve の形は変わりうる。</p>
+<h3>要点の読み方</h3>
+<p>1因子の代表は、Rendleman–Bartter <span class="math inline"><span data-source-tex="dr=\mu r\,dt+\sigma_{\rm RB}r\,dW">\(dr=\mu r\,dt+\sigma_{\rm RB}r\,dW\)</span></span>、Vasicek <span class="math inline"><span data-source-tex="dr=a(b-r)dt+\sigma_{\rm V}dW">\(dr=a(b-r)dt+\sigma_{\rm V}dW\)</span></span>、CIR <span class="math inline"><span data-source-tex="dr=a(b-r)dt+\sigma_{\rm C}\sqrt r\,dW">\(dr=a(b-r)dt+\sigma_{\rm C}\sqrt r\,dW\)</span></span>である。<span class="math inline"><span data-source-tex="a">\(a\)</span></span>は年の逆数、<span class="math inline"><span data-source-tex="b">\(b\)</span></span>は年率金利。Vasicekの<span class="math inline"><span data-source-tex="\sigma">\(\sigma\)</span></span>は絶対金利／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>、RBは相対vol、CIRは<span class="math inline"><span data-source-tex="\sqrt r">\(\sqrt r\)</span></span>に掛ける係数なので、数値をそのまま交換しない。</p>
+<p>Vasicekでは<span class="math inline"><span data-source-tex="\tau=T-t,B=(1-e^{-a\tau})/a">\(\tau=T-t,B=(1-e^{-a\tau})/a\)</span></span>として</p>
+<div class="math block">
+<span data-source-tex="P=Ae^{-Br},\quad \log A=-b(\tau-B)+\frac{\sigma_{\rm V}^2}{2}\int_0^\tau B(a,u)^2du.">\(P=Ae^{-Br},\quad \log A=-b(\tau-B)+\frac{\sigma_{\rm V}^2}{2}\int_0^\tau B(a,u)^2du.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="a=0">\(a=0\)</span></span>は<span class="math inline"><span data-source-tex="B=\tau">\(B=\tau\)</span></span>の極限である。CIRでは<span class="math inline"><span data-source-tex="\gamma=\sqrt{a^2+2\sigma_{\rm C}^2}">\(\gamma=\sqrt{a^2+2\sigma_{\rm C}^2}\)</span></span>、</p>
+<div class="math block">
+<span data-source-tex="D=(\gamma+a)(e^{\gamma\tau}-1)+2\gamma,\quad
+B=\frac{2(e^{\gamma\tau}-1)}D,\quad
+A=\left[\frac{2\gamma e^{(a+\gamma)\tau/2}}D\right]^{2ab/\sigma_{\rm C}^2}.">\(D=(\gamma+a)(e^{\gamma\tau}-1)+2\gamma,\quad
+B=\frac{2(e^{\gamma\tau}-1)}D,\quad
+A=\left[\frac{2\gamma e^{(a+\gamma)\tau/2}}D\right]^{2ab/\sigma_{\rm C}^2}.\)</span>
+</div>
+<p>満期境界、PDE、VasicekのGaussian核求積とCIRの独立Riccati ODEを照合する。</p>
+<p>CIRは非負で、<span class="math inline"><span data-source-tex="\,2ab\ge\sigma_{\rm C}^2">\(\,2ab\ge\sigma_{\rm C}^2\)</span></span>のFeller条件を満たす正初期rateは0へ到達しない。条件を外れても反射Eulerを厳密解とは呼ばない。厳密endpointはscaled非中心<span class="math inline"><span data-source-tex="\chi^2">\(\chi^2\)</span></span>で、<span class="math inline"><span data-source-tex="ab=0">\(ab=0\)</span></span>のdf0には吸収zero atomがある。Vasicekは負金利を許す。CIRの厳密endpoint MCでも経路割引は時間積分近似であり、RBもGBM endpointの厳密性と経路割引・PDEの収束を分ける。</p>
+<p>ZCBのshort-rate durationは<span class="math inline"><span data-source-tex="\widehat D=-P_r/P=B">\(\widehat D=-P_r/P=B\)</span></span>で、yield durationとは異なる。Ex31.1の<span class="math inline"><span data-source-tex="a=.1,\tau=4">\(a=.1,\tau=4\)</span></span>で<span class="math inline"><span data-source-tex="B=3.29679954">\(B=3.29679954\)</span></span>（3.30）、short rate10bpの変化なら一次価格変化約0.32968%（0.33%）。Duration4の単純例は約0.4%。<span class="math inline"><span data-source-tex="r=.04,\sigma_{\rm V}=.01">\(r=.04,\sigma_{\rm V}=.01\)</span></span>と同じ局所SDにするCIR係数は<span class="math inline"><span data-source-tex="\,.01/\sqrt{.04}=.05">\(\,.01/\sqrt{.04}=.05\)</span></span>。債券のsigned relative diffusionは<span class="math inline"><span data-source-tex="-\sigma_{\rm V}B">\(-\sigma_{\rm V}B\)</span></span>または<span class="math inline"><span data-source-tex="-\sigma_{\rm C}\sqrt r B">\(-\sigma_{\rm C}\sqrt r B\)</span></span>である。原典の概念図を市場curve較正の実測結果とはしない。</p>
+<div class="requirement" id="D31.2-01">
+<p>3 SDE、平均回帰、Vasicek/CIRのA・B（721–724）</p>
+<p><span class="math inline"><span data-source-tex="P(T,T)=1">\(P(T,T)=1\)</span></span>、PDE残差、MC割引</p>
+</div>
+<div class="requirement" id="D31.2-02">
+<p>CIRのFeller条件とVasicekの負金利（724）</p>
+<p>非中心χ²の遷移とEulerの境界bias</p>
+</div>
+<div class="requirement" id="D31.2-03">
+<p>Ex31.1、<span class="math inline"><span data-source-tex="\hat D=B">\(\hat D=B\)</span></span>、式31.11–12のbond diffusion（725）</p>
+<p>finite difference のshort-rate感度</p>
+</div>
+<div class="requirement" id="D31.2-04">
+<p>同じ局所標準偏差でVasicek/CIRを比較（726）</p>
+<p><span class="math inline"><span data-source-tex="\sigma_{\rm Vas}=\sigma_{\rm CIR}\sqrt r">\(\sigma_{\rm Vas}=\sigma_{\rm CIR}\sqrt r\)</span></span></p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>Ex31.1 <span class="math inline"><span data-source-tex="D=4">\(D=4\)</span></span>、10bpで約0.4%、<span class="math inline"><span data-source-tex="a=.1,T=4">\(a=.1,T=4\)</span></span> → <span class="math inline"><span data-source-tex="\hat D=3.30">\(\hat D=3.30\)</span></span>（3.29679954）、10bpで約0.33%（0.32967995%）。p.726 <span class="math inline"><span data-source-tex="r=.04,\sigma_{\rm Vas}=.01">\(r=.04,\sigma_{\rm Vas}=.01\)</span></span> → CIR <span class="math inline"><span data-source-tex="\sigma=.05">\(\sigma=.05\)</span></span>。3つの計算出力 、専用固定値なし。Figure31.1–2は概念図で数値入力なし。</p>
+<h3>計算の読み方</h3>
+<p>Ex31.1: 3.30/0.33%、CIR vol0.05、Vas Gaussian求積/CIR Riccati・χ²求積/厳密時点MC/RB独立PDE</p>
+<p>CIR exact endpointは積分short rateまで厳密ではない。df0 zero atom／Feller／反射Euler biasを保持。RBはGBM endpointと経路割引／独立PDE収束を区別。概念図を市場較正としない。</p>
+<div class="caution">
+<p>CIR exact endpointは積分short rateまで厳密ではない。df0 zero atom／Feller／反射Euler biasを保持。RBはGBM endpointと経路割引／独立PDE収束を区別。概念図を市場較正としない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-31-3">
+<h2>§31.3 Real-World vs. Risk-Neutral Processes</h2>
+<p>出典: Hull 11e Global Edition pp.726–727。</p>
+<p>本文では bond の正のリスクプレミアムに対応し short-rate risk price を負とする。Q の drift に <span class="math inline"><span data-source-tex="\lambda s">\(\lambda s\)</span></span> を足すとPの drift。Vasicek は <span class="math inline"><span data-source-tex="b^*=b+\lambda\sigma/a">\(b^*=b+\lambda\sigma/a\)</span></span>、CIR で <span class="math inline"><span data-source-tex="\lambda=k\sqrt r">\(\lambda=k\sqrt r\)</span></span> なら <span class="math inline"><span data-source-tex="a^*=a-k\sigma,b^*=ab/a^*">\(a^*=a-k\sigma,b^*=ab/a^*\)</span></span>。</p>
+<h3>要点の読み方</h3>
+<p>本文の符号規約は<span class="math inline"><span data-source-tex="P">\(P\)</span></span>のrate drift＝<span class="math inline"><span data-source-tex="Q">\(Q\)</span></span>のrate drift＋<span class="math inline"><span data-source-tex="\lambda s">\(\lambda s\)</span></span>である。Vasicekは</p>
+<div class="math block">
+<span data-source-tex="b_P=b_Q+\lambda\sigma/a,">\(b_P=b_Q+\lambda\sigma/a,\)</span>
+</div>
+<p>CIRで<span class="math inline"><span data-source-tex="\lambda(r)=k\sqrt r">\(\lambda(r)=k\sqrt r\)</span></span>なら</p>
+<div class="math block">
+<span data-source-tex="a_P=a_Q-k\sigma,\quad a_Pb_P=a_Qb_Q.">\(a_P=a_Q-k\sigma,\quad a_Pb_P=a_Qb_Q.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="dr=(c-ar)dt+\cdots">\(dr=(c-ar)dt+\cdots\)</span></span>の<span class="math inline"><span data-source-tex="c">\(c\)</span></span>を保存して変換すると、<span class="math inline"><span data-source-tex="a=0">\(a=0\)</span></span>でも架空の有限長期平均<span class="math inline"><span data-source-tex="b=c/a">\(b=c/a\)</span></span>を作らずにP↔Qを往復できる。変換後に非定常なsigned <span class="math inline"><span data-source-tex="a">\(a\)</span></span>となる可能性と、較正された平均回帰モデルの主張を分ける。</p>
+<p>Bondのsigned diffusionはrate上昇で価格が下がるので負である。Pでの期待収益は</p>
+<div class="math block">
+<span data-source-tex="r+\lambda\,(\text{signed bond diffusion})
+=r-\lambda\sigma B\quad\text{（Vasicek）},">\(r+\lambda\,(\text{signed bond diffusion})
+=r-\lambda\sigma B\quad\text{（Vasicek）},\)</span>
+</div>
+<div class="math block">
+<span data-source-tex="r-k\sigma Br\quad\text{（CIR）}.">\(r-k\sigma Br\quad\text{（CIR）}.\)</span>
+</div>
+<p>CIRの<span class="math inline"><span data-source-tex="\sqrt r">\(\sqrt r\)</span></span>はrisk priceとbond diffusionの双方にあり、片方だけを残さない。本文の正のbond premiumに対応する負のrisk priceを、全時代・市場に成立する実証法則とはしない。</p>
+<p>Affine係数の往復、CIRの<span class="math inline"><span data-source-tex="ab">\(ab\)</span></span>不変、独立Gaussian密度tilt／raw MC、P-generatorの有限差分PDEで照合する。CIRのstate-dependent tilt検証は局所1step driftであり、一般の連続CIR経路密度を完全に標本化したと主張しない。本文の印刷価格例はない。</p>
+<div class="requirement" id="D31.3-01">
+<p>Vasicekの <span class="math inline"><span data-source-tex="b^*">\(b^*\)</span></span> と式31.13（726）</p>
+<p>P→Q→P の往復</p>
+</div>
+<div class="requirement" id="D31.3-02">
+<p>CIRの <span class="math inline"><span data-source-tex="a^*,b^*">\(a^*,b^*\)</span></span>、bond excess drift（726–727）</p>
+<p>drift展開一致、<span class="math inline"><span data-source-tex="a^*b^*=ab">\(a^*b^*=ab\)</span></span></p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>なし。</p>
+<h3>計算の読み方</h3>
+<p>印刷例なし。式31.13・CIR ab不変、P/Q往復、独立Gaussian求積/raw MC・P bond returnの有限差分PDE</p>
+<p>Pdrift=Qdrift+λsの符号規約。a=0はconstant driftを保持しb=None。Risk price負は本文の仮定で実証法則ではない。CIR local tiltは連続path密度の完全検証ではない。</p>
+<div class="caution">
+<p>Pdrift=Qdrift+λsの符号規約。a=0はconstant driftを保持しb=None。Risk price負は本文の仮定で実証法則ではない。CIR local tiltは連続path密度の完全検証ではない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-31-4">
+<h2>§31.4 Estimating Parameters</h2>
+<p>出典: Hull 11e Global Edition pp.727–728。</p>
+<p>1982-01-04～2016-08-23 の米国3か月T-bill日次データで <span class="math inline"><span data-source-tex="\Delta r">\(\Delta r\)</span></span> を <span class="math inline"><span data-source-tex="r">\(r\)</span></span> に回帰しPパラメータを推定する。その後現在のzero curveとの差を最小化してリスク価格を推定する2段階法。期間選択とcurve形状への感度がある。</p>
+<h3>要点の読み方</h3>
+<p>Pの時系列推定とQの当日curve較正を二段階で扱う。回収した元worksheetの1982-01-04〜2016-08-23の8664観測（8663 pair）を固定CSVに保存し、百分率を100で割った小数rateを使う。日付の重複・順序・有限性を検査し、観測pairごとに<span class="math inline"><span data-source-tex="\Delta=1/250">\(\Delta=1/250\)</span></span>年を置く。暦日gapを勝手に日数へ置き換えない。外部の系列名とquote basisの完全な同定は残る。</p>
+<p>Euler回帰<span class="math inline"><span data-source-tex="\Delta r=\alpha+\beta r+\varepsilon">\(\Delta r=\alpha+\beta r+\varepsilon\)</span></span>から</p>
+<div class="math block">
+<span data-source-tex="a_P=-\beta/\Delta,\quad b_P=-\alpha/\beta,\quad
+\sigma=\operatorname{sd}(\varepsilon)/\sqrt\Delta.">\(a_P=-\beta/\Delta,\quad b_P=-\alpha/\beta,\quad
+\sigma=\operatorname{sd}(\varepsilon)/\sqrt\Delta.\)</span>
+</div>
+<p>切片.00000915、傾き−.000545、残差SD.000754を印刷精度で再現し、年率<span class="math inline"><span data-source-tex="a_P=.136,b_P=.0168,\sigma=.0119">\(a_P=.136,b_P=.0168,\sigma=.0119\)</span></span>を得る。OLSの不偏残差分散は分母<span class="math inline"><span data-source-tex="n-2">\(n-2\)</span></span>、Gaussian MLは<span class="math inline"><span data-source-tex="n">\(n\)</span></span>。Exact OU MLはAR係数<span class="math inline"><span data-source-tex="\rho=1+\beta&gt;0">\(\rho=1+\beta&gt;0\)</span></span>から<span class="math inline"><span data-source-tex="a=-\log\rho/\Delta">\(a=-\log\rho/\Delta\)</span></span>を求める別規約であり、Euler MLと同じ数値を要求しない。</p>
+<p>P推定値を固定し、<span class="math inline"><span data-source-tex="r_0=.003">\(r_0=.003\)</span></span>で<span class="math inline"><span data-source-tex="b_Q=b_P-\lambda\sigma/a_P">\(b_Q=b_P-\lambda\sigma/a_P\)</span></span>としてTable31.1のzero SSEを最小化すると<span class="math inline"><span data-source-tex="\lambda=-.1746228">\(\lambda=-.1746228\)</span></span>（印刷−.175）となる。市場列は2016-08-23の入力で、現在の市場curveではない。</p>
+<table>
+<thead>
+<tr>
+<th>満期（年）</th>
+<th style="text-align:right">モデル印刷（%）</th>
+<th style="text-align:right">市場入力（%）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.5</td>
+<td style="text-align:right">.40</td>
+<td style="text-align:right">.45</td>
+</tr>
+<tr>
+<td>1</td>
+<td style="text-align:right">.49</td>
+<td style="text-align:right">.58</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align:right">.65</td>
+<td style="text-align:right">.74</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align:right">.80</td>
+<td style="text-align:right">.86</td>
+</tr>
+<tr>
+<td>5</td>
+<td style="text-align:right">1.06</td>
+<td style="text-align:right">1.15</td>
+</tr>
+<tr>
+<td>7</td>
+<td style="text-align:right">1.27</td>
+<td style="text-align:right">1.40</td>
+</tr>
+<tr>
+<td>10</td>
+<td style="text-align:right">1.52</td>
+<td style="text-align:right">1.55</td>
+</tr>
+<tr>
+<td>20</td>
+<td style="text-align:right">2.02</td>
+<td style="text-align:right">1.88</td>
+</tr>
+<tr>
+<td>30</td>
+<td style="text-align:right">2.26</td>
+<td style="text-align:right">2.24</td>
+</tr>
+</tbody>
+</table>
+<p>原典p727の0.168という字面を保持する一方、直前の<span class="math inline"><span data-source-tex="b_P=.0168">\(b_P=.0168\)</span></span>とP/Q式に整合する計算には.0168を使う。0.168を機械転記して再現できたとはしない。補助CIR worksheetにはcanonical CIRの<span class="math inline"><span data-source-tex="B">\(B\)</span></span>と括弧の異なる保存式もあり、canonical fitをそのSolver結果の再現と呼ばない。独立centering OLS、Gaussian核求積、別optimizerで回帰・9満期・残差を照合し、推定期間変更の感応度も確認する。</p>
+<div class="requirement" id="D31.4-01">
+<p>日次回帰から年率パラメータへ（727）</p>
+<p>下記係数換算、合成OUで回復</p>
+</div>
+<div class="requirement" id="D31.4-02">
+<p>P→Q変換とλのfit（727–728）</p>
+<p>固定データ・時点で目的関数再計算</p>
+</div>
+<div class="requirement" id="D31.4-03">
+<p>Table31.1の残差、推定期間依存（728）</p>
+<p>モデル値と市場値を別列保存</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>元worksheetの8664観測から8663pairを作り、1pair=1/250年で回帰切片.00000915、傾き−.000545、残差SD.000754を印刷精度で確認した。年率a_P=.136、b_P=.0168、sigma=.0119。r0=.003と回収した2016-08-23の9市場入力でlambda=−.1746228（印刷−.175）、Table31.1のモデル%.40/.49/.65/.80/1.06/1.27/1.52/2.02/2.26を独立照合した。市場%.45/.58/.74/.86/1.15/1.40/1.55/1.88/2.24は歴史入力で、現在のcurveではない。本文p727の0.168とb_P=.0168の不整合は下の原典要件と補足に残す。</p>
+<h3>計算の読み方</h3>
+<p>元8664観測/8663pair、0.136/0.0168/0.0119、λ−0.175/Table31.1全9点、独立OLS/求積/optimizer</p>
+<p>元8664観測は固定worksheet proxyで、外部series名／quote basisの完全同定は残る。1pair=1/250年。p727の0.168と整合計算0.0168を併記。補助CIR worksheetのB括弧差、OLS／ML／exact OUを区別。</p>
+<div class="caution">
+<p>元8664観測は固定worksheet proxyで、外部series名／quote basisの完全同定は残る。1pair=1/250年。p727の0.168と整合計算0.0168を併記。補助CIR worksheetのB括弧差、OLS／ML／exact OUを区別。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-31-5">
+<h2>§31.5 More Sophisticated Models</h2>
+<p>出典: Hull 11e Global Edition pp.728–728。</p>
+<p><span class="math inline"><span data-source-tex="dr=(u-ar)dt+\sigma_1dz_1,\ du=-bu\,dt+\sigma_2dz_2">\(dr=(u-ar)dt+\sigma_1dz_1,\ du=-bu\,dt+\sigma_2dz_2\)</span></span> の2因子Vasicek拡張で平均回帰水準も動く。bond は <span class="math inline"><span data-source-tex="Ae^{-Br-Cu}">\(Ae^{-Br-Cu}\)</span></span>、<span class="math inline"><span data-source-tex="C">\(C\)</span></span> は式31.14。Longstaff–Schwartz の2因子CIR型にも言及する。</p>
+<h3>要点の読み方</h3>
+<p>2因子拡張では、平均回帰水準も確率変動させる。</p>
+<div class="math block">
+<span data-source-tex="dr=(u-ar)dt+\sigma_1dW_1,\quad du=-bu\,dt+\sigma_2dW_2,\quad dW_1dW_2=\rho\,dt.">\(dr=(u-ar)dt+\sigma_1dW_1,\quad du=-bu\,dt+\sigma_2dW_2,\quad dW_1dW_2=\rho\,dt.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="r">\(r\)</span></span>は年率金利、<span class="math inline"><span data-source-tex="u">\(u\)</span></span>はrate driftへの寄与（年率金利／年）、<span class="math inline"><span data-source-tex="\sigma_1">\(\sigma_1\)</span></span>は金利／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>、<span class="math inline"><span data-source-tex="\sigma_2">\(\sigma_2\)</span></span>は金利／年／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>。Bond loadingは<span class="math inline"><span data-source-tex="B">\(B\)</span></span>が年、<span class="math inline"><span data-source-tex="C">\(C\)</span></span>が年²で、</p>
+<div class="math block">
+<span data-source-tex="B(a,\tau)=\frac{1-e^{-a\tau}}a,\quad
+C(a,b,\tau)=\frac{B(b,\tau)-B(a,\tau)}{a-b}.">\(B(a,\tau)=\frac{1-e^{-a\tau}}a,\quad
+C(a,b,\tau)=\frac{B(b,\tau)-B(a,\tau)}{a-b}.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="a=b">\(a=b\)</span></span>では<span class="math inline"><span data-source-tex="C=[1-e^{-a\tau}(1+a\tau)]/a^2">\(C=[1-e^{-a\tau}(1+a\tau)]/a^2\)</span></span>、<span class="math inline"><span data-source-tex="a=b=0">\(a=b=0\)</span></span>では<span class="math inline"><span data-source-tex="\tau^2/2">\(\tau^2/2\)</span></span>。除去可能な特異点をnative Gaussian核で扱う。</p>
+<p>Equilibriumモデルの<span class="math inline"><span data-source-tex="\theta=0">\(\theta=0\)</span></span>では</p>
+<div class="math block">
+<span data-source-tex="P=\exp\{-Br-Cu+\tfrac12\operatorname{Var}(\int r\,dt)\}.">\(P=\exp\{-Br-Cu+\tfrac12\operatorname{Var}(\int r\,dt)\}.\)</span>
+</div>
+<p>Technical Note14のcurve-fit版は別に<span class="math inline"><span data-source-tex="\theta(t)">\(\theta(t)\)</span></span>を持つ。初期forward <span class="math inline"><span data-source-tex="f_0">\(f_0\)</span></span>とGaussian shift <span class="math inline"><span data-source-tex="\psi">\(\psi\)</span></span>から<span class="math inline"><span data-source-tex="\theta=(f_0+\psi)&#x27;+a(f_0+\psi)">\(\theta=(f_0+\psi)&#x27;+a(f_0+\psi)\)</span></span>を作る微分は、<strong>初期curveの満期引数</strong>の微分である。時刻第1引数を文字通り微分して0にすると初期curveにfitしない。<span class="math inline"><span data-source-tex="u_0\ne0">\(u_0\ne0\)</span></span>は明示した中心化拡張として扱う。</p>
+<p>独立block行列指数でjoint rate／level／積分の共分散を構成し、raw MC、PDEの交差微分、TN14全6gamma・eta・option分散の求積で照合する。Nativeモデルは<span class="math inline"><span data-source-tex="a=b,\rho=\pm1">\(a=b,\rho=\pm1\)</span></span>を扱うが、TN14の因子変換には<span class="math inline"><span data-source-tex="a\ne b">\(a\ne b\)</span></span>の制約がある。Coupon optionのmoment-matchingは近似で、宣言した合成例の9.91208206と厳密Gaussian給付求積9.88683279は区別する。本文に価格の印刷pinはない。Longstaff–Schwartz等の紹介を全モデル実装要求へ広げない。</p>
+<div class="requirement" id="D31.5-01">
+<p>2因子SDEとB/C loading、式31.14（728）</p>
+<p>線形SDEの行列指数と一致</p>
+</div>
+<div class="requirement" id="D31.5-02">
+<p>Aは本文で省略、Technical Note14への参照（728）</p>
+<p>積分rateのGaussian cumulantから独立構成</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>なし。</p>
+<h3>計算の読み方</h3>
+<p>印刷価格なし。式31.14/TN14全6gamma・eta・theta・option variance、独立block指数/求積/MC、coupon近似9.91208≠厳密9.88683</p>
+<p>Native a=b／ρ±1を扱う一方、TN14因子変換はa≠b。Equilibrium θ0とmarket curve fitを分ける。θの微分は初期curveのmaturity引数。合成coupon近似9.91208≠厳密9.88683。紹介された他モデル全実装は対象外。</p>
+<div class="caution">
+<p>Native a=b／ρ±1を扱う一方、TN14因子変換はa≠b。Equilibrium θ0とmarket curve fitを分ける。θの微分は初期curveのmaturity引数。合成coupon近似9.91208≠厳密9.88683。紹介された他モデル全実装は対象外。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+</main></body></html>

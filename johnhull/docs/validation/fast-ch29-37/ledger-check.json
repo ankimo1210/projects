@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "base": "0d07def7",
+  "counts": {
+    "unreviewed": 0,
+    "gaps_found": 0,
+    "pending_validation": 0,
+    "accepted": 306,
+    "out_of_scope": 0
+  },
+  "artifacts_checked": true,
+  "summary": "41 passed in 6.65s",
+  "old_accepted_rows_unchanged": 261,
+  "all_unselected_rows_unchanged": 261,
+  "source_sha256": {
+    "docs/section_inventory.json": "febd095cd5e7699840e3e06b5af0dc0eb23d6ac8eaa79ec1cd83dce84a3a83a0",
+    "docs/section_ledger.json": "9a0e4b3009534decbce088e8b691ee8cf0b97d108dcc18a52b3cfb6e3edbde6f",
+    "report/tests/test_section_ledger.py": "09c47a1e675d21240d9fbe88996b4870adadb4b4769a004ce2c22027f2c7fb2a",
+    "scripts/verify_section_ledger.py": "06a81a1e26630a5030fe80375b7ccf706f63f6cac26206502b645ffa49c629c9"
+  },
+  "artifact_sha256": {
+    "docs/SECTION_LEDGER.md": "acb32f35f665a388b26947a747f7587988bde9c42eb1924827c2568e5d9c8afa",
+    "docs/validation/fast-ch29-37/ledger-tests.log": "3eb979701a2a475b5f8807fd97193a456722d508817f37e17ea0b1408ddec0ac",
+    "docs/validation/fast-ch29-37/ledger-tests.xml": "3c1a4616fc5666b19522f5a2f5c1501655c65de8665b776ee0772005a20d964c"
+  }
+}

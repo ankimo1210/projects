@@ -1,0 +1,619 @@
+{
+  "base": "0d07def7c818e265a32cc2c42172b7478accf995",
+  "section_contracts": {
+    "29.1": {
+      "implementation": "hullkit/src/hullkit/_bond_market.py",
+      "tests": [
+        "hullkit/tests/test_bond_market.py"
+      ]
+    },
+    "29.2": {
+      "implementation": "hullkit/src/hullkit/_cap_floor_market.py",
+      "tests": [
+        "hullkit/tests/test_cap_floor_market.py"
+      ]
+    },
+    "29.3": {
+      "implementation": "hullkit/src/hullkit/_swaption_market.py",
+      "tests": [
+        "hullkit/tests/test_swaption_market.py"
+      ]
+    },
+    "29.4": {
+      "implementation": "hullkit/src/hullkit/_ir_hedging.py",
+      "tests": [
+        "hullkit/tests/test_ir_hedging.py"
+      ]
+    },
+    "30.1": {
+      "implementation": "hullkit/src/hullkit/_yield_convexity.py",
+      "tests": [
+        "hullkit/tests/test_yield_convexity.py"
+      ]
+    },
+    "30.2": {
+      "implementation": "hullkit/src/hullkit/_timing_adjustment.py",
+      "tests": [
+        "hullkit/tests/test_timing_adjustment.py"
+      ]
+    },
+    "30.3": {
+      "implementation": "hullkit/src/hullkit/_quanto.py",
+      "tests": [
+        "hullkit/tests/test_quanto.py"
+      ]
+    },
+    "30.appendix": {
+      "implementation": "hullkit/src/hullkit/_yield_convexity.py",
+      "tests": [
+        "hullkit/tests/test_yield_convexity_appendix.py"
+      ]
+    },
+    "31.1": {
+      "implementation": "hullkit/src/hullkit/_short_rate_pde.py",
+      "tests": [
+        "hullkit/tests/test_short_rate_pde.py"
+      ]
+    },
+    "31.2": {
+      "implementation": "hullkit/src/hullkit/_short_rate_models.py",
+      "tests": [
+        "hullkit/tests/test_short_rate_models.py"
+      ]
+    },
+    "31.3": {
+      "implementation": "hullkit/src/hullkit/_short_rate_measure.py",
+      "tests": [
+        "hullkit/tests/test_short_rate_measure.py"
+      ]
+    },
+    "31.4": {
+      "implementation": "hullkit/src/hullkit/_short_rate_estimation.py",
+      "tests": [
+        "hullkit/tests/test_short_rate_estimation.py"
+      ]
+    },
+    "31.5": {
+      "implementation": "hullkit/src/hullkit/_two_factor_rates.py",
+      "tests": [
+        "hullkit/tests/test_two_factor_rates.py"
+      ]
+    },
+    "32.1": {
+      "implementation": "hullkit/src/hullkit/_fitted_short_rate.py",
+      "tests": [
+        "hullkit/tests/test_fitted_short_rate.py"
+      ]
+    },
+    "32.2": {
+      "implementation": "hullkit/src/hullkit/_short_rate_bond_options.py",
+      "tests": [
+        "hullkit/tests/test_short_rate_bond_options.py"
+      ]
+    },
+    "32.3": {
+      "implementation": "hullkit/src/hullkit/_forward_rate_volatility.py",
+      "tests": [
+        "hullkit/tests/test_forward_rate_volatility.py"
+      ]
+    },
+    "32.4": {
+      "implementation": "hullkit/src/hullkit/_rate_tree.py",
+      "tests": [
+        "hullkit/tests/test_rate_tree.py"
+      ]
+    },
+    "32.5": {
+      "implementation": "hullkit/src/hullkit/_calibrated_rate_tree.py",
+      "tests": [
+        "hullkit/tests/test_calibrated_rate_tree.py"
+      ]
+    },
+    "32.6": {
+      "implementation": "hullkit/src/hullkit/_short_rate_calibration.py",
+      "tests": [
+        "hullkit/tests/test_short_rate_calibration.py"
+      ]
+    },
+    "32.7": {
+      "implementation": "hullkit/src/hullkit/_outside_model_hedging.py",
+      "tests": [
+        "hullkit/tests/test_outside_model_hedging.py"
+      ]
+    },
+    "33.1": {
+      "implementation": "hullkit/src/hullkit/_hjm_forward.py",
+      "tests": [
+        "hullkit/tests/test_hjm_forward.py"
+      ]
+    },
+    "33.3": {
+      "implementation": "hullkit/src/hullkit/_mortgage_cashflows.py",
+      "tests": [
+        "hullkit/tests/test_mortgage_cashflows.py"
+      ]
+    },
+    "34.1": {
+      "implementation": "hullkit/src/hullkit/_nonstandard_legs.py",
+      "tests": [
+        "hullkit/tests/test_nonstandard_legs.py"
+      ]
+    },
+    "34.2": {
+      "implementation": "hullkit/src/hullkit/_compounding_swaps.py",
+      "tests": [
+        "hullkit/tests/test_compounding_swaps.py"
+      ]
+    },
+    "34.3": {
+      "implementation": "hullkit/src/hullkit/_cross_currency_swaps.py",
+      "tests": [
+        "hullkit/tests/test_cross_currency_swaps.py"
+      ]
+    },
+    "34.4": {
+      "implementation": "hullkit/src/hullkit/_equity_swaps.py",
+      "tests": [
+        "hullkit/tests/test_equity_swaps.py"
+      ]
+    },
+    "34.5": {
+      "implementation": "hullkit/src/hullkit/_embedded_swap_options.py",
+      "tests": [
+        "hullkit/tests/test_embedded_swap_options.py"
+      ]
+    },
+    "34.6": {
+      "implementation": "hullkit/src/hullkit/_other_swap_payoffs.py",
+      "tests": [
+        "hullkit/tests/test_other_swap_payoffs.py"
+      ]
+    },
+    "33.2": {
+      "implementation": "hullkit/src/hullkit/_bgm_lesson.py",
+      "tests": [
+        "hullkit/tests/test_bgm_lesson.py"
+      ]
+    }
+  },
+  "calculation_rows": {
+    "29.1": [
+      "§29.1",
+      "`_bond_market.py`",
+      "Ex29.1: 9.49/7.97、Ex29.2: 122.82/2.36/1.74、独立求積・OU分散MC",
+      "ロジック完了。半年複利＋修正duration規約、教材・受入は保留"
+    ],
+    "29.2": [
+      "§29.2",
+      "`_cap_floor_market.py`",
+      "Ex29.3: 0.00519百万ドル、d1/d2、25,000/12,500、6支払期間、92/360、独立求積・flat strip・支払測度/日次RFR MC",
+      "ロジック完了。RFR midpointのモデル依存バイアスを明示、教材・受入は保留"
+    ],
+    "29.3": [
+      "§29.3",
+      "`_swaption_market.py`",
+      "Ex29.4: 2.19百万ドル、A=2.0035（切捨て）、6.194%、d1/d2、184/365、独立求積・annuity測度Q MC",
+      "ロジック完了。forwardと割引カーブを分離、教材・受入は保留"
+    ],
+    "29.4": [
+      "§29.4",
+      "`_ir_hedging.py`",
+      "10クオート55 gamma、同一cap/swaptionの4 delta、解析微分・独立SVD、bump縮小で高次差収束",
+      "ロジック完了。有限bumpのdelta合計は一次一致、Ch29受入は保留"
+    ],
+    "30.1": [
+      "§30.1",
+      "`_yield_convexity.py`",
+      "Ex30.1: G′−2.6730/G″9.8910、6.097%、5.27/5.18、逆価格求積の二次近似誤差収束",
+      "ロジック完了。CMSのpar bond同一視は局所近似、教材・受入は保留"
+    ],
+    "30.2": [
+      "§30.2",
+      "`_timing_adjustment.py`",
+      "Ex30.2: 1.00535/1206.42/0.6302/760.25、8条件の独立求積・raw密度固定seed MC",
+      "ロジック完了。constant Gaussianは厳密、rate→ratio loadingは凍結近似、教材・受入は保留"
+    ],
+    "30.3": [
+      "§30.3",
+      "`_quanto.py`",
+      "Ex30.3: 15,150.75→15,260.23、Ex30.4: 0.006/0.029/179.83、独立給付求積・raw FX密度MC・American PDE",
+      "ロジック完了。Y/XのFX、forward/spotと100段/収束価格を区別、教材・受入は保留"
+    ],
+    "30.appendix": [
+      "Ch30付録",
+      "`_yield_convexity.py`",
+      "印刷例なし。E[(y−yF)²]=Var+bias²、price平均・Taylor一次/二次/省略項を独立逆価格求積で検証",
+      "ロジック完了。vol/time縮小の高次残差収束、Ch30受入は保留"
+    ],
+    "31.1": [
+      "§31.1",
+      "`_short_rate_pde.py`",
+      "印刷例なし。式31.1–5、定数rate/terminal、Gaussian割引MC・独立PDE微分、flat stochastic curve残差",
+      "ロジック完了。経路積分は台形近似、教材・受入は保留"
+    ],
+    "31.2": [
+      "§31.2",
+      "`_short_rate_models.py`",
+      "Ex31.1: 3.30/0.33%、CIR vol0.05、Vas Gaussian求積/CIR Riccati・χ²求積/厳密時点MC/RB独立PDE",
+      "ロジック完了。CIR zero atom・Feller/Euler反射bias、RB/CIR経路割引は時間近似、教材・受入は保留"
+    ],
+    "31.3": [
+      "§31.3",
+      "`_short_rate_measure.py`",
+      "印刷例なし。式31.13・CIR ab不変、P/Q往復、独立Gaussian求積/raw MC・P bond returnの有限差分PDE",
+      "ロジック完了。a=0はconstant driftで保持、risk price符号は本文の仮定、教材・受入は保留"
+    ],
+    "31.4": [
+      "§31.4",
+      "`_short_rate_estimation.py`、`tests/data/hull_31_4_rates.csv`",
+      "元8664観測/8663pair、0.136/0.0168/0.0119、λ−0.175/Table31.1全9点、独立OLS/求積/optimizer",
+      "ロジック完了。外部series/basis未同定、p727/補助CIR worksheet式差を保持、教材・受入は保留"
+    ],
+    "31.5": [
+      "§31.5",
+      "`_two_factor_rates.py`",
+      "印刷価格なし。式31.14/TN14全6gamma・eta・theta・option variance、独立block指数/求積/MC、coupon近似9.91208≠厳密9.88683",
+      "ロジック完了。native a=b・rho±1、curve fitとequilibrium・微分方向を明示、Ch31受入は保留"
+    ],
+    "32.1": [
+      "§32.1",
+      "`_fitted_short_rate.py`",
+      "印刷例なし。式32.1–8、Ho–Lee/HW curve fit・極限、独立Gaussian θ核求積/PDE/MC、BDT a=−σ′/σ・BK正値step",
+      "ロジック完了。smooth曲線のmaturity微分、対数とGaussian θを分離、教材・受入は保留"
+    ],
+    "32.2": [
+      "§32.2",
+      "`_short_rate_bond_options.py`",
+      "本文印刷例なし。式32.10/Ho–Lee極限、TN15 r*=0.10952/配賦K、0.8751256、独立Gaussian/CIR求積・raw Q MC",
+      "ロジック完了。TN15掲載合計0.8752との差・df0 atom・Jamshidian単調性条件を保持、教材・受入は保留"
+    ],
+    "32.3": [
+      "§32.3",
+      "`_forward_rate_volatility.py`",
+      "Fig32.3は印刷数値なし。同一3か月tenorでflat/低下/hump、独立block指数・bond比shock MC",
+      "ロジック完了。normal/Black換算/瞬間forward/implied capの単位を区別、教材・受入は保留"
+    ],
+    "32.4": [
+      "§32.4",
+      "`_rate_tree.py`",
+      "Fig32.4: B1.11/C0.23/A0.35、独立9経路列挙、3branchのmoment・原確率・exercise obstacle",
+      "ロジック完了。節点の期間rateで割引、後継indexは昇順、教材・受入は保留"
+    ],
+    "32.5": [
+      "§32.5",
+      "`_calibrated_rate_tree.py`",
+      "Fig32.6–8全node/Q、Table32.3全6価格・解析1.8093、Fig32.9全75項目/0.671933/0.703、小木経路列挙・HW解析/期間変換",
+      "ロジック完了。DG201の1日終端/別rate-date、actual coupon/accrual、shifted BKのfloorを明示、教材・受入は保留"
+    ],
+    "32.6": [
+      "§32.6",
+      "`_short_rate_calibration.py`",
+      "5×5/6×4/7×3/8×2/9×1、σ(t)/a回復・penalty・独立Gaussian求積/held-out、Black→HW σ往復、Bermudan行使順序",
+      "ロジック完了。市場価格は本文にないため合成例、single curve/last σ flat延長、教材・受入は保留"
+    ],
+    "32.7": [
+      "§32.7",
+      "`_outside_model_hedging.py`",
+      "印刷例なし。1因子price/複数curve・vol bucket、解析PV01/gamma・独立Gaussian給付求積、σ=0の片側vega",
+      "ロジック完了。curve bumpでa/σ固定、quote再較正riskとは別、Ch32受入は保留"
+    ],
+    "33.1": [
+      "§33.1",
+      "`_hjm_forward.py`",
+      "印刷例なし。signed v/瞬間・有限forward drift、独立Gaussian解析対HJM MC、時間刻み収束、同じrの2履歴で異なるdrift",
+      "ロジック完了。batched pathはdeterministic vol、一般履歴依存HJMの少数状態保証なし、教材・受入は保留"
+    ],
+    "33.2": [
+      "§33.2",
+      "未実装（下調べ・独立scratchあり）",
+      "Ex33.1/Table33.1と60条件付きMCは準備済み、製品ロジック完了には数えない",
+      "flexicap strike/reset・payment日とsticky K0未確定。本人指示に従い節を飛ばし§33.3へ"
+    ],
+    "33.3": [
+      "§33.3",
+      "`_mortgage_cashflows.py`",
+      "本文CMO 400/300/100・100/200/500（計800）、独立30年償却/PV閉形式、IO/PO方向性・principal保存・Gaussian割引MC・OAS逆算",
+      "ロジック完了。返済は明示したpool生存モデル＋任意SMM、原pool/市場価格なし、実証較正とは別。教材・受入は保留"
+    ],
+    "34.1": [
+      "§34.1",
+      "`_nonstandard_legs.py`",
+      "BS34.1: raw10/20期間・100M/120M・2%・ACT365/360、独立cashflow/PV telescope/日次RFR積、元本列・known fixing",
+      "ロジック完了。具体U.S.休日未確定、caller calendarのFollowing、adjusted source pinなし。教材・受入は保留"
+    ],
+    "34.2": [
+      "§34.2",
+      "`_compounding_swaps.py`",
+      "Ex34.1全残高・精密2.895848743/表示値経路2.895、BS34.2の20期間、独立積の和/8経路木のspread厳密条件",
+      "ロジック完了。一般forward実現は近似、additive spread誤差と表示切捨てを保持。教材・受入は保留"
+    ],
+    "34.3": [
+      "§34.3",
+      "`_cross_currency_swaps.py`",
+      "印刷例なし。通貨leg/FX forward等価・反転・coupon spread較正、convexity/timing/quanto個別極限・独立Gaussian tilt",
+      "ロジック完了。spot domestic/foreignとquanto forward foreign/domesticを分離、local/frozen近似。教材・受入は保留"
+    ],
+    "34.4": [
+      "§34.4",
+      "`_equity_swaps.py`",
+      "TN19 net式/独立Gaussian求積、TR配当再投資/reset・pending、既知RFR×残growth、相関stochastic bank/equity MC（basis有無）",
+      "ロジック完了。本文指数/価格pinなし。leg PVとnet/lag・予測期待値入力を分離。教材・受入は保留"
+    ],
+    "34.5": [
+      "§34.5",
+      "`_embedded_swap_options.py`",
+      "trigger2%・6×4 payer/2–5年short receiver、独立binary積分、plain/複利解約を全64方策と照合、同じrでも異なる残高を保持",
+      "ロジック完了。full-history小木16期間まで、4step spreadは近似/large実市場Bermudanとは別。教材・受入は保留"
+    ],
+    "34.6": [
+      "§34.6",
+      "`_other_swap_payoffs.py`",
+      "本文50 USD/bbl・CP6%/spread10%→15.25%、P&G初回0/後9回、独立Gaussian正部分期待値/MC・元本保存",
+      "ロジック完了。歴史的指標/価格なし、payoffとvaluationを区別。Ch34受入は保留"
+    ]
+  },
+  "numerical_requirements": {
+    "29.1": [
+      "D29.1-02",
+      "D29.1-03",
+      "D29.1-04",
+      "D29.1-05",
+      "D29.1-06",
+      "D29.1-07"
+    ],
+    "29.2": [
+      "D29.2-01",
+      "D29.2-02",
+      "D29.2-03",
+      "D29.2-04",
+      "D29.2-05",
+      "D29.2-06",
+      "D29.2-07",
+      "D29.2-09",
+      "D29.2-10",
+      "D29.2-11",
+      "D29.2-12",
+      "D29.2-13"
+    ],
+    "29.3": [
+      "D29.3-02",
+      "D29.3-03",
+      "D29.3-04",
+      "D29.3-05",
+      "D29.3-06",
+      "D29.3-07"
+    ],
+    "29.4": [
+      "D29.4-01",
+      "D29.4-02",
+      "D29.4-03"
+    ],
+    "30.1": [
+      "D30.1-01",
+      "D30.1-02",
+      "D30.1-03"
+    ],
+    "30.2": [
+      "D30.2-01",
+      "D30.2-02"
+    ],
+    "30.3": [
+      "D30.3-01",
+      "D30.3-02",
+      "D30.3-03"
+    ],
+    "30.appendix": [
+      "D30.appendix-01",
+      "D30.appendix-02"
+    ],
+    "31.1": [
+      "D31.1-01",
+      "D31.1-02"
+    ],
+    "31.2": [
+      "D31.2-01",
+      "D31.2-02",
+      "D31.2-03",
+      "D31.2-04"
+    ],
+    "31.3": [
+      "D31.3-01",
+      "D31.3-02"
+    ],
+    "31.4": [
+      "D31.4-01",
+      "D31.4-02",
+      "D31.4-03"
+    ],
+    "31.5": [
+      "D31.5-01",
+      "D31.5-02"
+    ],
+    "32.1": [
+      "D32.1-01",
+      "D32.1-02",
+      "D32.1-03"
+    ],
+    "32.2": [
+      "D32.2-01",
+      "D32.2-02",
+      "D32.2-03"
+    ],
+    "32.3": [
+      "D32.3-01",
+      "D32.3-02"
+    ],
+    "32.4": [
+      "D32.4-01",
+      "D32.4-02"
+    ],
+    "32.5": [
+      "D32.5-01",
+      "D32.5-02",
+      "D32.5-03",
+      "D32.5-04",
+      "D32.5-05"
+    ],
+    "32.6": [
+      "D32.6-01",
+      "D32.6-02",
+      "D32.6-03",
+      "D32.6-04"
+    ],
+    "32.7": [
+      "D32.7-01",
+      "D32.7-02"
+    ],
+    "33.1": [
+      "D33.1-01",
+      "D33.1-02",
+      "D33.1-03"
+    ],
+    "33.2": [
+      "D33.2-01",
+      "D33.2-02",
+      "D33.2-03",
+      "D33.2-04"
+    ],
+    "33.3": [
+      "D33.3-01",
+      "D33.3-02",
+      "D33.3-03"
+    ],
+    "34.1": [
+      "D34.1-01",
+      "D34.1-02",
+      "D34.1-03"
+    ],
+    "34.2": [
+      "D34.2-01",
+      "D34.2-02",
+      "D34.2-03"
+    ],
+    "34.3": [
+      "D34.3-01",
+      "D34.3-02",
+      "D34.3-03"
+    ],
+    "34.4": [
+      "D34.4-01",
+      "D34.4-02",
+      "D34.4-03"
+    ],
+    "34.5": [
+      "D34.5-01",
+      "D34.5-02",
+      "D34.5-03",
+      "D34.5-04"
+    ],
+    "34.6": [
+      "D34.6-01",
+      "D34.6-03"
+    ]
+  },
+  "non_numerical_reasons": {
+    "D29.1-01": "組込optionと利回りの方向、期限前解約預金／loan commitmentの契約対応を説明する。原典にない個別callable／puttable行使価格の数値化は本節の対象外。",
+    "D29.2-08": "Smile／skewとSABRの方法紹介。新しい市場quoteのSABR較正は本節の要求ではなく、既受入§27.2の数値scopeも変更しない。",
+    "D29.3-01": "Swaptionの権利とforward swapの義務、利用目的の説明。具体的なhedge取引の市場入力や損益価格は原典に指定されない。",
+    "D33.2-05": "CEV skewとα=1のlognormal極限、BermudanのLSM／境界近似、実務上の因子数を原典の紹介として説明する。未指定Bermudan市場価格・多curve動的研究の数値実装は本編受入外。",
+    "D34.6-02": "Asset／TRS／CDS／variance swapの受払対象・元本・credit eventの比較と他章への参照を説明する。対応する既受入章の数値sourceを再実装・変更しない。"
+  },
+  "limitations": {
+    "29.1": "Ex29.2はputで、半年複利forward yieldと修正durationによる規約再現。DerivaGem内部仕様と同一とは断定しない。Fig29.1–2のGaussian入力は模式図用合成例。現金／quotedと行使日の経過利子を分ける。",
+    "29.2": "Black relative volとnormal absolute rate vol、fixing timeとpayment DF、known first couponを分ける。RFR midpointはモデル依存近似で、観測済みfactor込みの離散Gaussian日次benchmarkと別。Smile／SABRは紹介。",
+    "29.3": "原典forward6.1%連続は割引curve6%と別入力。A2.0035は切捨て。Coupon bond等価はsingle-curve par浮動脚条件、一般multi-curveへ無条件拡張しない。負金利検証は宣言合成例。",
+    "29.4": "Finite bumpのdelta合計は一次一致で、高次誤差をbump縮小で確認。Bucketの補間／shapeとPCA規模を指定。Quote rebuild感応度と市場parameter再較正riskは別。観測curve／vol系列は未推定。",
+    "30.1": "二次yield補正とCMSのpar-bond同一視は局所近似。G''/G'は負。合成price分布の逆yield求積で省略項を検証し、全スマイル／市場CMSの厳密価格とはしない。",
+    "30.2": "Constant signed Gaussian loadingのtiltは厳密だが、forward rate→bond ratio loadingは係数凍結近似。支払DFを使い、loading負号と相関反転を二重適用しない。",
+    "30.3": "FXはY units per X。Single settlementのforward FX volとAmericanのspot FX volを分ける。原典179.83は100段値で、PDE収束価格約180.22とは別。定数係数・固定FX倍率の範囲。",
+    "30.appendix": "二乗偏差はvariance+bias²。高次Taylor残差／bias²／局所variance置換の省略を別々に検証する二次近似で、厳密terminal yield分布や追加印刷価格pinではない。",
+    "31.1": "Instantaneous rとperiod zero Rを区別。経路割引は台形積分近似。全ての将来curveがstochastic flatという仮定のPDE矛盾と、初期flat curve fitは別命題。",
+    "31.2": "CIR exact endpointは積分short rateまで厳密ではない。df0 zero atom／Feller／反射Euler biasを保持。RBはGBM endpointと経路割引／独立PDE収束を区別。概念図を市場較正としない。",
+    "31.3": "Pdrift=Qdrift+λsの符号規約。a=0はconstant driftを保持しb=None。Risk price負は本文の仮定で実証法則ではない。CIR local tiltは連続path密度の完全検証ではない。",
+    "31.4": "元8664観測は固定worksheet proxyで、外部series名／quote basisの完全同定は残る。1pair=1/250年。p727の0.168と整合計算0.0168を併記。補助CIR worksheetのB括弧差、OLS／ML／exact OUを区別。",
+    "31.5": "Native a=b／ρ±1を扱う一方、TN14因子変換はa≠b。Equilibrium θ0とmarket curve fitを分ける。θの微分は初期curveのmaturity引数。合成coupon近似9.91208≠厳密9.88683。紹介された他モデル全実装は対象外。",
+    "32.1": "Smooth curveの満期微分を使う。Gaussian θはrate/year、log-rate θは別単位。Ho–Lee a0／負Gaussian rateを保持。BDTのa=−σ'/σ制約とBK独立aを分け、log-rate stepをfull fitted BK価格とはしない。",
+    "32.2": "Jamshidianは正cashflow／単調single-factor条件。TN15掲載0.8752と独立厳密0.8751256の差を保持。CIR expiry測度CDFはdf0 atomを含み、raw Q path割引の時間誤差は別。",
+    "32.3": "同一3か月tenorのnormal／Black換算／瞬間forward／implied cap volを区別。Fig32.3のparameterは原典未指定で合成。Zero／負forwardにunshifted Black換算はない。",
+    "32.4": "節点の連続複利期間rateで割引、後継indexは昇順。Tree momentはEuler drift／grid varianceで厳密OU endpointではない。Cash／quoted strikeやaccrualはcallerイベント規約。",
+    "32.5": "DG201の終端1日／rate-date移動、actual coupon／accrual、Table32.2のACT365とzero線形補間を保持。期間Rと瞬間rを分ける。BK／shifted BKはrate floorのfeasibilityがあり任意負curveへfitできない。",
+    "32.6": "原典の5×5〜9×1は契約例だけで、市場quoteはない。合成basketのparameter回復／held-outを検証。Single curve、区分σの最終flat延長、価格scaleとvol penalty規約を明示。Black volとHW absolute σは別。",
+    "32.7": "外部curve bumpはa／σ固定で、quote再較正riskとは別。価格因子数とhedge方向数を分ける。σ0では片側vega、vol1ポイントの単位を表示。原典価格pinなし。",
+    "33.1": "Batched HJM pathはdeterministic vol。一般履歴依存volはper-path callbackで、有限因子数によるscalar Markov性／少数state再結合は保証しない。時間Euler割引と満期求積の誤差を分ける。",
+    "33.2": "単一curve・正の単利forwardのLMM。rolling/terminal/payment-bond drift、reset freeze、割引、caplet/ratchet/sticky/最初の5回のITM flexicap、frozen-forward swaption/PCAをcallerが固定した契約で検証する。sticky K0とflexicap strike/対象fixing/payment不足により原典3.43/3.58/3.61等の価格は未再現。CEV/Bermudanは紹介のみで、市場fitや多curve拡張は対象外。",
+    "33.3": "Homogeneous pool生存モデルとcaller SMMであり実証prepayment／保証制度の検証ではない。原pool／市場価格なし。Sequential CMOはprincipal配分のみでtranche couponは別。OAS逆算中は返済CFを固定。",
+    "34.1": "Raw source10／20期間と100M／120Mを保持。U.S.具体holiday集合は未指定でcaller calendarのFollowing例は合成、adjusted source pinではない。Projection／OIS、known fixing、元本交換、payment lagは別入力。",
+    "34.2": "Forward-realizedは一般に近似。Single-curve／zero compound spreadまたはdeterministic multiplicative spreadの厳密条件とadditive誤差を分ける。精密PV2.895848743と原典途中切捨てroute2.895は別。",
+    "34.3": "Spot国内/外貨とquanto forward外貨/国内のFX quoteを分ける。Mid0は明示coupon spread solve。CMS/timing/quantoの合成はlocal/frozen近似で一般collateral／stochastic multicurveへ無条件拡張しない。",
+    "34.4": "単独equity leg L(ratio−P)とnetを分ける。Known RFR×残りgrowthのcross項を保持。Lagのdiscounted terminal ratioとprojection期待growthは明示入力。指数／価格pinなし、合成TN19／stochastic bank検証。",
+    "34.5": "全履歴小木16期間まで、未払複利残高を保持。Owner max／counterparty min、即時精算とcoupon順序を指定。Binary timingはsigned frozen loading、strict<／補数≥。4step spread proxyは近似でlarge市場Bermudan較正とは別。",
+    "34.6": "商品数量／単価、CMT小数／par100Treasuryの単位を保持。P&Gは初回spread0・後9回、CP6%+spread10%−75bp=15.25%。歴史的指標／価格なし、payoff検証を当時valuationとしない。Amortizationはcaller rule。"
+  },
+  "samples": {
+    "29": "29.2",
+    "30": "30.3",
+    "31": "31.4",
+    "32": "32.5",
+    "33": "33.1",
+    "34": "34.4"
+  },
+  "test_execution": {
+    "primary": {
+      "files": 27,
+      "passed": 282,
+      "skipped": 0,
+      "failed": 0,
+      "seconds": 12.36,
+      "command": "source /tmp/johnhull-acceptance-env.sh && /home/kazumasa/projects/.venv/bin/python -m pytest -q johnhull/hullkit/tests/test_{bond_market,cap_floor_market,swaption_market,ir_hedging,yield_convexity,timing_adjustment,quanto,short_rate_pde,short_rate_models,short_rate_measure,short_rate_estimation,two_factor_rates,fitted_short_rate,short_rate_bond_options,forward_rate_volatility,rate_tree,calibrated_rate_tree,short_rate_calibration,outside_model_hedging,hjm_forward,mortgage_cashflows,nonstandard_legs,compounding_swaps,cross_currency_swaps,equity_swaps,embedded_swap_options,other_swap_payoffs}.py"
+    },
+    "appendix": {
+      "files": 1,
+      "passed": 4,
+      "skipped": 0,
+      "failed": 0,
+      "seconds": 0.57,
+      "command": "source /tmp/johnhull-acceptance-env.sh && /home/kazumasa/projects/.venv/bin/python -m pytest -q johnhull/hullkit/tests/test_yield_convexity_appendix.py"
+    }
+  },
+  "baseline_pending_scope": {
+    "33.2": {
+      "status": "pending_scope",
+      "numerical_requirements": [
+        "D33.2-01",
+        "D33.2-02",
+        "D33.2-03",
+        "D33.2-04"
+      ],
+      "reason": "基点には製品private実装がなく、親の新規BGM contract追加待ち。元典のflexicap strike／対象reset・payment、sticky初期K0の不足はgeneric caller入力と元価格pinを区別して保持する。",
+      "source_outputs_without_product_verification": [
+        "Ex33.1／Table33.1 forward-vol差分算術",
+        "Table33.4／33.5 loading normの表示丸め差",
+        "Table33.2／33.3の原典60価格と条件付きscratch",
+        "Flexicap原典3.43／3.58／3.61（契約不足のため価格pin対象外）"
+      ]
+    }
+  },
+  "current_calculation_rows": {
+    "33.2": [
+      "§33.2",
+      "`_bgm_lesson.py`",
+      "Ex33.1/33.1表forward vol bootstrap、多因子norm/covariance、measure drift、reset/discount、log Euler/PC、Black caplet・ratchet/sticky/chronological flexicap、frozen-forward swaption/PCAの独立検証",
+      "単一curve・正の単利forwardのLMM。rolling/terminal/payment-bond drift、reset freeze、割引、caplet/ratchet/sticky/最初の5回のITM flexicap、frozen-forward swaption/PCAをcallerが固定した契約で検証する。sticky K0とflexicap strike/対象fixing/payment不足により原典3.43/3.58/3.61等の価格は未再現。CEV/Bermudanは紹介のみで、市場fitや多curve拡張は対象外。"
+    ]
+  },
+  "completed_model_scope": {
+    "33.2": {
+      "status": "verified_declared_model_scope",
+      "numerical_requirements": [
+        "D33.2-01",
+        "D33.2-02",
+        "D33.2-03",
+        "D33.2-04"
+      ],
+      "tests_passed": 28,
+      "independent_review": "PASS; Critical 0 / Important 0",
+      "original_prices": "not_reproduced_unconditionally",
+      "limitation": "単一curve・正の単利forwardのLMM。rolling/terminal/payment-bond drift、reset freeze、割引、caplet/ratchet/sticky/最初の5回のITM flexicap、frozen-forward swaption/PCAをcallerが固定した契約で検証する。sticky K0とflexicap strike/対象fixing/payment不足により原典3.43/3.58/3.61等の価格は未再現。CEV/Bermudanは紹介のみで、市場fitや多curve拡張は対象外。"
+    }
+  }
+}

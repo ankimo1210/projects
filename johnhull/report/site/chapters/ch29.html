@@ -1,0 +1,519 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hull Ch29 補足教材</title><style>/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+.lesson{margin:2rem 0;padding:1.4rem;background:var(--surface);border-radius:10px}
+    .requirement{padding:.6rem 0;border-bottom:1px solid var(--rule)}
+    .caution{padding:.8rem;border-left:3px solid var(--series-2)}
+    p,li{line-height:1.85} table{width:100%;border-collapse:collapse}
+    th,td{padding:.5rem;text-align:left;border-bottom:1px solid var(--rule)}
+    pre{overflow-x:auto} .lesson{overflow-wrap:anywhere} mjx-container{overflow-x:auto;max-width:100%}
+    nav{line-height:2} .wrap{max-width:1060px;margin:auto;padding:1.3rem}
+    </style><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><body><main class="wrap"><nav><a href="ch01.html">Ch1</a> · <a href="ch02.html">Ch2</a> · <a href="ch03.html">Ch3</a> · <a href="ch04.html">Ch4</a> · <a href="ch05.html">Ch5</a> · <a href="ch06.html">Ch6</a> · <a href="ch07.html">Ch7</a> · <a href="ch08.html">Ch8</a> · <a href="ch09.html">Ch9</a> · <a href="ch10.html">Ch10</a> · <a href="ch11.html">Ch11</a> · <a href="ch12.html">Ch12</a> · <a href="ch13.html">Ch13</a> · <a href="ch14.html">Ch14</a> · <a href="ch15.html">Ch15</a> · <a href="ch16.html">Ch16</a> · <a href="ch17.html">Ch17</a> · <a href="ch18.html">Ch18</a> · <a href="ch19.html">Ch19</a> · <a href="ch20.html">Ch20</a> · <a href="ch21.html">Ch21</a> · <a href="ch22.html">Ch22</a> · <a href="ch23.html">Ch23</a> · <a href="ch24.html">Ch24</a> · <a href="ch25.html">Ch25</a> · <a href="../exotics.html">Ch26</a> · <a href="../numerics.html">Ch27</a> · <a href="../exotics.html">Ch28</a> · <a href="ch29.html">Ch29</a> · <a href="ch30.html">Ch30</a> · <a href="ch31.html">Ch31</a> · <a href="ch32.html">Ch32</a> · <a href="ch33.html">Ch33</a> · <a href="ch34.html">Ch34</a> · <a href="ch35.html">Ch35</a> · <a href="ch36.html">Ch36</a> · <a href="ch37.html">Ch37</a> · <a href="../index.html">ポータル</a> · <a href="../../../book/_build/html/index.html">Book</a></nav><nav><a href="#section-29-1">§29.1</a>　<a href="#section-29-2">§29.2</a>　<a href="#section-29-3">§29.3</a>　<a href="#section-29-4">§29.4</a></nav><h1>Ch29 節別補足教材</h1>
+<p>刊行時点の原典本文を学ぶ。現在の市場条件や法令の適用はこの教材の対象に含めない。</p>
+<section class="lesson" id="section-29-1">
+<h2>§29.1 Bond Options</h2>
+<p>出典: Hull 11e Global Edition pp.688–692。</p>
+<ul>
+<li>組込オプション：callable 債は保有者が発行体にコールを売った形、puttable 債は保有者がプットを持つ形。期限前解約できる定期預金は米国型の債券プット、ローン・コミットメントも債券プット。callable は利回りが高く、puttable は低い。
+<ul>
+<li>欧州型債券オプションの標準市場モデルは、フォワード債券価格のボラ <span class="math inline"><span data-source-tex="\sigma_B">\(\sigma_B\)</span></span> を置いた Black モデル（式 29.1・29.2）。<span class="math inline"><span data-source-tex="F_B=(B_0-I)/P(0,T)">\(F_B=(B_0-I)/P(0,T)\)</span></span>（式 29.3）。価格はすべて現金価格で、ストライクが quoted price なら満期時点の経過利子を足す。</li>
+<li>債券価格の対数の標準偏差は今日と満期で 0 になり、その間で山になる（Figure 29.1）。そのため同じ債券でもオプション期間が長いほど <span class="math inline"><span data-source-tex="\sigma_B">\(\sigma_B\)</span></span> は下がる（Figure 29.2）。</li>
+<li>市場は利回りボラで呼ぶことが多く、修正デュレーション <span class="math inline"><span data-source-tex="D">\(D\)</span></span> で <span class="math inline"><span data-source-tex="\sigma_B=Dy_0\sigma_y">\(\sigma_B=Dy_0\sigma_y\)</span></span>（式 29.4）と価格ボラに直す。</li>
+</ul>
+</li>
+</ul>
+<h3>要点の読み方</h3>
+<p>Callable債は保有者が発行体へcallを売った形、puttable債は保有者がputを持つ形である。ほかの条件が同じなら、前者の価格は通常債より低く利回りは高い、後者は逆になる。期限前解約できる定期預金とローン・コミットメントは債券putとして読む。ここではその契約対応を説明し、個別の期限前行使価格は指定しない。</p>
+<p><span class="math inline"><span data-source-tex="B_0">\(B_0\)</span></span> はdirty現金価格、<span class="math inline"><span data-source-tex="I">\(I\)</span></span> は行使前couponの時点0のPV、<span class="math inline"><span data-source-tex="P(0,T)">\(P(0,T)\)</span></span> は行使日までの割引である。</p>
+<div class="math block">
+<span data-source-tex="F_B=\frac{B_0-I}{P(0,T)},\quad K_{\rm cash}=K_{\rm quoted}+AI_T.">\(F_B=\frac{B_0-I}{P(0,T)},\quad K_{\rm cash}=K_{\rm quoted}+AI_T.\)</span>
+</div>
+<p>満期の経過利子を今日の経過利子と取り違えない。正の現金forward/strikeを使うBlack式は</p>
+<div class="math block">
+<span data-source-tex="c=P(0,T)[F_BN(d_1)-K_{\rm cash}N(d_2)],\quad
+p=P(0,T)[K_{\rm cash}N(-d_2)-F_BN(-d_1)],">\(c=P(0,T)[F_BN(d_1)-K_{\rm cash}N(d_2)],\quad
+p=P(0,T)[K_{\rm cash}N(-d_2)-F_BN(-d_1)],\)</span>
+</div>
+<div class="math block">
+<span data-source-tex="d_1=\frac{\log(F_B/K_{\rm cash})+\sigma_B^2T/2}{\sigma_B\sqrt T},\quad d_2=d_1-\sigma_B\sqrt T.">\(d_1=\frac{\log(F_B/K_{\rm cash})+\sigma_B^2T/2}{\sigma_B\sqrt T},\quad d_2=d_1-\sigma_B\sqrt T.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="c-p=P(0,T)(F_B-K_{\rm cash})">\(c-p=P(0,T)(F_B-K_{\rm cash})\)</span></span>、zero volでは割引した確定給付へ戻る。<span class="math inline"><span data-source-tex="T">\(T\)</span></span>は年、<span class="math inline"><span data-source-tex="\sigma_B">\(\sigma_B\)</span></span>は相対vol／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>、金額は同じ額面単位にそろえる。</p>
+<p>Ex29.1ではdirty960から今日の経過利子25を引くとquoted935。<span class="math inline"><span data-source-tex="T=10/12">\(T=10/12\)</span></span>、行使前couponのPV95.449、割引0.920044、forward939.684となる。cash strike1000のcall9.48726は印刷9.49、quoted strike1000に<span class="math inline"><span data-source-tex="\,100/12">\(\,100/12\)</span></span>の経過利子を加えたcash1008.333のcall7.96860は7.97を再現する。</p>
+<p>Ex29.2は<strong>put</strong>である。額面100、10年8%半期coupon、割引5%連続、行使2.25年では債券122.8245、couponのPV15.0365、forward120.6226。残りcouponまで最初0.25年として半年複利yield5.0630%、修正duration5.8463を用い、<span class="math inline"><span data-source-tex="\sigma_B=D_{\rm mod}y_F\sigma_y=0.05920">\(\sigma_B=D_{\rm mod}y_F\sigma_y=0.05920\)</span></span>を得る。quoted115は経過利子2込みのcash117なのでput2.36072、cash strike115ならput1.74171である。印刷値は122.82／2.36／1.74。Macaulay durationをそのまま使うと一致しない。<span class="math inline"><span data-source-tex="\,5\times8\%\times20\%=8\%">\(\,5\times8\%\times20\%=8\%\)</span></span>も同じ換算である。この規約による再現を確認したもので、DerivaGemの内部実装と同一とは断定しない。</p>
+<p>Fig29.1–2は原典にモデル入力のない模式図である。宣言したGaussian短期金利モデルでは、<span class="math inline"><span data-source-tex="M">\(M\)</span></span>を債券満期として</p>
+<div class="math block">
+<span data-source-tex="\operatorname{sd}[\log P(t,M)]=B(a,M-t)\sigma\sqrt{B(2a,t)},\quad B(a,u)=\frac{1-e^{-au}}a.">\(\operatorname{sd}[\log P(t,M)]=B(a,M-t)\sigma\sqrt{B(2a,t)},\quad B(a,u)=\frac{1-e^{-au}}a.\)</span>
+</div>
+<p>両端で0となる山型と、これを<span class="math inline"><span data-source-tex="\sqrt t">\(\sqrt t\)</span></span>で割ったoptionの年率volを分ける。<span class="math inline"><span data-source-tex="a=0">\(a=0\)</span></span>では<span class="math inline"><span data-source-tex="B(0,u)=u">\(B(0,u)=u\)</span></span>。給付密度の独立求積と固定seedのOU分散MCを用い、模式図の数値を原典の価格pinとして扱わない。</p>
+<div class="requirement" id="D29.1-01">
+<p>組込オプション（callable・puttable・期限前解約できる預金・ローン・コミットメント）と利回りへの影響（p.689）</p>
+<p>定性。数値化は §32 のツリーの後（callable と straight の差）。ここでは説明と対応表だけ</p>
+</div>
+<div class="requirement" id="D29.1-02">
+<p>Black の債券オプション式 (29.1)・(29.2)。<span class="math inline"><span data-source-tex="K">\(K\)</span></span> は現金ストライク、<span class="math inline"><span data-source-tex="P(0,T)">\(P(0,T)\)</span></span> は無リスク割引（p.689）</p>
+<p>put–call parity <span class="math inline"><span data-source-tex="c-p=P(0,T)(F_B-K)">\(c-p=P(0,T)(F_B-K)\)</span></span>、<span class="math inline"><span data-source-tex="\sigma_B\to0">\(\sigma_B\to0\)</span></span> の極限</p>
+</div>
+<div class="requirement" id="D29.1-03">
+<p><span class="math inline"><span data-source-tex="F_B=(B_0-I)/P(0,T)">\(F_B=(B_0-I)/P(0,T)\)</span></span>（式 29.3）。clean と dirty、quoted strike のときは満期の経過利子を足す（p.690）</p>
+<p>Ex 29.1 の <span class="math inline"><span data-source-tex="I">\(I\)</span></span>・<span class="math inline"><span data-source-tex="F_B">\(F_B\)</span></span>・経過利子 25・quoted 935</p>
+</div>
+<div class="requirement" id="D29.1-04">
+<p>Example 29.1：現金ストライク 1,000 で 9.49、quoted ストライク（現金 1,008.33）で 7.97（p.690）</p>
+<p>下の印刷値</p>
+</div>
+<div class="requirement" id="D29.1-05">
+<p>Figure 29.1・29.2：対数価格の標準偏差の山型、<span class="math inline"><span data-source-tex="\sigma_B">\(\sigma_B\)</span></span> はオプション期間とともに低下（p.691）</p>
+<p>原典は模式図でモデルを指定していない。受入ではモデル（HW か Vasicek）を明示して形だけを再現する</p>
+</div>
+<div class="requirement" id="D29.1-06">
+<p>利回りボラの換算 <span class="math inline"><span data-source-tex="\sigma_B=Dy_0\sigma_y">\(\sigma_B=Dy_0\sigma_y\)</span></span>（式 29.4）。例 <span class="math inline"><span data-source-tex="\,5\times0.08\times0.2=0.08">\(\,5\times0.08\times0.2=0.08\)</span></span>（p.692）</p>
+<p>数値。forward yield の複利頻度と「修正」デュレーションの規約を仕様にする</p>
+</div>
+<div class="requirement" id="D29.1-07">
+<p>Example 29.2：10 年 8%（半年払い）、期間 2.25 年、ストライク 115、利回りボラ 20%、フラット 5%（連続）。債券 122.82、quoted ストライクで 2.36、現金ストライクで 1.74（p.692、Problem 29.16 が手計算）</p>
+<p>下の印刷値。規約を固定して再現</p>
+</div>
+<h3>本文の数値と前提</h3>
+<ul>
+<li>Example 29.1：<span class="math inline"><span data-source-tex="I=95.449">\(I=95.449\)</span></span>（95.45 ✓）、<span class="math inline"><span data-source-tex="F_B=939.684">\(F_B=939.684\)</span></span>（939.68 ✓）、<span class="math inline"><span data-source-tex="P(0,T)=0.920044">\(P(0,T)=0.920044\)</span></span>（0.9200 ✓）、コール 9.48726（9.49 ✓）、<span class="math inline"><span data-source-tex="K=1{,}008.333">\(K=1{,}008.333\)</span></span>（1,008.33 ✓）、コール 7.96860（7.97 ✓）、経過利子 25・quoted 935（✓）。
+<ul>
+<li>利回りボラの換算：0.08（✓、自明な積。テストなし）。</li>
+<li>Example 29.2：債券 122.8245（122.82 ✓）。期間中のクーポン現在価値 15.0365、フォワード現金価格 120.6226、満期の経過利子 2（quoted 115 → 現金 117）。
+<ul>
+<li><strong>規約：</strong> フォワード現金価格と、オプション満期から数えた残りキャッシュフロー（最初のクーポンまで 0.25 年）から<strong>半年複利の利回り</strong> <span class="math inline"><span data-source-tex="y=5.0630\%">\(y=5.0630\%\)</span></span> を出し、<strong>修正デュレーション</strong> <span class="math inline"><span data-source-tex="D=D_{\rm mac}/(1+y/2)=5.8463">\(D=D_{\rm mac}/(1+y/2)=5.8463\)</span></span> で <span class="math inline"><span data-source-tex="\sigma_B=Dy\sigma_y=0.05920">\(\sigma_B=Dy\sigma_y=0.05920\)</span></span>。このとき quoted ストライク 2.36072（2.36 ✓）、現金ストライク 1.74171（1.74 ✓）。<code>計算部品.ir_options:bond_option_black</code> に同じ入力を渡しても同値（<code>ch29_計算部品_check.py</code>）。</li>
+<li>ほかの規約では合わない：連続複利（2.4052 / 1.7822）、年複利（2.3170 / 1.7020）、半年複利で Macaulay のまま（2.4505 / 1.8236）、clean 価格から利回り（2.5456 / 1.9107）。</li>
+<li>テストでは固定されていない（<code>122.82</code>・<code>2.36</code>・<code>1.74</code> の grep 0 件）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>計算の読み方</h3>
+<p>Ex29.1: 9.49/7.97、Ex29.2: 122.82/2.36/1.74、独立求積・OU分散MC</p>
+<p>Ex29.2はputで、半年複利forward yieldと修正durationによる規約再現。DerivaGem内部仕様と同一とは断定しない。Fig29.1–2のGaussian入力は模式図用合成例。現金／quotedと行使日の経過利子を分ける。</p>
+<div class="caution">
+<p>Ex29.2はputで、半年複利forward yieldと修正durationによる規約再現。DerivaGem内部仕様と同一とは断定しない。Fig29.1–2のGaussian入力は模式図用合成例。現金／quotedと行使日の経過利子を分ける。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-29-2">
+<h2>§29.2 Interest Rate Caps and Floors</h2>
+<p>出典: Hull 11e Global Edition pp.693–699。</p>
+<ul>
+<li>キャップは金利コールの列、フロアは金利プットの列。支払いは <span class="math inline"><span data-source-tex="L\delta_k\max(R_k-R_K,0)">\(L\delta_k\max(R_k-R_K,0)\)</span></span> を <span class="math inline"><span data-source-tex="t_{k+1}">\(t_{k+1}\)</span></span> に（式 29.5）。<span class="math inline"><span data-source-tex="t_k">\(t_k\)</span></span> で割り引いて整理すると、キャップは ZCB プットのポートフォリオ（式 29.6）、フロアは ZCB コールのポートフォリオ。カラー＝キャップ買い＋フロア売り（通常ゼロコスト）。
+<ul>
+<li>パリティ：キャップ − フロア ＝ スワップ（初回リセット日の交換なし、BS 29.1）。</li>
+<li>Black のキャップレット（式 29.7）・フロアレット（式 29.8）。ボラは観測時点 <span class="math inline"><span data-source-tex="t_k">\(t_k\)</span></span> で <span class="math inline"><span data-source-tex="\sqrt{t_k}">\(\sqrt{t_k}\)</span></span>、割引は支払時点 <span class="math inline"><span data-source-tex="t_{k+1}">\(t_{k+1}\)</span></span>。spot vol と flat vol、スマイルと SABR。</li>
+<li>理論的根拠：<span class="math inline"><span data-source-tex="P(t,t_{k+1})">\(P(t,t_{k+1})\)</span></span> をニュメレールとする世界で <span class="math inline"><span data-source-tex="E_{k+1}(R_k)=F_k">\(E_{k+1}(R_k)=F_k\)</span></span>（式 29.9）。</li>
+<li>DerivaGem の支払日の作り方、日数計算（act/360 の <span class="math inline"><span data-source-tex="\alpha_k">\(\alpha_k\)</span></span> と <span class="math inline"><span data-source-tex="F_k">\(F_k\)</span></span> の定義）、負の金利（shifted lognormal と Bachelier）、後ろ向き RFR の「quick and dirty」な調整。</li>
+</ul>
+</li>
+</ul>
+<h3>要点の読み方</h3>
+<p>Capletは<span class="math inline"><span data-source-tex="t_k">\(t_k\)</span></span>に観測した単利<span class="math inline"><span data-source-tex="R_k">\(R_k\)</span></span>に対し、<span class="math inline"><span data-source-tex="t_{k+1}">\(t_{k+1}\)</span></span>に<span class="math inline"><span data-source-tex="L\alpha_k(R_k-K)^+">\(L\alpha_k(R_k-K)^+\)</span></span>を支払う。Floorletは<span class="math inline"><span data-source-tex="L\alpha_k(K-R_k)^+">\(L\alpha_k(K-R_k)^+\)</span></span>。元本1000万、<span class="math inline"><span data-source-tex="\alpha=.25">\(\alpha=.25\)</span></span>なら4%対3%のcap支払25000、1.5%対2%のfloor支払12500である。支払を観測日へ戻すと</p>
+<div class="math block">
+<span data-source-tex="\frac{L\alpha(R-K)^+}{1+\alpha R}
+=L\left[1-(1+\alpha K)P(t_k,t_{k+1})\right]^+.">\(\frac{L\alpha(R-K)^+}{1+\alpha R}
+=L\left[1-(1+\alpha K)P(t_k,t_{k+1})\right]^+.\)</span>
+</div>
+<p>したがってcapは額面<span class="math inline"><span data-source-tex="L(1+\alpha K)">\(L(1+\alpha K)\)</span></span>、strike<span class="math inline"><span data-source-tex="L">\(L\)</span></span>のZCB put列、floorはcall列に分解できる。これは給付の恒等式であり、モデルを選んだ後の価格式とは別である。</p>
+<p>Blackのcapletは</p>
+<div class="math block">
+<span data-source-tex="C_k=L\alpha_kP(0,t_{k+1})[F_kN(d_1)-KN(d_2)],\quad
+d_1=\frac{\log(F_k/K)+\sigma_k^2t_k/2}{\sigma_k\sqrt{t_k}}.">\(C_k=L\alpha_kP(0,t_{k+1})[F_kN(d_1)-KN(d_2)],\quad
+d_1=\frac{\log(F_k/K)+\sigma_k^2t_k/2}{\sigma_k\sqrt{t_k}}.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="d_2=d_1-\sigma_k\sqrt{t_k}">\(d_2=d_1-\sigma_k\sqrt{t_k}\)</span></span>で、volの時計は<strong>観測日</strong>、割引は<strong>支払日</strong>。支払債券をnumeraireにすれば<span class="math inline"><span data-source-tex="E^{k+1}[R_k]=F_k">\(E^{k+1}[R_k]=F_k\)</span></span>となる。Q測度の単純平均と同一視せず、raw密度で再重み付けして確認する。Ex29.3の<span class="math inline"><span data-source-tex="L=10^7,F=.07,K=.08,\sigma=.20,t_k=1,t_{k+1}=1.25">\(L=10^7,F=.07,K=.08,\sigma=.20,t_k=1,t_{k+1}=1.25\)</span></span>、連続zero6.5%では<span class="math inline"><span data-source-tex="P=.921963,d_1=-.567657,d_2=-.767657">\(P=.921963,d_1=-.567657,d_2=-.767657\)</span></span>、5190.05ドル＝0.00519005百万ドルであり、印刷0.00519百万ドルに一致する。</p>
+<p>Cap−floorは同じ期間・strikeのswap、collarはcap買い＋floor売り。既に固定された最初のcouponを新しいoption列へ混ぜない。Zero-cost collarはfloor価格がcap価格になるfloor strikeを求根する。Flat volはcap全体の一つのquote、spot volはcapletごとのvolで、隣り合うcap価格の増分をstripして全満期を再価格する。不適切な価格増分を無言で0へ丸めない。Smile／skewとSABRはモデルの紹介であり、ここで新しい市場較正をしたとはしない。</p>
+<p>Scheduleは末尾からtenorで遡り、半期間未満の初回stubを併合する。1.22→2.80年の四半期例は1.22–1.55／1.55–1.80／1.80–2.05／2.05–2.30／2.30–2.55／2.55–2.80の6期間。Actual/360では5月1日→8月1日が<span class="math inline"><span data-source-tex="\,92/360=.255556">\(\,92/360=.255556\)</span></span>、forwardも<span class="math inline"><span data-source-tex="\,1+\alpha F=P(0,t_k)/P(0,t_{k+1})">\(\,1+\alpha F=P(0,t_k)/P(0,t_{k+1})\)</span></span>で同じbasisを使う。</p>
+<p>Black／shifted Blackのvolは相対量、Bachelierのvolは年率金利の絶対量／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>。Shiftedでは<span class="math inline"><span data-source-tex="F+s,K+s&gt;0">\(F+s,K+s&gt;0\)</span></span>が必要。<span class="math inline"><span data-source-tex="F=K=3\%">\(F=K=3\%\)</span></span>、Black33%、1年ATM価格に一致するnormal volは約.00986（約99bp／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>）で、33%と直接比較しない。Shift0、parity、給付密度求積を検証する。</p>
+<p>後ろ向きRFRのforwardは観測済み日次積を含め、<span class="math inline"><span data-source-tex="G_{\rm known}=\prod_d(1+r_d\alpha_d)">\(G_{\rm known}=\prod_d(1+r_d\alpha_d)\)</span></span>と残りのOIS bond比から全期間の成長を作る。Hullのquick-and-dirtyは残り観測時点の平均をvolの時計に使う近似で、未開始なら<span class="math inline"><span data-source-tex="(t_k+t_{k+1})/2">\((t_k+t_{k+1})/2\)</span></span>。共通Brownianで期間平均を作る単純モデルの有効時間<span class="math inline"><span data-source-tex="t_k+(t_{k+1}-t_k)/3">\(t_k+(t_{k+1}-t_k)/3\)</span></span>や厳密な離散Gaussian日次複利モデルとは異なる。観測済みfactor込みの独立求積・割引Q MCを基準とし、midpointとの差をモデル依存の近似biasとして残す。</p>
+<div class="requirement" id="D29.2-01">
+<p>キャップとフロアの支払い（25,000・12,500）、式 (29.5)、tenor（p.693）</p>
+<p>下の印刷値</p>
+</div>
+<div class="requirement" id="D29.2-02">
+<p>キャップ＝ZCB プットのポートフォリオ（式 29.6、額面 <span class="math inline"><span data-source-tex="L(1+R_K\delta_k)">\(L(1+R_K\delta_k)\)</span></span>、ストライク <span class="math inline"><span data-source-tex="L">\(L\)</span></span>）（p.694）</p>
+<p>支払いの恒等式を乱数の <span class="math inline"><span data-source-tex="R_k">\(R_k\)</span></span> で確かめる（モデルに依らない）</p>
+</div>
+<div class="requirement" id="D29.2-03">
+<p>フロア・フロアレット・カラー。ゼロコスト・カラー（p.694）</p>
+<p>カラー＝キャップ − フロア。ゼロコストになるフロア金利の求解</p>
+</div>
+<div class="requirement" id="D29.2-04">
+<p>パリティ：キャップ − フロア ＝ スワップ（初回リセットの交換なし）（p.695、BS 29.1）</p>
+<p>同じストライク・満期で恒等式。LIBOR 型では初回の扱いを調整する旨も説明</p>
+</div>
+<div class="requirement" id="D29.2-05">
+<p>Black のキャップレット式 (29.7)・フロアレット式 (29.8)（pp.694–695）</p>
+<p>Example 29.3</p>
+</div>
+<div class="requirement" id="D29.2-06">
+<p>Example 29.3：<span class="math inline"><span data-source-tex="L">\(L\)</span></span>=1,000 万、<span class="math inline"><span data-source-tex="R_K">\(R_K\)</span></span>=8%、<span class="math inline"><span data-source-tex="F_k">\(F_k\)</span></span>=7%、<span class="math inline"><span data-source-tex="\sigma_k">\(\sigma_k\)</span></span>=20%、<span class="math inline"><span data-source-tex="t_k">\(t_k\)</span></span>=1、<span class="math inline"><span data-source-tex="t_{k+1}">\(t_{k+1}\)</span></span>=1.25、ゼロ 6.5%（連続）。0.00519（百万ドル）（pp.695–696）</p>
+<p>下の印刷値</p>
+</div>
+<div class="requirement" id="D29.2-07">
+<p>spot vol と flat vol。市場は flat で呼び、トレーダーは spot を推定する（p.696、Problem 29.20）</p>
+<p>flat → spot のストリップ。spot vol で各満期のキャップを再評価すると flat の価格を再現</p>
+</div>
+<div class="requirement" id="D29.2-08">
+<p>スマイル・スキューと SABR（p.696）</p>
+<p>説明のみ（SABR の数値は §27.2、M11 で受入済み）</p>
+</div>
+<div class="requirement" id="D29.2-09">
+<p>理論的根拠：<span class="math inline"><span data-source-tex="t_{k+1}">\(t_{k+1}\)</span></span>-フォワード測度で <span class="math inline"><span data-source-tex="E_{k+1}(R_k)=F_k">\(E_{k+1}(R_k)=F_k\)</span></span>（式 29.9）（pp.696–697）</p>
+<p>何らかの金利モデルの MC で、<span class="math inline"><span data-source-tex="t_{k+1}">\(t_{k+1}\)</span></span> 債をニュメレールにした <span class="math inline"><span data-source-tex="R_k">\(R_k\)</span></span> の平均が <span class="math inline"><span data-source-tex="F_k">\(F_k\)</span></span> に一致</p>
+</div>
+<div class="requirement" id="D29.2-10">
+<p>DerivaGem の支払日：期間の末尾から tenor で遡り、初回は通常期間の 0.5〜1.5 倍（例：1.22–2.80 年で 6 期間）（p.697）</p>
+<p>下の印刷値</p>
+</div>
+<div class="requirement" id="D29.2-11">
+<p>日数計算：<span class="math inline"><span data-source-tex="\delta_k">\(\delta_k\)</span></span> を <span class="math inline"><span data-source-tex="\alpha_k">\(\alpha_k\)</span></span>（act/360）に置き換え、<span class="math inline"><span data-source-tex="\,1+\alpha_kF_k=P(0,t_k)/P(0,t_{k+1})">\(\,1+\alpha_kF_k=P(0,t_k)/P(0,t_{k+1})\)</span></span> で <span class="math inline"><span data-source-tex="F_k">\(F_k\)</span></span> を定義（p.697）</p>
+<p>5/1→8/1 の 92 日で 0.2556。act/actual で計算しても影響はほぼ同じ、という主張を数値で確かめる</p>
+</div>
+<div class="requirement" id="D29.2-12">
+<p>負の金利：shifted lognormal（<span class="math inline"><span data-source-tex="F_k+\alpha">\(F_k+\alpha\)</span></span>、<span class="math inline"><span data-source-tex="R_K+\alpha">\(R_K+\alpha\)</span></span>）、Bachelier のキャップレット・フロアレット式、<span class="math inline"><span data-source-tex="\sigma_k">\(\sigma_k\)</span></span> 33% に対し <span class="math inline"><span data-source-tex="\sigma_k^*">\(\sigma_k^*\)</span></span> は約 1%（pp.697–698）</p>
+<p>shift → 0 で Black に一致。Bachelier の put–call parity。ATM 価格を合わせた normal vol</p>
+</div>
+<div class="requirement" id="D29.2-13">
+<p>後ろ向き RFR：<span class="math inline"><span data-source-tex="F_k">\(F_k\)</span></span> を OIS から取り、<span class="math inline"><span data-source-tex="d_1,d_2">\(d_1,d_2\)</span></span> の <span class="math inline"><span data-source-tex="t_k">\(t_k\)</span></span> を <span class="math inline"><span data-source-tex="\,0.5(t_k+t_{k+1})">\(\,0.5(t_k+t_{k+1})\)</span></span> に置き換える。期中は観測済みの分を <span class="math inline"><span data-source-tex="F_k">\(F_k\)</span></span> に入れ、残りの観測時点の平均を使う（pp.698–699）</p>
+<p>日次複利の MC と比べる（下の「注意」）</p>
+</div>
+<h3>本文の数値と前提</h3>
+<ul>
+<li>キャップの支払い 25,000、フロアの支払い 12,500（✓）。
+<ul>
+<li>Example 29.3：<span class="math inline"><span data-source-tex="P(0,1.25)=0.921963">\(P(0,1.25)=0.921963\)</span></span>（0.9220 ✓）、<span class="math inline"><span data-source-tex="d_1=-0.567657">\(d_1=-0.567657\)</span></span>（−0.5677 ✓）、<span class="math inline"><span data-source-tex="d_2=-0.767657">\(d_2=-0.767657\)</span></span>（−0.7677 ✓）、キャップレット 0.0051900 百万ドル（0.00519 ✓）。丸めた <span class="math inline"><span data-source-tex="P=0.9220">\(P=0.9220\)</span></span> で計算しても 0.0051903。</li>
+<li>DerivaGem の支払日（1.22–2.80 年、四半期）：1.22–1.55、1.55–1.80、1.80–2.05、2.05–2.30、2.30–2.55、2.55–2.80（6 期間とも ✓。末尾から遡ると 1.22–1.30 が 0.32 期間で 0.5 未満になり、1.22–1.55 に併合される）。</li>
+<li>日数：5/1→8/1 は 92 日、<span class="math inline"><span data-source-tex="\,92/360=0.2556">\(\,92/360=0.2556\)</span></span>（✓）。</li>
+<li>normal vol：<span class="math inline"><span data-source-tex="F=3\%">\(F=3\%\)</span></span>、<span class="math inline"><span data-source-tex="\sigma_k=33\%">\(\sigma_k=33\%\)</span></span> の ATM 価格を合わせる normal vol は <span class="math inline"><span data-source-tex="T">\(T\)</span></span>=0.5・1・5 年で 0.00988・0.00986・0.00968（「about 1%」✓）。</li>
+<li>テストでの固定：0.00519（百万ドル表記）、支払日、日数は grep 0 件。</li>
+</ul>
+</li>
+</ul>
+<h3>計算の読み方</h3>
+<p>Ex29.3: 0.00519百万ドル、d1/d2、25,000/12,500、6支払期間、92/360、独立求積・flat strip・支払測度/日次RFR MC</p>
+<p>Black relative volとnormal absolute rate vol、fixing timeとpayment DF、known first couponを分ける。RFR midpointはモデル依存近似で、観測済みfactor込みの離散Gaussian日次benchmarkと別。Smile／SABRは紹介。</p>
+<div class="caution">
+<p>Black relative volとnormal absolute rate vol、fixing timeとpayment DF、known first couponを分ける。RFR midpointはモデル依存近似で、観測済みfactor込みの離散Gaussian日次benchmarkと別。Smile／SABRは紹介。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-29-3">
+<h2>§29.3 European Swap Options</h2>
+<p>出典: Hull 11e Global Edition pp.699–702。</p>
+<ul>
+<li>スワプションの使い方（将来の借入の固定金利に上限を付ける）と、コストのない forward swap との違い。
+<ul>
+<li>スワプションは固定利付債のオプションとみなせる：payer は元本をストライクとする固定利付債のプット、receiver はコール（BS 29.2）。</li>
+<li>支払いは <span class="math inline"><span data-source-tex="\frac{L}{m}\max(s_T-s_K,0)">\(\frac{L}{m}\max(s_T-s_K,0)\)</span></span> が <span class="math inline"><span data-source-tex="mn">\(mn\)</span></span> 回。スワップレートを対数正規とする Black 式 <span class="math inline"><span data-source-tex="LA[s_FN(d_1)-s_KN(d_2)]">\(LA[s_FN(d_1)-s_KN(d_2)]\)</span></span>（式 29.10）、receiver は式 (29.11)、<span class="math inline"><span data-source-tex="A=\frac1m\sum P(0,T_i)">\(A=\frac1m\sum P(0,T_i)\)</span></span>。</li>
+<li>理論的根拠：annuity をニュメレールとする世界で <span class="math inline"><span data-source-tex="E_A(s_T)=s_F">\(E_A(s_T)=s_F\)</span></span>。</li>
+<li>日数計算：<span class="math inline"><span data-source-tex="A=\sum\alpha_iP(0,T_i)">\(A=\sum\alpha_iP(0,T_i)\)</span></span>。負の金利：shifted lognormal（shift は option と swap の長さに依存）と Bachelier 式。</li>
+</ul>
+</li>
+</ul>
+<h3>要点の読み方</h3>
+<p>Payer swaptionは固定払いのswapを開始する権利、receiverは固定受けの権利である。Forward swapは開始義務があるがswaptionは行使を選べる。単一曲線・同一元本のpar floating legという条件では、payerは固定coupon bondのput、receiverはcall、strikeは元本<span class="math inline"><span data-source-tex="L">\(L\)</span></span>となる。投影curveにbasisがある一般契約へ、そのpar bondの置換を無条件に広げない。</p>
+<p>時点0のannuityは<span class="math inline"><span data-source-tex="A_0=\sum_i\alpha_iP(0,T_i)">\(A_0=\sum_i\alpha_iP(0,T_i)\)</span></span>である。Blackのpayer／receiver価格は</p>
+<div class="math block">
+<span data-source-tex="V_{\rm pay}=LA_0[s_FN(d_1)-s_KN(d_2)],\quad
+V_{\rm rec}=LA_0[s_KN(-d_2)-s_FN(-d_1)],">\(V_{\rm pay}=LA_0[s_FN(d_1)-s_KN(d_2)],\quad
+V_{\rm rec}=LA_0[s_KN(-d_2)-s_FN(-d_1)],\)</span>
+</div>
+<div class="math block">
+<span data-source-tex="d_1=\frac{\log(s_F/s_K)+\sigma^2T/2}{\sigma\sqrt T},\quad d_2=d_1-\sigma\sqrt T.">\(d_1=\frac{\log(s_F/s_K)+\sigma^2T/2}{\sigma\sqrt T},\quad d_2=d_1-\sigma\sqrt T.\)</span>
+</div>
+<p>Annuity測度では<span class="math inline"><span data-source-tex="E^A[s_T]=s_F">\(E^A[s_T]=s_F\)</span></span>なのでこの形になり、確率的割引をQ世界で定数にしているわけではない。Raw密度<span class="math inline"><span data-source-tex="e^{-\int_0^T r\,dt}A_T/A_0">\(e^{-\int_0^T r\,dt}A_T/A_0\)</span></span>を使う独立Q MCでmeanとcoupon-bond給付を確認する。Payer−receiverは<span class="math inline"><span data-source-tex="LA_0(s_F-s_K)">\(LA_0(s_F-s_K)\)</span></span>、ATMでは両価格が等しい。</p>
+<p>Ex29.4は1億ドル、5年後開始、3年半期払い、strike6.2%、vol20%。割引curveは6%連続だが、<span class="math inline"><span data-source-tex="s_F">\(s_F\)</span></span>は別入力6.1%連続を半年複利<span class="math inline"><span data-source-tex="\,2(e^{.061/2}-1)=6.1940\%">\(\,2(e^{.061/2}-1)=6.1940\%\)</span></span>へ換算する。割引curveから作り直した6.0909%を代入しない。<span class="math inline"><span data-source-tex="A_0=2.003558">\(A_0=2.003558\)</span></span>（原典表示2.0035は切捨て）、<span class="math inline"><span data-source-tex="d_1=.22143,d_2=-.22578">\(d_1=.22143,d_2=-.22578\)</span></span>、payer価格2.19082百万ドルは印刷2.19に一致する。</p>
+<p>日数計算では3月1日→9月1日の184日をActual/365の.504110とし、annuityの<span class="math inline"><span data-source-tex="\alpha_i">\(\alpha_i\)</span></span>にも反映する。Negative rateはshifted Blackまたはnormalを選び、前者のrelative volと後者のabsolute rate volを分ける。Shift0のBlack極限、normal／shifted双方のparity、独立terminal密度求積を検証する。これらの合成負金利例はEx29.4の市場入力とは別である。</p>
+<div class="requirement" id="D29.3-01">
+<p>スワプションの使い方、forward swap との違い（p.699）</p>
+<p>定性（説明のみ）</p>
+</div>
+<div class="requirement" id="D29.3-02">
+<p>スワプション＝固定利付債のオプション（payer＝プット、receiver＝コール、ストライク＝元本）（p.700、BS 29.2）</p>
+<p>満期での支払いの恒等式。HW では Jamshidian（既存）と短期金利 MC が一致</p>
+</div>
+<div class="requirement" id="D29.3-03">
+<p>支払いの列と Black 式 (29.10)・(29.11)、<span class="math inline"><span data-source-tex="A">\(A\)</span></span> の定義（pp.700–701）</p>
+<p>payer − receiver ＝ <span class="math inline"><span data-source-tex="LA(s_F-s_K)">\(LA(s_F-s_K)\)</span></span>（Problem 29.18）、ATM で payer＝receiver</p>
+</div>
+<div class="requirement" id="D29.3-04">
+<p>Example 29.4：フラット 6%（連続）、5 年後開始の 3 年スワップ（半年払い）、<span class="math inline"><span data-source-tex="s_K">\(s_K\)</span></span>=6.2%、<span class="math inline"><span data-source-tex="s_F">\(s_F\)</span></span>=6.1%（連続）＝6.194%（半年）、<span class="math inline"><span data-source-tex="\sigma">\(\sigma\)</span></span>=20%、1 億ドル。2.19（百万ドル）（p.701）</p>
+<p>下の印刷値</p>
+</div>
+<div class="requirement" id="D29.3-05">
+<p>annuity 測度で <span class="math inline"><span data-source-tex="E_A(s_T)=s_F">\(E_A(s_T)=s_F\)</span></span> と、割引を定数扱いできる理由（pp.701–702）</p>
+<p>何らかの金利モデルの MC で、annuity をニュメレールにした <span class="math inline"><span data-source-tex="s_T">\(s_T\)</span></span> の平均が <span class="math inline"><span data-source-tex="s_F">\(s_F\)</span></span></p>
+</div>
+<div class="requirement" id="D29.3-06">
+<p>日数計算：<span class="math inline"><span data-source-tex="A=\sum\alpha_iP(0,T_i)">\(A=\sum\alpha_iP(0,T_i)\)</span></span>、3/1→9/1 の act/365 で 0.5041（p.702）</p>
+<p>下の印刷値</p>
+</div>
+<div class="requirement" id="D29.3-07">
+<p>負の金利：shifted lognormal と Bachelier 式（p.702）</p>
+<p>shift → 0 で Black、Bachelier の payer−receiver パリティ</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>Ex29.4のannuity A=2.003558（原典2.0035は切捨て）、forward swap rate .061940、d1=.22143、d2=−.22578、PV2.19082 million USDは各独立計算と一致する。3/1→9/1は184日、Actual/365で184/365=.504109589。途中丸めとyear fractionを区別する。</p>
+<h3>計算の読み方</h3>
+<p>Ex29.4: 2.19百万ドル、A=2.0035（切捨て）、6.194%、d1/d2、184/365、独立求積・annuity測度Q MC</p>
+<p>原典forward6.1%連続は割引curve6%と別入力。A2.0035は切捨て。Coupon bond等価はsingle-curve par浮動脚条件、一般multi-curveへ無条件拡張しない。負金利検証は宣言合成例。</p>
+<div class="caution">
+<p>原典forward6.1%連続は割引curve6%と別入力。A2.0035は切捨て。Coupon bond等価はsingle-curve par浮動脚条件、一般multi-curveへ無条件拡張しない。負金利検証は宣言合成例。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-29-4">
+<h2>§29.4 Hedging Interest Rate Derivatives</h2>
+<p>出典: Hull 11e Global Edition pp.703–703。</p>
+<ul>
+<li>デルタの 4 つの定義：(1) ゼロカーブの 1bp 平行シフト（DV01）、(2) カーブ構築に使った各商品のクオートの変化、(3) バケット（1 区間だけ 1bp 動かす。BS 6.3）、(4) 主成分分析（§22.9）の因子。トレーダーは (2) を好む（カーブが変わるのはクオートが変わるときだけ）。
+<ul>
+<li>ガンマは組合せが多い（10 商品なら 55 個）。対角だけ、平行シフトの 2 階、PCA の 2 因子、という選び方がある。</li>
+<li>ベガ：全キャップ・スワプションの Black vol を同じだけ動かす方法は 1 因子の仮定。vol の PCA で 2〜3 因子のベガを出すほうがよい。</li>
+</ul>
+</li>
+</ul>
+<h3>要点の読み方</h3>
+<p>同じcap／swaptionポートフォリオでも、どの市場座標を動かすかでdeltaが変わる。1bpは年率金利.0001である。</p>
+<table>
+<thead>
+<tr>
+<th>定義</th>
+<th>操作</th>
+<th>読み方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero平行／DV01</td>
+<td>全zero rateを同じ1bp動かす</td>
+<td>全curveの平行shockによる金額変化</td>
+</tr>
+<tr>
+<td>Quote delta</td>
+<td>構築商品の一つのquoteを動かしcurveを再構築</td>
+<td>観測quoteの変化と価格を結ぶ</td>
+</tr>
+<tr>
+<td>Bucket delta</td>
+<td>指定した年限方向だけ動かす</td>
+<td>補間・bucket形状に依存</td>
+</tr>
+<tr>
+<td>PCA delta</td>
+<td>履歴変動のloading方向へ動かす</td>
+<td>因子shockの正規化を指定</td>
+</tr>
+</tbody>
+</table>
+<p>トレーダーがquote deltaを好むという本文の理由は、curveの観測入力がquoteだからである。計算では再構築関数を明示し、独立のdeposit割引微分で照合する。Bucket方向の和が平行方向を作る場合、一次微分の和は一致するが、有限bumpでの差には高次項がある。Bumpを縮めて収束を確認し、有限差分の完全一致を一般法則にしない。</p>
+<p><span class="math inline"><span data-source-tex="g=\nabla V,H=\nabla^2V">\(g=\nabla V,H=\nabla^2V\)</span></span>として方向<span class="math inline"><span data-source-tex="d">\(d\)</span></span>のgammaは<span class="math inline"><span data-source-tex="d^\top Hd">\(d^\top Hd\)</span></span>。10座標では対称Hessianの独立要素が<span class="math inline"><span data-source-tex="\,10(10+1)/2=55">\(\,10(10+1)/2=55\)</span></span>で、平行gammaは<span class="math inline"><span data-source-tex="\mathbf1^\top H\mathbf1">\(\mathbf1^\top H\mathbf1\)</span></span>、対角の和<span class="math inline"><span data-source-tex="\operatorname{tr}H">\(\operatorname{tr}H\)</span></span>とは異なる。PCAの固有vectorの符号は任意であり、独立SVDと比較するときは方向符号の自由度を許す。</p>
+<p>全Black volの平行shiftによるvegaは一つのvol因子を仮定する。Vol変動のPCAを使えば複数方向のvegaを持てる。値を「vol1ポイント＝.01あたり」に換算したか、絶対金利volか相対Black volかを表示する。合成変動のPCA・解析quadratic微分・同一ポートフォリオのbump収束を検証した範囲であり、観測vol系列や市場quoteの再較正riskを推定した結果ではない。</p>
+<div class="requirement" id="D29.4-01">
+<p>デルタの 4 定義（DV01、クオート、バケット、PCA）と、実務が (2) を好む理由（p.703）</p>
+<p>同じポートフォリオで 4 種を計算。クオート・デルタの合計＝全クオートを同時に動かして再構築した差分、バケットの合計≈DV01（補間の規約に依存）</p>
+</div>
+<div class="requirement" id="D29.4-02">
+<p>ガンマの数：10 商品で 55 個。対角のみ、平行シフトの 2 階、PCA 2 因子（p.703）</p>
+<p><span class="math inline"><span data-source-tex="n(n+1)/2">\(n(n+1)/2\)</span></span>。有限差分のヘッセ行列が対称であること、対角と平行の 2 階の関係</p>
+</div>
+<div class="requirement" id="D29.4-03">
+<p>ベガ：Black vol の平行シフト（1 因子の仮定）と、vol の PCA（p.703）</p>
+<p>合成の vol 変動から PCA ベガを出し、平行ベガとの差を示す</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>55（<span class="math inline"><span data-source-tex="=10\cdot11/2">\(=10\cdot11/2\)</span></span>、✓）。ほかに数値はない。</p>
+<h3>計算の読み方</h3>
+<p>10クオート55 gamma、同一cap/swaptionの4 delta、解析微分・独立SVD、bump縮小で高次差収束</p>
+<p>Finite bumpのdelta合計は一次一致で、高次誤差をbump縮小で確認。Bucketの補間／shapeとPCA規模を指定。Quote rebuild感応度と市場parameter再較正riskは別。観測curve／vol系列は未推定。</p>
+<div class="caution">
+<p>Finite bumpのdelta合計は一次一致で、高次誤差をbump縮小で確認。Bucketの補間／shapeとPCA規模を指定。Quote rebuild感応度と市場parameter再較正riskは別。観測curve／vol系列は未推定。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+</main></body></html>

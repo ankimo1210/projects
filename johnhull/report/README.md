@@ -86,6 +86,20 @@ python johnhull/scripts/fast_acceptance_risk_credit.py build
 [受入範囲・省略・再検証](../docs/CHAPTERS_22_25_ACCEPTANCE_2026-10-07.md)を参照。
 登録後は`verify`で証跡を生成し直さず確認する。既存Book改訂/main統合は未実施。
 
+## Ch29–37の節別補足教材
+
+残り45節・149要件を`site/chapters/ch29.html`〜`ch37.html`へ生成する。
+全306節の台帳受入を完了。§33.2/36.4はprivate計算を補完し、
+caller指定条件の検証と未確定の原典価格の再現を区別する。
+
+```bash
+python johnhull/scripts/fast_acceptance_final.py build
+```
+
+共通venv/PYTHONPATHを使用し、数式表示にはオンライン接続が必要。
+[受入範囲・制限・再検証](../docs/CHAPTERS_29_37_ACCEPTANCE_2026-10-08.md)を参照。
+登録後は`verify`で証跡を生成し直さず確認する。既存Book改訂/main統合は別工程。
+
 ## 図を追加する
 
 `report_builder/figures.py` の `FIGURES` に `FigureSpec` を1つ足すだけ
