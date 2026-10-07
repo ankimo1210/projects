@@ -1,0 +1,118 @@
+{
+  "status": "PASS",
+  "scope": "P8 assigned audit repairs and decisions; no new section acceptance",
+  "created_at": "2026-10-06T23:14:27.897264+00:00",
+  "verified_source_commit": "72a7ade10562da85667376cdef3269e6ee2c11bc",
+  "base_commit": "b6bbbdca76e7fd2840e00893f296f261bf59d719",
+  "source_sha256": {
+    "deep_hedge_price/scripts/export_johnhull_pricing_reference.py": "2134a8d971a9db17187c4f15749a434b5166c0d371fba1a7d54d9cc5efba22a2",
+    "deep_hedge_price/src/deep_hedge_price/frontier_reference.py": "f25a1de343d2570983f82719353fb5d9cc6dd3526684f3ef4cb0c9fc566d8840",
+    "deep_hedge_price/src/deep_hedge_price/hedge_capstone.py": "a555a5c8ea3178cd8f00b70073f6caf102bc5a4abace2871bd3d50efa8de1766",
+    "deep_hedge_price/src/deep_hedge_price/pricing_calibration.py": "64976b86fff60c7ebce8986a0aa8739cdbf95f1c1c79492a3d1dba7f96088f0b",
+    "deep_hedge_price/src/deep_hedge_price/pricing_evaluation.py": "9347473cb4ee9b3dc83d6a5c8d1685ccf8b86969304a2a4ca083e15833251152",
+    "deep_hedge_price/src/deep_hedge_price/pricing_residuals.py": "136d28a0c9079d3e90270cd6bca5835a7198e6b31b8a5b60b28458f846eee8f3",
+    "deep_hedge_price/src/deep_hedge_price/surface_hedge_pipeline.py": "3b35ebd2338b98c0671406508c0f7598113ca8c5d1232a94328843459fa45f4e",
+    "deep_hedge_price/src/deep_hedge_price/walk_forward.py": "84ccde6745cdaf6663134f4835a8ea078cab2a3352039b05cb031ee6416af6f0",
+    "deep_hedge_price/tests/test_p8_forecast_hedge.py": "e108dcb6ce280ea6e356f759d82dbce93978fc9f42435d781e6172a45292f242",
+    "johnhull/hullkit/src/hullkit/frontier_reference.py": "c306605c2cb0e3745f4e542260b88a40a9406f77d54c984b5be40433fc7c960e",
+    "johnhull/hullkit/src/hullkit/surrogate_data.py": "251a883394722e33e38259c133681166c7444c5c570d8100e08d9f9a2f969459",
+    "johnhull/hullkit/src/hullkit/zero_dte.py": "e8f99291613b17e0ffb6a29535d9ea08a2ab604e7116513164e91eca6dc07265",
+    "johnhull/hullkit/tests/test_frontier_reference.py": "9efc4ba18da3fe95a845167dcafac1eb2742aabe0d22f022d812688c6c01c333",
+    "johnhull/hullkit/tests/test_p8_mc_corrections.py": "cf3841717a9c8774d0213f91a95072e1b46a34ae35f8c816d96bac7e64f4a1d5",
+    "johnhull/report/report_builder/figures.py": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3",
+    "johnhull/report/report_builder/frontier_figures.py": "ef274603ae8c2aee7a997d1a5c28d088c45a40b010e2f4cd27858edb107ee1c4",
+    "johnhull/report/tests/test_frontier_acceptance_tamper.py": "b54ea80ab35445c168ba408d2feb32fa34ccc4c56c62662691ae47b62cedbe17",
+    "johnhull/report/tests/test_p8_acceptance_evidence.py": "034443bcda76b105a766b4f107e7eff7281584c3c26762079e0813ad17863dd9",
+    "johnhull/report/tests/test_p8_artifact_precision.py": "17e02746db77083c020ac06c2ffd3bfb2971cb80d7cda9ebdbc980ed715ab284",
+    "johnhull/report/tests/test_section_ledger.py": "e926776000cad7821a640475ed5c509a91f83e8ae3277f14510d46c8d37773d1",
+    "johnhull/report/tests/test_vol21_timing_provenance.py": "5c1cd774ef25abbc2bf3be7a7f931f2903f6a36db5effa77486ada26bda7f46b",
+    "johnhull/scripts/build_frontier_artifacts.py": "b4e587809806888e6612deb37eec8dc574a5d718109963167e98fb07efb1e143",
+    "johnhull/scripts/build_frontier_notebooks.py": "6adcfaa51f5ccd72f701823ac82e3a7586bfae6290edcdf40aa7ab75dc154070",
+    "johnhull/scripts/frontier_acceptance.py": "d75a52f49b45a74ab5e9c4c778c82c112b17d5b786d2e24980af2e675e9c9e3a",
+    "johnhull/scripts/verify_frontier_artifacts.py": "1a4bcc96c974da3b10eb30c5d8ecd810b74cd85b43c7f656ece7818b37fa2863"
+  },
+  "tests": {
+    "hullkit_report": {
+      "passed": 4466,
+      "skipped": 6,
+      "warnings": 2
+    },
+    "deep_hedge_price": {
+      "passed": 209
+    }
+  },
+  "checks": {
+    "frontier_acceptance": {
+      "volumes": 11,
+      "checks": 118,
+      "status": "PASS"
+    },
+    "frontier_rebuild": {
+      "volumes": 10,
+      "repetitions": 2,
+      "comparison": "rtol 1e-10, atol 1e-12",
+      "status": "PASS"
+    },
+    "fresh_notebooks": {
+      "frontier": 11,
+      "core": 19,
+      "status": "PASS"
+    },
+    "browser": {
+      "states": 18,
+      "images": 18,
+      "numeric_mutation_rejected": true,
+      "status": "PASS"
+    },
+    "d1": {
+      "sections": 33,
+      "browser_runtime_pytest_restore": "PASS",
+      "status": "PASS"
+    },
+    "ledger": {
+      "accepted": 33,
+      "unreviewed": 273,
+      "total": 306,
+      "artifacts_checked": true,
+      "status": "PASS"
+    },
+    "release": {
+      "require_tracked": true,
+      "status": "PASS"
+    },
+    "review": {
+      "critical": 0,
+      "important": 0,
+      "minor_fixed": 1
+    },
+    "ruff": {
+      "changed_python_files": 25,
+      "check": "PASS",
+      "format": "PASS"
+    }
+  },
+  "records": {
+    "d1": "d1-final-check.json",
+    "browser": "p8-browser-check.json",
+    "evidence_refresh": "ledger-evidence-refresh.json",
+    "validation_manifest": "p8-validation-manifest.json"
+  },
+  "storage_verification": {
+    "status": "PASS",
+    "primary": {
+      "status": "PASS",
+      "entries": 12,
+      "bytes": 22722
+    },
+    "mirror": {
+      "status": "PASS",
+      "entries": 12,
+      "bytes": 22722
+    }
+  },
+  "limits": [
+    "Finite-grid rough variance approximation; no general convergence-rate claim",
+    "Synthetic first held-out origin per fold; oracle evaluation premium is not a tradable forecast",
+    "R6 fee-aware inventory extension and R11 teaching belong to later research/chapter acceptance"
+  ]
+}

@@ -21,9 +21,15 @@ from .feature_diagnostics import (
     occlusion_importance,
     permutation_importance,
 )
-from .hedge_capstone import DEFAULT_NO_TRADE_WIDTH, DEFAULT_TRANSACTION_COST
+from .hedge_capstone import (
+    DEFAULT_NO_TRADE_WIDTH,
+    DEFAULT_TRANSACTION_COST,
+    _forecast_hedge_case,
+    _risk_metrics,
+)
 from .pricing_calibration import (
     CalibrationResult,
+    _calibrate_with_evidence,
     calibrate_parameters,
     calibration_error_metrics,
     fit_direct_inverse_ridge,
@@ -38,6 +44,7 @@ from .volatility_data import (
 )
 from .walk_forward import (
     SequenceForecaster,
+    _mean_log_forecast,
     block_bootstrap_metric_ci,
     ewma_forecast,
     fit_garch11,
@@ -391,7 +398,7 @@ def build_vol19_reference(*, seed: int = 1900, rbergomi_paths: int = 2_048) -> R
     def sabr_forward(values: np.ndarray) -> np.ndarray:
         return _sabr_forward(strikes, maturities, values)
 
-    calibration = calibrate_parameters(
+    calibration, calibration_evidence = _calibrate_with_evidence(
         sabr_forward,
         teacher_iv[1].reshape(-1),
         np.array([0.18, 0.60, -0.10, 0.35]),
@@ -421,6 +428,7 @@ def build_vol19_reference(*, seed: int = 1900, rbergomi_paths: int = 2_048) -> R
     )
     starts = calibration.starts
     arrays = {
+        **calibration_evidence,
         "teacher_model_code": np.arange(len(definitions), dtype=np.int16),
         "teacher_strikes": strikes,
         "teacher_maturities": maturities,
@@ -500,6 +508,14 @@ def build_vol19_reference(*, seed: int = 1900, rbergomi_paths: int = 2_048) -> R
         "teacher_implied_volatility": "annualized_volatility",
         "teacher_standard_error": "spot_units",
         "calibration_start_repricing_rmse": "annualized_volatility",
+        "calibration_optimizer_status": "scipy termination code",
+        "calibration_optimizer_nfev": "function evaluations",
+        "calibration_optimizer_optimality": "scaled gradient infinity norm",
+        "calibration_optimizer_residuals": "annualized_volatility",
+        "calibration_bounds_lower": "SABR alpha,beta,rho,nu",
+        "calibration_bounds_upper": "SABR alpha,beta,rho,nu",
+        "calibration_max_evaluations": "function evaluations",
+        "calibration_optimizer_gtol": "scaled gradient infinity norm tolerance",
         "constraint_strikes": "spot_units",
         "constraint_maturities": "years",
         "constraint_clean_teacher_price": "spot_units",
@@ -823,6 +839,7 @@ def _walk_forward_horizon(
     garch_parameters = []
     regime_thresholds = []
     fold_bounds = []
+    smearing_rows = []
     diagnostic_inputs: tuple[SequenceForecaster, np.ndarray, np.ndarray] | None = None
     persistence_column = {1: 0, 5: 1, 21: 2}[horizon]
 
@@ -877,10 +894,20 @@ def _walk_forward_horizon(
             "persistence": np.exp(features[split.test, persistence_column]),
             "ewma": np.exp(features[split.test, 3]),
             "garch11": np.asarray(garch_prediction),
-            "log_har": np.exp(log_har.predict(features[split.test, :3])),
-            "regularized_linear": np.exp(regularized.predict(standardized[split.test])),
-            "pca_ridge_challenger": np.exp(pca_model.predict(projected[split.test])),
         }
+
+        smearing = []
+        for name, model, inputs in [
+            ("log_har", log_har, features[:, :3]),
+            ("regularized_linear", regularized, standardized),
+            ("pca_ridge_challenger", pca_model, projected),
+        ]:
+            predictions[name], factor = _mean_log_forecast(
+                log_target[split.train],
+                model.predict(inputs[split.train]),
+                model.predict(inputs[split.test]),
+            )
+            smearing.append(factor)
 
         sequence_standardizer = TrainWindowStandardizer.fit(sequences, split.train)
         standardized_sequences = sequence_standardizer.transform(sequences)
@@ -901,7 +928,13 @@ def _walk_forward_horizon(
             model.eval()
             with torch.no_grad():
                 normalized_prediction = model(test_x).cpu().numpy()
-            predictions[kind] = np.exp(target_mean + target_scale * normalized_prediction)
+                normalized_train = model(train_x).cpu().numpy()
+            predictions[kind], factor = _mean_log_forecast(
+                log_target[split.train],
+                target_mean + target_scale * normalized_train,
+                target_mean + target_scale * normalized_prediction,
+            )
+            smearing.append(factor)
             if horizon == 5 and kind == "transformer" and fold == len(splits) - 1:
                 diagnostic_inputs = (
                     model,
@@ -909,6 +942,7 @@ def _walk_forward_horizon(
                     (log_target[split.test] - target_mean) / target_scale,
                 )
 
+        smearing_rows.append(smearing)
         origin_variance = np.exp(features[:, 4])
         thresholds = np.quantile(origin_variance[split.train], [1 / 3, 2 / 3])
         regime = np.digitize(origin_variance[split.test], thresholds).astype(np.int8)
@@ -956,6 +990,7 @@ def _walk_forward_horizon(
         "source_time_index": time_index,
         "returns": returns,
         "sequence_features": sequences,
+        "smearing_factor": np.asarray(smearing_rows),
         "fold_bounds": fold_bounds_array,
         "test_row": np.concatenate(test_rows),
         "prediction_fold": np.concatenate(fold_rows),
@@ -1092,6 +1127,106 @@ def _walk_forward_reference(seed: int) -> tuple[dict[str, Any], dict[str, np.nda
     )
 
 
+def _forecast_economic_reference(walk, arrays, seed, steps):
+    """First held-out origin per fold: ten forecasts on each horizon's common scenario.
+
+    Realized future variance sets oracle test paths/premium, never a forecast input.
+    This bounded synthetic evaluation is not a tradable oracle-premium strategy.
+    """
+    models = [
+        "persistence",
+        "ewma",
+        "garch11",
+        "log_har",
+        "regularized_linear",
+        "pca_ridge_challenger",
+        "harnet",
+        "tcn",
+        "lstm",
+        "transformer",
+    ]
+    rows = []
+    for horizon in [1, 5, 21]:
+        prefix = f"walk_forward_h{horizon}_"
+        folds = arrays[prefix + "prediction_fold"]
+        for fold in np.unique(folds):
+            row = int(np.flatnonzero(folds == fold)[0])
+            realized = float(
+                np.clip(np.sqrt(252 * arrays[prefix + "actual"][row] / horizon), 0.05, 1.0)
+            )
+            forecasts = np.array(
+                [
+                    np.clip(
+                        np.sqrt(252 * float(arrays[prefix + "prediction_" + name][row]) / horizon),
+                        0.05,
+                        1.0,
+                    )
+                    for name in models
+                ]
+            )
+            cases = []
+            evidence = None
+            for forecast in forecasts:
+                result, evidence = _forecast_hedge_case(
+                    forecast_volatility=float(forecast),
+                    path_volatility=realized,
+                    maturity=horizon / 252,
+                    n_paths=128,
+                    n_steps=steps,
+                    seed=seed + horizon * 100 + int(fold),
+                )
+                cases.append((result, evidence))
+            rows.append((horizon, int(fold), row, realized, forecasts, cases, evidence))
+    names = rows[0][-1]["strategy_names"]
+    data = {
+        "economic_horizon": np.array([r[0] for r in rows]),
+        "economic_fold": np.array([r[1] for r in rows]),
+        "economic_row": np.array([r[2] for r in rows]),
+        "economic_true_volatility": np.array([r[3] for r in rows]),
+        "economic_forecast_volatility": np.stack([r[4] for r in rows]),
+        "economic_spot": np.stack([r[-1]["spot"] for r in rows]),
+        "economic_shocks": np.stack([r[-1]["shocks"] for r in rows]),
+        "economic_premium": np.array([r[-1]["premium"] for r in rows]),
+        "economic_secondary_price": np.stack([r[-1]["secondary_price"] for r in rows]),
+        "economic_stock_positions": np.stack(
+            [np.stack([e["stock_positions"] for _, e in r[-2]]) for r in rows]
+        ),
+        "economic_option_positions": np.stack(
+            [np.stack([e["option_positions"] for _, e in r[-2]]) for r in rows]
+        ),
+        "economic_pnl": np.stack(
+            [np.stack([np.stack([c.pnl[n] for n in names]) for c, _ in r[-2]]) for r in rows]
+        ),
+        "economic_turnover": np.stack(
+            [np.stack([np.stack([c.turnover[n] for n in names]) for c, _ in r[-2]]) for r in rows]
+        ),
+    }
+    risk = {}
+    for horizon in [1, 5, 21]:
+        mask = data["economic_horizon"] == horizon
+        risk[str(horizon)] = {
+            name: {
+                strategy: _risk_metrics(
+                    data["economic_pnl"][mask, m, i].ravel(),
+                    data["economic_turnover"][mask, m, i].ravel(),
+                )
+                for i, strategy in enumerate(names)
+            }
+            for m, name in enumerate(models)
+        }
+    return {
+        "models": models,
+        "strategies": names,
+        "sample": "first held-out origin per fold",
+        "paths_per_case": 128,
+        "steps": steps,
+        "annualization": 252,
+        "premium": "common oracle BSM at held-out realized-vol scenario",
+        "volatility_clip": [0.05, 1.0],
+        "risk_by_horizon": risk,
+    }, data
+
+
 def build_vol20_reference(
     *,
     seed: int = 2000,
@@ -1112,6 +1247,9 @@ def build_vol20_reference(
     else:
         supplied = None
     dynamics_metrics, dynamics_arrays = _walk_forward_reference(seed + 10)
+    economic_metrics, economic_arrays = _forecast_economic_reference(
+        dynamics_metrics, dynamics_arrays, seed + 50, hedge_steps
+    )
     pipeline = run_synthetic_surface_hedge_pipeline(
         seed=seed + 20,
         n_paths=hedge_paths,
@@ -1124,6 +1262,7 @@ def build_vol20_reference(
     phase1_status = "evaluated_external_positions" if supplied is not None else "not_evaluated"
     arrays = {
         **dynamics_arrays,
+        **economic_arrays,
         "e2e_true_parameters": pipeline.true_parameters,
         "e2e_calibrated_parameters": pipeline.calibration.parameters,
         "e2e_path_ids": pipeline.hedge.path_ids,
@@ -1140,6 +1279,7 @@ def build_vol20_reference(
         "execution_profile": "cpu_quick",
         "data_policy": "synthetic_offline_actual_pipeline_execution",
         "walk_forward": dynamics_metrics,
+        "forecast_economic_evaluation": economic_metrics,
         "end_to_end": {
             "chain": ["surrogate", "multi_start_calibration", "forecast", "common_path_hedge"],
             "surrogate_kind": "deterministic polynomial quote surrogate",
@@ -1157,7 +1297,7 @@ def build_vol20_reference(
             "strategy_metrics": pipeline.hedge.metrics,
             "comparison_controls": {
                 "paths": "common",
-                "premium": "common_zero_rate_BSM_at_scenario_volatility",
+                "premium": "common_zero_rate_BSM_at_true_scenario_volatility",
                 "transaction_cost_rate": DEFAULT_TRANSACTION_COST,
                 "transaction_cost_convention": "common_proportional_notional",
                 "pathwise_pairing": True,
@@ -1203,6 +1343,19 @@ def build_vol20_reference(
         "walk_forward_prediction_ewma": "future_variance_sum",
         "walk_forward_prediction_har_ridge": "future_variance_sum",
         "walk_forward_prediction_challenger": "future_variance_sum",
+        "economic_horizon": "trading days",
+        "economic_fold": "fold index",
+        "economic_row": "held-out prediction row index",
+        "economic_true_volatility": "annualized_volatility",
+        "economic_forecast_volatility": "annualized_volatility",
+        "economic_spot": "currency_units",
+        "economic_shocks": "standard normal shock",
+        "economic_premium": "currency_units",
+        "economic_secondary_price": "currency_units",
+        "economic_stock_positions": "underlying units",
+        "economic_option_positions": "option contracts",
+        "economic_pnl": "currency_units",
+        "economic_turnover": "currency_notional",
         "e2e_hedge_pnl": "currency_units",
         "e2e_hedge_turnover": "currency_notional",
     }

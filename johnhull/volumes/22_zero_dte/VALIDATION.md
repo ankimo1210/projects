@@ -13,11 +13,11 @@
 | `adjacent_expiry_violations` | 0 |
 | `calendar_violations` | 0 |
 | `event_count` | 7 |
-| `event_greek_mae` | 0.04382690272196831 |
-| `event_greek_rmse` | 0.04587768786408403 |
-| `event_price_mae` | 0.10933144902969492 |
-| `event_price_rmse` | 0.11222925351085129 |
-| `event_teacher_standard_error` | 0.019301737581782084 |
+| `event_greek_mae` | 0.04405093290750241 |
+| `event_greek_rmse` | 0.046087184927897824 |
+| `event_price_mae` | 0.11540605370951353 |
+| `event_price_rmse` | 0.11680614880406952 |
+| `event_teacher_standard_error` | 0.019458499393851445 |
 | `non_event_count` | 6 |
 | `non_event_greek_rmse` | 0.0 |
 | `non_event_price_rmse` | 0.0 |
@@ -32,7 +32,7 @@
 | `variance_clock` | 1.0 | monotone from 0 to 1 | PASS |
 | `expiry_consistency` | 0 | zero violations and nonnegative forward variance, recomputed from total variance | PASS |
 | `event_variance_injection` | 5.421010862427522e-20 | jump variance added to the teacher equals the scheduled event variance | PASS |
-| `event_teacher_uncertainty` | 0.019301737581782084 | > 0 as the mean event-row standard error | PASS |
+| `event_teacher_uncertainty` | 0.019458499393851445 | > 0 as the mean event-row standard error | PASS |
 | `time_of_day_diagnostics` | 3 | open/midday/close price and Greek MAE recomputed from teacher/baseline pairs | PASS |
 | `event_non_event_split` | 7/6 | mask counts and two-way diagnostics agree; the announcement ramp enters event rows only | PASS |
 

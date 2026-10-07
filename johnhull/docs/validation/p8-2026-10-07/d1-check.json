@@ -1,0 +1,139 @@
+{
+  "status": "PASS",
+  "commit": "1eea23dd",
+  "scope": "first 33-section run, superseded by final display revision",
+  "sections": {
+    "26.1": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-1/d1pf-26.1-20261006T224054Z-redraw-38c04f3869834a039ca942ff90a5b629.json"
+    },
+    "26.10": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-10/d1pf-26.10-20261006T224223Z-redraw-b762ddf2f1d54584a0ca204e3ba3c923.json"
+    },
+    "26.11": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-11/d1pf-26.11-20261006T224226Z-redraw-87832e4005d04b12adcd3cb82e8314fd.json"
+    },
+    "26.12": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-12/d1pf-26.12-20261006T224232Z-redraw-69a0e1d1becc4c8d913d7cd6b3fd97ba.json"
+    },
+    "26.13": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-13/d1pf-26.13-20261006T224300Z-redraw-c1195ac5ab64493686add5d59ee7e83d.json"
+    },
+    "26.14": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-14/d1pf-26.14-20261006T224351Z-redraw-ff18a71051a0462aad0cc45322d33bbb.json"
+    },
+    "26.15": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-15/d1pf-26.15-20261006T224408Z-redraw-b2700f496c2e459eae6dd43ac259f8d0.json"
+    },
+    "26.16": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-16/d1pf-26.16-20261006T224411Z-redraw-10fc07574d6248e59145b6f45bc39a84.json"
+    },
+    "26.17": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-17/d1pf-26.17-20261006T224500Z-redraw-7ddd808f4d134438b1afbd04348fa7e0.json"
+    },
+    "26.2": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-2/d1pf-26.2-20261006T224054Z-redraw-ecde54d446a047c892b849ddddb071ff.json"
+    },
+    "26.3": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-3/d1pf-26.3-20261006T224054Z-redraw-3aaf1573cb34439eb7869f68fd03c79b.json"
+    },
+    "26.4": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-4/d1pf-26.4-20261006T224123Z-redraw-98c3664af5c442a691f11ea747c41756.json"
+    },
+    "26.5": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-5/d1pf-26.5-20261006T224123Z-redraw-0bc23516af034b879707b965dbf639d5.json"
+    },
+    "26.6": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-6/d1pf-26.6-20261006T224126Z-redraw-57298ed0121b44a9a83d06c8db376560.json"
+    },
+    "26.7": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-7/d1pf-26.7-20261006T224153Z-redraw-2308fd7b9e6244cc94381d59a9ef66df.json"
+    },
+    "26.8": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-8/d1pf-26.8-20261006T224156Z-redraw-972d274bb5344707add879f1632b006e.json"
+    },
+    "26.9": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-26-9/d1pf-26.9-20261006T224203Z-redraw-5aedf270a3df41ecb3a43317242d5df4.json"
+    },
+    "27.1": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-27-1/d1pf-27.1-20261006T224512Z-redraw-ade5f6b185134d018c7f6b55d434daff.json"
+    },
+    "27.2": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-27-2/d1pf-27.2-20261006T224524Z-redraw-7799e98e8ebe48fbac7b8cb1715bfc45.json"
+    },
+    "27.3": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-27-3/d1pf-27.3-20261006T224529Z-redraw-2be7ff7997034bbfa9067a5fe1e635d1.json"
+    },
+    "27.4": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-27-4/d1pf-27.4-20261006T224536Z-redraw-ee53640cb8574e7f98de9fda7625aac2.json"
+    },
+    "27.5": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-27-5/d1pf-27.5-20261006T224544Z-redraw-58a2e3f0849f4fb298497f4ce3e4ab12.json"
+    },
+    "27.6": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-27-6/d1pf-27.6-20261006T224546Z-redraw-9cc79b6610b34091b2f52301eddd1640.json"
+    },
+    "27.7": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-27-7/d1pf-27.7-20261006T224553Z-redraw-0e96eafe8b974c0e9311fe25899c0981.json"
+    },
+    "27.8": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-27-8/d1pf-27.8-20261006T224601Z-redraw-6f6c73a3518c48fcb8a7002531ce9174.json"
+    },
+    "28.1": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-28-1/d1pf-28.1-20261006T224603Z-redraw-fd803df290e1491fa5e2e8472f7d05c5.json"
+    },
+    "28.2": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-28-2/d1pf-28.2-20261006T224613Z-redraw-0276acacb4f346c0b8dde8ace3bffa15.json"
+    },
+    "28.3": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-28-3/d1pf-28.3-20261006T224618Z-redraw-02cf27e6287b4802b5ae05ffd56d33ef.json"
+    },
+    "28.4": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-28-4/d1pf-28.4-20261006T224633Z-redraw-095e46912a904773be1e71fdba7c166e.json"
+    },
+    "28.5": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-28-5/d1pf-28.5-20261006T224642Z-redraw-c67a5419160e40859e94cfc2a2159bf6.json"
+    },
+    "28.6": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-28-6/d1pf-28.6-20261006T224647Z-redraw-232fc264d5cd459189ba3e1b7252311b.json"
+    },
+    "28.7": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-28-7/d1pf-28.7-20261006T224711Z-redraw-0948c977eda6446d8aafb2d4dd77ae8b.json"
+    },
+    "28.8": {
+      "status": "PASS",
+      "record": "docs/validation/p8-2026-10-07/d1/section-28-8/d1pf-28.8-20261006T224713Z-redraw-5be715c5ab084c3cbf165b3479005f10.json"
+    }
+  }
+}

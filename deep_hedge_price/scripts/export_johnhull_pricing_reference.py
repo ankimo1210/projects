@@ -24,6 +24,8 @@ from deep_hedge_price.greeks import autodiff_greeks
 from deep_hedge_price.pricing_artifacts import load_pricing_dataset
 from deep_hedge_price.pricing_config import load_pricing_config, pricing_run_directory
 from deep_hedge_price.pricing_data import black_scholes_labels
+from deep_hedge_price.pricing_evaluation import _hard_probe
+from deep_hedge_price.pricing_residuals import _heston_residual_evidence
 from deep_hedge_price.pricing_training import load_pricing_model
 
 ROOT = WORKSPACE_ROOT
@@ -157,7 +159,7 @@ def _array_schema(arrays: dict[str, np.ndarray]) -> dict[str, dict[str, object]]
         name: {
             "shape": list(np.asarray(value).shape),
             "dtype": str(np.asarray(value).dtype),
-            "unit": units[name],
+            "unit": units.get(name, "normalized pricing probe/held-out evidence"),
         }
         for name, value in sorted(arrays.items())
     }
@@ -249,6 +251,18 @@ def export(config_path: Path, output_dir: Path, ablation_path: Path) -> tuple[Pa
         "analytic_us": 1_000 * np.asarray([row["median_ms"] for row in benchmark["analytic"]]),
         "mlp_us": 1_000 * np.asarray([row["median_ms"] for row in benchmark["neural"]]),
     }
+    raw_report, hard_evidence = _hard_probe(model, torch.device("cpu"))
+    residual_evidence = _heston_residual_evidence(
+        dataset["train_inputs"][:1024], dataset["test_inputs"][:256], n_terms=128
+    )
+    residual_evidence["heston_test_row_key"] = _row_keys(dataset["test_inputs"][:256])
+    if any(
+        r["n_violations"] != constrained_checks[r["name"]]["n_violations"]
+        for r in raw_report["checks"]
+    ):
+        raise ValueError("saved hard report differs from checkpoint probe")
+    arrays.update(hard_evidence)
+    arrays.update(residual_evidence)
     # Per-row split errors, re-evaluated with the evaluation's adopted Greek
     # route, so the gate recomputes the MAEs instead of trusting the JSON.
     for split in ("test", "ood"):
@@ -304,8 +318,22 @@ def export(config_path: Path, output_dir: Path, ablation_path: Path) -> tuple[Pa
         "soft_penalty_improved_hard_checks": ablation["conclusions"]["penalty_comparison"][
             "positive_penalty_improves_hard_checks_without_material_price_degradation"
         ],
-        "heston_bsm_residual_mae": evaluation["residual_correction"]["bsm_residual_mae"],
-        "heston_raw_price_mae": evaluation["residual_correction"]["raw_price_mae"],
+        "heston_bsm_residual_mae": float(
+            np.mean(
+                np.abs(
+                    residual_evidence["heston_residual_prediction"]
+                    - residual_evidence["heston_test_teacher"]
+                )
+            )
+        ),
+        "heston_raw_price_mae": float(
+            np.mean(
+                np.abs(
+                    residual_evidence["heston_raw_prediction"]
+                    - residual_evidence["heston_test_teacher"]
+                )
+            )
+        ),
     }
     payload = {
         "schema_version": 1,
@@ -338,6 +366,8 @@ def export(config_path: Path, output_dir: Path, ablation_path: Path) -> tuple[Pa
             "The small ablation may fail absolute main-run thresholds and is used only for relative comparison.",
         ],
     }
+    if not payload["acceptance"]["passed"]:
+        raise ValueError("recomputed pricing reference acceptance failed")
     json_path = output_dir / "pricing_metrics.json"
     with tempfile.TemporaryDirectory(prefix=".pricing-reference-", dir=output_dir) as temporary:
         temporary_dir = Path(temporary)

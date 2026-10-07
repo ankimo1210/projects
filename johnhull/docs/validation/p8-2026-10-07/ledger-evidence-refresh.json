@@ -1,0 +1,1446 @@
+{
+  "status": "PASS",
+  "scope": "Evidence references only; all statuses and requirements preserved",
+  "accepted": 33,
+  "sections": [
+    {
+      "section": "26.1",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-1/d1pf-26.1-20261006T225318Z-redraw-827c48575ec947328bcc11541dafb025.json",
+            "kind": "record",
+            "sha256": "786c40b525fd341cc1dc39179093cc2071e00a75999a2de1f54d34047ce384a9"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-1.json",
+            "kind": "record",
+            "sha256": "12c340cf5e9ac3240ff70077fc3e072a7e0be4b5329e0851ee2fbb61e105092a"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-1/d1pf-26.1-20261006T225318Z-redraw-827c48575ec947328bcc11541dafb025.json",
+            "kind": "record",
+            "sha256": "786c40b525fd341cc1dc39179093cc2071e00a75999a2de1f54d34047ce384a9"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.2",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-2/d1pf-26.2-20261006T225318Z-redraw-cf777fea25554ecbb46a1833e91dd908.json",
+            "kind": "record",
+            "sha256": "6054bbfb71bd581c8dcaab3136e4678c4c51698f44f2ee13259b685ba06ff984"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-2.json",
+            "kind": "record",
+            "sha256": "ee58099ab7ba87f98628704e0cc561f3e8e788623d0e42c7743035bcb4d3439e"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-2/d1pf-26.2-20261006T225318Z-redraw-cf777fea25554ecbb46a1833e91dd908.json",
+            "kind": "record",
+            "sha256": "6054bbfb71bd581c8dcaab3136e4678c4c51698f44f2ee13259b685ba06ff984"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.3",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-3/d1pf-26.3-20261006T225318Z-redraw-2993644982ad4c478ed8006c996a425c.json",
+            "kind": "record",
+            "sha256": "e422e9c62616bd88f9eed817ca42e89b05787334569e09b3f821f58f8d9d1911"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-3.json",
+            "kind": "record",
+            "sha256": "70ec442f8af4a5a79ae3ebd4e25b081b0d0321a906ff783a346d3c4c002e3fb3"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-3/d1pf-26.3-20261006T225318Z-redraw-2993644982ad4c478ed8006c996a425c.json",
+            "kind": "record",
+            "sha256": "e422e9c62616bd88f9eed817ca42e89b05787334569e09b3f821f58f8d9d1911"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.4",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-4/d1pf-26.4-20261006T225318Z-redraw-f5cbc4bde69b433cbb4de44db59284cf.json",
+            "kind": "record",
+            "sha256": "7ec729234b637fd2f614022d3dd7445ec9bcc05ddd966de60dae918f80d34c47"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-4.json",
+            "kind": "record",
+            "sha256": "6fd4c793f8d6d76ab23d22f810dd856b13d54d53f4519418566a01488aad8e9f"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-4/d1pf-26.4-20261006T225318Z-redraw-f5cbc4bde69b433cbb4de44db59284cf.json",
+            "kind": "record",
+            "sha256": "7ec729234b637fd2f614022d3dd7445ec9bcc05ddd966de60dae918f80d34c47"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.5",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-5/d1pf-26.5-20261006T225349Z-redraw-9c264c6067e84aa09476923b7d3b3814.json",
+            "kind": "record",
+            "sha256": "c7ac5f4ba5a78e4df766cc82ace6004543f8f4abeb8d922b918a2802ca95e84d"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-5.json",
+            "kind": "record",
+            "sha256": "945e001e4617e1b5006b1c694e6539ba748146a84f4ac4aeb344b762721f6ff4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-5/d1pf-26.5-20261006T225349Z-redraw-9c264c6067e84aa09476923b7d3b3814.json",
+            "kind": "record",
+            "sha256": "c7ac5f4ba5a78e4df766cc82ace6004543f8f4abeb8d922b918a2802ca95e84d"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.6",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-6/d1pf-26.6-20261006T225349Z-redraw-a301bd13f5344bd48e60b10f401c2cda.json",
+            "kind": "record",
+            "sha256": "c0b5a576d278c2263115fdeb96409a5864dbb3dad6f5dfe41a21f2499f6627d0"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-6.json",
+            "kind": "record",
+            "sha256": "14ac5b80030db2bf41388d5015dae45219eb2976982ba298a3dd53b88a8485c4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-6/d1pf-26.6-20261006T225349Z-redraw-a301bd13f5344bd48e60b10f401c2cda.json",
+            "kind": "record",
+            "sha256": "c0b5a576d278c2263115fdeb96409a5864dbb3dad6f5dfe41a21f2499f6627d0"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.7",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-7/d1pf-26.7-20261006T225349Z-redraw-44cd20db4d644056af75b976190b7fff.json",
+            "kind": "record",
+            "sha256": "454f719e71452466e478c1913057f923bdff97240ed83d8471fc433edbcf4c30"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-7.json",
+            "kind": "record",
+            "sha256": "690db84c4ef62053f07f7a8e168eabdbde92c775c9ceb607f912cbeec54af0a1"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-7/d1pf-26.7-20261006T225349Z-redraw-44cd20db4d644056af75b976190b7fff.json",
+            "kind": "record",
+            "sha256": "454f719e71452466e478c1913057f923bdff97240ed83d8471fc433edbcf4c30"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.8",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-8/d1pf-26.8-20261006T225352Z-redraw-1b30bb2d90794275b5f0bf38e56dedd9.json",
+            "kind": "record",
+            "sha256": "d3a3797621ab74ed5029cbb37777a2af9a65ca18d4f548bc7d69e2518fa0fe71"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-8.json",
+            "kind": "record",
+            "sha256": "44f43ee0ba774140e58e3b7949972f182adbea36d4b5aa463cea65150db79516"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-8/d1pf-26.8-20261006T225352Z-redraw-1b30bb2d90794275b5f0bf38e56dedd9.json",
+            "kind": "record",
+            "sha256": "d3a3797621ab74ed5029cbb37777a2af9a65ca18d4f548bc7d69e2518fa0fe71"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.9",
+      "updates": [
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-9/d1pf-26.9-20261006T225421Z-redraw-5cb6811c138c485292418c2399a5da32.json",
+            "kind": "record",
+            "sha256": "e4d03920beec0650da1476657b9c935ba0eced46f512d986dc0ba0f11961f561"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-9.json",
+            "kind": "record",
+            "sha256": "9d76fad78024ec096d25ff3d414a9a55737558c816b5eada8c1727b9b37b7460"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-9/d1pf-26.9-20261006T225421Z-redraw-5cb6811c138c485292418c2399a5da32.json",
+            "kind": "record",
+            "sha256": "e4d03920beec0650da1476657b9c935ba0eced46f512d986dc0ba0f11961f561"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.10",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-10/d1pf-26.10-20261006T225421Z-redraw-6239ee0f91274f3d83fe4721d05464a3.json",
+            "kind": "record",
+            "sha256": "0c36c5d57d67457d0519b67021e8abec49245455a15cfa4712515fce4d48874a"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-10.json",
+            "kind": "record",
+            "sha256": "220814b5717b981f13f71f970e1ef187b4cc3ce21f919bab9361f4bd81d24a65"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-10/d1pf-26.10-20261006T225421Z-redraw-6239ee0f91274f3d83fe4721d05464a3.json",
+            "kind": "record",
+            "sha256": "0c36c5d57d67457d0519b67021e8abec49245455a15cfa4712515fce4d48874a"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.11",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-11/d1pf-26.11-20261006T230014Z-redraw-52c3c5a00516464b91b7a53e1d0c8525.json",
+            "kind": "record",
+            "sha256": "dfbb9d2858d6569a2dbc607fa67a0e29c07ac2fa869680cfecee59b72d49b975"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-11.json",
+            "kind": "record",
+            "sha256": "6c0b7fe55f3ecd2adb7d48ad305854267575d0b06002ecf1f7c4d86f43868402"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-11/d1pf-26.11-20261006T230014Z-redraw-52c3c5a00516464b91b7a53e1d0c8525.json",
+            "kind": "record",
+            "sha256": "dfbb9d2858d6569a2dbc607fa67a0e29c07ac2fa869680cfecee59b72d49b975"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.12",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-12/d1pf-26.12-20261006T225427Z-redraw-77558c7649904e7596ed18518e1cd896.json",
+            "kind": "record",
+            "sha256": "99901d8149ab878e5e60caea9baa7c5eb56c05de0c159be964c1f90c3e68cb07"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-12.json",
+            "kind": "record",
+            "sha256": "a81ad5433b0e120dc8746c4463ecc447f99dccf9b5c4a0e3449e682198aca67f"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-12/d1pf-26.12-20261006T225427Z-redraw-77558c7649904e7596ed18518e1cd896.json",
+            "kind": "record",
+            "sha256": "99901d8149ab878e5e60caea9baa7c5eb56c05de0c159be964c1f90c3e68cb07"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.13",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-13/d1pf-26.13-20261006T225436Z-redraw-9854fb1054254e5490081b4883d6e4a5.json",
+            "kind": "record",
+            "sha256": "fb4c2bcdb72fbd264104a20dbc45d5037b53e30699f912de32dc92806b42c00c"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-13.json",
+            "kind": "record",
+            "sha256": "3c0d78c800e9bcd4174097a6b9a9220b0400495590934e316abcb24ff5a840d0"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-13/d1pf-26.13-20261006T225436Z-redraw-9854fb1054254e5490081b4883d6e4a5.json",
+            "kind": "record",
+            "sha256": "fb4c2bcdb72fbd264104a20dbc45d5037b53e30699f912de32dc92806b42c00c"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.14",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-14/d1pf-26.14-20261006T225451Z-redraw-ed0489e3c6eb4b8595b1073f72b025bb.json",
+            "kind": "record",
+            "sha256": "a8d58d0b484052413dbd0ab115be9775658897dd4687161bfd4e679e877a1c7d"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-14.json",
+            "kind": "record",
+            "sha256": "99ccbbf6a4804ff41db7de0dcce7d502ad69804974597daf63e93154811685aa"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-14/d1pf-26.14-20261006T225451Z-redraw-ed0489e3c6eb4b8595b1073f72b025bb.json",
+            "kind": "record",
+            "sha256": "a8d58d0b484052413dbd0ab115be9775658897dd4687161bfd4e679e877a1c7d"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.15",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-15/d1pf-26.15-20261006T225500Z-redraw-4cc778bcfcad445d953c4ee809954ea3.json",
+            "kind": "record",
+            "sha256": "f07d11ab4d3846f538cd66e771dd9bfa2ed0f89e30203761a61f9c36839de4bd"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-15.json",
+            "kind": "record",
+            "sha256": "0716bec4559fd63b82fbc65d6d332e82b27ab31923fb238c786bbcf000a7a026"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-15/d1pf-26.15-20261006T225500Z-redraw-4cc778bcfcad445d953c4ee809954ea3.json",
+            "kind": "record",
+            "sha256": "f07d11ab4d3846f538cd66e771dd9bfa2ed0f89e30203761a61f9c36839de4bd"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.16",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-16/d1pf-26.16-20261006T225553Z-redraw-378714ee8c674976be84c3f9ce424600.json",
+            "kind": "record",
+            "sha256": "9661237efe2f3f3c086e37d59b9db68758c904d4799006d00b8a8ef58025c6b2"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-16.json",
+            "kind": "record",
+            "sha256": "bd7d797d1012421b169b2f82cec2a993d3f7dcf1eb316d7a42f359e75a8b7be7"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-16/d1pf-26.16-20261006T225553Z-redraw-378714ee8c674976be84c3f9ce424600.json",
+            "kind": "record",
+            "sha256": "9661237efe2f3f3c086e37d59b9db68758c904d4799006d00b8a8ef58025c6b2"
+          }
+        }
+      ]
+    },
+    {
+      "section": "26.17",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-17/d1pf-26.17-20261006T225553Z-redraw-9af171b60aa34f99ab28c5a5a60ea0b4.json",
+            "kind": "record",
+            "sha256": "02b4121fbcaa4de9d4bdfd38cff892f910b56e4f123668ed77f15596ac904485"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-26-17.json",
+            "kind": "record",
+            "sha256": "8bd5f724884cbdc3bb5568cc4f6b7efd886afef9b7972826e55a93976104b0e7"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-26-17/d1pf-26.17-20261006T225553Z-redraw-9af171b60aa34f99ab28c5a5a60ea0b4.json",
+            "kind": "record",
+            "sha256": "02b4121fbcaa4de9d4bdfd38cff892f910b56e4f123668ed77f15596ac904485"
+          }
+        }
+      ]
+    },
+    {
+      "section": "27.1",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-1/d1pf-27.1-20261006T225606Z-redraw-725611a433704a1a8d73ebe5f952df9d.json",
+            "kind": "record",
+            "sha256": "efecd7e0381230491ce63a3deb318fd3b15d459fc4abadcb2ce391a265516bc6"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-27-1.json",
+            "kind": "record",
+            "sha256": "b2fce5d5eac707b68785fd278ba3fa7c771e230d4eefd2929428311e9207a0e9"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-1/d1pf-27.1-20261006T225606Z-redraw-725611a433704a1a8d73ebe5f952df9d.json",
+            "kind": "record",
+            "sha256": "efecd7e0381230491ce63a3deb318fd3b15d459fc4abadcb2ce391a265516bc6"
+          }
+        }
+      ]
+    },
+    {
+      "section": "27.2",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-2/d1pf-27.2-20261006T225610Z-redraw-8a3669fcc4dd4f38b2692a327196ea8b.json",
+            "kind": "record",
+            "sha256": "034f8f4bed9bd717d1114a55411b4911a851fcedf86555e063a254b4f955ae50"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-27-2.json",
+            "kind": "record",
+            "sha256": "abcacd5b7a8458d0a76cdbd9c39fae322334471d38e166737b2c2d0038d92154"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-2/d1pf-27.2-20261006T225610Z-redraw-8a3669fcc4dd4f38b2692a327196ea8b.json",
+            "kind": "record",
+            "sha256": "034f8f4bed9bd717d1114a55411b4911a851fcedf86555e063a254b4f955ae50"
+          }
+        }
+      ]
+    },
+    {
+      "section": "27.3",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-3/d1pf-27.3-20261006T225625Z-redraw-6df349c800dd4afeba2806d1faf7678b.json",
+            "kind": "record",
+            "sha256": "47749b42cc64d13eec422d1f95f60fdf54001a94776b39087090dc437923f987"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-27-3.json",
+            "kind": "record",
+            "sha256": "9c72d2ea84e5bae1498a39599407de1784e9b52eacd4519f2990aa927d584033"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-3/d1pf-27.3-20261006T225625Z-redraw-6df349c800dd4afeba2806d1faf7678b.json",
+            "kind": "record",
+            "sha256": "47749b42cc64d13eec422d1f95f60fdf54001a94776b39087090dc437923f987"
+          }
+        }
+      ]
+    },
+    {
+      "section": "27.4",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-4/d1pf-27.4-20261006T225633Z-redraw-4b010aa11bcb450ca7a9f6f17c07e3f0.json",
+            "kind": "record",
+            "sha256": "7c6b3b93c84715a11571950bab621a49f0a52717800e5f6f53a11b30e2e9f308"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-27-4.json",
+            "kind": "record",
+            "sha256": "97e35d7457b93d6a412ced5a2569959dcc9010a05b2d48175a6c22f9ede0af63"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-4/d1pf-27.4-20261006T225633Z-redraw-4b010aa11bcb450ca7a9f6f17c07e3f0.json",
+            "kind": "record",
+            "sha256": "7c6b3b93c84715a11571950bab621a49f0a52717800e5f6f53a11b30e2e9f308"
+          }
+        }
+      ]
+    },
+    {
+      "section": "27.5",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-5/d1pf-27.5-20261006T225634Z-redraw-8d061b0cdee74fef84cc2aa561083a30.json",
+            "kind": "record",
+            "sha256": "dd6f8d68976adf80640ab7e522136fbc9492028b50ba83cd620dd0ed669eeb43"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-27-5.json",
+            "kind": "record",
+            "sha256": "47535a75b88fd38f75cc1ee45475bd5535040bc8a4f9bc235d3802af469edcf2"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-5/d1pf-27.5-20261006T225634Z-redraw-8d061b0cdee74fef84cc2aa561083a30.json",
+            "kind": "record",
+            "sha256": "dd6f8d68976adf80640ab7e522136fbc9492028b50ba83cd620dd0ed669eeb43"
+          }
+        }
+      ]
+    },
+    {
+      "section": "27.6",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-6/d1pf-27.6-20261006T225643Z-redraw-f1ddcd81abce4f31815d54e48843180b.json",
+            "kind": "record",
+            "sha256": "0830ae702a54c67b48f347b653d8432a70678c452f0f2ecf648f65570a230f8d"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-27-6.json",
+            "kind": "record",
+            "sha256": "1da9bed6f0841118d56257f072999f1b284131adc9b3d3e219a8b661667c1a35"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-6/d1pf-27.6-20261006T225643Z-redraw-f1ddcd81abce4f31815d54e48843180b.json",
+            "kind": "record",
+            "sha256": "0830ae702a54c67b48f347b653d8432a70678c452f0f2ecf648f65570a230f8d"
+          }
+        }
+      ]
+    },
+    {
+      "section": "27.7",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-7/d1pf-27.7-20261006T225651Z-redraw-3f364bd6650f41f8b41a0c53c652fbd9.json",
+            "kind": "record",
+            "sha256": "72026632310c1b2afe1b0c8f2e24e864e7a5afe450ad568da2feac0975b07042"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-27-7.json",
+            "kind": "record",
+            "sha256": "e4925162479037dfb38a1387a823feeb2632842c91ad0b87a3ce0d97b70e0563"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-7/d1pf-27.7-20261006T225651Z-redraw-3f364bd6650f41f8b41a0c53c652fbd9.json",
+            "kind": "record",
+            "sha256": "72026632310c1b2afe1b0c8f2e24e864e7a5afe450ad568da2feac0975b07042"
+          }
+        }
+      ]
+    },
+    {
+      "section": "27.8",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-8/d1pf-27.8-20261006T225653Z-redraw-b0459335695e4943983b0d0a60517691.json",
+            "kind": "record",
+            "sha256": "2729f77b7fc52fc93066a446584ce2acbd5cf0e0322c99916b9f2963b3e403fe"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-27-8.json",
+            "kind": "record",
+            "sha256": "26fa18f68f60096cdf7d81c72d176a5601bc94cb5f7f82a71225e028a0648ac6"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-27-8/d1pf-27.8-20261006T225653Z-redraw-b0459335695e4943983b0d0a60517691.json",
+            "kind": "record",
+            "sha256": "2729f77b7fc52fc93066a446584ce2acbd5cf0e0322c99916b9f2963b3e403fe"
+          }
+        }
+      ]
+    },
+    {
+      "section": "28.1",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-1/d1pf-28.1-20261006T225702Z-redraw-17c975c06e104bac8cddd6ea52acdaf7.json",
+            "kind": "record",
+            "sha256": "f49872d12fc1e5a98051a6af240465a0aa668b512ac468e94da320f9fe373381"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-28-1.json",
+            "kind": "record",
+            "sha256": "94502c97d3032306a5a10eea2bdf770b978e31527f45e090318ba04a36581ff4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-1/d1pf-28.1-20261006T225702Z-redraw-17c975c06e104bac8cddd6ea52acdaf7.json",
+            "kind": "record",
+            "sha256": "f49872d12fc1e5a98051a6af240465a0aa668b512ac468e94da320f9fe373381"
+          }
+        }
+      ]
+    },
+    {
+      "section": "28.2",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-2/d1pf-28.2-20261006T225711Z-redraw-d9a57adc0c004ab79c291c34a7f9189b.json",
+            "kind": "record",
+            "sha256": "5945710f88327d6352d9dcd6277f6031ce8dfbaaf20993357805335ad595006e"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/d1-recheck/section-28-2/d1pf-28.2-20261005T004111Z-redraw-54b4fcd0b500469a89094eb97c6990d9.json",
+            "kind": "record",
+            "sha256": "2999cb9e66dbe90d83a977b6875364899cea873b350a9b0710b2fd6e40396cdb"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-2/d1pf-28.2-20261006T225711Z-redraw-d9a57adc0c004ab79c291c34a7f9189b.json",
+            "kind": "record",
+            "sha256": "5945710f88327d6352d9dcd6277f6031ce8dfbaaf20993357805335ad595006e"
+          }
+        }
+      ]
+    },
+    {
+      "section": "28.3",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-3/d1pf-28.3-20261006T225711Z-redraw-79d47985d63f4491bf06e740c2ce2885.json",
+            "kind": "record",
+            "sha256": "354a01de1e3a7874c34cbab4c6947360d07687b9055ba69a3d70233dbb702a28"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-28-3.json",
+            "kind": "record",
+            "sha256": "98c1db5137b3f0eae6cc1d09616fa43e71db382fe80c096922fa13dc94fc19c4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-3/d1pf-28.3-20261006T225711Z-redraw-79d47985d63f4491bf06e740c2ce2885.json",
+            "kind": "record",
+            "sha256": "354a01de1e3a7874c34cbab4c6947360d07687b9055ba69a3d70233dbb702a28"
+          }
+        }
+      ]
+    },
+    {
+      "section": "28.4",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-4/d1pf-28.4-20261006T225712Z-redraw-fcabc94c852347e4aa5133b74b16cc83.json",
+            "kind": "record",
+            "sha256": "3aabac020181d5b588235d81a8dad747245929bc5c02e16ce2194dd4cfe86e98"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-28-4.json",
+            "kind": "record",
+            "sha256": "856d09c0518dc37fa72aaec1b75ed19023e090ff069a30fbbf7c4480f091b3cf"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-4/d1pf-28.4-20261006T225712Z-redraw-fcabc94c852347e4aa5133b74b16cc83.json",
+            "kind": "record",
+            "sha256": "3aabac020181d5b588235d81a8dad747245929bc5c02e16ce2194dd4cfe86e98"
+          }
+        }
+      ]
+    },
+    {
+      "section": "28.5",
+      "updates": [
+        {
+          "id": "portal",
+          "before": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "b0414e6116a26acb64c1869731263c5e593aa2352028fccae805a1f1f45ba898"
+          },
+          "after": {
+            "path": "report/report_builder/figures.py",
+            "kind": "source",
+            "sha256": "3c5dbd43aac16e50f40de6fec0782b04c8434c238bd61344219bf59b5e3606e3"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-5/d1pf-28.5-20261006T225734Z-redraw-9b179a198784446d82bfe35691b47eb7.json",
+            "kind": "record",
+            "sha256": "06f214bdc4599fb1d85a94642fb01c6d2e2aae8a926af30a424d5beecf383f51"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/d1-recheck/section-28-5/d1pf-28.5-20261005T003842Z-redraw-a50d10f8f8884d0b803f14e9de872dc3.json",
+            "kind": "record",
+            "sha256": "eaa4614e428d29a045e6f43b078f7bed69ba34dfef141b943eeb61c40be0de64"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-5/d1pf-28.5-20261006T225734Z-redraw-9b179a198784446d82bfe35691b47eb7.json",
+            "kind": "record",
+            "sha256": "06f214bdc4599fb1d85a94642fb01c6d2e2aae8a926af30a424d5beecf383f51"
+          }
+        }
+      ]
+    },
+    {
+      "section": "28.6",
+      "updates": [
+        {
+          "id": "numerical",
+          "before": {
+            "path": "docs/validation/chapter-28/numerical-check.json",
+            "kind": "record",
+            "sha256": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-6/d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4.json",
+            "kind": "record",
+            "sha256": "d1de3988ea50b8db5bf46b9793c0b80c3e88f8ea46c5d83cc4e6a8a866ea695e"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-28-6.json",
+            "kind": "record",
+            "sha256": "cee59058d49a01443274de077b52927903f87660e3571a64e1a734ae96cd8a04"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-6/d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4.json",
+            "kind": "record",
+            "sha256": "d1de3988ea50b8db5bf46b9793c0b80c3e88f8ea46c5d83cc4e6a8a866ea695e"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-6/d1pf-28.6-20261006T225743Z-redraw-19b68db17d6d4594be684707c4b048b4.json",
+            "kind": "record",
+            "sha256": "d1de3988ea50b8db5bf46b9793c0b80c3e88f8ea46c5d83cc4e6a8a866ea695e"
+          }
+        }
+      ]
+    },
+    {
+      "section": "28.7",
+      "updates": [
+        {
+          "id": "numerical",
+          "before": {
+            "path": "docs/validation/chapter-28/numerical-check.json",
+            "kind": "record",
+            "sha256": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-7/d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef.json",
+            "kind": "record",
+            "sha256": "5f8a4282d750f51adea1953a65e2bba2dd7bfd04aa39f530e943ecbb098f9227"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-28-7.json",
+            "kind": "record",
+            "sha256": "a2e577897cac5292b80ed4e0a1fa2f110256de41a240cf6ea404ee68fb0ba744"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-7/d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef.json",
+            "kind": "record",
+            "sha256": "5f8a4282d750f51adea1953a65e2bba2dd7bfd04aa39f530e943ecbb098f9227"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-7/d1pf-28.7-20261006T225743Z-redraw-cd5ddb2f484a4c33bc3345cbe932c4ef.json",
+            "kind": "record",
+            "sha256": "5f8a4282d750f51adea1953a65e2bba2dd7bfd04aa39f530e943ecbb098f9227"
+          }
+        }
+      ]
+    },
+    {
+      "section": "28.8",
+      "updates": [
+        {
+          "id": "numerical",
+          "before": {
+            "path": "docs/validation/chapter-28/numerical-check.json",
+            "kind": "record",
+            "sha256": "e889658dea4f1389a8ca57167cf84586a37a1f89826fb22c8f68ffdb4cd61eed"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-8/d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192.json",
+            "kind": "record",
+            "sha256": "2d3c669b6438076c2c7a479b210febf3d4b8754e83ae8cd7651d311ab981bf40"
+          }
+        },
+        {
+          "id": "browser_run",
+          "before": {
+            "path": "docs/validation/chapter-28/section-28-8.json",
+            "kind": "record",
+            "sha256": "e6d6610dba992172d15b407389b881ae77c17ce6fd5e36c7fbb80343012f1fd4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-8/d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192.json",
+            "kind": "record",
+            "sha256": "2d3c669b6438076c2c7a479b210febf3d4b8754e83ae8cd7651d311ab981bf40"
+          }
+        },
+        {
+          "id": "chapter_check",
+          "before": {
+            "path": "docs/validation/chapter-28/acceptance-check.json",
+            "kind": "record",
+            "sha256": "070f720c6b232e38dbbe3c81f47534e04b189fc0ba7b2bd7f22077ddd1e324b4"
+          },
+          "after": {
+            "path": "docs/validation/p8-2026-10-07/section-28-8/d1pf-28.8-20261006T225753Z-redraw-3c223d8aa70642859bc2b2458716a192.json",
+            "kind": "record",
+            "sha256": "2d3c669b6438076c2c7a479b210febf3d4b8754e83ae8cd7651d311ab981bf40"
+          }
+        }
+      ]
+    }
+  ]
+}

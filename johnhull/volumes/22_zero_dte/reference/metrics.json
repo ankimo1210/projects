@@ -28,7 +28,7 @@
       {
         "criterion": "> 0 as the mean event-row standard error",
         "name": "event_teacher_uncertainty",
-        "observed": 0.019301737581782084,
+        "observed": 0.019458499393851445,
         "passed": true
       },
       {
@@ -81,12 +81,76 @@
         ],
         "unit": "synthetic monetary units"
       },
+      "calendar_holiday_ordinal": {
+        "dtype": "int64",
+        "shape": [
+          1
+        ],
+        "unit": "Gregorian holiday ordinals"
+      },
+      "calendar_open_close_minute": {
+        "dtype": "int64",
+        "shape": [
+          2
+        ],
+        "unit": "New York wall-clock minutes since midnight"
+      },
+      "calendar_probe_minute": {
+        "dtype": "int64",
+        "shape": [
+          2
+        ],
+        "unit": "New York wall-clock minutes since midnight"
+      },
+      "calendar_probe_ordinal": {
+        "dtype": "int64",
+        "shape": [
+          2
+        ],
+        "unit": "Gregorian date ordinal"
+      },
+      "calendar_probe_seconds": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ],
+        "unit": "trading seconds to settlement"
+      },
+      "calendar_probe_trading": {
+        "dtype": "bool",
+        "shape": [
+          2
+        ],
+        "unit": "boolean trading-day observation"
+      },
+      "calendar_session_ordinal": {
+        "dtype": "int64",
+        "shape": [
+          1
+        ],
+        "unit": "Gregorian session ordinal"
+      },
       "delta": {
         "dtype": "float64",
         "shape": [
           13
         ],
         "unit": "price per underlying unit"
+      },
+      "event_effect_paired_se": {
+        "dtype": "float64",
+        "shape": [
+          13
+        ],
+        "unit": "standard error of paired event effect"
+      },
+      "event_effect_payoff": {
+        "dtype": "float64",
+        "shape": [
+          13,
+          3000
+        ],
+        "unit": "discounted paired event-minus-baseline payoff"
       },
       "event_greek_rmse": {
         "dtype": "float64",
@@ -245,7 +309,7 @@
     }
   },
   "companions": {
-    "intraday_slices.npz": "5109715c0f558b351624517c6e60625d48469f38d6b9fbecd5b93e9007217fe4"
+    "intraday_slices.npz": "177cd85116200b5a7a1e5165ef2d3cc6fd5e99096168cc2483b4e05bc0abd48f"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -257,11 +321,11 @@
     "adjacent_expiry_violations": 0,
     "calendar_violations": 0,
     "event_count": 7,
-    "event_greek_mae": 0.04382690272196831,
-    "event_greek_rmse": 0.04587768786408403,
-    "event_price_mae": 0.10933144902969492,
-    "event_price_rmse": 0.11222925351085129,
-    "event_teacher_standard_error": 0.019301737581782084,
+    "event_greek_mae": 0.04405093290750241,
+    "event_greek_rmse": 0.046087184927897824,
+    "event_price_mae": 0.11540605370951353,
+    "event_price_rmse": 0.11680614880406952,
+    "event_teacher_standard_error": 0.019458499393851445,
     "non_event_count": 6,
     "non_event_greek_rmse": 0.0,
     "non_event_price_rmse": 0.0,

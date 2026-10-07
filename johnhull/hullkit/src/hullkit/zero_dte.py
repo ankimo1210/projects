@@ -377,16 +377,18 @@ def sv_jump_teacher(
     if kind not in {"call", "put"} or n_paths < 2:
         raise ValueError("kind must be call/put and n_paths must be at least two")
 
-    rng = np.random.default_rng(seed)
+    normal_seed, count_seed = np.random.SeedSequence(seed).spawn(2)
+    normal_rng = np.random.default_rng(normal_seed)
+    count_rng = np.random.default_rng(count_seed)
     log_multiplier = np.zeros(n_paths, dtype=float)
     variance = np.full(n_paths, v0, dtype=float)
     jump_compensator = np.exp(jump_mean + 0.5 * jump_std**2) - 1.0
     correlation_scale = np.sqrt(max(0.0, 1.0 - rho * rho))
     for delta, lam in zip(dt, intensity, strict=True):
-        normals = rng.standard_normal((n_paths, 3))
+        normals = normal_rng.standard_normal((n_paths, 3))
         variance_positive = np.maximum(variance, 0.0)
         spot_shock = rho * normals[:, 0] + correlation_scale * normals[:, 1]
-        counts = rng.poisson(lam * delta, size=n_paths)
+        counts = count_rng.poisson(lam * delta, size=n_paths)
         jump_sum = counts * jump_mean + np.sqrt(counts) * jump_std * normals[:, 2]
         log_multiplier += (
             (r - lam * jump_compensator - 0.5 * variance_positive) * delta

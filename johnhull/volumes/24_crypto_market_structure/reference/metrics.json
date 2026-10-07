@@ -65,7 +65,7 @@
     "model_performance_approved": false,
     "negative_results": [
       "The liquidation cascade is deliberately synthetic and is not a reconstruction of a market event.",
-      "The dynamic fee does not reduce gross LVR in this fixture; fee compensation is reported separately."
+      "Gross LVR is identical by construction: both fee scenarios reuse the same no-fee endpoint. This is a fee-compensation identity, not an experiment on fee-aware arbitrage or inventory paths."
     ],
     "passed": true,
     "schema_version": 1,
