@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **113**
+- accepted: **171**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 193 |
+| unreviewed | 135 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 113 |
+| accepted | 171 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -31,12 +31,12 @@
 | 7 | 13 | 0 | 0 | 0 | 13 | 0 |
 | 8 | 4 | 0 | 0 | 0 | 4 | 0 |
 | 9 | 4 | 0 | 0 | 0 | 4 | 0 |
-| 10 | 12 | 12 | 0 | 0 | 0 | 0 |
-| 11 | 7 | 7 | 0 | 0 | 0 | 0 |
-| 12 | 5 | 5 | 0 | 0 | 0 | 0 |
-| 13 | 12 | 12 | 0 | 0 | 0 | 0 |
-| 14 | 9 | 9 | 0 | 0 | 0 | 0 |
-| 15 | 13 | 13 | 0 | 0 | 0 | 0 |
+| 10 | 12 | 0 | 0 | 0 | 12 | 0 |
+| 11 | 7 | 0 | 0 | 0 | 7 | 0 |
+| 12 | 5 | 0 | 0 | 0 | 5 | 0 |
+| 13 | 12 | 0 | 0 | 0 | 12 | 0 |
+| 14 | 9 | 0 | 0 | 0 | 9 | 0 |
+| 15 | 13 | 0 | 0 | 0 | 13 | 0 |
 | 16 | 5 | 5 | 0 | 0 | 0 | 0 |
 | 17 | 6 | 6 | 0 | 0 | 0 | 0 |
 | 18 | 11 | 11 | 0 | 0 | 0 | 0 |
@@ -144,64 +144,64 @@
 | 9.2 | 9 | section | FVA and MVA | accepted |
 | 9.3 | 9 | section | KVA | accepted |
 | 9.4 | 9 | section | Calculation Issues | accepted |
-| 10.1 | 10 | section | Types of Options | unreviewed |
-| 10.2 | 10 | section | Option Positions | unreviewed |
-| 10.3 | 10 | section | Underlying Assets | unreviewed |
-| 10.4 | 10 | section | Specification of Stock Options | unreviewed |
-| 10.5 | 10 | section | Trading | unreviewed |
-| 10.6 | 10 | section | Trading Costs | unreviewed |
-| 10.7 | 10 | section | Margin Requirements | unreviewed |
-| 10.8 | 10 | section | The Options Clearing Corporation | unreviewed |
-| 10.9 | 10 | section | Regulation | unreviewed |
-| 10.10 | 10 | section | Taxation | unreviewed |
-| 10.11 | 10 | section | Warrants, Employee Stock Options, and Convertibles | unreviewed |
-| 10.12 | 10 | section | Over-the-Counter Options Markets | unreviewed |
-| 11.1 | 11 | section | Factors Affecting Option Prices | unreviewed |
-| 11.2 | 11 | section | Assumptions and Notation | unreviewed |
-| 11.3 | 11 | section | Upper and Lower Bounds for Option Prices | unreviewed |
-| 11.4 | 11 | section | Put–Call Parity | unreviewed |
-| 11.5 | 11 | section | Calls on a Non-Dividend-Paying Stock | unreviewed |
-| 11.6 | 11 | section | Puts on a Non-Dividend-Paying Stock | unreviewed |
-| 11.7 | 11 | section | Effect of Dividends | unreviewed |
-| 12.1 | 12 | section | Principal-Protected Notes | unreviewed |
-| 12.2 | 12 | section | Trading an Option and the Underlying Asset | unreviewed |
-| 12.3 | 12 | section | Spreads | unreviewed |
-| 12.4 | 12 | section | Combinations | unreviewed |
-| 12.5 | 12 | section | Other Payoffs | unreviewed |
-| 13.1 | 13 | section | A One-Step Binomial Model and a No-Arbitrage Argument | unreviewed |
-| 13.2 | 13 | section | Risk-Neutral Valuation | unreviewed |
-| 13.3 | 13 | section | Two-Step Binomial Trees | unreviewed |
-| 13.4 | 13 | section | A Put Example | unreviewed |
-| 13.5 | 13 | section | American Options | unreviewed |
-| 13.6 | 13 | section | Delta | unreviewed |
-| 13.7 | 13 | section | Matching Volatility with u and d | unreviewed |
-| 13.8 | 13 | section | The Binomial Tree Formulas | unreviewed |
-| 13.9 | 13 | section | Increasing the Number of Steps | unreviewed |
-| 13.10 | 13 | section | Using DerivaGem | unreviewed |
-| 13.11 | 13 | section | Options on other Assets | unreviewed |
-| 13.appendix | 13 | appendix | Derivation of the Black–Scholes–Merton Option-Pricing Formula from a Binomial Tree | unreviewed |
-| 14.1 | 14 | section | The Markov Property | unreviewed |
-| 14.2 | 14 | section | Continuous-Time Stochastic Processes | unreviewed |
-| 14.3 | 14 | section | The Process for a Stock Price | unreviewed |
-| 14.4 | 14 | section | The Parameters | unreviewed |
-| 14.5 | 14 | section | Correlated Processes | unreviewed |
-| 14.6 | 14 | section | Itô’s Lemma | unreviewed |
-| 14.7 | 14 | section | The Lognormal Property | unreviewed |
-| 14.8 | 14 | section | Fractional Brownian Motion | unreviewed |
-| 14.appendix | 14 | appendix | A Nonrigorous Derivation of Itô’s Lemma | unreviewed |
-| 15.1 | 15 | section | Lognormal Property of Stock Prices | unreviewed |
-| 15.2 | 15 | section | The Distribution of the Rate of Return | unreviewed |
-| 15.3 | 15 | section | The Expected Return | unreviewed |
-| 15.4 | 15 | section | Volatility | unreviewed |
-| 15.5 | 15 | section | The Idea Underlying the Black–Scholes–Merton Differential Equation | unreviewed |
-| 15.6 | 15 | section | Derivation of the Black–Scholes–Merton Differential Equation | unreviewed |
-| 15.7 | 15 | section | Risk-Neutral Valuation | unreviewed |
-| 15.8 | 15 | section | Black–Scholes–Merton Pricing Formulas | unreviewed |
-| 15.9 | 15 | section | Cumulative Normal Distribution Function | unreviewed |
-| 15.10 | 15 | section | Warrants and Employee Stock Options | unreviewed |
-| 15.11 | 15 | section | Implied Volatilities | unreviewed |
-| 15.12 | 15 | section | Dividends | unreviewed |
-| 15.appendix | 15 | appendix | Proof of the Black–Scholes–Merton Formula Using Risk-Neutral Valuation | unreviewed |
+| 10.1 | 10 | section | Types of Options | accepted |
+| 10.2 | 10 | section | Option Positions | accepted |
+| 10.3 | 10 | section | Underlying Assets | accepted |
+| 10.4 | 10 | section | Specification of Stock Options | accepted |
+| 10.5 | 10 | section | Trading | accepted |
+| 10.6 | 10 | section | Trading Costs | accepted |
+| 10.7 | 10 | section | Margin Requirements | accepted |
+| 10.8 | 10 | section | The Options Clearing Corporation | accepted |
+| 10.9 | 10 | section | Regulation | accepted |
+| 10.10 | 10 | section | Taxation | accepted |
+| 10.11 | 10 | section | Warrants, Employee Stock Options, and Convertibles | accepted |
+| 10.12 | 10 | section | Over-the-Counter Options Markets | accepted |
+| 11.1 | 11 | section | Factors Affecting Option Prices | accepted |
+| 11.2 | 11 | section | Assumptions and Notation | accepted |
+| 11.3 | 11 | section | Upper and Lower Bounds for Option Prices | accepted |
+| 11.4 | 11 | section | Put–Call Parity | accepted |
+| 11.5 | 11 | section | Calls on a Non-Dividend-Paying Stock | accepted |
+| 11.6 | 11 | section | Puts on a Non-Dividend-Paying Stock | accepted |
+| 11.7 | 11 | section | Effect of Dividends | accepted |
+| 12.1 | 12 | section | Principal-Protected Notes | accepted |
+| 12.2 | 12 | section | Trading an Option and the Underlying Asset | accepted |
+| 12.3 | 12 | section | Spreads | accepted |
+| 12.4 | 12 | section | Combinations | accepted |
+| 12.5 | 12 | section | Other Payoffs | accepted |
+| 13.1 | 13 | section | A One-Step Binomial Model and a No-Arbitrage Argument | accepted |
+| 13.2 | 13 | section | Risk-Neutral Valuation | accepted |
+| 13.3 | 13 | section | Two-Step Binomial Trees | accepted |
+| 13.4 | 13 | section | A Put Example | accepted |
+| 13.5 | 13 | section | American Options | accepted |
+| 13.6 | 13 | section | Delta | accepted |
+| 13.7 | 13 | section | Matching Volatility with u and d | accepted |
+| 13.8 | 13 | section | The Binomial Tree Formulas | accepted |
+| 13.9 | 13 | section | Increasing the Number of Steps | accepted |
+| 13.10 | 13 | section | Using DerivaGem | accepted |
+| 13.11 | 13 | section | Options on other Assets | accepted |
+| 13.appendix | 13 | appendix | Derivation of the Black–Scholes–Merton Option-Pricing Formula from a Binomial Tree | accepted |
+| 14.1 | 14 | section | The Markov Property | accepted |
+| 14.2 | 14 | section | Continuous-Time Stochastic Processes | accepted |
+| 14.3 | 14 | section | The Process for a Stock Price | accepted |
+| 14.4 | 14 | section | The Parameters | accepted |
+| 14.5 | 14 | section | Correlated Processes | accepted |
+| 14.6 | 14 | section | Itô’s Lemma | accepted |
+| 14.7 | 14 | section | The Lognormal Property | accepted |
+| 14.8 | 14 | section | Fractional Brownian Motion | accepted |
+| 14.appendix | 14 | appendix | A Nonrigorous Derivation of Itô’s Lemma | accepted |
+| 15.1 | 15 | section | Lognormal Property of Stock Prices | accepted |
+| 15.2 | 15 | section | The Distribution of the Rate of Return | accepted |
+| 15.3 | 15 | section | The Expected Return | accepted |
+| 15.4 | 15 | section | Volatility | accepted |
+| 15.5 | 15 | section | The Idea Underlying the Black–Scholes–Merton Differential Equation | accepted |
+| 15.6 | 15 | section | Derivation of the Black–Scholes–Merton Differential Equation | accepted |
+| 15.7 | 15 | section | Risk-Neutral Valuation | accepted |
+| 15.8 | 15 | section | Black–Scholes–Merton Pricing Formulas | accepted |
+| 15.9 | 15 | section | Cumulative Normal Distribution Function | accepted |
+| 15.10 | 15 | section | Warrants and Employee Stock Options | accepted |
+| 15.11 | 15 | section | Implied Volatilities | accepted |
+| 15.12 | 15 | section | Dividends | accepted |
+| 15.appendix | 15 | appendix | Proof of the Black–Scholes–Merton Formula Using Risk-Neutral Valuation | accepted |
 | 16.1 | 16 | section | Contractual Arrangements | unreviewed |
 | 16.2 | 16 | section | Do Options Align the Interests of Shareholders and Managers? | unreviewed |
 | 16.3 | 16 | section | Accounting Issues | unreviewed |
