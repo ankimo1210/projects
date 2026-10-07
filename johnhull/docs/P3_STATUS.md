@@ -1,14 +1,21 @@
 # P3 完了に向けた実装状態
 
-更新2026-10-05。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。残り要件をN/Aへ置き換えたり、簡易モデルだけで完了としない。
+更新2026-10-08。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。別受入branchで37/37 accepted、main統合は未実施。未提示の原典契約の価格は未再現と明記し、caller指定条件の検証と区別する。
 
-- 正式受入：Ch28全8節、P3 8/37（21.6%）、全33受入・273未評価。§28.6–28.8を[D3章末まとめ受入](CHAPTER_28_ACCEPTANCE_2026-10-05.md)。42価格の独立求積、共有6図/24表示状態、依存変更2節（28.2/28.5）のD1、28不変節の直接基点再利用、両保管庫復元、台帳成果物検査を確認。
-- ロジック：`codex/p3-logic`に36/37（97.3%）を節ごとcommit/push済み。Ch28 8/8、Ch29 4/4、Ch30 4/4、Ch31 5/5、Ch32 7/7、Ch33 2/3、Ch34 6/6。新計算はprivate moduleで、本文の数値例＋独立検証を対象tests/ruffで確認。§33.2はflexicap strike/reset・payment日とsticky K0不足で保留。
+- 正式受入：mainはP3 8/37・全体33/306。別受入branch `codex/johnhull-acceptance` の `cef7cea1` はP3 37/37・全体306/306 accepted。旧261台帳行を維持。Ch28は従来の[D3章末まとめ受入](CHAPTER_28_ACCEPTANCE_2026-10-05.md)で受入済み。
+- ロジック：`codex/p3-logic`に36/37を節ごとcommit/push済み、集約先は`codex/p7-logic`。別受入branchの`5a2b72c9`で§33.2 `_bgm_lesson.py`を補完。公開API/依存の追加なし。flexicap strike/対象fixing・paymentとsticky K0不足は残り、原典価格を再現済みとはしない。
+- 現在：Ch29–34を含む正式受入は別branchで完了。受入成果・補完BGMと開発側の最新レビュー修正/P8の合流、統合後の検証、main反映が残る。
 - 方針変更（本人指示2026-10-05）：受入作業はCh28を区切りに一時停止。Ch29–34の教材・台帳・正式受入29節は保留し、[P4（Ch10–21）のロジック実装](P4_STATUS.md)へ進む。§33.2の入力不足は保留。mainには受入済みの計算を統合する。
 - Ch28検証：全suite1回は4,436 passed・6 skipped・3 failed（234.02s）。3件は索引/図件数/台帳の更新漏れで、修正後の対象70 testsがPASS。全体4,439件を初回＋修正対象の再検査で確認し、最初の失敗記録も保持。[記録](validation/chapter-28/full-suite.json)。検証環境はLinux/Python 3.12。Python 3.13での新規実行はしていない。
 - 既知の互換修正：§28.5のteacher/固定seed MCを許容誤差付きで比較し、数値digest照合を廃止。誤値の拒否は独立参照・固定seed再計算で保持。公開APIへの追加なし。
 - 受入再開時：D3本人承認2026-10-03、PR #11。設定は`docs/acceptance/chapters/ch28.json`、共通ツールは`scripts/chapter_acceptance.py`。Claudeによる数式レビューは後追いで、今回新しい独立レビューパッケージを作成していない。
 - 公開API/production依存の追加は避け、計算をprivate moduleへ置く。既存公開契約を保持。
+
+## 別セッションの最終受入（2026-10-08）
+
+- 残Ch29–37の45節・149要件をfast-v1で受入。受入側の対象389 tests＋台帳41、全45画面/598数式/22表/9画像、全306 native artifacts、strict tracked release PASS、独立review C/I/未解決Minor 0の記録を確認。開発側では再実行していない。
+- §33.2は単一curve LMMのmeasure drift・bootstrap・reset・caller指定caplet/ratchet/sticky/flexicap・swaption近似/PCAを検証。ratchet/sticky60価格はK0=F0指定・80,000 pathsで条件付き整合。原典の個別SE/seed/離散化と一部契約条件がなく、無条件の原典pinではない。原典flexicap価格3.43/3.58/3.61等は未再現。
+- 正本は別受入branchの`docs/CHAPTERS_29_37_ACCEPTANCE_2026-10-08.md`と`docs/validation/fast-ch29-37/`。以下の履歴と節別件数は開発完了時点の記録を保持する。
 
 - [要求監査表](P3_REQUIREMENT_AUDIT_2026-10-04.md)：残35節の118草稿要求を全件保持。TN14/19と31.4元worksheetの取得不足は回収記録で解消。正式数理/実装受入は未完、flexicapのstrike/date不足は保持。HW Q OU/bond式整合はM29で独立RED→GREEN。
 
@@ -25,7 +32,7 @@
 
 ## ロジック先行の進捗
 
-Ch28は正式受入済み。Ch29–34の実装ファイルは`codex/p3-logic`上のもの。
+Ch28はmainで正式受入済み。Ch29–34も別受入branchで受入済み。実装ファイルは原則`codex/p3-logic`、§33.2補完は別受入branch上のもの。「教材・受入保留」は開発時点の記録。
 
 | 節 | 実装ファイル | 再現した本文の数値／独立検証 | 未解決の点 |
 |---|---|---|---|
@@ -54,7 +61,7 @@ Ch28は正式受入済み。Ch29–34の実装ファイルは`codex/p3-logic`上
 | §32.6 | `_short_rate_calibration.py` | 5×5/6×4/7×3/8×2/9×1、σ(t)/a回復・penalty・独立Gaussian求積/held-out、Black→HW σ往復、Bermudan行使順序 | ロジック完了。市場価格は本文にないため合成例、single curve/last σ flat延長、教材・受入は保留 |
 | §32.7 | `_outside_model_hedging.py` | 印刷例なし。1因子price/複数curve・vol bucket、解析PV01/gamma・独立Gaussian給付求積、σ=0の片側vega | ロジック完了。curve bumpでa/σ固定、quote再較正riskとは別、Ch32受入は保留 |
 | §33.1 | `_hjm_forward.py` | 印刷例なし。signed v/瞬間・有限forward drift、独立Gaussian解析対HJM MC、時間刻み収束、同じrの2履歴で異なるdrift | ロジック完了。batched pathはdeterministic vol、一般履歴依存HJMの少数状態保証なし、教材・受入は保留 |
-| §33.2 | 未実装（下調べ・独立scratchあり） | Ex33.1/Table33.1と60条件付きMCは準備済み、製品ロジック完了には数えない | flexicap strike/reset・payment日とsticky K0未確定。本人指示に従い節を飛ばし§33.3へ |
+| §33.2 | `_bgm_lesson.py`（別受入branch） | LMM drift/PC/3測度・ZCB/Black等の独立検証、K0=F0指定の60価格/SEを保存 | 別branchで受入済み。flexicap strike/対象日・sticky K0・原典MC規約は未確定、原典価格の無条件pinは未達。main未統合 |
 | §33.3 | `_mortgage_cashflows.py` | 本文CMO 400/300/100・100/200/500（計800）、独立30年償却/PV閉形式、IO/PO方向性・principal保存・Gaussian割引MC・OAS逆算 | ロジック完了。返済は明示したpool生存モデル＋任意SMM、原pool/市場価格なし、実証較正とは別。教材・受入は保留 |
 | §34.1 | `_nonstandard_legs.py` | BS34.1: raw10/20期間・100M/120M・2%・ACT365/360、独立cashflow/PV telescope/日次RFR積、元本列・known fixing | ロジック完了。具体U.S.休日未確定、caller calendarのFollowing、adjusted source pinなし。教材・受入は保留 |
 | §34.2 | `_compounding_swaps.py` | Ex34.1全残高・精密2.895848743/表示値経路2.895、BS34.2の20期間、独立積の和/8経路木のspread厳密条件 | ロジック完了。一般forward実現は近似、additive spread誤差と表示切捨てを保持。教材・受入は保留 |
