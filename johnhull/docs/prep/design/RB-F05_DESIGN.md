@@ -1,6 +1,6 @@
 # RB-F05：不連続payoffの微分教師とDML（軽い設計メモ）
 
-- 日付：2026-09-27。状態：設計案、実装・学習・採用判定は未着手。
+- 日付：2026-09-27。更新2026-10-07。状態：v1 digitalの実装・数値/学習比較・研究3図まで完成。独立レビューImportant1修正済み（Critical/Minor0）。
 - 順序：RB-F07の採否記録後。第2段階の離散バリアはM15受入後、0DTEはR4解決後。
 - 置き場：`research/RB-F05/`。teacherはhullkit非公開モジュール、学習はdeep_hedge_price。公開API・依存追加は別承認。
 - 問い：正しいGreek教師を作る費用を含めても、price-only学習・積分・補間よりDMLに利点があるか。
@@ -58,3 +58,17 @@ S002 v2 の原PDFには、式(3)のGBMドリフトの1/2欠落、式(18)の密�
 - 教材採用と標準器への昇格を分ける。教師biasが残る、独立参照に合わない、費用を回収できない場合は速度の採用理由にしない。
 - 出典：[S002記録](../sources/sources_S001-S031.md#s002)。論文のdigital/barrier実験は実市場での優位を示すものではない。
 - 残る設計事項：離散バリアの監視日・参照精度、学習予算、学習側担当とのartifact境界。実装着手時に確定する。
+
+## 5. v1の実施条件（2026-10-07）
+
+- digitalのみ。K=100、r=3%、sigma=20%、S=80–120、T=0.05–2年。train512/validation128、独立testは距離×満期の格子。split別のscenario IDと独立乱数streamを固定し、同一pathをsplit間で共有しない。
+- teacher→小型CPUネット→JSON/NPZ・artifact-only notebookの順。LRM/CRN/厳密条件付き期待値/rampと解析・積分を比較。pathwise=0は負の対照。
+- paired seed 11/29/47、同じ2層32幅tanhネット。price-onlyとLRM-DMLは教師生成込み各8秒の上限（最後の1 updateの超過を記録）。重み/正規化はtrainだけ、validationは診断、testを設定選択に使わない。固定pilotで6SE＋参照数値誤差の教師判定を先に固定する。
+- 独立解析・積分・価格/Greek補間、OOD判定＋解析fallbackも総費用に含める。教師配列・全seedの予測/誤差・重みを小さなNPZに保存し、checkは再学習せず根拠配列から指標と推論を再計算する。速度の採用は費用回収と誤差を見て決める。
+- Ruling: 最小版をdigitalに固定する — 教師biasと学習誤差を分離する既存設計に従う — バリア/0DTEの性能はこの結果から判断できず、後続実験が必要。
+
+## 6. v1の実測（2026-10-07）
+
+- 新規32 tests、既存aad/exotics/quote-risk/pricing-lossと両packageの索引/docstringを含む807 tests PASS。変更Python7ファイルruff/format、独立積分・MC再生成・保存重みからのNumPy推論・4種改竄検査PASS。artifact-only notebook3図をfresh実行し目視確認。
+- 3seedすべてでDMLの価格/delta RMSE改善、deltaは約32–71%減。解析約0.12µs/件、ネット約1.3µs/件、補間もより高精度/高速。速度での標準採用は不採用、教師と教育比較は採用。入力・全seedの誤差/SE/重み/総費用は[研究資料](../../../research/RB-F05/README.md)に保存。
+- 本編台帳/教材/既存vol18配列には変更なし。レビュー修正の検証後にv1をmainへ反映する。離散バリアの監視日/精度は次段階、0DTE/roughは後続。
