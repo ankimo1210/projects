@@ -1,7 +1,7 @@
 # RB-F07 設計メモ（下地）：較正を通した市場クオート感応度
 
 - 日付：2026-09-27
-- 状態：**設計の下地。実装ではない。** 研究計画 `docs/superpowers/plans/2026-09-27-research-backlog.md` §6.2 の最小仕様を、scratch の試作で確かめた結果で具体化した。
+- 状態：**2026-10-07、v1の計算・研究notebook3図・対象検証・独立レビューまで完了。** 初期の設計下地は下記に保持する。 研究計画 `docs/superpowers/plans/2026-09-27-research-backlog.md` §6.2 の最小仕様を、scratch の試作で確かめた結果で具体化した。
 - 着手の前提：D1-preflight の検証完了。研究の置き場は計画 §8-2 で本人承認済み（2026-09-27）。
 - 試作：`tmp/johnhull-prep/scratch/rbf07/proto.py`・`cond.py`（gitignore 下。リポジトリには入れない）。数値はすべて HEAD 7c4bb109 の hullkit と NumPy/SciPy で実測した。
 - 出典：S003（Henrard）と L01（Strata）の確認結果は `docs/prep/sources/` に置く。本メモの式と試験は出典に依存しない形で書いてある。
@@ -149,3 +149,17 @@ log DF 座標や PV 残差の生の条件数をこの判定と混ぜない。sol
 - [L01](../sources/sources_S032-S062_L01-L03.md#l01)：`MarketQuoteSensitivityCalculator` と `JacobianCalibrationMatrix` を確認。Strata が格納するのは $d\theta/dq$ で、本メモの $J$ の逆向き。コードは Apache-2.0、今回は依存追加もJava実行も行わない。
 - 本実装前に、単位別の絶対許容差、非収束時の戻り値、数値rankの境界fixtureを確定する。
 - 公開 API への昇格（別承認）。
+
+## 12. v1 実装時の確定事項（2026-10-07）
+
+- REDで先に22テストの失敗を確認。既存の本メモを実装仕様に使い、新しい計画書は作らない。
+- 解析解・座標/残差不変性・価格オラクルは相対1e-12、zero絶対2e-14、PV絶対5e-8通貨、感応度絶対2e-8通貨/step。複素ステップJacobianは絶対2e-12。
+- 中央差分は相対1e-8・絶対2e-6通貨/step、平行シフトは相対1e-9・絶対2e-6通貨/bp。印刷値はその表示精度で比較する。
+- Newtonの停止はクオート刻みで正規化した残差の最大値1e-10以下（rate絶対1e-14、price絶対1e-10）。非収束はRuntimeError、数値rank欠落はValueError。部分較正値を成功として返さない。
+- rankはJを「zero 1bp」「rate quote 1bp／bond price 1.00」に正規化し、s_min <= n*eps*s_maxなら停止。増幅率はzero bp/quote step、10超は警告だけ。生の条件数は参考値。
+- 明示柱は情報不足の実験のためだけに対応。補間比較は各補間を再較正して検証。log DF補間の区間外はzeroをフラットとする。v2/v3・公開API・新依存は対象外。
+
+- v1成果物は [research/RB-F07](../../../research/RB-F07/README.md)。最初の22テストRED→GREEN、順序・単位混在を追加して24 PASS、既存rates/swaps/docstring/索引を含む対象649 PASS。3図artifact-only notebookと保存/新規独立数値照合を確認。正式台帳・公開API・依存は変更しない。
+- 手計算の参照式はzero線形に合わせて P(1)^(3/4)*P(2)^(3/8) とした。sqrt(P(1)*P(2)) はlog DF線形で、この設計の参照式にはならない。
+- 小さいbump幅の保存値照合では 40*eps*abs(PV)*1e-4/h を丸め誤差の比較幅とし、V字右端のビット一致や固定増加を要求しない。
+- 最終独立レビューCritical/Important/Minor 0、tracked releaseおよび既存33節の台帳check-artifacts PASS。v1完了。次は承認済み研究順序のRB-F05。
