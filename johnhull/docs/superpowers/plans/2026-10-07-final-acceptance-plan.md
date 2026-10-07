@@ -33,4 +33,11 @@
 - [x] §33.2/§36.4の原典と既存計算を調査し、不足入力を正直に扱える最終判定を記録する。
 - [x] 新recipe/adapter/guardを作り、fresh対象testと45節browser/代表9画像を検証する。
 - [x] 独立レビューの重要指摘を解決し、native台帳/既存261行/件数/summaryを検証する。
-- [ ] ローカルcommit後にread-only既存/新証跡とtracked releaseを確認し、全体結果を報告する。
+- [x] ローカルcommit後にread-only既存/新証跡とtracked releaseを確認し、全体結果を報告する。
+
+## 完了確認 — 2026-10-08
+
+実装commit `5a2b72c9`。対象389 tests・台帳41 tests、45節/149要求・598数式/22表・代表9画像PASS。
+独立レビューC/I/Minor0、旧261行と全対象外261行を保持。commit後の新45節と旧36/54/58節の
+read-only verify、全306 accepted artifacts、証跡鮮度、strict tracked release PASS。原典未指定価格の
+再現・main統合・公開は宣言した受入範囲と区別する。数値・画面証跡をcommit後に再生成していない。
