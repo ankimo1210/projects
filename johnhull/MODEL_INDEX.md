@@ -334,3 +334,9 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._commodity_foundations` | Private Ch35商品先物/季節補間・futures較正木/行使・OU/jump/SDE係数・HDD/CDD・再保険/CAT・条件付きweather価格・energy/weather共同hedge | GE例/全節点と独立path/OU求積/jump MC/Itô・cash台帳/call spread・密度/MC・共分散/holdout。test_commodity_foundations_*.py |
 | `hullkit._real_options_foundations` | Private Ch36 NPV・P/Q risk adjustment・賃料option・CAPMリスク価格・商品事業CF/撤退/拡張状態 | GE数値/節点と独立replication・密度積分・OLS・全方策/状態path列挙。test_real_options_foundations_*.py |
 | `hullkit._mishap_foundations` | Private Ch37 条件付き連勝確率/期待人数と等相関等weight portfolio分散（組織統制ではない） | GE p818–819の1/16・1人・14.7%、独立二項列挙/共分散/固定seed MC6SE。test_mishap_foundations_*.py |
+
+## RB-F07 research: market quote sensitivity
+
+| Module | Contracts | Verification |
+|---|---|---|
+| `hullkit._quote_risk` | Private v1 `hullkit._quote_risk:Quote`, `hullkit._quote_risk:calibrate`, `hullkit._quote_risk:model_quotes`, `hullkit._quote_risk:cashflow_value`, `hullkit._quote_risk:receiver_swap_value`, `hullkit._quote_risk:quote_sensitivity` | Exact square single-curve Newton/analytic Jacobian; independent sequential brentq, hand closed form, Hull Table4.3, rebootstrap bumps, coordinate/residual invariance, complex step, interpolation/coverage/quote-unit checks; `test_quote_risk.py`; `research/RB-F07/` |
