@@ -243,6 +243,8 @@ vol 18–28 は release 契約（artifact-only、acceptance の再計算、改�
 
 ### 6.2 RB-F07 の実装計画（着手時の最小仕様案）
 
+**実装状況（2026-10-07）：** v1の非公開計算・24 tests・独立比較・artifact-only研究notebook3図を実装。[研究資料](../../../research/RB-F07/README.md)。対象649 tests/ruff/数値再生成/3図目視PASS、独立レビュー・tracked release確認待ち。正式節受入とは別枠。v2/v3は引き続き別承認。
+
 **問い：** モデルのパラメータ感応度と、実際に取引する市場クオートの感応度はどう違うか。
 
 **範囲 v1：**
