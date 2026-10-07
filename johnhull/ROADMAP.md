@@ -19,7 +19,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 | 11 | `volumes/11_ir_derivatives_market` | 29, 30 | done |
 | 12 | `volumes/12_qualitative_summary` | 1, 8, 16, 35, 36, 37 | done |
 
-Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 38 private modules including RB-F07 v1 as of 2026-10-07 (later P3–P7 logic is on `codex/p7-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` / `codex/p6-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
+Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 38 private modules on main including RB-F07 v1 as of 2026-10-07 (later P3–P7 logic is on `codex/p7-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` / `codex/p6-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
 ## 現在地（2026-10-07、開発修正を集約・RB-F07 v1完了）
 
