@@ -1,0 +1,825 @@
+{
+  "profile": "fast-v1",
+  "base": "99476dbc",
+  "chapters": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "out": "docs/validation/fast-ch16-21",
+  "config": "docs/acceptance/fast-ch16-21.json",
+  "note": "docs/CHAPTERS_16_21_ACCEPTANCE_2026-10-07.md",
+  "policy": "docs/FAST_ACCEPTANCE_GUIDE.md",
+  "details": "docs/lessons/advanced-options-chapter-details.json",
+  "section_contracts": {
+    "16.3": {
+      "implementation": "hullkit/src/hullkit/_employee_options.py",
+      "tests": [
+        "hullkit/tests/test_employee_options_awards.py"
+      ]
+    },
+    "16.4": {
+      "implementation": "hullkit/src/hullkit/_employee_options.py",
+      "tests": [
+        "hullkit/tests/test_employee_options_valuation.py"
+      ]
+    },
+    "16.5": {
+      "implementation": "hullkit/src/hullkit/_employee_options.py",
+      "tests": [
+        "hullkit/tests/test_employee_options_backdating.py"
+      ]
+    },
+    "17.1": {
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_insurance.py"
+      ]
+    },
+    "17.2": {
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_range.py"
+      ]
+    },
+    "17.3": {
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_carry.py"
+      ]
+    },
+    "17.4": {
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_index.py"
+      ]
+    },
+    "17.5": {
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_fx.py"
+      ]
+    },
+    "17.6": {
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_american.py"
+      ]
+    },
+    "18.1": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_cash.py"
+      ]
+    },
+    "18.3": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_equivalence.py"
+      ]
+    },
+    "18.4": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_parity.py"
+      ]
+    },
+    "18.5": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_bounds.py"
+      ]
+    },
+    "18.6": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_martingale.py"
+      ]
+    },
+    "18.7": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_black.py"
+      ]
+    },
+    "18.8": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_spot.py"
+      ]
+    },
+    "18.9": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_replication.py"
+      ]
+    },
+    "18.10": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_american.py"
+      ]
+    },
+    "18.11": {
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_style.py"
+      ]
+    },
+    "19.1": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_sale.py"
+      ]
+    },
+    "19.2": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_stop.py"
+      ]
+    },
+    "19.4": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_delta.py"
+      ]
+    },
+    "19.5": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_theta.py"
+      ]
+    },
+    "19.6": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_gamma.py"
+      ]
+    },
+    "19.7": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_pde.py"
+      ]
+    },
+    "19.8": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_vega.py"
+      ]
+    },
+    "19.9": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_rho.py"
+      ]
+    },
+    "19.11": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_scenarios.py"
+      ]
+    },
+    "19.12": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_extensions.py"
+      ]
+    },
+    "19.13": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_insurance.py"
+      ]
+    },
+    "19.appendix": {
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_taylor.py"
+      ]
+    },
+    "20.1": {
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_parity.py"
+      ]
+    },
+    "20.2": {
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_tails.py"
+      ]
+    },
+    "20.4": {
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_axes.py"
+      ]
+    },
+    "20.5": {
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_interpolation.py"
+      ]
+    },
+    "20.6": {
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_minimum_variance.py"
+      ]
+    },
+    "20.8": {
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_single_jump.py"
+      ]
+    },
+    "20.appendix": {
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_density.py"
+      ]
+    },
+    "21.1": {
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_crr.py"
+      ]
+    },
+    "21.2": {
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_carry.py"
+      ]
+    },
+    "21.3": {
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_dividends.py"
+      ]
+    },
+    "21.4": {
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_alternative.py"
+      ]
+    },
+    "21.5": {
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_time.py"
+      ]
+    },
+    "21.6": {
+      "implementation": "hullkit/src/hullkit/_numerical_mc.py",
+      "tests": [
+        "hullkit/tests/test_numerical_mc_replay.py"
+      ]
+    },
+    "21.7": {
+      "implementation": "hullkit/src/hullkit/_numerical_mc.py",
+      "tests": [
+        "hullkit/tests/test_numerical_mc_variance.py"
+      ]
+    },
+    "21.8": {
+      "implementation": "hullkit/src/hullkit/_numerical_fd.py",
+      "tests": [
+        "hullkit/tests/test_numerical_fd_source.py"
+      ]
+    }
+  },
+  "calculation_rows": {
+    "16.3": [
+      "§16.3",
+      "`_employee_options.py`",
+      "本文指数2000→2200でstrike30→33、1700なら25.50。RSU1株、MSU株数ST/S0・価値ST²/S0。独立Fraction資本台帳とlognormal MSU期待値の求積",
+      "計算部分完了。指数連動strike/RSU/MSUの定義を実装。会計史・現行基準・IAS 2記載の確認、§16.1–2の説明・図・受入は保留"
+    ],
+    "16.4": [
+      "§16.4",
+      "`_employee_options.py`",
+      "Ex16.1 unit6.31/1百万権利6.31百万。Ex16.2全15株価/option節点・根14.97/通常call17.98、D/G/H行使.43/.81/.335・継続11.05/106.64/24.95。独立全経路cash列挙/MC6SE/密度積分、倍率45・市場連動20/25",
+      "計算部分完了。原典の根を含む離職タイミングを明示。倍率は整列CRR格子を検証、一般格子では境界離散化誤差あり。倍率∞/離職0は欧州保持、無配当r≥0のcallではAmericanと同値。期待寿命BSMを理論的等価としない。説明・図・受入は保留"
+    ],
+    "16.5": [
+      "§16.5",
+      "`_employee_options.py`",
+      "本文4/30の株価50・4/3の42をstrikeにする例のintrinsic差8。既存award/cash関数を再利用し独立Fractionの行使支払・売却cash ledgerで照合",
+      "算術部分のみ完了。決定日と表示日・研究の論証・法制度は説明/受入へ保留。Ch16の計算3節完了、§16.1–2と会計史の説明は未実施"
+    ],
+    "17.1": [
+      "§17.1",
+      "`_index_currency.py`",
+      "β1で5枚/K900/880時440000＋10000=450000。Table17.1全return、Table17.2全6価値570000–370000、β2で10枚/K960/補填80000、配当込K955。独立Fraction/CAPM cash ledger",
+      "計算部分完了。CAPMは条件付き期待シナリオで、betaだけの確定保証を主張しない。premium/基差残差は別cash入力、契約倍率は原典例。説明・図・受入は保留"
+    ],
+    "17.2": [
+      "§17.2",
+      "`_index_currency.py`",
+      "EUR call50000/AUD put300000、GBP forward1320000。range put0.027304826/call0.027292496（印刷0.0273、上strike丸めの残差を保持）、zero-cost上strike探索。独立Fractionの3領域cash・lognormal payoff求積",
+      "計算部分完了。外貨受取/支払の符号とnotionalを明示、印刷strikeの小さな費用と厳密zero-costを区別。forward一致境界の求根丸めを修正。市場説明・図・受入は保留"
+    ],
+    "17.3": [
+      "§17.3",
+      "`_index_currency.py`",
+      "式17.1–5の下限/parity/配当spot変換、配当込みPDEと米国差額不等式。本文に数値例なし。独立lognormal payoff求積、再投資台帳、数値微分PDE・CRRで照合",
+      "計算部分完了。spot縮小は欧州限定、米国差額不等式は本文のr/q非負前提を明示。説明・図・受入は保留"
+    ],
+    "17.4": [
+      "§17.4",
+      "`_index_currency.py`",
+      "Ex17.1 c51.83/契約5183、d1印刷0.5444は切捨て相当（未丸め0.544478575）、d2/N再現。Snapshot put169.7、forward/配当利回り逆算。独立CRR・payoff積分",
+      "計算部分完了。契約5183は丸めた価格の100倍で未丸め5183.2957と区別、同一満期の理論quotesを逆算。説明・図・受入は保留"
+    ],
+    "17.5": [
+      "§17.5",
+      "`_index_currency.py`",
+      "Ex17.2 σ20%→0.0639、10%→0.0285、c0.043→IV14.1%（未丸め14.111938%）。通貨反転call/putの数量Kと価格係数S×K。独立payoff積分によるIV求根・満期換算台帳、微小価格の回帰",
+      "計算部分完了。国内/外貨の単位とnumeraire反転を明示、T=.3333は4/12の表示丸め。微小価格をゼロIVにしないBrent幅収束へ修正。説明・図・受入は保留"
+    ],
+    "17.6": [
+      "§17.6",
+      "`_index_currency.py`",
+      "Ch13参照の米国為替call0.019・全option節点、成長a0.9983/p0.4673。独立停止方針列挙・CN-PDE、外国金利別の行使premium、ゼロvol/満期境界",
+      "計算部分完了。国内rで割引しr−qで成長、米国>=欧州、行使判定は指定格子上の厳密優越。説明・図・受入は保留"
+    ],
+    "18.1": [
+      "§18.1",
+      "`_futures_options.py`",
+      "銅2500+250=2750、corn1050−50=1000、SOFR0.65%/premium125/payoff500/profit375、国債96-09/1-04/利益937.50。独立Fractionの2脚決済・符号付き価格cash",
+      "計算部分完了。先物建玉と清算cashを分離、倍率は本文例のcaller入力。市場の現行制度・定性説明・図・受入は保留"
+    ],
+    "18.3": [
+      "§18.3",
+      "`_futures_options.py`",
+      "本文に数値例なし。満期一致ならF_T=S_T、spotと先物の欧州call/put一致。独立spot payoff求積・terminal cashと満期ずれの反例",
+      "計算部分完了。確定carryと満期一致を明示、米国型へ等価性を拡張しない。§18.2定性・説明・図・受入は保留"
+    ],
+    "18.4": [
+      "§18.4",
+      "`_futures_options.py`",
+      "Ex18.5 call0.56→put1.04（未丸め1.035614712）、式18.1/18.2。独立Fractionの2portfolio終端cashと米国CRRの差額上下限",
+      "計算部分完了。本文の複製は満期清算に簡略化した議論で、実際の日々清算再投資と区別。米国差額上下限は非負金利。説明・図・受入は保留"
+    ],
+    "18.5": [
+      "§18.5",
+      "`_futures_options.py`",
+      "本文に数値例なし。式18.3/18.4の割引本質価値下限・米国即時本質価値下限、ゼロvol/ATM等号とdeep ITM極限。独立密度求積/Jensen・米国CRR",
+      "計算部分完了。大小関係は等号を含む。説明・下限図・受入は保留"
+    ],
+    "18.6": [
+      "§18.6",
+      "`_futures_options.py`",
+      "本文に数値例なし。式18.5/18.6のQ drift0・log drift−σ²/2・条件付き平均F・先物PDE。独立密度求積/stock Euler MC固定seed6SE・価格数値微分",
+      "計算部分完了。futuresはmoney-market測度、forwardは満期債測度と区別。Black/PDE価格検証は確定r。説明・図・受入は保留"
+    ],
+    "18.7": [
+      "§18.7",
+      "`_futures_options.py`",
+      "Ex18.6 put1.12（未丸め1.116641457）、d1印刷0.07216は切捨て相当/d2−0.07216/N−d1=0.4712/N−d2=0.5288。独立payoff積分・先物CRRとゼロvol/満期境界",
+      "計算部分完了。既存の共通Black入口を使用、正のlognormal Fのみ。負価格モデルRB-H18は範囲外。説明・図・受入は保留"
+    ],
+    "18.8": [
+      "§18.8",
+      "`_futures_options.py`",
+      "Ex18.7 gold call88.37、d1=0.3026/d2=0.1611。spot/carryとforward/満期discountの入力一致、独立spot/forward payoff積分",
+      "計算部分完了。市場discount入力は満期債測度でforwardがlognormalという仮定が必要。確率金利でfuturesへ置換する主張なし。説明・図・受入は保留"
+    ],
+    "18.9": [
+      "§18.9",
+      "`_futures_options.py`",
+      "F30→33/28、Δ0.8、確定cash−1.6/PV−1.592、p0.4、option1.592019967。Ch13参照の米国put2.84。独立2×2複製連立解・全停止方針",
+      "計算部分完了。先物entry価値0/初期portfolio−f、清算をステップ末へ近似する本文の留保を明示。説明・図・受入は保留"
+    ],
+    "18.10": [
+      "§18.10",
+      "`_futures_options.py`",
+      "本文に数値例なし。normal/inverted/zero carryの米国call/put大小関係、満期一致の欧州等価と後月先物の差。独立CN-PDEで4契約・ゼロvol境界を検証",
+      "計算部分完了。大小関係は確定carry/r>0の本文前提、後月ほど差が広がる点は合成例の確認で普遍単調性を主張しない。説明・図・受入は保留"
+    ],
+    "18.11": [
+      "§18.11",
+      "`_futures_options.py`",
+      "本文に数値例なし。無割引Black気配=e^(rT)×通常価格、p+F=c+K、金利独立、早期行使の優越なし。独立求積/全停止方針/Fraction清算cash、1.1506は合成値と明示",
+      "計算部分完了。気配は先払いpremiumではなく清算基準、initial premium0/担保と清算cash利息は範囲外。§18.2定性・説明・図・受入は保留"
+    ],
+    "19.1": [
+      "§19.1",
+      "`_greeks_hedging.py`",
+      "通し例call2.40・理論総額約240000・売却300000との差約60000（未丸め2.400461/240046/59954）。独立Q payoff積分、P drift13%と価格r5%を区別",
+      "計算部分完了。売却差額は時点0の理論価値との差で将来の確定利益ではない。定性説明・図・受入は保留"
+    ],
+    "19.2": [
+      "§19.2",
+      "`_greeks_hedging.py`",
+      "naked S60支払1000000、covered49→40の株式損失900000、閾値1往復2ε。Table19.1全6成績を固定seed MC/6SE＋表示丸め幅で確認。同一パスの無利息/資金口座会計と独立discounted gains",
+      "計算部分完了。本文の成績は利息/割引を除外し、資金繰り付きPV費用と別欄。MCの印刷値一致は統計的確認。説明・図・受入は保留"
+    ],
+    "19.4": [
+      "§19.4",
+      "`_greeks_hedging.py`",
+      "Ex19.1 delta0.522、1200株＋再調整100株、book hedge14900株。Tables19.2/3全21行の取引/利息/表示帳簿、19.2費用263338.49、Table19.4全6成績(MC6SE)、週9価格414.5k・純変化−4.1k。独立density delta/discounted gains",
+      "計算部分完了。Table19.3表示S/Δの精密会計256337.59と本文256600に262.41差、元の非丸め入力不明として保留。原典成績は無利息費用。定性/受入は保留"
+    ],
+    "19.5": [
+      "§19.5",
+      "`_greeks_hedging.py`",
+      "Ex19.2 theta−4.31/年、−.0118/暦日、−.0171/営業日。独立Q payoff積分のremaining-time中央差分、call/put parity、正thetaの本文例外",
+      "計算部分完了。thetaは暦時間微分でremaining T微分の負号、365/252単位を明記。説明・図・受入は保留"
+    ],
+    "19.6": [
+      "§19.6",
+      "`_greeks_hedging.py`",
+      "Ex19.3 ±2の二次損失−20000、gamma hedge2000 options/−1240株、Ex19.4 Γ.066。独立Q密度価格二階差分とdelta hedge残差の三次収束",
+      "計算部分完了。株式gammaは0、gamma0のヘッジ商品は不可。説明・図・受入は保留"
+    ],
+    "19.7": [
+      "§19.7",
+      "`_greeks_hedging.py`",
+      "Eq19.4 theta+rSdelta+σ²S²gamma/2=rΠ、q版・stock/bank込みdelta中立book。独立CN grid/time差分の残差2e−6以内・格子倍密で縮小（数値例なし）",
+      "計算部分完了。thetaはcalendar-timeで、stock/bankもbook価値と時間微分へ算入。説明・図・受入は保留"
+    ],
+    "19.8": [
+      "§19.8",
+      "`_greeks_hedging.py`",
+      "Ex19.5 vegaのみ4000 options/−2400株・残Γ−3000、同時中立400/6000 options/−3240株。Ex19.6 vega12.1/単位・.121/vol point。独立有理数消去とQ密度vol差分",
+      "計算部分完了。vega中立はparallel IV shiftを前提、vol surfaceの個別変化は未ヘッジ。説明・図・受入は保留"
+    ],
+    "19.9": [
+      "§19.9",
+      "`_greeks_hedging.py`",
+      "Ex19.7 rho8.91/金利単位・.0891/1% point。spot/q固定の独立Q密度国内金利差分4例、rho parity・完全再評価の二次誤差",
+      "計算部分完了。金利の絶対変化1.0/.01/.0001を区別、先物固定Fのrhoは§19.12で別扱い。説明・受入は保留"
+    ],
+    "19.11": [
+      "§19.11",
+      "`_greeks_hedging.py`",
+      "Table19.5の21表示値・最大損失−90mを読取り（再価格計算ではない）。2週・7×3の合成FX bookを独立Q密度積分で完全再評価、short butterflyの内点最大損失、IV10%→12%",
+      "計算部品完了。Table19.5はbook/strike/maturity不明のため価格再現は入力不足で飛ばす。合成book検証と引用値読取りを区別。説明・受入は保留"
+    ],
+    "19.12": [
+      "§19.12",
+      "`_greeks_hedging.py`",
+      "Table19.6全Greeks/qと外国rhoを独立密度差分、固定F futures rho=−TV、forward/futures delta差。Ex19.8精密468421.81GBP・factor表示丸め468442GBP、契約7枚",
+      "計算部分完了。futures rhoはq=rを連動させ固定Fを保持、通貨rhoは国内/外国を分離。Ex19.8の21GBP差はfactor4桁丸めで再現可能と注記（原著の中間精度は不明）。説明・受入は保留"
+    ],
+    "19.13": [
+      "§19.13",
+      "`_greeks_hedging.py`",
+      "Ex19.9 d1.4499・売却32.15%・表示差4.64/4.28%、Ex19.10 122.96→123 short futures。独立密度put delta、同一初期premiumの離散replication帳簿とgap-floor破れ",
+      "計算部分完了。Ex19.9の88mは符号欠落/残存.5で一致、92mは1日経過で一致：同一時間規約での厳密一致は保留。index-mirror/beta1限定。説明・歴史・受入は保留"
+    ],
+    "19.appendix": [
+      "§19.appendix",
+      "`_greeks_hedging.py`",
+      "Eq19A.1とspot/IV二変数Taylor（vega/vanna/vomma）。独立payoff求積の混合微分2経路・vol二階差分、完全再評価との差の三次縮小、ΔS∝√Δt時のgamma/θ次数（数値例なし）",
+      "計算部分完了。並行IV shock・金利/q固定、時間cross項など高次は省略。定性・説明/図/受入は保留"
+    ],
+    "20.1": [
+      "§20.1",
+      "`_smile_surface.py`",
+      "Ex20.1 put.0419・IV14.5%（未丸め.04192291/.14511006）、Eq20.2 dollar誤差3例。独立Q payoff積分＋二分逆算、丸めquoteのIV差と微小正価格",
+      "計算部分完了。欧州parity前提、丸めputの残差とIV差を消さない。有限IV arb bounds、極端ITM側の価格桁落ちによる識別限界を区別。説明・受入は保留"
+    ],
+    "20.2": [
+      "§20.2",
+      "`_smile_surface.py`",
+      "Table20.1正規列31.73/4.55/.27/.01/.00/.00%を独立求積。合成Q混合とlognormalの平均/分散を一致させ、両OTM価格上昇・U字IV・parityを直接terminal密度積分で確認",
+      "計算部分完了。2005–2015実測列の原データなし、実測再現は飛ばす。合成Q mixtureは経験P分布・現行市場smileとは区別。歴史説明・受入は保留"
+    ],
+    "20.4": [
+      "§20.4",
+      "`_smile_surface.py`",
+      "本文50-delta±.5定義、K・K/S・K/F・spot delta軸の往復とATM spot/forward/50deltaの差。独立terminal payoff積分のspot差分と通貨単位不変性（固有数値例なし）",
+      "計算部分完了。spot deltaはpremium未調整、qで±.5が範囲外になる場合は不可。premium-adjusted FX delta・定性説明・図・受入は保留"
+    ],
+    "20.5": [
+      "§20.5",
+      "`_smile_surface.py`",
+      "Table20.2全30IV・9月13.7%・1.5年/.925で14.525%。独立Fraction4隅重み・双線形多項式、ln(K/F)/√T軸。価格凸性/calendar違反を補間とは別に検出する合成例",
+      "計算部分完了。IVを補間しtotal varianceへ置換しない。範囲外はエラー、無裁定修復/市場surface推定は別研究。説明・図・受入は保留"
+    ],
+    "20.6": [
+      "§20.6",
+      "`_smile_surface.py`",
+      "ΔMV=ΔBSM+vega×条件付きIV応答。独立Q payoff完全再評価の連鎖微分、合成2因子4状態Cov(ΔV,ΔS)/Var(ΔS)と最小分散、非線形再評価の局所極限（本文数値例なし）",
+      "計算部分完了。応答は条件付き時間方向の入力で横断smile傾きと別。実データ推定/モデル較正はRB-H20、局所一次式の精度を超える保証なし。説明・受入は保留"
+    ],
+    "20.8": [
+      "§20.8",
+      "`_smile_surface.py`",
+      "Table20.3 call/put全9行、p=.53140677、端点IV=0とfrown。印刷callから内点IV58.85004/66.62438/69.51882/69.16508/66.09182/59.97265/49.88574%、独立2状態複製・Q密度再評価",
+      "計算部分完了。K56印刷IV49.0%は丸めcallから49.88574%、未丸めモデルから49.93360%で不一致を保存。本文数値を改変せず誤植候補として記録、説明・受入は保留"
+    ],
+    "20.appendix": [
+      "§20.appendix",
+      "`_smile_surface.py`",
+      "Ex20A.1 call4.045/3.549/3.055、全8密度.0057/.0444/.1545/.2781/.2813/.1659/.0573/.0113、面積.998473283/残差.001526717、平坦26%区間確率.0031/.0167。独立payoff/三角butterfly積分・対数正規密度への二次収束",
+      "計算部分完了。丸めた3価格ではg1≈.00806になり、未丸め価格を使用。区間質量は中点則の推定で尾部を直接観測したものではない。負密度・質量残差を保存し正規化/修復はしない。説明・受入は保留"
+    ],
+    "21.1": [
+      "§21.1",
+      "`_numerical_trees.py`",
+      "Ex21.1 N5価格4.49、N30/50/100/500は4.263/4.272/4.278/4.283、Fig21.3全21節点。Ex21.2 Δ−.415/Γ.034/Θ−.0117日、vega.123/rho−.072 per point。独立全停止方針/FD/欧州BSM",
+      "計算部分完了。Greekの推定時点Δt/2Δtと単位を明示。bump固定N・Δσ/Δr=1e−4、元のDerivaGem bump幅は不明。説明・受入は保留"
+    ],
+    "21.2": [
+      "§21.2",
+      "`_numerical_trees.py`",
+      "Ex21.3 futures19.16/20.18/20.22、Ex21.4 FX.0710/.0738、Figs21.5/6全30節点。q=r/q=rf/q=dividend yield、独立全停止方針・FD・欧州BSM",
+      "計算部分完了。先物成長0でも国内金利割引を保持。定性説明・教材・受入は保留"
+    ],
+    "21.3": [
+      "§21.3",
+      "`_numerical_trees.py`",
+      "Ex21.5 4.44/4.208/4.214、Fig21.9全21節点、S*=49.999218/PV2.000782。CV未丸め4.2454208/表示4.25。独立全停止方針・配当PDE・欧州BSM、割合配当の複合縮小",
+      "計算部分完了。σはS*へ適用。N5のex日3.5月は格子外で行使は月次のみと明示し、aligned時はex前後を比較。CV改善の普遍保証なし。説明・受入は保留"
+    ],
+    "21.4": [
+      "§21.4",
+      "`_numerical_trees.py`",
+      "Ex21.6 u1.0098/d.9703/price.0026・Fig21.11全10節点。p=.5 log平均/分散、三項pU/pM/pD・独立log陽解法行列/BSM/米国FD",
+      "計算部分完了。p=.5のstock成長と三項のlog分散は有限dt近似。負の三項確率は拒否。adaptive meshは概念説明として保留、教材・受入は保留"
+    ],
+    "21.5": [
+      "§21.5",
+      "`_numerical_trees.py`",
+      "本文式21.11/12・等分散clockを実装（固有数値例なし）。定数CRRへの退化、区間DF/forward成長、独立全パス/停止方針・積分BSM・時変CN-PDE",
+      "計算部分完了。曲線はcallerのpiecewise forward rate/variance rate。負分散と負branch確率を拒否、ゼロ分散区間を含む場合も確率条件を要求。説明・受入は保留"
+    ],
+    "21.6": [
+      "§21.6",
+      "`_numerical_mc.py`",
+      "Ex21.7 SE.169/CI2.71–3.37、Ex21.8 raw CI4.503989–5.456011/先丸め4.51–5.45、Table21.2 BSM4.817、Table21.3全10平均/payoffと6.78705→6.79。独立32経路・Gauss-Hermiteモーメント・BSM/解析Greekを固定seed6SE",
+      "計算部分完了。Tables21.1/2の全乱数標本は不足で再現を飛ばす。掲載10経路は方法例で真値と区別。SEは独立trialを仮定、共通乱数Greekはpaired差分のSE。説明・受入は保留"
+    ],
+    "21.7": [
+      "§21.7",
+      "`_numerical_mc.py`",
+      "本文4層Φ⁻¹(.125/.375/.625/.875)、6方式（antithetic/control/tail conditional/stratification/moment matching/Sobol）。独立Q payoff求積・解析BSMを固定seed6SE、1024 Sobol点の分割均等性",
+      "計算部分完了。antiはpair平均、層化/moment matchingは独立batch、QMCは独立scrambleのSE。決定的点へiid SEは付けない。有限sample moment matchingはbiasedになり得る、普遍的分散改善/1M収束は主張しない。説明・受入は保留"
+    ],
+    "21.8": [
+      "§21.8",
+      "`_numerical_fd.py`",
+      "Tables21.4/5全462格子値、米国4.067186/欧州3.911208/BSM4.075981、explicit4.256804と負価格。独立Q payoff求積/CRR・空間時間領域の収束・解析Greek",
+      "計算部分完了。source projectionは負の不安定値を再生するopt-in。S75/t0・S60/t2は丸め境界、T=.4167なら全表が印刷丸め内（原著規約は未確定）。CV未丸め4.231959、表示値の加算4.24を分離。Americanはpost-step projection、厳密LCPとは区別。説明・受入は保留"
+    ]
+  },
+  "numerical_requirements": {
+    "16.1": [],
+    "16.2": [],
+    "16.3": [
+      "D16.3-02"
+    ],
+    "16.4": [
+      "D16.4-01",
+      "D16.4-02",
+      "D16.4-03",
+      "D16.4-04"
+    ],
+    "16.5": [
+      "D16.5-01"
+    ],
+    "17.1": [
+      "D17.1-01",
+      "D17.1-02"
+    ],
+    "17.2": [
+      "D17.2-01",
+      "D17.2-02"
+    ],
+    "17.3": [
+      "D17.3-01",
+      "D17.3-02"
+    ],
+    "17.4": [
+      "D17.4-01",
+      "D17.4-02"
+    ],
+    "17.5": [
+      "D17.5-01",
+      "D17.5-02"
+    ],
+    "17.6": [
+      "D17.6-01"
+    ],
+    "18.1": [
+      "D18.1-01",
+      "D18.1-02"
+    ],
+    "18.2": [],
+    "18.3": [
+      "D18.3-01"
+    ],
+    "18.4": [
+      "D18.4-01",
+      "D18.4-02"
+    ],
+    "18.5": [
+      "D18.5-01"
+    ],
+    "18.6": [
+      "D18.6-01"
+    ],
+    "18.7": [
+      "D18.7-01"
+    ],
+    "18.8": [
+      "D18.8-01"
+    ],
+    "18.9": [
+      "D18.9-01",
+      "D18.9-02"
+    ],
+    "18.10": [
+      "D18.10-01"
+    ],
+    "18.11": [
+      "D18.11-01"
+    ],
+    "19.1": [
+      "D19.1-01",
+      "D19.1-02"
+    ],
+    "19.2": [
+      "D19.2-01",
+      "D19.2-02"
+    ],
+    "19.3": [],
+    "19.4": [
+      "D19.4-01",
+      "D19.4-02",
+      "D19.4-03"
+    ],
+    "19.5": [
+      "D19.5-01",
+      "D19.5-02"
+    ],
+    "19.6": [
+      "D19.6-01",
+      "D19.6-02"
+    ],
+    "19.7": [
+      "D19.7-01"
+    ],
+    "19.8": [
+      "D19.8-01",
+      "D19.8-02"
+    ],
+    "19.9": [
+      "D19.9-01"
+    ],
+    "19.10": [],
+    "19.11": [
+      "D19.11-01"
+    ],
+    "19.12": [
+      "D19.12-01",
+      "D19.12-02"
+    ],
+    "19.13": [
+      "D19.13-01",
+      "D19.13-02"
+    ],
+    "19.14": [],
+    "19.appendix": [
+      "D19.appendix-01",
+      "D19.appendix-02"
+    ],
+    "20.1": [
+      "D20.1-01"
+    ],
+    "20.2": [
+      "D20.2-01"
+    ],
+    "20.3": [],
+    "20.4": [
+      "D20.4-01"
+    ],
+    "20.5": [
+      "D20.5-01",
+      "D20.5-02"
+    ],
+    "20.6": [
+      "D20.6-01"
+    ],
+    "20.7": [],
+    "20.8": [
+      "D20.8-01",
+      "D20.8-02"
+    ],
+    "20.appendix": [
+      "D20.appendix-01",
+      "D20.appendix-02"
+    ],
+    "21.1": [
+      "D21.1-01",
+      "D21.1-02"
+    ],
+    "21.2": [
+      "D21.2-01"
+    ],
+    "21.3": [
+      "D21.3-01",
+      "D21.3-02"
+    ],
+    "21.4": [
+      "D21.4-01",
+      "D21.4-02"
+    ],
+    "21.5": [
+      "D21.5-01",
+      "D21.5-02"
+    ],
+    "21.6": [
+      "D21.6-01",
+      "D21.6-02"
+    ],
+    "21.7": [
+      "D21.7-01",
+      "D21.7-02"
+    ],
+    "21.8": [
+      "D21.8-01",
+      "D21.8-02",
+      "D21.8-03"
+    ]
+  },
+  "samples": {
+    "16": "16.4",
+    "17": "17.5",
+    "18": "18.1",
+    "19": "19.4",
+    "20": "20.8",
+    "21": "21.8"
+  },
+  "limitations": {
+    "16.1": "契約期間・権利確定・離職条件は刊行時点の一般的な例。現在の契約の条件を保証しない。",
+    "16.2": "著者のインセンティブの議論と提案を説明する。因果を実データで検証したものではない。",
+    "16.3": "原典p374はIAS 2と印字されている。株式報酬の公式基準名IFRS 2との差を明示する（原典の誤記と推定）。付与日費用の制度史と著者の毎期再評価案、報酬の算術を分ける。",
+    "16.4": "期待寿命BSMは近似であり理論的等価ではない。Figure16.1の根にも.95を掛ける離職重み規約を保存。倍率閾値は格子整列時の検証、一般格子の境界誤差は残る。発表済み希薄化を二重控除しない。",
+    "16.5": "決定日時点50と遡及strike42の差8のみ算術検証。研究の因果・現在の法的判断は受入対象外。",
+    "17.1": "CAPMの条件付き期待シナリオ。betaだけで任意の実現経路の損失を確定保証しない。premium/基差残差は別の現金項。契約倍率100は原典例。",
+    "17.2": "印刷K2=1.3414ではputとcallに.000012329の費用差が残る。厳密zero-costの求根と表示丸めを区別。上限を設ければ有利な為替の利益も放棄する。",
+    "17.3": "exp(−qT)によるspot縮小は欧州終端分布の評価。American行使方針へそのまま適用しない。差額不等式はr/q非負という原典前提。",
+    "17.4": "Ex17.1のd1印刷.5444は切捨て相当、未丸め.544478575。契約5183は表示価格51.83の100倍で未丸め5183.2957とは別。",
+    "17.5": "Sは国内通貨/外国通貨、rfは外国金利。逆quoteのcall/putはstrikeとnotionalの換算が必要。T=.3333は4/12の表示丸め。",
+    "17.6": "国内金利で割引、成長はr−q。行使判定は選択したCRR格子上。American≥Europeanで、等価になる境界もある。",
+    "18.1": "先物建玉と清算cashを分離する。SOFRと債券先物の倍率/quoteは原典例であり現行契約仕様を検証したものではない。",
+    "18.2": "流動性・費用比較と受渡しの説明は刊行時点の例。現在の市場比較は別データが必要。",
+    "18.3": "先物とoptionの満期一致と確定carryを明示。FT=STによる欧州等価をAmericanへ拡張しない。",
+    "18.4": "本文の複製議論は満期清算へ簡略化。実際の日々清算cashの再投資と区別。米国差額上下限は非負金利。",
+    "18.5": "大小関係に等号を含む。ATM/OTM/ゼロvolの境界を除いて厳密な優越とは言わない。",
+    "18.6": "money-market測度のfuturesと満期債測度のforwardを区別。Black/PDEの価格検証は確定r。level drift0でもlog driftは−σ²/2。",
+    "18.7": "対数正規のF>0。負価格のモデルは今回対象外。印刷d1 .07216は切捨て相当で通常の四捨五入は.07217。",
+    "18.8": "市場DFとforwardで評価するには満期債測度でforwardがlognormalという仮定が必要。確率金利でfuturesへ無条件に置換しない。",
+    "18.9": "先物の初期価値0、清算はステップ末へ近似した本文規約。国内rの割引を保持する。",
+    "18.10": "確定carryとr>0の本文前提。後月先物ほど差が広がることは合成例で確認し、普遍的な単調性は主張しない。",
+    "18.11": "無割引Blackは先払いpremiumではなく日々清算の気配。initial premium0。担保と清算cashの利息は対象外。",
+    "19.1": "時点0の理論価値と売却代金の差は将来の確定利益ではない。r5%による価格とP drift13%による経路を分ける。",
+    "19.2": "Tables19.1/4の成績は無利息・無割引費用。資金口座付きPV費用は別。原典MCの一致は固定seed6SEと表示丸め幅で統計的に検証。",
+    "19.3": "Greekはモデルと入力を固定する規約に依存する。市場IVを使うことと、そのspot応答を固定することは別。",
+    "19.4": "Table19.3の精密計算256337.58669と印刷256600に262.41331ドル差。元の非丸め株価/Δがなく厳密印刷再現は未完。表示帳簿の全21行と独立資金会計は確認し、差を金利変更で消さない。",
+    "19.5": "thetaは暦時間微分。残存T微分は負号、365暦日/252営業日の換算を分ける。正thetaの例外を保持する。",
+    "19.6": "株式のgammaは0。gamma0の道具ではgammaを中立化できない。局所二次近似であり任意の大きなshockの損益保証ではない。",
+    "19.7": "qがあれば(r−q)Sdelta。stock/bankの価値と暦時間微分もbookへ算入。モデルPDEの関係である。",
+    "19.8": "vegaはvol絶対単位1.0、1pointは.01倍。中立化はparallel IV shiftで、surfaceの個別変形までは消さない。",
+    "19.9": "rhoは固定spot/qと国内rの変化。1.0/.01/.0001を分ける。固定Fのfutures rhoは別の規約。",
+    "19.10": "ヘッジ頻度・取引費・Greek limitsの定性説明。実運用の閾値や損失を保証しない。",
+    "19.11": "原典Table19.5のbook/strike/maturityが不足し、21セルの原典再価格は未検証（対象外）。表の読取りと2週7×3の合成book完全再評価の独立検証を分ける。数値verifiedは後者の計算部分だけを指す。",
+    "19.12": "Ex19.8は未丸め468421.81GBPとfactor4桁の468442GBPで21GBP差。原著の中間精度は不明。futures rhoは固定Fかつq=rを連動、通貨rhoは国内/外国を分ける。",
+    "19.13": "Ex19.9の88mは残存.5、92mは1日経過で一致し、同一時間規約での厳密印刷再現は未完。index mirror/beta1限定。gapや売買遅れで床が破れ得る。",
+    "19.14": "本編は状態・行動・費用・X+cYの説明。学習済み性能、ensemble/fallback、大規模訓練は今回対象外。",
+    "19.appendix": "ΔSは√Δtの次数。vannaの混合項に1/2を付けず、vommaの二乗項へ1/2を付ける。局所展開の残差を確認する。",
+    "20.1": "欧州・同一K/T・同じ前提とparity。American call/put IV一致は厳密な主張にしない。",
+    "20.2": "Table20.1の実測FX列（2005–2015）は原データがなく再計算未検証（対象外）。正規列と合成Q分布の尾部payoffは検証。Pの実測とQのimplied分布を混同しない。",
+    "20.3": "1987年前後の記述とleverage/jumpという機序仮説を分ける。現在の市場で因果を実証したものではない。",
+    "20.4": "spot deltaの許容域はqとTに依存し、call上限exp(−qT)、put下限−exp(−qT)。軸を変えて同じ契約を特定する。",
+    "20.5": "原典はIVの線形/双線形補間。total varianceの補間と別方式。grid外は明示方針、無裁定診断とsurface修復は別で、修復は対象外。",
+    "20.6": "条件付きIV応答は合成関数で検証。実測の最小分散応答推定は原データ不足で対象外。",
+    "20.7": "同じvanilla surfaceへの較正でも将来のsurface変化とヘッジはモデルに依存。市場性能の承認ではない。",
+    "20.8": "Table20.3のK56：印刷call1.05からIV49.885736%、未丸め1.05223837から49.933602%。原典49.0%とは不一致で、価格丸めだけでは説明できない。値を改変して合わせない。",
+    "20.appendix": "3桁丸め価格だとg1≈.00806、未丸め価格なら.0057。価格丸め誤差を二次差分が増幅する。区間質量は中点則推定、欠けた尾部の直接測定ではない。正規化/負密度clipをしない。",
+    "21.1": "Greekは最初の2段から推定。bump時N固定、Δσ/Δr=1e−4、原典DerivaGemのbump幅は不明。選択した格子と連続停止極限を分ける。",
+    "21.2": "先物成長0でも国内rで割引。指数q、外国金利rf、先物q=rの意味を区別。",
+    "21.3": "σはS*へ適用するescrowed配当木。N5のex日3.5月は格子外で月次行使のみ。ex前後の行使比較は整列時。CV改善を普遍保証しない。",
+    "21.4": "p=.5のstock成長と三項log分散は有限Δt近似。負の三項確率は拒否。adaptive meshは概念説明のみ。",
+    "21.5": "callerのpiecewise forward金利/分散曲線。負分散と負branch確率を拒否。ゼロ分散区間を含む場合も選択格子の確率条件を要求。",
+    "21.6": "Tables21.1/2の全乱数標本は欠落し完全再生は未検証（対象外）。掲載10経路は方法例で真値ではない。Greek共通乱数はpaired差分のSE、独立trialのSEと分ける。",
+    "21.7": "antitheticはpair平均、層化/moment matchingは独立batch、QMCは独立scrambleでSE。決定的QMCへiid SEを付けない。moment matchingの有限標本biasと改善非保証を明記。",
+    "21.8": "S75/t0とS60/t2は原典丸め境界、T=.4167なら全表が印刷幅内になるが原著の中間精度は未確定。負値を返すsource projectionは不安定性再現のopt-in。Americanはpost-step projectionで厳密LCPとは別。CV未丸め4.231959と表示和4.24を分ける。"
+  },
+  "calculation_snapshot": {
+    "path": "docs/P4_STATUS.md",
+    "commit": "99476dbc",
+    "sha256": "bc3588b0cfd94fa77368f364c0a0567ad0c71b435b1bf5230930c477c85aa449"
+  },
+  "extra_tests": [
+    "report/tests/test_fast_acceptance_advanced_options.py"
+  ]
+}

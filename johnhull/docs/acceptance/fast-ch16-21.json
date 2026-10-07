@@ -1,0 +1,2818 @@
+{
+  "profile": "fast-v1",
+  "base": "99476dbc",
+  "out": "docs/validation/fast-ch16-21",
+  "sections": [
+    {
+      "id": "16.1",
+      "chapter": 16,
+      "heading": "Contractual Arrangements（pp.371–372）",
+      "source_pages": [
+        371,
+        372
+      ],
+      "requirements": [
+        {
+          "id": "D16.1-01",
+          "statement": "vesting/離職/譲渡不可/新株発行の5条件（372）",
+          "reading": "§16.4の各分岐に対応させる"
+        },
+        {
+          "id": "D16.1-02",
+          "statement": "行使後売却と保有を区別、議決権の留保（372）",
+          "reading": "strike支払延期と保険価値の論証"
+        }
+      ],
+      "explanation": "権利確定前は行使できず、離職で失効する。権利確定後の離職はITMなら即時行使、OTMなら失効。譲渡できないため、流動性や分散の必要から市場の通常callより早く行使される。無配当なら「行使して株を持ち続ける」ことは通常合理的でない。",
+      "printed": "寿命10–15年、vesting最長4年は**記述統計（ピン不要、年次に注意）**。数値モデルのピンなし。",
+      "cautions": "D3軽量受入候補（方式は未決）。契約一般の現行法的助言にはしない。",
+      "prep": "docs/prep/sections/ch16.md",
+      "lesson": "docs/lessons/ch16.md",
+      "page": "report/site/chapters/ch16.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "契約期間・権利確定・離職条件は刊行時点の一般的な例。現在の契約の条件を保証しない。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "16.2",
+      "chapter": 16,
+      "heading": "Do Options Align the Interests of Shareholders and Managers?（pp.373–374）",
+      "source_pages": [
+        373,
+        374
+      ],
+      "requirements": [
+        {
+          "id": "D16.2-01",
+          "statement": "agent/principal、optionとRSUの損益非対称、repricing（373）",
+          "reading": "上下の株価シナリオで利害の比較"
+        },
+        {
+          "id": "D16.2-02",
+          "statement": "情報時期と短期主義、売買予告の提案（373–374）",
+          "reading": "原典の提案と現行制度を区別"
+        }
+      ],
+      "explanation": "start-upの動機付けと上場企業の経営者報酬を分け、callの非対称性がリスク選好・短期的行動へ与える影響を扱う。RSU、repricing、情報公表時期、事前の売買通知という代案を比較する。",
+      "printed": "3か月/1週間は説明用の期間、計算ピンなし。",
+      "cautions": "D3候補。善悪や因果をデータで実証したとは書かない。",
+      "prep": "docs/prep/sections/ch16.md",
+      "lesson": "docs/lessons/ch16.md",
+      "page": "report/site/chapters/ch16.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "著者のインセンティブの議論と提案を説明する。因果を実データで検証したものではない。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "16.3",
+      "chapter": 16,
+      "heading": "Accounting Issues（pp.374–375）",
+      "source_pages": [
+        374,
+        375
+      ],
+      "requirements": [
+        {
+          "id": "D16.3-01",
+          "statement": "付与日公正価値と再評価の議論（374–375）",
+          "reading": "歴史叙述と著者の提案を区別"
+        },
+        {
+          "id": "D16.3-02",
+          "statement": "RSU/MSU/指数連動strike（375）",
+          "reading": "index変化率をKに適用"
+        }
+      ],
+      "explanation": "intrinsicのみの費用認識から付与時公正価値への変遷と、毎期再評価という著者の代案を説明する。RSU、ST/S0株を与えるMSU、市場/業種指数にstrikeを連動させる報酬を紹介する。",
+      "printed": "S=K30,index2000→2200ならK33、1700なら25.50（375）。単純乗算、未再計算。1995/2004/2005の制度史は記述情報でピン不要。",
+      "cautions": "付与日公正価値による認識と、著者の継続再評価案を分ける。本文の付与年全額費用という簡略化を現行の一般則にはしない。",
+      "prep": "docs/prep/sections/ch16.md",
+      "lesson": "docs/lessons/ch16.md",
+      "page": "report/site/chapters/ch16.html",
+      "implementation": "hullkit/src/hullkit/_employee_options.py",
+      "tests": [
+        "hullkit/tests/test_employee_options_awards.py"
+      ],
+      "limitation": "原典p374はIAS 2と印字されている。株式報酬の公式基準名IFRS 2との差を明示する（原典の誤記と推定）。付与日費用の制度史と著者の毎期再評価案、報酬の算術を分ける。",
+      "numerical_requirements": [
+        "D16.3-02"
+      ],
+      "calculation": "本文指数2000→2200でstrike30→33、1700なら25.50。RSU1株、MSU株数ST/S0・価値ST²/S0。独立Fraction資本台帳とlognormal MSU期待値の求積",
+      "calculation_scope": "原典p374はIAS 2と印字されている。株式報酬の公式基準名IFRS 2との差を明示する（原典の誤記と推定）。付与日費用の制度史と著者の毎期再評価案、報酬の算術を分ける。"
+    },
+    {
+      "id": "16.4",
+      "chapter": 16,
+      "heading": "Valuation（pp.375–379）",
+      "source_pages": [
+        375,
+        379
+      ],
+      "requirements": [
+        {
+          "id": "D16.4-01",
+          "statement": "Ex16.1の期待寿命4.5年・PV配当4（376）",
+          "reading": "BSMを独立求積"
+        },
+        {
+          "id": "D16.4-02",
+          "statement": "Ex16.2の4段木、vesting3年、各段離職5%、D/G/H任意行使40/80/30%（377–378）",
+          "reading": "各経路×離職×行使の明示期待値"
+        },
+        {
+          "id": "D16.4-03",
+          "statement": "行使倍率、閾値上にノードを置く必要、離職/満期行使を推定対象から外す（378–379）",
+          "reading": "離職0・倍率∞で欧州保持へ（無配当・r≥0のcallではAmericanと同値）"
+        },
+        {
+          "id": "D16.4-04",
+          "statement": "市場ベースの証券、発表済み希薄化は再控除しない（379）",
+          "reading": "payoffの契約対応、資本価値保存"
+        }
+      ],
+      "explanation": "期待存続期間をTに入れるBSMは理論的等価ではない近似。ツリーではvesting、離職、任意行使を各節点の重みへ入れる。exercise multiple法は権利確定後のS/Kの閾値、market-based法は従業員の実際の行使を写す証券を価格発見に使う。",
+      "printed": "Ex16.1 S30−PV4=26,K30,r5%,σ25%,T4.5、1百万権利→6.31/6.31百万。✓再計算一致：6.306219752。\n  Ex16.2 S=K40,σ30%,r5%,T8,N4、u1.5285,d.6543,a1.1052,p.5158、割引.9048。Figure16.1の価格を下から上へ：時点0=14.97、2年4.65/29.39、4年0/10.49/56.44、6年0/0/23.67/103.56、8年0/0/0/53.45/178.31。✓再計算一致：14.969214、4.653164/29.393534、10.494764/56.442484、23.669931/103.555599。通常call17.98も17.982833で一致。原資産全節点もスクリプトで再計算済み。\n  Hの行使率.335、G .81、D .43、H継続24.95、G継続106.64、E継続11.05（378）は重み・継続値の追加ピン候補（個別丸め判定は未実施）。倍率例K30×1.5=45、market-based例K40でS60/65→20/25、行使比率1%/2%（378–379）は未再計算の算術例。",
+      "cautions": "原典は各期間末の離職という説明だが、根にも.95の重みを掛けるFigure16.1の規約を忠実に固定する。無批判に離職時刻を変更しない。RB-H16は本編範囲。市場ベースの2006/2007事例は記述統計（ピン不要、年次に注意）。",
+      "prep": "docs/prep/sections/ch16.md",
+      "lesson": "docs/lessons/ch16.md",
+      "page": "report/site/chapters/ch16.html",
+      "implementation": "hullkit/src/hullkit/_employee_options.py",
+      "tests": [
+        "hullkit/tests/test_employee_options_valuation.py"
+      ],
+      "limitation": "期待寿命BSMは近似であり理論的等価ではない。Figure16.1の根にも.95を掛ける離職重み規約を保存。倍率閾値は格子整列時の検証、一般格子の境界誤差は残る。発表済み希薄化を二重控除しない。",
+      "numerical_requirements": [
+        "D16.4-01",
+        "D16.4-02",
+        "D16.4-03",
+        "D16.4-04"
+      ],
+      "calculation": "Ex16.1 unit6.31/1百万権利6.31百万。Ex16.2全15株価/option節点・根14.97/通常call17.98、D/G/H行使.43/.81/.335・継続11.05/106.64/24.95。独立全経路cash列挙/MC6SE/密度積分、倍率45・市場連動20/25",
+      "calculation_scope": "期待寿命BSMは近似であり理論的等価ではない。Figure16.1の根にも.95を掛ける離職重み規約を保存。倍率閾値は格子整列時の検証、一般格子の境界誤差は残る。発表済み希薄化を二重控除しない。"
+    },
+    {
+      "id": "16.5",
+      "chapter": 16,
+      "heading": "The Backdating Scandal（pp.380–381）",
+      "source_pages": [
+        380,
+        381
+      ],
+      "requirements": [
+        {
+          "id": "D16.5-01",
+          "statement": "4/30にS50、4/3のS42をstrikeにする例（380）",
+          "reading": "決定日時点では8 ITM、日付と価格を混同しない"
+        },
+        {
+          "id": "D16.5-02",
+          "statement": "Yermack/Lie/Heron–Lieの観測と報告期限変更（380–381）",
+          "reading": "前後の研究設計と代替説明を整理"
+        }
+      ],
+      "explanation": "実際の意思決定日より低い株価の日を付与日に見せると費用が過小表示される。付与日前後の株価パターンと、報告期限短縮後の変化からbackdatingを調べた研究を説明する。",
+      "printed": "50−42=8は算術例。1993–2002、前後30日、2営業日、18か月、15百万、137.4百万/13.8百万等は**記述統計（ピン不要、年次に注意）**。",
+      "cautions": "D3候補。法的適否の記述は出版当時の事例紹介に限定し、現行判断を追加しない。",
+      "prep": "docs/prep/sections/ch16.md",
+      "lesson": "docs/lessons/ch16.md",
+      "page": "report/site/chapters/ch16.html",
+      "implementation": "hullkit/src/hullkit/_employee_options.py",
+      "tests": [
+        "hullkit/tests/test_employee_options_backdating.py"
+      ],
+      "limitation": "決定日時点50と遡及strike42の差8のみ算術検証。研究の因果・現在の法的判断は受入対象外。",
+      "numerical_requirements": [
+        "D16.5-01"
+      ],
+      "calculation": "本文4/30の株価50・4/3の42をstrikeにする例のintrinsic差8。既存award/cash関数を再利用し独立Fractionの行使支払・売却cash ledgerで照合",
+      "calculation_scope": "決定日時点50と遡及strike42の差8のみ算術検証。研究の因果・現在の法的判断は受入対象外。"
+    },
+    {
+      "id": "17.1",
+      "chapter": 17,
+      "heading": "Options on Stock Indices（pp.384–386）",
+      "source_pages": [
+        384,
+        386
+      ],
+      "requirements": [
+        {
+          "id": "D17.1-01",
+          "statement": "βV/(100S0)の枚数、β=1の保証（385）",
+          "reading": "端点のportfolio＋payoff"
+        },
+        {
+          "id": "D17.1-02",
+          "statement": "β=2、r12%,q4%,T.25のTables17.1/2（385–386）",
+          "reading": "CAPM算術を各行へ適用"
+        }
+      ],
+      "explanation": "指数の現金決済と契約倍率を説明し、betaに応じたput枚数と保険のstrikeを求める。beta≠1ではCAPMの期待超過リターンから指数とポートフォリオ価値の対応を作る。",
+      "printed": "β1,V500000,S1000→5枚,K900、S880なら440000＋10000=450000。β2なら10枚。Table17.1のindex1040→価格収益4%、配当1%、総5%、r3%、超過2%、portfolio超過4%、総7%、価格6%、530000。Table17.2の1080/1040/1000/960/920/880→570000/530000/490000/450000/410000/370000は✓再計算一致。K960、S880で80000の補填、配当5000を保証に含めるならK955（p.386脚注）もピン候補（直接再計算未実施）。",
+      "cautions": "市場一覧/倍率100は出版時の契約例で**記述統計（ピン不要、年次に注意）**。市場紹介部分はD3候補。",
+      "prep": "docs/prep/sections/ch17.md",
+      "lesson": "docs/lessons/ch17.md",
+      "page": "report/site/chapters/ch17.html",
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_insurance.py"
+      ],
+      "limitation": "CAPMの条件付き期待シナリオ。betaだけで任意の実現経路の損失を確定保証しない。premium/基差残差は別の現金項。契約倍率100は原典例。",
+      "numerical_requirements": [
+        "D17.1-01",
+        "D17.1-02"
+      ],
+      "calculation": "β1で5枚/K900/880時440000＋10000=450000。Table17.1全return、Table17.2全6価値570000–370000、β2で10枚/K960/補填80000、配当込K955。独立Fraction/CAPM cash ledger",
+      "calculation_scope": "CAPMの条件付き期待シナリオ。betaだけで任意の実現経路の損失を確定保証しない。premium/基差残差は別の現金項。契約倍率100は原典例。"
+    },
+    {
+      "id": "17.2",
+      "chapter": 17,
+      "heading": "Currency Options（pp.386–389）",
+      "source_pages": [
+        386,
+        389
+      ],
+      "requirements": [
+        {
+          "id": "D17.2-01",
+          "statement": "外貨の向きとpayoff、Figures17.1/2の3領域（387–388）",
+          "reading": "外貨実需＋2optionの台帳"
+        },
+        {
+          "id": "D17.2-02",
+          "statement": "同価格のK1/K2、K1=K2でforward（388–389）",
+          "reading": "q=rfのBSMとput-call parity"
+        }
+      ],
+      "explanation": "外貨受取はput、支払はcallで保険できる。低いstrikeのputと高いstrikeのcallを反対売買するrange forwardは換算レートを上下に制限し、両価格が等しければ初期費用ゼロ。",
+      "printed": "EUR100万、1.10→1.15で50000、AUD1000万、.70→.67で300000（387、算術・未再計算）。GBP100万、forward1.32なら132万。S1.32,r=rf2%,σ14%,T.25,K1=1.3000,K2=1.3414→put/callとも.0273（388）：✓再計算一致 .027304826/.027292496（K2丸めで差.000012329）。",
+      "cautions": "初期費用ゼロでも有利な為替の利益を上限で放棄する。市場説明のみD3候補。",
+      "prep": "docs/prep/sections/ch17.md",
+      "lesson": "docs/lessons/ch17.md",
+      "page": "report/site/chapters/ch17.html",
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_range.py"
+      ],
+      "limitation": "印刷K2=1.3414ではputとcallに.000012329の費用差が残る。厳密zero-costの求根と表示丸めを区別。上限を設ければ有利な為替の利益も放棄する。",
+      "numerical_requirements": [
+        "D17.2-01",
+        "D17.2-02"
+      ],
+      "calculation": "EUR call50000/AUD put300000、GBP forward1320000。range put0.027304826/call0.027292496（印刷0.0273、上strike丸めの残差を保持）、zero-cost上strike探索。独立Fractionの3領域cash・lognormal payoff求積",
+      "calculation_scope": "印刷K2=1.3414ではputとcallに.000012329の費用差が残る。厳密zero-costの求根と表示丸めを区別。上限を設ければ有利な為替の利益も放棄する。"
+    },
+    {
+      "id": "17.3",
+      "chapter": 17,
+      "heading": "Options on Stocks Paying Known Dividend Yields（pp.389–391）",
+      "source_pages": [
+        389,
+        391
+      ],
+      "requirements": [
+        {
+          "id": "D17.3-01",
+          "statement": "式17.1–5の下限/parity/価格（389–390）",
+          "reading": "配当再投資したexp(−qT)株の複製"
+        },
+        {
+          "id": "D17.3-02",
+          "statement": "f_t+(r−q)Sf_S+σ²S²f_SS/2=rf、Qのdrift r−q（391）",
+          "reading": "PDE残差と期待配当込み成長率"
+        }
+      ],
+      "explanation": "欧州の終端分布は初期値をS0exp(−qT)へ替えた無配当モデルと等価。下限、parity、価格式、配当込み自己金融PDEへ拡張する。",
+      "printed": "なし。",
+      "cautions": "S0縮小は欧州用。Americanへそのまま適用できない。",
+      "prep": "docs/prep/sections/ch17.md",
+      "lesson": "docs/lessons/ch17.md",
+      "page": "report/site/chapters/ch17.html",
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_carry.py"
+      ],
+      "limitation": "exp(−qT)によるspot縮小は欧州終端分布の評価。American行使方針へそのまま適用しない。差額不等式はr/q非負という原典前提。",
+      "numerical_requirements": [
+        "D17.3-01",
+        "D17.3-02"
+      ],
+      "calculation": "式17.1–5の下限/parity/配当spot変換、配当込みPDEと米国差額不等式。本文に数値例なし。独立lognormal payoff求積、再投資台帳、数値微分PDE・CRRで照合",
+      "calculation_scope": "exp(−qT)によるspot縮小は欧州終端分布の評価。American行使方針へそのまま適用しない。差額不等式はr/q非負という原典前提。"
+    },
+    {
+      "id": "17.4",
+      "chapter": 17,
+      "heading": "Valuation of European Stock Index Options（pp.391–394）",
+      "source_pages": [
+        391,
+        394
+      ],
+      "requirements": [
+        {
+          "id": "D17.4-01",
+          "statement": "Ex17.1とSnapshot17.1（392–393）",
+          "reading": "q付き価格と二項木"
+        },
+        {
+          "id": "D17.4-02",
+          "statement": "式17.8–10、F0=K+(c−p)e^(rT)、q=r−ln(F0/S0)/T（392–394）",
+          "reading": "put-call parityからの再構成"
+        }
+      ],
+      "explanation": "指数を配当利回り資産として評価する。forward価格を使えば配当を直接見積もらずに済み、同一K/Tのcall/putからforwardとimplied qを逆算できる。",
+      "printed": "Ex17.1 S930,K900,r8%,σ20%,T2/12、月次配当.2%/.3%→q3%、d1 .5444,d2 .4628,N .7069/.6782,c51.83、100倍契約5183（392）。✓再計算：価格51.832957、d2 .462828917は一致、d1 .544478575は4桁四捨五入で.5445（印刷.5444は切捨て相当）。Snapshot S1000,q1%,σ15%,r5%,T10,K1492→put169.7/約17%（393）は✓再計算一致169.698191。K1492は1000e^.4の丸め。",
+      "cautions": "歴史的株式超過収益をQでの保証費用と混同しない。",
+      "prep": "docs/prep/sections/ch17.md",
+      "lesson": "docs/lessons/ch17.md",
+      "page": "report/site/chapters/ch17.html",
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_index.py"
+      ],
+      "limitation": "Ex17.1のd1印刷.5444は切捨て相当、未丸め.544478575。契約5183は表示価格51.83の100倍で未丸め5183.2957とは別。",
+      "numerical_requirements": [
+        "D17.4-01",
+        "D17.4-02"
+      ],
+      "calculation": "Ex17.1 c51.83/契約5183、d1印刷0.5444は切捨て相当（未丸め0.544478575）、d2/N再現。Snapshot put169.7、forward/配当利回り逆算。独立CRR・payoff積分",
+      "calculation_scope": "Ex17.1のd1印刷.5444は切捨て相当、未丸め.544478575。契約5183は表示価格51.83の100倍で未丸め5183.2957とは別。"
+    },
+    {
+      "id": "17.5",
+      "chapter": 17,
+      "heading": "Valuation of European Currency Options（pp.394–395）",
+      "source_pages": [
+        394,
+        395
+      ],
+      "requirements": [
+        {
+          "id": "D17.5-01",
+          "statement": "式17.11–14、Sは外国通貨1単位の国内価格（394–395）",
+          "reading": "通貨反転時のnotionalとKの変換"
+        },
+        {
+          "id": "D17.5-02",
+          "statement": "Ex17.2のIV（395）",
+          "reading": "価格再現と二分探索"
+        }
+      ],
+      "explanation": "qを外国金利rfに置き換えるGarman–Kohlhagen式。国内通貨/外国通貨の向き、通貨反転によるcall/put対称性、forwardによる表現を扱う。",
+      "printed": "S=K1.6,r8%,rf11%,T4/12,c.043、σ20%→.0639、10%→.0285、IV14.1%。✓再計算一致 .063885722/.028482814/14.111938%。",
+      "cautions": "T=.3333という表記は4/12の丸め。",
+      "prep": "docs/prep/sections/ch17.md",
+      "lesson": "docs/lessons/ch17.md",
+      "page": "report/site/chapters/ch17.html",
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_fx.py"
+      ],
+      "limitation": "Sは国内通貨/外国通貨、rfは外国金利。逆quoteのcall/putはstrikeとnotionalの換算が必要。T=.3333は4/12の表示丸め。",
+      "numerical_requirements": [
+        "D17.5-01",
+        "D17.5-02"
+      ],
+      "calculation": "Ex17.2 σ20%→0.0639、10%→0.0285、c0.043→IV14.1%（未丸め14.111938%）。通貨反転call/putの数量Kと価格係数S×K。独立payoff積分によるIV求根・満期換算台帳、微小価格の回帰",
+      "calculation_scope": "Sは国内通貨/外国通貨、rfは外国金利。逆quoteのcall/putはstrikeとnotionalの換算が必要。T=.3333は4/12の表示丸め。"
+    },
+    {
+      "id": "17.6",
+      "chapter": 17,
+      "heading": "American Options（pp.395–396）",
+      "source_pages": [
+        395,
+        396
+      ],
+      "requirements": [
+        {
+          "id": "D17.6-01",
+          "statement": "式17.15–16と毎節点の行使比較（395–396）",
+          "reading": "American≥European、行使領域"
+        }
+      ],
+      "explanation": "CRRの成長係数を指数ならexp((r−q)Δt)、通貨ならexp((r−rf)Δt)にする。高金利通貨のcall、低金利通貨のputで早期行使が起きやすい。",
+      "printed": "新規なし。Ex13.1/13.2の53.39/.019はch13で再計算済み（前者はEuropeanの木の紹介）。",
+      "cautions": "「AmericanはEuropeanより高い」は一般には≥、早期行使価値がなければ一致。",
+      "prep": "docs/prep/sections/ch17.md",
+      "lesson": "docs/lessons/ch17.md",
+      "page": "report/site/chapters/ch17.html",
+      "implementation": "hullkit/src/hullkit/_index_currency.py",
+      "tests": [
+        "hullkit/tests/test_index_currency_american.py"
+      ],
+      "limitation": "国内金利で割引、成長はr−q。行使判定は選択したCRR格子上。American≥Europeanで、等価になる境界もある。",
+      "numerical_requirements": [
+        "D17.6-01"
+      ],
+      "calculation": "Ch13参照の米国為替call0.019・全option節点、成長a0.9983/p0.4673。独立停止方針列挙・CN-PDE、外国金利別の行使premium、ゼロvol/満期境界",
+      "calculation_scope": "国内金利で割引、成長はr−q。行使判定は選択したCRR格子上。American≥Europeanで、等価になる境界もある。"
+    },
+    {
+      "id": "18.1",
+      "chapter": 18,
+      "heading": "Nature of Futures Options（pp.401–404）",
+      "source_pages": [
+        401,
+        404
+      ],
+      "requirements": [
+        {
+          "id": "D18.1-01",
+          "statement": "Examples18.1/2の清算値・現在値と先物反対売買（402）",
+          "reading": "2段の現金台帳"
+        },
+        {
+          "id": "D18.1-02",
+          "statement": "Examples18.3/4、bpと32分法/64分法（403–404）",
+          "reading": "単位変換とpremium控除"
+        }
+      ],
+      "explanation": "行使で得る先物ポジションと直近清算値からの現金を合算すると、実効payoffはmax(F−K,0)/max(K−F,0)。契約月とオプション満期を分け、金利先物価格と金利の逆方向の関係を説明する。",
+      "printed": "銅25000lb,K320¢,清算330¢,現在331¢→2500+250=2750。corn5000bushel,K600¢,清算579¢,現在580¢→1050−50=1000。SOFR99.35→金利.65%、K99.50,premium.05、行使99.70→125支払/500受取/375利益。国債96-09=96.28125、option1-04=1.0625、K98、F100→.9375/100ドル、100000額面で937.50。いずれも✓再計算一致。",
+      "cautions": "SOFR開始時期、Eurodollar移行、契約満期規約は出版時の説明（記述統計、ピン不要、年次に注意）。D3は市場紹介部分。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_cash.py"
+      ],
+      "limitation": "先物建玉と清算cashを分離する。SOFRと債券先物の倍率/quoteは原典例であり現行契約仕様を検証したものではない。",
+      "numerical_requirements": [
+        "D18.1-01",
+        "D18.1-02"
+      ],
+      "calculation": "銅2500+250=2750、corn1050−50=1000、SOFR0.65%/premium125/payoff500/profit375、国債96-09/1-04/利益937.50。独立Fractionの2脚決済・符号付き価格cash",
+      "calculation_scope": "先物建玉と清算cashを分離する。SOFRと債券先物の倍率/quoteは原典例であり現行契約仕様を検証したものではない。"
+    },
+    {
+      "id": "18.2",
+      "chapter": 18,
+      "heading": "Reasons for the Popularity of Futures Options（p.404）",
+      "source_pages": [
+        404,
+        404
+      ],
+      "requirements": [
+        {
+          "id": "D18.2-01",
+          "statement": "国債/家畜の例、先物受渡しと現物受渡しの区別（404）",
+          "reading": "契約の時系列を照合"
+        }
+      ],
+      "explanation": "流動性、価格の観測しやすさ、現物引渡しの回避、同じ取引所でのヘッジ、取引費用が選ばれる理由。先物ポジションを受けても引渡し前に閉じれば最終的なキャッシュフローになる。",
+      "printed": "なし。",
+      "cautions": "D3候補。費用や流動性の現行比較は別のデータ調査。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "流動性・費用比較と受渡しの説明は刊行時点の例。現在の市場比較は別データが必要。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "18.3",
+      "chapter": 18,
+      "heading": "European Spot and Futures Options（pp.404–405）",
+      "source_pages": [
+        404,
+        405
+      ],
+      "requirements": [
+        {
+          "id": "D18.3-01",
+          "statement": "満期同一条件とcall/put両方の等価性（405）",
+          "reading": "同一終端payoff、BSM→Black変換"
+        }
+      ],
+      "explanation": "先物とoptionの満期が同じならFT=STであり、欧州現物optionと欧州先物optionのpayoffが一致する。",
+      "printed": "なし。",
+      "cautions": "Americanには一般に成立しない。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_equivalence.py"
+      ],
+      "limitation": "先物とoptionの満期一致と確定carryを明示。FT=STによる欧州等価をAmericanへ拡張しない。",
+      "numerical_requirements": [
+        "D18.3-01"
+      ],
+      "calculation": "本文に数値例なし。満期一致ならF_T=S_T、spotと先物の欧州call/put一致。独立spot payoff求積・terminal cashと満期ずれの反例",
+      "calculation_scope": "先物とoptionの満期一致と確定carryを明示。FT=STによる欧州等価をAmericanへ拡張しない。"
+    },
+    {
+      "id": "18.4",
+      "chapter": 18,
+      "heading": "Put–Call Parity（pp.405–406）",
+      "source_pages": [
+        405,
+        406
+      ],
+      "requirements": [
+        {
+          "id": "D18.4-01",
+          "statement": "式18.1とEx18.5（405–406）",
+          "reading": "2つのportfolioのcash-flow一致"
+        },
+        {
+          "id": "D18.4-02",
+          "statement": "Americanの式18.2（406）",
+          "reading": "CRRで上下限を確認"
+        }
+      ],
+      "explanation": "call＋PV(K)とput＋先物＋PV(F0)の終端価値max(FT,K)を比べ、c−p=exp(−rT)(F0−K)を導く。",
+      "printed": "c.56,K8.50,F8,T.5,r10%→p1.04：✓再計算一致1.035614712。",
+      "cautions": "AmericanはF0e^(−rT)−K≤C−P≤F0−Ke^(−rT)として境界等号も扱う。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_parity.py"
+      ],
+      "limitation": "本文の複製議論は満期清算へ簡略化。実際の日々清算cashの再投資と区別。米国差額上下限は非負金利。",
+      "numerical_requirements": [
+        "D18.4-01",
+        "D18.4-02"
+      ],
+      "calculation": "Ex18.5 call0.56→put1.04（未丸め1.035614712）、式18.1/18.2。独立Fractionの2portfolio終端cashと米国CRRの差額上下限",
+      "calculation_scope": "本文の複製議論は満期清算へ簡略化。実際の日々清算cashの再投資と区別。米国差額上下限は非負金利。"
+    },
+    {
+      "id": "18.5",
+      "chapter": 18,
+      "heading": "Bounds for Futures Options（pp.406–407）",
+      "source_pages": [
+        406,
+        407
+      ],
+      "requirements": [
+        {
+          "id": "D18.5-01",
+          "statement": "式18.3/4とAmerican下限（406–407）",
+          "reading": "parityと非負性、σ→0/深いITM"
+        }
+      ],
+      "explanation": "Europeanの下限は割り引いたintrinsic、Americanは即時intrinsic。deep ITMでは反対側optionがほぼゼロになり欧州価格は下限へ近づく。",
+      "printed": "なし。",
+      "cautions": "原典はr>0を前提。厳密な「常に高い」はATM/OTM等で等号あり。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_bounds.py"
+      ],
+      "limitation": "大小関係に等号を含む。ATM/OTM/ゼロvolの境界を除いて厳密な優越とは言わない。",
+      "numerical_requirements": [
+        "D18.5-01"
+      ],
+      "calculation": "本文に数値例なし。式18.3/18.4の割引本質価値下限・米国即時本質価値下限、ゼロvol/ATM等号とdeep ITM極限。独立密度求積/Jensen・米国CRR",
+      "calculation_scope": "大小関係に等号を含む。ATM/OTM/ゼロvolの境界を除いて厳密な優越とは言わない。"
+    },
+    {
+      "id": "18.6",
+      "chapter": 18,
+      "heading": "Drift of a Futures Price in a Risk-Neutral World（pp.407–408）",
+      "source_pages": [
+        407,
+        408
+      ],
+      "requirements": [
+        {
+          "id": "D18.6-01",
+          "statement": "E_Q[Fnext|現在]=F、dF=σFdz、式18.6（407–408）",
+          "reading": "条件付き平均、f_t+σ²F²f_FF/2=rf"
+        }
+      ],
+      "explanation": "日々清算後の先物価値はゼロなので、次の清算差額のQ期待値もゼロ。先物Fはmoney-market numeraireの下でmartingaleとなり、q=rの資産と同じPDEになる。",
+      "printed": "なし。",
+      "cautions": "forwardとfuturesのmartingale測度を混同しない。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_martingale.py"
+      ],
+      "limitation": "money-market測度のfuturesと満期債測度のforwardを区別。Black/PDEの価格検証は確定r。level drift0でもlog driftは−σ²/2。",
+      "numerical_requirements": [
+        "D18.6-01"
+      ],
+      "calculation": "本文に数値例なし。式18.5/18.6のQ drift0・log drift−σ²/2・条件付き平均F・先物PDE。独立密度求積/stock Euler MC固定seed6SE・価格数値微分",
+      "calculation_scope": "money-market測度のfuturesと満期債測度のforwardを区別。Black/PDEの価格検証は確定r。level drift0でもlog driftは−σ²/2。"
+    },
+    {
+      "id": "18.7",
+      "chapter": 18,
+      "heading": "Black's Model for Valuing Futures Options（pp.408–409）",
+      "source_pages": [
+        408,
+        409
+      ],
+      "requirements": [
+        {
+          "id": "D18.7-01",
+          "statement": "式18.7/8とEx18.6（408–409）",
+          "reading": "対数正規payoffの直接積分"
+        }
+      ],
+      "explanation": "FがQで対数正規・drift0なら、q=rのBSMからBlackの割引期待payoffが得られる。σは先物価格のvolであり、carryが確定的な場合にspotのvolと一致する。",
+      "printed": "F=K20,T4/12,r9%,σ25%→d1 .07216,d2−.07216,N(−d1).4712,N(−d2).5288,p1.12。✓再計算一致（価格1.116641457）。d1の未丸め.072168784は四捨五入なら.07217、原典の切捨て相当と区別。",
+      "cautions": "対数正規は負のFを扱えない。負価格モデルRB-H18は本節外の研究。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_black.py"
+      ],
+      "limitation": "対数正規のF>0。負価格のモデルは今回対象外。印刷d1 .07216は切捨て相当で通常の四捨五入は.07217。",
+      "numerical_requirements": [
+        "D18.7-01"
+      ],
+      "calculation": "Ex18.6 put1.12（未丸め1.116641457）、d1印刷0.07216は切捨て相当/d2−0.07216/N−d1=0.4712/N−d2=0.5288。独立payoff積分・先物CRRとゼロvol/満期境界",
+      "calculation_scope": "対数正規のF>0。負価格のモデルは今回対象外。印刷d1 .07216は切捨て相当で通常の四捨五入は.07217。"
+    },
+    {
+      "id": "18.8",
+      "chapter": 18,
+      "heading": "Using Black's Model Instead of Black–Scholes–Merton（pp.409–410）",
+      "source_pages": [
+        409,
+        410
+      ],
+      "requirements": [
+        {
+          "id": "D18.8-01",
+          "statement": "Ex18.7のgold、forwardへの変換条件（409）",
+          "reading": "現物carryモデルと同価格"
+        }
+      ],
+      "explanation": "同満期のforward/futuresを使って現物optionを評価し、配当やconvenience yieldを直接推定する手間を避ける。確定金利ならforward=futures、確率金利ではforwardと適切な割引債を使う。",
+      "printed": "F1240,K1200,r5%,σ20%,T.5、d1 .3026,d2 .1611,c88.37。✓再計算一致 .302569739/.161148383/88.3737066。",
+      "cautions": "確率金利の導出はCh28。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_spot.py"
+      ],
+      "limitation": "市場DFとforwardで評価するには満期債測度でforwardがlognormalという仮定が必要。確率金利でfuturesへ無条件に置換しない。",
+      "numerical_requirements": [
+        "D18.8-01"
+      ],
+      "calculation": "Ex18.7 gold call88.37、d1=0.3026/d2=0.1611。spot/carryとforward/満期discountの入力一致、独立spot/forward payoff積分",
+      "calculation_scope": "市場DFとforwardで評価するには満期債測度でforwardがlognormalという仮定が必要。確率金利でfuturesへ無条件に置換しない。"
+    },
+    {
+      "id": "18.9",
+      "chapter": 18,
+      "heading": "Valuation of Futures Options Using Binomial Trees（pp.410–412）",
+      "source_pages": [
+        410,
+        412
+      ],
+      "requirements": [
+        {
+          "id": "D18.9-01",
+          "statement": "F30→33/28,K29,T1/12,r6%の複製（410–412）",
+          "reading": "3Δ−4=−2Δ"
+        },
+        {
+          "id": "D18.9-02",
+          "statement": "式18.9/10、Americanへの拡張（411–412）",
+          "reading": "2状態の全列挙、§13.11の木"
+        }
+      ],
+      "explanation": "初期費用ゼロの先物をΔ枚持ちoptionを売り、2状態の損益を等しくする。p=(1−d)/(u−d)となり、後退時はrで割り引く。",
+      "printed": "Δ.8、確定−1.6、PV−1.592、u1.1,d.9333,p.4、price1.592。✓再計算一致1.592019967。dは28/30を使う（.9333は表示丸め）。",
+      "cautions": "本文の§13.9参照は実際の資産別拡張§13.11との版差/参照番号に注意。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_replication.py"
+      ],
+      "limitation": "先物の初期価値0、清算はステップ末へ近似した本文規約。国内rの割引を保持する。",
+      "numerical_requirements": [
+        "D18.9-01",
+        "D18.9-02"
+      ],
+      "calculation": "F30→33/28、Δ0.8、確定cash−1.6/PV−1.592、p0.4、option1.592019967。Ch13参照の米国put2.84。独立2×2複製連立解・全停止方針",
+      "calculation_scope": "先物の初期価値0、清算はステップ末へ近似した本文規約。国内rの割引を保持する。"
+    },
+    {
+      "id": "18.10",
+      "chapter": 18,
+      "heading": "American Futures Options vs. American Spot Options（pp.412–413）",
+      "source_pages": [
+        412,
+        413
+      ],
+      "requirements": [
+        {
+          "id": "D18.10-01",
+          "statement": "normal/invertedのcall/put大小関係（412）",
+          "reading": "同じK/T・整合したS/Fで停止問題を比較"
+        }
+      ],
+      "explanation": "満期前にF>SならAmerican futures callはspot callより高く、putは逆。F<Sでは逆転する。満期だけ同じpayoffでも、途中の行使価値が違うため欧州の等価性は使えない。",
+      "printed": "なし。",
+      "cautions": "r>0と満期前のF/S順序を前提とする。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_american.py"
+      ],
+      "limitation": "確定carryとr>0の本文前提。後月先物ほど差が広がることは合成例で確認し、普遍的な単調性は主張しない。",
+      "numerical_requirements": [
+        "D18.10-01"
+      ],
+      "calculation": "本文に数値例なし。normal/inverted/zero carryの米国call/put大小関係、満期一致の欧州等価と後月先物の差。独立CN-PDEで4契約・ゼロvol境界を検証",
+      "calculation_scope": "確定carryとr>0の本文前提。後月先物ほど差が広がることは合成例で確認し、普遍的な単調性は主張しない。"
+    },
+    {
+      "id": "18.11",
+      "chapter": 18,
+      "heading": "Futures-Style Options（p.413）",
+      "source_pages": [
+        413,
+        413
+      ],
+      "requirements": [
+        {
+          "id": "D18.11-01",
+          "statement": "無割引Black、金利からの独立、parity、American行使（413）",
+          "reading": "c_style=e^(rT)cと凸性/Jensen"
+        }
+      ],
+      "explanation": "option payoffに対する先物として日々清算し、premiumを先払いしない。確定金利では通常option価格をexp(rT)倍した無割引Black式で気配を得る。call/put parityはp+F0=c+K、早期行使は有利にならない。",
+      "printed": "なし。",
+      "cautions": "議論のc,pは先払いpremiumでなく先物気配。",
+      "prep": "docs/prep/sections/ch18.md",
+      "lesson": "docs/lessons/ch18.md",
+      "page": "report/site/chapters/ch18.html",
+      "implementation": "hullkit/src/hullkit/_futures_options.py",
+      "tests": [
+        "hullkit/tests/test_futures_options_style.py"
+      ],
+      "limitation": "無割引Blackは先払いpremiumではなく日々清算の気配。initial premium0。担保と清算cashの利息は対象外。",
+      "numerical_requirements": [
+        "D18.11-01"
+      ],
+      "calculation": "本文に数値例なし。無割引Black気配=e^(rT)×通常価格、p+F=c+K、金利独立、早期行使の優越なし。独立求積/全停止方針/Fraction清算cash、1.1506は合成値と明示",
+      "calculation_scope": "無割引Blackは先払いpremiumではなく日々清算の気配。initial premium0。担保と清算cashの利息は対象外。"
+    },
+    {
+      "id": "19.1",
+      "chapter": 19,
+      "heading": "Illustration",
+      "source_pages": [
+        417,
+        418
+      ],
+      "requirements": [
+        {
+          "id": "D19.1-01",
+          "statement": "S=49、K=50、r=5%、σ=20%、20週、μ=13%を区別する（417–418）",
+          "reading": "価格はμに依存しない。金額＝単価×100,000"
+        },
+        {
+          "id": "D19.1-02",
+          "statement": "理論価格と売却プレミアムの差（418）",
+          "reading": "2.40×100,000、300,000との差60,000"
+        }
+      ],
+      "explanation": "数値（例題あり）。原典 pp417–418 は、10万株のコールを30万ドルで売った銀行を通し例にする。初期理論値と売却代金の差を確保するには、満期までのリスク管理が必要になる。",
+      "printed": "2.40（418）→独立BSM 2.400461（T=.3846）、約240,000、差約60,000、✓再計算一致。`test_greeks.py::test_hull_ch19_example_values` が単価を固定済み。",
+      "cautions": "§15.8、§19.4、R11。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_sale.py"
+      ],
+      "limitation": "時点0の理論価値と売却代金の差は将来の確定利益ではない。r5%による価格とP drift13%による経路を分ける。",
+      "numerical_requirements": [
+        "D19.1-01",
+        "D19.1-02"
+      ],
+      "calculation": "通し例call2.40・理論総額約240000・売却300000との差約60000（未丸め2.400461/240046/59954）。独立Q payoff積分、P drift13%と価格r5%を区別",
+      "calculation_scope": "時点0の理論価値と売却代金の差は将来の確定利益ではない。r5%による価格とP drift13%による経路を分ける。"
+    },
+    {
+      "id": "19.2",
+      "chapter": 19,
+      "heading": "Naked and Covered Positions",
+      "source_pages": [
+        418,
+        420
+      ],
+      "requirements": [
+        {
+          "id": "D19.2-01",
+          "statement": "naked／coveredの両方向リスクとK±εでの売買費（418–419）",
+          "reading": "満期S=60の支払、S=40の株式損失、1往復2ε"
+        },
+        {
+          "id": "D19.2-02",
+          "statement": "Table19.1の成績＝ヘッジコスト標準偏差／初期BSM価値（420）",
+          "reading": "**利息と割引を除外**。資金繰りありの成績を別欄にする"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp418–420 は無被覆・株式保有・閾値売買を比較する。ストップロスではKで必ず売買できるという仮定が成り立たず、頻度を上げてもヘッジ誤差が消えない。",
+      "printed": "60で支払1,000,000、49→40の株式損失900,000は✓算術一致。Table19.1（420）5/4/2/1/.5/.25週の .98/.93/.83/.79/.77/.76。統合担当の20万共通パス、利息・割引除外では .9801/.9266/.8335/.7936/.7715/.7639、✓表示丸め一致（原典は100万パス）。MC値は確率誤差を持つため固定小数の厳密一致を要求しない。",
+      "cautions": "R11。原因は規約差であり、現行の金融計算を誤りとは呼ばない。詳細は [P8再確認](../design/P8_RECHECK.md)。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_stop.py"
+      ],
+      "limitation": "Tables19.1/4の成績は無利息・無割引費用。資金口座付きPV費用は別。原典MCの一致は固定seed6SEと表示丸め幅で統計的に検証。",
+      "numerical_requirements": [
+        "D19.2-01",
+        "D19.2-02"
+      ],
+      "calculation": "naked S60支払1000000、covered49→40の株式損失900000、閾値1往復2ε。Table19.1全6成績を固定seed MC/6SE＋表示丸め幅で確認。同一パスの無利息/資金口座会計と独立discounted gains",
+      "calculation_scope": "Tables19.1/4の成績は無利息・無割引費用。資金口座付きPV費用は別。原典MCの一致は固定seed6SEと表示丸め幅で統計的に検証。"
+    },
+    {
+      "id": "19.3",
+      "chapter": 19,
+      "heading": "Greek Letters",
+      "source_pages": [
+        420,
+        421
+      ],
+      "requirements": [
+        {
+          "id": "D19.3-01",
+          "statement": "IVを用いる価格・Greekと理論モデルの前提を分ける（420–421）",
+          "reading": "spotを動かす際のIV固定とsurface更新の差を説明"
+        }
+      ],
+      "explanation": "定性。pp420–421 は価格の感応度をリスク管理の共通語として導入する。Practitioner BSMは市場IVを代入する運用であり、感応度はモデルと変数を固定する規約に依存する。米国型では木などの数値法が必要。",
+      "printed": "なし。",
+      "cautions": "§15.11、§20.6。**D3候補**：説明＋rendered。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "Greekはモデルと入力を固定する規約に依存する。市場IVを使うことと、そのspot応答を固定することは別。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "19.4",
+      "chapter": 19,
+      "heading": "Delta Hedging",
+      "source_pages": [
+        421,
+        427
+      ],
+      "requirements": [
+        {
+          "id": "D19.4-01",
+          "statement": "call Δ=N(d1)、put Δ=N(d1)−1、数量の加重和（421–423、427）",
+          "reading": "中心差分と原典ポートフォリオΔ−14,900"
+        },
+        {
+          "id": "D19.4-02",
+          "statement": "Tables19.2/3の全21行を原典株価でリプレイ（423–425）",
+          "reading": "株数、売買代金、繰越残高、翌週利息を別列にし丸め規約を保存"
+        },
+        {
+          "id": "D19.4-03",
+          "statement": "Table19.4とWeek9の損益説明（425–426）",
+          "reading": "同じ道筋を別会計式でも計算、利息除外成績はR11と共通化"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp421–427 はΔ株で局所的な株価変動を相殺し、時間と株価に応じて持高を更新する。Table19.2/3は利息付きの具体的売買帳簿、Table19.4はTable19.1と同じ成績指標であり、両者の資金繰り規約を混同しない。",
+      "printed": "2000 calls×.6＝1200株、Δ.65へ変化なら100株追加（421）✓算術一致。Ex19.1（422）d1=.0542、Δ=.522→.05417375/.52160163 ✓、既存 `test_greeks.py` 固定済み。Figs19.1–4（421–423）は接線・Δとspot/maturityの曲線、KまたはS=50、r=0、σ=.25、T=2、K=40/50/60等の設定を図の再現候補とし曲線点は未再計算。\n\nTable19.2の印刷Δを入力し週次複利を丸めず更新すると263,338.49→263.3千ドル、✓一致。Table19.3は256,337.59→256.3千ドル、✗印刷256.6（全21行の逐次丸め・組版を後続確認）。2026-10-06の対象テストで全21行の取引額、20区間の利息と表示累積帳簿の再帰を表示丸め幅付きで確認。Table19.3の262.41ドル差は元の非丸め入力不明として保留し、金利規約を変えて合わせない。Week9 call414,519.42→414.5千ドル ✓。原典のoption損失174.5、資金残高増1,442.9、株式価値2,557.8→4,171.1、差4.1千ドルは表示値から✓算術一致。ポートフォリオΔ=100000×.533−200000×.468−50000×(−.508)=−14,900 ✓。\n\nTable19.4（426）の .42/.38/.28/.21/.16/.13 に対し、統合担当の利息・割引除外20万共通パス .4203/.3798/.2799/.2112/.1645/.1342 は✓表示丸め一致。資金繰りあり .4158/.3739/.2685/.1927/.1377/.0976 との差は規約差。資金繰りありの独立discounted-gains式と既存実装の差は最大1.7e−13。[P8再確認](../design/P8_RECHECK.md)参照。",
+      "cautions": "OP-06/07/17、R11、§19.2。T=.3846と20/52、Δ丸め、利息の計算順序を固定。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_delta.py"
+      ],
+      "limitation": "Table19.3の精密計算256337.58669と印刷256600に262.41331ドル差。元の非丸め株価/Δがなく厳密印刷再現は未完。表示帳簿の全21行と独立資金会計は確認し、差を金利変更で消さない。",
+      "numerical_requirements": [
+        "D19.4-01",
+        "D19.4-02",
+        "D19.4-03"
+      ],
+      "calculation": "Ex19.1 delta0.522、1200株＋再調整100株、book hedge14900株。Tables19.2/3全21行の取引/利息/表示帳簿、19.2費用263338.49、Table19.4全6成績(MC6SE)、週9価格414.5k・純変化−4.1k。独立density delta/discounted gains",
+      "calculation_scope": "Table19.3の精密計算256337.58669と印刷256600に262.41331ドル差。元の非丸め株価/Δがなく厳密印刷再現は未完。表示帳簿の全21行と独立資金会計は確認し、差を金利変更で消さない。"
+    },
+    {
+      "id": "19.5",
+      "chapter": 19,
+      "heading": "Theta",
+      "source_pages": [
+        427,
+        429
+      ],
+      "requirements": [
+        {
+          "id": "D19.5-01",
+          "statement": "call/putのθと年・暦日・営業日の単位（427–429）",
+          "reading": "−∂V/∂T、put−call=rKe^(−rT)、T→0の挙動"
+        },
+        {
+          "id": "D19.5-02",
+          "statement": "ITM putや高外国金利のcallでは正にもなり得る（429）",
+          "reading": "「常に負」という表示にしない"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp427–429 は時間経過に伴う価値の変化をθ=∂V/∂tで表す。残存期間Tによる微分とは符号が逆。時間は確実に進むので、spotのリスクと同じ意味で中立化する量ではない。",
+      "printed": "Ex19.2（428）−4.31/年、−.0118/暦日、−.0171/営業日→−4.30538996、−.01179559、−.01708488、✓一致。Figs19.5/6（428–429）はKまたはS=50、r=0、σ=.25、T=2とK=40/50/60の曲線。数値点の固定はなし、未再計算。",
+      "cautions": "OP-01、§19.7。T=0・σ=0の定義は別判断。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_theta.py"
+      ],
+      "limitation": "thetaは暦時間微分。残存T微分は負号、365暦日/252営業日の換算を分ける。正thetaの例外を保持する。",
+      "numerical_requirements": [
+        "D19.5-01",
+        "D19.5-02"
+      ],
+      "calculation": "Ex19.2 theta−4.31/年、−.0118/暦日、−.0171/営業日。独立Q payoff積分のremaining-time中央差分、call/put parity、正thetaの本文例外",
+      "calculation_scope": "thetaは暦時間微分。残存T微分は負号、365暦日/252営業日の換算を分ける。正thetaの例外を保持する。"
+    },
+    {
+      "id": "19.6",
+      "chapter": 19,
+      "heading": "Gamma",
+      "source_pages": [
+        429,
+        433
+      ],
+      "requirements": [
+        {
+          "id": "D19.6-01",
+          "statement": "Δ中立P&L≈ΘΔt+Γ(ΔS)²/2（429–431）",
+          "reading": "±ΔSで曲率項は同符号、step縮小でTaylor残差が縮む"
+        },
+        {
+          "id": "D19.6-02",
+          "statement": "γ中立化と残るΔ（431–433）",
+          "reading": "Γ合計とΔ合計の残差ゼロを検証"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp429–433 はΔ近似の曲率誤差をγで表し、株だけではγを変えられないことを説明する。オプションを追加してγを合わせた後、変化したΔを株で調整する。",
+      "printed": "Ex19.3（431）Γ=−10000、ΔS=±2→曲率損益−20000、✓算術一致。Γ=−3000、追加option Γ=1.5/Δ=.62→2000options購入、1240株売却、✓。Ex19.4（432）.066→.06554538 ✓。Figs19.7–10の接線、正負γの放物線、K/S=50・σ=.25・r=0の曲線設定は再現候補、曲線点未再計算。",
+      "cautions": "OP-07、OP-01、§19.8。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_gamma.py"
+      ],
+      "limitation": "株式のgammaは0。gamma0の道具ではgammaを中立化できない。局所二次近似であり任意の大きなshockの損益保証ではない。",
+      "numerical_requirements": [
+        "D19.6-01",
+        "D19.6-02"
+      ],
+      "calculation": "Ex19.3 ±2の二次損失−20000、gamma hedge2000 options/−1240株、Ex19.4 Γ.066。独立Q密度価格二階差分とdelta hedge残差の三次収束",
+      "calculation_scope": "株式のgammaは0。gamma0の道具ではgammaを中立化できない。局所二次近似であり任意の大きなshockの損益保証ではない。"
+    },
+    {
+      "id": "19.7",
+      "chapter": 19,
+      "heading": "Relationship between Delta, Theta, and Gamma",
+      "source_pages": [
+        433,
+        434
+      ],
+      "requirements": [
+        {
+          "id": "D19.7-01",
+          "statement": "Θ+rSΔ+σ²S²Γ/2=rΠ（433–434）",
+          "reading": "call/put・数量の線形結合で残差、Δ=0時の式"
+        }
+      ],
+      "explanation": "数値（例題なし）。pp433–434 はBSM PDEをGreekで書き直し、Δ中立のポートフォリオのθとγの関係を示す。θとγが常に正反対とは限らず、rΠ項と前提モデルを残す。",
+      "printed": "固有の数値例なし。",
+      "cautions": "§15.6、19.5–6、q≠0では(r−q)SΔへ変更。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_pde.py"
+      ],
+      "limitation": "qがあれば(r−q)Sdelta。stock/bankの価値と暦時間微分もbookへ算入。モデルPDEの関係である。",
+      "numerical_requirements": [
+        "D19.7-01"
+      ],
+      "calculation": "Eq19.4 theta+rSdelta+σ²S²gamma/2=rΠ、q版・stock/bank込みdelta中立book。独立CN grid/time差分の残差2e−6以内・格子倍密で縮小（数値例なし）",
+      "calculation_scope": "qがあれば(r−q)Sdelta。stock/bankの価値と暦時間微分もbookへ算入。モデルPDEの関係である。"
+    },
+    {
+      "id": "19.8",
+      "chapter": 19,
+      "heading": "Vega",
+      "source_pages": [
+        434,
+        436
+      ],
+      "requirements": [
+        {
+          "id": "D19.8-01",
+          "statement": "vegaの単位はσ=1.0当たり、1ポイントは.01倍（434–436）",
+          "reading": "σ方向の中心差分、callとputのvega一致"
+        },
+        {
+          "id": "D19.8-02",
+          "statement": "Ex19.5のγ・vega同時中立化（435）",
+          "reading": "2×2連立式と株式による残Δ解消"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp434–436 はσの変化に対する感応度を導入し、γとvegaを同時に消すには性質の違うオプションが必要とする。全IVの平行移動という仮定と、実際の満期・行使価格別の変化を分ける。",
+      "printed": "Ex19.5：初期Γ=−5000,V=−8000、追加1は(Δ,Γ,V)=(.6,.5,2)、追加2=(.5,.8,1.2)。vegaだけなら4000options、Δ2400、Γ−3000。両方なら400/6000options、株3240売り、✓独立連立式一致。Ex19.6（436）12.1、1pointで.121→12.10524275/.12105243 ✓。Fig19.11のK50,r0,σ.25,T2のvega曲線は点ピンなし。",
+      "cautions": "OP-07、§20.6。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_vega.py"
+      ],
+      "limitation": "vegaはvol絶対単位1.0、1pointは.01倍。中立化はparallel IV shiftで、surfaceの個別変形までは消さない。",
+      "numerical_requirements": [
+        "D19.8-01",
+        "D19.8-02"
+      ],
+      "calculation": "Ex19.5 vegaのみ4000 options/−2400株・残Γ−3000、同時中立400/6000 options/−3240株。Ex19.6 vega12.1/単位・.121/vol point。独立有理数消去とQ密度vol差分",
+      "calculation_scope": "vegaはvol絶対単位1.0、1pointは.01倍。中立化はparallel IV shiftで、surfaceの個別変形までは消さない。"
+    },
+    {
+      "id": "19.9",
+      "chapter": 19,
+      "heading": "Rho",
+      "source_pages": [
+        436,
+        437
+      ],
+      "requirements": [
+        {
+          "id": "D19.9-01",
+          "statement": "callとputのrhoの符号・単位（436–437）",
+          "reading": "金利1pointの損益はrho×.01"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp436–437 は金利の変化による価格感応度を定義する。スポット・配当利回りなど固定する量を明示して微分する必要がある。",
+      "printed": "Ex19.7（437）8.91、5%→6%の一次近似.0891→8.90657410/.08906574 ✓（完全再評価との差は二次項）。",
+      "cautions": "§19.12の先物・外国金利rhoとは固定条件が違う。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_rho.py"
+      ],
+      "limitation": "rhoは固定spot/qと国内rの変化。1.0/.01/.0001を分ける。固定Fのfutures rhoは別の規約。",
+      "numerical_requirements": [
+        "D19.9-01"
+      ],
+      "calculation": "Ex19.7 rho8.91/金利単位・.0891/1% point。spot/q固定の独立Q密度国内金利差分4例、rho parity・完全再評価の二次誤差",
+      "calculation_scope": "rhoは固定spot/qと国内rの変化。1.0/.01/.0001を分ける。固定Fのfutures rhoは別の規約。"
+    },
+    {
+      "id": "19.10",
+      "chapter": 19,
+      "heading": "The Realities of Hedging",
+      "source_pages": [
+        437,
+        438
+      ],
+      "requirements": [
+        {
+          "id": "D19.10-01",
+          "statement": "調整頻度、売買費、相殺、Greek限度額（437–438）",
+          "reading": "dollar deltaと株数delta、vega/1pointを区別"
+        }
+      ],
+      "explanation": "定性。p437とSnapshot19.1（438）は、日々のΔ管理に対してγ/vega調整は流動性・費用に制約され、個別取引よりbook全体で相殺できることを扱う。限度額の単位と短期ATMでの急変を結びつける。",
+      "printed": "Snapshot19.1、S=50のdollar-delta limit 1,000,000→株数Δ限度20,000、✓算術一致。特定市場の統計ではなく単位換算例。",
+      "cautions": "§19.6/8、RB-A04。**D3候補**：単位換算を説明内で完結。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "ヘッジ頻度・取引費・Greek limitsの定性説明。実運用の閾値や損失を保証しない。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "19.11",
+      "chapter": 19,
+      "heading": "Scenario Analysis",
+      "source_pages": [
+        437,
+        439
+      ],
+      "requirements": [
+        {
+          "id": "D19.11-01",
+          "statement": "2週間、FX変化7点×IV変化3点のTable19.5（439）",
+          "reading": "時間経過を含む完全再評価。最悪点探索は四隅だけにしない"
+        }
+      ],
+      "explanation": "混在。pp437–439 は複数のspot/IV変化を与えた将来時点の完全再評価でGreek近似を補う。端点が最悪とは限らず、short butterflyなどでは内部に損失極大がある。",
+      "printed": "Table19.5、FX変化−.06/−.04/−.02/0/.02/.04/.06、IV−2/0/+2point。損益行（百万ドル）は102/55/25/6/−10/−34/−80、80/40/17/2/−14/−38/−85、60/25/9/−2/−18/−42/−90。**未再計算**：book内訳が原典にない仮定表であり、21セルは例示データとして保存し価格モデルからの再現を約束しない。",
+      "cautions": "§19.appendix、§22.6。表の一致を独立検証としない。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_scenarios.py"
+      ],
+      "limitation": "原典Table19.5のbook/strike/maturityが不足し、21セルの原典再価格は未検証（対象外）。表の読取りと2週7×3の合成book完全再評価の独立検証を分ける。数値verifiedは後者の計算部分だけを指す。",
+      "numerical_requirements": [
+        "D19.11-01"
+      ],
+      "calculation": "Table19.5の21表示値・最大損失−90mを読取り（再価格計算ではない）。2週・7×3の合成FX bookを独立Q密度積分で完全再評価、short butterflyの内点最大損失、IV10%→12%",
+      "calculation_scope": "原典Table19.5のbook/strike/maturityが不足し、21セルの原典再価格は未検証（対象外）。表の読取りと2週7×3の合成book完全再評価の独立検証を分ける。数値verifiedは後者の計算部分だけを指す。"
+    },
+    {
+      "id": "19.12",
+      "chapter": 19,
+      "heading": "Extensions of the Analysis",
+      "source_pages": [
+        439,
+        441
+      ],
+      "requirements": [
+        {
+          "id": "D19.12-01",
+          "statement": "Table19.6のq付きGreek、通貨の第二rho（439–440）",
+          "reading": "q方向差分、先物rho=−cT/−pTは割引だけ変化"
+        },
+        {
+          "id": "D19.12-02",
+          "statement": "先渡と先物のdelta、H_F=e^(−(r−q)T)H_A（440–441）",
+          "reading": "毎日決済によるe^(rT)因子と契約乗数"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp439–441 は配当・外国金利・先物のGreekを統一する。特に先物rhoはrとq=rを一緒に動かすため、通常のBSM rhoにq=rを代入するだけでは得られない。",
+      "printed": "Table19.6は公式表、数値例なし。Ex19.8（441）458,000 GBP、rUSD=.04/rGBP=.07、先物.75年、62,500GBP/枚→468,421.81GBP、7枚へ丸め。✗印刷468,442は丸めた係数1.0228を掛けると468,442.40で再現可能（原著の中間精度は不明）、7枚は一致。",
+      "cautions": "OP-08/17、§17/18。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_extensions.py"
+      ],
+      "limitation": "Ex19.8は未丸め468421.81GBPとfactor4桁の468442GBPで21GBP差。原著の中間精度は不明。futures rhoは固定Fかつq=rを連動、通貨rhoは国内/外国を分ける。",
+      "numerical_requirements": [
+        "D19.12-01",
+        "D19.12-02"
+      ],
+      "calculation": "Table19.6全Greeks/qと外国rhoを独立密度差分、固定F futures rho=−TV、forward/futures delta差。Ex19.8精密468421.81GBP・factor表示丸め468442GBP、契約7枚",
+      "calculation_scope": "Ex19.8は未丸め468421.81GBPとfactor4桁の468442GBPで21GBP差。原著の中間精度は不明。futures rhoは固定Fかつq=rを連動、通貨rhoは国内/外国を分ける。"
+    },
+    {
+      "id": "19.13",
+      "chapter": 19,
+      "heading": "Portfolio Insurance",
+      "source_pages": [
+        441,
+        444
+      ],
+      "requirements": [
+        {
+          "id": "D19.13-01",
+          "statement": "売却割合=e^(−qT)[1−N(d1)]（441–443）",
+          "reading": "put delta、下落時追加売却と上昇時買戻し"
+        },
+        {
+          "id": "D19.13-02",
+          "statement": "Ex19.10の先物換算と追随不能リスク（443–444）",
+          "reading": "金利・配当・先物満期・乗数250を分離"
+        }
+      ],
+      "explanation": "混在。pp441–443 はputのΔを株の売却で複製し、必要売却量を指数先物に変換する。Snapshot19.2（444）は1987年の急落時に売買を追随できなかった事例で、複製の連続売買仮定の限界を示す。",
+      "printed": "Ex19.9、A90百万、floor87百万、r.09/q.03/σ.25/T.5、d1=.4499、Δ−.3215→Δ−.32154256 ✓。A88/92の印刷−.3679/−.2787（本文の88の値は符号「−」が欠落し文脈と矛盾）。88は残存期間を.5年のままにすると−.36788453で✓一致。1暦日の経過を入れると−.36811261/−.27867270となり、92の印刷値は1日経過側で一致する。88/92の印刷値は同じ厳密な時間規約で揃わないため、原典の時間近似として保留する。追加売却4.64%/買戻し4.28%は印刷Δ差から✓算術一致（再計算スクリプトは `recompute_ch20.py` も参照）。Ex19.10、先物.75年、指数900、A1=100000/A2=250→122.95755、122.96→123枚 ✓。",
+      "cautions": "OP-09、R11、§17.3。歴史部分のみD3候補。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_insurance.py"
+      ],
+      "limitation": "Ex19.9の88mは残存.5、92mは1日経過で一致し、同一時間規約での厳密印刷再現は未完。index mirror/beta1限定。gapや売買遅れで床が破れ得る。",
+      "numerical_requirements": [
+        "D19.13-01",
+        "D19.13-02"
+      ],
+      "calculation": "Ex19.9 d1.4499・売却32.15%・表示差4.64/4.28%、Ex19.10 122.96→123 short futures。独立密度put delta、同一初期premiumの離散replication帳簿とgap-floor破れ",
+      "calculation_scope": "Ex19.9の88mは残存.5、92mは1日経過で一致し、同一時間規約での厳密印刷再現は未完。index mirror/beta1限定。gapや売買遅れで床が破れ得る。"
+    },
+    {
+      "id": "19.14",
+      "chapter": 19,
+      "heading": "Application of Machine Learning to Hedging",
+      "source_pages": [
+        443,
+        444
+      ],
+      "requirements": [
+        {
+          "id": "D19.14-01",
+          "statement": "状態・行動・費用・目的関数X+cYを対応付ける（443–444）",
+          "reading": "delta基準との比較条件を固定し、費用とリスクの単位を説明"
+        },
+        {
+          "id": "D19.14-02",
+          "statement": "本文の入口と費用/ensemble/fallbackの研究を切り分ける（444）",
+          "reading": "本編の説明完了を大規模学習に依存させない"
+        }
+      ],
+      "explanation": "定性。pp443–444 は費用を含めた逐次売買を強化学習で選び、期待費用Xと損益標準偏差YのX+cYを最小化する入口を説明する。特定のNN構造や訓練数、性能の印刷値は与えない。",
+      "printed": "なし。cは選好パラメータ。",
+      "cautions": "RB-A04、RB-H19入口、R11、BA-01。原典参考文献はCao/Chen/Hull/Poulos、Buehlerら、Kolm/Ritter。外部文献を今回読んだとは扱わない。**D3候補**：本文の概念説明。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "本編は状態・行動・費用・X+cYの説明。学習済み性能、ensemble/fallback、大規模訓練は今回対象外。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "19.appendix",
+      "chapter": 19,
+      "heading": "Taylor Series Expansions and Hedge Parameters",
+      "source_pages": [
+        450,
+        450
+      ],
+      "requirements": [
+        {
+          "id": "D19.appendix-01",
+          "statement": "ΔΠ≈ΔΔS+ΘΔt+Γ(ΔS)²/2と次数（450）",
+          "reading": "ΔS∝√Δtで二次spot項を落とせない"
+        },
+        {
+          "id": "D19.appendix-02",
+          "statement": "vanna ΔSΔσ、vomma (Δσ)²/2を含む展開（450）",
+          "reading": "混合微分を二経路で差分、係数1/2の位置"
+        }
+      ],
+      "explanation": "数値（例題なし）。p450 はΔSが√Δt程度という確率過程の次数を用い、時間一次・spot二次までを残す。Practitioner BSMではIVも変数とし、vega・vomma・vannaの項を加える。",
+      "printed": "数値例なし。",
+      "cautions": "§14の伊藤次数、§19.3/11、OP-01。監査qualでも式の数値検証を残す。",
+      "prep": "docs/prep/sections/ch19.md",
+      "lesson": "docs/lessons/ch19.md",
+      "page": "report/site/chapters/ch19.html",
+      "implementation": "hullkit/src/hullkit/_greeks_hedging.py",
+      "tests": [
+        "hullkit/tests/test_greeks_hedging_taylor.py"
+      ],
+      "limitation": "ΔSは√Δtの次数。vannaの混合項に1/2を付けず、vommaの二乗項へ1/2を付ける。局所展開の残差を確認する。",
+      "numerical_requirements": [
+        "D19.appendix-01",
+        "D19.appendix-02"
+      ],
+      "calculation": "Eq19A.1とspot/IV二変数Taylor（vega/vanna/vomma）。独立payoff求積の混合微分2経路・vol二階差分、完全再評価との差の三次縮小、ΔS∝√Δt時のgamma/θ次数（数値例なし）",
+      "calculation_scope": "ΔSは√Δtの次数。vannaの混合項に1/2を付けず、vommaの二乗項へ1/2を付ける。局所展開の残差を確認する。"
+    },
+    {
+      "id": "20.1",
+      "chapter": 20,
+      "heading": "Implied Volatilities of Calls and Puts",
+      "source_pages": [
+        451,
+        452
+      ],
+      "requirements": [
+        {
+          "id": "D20.1-01",
+          "statement": "同一K/Tでcall/put IVが等しい（451–452）",
+          "reading": "parityでputを生成して両方向に逆算。米国型は厳密な主張にしない"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp451–452。欧州call/putのparityは将来分布に依存しない。BSMと市場価格がともにparityを満たせば、価格誤差が等しく、同一K/TのIVも一致する。",
+      "printed": "Ex20.1（452）、S=.60,K=.59,r=.05,q=.10,T=1,c=.0236→p=.04192291（印刷.0419）、IV=.14511006（14.5%）、✓一致。本文の22%は代数的説明例で計算入力なし。",
+      "cautions": "VN-01済、VN-19、§15.11。",
+      "prep": "docs/prep/sections/ch20.md",
+      "lesson": "docs/lessons/ch20.md",
+      "page": "report/site/chapters/ch20.html",
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_parity.py"
+      ],
+      "limitation": "欧州・同一K/T・同じ前提とparity。American call/put IV一致は厳密な主張にしない。",
+      "numerical_requirements": [
+        "D20.1-01"
+      ],
+      "calculation": "Ex20.1 put.0419・IV14.5%（未丸め.04192291/.14511006）、Eq20.2 dollar誤差3例。独立Q payoff積分＋二分逆算、丸めquoteのIV差と微小正価格",
+      "calculation_scope": "欧州・同一K/T・同じ前提とparity。American call/put IV一致は厳密な主張にしない。"
+    },
+    {
+      "id": "20.2",
+      "chapter": 20,
+      "heading": "Volatility Smile for Foreign Currency Options",
+      "source_pages": [
+        453,
+        456
+      ],
+      "requirements": [
+        {
+          "id": "D20.2-01",
+          "statement": "Figs20.1/2の両裾とOTM価格を対応させる（453–454）",
+          "reading": "同じ平均・分散の分布で尾部payoff積分を比較"
+        },
+        {
+          "id": "D20.2-02",
+          "statement": "Table20.1とSnapshot20.1の歴史的位置（454–456）",
+          "reading": "PとQの違い、過去の収益機会を現在の推奨と扱わない"
+        }
+      ],
+      "explanation": "混在。pp453–456。両裾が厚いリスク中立分布はOTM put/callを高くし、U字型のIVになる。変動するσやjumpは説明候補だが、過去の実分布とオプションからのリスク中立分布は同一ではない。",
+      "printed": "Table20.1は2005–2015の10通貨。1～6SD超の実測23.32/4.67/1.30/.49/.24/.13%、正規31.73/4.55/.27/.01/.00/.00%。実測列は原データ不足で未検証。正規列は2Φ(−n)で独立検証した。Figs20.1/2は模式図で数値曲線なし。",
+      "cautions": "付録20A、§27/§28への拡張は別範囲。歴史説明は**D3候補**。",
+      "prep": "docs/prep/sections/ch20.md",
+      "lesson": "docs/lessons/ch20.md",
+      "page": "report/site/chapters/ch20.html",
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_tails.py"
+      ],
+      "limitation": "Table20.1の実測FX列（2005–2015）は原データがなく再計算未検証（対象外）。正規列と合成Q分布の尾部payoffは検証。Pの実測とQのimplied分布を混同しない。",
+      "numerical_requirements": [
+        "D20.2-01"
+      ],
+      "calculation": "Table20.1正規列31.73/4.55/.27/.01/.00/.00%を独立求積。合成Q混合とlognormalの平均/分散を一致させ、両OTM価格上昇・U字IV・parityを直接terminal密度積分で確認",
+      "calculation_scope": "Table20.1の実測FX列（2005–2015）は原データがなく再計算未検証（対象外）。正規列と合成Q分布の尾部payoffは検証。Pの実測とQのimplied分布を混同しない。"
+    },
+    {
+      "id": "20.3",
+      "chapter": 20,
+      "heading": "Volatility Smile for Equity Options",
+      "source_pages": [
+        456,
+        458
+      ],
+      "requirements": [
+        {
+          "id": "D20.3-01",
+          "statement": "Figs20.3/4の左尾・右尾とIV skew（456–457）",
+          "reading": "FXの両側smileとの違い、OTM価格の向き"
+        },
+        {
+          "id": "D20.3-02",
+          "statement": "Snapshot20.2の1987年前後の説明（458）",
+          "reading": "歴史的観察と機序仮説を区別"
+        }
+      ],
+      "explanation": "定性。pp456–458。株式の低Kで高いIVは左尾の厚さと結びつく。spotとσの負相関の説明としてレバレッジ、volatility feedback、crashophobiaを挙げるが、どれか一つを確定原因とはしない。",
+      "printed": "固有の計算値なし。1987は歴史区分。",
+      "cautions": "§20.6、RB-H20。**D3候補**：説明＋rendered。",
+      "prep": "docs/prep/sections/ch20.md",
+      "lesson": "docs/lessons/ch20.md",
+      "page": "report/site/chapters/ch20.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "1987年前後の記述とleverage/jumpという機序仮説を分ける。現在の市場で因果を実証したものではない。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "20.4",
+      "chapter": 20,
+      "heading": "Alternative Ways of Characterizing the Volatility Smile",
+      "source_pages": [
+        458,
+        458
+      ],
+      "requirements": [
+        {
+          "id": "D20.4-01",
+          "statement": "F=S exp((r−q)T)、K/F軸、±.5delta軸（458）",
+          "reading": "往復変換と許容delta範囲、qによるspot deltaの上限"
+        }
+      ],
+      "explanation": "数値（例題なし）。p458。K、K/S、K/F、deltaの横軸を比較する。ATM spot、ATM forward、50-deltaは異なる定義である。",
+      "printed": "50-deltaの±.5のみ、特定S/K/T例なし。",
+      "cautions": "VN-02済、§19.12。",
+      "prep": "docs/prep/sections/ch20.md",
+      "lesson": "docs/lessons/ch20.md",
+      "page": "report/site/chapters/ch20.html",
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_axes.py"
+      ],
+      "limitation": "spot deltaの許容域はqとTに依存し、call上限exp(−qT)、put下限−exp(−qT)。軸を変えて同じ契約を特定する。",
+      "numerical_requirements": [
+        "D20.4-01"
+      ],
+      "calculation": "本文50-delta±.5定義、K・K/S・K/F・spot delta軸の往復とATM spot/forward/50deltaの差。独立terminal payoff積分のspot差分と通貨単位不変性（固有数値例なし）",
+      "calculation_scope": "spot deltaの許容域はqとTに依存し、call上限exp(−qT)、put下限−exp(−qT)。軸を変えて同じ契約を特定する。"
+    },
+    {
+      "id": "20.5",
+      "chapter": 20,
+      "heading": "The Volatility Term Structure and Volatility Surfaces",
+      "source_pages": [
+        458,
+        460
+      ],
+      "requirements": [
+        {
+          "id": "D20.5-01",
+          "statement": "Table20.2の6満期×5moneynessを保持（459）",
+          "reading": "原典はIVの線形・双線形補間。total variance補間と名前を分ける"
+        },
+        {
+          "id": "D20.5-02",
+          "statement": "市場観測点と補間点を区別（459–460）",
+          "reading": "grid点再現、範囲外の方針、価格凸性とcalendar整合性を別検査"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp458–460。K/Sと満期の表からIVを補間して価格に戻す。smileの満期依存を弱める座標としてln(K/F)/√Tを紹介する。",
+      "printed": "Table20.2の満期1/3/6月、1/2/5年とK/S=.90/.95/1/1.05/1.10、IV全30値は既存ピン入力に保存済み。9月・1.05の13.7%、1.5年・.925の14.525%を独立加重平均で✓再計算一致。表は市場実測でなく例示surface、観測日を捏造しない。",
+      "cautions": "VN-01済、RB-H20、無裁定surface修復は別研究。",
+      "prep": "docs/prep/sections/ch20.md",
+      "lesson": "docs/lessons/ch20.md",
+      "page": "report/site/chapters/ch20.html",
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_interpolation.py"
+      ],
+      "limitation": "原典はIVの線形/双線形補間。total varianceの補間と別方式。grid外は明示方針、無裁定診断とsurface修復は別で、修復は対象外。",
+      "numerical_requirements": [
+        "D20.5-01",
+        "D20.5-02"
+      ],
+      "calculation": "Table20.2全30IV・9月13.7%・1.5年/.925で14.525%。独立Fraction4隅重み・双線形多項式、ln(K/F)/√T軸。価格凸性/calendar違反を補間とは別に検出する合成例",
+      "calculation_scope": "原典はIVの線形/双線形補間。total varianceの補間と別方式。grid外は明示方針、無裁定診断とsurface修復は別で、修復は対象外。"
+    },
+    {
+      "id": "20.6",
+      "chapter": 20,
+      "heading": "Minimum Variance Delta",
+      "source_pages": [
+        460,
+        460
+      ],
+      "requirements": [
+        {
+          "id": "D20.6-01",
+          "statement": "IV応答を含む連鎖微分と固定IVの違い（460）",
+          "reading": "応答0でBSMへ戻る、合成σ(S)で完全再評価を差分"
+        }
+      ],
+      "explanation": "数値（例題なし）。p460。期待IVのspot応答を含めたdeltaは ΔMV=ΔBSM+VBSM ∂E[σimp]/∂S。負の応答を仮定すると通常のlong optionではΔMVが小さくなる。",
+      "printed": "なし。",
+      "cautions": "§19.3、RB-H20。",
+      "prep": "docs/prep/sections/ch20.md",
+      "lesson": "docs/lessons/ch20.md",
+      "page": "report/site/chapters/ch20.html",
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_minimum_variance.py"
+      ],
+      "limitation": "条件付きIV応答は合成関数で検証。実測の最小分散応答推定は原データ不足で対象外。",
+      "numerical_requirements": [
+        "D20.6-01"
+      ],
+      "calculation": "ΔMV=ΔBSM+vega×条件付きIV応答。独立Q payoff完全再評価の連鎖微分、合成2因子4状態Cov(ΔV,ΔS)/Var(ΔS)と最小分散、非線形再評価の局所極限（本文数値例なし）",
+      "calculation_scope": "条件付きIV応答は合成関数で検証。実測の最小分散応答推定は原データ不足で対象外。"
+    },
+    {
+      "id": "20.7",
+      "chapter": 20,
+      "heading": "The Role of the Model",
+      "source_pages": [
+        460,
+        460
+      ],
+      "requirements": [
+        {
+          "id": "D20.7-01",
+          "statement": "vanilla価格一致だけでは動学・ヘッジ一致を意味しない（460）",
+          "reading": "同じsurfaceへの較正と将来変化の仮定を分ける"
+        }
+      ],
+      "explanation": "定性。p460。流動的なvanillaではモデルが市場価格の補間言語として働いても、Greek・ヘッジと非流動的exoticの価値はモデルに依存する。",
+      "printed": "なし。",
+      "cautions": "§27、§28、RB-H20。**D3候補**。",
+      "prep": "docs/prep/sections/ch20.md",
+      "lesson": "docs/lessons/ch20.md",
+      "page": "report/site/chapters/ch20.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "同じvanilla surfaceへの較正でも将来のsurface変化とヘッジはモデルに依存。市場性能の承認ではない。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "20.8",
+      "chapter": 20,
+      "heading": "When a Single Large Jump is Anticipated",
+      "source_pages": [
+        460,
+        462
+      ],
+      "requirements": [
+        {
+          "id": "D20.8-01",
+          "statement": "S50→42/58、r12%、1月からTable20.3を作る（461–462）",
+          "reading": "二状態の無裁定確率、call/put全9行、parity"
+        },
+        {
+          "id": "D20.8-02",
+          "statement": "丸め価格からのIVと未丸め価格からのIVを分ける（462）",
+          "reading": "K42/58の0volは境界値でsolver不良にしない"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp460–462。既知の近いイベントで上下二状態へ動く例では、ATM付近のIVが高いfrownになる。二峰性の模式分布と二点分布による厳密な価格例を区別する。",
+      "printed": "u1.16/d.84/a1.0101/p.5314、✓独立式一致。Table20.3、K42～58のcall8.42/7.37/6.31/5.26/4.21/3.16/2.10/1.05/0、put0/.93/1.86/2.78/3.71/4.64/5.57/6.50/7.42は✓全行再計算一致。内点の印刷IV58.8/66.6/69.5/69.2/66.1/60.0/49.0%に対し、印刷call価格から58.85004/66.62438/69.51882/69.16508/66.09182/59.97265/**49.88574**%。K44は丸め境界で0.06point許容、K56の49.0は✗（49.9が計算値、誤植候補）。Figs20.5–7は二峰性/木/frown。",
+      "cautions": "VN-01済、§13.1。",
+      "prep": "docs/prep/sections/ch20.md",
+      "lesson": "docs/lessons/ch20.md",
+      "page": "report/site/chapters/ch20.html",
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_single_jump.py"
+      ],
+      "limitation": "Table20.3のK56：印刷call1.05からIV49.885736%、未丸め1.05223837から49.933602%。原典49.0%とは不一致で、価格丸めだけでは説明できない。値を改変して合わせない。",
+      "numerical_requirements": [
+        "D20.8-01",
+        "D20.8-02"
+      ],
+      "calculation": "Table20.3 call/put全9行、p=.53140677、端点IV=0とfrown。印刷callから内点IV58.85004/66.62438/69.51882/69.16508/66.09182/59.97265/49.88574%、独立2状態複製・Q密度再評価",
+      "calculation_scope": "Table20.3のK56：印刷call1.05からIV49.885736%、未丸め1.05223837から49.933602%。原典49.0%とは不一致で、価格丸めだけでは説明できない。値を改変して合わせない。"
+    },
+    {
+      "id": "20.appendix",
+      "chapter": 20,
+      "heading": "Determining Implied Risk-Neutral Distributions from Volatility Smiles",
+      "source_pages": [
+        467,
+        469
+      ],
+      "requirements": [
+        {
+          "id": "D20.appendix-01",
+          "statement": "BL公式とbutterfly差分の導出（467–468）",
+          "reading": "割引の向き、幅δ、二次差分収束、密度の単位"
+        },
+        {
+          "id": "D20.appendix-02",
+          "statement": "Ex20A.1の全8区間と欠けた尾部（468–469）",
+          "reading": "範囲内面積を勝手に1へ正規化しない、平坦IVなら対数正規"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp467–469。call価格のK方向二階微分にexp(rT)を掛けてQ密度を復元する。狭いbutterflyの面積δ²から同じ式を導く。負の密度は価格の凸性違反または数値誤差を知らせる。",
+      "printed": "S10,r3%,T.25,K6～14のIV30%→22%。初めのcall4.045/3.549/3.055、密度.0057/.0444/.1545/.2781/.2813/.1659/.0573/.0113、面積.9985/外側.0015、平坦26%の区間確率.0031/.0167は✓独立再計算一致（面積.998473283）。**丸めた3価格をそのまま差分すると.00806になり、g1=.0057を得るには未丸め価格が必要**。",
+      "cautions": "VN-01/02済、§12butterfly。",
+      "prep": "docs/prep/sections/ch20.md",
+      "lesson": "docs/lessons/ch20.md",
+      "page": "report/site/chapters/ch20.html",
+      "implementation": "hullkit/src/hullkit/_smile_surface.py",
+      "tests": [
+        "hullkit/tests/test_smile_surface_density.py"
+      ],
+      "limitation": "3桁丸め価格だとg1≈.00806、未丸め価格なら.0057。価格丸め誤差を二次差分が増幅する。区間質量は中点則推定、欠けた尾部の直接測定ではない。正規化/負密度clipをしない。",
+      "numerical_requirements": [
+        "D20.appendix-01",
+        "D20.appendix-02"
+      ],
+      "calculation": "Ex20A.1 call4.045/3.549/3.055、全8密度.0057/.0444/.1545/.2781/.2813/.1659/.0573/.0113、面積.998473283/残差.001526717、平坦26%区間確率.0031/.0167。独立payoff/三角butterfly積分・対数正規密度への二次収束",
+      "calculation_scope": "3桁丸め価格だとg1≈.00806、未丸め価格なら.0057。価格丸め誤差を二次差分が増幅する。区間質量は中点則推定、欠けた尾部の直接測定ではない。正規化/負密度clipをしない。"
+    },
+    {
+      "id": "21.1",
+      "chapter": 21,
+      "heading": "Binomial Trees",
+      "source_pages": [
+        470,
+        477
+      ],
+      "requirements": [
+        {
+          "id": "D21.1-01",
+          "statement": "p,u,dと後退計算、全行使判定（471–475）",
+          "reading": "pの範囲、成長平均、米国型≥欧州型、Ex21.1のA/Bで同じSでも行使が異なる"
+        },
+        {
+          "id": "D21.1-02",
+          "statement": "木からのΔ/Γ/Θとbump vega/rho（476–477）",
+          "reading": "最初の2段の差分、calendar-day換算、bump時N固定"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp470–477。CRRは平均成長を厳密に、分散を時間一次まで合わせる。後退計算で継続価値と即時行使を比較し、木の値からdelta/gamma/thetaを推定する。ノード数に対する価格収束は振動する。",
+      "printed": "Ex21.1 S=K50,r.1,σ.4,T=5/12、N5でu1.1224/d.8909/a1.0084/p.5073。独立木4.488459→4.49、N30/50/100/500は4.263427/4.272021/4.278059/4.283021、✓印刷4.263/4.272/4.278/4.283一致。Fig21.3全ノードとAのS39.69・継続9.90/行使10.31、Bの継続10.36、E2.66はピン候補（主要ノードは既存test、全図の丸め照合は未実施）。Fig21.4は振動収束。",
+      "cautions": "VN-03（ピン済）、OP-01、§13。Tの.4167をそのまま入力せず5/12と明記。",
+      "prep": "docs/prep/sections/ch21.md",
+      "lesson": "docs/lessons/ch21.md",
+      "page": "report/site/chapters/ch21.html",
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_crr.py"
+      ],
+      "limitation": "Greekは最初の2段から推定。bump時N固定、Δσ/Δr=1e−4、原典DerivaGemのbump幅は不明。選択した格子と連続停止極限を分ける。",
+      "numerical_requirements": [
+        "D21.1-01",
+        "D21.1-02"
+      ],
+      "calculation": "Ex21.1 N5価格4.49、N30/50/100/500は4.263/4.272/4.278/4.283、Fig21.3全21節点。Ex21.2 Δ−.415/Γ.034/Θ−.0117日、vega.123/rho−.072 per point。独立全停止方針/FD/欧州BSM",
+      "calculation_scope": "Greekは最初の2段から推定。bump時N固定、Δσ/Δr=1e−4、原典DerivaGemのbump幅は不明。選択した格子と連続停止極限を分ける。"
+    },
+    {
+      "id": "21.2",
+      "chapter": 21,
+      "heading": "Using the Binomial Tree for Options on Indices, Currencies, and Futures Contracts",
+      "source_pages": [
+        478,
+        480
+      ],
+      "requirements": [
+        {
+          "id": "D21.2-01",
+          "statement": "qの3種類の意味と早期行使（478–480）",
+          "reading": "先物a=1、FX a=exp((r−rf)Δt)、欧州版はBlack/Garman–Kohlhagen"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp478–480。指数は配当利回り、通貨は外国金利、先物は国内金利をqに代入する。先物の成長率はゼロでも継続価値の割引は残る。",
+      "printed": "Ex21.3 F=K300,r=.08,σ=.3,T1/3、N4のu1.0905/d.9170/p.4784、価格19.16→19.161006、N50/100の20.18/20.22→20.176095/20.220598、✓。Ex21.4 S1.61/K1.60/r.08/rf.09/σ.12/T1、N4 a.9975/u1.0618/d.9418/p.4642、価格.0710→.07098996、N50/100の.0738→.07376644/.07379612、✓。2026-10-06の対象テストでFigs21.5/6の全30ノードも照合済み。",
+      "cautions": "VN-03済、§17/18。",
+      "prep": "docs/prep/sections/ch21.md",
+      "lesson": "docs/lessons/ch21.md",
+      "page": "report/site/chapters/ch21.html",
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_carry.py"
+      ],
+      "limitation": "先物成長0でも国内rで割引。指数q、外国金利rf、先物q=rの意味を区別。",
+      "numerical_requirements": [
+        "D21.2-01"
+      ],
+      "calculation": "Ex21.3 futures19.16/20.18/20.22、Ex21.4 FX.0710/.0738、Figs21.5/6全30節点。q=r/q=rf/q=dividend yield、独立全停止方針・FD・欧州BSM",
+      "calculation_scope": "先物成長0でも国内rで割引。指数q、外国金利rf、先物q=rの意味を区別。"
+    },
+    {
+      "id": "21.3",
+      "chapter": 21,
+      "heading": "Binomial Model for a Dividend-Paying Stock",
+      "source_pages": [
+        480,
+        485
+      ],
+      "requirements": [
+        {
+          "id": "D21.3-01",
+          "statement": "割合配当・定額配当・S*モデルの違い（480–483）",
+          "reading": "Figs21.7/8/9、ex日直前の行使、σとσ*の対象を表示"
+        },
+        {
+          "id": "D21.3-02",
+          "statement": "fA+(fBSM−fE)のcontrol variate（483–485）",
+          "reading": "同一木・同一配当モデル、補正が常に改善するとはしない"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp480–485。離散割合配当なら価格を乗法縮小できるが、定額配当を一定σの株から引く木は再結合しない。原典はS*=S−PV(dividend)のσ*を一定にして再結合させる。欧州木の誤差による米国型価格補正も示す。",
+      "printed": "Ex21.5 S52/K50/r.1/σ*.4/D2.06、ex日3.5月、T5月→PV約2、S*約50。独立S*木のN5/50/100は4.440360/4.208436/4.214261、✓印刷4.44/4.208/4.214。2026-10-06にFig21.9全21ノードの印刷丸めを対象テストで照合済み。CV例のfA4.49/fE4.32/fBSM4.08→4.25、独立未丸め和4.2454208（表示値を足すと4.25）、✓。Fig21.10欧州木の全ノードは候補。",
+      "cautions": "VN-04、§15.12、§16.4。",
+      "prep": "docs/prep/sections/ch21.md",
+      "lesson": "docs/lessons/ch21.md",
+      "page": "report/site/chapters/ch21.html",
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_dividends.py"
+      ],
+      "limitation": "σはS*へ適用するescrowed配当木。N5のex日3.5月は格子外で月次行使のみ。ex前後の行使比較は整列時。CV改善を普遍保証しない。",
+      "numerical_requirements": [
+        "D21.3-01",
+        "D21.3-02"
+      ],
+      "calculation": "Ex21.5 4.44/4.208/4.214、Fig21.9全21節点、S*=49.999218/PV2.000782。CV未丸め4.2454208/表示4.25。独立全停止方針・配当PDE・欧州BSM、割合配当の複合縮小",
+      "calculation_scope": "σはS*へ適用するescrowed配当木。N5のex日3.5月は格子外で月次行使のみ。ex前後の行使比較は整列時。CV改善を普遍保証しない。"
+    },
+    {
+      "id": "21.4",
+      "chapter": 21,
+      "heading": "Alternative Procedures for Constructing Trees",
+      "source_pages": [
+        485,
+        488
+      ],
+      "requirements": [
+        {
+          "id": "D21.4-01",
+          "statement": "p=.5、u/d=exp((r−q−σ²/2)Δt±σ√Δt)（485–487）",
+          "reading": "logモーメント、CRRの負確率となる条件との比較"
+        },
+        {
+          "id": "D21.4-02",
+          "statement": "三項p_m=2/3、p_u/d=1/6±√(Δt/(12σ²))(r−q−σ²/2)（487–488）",
+          "reading": "確率和・非負条件、明示FDとの係数対応"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp485–488。p=.5の木はlog価格の平均・分散を合わせる。三項木は上中下の3分岐を持ち、log格子の陽解法と対応する。どちらも有限Δtでの近似である。",
+      "printed": "Ex21.6 S.790/K.795/r.06/rf.10/σ.04/T.75/N3、u1.0098/d.9703、Fig21.11の価格.0026→1.00984818/.97025146/.00258059、✓独立p=.5後退計算一致。2026-10-06にFig21.11全10ノードを対象テストで照合済み。Fig21.12は模式三項木、adaptive meshに固有数値なし。",
+      "cautions": "VN-04、§21.8。",
+      "prep": "docs/prep/sections/ch21.md",
+      "lesson": "docs/lessons/ch21.md",
+      "page": "report/site/chapters/ch21.html",
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_alternative.py"
+      ],
+      "limitation": "p=.5のstock成長と三項log分散は有限Δt近似。負の三項確率は拒否。adaptive meshは概念説明のみ。",
+      "numerical_requirements": [
+        "D21.4-01",
+        "D21.4-02"
+      ],
+      "calculation": "Ex21.6 u1.0098/d.9703/price.0026・Fig21.11全10節点。p=.5 log平均/分散、三項pU/pM/pD・独立log陽解法行列/BSM/米国FD",
+      "calculation_scope": "p=.5のstock成長と三項log分散は有限Δt近似。負の三項確率は拒否。adaptive meshは概念説明のみ。"
+    },
+    {
+      "id": "21.5",
+      "chapter": 21,
+      "heading": "Time-Dependent Parameters",
+      "source_pages": [
+        488,
+        489
+      ],
+      "requirements": [
+        {
+          "id": "D21.5-01",
+          "statement": "区間f(t),g(t)でpと割引を計算（488）",
+          "reading": "区間割引の積が満期DFに一致、定数曲線へ退化"
+        },
+        {
+          "id": "D21.5-02",
+          "statement": "σ(t_i)²t_i=iV/N、u=exp(√(V/N))（488–489）",
+          "reading": "累積分散単調性、区間幅、同じ累積分散を持つ欧州価格"
+        }
+      ],
+      "explanation": "数値（例題なし）。pp488–489。r/qの時間依存は各区間のforward rateで確率と割引を更新する。σの時間依存では累積分散を等分する非一様時刻を選び、u/dを共通化して再結合を保つ。",
+      "printed": "公式のみ。p489のπのSnapshot21.1は§21.6に帰属。",
+      "cautions": "VN-05、§27.2、負のforward varianceを受け入れない。",
+      "prep": "docs/prep/sections/ch21.md",
+      "lesson": "docs/lessons/ch21.md",
+      "page": "report/site/chapters/ch21.html",
+      "implementation": "hullkit/src/hullkit/_numerical_trees.py",
+      "tests": [
+        "hullkit/tests/test_numerical_trees_time.py"
+      ],
+      "limitation": "callerのpiecewise forward金利/分散曲線。負分散と負branch確率を拒否。ゼロ分散区間を含む場合も選択格子の確率条件を要求。",
+      "numerical_requirements": [
+        "D21.5-01",
+        "D21.5-02"
+      ],
+      "calculation": "本文式21.11/12・等分散clockを実装（固有数値例なし）。定数CRRへの退化、区間DF/forward成長、独立全パス/停止方針・積分BSM・時変CN-PDE",
+      "calculation_scope": "callerのpiecewise forward金利/分散曲線。負分散と負branch確率を拒否。ゼロ分散区間を含む場合も選択格子の確率条件を要求。"
+    },
+    {
+      "id": "21.6",
+      "chapter": 21,
+      "heading": "Monte Carlo Simulation",
+      "source_pages": [
+        489,
+        495
+      ],
+      "requirements": [
+        {
+          "id": "D21.6-01",
+          "statement": "exact GBMとEuler、Cholesky、割引・SE（490–494）",
+          "reading": "モーメント、相関、SE∝1/√M、4倍試行でSE半分"
+        },
+        {
+          "id": "D21.6-02",
+          "statement": "Table21.3の10経路とGreek共通乱数（494–495）",
+          "reading": "初期/最終を含む6株価の平均、同じnormal乱数でbump"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp489–495。Q測度のパスでpayoffを平均し割引く。GBMのEuler更新とlogの厳密更新を区別し、相関正規乱数・標準誤差・共通乱数によるGreekを扱う。経路依存や多因子に向き、早期行使には追加手法が要る。",
+      "printed": "Table21.1のπ推定3.04/SD1.69は乱数標本全体がないので未再現、Ex21.7のSE.169・CI2.71–3.37は✓算術一致。Table21.2 S=K50/r.05/σ.3/T.5のd1.2239/d2.0118/BSM4.817は✓閉形式一致（4.817438）。MC標本平均4.98/SD7.68と掲載株価45.95/54.49/50.09/47.46/44.93/68.27の標本は未再現。Ex21.8のCI4.51–5.45は**先にSEを.24に丸めた値**、未丸めSEなら4.503989–5.456011、規約差。",
+      "cautions": "§14.3/5、§27.7。",
+      "prep": "docs/prep/sections/ch21.md",
+      "lesson": "docs/lessons/ch21.md",
+      "page": "report/site/chapters/ch21.html",
+      "implementation": "hullkit/src/hullkit/_numerical_mc.py",
+      "tests": [
+        "hullkit/tests/test_numerical_mc_replay.py"
+      ],
+      "limitation": "Tables21.1/2の全乱数標本は欠落し完全再生は未検証（対象外）。掲載10経路は方法例で真値ではない。Greek共通乱数はpaired差分のSE、独立trialのSEと分ける。",
+      "numerical_requirements": [
+        "D21.6-01",
+        "D21.6-02"
+      ],
+      "calculation": "Ex21.7 SE.169/CI2.71–3.37、Ex21.8 raw CI4.503989–5.456011/先丸め4.51–5.45、Table21.2 BSM4.817、Table21.3全10平均/payoffと6.78705→6.79。独立32経路・Gauss-Hermiteモーメント・BSM/解析Greekを固定seed6SE",
+      "calculation_scope": "Tables21.1/2の全乱数標本は欠落し完全再生は未検証（対象外）。掲載10経路は方法例で真値ではない。Greek共通乱数はpaired差分のSE、独立trialのSEと分ける。"
+    },
+    {
+      "id": "21.7",
+      "chapter": 21,
+      "heading": "Variance Reduction Procedures",
+      "source_pages": [
+        495,
+        498
+      ],
+      "requirements": [
+        {
+          "id": "D21.7-01",
+          "statement": "6方式の推定量・重み・SEを区別（496–498）",
+          "reading": "pair平均のSE、controlの期待値、importanceの尤度比"
+        },
+        {
+          "id": "D21.7-02",
+          "statement": "層化のmidpoint、moment matching、Sobol図（497–499）",
+          "reading": "4層のΦ⁻¹(.125/.375/.625/.875)、標本平均0/分散1、randomized QMCの複数scramble"
+        }
+      ],
+      "explanation": "数値（例題なし）。pp495–498。反対変量、制御変量、重点サンプリング、層化、モーメント一致、準乱数を比較する。反対変量では独立単位が2本のpair平均になる。",
+      "printed": "具体的価格ピンなし。4層の分位点指定、Fig21.14の最初の1024点（1–128/129–512/513–1024）は構成例で未再計算。QMCの1/Mは条件付きの改善可能性で、一般的なSE保証とは扱わない。",
+      "cautions": "VN-06、無作為化しないQMCへiid標準誤差を付けない。",
+      "prep": "docs/prep/sections/ch21.md",
+      "lesson": "docs/lessons/ch21.md",
+      "page": "report/site/chapters/ch21.html",
+      "implementation": "hullkit/src/hullkit/_numerical_mc.py",
+      "tests": [
+        "hullkit/tests/test_numerical_mc_variance.py"
+      ],
+      "limitation": "antitheticはpair平均、層化/moment matchingは独立batch、QMCは独立scrambleでSE。決定的QMCへiid SEを付けない。moment matchingの有限標本biasと改善非保証を明記。",
+      "numerical_requirements": [
+        "D21.7-01",
+        "D21.7-02"
+      ],
+      "calculation": "本文4層Φ⁻¹(.125/.375/.625/.875)、6方式（antithetic/control/tail conditional/stratification/moment matching/Sobol）。独立Q payoff求積・解析BSMを固定seed6SE、1024 Sobol点の分割均等性",
+      "calculation_scope": "antitheticはpair平均、層化/moment matchingは独立batch、QMCは独立scrambleでSE。決定的QMCへiid SEを付けない。moment matchingの有限標本biasと改善非保証を明記。"
+    },
+    {
+      "id": "21.8",
+      "chapter": 21,
+      "heading": "Finite Difference Methods",
+      "source_pages": [
+        498,
+        508
+      ],
+      "requirements": [
+        {
+          "id": "D21.8-01",
+          "statement": "S格子の端条件・係数・後退更新（498–503）",
+          "reading": "欧州/米国型のS=0境界を区別、三重対角残差"
+        },
+        {
+          "id": "D21.8-02",
+          "statement": "Tables21.4/5の全21×11格子と負値（503–507）",
+          "reading": "同じM20/N10/ΔS5、負値を無条件0clipして不安定性を隠さない"
+        },
+        {
+          "id": "D21.8-03",
+          "statement": "log格子・三項対応・CNとGreek（504–508）",
+          "reading": "空間/時間/領域を別々に収束、payoff kinkと境界を確認"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp498–508。S格子でBSM PDEを離散化し、陰解法の三重対角方程式、陽解法の逐次更新、行使判定を示す。log Sへ変換すると係数が一定になる。陽解法の不安定性、三項木との対応、hopscotch/CN、Greek計算までが本節の範囲。",
+      "printed": "Ex21.10の米国型4.07/欧州3.91/BSM4.08/補正4.24→独立S格子4.067186/3.911208/4.075981/4.231959。**補正の4.24は表示値4.07+4.08−3.91を加えた場合に一致**。2026-10-06実装でTable21.4の全時刻231セルを印刷丸め内で照合済み。Ex21.11、4.26→4.256804 ✓。Table21.5のS80で−.13、S90で−.11→−.134077/−.106732 ✓、Table21.5の全231セルを照合。S75/t0の.46は.454959、S60/t2の1.17は1.164953で丸め境界（独立Decimal45桁でも一致）。この2セルのみ許容.0051、残りは.005。T=.4167なら全231セルが.005以内だが、原著の中間精度は未確定。j≥13（S≥65）の中央係数が負になることは式で✓。Figs21.15–18は格子/stencil/三項/hopscotch図。",
+      "cautions": "VN-06、§21.1/4、OP-01。",
+      "prep": "docs/prep/sections/ch21.md",
+      "lesson": "docs/lessons/ch21.md",
+      "page": "report/site/chapters/ch21.html",
+      "implementation": "hullkit/src/hullkit/_numerical_fd.py",
+      "tests": [
+        "hullkit/tests/test_numerical_fd_source.py"
+      ],
+      "limitation": "S75/t0とS60/t2は原典丸め境界、T=.4167なら全表が印刷幅内になるが原著の中間精度は未確定。負値を返すsource projectionは不安定性再現のopt-in。Americanはpost-step projectionで厳密LCPとは別。CV未丸め4.231959と表示和4.24を分ける。",
+      "numerical_requirements": [
+        "D21.8-01",
+        "D21.8-02",
+        "D21.8-03"
+      ],
+      "calculation": "Tables21.4/5全462格子値、米国4.067186/欧州3.911208/BSM4.075981、explicit4.256804と負価格。独立Q payoff求積/CRR・空間時間領域の収束・解析Greek",
+      "calculation_scope": "S75/t0とS60/t2は原典丸め境界、T=.4167なら全表が印刷幅内になるが原著の中間精度は未確定。負値を返すsource projectionは不安定性再現のopt-in。Americanはpost-step projectionで厳密LCPとは別。CV未丸め4.231959と表示和4.24を分ける。"
+    }
+  ],
+  "samples": {
+    "16": "16.4",
+    "17": "17.5",
+    "18": "18.1",
+    "19": "19.4",
+    "20": "20.8",
+    "21": "21.8"
+  },
+  "template_sha256": "a7fe9f7e0dae1dc485b1b0edff75f4be6652d734bd2c4e66cf6cb50fb728bf3b",
+  "expected_dom": {
+    "section-16-1": {
+      "text_sha256": "466badf32f4c12a97595de92c16aa1ec9099bff6fe4ba1b034874888f74d9315",
+      "math": [],
+      "tables": 0
+    },
+    "D16.1-01": {
+      "text_sha256": "c47040458fffc80bbc12dbd83280038b9b8a4d73e9628edf48e075ca7f75db17",
+      "math": [],
+      "tables": 0
+    },
+    "D16.1-02": {
+      "text_sha256": "43d60286968a37338790c72ac5784cde3f40a2483b1afa525b0a7d4dca1676bd",
+      "math": [],
+      "tables": 0
+    },
+    "section-16-2": {
+      "text_sha256": "97301800c4d3daca2d2bffce80d5ee7779f52bd00942ad9df14b670402748e58",
+      "math": [],
+      "tables": 0
+    },
+    "D16.2-01": {
+      "text_sha256": "0b75e8e2c16122233a6e489b61fc47061f6e7626a3a854d8199f05f18ff2949a",
+      "math": [],
+      "tables": 0
+    },
+    "D16.2-02": {
+      "text_sha256": "1976a80c52918f6547804ac4d20f45d19b9c4a93ad14660017224131e99903e2",
+      "math": [],
+      "tables": 0
+    },
+    "section-16-3": {
+      "text_sha256": "1af3f7f06f64983a93356ec65f7778b366a605b62ccef54c7be62363c300cc5d",
+      "math": [
+        "S_T/S_0",
+        "S_T^2/S_0",
+        "K_T=K_0I_T/I_0",
+        "K_0=30,I_0=2000"
+      ],
+      "tables": 0
+    },
+    "D16.3-01": {
+      "text_sha256": "55ecd4d414a4e9e62e5b513826a30a27a23e2a01e978051c0e962e07aefb72a7",
+      "math": [],
+      "tables": 0
+    },
+    "D16.3-02": {
+      "text_sha256": "b9f220847916727afec9163266c1396cd41de2d33d02dd3e6f216b9cced69280",
+      "math": [],
+      "tables": 0
+    },
+    "section-16-4": {
+      "text_sha256": "f81cabc9bee8ad6e31b61f9ca130ba968ccab9dd32997a04b85798b7c573fa01",
+      "math": [
+        "S-PV(D)=26,K=30,r=5\\%,\\sigma=25\\%",
+        "S=K=40,\\sigma=30\\%,r=5\\%,T=8,N=4"
+      ],
+      "tables": 0
+    },
+    "D16.4-01": {
+      "text_sha256": "5586bc011d97b6a516e89407e755e157e1749a4be92a6be9d2eba789b41c0bbd",
+      "math": [],
+      "tables": 0
+    },
+    "D16.4-02": {
+      "text_sha256": "1e60508917ca563e5b709444f6b926ff19bb90ed89f604a70b81cc7d088a47b3",
+      "math": [],
+      "tables": 0
+    },
+    "D16.4-03": {
+      "text_sha256": "369f9103b96785ab1165c6c2a6ae486ebe3ccf2b65166e35f150842b108e2b31",
+      "math": [],
+      "tables": 0
+    },
+    "D16.4-04": {
+      "text_sha256": "bd8467e380de9c8ebc42d789c3c6e871c597cfea3f7822b7fde319eaf7f54de9",
+      "math": [],
+      "tables": 0
+    },
+    "section-16-5": {
+      "text_sha256": "78285724336fbaf30a8163c5153189819bb7e1282c3ff14a04d7d393ff2e2163",
+      "math": [
+        "\\,50-42=8"
+      ],
+      "tables": 0
+    },
+    "D16.5-01": {
+      "text_sha256": "9d97c874537ac8ff764dfb9137f6b68dc61d84863fe29353442c8a1f2081c381",
+      "math": [],
+      "tables": 0
+    },
+    "D16.5-02": {
+      "text_sha256": "602c67011b5562b844e3708d8a230bbc0b83ba119a7442c48d0fe3d25eebb582",
+      "math": [],
+      "tables": 0
+    },
+    "section-17-1": {
+      "text_sha256": "f2aa72918dc1150ed9ffae584c2f518f5d6197bfe05fa969411d0aa3610c017e",
+      "math": [
+        "n=\\beta V/(100I_0)",
+        "\\beta=1,V=500000,I_0=1000",
+        "\\beta=2"
+      ],
+      "tables": 0
+    },
+    "D17.1-01": {
+      "text_sha256": "82cf6a55a16029cb46720e0f5917f6fa4184c6fbc1d1c6a85398ccfc9adfe503",
+      "math": [],
+      "tables": 0
+    },
+    "D17.1-02": {
+      "text_sha256": "f579d998f7dd30acf1d8983cced11b9cca9b5399c912902306d3690f917e8321",
+      "math": [],
+      "tables": 0
+    },
+    "section-17-2": {
+      "text_sha256": "c735f7ef030636c09187c2b11cf2cb235160961359f6180355ebac00c1ee37ab",
+      "math": [
+        "K_1",
+        "K_1",
+        "K_2",
+        "K_2",
+        "S=1.32,r=r_f=2\\%,\\sigma=14\\%,T=.25,K_1=1.3000,K_2=1.3414",
+        "p(K_1)=c(K_2)",
+        "K_1=K_2"
+      ],
+      "tables": 0
+    },
+    "D17.2-01": {
+      "text_sha256": "4fec95d1cfd962308f44eb4d0f168711a530ba4d3042023f433e41edbe4a0d60",
+      "math": [],
+      "tables": 0
+    },
+    "D17.2-02": {
+      "text_sha256": "9d5466e9657cf76f39491a6c91589092c3d2973cc26a9c65c688a4773da9e598",
+      "math": [],
+      "tables": 0
+    },
+    "section-17-3": {
+      "text_sha256": "457fa9ca608af9c96a72c69a163a13de23ee50b65d7b004709e34140bc1fd814",
+      "math": [
+        "c-p=Se^{-qT}-Ke^{-rT}",
+        "\\max(Se^{-qT}-Ke^{-rT},0)",
+        "r-q",
+        "Se^{-qT}"
+      ],
+      "tables": 0
+    },
+    "D17.3-01": {
+      "text_sha256": "4f006eaea28fab6c03016f1fa6e90828e8fc0a5bb5682484a745b6c742856ab2",
+      "math": [],
+      "tables": 0
+    },
+    "D17.3-02": {
+      "text_sha256": "7e207f050ed5317d8d8e8000909807d6ec8cf91aeaf86fe9a2a1f1099ff744e6",
+      "math": [],
+      "tables": 0
+    },
+    "section-17-4": {
+      "text_sha256": "34d5027804d619d143c8914e46706ea57e145af5953d47512239e2d12b1d3b3d",
+      "math": [
+        "S=930,K=900,r=8\\%,\\sigma=20\\%,T=2/12,q=3\\%",
+        "d_1=.544478575,d_2=.462828917,c=51.832957",
+        "S=1000,q=1\\%,\\sigma=15\\%,r=5\\%,T=10,K=1492"
+      ],
+      "tables": 0
+    },
+    "D17.4-01": {
+      "text_sha256": "4904206d424fe1318c876b528a1f269f816831089f8d5428ce6a5e10eb04f7e2",
+      "math": [],
+      "tables": 0
+    },
+    "D17.4-02": {
+      "text_sha256": "382b10205c71bb22f01f6a4a1f4c8b1f758aa84bdad13696e722720526d1a497",
+      "math": [],
+      "tables": 0
+    },
+    "section-17-5": {
+      "text_sha256": "c1fc2ceb3678cfd0df5a09c0a355a694bcbdcde7793cc5fed88c2314654c6e11",
+      "math": [
+        "r_f",
+        "c=Se^{-r_fT}N(d_1)-Ke^{-rT}N(d_2)",
+        "S=K=1.6,r=8\\%,r_f=11\\%,T=4/12"
+      ],
+      "tables": 0
+    },
+    "D17.5-01": {
+      "text_sha256": "eb597e7aae4a1152760f172725fa844d84d2456559a2f240c7df34a27d2c8b06",
+      "math": [],
+      "tables": 0
+    },
+    "D17.5-02": {
+      "text_sha256": "19900ff3355a248caf9d03b96ca06e8ec7d7d046bc2148036a3a088e33c97c75",
+      "math": [],
+      "tables": 0
+    },
+    "section-17-6": {
+      "text_sha256": "4f0df7c159af1c9907bdb9eeba5ec6bff21370f67f6065c3c488efd3da41f72e",
+      "math": [
+        "a=e^{(r-q)\\Delta t}",
+        "p=(a-d)/(u-d)",
+        "q=r_f",
+        "V=\\max(\\text{行使給付},e^{-r\\Delta t}[pV_u+(1-p)V_d])"
+      ],
+      "tables": 0
+    },
+    "D17.6-01": {
+      "text_sha256": "f08bc035975d718d85e654b87c765cfe9d38cbcfb7ff8f6166f91900e0afa609",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-1": {
+      "text_sha256": "6143bb55429c45514c39898807730fe9c2e2b5f15429ce9a495f29d18788b190",
+      "math": [],
+      "tables": 0
+    },
+    "D18.1-01": {
+      "text_sha256": "869d4491406d0205074466d7847f345f8d1d76548db0a4933297e47e193db413",
+      "math": [],
+      "tables": 0
+    },
+    "D18.1-02": {
+      "text_sha256": "1e477ac89511ea869f09074d0884b91955053e73bb1e8fa6dbaccafe8b5950a4",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-2": {
+      "text_sha256": "633c8b932127cd6d9908fccbe9907321c0095fb5a09a766781efa27cb0626025",
+      "math": [],
+      "tables": 0
+    },
+    "D18.2-01": {
+      "text_sha256": "9df6543c712df1f65e58493ea5d280e0331c33139546c78bb336fe098361971c",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-3": {
+      "text_sha256": "cd27d52ee759b49cd69e86fff9c9a80c3ff82c384b684b5a96dfe547e759c067",
+      "math": [
+        "F_T=S_T"
+      ],
+      "tables": 0
+    },
+    "D18.3-01": {
+      "text_sha256": "929e5698bc68eb0543018fd9f91905563cdfa0f8a57cc475b80cb723cf05480b",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-4": {
+      "text_sha256": "c51856926ff82cf604036fffd52ef64ff491b506f6fde3b83c208956cbc2cd6a",
+      "math": [
+        "c-p=e^{-rT}(F_0-K)",
+        "c=.56,K=8.5,F_0=8,T=.5,r=.1"
+      ],
+      "tables": 0
+    },
+    "D18.4-01": {
+      "text_sha256": "203c6767dc5b0b5876974e650cd4e33ddb0f215ef8ee01915347f4ebfcb2412d",
+      "math": [],
+      "tables": 0
+    },
+    "D18.4-02": {
+      "text_sha256": "9b2b529d75f58591a97f41b7e69cbed641ce8d1328844040b5f39b2a62c4986a",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-5": {
+      "text_sha256": "43cc58b420840f6ea4d1fcf5a73d5a866d8076995f1f09722f0e958ccc144119",
+      "math": [
+        "c_E\\ge e^{-rT}\\max(F_0-K,0)",
+        "p_E\\ge e^{-rT}\\max(K-F_0,0)"
+      ],
+      "tables": 0
+    },
+    "D18.5-01": {
+      "text_sha256": "afabeda4ba929044389ba9dc8ec2460b382bdd5676748df457a190471d415b62",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-6": {
+      "text_sha256": "5f07c7b408e9b6002a824365660567939653ccbc754d4a92a1ab4d8f836e862e",
+      "math": [
+        "dF=\\sigma F\\,dW",
+        "f_t+\\tfrac12\\sigma^2F^2f_{FF}=rf",
+        "d\\log F=-\\tfrac12\\sigma^2dt+\\sigma dW"
+      ],
+      "tables": 0
+    },
+    "D18.6-01": {
+      "text_sha256": "1fe9ec665ea3c0b9451e77b676a67f5c7ba979dacc7d3feb7ec00f3ccc804b72",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-7": {
+      "text_sha256": "af4e9689d0805206c297692088f622ebd9fdffc629d1f6e610b7dea67dac61da",
+      "math": [
+        "c=e^{-rT}[F_0N(d_1)-KN(d_2)]",
+        "d_1=[\\log(F_0/K)+\\sigma^2T/2]/(\\sigma\\sqrt T)",
+        "d_2=d_1-\\sigma\\sqrt T",
+        "F_0=K=20,T=4/12,r=9\\%,\\sigma=25\\%",
+        "d_1=.072168784"
+      ],
+      "tables": 0
+    },
+    "D18.7-01": {
+      "text_sha256": "5ac5a8cbfd133a96cc6897c6163d47f4bbf1eee14aee0c18820648fe20dfe378",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-8": {
+      "text_sha256": "8b99226c9e7d7ee70e557ab600c25649e2156f8d5471bde3e4f30ec514890822",
+      "math": [
+        "F_0=1240,K=1200,r=5\\%,\\sigma=20\\%,T=.5",
+        "d_1=.302569739,d_2=.161148383"
+      ],
+      "tables": 0
+    },
+    "D18.8-01": {
+      "text_sha256": "db8cf5c2313ab0c201267fc261c6cc2806ec3c6165e9ce4887a27333c97025dc",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-9": {
+      "text_sha256": "1a6214dc3543e3ff63e42c7741367f89f21bfe7c425a144dda5e07fa7c58fa17",
+      "math": [
+        "F_0=30,F_u=33,F_d=28,K=29,T=1/12,r=6\\%",
+        "\\Delta=(4-0)/(33-28)=.8",
+        "p=(30-28)/(33-28)=.4"
+      ],
+      "tables": 0
+    },
+    "D18.9-01": {
+      "text_sha256": "071cad0b68382e30b0075d2441688b49696095ffe8f72bd1fa83f797e9ed9106",
+      "math": [],
+      "tables": 0
+    },
+    "D18.9-02": {
+      "text_sha256": "a327f1b02b7afd70515e3f35cc7ad294aa927300db7dfd2f5619688a8e343a09",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-10": {
+      "text_sha256": "e2a2a3b3dc8c2256f5902004ab83a9f77ae88839a7cf4e0643dff9adf406beae",
+      "math": [],
+      "tables": 0
+    },
+    "D18.10-01": {
+      "text_sha256": "b41c9057fa388a23819ef53494fbe1a8d7c42417cf2348b9b50077164a8f5c9e",
+      "math": [],
+      "tables": 0
+    },
+    "section-18-11": {
+      "text_sha256": "8b2220bf929aca00f82ed5f05cdfc0259d11f7ad3b31ffdcae031a2243890b58",
+      "math": [
+        "e^{-rT}",
+        "c_{fs}-p_{fs}=F_0-K"
+      ],
+      "tables": 0
+    },
+    "D18.11-01": {
+      "text_sha256": "8e7852654d7898592031d4c34d2f97687b40483868cc78c0a0c754ddf54d3b73",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-1": {
+      "text_sha256": "21acb76b525f40690f3f10e8317e2939ee062ee07ee18bb9bb16f57053680e0e",
+      "math": [
+        "S=49,K=50,r=5\\%,\\sigma=20\\%,T=.3846",
+        "\\mu=13\\%"
+      ],
+      "tables": 0
+    },
+    "D19.1-01": {
+      "text_sha256": "b279dc1799b424302eeeff13670bdd18c520feec56fa284eb80223d408dc7d10",
+      "math": [],
+      "tables": 0
+    },
+    "D19.1-02": {
+      "text_sha256": "9dbd0b2ffbf0eae8b370e62b675b4cf4301affd771dc703702a0db5e6c92cb24",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-2": {
+      "text_sha256": "b3fda80a2892fcd3b148e8c334f1cf3325844fdbf6a76706360db118722b1466",
+      "math": [
+        "K+\\varepsilon",
+        "K-\\varepsilon",
+        "\\,2\\varepsilon"
+      ],
+      "tables": 1
+    },
+    "D19.2-01": {
+      "text_sha256": "a69fa6cc0fe2fa0009ba372453a709185220b248e4a80a60287abb7331ca8ddb",
+      "math": [],
+      "tables": 0
+    },
+    "D19.2-02": {
+      "text_sha256": "900ada98e31c2a2c824792867ba1d28a5813e5e88da3f857125d1623da656ae2",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-3": {
+      "text_sha256": "85a2ffc88563a21de810aa78c4f2bee899d738321dde2166a677f1368c326d12",
+      "math": [],
+      "tables": 0
+    },
+    "D19.3-01": {
+      "text_sha256": "c89df14bf54f97f8db80f404eee29d6411cfc77afbba78ca4d024a58a66a62a6",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-4": {
+      "text_sha256": "f6ed391d3231c1763322317b0cc7c97d2356e61c3b3f0d29c14ffae66146646c",
+      "math": [
+        "\\Delta=N(d_1)",
+        "N(d_1)-1",
+        "\\Delta=.52160163"
+      ],
+      "tables": 0
+    },
+    "D19.4-01": {
+      "text_sha256": "2302fbf652612b91f8359b5d614bf67e78a475bb22bedcbca91724cf06603007",
+      "math": [],
+      "tables": 0
+    },
+    "D19.4-02": {
+      "text_sha256": "0ae97e6900f22720287a4f7e3e346d73972f9bee2c1d8ed5634cf59bb197b0aa",
+      "math": [],
+      "tables": 0
+    },
+    "D19.4-03": {
+      "text_sha256": "67aa9753d292a3fcd47559d1c4d6ca0fb7872c373fff8c28b36b05cb69b8cd84",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-5": {
+      "text_sha256": "c0b1b78fb13aa33fbde83ca6c1e036d5790c5fa149aa2038c728a671e3cc54ab",
+      "math": [
+        "\\Theta=\\partial V/\\partial t=-\\partial V/\\partial T",
+        "\\Theta_p-\\Theta_c=rKe^{-rT}"
+      ],
+      "tables": 0
+    },
+    "D19.5-01": {
+      "text_sha256": "0ef64cebf3878b12a58fae333e32be7d3cadebf0671846a69820a1eb65a46567",
+      "math": [],
+      "tables": 0
+    },
+    "D19.5-02": {
+      "text_sha256": "ea6f94af80d2eeb8d2d9fabfaf882641dcf0592db558a193069e7fbe5681cb64",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-6": {
+      "text_sha256": "f2283d10f06c323526fee1dba61a0d3a4f5f5053d4da614f0cf42ac91f1e4c58",
+      "math": [
+        "\\Gamma=\\partial^2V/\\partial S^2",
+        "\\Theta\\Delta t+\\tfrac12\\Gamma(\\Delta S)^2"
+      ],
+      "tables": 0
+    },
+    "D19.6-01": {
+      "text_sha256": "4d89b2077bf9f9c84f7cef76d69250037da246761607f8c6506da46326ef6436",
+      "math": [],
+      "tables": 0
+    },
+    "D19.6-02": {
+      "text_sha256": "cf4e5791779328d37c2a17cfec6c6c8ad7ce828318ab3c5ed4485446ebcd2126",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-7": {
+      "text_sha256": "ac9f97ae9ef84cef06fd77e1a6881ae4afc9f63282c513cb3f74d42e67acdbdd",
+      "math": [
+        "\\Theta+(r-q)S\\Delta+\\tfrac12\\sigma^2S^2\\Gamma=rV"
+      ],
+      "tables": 0
+    },
+    "D19.7-01": {
+      "text_sha256": "8312fe202565c6eac10c5d986a5eeed6bc6752d3be23d7c65689f2b49cdd9439",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-8": {
+      "text_sha256": "d4e95f6d3a273eaad9435ca7681a2169c0c1254b78d97160e3e3e5d2ee928853",
+      "math": [],
+      "tables": 0
+    },
+    "D19.8-01": {
+      "text_sha256": "55e640afaddc7287f44fac9d990f40680a33f4b16647e9ac088bc4fb30da0c0f",
+      "math": [],
+      "tables": 0
+    },
+    "D19.8-02": {
+      "text_sha256": "202e1581ef112d7df341a599c86edde72246ff22590050027b767ba443a25f63",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-9": {
+      "text_sha256": "9888d140d92a341a1a01d38e2b6091cda0b008347db1e7c4287e29fbac26cb55",
+      "math": [
+        "\\rho=-TV"
+      ],
+      "tables": 0
+    },
+    "D19.9-01": {
+      "text_sha256": "6d76ee31b9cece3d9bd18a8c4a52d6649a4014814805593cc3a7d00eb8a3d0d8",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-10": {
+      "text_sha256": "f1941a7f6ac52246403241e09574aa312ee152b951baa5d819db2c672cce1ab7",
+      "math": [
+        "S\\Delta"
+      ],
+      "tables": 0
+    },
+    "D19.10-01": {
+      "text_sha256": "a8c94b74317850c8a5debcf1f2af80a1eef0acb856514d497d5f29159f8e7214",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-11": {
+      "text_sha256": "c365b27a95deb107dec10e65d85a0f5941d35e6302e346176a5daa114d0377a9",
+      "math": [],
+      "tables": 1
+    },
+    "D19.11-01": {
+      "text_sha256": "347c776274342ccf687633c74df1c4a216b6cc99d036f578df0d4b41164ad705",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-12": {
+      "text_sha256": "71ea6e877a1a2a43158e111a390b17d31502d6e1eb927d9a44d430b43961c5e4",
+      "math": [
+        "e^{-qT}N(d_1)",
+        "F=Se^{(r-q)T}",
+        "e^{(r-q)T}",
+        "Se^{-qT}-Ke^{-rT}",
+        "e^{-qT}",
+        "e^{rT}",
+        "He^{-(r-q)T}",
+        "H=-458000,r=.04,q=.07,T=.75"
+      ],
+      "tables": 0
+    },
+    "D19.12-01": {
+      "text_sha256": "79de3002261d3155592e01a22bbe8874ce1fd29ac44f8f125df09750f2a6e688",
+      "math": [],
+      "tables": 0
+    },
+    "D19.12-02": {
+      "text_sha256": "26d8529d73d76486a3a215a9c286fb581bcda85a38c2c27df9c8ac7ad2d2e3c4",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-13": {
+      "text_sha256": "0f882ff86d5ba688faa5062f00167a06bd9dcd694ed79d29df77357698168daa",
+      "math": [
+        "e^{-qT}[1-N(d_1)]",
+        "d_1=.4499"
+      ],
+      "tables": 0
+    },
+    "D19.13-01": {
+      "text_sha256": "9eb7d5404e8005c4032926506a8143e277718c4ec5dfd9f0b3f4d7702c1c1ff4",
+      "math": [],
+      "tables": 0
+    },
+    "D19.13-02": {
+      "text_sha256": "4c8d0dff1882874727e3b9b1a2f31bf1f7763707ce48e650644dbd044eb106d7",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-14": {
+      "text_sha256": "6ca9eb5261429710567f66f9dd5fb3240238814a06d6b947f6fd7b00a08fbe30",
+      "math": [
+        "X+cY"
+      ],
+      "tables": 0
+    },
+    "D19.14-01": {
+      "text_sha256": "734c503de2ad5dcf07feaca6562330cf43644f7fdb4e049c500a578327696834",
+      "math": [],
+      "tables": 0
+    },
+    "D19.14-02": {
+      "text_sha256": "476f567fc583edc7d8249f5d6a5d03be06a796f45c19429f873bf689a815c371",
+      "math": [],
+      "tables": 0
+    },
+    "section-19-appendix": {
+      "text_sha256": "dbe34a3861d556d0b89f063fdb2ec01cd5413da6342e47ccd46912238c8d3db5",
+      "math": [
+        "\\Delta V=\\Delta\\,\\Delta S+\\Theta\\Delta t+\\tfrac12\\Gamma(\\Delta S)^2+\\cdots",
+        "\\Delta S",
+        "\\sqrt{\\Delta t}",
+        "V_{S\\sigma}\\Delta S\\Delta\\sigma",
+        "\\tfrac12V_{\\sigma\\sigma}(\\Delta\\sigma)^2"
+      ],
+      "tables": 0
+    },
+    "D19.appendix-01": {
+      "text_sha256": "fe381a0a1e7635cd0a3c7d375e88dde578057a87571a10671fc97932b15682d6",
+      "math": [],
+      "tables": 0
+    },
+    "D19.appendix-02": {
+      "text_sha256": "a69f60fc1cfc6d0980bf9f410da8f3278b4657ec3d3d010fc721c1e24bc55769",
+      "math": [],
+      "tables": 0
+    },
+    "section-20-1": {
+      "text_sha256": "de9f37aa0f5a54abd7150ca55385367543d251a8671bfe60f3e541e979428455",
+      "math": [
+        "c-p=Se^{-qT}-Ke^{-rT}"
+      ],
+      "tables": 0
+    },
+    "D20.1-01": {
+      "text_sha256": "c4268417f952a859dbf63c015b4c692101eb75d76b53ece48a6bffce47bf0492",
+      "math": [],
+      "tables": 0
+    },
+    "section-20-2": {
+      "text_sha256": "49928248b3b3d22c008df0f8e2fe363153c678bfe960ce212b051a9dab27325a",
+      "math": [
+        "\\,2\\Phi(-n)"
+      ],
+      "tables": 1
+    },
+    "D20.2-01": {
+      "text_sha256": "7888eee502b37000ff2d7ac351767ed84dca619503bf15d0c44d9f1d22c7e494",
+      "math": [],
+      "tables": 0
+    },
+    "D20.2-02": {
+      "text_sha256": "7c7c59c694ad7dbd9d353d1e04e5fc7c4f4e27eca32412b9006d9b9c4b22f836",
+      "math": [],
+      "tables": 0
+    },
+    "section-20-3": {
+      "text_sha256": "9fc7364da9eba6252de2eb37052c6e873ba7814b3c2363f67266f20e391562c6",
+      "math": [],
+      "tables": 0
+    },
+    "D20.3-01": {
+      "text_sha256": "1a97bf5ad281b5d17ed3f4b36e01938771bcf261acf42c135a46658d84088275",
+      "math": [],
+      "tables": 0
+    },
+    "D20.3-02": {
+      "text_sha256": "d7789352bda8be90f5386004101e93f7ff10d29ecc7399f1f203a9a31baf19f7",
+      "math": [],
+      "tables": 0
+    },
+    "section-20-4": {
+      "text_sha256": "30b0bd0475fe208d4446e836b87ebd4341f778505c2c14903224f9cff4d223bf",
+      "math": [
+        "K/S",
+        "K/F",
+        "F=Se^{(r-q)T}",
+        "e^{-qT}N(d_1)",
+        "e^{-qT}",
+        "-e^{-qT}"
+      ],
+      "tables": 0
+    },
+    "D20.4-01": {
+      "text_sha256": "766951b46d0d5660f5809313453c4f433ca15cba4fb263d3c475e97417f94dbb",
+      "math": [],
+      "tables": 0
+    },
+    "section-20-5": {
+      "text_sha256": "f8c3260820eef4daf8a791cf5f48c3418669a67c677e90831635876647567405",
+      "math": [
+        "K/S=.90/.95/1/1.05/1.10",
+        "\\sigma^2T",
+        "\\log(K/F)/\\sqrt T"
+      ],
+      "tables": 0
+    },
+    "D20.5-01": {
+      "text_sha256": "eae19fb8c49f272b9c01314ce62ad6bf04fcb99e2674d6fc18a9e1983e87ae4e",
+      "math": [],
+      "tables": 0
+    },
+    "D20.5-02": {
+      "text_sha256": "28357961b9a141ea0e22ab9e9abaaecc1a63b54a707908768865c00aa5b2bd59",
+      "math": [],
+      "tables": 0
+    },
+    "section-20-6": {
+      "text_sha256": "90640e991c853004c8f0e867d12530dcf37e361263f5367b523c6910bf28ad09",
+      "math": [
+        "\\Delta_{MV}=\\Delta_{BSM}+\\mathrm{vega}\\,\\partial\\sigma/\\partial S",
+        "\\sigma(S)"
+      ],
+      "tables": 0
+    },
+    "D20.6-01": {
+      "text_sha256": "345ce68ac08d8335d2a3c1e7be1e6377450ad3f1dd8c595685b034848eddc4a9",
+      "math": [],
+      "tables": 0
+    },
+    "section-20-7": {
+      "text_sha256": "769a694b8aadcdf4f1b9bfc9f5aa1e117263be7c75cc520b9a5c7d33de9a6e9d",
+      "math": [],
+      "tables": 0
+    },
+    "D20.7-01": {
+      "text_sha256": "8d2984e3811fc2e09ec7108f2ac28460a288f9b113c034b007b439f53dd2ce2d",
+      "math": [],
+      "tables": 0
+    },
+    "section-20-8": {
+      "text_sha256": "debd713df4e2536c9e102b50c92fe3a2bd10eada3ea1b8421a590363c6889870",
+      "math": [
+        "S=50,r=12\\%,T=1/12",
+        "p=(50e^{rT}-42)/(58-42)"
+      ],
+      "tables": 0
+    },
+    "D20.8-01": {
+      "text_sha256": "f0ef9d914d0794ced88210ec74b15d38c6d8a9927bf56bca1ffc1031d27267dc",
+      "math": [],
+      "tables": 0
+    },
+    "D20.8-02": {
+      "text_sha256": "683ddc5ba221c949814fa7f525cef418a08cb60eb730b02d76a71aafe0589b6f",
+      "math": [],
+      "tables": 0
+    },
+    "section-20-appendix": {
+      "text_sha256": "a162a5f58c803503450ec6081782f1f7278be75431304619d9a1fc096c8b3e97",
+      "math": [
+        "f_Q(K)=e^{rT}\\partial^2c/\\partial K^2",
+        "e^{rT}[c(K-h)-2c(K)+c(K+h)]/h^2"
+      ],
+      "tables": 0
+    },
+    "D20.appendix-01": {
+      "text_sha256": "103e299c7660914b03bc5c7a90ef87fbf2a252e8d50b21955eda203b20897f48",
+      "math": [],
+      "tables": 0
+    },
+    "D20.appendix-02": {
+      "text_sha256": "7ca15011a43a4121b2b652c3ca73b9eac747e827f91f4ebe74149bccf6ebd454",
+      "math": [],
+      "tables": 0
+    },
+    "section-21-1": {
+      "text_sha256": "17d9c7d31107a612f2762261714339e328caaf37161b4ed3fd93db23b0182376",
+      "math": [
+        "u=e^{\\sigma\\sqrt{\\Delta t}},d=1/u,p=[e^{(r-q)\\Delta t}-d]/(u-d)"
+      ],
+      "tables": 0
+    },
+    "D21.1-01": {
+      "text_sha256": "97902764dc685690114a9ccd4e74143009dfef3b486738ea91d71b85d8d6fc78",
+      "math": [],
+      "tables": 0
+    },
+    "D21.1-02": {
+      "text_sha256": "1da0052ff5d3d0eeecc3c1e1f2e2beb8e23686f999afb779dd98e476aad439b3",
+      "math": [],
+      "tables": 0
+    },
+    "section-21-2": {
+      "text_sha256": "be3d9d8a0f356fab8b862fc6f9550cd74f33bffe8ffef7ede658b32a876d0b35",
+      "math": [
+        "r_f",
+        "a=1"
+      ],
+      "tables": 0
+    },
+    "D21.2-01": {
+      "text_sha256": "2b14f7f8156d505611399d9a0757c32f5325c790d9cc824e562c9e707b411f80",
+      "math": [],
+      "tables": 0
+    },
+    "section-21-3": {
+      "text_sha256": "4331fd9e32d914c6bff615db1045939f64acb1e828dc0e62c67a536195422ef2",
+      "math": [
+        "S^*=S-PV(D)",
+        "S^*=49.999218"
+      ],
+      "tables": 0
+    },
+    "D21.3-01": {
+      "text_sha256": "8d357f5f59df695cdf951ede259f40e8ccbc49ec973c1c6c5c6dc3690f770c6a",
+      "math": [],
+      "tables": 0
+    },
+    "D21.3-02": {
+      "text_sha256": "f1e6fccbff3825c9536520f535612892691968e483d52abc9ef2286b6d22f6e2",
+      "math": [],
+      "tables": 0
+    },
+    "section-21-4": {
+      "text_sha256": "6ad44ad493395aebeb8a190a27761a44c3f6002061c9fad93730b91f9ecc9b8c",
+      "math": [
+        "\\sigma\\sqrt{\\Delta t}",
+        "p_m=2/3",
+        "p_{u,d}=1/6\\pm\\sqrt{\\Delta t/(12\\sigma^2)}(r-q-\\sigma^2/2)",
+        "S=.790,K=.795,r=6\\%,r_f=10\\%,\\sigma=4\\%,T=.75,N=3"
+      ],
+      "tables": 0
+    },
+    "D21.4-01": {
+      "text_sha256": "12bb36baf46fd7d60137ec59496a7b14074a592c427d45fde0b36945be7d6d4a",
+      "math": [],
+      "tables": 0
+    },
+    "D21.4-02": {
+      "text_sha256": "6dbc9433f57f395af8bb76d74c3730144c5a761250abbc607a465d0278cc15bc",
+      "math": [],
+      "tables": 0
+    },
+    "section-21-5": {
+      "text_sha256": "ad7b30d8168c70c0dc0e3c5b154d8d1ee0e2c3ab0cdd61cd076734622f0c3b53",
+      "math": [
+        "\\sigma(t)",
+        "\\sigma_f",
+        "\\sigma^2(t)t=\\int_0^t\\sigma_f^2(s)\\,ds",
+        "\\sigma^2(t_i)t_i=iV/N",
+        "u=e^{\\sqrt{V/N}}"
+      ],
+      "tables": 0
+    },
+    "D21.5-01": {
+      "text_sha256": "7f55e5925e979d358c625e47a8f2c659fdb040a5215fdb34907e3f5180a09131",
+      "math": [],
+      "tables": 0
+    },
+    "D21.5-02": {
+      "text_sha256": "8b945eda926cc90f69c869518a1edab4fbc9509dddc09873b6deaf34675d1698",
+      "math": [],
+      "tables": 0
+    },
+    "section-21-6": {
+      "text_sha256": "2aeabb426820be6890e65695ddca27f80b24f8fe365d2167a333116c42159a55",
+      "math": [
+        "S_{i+1}=S_i\\exp[(r-q-\\sigma^2/2)\\Delta t+\\sigma\\sqrt{\\Delta t}Z_i]"
+      ],
+      "tables": 0
+    },
+    "D21.6-01": {
+      "text_sha256": "5f4ad3390cfee23c221cc6a353816f9035fe6dddc9080356732ee4cf3b7a3355",
+      "math": [],
+      "tables": 0
+    },
+    "D21.6-02": {
+      "text_sha256": "21917f8733af9486aac7cb9fa7c8d9b3649622f8ac16d5a8a7162f6f90fd2fc2",
+      "math": [],
+      "tables": 0
+    },
+    "section-21-7": {
+      "text_sha256": "11192bb49bbea63be2bd7757591df0acfa2ff6e023ed1cdd81ea65b2c0258d51",
+      "math": [],
+      "tables": 0
+    },
+    "D21.7-01": {
+      "text_sha256": "98a7d717aba573223a0fb7bc0f4175e09c25f4b361cf3e9544242cc949b5c4b0",
+      "math": [],
+      "tables": 0
+    },
+    "D21.7-02": {
+      "text_sha256": "02b54a9c1a85087f8a1c7a5d7e2988152086288dc5a4164b568290b0021c6b8e",
+      "math": [],
+      "tables": 0
+    },
+    "section-21-8": {
+      "text_sha256": "cd8c0b79c6f396487bdc4f671134ba98697572ba030bdcd53e540258da273f30",
+      "math": [
+        "Ke^{-r\\tau}"
+      ],
+      "tables": 0
+    },
+    "D21.8-01": {
+      "text_sha256": "4d5ee980d17e6c50354875a110c28d51b2dd36fe1913cf8eb3795d4ffe6ed2ea",
+      "math": [],
+      "tables": 0
+    },
+    "D21.8-02": {
+      "text_sha256": "8c8356a5ee6cdecb61bb61b9db33af2d400fcc87739cb611443d10a17f7e9085",
+      "math": [],
+      "tables": 0
+    },
+    "D21.8-03": {
+      "text_sha256": "05f2e27aa4dc2d0e51c318c67024edefaa30fc301b8195e271ea99517e73bed0",
+      "math": [],
+      "tables": 0
+    }
+  }
+}
