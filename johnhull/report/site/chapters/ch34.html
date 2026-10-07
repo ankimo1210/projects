@@ -1,0 +1,514 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hull Ch34 補足教材</title><style>/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+.lesson{margin:2rem 0;padding:1.4rem;background:var(--surface);border-radius:10px}
+    .requirement{padding:.6rem 0;border-bottom:1px solid var(--rule)}
+    .caution{padding:.8rem;border-left:3px solid var(--series-2)}
+    p,li{line-height:1.85} table{width:100%;border-collapse:collapse}
+    th,td{padding:.5rem;text-align:left;border-bottom:1px solid var(--rule)}
+    pre{overflow-x:auto} .lesson{overflow-wrap:anywhere} mjx-container{overflow-x:auto;max-width:100%}
+    nav{line-height:2} .wrap{max-width:1060px;margin:auto;padding:1.3rem}
+    </style><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><body><main class="wrap"><nav><a href="ch01.html">Ch1</a> · <a href="ch02.html">Ch2</a> · <a href="ch03.html">Ch3</a> · <a href="ch04.html">Ch4</a> · <a href="ch05.html">Ch5</a> · <a href="ch06.html">Ch6</a> · <a href="ch07.html">Ch7</a> · <a href="ch08.html">Ch8</a> · <a href="ch09.html">Ch9</a> · <a href="ch10.html">Ch10</a> · <a href="ch11.html">Ch11</a> · <a href="ch12.html">Ch12</a> · <a href="ch13.html">Ch13</a> · <a href="ch14.html">Ch14</a> · <a href="ch15.html">Ch15</a> · <a href="ch16.html">Ch16</a> · <a href="ch17.html">Ch17</a> · <a href="ch18.html">Ch18</a> · <a href="ch19.html">Ch19</a> · <a href="ch20.html">Ch20</a> · <a href="ch21.html">Ch21</a> · <a href="ch22.html">Ch22</a> · <a href="ch23.html">Ch23</a> · <a href="ch24.html">Ch24</a> · <a href="ch25.html">Ch25</a> · <a href="../exotics.html">Ch26</a> · <a href="../numerics.html">Ch27</a> · <a href="../exotics.html">Ch28</a> · <a href="ch29.html">Ch29</a> · <a href="ch30.html">Ch30</a> · <a href="ch31.html">Ch31</a> · <a href="ch32.html">Ch32</a> · <a href="ch33.html">Ch33</a> · <a href="ch34.html">Ch34</a> · <a href="ch35.html">Ch35</a> · <a href="ch36.html">Ch36</a> · <a href="ch37.html">Ch37</a> · <a href="../index.html">ポータル</a> · <a href="../../../book/_build/html/index.html">Book</a></nav><nav><a href="#section-34-1">§34.1</a>　<a href="#section-34-2">§34.2</a>　<a href="#section-34-3">§34.3</a>　<a href="#section-34-4">§34.4</a>　<a href="#section-34-5">§34.5</a>　<a href="#section-34-6">§34.6</a></nav><h1>Ch34 節別補足教材</h1>
+<p>刊行時点の原典本文を学ぶ。現在の市場条件や法令の適用はこの教材の対象に含めない。</p>
+<section class="lesson" id="section-34-1">
+<h2>§34.1 Variations on the Vanilla Deal</h2>
+<p>出典: Hull 11e Global Edition pp.773–775。</p>
+<p>想定元本が予定通り変わる、両脚の元本や支払頻度が異なる、basis swapになる、といったvanillaの変形を整理する。決まったcashflowにはforwardを使い、同一通貨のOISで割り引く。Reference rate移行は原典執筆時点の制度説明として扱う。</p>
+<h3>要点の読み方</h3>
+<p>脚ごとに元本<span class="math inline"><span data-source-tex="L_i">\(L_i\)</span></span>、coupon、frequency、day count、payment日、元本交換の有無を指定する。予定済みのstep-up／amortizingと、rateで元本が変わるindex-amortizingは別である。Known cashflowのPVは<span class="math inline"><span data-source-tex="\sum_iCF_iP(0,T_i)">\(\sum_iCF_iP(0,T_i)\)</span></span>、floating projectionは別のreference curveから作り、同一通貨OISのdiscountと分ける。</p>
+<p>BS34.1はtrade2021-01-04、effective2021-01-11、maturity2026-01-11、Following／U.S.営業日という入力である。</p>
+<table>
+<thead>
+<tr>
+<th>脚</th>
+<th style="text-align:right">元本USD</th>
+<th>Coupon</th>
+<th>頻度</th>
+<th>Basis</th>
+<th style="text-align:right">未調整期間数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft固定</td>
+<td style="text-align:right">100M</td>
+<td>2%</td>
+<td>半年Jan／Jul11</td>
+<td>ACT365</td>
+<td style="text-align:right">10</td>
+</tr>
+<tr>
+<td>Goldman変動</td>
+<td style="text-align:right">120M</td>
+<td>3か月compounded SOFR</td>
+<td>四半期Jan／Apr／Jul／Oct11</td>
+<td>ACT360</td>
+<td style="text-align:right">20</td>
+</tr>
+</tbody>
+</table>
+<p>未調整の初回は固定181/365、変動90/360。具体的なU.S.休日集合は本文にないのでcaller calendarを必要とする。合成休日／週末でFollowingと月末anchorの挙動を検査するが、休日調整済みの原典scheduleを再現したとはしない。Payment lagも別入力である。</p>
+<p>固定couponは<span class="math inline"><span data-source-tex="L_iK_i\alpha_i">\(L_iK_i\alpha_i\)</span></span>。Forward floatingは<span class="math inline"><span data-source-tex="L_i(F_i+s_i)\alpha_i">\(L_i(F_i+s_i)\alpha_i\)</span></span>を原則とし、既知fixingは予測へ戻さない。日次RFRは<span class="math inline"><span data-source-tex="G=\prod_d(1+r_d\alpha_d)">\(G=\prod_d(1+r_d\alpha_d)\)</span></span>で観測済み積を扱う。支払済みcashを除外し、元本のinitial／final交換を独立条件として足す。</p>
+<p>同一元本・single curve・標準resetならfloating PVが<span class="math inline"><span data-source-tex="L[P(0,t_0)-P(0,t_n)]">\(L[P(0,t_0)-P(0,t_n)]\)</span></span>へtelescopingすることを、独立coupon表とFRA分解で確認する。Basisがあればこの同一視は崩れる。Reference rate移行の説明は原典時点の内容であり、現行市場の契約仕様へ更新した結果ではない。</p>
+<div class="requirement" id="D34.1-01">
+<p>step-up/amortizing元本、支払頻度、accrual day countを脚ごとに指定（773–774）。</p>
+<p>各couponを独立手計算したcashflow表と照合。元本交換の有無を別条件とする。</p>
+</div>
+<div class="requirement" id="D34.1-02">
+<p>BS34.1の両脚をterm sheetからschedule化（774）。</p>
+<p>固定100M対変動120M、半年対四半期、ACT365対ACT360の違いを保持。</p>
+</div>
+<div class="requirement" id="D34.1-03">
+<p>forward projectionとOIS discountを分け、basis swapを説明（774–775）。</p>
+<p>等しい元本/頻度に戻せば標準IRSと一致。異なるreference rateのcurveを同一視しない。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>BS34.1 p774：trade 2021-01-04、effective 2021-01-11、maturity 2026-01-11、Following/米国営業日。Microsoft固定USD100M・2%・ACT365、Jan/Jul11日（初回Jul11）。Goldman変動USD120M・3か月compounded SOFR・ACT360、Jan/Apr/Jul/Oct11日（初回Apr11）。これは入力条件で価格はない。休日調整済みscheduleは <strong>未検証</strong>（holiday calendar未指定の細部は要確認）。LIBOR移行等は<strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong>。</p>
+<h3>計算の読み方</h3>
+<p>BS34.1: raw10/20期間・100M/120M・2%・ACT365/360、独立cashflow/PV telescope/日次RFR積、元本列・known fixing</p>
+<p>Raw source10／20期間と100M／120Mを保持。U.S.具体holiday集合は未指定でcaller calendarのFollowing例は合成、adjusted source pinではない。Projection／OIS、known fixing、元本交換、payment lagは別入力。</p>
+<div class="caution">
+<p>Raw source10／20期間と100M／120Mを保持。U.S.具体holiday集合は未指定でcaller calendarのFollowing例は合成、adjusted source pinではない。Projection／OIS、known fixing、元本交換、payment lagは別入力。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-34-2">
+<h2>§34.2 Compounding Swaps</h2>
+<p>出典: Hull 11e Global Edition pp.775–776。</p>
+<p>各期間に発生したcouponを直ちに払わず、別に指定された率で複利累積して後で支払う。coupon rateとcompounding rateを区別する。将来forwardを実現値として置く評価は一般に近似だが、spreadがない場合やspreadの付け方によって厳密となる条件を説明する。</p>
+<h3>要点の読み方</h3>
+<p>発生couponと、既に未払いの残高へ掛けるcompounding rateを分ける。期間末にcoupon <span class="math inline"><span data-source-tex="C_i">\(C_i\)</span></span>を加える規約は</p>
+<div class="math block">
+<span data-source-tex="B_i=B_{i-1}g_i+C_i,\quad
+B_n=B_0\prod_{j=1}^ng_j+\sum_{i=1}^nC_i\prod_{j=i+1}^ng_j.">\(B_i=B_{i-1}g_i+C_i,\quad
+B_n=B_0\prod_{j=1}^ng_j+\sum_{i=1}^nC_i\prod_{j=i+1}^ng_j.\)</span>
+</div>
+<p>支払うのは最後の<span class="math inline"><span data-source-tex="B_n">\(B_n\)</span></span>一回なので<span class="math inline"><span data-source-tex="P(0,T_n)B_n">\(P(0,T_n)B_n\)</span></span>で割り引く。逐次coupon払いのswapとはcashflowの時点が異なる。</p>
+<p>Ex34.1は元本100M、年1回3年、固定coupon4%／compounding3.9%、floating forward coupon5%／compounding4.8%、OIS4%年複利。Receive floatingの残高と価格は次のとおり。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">年末</th>
+<th style="text-align:right">固定残高（M）</th>
+<th style="text-align:right">変動残高（M）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">5</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">8.156</td>
+<td style="text-align:right">10.24</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">12.474084</td>
+<td style="text-align:right">15.731520</td>
+</tr>
+</tbody>
+</table>
+<p>精密PVは<span class="math inline"><span data-source-tex="(15.731520-12.474084)/1.04^3=2.895848743">\((15.731520-12.474084)/1.04^3=2.895848743\)</span></span>M。原典は途中値15.731／12.474から2.895461140→2.895を表示する。精密値を通常丸めた2.896と表示値経路2.895を分け、原典の最終桁へ強制的に計算を合わせない。</p>
+<p>BS34.2は100M同士、四半期20期間を2026-01-11に一括払。固定coupon2%を2.3%で複利（ACT365）、floating SOFR+20bpをSOFRで複利（ACT360）する。Coupon spreadとcompounding spreadは同じ入力ではない。</p>
+<p>Additive <span class="math inline"><span data-source-tex="g=1+(R+s)\alpha">\(g=1+(R+s)\alpha\)</span></span>とmultiplicative <span class="math inline"><span data-source-tex="g=(1+R\alpha)(1+s\alpha)">\(g=(1+R\alpha)(1+s\alpha)\)</span></span>の差は<span class="math inline"><span data-source-tex="Rs\alpha^2">\(Rs\alpha^2\)</span></span>。<span class="math inline"><span data-source-tex="s=0">\(s=0\)</span></span>は一致する。Forwardが実現すると置く方法は一般には近似で、single-curve floating bank設定のzero compound spreadやdeterministic multiplicative spreadに厳密telescoping条件がある。Basis／任意coupon／exerciseへ広げない。独立の積の和・幾何級数・8経路Q木で厳密条件とadditiveの誤差を照合する。</p>
+<div class="requirement" id="D34.2-01">
+<p>coupon発生と未払残高への利息付与を別ステップで記述（775–776）。</p>
+<p>Ex34.1の毎年残高を再帰と幾何級数で独立計算。</p>
+</div>
+<div class="requirement" id="D34.2-02">
+<p>additive spread Q[1+(R+s)τ] とmultiplicative Q(1+Rτ)(1+sτ)を区別しforward実現法の条件を明記（776）。</p>
+<p>s=0で一致、非zero spreadでは交差項の差を確認。</p>
+</div>
+<div class="requirement" id="D34.2-03">
+<p>BS34.2をschedule付きで解釈し、最後の一括支払を割引（775）。</p>
+<p>標準逐次払と支払日が異なることをcashflow表で確認。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<ul>
+<li>BS34.2 p775：§34.1と同じtrade/effective/maturity、双方元本100M、四半期計算・2026-01-11一括払。固定coupon2%を2.3%で複利、ACT365。変動SOFR+20bpをSOFRで複利、ACT360。契約入力であり価格固定値なし。</li>
+<li>Ex34.1 p776：年1回、3年、元本100M、固定coupon4%/compounding3.9%、forward変動coupon5%/compounding4.8%、OIS年複利4%。固定残高4→8.156→12.474M、変動5→10.24→15.731M、価格2.895M（receive floating）。</li>
+<li>独立計算：固定12.474084M、変動15.731520M、PV2.895848743M。固定終値は表示丸め内、変動終値を普通に丸めると15.732、PVは2.896となり <strong>✗通常丸めでは最終桁不一致</strong>。印刷の途中値15.731/12.474を使えば2.895461140→2.895で<strong>✓本文の途中切捨て経路を再現</strong>。厳密計算を印刷2.895へ強制しない。標準IRSテストはあるが本例の専用固定値はない。</li>
+</ul>
+<h3>計算の読み方</h3>
+<p>Ex34.1全残高・精密2.895848743/表示値経路2.895、BS34.2の20期間、独立積の和/8経路木のspread厳密条件</p>
+<p>Forward-realizedは一般に近似。Single-curve／zero compound spreadまたはdeterministic multiplicative spreadの厳密条件とadditive誤差を分ける。精密PV2.895848743と原典途中切捨てroute2.895は別。</p>
+<div class="caution">
+<p>Forward-realizedは一般に近似。Single-curve／zero compound spreadまたはdeterministic multiplicative spreadの厳密条件とadditive誤差を分ける。精密PV2.895848743と原典途中切捨てroute2.895は別。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-34-3">
+<h2>§34.3 Currency and Nonstandard Swaps</h2>
+<p>出典: Hull 11e Global Edition pp.776–777。</p>
+<p>Currency swapはfixed/fixedに限らずfloating/floatingやfixed/floatingも可能で、各通貨の脚を評価してspotで換算する。取引価格と無裁定の曲線を整合させる条件が必要となる。CMSや異なる通貨での支払いでは、単純にforwardを代入するだけでは足りずconvexity、timing、quantoの調整が必要になる。</p>
+<h3>要点の読み方</h3>
+<p>Receive domestic／pay foreignの価値は</p>
+<div class="math block">
+<span data-source-tex="V_D=PV_D-X_{D/F}PV_F,">\(V_D=PV_D-X_{D/F}PV_F,\)</span>
+</div>
+<p>ここでspot <span class="math inline"><span data-source-tex="X_{D/F}">\(X_{D/F}\)</span></span>はdomestic units per foreignで、各脚には契約で指定した元本交換も含める。脚と通貨を反転すれば新価値は<span class="math inline"><span data-source-tex="-V_D/X_{D/F}">\(-V_D/X_{D/F}\)</span></span>である。同じCIP設定では<span class="math inline"><span data-source-tex="X_{D/F}(0,T)=X_{D/F}(0)P_F(0,T)/P_D(0,T)">\(X_{D/F}(0,T)=X_{D/F}(0)P_F(0,T)/P_D(0,T)\)</span></span>となり、spot換算とFX forwardでのcashflow換算が一致する。</p>
+<p>Initial mid-price0にするのは自動で値を0へclipする操作ではない。Foreign coupon annuity <span class="math inline"><span data-source-tex="A_F">\(A_F\)</span></span>が元本込みなら、明示spread</p>
+<div class="math block">
+<span data-source-tex="s=\frac{PV_D/X_{D/F}-PV_{F,\rm base}}{A_F}">\(s=\frac{PV_D/X_{D/F}-PV_{F,\rm base}}{A_F}\)</span>
+</div>
+<p>を求めて再価格する。Observed collateral／basis FX curveに任意のsingle-currency discountを代入してCIPが成立したとしない。</p>
+<p>CMSのconvexityは非線形なrate、timingは観測／支払日の違い、quantoは参照通貨／支払通貨の違いによる。§30.1–3のlocal CMS mean、frozen timing factor、forward-FX quanto factorを個別に記録し、それぞれvol／相関0の極限を確認する。Quantoの相関quoteは<strong>foreign per domestic</strong>で、上のspot脚換算と逆向きである。</p>
+<p>本文に価格pinはない。独立cashflow換算・spread求解・正規化Gaussian tiltで検証する合成例であり、補正factorを掛けた式を一般のstochastic multi-curve／collateral pricingへ無条件に拡張しない。</p>
+<div class="requirement" id="D34.3-01">
+<p>各通貨のcashflowを評価しdomestic−spot×foreignの符号で集約（776–777）。</p>
+<p>通貨とreceive/payを反転するとFX換算後の価値が符号反転。元本交換も確認。</p>
+</div>
+<div class="requirement" id="D34.3-02">
+<p>curve/basisを整合させ、market mid-priceで初期価値0になる条件を明記（777）。</p>
+<p>曲線・spreadを一つずつ変え、何を校正してzeroを作ったかを残す。</p>
+</div>
+<div class="requirement" id="D34.3-03">
+<p>CMS/非標準resetのconvexity、支払日のtiming、cross-currency quantoを区別（777）。</p>
+<p>各correlation/vol=0の極限で標準forward評価へ戻る。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>新規数値価格・表なし。再計算対象なし。</p>
+<h3>計算の読み方</h3>
+<p>印刷例なし。通貨leg/FX forward等価・反転・coupon spread較正、convexity/timing/quanto個別極限・独立Gaussian tilt</p>
+<p>Spot国内/外貨とquanto forward外貨/国内のFX quoteを分ける。Mid0は明示coupon spread solve。CMS/timing/quantoの合成はlocal/frozen近似で一般collateral／stochastic multicurveへ無条件拡張しない。</p>
+<div class="caution">
+<p>Spot国内/外貨とquanto forward外貨/国内のFX quoteを分ける。Mid0は明示coupon spread solve。CMS/timing/quantoの合成はlocal/frozen近似で一般collateral／stochastic multicurveへ無条件拡張しない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-34-4">
+<h2>§34.4 Equity Swaps</h2>
+<p>出典: Hull 11e Global Edition pp.777–779。</p>
+<p>配当を再投資するtotal return indexと固定または変動金利を交換する。元本を借り指数に投資する複製により、frictionlessなequity-for-floating swapは開始時と各支払直後に価値0となる。支払日の間では既知のovernight実績と残り期間forward、および指数の累積変化を扱う。</p>
+<h3>要点の読み方</h3>
+<p>Equity-for-floating swapは同じ元本<span class="math inline"><span data-source-tex="L">\(L\)</span></span>についてtotal-return indexの期間returnと金利脚を交換する。Total-return indexは配当を再投資するので、price indexの場合だけ必要な配当を別に扱い、TR indexへ二重に加えない。Resetごとの保有単位は<span class="math inline"><span data-source-tex="L/I_0">\(L/I_0\)</span></span>で、観測後の新resetは<span class="math inline"><span data-source-tex="L/I_1">\(L/I_1\)</span></span>へ更新する。既に観測したが未払いのnet cashはpendingとして残す。</p>
+<p>BS34.3は2021-01-11〜2026-01-11、双方100M、四半期Jan／Apr／Jul／Oct11日、MicrosoftがS&amp;P500 total return、Goldmanが3か月compounded SOFR ACT360、同日決済という条件。指数水準・価格pinはない。Frictionless・同一curve・同日支払のfloating fundingとの複製で開始時と支払直後のnet PVは0となるが、期中の価値まで0とはしない。</p>
+<p><span class="math inline"><span data-source-tex="t">\(t\)</span></span>のindex ratio <span class="math inline"><span data-source-tex="q=I_t/I_0">\(q=I_t/I_0\)</span></span>、次回支払discount <span class="math inline"><span data-source-tex="P=P(t,T)">\(P=P(t,T)\)</span></span>、観測済みfunding積<span class="math inline"><span data-source-tex="G_{\rm known}">\(G_{\rm known}\)</span></span>、支払測度での残り積mean<span class="math inline"><span data-source-tex="G_{\rm rem}">\(G_{\rm rem}\)</span></span>とすると</p>
+<div class="math block">
+<span data-source-tex="PV_{\rm equity}=L(q-P),\quad
+PV_{\rm funding}=LP(G_{\rm known}G_{\rm rem}-1),">\(PV_{\rm equity}=L(q-P),\quad
+PV_{\rm funding}=LP(G_{\rm known}G_{\rm rem}-1),\)</span>
+</div>
+<div class="math block">
+<span data-source-tex="V_{\rm net}=L[q-PG_{\rm known}G_{\rm rem}].">\(V_{\rm net}=L[q-PG_{\rm known}G_{\rm rem}].\)</span>
+</div>
+<p>同一bankの残りgrowthが<span class="math inline"><span data-source-tex="\,1/P">\(\,1/P\)</span></span>なら<span class="math inline"><span data-source-tex="V=L(q-G_{\rm known})">\(V=L(q-G_{\rm known})\)</span></span>。原典の<span class="math inline"><span data-source-tex="L(I_t-I_0)/I_0">\(L(I_t-I_0)/I_0\)</span></span>を単独equity couponの汎用PVとせず、fundingを差し引く条件との関係を読む。</p>
+<p>TN19のsimple couponは前回resetの<span class="math inline"><span data-source-tex="R_0\alpha">\(R_0\alpha\)</span></span>が固定され、<span class="math inline"><span data-source-tex="G_{\rm known}=1+R_0\alpha">\(G_{\rm known}=1+R_0\alpha\)</span></span>、<span class="math inline"><span data-source-tex="P=(1+R_t\beta)^{-1}">\(P=(1+R_t\beta)^{-1}\)</span></span>で<span class="math inline"><span data-source-tex="V=L[q-(1+R_0\alpha)/(1+R_t\beta)]">\(V=L[q-(1+R_0\alpha)/(1+R_t\beta)]\)</span></span>となる。日次RFRはknown productと残りgrowthを掛けるので交差項を落とさない。</p>
+<p>Observation／payment lagがあれば<span class="math inline"><span data-source-tex="E_t[D_{t,T}I_{\rm obs}/I_0]">\(E_t[D_{t,T}I_{\rm obs}/I_0]\)</span></span>を必要なtiming modelから明示入力する。任意projection curveだけでstochastic basisの期待growthを決めない。独立Gaussian給付求積、相関stochastic bank／equity MC（basis有無）、配当再投資、reset／pending cashを検証する合成範囲であり、原典の市場価格を再現したものではない。</p>
+<div class="requirement" id="D34.4-01">
+<p>total return index、resetごとの株式単位、元本Lを定義（777–778）。</p>
+<p>price indexのみの場合に配当を別途加える条件を説明。開始/支払直後のnet PV0を複製で確認。</p>
+</div>
+<div class="requirement" id="D34.4-02">
+<p>BS34.3のequity return L(I1/I0−1)とSOFR脚の同日決済（778）。</p>
+<p>同一Lと同一期間でborrowing＋index investmentのcashflowが再現されること。</p>
+</div>
+<div class="requirement" id="D34.4-03">
+<p>中途時点のleg PVとnet MTM、既知利息と未確定利息を分離（778–779）。</p>
+<p>原典L(E−E0)/E0をそのまま単独legの一般PVとせず、Technical Note19の導出条件を確認。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>BS34.3 p778は2021-01-04取引、2021-01-11開始、2026-01-11終了、Following/U.S.、双方100M、quarterly Jan/Apr/Jul/Oct11日、Microsoftがtotal return S&amp;P500、Goldmanが3か月compounded SOFR ACT360。指数観測値・価格例はない。再計算対象なし。制度・市場慣行は <strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong>。</p>
+<h3>計算の読み方</h3>
+<p>TN19 net式/独立Gaussian求積、TR配当再投資/reset・pending、既知RFR×残growth、相関stochastic bank/equity MC（basis有無）</p>
+<p>単独equity leg L(ratio−P)とnetを分ける。Known RFR×残りgrowthのcross項を保持。Lagのdiscounted terminal ratioとprojection期待growthは明示入力。指数／価格pinなし、合成TN19／stochastic bank検証。</p>
+<div class="caution">
+<p>単独equity leg L(ratio−P)とnetを分ける。Known RFR×残りgrowthのcross項を保持。Lagのdiscounted terminal ratioとprojection期待growthは明示入力。指数／価格pinなし、合成TN19／stochastic bank検証。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-34-5">
+<h2>§34.5 Swaps with Embedded Options</h2>
+<p>出典: Hull 11e Global Edition pp.779–781。</p>
+<p>条件を満たす日のみ固定利息が発生するaccrual swapは、通常swapと日次binary option列に分解できる。解約権は一回なら反対方向のEuropean swaption、複数回ならBermudanになる。複利swapの解約では、未払複利残高とspreadの扱いがexercise価値を変える。</p>
+<h3>要点の読み方</h3>
+<p>Accrual swapは参照rateがcutoffより低い日だけ固定couponを積む。年間固定rate <span class="math inline"><span data-source-tex="Q">\(Q\)</span></span>、元本<span class="math inline"><span data-source-tex="L">\(L\)</span></span>、対象日数<span class="math inline"><span data-source-tex="n_1">\(n_1\)</span></span>、basis <span class="math inline"><span data-source-tex="n_2">\(n_2\)</span></span>ならcouponは<span class="math inline"><span data-source-tex="QLn_1/n_2">\(QLn_1/n_2\)</span></span>で、一日額は<span class="math inline"><span data-source-tex="QL/n_2">\(QL/n_2\)</span></span>。原典cutoffはSOFR2%。非営業日にはpreceding business fixingを使う。既知rateがcutoffと等しい日は、strict「未満」のaccrualへ含めず、除くbinaryの補数側へ含める。</p>
+<p>通常couponからcutoff以上の日のbinary列を引ける。観測<span class="math inline"><span data-source-tex="t_i">\(t_i\)</span></span>、natural payment <span class="math inline"><span data-source-tex="t_i+\tau">\(t_i+\tau\)</span></span>、実際のpayment <span class="math inline"><span data-source-tex="s_i">\(s_i\)</span></span>を分け、signed ratio loading <span class="math inline"><span data-source-tex="\ell">\(\ell\)</span></span>の凍結近似では</p>
+<div class="math block">
+<span data-source-tex="d_2^*=\frac{\log(F_i/K)+(\rho\sigma_i\ell-\sigma_i^2/2)t_i}{\sigma_i\sqrt{t_i}},\quad
+V_i^{\ge K}=\frac{QL}{n_2}P(0,s_i)N(d_2^*).">\(d_2^*=\frac{\log(F_i/K)+(\rho\sigma_i\ell-\sigma_i^2/2)t_i}{\sigma_i\sqrt{t_i}},\quad
+V_i^{\ge K}=\frac{QL}{n_2}P(0,s_i)N(d_2^*).\)</span>
+</div>
+<p>未満は<span class="math inline"><span data-source-tex="N(-d_2^*)">\(N(-d_2^*)\)</span></span>の補数。全日成立／不成立、zero volのknown indicator、実支払測度の独立binary密度求積で照合する。支払が自然日より早い／遅いとloadingの符号が変わる。</p>
+<p>自分が10年6%固定受けswapを6年で解約できるなら、残り4年の反対swapを得る<strong>long 6×4 payer</strong>。相手へ解約権を与えるとshort optionになる。5年6%受固定・半年払いに2〜5年の相手解約権を付ける本文例はshort receiverのBermudanで、方向と残存tenorを明示する。</p>
+<p>複数行使のrollbackは自分の権利ならmax、相手の権利ならmin。Couponの支払後に解約を判断し、止めた後のcashflowを再び払わない。複利swapではfloating／fixedの未払残高も状態で、exercise時にnet残高を即時精算する。同じrateでも履歴により残高が違うため単一rateへ再結合しない。</p>
+<p>独立64停止方策とfull-history小木でplain／compoundingを照合する。Full-history実装は16期間までの教材用で、実市場の大規模Bermudanや連続時間収束の保証ではない。本文のspreadを固定脚へ移す4step手順は別の近似として記録し、厳密なexercise分解に混ぜない。本文は契約例のみで価格pinはない。</p>
+<div class="requirement" id="D34.5-01">
+<p>accrual coupon QL n1/n2と通常couponから除く日次binary列（779）。</p>
+<p>一日当たり額QL/n2、観測日/支払日、休日の参照fixingを一致させる。</p>
+</div>
+<div class="requirement" id="D34.5-02">
+<p>Black binaryのQL/n2×P(0,si)N(d2*)とtiming補正（779–780）。</p>
+<p>natural payment ti+τと実際siの違い。全日条件成立/不成立の極限。</p>
+</div>
+<div class="requirement" id="D34.5-03">
+<p>解約者・receive/pay・残存期間からswaption向きを決める（780）。</p>
+<p>自分が受固定10年6% swapを6年時点で解約可能→long 6×4 payer。相手に解約権を与える場合はshort option。</p>
+</div>
+<div class="requirement" id="D34.5-04">
+<p>複数解約日はBermudan、compoundingでは残高もexercise状態に含める（780–781）。</p>
+<p>支払後にfloatingをparにする条件、receive/payでmax/minの向き、spreadの4段階近似を明示。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>p779 accrual trigger SOFR2%、p780 10年receive6%を6年で解約する例、および5年半年払いreceive6%に2–5年の相手解約権を付ける例。いずれもcontract入力で価格なし。価格再計算対象なし。単なるvanilla swaptionの数値を本節印刷値の代用にしない。</p>
+<h3>計算の読み方</h3>
+<p>trigger2%・6×4 payer/2–5年short receiver、独立binary積分、plain/複利解約を全64方策と照合、同じrでも異なる残高を保持</p>
+<p>全履歴小木16期間まで、未払複利残高を保持。Owner max／counterparty min、即時精算とcoupon順序を指定。Binary timingはsigned frozen loading、strict&lt;／補数≥。4step spread proxyは近似でlarge市場Bermudan較正とは別。</p>
+<div class="caution">
+<p>全履歴小木16期間まで、未払複利残高を保持。Owner max／counterparty min、即時精算とcoupon順序を指定。Binary timingはsigned frozen loading、strict&lt;／補数≥。4step spread proxyは近似でlarge市場Bermudan較正とは別。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-34-6">
+<h2>§34.6 Other Swaps</h2>
+<p>出典: Hull 11e Global Edition pp.781–782。</p>
+<p>金利に応じ元本が変わるindex-amortizing swap、commodity swap、asset/total-return/credit/variance swapを整理する。複雑な条件を持つswapは利用者がpayoffを読み解ける必要がある。P&amp;Gの事例は二つの金利関連指標から作るspreadが支払率を大きく変える構造を示す。</p>
+<h3>要点の読み方</h3>
+<p>Index-amortizing swapの元本は観測rateの履歴により減るため、予定済みamortizingと異なる。Callerのamortization ruleは当時点までの履歴と残高を使い、将来rateを先読みしない。各時点の返済元本＋残存元本を保存する。MBS型という類似は借り手の実証モデルが自動的に決まるという意味ではない。</p>
+<p>Commodity swapは数量×単価のfloating金額と固定金額を交換する。100000 bbl／年に5M USD／年を10年払う例は、固定単価50 USD/bbl。Receive floatingなら<span class="math inline"><span data-source-tex="q_i(S_i-K_i)">\(q_i(S_i-K_i)\)</span></span>で、年の総額と単位価格を区別する。</p>
+<table>
+<thead>
+<tr>
+<th>商品</th>
+<th>受払対象</th>
+<th>確認する契約量</th>
+<th>参照</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Asset／TRS</td>
+<td>値上がり＋incomeとfunding</td>
+<td>固定元本／asset単位、TR indexの配当二重計上</td>
+<td><a href="ch25.html#section-25-7">§25.7</a></td>
+</tr>
+<tr>
+<td>CDS</td>
+<td>Credit event時の損失保護とpremium</td>
+<td>額面、回収、default時点</td>
+<td><a href="ch25.html#section-25-1">§25.1</a></td>
+</tr>
+<tr>
+<td>Variance swap</td>
+<td>Realized varianceとstrike</td>
+<td>Variance notionalと期間</td>
+<td><a href="../exotics.html#fig-varswap_payoff">§26.16</a></td>
+</tr>
+</tbody>
+</table>
+<p>BS34.4はP&amp;GがCP連動の複雑な脚を払い、BTの5.30%を受ける契約。CMT5は小数金利、Treasury cash priceはpar100当たりとして</p>
+<div class="math block">
+<span data-source-tex="s=\max\left(0,\frac{98.5(CMT5/.0578)-P_{\rm Treasury}}{100}\right),\quad
+R_{\rm PG}=CP_{30}- .0075+s.">\(s=\max\left(0,\frac{98.5(CMT5/.0578)-P_{\rm Treasury}}{100}\right),\quad
+R_{\rm PG}=CP_{30}- .0075+s.\)</span>
+</div>
+<p>元本200M、5年半期10回の初回spreadは0、残り9回に観測spreadを使う。Spread10%とCP6%なら支払率15.25%である。5.78%を数値5.78として小数CMTへ混ぜない。</p>
+<p>当時のCMT／Treasury／CP系列と取引価格は指定されない。合成指標からのpayoff、独立Gaussian正部分期待値／MC、元本保存を確認したもので、歴史的契約価値を再現したとはしない。不透明な条件を読み解けないまま取引したという原典の教訓を説明し、現在の市場規模や制度判断へ一般化しない。</p>
+<div class="requirement" id="D34.6-01">
+<p>index-amortizingをMBS型のrate依存元本として、commodity swapをfixed-for-floating数量契約として説明（781）。</p>
+<p>元本が予定済みのamortizingと区別。数量×単価の単位を確認。</p>
+</div>
+<div class="requirement" id="D34.6-02">
+<p>他章のasset/TRS/CDS/variance swapへ参照を張る（781–782）。</p>
+<p>原資産、受払対象、元本/時価、credit eventを比較表にする。</p>
+</div>
+<div class="requirement" id="D34.6-03">
+<p>BS34.4のspread構造と利率増幅を説明し、不透明な商品設計/理解不足の教訓を示す（782）。</p>
+<p>CMTは%表示、債券価格はpar100表示として同じ式へ入れる。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>商品例100,000 bbl/年に年5Mを10年支払う契約→fixed price50 USD/bbl 。BS34.4：1993-11-02、5年半年、元本200M、BT5.30%払い、P&amp;Gは平均30日CP−75bp＋spread、初回spread0、残9回にspread=max(0,[98.5×(5y CMT/5.78%)−30y Treasury price]/100)。対象Treasuryは6.25%・2023年8月満期。spread10%、CP6%なら支払15.25%。当時の指標実績・取引価格はなくvaluation再計算なし。時系列・市場規模は<strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong>。</p>
+<h3>計算の読み方</h3>
+<p>本文50 USD/bbl・CP6%/spread10%→15.25%、P&amp;G初回0/後9回、独立Gaussian正部分期待値/MC・元本保存</p>
+<p>商品数量／単価、CMT小数／par100Treasuryの単位を保持。P&amp;Gは初回spread0・後9回、CP6%+spread10%−75bp=15.25%。歴史的指標／価格なし、payoff検証を当時valuationとしない。Amortizationはcaller rule。</p>
+<div class="caution">
+<p>商品数量／単価、CMT小数／par100Treasuryの単位を保持。P&amp;Gは初回spread0・後9回、CP6%+spread10%−75bp=15.25%。歴史的指標／価格なし、payoff検証を当時valuationとしない。Amortizationはcaller rule。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+</main></body></html>

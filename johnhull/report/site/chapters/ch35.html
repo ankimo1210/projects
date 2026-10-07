@@ -1,0 +1,627 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hull Ch35 補足教材</title><style>/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+.lesson{margin:2rem 0;padding:1.4rem;background:var(--surface);border-radius:10px}
+    .requirement{padding:.6rem 0;border-bottom:1px solid var(--rule)}
+    .caution{padding:.8rem;border-left:3px solid var(--series-2)}
+    p,li{line-height:1.85} table{width:100%;border-collapse:collapse}
+    th,td{padding:.5rem;text-align:left;border-bottom:1px solid var(--rule)}
+    pre{overflow-x:auto} .lesson{overflow-wrap:anywhere} mjx-container{overflow-x:auto;max-width:100%}
+    nav{line-height:2} .wrap{max-width:1060px;margin:auto;padding:1.3rem}
+    </style><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><body><main class="wrap"><nav><a href="ch01.html">Ch1</a> · <a href="ch02.html">Ch2</a> · <a href="ch03.html">Ch3</a> · <a href="ch04.html">Ch4</a> · <a href="ch05.html">Ch5</a> · <a href="ch06.html">Ch6</a> · <a href="ch07.html">Ch7</a> · <a href="ch08.html">Ch8</a> · <a href="ch09.html">Ch9</a> · <a href="ch10.html">Ch10</a> · <a href="ch11.html">Ch11</a> · <a href="ch12.html">Ch12</a> · <a href="ch13.html">Ch13</a> · <a href="ch14.html">Ch14</a> · <a href="ch15.html">Ch15</a> · <a href="ch16.html">Ch16</a> · <a href="ch17.html">Ch17</a> · <a href="ch18.html">Ch18</a> · <a href="ch19.html">Ch19</a> · <a href="ch20.html">Ch20</a> · <a href="ch21.html">Ch21</a> · <a href="ch22.html">Ch22</a> · <a href="ch23.html">Ch23</a> · <a href="ch24.html">Ch24</a> · <a href="ch25.html">Ch25</a> · <a href="../exotics.html">Ch26</a> · <a href="../numerics.html">Ch27</a> · <a href="../exotics.html">Ch28</a> · <a href="ch29.html">Ch29</a> · <a href="ch30.html">Ch30</a> · <a href="ch31.html">Ch31</a> · <a href="ch32.html">Ch32</a> · <a href="ch33.html">Ch33</a> · <a href="ch34.html">Ch34</a> · <a href="ch35.html">Ch35</a> · <a href="ch36.html">Ch36</a> · <a href="ch37.html">Ch37</a> · <a href="../index.html">ポータル</a> · <a href="../../../book/_build/html/index.html">Book</a></nav><nav><a href="#section-35-1">§35.1</a>　<a href="#section-35-2">§35.2</a>　<a href="#section-35-3">§35.3</a>　<a href="#section-35-4">§35.4</a>　<a href="#section-35-5">§35.5</a>　<a href="#section-35-6">§35.6</a>　<a href="#section-35-7">§35.7</a>　<a href="#section-35-8">§35.8</a></nav><h1>Ch35 節別補足教材</h1>
+<p>刊行時点の原典本文を学ぶ。現在の市場条件や法令の適用はこの教材の対象に含めない。</p>
+<section class="lesson" id="section-35-1">
+<h2>§35.1 Agricultural Commodities</h2>
+<p>出典: Hull 11e Global Edition pp.785–786。</p>
+<p>農産物は作付け、収穫、保管の制約で季節性を持つ。天候は供給ショックになり、収穫前は収穫量が確定した後より不確実性が大きい。価格変化は生産・消費行動を通して平均回帰を生み、家畜と飼料価格もつながる。</p>
+<h3>要点の読み方</h3>
+<p>期末在庫と年間使用量を同じ重量単位（例：tonne）で表すと、<span class="math inline"><span data-source-tex="\text{stocks-to-use}=\text{期末在庫}/\text{年使用量}">\(\text{stocks-to-use}=\text{期末在庫}/\text{年使用量}\)</span></span> は無次元の比率になる。原典の通常20–40%は刊行時点の記述で、現在の全商品に適用する固定基準ではない。在庫が薄いと、収穫量が少し減っても需要を埋める備蓄が乏しく、短期価格が大きく動きやすい。在庫が多ければ、放出が供給ショックを吸収する。</p>
+<table>
+<thead>
+<tr>
+<th>要因</th>
+<th>価格に伝わる経路</th>
+<th>時間の区別</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>作付け・収穫暦</td>
+<td>収穫期の供給増と収穫後の在庫取り崩し</td>
+<td>毎年予測できる季節性</td>
+</tr>
+<tr>
+<td>天候・病害</td>
+<td>収穫量の予想が急に変わる</td>
+<td>予想外のjump</td>
+</tr>
+<tr>
+<td>価格上昇</td>
+<td>増産・代替消費が進み、需給が緩む</td>
+<td>生産には時間がかかる平均回帰</td>
+</tr>
+<tr>
+<td>飼料・家畜</td>
+<td>飼料費が生産費に入り、家畜供給へ波及する</td>
+<td>別商品の連関と時間差</td>
+</tr>
+</tbody>
+</table>
+<p>収穫前の気象不確実性と、収穫量が判明した後の保管リスクを分ける。平均回帰は需給反応の説明であり、全期間の価格分布や戻る速度を決めるものではない。本節は因果関係と単位の説明を確認し、在庫データや価格系列からvolを推定したとはしない。</p>
+<div class="requirement" id="D35.1-01">
+<p>stocks-to-use=期末在庫/年使用量と短期ボラの関係（785–786）。</p>
+<p>分母/分子の単位を揃え、在庫が少ないと供給変化が価格へ伝わりやすい理由を説明。</p>
+</div>
+<div class="requirement" id="D35.1-02">
+<p>収穫暦、貯蔵、気象jump、平均回帰、飼料と家畜の連関（786）。</p>
+<p>deterministic季節性とunexpected jumpを別概念として整理。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>stocks-to-use通常20–40%は <strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong>。価格例・再計算なし。</p>
+<div class="caution">
+<p>stocks-to-useは同じ重量単位の在庫/年使用量で無次元。20–40%は原典時点の記述で、現在の市場や全商品の固定基準ではない。価格/在庫系列の実証やvol推定は未実施。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-35-2">
+<h2>§35.2 Metals</h2>
+<p>出典: Hull 11e Global Edition pp.786–787。</p>
+<p>金属は貯蔵・分割しやすく、消費向けと投資保有もあるものを区別する。供給には採掘・探鉱・再利用があり、用途や生産技術、為替、政治・規制も価格に影響する。消費材の需給による平均回帰と投資資産の無裁定条件を同一視しない。</p>
+<h3>要点の読み方</h3>
+<p>金属は貯蔵・分割・再利用がしやすいが、投資保有の対象にもなる金・銀と、製造に消費される金属では価格形成の制約が異なる。採掘・探鉱の長い期間、recyclingによる追加供給、用途や生産技術、為替、政治・規制を合わせて読む。原典の「20年で10%を再回収する」は説明用の仮想回収率で、実測の年間回収率や複利率へ置き換えない。</p>
+<table>
+<thead>
+<tr>
+<th>観点</th>
+<th>投資資産として保有する金属</th>
+<th>消費資産として必要な金属</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>現物保有の目的</td>
+<td>価値の保存、投資</td>
+<td>生産への投入、供給確保</td>
+</tr>
+<tr>
+<td>在庫の意味</td>
+<td>保管費・資金費用を伴う保有</td>
+<td>欠品を避ける便益もある</td>
+</tr>
+<tr>
+<td>先物との関係</td>
+<td>複製・空売り等の条件を確認</td>
+<td>現物の便益yieldも確認</td>
+</tr>
+<tr>
+<td>平均回帰の解釈</td>
+<td>測度とcarry条件を明示</td>
+<td>価格上昇による供給増・需要減を考える</td>
+</tr>
+</tbody>
+</table>
+<p>貯蔵可能な商品の対応式は <span class="math inline"><span data-source-tex="F_0=S_0e^{(r+u-y)T}">\(F_0=S_0e^{(r+u-y)T}\)</span></span>。<span class="math inline"><span data-source-tex="r,u,y">\(r,u,y\)</span></span> はそれぞれ資金費用、比例保管費、convenience yieldの連続年率、<span class="math inline"><span data-source-tex="T">\(T\)</span></span> は年数であり、spotとfutureは同じ通貨・同じ金属重量単位を使う。取引・保管・空売りの制約があれば、単純な複製をそのまま適用できない。原典の投資金属の無裁定論を、現実測度Pで統計的平均回帰が起こらないという普遍命題へ広げない。Pの需給による動きと、先物に整合するQのdriftは別の論点である。</p>
+<div class="requirement" id="D35.2-01">
+<p>investment assetとconsumption asset、在庫・貯蔵・recyclingの役割（786–787）。</p>
+<p>§5のcost-of-carry/convenience yieldとの対応表。</p>
+</div>
+<div class="requirement" id="D35.2-02">
+<p>金属の平均回帰に関する本文の前提を明示（786–787）。</p>
+<p>「投資金属では平均回帰がarbitrageを生む」は測度・carryの条件を伴う説明であり、現実測度の統計的平均回帰の全面禁止と解釈しない。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>20年で10%をrecycling回収する仮想例は <strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong> と同じ扱いの説明用比率。価格固定値・再計算対象なし。</p>
+<div class="caution">
+<p>投資/消費金属、取引制約、carry、P/Qを区別する。20年10%は説明用仮想回収率で年率化しない。原典の無裁定論をPの平均回帰の普遍的禁止へ広げず、現行市場/規制の確認を行ったとはしない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-35-3">
+<h2>§35.3 Energy Products</h2>
+<p>出典: Hull 11e Global Edition pp.787–789。</p>
+<p>石油はgrade・精製品・受渡、天然ガスはhub・pipeline・季節需要、電力は貯蔵/送電制約と需要急増によるspot変動を特徴とする。エネルギー契約には一時点だけでなく期間を通した受渡がある。Swingは日次と月全体の数量上下限、数量変更回数の制約を持つ。</p>
+<h3>要点の読み方</h3>
+<p>エネルギー契約では、価格だけでなくgrade、受渡地点、数量単位、時刻、受渡期間を固定する。原油のgradeと精製品、天然ガスのhub・pipeline、電力の送電制約は互換ではない。期間中の物理供給契約は、満期一時点のspotを対象にした金融optionより多くの契約状態を持つ。</p>
+<table>
+<thead>
+<tr>
+<th>原典時点の例</th>
+<th>数量・単位</th>
+<th>契約や市場を読む注意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>世界石油需要</td>
+<td>約90 million bbl/day</td>
+<td>刊行時点の統計で、現在値ではない</td>
+</tr>
+<tr>
+<td>原油contract</td>
+<td>1,000 bbl</td>
+<td>grade・地点・満期を別に指定</td>
+</tr>
+<tr>
+<td>精製品contract</td>
+<td>42,000 US gallon</td>
+<td>原油の数量単位と混ぜない</td>
+</tr>
+<tr>
+<td>天然ガスcontract</td>
+<td>10,000 MMBtu</td>
+<td>熱量単位で、体積単位ではない</td>
+</tr>
+<tr>
+<td>米国電力市場の説明</td>
+<td>約140 control areas</td>
+<td>原典時点の制度説明</td>
+</tr>
+</tbody>
+</table>
+<p>電力の5×8、5×16、7×24はそれぞれ週の5日×日8時間、5日×16時間、7日×24時間の受渡ブロックを表す。MWの供給を時間積分したMWhと、各時刻の価格を対応させる。行使が日次か月次かという意思決定頻度と、受渡頻度を別々に確認する。</p>
+<p>Swingでは <span class="math inline"><span data-source-tex="q_{\min,d}\le q_d\le q_{\max,d}">\(q_{\min,d}\le q_d\le q_{\max,d}\)</span></span>、<span class="math inline"><span data-source-tex="Q_{\min}\le\sum_dq_d\le Q_{\max}">\(Q_{\min}\le\sum_dq_d\le Q_{\max}\)</span></span> に加え、数量を変更できる回数等の条件がある。ある日の安値だけで最大量を選ぶと、残る日の最低量と合わせて月上限を超えることがある。したがって残余数量も状態になるが、本節はこの制約の説明までとする。</p>
+<p>季節性は既知の需要暦、平均回帰は需給反応、jumpは急な需給変化であり、同じ機構ではない。原典のspotが1,000%動く例や貯蔵制約の説明は、全時点・全蓄電技術の主張ではない。正の対数価格モデルはzero/negative priceを表せず、平均回帰だけでもspikeの頻度や大きさを定められない。</p>
+<div class="requirement" id="D35.3-01">
+<p>grade/location/時刻/受渡期間を商品仕様として整理（787–789）。</p>
+<p>spot一点の金融optionとphysical supply contractの違いを例示。</p>
+</div>
+<div class="requirement" id="D35.3-02">
+<p>電力の5×8/5×16/7×24、daily/monthly exercise、swing制約（788–789）。</p>
+<p>exercise頻度と受渡頻度を分け、1日だけの最適化が月数量制約を破らないか説明。</p>
+</div>
+<div class="requirement" id="D35.3-03">
+<p>需給によるmean reversion、seasonality、非貯蔵性と価格jump（787–789）。</p>
+<p>平均回帰だけでspike/負価格を表現できるとはしない。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>世界石油需要約90M bbl/day、原油contract1000bbl、精製品42,000gallon、ガス10,000MMBtu、米国140control areas、spot1000%変動例、5×8/5×16/7×24の契約時間は <strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong>／原典時点の仕様。取引所の現行仕様として扱わない。再計算対象なし。</p>
+<div class="caution">
+<p>数量、grade、場所、時刻、受渡期間を固定する。需要・lot・control areas等は原典時点の仕様/統計。swing価格、負価格モデル、全蓄電技術の評価は対象外で、説明を計算verifiedにしない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-35-4">
+<h2>§35.4 Modeling Commodity Prices</h2>
+<p>出典: Hull 11e Global Edition pp.789–795。</p>
+<p>Futures曲線からrisk-neutral成長率を読み、log spotの平均回帰を使う三項木をfuturesへ合わせる。季節性は一旦除いて補間し再び付与する。Jump、確率convenience yield、確率volの拡張も紹介するが、これらは単純GBMと同じ入力だけでは校正できない。</p>
+<h3>要点の読み方</h3>
+<p>決定論的金利の下でfutureを <span class="math inline"><span data-source-tex="F(t)=E_Q[S_t]">\(F(t)=E_Q[S_t]\)</span></span> と解釈する。<span class="math inline"><span data-source-tex="dS/S=\mu(t)dt+\sigma dW_Q">\(dS/S=\mu(t)dt+\sigma dW_Q\)</span></span> なら <span class="math inline"><span data-source-tex="\mu(t)=\partial_t\log F(t)">\(\mu(t)=\partial_t\log F(t)\)</span></span>。Ex35.1のcents/lbの曲線は次のとおりで、Oct→Decの2か月を <span class="math inline"><span data-source-tex="\,1/6">\(\,1/6\)</span></span> 年に換算する。</p>
+<table>
+<thead>
+<tr>
+<th>満期</th>
+<th style="text-align:right">Aug 2021</th>
+<th style="text-align:right">Oct 2021</th>
+<th style="text-align:right">Dec 2021</th>
+<th style="text-align:right">Feb 2022</th>
+<th style="text-align:right">Apr 2022</th>
+<th style="text-align:right">Jun 2022</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>futures（cents/lb）</td>
+<td style="text-align:right">62.20</td>
+<td style="text-align:right">60.60</td>
+<td style="text-align:right">62.70</td>
+<td style="text-align:right">63.37</td>
+<td style="text-align:right">64.42</td>
+<td style="text-align:right">64.40</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math inline"><span data-source-tex="\log(62.70/60.60)=0.034066555">\(\log(62.70/60.60)=0.034066555\)</span></span>、連続年率は約20.43993%で、印刷.034/20.4%に一致する。Ex35.2は初期100,000 USD、3/6/9か月に各20,000 USD、1年末の期待販売量300,000 lb、future .644 USD/lb、連続年率10%。<span class="math inline"><span data-source-tex="-100000-\sum_{t=.25,.5,.75}20000e^{-.1t}+300000(.644)e^{-.1}=17728.932707">\(-100000-\sum_{t=.25,.5,.75}20000e^{-.1t}+300000(.644)e^{-.1}=17728.932707\)</span></span> USDで、17.729千USDへ丸める。数量の系統リスク0と価格との無相関が、期待数量とfutureの積を使える条件である。</p>
+<p><span class="math inline"><span data-source-tex="X=\log S">\(X=\log S\)</span></span> のモデルは <span class="math inline"><span data-source-tex="dX=[\theta(t)-aX]dt+\sigma dW_Q">\(dX=[\theta(t)-aX]dt+\sigma dW_Q\)</span></span>。対応する <span class="math inline"><span data-source-tex="dS/S">\(dS/S\)</span></span> のdriftには <span class="math inline"><span data-source-tex="+\sigma^2/2">\(+\sigma^2/2\)</span></span> が加わる。三項木では通常到達確率 <span class="math inline"><span data-source-tex="w_{ij}">\(w_{ij}\)</span></span> を伝播し、<span class="math inline"><span data-source-tex="\alpha_i=\log F_i-\log\sum_jw_{ij}e^{x_{ij}}">\(\alpha_i=\log F_i-\log\sum_jw_{ij}e^{x_{ij}}\)</span></span>、<span class="math inline"><span data-source-tex="S_{ij}=e^{x_{ij}+\alpha_i}">\(S_{ij}=e^{x_{ij}+\alpha_i}\)</span></span> とshiftする。<span class="math inline"><span data-source-tex="w_{ij}">\(w_{ij}\)</span></span> は割引state priceではない。<span class="math inline"><span data-source-tex="S_0=20,F_{1,2,3}=22,23,24,a=.1/\text{year},\sigma=.2/\sqrt{\text{year}},\Delta t=1">\(S_0=20,F_{1,2,3}=22,23,24,a=.1/\text{year},\sigma=.2/\sqrt{\text{year}},\Delta t=1\)</span></span> 年なら幅 <span class="math inline"><span data-source-tex="\sigma\sqrt{3\Delta t}=.346410">\(\sigma\sqrt{3\Delta t}=.346410\)</span></span>、境界は±.692820、<span class="math inline"><span data-source-tex="\alpha_1=3.071042981,\alpha_2=3.099296004">\(\alpha_1=3.071042981,\alpha_2=3.099296004\)</span></span>。</p>
+<table>
+<thead>
+<tr>
+<th>分岐位置</th>
+<th style="text-align:right">上方向</th>
+<th style="text-align:right">中方向</th>
+<th style="text-align:right">下方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中央 <span class="math inline"><span data-source-tex="j=0">\(j=0\)</span></span></td>
+<td style="text-align:right">1/6</td>
+<td style="text-align:right">2/3</td>
+<td style="text-align:right">1/6</td>
+</tr>
+<tr>
+<td><span class="math inline"><span data-source-tex="j=1">\(j=1\)</span></span></td>
+<td style="text-align:right">.121667</td>
+<td style="text-align:right">.656667</td>
+<td style="text-align:right">.221667</td>
+</tr>
+<tr>
+<td>上境界 <span class="math inline"><span data-source-tex="j=2">\(j=2\)</span></span>（行先2/1/0）</td>
+<td style="text-align:right">.886667</td>
+<td style="text-align:right">.026667</td>
+<td style="text-align:right">.086667</td>
+</tr>
+</tbody>
+</table>
+<p>下側は対称で、時点2の通常到達確率は上から.0203/.2206/.5183/.2206/.0203（印刷精度）。Fig35.2のspotは年1の30.49/21.56/15.25、年2の44.35/31.37/22.18/15.69/11.10、年3の45.68/32.30/22.85/16.16/11.43。年2最下段の丸め前計算11.094790584は通常丸め11.09となり、印刷11.10とは末桁が異なる。</p>
+<p>American putは <span class="math inline"><span data-source-tex="V_{ij}=\max((K-S_{ij})^+,e^{-r\Delta t}\sum_kp_{ijk}V_{i+1,k})">\(V_{ij}=\max((K-S_{ij})^+,e^{-r\Delta t}\sum_kp_{ijk}V_{i+1,k})\)</span></span>。<span class="math inline"><span data-source-tex="K=20,r=3\%">\(K=20,r=3\%\)</span></span>、3年のEx35.3は独立全経路後退でも1.501100501となり、印刷root1.48を再現しない。中間B/C/D=.13/1.10/4.75、E/F/G/H/I=0/0/.62/4.31/8.90のうち、Iも計算8.905209416→8.91と印刷8.90が異なる。D/H/Iの早期行使は一致する。印刷rootへ逆合わせしない。連続log-OUの終端分散 <span class="math inline"><span data-source-tex="v=\sigma^2(1-e^{-2aT})/(2a)">\(v=\sigma^2(1-e^{-2aT})/(2a)\)</span></span>、平均 <span class="math inline"><span data-source-tex="\log F_T-v/2">\(\log F_T-v/2\)</span></span> からの独立European密度積分と、64→256段の木の収束も確認する。Americanの粗い3段rootとこのEuropean参照を混同しない。</p>
+<p>季節性は脱季節→補間→再季節の順。Sep/Decの40/44と係数.95/1.1から42.105263/40、Oct/Novの脱季節補間41.403509/40.701754に係数.85/.8を戻して35.192982/32.561404となる。印刷42.1/40/41.4/40.7/35.2/32.6に一致する。価格の係数とvolの季節係数を混ぜず、centered移動平均には将来情報が入るため予測評価の情報截止を固定する。</p>
+<p>独立compound-Poissonの対数jump <span class="math inline"><span data-source-tex="J">\(J\)</span></span> は、平均回帰で年齢uの効果が <span class="math inline"><span data-source-tex="Je^{-au}">\(Je^{-au}\)</span></span> となる。対数期待倍率 <span class="math inline"><span data-source-tex="g_J=\nu\int_0^T(E[e^{Je^{-au}}]-1)du">\(g_J=\nu\int_0^T(E[e^{Je^{-au}}]-1)du\)</span></span> を差し引いてから無jump部分をfutureへ合わせる。Gibson–Schwartzは <span class="math inline"><span data-source-tex="dS/S=(r-y)dt+\sigma_1dW_1,dy=\kappa(\bar y-y)dt+\sigma_2dW_2">\(dS/S=(r-y)dt+\sigma_1dW_1,dy=\kappa(\bar y-y)dt+\sigma_2dW_2\)</span></span>、Eydeland–Gemanは <span class="math inline"><span data-source-tex="dS/S=a(b-\log S)dt+\sqrt VdW_1,dV=c(d-V)dt+e\sqrt VdW_2">\(dS/S=a(b-\log S)dt+\sqrt VdW_1,dV=c(d-V)dt+e\sqrt VdW_2\)</span></span>。対数化したdriftの−<span class="math inline"><span data-source-tex="\sigma_1^2/2">\(\sigma_1^2/2\)</span></span>・−<span class="math inline"><span data-source-tex="V/2">\(V/2\)</span></span>と相関共分散を確認したが、全面市場較正、jump分岐木、varianceの非負性を保存する汎用simulatorはこの検証範囲に含めない。</p>
+<div class="requirement" id="D35.4-01">
+<p>dS/S=μ(t)dt+σdW、μ=∂t log F、数量リスクの仮定付き投資PV（789–790）。</p>
+<p>Ex35.1–2を手計算。E[数量×価格]=E数量×E価格の条件を説明。</p>
+</div>
+<div class="requirement" id="D35.4-02">
+<p>d log S=[θ(t)−a log S]dt+σdW、元のS式との差σ²/2、OU三項木と平行shift（790–792）。</p>
+<p>割引state priceではなく通常到達確率でE[S_t]=F(t)を合わせる。</p>
+</div>
+<div class="requirement" id="D35.4-03">
+<p>American put rollbackと早期行使、細分化時のfutures補間（792–794）。</p>
+<p>payoff/継続価値の大小、格子収束と曲線一致を独立に検査。</p>
+</div>
+<div class="requirement" id="D35.4-04">
+<p>脱季節→補間→再季節、価格とvolの季節性を分ける（793–794）。</p>
+<p>印刷小例を手計算。centered移動平均を過去時点の予測へ使うとleakageになるので評価時点を固定。</p>
+</div>
+<div class="requirement" id="D35.4-05">
+<p>log-price jump、Gibson–Schwartzの確率convenience yield、Eydeland–Gemanの確率vol（794）。</p>
+<p>jump追加後もfutures期待値一致、相関とvariance非負性、各単純極限。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<ul>
+<li>Ex35.1 pp789–790：Aug/Oct/Dec2021, Feb/Apr/Jun2022のfutures（cents/lb）62.20/60.60/62.70/63.37/64.42/64.40。Oct→Decのlog成長.034（独立.0340665546）、年率20.4%（20.4399327%） 。</li>
+<li>Ex35.2 p790：初期100k、3/6/9か月20k、1年末300,000lb×.644 USD/lb、r10%continuous、NPV17.729k（17.728932707） 。数量の系統リスク0かつ価格との無相関が条件。</li>
+<li>Fig35.1–2 pp791–792：S0=20、F1/2/3=22/23/24、a=.1、σ=.2、Δt=1。X幅.3464、上下境界±.6928。遷移(pu,pm,pd)はj0=(1/6,2/3,1/6)、j1=(.1217,.6566,.2217)、j−1は逆、上境界j2=(.8867,.0266,.0867)、下境界は逆。<strong>✓モーメントから再計算一致</strong>（pmの印刷は.6666/.6566/.0266と切捨て）。α1=3.071、α2=3.099（3.071042981/3.099296004）。時点2到達確率上から.0203/.2206/.5183/.2206/.0203も。</li>
+<li>Fig35.2 prices：年1=30.49/21.56/15.25、年2=44.35/31.37/22.18/15.69/11.10、年3=45.68/32.30/22.85/16.16/11.43。独立計算は年2最下段11.094790584（通常丸め11.09）を除き表示丸め内。<strong>✗11.10は最終桁不一致</strong>（差.005209416）。αやノードの途中丸めに依存する可能性を残す。</li>
+<li>Ex35.3/Fig35.3 pp792–793：K20、r3%、3年American put印刷1.48。木を独立構成すると <strong>✗1.501100501で不一致</strong>。B/C/D=.133682773/1.099506307/4.749186903（印刷.13/1.10/4.75）、E/F/G/H/I=0/0/.621446704/4.312160738/8.905209416（印刷0/0/.62/4.31/8.90）。終端J/K/L/M/N=0/0/0/3.842235443/8.572867743（印刷0/0/0/3.84/8.57）。Iは通常丸め8.91で印刷8.90と最終桁が異なる。D/H/Iの行使は<strong>✓一致</strong>。印刷のB=.13,C=1.10,D=4.75とroot確率.1667/.6666/.1667だけでも1.501042452であり1.48にならない。PDF p793目視済み。1.48へコードを合わせない。</li>
+<li>季節補間p793：Sep40/Dec44、係数Sep/Oct/Nov/Dec=.95/.85/.8/1.1。脱季節42.1/40、補間41.4/40.7、再季節35.2/32.6。厳密42.105263/40、41.403509/40.701754、35.192982/32.561404で6値 。</li>
+</ul>
+<h3>計算の読み方</h3>
+<p>Ex35.1 .034/20.4%、Ex35.2 17.729k、季節6値、Fig35.1/2の分岐/shift/価格、Fig35.3中間値とD/H/I行使。独立全経路とOU密度積分・jump MC</p>
+<p>決定論的金利でfuture=Q期待spotとし、普通到達確率で較正する。印刷root1.48対計算1.501100501、年2最下11.10対11.094790584、I8.90対8.905209416は不一致を明示。log modelは非正価格を扱えない。jump期待倍率/複雑SDEの係数検証までで、全面市場較正・jump木・非負variance simulatorは未実施。</p>
+<div class="caution">
+<p>決定論的金利でfuture=Q期待spotとし、普通到達確率で較正する。印刷root1.48対計算1.501100501、年2最下11.10対11.094790584、I8.90対8.905209416は不一致を明示。log modelは非正価格を扱えない。jump期待倍率/複雑SDEの係数検証までで、全面市場較正・jump木・非負variance simulatorは未実施。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-35-5">
+<h2>§35.5 Weather Derivatives</h2>
+<p>出典: Hull 11e Global Edition pp.795–796。</p>
+<p>指定観測所の一日の最高/最低温度の平均からHDD/CDDを求め、月の累計を契約の原資産とする。Weather hedgeは企業の気象に伴う収益変動を緩和できるが、観測所と実際の損失にはbasisが残る。上限付きcallはcall spreadで表せる。</p>
+<h3>要点の読み方</h3>
+<p>指定station・観測期間の日ごとに、最高Hと最低Lから <span class="math inline"><span data-source-tex="A_d=(H_d+L_d)/2">\(A_d=(H_d+L_d)/2\)</span></span> を求める。温度がFahrenheitなら <span class="math inline"><span data-source-tex="HDD_d=(65-A_d)^+,CDD_d=(A_d-65)^+">\(HDD_d=(65-A_d)^+,CDD_d=(A_d-65)^+\)</span></span>、月の指数はそれぞれ日次値の合計である。日ごとに正部分を取るので、月平均温度から指数を一度だけ計算した値とは一般に異なる。同じ日にHDDとCDDが両方正にはならない。</p>
+<p>原典のH=68°F、L=44°FはA=56°F、HDD=9°F·day、CDD=0。温度をCelsiusへ変えるとbaseは <span class="math inline"><span data-source-tex="\,65\,°F=18.333\ldots\,°C">\(\,65\,°F=18.333\ldots\,°C\)</span></span>、指数は5/9倍になる。cashを保存するにはtickも9/5倍へ変える。base18°Cだけを使って同じ契約としない。</p>
+<p>月指数I、strikeK、tickω（USD/degree-day）、capC（USD）の買い手受取は <span class="math inline"><span data-source-tex="G(I)=\min(\omega(I-K)^+,C)=\omega[(I-K)^+-(I-K-C/\omega)^+]">\(G(I)=\min(\omega(I-K)^+,C)=\omega[(I-K)^+-(I-K-C/\omega)^+]\)</span></span>。K=700、ω=10,000ならI=820で1,200,000 USD、cap1,500,000 USDの上側strikeは850となる。gross indemnityとpremium控除後のnetを区別し、同じ評価時点にそろえたpremiumをpとすればbuyer net=G−p、writer net=p−Gである。これはpayoffの照合で、市場premiumの推定ではない。</p>
+<p>OTC導入1997、CME開始1999、exchange倍率20 USD/degree-dayは原典時点の制度史・仕様で、上記OTC例の10,000と異なる。stationと事業所在地、temperatureと実際の販売量のずれはbasis riskを残す。観測期間、station、欠測処理、支払日、premiumの時点は契約入力として固定する。</p>
+<div class="requirement" id="D35.5-01">
+<p>FahrenheitでA=(高温+低温)/2、HDD=max(65−A,0)、CDD=max(A−65,0)（795）。</p>
+<p>一日→月合計の順序、温度単位とbaseを固定。HDDとCDDが同時に正にならない。</p>
+</div>
+<div class="requirement" id="D35.5-02">
+<p>strike、tick額、観測期間/場所、capを定義（795–796）。</p>
+<p>capped payoffと二つのcallの差が全累計値で一致。</p>
+</div>
+<h3>計算の読み方</h3>
+<p>56°F/HDD9/CDD0、HDD820→1.2M/cap1.5M/upper850。独立日別台帳とcall spread/温度換算</p>
+<p>入力温度/baseはFahrenheit、Celsiusでは65°F=18.333…°Cとtickの9/5換算が必要。station/観測期間/支払日はcaller入力。OTC/CMEの仕様は原典時点。payoff算術の検証で、市場premiumや所在地basisの消滅は主張しない。</p>
+<div class="caution">
+<p>入力温度/baseはFahrenheit、Celsiusでは65°F=18.333…°Cとtickの9/5換算が必要。station/観測期間/支払日はcaller入力。OTC/CMEの仕様は原典時点。payoff算術の検証で、市場premiumや所在地basisの消滅は主張しない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-35-6">
+<h2>§35.6 Insurance Derivatives</h2>
+<p>出典: Hull 11e Global Edition pp.796–797。</p>
+<p>比例再保険とexcess-of-loss layerを区別する。損失額に対するlayerの受取はcall spread、閾値で一定額を払う形はbinaryで表せる。CAT bondは高いcouponと引き換えに、一定条件で元本や利息を保険金に充てる構造である。</p>
+<h3>要点の読み方</h3>
+<p>損失Lを正のUSD額で表す。70%比例再保険ならceded loss=.7L、retained loss=.3L。原典の最大exposure100 million USDは自己負担30 million USDへ、実損失50 million USDは自己負担15 million USDとなる。</p>
+<p>AttachmentA=30 million USD、widthW=10 million USDのlayerについて、保険者（protection買い手）の受取は <span class="math inline"><span data-source-tex="G(L)=\min((L-A)^+,W)=(L-A)^+-(L-A-W)^+">\(G(L)=\min((L-A)^+,W)=(L-A)^+-(L-A-W)^+\)</span></span>。</p>
+<table>
+<thead>
+<tr>
+<th>損失の領域</th>
+<th>買い手のgross受取</th>
+<th>残る損失</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline"><span data-source-tex="L\le A">\(L\le A\)</span></span></td>
+<td>0</td>
+<td>L</td>
+</tr>
+<tr>
+<td><span class="math inline"><span data-source-tex="A&lt;L&lt;A+W">\(A&lt;L&lt;A+W\)</span></span></td>
+<td>L−A</td>
+<td>A</td>
+</tr>
+<tr>
+<td><span class="math inline"><span data-source-tex="L\ge A+W">\(L\ge A+W\)</span></span></td>
+<td>W</td>
+<td>L−W</td>
+</tr>
+</tbody>
+</table>
+<p>下strikeのcallをlong、上strikeをshortとしたspreadはprotection買い手の受取を複製する。原典のreinsurerをwriterとしながらlong spreadとも書く文章は符号が整合しない。writerのgross支払は−G、同一時点にそろえたpremium pを入れたnetはp−Gで、buyer netのG−pと相殺する。閾値で固定額Bを払うbinaryは <span class="math inline"><span data-source-tex="B1_{\{L&gt;K\}}">\(B1_{\{L&gt;K\}}\)</span></span> のような契約となるが、等号を含むかはterm sheetの規約である。</p>
+<p>CAT bondでは保険事象の条件に従い、投資家の元本や利息が保険者へ移る。元本10 million USDを上の30–40 million USD layerへ充てる例では、放出元本=G、残存元本=10 million−Gで合計を保存する。損失50 millionなら全10 millionが放出される。triggerが業界損失やparametric指標なら個社の実損失と異なり、basis riskを残す。coupon、元本以外の減額、triggerの評価日には追加の契約入力が必要で、この実装は元本layerの配分までを確認する。</p>
+<p>Hurricane Andrew 1992のinsured loss約15 billion USD、7年分premium超、Miamiなら40 billion USD超という想定は原典の歴史・仮想比較である。現在の災害価格の再推定や、損失額・保険料・支援額の合算を行ったとはしない。</p>
+<div class="requirement" id="D35.6-01">
+<p>比例再保険、layer、binaryのpayoffを受取側/支払側で定義（796）。</p>
+<p>layer受取=min(max(loss−attachment,0),width)。再保険者側はその負。</p>
+</div>
+<div class="requirement" id="D35.6-02">
+<p>CAT bondのprincipal/interest at riskをterm sheet条件として説明（796–797）。</p>
+<p>保険者の受取と債券保有者の損失の保存、triggerと実損失の違いを説明。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>最大exposure100Mを30Mに抑える70%比例再保険、loss50M→自己負担15Mは <strong>（50×.3）</strong>。30–40M layerは最大10M、CAT bondのprincipal10Mと一致（手算術）。Hurricane Andrew1992のinsured loss約15bn、7年分premium超、Miamiなら40bn超という想定は<strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong>。市場価格の例はない。</p>
+<h3>計算の読み方</h3>
+<p>100M exposure→retained30M、loss50M→15M、30–40M layer10MとCAT principal10M。独立3領域台帳/call spread</p>
+<p>protection買い手の受取とwriterの逆符号を固定し、原典のlong/short文章不整合を残す。binary境界、CAT trigger/couponはterm sheet入力で、実装は元本layerの保存まで。歴史的災害損失・premium・想定を現在価格へ再推定しない。</p>
+<div class="caution">
+<p>protection買い手の受取とwriterの逆符号を固定し、原典のlong/short文章不整合を残す。binary境界、CAT trigger/couponはterm sheet入力で、実装は元本layerの保存まで。歴史的災害損失・premium・想定を現在価格へ再推定しない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-35-7">
+<h2>§35.7 Pricing Weather and Insurance Derivatives</h2>
+<p>出典: Hull 11e Global Edition pp.797–798。</p>
+<p>系統的に価格付けされるリスクがないと仮定し、historical期待payoffをrisk-freeで割り引く。HDD分布にはtrendや予報を反映し、期間先が長くなっても株価と同じように分散が増えるとは仮定しない。CAT bondの低い株式相関は紹介されるが、その観測だけから一般に唯一の無裁定価格が定まるわけではない。</p>
+<h3>要点の読み方</h3>
+<p>Weather指数は取引されるspot資産ではない。原典基本例の「価格付けされる系統リスク0」を仮定すれば <span class="math inline"><span data-source-tex="V_0=e^{-rT}E[\text{payoff}]">\(V_0=e^{-rT}E[\text{payoff}]\)</span></span> とするが、低い株式相関だけで不完備市場の唯一の価格が証明されるわけではない。効用premium、standard-deviation premium、market loadingを入れる評価は別の原理で、同じ数値へ混ぜない。</p>
+<p>Ex35.4はFeb 2018評価、Feb 2019の月HDD、K=700、tickω=10,000 USD/degree-day、連続年率r=3%、T=1年。<span class="math inline"><span data-source-tex="m=E[I]">\(m=E[I]\)</span></span>、<span class="math inline"><span data-source-tex="s=SD(\log I)=.07">\(s=SD(\log I)=.07\)</span></span> とすると、対数分布の位置は <span class="math inline"><span data-source-tex="\log m-s^2/2">\(\log m-s^2/2\)</span></span> であり、<span class="math inline"><span data-source-tex="d_1=\log(m/K)/s+s/2,d_2=d_1-s">\(d_1=\log(m/K)/s+s/2,d_2=d_1-s\)</span></span>、期待cashは <span class="math inline"><span data-source-tex="\omega[mN(d_1)-KN(d_2)]">\(\omega[mN(d_1)-KN(d_2)]\)</span></span>。sはその月累計の対数SDで、株価の年率volのように追加の <span class="math inline"><span data-source-tex="\sqrt T">\(\sqrt T\)</span></span> を掛けない。支払までの年数は割引へ入る。</p>
+<table>
+<thead>
+<tr>
+<th>mean HDD</th>
+<th style="text-align:right">期待payoff（USD、丸め前）</th>
+<th style="text-align:right">PV（USD、丸め前）</th>
+<th>印刷100 USD精度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>710</td>
+<td style="text-align:right">250,863.605</td>
+<td style="text-align:right">243,449.465</td>
+<td>250,900 / 243,400</td>
+</tr>
+<tr>
+<td>697</td>
+<td style="text-align:right">180,389.833</td>
+<td style="text-align:right">175,058.508</td>
+<td>180,400 / 175,100</td>
+</tr>
+</tbody>
+</table>
+<p>m=710のd1=.237637643、d2=.167637643は印刷.2376/.1676に一致する。丸め前期待payoffを割り引いてから最後に丸める。印刷250,900を先に割り引くとPVの100 USD丸めが243,500となり、同じ経路ではない。lognormal密度の独立積分と固定seed MC（6標準誤差以内）で期待payoffを確認し、cap付きなら上側strikeの期待callを差し引く。</p>
+<p>原典の50年平均710、年あたり−.5のtrend、次年の補正mean697は推定期間と予測時点を分けて読む。50年の年次観測を等間隔とすれば中央は25.5年目、翌年は51年目なので、補正は <span class="math inline"><span data-source-tex="\,710-.5(51-25.5)=697.25">\(\,710-.5(51-25.5)=697.25\)</span></span>、指数のwhole-number表示で697となる。これは平均を推定した過去の中間時点から将来へ外挿する説明であり、710から1年分だけ引く処理ではない。元の日次温度・50年の指数系列はなく、697は本文が与えた評価シナリオとして使う。trendの回帰推定や予報変更の実証は未実施で、m=697の価格計算とは区別する。</p>
+<div class="requirement" id="D35.7-01">
+<p>nontraded underlyingと「系統リスク0」の評価仮定、期待payoffと割引を分離（797–798）。</p>
+<p>market loading/効用premiumは本文基本例とは別の評価原理として表示。</p>
+</div>
+<div class="requirement" id="D35.7-02">
+<p>lognormal月HDDのmeanとlog-SDからoption期待値を求める（797）。</p>
+<p>Ex35.4の式15A.1と独立積分。σlog=.07に余分な√年数を掛けない。</p>
+</div>
+<div class="requirement" id="D35.7-03">
+<p>historical平均をtrend補正し、予報の変更を別シナリオとする（798）。</p>
+<p>50年平均710、年−.5のtrendから次年697への脚注推計。推定期間と予測時点を分ける。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>Ex35.4 pp797–798、HDD K700、tick10,000、平均710、log-SD.07、r3%、T1。d1=.2376/d2=.1676（.237637643/.167637643）、期待payoff250,900USD（250,863.605）、PV243,400（243,449.465）。mean697に補正後payoff180,400（180,389.833）、PV175,100（175,058.508）。6値 （dは4桁、価格は100USD丸め）。印刷250,900を割り引くと243,485→243,500になるため、丸め前からの経路で確認する。対象月Feb2019/valuationFeb2018は例題条件で、現在の価格ではない。</p>
+<h3>計算の読み方</h3>
+<p>d1 .2376/d2 .1676、250900/243400、mean697→180400/175100。独立密度積分/MCと支払割引</p>
+<p>nontraded指数の系統リスク0という本文仮定付き。log-SD.07は対象月累計の分布で、余分な√年数を掛けない。trend原系列なし、697は本文入力でtrend推定未verified。期待値から丸め前に割引し、Feb2018/2019条件を現在値としない。</p>
+<div class="caution">
+<p>nontraded指数の系統リスク0という本文仮定付き。log-SD.07は対象月累計の分布で、余分な√年数を掛けない。trend原系列なし、697は本文入力でtrend推定未verified。期待値から丸め前に割引し、Feb2018/2019条件を現在値としない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-35-8">
+<h2>§35.8 How an Energy Producer can Hedge Risks</h2>
+<p>出典: Hull 11e Global Edition pp.798–799。</p>
+<h3>要点の読み方</h3>
+<p>月利益Y（USD）を月平均energy価格PとHDD/CDD指数Tへ <span class="math inline"><span data-source-tex="Y=a+bP+cT+\varepsilon">\(Y=a+bP+cT+\varepsilon\)</span></span> と回帰する。bはUSD/P-index-point、cはUSD/degree-dayである。energyとweatherの1契約当たりcash tickをそれぞれ <span class="math inline"><span data-source-tex="k_P,k_T">\(k_P,k_T\)</span></span> とすると、signed契約数は <span class="math inline"><span data-source-tex="n_P=-b/k_P,n_T=-c/k_T">\(n_P=-b/k_P,n_T=-c/k_T\)</span></span>。energy価格をUSD/unitで記録する場合、対応するtickは契約の現物数量と整合させる。</p>
+<p>先物のentryを <span class="math inline"><span data-source-tex="P_0,T_0">\(P_0,T_0\)</span></span> として、hedge後cashは <span class="math inline"><span data-source-tex="Y+n_Pk_P(P-P_0)+n_Tk_T(T-T_0)=a+bP_0+cT_0+\varepsilon">\(Y+n_Pk_P(P-P_0)+n_Tk_T(T-T_0)=a+bP_0+cT_0+\varepsilon\)</span></span>。係数の符号を反転しても残差は消えない。数量と単価が不完全に相関し、販売量の非線形な反応やstation/location basisを線形2因子だけでは捉えきれないからである。</p>
+<p>本文には観測列・推定係数・印刷価格がない。検証用の合成例 <span class="math inline"><span data-source-tex="Y=100+2P-3T">\(Y=100+2P-3T\)</span></span> とticks25/10では係数2/−3、契約数−.08/+.3を回復し、別に組んだ共分散の正規方程式と照合した。ここでの数値は教材検証用で、市場データを推定した値ではない。PとTが完全に共線なら個々の契約数は一意にならないため拒否する。</p>
+<p>係数はtrainingだけで推定し、holdoutでは固定して価格だけ・weatherだけ・共同hedgeの残差分散を比べる。合成holdoutの改善は方法の検証であり、将来の実事業で同率のrisk減少を保証しない。回帰のP測度のexposureを、Q価格過程のdriftや契約の無裁定価格へ読み替えない。</p>
+<div class="requirement" id="D35.8-01">
+<p>contract tick/数量を係数に換算して、利益単位と一致させる。</p>
+</div>
+<div class="requirement" id="D35.8-02">
+<p>価格/数量/basisリスクを分け、回帰fitとhedge評価期間を分離（798–799）。</p>
+<p>合成既知係数の回復、out-of-sample残差分散、単一hedgeと共同hedgeの比較。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>データ、推定係数、損益、図表なし。数値再計算対象なし。原典式の末尾εはOCR上Pのように見えるが、価格Pではなく誤差項。</p>
+<h3>計算の読み方</h3>
+<p>本文にデータ/数値なし。合成a+bP+cT、独立共分散正規方程式とtrain/holdoutの単独/共同hedge</p>
+<p>原典に実データ/推定係数/印刷価格はなく合成回帰と独立holdout検証である。rank不足を拒否し、係数はtrainingで推定後固定する。単位/tick/entryを合わせ、P回帰をQ pricingや完全hedgeへ読み替えない。</p>
+<div class="caution">
+<p>原典に実データ/推定係数/印刷価格はなく合成回帰と独立holdout検証である。rank不足を拒否し、係数はtrainingで推定後固定する。単位/tick/entryを合わせ、P回帰をQ pricingや完全hedgeへ読み替えない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+</main></body></html>

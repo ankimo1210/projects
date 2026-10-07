@@ -1,4 +1,22 @@
-# P3 完了に向けた実装状態
+# P3 実装・受入状態
+
+更新2026-10-08。ローカル`codex/johnhull-acceptance`でP3 **37/37 accepted**。
+Ch28の旧8節を保持し、Ch29–34の残29節・104要件をfast-v1で受け入れた。
+全体は306/306、未評価0。判定の正本は[節台帳](SECTION_LEDGER.md)。
+
+- Ch29–34の既存286 testsに§33.2のprivate BGM28 testsを追加。
+  P7とguardを合わせた今回の対象389 tests PASS、全45節のbrowser・代表9画像・独立レビューを確認。
+  [最終便の記録](CHAPTERS_29_37_ACCEPTANCE_2026-10-08.md)に範囲・数値差・省略を保存する。
+- §33.2は単一curve LMM、measure drift/reset/discount、bootstrap、caller指定cap/ratchet/sticky/
+  first5 ITM flexicap、full Jacobianによるfrozen swaption/PCAを実装・独立検証。
+  原典sticky K0/flexicap strike・対象日・MC規約不足は保持し、無条件の原典価格再現を主張しない。
+- §31.4の8664観測、2016-08-23の9満期を検証済み。原典の0.168と.0168の不整合を明示。
+  市場fit・大規模Bermudan・CEVの追加エンジンは宣言した受入範囲に含めない。
+- 旧261受入の計算・教材・証跡を変更しない。main統合・push・公開・既存Book改訂は別工程。
+
+## ロジック先行時の履歴（2026-10-05時点）
+
+以下の保留・未受入は当時の状態。現在の判定は上記と台帳を優先する。
 
 更新2026-10-05。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。残り要件をN/Aへ置き換えたり、簡易モデルだけで完了としない。
 

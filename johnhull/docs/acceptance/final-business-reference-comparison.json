@@ -1,0 +1,152 @@
+{
+  "source": "https://www.anderson.ucla.edu/faculty/eduardo.schwartz/articles/70.pdf",
+  "published_reference_only": {
+    "enterprise_million_usd": 5457,
+    "bankruptcy_probability": 0.279,
+    "equity_usd_per_share": 12.42,
+    "numerical_reproduction_status": "unverified",
+    "source_mc_seed_and_standard_error": "not reported"
+  },
+  "model_parameters": {
+    "initial_revenue": 356.0,
+    "initial_growth": 0.11,
+    "initial_cash": 906.0,
+    "initial_loss_carry": 559.0,
+    "revenue_volatility": 0.1,
+    "long_revenue_volatility": 0.05,
+    "growth_volatility": 0.03,
+    "long_growth": 0.015,
+    "growth_reversion": 0.07,
+    "volatility_reversion": 0.07,
+    "growth_volatility_reversion": 0.07,
+    "revenue_risk_price": 0.01,
+    "growth_risk_price": 0.0,
+    "cogs_fraction": 0.75,
+    "other_variable_fraction": 0.19,
+    "fixed_cost": 75.0,
+    "tax_rate": 0.35,
+    "annual_rate": 0.05,
+    "horizon_quarters": 100
+  },
+  "seed": 20261008,
+  "n_paths": 100000,
+  "substeps_per_quarter": 1,
+  "terminal_multiple": 10,
+  "floor_terminal_profit": true,
+  "interest_accounting": "opening cash * expm1(annual_rate * dt_quarters / 4), taxable",
+  "limitations": [
+    "Start/end revenue timing is not fixed by the recovered source.",
+    "The terminal quarterly-to-annual earnings scale is not fixed by the source.",
+    "This implementation defines discrete loss exhaustion and absorbing cash<=0 default.",
+    "Source Eq18 extra sqrt(dt) has no effect at dt=1; correct frozen OU variance is used on refinement.",
+    "Option buckets and maturities cannot be inferred from the printed equity price.",
+    "1998 split-adjusted option counts resemble the paper, but this is an unverified date inference."
+  ],
+  "results": [
+    {
+      "revenue_timing": "start",
+      "terminal_profit_periods": 1,
+      "enterprise_value_million_usd": 8387.418250648116,
+      "value_standard_error": 51.13832516827078,
+      "difference_from_published_5457": 2930.4182506481156,
+      "bankruptcy_probability": 0.30729,
+      "bankruptcy_standard_error": 0.0010882926102919713,
+      "difference_from_published_0_279": 0.028289999999999982,
+      "independent_antithetic_pairs": 50000,
+      "accounting": {
+        "revenue_timing": "start",
+        "terminal_profit_periods": 1,
+        "floor_terminal_profit": true,
+        "cash_interest": "start cash, compounded at annual_rate/4, taxable",
+        "default": "first accounting endpoint with cash<=0; absorbing",
+        "units": "quarter; million USD; annual continuous discount rate",
+        "source_price_reproduction": "unverified: source timing and capital inputs incomplete"
+      }
+    },
+    {
+      "revenue_timing": "start",
+      "terminal_profit_periods": 4,
+      "enterprise_value_million_usd": 14026.051226432624,
+      "value_standard_error": 89.19932994506523,
+      "difference_from_published_5457": 8569.051226432624,
+      "bankruptcy_probability": 0.30729,
+      "bankruptcy_standard_error": 0.0010882926102919713,
+      "difference_from_published_0_279": 0.028289999999999982,
+      "independent_antithetic_pairs": 50000,
+      "accounting": {
+        "revenue_timing": "start",
+        "terminal_profit_periods": 4,
+        "floor_terminal_profit": true,
+        "cash_interest": "start cash, compounded at annual_rate/4, taxable",
+        "default": "first accounting endpoint with cash<=0; absorbing",
+        "units": "quarter; million USD; annual continuous discount rate",
+        "source_price_reproduction": "unverified: source timing and capital inputs incomplete"
+      }
+    },
+    {
+      "revenue_timing": "end",
+      "terminal_profit_periods": 1,
+      "enterprise_value_million_usd": 8596.913576513603,
+      "value_standard_error": 52.221072961350515,
+      "difference_from_published_5457": 3139.9135765136034,
+      "bankruptcy_probability": 0.29516,
+      "bankruptcy_standard_error": 0.001099652523624374,
+      "difference_from_published_0_279": 0.016159999999999952,
+      "independent_antithetic_pairs": 50000,
+      "accounting": {
+        "revenue_timing": "end",
+        "terminal_profit_periods": 1,
+        "floor_terminal_profit": true,
+        "cash_interest": "start cash, compounded at annual_rate/4, taxable",
+        "default": "first accounting endpoint with cash<=0; absorbing",
+        "units": "quarter; million USD; annual continuous discount rate",
+        "source_price_reproduction": "unverified: source timing and capital inputs incomplete"
+      }
+    },
+    {
+      "revenue_timing": "end",
+      "terminal_profit_periods": 4,
+      "enterprise_value_million_usd": 14250.935103773094,
+      "value_standard_error": 90.26048787352713,
+      "difference_from_published_5457": 8793.935103773094,
+      "bankruptcy_probability": 0.29516,
+      "bankruptcy_standard_error": 0.001099652523624374,
+      "difference_from_published_0_279": 0.016159999999999952,
+      "independent_antithetic_pairs": 50000,
+      "accounting": {
+        "revenue_timing": "end",
+        "terminal_profit_periods": 4,
+        "floor_terminal_profit": true,
+        "cash_interest": "start cash, compounded at annual_rate/4, taxable",
+        "default": "first accounting endpoint with cash<=0; absorbing",
+        "units": "quarter; million USD; annual continuous discount rate",
+        "source_price_reproduction": "unverified: source timing and capital inputs incomplete"
+      }
+    }
+  ],
+  "scope": "Conditional caller-specified numerical comparison, not unconditional original-price reproduction.",
+  "source_valuation_context": {
+    "stated_information_date": "1999-12-31",
+    "latest_reported_financial_quarter": "1999-Q3",
+    "reference_date_location": "Simulation Results, printed p66",
+    "parameter_location": "Exhibit 2, printed p69",
+    "published_value_and_bankruptcy_location": "printed p67; base case Table 3 printed p70",
+    "option_date_caveat": "Source states year-end 1999 but split-adjusted 1998 10-K option counts resemble its 76M/60M figures. This is an unverified inference, not substituted source data.",
+    "source_replication_inputs_missing": [
+      "Exact discrete revenue/cash accounting order",
+      "Terminal quarterly-to-annual earnings scale and treatment",
+      "Discrete loss-carry exhaustion and interest compounding convention",
+      "Exact employee-option strike buckets and maturities",
+      "Original simulation seed and Monte Carlo standard error"
+    ]
+  },
+  "standard_error_method": "Sample standard deviation of 50000 independent antithetic pair averages divided by sqrt(50000); bankruptcy SE is a probability fraction, multiply by 100 for percentage points.",
+  "source_statement_about_next_year": "Printed p66 describes analyst expectations for the next four quarters but supplies no numerical projection vector. The simulation here uses only the Exhibit 2 OU dynamics, not invented forecasts.",
+  "checked_at": "2026-10-08",
+  "source_sha256": {
+    "hullkit/src/hullkit/_business_valuation_lesson.py": "68cd7ac5a344ad0ccf768a708954fab8547f44d5fbb53b9a3078653abc52ed67",
+    "hullkit/tests/test_business_valuation_lesson.py": "47f5f0fb6cecbdcfa685ad7973939535a4b3a7403b48131bb9162df62512337f",
+    "options, futures and other derivatives 11th.pdf": "8bc6e2f04fad95e4eeb40d0526219ba5f9228ee3d2ea3eaaf80870bdf7ccb482",
+    "docs/prep/sources/schwartz-moon-2000.pdf": "cbfa663fa0c915ef0ed397d077152dd779403e23b7a32dece41db17196171b05"
+  }
+}
