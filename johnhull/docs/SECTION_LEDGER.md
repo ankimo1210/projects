@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **171**
+- accepted: **225**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 135 |
+| unreviewed | 81 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 171 |
+| accepted | 225 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -37,12 +37,12 @@
 | 13 | 12 | 0 | 0 | 0 | 12 | 0 |
 | 14 | 9 | 0 | 0 | 0 | 9 | 0 |
 | 15 | 13 | 0 | 0 | 0 | 13 | 0 |
-| 16 | 5 | 5 | 0 | 0 | 0 | 0 |
-| 17 | 6 | 6 | 0 | 0 | 0 | 0 |
-| 18 | 11 | 11 | 0 | 0 | 0 | 0 |
-| 19 | 15 | 15 | 0 | 0 | 0 | 0 |
-| 20 | 9 | 9 | 0 | 0 | 0 | 0 |
-| 21 | 8 | 8 | 0 | 0 | 0 | 0 |
+| 16 | 5 | 0 | 0 | 0 | 5 | 0 |
+| 17 | 6 | 0 | 0 | 0 | 6 | 0 |
+| 18 | 11 | 0 | 0 | 0 | 11 | 0 |
+| 19 | 15 | 0 | 0 | 0 | 15 | 0 |
+| 20 | 9 | 0 | 0 | 0 | 9 | 0 |
+| 21 | 8 | 0 | 0 | 0 | 8 | 0 |
 | 22 | 9 | 9 | 0 | 0 | 0 | 0 |
 | 23 | 7 | 7 | 0 | 0 | 0 | 0 |
 | 24 | 9 | 9 | 0 | 0 | 0 | 0 |
@@ -202,60 +202,60 @@
 | 15.11 | 15 | section | Implied Volatilities | accepted |
 | 15.12 | 15 | section | Dividends | accepted |
 | 15.appendix | 15 | appendix | Proof of the Black–Scholes–Merton Formula Using Risk-Neutral Valuation | accepted |
-| 16.1 | 16 | section | Contractual Arrangements | unreviewed |
-| 16.2 | 16 | section | Do Options Align the Interests of Shareholders and Managers? | unreviewed |
-| 16.3 | 16 | section | Accounting Issues | unreviewed |
-| 16.4 | 16 | section | Valuation | unreviewed |
-| 16.5 | 16 | section | The Backdating Scandal | unreviewed |
-| 17.1 | 17 | section | Options on Stock Indices | unreviewed |
-| 17.2 | 17 | section | Currency Options | unreviewed |
-| 17.3 | 17 | section | Options on Stocks Paying known Dividend Yields | unreviewed |
-| 17.4 | 17 | section | Valuation of European Stock Index Options | unreviewed |
-| 17.5 | 17 | section | Valuation of European Currency Options | unreviewed |
-| 17.6 | 17 | section | American Options | unreviewed |
-| 18.1 | 18 | section | Nature of Futures Options | unreviewed |
-| 18.2 | 18 | section | Reasons for the Popularity of Futures Options | unreviewed |
-| 18.3 | 18 | section | European Spot and Futures Options | unreviewed |
-| 18.4 | 18 | section | Put–Call Parity | unreviewed |
-| 18.5 | 18 | section | Bounds for Futures Options | unreviewed |
-| 18.6 | 18 | section | Drift of a Futures Price in a Risk-Neutral World | unreviewed |
-| 18.7 | 18 | section | Black’s Model for Valuing Futures Options | unreviewed |
-| 18.8 | 18 | section | Using Black’s model instead of Black–Scholes–Merton | unreviewed |
-| 18.9 | 18 | section | Valuation of Futures Options Using Binomial Trees | unreviewed |
-| 18.10 | 18 | section | American Futures Options vs. American Spot Options | unreviewed |
-| 18.11 | 18 | section | Futures-Style Options | unreviewed |
-| 19.1 | 19 | section | Illustration | unreviewed |
-| 19.2 | 19 | section | Naked and Covered Positions | unreviewed |
-| 19.3 | 19 | section | Greek Letter Calculation | unreviewed |
-| 19.4 | 19 | section | Delta Hedging | unreviewed |
-| 19.5 | 19 | section | Theta | unreviewed |
-| 19.6 | 19 | section | Gamma | unreviewed |
-| 19.7 | 19 | section | Relationship between Delta, Theta, and Gamma | unreviewed |
-| 19.8 | 19 | section | Vega | unreviewed |
-| 19.9 | 19 | section | Rho | unreviewed |
-| 19.10 | 19 | section | The Realities of Hedging | unreviewed |
-| 19.11 | 19 | section | Scenario Analysis | unreviewed |
-| 19.12 | 19 | section | Extension of Formulas | unreviewed |
-| 19.13 | 19 | section | Portfolio Insurance | unreviewed |
-| 19.14 | 19 | section | Application of Machine Learning to Hedging | unreviewed |
-| 19.appendix | 19 | appendix | Taylor Series Expansions and Greek Letters | unreviewed |
-| 20.1 | 20 | section | Implied Volatilities of Calls and Puts | unreviewed |
-| 20.2 | 20 | section | Volatility Smile for Foreign Currency Options | unreviewed |
-| 20.3 | 20 | section | Volatility Smile for Equity Options | unreviewed |
-| 20.4 | 20 | section | Alternative Ways of Characterizing the Volatility Smile | unreviewed |
-| 20.5 | 20 | section | The Volatility Term Structure and Volatility Surfaces | unreviewed |
-| 20.6 | 20 | section | Minimum Variance Delta | unreviewed |
-| 20.7 | 20 | section | The Role of the Model | unreviewed |
-| 20.8 | 20 | section | When a Single Large Jump is Anticipated | unreviewed |
-| 20.appendix | 20 | appendix | Determining Implied Risk-Neutral Distributions from Volatility Smiles | unreviewed |
-| 21.1 | 21 | section | Binomial Trees | unreviewed |
-| 21.2 | 21 | section | Using the Binomial Tree for Options on Indices, Currencies, and Futures Contracts | unreviewed |
-| 21.3 | 21 | section | Binomial Model for a Dividend-Paying Stock | unreviewed |
-| 21.4 | 21 | section | Alternative Procedures for Constructing Trees | unreviewed |
-| 21.5 | 21 | section | Time-Dependent Parameters | unreviewed |
-| 21.6 | 21 | section | Monte Carlo Simulation | unreviewed |
-| 21.7 | 21 | section | Variance Reduction Procedures | unreviewed |
-| 21.8 | 21 | section | Finite Difference Methods | unreviewed |
+| 16.1 | 16 | section | Contractual Arrangements | accepted |
+| 16.2 | 16 | section | Do Options Align the Interests of Shareholders and Managers? | accepted |
+| 16.3 | 16 | section | Accounting Issues | accepted |
+| 16.4 | 16 | section | Valuation | accepted |
+| 16.5 | 16 | section | The Backdating Scandal | accepted |
+| 17.1 | 17 | section | Options on Stock Indices | accepted |
+| 17.2 | 17 | section | Currency Options | accepted |
+| 17.3 | 17 | section | Options on Stocks Paying known Dividend Yields | accepted |
+| 17.4 | 17 | section | Valuation of European Stock Index Options | accepted |
+| 17.5 | 17 | section | Valuation of European Currency Options | accepted |
+| 17.6 | 17 | section | American Options | accepted |
+| 18.1 | 18 | section | Nature of Futures Options | accepted |
+| 18.2 | 18 | section | Reasons for the Popularity of Futures Options | accepted |
+| 18.3 | 18 | section | European Spot and Futures Options | accepted |
+| 18.4 | 18 | section | Put–Call Parity | accepted |
+| 18.5 | 18 | section | Bounds for Futures Options | accepted |
+| 18.6 | 18 | section | Drift of a Futures Price in a Risk-Neutral World | accepted |
+| 18.7 | 18 | section | Black’s Model for Valuing Futures Options | accepted |
+| 18.8 | 18 | section | Using Black’s model instead of Black–Scholes–Merton | accepted |
+| 18.9 | 18 | section | Valuation of Futures Options Using Binomial Trees | accepted |
+| 18.10 | 18 | section | American Futures Options vs. American Spot Options | accepted |
+| 18.11 | 18 | section | Futures-Style Options | accepted |
+| 19.1 | 19 | section | Illustration | accepted |
+| 19.2 | 19 | section | Naked and Covered Positions | accepted |
+| 19.3 | 19 | section | Greek Letter Calculation | accepted |
+| 19.4 | 19 | section | Delta Hedging | accepted |
+| 19.5 | 19 | section | Theta | accepted |
+| 19.6 | 19 | section | Gamma | accepted |
+| 19.7 | 19 | section | Relationship between Delta, Theta, and Gamma | accepted |
+| 19.8 | 19 | section | Vega | accepted |
+| 19.9 | 19 | section | Rho | accepted |
+| 19.10 | 19 | section | The Realities of Hedging | accepted |
+| 19.11 | 19 | section | Scenario Analysis | accepted |
+| 19.12 | 19 | section | Extension of Formulas | accepted |
+| 19.13 | 19 | section | Portfolio Insurance | accepted |
+| 19.14 | 19 | section | Application of Machine Learning to Hedging | accepted |
+| 19.appendix | 19 | appendix | Taylor Series Expansions and Greek Letters | accepted |
+| 20.1 | 20 | section | Implied Volatilities of Calls and Puts | accepted |
+| 20.2 | 20 | section | Volatility Smile for Foreign Currency Options | accepted |
+| 20.3 | 20 | section | Volatility Smile for Equity Options | accepted |
+| 20.4 | 20 | section | Alternative Ways of Characterizing the Volatility Smile | accepted |
+| 20.5 | 20 | section | The Volatility Term Structure and Volatility Surfaces | accepted |
+| 20.6 | 20 | section | Minimum Variance Delta | accepted |
+| 20.7 | 20 | section | The Role of the Model | accepted |
+| 20.8 | 20 | section | When a Single Large Jump is Anticipated | accepted |
+| 20.appendix | 20 | appendix | Determining Implied Risk-Neutral Distributions from Volatility Smiles | accepted |
+| 21.1 | 21 | section | Binomial Trees | accepted |
+| 21.2 | 21 | section | Using the Binomial Tree for Options on Indices, Currencies, and Futures Contracts | accepted |
+| 21.3 | 21 | section | Binomial Model for a Dividend-Paying Stock | accepted |
+| 21.4 | 21 | section | Alternative Procedures for Constructing Trees | accepted |
+| 21.5 | 21 | section | Time-Dependent Parameters | accepted |
+| 21.6 | 21 | section | Monte Carlo Simulation | accepted |
+| 21.7 | 21 | section | Variance Reduction Procedures | accepted |
+| 21.8 | 21 | section | Finite Difference Methods | accepted |
 | 22.1 | 22 | section | The VaR and ES Measures | unreviewed |
 | 22.2 | 22 | section | Historical Simulation | unreviewed |
 | 22.3 | 22 | section | Model-Building Approach | unreviewed |

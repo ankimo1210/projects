@@ -60,6 +60,19 @@ python johnhull/scripts/fast_acceptance_options.py build
 [省略した確認と再検証手順](../docs/FAST_ACCEPTANCE_GUIDE.md)を参照。
 既存Book本文の改訂・main統合は未実施。登録後の再確認には`verify`を使い、証跡を生成し直さない。
 
+## Ch16–21の節別補足教材
+
+全54節・93要件を`site/chapters/ch16.html`〜`ch21.html`へ生成する。
+Ch21の木/MC/差分法は節ごとに実装とtestを宣言し、前便のcoreと証跡を保持する。
+
+```bash
+python johnhull/scripts/fast_acceptance_advanced_options.py build
+```
+
+共通venvのPythonとPYTHONPATHを使う。数式表示にはオンライン接続が必要。
+[受入範囲・制限・再検証](../docs/CHAPTERS_16_21_ACCEPTANCE_2026-10-07.md)を参照。
+登録後は`verify`でread-only確認する。既存Book改訂/main統合は未実施。
+
 ## 図を追加する
 
 `report_builder/figures.py` の `FIGURES` に `FigureSpec` を1つ足すだけ
