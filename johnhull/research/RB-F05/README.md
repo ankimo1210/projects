@@ -1,6 +1,6 @@
 # RB-F05 v1 — digitalの微分教師とDML
 
-更新2026-10-07。**v1 digitalの計算・独立検証・6本のCPU学習比較・研究3図を実装。最終レビュー待ち。**
+更新2026-10-07。**v1 digitalの計算・独立検証・6本のCPU学習比較・研究3図を実装。独立レビューImportant1を修正し、v1 digital完了。**
 RB-F05全体の完了ではない。離散バリアと0DTE/roughは後続。
 設計は[既存メモ](../../docs/prep/design/RB-F05_DESIGN.md)、順序は[研究計画§6.1](../../docs/superpowers/plans/2026-09-27-research-backlog.md)。
 
@@ -50,7 +50,7 @@ deltaはdiscount×phi(d2)/(S sigma sqrt(T))。既存cash_or_nothing、密度積�
 | ramp | K±8のcall spreadに等しい別payoff。独立call spread価格/deltaとは一致し、digitalのdeltaとは異なる |
 
 固定pilotはseed6017・32768本。**主実験を見る前に6SE＋独立参照誤差2e-12を確定**。
-主diagnosticは別seed1107・65536本、S=95/100/105とT=.05/1/3/2年。
+主diagnosticは別seed1107・65536本、S=95/100/105とT=.05・1/3・2年。
 LRM/条件付き期待値に価格・deltaの6SE検査を適用し、pathwise/rampは負の結果として残す。
 MCのSEはIIDのpath axisから計算し、シナリオ平均・seed分散と混同しない。
 
@@ -72,6 +72,7 @@ WSLの対象checkout rootから共有venvを使う。重い学習はcheck時に�
 
 ```bash
 export PYTHONPATH="$PWD/johnhull/hullkit/src:$PWD/deep_hedge_price/src:$PWD/johnhull/report:$PWD"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
 /home/kazumasa/projects/.venv/bin/python johnhull/research/RB-F05/build_reference.py --check
 /home/kazumasa/projects/.venv/bin/python -m pytest -q johnhull/hullkit/tests/test_digital_teachers.py johnhull/hullkit/tests/test_digital_research.py deep_hedge_price/tests/test_digital_dml.py
 # 全比較を作り直す場合のみ（時間予算のため、update数・学習結果・計時は変わり得る）
@@ -95,3 +96,18 @@ CPU計時や学習結果の環境共通一致は要求しない。全配列を�
 - Glasserman/Karmarkar, [Differential ML with a Difference, arXiv 2512.05301v2](https://arxiv.org/html/2512.05301v2)、§3.1–3.4。2026-10-07に一次本文を再確認。[S002確認記録](../../docs/prep/sources/sources_S001-S031.md#s002)。
 - v2の式(3)/(18)は標準GBM・密度と不整合で、標準密度から独立に導いた教師を使う。著者コード・論文学習値の再現は行っていないため、著者実験の誤りとは判断しない。
 - Hull 11e GE §26.10のcash-or-nothingは既存binary pricerとの独立照合に使う。データは合成、論文の本文・図の転載はしない。
+
+## 最終検証・レビュー（2026-10-07）
+
+- 新規32 tests（教師20・学習5・証跡7）、既存aad/exotics/quote-risk/pricing-lossと両package索引/docstringを含む807 tests PASS。変更Python7ファイルruff/format、cached+fresh数値検査、notebook3図実行/目視PASS。
+- 独立レビュー：Critical0・Important1・Minor0。推論threadが呼出側設定へ戻るとhardware.threads=1の記録が偽になる点を修正。生成全体を1threadへ固定し、実際の値を記録、呼出側設定を終了後に復元。READMEにOMP/BLAS設定を明記。
+- Final: fixed thread記録の食い違い — 呼出側2threadで本物の小規模学習/推論を実行し、観測2・記録1でRED、全処理1thread/終了後2へ復元でGREEN、対象807 PASS。保存済み6モデルは元々1threadで計測され、重み/誤差/費用は変更・再学習していない。
+- 台帳check-artifacts PASS（33/306維持）、tracked release PASS。全suite/Book/D1再撮影は繰り返していない。
+
+### 最終レビューで確認した境界
+
+- Final: Ruling: 著者の学習結果/コードの正否は判断しない — 本実装の独立数式とteacher検査を根拠にする — 著者実験について結論が必要なら別の再現作業が要る。
+- Final: Ruling: 全6モデルの再学習と壁時計値の固定一致は要求しない — 保存重みの独立推論・誤差/費用の再計算と、計測時1threadの事実を確認する — 別hardwareへの速度保証には再計測が要る。
+- Final: Ruling: bool/complex/object/datetimeの網羅拒否は最小入力方針に従い対象外 — 数学的に無効な値/次元を検査する — 公開API等の厳密な型契約が必要になれば追加検査が要る。
+- Final: Ruling: 全suite/本編Book/D1/別受入worktreeはこの研究から判定しない — 本編依存/台帳を変更せず、親が対象807・tracked release・33節台帳gateを確認する — 広い回帰/表示/受入の保証は別検証が要る。
+- Deferred minors：なし。

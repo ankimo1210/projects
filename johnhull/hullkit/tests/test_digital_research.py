@@ -50,3 +50,34 @@ def test_tampering_predictions_metrics_split_or_total_cost_is_detected(target):
         data["runs"][0]["offline_s"] += 1
     with pytest.raises(AssertionError):
         REF.check_record(data, arrays, fresh=False)
+
+
+def test_default_caller_threads_match_recorded_training_and_inference(monkeypatch, tmp_path):
+    """Reproduce the review issue with genuine training/inference at a tiny cap."""
+    import torch
+
+    from deep_hedge_price import _digital_dml as learner
+
+    original_train, original_predict = learner.train, learner.predict
+    observed = []
+
+    def small_train(*args, **kwargs):
+        kwargs["max_updates"] = min(kwargs.get("max_updates", 2), 2)
+        return original_train(*args, **kwargs)
+
+    def measured_predict(*args, **kwargs):
+        observed.append(torch.get_num_threads())
+        return original_predict(*args, **kwargs)
+
+    monkeypatch.setattr(learner, "train", small_train)
+    monkeypatch.setattr(learner, "predict", measured_predict)
+    monkeypatch.setattr(REF, "HERE", tmp_path)
+    previous = torch.get_num_threads()
+    try:
+        torch.set_num_threads(2)
+        REF.generate()
+        record = json.loads((tmp_path / "reference.json").read_text())
+        assert observed and set(observed) == {record["hardware"]["threads"]} == {1}
+        assert torch.get_num_threads() == 2, "restore the caller's thread setting"
+    finally:
+        torch.set_num_threads(previous)

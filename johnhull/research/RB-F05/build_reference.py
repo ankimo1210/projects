@@ -330,7 +330,7 @@ def baseline_experiment(arrays):
     return baselines
 
 
-def generate():
+def _generate():
     """Run the fixed pilot and all six CPU fits; retain all arrays and negative results."""
     import torch
 
@@ -463,7 +463,8 @@ def generate():
         "python": platform.python_version(),
         "numpy": np.__version__,
         "torch": torch.__version__,
-        "threads": 1,
+        "threads": torch.get_num_threads(),
+        "thread_scope": "torch training and inference",
         "device": "cpu",
         "timing": "observed perf_counter; not a portable performance gate",
     }
@@ -472,6 +473,18 @@ def generate():
     np.savez_compressed(HERE / "reference.npz", **arrays)
     (HERE / "reference.json").write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     print("RB-F05 generated; all independent numerical/array checks PASS", flush=True)
+
+
+def generate():
+    """Run training and inference at one thread, then restore the caller's setting."""
+    import torch
+
+    previous = torch.get_num_threads()
+    torch.set_num_threads(1)
+    try:
+        _generate()
+    finally:
+        torch.set_num_threads(previous)
 
 
 def main():
