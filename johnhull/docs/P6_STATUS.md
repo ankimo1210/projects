@@ -3,7 +3,7 @@
 ## 最終統合（2026-10-08）
 
 統合構成でP6 **80/80 accepted**、全体**306/306・未評価0**。
-最新の開発修正と正式受入を合流し、全体suite `full run: 6640 passed, 2 catalogue failures, 6 skipped; catalogue-only repair: 764 passed; combined unique checks: 6649 passed, 6 skipped`、全306節native artifacts、変更Pythonのruff/formatを確認。
+最新の開発修正と正式受入を合流し、全体suiteと対象再検査、全306節native artifacts、変更Pythonのruff/formatを確認（[検証結果](validation/final-integration/full-suite.json)）。
 原典の入力不足・未再現値とcaller条件の検証範囲を保持する。main反映・最終レビューは[統合記録](FINAL_INTEGRATION_2026-10-08.md)を参照。
 
 ## 実装と受入の履歴

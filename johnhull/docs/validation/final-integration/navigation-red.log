@@ -1,0 +1,29 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___ test_normal_entrance_lists_every_supplement_and_its_network_requirement ____
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3397/test_normal_entrance_lists_eve0')
+
+    def test_normal_entrance_lists_every_supplement_and_its_network_requirement(tmp_path):
+        """The homepage must expose all 34 accepted chapter companions once each."""
+        output = render_site(output_dir=tmp_path, log=lambda *_args: None)
+        text = (output / "index.html").read_text()
+        parser = ChapterLinks()
+        parser.feed(text)
+        expected = {f"chapters/ch{chapter:02d}.html" for chapter in (*range(1, 26), *range(29, 38))}
+>       assert set(parser.links) == expected
+E       AssertionError: assert set() == {'chapters/ch...06.html', ...}
+E
+E         Extra items in the right set:
+E         'chapters/ch07.html'
+E         'chapters/ch20.html'
+E         'chapters/ch37.html'
+E         'chapters/ch31.html'
+E         'chapters/ch36.html'...
+E
+E         ...Full output truncated (30 lines hidden), use '-vv' to show
+
+johnhull/report/tests/test_supplement_navigation.py:29: AssertionError
+=========================== short test summary info ============================
+FAILED johnhull/report/tests/test_supplement_navigation.py::test_normal_entrance_lists_every_supplement_and_its_network_requirement
+1 failed in 8.47s

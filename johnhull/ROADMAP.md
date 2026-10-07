@@ -28,9 +28,9 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 101 priv
 | Hull 11e 全37章 | 全306節accepted・未評価0 | [生成台帳](docs/SECTION_LEDGER.md)。原典入力不足・表示差は各節の宣言範囲と制限に保持 |
 | P0–P7の計算・教材・受入 | 統合構成で完了 | 開発`9dd53804`と受入`cef7cea1`を合流。P4最新レビュー修正、private BGM/businessモデル、P8、研究v1を保持 |
 | P8監査の是正 | 完了 | [P8状態](docs/P8_STATUS.md)。P8時点の33節D1・両保管庫復元・影響画面の記録を保持し、統合時に全306節native artifactsを検査 |
-| 統合検証 | 全体suite・数値・台帳PASS | `full run: 6640 passed, 2 catalogue failures, 6 skipped; catalogue-only repair: 764 passed; combined unique checks: 6649 passed, 6 skipped`（hullkit + report + deep_hedge_price）。変更Python299ファイルruff/format PASS。影響4便の数値検査、Ch1の37値/40状態、最終45節のfresh画面検査PASS |
-| 配布生成 | 通常`make hull-report`で全補足教材を再生成 | Ch1・Ch2–25・Ch29–37の補足教材を既存portalへ接続。Ch1の古いBookキャッシュは同一入力の受入済み出力から復元 |
-| main反映 | 最終レビュー・push段階 | 実測結果・判断・反映結果は[最終統合記録](docs/FINAL_INTEGRATION_2026-10-08.md)。rootの未公開履歴・別プロジェクト変更・受入worktreeを保持 |
+| 統合検証 | 全体suite・数値・台帳PASS | 全体run 6,640 passed・索引2件FAIL・6 skipped、索引修正764件と導線/render検査16件がPASS。重複を除く6,650 passed・6 skipped（hullkit + report + deep_hedge_price）。変更Python300ファイルruff/format PASS。影響4便の数値検査、Ch1の37値/40状態、最終45節のfresh画面検査PASS |
+| 配布生成 | 通常`make hull-report`で全補足教材を再生成 | Ch1・Ch2–25・Ch29–37の補足教材を生成し、入口から全34章への到達を確認。Ch1の古いBookキャッシュは同一入力の受入済み出力から復元 |
+| main反映 | 独立レビュー修正済み・push段階 | 実測結果・判断・反映結果は[最終統合記録](docs/FINAL_INTEGRATION_2026-10-08.md)。rootの未公開履歴・別プロジェクト変更・受入worktreeを保持 |
 | Beyond Hull（vol13–28） | 完了 | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 研究track #1 | RB-F07 v1完了 | [研究資料](research/RB-F07/README.md)。private単一曲線・解析Jacobian・随伴リスク、独立レビュー済み。v2/v3は別承認 |
 | 研究track #2 | RB-F05 digital v1完了 | [研究資料](research/RB-F05/README.md)。DMLは全seed改善、解析・補間には精度/費用で劣り、速度昇格は不採用。次は離散バリアの契約/独立参照を固定 |

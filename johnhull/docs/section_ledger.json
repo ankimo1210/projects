@@ -132,7 +132,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -329,7 +329,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -544,7 +544,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -703,7 +703,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -914,7 +914,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -1073,7 +1073,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -1243,7 +1243,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -1455,7 +1455,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -1580,7 +1580,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -1739,7 +1739,7 @@
         "integration": {
           "path": "docs/validation/chapter-01/acceptance-check.json",
           "kind": "record",
-          "sha256": "26f2e74bfb803be9111730f879c08b9a97ca6c3fd766ce6eb84d96852237d0f4"
+          "sha256": "cebbabaf2186536d772d76e0e5b289852f467d1dfe858babb2e19bb83425a3c4"
         },
         "acceptance_note": {
           "path": "docs/CHAPTER_01_ACCEPTANCE_2026-10-07.md",
@@ -1886,7 +1886,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -1896,7 +1896,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -2018,7 +2018,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -2028,7 +2028,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -2113,7 +2113,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -2123,7 +2123,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -2294,7 +2294,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -2304,7 +2304,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -2473,7 +2473,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -2483,7 +2483,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -2613,7 +2613,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -2623,7 +2623,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -2755,7 +2755,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -2765,7 +2765,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -2887,7 +2887,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -2897,7 +2897,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -3019,7 +3019,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -3029,7 +3029,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -3159,7 +3159,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -3169,7 +3169,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -3350,7 +3350,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -3360,7 +3360,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -3541,7 +3541,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -3551,7 +3551,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -3732,7 +3732,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -3742,7 +3742,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -3923,7 +3923,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -3933,7 +3933,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -4114,7 +4114,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -4124,7 +4124,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -4305,7 +4305,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -4315,7 +4315,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -4455,7 +4455,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -4465,7 +4465,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -4605,7 +4605,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -4615,7 +4615,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -4821,7 +4821,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -4831,7 +4831,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -5084,7 +5084,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -5094,7 +5094,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -5226,7 +5226,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -5236,7 +5236,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -5448,7 +5448,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -5458,7 +5458,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -5639,7 +5639,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -5649,7 +5649,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -5830,7 +5830,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -5840,7 +5840,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -6103,7 +6103,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -6113,7 +6113,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -6417,7 +6417,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -6427,7 +6427,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -6649,7 +6649,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -6659,7 +6659,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -7004,7 +7004,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -7014,7 +7014,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -7236,7 +7236,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -7246,7 +7246,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -7452,7 +7452,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -7462,7 +7462,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -7547,7 +7547,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -7557,7 +7557,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -7687,7 +7687,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -7697,7 +7697,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -7829,7 +7829,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -7839,7 +7839,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -8010,7 +8010,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -8020,7 +8020,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -8160,7 +8160,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -8170,7 +8170,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -8310,7 +8310,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -8320,7 +8320,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -8501,7 +8501,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -8511,7 +8511,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -8606,7 +8606,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -8616,7 +8616,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -8746,7 +8746,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -8756,7 +8756,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -8937,7 +8937,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -8947,7 +8947,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -9087,7 +9087,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -9097,7 +9097,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -9196,7 +9196,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -9206,7 +9206,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -9301,7 +9301,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -9311,7 +9311,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -9441,7 +9441,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -9451,7 +9451,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -9755,7 +9755,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -9765,7 +9765,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -10106,7 +10106,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -10116,7 +10116,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -10498,7 +10498,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -10508,7 +10508,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -10730,7 +10730,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -10740,7 +10740,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -10909,7 +10909,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -10919,7 +10919,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -11090,7 +11090,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -11100,7 +11100,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -11281,7 +11281,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -11291,7 +11291,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -11431,7 +11431,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -11441,7 +11441,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -11622,7 +11622,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -11632,7 +11632,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -11813,7 +11813,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -11823,7 +11823,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -12004,7 +12004,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -12014,7 +12014,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -12154,7 +12154,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -12164,7 +12164,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -12345,7 +12345,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -12355,7 +12355,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -12536,7 +12536,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -12546,7 +12546,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -12727,7 +12727,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -12737,7 +12737,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -12869,7 +12869,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -12879,7 +12879,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -13009,7 +13009,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -13019,7 +13019,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -13188,7 +13188,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -13198,7 +13198,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -13369,7 +13369,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -13379,7 +13379,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -13548,7 +13548,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -13558,7 +13558,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -13717,7 +13717,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -13727,7 +13727,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -13849,7 +13849,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -13859,7 +13859,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -14030,7 +14030,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -14040,7 +14040,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -14221,7 +14221,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -14231,7 +14231,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
@@ -14363,7 +14363,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -14373,7 +14373,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         }
       }
     },
@@ -14544,7 +14544,7 @@
         "numerical": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/numerical-check.json",
-          "sha256": "7787cbdfc051f0f9b05e02fd64bd5c9539ee7143e1edfd232e249d6de2701f3d"
+          "sha256": "8c35936a5e02752e9e1c39589361a8f9932ad09d06944c875b365ee2b2c758e3"
         },
         "browser": {
           "kind": "record",
@@ -14554,7 +14554,7 @@
         "chapter_check": {
           "kind": "record",
           "path": "docs/validation/fast-ch02-09/acceptance-check.json",
-          "sha256": "b8d9fd962a62ed4b2b7edb6e3399030c05020b8c68e66acdaaaf99f41e859600"
+          "sha256": "8e62549ad0054577165b7a3a80ab8aedea9182d7dcb928591522f3a3bac88011"
         },
         "implementation": {
           "kind": "source",
