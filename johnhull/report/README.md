@@ -46,6 +46,20 @@ python johnhull/scripts/fast_acceptance.py build
 [受入記録と省略した確認](../docs/CHAPTERS_02_09_ACCEPTANCE_2026-10-07.md)、
 [再検証コマンド](../docs/FAST_ACCEPTANCE.md)を参照。
 
+## Ch10–15の節別補足教材
+
+全58節・161要件を含む補足教材を`site/chapters/ch10.html`〜`ch15.html`へ生成する。
+Ch2–9の固定証跡はそのまま保持し、各便のrecipeで後続を追加する。
+
+```bash
+python johnhull/scripts/fast_acceptance_options.py build
+```
+
+数式表示はMathJax CDNを利用し、オンライン接続が必要。
+[受入記録](../docs/CHAPTERS_10_15_ACCEPTANCE_2026-10-07.md)、
+[省略した確認と再検証手順](../docs/FAST_ACCEPTANCE_GUIDE.md)を参照。
+既存Book本文の改訂・main統合は未実施。登録後の再確認には`verify`を使い、証跡を生成し直さない。
+
 ## 図を追加する
 
 `report_builder/figures.py` の `FIGURES` に `FigureSpec` を1つ足すだけ

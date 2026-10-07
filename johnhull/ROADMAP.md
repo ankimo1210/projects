@@ -21,18 +21,18 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 private modules on main as of 2026-10-05 (later P3–P6 logic is on `codex/p6-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-10-07、Ch1–9の80節受入・開発側P8完了報告）
+## 現在地（2026-10-07、Ch1–15受入・開発側P8完了報告）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
 | 章単位（Hull 11e 全37章） | 上表14行すべてdone | 巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol13–28） | すべてdone | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 全節監査の是正 | 第1–5便完了 | 残りは「全節監査と是正」の表 |
-| 節単位の受入 | 受入113・未評価193（36.9%） | Ch1全10節はD3、Ch2–9全70節は承認済みfast-v1で受入、P6正式80/80。P0/P1/P2完了、P3正式8/37。ローカルcodex/johnhull-acceptance、main統合は未実施。[Ch2–9受入](docs/CHAPTERS_02_09_ACCEPTANCE_2026-10-07.md) |
+| 節単位の受入 | 受入171・未評価135（55.9%） | Ch1全10節はD3、Ch2–15全128節は承認済みfast-v1で受入。P6正式80/80、P4正式58/112。P0/P1/P2完了、P3正式8/37。ローカルcodex/johnhull-acceptance、main統合は未実施。[Ch10–15受入](docs/CHAPTERS_10_15_ACCEPTANCE_2026-10-07.md) |
 | ロジック先行 | P3 36/37、P4 95/95、P5 32/32、P6 54/54 | 開発チャット報告ではP7計算10/11（§36.4入力不足）、P8監査完了・mainへce801e48統合の報告。この受入branchはP6完了時の995188e6が基点。[P6状態](docs/P6_STATUS.md) |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。Ch28：依存変更2節を再検査 | §28.2/28.5のbrowser/runtime/pytest・両保管庫PASS。他28節は完全指紋とruntimeが同じ直接のredrawn基点を再利用。新6図/24表示状態と基点画像の両コピー復元PASS。[章記録](docs/validation/chapter-28/acceptance-check.json) |
-| テスト・レビュー | Ch2–9対象130 tests・70表示状態・代表8画像PASS | 台帳41 testsとsource/artifactを確認。全suite/全Book/2幅/全画像/両保管庫復元はfast-v1で省略。Ch1の初回6098 passed/6 skipped・40画面と旧33行を保持し、件数試験だけmetadata gateへ分離。[Ch2–9証跡](docs/validation/fast-ch02-09/acceptance-check.json) |
+| テスト・レビュー | Ch10–15対象381 tests・58表示状態・代表6画像PASS | 独立レビューと台帳41 tests、source/artifactを確認。全suite/全Book/2幅/全画像/両保管庫復元はfast-v1で省略。旧113受入行と証跡を保持。[Ch10–15証跡](docs/validation/fast-ch10-15/acceptance-check.json) |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -60,12 +60,12 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | P1 | Ch 27 の残り（§27.5–§27.8） | 4 | 4 | 0 | — | 完了（M14–M17） |
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
 | P3 | 金利（Ch 28–34） | 37 | 8 | 3 | ロジック36/37、§33.2は原典入力不足 | Ch28全8節受入、Ch29–34受入29節を保留。本人指示2026-10-05でP4実装へ |
-| P4 | オプションの中核（Ch 10–21） | 112 | 0 | 19 | 計算95/95項目の初回実装・対象検証完了、説明中心17項目は保留（下調べの分類） | codex/p4-logicへpush。Ch21対象112 tests・ruff check/format check PASS。教材・正式受入は保留 |
+| P4 | オプションの中核（Ch 10–21） | 112 | 58 | 19 | 計算95/95項目の初回実装完了。Ch10–15受入58節、Ch16–21残り54節 | Ch10–15全58節・161要件をfast-v1受入、381 tests・58表示状態・代表6画像・台帳41 tests PASS。[P4状態](docs/P4_STATUS.md)。Book改訂/main統合は未実施 |
 | P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | 計算32/32の初回実装・対象検証完了、説明中心4項目は保留 | codex/p5-logicへ節ごとpush。P5対象196 tests・docstring156・索引6・ruff PASS。入力不足・モデル範囲は[P5状態](docs/P5_STATUS.md)に記録。教材・正式受入は保留 |
-| P6 | 先物・金利の基礎（Ch 1–9） | 80 | 80 | 31 | 計算54/54、説明中心26（旧監査の分類とは異なる） | Ch1全10節・23要件D3、Ch2–9全70節・206要件fast-v1受入。対象130 tests・70表示状態・代表8画像・台帳41 tests PASS。次はCh10。[便の記録](docs/CHAPTERS_02_09_ACCEPTANCE_2026-10-07.md)。補足HTMLの受入、Book改訂/main統合は未実施 |
+| P6 | 先物・金利の基礎（Ch 1–9） | 80 | 80 | 31 | 計算54/54、説明中心26（旧監査の分類とは異なる） | Ch1全10節・23要件D3、Ch2–9全70節・206要件fast-v1受入。対象130 tests・70表示状態・代表8画像・台帳41 tests PASS。P6受入完了。[便の記録](docs/CHAPTERS_02_09_ACCEPTANCE_2026-10-07.md)。補足HTMLの受入、Book改訂/main統合は未実施 |
 | P7 | Ch 35–37 | 16 | 0 | 6 | §36.4 はモデル係数・株数・希薄化等の入力不足 | 開発チャット報告では計算10/11の初回実装完了、正式受入は保留。この受入branchの基点には含めない |
-| P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表 | 開発チャット報告では是正・判断・検証完了、main ce801e48（10/7確認）。この便の対象はCh1–9受入 |
-| **計** | | **306** | **113** | **63** | | **36.9%** |
+| P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表 | 開発チャット報告では是正・判断・検証完了、main ce801e48（10/7確認）。この便の対象はCh10–15受入 |
+| **計** | | **306** | **171** | **63** | | **55.9%** |
 
 ### 先に決めること
 
