@@ -269,3 +269,9 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._numeraire_change` | `hullkit._numeraire_change:numeraire_drift_change`, `hullkit._numeraire_change:physical_to_q_drift`, `hullkit._numeraire_change:new_measure_brownian_increment`, `hullkit._numeraire_change:numeraire_density` | §28.8; signed covariance, absolute loadings, independent Gaussian tilt and fixed-seed MC; test_numeraire_change.py |
 
 | `hullkit._chapter28_lesson` | Shared private §28.6–28.8 cells and six figures; independent Q/T/ratio quadrature and covariance trace checks; test_chapter28_lesson.py |
+
+## RB-F07 research: market quote sensitivity
+
+| Module | Contracts | Verification |
+|---|---|---|
+| `hullkit._quote_risk` | Private v1 `hullkit._quote_risk:Quote`, `hullkit._quote_risk:calibrate`, `hullkit._quote_risk:model_quotes`, `hullkit._quote_risk:cashflow_value`, `hullkit._quote_risk:receiver_swap_value`, `hullkit._quote_risk:quote_sensitivity` | Exact square single-curve Newton/analytic Jacobian; independent sequential brentq, hand closed form, Hull Table4.3, rebootstrap bumps, coordinate/residual invariance, complex step, interpolation/coverage/quote-unit checks; `test_quote_risk.py`; `research/RB-F07/` |
