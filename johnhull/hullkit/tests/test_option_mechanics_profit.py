@@ -44,7 +44,9 @@ def test_independent_physical_exercise_cash_ledger(kind, strike, premium):
         expected.append(float(300 * (exercise - premium)))
     assert np.allclose(actual["profit"], expected, atol=1e-12, rtol=1e-12)
     breakeven = strike + premium if kind == "call" else strike - premium
-    assert model().option_cashflows(breakeven, strike, premium, kind=kind)["profit"] == pytest.approx(0)
+    assert model().option_cashflows(breakeven, strike, premium, kind=kind)[
+        "profit"
+    ] == pytest.approx(0)
 
 
 @pytest.mark.parametrize(

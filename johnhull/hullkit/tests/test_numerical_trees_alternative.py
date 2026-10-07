@@ -53,7 +53,7 @@ def test_equal_probability_european_independent_terminal_binomial_sum():
 def test_equal_probability_bsm_limit(kind):
     result = numerical.equal_probability_lattice(50, 50, 0.05, 0.3, 0.5, 1000, kind=kind)
     reference = (bsm.call_price if kind == "call" else bsm.put_price)(50, 50, 0.05, 0.3, 0.5)
-    assert result["price"] == pytest.approx(reference, abs=0.006)
+    assert result["price"] == pytest.approx(reference, abs=0.001)
 
 
 def test_equal_probability_survives_coarse_crr_negative_probability():

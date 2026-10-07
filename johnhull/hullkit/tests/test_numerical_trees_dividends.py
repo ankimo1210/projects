@@ -143,7 +143,7 @@ def test_source_cash_dividend_independent_pde_on_same_s_star_model():
     reference = independent_dividend_pde(
         52, 50, 0.1, 0.4, 5 / 12, [3.5 / 12], [2.06], kind="put", american=True
     )
-    assert result["price"] == pytest.approx(reference, abs=0.007)
+    assert result["price"] == pytest.approx(reference, abs=0.003)
 
 
 def test_proportional_dividends_compound_and_european_terminal_law():
@@ -151,12 +151,14 @@ def test_proportional_dividends_compound_and_european_terminal_law():
         52, 50, 0.05, 0.3, 1, 1000, [0.3, 0.6], [0.04, 0.07], model="fraction", kind="call"
     )
     reference = bsm.call_price(52 * (1 - 0.04) * (1 - 0.07), 50, 0.05, 0.3, 1)
-    assert result["price"] == pytest.approx(reference, abs=0.003)
+    assert result["price"] == pytest.approx(reference, abs=0.002)
     assert result["terminal_scale"] == pytest.approx(0.96 * 0.93, abs=1e-12)
 
 
 def test_aligned_ex_date_american_call_can_exercise_before_cash_drop():
-    result = numerical.dividend_lattice(60, 50, 0.05, 0.1, 0.5, 20, [0.25], [5], american=True)
+    result = numerical.dividend_lattice(
+        60, 50, 0.05, 0.1, 0.5, 20, [0.25], [5], kind="call", american=True
+    )
     assert not result["off_grid_dividend_times"]
     assert np.any(result["exercise"][10])
     assert result["before_stock"][10] - result["stock"][10] == pytest.approx(
@@ -182,3 +184,62 @@ def test_cash_control_uses_same_dividend_deducted_european_reference():
     assert result["corrected"] == pytest.approx(
         result["american"] - result["european_tree"] + reference, abs=1e-12
     )
+
+
+def independent_dividend_tree(
+    spot, strike, rate, sigma, maturity, steps, times, amounts, *, model, kind
+):
+    # Node-index alignment, so it does not share the module's float time comparisons.
+    dt = maturity / steps
+    up = math.exp(sigma * math.sqrt(dt))
+    p = (math.exp(rate * dt) - 1 / up) / (up - 1 / up)
+    index = [round(t / dt) for t in times]
+    risky = (
+        spot - sum(d * math.exp(-rate * t) for t, d in zip(times, amounts, strict=True))
+        if model == "cash"
+        else spot
+    )
+
+    def payoff(stock):
+        return np.maximum(stock - strike, 0) if kind == "call" else np.maximum(strike - stock, 0)
+
+    def prices(i):
+        base = risky * up ** (i - 2 * np.arange(i + 1))
+        if model == "cash":
+            after = base + sum(
+                d * math.exp(-rate * (k - i) * dt)
+                for k, d in zip(index, amounts, strict=True)
+                if k > i
+            )
+            return after, after + sum(d for k, d in zip(index, amounts, strict=True) if k == i)
+        after = base * math.prod(1 - f for k, f in zip(index, amounts, strict=True) if k <= i)
+        return after, base * math.prod(1 - f for k, f in zip(index, amounts, strict=True) if k < i)
+
+    after, before = prices(steps)
+    value = np.maximum(payoff(after), payoff(before))
+    for i in range(steps - 1, -1, -1):
+        after, before = prices(i)
+        value = np.maximum(
+            math.exp(-rate * dt) * (p * value[:-1] + (1 - p) * value[1:]),
+            np.maximum(payoff(after), payoff(before)),
+        )
+    return float(value[0])
+
+
+@pytest.mark.parametrize(
+    "args,times,amounts,model,kind",
+    [
+        ((60, 50, 0.05, 0.1, 0.5, 20), [0.25], [5], "cash", "call"),
+        ((52, 50, 0.1, 0.4, 5 / 12, 10), [3.5 / 12], [0.04], "fraction", "put"),
+        ((60, 50, 0.05, 0.1, 0.3, 7), [5 * 0.3 / 7], [3], "cash", "call"),
+    ],
+)
+def test_american_aligned_dividend_lattice_matches_an_independent_node_index_tree(
+    args, times, amounts, model, kind
+):
+    result = numerical.dividend_lattice(
+        *args, times, amounts, model=model, kind=kind, american=True
+    )
+    assert not result["off_grid_dividend_times"]
+    expected = independent_dividend_tree(*args, times, amounts, model=model, kind=kind)
+    assert result["price"] == pytest.approx(expected, abs=1e-10)

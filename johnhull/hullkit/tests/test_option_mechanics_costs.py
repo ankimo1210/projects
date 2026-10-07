@@ -19,7 +19,9 @@ def test_printed_midpoint_hidden_cost_and_contract_units():
 
 @pytest.mark.parametrize("contracts", [1, 3, 10])
 def test_order_cashflows_against_independent_decimal_fill_accounting(contracts):
-    row = model().option_trade_costs(4, 4.5, contracts=contracts, fixed_fee=2.5, fee_per_contract=0.5)
+    row = model().option_trade_costs(
+        4, 4.5, contracts=contracts, fixed_fee=2.5, fee_per_contract=0.5
+    )
     fee = Decimal("2.5") + contracts * Decimal("0.5")
     buys = sum(Decimal("4.5") * 100 for _ in range(contracts))
     sells = sum(Decimal("4") * 100 for _ in range(contracts))
@@ -47,11 +49,14 @@ def test_sale_and_exercise_compare_total_cash_after_different_fees():
     assert row["sale_minus_exercise"] == pytest.approx(float(expected))
 
 
-@pytest.mark.parametrize("call", [
-    lambda m: m.option_trade_costs(4.5, 4),
-    lambda m: m.option_trade_costs(4, 4.5, contracts=-1),
-    lambda m: m.option_trade_costs(4, 4.5, multiplier=0),
-])
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda m: m.option_trade_costs(4.5, 4),
+        lambda m: m.option_trade_costs(4, 4.5, contracts=-1),
+        lambda m: m.option_trade_costs(4, 4.5, multiplier=0),
+    ],
+)
 def test_undefined_quote_or_contract_count_rejected(call):
     with pytest.raises(ValueError):
         call(model())

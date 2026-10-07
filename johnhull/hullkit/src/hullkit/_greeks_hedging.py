@@ -1,6 +1,7 @@
 """Private Hull GE Ch19: Greek units, hedge cash replay and scenarios."""
 
 import math
+import sys
 
 import numpy as np
 
@@ -362,7 +363,12 @@ def scenario_reprice(book, spot, rate, spot_changes, vol_changes, *, elapsed=0, 
             not all(math.isfinite(x) for x in (quantity, strike, maturity, sigma))
             or kind not in ("call", "put")
             or min(strike, sigma) < 0
-            or maturity < elapsed
+            or (
+                maturity < elapsed
+                and not math.isclose(
+                    maturity, elapsed, rel_tol=8 * sys.float_info.epsilon, abs_tol=0
+                )
+            )
             or np.any(sigma + dv < 0)
         ):
             raise ValueError("finite European book with nonnegative resulting time/IV required")
@@ -371,7 +377,12 @@ def scenario_reprice(book, spot, rate, spot_changes, vol_changes, *, elapsed=0, 
         return sum(
             quantity
             * carry_option_details(
-                current_spot, strike, rate, yield_rate, sigma + vol_shock, maturity - time_passed
+                current_spot,
+                strike,
+                rate,
+                yield_rate,
+                sigma + vol_shock,
+                max(maturity - time_passed, 0),
             )[kind]
             for quantity, kind, strike, maturity, sigma in book
         )

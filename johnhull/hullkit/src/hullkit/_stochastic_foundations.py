@@ -9,12 +9,18 @@ def wiener_moments(initial, drift, diffusion, maturity):
     """Exact normal mean, variance and standard deviation for constant a,b."""
     if not all(math.isfinite(x) for x in (initial, drift, diffusion, maturity)) or maturity < 0:
         raise ValueError("finite coefficients and nonnegative maturity required")
-    return initial+drift*maturity, diffusion**2*maturity, abs(diffusion)*math.sqrt(maturity)
+    return initial + drift * maturity, diffusion**2 * maturity, abs(diffusion) * math.sqrt(maturity)
 
 
 def _time_grid(times):
     times = np.asarray(times, dtype=float)
-    if times.ndim != 1 or len(times) < 2 or times[0] != 0 or not np.all(np.isfinite(times)) or np.any(np.diff(times) <= 0):
+    if (
+        times.ndim != 1
+        or len(times) < 2
+        or times[0] != 0
+        or not np.all(np.isfinite(times))
+        or np.any(np.diff(times) <= 0)
+    ):
         raise ValueError("time grid must start at zero and increase strictly")
     return times
 
@@ -24,11 +30,11 @@ def wiener_paths(initial, drift, diffusion, times, normals):
     times = _time_grid(times)
     wiener_moments(initial, drift, diffusion, times[-1])
     normals = np.atleast_2d(np.asarray(normals, dtype=float))
-    if normals.ndim != 2 or normals.shape[1] != len(times)-1 or not np.all(np.isfinite(normals)):
+    if normals.ndim != 2 or normals.shape[1] != len(times) - 1 or not np.all(np.isfinite(normals)):
         raise ValueError("one finite normal increment per time interval required")
-    increments = normals*np.sqrt(np.diff(times))
+    increments = normals * np.sqrt(np.diff(times))
     brownian = np.column_stack((np.zeros(len(normals)), np.cumsum(increments, axis=1)))
-    return initial+drift*times+diffusion*brownian
+    return initial + drift * times + diffusion * brownian
 
 
 def brownian_bridge_refine(times, paths, midpoint_normals):
@@ -40,14 +46,19 @@ def brownian_bridge_refine(times, paths, midpoint_normals):
     times = _time_grid(times)
     paths = np.atleast_2d(np.asarray(paths, dtype=float))
     normals = np.atleast_2d(np.asarray(midpoint_normals, dtype=float))
-    if paths.shape[1] != len(times) or normals.shape != (len(paths), len(times)-1) or not np.all(np.isfinite(paths)) or not np.all(np.isfinite(normals)):
+    if (
+        paths.shape[1] != len(times)
+        or normals.shape != (len(paths), len(times) - 1)
+        or not np.all(np.isfinite(paths))
+        or not np.all(np.isfinite(normals))
+    ):
         raise ValueError("coarse paths and matching midpoint normals required")
-    fine_times = np.empty(2*len(times)-1)
+    fine_times = np.empty(2 * len(times) - 1)
     fine_times[::2] = times
-    fine_times[1::2] = (times[:-1]+times[1:])/2
+    fine_times[1::2] = (times[:-1] + times[1:]) / 2
     fine = np.empty((len(paths), len(fine_times)))
     fine[:, ::2] = paths
-    fine[:, 1::2] = (paths[:, :-1]+paths[:, 1:])/2+normals*np.sqrt(np.diff(times)/4)
+    fine[:, 1::2] = (paths[:, :-1] + paths[:, 1:]) / 2 + normals * np.sqrt(np.diff(times) / 4)
     return fine_times, fine
 
 
@@ -55,11 +66,16 @@ def brownian_path_length_mean(maturity, steps):
     """Expected summed absolute vertical increments on a uniform Brownian grid."""
     if not math.isfinite(maturity) or maturity < 0 or steps < 1 or int(steps) != steps:
         raise ValueError("nonnegative time and positive integer steps required")
-    return math.sqrt(2*maturity*steps/math.pi)
+    return math.sqrt(2 * maturity * steps / math.pi)
 
 
 def _stock_inputs(spot, drift, sigma, time):
-    if not all(math.isfinite(x) for x in (spot, drift, sigma, time)) or spot <= 0 or sigma < 0 or time < 0:
+    if (
+        not all(math.isfinite(x) for x in (spot, drift, sigma, time))
+        or spot <= 0
+        or sigma < 0
+        or time < 0
+    ):
         raise ValueError("positive spot, nonnegative volatility/time and finite drift required")
 
 
@@ -75,15 +91,17 @@ def stock_paths(spot, drift, sigma, dt, normals, *, scheme="euler", step_coeffic
     if normals.ndim != 2 or not np.all(np.isfinite(normals)):
         raise ValueError("finite one- or two-dimensional shocks required")
     if scheme == "euler":
-        a, b = (drift*dt, sigma*math.sqrt(dt)) if step_coefficients is None else step_coefficients
+        a, b = (
+            (drift * dt, sigma * math.sqrt(dt)) if step_coefficients is None else step_coefficients
+        )
         if not math.isfinite(a) or not math.isfinite(b):
             raise ValueError("finite step coefficients required")
-        multipliers = 1+a+b*normals
+        multipliers = 1 + a + b * normals
     elif scheme == "exact" and step_coefficients is None:
-        multipliers = np.exp((drift-sigma*sigma/2)*dt+sigma*math.sqrt(dt)*normals)
+        multipliers = np.exp((drift - sigma * sigma / 2) * dt + sigma * math.sqrt(dt) * normals)
     else:
         raise ValueError("scheme must be euler or exact; step coefficients are Euler-only")
-    return spot*np.column_stack((np.ones(len(normals)), np.cumprod(multipliers, axis=1)))
+    return spot * np.column_stack((np.ones(len(normals)), np.cumprod(multipliers, axis=1)))
 
 
 def euler_stock_moments(spot, drift, sigma, maturity, steps):
@@ -91,10 +109,10 @@ def euler_stock_moments(spot, drift, sigma, maturity, steps):
     _stock_inputs(spot, drift, sigma, maturity)
     if steps < 1 or int(steps) != steps:
         raise ValueError("positive integer steps required")
-    dt = maturity/steps
-    mean = spot*(1+drift*dt)**steps
-    second = spot**2*((1+drift*dt)**2+sigma*sigma*dt)**steps
-    return mean, max(second-mean*mean, 0.0)
+    dt = maturity / steps
+    mean = spot * (1 + drift * dt) ** steps
+    second = spot**2 * ((1 + drift * dt) ** 2 + sigma * sigma * dt) ** steps
+    return mean, max(second - mean * mean, 0.0)
 
 
 def correlated_wiener_increments(normals, rho, dt=1):
@@ -104,9 +122,20 @@ def correlated_wiener_increments(normals, rho, dt=1):
     rho = +/-1 are permitted and give singular, perfectly correlated pairs.
     """
     normals = np.asarray(normals, dtype=float)
-    if not math.isfinite(rho) or abs(rho) > 1 or not math.isfinite(dt) or dt < 0 or normals.ndim < 1 or normals.shape[-1] != 2 or not np.all(np.isfinite(normals)):
+    if (
+        not math.isfinite(rho)
+        or abs(rho) > 1
+        or not math.isfinite(dt)
+        or dt < 0
+        or normals.ndim < 1
+        or normals.shape[-1] != 2
+        or not np.all(np.isfinite(normals))
+    ):
         raise ValueError("finite paired normals, rho in [-1,1] and nonnegative dt required")
-    return math.sqrt(dt)*np.stack((normals[..., 0], rho*normals[..., 0]+math.sqrt(1-rho*rho)*normals[..., 1]), axis=-1)
+    return math.sqrt(dt) * np.stack(
+        (normals[..., 0], rho * normals[..., 0] + math.sqrt(1 - rho * rho) * normals[..., 1]),
+        axis=-1,
+    )
 
 
 def ito_coefficients(drift, diffusion, g_time, g_x, g_xx):
@@ -115,10 +144,12 @@ def ito_coefficients(drift, diffusion, g_time, g_x, g_xx):
     The returned diffusion multiplies the same Brownian increment as X.
     Derivatives are caller inputs; this helper performs no differentiation.
     """
-    a, b, gt, gx, gxx = np.broadcast_arrays(*[np.asarray(x, dtype=float) for x in (drift, diffusion, g_time, g_x, g_xx)])
+    a, b, gt, gx, gxx = np.broadcast_arrays(
+        *[np.asarray(x, dtype=float) for x in (drift, diffusion, g_time, g_x, g_xx)]
+    )
     if not all(np.all(np.isfinite(x)) for x in (a, b, gt, gx, gxx)):
         raise ValueError("finite coefficients and derivatives required")
-    return gx*a+gt+.5*gxx*b*b, gx*b
+    return gx * a + gt + 0.5 * gxx * b * b, gx * b
 
 
 def forward_ito(spot, drift, sigma, rate, time, expiry):
@@ -131,9 +162,14 @@ def forward_ito(spot, drift, sigma, rate, time, expiry):
     _stock_inputs(spot, drift, sigma, time)
     if not math.isfinite(rate) or not math.isfinite(expiry) or expiry < time:
         raise ValueError("finite rate and expiry at or after current time required")
-    forward = spot*math.exp(rate*(expiry-time))
-    a, b = ito_coefficients(drift*spot, sigma*spot, -rate*forward, forward/spot, 0)
-    return dict(forward=forward, drift=float(a), diffusion=float(b), log_drift=drift-rate-sigma*sigma/2)
+    forward = spot * math.exp(rate * (expiry - time))
+    a, b = ito_coefficients(drift * spot, sigma * spot, -rate * forward, forward / spot, 0)
+    return dict(
+        forward=forward,
+        drift=float(a),
+        diffusion=float(b),
+        log_drift=drift - rate - sigma * sigma / 2,
+    )
 
 
 def gbm_log_law(spot, drift, sigma, maturity):
@@ -143,18 +179,33 @@ def gbm_log_law(spot, drift, sigma, maturity):
     Euler stock simulation approaches this law as its grid is refined.
     """
     _stock_inputs(spot, drift, sigma, maturity)
-    mean = spot*math.exp(drift*maturity)
-    variance = mean*mean*math.expm1(sigma*sigma*maturity)
-    return dict(log_mean=math.log(spot)+(drift-sigma*sigma/2)*maturity,
-                log_variance=sigma*sigma*maturity, mean=mean, variance=variance)
+    mean = spot * math.exp(drift * maturity)
+    variance = mean * mean * math.expm1(sigma * sigma * maturity)
+    return dict(
+        log_mean=math.log(spot) + (drift - sigma * sigma / 2) * maturity,
+        log_variance=sigma * sigma * maturity,
+        mean=mean,
+        variance=variance,
+    )
 
 
 def fractional_brownian_covariance(s, t, hurst, scale=1):
-    """Hull fBM level covariance, including zero times (equation 14.20)."""
+    """Hull fBM level covariance, including zero times (equation 14.20 is its correlation)."""
     s, t = np.broadcast_arrays(np.asarray(s, dtype=float), np.asarray(t, dtype=float))
-    if not math.isfinite(hurst) or not 0 < hurst < 1 or not math.isfinite(scale) or scale < 0 or np.any(s < 0) or np.any(t < 0) or not np.all(np.isfinite(s)) or not np.all(np.isfinite(t)):
+    if (
+        not math.isfinite(hurst)
+        or not 0 < hurst < 1
+        or not math.isfinite(scale)
+        or scale < 0
+        or np.any(s < 0)
+        or np.any(t < 0)
+        or not np.all(np.isfinite(s))
+        or not np.all(np.isfinite(t))
+    ):
         raise ValueError("H in (0,1), nonnegative scale and finite nonnegative times required")
-    return .5*scale*scale*(s**(2*hurst)+t**(2*hurst)-np.abs(t-s)**(2*hurst))
+    return (
+        0.5 * scale * scale * (s ** (2 * hurst) + t ** (2 * hurst) - np.abs(t - s) ** (2 * hurst))
+    )
 
 
 def fractional_brownian_correlation(s, t, hurst):
@@ -163,7 +214,7 @@ def fractional_brownian_correlation(s, t, hurst):
     s, t = np.asarray(s, dtype=float), np.asarray(t, dtype=float)
     if np.any(s <= 0) or np.any(t <= 0):
         raise ValueError("correlation requires strictly positive times")
-    return covariance/(s**hurst*t**hurst)
+    return covariance / (s**hurst * t**hurst)
 
 
 def fractional_brownian_paths(times, hurst, n_paths=1, *, scale=1, rng=None):
@@ -182,7 +233,7 @@ def fractional_brownian_paths(times, hurst, n_paths=1, *, scale=1, rng=None):
         raise ValueError("nonnegative finite scale required")
     factor = np.linalg.cholesky(covariance)
     rng = np.random.default_rng(42) if rng is None else rng
-    values = scale*(rng.standard_normal((int(n_paths), len(times)-1)) @ factor.T)
+    values = scale * (rng.standard_normal((int(n_paths), len(times) - 1)) @ factor.T)
     return np.column_stack((np.zeros(int(n_paths)), values))
 
 
@@ -192,12 +243,20 @@ def brownian_quadratic_variation_moments(maturity, steps, diffusion=1):
     The scaled chi-square variance is 2*b**4*T*dt and tends to zero, while
     a single standardized squared increment retains variance two.
     """
-    if not math.isfinite(diffusion) or not math.isfinite(maturity) or maturity < 0 or steps < 1 or int(steps) != steps:
+    if (
+        not math.isfinite(diffusion)
+        or not math.isfinite(maturity)
+        or maturity < 0
+        or steps < 1
+        or int(steps) != steps
+    ):
         raise ValueError("finite diffusion, nonnegative time and integer positive steps required")
-    return diffusion*diffusion*maturity, 2*diffusion**4*maturity*maturity/steps
+    return diffusion * diffusion * maturity, 2 * diffusion**4 * maturity * maturity / steps
 
 
-def multivariate_ito_coefficients(drift, diffusion, g_time, gradient, hessian, *, driver_covariance=None):
+def multivariate_ito_coefficients(
+    drift, diffusion, g_time, gradient, hessian, *, driver_covariance=None
+):
     """Equations 14A.10–11 with state-by-driver diffusion matrix B.
 
     Driver increments have covariance C*dt (identity by default). State
@@ -208,12 +267,30 @@ def multivariate_ito_coefficients(drift, diffusion, g_time, gradient, hessian, *
     b = np.asarray(diffusion, dtype=float)
     gradient = np.asarray(gradient, dtype=float)
     hessian = np.asarray(hessian, dtype=float)
-    if a.ndim != 1 or len(a) < 1 or b.ndim != 2 or b.shape[0] != len(a) or b.shape[1] < 1 or gradient.shape != a.shape or hessian.shape != (len(a), len(a)):
-        raise ValueError("matching state drift/gradient/Hessian and state-by-driver diffusion required")
-    c = np.eye(b.shape[1]) if driver_covariance is None else np.asarray(driver_covariance, dtype=float)
-    if c.shape != (b.shape[1], b.shape[1]) or not math.isfinite(g_time) or not all(np.all(np.isfinite(x)) for x in (a, b, gradient, hessian, c)):
+    if (
+        a.ndim != 1
+        or len(a) < 1
+        or b.ndim != 2
+        or b.shape[0] != len(a)
+        or b.shape[1] < 1
+        or gradient.shape != a.shape
+        or hessian.shape != (len(a), len(a))
+    ):
+        raise ValueError(
+            "matching state drift/gradient/Hessian and state-by-driver diffusion required"
+        )
+    c = (
+        np.eye(b.shape[1])
+        if driver_covariance is None
+        else np.asarray(driver_covariance, dtype=float)
+    )
+    if (
+        c.shape != (b.shape[1], b.shape[1])
+        or not math.isfinite(g_time)
+        or not all(np.all(np.isfinite(x)) for x in (a, b, gradient, hessian, c))
+    ):
         raise ValueError("finite coefficients and matching driver covariance required")
     if not np.allclose(c, c.T, atol=1e-12, rtol=0) or np.linalg.eigvalsh(c).min() < -1e-12:
         raise ValueError("driver covariance must be symmetric and positive semidefinite")
     state_covariance = b @ c @ b.T
-    return float(gradient @ a+g_time+.5*np.sum(hessian*state_covariance)), gradient @ b
+    return float(gradient @ a + g_time + 0.5 * np.sum(hessian * state_covariance)), gradient @ b
