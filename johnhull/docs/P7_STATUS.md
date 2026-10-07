@@ -4,7 +4,7 @@
 
 - 完了条件：既存節メモの式/例を確認、計画を数行追記、private計算部品と本文/独立検証をそろえ、変更モジュールのtests/ruffを通す。入力不足は明示して次の節へ進む。
 - 1節1コミット（P7 §xx.y）、codex/p7-logicへ節ごとpush。公開API・依存・台帳を変更しない。教材・画面・章受入・全suite・D1/保管庫は保留。
-- 正式受入：P7 0/16。mainは33/306、別受入branch `0c72b31d` は225/306（73.5%、P4 112/112・P6 80/80）。コミット済み台帳で件数を照合。main統合は未実施。この作業では別受入worktreeの台帳/教材を編集しない。
+- 正式受入：P7 0/16。mainは33/306、別受入branch `0d07def7` は261/306（85.3%、P4 112/112・P5 36/36・P6 80/80）。コミット済み台帳で件数を照合。残りはP3 29節・P7 16節。main統合は未実施。この作業では別受入worktreeの台帳/教材を編集しない。
 - 現在：計算10/11を実装・対象検証・節ごとpush済み。§36.4は入力不足1件。P7の実装可能な計算を完了。P4レビュー修正18コミットとP8を集約開発ブランチへ反映済み。RB-F07 v1はmainへ反映済み。RB-F05 digital v1は実装・対象検証・独立レビュー修正を完了。次は離散バリアの契約/参照を固定。
 
 ## 節別の実装
@@ -44,11 +44,11 @@
 
 - `codex/p7-logic`へP4レビュー修正18コミット（`00d8a651`まで）とP8（`ce801e48`まで）を通常merge。両commitの祖先包含を確認。既存P3–P7ロジックを保持し、未受入ロジックはmainへ入れていない。
 - 統合前の主要3モジュール対象224 tests PASS。統合後の変更テスト81ファイル＋docstring/索引2ファイルは1,727 passed、変更Python108ファイルのruff check/format check PASS。全suite・教材再生成・D1再撮影は繰り返していない。
-- 別受入worktreeは`0c72b31d`で225/306 accepted（P4 112/112、P6 80/80、未評価81）。このブランチの正式台帳はmainの33/306を維持。受入成果のmain統合は別セッションで実施する。次の受入対象はP5（Ch22–25、36節）。
+- 別受入worktreeは`0d07def7`で261/306 accepted（P4 112/112、P5 36/36、P6 80/80、未評価45）。P5の対象外270台帳行と計算コードが基点`0c72b31d`と不変であることを確認。このブランチの正式台帳はmainの33/306を維持。受入成果のmain統合は別セッションで実施する。残る受入対象はP3（29節）・P7（16節）。
 
 - RB-F07 v1は`origin/main`の`3ac3e00c`へ反映済み。private計算・24 tests・研究3図、関連649 tests、独立レビュー指摘0、tracked release/33節台帳PASS。詳細は [研究資料](../research/RB-F07/README.md)。
 - RB-F07を集約開発branchへ通常merge。P3–P7のprivate索引を保持し、RB-F07＋索引/docstringの858 testsと独立数値参照の再生成checkはPASS。競合は索引・ロードマップ・状態文書の3件だけで、計算ファイルは自動merge。
-- 受入branch `0c72b31d` の `_futures_options.py`・`_index_currency.py`・`_greeks_hedging.py` はP4最新review branch `00d8a651` とblobが異なり、RB-F05反映後のorigin/mainも祖先に含まない。P4レビュー修正/P8の取り込みは受入側で調整する。別セッションの作業tree・台帳はこの開発作業では変更しない。
+- 受入branch `0d07def7` の `_futures_options.py`・`_index_currency.py`・`_greeks_hedging.py` はP4最新review branch `00d8a651` とblobが異なり、RB-F05反映後のorigin/mainも祖先に含まない。P4レビュー修正/P8の取り込みは受入側で調整する。別セッションの作業tree・台帳はこの開発作業では変更しない。
 
 ## RB-F05 digital v1（2026-10-07）
 
