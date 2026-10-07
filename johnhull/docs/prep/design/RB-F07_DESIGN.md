@@ -1,7 +1,7 @@
 # RB-F07 設計メモ（下地）：較正を通した市場クオート感応度
 
 - 日付：2026-09-27
-- 状態：**2026-10-07、v1の計算と研究notebook3図を実装・対象検証済み。独立レビュー待ち。** 初期の設計下地は下記に保持する。 研究計画 `docs/superpowers/plans/2026-09-27-research-backlog.md` §6.2 の最小仕様を、scratch の試作で確かめた結果で具体化した。
+- 状態：**2026-10-07、v1の計算・研究notebook3図・対象検証・独立レビューまで完了。** 初期の設計下地は下記に保持する。 研究計画 `docs/superpowers/plans/2026-09-27-research-backlog.md` §6.2 の最小仕様を、scratch の試作で確かめた結果で具体化した。
 - 着手の前提：D1-preflight の検証完了。研究の置き場は計画 §8-2 で本人承認済み（2026-09-27）。
 - 試作：`tmp/johnhull-prep/scratch/rbf07/proto.py`・`cond.py`（gitignore 下。リポジトリには入れない）。数値はすべて HEAD 7c4bb109 の hullkit と NumPy/SciPy で実測した。
 - 出典：S003（Henrard）と L01（Strata）の確認結果は `docs/prep/sources/` に置く。本メモの式と試験は出典に依存しない形で書いてある。
@@ -162,3 +162,4 @@ log DF 座標や PV 残差の生の条件数をこの判定と混ぜない。sol
 - v1成果物は [research/RB-F07](../../../research/RB-F07/README.md)。最初の22テストRED→GREEN、順序・単位混在を追加して24 PASS、既存rates/swaps/docstring/索引を含む対象649 PASS。3図artifact-only notebookと保存/新規独立数値照合を確認。正式台帳・公開API・依存は変更しない。
 - 手計算の参照式はzero線形に合わせて P(1)^(3/4)*P(2)^(3/8) とした。sqrt(P(1)*P(2)) はlog DF線形で、この設計の参照式にはならない。
 - 小さいbump幅の保存値照合では 40*eps*abs(PV)*1e-4/h を丸め誤差の比較幅とし、V字右端のビット一致や固定増加を要求しない。
+- 最終独立レビューCritical/Important/Minor 0、tracked releaseおよび既存33節の台帳check-artifacts PASS。v1完了。次は承認済み研究順序のRB-F05。
