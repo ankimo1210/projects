@@ -340,3 +340,10 @@ synthetic-data method demonstrations, not market-performance claims.
 | Module | Contracts | Verification |
 |---|---|---|
 | `hullkit._quote_risk` | Private v1 `hullkit._quote_risk:Quote`, `hullkit._quote_risk:calibrate`, `hullkit._quote_risk:model_quotes`, `hullkit._quote_risk:cashflow_value`, `hullkit._quote_risk:receiver_swap_value`, `hullkit._quote_risk:quote_sensitivity` | Exact square single-curve Newton/analytic Jacobian; independent sequential brentq, hand closed form, Hull Table4.3, rebootstrap bumps, coordinate/residual invariance, complex step, interpolation/coverage/quote-unit checks; `test_quote_risk.py`; `research/RB-F07/` |
+
+## RB-F05 research: discontinuous-payoff teachers and DML
+
+| Module | Contracts | Verification |
+|---|---|---|
+| `hullkit._digital_teachers` | Private `hullkit._digital_teachers:analytic`, `hullkit._digital_teachers:samples`, `hullkit._digital_teachers:summarize`, `hullkit._digital_teachers:lrm_variance` | Payout-1 GBM digital, LRM/CRN/exact conditioning/ramp/zero pathwise; independent density integrals, call spread, finite differences and 6SE; `test_digital_teachers.py` |
+| `deep_hedge_price._digital_dml` | Private `deep_hedge_price._digital_dml:normalization`, `deep_hedge_price._digital_dml:train`, `deep_hedge_price._digital_dml:predict` | Train-only normalization, bounded 2-layer CPU network, physical autograd delta, teacher-inclusive time cap; `test_digital_dml.py`; `research/RB-F05/` |
