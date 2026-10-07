@@ -28,7 +28,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 39 priva
 | 章単位（Hull 11e 全37章） | 上表14行すべてdone | 巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol13–28） | すべてdone | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 全節監査の是正 | 第1–6便完了 | P8の指定是正・判断・最終検証完了。[P8状態](docs/P8_STATUS.md)。残りの節受入は各段階で進める |
-| 節単位の受入 | mainは33/306（10.8%）、別受入branchは225/306（73.5%） | `codex/johnhull-acceptance` の `0c72b31d` のコミット済み台帳を照合。P4 112/112・P6 80/80を受入済み、未評価81。main統合は未実施。P3正式8/37・ロジック36/37、§33.2は入力不足。[P3状態](docs/P3_STATUS.md) |
+| 節単位の受入 | mainは33/306（10.8%）、別受入branchは261/306（85.3%） | `codex/johnhull-acceptance` の `0d07def7` のコミット済み台帳を照合。P4 112/112・P5 36/36・P6 80/80を受入済み、未評価45（P3 29・P7 16）。main統合は未実施。P3正式8/37・ロジック36/37、§33.2は入力不足。[P3状態](docs/P3_STATUS.md) |
 | ロジック先行 | P3 36/37、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11 | codex/p7-logicで実装可能なCh35–37計算を完了。P4レビュー修正18コミットとP8を合流、影響1,727 tests・Python108ファイルruff/format PASS。RB-F07 v1を実装・対象検証・独立レビューまで完了。§33.2/§36.4は入力不足。P8の計算修正/根拠配列/改竄検証、教材・リリースの確認を完了。教材・正式受入は保留。[P6状態](docs/P6_STATUS.md)・[P7状態](docs/P7_STATUS.md) |
 | 研究track #1（本編とは別枠） | RB-F07 v1完了（計算・独立検証・研究notebook3図） | [研究資料](research/RB-F07/README.md)。private単一曲線・正方Newton/解析Jacobian・随伴リスク。24 tests、関連rates/swaps/docstring/索引649 tests、ruff/数値再生成/notebook/3図目視PASS。独立レビューCritical/Important/Minor 0、tracked releaseと33節台帳check-artifacts PASS。F07 v2/v3は別承認 |
 | 研究track #2 | RB-F05 digital v1完了・mainへpush済み | `097d4c8d`。非公開teacher/CPU-DML・3seed各8秒・研究3図を実装。新規32/関連807 tests・独立数値/重み/改竄/ruff/図目視PASS、独立レビューImportant1修正済み（Critical/Minor0）。集約開発branchへの合流後1,019 tests、root mainでも新規32と独立参照check PASS。[F05研究資料](research/RB-F05/README.md)。DMLは全seed改善、解析・補間には精度/費用で劣り速度昇格は不採用。次は離散バリアの契約/独立参照を固定。F07 v2/v3は別承認 |
@@ -47,7 +47,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 39 priva
 
 ユーザー指定（2026-10-03）：各ターンの最終応答の末尾に、P0–P8の全体ロードマップと現在の作業を表示する。
 
-開発branchへの修正反映（2026-10-07）：P4 `00d8a651`・P8 `ce801e48`・RB-F07/RB-F05 v1を`codex/p7-logic`へ合流済み。正式受入の別branch `codex/johnhull-acceptance` は `0c72b31d` 時点で225/306（P4 112/112、P6 80/80）。その成果のmain統合はまだ。以下はmainと別受入branchの台帳を並記する。受入branchの主要P4計算3ファイルは最新review版と異なり、レビュー修正/P8の取り込みは受入側で調整する。
+開発branchへの修正反映（2026-10-07）：P4 `00d8a651`・P8 `ce801e48`・RB-F07/RB-F05 v1を`codex/p7-logic`へ合流済み。正式受入の別branch `codex/johnhull-acceptance` は `0d07def7` 時点で261/306（P4 112/112、P5 36/36、P6 80/80）。P5の36節・125要件を受け入れ、基点`0c72b31d`の対象外270台帳行と計算コードは不変。その成果のmain統合はまだ。以下はmainと別受入branchの台帳を並記する。受入branchの主要P4計算3ファイルは最新review版と異なり、レビュー修正/P8の取り込みは受入側で調整する。
 
 **完了の定義：** (1) 節別台帳の 306 項目がすべて `accepted` か `out_of_scope`、
 (2) 下の P8（監査の残り）が対応済みか、判断を記録済み。
@@ -65,11 +65,11 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 39 priva
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
 | P3 | 金利（Ch 28–34） | 37 | 8 | 8 | 3 | ロジック36/37、§33.2は原典入力不足 | Ch28全8節受入、Ch29–34受入29節を保留。本人指示2026-10-05でP4実装へ |
 | P4 | オプションの中核（Ch 10–21） | 112 | 0 | 112 | 19 | 計算95/95項目の実装・対象検証完了。下調べの説明中心17項目は旧監査の定性分類と異なる | 別受入branchで112/112 accepted。レビュー修正18コミットをcodex/p7-logicへ反映済み、受入側への最新計算修正の取り込みとmain統合は未完了 |
-| P5 | リスク・信用（Ch 22–25） | 36 | 0 | 0 | 4 | 計算32/32の初回実装・対象検証完了、説明中心4項目は保留 | codex/p5-logicへ節ごとpush。P5対象196 tests・docstring156・索引6・ruff PASS。入力不足・モデル範囲は[P5状態](docs/P5_STATUS.md)に記録。別受入セッションの次対象 |
+| P5 | リスク・信用（Ch 22–25） | 36 | 0 | 36 | 4 | 計算32/32の実装・対象検証完了。原系列不足・印刷差・合成入力・静的モデルの範囲を保持 | 別受入branchで36/36 accepted。受入側の対象245 tests・台帳41・36画面状態/4画像・261節native artifact・strict release PASSの記録を確認。計算コードは不変、main統合は未実施。[P5状態](docs/P5_STATUS.md) |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 0 | 80 | 31 | 下調べは計算54・説明中心26（旧監査と分類が異なる） | 計算54/54の実装・対象検証完了。別受入branchで80/80 accepted、main統合は未実施。入力不足/原典差は[P6状態](docs/P6_STATUS.md) |
 | P7 | Ch 35–37 | 16 | 0 | 0 | 6 | 下調べは計算11・説明中心5（旧監査と分類が異なる）。§36.4はモデル入力不足 | 計算10/11の実装・対象検証・一覧照合完了。codex/p7-logicへ節ごとpush。対象28 tests・docstring/索引6・ruff PASS。§35.4/§36.5の原典差は[P7状態](docs/P7_STATUS.md)。次は教材・章まとめ受入。教材・正式受入保留 |
 | P8 | 監査の残り | — | — | — | — | R1–R4・R6・R11、保存値依存5項目、§7の判断事項 | 完了。origin/main基点のcodex/p8-auditで是正・判断・影響教材を反映。11巻118チェック、全suite、33節D1、18画面状態、tracked release、独立レビューPASS。[P8状態](docs/P8_STATUS.md) |
-| **計** | | **306** | **33** | **225** | **63** | | **main 10.8%・別branch 73.5%** |
+| **計** | | **306** | **33** | **261** | **63** | | **main 10.8%・別branch 85.3%** |
 
 ### 先に決めること
 
@@ -320,7 +320,7 @@ private計算を先行し、D3の共通設定ツールで説明とrenderedを含
 | M31 | §28.6 Black’s Model Revisited（pp.680–681） | Ch28まとめで正式受入・main統合済み。独立7市場42価格・zero-hit importance検証済み |
 | 以降 | Ch29–34の未受入29節から未評価節へ展開 | ロジックは28節完了、§33.2は原典入力不足。正式受入を保留しP4/P5/P6の計算とP7の実装可能な計算を完了、次は教材・章まとめ受入 |
 
-現在地（2026-10-07）：正式受入はCh28までaccepted33/unreviewed273、P3正式8/37。ロジックはP3 36/37（§33.2入力不足）、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11（§36.4入力不足）。P8は指定監査是正・判断・教材更新と全検証を完了。P3–P7コードの作業先はcodex/p7-logic。次は教材・説明と章末まとめ受入。Ch1からの受入は別の専用worktreeで進行中。
+現在地（2026-10-07）：mainの正式台帳はaccepted33/unreviewed273、別受入branchは`0d07def7`でaccepted261/unreviewed45（P4/P5/P6受入完了、残りP3 29節・P7 16節）。main統合は未実施。ロジックはP3 36/37（§33.2入力不足）、P4計算95/95、P5計算32/32、P6計算54/54、P7計算10/11（§36.4入力不足）。P8は指定監査是正・判断・教材更新と全検証を完了。P3–P7コードの作業先はcodex/p7-logic。開発の次はRB-F05離散バリア、正式受入は別の専用worktreeで進む。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
