@@ -1,7 +1,7 @@
 # 全306節の最終統合
 
 更新2026-10-08。目的：全節受入と開発側の最新修正・P8・研究v1を合流し、検証後mainへ反映する。
-現在：`codex/hull-final-integration`。全306節の統合と独立レビュー後の修正を完了。修正commit後のtracked releaseとmain反映・root同期を残す。
+現在：全306節の統合・独立レビュー修正・strict tracked release・main反映・root同期を完了。統合実装`a3a533cb`をmainと`codex/hull-final-integration`へpushし、remote実体を確認済み。
 
 ## 統合対象と完了条件
 
@@ -37,7 +37,7 @@
 
 reviewerは旧33行のP8/D1完全保持、残273行の受入意味保持、整形4ファイルのAST、source/artifact参照、unique 6,649/6、strict native 306 PASSも独立確認した。指摘修正後はprimaryが対象検査とreleaseを確認する。
 
-全Book/全節画像/別幅/全306節の両保管庫再復元は承認済みfast-v1の範囲外として今回追加しない。§33.2/36.4の不足入力は未再現のまま明示する。この判断はprimaryも採用。mainの実際の反映状態はpush後に確認し、下段へ記録する。
+全Book/全節画像/別幅/全306節の両保管庫再復元は承認済みfast-v1の範囲外として今回追加しない。§33.2/36.4の不足入力は未再現のまま明示する。この判断はprimaryも採用。mainの実際の反映状態とrootの同期を確認し、下段へ記録した。
 
 ## 判断と範囲
 
@@ -54,4 +54,8 @@ reviewerは旧33行のP8/D1完全保持、残273行の受入意味保持、整�
 
 ## 残り・反映結果
 
-- 統合commit `ca3d71a3`のstrict tracked releaseはPASS。独立レビューの指摘は上記の1回の修正で対応。修正commit後のstrict tracked release、main反映、rootの未公開履歴・別プロジェクト差分を保持した同期を残す。
+- 統合`ca3d71a3`・レビュー修正`a3a533cb`のstrict tracked releaseはPASS。後者をatomic・non-force pushし、origin/mainと統合branchの両方が同じ実装commitであることを確認。origin/mainは`b840f796`から`a3a533cb`へ進んだ。
+- root mainへorigin/mainをmerge。元の未公開14コミットをすべて祖先として保持し、別プロジェクト24変更のstatusとmarket-research差分は不変。root HEADをremoteへpushしていない。
+- rootで通常`make hull-report`を実行。Ch1の同一入力・40画像を照合して受入済みBook HTMLを復元し、31ローカル依存を確認してPNG1点を補った。全306節native artifacts・保存suite/導線の鮮度を確認。
+- [配布・同期証跡](validation/final-integration/delivery-check.json)。公開した実装と同期の状態を固定し、この完了記録のcommitは別にmainへ反映する。
+- 本編の残作業はなし。§33.2/36.4の不足入力・原典未再現、§36.5脚注との差は宣言した制限として保持。次の研究候補はRB-F05の離散バリア契約と独立参照の固定で、本編完了条件には含めない。
