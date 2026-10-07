@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "verified_at_utc": "2026-10-07T23:43:11.812964+00:00",
+  "scope": "reviewed implementation delivery and root verification before this metadata finalization",
+  "published": {
+    "status": "PASS",
+    "verified_at_utc": "2026-10-07T23:40:50.442822+00:00",
+    "before_main": "b840f7964a1ef0d7c3289de74c5bb8478feebabf",
+    "reviewed_integration": "a3a533cb5ed838efc6a4138966835eb9dd63aacc",
+    "main": "a3a533cb5ed838efc6a4138966835eb9dd63aacc",
+    "branch": "codex/hull-final-integration",
+    "atomic_non_force_push": true,
+    "remote_heads_confirmed": true,
+    "strict_tracked_release": "PASS",
+    "original_root_unpublished_commits": 14
+  },
+  "root_verification": {
+    "status": "PASS",
+    "published_main": "a3a533cb5ed838efc6a4138966835eb9dd63aacc",
+    "root_main": "c7bedb62b4b69fb48d7927a8db949247033e6e08",
+    "target_working_tree_clean": true,
+    "original_unpublished_commits_preserved": 14,
+    "unrelated_entries_preserved": 24,
+    "unrelated_diff_sha256": "4ef891dfde15850ec0a9b2323c3a6ad4fa4e68e2402d27c4cfd4dde6ff29f0b5",
+    "native_artifacts_checked": true,
+    "saved_suite_and_navigation_fresh": true,
+    "book_cache": {
+      "status": "PASS",
+      "method": "restore exact accepted Ch1 Book output after current root input/capture equality",
+      "source_checkout": "/home/kazumasa/worktrees/m29/johnhull",
+      "before_sha256": "96dc28d440ba6ead0d8ad21eadc2384ac5ea83cbde753a867f5d796ad39e55fd",
+      "accepted_html_sha256": "a89e4ea68c41327fca1b008adb1edbfceb108c684dcd87f60f27b18a23d0bc4e",
+      "local_dependencies_checked": 31,
+      "restored_dependencies": [
+        "book/_build/html/notebooks/../_images/d6d8ff998cb99d22afece8d584f1d211571d4c77c6803eaece3bc79725e97949.png"
+      ]
+    }
+  },
+  "source_sha256": {
+    "docs/validation/final-integration/full-suite.json": "b126cf8c38ad03688898a46c40659618b2a4968a454d24b0e2efe7218ff71f14",
+    "docs/validation/final-integration/native-rebind.json": "d62f37c92bdc152645748a58657bc2ccee2d4defdd17eb823078c09e1e3480db",
+    "docs/validation/final-integration/navigation-check.json": "7bd43cc948afe6d3e47ec36d1593f4d965b283200e9b468e3aba6f05d97e095a"
+  },
+  "artifact_sha256": {
+    "docs/validation/final-integration/root-build.log": "7338f3a37aed145e9cffdab9419ef370e568a5a73dcf926fb579fe643e6cc559",
+    "docs/validation/final-integration/root-native.log": "cfcbef5e050736b9212907af08974e6c68ded0c2d13147eb413d5bd2d958b330",
+    "docs/validation/final-integration/review-strict-release.log": "d2ddac961169bac597391f536c3729ad398c688a52be025c9e9acdaae641122a"
+  }
+}
