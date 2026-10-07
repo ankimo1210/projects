@@ -1,6 +1,6 @@
 # RB-F07 v1 — 較正を通した市場クオート感応度
 
-更新2026-10-07。**計算・独立数値検証・研究notebookの3図まで完成。独立レビュー待ち。**
+更新2026-10-07。**v1完了。計算・独立数値検証・研究notebook3図・独立レビュー・既存ゲート確認まで完成。**
 承認済み研究計画のv1を実装した。正式な節受入とは別の研究で、受入件数は増やさない。
 設計の正本は[既存メモ](../../docs/prep/design/RB-F07_DESIGN.md)、範囲は[研究計画§6.2](../../docs/superpowers/plans/2026-09-27-research-backlog.md)。
 
@@ -77,6 +77,8 @@ export PYTHONPATH="$PWD/johnhull/hullkit/src:$PWD/johnhull/report:$PWD"
 - 最初の22テストは未実装でRED、実装後にPASS。順序・金利/価格混在の2検査を加えて計24 PASS。
 - 既存rates/swaps・全docstring/索引を含む対象649 tests PASS。変更Pythonのruff check/format check PASS。
 - 保存・新規計算の独立数値検査PASS。notebookはfresh実行・nbformat・3枚のPNG目視確認PASS。
+- 独立最終レビュー：Critical/Important/Minorすべて0。数式・単位・停止・独立検証・notebook内容を確認、レビュー側でも保存/新規数値照合PASS。
+- `verify_release.py --require-tracked` PASS、`verify_section_ledger.py --check-artifacts` PASS（受入33/306維持）。本編の受入・依存範囲を変更しないため、全suite・D1再撮影・Book全buildは繰り返していない。
 - 停止条件はquote step正規化残差1e-10以下。非収束はRuntimeError、数値rank不足はValueError。部分較正結果を成功として返さない。
 - rankはzero 1bp / quote 1bpまたは価格1.00へ単位を固定したJで判定。増幅10超は研究上の警告値で、生の条件数だけで拒否しない。
 - 単位別許容差は既存設計メモ§12。SHA・ビット一致は数値オラクルに使わない。
@@ -96,3 +98,13 @@ v2（非正方・最小二乗）・v3（HW1F swaption較正）・公開API昇格
 | S003 | Marc Henrard, *Adjoint Algorithmic Differentiation: Calibration and Implicit Function Theorem*, 2011-11-01改訂、§2–3。[確認記録](../../docs/prep/sources/sources_S001-S031.md#s003) | 微分可能・正方・局所可逆、直接依存項。v2最小二乗の保証として使わない |
 | L01 | OpenGamma Strata `MarketQuoteSensitivityCalculator` / `JacobianCalibrationMatrix`。[確認記録](../../docs/prep/sources/sources_S032-S062_L01-L03.md#l01)、[公式行列定義](https://strata.opengamma.io/apidocs/com/opengamma/strata/market/curve/JacobianCalibrationMatrix.html) | 格納する向きは `dz/dq`、本実装の `J=dm/dz` と区別。Apache-2.0コードの移植・Java依存追加は行わない |
 | Hull | 11e Global Edition Ch4 Table4.3、既存ratesテストと[§4.7準備記録](../../docs/prep/sections/ch04.md) | 債券価格の再較正は既存 `bootstrap_zero_curve` を独立オラクルにする |
+
+## 最終レビューで確認した境界
+
+既承認の範囲を維持した判断で、追加のscope変更はない。
+
+- Final: Ruling: 型拒否の網羅はユーザーの最小入力検証方針に従い対象外。数学的に無効な入力は検査する。将来、型ごとの詳細な拒否契約が必要なら追加検査が要る。
+- Final: Ruling: 最小二乗・多曲線・直接クオート依存・HW1F・公開APIとしての堅牢性はv1外。正方局所可逆・直接依存0の条件を明示する。拡張時は式と検証を追加する必要がある。
+- Final: Ruling: 小bumpの固定V字・ビット一致は丸め誤差の観測として対象外。単位別許容差とPV規模の比較幅を用いる。最適bump幅のOS共通保証は与えない。
+- Final: Ruling: 他branchの正式受入・市場性能・全workspace回帰はこの研究から判定しない。対象649 testsと既存リリース/台帳gateを実行。追加の保証には受入成果の統合、別の市場評価・回帰検査が必要。
+- Deferred minors：なし。
