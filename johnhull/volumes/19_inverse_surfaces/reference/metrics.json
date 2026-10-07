@@ -8,9 +8,9 @@
         "passed": true
       },
       {
-        "criterion": "all starts successful",
+        "criterion": "all starts have matching raw optimizer termination, residual and budget evidence",
         "name": "multi_start_calibration",
-        "observed": true,
+        "observed": 4,
         "passed": true
       },
       {
@@ -86,6 +86,63 @@
   "benchmark_policy": "no nondeterministic benchmark fields",
   "companion_schemas": {
     "surfaces.npz": {
+      "calibration_bounds_lower": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "SABR alpha,beta,rho,nu"
+      },
+      "calibration_bounds_upper": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "SABR alpha,beta,rho,nu"
+      },
+      "calibration_max_evaluations": {
+        "dtype": "int64",
+        "shape": [
+          1
+        ],
+        "unit": "function evaluations"
+      },
+      "calibration_optimizer_gtol": {
+        "dtype": "float64",
+        "shape": [
+          1
+        ],
+        "unit": "scaled gradient infinity norm tolerance"
+      },
+      "calibration_optimizer_nfev": {
+        "dtype": "int64",
+        "shape": [
+          4
+        ],
+        "unit": "function evaluations"
+      },
+      "calibration_optimizer_optimality": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ],
+        "unit": "scaled gradient infinity norm"
+      },
+      "calibration_optimizer_residuals": {
+        "dtype": "float64",
+        "shape": [
+          4,
+          12
+        ],
+        "unit": "annualized_volatility"
+      },
+      "calibration_optimizer_status": {
+        "dtype": "int64",
+        "shape": [
+          4
+        ],
+        "unit": "scipy termination code"
+      },
       "calibration_parameter_dispersion": {
         "dtype": "float64",
         "shape": [
@@ -337,7 +394,7 @@
     }
   },
   "companions": {
-    "surfaces.npz": "005a7300a254a73b9f9124511fc0cebce07783ed8f0c2e40163149ff307cf47b"
+    "surfaces.npz": "725583904be83fc8c29e140505459995c550a5b6efc0fd7ee28001c9820c1c7e"
   },
   "data_policy": "synthetic-offline",
   "generated_by": "johnhull/scripts/build_frontier_artifacts.py",
@@ -348,8 +405,65 @@
     "quote contamination is deterministic stress data, not observed market data"
   ],
   "metrics": {
-    "array_fingerprint": "sha256:4c1cd3f973efda05a09a3fb8917eff7fecf52ff09417d8cca2bee883c17936aa",
+    "array_fingerprint": "sha256:38cf94b4abc8044e0e6fc86fcfac66dfebb4bce7cee9c773d11b29482c532d10",
     "array_schema": {
+      "calibration_bounds_lower": {
+        "dtype": "<f8",
+        "shape": [
+          4
+        ],
+        "unit": "SABR alpha,beta,rho,nu"
+      },
+      "calibration_bounds_upper": {
+        "dtype": "<f8",
+        "shape": [
+          4
+        ],
+        "unit": "SABR alpha,beta,rho,nu"
+      },
+      "calibration_max_evaluations": {
+        "dtype": "<i8",
+        "shape": [
+          1
+        ],
+        "unit": "function evaluations"
+      },
+      "calibration_optimizer_gtol": {
+        "dtype": "<f8",
+        "shape": [
+          1
+        ],
+        "unit": "scaled gradient infinity norm tolerance"
+      },
+      "calibration_optimizer_nfev": {
+        "dtype": "<i8",
+        "shape": [
+          4
+        ],
+        "unit": "function evaluations"
+      },
+      "calibration_optimizer_optimality": {
+        "dtype": "<f8",
+        "shape": [
+          4
+        ],
+        "unit": "scaled gradient infinity norm"
+      },
+      "calibration_optimizer_residuals": {
+        "dtype": "<f8",
+        "shape": [
+          4,
+          12
+        ],
+        "unit": "annualized_volatility"
+      },
+      "calibration_optimizer_status": {
+        "dtype": "<i8",
+        "shape": [
+          4
+        ],
+        "unit": "scipy termination code"
+      },
       "calibration_parameter_dispersion": {
         "dtype": "<f8",
         "shape": [
@@ -725,7 +839,7 @@
               "violation_rate": 0.0
             },
             {
-              "max_violation": 4.884981308350689e-15,
+              "max_violation": 2.6645352591003757e-15,
               "n_checked": 28,
               "n_violations": 0,
               "name": "strike_convexity",
@@ -823,13 +937,13 @@
               "violation_rate": 0.0
             },
             {
-              "max_violation": 3.4373871459214556e-06,
+              "max_violation": 1.6940873749371477e-06,
               "n_checked": 28,
-              "n_violations": 4,
+              "n_violations": 6,
               "name": "strike_convexity",
               "passed": false,
               "tolerance": 1e-07,
-              "violation_rate": 0.14285714285714285
+              "violation_rate": 0.21428571428571427
             },
             {
               "max_violation": 0.0,
@@ -845,9 +959,9 @@
         }
       },
       "rmse_to_clean_teacher": {
-        "hard": 0.0030631163078194564,
+        "hard": 0.003063116307991272,
         "raw": 0.003937961394684812,
-        "soft": 0.0032326269914989595
+        "soft": 0.0030535921103531714
       },
       "soft_objective_is_not_an_arbitrage_free_claim": true,
       "source": "Heston/COS prices with deterministic quote contamination"

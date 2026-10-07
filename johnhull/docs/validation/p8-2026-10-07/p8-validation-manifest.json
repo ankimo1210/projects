@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": "p8-validation/suite.log",
+      "ref": "artifact:sha256:cffd6be2935e4e8d37cc743c595961f7accd96d4c4573dd7175ec0e375750fe0",
+      "bytes": 6094,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/deep.log",
+      "ref": "artifact:sha256:e7145e2ebab15c67cbefa064eed08b553600a001b734eef5b96b349d418e514c",
+      "bytes": 261,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/release.log",
+      "ref": "artifact:sha256:d2ddac961169bac597391f536c3729ad398c688a52be025c9e9acdaae641122a",
+      "bytes": 40,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/ledger.log",
+      "ref": "artifact:sha256:525272b8fa36a462058d9af324930b432404f08657cc6c2d280fe23e0a94d048",
+      "bytes": 80,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/frontier-artifacts.log",
+      "ref": "artifact:sha256:8769bfac0e64e107e70b59f9eb5b6b55db838fba921ae65568f0aaf9bc0cf54a",
+      "bytes": 780,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/frontier-notebooks.log",
+      "ref": "artifact:sha256:7f5e90e9d9a0991d05a67ad029113de2f6bf594911d13fa85ae00f68acd0b35d",
+      "bytes": 763,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/core-notebooks.log",
+      "ref": "artifact:sha256:800c3a7e4d3e49ef19f68eab46b9890214f8f7bc7f5122c70f7c5245e1c2620a",
+      "bytes": 1168,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/book.log",
+      "ref": "artifact:sha256:f4f11eef74a2498925e15cc5c5ec58770dd54181defc6c8a7604733e64a7dc99",
+      "bytes": 5290,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/precision-red.log",
+      "ref": "artifact:sha256:9367652262119bf027c0bcee6a879980ae7af042f454135a8bf36d110346b9a5",
+      "bytes": 2062,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/ledger-fixture-green.log",
+      "ref": "artifact:sha256:41c3b06b1f0237013bf2a2d9555cfc394501d11435eed1ea4fe0a018aef42c2e",
+      "bytes": 98,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/browser-check.cjs",
+      "ref": "artifact:sha256:80391ca4126da582c7baa102d2b8b3db08ed48f6ce045ef808dc1fdc40c74e88",
+      "bytes": 5626,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "p8-validation/browser-reference.py",
+      "ref": "artifact:sha256:24847f6456a5a0e8e74d5b4a182648171bef673f0e3052fd8094ca74915a67d8",
+      "bytes": 460,
+      "mime": "application/octet-stream"
+    }
+  ]
+}

@@ -599,6 +599,17 @@ def test_committed_gate_passes(volume):
 
 # Inputs that used to abort evaluate_acceptance with an exception when zeroed
 # (found by zeroing every numeric array and metric of every volume in turn).
+# P8 adds genuine recomputation dependencies; preserve the exact failure contract.
+P8_INPUT_DEPENDENCIES = {
+    (18, "split_row_key_test"): {"residual_baseline"},
+    (19, "calibration_start_repricing_rmse"): {"multi_start_calibration"},
+    (20, "walk_forward_h21_prediction_tcn"): {"economic_comparison_controls"},
+    (21, "surrogate_ms"): {"measured_cpu_timing"},
+    (21, "nested_mc_ms"): {"measured_cpu_timing"},
+    (22, "teacher_price"): {"event_teacher_uncertainty"},
+}
+
+
 DEGENERATE_ZEROS = [
     (23, "array", "day_count"),
     (23, "metric", "rfr_day_count_basis"),
@@ -650,6 +661,8 @@ def test_tamper_flips_exactly_the_recomputing_check(volume, label, tamper, check
     tamper(metrics, arrays)
     failed = _failed(volume, metrics, arrays)
     assert check in failed, f"vol {volume} {label}: {check} still passes after tampering"
-    assert failed <= {check, *DEPENDENT_FAILURES.get(check, set())}, (
-        f"vol {volume} {label}: {failed}"
-    )
+    assert failed <= {
+        check,
+        *DEPENDENT_FAILURES.get(check, set()),
+        *P8_INPUT_DEPENDENCIES.get((volume, label), set()),
+    }, f"vol {volume} {label}: {failed}"

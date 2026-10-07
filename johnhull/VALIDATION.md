@@ -10,6 +10,18 @@
 integration gate を満たすことだけを表す。実市場での予測力、収益性、較正品質、
 または production readiness の承認ではない。
 
+## P8 監査是正 — 2026-10-07
+
+[P8状態](docs/P8_STATUS.md)・[統合記録](docs/validation/p8-2026-10-07/p8-check.json)。
+R1–R4・R6・R11と保存値依存5項目を是正／判断し、監査§7の方針を記録。
+
+- rBergomiの左端点／離散補償／ペアSE、訓練残差だけのmean補正、予測を接続した共通経路ヘッジ評価、Brownian／Poisson stream分離を反映。
+- vol18–22の教師・予測・optimizer・生計測・calendar根拠から合否を再計算。11巻118チェックの名前・件数・閾値は保持。
+- hullkit＋report全suite **4,466 passed / 6 skipped**、deep_hedge_price **209 passed**。変更Python25ファイルruff、vol19–28の2回再生成、core19＋frontier11ノートブック、tracked releaseがPASS。
+- 影響6巻の18画面状態・18画像、表示数値の改変拒否。既受入33節D1のbrowser／runtime／pytest／両保管庫復元PASS。台帳check-artifacts PASS、受入33・未評価273のまま現行証跡へ更新。
+- 独立レビューCritical／Importantなし。外部policyの有限値検査を回復。R6は構成恒等式の説明へ修正、fee-awareモデルは研究拡張。R11教材はP4章受入へ。
+- 評価は有限格子／合成オフライン。R3のoracle premiumと実現分散は評価用であり、forecast学習には使用しない。市場性能の承認ではない。
+
 ## Section 28.2 M27 — 2026-10-03
 
 [受入ノート](docs/SECTION_28_2_ACCEPTANCE_2026-10-03.md)・[レビュー](docs/SECTION_28_2_REVIEW_2026-10-03.md)・[統合記録](docs/validation/section-28-2/m27-check.json)。FR01–FR06の5軸、accepted27/unreviewed279、P3は2/37。mainへfast-forward統合・push済み（受入commit cb4497fe）。mainのfresh全suite3,925 passed/6 skipped（167.61s）。
@@ -410,8 +422,9 @@ and fourth runs below): for all 11 volumes, the tamper suite
 (`report/tests/test_frontier_acceptance_tamper.py`) checks that each selected alteration of
 a committed array or metric fails the check that recomputes it, plus only the dependent
 checks declared for that input (`DEPENDENT_FAILURES`). Where a check can be rebuilt from
-the arrays, the stored scalar must also equal the rebuild. Checks without raw array or
-run-time evidence still read a stored value and are listed separately (third run, below).
+the arrays, the stored scalar must also equal the rebuild. The five remaining stored-value dependencies were repaired by P8 (2026-10-07):
+vol18 residual/hard probes, vol19 optimizer status/residual/budget, vol21 raw timings,
+and vol22 calendar probes. Historical exceptions in the third-run section describe that run.
 Degenerate inputs (zeros, a fit parameter at a pole) yield a failing record rather than
 an exception. The tamper cases are selected alterations, not an exhaustive proof of
 independence from every stored value.
@@ -819,3 +832,14 @@ M29独立最終レビューCritical0/Important0/Minor3、96tests/4--check/100条
 ## main統合（2026-10-04）
 
 M29受入commit f8d57ef4をmainへfast-forward統合・pushし、live origin/main一致を確認。main fresh全suite4,125 passed/6 skipped/既存warnings2（222.54s）、Book/portal再build・統合gate/台帳成果物/両保管庫/tracked release PASS。Minor3を記録。次はM30 §28.5、P3 4/37、残33節。
+
+## 2026-10-07 P8 audit repairs
+
+Implementation/evidence are on codex/p8-audit from origin/main, without unaccepted P3–P7 logic.
+[Current record](docs/P8_STATUS.md) tracks remaining integration checks. Acceptance names/counts
+are unchanged (118); aggregate flags do not replace the five raw-evidence sets. Missing P8
+evidence returns a failing gate. MC comparisons use fixed seeds and standard errors; deterministic
+numeric rebuilds use tolerances (rtol1e-10, atol1e-12), with SHA retained for file integrity only.
+R6 gross-LVR invariance is the identity of a shared no-fee endpoint, not a fee-aware inventory
+experiment. R11's no-interest textbook convention is already in P4 logic and awaits its chapter
+teaching acceptance.

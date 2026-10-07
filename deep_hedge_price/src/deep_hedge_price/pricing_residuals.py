@@ -37,13 +37,13 @@ def _heston_teacher(inputs: np.ndarray, *, n_terms: int) -> np.ndarray:
     return np.asarray(prices, dtype=np.float64)
 
 
-def compare_heston_bsm_residual(
+def _heston_residual_evidence(
     train_inputs: np.ndarray,
     test_inputs: np.ndarray,
     *,
     n_terms: int = 128,
     teacher_function: Callable[[np.ndarray], np.ndarray] | None = None,
-) -> dict[str, float | int | str | bool]:
+) -> dict[str, np.ndarray]:
     """Compare equal-capacity raw and BSM-residual polynomial surrogates.
 
     The analytical BSM value is a disclosed control variate, not a hidden
@@ -78,14 +78,37 @@ def compare_heston_bsm_residual(
     )
     raw_prediction = raw_model.predict(test)
     corrected_prediction = test_bsm + residual_model.predict(test)
-    raw_mae = float(np.mean(np.abs(raw_prediction - test_teacher)))
-    residual_mae = float(np.mean(np.abs(corrected_prediction - test_teacher)))
+    return {
+        "heston_test_inputs": test,
+        "heston_test_teacher": test_teacher,
+        "heston_raw_prediction": raw_prediction,
+        "heston_residual_prediction": corrected_prediction,
+    }
+
+
+def compare_heston_bsm_residual(
+    train_inputs: np.ndarray,
+    test_inputs: np.ndarray,
+    *,
+    n_terms: int = 128,
+    teacher_function: Callable[[np.ndarray], np.ndarray] | None = None,
+) -> dict[str, float | int | str | bool]:
+    """Compare equal-capacity raw and BSM-residual fits on identical held-out rows."""
+    evidence = _heston_residual_evidence(
+        train_inputs, test_inputs, n_terms=n_terms, teacher_function=teacher_function
+    )
+    raw_mae = float(
+        np.mean(np.abs(evidence["heston_raw_prediction"] - evidence["heston_test_teacher"]))
+    )
+    residual_mae = float(
+        np.mean(np.abs(evidence["heston_residual_prediction"] - evidence["heston_test_teacher"]))
+    )
     return {
         "teacher": "heston_cos",
         "baseline": "analytic_bsm",
         "surrogate": "degree_3_polynomial_ridge",
-        "train_rows": len(train),
-        "test_rows": len(test),
+        "train_rows": len(train_inputs),
+        "test_rows": len(test_inputs),
         "cos_terms": n_terms,
         "raw_price_mae": raw_mae,
         "bsm_residual_mae": residual_mae,

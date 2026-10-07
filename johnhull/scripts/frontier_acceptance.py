@@ -75,6 +75,303 @@ def _unit_spot_surface_violations(
     }
 
 
+def _require_evidence(arrays, *names):
+    """Missing audit evidence is a gate failure, not a stored-value fallback."""
+    missing = sorted(set(names) - set(arrays))
+    if missing:
+        raise ValueError(f"missing P8 evidence: {missing}")
+
+
+def _vol18_hard_evidence(arrays):
+    _require_evidence(
+        arrays,
+        "hard_strike_grid",
+        "hard_strike_prices",
+        "hard_strike_inputs",
+        "hard_derived_puts",
+        "hard_maturity_inputs",
+        "hard_maturity_grid",
+        "hard_maturity_prices",
+        "hard_spot_inputs",
+        "hard_spot_grid",
+        "hard_spot_prices",
+        "hard_spot_delta",
+        "hard_spot_gamma",
+        "hard_n_checked",
+        "hard_tolerance",
+    )
+    from hullkit import surrogate_validation as v
+
+    a = arrays
+    strike = a["hard_strike_grid"]
+    price = a["hard_strike_prices"]
+    inputs = a["hard_strike_inputs"]
+    rate = inputs[0, 2]
+    yield_rate = inputs[0, 3]
+    checks = [
+        v.check_price_bounds(price, 1.0, strike, rate, 1.0, yield_rate, tolerance=1e-6),
+        v.check_put_call_parity(
+            price, a["hard_derived_puts"], 1.0, strike, rate, 1.0, yield_rate, tolerance=1e-12
+        ),
+        v.check_strike_monotonicity(price, strike, tolerance=1e-5),
+        v.check_strike_convexity(price, strike, tolerance=1e-4),
+        v.check_calendar_monotonicity(
+            a["hard_maturity_prices"], a["hard_maturity_grid"], tolerance=1e-5
+        ),
+        v.check_spot_monotonicity(a["hard_spot_prices"], a["hard_spot_grid"], tolerance=1e-5),
+        v.check_nonnegative_gamma(a["hard_spot_gamma"], tolerance=1e-5),
+        v.check_greek_consistency(
+            a["hard_spot_grid"],
+            a["hard_spot_prices"],
+            a["hard_spot_delta"],
+            a["hard_spot_gamma"],
+            tolerance=2e-2,
+        ),
+    ]
+    names = [str(n) for n in a["check_names"]]
+    results = {r.name: r for r in checks}
+    ordered = [results[n] for n in names]
+    counts = np.array([r.n_violations for r in ordered])
+    rate = float(np.mean([r.violation_rate for r in ordered]))
+    inputs_ok = (
+        np.allclose(inputs[:, 0], 1 / strike)
+        and np.allclose(inputs[:, 1], 1)
+        and np.allclose(a["hard_maturity_inputs"][:, 1], a["hard_maturity_grid"])
+        and np.allclose(a["hard_spot_inputs"][:, 0], a["hard_spot_grid"])
+        and np.allclose(a["hard_n_checked"], [r.n_checked for r in ordered])
+        and np.allclose(a["hard_tolerance"], [r.tolerance for r in ordered], rtol=0, atol=1e-15)
+    )
+    return counts, rate, inputs_ok
+
+
+def _optimizer_start_evidence(metrics, arrays):
+    _require_evidence(
+        arrays,
+        "calibration_optimizer_status",
+        "calibration_optimizer_nfev",
+        "calibration_optimizer_optimality",
+        "calibration_optimizer_residuals",
+        "calibration_bounds_lower",
+        "calibration_bounds_upper",
+        "calibration_max_evaluations",
+        "calibration_optimizer_gtol",
+    )
+    c = metrics["forward_calibration"]
+    a = arrays
+    n = c["n_starts"]
+    status = a["calibration_optimizer_status"]
+    evaluations = a["calibration_optimizer_nfev"]
+    optimality = a["calibration_optimizer_optimality"]
+    residual = a["calibration_optimizer_residuals"]
+    success = (status > 0) & (status <= 4)
+    rmse = np.sqrt(np.mean(residual**2, axis=1))
+    return bool(
+        status.shape == evaluations.shape == optimality.shape == (n,)
+        and np.all(evaluations > 0)
+        and np.all(evaluations <= a["calibration_max_evaluations"][0])
+        and np.all(optimality >= 0)
+        and np.all(np.isfinite(residual))
+        and np.all(optimality[status == 1] <= a["calibration_optimizer_gtol"][0] * (1 + 1e-6))
+        and np.all(a["calibration_start_parameters"] >= a["calibration_bounds_lower"])
+        and np.all(a["calibration_start_parameters"] <= a["calibration_bounds_upper"])
+        and np.allclose(rmse, a["calibration_start_repricing_rmse"], rtol=1e-10, atol=1e-14)
+        and np.allclose(evaluations, c["evaluations"])
+        and bool(c["all_starts_successful"]) == bool(np.all(success))
+        and np.all(success)
+    )
+
+
+def _calendar_evidence(metrics, arrays):
+    from datetime import date
+
+    _require_evidence(
+        arrays,
+        "calendar_holiday_ordinal",
+        "calendar_probe_ordinal",
+        "calendar_probe_trading",
+        "calendar_session_ordinal",
+        "calendar_open_close_minute",
+        "calendar_probe_minute",
+        "calendar_probe_seconds",
+    )
+    a = arrays
+    holidays = set(a["calendar_holiday_ordinal"].tolist())
+    expected = np.array(
+        [
+            date.fromordinal(int(day)).weekday() < 5 and day not in holidays
+            for day in a["calendar_probe_ordinal"]
+        ]
+    )
+    day = int(a["calendar_session_ordinal"][0])
+    live = date.fromordinal(day).weekday() < 5 and day not in holidays
+    opening, closing = a["calendar_open_close_minute"]
+    expected_seconds = (
+        np.maximum(closing - np.maximum(a["calendar_probe_minute"], opening), 0) * 60
+        if live
+        else np.zeros_like(a["calendar_probe_minute"])
+    )
+    violations = int(np.count_nonzero(a["calendar_probe_trading"] != expected))
+    violations += int(
+        np.count_nonzero(
+            ~np.isclose(a["calendar_probe_seconds"], expected_seconds, rtol=0, atol=1e-10)
+        )
+    )
+    intraday = np.maximum(closing - opening - a["minute"], 0) * 60
+    return (
+        violations == 0 == metrics["calendar_violations"]
+        and live
+        and np.allclose(a["seconds_to_settlement"], intraday, rtol=0, atol=1e-10)
+        and _close(metrics["session_seconds"], (closing - opening) * 60)
+    )
+
+
+def _forecast_hedge_evidence(metrics, arrays):
+    from scipy.special import ndtr
+
+    _require_evidence(
+        arrays,
+        "economic_horizon",
+        "economic_true_volatility",
+        "economic_forecast_volatility",
+        "economic_fold",
+        "economic_row",
+        "economic_spot",
+        "economic_shocks",
+        "economic_premium",
+        "economic_secondary_price",
+        "economic_stock_positions",
+        "economic_option_positions",
+        "economic_pnl",
+        "economic_turnover",
+    )
+    if "forecast_economic_evaluation" not in metrics:
+        raise ValueError("missing forecast economic evaluation")
+    a = arrays
+    meta = metrics["forecast_economic_evaluation"]
+    horizons = a["economic_horizon"]
+    true = a["economic_true_volatility"]
+    forecast = a["economic_forecast_volatility"]
+    names = meta["models"]
+    strategies = meta["strategies"]
+    if len(names) != 10 or strategies != ["delta", "delta-gamma", "no hedge", "no-trade"]:
+        return False
+    for case, (h, fold, row) in enumerate(
+        zip(horizons, a["economic_fold"], a["economic_row"], strict=True)
+    ):
+        prefix = f"walk_forward_h{h}_"
+        eligible = np.flatnonzero(a[prefix + "prediction_fold"] == fold)
+        if not eligible.size or row != eligible[0]:
+            return False
+        expected = np.clip(
+            np.sqrt(252 * np.array([a[prefix + "prediction_" + n][row] for n in names]) / h),
+            0.05,
+            1.0,
+        )
+        actual = np.clip(np.sqrt(252 * a[prefix + "actual"][row] / h), 0.05, 1.0)
+        if not np.allclose(forecast[case], expected, rtol=1e-12, atol=1e-14) or not _close(
+            true[case], actual
+        ):
+            return False
+    spot = a["economic_spot"]
+    shocks = a["economic_shocks"]
+    steps = shocks.shape[-1]
+    maturity = horizons / 252
+    dt = maturity / steps
+    expected = 100 * np.exp(
+        np.concatenate(
+            [
+                np.zeros((*spot.shape[:2], 1)),
+                np.cumsum(
+                    -0.5 * true[:, None, None] ** 2 * dt[:, None, None]
+                    + true[:, None, None] * np.sqrt(dt[:, None, None]) * shocks,
+                    axis=2,
+                ),
+            ],
+            axis=2,
+        )
+    )
+    if not np.allclose(spot, expected, rtol=1e-12, atol=1e-12):
+        return False
+
+    def bsm_state(S, K, tau, sigma):
+        safe = np.maximum(tau, np.finfo(float).eps)
+        d1 = (np.log(S / K) + 0.5 * sigma**2 * safe) / (sigma * np.sqrt(safe))
+        value = S * ndtr(d1) - K * ndtr(d1 - sigma * np.sqrt(safe))
+        gamma = np.exp(-0.5 * d1**2) / np.sqrt(2 * np.pi) / (S * sigma * np.sqrt(safe))
+        return np.where(tau > 0, value, np.maximum(S - K, 0)), ndtr(d1), np.where(tau > 0, gamma, 0)
+
+    premium = bsm_state(100.0, 100.0, maturity, true)[0]
+    tau = maturity[:, None, None] - np.arange(steps + 1)[None, None, :] * dt[:, None, None]
+    secondary, secondary_delta, secondary_gamma = bsm_state(spot, 105.0, tau, true[:, None, None])
+    if not np.allclose(premium, a["economic_premium"], rtol=1e-12, atol=1e-12) or not np.allclose(
+        secondary, a["economic_secondary_price"], rtol=1e-12, atol=1e-12
+    ):
+        return False
+    _, delta, gamma = bsm_state(
+        spot[:, None, :, :-1], 100.0, tau[:, None, :, :-1], forecast[:, :, None, None]
+    )
+    denominator = secondary_gamma[:, None, :, :-1]
+    units = np.divide(gamma, denominator, out=np.zeros_like(gamma), where=denominator > 1e-10)
+    units = np.clip(units, 0, 5.0)
+    no_trade = delta.copy()
+    for t in range(1, steps):
+        no_trade[:, :, :, t] = np.where(
+            np.abs(delta[:, :, :, t] - no_trade[:, :, :, t - 1]) > 0.04,
+            delta[:, :, :, t],
+            no_trade[:, :, :, t - 1],
+        )
+    expected_stock = np.stack(
+        [delta, delta - units * secondary_delta[:, None, :, :-1], np.zeros_like(delta), no_trade],
+        axis=2,
+    )
+    expected_options = np.stack(
+        [np.zeros_like(delta), units, np.zeros_like(delta), np.zeros_like(delta)], axis=2
+    )
+    stock = a["economic_stock_positions"]
+    options = a["economic_option_positions"]
+    if not np.allclose(stock, expected_stock, rtol=1e-10, atol=1e-11) or not np.allclose(
+        options, expected_options, rtol=1e-10, atol=1e-11
+    ):
+        return False
+    trades = np.diff(np.concatenate([np.zeros((*stock.shape[:-1], 1)), stock], axis=-1), axis=-1)
+    option_trades = np.diff(
+        np.concatenate([np.zeros((*options.shape[:-1], 1)), options], axis=-1), axis=-1
+    )
+    turnover = np.sum(np.abs(trades) * spot[:, None, None, :, :-1], axis=-1)
+    turnover += np.sum(np.abs(option_trades) * secondary[:, None, None, :, :-1], axis=-1)
+    turnover += np.abs(stock[:, :, :, :, -1]) * spot[:, None, None, :, -1]
+    pnl = premium[:, None, None, None] + np.sum(
+        stock * np.diff(spot, axis=-1)[:, None, None], axis=-1
+    )
+    pnl += np.sum(options * np.diff(secondary, axis=-1)[:, None, None], axis=-1)
+    pnl -= np.maximum(spot[:, :, -1] - 100, 0)[:, None, None, :]
+    pnl -= metrics["end_to_end"]["comparison_controls"]["transaction_cost_rate"] * turnover
+    if not np.allclose(pnl, a["economic_pnl"], rtol=1e-10, atol=1e-11) or not np.allclose(
+        turnover, a["economic_turnover"], rtol=1e-10, atol=1e-11
+    ):
+        return False
+    for h in [1, 5, 21]:
+        mask = horizons == h
+        for m, name in enumerate(names):
+            for i, strategy in enumerate(strategies):
+                values = pnl[mask, m, i].ravel()
+                loss = -values
+                q = float(np.quantile(loss, 0.95))
+                expected = {
+                    "mean_pnl": float(values.mean()),
+                    "hedging_rmse": _rmse_np(values),
+                    "var95": q,
+                    "cvar95": float(loss[loss >= q].mean()),
+                    "turnover": float(turnover[mask, m, i].mean()),
+                }
+                stored = meta["risk_by_horizon"][str(h)][name][strategy]
+                if not all(
+                    _close(stored[k], v, rel=1e-10, abs_tol=1e-11) for k, v in expected.items()
+                ):
+                    return False
+    return True
+
+
 def _volume18(
     metrics: dict[str, Any], arrays: dict[str, np.ndarray]
 ) -> tuple[list[dict[str, Any]], list[str]]:
@@ -90,7 +387,9 @@ def _volume18(
         "greek_consistency",
     }
     names = {str(value) for value in arrays["check_names"].tolist()}
-    violations = int(np.sum(arrays["violations_constrained"]))
+    raw_counts, hard_rate, hard_inputs_ok = _vol18_hard_evidence(arrays)
+    violations = int(raw_counts.sum())
+    stored_counts_ok = np.allclose(raw_counts, arrays["violations_constrained"], rtol=0, atol=0)
     overlap = _split_overlap_np(
         [arrays[f"split_row_key_{split}"] for split in ("train", "validation", "test", "ood")]
     )
@@ -131,9 +430,35 @@ def _volume18(
         "hard_check_violations",
         violations,
         "== 0",
-        violations == 0 and metrics["hard_violation_rate"] == 0.0,
+        violations == 0
+        and hard_inputs_ok
+        and stored_counts_ok
+        and _close(metrics["hard_violation_rate"], hard_rate),
     )
-    residual_better = metrics["heston_bsm_residual_mae"] < metrics["heston_raw_price_mae"]
+    _require_evidence(
+        arrays,
+        "heston_raw_prediction",
+        "heston_residual_prediction",
+        "heston_test_teacher",
+        "heston_test_inputs",
+        "heston_test_row_key",
+    )
+    residual_mae = float(
+        np.mean(np.abs(arrays["heston_residual_prediction"] - arrays["heston_test_teacher"]))
+    )
+    raw_mae = float(
+        np.mean(np.abs(arrays["heston_raw_prediction"] - arrays["heston_test_teacher"]))
+    )
+    residual_better = (
+        residual_mae < raw_mae
+        and _close(metrics["heston_bsm_residual_mae"], residual_mae)
+        and _close(metrics["heston_raw_price_mae"], raw_mae)
+        and arrays["heston_test_inputs"].shape == (len(arrays["heston_test_teacher"]), 5)
+        and np.array_equal(
+            arrays["heston_test_row_key"],
+            arrays["split_row_key_test"][: len(arrays["heston_test_teacher"])],
+        )
+    )
     _add(
         checks,
         "residual_baseline",
@@ -208,6 +533,7 @@ def _volume19(
     metrics: dict[str, Any], arrays: dict[str, np.ndarray]
 ) -> tuple[list[dict[str, Any]], list[str]]:
     checks: list[dict[str, Any]] = []
+    start_evidence_ok = _optimizer_start_evidence(metrics, arrays)
     calibration = metrics["forward_calibration"]
     reports = metrics["surface_constraints"]["reports"]
     hard = reports["hard"]
@@ -239,9 +565,9 @@ def _volume19(
     _add(
         checks,
         "multi_start_calibration",
-        calibration["all_starts_successful"],
-        "all starts successful",
-        calibration["all_starts_successful"],
+        int(np.count_nonzero(arrays["calibration_optimizer_status"] > 0)),
+        "all starts have matching raw optimizer termination, residual and budget evidence",
+        start_evidence_ok,
     )
     starts_ok = (
         arrays["calibration_start_initial"].shape == arrays["calibration_start_parameters"].shape
@@ -666,6 +992,7 @@ def _volume20(
         }
         stored = end_to_end["strategy_metrics"][name]
         controls_ok &= all(_close(stored[key], value) for key, value in recomputed.items())
+    controls_ok &= _forecast_hedge_evidence(metrics, arrays)
     _add(
         checks,
         "economic_comparison_controls",
@@ -818,13 +1145,33 @@ def _volume21(
         "> 0 flagged observations",
         metrics["ood_count"] > 0 and int(arrays["ood_flag"].sum()) == metrics["ood_count"],
     )
-    timings = bool(np.all(arrays["nested_mc_ms"] > 0) and np.all(arrays["surrogate_ms"] > 0))
+    _require_evidence(arrays, "nested_mc_repeats_ns", "surrogate_repeats_ns", "timing_warmup_count")
+    timings = bool(
+        arrays["nested_mc_repeats_ns"].shape
+        == arrays["surrogate_repeats_ns"].shape
+        == (len(arrays["batch_size"]), 5)
+        and np.all(arrays["nested_mc_repeats_ns"] > 0)
+        and np.all(arrays["surrogate_repeats_ns"] > 0)
+        and arrays["timing_warmup_count"][0] == 1
+        and np.allclose(
+            arrays["nested_mc_ms"],
+            np.median(arrays["nested_mc_repeats_ns"], axis=1) * 1e-6,
+            rtol=1e-12,
+            atol=1e-15,
+        )
+        and np.allclose(
+            arrays["surrogate_ms"],
+            np.median(arrays["surrogate_repeats_ns"], axis=1) * 1e-6,
+            rtol=1e-12,
+            atol=1e-15,
+        )
+    )
     _add(
         checks,
         "measured_cpu_timing",
         metrics["timing_method"],
-        "positive measured samples",
-        timings and metrics["timing_nondeterministic"] is True,
+        "warmup + 5 positive raw perf_counter_ns samples; medians recomputed",
+        timings and metrics["timing_method"] == "perf_counter_ns warm-cache median of 5",
     )
     at_1024 = np.flatnonzero(arrays["batch_size"] == 1024)
     speedup = (
@@ -934,7 +1281,7 @@ def _volume22(
     model_forward = np.diff(arrays["model_total_variance"]) / np.diff(expiry_years)
     expiry_violations = int(np.sum(model_forward < -1e-12))
     calendar_ok = bool(
-        metrics["calendar_violations"] == 0
+        _calendar_evidence(metrics, arrays)
         and np.all(np.diff(expiry_years) > 0)
         and expiry_violations == 0 == metrics["adjacent_expiry_violations"]
         and arrays["forward_variance"].shape == forward_variance.shape
@@ -960,6 +1307,15 @@ def _volume22(
         and bool(np.any(scheduled > 0.0))
         and injection_error <= 1e-12 * float(np.max(scheduled)),
     )
+    _require_evidence(arrays, "event_effect_payoff", "event_effect_paired_se")
+    paired = arrays["event_effect_payoff"]
+    paired_se = np.std(paired, axis=1, ddof=1) / np.sqrt(paired.shape[1])
+    paired_ok = np.allclose(
+        paired.mean(axis=1),
+        arrays["teacher_price"] - arrays["baseline_price"],
+        rtol=1e-10,
+        atol=1e-12,
+    ) and np.allclose(paired_se, arrays["event_effect_paired_se"], rtol=1e-12, atol=1e-14)
     event_mask = arrays["event_mask"].astype(bool)
     teacher_se = arrays["teacher_standard_error"]
     event_se = float(np.mean(teacher_se[event_mask])) if event_mask.any() else float("nan")
@@ -971,7 +1327,8 @@ def _volume22(
         teacher_se.shape == arrays["teacher_price"].shape
         and bool(np.all(teacher_se >= 0))
         and event_se > 0
-        and _close(metrics["event_teacher_standard_error"], event_se),
+        and _close(metrics["event_teacher_standard_error"], event_se)
+        and paired_ok,
     )
     price_error = np.abs(arrays["teacher_price"] - arrays["baseline_price"])
     greek_error = np.abs(arrays["delta"] - arrays["baseline_delta"])
@@ -1479,7 +1836,7 @@ def _volume24(
     ]
     if metrics["dynamic_fee_gross_lvr_reduction"] <= 0:
         negative.append(
-            "The dynamic fee does not reduce gross LVR in this fixture; fee compensation is reported separately."
+            "Gross LVR is identical by construction: both fee scenarios reuse the same no-fee endpoint. This is a fee-compensation identity, not an experiment on fee-aware arbitrage or inventory paths."
         )
     return checks, negative
 
