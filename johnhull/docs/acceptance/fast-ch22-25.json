@@ -1,0 +1,2677 @@
+{
+  "profile": "fast-v1",
+  "base": "0c72b31d",
+  "out": "docs/validation/fast-ch22-25",
+  "sections": [
+    {
+      "id": "22.1",
+      "chapter": 22,
+      "heading": "The VaR and ES Measures（pp.514–517）",
+      "source_pages": [
+        514,
+        517
+      ],
+      "requirements": [
+        {
+          "id": "D22.1-01",
+          "statement": "VaR の定義：N 日損失の X 分位点＝利益分布の (100−X)% 点の符号反転（p.514、Figure 22.1）",
+          "reading": "既知の分布（正規・t）で分位点を解析値と比べる"
+        },
+        {
+          "id": "D22.1-02",
+          "statement": "規制での使い方：N=10・X=99、資本 = k×VaR（k≥3）、Basel II の 1 年 99.9%、II.5 の stressed VaR、FRTB の ES 97.5%（p.515、BS 22.1）",
+          "reading": "記述のみ。数値ピンは不要"
+        },
+        {
+          "id": "D22.1-03",
+          "statement": "Figure 22.1・22.2：VaR が同じで裾が違う。ES＝VaR を超える損失の条件付き期待値。脚注 1：C-VaR／expected tail loss、Artzner et al. の coherence（pp.515–516）",
+          "reading": "同じ 99% VaR を持つ 2 分布を作り、ES が違うことを数値で示す"
+        },
+        {
+          "id": "D22.1-04",
+          "statement": "$N$ 日 VaR・ES $=$ 1 日値 $\\times\\sqrt N$。平均 0 の iid 正規なら厳密、それ以外は近似（pp.516–517）",
+          "reading": "iid なら比 1。AR(1) 日次変化なら比 $\\sqrt{[N+2\\sum_{k<N}(N-k)\\phi^k]/N}$（φ=0.1 で 1.094、0.3 で 1.317、2026-09-27 に式で計算）"
+        }
+      ],
+      "explanation": "VaR は「N 日で X% の確信で超えない損失」、つまり N 日損失分布の X 分位点（利益分布の $(100-X)$ 分位点の符号反転）。規制は伝統的に N=10、X=99 で、資本は VaR の k 倍（k≥3）。Basel II は 1 年・99.9%、Basel II.5 は stressed VaR、FRTB は ES 97.5% へ移る（BS 22.1）。Figure 22.1・22.2 は VaR が同じでも裾の重さが違う 2 分布で、これが ES（VaR を超える損失の条件付き期待値、脚注 1 で coherent）の動機。期間は通常 N=1 で推定し、$N$ 日 VaR $=$ 1 日 VaR $\\times\\sqrt N$（ES も同じ）。これは日次変化が平均 0 の iid 正規なら厳密で、それ以外では近似。",
+      "printed": "計算を要する印刷値はない。\n  - 記述統計（ピン不要、年次に注意）：k≥3、Basel I（1988）、1996 Amendment（1998 施行）、Basel II（2007 前後）、II.5（2012）、FRTB の 97.5%。\n  - 参考（節の外）：PQ 22.20「正規なら VaR 99% と ES 97.5% はほぼ同じ」は乗数 2.3263 と 2.3378 で確かめられる（2026-09-27 に SciPy で計算）。FRTB の置き換えの根拠として本文の説明に使える。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch22.md",
+      "lesson": "docs/lessons/ch22.md",
+      "page": "report/site/chapters/ch22.html",
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_definitions.py"
+      ],
+      "limitation": "loss_meanは正が損失。期間sqrt(N)は平均ゼロiid正規なら厳密、AR(1)や一般分布では別。規制史は刊行時点で現行適用の保証ではない。離散ESは分位点の裾積分を使う。",
+      "numerical_requirements": [
+        "D22.1-01",
+        "D22.1-03",
+        "D22.1-04"
+      ],
+      "calculation": "固有の印刷価格なし。正常/tの同じVaR・異なるES、sqrt(N)とAR(1)集計分散。独立裾積分・共分散和、固定seed MCの分位点6SE",
+      "calculation_scope": "loss_meanは正が損失。期間sqrt(N)は平均ゼロiid正規なら厳密、AR(1)や一般分布では別。規制史は刊行時点で現行適用の保証ではない。離散ESは分位点の裾積分を使う。"
+    },
+    {
+      "id": "22.2",
+      "chapter": 22,
+      "heading": "Historical Simulation（pp.517–521）",
+      "source_pages": [
+        517,
+        521
+      ],
+      "requirements": [
+        {
+          "id": "D22.2-01",
+          "statement": "シナリオの作り方 $v_n v_i/v_{i-1}$、自国通貨建て（FTSE：6,515.12×1.3553=8,830.23）（pp.517–518）",
+          "reading": "Table 22.2 から手計算"
+        },
+        {
+          "id": "D22.2-02",
+          "statement": "Table 22.3：シナリオ 1 の S&P 6,496.14×5,343.70/5,292.90=6,558.49、ポートフォリオ 10,064.257、損失 −64.257（p.519）",
+          "reading": "Table 22.2 に載っている日だけで作れる行（シナリオ 1・2・3・500）を再計算"
+        },
+        {
+          "id": "D22.2-03",
+          "statement": "VaR＝500 中 5 位の損失 \\$422,291（シナリオ 427＝2020-03-17→18）、10 日 \\$1,335,401（pp.519–520、Table 22.4）",
+          "reading": "既存ピン"
+        },
+        {
+          "id": "D22.2-04",
+          "statement": "窓の更新（Day 1–501 を使う）（p.520）",
+          "reading": "説明。合成データで 1 日ずらすと最古のシナリオが落ちることを示す"
+        },
+        {
+          "id": "D22.2-05",
+          "statement": "ES＝最悪 5 つの平均 \\$669,391（p.520）",
+          "reading": "既存ピン"
+        },
+        {
+          "id": "D22.2-06",
+          "statement": "BRW の重み（λ=0.995）：0.003776・0.003814・0.003719・0.003555、累積が 0.01 を超える 3 位で VaR \\$653,541、ES 約 \\$833,200（p.521）",
+          "reading": "既存ピン（p.521 の累積 0.004833 は誤植）"
+        },
+        {
+          "id": "D22.2-07",
+          "statement": "stressed VaR・ES：251 日・250 シナリオ、VaR は 2 位と 3 位の中点、ES は $0.4c_1+0.4c_2+0.2c_3$、脚注 4 の別法（p.521）",
+          "reading": "手計算。ES の規則は経験分布の分位関数の [0.99, 1] 積分と一致する（下の「注意」）"
+        },
+        {
+          "id": "D22.2-08",
+          "statement": "脚注 2：5 位・6 位・平均、Excel PERCENTILE（k/(n−1) 分位が k+1 位、他は線形補間）（p.517）",
+          "reading": "同じ標本で各規約の値を並べ、真の分位点に対する偏りを MC で測る"
+        }
+      ],
+      "explanation": "501 日のデータから 500 シナリオを作る。シナリオ i の値は $v_n\\,v_i/v_{i-1}$。価格はすべて自国通貨（ドル）建て。4 指数（S&P 500・FTSE 100・CAC 40・Nikkei 225、total return、2020-07-08 時点で計 \\$10M）で、1 日 99% VaR は 5 番目に大きい損失 \\$422,291、10 日は $\\times\\sqrt{10}$ で \\$1,335,401、ES は最悪 5 つの平均 \\$669,391。窓は毎日 1 日ずつずらす。Boudoukh–Richardson–Whitelaw の重み $\\lambda^{n-i}(1-\\lambda)/(1-\\lambda^n)$（λ=0.995）では VaR が 3 位の \\$653,541、ES は約 \\$833,200。stressed VaR・ES は 251 日の窓（250 シナリオ）で、VaR は 2 位と 3 位の中点、ES は $0.4c_1+0.4c_2+0.2c_3$（脚注 4 の別法は最悪 2 つの平均）。脚注 2 は 5 位・6 位・その平均、Excel の PERCENTILE の規約を挙げる。",
+      "printed": "- 8,830.23：6,515.12×1.3553 は 8,829.94。為替レートの印刷が 4 桁に丸められているためで、8,830.23 は 1.355344 に相当し、四捨五入で 1.3553 になる。✓（丸めの範囲内）。未ピン。\n  - Table 22.3（Table 22.2 に日が載っている 4 行）：\n    - シナリオ 1：指数 6,558.49・7,334.19・15,545.11・340.78（印刷 …15,545.12・340.79）、価値 10,064.223（印刷 10,064.257）。\n    - シナリオ 2：10,066.876（印刷 10,066.822）。シナリオ 3：10,023.743（10,023.722）。シナリオ 500：9,990.340（9,990.361）。\n    - 差は最大 0.054（千ドル）で、Table 22.2 の小数 2 桁の丸め（Nikkei は 5 桁しかない）の伝播で説明できる。✓（許容 0.06 程度が要る）。未ピン。\n  - Table 22.4：VaR 422.291、ES 669.391（計算 669.3908）、10 日 1,335,401（計算 1,335,401.4）。✓。ピン済み（`test_hull_pins_vol_var.py::test_table_22_4_historical_simulation_var_es_hull_ge`。Hull のデータがないので、印刷 15 損失に 0 損失 485 個を足して k=5 にしている）。\n  - BRW：重み 0.003776・0.003814・0.003719・0.003555、累積 0.003776（印刷 0.004833 は誤植）・0.007590・0.011309・0.014864、VaR 653,541、ES 833.228（千ドル、印刷「about 833,200」）。✓。ピン済み（`::test_brw_weighted_historical_simulation_hull_ge`、誤植も docstring に記録）。\n  - stressed：印刷値なし（規則だけ）。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch22.md",
+      "lesson": "docs/lessons/ch22.md",
+      "page": "report/site/chapters/ch22.html",
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_historical.py"
+      ],
+      "limitation": "501日原系列なし。15印刷損失の下側は合成補完であり観測データの全再生ではない。表22.2丸め伝播に.06千ドル幅。VaRのHull/Excel/stressed規約を分ける。p521累積.004833は誤記、250点ESはfractional tail mass。",
+      "numerical_requirements": [
+        "D22.2-01",
+        "D22.2-02",
+        "D22.2-03",
+        "D22.2-04",
+        "D22.2-05",
+        "D22.2-06",
+        "D22.2-07",
+        "D22.2-08"
+      ],
+      "calculation": "Table22.3の4行（印刷丸め許容.06千ドル）、Table22.4 VaR422.291/ES669.391、BRW VaR653.541/ES約833.2。独立Decimal cash、整数重複分布・分位関数の裾積分",
+      "calculation_scope": "501日原系列なし。15印刷損失の下側は合成補完であり観測データの全再生ではない。表22.2丸め伝播に.06千ドル幅。VaRのHull/Excel/stressed規約を分ける。p521累積.004833は誤記、250点ESはfractional tail mass。"
+    },
+    {
+      "id": "22.3",
+      "chapter": 22,
+      "heading": "Model-Building Approach（pp.521–524）",
+      "source_pages": [
+        522,
+        524
+      ],
+      "requirements": [
+        {
+          "id": "D22.3-01",
+          "statement": "日次ボラ＝年率/$\\sqrt{252}$（約 6%）、日次変化率の標準偏差と同一視（p.522）",
+          "reading": "算術"
+        },
+        {
+          "id": "D22.3-02",
+          "statement": "平均 0 の仮定：0.20/252≈0.08% と 2%、10 日で 0.8% と $2\\sqrt{10}$≈6.3%（p.522）",
+          "reading": "算術。平均を入れた VaR との差を示す"
+        },
+        {
+          "id": "D22.3-03",
+          "statement": "単一資産：MSFT 465,300／1,471,300、AT&T 116,300／367,800（pp.522–523）",
+          "reading": "既存ピン"
+        },
+        {
+          "id": "D22.3-04",
+          "statement": "2 資産：$\\sigma_{X+Y}=\\sqrt{\\sigma_X^2+\\sigma_Y^2+2\\rho\\sigma_X\\sigma_Y}$=220,200、VaR 512,300／1,620,100（p.523）",
+          "reading": "既存ピン"
+        },
+        {
+          "id": "D22.3-05",
+          "statement": "分散効果 219,000。完全相関なら VaR は足し算（p.524）",
+          "reading": "既存ピン。ρ=1 で差 0"
+        },
+        {
+          "id": "D22.3-06",
+          "statement": "式 (22.1) と 10 日 ES 1,687,000／421,400／1,856,100（p.524）",
+          "reading": "既存ピン（MSFT は計算値で固定）"
+        },
+        {
+          "id": "D22.3-07",
+          "statement": "脚注 5：1 日なら対数正規と正規の違いは小さい（p.522）",
+          "reading": "対数正規の厳密な分位点と正規近似の VaR を比べる"
+        }
+      ],
+      "explanation": "年率ボラと日次ボラは $\\sigma_{year}=\\sigma_{day}\\sqrt{252}$（日次は年率の約 6%）。日次ボラは 1 日の変化率の標準偏差と同一視する。期待変化は 0 と仮定する（年 20% のリターンでも 1 日 0.08%、標準偏差 2% に比べて小さい）。Microsoft \\$10M・日次 2% で σ=\\$200,000、$N^{-1}(0.01)=-2.326$ から 1 日 99% VaR \\$465,300、10 日 \\$1,471,300。AT&T \\$5M・1% で \\$116,300、\\$367,800。相関 0.3 の 2 資産で σ=\\$220,200、1 日 \\$512,300、10 日 \\$1,620,100、分散効果 \\$219,000。正規損失の ES は式 (22.1) $ES=\\mu+\\sigma e^{-Y^2/2}/[\\sqrt{2\\pi}(1-X)]$ で、10 日 ES は \\$1,687,000・\\$421,400・\\$1,856,100。脚注 5：1 日なら対数正規と正規はほぼ同じ。",
+      "printed": "- 約 6%（1/√252=0.0630）、約 32%（0.3175）、約 16%（0.1587）、約 0.08%（0.0794%）、約 6.3%（6.325%）：✓。記述的な値で未ピン。\n  - $N^{-1}(0.01)=-2.3263$（印刷 −2.326）：✓。ピン済み。\n  - 465,269.6→465,300、1,471,311.6→1,471,300、116,317.4→116,300、367,827.9→367,800、220,227.2→220,200、512,325.0→512,300、1,620,113.8→1,620,100、分散効果 219,025.7→219,000：すべて ✓。ピン済み（`test_hull_pins_vol_var.py::test_section_22_3_model_building_microsoft_att_hull_ge`、`test_risk.py::test_hull_microsoft_att_example`）。\n  - 本文の「2.326×220,200=512,300」は書いたとおりに掛けると 512,185 で、印刷値は丸めない z を使っている。ES も同じ。\n  - 10 日 ES：AT&T 421,407.4 ✓、合計 1,856,106.9 ✓。MSFT は ✗：計算 1,685,629.5、印刷 1,687,000。丸めた Y=2.326 を式に入れると乗数 2.66737 で 1,686,994 になり印刷と合うが、他の 2 つは丸めない Y でしか合わない。既存テストは計算値で固定し、docstring に記録済み。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch22.md",
+      "lesson": "docs/lessons/ch22.md",
+      "page": "report/site/chapters/ch22.html",
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_normal.py"
+      ],
+      "limitation": "利益平均とloss_meanの符号を分ける。MSFT厳密ES1685629.5と印刷1687000はz2.326の中間丸め規約が異なる。対数正規へsqrt(N)を厳密適用しない。",
+      "numerical_requirements": [
+        "D22.3-01",
+        "D22.3-02",
+        "D22.3-03",
+        "D22.3-04",
+        "D22.3-05",
+        "D22.3-06",
+        "D22.3-07"
+      ],
+      "calculation": "MSFT/AT&T/相関.3のVaR1,471,300/367,800/1,620,100、ESの厳密値。印刷MSFT ES1,687,000はz2.326で再現。独立正規/対数正規裾積分・固定seed相関MC6SE",
+      "calculation_scope": "利益平均とloss_meanの符号を分ける。MSFT厳密ES1685629.5と印刷1687000はz2.326の中間丸め規約が異なる。対数正規へsqrt(N)を厳密適用しない。"
+    },
+    {
+      "id": "22.4",
+      "chapter": 22,
+      "heading": "The Linear Model（pp.524–530）",
+      "source_pages": [
+        524,
+        530
+      ],
+      "requirements": [
+        {
+          "id": "D22.4-01",
+          "statement": "式 (22.2)・(22.3) とウェイト版、§22.3 の再計算 $\\sigma_P^2=0.0485$、$\\sigma_P=0.2202$、10 日 VaR 1.62M（p.525）",
+          "reading": "算術（§22.3 のピンと同値）"
+        },
+        {
+          "id": "D22.4-02",
+          "statement": "相関行列・分散共分散行列（Tables 22.5・22.6）、$\\sigma_P^2=a^TCa$（22.4）（pp.525–527）",
+          "reading": "行列形とスカラー形の一致"
+        },
+        {
+          "id": "D22.4-03",
+          "statement": "4 指数：Tables 22.7・22.8 → 14,406.193、120.03、279.222、319.894。HS（422.291／669.391）より小さい理由（p.527）",
+          "reading": "既存ピン（丸めた表からは相対 1.5e-4 の差）"
+        },
+        {
+          "id": "D22.4-04",
+          "statement": "平行移動だけのデュレーション式 $\\Delta P=-DP\\Delta y$（p.528）",
+          "reading": "平行シフトでの全再評価との差（凸性）"
+        },
+        {
+          "id": "D22.4-05",
+          "statement": "cash-flow mapping：標準満期、1.2 年債のキャッシュフロー 30,000／30,000／1.03M、隣の満期へ振り分け（TN25）（p.528）",
+          "reading": "振り分け前後で PV と（TN25 型なら）分散が保存されること"
+        },
+        {
+          "id": "D22.4-06",
+          "statement": "FX フォワード＝外貨ゼロ債ロング＋自国ゼロ債ショート、OIS＝固定利付債−変動利付債（変動側の価値は既知）（p.528）",
+          "reading": "分解した債券の和でフォワード・OIS の価値を再現"
+        },
+        {
+          "id": "D22.4-07",
+          "statement": "オプションのデルタ線形化 (22.5)・(22.6)、Example 22.1：\\$120,000・\\$600,000 相当、σ=7.099（pp.529–530）",
+          "reading": "既存ピン。小さい変動での全再評価との差"
+        }
+      ],
+      "explanation": "$\\Delta P=\\sum a_i\\Delta x_i$（22.2）、$\\sigma_P^2=\\sum_i\\sum_j\\rho_{ij}a_ia_j\\sigma_i\\sigma_j$（22.3）、共分散行列で $\\sigma_P^2=a^TCa$（22.4）、$N$ 日 99% VaR $=2.326\\,\\sigma_P\\sqrt N$、ウェイト版は $\\sum\\sum\\rho_{ij}w_iw_j\\sigma_i\\sigma_j$。§22.3 の例を行列形で再計算（$\\sigma_P^2=0.0485$）。4 指数の例（Tables 22.7・22.8）で分散 14,406.193、σ 120.03、VaR 279.222、ES 319.894（千ドル）。HS の値より小さいのは 2020 年 3 月の少数の大損失のため。金利は、平行移動だけならデュレーション式 $\\Delta P=-DP\\Delta y$、通常は標準満期（1m〜30y）のゼロクーポン債へ cash-flow mapping する（1.2 年・6% 半年払いの債券 \\$1M → 0.2 年と 0.7 年に 30,000、1.2 年に 1.03M、それぞれ隣の標準満期へ振り分け。方法は Technical Note 25）。HS では mapping は不要。FX フォワードは外貨ゼロ債のロング＋自国ゼロ債のショート、OIS は固定利付債と変動利付債の交換。オプションはデルタで線形化し $\\Delta P=\\sum S_i\\delta_i\\Delta x_i$（22.6）。Example 22.1 で $\\sigma=7.099$（千ドル）。",
+      "printed": "- $\\sigma_P^2=0.0485$（厳密）、$\\sigma_P=0.22023$（印刷 0.2202）、10 日 VaR 1.6201（印刷 1.62）：✓。§22.3 の 220,200 のピンと同値で、この形では未ピン。\n  - Table 22.8 から作った相関と Table 22.7 の差は最大 0.003（0.694 と 0.693、0.482 と 0.479 など）：✓（丸め）。ピン済み。\n  - 14,406.193：丸めた Table 22.8 からは 14,404.000（相対 −1.5e-4）。✓（表の丸め）。120.03（√14,406.193=120.0258）✓、279.222 ✓、319.894 ✓。ピン済み（`test_hull_pins_vol_var.py::test_table_22_8_linear_model_four_index_var_es_hull_ge`、相対 2e-4）。\n  - 本文の「2.326×120.03=279.222」は書いたとおりに掛けると 279.190。印刷値は丸めない z と丸めない σ の積。\n  - 30,000・30,000・1,030,000：✓（算術）。未ピン。\n  - Example 22.1：\\$120,000・\\$600,000、σ=7.0993（印刷 7.099）：✓。ピン済み（`::test_example_22_1_delta_linear_model_hull_ge`）。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch22.md",
+      "lesson": "docs/lessons/ch22.md",
+      "page": "report/site/chapters/ch22.html",
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_linear.py"
+      ],
+      "limitation": "丸め表の分散14404と印刷14406.193の差を保持。cash-flow mappingは個別PV/分散を保存するがbook全cross covarianceの保存を保証しない。TN25全中間表は取得できず未検証。",
+      "numerical_requirements": [
+        "D22.4-01",
+        "D22.4-02",
+        "D22.4-03",
+        "D22.4-04",
+        "D22.4-05",
+        "D22.4-06",
+        "D22.4-07"
+      ],
+      "calculation": "Tables22.7/8 分散14404（印刷14406.193との丸め差）、VaR279.222/ES319.894、Ex22.1 sigma7.099、本文3CF30000/30000/1030000。独立多変量求積・債券再評価・mapping求根・FX/OIS cashflow",
+      "calculation_scope": "丸め表の分散14404と印刷14406.193の差を保持。cash-flow mappingは個別PV/分散を保存するがbook全cross covarianceの保存を保証しない。TN25全中間表は取得できず未検証。"
+    },
+    {
+      "id": "22.5",
+      "chapter": 22,
+      "heading": "The Quadratic Model（pp.530–533）",
+      "source_pages": [
+        530,
+        533
+      ],
+      "requirements": [
+        {
+          "id": "D22.5-01",
+          "statement": "ガンマの符号と歪み：正のガンマ→正の歪み→正規 VaR は高すぎ、負のガンマ→低すぎ（pp.530–532、Figures 22.3–22.5）",
+          "reading": "ロング・ショートのコールで、正規近似の VaR と全再評価の VaR の大小"
+        },
+        {
+          "id": "D22.5-02",
+          "statement": "式 (22.7) と多変数の対角形、cross gamma つきの (22.8)（p.532）",
+          "reading": "2 資産の関数で、有限差分の $\\gamma_{ij}$ を入れた 2 次近似の誤差が 3 次で縮むこと"
+        },
+        {
+          "id": "D22.5-03",
+          "statement": "脚注 9：$\\Theta\\Delta t$ を省く理由（p.532）",
+          "reading": "1 日の Θ と 99% の変動での δ・γ 項の大きさの比"
+        },
+        {
+          "id": "D22.5-04",
+          "statement": "脚注 10 のモーメント 3 本と Cornish–Fisher（p.532）",
+          "reading": "下の独立参照（厳密分布）と比べる"
+        }
+      ],
+      "explanation": "オプションを含むと線形モデルは近似でガンマを無視する。正のガンマは分布を右に歪ませ左裾を軽くするので、正規仮定の VaR は高すぎる。負のガンマはその逆で低すぎる（Figure 22.4 はロングコール、22.5 はショートコール）。1 変数では $\\Delta P=\\delta\\Delta S+\\tfrac12\\gamma(\\Delta S)^2$、$\\Delta x=\\Delta S/S$ で $\\Delta P=S\\delta\\Delta x+\\tfrac12S^2\\gamma(\\Delta x)^2$（22.7）。多変数では cross gamma $\\gamma_{ij}=\\partial^2P/\\partial S_i\\partial S_j$ を含む (22.8)。$\\Delta P$ は正規でないので、変数が少なければモーメントを求め Cornish–Fisher 展開で分位点を推定する。脚注 9：$\\Theta\\Delta t$ 項は大きな $\\Delta S$ に比べて小さいので省く。脚注 10：1 変数のモーメント $E(\\Delta P)=0.5S^2\\gamma\\sigma^2$、$E(\\Delta P^2)=S^2\\delta^2\\sigma^2+0.75S^4\\gamma^2\\sigma^4$、$E(\\Delta P^3)=4.5S^4\\delta^2\\gamma\\sigma^4+1.875S^6\\gamma^3\\sigma^6$（数値は TN10 と DerivaGem の Sample Application E にあり、PDF の外）。",
+      "printed": "数値の印刷値はない。脚注 10 の式は、$\\Delta P=a+bZ+cZ^2$（$b=S\\delta\\sigma$、$c=\\tfrac12S^2\\gamma\\sigma^2$）の正規モーメント $E=c$、$E^2=b^2+3c^2$、$E^3=9b^2c+15c^3$ に展開すると係数 0.5・0.75・4.5・1.875 がすべて一致する（2026-09-27 に導出し、400 万本の MC でも誤差内で確認）。✓（式）。数値ピンは TN10 が PDF の外にあるので blocked（VN-09）。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch22.md",
+      "lesson": "docs/lessons/ch22.md",
+      "page": "report/site/chapters/ch22.html",
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_quadratic.py"
+      ],
+      "limitation": "CFは近似で強い歪度に精度/単調性の保証なし。脚注10はraw moments、CFには中心化が必要。TN10 PDF未取得、公式索引例の−5.326/−5.976と独立計算を区別。small gamma修正を保持。",
+      "numerical_requirements": [
+        "D22.5-01",
+        "D22.5-02",
+        "D22.5-04"
+      ],
+      "calculation": "脚注10の3 raw moments、TN10 mean−.2/SD2.2/skew−.4→normal−5.326/CF−5.976。独立多変量Gauss求積・二次式の正規区間CDF求根・full Hessian再評価",
+      "calculation_scope": "CFは近似で強い歪度に精度/単調性の保証なし。脚注10はraw moments、CFには中心化が必要。TN10 PDF未取得、公式索引例の−5.326/−5.976と独立計算を区別。small gamma修正を保持。"
+    },
+    {
+      "id": "22.6",
+      "chapter": 22,
+      "heading": "Monte Carlo Simulation（p.533）",
+      "source_pages": [
+        533,
+        533
+      ],
+      "requirements": [
+        {
+          "id": "D22.6-01",
+          "statement": "全再評価 MC の 6 手順（p.533）",
+          "reading": "手順どおりの関数と、線形ブックでの閉形式との一致"
+        },
+        {
+          "id": "D22.6-02",
+          "statement": "5,000 標本で 99% は 50 位、95% は 250 位（p.533）",
+          "reading": "`historical_var_es` の $k=\\lceil(1-\\alpha)n\\rceil$ と一致"
+        },
+        {
+          "id": "D22.6-03",
+          "statement": "$N$ 日は $\\sqrt N$ 倍、オプションがあると近似（p.533、脚注 13）",
+          "reading": "10 日の全再評価 VaR と $\\sqrt{10}\\times\\$1 日 VaR の比"
+        },
+        {
+          "id": "D22.6-04",
+          "statement": "partial simulation：(22.8) で再評価を省く（p.533）",
+          "reading": "全再評価と 2 次近似の損益の差（同じ乱数）"
+        },
+        {
+          "id": "D22.6-05",
+          "statement": "脚注 12（EVT）、脚注 14（Jamshidian–Zhu）の紹介",
+          "reading": "説明のみ。EVT は vol 27 に実装あり"
+        }
+      ],
+      "explanation": "モデル構築法を MC で行う 6 手順：現在価値の評価 → $\\Delta x_i$ を多変量正規から 1 回抽出（§21.6）→ 1 日後の市場変数 → 再評価 → 差を $\\Delta P$ の標本に → 繰り返し。5,000 標本なら 99% VaR は 50 番目、95% は 250 番目に悪い結果。$N$ 日は $\\sqrt N$ 倍（オプションがあると近似、脚注 13）。欠点は全ポートフォリオの再評価が遅いこと。(22.8) を使って手順 2 から 5 へ飛ぶのが partial simulation。脚注 12 は極値理論で裾を滑らかにする方法、脚注 14 は Jamshidian–Zhu の再評価回数の削減。",
+      "printed": "50 位・250 位：$0.01\\times5000=50$、$0.05\\times5000=250$ ✓。hullkit の規約（天井）とも一致。これ自体のピンはない（n=500・n=250 の規約はピン済み）。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch22.md",
+      "lesson": "docs/lessons/ch22.md",
+      "page": "report/site/chapters/ch22.html",
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_simulation.py"
+      ],
+      "limitation": "Gaussian arithmetic returnsと明示したfuture_bookを使用。theta/carryを指定し10日残存満期で再評価。optionへsqrt(N)は近似。EVT等の紹介は実装受入ではない。",
+      "numerical_requirements": [
+        "D22.6-01",
+        "D22.6-02",
+        "D22.6-03",
+        "D22.6-04"
+      ],
+      "calculation": "5000標本99%50位/95%250位。独立線形正規と単調BSM分位点を固定seed MC6SEで照合、full/partial同一shock・実際の10日maturity再評価",
+      "calculation_scope": "Gaussian arithmetic returnsと明示したfuture_bookを使用。theta/carryを指定し10日残存満期で再評価。optionへsqrt(N)は近似。EVT等の紹介は実装受入ではない。"
+    },
+    {
+      "id": "22.7",
+      "chapter": 22,
+      "heading": "Comparison of Approaches（pp.533–534）",
+      "source_pages": [
+        533,
+        534
+      ],
+      "requirements": [
+        {
+          "id": "D22.7-01",
+          "statement": "線形モデル・全再評価MC・HSの仮定と費用（533–534）",
+          "reading": "分布仮定、非線形性、mapping、vol更新の4軸で同じbookを比較"
+        },
+        {
+          "id": "D22.7-02",
+          "statement": "HSのvol更新は拡張で可能（534脚注15）",
+          "reading": "本文の「容易でない」を「不可能」にしない、filtered HSは別要求"
+        }
+      ],
+      "explanation": "線形・正規のモデル構築法は高速だが非線形性と厚い裾に弱い。全再評価MCなら線形仮定を外せるが計算費用が増える。歴史シミュレーションは観測された同時変動を使いcash-flow mappingを省けるが、再評価負荷と古いvol水準の影響が残る。",
+      "printed": "なし。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch22.md",
+      "lesson": "docs/lessons/ch22.md",
+      "page": "report/site/chapters/ch22.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "分布仮定、非線形性、mapping、vol更新と費用を比較。HSのvol更新は容易でないという本文表現を、不可能と読み替えない。filtered HSは別範囲。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "22.8",
+      "chapter": 22,
+      "heading": "Back Testing（p.534）",
+      "source_pages": [
+        534,
+        534
+      ],
+      "requirements": [
+        {
+          "id": "D22.8-01",
+          "statement": "99%VaRの超過率と予測時点（534）",
+          "reading": "t日前の窓で予測してt日の損益へ対応、正損失/正利益の符号を固定"
+        },
+        {
+          "id": "D22.8-02",
+          "statement": "期待1%と7%の差、ESの検証の難しさ（534）",
+          "reading": "有限標本の二項ばらつき、頻度と超過の群発を区別"
+        }
+      ],
+      "explanation": "その日以前の情報で予測した1日VaRと実際の損失を比較し、超過率を点検する。VaRの頻度確認とESの検証は同じ問題ではない。",
+      "printed": "1%/7%は診断の例示で標本数未指定、特定統計量のピンはない。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch22.md",
+      "lesson": "docs/lessons/ch22.md",
+      "page": "report/site/chapters/ch22.html",
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_backtesting.py"
+      ],
+      "limitation": "1%/7%には本文の標本数がない。100日例は明示合成入力。超過頻度だけでESや全モデルの妥当性を判定せず、時間順を守る。",
+      "numerical_requirements": [
+        "D22.8-01",
+        "D22.8-02"
+      ],
+      "calculation": "本文1%/7%（100日を明示した合成例）。独立二項和・尤度式・遷移表、将来値を変えても事前予測が変わらないこと",
+      "calculation_scope": "1%/7%には本文の標本数がない。100日例は明示合成入力。超過頻度だけでESや全モデルの妥当性を判定せず、時間順を守る。"
+    },
+    {
+      "id": "22.9",
+      "chapter": 22,
+      "heading": "Principal Components Analysis（pp.534–537）",
+      "source_pages": [
+        534,
+        537
+      ],
+      "requirements": [
+        {
+          "id": "D22.9-01",
+          "statement": "Tables22.9/10の負荷量・factor score・分散説明率（534–536）",
+          "reading": "L' L≈I、符号反転不変、trace保存、eigen分解とSVDの一致"
+        },
+        {
+          "id": "D22.9-02",
+          "statement": "Table22.11のbookをPC1/2へ写像（536–537）",
+          "reading": "金額/1bpと因子得点bpの単位、露出和とVaR"
+        },
+        {
+          "id": "D22.9-03",
+          "statement": "市場全体の分散説明率とbookの残余リスクを区別（537）",
+          "reading": "上位PCへの露出が小さいbookでは捨てた因子の相対影響が大きい"
+        }
+      ],
+      "explanation": "金利8満期の共分散を直交因子へ変換し、level/slope/curvatureで変動を要約する。因子得点の無相関と独立性を区別し、bookの感応度をfactor loadingで変換してVaRへ結ぶ。",
+      "printed": "Tables22.9/10は2010–2020の2631観測、満期1/2/3/5/7/10/20/30年、因子SD11.54/3.55/1.78/1.25/.91/.69/.62/.57bp。原系列からの推定再現は**未再計算（入力なし）**。印刷表の算術は独立再計算済み：総分散152.5185→152.5、PC1 87.315%→87.3%、PC1/2 95.578%→95.6%、PC3 2.077%→2.1%、1SD時の1年.95782bp→.96/2年2.4234bp→2.42、✓。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch22.md",
+      "lesson": "docs/lessons/ch22.md",
+      "page": "report/site/chapters/ch22.html",
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_pca.py"
+      ],
+      "limitation": "元2631観測なし。印刷loadingからsigma25.49837/VaR59.31808、原典25.45/59.2と不一致を保持。市場説明率とbook残余risk、無相関と独立を区別。",
+      "numerical_requirements": [
+        "D22.9-01",
+        "D22.9-02",
+        "D22.9-03"
+      ],
+      "calculation": "全64loading/8SD、総分散152.5185、87.3%/95.6%/.96bp/2.42bp。Table22.11露出−1.998/−3.067→sigma25.49837/VaR59.31808。独立SVD/固有分解・trace・符号不変",
+      "calculation_scope": "元2631観測なし。印刷loadingからsigma25.49837/VaR59.31808、原典25.45/59.2と不一致を保持。市場説明率とbook残余risk、無相関と独立を区別。"
+    },
+    {
+      "id": "23.1",
+      "chapter": 23,
+      "heading": "Estimating Volatility",
+      "source_pages": [
+        542,
+        544
+      ],
+      "requirements": [
+        {
+          "id": "D23.1-01",
+          "statement": "不偏標本分散と平均ゼロMLEの違い（542–543）",
+          "reading": "同じ価格系列から二通りのreturn/中心化/ddofを別々に計算"
+        },
+        {
+          "id": "D23.1-02",
+          "statement": "観測重みの和1、ARCHのω=γVL（543–544）",
+          "reading": "重み非負・正規化、定数系列、予測day nにu_nを混入しない"
+        }
+      ],
+      "explanation": "数値（例題なし）。pp542–544。前日までのm観測を使う日次分散推定を、log return・標本平均控除・m−1の式から、単純return・平均ゼロ・mの式へ簡略化する。重みを最近の観測へ寄せ、長期分散を加えるとARCH(m)になる。",
+      "printed": "固有の数値例なし。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch23.md",
+      "lesson": "docs/lessons/ch23.md",
+      "page": "report/site/chapters/ch23.html",
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_basics.py"
+      ],
+      "limitation": "log return/標本平均/m−1とsimple return/平均ゼロ/mを区別。日次分散の年率化は別。予測日前までのchronological履歴だけを使う。",
+      "numerical_requirements": [
+        "D23.1-01",
+        "D23.1-02"
+      ],
+      "calculation": "固有印刷価格なし。式23.1–6のlog/sample mean/m−1とsimple/zero mean/m、ARCH重みを独立小標本算術と解析MLEで照合",
+      "calculation_scope": "log return/標本平均/m−1とsimple return/平均ゼロ/mを区別。日次分散の年率化は別。予測日前までのchronological履歴だけを使う。"
+    },
+    {
+      "id": "23.2",
+      "chapter": 23,
+      "heading": "The Exponentially Weighted Moving Average Model",
+      "source_pages": [
+        544,
+        546
+      ],
+      "requirements": [
+        {
+          "id": "D23.2-01",
+          "statement": "v_n=λv_(n−1)+(1−λ)u_(n−1)²と有限履歴（544–545）",
+          "reading": "再帰と重み付き和＋初期項の一致、初期値の影響"
+        },
+        {
+          "id": "D23.2-02",
+          "statement": "λの意味と歴史的RiskMetrics .94（545）",
+          "reading": ".94を全市場の普遍的最適値にしない"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp544–546。EWMAは前の分散と最新の二乗returnの加重平均で、過去への展開には初期分散λ^m項が残る。λが小さいほど新しいショックへの反応が速い。",
+      "printed": "Ex23.1、λ.9、前日vol.01、return.02→.00013、vol.01140175→1.14%/日、✓独立一致。既存 `test_hull_pins_vol_var.py::test_example_23_1_ewma_update_hull_ge` が固定。RiskMetricsの1994/.94/後続25日の比較は**記述統計（ピン不要、年次に注意）**、元調査は未検証。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch23.md",
+      "lesson": "docs/lessons/ch23.md",
+      "page": "report/site/chapters/ch23.html",
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_ewma.py"
+      ],
+      "limitation": "initial variance必須、lambda^mの初期項を残す。最後は翌日予測。当日returnをその日の予測に混入しない。RiskMetrics.94は歴史設定で普遍最適ではない。",
+      "numerical_requirements": [
+        "D23.2-01"
+      ],
+      "calculation": "Ex23.1 lambda.9/vol.01/return.02→variance.00013・vol1.14%。独立幾何重み和+lambda^m初期項、予測への当日return不混入",
+      "calculation_scope": "initial variance必須、lambda^mの初期項を残す。最後は翌日予測。当日returnをその日の予測に混入しない。RiskMetrics.94は歴史設定で普遍最適ではない。"
+    },
+    {
+      "id": "23.3",
+      "chapter": 23,
+      "heading": "The Garch(1,1) Model",
+      "source_pages": [
+        546,
+        547
+      ],
+      "requirements": [
+        {
+          "id": "D23.3-01",
+          "statement": "γ=1−α−β、VL、EWMAへの退化（546）",
+          "reading": "α+β<1と非負性、ω0/α1−λ/βλでは同じ更新"
+        },
+        {
+          "id": "D23.3-02",
+          "statement": "βによる履歴重みと平均回帰（547）",
+          "reading": "再帰展開、一次条件付き期待値のα+β、連続近似の前提"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp546–547。ω+αu²+βvに長期分散VL=ω/(1−α−β)を対応させる。観測二乗returnの過去重みはαβ^(i−1)、予測の平均回帰を決めるのはα+βであり、この2つを分ける。",
+      "printed": "Ex23.2 ω.000002/α.13/β.86→γ.01、VL.0002、√VL=.01414214→.014（日次1.4%）、✓。続く前日vol1.6%・return−1%の更新.00023516、vol1.5335%→1.53%、✓。β=.9で前々日重み90%/3日前81%は✓算術一致。連続近似dV=a(VL−V)dt+ξVdzのa=1−α−β、ξ=α√2は原典の近似対応として扱う。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch23.md",
+      "lesson": "docs/lessons/ch23.md",
+      "page": "report/site/chapters/ch23.html",
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_garch.py"
+      ],
+      "limitation": "betaは過去観測への重み、alpha+betaは予測持続性。非定常時は有限VLなし。連続時間対応は原典近似である。",
+      "numerical_requirements": [
+        "D23.3-01",
+        "D23.3-02"
+      ],
+      "calculation": "Ex23.2 gamma.01/VL.0002・更新.00023516→vol1.53%。独立beta幾何和と再帰・EWMA極限、連続近似a.01/xi=.13sqrt2",
+      "calculation_scope": "betaは過去観測への重み、alpha+betaは予測持続性。非定常時は有限VLなし。連続時間対応は原典近似である。"
+    },
+    {
+      "id": "23.4",
+      "chapter": 23,
+      "heading": "Choosing between the Models",
+      "source_pages": [
+        547,
+        548
+      ],
+      "requirements": [
+        {
+          "id": "D23.4-01",
+          "statement": "平均回帰、パラメータ制約、モデル選択（547–548）",
+          "reading": "制約なし最適値の議論と制約付きfitの失敗を区別"
+        }
+      ],
+      "explanation": "定性。pp547–548。GARCHの長期分散への回帰とEWMAの追随性を比較する。原典は不適切な負のωが推定される場合のEWMAへの切替を述べるが、既存推定器は最初から正値制約を置いている。",
+      "printed": "なし。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch23.md",
+      "lesson": "docs/lessons/ch23.md",
+      "page": "report/site/chapters/ch23.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "負omegaなど制約なしfitの不適切解という原典の議論と、最初から制約を設けたfitを分ける。EWMA/GARCH選択の市場性能承認ではない。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "23.5",
+      "chapter": 23,
+      "heading": "Maximum Likelihood Methods",
+      "source_pages": [
+        548,
+        553
+      ],
+      "requirements": [
+        {
+          "id": "D23.5-01",
+          "statement": "p(1−p)^9の最大化、v=Σu²/m、式23.12（548–549）",
+          "reading": "手微分、尤度と負log尤度の符号、不要な定数因子"
+        },
+        {
+          "id": "D23.5-02",
+          "statement": "Table23.1はv3=u2²で開始（549–550）",
+          "reading": "掲載最初の4行のreturn/v/log尤度、fit初期化を一致させる"
+        },
+        {
+          "id": "D23.5-03",
+          "statement": "3parameter fit、variance targeting、EWMA fit（550–551）",
+          "reading": "多初期点、制約、変数スケーリング、元系列の有無"
+        },
+        {
+          "id": "D23.5-04",
+          "statement": "二乗returnのACFと標準化後のLjung–Box（552–553）",
+          "reading": "中心化/標本長/lag、推定後の自由度扱いを明記"
+        }
+      ],
+      "explanation": "混在。pp548–553。Bernoulli例から平均ゼロ正規の分散MLEへ進み、条件付き分散v_iのlog尤度を最適化する。初期分散、variance targeting、EWMAのλ推定、標準化二乗returnのLjung–Box診断を扱う。",
+      "printed": "1/10下落→p=.1は✓微分一致。Table23.1：2015-07-10～2020-07-09、1259価格、ω=.0000039818/α=.223793/β=.747577、尤度10837.4227。**元系列がないためfit・全尤度は未再計算**。掲載2076.62/2099.60/2108.95/2107.40/2124.29/2126.64から、day3～6のv=.0001224577/.0000999664/.0000788353/.0000772924は✓印刷丸め一致。log尤度8.845801/9.205273/8.633362/9.452082、印刷8.8458/9.2053/**8.6333**/9.4521とは3行目が最終桁で異なる（推定パラメータ丸めの可能性）。最後2行のv/尤度は直前vがないため未再計算。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch23.md",
+      "lesson": "docs/lessons/ch23.md",
+      "page": "report/site/chapters/ch23.html",
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_mle.py"
+      ],
+      "limitation": "元1259価格なし、歴史fit/全尤度10837.4227は未再現。第3行8.6333対8.633362、Q2170/13.2対2139.60985/12.94915の差を保持。初期化/自由度/多極値探索を明示し最適の一意性は証明しない。",
+      "numerical_requirements": [
+        "D23.5-01",
+        "D23.5-02",
+        "D23.5-03",
+        "D23.5-04"
+      ],
+      "calculation": "p1/10=.1、Table23.1先頭4variance/尤度、VL.0001391、Table23.2全30ACFからQ2139.60985/12.94915・閾値25。独立normal密度・別optimizer・grid",
+      "calculation_scope": "元1259価格なし、歴史fit/全尤度10837.4227は未再現。第3行8.6333対8.633362、Q2170/13.2対2139.60985/12.94915の差を保持。初期化/自由度/多極値探索を明示し最適の一意性は証明しない。"
+    },
+    {
+      "id": "23.6",
+      "chapter": 23,
+      "heading": "Using Garch(1,1) to Forecast Future Volatility",
+      "source_pages": [
+        553,
+        556
+      ],
+      "requirements": [
+        {
+          "id": "D23.6-01",
+          "statement": "将来分散、a=−ln(α+β)、期間積分（553–555）",
+          "reading": "t0/無限大、numerical quadrature、日数/252の単位"
+        },
+        {
+          "id": "D23.6-02",
+          "statement": "式23.15のvol shock伝播（555–556）",
+          "reading": "式23.14の中心差分、1%相対増でなく1percentage point"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp553–556。将来分散の期待値をVL+(α+β)^t(v0−VL)で予測し、期間平均分散を積分してoption maturity別の年率volへ換算する。spot varianceの変化が長い満期のIVへ及ぼす影響は弱まる。",
+      "printed": "v0=.0003、日次1.732%、10日v.0002594/vol1.61%、100日v.0001479/vol1.22%→.00025943246/.00014789009、✓。a.02905、VL.0001391も✓。Table23.3の10/30/50/100/500日26.5/24.9/23.8/22.0/19.5%→26.50309/24.92284/23.75603/21.96445/19.45244%、✓。独立積分と閉形式の平均分散差≤2.8e−20。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch23.md",
+      "lesson": "docs/lessons/ch23.md",
+      "page": "report/site/chapters/ch23.html",
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_forecast.py"
+      ],
+      "limitation": "sqrt(E[v])とE[sqrt(v)]、P予測とQ IVを分ける。vol shockは相対1%でなく1point。alpha=beta=0も有効な定数varianceとして扱う。",
+      "numerical_requirements": [
+        "D23.6-01",
+        "D23.6-02"
+      ],
+      "calculation": "10/100日v.0002594/.0001479、Table23.3 26.5/24.9/23.8/22.0/19.5%、Table23.4 +1point→.90/.74/.61/.41/.10point。独立quad・反復期待値・中心差分",
+      "calculation_scope": "sqrt(E[v])とE[sqrt(v)]、P予測とQ IVを分ける。vol shockは相対1%でなく1point。alpha=beta=0も有効な定数varianceとして扱う。"
+    },
+    {
+      "id": "23.7",
+      "chapter": 23,
+      "heading": "Correlations",
+      "source_pages": [
+        556,
+        558
+      ],
+      "requirements": [
+        {
+          "id": "D23.7-01",
+          "statement": "EWMA/GARCH共分散とρへの換算（556–557）",
+          "reading": "同じ窓・重み・初期化、ゼロ分散時の規約"
+        },
+        {
+          "id": "D23.7-02",
+          "statement": "w'Ωw≥0と全体整合性（558）",
+          "reading": "固有値、CholeskyはPSDの特異行列で失敗するので正定値と区別"
+        }
+      ],
+      "explanation": "数値（例題あり）。pp556–558。共分散を分散と同じ規則で更新し、標準偏差で割って相関を得る。各ペアの相関が範囲内でも全体行列がPSDとは限らず、どのportfolioの分散も非負になる必要がある。",
+      "printed": "Ex23.3、λ.95、前ρ.6/vol.01,.02、return.005,.025→vX.00009625/vY.00041125/cov.00012025、vol.981%/2.028%、ρ.6044→.60441017、✓独立再計算一致。初期cov.00012も✓。式23.17のΩ=[[1,0,.9],[0,1,.9],[.9,.9,1]]、w=(1,1,−1)→−.6、最小固有値−.2727922、✓（−.6は原典入力から導いた値）。GARCH共分散には固有の数値例なし。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch23.md",
+      "lesson": "docs/lessons/ch23.md",
+      "page": "report/site/chapters/ch23.html",
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_covariance.py"
+      ],
+      "limitation": "zero varianceの相関はNaN。PSD特異は許容し、ペア別の相関範囲内だけではglobal PSDを保証しない。日次/年率と同一重みを揃える。",
+      "numerical_requirements": [
+        "D23.7-01",
+        "D23.7-02"
+      ],
+      "calculation": "Ex23.3 variance.00009625/.00041125/cov.00012025→rho.6044。式23.17 book variance−.6・最小eigen−.2727922。独立outer-product幾何和・matrix反復・PSD特異例",
+      "calculation_scope": "zero varianceの相関はNaN。PSD特異は許容し、ペア別の相関範囲内だけではglobal PSDを保証しない。日次/年率と同一重みを揃える。"
+    },
+    {
+      "id": "24.1",
+      "chapter": 24,
+      "heading": "Credit Ratings（p.562）",
+      "source_pages": [
+        562,
+        562
+      ],
+      "requirements": [
+        {
+          "id": "D24.1-01",
+          "statement": "3社の格付け序列と投資適格の境界（p.562）",
+          "reading": "対応表を本文照合し、数値のPDそのものではないと説明"
+        },
+        {
+          "id": "D24.1-02",
+          "statement": "最上位等を細分しないという例外（p.562）",
+          "reading": "無理に全等級へ +/− を付けない"
+        }
+      ],
+      "explanation": "格付けは企業債の信用力の序列。Moody’s の Aaa/Aa/A/Baa/Ba/B/Caa/Ca/C と S&P・Fitch の AAA/AA/A/BBB/BB/B/CCC/CC/C を対応させ、Baa/BBB 以上を投資適格とする。細分の 1/2/3 と +/無印/− を区別する。",
+      "printed": "なし。格付け記号は分類であり計算値ではない。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch24.md",
+      "lesson": "docs/lessons/ch24.md",
+      "page": "report/site/chapters/ch24.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "格付けは序列でPDそのものではない。投資適格は無リスクではない。記号の例外と原典時点の表記を保持。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "24.2",
+      "chapter": 24,
+      "heading": "Historical Default Probabilities（pp.563–564）",
+      "source_pages": [
+        563,
+        564
+      ],
+      "requirements": [
+        {
+          "id": "D24.2-01",
+          "statement": "累積・区間・生存条件付きの3確率（p.563）",
+          "reading": "Table24.1 の差と生存確率による除算を別列で示す"
+        },
+        {
+          "id": "D24.2-02",
+          "statement": "強度の定義と式(24.1)（pp.563–564）",
+          "reading": "生存確率の微分方程式と、定数強度の指数形を照合"
+        },
+        {
+          "id": "D24.2-03",
+          "statement": "平均強度と瞬時強度の違い（p.564）",
+          "reading": "区分一定曲線で積分と平均を復元"
+        }
+      ],
+      "explanation": "初期格付け別の累積デフォルト確率から、特定年の無条件確率と、その年まで生存した条件での確率を求める。短い期間の条件付き確率を強度に移し、$Q(t)=1-\\exp[-\\int_0^t\\lambda(u)du]=1-e^{-\\bar\\lambda(t)t}$ と表す。",
+      "printed": "p.563：BBB 第2年 0.29%、CCC/C 第3年 4.77%、2年生存 63.36%、生存条件付き 7.53%。✓4値再計算一致（条件付き 7.528409091%、百分率小数第2位の許容幅0.005）。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch24.md",
+      "lesson": "docs/lessons/ch24.md",
+      "page": "report/site/chapters/ch24.html",
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_probabilities.py"
+      ],
+      "limitation": "歴史表は観測入力として読み、再推定しない。累積/区間/条件付きPD、平均/瞬時hazard、P/Qを区別。",
+      "numerical_requirements": [
+        "D24.2-01",
+        "D24.2-02",
+        "D24.2-03"
+      ],
+      "calculation": "Table24.1 BBB2年.29%/CCC3年4.77%/2年生存63.36%/条件付き7.53%。独立ODEと生存比・確率積",
+      "calculation_scope": "歴史表は観測入力として読み、再推定しない。累積/区間/条件付きPD、平均/瞬時hazard、P/Qを区別。"
+    },
+    {
+      "id": "24.3",
+      "chapter": 24,
+      "heading": "Recovery Rates（p.564）",
+      "source_pages": [
+        564,
+        564
+      ],
+      "requirements": [
+        {
+          "id": "D24.3-01",
+          "statement": "回収率の測定時点・分母・優先順位と担保（p.564）",
+          "reading": "§25.1 の現金決済に使う回収価格と整合"
+        },
+        {
+          "id": "D24.3-02",
+          "statement": "デフォルト率と回収率の負の依存（p.564）",
+          "reading": "固定40%という計算仮定と、実証的な依存を区別"
+        }
+      ],
+      "explanation": "回収率は通常、デフォルト直後の債券市場価値を額面で割った率であり、優先順位と担保に依存する。破綻処理の最終現金回収額とは時点が異なる。景気が悪いとデフォルト件数が増え、回収率も下がる傾向があるため、貸し手には二重の損失となる。",
+      "printed": "計算例なし。**記述統計（ピン不要、年次に注意）：** 平均の仮定40%、良い年には60%程度、悪い年には30%程度という説明値。特定のデータ系列の推定結果として再計算しない。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch24.md",
+      "lesson": "docs/lessons/ch24.md",
+      "page": "report/site/chapters/ch24.html",
+      "implementation": null,
+      "tests": [],
+      "limitation": "回収はdefault直後の市場価値/額面。最終回収cashとは別。40/60/30%は本文説明値、ランダム回収のモデル較正は本節の対象外。",
+      "numerical_requirements": []
+    },
+    {
+      "id": "24.4",
+      "chapter": 24,
+      "heading": "Estimating Default Probabilities from Bond Yield Spreads（pp.564–566）",
+      "source_pages": [
+        564,
+        566
+      ],
+      "requirements": [
+        {
+          "id": "D24.4-01",
+          "statement": "式(24.2)、平均強度から区間強度への変換（p.565）",
+          "reading": "Ex24.1の累積ハザードの差分"
+        },
+        {
+          "id": "D24.4-02",
+          "statement": "債券価格差＝期待デフォルト損失PV（pp.565–566）",
+          "reading": "Ex24.2の支払日・半年区間の中央でのデフォルトを固定"
+        },
+        {
+          "id": "D24.4-03",
+          "statement": "回収は額面の40%、損失はその時点の無リスク債価値との差（p.566）",
+          "reading": "3か月・9か月の損失を別々に手計算"
+        },
+        {
+          "id": "D24.4-04",
+          "statement": "無リスク曲線の選択とCDSによる観察（p.566）",
+          "reading": "Treasury/OISを無条件に同一視しない説明"
+        }
+      ],
+      "explanation": "スプレッドを平均損失率とみなし $\\bar\\lambda(T)\\simeq s(T)/(1-R)$ と近似する。より精密には、無リスク債と市場債の価格差を、デフォルト時の損失PVの期待値に合わせ、年限順に区間強度を求める。計算結果は無リスク金利の選択に依存する。",
+      "printed": "✓21値再計算一致。\n  - Ex24.1 p.565、150/180/195bp・$R=40\\%$：平均強度 2.5/3.0/3.25%、第2/3年の区間強度 3.5/3.75%（5値）。\n  - Ex24.2 pp.565–566：額面100・8%半年クーポン・無リスク連続5%、1/2/3年利回り6.5/6.8/6.95%。市場債101.33/101.99/102.47、無リスク債102.83/105.52/108.08、価格差1.50/3.53/5.61。未丸めの強度は2.457533/3.475778/3.735123%で印刷2.46/3.48/3.74%に一致（12値）。\n  - 1年債の3か月/9か月の無リスク価値104.12/102.71、デフォルト時損失PV63.33/60.40（4値）。金額許容幅0.005、強度の百分率0.005。逐次計算は未丸め値を用いた。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch24.md",
+      "lesson": "docs/lessons/ch24.md",
+      "page": "report/site/chapters/ch24.html",
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_bond_curve.py"
+      ],
+      "limitation": "中央default/額面回収の教材モデルでISDA標準慣行とは異なる。割引curveと信用curveを分け、最後のhazardはflat外挿。",
+      "numerical_requirements": [
+        "D24.4-01",
+        "D24.4-02",
+        "D24.4-03"
+      ],
+      "calculation": "Ex24.1平均2.5/3/3.25%・区間2.5/3.5/3.75%。Ex24.2価格/差/3hazard/forward104.12/102.71・lossPV63.33/60.40の全21印刷値。独立同時root+生存CF/回収events",
+      "calculation_scope": "中央default/額面回収の教材モデルでISDA標準慣行とは異なる。割引curveと信用curveを分け、最後のhazardはflat外挿。"
+    },
+    {
+      "id": "24.5",
+      "chapter": 24,
+      "heading": "Comparison of Default Probability Estimates（pp.567–569）",
+      "source_pages": [
+        567,
+        569
+      ],
+      "requirements": [
+        {
+          "id": "D24.5-01",
+          "statement": "Table24.2の比率と差、Table24.3の超過収益（pp.567–568）",
+          "reading": "印刷された入力から派生列を計算し、丸める段階を明示"
+        },
+        {
+          "id": "D24.5-02",
+          "statement": "BBBの7年累積PDから平均強度を逆算（p.567）",
+          "reading": "$-\\log(1-0.0233)/7$。原典の「式24.10」は24.1の誤参照"
+        },
+        {
+          "id": "D24.5-03",
+          "statement": "確率の使い分けとプレミアムの複数の理由（pp.568–569）",
+          "reading": "評価とリスク計測を例で分類。観測結果を常に成り立つ定理にしない"
+        }
+      ],
+      "explanation": "履歴から得た実世界PDと価格から得たリスク中立PDを比較する。差は流動性だけでなく、共通景気因子や偏った債券損益の分散の難しさへのリスクプレミアムを含む。価格評価にはリスク中立、将来損失のシナリオ分析には実世界の確率を使う。",
+      "printed": "✓31値再計算一致。\n  - Table24.2 p.567、Aaa/Aa/A/Baa/Ba/B/Caa以下の比率16.8/13.0/9.8/5.1/2.1/1.2/1.3、差0.63/0.72/1.15/1.91/2.67/1.53/4.40百分率ポイント（14値）。比率は小数第1位、16.75→16.8という端点を含む。\n  - Table24.3 p.568、履歴損失を補うスプレッド2/4/8/28/144/449/1014bp、超過収益38/43/69/115/160/93/264bp（14値）。元の履歴強度×0.6から前者を整数bpに丸め、印刷された総スプレッド40/47/77/143/304/542/1278bpから差し引く。未丸めの差と印刷整数を混同しない。\n  - BBBの平均強度0.336796%→0.34%（34bp）、スプレッド1.8%からリスク中立強度3%、Baa履歴0.47%×0.6＝28.2→28bp（3値）。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch24.md",
+      "lesson": "docs/lessons/ch24.md",
+      "page": "report/site/chapters/ch24.html",
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_measures.py"
+      ],
+      "limitation": "P/Q変換の市場モデルではなく観測入力の比較。整数補償bpを先丸めした差とraw差を区別。式24.10という参照は24.1の原典誤参照。",
+      "numerical_requirements": [
+        "D24.5-01",
+        "D24.5-02"
+      ],
+      "calculation": "Tables24.2/3の全ratio/difference/compensation/excess28値、BBB7年hazard.34%/Q3%/Baa損失spread28.2bp。独立Decimal比/積・指数CDF求根",
+      "calculation_scope": "P/Q変換の市場モデルではなく観測入力の比較。整数補償bpを先丸めした差とraw差を区別。式24.10という参照は24.1の原典誤参照。"
+    },
+    {
+      "id": "24.6",
+      "chapter": 24,
+      "heading": "Using Equity Prices to Estimate Default Probabilities（pp.570–571）",
+      "source_pages": [
+        570,
+        571
+      ],
+      "requirements": [
+        {
+          "id": "D24.6-01",
+          "statement": "株式＝コール、負債＝資産−株式（p.570）",
+          "reading": "満期ペイオフの和が資産価値を保存"
+        },
+        {
+          "id": "D24.6-02",
+          "statement": "2本の連立方程式と $d_2=d_1-\\sigma_V\\sqrt T$（p.570）",
+          "reading": "解の正値と両残差、T≠1でも検証"
+        },
+        {
+          "id": "D24.6-03",
+          "statement": "Ex24.3の全計算とEDFの位置付け（p.571）",
+          "reading": "7印刷値と、経験的写像を未実装とする明示"
+        }
+      ],
+      "explanation": "単一のゼロクーポン負債を持つ会社の株式を、企業資産に対するコールとみなす。株価式(24.3)と伊藤の公式からのボラティリティ関係(24.4)を連立し、観測できない資産価値・資産ボラティリティを求める。$N(-d_2)$ はモデル上のリスク中立PDで、実世界EDFへの経験的写像は別の較正を要する。",
+      "printed": "Ex24.3 p.571、$E_0=3$M、株式ボラ80%、$D=10$M、$r=5\\%$、1年。✓7値再計算一致：$V_0=12.395387$→12.40M、$\\sigma_V=0.2123047$→0.2123、$d_2=1.1408257$→1.1408、PD12.697124%→12.7%、負債9.395387→9.40M、無リスク負債9.512294→9.51M、期待損失率1.22901%→約1.2%。丸めた9.51−9.40を使うより未丸め連鎖を優先。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch24.md",
+      "lesson": "docs/lessons/ch24.md",
+      "page": "report/site/chapters/ch24.html",
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_merton.py"
+      ],
+      "limitation": "N(−d2)はQ PD。指定P driftの構造PDは非公開EDFの較正ではない。単一満期負債/満期defaultの仮定。",
+      "numerical_requirements": [
+        "D24.6-01",
+        "D24.6-02",
+        "D24.6-03"
+      ],
+      "calculation": "Ex24.3全7値 asset12.40/vol.2123/d2 1.1408/PD12.7%/debt9.40/riskfree9.51/loss約1.2%。独立payoff/delta求積+log root（T1/2.5）、固定seed default6SE",
+      "calculation_scope": "N(−d2)はQ PD。指定P driftの構造PDは非公開EDFの較正ではない。単一満期負債/満期defaultの仮定。"
+    },
+    {
+      "id": "24.7",
+      "chapter": 24,
+      "heading": "Credit Risk in Derivatives Transactions（pp.571–577）",
+      "source_pages": [
+        571,
+        577
+      ],
+      "requirements": [
+        {
+          "id": "D24.7-01",
+          "statement": "区間PD・割引済み損失・回収率を分けたCVA/DVA（pp.572–573）",
+          "reading": "二重割引・LGDの二重適用がない手計算"
+        },
+        {
+          "id": "D24.7-02",
+          "statement": "ネッティング、cure period、差入担保の超過分（pp.573–575）",
+          "reading": "Ex24.4の4分岐と40→15の算術"
+        },
+        {
+          "id": "D24.7-03",
+          "statement": "peak exposureと増分CVA/DVA、wrong/right-way（p.574）",
+          "reading": "分位点の定義、共通パスの新取引前後差、独立の仮定"
+        },
+        {
+          "id": "D24.7-04",
+          "statement": "格下げトリガーの限界とAIG（p.575）",
+          "reading": "多数の同時担保請求が保護を弱める説明"
+        },
+        {
+          "id": "D24.7-05",
+          "statement": "式(24.5)/(24.6)とEx24.5、フォワードのEx24.6（pp.575–577）",
+          "reading": "支払が非負のケースと正負両方あるケースを区別"
+        }
+      ],
+      "explanation": "ISDA契約下の清算・ネッティング・担保を前提に、正の取引価値と返還されない過剰な差入担保からエクスポージャーを測る。$f=f_{nd}-CVA+DVA$、$CVA=\\sum_i q_i v_i$。一般には市場変数のMCと担保の過去時点の評価が必要だが、片方向の単一ペイオフと単独フォワードには簡単な計算がある。",
+      "printed": "✓15値再計算一致。\n  - Ex24.4 pp.573–574：現在価値50/50/−50/−50、20日前45/55/−45/−55から露出5/0/0/5（4値）。p.574：1万パスの97.5%点を上位250番とする順位算術、取引10/30/−25Mの露出40M→15M（3値）。\n  - Ex24.5 p.576：$3e^{-0.015\\times2}=2.9113366$→$2.91（1値）。債券比率からのこの値と、近似強度$s/(1-R)$を式(24.5)へ入れた2.912213は微小に異なる。既存テストも両者を区別する。\n  - Ex24.6 p.577：$d_1=0.5271$、$d_2=0.3856$、$v_1=92.67$、$v_2=130.65$、CVA5.77、無デフォルト価値90.48、調整後84.71（7値）。これらの金額は**1オンス当たり**。契約1百万オンスの総額は各値×1百万。再計算CVA5.772859461、調整後84.71088234。$q_1=2\\%,q_2=3\\%$は無条件の区間PD。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch24.md",
+      "lesson": "docs/lessons/ch24.md",
+      "page": "report/site/chapters/ch24.html",
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_derivatives.py"
+      ],
+      "limitation": "区間PDは無条件、LGD/割引は各1回。Ex24.6は1oz単位、契約総額は100万倍。wrong-wayは指定Gaussian factor例で一般first-to-default解ではない。担保lagは選択grid。",
+      "numerical_requirements": [
+        "D24.7-01",
+        "D24.7-02",
+        "D24.7-03",
+        "D24.7-05"
+      ],
+      "calculation": "Ex24.4 5/0/0/5、40→15・10000中250位、Ex24.5 2.91、Ex24.6全7値CVA5.77/調整84.71。独立lognormal求積・共通GBM MC6SE・担保lag恒等式・factor求積",
+      "calculation_scope": "区間PDは無条件、LGD/割引は各1回。Ex24.6は1oz単位、契約総額は100万倍。wrong-wayは指定Gaussian factor例で一般first-to-default解ではない。担保lagは選択grid。"
+    },
+    {
+      "id": "24.8",
+      "chapter": 24,
+      "heading": "Default Correlation（pp.577–580）",
+      "source_pages": [
+        577,
+        580
+      ],
+      "requirements": [
+        {
+          "id": "D24.8-01",
+          "statement": "周辺分布と依存構造を分けた分位点変換（pp.578–579）",
+          "reading": "変換前後の累積確率を保存"
+        },
+        {
+          "id": "D24.8-02",
+          "statement": "Ex24.7の10社・5年間のデフォルト年分類（p.579）",
+          "reading": "5閾値、周辺頻度、5年生存85%"
+        },
+        {
+          "id": "D24.8-03",
+          "statement": "1因子の負荷と相関、条件付きPD（p.580）",
+          "reading": "$a=0$で周辺PD、因子積分で元のPDを復元"
+        },
+        {
+          "id": "D24.8-04",
+          "statement": "誘導型・構造型の利点と限界（p.578）",
+          "reading": "原典のモデル比較を説明し、未指定の拡張を混ぜない"
+        }
+      ],
+      "explanation": "共通景気因子・業種・地域・信用連鎖がデフォルトの依存を生む。強度を使う誘導型と資産価値を使う構造型を比較し、デフォルト時刻の累積分布を標準正規に写すGaussian copulaを導入する。1因子表現 $x_i=a_iF+\\sqrt{1-a_i^2}Z_i$ では相関は $a_i a_j$、因子条件付きPDは式(24.8)、同質プールは式(24.9)。",
+      "printed": "✓7値再計算一致。p.579の5/10%分位点−1.645/−1.282、Ex24.7の累積PD1/3/6/10/15%に対する閾値−2.33/−1.88/−1.55/−1.28/−1.04。印刷の桁に応じ0.0005/0.005の幅。相関0.2は入力。原典にMCの特定標本値・SEはない。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch24.md",
+      "lesson": "docs/lessons/ch24.md",
+      "page": "report/site/chapters/ch24.html",
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_dependence.py"
+      ],
+      "limitation": "latent相関、indicator相関、default時刻相関を区別。year0は年限後生存で永久非defaultではない。TN26詳細は未取得。",
+      "numerical_requirements": [
+        "D24.8-01",
+        "D24.8-02",
+        "D24.8-03"
+      ],
+      "calculation": "5/10%とEx24.7全5threshold（計7値）、10社rho.2/5年PD15%を固定seed MC6SE。独立正規CDF逆積分・条件付き2latent積分・factor積分",
+      "calculation_scope": "latent相関、indicator相関、default時刻相関を区別。year0は年限後生存で永久非defaultではない。TN26詳細は未取得。"
+    },
+    {
+      "id": "24.9",
+      "chapter": 24,
+      "heading": "Credit VaR（pp.580–582）",
+      "source_pages": [
+        580,
+        582
+      ],
+      "requirements": [
+        {
+          "id": "D24.9-01",
+          "statement": "大規模同質極限と式(24.10)、金額への換算（pp.580–581）",
+          "reading": "有限プールMCの収束と回収率の適用を照合"
+        },
+        {
+          "id": "D24.9-02",
+          "statement": "Ex24.8の99.9%信用VaR（p.581）",
+          "reading": "未丸めPD割合から$5.13Mへ"
+        },
+        {
+          "id": "D24.9-03",
+          "statement": "Table24.4から遷移閾値と相関付き状態を生成（p.582）",
+          "reading": "AAA/BBBの7閾値と正確なデフォルト境界"
+        },
+        {
+          "id": "D24.9-04",
+          "statement": "格付け変化後の再評価と損失分布（pp.581–582）",
+          "reading": "格上げ益を負の損失として残す。デフォルト損失を二重計上しない"
+        }
+      ],
+      "explanation": "大規模・同質プールでは1因子の条件付きPDがデフォルト割合に近づき、悪い共通因子の分位点から式(24.10)の割合を得る。金額VaRは $L(1-R)V(X,T)$。CreditMetrics は格付け変化を相関付きでシミュレートし、デフォルトだけでなく格下げ損失・格上げ益も再評価する。",
+      "printed": "✓9値再計算一致。Ex24.8 p.581：100M、PD2%、回収60%、相関0.1から最悪PD0.128237107→0.128（12.8%）、VaR5.129484292→$5.13M（2値）。印刷0.128を途中で丸めて使うと$5.12Mとなるため未丸めを使う。p.582：AAA閾値1.2719/2.4089/2.8070、BBB −3.7190/−3.0618/−1.7866、デフォルト境界2.9290（7値、許容0.00005）。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch24.md",
+      "lesson": "docs/lessons/ch24.md",
+      "page": "report/site/chapters/ch24.html",
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_var.py"
+      ],
+      "limitation": "total loss VaRとEL控除capitalを分ける。格付再評価は指定spread curveのflat例、回収は額面。BBB→Aは原典区間逆転。既存TransitionMatrix docstringの丸め残差記述は実装と不整合で未修正。",
+      "numerical_requirements": [
+        "D24.9-01",
+        "D24.9-02",
+        "D24.9-03",
+        "D24.9-04"
+      ],
+      "calculation": "Ex24.8 PD12.8%/VaR5.13m、Table24.4全7threshold。独立factor/5000社有限pool MC6SE、bond cashflow再評価・2社状態列挙",
+      "calculation_scope": "total loss VaRとEL控除capitalを分ける。格付再評価は指定spread curveのflat例、回収は額面。BBB→Aは原典区間逆転。既存TransitionMatrix docstringの丸め残差記述は実装と不整合で未修正。"
+    },
+    {
+      "id": "25.1",
+      "chapter": 25,
+      "heading": "Credit Default Swaps（pp.588–591）",
+      "source_pages": [
+        588,
+        591
+      ],
+      "requirements": [
+        {
+          "id": "D25.1-01",
+          "statement": "参照企業・信用事由・元本・保護買い/売りのキャッシュフロー（pp.588–589）",
+          "reading": "Figure25.1と四半期支払・回収の例"
+        },
+        {
+          "id": "D25.1-02",
+          "statement": "現金/現物決済、経過プレミアム、CTD（pp.589–591）",
+          "reading": "額面100に対し回収35なら支払65を確認"
+        },
+        {
+          "id": "D25.1-03",
+          "statement": "保険との相違、情報の非対称性と信用リスクの移転（pp.588,590）",
+          "reading": "BS25.1/25.2を原典の事例として説明"
+        },
+        {
+          "id": "D25.1-04",
+          "statement": "CDS–bond basisの符号と近似裁定（p.591）",
+          "reading": "basis＝CDS spread−bond yield spread。7%−2%=5%"
+        }
+      ],
+      "explanation": "CDSは参照企業の信用事由に対する保護で、買い手はデフォルトまでプレミアムを払い、信用事由時に額面と回収価格の差を受け取る。現物決済・現金決済、最後の経過分、CTD債の選択を区別する。債券と保護買いの組合せからCDSと債券スプレッドが近くなる理由とbasisを説明する。",
+      "printed": "✓7値再計算一致。p.588：年90bpから四半期22.5bp、元本100Mの支払225,000。p.589：回収35%なら65M、2か月分経過額は概算150,000、250/260bp＝2.5/2.6%。p.591：債券利回り7%から保護費用2%を引き5%。実際の日数を使う場合は150,000・225,000の概算から差が出ることを脚注2に従い明示する。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_cashflows.py"
+      ],
+      "limitation": "年分数の概算例でcalendar/auction CTD/legal契約モデルは対象外。信用事由と取引相手defaultを区別。制度は刊行時点。",
+      "numerical_requirements": [
+        "D25.1-01",
+        "D25.1-02",
+        "D25.1-04"
+      ],
+      "calculation": "90bp→四半期22.5bp/225000、回収35%→65m・2か月経過150000、250/260bp→2.5/2.6%、保護付きyield5%の全7値。独立Decimal cash・生存/default CF列挙",
+      "calculation_scope": "年分数の概算例でcalendar/auction CTD/legal契約モデルは対象外。信用事由と取引相手defaultを区別。制度は刊行時点。"
+    },
+    {
+      "id": "25.2",
+      "chapter": 25,
+      "heading": "Valuation of Credit Default Swaps（pp.591–595）",
+      "source_pages": [
+        591,
+        595
+      ],
+      "requirements": [
+        {
+          "id": "D25.2-01",
+          "statement": "年2%強度・年次払い・年中央デフォルト・回収40%の各レッグ（pp.591–593）",
+          "reading": "Tables25.1–25.4の行・列合計を再現"
+        },
+        {
+          "id": "D25.2-02",
+          "statement": "150bp契約の売り/買いMTM（p.594）",
+          "reading": "符号反転とパー契約の価値ゼロ"
+        },
+        {
+          "id": "D25.2-03",
+          "statement": "100bpから強度を逆算、バイナリCDS（p.594）",
+          "reading": "再価格とTable25.5の205bp"
+        },
+        {
+          "id": "D25.2-04",
+          "statement": "較正と評価で同じ回収率を使う場合の感応度（p.595）",
+          "reading": "気配を固定して強度を再較正し、通常CDSとバイナリを比較"
+        }
+      ],
+      "explanation": "生存時の期末プレミアム、デフォルト時の保護、半期分の経過プレミアムの3レッグを割り引き、保護PV/リスキーアニュイティからパースプレッドを求める。既存契約のMTM、気配からの強度逆算、回収に依存しないバイナリ支払へ展開する。",
+      "printed": "✓61値再計算一致。共有される確率・DF・元本1の係数は重複計上しない。以下は年1→5の順、すべて未丸めで計算して印刷小数第4位（許容0.00005）と照合。\n\n| 対象 | 印刷された計算値（pp.592–594） |\n|---|---|\n| Table25.1 生存 | 0.9802 / 0.9608 / 0.9418 / 0.9231 / 0.9048 |\n| Table25.1 区間PD | 0.0198 / 0.0194 / 0.0190 / 0.0186 / 0.0183 |\n| Table25.2 期末DF | 0.9512 / 0.9048 / 0.8607 / 0.8187 / 0.7788 |\n| Table25.2 支払PVの係数 | 0.9324 / 0.8694 / 0.8106 / 0.7558 / 0.7047、合計4.0728 |\n| Table25.3 期待保護支払 | 0.0119 / 0.0116 / 0.0114 / 0.0112 / 0.0110 |\n| Table25.3 中央DF | 0.9753 / 0.9277 / 0.8825 / 0.8395 / 0.7985 |\n| Table25.3 保護PV | 0.0116 / 0.0108 / 0.0101 / 0.0094 / 0.0088、合計0.0506 |\n| Table25.4 経過分の期待支払係数 | 0.0099 / 0.0097 / 0.0095 / 0.0093 / 0.0091 |\n| Table25.4 経過分PVの係数 | 0.0097 / 0.0090 / 0.0084 / 0.0078 / 0.0073、合計0.0422 |\n| Table25.5 バイナリ保護PV | 0.0193 / 0.0180 / 0.0168 / 0.0157 / 0.0146、合計0.0844 |\n\n  - 上表54値に、$D=4.1150$、パー123bp（123.002576）、150bp契約の支払PV0.0617、売り手MTM0.0111・買い手−0.0111、100bpからの強度1.63%（1.625887%）、バイナリ205bp（205.004294）の7値を加える。Table25.2の期待支払係数は生存確率、Tables25.3–25.5のPD/DFは上表の共有列。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_legs.py"
+      ],
+      "limitation": "中央default/元本1、premium係数はspread1当たり。quoteを固定してhazardを再較正。通常CDSの回収近似不感応は厳密不変ではない。",
+      "numerical_requirements": [
+        "D25.2-01",
+        "D25.2-02",
+        "D25.2-03",
+        "D25.2-04"
+      ],
+      "calculation": "Tables25.1–5全54cell/合計+7結果=61値、par123bp/MTM±.0111/100bp→hazard1.63%/binary205bp。独立default年CF列挙・指数時刻MC6SE・回収再較正",
+      "calculation_scope": "中央default/元本1、premium係数はspread1当たり。quoteを固定してhazardを再較正。通常CDSの回収近似不感応は厳密不変ではない。"
+    },
+    {
+      "id": "25.3",
+      "chapter": 25,
+      "heading": "Credit Indices（p.595）",
+      "source_pages": [
+        595,
+        595
+      ],
+      "requirements": [
+        {
+          "id": "D25.3-01",
+          "statement": "65/66bpのbid/ask、1社デフォルト後の元本減少（p.595）",
+          "reading": "年間支払660,000/650,000と減少5,280"
+        },
+        {
+          "id": "D25.3-02",
+          "statement": "単純平均とリスキーアニュイティ加重の違い（脚注6）",
+          "reading": "2社なら $s_{index}=(C_1+C_2)/(D_1+D_2)$ を各CDSの価値から導く"
+        }
+      ],
+      "explanation": "CDX NA IGとiTraxx Europeの各125社の標準ポートフォリオと、構成更新・残存元本・指数保護の支払を説明する。指数スプレッドはおおよそ構成銘柄の平均だが、厳密には支払が存続する期間に応じた重みを持つ。",
+      "printed": "✓4値再計算一致。1社800,000×125社×66/65bpから年660,000/650,000、デフォルト1社で660,000/125＝5,280減少。脚注の1000bpと10bpの単純平均505bp。実際の加重指数は「505bpより少ない」とあるだけで、価格の確定値は印刷されていない。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_index.py"
+      ],
+      "limitation": "125社の原典算術と合成2社のannuity加重を区別。実際の加重priceは入力不足で印刷pinなし。現在の指数仕様は扱わない。",
+      "numerical_requirements": [
+        "D25.3-01",
+        "D25.3-02"
+      ],
+      "calculation": "125社800000×65/66bp→650000/660000、1社減少5280、1000/10bp単純平均505bp。独立2社default状態CF・zero NPV求根でindex加重",
+      "calculation_scope": "125社の原典算術と合成2社のannuity加重を区別。実際の加重priceは入力不足で印刷pinなし。現在の指数仕様は扱わない。"
+    },
+    {
+      "id": "25.4",
+      "chapter": 25,
+      "heading": "The Use of Fixed Coupons（p.596）",
+      "source_pages": [
+        596,
+        596
+      ],
+      "requirements": [
+        {
+          "id": "D25.4-01",
+          "statement": "気配→強度→D→価格→支払方向の4段階（p.596）",
+          "reading": "s=cならP=100、s<cなら買い手が初期金を受け取る"
+        },
+        {
+          "id": "D25.4-02",
+          "statement": "Ex25.1の日数換算と価格（p.596）",
+          "reading": "未丸めの365/360換算から連鎖計算"
+        },
+        {
+          "id": "D25.4-03",
+          "statement": "残存銘柄数に応じるクーポンとデフォルト時の経過分（p.596）",
+          "reading": "1社減少時のキャッシュフロー表"
+        }
+      ],
+      "explanation": "気配スプレッドから強度を求め、プレミアムのPV係数Dを計算して、固定クーポンcとの価値差をアップフロントで調整する。100当たり価格は $P=100-100D(s-c)$、保護買い手の初期支払は100−P。以降のクーポンは取引時の気配ではなく残存元本と固定率で決まる。",
+      "printed": "✓5値再計算一致。Ex25.1、34bp/40bp actual/360→0.344722/0.405556%→印刷0.345/0.406%。回収40%、連続4%、四半期払い、厳密5年から強度0.5716737%→0.5717%、D4.4474043→4.447、P100.2705504→100.27。**印刷0.345%をそのまま逆算に使うと強度0.5721343%となる**ため、途中の丸めを明記。原典の初期額の式1M×125×0.0027は337,500だが、この計算結果自体は印刷なし（上記5件に含めない）。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_fixed_coupon.py"
+      ],
+      "limitation": "365/360固定例で閏年/一般calendar day countではない。Dはpremium PV係数でbond durationとは別。中間の印刷丸めを入力へ戻さない。",
+      "numerical_requirements": [
+        "D25.4-01",
+        "D25.4-02",
+        "D25.4-03"
+      ],
+      "calculation": "Ex25.1年率.345/.406%・hazard.5717%・D4.447・price100.27の5値。独立default時刻別CF+upfront NPV0・受払符号",
+      "calculation_scope": "365/360固定例で閏年/一般calendar day countではない。Dはpremium PV係数でbond durationとは別。中間の印刷丸めを入力へ戻さない。"
+    },
+    {
+      "id": "25.5",
+      "chapter": 25,
+      "heading": "CDS Forwards and Options（p.597）",
+      "source_pages": [
+        597,
+        597
+      ],
+      "requirements": [
+        {
+          "id": "D25.5-01",
+          "statement": "1年後開始・5年保護・280bpの義務と権利の違い（p.597）",
+          "reading": "時間軸と3つの契約の受払を本文照合"
+        },
+        {
+          "id": "D25.5-02",
+          "statement": "payer/call・receiver/putと期前デフォルト時の消滅（p.597）",
+          "reading": "スプレッドの上下で行使方向を確認"
+        },
+        {
+          "id": "D25.5-03",
+          "statement": "既存のBlack型評価を示す場合の仮定（脚注8）",
+          "reading": "ノートの「実装した範囲」と本文の契約定義を接続"
+        }
+      ],
+      "explanation": "将来のCDSを売買する義務がフォワード、権利がオプション。将来スプレッドが行使スプレッドより高ければ保護買いのコール、低ければ保護売りのプットを行使する。いずれも開始/満期より前の参照企業のデフォルトで通常消滅する。",
+      "printed": "計算結果なし。280bp、1年、5年は契約設定で、価格・ボラティリティは与えられない。原典から価格ピンは作れない。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_options.py"
+      ],
+      "limitation": "原典price/vol入力なし。合成入力のBlack型価格を検証し原典印刷価格とはしない。forward annuity測度でspread lognormal、Aは時点0の無条件生存/割引込み。front-end protectionは別範囲。",
+      "numerical_requirements": [
+        "D25.5-01",
+        "D25.5-02",
+        "D25.5-03"
+      ],
+      "calculation": "原典1年開始/5年保護/280bpの契約設定と期前default KO。価格印刷なし。明示した合成vol等で独立lognormal payoff求積・parity・ゼロvol",
+      "calculation_scope": "原典price/vol入力なし。合成入力のBlack型価格を検証し原典印刷価格とはしない。forward annuity測度でspread lognormal、Aは時点0の無条件生存/割引込み。front-end protectionは別範囲。"
+    },
+    {
+      "id": "25.6",
+      "chapter": 25,
+      "heading": "Basket Credit Default Swaps（p.597）",
+      "source_pages": [
+        597,
+        597
+      ],
+      "requirements": [
+        {
+          "id": "D25.6-01",
+          "statement": "各契約の発動条件と終了時点（p.597）",
+          "reading": "3社のデフォルト順序を並べ、どの契約がいつ払うか確認"
+        },
+        {
+          "id": "D25.6-02",
+          "statement": "決済額と将来プレミアムの停止（p.597）",
+          "reading": "単独CDSの定義に接続、価格は §25.10 へ"
+        }
+      ],
+      "explanation": "複数参照企業のどのデフォルトを保護するかでadd-up、first、second、kth-to-defaultを区別する。kthでは指定順位のデフォルトで通常CDSと同じ方法の決済を行い、その後の支払を終了する。add-upの複数企業の保護と、最初の1社で終わる保護を混同しない。",
+      "printed": "数値例・計算結果なし。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_portfolio_extensions.py",
+      "tests": [
+        "hullkit/tests/test_credit_portfolio_extensions_basket.py"
+      ],
+      "limitation": "本文に印刷priceなし。3社/27default年の合成CFと既存順位priceを検証。notional/回収/hazardは合成入力。同時刻は入力順で法的netting/同時defaultの一般契約は対象外。",
+      "numerical_requirements": [
+        "D25.6-01",
+        "D25.6-02"
+      ],
+      "calculation": "本文に価格印刷なし。3社のadd-up/first/second/kth発動と終了。独立27default年状態CF列挙による3順位のprice",
+      "calculation_scope": "本文に印刷priceなし。3社/27default年の合成CFと既存順位priceを検証。notional/回収/hazardは合成入力。同時刻は入力順で法的netting/同時defaultの一般契約は対象外。"
+    },
+    {
+      "id": "25.7",
+      "chapter": 25,
+      "heading": "Total Return Swaps（pp.597–598）",
+      "source_pages": [
+        597,
+        598
+      ],
+      "requirements": [
+        {
+          "id": "D25.7-01",
+          "statement": "100M・5年・floating＋25bpの総収益交換（pp.597–598）",
+          "reading": "Figure25.2にクーポンと終端の値動きを分けて描く"
+        },
+        {
+          "id": "D25.7-02",
+          "statement": "+10%/−15%時の受払とデフォルト時決済（p.598）",
+          "reading": "正負双方を手計算、原資産所有者と総収益の受取者を分ける"
+        },
+        {
+          "id": "D25.7-03",
+          "statement": "融資との関係と相手方信用・原資産信用・相関（p.598）",
+          "reading": "スプレッドが原資産信用だけでは決まらない説明"
+        }
+      ],
+      "explanation": "債券のクーポンと値上がり/値下がりを含む総収益を、変動金利＋スプレッドと交換する。原資産を保有するpayerは信用リスクをreceiverへ移せ、receiverは資金を借りて原資産を保有した形に近い経済効果を得る。所有権を保つpayerにも、原資産が下落した時のreceiver破綻リスクが残る。",
+      "printed": "✓2値再計算一致。100Mの10%上昇でpayer→receiver 10M、15%下落でreceiver→payer 15M。25bpは契約入力で、公正スプレッドを計算する入力一式はない。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_trs.py"
+      ],
+      "limitation": "固定initial notionalのprice marks、couponは金額。公正spread/信用調整入力なし。calendar/periodic notional resetは別規約。",
+      "numerical_requirements": [
+        "D25.7-01",
+        "D25.7-02"
+      ],
+      "calculation": "本文100m・5年・floating+25bp、+10%→10m/−15%→−15m。独立借入購入のcash accountでcoupon/financing/priceの全CFを照合",
+      "calculation_scope": "固定initial notionalのprice marks、couponは金額。公正spread/信用調整入力なし。calendar/periodic notional resetは別規約。"
+    },
+    {
+      "id": "25.8",
+      "chapter": 25,
+      "heading": "Collateralized Debt Obligations（pp.599–601）",
+      "source_pages": [
+        599,
+        601
+      ],
+      "requirements": [
+        {
+          "id": "D25.8-01",
+          "statement": "0–5/5–20/20–100%の損失配分と残存元本（p.599）",
+          "reading": "100M・損失2M→追加4Mのウォーターフォール"
+        },
+        {
+          "id": "D25.8-02",
+          "statement": "cash/syntheticと当初投資・担保、single-tranche（p.600）",
+          "reading": "保護売りの債務と担保差入を区別"
+        },
+        {
+          "id": "D25.8-03",
+          "statement": "標準トランシェとTable25.6の気配単位（pp.600–601）",
+          "reading": "0–3%だけupfront%＋500bp、他は年率bp"
+        }
+      ],
+      "explanation": "債券ポートフォリオを裏付けるcash CDOと、CDS保護売りのリスクを分けるsynthetic CDOを説明する。損失で元本が減り、スプレッドは残存元本に支払う。実際の原資産保有を作らず1トランシェだけを取引する仕組みと、エクイティのupfront＋runningの気配を区別する。",
+      "printed": "✓8値再計算一致。p.599：初期元本5/15/80M、損失2M後エクイティ残3M、累積損失6Mではエクイティ支払累計5M・残0、メザニン支払1M・残14M。スプレッド1000/100/10bpは入力。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_portfolio_extensions.py",
+      "tests": [
+        "hullkit/tests/test_credit_portfolio_extensions_waterfall.py"
+      ],
+      "limitation": "任意金額lossの優先配分を計算し、整数defaultへ置換しない。原典境界5/20%と既存vol12の5/15%を分ける。Table25.6は歴史quote入力で再推定しない。",
+      "numerical_requirements": [
+        "D25.8-01"
+      ],
+      "calculation": "本文100mの5/15/80mトランシェ、loss2mでequity3m、loss6mでequity0/mezz14m。1000/100/10bpの残存元本premium。独立優先順位cash allocationと総損失保存",
+      "calculation_scope": "任意金額lossの優先配分を計算し、整数defaultへ置換しない。原典境界5/20%と既存vol12の5/15%を分ける。Table25.6は歴史quote入力で再推定しない。"
+    },
+    {
+      "id": "25.9",
+      "chapter": 25,
+      "heading": "Role of Correlation in a Basket CDS and CDO（p.601）",
+      "source_pages": [
+        601,
+        601
+      ],
+      "requirements": [
+        {
+          "id": "D25.9-01",
+          "statement": "独立時の二項裾確率（p.601）",
+          "reading": "$1-0.98^{100}$ と10社以上の二項和"
+        },
+        {
+          "id": "D25.9-02",
+          "statement": "完全相関の極限とトランシェの違い（p.601）",
+          "reading": "周辺PD2%を保持して全社/ゼロ社の2状態へ"
+        },
+        {
+          "id": "D25.9-03",
+          "statement": "エクイティとシニアのリスク方向（p.601）",
+          "reading": "相関による総期待損失の保存と各層の再配分"
+        }
+      ],
+      "explanation": "同じ周辺PDでも相関が変わると損失分布は変わる。100社・5年PD2%の例では、独立時は1社以上のデフォルトが多いが10社以上は極めて少なく、完全相関では全社同時か全社生存となる。低いトランシェと高いトランシェの相関感応度は異なる。",
+      "printed": "✓4値再計算一致。独立時1社以上86.738044%→86.74%、10社以上0.00344168%→0.0034%。完全相関時は全社2%・生存98%。ここで2%は**5年累積PD**で、年2%強度ではない。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_portfolio_extensions.py",
+      "tests": [
+        "hullkit/tests/test_credit_portfolio_extensions_correlation.py"
+      ],
+      "limitation": "2%は5年累積PDで年2%hazardではない。rho1は解析2状態。全層同riskは回収0条件、40%へ一般化しない。高相関tailの適応求積修正を保持。",
+      "numerical_requirements": [
+        "D25.9-01",
+        "D25.9-02",
+        "D25.9-03"
+      ],
+      "calculation": "100社5年PD2%：独立>=1 86.74%、>=10 .0034%、完全相関100社2%/0社98%。独立組合せ和・latent-normal MC6SE、総期待loss保存とtranche再配分",
+      "calculation_scope": "2%は5年累積PDで年2%hazardではない。rho1は解析2状態。全層同riskは回収0条件、40%へ一般化しない。高相関tailの適応求積修正を保持。"
+    },
+    {
+      "id": "25.10",
+      "chapter": 25,
+      "heading": "Valuation of a Synthetic CDO（pp.601–608）",
+      "source_pages": [
+        601,
+        608
+      ],
+      "requirements": [
+        {
+          "id": "D25.10-01",
+          "statement": "式(25.1)–(25.4)のA/B/Cとupfront（pp.601–602）",
+          "reading": "元本1・スプレッド1の規約と買い手価値C−s(A+B)"
+        },
+        {
+          "id": "D25.10-02",
+          "statement": "条件付き二項分布、式(25.8)の残存元本、因子求積（pp.602–604）",
+          "reading": "確率和1、元本範囲[0,1]、トランシェ損失保存"
+        },
+        {
+          "id": "D25.10-03",
+          "statement": "Ex25.2とTable25.7（pp.604–605）",
+          "reading": "全印刷セルと348bp、M=60の節点/重み"
+        },
+        {
+          "id": "D25.10-04",
+          "statement": "Ex25.3の3番目デフォルト（pp.605–606）",
+          "reading": "累積裾確率→年内発動確率→3レッグ→153bp"
+        },
+        {
+          "id": "D25.10-05",
+          "statement": "compound/base較正、Table25.8（pp.606–607）",
+          "reading": "2007年気配を再価格。トランシェ元本から全体元本へ単位換算"
+        },
+        {
+          "id": "D25.10-06",
+          "statement": "非標準4–8%区間と期待損失曲線（pp.607–608）",
+          "reading": "0–8%−0–4%、単調増加・凹性と標準点の再価格"
+        }
+      ],
+      "explanation": "期待残存元本 $E_j$ から定期支払A、経過分B、損失補填Cを作り、スプレッドを $C/(A+B)$ とする。1因子条件付きではデフォルト件数を二項分布で扱い、因子について積分する。同じ仕組みをkth-to-defaultへ使い、市場気配からcompound/base相関を逆算する。非標準区間には期待損失曲線の単調・凹な補間が望ましい。",
+      "printed": "`check_ch25_tables.py` で ✓113値再計算一致。Table25.7の数値は原典の因子60点・未丸め強度を使用。百分率と元本単位は下記のとおり。\n  - Ex25.2 p.604：$n_L=6.25,n_H=12.5$、50bpから年強度0.8296995%→0.83%。因子節点0.2020/−0.2020/−0.6060/−1.0104、重み0.1579/0.1579/0.1342/0.0969（8値）。\n  - Table25.7の残存元本・支払係数は下表（60値）。各行の列順は上記4因子、jは四半期支払番号。末尾0も印刷値として照合した。\n\n| 項目 | j=1 | j=19 | j=20 | 条件付き合計 |\n|---|---|---|---|---|\n| 期待元本E | 1/1/1/1 | .9953/.9687/.8636/.6134 | .9936/.9600/.8364/.5648 | — |\n| 支払A | .2478/.2478/.2478/.2478 | .2107/.2051/.1828/.1299 | .2085/.2015/.1755/.1185 | 4.5624/4.5345/4.4080/4.0361 |\n| 経過分B | 0/0/0/0 | .0001/.0008/.0026/.0051 | .0002/.0009/.0029/.0051 | .0007/.0043/.0178/.0478 |\n| 保護C | 0/0/0/0 | .0011/.0062/.0211/.0412 | .0014/.0074/.0230/.0410 | .0055/.0346/.1423/.3823 |\n\n  - 無条件A4.2846、B0.0187、C0.1496、スプレッド348bp（再計算347.574409bp）。nL/nH/強度・Table・4結果の合計75値。価格係数許容0.00005、整数bp許容0.5。補助確認として固定Hermite求積を適応積分へ替えると、A/B/C差の最大は $1.4\\times10^{-9}$。\n  - Ex25.3 pp.605–606の27値：無条件累積PD .0198/.0392/.0582/.0769/.0952。因子−1.0104で条件付きPD .0361/.0746/.1122/.1484/.1830、3社以上の累積確率 .0047/.0335/.0928/.1757/.2717、年内発動確率 .0047/.0289/.0593/.0829/.0960。条件付き保護/定期/経過PV .1379/3.8443/.1149、無条件 .0629/4.0580/.0524、153bp（152.966469）。いずれも1元本・プレミアム側はスプレッド1当たり。\n  - Table25.8 p.607の11値：指数23bpから強度0.3818992%→0.382%。compound 17.7/7.8/14.0/18.2/23.3%、base 17.7/28.4/36.5/43.2/60.5%。再計算compound 17.6711/7.7658/13.9682/18.1952/23.2916%、base 17.6711/28.4120/36.4908/43.2185/60.5224%。**百分率0.05ポイントの印刷丸め幅内**。現行テストの許容0.15ポイントより厳しい幅でも一致した。\n  - Figure25.3には個別の数値ラベルがなく、追加ピンなし。計算した標準detachment3/6/9/12/22%での全体元本比損失PVは0.888861/0.946277/0.962836/0.970601/0.979850%（派生参照、印刷値としては数えない）。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_portfolio_extensions.py",
+      "tests": [
+        "hullkit/tests/test_credit_portfolio_extensions_valuation.py"
+      ],
+      "limitation": "源60点/未丸めhazard、midpoint default規約。非標準区間は全標準leg/time curveを保存する区分線形補間。PV loss単独からannuityを推測せず、市場無裁定の普遍保証はしない。",
+      "numerical_requirements": [
+        "D25.10-01",
+        "D25.10-02",
+        "D25.10-03",
+        "D25.10-04",
+        "D25.10-05",
+        "D25.10-06"
+      ],
+      "calculation": "Ex25.2/Table25.7/Ex25.3/Table25.8の113印刷値、348/153bp。独立Gaussian default時刻MC6SE、標準quote再価格と単調凹loss curveの4–8%補間",
+      "calculation_scope": "源60点/未丸めhazard、midpoint default規約。非標準区間は全標準leg/time curveを保存する区分線形補間。PV loss単独からannuityを推測せず、市場無裁定の普遍保証はしない。"
+    },
+    {
+      "id": "25.11",
+      "chapter": 25,
+      "heading": "Alternatives to the Standard Market Model（pp.608–610）",
+      "source_pages": [
+        608,
+        610
+      ],
+      "requirements": [
+        {
+          "id": "D25.11-01",
+          "statement": "不均質な周辺PD/相関、ASB等の再帰（p.608）",
+          "reading": "同質極限で二項分布、確率和と平均デフォルト数を保存"
+        },
+        {
+          "id": "D25.11-02",
+          "statement": "double-tと他コピュラ、多因子の計算費用（p.608）",
+          "reading": "因子・個別ノイズを分散1にし、周辺PDを保つ閾値を求める"
+        },
+        {
+          "id": "D25.11-03",
+          "statement": "因子依存の回収率/負荷（p.609）",
+          "reading": "悪い因子で回収低下・相関上昇。較正条件を明示"
+        },
+        {
+          "id": "D25.11-04",
+          "statement": "implied copulaの共通平均強度分布（p.609）",
+          "reading": "正の重みと和1、市場トランシェ再価格"
+        },
+        {
+          "id": "D25.11-05",
+          "statement": "静的と動的、構造型/誘導型/トップダウン（pp.609–610）",
+          "reading": "時間発展の状態変数・デフォルト機構・較正の違いを比較"
+        }
+      ],
+      "explanation": "同質性・Gaussian・固定回収率/負荷・静的な環境という仮定を順に緩める。不均質では件数分布を二項式で計算できず数値再帰が必要。double-t、因子依存回収率/相関、市場から逆算するimplied copula、資産・強度・総損失を動かす3種の動的モデルを比較する。",
+      "printed": "数値結果なし。double-tの自由度4、5/7/10年の別々の静的CDOは設定/説明値。原典だけではCR-10/11の独自パラメータ・市場適合値を再計算できない。",
+      "cautions": "",
+      "prep": "docs/prep/sections/ch25.md",
+      "lesson": "docs/lessons/ch25.md",
+      "page": "report/site/chapters/ch25.html",
+      "implementation": "hullkit/src/hullkit/_credit_alternatives.py",
+      "tests": [
+        "hullkit/tests/test_credit_alternatives.py"
+      ],
+      "limitation": "静的ASB/double-t/因子依存/hazard mixtureの明示合成検証のみ。PDを再較正し、固定hazard gridの重みはquote不足時非一意。全copula/著者市場parameter/CR-11動的研究は対象外。",
+      "numerical_requirements": [
+        "D25.11-01",
+        "D25.11-02",
+        "D25.11-03",
+        "D25.11-04"
+      ],
+      "calculation": "原典計算結果なし、double-t自由度4。ASB countを独立2^n状態積分、t潜在変数MC、因子依存PD/terminal loss MC、hazard混合を独立default年CF列挙・既知weights回復",
+      "calculation_scope": "静的ASB/double-t/因子依存/hazard mixtureの明示合成検証のみ。PDを再較正し、固定hazard gridの重みはquote不足時非一意。全copula/著者市場parameter/CR-11動的研究は対象外。"
+    }
+  ],
+  "samples": {
+    "22": "22.2",
+    "23": "23.5",
+    "24": "24.7",
+    "25": "25.10"
+  },
+  "template_sha256": "a7fe9f7e0dae1dc485b1b0edff75f4be6652d734bd2c4e66cf6cb50fb728bf3b",
+  "expected_dom": {
+    "section-22-1": {
+      "text_sha256": "d0bd4a497560d4665c5a8aa720f740962e5ca80a986e0c764b5ae6ca4c517935",
+      "math": [
+        "(100-X)",
+        "N",
+        "=",
+        "\\times\\sqrt N",
+        "\\operatorname{VaR}_\\alpha=F_L^{-1}(\\alpha)",
+        "\\operatorname{ES}_\\alpha=(1-\\alpha)^{-1}\\int_\\alpha^1 F_L^{-1}(u)\\,du",
+        "\\sqrt N",
+        "\\sigma^2[N+2\\sum_{k=1}^{N-1}(N-k)\\phi^k]",
+        "N",
+        "=",
+        "\\times\\sqrt N",
+        "\\sqrt{[N+2\\sum_{k<N}(N-k)\\phi^k]/N}"
+      ],
+      "tables": 0
+    },
+    "D22.1-01": {
+      "text_sha256": "9272705df7dc5fe3db62f4e8fafc9e1fdcb8a2bd5d55d321fc5953a4e53928e5",
+      "math": [],
+      "tables": 0
+    },
+    "D22.1-02": {
+      "text_sha256": "e358a85ec1acc2050f72caf458f3d73d68763491f1d0f5beb6d3fd5a4fe399b6",
+      "math": [],
+      "tables": 0
+    },
+    "D22.1-03": {
+      "text_sha256": "a4bf34d7db4f8a3df98e582d2467f6cce42d8cfb26fa9494399f817ae0bb10a4",
+      "math": [],
+      "tables": 0
+    },
+    "D22.1-04": {
+      "text_sha256": "a35e64eaeb1497493fc707bf4fd61b9844aeef74e66a2cf088c1012418b68df0",
+      "math": [
+        "N",
+        "=",
+        "\\times\\sqrt N",
+        "\\sqrt{[N+2\\sum_{k<N}(N-k)\\phi^k]/N}"
+      ],
+      "tables": 0
+    },
+    "section-22-2": {
+      "text_sha256": "c24c69c665bd9a0706c05fe2a04fa548c2562b99b90c42b83ec7fe9e4d89b3d9",
+      "math": [
+        "v_n\\,v_i/v_{i-1}",
+        "\\times\\sqrt{10}",
+        "\\lambda^{n-i}(1-\\lambda)/(1-\\lambda^n)",
+        "\\,0.4c_1+0.4c_2+0.2c_3",
+        "v_n(v_i/v_{i-1})",
+        "w_i=(1-\\lambda)\\lambda^{n-i}/(1-\\lambda^n)",
+        "v_n v_i/v_{i-1}",
+        "\\,0.4c_1+0.4c_2+0.2c_3"
+      ],
+      "tables": 0
+    },
+    "D22.2-01": {
+      "text_sha256": "8e604ed879c7912bde49d9f941b1c9687be61aa12ef61253f9b05a42f8eae694",
+      "math": [
+        "v_n v_i/v_{i-1}"
+      ],
+      "tables": 0
+    },
+    "D22.2-02": {
+      "text_sha256": "6b8e609ae4edc59f0186c0dc262137fad85464b15d5cf5776ae831b084dd3933",
+      "math": [],
+      "tables": 0
+    },
+    "D22.2-03": {
+      "text_sha256": "5f96d4bb6e22c9fefc6c95f80b7961ad46f6fc3982fbefe6564e5c81b76a1551",
+      "math": [],
+      "tables": 0
+    },
+    "D22.2-04": {
+      "text_sha256": "bd7ee260aaad33de57b2d39cd9b7e3ea7f60724827c9a6897eddaa63e64b01af",
+      "math": [],
+      "tables": 0
+    },
+    "D22.2-05": {
+      "text_sha256": "b1486e9f4d83fff3427d60bada0917a71bb6ff4d856d6bc507ce978fc2fb6bd3",
+      "math": [],
+      "tables": 0
+    },
+    "D22.2-06": {
+      "text_sha256": "c7c1d5aa22ef29232d70cce12bb88df77d4873aeed8c157c8397da6629519d58",
+      "math": [],
+      "tables": 0
+    },
+    "D22.2-07": {
+      "text_sha256": "7594531e017632eb38568f88cc7ea3944e94c3825c4d29b25c5cb509ac36dddb",
+      "math": [
+        "\\,0.4c_1+0.4c_2+0.2c_3"
+      ],
+      "tables": 0
+    },
+    "D22.2-08": {
+      "text_sha256": "a870834e177ccb8c27819ad2baa740feb99e6b233b997a9d97d4f84b51350143",
+      "math": [],
+      "tables": 0
+    },
+    "section-22-3": {
+      "text_sha256": "cfe49d3854bdc7d05d4f73a2c3349c2910277796b80a3842b4da57c55ccfd8f9",
+      "math": [
+        "\\sigma_{year}=\\sigma_{day}\\sqrt{252}",
+        "N^{-1}(0.01)=-2.326",
+        "ES=\\mu+\\sigma e^{-Y^2/2}/[\\sqrt{2\\pi}(1-X)]",
+        "\\operatorname{VaR}_\\alpha=\\mu_L+\\sigma_L z_\\alpha",
+        "\\operatorname{ES}_\\alpha=\\mu_L+\\sigma_L\\varphi(z_\\alpha)/(1-\\alpha)",
+        "\\sqrt{252}",
+        "\\,2\\sqrt{10}",
+        "\\sigma_{X+Y}=\\sqrt{\\sigma_X^2+\\sigma_Y^2+2\\rho\\sigma_X\\sigma_Y}",
+        "N^{-1}(0.01)=-2.3263"
+      ],
+      "tables": 0
+    },
+    "D22.3-01": {
+      "text_sha256": "76b46d99b853f5be1d671a88b218b7522523aea7525f8a560feb8c98222d6851",
+      "math": [
+        "\\sqrt{252}"
+      ],
+      "tables": 0
+    },
+    "D22.3-02": {
+      "text_sha256": "fbcbbc39403adbacd381d72607844ee1cb2e5a7a79f7a9deceb071e7f892c7e3",
+      "math": [
+        "\\,2\\sqrt{10}"
+      ],
+      "tables": 0
+    },
+    "D22.3-03": {
+      "text_sha256": "9caae6f9f753461a9071d2bfcd04afcf2a8cf3e643da88bda11f6ec7b9d849ac",
+      "math": [],
+      "tables": 0
+    },
+    "D22.3-04": {
+      "text_sha256": "8383beecc01c6e01a78732203607637e2e9097a6b2bd2712f5c5612c5457507f",
+      "math": [
+        "\\sigma_{X+Y}=\\sqrt{\\sigma_X^2+\\sigma_Y^2+2\\rho\\sigma_X\\sigma_Y}"
+      ],
+      "tables": 0
+    },
+    "D22.3-05": {
+      "text_sha256": "e971b8fcec3e9776ca04f5b96b190b82a004019c79ced16ce7985a3771408c1d",
+      "math": [],
+      "tables": 0
+    },
+    "D22.3-06": {
+      "text_sha256": "4549b95c3a06d54f648c8067abd57c15d48442c635504dfeb48353aeca12502a",
+      "math": [],
+      "tables": 0
+    },
+    "D22.3-07": {
+      "text_sha256": "fab61349c763befcf885dbaa6500a91418c7ed5ebdf86197fa149392e8ef990b",
+      "math": [],
+      "tables": 0
+    },
+    "section-22-4": {
+      "text_sha256": "940b6d28d5138721a2fec1faa9d823bf0045f80215e4328b0fe954c403c419ef",
+      "math": [
+        "\\Delta P=\\sum a_i\\Delta x_i",
+        "\\sigma_P^2=\\sum_i\\sum_j\\rho_{ij}a_ia_j\\sigma_i\\sigma_j",
+        "\\sigma_P^2=a^TCa",
+        "N",
+        "=2.326\\,\\sigma_P\\sqrt N",
+        "\\sum\\sum\\rho_{ij}w_iw_j\\sigma_i\\sigma_j",
+        "\\sigma_P^2=0.0485",
+        "\\Delta P=-DP\\Delta y",
+        "\\Delta P=\\sum S_i\\delta_i\\Delta x_i",
+        "\\sigma=7.099",
+        "\\Delta P=\\sum_i a_i\\Delta x_i",
+        "a^TCa",
+        "\\Delta P=-DP\\Delta y",
+        "a_i=S_i\\delta_i",
+        "\\sigma_P^2=0.0485",
+        "\\sigma_P=0.2202",
+        "\\sigma_P^2=a^TCa",
+        "\\Delta P=-DP\\Delta y",
+        "\\sigma_P^2=0.0485",
+        "\\sigma_P=0.22023"
+      ],
+      "tables": 0
+    },
+    "D22.4-01": {
+      "text_sha256": "9e277e7f0b3eb6a3c145550c3a527ba3e2c28b62433f29519aad7e90d252cc4b",
+      "math": [
+        "\\sigma_P^2=0.0485",
+        "\\sigma_P=0.2202"
+      ],
+      "tables": 0
+    },
+    "D22.4-02": {
+      "text_sha256": "2e85f5f78caeda32f9c12e1eece35053095a7a4c3a56845b30326551d9e2ceb9",
+      "math": [
+        "\\sigma_P^2=a^TCa"
+      ],
+      "tables": 0
+    },
+    "D22.4-03": {
+      "text_sha256": "2e05def5b90c835fa771ebaf9b7f479d47974a15660b779bbe929f57d7d58bef",
+      "math": [],
+      "tables": 0
+    },
+    "D22.4-04": {
+      "text_sha256": "f7c69c36eac0658f2ff6ba3d2a572f02d7b064d39aa90823568df01f662f7f8d",
+      "math": [
+        "\\Delta P=-DP\\Delta y"
+      ],
+      "tables": 0
+    },
+    "D22.4-05": {
+      "text_sha256": "28b01b56e5d4e09ceabfe3eb1e8015af40417dccd0be30a5f320e5621f4c4598",
+      "math": [],
+      "tables": 0
+    },
+    "D22.4-06": {
+      "text_sha256": "a97ae0577d27e058fd399cfa4c1d6c7e75cba9e9a65f96a73fe633bcfcab12b0",
+      "math": [],
+      "tables": 0
+    },
+    "D22.4-07": {
+      "text_sha256": "cb9c1dc872b2116506814d17aac0cded729d04be79f8d092c111d9789ac4d495",
+      "math": [],
+      "tables": 0
+    },
+    "section-22-5": {
+      "text_sha256": "f98701781b9242c584f783f7e687ec5ce121972bbf59dc9d5f40718995106b6d",
+      "math": [
+        "\\Delta P=\\delta\\Delta S+\\tfrac12\\gamma(\\Delta S)^2",
+        "\\Delta x=\\Delta S/S",
+        "\\Delta P=S\\delta\\Delta x+\\tfrac12S^2\\gamma(\\Delta x)^2",
+        "\\gamma_{ij}=\\partial^2P/\\partial S_i\\partial S_j",
+        "\\Delta P",
+        "\\Theta\\Delta t",
+        "\\Delta S",
+        "E(\\Delta P)=0.5S^2\\gamma\\sigma^2",
+        "E(\\Delta P^2)=S^2\\delta^2\\sigma^2+0.75S^4\\gamma^2\\sigma^4",
+        "E(\\Delta P^3)=4.5S^4\\delta^2\\gamma\\sigma^4+1.875S^6\\gamma^3\\sigma^6",
+        "X=a+bZ+cZ^2",
+        "b=S\\delta\\sigma,c=S^2\\gamma\\sigma^2/2",
+        "E[X]=c,E[X^2]=b^2+3c^2,E[X^3]=9b^2c+15c^3",
+        "b^2+2c^2",
+        "\\,6b^2c+8c^3",
+        "\\gamma_{ij}",
+        "\\Theta\\Delta t",
+        "\\Delta P=a+bZ+cZ^2",
+        "b=S\\delta\\sigma",
+        "c=\\tfrac12S^2\\gamma\\sigma^2",
+        "E=c",
+        "E^2=b^2+3c^2",
+        "E^3=9b^2c+15c^3"
+      ],
+      "tables": 0
+    },
+    "D22.5-01": {
+      "text_sha256": "ff40f9edc4eeb5a29297d955065321c43d21a5aeeed81c19c8012b77f8ece345",
+      "math": [],
+      "tables": 0
+    },
+    "D22.5-02": {
+      "text_sha256": "1bf48cb911bf7411cfa450823a0ddcb9d1316c5bb9d3a7e933caffa430b4f989",
+      "math": [
+        "\\gamma_{ij}"
+      ],
+      "tables": 0
+    },
+    "D22.5-03": {
+      "text_sha256": "1cc09b22c50782dda09ec91e6822c8d89dda5856939bbf4e23fad346c5b8903e",
+      "math": [
+        "\\Theta\\Delta t"
+      ],
+      "tables": 0
+    },
+    "D22.5-04": {
+      "text_sha256": "55dd1260b3a3f3d98c6360641a31a781ed74ed0121fb6026ce4dd56df378bd71",
+      "math": [],
+      "tables": 0
+    },
+    "section-22-6": {
+      "text_sha256": "381b4ff395c9e0ac85f1158cfb06f2f93fabe8f3c9c8e8b4906c72e4c6140e21",
+      "math": [
+        "\\Delta x_i",
+        "\\Delta P",
+        "N",
+        "\\sqrt N",
+        "\\sqrt{10}",
+        "k=\\lceil(1-\\alpha)n\\rceil",
+        "N",
+        "\\sqrt N",
+        "\\sqrt{10}",
+        "\\,0.01\\times5000=50",
+        "\\,0.05\\times5000=250"
+      ],
+      "tables": 0
+    },
+    "D22.6-01": {
+      "text_sha256": "0d6c7b4abe9c8151b8105cf39778d31df246c507bd974c362382796cb2378cc3",
+      "math": [],
+      "tables": 0
+    },
+    "D22.6-02": {
+      "text_sha256": "f49add3897256752aac231897b72d41a57f1cd58a4aac2062d41f30b2f97c17c",
+      "math": [
+        "k=\\lceil(1-\\alpha)n\\rceil"
+      ],
+      "tables": 0
+    },
+    "D22.6-03": {
+      "text_sha256": "6e93155dd6e724de0e1bfaa765596f205280136a4a9bc315c112c1ae65a34769",
+      "math": [
+        "N",
+        "\\sqrt N",
+        "\\sqrt{10}"
+      ],
+      "tables": 0
+    },
+    "D22.6-04": {
+      "text_sha256": "1b39947b291c774d58f8cc9efe2ecd23b7f463d591d85fb0dd0af07f03dabe86",
+      "math": [],
+      "tables": 0
+    },
+    "D22.6-05": {
+      "text_sha256": "ff7713f6b8f14882db8f41f919015ea81c52c6393fab609fd36b154b94f0bd6c",
+      "math": [],
+      "tables": 0
+    },
+    "section-22-7": {
+      "text_sha256": "7cf9b23cc8db439d21607d0c7a69cd298d6baabaf401d68b6e6c338b32918b0d",
+      "math": [],
+      "tables": 0
+    },
+    "D22.7-01": {
+      "text_sha256": "a43fffd91489132d951376f9273f7e5e3a52413e82d07f6b860e8f5fdf8b8577",
+      "math": [],
+      "tables": 0
+    },
+    "D22.7-02": {
+      "text_sha256": "159094968480ed7f4d50943316a3caca4994b1b3fc65ee9dfae2a92b748ad159",
+      "math": [],
+      "tables": 0
+    },
+    "section-22-8": {
+      "text_sha256": "6cd30755980f56c1e9e40d33097a20f48f9ddf27f669b7944473fdc6f21c77fb",
+      "math": [],
+      "tables": 0
+    },
+    "D22.8-01": {
+      "text_sha256": "02da45fbdfa736069720064df1d036981e231756146e10743ea3fc70c21d177d",
+      "math": [],
+      "tables": 0
+    },
+    "D22.8-02": {
+      "text_sha256": "8990cbd88228bfd81176f871695c1eb7be7245ceb7e956cf0f760fa5380034d3",
+      "math": [],
+      "tables": 0
+    },
+    "section-22-9": {
+      "text_sha256": "1d9ff8518cad5d23a5f23b97967f50ee52dc0e80927be0fae570bd4cfb61fdd9",
+      "math": [],
+      "tables": 0
+    },
+    "D22.9-01": {
+      "text_sha256": "8b7b7f9f58a32f88d9d36b31e0bdd80f7184664750df725f94144d11c6673d8b",
+      "math": [],
+      "tables": 0
+    },
+    "D22.9-02": {
+      "text_sha256": "5bbecbd09e436196ca92eef1dec98f032b4228d59ac19f2b16592b9bcd32471e",
+      "math": [],
+      "tables": 0
+    },
+    "D22.9-03": {
+      "text_sha256": "56e88825971f8f95c614f51eb660d26f2c627ffa1fefc00f9b234dd367d96622",
+      "math": [],
+      "tables": 0
+    },
+    "section-23-1": {
+      "text_sha256": "9733b8cdddb825e785eb56d75d7891112981565a25760ad206c746e3b5cfd808",
+      "math": [
+        "u_i=\\log(S_i/S_{i-1})",
+        "v=m^{-1}\\sum_i u_i^2",
+        "\\omega=\\gamma V_L"
+      ],
+      "tables": 0
+    },
+    "D23.1-01": {
+      "text_sha256": "a2775cd0fcc45f3d09f35bfe3d23b6ba41f80f339ab1b7f9aad101733fda1fc2",
+      "math": [],
+      "tables": 0
+    },
+    "D23.1-02": {
+      "text_sha256": "1cec814e1357ac6ed1a40029589be4d35cc0813da7992478b152481966083096",
+      "math": [],
+      "tables": 0
+    },
+    "section-23-2": {
+      "text_sha256": "85165aaa6838c0e5d3a9506358eac3304fde18dfb10d7f53e26874cf18acdfb3",
+      "math": [
+        "v_n=\\lambda v_{n-1}+(1-\\lambda)u_{n-1}^2",
+        "\\lambda^m v_{n-m}"
+      ],
+      "tables": 0
+    },
+    "D23.2-01": {
+      "text_sha256": "c629d167ad488a537fe0a5cbbee42d4324dfb5c95716ccdc43628be8fc1d4fc8",
+      "math": [],
+      "tables": 0
+    },
+    "D23.2-02": {
+      "text_sha256": "0462432963b5f4fa39b6095abdf822e4cf085ae6ca183c705f386396730796e6",
+      "math": [],
+      "tables": 0
+    },
+    "section-23-3": {
+      "text_sha256": "995eabfcda0ed17d4ce7cf2b4fcddcea5be14b715db53218b5878c83a1557fe0",
+      "math": [
+        "v_n=\\omega+\\alpha u_{n-1}^2+\\beta v_{n-1}",
+        "\\gamma=1-\\alpha-\\beta,V_L=\\omega/\\gamma"
+      ],
+      "tables": 0
+    },
+    "D23.3-01": {
+      "text_sha256": "795dd38bafefd6b02b82c60dad66bd8a967ff9c69be92d293f522662188ff412",
+      "math": [],
+      "tables": 0
+    },
+    "D23.3-02": {
+      "text_sha256": "6f957658ef2375f5af1d402b0ce120a00b19f1c9517983e8f1095a091a0c6f6f",
+      "math": [],
+      "tables": 0
+    },
+    "section-23-4": {
+      "text_sha256": "0d337b171a797cafaf2cf90190ad1096907fa818ed3879e41d64e4269c676bfe",
+      "math": [],
+      "tables": 0
+    },
+    "D23.4-01": {
+      "text_sha256": "6c964235e979d7032503fe52c3a0609aa154b9fadf2eea229f32cbbb18d2c534",
+      "math": [],
+      "tables": 0
+    },
+    "section-23-5": {
+      "text_sha256": "ea571a5af7ea4dcb59bd88cc5df916eed9b6e6a7b3e4b8216f3adeaf01905efb",
+      "math": [
+        "\\hat v=\\sum u_i^2/m",
+        "-\\tfrac12\\sum_i(\\log v_i+u_i^2/v_i)",
+        "v_3=u_2^2"
+      ],
+      "tables": 0
+    },
+    "D23.5-01": {
+      "text_sha256": "52ff4a9a646d3af24d5501ac1bc8341bdce93e56d3bc361bd26d0de92704b363",
+      "math": [],
+      "tables": 0
+    },
+    "D23.5-02": {
+      "text_sha256": "c337a52d2fbd462edc833b960229b1acf7dfc9685846aa2ceda81d52e1bfc082",
+      "math": [],
+      "tables": 0
+    },
+    "D23.5-03": {
+      "text_sha256": "c4d15d15f719e6d9002b543a3e8a7361b115003ebc67cbf0ca57f123ee540048",
+      "math": [],
+      "tables": 0
+    },
+    "D23.5-04": {
+      "text_sha256": "5845bcbb87034ce05f0186e520420a89ce0bb88e152a7821b465e410415d2cf7",
+      "math": [],
+      "tables": 0
+    },
+    "section-23-6": {
+      "text_sha256": "e75454fcf30cd3dd105560233c8d3e0fcffb544712e1c2cf0f81ee69d8cfa821",
+      "math": [
+        "E[v_{n+t}]=V_L+p^t(v_n-V_L)",
+        "a=-\\log p",
+        "\\bar v(T)=V_L+(v_n-V_L)(1-e^{-aT})/(aT)",
+        "\\sqrt{252\\bar v(T)}",
+        "E[\\sqrt v]"
+      ],
+      "tables": 0
+    },
+    "D23.6-01": {
+      "text_sha256": "ef16f708f456b487a18fed3ff37b8a95aeb170ff225b83ae08372372757b8ed7",
+      "math": [],
+      "tables": 0
+    },
+    "D23.6-02": {
+      "text_sha256": "3b3f121536cd508c311c248fd39a68f732739cced4106e2c1f01f96936849d21",
+      "math": [],
+      "tables": 0
+    },
+    "section-23-7": {
+      "text_sha256": "c35c81c978198704f66121ec0aca3effa1e37436a9fbdec124d874b3737f2606",
+      "math": [],
+      "tables": 0
+    },
+    "D23.7-01": {
+      "text_sha256": "6ee0f12bc72bc5cc23bc0385e09b09035b24b2f304bea857829d7a260afd156e",
+      "math": [],
+      "tables": 0
+    },
+    "D23.7-02": {
+      "text_sha256": "8453e597f5637375d398430748c5ff00c93078d8214cd13d22d398c4c5edf837",
+      "math": [],
+      "tables": 0
+    },
+    "section-24-1": {
+      "text_sha256": "209b02409a18ffc48cbe8cef57a0a2bbc44413cefae18f00d2a0dbec1e38d9cf",
+      "math": [],
+      "tables": 0
+    },
+    "D24.1-01": {
+      "text_sha256": "f500578f840f9c7e369bfb8a954b8786b1eef9b047d6473faa67167553ca601e",
+      "math": [],
+      "tables": 0
+    },
+    "D24.1-02": {
+      "text_sha256": "2b659db184a47dce9deb60fc26366b248d9d735145d8c4df73f9d32808744096",
+      "math": [],
+      "tables": 0
+    },
+    "section-24-2": {
+      "text_sha256": "4b2c76a1a2d983d5352bc3fed16bb89279eaa491f59a405b5bb50603135a12b2",
+      "math": [
+        "Q(t)=1-\\exp[-\\int_0^t\\lambda(u)du]=1-e^{-\\bar\\lambda(t)t}",
+        "Q(t)=1-\\exp[-\\int_0^t\\lambda(u)du]",
+        "Q(t)=1-e^{-\\bar\\lambda t}"
+      ],
+      "tables": 0
+    },
+    "D24.2-01": {
+      "text_sha256": "f88945fa8297da2838071196d8b3e24a9c8068f2ae3f7ea449548565c8a46ea9",
+      "math": [],
+      "tables": 0
+    },
+    "D24.2-02": {
+      "text_sha256": "6c87801bc3425c562000fc2699dd7fac5d5fb8f3587c7742755ccef08b652d87",
+      "math": [],
+      "tables": 0
+    },
+    "D24.2-03": {
+      "text_sha256": "2a8b16c4335f4293a2d6c55e3eabcd0b7193e0d144caf63f1e2e02455f015caa",
+      "math": [],
+      "tables": 0
+    },
+    "section-24-3": {
+      "text_sha256": "82f218bb10a769fa9c273226292cb6ed92e7f1c70ad5768737cd4eaceaabdbd4",
+      "math": [],
+      "tables": 0
+    },
+    "D24.3-01": {
+      "text_sha256": "be98e5ddec6348adf8d8cf41baedf1244c96e2c2c9d0c5b42ff65b6845eea116",
+      "math": [],
+      "tables": 0
+    },
+    "D24.3-02": {
+      "text_sha256": "35a227ab4c3dcd5b1285a503895db591d75dcee01f3a8030b955e1775c9de5db",
+      "math": [],
+      "tables": 0
+    },
+    "section-24-4": {
+      "text_sha256": "791ac068cd2aa74e4f6e0da7ebdd0ccb94e791b3934d20e3337176a09b2811df",
+      "math": [
+        "\\bar\\lambda(T)\\simeq s(T)/(1-R)",
+        "\\bar\\lambda\\simeq s/(1-R)",
+        "R=40\\%"
+      ],
+      "tables": 0
+    },
+    "D24.4-01": {
+      "text_sha256": "06e6069a1eeac103a9d9d7ffa1338c98f95d30f6848f353f9f03170309a9a2ef",
+      "math": [],
+      "tables": 0
+    },
+    "D24.4-02": {
+      "text_sha256": "fdd98cfc59f0ddf89eef325c75ce1ec2957f37556adffcf536c2fd1100bb9fc2",
+      "math": [],
+      "tables": 0
+    },
+    "D24.4-03": {
+      "text_sha256": "4a45409de01955a9802b3e0e2cf5359ef1807d9e9516809e92af240429b17cf9",
+      "math": [],
+      "tables": 0
+    },
+    "D24.4-04": {
+      "text_sha256": "388d94f73739cb94af0b6c5de4f23fd08268e8997b401cf33e37f86111f293cf",
+      "math": [],
+      "tables": 0
+    },
+    "section-24-5": {
+      "text_sha256": "124476969fc94395acc6b9f2f7dc51be55d1f14faa083d575dd836f0967cc8f4",
+      "math": [
+        "-\\log(1-0.0233)/7"
+      ],
+      "tables": 0
+    },
+    "D24.5-01": {
+      "text_sha256": "4df443572fa944ede15e2d96dd49f315f714fd1ccb82453bf717c9050025dbd5",
+      "math": [],
+      "tables": 0
+    },
+    "D24.5-02": {
+      "text_sha256": "aede6e414d6cbdcc8af9c7807ce0bed8124cdcc44869fbd72ee8c123113c3b24",
+      "math": [
+        "-\\log(1-0.0233)/7"
+      ],
+      "tables": 0
+    },
+    "D24.5-03": {
+      "text_sha256": "58a813b74dcd3a2c1a978f4306ae79644d44a3cb1c49c4af24db347a115e8368",
+      "math": [],
+      "tables": 0
+    },
+    "section-24-6": {
+      "text_sha256": "43c386af5fe54a651ccaeb05472a3ffe05f28562c898040db520214d7d3386bd",
+      "math": [
+        "N(-d_2)",
+        "E=VN(d_1)-De^{-rT}N(d_2)",
+        "\\sigma_E E=N(d_1)\\sigma_V V",
+        "d_2=d_1-\\sigma_V\\sqrt T",
+        "E_0=3",
+        "D=10",
+        "r=5\\%",
+        "V_0=12.395387",
+        "\\sigma_V=0.2123047",
+        "d_2=1.1408257"
+      ],
+      "tables": 0
+    },
+    "D24.6-01": {
+      "text_sha256": "0653a7496332f3176b50d11ebb746dfe20e783786d03ff8b3e68770748ef6e10",
+      "math": [],
+      "tables": 0
+    },
+    "D24.6-02": {
+      "text_sha256": "41545f30baadbc1e5bdfb5114e5f4618dff400a32e63ec2adec733ba52c7efde",
+      "math": [
+        "d_2=d_1-\\sigma_V\\sqrt T"
+      ],
+      "tables": 0
+    },
+    "D24.6-03": {
+      "text_sha256": "30f193b8985bcf1c1c4304e9c6984199312af96196a06d3adcfe36f767fda3d5",
+      "math": [],
+      "tables": 0
+    },
+    "section-24-7": {
+      "text_sha256": "a0edb0707d120d53abfb7bb1f3eeed1f5f10538489a211fda6eb42bc3c763c7d",
+      "math": [
+        "f=f_{nd}-CVA+DVA",
+        "CVA=\\sum_i q_i v_i",
+        "f=f_{\\mathrm{no}}-\\mathrm{CVA}+\\mathrm{DVA}",
+        "d_1=0.5271",
+        "d_2=0.3856",
+        "v_1=92.67",
+        "v_2=130.65",
+        "q_1=2\\%,q_2=3\\%"
+      ],
+      "tables": 0
+    },
+    "D24.7-01": {
+      "text_sha256": "5f6351bad6c668a1554404b4a6db9cfa0e9683c513298c8f92f608f5c1b61e6b",
+      "math": [],
+      "tables": 0
+    },
+    "D24.7-02": {
+      "text_sha256": "dd1036fcb6eb2cfb3235da3bebc226593edddb1ed804c768d88299e00f82c222",
+      "math": [],
+      "tables": 0
+    },
+    "D24.7-03": {
+      "text_sha256": "d206e8f727fde1e8ff532f060e0a492d7c3cc4c03ada8683d7979d4e2f1eeaf5",
+      "math": [],
+      "tables": 0
+    },
+    "D24.7-04": {
+      "text_sha256": "de78d8e61e2dd46f95335fd3f613c1e4bd66ef41f0c0037f77b10763086d1609",
+      "math": [],
+      "tables": 0
+    },
+    "D24.7-05": {
+      "text_sha256": "6b07496c3a3e4e6f7d189e7ae51c60a479b2e1a3774a3f98ed8baeadebeb9829",
+      "math": [],
+      "tables": 0
+    },
+    "section-24-8": {
+      "text_sha256": "eaffe7528b9ee070cc52e074d500d131dc951f6ace6e9ceacd62616fcc4f2b5a",
+      "math": [
+        "x_i=a_iF+\\sqrt{1-a_i^2}Z_i",
+        "a_i a_j",
+        "x_i=a_iF+\\sqrt{1-a_i^2}Z_i",
+        "\\Phi[(\\Phi^{-1}(Q_i)-a_iF)/\\sqrt{1-a_i^2}]",
+        "a=0"
+      ],
+      "tables": 0
+    },
+    "D24.8-01": {
+      "text_sha256": "c02cf6295faf75962257fa35d13e77c0fa4b273bdc67972239b6e24099df68d6",
+      "math": [],
+      "tables": 0
+    },
+    "D24.8-02": {
+      "text_sha256": "a186286ede6a2fd787459d2a226f0477ebb0152e16ca5623129a3946a17d0240",
+      "math": [],
+      "tables": 0
+    },
+    "D24.8-03": {
+      "text_sha256": "40350128a4f786f2b06ba0a5ab45759a019240b63495430c6f0faae2c8395ad5",
+      "math": [
+        "a=0"
+      ],
+      "tables": 0
+    },
+    "D24.8-04": {
+      "text_sha256": "5111edb6571f6cdbe680e666a110861e1fe023c4d5addb1048710b45654d7fa1",
+      "math": [],
+      "tables": 0
+    },
+    "section-24-9": {
+      "text_sha256": "4fbfe5767011cf86d822d40080426cf3ed2ccc66793b9ada1fd713508841052a",
+      "math": [
+        "L(1-R)V(X,T)",
+        "V(X,T)=\\Phi[(\\Phi^{-1}(Q)+\\sqrt\\rho\\Phi^{-1}(X))/\\sqrt{1-\\rho}]",
+        "L(1-R)V"
+      ],
+      "tables": 0
+    },
+    "D24.9-01": {
+      "text_sha256": "0f8d892fbda60f84472da88c352d465ef48866d8406f4a9846730abf2524c109",
+      "math": [],
+      "tables": 0
+    },
+    "D24.9-02": {
+      "text_sha256": "2ab318328e4df82079d8add4de99fc69202c08629847a654dbc7385de3f7f257",
+      "math": [],
+      "tables": 0
+    },
+    "D24.9-03": {
+      "text_sha256": "406fd57840fa3735c63cf63869ab9eeaddb16825095f53e9021bda49316439c7",
+      "math": [],
+      "tables": 0
+    },
+    "D24.9-04": {
+      "text_sha256": "d7ea424136a64e8e7217cae5959f97e835004b65af232fbe8096b903239b929a",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-1": {
+      "text_sha256": "bed2b5e64b47eb25b80824543d72993a57b0c1a53f860c00c264ebf2dc0daf25",
+      "math": [],
+      "tables": 0
+    },
+    "D25.1-01": {
+      "text_sha256": "4704eee90e1691d89c4a9c6f81cc1a7a13ae6b6d5d50f789bce05f150dc55e4b",
+      "math": [],
+      "tables": 0
+    },
+    "D25.1-02": {
+      "text_sha256": "8fa6ad473a44a750d9a2b767b258cc19ef9f4843b46c4880c27c7f5221a7d0f3",
+      "math": [],
+      "tables": 0
+    },
+    "D25.1-03": {
+      "text_sha256": "b5512b25c021679b1c938f29f92d73ba71bf231f253643723327b1bcfa622e94",
+      "math": [],
+      "tables": 0
+    },
+    "D25.1-04": {
+      "text_sha256": "0192ff6554f49814c4d192acfe9f41b25423d7c938618e18d1ef880ed8f8a77d",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-2": {
+      "text_sha256": "d702d162fcf870ddbad79ee77aa1447c5d26279004ff184fcdddd8a3dc99dd65",
+      "math": [
+        "s=C/(A+B)",
+        "D=4.1150"
+      ],
+      "tables": 1
+    },
+    "D25.2-01": {
+      "text_sha256": "69266953018e5aae23ebf51910ee1897470785b8cac18c9d5d8a36fb96dcb5db",
+      "math": [],
+      "tables": 0
+    },
+    "D25.2-02": {
+      "text_sha256": "bfce8db7deb4f2f94fa7732aa6158eaf72ae3c6303045855da3b2b1cb1538c70",
+      "math": [],
+      "tables": 0
+    },
+    "D25.2-03": {
+      "text_sha256": "c47ecf2dccad44fca93798447dcdc6ae5a3ac012cc1865b182ebdc5100fd695d",
+      "math": [],
+      "tables": 0
+    },
+    "D25.2-04": {
+      "text_sha256": "b4739ea6e4b015e213ef97443061b1e440a3a56d86eb66c53aabe19991488b25",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-3": {
+      "text_sha256": "cfee4ddd7ea5b2a19afbb421cc0dcf778f238341fbd451d39de3ae13bd7409e6",
+      "math": [
+        "s=(C_1+C_2)/(D_1+D_2)",
+        "s_{index}=(C_1+C_2)/(D_1+D_2)"
+      ],
+      "tables": 0
+    },
+    "D25.3-01": {
+      "text_sha256": "c2f5a43846129629c788dcf426390bce741e0e541aa897f7278ba58a17094b10",
+      "math": [],
+      "tables": 0
+    },
+    "D25.3-02": {
+      "text_sha256": "faec467550858842bcbaf7390d673b839db991459e24342a887f7a5465304cbc",
+      "math": [
+        "s_{index}=(C_1+C_2)/(D_1+D_2)"
+      ],
+      "tables": 0
+    },
+    "section-25-4": {
+      "text_sha256": "652d5f5c9989c09f84498d8cbe51869d94131983442ad6d6bc70f34ef2226337",
+      "math": [
+        "P=100-100D(s-c)",
+        "P=100-100D(s-c)"
+      ],
+      "tables": 0
+    },
+    "D25.4-01": {
+      "text_sha256": "ef5fed253f7b0e596ea7e88b266ef7035af8bf0b6c6ff41772d58aa115dafe59",
+      "math": [],
+      "tables": 0
+    },
+    "D25.4-02": {
+      "text_sha256": "5ffacde369df94513e695566135be382ab17a416a4276c609c959a2b9f595564",
+      "math": [],
+      "tables": 0
+    },
+    "D25.4-03": {
+      "text_sha256": "c4e3614d05afc0aa9cd92467dac1f1142a93497eb33a601fff9ae0f1d42e32b6",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-5": {
+      "text_sha256": "70d0e2c7cdd7e50d690d94985dc5c1d22d0d7f243ff7ca6814d1f34f93602609",
+      "math": [],
+      "tables": 0
+    },
+    "D25.5-01": {
+      "text_sha256": "09d7fd6dffb743910cdfd30e7fc0b9aa868c86d40fcd6041f2be75a7c0886a1e",
+      "math": [],
+      "tables": 0
+    },
+    "D25.5-02": {
+      "text_sha256": "791f2e9d00452a38d2b5968c4aa3df738f652daf0a2abf77d204b1cf4b1e8833",
+      "math": [],
+      "tables": 0
+    },
+    "D25.5-03": {
+      "text_sha256": "9fd6e2c6921832db0a5c2c3c184847caa3234206f5ce682ce902442b348a824d",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-6": {
+      "text_sha256": "d609314d27ac48c0eb3516c56533ccc198a3de492cafbc5e7a9459ebbeead6e8",
+      "math": [],
+      "tables": 0
+    },
+    "D25.6-01": {
+      "text_sha256": "3419fa9c7318166e88bcb3d2c8603157aa211093d8c275b15633a05eeac81a73",
+      "math": [],
+      "tables": 0
+    },
+    "D25.6-02": {
+      "text_sha256": "6db1d457226247050d0cadfddd9d79767a458b317bf70304bb291d847105b2c8",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-7": {
+      "text_sha256": "e5ff7890633ba114293e67d67556bc6129d0125ad15b20cf3e107969aa65c1b3",
+      "math": [],
+      "tables": 0
+    },
+    "D25.7-01": {
+      "text_sha256": "e605957693a7ee1e22df79b200bbf99ac2d335317328b49be9b03d78b64ad9a6",
+      "math": [],
+      "tables": 0
+    },
+    "D25.7-02": {
+      "text_sha256": "c880041d444ef273457c9d403d39a440531fec5ab882530828a376ba7242fa4d",
+      "math": [],
+      "tables": 0
+    },
+    "D25.7-03": {
+      "text_sha256": "b770f86a8f68bb77a1eadfc8473127d56207e936bca395590afb3cdf5356eaa1",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-8": {
+      "text_sha256": "aaa3e82c20ef51a67033bbd42b1857121620819590738fa192c985e18b07cd7f",
+      "math": [],
+      "tables": 0
+    },
+    "D25.8-01": {
+      "text_sha256": "138b549de93e9d2326334b91049c65c9d14e87e86a0249b1d31e8b07a230f802",
+      "math": [],
+      "tables": 0
+    },
+    "D25.8-02": {
+      "text_sha256": "036356dd327656ee8ae9bd50c8a105a916b0f65b8d004653b52827ca46bf1f68",
+      "math": [],
+      "tables": 0
+    },
+    "D25.8-03": {
+      "text_sha256": "1fb39ab7e91c8ecd901e6b6fe144ca0a8a5e7f520d4064af613f2095bbd2971a",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-9": {
+      "text_sha256": "fc1532fac084e69b25fac2d30f6cc5792fe3d40d531b5d74d6aeb9b92d5b39e9",
+      "math": [
+        "\\,1-0.98^{100}"
+      ],
+      "tables": 0
+    },
+    "D25.9-01": {
+      "text_sha256": "93f39472ac8beb14b2de69c50f28d666cb0358384842741b6ad9cdfdd0991c13",
+      "math": [
+        "\\,1-0.98^{100}"
+      ],
+      "tables": 0
+    },
+    "D25.9-02": {
+      "text_sha256": "62dca0796d0d5bcd2a7fdf138f538c188b96a974b830d1b29305541e2cc221a3",
+      "math": [],
+      "tables": 0
+    },
+    "D25.9-03": {
+      "text_sha256": "beceeec40403d565106d13c01649bda40686170c58b7981f70873601d633dcd9",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-10": {
+      "text_sha256": "ca34fedda9ca4b056fefe541dd218b8d784ee8fbf4d16ee531f751cd765cc174",
+      "math": [
+        "E_j",
+        "C/(A+B)",
+        "s=C/(A+B)",
+        "C-s(A+B)",
+        "U=C-sD",
+        "n_L=6.25,n_H=12.5",
+        "\\,1.4\\times10^{-9}"
+      ],
+      "tables": 1
+    },
+    "D25.10-01": {
+      "text_sha256": "f2794371372683096d3bcd6bfefd9447bf193c9c235d37624cb1146e95669ee0",
+      "math": [],
+      "tables": 0
+    },
+    "D25.10-02": {
+      "text_sha256": "5ad175745f7d1bc64919cebb07696c58c3c543e016a7054cceda05e271675334",
+      "math": [],
+      "tables": 0
+    },
+    "D25.10-03": {
+      "text_sha256": "3a21b8b5e32fe70d765ad1451800e08ac8903bc0d9e6f9bc0e1c2f8aad930652",
+      "math": [],
+      "tables": 0
+    },
+    "D25.10-04": {
+      "text_sha256": "7628f3e04702d3267386213fbe9d5ba242760821e25568b169b37e085f982e90",
+      "math": [],
+      "tables": 0
+    },
+    "D25.10-05": {
+      "text_sha256": "15c1cc098e5a47eeeb596517bddc1381e82a3078c95a9ec7bdddebf88b3e8a5d",
+      "math": [],
+      "tables": 0
+    },
+    "D25.10-06": {
+      "text_sha256": "3d26c2498bf705d8c8c9cd3a09c5ac730f6ef8348b284d4790c2c6666c6dde6e",
+      "math": [],
+      "tables": 0
+    },
+    "section-25-11": {
+      "text_sha256": "d8e89f1735571651f238eedc96af4c7307139de3c1e7f17929150e575f7394a2",
+      "math": [],
+      "tables": 0
+    },
+    "D25.11-01": {
+      "text_sha256": "1e2a5eed8ad4f64608f089b93b2b087ca73fcdd598d41e18b206714428f272bc",
+      "math": [],
+      "tables": 0
+    },
+    "D25.11-02": {
+      "text_sha256": "784b3767850d3fe6966e001e83120a8faf1bc1ae6f6924d18b6d86e2df1aaa26",
+      "math": [],
+      "tables": 0
+    },
+    "D25.11-03": {
+      "text_sha256": "92ea8d3889be2c05d09a9afa831b934e5c058d7fd73668471a17069074977721",
+      "math": [],
+      "tables": 0
+    },
+    "D25.11-04": {
+      "text_sha256": "0f503f9c1460f2a0cfb057064d0b39ab30f2fa1c0afcc16a3176b91734570845",
+      "math": [],
+      "tables": 0
+    },
+    "D25.11-05": {
+      "text_sha256": "e37166cffb7606a419a3118243e46d3d224fc4dd511d8e672e272afc29a68a47",
+      "math": [],
+      "tables": 0
+    }
+  }
+}
