@@ -2,7 +2,7 @@
 
 - 証跡検査: **PASS**
 - 登録項目: **306**
-- accepted: **225**
+- accepted: **261**
 - 成果物ハッシュ: **既定では未検査（--check-artifacts で追加検査）**
 
 > PASS は台帳の網羅性・証拠の存在・保存ハッシュに対する現在ファイルの鮮度を示します。
@@ -12,10 +12,10 @@
 
 | 状態 | 件数 |
 |---|---:|
-| unreviewed | 81 |
+| unreviewed | 45 |
 | gaps_found | 0 |
 | pending_validation | 0 |
-| accepted | 225 |
+| accepted | 261 |
 | out_of_scope | 0 |
 
 ## 章別件数
@@ -43,10 +43,10 @@
 | 19 | 15 | 0 | 0 | 0 | 15 | 0 |
 | 20 | 9 | 0 | 0 | 0 | 9 | 0 |
 | 21 | 8 | 0 | 0 | 0 | 8 | 0 |
-| 22 | 9 | 9 | 0 | 0 | 0 | 0 |
-| 23 | 7 | 7 | 0 | 0 | 0 | 0 |
-| 24 | 9 | 9 | 0 | 0 | 0 | 0 |
-| 25 | 11 | 11 | 0 | 0 | 0 | 0 |
+| 22 | 9 | 0 | 0 | 0 | 9 | 0 |
+| 23 | 7 | 0 | 0 | 0 | 7 | 0 |
+| 24 | 9 | 0 | 0 | 0 | 9 | 0 |
+| 25 | 11 | 0 | 0 | 0 | 11 | 0 |
 | 26 | 17 | 0 | 0 | 0 | 17 | 0 |
 | 27 | 8 | 0 | 0 | 0 | 8 | 0 |
 | 28 | 8 | 0 | 0 | 0 | 8 | 0 |
@@ -256,42 +256,42 @@
 | 21.6 | 21 | section | Monte Carlo Simulation | accepted |
 | 21.7 | 21 | section | Variance Reduction Procedures | accepted |
 | 21.8 | 21 | section | Finite Difference Methods | accepted |
-| 22.1 | 22 | section | The VaR and ES Measures | unreviewed |
-| 22.2 | 22 | section | Historical Simulation | unreviewed |
-| 22.3 | 22 | section | Model-Building Approach | unreviewed |
-| 22.4 | 22 | section | The Linear Model | unreviewed |
-| 22.5 | 22 | section | The Quadratic Model | unreviewed |
-| 22.6 | 22 | section | Monte Carlo Simulation | unreviewed |
-| 22.7 | 22 | section | Comparison of Approaches | unreviewed |
-| 22.8 | 22 | section | Back Testing | unreviewed |
-| 22.9 | 22 | section | Principal Components Analysis | unreviewed |
-| 23.1 | 23 | section | Estimating Volatility | unreviewed |
-| 23.2 | 23 | section | The Exponentially Weighted Moving Average Model | unreviewed |
-| 23.3 | 23 | section | The Garch(1,1) Model | unreviewed |
-| 23.4 | 23 | section | Choosing between the Models | unreviewed |
-| 23.5 | 23 | section | Maximum Likelihood Methods | unreviewed |
-| 23.6 | 23 | section | Using Garch(1,1) to Forecast Future Volatility | unreviewed |
-| 23.7 | 23 | section | Correlations | unreviewed |
-| 24.1 | 24 | section | Credit Ratings | unreviewed |
-| 24.2 | 24 | section | Historical Default Probabilities | unreviewed |
-| 24.3 | 24 | section | Recovery Rates | unreviewed |
-| 24.4 | 24 | section | Estimating Default Probabilities from Bond Yield Spreads | unreviewed |
-| 24.5 | 24 | section | Comparison of Default Probability Estimates | unreviewed |
-| 24.6 | 24 | section | Using Equity Prices to Estimate Default Probabilities | unreviewed |
-| 24.7 | 24 | section | Credit Risk in Derivatives Transactions | unreviewed |
-| 24.8 | 24 | section | Default Correlation | unreviewed |
-| 24.9 | 24 | section | Credit VaR | unreviewed |
-| 25.1 | 25 | section | Credit Default Swaps | unreviewed |
-| 25.2 | 25 | section | Valuation of Credit Default Swaps | unreviewed |
-| 25.3 | 25 | section | Credit Indices | unreviewed |
-| 25.4 | 25 | section | The Use of Fixed Coupons | unreviewed |
-| 25.5 | 25 | section | CDS Forwards and Options | unreviewed |
-| 25.6 | 25 | section | Basket Credit Default Swaps | unreviewed |
-| 25.7 | 25 | section | Total Return Swaps | unreviewed |
-| 25.8 | 25 | section | Collateralized Debt Obligations | unreviewed |
-| 25.9 | 25 | section | Role of Correlation in a Basket CDS and CDO | unreviewed |
-| 25.10 | 25 | section | Valuation of a Synthetic CDO | unreviewed |
-| 25.11 | 25 | section | Alternatives to the Standard Market Model | unreviewed |
+| 22.1 | 22 | section | The VaR and ES Measures | accepted |
+| 22.2 | 22 | section | Historical Simulation | accepted |
+| 22.3 | 22 | section | Model-Building Approach | accepted |
+| 22.4 | 22 | section | The Linear Model | accepted |
+| 22.5 | 22 | section | The Quadratic Model | accepted |
+| 22.6 | 22 | section | Monte Carlo Simulation | accepted |
+| 22.7 | 22 | section | Comparison of Approaches | accepted |
+| 22.8 | 22 | section | Back Testing | accepted |
+| 22.9 | 22 | section | Principal Components Analysis | accepted |
+| 23.1 | 23 | section | Estimating Volatility | accepted |
+| 23.2 | 23 | section | The Exponentially Weighted Moving Average Model | accepted |
+| 23.3 | 23 | section | The Garch(1,1) Model | accepted |
+| 23.4 | 23 | section | Choosing between the Models | accepted |
+| 23.5 | 23 | section | Maximum Likelihood Methods | accepted |
+| 23.6 | 23 | section | Using Garch(1,1) to Forecast Future Volatility | accepted |
+| 23.7 | 23 | section | Correlations | accepted |
+| 24.1 | 24 | section | Credit Ratings | accepted |
+| 24.2 | 24 | section | Historical Default Probabilities | accepted |
+| 24.3 | 24 | section | Recovery Rates | accepted |
+| 24.4 | 24 | section | Estimating Default Probabilities from Bond Yield Spreads | accepted |
+| 24.5 | 24 | section | Comparison of Default Probability Estimates | accepted |
+| 24.6 | 24 | section | Using Equity Prices to Estimate Default Probabilities | accepted |
+| 24.7 | 24 | section | Credit Risk in Derivatives Transactions | accepted |
+| 24.8 | 24 | section | Default Correlation | accepted |
+| 24.9 | 24 | section | Credit VaR | accepted |
+| 25.1 | 25 | section | Credit Default Swaps | accepted |
+| 25.2 | 25 | section | Valuation of Credit Default Swaps | accepted |
+| 25.3 | 25 | section | Credit Indices | accepted |
+| 25.4 | 25 | section | The Use of Fixed Coupons | accepted |
+| 25.5 | 25 | section | CDS Forwards and Options | accepted |
+| 25.6 | 25 | section | Basket Credit Default Swaps | accepted |
+| 25.7 | 25 | section | Total Return Swaps | accepted |
+| 25.8 | 25 | section | Collateralized Debt Obligations | accepted |
+| 25.9 | 25 | section | Role of Correlation in a Basket CDS and CDO | accepted |
+| 25.10 | 25 | section | Valuation of a Synthetic CDO | accepted |
+| 25.11 | 25 | section | Alternatives to the Standard Market Model | accepted |
 | 26.1 | 26 | section | Packages | accepted |
 | 26.2 | 26 | section | Perpetual American Call and Put Options | accepted |
 | 26.3 | 26 | section | Nonstandard American Options | accepted |

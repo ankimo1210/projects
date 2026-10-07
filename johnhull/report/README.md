@@ -73,6 +73,19 @@ python johnhull/scripts/fast_acceptance_advanced_options.py build
 [受入範囲・制限・再検証](../docs/CHAPTERS_16_21_ACCEPTANCE_2026-10-07.md)を参照。
 登録後は`verify`でread-only確認する。既存Book改訂/main統合は未実施。
 
+## Ch22–25の節別補足教材
+
+全36節・125要件を`site/chapters/ch22.html`〜`ch25.html`へ生成する。
+数値105・説明20の要件と、元系列不足・印刷差・合成検証の範囲を節ごとに保持する。
+
+```bash
+python johnhull/scripts/fast_acceptance_risk_credit.py build
+```
+
+共通venv/PYTHONPATHを使用し、数式表示にはオンライン接続が必要。
+[受入範囲・省略・再検証](../docs/CHAPTERS_22_25_ACCEPTANCE_2026-10-07.md)を参照。
+登録後は`verify`で証跡を生成し直さず確認する。既存Book改訂/main統合は未実施。
+
 ## 図を追加する
 
 `report_builder/figures.py` の `FIGURES` に `FigureSpec` を1つ足すだけ

@@ -21,18 +21,18 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 private modules on main as of 2026-10-05 (later P3–P6 logic is on `codex/p6-logic`, with earlier `codex/p3-logic` / `codex/p4-logic` / `codex/p5-logic` branches retained); the catalogue is `MODEL_INDEX.md` (the original 14 were bsm, trees, mc, nbplot, payoffs, hedging, rates, volatility, fd, swaps, risk, credit, exotics, ir_options).
 
-## 現在地（2026-10-07、Ch1–21受入・P4受入完了）
+## 現在地（2026-10-07、Ch1–25受入・P4/P5受入完了）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
 | 章単位（Hull 11e 全37章） | 上表14行すべてdone | 巻があるという意味。節単位の完全性ではない |
 | Beyond Hull（vol13–28） | すべてdone | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 全節監査の是正 | 第1–5便完了 | 残りは「全節監査と是正」の表 |
-| 節単位の受入 | 受入225・未評価81（73.5%） | Ch1全10節はD3、Ch2–21全182節は承認済みfast-v1で受入。P6正式80/80、P4正式112/112。P0/P1/P2完了、P3正式8/37。ローカルcodex/johnhull-acceptance、main統合は未実施。[Ch16–21受入](docs/CHAPTERS_16_21_ACCEPTANCE_2026-10-07.md) |
+| 節単位の受入 | 受入261・未評価45（85.3%） | Ch1全10節はD3、Ch2–25全218節は承認済みfast-v1で受入。P6正式80/80、P4正式112/112、P5正式36/36。P0/P1/P2完了、P3正式8/37。ローカルcodex/johnhull-acceptance、main統合は未実施。[Ch22–25受入](docs/CHAPTERS_22_25_ACCEPTANCE_2026-10-07.md) |
 | ロジック先行 | P3 36/37、P4 95/95、P5 32/32、P6 54/54 | 開発チャット報告ではP7計算10/11（§36.4入力不足）、P8監査完了・mainへce801e48統合の報告。この受入branchはP6完了時の995188e6が基点。[P6状態](docs/P6_STATUS.md) |
 | 実装再開前の準備 | [準備資料](docs/prep/README.md)完成 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で、製品の節受入とは区別 |
 | 証跡D1 | [方針](docs/EVIDENCE_POLICY.md)。Ch28：依存変更2節を再検査 | §28.2/28.5のbrowser/runtime/pytest・両保管庫PASS。他28節は完全指紋とruntimeが同じ直接のredrawn基点を再利用。新6図/24表示状態と基点画像の両コピー復元PASS。[章記録](docs/validation/chapter-28/acceptance-check.json) |
-| テスト・レビュー | Ch16–21対象475 tests・54表示状態・代表6画像PASS | 独立レビューと台帳41 tests、source/artifactを確認。全suite/全Book/2幅/全画像/両保管庫復元はfast-v1で省略。旧171受入行と対象外252行を保持。[Ch16–21証跡](docs/validation/fast-ch16-21/acceptance-check.json) |
+| テスト・レビュー | Ch22–25対象245 tests・36表示状態・代表4画像PASS | 独立レビューと台帳41 tests、source/artifactを確認。全suite/全Book/2幅/全画像/両保管庫復元はfast-v1で省略。旧225受入行と対象外270行を保持。[Ch22–25証跡](docs/validation/fast-ch22-25/acceptance-check.json) |
 
 `done`・`accepted`・PASS は定義した integration・数値恒等式・再現性の PASS を表す。印刷値がある節ではそのピンも検証する。
 データはすべて synthetic で、市場較正や model performance の承認ではない。
@@ -61,11 +61,11 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 37 priva
 | P2 | Ch 26 の残り（§26.1–§26.8） | 8 | 8 | 0 | — | 完了（M18–M25）。chooser EX-03を受入 |
 | P3 | 金利（Ch 28–34） | 37 | 8 | 3 | ロジック36/37、§33.2は原典入力不足 | Ch28全8節受入、Ch29–34受入29節を保留。本人指示2026-10-05でP4実装へ |
 | P4 | オプションの中核（Ch 10–21） | 112 | 112 | 19 | 計算95/95・説明中心17の補足教材を確認（定性19は旧監査分類） | Ch10–21全112節・254要件をfast-v1受入。今回Ch16–21は475 tests・54表示状態・代表6画像・台帳41 tests PASS。[P4状態](docs/P4_STATUS.md)。Book改訂/main統合は未実施 |
-| P5 | リスク・信用（Ch 22–25） | 36 | 0 | 4 | 計算32/32の初回実装・対象検証完了、説明中心4項目は保留 | codex/p5-logicへ節ごとpush。P5対象196 tests・docstring156・索引6・ruff PASS。入力不足・モデル範囲は[P5状態](docs/P5_STATUS.md)に記録。教材・正式受入は保留 |
+| P5 | リスク・信用（Ch 22–25） | 36 | 36 | 4 | 計算32/32・説明中心4、原典入力不足と範囲を明示 | 全36節・125要件をfast-v1受入。対象245 tests・36表示状態・代表4画像・台帳41 tests・独立レビューPASS。[P5状態](docs/P5_STATUS.md)。Book改訂/main統合は未実施 |
 | P6 | 先物・金利の基礎（Ch 1–9） | 80 | 80 | 31 | 計算54/54、説明中心26（旧監査の分類とは異なる） | Ch1全10節・23要件D3、Ch2–9全70節・206要件fast-v1受入。対象130 tests・70表示状態・代表8画像・台帳41 tests PASS。P6受入完了。[便の記録](docs/CHAPTERS_02_09_ACCEPTANCE_2026-10-07.md)。補足HTMLの受入、Book改訂/main統合は未実施 |
 | P7 | Ch 35–37 | 16 | 0 | 6 | §36.4 はモデル係数・株数・希薄化等の入力不足 | 開発チャット報告では計算10/11の初回実装完了、正式受入は保留。この受入branchの基点には含めない |
-| P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表 | 開発チャット報告では是正・判断・検証完了、main ce801e48（10/7確認）。この便の対象はCh16–21受入 |
-| **計** | | **306** | **225** | **63** | | **73.5%** |
+| P8 | 監査の残り | — | — | — | 下の「全節監査と是正」の残り表 | 開発チャット報告では是正・判断・検証完了、main ce801e48（10/7確認）。この便の対象はCh22–25受入 |
+| **計** | | **306** | **261** | **63** | | **85.3%** |
 
 ### 先に決めること
 
