@@ -1,0 +1,246 @@
+{
+  "status": "PASS",
+  "chapter": 1,
+  "printed_value_count": 37,
+  "values": {
+    "1.3": {
+      "delivery": 1223000.0,
+      "gain_high": 77000.0,
+      "loss_low": -23000.0,
+      "unit_high": 0.077,
+      "unit_low": -0.023,
+      "fair": 63.0,
+      "carry_gain": 4.0,
+      "interest": 3.0,
+      "reverse_gain": 5.0
+    },
+    "1.5": {
+      "call_cost": 2030.0,
+      "call_payoff": 6000.0,
+      "call_profit": 3970.0,
+      "put_premium": 1270.0,
+      "put_payment": 4000.0,
+      "put_loss": 2730.0
+    },
+    "1.7": {
+      "import_fixed": 12225000.0,
+      "export_fixed": 36660000.0,
+      "import_low": 12000000.0,
+      "import_high": 13000000.0,
+      "cost_contract": 100.0,
+      "cost_total": 1000.0,
+      "floor": 27500.0,
+      "floor_after_cost": 26500.0
+    },
+    "1.8": {
+      "spot_outlay": 305500.0,
+      "margin": 20000.0,
+      "spot_high": 19500.0,
+      "future_high": 19425.0,
+      "spot_low": -5500.0,
+      "future_low": -5575.0,
+      "stock_high": 700.0,
+      "stock_low": -500.0,
+      "call_unit": 4.5,
+      "call_payoff": 9000.0,
+      "call_high": 7000.0,
+      "call_low": -2000.0,
+      "ratio": 10.0
+    },
+    "1.9": {
+      "arbitrage": 300.0
+    }
+  },
+  "figures": {
+    "intro_forward": [
+      {
+        "role": "long",
+        "x": [
+          0,
+          1.2,
+          1.223,
+          1.3,
+          2
+        ],
+        "y": [
+          -1223000.0,
+          -23000.0,
+          0.0,
+          77000.0,
+          777000.0
+        ]
+      },
+      {
+        "role": "short",
+        "x": [
+          0,
+          1.2,
+          1.223,
+          1.3,
+          2
+        ],
+        "y": [
+          1223000.0,
+          23000.0,
+          0.0,
+          -77000.0,
+          -777000.0
+        ]
+      }
+    ],
+    "intro_options": [
+      {
+        "role": "long_call",
+        "x": [
+          0,
+          250,
+          290,
+          340,
+          400,
+          500
+        ],
+        "y": [
+          -2030.0,
+          -2030.0,
+          -2030.0,
+          -2030.0,
+          3970.0,
+          13970.0
+        ]
+      },
+      {
+        "role": "short_put",
+        "x": [
+          0,
+          250,
+          290,
+          340,
+          400,
+          500
+        ],
+        "y": [
+          -27730.0,
+          -2730.0,
+          1270.0,
+          1270.0,
+          1270.0,
+          1270.0
+        ]
+      }
+    ],
+    "intro_protection": [
+      {
+        "role": "unhedged",
+        "x": [
+          0,
+          20,
+          27.5,
+          28,
+          40
+        ],
+        "y": [
+          0.0,
+          20000.0,
+          27500.0,
+          28000.0,
+          40000.0
+        ]
+      },
+      {
+        "role": "insured_after_cost",
+        "x": [
+          0,
+          20,
+          27.5,
+          28,
+          40
+        ],
+        "y": [
+          26500.0,
+          26500.0,
+          26500.0,
+          27000.0,
+          39000.0
+        ]
+      }
+    ],
+    "intro_speculation": [
+      {
+        "role": "stock",
+        "x": [
+          0,
+          15,
+          20,
+          22.5,
+          27,
+          30
+        ],
+        "y": [
+          -2000.0,
+          -500.0,
+          0.0,
+          250.0,
+          700.0,
+          1000.0
+        ]
+      },
+      {
+        "role": "call",
+        "x": [
+          0,
+          15,
+          20,
+          22.5,
+          27,
+          30
+        ],
+        "y": [
+          -2000.0,
+          -2000.0,
+          -2000.0,
+          -2000.0,
+          7000.0,
+          13000.0
+        ]
+      }
+    ]
+  },
+  "labels": {
+    "GBP購入額（USD）": "delivery",
+    "GBP高の受払（USD）": "gain_high",
+    "GBP安の受払（USD）": "loss_low",
+    "GBP高の単位受払（USD/GBP）": "unit_high",
+    "GBP安の単位受払（USD/GBP）": "unit_low",
+    "公正forward（USD/株）": "fair",
+    "割高forwardの利益（USD）": "carry_gain",
+    "1年の利息（USD）": "interest",
+    "割安forwardの改善額（USD）": "reverse_gain",
+    "callの購入代金（USD）": "call_cost",
+    "callの満期受払（USD）": "call_payoff",
+    "callの利益（USD）": "call_profit",
+    "put売りの代金受取（USD）": "put_premium",
+    "put売りの満期支払（USD）": "put_payment",
+    "put売りの損失額（USD）": "put_loss",
+    "輸入の固定支払（USD）": "import_fixed",
+    "輸出の固定受取（USD）": "export_fixed",
+    "GBP安の無ヘッジ支払（USD）": "import_low",
+    "GBP高の無ヘッジ支払（USD）": "import_high",
+    "putの1契約費用（USD）": "cost_contract",
+    "putの総保険費用（USD）": "cost_total",
+    "保有価値の床（USD）": "floor",
+    "保険費用後の床（USD）": "floor_after_cost",
+    "GBP現物の購入費（USD）": "spot_outlay",
+    "先物の初期証拠金（USD）": "margin",
+    "GBP高の現物利益（USD）": "spot_high",
+    "GBP高の先物利益（USD）": "future_high",
+    "GBP安の現物損益（USD）": "spot_low",
+    "GBP安の先物損益（USD）": "future_low",
+    "株高の株利益（USD）": "stock_high",
+    "株安の株損益（USD）": "stock_low",
+    "callの単位受払（USD/株）": "call_unit",
+    "株高のcall利益（USD）": "call_high",
+    "株安のcall損益（USD）": "call_low",
+    "株高シナリオの利益比（倍）": "ratio",
+    "同時売買の残余（USD）": "arbitrage"
+  }
+}

@@ -1,0 +1,654 @@
+{
+  "profile": "fast-v1",
+  "base": "0c72b31d",
+  "chapters": [
+    22,
+    23,
+    24,
+    25
+  ],
+  "out": "docs/validation/fast-ch22-25",
+  "config": "docs/acceptance/fast-ch22-25.json",
+  "note": "docs/CHAPTERS_22_25_ACCEPTANCE_2026-10-07.md",
+  "policy": "docs/FAST_ACCEPTANCE_GUIDE.md",
+  "details": "docs/lessons/risk-credit-chapter-details.json",
+  "section_contracts": {
+    "22.1": {
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_definitions.py"
+      ]
+    },
+    "22.2": {
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_historical.py"
+      ]
+    },
+    "22.3": {
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_normal.py"
+      ]
+    },
+    "22.4": {
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_linear.py"
+      ]
+    },
+    "22.5": {
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_quadratic.py"
+      ]
+    },
+    "22.6": {
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_simulation.py"
+      ]
+    },
+    "22.8": {
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_backtesting.py"
+      ]
+    },
+    "22.9": {
+      "implementation": "hullkit/src/hullkit/_market_risk.py",
+      "tests": [
+        "hullkit/tests/test_market_risk_pca.py"
+      ]
+    },
+    "23.1": {
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_basics.py"
+      ]
+    },
+    "23.2": {
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_ewma.py"
+      ]
+    },
+    "23.3": {
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_garch.py"
+      ]
+    },
+    "23.5": {
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_mle.py"
+      ]
+    },
+    "23.6": {
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_forecast.py"
+      ]
+    },
+    "23.7": {
+      "implementation": "hullkit/src/hullkit/_volatility_estimation.py",
+      "tests": [
+        "hullkit/tests/test_volatility_estimation_covariance.py"
+      ]
+    },
+    "24.2": {
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_probabilities.py"
+      ]
+    },
+    "24.4": {
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_bond_curve.py"
+      ]
+    },
+    "24.5": {
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_measures.py"
+      ]
+    },
+    "24.6": {
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_merton.py"
+      ]
+    },
+    "24.7": {
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_derivatives.py"
+      ]
+    },
+    "24.8": {
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_dependence.py"
+      ]
+    },
+    "24.9": {
+      "implementation": "hullkit/src/hullkit/_credit_risk.py",
+      "tests": [
+        "hullkit/tests/test_credit_risk_var.py"
+      ]
+    },
+    "25.1": {
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_cashflows.py"
+      ]
+    },
+    "25.2": {
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_legs.py"
+      ]
+    },
+    "25.3": {
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_index.py"
+      ]
+    },
+    "25.4": {
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_fixed_coupon.py"
+      ]
+    },
+    "25.5": {
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_options.py"
+      ]
+    },
+    "25.6": {
+      "implementation": "hullkit/src/hullkit/_credit_portfolio_extensions.py",
+      "tests": [
+        "hullkit/tests/test_credit_portfolio_extensions_basket.py"
+      ]
+    },
+    "25.7": {
+      "implementation": "hullkit/src/hullkit/_credit_contracts.py",
+      "tests": [
+        "hullkit/tests/test_credit_contracts_trs.py"
+      ]
+    },
+    "25.8": {
+      "implementation": "hullkit/src/hullkit/_credit_portfolio_extensions.py",
+      "tests": [
+        "hullkit/tests/test_credit_portfolio_extensions_waterfall.py"
+      ]
+    },
+    "25.9": {
+      "implementation": "hullkit/src/hullkit/_credit_portfolio_extensions.py",
+      "tests": [
+        "hullkit/tests/test_credit_portfolio_extensions_correlation.py"
+      ]
+    },
+    "25.10": {
+      "implementation": "hullkit/src/hullkit/_credit_portfolio_extensions.py",
+      "tests": [
+        "hullkit/tests/test_credit_portfolio_extensions_valuation.py"
+      ]
+    },
+    "25.11": {
+      "implementation": "hullkit/src/hullkit/_credit_alternatives.py",
+      "tests": [
+        "hullkit/tests/test_credit_alternatives.py"
+      ]
+    }
+  },
+  "calculation_rows": {
+    "22.1": [
+      "§22.1",
+      "`_market_risk.py`",
+      "固有の印刷価格なし。正常/tの同じVaR・異なるES、sqrt(N)とAR(1)集計分散。独立裾積分・共分散和、固定seed MCの分位点6SE",
+      "計算部分完了。loss_meanは正が損失。AR(1)はstationary日次SD。規制・説明/教材/正式受入は保留"
+    ],
+    "22.2": [
+      "§22.2",
+      "`_market_risk.py`",
+      "Table22.3の4行（印刷丸め許容.06千ドル）、Table22.4 VaR422.291/ES669.391、BRW VaR653.541/ES約833.2。独立Decimal cash、整数重複分布・分位関数の裾積分",
+      "計算部分完了。501日原系列は未保有、既知15最悪損失の下側はテスト用合成補完。p521累積.004833は誤植。Hull/Excel/stressedのVaR規約を分離し、250点ESはfractional tail mass。説明・受入保留"
+    ],
+    "22.3": [
+      "§22.3",
+      "`_market_risk.py`",
+      "MSFT/AT&T/相関.3のVaR1,471,300/367,800/1,620,100、ESの厳密値。印刷MSFT ES1,687,000はz2.326で再現。独立正規/対数正規裾積分・固定seed相関MC6SE",
+      "計算部分完了。MSFT印刷ESと厳密ES1,685,629.5の丸め規約差を分離。正規はloss_mean/利益平均の符号を明示、lognormalにsqrt(N)を仮定しない。説明・受入保留"
+    ],
+    "22.4": [
+      "§22.4",
+      "`_market_risk.py`",
+      "Tables22.7/8 分散14404（印刷14406.193との丸め差）、VaR279.222/ES319.894、Ex22.1 sigma7.099、本文3CF30000/30000/1030000。独立多変量求積・債券再評価・mapping求根・FX/OIS cashflow",
+      "計算部分完了。mappingは各cashflowのPV/分散を保存、bookの全cross covariance保存は保証しない。TN25配布先はエラーページ、公式検索に残る設定は確認したが全中間印刷pinは保留。説明・受入保留"
+    ],
+    "22.5": [
+      "§22.5",
+      "`_market_risk.py`",
+      "脚注10の3 raw moments、TN10 mean−.2/SD2.2/skew−.4→normal−5.326/CF−5.976。独立多変量Gauss求積・二次式の正規区間CDF求根・full Hessian再評価",
+      "計算完了。CFは第三モーメントの近似で強い歪度で精度・単調性の保証なし。TN10の公式索引の式・例は確認、配布PDF取得不可。説明・受入保留"
+    ],
+    "22.6": [
+      "§22.6",
+      "`_market_risk.py`",
+      "5000標本99%50位/95%250位。独立線形正規と単調BSM分位点を固定seed MC6SEで照合、full/partial同一shock・実際の10日maturity再評価",
+      "計算完了。Gaussian arithmetic return、future_bookがtheta/carryの扱いを決める。sqrt(N)はoptionに厳密でない。説明・受入保留"
+    ],
+    "22.8": [
+      "§22.8",
+      "`_market_risk.py`",
+      "本文1%/7%（100日を明示した合成例）。独立二項和・尤度式・遷移表、将来値を変えても事前予測が変わらないこと",
+      "計算完了。超過頻度だけでESやモデル全体の妥当性は判定しない。本文の標本数は未指定。説明・受入保留"
+    ],
+    "22.9": [
+      "§22.9",
+      "`_market_risk.py`",
+      "全64loading/8SD、総分散152.5185、87.3%/95.6%/.96bp/2.42bp。Table22.11露出−1.998/−3.067→sigma25.49837/VaR59.31808。独立SVD/固有分解・trace・符号不変",
+      "計算完了。2631観測は未保有。印刷sigma25.45/VaR59.2は丸め表から一致しないため補正せず記録。市場説明率とbook残余riskを区別。説明・受入保留"
+    ],
+    "23.1": [
+      "§23.1",
+      "`_volatility_estimation.py`",
+      "固有印刷価格なし。式23.1–6のlog/sample mean/m−1とsimple/zero mean/m、ARCH重みを独立小標本算術と解析MLEで照合",
+      "計算完了。日次分散を返し年率換算は別。ARCH historyは予測日前までのchronological履歴。説明・受入保留"
+    ],
+    "23.2": [
+      "§23.2",
+      "`_volatility_estimation.py`",
+      "Ex23.1 lambda.9/vol.01/return.02→variance.00013・vol1.14%。独立幾何重み和+lambda^m初期項、予測への当日return不混入",
+      "計算完了。n+1 forecastsで最後は翌日予測、initial必須。RiskMetrics.94を普遍最適としない。説明・受入保留"
+    ],
+    "23.3": [
+      "§23.3",
+      "`_volatility_estimation.py`",
+      "Ex23.2 gamma.01/VL.0002・更新.00023516→vol1.53%。独立beta幾何和と再帰・EWMA極限、連続近似a.01/xi=.13sqrt2",
+      "計算完了。betaは履歴重み、alpha+betaは予測持続性。非定常時はVLなし。連続対応は原典の近似。説明・受入保留"
+    ],
+    "23.5": [
+      "§23.5",
+      "`_volatility_estimation.py`",
+      "p1/10=.1、Table23.1先頭4variance/尤度、VL.0001391、Table23.2全30ACFからQ2139.60985/12.94915・閾値25。独立normal密度・別optimizer・grid",
+      "計算完了。1259価格未保有で原系列fit/全尤度10837.4227は保留。尤度第三行8.6333とACF統計2170/13.2との不一致を保持。自由度補正は明示。説明・受入保留"
+    ],
+    "23.6": [
+      "§23.6",
+      "`_volatility_estimation.py`",
+      "10/100日v.0002594/.0001479、Table23.3 26.5/24.9/23.8/22.0/19.5%、Table23.4 +1point→.90/.74/.61/.41/.10point。独立quad・反復期待値・中心差分",
+      "計算完了。sqrt(E[v])とE[sqrt(v)]、P予測とQ IVを区別。ショックは相対1%でなく1percentage point。説明・受入保留"
+    ],
+    "23.7": [
+      "§23.7",
+      "`_volatility_estimation.py`",
+      "Ex23.3 variance.00009625/.00041125/cov.00012025→rho.6044。式23.17 book variance−.6・最小eigen−.2727922。独立outer-product幾何和・matrix反復・PSD特異例",
+      "計算完了。ゼロvarianceの相関はNaN、PSD特異行列は許容。ペア別範囲内でもglobal PSDとは限らない。説明・受入保留"
+    ],
+    "24.2": [
+      "§24.2",
+      "`_credit_risk.py`",
+      "Table24.1 BBB2年.29%/CCC3年4.77%/2年生存63.36%/条件付き7.53%。独立ODEと生存比・確率積",
+      "計算完了。Table24.1は観測入力で再推定しない。累積/区間/条件付きPDと年率hazard、P/Qを明示。説明・受入保留"
+    ],
+    "24.4": [
+      "§24.4",
+      "`_credit_risk.py`",
+      "Ex24.1平均2.5/3/3.25%・区間2.5/3.5/3.75%。Ex24.2価格/差/3hazard/forward104.12/102.71・lossPV63.33/60.40の全21印刷値。独立同時root+生存CF/回収events",
+      "計算完了。半年中央default・額面回収でISDA慣行モデルとは異なる。割引curveと信用curveを分離。説明・受入保留"
+    ],
+    "24.5": [
+      "§24.5",
+      "`_credit_risk.py`",
+      "Tables24.2/3の全ratio/difference/compensation/excess28値、BBB7年hazard.34%/Q3%/Baa損失spread28.2bp。独立Decimal比/積・指数CDF求根",
+      "計算完了。P/Q変換モデルではなく観測入力の比較。印刷補償spread整数bpを先に丸めた差とraw差を区別。式24.10参照は24.1の原典誤参照。説明・受入保留"
+    ],
+    "24.6": [
+      "§24.6",
+      "`_credit_risk.py`",
+      "Ex24.3全7値 asset12.40/vol.2123/d2 1.1408/PD12.7%/debt9.40/riskfree9.51/loss約1.2%。独立payoff/delta求積+log root（T1/2.5）、固定seed default6SE",
+      "計算完了。N(−d2)はQ PD。指定P driftの構造PDは非公開EDFの較正ではない。単一満期/満期default仮定。説明・受入保留"
+    ],
+    "24.7": [
+      "§24.7",
+      "`_credit_risk.py`",
+      "Ex24.4 5/0/0/5、40→15・10000中250位、Ex24.5 2.91、Ex24.6全7値CVA5.77/調整84.71。独立lognormal求積・共通GBM MC6SE・担保lag恒等式・factor求積",
+      "計算完了。1oz単位と1m oz総額を区別。PDは無条件区間、LGD/割引各1回。wrong-wayは明示したGaussian factor例で一般契約/first-to-default解ではない。担保lagは指定grid段数。説明・受入保留"
+    ],
+    "24.8": [
+      "§24.8",
+      "`_credit_risk.py`",
+      "5/10%とEx24.7全5threshold（計7値）、10社rho.2/5年PD15%を固定seed MC6SE。独立正規CDF逆積分・条件付き2latent積分・factor積分",
+      "計算完了。latent相関、indicator相関、default時刻相関を区別。year0は年限後生存でnever defaultではない。TN26の詳細原文は未取得。説明・受入保留"
+    ],
+    "24.9": [
+      "§24.9",
+      "`_credit_risk.py`",
+      "Ex24.8 PD12.8%/VaR5.13m、Table24.4全7threshold。独立factor/5000社有限pool MC6SE、bond cashflow再評価・2社状態列挙",
+      "計算完了。total loss VaRとEL控除capitalを分離。格付再評価は渡したspread曲線のflat例、default回収は額面。BBB→A原典区間逆転/既存docstring残差記述の問題は未変更。説明・受入保留"
+    ],
+    "25.1": [
+      "§25.1",
+      "`_credit_contracts.py`",
+      "90bp→四半期22.5bp/225000、回収35%→65m・2か月経過150000、250/260bp→2.5/2.6%、保護付きyield5%の全7値。独立Decimal cash・生存/default CF列挙",
+      "計算完了。年分数の概算規約でcalendar dates/auction CTD/legal契約モデルは対象外。信用事由と取引相手defaultを区別。説明・受入保留"
+    ],
+    "25.2": [
+      "§25.2",
+      "`_credit_contracts.py`",
+      "Tables25.1–5全54cell/合計+7結果=61値、par123bp/MTM±.0111/100bp→hazard1.63%/binary205bp。独立default年CF列挙・指数時刻MC6SE・回収再較正",
+      "計算完了。中央default/元本1・spread1の係数。quote固定でhazard再較正、通常CDS回収近似不感応を厳密不変としない。説明・受入保留"
+    ],
+    "25.3": [
+      "§25.3",
+      "`_credit_contracts.py`",
+      "125社800000×65/66bp→650000/660000、1社減少5280、1000/10bp単純平均505bp。独立2社default状態CF・zero NPV求根でindex加重",
+      "計算完了。実際の加重priceは原典入力不足でpinなし、合成r/T/Rを明記。観測125社指数の現在仕様は扱わない。説明・受入保留"
+    ],
+    "25.4": [
+      "§25.4",
+      "`_credit_contracts.py`",
+      "Ex25.1年率.345/.406%・hazard.5717%・D4.447・price100.27の5値。独立default時刻別CF+upfront NPV0・受払符号",
+      "計算完了。365/360固定例で閏年/任意calendar日数一般化なし。Dはpremium PV係数でbond durationと異なる。説明・受入保留"
+    ],
+    "25.5": [
+      "§25.5",
+      "`_credit_contracts.py`",
+      "原典1年開始/5年保護/280bpの契約設定と期前default KO。価格印刷なし。明示した合成vol等で独立lognormal payoff求積・parity・ゼロvol",
+      "計算完了。原典価格/vol入力不足で価格pinなし。Blackはforward annuity測度のspread lognormal仮定、Aは時点0の無条件生存/割引込み。front-end protectionは別範囲。説明・受入保留"
+    ],
+    "25.6": [
+      "§25.6",
+      "`_credit_portfolio_extensions.py`",
+      "本文に価格印刷なし。3社のadd-up/first/second/kth発動と終了。独立27default年状態CF列挙による3順位のprice",
+      "計算完了。例のnotional/回収・hazardは明示合成入力。本文価格Ex25.3は§25.10で扱う。法的netting/同時defaultの契約規約は別範囲、同時刻は入力順。説明・受入保留"
+    ],
+    "25.7": [
+      "§25.7",
+      "`_credit_contracts.py`",
+      "本文100m・5年・floating+25bp、+10%→10m/−15%→−15m。独立借入購入のcash accountでcoupon/financing/priceの全CFを照合",
+      "計算完了。固定initial notionalベースのprice marks、couponは金額。fair spread/信用調整の本文入力なし。calendar/periodic notional resetは別規約。説明・受入保留"
+    ],
+    "25.8": [
+      "§25.8",
+      "`_credit_portfolio_extensions.py`",
+      "本文100mの5/15/80mトランシェ、loss2mでequity3m、loss6mでequity0/mezz14m。1000/100/10bpの残存元本premium。独立優先順位cash allocationと総損失保存",
+      "計算完了。整数default件数に変換せず任意金額lossを配分。Table25.6は2007–2009年観測quote入力で再推定しない。既存vol12境界5/15%との差は据置。説明・受入保留"
+    ],
+    "25.9": [
+      "§25.9",
+      "`_credit_portfolio_extensions.py`",
+      "100社5年PD2%：独立>=1 86.74%、>=10 .0034%、完全相関100社2%/0社98%。独立組合せ和・latent-normal MC6SE、総期待loss保存とtranche再配分",
+      "計算完了。2%は5年累積PD。rho=1は解析2状態。全層同riskは回収0条件、40%に一般化せず明示。説明・受入保留"
+    ],
+    "25.10": [
+      "§25.10",
+      "`_credit_portfolio_extensions.py`",
+      "Ex25.2/Table25.7/Ex25.3/Table25.8の113印刷値、348/153bp。独立Gaussian default時刻MC6SE、標準quote再価格と単調凹loss curveの4–8%補間",
+      "計算完了。源60点・未丸めhazard、midpoint default規約。非標準区間はcompound較正の全標準leg/time curveを保存した区分線形補間、PV loss単独からannuityは推測しない。市場無裁定の普遍保証ではなく入力curve制約を検査。説明・受入保留"
+    ],
+    "25.11": [
+      "§25.11",
+      "`_credit_alternatives.py`",
+      "原典計算結果なし、double-t自由度4。ASB countを独立2^n状態積分、t潜在変数MC、因子依存PD/terminal loss MC、hazard混合を独立default年CF列挙・既知weights回復",
+      "計算範囲完了。因子依存モデルはPDを再較正した明示合成例、著者の全市場モデル再現ではない。mixtureはfixed hazard gridの静的同質版でquote不足時非一意。CR-11動的モデル・その他全copula・市場parameter不足は研究項目、説明・受入保留"
+    ]
+  },
+  "numerical_requirements": {
+    "22.1": [
+      "D22.1-01",
+      "D22.1-03",
+      "D22.1-04"
+    ],
+    "22.2": [
+      "D22.2-01",
+      "D22.2-02",
+      "D22.2-03",
+      "D22.2-04",
+      "D22.2-05",
+      "D22.2-06",
+      "D22.2-07",
+      "D22.2-08"
+    ],
+    "22.3": [
+      "D22.3-01",
+      "D22.3-02",
+      "D22.3-03",
+      "D22.3-04",
+      "D22.3-05",
+      "D22.3-06",
+      "D22.3-07"
+    ],
+    "22.4": [
+      "D22.4-01",
+      "D22.4-02",
+      "D22.4-03",
+      "D22.4-04",
+      "D22.4-05",
+      "D22.4-06",
+      "D22.4-07"
+    ],
+    "22.5": [
+      "D22.5-01",
+      "D22.5-02",
+      "D22.5-04"
+    ],
+    "22.6": [
+      "D22.6-01",
+      "D22.6-02",
+      "D22.6-03",
+      "D22.6-04"
+    ],
+    "22.7": [],
+    "22.8": [
+      "D22.8-01",
+      "D22.8-02"
+    ],
+    "22.9": [
+      "D22.9-01",
+      "D22.9-02",
+      "D22.9-03"
+    ],
+    "23.1": [
+      "D23.1-01",
+      "D23.1-02"
+    ],
+    "23.2": [
+      "D23.2-01"
+    ],
+    "23.3": [
+      "D23.3-01",
+      "D23.3-02"
+    ],
+    "23.4": [],
+    "23.5": [
+      "D23.5-01",
+      "D23.5-02",
+      "D23.5-03",
+      "D23.5-04"
+    ],
+    "23.6": [
+      "D23.6-01",
+      "D23.6-02"
+    ],
+    "23.7": [
+      "D23.7-01",
+      "D23.7-02"
+    ],
+    "24.1": [],
+    "24.2": [
+      "D24.2-01",
+      "D24.2-02",
+      "D24.2-03"
+    ],
+    "24.3": [],
+    "24.4": [
+      "D24.4-01",
+      "D24.4-02",
+      "D24.4-03"
+    ],
+    "24.5": [
+      "D24.5-01",
+      "D24.5-02"
+    ],
+    "24.6": [
+      "D24.6-01",
+      "D24.6-02",
+      "D24.6-03"
+    ],
+    "24.7": [
+      "D24.7-01",
+      "D24.7-02",
+      "D24.7-03",
+      "D24.7-05"
+    ],
+    "24.8": [
+      "D24.8-01",
+      "D24.8-02",
+      "D24.8-03"
+    ],
+    "24.9": [
+      "D24.9-01",
+      "D24.9-02",
+      "D24.9-03",
+      "D24.9-04"
+    ],
+    "25.1": [
+      "D25.1-01",
+      "D25.1-02",
+      "D25.1-04"
+    ],
+    "25.2": [
+      "D25.2-01",
+      "D25.2-02",
+      "D25.2-03",
+      "D25.2-04"
+    ],
+    "25.3": [
+      "D25.3-01",
+      "D25.3-02"
+    ],
+    "25.4": [
+      "D25.4-01",
+      "D25.4-02",
+      "D25.4-03"
+    ],
+    "25.5": [
+      "D25.5-01",
+      "D25.5-02",
+      "D25.5-03"
+    ],
+    "25.6": [
+      "D25.6-01",
+      "D25.6-02"
+    ],
+    "25.7": [
+      "D25.7-01",
+      "D25.7-02"
+    ],
+    "25.8": [
+      "D25.8-01"
+    ],
+    "25.9": [
+      "D25.9-01",
+      "D25.9-02",
+      "D25.9-03"
+    ],
+    "25.10": [
+      "D25.10-01",
+      "D25.10-02",
+      "D25.10-03",
+      "D25.10-04",
+      "D25.10-05",
+      "D25.10-06"
+    ],
+    "25.11": [
+      "D25.11-01",
+      "D25.11-02",
+      "D25.11-03",
+      "D25.11-04"
+    ]
+  },
+  "non_numerical_reasons": {
+    "D22.1-02": "刊行時点の規制史とVaR/ESの使い方の説明。現在の規制適用や資本計算モデルは対象外。",
+    "D22.5-03": "theta項を省く理由を説明する。数値比較は下調べの検証案で、今回の独立モデル実装要件にはしない。",
+    "D22.6-05": "EVTとJamshidian–Zhuの紹介。各手法の実装や別巻の再検証は本要件の対象外。",
+    "D23.2-02": "lambdaの意味と歴史的RiskMetricsの設定を説明する。元調査や普遍的な最適lambdaは検証対象外。",
+    "D24.4-04": "割引曲線選択と信用曲線の違いを説明する。特定の市場curveへの較正や現行取引慣行は対象外。",
+    "D24.5-03": "P/Qの確率の使い分けとプレミアムの理由を説明する。観測表を一般的な変換モデル・定理とはしない。",
+    "D24.7-04": "格下げトリガーとAIGの歴史例の説明。同時請求の実データによる推定や現行制度判断は対象外。",
+    "D24.8-04": "誘導型/構造型の比較を説明する。原典で指定されていない動的拡張は対象外。",
+    "D25.1-03": "CDSと保険の契約の違い、非対称情報、信用移転を説明する。現在の法的判断や実例の因果推定は対象外。",
+    "D25.7-03": "融資との関係と相手方/原資産信用の説明。公正spreadを求める市場入力が不足し価格較正は対象外。",
+    "D25.8-02": "cash/synthetic、担保、single-trancheの契約構造を説明する。現在の市場条件の価格計算は要求しない。",
+    "D25.8-03": "原典の標準境界と観測quoteの単位を説明する。Table25.6の歴史気配を再推定せず、現行標準や市場較正は対象外。",
+    "D25.11-05": "静的と動的、構造型/誘導型/トップダウンを説明する。CR-11の動的研究や未指定市場モデルは今回の数値受入範囲外。",
+    "D22.7-01": "本節は刊行時点の定義・制度・モデル比較の説明。数値モデルの実装は要求せず、原典と配布HTMLの意味を確認する。",
+    "D22.7-02": "本節は刊行時点の定義・制度・モデル比較の説明。数値モデルの実装は要求せず、原典と配布HTMLの意味を確認する。",
+    "D23.4-01": "本節は刊行時点の定義・制度・モデル比較の説明。数値モデルの実装は要求せず、原典と配布HTMLの意味を確認する。",
+    "D24.1-01": "本節は刊行時点の定義・制度・モデル比較の説明。数値モデルの実装は要求せず、原典と配布HTMLの意味を確認する。",
+    "D24.1-02": "本節は刊行時点の定義・制度・モデル比較の説明。数値モデルの実装は要求せず、原典と配布HTMLの意味を確認する。",
+    "D24.3-01": "本節は刊行時点の定義・制度・モデル比較の説明。数値モデルの実装は要求せず、原典と配布HTMLの意味を確認する。",
+    "D24.3-02": "本節は刊行時点の定義・制度・モデル比較の説明。数値モデルの実装は要求せず、原典と配布HTMLの意味を確認する。"
+  },
+  "samples": {
+    "22": "22.2",
+    "23": "23.5",
+    "24": "24.7",
+    "25": "25.10"
+  },
+  "limitations": {
+    "22.1": "loss_meanは正が損失。期間sqrt(N)は平均ゼロiid正規なら厳密、AR(1)や一般分布では別。規制史は刊行時点で現行適用の保証ではない。離散ESは分位点の裾積分を使う。",
+    "22.2": "501日原系列なし。15印刷損失の下側は合成補完であり観測データの全再生ではない。表22.2丸め伝播に.06千ドル幅。VaRのHull/Excel/stressed規約を分ける。p521累積.004833は誤記、250点ESはfractional tail mass。",
+    "22.3": "利益平均とloss_meanの符号を分ける。MSFT厳密ES1685629.5と印刷1687000はz2.326の中間丸め規約が異なる。対数正規へsqrt(N)を厳密適用しない。",
+    "22.4": "丸め表の分散14404と印刷14406.193の差を保持。cash-flow mappingは個別PV/分散を保存するがbook全cross covarianceの保存を保証しない。TN25全中間表は取得できず未検証。",
+    "22.5": "CFは近似で強い歪度に精度/単調性の保証なし。脚注10はraw moments、CFには中心化が必要。TN10 PDF未取得、公式索引例の−5.326/−5.976と独立計算を区別。small gamma修正を保持。",
+    "22.6": "Gaussian arithmetic returnsと明示したfuture_bookを使用。theta/carryを指定し10日残存満期で再評価。optionへsqrt(N)は近似。EVT等の紹介は実装受入ではない。",
+    "22.7": "分布仮定、非線形性、mapping、vol更新と費用を比較。HSのvol更新は容易でないという本文表現を、不可能と読み替えない。filtered HSは別範囲。",
+    "22.8": "1%/7%には本文の標本数がない。100日例は明示合成入力。超過頻度だけでESや全モデルの妥当性を判定せず、時間順を守る。",
+    "22.9": "元2631観測なし。印刷loadingからsigma25.49837/VaR59.31808、原典25.45/59.2と不一致を保持。市場説明率とbook残余risk、無相関と独立を区別。",
+    "23.1": "log return/標本平均/m−1とsimple return/平均ゼロ/mを区別。日次分散の年率化は別。予測日前までのchronological履歴だけを使う。",
+    "23.2": "initial variance必須、lambda^mの初期項を残す。最後は翌日予測。当日returnをその日の予測に混入しない。RiskMetrics.94は歴史設定で普遍最適ではない。",
+    "23.3": "betaは過去観測への重み、alpha+betaは予測持続性。非定常時は有限VLなし。連続時間対応は原典近似である。",
+    "23.4": "負omegaなど制約なしfitの不適切解という原典の議論と、最初から制約を設けたfitを分ける。EWMA/GARCH選択の市場性能承認ではない。",
+    "23.5": "元1259価格なし、歴史fit/全尤度10837.4227は未再現。第3行8.6333対8.633362、Q2170/13.2対2139.60985/12.94915の差を保持。初期化/自由度/多極値探索を明示し最適の一意性は証明しない。",
+    "23.6": "sqrt(E[v])とE[sqrt(v)]、P予測とQ IVを分ける。vol shockは相対1%でなく1point。alpha=beta=0も有効な定数varianceとして扱う。",
+    "23.7": "zero varianceの相関はNaN。PSD特異は許容し、ペア別の相関範囲内だけではglobal PSDを保証しない。日次/年率と同一重みを揃える。",
+    "24.1": "格付けは序列でPDそのものではない。投資適格は無リスクではない。記号の例外と原典時点の表記を保持。",
+    "24.2": "歴史表は観測入力として読み、再推定しない。累積/区間/条件付きPD、平均/瞬時hazard、P/Qを区別。",
+    "24.3": "回収はdefault直後の市場価値/額面。最終回収cashとは別。40/60/30%は本文説明値、ランダム回収のモデル較正は本節の対象外。",
+    "24.4": "中央default/額面回収の教材モデルでISDA標準慣行とは異なる。割引curveと信用curveを分け、最後のhazardはflat外挿。",
+    "24.5": "P/Q変換の市場モデルではなく観測入力の比較。整数補償bpを先丸めした差とraw差を区別。式24.10という参照は24.1の原典誤参照。",
+    "24.6": "N(−d2)はQ PD。指定P driftの構造PDは非公開EDFの較正ではない。単一満期負債/満期defaultの仮定。",
+    "24.7": "区間PDは無条件、LGD/割引は各1回。Ex24.6は1oz単位、契約総額は100万倍。wrong-wayは指定Gaussian factor例で一般first-to-default解ではない。担保lagは選択grid。",
+    "24.8": "latent相関、indicator相関、default時刻相関を区別。year0は年限後生存で永久非defaultではない。TN26詳細は未取得。",
+    "24.9": "total loss VaRとEL控除capitalを分ける。格付再評価は指定spread curveのflat例、回収は額面。BBB→Aは原典区間逆転。既存TransitionMatrix docstringの丸め残差記述は実装と不整合で未修正。",
+    "25.1": "年分数の概算例でcalendar/auction CTD/legal契約モデルは対象外。信用事由と取引相手defaultを区別。制度は刊行時点。",
+    "25.2": "中央default/元本1、premium係数はspread1当たり。quoteを固定してhazardを再較正。通常CDSの回収近似不感応は厳密不変ではない。",
+    "25.3": "125社の原典算術と合成2社のannuity加重を区別。実際の加重priceは入力不足で印刷pinなし。現在の指数仕様は扱わない。",
+    "25.4": "365/360固定例で閏年/一般calendar day countではない。Dはpremium PV係数でbond durationとは別。中間の印刷丸めを入力へ戻さない。",
+    "25.5": "原典price/vol入力なし。合成入力のBlack型価格を検証し原典印刷価格とはしない。forward annuity測度でspread lognormal、Aは時点0の無条件生存/割引込み。front-end protectionは別範囲。",
+    "25.6": "本文に印刷priceなし。3社/27default年の合成CFと既存順位priceを検証。notional/回収/hazardは合成入力。同時刻は入力順で法的netting/同時defaultの一般契約は対象外。",
+    "25.7": "固定initial notionalのprice marks、couponは金額。公正spread/信用調整入力なし。calendar/periodic notional resetは別規約。",
+    "25.8": "任意金額lossの優先配分を計算し、整数defaultへ置換しない。原典境界5/20%と既存vol12の5/15%を分ける。Table25.6は歴史quote入力で再推定しない。",
+    "25.9": "2%は5年累積PDで年2%hazardではない。rho1は解析2状態。全層同riskは回収0条件、40%へ一般化しない。高相関tailの適応求積修正を保持。",
+    "25.10": "源60点/未丸めhazard、midpoint default規約。非標準区間は全標準leg/time curveを保存する区分線形補間。PV loss単独からannuityを推測せず、市場無裁定の普遍保証はしない。",
+    "25.11": "静的ASB/double-t/因子依存/hazard mixtureの明示合成検証のみ。PDを再較正し、固定hazard gridの重みはquote不足時非一意。全copula/著者市場parameter/CR-11動的研究は対象外。"
+  },
+  "calculation_snapshot": {
+    "path": "docs/P5_STATUS.md",
+    "commit": "0c72b31d",
+    "sha256": "37a12c5e235817e9540b31613034035dd1f8383145c81569df693adeea55ff17"
+  },
+  "extra_tests": [
+    "report/tests/test_fast_acceptance_risk_credit.py",
+    "hullkit/tests/test_cds.py",
+    "hullkit/tests/test_credit_portfolio.py"
+  ]
+}

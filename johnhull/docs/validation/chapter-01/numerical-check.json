@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "chapter": 1,
+  "printed_value_count": 37,
+  "shared_figures": 4,
+  "shared_build_sha256": "7d27ad2a5eceac603c77166186533d791fe8dd4f9f185256f7732bc968dd7a92",
+  "shared_template_sha256": "a7fe9f7e0dae1dc485b1b0edff75f4be6652d734bd2c4e66cf6cb50fb728bf3b",
+  "max_absolute_error": 2.546585164964199e-11,
+  "source_sha256": {
+    "docs/acceptance/chapters/ch01.json": "f6fc789f023475acf8bc84f51f2b7a8ceb286e8b2b53952e33ebd46298ddddf5",
+    "hullkit/src/hullkit/_chapter01_lesson.py": "02e2224e3f437ab742758f457305e1789a362a9d5fc0d145508bb6039df5e4e6",
+    "hullkit/src/hullkit/_intro_contracts.py": "9325271320661b633109c62974ab48f05eebc3dbc4468dcb644a27c117269673",
+    "hullkit/tests/_chapter01_reference.py": "2a1c935117a35fd61bdfe7dcb878122fd08013e307855c53eb9d21f3505bdcd6",
+    "hullkit/tests/test_chapter01_lesson.py": "ad83ba49ce465eb8ccdd8e554693ab96bd251672ce61a2b05a375c5deeec6d93",
+    "report/tests/test_chapter01_acceptance.py": "9fb3faeb9cc6e13a6a6087c618a6335fe4ab9e5a14c5a71e87cd0a873ccf568d",
+    "report/report_builder/build.py": "12e280a3c47a2aa952f135ba8b459effcd308d519cc317170c8b0c0f11754cbf",
+    "report/tests/test_report_build.py": "9ddd72f901636b5b96e24552110efc0c0e76479b6ecae1944774a2800c4569bb",
+    "volumes/12_qualitative_summary/build_summary_notebook.py": "1e904558fecb3f3af1258975fb0069d80f47c7fdcad38805040dabc5b78ac2f1",
+    "volumes/12_qualitative_summary/qualitative_summary.ipynb": "5f8fb74e90c1ced47bb6c19b026eadeaf75e7a37f2562e3631acab323ac500f2",
+    "scripts/build_chapter01_portal.py": "566953564e50844b3c7caa4d59d8a7aeaec79a140f6a406ba437b06ef9d0c0f7",
+    "scripts/verify_chapter01_browser.cjs": "8f12ab2a0f508f8775c2b5497384feb655e59d4cedeb05e7b108e371b1432844",
+    "scripts/verify_chapter01_acceptance.py": "869d5805c6460eea300598c128ae5a1b72ad309346e7c0e3bd644d012081505e",
+    "book/_config.yml": "e8e040f95f35a5b232746362559449577df3d97420ca9add014395ce7eb141f4",
+    "book/_toc.yml": "cdfdb1715208f3de249c2e8dbc4aad5889033b10a90736658500d5702e2ef70c"
+  },
+  "artifact_sha256": {
+    "docs/validation/chapter-01/reference.json": "c065a9484479731aaa2f4d0c2e8d7bab6541560a19bb10c6a8787271c8188326"
+  }
+}

@@ -99,7 +99,7 @@ cells.append(
 cells.append(
     code(r"""# --- ロング/ショート・フォワードのペイオフ ---
 K_f = 100.0
-s_t = np.linspace(60.0, 140.0, 200)
+s_t = np.linspace(0.0, 200.0, 200) # 非負の株価の定義域
 fig1, ax1 = plt.subplots(figsize=(7.5, 4))
 fig1.canvas.header_visible = False
 ax1.plot(s_t, s_t - K_f, lw=2, label="ロング・フォワード（S_T − K）")
@@ -108,9 +108,20 @@ ax1.axhline(0.0, color="black", lw=0.8)
 ax1.axvline(K_f, color="0.7", ls=":", lw=1)
 ax1.set_xlabel("満期原資産価格 $S_T$")
 ax1.set_ylabel("ペイオフ")
-ax1.set_title("フォワードの線形ペイオフ（オプションと違い両側に無限）")
+ax1.set_title("非負の株価: longの損失はK、shortの損失は上値とともに増える")
 ax1.legend()
 display(fig1.canvas)""")
+)
+
+
+# Shared Hull GE Ch1 lessons.
+from hullkit._chapter01_lesson import _cells as chapter01_cells
+
+cells.extend(chapter01_cells())
+cells.append(
+    md(
+        "<a href='../../../../report/site/chapters/ch01.html'>Book表示からCh1のオフライン教材と共有図を開く</a>"
+    )
 )
 
 # ===========================================================================

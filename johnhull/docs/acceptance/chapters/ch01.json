@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "chapter": 1,
+  "base": "995188e6",
+  "book_page": "book/_build/html/notebooks/12_qualitative_summary.html",
+  "portal_page": "report/site/chapters/ch01.html",
+  "viewports": [
+    [
+      1440,
+      1050
+    ],
+    [
+      1000,
+      1050
+    ]
+  ],
+  "sections": [
+    {
+      "id": "1.1",
+      "heading": "§1.1 取引所市場",
+      "source_pages": [
+        24,
+        25
+      ],
+      "requirements": [
+        {
+          "id": "D1.1-01",
+          "statement": "契約の標準化、取引所と清算機関の役割（24–25）"
+        },
+        {
+          "id": "D1.1-02",
+          "statement": "open outcry から電子取引・HFT への移行（25）"
+        }
+      ]
+    },
+    {
+      "id": "1.2",
+      "heading": "§1.2 OTC市場",
+      "source_pages": [
+        25,
+        28
+      ],
+      "requirements": [
+        {
+          "id": "D1.2-01",
+          "statement": "market maker の bid/ask、相対契約とCCP（25–26）"
+        },
+        {
+          "id": "D1.2-02",
+          "statement": "SEF、CCP、取引報告と systemic risk（26–27）"
+        },
+        {
+          "id": "D1.2-03",
+          "statement": "想定元本とgross market value、compression、二重計上（27–28）"
+        }
+      ]
+    },
+    {
+      "id": "1.3",
+      "heading": "§1.3 フォワード契約",
+      "source_pages": [
+        28,
+        30
+      ],
+      "requirements": [
+        {
+          "id": "D1.3-01",
+          "statement": "USD/GBP の bid/ask、£1M の6か月買い（28–29）"
+        },
+        {
+          "id": "D1.3-02",
+          "statement": "Figure 1.2 の2本の直線（29–30）"
+        },
+        {
+          "id": "D1.3-03",
+          "statement": "$60の無配当株、年5%でforward $63（30）"
+        }
+      ]
+    },
+    {
+      "id": "1.4",
+      "heading": "§1.4 先物契約",
+      "source_pages": [
+        30,
+        31
+      ],
+      "requirements": [
+        {
+          "id": "D1.4-01",
+          "statement": "標準化と原資産の種類、価格形成（30–31）"
+        },
+        {
+          "id": "D1.4-02",
+          "statement": "forwardとの共通点と制度差（30–31）"
+        }
+      ]
+    },
+    {
+      "id": "1.5",
+      "heading": "§1.5 オプション",
+      "source_pages": [
+        31,
+        33
+      ],
+      "requirements": [
+        {
+          "id": "D1.5-01",
+          "statement": "1契約100株、行使条件と4ポジション（31–33）"
+        },
+        {
+          "id": "D1.5-02",
+          "statement": "Apple call買いとput売り、Figure 1.3（32–33）"
+        },
+        {
+          "id": "D1.5-03",
+          "statement": "Tables 1.2–1.3 のstrike/満期による傾向（31–32）"
+        }
+      ]
+    },
+    {
+      "id": "1.6",
+      "heading": "§1.6 取引者の目的",
+      "source_pages": [
+        33,
+        34
+      ],
+      "requirements": [
+        {
+          "id": "D1.6-01",
+          "statement": "3目的と市場の流動性（33）"
+        },
+        {
+          "id": "D1.6-02",
+          "statement": "Business Snapshot 1.3 の戦略・許容リスク・ヘッジ（34）"
+        }
+      ]
+    },
+    {
+      "id": "1.7",
+      "heading": "§1.7 ヘッジャー",
+      "source_pages": [
+        34,
+        36
+      ],
+      "requirements": [
+        {
+          "id": "D1.7-01",
+          "statement": "ImportCo/ExportCoの通貨ヘッジ（34–35）"
+        },
+        {
+          "id": "D1.7-02",
+          "statement": "1,000株に10put契約、Figure 1.4（35–36）"
+        }
+      ]
+    },
+    {
+      "id": "1.8",
+      "heading": "§1.8 投機家",
+      "source_pages": [
+        36,
+        39
+      ],
+      "requirements": [
+        {
+          "id": "D1.8-01",
+          "statement": "£250,000現物と4×£62,500先物、Table1.4（36–37）"
+        },
+        {
+          "id": "D1.8-02",
+          "statement": "$2,000で100株または2,000call、Table1.5・Figure1.5（37–38）"
+        },
+        {
+          "id": "D1.8-03",
+          "statement": "比較で金利を無視している点（37）"
+        }
+      ]
+    },
+    {
+      "id": "1.9",
+      "heading": "§1.9 裁定者",
+      "source_pages": [
+        39,
+        39
+      ],
+      "requirements": [
+        {
+          "id": "D1.9-01",
+          "statement": "NY $120、London £100、USD/GBP1.23、100株（39）"
+        }
+      ]
+    },
+    {
+      "id": "1.10",
+      "heading": "§1.10 危険と統制",
+      "source_pages": [
+        39,
+        40
+      ],
+      "requirements": [
+        {
+          "id": "D1.10-01",
+          "statement": "Kervielの架空ヘッジと日次監視（39–40）"
+        },
+        {
+          "id": "D1.10-02",
+          "statement": "限度内でも起こるモデル・共通要因リスク（40）"
+        }
+      ]
+    }
+  ]
+}

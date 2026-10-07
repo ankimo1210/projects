@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "base": "251715f3",
+  "counts": {
+    "unreviewed": 135,
+    "gaps_found": 0,
+    "pending_validation": 0,
+    "accepted": 171,
+    "out_of_scope": 0
+  },
+  "artifacts_checked": true,
+  "summary": "41 passed in 3.64s",
+  "old_accepted_rows_unchanged": 113,
+  "all_unselected_rows_unchanged": 248,
+  "source_sha256": {
+    "docs/section_inventory.json": "febd095cd5e7699840e3e06b5af0dc0eb23d6ac8eaa79ec1cd83dce84a3a83a0",
+    "docs/section_ledger.json": "4701c959bf2c780f8acc42e265ad9dd87f3e0b693edd1d073fc749f8652a9e53",
+    "report/tests/test_section_ledger.py": "4dabba972990232f5ab6708eed34592e36e02c52f225f4b7bd8483cff546b1cc",
+    "scripts/verify_section_ledger.py": "06a81a1e26630a5030fe80375b7ccf706f63f6cac26206502b645ffa49c629c9"
+  },
+  "artifact_sha256": {
+    "docs/validation/fast-ch10-15/ledger-tests.log": "e6ddf7e6371fb5145faffb5c84e2571f1b91c108a6408aa601cf5b18d817a6c9"
+  }
+}
