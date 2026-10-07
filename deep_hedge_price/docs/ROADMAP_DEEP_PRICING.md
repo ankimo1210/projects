@@ -80,3 +80,9 @@ Create `notebooks/02_neural_pricing_surrogate.ipynb` with label QA, analytic bas
 - Arbitrage violations quantified rather than hidden by aggregate error.
 - CPU inference and calibration benchmarks reproducible.
 - Executed Notebook 02 and a separate self-contained pricing report generated.
+
+## Separate research: RB-F05 digital v1 (2026-10-07)
+
+- Private `_digital_dml.py` consumes plain teacher arrays; public API/config/checkpoint namespaces and the accepted vol18 artifacts are unchanged. Torch-free teachers belong to hullkit.
+- Three paired seeds, price-only/LRM-DML, train-only scales, teacher-inclusive 8s CPU cap, array-derived metrics and independent NumPy weight inference. 31 new / 806 related tests PASS, ruff and three artifact-only research figures PASS; final review pending.
+- All paired seeds improve price/delta, but closed forms and Hermite interpolation are cheaper and more accurate. Adopt the educational comparison; reject promotion for speed. Discrete barriers and 0DTE/rough remain subsequent experiments. Details: [RB-F05](../../johnhull/research/RB-F05/README.md).
