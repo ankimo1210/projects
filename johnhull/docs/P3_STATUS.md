@@ -1,4 +1,32 @@
-# P3 完了に向けた実装状態
+# P3 実装・受入状態
+
+## 最終統合（2026-10-08）
+
+統合構成でP3 **37/37 accepted**、全体**306/306・未評価0**。
+最新の開発修正と正式受入を合流し、全体suite `full run: 6640 passed, 2 catalogue failures, 6 skipped; catalogue-only repair: 764 passed; combined unique checks: 6649 passed, 6 skipped`、全306節native artifacts、変更Pythonのruff/formatを確認。
+原典の入力不足・未再現値とcaller条件の検証範囲を保持する。main反映・最終レビューは[統合記録](FINAL_INTEGRATION_2026-10-08.md)を参照。
+
+## 実装と受入の履歴
+
+以下の別branch・未統合・検証件数は各工程の実施時点の記録。現在の判定は上記と[生成台帳](SECTION_LEDGER.md)。
+
+更新2026-10-08。ローカル`codex/johnhull-acceptance`でP3 **37/37 accepted**。
+Ch28の旧8節を保持し、Ch29–34の残29節・104要件をfast-v1で受け入れた。
+全体は306/306、未評価0。判定の正本は[節台帳](SECTION_LEDGER.md)。
+
+- Ch29–34の既存286 testsに§33.2のprivate BGM28 testsを追加。
+  P7とguardを合わせた今回の対象389 tests PASS、全45節のbrowser・代表9画像・独立レビューを確認。
+  [最終便の記録](CHAPTERS_29_37_ACCEPTANCE_2026-10-08.md)に範囲・数値差・省略を保存する。
+- §33.2は単一curve LMM、measure drift/reset/discount、bootstrap、caller指定cap/ratchet/sticky/
+  first5 ITM flexicap、full Jacobianによるfrozen swaption/PCAを実装・独立検証。
+  原典sticky K0/flexicap strike・対象日・MC規約不足は保持し、無条件の原典価格再現を主張しない。
+- §31.4の8664観測、2016-08-23の9満期を検証済み。原典の0.168と.0168の不整合を明示。
+  市場fit・大規模Bermudan・CEVの追加エンジンは宣言した受入範囲に含めない。
+- 旧261受入の計算・教材・証跡を変更しない。main統合・push・公開・既存Book改訂は別工程。
+
+## ロジック先行時の履歴（2026-10-05時点）
+
+以下の保留・未受入は当時の状態。現在の判定は上記と台帳を優先する。
 
 更新2026-10-08。目標：Ch28–34の台帳37節を原典要求/実装/独立検証/可視化/配布画面の5軸で受け入れる。設計はprep/design/P3_DESIGN.md、節要求はprep/sections/ch28.md–ch34.md。別受入branchで37/37 accepted、main統合は未実施。未提示の原典契約の価格は未再現と明記し、caller指定条件の検証と区別する。
 

@@ -1,0 +1,379 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hull Ch37 補足教材</title><style>/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+.lesson{margin:2rem 0;padding:1.4rem;background:var(--surface);border-radius:10px}
+    .requirement{padding:.6rem 0;border-bottom:1px solid var(--rule)}
+    .caution{padding:.8rem;border-left:3px solid var(--series-2)}
+    p,li{line-height:1.85} table{width:100%;border-collapse:collapse}
+    th,td{padding:.5rem;text-align:left;border-bottom:1px solid var(--rule)}
+    pre{overflow-x:auto} .lesson{overflow-wrap:anywhere} mjx-container{overflow-x:auto;max-width:100%}
+    nav{line-height:2} .wrap{max-width:1060px;margin:auto;padding:1.3rem}
+    </style><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><body><main class="wrap"><nav><a href="ch01.html">Ch1</a> · <a href="ch02.html">Ch2</a> · <a href="ch03.html">Ch3</a> · <a href="ch04.html">Ch4</a> · <a href="ch05.html">Ch5</a> · <a href="ch06.html">Ch6</a> · <a href="ch07.html">Ch7</a> · <a href="ch08.html">Ch8</a> · <a href="ch09.html">Ch9</a> · <a href="ch10.html">Ch10</a> · <a href="ch11.html">Ch11</a> · <a href="ch12.html">Ch12</a> · <a href="ch13.html">Ch13</a> · <a href="ch14.html">Ch14</a> · <a href="ch15.html">Ch15</a> · <a href="ch16.html">Ch16</a> · <a href="ch17.html">Ch17</a> · <a href="ch18.html">Ch18</a> · <a href="ch19.html">Ch19</a> · <a href="ch20.html">Ch20</a> · <a href="ch21.html">Ch21</a> · <a href="ch22.html">Ch22</a> · <a href="ch23.html">Ch23</a> · <a href="ch24.html">Ch24</a> · <a href="ch25.html">Ch25</a> · <a href="../exotics.html">Ch26</a> · <a href="../numerics.html">Ch27</a> · <a href="../exotics.html">Ch28</a> · <a href="ch29.html">Ch29</a> · <a href="ch30.html">Ch30</a> · <a href="ch31.html">Ch31</a> · <a href="ch32.html">Ch32</a> · <a href="ch33.html">Ch33</a> · <a href="ch34.html">Ch34</a> · <a href="ch35.html">Ch35</a> · <a href="ch36.html">Ch36</a> · <a href="ch37.html">Ch37</a> · <a href="../index.html">ポータル</a> · <a href="../../../book/_build/html/index.html">Book</a></nav><nav><a href="#section-37-1">§37.1</a>　<a href="#section-37-2">§37.2</a>　<a href="#section-37-3">§37.3</a></nav><h1>Ch37 節別補足教材</h1>
+<p>刊行時点の原典本文を学ぶ。現在の市場条件や法令の適用はこの教材の対象に含めない。</p>
+<section class="lesson" id="section-37-1">
+<h2>§37.1 Lessons for All Users of Derivatives</h2>
+<p>出典: Hull 11e Global Edition pp.815–819。</p>
+<p>明確なrisk limitを組織から個人へ落とし、実損益と感応度予測を照合する。限度超過は利益になった場合も同じように扱い、短期の成功を技能と即断しない。分散投資とscenario/stressを組み合わせて、単一リスクへの集中や都合のよい想定を避ける。</p>
+<h3>要点の読み方</h3>
+<p>Risk limitは組織全体からdesk・個人へ割り当て、position、感応度、日次P&amp;Lを独立に照合する。限度超過が利益を出しても、損失を出した違反と同じ報告・是正経路へ乗せる。実際のP&amp;Lと感応度からの説明との差を観測すれば、記帳漏れ、モデル外risk、評価の異常を調べる手がかりになる。統制の有効性を、一般VaR関数の実装だけで証明したとはしない。</p>
+<table>
+<thead>
+<tr>
+<th>原典の事例</th>
+<th>記述量</th>
+<th>教材で分ける論点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Barings（1995）</td>
+<td>損失約1 billion USD</td>
+<td>取引と決済照合の独立性</td>
+</tr>
+<tr>
+<td>Amaranth（2006）</td>
+<td>損失6 billion USD</td>
+<td>集中、basis、liquidity</td>
+</tr>
+<tr>
+<td>SocGen（2008）</td>
+<td>損失7 billion USD超</td>
+<td>limit違反とpositionの検知</td>
+</tr>
+<tr>
+<td>LTCM（1998）</td>
+<td>損失約4 billion USD、支援14銀行</td>
+<td>損失額と支援主体数は別の量</td>
+</tr>
+<tr>
+<td>Enron関連銀行</td>
+<td>和解1 billion USD超</td>
+<td>損失・和解・資金供給を合算しない</td>
+</tr>
+</tbody>
+</table>
+<p>各値は刊行時点の歴史記述で、責任や損失原因を独立実証したものではない。単位と時点を保ち、事故損失を現在の通貨価値へ再推定しない。</p>
+<p>勝率1/2で各四半期が独立なら、4四半期連勝の確率は <span class="math inline"><span data-source-tex="(1/2)^4=1/16">\((1/2)^4=1/16\)</span></span>、16人の成功者数の期待値は1。さらに人同士も独立なら、少なくとも1人が成功する確率は <span class="math inline"><span data-source-tex="\,1-(15/16)^{16}=.64392587">\(\,1-(15/16)^{16}=.64392587\)</span></span>（追加検算、印刷値ではない）。期待人数1は、必ず成功者が1人いることやskillの証明を意味しない。独立二項列挙とMCで条件付き算術を確認した。</p>
+<p>20株が等金額で、各expected annual return10%、annual vol30%、等相関ρ=.2なら、portfolio mean10%、<span class="math inline"><span data-source-tex="\sigma_p=.30\sqrt{\rho+(1-\rho)/20}=.146969385">\(\sigma_p=.30\sqrt{\rho+(1-\rho)/20}=.146969385\)</span></span>、印刷14.7%。一般に等相関行列が半正定値となる <span class="math inline"><span data-source-tex="-1/(n-1)\le\rho\le1">\(-1/(n-1)\le\rho\le1\)</span></span> が必要で、危機時もρ=.2に固定とはしない。</p>
+<p>VaR/ESは価格shockに加え、basis拡大、市場liquidityの減少、margin上昇、funding rollover停止のstressで補完する。長い履歴や類似変数proxyを使っても、制度・市場構造の変化や同時発生を取り逃がす可能性がある。単一の都合のよいscenarioでriskを確定しない。</p>
+<div class="requirement" id="D37.1-01">
+<p>risk limit定義、日次risk/P&amp;L照合、利益を出した違反も一貫して扱う（817–818）。</p>
+<p>「何を誰が観測し、どこへ報告するか」を事件→失敗統制→改善の表にする。</p>
+</div>
+<div class="requirement" id="D37.1-02">
+<p>過去成績と偶然、分散投資の効用（818–819）。</p>
+<p>16人例の「期待人数1」と「必ず1人」を区別。等相関portfolio分散を独立計算。</p>
+</div>
+<div class="requirement" id="D37.1-03">
+<p>VaR/ESをscenario・stressで補完、長期データ/類似変数proxyの限界（819）。</p>
+<p>価格・basis・liquidity・fundingの異なるstressを分類し、単一シナリオに固定しない。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<ul>
+<li>p818、勝率1/2で4四半期連勝は.5^4=1/16、16人中の期待人数1 。全員独立なら少なくとも1人が連勝する確率は約.64392587（追加検算、印刷値ではない）。原典の「1人が成功する」を確定事象と読まない。</li>
+<li>BS37.1 p816：AIB約.7bn、Amaranth6bn(2006)、Barings約1bn(1995)、Enron関連銀行の和解1bn超、Kidder .35bn、LTCM約4bn(1998)/支援14銀行、Midland .5bn、SocGen7bn超(2008)、subprimeで複数銀行tens of billions、UBS2.3bn(2011)。</li>
+<li>BS37.2 p817：Allied Lyons .15bn(1991)、Gibson .02bn(1994)、Hammersmith/Fulham .6bn(1988)、Metallgesellschaft1.3bn、Orange County約2bn(1994)、P&amp;G .09bn(1994)、Shell1bn、Sumitomo約2bn。以上はすべて <strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong>。損失・和解額・資金供給を同一指標として集計しない。</li>
+</ul>
+<h3>計算の読み方</h3>
+<p>4連勝1/16・16人の期待人数1、20株平均10%/vol14.7%。追加any-success .64392587、独立二項列挙/共分散行列/MC6SE</p>
+<p>連勝はtrial/manager独立、分散効果は同vol・等weight・等相関に条件付き。期待人数1は必ず1人の保証ではない。歴史的損失/和解/支援を足さず、統制の実証や将来の相関安定性を数値pinで証明しない。</p>
+<div class="caution">
+<p>連勝はtrial/manager独立、分散効果は同vol・等weight・等相関に条件付き。期待人数1は必ず1人の保証ではない。歴史的損失/和解/支援を足さず、統制の実証や将来の相関安定性を数値pinで証明しない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-37-2">
+<h2>§37.2 Lessons for Financial Institutions</h2>
+<p>出典: Hull 11e Global Edition pp.819–824。</p>
+<p>高収益のtraderも例外なく監視し、front/middle/back officeを分離する。Model priceに依存する初日利益、顧客に合わない商品の販売、容易に見える利得には慎重な検証が必要となる。流動性・共同行動・短期funding・情報不足・報酬設計が、単独positionの価格riskを増幅する。</p>
+<h3>要点の読み方</h3>
+<p>高収益を理由にtraderを監視の例外にしない。原典の事故例を、観測担当と独立した照合先を持つ統制へ対応させる。</p>
+<table>
+<thead>
+<tr>
+<th>機能</th>
+<th>主に観測するもの</th>
+<th>独立して確認する経路</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Front office</td>
+<td>trade入力と取引理由</td>
+<td>limit権限、契約条件</td>
+</tr>
+<tr>
+<td>Middle / risk</td>
+<td>position、感応度、モデル評価、日次P&amp;L</td>
+<td>limit超過報告、model/system validation</td>
+</tr>
+<tr>
+<td>Back office</td>
+<td>counterpart確認、cash、決済</td>
+<td>trade記録と実際の確認・支払の一致</td>
+</tr>
+</tbody>
+</table>
+<p>Barings等の教訓は、取引と記録・決済確認を一人に集中させないことにある。販売商品は顧客の本業risk、理解、損失許容度と合わせて確認する。Bankers Trustの1994年の事件と1999年の買収という原典の時系列は、現在の販売規則の根拠ではない。</p>
+<p>仮想のinception profit10 million USDは、モデルが契約時fair valueをそう評価したという説明例で、市場cashが同額確定したことを意味しない。推定誤差・valuation reserve、会計認識の時期、報酬によるrisk-taking、顧客適合性を別の論点として扱う。価格モデル入力は与えられていないため、この初日利益を再計算済み価格としない。</p>
+<p>LTCMのlong off-the-run / short on-the-runでは、前者が相対的に割安となる価格差の収束を狙う。Flight to qualityで流動的なon-the-runへ需要が移ると、off-the-runが相対的に下がり、longは不利、相対的に上がるon-the-runのshortも不利になる。解消の売りoff-the-run・買いon-the-runがcrowded unwindで重なると価格差はさらに拡大し、marginを求められる。これはbasis変動と市場liquidityの経路であり、短期借入のrolloverが止まってcashが不足するfunding経路と区別する。同じpositionに両方が作用することがある。</p>
+<p>1987 crash、1998 LTCM、2007–09危機、Citigroup損失50 billion USD超は原典の歴史事例で、同じloss指標として集計しない。担保やpoolの情報をratingだけで代替せず、securitizationの販売者・保有者の誘因を追う。報酬のdeferred支払・clawback、独立risk部門、risk reportが経営判断へ届く経路を合わせて説明する。本文の因果説明の照合までであり、現在のBasel・会計・報酬規制の適用や事件因果の独立実証を行ったとはしない。</p>
+<div class="requirement" id="D37.2-01">
+<p>職務分離、position照合、model/system validation、高収益を理由にした例外扱いの禁止（819–820）。</p>
+<p>誰がtrade入力・価値評価・決済確認を独立実施するかを整理。</p>
+</div>
+<div class="requirement" id="D37.2-02">
+<p>inception profitのmodel依存と報酬誘因、顧客適合性、容易な収益のhidden risk（820–821）。</p>
+<p>fair valueの推定誤差、valuation reserve、会計認識、販売倫理を別論点にする。</p>
+</div>
+<div class="requirement" id="D37.2-03">
+<p>liquidity spread・flight to quality・crowded unwind・短期rolloverの連鎖（821–823）。</p>
+<p>LTCMのlong off-the-run/short on-the-runを符号付きで追い、basis拡大とmargin fundingを区別。</p>
+</div>
+<div class="requirement" id="D37.2-04">
+<p>transparency、securitization incentives、deferred/clawback報酬、risk部門の独立性（823–824）。</p>
+<p>格付だけで担保情報を代替しない。risk reportが意思決定に反映される経路を説明。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>仮想inception profit10M、1994のBT事件/1999買収、1987 crash、1998LTCM、2007–09危機、Citigroup損失50bn超等は <strong>記述統計（説明用の条件・歴史的記述、年次に注意）</strong>。初日利益の例は認識時期の論点でpriceモデル入力なし。再計算対象なし。</p>
+<div class="caution">
+<p>因果経路と取引符号の原典照合までで、事件因果の独立実証は未実施。仮想初日利益10Mにpricing入力なし。損失/和解/支援・市場liquidity/fundingを区別し、現行Basel/会計/販売/報酬規制の適用助言は対象外。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-37-3">
+<h2>§37.3 Lessons for Nonfinancial Corporations</h2>
+<p>出典: Hull 11e Global Edition pp.824–826。</p>
+<p>経営者が理解・承認でき、独立に価値を確認できる契約を使う。ヘッジは本業exposureから直接導き、損失回復の賭けやtreasuryの利益目標から作らない。Dealerのみの評価に頼ると、解約時に提示価格を確かめる手段がなくなる。</p>
+<h3>要点の読み方</h3>
+<p>非金融企業では本業exposureから契約の必要性を導く。承認前にterm sheetのpayoff、取引理由、元本、通貨、数量、観測時点、支払日を経営者が理解できる形へ直し、dealer以外でも評価できる入力と方法を確保する。Dealerだけのvaluationでは、解約時の提示価格やモデル条件を独立に照合できない。P&amp;G、Gibson、自治体の事例は契約理解と独立valuationの教訓として読む。</p>
+<table>
+<thead>
+<tr>
+<th>判断</th>
+<th>確認する対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exposureからのhedge</td>
+<td>本業cashflowと契約cashflowの数量・通貨・期間をそろえる</td>
+</tr>
+<tr>
+<td>hedgeからspeculationへの変化</td>
+<td>exposureに対するnotionalとrisk limit、取引理由の変更を監視</td>
+</tr>
+<tr>
+<td>損失後のdouble-up</td>
+<td>追加riskと回復目標を分け、risk減少と呼ばない</td>
+</tr>
+<tr>
+<td>treasuryの利益目標</td>
+<td>hedge単体のP&amp;Lと本業込みのrisk減少を分ける</td>
+</tr>
+</tbody>
+</table>
+<p>数量・価格・受払時点が一致する単純な生産者の例なら、本業cash <span class="math inline"><span data-source-tex="qS_T">\(qS_T\)</span></span> とshort forwardのcash <span class="math inline"><span data-source-tex="q(K-S_T)">\(q(K-S_T)\)</span></span> の合計はqKとなる。hedge単体は価格上昇時に損をするが、本業の増益と対応する。実際にはgrade、地点、数量、期間のbasisがあり、契約の利益だけで成功・失敗を判定できない。</p>
+<p>原典の「hedgeすると約50%のときunhedgedより悪い」は対称的な価格変化を念頭に置いた説明用の目安である。全契約・全分布の確率定理ではなく、費用やbasisを含む実データから50%を推定したものでもない。treasuryをprofit centerとして契約単体の利益を要求すると、本業riskを減らす目的と衝突しうる。限度と独立valuationはその目的を観測可能にする統制として説明し、本節に存在しない市場価格や組織APIのverifiedを付けない。</p>
+<div class="requirement" id="D37.3-01">
+<p>契約payoff・取引理由・独立valuationを承認の前提にする（824–825）。</p>
+<p>P&amp;G/Gibson/自治体事例に対し、保有riskと契約riskを同じ単位で説明できるか。</p>
+</div>
+<div class="requirement" id="D37.3-02">
+<p>hedgeからspeculationへの変化をexposure・notional・risk limitで監視（825）。</p>
+<p>損失後のdouble-upをrisk減少と呼ばない。契約単体のprofitでhedgeを判定しない。</p>
+</div>
+<div class="requirement" id="D37.3-03">
+<p>treasuryをprofit centerにする誘因とヘッジの目的の衝突（825–826）。</p>
+<p>本業＋hedge合計のrisk減少とhedge単体の損益を区別。</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>「hedgeすると約50%の時にunhedgedより悪くなる」は対称的な説明用目安で、全契約・全分布の確率定理ではない。**記述統計（説明用の条件・歴史的記述、年次に注意）**として条件付き説明にとどめる。数値例・再計算対象なし。</p>
+<div class="caution">
+<p>本業exposureとhedgeの数量/通貨/時点をそろえ、契約単体のprofitで判定しない。約50%は対称的変化の説明用目安で全分布の確率定理ではない。事故の再価格・実組織統制・現行制度の検証は対象外。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+</main></body></html>

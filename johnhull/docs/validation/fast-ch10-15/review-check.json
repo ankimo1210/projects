@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "scope": "Ch10–15の58節・161要件、承認済みfast-v1",
+  "critical": 0,
+  "important": 0,
+  "minor_open": 0,
+  "independent_test_summary": "381 passed in 5.70s（数値モジュールは変更なし。最終生成器の更新後は親側の381 testsとread-only verifyがPASS）",
+  "visual_captures_reviewed": 6,
+  "prior_accepted_rows_unchanged": 113,
+  "closed_minor": [
+    "13.appendixの閾値規約をrecipeの範囲記述とlimitationの両方で64epsへ統一",
+    "10.10のみなし売却の第三条件を一つ以上のポジションへ修正"
+  ],
+  "final_reviewer_report": "両Minorクローズ。教材と台帳でItô相関±説明一致。read-only verify PASS（58節）。旧113行は基点と完全一致。Critical/Importantなし。共有ファイル編集なし。",
+  "source_sha256": {
+    "scripts/fast_acceptance_options.py": "15c2bd4bfbb0695743bdc82185575823a375726d024653b5451ae3e8d0261f2d",
+    "scripts/verify_fast_acceptance_options_browser.cjs": "1a3e8f7a8525f2a87c653a94543f6ca3f9974c2898d44d9f9a557aa354c658fd",
+    "docs/acceptance/fast-ch10-15-profile.json": "2cd47ac289d43346db1de69352f3eef0dda3cd0db245e4e3a080bd179b61622d",
+    "docs/lessons/options-chapter-details.json": "65b30771de23f2d84530580729437f7dfff1e7a9a78ac60645fd01e19b23934c",
+    "docs/CHAPTERS_10_15_ACCEPTANCE_2026-10-07.md": "3d3ce9d7e22a7ef8fde58a6edb3d314c5c33ae849bc81e704f608a2859b0af7e"
+  },
+  "artifact_sha256": {
+    "docs/validation/fast-ch10-15/acceptance-check.json": "10d164a12e126e4ce434ce2e1fc538784268e99d88cad1a62f614ed83da23219",
+    "docs/validation/fast-ch10-15/ledger-check.json": "c09d3443baf28676b31e692f8552edf3c8e70389ce35d2deec72987d9a7997ea",
+    "docs/validation/fast-ch10-15/browser-check.json": "97a3d28d7dad5eb460035fc14af0351b8a2a906c135a3d3a3545af8366d92c98"
+  }
+}

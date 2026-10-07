@@ -1,0 +1,713 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hull Ch32 補足教材</title><style>/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+.lesson{margin:2rem 0;padding:1.4rem;background:var(--surface);border-radius:10px}
+    .requirement{padding:.6rem 0;border-bottom:1px solid var(--rule)}
+    .caution{padding:.8rem;border-left:3px solid var(--series-2)}
+    p,li{line-height:1.85} table{width:100%;border-collapse:collapse}
+    th,td{padding:.5rem;text-align:left;border-bottom:1px solid var(--rule)}
+    pre{overflow-x:auto} .lesson{overflow-wrap:anywhere} mjx-container{overflow-x:auto;max-width:100%}
+    nav{line-height:2} .wrap{max-width:1060px;margin:auto;padding:1.3rem}
+    </style><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><body><main class="wrap"><nav><a href="ch01.html">Ch1</a> · <a href="ch02.html">Ch2</a> · <a href="ch03.html">Ch3</a> · <a href="ch04.html">Ch4</a> · <a href="ch05.html">Ch5</a> · <a href="ch06.html">Ch6</a> · <a href="ch07.html">Ch7</a> · <a href="ch08.html">Ch8</a> · <a href="ch09.html">Ch9</a> · <a href="ch10.html">Ch10</a> · <a href="ch11.html">Ch11</a> · <a href="ch12.html">Ch12</a> · <a href="ch13.html">Ch13</a> · <a href="ch14.html">Ch14</a> · <a href="ch15.html">Ch15</a> · <a href="ch16.html">Ch16</a> · <a href="ch17.html">Ch17</a> · <a href="ch18.html">Ch18</a> · <a href="ch19.html">Ch19</a> · <a href="ch20.html">Ch20</a> · <a href="ch21.html">Ch21</a> · <a href="ch22.html">Ch22</a> · <a href="ch23.html">Ch23</a> · <a href="ch24.html">Ch24</a> · <a href="ch25.html">Ch25</a> · <a href="../exotics.html">Ch26</a> · <a href="../numerics.html">Ch27</a> · <a href="../exotics.html">Ch28</a> · <a href="ch29.html">Ch29</a> · <a href="ch30.html">Ch30</a> · <a href="ch31.html">Ch31</a> · <a href="ch32.html">Ch32</a> · <a href="ch33.html">Ch33</a> · <a href="ch34.html">Ch34</a> · <a href="ch35.html">Ch35</a> · <a href="ch36.html">Ch36</a> · <a href="ch37.html">Ch37</a> · <a href="../index.html">ポータル</a> · <a href="../../../book/_build/html/index.html">Book</a></nav><nav><a href="#section-32-1">§32.1</a>　<a href="#section-32-2">§32.2</a>　<a href="#section-32-3">§32.3</a>　<a href="#section-32-4">§32.4</a>　<a href="#section-32-5">§32.5</a>　<a href="#section-32-6">§32.6</a>　<a href="#section-32-7">§32.7</a></nav><h1>Ch32 節別補足教材</h1>
+<p>刊行時点の原典本文を学ぶ。現在の市場条件や法令の適用はこの教材の対象に含めない。</p>
+<section class="lesson" id="section-32-1">
+<h2>§32.1 Extensions of Equilibrium Models</h2>
+<p>出典: Hull 11e Global Edition pp.732–736。</p>
+<p>時間依存 drift で初期curveを入力として一致させる。Ho–Lee、HW1F、BDT、BK、HW2Fを比較する。BDTは <span class="math inline"><span data-source-tex="a(t)=-\sigma&#x27;(t)/\sigma(t)">\(a(t)=-\sigma&#x27;(t)/\sigma(t)\)</span></span> の制約、BKはaとσを独立に指定できる。</p>
+<h3>要点の読み方</h3>
+<p>No-arbitrageモデルは今日のcurveを入力としてfitする。<span class="math inline"><span data-source-tex="f_0(T)=-\partial_T\log P(0,T)">\(f_0(T)=-\partial_T\log P(0,T)\)</span></span>、<span class="math inline"><span data-source-tex="dr=[\theta(t)-ar]dt+\sigma dW">\(dr=[\theta(t)-ar]dt+\sigma dW\)</span></span>、<span class="math inline"><span data-source-tex="B(a,u)=(1-e^{-au})/a">\(B(a,u)=(1-e^{-au})/a\)</span></span>とすると</p>
+<div class="math block">
+<span data-source-tex="\theta(t)=f_0&#x27;(t)+af_0(t)+\sigma^2B(2a,t),">\(\theta(t)=f_0&#x27;(t)+af_0(t)+\sigma^2B(2a,t),\)</span>
+</div>
+<div class="math block">
+<span data-source-tex="P(t,T)=\frac{P(0,T)}{P(0,t)}
+\exp\!\left[-B(a,T-t)(r_t-f_0(t))
+-\frac12\sigma^2B(2a,t)B(a,T-t)^2\right].">\(P(t,T)=\frac{P(0,T)}{P(0,t)}
+\exp\!\left[-B(a,T-t)(r_t-f_0(t))
+-\frac12\sigma^2B(2a,t)B(a,T-t)^2\right].\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="t,T">\(t,T\)</span></span>は年、<span class="math inline"><span data-source-tex="a">\(a\)</span></span>は年の逆数、<span class="math inline"><span data-source-tex="\sigma">\(\sigma\)</span></span>は絶対金利／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>、Gaussian <span class="math inline"><span data-source-tex="\theta">\(\theta\)</span></span>は金利／年。Smoothな入力curveの満期微分を使う。初期<span class="math inline"><span data-source-tex="r_0=f_0(0)">\(r_0=f_0(0)\)</span></span>で初期curveを再現し、独立<span class="math inline"><span data-source-tex="\theta">\(\theta\)</span></span>核積分・PDE・Gaussian MCで検証する。</p>
+<p><span class="math inline"><span data-source-tex="a\to0">\(a\to0\)</span></span>はHo–Leeで<span class="math inline"><span data-source-tex="\theta=f_0&#x27;+\sigma^2t,B=T-t">\(\theta=f_0&#x27;+\sigma^2t,B=T-t\)</span></span>。Gaussianモデルは負のrate／初期forwardを許す。初期curve fitの事実と、その後のoption市場へのfitを区別する。</p>
+<p>BDT／BKは<span class="math inline"><span data-source-tex="\log r">\(\log r\)</span></span>の過程を扱い、正値性とGaussian rate modelの<span class="math inline"><span data-source-tex="\theta">\(\theta\)</span></span>を混同しない。BDTは<span class="math inline"><span data-source-tex="a(t)=-\sigma&#x27;(t)/\sigma(t)">\(a(t)=-\sigma&#x27;(t)/\sigma(t)\)</span></span>なのでconstant volなら<span class="math inline"><span data-source-tex="a=0">\(a=0\)</span></span>、vol増加ならsigned <span class="math inline"><span data-source-tex="a">\(a\)</span></span>は負にもなる。BKは<span class="math inline"><span data-source-tex="a,\sigma">\(a,\sigma\)</span></span>を独立に指定できる。Frozen係数のlog OU stepを独立Gaussian積分／lognormal MCで照合し、clipや反射で負rateを修正しない。BKのcurve-fit木は§32.5、HW2Fは§31.5の範囲で扱う。本文に価格例はなく、p736の2因子参照先「§31.4」は内容上§31.5である。</p>
+<div class="requirement" id="D32.1-01">
+<p>Ho–Leeのθ、A、式32.1–3（733）</p>
+<p>任意の入力curveを再現</p>
+</div>
+<div class="requirement" id="D32.1-02">
+<p>HWのθ、A/B、式32.4–8（734–735）</p>
+<p><span class="math inline"><span data-source-tex="a\to0">\(a\to0\)</span></span> でHo–Lee、解析bondとMC</p>
+</div>
+<div class="requirement" id="D32.1-03">
+<p>BDT/BK/HW2Fの特徴（735–736）</p>
+<p>BDTのσ一定ならa=0、対数rの正値性</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>計算例なし。章導入の「bond1%誤差がoption25%誤差になりうる」はillustrationで固定入力なし。</p>
+<h3>計算の読み方</h3>
+<p>印刷例なし。式32.1–8、Ho–Lee/HW curve fit・極限、独立Gaussian θ核求積/PDE/MC、BDT a=−σ′/σ・BK正値step</p>
+<p>Smooth curveの満期微分を使う。Gaussian θはrate/year、log-rate θは別単位。Ho–Lee a0／負Gaussian rateを保持。BDTのa=−σ'/σ制約とBK独立aを分け、log-rate stepをfull fitted BK価格とはしない。</p>
+<div class="caution">
+<p>Smooth curveの満期微分を使う。Gaussian θはrate/year、log-rate θは別単位。Ho–Lee a0／負Gaussian rateを保持。BDTのa=−σ'/σ制約とBK独立aを分け、log-rate stepをfull fitted BK価格とはしない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-32-2">
+<h2>§32.2 Options on Bonds</h2>
+<p>出典: Hull 11e Global Edition pp.736–737。</p>
+<p>Vasicek/HW/Ho–LeeのZCBオプションは式32.10のBlack型で評価し、総標準偏差 <span class="math inline"><span data-source-tex="\sigma_P">\(\sigma_P\)</span></span> はモデルから計算する。単因子で全ZCBがshort rateに対して同方向に動くため、coupon bondのoptionを臨界rによってZCB optionsへ分解できる。</p>
+<h3>要点の読み方</h3>
+<p>満期<span class="math inline"><span data-source-tex="s">\(s\)</span></span>のZCBを<span class="math inline"><span data-source-tex="T&lt;s">\(T&lt;s\)</span></span>に行使するoptionでは、Gaussian短期金利モデルのtotal log標準偏差は</p>
+<div class="math block">
+<span data-source-tex="w=\sigma B(a,s-T)\sqrt{B(2a,T)}.">\(w=\sigma B(a,s-T)\sqrt{B(2a,T)}.\)</span>
+</div>
+<p>これはtotal標準偏差であり、さらに<span class="math inline"><span data-source-tex="\sqrt T">\(\sqrt T\)</span></span>を掛けない。額面<span class="math inline"><span data-source-tex="L">\(L\)</span></span>なら<span class="math inline"><span data-source-tex="F=LP(0,s)/P(0,T)">\(F=LP(0,s)/P(0,T)\)</span></span>にBlackを適用する。</p>
+<div class="math block">
+<span data-source-tex="c=LP(0,s)N(h)-KP(0,T)N(h-w),\quad
+h=\frac{\log(F/K)}w+\frac w2.">\(c=LP(0,s)N(h)-KP(0,T)N(h-w),\quad
+h=\frac{\log(F/K)}w+\frac w2.\)</span>
+</div>
+<p>Ho–Lee極限は<span class="math inline"><span data-source-tex="w=\sigma(s-T)\sqrt T">\(w=\sigma(s-T)\sqrt T\)</span></span>。Parity、zero vol、zero expiry、独立payment-measure密度求積で検証する。</p>
+<p>正のfuture cashflow<span class="math inline"><span data-source-tex="c_i">\(c_i\)</span></span>のcoupon bondでは、全ZCBが<span class="math inline"><span data-source-tex="r_T">\(r_T\)</span></span>に対して単調に低下する単因子条件で</p>
+<div class="math block">
+<span data-source-tex="\sum_i c_iP(T,T_i;r^*)=K">\(\sum_i c_iP(T,T_i;r^*)=K\)</span>
+</div>
+<p>を解き、各strike<span class="math inline"><span data-source-tex="K_i=P(T,T_i;r^*)">\(K_i=P(T,T_i;r^*)\)</span></span>のZCB optionを<span class="math inline"><span data-source-tex="c_i">\(c_i\)</span></span>倍して合計する。多曲線floating legや符号の混在するcashflowへJamshidianを無条件に適用しない。</p>
+<p>本文の価格印刷例はない。回収したTN15例は<span class="math inline"><span data-source-tex="r^*=.10952">\(r^*=.10952\)</span></span>、cash strike配賦4.734／4.484／4.248／84.535（和98）を再現する。独立Gaussian給付求積と分解の価格は.8751256364であり、TN15掲載合計.8752との差を保持する。途中の表示値だけを使って厳密値を強制しない。</p>
+<p>CIRではexpiry債券測度の非中心<span class="math inline"><span data-source-tex="\chi^2">\(\chi^2\)</span></span>で評価し、df0のzero atomをCDFへ含める。独立density求積、semigroup、raw Qの割引endpoint経路MCで照合するが、CIR経路割引の時間積分誤差は残る。</p>
+<div class="requirement" id="D32.2-01">
+<p>式32.10とHWの <span class="math inline"><span data-source-tex="\sigma_P=\sigma(1-e^{-a(s-T)})\sqrt{(1-e^{-2aT})/(2a)}/a">\(\sigma_P=\sigma(1-e^{-a(s-T)})\sqrt{(1-e^{-2aT})/(2a)}/a\)</span></span>（736–737）</p>
+<p>parity、ゼロvol、Ho–Lee極限</p>
+</div>
+<div class="requirement" id="D32.2-02">
+<p>Ho–Lee <span class="math inline"><span data-source-tex="\sigma_P=\sigma(s-T)\sqrt T">\(\sigma_P=\sigma(s-T)\sqrt T\)</span></span>（737）</p>
+<p>HWのa→0</p>
+</div>
+<div class="requirement" id="D32.2-03">
+<p>coupon bondの臨界rとJamshidian分解、CIR非中心χ²への言及（737）</p>
+<p>payoff単位の等価性、1次元積分</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>なし。Technical Note15の例題は別資料で未取得。</p>
+<h3>計算の読み方</h3>
+<p>本文印刷例なし。式32.10/Ho–Lee極限、TN15 r*=0.10952/配賦K、0.8751256、独立Gaussian/CIR求積・raw Q MC</p>
+<p>Jamshidianは正cashflow／単調single-factor条件。TN15掲載0.8752と独立厳密0.8751256の差を保持。CIR expiry測度CDFはdf0 atomを含み、raw Q path割引の時間誤差は別。</p>
+<div class="caution">
+<p>Jamshidianは正cashflow／単調single-factor条件。TN15掲載0.8752と独立厳密0.8751256の差を保持。CIR expiry測度CDFはdf0 atomを含み、raw Q path割引の時間誤差は別。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-32-3">
+<h2>§32.3 Volatility Structures</h2>
+<p>出典: Hull 11e Global Edition pp.737–738。</p>
+<p>flat curveで3か月forward rateのvolを満期ごとに比較する。Ho–Leeはflat、HW1Fは低下、HW2Fは適切なパラメータでhumpを作れる。</p>
+<h3>要点の読み方</h3>
+<p>Fig32.3は同じ<strong>3か月tenor</strong>のforward rateのvol形状を比べる模式図で、原典に軸の数値・較正parameterはない。Finite-tenor単利は</p>
+<div class="math block">
+<span data-source-tex="R(t;S,U)=\frac{P(t,S)/P(t,U)-1}{\delta},\quad\delta=U-S=.25.">\(R(t;S,U)=\frac{P(t,S)/P(t,U)-1}{\delta},\quad\delta=U-S=.25.\)</span>
+</div>
+<p>瞬間forward <span class="math inline"><span data-source-tex="-\partial_T\log P">\(-\partial_T\log P\)</span></span>とも、cap implied volとも別の量である。</p>
+<p>2因子のloading差を<span class="math inline"><span data-source-tex="\Delta B=B(a,U-t)-B(a,S-t)">\(\Delta B=B(a,U-t)-B(a,S-t)\)</span></span>、<span class="math inline"><span data-source-tex="\Delta C=C(a,b,U-t)-C(a,b,S-t)">\(\Delta C=C(a,b,U-t)-C(a,b,S-t)\)</span></span>とし、<span class="math inline"><span data-source-tex="g_1=\sigma_1\Delta B,g_2=\sigma_2\Delta C,q=P(t,S)/P(t,U)">\(g_1=\sigma_1\Delta B,g_2=\sigma_2\Delta C,q=P(t,S)/P(t,U)\)</span></span>とすると</p>
+<div class="math block">
+<span data-source-tex="\sigma_N=\frac q\delta\sqrt{g_1^2+2\rho g_1g_2+g_2^2}.">\(\sigma_N=\frac q\delta\sqrt{g_1^2+2\rho g_1g_2+g_2^2}.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="\sigma_N">\(\sigma_N\)</span></span>は絶対年率金利／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>。正forwardだけ<span class="math inline"><span data-source-tex="\sigma_{\rm Black,eq}=\sigma_N/R">\(\sigma_{\rm Black,eq}=\sigma_N/R\)</span></span>と換算でき、zero／負forwardをunshifted Black volとして表示しない。</p>
+<p>Ho–Lee（<span class="math inline"><span data-source-tex="a=0,\sigma_2=0">\(a=0,\sigma_2=0\)</span></span>）はflat、HW1Fはmean reversionにより低下、適切なHW2Fはhumpとなる。Hump用入力は明示した合成parameterで、原典curveの数値再現ではない。独立block指数の共分散と小時間bond-ratio shock MC、交差項、<span class="math inline"><span data-source-tex="\sigma_2=0">\(\sigma_2=0\)</span></span>の1因子極限を検証する。Tenorを0へ近づける操作は瞬間forwardの別極限であり、tenor0を同じ契約として受け付けない。</p>
+<div class="requirement" id="D32.3-01">
+<p>Figure32.3の3形状（737–738）</p>
+<p>同じforward tenor・vol単位で比較</p>
+</div>
+<div class="requirement" id="D32.3-02">
+<p>mean reversionとhump（738）</p>
+<p>1因子極限、2因子の交差項</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>Figure32.3は軸数値・パラメータなし。3か月が契約tenorで、数値固定値ではない。</p>
+<h3>計算の読み方</h3>
+<p>Fig32.3は印刷数値なし。同一3か月tenorでflat/低下/hump、独立block指数・bond比shock MC</p>
+<p>同一3か月tenorのnormal／Black換算／瞬間forward／implied cap volを区別。Fig32.3のparameterは原典未指定で合成。Zero／負forwardにunshifted Black換算はない。</p>
+<div class="caution">
+<p>同一3か月tenorのnormal／Black換算／瞬間forward／implied cap volを区別。Fig32.3のparameterは原典未指定で合成。Zero／負forwardにunshifted Black換算はない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-32-4">
+<h2>§32.4 Interest Rate Trees</h2>
+<p>出典: Hull 11e Global Edition pp.738–740。</p>
+<p>木のrateは連続複利のΔt期間rateで、各nodeのrateで割り引く。三項は平均回帰を表現しやすく、端で枝を内側へ向ける3種類のbranchingを導入する。</p>
+<h3>要点の読み方</h3>
+<p>Rate treeは各nodeの連続複利<strong>期間rate</strong><span class="math inline"><span data-source-tex="R_{i,j}">\(R_{i,j}\)</span></span>で割り引く。</p>
+<div class="math block">
+<span data-source-tex="V_{i,j}=e^{-R_{i,j}\Delta t}\sum_kp_{j,k}V_{i+1,k}.">\(V_{i,j}=e^{-R_{i,j}\Delta t}\sum_kp_{j,k}V_{i+1,k}.\)</span>
+</div>
+<p>Americanでは同じnodeの継続価値と行使価値のmaxを取る。株式CRRの全node共通割引を代用しない。</p>
+<p>Fig32.4の<span class="math inline"><span data-source-tex="\Delta t=1">\(\Delta t=1\)</span></span>、確率(.25,.5,.25)、rate A10%、B/C/D12/10/8%、終端14/12/10/8/6%に、給付<span class="math inline"><span data-source-tex="\,100(R-.11)^+">\(\,100(R-.11)^+\)</span></span>＝3/1/0/0/0を対応させる。未丸めrollbackはB1.108650546、C.226209355、D0、A.353128468。印刷1.11／.23／.35と一致する。途中で二桁へ丸めてからrootを再計算しない。独立9経路の確率×経路割引×給付の和でも同じ価格となる。</p>
+<p>平均回帰の三項branchは、内部で<span class="math inline"><span data-source-tex="j-1,j,j+1">\(j-1,j,j+1\)</span></span>、上端で<span class="math inline"><span data-source-tex="j-2,j-1,j">\(j-2,j-1,j\)</span></span>、下端で<span class="math inline"><span data-source-tex="j,j+1,j+2">\(j,j+1,j+2\)</span></span>へ向かう。後継arrayは昇順とする。Grid単位のoffset<span class="math inline"><span data-source-tex="x">\(x\)</span></span>に対し</p>
+<div class="math block">
+<span data-source-tex="\sum p=1,\quad\sum px=-aj\Delta t,\quad
+\sum px^2=\tfrac13+(aj\Delta t)^2">\(\sum p=1,\quad\sum px=-aj\Delta t,\quad
+\sum px^2=\tfrac13+(aj\Delta t)^2\)</span>
+</div>
+<p>を解き、非負確率と対応nodeを確認する。<span class="math inline"><span data-source-tex="\Delta R=\sigma\sqrt{3\Delta t}">\(\Delta R=\sigma\sqrt{3\Delta t}\)</span></span>に対応するEuler treeのmomentであり、厳密OU endpoint分散を使った木とは区別する。</p>
+<div class="requirement" id="D32.4-01">
+<p>Figure32.4、Δt=1、確率(.25,.5,.25)、給付 <span class="math inline"><span data-source-tex="\,100(R-.11)^+">\(\,100(R-.11)^+\)</span></span>（738–739）</p>
+<p>node別割引のrollback</p>
+</div>
+<div class="requirement" id="D32.4-02">
+<p>Figure32.5の標準/上向き/下向きbranch（739–740）</p>
+<p>枝と後継nodeの対応、確率和1</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>Fig32.4 rates：A10%、B/C/D12/10/8%、E–I14/12/10/8/6%。terminal payoff3/1/0/0/0。B1.11（1.108650546）、C.23（.226209355）、A.35（.353128468）を 。D0も再現。計算途中で印刷2桁を使うとAは約.355となるため、原入力から計算した.3531を基準とする。</p>
+<h3>計算の読み方</h3>
+<p>Fig32.4: B1.11/C0.23/A0.35、独立9経路列挙、3branchのmoment・原確率・exercise obstacle</p>
+<p>節点の連続複利期間rateで割引、後継indexは昇順。Tree momentはEuler drift／grid varianceで厳密OU endpointではない。Cash／quoted strikeやaccrualはcallerイベント規約。</p>
+<div class="caution">
+<p>節点の連続複利期間rateで割引、後継indexは昇順。Tree momentはEuler drift／grid varianceで厳密OU endpointではない。Cash／quoted strikeやaccrualはcallerイベント規約。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-32-5">
+<h2>§32.5 A General Tree-Building Procedure</h2>
+<p>出典: Hull 11e Global Edition pp.740–750。</p>
+<p>最初に平均回帰するゼロ中心の木を作り、各時点のshift αとstate price Qで初期curveを正確に合わせる。<span class="math inline"><span data-source-tex="f(r)=r">\(f(r)=r\)</span></span>ならHW、<span class="math inline"><span data-source-tex="f(r)=\ln r">\(f(r)=\ln r\)</span></span>ならBK。木の期間rateから他満期bondを作る式32.15–17、Americanのclean/dirty strikeも扱う。</p>
+<h3>要点の読み方</h3>
+<p>まずゼロ中心のmean-reverting木を作り、次に時点ごとのshift <span class="math inline"><span data-source-tex="\alpha_i">\(\alpha_i\)</span></span>で初期curveへfitする。<span class="math inline"><span data-source-tex="\Delta R=\sigma\sqrt{3\Delta t}">\(\Delta R=\sigma\sqrt{3\Delta t}\)</span></span>と内向きbranchで非負確率を確保する。<span class="math inline"><span data-source-tex="Q_{i,j}">\(Q_{i,j}\)</span></span>は<strong>割引state price</strong>で、</p>
+<div class="math block">
+<span data-source-tex="P(0,t_{i+1})=\sum_jQ_{i,j}e^{-R_{i,j}\Delta t_i},\quad
+Q_{i+1,k}=\sum_jQ_{i,j}p_{j,k}e^{-R_{i,j}\Delta t_i}.">\(P(0,t_{i+1})=\sum_jQ_{i,j}e^{-R_{i,j}\Delta t_i},\quad
+Q_{i+1,k}=\sum_jQ_{i,j}p_{j,k}e^{-R_{i,j}\Delta t_i}.\)</span>
+</div>
+<p>HWは<span class="math inline"><span data-source-tex="R=\alpha+x">\(R=\alpha+x\)</span></span>、BKは<span class="math inline"><span data-source-tex="R=e^{\alpha+x}">\(R=e^{\alpha+x}\)</span></span>、shifted BKは<span class="math inline"><span data-source-tex="R=e^{\alpha+x}-s">\(R=e^{\alpha+x}-s\)</span></span>。BKにはrate floorがあり、任意の負forward curveへfitできるとはしない。投影curveと割引curveを無条件に同一視しない。</p>
+<p>Table32.1のzero入力は.5／1／1.5／2／2.5／3年に3.430／3.824／4.183／4.512／4.812／5.086%。HWの最初の9node rateは3.824；6.937／5.205／3.473；9.716／7.984／6.252／4.520／2.788%。State priceは<span class="math inline"><span data-source-tex="Q_1=(.1604,.6417,.1604),Q_2=(.0182,.1998,.4736,.2033,.0189)">\(Q_1=(.1604,.6417,.1604),Q_2=(.0182,.1998,.4736,.2033,.0189)\)</span></span>へ表示丸めする。BKの同じ9node rateは3.430；5.642／4.154／3.058；8.803／6.481／4.772／3.513／2.587%。Fig32.6–8の全node／確率／state priceを検査し、小木の経路列挙でもcurve価格を確認する。.6666等の表示切捨てを確率和の厳密入力にしない。</p>
+<p>有限期間rate <span class="math inline"><span data-source-tex="R">\(R\)</span></span>と瞬間<span class="math inline"><span data-source-tex="r">\(r\)</span></span>を分ける。<span class="math inline"><span data-source-tex="B_h=B(a,T-t),B_\delta=B(a,\delta),v_t=\sigma^2B(2a,t)">\(B_h=B(a,T-t),B_\delta=B(a,\delta),v_t=\sigma^2B(2a,t)\)</span></span>なら</p>
+<div class="math block">
+<span data-source-tex="P(t,T;R)=\widetilde A\exp[-\delta B_hR/B_\delta],">\(P(t,T;R)=\widetilde A\exp[-\delta B_hR/B_\delta],\)</span>
+</div>
+<div class="math block">
+<span data-source-tex="\log\widetilde A=\log\frac{P(0,T)}{P(0,t)}
+-\frac{B_h}{B_\delta}\log\frac{P(0,t+\delta)}{P(0,t)}
+-\tfrac12v_tB_h(B_h-B_\delta).">\(\log\widetilde A=\log\frac{P(0,T)}{P(0,t)}
+-\frac{B_h}{B_\delta}\log\frac{P(0,t+\delta)}{P(0,t)}
+-\tfrac12v_tB_h(B_h-B_\delta).\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="T=t+\delta">\(T=t+\delta\)</span></span>で<span class="math inline"><span data-source-tex="e^{-R\delta}">\(e^{-R\delta}\)</span></span>を再現する。Couponは実際の日付、quoted strikeは行使日の経過利子込みcash strikeへ変換する。</p>
+<p>Ex32.1は3年option、9年ZCB100、strike63、<span class="math inline"><span data-source-tex="a=.1,\sigma=.01">\(a=.1,\sigma=.01\)</span></span>。Table32.2の15day/zero入力、Actual/365、zeroの線形補間と、著者DG201のrate-date移動・<strong>終端1日</strong>規約を保存する。解析put1.809294168（1.8093）とTable32.3の木を別に示す。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">段数</th>
+<th style="text-align:right">印刷put</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">1.8468</td>
+</tr>
+<tr>
+<td style="text-align:right">30</td>
+<td style="text-align:right">1.8172</td>
+</tr>
+<tr>
+<td style="text-align:right">50</td>
+<td style="text-align:right">1.8057</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">1.8128</td>
+</tr>
+<tr>
+<td style="text-align:right">200</td>
+<td style="text-align:right">1.8090</td>
+</tr>
+<tr>
+<td style="text-align:right">500</td>
+<td style="text-align:right">1.8091</td>
+</tr>
+</tbody>
+</table>
+<p>Fig32.9はBK <span class="math inline"><span data-source-tex="a=.05,\sigma=.20">\(a=.05,\sigma=.20\)</span></span>、flat5%連続、10年5%半期coupon100、quoted105、1.5年American call。Volはlog-rateの相対量で、HWの絶対金利vol.01とは単位が違う。4段の経過利子は0／1.875／1.25／.625／0。以下は上から並べた原典全25node（75field）の照合値である。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">時点（年）</th>
+<th style="text-align:right">上からのnode</th>
+<th style="text-align:right">Cash bond</th>
+<th style="text-align:right">Call価値</th>
+<th style="text-align:right">Rate（%）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">99.51021</td>
+<td style="text-align:right">.671933</td>
+<td style="text-align:right">5.0000</td>
+</tr>
+<tr>
+<td style="text-align:right">.375</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">94.69</td>
+<td style="text-align:right">.058227</td>
+<td style="text-align:right">6.1362</td>
+</tr>
+<tr>
+<td style="text-align:right">.375</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">101.4979</td>
+<td style="text-align:right">.471654</td>
+<td style="text-align:right">4.9633</td>
+</tr>
+<tr>
+<td style="text-align:right">.375</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">107.6802</td>
+<td style="text-align:right">2.16306</td>
+<td style="text-align:right">4.0146</td>
+</tr>
+<tr>
+<td style="text-align:right">.75</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">87.0692</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">7.5348</td>
+</tr>
+<tr>
+<td style="text-align:right">.75</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">94.32588</td>
+<td style="text-align:right">.017063</td>
+<td style="text-align:right">6.0946</td>
+</tr>
+<tr>
+<td style="text-align:right">.75</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">100.9787</td>
+<td style="text-align:right">.273599</td>
+<td style="text-align:right">4.9297</td>
+</tr>
+<tr>
+<td style="text-align:right">.75</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">107.0004</td>
+<td style="text-align:right">1.771632</td>
+<td style="text-align:right">3.9874</td>
+</tr>
+<tr>
+<td style="text-align:right">.75</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">112.3922</td>
+<td style="text-align:right">6.142178</td>
+<td style="text-align:right">3.2253</td>
+</tr>
+<tr>
+<td style="text-align:right">1.125</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">79.19393</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">9.2572</td>
+</tr>
+<tr>
+<td style="text-align:right">1.125</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">86.85737</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">7.4877</td>
+</tr>
+<tr>
+<td style="text-align:right">1.125</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">93.96242</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">6.0565</td>
+</tr>
+<tr>
+<td style="text-align:right">1.125</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">100.4532</td>
+<td style="text-align:right">.09907</td>
+<td style="text-align:right">4.8989</td>
+</tr>
+<tr>
+<td style="text-align:right">1.125</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">106.3087</td>
+<td style="text-align:right">1.275943</td>
+<td style="text-align:right">3.9625</td>
+</tr>
+<tr>
+<td style="text-align:right">1.125</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">111.5353</td>
+<td style="text-align:right">5.910323</td>
+<td style="text-align:right">3.2051</td>
+</tr>
+<tr>
+<td style="text-align:right">1.125</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">116.1587</td>
+<td style="text-align:right">10.53372</td>
+<td style="text-align:right">2.5925</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">71.13165</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">11.3744</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">79.13643</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">9.2003</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">86.65577</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">7.4417</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">93.60053</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">6.0193</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">99.92196</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">4.8687</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">105.6054</td>
+<td style="text-align:right">.605443</td>
+<td style="text-align:right">3.9381</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">110.6623</td>
+<td style="text-align:right">5.662307</td>
+<td style="text-align:right">3.1854</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">115.1222</td>
+<td style="text-align:right">10.12224</td>
+<td style="text-align:right">2.5765</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">119.0263</td>
+<td style="text-align:right">14.02632</td>
+<td style="text-align:right">2.0840</td>
+</tr>
+</tbody>
+</table>
+<p>Root.671933（図.672）、100段.703を保持し、同じ木でEuropean≤Bermudan≤Americanを確認する。終端期間を通常stepへ置き換えたり、actual couponを近いgridへ移してから「原典再現」と呼ばない。表示精度の照合と解析価格への格子収束は別の検証である。</p>
+<div class="requirement" id="D32.5-01">
+<p><span class="math inline"><span data-source-tex="\Delta R=\sigma\sqrt{3\Delta t}">\(\Delta R=\sigma\sqrt{3\Delta t}\)</span></span>、jmax、3branchのモーメント整合（740–742）</p>
+<p>非負確率、平均・分散、Fig32.6</p>
+</div>
+<div class="requirement" id="D32.5-02">
+<p>αとQの前進較正、式32.11–14（743–746）</p>
+<p>全格子満期のbond価格が入力curveと一致</p>
+</div>
+<div class="requirement" id="D32.5-03">
+<p>HW/BK、負金利・shifted BK・多曲線（746–747）</p>
+<p>対数の定義域とcurveの役割</p>
+</div>
+<div class="requirement" id="D32.5-04">
+<p>期間rate用の <span class="math inline"><span data-source-tex="\tilde A,\tilde B">\(\tilde A,\tilde B\)</span></span>、式32.15–17（748）</p>
+<p>同じRからΔt債価格を再現</p>
+</div>
+<div class="requirement" id="D32.5-05">
+<p>Ex32.1 / Table32.2–3、Fig32.9 American（748–750）</p>
+<p>解析値、格子収束、accrual込み行使</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>Table32.1（743）：年限 .5/1/1.5/2/2.5/3、zero% 3.430/3.824/4.183/4.512/4.812/5.086（入力）。Fig32.6（741）：R*% = 0; ±1.732,0; ±3.464,±1.732,0。j=0確率(.1667,.6666,.1667)、j=1(.1217,.6566,.2217)、j=2内向き(.8867,.0266,.0867)、負jは鏡像。モーメント方程式から （.6666等は切捨て表示、1e−4許容）。</p>
+<ul>
+<li>Fig32.7（744）A–I rates%：3.824 / 6.937 / 5.205 / 3.473 / 9.716 / 7.984 / 6.252 / 4.520 / 2.788。9値 。再計算α0=.03824、α1=.05205、α2=.0625205。Q1=(.16041365,.64165461,.16041365)、Q2=(.01820898,.19979709,.47359377,.20326122,.01885081) は印刷(.1604,.6417,.1604)と(.0182,.1998,.4736,.2033,.0189)に一致（8値）。2年bond .9137は <span class="math inline"><span data-source-tex="e^{-.04512(2)}">\(e^{-.04512(2)}\)</span></span>。確率はFig32.6と同じ。</li>
+</ul>
+<h3>計算の読み方</h3>
+<p>Fig32.6–8全node/Q、Table32.3全6価格・解析1.8093、Fig32.9全75項目/0.671933/0.703、小木経路列挙・HW解析/期間変換</p>
+<p>DG201の終端1日／rate-date移動、actual coupon／accrual、Table32.2のACT365とzero線形補間を保持。期間Rと瞬間rを分ける。BK／shifted BKはrate floorのfeasibilityがあり任意負curveへfitできない。</p>
+<div class="caution">
+<p>DG201の終端1日／rate-date移動、actual coupon／accrual、Table32.2のACT365とzero線形補間を保持。期間Rと瞬間rを分ける。BK／shifted BKはrate floorのfeasibilityがあり任意負curveへfitできない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-32-6">
+<h2>§32.6 Calibration</h2>
+<p>出典: Hull 11e Global Edition pp.749–751。</p>
+<p>option市場価格とモデル価格の二乗誤差でa/σをfitする。時間依存σには段差と曲率のpenaltyを加える。対象契約に近いcalibration instrumentsを選び、より正確なfitと非定常vol構造のtradeoffを説明する。</p>
+<h3>要点の読み方</h3>
+<p>Option価格を入力して<span class="math inline"><span data-source-tex="a,\sigma">\(a,\sigma\)</span></span>を較正する工程は、初期zero curveへのfitとは異なる。対象Bermudanの行使5〜9年、最終満期10年に合わせるco-terminal basketは5×5／6×4／7×3／8×2／9×1である。本文は契約年限を示すが市場価格・vol quoteを指定していないので、検証用quoteは明示した合成入力とする。</p>
+<p><span class="math inline"><span data-source-tex="\sigma(t)">\(\sigma(t)\)</span></span>を区分一定とし、固定または可変<span class="math inline"><span data-source-tex="a">\(a\)</span></span>を正のparameterとしてLMでfitする。目的関数は価格二乗残差に、隣接<span class="math inline"><span data-source-tex="\sigma">\(\sigma\)</span></span>の差と二階差のpenaltyを加える。</p>
+<div class="math block">
+<span data-source-tex="J=\sum_j[(V_j^{\rm model}-V_j^{\rm quote})/s_V]^2+
+\lambda_1\sum_i[\Delta(\sigma_i/.01)]^2+
+\lambda_2\sum_i[\Delta^2(\sigma_i/.01)]^2.">\(J=\sum_j[(V_j^{\rm model}-V_j^{\rm quote})/s_V]^2+
+\lambda_1\sum_i[\Delta(\sigma_i/.01)]^2+
+\lambda_2\sum_i[\Delta^2(\sigma_i/.01)]^2.\)</span>
+</div>
+<p>Price scaleとvol正規化を指定し、penaltyを増やすほど全ての個別項が必ず減るとはしない。Fitとsmoothnessのtradeoff、Jacobianの識別性、複数初期値を確認する。最後のvol区間はflat延長する明示規約である。</p>
+<p>Expiry <span class="math inline"><span data-source-tex="E">\(E\)</span></span>のstate varianceは</p>
+<div class="math block">
+<span data-source-tex="q(E)=\int_0^E\sigma(u)^2e^{-2a(E-u)}du.">\(q(E)=\int_0^E\sigma(u)^2e^{-2a(E-u)}du.\)</span>
+</div>
+<p>独立Gaussian給付求積とheld-out strikeで再価格し、同じobjectiveの再呼出しだけを独立検証と数えない。Black caplet価格を先に作り、固定<span class="math inline"><span data-source-tex="a">\(a\)</span></span>のHW絶対<span class="math inline"><span data-source-tex="\sigma">\(\sigma\)</span></span>を求根してその価格へ戻す。Black relative volとHW absolute rate volは異なる量である。</p>
+<p>同じ区分<span class="math inline"><span data-source-tex="\sigma">\(\sigma\)</span></span>の木で、行使日とpayment日をevent meshに保持したBermudanを評価し、行使機会の追加が価値を下げないこと、単一9×1のEuropean極限を確認する。Single curveの正cashflow分解を使う範囲であり、実市場basketやmulti-curve較正の完了を意味しない。</p>
+<div class="requirement" id="D32.6-01">
+<p>二乗残差、パラメータ数、LM（749–750）</p>
+<p>合成市場から回復、再価格</p>
+</div>
+<div class="requirement" id="D32.6-02">
+<p>σ(t)の段差・曲率penalty（751）</p>
+<p>penaltyゼロ/増加でfitとsmoothnessを比較</p>
+</div>
+<div class="requirement" id="D32.6-03">
+<p>Bermudan5–9年行使→5×5,6×4,7×3,8×2,9×1（751）</p>
+<p>行使日とunderlying満期10年の対応</p>
+</div>
+<div class="requirement" id="D32.6-04">
+<p>固定aでimpliedσ、Black volとの区別（751）</p>
+<p>Black price→HW impliedσの往復</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>上記5年限は契約例で市場quote・価格なし。Figure32.9は§32.5に所属。</p>
+<h3>計算の読み方</h3>
+<p>5×5/6×4/7×3/8×2/9×1、σ(t)/a回復・penalty・独立Gaussian求積/held-out、Black→HW σ往復、Bermudan行使順序</p>
+<p>原典の5×5〜9×1は契約例だけで、市場quoteはない。合成basketのparameter回復／held-outを検証。Single curve、区分σの最終flat延長、価格scaleとvol penalty規約を明示。Black volとHW absolute σは別。</p>
+<div class="caution">
+<p>原典の5×5〜9×1は契約例だけで、市場quoteはない。合成basketのparameter回復／held-outを検証。Single curve、区分σの最終flat延長、価格scaleとvol penalty規約を明示。Black volとHW absolute σは別。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-32-7">
+<h2>§32.7 Hedging Using a One-Factor Model</h2>
+<p>出典: Hull 11e Global Edition pp.751–752。</p>
+<p>価格モデルが1因子でもhedgeは多様なcurve変動を考慮する。curve/volをbumpしてdelta・gamma・vegaを計算し、モデルが生成しない変形も扱う outside-model hedging を説明する。</p>
+<h3>要点の読み方</h3>
+<p>Pricing modelのBrownian因子が1個でも、hedgeで動かす市場座標は複数あってよい。Outside-model hedgingは、one-factorの再価格器へ外部zero curveの平行／bucket／PCA shockとvol環境のshockを与える操作である。モデル自身が経路として生成しないslope・curvatureにも感応度を計算できる。</p>
+<p>Curve bump中は<span class="math inline"><span data-source-tex="a">\(a\)</span></span>と<span class="math inline"><span data-source-tex="\sigma">\(\sigma\)</span></span>を固定する。Quoteを変えて再較正したparameterのriskとは別である。金利1bpの中央差分cash delta、full Hessian、vol1ポイントあたりのvegaを、§29.4と同じ座標・direction規約で読む。Deterministic cashflow <span class="math inline"><span data-source-tex="C_i">\(C_i\)</span></span>なら</p>
+<div class="math block">
+<span data-source-tex="PV_i=C_ie^{-z_iT_i},\quad \partial_{z_i}PV_i=-T_iPV_i,\quad
+\partial_{z_i}^2PV_i=T_i^2PV_i">\(PV_i=C_ie^{-z_iT_i},\quad \partial_{z_i}PV_i=-T_iPV_i,\quad
+\partial_{z_i}^2PV_i=T_i^2PV_i\)</span>
+</div>
+<p>を独立基準にできる。確率swaptionは別のGaussian給付求積で照合する。</p>
+<p><span class="math inline"><span data-source-tex="\sigma=0">\(\sigma=0\)</span></span>では中央bumpが負volを作るので、<span class="math inline"><span data-source-tex="[-3V(0)+4V(h)-V(2h)]/(2h)">\([-3V(0)+4V(h)-V(2h)]/(2h)\)</span></span>の片側vegaを使う。ATMのzero-vol価格が0でもvegaまで0とは限らない。Zero curveとvolを同じshockとみなさず、複数bucketの数値検証と本文の因子数の説明を確認する。原典には数値価格例がなく、観測quote riskの推定結果とはしない。</p>
+<div class="requirement" id="D32.7-01">
+<p>pricing factor数とhedging shock数を区別（751–752）</p>
+<p>1因子モデルでも複数bucketをbumpできる説明</p>
+</div>
+<div class="requirement" id="D32.7-02">
+<p>§29.4との接続（751）</p>
+<p>zero curveとvol environmentを別shockとして表現</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>なし。記述統計もなし。</p>
+<h3>計算の読み方</h3>
+<p>印刷例なし。1因子price/複数curve・vol bucket、解析PV01/gamma・独立Gaussian給付求積、σ=0の片側vega</p>
+<p>外部curve bumpはa／σ固定で、quote再較正riskとは別。価格因子数とhedge方向数を分ける。σ0では片側vega、vol1ポイントの単位を表示。原典価格pinなし。</p>
+<div class="caution">
+<p>外部curve bumpはa／σ固定で、quote再較正riskとは別。価格因子数とhedge方向数を分ける。σ0では片側vega、vol1ポイントの単位を表示。原典価格pinなし。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+</main></body></html>
