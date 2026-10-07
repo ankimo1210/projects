@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "scope": "Ch16–21の54節・93要件、承認済みfast-v1",
+  "critical": 0,
+  "important": 0,
+  "minor_open": 0,
+  "independent_test_summary": "既存数値450 passed（8.21s）、最終guard25 passed（0.11s）。親側の全475 passed（8.50s）と台帳41 passed（5.21s）。",
+  "visual_captures_reviewed": 6,
+  "prior_accepted_rows_unchanged": 171,
+  "all_unselected_rows_unchanged": 252,
+  "requirements": {
+    "total": 93,
+    "numerical": 78,
+    "explanatory": 15,
+    "source_ids_statements_readings_match": true
+  },
+  "closed_material_findings": [
+    "18.1 SOFR premium quote .05・支払125ドル・利益375ドルを区別",
+    "19.4 初期2557.8→週9 4171.1の株式増分1613.3、損益−4.1千を明示",
+    "19.8 vega12.10524の例番号Ex19.6へ修正",
+    "19.13 原典portfolio90百万/floor87百万へ統一",
+    "21.2 二つのN4木は各15節点・計30節点へ修正",
+    "21.5 期間平均volとforward区間volを累積分散積分で区別"
+  ],
+  "closed_minor": [
+    "16.4 個別丸め判定は未実施の残存表示を除去",
+    "21.8 put境界をS=0と明示",
+    "extra_testsの欠落を拒否するwrapper、missing_extra_test RED→GREEN"
+  ],
+  "final_reviewer_report": "Minor3件すべてクローズ。Critical 0 / Important 0 / Minor 0。新guard25 passed、更新16/21画像に切れ・重なり・数式欠落なし。元93要求と54節の範囲、Ch21の木/MC/FD、部分N/Aを確認。共有source編集なし。",
+  "source_sha256": {
+    "docs/CHAPTERS_16_21_ACCEPTANCE_2026-10-07.md": "1f43d0c1af019b20728e58d78ddc03c9570866af7cdf9dadcf61e1acb26b09a2",
+    "docs/acceptance/fast-ch16-21-profile.json": "3210240927c99bef337ca2e413cbdec703445152efcfca529a78c2e7f0817f34",
+    "docs/acceptance/fast-ch16-21.json": "63dcddaaf64d9be035a7ea86c13b1c3d5d54520bd553de1d624f2d3013159c5d",
+    "docs/lessons/advanced-options-chapter-details.json": "5ed52d5305be9af2be3b766f25a2d7ad3dd4dd39a2a0c60bee645960733af77a",
+    "report/tests/test_fast_acceptance_advanced_options.py": "d69d8516433554da3dc28244a202bee6cd0751e34592bd9f5120ee218b719f83",
+    "scripts/fast_acceptance_advanced_options.py": "85678fb3ed504f54835bca4aea9afb3fc3a609985f86cc10e41dee73a828363a",
+    "scripts/fast_acceptance_options.py": "15c2bd4bfbb0695743bdc82185575823a375726d024653b5451ae3e8d0261f2d",
+    "scripts/verify_fast_acceptance_options_browser.cjs": "1a3e8f7a8525f2a87c653a94543f6ca3f9974c2898d44d9f9a557aa354c658fd"
+  },
+  "artifact_sha256": {
+    "docs/validation/fast-ch16-21/acceptance-check.json": "40248623b101385fdc05552bd00f7a77a71f12b332bcaf117e3593a3fab27c68",
+    "docs/validation/fast-ch16-21/browser-check.json": "c7c682ff18b45b3e27616d31137aef370d35476c89f817cc19cd13e074fc10a9",
+    "docs/validation/fast-ch16-21/ledger-check.json": "7ebb3a2f210c95dd39019128c8375713e5eac381c4b1742a9fef477343caafff"
+  }
+}

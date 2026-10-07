@@ -297,6 +297,9 @@ synthetic-data method demonstrations, not market-performance claims.
 | `hullkit._other_swap_payoffs` | `hullkit._other_swap_payoffs:commodity_fixed_unit_price`, `hullkit._other_swap_payoffs:commodity_swap_cashflows`, `hullkit._other_swap_payoffs:pg_spread`, `hullkit._other_swap_payoffs:pg_swap_coupons`, `hullkit._other_swap_payoffs:index_amortizing_notionals` | §34.6; source 50 USD/bbl and 15.25% payment rate, independent Gaussian positive-part expectation/MC and adapted principal conservation; test_other_swap_payoffs.py |
 
 | `hullkit._chapter28_lesson` | Shared private §28.6–28.8 cells and six figures | Independent Q/T/ratio quadrature and covariance trace checks; test_chapter28_lesson.py |
+| `hullkit._chapter01_lesson` | Private Ch1 section explanations, 37 cash amounts and four shared figures | Independent Decimal cash accounts and display-corruption rejection; test_chapter01_lesson.py |
+| `hullkit._bgm_lesson` | `hullkit._bgm_lesson:simulate_lmm`, `hullkit._bgm_lesson:cap_cashflows`, `hullkit._bgm_lesson:frozen_swaption_price`, `hullkit._bgm_lesson:pca_factor_loadings` | §33.2 private single-curve LMM; independent measure/discount/reset, caplet quadrature and full swap-rate Jacobian checks; test_bgm_lesson.py. Sticky K0/flexicap strike/date/MC conventions are missing: caller-condition validation does not establish unconditional printed-price reproduction |
+| `hullkit._business_valuation_lesson` | `hullkit._business_valuation_lesson:BusinessModel`, `hullkit._business_valuation_lesson:simulate_business_value`, `hullkit._business_valuation_lesson:capitalized_equity` | §36.4 private Schwartz–Moon model; independent OU integration, quarterly cash/tax/default accounting and antithetic error checks; test_business_valuation_lesson.py. Caller accounting/ESO timing is explicit; original 5457M/27.9%/12.42 remains unreproduced |
 
 ## P4 logic-first private models
 

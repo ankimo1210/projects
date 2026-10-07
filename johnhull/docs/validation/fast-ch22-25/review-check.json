@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "scope": "Ch22–25の36節・125要件、承認済みfast-v1",
+  "critical": 0,
+  "important": 0,
+  "minor_open": 0,
+  "independent_test_summary": "独立実行：既存数値218 passed、新guard初回26 passed、source-list回帰/名前空間分離/追加依存の修正後3 passed。親側最終guard27 passed、全245 passed（21.89s）、台帳41 passed。",
+  "visual_captures_reviewed": 4,
+  "prior_accepted_rows_unchanged": 225,
+  "all_unselected_rows_unchanged": 270,
+  "requirements": {
+    "total": 125,
+    "numerical": 105,
+    "explanatory": 20,
+    "source_ids_statements_readings_match": true
+  },
+  "closed_material_findings": [
+    "23.5 初期variance v3=u2²を保持し当日情報を混入しない",
+    "24.7 現在価値と20日前の担保基準値の時点を修正",
+    "24.2 第2年無条件PD .29%と2年累積PD .45%を区別",
+    "新adapterと継承runnerのinput listを統一し4 source欠落を拒否する回帰を追加"
+  ],
+  "closed_minor": [
+    "旧sanitizerの文切れ/Markdown記号残りを修正し元系列不足の説明を保持"
+  ],
+  "pre_existing_out_of_scope": [
+    "TransitionMatrix docstringの丸め残差記述と実装の不整合を教材/noteで開示、共有codeは未変更"
+  ],
+  "final_reviewer_report": "最終Critical 0 / Important 0 / Minor 0。数値分類105/20、32計算/4説明と全N/A理由が妥当。元125要求ID/statement/readingとprepは完全一致。4更新画像の数式/表/本文/レイアウトを目視確認。追加provenance等3 passed、engine.inputs差替えと4 source記録を独立確認。共有source編集なし。",
+  "source_sha256": {
+    "docs/CHAPTERS_22_25_ACCEPTANCE_2026-10-07.md": "3dc90369300b449adadb136a75f78cba81913e180253d0c57b0dac11e9b9dc8a",
+    "docs/acceptance/fast-ch22-25-profile.json": "23788795d47030352bce1b4b4b5442023c85ed3ad82fc4979176add5177ff1be",
+    "docs/acceptance/fast-ch22-25.json": "d882c7519cdab532a5047c218ef8cd15b1ecf722ec5466eed5217721b9432d28",
+    "docs/lessons/risk-credit-chapter-details.json": "7a4c06c6c2fd3045e6430c3a3a40e16b5a5c7ec851054fca25c49ef4f2355fc3",
+    "report/tests/test_fast_acceptance_risk_credit.py": "371a99f1df9c8cfa14c6c971da859a6dbd946db5ff234f59b0c02511a7c13d9e",
+    "scripts/fast_acceptance_advanced_options.py": "85678fb3ed504f54835bca4aea9afb3fc3a609985f86cc10e41dee73a828363a",
+    "scripts/fast_acceptance_options.py": "15c2bd4bfbb0695743bdc82185575823a375726d024653b5451ae3e8d0261f2d",
+    "scripts/fast_acceptance_risk_credit.py": "923e409008207603111515567225d490fada59ce02137e3087ca5f6c253ab62c",
+    "scripts/verify_fast_acceptance_options_browser.cjs": "1a3e8f7a8525f2a87c653a94543f6ca3f9974c2898d44d9f9a557aa354c658fd"
+  },
+  "artifact_sha256": {
+    "docs/validation/fast-ch22-25/acceptance-check.json": "1e6705bc8d5b0a5b93fdde4c03af6b501915348b69e97cb03a3b2a85cfb96a8e",
+    "docs/validation/fast-ch22-25/browser-check.json": "2f25db70d679cf715af3ac899d88d91e4d28869df8683e015d5047c8a00a6fdf",
+    "docs/validation/fast-ch22-25/ledger-check.json": "1ab0230261b026a1d97a2d01d27c9f3ec6604d86b4966dc4795785ed479f9188"
+  }
+}

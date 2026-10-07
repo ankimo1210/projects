@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "kind": "johnhull-evidence-manifest",
+  "entries": [
+    {
+      "path": "docs/validation/chapter-01/book-section-1-1-1440.png",
+      "ref": "artifact:sha256:f3a0e6dfab0dc52781810fce648262a2acf227ed6848a2bb9466be2047b6884f",
+      "bytes": 180419,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-2-1440.png",
+      "ref": "artifact:sha256:2da5aac211f0ea975dea0d16414489f2d5567592c38ccd5fcebbcd56d8f2f692",
+      "bytes": 277948,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-3-1440.png",
+      "ref": "artifact:sha256:ce256657cee4edd6f2b7b7f44d16ec3ff5b01815e554091f8f4a5c1247d53edb",
+      "bytes": 500694,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-4-1440.png",
+      "ref": "artifact:sha256:1f562cec27c0416ca8add6e4470ac403cf2e5665f24f0f6d49271e3d6a5864f8",
+      "bytes": 133142,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-5-1440.png",
+      "ref": "artifact:sha256:11b17b96a33c05859f32fde5c439642a5bd45b13b446ef87138630baa859e3f8",
+      "bytes": 433419,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-6-1440.png",
+      "ref": "artifact:sha256:c621337dd14134c2a2a4c73642a4a3f547c37275ea829b410234b731e0470f8e",
+      "bytes": 185644,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-7-1440.png",
+      "ref": "artifact:sha256:840ba86931fb3b2f22f99bcb797278453b20c299936ef265b10661bbba403421",
+      "bytes": 415036,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-8-1440.png",
+      "ref": "artifact:sha256:cfc0da2a878391195d9556a509d0733dfea51577e44d801a578c02ad8368b078",
+      "bytes": 464966,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-9-1440.png",
+      "ref": "artifact:sha256:faca9feab74c63ca30692b7c57a4fcf0f7ae7fc33dadac90aa366cf50890bd83",
+      "bytes": 242850,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-10-1440.png",
+      "ref": "artifact:sha256:e713a32bba473efdbb85e5e5873e7ea0c878c30b70a43cddc23dc5708f5c0e03",
+      "bytes": 184908,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-1-1000.png",
+      "ref": "artifact:sha256:c811f8c892cb50614e6cdd625ef710eb055ae6a191b16b3baeff578d526873ab",
+      "bytes": 143554,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-2-1000.png",
+      "ref": "artifact:sha256:17bad5495af363eb1d46a6ee6fe29a06260eb8e049d6a27907c29d048214e14d",
+      "bytes": 231787,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-3-1000.png",
+      "ref": "artifact:sha256:68e43c7bce3b8ad4781a8589abd6090e7d891f2ae2a4010c2643a00b1c95bad4",
+      "bytes": 420123,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-4-1000.png",
+      "ref": "artifact:sha256:22850369ce5f30664c73a37472033692308c0bb9121c4b9c149df39e5ae5bf3f",
+      "bytes": 99780,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-5-1000.png",
+      "ref": "artifact:sha256:e6bbabbc92a1bb78f526986cd99c999a1da2c598e85222f4bfe753a85f6a27d6",
+      "bytes": 363407,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-6-1000.png",
+      "ref": "artifact:sha256:59b13af8bbc33cba6769a6d0f759b079fd1475db6f7511fef31707facd9c78d6",
+      "bytes": 139015,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-7-1000.png",
+      "ref": "artifact:sha256:86f2cdb7ad799ba763174d32db7a445190fe134a009cfce0121cfdb90cd389d4",
+      "bytes": 341441,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-8-1000.png",
+      "ref": "artifact:sha256:0e97aa67dd0a8815fbfcbc08f62cf8c5344eceb398afa0557aa64369256ff674",
+      "bytes": 386731,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-9-1000.png",
+      "ref": "artifact:sha256:1af773c79534d35b42a36e5536095d5f738f257298acb979d7929d7d4ffa76a2",
+      "bytes": 182709,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/book-section-1-10-1000.png",
+      "ref": "artifact:sha256:5c7e8b35997cf01454da7e257a7b0cd9d6e4c8d9cae3ae2b1931af53e5882c9a",
+      "bytes": 142083,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-1-1440.png",
+      "ref": "artifact:sha256:f8d50df156feac459a56309b098105ceffc3c5e71ead254d2e73c3fab5292539",
+      "bytes": 103473,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-2-1440.png",
+      "ref": "artifact:sha256:5bb88899b1fe3a2590192f90844d198388f023eb0fa8e88aea7de7ca20c322b7",
+      "bytes": 172340,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-3-1440.png",
+      "ref": "artifact:sha256:305384bddaaf79a52f95c108ad803a0568df3a1fed973b663de3dc67f55d61b5",
+      "bytes": 228841,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-4-1440.png",
+      "ref": "artifact:sha256:2c02445445ac642c63a2a83e25f00cf61ac3ef0b96f179aba63eb6674287e712",
+      "bytes": 72941,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-5-1440.png",
+      "ref": "artifact:sha256:1e421c84ed2438e6768ee26e292383cc5fd77d87fea482f7d1ea5067395831c8",
+      "bytes": 212660,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-6-1440.png",
+      "ref": "artifact:sha256:5c46ea5df3e8d58e1f940ee99d37f8cb79f98fee3da99c3a8dff100ad4a6d608",
+      "bytes": 104818,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-7-1440.png",
+      "ref": "artifact:sha256:5c97e950d91ce0cf5d8eb57ac88ccf5d45bd94fcced73d7a2c80cabe84b17948",
+      "bytes": 196160,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-8-1440.png",
+      "ref": "artifact:sha256:1a1e7a9992b6f55a9f85a02c6f27d7b9cc113d2d1e48ba5a1ff619beeddc1923",
+      "bytes": 209736,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-9-1440.png",
+      "ref": "artifact:sha256:13aba8a7221d35aecb8fc64842efc9cf5c97db5f715cd2650ccd8f4d21bbf897",
+      "bytes": 114208,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-10-1440.png",
+      "ref": "artifact:sha256:10b4d173841aebeb42de58bd2ddacb8394e5a3035ee99de35110333db0e5135a",
+      "bytes": 96457,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-1-1000.png",
+      "ref": "artifact:sha256:32e6c8277f0f42441d12486190517620a936352a6a7e04dac5aa9989a6914715",
+      "bytes": 99843,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-2-1000.png",
+      "ref": "artifact:sha256:fb012979221935fda2e56e5e6d10458a5c39dbe03d47307db24c5b76879c238d",
+      "bytes": 171263,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-3-1000.png",
+      "ref": "artifact:sha256:150a671726e372be121ea027f894eb1a2cba8be4b4159735eedb0ea86e44ae10",
+      "bytes": 227003,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-4-1000.png",
+      "ref": "artifact:sha256:942a83f86ff45548fc258e8461686ec2de5929164b7d4b23ccafb0b72e450378",
+      "bytes": 71210,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-5-1000.png",
+      "ref": "artifact:sha256:80b2511dd57daba7419ee362921663c44eb1058282dcc543a3f3ebf89ffdf2cd",
+      "bytes": 212296,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-6-1000.png",
+      "ref": "artifact:sha256:624fbe1077c4b1b351db693bbbd827bf1b27d7c37f95701ce33b9c2ca415ae2c",
+      "bytes": 102496,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-7-1000.png",
+      "ref": "artifact:sha256:b88837bbd1907f3b98086022f8029b5ee439f18fc11fdb88cdb0404d49149495",
+      "bytes": 191699,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-8-1000.png",
+      "ref": "artifact:sha256:97520101d7dee9d8912d95badd9f76f7421eeee346307c2c5bbfd44a8ed22af6",
+      "bytes": 207661,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-9-1000.png",
+      "ref": "artifact:sha256:92a002ade1386c4c56d40d2573b299b2ce531ff23d056b7b0215f893bfb25d1b",
+      "bytes": 112544,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/validation/chapter-01/portal-section-1-10-1000.png",
+      "ref": "artifact:sha256:b48c50d6cc7eefb6609ef97425a20c5cdf8bfa393c005f596a5aa970fd555ae6",
+      "bytes": 94438,
+      "mime": "image/png"
+    }
+  ]
+}

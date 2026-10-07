@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "changed": [],
+  "policy": "only local MyST stylesheet query; exact old HTML pins preserved",
+  "artifact_sha256": {
+    "book/_build/html/notebooks/10_exotics.html": "0560bae03ccca2246440f825138a0f2bcbc634291e82fc16fa21d1cf7f1d4dea",
+    "report/site/exotics.html": "9a3abf9ae363ade735ec937308319d2785e4ffadd85378e341f4804be75258ed",
+    "book/_build/html/notebooks/06_numerical.html": "96d51dd719d438b7fc854ca9d685784b21a90e2e45de22efa59c76ed0adaed46",
+    "report/site/numerics.html": "f3a248d386180f6534b154b7d4c3980064f66d840dfce44dee4bc744e6d8ca93"
+  }
+}

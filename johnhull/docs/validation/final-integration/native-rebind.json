@@ -1,0 +1,118 @@
+{
+  "status": "PASS",
+  "baseline": {
+    "existing_33": "9dd53804 including latest P8/D1",
+    "remaining_273": "cef7cea1"
+  },
+  "date": "2026-10-08",
+  "accepted": 306,
+  "unchanged_rows": 33,
+  "rebound_rows": 273,
+  "rebound_evidence_entries": 768,
+  "all_requirements_coverage_paths_scopes_assumptions_limitations_preserved": true,
+  "atomic_update": {
+    "status": "PASS",
+    "date": "2026-10-08",
+    "method": "fresh profiles then one atomic native evidence rebind",
+    "profiles": [
+      {
+        "profile": "fast-ch02-09",
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "-c",
+          "import json; from johnhull.scripts import fast_acceptance as f; cfg=f.read(f.CONFIG); f.validate(cfg,f.read(f.OUT+'/numerical-check.json'),f.read(f.OUT+'/browser-check.json')); f.fresh(f.read(f.OUT+'/acceptance-check.json')); print(json.dumps(dict(status='PASS',sections=len(cfg['sections']),read_only=True)))"
+        ],
+        "result": {
+          "status": "PASS",
+          "sections": 70,
+          "read_only": true
+        }
+      },
+      {
+        "profile": "fast-ch10-15",
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "/home/kazumasa/worktrees/m29/johnhull/scripts/fast_acceptance_options.py",
+          "verify"
+        ],
+        "result": {
+          "status": "PASS",
+          "sections": 58,
+          "read_only": true
+        }
+      },
+      {
+        "profile": "fast-ch16-21",
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "/home/kazumasa/worktrees/m29/johnhull/scripts/fast_acceptance_advanced_options.py",
+          "verify"
+        ],
+        "result": {
+          "status": "PASS",
+          "sections": 54,
+          "read_only": true
+        }
+      },
+      {
+        "profile": "fast-ch22-25",
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "/home/kazumasa/worktrees/m29/johnhull/scripts/fast_acceptance_risk_credit.py",
+          "verify"
+        ],
+        "result": {
+          "status": "PASS",
+          "sections": 36,
+          "read_only": true
+        }
+      },
+      {
+        "profile": "fast-ch29-37",
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "/home/kazumasa/worktrees/m29/johnhull/scripts/fast_acceptance_final.py",
+          "verify"
+        ],
+        "result": {
+          "status": "PASS",
+          "sections": 45,
+          "read_only": true
+        }
+      },
+      {
+        "profile": "chapter-01",
+        "result": {
+          "status": "PASS",
+          "sections": 10,
+          "states": 40
+        }
+      }
+    ],
+    "selected_sections": 273,
+    "changed_evidence": 150,
+    "unchanged_sections": 33,
+    "requirements_and_coverage_preserved": true,
+    "counts": {
+      "unreviewed": 0,
+      "gaps_found": 0,
+      "pending_validation": 0,
+      "accepted": 306,
+      "out_of_scope": 0
+    },
+    "native_artifacts_checked": true
+  },
+  "book_cache": {
+    "status": "PASS",
+    "chapter": 1,
+    "method": "restore exact accepted output after matching current notebook and browser inputs",
+    "source_checkout": "/home/kazumasa/worktrees/johnhull-acceptance/johnhull",
+    "before": "96dc28d440ba6ead0d8ad21eadc2384ac5ea83cbde753a867f5d796ad39e55fd",
+    "accepted_html_sha256": "a89e4ea68c41327fca1b008adb1edbfceb108c684dcd87f60f27b18a23d0bc4e",
+    "source_and_capture_bindings_matched": true,
+    "local_dependencies_checked": 31,
+    "restored_dependencies": [
+      "book/_build/html/notebooks/../_images/d6d8ff998cb99d22afece8d584f1d211571d4c77c6803eaece3bc79725e97949.png"
+    ]
+  }
+}

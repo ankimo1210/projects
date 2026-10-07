@@ -1,0 +1,338 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hull Ch30 補足教材</title><style>/* ============================================================
+   claude-report — workspace default style for HTML reports
+   ------------------------------------------------------------
+   Inline this whole file into a <style> block. Artifacts must be
+   self-contained; only Google Fonts may be linked externally:
+
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?\
+family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&\
+family=Public+Sans:wght@400;500;700&\
+family=Zen+Old+Mincho:wght@700;900&\
+family=Zen+Kaku+Gothic+New:wght@400;500;700&\
+family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+   Chart colors are validated (dataviz six checks) on both surfaces:
+     light  #C05C33 / #2A6DA6  on #FAF9F5   — ALL CHECKS PASS
+     dark   #D2704E / #5093DD  on #262624   — ALL CHECKS PASS
+   Re-run the validator before changing any --series-* value.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  /* surfaces & ink */
+  --ground:#F0EEE6; --surface:#FAF9F5; --surface-2:#E9E6DB; --surface-3:#F5F3EC;
+  --ink:#141413; --ink-2:#4E4B45; --ink-3:#85817A;
+  --rule:#DFDBCF; --rule-2:#CDC8B8;
+  /* brand accent */
+  --accent:#C05C33; --accent-soft:#D97757; --accent-wash:#F7EBE3;
+  /* chart series (validated) */
+  --series-1:#C05C33; --series-2:#2A6DA6;
+  --grid:#E4E0D4;
+  /* sequential ramp, light -> dark */
+  --s1:#F4E7DD; --s2:#EBD2C0; --s3:#DFB79E; --s4:#D0997A;
+  --s5:#BE7B58; --s6:#AA6140; --s7:#8F4A2C; --s8:#71351E;
+  /* type */
+  --serif:"Source Serif 4","Zen Old Mincho",Georgia,'Hiragino Mincho ProN',"Yu Mincho",serif;
+  /* JP-first: Japanese punctuation (——, 〜, 「」) must come from the JP face,
+     or a doubled em dash breaks into two disconnected strokes.
+     For an English-only document, swap the first two families. */
+  --sans:"Zen Kaku Gothic New","Public Sans",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* shape */
+  --r-card:12px; --r-chip:999px; --r-mark:3px;
+  --measure:660px; --wide:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+    --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+    --rule:#38352F; --rule-2:#4A473F;
+    --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+    --series-1:#D2704E; --series-2:#5093DD;
+    --grid:#2F2D29;
+    --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+    --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#1A1917; --surface:#262624; --surface-2:#32302C; --surface-3:#201F1D;
+  --ink:#F4F2EC; --ink-2:#B0ACA2; --ink-3:#817D74;
+  --rule:#38352F; --rule-2:#4A473F;
+  --accent:#E08A6A; --accent-soft:#D2704E; --accent-wash:#332822;
+  --series-1:#D2704E; --series-2:#5093DD;
+  --grid:#2F2D29;
+  --s1:#2B2724; --s2:#3A2E28; --s3:#4B352C; --s4:#5F3D30;
+  --s5:#764936; --s6:#8F573B; --s7:#AA6A45; --s8:#C88056;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.9;
+  margin:0; padding:0 24px 120px; -webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1;
+}
+.wrap{max-width:var(--wide);margin:0 auto}
+.col{max-width:var(--measure)}
+
+/* ---------- masthead ---------- */
+.mast{padding:72px 0 40px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;gap:8px 16px;flex-wrap:wrap;align-items:baseline}
+.eyebrow b{color:var(--accent);font-weight:600}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(38px,6.6vw,68px);
+  line-height:1.12;letter-spacing:0;margin:22px 0 0;text-wrap:balance}
+h1 .sub{display:block;font-family:var(--sans);font-size:clamp(16px,2vw,21px);
+  font-weight:500;line-height:1.7;color:var(--ink-2);margin-top:22px}
+.lede{max-width:var(--measure);margin:26px 0 0;color:var(--ink-2);font-size:16.5px}
+.lede strong{color:var(--ink);font-weight:700}
+
+/* ---------- key-number strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  gap:12px;margin:40px 0 0}
+.strip>div{background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:20px 20px 22px}
+.strip .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);display:block}
+.strip .v{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;
+  display:block;margin-top:12px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.strip .v.a{color:var(--accent)}
+.strip .v.b{color:var(--series-2)}
+.strip .n{font-size:13px;color:var(--ink-3);display:block;margin-top:8px;line-height:1.65}
+
+/* ---------- sections ---------- */
+section{padding:72px 0 0}
+.head{display:flex;gap:18px;align-items:baseline;margin-bottom:6px}
+.step{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.1em;padding-top:8px;flex:none}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3.3vw,34px);
+  line-height:1.4;margin:0;text-wrap:balance}
+h3{font-weight:700;font-size:15.5px;margin:44px 0 10px;letter-spacing:.02em}
+p{margin:16px 0}.col p{max-width:var(--measure)}
+strong{font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);padding:0 2px}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface-2);
+  padding:2px 7px;border-radius:var(--r-mark);color:var(--ink-2)}
+ul{max-width:var(--measure);padding-left:0;list-style:none;margin:20px 0}
+ul li{position:relative;padding-left:24px;margin:14px 0}
+ul li::before{content:"";position:absolute;left:3px;top:.78em;width:8px;height:2px;
+  border-radius:1px;background:var(--accent-soft)}
+
+/* ---------- ornament (Claude asterisk motif) ---------- */
+.burst{display:block;width:22px;height:22px;margin:64px auto 0;opacity:.5}
+.burst path{stroke:var(--accent-soft);stroke-width:1.4;stroke-linecap:round}
+
+/* ---------- figures ---------- */
+figure{margin:36px 0 0;background:var(--surface);border:1px solid var(--rule);
+  border-radius:var(--r-card);padding:26px 26px 20px}
+.figtitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:.01em}
+.figsub{font-size:13px;color:var(--ink-3);margin:0 0 18px;line-height:1.65}
+figcaption{font-size:13.5px;color:var(--ink-2);line-height:1.8;margin-top:16px;
+  padding-top:14px;border-top:1px solid var(--rule)}
+figcaption b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin-right:10px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:14px 0 6px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.sq{width:11px;height:11px;border-radius:2px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:30px 0 0;border:1px solid var(--rule);
+  border-radius:var(--r-card);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--surface-3)}
+th:first-child,td:first-child{text-align:left}
+td.num{font-family:var(--mono)}
+tbody tr:last-child td{border-bottom:none}
+tr.hl td{background:var(--accent-wash);font-weight:700}
+caption{caption-side:top;text-align:left;padding:16px 14px 10px;font-size:13px;
+  color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em}
+
+/* ---------- callout ---------- */
+.note{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent-soft);border-radius:var(--r-card);
+  padding:18px 22px;margin:32px 0;max-width:var(--measure)}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.note p{margin:8px 0 0;font-size:15.5px;line-height:1.85}
+
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:11.5px;color:var(--ink-3);line-height:2.1}
+
+/* ---------- tooltip ---------- */
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:11.5px;
+  line-height:1.7;padding:9px 12px;border-radius:8px;z-index:99;white-space:pre;
+  box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.hit{cursor:crosshair}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:640px){
+  body{padding:0 16px 80px}
+  figure{padding:18px 15px 14px}
+  .mast{padding-top:48px}
+}
+.lesson{margin:2rem 0;padding:1.4rem;background:var(--surface);border-radius:10px}
+    .requirement{padding:.6rem 0;border-bottom:1px solid var(--rule)}
+    .caution{padding:.8rem;border-left:3px solid var(--series-2)}
+    p,li{line-height:1.85} table{width:100%;border-collapse:collapse}
+    th,td{padding:.5rem;text-align:left;border-bottom:1px solid var(--rule)}
+    pre{overflow-x:auto} .lesson{overflow-wrap:anywhere} mjx-container{overflow-x:auto;max-width:100%}
+    nav{line-height:2} .wrap{max-width:1060px;margin:auto;padding:1.3rem}
+    </style><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+        <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><body><main class="wrap"><nav><a href="ch01.html">Ch1</a> · <a href="ch02.html">Ch2</a> · <a href="ch03.html">Ch3</a> · <a href="ch04.html">Ch4</a> · <a href="ch05.html">Ch5</a> · <a href="ch06.html">Ch6</a> · <a href="ch07.html">Ch7</a> · <a href="ch08.html">Ch8</a> · <a href="ch09.html">Ch9</a> · <a href="ch10.html">Ch10</a> · <a href="ch11.html">Ch11</a> · <a href="ch12.html">Ch12</a> · <a href="ch13.html">Ch13</a> · <a href="ch14.html">Ch14</a> · <a href="ch15.html">Ch15</a> · <a href="ch16.html">Ch16</a> · <a href="ch17.html">Ch17</a> · <a href="ch18.html">Ch18</a> · <a href="ch19.html">Ch19</a> · <a href="ch20.html">Ch20</a> · <a href="ch21.html">Ch21</a> · <a href="ch22.html">Ch22</a> · <a href="ch23.html">Ch23</a> · <a href="ch24.html">Ch24</a> · <a href="ch25.html">Ch25</a> · <a href="../exotics.html">Ch26</a> · <a href="../numerics.html">Ch27</a> · <a href="../exotics.html">Ch28</a> · <a href="ch29.html">Ch29</a> · <a href="ch30.html">Ch30</a> · <a href="ch31.html">Ch31</a> · <a href="ch32.html">Ch32</a> · <a href="ch33.html">Ch33</a> · <a href="ch34.html">Ch34</a> · <a href="ch35.html">Ch35</a> · <a href="ch36.html">Ch36</a> · <a href="ch37.html">Ch37</a> · <a href="../index.html">ポータル</a> · <a href="../../../book/_build/html/index.html">Book</a></nav><nav><a href="#section-30-1">§30.1</a>　<a href="#section-30-2">§30.2</a>　<a href="#section-30-3">§30.3</a>　<a href="#section-30-appendix">§30.appendix</a></nav><h1>Ch30 節別補足教材</h1>
+<p>刊行時点の原典本文を学ぶ。現在の市場条件や法令の適用はこの教材の対象に含めない。</p>
+<section class="lesson" id="section-30-1">
+<h2>§30.1 Convexity Adjustments</h2>
+<p>出典: Hull 11e Global Edition pp.707–710。</p>
+<p>forward yield は forward bond price を利回りに逆変換した値で、期待利回りとは違う。債券価格 <span class="math inline"><span data-source-tex="G(y)">\(G(y)\)</span></span> の非線形性から <span class="math inline"><span data-source-tex="E^T[y_T]\simeq y_F-\frac12y_F^2\sigma_y^2T\,G&#x27;&#x27;/G&#x27;">\(E^T[y_T]\simeq y_F-\frac12y_F^2\sigma_y^2T\,G&#x27;&#x27;/G&#x27;\)</span></span> を得る。swap rate は par coupon bond の利回りで近似する。</p>
+<h3>要点の読み方</h3>
+<p>Forward bond priceをyieldへ逆変換した<span class="math inline"><span data-source-tex="y_F">\(y_F\)</span></span>は、将来yieldの期待値とは異なる。年<span class="math inline"><span data-source-tex="m">\(m\)</span></span>回複利で</p>
+<div class="math block">
+<span data-source-tex="G(y)=\sum_i C_i(1+y/m)^{-mt_i}">\(G(y)=\sum_i C_i(1+y/m)^{-mt_i}\)</span>
+</div>
+<p>と書くと、正のcashflowでは<span class="math inline"><span data-source-tex="G&#x27;&lt;0,G&#x27;&#x27;&gt;0">\(G&#x27;&lt;0,G&#x27;&#x27;&gt;0\)</span></span>。価格の平均をyieldへ戻す操作と、yieldを平均する操作は交換できない。T-payment測度で<span class="math inline"><span data-source-tex="E^T[G(y_T)]=G(y_F)">\(E^T[G(y_T)]=G(y_F)\)</span></span>を用いる二次近似は</p>
+<div class="math block">
+<span data-source-tex="E^T[y_T]\simeq y_F-\frac12y_F^2\sigma_y^2T\frac{G&#x27;&#x27;(y_F)}{G&#x27;(y_F)}.">\(E^T[y_T]\simeq y_F-\frac12y_F^2\sigma_y^2T\frac{G&#x27;&#x27;(y_F)}{G&#x27;(y_F)}.\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="G&#x27;&#x27;/G&#x27;">\(G&#x27;&#x27;/G&#x27;\)</span></span>は負なので補正は正である。<span class="math inline"><span data-source-tex="\sigma_y">\(\sigma_y\)</span></span>は相対yield vol／<span class="math inline"><span data-source-tex="\sqrt{\rm 年}">\(\sqrt{\rm 年}\)</span></span>、<span class="math inline"><span data-source-tex="T">\(T\)</span></span>は観測までの年数。一般分布での厳密公式とはしない。</p>
+<p>Ex30.1の単位額面1、年払3年6%債を<span class="math inline"><span data-source-tex="y_F=6\%">\(y_F=6\%\)</span></span>で評価すると<span class="math inline"><span data-source-tex="G&#x27;=-2.673011949,G&#x27;&#x27;=9.891031992">\(G&#x27;=-2.673011949,G&#x27;&#x27;=9.891031992\)</span></span>。Vol22%、観測3年で期待yieldの近似.060967119（6.097%）。元本100のyield連動単一支払を5%年複利で割り引くと5.26656895（印刷5.27）、未調整なら5.18302559（5.18）。微分を別の有限差分で、近似biasを独立のprice分布→yield求根→求積で検証する。</p>
+<p>CMSでは現在のpar swap rateをcouponにしたpar bondを構成してyieldとの関係を調べる。現在のpar bondの価格一致は、将来swap-rateと固定coupon bond-yieldの力学が等しいことを意味しない。非flat curveや大きなshockではその同一視が局所近似であることを残す。Vol／時間を縮めてTaylor省略項が減ることを確認するが、本文の二次補正を全スマイル・全市場のCMS価格へ一般化しない。</p>
+<div class="requirement" id="D30.1-01">
+<p>Figure30.1 の価格平均と利回り平均、式30.1（708–709）</p>
+<p><span class="math inline"><span data-source-tex="G&#x27;&lt;0,G&#x27;&#x27;&gt;0">\(G&#x27;&lt;0,G&#x27;&#x27;&gt;0\)</span></span> と正の補正</p>
+</div>
+<div class="requirement" id="D30.1-02">
+<p>derivatives / 期待利回り / PV</p>
+</div>
+<div class="requirement" id="D30.1-03">
+<p>swap rate を債券利回りで近似する前提（709）</p>
+<p>近似誤差の領域を説明</p>
+</div>
+<h3>計算の読み方</h3>
+<p>Ex30.1: G′−2.6730/G″9.8910、6.097%、5.27/5.18、逆価格求積の二次近似誤差収束</p>
+<p>二次yield補正とCMSのpar-bond同一視は局所近似。G''/G'は負。合成price分布の逆yield求積で省略項を検証し、全スマイル／市場CMSの厳密価格とはしない。</p>
+<div class="caution">
+<p>二次yield補正とCMSのpar-bond同一視は局所近似。G''/G'は負。合成price分布の逆yield求積で省略項を検証し、全スマイル／市場CMSの厳密価格とはしない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-30-2">
+<h2>§30.2 Timing Adjustments</h2>
+<p>出典: Hull 11e Global Edition pp.710–711。</p>
+<p>観測 <span class="math inline"><span data-source-tex="T">\(T\)</span></span> と支払 <span class="math inline"><span data-source-tex="T^*">\(T^*\)</span></span> が違うと numeraire 比は <span class="math inline"><span data-source-tex="P(t,T^*)/P(t,T)">\(P(t,T^*)/P(t,T)\)</span></span>。金利・vol・相関を固定する近似では期待値に <span class="math inline"><span data-source-tex="\exp[-\rho_{VR}\sigma_V\sigma_R R_F(T^*-T)T/(1+R_F/m)]">\(\exp[-\rho_{VR}\sigma_V\sigma_R R_F(T^*-T)T/(1+R_F/m)]\)</span></span> を掛ける。</p>
+<h3>要点の読み方</h3>
+<p>値を観測する日<span class="math inline"><span data-source-tex="T">\(T\)</span></span>と支払う日<span class="math inline"><span data-source-tex="T^*">\(T^*\)</span></span>を分ける。Numeraire比は<span class="math inline"><span data-source-tex="P(t,T^*)/P(t,T)">\(P(t,T^*)/P(t,T)\)</span></span>であり、そのsigned loadingを<span class="math inline"><span data-source-tex="\ell">\(\ell\)</span></span>とすれば、定数Gaussianの密度は<span class="math inline"><span data-source-tex="\exp(\ell W_T-\ell^2T/2)">\(\exp(\ell W_T-\ell^2T/2)\)</span></span>となる。値の相対vol<span class="math inline"><span data-source-tex="\sigma_V">\(\sigma_V\)</span></span>との共分散で</p>
+<div class="math block">
+<span data-source-tex="E^{T^*}[V_T]=F_V\exp(\rho_{VR}\sigma_V\ell T),\quad
+\ell\simeq-\frac{\sigma_RR_F(T^*-T)}{1+R_F/m}.">\(E^{T^*}[V_T]=F_V\exp(\rho_{VR}\sigma_V\ell T),\quad
+\ell\simeq-\frac{\sigma_RR_F(T^*-T)}{1+R_F/m}.\)</span>
+</div>
+<p>ここで<span class="math inline"><span data-source-tex="\sigma_R">\(\sigma_R\)</span></span>はforward rateの相対vol、<span class="math inline"><span data-source-tex="m">\(m\)</span></span>は複利頻度、<span class="math inline"><span data-source-tex="P(0,T^*)">\(P(0,T^*)\)</span></span>で割り引く。負のratio loadingを採ったうえで相関の符号も同時に反転させると二重修正になる。</p>
+<p>Ex30.2は<span class="math inline"><span data-source-tex="T=5,T^*=6,F_V=1200,\sigma_V=.20,\sigma_R=.18,\rho=-.4,R_F=.08,m=1">\(T=5,T^*=6,F_V=1200,\sigma_V=.20,\sigma_R=.18,\rho=-.4,R_F=.08,m=1\)</span></span>。補正factor1.005347581（印刷1.00535）、支払測度mean1206.417097（1206.42）、<span class="math inline"><span data-source-tex="P(0,6)=1.08^{-6}=.630169627">\(P(0,6)=1.08^{-6}=.630169627\)</span></span>（.6302）、PV760.247412（760.25）である。途中丸めを最終計算へ持ち込まない。</p>
+<p><span class="math inline"><span data-source-tex="\rho=0">\(\rho=0\)</span></span>、vol0、<span class="math inline"><span data-source-tex="T^*=T">\(T^*=T\)</span></span>で対応する補正が0となる。Raw密度を使う独立条件付きGaussian求積と固定seed MCで8条件を照合する。定数のsigned loadingモデルでは厳密なtiltだが、金利からratio loadingへの式は係数を凍結した近似であり、任意のstate-dependent金利モデルでの厳密価格ではない。</p>
+<div class="requirement" id="D30.2-01">
+<p>式30.2–30.3、bond ratio と forward rate の符号（710–711）</p>
+<p><span class="math inline"><span data-source-tex="\rho=0">\(\rho=0\)</span></span>、<span class="math inline"><span data-source-tex="T^*=T">\(T^*=T\)</span></span> で補正ゼロ</p>
+</div>
+<div class="requirement" id="D30.2-02">
+<p>係数・期待値・割引・PV</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>1.00535（1.005347581）、1206.42（1206.417097）、<span class="math inline"><span data-source-tex="P(0,6)=.6302">\(P(0,6)=.6302\)</span></span>（.630169627）、760.25（760.247412）：4値 。丸め前を最後まで保持。専用固定値なし。</p>
+<h3>計算の読み方</h3>
+<p>Ex30.2: 1.00535/1206.42/0.6302/760.25、8条件の独立求積・raw密度固定seed MC</p>
+<p>Constant signed Gaussian loadingのtiltは厳密だが、forward rate→bond ratio loadingは係数凍結近似。支払DFを使い、loading負号と相関反転を二重適用しない。</p>
+<div class="caution">
+<p>Constant signed Gaussian loadingのtiltは厳密だが、forward rate→bond ratio loadingは係数凍結近似。支払DFを使い、loading負号と相関反転を二重適用しない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-30-3">
+<h2>§30.3 Quantos</h2>
+<p>出典: Hull 11e Global Edition pp.711–714。</p>
+<p>Y通貨で測る変数を X通貨で支払うとき、同一通貨で表した numeraire 比のボラと共分散で drift を調整する。単一支払は forward FX、複数支払・American は money-market numeraire と spot FX を使う。逆為替の Itô 項と測度変更で Siegel の見かけの非対称を解く。</p>
+<h3>要点の読み方</h3>
+<p>Y通貨で表した原資産をX通貨で固定換算して支払うquantoを考える。原典のFX quoteは<strong>Y units per X</strong>であり、この向きでは単一支払の調整forwardは</p>
+<div class="math block">
+<span data-source-tex="F_{\rm quanto}=F_Y\exp(\rho_{V,FX}\sigma_V\sigma_{{\rm FX},T}T).">\(F_{\rm quanto}=F_Y\exp(\rho_{V,FX}\sigma_V\sigma_{{\rm FX},T}T).\)</span>
+</div>
+<p><span class="math inline"><span data-source-tex="\sigma_{{\rm FX},T}">\(\sigma_{{\rm FX},T}\)</span></span>は同じ支払日のforward FX vol。逆quoteへ変えると拡散と相関の符号も対応させる。Spot FX volを一般のforward FX volへ無条件に置き換えない。</p>
+<p>Ex30.3では日経15000、Y金利2%、配当1%、1年の外国forward15150.752506（印刷15150.75）。原資産vol20%、forward FX vol12%、相関.3では15260.231576（15260.23）。Fixed換算倍率があれば最後に掛け、FX spotを再び掛けない。</p>
+<p>複数支払・Americanではmoney-market numeraireとspot FXを使い、X世界の原資産driftを<span class="math inline"><span data-source-tex="r_Y-q_Y+\rho\sigma_V\sigma_{{\rm FX},spot}">\(r_Y-q_Y+\rho\sigma_V\sigma_{{\rm FX},spot}\)</span></span>とする。X金利で割り引くため</p>
+<div class="math block">
+<span data-source-tex="q_{\rm eff}=r_X-r_Y+q_Y-\rho\sigma_V\sigma_{{\rm FX},spot}.">\(q_{\rm eff}=r_X-r_Y+q_Y-\rho\sigma_V\sigma_{{\rm FX},spot}.\)</span>
+</div>
+<p>Ex30.4のdrift補正.006、effective yield.029、100段American call179.8260736ポンドは印刷179.83を再現する。独立monotone PDEの格子400／800では180.20956／180.22000となる。179.83は100段の印刷値で、連続行使の収束値ではない。</p>
+<p>Siegelの問題では同じ測度の<span class="math inline"><span data-source-tex="E[1/S]">\(E[1/S]\)</span></span>と<span class="math inline"><span data-source-tex="\,1/E[S]">\(\,1/E[S]\)</span></span>を同一視しない。逆数のItô driftは旧測度で<span class="math inline"><span data-source-tex="r_X-r_Y+\sigma_{FX}^2">\(r_X-r_Y+\sigma_{FX}^2\)</span></span>、測度変更後は<span class="math inline"><span data-source-tex="r_X-r_Y">\(r_X-r_Y\)</span></span>となり、逆数変換とnumeraire変更は別操作である。欧州給付の独立joint-lognormal求積／raw FX密度MCとAmerican PDEで確認した定数係数モデルの範囲を示す。</p>
+<div class="requirement" id="D30.3-01">
+<p>式30.4–30.6、FX は Y units per X（712）</p>
+<p>FX を逆数にすると相関符号も変わる</p>
+</div>
+<div class="requirement" id="D30.3-02">
+<p>Ex30.3 日経 quanto forward（712–713）</p>
+<p>15150.75 → 15260.23</p>
+</div>
+<div class="requirement" id="D30.3-03">
+<p>式30.7、Ex30.4、Siegel’s paradox（713–714）</p>
+<p>effective yield と100step価格</p>
+</div>
+<h3>計算の読み方</h3>
+<p>Ex30.3: 15,150.75→15,260.23、Ex30.4: 0.006/0.029/179.83、独立給付求積・raw FX密度MC・American PDE</p>
+<p>FXはY units per X。Single settlementのforward FX volとAmericanのspot FX volを分ける。原典179.83は100段値で、PDE収束価格約180.22とは別。定数係数・固定FX倍率の範囲。</p>
+<div class="caution">
+<p>FXはY units per X。Single settlementのforward FX volとAmericanのspot FX volを分ける。原典179.83は100段値で、PDE収束価格約180.22とは別。定数係数・固定FX倍率の範囲。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+<section class="lesson" id="section-30-appendix">
+<h2>§30.appendix Proof of the Convexity Adjustment Formula</h2>
+<p>出典: Hull 11e Global Edition pp.718–718。</p>
+<p><span class="math inline"><span data-source-tex="G(y_T)">\(G(y_T)\)</span></span> を <span class="math inline"><span data-source-tex="y_F">\(y_F\)</span></span> の周りで2次展開し、T-forward 下で <span class="math inline"><span data-source-tex="E[G(y_T)]=G(y_F)">\(E[G(y_T)]=G(y_F)\)</span></span> を利用する。<span class="math inline"><span data-source-tex="E[(y_T-y_F)^2]\simeq y_F^2\sigma_y^2T">\(E[(y_T-y_F)^2]\simeq y_F^2\sigma_y^2T\)</span></span> を置いて式30.1を得る。</p>
+<h3>要点の読み方</h3>
+<p><span class="math inline"><span data-source-tex="y_T=y_F+\Delta y">\(y_T=y_F+\Delta y\)</span></span>として、T-forward測度の期待値を取ると</p>
+<div class="math block">
+<span data-source-tex="0=E[G(y_T)]-G(y_F)
+=G&#x27;(y_F)E[\Delta y]+\frac12G&#x27;&#x27;(y_F)E[(\Delta y)^2]+E[\mathcal R_3].">\(0=E[G(y_T)]-G(y_F)
+=G&#x27;(y_F)E[\Delta y]+\frac12G&#x27;&#x27;(y_F)E[(\Delta y)^2]+E[\mathcal R_3].\)</span>
+</div>
+<p>左辺0はforward priceの定義であり、<span class="math inline"><span data-source-tex="\mathcal R_3">\(\mathcal R_3\)</span></span>はTaylor高次項である。二乗偏差には</p>
+<div class="math block">
+<span data-source-tex="E[(y_T-y_F)^2]=\operatorname{Var}(y_T)+(E[y_T]-y_F)^2">\(E[(y_T-y_F)^2]=\operatorname{Var}(y_T)+(E[y_T]-y_F)^2\)</span>
+</div>
+<p>という厳密な恒等式がある。これを最初から分散だけへ置き換えない。</p>
+<p>Hullの二次式は、高次残差とbias²を落とし、さらに局所分散を<span class="math inline"><span data-source-tex="y_F^2\sigma_y^2T">\(y_F^2\sigma_y^2T\)</span></span>で近似して</p>
+<div class="math block">
+<span data-source-tex="E[y_T]-y_F\simeq-\frac{G&#x27;&#x27;}{2G&#x27;}y_F^2\sigma_y^2T">\(E[y_T]-y_F\simeq-\frac{G&#x27;&#x27;}{2G&#x27;}y_F^2\sigma_y^2T\)</span>
+</div>
+<p>を得る。相対yield volと年の時計を使う。Terminal yieldを厳密に対数正規と仮定した結論ではない。</p>
+<p>独立参照ではlognormalなbond-price分布の各点からyieldを求根し、平均yield・分散・二乗偏差・平均priceを数値積分する。一次項、二次項、省略項、局所分散置換の誤差をそれぞれ保存し、volを半分、時間を4分の1へ縮めたときに残差が減ることを確認する。二点の対称／非対称分布とzero varianceも別に検査する。印刷数値例はなく、§30.1の例を付録の新価格pinには数えない。</p>
+<div class="requirement" id="D30.appendix-01">
+<p>Taylor 展開・期待値・forward price の関係（718）</p>
+<p>一次項と二次項の期待残差</p>
+</div>
+<div class="requirement" id="D30.appendix-02">
+<p>二乗偏差の近似と高次項の省略（718）</p>
+<p>小vol・小Tの誤差縮小</p>
+</div>
+<h3>本文の数値と前提</h3>
+<p>なし。Ex30.1 は§30.1所属。</p>
+<h3>計算の読み方</h3>
+<p>印刷例なし。E[(y−yF)²]=Var+bias²、price平均・Taylor一次/二次/省略項を独立逆価格求積で検証</p>
+<p>二乗偏差はvariance+bias²。高次Taylor残差／bias²／局所variance置換の省略を別々に検証する二次近似で、厳密terminal yield分布や追加印刷価格pinではない。</p>
+<div class="caution">
+<p>二乗偏差はvariance+bias²。高次Taylor残差／bias²／局所variance置換の省略を別々に検証する二次近似で、厳密terminal yield分布や追加印刷価格pinではない。</p>
+</div>
+<p>確認: 上の関係で、数量・通貨・金利の表示方法・受払の時点を変えると何が変わるか説明する。</p>
+</section>
+</main></body></html>

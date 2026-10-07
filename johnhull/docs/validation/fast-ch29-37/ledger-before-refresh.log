@@ -1,0 +1,24 @@
+......................................F..                                [100%]
+=================================== FAILURES ===================================
+____________ test_real_inventory_and_accepted_sections_are_complete ____________
+
+    def test_real_inventory_and_accepted_sections_are_complete() -> None:
+        project = REPO_ROOT / "johnhull"
+        inventory = json.loads((project / "docs/section_inventory.json").read_text(encoding="utf-8"))
+        ledger = json.loads((project / "docs/section_ledger.json").read_text(encoding="utf-8"))
+    
+        result = evaluate_ledger(project, inventory, ledger)
+        section_26_ids = [entry["id"] for entry in inventory["entries"] if entry["chapter"] == 26]
+        accepted = next(section for section in ledger["sections"] if section["id"] == "26.9")
+    
+>       assert result["status"] == "PASS", result["errors"]
+E       AssertionError: ["ledger section 29.1.evidence acceptance_note.sha256: digest does not match 'docs/CHAPTERS_29_37_ACCEPTANCE_2026-10-0...RS_29_37_ACCEPTANCE_2026-10-08.md'].sha256: digest does not match 'docs/CHAPTERS_29_37_ACCEPTANCE_2026-10-08.md'", ...]
+E       assert 'FAIL' == 'PASS'
+E         
+E         - PASS
+E         + FAIL
+
+johnhull/report/tests/test_section_ledger.py:573: AssertionError
+=========================== short test summary info ============================
+FAILED johnhull/report/tests/test_section_ledger.py::test_real_inventory_and_accepted_sections_are_complete
+1 failed, 40 passed in 6.84s

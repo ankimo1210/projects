@@ -1,5 +1,15 @@
 # P7 ロジック先行の実装状態
 
+## 最終統合（2026-10-08）
+
+統合構成でP7 **16/16 accepted**、全体**306/306・未評価0**。
+最新の開発修正と正式受入を合流し、全体suite `full run: 6640 passed, 2 catalogue failures, 6 skipped; catalogue-only repair: 764 passed; combined unique checks: 6649 passed, 6 skipped`、全306節native artifacts、変更Pythonのruff/formatを確認。
+原典の入力不足・未再現値とcaller条件の検証範囲を保持する。main反映・最終レビューは[統合記録](FINAL_INTEGRATION_2026-10-08.md)を参照。
+
+## 実装と受入の履歴
+
+以下の別branch・未統合・検証件数は各工程の実施時点の記録。現在の判定は上記と[生成台帳](SECTION_LEDGER.md)。
+
 更新2026-10-08。目的：Ch35–37（台帳16項目）の本文計算をprivate moduleに実装し、本文例と独立参照を検証する。下調べは計算11・説明中心5（旧監査の定性6とは分類基準が異なる）。別受入branchで16/16 accepted、main統合は未実施。
 
 - 完了条件：既存節メモの式/例を確認、計画を数行追記、private計算部品と本文/独立検証をそろえ、変更モジュールのtests/ruffを通す。入力不足は明示して次の節へ進む。
