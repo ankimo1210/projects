@@ -195,10 +195,10 @@ assert np.allclose(out["naive_pathwise"][:, 0], 0., atol=1e-14)
 **Files:** `protocol.json`、`build_reference.py`、`test_quote_dml_research.py`。
 
 **Interfaces:** `make_dataset(protocol: dict, split: str) -> dict[str,np.ndarray]`。
-配列契約のx_quote/x_theta/g_quote/g_theta/Aにprice[n]、market_id[n]、contract_id[n]を加える。
+配列契約のx_quote/x_theta/g_quote/g_theta/Aにprice[n]、market_id[n]、contract_id[n]、integrated_rate[n]、a_quote[n,5]を加える。
 `load_protocol(path) -> dict` はschedule・units・fit数を確認する。未知のversionは拒否する。
 
-- [ ] **RED：** train2048/validation512/test1024、小train512はtrain先頭64市場、split間で市場群が混ざらないtestを作る。
+- [x] **RED：** train2048/validation512/test1024、小train512はtrain先頭64市場、split間で市場群が混ざらないtestを作る。
 
 ```python
 train = runner.make_dataset(protocol, "train")
@@ -210,14 +210,14 @@ assert np.all(np.unique(train["market_id"], return_counts=True)[1] == 8)
 assert np.unique(train["market_id"][:512]).size == 64
 ```
 
-- [ ] 新research testを実行してFAILを確認。
-- [ ] **GREEN：** `SeedSequence([20261009, split_id])` を使う。q=q0+Uniform(−.005,.005)、spot=Uniform(80,120)、T=exp(Uniform(log(.05),log(5)))。
+- [x] 新research testを実行してFAILを確認。
+- [x] **GREEN：** `SeedSequence([20261009, split_id])` を使う。q=q0+Uniform(−.005,.005)、spot=Uniform(80,120)、T=exp(Uniform(log(.05),log(5)))。
   同じmarketの8契約でMarketを共有する。testの8契約は設計§6の固定値。
   market IDはsplitを含む整数（例split_id×100000+curve_index）。contract IDは群内0–7。
-- [ ] protocolに比較5方式、2サイズ、3seed、lambda1、Greek平均6、scale下限1e-8、全shock/OOD、H1–H4、許容差を保存。
+- [x] protocolに比較5方式、2サイズ、3seed、lambda1、Greek平均6、scale下限1e-8、全shock/OOD、H1–H4、許容差を保存。
   失敗入力・較正残差・rank・増幅を記録し、黙ってresampleしない。生成失敗が主domainにある場合はfitを止め、protocol改訂理由を残す。
-- [ ] 較正回数がcurve数であること、再生成の数値許容差、未知protocol拒否をtest。
-- [ ] scoped tests＋ruff/format check後、commit：`feat(johnhull): define grouped quote-DML experiment protocol`。
+- [x] 較正回数がcurve数であること、再生成の数値許容差、未知protocol拒否をtest。
+- [x] scoped tests＋ruff/format check後、commit：`feat(johnhull): define grouped quote-DML experiment protocol`。
 
 ## Task 4：5NNと公平な市場risk損失
 
