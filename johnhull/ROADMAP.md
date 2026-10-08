@@ -21,7 +21,7 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 101 private modules in the integrated tree as of 2026-10-08, including P3–P7 logic, accepted BGM/business models, and RB-F07/RB-F05 v1. The catalogue is `MODEL_INDEX.md`; earlier development branches are retained.
 
-## 現在地（2026-10-08、全306節の最終統合）
+## 現在地（2026-10-09、全306節の統合完了・次の研究計画）
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
@@ -34,6 +34,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 101 priv
 | Beyond Hull（vol13–28） | 完了 | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 研究track #1 | RB-F07 v1完了 | [研究資料](research/RB-F07/README.md)。private単一曲線・解析Jacobian・随伴リスク、独立レビュー済み。v2/v3は別承認 |
 | 研究track #2 | RB-F05 digital v1完了 | [研究資料](research/RB-F05/README.md)。DMLは全seed改善、解析・補間には精度/費用で劣り、速度昇格は不採用。次は離散バリアの契約/独立参照を固定 |
+| 統合研究の追加調査 | 調査・計画完成、実装未着手 | [調査・研究設計](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)／[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)。一次資料12項目とコードを照合し、F07＋F05のquote DMLを推奨。公平な座標変換・固定契約ヘッジ・総費用を8工程で比較。既存研究順序の変更は未決定 |
 | 実装前の準備 | 完了 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で製品受入と区別 |
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
@@ -49,6 +50,8 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 ユーザー指定（2026-10-03）：各ターンの最終応答の末尾に、P0–P8の全体ロードマップと現在の作業を表示する。
 
 最終統合（2026-10-08）：集約開発`9dd53804`と正式受入`cef7cea1`を合流し、P4 `00d8a651`・P8 `ce801e48`・RB-F07/F05 v1と補完2モデルを保持。全306節native artifactsと統合suiteを確認。過去の受入記録を保持し、変更した入力・表示に関わる証跡だけ実測から更新した。
+
+研究計画（2026-10-09）：本人の「まずはしっかりリサーチしてプランを作って」に従い、[較正込みquote DMLの設計](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)と[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)を完成。今回は文書のみ。教師・5NN/2回帰・固定契約ヘッジ・記録再計算の8工程、暫定8–16時間。実装開始と既存の離散バリアより先に進めるかは計画確認後の指示に従う。本編の受入件数は変えない。
 
 **完了の定義：** (1) 節別台帳306項目がacceptedまたはout_of_scope、(2) P8の監査是正・判断が完了、(3) 統合構成の検証・配布生成・独立レビュー・main反映を確認。本編(1)(2)と統合検証・独立レビュー修正・main反映を完了し、反映結果を[最終統合記録](docs/FINAL_INTEGRATION_2026-10-08.md)で確認する。
 
@@ -103,6 +106,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 外部の[提案書](docs/RESEARCH_HANDOFF_2026-09-27.md)にある 94 件を次の4つに振り分けた：
 本編に畳む（RB-F02→P1、RB-F03→P3、R11・§19.14・RB-H16→P4）、章の受入後のコラム、研究トラック（同時1本）、johnhull の外。
 研究トラック #1 は RB-F07。研究の置き場は `research/<RB-ID>/`、計算は hullkit の非公開モジュールに決定した（2026-09-27 本人承認。公開 API 昇格は別承認）。
+2026-10-09の追加調査では、F07とF05をつなぐ[較正込み市場クオートGreeksのDML](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)を次の候補として推奨し、[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)を保存した。`research/RB-F07/quote_dml/` に新規private実験を作る案で、学習・製品実装は未着手。既存F07/F05 v1、承認済みの離散バリア→F04→F08→F06の順序を自動変更しない。
 **実装再開は、johnhull に必要な保管庫と作業分離が整った時点**とし、ワークスペース全工程の完了は待たない。
 M15 は D1-preflight の完了後に実施し、2026-09-28 に受入。M16（§27.7）も同日に受入。M17（§27.8）は2026-09-29 に受入し、P1 を完了した（RB-F02 の推定経路と評価経路の分離を含む。上界の実装は拡張のまま）。M18（§26.1 Packages）で P2 に入り、M19（§26.2 永久アメリカン）も同日に受入。M20（§26.3 非標準アメリカン）は2026-09-30に受入。M21（§26.4 ギャップ）とM22（§26.5 フォワード・スタート）、M23（§26.6 Cliquet）、M24（§26.7 Compound）は2026-10-01に受入。M25（§26.8 Chooser）は2026-10-03に受入しP2を完了。M26（§28.1 市場リスクの価格）は同日受入・main統合済み。M27（§28.2 複数状態変数）も同日に受入しP3は2/37、独立最終レビューと修正後検証、main統合/push済み。M28（§28.3）は2026-10-04受入、P3 3/37。独立最終レビューI1修正済み、main統合/push済み。M29（§28.4）は受入、P3 4/37、独立レビューCritical0/Important0、Minor3記録。main統合・push済み。M30 §28.5はmain統合/push済み、P3 5/37。本人の2026-10-04指示で§28.6以降はロジック先行、章末まとめ受入。ロジック36/37をcodex/p3-logicへpush済み、§33.2は原典入力不足で保留。Ch28の§28.6–28.8をD3共通設定ツールで受入しP3 8/37、受入を保留しP4（Ch10–21）のロジックを先行する。RB-F07 v1・RB-F05 digital v1は2026-10-07に実装・独立検証・レビューを完了しmainへ反映。[準備文書](docs/prep/README.md)は292節・65出典・設計等9本を完成し、構造検査と独立レビューを終えた。出典は支持23件・部分確認42件で、性能の独立再現とは区別する。
 金利編は [P3設計](docs/prep/design/P3_DESIGN.md)でHW/BKの本文範囲と独立参照の条件を整理した。R11の原典成績は利息・割引を除外する規約で再現でき、現行の資金繰り計算を誤りとみなして置換しない。
