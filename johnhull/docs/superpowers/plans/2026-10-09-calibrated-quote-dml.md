@@ -10,7 +10,7 @@
 
 **Spec:** [調査・研究設計](../specs/2026-10-09-calibrated-quote-dml-design.md)。本文のQ01–Q12を根拠とし、版・確認範囲・未再現の性能主張を引き継ぐ。
 
-- 更新日：2026-10-09。**実装中。Task1完了：新20＋曲線/索引込み728 tests、ruff/format PASS。学習本実験は未実施。**
+- 更新日：2026-10-09。**実装中。Tasks1–2完了：教師41 tests PASS。Task1の曲線/索引込み728 tests、ruff/formatもPASS。学習本実験は未実施。**
 - 本編P0–P8、306節acceptedの状態を変更しない。
 - 本人の「研究ロードマップを完遂せよ」に従い、quote DMLを先行し、既存離散バリア→F04→F08→F06と統合研究の後続候補も保持する。
 
@@ -167,7 +167,7 @@ productionのJacobianや教師を参照計算へ流用しない。別途q幅1e-4
 `payoff`、`lrm[npath,6]`、`conditional_price`、`conditional[npath,6]`、`naive_pathwise[npath,6]`、`discount_omitted[npath,6]`。
 単一S/Tでのshapeをまず固定する。MC sampleを主学習へ混ぜない。
 
-- [ ] **RED：** S95/100/105×T.05/.25/1.5/4.5、65536paths、seed1107のmean/SEを解析値と比較する。
+- [x] **RED：** S95/100/105×T.05/.25/1.5/4.5、65536paths、seed1107のmean/SEを解析値と比較する。
   pilot seed6017は分散・許容差の根拠確認だけに使う。
 
 ```python
@@ -181,14 +181,14 @@ assert expected[0] > 0
 assert np.allclose(out["naive_pathwise"][:, 0], 0., atol=1e-14)
 ```
 
-- [ ] 同じscoped testを実行し、未実装FAILを確認。
-- [ ] **GREEN：** 設計§4.3を実装。spot scoreは `Z/(S*v)`、quote scoreは `(-1+Z/v)*a_q`。
+- [x] 同じscoped testを実行し、未実装FAILを確認。
+- [x] **GREEN：** 設計§4.3を実装。spot scoreは `Z/(S*v)`、quote scoreは `(-1+Z/v)*a_q`。
   α=.5のconditional教師はnormal CDF/PDFを使い、6成分の条件付きmeanとSEを計算する。
   `a_q=∇q(-log D)` はMarketのAと曲線weightから求める。
-- [ ] 独立積分でLRM/conditioningのmeanとLRM2次モーメントを検査。割引項を落としたmeanのbiasが `price*a_q` に一致することをtest。
-- [ ] S80/T.05はexpected hits<20を事前分類。zero hitsやSE0を通常6SEのPASSへ変えないtestを追加。
+- [x] 独立積分でLRM/conditioningのmeanとLRM2次モーメントを検査。割引項を落としたmeanのbiasが `price*a_q` に一致することをtest。
+- [x] S80/T.05はexpected hits<20を事前分類。zero hitsやSE0を通常6SEのPASSへ変えないtestを追加。
   pathwiseと割引欠落教師は「検証に失敗すべき推定量」として保存し、ランダムな1回の有意差だけでbiasを証明しない。
-- [ ] 新teacher tests＋ruff/format check後、scoped commit：`feat(johnhull): verify digital score and conditional quote labels`。
+- [x] 新teacher tests＋ruff/format check後、scoped commit：`feat(johnhull): verify digital score and conditional quote labels`。
 
 ## Task 3：protocolと市場曲線群での分割
 
