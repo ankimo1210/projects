@@ -1,6 +1,6 @@
 # 較正込み市場クオートGreeksのDML Implementation Plan
 
-> **For agentic workers:** `superpowers:executing-plans` で本計画を順に実施する。checkboxで進捗を記録する。subagentの新規起動は本人の明示指示がある場合に限る。
+> **For agentic workers:** `superpowers:executing-plans` で実施し、checkboxで進捗を記録する。現在の実行モードに従い、金融参照・配列境界の学習・レビューなど共有変更のない作業は並行化できる。commitとgateは依存順でまとめる。
 
 **Goal:** RB-F07とRB-F05を接続し、同じ較正・契約・データ・計算予算で価格、市場risk、固定契約ヘッジ、総費用を比較する再実行可能な研究を作る。
 
@@ -10,9 +10,9 @@
 
 **Spec:** [調査・研究設計](../specs/2026-10-09-calibrated-quote-dml-design.md)。本文のQ01–Q12を根拠とし、版・確認範囲・未再現の性能主張を引き継ぐ。
 
-- 更新日：2026-10-09。**計画完成・実装未着手。**
+- 更新日：2026-10-09。**実装中。Task1完了：新20＋曲線/索引込み728 tests、ruff/format PASS。学習本実験は未実施。**
 - 本編P0–P8、306節acceptedの状態を変更しない。
-- 既存の次工程RB-F05離散バリアを自動で置き換えない。本計画の実装開始・優先順位は計画確認後の指示に従う。
+- 本人の「研究ロードマップを完遂せよ」に従い、quote DMLを先行し、既存離散バリア→F04→F08→F06と統合研究の後続候補も保持する。
 
 ## Global Constraints
 
@@ -26,7 +26,7 @@
 - 設計§6–8の分割・seed・尺度・shock・費用・仮説を主実験前に固定する。test結果から設定・許容差を変更しない。
 - 既存RB-F07/F05の成果物、別プロジェクト変更、別セッションの受入作業を保持する。
 - モジュール追加時に `johnhull/MODEL_INDEX.md` を同じcommitで更新。計画中のモジュールは実装済み索引へ掲載しない。
-- 調査・計画は今回の成果。下記の製品コード・データ生成・学習は今回実行しない。
+- 初回は調査・計画のみ。その後の完遂指示により下記の実装・データ生成・学習へ移行する。
 
 ## Review Focus
 
@@ -46,7 +46,7 @@
 | 4 記録・研究採否 | 7–8 | 30 fits、raw配列、再計算、3図、結果記録 | 2–3時間 |
 | **計** | | **8–16時間。段階1の実測で改訂** | |
 
-Task 1→2→3→4→5→6→7→8の順。学習はTask 7でまとめて1回実行する。
+commit/gateはTask 1→2→3→4→5→6→7→8の順。配列契約を固定した独立作業は並行可能。学習本実験はTask 7でまとめて1回実行する。
 時間は未実測の目安。学習watchdog合計60分には参照生成・計時・レビューを含まない。
 
 ## ファイルと配列契約
@@ -105,7 +105,7 @@ strike100、sigma.20、cash payout1。全価格は同一の教育用通貨単位
 - 参照側 `bootstrap(q) -> (pillars, zeros)`、`digital_price(q,S,T) -> float`、`digital_moments(q,S,T) -> dict`。
   momentsは独立score積分の `price`, `g_quote[6]`, `lrm_second_moment[6]` を返す。
 
-- [ ] **RED：** 5つの調査ケース、T=.5/1/2/3/5の柱、negative rateの有効曲線を独立参照と比較するtestを作る。
+- [x] **RED：** 5つの調査ケース、T=.5/1/2/3/5の柱、negative rateの有効曲線を独立参照と比較するtestを作る。
   最初に既存F07の固定CFテストを通し、次の1.5年cashflowで新Marketの座標配線を確認する。
 
 ```python
@@ -138,8 +138,8 @@ for spot, maturity in [(80, .05), (95, .25), (100, 1.5), (110, 4.5), (120, 5)]:
     )
 ```
 
-- [ ] `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_quote_dml_teachers.py` を実行し、未実装によるFAILを確認。
-- [ ] **GREEN：** `Quote`/`calibrate`/`discount_factors`/`quote_sensitivity`を再利用し、設計§4.2を実装する。
+- [x] `uv run --no-sync --package hullkit pytest -q johnhull/hullkit/tests/test_quote_dml_teachers.py` を実行し、未実装によるFAILを確認。
+- [x] **GREEN：** `Quote`/`calibrate`/`discount_factors`/`quote_sensitivity`を再利用し、設計§4.2を実装する。
 
 ```python
 v = sigma * np.sqrt(maturity)
@@ -155,9 +155,9 @@ A = np.linalg.solve(calibration.jacobian, np.eye(5))
 参照Jは自作quote式をzero座標でcomplex-step幅1e-25、積分は正規密度を `quad` でthreshold〜∞。
 productionのJacobianや教師を参照計算へ流用しない。別途q幅1e-4/1e-5/1e-6で再bootstrap中央差分を保存する。
 正のspot/T/sigma/strike、finite配列・shape、正のDFを確認。negative quoteを一律拒否しない。
-- [ ] zero→logDF座標とquote decimal→bpの変換をtest。表示Greek=raw×1e-4、価格・物理riskが不変であることを確認。
-- [ ] 既存 `test_quote_risk.py` と新testを実行し、変更Pythonのruff/format check、MODEL_INDEX guardを確認。
-- [ ] scoped commit：`feat(johnhull): add calibrated digital quote-risk teachers`。ROADMAPの研究行を「教師実装・残り未実施」へ更新。
+- [x] zero→logDF座標とquote decimal→bpの変換をtest。表示Greek=raw×1e-4、価格・物理riskが不変であることを確認。
+- [x] 既存 `test_quote_risk.py` と新testを実行し、変更Pythonのruff/format check、MODEL_INDEX guardを確認。
+- [x] scoped commit：`feat(johnhull): add calibrated digital quote-risk teachers`。ROADMAPの研究行を「教師実装・残り未実施」へ更新。
 
 ## Task 2：LRM／厳密conditioningと負の対照
 
@@ -461,4 +461,4 @@ ruff format --checkは同じ対象Pythonへ実行する。notebook builderの既
 - 既存F07/F05を書き換えず、新private modulesと研究subdirectoryで実施する。
 - 割引欠落、契約reset、rare event、漏洩、改変、rank不足の負の対照を用意した。
 - 文献の公開性能は未再現。研究新規性・本番採用・実市場の優位を完了条件へ入れていない。
-- **今回の完了範囲は調査・計画のみ。** 実装の最初の工程はTask 1の教師と独立参照。
+- 初回の完了範囲は調査・計画。その後の完遂指示によりTask1の教師と独立参照から実装を開始。
