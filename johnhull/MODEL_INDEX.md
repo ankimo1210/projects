@@ -1,5 +1,8 @@
 # MODEL_INDEX — johnhull model library
 
+For a Japanese volume-by-volume contents and model guide, see
+[目次・収録モデル索引](CONTENTS_INDEX.md).
+
 How to use this index (for agents):
 
 1. Search this file first for a model, method, or market term.

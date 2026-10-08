@@ -1,5 +1,8 @@
 # John Hull Notes
 
+教材の入口：**[目次・収録モデル索引](CONTENTS_INDEX.md)** — 全28巻・旧2冊・研究教材を日本語で案内。
+実装・関数・テストの詳細は [MODEL_INDEX.md](MODEL_INDEX.md)。
+
 Learning notebooks for Hull, "Options, Futures, and Other Derivatives" (11e),
 plus reproducible beyond-Hull volumes on modern derivatives research.  The Hull
 11e core covers all 37 chapters; volumes 18--28 add ML surrogates, inverse
