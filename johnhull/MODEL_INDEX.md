@@ -346,7 +346,7 @@ synthetic-data method demonstrations, not market-performance claims.
 | Module | Contracts | Verification |
 |---|---|---|
 | `hullkit._quote_risk` | Private v1 `hullkit._quote_risk:Quote`, `hullkit._quote_risk:calibrate`, `hullkit._quote_risk:model_quotes`, `hullkit._quote_risk:cashflow_value`, `hullkit._quote_risk:receiver_swap_value`, `hullkit._quote_risk:quote_sensitivity` | Exact square single-curve Newton/analytic Jacobian; independent sequential brentq, hand closed form, Hull Table4.3, rebootstrap bumps, coordinate/residual invariance, complex step, interpolation/coverage/quote-unit checks; `test_quote_risk.py`; `research/RB-F07/` |
-| `hullkit._quote_dml_teachers` | Private `hullkit._quote_dml_teachers:Market`, `hullkit._quote_dml_teachers:prepare_market`, `hullkit._quote_dml_teachers:analytic` | Curve-calibrated payout-1 GBM digital, total spot/zero/quote sensitivities; independent scalar brentq, own complex-step Jacobian/density integration, quote bumps, negative rates, log-DF/bp invariance; `test_quote_dml_teachers.py`; quote-DML experiment in progress |
+| `hullkit._quote_dml_teachers` | Private `hullkit._quote_dml_teachers:Market`, `hullkit._quote_dml_teachers:prepare_market`, `hullkit._quote_dml_teachers:analytic`, `hullkit._quote_dml_teachers:samples`, `hullkit._quote_dml_teachers:lrm_variance` | Curve-calibrated payout-1 GBM digital, total spot/zero/quote sensitivities, discount-correct LRM/exact conditioning and biased controls; independent brentq/complex-step/density integrals, bumps, log-DF/bp invariance, MC6SE and LRM second moments/rare event checks; `test_quote_dml_teachers.py`; quote-DML experiment in progress |
 
 ## RB-F05 research: discontinuous-payoff teachers and DML
 

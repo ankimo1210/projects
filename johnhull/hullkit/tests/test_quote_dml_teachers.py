@@ -133,3 +133,100 @@ def test_invalid_quote_shape_rejected(teacher):
     teacher = teacher()
     with pytest.raises(ValueError):
         teacher.prepare_market(Q[:4])
+
+
+@pytest.mark.parametrize("spot", [95.0, 100.0, 105.0])
+@pytest.mark.parametrize("maturity", [0.05, 0.25, 1.5, 4.5])
+def test_lrm_and_conditioning_within_independent_six_se(teacher, reference, spot, maturity):
+    teacher, reference = teacher(), reference()
+    z = np.random.default_rng(1107).standard_normal(65536)
+    got = teacher.samples(teacher.prepare_market(Q), spot, maturity, z)
+    expected = reference.digital_moments(Q, spot, maturity)
+    assert got["mc_regime"] == "regular"
+    for key in ("lrm", "conditional"):
+        mean = got[key].mean(axis=0)
+        se = got[key].std(axis=0, ddof=1) / np.sqrt(z.size)
+        assert np.all(np.abs(mean - expected["g_quote"]) <= 6 * se + 1e-10)
+    for key in ("payoff", "conditional_price"):
+        mean = got[key].mean()
+        se = got[key].std(ddof=1) / np.sqrt(z.size)
+        assert abs(mean - expected["price"]) <= 6 * se + 1e-12
+
+
+@pytest.mark.parametrize("spot,maturity", CASES)
+def test_lrm_variance_matches_independent_second_moment(teacher, reference, spot, maturity):
+    teacher, reference = teacher(), reference()
+    expected = reference.digital_moments(Q, spot, maturity)
+    variance = expected["lrm_second_moment"] - expected["g_quote"] ** 2
+    got = teacher.lrm_variance(teacher.prepare_market(Q), spot, maturity)
+    np.testing.assert_allclose(got, variance, atol=1e-10, rtol=1e-9)
+    assert np.all(got >= 0)
+
+
+def test_negative_controls_keep_the_known_discount_and_boundary_bias(teacher, reference):
+    teacher, reference = teacher(), reference()
+    market = teacher.prepare_market(Q)
+    z = np.random.default_rng(6017).standard_normal(4096)
+    out = teacher.samples(market, 100.0, 1.5, z)
+    exact = teacher.analytic(market, 100.0, 1.5)
+    missing_discount = out["payoff"][:, None] * np.r_[0.0, exact["a_quote"]]
+    np.testing.assert_allclose(
+        out["discount_omitted"] - out["lrm"], missing_discount, atol=1e-13, rtol=1e-10
+    )
+    np.testing.assert_allclose(out["naive_pathwise"][:, 0], 0.0, atol=1e-14)
+    np.testing.assert_allclose(
+        out["naive_pathwise"][:, 1:],
+        -out["payoff"][:, None] * exact["a_quote"],
+        atol=1e-13,
+        rtol=1e-10,
+    )
+    ref = reference.digital_moments(Q, 100, 1.5)
+    np.testing.assert_allclose(
+        ref["discount_omitted_mean"] - ref["g_quote"],
+        ref["price"] * np.r_[0, exact["a_quote"]],
+        atol=1e-10,
+        rtol=1e-9,
+    )
+    assert ref["naive_pathwise_mean"][0] == pytest.approx(0, abs=1e-14)
+    assert ref["g_quote"][0] > 0
+
+
+def test_conditioning_uses_total_nonflat_curve_drift(teacher, reference):
+    teacher, reference = teacher(), reference()
+    q = Q + np.array([0.005, -0.005, 0.003, -0.003, 0.004])
+    market = teacher.prepare_market(q)
+    z = np.array([-1.5, -0.25, 0.0, 0.5, 2.0])
+    out = teacher.samples(market, 103.0, 4.5, z)
+    exact = teacher.analytic(market, 103.0, 4.5)
+    from scipy.special import ndtr
+
+    b = (
+        np.log(103 / 100) + exact["integrated_rate"] - 0.2**2 * 4.5 / 2 + 0.2 * np.sqrt(2.25) * z
+    ) / (0.2 * np.sqrt(2.25))
+    np.testing.assert_allclose(
+        out["conditional_price"], exact["discount"] * ndtr(b), atol=1e-12, rtol=1e-10
+    )
+    expected = reference.conditioning_moments(q, 103, 4.5)
+    np.testing.assert_allclose(expected["g_quote"], exact["g_quote"], atol=1e-10, rtol=1e-9)
+
+
+def test_rare_zero_hit_sample_is_not_regular_mc_evidence(teacher):
+    teacher = teacher()
+    z = np.random.default_rng(1107).standard_normal(65536)
+    out = teacher.samples(teacher.prepare_market(Q), 80.0, 0.05, z)
+    assert out["expected_hits"] < 20
+    assert out["mc_regime"] == "rare_event"
+    assert np.count_nonzero(out["payoff"]) == 0
+    assert teacher.analytic(teacher.prepare_market(Q), 80.0, 0.05)["price"] > 0
+
+
+def test_path_axis_precedes_last_risk_component_axis(teacher):
+    teacher = teacher()
+    market = teacher.prepare_market(Q)
+    z = np.random.default_rng(6017).standard_normal((3, 64))
+    out = teacher.samples(market, 100, 1.5, z)
+    assert out["payoff"].shape == (3, 64)
+    assert out["lrm"].shape == (3, 64, 6)
+    for index in range(3):
+        single = teacher.samples(market, 100, 1.5, z[index])
+        np.testing.assert_allclose(out["lrm"][index], single["lrm"], atol=1e-12, rtol=1e-10)
