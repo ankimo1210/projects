@@ -116,7 +116,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 | 順 | 研究 | 完了を示す主な証拠 | 現在の状態 |
 |---|---|---|---|
 | 既存 | RB-F07 v1 / RB-F05 digital v1 | 保存済み研究成果・再計算・レビュー・採否 | 完了。F05全体の完了とは区別 |
-| 1 | F07＋F05 quote DML | 8工程、30NN fits＋4ridge、全入力/重み/予測/hedge/費用、再計算・改変検査・3図・レビュー | Tasks1–3教師/独立参照・固定protocol/群分割完了。教師41＋分割5 tests PASS。学習・ヘッジ・成果は未完了 |
+| 1 | F07＋F05 quote DML | 8工程、30NN fits＋4ridge、全入力/重み/予測/hedge/費用、再計算・改変検査・3図・レビュー | Tasks1–4教師/独立参照・固定protocol/群分割・5NN/ridge実装。教師41＋分割12＋学習22 tests PASS。replay・ヘッジ・成果は未完了 |
 | 2 | RB-F05離散バリア | 監視契約、独立離散参照、教師bias/SE、学習比較・総費用・3図・レビュー・採否 | 未着手 |
 | 3 | RB-F04モデル比較 | Heston→Dupire、vanilla再価格/収束、月次12観測Asian・二時点差、paired SE・3図・レビュー | 未着手。[設計](docs/prep/design/RB-F04_DESIGN.md) |
 | 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | 未着手。[設計](docs/prep/design/RB-F08_DESIGN.md) |
