@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "curve": {
+    "base_quotes": [
+      0.03,
+      0.032,
+      0.033,
+      0.0345,
+      0.036
+    ],
+    "quote_kinds": [
+      "deposit",
+      "fra",
+      "swap",
+      "swap",
+      "swap"
+    ],
+    "quote_times": [
+      [
+        0.5
+      ],
+      [
+        0.5,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    ],
+    "pillar_times": [
+      0.5,
+      1,
+      2,
+      3,
+      5
+    ],
+    "interpolation": "zero_linear",
+    "quote_unit": "rate_decimal",
+    "quote_step": 0.0001,
+    "halfwidth": 0.005
+  },
+  "contract": {
+    "strike": 100,
+    "sigma": 0.2,
+    "payout": 1,
+    "spot_bounds": [
+      80,
+      120
+    ],
+    "maturity_bounds": [
+      0.05,
+      5
+    ]
+  },
+  "sampling": {
+    "seed": 20261009,
+    "markets": {
+      "train": 256,
+      "validation": 64,
+      "test": 128
+    },
+    "contracts_per_market": 8,
+    "small_train_markets": 64,
+    "test_contracts": [
+      [
+        80,
+        0.05
+      ],
+      [
+        95,
+        0.25
+      ],
+      [
+        100,
+        1.5
+      ],
+      [
+        110,
+        4.5
+      ],
+      [
+        120,
+        5
+      ],
+      [
+        100,
+        0.5
+      ],
+      [
+        100,
+        1
+      ],
+      [
+        110,
+        3
+      ]
+    ]
+  },
+  "training": {
+    "modes": [
+      "q_price",
+      "theta_price",
+      "theta_dml",
+      "theta_quote_metric",
+      "q_dml"
+    ],
+    "sizes": [
+      512,
+      2048
+    ],
+    "seeds": [
+      11,
+      29,
+      47
+    ],
+    "hidden": [
+      64,
+      64
+    ],
+    "dtype": "float64",
+    "device": "cpu",
+    "threads": 1,
+    "lr": 0.001,
+    "batch": 256,
+    "updates": 512,
+    "budget_s": 120,
+    "lambda": 1,
+    "rms_floor": 1e-08
+  },
+  "mc": {
+    "spots": [
+      95,
+      100,
+      105
+    ],
+    "maturities": [
+      0.05,
+      0.25,
+      1.5,
+      4.5
+    ],
+    "paths": 65536,
+    "seed": 1107,
+    "pilot_seed": 6017,
+    "rare_event_min_count": 20,
+    "se_multiplier": 6
+  },
+  "shocks": {
+    "quote_bp": [
+      1,
+      10
+    ],
+    "patterns": [
+      "single5",
+      "parallel",
+      "steepener"
+    ],
+    "steepener": [
+      -1,
+      -1,
+      0,
+      1,
+      1
+    ],
+    "spot_fraction": 0.01,
+    "combined_quote_bp": 10,
+    "include_zero": true
+  },
+  "costs": {
+    "notional": 1000000,
+    "rate_halfspread_bp": [
+      0,
+      0.1,
+      0.5,
+      1
+    ],
+    "stock_halfspread_bp": [
+      0,
+      1,
+      5
+    ]
+  },
+  "ood": {
+    "quote_bp": 100,
+    "spots": [
+      70,
+      130
+    ],
+    "maturities": [
+      0.01,
+      6
+    ],
+    "sigma": 0.25,
+    "strike": 105,
+    "amplification_limit": 10,
+    "unsupported": [
+      "pillar_times",
+      "quote_times",
+      "interpolation"
+    ]
+  },
+  "hypotheses": {
+    "H1": "quote DML vs quote price-only: normalized total quote-risk RMSE",
+    "H2": "quote DML vs theta quote-metric DML: paired normalized market-risk RMSE",
+    "H3": "fixed-contract shock residual and entry cost",
+    "H4": "teacher-inclusive surrogate cost vs exact and reduced regressions"
+  },
+  "verification": {
+    "price_atol": 1e-12,
+    "price_rtol": 1e-10,
+    "risk_atol": 1e-10,
+    "risk_rtol": 1e-09,
+    "held_atol": 1e-06,
+    "held_rtol": 1e-09
+  },
+  "timing": {
+    "repeats": 100,
+    "warmup": 3,
+    "batches": [
+      1,
+      32,
+      1024
+    ],
+    "statistics": [
+      "median",
+      "p95"
+    ],
+    "caches": [
+      "market",
+      "row"
+    ]
+  },
+  "bootstrap": {
+    "repeats": 2000,
+    "seed": 20261010,
+    "confidence": 0.95
+  },
+  "artifacts": {
+    "max_git_bytes": 20971520
+  }
+}
