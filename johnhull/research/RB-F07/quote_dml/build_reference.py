@@ -19,6 +19,21 @@ def load_protocol(path=HERE / "protocol.json"):
     """Read the frozen schema, quote units, supported curve and fit design."""
     config = json.loads(Path(path).read_text())
     curve, training = config["curve"], config["training"]
+    fixed_training = {
+        "modes": ["q_price", "theta_price", "theta_dml", "theta_quote_metric", "q_dml"],
+        "sizes": [512, 2048],
+        "seeds": [11, 29, 47],
+        "hidden": [64, 64],
+        "dtype": "float64",
+        "device": "cpu",
+        "threads": 1,
+        "lr": 0.001,
+        "batch": 256,
+        "updates": 512,
+        "budget_s": 120,
+        "lambda": 1,
+        "rms_floor": 1e-8,
+    }
     if (
         config["schema_version"] != 1
         or curve["quote_unit"] != "rate_decimal"
@@ -26,7 +41,12 @@ def load_protocol(path=HERE / "protocol.json"):
         or curve["quote_kinds"] != list(teacher.QUOTE_KINDS)
         or curve["quote_times"] != [list(times) for times in teacher.QUOTE_TIMES]
         or curve["pillar_times"] != [0.5, 1, 2, 3, 5]
-        or len(training["modes"]) * len(training["sizes"]) * len(training["seeds"]) != 30
+        or any(training.get(key) != value for key, value in fixed_training.items())
+        or any(
+            config["contract"].get(key) != value
+            for key, value in {"strike": 100, "sigma": 0.2, "payout": 1}.items()
+        )
+        or config["sampling"]["contracts_per_market"] != 8
     ):
         raise ValueError("unsupported protocol schema, curve, units or fit design")
     return config
