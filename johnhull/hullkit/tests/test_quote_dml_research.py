@@ -120,3 +120,24 @@ def test_failed_calibration_is_recorded_without_resampling(monkeypatch):
     assert np.all(np.isnan(got["price"]))
     assert all("forced nonconvergence" in value for value in got["failure_reason"])
     assert got["calibration_count"] == 2
+
+
+@pytest.mark.parametrize(
+    "section,key,value",
+    [
+        ("contract", "payout", 2),
+        ("contract", "strike", 105),
+        ("training", "lr", 0.1),
+        ("training", "hidden", [32, 32]),
+        ("training", "lambda", 2),
+        ("training", "dtype", "float32"),
+        ("training", "modes", ["q_price"] * 5),
+    ],
+)
+def test_protocol_cannot_claim_unimplemented_training_or_contract(section, key, value, tmp_path):
+    run, config = runner(), protocol()
+    config[section][key] = value
+    path = tmp_path / "changed.json"
+    path.write_text(json.dumps(config))
+    with pytest.raises(ValueError, match="protocol"):
+        run.load_protocol(path)
