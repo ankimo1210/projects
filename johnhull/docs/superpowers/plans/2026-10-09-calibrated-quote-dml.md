@@ -231,7 +231,7 @@ assert np.unique(train["market_id"][:512]).size == 64
 - `predict_nn(fit: Fit, x: np.ndarray, A: np.ndarray) -> dict`。price[n]、g_quote[n,6]、g_native[n,6]。
 - `export_nn(fit) -> dict[str,np.ndarray]`。各層weight/biasとtrain-only尺度を保存する。
 
-- [ ] **RED：** 同じ固定した小NNの物理勾配を中央差分と比較し、Thetaの勾配をAで変換するtestを作る。
+- [x] **RED：** 同じ固定した小NNの物理勾配を中央差分と比較し、Thetaの勾配をAで変換するtestを作る。
 
 ```python
 pred = learner.predict_nn(fit, x, A)
@@ -270,8 +270,8 @@ down[:, 5] -= 1e-3
 finite_delta = (learner.predict_nn(fit, up, A)["price"]
                 - learner.predict_nn(fit, down, A)["price"]) / .002
 ```
-- [ ] `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests/test_quote_dml.py` でFAILを確認。
-- [ ] **GREEN：** 生入力tensorに `requires_grad` を付けてからrate5/log(S/K)/logTの特徴化・標準化を行う。
+- [x] `uv run --no-sync --package deep-hedge-price pytest -q deep_hedge_price/tests/test_quote_dml.py` でFAILを確認。
+- [x] **GREEN：** 生入力tensorに `requires_grad` を付けてからrate5/log(S/K)/logTの特徴化・標準化を行う。
   価格はtrain mean/stdで復元し、その価格の勾配を取る。differential lossでは `create_graph=True`。
 
 ```python
@@ -287,11 +287,11 @@ loss = loss_price + loss_risk  # lambda1 × mean of six squared normalized Greek
 
 price-onlyはloss_priceだけ、Theta-DMLはnative/内部教師と内部尺度、Theta-quote-metricはquoted/quote教師とQ-DML共通尺度。
 spot scaleも同一trainデータから求める。特徴stdゼロなら1、price std/Greek RMSの下限1e-8。
-- [ ] trainのみを受け取るnormalization、domainの異なるtest入力をpredictしてもfit尺度が不変、seedを揃えた初期重み/batch順、CPU thread/RNGの復元をtest。
+- [x] trainのみを受け取るnormalization、domainの異なるtest入力をpredictしてもfit尺度が不変、seedを揃えた初期重み/batch順、CPU thread/RNGの復元をtest。
   smokeはupdates2・小trainを使い、フル学習や勝者をunit testの条件にしない。
-- [ ] updates数・setup/training実測・budget_failureを返す。途中fitは成功30fitsに数えない。
+- [x] updates数・setup/training実測・budget_failureを返す。途中fitは成功30fitsに数えない。
   minibatchはmin(256, train行数)。smoke fixture16行でも実行でき、主学習512/2048行では固定256になる。
-- [ ] 新test＋既存digital DML test、ruff/format、両索引guardを確認し、commit：`feat(deep-hedge): compare quote and parameter DML metrics`。
+- [x] 新test＋既存digital DML test、ruff/format、deep索引guardを確認し（hull索引は並行Task6の未コミットmodule登録時に再確認）、commit：`feat(deep-hedge): compare quote and parameter DML metrics`。
 
 ## Task 5：低次元price／differential ridgeと重み再評価
 
