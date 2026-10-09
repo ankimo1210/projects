@@ -221,3 +221,15 @@ def test_common_initialization_preserves_rng_and_meta_caller_device(monkeypatch)
     assert elapsed > 0
     assert torch.equal(before, torch.random.get_rng_state())
     assert threads == torch.get_num_threads()
+
+
+def test_post_measurement_stage_no_longer_reports_pending(smoke_result):
+    runner, record, _ = smoke_result
+    assert runner._adoption(record)["timing_and_full_cost"].startswith("pending")
+    completed = copy.deepcopy(record)
+    completed["benchmark"] = {"measurements": []}
+    completed["costs"] = {"comparisons": []}
+    stage = runner._adoption(completed)
+    assert stage["timing_and_full_cost"].startswith("measured")
+    assert "unmeasured" in stage["timing_and_full_cost"]
+    assert not stage["standard_speed_adopted"]

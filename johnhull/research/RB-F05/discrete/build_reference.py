@@ -562,7 +562,11 @@ def _adoption(record):
         "paired": rows,
         "all_seed_quality_pass": all(row["quality_pass"] for row in rows),
         "standard_speed_adopted": False,
-        "timing_and_full_cost": "pending; no automatic benchmark",
+        "timing_and_full_cost": (
+            "measured; see benchmark/costs and explicit unmeasured boundary"
+            if "benchmark" in record and "costs" in record
+            else "pending; no automatic benchmark"
+        ),
         "interpretation": "paired NN quality and strong Hermite accuracy tradeoff retained; accuracy alone does not establish full-cost speed advantage",
     }
 

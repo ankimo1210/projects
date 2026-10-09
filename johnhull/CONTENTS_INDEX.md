@@ -87,7 +87,7 @@ Ch26–28 は既存巻の節別教材を利用する。全 Book 本文をこの�
 | 研究 | 収録したモデル・分析 | 状態・結果 |
 |---|---|---|
 | [RB-F07：較正を通した市場クオート感応度](research/RB-F07/README.md) | 単一曲線の預金／FRA／par swap 較正、解析 Jacobian、減衰 Newton、随伴 quote sensitivity、再 bootstrap bump、座標／残差不変性、補間変更・情報不足の増幅診断 | **v1 完了**。6か月の柱リスクが0でも、同じ満期の預金クオートリスクは +106.30/bp。補間変更は別モデルで、不変性を主張しない。v2／v3 は今後の範囲 |
-| [RB-F05：不連続 payoff の微分教師と DML](research/RB-F05/README.md) | GBM cash-or-nothing digital、LRM、厳密条件付き期待値、CRN bump、ramp 対照、price-only／DML、train-only 正規化、解析・Hermite 補間との精度／費用比較 | **digital v1 完了**。3 seed で DML の価格・delta が改善。解析・補間より速くならず、標準価格器への速度採用はしない。離散バリアはprivate教師・独立参照に着手（研究受入は未完了）。0DTE・rough は未着手の後続範囲 |
+| [RB-F05：不連続 payoff の微分教師と DML](research/RB-F05/README.md) | GBM cash-or-nothing digital、LRM、厳密条件付き期待値、CRN bump、ramp 対照、price-only／DML、train-only 正規化、解析・Hermite 補間との精度／費用比較 | **digital v1 完了**。3 seed で DML の価格・delta が改善。解析・補間より速くならず、標準価格器への速度採用はしない。[離散バリアv1](research/RB-F05/discrete/README.md)も研究完了。実MC LRM/conditioning/OSS、Markov/PDE、6fits、32計時/会計と3図を検証し、DMLの全seed改善・強Hermiteへの精度劣後を記録。標準高速器採用は見送り。0DTE・rough は未着手の後続範囲 |
 
 計算の正本は非公開の [quote risk](hullkit/src/hullkit/_quote_risk.py)、[digital 教師](hullkit/src/hullkit/_digital_teachers.py)、[digital DML](../deep_hedge_price/src/deep_hedge_price/_digital_dml.py)。
 研究 backlog 全体は [研究計画](docs/superpowers/plans/2026-09-27-research-backlog.md) を参照。
@@ -121,7 +121,7 @@ Ch26–28 は既存巻の節別教材を利用する。全 Book 本文をこの�
 - **§36.4 Schwartz–Moon は原著価格未再現。** 四半期 OU・会計 CF・税・default を独立検証したが、原著の会計／ESO 時点が不足。原著 5457M／27.9%／12.42 は未再現で、指定した会計条件での値と区別する。
 - **§36.5 の共同 option は原典脚注と差がある。** 単独の撤退／拡張価格は一致。共同値 3.217896M は独立方策でも確認したが、原典の「相互作用なし」は再現できない。
 - **Book と受入表示の範囲は同一ではない。** 章別 fast-v1 補足 HTML を含めて受け入れた。全 Book 本文・全画像・別画面幅・全306節の両保管庫からの復元を最終統合で再実行したとは主張しない。
-- **研究の後続は未完了。** RB-F07 v2／v3、RB-F05 の離散バリア・0DTE・rough は今回の完成範囲に含まれない。
+- **研究の後続は未完了。** RB-F07 v2／v3、RB-F05 の0DTE・rough、F04/F08/F06と後続統合研究は完成範囲に含まれない。離散バリアv1は研究完了。
 
 ## 8. 全体ロードマップ
 
