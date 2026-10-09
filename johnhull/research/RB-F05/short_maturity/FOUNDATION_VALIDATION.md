@@ -12,7 +12,7 @@
 | 条件・seed台帳・review/source freeze | 候補規約実装済み | 23 tests。実pilot/全金融source不足ではmain生成を拒否 |
 | C² quintic Hermite・raw/safe・費用/誤差集計 | 基礎実装済み | 11 tests。独立log-spot polynomial/FD、endpoint・bound・費用祖先/overflow回帰 |
 | 教師→学習→保存重み | 接続smoke済み | FOUNDATION_SMOKE.json、pilot-only16条件/32updates |
-| pilot/主runner/教材builder | 実装・事前レビュー完了 | 最終対象1275 PASS、Python16件ruff/format PASS、残Critical/Important0。実fullpilot・freeze・主6fits・正式3図・採否は未完了 |
+| pilot/主runner/教材builder | 実装・事前レビュー完了 | 最終対象1275 PASS、Python16件ruff/format PASS、残Critical/Important0。実fullpilotの保存値/両復元はPASS、独立review待ち。freeze・主6fits・正式3図・採否は未完了 |
 
 ## 判断に影響する発見
 
@@ -58,3 +58,5 @@ main runnerとartifact-only notebook builderを実装。全short-maturity対象�
 pilot費用の閉集合は29 testsと独立改変再検査で確認。[pilot事前レビュー](PILOT_CODE_REVIEW.md)。runner初回独立レビューの費用・pending・fit lifecycleの3 Importantを41 testsで修正したが、再レビューで「ゼロ更新time capなのに学習済み重みを保持できる」Importantを追加検出した。追加46回帰で修正し、独立再確認で残Critical/Important0。[初回review](RUNNER_CODE_REVIEW_INITIAL.md)／[修正記録](RUNNER_REVIEW_FIXES.md)／[最終事前review](RUNNER_CODE_REVIEW.md)。最終対象gateは1275 passed（20.73秒）、Python16ファイルruff/format PASS。[最終receipt](PREFLIGHT_TESTS_FINAL.json)。
 
 教材builderはtoy保存物を実kernelで実行し、乱数・optimizer・学習・network禁止のまま3PNGを確認した（4 tests）。正式mainからの教材生成・3図の目視は未実施。[教材実装記録](NOTEBOOK_CODE_VALIDATION.md)。金融source10件、予約seed3870件、候補84条件をcandidate_protocol.jsonへ保存した。NPZはGitへ直接追加せず、実生成後に両保管庫へ保存・独立復元する。
+
+正式pilotの実84×3、N選択・両341054854-byte復元の数値PASSは[README](README.md#正式pilot)とJSON receiptsを参照。tracked releaseは全新source/testをcommit後にPASSした（[receipt](PREFLIGHT_RELEASE.json)）。過去のuntracked study testによるFAILを現在のPASSと混同しない。

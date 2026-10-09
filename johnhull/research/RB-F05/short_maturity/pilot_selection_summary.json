@@ -1,0 +1,47 @@
+{
+  "schema": "RB-F05-short-pilot-selection-summary-v1",
+  "selected_sample_count": 1048576,
+  "rows": [
+    {
+      "sample_count": 16384,
+      "original_slots": 252,
+      "ready_slots": 126,
+      "event_slots": 126,
+      "minimum_observed_event_count": 9,
+      "maximum_price_se": 0.008863788245413798,
+      "maximum_delta_se": 0.0010399364337089398,
+      "maximum_scaled_gamma_se": 0.10177264193025823
+    },
+    {
+      "sample_count": 65536,
+      "original_slots": 252,
+      "ready_slots": 157,
+      "event_slots": 126,
+      "minimum_observed_event_count": 54,
+      "maximum_price_se": 0.004437019171956365,
+      "maximum_delta_se": 0.0005125991094821925,
+      "maximum_scaled_gamma_se": 0.055629087412593536
+    },
+    {
+      "sample_count": 262144,
+      "original_slots": 252,
+      "ready_slots": 235,
+      "event_slots": 126,
+      "minimum_observed_event_count": 218,
+      "maximum_price_se": 0.0021623532588131186,
+      "maximum_delta_se": 0.00025696498099940816,
+      "maximum_scaled_gamma_se": 0.027744076003014023
+    },
+    {
+      "sample_count": 1048576,
+      "original_slots": 252,
+      "ready_slots": 252,
+      "event_slots": 126,
+      "minimum_observed_event_count": 905,
+      "maximum_price_se": 0.0010694391821137233,
+      "maximum_delta_se": 0.00012800570399715516,
+      "maximum_scaled_gamma_se": 0.012973181989762618
+    }
+  ],
+  "scope": "descriptive summary of actual fixed original pilot; criteria not changed; no main/test observations"
+}

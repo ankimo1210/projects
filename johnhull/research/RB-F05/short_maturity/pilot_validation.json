@@ -1,0 +1,46 @@
+{
+  "schema": "RB-F05-short-pilot-validation-v1",
+  "archive_load_s": 2.0957622950081713,
+  "saved_check_s": 4.486440897977445,
+  "check": {
+    "passed": true,
+    "selected_sample_count": 1048576,
+    "numerical_replay_passed": true,
+    "reasons": [],
+    "ready_sample_candidates": [
+      1048576
+    ],
+    "case_count": 84,
+    "stream_count": 3,
+    "raw_replay_count": 252,
+    "clock_failure_count": 0,
+    "reference_failure_count": 0,
+    "raw_failure_count": 0,
+    "reference_precision_passed": true,
+    "raw_diagnostic_status_counts": {
+      "price/supported": 246,
+      "pw_delta/supported": 247,
+      "lr_delta/supported": 246,
+      "lrpw_gamma/supported": 248,
+      "lr2_gamma/supported": 246,
+      "naive_gamma/negative_control": 252,
+      "crn_delta/supported": 743,
+      "crn_gamma/supported": 625,
+      "crn_gamma/diagnostic_inconclusive": 128,
+      "pw_delta/unsupported": 1,
+      "crn_delta/unsupported": 13,
+      "price/unsupported": 2,
+      "lr_delta/unsupported": 2,
+      "lr2_gamma/unsupported": 2,
+      "crn_gamma/unsupported": 3,
+      "price/diagnostic_inconclusive": 4,
+      "pw_delta/diagnostic_inconclusive": 4,
+      "lr_delta/diagnostic_inconclusive": 4,
+      "lrpw_gamma/diagnostic_inconclusive": 4,
+      "lr2_gamma/diagnostic_inconclusive": 4
+    }
+  },
+  "original_arrays": 17724,
+  "pilot_npz_bytes": 341054854,
+  "pilot_json_bytes": 3481528
+}

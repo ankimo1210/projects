@@ -1,0 +1,17 @@
+{
+  "schema": "RB-F05-short-process-cost-v1",
+  "phase": "formal_pilot",
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/pilot.py",
+    "--protocol",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/candidate_protocol.json",
+    "--mode",
+    "full",
+    "--output",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/pilot"
+  ],
+  "wall_seconds": 12.60960372898262,
+  "exit_code": 0,
+  "scope": "child CLI wall includes imports, references, all IID draws, prefix/raw summaries and serialization; do not add nested API time"
+}
