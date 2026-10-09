@@ -53,7 +53,15 @@
       "Minor": 0
     }
   },
-  "release": "pending",
+  "release": {
+    "status": "PASS",
+    "command": "python johnhull/scripts/verify_release.py --require-tracked",
+    "checkout": "codex/rbf08-mlmc-rqmc",
+    "checked_commit": "eca07f65",
+    "checked_at_utc": "2026-10-09T05:46:31.122534+00:00",
+    "exit_code": 0,
+    "output": "[PASS] johnhull A5--A8 release contract"
+  },
   "main_integration": "pending",
   "limitations": [
     "Core accepted sections were not fully reaccepted by this research gate.",
