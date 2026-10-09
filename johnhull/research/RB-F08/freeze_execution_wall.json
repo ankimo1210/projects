@@ -1,0 +1,8 @@
+{
+  "schema": "RB-F08-freeze-cli-wall-v1",
+  "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+  "wall_s": 25.238621675001923,
+  "recorded_freeze_validation_s": 20.984094500017818,
+  "unaccounted_overhead_s": 4.254527174984105,
+  "scope": "whole freeze subprocess including interpreter startup/CLI and receipt JSON write"
+}

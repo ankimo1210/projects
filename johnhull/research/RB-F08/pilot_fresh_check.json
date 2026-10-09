@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "numerical_columns": 52,
+  "fresh_s": 2.515733028005343,
+  "timing_replay": "new wall seconds not required to match",
+  "pilot_record_digest": "0efc23f768fe1c11a887ce595d8c9ec2b7fe70b66845973c60feeca44f416788",
+  "pilot_arrays_digest": "a6aabfbc80064f4e4c9a829ed52da08c34be6aa851061dc033df86ff398248e7",
+  "wall_s": 17.519093207025435
+}

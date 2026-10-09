@@ -404,9 +404,9 @@ Full pilotは§1.2の3×16384全9level、exact paired bias、coarse/fine負状�
 
 - [x] **Step 1: moments fixtureからの配分/停止のRED test。** mean(D)=[-.20,-.08,-.02]、SE=[.01,.01,.001]、epsilon=.10はL2の経験的bias基準に合格。mean(D_L)=.20なら上限L8でも`bias_unresolved`。coarse negative rate=2e-5なら`coarse_grid_invalid`。V/C配分はTask1のfixtureと一致する。mode=smoke、source不一致、reviewのpilot SHA不一致はfreeze不可。
 - [x] **Step 2: REDを確認し、全候補固定pilotと配分選択を実装。** pilotの乱数生成開始前にcandidate全phaseのseed台帳を作り、resolutionのraw/generated seed・retry・実spawn_keyを保存する。台帳はNPZのtyped列としてpilot bundleへ保存し、protocol JSONには台帳のdigest/件数/column registryを記す。`p["seed_ledger"]`は保存台帳を読み込んだin-memory表とする。途中meanを見てpathを増やさず、pilotstreamを主推定へpoolしない。per-block n/mean/M2、seed、負path/state数、RNG/update/payoff/aggregation数、秒数を保存する。
-- [ ] **Step 3: F04採否後、無負荷時にfull pilotを実行。** Cost calibrationを主比較前に行いhardware/OS/CPU/thread/backendを保存する。秒数の精密な比例をsmall unit testへ要求しない。
-- [ ] **Step 4: 独立pilotレビュー。** fresh agentが粗細係数、N式、bias target、負株価、seed phase/resolution、CV費用、clip差と全候補rosterを再検算し、PILOT_REVIEW.mdとmachine-readable reviewへ対象fingerprintを記す。candidate capの選定・予算妥当性はここで主比較前に判断する。512coverage・256mainなど全候補数字、未支持cell、最終台帳を確認する。未知のrateは`unresolved`のまま記す。
-- [ ] **Step 5: 合格pilotからprotocol freeze。** `freeze_protocol`で§1.5の全条件を保存する。L/N/betaだけでなく、epsilon/商品/格子、pilot条件、512coverage・256main、全K/m/R、全cap・閾値・block/thread/timing/CI/clip/採否基準、最終seed台帳を主実験前に固定する。reviewがFAILなら当該原因を修正しprotocol revisionと必要な新pilot/台帳を作る。主実験の結果を用いてfreezeを書き換えない。
+- [x] **Step 3: F04採否後、無負荷時にfull pilotを実行。** Cost calibrationを主比較前に行いhardware/OS/CPU/thread/backendを保存する。秒数の精密な比例をsmall unit testへ要求しない。
+- [x] **Step 4: 独立pilotレビュー。** fresh agentが粗細係数、N式、bias target、負株価、seed phase/resolution、CV費用、clip差と全候補rosterを再検算し、PILOT_REVIEW.mdとmachine-readable reviewへ対象fingerprintを記す。candidate capの選定・予算妥当性はここで主比較前に判断する。512coverage・256mainなど全候補数字、未支持cell、最終台帳を確認する。未知のrateは`unresolved`のまま記す。
+- [x] **Step 5: 合格pilotからprotocol freeze。** `freeze_protocol`で§1.5の全条件を保存する。L/N/betaだけでなく、epsilon/商品/格子、pilot条件、512coverage・256main、全K/m/R、全cap・閾値・block/thread/timing/CI/clip/採否基準、最終seed台帳を主実験前に固定する。reviewがFAILなら当該原因を修正しprotocol revisionと必要な新pilot/台帳を作る。主実験の結果を用いてfreezeを書き換えない。
 
 ## Task 5: 主反復のanalytics・被覆率・費用会計
 
@@ -465,9 +465,9 @@ def check_record(record: dict, arrays: dict, *, fresh: bool = False) -> dict: ..
 
 main modeはfrozen/review/source/全数値条件/最終seed台帳/rosterが全一致の場合だけ実行。fixture modeは計測/採否に使わない。既存reference上書きを拒否し、再実行は別directory。各method/epsilon/run/levelのn/mean/M2、block summaries、sampling/bias-aware CI、全scramble pricesとraw/generated seed・retry・実spawn_key、負数、cost-counter、timing observationとsource/protocol snapshotを保存する。全Eulerpathを保存しない。
 
-- [ ] **Step 1: Tiny fixtureのRED。** B=4、m=3、R=4、L=2、N_l=[16,8,4]のfixtureを使う。これはmain protocolと別schemaで`fixture`と明示。JSONのprice/SE/coverage/decision、N_l、clip、子seed、review digest、level M2を1つずつ改変してcheckerが拒否するtestを書く。
-- [ ] **Step 2: main配線を最小実装してGREEN。** per-run independentlevels、fixed allocations、block generator、plain Euler/exact/CVを配線。RQMCはfrozen台帳の当該R行を`rqmc_gbm_call_from_seeds(..., child_seeds=..., child_metadata=...)`へ渡す。legacy wrapperとcandidate resolutionをmainでmonkeypatchして例外にし、mainが呼ばないtestを追加する。RNG/engine/summary timerを保存。partial runで例外が出たら失敗recordを保存し、completed rosterへ補充しない。
-- [ ] **Step 3: 保存checker。** NPZ `allow_pickle=False`、array registry/shape/dtype、n/M2>=0、nのint、negative<=paths/states、price/SE/df/CI/費用/roster/採否を再計算する。fingerprintが合ってもstatistical summary改変は通さない。
+- [x] **Step 1: Tiny fixtureのRED。** B=4、m=3、R=4、L=2、N_l=[16,8,4]のfixtureを使う。これはmain protocolと別schemaで`fixture`と明示。JSONのprice/SE/coverage/decision、N_l、clip、子seed、review digest、level M2を1つずつ改変してcheckerが拒否するtestを書く。
+- [x] **Step 2: main配線を最小実装してGREEN。** per-run independentlevels、fixed allocations、block generator、plain Euler/exact/CVを配線。RQMCはfrozen台帳の当該R行を`rqmc_gbm_call_from_seeds(..., child_seeds=..., child_metadata=...)`へ渡す。legacy wrapperとcandidate resolutionをmainでmonkeypatchして例外にし、mainが呼ばないtestを追加する。RNG/engine/summary timerを保存。partial runで例外が出たら失敗recordを保存し、completed rosterへ補充しない。
+- [x] **Step 3: 保存checker。** NPZ `allow_pickle=False`、array registry/shape/dtype、n/M2>=0、nのint、negative<=paths/states、price/SE/df/CI/費用/roster/採否を再計算する。fingerprintが合ってもstatistical summary改変は通さない。
 - [ ] **Step 4: fresh検証と独立参照。** 固定seedから代表caseごとの最初/最後runと全levelを再生成しblockmomentsを1e-10相対/1e-12絶対で照合。全scramble推定値はsmall referenceの全件、full mainは全seed台帳＋各18cellの3代表outerrunを再生成する。fresh-review rootは追加の独立256pair/caseでscalar Euler replayとcouplingを照合し、主反復へpoolしない。
 - [ ] **Step 5: F04採否後に全mainを実行。** B=256 Euler系列、B=512の18RQMCcellを満たす。smokeをmainへ昇格しない。frozen未支持cell・失敗件数も保存する。明らかな負荷競合/バックエンド変更があった計時は理由付きで別revisionへ再計測し、良い時間だけ選ばない。
 - [ ] **Step 6: 保管。** 20MB以下は小さなsynthetic bundleを研究資料へ保持。超える場合は既存`artifacts.store_large(output, stem="reference")`でprimary/mirrorを使い、各copyから独立復元とSHA/数値checkerを実施する。保管庫marker未接続を空folder作成で迂回しない。
@@ -485,8 +485,8 @@ main modeはfrozen/review/source/全数値条件/最終seed台帳/rosterが全�
 3. **RMSE対費用：** Euler MLMC/plain Euler/exact plain/frozen CVの独立run RMSE、main/cold/amortized秒数、step費用の別panel。BSM解析評価は価格真値/時間比較器として別表示し、Euler研究から除去しない。
 4. **CI被覆率：** R/m/KごとのStudent nominal95%、empirical coverageとWilson区間、幅median/p95、BSM/P_clipの区別、退化数。MLMC sampling vs bias-awareの真値被覆も表で添える。
 
-- [ ] **Step 1: artifact-onlyのRED test。** fixture bundleからbuilderを実行し、PNG display_dataのあるfigure cellが4個、seed/clip/CI近似/bias/費用/失敗理由/採否が本文に現れることを固定する。主計算関数をmonkeypatchして例外にし、notebookを実行しても呼ばれないことを確かめる。
-- [ ] **Step 2: builderの最小実装・GREEN。** nbformat deterministic cell-id、`hullkit.nbplot.setup()`またはjapanize_matplotlib、matplotlib、保存配列checkerのみ。欠損/壊れたbundleは明示エラー。計測秒数の再現をnotebook実行で要求しない。
+- [x] **Step 1: artifact-onlyのRED test。** fixture bundleからbuilderを実行し、PNG display_dataのあるfigure cellが4個、seed/clip/CI近似/bias/費用/失敗理由/採否が本文に現れることを固定する。主計算関数をmonkeypatchして例外にし、notebookを実行しても呼ばれないことを確かめる。
+- [x] **Step 2: builderの最小実装・GREEN。** nbformat deterministic cell-id、`hullkit.nbplot.setup()`またはjapanize_matplotlib、matplotlib、保存配列checkerのみ。欠損/壊れたbundleは明示エラー。計測秒数の再現をnotebook実行で要求しない。
 - [ ] **Step 3: 4図を実行・render・目視。** 日本語glyph、軸/legend/CIラベルの衝突、log軸で0/unsupported点を隠していないか、cost内訳が表と一致するかを確認する。HTMLを付ける場合はworkspaceの`docs/templates/claude-report/`を適用する。
 - [ ] **Step 4: 独立最終レビュー。** fresh reviewerが原始block/scramble観測から配分、bias/SE、RMSE/coverage、費用・採否を再計算し、代表fresh replay、source snapshot、clip bias、4図を確認。Critical/Importantは修正して再検査する。reviewerの自前Black/Euler計算を証跡に残す。
 - [ ] **Step 5: 完了記録。** READMEに問い・固定条件・反復roster・有効/失敗cell・検証・採否・限界・後続Hestonを保存する。ROADMAPは実測を根拠にF08 v1完了として更新し、未実装Hestonを完了に数えない。勝利・理論改善率・公開API昇格を完了条件にしない。
@@ -585,3 +585,5 @@ ruffは今回追加/変更したPythonだけに`uv run --no-sync ruff check <fil
 2026-10-09実装前レビュー修正：数値再現比較をallcloseへ統一し、32bit seedのcandidate時限定・決定的衝突解決と直接seed seam、pilot reviewでのcap選定と全主条件freezeを追加した。変更対象はこの計画1fileのみ。実装・主実験・commit/pushは実施していない。
 
 2026-10-09実装時の補完：固定seed clip診断の専用slotをfullpilot前に追加。freeze/fresh費用は承認済み観測を変更しない別receiptに記録。基礎独立レビューの3件（epsilon重複、offline原価欠落、精度未達比較器の速度理由）とCI confidence渡しは対象RED→GREENで修正。
+
+2026-10-09 full pilot後の計測解釈補足：coldは凍結研究pipelineの検証込み初回費用。個別exact/解析器の必須起動費用とは呼ばない。C_lはpilot較正集計workloadを含むため主runの実時間を厳密に最小化する配分とは主張しない。原始費用・固定配分・主runの実測速度比を保持する。BLAS backendはpilot時直接記録の欠如をレビュー時捕捉で補足し、時点の差を残す。

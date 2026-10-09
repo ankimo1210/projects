@@ -1,0 +1,18 @@
+{
+  "schema": "RB-F08-freeze-cost-v1",
+  "seconds": 20.984094500017818,
+  "expense_id": "freeze_validation",
+  "methods": [
+    "mlmc",
+    "plain_euler",
+    "exact_plain",
+    "exact_cv"
+  ],
+  "epsilons": [
+    0.4,
+    0.2,
+    0.1
+  ],
+  "protocol_frozen_digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957",
+  "scope": "freeze_protocol plus protocol save/read/validation; receipt serialization excluded"
+}

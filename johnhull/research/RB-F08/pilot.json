@@ -1,0 +1,6871 @@
+{
+  "schema": "RB-F08-pilot-v1",
+  "mode": "full",
+  "protocol": {
+    "schema": "RB-F08-mlmc-rqmc-v1",
+    "revision": 1,
+    "state": "candidate",
+    "parameters": {
+      "spot": 100.0,
+      "strike": 100.0,
+      "rate": 0.03,
+      "sigma": 0.2,
+      "maturity": 1.0,
+      "yield_rate": 0.0
+    },
+    "product": {
+      "kind": "european_call",
+      "payment": "expiry",
+      "units": "currency/year"
+    },
+    "scheme": "ordinary_euler",
+    "base_steps": 4,
+    "epsilon": [
+      0.4,
+      0.2,
+      0.1
+    ],
+    "pilot": {
+      "levels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "streams": 3,
+      "paths_per_stream": 16384,
+      "exact_cv_paths_per_stream": 16384,
+      "bias_confidence": 0.99,
+      "minimum_main_level": 2,
+      "alpha_signal_multiplier": 3.0,
+      "alpha_consecutive_levels": 3,
+      "negative_path_rate_cap": 1e-05
+    },
+    "allocation": {
+      "minimum_paths": 32,
+      "variance_floor": 1e-12,
+      "sampling_variance_fraction": 0.5,
+      "bias_fraction_sqrt": 0.5,
+      "cost_basis": "isolated_median_seconds_per_pair",
+      "rounding": "ceil"
+    },
+    "caps": {
+      "paths_per_run": 2000000,
+      "steps_per_run": 100000000
+    },
+    "main": {
+      "outer_runs": 256,
+      "methods": [
+        "mlmc",
+        "plain_euler",
+        "exact_plain",
+        "exact_cv"
+      ],
+      "confidence": 0.95,
+      "levels_reserved": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "mlmc_df": "Satterthwaite",
+      "failed_path_rule": "retain negative; nonfinite fails original run",
+      "cv_control": "exp(-rT)*ST",
+      "cv_expectation": "S0*exp(-qT)",
+      "cv_beta": "independent pilot only",
+      "selected_allocations": null
+    },
+    "rqmc": {
+      "strikes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "powers": [
+        8,
+        10
+      ],
+      "scrambles": [
+        8,
+        16,
+        32
+      ],
+      "outer_runs": 512,
+      "confidence": 0.95,
+      "dimensions": 1,
+      "scheme": "exact_terminal",
+      "interval": "approximate Student",
+      "sampling_unit": "independent scramble estimates",
+      "df": "R-1",
+      "sobol": "scipy LMS+shift; random_base2; retain point zero",
+      "clip": {
+        "lower": 5e-324,
+        "upper": 0.9999999999999999,
+        "lower_hex": "0x0.0000000000001p-1022",
+        "upper_hex": "0x1.fffffffffffffp-1"
+      },
+      "truths": [
+        "BSM",
+        "independent_clipped_integral"
+      ],
+      "coverage_uncertainty": "Wilson 95%"
+    },
+    "clip_diagnostic": {
+      "power": 10,
+      "public_clip": [
+        1e-10,
+        0.9999999999
+      ]
+    },
+    "fresh_review": {
+      "strikes": [
+        80.0,
+        100.0,
+        120.0
+      ],
+      "runs_per_case": 1,
+      "paths_per_level": 256,
+      "coverage_replay_runs": [
+        0,
+        255,
+        511
+      ],
+      "rqmc_reserved_runs": 1
+    },
+    "timing": {
+      "pairs_per_level": 4096,
+      "warmup_repetitions": 1,
+      "measured_repetitions": 7,
+      "statistics": [
+        "median",
+        "p95"
+      ]
+    },
+    "bootstrap": {
+      "resamples": 2000,
+      "confidence": 0.95,
+      "unit": "paired main run ratios"
+    },
+    "method_order": "seeded balanced permutations per epsilon",
+    "phase_roots": {
+      "pilot": 83101,
+      "main": 83201,
+      "coverage": 83301,
+      "fresh_review": 83401,
+      "timing": 83501,
+      "method_order": 83601,
+      "bootstrap": 83701
+    },
+    "seed_rule": "phase/case/budget/run/method/level/scramble fixed ordinals; uint32 retry child",
+    "seed_independence": "unique physical seeds prevent reuse; do not prove independence",
+    "block_size": 2048,
+    "single_process": true,
+    "threads": {
+      "OPENBLAS_NUM_THREADS": 1,
+      "OMP_NUM_THREADS": 1,
+      "MKL_NUM_THREADS": 1
+    },
+    "cost_definition": {
+      "level_zero": {
+        "updates": "M0*N",
+        "normals": "M0*N",
+        "payoffs": "N",
+        "coarse_aggregation": "0"
+      },
+      "level_positive": {
+        "updates": "(M_l+M_l/2)*N",
+        "normals": "M_l*N",
+        "payoffs": "2*N",
+        "coarse_aggregation": "M_l/2*N"
+      },
+      "wall_scope": "RNG+path+payoff+summary; import setup separate",
+      "expense_rule": "sum unique expense_id once; method cold includes required shared expenses",
+      "euler_pilot_rule": "all candidate levels, not selected prefix only",
+      "exact_pilot_rule": "own necessary pilot/CV cost, no mandatory Euler-only pilot"
+    },
+    "amortizations": [
+      1,
+      10,
+      100
+    ],
+    "acceptance": {
+      "teaching": "valid coupling/full roster/recomputation/4 figures/independent review",
+      "speedup_epsilon_cells": 2,
+      "rmse_rule": "rmse<=epsilon",
+      "main_ratio_median_cap": 1.0,
+      "bootstrap_ratio_upper_cap": 1.0,
+      "exact_terminal_win_required": false,
+      "report_cold_disadvantage": true
+    },
+    "constraints": {
+      "cpu": true,
+      "torch": false,
+      "public_api_changes": false,
+      "production_dependencies": false,
+      "external_data": false
+    },
+    "seed_ledger_meta": {
+      "digest": "e3c264ebc4fb93b7c82e6ba3464243a04d4881981cab23ce698acbbadcebdb16",
+      "count": 181729,
+      "columns": {
+        "seed_ledger_budget": {
+          "dtype": "<i4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_budget_present": {
+          "dtype": "|b1",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_candidate_seeds_offsets": {
+          "dtype": "<i8",
+          "shape": [
+            181730
+          ]
+        },
+        "seed_ledger_candidate_seeds_values": {
+          "dtype": "<u4",
+          "shape": [
+            181731
+          ]
+        },
+        "seed_ledger_case": {
+          "dtype": "<i4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_case_present": {
+          "dtype": "|b1",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_entropy_offsets": {
+          "dtype": "<i8",
+          "shape": [
+            181730
+          ]
+        },
+        "seed_ledger_entropy_values": {
+          "dtype": "<u4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_level": {
+          "dtype": "<i4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_level_present": {
+          "dtype": "|b1",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_logical_id": {
+          "dtype": "<U37",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_logical_spawn_key_offsets": {
+          "dtype": "<i8",
+          "shape": [
+            181730
+          ]
+        },
+        "seed_ledger_logical_spawn_key_values": {
+          "dtype": "<u4",
+          "shape": [
+            1090374
+          ]
+        },
+        "seed_ledger_method": {
+          "dtype": "<U15",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_method_ordinal": {
+          "dtype": "<i4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_method_ordinal_present": {
+          "dtype": "|b1",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_method_present": {
+          "dtype": "|b1",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_phase": {
+          "dtype": "<U12",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_raw_seed": {
+          "dtype": "<u4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_retry_count": {
+          "dtype": "<u4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_run": {
+          "dtype": "<i4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_run_present": {
+          "dtype": "|b1",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_scramble": {
+          "dtype": "<i4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_scramble_present": {
+          "dtype": "|b1",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_seed": {
+          "dtype": "<u4",
+          "shape": [
+            181729
+          ]
+        },
+        "seed_ledger_spawn_key_offsets": {
+          "dtype": "<i8",
+          "shape": [
+            181730
+          ]
+        },
+        "seed_ledger_spawn_key_values": {
+          "dtype": "<u4",
+          "shape": [
+            1272103
+          ]
+        }
+      }
+    }
+  },
+  "protocol_digest": "1918739bcccd8a29cdef1cddfab29b5721df2058381273b3ed94c332839d95cd",
+  "seed_ledger_digest": "e3c264ebc4fb93b7c82e6ba3464243a04d4881981cab23ce698acbbadcebdb16",
+  "source_fingerprint": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004",
+  "source": {
+    "files": {
+      "hullkit/src/hullkit/_multilevel_mc.py": "7104b480a0e4ea872bbf44acc18c6bdb939da3678b9db26f8908337c2fefbfc3",
+      "hullkit/src/hullkit/_rqmc_ci.py": "a36c08e1b55e92189d84319099fb634ef6bf3eff0799ea770c66d41e0d36c43d",
+      "hullkit/src/hullkit/_numerical_mc.py": "6292bb6a4797cb85bf42e4b57d8f7ae68d11af16828ae08206669300bb5515ee",
+      "hullkit/src/hullkit/_stochastic_foundations.py": "a34ddeba7249af129aba83171f9c1a720067fd7b6a812ae0386ba79b180d28f2",
+      "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+      "research/RB-F08/reference_methods.py": "6a3b112b0686068fe5452f24ecba590c7457ca7859dd7c6195ab8bfeb36a50ca",
+      "research/RB-F08/protocol.py": "3b26af1239232c7f99873a326a74117ac41a81b43bc8a7bc31eb25b4d24958ed",
+      "research/RB-F08/pilot.py": "5b8676df6f3266fc6cfc907b1cd2486d9c48df9fb8ad4a3d834eaaaabef75b2b",
+      "research/RB-F08/analytics.py": "9cbccf4336977a621ac9ea179fa4c0543313f66cee79b00642aa6947f21ef44d",
+      "research/RB-F08/build_reference.py": "50e28c8789857aa9981d43a59891528c1c352f16fefb4f0daba179539adb2992"
+    },
+    "dependencies": {
+      "python": "3.12.3",
+      "numpy": "2.4.6",
+      "scipy": "1.17.1"
+    },
+    "digest": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004"
+  },
+  "actual": {
+    "levels": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "streams": 3,
+    "paths": 16384,
+    "exact_paths": 16384,
+    "timing_paths": 4096
+  },
+  "level_summaries": [
+    {
+      "level": 0,
+      "steps": 4,
+      "count": 49152,
+      "fine": {
+        "count": 49152,
+        "mean": 9.454316882226394,
+        "m2": 9192418.95119896,
+        "variance": 187.02404734794735,
+        "standard_error": 0.061684795404781785
+      },
+      "coarse": {
+        "count": 49152,
+        "mean": 0.0,
+        "m2": 0.0,
+        "variance": 0.0,
+        "standard_error": 0.0
+      },
+      "difference": {
+        "count": 49152,
+        "mean": 9.454316882226394,
+        "m2": 9192418.95119896,
+        "variance": 187.02404734794735,
+        "standard_error": 0.061684795404781785
+      },
+      "bias": {
+        "count": 49152,
+        "mean": -0.002866649146599204,
+        "m2": 65452.76427896491,
+        "variance": 1.331666991087972,
+        "standard_error": 0.005205077741142833
+      },
+      "exact": {
+        "count": 49152,
+        "mean": 9.457183531372992,
+        "m2": 9838844.023970017,
+        "variance": 200.17586669589667,
+        "standard_error": 0.0638168350339815
+      },
+      "fine_coarse_covariance": 0.0,
+      "fine_exact_covariance": 192.93412352637804,
+      "coupled_variance": 187.02404734794735,
+      "uncoupled_variance": 187.02404734794735,
+      "fine_negative_states": 0,
+      "coarse_negative_states": 0,
+      "negative_paths": 0,
+      "negative_path_rate": 0.0,
+      "fine_state_denominator": 196608,
+      "coarse_state_denominator": 0,
+      "fine_negative_state_rate": 0.0,
+      "coarse_negative_state_rate": 0.0,
+      "bias_half_width": 0.013407912452995977,
+      "bias_bound": 0.01627456159959518
+    },
+    {
+      "level": 1,
+      "steps": 8,
+      "count": 49152,
+      "fine": {
+        "count": 49152,
+        "mean": 9.466556645589305,
+        "m2": 9490524.422120344,
+        "variance": 193.0891420748376,
+        "standard_error": 0.06267701853342038
+      },
+      "coarse": {
+        "count": 49152,
+        "mean": 9.46075531088774,
+        "m2": 9167320.063229814,
+        "variance": 186.51339877580952,
+        "standard_error": 0.06160052607188809
+      },
+      "difference": {
+        "count": 49152,
+        "mean": 0.005801334701568028,
+        "m2": 31048.37670074506,
+        "variance": 0.6316936929206945,
+        "standard_error": 0.003584946454716542
+      },
+      "bias": {
+        "count": 49152,
+        "mean": -0.0014515309318617244,
+        "m2": 33129.27413442647,
+        "variance": 0.6740305209339885,
+        "standard_error": 0.0037031319250275564
+      },
+      "exact": {
+        "count": 49152,
+        "mean": 9.468008176521169,
+        "m2": 9807962.481851256,
+        "variance": 199.5475673302935,
+        "standard_error": 0.0637166041973149
+      },
+      "fine_coarse_covariance": 189.48542357886325,
+      "fine_exact_covariance": 195.9813394420986,
+      "coupled_variance": 0.6316936929206945,
+      "uncoupled_variance": 379.60254085064713,
+      "fine_negative_states": 0,
+      "coarse_negative_states": 0,
+      "negative_paths": 0,
+      "negative_path_rate": 0.0,
+      "fine_state_denominator": 393216,
+      "coarse_state_denominator": 196608,
+      "fine_negative_state_rate": 0.0,
+      "coarse_negative_state_rate": 0.0,
+      "bias_half_width": 0.009539006163193722,
+      "bias_bound": 0.010990537095055446
+    },
+    {
+      "level": 2,
+      "steps": 16,
+      "count": 49152,
+      "fine": {
+        "count": 49152,
+        "mean": 9.298448297692463,
+        "m2": 9447077.594291516,
+        "variance": 192.20519611587792,
+        "standard_error": 0.06253338888677659
+      },
+      "coarse": {
+        "count": 49152,
+        "mean": 9.298810930844118,
+        "m2": 9292651.503323881,
+        "variance": 189.06332533059106,
+        "standard_error": 0.06202018381864947
+      },
+      "difference": {
+        "count": 49152,
+        "mean": -0.00036263315165750915,
+        "m2": 16007.200737828705,
+        "variance": 0.3256739585731461,
+        "standard_error": 0.002574073357415441
+      },
+      "bias": {
+        "count": 49152,
+        "mean": 0.004258717836119268,
+        "m2": 16968.24960651253,
+        "variance": 0.34522694566768797,
+        "standard_error": 0.002650218894766845
+      },
+      "exact": {
+        "count": 49152,
+        "mean": 9.294189579856344,
+        "m2": 9601375.720374327,
+        "variance": 195.34446339594976,
+        "standard_error": 0.0630419961770041
+      },
+      "fine_coarse_covariance": 190.47142374394795,
+      "fine_exact_covariance": 193.60221628308008,
+      "coupled_variance": 0.3256739585731461,
+      "uncoupled_variance": 381.268521446469,
+      "fine_negative_states": 0,
+      "coarse_negative_states": 0,
+      "negative_paths": 0,
+      "negative_path_rate": 0.0,
+      "fine_state_denominator": 786432,
+      "coarse_state_denominator": 393216,
+      "fine_negative_state_rate": 0.0,
+      "coarse_negative_state_rate": 0.0,
+      "bias_half_width": 0.006826776599595562,
+      "bias_bound": 0.01108549443571483
+    },
+    {
+      "level": 3,
+      "steps": 32,
+      "count": 49152,
+      "fine": {
+        "count": 49152,
+        "mean": 9.329007215884369,
+        "m2": 9724377.642631415,
+        "variance": 197.8469948247526,
+        "standard_error": 0.06344452233440309
+      },
+      "coarse": {
+        "count": 49152,
+        "mean": 9.32936580828689,
+        "m2": 9641091.102639476,
+        "variance": 196.15249135601465,
+        "standard_error": 0.06317224590683562
+      },
+      "difference": {
+        "count": 49152,
+        "mean": -0.00035859240252153333,
+        "m2": 8296.307191378666,
+        "variance": 0.16879223599476442,
+        "standard_error": 0.0018531289303704082
+      },
+      "bias": {
+        "count": 49152,
+        "mean": -0.0022078302528673733,
+        "m2": 8477.447396263353,
+        "variance": 0.17247761787681537,
+        "standard_error": 0.001873250148515428
+      },
+      "exact": {
+        "count": 49152,
+        "mean": 9.331215046137237,
+        "m2": 9806392.779966202,
+        "variance": 199.51563101394075,
+        "standard_error": 0.06371150527508936
+      },
+      "fine_coarse_covariance": 196.91534697238615,
+      "fine_exact_covariance": 198.59507411040815,
+      "coupled_variance": 0.16879223599476442,
+      "uncoupled_variance": 393.99948618076724,
+      "fine_negative_states": 0,
+      "coarse_negative_states": 0,
+      "negative_paths": 0,
+      "negative_path_rate": 0.0,
+      "fine_state_denominator": 1572864,
+      "coarse_state_denominator": 786432,
+      "fine_negative_state_rate": 0.0,
+      "coarse_negative_state_rate": 0.0,
+      "bias_half_width": 0.0048253600124600615,
+      "bias_bound": 0.007033190265327435
+    },
+    {
+      "level": 4,
+      "steps": 64,
+      "count": 49152,
+      "fine": {
+        "count": 49152,
+        "mean": 9.322299400191177,
+        "m2": 9681107.299627474,
+        "variance": 196.96663953179942,
+        "standard_error": 0.06330321113461466
+      },
+      "coarse": {
+        "count": 49152,
+        "mean": 9.324001039222008,
+        "m2": 9638991.674094573,
+        "variance": 196.10977750390782,
+        "standard_error": 0.0631653673888462
+      },
+      "difference": {
+        "count": 49152,
+        "mean": -0.001701639030829732,
+        "m2": 4210.440979644818,
+        "variance": 0.08566338385068092,
+        "standard_error": 0.0013201613560760968
+      },
+      "bias": {
+        "count": 49152,
+        "mean": 0.002393464110917013,
+        "m2": 4198.557623650028,
+        "variance": 0.08542161143516974,
+        "standard_error": 0.0013182970582121432
+      },
+      "exact": {
+        "count": 49152,
+        "mean": 9.31990593608026,
+        "m2": 9718572.2014967,
+        "variance": 197.72888041945637,
+        "standard_error": 0.0634255813573122
+      },
+      "fine_coarse_covariance": 196.49537682592833,
+      "fine_exact_covariance": 197.30504916991035,
+      "coupled_variance": 0.08566338385068092,
+      "uncoupled_variance": 393.0764170357072,
+      "fine_negative_states": 0,
+      "coarse_negative_states": 0,
+      "negative_paths": 0,
+      "negative_path_rate": 0.0,
+      "fine_state_denominator": 3145728,
+      "coarse_state_denominator": 1572864,
+      "fine_negative_state_rate": 0.0,
+      "coarse_negative_state_rate": 0.0,
+      "bias_half_width": 0.0033958400666787504,
+      "bias_bound": 0.005789304177595763
+    },
+    {
+      "level": 5,
+      "steps": 128,
+      "count": 49152,
+      "fine": {
+        "count": 49152,
+        "mean": 9.40784766753869,
+        "m2": 9673877.194470922,
+        "variance": 196.8195396730671,
+        "standard_error": 0.0632795684693428
+      },
+      "coarse": {
+        "count": 49152,
+        "mean": 9.406629143401222,
+        "m2": 9648107.74037418,
+        "variance": 196.29524812057088,
+        "standard_error": 0.06319522961999469
+      },
+      "difference": {
+        "count": 49152,
+        "mean": 0.0012185241374662319,
+        "m2": 2171.7564219305627,
+        "variance": 0.04418539647068346,
+        "standard_error": 0.0009481319488967702
+      },
+      "bias": {
+        "count": 49152,
+        "mean": -0.0005862337660028101,
+        "m2": 2132.2383262437957,
+        "variance": 0.04338138239799385,
+        "standard_error": 0.0009394660634286822
+      },
+      "exact": {
+        "count": 49152,
+        "mean": 9.408433901304686,
+        "m2": 9697249.431863941,
+        "variance": 197.2950587345922,
+        "standard_error": 0.06335596456324841
+      },
+      "fine_coarse_covariance": 196.53530119858374,
+      "fine_exact_covariance": 197.03560851263063,
+      "coupled_variance": 0.04418539647068346,
+      "uncoupled_variance": 393.114787793638,
+      "fine_negative_states": 0,
+      "coarse_negative_states": 0,
+      "negative_paths": 0,
+      "negative_path_rate": 0.0,
+      "fine_state_denominator": 6291456,
+      "coarse_state_denominator": 3145728,
+      "fine_negative_state_rate": 0.0,
+      "coarse_negative_state_rate": 0.0,
+      "bias_half_width": 0.0024199981935806563,
+      "bias_bound": 0.0030062319595834663
+    },
+    {
+      "level": 6,
+      "steps": 256,
+      "count": 49152,
+      "fine": {
+        "count": 49152,
+        "mean": 9.420365621455769,
+        "m2": 9939379.475349015,
+        "variance": 202.22130730501954,
+        "standard_error": 0.06414205351780046
+      },
+      "coarse": {
+        "count": 49152,
+        "mean": 9.420894456316566,
+        "m2": 9929037.071116047,
+        "variance": 202.010886271206,
+        "standard_error": 0.06410867338034701
+      },
+      "difference": {
+        "count": 49152,
+        "mean": -0.0005288348607972878,
+        "m2": 1064.7282925191953,
+        "variance": 0.0216623932884213,
+        "standard_error": 0.0006638693543933036
+      },
+      "bias": {
+        "count": 49152,
+        "mean": -0.00036844189111395623,
+        "m2": 1066.4681152669248,
+        "variance": 0.0216977907930037,
+        "standard_error": 0.0006644115319415601
+      },
+      "exact": {
+        "count": 49152,
+        "mean": 9.420734063346881,
+        "m2": 9949674.037169384,
+        "variance": 202.43075496265354,
+        "standard_error": 0.06417526200167534
+      },
+      "fine_coarse_covariance": 202.1052655914685,
+      "fine_exact_covariance": 202.31518223844,
+      "coupled_variance": 0.0216623932884213,
+      "uncoupled_variance": 404.23219357622554,
+      "fine_negative_states": 0,
+      "coarse_negative_states": 0,
+      "negative_paths": 0,
+      "negative_path_rate": 0.0,
+      "fine_state_denominator": 12582912,
+      "coarse_state_denominator": 6291456,
+      "fine_negative_state_rate": 0.0,
+      "coarse_negative_state_rate": 0.0,
+      "bias_half_width": 0.001711477156742225,
+      "bias_bound": 0.002079919047856181
+    },
+    {
+      "level": 7,
+      "steps": 512,
+      "count": 49152,
+      "fine": {
+        "count": 49152,
+        "mean": 9.381709019040397,
+        "m2": 9781417.950593827,
+        "variance": 199.00750647176716,
+        "standard_error": 0.06363032362122951
+      },
+      "coarse": {
+        "count": 49152,
+        "mean": 9.381351409889072,
+        "m2": 9775526.417965053,
+        "variance": 198.88764049490453,
+        "standard_error": 0.06361115786243879
+      },
+      "difference": {
+        "count": 49152,
+        "mean": 0.0003576091513240859,
+        "m2": 535.5558749121278,
+        "variance": 0.010896133851033099,
+        "standard_error": 0.0004708316160860906
+      },
+      "bias": {
+        "count": 49152,
+        "mean": -0.000152005403744338,
+        "m2": 541.023650142535,
+        "variance": 0.011007378286149517,
+        "standard_error": 0.000473228997983708
+      },
+      "exact": {
+        "count": 49152,
+        "mean": 9.381861024444142,
+        "m2": 9786073.279263984,
+        "variance": 199.1022213030047,
+        "standard_error": 0.06364546379999905
+      },
+      "fine_coarse_covariance": 198.9421254164104,
+      "fine_exact_covariance": 199.04936019824288,
+      "coupled_variance": 0.010896133851033099,
+      "uncoupled_variance": 397.8951469666717,
+      "fine_negative_states": 0,
+      "coarse_negative_states": 0,
+      "negative_paths": 0,
+      "negative_path_rate": 0.0,
+      "fine_state_denominator": 25165824,
+      "coarse_state_denominator": 12582912,
+      "fine_negative_state_rate": 0.0,
+      "coarse_negative_state_rate": 0.0,
+      "bias_half_width": 0.0012190044588635575,
+      "bias_bound": 0.0013710098626078956
+    },
+    {
+      "level": 8,
+      "steps": 1024,
+      "count": 49152,
+      "fine": {
+        "count": 49152,
+        "mean": 9.353214729089231,
+        "m2": 9733529.137667045,
+        "variance": 198.03318625596722,
+        "standard_error": 0.06347436875311249
+      },
+      "coarse": {
+        "count": 49152,
+        "mean": 9.353162410482753,
+        "m2": 9730307.782404784,
+        "variance": 197.96764628196343,
+        "standard_error": 0.06346386431995342
+      },
+      "difference": {
+        "count": 49152,
+        "mean": 5.231860647648428e-05,
+        "m2": 267.76481467494915,
+        "variance": 0.0054477999364193844,
+        "standard_error": 0.00033292007065665534
+      },
+      "bias": {
+        "count": 49152,
+        "mean": -0.00043879925350190553,
+        "m2": 270.40583947281334,
+        "variance": 0.005501532816683553,
+        "standard_error": 0.00033455787495378794
+      },
+      "exact": {
+        "count": 49152,
+        "mean": 9.353653528342731,
+        "m2": 9736414.499888564,
+        "variance": 198.09189029498003,
+        "standard_error": 0.06348377607969868
+      },
+      "fine_coarse_covariance": 197.99769236899712,
+      "fine_exact_covariance": 198.05978750906527,
+      "coupled_variance": 0.0054477999364193844,
+      "uncoupled_variance": 396.00083253793065,
+      "fine_negative_states": 0,
+      "coarse_negative_states": 0,
+      "negative_paths": 0,
+      "negative_path_rate": 0.0,
+      "fine_state_denominator": 50331648,
+      "coarse_state_denominator": 25165824,
+      "fine_negative_state_rate": 0.0,
+      "coarse_negative_state_rate": 0.0,
+      "bias_half_width": 0.0008617974449034596,
+      "bias_bound": 0.0013005966984053652
+    }
+  ],
+  "exact_summary": {
+    "payoff": {
+      "count": 49152,
+      "mean": 9.44904145048079,
+      "m2": 9958027.140931318,
+      "variance": 202.6007027513442,
+      "standard_error": 0.06420219505278642
+    },
+    "control": {
+      "count": 49152,
+      "mean": 100.01397135140002,
+      "m2": 20287170.815982554,
+      "variance": 412.75194433445006,
+      "standard_error": 0.09163765495134349
+    },
+    "covariance": 263.82817902724497,
+    "cv_beta": 0.6391930617132764,
+    "cv_variance": 33.96356123268106,
+    "control_expectation": 100.0,
+    "beta_fallback": false
+  },
+  "calibration": [
+    {
+      "level": 0,
+      "measurements": 7,
+      "median_seconds_per_pair": 1.6941869773745566e-07,
+      "p95_seconds_per_pair": 1.8388413707270957e-07
+    },
+    {
+      "level": 1,
+      "measurements": 7,
+      "median_seconds_per_pair": 2.930903519882122e-07,
+      "p95_seconds_per_pair": 2.9947283053388674e-07
+    },
+    {
+      "level": 2,
+      "measurements": 7,
+      "median_seconds_per_pair": 4.19420160824302e-07,
+      "p95_seconds_per_pair": 4.369787632185762e-07
+    },
+    {
+      "level": 3,
+      "measurements": 7,
+      "median_seconds_per_pair": 7.189450883515747e-07,
+      "p95_seconds_per_pair": 7.526629943299667e-07
+    },
+    {
+      "level": 4,
+      "measurements": 7,
+      "median_seconds_per_pair": 1.3428466729692445e-06,
+      "p95_seconds_per_pair": 1.429352340664991e-06
+    },
+    {
+      "level": 5,
+      "measurements": 7,
+      "median_seconds_per_pair": 2.5297580492633642e-06,
+      "p95_seconds_per_pair": 2.563476294881184e-06
+    },
+    {
+      "level": 6,
+      "measurements": 7,
+      "median_seconds_per_pair": 5.123222166503183e-06,
+      "p95_seconds_per_pair": 5.364260141504928e-06
+    },
+    {
+      "level": 7,
+      "measurements": 7,
+      "median_seconds_per_pair": 1.2571013670026332e-05,
+      "p95_seconds_per_pair": 1.278280520438102e-05
+    },
+    {
+      "level": 8,
+      "measurements": 7,
+      "median_seconds_per_pair": 2.6226881828961268e-05,
+      "p95_seconds_per_pair": 2.717066683857183e-05
+    }
+  ],
+  "rates": {
+    "alpha_status": "unresolved",
+    "alpha_windows": [],
+    "beta_adjacent": [
+      {
+        "coarse": 0,
+        "fine": 1,
+        "beta": 8.209782899002793
+      },
+      {
+        "coarse": 1,
+        "fine": 2,
+        "beta": 0.9557968037822789
+      },
+      {
+        "coarse": 2,
+        "fine": 3,
+        "beta": 0.9481798187311156
+      },
+      {
+        "coarse": 3,
+        "fine": 4,
+        "beta": 0.9784979729424543
+      },
+      {
+        "coarse": 4,
+        "fine": 5,
+        "beta": 0.95510903795218
+      },
+      {
+        "coarse": 5,
+        "fine": 6,
+        "beta": 1.0283769868204442
+      },
+      {
+        "coarse": 6,
+        "fine": 7,
+        "beta": 0.9913763114874408
+      },
+      {
+        "coarse": 7,
+        "fine": 8,
+        "beta": 1.0000707027447029
+      }
+    ],
+    "sign_changes": [
+      {
+        "coarse": 1,
+        "fine": 2,
+        "sign_flip": true
+      },
+      {
+        "coarse": 2,
+        "fine": 3,
+        "sign_flip": false
+      },
+      {
+        "coarse": 3,
+        "fine": 4,
+        "sign_flip": false
+      },
+      {
+        "coarse": 4,
+        "fine": 5,
+        "sign_flip": true
+      },
+      {
+        "coarse": 5,
+        "fine": 6,
+        "sign_flip": true
+      },
+      {
+        "coarse": 6,
+        "fine": 7,
+        "sign_flip": true
+      },
+      {
+        "coarse": 7,
+        "fine": 8,
+        "sign_flip": false
+      }
+    ]
+  },
+  "clip_diagnostic": {
+    "seed": 3739489220,
+    "power": 10,
+    "points": 1024,
+    "paired_comparison": true,
+    "used_in_mlmc": false,
+    "private_clip": [
+      5e-324,
+      0.9999999999999999
+    ],
+    "public_clip": [
+      1e-10,
+      0.9999999999
+    ],
+    "endpoint_counts": [
+      0,
+      0
+    ],
+    "clipped_points": [
+      0,
+      0
+    ],
+    "cases": [
+      {
+        "strike": 80.0,
+        "private_estimate": 23.256269855966345,
+        "public_estimate": 23.256269855966345,
+        "sample_difference": 0.0,
+        "private_truth": 23.223991292486733,
+        "public_truth": 23.223991291403667,
+        "analytic_difference": -1.0830660812644055e-09,
+        "bsm_truth": 23.223991292486758
+      },
+      {
+        "strike": 100.0,
+        "private_estimate": 9.445587153170388,
+        "public_estimate": 9.445587153170388,
+        "sample_difference": 0.0,
+        "private_truth": 9.413403383853005,
+        "public_truth": 9.41340338276993,
+        "analytic_difference": -1.0830749630486025e-09,
+        "bsm_truth": 9.413403383853016
+      },
+      {
+        "strike": 120.0,
+        "private_estimate": 2.7986301210057487,
+        "public_estimate": 2.7986301210057487,
+        "sample_difference": 0.0,
+        "private_truth": 2.7665576398914244,
+        "public_truth": 2.766557638808351,
+        "analytic_difference": -1.083073630780973e-09,
+        "bsm_truth": 2.766557639891424
+      }
+    ]
+  },
+  "allocations": [
+    {
+      "epsilon": 0.4,
+      "status": "ready",
+      "reason": null,
+      "level": 2,
+      "mlmc_paths": [
+        2670,
+        118,
+        71
+      ],
+      "plain_euler_paths": 2403,
+      "exact_plain_paths": 2533,
+      "exact_cv_paths": 425,
+      "bias_bound": 0.01108549443571483,
+      "sampling_variance": 0.08000000000000002,
+      "bias_target": 0.28284271247461906,
+      "method_status": {
+        "mlmc": "ready",
+        "plain_euler": "ready",
+        "exact_plain": "ready",
+        "exact_cv": "ready"
+      },
+      "method_reasons": {
+        "exact_plain": null,
+        "exact_cv": null,
+        "mlmc": null,
+        "plain_euler": null
+      },
+      "candidate_levels": [
+        {
+          "level": 2,
+          "bias_bound": 0.01108549443571483,
+          "bias_target": 0.28284271247461906,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 3,
+          "bias_bound": 0.007033190265327435,
+          "bias_target": 0.28284271247461906,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 4,
+          "bias_bound": 0.005789304177595763,
+          "bias_target": 0.28284271247461906,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 5,
+          "bias_bound": 0.0030062319595834663,
+          "bias_target": 0.28284271247461906,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 6,
+          "bias_bound": 0.002079919047856181,
+          "bias_target": 0.28284271247461906,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 7,
+          "bias_bound": 0.0013710098626078956,
+          "bias_target": 0.28284271247461906,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 8,
+          "bias_bound": 0.0013005966984053652,
+          "bias_target": 0.28284271247461906,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        }
+      ],
+      "cost_counts": {
+        "stock_updates": 13800,
+        "normal_draws": 12760,
+        "payoff_evaluations": 3048,
+        "coarse_aggregations": 1040
+      },
+      "floor_levels": [],
+      "variance_cost_allocation": {
+        "variances": [
+          187.02404734794735,
+          0.6316936929206945,
+          0.3256739585731461
+        ],
+        "median_seconds_per_pair": [
+          1.6941869773745566e-07,
+          2.930903519882122e-07,
+          4.19420160824302e-07
+        ],
+        "step_proxy_paths": [
+          2813,
+          95,
+          48
+        ],
+        "estimated_sampling_variance": 0.07998675322456505
+      }
+    },
+    {
+      "epsilon": 0.2,
+      "status": "ready",
+      "reason": null,
+      "level": 2,
+      "mlmc_paths": [
+        10680,
+        472,
+        284
+      ],
+      "plain_euler_paths": 9611,
+      "exact_plain_paths": 10131,
+      "exact_cv_paths": 1699,
+      "bias_bound": 0.01108549443571483,
+      "sampling_variance": 0.020000000000000004,
+      "bias_target": 0.14142135623730953,
+      "method_status": {
+        "mlmc": "ready",
+        "plain_euler": "ready",
+        "exact_plain": "ready",
+        "exact_cv": "ready"
+      },
+      "method_reasons": {
+        "exact_plain": null,
+        "exact_cv": null,
+        "mlmc": null,
+        "plain_euler": null
+      },
+      "candidate_levels": [
+        {
+          "level": 2,
+          "bias_bound": 0.01108549443571483,
+          "bias_target": 0.14142135623730953,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 3,
+          "bias_bound": 0.007033190265327435,
+          "bias_target": 0.14142135623730953,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 4,
+          "bias_bound": 0.005789304177595763,
+          "bias_target": 0.14142135623730953,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 5,
+          "bias_bound": 0.0030062319595834663,
+          "bias_target": 0.14142135623730953,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 6,
+          "bias_bound": 0.002079919047856181,
+          "bias_target": 0.14142135623730953,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 7,
+          "bias_bound": 0.0013710098626078956,
+          "bias_target": 0.14142135623730953,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 8,
+          "bias_bound": 0.0013005966984053652,
+          "bias_target": 0.14142135623730953,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        }
+      ],
+      "cost_counts": {
+        "stock_updates": 55200,
+        "normal_draws": 51040,
+        "payoff_evaluations": 12192,
+        "coarse_aggregations": 4160
+      },
+      "floor_levels": [],
+      "variance_cost_allocation": {
+        "variances": [
+          187.02404734794735,
+          0.6316936929206945,
+          0.3256739585731461
+        ],
+        "median_seconds_per_pair": [
+          1.6941869773745566e-07,
+          2.930903519882122e-07,
+          4.19420160824302e-07
+        ],
+        "step_proxy_paths": [
+          11249,
+          378,
+          192
+        ],
+        "estimated_sampling_variance": 0.019996688306141264
+      }
+    },
+    {
+      "epsilon": 0.1,
+      "status": "ready",
+      "reason": null,
+      "level": 2,
+      "mlmc_paths": [
+        42720,
+        1888,
+        1133
+      ],
+      "plain_euler_paths": 38442,
+      "exact_plain_paths": 40521,
+      "exact_cv_paths": 6793,
+      "bias_bound": 0.01108549443571483,
+      "sampling_variance": 0.005000000000000001,
+      "bias_target": 0.07071067811865477,
+      "method_status": {
+        "mlmc": "ready",
+        "plain_euler": "ready",
+        "exact_plain": "ready",
+        "exact_cv": "ready"
+      },
+      "method_reasons": {
+        "exact_plain": null,
+        "exact_cv": null,
+        "mlmc": null,
+        "plain_euler": null
+      },
+      "candidate_levels": [
+        {
+          "level": 2,
+          "bias_bound": 0.01108549443571483,
+          "bias_target": 0.07071067811865477,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 3,
+          "bias_bound": 0.007033190265327435,
+          "bias_target": 0.07071067811865477,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 4,
+          "bias_bound": 0.005789304177595763,
+          "bias_target": 0.07071067811865477,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 5,
+          "bias_bound": 0.0030062319595834663,
+          "bias_target": 0.07071067811865477,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 6,
+          "bias_bound": 0.002079919047856181,
+          "bias_target": 0.07071067811865477,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 7,
+          "bias_bound": 0.0013710098626078956,
+          "bias_target": 0.07071067811865477,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        },
+        {
+          "level": 8,
+          "bias_bound": 0.0013005966984053652,
+          "bias_target": 0.07071067811865477,
+          "negative_path_rate": 0.0,
+          "bias_pass": true,
+          "negative_pass": true
+        }
+      ],
+      "cost_counts": {
+        "stock_updates": 220728,
+        "normal_draws": 204112,
+        "payoff_evaluations": 48762,
+        "coarse_aggregations": 16616
+      },
+      "floor_levels": [],
+      "variance_cost_allocation": {
+        "variances": [
+          187.02404734794735,
+          0.6316936929206945,
+          0.3256739585731461
+        ],
+        "median_seconds_per_pair": [
+          1.6941869773745566e-07,
+          2.930903519882122e-07,
+          4.19420160824302e-07
+        ],
+        "step_proxy_paths": [
+          44994,
+          1510,
+          767
+        ],
+        "estimated_sampling_variance": 0.004999931171387975
+      }
+    }
+  ],
+  "cv_beta": 0.6391930617132764,
+  "allocation_s": 0.004019985964987427,
+  "setup_s": 8.361806567991152,
+  "setup_ledger_generated": true,
+  "pilot_validation_s": 9.526336593960878,
+  "pilot_s": 2.18197263777256,
+  "calibration_s": 1.6367423553019762,
+  "freeze_validation_s": 0.0,
+  "freeze_validation_pending": true,
+  "expenses": [
+    {
+      "expense_id": "research_setup",
+      "kind": "source and resolved ledger setup",
+      "seconds": 8.361806567991152,
+      "methods": [
+        "research_setup"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ]
+    },
+    {
+      "expense_id": "pilot.euler.0",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0008156910189427435,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.1",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.000282399938441813,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.2",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00025552697479724884,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.3",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00024803203996270895,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.4",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00024353998014703393,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.5",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00024242710787802935,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.6",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00026185798924416304,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.7",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.000270482967607677,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.8",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00035820796620100737,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.9",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00029580999398604035,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.10",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0002455340581946075,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.11",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00024326093262061477,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.12",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00023458694340661168,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.13",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0002584749599918723,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.14",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00023596000391989946,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.15",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0002474400098435581,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.16",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.000370964000467211,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.17",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0002987129846587777,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.18",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00025072594871744514,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.19",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00024889002088457346,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.20",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00024737301282584667,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.21",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00024633604334667325,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.22",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0002455119974911213,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.23",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.000243732996750623,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.24",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0006405039457604289,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.25",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005185561021789908,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.26",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00048616400454193354,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.27",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005086309975013137,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.28",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0004870870034210384,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.29",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0004797559231519699,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.30",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00047739199362695217,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.31",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0004764269688166678,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.32",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0006323480047285557,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.33",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.000514302053488791,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.34",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005347380065359175,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.35",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005089269252493978,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.36",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005233470583334565,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.37",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005020229145884514,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.38",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005262850318104029,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.39",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.000515044026542455,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.40",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0006476779817603528,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.41",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005366930272430182,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.42",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005011810571886599,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.43",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005058279493823647,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.44",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005213600234128535,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.45",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005075209774076939,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.46",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005357239861041307,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.47",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0005176070262677968,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.48",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0011128389742225409,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.49",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007475970196537673,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.50",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0008102590218186378,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.51",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007381930481642485,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.52",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007691810023970902,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.53",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007474870071746409,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.54",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007667309837415814,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.55",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007745720213279128,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.56",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0009193569421768188,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.57",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0008013559854589403,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.58",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.000732360000256449,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.59",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0009537179139442742,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.60",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0008256360306404531,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.61",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0008043249836191535,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.62",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0008083789725787938,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.63",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007601509569212794,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.64",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.000913503987248987,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.65",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007602759869769216,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.66",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0008511780179105699,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.67",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007793730474077165,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.68",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007526070112362504,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.69",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007825259817764163,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.70",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007415769505314529,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.71",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0007642130367457867,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.72",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0015309740556403995,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.73",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0014013090403750539,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.74",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0013615299831144512,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.75",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.001344046089798212,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.76",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.001300125033594668,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.77",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0013056109892204404,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.78",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.001548836997244507,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.79",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0013557380298152566,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.80",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0014354809536598623,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.81",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.001368128985632211,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.82",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0012936260318383574,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.83",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0012984800268895924,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.84",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0012723190011456609,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.85",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.001315149012953043,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.86",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0013041109777987003,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.87",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0012862419825978577,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.88",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.001473843993153423,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.89",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0015384180005639791,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.90",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0013888939865864813,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.91",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0014082459965720773,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.92",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0014255800051614642,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.93",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.001347284996882081,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.94",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0013784219627268612,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.95",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0013715209788642824,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.96",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0027143980260007083,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.97",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0024239010526798666,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.98",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002409994078334421,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.99",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002346595050767064,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.100",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0023855900508351624,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.101",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002401580975856632,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.102",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0024610229884274304,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.103",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002521077054552734,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.104",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002499676018487662,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.105",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002458572038449347,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.106",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0024577489821240306,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.107",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0025712160277180374,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.108",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0026475729537196457,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.109",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0024167949450202286,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.110",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0023599780397489667,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.111",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0024776990176178515,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.112",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002444659941829741,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.113",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002413931011687964,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.114",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0024554820265620947,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.115",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0025577000342309475,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.116",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0024898260016925633,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.117",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002530911995563656,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.118",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.002474637934938073,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.119",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0023500489769503474,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.120",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.005170946998987347,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.121",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004695042967796326,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.122",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004842151945922524,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.123",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004602372006047517,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.124",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004585130081977695,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.125",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004630621988326311,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.126",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004641396051738411,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.127",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004639752034563571,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.128",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.005194041004870087,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.129",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.005086569057311863,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.130",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004854274040553719,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.131",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004712396010290831,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.132",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004957174009177834,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.133",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.005217533092945814,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.134",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.005256056960206479,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.135",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004585165006574243,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.136",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.005015007976908237,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.137",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004636666039004922,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.138",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0047508179559372365,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.139",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004704458056949079,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.140",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00458049401640892,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.141",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004774248867761344,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.142",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.004686462983954698,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.143",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00452175794634968,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.144",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.011186505958903581,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.145",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.010209492989815772,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.146",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009750870056450367,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.147",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009625312988646328,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.148",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00985039898660034,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.149",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009327826031949371,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.150",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009318762109614909,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.151",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009307657019235194,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.152",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009454041020944715,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.153",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00926327396882698,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.154",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009721872978843749,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.155",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009454244922380894,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.156",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00935559201752767,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.157",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009097207977902144,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.158",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009178841952234507,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.159",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009696853056084365,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.160",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.00951330701354891,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.161",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009210722055286169,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.162",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009222585940733552,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.163",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009468372038099915,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.164",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.010180353943724185,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.165",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009402994939591736,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.166",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009249504946637899,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.167",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.009451374993659556,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.168",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.027066893002483994,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.169",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.02309649804374203,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.170",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0211630979902111,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.171",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020779583021067083,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.172",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020635571039747447,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.173",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.02096705901203677,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.174",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020981336070690304,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.175",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020765962020959705,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.176",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.02096114296000451,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.177",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.021143130958080292,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.178",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020445695030502975,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.179",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020805527979973704,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.180",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.01973225804977119,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.181",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020201803999952972,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.182",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020571108965668827,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.183",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020827719010412693,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.184",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.021508832986000925,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.185",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020764407992828637,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.186",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020393082057125866,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.187",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020566146995406598,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.188",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.020857917959801853,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.189",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.02110883401473984,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.190",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.021313195931725204,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.191",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.021282597968820482,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.192",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.053284170920960605,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.193",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.050213886017445475,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.194",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0511484460439533,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.195",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.04848398396279663,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.196",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.05085110600339249,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.197",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.04895550204673782,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.198",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.04865992197301239,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.199",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.047419433016330004,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.200",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.04765780793968588,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.201",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.047941872966475785,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.202",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.050228994979988784,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.203",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.04992374492576346,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.204",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.04968639696016908,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.205",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.051503177965059876,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.206",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.05047741800080985,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.207",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.052004371013026685,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.euler.208",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.050677493039984256,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.euler.209",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.05068574601318687,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.euler.210",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.04749113804427907,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.euler.211",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.05036509706405923,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.euler.212",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.04818351095309481,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.euler.213",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.0488328019855544,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.euler.214",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.051522265013772994,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.euler.215",
+      "kind": "Euler full candidate pilot",
+      "seconds": 0.050430142029654235,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.exact.0",
+      "kind": "independent exact/control pilot",
+      "seconds": 0.00012502900790423155,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 0,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.exact.1",
+      "kind": "independent exact/control pilot",
+      "seconds": 5.3727999329566956e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 0,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.exact.2",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.554103361442685e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 0,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.exact.3",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.3290958274155855e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 0,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.exact.4",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.368094960227609e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 0,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.exact.5",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.1767023503780365e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 0,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.exact.6",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.082889063283801e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 0,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.exact.7",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.121294477954507e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 0,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.exact.8",
+      "kind": "independent exact/control pilot",
+      "seconds": 0.00011090398766100407,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 1,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.exact.9",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.757492570206523e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 1,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.exact.10",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.404893843457103e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 1,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.exact.11",
+      "kind": "independent exact/control pilot",
+      "seconds": 6.892503006383777e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 1,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.exact.12",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.2832980398088694e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 1,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.exact.13",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.0542043279856443e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 1,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.exact.14",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.5568973291665316e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 1,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.exact.15",
+      "kind": "independent exact/control pilot",
+      "seconds": 3.910699160769582e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 1,
+      "block": 7
+    },
+    {
+      "expense_id": "pilot.exact.16",
+      "kind": "independent exact/control pilot",
+      "seconds": 0.00015050702495500445,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 2,
+      "block": 0
+    },
+    {
+      "expense_id": "pilot.exact.17",
+      "kind": "independent exact/control pilot",
+      "seconds": 5.1941024139523506e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 2,
+      "block": 1
+    },
+    {
+      "expense_id": "pilot.exact.18",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.2534025851637125e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 2,
+      "block": 2
+    },
+    {
+      "expense_id": "pilot.exact.19",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.3225998524576426e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 2,
+      "block": 3
+    },
+    {
+      "expense_id": "pilot.exact.20",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.149897722527385e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 2,
+      "block": 4
+    },
+    {
+      "expense_id": "pilot.exact.21",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.133803304284811e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 2,
+      "block": 5
+    },
+    {
+      "expense_id": "pilot.exact.22",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.0579994674772024e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 2,
+      "block": 6
+    },
+    {
+      "expense_id": "pilot.exact.23",
+      "kind": "independent exact/control pilot",
+      "seconds": 4.156096838414669e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": -1,
+      "stream": 2,
+      "block": 7
+    },
+    {
+      "expense_id": "calibration.0",
+      "kind": "isolated calibration",
+      "seconds": 0.0006392020150087774,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "warmup": true
+    },
+    {
+      "expense_id": "calibration.1",
+      "kind": "isolated calibration",
+      "seconds": 0.0006750639877282083,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.2",
+      "kind": "isolated calibration",
+      "seconds": 0.0007470770506188273,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.3",
+      "kind": "isolated calibration",
+      "seconds": 0.0007558090146631002,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.4",
+      "kind": "isolated calibration",
+      "seconds": 0.0006939389859326184,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.5",
+      "kind": "isolated calibration",
+      "seconds": 0.0007040339987725019,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.6",
+      "kind": "isolated calibration",
+      "seconds": 0.0006309859454631805,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.7",
+      "kind": "isolated calibration",
+      "seconds": 0.0006643669912591577,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 0,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.8",
+      "kind": "isolated calibration",
+      "seconds": 0.0014204090111888945,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "warmup": true
+    },
+    {
+      "expense_id": "calibration.9",
+      "kind": "isolated calibration",
+      "seconds": 0.001222339051309973,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.10",
+      "kind": "isolated calibration",
+      "seconds": 0.0011888910084962845,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.11",
+      "kind": "isolated calibration",
+      "seconds": 0.001166215050034225,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.12",
+      "kind": "isolated calibration",
+      "seconds": 0.0011541959829628468,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.13",
+      "kind": "isolated calibration",
+      "seconds": 0.0012004980817437172,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.14",
+      "kind": "isolated calibration",
+      "seconds": 0.0012267130077816546,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.15",
+      "kind": "isolated calibration",
+      "seconds": 0.0012264720280654728,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 1,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.16",
+      "kind": "isolated calibration",
+      "seconds": 0.0019023909117095172,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "warmup": true
+    },
+    {
+      "expense_id": "calibration.17",
+      "kind": "isolated calibration",
+      "seconds": 0.0018041179864667356,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.18",
+      "kind": "isolated calibration",
+      "seconds": 0.001717944978736341,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.19",
+      "kind": "isolated calibration",
+      "seconds": 0.0017126229358837008,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.20",
+      "kind": "isolated calibration",
+      "seconds": 0.0016540440265089273,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.21",
+      "kind": "isolated calibration",
+      "seconds": 0.001642214076127857,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.22",
+      "kind": "isolated calibration",
+      "seconds": 0.0017566080787219107,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.23",
+      "kind": "isolated calibration",
+      "seconds": 0.0017313319840468466,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 2,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.24",
+      "kind": "isolated calibration",
+      "seconds": 0.0029181819991208613,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "warmup": true
+    },
+    {
+      "expense_id": "calibration.25",
+      "kind": "isolated calibration",
+      "seconds": 0.002945988962892443,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.26",
+      "kind": "isolated calibration",
+      "seconds": 0.00294479908188805,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.27",
+      "kind": "isolated calibration",
+      "seconds": 0.0029398849001154304,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.28",
+      "kind": "isolated calibration",
+      "seconds": 0.0028532209689728916,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.29",
+      "kind": "isolated calibration",
+      "seconds": 0.0028384349425323308,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.30",
+      "kind": "isolated calibration",
+      "seconds": 0.002982836973387748,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.31",
+      "kind": "isolated calibration",
+      "seconds": 0.003125795046798885,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 3,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.32",
+      "kind": "isolated calibration",
+      "seconds": 0.0059158820658922195,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "warmup": true
+    },
+    {
+      "expense_id": "calibration.33",
+      "kind": "isolated calibration",
+      "seconds": 0.005890025990083814,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.34",
+      "kind": "isolated calibration",
+      "seconds": 0.00574865099042654,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.35",
+      "kind": "isolated calibration",
+      "seconds": 0.005772029981017113,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.36",
+      "kind": "isolated calibration",
+      "seconds": 0.005500299972482026,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.37",
+      "kind": "isolated calibration",
+      "seconds": 0.005460939020849764,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.38",
+      "kind": "isolated calibration",
+      "seconds": 0.005466454953420907,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.39",
+      "kind": "isolated calibration",
+      "seconds": 0.005417266977019608,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 4,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.40",
+      "kind": "isolated calibration",
+      "seconds": 0.01135288312798366,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "warmup": true
+    },
+    {
+      "expense_id": "calibration.41",
+      "kind": "isolated calibration",
+      "seconds": 0.010387423040810972,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.42",
+      "kind": "isolated calibration",
+      "seconds": 0.010437700955662876,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.43",
+      "kind": "isolated calibration",
+      "seconds": 0.010103932057972997,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.44",
+      "kind": "isolated calibration",
+      "seconds": 0.009970988088753074,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.45",
+      "kind": "isolated calibration",
+      "seconds": 0.01036188896978274,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.46",
+      "kind": "isolated calibration",
+      "seconds": 0.01052669802447781,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.47",
+      "kind": "isolated calibration",
+      "seconds": 0.009950065985321999,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 5,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.48",
+      "kind": "isolated calibration",
+      "seconds": 0.024088023987133056,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "warmup": true
+    },
+    {
+      "expense_id": "calibration.49",
+      "kind": "isolated calibration",
+      "seconds": 0.022246931039262563,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.50",
+      "kind": "isolated calibration",
+      "seconds": 0.02133052604040131,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.51",
+      "kind": "isolated calibration",
+      "seconds": 0.020984717993997037,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.52",
+      "kind": "isolated calibration",
+      "seconds": 0.0209747800254263,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.53",
+      "kind": "isolated calibration",
+      "seconds": 0.020918091060593724,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.54",
+      "kind": "isolated calibration",
+      "seconds": 0.021000868058763444,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.55",
+      "kind": "isolated calibration",
+      "seconds": 0.020832675916608423,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 6,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.56",
+      "kind": "isolated calibration",
+      "seconds": 0.049649991968180984,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "warmup": true
+    },
+    {
+      "expense_id": "calibration.57",
+      "kind": "isolated calibration",
+      "seconds": 0.05231805506628007,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.58",
+      "kind": "isolated calibration",
+      "seconds": 0.05237564799608663,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.59",
+      "kind": "isolated calibration",
+      "seconds": 0.051708571962080896,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.60",
+      "kind": "isolated calibration",
+      "seconds": 0.05011699802707881,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.61",
+      "kind": "isolated calibration",
+      "seconds": 0.051490871992427856,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.62",
+      "kind": "isolated calibration",
+      "seconds": 0.0503320720163174,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.63",
+      "kind": "isolated calibration",
+      "seconds": 0.05070123105542734,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 7,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.64",
+      "kind": "isolated calibration",
+      "seconds": 0.12216993101174012,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "warmup": true
+    },
+    {
+      "expense_id": "calibration.65",
+      "kind": "isolated calibration",
+      "seconds": 0.10504988499451429,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.66",
+      "kind": "isolated calibration",
+      "seconds": 0.10742530797142535,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.67",
+      "kind": "isolated calibration",
+      "seconds": 0.10668654198525473,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.68",
+      "kind": "isolated calibration",
+      "seconds": 0.11215823795646429,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.69",
+      "kind": "isolated calibration",
+      "seconds": 0.10926761600421742,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.70",
+      "kind": "isolated calibration",
+      "seconds": 0.10742808401118964,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "warmup": false
+    },
+    {
+      "expense_id": "calibration.71",
+      "kind": "isolated calibration",
+      "seconds": 0.1044369378942065,
+      "methods": [
+        "mlmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "level": 8,
+      "warmup": false
+    },
+    {
+      "expense_id": "allocation.euler_summary",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 0.0037254110211506486,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ]
+    },
+    {
+      "expense_id": "allocation.exact_summary",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 7.210997864603996e-05,
+      "methods": [
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ]
+    },
+    {
+      "expense_id": "allocation.select.0.4",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 1.1826981790363789e-05,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4
+      ]
+    },
+    {
+      "expense_id": "allocation.exact_plain.0.4",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 3.914989065378904e-06,
+      "methods": [
+        "exact_plain"
+      ],
+      "epsilons": [
+        0.4
+      ]
+    },
+    {
+      "expense_id": "allocation.exact_cv.0.4",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 5.149631761014462e-07,
+      "methods": [
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4
+      ]
+    },
+    {
+      "expense_id": "allocation.euler_counts.0.4",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 8.614396210759878e-05,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.4
+      ]
+    },
+    {
+      "expense_id": "allocation.select.0.2",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 7.11000757291913e-06,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.2
+      ]
+    },
+    {
+      "expense_id": "allocation.exact_plain.0.2",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 8.490169420838356e-07,
+      "methods": [
+        "exact_plain"
+      ],
+      "epsilons": [
+        0.2
+      ]
+    },
+    {
+      "expense_id": "allocation.exact_cv.0.2",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 3.2404204830527306e-07,
+      "methods": [
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.2
+      ]
+    },
+    {
+      "expense_id": "allocation.euler_counts.0.2",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 5.157798295840621e-05,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.2
+      ]
+    },
+    {
+      "expense_id": "allocation.select.0.1",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 5.99399209022522e-06,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.1
+      ]
+    },
+    {
+      "expense_id": "allocation.exact_plain.0.1",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 5.67000824958086e-07,
+      "methods": [
+        "exact_plain"
+      ],
+      "epsilons": [
+        0.1
+      ]
+    },
+    {
+      "expense_id": "allocation.exact_cv.0.1",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 3.400491550564766e-07,
+      "methods": [
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.1
+      ]
+    },
+    {
+      "expense_id": "allocation.euler_counts.0.1",
+      "kind": "fixed pilot selection/counts/statistics",
+      "seconds": 5.330197745934129e-05,
+      "methods": [
+        "mlmc",
+        "plain_euler"
+      ],
+      "epsilons": [
+        0.1
+      ]
+    },
+    {
+      "expense_id": "clip_diagnostic",
+      "kind": "fixed-seed CRN clip comparison",
+      "seconds": 0.026729149976745248,
+      "methods": [
+        "rqmc"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ]
+    },
+    {
+      "expense_id": "pilot_validation",
+      "kind": "saved moment/ledger/source validation",
+      "seconds": 9.526336593960878,
+      "methods": [
+        "mlmc",
+        "plain_euler",
+        "exact_plain",
+        "exact_cv"
+      ],
+      "epsilons": [
+        0.4,
+        0.2,
+        0.1
+      ]
+    }
+  ],
+  "total_measured_s": 21.7376072909683,
+  "hardware": {
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu": "Intel(R) Core(TM) Ultra 9 285K",
+    "logical_cpus": 20,
+    "python": "3.12.3",
+    "threads": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    }
+  },
+  "limitations": [
+    "finite-pilot bias envelope is empirical",
+    "rates may be unresolved",
+    "negative states retained",
+    "smoke cannot freeze",
+    "freeze time not yet incurred"
+  ],
+  "artifact": {
+    "bytes": 5071444,
+    "sha256": "4d50f5be5b41d7f86e5fc849b0c7dc97bd482f39c52d2e68c361e5e87b093be2",
+    "storage": "small synthetic archive tracked with study"
+  }
+}
