@@ -1,0 +1,972 @@
+{
+  "approval_scope": "Freeze and run this exact synthetic numerical experiment; main comparison and research acceptance have not been reviewed.",
+  "defects": {
+    "blocking_open": [],
+    "resolved": [
+      {
+        "example": "S100 K150 T1 v.04 r.03 q0 log_half_width.2 returned about -8.36966 before repair.",
+        "issue": "Too narrow PDE domains could return supported negative call prices.",
+        "priority": "P2",
+        "resolution": "Reject domains where upper/lower call boundary assumptions fail; return unsupported_domain and NaN. Successful fixed-study keys and solver outputs are preserved.",
+        "verified": "New domain/NPZ roundtrip tests and full saved pilot fresh replay pass."
+      },
+      {
+        "issue": "PDE domain metadata initially changed NPZ keys and introduced object arrays.",
+        "priority": "P2",
+        "resolution": "Supported results retain old grid keys; unsupported unevaluated calendar times use float NaN.",
+        "verified": "Final pilot/core tests and full fresh replay pass."
+      },
+      {
+        "issue": "Main entry point did not bind numerical_precision and main dimensions to the approved review.",
+        "priority": "P2",
+        "resolution": "Exact comparisons reject even one-ULP cap drift and unreviewed dimensions.",
+        "verified": "16 focused freeze/provenance tests pass."
+      }
+    ]
+  },
+  "evidence": {
+    "conditional_denominators": {
+      "heston": [
+        545,
+        1097,
+        1881,
+        2325,
+        1690,
+        654
+      ],
+      "local": [
+        562,
+        1076,
+        1883,
+        2328,
+        1690,
+        653
+      ]
+    },
+    "conditional_numerators": {
+      "heston": [
+        2,
+        41,
+        309,
+        984,
+        1168,
+        577
+      ],
+      "local": [
+        4,
+        58,
+        354,
+        957,
+        1126,
+        584
+      ]
+    },
+    "contract": {
+      "asian_strike": 100.0,
+      "expiry": 1.0,
+      "include_initial": false,
+      "observations": [
+        0.08333333333333333,
+        0.16666666666666666,
+        0.25,
+        0.3333333333333333,
+        0.4166666666666667,
+        0.5,
+        0.5833333333333334,
+        0.6666666666666666,
+        0.75,
+        0.8333333333333334,
+        0.9166666666666666,
+        1.0
+      ],
+      "payment": "expiry"
+    },
+    "fourier_vanilla_residual_max": 1.2789769243681803e-13,
+    "independent_cf_upper_change_max": 3.552713678800501e-15,
+    "joint_all_paths": {
+      "empty_heston_cells": 0,
+      "empty_local_cells": 2,
+      "heston_count_sum": 8192,
+      "local_count_sum": 8192
+    },
+    "main_sampling_95_half_width_forecast": 0.008653441010025876,
+    "parameters": {
+      "dividend_yield": 0.0,
+      "kappa": 2.0,
+      "rate": 0.03,
+      "rho": -0.7,
+      "spot": 100.0,
+      "theta": 0.04,
+      "v0": 0.04,
+      "xi": 0.3
+    },
+    "pilot_surface_empirical_refinement_max": 0.00035120490318460597,
+    "selected_asian": {
+      "difference": {
+        "mean": -0.0051820386395603785,
+        "samples": 8192,
+        "standard_error": 0.021629096932487435,
+        "supported": true
+      },
+      "heston": {
+        "mean": 5.615051739023809,
+        "samples": 8192,
+        "standard_error": 0.07762658765897015,
+        "supported": true
+      },
+      "local": {
+        "mean": 5.609869700384249,
+        "samples": 8192,
+        "standard_error": 0.07709077654997769,
+        "supported": true
+      }
+    },
+    "selected_diagnostics": {
+      "heston": {
+        "failed_paths": 0,
+        "negative_variance_states": 80,
+        "surface_visited_paths": {},
+        "surface_visits": {}
+      },
+      "local": {
+        "failed_paths": 0,
+        "negative_variance_states": 0,
+        "surface_visited_paths": {
+          "initial_state": 8192,
+          "interior": 8192,
+          "wing_left": 38
+        },
+        "surface_visits": {
+          "initial_state": 8192,
+          "interior": 6280156,
+          "wing_left": 3108
+        }
+      }
+    },
+    "selected_direct_pde_refinements": {
+      "domain": {
+        "all_supported": true,
+        "log_half_width": 3.0,
+        "max_abs_change": 2.3092638912203256e-14,
+        "max_abs_residual": 0.0003439606318571542,
+        "space_nodes": 2401,
+        "time_steps": 768
+      },
+      "joint": {
+        "all_supported": true,
+        "log_half_width": 1.5,
+        "max_abs_change": 0.00022824119324482695,
+        "max_abs_residual": 0.00036612440171079896,
+        "space_nodes": 2401,
+        "time_steps": 1536
+      },
+      "original": {
+        "log_half_width": 1.5,
+        "max_abs_residual": 0.0003439606318580424,
+        "space_nodes": 1201,
+        "time_steps": 768
+      },
+      "space": {
+        "all_supported": true,
+        "log_half_width": 1.5,
+        "max_abs_change": 0.0002280897135999993,
+        "max_abs_residual": 0.0003656661046420595,
+        "space_nodes": 2401,
+        "time_steps": 768
+      },
+      "time": {
+        "all_supported": true,
+        "log_half_width": 1.5,
+        "max_abs_change": 4.6043210932822376e-07,
+        "max_abs_residual": 0.0003441356726308076,
+        "space_nodes": 1201,
+        "time_steps": 1536
+      }
+    },
+    "selected_full_grid_fourier": {
+      "cells": 20769,
+      "cutoff_only": {
+        "first_frequency_scale": 512,
+        "max_abs_local_variance_change": 1.4965639541127118e-06,
+        "max_abs_price_change": 2.272387104879199e-11,
+        "max_relative_local_variance_change": 6.250947199368618e-05,
+        "order": 2048,
+        "second_frequency_scale": 1024,
+        "support_changes": 0,
+        "worst_time": 0.09638817658799635,
+        "worst_z": 5.0
+      },
+      "order_only": {
+        "first_order": 1024,
+        "frequency_scale": 512,
+        "max_abs_local_variance_change": 1.1097669513938924e-06,
+        "max_abs_price_change": 1.621431473300531e-11,
+        "max_relative_local_variance_change": 4.643911873708386e-05,
+        "second_order": 2048,
+        "support_changes": 0
+      }
+    },
+    "selected_pde_max_abs_residual": 0.0003439606318580424,
+    "selected_surface": {
+      "cells": 20769,
+      "dupire_conditional_max_abs": 3.6174279579789803e-07,
+      "local_variance_max": 0.15290320363959828,
+      "local_variance_min": 0.01792305219541881,
+      "supported_cells": 20769,
+      "supported_per_time": [
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161
+      ],
+      "unsupported_cells": 0,
+      "wing_boundaries": [
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ],
+        [
+          0,
+          160
+        ]
+      ]
+    }
+  },
+  "main": {
+    "block_size": 2048,
+    "paths": 65536,
+    "seeds": [
+      9017,
+      9029,
+      9047
+    ],
+    "steps": [
+      192,
+      384,
+      768
+    ],
+    "surface": {
+      "allow_row_wings": true,
+      "density_floor": 1e-10,
+      "frequency_scale": 512,
+      "order": 1024,
+      "time_nodes": 129,
+      "times_min": 0.000244140625,
+      "z_nodes": 161,
+      "z_width": 5.0
+    }
+  },
+  "main_results_reviewed": false,
+  "notes": [
+    "All price budgets use currency with S0=100; probabilities use fractions internally and percentage points for display; time is years.",
+    "This pilot supports the exact experiment, not equality of the entire vanilla surface or universal Heston parameter robustness.",
+    "Selected pilot Asian difference is -0.00518203864 with paired SE 0.02162909693; it is not identified. Main results must be judged independently using the frozen criteria, including unidentified or precision-insufficient outcomes.",
+    "Empirical two-level changes and |mean change|+1.96 SE are diagnostics, not rigorous discretization-bias bounds. PDE residual is a vanilla diagnostic, not an Asian price error bound.",
+    "Selected PDE spatial refinement slightly raises the maximum residual; no monotone convergence or certified bias bound is claimed.",
+    "Full-grid cutoff refinement shows 6.25e-5 relative local-variance change at a weak-density edge. Tiny vanilla-price residuals do not imply equally precise local variance.",
+    "Constant edge wings and minimum-time proxy are labelled numerical extensions. Wing6 retains 133 unsupported source cells as NaN; failed paths are not removed.",
+    "Conditional denominator support does not guarantee a reliable normal interval: the first pilot bin has only Heston 2/local 4 successes. Empty or sparse joint/conditional cells and SE0 do not prove zero probability or no effect.",
+    "Under constant r,q and square-integrable stock-martingale assumptions, exact same one-time marginals imply E[S_s S_t]=exp((r-q)(t-s))*E[S_s^2] and equal fixed-average mean/variance. Asian differences depend on higher joint-law features; small or unidentified differences are natural. This theoretical fact is distinct from finite-grid checks.",
+    "Approval records this exact main and numerical_precision before main comparison. Changes need review rather than retuning after seeing main results."
+  ],
+  "numerical_precision": {
+    "fourier_vanilla_residual": 1e-09,
+    "heston_step_empirical_refinement": 0.006,
+    "local_step_empirical_refinement": 0.003,
+    "pde_vanilla_residual": 0.001,
+    "pilot_surface_empirical_refinement": 0.0005,
+    "sampling_95_half_width": 0.01,
+    "vanilla_mc_empirical_step_allowance": 0.015,
+    "vanilla_mc_sampling_multiplier": 6.0
+  },
+  "pilot_sha256": "a08d24eba6ff896dd2a00dedcba2909a576aa1c57e64e0a77072a4674fa0e2c6",
+  "research_acceptance": false,
+  "reviewed_at_utc": "2026-10-09T03:48:09.214409+00:00",
+  "reviewed_by": "independent f04_pilot_review",
+  "schema": 1,
+  "selected_surface": "joint_refined",
+  "source_provenance": {
+    "base_commit": "e803e00bc72ec79b840cb083654d55f6715d6b0b",
+    "sha_role": "Actual saved blob and reviewed current source provenance; hashes do not prove mathematical correctness.",
+    "source_sha256": {
+      "hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622",
+      "hullkit/src/hullkit/_model_dynamics.py": "4e1dda51023e5a44978761e030728453304a1b96afb68cfbbf0e2db37633c10d",
+      "research/RB-F04/analytics.py": "b0b0e1b545364614018a49906a17205704b09e673497a88596839a169f7c847e",
+      "research/RB-F04/pilot.py": "7bec9443b0721f9252fed1b3c4f9f8ba8c85770e9ac4869d18977ad5acc46536",
+      "research/RB-F04/reference_methods.py": "03ebf1efc80e3d6bc9894fc2f30122e73be56f1dd19adf125687df038e918b27"
+    },
+    "working_tree_sources_uncommitted": true
+  },
+  "status": "approved",
+  "study": "RB-F04-numerical-pilot-review-v1",
+  "verification": {
+    "full_fresh": {
+      "atol": 1e-10,
+      "elapsed_s": 35.35351125401212,
+      "failures": [],
+      "fresh_regenerated": true,
+      "passed": true,
+      "rtol": 1e-08,
+      "source_unchanged_during_check": true
+    },
+    "independent_cas_copies": {
+      "mirror": {
+        "array_count": 1264,
+        "bytes": 28967239,
+        "numeric_check_passed": true,
+        "sha256": "5d1f0084df7689527d0e0728312d42069a664bebe3cb7eabba679c8aca4bc1bc"
+      },
+      "primary": {
+        "array_count": 1264,
+        "bytes": 28967239,
+        "numeric_check_passed": true,
+        "sha256": "5d1f0084df7689527d0e0728312d42069a664bebe3cb7eabba679c8aca4bc1bc"
+      }
+    },
+    "main_freeze_contract_tests": {
+      "deselected": 23,
+      "elapsed_s": 0.12,
+      "failed": 0,
+      "passed": 16
+    },
+    "pilot_and_core_tests": {
+      "elapsed_s": 6.34,
+      "failed": 0,
+      "passed": 157,
+      "source_resolution": "PYTHONPATH explicitly points to this worktree johnhull/hullkit/src"
+    }
+  }
+}

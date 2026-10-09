@@ -1,0 +1,154 @@
+{
+  "schema": 1,
+  "study": "RB-F04-dynamics-v1",
+  "state": "frozen",
+  "parameters": {
+    "spot": 100.0,
+    "rate": 0.03,
+    "dividend_yield": 0.0,
+    "v0": 0.04,
+    "kappa": 2.0,
+    "theta": 0.04,
+    "xi": 0.3,
+    "rho": -0.7
+  },
+  "contract": {
+    "expiry": 1.0,
+    "asian_strike": 100.0,
+    "observations": [
+      0.08333333333333333,
+      0.16666666666666666,
+      0.25,
+      0.3333333333333333,
+      0.4166666666666667,
+      0.5,
+      0.5833333333333334,
+      0.6666666666666666,
+      0.75,
+      0.8333333333333334,
+      0.9166666666666666,
+      1.0
+    ],
+    "include_initial": false,
+    "payment": "expiry"
+  },
+  "pilot": {
+    "paths": 8192,
+    "seed": 8117,
+    "steps": [
+      192,
+      384,
+      768
+    ],
+    "times_min": 0.000244140625,
+    "surface_times": 65,
+    "surface_z": 81,
+    "z_widths": [
+      4,
+      5,
+      6
+    ]
+  },
+  "main_candidate": {
+    "paths": 65536,
+    "seeds": [
+      9017,
+      9029,
+      9047
+    ],
+    "steps": [
+      192,
+      384,
+      768
+    ],
+    "block_size": 2048
+  },
+  "quotes": {
+    "times": [
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "strikes": [
+      80,
+      90,
+      100,
+      110,
+      120
+    ],
+    "holdout_times": [
+      0.3333333333333333,
+      0.6666666666666666
+    ],
+    "holdout_strikes": [
+      85,
+      95,
+      105,
+      115
+    ]
+  },
+  "two_date": {
+    "first": 0.5,
+    "second": 1.0,
+    "bins": [
+      80,
+      90,
+      100,
+      110,
+      120
+    ],
+    "conditional_threshold": 110
+  },
+  "constraints": {
+    "cpu": true,
+    "torch": false,
+    "public_api_changes": false,
+    "production_dependencies": false,
+    "drop_unsupported_paths": false
+  },
+  "main": {
+    "block_size": 2048,
+    "paths": 65536,
+    "seeds": [
+      9017,
+      9029,
+      9047
+    ],
+    "steps": [
+      192,
+      384,
+      768
+    ],
+    "surface": {
+      "allow_row_wings": true,
+      "density_floor": 1e-10,
+      "frequency_scale": 512,
+      "order": 1024,
+      "time_nodes": 129,
+      "times_min": 0.000244140625,
+      "z_nodes": 161,
+      "z_width": 5.0
+    }
+  },
+  "numerical_precision": {
+    "fourier_vanilla_residual": 1e-09,
+    "heston_step_empirical_refinement": 0.006,
+    "local_step_empirical_refinement": 0.003,
+    "pde_vanilla_residual": 0.001,
+    "pilot_surface_empirical_refinement": 0.0005,
+    "sampling_95_half_width": 0.01,
+    "vanilla_mc_empirical_step_allowance": 0.015,
+    "vanilla_mc_sampling_multiplier": 6.0
+  },
+  "freeze": {
+    "reviewed": true,
+    "pilot_mode": "full",
+    "pilot_path": "pilot.json",
+    "pilot_sha256": "a08d24eba6ff896dd2a00dedcba2909a576aa1c57e64e0a77072a4674fa0e2c6",
+    "selected_surface": "joint_refined",
+    "reviewed_by": "independent f04_pilot_review",
+    "review_record": "pilot_review.json",
+    "review_sha256": "44f5240d77e5798f164b880b36929b31ab303dd5d5da68de780bf2a9431bb688"
+  }
+}
