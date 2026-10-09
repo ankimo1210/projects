@@ -1,0 +1,111 @@
+"""Scratch auxiliary-GBM control feasibility; not official labels or pilot."""
+from pathlib import Path
+import json
+import math
+from time import perf_counter
+import numpy as np
+from scipy.special import ndtr
+
+
+def black(F,K,W):
+    root=np.sqrt(W)
+    d1=(np.log(F/K)+.5*W)/root
+    return F*ndtr(d1)-K*ndtr(d1-root)
+
+
+def cond_call(c,y,W):
+    c=np.asarray(c);y=np.asarray(y);W=np.asarray(W);forward=c*np.exp(.03/192)
+    out=np.empty_like(c);active=(y>0)&(W>0)
+    out[active]=black(forward[active],y[active],W[active])
+    zero=(y>0)&(W==0)
+    out[zero]=np.maximum(forward[zero]-y[zero],0)
+    out[y<=0]=forward[y<=0]-y[y<=0]
+    return out
+
+
+def proxy_base_variance(S):
+    return .04*(np.asarray(S)/100)**(-.6)
+
+
+def estimate(z,model,spot=100.,theta=.04):
+    steps=z.shape[1];assert steps==192
+    dt=1/steps;r=.03;discount=np.exp(-r);n=len(z)
+    stock=np.full(n,spot);variance=np.full(n,theta) if model=='Heston' else None
+    kappa=2.;bar=.04;xi=.3;rho=-.7
+    e=np.exp(-kappa*dt)
+    sigma_ctrl2=bar+(theta-bar)*(-np.expm1(-kappa)/kappa) if model=='Heston' else theta*proxy_base_variance(spot)
+    auxlog=np.full(n,np.log(spot))
+    sums=np.zeros(n);geo_logs=np.zeros(n)
+    conditional=None;auxcond=None;raw=None
+    for i in range(steps):
+        a=variance if model=='Heston' else theta*proxy_base_variance(stock)
+        if i==steps-1:
+            y=1200-sums
+            conditional=discount*cond_call(stock,y,a*dt)/12
+            log_geo=(geo_logs+auxlog)/12
+            w=sigma_ctrl2*dt/144
+            auxforward=np.exp(log_geo+(r-.5*sigma_ctrl2)*dt/12+w/2)
+            auxcond=discount*black(auxforward,100,w)
+        stock*=np.exp((r-.5*a)*dt+np.sqrt(a*dt)*z[:,i,0])
+        auxlog+=(r-.5*sigma_ctrl2)*dt+np.sqrt(sigma_ctrl2*dt)*z[:,i,0]
+        if model=='Heston':
+            mean=bar+(variance-bar)*e
+            var=variance*xi*xi*e*(1-e)/kappa+bar*xi*xi*(1-e)**2/(2*kappa)
+            logvar=np.log1p(var/mean**2)
+            zv=rho*z[:,i,0]+np.sqrt(1-rho*rho)*z[:,i,1]
+            variance=mean*np.exp(-.5*logvar+np.sqrt(logvar)*zv)
+        if (i+1)%16==0:
+            sums+=stock
+            geo_logs+=auxlog
+    raw=discount*np.maximum(sums/12-100,0)
+    times=np.arange(1,13)/12
+    mean_t=times.mean()
+    covariance_coeff=np.minimum(times[:,None],times[None,:]).sum()/144
+    W=sigma_ctrl2*covariance_coeff
+    expected_aux=discount*black(spot*np.exp((r-.5*sigma_ctrl2)*mean_t+W/2),100,W)
+    cv=conditional-auxcond+expected_aux
+    assert np.isfinite(np.column_stack([raw,conditional,cv])).all()
+    return raw,conditional,cv
+
+
+def stat(values,N):
+    v=values[:N]
+    return {'original_n':N,'mean':float(v.mean()),'sd':float(v.std(ddof=1)),'se':float(v.std(ddof=1)/np.sqrt(N))}
+
+
+rng=np.random.default_rng(202610090406)
+before=perf_counter()
+z=rng.standard_normal((16384,192,2))
+driver_s=perf_counter()-before
+report={'scope':'scratch finite-discrete-model probe only; no official main labels/pilot selection',
+        'N_generated':16384,'steps':192,'normal_shape':list(z.shape),'driver_generation_s':driver_s,'models':[]}
+for model,theta in [('Heston',.04),('local_CEV_proxy',1.)]:
+    actual='Heston' if model=='Heston' else 'local'
+    before=perf_counter();baseline=estimate(z,actual,theta=theta);price_s=perf_counter()-before
+    row={'model':model,'theta':theta,'baseline_generation_s':price_s,'prefixes':[]}
+    for N in [1024,4096,16384]:
+        row['prefixes'].append({'N':N,'raw':stat(baseline[0],N),'conditional':stat(baseline[1],N),'conditional_beta1_auxGBM_control':stat(baseline[2],N)})
+    row['bump_price_derivatives']=[]
+    for frac in [.02,.05,.1]:
+        h=theta*frac
+        before=perf_counter()
+        upper=estimate(z,actual,theta=theta+h);lower=estimate(z,actual,theta=theta-h)
+        fd=[(u-l)/(2*h) for u,l in zip(upper,lower)]
+        row['bump_price_derivatives'].append({'relative_theta_bump':frac,'bump_pair_s':perf_counter()-before,
+                  'prefixes':[{'N':N,'raw_Vtheta':stat(fd[0],N),'conditional_Vtheta':stat(fd[1],N),
+                               'conditional_control_Vtheta':stat(fd[2],N)} for N in [1024,4096,16384]]})
+    # One physical spot bump verifies state-dependent control and expectation
+    # are both recomputed. This is a scalar-price CRN derivative, never copied
+    # from Heston homogeneity in the local proxy.
+    h=.1
+    upper=estimate(z,actual,spot=100+h,theta=theta);lower=estimate(z,actual,spot=100-h,theta=theta)
+    fd=[(u-l)/(2*h) for u,l in zip(upper,lower)]
+    row['physical_spot_bump']={'h':h,'prefixes':[{'N':N,'raw_VS':stat(fd[0],N),'conditional_VS':stat(fd[1],N),
+                                               'conditional_control_VS':stat(fd[2],N)} for N in [1024,4096,16384]]}
+    report['models'].append(row)
+Path('/tmp/rbf04-auxiliary-gbm-control-probe.json').write_text(json.dumps(report,indent=2))
+for m in report['models']:
+ print(m['model'],'baseline',m['baseline_generation_s'])
+ print('prices',[(r['N'],r['conditional']['se'],r['conditional_beta1_auxGBM_control']['se']) for r in m['prefixes']])
+ print('Vtheta',[(r['N'],r['conditional_Vtheta']['se'],r['conditional_control_Vtheta']['se']) for r in m['bump_price_derivatives'][0]['prefixes']])
+ print('VS',[(r['N'],r['conditional_VS']['se'],r['conditional_control_VS']['se']) for r in m['physical_spot_bump']['prefixes']])

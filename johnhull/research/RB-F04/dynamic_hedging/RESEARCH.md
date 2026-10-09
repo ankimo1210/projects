@@ -1,5 +1,7 @@
 # 同一較正条件の動的モデル横断ヘッジ：設計調査
 
+現行契約：[DESIGN.md](DESIGN.md)と[実施計画](../../../docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md)。以下は初期調査時点の候補を保持した記録であり、CM2-LN/hedge頻度/採否式は現行設計の修正を優先する。
+
 調査日：2026-10-09。作業先：`/home/kazumasa/worktrees/johnhull-research-roadmap`。
 これは次の研究の設計案であり、承認済み仕様・実装済み機能・実証結果ではない。正式文書、金融ソース、ROADMAP、Gitは変更していない。主MC・学習は実行していない。
 

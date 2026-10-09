@@ -1,0 +1,81 @@
+"""Deterministic design counterexamples/certificates only: no sampling/training."""
+import json,math,hashlib
+from pathlib import Path
+import numpy as np
+from scipy.stats import norm,binom
+from scipy.optimize import brentq
+from scipy.integrate import quad
+kappa,barv,xi,rho,v0,r=2.,.04,.3,-.7,.04,.03
+a=(4*kappa*barv-xi*xi)/8;b=kappa/2;c=xi/2
+rows=[]
+for level in [192,384,768,1536]:
+ for T in [1.,1.25]:
+  dt=1/level;N=round(T*level);D=1+b*dt;p=4.
+  A=0.;logconst=0.;maxratio=0.;minL=1.
+  for j in range(N):
+   L=1-2*A*c*c*dt/(D*D)
+   assert L>0
+   maxratio=max(maxratio,1-L);minL=min(minL,L)
+   logconst+=p*r*dt+2*A*a*dt/D-.5*math.log(L)
+   A=.5*(p*p*(1-rho*rho)-p)*dt+A/(D*D)+dt*(p*rho+2*A*c/(D*D))**2/(2*L)
+  rootproof=(2*p*p-p)*(1+.01)*c*c*T*T
+  assert rootproof<1
+  rows.append(dict(level=level,T=T,N=N,A_terminal=A,min_L=minL,max_MGF_ratio=maxratio,log_fourth_over_S0fourth_bound=logconst+A*v0,root_Frobenius_condition=rootproof,finite_fourth=True))
+# Check algebraic v' bound at deterministic grids; proof uses sqrt inequality.
+maxexcess=0.
+for dt in [1/192,1/384,1/768]:
+ D=1+b*dt;d=a*dt
+ for v in [0,.00001,.02,.04,.08,.5,10]:
+  for z in [-100,-20,-5,-1,0,1,5,20,100]:
+   X=math.sqrt(v)+c*math.sqrt(dt)*z;s=math.hypot(X,math.sqrt(4*D*d))
+   y=(X+s)/(2*D) if X>=0 else 2*d/(s-X)
+   q=X*X/(D*D)+2*d/D
+   maxexcess=max(maxexcess,y*y-q)
+   assert y>0 and y*y<=q+1e-12
+# Old CM2 exact log integral divergence witness (not Monte Carlo).
+dt=1/768;e=math.exp(-kappa*dt);mv=barv+(v0-barv)*e
+sv=v0*xi*xi*e*(1-e)/kappa+barv*xi*xi*(1-e)**2/(2*kappa)
+w=math.log1p(sv/(mv*mv))
+tails=[dict(z=z,log_integrand_without_constant=dt*mv*math.exp(-w/2+math.sqrt(w)*z)+2*rho*math.sqrt(v0*dt)*z-z*z/2) for z in [100,200,300,400,450,500,550]]
+assert tails[-1]["log_integrand_without_constant"]>1e6
+# Exact null-boundary false-positive probability of old random 5% threshold.
+N=8192;prob=float(binom.cdf(N//2-1,N,.5));assert prob>.49
+# Black IFT toy: independent analytic jets vs root recalibration.
+def call(S,K,T,sigma):
+ W=sigma*sigma*T;d1=(math.log(S/K)+r*T+.5*W)/math.sqrt(W);d2=d1-math.sqrt(W)
+ return S*norm.cdf(d1)-K*math.exp(-r*T)*norm.cdf(d2)
+def jets(S,K,T,sigma):
+ d1=(math.log(S/K)+r*T+.5*sigma*sigma*T)/(sigma*math.sqrt(T))
+ return norm.cdf(d1),S*norm.pdf(d1)*math.sqrt(T)
+S=100.;sigma=.2;Q=call(S,100,1.25,sigma);V=call(S,110,1,sigma)
+CS,Csig=jets(S,100,1.25,sigma);VS,Vsig=jets(S,110,1,sigma)
+hQ=Vsig/Csig;hS=VS-hQ*CS
+def fitted(s,q):return call(s,110,1,brentq(lambda x:call(s,100,1.25,x)-q,.01,2,xtol=1e-14))
+h=.001;fdQ=(fitted(S,Q+h)-fitted(S,Q-h))/(2*h);fdS=(fitted(S+h,Q)-fitted(S-h,Q))/(2*h)
+assert abs(fdQ-hQ)<1e-8 and abs(fdS-hS)<1e-8
+# Local one-Brownian covariance: null vector (-CS,1), Heston covariance beta.
+dt=1/12;S=100.;v=.04;CS=.6;Cv=40
+sigH=v*dt*np.array([[S*S,S*S*CS+rho*xi*S*Cv],[S*S*CS+rho*xi*S*Cv,S*S*CS*CS+2*rho*xi*S*CS*Cv+xi*xi*Cv*Cv]])
+sigL=v*dt*S*S*np.array([[1,CS],[CS,CS*CS]])
+betaH=sigH[1,0]/sigH[0,0];assert abs(betaH-(CS+Cv*rho*xi/S))<1e-12
+null=np.array([-CS,1]);assert abs(null@sigL@null)<1e-12
+# Auxiliary known-GBM control: actual remaining six monthly fixing dates.
+ds=np.arange(7,13)/12-.5;m=6;Afix=600.;K=100.;S=100.;sigma=.2;D=math.exp(-r*.5)
+mu=math.log(S)+(r-.5*sigma*sigma)*float(ds.mean());W=sigma*sigma*float(np.minimum(ds[:,None],ds[None,:]).sum())/(m*m);sd=math.sqrt(W);keff=(12*K-Afix)/m
+F=math.exp(mu+W/2);d2=(mu-math.log(keff))/sd;d1=d2+sd
+closed=D*m/12*(F*norm.cdf(d1)-keff*norm.cdf(d2))
+integral=quad(lambda z:D*m/12*(math.exp(mu+sd*z)-keff)*norm.pdf(z),-d2,14,epsabs=1e-12,epsrel=1e-12)[0]
+assert abs(closed-integral)<1e-11
+# Cash/gain independent recursions include terminal fee exactly once.
+times=np.array([0,.5,1.]);prices=np.array([[100,6],[104,8],[102,5]],float);hold=np.array([[.4,.5],[.6,.2]],float);spreads=np.array([.001,.005]);premium=7.;payoff=3.;rate=.05
+cash=premium;previous=np.zeros(2);fees=[]
+for i,t in enumerate(times):
+ if i:cash*=math.exp(rate*(times[i]-times[i-1]))
+ current=hold[i] if i<2 else np.zeros(2)
+ trade=current-previous;fee=float(np.sum(spreads*prices[i]*np.abs(trade)));fees.append(fee);cash-=float(trade@prices[i])+fee;previous=current
+cash-=payoff;discounted=math.exp(-rate)*cash
+gain=premium+sum(hold[i]@(np.exp(-rate*times[i+1])*prices[i+1]-np.exp(-rate*times[i])*prices[i]) for i in range(2))-sum(math.exp(-rate*t)*fee for t,fee in zip(times,fees))-math.exp(-rate)*payoff
+assert abs(gain-discounted)<1e-12
+report=dict(schema="RB-F04-dynamic-design-deterministic-probes-v1",no_sampling=True,no_training=True,parameters=dict(kappa=kappa,barv=barv,xi=xi,rho=rho,v0=v0,r=r,a=a,b=b,c=c),BEM_finite_fourth=rows,root_bound_grid_max_excess=maxexcess,CM2_w=w,CM2_log_integrand_tail=tails,old_relative_MSE_gate=dict(null_true_base_MSE=2,null_true_delta=-.1,constant_paired_delta_SE=0,N=N,false_positive_probability=prob,nominal_alpha=.05/8),IFT=dict(Q=Q,V=V,hQ=hQ,hS=hS,recalibrated_fdQ=fdQ,recalibrated_fdS=fdS),covariance=dict(betaH=betaH,betaLocal=CS,local_eigenvalues=np.linalg.eigvalsh(sigL).tolist(),local_null_variance=float(null@sigL@null),Heston_eigenvalues=np.linalg.eigvalsh(sigH).tolist()),auxiliary=dict(closed=closed,normal_quadrature=integral,difference=integral-closed),cash=dict(fees=fees,discounted_cash=discounted,discounted_gain=gain,difference=discounted-gain),limits=["Deterministic mathematics/probes only, not new MC or empirical main evidence.","Root Frobenius moment bound is fixed-N; constant depends on N. Backward MGF recurrence certifies actual finite levels independently.","Finite fourth moments do not establish numerical bias bounds, interpolation support or exact bootstrap coverage."])
+Path("/tmp/rbf04-dynamic-design-probes.json").write_text(json.dumps(report,indent=2,allow_nan=False))
+print(json.dumps(report,indent=2))

@@ -1,0 +1,20 @@
+{
+  "schema": "RB-F04-dynamic-design-document-validation-v1",
+  "date": "2026-10-09",
+  "scope": "Design/research only, no formal financial source/pilot/main",
+  "design_source_sha256": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce",
+  "plan_source_sha256": "cf339d0baa55051cddddabfa7f2351cbb2e826153db288c1bf20507c0aaa7933",
+  "review_status": "approved_for_implementation",
+  "unresolved_critical": 0,
+  "unresolved_important": 0,
+  "unresolved_minor": 0,
+  "json_files_parsed": 7,
+  "local_links_checked": 23,
+  "plan_test_examples_syntax": 5,
+  "copied_original_byte_provenance": 7,
+  "moment_cases": 24,
+  "independent_max_abs_difference": 1.3322676295501878e-15,
+  "formal_numeric_precision_validated": false,
+  "main_experiment_executed": false,
+  "note": "Hashes/byte copies establish provenance, not financial correctness. Math comparison is tolerance based."
+}

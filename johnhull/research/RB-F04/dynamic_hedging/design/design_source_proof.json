@@ -1,0 +1,63 @@
+{
+  "schema": "RB-F04-dynamic-design-source-proof-v1",
+  "inputs": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/DESIGN.md",
+      "size_bytes": 41224,
+      "sha256_provenance": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/CONDITIONAL_FEASIBILITY.md",
+      "size_bytes": 25208,
+      "sha256_provenance": "6699a641c6d9955f36a7c0b616a485da2cc9a49b786267498cb9f00de2314e47"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/RESEARCH.md",
+      "size_bytes": 43373,
+      "sha256_provenance": "c4cb5ddabaad9a5c20ec0456c477f3378bd0e69832c5095fe49e001725eaa405"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md",
+      "size_bytes": 22646,
+      "sha256_provenance": "cf339d0baa55051cddddabfa7f2351cbb2e826153db288c1bf20507c0aaa7933"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/design/implicit_cir_moment_bound.json",
+      "size_bytes": 5120,
+      "sha256_provenance": "2104111f05f01a6e350638743351dab4b7860cfc1c517e68b2d7975ff1e3e2a5"
+    },
+    {
+      "path": "/tmp/rbf04-implicit-cir-moment-bound.json",
+      "size_bytes": 5120,
+      "sha256_provenance": "2104111f05f01a6e350638743351dab4b7860cfc1c517e68b2d7975ff1e3e2a5"
+    },
+    {
+      "path": "/tmp/rbf04_dynamic_design_probes.py",
+      "size_bytes": 5738,
+      "sha256_provenance": "9b0afba68363d58e370e3f6a49cf7b00f13e333ba9e6006fb5f8cc7e0233a7c6"
+    },
+    {
+      "path": "/tmp/rbf04-dynamic-design-probes.json",
+      "size_bytes": 5058,
+      "sha256_provenance": "b190cb66500c9339ac5d9f031ac5c8cd5a35d7bb0bd336560c839e448db33c28"
+    },
+    {
+      "path": "/tmp/rbf04_dynamic_moment_recheck.py",
+      "size_bytes": 3121,
+      "sha256_provenance": "e09ad8adf1913b829bd852bc6fb772108ee4883ec5b13b5c3945b1f200b2b881"
+    },
+    {
+      "path": "/tmp/rbf04-dynamic-moment-recheck.json",
+      "size_bytes": 10338,
+      "sha256_provenance": "d93ad224b0b996a164c07c065cfc402901bbd40bc846f248dd402eb61eb59637"
+    }
+  ],
+  "review": {
+    "path": "/tmp/rbf04-dynamic-design-review.json",
+    "sha256_provenance": "39f5f64aa75824207381df28983594515b740c18ec805b5f0d0b21e6ffe824b5"
+  },
+  "markdown": {
+    "path": "/tmp/rbf04-dynamic-design-review.md",
+    "sha256_provenance": "daa8e335c4da6e5826524370315dd5475e2d2c1366e4565336686ed356987230"
+  }
+}

@@ -1,0 +1,406 @@
+{
+  "schema": "RB-F04-independent-fixed-grid-moment-recheck-v1",
+  "no_sampling": true,
+  "no_training": true,
+  "source_path": "/tmp/rbf04-implicit-cir-moment-bound.json",
+  "source_sha256_provenance": "2104111f05f01a6e350638743351dab4b7860cfc1c517e68b2d7975ff1e3e2a5",
+  "rows_checked": 24,
+  "all_saved_numerics_match": true,
+  "global_minimum_denominator": 1.0008165839716445,
+  "maximum_absolute_error": 1.3322676295501878e-15,
+  "p4_Frobenius_sufficient_bounds": {
+    "1.0": 0.6363,
+    "1.25": 0.9942187499999999
+  },
+  "rows": [
+    {
+      "p": 2,
+      "T": 1,
+      "N": 192,
+      "lambda_": 6,
+      "eta": 2.70554159882204,
+      "min_denominator": 1.009810856990766,
+      "log_bound_at_v04": 0.24652995757049898,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 3.0531133177191805e-16
+      }
+    },
+    {
+      "p": 2,
+      "T": 1,
+      "N": 384,
+      "lambda_": 6,
+      "eta": 2.6967009877927817,
+      "min_denominator": 1.0048993870935075,
+      "log_bound_at_v04": 0.24648902715338533,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 2.220446049250313e-16
+      }
+    },
+    {
+      "p": 2,
+      "T": 1,
+      "N": 768,
+      "lambda_": 6,
+      "eta": 2.692280841436091,
+      "min_denominator": 1.0024481839384325,
+      "log_bound_at_v04": 0.24646839313765484,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 1.1102230246251565e-16
+      }
+    },
+    {
+      "p": 2,
+      "T": 1,
+      "N": 1536,
+      "lambda_": 6,
+      "eta": 2.6900708092571963,
+      "min_denominator": 1.0012237146595362,
+      "log_bound_at_v04": 0.246458033835816,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 8.881784197001252e-16
+      }
+    },
+    {
+      "p": 2,
+      "T": 1.25,
+      "N": 240,
+      "lambda_": 6,
+      "eta": 2.8995917553635038,
+      "min_denominator": 1.0097649611368873,
+      "log_bound_at_v04": 0.3100761869912877,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 2.220446049250313e-16
+      }
+    },
+    {
+      "p": 2,
+      "T": 1.25,
+      "N": 480,
+      "lambda_": 6,
+      "eta": 2.8898229813610796,
+      "min_denominator": 1.004876652386993,
+      "log_bound_at_v04": 0.3100154842682557,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 3.3306690738754696e-16
+      }
+    },
+    {
+      "p": 2,
+      "T": 1.25,
+      "N": 960,
+      "lambda_": 6,
+      "eta": 2.884939225622307,
+      "min_denominator": 1.002436869632105,
+      "log_bound_at_v04": 0.3099849262751837,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 1.1102230246251565e-16
+      }
+    },
+    {
+      "p": 2,
+      "T": 1.25,
+      "N": 1920,
+      "lambda_": 6,
+      "eta": 2.8824975070764634,
+      "min_denominator": 1.0012180707359042,
+      "log_bound_at_v04": 0.30996959550671976,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 7.771561172376096e-16
+      }
+    },
+    {
+      "p": 3,
+      "T": 1,
+      "N": 192,
+      "lambda_": 15,
+      "eta": 7.16410090996927,
+      "min_denominator": 1.0087684553621292,
+      "log_bound_at_v04": 0.6431597370268629,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 2.220446049250313e-16
+      }
+    },
+    {
+      "p": 3,
+      "T": 1,
+      "N": 384,
+      "lambda_": 15,
+      "eta": 7.143209011283429,
+      "min_denominator": 1.004378952295101,
+      "log_bound_at_v04": 0.6432183942940701,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 5.551115123125783e-16
+      }
+    },
+    {
+      "p": 3,
+      "T": 1,
+      "N": 768,
+      "lambda_": 15,
+      "eta": 7.132762689427523,
+      "min_denominator": 1.002188159178176,
+      "log_bound_at_v04": 0.6432476285203941,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 4.440892098500626e-16
+      }
+    },
+    {
+      "p": 3,
+      "T": 1,
+      "N": 1536,
+      "lambda_": 15,
+      "eta": 7.127539436194889,
+      "min_denominator": 1.00109375058076,
+      "log_bound_at_v04": 0.6432622220759102,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 9.992007221626409e-16
+      }
+    },
+    {
+      "p": 3,
+      "T": 1.25,
+      "N": 240,
+      "lambda_": 15,
+      "eta": 7.8143418925976835,
+      "min_denominator": 1.0086149970640867,
+      "log_bound_at_v04": 0.8182185933871937,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 3.3306690738754696e-16
+      }
+    },
+    {
+      "p": 3,
+      "T": 1.25,
+      "N": 480,
+      "lambda_": 15,
+      "eta": 7.791081874760424,
+      "min_denominator": 1.0043027664427218,
+      "log_bound_at_v04": 0.8182870070170557,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 6.661338147750939e-16
+      }
+    },
+    {
+      "p": 3,
+      "T": 1.25,
+      "N": 960,
+      "lambda_": 15,
+      "eta": 7.779451863724297,
+      "min_denominator": 1.0021502015794341,
+      "log_bound_at_v04": 0.8183210976906965,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 8.881784197001252e-16
+      }
+    },
+    {
+      "p": 3,
+      "T": 1.25,
+      "N": 1920,
+      "lambda_": 15,
+      "eta": 7.773636858828488,
+      "min_denominator": 1.0010748055513081,
+      "log_bound_at_v04": 0.8183381140138966,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 1.3322676295501878e-15
+      }
+    },
+    {
+      "p": 4,
+      "T": 1,
+      "N": 192,
+      "lambda_": 28,
+      "eta": 14.713463252611469,
+      "min_denominator": 1.007005586050225,
+      "log_bound_at_v04": 1.2878623016000552,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 4.440892098500626e-16
+      }
+    },
+    {
+      "p": 4,
+      "T": 1,
+      "N": 384,
+      "lambda_": 28,
+      "eta": 14.679696940465826,
+      "min_denominator": 1.0034973963485574,
+      "log_bound_at_v04": 1.288558060795098,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 6.661338147750939e-16
+      }
+    },
+    {
+      "p": 4,
+      "T": 1,
+      "N": 768,
+      "lambda_": 28,
+      "eta": 14.662816434066757,
+      "min_denominator": 1.0017473514145339,
+      "log_bound_at_v04": 1.2889072935516186,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 2.220446049250313e-16
+      }
+    },
+    {
+      "p": 4,
+      "T": 1,
+      "N": 1536,
+      "lambda_": 28,
+      "eta": 14.654376844943146,
+      "min_denominator": 1.0008733393174476,
+      "log_bound_at_v04": 1.2890822502320443,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 4.440892098500626e-16
+      }
+    },
+    {
+      "p": 4,
+      "T": 1.25,
+      "N": 240,
+      "lambda_": 28,
+      "eta": 16.655516893377417,
+      "min_denominator": 1.006548995262279,
+      "log_bound_at_v04": 1.6773898957965474,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 4.440892098500626e-16
+      }
+    },
+    {
+      "p": 4,
+      "T": 1.25,
+      "N": 480,
+      "lambda_": 28,
+      "eta": 16.618575340638127,
+      "min_denominator": 1.003269830621811,
+      "log_bound_at_v04": 1.6784120580211614,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 4.440892098500626e-16
+      }
+    },
+    {
+      "p": 4,
+      "T": 1.25,
+      "N": 960,
+      "lambda_": 28,
+      "eta": 16.600108089224364,
+      "min_denominator": 1.001633750137227,
+      "log_bound_at_v04": 1.6789251527990734,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 0.0
+      }
+    },
+    {
+      "p": 4,
+      "T": 1.25,
+      "N": 1920,
+      "lambda_": 28,
+      "eta": 16.590875347673915,
+      "min_denominator": 1.0008165839716445,
+      "log_bound_at_v04": 1.6791822064435928,
+      "saved_comparison_pass": true,
+      "absolute_errors": {
+        "lambda_": 0,
+        "eta": 0.0,
+        "min_denominator": 0.0,
+        "log_bound_at_v04": 0.0
+      }
+    }
+  ],
+  "limits": [
+    "Bounds concern fixed finite grids and fixed stated parameters.",
+    "log_bound_at_v04 bounds E exp((2p^2-p) A); it is not log E S^p.",
+    "No claim of uniform grid convergence, Greek moment bounds, precision or empirical performance."
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "schema": "RB-F04-dynamic-design-review-v1",
+  "reviewer": "/root/short_runner_review",
+  "review_date": "2026-10-09",
+  "decision": "approved_for_implementation",
+  "approved_for_implementation": true,
+  "approved_for_pilot_freeze": false,
+  "approved_for_main": false,
+  "critical_findings": [],
+  "important_findings": [],
+  "minor_findings": [],
+  "closed_findings": [
+    {
+      "id": "I1",
+      "severity": "Important",
+      "title": "CM2 lognormal variance plus old-v stock gives infinite second moment",
+      "status": "closed",
+      "resolution": "Rejected; drift-implicit sqrt-CIR with adapted old-v stock and independent finite fourth-moment certificate."
+    },
+    {
+      "id": "I2",
+      "severity": "Important",
+      "title": "Random baseline 5% threshold outside paired CI",
+      "status": "closed",
+      "resolution": "Independent paired d/r scores, both upper CI plus separate empirical numerical envelopes; all 3 initializations and 8-family IUT."
+    }
+  ],
+  "source_scope": "Read-only design/mathematics/probes. No implementation/test/Git edits; outputs only /tmp.",
+  "no_sampling": true,
+  "no_training": true,
+  "no_optimizer": true,
+  "inputs": [
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/DESIGN.md",
+      "size_bytes": 41224,
+      "sha256_provenance": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/CONDITIONAL_FEASIBILITY.md",
+      "size_bytes": 25208,
+      "sha256_provenance": "6699a641c6d9955f36a7c0b616a485da2cc9a49b786267498cb9f00de2314e47"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/RESEARCH.md",
+      "size_bytes": 43373,
+      "sha256_provenance": "c4cb5ddabaad9a5c20ec0456c477f3378bd0e69832c5095fe49e001725eaa405"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md",
+      "size_bytes": 22646,
+      "sha256_provenance": "cf339d0baa55051cddddabfa7f2351cbb2e826153db288c1bf20507c0aaa7933"
+    },
+    {
+      "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/design/implicit_cir_moment_bound.json",
+      "size_bytes": 5120,
+      "sha256_provenance": "2104111f05f01a6e350638743351dab4b7860cfc1c517e68b2d7975ff1e3e2a5"
+    },
+    {
+      "path": "/tmp/rbf04-implicit-cir-moment-bound.json",
+      "size_bytes": 5120,
+      "sha256_provenance": "2104111f05f01a6e350638743351dab4b7860cfc1c517e68b2d7975ff1e3e2a5"
+    },
+    {
+      "path": "/tmp/rbf04_dynamic_design_probes.py",
+      "size_bytes": 5738,
+      "sha256_provenance": "9b0afba68363d58e370e3f6a49cf7b00f13e333ba9e6006fb5f8cc7e0233a7c6"
+    },
+    {
+      "path": "/tmp/rbf04-dynamic-design-probes.json",
+      "size_bytes": 5058,
+      "sha256_provenance": "b190cb66500c9339ac5d9f031ac5c8cd5a35d7bb0bd336560c839e448db33c28"
+    },
+    {
+      "path": "/tmp/rbf04_dynamic_moment_recheck.py",
+      "size_bytes": 3121,
+      "sha256_provenance": "e09ad8adf1913b829bd852bc6fb772108ee4883ec5b13b5c3945b1f200b2b881"
+    },
+    {
+      "path": "/tmp/rbf04-dynamic-moment-recheck.json",
+      "size_bytes": 10338,
+      "sha256_provenance": "d93ad224b0b996a164c07c065cfc402901bbd40bc846f248dd402eb61eb59637"
+    }
+  ],
+  "numerical_evidence": {
+    "moment_rows": 24,
+    "moment_rows_match": true,
+    "minimum_denominator": 1.0008165839716445,
+    "maximum_saved_absolute_error": 1.3322676295501878e-15,
+    "fourth_moment_additional_correlated_gaussian_grids": 8,
+    "old_relative_gate_false_positive_probability": 0.49559240338975946,
+    "IFT_maximum_FD_error": 8.159222741888073e-10,
+    "auxiliary_quadrature_absolute_error": 6.8833827526759706e-15,
+    "cash_gain_absolute_error": 7.105427357601002e-15
+  },
+  "accepted_scope": {
+    "primary_hedge_count": 12,
+    "frequency_diagnostics": [
+      24,
+      48
+    ],
+    "main_cells": 44,
+    "main_fits": 12,
+    "claim_fixings": 12,
+    "claim_includes_S0": false,
+    "premium": "Independent Heston arithmetic Asian direct-MC pilot: 65536 IID paths, 1536 steps/year, reserved independent seed, separate implementation. Fixed-p0 conditional main MSE.",
+    "cost_caps": "1e9 path-steps/job; NPZ <=256MiB uncompressed; NN 300s/attempt; total runtime not measured or guaranteed."
+  },
+  "scope_limits": [
+    "Finite fixed-grid moments do not certify uniform dt convergence, Greek moments or numerical precision.",
+    "Bootstrap CI is nominal/asymptotic; empirical numerical envelopes are not rigorous bias bounds.",
+    "Formal actual-field pilot, sourcefreeze, implementation checks and main/phase acceptance remain unperformed.",
+    "Original raw failures/unknown/full denominators and complete expenses must persist; no implicit repair."
+  ],
+  "primary_sources": [
+    {
+      "title": "Cozma & Reisinger, Exponential integrability properties of Euler discretization schemes for the CIR process",
+      "url": "https://arxiv.org/pdf/1601.00919",
+      "read_scope": "Section 2 (2.7)-(2.9), Section 3 Proposition 3.4, Section 4 (4.3)"
+    },
+    {
+      "title": "Han & Lai, Generalized Control Variate Methods for Pricing Asian Options",
+      "url": "https://mx.nthu.edu.tw/~chhan/gen_AAO_v.kan.final.pdf",
+      "read_scope": "Section 2"
+    },
+    {
+      "title": "Buehler et al., Deep Hedging v1",
+      "url": "https://arxiv.org/html/1802.03042v1",
+      "read_scope": "Section 2 (2.1), full liquidation and numerical example terminal fee convention"
+    }
+  ],
+  "verification_receipt": {
+    "probe_commands": [
+      "env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /home/kazumasa/projects/.venv/bin/python /tmp/rbf04_dynamic_design_probes.py",
+      "env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 /home/kazumasa/projects/.venv/bin/python /tmp/rbf04_dynamic_moment_recheck.py"
+    ],
+    "both_exit_codes": 0,
+    "all_assertions_pass": true,
+    "no_rng_or_training": true
+  }
+}

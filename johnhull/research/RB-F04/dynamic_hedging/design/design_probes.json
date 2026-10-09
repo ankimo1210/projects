@@ -1,0 +1,187 @@
+{
+  "schema": "RB-F04-dynamic-design-deterministic-probes-v1",
+  "no_sampling": true,
+  "no_training": true,
+  "parameters": {
+    "kappa": 2.0,
+    "barv": 0.04,
+    "xi": 0.3,
+    "rho": -0.7,
+    "v0": 0.04,
+    "r": 0.03,
+    "a": 0.02875,
+    "b": 1.0,
+    "c": 0.15
+  },
+  "BEM_finite_fourth": [
+    {
+      "level": 192,
+      "T": 1.0,
+      "N": 192,
+      "A_terminal": 2.0551578519655003,
+      "min_L": 0.9995237913542949,
+      "max_MGF_ratio": 0.0004762086457050785,
+      "log_fourth_over_S0fourth_bound": 0.31654178829000407,
+      "root_Frobenius_condition": 0.6363,
+      "finite_fourth": true
+    },
+    {
+      "level": 192,
+      "T": 1.25,
+      "N": 240,
+      "A_terminal": 2.128855599578717,
+      "min_L": 0.9995064594468697,
+      "max_MGF_ratio": 0.0004935405531303338,
+      "log_fourth_over_S0fourth_bound": 0.39112016119838866,
+      "root_Frobenius_condition": 0.9942187499999999,
+      "finite_fourth": true
+    },
+    {
+      "level": 384,
+      "T": 1.0,
+      "N": 384,
+      "A_terminal": 2.046610198241463,
+      "min_L": 0.9997615293102006,
+      "max_MGF_ratio": 0.00023847068979943042,
+      "log_fourth_over_S0fourth_bound": 0.31633026421766886,
+      "root_Frobenius_condition": 0.6363,
+      "finite_fourth": true
+    },
+    {
+      "level": 384,
+      "T": 1.25,
+      "N": 480,
+      "A_terminal": 2.119892611681738,
+      "min_L": 0.9997529268891091,
+      "max_MGF_ratio": 0.0002470731108908941,
+      "log_fourth_over_S0fourth_bound": 0.3908619086419466,
+      "root_Frobenius_condition": 0.9942187499999999,
+      "finite_fourth": true
+    },
+    {
+      "level": 768,
+      "T": 1.0,
+      "N": 768,
+      "A_terminal": 2.0423404707213506,
+      "min_L": 0.9998806731236632,
+      "max_MGF_ratio": 0.0001193268763367561,
+      "log_fourth_over_S0fourth_bound": 0.31622429366550814,
+      "root_Frobenius_condition": 0.6363,
+      "finite_fourth": true
+    },
+    {
+      "level": 768,
+      "T": 1.25,
+      "N": 960,
+      "A_terminal": 2.1154155505588634,
+      "min_L": 0.9998763877349816,
+      "max_MGF_ratio": 0.0001236122650184468,
+      "log_fourth_over_S0fourth_bound": 0.39073254286097686,
+      "root_Frobenius_condition": 0.9942187499999999,
+      "finite_fourth": true
+    },
+    {
+      "level": 1536,
+      "T": 1.0,
+      "N": 1536,
+      "A_terminal": 2.040206633029402,
+      "min_L": 0.9999403136864464,
+      "max_MGF_ratio": 5.968631355357523e-05,
+      "log_fourth_over_S0fourth_bound": 0.3161712562420696,
+      "root_Frobenius_condition": 0.6363,
+      "finite_fourth": true
+    },
+    {
+      "level": 1536,
+      "T": 1.25,
+      "N": 1920,
+      "A_terminal": 2.113178129617848,
+      "min_L": 0.9999381749399289,
+      "max_MGF_ratio": 6.182506007113009e-05,
+      "log_fourth_over_S0fourth_bound": 0.3906678000686533,
+      "root_Frobenius_condition": 0.9942187499999999,
+      "finite_fourth": true
+    }
+  ],
+  "root_bound_grid_max_excess": 0.0,
+  "CM2_w": 0.0029178103817958053,
+  "CM2_log_integrand_tail": [
+    {
+      "z": 100,
+      "log_integrand_without_constant": -5000.998828882963
+    },
+    {
+      "z": 200,
+      "log_integrand_without_constant": -19999.46272115275
+    },
+    {
+      "z": 300,
+      "log_integrand_without_constant": -44435.72239185775
+    },
+    {
+      "z": 400,
+      "log_integrand_without_constant": 45812.438285364275
+    },
+    {
+      "z": 450,
+      "log_integrand_without_constant": 1772430.426831545
+    },
+    {
+      "z": 500,
+      "log_integrand_without_constant": 27778298.133267503
+    },
+    {
+      "z": 550,
+      "log_integrand_without_constant": 415390492.2101379
+    }
+  ],
+  "old_relative_MSE_gate": {
+    "null_true_base_MSE": 2,
+    "null_true_delta": -0.1,
+    "constant_paired_delta_SE": 0,
+    "N": 8192,
+    "false_positive_probability": 0.49559240338975946,
+    "nominal_alpha": 0.00625
+  },
+  "IFT": {
+    "Q": 10.700593492990613,
+    "V": 5.2933980580449145,
+    "hQ": 0.9064930364808234,
+    "hS": -0.1426401579548237,
+    "recalibrated_fdQ": 0.9064930360196399,
+    "recalibrated_fdS": -0.14264015877074598
+  },
+  "covariance": {
+    "betaH": 0.516,
+    "betaLocal": 0.6,
+    "local_eigenvalues": [
+      0.0,
+      45.33333333333333
+    ],
+    "local_null_variance": 0.0,
+    "Heston_eigenvalues": [
+      0.1930892776969566,
+      42.26024405563637
+    ]
+  },
+  "auxiliary": {
+    "closed": 1.9912261122676889,
+    "normal_quadrature": 1.9912261122676957,
+    "difference": 6.8833827526759706e-15
+  },
+  "cash": {
+    "fees": [
+      0.05500000000000001,
+      0.032799999999999996,
+      0.06620000000000001
+    ],
+    "discounted_cash": 2.217117996104463,
+    "discounted_gain": 2.21711799610447,
+    "difference": -7.105427357601002e-15
+  },
+  "limits": [
+    "Deterministic mathematics/probes only, not new MC or empirical main evidence.",
+    "Root Frobenius moment bound is fixed-N; constant depends on N. Backward MGF recurrence certifies actual finite levels independently.",
+    "Finite fourth moments do not establish numerical bias bounds, interpolation support or exact bootstrap coverage."
+  ]
+}

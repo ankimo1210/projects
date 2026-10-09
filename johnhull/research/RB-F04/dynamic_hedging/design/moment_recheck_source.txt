@@ -1,0 +1,60 @@
+"""Independent deterministic recheck of 24 fixed-grid CIR moment rows; no RNG."""
+import hashlib
+import json
+import math
+from pathlib import Path
+
+source = Path("/tmp/rbf04-implicit-cir-moment-bound.json")
+raw = source.read_bytes()
+saved = json.loads(raw)
+kappa, barv, xi, v0 = 2.0, 0.04, 0.3, 0.04
+a = (4 * kappa * barv - xi * xi) / 8
+b, c = kappa / 2, xi / 2
+rows = []
+largest_abs_error = 0.0
+for old in saved["rows"]:
+    p, T, N = old["p"], old["T"], old["N"]
+    dt = T / N
+    d = 1 + b * dt
+    lam = 2 * p * p - p
+    eta = 0.0
+    log_constant = 0.0
+    minimum = math.inf
+    for _ in range(N):
+        denominator = d * d - 2 * c * c * dt * eta
+        assert denominator > 0
+        minimum = min(minimum, denominator)
+        gaussian_denom = 1 - 2 * c * c * dt * eta / (d * d)
+        log_constant += 2 * eta * a * dt / d - 0.5 * math.log(gaussian_denom)
+        eta = lam * dt + eta / denominator
+    actual = dict(p=p, T=T, N=N, lambda_=lam, eta=eta,
+                  min_denominator=minimum,
+                  log_bound_at_v04=log_constant + eta * v0)
+    errors = {}
+    for field in ("lambda_", "eta", "min_denominator", "log_bound_at_v04"):
+        error = abs(actual[field] - old[field])
+        assert math.isclose(actual[field], old[field], rel_tol=1e-12, abs_tol=1e-13), (p,T,N,field,error)
+        errors[field] = error
+        largest_abs_error = max(largest_abs_error, error)
+    actual["saved_comparison_pass"] = True
+    actual["absolute_errors"] = errors
+    rows.append(actual)
+expected = {(p,T,round(T*level)) for p in (2,3,4) for T in (1.0,1.25) for level in (192,384,768,1536)}
+assert {(row["p"],row["T"],row["N"]) for row in rows} == expected
+assert len(rows) == len(expected) == 24
+proof_values = {str(T): (2*4**2-4)*1.01*c*c*T*T for T in (1.0,1.25)}
+assert all(value < 1 for value in proof_values.values())
+assert math.isclose(proof_values["1.0"], saved["p4_Frobenius_sufficient_bound_T1"], abs_tol=1e-15)
+assert math.isclose(proof_values["1.25"], saved["p4_Frobenius_sufficient_bound_T125"], abs_tol=1e-15)
+report = dict(schema="RB-F04-independent-fixed-grid-moment-recheck-v1",
+              no_sampling=True, no_training=True, source_path=str(source),
+              source_sha256_provenance=hashlib.sha256(raw).hexdigest(),
+              rows_checked=24, all_saved_numerics_match=True,
+              global_minimum_denominator=min(row["min_denominator"] for row in rows),
+              maximum_absolute_error=largest_abs_error,
+              p4_Frobenius_sufficient_bounds=proof_values, rows=rows,
+              limits=["Bounds concern fixed finite grids and fixed stated parameters.",
+                      "log_bound_at_v04 bounds E exp((2p^2-p) A); it is not log E S^p.",
+                      "No claim of uniform grid convergence, Greek moment bounds, precision or empirical performance."])
+Path("/tmp/rbf04-dynamic-moment-recheck.json").write_text(json.dumps(report, indent=2, allow_nan=False))
+print(json.dumps({key:report[key] for key in ("rows_checked","all_saved_numerics_match","global_minimum_denominator","maximum_absolute_error","p4_Frobenius_sufficient_bounds")}))
