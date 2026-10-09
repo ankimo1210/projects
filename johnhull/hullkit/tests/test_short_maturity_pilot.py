@@ -214,6 +214,10 @@ def test_reference_math_failure_keeps_every_reserved_case_stream(tmp_path, monke
         assert row["streams"][0]["status"] == "not_run"
     checked = m.check_record(*m.load_result(tmp_path / "failed"))
     assert not checked["passed"] and checked["reference_failure_count"] == 2
+    missing = copy.deepcopy(record)
+    missing["cases"][0]["reference_timings"] = {}
+    with pytest.raises(ValueError, match="timing"):
+        m.check_record(missing, _arrays)
 
 
 def test_raw_math_failure_retains_original_draws_and_unknown_slot(tmp_path, monkeypatch):
@@ -233,6 +237,28 @@ def test_raw_math_failure_retains_original_draws_and_unknown_slot(tmp_path, monk
     assert raw["actual_random_draws"] == 1536
     checked = m.check_record(*m.load_result(tmp_path / "raw_failed"))
     assert checked["raw_failure_count"] == 2
+    missing = copy.deepcopy(record)
+    missing["cases"][0]["streams"][0]["timings"] = {}
+    with pytest.raises(ValueError, match="timing"):
+        m.check_record(missing, arrays)
+
+
+def test_clock_failure_keeps_only_its_actual_failure_cost(tmp_path, monkeypatch):
+    m = module()
+
+    def failure(*args, **kwargs):
+        raise ValueError("fixture clock failure")
+
+    monkeypatch.setattr(m, "_case_state", failure)
+    record, arrays = m.run_pilot(
+        m.protocol.candidate_protocol(), tmp_path / "clock_failed", mode="smoke"
+    )
+    assert m.check_record(record, arrays)["clock_failure_count"] == 2
+    assert all("reference_timings" not in row for row in record["cases"])
+    missing = copy.deepcopy(record)
+    del missing["cases"][0]["clock_failure_s"]
+    with pytest.raises(ValueError, match="timing"):
+        m.check_record(missing, arrays)
 
 
 def test_individual_expense_or_actual_count_cost_cannot_be_silently_changed(saved):
@@ -252,3 +278,41 @@ def test_mathematically_valid_float_moment_rounding_uses_tolerance(saved):
     slight = copy.deepcopy(record)
     slight["cases"][0]["streams"][0]["raw"]["methods"]["price"]["mean"] += 1e-13
     assert m.check_record(slight, arrays)["numerical_replay_passed"]
+
+
+@pytest.mark.parametrize("location", ["all", "root", "reference", "stream"])
+def test_complete_measured_cost_roster_cannot_be_removed(saved, location):
+    m, _, record, arrays = saved
+    wrong = copy.deepcopy(record)
+    if location in {"all", "root"}:
+        wrong["timings"] = {}
+    for row in wrong["cases"]:
+        if location in {"all", "reference"}:
+            row["reference_timings"] = {}
+        for stream in row["streams"]:
+            if location in {"all", "stream"}:
+                stream["timings"] = {}
+    if location == "all":
+        wrong["expenses"] = []
+    with pytest.raises(ValueError, match=r"timing|expense|scope"):
+        m.check_record(wrong, arrays)
+
+
+@pytest.mark.parametrize("location", ["cost_scope", "timings_scope"])
+def test_measured_cost_scope_cannot_be_relabelled_free(saved, location):
+    m, _, record, arrays = saved
+    wrong = copy.deepcopy(record)
+    if location == "cost_scope":
+        wrong["cost_scope"] = "全部free"
+    else:
+        wrong["timings"]["scope"] = "全部free"
+    with pytest.raises(ValueError, match="scope"):
+        m.check_record(wrong, arrays)
+
+
+def test_extra_unregistered_timer_is_rejected(saved):
+    m, _, record, arrays = saved
+    wrong = copy.deepcopy(record)
+    wrong["cases"][0]["streams"][0]["timings"]["unaccounted_s"] = 1.0
+    with pytest.raises(ValueError, match=r"timing|expense"):
+        m.check_record(wrong, arrays)

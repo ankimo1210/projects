@@ -25,6 +25,24 @@ DIRECTORY = Path(__file__).resolve().parent
 RAW_METHODS = ("price", "pw_delta", "lr_delta", "lrpw_gamma", "lr2_gamma", "naive_gamma")
 MOMENT_ARRAYS = ("mean", "m2_matrix", "covariance", "se")
 COMPACT_ARRAYS = ("zero_values", "active_indices", "active_counts", "z_jump", "active_values")
+COST_SCOPE = "all N counts/active marks/conditioned values, raw independent draws/engine/summary, references; serialization separate"
+RUN_SCOPE = (
+    "API entry through compressed NPZ and first JSON write; final accounting JSON write excluded"
+)
+REFERENCE_TIMERS = {
+    "independent_mixture_s",
+    "core_mixture_s",
+    "density_quad_s",
+    "density_quad_tight_s",
+    "merton_s",
+    "finite_differences_s",
+}
+STREAM_TIMERS = {
+    "selection_generation_s": "selection_generation",
+    "selection_summary_s": "selection_prefix_summary",
+    "raw_rng_s": "raw_rng",
+    "raw_engine_and_summary_s": "raw_engine_and_summary",
+}
 
 
 def _module(name):
@@ -129,22 +147,46 @@ def _confirm_failure(saved, exc, name):
 
 
 def _check_expenses(record):
+    def measured(timers, keys, name):
+        if not isinstance(timers, dict) or set(timers) != set(keys):
+            raise ValueError(f"complete status-specific timing roster required: {name}")
+        if any(not np.isfinite(value) or value < 0 for value in timers.values()):
+            raise ValueError(f"finite nonnegative measured timing required: {name}")
+
+    root = record.get("timings", {})
+    if set(root) != {"setup_s", "serialization_s", "run_s", "scope"}:
+        raise ValueError("complete root timing roster required")
+    if root["scope"] != RUN_SCOPE or record.get("cost_scope") != COST_SCOPE:
+        raise ValueError("measured cost scope changed")
+    measured(
+        {k: v for k, v in root.items() if k != "scope"},
+        {"setup_s", "serialization_s", "run_s"},
+        "root",
+    )
     expected = []
     for row in record["cases"]:
-        for name, seconds in row.get("reference_timings", {}).items():
-            _expense(expected, row["id"], "shared", f"reference_{name}", seconds)
         if "clock_failure_s" in row:
+            if "reference_timings" in row:
+                raise ValueError("clock-failed case cannot have reference timings")
+            measured(
+                {"clock_failure_s": row["clock_failure_s"]}, {"clock_failure_s"}, "clock failure"
+            )
             _expense(expected, row["id"], "shared", "clock_failure", row["clock_failure_s"])
+        else:
+            keys = {"failed_attempt_s"} if "reference_failure" in row else REFERENCE_TIMERS
+            timers = row.get("reference_timings", {})
+            measured(timers, keys, f"{row['id']} reference")
+            for name, seconds in timers.items():
+                _expense(expected, row["id"], "shared", f"reference_{name}", seconds)
         for stream in row["streams"]:
-            mapping = {
-                "selection_generation_s": "selection_generation",
-                "selection_summary_s": "selection_prefix_summary",
-                "raw_rng_s": "raw_rng",
-                "raw_engine_and_summary_s": "raw_engine_and_summary",
-            }
-            for field, kind in mapping.items():
-                if field in stream.get("timings", {}):
-                    _expense(expected, row["id"], stream["replica"], kind, stream["timings"][field])
+            if stream.get("status") == "not_run":
+                if "timings" in stream:
+                    raise ValueError("unexecuted stream cannot have measured timings")
+                continue
+            timers = stream.get("timings", {})
+            measured(timers, STREAM_TIMERS, f"{row['id']} stream {stream['replica']}")
+            for field, kind in STREAM_TIMERS.items():
+                _expense(expected, row["id"], stream["replica"], kind, timers[field])
     _compare_tree(
         {row["expense_id"]: row for row in record["expenses"]},
         {row["expense_id"]: row for row in expected},
@@ -527,7 +569,7 @@ def run_pilot(p, directory, mode="full"):
         cases=[],
         expenses=[],
         timings={"setup_s": perf_counter() - started},
-        cost_scope="all N counts/active marks/conditioned values, raw independent draws/engine/summary, references; serialization separate",
+        cost_scope=COST_SCOPE,
     )
     arrays = {}
     parameters = _parameters(p)
@@ -644,9 +686,7 @@ def run_pilot(p, directory, mode="full"):
     )
     record["timings"]["serialization_s"] = perf_counter() - began
     record["timings"]["run_s"] = perf_counter() - started
-    record["timings"]["scope"] = (
-        "API entry through compressed NPZ and first JSON write; final accounting JSON write excluded"
-    )
+    record["timings"]["scope"] = RUN_SCOPE
     record = _plain(record)
     (directory / "pilot.json").write_text(
         json.dumps(record, sort_keys=True, indent=2, allow_nan=False) + "\n"
