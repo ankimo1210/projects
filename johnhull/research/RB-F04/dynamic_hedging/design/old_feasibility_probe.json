@@ -1,0 +1,157 @@
+{
+  "scope": "scratch feasibility only; GBM limit, no main/pilot design selection",
+  "N": 4096,
+  "GBM_t0": {
+    "raw_price": {
+      "mean": 5.467067803079794,
+      "sd": 8.099478791340045,
+      "se": 0.1265543561146882
+    },
+    "last_step_conditioned_price": {
+      "mean": 5.467498535184911,
+      "sd": 8.100892110907846,
+      "se": 0.1265764392329351
+    },
+    "last_step_conditioned_delta": {
+      "mean": 0.5601408523161907,
+      "sd": 0.5398590199109182,
+      "se": 0.008435297186108097
+    },
+    "beta1_geometric_control_price": {
+      "mean": 5.621882018793226,
+      "sd": 0.30589791024807356,
+      "se": 0.004779654847626149
+    }
+  },
+  "GBM_t0_Vv": [
+    {
+      "relative_v_bump": 0.02,
+      "raw_conditional_Vv": {
+        "mean": 57.05559731371827,
+        "sd": 103.52262099522994,
+        "se": 1.6175409530504679
+      },
+      "beta1_geometric_control_Vv": {
+        "mean": 59.054599098247095,
+        "sd": 7.917305735844358,
+        "se": 0.12370790212256809
+      },
+      "scope": "finite-h CRN variance sensitivity, not certified analytic arithmetic Asian Greek"
+    },
+    {
+      "relative_v_bump": 0.05,
+      "raw_conditional_Vv": {
+        "mean": 57.07028271808895,
+        "sd": 103.54528563647186,
+        "se": 1.6178950880698728
+      },
+      "beta1_geometric_control_Vv": {
+        "mean": 59.068627894363544,
+        "sd": 7.908026345411982,
+        "se": 0.12356291164706222
+      },
+      "scope": "finite-h CRN variance sensitivity, not certified analytic arithmetic Asian Greek"
+    },
+    {
+      "relative_v_bump": 0.1,
+      "raw_conditional_Vv": {
+        "mean": 57.12515161853425,
+        "sd": 103.6254560830983,
+        "se": 1.619147751298411
+      },
+      "beta1_geometric_control_Vv": {
+        "mean": 59.122005652632865,
+        "sd": 7.882028314358039,
+        "se": 0.12315669241184436
+      },
+      "scope": "finite-h CRN variance sensitivity, not certified analytic arithmetic Asian Greek"
+    }
+  ],
+  "local_last_step_spot_dependence": {
+    "scalar_price": 0.12254060199225307,
+    "naive_homogeneous_delta": 0.0428420614997814,
+    "true_chain_delta": 0.04332161454586053,
+    "spot_fd": [
+      0.04332160966682014,
+      0.043321570635046956,
+      0.043321126727583134
+    ],
+    "missing_delta": 0.0004795530460791342
+  },
+  "initial_support": {
+    "99.9": "unsupported_initial_state",
+    "100": "initial_state",
+    "100.1": "unsupported_initial_state"
+  },
+  "local_evaluator_proxy": [
+    {
+      "paths": 1024,
+      "batch_steps": 100,
+      "repetitions": 7,
+      "median_s": 0.004510547965764999,
+      "ns_per_path_step": 44.04831997817382,
+      "scope": "time-mid/spot-left evaluator+log update proxy; status allocation retained, no actual Heston marginal grid construction or driver RNG"
+    },
+    {
+      "paths": 4096,
+      "batch_steps": 100,
+      "repetitions": 7,
+      "median_s": 0.010798306029755622,
+      "ns_per_path_step": 26.363051830458062,
+      "scope": "time-mid/spot-left evaluator+log update proxy; status allocation retained, no actual Heston marginal grid construction or driver RNG"
+    }
+  ],
+  "three_node_cubic_failure": "There are 3 points in dimension 1, but method cubic requires at least  4 points per dimension.",
+  "work_counts": [
+    {
+      "case": "original_low",
+      "N": 1024,
+      "heston_path_steps": 134873088,
+      "local_path_steps": 520224768,
+      "heston_threshold_tail_evaluations": 22364160,
+      "local_threshold_tail_evaluations": 86261760
+    },
+    {
+      "case": "original_high",
+      "N": 4096,
+      "heston_path_steps": 1001914368,
+      "local_path_steps": 9171369984,
+      "heston_threshold_tail_evaluations": 329711616,
+      "local_threshold_tail_evaluations": 3018129408
+    },
+    {
+      "case": "updated_high_N",
+      "N": 16384,
+      "heston_path_steps": 4007657472,
+      "local_path_steps": 36685479936,
+      "heston_threshold_tail_evaluations": 1318846464,
+      "local_threshold_tail_evaluations": 12072517632
+    }
+  ],
+  "local_evaluator_unsorted_status_proxy": [
+    {
+      "paths": 1024,
+      "steps": 100,
+      "repetitions": 7,
+      "median_s": 0.016925529984291643,
+      "ns_per_path_step": 165.28837875284808,
+      "scope": "unsorted vector spot/evaluate + status unique count + log update, positive constant grid proxy only"
+    },
+    {
+      "paths": 4096,
+      "steps": 100,
+      "repetitions": 7,
+      "median_s": 0.06797481200192124,
+      "ns_per_path_step": 165.95413086406552,
+      "scope": "unsorted vector spot/evaluate + status unique count + log update, positive constant grid proxy only"
+    }
+  ],
+  "storage_naive_independent_nodes_bytes": {
+    "original_low": 6319767552,
+    "original_high": 89401589760,
+    "updated_high_N": 357606359040
+  },
+  "storage_high_common_normals_per_date_bytes": 1849688064,
+  "storage_high_common_global_two_factor_driver_bytes": 50331648,
+  "storage_high_sufficient_coefficients_bytes": 830472192
+}

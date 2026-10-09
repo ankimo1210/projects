@@ -1,0 +1,119 @@
+"""Small synthetic feasibility probes; no official dynamic source/results."""
+from pathlib import Path
+import json
+import math
+from time import perf_counter
+import numpy as np
+from scipy.special import ndtr
+from scipy.interpolate import RegularGridInterpolator
+from hullkit._heston_local_surface import HestonParameters, LocalVarianceGrid
+
+
+def phi(x):
+    return np.exp(-np.asarray(x)**2/2)/np.sqrt(2*np.pi)
+
+
+def black(F,K,W):
+    root=np.sqrt(W);d1=(np.log(F/K)+.5*W)/root;d2=d1-root
+    return F*ndtr(d1)-K*ndtr(d2)
+
+
+def arithmetic_and_geo(normals, v, last_dt=1/768):
+    N=len(normals);n=12;r=.03;S=100;K=100
+    increments=np.r_[np.full(11,1/12),1/12-last_dt]
+    times=np.cumsum(increments)
+    brown=np.cumsum(normals[:,:12]*np.sqrt(increments),axis=1)
+    log_spots=(r-.5*v)*times+np.sqrt(v)*brown
+    previous=np.exp(log_spots[:,:11])
+    c=np.exp(log_spots[:,11]);b=previous.sum(1);x=12
+    y=x-b;root=np.sqrt(v*last_dt);F=c*np.exp(r*last_dt)
+    cond=np.empty(N);delta=np.empty(N)
+    above=y>0
+    d2=(np.log(F[above]/y[above])-.5*v*last_dt)/root
+    d1=d2+root
+    cond[above]=F[above]*ndtr(d1)-y[above]*ndtr(d2)
+    delta[above]=(F[above]*ndtr(d1)+b[above]*ndtr(d2))/12
+    cond[~above]=b[~above]+F[~above]-x
+    delta[~above]=(b[~above]+F[~above])/12
+    discount=np.exp(-r)
+    cond*=discount*S/12;delta*=discount
+    final=c*np.exp((r-.5*v)*last_dt+root*normals[:,12])
+    plain=discount*S/12*np.maximum(b+final-x,0)
+    log_geo0=(log_spots[:,:11].sum(1)+log_spots[:,11])/12
+    WG=v*last_dt/144
+    FG=100*np.exp(log_geo0+(r-.5*v)*last_dt/12+WG/2)
+    geo=discount*black(FG,100,WG)
+    t=np.arange(1,13)/12
+    mean_t=t.mean();variance_coeff=np.minimum(t[:,None],t[None,:]).sum()/144
+    exact_geo=discount*black(100*np.exp((r-.5*v)*mean_t+v*variance_coeff/2),100,v*variance_coeff)
+    return cond,delta,plain,geo,float(exact_geo)
+
+
+def moments(x):
+    x=np.asarray(x)
+    return {'mean':float(x.mean()),'sd':float(x.std(ddof=1)),'se':float(x.std(ddof=1)/np.sqrt(len(x)))}
+
+
+rng=np.random.default_rng(202610090404)
+z=rng.standard_normal((4096,13))
+C,D,raw,G,exactG=arithmetic_and_geo(z,.04)
+report={'scope':'scratch feasibility only; GBM limit, no main/pilot design selection',
+        'N':4096,'GBM_t0':{'raw_price':moments(raw),'last_step_conditioned_price':moments(C),
+                          'last_step_conditioned_delta':moments(D),'beta1_geometric_control_price':moments(C-G+exactG)}}
+vega_rows=[]
+for frac in [.02,.05,.1]:
+ h=.04*frac
+ Cp,_,_,Gp,geoP=arithmetic_and_geo(z,.04+h)
+ Cm,_,_,Gm,geoM=arithmetic_and_geo(z,.04-h)
+ vega_rows.append({'relative_v_bump':frac,'raw_conditional_Vv':moments((Cp-Cm)/(2*h)),
+                   'beta1_geometric_control_Vv':moments(((Cp-Gp+geoP)-(Cm-Gm+geoM))/(2*h)),
+                   'scope':'finite-h CRN variance sensitivity, not certified analytic arithmetic Asian Greek'})
+report['GBM_t0_Vv']=vega_rows
+
+# Toy local Euler: one remaining observed stock, state-dependent left coefficient.
+def toy_local(S,ell=1):
+ tau=1/48;Keff=100;r=.03;sigma=.15+.001*S
+ return np.exp(-r*tau)*black(S*np.exp(r*tau),Keff,ell*sigma*sigma*tau)/12
+S=100.;ell=1.;tau=1/48;r=.03;sigma=.25;W=sigma*sigma*tau;F=S*np.exp(r*tau)
+d1=(np.log(F/100)+.5*W)/np.sqrt(W)
+fixed_sigma_delta=ndtr(d1)/12
+CW=np.exp(-r*tau)*F*phi(d1)/(2*np.sqrt(W))/12
+true_delta=fixed_sigma_delta+CW*(2*sigma*.001*tau)
+fd=[(toy_local(S+h)-toy_local(S-h))/(2*h) for h in [.01,.03,.1]]
+report['local_last_step_spot_dependence']={'scalar_price':float(toy_local(S)),'naive_homogeneous_delta':float(fixed_sigma_delta),
+                                          'true_chain_delta':float(true_delta),'spot_fd':list(map(float,fd)),
+                                          'missing_delta':float(true_delta-fixed_sigma_delta)}
+assert max(abs(x-true_delta) for x in fd)<5e-7
+
+# Existing evaluator scalar-time/vector-spot work; positive constant proxy grid.
+p=HestonParameters(100,.03,0,.04,2,.04,.3,-.7)
+surface=LocalVarianceGrid(np.geomspace(1/4096,1.25,129),np.linspace(-5,5,161),np.full((129,161),.04),p)
+report['initial_support']={str(S):str(surface.evaluate(0,np.array([S]))['status'][0]) for S in [99.9,100,100.1]}
+report['local_evaluator_proxy']=[]
+for n in [1024,4096]:
+ spots=np.linspace(70,130,n);shocks=np.linspace(-2,2,n);times=[.1,.3,.5,.7,.9]
+ runs=[]
+ for rep in range(8):
+  before=perf_counter()
+  for j in range(100):
+   result=surface.evaluate(times[j%5],spots)
+   trial=spots*np.exp((.03-.5*result['variance'])/768+np.sqrt(result['variance']/768)*shocks)
+   assert np.isfinite(trial).all()
+  seconds=perf_counter()-before
+  if rep:runs.append(seconds)
+ report['local_evaluator_proxy'].append({'paths':n,'batch_steps':100,'repetitions':7,
+    'median_s':float(np.median(runs)),'ns_per_path_step':float(np.median(runs)/(100*n)*1e9),
+    'scope':'time-mid/spot-left evaluator+log update proxy; status allocation retained, no actual Heston marginal grid construction or driver RNG'})
+rgi_error=None
+try:RegularGridInterpolator((np.arange(9.),np.arange(3.),np.arange(65.)),np.zeros((9,3,65)),method='cubic')
+except ValueError as e:rgi_error=str(e)
+assert rgi_error
+report['three_node_cubic_failure']=rgi_error
+sum_steps=sum(768-16*i for i in range(48))
+work=[]
+for label,N,nv,ns,nell,nx in [('original_low',1024,7,9,3,65),('original_high',4096,13,17,7,129),('updated_high_N',16384,13,17,7,129)]:
+ work.append({'case':label,'N':N,'heston_path_steps':N*nv*sum_steps,'local_path_steps':N*ns*nell*sum_steps,
+              'heston_threshold_tail_evaluations':48*nv*nx*N,'local_threshold_tail_evaluations':48*ns*nell*nx*N})
+report['work_counts']=work
+Path('/tmp/rbf04-dynamic-feasibility-probe.json').write_text(json.dumps(report,indent=2))
+print(json.dumps(report,indent=2))
