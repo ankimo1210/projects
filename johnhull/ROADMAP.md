@@ -117,7 +117,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 |---|---|---|---|
 | 既存 | RB-F07 v1 / RB-F05 digital v1 | 保存済み研究成果・再計算・レビュー・採否 | 完了。F05全体の完了とは区別 |
 | 1 | F07＋F05 quote DML | 34 fits、310計時/288原価、fresh数値/改変検査、最終両復元・3図・独立最終レビュー | 完了・main統合済み。H1改善・H2優位不支持、rate-only残余改善/spot・混合悪化、全面速度優位なし。教材保持、標準器へ昇格しない。統合後6919 tests PASS/6 skip・release PASS |
-| 2 | RB-F05離散バリア | 監視契約、独立離散参照、教師bias/SE、学習比較・総費用・3図・レビュー・採否 | 初期実装中（`codex/rbf05-discrete`）。監視契約を固定し、private教師と独立log-PDE参照を並行実装。pilot・学習・成果物・レビュー・採否は未完了。[追加調査](docs/prep/design/RB-F05_DISCRETE_RESEARCH.md)：BGK/連続監視を離散オラクルにしない。最終増分conditioningだけのPWには途中barrierのbiasが残る |
+| 2 | RB-F05離散バリア | 監視契約、独立離散参照、教師bias/SE、学習比較・総費用・3図・レビュー・採否 | 数値pilot完了（`codex/rbf05-discrete`）。private教師・独立log-PDE・OSS・学習器を対象検査。12条件の最大PDE/GL差price1.56e-4/Delta3.12e-5、MC72＋頻度44件が6SE内、158,401,006 bytesを両保管庫から復元。[研究状況](research/RB-F05/discrete/README.md)。主学習・計時・3図・最終レビュー・採否は未完了。[追加調査](docs/prep/design/RB-F05_DISCRETE_RESEARCH.md)：BGK/連続監視を離散オラクルにしない。最終増分conditioningだけのPWには途中barrierのbiasが残る |
 | 3 | RB-F04モデル比較 | Heston→Dupire、vanilla再価格/収束、月次12観測Asian・二時点差、paired SE・3図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F04_DESIGN.md)に現行コード監査を反映。scalar Dupireと終端Heston MCだけでは面・局所ボラ経路/PDE・Asianを満たさない |
 | 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F08_DESIGN.md)に既存private独立scramble推定の再利用と、Euler/観測点の指定を追記。Student CI・被覆率・MLMCは追加が必要 |
 | 5 | RB-F06識別可能性 | 固定β SABR、削減/疎/noisy quote、多点初期化、scaled J/profile・3図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F06_DESIGN.md)にraw較正の制限、scaled J・再最適化profile・解析的な未識別fixtureを追記 |
