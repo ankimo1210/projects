@@ -19,11 +19,11 @@
 | 工程 | 実装・検証 | 状態 |
 |---|---|---|
 | 1 | private教師・m1・独立PDE、scoped TDD | 完了・独立レビュー済み |
-| 2 | OSSの状態と重みの微分、CRN・oracle対照 | 完了・35 tests PASS |
+| 2 | OSSの状態と重みの微分、CRN・oracle対照 | 完了・batch共有を含む44 tests PASS |
 | 3 | 数値pilot、主条件freeze | 完了・独立再検査後freeze |
-| 4 | 6fits、強い補間対照、保存重みreplay、改変検査 | 準備中 |
-| 5 | price+Deltaの20反復、offline/load・safe費用、3図 | 未実行 |
-| 6 | 対象/全関連suite、独立レビュー、採否・main反映 | 未実行 |
+| 4 | 6fits、強い補間対照、保存重みreplay、改変検査 | 完了・6fits/fresh保存replayと独立200点PDE PASS |
+| 5 | price+Deltaの20反復、offline/load・safe費用、3図 | 完了・32測定/100load/3図実行・目視 |
+| 6 | 対象/全関連suite、独立レビュー、採否・main反映 | 独立最終レビュー・関連3suite7104 PASS/6 skip。main反映準備済み |
 
 ## 候補protocolとfreeze
 
@@ -53,7 +53,7 @@ JSONにはprotocol/環境/ソース由来/全fit状態/費用/採否、NPZには
 補間はspot65×logT33のCubicHermite/線形blend、Deltaは同じ価格曲面の導関数。
 OODは数値成立したMarkov積分へfallback、変更契約はunsupported、Hの通常Deltaはundefinedとする。
 全比較器のprice+Deltaをbatch1/32、warmup3後20反復、median/p95・raw/safe別で測る。
-総費用は教師/setup/fit/export/loadとfull batch呼出回数を分離し、p95の和を総費用のp95と呼ばない。
+総費用は教師/共通初期化/fit elapsed/export/loadとfull batch呼出回数を分離し、setup/trainingをelapsedへ二重加算しない。loadは計時配列追加前の主fit bundleのwarm decodeで、最終archiveの計測ではない。未測定範囲は0に置かず、p95の和を総費用のp95と呼ばない。H接触の未定義Deltaを含むsafe32はlatencyだけを保持し費用回収をunsupportedにする。
 3図: 教師bias/SEと収束、全seedの価格/Delta精度、raw/safe/総費用と境界。
 
 対象pytestとruff/formatを先に実行。索引guardはmodule登録と同時に通す。

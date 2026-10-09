@@ -1,7 +1,7 @@
 # RB-F05 v1 — digitalの微分教師とDML
 
 更新2026-10-07。**v1 digitalの計算・独立検証・6本のCPU学習比較・研究3図を実装。独立レビューImportant1を修正し、v1 digital完了。**
-RB-F05全体の完了ではない。離散バリアと0DTE/roughは後続。
+digital v1と[離散バリアv1](discrete/README.md)の研究成果・独立レビューは完了。0DTE/roughは後続で、RB-F05全体の完了とは区別する。
 設計は[既存メモ](../../docs/prep/design/RB-F05_DESIGN.md)、順序は[研究計画§6.1](../../docs/superpowers/plans/2026-09-27-research-backlog.md)。
 
 ## 問いと結果
@@ -88,7 +88,7 @@ CPU計時や学習結果の環境共通一致は要求しない。全配列を�
 
 - Ruling: 最小版をdigitalに固定する — 既存設計の教師bias/学習誤差の分離を実行する — バリア/0DTEへは直接一般化できず、後続実験が必要。
 - 教師検証・教育資料は採用。速度での標準器昇格は不採用。負の費用回収分母を0や任意の回収件数へ置換しない。
-- 離散バリアv2はM15/§26.9の参照に合わせ、無rebateの1契約、監視日/初回/満期/接触と参照精度を確定してから実装する。0DTE/roughはさらに後続。
+- [離散バリアv1](discrete/README.md)は無rebateの固定契約を実装し、監視日/初回/満期/接触、独立PDE/MC、6fitsと32計時/費用、3図を検証。DML教材を保持し、標準高速器採用は見送り。0DTE/roughは後続。
 - 公開API・新依存・本編Book/portal・節台帳の追加なし。既存vol18のaccepted教材/学習配列は変更しない。
 
 ## 出典
