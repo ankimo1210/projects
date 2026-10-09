@@ -1,0 +1,1 @@
+{"missing_transitive_closure_accepted": true, "present_closure_registered": true, "root_required_phase_count": 10, "source_unit_only": true}

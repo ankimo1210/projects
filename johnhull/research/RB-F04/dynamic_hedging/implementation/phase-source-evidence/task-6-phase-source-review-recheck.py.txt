@@ -1,0 +1,35 @@
+"""Recheck the preserved missing-closure counterexample after the root repair."""
+import json
+import sys
+import tempfile
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / "johnhull/research/RB-F04/dynamic_hedging"))
+import run_reference as runner
+
+names = ["reference_methods", "run_fresh", "check_fresh", "run_pilot", "check_pilot",
+         "run_main", "check_main", "run_reference", "check_initial_quotes", "check_selected_calls"]
+with tempfile.TemporaryDirectory() as temporary, pytest.MonkeyPatch.context() as patch:
+    root = Path(temporary)
+    base = root / "johnhull/research/RB-F04/dynamic_hedging"
+    base.mkdir(parents=True)
+    for name in names:
+        (base / f"{name}.py").write_text("VALUE=1\n")
+        patch.delitem(sys.modules, name, raising=False)
+        patch.delitem(sys.modules, "dynamic_research." + name, raising=False)
+    deep = root / "deep_hedge_price/src/deep_hedge_price"
+    deep.mkdir(parents=True)
+    (deep / "__init__.py").write_text("VALUE=1\n")
+    (base / "run_main.py").write_text("from deep_hedge_price import _dynamic_hedging_closure\n")
+    patch.delitem(sys.modules, "deep_hedge_price", raising=False)
+    patch.delitem(sys.modules, "deep_hedge_price._dynamic_hedging_closure", raising=False)
+    with pytest.raises(ValueError, match="required execution source.*_dynamic_hedging_closure"):
+        runner.execution_source_identity(root)
+    (deep / "_dynamic_hedging_closure.py").write_text("VALUE=2\n")
+    present = runner.execution_source_identity(root)
+    assert any(path.endswith("_dynamic_hedging_closure.py") for path in present["files"])
+    print(json.dumps({"source_unit_only": True, "missing_transitive_closure_rejected": True,
+        "present_closure_registered": True, "original_counterexample_closed": True}, sort_keys=True))

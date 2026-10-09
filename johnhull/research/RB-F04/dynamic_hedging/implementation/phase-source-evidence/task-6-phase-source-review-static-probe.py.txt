@@ -1,0 +1,27 @@
+"""Read-only source inventory probe; no reserved finance stream is opened."""
+
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+sys.path[:0] = [
+    str(ROOT / "johnhull/research/RB-F04/dynamic_hedging"),
+    str(ROOT / "johnhull/hullkit/src"),
+    str(ROOT / "deep_hedge_price/src"),
+]
+import run_reference
+
+identity = run_reference.execution_source_identity(ROOT)
+assert identity["dynamic_imports"] == []
+assert "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py" in identity["files"]
+assert "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_closure.py" in identity["files"]
+print(json.dumps({
+    "source_sha256": hashlib.sha256(Path(run_reference.__file__).read_bytes()).hexdigest(),
+    "file_count": len(identity["files"]),
+    "dynamic_imports": identity["dynamic_imports"],
+    "static_saved_checker": "registered",
+    "closure": "registered",
+    "formal_finance_executed": False,
+}, sort_keys=True))

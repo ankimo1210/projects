@@ -1,0 +1,50 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_initial_quote_saved_checker_uses_static_bound_source_and_restores_path __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x776da11dab70>
+
+    def test_initial_quote_saved_checker_uses_static_bound_source_and_restores_path(monkeypatch):
+        def forbidden(*args, **kwargs):
+            pytest.fail("fixed saved quote checker cannot need a dynamic source loader")
+        monkeypatch.setattr(importlib.util, "spec_from_file_location", forbidden)
+        before = sys.path[:]
+        saved = ROOT / "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes"
+>       result = runner.initial_quote_pilot(saved)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:979: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:1124: in initial_quote_pilot
+    spec = importlib.util.spec_from_file_location("dynamic_initial_quotes_component", path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ('dynamic_initial_quotes_component', PosixPath('/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py'))
+kwargs = {}
+
+    def forbidden(*args, **kwargs):
+>       pytest.fail("fixed saved quote checker cannot need a dynamic source loader")
+E       Failed: fixed saved quote checker cannot need a dynamic source loader
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:975: Failed
+_______ test_initial_quote_saved_checker_rejects_a_loaded_foreign_alias ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x776c827cbd70>
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3769/test_initial_quote_saved_check0')
+
+    def test_initial_quote_saved_checker_rejects_a_loaded_foreign_alias(monkeypatch, tmp_path):
+        foreign = types.ModuleType("check_initial_quotes")
+        foreign.__file__ = str(tmp_path / "check_initial_quotes.py")
+        foreign.check_initial_quotes = lambda *args: pytest.fail("foreign checker called")
+        monkeypatch.setitem(sys.modules, "check_initial_quotes", foreign)
+        before = sys.path[:]
+        saved = ROOT / "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes"
+>       with pytest.raises(ValueError, match="loaded source"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:994: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_initial_quote_saved_checker_uses_static_bound_source_and_restores_path
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_initial_quote_saved_checker_rejects_a_loaded_foreign_alias
+2 failed, 46 deselected in 1.41s

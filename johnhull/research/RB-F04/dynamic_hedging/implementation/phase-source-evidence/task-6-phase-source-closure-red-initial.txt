@@ -1,0 +1,165 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_execution_source_rejects_missing_actual_financial_closure ________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3761/test_execution_source_rejects_0')
+
+    def test_execution_source_rejects_missing_actual_financial_closure(tmp_path):
+        base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+        base.mkdir(parents=True)
+        for name in [
+            "reference_methods", "run_fresh", "check_fresh", "run_pilot", "check_pilot",
+            "run_main", "check_main", "run_reference", "check_initial_quotes", "check_selected_calls",
+        ]:
+            (base / f"{name}.py").write_text("VALUE = 1\n")
+        (base / "run_main.py").write_text(
+            "from deep_hedge_price import _dynamic_hedging_closure\n"
+        )
+        deep = tmp_path / "deep_hedge_price/src/deep_hedge_price"
+        deep.mkdir(parents=True)
+        (deep / "__init__.py").write_text("")
+        with pytest.raises(ValueError, match="required execution source.*_dynamic_hedging_closure"):
+>           runner.execution_source_identity(tmp_path)
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:960: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:225: in execution_source_identity
+    return source_identity(root, entrypoints=[f"dynamic_research.{name}" for name in required])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-of-kazumasa/pytest-3761/test_execution_source_rejects_0')
+
+    def source_identity(root=ROOT, *, entrypoints=None, package_roots=None) -> dict:
+        """Record transitive local imports, package initializers and actual versions.
+    
+        Imports inside functions, research-local bare imports and from-import
+        submodules are included. Loaded research bare aliases must use this checkout.
+        External versions come from distribution metadata without module imports.
+        Dynamic imports are explicitly listed and not treated as resolved silently.
+        """
+        root = Path(root).resolve(strict=True)
+        package_roots = package_roots or {
+            "hullkit": "johnhull/hullkit/src/hullkit",
+            "deep_hedge_price": "deep_hedge_price/src/deep_hedge_price",
+            "dynamic_research": "johnhull/research/RB-F04/dynamic_hedging",
+        }
+        entrypoints = entrypoints or [
+            "dynamic_research.run_reference",
+            "dynamic_research.check_initial_quotes",
+            "dynamic_research.check_selected_calls",
+        ]
+        bases = {name: root / value for name, value in package_roots.items()}
+        pending, paths, graph, external, dynamic = list(entrypoints), {}, {}, set(), []
+    
+        def resolve(name):
+            for package, base in bases.items():
+                if name == package:
+                    path = base / "__init__.py"
+                elif name.startswith(package + "."):
+                    relative = name[len(package) + 1 :].replace(".", "/")
+                    path = base / (relative + ".py")
+                    if not path.is_file():
+                        path = base / relative / "__init__.py"
+                else:
+                    continue
+                return path if path.is_file() else None
+            return None
+    
+        while pending:
+            name = pending.pop()
+            if name in paths:
+                continue
+            path = resolve(name)
+            if path is None:
+                external.add(name.split(".")[0])
+                continue
+            if path.resolve() != path or not path.is_relative_to(root):
+                raise ValueError("source closure requires canonical local paths")
+            paths[name] = path.relative_to(root).as_posix()
+            package = name if path.name == "__init__.py" else name.rsplit(".", 1)[0]
+            pieces = name.split(".")
+            for count in range(1, len(pieces)):
+                parent = ".".join(pieces[:count])
+                parent_path = resolve(parent)
+                if parent_path is not None and parent_path.name == "__init__.py":
+                    pending.append(parent)
+            dependencies = set()
+            for node in ast.walk(ast.parse(path.read_text(), filename=str(path))):
+                if isinstance(node, ast.Import):
+                    dependencies.update(alias.name for alias in node.names)
+                elif isinstance(node, ast.ImportFrom):
+                    if node.level:
+                        parts = package.split(".")
+                        base = ".".join(parts[: len(parts) - node.level + 1])
+                        module = base + ("." + node.module if node.module else "")
+                    else:
+                        module = node.module or ""
+                    dependencies.add(module)
+                    dependencies.update(
+                        module + "." + alias.name
+                        for alias in node.names
+                        if resolve(module + "." + alias.name)
+                    )
+                elif isinstance(node, ast.Call):
+                    text = ast.unparse(node.func)
+                    if text in (
+                        "__import__",
+                        "importlib.import_module",
+                        "importlib.util.spec_from_file_location",
+                    ):
+                        dynamic.append({"source": paths[name], "line": node.lineno, "call": text})
+            if name.startswith("dynamic_research."):
+                dependencies = {
+                    "dynamic_research." + dependency
+                    if not resolve(dependency) and resolve("dynamic_research." + dependency)
+                    else dependency
+                    for dependency in dependencies
+                }
+            graph[paths[name]] = sorted(dep for dep in dependencies if resolve(dep))
+            for dependency in dependencies:
+                if resolve(dependency):
+                    pending.append(dependency)
+                elif dependency:
+                    external.add(dependency.split(".")[0])
+        files = protocol.source_registry(root, sorted(set(paths.values())))
+        for module_name, relative in paths.items():
+            aliases = [module_name]
+            if module_name.startswith("dynamic_research."):
+                aliases.append(module_name.removeprefix("dynamic_research."))
+            for alias in aliases:
+                loaded = sys.modules.get(alias)
+                if loaded is not None and getattr(loaded, "__file__", None):
+                    if Path(loaded.__file__).resolve() != root / relative:
+>                       raise ValueError(f"loaded source differs from registered checkout: {alias}")
+E                       ValueError: loaded source differs from registered checkout: deep_hedge_price
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:176: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3761/test_execution_source_rejects_0')
+
+    def test_execution_source_rejects_missing_actual_financial_closure(tmp_path):
+        base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+        base.mkdir(parents=True)
+        for name in [
+            "reference_methods", "run_fresh", "check_fresh", "run_pilot", "check_pilot",
+            "run_main", "check_main", "run_reference", "check_initial_quotes", "check_selected_calls",
+        ]:
+            (base / f"{name}.py").write_text("VALUE = 1\n")
+        (base / "run_main.py").write_text(
+            "from deep_hedge_price import _dynamic_hedging_closure\n"
+        )
+        deep = tmp_path / "deep_hedge_price/src/deep_hedge_price"
+        deep.mkdir(parents=True)
+        (deep / "__init__.py").write_text("")
+>       with pytest.raises(ValueError, match="required execution source.*_dynamic_hedging_closure"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'required execution source.*_dynamic_hedging_closure'
+E         Actual message: 'loaded source differs from registered checkout: deep_hedge_price'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:959: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_rejects_missing_actual_financial_closure
+1 failed, 45 deselected in 1.28s

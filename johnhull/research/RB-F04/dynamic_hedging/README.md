@@ -4,6 +4,7 @@
 
 - [prefreeze revision候補](PREFREEZE_REVISION.md)：旧v1の精度契約は保持。state15.Hの元quote条件拒否とfull Cartesian cacheの未知tailを受け、別execution-readinessと日付固定domainを検討。[独立設計レビュー](prefreeze-review/README.md)でA/Bの限定設計を承認。[private source/TDD・最終独立レビュー](implementation/PREFREEZE_SOURCE.md)を完了、正式pilot/mainは未開封。候補文書はレビュー前snapshotを保持。
 - [12本の学習・検証source確認](implementation/NN_CLOSURE_SOURCE.md)：元8,192経路・512更新、全12 NNの2,048検証経路、4×14baseline、保存算術と実費用を接続。38tests・独立6群・索引/docstring1,129件、合成経路での実12fitと分割保存/replayを確認。正式金融pilot/主実験は未完了。
+- [正式実験のsource照合](implementation/PHASE_SOURCE_IDENTITY.md)：全10入口と学習closureを必須登録、bare依存・別checkoutのloaded aliasを照合。48scoped tests、独立14件と実在80ファイルinventoryを確認。正式freezeは未実施。
 - [主実験結果の分割保存接続](implementation/MAIN_SINK_SOURCE.md)：元396件の結果を36回に分けてsinkへ渡す。41scoped tests、独立writer例外probe、限定レビュー未解決0。正式金融mainは未実行。
 - [追加の測定・証跡](preflight-diagnostics/README.md)：元全36教師slots、実2日付108groups、保存call/put比較と独立feasibility監査。45ファイルの原byte保持、rawは両保管庫からbyte復元済み。追加保管庫の金融semantic認証は未実施。
 

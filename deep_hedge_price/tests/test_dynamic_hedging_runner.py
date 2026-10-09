@@ -643,15 +643,34 @@ def test_execution_source_requires_missing_real_fresh_entry_before_opening(tmp_p
         runner.execution_source_identity(tmp_path)
 
 
-def test_execution_source_includes_both_phase_roots_and_relative_dependency(tmp_path):
+def test_execution_source_includes_both_phase_roots_and_relative_dependency(tmp_path, monkeypatch):
     base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
     base.mkdir(parents=True)
-    for name in ["run_reference", "check_initial_quotes", "check_selected_calls"]:
+    for name in [
+        "run_reference",
+        "check_initial_quotes",
+        "check_selected_calls",
+        "run_pilot",
+        "check_pilot",
+        "check_fresh",
+        "run_main",
+        "check_main",
+    ]:
+        monkeypatch.delitem(sys.modules, name, raising=False)
         (base / f"{name}.py").write_text("SCALE = 1\n")
+    for name in ["reference_methods", "run_fresh"]:
+        monkeypatch.delitem(sys.modules, name, raising=False)
     (base / "reference_methods.py").write_text("from .shared import SCALE\n")
     (base / "run_fresh.py").write_text("from .shared import SCALE\n")
     (base / "shared.py").write_text("SCALE = 2\n")
+    deep = tmp_path / "deep_hedge_price/src/deep_hedge_price"
+    deep.mkdir(parents=True)
+    (deep / "__init__.py").write_text("")
+    (deep / "_dynamic_hedging_closure.py").write_text("VALUE = 1\n")
+    for name in ["deep_hedge_price", "deep_hedge_price._dynamic_hedging_closure"]:
+        monkeypatch.delitem(sys.modules, name, raising=False)
     identity = runner.execution_source_identity(tmp_path)
+    assert str((deep / "_dynamic_hedging_closure.py").relative_to(tmp_path)) in identity["files"]
     assert {str(p.relative_to(tmp_path)) for p in base.glob("*.py")} <= set(identity["files"])
     first = identity["files"][str((base / "shared.py").relative_to(tmp_path))]
     (base / "shared.py").write_text("SCALE = 3\n")
@@ -859,3 +878,120 @@ def test_execution_sink_never_opens_before_actual_gate(monkeypatch):
             evaluation_sink=lambda row: touched.append("sink"),
         )
     assert touched == []
+
+
+def test_source_closure_research_bare_imports_bind_actual_nested_dependencies(tmp_path):
+    base = tmp_path / "research"
+    base.mkdir()
+    (base / "entry.py").write_text("import peer\ndef later():\n    from saved import check\n")
+    (base / "peer.py").write_text("import numpy\nfrom leaf import VALUE\n")
+    (base / "leaf.py").write_text("VALUE = 3\n")
+    (base / "saved.py").write_text("def check():\n    return 3\n")
+    identity = runner.source_identity(
+        tmp_path,
+        entrypoints=["dynamic_research.entry"],
+        package_roots={"dynamic_research": "research"},
+    )
+    assert set(identity["files"]) == {
+        "research/entry.py",
+        "research/peer.py",
+        "research/leaf.py",
+        "research/saved.py",
+    }
+    assert identity["local_import_graph"]["research/entry.py"] == [
+        "dynamic_research.peer",
+        "dynamic_research.saved",
+    ]
+    assert "numpy" in identity["environment"]["distributions"]
+    assert not {"peer", "saved", "leaf"} & identity["environment"]["distributions"].keys()
+
+
+def test_source_closure_research_bare_alias_rejects_loaded_other_checkout(tmp_path, monkeypatch):
+    base = tmp_path / "research"
+    base.mkdir()
+    (base / "entry.py").write_text("import peer\n")
+    (base / "peer.py").write_text("VALUE = 3\n")
+    imported = types.ModuleType("peer")
+    imported.__file__ = str(tmp_path / "other_checkout" / "peer.py")
+    monkeypatch.setitem(sys.modules, "peer", imported)
+    with pytest.raises(ValueError, match="loaded source"):
+        runner.source_identity(
+            tmp_path,
+            entrypoints=["dynamic_research.entry"],
+            package_roots={"dynamic_research": "research"},
+        )
+
+
+@pytest.mark.parametrize("missing", ["check_fresh", "check_main"])
+def test_execution_source_requires_all_saved_phase_checkers(tmp_path, missing):
+    base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+    base.mkdir(parents=True)
+    for name in [
+        "reference_methods",
+        "run_fresh",
+        "check_fresh",
+        "run_pilot",
+        "check_pilot",
+        "run_main",
+        "check_main",
+        "run_reference",
+        "check_initial_quotes",
+        "check_selected_calls",
+    ]:
+        if name != missing:
+            (base / f"{name}.py").write_text("VALUE = 1\n")
+    with pytest.raises(ValueError, match="required execution source.*" + missing):
+        runner.execution_source_identity(tmp_path)
+
+
+def test_execution_source_rejects_missing_actual_financial_closure(tmp_path, monkeypatch):
+    base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+    base.mkdir(parents=True)
+    for name in [
+        "reference_methods",
+        "run_fresh",
+        "check_fresh",
+        "run_pilot",
+        "check_pilot",
+        "run_main",
+        "check_main",
+        "run_reference",
+        "check_initial_quotes",
+        "check_selected_calls",
+    ]:
+        (base / f"{name}.py").write_text("VALUE = 1\n")
+    (base / "run_main.py").write_text("from deep_hedge_price import _dynamic_hedging_closure\n")
+    deep = tmp_path / "deep_hedge_price/src/deep_hedge_price"
+    deep.mkdir(parents=True)
+    (deep / "__init__.py").write_text("")
+    for name in ["deep_hedge_price", "deep_hedge_price._dynamic_hedging_closure"]:
+        monkeypatch.delitem(sys.modules, name, raising=False)
+    with pytest.raises(ValueError, match=r"required execution source.*_dynamic_hedging_closure"):
+        runner.execution_source_identity(tmp_path)
+
+
+def test_initial_quote_saved_checker_uses_static_bound_source_and_restores_path(monkeypatch):
+    def forbidden(*args, **kwargs):
+        pytest.fail("fixed saved quote checker cannot need a dynamic source loader")
+
+    monkeypatch.setattr(importlib.util, "spec_from_file_location", forbidden)
+    before = sys.path[:]
+    saved = ROOT / "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes"
+    result = runner.initial_quote_pilot(saved)
+    assert sys.path == before
+    assert result["kind"] == "initial_quote_pilot_component"
+    assert result["formal_pilot_qualification"] == "unknown"
+    identity = runner.source_identity(entrypoints=["dynamic_research.run_reference"])
+    assert identity["dynamic_imports"] == []
+
+
+def test_initial_quote_saved_checker_rejects_a_loaded_foreign_alias(monkeypatch, tmp_path):
+    foreign = types.ModuleType("check_initial_quotes")
+    foreign.__file__ = str(tmp_path / "check_initial_quotes.py")
+    foreign.check_initial_quotes = lambda *args: pytest.fail("foreign checker called")
+    monkeypatch.setitem(sys.modules, "check_initial_quotes", foreign)
+    before = sys.path[:]
+    saved = ROOT / "johnhull/research/RB-F04/dynamic_hedging/pilot/initial-quotes"
+    with pytest.raises(ValueError, match="loaded source"):
+        runner.initial_quote_pilot(saved)
+    assert sys.path == before

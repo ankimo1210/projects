@@ -1,0 +1,30 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_execution_source_rejects_missing_actual_financial_closure ________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3763/test_execution_source_rejects_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f962c73b9e0>
+
+    def test_execution_source_rejects_missing_actual_financial_closure(tmp_path, monkeypatch):
+        base = tmp_path / "johnhull/research/RB-F04/dynamic_hedging"
+        base.mkdir(parents=True)
+        for name in [
+            "reference_methods", "run_fresh", "check_fresh", "run_pilot", "check_pilot",
+            "run_main", "check_main", "run_reference", "check_initial_quotes", "check_selected_calls",
+        ]:
+            (base / f"{name}.py").write_text("VALUE = 1\n")
+        (base / "run_main.py").write_text(
+            "from deep_hedge_price import _dynamic_hedging_closure\n"
+        )
+        deep = tmp_path / "deep_hedge_price/src/deep_hedge_price"
+        deep.mkdir(parents=True)
+        (deep / "__init__.py").write_text("")
+        for name in ["deep_hedge_price", "deep_hedge_price._dynamic_hedging_closure"]:
+            monkeypatch.delitem(sys.modules, name, raising=False)
+>       with pytest.raises(ValueError, match="required execution source.*_dynamic_hedging_closure"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:963: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_execution_source_rejects_missing_actual_financial_closure
+1 failed, 45 deselected in 1.46s
