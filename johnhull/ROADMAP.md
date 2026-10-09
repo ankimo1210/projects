@@ -36,6 +36,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 106 priv
 | 研究track #2 | RB-F05 digital v1・離散バリアv1完了 | [離散研究](research/RB-F05/discrete/README.md)／[独立レビュー](research/RB-F05/discrete/REVIEW.md)。主6fits、fresh独立PDE200点・実MC116比較、32計時/会計と100loadの再検査、artifact-only3図実行/目視を完了。関連3suiteは7104 PASS/6 skip（366.24秒）。DMLは全seedでprice-only改善、強Hermiteには精度で劣るため教材保持・標準高速器不採用。main統合済み。09b8c1af統合後のrelease gateと主成果/計時・会計の再検査PASS |
 | 統合研究 | quote DML v1完了・main統合済み | [結果](research/RB-F07/quote_dml/README.md)／[独立レビュー](research/RB-F07/quote_dml/REVIEW.md)。30NN＋4ridge、fresh独立再計算、310計時、288費用対照、最終23,498,066 bytesの両保管庫復元、artifact-only3図実行/目視・最終レビューを完了。`a25345e1`をmainへfast-forward統合後、関連3suiteを全再実行し6919 PASS/6 skip（334.02秒）、`verify_release.py --require-tracked` PASS。教材保持・標準器昇格不採用 |
 | 研究track #3 | RB-F04 v1完了・main統合済み | [研究状態](research/RB-F04/README.md)。Fourier/支持域・固定月次の共通乱数経路・独立PDE/積分・paired集計を実装。初期8192 pathsではAsian差−0.00487、SE0.02163、失敗0。包括収束pilot・独立レビューを完了し、129×161点の面と精度予算を主実験前に固定。3seed主比較196608 paths・fresh再計算・193MBの両復元・3図を完了。Asian差0.003673/paired SE0.004387で未識別。独立レビューapproved・関連3suite7316 PASS/6 skip・ruff/format PASS。c4430dfaをmainへfast-forward統合/push。branch/mainのtracked releaseとmainの保管庫復元・原始配列checkerもPASS |
+| 研究track #4 | RB-F08実装着手・candidate | [実施計画](docs/superpowers/plans/2026-10-09-mlmc-rqmc-ci.md)／[研究状態](research/RB-F08/README.md)。GBM Euler粗細結合、独立scramble Student CI、固定seed台帳から実装。pilot・主実験・採否は未実施 |
 | 実装前の準備 | 完了 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で製品受入と区別 |
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
@@ -122,7 +123,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 | 1 | F07＋F05 quote DML | 34 fits、310計時/288原価、fresh数値/改変検査、最終両復元・3図・独立最終レビュー | 完了・main統合済み。H1改善・H2優位不支持、rate-only残余改善/spot・混合悪化、全面速度優位なし。教材保持、標準器へ昇格しない。統合後6919 tests PASS/6 skip・release PASS |
 | 2 | RB-F05離散バリア | 監視契約、独立離散参照、教師bias/SE、学習比較・総費用・3図・レビュー・採否 | v1完了・main統合済み。[結果](research/RB-F05/discrete/README.md)／[独立レビュー](research/RB-F05/discrete/REVIEW.md)。主6fits・fresh MC/PDE200点（最大price差1.54e-4/Delta3.12e-5）・32計時/費用/100load再検査・3図を完了。関連3suite7104 PASS/6 skip。DML全seed改善、Hermiteの精度/準備費用を理由に標準高速器は不採用。158,401,006 bytesのpilot両復元済み。0DTE/roughの完了とは区別 |
 | 3 | RB-F04モデル比較 | Heston→Dupire、vanilla再価格/収束、月次12観測Asian・二時点差、paired SE・3図・レビュー | v1完了・main統合済み。[研究状態](research/RB-F04/README.md)。private面/行支持端・月次経路・独立PDE/積分・paired比集計を追加。初期8192 pathsを保存し、包括pilot/独立レビュー/条件固定は完了。主3seed/3図/採否・fresh/両復元は完了。独立最終レビューapproved・関連3suite7316 PASS/6 skip。c4430dfaをmain統合/push、branch/mainのtracked release・mainの原始配列checker/復元もPASS |
-| 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F08_DESIGN.md)に既存private独立scramble推定の再利用と、Euler/観測点の指定を追記。Student CI・被覆率・MLMCは追加が必要 |
+| 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | 実装着手・candidate。[実施計画](docs/superpowers/plans/2026-10-09-mlmc-rqmc-ci.md)を確定。粗細pair・独立scramble CI・独立参照・seed台帳から開始。全条件freeze・pilot/主反復・4図・レビューは未実施 |
 | 5 | RB-F06識別可能性 | 固定β SABR、削減/疎/noisy quote、多点初期化、scaled J/profile・3図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F06_DESIGN.md)にraw較正の制限、scaled J・再最適化profile・解析的な未識別fixtureを追記 |
 | 後続 | RB-F05短期/0DTE | 短期契約・calendar・教師分散/共通乱数・独立参照・比較・採否 | 未設計。digital結果を短期へ外挿しない |
 | 後続 | 同一較正条件の動的モデル横断ヘッジ | 市場生成/評価/方策を分離、自己資金・CF・費用を持つ共通P&L実験・レビュー | 未設計。瞬間shockで代用しない |
