@@ -1,0 +1,98 @@
+{
+  "review_date": "2026-10-09",
+  "scope": "Targeted Task4 fix review: original T14-R1/T14-R2 and concrete fix-induced risks only; not phase acceptance",
+  "prior_review": "task-1-4-review.md/.json",
+  "fix_package_sha256": "25531b409ac2c2323ce727ad290115bc68f8448368570a9dc69977df1e888b96",
+  "fix_manifest_sha256": "9528709147ad7363af9aa24a7003368f7f14766c088130a78d18fe3e28aa2cdb",
+  "source_digests": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py": "585ea869a96a6076fedd7749d88824dde5ebbbd99d0ca60a646ac829e39be50e",
+    "johnhull/hullkit/tests/test_dynamic_hedging_risk.py": "1a8ed43b97fdc9b229f5db4fa6ef8c794d6f78c01130f7be96bdb457e4cfbc22",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py": "c233ba0cf6d736401c4f2a4d92dc803810c8066ebf7960534730299759142fca",
+    "deep_hedge_price/tests/test_dynamic_hedging_policy.py": "0b5929aeda2d044b3b70bc13c7d07c315a9a9166153479877a2daa3c3ff156cb"
+  },
+  "all_current_source_digests_match": true,
+  "fix_package_reconstruction_matches": true,
+  "task1_original_digests": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py": "78ad0cc9e32628476da2023755cd688ea8363aee9be5f5655c204c6ab6fa5777",
+    "johnhull/hullkit/tests/test_dynamic_hedging_core.py": "3347d9def05ccff761527b0273d85c7d98b2712da9c45813bbe7a03999cfcb2b"
+  },
+  "task1_unchanged": true,
+  "spec_compliance": "PASS within Task4 source scope after fixes",
+  "code_quality": "PASS: no remaining blocking or concrete fix-induced finding identified",
+  "proceed_to_integration": true,
+  "resolved_findings": [
+    {
+      "id": "T14-R1",
+      "severity": "Important",
+      "status": "resolved",
+      "file": "johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py",
+      "lines": [
+        152,
+        169,
+        189,
+        192
+      ],
+      "evidence": {
+        "c_s": 0.6,
+        "dt": 0.08333333333333333,
+        "raw_squared_sd": -1.7763568394002505e-15,
+        "roundoff_bound": 1.7053025658242404e-13,
+        "valid": true,
+        "holdings": [
+          0.0,
+          0.0
+        ],
+        "roundoff_corrected": true,
+        "roundoff_correction_count": 1
+      },
+      "assessment": "Only finite small-negative PSD cancellation within explicit absolute-product bound is set to zero, raw value/bound/flag/count retained; CS=.3/.7/.9 also hold, materially indefinite covariance still rejected, nonfinite covariance remains unknown. No ridge/hidden blanket floor."
+    },
+    {
+      "id": "T14-R2",
+      "severity": "Important",
+      "status": "resolved",
+      "file": "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py",
+      "lines": [
+        324,
+        338
+      ],
+      "evidence": {
+        "clock": [
+          0.0,
+          0.1,
+          0.2,
+          2.0
+        ],
+        "cap_seconds": 1.0,
+        "status": "time_cap",
+        "complete": false,
+        "updates": 1,
+        "updates_complete": true,
+        "elapsed_seconds": 2.0,
+        "overrun_seconds": 1.0
+      },
+      "assessment": "Elapsed measured after final diagnostics and thread restore; cap overrun downgrades status while preserving requested update completion and last finite weights. Existing nonfinite status precedence is preserved."
+    }
+  ],
+  "new_findings": [],
+  "counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0
+  },
+  "verification": {
+    "green_suites_rerun": false,
+    "root_reported_scoped_green": {
+      "risk": 22,
+      "policy": 10
+    },
+    "root_reported_ruff_check_and_formatcheck": "PASS; not rerun by reviewer",
+    "independent_probe": "/tmp/dynamic_task4_fix_rereview_probe.py",
+    "probe_scope": "original two regressions, ordinary neighboring null vectors, materially indefinite/nonfinite guard, frozen file/diff integrity"
+  },
+  "pending_integration": [
+    "Runner must serialize raw_squared_sd/squared_sd_roundoff_bound/roundoff flags-count and updates_complete/status/complete/overrun with full attempt evidence.",
+    "Original review caller obligations remain: dataset rejection preserves original N and all attempts, full fit/teacher qualification, fixed study contract/selection/IDs.",
+    "Whole-suite, formal pilot, source/candidate/pilot/review freeze, main and study final acceptance remain future Tasks5–7."
+  ]
+}

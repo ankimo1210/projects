@@ -1,0 +1,110 @@
+{
+  "date": "2026-10-09",
+  "scope": "Task3 original source checkpoint; independent read-only math/spec/quality review; DESIGN sections3/5/6/7/11",
+  "spec_compliance_verdict": "changes_required",
+  "code_quality_verdict": "changes_required",
+  "source_approved_for_task_5_integration": false,
+  "phase_acceptance": false,
+  "findings": [
+    {
+      "id": "I1",
+      "severity": "Important",
+      "file": "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+      "start_line": 227,
+      "end_line": 239,
+      "title": "Exact deterministic CIR branch missing in original independent MC",
+      "description": "Original direct_conditional_asian applies the implicit Lamperti update even when xi=0. DESIGN section4.1/core lines23-24 require theta+(v-theta)*exp(-kappa*dt). At v!=theta the next stock step and state bumps differ.",
+      "evidence": {
+        "original_N": 32,
+        "seed": 17,
+        "dates": [
+          0.9166666666666666,
+          0.9583333333333334,
+          1
+        ],
+        "state": 0.08,
+        "theta": 0.04,
+        "xi": 0,
+        "max_abs_payoff_difference": 0.0007566006603276776,
+        "mean_difference": 9.39315901748633e-05,
+        "reference_status": "measured"
+      },
+      "fix": "Independently implement exact xi=0 transition and verify a nonstationary same-driver multi-increment price/state-bump fixture.",
+      "concurrent_boundary": "A later source edit visibly adds exact xi=0 lines228-229; original probe has not been rerun against that revision in this review."
+    },
+    {
+      "id": "I2",
+      "severity": "Important",
+      "file": "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py",
+      "start_line": 557,
+      "end_line": 559,
+      "related_lines": [
+        142,
+        143,
+        144,
+        149,
+        150,
+        151
+      ],
+      "title": "Adaptive CF convergence and errors omitted",
+      "description": "Original quad calls discard error/convergence receipts. selected_call_refinement declares all finite values measured, even when integration exhausts subdivisions. Saving refinement differences does not preserve convergence failures or integration uncertainty.",
+      "evidence": {
+        "direct_limit1_price": 7.848537617463641,
+        "direct_integration_warnings": 2,
+        "selected_limit1_status": "measured",
+        "selected_integration_warnings": 78,
+        "selected_price_change": 0.041906467765087996,
+        "convergence_or_quadrature_error_fields": false,
+        "injection": "In-memory limit override only; no file changes."
+      },
+      "fix": "Save P1/P2 adaptive error/convergence/configuration receipts and propagate nonconverged/failed status and currency/Greek uncertainty through selected refinements, separately from cutoff/grid/finite-width differences."
+    }
+  ],
+  "severity_counts": {
+    "Critical": 0,
+    "Important": 2,
+    "Minor": 0
+  },
+  "verification": {
+    "suite_rerun": false,
+    "tiny_probes": [
+      "xi0 nonstationary same-driver two-step",
+      "direct adaptive-CF exhausted-limit",
+      "selected helper exhausted-limit in-memory injection"
+    ],
+    "original_manifest_matched_at_initial_read": true,
+    "current_matches_original": false,
+    "received_validation": "Owned17PASS; root scoped103new plus index/docguards1191PASS;11Pythonruff/formatPASS. No independent suite rerun.",
+    "source_test_git_mutation": false
+  },
+  "integration_requirements": [
+    "Task5 caller must attach validated call/Asian state-support intersection; fit currently falls back to call-only when asian_state_bounds absent.",
+    "Solver/interpolation status ok does not qualify precision: Task5 must require independent converged references, finite price/derivative uncertainty and fixed gates before qualification. NaN errors and unmeasured reference_status are explicit in source; fit permits solver-ok while error remains unmeasured.",
+    "Task5 must propagate teacher covariance and deterministic call/spline/reference/bump errors through F07 separately."
+  ],
+  "declined_to_judge": [
+    "18-state formal pilot and budgets",
+    "Main grids, grid doubling, N/SDE refinements, Q/P&L gates",
+    "Task5 caller/checker enforcement and cache serialization/replay",
+    "Runtime, memory, model or NN performance",
+    "Source/protocol/pilot freeze, main and publication",
+    "Concurrent fix revisions outside the original manifest"
+  ],
+  "source_sha256": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "6cf72bd149655a439bc5e68ad6f3d7e2ae6c77e5feb80d89cfdda68ff877ad0c",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py": "e57269b13b831f19e0fff27cd0d7c6f1818440710994acdebd849956cd721e18",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "3c6ef18c284a60510371e921a10e0be8060ac12edf013354798b30f9c83462f9",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-3-review-package.diff": "2e8e2cdda1c485af34d826db3ea5a08b4027c2ab9be67b910911ccbac5c2b0aa",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-3-review-source.json": "e50e7a4a3c9973d0a631fceff629b38165f796c6c6c8cc9cfca7fd8ecc936eff",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+  },
+  "current_observed_sha256": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "6cf72bd149655a439bc5e68ad6f3d7e2ae6c77e5feb80d89cfdda68ff877ad0c",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py": "20d43d3d7e8fd225b860d2dae5ac8e87152bb481805fb93b4fee2df2685e8617",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "0bc79b971dd6f7f69847ef6029056cfbfbeb3a80b1a7a2cb19d73bcc9f9019f4",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-3-review-package.diff": "2e8e2cdda1c485af34d826db3ea5a08b4027c2ab9be67b910911ccbac5c2b0aa",
+    ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-3-review-source.json": "e50e7a4a3c9973d0a631fceff629b38165f796c6c6c8cc9cfca7fd8ecc936eff",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce"
+  },
+  "concurrent_changes": "Reference/tests changed after original reviewed hashes were verified. This report preserves original-checkpoint findings; current-source approval requires a fix review."
+}

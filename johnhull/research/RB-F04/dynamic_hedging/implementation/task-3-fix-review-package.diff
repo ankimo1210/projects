@@ -1,0 +1,429 @@
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-test_dynamic_hedging_surfaces.py.txt b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py
+index 20845734..fbcc9799 100644
+--- a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-test_dynamic_hedging_surfaces.py.txt
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py
+@@ -309,10 +309,73 @@ def test_actual_stochastic_heston_cf_and_state_coordinate_invariance():
+     assert evaluate_call(cache, 0, 105.0, 0.04)["value"] == pytest.approx(truth, abs=1e-8)
+     # An invertible theta=u^2 change is represented exactly in both cubic fixtures.
+     theta = np.array([0.25, 0.5, 1.0, 2.0, 4.0])
+     physical = call_fixture(lambda v: 5 + 3 * v)
+     changed = {**physical, "state_nodes": np.sqrt(theta)}
+     fit1 = fit_quote_state(physical, 0, 100.0, 8.0, state_scale=1.0)
+     fit2 = fit_quote_state(changed, 0, 100.0, 8.0, state_scale=1.0)
+     assert fit2["state"] ** 2 == pytest.approx(fit1["state"])
+     vtheta, vcoordinate = 0.4, 0.8
+     assert vtheta / fit1["Ctheta"] == pytest.approx(vcoordinate / fit2["Ctheta"])
++
++
++def test_independent_zero_xi_uses_exact_nonstationary_variance_transition():
++    """Own payoff replay separates the exact xi=0 transition from Lamperti bias."""
++    path = (
++        Path(__file__).resolve().parents[2] / "research/RB-F04/dynamic_hedging/reference_methods.py"
++    )
++    spec = importlib.util.spec_from_file_location("dynamic_reference_zero_xi", path)
++    ref = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(ref)
++    times = np.array([11 / 12, 23 / 24, 1.0])
++    seed, n_paths, initial_v = 41, 32, 0.08
++    result = ref.direct_conditional_asian(
++        P,
++        None,
++        model="heston",
++        calendar_times=times,
++        fixing_indices=np.array([2]),
++        spot=100.0,
++        state=initial_v,
++        memory_sum=1100.0,
++        memory_count=11,
++        seed=seed,
++        n_paths=n_paths,
++    )
++    rng = np.random.default_rng(seed)
++    stock = np.full(n_paths, 100.0)
++    variance = initial_v
++    for dt in np.diff(times):
++        zs = rng.standard_normal((n_paths, 2))[:, 0]
++        stock *= np.exp(
++            (P.rate - P.dividend_yield - variance / 2) * dt + np.sqrt(variance * dt) * zs
++        )
++        variance = P.theta + (variance - P.theta) * np.exp(-P.kappa * dt)
++    expected = np.exp(-P.rate * (1 - times[0])) * np.maximum((1100 + stock) / 12 - 100.0, 0.0)
++    assert result["status"] == "measured"
++    assert result["original_path_count"] == n_paths
++    np.testing.assert_allclose(result["samples"][:, 0], expected, rtol=0.0, atol=1e-14)
++
++
++def test_independent_adaptive_integral_failure_keeps_receipt_and_is_unknown():
++    path = (
++        Path(__file__).resolve().parents[2] / "research/RB-F04/dynamic_hedging/reference_methods.py"
++    )
++    spec = importlib.util.spec_from_file_location("dynamic_reference_quad_failure", path)
++    ref = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(ref)
++    p = replace(P, xi=0.3)
++    result = ref.independent_heston_call([100.0], 0.75, p, quadrature_limit=1, return_receipt=True)
++    assert result["status"] == "unknown"
++    assert np.isfinite(result["raw_prices"][0])
++    assert np.isnan(result["price"][0])
++    assert result["price_unit_error"][0] > 0
++    for integral in result["integration_receipts"][0]:
++        assert integral["status"] == "nonconverged"
++        assert integral["message"]
++        assert integral["neval"] > 0
++        assert integral["absolute_error"] > 0
++    selected = ref.selected_call_refinement(
++        p, None, model="heston", date=0.5, spot=100.0, state=0.04, quadrature_limit=1
++    )
++    assert selected["status"] == "unknown"
++    assert selected["integration_receipts"]
+
+diff --git a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-reference_methods.py.txt b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/reference_methods.py
+index 41288cbe..591cf29c 100644
+--- a/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/fix-before-reference_methods.py.txt
++++ b/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/reference_methods.py
+@@ -58,51 +58,60 @@ def selected_call_refinement(
+     model,
+     date,
+     spot,
+     state,
+     space_nodes=601,
+     time_steps=960,
+     log_half_width=1.8,
+     upper=250.0,
+     spot_bump=0.02,
+     state_bump=None,
++    quadrature_limit=None,
+ ):
+     """Measure independent price/CS/Ctheta refinement at one selected state.
+ 
+     CF cutoff is doubled; local space, time and domain are refined separately.
+     CRN is irrelevant for deterministic references. Derivatives use centered
+     three-width bumps and their finite-width changes are retained separately.
+     This is a measured comparison, not a rigorous truncation-error bound.
+     """
+     from dataclasses import asdict, is_dataclass
+ 
+     from scipy.interpolate import CubicSpline
+ 
+     p = asdict(parameters) if is_dataclass(parameters) else dict(parameters)
+     state_bump = (0.0001 if model == "heston" else 0.001) if state_bump is None else state_bump
+     if model not in {"heston", "local"} or date < 0 or date >= 1.25 or state <= 2 * state_bump:
+         raise ValueError("selected reference needs supported date/model/interior state")
++    integration_receipts = []
++    price_unit_errors = {}
+ 
+     def calculate(s, v, level):
+         if model == "heston":
+             current = {**p, "spot": float(s), "v0": float(v)}
+-            return float(
+-                independent_heston_call(
+-                    [100.0],
+-                    1.25 - date,
+-                    current,
+-                    upper=upper * (2 if level else 1),
+-                    quadrature_limit=1600 if level == 2 else 800,
+-                    epsabs=1e-13 if level == 2 else 1e-12,
+-                    epsrel=1e-12 if level == 2 else 1e-11,
+-                )[0]
++            receipt = independent_heston_call(
++                [100.0],
++                1.25 - date,
++                current,
++                upper=upper * (2 if level else 1),
++                quadrature_limit=(1600 if level == 2 else 800)
++                if quadrature_limit is None
++                else quadrature_limit,
++                epsabs=1e-13 if level == 2 else 1e-12,
++                epsrel=1e-12 if level == 2 else 1e-11,
++                return_receipt=True,
+             )
++            integration_receipts.append(
++                {"level": level, "spot": float(s), "state": float(v), **receipt}
++            )
++            price_unit_errors[(level, s, v)] = float(receipt["price_unit_error"][0])
++            return float(receipt["price"][0])
+         if surface is None:
+             raise ValueError("local reference requires a calendar surface")
+ 
+         def coefficient(t, ss):
+             raw = surface.evaluate(t, ss)
+             return {**raw, "variance": np.asarray(raw["variance"]) * v}
+ 
+         nodes = (2 * space_nodes - 1) if level == 1 else space_nodes
+         steps = (2 * time_steps) if level == 2 else time_steps
+         width = log_half_width * 1.25 if level == 3 else log_half_width
+@@ -117,50 +126,70 @@ def selected_call_refinement(
+             space_nodes=nodes,
+             time_steps=steps,
+             log_half_width=width,
+         )
+         if not result["supported"]:
+             return np.nan
+         return float(CubicSpline(np.log(result["spots"]), result["values"][0])(math.log(s)))
+ 
+     levels = range(3 if model == "heston" else 4)
+     prices, ds, dv, derivative_widths = [], [], [], []
++    integration_derivative_errors = []
+     for level in levels:
+         prices.append(calculate(spot, state, level))
+         spot_derivatives, state_derivatives = [], []
++        derivative_errors = []
+         for width in [1.0, 0.5, 2.0]:
+             hs, hv = spot_bump * width, state_bump * width
+             spot_derivatives.append(
+                 (calculate(spot + hs, state, level) - calculate(spot - hs, state, level)) / (2 * hs)
+             )
+             state_derivatives.append(
+                 (calculate(spot, state + hv, level) - calculate(spot, state - hv, level)) / (2 * hv)
+             )
++            derivative_errors.append(
++                [
++                    (
++                        price_unit_errors.get((level, spot + hs, state), 0.0)
++                        + price_unit_errors.get((level, spot - hs, state), 0.0)
++                    )
++                    / (2 * hs),
++                    (
++                        price_unit_errors.get((level, spot, state + hv), 0.0)
++                        + price_unit_errors.get((level, spot, state - hv), 0.0)
++                    )
++                    / (2 * hv),
++                ]
++            )
+         ds.append(spot_derivatives[1])
+         dv.append(state_derivatives[1])
+         derivative_widths.append([spot_derivatives, state_derivatives])
++        integration_derivative_errors.append(derivative_errors)
+     prices, ds, dv, widths = map(np.asarray, (prices, ds, dv, derivative_widths))
+     finite = np.all(np.isfinite(prices)) and np.all(np.isfinite(widths))
+     return {
+         "status": "measured" if finite else "unknown",
+         "model": model,
+         "price": prices[-1],
+         "spot_derivative": ds[-1],
+         "state_derivative": dv[-1],
+         "price_error": float(np.max(np.abs(prices - prices[0]))),
+         "spot_derivative_error": float(np.max(np.abs(ds - ds[0]))),
+         "state_derivative_error": float(np.max(np.abs(dv - dv[0]))),
+         "prices": prices,
+         "spot_derivatives": ds,
+         "state_derivatives": dv,
+         "three_width_derivatives": widths,
+         "finite_width_errors": np.max(np.abs(widths - widths[:, :, [1]]), axis=(0, 2)),
++        "integration_receipts": integration_receipts,
++        "price_unit_error": max(price_unit_errors.values(), default=0.0),
++        "integration_derivative_error": np.max(integration_derivative_errors, axis=(0, 1)),
+         "refinements": ["cutoff", "adaptive_quadrature"]
+         if model == "heston"
+         else ["space", "time", "domain"],
+     }
+ 
+ 
+ def direct_conditional_asian(
+     parameters,
+     surface,
+     *,
+@@ -218,32 +247,37 @@ def direct_conditional_asian(
+         # O(N) storage, and no mutation of caller/global RNG state.
+         rng = np.random.default_rng(seed)
+         stocks = np.full(n_paths, s, float)
+         variances = np.full(n_paths, v, float)
+         sums = np.full(n_paths, memory_sum, float)
+         for i, dt in enumerate(np.diff(times)):
+             noise = rng.standard_normal((n_paths, 2))
+             zs, zp = noise[:, 0], noise[:, 1]
+             if model == "heston":
+                 var = variances.copy()
+-                zv = p["rho"] * zs + math.sqrt(1 - p["rho"] ** 2) * zp
+-                a = (4 * p["kappa"] * p["theta"] - p["xi"] ** 2) / 8
+-                if a <= 0:
+-                    raise ValueError("positive CIR reference requires 4 kappa theta > xi squared")
+-                u = np.sqrt(var) + 0.5 * p["xi"] * math.sqrt(dt) * zv
+-                d = 1 + 0.5 * p["kappa"] * dt
+-                radical = np.sqrt(u * u + 4 * d * a * dt)
+-                y = np.empty_like(u)
+-                nonnegative = u >= 0
+-                y[nonnegative] = (u[nonnegative] + radical[nonnegative]) / (2 * d)
+-                y[~nonnegative] = 2 * a * dt / (radical[~nonnegative] - u[~nonnegative])
+-                variances = y * y
++                if p["xi"] == 0:
++                    variances = p["theta"] + (var - p["theta"]) * math.exp(-p["kappa"] * dt)
++                else:
++                    zv = p["rho"] * zs + math.sqrt(1 - p["rho"] ** 2) * zp
++                    a = (4 * p["kappa"] * p["theta"] - p["xi"] ** 2) / 8
++                    if a <= 0:
++                        raise ValueError(
++                            "positive CIR reference requires 4 kappa theta > xi squared"
++                        )
++                    u = np.sqrt(var) + 0.5 * p["xi"] * math.sqrt(dt) * zv
++                    d = 1 + 0.5 * p["kappa"] * dt
++                    radical = np.sqrt(u * u + 4 * d * a * dt)
++                    y = np.empty_like(u)
++                    nonnegative = u >= 0
++                    y[nonnegative] = (u[nonnegative] + radical[nonnegative]) / (2 * d)
++                    y[~nonnegative] = 2 * a * dt / (radical[~nonnegative] - u[~nonnegative])
++                    variances = y * y
+             else:
+                 coefficient = surface.evaluate((times[i] + times[i + 1]) / 2, stocks)
+                 status = np.asarray(coefficient["status"]).astype(str)
+                 if np.any(np.char.startswith(status, "unsupported")):
+                     return np.full(n_paths, np.nan)
+                 var = v * np.asarray(coefficient["variance"])
+             if np.any(~np.isfinite(var)) or np.any(var < 0):
+                 return np.full(n_paths, np.nan)
+             stocks *= np.exp(
+                 (p["rate"] - p["dividend_yield"] - 0.5 * var) * dt + np.sqrt(var * dt) * zs
+@@ -482,33 +516,44 @@ def _log_price_cf(u, T, parameters):
+     b = p["kappa"] - 1j * p["rho"] * xi * u
+     d = np.sqrt(b * b + xi * xi * (u * u + 1j * u))
+     g = (b - d) / (b + d)
+     decay = np.exp(-d * T)
+     c = p["kappa"] * p["theta"] / xi**2 * ((b - d) * T - 2 * np.log((1 - g * decay) / (1 - g)))
+     loading = (b - d) / xi**2 * (1 - decay) / (1 - g * decay)
+     return np.exp(phase + c + loading * p["v0"])
+ 
+ 
+ def independent_heston_call(
+-    strikes, T, parameters, upper=250.0, *, quadrature_limit=800, epsabs=1e-12, epsrel=1e-11
++    strikes,
++    T,
++    parameters,
++    upper=250.0,
++    *,
++    quadrature_limit=800,
++    epsabs=1e-12,
++    epsrel=1e-11,
++    return_receipt=False,
+ ):
+     """Price calls using two own-CF Gil-Pelaez probability integrals.
+ 
+     Parameters may be a mapping or an object with spot, rate, dividend_yield,
+     v0, kappa, theta, xi and rho attributes. The formula is independently
+     transcribed from the existing research reference in
+     scripts/build_stochastic_volatility_reference.py, without importing it
+     or any hullkit transform. The finite integration upper bound is explicit;
+     callers compare separate bounds to diagnose truncation.
+ 
+     xi=0 uses the exact integrated deterministic variance in the own CF.
+     The zero-integrated-variance case returns discounted intrinsic value.
++    ``return_receipt`` preserves each full-output integral's error, convergence
++    message, evaluation count and used subinterval data. Nonconverged prices
++    remain NaN in the ordinary result; finite raw estimates are saved separately.
+     """
+     from collections.abc import Mapping
+ 
+     from scipy.integrate import quad
+ 
+     names = ("spot", "rate", "dividend_yield", "v0", "kappa", "theta", "xi", "rho")
+     try:
+         p = {
+             key: float(
+                 parameters[key] if isinstance(parameters, Mapping) else getattr(parameters, key)
+@@ -522,39 +567,100 @@ def independent_heston_call(
+         not all(np.isfinite(v) for v in (*p.values(), T, upper))
+         or p["spot"] <= 0
+         or min(p["v0"], p["kappa"], p["theta"], p["xi"]) < 0
+         or abs(p["rho"]) > 1
+         or T <= 0
+         or upper <= 0
+         or strikes.ndim != 1
+         or strikes.size == 0
+         or np.any(~np.isfinite(strikes))
+         or np.any(strikes <= 0)
++        or not isinstance(quadrature_limit, (int, np.integer))
++        or isinstance(quadrature_limit, bool)
++        or quadrature_limit < 1
++        or not np.isfinite(epsabs + epsrel)
++        or epsabs <= 0
++        or epsrel <= 0
+     ):
+         raise ValueError(
+             "finite positive market/integration inputs and valid Heston parameters required"
+         )
+     discount_stock = p["spot"] * math.exp(-p["dividend_yield"] * T)
+     discount = math.exp(-p["rate"] * T)
+     if _integrated_variance(p, T) == 0:
+-        return np.maximum(discount_stock - strikes * discount, 0.0)
++        prices = np.maximum(discount_stock - strikes * discount, 0.0)
++        if not return_receipt:
++            return prices
++        return {
++            "price": prices,
++            "raw_prices": prices.copy(),
++            "status": "converged",
++            "price_unit_error": np.zeros_like(prices),
++            "integration_receipts": [[] for _ in strikes],
++        }
+ 
+     # E[S_T] is known analytically, including cases where the -i CF formula
+     # itself has a removable singularity. It normalizes the stock measure.
+     stock_moment = p["spot"] * math.exp((p["rate"] - p["dividend_yield"]) * T)
+     settings = {"limit": quadrature_limit, "epsabs": epsabs, "epsrel": epsrel}
+-    prices = []
++    prices, raw_prices, errors, receipts = [], [], [], []
+     for strike in strikes:
+         log_k = math.log(strike)
+ 
+         def stock_probability_integrand(u, log_k=log_k):
+             return (
+                 np.exp(-1j * u * log_k) * _log_price_cf(u - 1j, T, p) / (1j * u * stock_moment)
+             ).real
+ 
+         def money_probability_integrand(u, log_k=log_k):
+             return (np.exp(-1j * u * log_k) * _log_price_cf(u, T, p) / (1j * u)).real
+ 
+-        p1 = 0.5 + quad(stock_probability_integrand, 0.0, upper, **settings)[0] / math.pi
+-        p2 = 0.5 + quad(money_probability_integrand, 0.0, upper, **settings)[0] / math.pi
+-        prices.append(discount_stock * p1 - strike * discount * p2)
+-    return np.array(prices)
++        integrals = []
++        for integrand in [stock_probability_integrand, money_probability_integrand]:
++            result = quad(integrand, 0.0, upper, full_output=1, **settings)
++            integral, error, info = result[:3]
++            message = result[3] if len(result) > 3 else ""
++            last = int(info["last"])
++            integrals.append(
++                {
++                    "value": float(integral),
++                    "absolute_error": float(error),
++                    "status": "converged"
++                    if not message and np.isfinite(integral + error)
++                    else "nonconverged",
++                    "message": message,
++                    "neval": int(info["neval"]),
++                    "subinterval_count": last,
++                    "subintervals": np.column_stack(
++                        [info[key][:last] for key in ["alist", "blist", "rlist", "elist"]]
++                    ),
++                    "quadrature_limit": quadrature_limit,
++                    "epsabs": epsabs,
++                    "epsrel": epsrel,
++                    "upper": upper,
++                }
++            )
++        p1, p2 = [0.5 + result["value"] / math.pi for result in integrals]
++        raw = discount_stock * p1 - strike * discount * p2
++        raw_prices.append(raw)
++        errors.append(
++            (
++                discount_stock * integrals[0]["absolute_error"]
++                + strike * discount * integrals[1]["absolute_error"]
++            )
++            / math.pi
++        )
++        converged = all(result["status"] == "converged" for result in integrals) and np.isfinite(
++            raw
++        )
++        prices.append(raw if converged else np.nan)
++        receipts.append(integrals)
++    prices = np.asarray(prices)
++    if not return_receipt:
++        return prices
++    return {
++        "price": prices,
++        "raw_prices": np.asarray(raw_prices),
++        "price_unit_error": np.asarray(errors),
++        "integration_receipts": receipts,
++        "status": "converged" if np.all(np.isfinite(prices)) else "unknown",
++    }

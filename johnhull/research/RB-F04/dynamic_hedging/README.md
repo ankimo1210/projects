@@ -1,7 +1,8 @@
 # 動的モデル横断ヘッジ — 研究v1
 
-2026-10-09。**設計・実現性調査・独立数学レビュー完了。金融source/正式pilot/主実験/研究受入は未実施。** 実装計画に従いprivate coreから開始する。
+2026-10-09。**設計・実現性調査・独立数学レビュー、Tasks1–4のprivate source実装・独立レビュー完了（開発branch）。正式pilot/主実験/研究受入・main統合は未実施。** 次はTask5のrunnerと正式pilot。
 
+- [ソース実装チェックポイント](implementation/README.md)：5件の重要指摘を修正・再レビュー承認、変更範囲＋索引/docstring1193 testsと11Python ruff/format。
 - [実装設計](DESIGN.md)：Heston/local、月次12fixing Asian、主月次12rebalance、stock/call、再較正市場クオートGreeks、Greek/band/NN全44cell/12fits。
 - [実施計画](../../../docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md)：7tasks、exact private interfaces、テスト例、pilot/freeze/main/check/受入。
 - [条件付き教師の実現性](CONDITIONAL_FEASIBILITY.md)：追加local spot/ℓ依存、auxiliary GBM control、calendar call PDE、shared drivers、保存/費用。

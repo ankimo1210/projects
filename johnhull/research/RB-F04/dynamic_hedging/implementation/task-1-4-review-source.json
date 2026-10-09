@@ -1,0 +1,8 @@
+{
+  "johnhull/hullkit/src/hullkit/_dynamic_hedging_core.py": "78ad0cc9e32628476da2023755cd688ea8363aee9be5f5655c204c6ab6fa5777",
+  "johnhull/hullkit/tests/test_dynamic_hedging_core.py": "3347d9def05ccff761527b0273d85c7d98b2712da9c45813bbe7a03999cfcb2b",
+  "johnhull/hullkit/src/hullkit/_dynamic_hedging_risk.py": "f2a1c533d8536fce5df3698f5413e430a61abf9fc5e469e55351f9af05c36242",
+  "johnhull/hullkit/tests/test_dynamic_hedging_risk.py": "7255a2b52b9974ea015c78fd45eb4193346c54f740f6a7d13b0de077a4c34bbd",
+  "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_policy.py": "617910b429aefbe7c04b97e81dc75b15f419302eab5e3c838d33d8f26207651f",
+  "deep_hedge_price/tests/test_dynamic_hedging_policy.py": "41a165842e7d3f1386583d85f6f8c3927a2544404c3d53d710f2478ab3d0018f"
+}
