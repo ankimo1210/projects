@@ -1,0 +1,25 @@
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+from time import perf_counter
+from datetime import datetime, UTC
+directory=Path('/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity')
+path=directory/'fresh_saved_replay_cost.json'
+if path.exists(): raise FileExistsError('existing saved replay receipt')
+env=dict(os.environ)
+env.update(OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MKL_NUM_THREADS='1',PYTHONPATH='/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src:/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src')
+command=[sys.executable,str(directory/'fresh_support.py'),'--directory',str(directory),'--source',str(directory),'--check']
+start=datetime.now(UTC).isoformat();before=perf_counter()
+r=subprocess.run(command,env=env,text=True,capture_output=True)
+seconds=perf_counter()-before;end=datetime.now(UTC).isoformat()
+Path('/tmp/rbf05-fresh-saved-replay.stdout').write_text(r.stdout)
+Path('/tmp/rbf05-fresh-saved-replay.stderr').write_text(r.stderr)
+generation=json.loads((directory/'fresh_cost.json').read_text())
+receipt={'schema':'RB-F05-short-fresh-saved-replay-cost-v1','record_digest':generation['record_digest'],'fresh_record_digest':generation['fresh_record_digest'],'expense_id':'fresh_saved_replay','seconds':seconds,'started_utc':start,'completed_utc':end,'exit_code':r.returncode,'charged_once':True,'parent':None,'disjoint_from_fresh_generation':True,'scope':'separate saved-file read/check process wall, RNG default_rng forbidden, no optimizer/training; additional verification research cost','check':json.loads(r.stdout) if r.returncode==0 else None}
+path.write_text(json.dumps(receipt,indent=2))
+print(r.stdout)
+if r.stderr: print(r.stderr,file=sys.stderr)
+print(json.dumps(receipt,indent=2))
+sys.exit(r.returncode)

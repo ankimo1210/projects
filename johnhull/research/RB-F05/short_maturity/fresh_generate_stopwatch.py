@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+"""Outside-process stopwatch for supplemental fresh support only."""
+
+import hashlib
+import importlib.util
+import json
+import os
+import subprocess
+import sys
+from datetime import UTC, datetime
+from pathlib import Path
+from time import perf_counter
+
+source = Path(
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity"
+)
+script = Path("/tmp/rbf05_fresh_support.py")
+receipt = source / "fresh_execution_wall.json"
+if receipt.exists():
+    raise FileExistsError("actual fresh process stopwatch already exists")
+env = dict(os.environ)
+env.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
+env["PYTHONPATH"] = (
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/src:/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/src"
+)
+command = [
+    sys.executable,
+    str(script),
+    "--directory",
+    str(source),
+    "--source",
+    str(source),
+    "--generate",
+]
+started = datetime.now(UTC).isoformat()
+before = perf_counter()
+result = subprocess.run(command, env=env, text=True, capture_output=True)
+wall_s = perf_counter() - before
+completed = datetime.now(UTC).isoformat()
+Path("/tmp/rbf05-fresh-generation.stdout").write_text(result.stdout)
+Path("/tmp/rbf05-fresh-generation.stderr").write_text(result.stderr)
+spec = importlib.util.spec_from_file_location("fresh_support", script)
+support = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(support)
+protocol = support.modules(source)[1]
+record = json.loads((source / "reference.json").read_text())
+cost = (
+    json.loads((source / "fresh_cost.json").read_text())
+    if (source / "fresh_cost.json").exists()
+    else None
+)
+saved = {
+    "schema": "RB-F05-short-fresh-execution-wall-v1",
+    "main_record_digest": protocol.json_digest(record),
+    "fresh_record_digest": cost["fresh_record_digest"] if cost else None,
+    "support_script_sha256": hashlib.sha256(script.read_bytes()).hexdigest(),
+    "started_utc": started,
+    "completed_utc": completed,
+    "exit_code": result.returncode,
+    "wall_s": wall_s,
+    "fresh_function_s": cost["seconds"] if cost else None,
+    "unaccounted_overhead_s": wall_s - cost["seconds"] if cost else None,
+    "scope": "independent subprocess wall, including startup/imports/gates/draws/estimators/replay/IO/receipt/stdout/exit; descriptive overhead difference",
+    "charged_separately": False,
+}
+receipt.write_text(json.dumps(saved, indent=2))
+print(result.stdout)
+if result.stderr:
+    print(result.stderr, file=sys.stderr)
+print(json.dumps(saved, indent=2))
+sys.exit(result.returncode)

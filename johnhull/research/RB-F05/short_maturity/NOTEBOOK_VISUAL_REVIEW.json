@@ -1,0 +1,38 @@
+{
+  "pngs": [
+    {
+      "path": "/tmp/rbf05-main-figure-1.png",
+      "bytes": 271047,
+      "sha256": "4773174391e5975b93f12c9c9ee011e3060917e68681394a864794c7ac77e436"
+    },
+    {
+      "path": "/tmp/rbf05-main-figure-2.png",
+      "bytes": 278519,
+      "sha256": "e2b1d8e9c7b7023f9a3a5bc368de7466e54c4e3c7376ea4de25bb8f6bb103472"
+    },
+    {
+      "path": "/tmp/rbf05-main-figure-3.png",
+      "bytes": 200230,
+      "sha256": "7efa49dc2e30d5e71fedfa7e65a430f790124692fc4fdd55b0792fe2370a299c"
+    }
+  ],
+  "errors": [],
+  "execution_counts": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "review_date": "2026-10-09",
+  "reviewer": "root visual inspection",
+  "passed": true,
+  "figure_count": 3,
+  "checks": [
+    "All three actual main figures rendered and inspected",
+    "Labels, legends, panel titles and captions readable; no panel overlap",
+    "Actual six fits, 336 original rows, saved timings and expense categories shown",
+    "External decisions and all six ineligible payback entries fit within figure 3",
+    "RNG/optimizer/training/network forbidden in actual notebook; original main/protocol/fresh JSON unchanged"
+  ],
+  "scope": "three artifact-only research figures; not all Book/browser widths or market validity"
+}

@@ -1,0 +1,31 @@
+{
+  "paths": [
+    "deep_hedge_price/src/deep_hedge_price/_short_maturity_dml.py",
+    "deep_hedge_price/tests/test_short_maturity_dml.py",
+    "johnhull/hullkit/src/hullkit/_short_maturity_teachers.py",
+    "johnhull/hullkit/tests/test_short_maturity_independent.py",
+    "johnhull/hullkit/tests/test_short_maturity_notebook.py",
+    "johnhull/hullkit/tests/test_short_maturity_pilot.py",
+    "johnhull/hullkit/tests/test_short_maturity_protocol.py",
+    "johnhull/hullkit/tests/test_short_maturity_reference.py",
+    "johnhull/hullkit/tests/test_short_maturity_study.py",
+    "johnhull/hullkit/tests/test_short_maturity_teachers.py",
+    "johnhull/research/RB-F05/short_maturity/analytics.py",
+    "johnhull/research/RB-F05/short_maturity/build_notebook.py",
+    "johnhull/research/RB-F05/short_maturity/build_reference.py",
+    "johnhull/research/RB-F05/short_maturity/fresh_generate_stopwatch.py",
+    "johnhull/research/RB-F05/short_maturity/fresh_replay_stopwatch.py",
+    "johnhull/research/RB-F05/short_maturity/fresh_support.py",
+    "johnhull/research/RB-F05/short_maturity/pilot.py",
+    "johnhull/research/RB-F05/short_maturity/protocol.py",
+    "johnhull/research/RB-F05/short_maturity/reference_methods.py"
+  ],
+  "count": 19,
+  "ruff_exit": 0,
+  "ruff_stdout": "All checks passed!\n",
+  "ruff_stderr": "",
+  "format_exit": 0,
+  "format_stdout": "19 files already formatted\n",
+  "format_stderr": "",
+  "initial_style_result": "FINAL_RUFF_INITIAL.json; measured stopwatch exact sources preserved as txt"
+}

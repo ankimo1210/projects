@@ -1,0 +1,8 @@
+{
+  "schema": "RB-F05-short-serialization-v1",
+  "record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
+  "seconds": 4.184679661993869,
+  "expense_id": "serialization",
+  "npz_bytes": 177133184,
+  "scope": "NPZ compression/write and study JSON serialization/write; receipt write excluded"
+}

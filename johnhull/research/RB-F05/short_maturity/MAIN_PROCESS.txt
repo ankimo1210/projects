@@ -1,0 +1,6 @@
+{
+  "mode": "main",
+  "fit_slots": 6,
+  "accepted": false,
+  "npz_arrays": 7715
+}

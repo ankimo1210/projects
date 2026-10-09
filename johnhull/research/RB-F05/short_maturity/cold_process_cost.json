@@ -1,0 +1,303 @@
+{
+  "schema": "RB-F05-short-cold-process-cost-v1",
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/tmp/rbf05-cold-artifact-child.py"
+  ],
+  "wall_seconds": 18.15101205703104,
+  "exit_code": 0,
+  "stderr": "",
+  "scope": "new-process artifact-backed validated pipeline; not uncached disk, and not repeated offline teacher/training construction",
+  "measurement": {
+    "schema": "RB-F05-short-cold-artifact-pipeline-v1",
+    "record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
+    "arrays_digest": "8d270b341fae01de439f4a99edf81b61704fb1a2b9e98e545dbf5289169b44b6",
+    "timings": {
+      "cold_import_s": 1.0506436499999836,
+      "pilot_freeze_s": 6.590492043993436,
+      "archive_load_s": 0.899917743052356,
+      "saved_check_s": 9.192855457018595,
+      "prepare_s": 0.07718702894635499,
+      "serving_s": 0.004019165993668139
+    },
+    "check": {
+      "passed": true,
+      "mode": "main",
+      "teacher_slots": 640,
+      "fit_slots": 6,
+      "original_test_count": 336,
+      "timing_slots": 448,
+      "accepted": false,
+      "scope": "saved-only numeric reconstruction; no RNG, training, optimizer or main adoption"
+    },
+    "outputs": [
+      {
+        "method": "core_mixture",
+        "values": [
+          [
+            6.603636891742066e-07,
+            3.1741508225245206e-05,
+            0.0014541951789108045
+          ],
+          [
+            0.0018385871022652625,
+            0.0003335837232605322,
+            0.001765751147862706
+          ]
+        ],
+        "routes": [
+          "mixture",
+          "mixture"
+        ]
+      },
+      {
+        "method": "hermite",
+        "values": [
+          [
+            1.221347328931974e-06,
+            2.0170782377964225e-05,
+            0.0009807717140538456
+          ],
+          [
+            0.0018392188543570331,
+            0.0003204931472333755,
+            0.0012346208723325815
+          ]
+        ],
+        "routes": [
+          "hermite",
+          "hermite"
+        ]
+      },
+      {
+        "method": "fit0/raw",
+        "values": [
+          [
+            -0.007597727459542902,
+            0.3341556378544607,
+            0.4178522528793337
+          ],
+          [
+            -0.02321335487213405,
+            0.3181565518829817,
+            0.36538682609785467
+          ]
+        ],
+        "routes": [
+          "raw",
+          "raw"
+        ]
+      },
+      {
+        "method": "fit0/safe",
+        "values": [
+          [
+            6.603636891742066e-07,
+            3.1741508225245206e-05,
+            0.0014541951789108045
+          ],
+          [
+            0.0018385871022652625,
+            0.0003335837232605322,
+            0.001765751147862706
+          ]
+        ],
+        "routes": [
+          "fallback_bound",
+          "fallback_bound"
+        ]
+      },
+      {
+        "method": "fit1/raw",
+        "values": [
+          [
+            -0.009721650368428425,
+            0.019595269459811288,
+            0.6322526503893897
+          ],
+          [
+            -0.09412267493445892,
+            0.046663927923797685,
+            0.7396734203390318
+          ]
+        ],
+        "routes": [
+          "raw",
+          "raw"
+        ]
+      },
+      {
+        "method": "fit1/safe",
+        "values": [
+          [
+            6.603636891742066e-07,
+            3.1741508225245206e-05,
+            0.0014541951789108045
+          ],
+          [
+            0.0018385871022652625,
+            0.0003335837232605322,
+            0.001765751147862706
+          ]
+        ],
+        "routes": [
+          "fallback_bound",
+          "fallback_bound"
+        ]
+      },
+      {
+        "method": "fit2/raw",
+        "values": [
+          [
+            -0.0182680797472079,
+            0.3418091338387918,
+            0.3277748910641199
+          ],
+          [
+            -0.031749346400213097,
+            0.33089828521583103,
+            0.33431521369825606
+          ]
+        ],
+        "routes": [
+          "raw",
+          "raw"
+        ]
+      },
+      {
+        "method": "fit2/safe",
+        "values": [
+          [
+            6.603636891742066e-07,
+            3.1741508225245206e-05,
+            0.0014541951789108045
+          ],
+          [
+            0.0018385871022652625,
+            0.0003335837232605322,
+            0.001765751147862706
+          ]
+        ],
+        "routes": [
+          "fallback_bound",
+          "fallback_bound"
+        ]
+      },
+      {
+        "method": "fit3/raw",
+        "values": [
+          [
+            -0.054113952310726465,
+            0.0562849255125999,
+            0.5518580776585567
+          ],
+          [
+            -0.07037845636146534,
+            0.07587900293627756,
+            0.6086054966956245
+          ]
+        ],
+        "routes": [
+          "raw",
+          "raw"
+        ]
+      },
+      {
+        "method": "fit3/safe",
+        "values": [
+          [
+            6.603636891742066e-07,
+            3.1741508225245206e-05,
+            0.0014541951789108045
+          ],
+          [
+            0.0018385871022652625,
+            0.0003335837232605322,
+            0.001765751147862706
+          ]
+        ],
+        "routes": [
+          "fallback_bound",
+          "fallback_bound"
+        ]
+      },
+      {
+        "method": "fit4/raw",
+        "values": [
+          [
+            -0.018108657837181963,
+            0.3491814821935765,
+            0.3616255810497945
+          ],
+          [
+            -0.05556251081432628,
+            0.31359261321418597,
+            0.34894294507724355
+          ]
+        ],
+        "routes": [
+          "raw",
+          "raw"
+        ]
+      },
+      {
+        "method": "fit4/safe",
+        "values": [
+          [
+            6.603636891742066e-07,
+            3.1741508225245206e-05,
+            0.0014541951789108045
+          ],
+          [
+            0.0018385871022652625,
+            0.0003335837232605322,
+            0.001765751147862706
+          ]
+        ],
+        "routes": [
+          "fallback_bound",
+          "fallback_bound"
+        ]
+      },
+      {
+        "method": "fit5/raw",
+        "values": [
+          [
+            -0.022306471050259402,
+            -0.03362531632042264,
+            0.3234021697964059
+          ],
+          [
+            -0.025654840735743423,
+            -0.02965066685900477,
+            0.5329080733242932
+          ]
+        ],
+        "routes": [
+          "raw",
+          "raw"
+        ]
+      },
+      {
+        "method": "fit5/safe",
+        "values": [
+          [
+            6.603636891742066e-07,
+            3.1741508225245206e-05,
+            0.0014541951789108045
+          ],
+          [
+            0.0018385871022652625,
+            0.0003335837232605322,
+            0.001765751147862706
+          ]
+        ],
+        "routes": [
+          "fallback_bound",
+          "fallback_bound"
+        ]
+      }
+    ],
+    "scope": "one new interpreter: imports, actual frozen pilot validation, complete saved archive numeric check and fixed 2-row whole-Greek serving; construction/training measured separately; OS disk cache is not flushed"
+  }
+}

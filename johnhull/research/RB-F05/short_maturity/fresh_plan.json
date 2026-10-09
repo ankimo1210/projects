@@ -1,0 +1,141 @@
+{
+  "schema": "RB-F05-short-fresh-plan-v1",
+  "sample_count": 1048576,
+  "normal_draw_policy": "full_N_diagnostic",
+  "cases": [
+    {
+      "index": 0,
+      "spot": 100.0,
+      "minutes": 1,
+      "event": false,
+      "seeds": {
+        "count": "fresh/raw/0/count",
+        "jump": "fresh/raw/0/jump",
+        "brown": "fresh/raw/0/brown"
+      }
+    },
+    {
+      "index": 1,
+      "spot": 100.0,
+      "minutes": 1,
+      "event": true,
+      "seeds": {
+        "count": "fresh/raw/1/count",
+        "jump": "fresh/raw/1/jump",
+        "brown": "fresh/raw/1/brown"
+      }
+    },
+    {
+      "index": 2,
+      "spot": 100.0,
+      "minutes": 5,
+      "event": false,
+      "seeds": {
+        "count": "fresh/raw/2/count",
+        "jump": "fresh/raw/2/jump",
+        "brown": "fresh/raw/2/brown"
+      }
+    },
+    {
+      "index": 3,
+      "spot": 100.0,
+      "minutes": 5,
+      "event": true,
+      "seeds": {
+        "count": "fresh/raw/3/count",
+        "jump": "fresh/raw/3/jump",
+        "brown": "fresh/raw/3/brown"
+      }
+    },
+    {
+      "index": 4,
+      "spot": 100.0,
+      "minutes": 30,
+      "event": false,
+      "seeds": {
+        "count": "fresh/raw/4/count",
+        "jump": "fresh/raw/4/jump",
+        "brown": "fresh/raw/4/brown"
+      }
+    },
+    {
+      "index": 5,
+      "spot": 100.0,
+      "minutes": 30,
+      "event": true,
+      "seeds": {
+        "count": "fresh/raw/5/count",
+        "jump": "fresh/raw/5/jump",
+        "brown": "fresh/raw/5/brown"
+      }
+    },
+    {
+      "index": 6,
+      "spot": 100.0,
+      "minutes": 60,
+      "event": false,
+      "seeds": {
+        "count": "fresh/raw/6/count",
+        "jump": "fresh/raw/6/jump",
+        "brown": "fresh/raw/6/brown"
+      }
+    },
+    {
+      "index": 7,
+      "spot": 100.0,
+      "minutes": 60,
+      "event": true,
+      "seeds": {
+        "count": "fresh/raw/7/count",
+        "jump": "fresh/raw/7/jump",
+        "brown": "fresh/raw/7/brown"
+      }
+    },
+    {
+      "index": 8,
+      "spot": 100.0,
+      "minutes": 240,
+      "event": false,
+      "seeds": {
+        "count": "fresh/raw/8/count",
+        "jump": "fresh/raw/8/jump",
+        "brown": "fresh/raw/8/brown"
+      }
+    },
+    {
+      "index": 9,
+      "spot": 100.0,
+      "minutes": 240,
+      "event": true,
+      "seeds": {
+        "count": "fresh/raw/9/count",
+        "jump": "fresh/raw/9/jump",
+        "brown": "fresh/raw/9/brown"
+      }
+    },
+    {
+      "index": 10,
+      "spot": 100.0,
+      "minutes": 390,
+      "event": false,
+      "seeds": {
+        "count": "fresh/raw/10/count",
+        "jump": "fresh/raw/10/jump",
+        "brown": "fresh/raw/10/brown"
+      }
+    },
+    {
+      "index": 11,
+      "spot": 100.0,
+      "minutes": 390,
+      "event": true,
+      "seeds": {
+        "count": "fresh/raw/11/count",
+        "jump": "fresh/raw/11/jump",
+        "brown": "fresh/raw/11/brown"
+      }
+    }
+  ],
+  "scope": "declared before first main dataset/fit; additional fixed-seed diagnostic, no main labels/pooling/checkpoint/selection update",
+  "comparison": "frozen six-SE plus reference tolerances; retain unsupported/inconclusive and original denominators"
+}

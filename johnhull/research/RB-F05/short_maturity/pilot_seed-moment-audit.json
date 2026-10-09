@@ -1,0 +1,142 @@
+{
+  "passed": true,
+  "case_count": 84,
+  "stream_count": 3,
+  "conditioned_streams": 252,
+  "prefix_count": 1008,
+  "raw_replay_count": 252,
+  "raw_crn_row_count": 756,
+  "selected_sample_count": 1048576,
+  "ready_sample_candidates": [
+    1048576
+  ],
+  "ready_counts": {
+    "16384": 126,
+    "65536": 157,
+    "262144": 235,
+    "1048576": 252
+  },
+  "failed_counts": {
+    "16384": 126,
+    "65536": 95,
+    "262144": 17,
+    "1048576": 0
+  },
+  "minimum_event_active_count": {
+    "16384": 9,
+    "65536": 54,
+    "262144": 218,
+    "1048576": 905
+  },
+  "maximum_scaled_se": {
+    "16384": [
+      0.008863788245413819,
+      0.0010399364337089444,
+      0.10177264193025885
+    ],
+    "65536": [
+      0.004437019171956374,
+      0.0005125991094821947,
+      0.05562908741259364
+    ],
+    "262144": [
+      0.002162353258813123,
+      0.00025696498099940914,
+      0.027744076003014217
+    ],
+    "1048576": [
+      0.001069439182113728,
+      0.00012800570399715578,
+      0.012973181989762632
+    ]
+  },
+  "maximum_conditioned_mean_reference_difference": [
+    0.023158128771488595,
+    0.002037128489205564,
+    0.0019094415354024008
+  ],
+  "all_reserved_seed_rows": 3870,
+  "replayed_selection_observed_count": 132120576,
+  "replayed_raw_observed_count": 16515072,
+  "replayed_actual_random_draws": 184221365,
+  "source_count": 10,
+  "array_count": 17724,
+  "numeric_comparisons": 23688,
+  "max_absolute_replay_differences": {
+    "carry_years": 0.0,
+    "variance": 2.710505431213761e-20,
+    "jump_mean_count": 0.0,
+    "remaining_seconds": 0.0,
+    "spot-strike": 2.842170943040401e-14,
+    "independent-mixture": 2.674527266322002e-13,
+    "z_jump": 0.0,
+    "conditioned-active-values": 2.2164492463616625e-12,
+    "conditioned-zero-values": 8.532063944244328e-13,
+    "mean": 1.72885039617654e-11,
+    "m2_matrix": 0.0010223388671875,
+    "covariance": 1.5599653124809265e-08,
+    "se": 1.8196555373606316e-13,
+    "precision_limits": 2.674076238218248e-15,
+    "z_brown": 0.0,
+    "target": 0.0,
+    "difference": 1.72885039617654e-11,
+    "crn-width": 6.245004513516506e-17,
+    "crn-target": 0.0,
+    "crn-bias": 0.0,
+    "martingale-variance-mean": 2.842170943040401e-14,
+    "martingale-variance-se": 6.938893903907228e-18,
+    "martingale-variance-target": 2.842170943040401e-14
+  },
+  "raw_diagnostic_status_counts": {
+    "price/supported": 246,
+    "pw_delta/supported": 247,
+    "lr_delta/supported": 246,
+    "lrpw_gamma/supported": 248,
+    "lr2_gamma/supported": 246,
+    "naive_gamma/negative_control": 252,
+    "crn_delta/supported": 743,
+    "crn_gamma/supported": 625,
+    "crn_gamma/diagnostic_inconclusive": 128,
+    "pw_delta/unsupported": 1,
+    "crn_delta/unsupported": 13,
+    "price/unsupported": 2,
+    "lr_delta/unsupported": 2,
+    "lr2_gamma/unsupported": 2,
+    "crn_gamma/unsupported": 3,
+    "price/diagnostic_inconclusive": 4,
+    "pw_delta/diagnostic_inconclusive": 4,
+    "lr_delta/diagnostic_inconclusive": 4,
+    "lrpw_gamma/diagnostic_inconclusive": 4,
+    "lr2_gamma/diagnostic_inconclusive": 4
+  },
+  "costs": {
+    "expense_receipts": 1512,
+    "category_s": {
+      "raw_engine_and_summary": 2.6329215186997317,
+      "raw_rng": 0.28670301532838494,
+      "reference_core_mixture_s": 0.014317633991595358,
+      "reference_density_quad_s": 0.07652481208788231,
+      "reference_density_quad_tight_s": 0.07487093179952353,
+      "reference_finite_differences_s": 0.12770434422418475,
+      "reference_independent_mixture_s": 0.030444888689089566,
+      "reference_merton_s": 0.06608334113843739,
+      "selection_generation": 1.0782293197698891,
+      "selection_prefix_summary": 0.15375621436396614
+    },
+    "nonoverlapping_components_s": 11.885343914036639,
+    "api_run_s": 12.029278137953952,
+    "cli_wall_s": 12.60960372898262,
+    "serialization_s": 7.321913452993613,
+    "unassigned_api_overhead_s": 0.14393422391731292,
+    "cli_over_api_s": 0.580325591028668,
+    "nested_api_added_to_cli": false,
+    "process_receipt_digest": "6e78cd0c6dc61ae7f9f1515bb6fdfe43130887a19b02862dc43b34bec2f3aad3"
+  },
+  "audit_wall_s": 6.9459767790394835,
+  "limits": [
+    "seed replay checks completed pilot provenance; it creates no new labels or allocation",
+    "6SE empirical checks do not prove unbiasedness or coverage",
+    "raw unsupported and inconclusive outcomes remain all original slots",
+    "pilot validation does not approve main NN/Gamma/performance/market use"
+  ]
+}

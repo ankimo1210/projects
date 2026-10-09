@@ -1,0 +1,14 @@
+{
+  "schema": "RB-F05-short-fresh-cost-v1",
+  "record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
+  "fresh_record_digest": "f6d34e936f970cfbf09e9e121ce0cea95428d79b5a5f9e4dfbc60fc1a61442c8",
+  "expense_id": "fresh",
+  "seconds": 26.15482251503272,
+  "categorized_before_serialization_s": 22.26042553631123,
+  "serialization_s": 3.7952655779663473,
+  "npz_bytes": 193825173,
+  "scope": "whole supplemental fresh function through evidence save; fresh-cost receipt write excluded",
+  "charged_once": true,
+  "main_only_cost": false,
+  "cold_pricing_cost": false
+}

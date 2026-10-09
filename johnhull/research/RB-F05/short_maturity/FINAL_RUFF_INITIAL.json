@@ -1,0 +1,30 @@
+{
+  "paths": [
+    "deep_hedge_price/src/deep_hedge_price/_short_maturity_dml.py",
+    "deep_hedge_price/tests/test_short_maturity_dml.py",
+    "johnhull/hullkit/src/hullkit/_short_maturity_teachers.py",
+    "johnhull/hullkit/tests/test_short_maturity_independent.py",
+    "johnhull/hullkit/tests/test_short_maturity_notebook.py",
+    "johnhull/hullkit/tests/test_short_maturity_pilot.py",
+    "johnhull/hullkit/tests/test_short_maturity_protocol.py",
+    "johnhull/hullkit/tests/test_short_maturity_reference.py",
+    "johnhull/hullkit/tests/test_short_maturity_study.py",
+    "johnhull/hullkit/tests/test_short_maturity_teachers.py",
+    "johnhull/research/RB-F05/short_maturity/analytics.py",
+    "johnhull/research/RB-F05/short_maturity/build_notebook.py",
+    "johnhull/research/RB-F05/short_maturity/build_reference.py",
+    "johnhull/research/RB-F05/short_maturity/fresh_generate_stopwatch.py",
+    "johnhull/research/RB-F05/short_maturity/fresh_replay_stopwatch.py",
+    "johnhull/research/RB-F05/short_maturity/fresh_support.py",
+    "johnhull/research/RB-F05/short_maturity/pilot.py",
+    "johnhull/research/RB-F05/short_maturity/protocol.py",
+    "johnhull/research/RB-F05/short_maturity/reference_methods.py"
+  ],
+  "count": 19,
+  "ruff_exit": 1,
+  "ruff_stdout": "I001 [*] Import block is un-sorted or un-formatted\n  --> johnhull/research/RB-F05/short_maturity/fresh_generate_stopwatch.py:3:1\n   |\n 1 |   #!/usr/bin/env python3\n 2 |   \"\"\"Outside-process stopwatch for supplemental fresh support only.\"\"\"\n 3 | / import hashlib\n 4 | | import importlib.util\n 5 | | import json\n 6 | | import os\n 7 | | from pathlib import Path\n 8 | | import subprocess\n 9 | | import sys\n10 | | from time import perf_counter\n11 | | from datetime import datetime, UTC\n   | |__________________________________^\n12 |\n13 |   source=Path('/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity')\n   |\nhelp: Organize imports\n\nE702 Multiple statements on one line (semicolon)\n  --> johnhull/research/RB-F05/short_maturity/fresh_generate_stopwatch.py:30:46\n   |\n28 | Path('/tmp/rbf05-fresh-generation.stderr').write_text(result.stderr)\n29 | spec=importlib.util.spec_from_file_location('fresh_support',script)\n30 | support=importlib.util.module_from_spec(spec);spec.loader.exec_module(support)\n   |                                              ^\n31 | protocol=support.modules(source)[1]\n32 | record=json.loads((source/'reference.json').read_text())\n   |\n\nE701 Multiple statements on one line (colon)\n  --> johnhull/research/RB-F05/short_maturity/fresh_generate_stopwatch.py:47:17\n   |\n45 | receipt.write_text(json.dumps(saved,indent=2))\n46 | print(result.stdout)\n47 | if result.stderr: print(result.stderr,file=sys.stderr)\n   |                 ^\n48 | print(json.dumps(saved,indent=2))\n49 | sys.exit(result.returncode)\n   |\n\nI001 [*] Import block is un-sorted or un-formatted\n --> johnhull/research/RB-F05/short_maturity/fresh_replay_stopwatch.py:1:1\n  |\n1 | / import json\n2 | | import os\n3 | | from pathlib import Path\n4 | | import subprocess\n5 | | import sys\n6 | | from time import perf_counter\n7 | | from datetime import datetime, UTC\n  | |__________________________________^\n8 |   directory=Path('/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity')\n9 |   path=directory/'fresh_saved_replay_cost.json'\n  |\nhelp: Organize imports\n\nE701 Multiple statements on one line (colon)\n  --> johnhull/research/RB-F05/short_maturity/fresh_replay_stopwatch.py:10:17\n   |\n 8 | directory=Path('/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity')\n 9 | path=directory/'fresh_saved_replay_cost.json'\n10 | if path.exists(): raise FileExistsError('existing saved replay receipt')\n   |                 ^\n11 | env=dict(os.environ)\n12 | env.update(OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MKL_NUM_THREADS='1',PYTHONPATH='/home/kazumasa/worktrees/johnhull-research-roa\u2026\n   |\n\nE702 Multiple statements on one line (semicolon)\n  --> johnhull/research/RB-F05/short_maturity/fresh_replay_stopwatch.py:14:36\n   |\n12 | env.update(OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MKL_NUM_THREADS='1',PYTHONPATH='/home/kazumasa/worktrees/johnhull-research-roa\u2026\n13 | command=[sys.executable,str(directory/'fresh_support.py'),'--directory',str(directory),'--source',str(directory),'--check']\n14 | start=datetime.now(UTC).isoformat();before=perf_counter()\n   |                                    ^\n15 | r=subprocess.run(command,env=env,text=True,capture_output=True)\n16 | seconds=perf_counter()-before;end=datetime.now(UTC).isoformat()\n   |\n\nE702 Multiple statements on one line (semicolon)\n  --> johnhull/research/RB-F05/short_maturity/fresh_replay_stopwatch.py:16:30\n   |\n14 | start=datetime.now(UTC).isoformat();before=perf_counter()\n15 | r=subprocess.run(command,env=env,text=True,capture_output=True)\n16 | seconds=perf_counter()-before;end=datetime.now(UTC).isoformat()\n   |                              ^\n17 | Path('/tmp/rbf05-fresh-saved-replay.stdout').write_text(r.stdout)\n18 | Path('/tmp/rbf05-fresh-saved-replay.stderr').write_text(r.stderr)\n   |\n\nE701 Multiple statements on one line (colon)\n  --> johnhull/research/RB-F05/short_maturity/fresh_replay_stopwatch.py:23:12\n   |\n21 | path.write_text(json.dumps(receipt,indent=2))\n22 | print(r.stdout)\n23 | if r.stderr: print(r.stderr,file=sys.stderr)\n   |            ^\n24 | print(json.dumps(receipt,indent=2))\n25 | sys.exit(r.returncode)\n   |\n\nFound 8 errors.\n[*] 2 fixable with the `--fix` option.\n",
+  "ruff_stderr": "",
+  "format_exit": 1,
+  "format_stdout": "Would reformat: johnhull/research/RB-F05/short_maturity/fresh_generate_stopwatch.py\nWould reformat: johnhull/research/RB-F05/short_maturity/fresh_replay_stopwatch.py\n2 files would be reformatted, 17 files already formatted\n",
+  "format_stderr": ""
+}

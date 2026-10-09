@@ -1,0 +1,4770 @@
+{
+  "schema": "RB-F05-short-fresh-v1",
+  "phase": "additional_verification",
+  "main_record_digest": "c116e01cbcfa0ef3d42b1b623a85eb976c6d3c3545ffca1b38cc97e06b03aebe",
+  "protocol_digest": "12ccfefe21193800ec4ace021c44ffe926461fc68bd86f526bb02b617c19acc2",
+  "source_registry": {
+    "johnhull/hullkit/src/hullkit/_short_maturity_teachers.py": "a51a5850fa11666e07019af5efd644124be2f36f7396d84a8292bc7755879b37",
+    "deep_hedge_price/src/deep_hedge_price/_short_maturity_dml.py": "bf28b110f1706668d8d206651a7ceafd8c58ad637c7279355e1f738ea17a720b",
+    "johnhull/research/RB-F05/short_maturity/reference_methods.py": "125a6ff0b15e1576f40b5084f21b45a0e43c94a120b8db8519ef401f042ca165",
+    "johnhull/research/RB-F05/short_maturity/protocol.py": "894a3e0d8c0efcde90d92ea165796b3e0f647bf66a205e117b73a65d66c4cf5b",
+    "johnhull/research/RB-F05/short_maturity/pilot.py": "0a739e9a783b5cfa797c39dfedc9e01dc87fe421afc65a0becd6ad983e83b965",
+    "johnhull/research/RB-F05/short_maturity/build_reference.py": "a198d21853693bb73e6f5e86530ff4affbe72da91a39abbbff0b27d599502bd6",
+    "johnhull/research/RB-F05/short_maturity/analytics.py": "09430708a7256774f09a73120398684db0893477111b3fd8f8af18dccc879235",
+    "johnhull/hullkit/src/hullkit/zero_dte.py": "e8f99291613b17e0ffb6a29535d9ea08a2ab604e7116513164e91eca6dc07265",
+    "johnhull/hullkit/src/hullkit/alternative_models.py": "a1b6001c1c508598240b806f0fa282bde2d5e9290ca4ff1c38a92baaa4cd64d0",
+    "johnhull/hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d"
+  },
+  "support_script_sha256": "21838ffe256244973838030521658995c1e4e2f58dcc8bd446c3301c70df70b6",
+  "support_source_filename": "fresh_support.py",
+  "declared_plan": {
+    "schema": "RB-F05-short-fresh-plan-v1",
+    "sample_count": 1048576,
+    "normal_draw_policy": "full_N_diagnostic",
+    "cases": [
+      {
+        "index": 0,
+        "spot": 100.0,
+        "minutes": 1,
+        "event": false,
+        "seeds": {
+          "count": "fresh/raw/0/count",
+          "jump": "fresh/raw/0/jump",
+          "brown": "fresh/raw/0/brown"
+        }
+      },
+      {
+        "index": 1,
+        "spot": 100.0,
+        "minutes": 1,
+        "event": true,
+        "seeds": {
+          "count": "fresh/raw/1/count",
+          "jump": "fresh/raw/1/jump",
+          "brown": "fresh/raw/1/brown"
+        }
+      },
+      {
+        "index": 2,
+        "spot": 100.0,
+        "minutes": 5,
+        "event": false,
+        "seeds": {
+          "count": "fresh/raw/2/count",
+          "jump": "fresh/raw/2/jump",
+          "brown": "fresh/raw/2/brown"
+        }
+      },
+      {
+        "index": 3,
+        "spot": 100.0,
+        "minutes": 5,
+        "event": true,
+        "seeds": {
+          "count": "fresh/raw/3/count",
+          "jump": "fresh/raw/3/jump",
+          "brown": "fresh/raw/3/brown"
+        }
+      },
+      {
+        "index": 4,
+        "spot": 100.0,
+        "minutes": 30,
+        "event": false,
+        "seeds": {
+          "count": "fresh/raw/4/count",
+          "jump": "fresh/raw/4/jump",
+          "brown": "fresh/raw/4/brown"
+        }
+      },
+      {
+        "index": 5,
+        "spot": 100.0,
+        "minutes": 30,
+        "event": true,
+        "seeds": {
+          "count": "fresh/raw/5/count",
+          "jump": "fresh/raw/5/jump",
+          "brown": "fresh/raw/5/brown"
+        }
+      },
+      {
+        "index": 6,
+        "spot": 100.0,
+        "minutes": 60,
+        "event": false,
+        "seeds": {
+          "count": "fresh/raw/6/count",
+          "jump": "fresh/raw/6/jump",
+          "brown": "fresh/raw/6/brown"
+        }
+      },
+      {
+        "index": 7,
+        "spot": 100.0,
+        "minutes": 60,
+        "event": true,
+        "seeds": {
+          "count": "fresh/raw/7/count",
+          "jump": "fresh/raw/7/jump",
+          "brown": "fresh/raw/7/brown"
+        }
+      },
+      {
+        "index": 8,
+        "spot": 100.0,
+        "minutes": 240,
+        "event": false,
+        "seeds": {
+          "count": "fresh/raw/8/count",
+          "jump": "fresh/raw/8/jump",
+          "brown": "fresh/raw/8/brown"
+        }
+      },
+      {
+        "index": 9,
+        "spot": 100.0,
+        "minutes": 240,
+        "event": true,
+        "seeds": {
+          "count": "fresh/raw/9/count",
+          "jump": "fresh/raw/9/jump",
+          "brown": "fresh/raw/9/brown"
+        }
+      },
+      {
+        "index": 10,
+        "spot": 100.0,
+        "minutes": 390,
+        "event": false,
+        "seeds": {
+          "count": "fresh/raw/10/count",
+          "jump": "fresh/raw/10/jump",
+          "brown": "fresh/raw/10/brown"
+        }
+      },
+      {
+        "index": 11,
+        "spot": 100.0,
+        "minutes": 390,
+        "event": true,
+        "seeds": {
+          "count": "fresh/raw/11/count",
+          "jump": "fresh/raw/11/jump",
+          "brown": "fresh/raw/11/brown"
+        }
+      }
+    ],
+    "scope": "declared before first main dataset/fit; additional fixed-seed diagnostic, no main labels/pooling/checkpoint/selection update",
+    "comparison": "frozen six-SE plus reference tolerances; retain unsupported/inconclusive and original denominators"
+  },
+  "declared_plan_digest": "ad6e442058a5b9a2012f28bd570bb2fb13ac853dea26d36aad0012e200baec36",
+  "fixed_design": {
+    "sample_count": 1048576,
+    "block_size": 16384,
+    "normal_draw_policy": "full_N_diagnostic",
+    "roster": [
+      {
+        "id": 0,
+        "remaining_minutes": 1,
+        "event": false,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/0/count",
+          "jump": "fresh/raw/0/jump",
+          "brown": "fresh/raw/0/brown"
+        }
+      },
+      {
+        "id": 1,
+        "remaining_minutes": 1,
+        "event": true,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/1/count",
+          "jump": "fresh/raw/1/jump",
+          "brown": "fresh/raw/1/brown"
+        }
+      },
+      {
+        "id": 2,
+        "remaining_minutes": 5,
+        "event": false,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/2/count",
+          "jump": "fresh/raw/2/jump",
+          "brown": "fresh/raw/2/brown"
+        }
+      },
+      {
+        "id": 3,
+        "remaining_minutes": 5,
+        "event": true,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/3/count",
+          "jump": "fresh/raw/3/jump",
+          "brown": "fresh/raw/3/brown"
+        }
+      },
+      {
+        "id": 4,
+        "remaining_minutes": 30,
+        "event": false,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/4/count",
+          "jump": "fresh/raw/4/jump",
+          "brown": "fresh/raw/4/brown"
+        }
+      },
+      {
+        "id": 5,
+        "remaining_minutes": 30,
+        "event": true,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/5/count",
+          "jump": "fresh/raw/5/jump",
+          "brown": "fresh/raw/5/brown"
+        }
+      },
+      {
+        "id": 6,
+        "remaining_minutes": 60,
+        "event": false,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/6/count",
+          "jump": "fresh/raw/6/jump",
+          "brown": "fresh/raw/6/brown"
+        }
+      },
+      {
+        "id": 7,
+        "remaining_minutes": 60,
+        "event": true,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/7/count",
+          "jump": "fresh/raw/7/jump",
+          "brown": "fresh/raw/7/brown"
+        }
+      },
+      {
+        "id": 8,
+        "remaining_minutes": 240,
+        "event": false,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/8/count",
+          "jump": "fresh/raw/8/jump",
+          "brown": "fresh/raw/8/brown"
+        }
+      },
+      {
+        "id": 9,
+        "remaining_minutes": 240,
+        "event": true,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/9/count",
+          "jump": "fresh/raw/9/jump",
+          "brown": "fresh/raw/9/brown"
+        }
+      },
+      {
+        "id": 10,
+        "remaining_minutes": 390,
+        "event": false,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/10/count",
+          "jump": "fresh/raw/10/jump",
+          "brown": "fresh/raw/10/brown"
+        }
+      },
+      {
+        "id": 11,
+        "remaining_minutes": 390,
+        "event": true,
+        "spot": 100.0,
+        "strike": 100.0,
+        "seed_ids": {
+          "count": "fresh/raw/11/count",
+          "jump": "fresh/raw/11/jump",
+          "brown": "fresh/raw/11/brown"
+        }
+      }
+    ],
+    "method_order": [
+      "conditioned_price",
+      "conditioned_delta",
+      "conditioned_gamma",
+      "price",
+      "pw_delta",
+      "lr_delta",
+      "lrpw_gamma",
+      "lr2_gamma",
+      "naive_gamma",
+      "crn_delta_0.02",
+      "crn_gamma_0.02",
+      "crn_delta_0.05",
+      "crn_gamma_0.05",
+      "crn_delta_0.10",
+      "crn_gamma_0.10"
+    ],
+    "crn_scaled_bumps": [
+      0.02,
+      0.05,
+      0.1
+    ],
+    "se_multiple": 6.0,
+    "absolute_tolerance": [
+      1e-07,
+      1e-09,
+      1e-09
+    ],
+    "relative_tolerance": [
+      1e-10,
+      1e-10,
+      1e-09
+    ],
+    "nmax": 8,
+    "epsabs": 1e-10,
+    "epsrel": 1e-10,
+    "tighten_factor": 4
+  },
+  "original_case_count": 12,
+  "cases": [
+    {
+      "id": 0,
+      "remaining_minutes": 1,
+      "event": false,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/0/count",
+        "jump": "fresh/raw/0/jump",
+        "brown": "fresh/raw/0/brown"
+      },
+      "state": {
+        "carry_years": 1.902587519025875e-06,
+        "variance": 8.568429621061282e-07,
+        "jump_mean_count": 0.0,
+        "remaining_seconds": 60.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 18151275521903228455,
+        "jump": 3892804635976798841,
+        "brown": 12751121781802344795
+      },
+      "keys": {
+        "counts": "fresh_0_counts",
+        "z_jump": "fresh_0_z_jump",
+        "z_brown": "fresh_0_z_brown",
+        "mean": "fresh_0_mean",
+        "m2": "fresh_0_m2",
+        "covariance": "fresh_0_covariance",
+        "se": "fresh_0_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 0,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 2097152,
+        "count_status": "deterministic_zero",
+        "conditioned_effective_observed_mc_n": 0,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.036931267856089314,
+          0.5002092415189529,
+          4.309822549851458
+        ],
+        "tail_bounds": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0000369312678561e-07,
+          1.0500209241518954e-09,
+          5.309822549851458e-09
+        ],
+        "quad_values": [
+          0.03693126785609087,
+          0.5002092415189529,
+          4.309822549851458
+        ],
+        "quad_errors": [
+          2.0201725804163323e-12,
+          1.6136772444671944e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.03693126785609087,
+          0.5002092415189529,
+          4.309822549851458
+        ],
+        "tight_errors": [
+          2.0201725804163323e-12,
+          1.6136772444671944e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 4.309822549851459,
+        "quad_lr_gamma_error": 7.517394888033899e-12,
+        "tight_lr_gamma": 4.309822549851459,
+        "tight_lr_gamma_error": 7.517394888033899e-12,
+        "finite_steps": [
+          0.0018513162475451116,
+          0.004628290618862779,
+          0.009256581237725558
+        ],
+        "finite_values": [
+          [
+            0.5002092029520382,
+            4.309678900720826
+          ],
+          [
+            0.5002090006139855,
+            4.30892489806668
+          ],
+          [
+            0.5002082796739565,
+            4.3062346316202715
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -3.8566914661863905e-08,
+            -0.00014364913063236173
+          ],
+          [
+            -2.409049673079977e-07,
+            -0.0008976517847782972
+          ],
+          [
+            -9.618449963166853e-07,
+            -0.0035879182311866487
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 0,
+      "zero_count": 1048576,
+      "nonzero_raw": [
+        524543,
+        524543,
+        524543,
+        524543,
+        524543,
+        0
+      ],
+      "crossings": [
+        16792,
+        41879,
+        83684
+      ],
+      "finite_steps": [
+        0.0018513162475451118,
+        0.00462829061886278,
+        0.00925658123772556
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.03693126785609166,
+          "se": 0.0,
+          "target": 0.036931267856089314,
+          "difference": 2.345346139520643e-15,
+          "tolerance": 1.0000369312678561e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5002092415189527,
+          "se": 0.0,
+          "target": 0.5002092415189529,
+          "difference": -1.1102230246251565e-16,
+          "tolerance": 1.0500209241518954e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 4.309822549851456,
+          "se": 0.0,
+          "target": 4.309822549851458,
+          "difference": -1.7763568394002505e-15,
+          "tolerance": 5.309822549851458e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.036916164239204526,
+          "se": 5.2771481248904476e-05,
+          "target": 0.036931267856089314,
+          "difference": -1.5103616884788729e-05,
+          "tolerance": 1.0000369312678561e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.500612320040388,
+          "se": 0.0004886418835927252,
+          "target": 0.5002092415189529,
+          "difference": 0.000403078521435174,
+          "tolerance": 1.0500209241518954e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.49963838212359596,
+          "se": 0.0010910284271143259,
+          "target": 0.5002092415189529,
+          "difference": -0.000570859395356893,
+          "tolerance": 1.0500209241518954e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 4.308054705429097,
+          "se": 0.006161939416963282,
+          "target": 4.309822549851458,
+          "difference": -0.001767844422361442,
+          "tolerance": 5.309822549851458e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 4.294975353160251,
+          "se": 0.023141386537435325,
+          "target": 4.309822549851458,
+          "difference": -0.014847196691206932,
+          "tolerance": 5.309822549851458e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 4.309822549851458,
+          "difference": -4.309822549851458,
+          "tolerance": 5.309822549851458e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5005943002650177,
+          "se": 0.00048603928473018215,
+          "target": 0.5002092029520382,
+          "difference": 0.0003850973129795321,
+          "tolerance": 1.0500209241518954e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 4.313597352080875,
+          "se": 0.03828696811180663,
+          "target": 4.309678900720826,
+          "difference": 0.003918451360049424,
+          "tolerance": 5.309822549851458e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5005496057577244,
+          "se": 0.0004820844737491538,
+          "target": 0.5002090006139855,
+          "difference": 0.0003406051437389035,
+          "tolerance": 1.0500209241518954e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 4.326245255469951,
+          "se": 0.02400848698367524,
+          "target": 4.30892489806668,
+          "difference": 0.017320357403271203,
+          "tolerance": 5.309822549851458e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5004919728655188,
+          "se": 0.0004754859477113515,
+          "target": 0.5002082796739565,
+          "difference": 0.00028369319156229533,
+          "tolerance": 1.0500209241518954e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 4.312618230939568,
+          "se": 0.016696914297543747,
+          "target": 4.3062346316202715,
+          "difference": 0.006383599319296884,
+          "tolerance": 5.309822549851458e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "remaining_minutes": 1,
+      "event": true,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/1/count",
+        "jump": "fresh/raw/1/jump",
+        "brown": "fresh/raw/1/brown"
+      },
+      "state": {
+        "carry_years": 1.902587519025875e-06,
+        "variance": 8.568429621061282e-07,
+        "jump_mean_count": 0.0009333333333333333,
+        "remaining_seconds": 60.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 1208915446071335324,
+        "jump": 17186592491954127926,
+        "brown": 4896819830451337454
+      },
+      "keys": {
+        "counts": "fresh_1_counts",
+        "z_jump": "fresh_1_z_jump",
+        "z_brown": "fresh_1_z_brown",
+        "mean": "fresh_1_mean",
+        "m2": "fresh_1_m2",
+        "covariance": "fresh_1_covariance",
+        "se": "fresh_1_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 1048576,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 3145728,
+        "count_status": "IID_poisson",
+        "conditioned_effective_observed_mc_n": 1048576,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.04093472967959463,
+          0.5177487839398331,
+          4.301675510245597
+        ],
+        "tail_bounds": [
+          9.870290571364438e-32,
+          9.870290571364438e-34,
+          1.3125524948733473e-35
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0000409347296796e-07,
+          1.0517748783939833e-09,
+          5.301675510245597e-09
+        ],
+        "quad_values": [
+          0.040934729679597374,
+          0.5177487839398334,
+          4.301675510245599
+        ],
+        "quad_errors": [
+          1.986981636260509e-12,
+          1.7828478420606341e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.040934729679597374,
+          0.5177487839398334,
+          4.301675510245599
+        ],
+        "tight_errors": [
+          1.986981636260509e-12,
+          1.6140937675459458e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 4.301675510245599,
+        "quad_lr_gamma_error": 7.637562096660217e-12,
+        "tight_lr_gamma": 4.301675510245599,
+        "tight_lr_gamma_error": 7.593648754431346e-12,
+        "finite_steps": [
+          0.0018513162475451116,
+          0.004628290618862779,
+          0.009256581237725558
+        ],
+        "finite_values": [
+          [
+            0.5177475677567078,
+            4.3015324395839905
+          ],
+          [
+            0.5177411852452105,
+            4.300781477029312
+          ],
+          [
+            0.5177184239760985,
+            4.298102050882801
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -1.2161831253187927e-06,
+            -0.00014307066160679227
+          ],
+          [
+            -7.5986946226347385e-06,
+            -0.0008940332162854503
+          ],
+          [
+            -3.035996373468297e-05,
+            -0.003573459362796072
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 955,
+      "zero_count": 1047621,
+      "nonzero_raw": [
+        543402,
+        543402,
+        543402,
+        543402,
+        543402,
+        0
+      ],
+      "crossings": [
+        16554,
+        41503,
+        83065
+      ],
+      "finite_steps": [
+        0.0018513162475451118,
+        0.00462829061886278,
+        0.00925658123772556
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.041157436973436656,
+          "se": 0.00015654766422090502,
+          "target": 0.04093472967959463,
+          "difference": 0.00022270729384202964,
+          "tolerance": 1.0000409347296796e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5177746127790471,
+          "se": 1.563108291232515e-05,
+          "target": 0.5177487839398331,
+          "difference": 2.5828839213981603e-05,
+          "tolerance": 1.0517748783939833e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 4.301754398214553,
+          "se": 0.00012648433710070564,
+          "target": 4.301675510245597,
+          "difference": 7.888796895549888e-05,
+          "tolerance": 5.301675510245597e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.04119173971828655,
+          "se": 0.0001655948953439868,
+          "target": 0.04093472967959463,
+          "difference": 0.0002570100386919266,
+          "tolerance": 1.0000409347296796e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5186404187017213,
+          "se": 0.0004883473647508063,
+          "target": 0.5177487839398331,
+          "difference": 0.0008916347618881382,
+          "tolerance": 1.0517748783939833e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.516967269018471,
+          "se": 0.0021883720293403132,
+          "target": 0.5177487839398331,
+          "difference": -0.0007815149213621364,
+          "tolerance": 1.0517748783939833e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 4.305336728041518,
+          "se": 0.006168839600314361,
+          "target": 4.301675510245597,
+          "difference": 0.00366121779592099,
+          "tolerance": 5.301675510245597e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 4.338470756737431,
+          "se": 0.041764274941293304,
+          "target": 4.301675510245597,
+          "difference": 0.036795246491833744,
+          "tolerance": 5.301675510245597e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 4.301675510245597,
+          "difference": -4.301675510245597,
+          "tolerance": 5.301675510245597e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5186415573366823,
+          "se": 0.0004857613401079336,
+          "target": 0.5177475677567078,
+          "difference": 0.0008939895799744413,
+          "tolerance": 1.0517748783939833e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 4.288251662297114,
+          "se": 0.03821831175470209,
+          "target": 4.3015324395839905,
+          "difference": -0.0132807772868766,
+          "tolerance": 5.301675510245597e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5186499362317181,
+          "se": 0.0004818709265446575,
+          "target": 0.5177411852452105,
+          "difference": 0.000908750986507556,
+          "tolerance": 1.0517748783939833e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 4.271774115481084,
+          "se": 0.023869928671323756,
+          "target": 4.300781477029312,
+          "difference": -0.029007361548227806,
+          "tolerance": 5.301675510245597e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5186393457157822,
+          "se": 0.00047528767863304594,
+          "target": 0.5177184239760985,
+          "difference": 0.0009209217396837222,
+          "tolerance": 1.0517748783939833e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 4.275647747102027,
+          "se": 0.01661650346518077,
+          "target": 4.298102050882801,
+          "difference": -0.02245430378077451,
+          "tolerance": 5.301675510245597e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "remaining_minutes": 5,
+      "event": false,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/2/count",
+        "jump": "fresh/raw/2/jump",
+        "brown": "fresh/raw/2/brown"
+      },
+      "state": {
+        "carry_years": 9.512937595129377e-06,
+        "variance": 4.284214810530606e-06,
+        "jump_mean_count": 0.0,
+        "remaining_seconds": 300.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 14993016227590889961,
+        "jump": 14975106854029803729,
+        "brown": 17596982384723036662
+      },
+      "keys": {
+        "counts": "fresh_2_counts",
+        "z_jump": "fresh_2_z_jump",
+        "z_brown": "fresh_2_z_brown",
+        "mean": "fresh_2_mean",
+        "m2": "fresh_2_m2",
+        "covariance": "fresh_2_covariance",
+        "se": "fresh_2_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 0,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 2097152,
+        "count_status": "deterministic_zero",
+        "conditioned_effective_observed_mc_n": 0,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.08258869276285948,
+          0.5004678781742878,
+          1.927410178061018
+        ],
+        "tail_bounds": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0000825886927628e-07,
+          1.0500467878174288e-09,
+          2.9274101780610182e-09
+        ],
+        "quad_values": [
+          0.08258869276287052,
+          0.5004678781742878,
+          1.9274101780610178
+        ],
+        "quad_errors": [
+          4.489866464428472e-12,
+          1.6097587654642307e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.08258869276287052,
+          0.5004678781742878,
+          1.9274101780610178
+        ],
+        "tight_errors": [
+          4.489866464428472e-12,
+          1.6097587654642307e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 1.9274101780610182,
+        "quad_lr_gamma_error": 3.363308350845491e-12,
+        "tight_lr_gamma": 1.9274101780610182,
+        "tight_lr_gamma_error": 3.363308350845491e-12,
+        "finite_steps": [
+          0.00413966897736068,
+          0.010349172443401701,
+          0.020698344886803402
+        ],
+        "finite_values": [
+          [
+            0.5004677919403318,
+            1.9273459366947245
+          ],
+          [
+            0.5004673394962877,
+            1.9270087418425217
+          ],
+          [
+            0.5004657274271364,
+            1.9258056352260646
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -8.623395608697848e-08,
+            -6.424136629346044e-05
+          ],
+          [
+            -5.386780000948832e-07,
+            -0.0004014362184963094
+          ],
+          [
+            -2.150747151485888e-06,
+            -0.0016045428349533708
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 0,
+      "zero_count": 1048576,
+      "nonzero_raw": [
+        524268,
+        524268,
+        524268,
+        524268,
+        524268,
+        0
+      ],
+      "crossings": [
+        16710,
+        41708,
+        83435
+      ],
+      "finite_steps": [
+        0.00413966897736068,
+        0.010349172443401701,
+        0.020698344886803402
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.08258869276287173,
+          "se": 0.0,
+          "target": 0.08258869276285948,
+          "difference": 1.2254086634300165e-14,
+          "tolerance": 1.0000825886927628e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.500467878174288,
+          "se": 0.0,
+          "target": 0.5004678781742878,
+          "difference": 1.1102230246251565e-16,
+          "tolerance": 1.0500467878174288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 1.9274101780610162,
+          "se": 0.0,
+          "target": 1.927410178061018,
+          "difference": -1.7763568394002505e-15,
+          "tolerance": 2.9274101780610182e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.08260734615078875,
+          "se": 0.00011812042029166666,
+          "target": 0.08258869276285948,
+          "difference": 1.8653387929279397e-05,
+          "tolerance": 1.0000825886927628e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5008068572865773,
+          "se": 0.0004890888476654384,
+          "target": 0.5004678781742878,
+          "difference": 0.000338979112289417,
+          "tolerance": 1.0500467878174288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.5003042341385994,
+          "se": 0.0010920144656587126,
+          "target": 0.5004678781742878,
+          "difference": -0.00016364403568847052,
+          "tolerance": 1.0500467878174288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 1.9278428348831234,
+          "se": 0.0027602226039230024,
+          "target": 1.927410178061018,
+          "difference": 0.0004326568221053595,
+          "tolerance": 2.9274101780610182e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 1.9216391368599577,
+          "se": 0.01034344967997638,
+          "target": 1.927410178061018,
+          "difference": -0.005771041201060312,
+          "tolerance": 2.9274101780610182e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 1.927410178061018,
+          "difference": -1.927410178061018,
+          "tolerance": 2.9274101780610182e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5007541330605709,
+          "se": 0.0004864997334204966,
+          "target": 0.5004677919403318,
+          "difference": 0.00028634112023917524,
+          "tolerance": 1.0500467878174288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 1.9175219647406427,
+          "se": 0.01704110450696679,
+          "target": 1.9273459366947245,
+          "difference": -0.0098239719540818,
+          "tolerance": 2.9274101780610182e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5007460966957663,
+          "se": 0.0004825814544281509,
+          "target": 0.5004673394962877,
+          "difference": 0.00027875719947856314,
+          "tolerance": 1.0500467878174288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 1.92152072545565,
+          "se": 0.010699563524132883,
+          "target": 1.9270087418425217,
+          "difference": -0.005488016386871797,
+          "tolerance": 2.9274101780610182e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5007459079986883,
+          "se": 0.00047596799663383204,
+          "target": 0.5004657274271364,
+          "difference": 0.00028018057155199116,
+          "tolerance": 1.0500467878174288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 1.9238556874555142,
+          "se": 0.00745260047832621,
+          "target": 1.9258056352260646,
+          "difference": -0.0019499477705504642,
+          "tolerance": 2.9274101780610182e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "remaining_minutes": 5,
+      "event": true,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/3/count",
+        "jump": "fresh/raw/3/jump",
+        "brown": "fresh/raw/3/brown"
+      },
+      "state": {
+        "carry_years": 9.512937595129377e-06,
+        "variance": 4.284214810530606e-06,
+        "jump_mean_count": 0.004666666666666667,
+        "remaining_seconds": 300.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 16755960963848808363,
+        "jump": 11059159697070779663,
+        "brown": 15892153707603065230
+      },
+      "keys": {
+        "counts": "fresh_3_counts",
+        "z_jump": "fresh_3_z_jump",
+        "z_brown": "fresh_3_z_brown",
+        "mean": "fresh_3_mean",
+        "m2": "fresh_3_m2",
+        "covariance": "fresh_3_covariance",
+        "se": "fresh_3_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 1048576,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 3145728,
+        "count_status": "IID_poisson",
+        "conditioned_effective_observed_mc_n": 1048576,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.10259467072863077,
+          0.5391123299902831,
+          1.9093526217057615
+        ],
+        "tail_bounds": [
+          1.9216088549736102e-25,
+          1.92160885497361e-27,
+          2.5553092434568173e-29
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0001025946707286e-07,
+          1.0539112329990283e-09,
+          2.9093526217057616e-09
+        ],
+        "quad_values": [
+          0.1025946707286263,
+          0.5391123299902834,
+          1.9093526217057615
+        ],
+        "quad_errors": [
+          4.3289478145937735e-12,
+          2.4685689095068085e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.1025946707286263,
+          0.5391123299902834,
+          1.9093526217057615
+        ],
+        "tight_errors": [
+          4.3289478145937735e-12,
+          1.6072304584232704e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 1.909352621705762,
+        "quad_lr_gamma_error": 3.6508425370031606e-12,
+        "tight_lr_gamma": 1.909352621705762,
+        "tight_lr_gamma_error": 3.430724417350928e-12,
+        "finite_steps": [
+          0.00413966897736068,
+          0.010349172443401701,
+          0.020698344886803402
+        ],
+        "finite_values": [
+          [
+            0.5391096311251283,
+            1.9092896667439583
+          ],
+          [
+            0.5390954674874179,
+            1.9089592304097496
+          ],
+          [
+            0.5390449570247003,
+            1.9077802220251319
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -2.6988651548043308e-06,
+            -6.29549618031966e-05
+          ],
+          [
+            -1.6862502865255813e-05,
+            -0.00039339129601190237
+          ],
+          [
+            -6.737296558279038e-05,
+            -0.0015723996806296103
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 4830,
+      "zero_count": 1043746,
+      "nonzero_raw": [
+        563788,
+        563788,
+        563788,
+        563788,
+        563788,
+        0
+      ],
+      "crossings": [
+        16515,
+        41307,
+        82736
+      ],
+      "finite_steps": [
+        0.00413966897736068,
+        0.010349172443401701,
+        0.020698344886803402
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.10253895373837078,
+          "se": 0.00032848108313698296,
+          "target": 0.10259467072863077,
+          "difference": -5.5716990259982446e-05,
+          "tolerance": 1.0001025946707286e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5390972351101204,
+          "se": 3.539742941752328e-05,
+          "target": 0.5391123299902831,
+          "difference": -1.5094880162713764e-05,
+          "tolerance": 1.0539112329990283e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 1.9094314348694128,
+          "se": 0.0001254785801569363,
+          "target": 1.9093526217057615,
+          "difference": 7.881316365132562e-05,
+          "tolerance": 2.9093526217057616e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.1024886597537177,
+          "se": 0.0003517851630644264,
+          "target": 0.10259467072863077,
+          "difference": -0.00010601097491307054,
+          "tolerance": 1.0001025946707286e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5386948686509346,
+          "se": 0.0004878334904920934,
+          "target": 0.5391123299902831,
+          "difference": -0.0004174613393485016,
+          "tolerance": 1.0539112329990283e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.5413106309959904,
+          "se": 0.0019259717491074643,
+          "target": 0.5391123299902831,
+          "difference": 0.0021983010057072816,
+          "tolerance": 1.0539112329990283e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 1.908426580730849,
+          "se": 0.0027704523270011983,
+          "target": 1.9093526217057615,
+          "difference": -0.0009260409749125564,
+          "tolerance": 2.9093526217057616e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 1.891625920476972,
+          "se": 0.014889889551319173,
+          "target": 1.9093526217057615,
+          "difference": -0.017726701228789388,
+          "tolerance": 2.9093526217057616e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 1.9093526217057615,
+          "difference": -1.9093526217057615,
+          "tolerance": 2.9093526217057616e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5386317094254922,
+          "se": 0.00048526015861847355,
+          "target": 0.5391096311251283,
+          "difference": -0.0004779216996361191,
+          "tolerance": 1.0539112329990283e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 1.9084489910608589,
+          "se": 0.017037472745670048,
+          "target": 1.9092896667439583,
+          "difference": -0.0008406756830994233,
+          "tolerance": 2.9093526217057616e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5385498437519449,
+          "se": 0.0004813817068011421,
+          "target": 0.5390954674874179,
+          "difference": -0.0005456237354729554,
+          "tolerance": 1.0539112329990283e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 1.9045964510666504,
+          "se": 0.010660074285689327,
+          "target": 1.9089592304097496,
+          "difference": -0.0043627793430991435,
+          "tolerance": 2.9093526217057616e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5384393721634135,
+          "se": 0.0004748117200221059,
+          "target": 0.5390449570247003,
+          "difference": -0.000605584861286812,
+          "tolerance": 1.0539112329990283e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 1.907496012210353,
+          "se": 0.007423262414314489,
+          "target": 1.9077802220251319,
+          "difference": -0.0002842098147788352,
+          "tolerance": 2.9093526217057616e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "remaining_minutes": 30,
+      "event": false,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/4/count",
+        "jump": "fresh/raw/4/jump",
+        "brown": "fresh/raw/4/brown"
+      },
+      "state": {
+        "carry_years": 5.7077625570776254e-05,
+        "variance": 2.5705288863183602e-05,
+        "jump_mean_count": 0.0,
+        "remaining_seconds": 1800.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 17359502738334754772,
+        "jump": 6787647092560763775,
+        "brown": 17851149017291332155
+      },
+      "keys": {
+        "counts": "fresh_4_counts",
+        "z_jump": "fresh_4_z_jump",
+        "z_brown": "fresh_4_z_brown",
+        "mean": "fresh_4_mean",
+        "m2": "fresh_4_m2",
+        "covariance": "fresh_4_covariance",
+        "se": "fresh_4_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 0,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 2097152,
+        "count_status": "deterministic_zero",
+        "conditioned_effective_observed_mc_n": 0,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.2023505041704463,
+          0.5011460614751626,
+          0.7868592044924873
+        ],
+        "tail_bounds": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0002023505041704e-07,
+          1.0501146061475164e-09,
+          1.7868592044924873e-09
+        ],
+        "quad_values": [
+          0.20235050417045108,
+          0.5011460614751625,
+          0.7868592044924873
+        ],
+        "quad_errors": [
+          1.0822481064217508e-11,
+          1.599468464897639e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.20235050417045103,
+          0.5011460614751625,
+          0.7868592044924873
+        ],
+        "tight_errors": [
+          5.5579465389089984e-15,
+          1.599468464897639e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 0.7868592044924871,
+        "quad_lr_gamma_error": 1.374514181229233e-12,
+        "tight_lr_gamma": 0.7868592044924871,
+        "tight_lr_gamma_error": 1.374514181229233e-12,
+        "finite_steps": [
+          0.010140076698562709,
+          0.02535019174640677,
+          0.05070038349281354
+        ],
+        "finite_values": [
+          [
+            0.5011458502494208,
+            0.7868329798239321
+          ],
+          [
+            0.5011447419930397,
+            0.7866953333950542
+          ],
+          [
+            0.5011407932604531,
+            0.7862042110987864
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -2.1122574178633613e-07,
+            -2.62246685551748e-05
+          ],
+          [
+            -1.3194821228967868e-06,
+            -0.00016387109743309924
+          ],
+          [
+            -5.268214709475139e-06,
+            -0.0006549933937008978
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 0,
+      "zero_count": 1048576,
+      "nonzero_raw": [
+        523031,
+        523031,
+        523031,
+        523031,
+        523031,
+        0
+      ],
+      "crossings": [
+        16683,
+        41647,
+        83346
+      ],
+      "finite_steps": [
+        0.01014007669856271,
+        0.025350191746406778,
+        0.050700383492813555
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.2023505041704487,
+          "se": 0.0,
+          "target": 0.2023505041704463,
+          "difference": 2.3869795029440866e-15,
+          "tolerance": 1.0002023505041704e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5011460614751626,
+          "se": 0.0,
+          "target": 0.5011460614751626,
+          "difference": 0.0,
+          "tolerance": 1.0501146061475164e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 0.7868592044924869,
+          "se": 0.0,
+          "target": 0.7868592044924873,
+          "difference": -3.3306690738754696e-16,
+          "tolerance": 1.7868592044924873e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.20187360954994102,
+          "se": 0.00028939818084058714,
+          "target": 0.2023505041704463,
+          "difference": -0.0004768946205052915,
+          "tolerance": 1.0002023505041704e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5008191133688074,
+          "se": 0.0004902599572826831,
+          "target": 0.5011460614751626,
+          "difference": -0.0003269481063552515,
+          "tolerance": 1.0501146061475164e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.4990360786302888,
+          "se": 0.0010934852525222314,
+          "target": 0.5011460614751626,
+          "difference": -0.0021099828448737923,
+          "tolerance": 1.0501146061475164e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 0.7849952588492737,
+          "se": 0.0011289465078867151,
+          "target": 0.7868592044924873,
+          "difference": -0.0018639456432135715,
+          "tolerance": 1.7868592044924873e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 0.7797079685966054,
+          "se": 0.004242078774695122,
+          "target": 0.7868592044924873,
+          "difference": -0.007151235895881847,
+          "tolerance": 1.7868592044924873e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 0.7868592044924873,
+          "difference": -0.7868592044924873,
+          "tolerance": 1.7868592044924873e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5007668567608661,
+          "se": 0.00048766878593957944,
+          "target": 0.5011458502494208,
+          "difference": -0.00037899348855474635,
+          "tolerance": 1.0501146061475164e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 0.7861970233164527,
+          "se": 0.0069798175805790745,
+          "target": 0.7868329798239321,
+          "difference": -0.0006359565074793849,
+          "tolerance": 1.7868592044924873e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5007229643151856,
+          "se": 0.00048377222436321723,
+          "target": 0.5011447419930397,
+          "difference": -0.00042177767785411824,
+          "tolerance": 1.0501146061475164e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 0.7842872654310971,
+          "se": 0.004369628686429868,
+          "target": 0.7866953333950542,
+          "difference": -0.0024080679639570945,
+          "tolerance": 1.7868592044924873e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5006687154788475,
+          "se": 0.00047720881968637494,
+          "target": 0.5011407932604531,
+          "difference": -0.00047207778160562874,
+          "tolerance": 1.0501146061475164e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 0.7833892684698823,
+          "se": 0.0030401129705340275,
+          "target": 0.7862042110987864,
+          "difference": -0.002814942628904027,
+          "tolerance": 1.7868592044924873e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "remaining_minutes": 30,
+      "event": true,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/5/count",
+        "jump": "fresh/raw/5/jump",
+        "brown": "fresh/raw/5/brown"
+      },
+      "state": {
+        "carry_years": 5.7077625570776254e-05,
+        "variance": 2.5705288863183602e-05,
+        "jump_mean_count": 0.028,
+        "remaining_seconds": 1800.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 5171555348144485107,
+        "jump": 5963284157480210198,
+        "brown": 4534638073834891814
+      },
+      "keys": {
+        "counts": "fresh_5_counts",
+        "z_jump": "fresh_5_z_jump",
+        "z_brown": "fresh_5_z_brown",
+        "mean": "fresh_5_mean",
+        "m2": "fresh_5_m2",
+        "covariance": "fresh_5_covariance",
+        "se": "fresh_5_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 1048576,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 3145728,
+        "count_status": "IID_poisson",
+        "conditioned_effective_observed_mc_n": 1048576,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.3215447774556993,
+          0.5905483835565446,
+          0.7442396434293936
+        ],
+        "tail_bounds": [
+          1.8980542048536386e-18,
+          1.8980542048536388e-20,
+          2.5236865345887207e-22
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0003215447774557e-07,
+          1.0590548383556545e-09,
+          1.7442396434293938e-09
+        ],
+        "quad_values": [
+          0.32154477745570925,
+          0.5905483835565446,
+          0.7442396434293935
+        ],
+        "quad_errors": [
+          9.815666080502948e-12,
+          7.424215762841892e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.32154477745570925,
+          0.5905483835565446,
+          0.7442396434293935
+        ],
+        "tight_errors": [
+          1.4348981328078489e-12,
+          1.5752621866811997e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 0.7442396434293935,
+        "quad_lr_gamma_error": 2.758304161658787e-12,
+        "tight_lr_gamma": 0.7442396434293935,
+        "tight_lr_gamma_error": 1.4182666842060845e-12,
+        "finite_steps": [
+          0.010140076698562709,
+          0.02535019174640677,
+          0.05070038349281354
+        ],
+        "finite_values": [
+          [
+            0.5905420798131519,
+            0.7442164607831333
+          ],
+          [
+            0.5905089975374563,
+            0.7440947780060287
+          ],
+          [
+            0.5903910161651537,
+            0.7436605843653423
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -6.30374339272155e-06,
+            -2.3182646260333506e-05
+          ],
+          [
+            -3.9386019088261115e-05,
+            -0.00014486542336489272
+          ],
+          [
+            -0.00015736739139093903,
+            -0.0005790590640513127
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 28913,
+      "zero_count": 1019663,
+      "nonzero_raw": [
+        615931,
+        615931,
+        615931,
+        615931,
+        615931,
+        0
+      ],
+      "crossings": [
+        15793,
+        39572,
+        79248
+      ],
+      "finite_steps": [
+        0.01014007669856271,
+        0.025350191746406778,
+        0.050700383492813555
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.3202608160330679,
+          "se": 0.0007816195124391807,
+          "target": 0.3215447774556993,
+          "difference": -0.00128396142263143,
+          "tolerance": 1.0003215447774557e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5904798369409409,
+          "se": 8.937297442898326e-05,
+          "target": 0.5905483835565446,
+          "difference": -6.854661560373732e-05,
+          "tolerance": 1.0590548383556545e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 0.744285010024504,
+          "se": 0.00011858607788827189,
+          "target": 0.7442396434293936,
+          "difference": 4.5366595110341024e-05,
+          "tolerance": 1.7442396434293938e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.3207937531361148,
+          "se": 0.0008485930109495193,
+          "target": 0.3215447774556993,
+          "difference": -0.0007510243195845145,
+          "tolerance": 1.0003215447774557e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5906045070928773,
+          "se": 0.0004834564137842947,
+          "target": 0.5905483835565446,
+          "difference": 5.612353633266398e-05,
+          "tolerance": 1.0590548383556545e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.5930748327738172,
+          "se": 0.0019966864895058956,
+          "target": 0.5905483835565446,
+          "difference": 0.0025264492172726305,
+          "tolerance": 1.0590548383556545e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 0.746353425831361,
+          "se": 0.0011580151798911706,
+          "target": 0.7442396434293936,
+          "difference": 0.002113782401967357,
+          "tolerance": 1.7442396434293938e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 0.7454698214786384,
+          "se": 0.006401611362414609,
+          "target": 0.7442396434293936,
+          "difference": 0.0012301780492447456,
+          "tolerance": 1.7442396434293938e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 0.7442396434293936,
+          "difference": -0.7442396434293936,
+          "tolerance": 1.7442396434293938e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5905453712467792,
+          "se": 0.00048096856125662567,
+          "target": 0.5905420798131519,
+          "difference": 3.2914336273170974e-06,
+          "tolerance": 1.0590548383556545e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 0.7483908375892333,
+          "se": 0.006819450395556468,
+          "target": 0.7442164607831333,
+          "difference": 0.0041743768061,
+          "tolerance": 1.7442396434293938e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5904746189359895,
+          "se": 0.0004772223071120265,
+          "target": 0.5905089975374563,
+          "difference": -3.437860146682237e-05,
+          "tolerance": 1.0590548383556545e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 0.7462791882620312,
+          "se": 0.00426688243886037,
+          "target": 0.7440947780060287,
+          "difference": 0.002184410256002467,
+          "tolerance": 1.7442396434293938e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5903338165964988,
+          "se": 0.0004709119430888071,
+          "target": 0.5903910161651537,
+          "difference": -5.719956865490872e-05,
+          "tolerance": 1.0590548383556545e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 0.7456895407127206,
+          "se": 0.00297068226588628,
+          "target": 0.7436605843653423,
+          "difference": 0.002028956347378319,
+          "tolerance": 1.7442396434293938e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "remaining_minutes": 60,
+      "event": false,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/6/count",
+        "jump": "fresh/raw/6/jump",
+        "brown": "fresh/raw/6/brown"
+      },
+      "state": {
+        "carry_years": 0.00011415525114155251,
+        "variance": 5.0446629393997835e-05,
+        "jump_mean_count": 0.0,
+        "remaining_seconds": 3600.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 12904272058308883999,
+        "jump": 8254889873077825432,
+        "brown": 2060967758886713318
+      },
+      "keys": {
+        "counts": "fresh_6_counts",
+        "z_jump": "fresh_6_z_jump",
+        "z_brown": "fresh_6_z_brown",
+        "mean": "fresh_6_mean",
+        "m2": "fresh_6_m2",
+        "covariance": "fresh_6_covariance",
+        "se": "fresh_6_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 0,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 2097152,
+        "count_status": "deterministic_zero",
+        "conditioned_effective_observed_mc_n": 0,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.2835220936899437,
+          0.501609113573399,
+          0.5616819348719287
+        ],
+        "tail_bounds": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0002835220936899e-07,
+          1.05016091135734e-09,
+          1.5616819348719288e-09
+        ],
+        "quad_values": [
+          0.28352209368994513,
+          0.501609113573399,
+          0.5616819348719289
+        ],
+        "quad_errors": [
+          1.499505757894229e-11,
+          1.592483795527876e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.2835220936899451,
+          0.501609113573399,
+          0.5616819348719289
+        ],
+        "tight_errors": [
+          7.699174724746347e-15,
+          1.592483795527876e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 0.5616819348719286,
+        "quad_lr_gamma_error": 9.818277787625677e-13,
+        "tight_lr_gamma": 0.5616819348719286,
+        "tight_lr_gamma_error": 9.818277787625677e-13,
+        "finite_steps": [
+          0.014205158132734437,
+          0.035512895331836096,
+          0.07102579066367219
+        ],
+        "finite_values": [
+          [
+            0.5016088174289207,
+            0.5616632166431499
+          ],
+          [
+            0.5016072636259521,
+            0.561564970798607
+          ],
+          [
+            0.5016017273970327,
+            0.5612144288880402
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -2.9614447827341905e-07,
+            -1.871822877885787e-05
+          ],
+          [
+            -1.8499474468969268e-06,
+            -0.00011696407332173475
+          ],
+          [
+            -7.386176366308561e-06,
+            -0.0004675059838885609
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 0,
+      "zero_count": 1048576,
+      "nonzero_raw": [
+        522666,
+        522666,
+        522666,
+        522666,
+        522666,
+        0
+      ],
+      "crossings": [
+        16656,
+        41496,
+        83215
+      ],
+      "finite_steps": [
+        0.014205158132734437,
+        0.035512895331836096,
+        0.07102579066367219
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.28352209368994724,
+          "se": 0.0,
+          "target": 0.2835220936899437,
+          "difference": 3.552713678800501e-15,
+          "tolerance": 1.0002835220936899e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5016091135733991,
+          "se": 0.0,
+          "target": 0.501609113573399,
+          "difference": 1.1102230246251565e-16,
+          "tolerance": 1.05016091135734e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 0.5616819348719282,
+          "se": 0.0,
+          "target": 0.5616819348719287,
+          "difference": -5.551115123125783e-16,
+          "tolerance": 1.5616819348719288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.28305887473735974,
+          "se": 0.0004061926506288322,
+          "target": 0.2835220936899437,
+          "difference": -0.00046321895258394363,
+          "tolerance": 1.0002835220936899e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5012820219777826,
+          "se": 0.0004910592584168158,
+          "target": 0.501609113573399,
+          "difference": -0.0003270915956163911,
+          "tolerance": 1.05016091135734e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.5001650193255824,
+          "se": 0.0010952876627028873,
+          "target": 0.501609113573399,
+          "difference": -0.001444094247816552,
+          "tolerance": 1.05016091135734e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 0.560758325570795,
+          "se": 0.0008083135299805127,
+          "target": 0.5616819348719287,
+          "difference": -0.0009236093011337765,
+          "tolerance": 1.5616819348719288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 0.5576867343361736,
+          "se": 0.0030157507052828475,
+          "target": 0.5616819348719287,
+          "difference": -0.0039952005357551945,
+          "tolerance": 1.5616819348719288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 0.5616819348719287,
+          "difference": -0.5616819348719287,
+          "tolerance": 1.5616819348719288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5013139501867953,
+          "se": 0.0004884870651583572,
+          "target": 0.5016088174289207,
+          "difference": -0.0002948672421254628,
+          "tolerance": 1.05016091135734e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 0.5571984987134845,
+          "se": 0.004957747853173403,
+          "target": 0.5616632166431499,
+          "difference": -0.004464717929665407,
+          "tolerance": 1.5616819348719288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5012876851634819,
+          "se": 0.0004845963302458751,
+          "target": 0.5016072636259521,
+          "difference": -0.0003195784624702158,
+          "tolerance": 1.05016091135734e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 0.5583902477492982,
+          "se": 0.0031140497460934845,
+          "target": 0.561564970798607,
+          "difference": -0.0031747230493087697,
+          "tolerance": 1.5616819348719288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.501256474093855,
+          "se": 0.00047804403007158103,
+          "target": 0.5016017273970327,
+          "difference": -0.000345253303177695,
+          "tolerance": 1.05016091135734e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 0.5583610472436881,
+          "se": 0.0021678121519226844,
+          "target": 0.5612144288880402,
+          "difference": -0.0028533816443521154,
+          "tolerance": 1.5616819348719288e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "remaining_minutes": 60,
+      "event": true,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/7/count",
+        "jump": "fresh/raw/7/jump",
+        "brown": "fresh/raw/7/brown"
+      },
+      "state": {
+        "carry_years": 0.00011415525114155251,
+        "variance": 5.0446629393997835e-05,
+        "jump_mean_count": 0.028,
+        "remaining_seconds": 3600.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 1607861282212573592,
+        "jump": 2130706778068002278,
+        "brown": 8715839166404022956
+      },
+      "keys": {
+        "counts": "fresh_7_counts",
+        "z_jump": "fresh_7_z_jump",
+        "z_brown": "fresh_7_z_brown",
+        "mean": "fresh_7_mean",
+        "m2": "fresh_7_m2",
+        "covariance": "fresh_7_covariance",
+        "se": "fresh_7_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 1048576,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 3145728,
+        "count_status": "IID_poisson",
+        "conditioned_effective_observed_mc_n": 1048576,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.399007418018201,
+          0.564588060647914,
+          0.5392744482239152
+        ],
+        "tail_bounds": [
+          1.8980542048536386e-18,
+          1.8980542048536388e-20,
+          2.5233398196102063e-22
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0003990074180182e-07,
+          1.0564588060647914e-09,
+          1.5392744482239154e-09
+        ],
+        "quad_values": [
+          0.39900741801820133,
+          0.564588060647914,
+          0.5392744482239152
+        ],
+        "quad_errors": [
+          1.3858947876095797e-11,
+          7.457363242759984e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.3990074180182013,
+          0.564588060647914,
+          0.5392744482239152
+        ],
+        "tight_errors": [
+          1.4389154098587021e-12,
+          1.565324705733495e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 0.5392744482239149,
+        "quad_lr_gamma_error": 2.337537043163125e-12,
+        "tight_lr_gamma": 0.5392744482239149,
+        "tight_lr_gamma_error": 9.965223297703662e-13,
+        "finite_steps": [
+          0.014205158132734437,
+          0.035512895331836096,
+          0.07102579066367219
+        ],
+        "finite_values": [
+          [
+            0.5645833565048093,
+            0.5392571402351233
+          ],
+          [
+            0.5645586692510886,
+            0.5391662954557817
+          ],
+          [
+            0.5644706306029801,
+            0.5388421477930405
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -4.704143104716785e-06,
+            -1.730798879195916e-05
+          ],
+          [
+            -2.939139682545111e-05,
+            -0.00010815276813358476
+          ],
+          [
+            -0.0001174300449339194,
+            -0.00043230043087472136
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 28883,
+      "zero_count": 1019693,
+      "nonzero_raw": [
+        588355,
+        588355,
+        588355,
+        588355,
+        588355,
+        0
+      ],
+      "crossings": [
+        15937,
+        40024,
+        79904
+      ],
+      "finite_steps": [
+        0.014205158132734437,
+        0.035512895331836096,
+        0.07102579066367219
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.39903004820119464,
+          "se": 0.0007848830471221872,
+          "target": 0.399007418018201,
+          "difference": 2.263018299364372e-05,
+          "tolerance": 1.0003990074180182e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5646265671036478,
+          "se": 8.674471753762885e-05,
+          "target": 0.564588060647914,
+          "difference": 3.8506455733777756e-05,
+          "tolerance": 1.0564588060647914e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 0.5393266621587726,
+          "se": 8.479755018730437e-05,
+          "target": 0.5392744482239152,
+          "difference": 5.221393485732584e-05,
+          "tolerance": 1.5392744482239154e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.39949472278562514,
+          "se": 0.0009024219815709075,
+          "target": 0.399007418018201,
+          "difference": 0.00048730476742414597,
+          "tolerance": 1.0003990074180182e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5650920780882506,
+          "se": 0.0004881421773456711,
+          "target": 0.564588060647914,
+          "difference": 0.0005040174403365683,
+          "tolerance": 1.0564588060647914e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.5643476672840114,
+          "se": 0.0016462940924796899,
+          "target": 0.564588060647914,
+          "difference": -0.00024039336390258015,
+          "tolerance": 1.0564588060647914e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 0.5401298182395176,
+          "se": 0.0008216816739547442,
+          "target": 0.5392744482239152,
+          "difference": 0.0008553700156023192,
+          "tolerance": 1.5392744482239154e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 0.5396105787090102,
+          "se": 0.0039051769184322055,
+          "target": 0.5392744482239152,
+          "difference": 0.00033613048509495425,
+          "tolerance": 1.5392744482239154e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 0.5392744482239152,
+          "difference": -0.5392744482239152,
+          "tolerance": 1.5392744482239154e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5650799360875032,
+          "se": 0.00048565331208049275,
+          "target": 0.5645833565048093,
+          "difference": 0.0004965795826938901,
+          "tolerance": 1.0564588060647914e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 0.5367864615120023,
+          "se": 0.0048713453556554175,
+          "target": 0.5392571402351233,
+          "difference": -0.0024706787231210114,
+          "tolerance": 1.5392744482239154e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5650083197024822,
+          "se": 0.00048191557765885843,
+          "target": 0.5645586692510886,
+          "difference": 0.0004496504513936683,
+          "tolerance": 1.0564588060647914e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 0.5357920552547112,
+          "se": 0.0030521970422643452,
+          "target": 0.5391662954557817,
+          "difference": -0.0033742402010704664,
+          "tolerance": 1.5392744482239154e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5649014287279227,
+          "se": 0.0004755840629754544,
+          "target": 0.5644706306029801,
+          "difference": 0.0004307981249426218,
+          "tolerance": 1.0564588060647914e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 0.5367561742640325,
+          "se": 0.0021278603347360528,
+          "target": 0.5388421477930405,
+          "difference": -0.0020859735290079673,
+          "tolerance": 1.5392744482239154e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "remaining_minutes": 240,
+      "event": false,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/8/count",
+        "jump": "fresh/raw/8/jump",
+        "brown": "fresh/raw/8/brown"
+      },
+      "state": {
+        "carry_years": 0.00045662100456621003,
+        "variance": 8.900456268877324e-05,
+        "jump_mean_count": 0.0,
+        "remaining_seconds": 14400.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 5395405648198083474,
+        "jump": 3772289086637566268,
+        "brown": 10699249743122649101
+      },
+      "keys": {
+        "counts": "fresh_8_counts",
+        "z_jump": "fresh_8_z_jump",
+        "z_brown": "fresh_8_z_brown",
+        "mean": "fresh_8_mean",
+        "m2": "fresh_8_m2",
+        "covariance": "fresh_8_covariance",
+        "se": "fresh_8_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 0,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 2097152,
+        "count_status": "deterministic_zero",
+        "conditioned_effective_observed_mc_n": 0,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.3770523917237497,
+          0.5024611096422014,
+          0.42285908553412127
+        ],
+        "tail_bounds": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0003770523917237e-07,
+          1.0502461109642203e-09,
+          1.4228590855341214e-09
+        ],
+        "quad_values": [
+          0.37705239172375443,
+          0.5024611096422013,
+          0.42285908553412127
+        ],
+        "quad_errors": [
+          1.965051833897226e-11,
+          1.584481043311898e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.3770523917237544,
+          0.5024611096422013,
+          0.42285908553412127
+        ],
+        "tight_errors": [
+          1.0096037634876846e-14,
+          1.584481043311898e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 0.4228590855341211,
+        "quad_lr_gamma_error": 7.398477205355606e-13,
+        "tight_lr_gamma": 0.4228590855341211,
+        "tight_lr_gamma_error": 7.398477205355606e-13,
+        "finite_steps": [
+          0.0188684459019574,
+          0.047171114754893495,
+          0.09434222950978699
+        ],
+        "finite_values": [
+          [
+            0.5024606947008378,
+            0.4228449963048695
+          ],
+          [
+            0.5024585175699284,
+            0.422771046294244
+          ],
+          [
+            0.5024507600391318,
+            0.4225071921012528
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -4.149413636023169e-07,
+            -1.4089229251779134e-05
+          ],
+          [
+            -2.5920722729333434e-06,
+            -8.803923987726892e-05
+          ],
+          [
+            -1.0349603069559343e-05,
+            -0.0003518934328684553
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 0,
+      "zero_count": 1048576,
+      "nonzero_raw": [
+        523234,
+        523234,
+        523234,
+        523234,
+        523234,
+        0
+      ],
+      "crossings": [
+        16776,
+        41837,
+        83439
+      ],
+      "finite_steps": [
+        0.0188684459019574,
+        0.047171114754893495,
+        0.09434222950978699
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.3770523917237524,
+          "se": 0.0,
+          "target": 0.3770523917237497,
+          "difference": 2.6645352591003757e-15,
+          "tolerance": 1.0003770523917237e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5024611096422014,
+          "se": 0.0,
+          "target": 0.5024611096422014,
+          "difference": 0.0,
+          "tolerance": 1.0502461109642203e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 0.42285908553412105,
+          "se": 0.0,
+          "target": 0.42285908553412127,
+          "difference": -2.220446049250313e-16,
+          "tolerance": 1.4228590855341214e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.3776502726753478,
+          "se": 0.000541657049374428,
+          "target": 0.3770523917237497,
+          "difference": 0.0005978809515980732,
+          "tolerance": 1.0003770523917237e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5027644944985015,
+          "se": 0.0004919851606176298,
+          "target": 0.5024611096422014,
+          "difference": 0.00030338485630010403,
+          "tolerance": 1.0502461109642203e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.5033992816564157,
+          "se": 0.0011021221591671088,
+          "target": 0.5024611096422014,
+          "difference": 0.0009381720142143113,
+          "tolerance": 1.0502461109642203e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 0.42353353486748374,
+          "se": 0.0006114339622091489,
+          "target": 0.42285908553412127,
+          "difference": 0.0006744493333624701,
+          "tolerance": 1.4228590855341214e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 0.4236363329978093,
+          "se": 0.002292707305386605,
+          "target": 0.42285908553412127,
+          "difference": 0.0007772474636880133,
+          "tolerance": 1.4228590855341214e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 0.42285908553412127,
+          "difference": -0.42285908553412127,
+          "tolerance": 1.4228590855341214e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5028034114185966,
+          "se": 0.0004893936982988316,
+          "target": 0.5024606947008378,
+          "difference": 0.000342716717758873,
+          "tolerance": 1.0502461109642203e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 0.42363369736511675,
+          "se": 0.00375275351906097,
+          "target": 0.4228449963048695,
+          "difference": 0.0007887010602472544,
+          "tolerance": 1.4228590855341214e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5027837374328198,
+          "se": 0.0004854806396310415,
+          "target": 0.5024585175699284,
+          "difference": 0.0003252198628913572,
+          "tolerance": 1.0502461109642203e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 0.42380890204290433,
+          "se": 0.002353405491235656,
+          "target": 0.422771046294244,
+          "difference": 0.0010378557486603324,
+          "tolerance": 1.4228590855341214e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5027410022268336,
+          "se": 0.0004789368443959995,
+          "target": 0.5024507600391318,
+          "difference": 0.00029024218770179466,
+          "tolerance": 1.0502461109642203e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 0.42251161282268945,
+          "se": 0.0016372980887925121,
+          "target": 0.4225071921012528,
+          "difference": 4.420721436637631e-06,
+          "tolerance": 1.4228590855341214e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "remaining_minutes": 240,
+      "event": true,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/9/count",
+        "jump": "fresh/raw/9/jump",
+        "brown": "fresh/raw/9/brown"
+      },
+      "state": {
+        "carry_years": 0.00045662100456621003,
+        "variance": 8.900456268877324e-05,
+        "jump_mean_count": 0.028,
+        "remaining_seconds": 14400.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 16175637194395157495,
+        "jump": 5743276587503771998,
+        "brown": 13726644393403121231
+      },
+      "keys": {
+        "counts": "fresh_9_counts",
+        "z_jump": "fresh_9_z_jump",
+        "z_brown": "fresh_9_z_brown",
+        "mean": "fresh_9_mean",
+        "m2": "fresh_9_m2",
+        "covariance": "fresh_9_covariance",
+        "se": "fresh_9_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 1048576,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 3145728,
+        "count_status": "IID_poisson",
+        "conditioned_effective_observed_mc_n": 1048576,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.4892338916653871,
+          0.5489710387572175,
+          0.40883509494799414
+        ],
+        "tail_bounds": [
+          1.8980542048536386e-18,
+          1.8980542048536388e-20,
+          2.522799769347457e-22
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0004892338916653e-07,
+          1.0548971038757217e-09,
+          1.4088350949479942e-09
+        ],
+        "quad_values": [
+          0.4892338916653905,
+          0.5489710387572174,
+          0.4088350949479942
+        ],
+        "quad_errors": [
+          1.8389829380165497e-11,
+          7.520846914875796e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.48923389166539044,
+          0.5489710387572174,
+          0.4088350949479942
+        ],
+        "tight_errors": [
+          1.4442248006758837e-12,
+          1.5556399711479474e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 0.4088350949479941,
+        "quad_lr_gamma_error": 2.086113754625597e-12,
+        "tight_lr_gamma": 0.4088350949479941,
+        "tight_lr_gamma_error": 7.432840749439606e-13,
+        "finite_steps": [
+          0.0188684459019574,
+          0.047171114754893495,
+          0.09434222950978699
+        ],
+        "finite_values": [
+          [
+            0.5489672902319068,
+            0.40882180902255427
+          ],
+          [
+            0.5489476182691069,
+            0.4087520748265456
+          ],
+          [
+            0.5488774680137909,
+            0.4085032560785691
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -3.7485253107094607e-06,
+            -1.3285925439865398e-05
+          ],
+          [
+            -2.342048811065922e-05,
+            -8.302012144856263e-05
+          ],
+          [
+            -9.357074342664085e-05,
+            -0.0003318388694250607
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 29118,
+      "zero_count": 1019458,
+      "nonzero_raw": [
+        569737,
+        569737,
+        569737,
+        569737,
+        569737,
+        0
+      ],
+      "crossings": [
+        15945,
+        40097,
+        80492
+      ],
+      "finite_steps": [
+        0.0188684459019574,
+        0.047171114754893495,
+        0.09434222950978699
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.489238964709385,
+          "se": 0.0007795724082281471,
+          "target": 0.4892338916653871,
+          "difference": 5.073043997882998e-06,
+          "tolerance": 1.0004892338916653e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5489194393920026,
+          "se": 8.538061593070053e-05,
+          "target": 0.5489710387572175,
+          "difference": -5.159936521492714e-05,
+          "tolerance": 1.0548971038757217e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 0.4087545939727959,
+          "se": 6.36963558725276e-05,
+          "target": 0.40883509494799414,
+          "difference": -8.050097519823884e-05,
+          "tolerance": 1.4088350949479942e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.48818041520787053,
+          "se": 0.0009701866967288341,
+          "target": 0.4892338916653871,
+          "difference": -0.0010534764575165778,
+          "tolerance": 1.0004892338916653e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.548217905147168,
+          "se": 0.0004908837213340059,
+          "target": 0.5489710387572175,
+          "difference": -0.0007531336100495833,
+          "tolerance": 1.0548971038757217e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.5454935558272698,
+          "se": 0.0014453688959040762,
+          "target": 0.5489710387572175,
+          "difference": -0.0034774829299477616,
+          "tolerance": 1.0548971038757217e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 0.4076698982059843,
+          "se": 0.0006176423288892805,
+          "target": 0.40883509494799414,
+          "difference": -0.001165196742009822,
+          "tolerance": 1.4088350949479942e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 0.4079366691995482,
+          "se": 0.0027180961321437718,
+          "target": 0.40883509494799414,
+          "difference": -0.0008984257484459524,
+          "tolerance": 1.4088350949479942e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 0.40883509494799414,
+          "difference": -0.40883509494799414,
+          "tolerance": 1.4088350949479942e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5482246330195976,
+          "se": 0.0004884129384341904,
+          "target": 0.5489672902319068,
+          "difference": -0.0007426572123092612,
+          "tolerance": 1.0548971038757217e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 0.403501133818943,
+          "se": 0.003668356271407532,
+          "target": 0.40882180902255427,
+          "difference": -0.005320675203611291,
+          "tolerance": 1.4088350949479942e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5482256614547832,
+          "se": 0.00048464431341653416,
+          "target": 0.5489476182691069,
+          "difference": -0.0007219568143236321,
+          "tolerance": 1.0548971038757217e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 0.4055335717360496,
+          "se": 0.0023027351322354827,
+          "target": 0.4087520748265456,
+          "difference": -0.0032185030904959833,
+          "tolerance": 1.4088350949479942e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5481546173205879,
+          "se": 0.0004783098442649995,
+          "target": 0.5488774680137909,
+          "difference": -0.0007228506932029921,
+          "tolerance": 1.0548971038757217e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 0.406120978475899,
+          "se": 0.0016051394099921613,
+          "target": 0.4085032560785691,
+          "difference": -0.0023822776026700687,
+          "tolerance": 1.4088350949479942e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "remaining_minutes": 390,
+      "event": false,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/10/count",
+        "jump": "fresh/raw/10/jump",
+        "brown": "fresh/raw/10/brown"
+      },
+      "state": {
+        "carry_years": 0.0007420091324200913,
+        "variance": 0.00015873015873015876,
+        "jump_mean_count": 0.0,
+        "remaining_seconds": 23400.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 9616784173544592270,
+        "jump": 14500426196821255929,
+        "brown": 3342128367771269031
+      },
+      "keys": {
+        "counts": "fresh_10_counts",
+        "z_jump": "fresh_10_z_jump",
+        "z_brown": "fresh_10_z_brown",
+        "mean": "fresh_10_mean",
+        "m2": "fresh_10_m2",
+        "covariance": "fresh_10_covariance",
+        "se": "fresh_10_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 0,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 2097152,
+        "count_status": "deterministic_zero",
+        "conditioned_effective_observed_mc_n": 0,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.5037248967456192,
+          0.5032179382025116,
+          0.3166403172198445
+        ],
+        "tail_bounds": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0005037248967456e-07,
+          1.0503217938202512e-09,
+          1.3166403172198446e-09
+        ],
+        "quad_values": [
+          0.5037248967456286,
+          0.5032179382025117,
+          0.3166403172198445
+        ],
+        "quad_errors": [
+          2.578433519185529e-11,
+          1.5735748922130453e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.5037248967456286,
+          0.5032179382025117,
+          0.3166403172198445
+        ],
+        "tight_errors": [
+          1.324821079773609e-14,
+          1.5735748922130453e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 0.3166403172198445,
+        "quad_lr_gamma_error": 5.54521491816654e-13,
+        "tight_lr_gamma": 0.3166403172198445,
+        "tight_lr_gamma_error": 5.54521491816654e-13,
+        "finite_steps": [
+          0.025197631533948484,
+          0.06299407883487121,
+          0.12598815766974242
+        ],
+        "finite_values": [
+          [
+            0.5032173886617073,
+            0.3166297702445003
+          ],
+          [
+            0.5032145053139432,
+            0.31657441227581423
+          ],
+          [
+            0.5032042314705139,
+            0.31637689451485873
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -5.495408043065808e-07,
+            -1.0546975344194465e-05
+          ],
+          [
+            -3.4328885684109522e-06,
+            -6.590494403024838e-05
+          ],
+          [
+            -1.3706731997742416e-05,
+            -0.0002634227049857496
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 0,
+      "zero_count": 1048576,
+      "nonzero_raw": [
+        522460,
+        522460,
+        522460,
+        522460,
+        522460,
+        0
+      ],
+      "crossings": [
+        16538,
+        41777,
+        83243
+      ],
+      "finite_steps": [
+        0.025197631533948488,
+        0.06299407883487122,
+        0.12598815766974245
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.5037248967456185,
+          "se": 0.0,
+          "target": 0.5037248967456192,
+          "difference": -6.661338147750939e-16,
+          "tolerance": 1.0005037248967456e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5032179382025117,
+          "se": 0.0,
+          "target": 0.5032179382025116,
+          "difference": 1.1102230246251565e-16,
+          "tolerance": 1.0503217938202512e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 0.31664031721984426,
+          "se": 0.0,
+          "target": 0.3166403172198445,
+          "difference": -2.220446049250313e-16,
+          "tolerance": 1.3166403172198446e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "analytic_deterministic"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.5040777977163611,
+          "se": 0.0007250273062383013,
+          "target": 0.5037248967456192,
+          "difference": 0.0003529009707419206,
+          "tolerance": 1.0005037248967456e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5032863701199425,
+          "se": 0.000493236027945155,
+          "target": 0.5032179382025116,
+          "difference": 6.843191743088894e-05,
+          "tolerance": 1.0503217938202512e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.5040608094631261,
+          "se": 0.0011077561667405206,
+          "target": 0.5032179382025116,
+          "difference": 0.0008428712606145528,
+          "tolerance": 1.0503217938202512e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 0.3168664404886511,
+          "se": 0.00045969788843934847,
+          "target": 0.3166403172198445,
+          "difference": 0.0002261232688066106,
+          "tolerance": 1.3166403172198446e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 0.3183644283436495,
+          "se": 0.0017328187968364175,
+          "target": 0.3166403172198445,
+          "difference": 0.0017241111238049944,
+          "tolerance": 1.3166403172198446e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 0.3166403172198445,
+          "difference": -0.3166403172198445,
+          "tolerance": 1.3166403172198446e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5033156566386657,
+          "se": 0.00049067996498086,
+          "target": 0.5032173886617073,
+          "difference": 9.82679769584438e-05,
+          "tolerance": 1.0503217938202512e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 0.3143922013543417,
+          "se": 0.0028039731176965595,
+          "target": 0.3166297702445003,
+          "difference": -0.002237568890158581,
+          "tolerance": 1.3166403172198446e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5033187302213211,
+          "se": 0.0004868000088212112,
+          "target": 0.5032145053139432,
+          "difference": 0.00010422490737793666,
+          "tolerance": 1.0503217938202512e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 0.31462335241234923,
+          "se": 0.0017538106529929633,
+          "target": 0.31657441227581423,
+          "difference": -0.001951059863464999,
+          "tolerance": 1.3166403172198446e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.5032644218607264,
+          "se": 0.00048026304250079193,
+          "target": 0.5032042314705139,
+          "difference": 6.0190390212544465e-05,
+          "tolerance": 1.0503217938202512e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 0.3150848592443586,
+          "se": 0.0012225999191251783,
+          "target": 0.31637689451485873,
+          "difference": -0.001292035270500147,
+          "tolerance": 1.3166403172198446e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "remaining_minutes": 390,
+      "event": true,
+      "spot": 100.0,
+      "strike": 100.0,
+      "seed_ids": {
+        "count": "fresh/raw/11/count",
+        "jump": "fresh/raw/11/jump",
+        "brown": "fresh/raw/11/brown"
+      },
+      "state": {
+        "carry_years": 0.0007420091324200913,
+        "variance": 0.00015873015873015876,
+        "jump_mean_count": 0.028,
+        "remaining_seconds": 23400.0,
+        "status": "active"
+      },
+      "parameters": {
+        "rate": 0.03,
+        "dividend": 0.0,
+        "jump_mean": -0.05,
+        "jump_std": 0.1
+      },
+      "seeds": {
+        "count": 6909243506023682435,
+        "jump": 8469609122179111248,
+        "brown": 7177205557316850265
+      },
+      "keys": {
+        "counts": "fresh_11_counts",
+        "z_jump": "fresh_11_z_jump",
+        "z_brown": "fresh_11_z_brown",
+        "mean": "fresh_11_mean",
+        "m2": "fresh_11_m2",
+        "covariance": "fresh_11_covariance",
+        "se": "fresh_11_se"
+      },
+      "draws": {
+        "original_n": 1048576,
+        "normal_draw_policy": "full_N_diagnostic",
+        "count_outputs": 1048576,
+        "count_random_variates": 1048576,
+        "jump_normal_outputs": 1048576,
+        "brownian_normal_outputs": 1048576,
+        "requested_stochastic_variates": 3145728,
+        "count_status": "IID_poisson",
+        "conditioned_effective_observed_mc_n": 1048576,
+        "conditioned_aggregation_n": 1048576,
+        "scope": "fresh full-N raw diagnostic, distinct from active-only main compact teachers; Poisson(0) outputs are deterministic",
+        "engine_scope": "requested variates, not a count of primitive generator words or rejection retries"
+      },
+      "reference": {
+        "values": [
+          0.6120626141885478,
+          0.5370725054504306,
+          0.3075312673326801
+        ],
+        "tail_bounds": [
+          1.8980542048536386e-18,
+          1.8980542048536388e-20,
+          2.5218240582882065e-22
+        ],
+        "status": "ok",
+        "tolerance": [
+          1.0006120626141886e-07,
+          1.0537072505450432e-09,
+          1.3075312673326802e-09
+        ],
+        "quad_values": [
+          0.6120626141885471,
+          0.5370725054504306,
+          0.3075312673326801
+        ],
+        "quad_errors": [
+          2.436930083921125e-11,
+          7.63363146326027e-13,
+          0.0
+        ],
+        "tight_values": [
+          0.6120626141885471,
+          0.5370725054504306,
+          0.3075312673326801
+        ],
+        "tight_errors": [
+          1.452641616959203e-12,
+          1.5435477595244922e-13,
+          0.0
+        ],
+        "quad_status": "ok",
+        "tight_status": "ok",
+        "quad_messages": [],
+        "tight_messages": [],
+        "quad_lr_gamma": 0.30753126733268016,
+        "quad_lr_gamma_error": 1.8983984394060757e-12,
+        "tight_lr_gamma": 0.30753126733268016,
+        "tight_lr_gamma_error": 5.527722569301063e-13,
+        "finite_steps": [
+          0.025197631533948484,
+          0.06299407883487121,
+          0.12598815766974242
+        ],
+        "finite_values": [
+          [
+            0.5370694583584188,
+            0.30752120710788583
+          ],
+          [
+            0.5370534677288064,
+            0.30746840365541933
+          ],
+          [
+            0.5369964487818772,
+            0.30727999683114743
+          ]
+        ],
+        "finite_h_bias": [
+          [
+            -3.047092011820851e-06,
+            -1.006022479427271e-05
+          ],
+          [
+            -1.9037721624259873e-05,
+            -6.286367726077158e-05
+          ],
+          [
+            -7.605666855337034e-05,
+            -0.0002512705015326744
+          ]
+        ],
+        "primary_passed": true,
+        "scope": "independent ordinary Poisson mixture and normal-density payoff integral; finite-h CRN target differs from true Greeks",
+        "error_scope": "quadrature errors are numerical estimates; mixture omitted-tail bounds are separate"
+      },
+      "status": "observed",
+      "n": 1048576,
+      "active_count": 28839,
+      "zero_count": 1019737,
+      "nonzero_raw": [
+        556935,
+        556935,
+        556935,
+        556935,
+        556935,
+        0
+      ],
+      "crossings": [
+        16332,
+        40569,
+        81152
+      ],
+      "finite_steps": [
+        0.025197631533948488,
+        0.06299407883487122,
+        0.12598815766974245
+      ],
+      "methods": [
+        {
+          "method": "conditioned_price",
+          "original_n": 1048576,
+          "mean": 0.6118808440880414,
+          "se": 0.0007692099439191405,
+          "target": 0.6120626141885478,
+          "difference": -0.000181770100506351,
+          "tolerance": 1.0006120626141886e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_delta",
+          "original_n": 1048576,
+          "mean": 0.5371404374483656,
+          "se": 8.312093279470921e-05,
+          "target": 0.5370725054504306,
+          "difference": 6.793199793497795e-05,
+          "tolerance": 1.0537072505450432e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "conditioned_gamma",
+          "original_n": 1048576,
+          "mean": 0.30755741332811204,
+          "se": 4.667019545828903e-05,
+          "target": 0.3075312673326801,
+          "difference": 2.614599543193652e-05,
+          "tolerance": 1.3075312673326802e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "price",
+          "original_n": 1048576,
+          "mean": 0.6117523784459573,
+          "se": 0.0010850311347036874,
+          "target": 0.6120626141885478,
+          "difference": -0.00031023574259048114,
+          "tolerance": 1.0006120626141886e-07,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "pw_delta",
+          "original_n": 1048576,
+          "mean": 0.5372403061219369,
+          "se": 0.0004930235560878121,
+          "target": 0.5370725054504306,
+          "difference": 0.00016780067150623523,
+          "tolerance": 1.0537072505450432e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr_delta",
+          "original_n": 1048576,
+          "mean": 0.5374174568511394,
+          "se": 0.0013208481880691266,
+          "target": 0.5370725054504306,
+          "difference": 0.0003449514007087817,
+          "tolerance": 1.0537072505450432e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lrpw_gamma",
+          "original_n": 1048576,
+          "mean": 0.3074763310358383,
+          "se": 0.0004636423102532418,
+          "target": 0.3075312673326801,
+          "difference": -5.493629684177881e-05,
+          "tolerance": 1.3075312673326802e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "lr2_gamma",
+          "original_n": 1048576,
+          "mean": 0.30872226407402753,
+          "se": 0.0019298791068834732,
+          "target": 0.3075312673326801,
+          "difference": 0.0011909967413474276,
+          "tolerance": 1.3075312673326802e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "naive_gamma",
+          "original_n": 1048576,
+          "mean": 0.0,
+          "se": 0.0,
+          "target": 0.3075312673326801,
+          "difference": -0.3075312673326801,
+          "tolerance": 1.3075312673326802e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": false,
+          "status": "negative_control"
+        },
+        {
+          "method": "crn_delta_0.02",
+          "original_n": 1048576,
+          "mean": 0.5372865444195125,
+          "se": 0.0004905046818155743,
+          "target": 0.5370694583584188,
+          "difference": 0.00021708606109371864,
+          "tolerance": 1.0537072505450432e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.02",
+          "original_n": 1048576,
+          "mean": 0.30892343969790853,
+          "se": 0.0027762863907063507,
+          "target": 0.30752120710788583,
+          "difference": 0.0014022325900227006,
+          "tolerance": 1.3075312673326802e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.05",
+          "original_n": 1048576,
+          "mean": 0.5372265476031663,
+          "se": 0.0004867417961493537,
+          "target": 0.5370534677288064,
+          "difference": 0.00017307987435999372,
+          "tolerance": 1.0537072505450432e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.05",
+          "original_n": 1048576,
+          "mean": 0.3075910195076488,
+          "se": 0.0017378069670957457,
+          "target": 0.30746840365541933,
+          "difference": 0.00012261585222944626,
+          "tolerance": 1.3075312673326802e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_delta_0.10",
+          "original_n": 1048576,
+          "mean": 0.537160113903854,
+          "se": 0.0004803758907867969,
+          "target": 0.5369964487818772,
+          "difference": 0.00016366512197674155,
+          "tolerance": 1.0537072505450432e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        },
+        {
+          "method": "crn_gamma_0.10",
+          "original_n": 1048576,
+          "mean": 0.3074194574901479,
+          "se": 0.0012091035383668667,
+          "target": 0.30727999683114743,
+          "difference": 0.00013946065900044546,
+          "tolerance": 1.3075312673326802e-09,
+          "criterion": "abs(mean-target)<=6*SE+fixed_abs+fixed_rel*abs(target)",
+          "supported": true,
+          "status": "supported"
+        }
+      ]
+    }
+  ],
+  "expenses": [
+    {
+      "id": "main_gate",
+      "category": "validation",
+      "charged": true,
+      "parent": null,
+      "seconds": 17.46024964703247,
+      "scope": "read/replay main and actual frozen pilot plus complete source binding"
+    },
+    {
+      "id": "fresh/0/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.01631172699853778,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/0/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.003991990990471095,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/0/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.18005403998540714,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/1/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.017607218003831804,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/1/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.003777911013457924,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/1/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.18073150602867827,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/2/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.015949916967656463,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/2/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.0038113060290925205,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/2/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.18280797300394624,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/3/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.01807676494354382,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/3/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.003614481014665216,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/3/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.18614848202560097,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/4/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.015642449026927352,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/4/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.0037445990019477904,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/4/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.1808081799536012,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/5/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.018198003992438316,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/5/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.003663558978587389,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/5/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.182797250978183,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/6/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.015608383051585406,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/6/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.003626273013651371,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/6/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.17873852100456133,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/7/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.018271880049724132,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/7/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.0034852010430768132,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/7/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.17891168600181118,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/8/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.015215663006529212,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/8/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.0034118019975721836,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/8/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.1801059889839962,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/9/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.017934731033165008,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/9/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.004094950039871037,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/9/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.18415978003758937,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/10/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.015392591012641788,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/10/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.0036587349604815245,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/10/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.17587200202979147,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "fresh/11/draw",
+      "category": "draw",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.01846227899659425,
+      "scope": "full original count outputs and separate full-N mark/Brownian normal streams"
+    },
+    {
+      "id": "fresh/11/reference",
+      "category": "reference",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.004090471018571407,
+      "scope": "ordinary Poisson mixture, two independent-density tolerances and deterministic finite-h targets"
+    },
+    {
+      "id": "fresh/11/estimator",
+      "category": "estimator",
+      "charged": true,
+      "parent": null,
+      "seconds": 0.18802359903929755,
+      "scope": "conditioned3/raw6/3hCRN original-N joint covariance in saved fixed blocks"
+    },
+    {
+      "id": "saved_replay",
+      "category": "validation",
+      "charged": true,
+      "parent": null,
+      "seconds": 2.3733739940216765,
+      "scope": "read-only re-evaluation of all original fresh primitives/references/statistics"
+    }
+  ],
+  "accepted": false,
+  "main_selection_changed": false,
+  "main_labels_pooled": false,
+  "scope": "additional fixed fresh estimator verification, never the original study's generation source",
+  "limits": [
+    "6SE is a diagnostic comparison, not a simultaneous confidence guarantee",
+    "ordinary mixture and density integration share the specified synthetic model, not market validation",
+    "unknown/unsupported and negative-control original slots remain",
+    "finite-h CRN checked at finite-h target; true Greek finite-h bias is separately retained",
+    "full-N fresh primitive storage intentionally differs from main active-only compact sampling"
+  ],
+  "summary": {
+    "original_cases": 12,
+    "original_method_slots": 180,
+    "observed_cases": 12,
+    "unknown_cases": 0,
+    "method_status_counts": {
+      "analytic_deterministic": 18,
+      "supported": 150,
+      "negative_control": 12
+    },
+    "primary_reference_supported_cases": 12,
+    "scope": "negative_control/unsupported/inconclusive remain in original 180 slots"
+  },
+  "numeric_arrays_digest": "03028af51db1708d075c0b0bcdb1a370195d0530cf89004dc05de2be661caf2d",
+  "saved_check": {
+    "passed": true,
+    "original_cases": 12,
+    "original_method_slots": 180,
+    "replay_rng": false,
+    "optimizer_or_training": false,
+    "scope": "saved primitive/statistical consistency, not all-estimator support or teaching acceptance"
+  },
+  "categorized_cost": {
+    "measured_seconds": 22.26042553631123,
+    "categories": {
+      "validation": 19.833623641054146,
+      "draw": 0.20267160708317533,
+      "reference": 0.04497127910144627,
+      "estimator": 2.179159009072464
+    },
+    "pending_ids": []
+  }
+}

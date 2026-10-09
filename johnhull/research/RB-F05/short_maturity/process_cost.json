@@ -1,0 +1,17 @@
+{
+  "schema": "RB-F05-short-process-cost-v1",
+  "phase": "main",
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/build_reference.py",
+    "--protocol",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity/protocol.json",
+    "--mode",
+    "main",
+    "--directory",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F05/short_maturity"
+  ],
+  "wall_seconds": 46.08508096204605,
+  "exit_code": 0,
+  "scope": "child CLI wall includes imports, numeric frozen pilot validation, geometry, all teachers, six fixed fits, comparisons, whole-call timings, saved check and serialization; nested expenses not added"
+}

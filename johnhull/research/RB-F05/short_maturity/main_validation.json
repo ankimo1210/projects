@@ -1,0 +1,230 @@
+{
+  "schema": "RB-F05-short-main-validation-v1",
+  "archive_load_s": 1.0554903059965,
+  "saved_check_s": 9.963750534981955,
+  "check": {
+    "passed": true,
+    "mode": "main",
+    "teacher_slots": 640,
+    "fit_slots": 6,
+    "original_test_count": 336,
+    "timing_slots": 448,
+    "accepted": false,
+    "scope": "saved-only numeric reconstruction; no RNG, training, optimizer or main adoption"
+  },
+  "original_arrays": 7715,
+  "npz_bytes": 177133184,
+  "teacher_precision": {
+    "train": {
+      "original": 512,
+      "ready": 512,
+      "status_counts": {
+        "ready": 256,
+        "analytic_deterministic": 256
+      }
+    },
+    "validation": {
+      "original": 128,
+      "ready": 128,
+      "status_counts": {
+        "ready": 64,
+        "analytic_deterministic": 64
+      }
+    }
+  },
+  "fits": [
+    {
+      "id": "fit0",
+      "status": "completed",
+      "updates": 512,
+      "training_s": 1.3266153959557414,
+      "test_raw": {
+        "original_count": 336,
+        "failed_rows": 0,
+        "units": [
+          "currency",
+          "currency/spot",
+          "K*currency/spot^2"
+        ],
+        "status": "complete",
+        "rmse": [
+          0.09685872124090034,
+          0.18492998857505275,
+          60.45303457976734
+        ],
+        "p99": [
+          0.4378614150418983,
+          0.5260232289148479,
+          333.25142601127976
+        ],
+        "max": [
+          0.4717537965228713,
+          0.542744749988322,
+          388.6782732135213
+        ]
+      },
+      "test_raw_count": 143
+    },
+    {
+      "id": "fit1",
+      "status": "completed",
+      "updates": 512,
+      "training_s": 0.6041631220141426,
+      "test_raw": {
+        "original_count": 336,
+        "failed_rows": 0,
+        "units": [
+          "currency",
+          "currency/spot",
+          "K*currency/spot^2"
+        ],
+        "status": "complete",
+        "rmse": [
+          0.04050451214506058,
+          0.06315641202645907,
+          43.90829212664167
+        ],
+        "p99": [
+          0.10735295506634429,
+          0.21320639182360943,
+          214.51448472408745
+        ],
+        "max": [
+          0.1722576158646616,
+          0.2758746845926624,
+          267.9895167151662
+        ]
+      },
+      "test_raw_count": 180
+    },
+    {
+      "id": "fit2",
+      "status": "completed",
+      "updates": 512,
+      "training_s": 0.4064618239644915,
+      "test_raw": {
+        "original_count": 336,
+        "failed_rows": 0,
+        "units": [
+          "currency",
+          "currency/spot",
+          "K*currency/spot^2"
+        ],
+        "status": "complete",
+        "rmse": [
+          0.11156295637996493,
+          0.21094847737174882,
+          62.08119409512455
+        ],
+        "p99": [
+          0.4557154736722594,
+          0.6275396111559107,
+          341.4419600003167
+        ],
+        "max": [
+          0.5957790654319899,
+          0.6539834502770595,
+          391.7622257393977
+        ]
+      },
+      "test_raw_count": 145
+    },
+    {
+      "id": "fit3",
+      "status": "completed",
+      "updates": 512,
+      "training_s": 0.5639747160021216,
+      "test_raw": {
+        "original_count": 336,
+        "failed_rows": 0,
+        "units": [
+          "currency",
+          "currency/spot",
+          "K*currency/spot^2"
+        ],
+        "status": "complete",
+        "rmse": [
+          0.042515011702633373,
+          0.0735156771966491,
+          47.21359264308148
+        ],
+        "p99": [
+          0.11659399791476374,
+          0.27161159152744874,
+          242.71246483723255
+        ],
+        "max": [
+          0.270469746903955,
+          0.30757443825722286,
+          289.3087538429972
+        ]
+      },
+      "test_raw_count": 146
+    },
+    {
+      "id": "fit4",
+      "status": "completed",
+      "updates": 512,
+      "training_s": 0.3988115590182133,
+      "test_raw": {
+        "original_count": 336,
+        "failed_rows": 0,
+        "units": [
+          "currency",
+          "currency/spot",
+          "K*currency/spot^2"
+        ],
+        "status": "complete",
+        "rmse": [
+          0.09710060241939245,
+          0.19411079271535853,
+          61.21776023799541
+        ],
+        "p99": [
+          0.3958839614322271,
+          0.5508565811726629,
+          339.2705832124547
+        ],
+        "max": [
+          0.49510521460155044,
+          0.5694450885484279,
+          389.6517176381264
+        ]
+      },
+      "test_raw_count": 154
+    },
+    {
+      "id": "fit5",
+      "status": "completed",
+      "updates": 512,
+      "training_s": 0.5721663479926065,
+      "test_raw": {
+        "original_count": 336,
+        "failed_rows": 0,
+        "units": [
+          "currency",
+          "currency/spot",
+          "K*currency/spot^2"
+        ],
+        "status": "complete",
+        "rmse": [
+          0.027817572268576035,
+          0.04649242311652028,
+          34.82559321056502
+        ],
+        "p99": [
+          0.09159088534591642,
+          0.15584128653909063,
+          165.15039058324797
+        ],
+        "max": [
+          0.12731868330167373,
+          0.16079213120113828,
+          222.1074342671124
+        ]
+      },
+      "test_raw_count": 171
+    }
+  ],
+  "scope": "saved-only entire main financial reconstruction; not independent review/adoption"
+}

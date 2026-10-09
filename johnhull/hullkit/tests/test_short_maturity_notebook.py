@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -10,6 +11,13 @@ import numpy as np
 import pytest
 
 HERE = Path(__file__).resolve().parents[2] / "research/RB-F05/short_maturity"
+
+
+def protocol_module():
+    spec = importlib.util.spec_from_file_location("short_notebook_protocol", HERE / "protocol.py")
+    result = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(result)
+    return result
 
 
 def builder():
@@ -197,6 +205,8 @@ def toy(tmp_path_factory):
         },
         "costs": {"main_only_s": 0.51, "cold_pipeline_s": None, "fresh_s": None},
         "analytics_path": str(HERE / "analytics.py"),
+        "protocol_path": str(HERE / "protocol.py"),
+        "protocol_digest": protocol_module().json_digest(p),
     }
     (artifacts / "reference.json").write_text(json.dumps(record))
     np.savez_compressed(artifacts / "reference.npz", **arrays)
@@ -212,10 +222,10 @@ def load_result(directory):
         arrays={k:b[k].copy() for k in b.files}
     return record,arrays
 def module(name):
-    if name!="analytics":
+    if name not in {"analytics", "protocol"}:
         raise KeyError(name)
     record,_=load_result(Path(__file__).parent.parent/"saved")
-    spec=importlib.util.spec_from_file_location("toy_short_analytics",record["analytics_path"])
+    spec=importlib.util.spec_from_file_location("toy_short_"+name,record[name+"_path"])
     value=importlib.util.module_from_spec(spec)
     sys.modules[spec.name]=value
     spec.loader.exec_module(value)
@@ -319,3 +329,165 @@ def test_missing_saved_evidence_fails_before_creating_a_notebook(tmp_path):
     with pytest.raises(FileNotFoundError):
         builder().build(tmp_path / "absent", output)
     assert not output.exists()
+
+
+@pytest.fixture
+def assessment_bundle(toy, tmp_path):
+    original, source, _ = toy
+    artifacts = tmp_path / "assessed"
+    shutil.copytree(original, artifacts)
+    record = json.loads((artifacts / "reference.json").read_text())
+    with np.load(artifacts / "reference.npz", allow_pickle=False) as bundle:
+        arrays = {key: bundle[key].copy() for key in bundle.files}
+    p = protocol_module()
+    assessment = {
+        "schema": "RB-F05-short-assessment-v1",
+        "study_record_digest": p.json_digest(record),
+        "study_arrays_digest": p.arrays_digest(arrays),
+        "protocol_digest": record["protocol_digest"],
+        "costs": {"cold_pipeline_s": 2.75, "fresh_s": None, "archive_load_s": 0.25},
+        "resolved_expenses": [
+            {
+                "id": "cold_import",
+                "seconds": 0.25,
+                "scope": "toy independent import; not main performance",
+                "receipt": "toy_import_receipt.json",
+            }
+        ],
+        "decisions": {
+            "teacher": "toy_teacher_supported",
+            "delta_improvement": "toy_unknown",
+            "gamma_utility": "toy_not_supported",
+            "standard_accelerator_adoption": "toy_no_adoption",
+        },
+        "equal_accuracy_payback": {
+            "fit0": {
+                "eligible": True,
+                "queries": 1234,
+                "reason": "toy_equal_accuracy_only",
+                "baseline": "toy_hermite",
+            },
+            "fit5": {
+                "eligible": False,
+                "queries": None,
+                "reason": "toy_time_cap",
+                "baseline": "toy_hermite",
+            },
+        },
+    }
+    path = artifacts / "assessment.json"
+    path.write_text(json.dumps(assessment))
+    return artifacts, source, record, arrays, assessment, path
+
+
+def test_optional_assessment_keeps_raw_record_and_original_pending(assessment_bundle):
+    artifacts, _, record, arrays, assessment, path = assessment_bundle
+    before = (artifacts / "reference.json").read_bytes()
+    original_digest = protocol_module().json_digest(record)
+    loaded = builder()._read_assessment(path, record, arrays, protocol_module())
+    assert loaded["costs"]["cold_pipeline_s"] == pytest.approx(2.75)
+    assert loaded["decisions"]["standard_accelerator_adoption"] == "toy_no_adoption"
+    assert loaded["equal_accuracy_payback"]["fit0"]["queries"] == 1234
+    assert loaded["costs"]["fresh_s"] is None
+    assert record["costs"]["cold_pipeline_s"] is None and record["accepted"] is False
+    assert protocol_module().json_digest(record) == original_digest
+    assert (artifacts / "reference.json").read_bytes() == before
+    assert loaded == assessment
+
+
+def test_missing_external_assessment_is_unknown(assessment_bundle):
+    _, _, record, arrays, _, path = assessment_bundle
+    path.unlink()
+    assert builder()._read_assessment(path, record, arrays, protocol_module()) is None
+
+
+@pytest.mark.parametrize(
+    "field", ["schema", "study_record_digest", "study_arrays_digest", "protocol_digest"]
+)
+def test_assessment_rejects_binding_tamper(assessment_bundle, field):
+    _, _, record, arrays, assessment, path = assessment_bundle
+    assessment[field] = "unbound"
+    path.write_text(json.dumps(assessment))
+    with pytest.raises(ValueError, match="assessment"):
+        builder()._read_assessment(path, record, arrays, protocol_module())
+
+
+def test_assessment_rejects_changed_study_arrays(assessment_bundle):
+    _, _, record, arrays, _, path = assessment_bundle
+    arrays[record["datasets"]["test"]["inputs_key"]][0, 0] += 0.001
+    with pytest.raises(ValueError, match="assessment"):
+        builder()._read_assessment(path, record, arrays, protocol_module())
+
+
+@pytest.mark.parametrize(
+    "section,key,value",
+    [
+        ("costs", "cold_pipeline_s", -1),
+        ("costs", "fresh_s", np.nan),
+        ("costs", "archive_load_s", np.inf),
+        ("resolved_expenses", "seconds", -0.1),
+        ("resolved_expenses", "seconds", np.inf),
+        ("resolved_expenses", "scope", ""),
+        ("resolved_expenses", "receipt", ""),
+        ("equal_accuracy_payback", "queries", -1),
+        ("equal_accuracy_payback", "queries", np.nan),
+    ],
+)
+def test_assessment_rejects_invalid_external_cost_or_scope(assessment_bundle, section, key, value):
+    _, _, record, arrays, assessment, path = assessment_bundle
+    if section == "costs":
+        assessment[section][key] = value
+    elif section == "resolved_expenses":
+        assessment[section][0][key] = value
+    else:
+        assessment[section]["fit0"][key] = value
+    path.write_text(json.dumps(assessment))
+    with pytest.raises(ValueError, match="assessment"):
+        builder()._read_assessment(path, record, arrays, protocol_module())
+
+
+def test_assessment_rejects_duplicate_resolved_cost_ids(assessment_bundle):
+    _, _, record, arrays, assessment, path = assessment_bundle
+    assessment["resolved_expenses"].append(dict(assessment["resolved_expenses"][0]))
+    path.write_text(json.dumps(assessment))
+    with pytest.raises(ValueError, match="assessment"):
+        builder()._read_assessment(path, record, arrays, protocol_module())
+
+
+def test_guarded_assessment_display_three_pngs_without_mutating_record(assessment_bundle):
+    artifacts, source, record, _, _, _ = assessment_bundle
+    before = (artifacts / "reference.json").read_bytes()
+    output = builder().build(artifacts, artifacts / "assessed.ipynb", source=source, execute=True)
+    notebook = nbformat.read(output, as_version=4)
+    text = "\n".join(
+        out.get("text", "") + out.get("data", {}).get("text/markdown", "")
+        for cell in notebook.cells
+        for out in cell.get("outputs", [])
+    )
+    for expected in [
+        "toy_teacher_supported",
+        "toy_no_adoption",
+        "toy_equal_accuracy_only",
+        "toy_import_receipt.json",
+        "original pending",
+        "resolved external",
+        "2.75",
+        "1234",
+        "fit5",
+        "toy_time_cap",
+    ]:
+        assert expected in text
+    assert "original test rows: 8" in text and "original fit slots: 6" in text
+    assert (
+        len(
+            [
+                out
+                for cell in notebook.cells
+                for out in cell.get("outputs", [])
+                if "image/png" in out.get("data", {})
+            ]
+        )
+        == 3
+    )
+    assert record["accepted"] is False
+    assert (artifacts / "reference.json").read_bytes() == before

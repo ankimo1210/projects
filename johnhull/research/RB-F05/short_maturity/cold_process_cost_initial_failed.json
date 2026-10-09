@@ -1,0 +1,12 @@
+{
+  "schema": "RB-F05-short-cold-process-cost-v1",
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/tmp/rbf05-cold-artifact-child.py"
+  ],
+  "wall_seconds": 18.026820087980013,
+  "exit_code": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/rbf05-cold-artifact-child.py\", line 15, in <module>\n    began=time.perf_counter();grid={name:a[key] for name,key in r['hermite']['grid'].items()};prepared=analytics.prepare_hermite(grid);prepare_s=time.perf_counter()-began\n                                                                ~~~~~~~~~~~~^^^^^^^^\nKeyError: 'grid'\n",
+  "scope": "new-process artifact-backed validated pipeline; not uncached disk, and not repeated offline teacher/training construction",
+  "stdout": ""
+}
