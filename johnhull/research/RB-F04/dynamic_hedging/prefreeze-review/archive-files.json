@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-10",
+  "proposal_sha256": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b",
+  "scope": "independent prefreeze design reviews, no financial/source/pilot/main acceptance",
+  "exact_original_files": [
+    {
+      "original": "task-5-prefreeze-revision-review.md",
+      "archive": "task-5-prefreeze-revision-review.md",
+      "bytes": 6296,
+      "sha256": "e2aa3e7e0f77fe8a37cad011e06d86a93db702ba22d26483046b25524e1ea56a"
+    },
+    {
+      "original": "task-5-prefreeze-revision-review.json",
+      "archive": "task-5-prefreeze-revision-review.json",
+      "bytes": 8290,
+      "sha256": "39e43457a1bf8d7e7529bef9d1e6ce893b2bc9f9cfb4121389f5716646649a74"
+    },
+    {
+      "original": "task-5-prefreeze-revision-review-original-e2a8.md",
+      "archive": "task-5-prefreeze-revision-review-original-e2a8.md",
+      "bytes": 5830,
+      "sha256": "68371360277cb84c30dcd4fdb8ed4bd5f367730a8d58c61860c82bdcfa0bcdea"
+    },
+    {
+      "original": "task-5-prefreeze-revision-review-original-e2a8.json",
+      "archive": "task-5-prefreeze-revision-review-original-e2a8.json",
+      "bytes": 7466,
+      "sha256": "67cececaf76fe4a53587d3c775eead31a8a3700c0766074a01dcdfe1a4075bfc"
+    },
+    {
+      "original": "task-5-fixed-domain-design-review.md",
+      "archive": "task-5-fixed-domain-design-review.md",
+      "bytes": 12099,
+      "sha256": "562bdf8fdfd6694ea6936c099df4bb9139e82754d15b390a46ae2802160f199f"
+    },
+    {
+      "original": "task-5-fixed-domain-design-review.json",
+      "archive": "task-5-fixed-domain-design-review.json",
+      "bytes": 3523,
+      "sha256": "04f1875b148dff1c90e68f46ffff670c013b82ba7700cedb21b535e1d0e98658"
+    },
+    {
+      "original": "task-5-fixed-domain-design-review-probes.py",
+      "archive": "task-5-fixed-domain-design-review-probes.py.txt",
+      "bytes": 3518,
+      "sha256": "effd65ed71290682ce33888fca02f63cf3dc0d4486ed7ef6882e2446a3ba75c6"
+    },
+    {
+      "original": "task-5-fixed-domain-design-review-probes.json",
+      "archive": "task-5-fixed-domain-design-review-probes.json",
+      "bytes": 1835,
+      "sha256": "f08d6242e53dcc17d32d205c7338a83026afe1fe81878d1b31fb17c3f9559aa4"
+    },
+    {
+      "original": "task-5-fixed-domain-design-review-probes.txt",
+      "archive": "task-5-fixed-domain-design-review-probes.txt",
+      "bytes": 1836,
+      "sha256": "6f318ba554357d88ebbd3b1f0407e0490caff5a55e424e54d011a4cd040d78b2"
+    },
+    {
+      "original": "task-5-fixed-domain-design-review-run.json",
+      "archive": "task-5-fixed-domain-design-review-run.json",
+      "bytes": 142,
+      "sha256": "5f0fae21fb6493be5ecbc7e20c94b605570b60d268c31ded28f95a69212c7f23"
+    }
+  ]
+}

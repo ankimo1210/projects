@@ -1,0 +1,140 @@
+{
+  "schema": "rb-f04-prefreeze-proposal-design-review-v1",
+  "date": "2026-10-10",
+  "reviewer": "/root/task5_freeze_feasibility",
+  "decision": "approved_bounded_design_for_implementation",
+  "scope": "Root-authored PREFREEZE_REVISION.md proposal design only. No formal source/financial pilot/readiness/main/final acceptance approval.",
+  "input_commit": "47372fd95b3d6af599c51c4996b1993eb75a445c",
+  "input_bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/PREFREEZE_REVISION.md": "3728b09ab65b0960a13bc54309dee13f476c606c36c6ce9b6cbcc10281ea271b",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN_REVIEW.md": "daa8e335c4da6e5826524370315dd5475e2d2c1366e4565336686ed356987230",
+    "johnhull/research/RB-F04/dynamic_hedging/candidate.json": "23304b8b25285dfb2f82cff6a3f4cb9f2b0b339b02b27d11ffc924fd97d52148",
+    "johnhull/research/RB-F04/dynamic_hedging/roster.json": "795a443261f3cd726fc95c7a4b4340aa86ae7dfb438d5f89e7031ca5e7723d2d",
+    "johnhull/research/RB-F04/dynamic_hedging/preflight-diagnostics/task-5-freeze-feasibility-audit.md": "034a29ccffe5abfae2326ab2e7795e69d67f5e6ee409dfec465fe0ec9d9b5c75",
+    "johnhull/research/RB-F04/dynamic_hedging/preflight-diagnostics/task-5-freeze-feasibility-audit.json": "3eb7d08220fdc8a698a6808a1d1dd1774690da787f825c737447963c03852f09",
+    "johnhull/research/RB-F04/dynamic_hedging/preflight-diagnostics/task-5-cache-domain-report.md": "c61e0c20635a5dc846e9fa39708ae7549ca14da087717b76c81b270cb217e4a1",
+    "johnhull/docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md": "f5867ba183acc959b7e4c38302e2cabd73e378c3691dde1142b857f9ef852204",
+    "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": "5f63d5871cdf6871f83fb08bf8f403b556cf6730c40430c0fc391f5da29bda0f",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "fff3bc88d497210a846956d464317d5ddb00941a1e3ef25193f9cbaa26a8c406"
+  },
+  "critical_count": 0,
+  "important_count": 0,
+  "blocking_findings": [],
+  "assessments": [
+    {
+      "id": "A_schema_separation",
+      "status": "approved_design",
+      "proposal_lines": [
+        13,
+        15,
+        39
+      ],
+      "reason": "Separate private schema and artifact namespace retain strict original v1 entrypoints; execution evaluation closure does not assert financial qualified."
+    },
+    {
+      "id": "v1_preservation",
+      "status": "approved_design_current_source_unchanged",
+      "proposal_lines": [
+        13,
+        14,
+        22
+      ],
+      "source_comparison": {
+        "johnhull/research/RB-F04/dynamic_hedging/candidate.json": true,
+        "deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_protocol.py": true
+      },
+      "reason": "All original thresholds, quote condition rule, N/seed/roster and original-N unknown decisions retained; no flag-only projection."
+    },
+    {
+      "id": "pilot_attempt_cap_closure",
+      "status": "approved_design_only_actual_closure_pending",
+      "proposal_lines": [
+        16,
+        17,
+        18,
+        40
+      ],
+      "reason": "Full original pilot obligations must be attempted/measured or independently justified refusal/predeclared-cap failures; N1024 alone cannot close pilot, incomplete integrity/source must refuse readiness."
+    },
+    {
+      "id": "pretest_research_N32768",
+      "status": "approved_design_no_financial_precision_approval",
+      "proposal_lines": [
+        20
+      ],
+      "reason": "Use original smallest-qualified rule when actually defined; otherwise deterministic max original candidate 32768 chosen before test with precision_selection=unavailable; no successful subset or precision-qualified claim."
+    },
+    {
+      "id": "cost_fresh_CAS_roster_acceptance",
+      "status": "approved_design_all_obligations_preserved",
+      "proposal_lines": [
+        9,
+        19,
+        21,
+        22,
+        41
+      ],
+      "reason": "44 cells x 3 test seeds x 3 SDE levels (396 slots), 12 full fit attempts, independent premium/Q/teacher/position/PnL refinement, all expenses, saved/fresh/C-F semantic restores, 3 plots/notebook/full suites/final review/main integration retained."
+    },
+    {
+      "id": "B_fixed_domain",
+      "status": "approved_bounded_design_source_and_precision_pending",
+      "proposal_lines": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        38
+      ],
+      "reason": "A pretest fixed finite Cartesian domain with the same not-a-knot linear operator for all 16 blocks is a separate interpolation revision; full raw arrays/axes/status/N remain and outside queries remain unknown. Referenced report explicitly preserves original call roots/bounds and denies smooth extension across unknown gaps."
+    }
+  ],
+  "implementation_review_requirements": [
+    {
+      "id": "IR1",
+      "scope": "B source",
+      "requirement": "Keep all original call root enumeration/residual/bounds before applying Asian patch membership; a root outside patch is asian_outside_patch unknown, never clip/restrict roots to fabricate uniqueness. Test original multi-root curve with only one root inside patch."
+    },
+    {
+      "id": "IR2",
+      "scope": "B source",
+      "requirement": "Exact linear x<=0 claim remains analytic and does not require quote inversion; C2 applies inside the single box, not across the unknown gap to the linear component. Save component/gap/boundary status and do not invent a smooth extension."
+    },
+    {
+      "id": "IR3",
+      "scope": "B statistics",
+      "requirement": "Freeze geometry and selection rule from declared pilot streams before evaluation; all block curves use the same fixed operator. Geometry selection does not itself certify teacher SE/accuracy; independent oracle/SE/grid/bias measurements remain mandatory. Bind the selection data scope and preserve all rejected nodes."
+    },
+    {
+      "id": "IR4",
+      "scope": "A validator",
+      "requirement": "The execution freeze validator must recompute evidence closure/original counts/status/unknown truth table and reject source bug, incomplete required attempt, incorrect input closure or integrity failure. A boolean approved flag is insufficient."
+    },
+    {
+      "id": "IR5",
+      "scope": "A selection",
+      "requirement": "In the unavailable precision branch, store test_N=32768 and precision_selection=unavailable, preserve all ordered pilot candidate projections/failures, and never describe this as smallest-qualified or as a replacement for missing pilot obligations."
+    },
+    {
+      "id": "IR6",
+      "scope": "full completion",
+      "requirement": "Do not set research done/main acceptance from this review, a source checkpoint, expected rejection alone or subset execution. Complete the original full deliverables and verify them against current saved/fresh/CAS/figures/final review evidence."
+    }
+  ],
+  "not_approved": [
+    "implementation_source",
+    "formal_pilot",
+    "financial_qualification",
+    "execution_readiness_freeze",
+    "test_opening",
+    "main_results",
+    "speedup_or_risk_improvement",
+    "final_acceptance",
+    "research_completion"
+  ],
+  "validation_scope": "Read-only local contract/source/artifact inspection and exact original guard/current checkpoint comparison. No RNG, training, source mutation, new financial experiment or full tests run.",
+  "canonical_files_modified": false
+}
