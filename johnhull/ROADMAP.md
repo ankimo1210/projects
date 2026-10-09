@@ -33,8 +33,8 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 101 priv
 | main反映 | 独立レビュー修正・main反映・root同期完了 | 実測結果・判断・反映結果は[最終統合記録](docs/FINAL_INTEGRATION_2026-10-08.md)。rootの未公開履歴・別プロジェクト変更・受入worktreeを保持 |
 | Beyond Hull（vol13–28） | 完了 | A1–A4、A5–A8 G8 release、vol26/27/28 |
 | 研究track #1 | RB-F07 v1完了 | [研究資料](research/RB-F07/README.md)。private単一曲線・解析Jacobian・随伴リスク、独立レビュー済み。v2/v3は別承認 |
-| 研究track #2 | RB-F05 digital v1完了 | [研究資料](research/RB-F05/README.md)。DMLは全seed改善、解析・補間には精度/費用で劣り、速度昇格は不採用。次は離散バリアの契約/独立参照を固定 |
-| 統合研究 | quote DML研究受入済み・commit後統合gate | [結果](research/RB-F07/quote_dml/README.md)／[独立レビュー](research/RB-F07/quote_dml/REVIEW.md)。30NN＋4ridge、fresh独立再計算、310計時、288費用対照、最終23,498,066 bytesの両保管庫復元、artifact-only3図実行/目視を完了。関連3suite初回6915 PASS/4 FAIL/6 skip、Agg表示修正後11 PASS、重複除去6919 PASS/6 skip（全suite2回目なし）。教材保持・標準器昇格不採用。commit後release/main反映を確認する |
+| 研究track #2 | RB-F05 digital v1完了・離散バリア着手 | [研究資料](research/RB-F05/README.md)。digitalのDMLは全seed改善、解析・補間には精度/費用で劣り、速度昇格は不採用。離散バリアは作業branchでprivate教師と独立PDE参照を実装中、研究受入は未完了 |
+| 統合研究 | quote DML v1完了・main統合済み | [結果](research/RB-F07/quote_dml/README.md)／[独立レビュー](research/RB-F07/quote_dml/REVIEW.md)。30NN＋4ridge、fresh独立再計算、310計時、288費用対照、最終23,498,066 bytesの両保管庫復元、artifact-only3図実行/目視・最終レビューを完了。`a25345e1`をmainへfast-forward統合後、関連3suiteを全再実行し6919 PASS/6 skip（334.02秒）、`verify_release.py --require-tracked` PASS。教材保持・標準器昇格不採用 |
 | 実装前の準備 | 完了 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で製品受入と区別 |
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
@@ -116,8 +116,8 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 | 順 | 研究 | 完了を示す主な証拠 | 現在の状態 |
 |---|---|---|---|
 | 既存 | RB-F07 v1 / RB-F05 digital v1 | 保存済み研究成果・再計算・レビュー・採否 | 完了。F05全体の完了とは区別 |
-| 1 | F07＋F05 quote DML | 34 fits、310計時/288原価、fresh数値/改変検査、最終両復元・3図・独立最終レビュー | 研究受入済み。H1改善・H2優位不支持、rate-only残余改善/spot・混合悪化、全面速度優位なし。教材保持、標準器へ昇格しない。commit後release/main統合を確認する |
-| 2 | RB-F05離散バリア | 監視契約、独立離散参照、教師bias/SE、学習比較・総費用・3図・レビュー・採否 | 実装未着手。[追加調査](docs/prep/design/RB-F05_DISCRETE_RESEARCH.md)：BGK/連続監視を離散オラクルにしない。最終増分conditioningだけのPWには途中barrierのbiasが残る |
+| 1 | F07＋F05 quote DML | 34 fits、310計時/288原価、fresh数値/改変検査、最終両復元・3図・独立最終レビュー | 完了・main統合済み。H1改善・H2優位不支持、rate-only残余改善/spot・混合悪化、全面速度優位なし。教材保持、標準器へ昇格しない。統合後6919 tests PASS/6 skip・release PASS |
+| 2 | RB-F05離散バリア | 監視契約、独立離散参照、教師bias/SE、学習比較・総費用・3図・レビュー・採否 | 初期実装中（`codex/rbf05-discrete`）。監視契約を固定し、private教師と独立log-PDE参照を並行実装。pilot・学習・成果物・レビュー・採否は未完了。[追加調査](docs/prep/design/RB-F05_DISCRETE_RESEARCH.md)：BGK/連続監視を離散オラクルにしない。最終増分conditioningだけのPWには途中barrierのbiasが残る |
 | 3 | RB-F04モデル比較 | Heston→Dupire、vanilla再価格/収束、月次12観測Asian・二時点差、paired SE・3図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F04_DESIGN.md)に現行コード監査を反映。scalar Dupireと終端Heston MCだけでは面・局所ボラ経路/PDE・Asianを満たさない |
 | 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F08_DESIGN.md)に既存private独立scramble推定の再利用と、Euler/観測点の指定を追記。Student CI・被覆率・MLMCは追加が必要 |
 | 5 | RB-F06識別可能性 | 固定β SABR、削減/疎/noisy quote、多点初期化、scaled J/profile・3図・レビュー | 実装未着手。[設計](docs/prep/design/RB-F06_DESIGN.md)にraw較正の制限、scaled J・再最適化profile・解析的な未識別fixtureを追記 |
@@ -343,9 +343,9 @@ private計算を先行し、D3の共通設定ツールで説明とrenderedを含
 | M29 | §28.4 Alternative Choices for the Numeraire（pp.676–679） | 受入。HW Q状態/同一給付Q・T/支払・annuity、63独立fixture/旧246保持/16状態/28D1。[受入](docs/SECTION_28_4_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_4_REVIEW_2026-10-04.md) |
 | M30 | §28.5 Extension to Several Factors（pp.679–680） | 受入/main統合push済み。MF01–06/11市場132状態/旧257/16状態/29D1。Important1を4回帰RED→GREENで修正、Minor2保留。[受入](docs/SECTION_28_5_ACCEPTANCE_2026-10-04.md)・[レビュー](docs/SECTION_28_5_REVIEW_2026-10-04.md) |
 | M31 | §28.6 Black’s Model Revisited（pp.680–681） | Ch28まとめで正式受入・main統合済み。独立7市場42価格・zero-hit importance検証済み |
-| 以降 | Ch29–37残45節の受入 | 別受入branch `cef7cea1` で全306節accepted。§33.2/§36.4を補完し、原典未再現値は明示。次は最新開発修正との合流・検証・main統合 |
+| 以降 | Ch29–37残45節の受入 | 全306節accepted。別受入branch `cef7cea1`の成果と最新開発修正/P8を合流し、main統合・検証済み。§33.2/§36.4の補完と原典未再現値の区別は保持。[最終統合記録](docs/FINAL_INTEGRATION_2026-10-08.md) |
 
-現在地（2026-10-08）：mainの正式台帳はaccepted33/unreviewed273、別受入branch `cef7cea1` はaccepted306/unreviewed0。P0–P7の台帳受入と開発側P8監査是正は完了。§33.2/§36.4は別受入branchでprivateモデルを補完し、原典未再現値は保持。受入成果・最新レビュー修正/P8の合流とmain統合・配布は未完了。研究の次はRB-F05離散バリア。
+統合前の記録（2026-10-08）：当時のmainの正式台帳はaccepted33/unreviewed273、別受入branch `cef7cea1` はaccepted306/unreviewed0。P0–P7の台帳受入と開発側P8監査是正は完了。§33.2/§36.4は別受入branchでprivateモデルを補完し、原典未再現値は保持。受入成果・最新レビュー修正/P8の合流とmain統合・配布は未完了。研究の次はRB-F05離散バリア。
 各段階で、共有ソースを変えたときは既受入節の個別テストと両画面を再検査し、台帳の現行証跡へ接続している。
 
 受入を通じて決まった進め方と、残している制限:
