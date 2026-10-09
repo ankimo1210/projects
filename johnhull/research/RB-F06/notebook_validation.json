@@ -1,0 +1,40 @@
+{
+  "notebook": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F06/sabr_identifiability.ipynb",
+  "code_cells": 4,
+  "png_paths": [
+    "/tmp/rbf06-main-figure-0.png",
+    "/tmp/rbf06-main-figure-1.png",
+    "/tmp/rbf06-main-figure-2.png"
+  ],
+  "errors": 0,
+  "guard_before_saved_check": true,
+  "saved_numerical_checker_passed": true,
+  "warnings": [],
+  "visual_inspection_pending": false,
+  "financial_source_modified": false,
+  "visual_inspection": {
+    "three_figures_viewed": true,
+    "japanese_glyphs": true,
+    "legend_and_labels_readable": true,
+    "scalar_and_per_step_jacobian_distinguished": true,
+    "zero_singular_values_retained": true,
+    "original_noisy_denominator": 96,
+    "independent_acceptance_not_claimed": true,
+    "figure_1_note": "symlog retains negative values; substantial unused negative margin visible",
+    "figure_3_note": "pointwise inclusion and finite visited price widths clearly distinguished from confidence coverage/envelope"
+  },
+  "updated_at": "2026-10-09T07:19:48.538455+00:00",
+  "label_review_fix": {
+    "noiseless_curve_table_components": "ΔQ-only sampled components",
+    "noiseless_same_fit_price_visits": "additionally max IV residual<=1e-9",
+    "actual_output_note_verified": true,
+    "test_result": "10 passed, 2 existing deprecation warnings in 7.31s",
+    "ruff": "PASS",
+    "actual_execution": "PASS",
+    "figure_bytes_unchanged": [
+      true,
+      true,
+      true
+    ]
+  }
+}

@@ -4,3 +4,4 @@
 /__pycache__/
 /pilot-initial/checkpoints/
 /pilot-pre-invalid-fix/checkpoints/
+/reference.npz

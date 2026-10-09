@@ -74,6 +74,8 @@ def test_frozen_load_rejects_self_consistent_incomplete_registry(monkeypatch):
     partial = {name: "fixture" for name in m.SOURCES[1:]}
     monkeypatch.setattr(m, "source_registry", lambda: partial)
     p = m.load_protocol()
+    # Build this unit fixture independently of the saved lifecycle state.
+    p.pop("frozen", None)
     p["state"] = "frozen"
     p["frozen"] = {"digest": m.json_digest(p), "source_registry": partial}
     with pytest.raises(ValueError, match="complete"):

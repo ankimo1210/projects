@@ -143,18 +143,18 @@ assert result["attempted_slots"] == len(result["fits"])
 assert support["included"] + support["excluded"] + support["unknown"] == 16
 assert bad_profile_dataset["support_status"] == "unsupported"
 ```
-- [ ] GREEN: 主fitと固定profileを全slot保存。Q,scaled J,SVD,holdout価格,失敗/境界,元分母を保存値から再計算。
-- [ ] freshは指定した通常full/弱ATM/sparseの独立3start再較正、profile truth固定点/quadを再検算し、主推定にpoolしない。独立reviewは別差分と別optimizer/profileを確認。
-- [ ] source freezeを守り、原価・数値結果・参考域の制限を保存。rootが主成果をcommitする。
+- [x] GREEN: 主fitと固定profileを全slot保存。Q,scaled J,SVD,holdout価格,失敗/境界,元分母を保存値から再計算。
+- [x] freshは指定した通常full/弱ATM/sparseの独立3start再較正、profile truth固定点/quadを再検算し、主推定にpoolしない。独立reviewは別差分と別optimizer/profileを確認。
+- [x] source freezeを守り、原価・数値結果・参考域の制限を保存。rootが主成果をcommitする。
 
 ## Task 4: artifact-only教材・最終受入・main反映
 
 **Files:** research/RB-F06/build_notebook.py、sabr_identifiability.ipynb、README.md、REVIEW.md/review.json、validation.json、ROADMAP.md、MODEL_INDEX.md。
-- [ ] 3図：profileとslice、scaled SVD/弱方向、全noisy反復/holdout価格幅。失敗/unknown/boundの数も表示し、固定代表repを変更しない。
-- [ ] notebook実行時のoptimizer/RNGをguardして保存成果だけで描画。nbformatと3図を実行/目視する。
-- [ ] 20MB超の成果は既存CAS契約で両保存/独立復元・数値検査。20MB以下はGit管理。
-- [ ] 関連3suiteを1回実行：pytest -q johnhull/hullkit/tests johnhull/report/tests deep_hedge_price/tests。変更Python ruff/formatとtracked releaseを実行。
-- [ ] 独立最終レビューで全データ/原価/採否を照合。Critical/Important未解決を受入済みと扱わない。
+- [x] 3図：profileとslice、scaled SVD/弱方向、全noisy反復/holdout価格幅。失敗/unknown/boundの数も表示し、固定代表repを変更しない。
+- [x] notebook実行時のoptimizer/RNGをguardして保存成果だけで描画。nbformatと3図を実行/目視する。
+- [x] 20MB超の成果は既存CAS契約で両保存/独立復元・数値検査。20MB以下はGit管理。
+- [x] 関連3suiteを1回実行：pytest -q johnhull/hullkit/tests johnhull/report/tests deep_hedge_price/tests。変更Python ruff/formatとtracked releaseを実行。
+- [x] 独立最終レビューで全データ/原価/採否を照合。Critical/Important未解決を受入済みと扱わない。
 - [ ] rootがmainへfast-forward/pushし、mainのrelease/保存数値checkerを確認。ROADMAPを更新し、次の研究を保持する。
 
 Nu=0の解析Jacobian列をprivate診断に使う（publicの小z/log取消しを修正しない）。rho=0/nu=0のrank1と弱方向を独立検算する。main918、代表profile最大1200、noiseless profile408、truth固定1152、細分化1152の最大4830 solver callsを本前固定し、重複省略も元rosterとの対応を保持する。
@@ -165,6 +165,13 @@ Nu=0の解析Jacobian列をprivate診断に使う（publicの小z/log取消し�
 - 初回pilotは30dataset/386solver callsを完了したが、JSON canonical保存のgroup順序でcheckerがFAIL。原始成果はpilot-initial/へ不変保持し、条件固定には使わない。
 - group rosterを固定順にし、typed pilot approvalを候補全条件・record・typed arrays・全金融sourceへbindした。freeze/load/main開始前に実pilotの数値checkerを必須化。fixture/不完全pilot/古い条件の承認は拒否。
 - 修正後のpilot/は30dataset/270 unrestricted＋116profile、saved/fresh checker PASS（元8noise vectorsと10selected fit再計算）。protocol22＋runner34＋core22＋analytics12＋reference22＋教材builder8の対象120 PASS、変更8Python ruff/format PASS。
-- 独立pilotレビューは進行中。主noise/holdoutはpilotの生成・評価には使用していない。
-- 無効slotのNaN/±Inf分類・有限値の数値照合と実master quoteからの無効判定を修正。正常quoteをinvalidとして隠す対照も拒否し、修正前の数値PASS成果はpilot-pre-invalid-fix/に保持した。新pilot saved/fresh PASS。\n
+- 独立pilotレビューは承認済み。主noise/holdoutはpilotの生成・評価には使用していない。
+- 無効slotのNaN/±Inf分類・有限値の数値照合と実master quoteからの無効判定を修正。正常quoteをinvalidとして隠す対照も拒否し、修正前の数値PASS成果はpilot-pre-invalid-fix/に保持した。新pilot saved/fresh PASS。
+
 - 最新pilotの独立レビューapproved・重要指摘0、386式比較/10SLSQP/270 multi-step確認後にcandidate全条件/financial source6件を固定。保存したfrozen protocolを実pilotへ再照合してPASS。主実験はこの固定から開始する。
+
+## 主実験の実測（2026-10-09）
+
+102 dataset / 918 unrestricted＋3480 profile＝4398 calls、上限4830以内。全saved/fresh検査、両保管庫の独立復元/全数値検査、artifact-only3図実行/目視、独立最終レビューapproved（重要0）を完了。金融source6件はfreezeから不変。
+
+最終3suiteは7742 passed・2 failed・6 skipped（433.14秒）。2件はdefault protocolがcandidateからfrozenへ正式更新されたことに依存するテストfixtureを修正済み。関係56件PASS、索引を含むroot再確認777件PASS（5.73秒）。元PASSと修正2件を合わせると重複なし7744 passed・6 skippedで、全suiteを再実行した数字ではない。金融sourceは6/6不変。main反映はrelease後に行う。独立レビューは一般exact SABR、大域識別、保証被覆、joint価格包絡を承認していない。

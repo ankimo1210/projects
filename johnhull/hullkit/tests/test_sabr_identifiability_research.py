@@ -153,6 +153,9 @@ def test_failed_optimizer_original_slot_survives(tmp_path, monkeypatch):
 def test_candidate_cannot_draw_main_noise(tmp_path, monkeypatch):
     m = builder()
     p = m.module("protocol").load_protocol()
+    # The default protocol may already be frozen after the real study.
+    p.pop("frozen", None)
+    p["state"] = "candidate"
 
     def forbidden(*args, **kwargs):
         raise AssertionError("main noise drawn before review/freeze")
