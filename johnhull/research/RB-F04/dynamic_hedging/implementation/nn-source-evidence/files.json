@@ -69,7 +69,7 @@
     },
     {
       "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-split-v2.log",
-      "saved": "task-6-full-count-unit-runtime-split-v2.log",
+      "saved": "task-6-full-count-unit-runtime-split-v2.log.txt",
       "bytes": 3246,
       "sha256": "342120cc82b451ef32c27603a3b320e046a044d3e25c38dc6eb039b7a7d90d5d"
     },
@@ -87,7 +87,7 @@
     },
     {
       "original": ".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-split.log",
-      "saved": "task-6-full-count-unit-runtime-split.log",
+      "saved": "task-6-full-count-unit-runtime-split.log.txt",
       "bytes": 812,
       "sha256": "82d967c7a878d42eb05c9ed471fc4ed781b418b126c57bc0e210771bbace18df"
     },

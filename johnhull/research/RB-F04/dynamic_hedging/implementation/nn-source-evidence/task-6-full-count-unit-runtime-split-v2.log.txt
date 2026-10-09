@@ -1,0 +1,25 @@
+{"fit_started": {"universe": "U1", "seed": 11, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U1", "seed": 11, "status": "completed", "elapsed": 2.769631698000012, "updates": 512}}
+{"fit_started": {"universe": "U1", "seed": 29, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U1", "seed": 29, "status": "completed", "elapsed": 2.1967775440007244, "updates": 512}}
+{"fit_started": {"universe": "U1", "seed": 47, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U1", "seed": 47, "status": "completed", "elapsed": 2.1496746049997455, "updates": 512}}
+{"fit_started": {"universe": "U2", "seed": 11, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U2", "seed": 11, "status": "completed", "elapsed": 2.111172164000891, "updates": 512}}
+{"fit_started": {"universe": "U2", "seed": 29, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U2", "seed": 29, "status": "completed", "elapsed": 2.14694578200033, "updates": 512}}
+{"fit_started": {"universe": "U2", "seed": 47, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U2", "seed": 47, "status": "completed", "elapsed": 2.0932913460001146, "updates": 512}}
+{"fit_started": {"universe": "U1", "seed": 11, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U1", "seed": 11, "status": "completed", "elapsed": 2.2474222609998833, "updates": 512}}
+{"fit_started": {"universe": "U1", "seed": 29, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U1", "seed": 29, "status": "completed", "elapsed": 2.255932115000178, "updates": 512}}
+{"fit_started": {"universe": "U1", "seed": 47, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U1", "seed": 47, "status": "completed", "elapsed": 2.2095398849996855, "updates": 512}}
+{"fit_started": {"universe": "U2", "seed": 11, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U2", "seed": 11, "status": "completed", "elapsed": 2.154187935999289, "updates": 512}}
+{"fit_started": {"universe": "U2", "seed": 29, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U2", "seed": 29, "status": "completed", "elapsed": 2.112546096999722, "updates": 512}}
+{"fit_started": {"universe": "U2", "seed": 47, "original_n": 8192, "updates": 512}}
+{"fit_finished": {"universe": "U2", "seed": 47, "status": "completed", "elapsed": 2.1228356980009266, "updates": 512}}
+{"summary": "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/task-6-full-count-unit-runtime-split.json", "elapsed_seconds": 34.51216298200052, "check": {"integrity": "pass", "closure_status": "closed", "original_fit_slots": 12, "original_validation_n": 2048, "test_opened": false, "optimizer_history_authenticated": false, "random_stream_provenance_authenticated": false, "qualification": "unknown", "nn_validation_qualification": "qualified", "baseline_validation_qualification": "qualified", "verification_scope": "fixed checkpoint/scaler/cash/selection arithmetic and retained expenses"}, "fits": ["completed", "completed", "completed", "completed", "completed", "completed", "completed", "completed", "completed", "completed", "completed", "completed"]}
