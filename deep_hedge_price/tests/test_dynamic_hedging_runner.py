@@ -789,3 +789,73 @@ def test_execution_cli_uses_execution_source_with_actual_guard(monkeypatch, tmp_
     assert saved[0]["qualification"] == "unknown"
     shown = json.loads(capsys.readouterr().out)
     assert shown["qualification"] == "unknown"
+
+
+def test_execution_sink_streams_original_cases_without_retaining_raw_arrays(monkeypatch):
+    import weakref
+
+    _, fixture, frozen, receipts, validation, closed = actual_execution_inputs()
+    monkeypatch.setattr(
+        runner, "execution_source_identity", lambda: {"protocol_source": fixture["source"]}
+    )
+    alive, order, persisted = [], [], []
+
+    def engine(dataset, risk, fits, selected, *, generator, universe):
+        assert not any(ref() is not None for ref in alive), "prior raw evaluation retained"
+        assert dataset["original_n"] == 32768
+        order.append(("evaluate", generator, universe))
+        loss = np.full(32768, np.nan)
+        alive.append(weakref.ref(loss))
+        return {"source_unit": True, "original_n": 32768, "loss": loss}
+
+    def sink(row):
+        assert row["result"]["loss"].shape == (32768,)
+        key = (row["generator"], row["seed_slot"], row["level"], row["universe"])
+        persisted.append(key)
+        order.append(("persist", row["generator"], row["universe"]))
+        return {"immutable_ref": key, "original_n": row["result"]["original_n"]}
+
+    cases = [
+        {
+            "generator": g,
+            "seed_slot": s,
+            "level": level,
+            "dataset": {"original_n": 32768},
+            "risk": {},
+        }
+        for g in ["Heston", "local"]
+        for s in range(3)
+        for level in [192, 384, 768]
+    ]
+    monkeypatch.setattr(runner.study, "test_roster", engine)
+    out = runner.run_execution_main(
+        frozen=frozen,
+        candidate=fixture["candidate"],
+        source=fixture["source"],
+        selection_receipts=receipts,
+        raw_validation=validation,
+        closed_fits=closed,
+        main_test_loader=lambda: {"test_cases": cases},
+        evaluation_sink=sink,
+    )
+    assert len(persisted) == len(out["evaluations"]) == 36
+    assert order[::2] == [("evaluate", g, u) for g, _, _, u in persisted]
+    assert order[1::2] == [("persist", g, u) for g, _, _, u in persisted]
+    assert all("result" not in row for row in out["evaluations"])
+    assert not any(ref() is not None for ref in alive)
+    assert out["qualification"] == "unknown"
+
+
+def test_execution_sink_never_opens_before_actual_gate(monkeypatch):
+    touched = []
+    with pytest.raises(ValueError, match="execution schema"):
+        runner.run_execution_main(
+            frozen={},
+            candidate={},
+            source={},
+            selection_receipts={},
+            raw_validation={},
+            main_test_loader=lambda: touched.append("test"),
+            evaluation_sink=lambda row: touched.append("sink"),
+        )
+    assert touched == []

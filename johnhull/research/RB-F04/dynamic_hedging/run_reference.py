@@ -323,11 +323,15 @@ def run_execution_main(
     raw_validation,
     main_test_loader,
     closed_fits=None,
+    evaluation_sink=None,
 ):
     """Use the separate research execution gate, retaining unknown precision.
 
     The full execution candidate is checked without a synthetic qualified v1
     freeze. The financial calculation uses its exact original v1 candidate.
+    An optional sink writes each generator/seed/level/universe result and
+    returns a caller-owned reference, so original-path arrays need not all
+    remain in memory. Sink errors propagate; no missing artifact is replaced.
     This supplied-data boundary is not a complete experiment or an acceptance.
     """
     fixed_candidate, fixed_frozen = copy.deepcopy((candidate, frozen))
@@ -343,6 +347,7 @@ def run_execution_main(
         closed_fits=closed_fits,
         readiness_guard=execution.assert_execution_ready,
         source_provider=execution_source_identity,
+        evaluation_sink=evaluation_sink,
     )
     return result | {
         "precision_selection": precision,
@@ -363,6 +368,7 @@ def _run_closed_main(
     closed_fits,
     readiness_guard,
     source_provider,
+    evaluation_sink=None,
 ):
     """Recalculate raw closed selections before either gated test loader."""
     frozen, candidate, gate_candidate, source, selection_receipts, raw_validation, closed_fits = (
@@ -454,10 +460,13 @@ def _run_closed_main(
                 generator=case["generator"],
                 universe=universe,
             )
-            evaluated.append(
-                {k: case[k] for k in ["generator", "seed_slot", "level"]}
-                | {"universe": universe, "result": result}
-            )
+            row = {k: case[k] for k in ["generator", "seed_slot", "level"]} | {
+                "universe": universe,
+                "result": result,
+            }
+            evaluated.append(row if evaluation_sink is None else evaluation_sink(row))
+            # With a sink the full original-path arrays belong to its artifact.
+            del row, result
     return {
         "test_opened": True,
         "main_execution": "supplied_data_evaluated",

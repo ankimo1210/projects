@@ -321,3 +321,7 @@ Task5 helperの[ソース確認](../../../research/RB-F04/dynamic_hedging/implem
 ## 元件数の学習・検証source checkpoint（2026-10-10）
 
 [12本のsource確認](../../../research/RB-F04/dynamic_hedging/implementation/NN_CLOSURE_SOURCE.md)：12fit×8,192経路×512更新、12 NN×2,048検証経路、4×14baselineを接続。38scoped tests・独立6群・索引/docstring1,129件・2Pythonruff/format PASS。実optimizerを使った合成source-unit12fitと分割保存、最終sourceの保存再検算を確認。実学習と最終cost guardのsource SHAを区別する。旧一括保存のcap失敗を保持。正式pilot/freeze/main/金融精度の未完条件を維持し、現在は正式pilot/fresh source確認と全396件の主実験実行器を並行して進める。
+
+## Task6 main保存接続のsource確認（2026-10-10）
+
+[分割保存接続](../../../research/RB-F04/dynamic_hedging/implementation/MAIN_SINK_SOURCE.md)：実source/rawの事前gate後、元18ケース×2集合の結果を任意sinkへ渡し、次の評価前にcaller配列参照を解放する。sinkなしと旧strict v1は保持。保存例外は伝播し、欠損を補わない。41scoped tests、独立56件（旧main15件を含む）、writer例外probeと限定独立レビュー未解決0、2Pythonruff/format PASS。合成source-unit検査であり、正式金融mainを実行した証拠ではない。全396件の保存・元分母・原費用・数値精度は正式main/checkerで検証し、正式pilot/freeze/最終受入・main統合の未完条件を維持する。
