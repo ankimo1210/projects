@@ -1,0 +1,7 @@
+{
+  "wall_seconds": 36.1488958580303,
+  "exit_code": 0,
+  "stdout": "{\"passed\": true, \"main_check\": {\"passed\": true, \"mode\": \"main\", \"teacher_slots\": 640, \"fit_slots\": 6, \"original_test_count\": 336, \"timing_slots\": 448, \"accepted\": false, \"scope\": \"saved-only numeric reconstruction; no RNG, training, optimizer or main adoption\"}, \"fresh_check\": {\"passed\": true, \"original_cases\": 12, \"original_method_slots\": 180, \"replay_rng\": false, \"optimizer_or_training\": false, \"scope\": \"saved primitive/statistical consistency, not all-estimator support or teaching acceptance\", \"cost_receipt_verified\": true, \"fresh_seconds\": 26.15482251503272}, \"timings\": {\"pilot_saved_s\": 6.807584774040151, \"main_saved_s\": 10.410186670022085, \"fresh_saved_including_repeated_main_s\": 13.929954148014076, \"whole_process_inner_s\": 35.58087092399364}}\n",
+  "stderr": "",
+  "scope": "main restoration and saved replay; components nested"
+}

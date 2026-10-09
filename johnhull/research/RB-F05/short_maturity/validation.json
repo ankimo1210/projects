@@ -1,7 +1,7 @@
 {
   "schema": "RB-F05-short-validation-v1",
   "date": "2026-10-09",
-  "phase": "v1 research accepted; main integration pending",
+  "phase": "v1 research accepted and main integration validated",
   "financial_sources_unchanged": true,
   "original_record_unchanged": true,
   "original_record_accepted": false,
@@ -91,9 +91,15 @@
     "receipt": "REVIEW.json"
   },
   "main_integration": {
-    "status": "pending",
+    "status": "validated_fast_forward",
     "before": "706f109ded2d90182678d8257616be66e3d20794",
-    "unrelated_changes": 48
+    "integrated_commit": "da1d1f3e2ed9e6bc4e3db6c950d961369330cda5",
+    "unrelated_changes": 48,
+    "unrelated_status_preserved": true,
+    "unrelated_tracked_diff_sha256": "9f65e9c4adf3ae6b29eba556eb1cfec1fffc0d356ca76e53b9d591eb0925734e",
+    "restored_saved_numeric": "MAIN_INTEGRATION_REPLAY.json",
+    "release": "MAIN_RELEASE.json",
+    "metadata_and_push": "followup commit in the same authorized integration; final remote HEAD verified in Git"
   },
   "limits": [
     "Primitive replay is provenance only; independent financial values use tolerances.",
