@@ -340,5 +340,28 @@
       "all_additional_are_missing_generated_book_html": true,
       "baseline_only_errors": []
     }
+  },
+  "integration": {
+    "source_commit": "c4430dfaadd1c9b1a613b45d278f98512c807908",
+    "main_original_array_check": {
+      "passed": true,
+      "research_acceptance": true,
+      "restored_from": "primary CAS using committed reference_manifest.json",
+      "artifact_bytes": 192772222
+    },
+    "main_release": {
+      "passed": true,
+      "require_tracked": true,
+      "output": "[PASS] johnhull A5--A8 release contract"
+    },
+    "unrelated_before_count": 48,
+    "unrelated_preserved_count": 48,
+    "unrelated_changed_since_snapshot": [],
+    "johnhull_clean": true
+  },
+  "branch_tracked_release": {
+    "passed": true,
+    "command": "python johnhull/scripts/verify_release.py --require-tracked",
+    "commit": "c4430dfaadd1c9b1a613b45d278f98512c807908"
   }
 }

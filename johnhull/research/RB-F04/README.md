@@ -1,6 +1,6 @@
 # RB-F04 — Heston と local volatility の動学比較
 
-更新日: 2026-10-09。**包括pilot・独立pilotレビュー・条件固定・主実験・fresh再計算・両保管庫復元・3図を完了。最終レビューapproved・関連suite PASS。tracked release・main反映は未実施。**
+更新日: 2026-10-09。**包括pilot・独立pilotレビュー・条件固定・主実験・fresh再計算・両保管庫復元・3図を完了。最終レビューapproved・関連suite PASS。tracked release PASS・main統合/push済み。**
 
 [固定protocol](protocol.json) / [主結果](reference.json) / [3図のnotebook](model_dynamics.ipynb) /
 [pilotレビュー](PILOT_REVIEW.md) / [最終レビュー](REVIEW.md) / [検証記録](validation.json) /
@@ -148,7 +148,7 @@ archiveが無い場合はmanifestと接続済両保管庫を使って復元す�
 
 独立最終レビューは [REVIEW.md](REVIEW.md) / [review.json](review.json) でapproved。
 関連3suiteは7,316 passed / 6 skipped / 既存deprecation warnings2件（374.77秒）。
-ruff / format、原始配列fresh・両復元、最新3図もPASS。tracked releaseとmain反映を残す。
+ruff / format、原始配列fresh・両復元、最新3図もPASS。tracked releaseはbranch/mainともPASS。c4430dfaをmainへfast-forward統合・pushし、mainでprimary保管庫復元と原始配列checkerを再確認した。
 
 本編の追加artifact照合はworktreeでFAIL（158件）。基点main e803e00bでも同じ依存指紋69件がFAILし、
 worktreeの追加89件はGit管理外のBook生成HTML欠如だけだった。既存本編source/証跡/台帳は変更していない。
