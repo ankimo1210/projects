@@ -1,0 +1,37 @@
+{
+  "schema": "RB-F08-pilot-backend-review-v1",
+  "captured_at_utc": "2026-10-09T05:14:27.621703+00:00",
+  "capture_scope": "pilot時直接記録なし。同一source/Python/NumPy/SciPyの独立レビュー時捕捉。元pilot計時の直接観測を置き換えない。",
+  "source_commit": "850c4d44a20ea190ae410155c75a1b4c9ec3ae50",
+  "source_fingerprint": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004",
+  "pilot_record_digest": "0efc23f768fe1c11a887ce595d8c9ec2b7fe70b66845973c60feeca44f416788",
+  "dependencies": {
+    "python": "3.12.3",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  },
+  "numpy_build_blas": {
+    "name": "scipy-openblas",
+    "found": true,
+    "version": "0.3.31.188.0",
+    "detection method": "pkgconfig",
+    "include directory": "/opt/_internal/cpython-3.12.12/lib/python3.12/site-packages/scipy_openblas64/include",
+    "lib directory": "/opt/_internal/cpython-3.12.12/lib/python3.12/site-packages/scipy_openblas64/lib",
+    "openblas configuration": "OpenBLAS 0.3.31.188.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+    "pc file directory": "/project/.openblas"
+  },
+  "threadpoolctl_available": true,
+  "runtime_threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libscipy_openblas",
+      "filepath": "/home/kazumasa/projects/.venv/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-32a4b2a6.so",
+      "version": "0.3.31.188.0",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    }
+  ],
+  "digest": "9b20c67b5d77ada3e76f5bfcdd28e56c214630fbd4cbb254d7ba634e5a84bb19"
+}

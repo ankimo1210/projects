@@ -1,7 +1,7 @@
 {
   "schema": "RB-F08-mlmc-rqmc-v1",
   "revision": 1,
-  "state": "candidate",
+  "state": "frozen",
   "parameters": {
     "spot": 100.0,
     "strike": 100.0,
@@ -211,5 +211,933 @@
     "production_dependencies": false,
     "external_data": false
   },
-  "seed_ledger_meta": null
+  "seed_ledger_meta": {
+    "digest": "e3c264ebc4fb93b7c82e6ba3464243a04d4881981cab23ce698acbbadcebdb16",
+    "count": 181729,
+    "columns": {
+      "seed_ledger_budget": {
+        "dtype": "<i4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_budget_present": {
+        "dtype": "|b1",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_candidate_seeds_offsets": {
+        "dtype": "<i8",
+        "shape": [
+          181730
+        ]
+      },
+      "seed_ledger_candidate_seeds_values": {
+        "dtype": "<u4",
+        "shape": [
+          181731
+        ]
+      },
+      "seed_ledger_case": {
+        "dtype": "<i4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_case_present": {
+        "dtype": "|b1",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_entropy_offsets": {
+        "dtype": "<i8",
+        "shape": [
+          181730
+        ]
+      },
+      "seed_ledger_entropy_values": {
+        "dtype": "<u4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_level": {
+        "dtype": "<i4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_level_present": {
+        "dtype": "|b1",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_logical_id": {
+        "dtype": "<U37",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_logical_spawn_key_offsets": {
+        "dtype": "<i8",
+        "shape": [
+          181730
+        ]
+      },
+      "seed_ledger_logical_spawn_key_values": {
+        "dtype": "<u4",
+        "shape": [
+          1090374
+        ]
+      },
+      "seed_ledger_method": {
+        "dtype": "<U15",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_method_ordinal": {
+        "dtype": "<i4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_method_ordinal_present": {
+        "dtype": "|b1",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_method_present": {
+        "dtype": "|b1",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_phase": {
+        "dtype": "<U12",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_raw_seed": {
+        "dtype": "<u4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_retry_count": {
+        "dtype": "<u4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_run": {
+        "dtype": "<i4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_run_present": {
+        "dtype": "|b1",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_scramble": {
+        "dtype": "<i4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_scramble_present": {
+        "dtype": "|b1",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_seed": {
+        "dtype": "<u4",
+        "shape": [
+          181729
+        ]
+      },
+      "seed_ledger_spawn_key_offsets": {
+        "dtype": "<i8",
+        "shape": [
+          181730
+        ]
+      },
+      "seed_ledger_spawn_key_values": {
+        "dtype": "<u4",
+        "shape": [
+          1272103
+        ]
+      }
+    }
+  },
+  "frozen": {
+    "pilot_record_digest": "0efc23f768fe1c11a887ce595d8c9ec2b7fe70b66845973c60feeca44f416788",
+    "pilot_arrays_digest": "a6aabfbc80064f4e4c9a829ed52da08c34be6aa851061dc033df86ff398248e7",
+    "protocol_digest": "1918739bcccd8a29cdef1cddfab29b5721df2058381273b3ed94c332839d95cd",
+    "seed_ledger_digest": "e3c264ebc4fb93b7c82e6ba3464243a04d4881981cab23ce698acbbadcebdb16",
+    "source_fingerprint": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004",
+    "review_digest": "63c97606735564bdec0a5b9c2cfacebefe3ebfcfbbb1468af4b39d1de25fbbca",
+    "source": {
+      "files": {
+        "hullkit/src/hullkit/_multilevel_mc.py": "7104b480a0e4ea872bbf44acc18c6bdb939da3678b9db26f8908337c2fefbfc3",
+        "hullkit/src/hullkit/_rqmc_ci.py": "a36c08e1b55e92189d84319099fb634ef6bf3eff0799ea770c66d41e0d36c43d",
+        "hullkit/src/hullkit/_numerical_mc.py": "6292bb6a4797cb85bf42e4b57d8f7ae68d11af16828ae08206669300bb5515ee",
+        "hullkit/src/hullkit/_stochastic_foundations.py": "a34ddeba7249af129aba83171f9c1a720067fd7b6a812ae0386ba79b180d28f2",
+        "hullkit/src/hullkit/bsm.py": "e7dd3eab5cb16be2bec633353ff940c6d85aef0a2630b287676a9beab84fc66d",
+        "research/RB-F08/reference_methods.py": "6a3b112b0686068fe5452f24ecba590c7457ca7859dd7c6195ab8bfeb36a50ca",
+        "research/RB-F08/protocol.py": "3b26af1239232c7f99873a326a74117ac41a81b43bc8a7bc31eb25b4d24958ed",
+        "research/RB-F08/pilot.py": "5b8676df6f3266fc6cfc907b1cd2486d9c48df9fb8ad4a3d834eaaaabef75b2b",
+        "research/RB-F08/analytics.py": "9cbccf4336977a621ac9ea179fa4c0543313f66cee79b00642aa6947f21ef44d",
+        "research/RB-F08/build_reference.py": "50e28c8789857aa9981d43a59891528c1c352f16fefb4f0daba179539adb2992"
+      },
+      "dependencies": {
+        "python": "3.12.3",
+        "numpy": "2.4.6",
+        "scipy": "1.17.1"
+      },
+      "digest": "d14e7b141275a6f988c309da1bedcfee579932addb910599ac0f2ee47660a004"
+    },
+    "conditions": {
+      "schema": "RB-F08-mlmc-rqmc-v1",
+      "revision": 1,
+      "parameters": {
+        "spot": 100.0,
+        "strike": 100.0,
+        "rate": 0.03,
+        "sigma": 0.2,
+        "maturity": 1.0,
+        "yield_rate": 0.0
+      },
+      "product": {
+        "kind": "european_call",
+        "payment": "expiry",
+        "units": "currency/year"
+      },
+      "scheme": "ordinary_euler",
+      "base_steps": 4,
+      "epsilon": [
+        0.4,
+        0.2,
+        0.1
+      ],
+      "pilot": {
+        "levels": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "streams": 3,
+        "paths_per_stream": 16384,
+        "exact_cv_paths_per_stream": 16384,
+        "bias_confidence": 0.99,
+        "minimum_main_level": 2,
+        "alpha_signal_multiplier": 3.0,
+        "alpha_consecutive_levels": 3,
+        "negative_path_rate_cap": 1e-05
+      },
+      "allocation": {
+        "minimum_paths": 32,
+        "variance_floor": 1e-12,
+        "sampling_variance_fraction": 0.5,
+        "bias_fraction_sqrt": 0.5,
+        "cost_basis": "isolated_median_seconds_per_pair",
+        "rounding": "ceil"
+      },
+      "caps": {
+        "paths_per_run": 2000000,
+        "steps_per_run": 100000000
+      },
+      "main": {
+        "outer_runs": 256,
+        "methods": [
+          "mlmc",
+          "plain_euler",
+          "exact_plain",
+          "exact_cv"
+        ],
+        "confidence": 0.95,
+        "levels_reserved": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "mlmc_df": "Satterthwaite",
+        "failed_path_rule": "retain negative; nonfinite fails original run",
+        "cv_control": "exp(-rT)*ST",
+        "cv_expectation": "S0*exp(-qT)",
+        "cv_beta": "independent pilot only",
+        "selected_allocations": null
+      },
+      "rqmc": {
+        "strikes": [
+          80.0,
+          100.0,
+          120.0
+        ],
+        "powers": [
+          8,
+          10
+        ],
+        "scrambles": [
+          8,
+          16,
+          32
+        ],
+        "outer_runs": 512,
+        "confidence": 0.95,
+        "dimensions": 1,
+        "scheme": "exact_terminal",
+        "interval": "approximate Student",
+        "sampling_unit": "independent scramble estimates",
+        "df": "R-1",
+        "sobol": "scipy LMS+shift; random_base2; retain point zero",
+        "clip": {
+          "lower": 5e-324,
+          "upper": 0.9999999999999999,
+          "lower_hex": "0x0.0000000000001p-1022",
+          "upper_hex": "0x1.fffffffffffffp-1"
+        },
+        "truths": [
+          "BSM",
+          "independent_clipped_integral"
+        ],
+        "coverage_uncertainty": "Wilson 95%"
+      },
+      "clip_diagnostic": {
+        "power": 10,
+        "public_clip": [
+          1e-10,
+          0.9999999999
+        ]
+      },
+      "fresh_review": {
+        "strikes": [
+          80.0,
+          100.0,
+          120.0
+        ],
+        "runs_per_case": 1,
+        "paths_per_level": 256,
+        "coverage_replay_runs": [
+          0,
+          255,
+          511
+        ],
+        "rqmc_reserved_runs": 1
+      },
+      "timing": {
+        "pairs_per_level": 4096,
+        "warmup_repetitions": 1,
+        "measured_repetitions": 7,
+        "statistics": [
+          "median",
+          "p95"
+        ]
+      },
+      "bootstrap": {
+        "resamples": 2000,
+        "confidence": 0.95,
+        "unit": "paired main run ratios"
+      },
+      "method_order": "seeded balanced permutations per epsilon",
+      "phase_roots": {
+        "pilot": 83101,
+        "main": 83201,
+        "coverage": 83301,
+        "fresh_review": 83401,
+        "timing": 83501,
+        "method_order": 83601,
+        "bootstrap": 83701
+      },
+      "seed_rule": "phase/case/budget/run/method/level/scramble fixed ordinals; uint32 retry child",
+      "seed_independence": "unique physical seeds prevent reuse; do not prove independence",
+      "block_size": 2048,
+      "single_process": true,
+      "threads": {
+        "OPENBLAS_NUM_THREADS": 1,
+        "OMP_NUM_THREADS": 1,
+        "MKL_NUM_THREADS": 1
+      },
+      "cost_definition": {
+        "level_zero": {
+          "updates": "M0*N",
+          "normals": "M0*N",
+          "payoffs": "N",
+          "coarse_aggregation": "0"
+        },
+        "level_positive": {
+          "updates": "(M_l+M_l/2)*N",
+          "normals": "M_l*N",
+          "payoffs": "2*N",
+          "coarse_aggregation": "M_l/2*N"
+        },
+        "wall_scope": "RNG+path+payoff+summary; import setup separate",
+        "expense_rule": "sum unique expense_id once; method cold includes required shared expenses",
+        "euler_pilot_rule": "all candidate levels, not selected prefix only",
+        "exact_pilot_rule": "own necessary pilot/CV cost, no mandatory Euler-only pilot"
+      },
+      "amortizations": [
+        1,
+        10,
+        100
+      ],
+      "acceptance": {
+        "teaching": "valid coupling/full roster/recomputation/4 figures/independent review",
+        "speedup_epsilon_cells": 2,
+        "rmse_rule": "rmse<=epsilon",
+        "main_ratio_median_cap": 1.0,
+        "bootstrap_ratio_upper_cap": 1.0,
+        "exact_terminal_win_required": false,
+        "report_cold_disadvantage": true
+      },
+      "constraints": {
+        "cpu": true,
+        "torch": false,
+        "public_api_changes": false,
+        "production_dependencies": false,
+        "external_data": false
+      },
+      "seed_ledger_meta": {
+        "digest": "e3c264ebc4fb93b7c82e6ba3464243a04d4881981cab23ce698acbbadcebdb16",
+        "count": 181729,
+        "columns": {
+          "seed_ledger_budget": {
+            "dtype": "<i4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_budget_present": {
+            "dtype": "|b1",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_candidate_seeds_offsets": {
+            "dtype": "<i8",
+            "shape": [
+              181730
+            ]
+          },
+          "seed_ledger_candidate_seeds_values": {
+            "dtype": "<u4",
+            "shape": [
+              181731
+            ]
+          },
+          "seed_ledger_case": {
+            "dtype": "<i4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_case_present": {
+            "dtype": "|b1",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_entropy_offsets": {
+            "dtype": "<i8",
+            "shape": [
+              181730
+            ]
+          },
+          "seed_ledger_entropy_values": {
+            "dtype": "<u4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_level": {
+            "dtype": "<i4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_level_present": {
+            "dtype": "|b1",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_logical_id": {
+            "dtype": "<U37",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_logical_spawn_key_offsets": {
+            "dtype": "<i8",
+            "shape": [
+              181730
+            ]
+          },
+          "seed_ledger_logical_spawn_key_values": {
+            "dtype": "<u4",
+            "shape": [
+              1090374
+            ]
+          },
+          "seed_ledger_method": {
+            "dtype": "<U15",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_method_ordinal": {
+            "dtype": "<i4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_method_ordinal_present": {
+            "dtype": "|b1",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_method_present": {
+            "dtype": "|b1",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_phase": {
+            "dtype": "<U12",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_raw_seed": {
+            "dtype": "<u4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_retry_count": {
+            "dtype": "<u4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_run": {
+            "dtype": "<i4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_run_present": {
+            "dtype": "|b1",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_scramble": {
+            "dtype": "<i4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_scramble_present": {
+            "dtype": "|b1",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_seed": {
+            "dtype": "<u4",
+            "shape": [
+              181729
+            ]
+          },
+          "seed_ledger_spawn_key_offsets": {
+            "dtype": "<i8",
+            "shape": [
+              181730
+            ]
+          },
+          "seed_ledger_spawn_key_values": {
+            "dtype": "<u4",
+            "shape": [
+              1272103
+            ]
+          }
+        }
+      }
+    },
+    "allocations": [
+      {
+        "epsilon": 0.4,
+        "status": "ready",
+        "reason": null,
+        "level": 2,
+        "mlmc_paths": [
+          2670,
+          118,
+          71
+        ],
+        "plain_euler_paths": 2403,
+        "exact_plain_paths": 2533,
+        "exact_cv_paths": 425,
+        "bias_bound": 0.01108549443571483,
+        "sampling_variance": 0.08000000000000002,
+        "bias_target": 0.28284271247461906,
+        "method_status": {
+          "mlmc": "ready",
+          "plain_euler": "ready",
+          "exact_plain": "ready",
+          "exact_cv": "ready"
+        },
+        "method_reasons": {
+          "exact_plain": null,
+          "exact_cv": null,
+          "mlmc": null,
+          "plain_euler": null
+        },
+        "candidate_levels": [
+          {
+            "level": 2,
+            "bias_bound": 0.01108549443571483,
+            "bias_target": 0.28284271247461906,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 3,
+            "bias_bound": 0.007033190265327435,
+            "bias_target": 0.28284271247461906,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 4,
+            "bias_bound": 0.005789304177595763,
+            "bias_target": 0.28284271247461906,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 5,
+            "bias_bound": 0.0030062319595834663,
+            "bias_target": 0.28284271247461906,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 6,
+            "bias_bound": 0.002079919047856181,
+            "bias_target": 0.28284271247461906,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 7,
+            "bias_bound": 0.0013710098626078956,
+            "bias_target": 0.28284271247461906,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 8,
+            "bias_bound": 0.0013005966984053652,
+            "bias_target": 0.28284271247461906,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          }
+        ],
+        "cost_counts": {
+          "stock_updates": 13800,
+          "normal_draws": 12760,
+          "payoff_evaluations": 3048,
+          "coarse_aggregations": 1040
+        },
+        "floor_levels": [],
+        "variance_cost_allocation": {
+          "variances": [
+            187.02404734794735,
+            0.6316936929206945,
+            0.3256739585731461
+          ],
+          "median_seconds_per_pair": [
+            1.6941869773745566e-07,
+            2.930903519882122e-07,
+            4.19420160824302e-07
+          ],
+          "step_proxy_paths": [
+            2813,
+            95,
+            48
+          ],
+          "estimated_sampling_variance": 0.07998675322456505
+        }
+      },
+      {
+        "epsilon": 0.2,
+        "status": "ready",
+        "reason": null,
+        "level": 2,
+        "mlmc_paths": [
+          10680,
+          472,
+          284
+        ],
+        "plain_euler_paths": 9611,
+        "exact_plain_paths": 10131,
+        "exact_cv_paths": 1699,
+        "bias_bound": 0.01108549443571483,
+        "sampling_variance": 0.020000000000000004,
+        "bias_target": 0.14142135623730953,
+        "method_status": {
+          "mlmc": "ready",
+          "plain_euler": "ready",
+          "exact_plain": "ready",
+          "exact_cv": "ready"
+        },
+        "method_reasons": {
+          "exact_plain": null,
+          "exact_cv": null,
+          "mlmc": null,
+          "plain_euler": null
+        },
+        "candidate_levels": [
+          {
+            "level": 2,
+            "bias_bound": 0.01108549443571483,
+            "bias_target": 0.14142135623730953,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 3,
+            "bias_bound": 0.007033190265327435,
+            "bias_target": 0.14142135623730953,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 4,
+            "bias_bound": 0.005789304177595763,
+            "bias_target": 0.14142135623730953,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 5,
+            "bias_bound": 0.0030062319595834663,
+            "bias_target": 0.14142135623730953,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 6,
+            "bias_bound": 0.002079919047856181,
+            "bias_target": 0.14142135623730953,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 7,
+            "bias_bound": 0.0013710098626078956,
+            "bias_target": 0.14142135623730953,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 8,
+            "bias_bound": 0.0013005966984053652,
+            "bias_target": 0.14142135623730953,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          }
+        ],
+        "cost_counts": {
+          "stock_updates": 55200,
+          "normal_draws": 51040,
+          "payoff_evaluations": 12192,
+          "coarse_aggregations": 4160
+        },
+        "floor_levels": [],
+        "variance_cost_allocation": {
+          "variances": [
+            187.02404734794735,
+            0.6316936929206945,
+            0.3256739585731461
+          ],
+          "median_seconds_per_pair": [
+            1.6941869773745566e-07,
+            2.930903519882122e-07,
+            4.19420160824302e-07
+          ],
+          "step_proxy_paths": [
+            11249,
+            378,
+            192
+          ],
+          "estimated_sampling_variance": 0.019996688306141264
+        }
+      },
+      {
+        "epsilon": 0.1,
+        "status": "ready",
+        "reason": null,
+        "level": 2,
+        "mlmc_paths": [
+          42720,
+          1888,
+          1133
+        ],
+        "plain_euler_paths": 38442,
+        "exact_plain_paths": 40521,
+        "exact_cv_paths": 6793,
+        "bias_bound": 0.01108549443571483,
+        "sampling_variance": 0.005000000000000001,
+        "bias_target": 0.07071067811865477,
+        "method_status": {
+          "mlmc": "ready",
+          "plain_euler": "ready",
+          "exact_plain": "ready",
+          "exact_cv": "ready"
+        },
+        "method_reasons": {
+          "exact_plain": null,
+          "exact_cv": null,
+          "mlmc": null,
+          "plain_euler": null
+        },
+        "candidate_levels": [
+          {
+            "level": 2,
+            "bias_bound": 0.01108549443571483,
+            "bias_target": 0.07071067811865477,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 3,
+            "bias_bound": 0.007033190265327435,
+            "bias_target": 0.07071067811865477,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 4,
+            "bias_bound": 0.005789304177595763,
+            "bias_target": 0.07071067811865477,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 5,
+            "bias_bound": 0.0030062319595834663,
+            "bias_target": 0.07071067811865477,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 6,
+            "bias_bound": 0.002079919047856181,
+            "bias_target": 0.07071067811865477,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 7,
+            "bias_bound": 0.0013710098626078956,
+            "bias_target": 0.07071067811865477,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          },
+          {
+            "level": 8,
+            "bias_bound": 0.0013005966984053652,
+            "bias_target": 0.07071067811865477,
+            "negative_path_rate": 0.0,
+            "bias_pass": true,
+            "negative_pass": true
+          }
+        ],
+        "cost_counts": {
+          "stock_updates": 220728,
+          "normal_draws": 204112,
+          "payoff_evaluations": 48762,
+          "coarse_aggregations": 16616
+        },
+        "floor_levels": [],
+        "variance_cost_allocation": {
+          "variances": [
+            187.02404734794735,
+            0.6316936929206945,
+            0.3256739585731461
+          ],
+          "median_seconds_per_pair": [
+            1.6941869773745566e-07,
+            2.930903519882122e-07,
+            4.19420160824302e-07
+          ],
+          "step_proxy_paths": [
+            44994,
+            1510,
+            767
+          ],
+          "estimated_sampling_variance": 0.004999931171387975
+        }
+      }
+    ],
+    "cv_beta": 0.6391930617132764,
+    "pilot_validation": {
+      "passed": true,
+      "mode": "full",
+      "levels": 9,
+      "original_euler_paths": 442368,
+      "original_exact_paths": 49152,
+      "allocation_cells": 3,
+      "numerical_comparison": {
+        "rtol": 1e-09,
+        "atol": 1e-10
+      }
+    },
+    "digest": "12055b2e301897dd49155e1cb6a1b58f19d62e24a6810e2ce2eb038e95f44957"
+  }
 }

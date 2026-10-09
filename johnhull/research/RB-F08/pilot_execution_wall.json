@@ -1,0 +1,9 @@
+{
+  "schema": "RB-F08-pilot-cli-wall-v1",
+  "pilot_record_digest": "0efc23f768fe1c11a887ce595d8c9ec2b7fe70b66845973c60feeca44f416788",
+  "pilot_arrays_digest": "a6aabfbc80064f4e4c9a829ed52da08c34be6aa851061dc033df86ff398248e7",
+  "wall_s": 23.682436066970695,
+  "recorded_total_measured_s": 21.7376072909683,
+  "unaccounted_overhead_s": 1.944828776002396,
+  "scope": "whole original full pilot subprocess; stopwatch output preserved by root tool; not a repeat-selected timing"
+}
