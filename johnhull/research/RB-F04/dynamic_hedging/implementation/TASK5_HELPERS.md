@@ -20,7 +20,7 @@
 
 ## Task5の残り
 
-実験runnerと、保存した金融raw arraysから再計算する独立checkerを作る。receiptのchecker名やSHAだけで金融精度や真正性は確認できない。次の義務を統合する。
+後続の[接続・予備測定](TASK5_CONNECTORS.md)でbounded runnerと保存金融rawのcheckerを実装・レビューした。正式pilotと主実験lifecycleは未完了。receiptのchecker名やSHAだけで金融精度や真正性は確認できない。次の義務を統合する。
 
 1. call/Asian支持域の交差、全original N、NaN/未測定誤差の不適格化、共通teacher covariance/Ctheta誤差のIFT伝播。
 2. transitive source closure、全attempt/重み/phaseのrequired expense IDs、raw failure/計時/超過の保存。

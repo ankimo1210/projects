@@ -1,0 +1,184 @@
+{
+  "schema": "independent-runner-source-review-v1",
+  "timestamp_utc": "2026-10-09T15:12:58.193730+00:00",
+  "bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "f96d768f5f4755d1495170b61f9e86e82413ee48498b30127d95050f77de94cd",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "4af2f331c8c7254afd2f0cad77338578d0e8d3ab4f88f7d964dec5bacd16606a",
+    "johnhull/research/RB-F04/dynamic_hedging/DESIGN.md": "8fbef30a824aa0b4e4153ad0e559255a6fe77b102d8fde223adb25f6138248ce",
+    "johnhull/docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md": "f2818f56afcc8fa97b0070c6aea4c387dbb3f7be94a5ff4b03c635ddecbc17e5"
+  },
+  "reviewer": "task5_study_review",
+  "scope": "Bounded Task5 source checkpoint: run_reference.py and test_dynamic_hedging_runner.py only; own study implementation not rereviewed",
+  "source_approved": true,
+  "approval_scope": "Source orchestration and saved tiny boundary only",
+  "task5_whole_phase_approved": false,
+  "formal_pilot_approved": false,
+  "formal_main_approved": false,
+  "counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0,
+    "unresolved": 0
+  },
+  "historical_findings": [
+    {
+      "id": "RUN1",
+      "severity": "Important",
+      "title": "Actual checkpoint supplied after test opening",
+      "status": "resolved",
+      "original_bindings": {
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "7458819bb3f0864f2ced8ff5b3b969ac9e9158436fb8e5cdeed376b7f18e2816",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "bd7bdfc4f2022cec272a4fce4adc5ea6c0c21ce91efda6b298367295c65a833e"
+      },
+      "original_evidence": "task-5-runner-review-first-probe.py/json",
+      "correction": "Actual preclosed fits mandatory; all12 original slot/raw metadata and finite complete weights/scaler verified; prior payload digest and receipt metadata bound before real gate; evaluation uses detached closed fits.",
+      "verification": "18 independent final probes with real protocol gate and actual source registry"
+    },
+    {
+      "id": "RUN2",
+      "severity": "Important",
+      "title": "Closed selection aliases cross the test loader",
+      "status": "resolved",
+      "original_bindings": {
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "cdd7583688cf65f4072e17f81369f1d5c2a65680b6d67203d2de6b8e8fca198b"
+      },
+      "original_evidence": "task-5-runner-review-selection-alias-probe.py/json",
+      "correction": "All prior candidate/frozen/source/selection/rawvalidation/closedfits inputs deepcopied before validation and loader; only fixed copies consumed.",
+      "verification": "Loader simultaneously mutates all caller inputs; 36 consumer calls retain N16384, fixed weight0 and band width0"
+    },
+    {
+      "id": "RUN3",
+      "severity": "Important",
+      "title": "Payload digest changes after sorted JSON save/load",
+      "status": "resolved",
+      "first_detected_by": "runner implementer; independently reproduced by reviewer",
+      "original_bindings": {
+        "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937",
+        "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "cdd7583688cf65f4072e17f81369f1d5c2a65680b6d67203d2de6b8e8fca198b"
+      },
+      "original_evidence": "task-5-runner-review-digest-order-original-probe.py/json",
+      "correction": "Canonical sorted dictionary traversal for ordinal array bindings.",
+      "verification": "Minimal numeric payload and all12 actual saved tiny checkpoint payloads retain identical digest after sorted JSON roundtrip"
+    }
+  ],
+  "findings": [],
+  "validation": {
+    "scoped_tests": {
+      "returncode": 0,
+      "wall_seconds": 27.995867579999867,
+      "output": "...........................                                              [100%]\n27 passed in 26.48s\n"
+    },
+    "test_log": "task-5-runner-review-final-tests.txt",
+    "main_gate_independent_probes": 18,
+    "main_gate_probe_scope": "independent source orchestration only; synthetic raw gate receipts, no formal financial pilot/main acceptance",
+    "saved_checker_full_passes": 1,
+    "saved_guarded_operations": 26,
+    "saved_early_rejections": [
+      {
+        "name": "erased fit",
+        "reason": "all twelve original fit attempts must be retained"
+      },
+      {
+        "name": "driver tamper",
+        "reason": "saved driver/slice provenance does not match original arrays"
+      },
+      {
+        "name": "erased required expense",
+        "reason": "required expense IDs erased or duplicated"
+      }
+    ],
+    "all_original_fit_attempts": 12,
+    "all_original_policy_cells": 44,
+    "original_market_n": {
+      "Heston": 32,
+      "local": 32
+    },
+    "teacher_groups": {
+      "heston": 48,
+      "local": 196
+    },
+    "financial_source_files": 71,
+    "raw_validation_per_selection": {
+      "original_n": 2048,
+      "candidate_count": 14,
+      "selection_count": 4
+    }
+  },
+  "artifact": {
+    "path": "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/pilot/tiny/source-f96d768f5f47-n32-update1",
+    "receipt": {
+      "arrays_sha256": "47cc2277ccc4b3f764c3e5862ea02efd7daa1ceabe676f4340594f2b7ab0487c",
+      "artifact_sha256": "9336075541939a609a8f643b78e8d21c7021fac57f3afd4de195130c8678a6d5",
+      "metadata_sha256": "43a8f6ff82ef533b0724876a709e566e9c5c25c68fc73add9af74a22d28067e0",
+      "schema": "rb-f04-array-receipt-v1",
+      "uncompressed_bytes": 45735944
+    }
+  },
+  "proved_boundaries": [
+    "Actual source closure and installed environment bind before test loader",
+    "All12 actual original fit slots with G/U/init/N/checkpoint/updates finite weight and scaler shape identities; failed attempts retained with reason",
+    "4x14 original-N raw validation loss MSE and minima, failure paths retained without finite filtering",
+    "Immutable prior selection, raw fits and denominator survive loader alias mutation",
+    "18 generator/seed/level headers and frozen original test denominator enforced; evaluator invoked twice per case",
+    "Saved teacher global driver/slice identity and last-step/cache regeneration from original raw saved boundary",
+    "All44 holdings/raw actions/fees/cash/terminal loss/gain perpath saved values replayed numerically",
+    "Source-owned required expense IDs preserve pending costs and inclusive parent accounting",
+    "No RNG/train/earlier SDE generation/CF/PDE while one full saved-boundary checker pass executes",
+    "Formal precision stays unknown; explicit source-owned unverified list cannot be erased by caller flags"
+  ],
+  "not_proved": [
+    "earlier_SDE_and_global_driver_generation",
+    "independent_call_and_Asian_precision",
+    "train_only_scaler_and_training_data_origin",
+    "exported_weights_binding_to_actual_training_events",
+    "original_training_loss_update_and_cap_history",
+    "original_expense_timing_measurement",
+    "conditional_and_binned_Q_accuracy",
+    "formal37quote_and18states",
+    "premium",
+    "full_pilot",
+    "freeze",
+    "main_statistics",
+    "independent_refinements",
+    "fresh",
+    "CAS",
+    "plots"
+  ],
+  "metadata_limit_probe": {
+    "scaler_source_and_training_path_count_changed": true,
+    "prior_loss_history_changed": true,
+    "raw_identity_check_accepts": true,
+    "interpretation": "explicit unverified scope; not financial qualification or a full checker pass on altered data"
+  },
+  "required_remaining": [
+    "Formal Heston/local selected18 state and 37quote conditional/call/Asian/Greek/SDE/grid accuracy pilot",
+    "Independent premium and Q conditional/binned/martingale diagnostics, fixed-SE selection of original teacher/test N and grids",
+    "Actual training-only scaler, training event-to-weights linkage, loss/update/cap history, all original timing source verification",
+    "Independent formally qualified pilot review and source/candidate/pilot bound freeze",
+    "Full train/validation/test lifecycle and all3 seeds/3levels/44 slots; main paired statistics and numerical envelopes",
+    "Independent refinement/fresh, both CAS full semantic recovery, total expenses and3figures",
+    "Final review, related3 suites once, release and main integration"
+  ],
+  "evidence_files": [
+    "task-5-runner-review-first.md/json",
+    "task-5-runner-review-first-source.py",
+    "task-5-runner-review-first-tests-source.py",
+    "task-5-runner-review-first-probe.py/json",
+    "task-5-runner-review-second.md/json",
+    "task-5-runner-review-second-source.py",
+    "task-5-runner-review-second-tests-source.py",
+    "task-5-runner-review-selection-alias-probe.py/json",
+    "task-5-runner-review-digest-order-original-probe.py/json",
+    "task-5-runner-review-final-source.py",
+    "task-5-runner-review-final-tests-source.py",
+    "task-5-runner-review-final-probes.py/json",
+    "task-5-runner-review-saved-probes.py/json",
+    "task-5-runner-review-final-tests.txt",
+    "task-5-runner-review-final-tests-receipt.json"
+  ],
+  "no_source_changes": true,
+  "no_git_changes": true,
+  "no_full_suite": true,
+  "synthetic_gate_caveat": "Gate probes use synthetic bound pilot/review receipts solely as structural unit scaffolding. The real freeze/assert_main_ready functions are used, but no actual financial pilot/main qualification is inferred. Expensive study evaluation is replaced at its consumer boundary to observe fixed inputs."
+}

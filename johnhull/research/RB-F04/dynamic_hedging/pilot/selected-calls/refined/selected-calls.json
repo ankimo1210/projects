@@ -1,0 +1,692 @@
+{
+  "scope": "actual 257x321 T1.25 field / full call state axes / six dates and18states; no teacher/position/P&L/Q gate",
+  "parameters": {
+    "spot": 100.0,
+    "rate": 0.03,
+    "dividend_yield": 0.0,
+    "v0": 0.04,
+    "kappa": 2.0,
+    "theta": 0.04,
+    "xi": 0.3,
+    "rho": -0.7
+  },
+  "rows": [
+    {
+      "date": 0.0,
+      "scenario": 0,
+      "spot": 99.95,
+      "heston_state": 0.02,
+      "quote": 9.686255823501824,
+      "cf_price_error": 3.5193900162220215e-13,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.019999999386537636,
+          "condition": 0.0059876178292630365,
+          "residual": 0.0,
+          "call_price": 9.686255823501822,
+          "call_spot_derivative": 0.6701638898874762,
+          "call_state_derivative": 41.75283178197827,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": 2.5613790199940922e-08
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.8171800155228437,
+          "condition": 0.002165303473192193,
+          "residual": 6.217248937900877e-14,
+          "call_price": 9.686255823501886,
+          "call_spot_derivative": 0.5409868462866609,
+          "call_state_derivative": 4.618290287623069,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -0.00013323140187537774,
+          "base_independent_price": 10.49022547748592
+        }
+      }
+    },
+    {
+      "date": 0.0,
+      "scenario": 1,
+      "spot": 100.0,
+      "heston_state": 0.04,
+      "quote": 10.516798237664773,
+      "cf_price_error": 6.294854902378855e-12,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.04,
+          "condition": 0.006559352595617773,
+          "residual": -7.105427357601002e-15,
+          "call_price": 10.516798237664766,
+          "call_spot_derivative": 0.6658364428393727,
+          "call_state_derivative": 38.11351750888058,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -7.105427357601002e-15
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 1.0000277716379595,
+          "condition": 0.002385912651538516,
+          "residual": 8.771650072958437e-11,
+          "call_price": 10.51679823775249,
+          "call_spot_derivative": 0.5322546959702773,
+          "call_state_derivative": 4.191268273610799,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -0.00013510618498990823,
+          "base_independent_price": 10.516816944773128
+        }
+      }
+    },
+    {
+      "date": 0.0,
+      "scenario": 2,
+      "spot": 100.05,
+      "heston_state": 0.08,
+      "quote": 11.963004033155933,
+      "cf_price_error": 1.0121900604644562e-10,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.08000000047505296,
+          "condition": 0.0075991378304406665,
+          "residual": 0.0,
+          "call_price": 11.963004033155933,
+          "call_spot_derivative": 0.659585780816319,
+          "call_state_derivative": 32.8984689550635,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -1.562851537073584e-08
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 1.367614789736292,
+          "condition": 0.002794421913429359,
+          "residual": 0.0,
+          "call_price": 11.963004033155931,
+          "call_spot_derivative": 0.5194817159724047,
+          "call_state_derivative": 3.5785576801921657,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -0.00013695876622854541,
+          "base_independent_price": 10.54345481629181
+        }
+      }
+    },
+    {
+      "date": 0.08333333333333333,
+      "scenario": 0,
+      "spot": 80.0,
+      "heston_state": 0.02,
+      "quote": 0.7902091085377894,
+      "cf_price_error": 7.051487105027222e-13,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.01999985208690485,
+          "condition": 0.012633975431204569,
+          "residual": -2.298161660974074e-14,
+          "call_price": 0.7902091085377664,
+          "call_spot_derivative": 0.15933232713208836,
+          "call_state_derivative": 19.787912471519153,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": 2.9268927143055734e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.3930161964383429,
+          "condition": 0.0029774416794405897,
+          "residual": -3.090860900556436e-13,
+          "call_price": 0.7902091085374799,
+          "call_spot_derivative": 0.11068673878125063,
+          "call_state_derivative": 3.3585880351748254,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -5.409801558275973e-05,
+          "base_independent_price": 2.8602337295515627
+        }
+      }
+    },
+    {
+      "date": 0.08333333333333333,
+      "scenario": 1,
+      "spot": 100.0,
+      "heston_state": 0.04,
+      "quote": 10.102927051591251,
+      "cf_price_error": 4.151379672187377e-11,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.04,
+          "condition": 0.006411940319711726,
+          "residual": -7.105427357601002e-15,
+          "call_price": 10.102927051591244,
+          "call_spot_derivative": 0.6626618754157719,
+          "call_state_derivative": 38.98975778540013,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -7.105427357601002e-15
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 1.001197589243624,
+          "condition": 0.002467423472889107,
+          "residual": -1.7763568394002505e-15,
+          "call_price": 10.10292705159125,
+          "call_spot_derivative": 0.5339611635741461,
+          "call_state_derivative": 4.052810597724847,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -0.00014180021911336382,
+          "base_independent_price": 10.098213842695285
+        }
+      }
+    },
+    {
+      "date": 0.08333333333333333,
+      "scenario": 2,
+      "spot": 120.0,
+      "heston_state": 0.08,
+      "quote": 26.95672741135637,
+      "cf_price_error": 5.595668708197114e-10,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.08000005605956552,
+          "condition": 0.009901735726963203,
+          "residual": 0.0,
+          "call_price": 26.95672741135636,
+          "call_spot_derivative": 0.8573845643728899,
+          "call_state_derivative": 25.24809860550412,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -1.4153974952080262e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 2.2180762018537763,
+          "condition": 0.0050299430693900825,
+          "residual": 3.552713678800501e-15,
+          "call_price": 26.956727411356365,
+          "call_spot_derivative": 0.7847905035357137,
+          "call_state_derivative": 1.9880940722481362,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -7.908417063973161e-05,
+          "base_independent_price": 24.52054865640077
+        }
+      }
+    },
+    {
+      "date": 0.25,
+      "scenario": 0,
+      "spot": 80.0,
+      "heston_state": 0.02,
+      "quote": 0.4901428115538735,
+      "cf_price_error": 8.108631738427682e-13,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.019999907372917573,
+          "condition": 0.015164129067438761,
+          "residual": -2.6478819137309983e-14,
+          "call_price": 0.49014281155384704,
+          "call_spot_derivative": 0.1170922234322622,
+          "call_state_derivative": 16.486274871981525,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": 1.527076346818923e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.37700170507364855,
+          "condition": 0.003987502585371436,
+          "residual": -4.6460779667967245e-11,
+          "call_price": 0.4901428115074125,
+          "call_spot_derivative": 0.08247296321010929,
+          "call_state_derivative": 2.5078353645928733,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -5.176655830396726e-05,
+          "base_independent_price": 2.228185280244325
+        }
+      }
+    },
+    {
+      "date": 0.25,
+      "scenario": 1,
+      "spot": 100.0,
+      "heston_state": 0.04,
+      "quote": 9.242521073959068,
+      "cf_price_error": 3.0452619926810767e-13,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.04,
+          "condition": 0.006138760195664225,
+          "residual": 2.1316282072803006e-14,
+          "call_price": 9.24252107395909,
+          "call_spot_derivative": 0.6556504242754458,
+          "call_state_derivative": 40.72483563970681,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": 2.1316282072803006e-14
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 1.0014065509027514,
+          "condition": 0.002652106223608491,
+          "residual": -1.7763568394002505e-15,
+          "call_price": 9.242521073959066,
+          "call_spot_derivative": 0.5370024847853193,
+          "call_state_derivative": 3.770588037154057,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -0.00015709901808591553,
+          "base_independent_price": 9.23737283416249
+        }
+      }
+    },
+    {
+      "date": 0.25,
+      "scenario": 2,
+      "spot": 120.0,
+      "heston_state": 0.08,
+      "quote": 26.135795097422715,
+      "cf_price_error": 3.6539204038732335e-10,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.0800000635155003,
+          "condition": 0.00992744954285715,
+          "residual": 0.0,
+          "call_price": 26.135795097422715,
+          "call_spot_derivative": 0.8612036403550144,
+          "call_state_derivative": 25.18270165168998,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -1.5994919664308327e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 2.2986489916705395,
+          "condition": 0.0056682536746123415,
+          "residual": 1.0658141036401503e-14,
+          "call_price": 26.135795097422726,
+          "call_spot_derivative": 0.7891457517648324,
+          "call_state_derivative": 1.7642117967989455,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -7.298804545641246e-05,
+          "base_independent_price": 23.849844680714412
+        }
+      }
+    },
+    {
+      "date": 0.5,
+      "scenario": 0,
+      "spot": 80.0,
+      "heston_state": 0.02,
+      "quote": 0.16795940706832013,
+      "cf_price_error": 5.602301779398681e-11,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.02000050944299057,
+          "condition": 0.026232426574155435,
+          "residual": 3.657629754627578e-13,
+          "call_price": 0.1679594070686859,
+          "call_spot_derivative": 0.05451489789510422,
+          "call_state_derivative": 9.530189641178811,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -4.855051588203985e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.34513289485765347,
+          "condition": 0.007943798775561253,
+          "residual": 1.5543122344752192e-15,
+          "call_price": 0.16795940706832183,
+          "call_spot_derivative": 0.04017861394806684,
+          "call_state_derivative": 1.2588435687425221,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -4.186575526166081e-05,
+          "base_independent_price": 1.3509965632144847
+        }
+      }
+    },
+    {
+      "date": 0.5,
+      "scenario": 1,
+      "spot": 100.0,
+      "heston_state": 0.04,
+      "quote": 7.847973573300706,
+      "cf_price_error": 8.654658041341196e-11,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.04,
+          "condition": 0.005820367270393078,
+          "residual": 1.0658141036401503e-13,
+          "call_price": 7.847973573300813,
+          "call_spot_derivative": 0.6427148838151419,
+          "call_state_derivative": 42.95261594086963,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": 1.0658141036401503e-13
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 1.0001334065043592,
+          "condition": 0.0030304104873723468,
+          "residual": 8.881784197001252e-16,
+          "call_price": 7.847973573300708,
+          "call_spot_derivative": 0.538972114762247,
+          "call_state_derivative": 3.2998829834010177,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -0.00018703245898255005,
+          "base_independent_price": 7.847720365558074
+        }
+      }
+    },
+    {
+      "date": 0.5,
+      "scenario": 2,
+      "spot": 120.0,
+      "heston_state": 0.08,
+      "quote": 24.79901346796848,
+      "cf_price_error": 5.6471688267121136e-11,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.08000008337866991,
+          "condition": 0.01036480458932247,
+          "residual": 3.552713678800501e-15,
+          "call_price": 24.799013467968486,
+          "call_spot_derivative": 0.8699125376923019,
+          "call_state_derivative": 24.120088116039994,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -2.0111009604306673e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 2.4132450792859963,
+          "condition": 0.0069979338619584235,
+          "residual": 0.0,
+          "call_price": 24.79901346796848,
+          "call_spot_derivative": 0.8057330636028592,
+          "call_state_derivative": 1.4289932138914714,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -6.089982283086215e-05,
+          "base_independent_price": 22.8348430781702
+        }
+      }
+    },
+    {
+      "date": 0.75,
+      "scenario": 0,
+      "spot": 80.0,
+      "heston_state": 0.02,
+      "quote": 0.023505102229885666,
+      "cf_price_error": 1.3184050181391616e-11,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.020003157938542897,
+          "condition": 0.09966127596756132,
+          "residual": -7.598088824778415e-16,
+          "call_price": 0.023505102229884903,
+          "call_spot_derivative": 0.011201054649251715,
+          "call_state_derivative": 2.508496881791604,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -7.920749047457543e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.31427879840269995,
+          "condition": 0.03268727687052648,
+          "residual": -3.3678615452004124e-13,
+          "call_price": 0.023505102229548925,
+          "call_spot_derivative": 0.009611993919496846,
+          "call_state_derivative": 0.305929430573546,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -1.9226225818957943e-05,
+          "base_independent_price": 0.5983150777067457
+        }
+      }
+    },
+    {
+      "date": 0.75,
+      "scenario": 1,
+      "spot": 100.0,
+      "heston_state": 0.04,
+      "quote": 6.264680928938759,
+      "cf_price_error": 2.825391874453468e-11,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.04,
+          "condition": 0.005739695836231365,
+          "residual": 4.263256414560601e-14,
+          "call_price": 6.264680928938802,
+          "call_spot_derivative": 0.6245920375081588,
+          "call_state_derivative": 43.55631502664211,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": 4.263256414560601e-14
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 1.0011706100240352,
+          "condition": 0.003673171624334383,
+          "residual": -8.881784197001252e-16,
+          "call_price": 6.264680928938759,
+          "call_spot_derivative": 0.5365483020999792,
+          "call_state_derivative": 2.7224428975088033,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -0.00023454251256183056,
+          "base_independent_price": 6.261727638976039
+        }
+      }
+    },
+    {
+      "date": 0.75,
+      "scenario": 2,
+      "spot": 120.0,
+      "heston_state": 0.08,
+      "quote": 23.2776594403188,
+      "cf_price_error": 1.4162451519371037e-10,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.08000013672836151,
+          "condition": 0.012003657273225322,
+          "residual": 3.552713678800501e-15,
+          "call_price": 23.277659440318804,
+          "call_spot_derivative": 0.8864368879779402,
+          "call_state_derivative": 20.82698583519458,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -2.8476397204713066e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 2.5571047366692827,
+          "condition": 0.009619393971387655,
+          "residual": 0.0,
+          "call_price": 23.27765944031881,
+          "call_spot_derivative": 0.8374868299217766,
+          "call_state_derivative": 1.0395665288004876,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -3.9306344628897705e-05,
+          "base_independent_price": 21.797391606613427
+        }
+      }
+    },
+    {
+      "date": 0.9166666666666666,
+      "scenario": 0,
+      "spot": 80.0,
+      "heston_state": 0.02,
+      "quote": 0.0017373254975669161,
+      "cf_price_error": 2.1658339647314834e-12,
+      "models": {
+        "heston": {
+          "status": "unknown",
+          "reason": "ill_conditioned",
+          "state": null,
+          "condition": 0.8078254066813348,
+          "residual": -1.46224178598775e-14,
+          "call_price": null,
+          "call_spot_derivative": null,
+          "call_state_derivative": null,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -1.988387081419945e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.321048274461999,
+          "condition": 0.21175893780740926,
+          "residual": -4.339410775155983e-15,
+          "call_price": 0.001737325497562566,
+          "call_spot_derivative": 0.0015108856399187254,
+          "call_state_derivative": 0.04722350850236523,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": 5.576386561789715e-06,
+          "base_independent_price": 0.21920923388031385
+        }
+      }
+    },
+    {
+      "date": 0.9166666666666666,
+      "scenario": 1,
+      "spot": 100.0,
+      "heston_state": 0.04,
+      "quote": 5.025233054519283,
+      "cf_price_error": 7.967387202251081e-11,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.04,
+          "condition": 0.00602419079784997,
+          "residual": -2.1316282072803006e-14,
+          "call_price": 5.025233054519262,
+          "call_spot_derivative": 0.6068739075230687,
+          "call_state_derivative": 41.4993496038049,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -2.1316282072803006e-14
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 1.0054854952392427,
+          "condition": 0.004474861375905949,
+          "residual": -2.531308496145357e-13,
+          "call_price": 5.02523305451903,
+          "call_spot_derivative": 0.5319381509964262,
+          "call_state_derivative": 2.2347060970074146,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -0.0002912485278745436,
+          "base_independent_price": 5.013249355507134
+        }
+      }
+    },
+    {
+      "date": 0.9166666666666666,
+      "scenario": 2,
+      "spot": 120.0,
+      "heston_state": 0.08,
+      "quote": 22.121583467349467,
+      "cf_price_error": 3.690907273816845e-10,
+      "models": {
+        "heston": {
+          "status": "ok",
+          "reason": "",
+          "state": 0.08000025928068259,
+          "condition": 0.015443499812803964,
+          "residual": 0.0,
+          "call_price": 22.12158346734946,
+          "call_spot_derivative": 0.9080388550759084,
+          "call_state_derivative": 16.18804047206646,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "price_error_at_true_v": -4.197245598192012e-06
+        },
+        "local": {
+          "status": "ok",
+          "reason": "",
+          "state": 2.684729757208699,
+          "condition": 0.01400807481378964,
+          "residual": -6.679101716144942e-13,
+          "call_price": 22.12158346734881,
+          "call_spot_derivative": 0.8731050908653539,
+          "call_state_derivative": 0.713873971472224,
+          "state_reference_error": null,
+          "qualification": "unknown",
+          "base_price_error": -1.6203720811347466e-05,
+          "base_independent_price": 21.11973971402759
+        }
+      }
+    }
+  ],
+  "original_states": 18,
+  "qualification": "unknown",
+  "wall_seconds": 12.480462415000034,
+  "cpu_seconds": 12.453622146999999,
+  "timing_scope": "afterimports/input-read/build/references; final archive outside",
+  "source_sha256": {
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "fff3bc88d497210a846956d464317d5ddb00941a1e3ef25193f9cbaa26a8c406",
+    "johnhull/hullkit/src/hullkit/_heston_local_surface.py": "b343578fd31b48457680b4da2e34fedf41f9724af77b5010929141cd74e2a622",
+    "johnhull/research/RB-F04/dynamic_hedging/reference_methods.py": "0bc79b971dd6f7f69847ef6029056cfbfbeb3a80b1a7a2cb19d73bcc9f9019f4"
+  },
+  "cache_numerical_status": "unmeasured"
+}

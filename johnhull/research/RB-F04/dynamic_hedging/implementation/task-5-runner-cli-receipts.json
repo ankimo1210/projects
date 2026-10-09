@@ -1,0 +1,32 @@
+[
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "--phase",
+      "tiny",
+      "--output",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/runner-tiny-source-connection-1",
+      "--original-n",
+      "32",
+      "--updates",
+      "1"
+    ],
+    "exit_code": 0,
+    "parent_wall_seconds": 5.969661718000225,
+    "child_cpu_seconds": 5.902002
+  },
+  {
+    "command": [
+      "/home/kazumasa/projects/.venv/bin/python",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "--phase",
+      "check",
+      "--input",
+      "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/runner-tiny-source-connection-1"
+    ],
+    "exit_code": 0,
+    "parent_wall_seconds": 3.7920006689996626,
+    "child_cpu_seconds": 3.7800580000000013
+  }
+]

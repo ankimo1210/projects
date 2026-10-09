@@ -1,0 +1,116 @@
+{
+  "kind": "independent_initial_quote_and_call_default_review",
+  "reviewed_at": "2026-10-09T14:36:47.192878+00:00",
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py": "64fc78e2715bd12651999ea49f26a973b734997d1fc669e620402b76ccbaf209",
+    "deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py": "a3ff24e9218146c7046d521eb9fbedfe4bb170045314742f10b21fe4d25eddbd",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "fff3bc88d497210a846956d464317d5ddb00941a1e3ef25193f9cbaa26a8c406",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py": "55071a03a936b89a26a85bed5531f31a515d04d041491a3c737d28c2613da825"
+  },
+  "scope": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py"
+  ],
+  "findings": [
+    {
+      "id": "I1",
+      "severity": "Important",
+      "file": "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+      "line": 104,
+      "title": "Missing original PDE attempt arrays are silently skipped",
+      "detail": "Deleting pde_space4801.prices from the actual 487-array evidence, while metadata still declares that completed original37 PDE attempt, returns integrity pass and initial_quote_gate pass. pde_space4801 disappears from output and eight original stages become seven. A caller can erase a failed or unwanted original attempt without failure.",
+      "recommendation": "Distinguish PDE stage metadata from non-PDE field/CF diagnostics. Require raw prices/errors/IDs/grids for every declared PDE attempt, preserve failed attempts explicitly, reject duplicate/erased attempt identity. Add a missing-completed-stage-price tamper regression."
+    },
+    {
+      "id": "I2",
+      "severity": "Minor",
+      "file": "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+      "line": 3,
+      "title": "Docstring claims measured refinement replay but implementation omits it",
+      "detail": "The module promises measured refinements are recalculated, but stage max_refinement and raw .refinement arrays are never consumed. Changing pde2401x1920 max_refinement to12345 leaves integrity pass and no refinement metric in the result. This does not certify solver correctness, but the current docstring overstates its saved numerical boundary.",
+      "recommendation": "Either explicitly limit the documented boundary to CF-integral/PDE-query prices and quote errors, or recompute declared stage refinement differences from saved stage prices and compare the metadata/refinement arrays."
+    }
+  ],
+  "counts": {
+    "Critical": 0,
+    "Important": 1,
+    "Minor": 1
+  },
+  "unresolved": 2,
+  "source_approved": false,
+  "formal_pilot_qualified": false,
+  "scoped_tests": [
+    {
+      "name": "initial",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.8526012639999863,
+      "output": "........                                                                 [100%]\n8 passed in 0.42s\n"
+    },
+    {
+      "name": "surface",
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 7.367090568000094,
+      "output": "....................                                                     [100%]\n20 passed in 6.86s\n"
+    }
+  ],
+  "independent_checks": {
+    "actual_arrays": 487,
+    "object_arrays": 0,
+    "original_quotes": 37,
+    "pde_stages": 8,
+    "original_order_reconstructed": true,
+    "cf_max_error": 3.959271899486031e-10,
+    "local_selected_price_error_old": 0.0014499732926109843,
+    "local_selected_price_error_new": 0.0002912485278745436,
+    "selected_states_each": 18,
+    "heston_unknown_each": 1,
+    "heston_unknown_condition": 0.807825406675948,
+    "CAS_each_restored_members": 487,
+    "CAS_each_bytes": 30535323,
+    "CAS_each_sha256": "dda742e71078be19383c4fb4209413a346c8e7259ed8e899d3288b28f0ee2591"
+  },
+  "limits": [
+    "Neither initial checker nor this review replays earlier Fourier/PDE solves, certifies Greeks, proves a uniform all-state error bound, or qualifies formal dynamic pilot/Q/P&L.",
+    "Hashes are used only for exact source/storage identity; numerical price checks use tolerances.",
+    "Both primary and mirror were restored independently through Store.open/restore and all37/eight-stage checker rerun. Existing recovery receipts correctly retain qualification unknown and missing child CPU as null.",
+    "The new spatial default1201 passes an independent late-ATM constant-variance Black formula; reference_status remains unmeasured and derivative_error NaN.",
+    "Old/new selected-call evidence retains all18 states and the ill-conditioned Heston case at t11/12,S80,v.02. It is not hidden; both versions remain unknown and no state_reference_error is manufactured.",
+    "Compact status and reviewer-owned replay module were outside this review."
+  ],
+  "artifacts": [
+    {
+      "path": "task-5-initial-call-review-probes.py",
+      "sha256": "27a63576d80585e4c15f1702b41a1d499500c837f43662e782fb9209c5490612"
+    },
+    {
+      "path": "task-5-initial-call-review-probes.txt",
+      "sha256": "c29e9584f857cf9a9e5bf46d760a7372c00e7e8d2296309b2a7a398c46b205ab"
+    },
+    {
+      "path": "task-5-initial-call-review-initial-tests.txt",
+      "sha256": "d8484aa51dfa78d3b0b9676e1ceffe132cb084661d18af1079c980df7e46b0b6"
+    },
+    {
+      "path": "task-5-initial-call-review-surface-tests.txt",
+      "sha256": "966c196f002159a879f829df19d68c67d3e0e35761cbd4c0eb840dfd2cd3ef1e"
+    }
+  ]
+}

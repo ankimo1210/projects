@@ -1,0 +1,39 @@
+from pathlib import Path
+import runpy,copy,json,numpy as np,hashlib
+R=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+W=R/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+path=R/"johnhull/research/RB-F04/dynamic_hedging/run_reference.py"
+ns={"__file__":str(path),"__name__":"independent_runner_review"}
+exec(compile(path.read_text(),str(path),"exec"),ns)
+fixtures=runpy.run_path(str(R/"deep_hedge_price/tests/test_dynamic_hedging_protocol.py"))
+p=ns["protocol"]
+candidate,source,pilot,review,selection=fixtures["freeze_inputs"]()
+source=ns["source_identity"]()["protocol_source"]
+def digest(x):return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest()
+pilot["verification"]["inputs"]={"candidate":digest(candidate),"source":digest(source)}
+review["verification"]["inputs"]={"candidate":digest(candidate),"source":digest(source),"pilot":digest(pilot)}
+frozen=p.freeze_contract(candidate,source,pilot,review,selection)
+receipts=fixtures["main_selection_receipts"](frozen)
+closed={"fits":[]}
+for slot in p.study_roster()["fits"]:
+ row=dict(slot,status="completed",attempted=True,original_n=8192,requested_updates=512,updates=512,elapsed_seconds=20.,reason=None,checkpoint_id="last_finite_completed")
+ row["raw_fit"]={"status":"completed","complete":True,"seed":slot["initialization"],"universe":slot["universe"],"original_path_count":8192,"training_generator":slot["training_generator"],"fit_id":slot["id"],"checkpoint_id":"last_finite_completed","requested_updates":512,"updates":512,"weights":{"w1":np.zeros((9,32)),"b1":np.zeros(32),"w2":np.zeros((32,32)),"b2":np.zeros(32),"w3":np.zeros((32,2)),"b3":np.zeros(2)},"scaler":{"mean":np.zeros(9),"std":np.ones(9)}}
+ closed["fits"].append(row)
+receipts["closed_fits_sha256"]=ns["payload_digest"](closed)
+raw={row["id"]:{v["id"]:np.full(2048,np.sqrt(v["mse"])) for v in row["candidates"]} for row in receipts["validation"]}
+cases=[{"generator":g,"seed_slot":s,"level":l,"dataset":{"original_n":16384},"risk":{}} for g in ["Heston","local"] for s in range(3) for l in [192,384,768]]
+observed=[]
+original=ns["study"].test_roster
+def consumer(dataset,risk,fitted,validation,*,generator,universe):
+ observed.append({"generator":generator,"universe":universe,"selected_band":validation["selected_bands"]["Heston"]})
+ return {}
+ns["study"].test_roster=consumer
+def loader():
+ # Mutate the same closed validation object only after the real gate.
+ receipts["validation"][0]["selected_bands"]["Heston"]="band:Heston:width0.2"
+ return {"test_cases":cases}
+try:
+ result=ns["run_main"](frozen=frozen,candidate=candidate,source=source,selection_receipts=receipts,raw_validation=raw,closed_fits=closed,main_test_loader=loader)
+finally:ns["study"].test_roster=original
+out={"scope":"orchestration with synthetic bound financial gate, not real formal acceptance","real_protocol_gate":True,"raw_validation_4x14_n":2048,"prior_Heston_U1_selected_band":"band:Heston:width0","post_loader_evaluation_Heston_U1_selected_bands":sorted({x["selected_band"] for x in observed if x["generator"]=="Heston" and x["universe"]=="U1"}),"main_qualification":result["qualification"],"finding":"closed validation selection remains aliased across test loader"}
+print(json.dumps(out,indent=2))

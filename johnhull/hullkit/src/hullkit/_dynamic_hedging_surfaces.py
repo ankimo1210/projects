@@ -102,13 +102,18 @@ def _calendar_pde(
     ell,
     spot_nodes,
     *,
-    space_nodes=601,
+    space_nodes=1201,
     time_steps=960,
     log_half_width=1.8,
     strike=100.0,
     maturity=1.25,
 ):
-    """One sparse CN/Rannacher solve per ell, with exact calendar snapshots."""
+    """One sparse CN/Rannacher solve per ell, with exact calendar snapshots.
+
+    The 1201-node spatial default resolves the late ATM call to the initial
+    0.001 price budget in the independent Black/actual-field probes. This
+    measured comparison does not certify other states or derivative errors.
+    """
     x = np.linspace(
         math.log(parameters.spot) - log_half_width,
         math.log(parameters.spot) + log_half_width,

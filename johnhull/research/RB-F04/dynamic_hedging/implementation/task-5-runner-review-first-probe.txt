@@ -1,0 +1,29 @@
+from pathlib import Path
+import runpy,copy,json,numpy as np
+R=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+W=R/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+ns={"__file__":str(R/"johnhull/research/RB-F04/dynamic_hedging/run_reference.py"),"__name__":"independent_runner_snapshot"}
+exec(compile((W/"task-5-runner-review-first-source.py").read_text(),ns["__file__"],"exec"),ns)
+fixtures=runpy.run_path(str(R/"deep_hedge_price/tests/test_dynamic_hedging_protocol.py"))
+candidate,source,pilot,review,selection=fixtures["freeze_inputs"]()
+p=ns["protocol"]
+frozen=p.freeze_contract(candidate,source,pilot,review,selection)
+receipts=fixtures["main_selection_receipts"](frozen)
+raw={}
+for row in receipts["validation"]:
+ raw[row["id"]]={v["id"]:np.full(2048,np.sqrt(v["mse"])) for v in row["candidates"]}
+fits={"fits":[dict(slot,status="completed",raw_fit={"weights":{"w1":np.full((9,32),123.0)}}) for slot in p.study_roster()["fits"]]}
+cases=[{"generator":g,"seed_slot":s,"level":l,"dataset":{"original_n":16384},"risk":{}} for g in ["Heston","local"] for s in range(3) for l in [192,384,768]]
+opened=[]
+original=ns["study"].test_roster
+def independent_boundary_consumer(dataset,risk,fitted,validation,*,generator,universe):
+ # Pricing/evaluation is deliberately replaced at its expensive consumer
+ # boundary; this probe verifies orchestration inputs, not financial outputs.
+ return {"supplied_weight":float(fitted["fits"][0]["raw_fit"]["weights"]["w1"][0,0]),"original_n":dataset["original_n"]}
+ns["study"].test_roster=independent_boundary_consumer
+try:
+ result=ns["run_main"](frozen=frozen,candidate=candidate,source=source,selection_receipts=receipts,raw_validation=raw,main_test_loader=lambda:opened.append(True) or {"fits":fits,"test_cases":cases})
+finally:
+ ns["study"].test_roster=original
+out={"probe_scope":"orchestration only; synthetic actual protocol freeze gate; no financial pilot/main qualification","real_protocol_gate_used":True,"raw_validation_all14_per4_original_n":2048,"pretest_receipts_have_weights":any("raw_fit" in x for x in receipts["fits"]),"test_opened":bool(opened),"evaluations":len(result["evaluations"]),"weight_taken_from_test_artifact":result["evaluations"][0]["result"]["supplied_weight"],"qualification":result["qualification"],"finding":"post-gate test artifact supplies all raw fit weights without closed training binding"}
+print(json.dumps(out,indent=2))

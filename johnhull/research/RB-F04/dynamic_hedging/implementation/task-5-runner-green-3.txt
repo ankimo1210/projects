@@ -1,0 +1,69 @@
+........F..                                                              [100%]
+=================================== FAILURES ===================================
+_____ test_tiny_real_pipeline_preserves_all_44_slots_and_unknown_precision _____
+
+    def test_tiny_real_pipeline_preserves_all_44_slots_and_unknown_precision():
+        bundle = runner.run_tiny(original_n=32, updates=1)
+        assert bundle["kind"] == "tiny"
+        assert bundle["formal_pilot_qualification"] == "unknown"
+        assert len(bundle["fits"]["fits"]) == 12
+        assert sum(len(row["cells"]) for row in bundle["evaluations"].values()) == 44
+        assert all(row["original_n"] == 32 for row in bundle["fits"]["fits"])
+>       result = runner.check_bundle(bundle)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:566: in check_bundle
+    replay.check_cash(data, cash_record)
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py:465: in check_cash
+    _same(np.clip(np.asarray(cell["raw_holdings"], float), -2., 2.), holds, "raw_holdings")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+expected = array([[[       nan, 0.        ],
+        [       nan, 0.        ],
+        [       nan, 0.        ],
+        [       ...n, 0.        ],
+        [       nan, 0.        ],
+        [       nan, 0.        ],
+        [       nan, 0.        ]]])
+saved = array([[[nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan]...      [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan],
+        [nan, nan]]])
+name = 'raw_holdings'
+
+    def _same(expected, saved, name):
+        """Compare numeric values by tolerance, preserving NaNs and shapes."""
+        if isinstance(expected, dict):
+            if not isinstance(saved, dict) or set(saved) != set(expected):
+                raise ValueError(f"{name}: saved key set differs from recomputation")
+            for key, value in expected.items():
+                _same(value, saved[key], f"{name}.{key}")
+            return
+        if expected is None or saved is None:
+            if expected is not None or saved is not None:
+                raise ValueError(f"{name}: unknown value changed")
+            return
+        left, right = np.asarray(expected), np.asarray(saved)
+        if left.shape != right.shape:
+            raise ValueError(f"{name}: saved shape differs from original")
+        if left.dtype.kind in "USb" or right.dtype.kind in "USb":
+            equal = np.array_equal(left, right)
+        else:
+            equal = np.allclose(left, right, rtol=_RTOL, atol=_ATOL, equal_nan=True)
+        if not equal:
+>           raise ValueError(f"{name}: saved value differs from recomputation")
+E           ValueError: raw_holdings: saved value differs from recomputation
+
+deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py:48: ValueError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_tiny_real_pipeline_preserves_all_44_slots_and_unknown_precision
+1 failed, 10 passed in 10.14s

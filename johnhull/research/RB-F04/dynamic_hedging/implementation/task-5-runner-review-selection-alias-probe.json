@@ -1,0 +1,11 @@
+{
+  "scope": "orchestration with synthetic bound financial gate, not real formal acceptance",
+  "real_protocol_gate": true,
+  "raw_validation_4x14_n": 2048,
+  "prior_Heston_U1_selected_band": "band:Heston:width0",
+  "post_loader_evaluation_Heston_U1_selected_bands": [
+    "band:Heston:width0.2"
+  ],
+  "main_qualification": "unknown",
+  "finding": "closed validation selection remains aliased across test loader"
+}

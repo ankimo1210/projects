@@ -2,3 +2,6 @@ pilot.npz
 reference.npz
 artifact-cache/
 __pycache__/
+
+# Dynamic source smoke arrays use protocol immutable artifact naming; CAS only.
+/dynamic_hedging/pilot/tiny/**/arrays.npz

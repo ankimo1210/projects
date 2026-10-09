@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_runner.py"
+  ],
+  "exit_code": 0,
+  "parent_wall_seconds": 24.72559325600014,
+  "source_sha256": "f96d768f5f4755d1495170b61f9e86e82413ee48498b30127d95050f77de94cd",
+  "tests_sha256": "4af2f331c8c7254afd2f0cad77338578d0e8d3ab4f88f7d964dec5bacd16606a",
+  "updated_at_utc": "2026-10-09T15:04:51.487755+00:00"
+}

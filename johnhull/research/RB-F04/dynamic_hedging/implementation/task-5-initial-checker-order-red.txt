@@ -1,0 +1,105 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_____ test_chronological_receipts_restore_original_fit_holdout_quote_order _____
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+
+    def test_chronological_receipts_restore_original_fit_holdout_quote_order(evidence):
+        check = _module("check_initial_quotes.py")
+        metadata, arrays = copy.deepcopy(evidence)
+        stage = metadata["stages"][0]
+        receipts = stage["pde_receipts"]
+        for i, receipt in enumerate(receipts):
+            prefix = f"pde.t{receipt['time']:.17g}"
+            arrays[prefix + ".log_spots"] = arrays.pop(f"pde.group{i}.log_spots")
+            arrays[prefix + ".values"] = arrays.pop(f"pde.group{i}.values")
+        stage["pde_receipts"] = sorted(receipts, key=lambda r: r["time"])
+>       got = check.check_initial_quotes(metadata, arrays)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+metadata = {'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[{...0.0, 'time': 0.5}, ...], 'stages': [{'failure': None, 'field': 'field', 'id': 'pde', 'original_quote_count': 37, ...}]}
+arrays = {'cf1024_cutoff512': array([20.71818617, 11.4994956 ,  4.30698199,  0.7642465 ,  0.04374119,
+       21.70522472, 13.10... 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...}
+
+    def check_initial_quotes(metadata: dict, arrays: dict) -> dict:
+        """Check all original37 IDs and derive initial gates from raw price arrays."""
+        groups = _roster()
+        quotes = metadata["quotes"]
+        expected = [(kind, t, k) for kind, t, ks in groups for k in ks]
+        if len(quotes) != 37 or len(metadata["cf_receipts"]) != 8:
+            raise ValueError("original37 quotes / eight maturity groups required")
+        for actual, (kind, t, k) in zip(quotes, expected, strict=True):
+            if actual["kind"] != kind:
+                raise ValueError("quote kind/order")
+            _same([actual["time"], actual["strike"]], [t, k], "quote time/strike")
+        derived, error_values = {"truth250": [], "truth500": []}, []
+        for receipt, (_, t, strikes) in zip(metadata["cf_receipts"], groups, strict=True):
+            _same(receipt["time"], t, "CF maturity")
+            _same(receipt["strikes"], strikes, "CF strike roster")
+            for suffix in [250, 500]:
+                values, errors = _cf_prices(
+                    receipt["upper" + str(suffix)], strikes, t, metadata["parameters"]
+                )
+                derived["truth" + str(suffix)].extend(values)
+                if suffix == 500:
+                    error_values.extend(errors)
+        for name, values in derived.items():
+            _same(arrays[name], values, name)
+        _same(arrays["truth500_error"], error_values, "CF error array")
+        truth = np.asarray(arrays["truth500"], float)
+        cf_names = ["truth250", "truth500", "cf1024_cutoff512", "cf2048_cutoff512", "cf2048_cutoff1024"]
+        for name in cf_names:
+            if np.asarray(arrays[name]).shape != (37,) or not np.isfinite(arrays[name]).all():
+                raise ValueError("CF complete finite original37 required")
+        cf_error = max(float(np.max(np.abs(np.asarray(arrays[name]) - truth))) for name in cf_names)
+        cf_error = max(cf_error, float(np.max(error_values)))
+        stages, fields = {}, {}
+        for stage in metadata["stages"]:
+            label = stage["id"]
+            if label + ".prices" not in arrays:
+                continue
+            ids = np.asarray(arrays[label + ".quote_ids"])
+            if stage["original_quote_count"] != 37 or not np.array_equal(ids, np.arange(37)):
+                raise ValueError("PDE original37 roster cannot be filtered")
+            receipts = stage["pde_receipts"]
+            if len(receipts) != 8:
+                raise ValueError("PDE eight original groups")
+            reconstructed = []
+            for i, receipt in enumerate(receipts):
+                if not receipt["supported"] or receipt["failure"] is not None:
+                    raise ValueError("PDE unsupported original group")
+>               nodes = np.asarray(arrays[f"{label}.group{i}.log_spots"], float)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               KeyError: 'pde.group0.log_spots'
+
+johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py:116: KeyError
+_______ test_duplicate_maturity_receipt_cannot_replace_original_holdout ________
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+
+    def test_duplicate_maturity_receipt_cannot_replace_original_holdout(evidence):
+        check = _module("check_initial_quotes.py")
+        metadata, arrays = copy.deepcopy(evidence)
+        metadata["stages"][0]["pde_receipts"][-1] = copy.deepcopy(
+            metadata["stages"][0]["pde_receipts"][0]
+        )
+>       with pytest.raises(ValueError, match="roster|duplicate|original|maturity"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:153: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_chronological_receipts_restore_original_fit_holdout_quote_order
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_duplicate_maturity_receipt_cannot_replace_original_holdout
+2 failed, 6 deselected in 0.40s

@@ -21,9 +21,9 @@ Spec: `docs/superpowers/specs/2026-06-07-johnhull-full-coverage-design.md`
 
 Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 115 private modules in this development checkout as of 2026-10-09, including two validated RB-F04 private modules integrated into main. P3–P7 logic, accepted BGM/business models, and completed RB-F07/RB-F05 studies are retained. The catalogue is `MODEL_INDEX.md`; earlier development branches are retained.
 
-## 現在地（2026-10-09、全306節の統合完了・次の研究計画）
+## 現在地（2026-10-10、全306節の統合完了・研究実行中）
 
-**全体：本編P0–P8は306/306節受入済み、研究v1は8テーマ完了・main統合済み。現在は動的モデル横断ヘッジのTask5（実験runner/正式pilot）。その後に多曲線risk/P&L→増分XVA＋IM/資本を進める。** 8/11はテーマ件数であり、残工数の割合ではない。
+**全体：本編P0–P8は306/306節受入済み、研究v1は8テーマ完了・main統合済み。現在は動的モデル横断ヘッジのTask5（接続source/予備測定完了、教師精度見直しと正式pilot）。その後に多曲線risk/P&L→増分XVA＋IM/資本を進める。** 8/11はテーマ件数であり、残工数の割合ではない。
 
 | 層 | 状態 | 詳細 |
 |---|---|---|
@@ -41,7 +41,7 @@ Shared module: `johnhull/hullkit` (uv workspace member) — 72 public + 115 priv
 | 研究track #4 | RB-F08 GBM v1完了・main統合済み | [研究結果](research/RB-F08/README.md)／[独立レビュー](research/RB-F08/REVIEW.md)。全9levelの固定pilot・全条件/181729seedのfreeze、主3072run/18RQMCcell・105groups fresh・22MB両復元semantic・artifact-only4図を完了。3εでEuler比速度改善を支持、exact/CVが速いため標準高速器不採用。Student95%実測coverage89.1–95.7%。独立28,990比較PASS、関連3suite7616 PASS/6 skip・16Python ruff/format PASS。255f4a61をmainへfast-forward統合/pushし、mainのtracked release・保管庫復元/原始配列checkerもPASS。Heston月次Asianは未実装の専用revision |
 | 研究track #5 | RB-F06 v1完了・main統合済み | [結果](research/RB-F06/README.md)／[レビュー](research/RB-F06/REVIEW.md)。条件/金融source固定後に102dataset/4398calls、全saved/fresh・両保管庫復元・3図を完了。独立最終レビューapproved・重要0。元全3suite7742 PASS/2 FAIL/6 skipのfixture2件を修正し関係56件/root索引込み777件PASS、重複なし7744 PASS/6 skip。12Python ruff/format PASS。3e919eedをmainへfast-forward統合/push。branch/main tracked release・mainの23MB復元/102dataset数値checker PASS。exact SABR・大域識別・保証被覆・joint価格包絡は未認定 |
 | 研究track #6 | RB-F05短期/0DTE v1完了・main統合済み | [結果](research/RB-F05/short_maturity/RESULTS.md)／[最終受入](research/RB-F05/short_maturity/validation.json)。正式84×3 pilot・source10/N1048576固定後、640教師/6fits/336点・追加12条件180推定枠・全費用・両復元・実3図を完了。独立最終208checks PASS・Critical/Important0、関連3suite7998PASS/6skip、19Pythonruff/format・tracked release PASS。Delta-DML全3seed誤差改善、NN raw/safe全fit固定精度未達・不採用、Hermite336/336PASS。da1d1f3eをmainへfast-forward統合、mainで3配列の保管庫復元・pilot/640教師/6fits/336点/fresh180slotの数値検査・tracked release PASS。別project48変更を保持 |
-| 次の研究 | 動的モデル横断ヘッジ：Tasks1–4＋Task5 helperソース承認済み | [設計/レビュー](research/RB-F04/dynamic_hedging/README.md)。月次Asian、Heston/local、共通stock/call、quote IFT/自己資金/費用、Greek/band/NNを具体化。旧lognormal varianceの無限2次momentとrelative-risk基準の不確実性を修正。金融core/条件付き教師/価格面/quote risk/CPU policyの実装・独立レビュー完了（開発branchのみ）。重要5件を修正・再レビュー承認、変更範囲＋索引/docstring1193 tests・11Python ruff/format PASS。[ソース記録](research/RB-F04/dynamic_hedging/implementation/README.md)。追加の統計/protocol helperはM1修正・独立再レビュー承認、scoped1200 tests・5Python ruff/format PASS。[helper記録](research/RB-F04/dynamic_hedging/implementation/TASK5_HELPERS.md)。候補12fits/44cellsを保存。runner/金融checker/正式pilot/主実験/研究受入は未完了、正式pilot/所要時間は未測定 |
+| 次の研究 | 動的モデル横断ヘッジ：Tasks1–4＋Task5 helper/接続source承認済み | [現在source/測定](research/RB-F04/dynamic_hedging/implementation/TASK5_CONNECTORS.md)。study/replay/runner/checker独立レビュー未解決0。1352scoped検査は旧runner時点、最終runner27tests・独立saved replay PASS（未加算、全suite未実施）。初期37quotes/selected18・latest tiny12fits/44cells・actual教師N1024を保存。latest tiny/教師rawは各C/F復元・saved算術PASS。元36教師slotsでSE同時条件6、underresolved5/fitunknown1、全qualification unknown。正式pilot/freeze/主実験/研究受入・main未完了（開発branchのみ） |
 | 実装前の準備 | 完了 | 下調べ292/292節・65/65出典・設計/再確認9本。準備時点の件数で製品受入と区別 |
 
 `done`・`accepted`・PASSは宣言した計算・再現性・integrationの範囲を示し、市場性能の承認ではない。
@@ -117,7 +117,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 研究トラック #1 は RB-F07。研究の置き場は `research/<RB-ID>/`、計算は hullkit の非公開モジュールに決定した（2026-09-27 本人承認。公開 API 昇格は別承認）。
 2026-10-09に[較正込み市場クオートGreeksのDML](docs/superpowers/specs/2026-10-09-calibrated-quote-dml-design.md)を推奨し、[実施計画](docs/superpowers/plans/2026-10-09-calibrated-quote-dml.md)を作成。続く完遂指示を受け、`research/RB-F07/quote_dml/` のprivate実験から着手した。既存F07/F05 v1と従来の後続研究を保持する。
 
-### 研究ロードマップの実行（2026-10-09）
+### 研究ロードマップの実行（2026-10-10）
 
 目標は「研究ロードマップを完遂せよ」。quote DMLだけを完了して全研究完了とはしない。
 各研究は設計・独立参照・テスト・成果配列・artifact-only教材・独立レビュー・採否記録で完了を確認する。NNの勝利や速度向上は必須条件ではない。
@@ -131,7 +131,7 @@ fast-v1の補足HTMLを受入対象とし、全Book本文・別幅・全節画�
 | 4 | RB-F08 MLMC / RQMC CI | GBM Euler粗細結合、bias/sampling、費用、独立scramble被覆率・4図・レビュー | GBM v1完了・main統合済み。[結果](research/RB-F08/README.md)／[レビュー](research/RB-F08/REVIEW.md)。主3072run/18×512cell・105freshgroups・22MB両復元・4図・独立28,990比較PASS。Euler比速度3/3条件支持、exact/CVが速いため標準高速器不採用。Student95%実測coverage89.1–95.7%。関連3suite7616 PASS/6 skip、16Python ruff/format PASS。255f4a61をmain統合/pushし、mainのrelease・保存数値checkerもPASS。Heston Asian次revisionの完了とは区別 |
 | 5 | RB-F06識別可能性 | 固定β Hagan inverse-map、全fit・scaled J/profile・失敗/原価・3図・レビュー | v1完了・main統合済み。[結果](research/RB-F06/README.md)／[検証](research/RB-F06/validation.json)。102dataset/918 unrestricted＋3480profile。全4398独立IV/Black・918J・870slice・代表10SLSQP・32noise/12fresh・両23MB復元を完了。教材保持。弱方向と未探索gap/元分母を保持し、一般exact SABR・大域識別・保証被覆は承認しない。3e919eedをmain統合/push、branch/main release・main保存数値checker/保管庫復元PASS |
 | 後続 | RB-F05短期/0DTE | 短期契約・calendar・教師分散/共通乱数・独立参照・比較・採否 | v1完了・main統合済み。[結果](research/RB-F05/short_maturity/RESULTS.md)／[最終review](research/RB-F05/short_maturity/REVIEW.json)。640教師・6fits/336点、追加12条件180推定枠・全費用・両復元・3図。最終独立208checks/重要0、3suite7998PASS/6skip、19Pythonruff/format・tracked releasePASS。DML改善は支持、NN標準採用不可、Hermite336/336PASS。Bates/PIDE/rough・実商品calendarは別範囲 |
-| 後続 | 同一較正条件の動的モデル横断ヘッジ | 市場生成/評価/方策を分離、自己資金・CF・費用を持つ共通P&L実験・レビュー | [正式設計](research/RB-F04/dynamic_hedging/DESIGN.md)・[実施計画](docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md)・独立数学review完了。CM2-LN発散/relative-risk判定を修正し、fixed-grid4次24条件再計算PASS。主月次12/全44cell/12fits、raw失敗/全費用を固定候補化。Tasks1–4の金融core/条件付き教師/価格面/risk/policyをb7c98432にcommit、開発branchへpush済み。重要5件修正・再レビュー承認、scoped1193 testsと11Pythonruff/format PASS。[ソース記録](research/RB-F04/dynamic_hedging/implementation/README.md)。Task5の統計/protocol helperも実装・独立レビュー完了（M1修正・未解決0、scoped1200 tests・5Python ruff/format）。[helper記録](research/RB-F04/dynamic_hedging/implementation/TASK5_HELPERS.md)。候補12fits/44cellsは未凍結。runner/金融checker/正式pilot/main未実施 |
+| 後続 | 同一較正条件の動的モデル横断ヘッジ | 市場生成/評価/方策を分離、自己資金・CF・費用を持つ共通P&L実験・レビュー | [正式設計](research/RB-F04/dynamic_hedging/DESIGN.md)・[実施計画](docs/superpowers/plans/2026-10-09-dynamic-cross-model-hedging.md)・独立数学review完了。Tasks1–4/統計/protocol/接続sourceの独立レビュー承認。[最新source](research/RB-F04/dynamic_hedging/implementation/TASK5_CONNECTORS.md)。初期37quotes・selected18states・N32 tiny全44cells/12fits・actual教師N1024元36slotsを保存し、latest tiny/教師rawの両復元/saved算術PASS。N1024はSE同時条件6/36、underresolved5/fitunknown1。候補未凍結、正式pilot/主実験/研究受入未完了。次は教師精度と正式pilot |
 | 後続 | 多曲線統合risk / P&L | date/fixing/曲線間依存・quote units・商品横断risk/P&L・独立比較 | [調査・候補工程](research/RB-F07/multicurve/README.md)保存・独立調査案レビュー承認。D/P3/P6・12quotes、全cross-gamma、roll/fixing/表現移行/市場の四項P&L bridge。正式設計・実装・pilot/mainは未実施 |
 | 後続 | 増分XVA＋IM・資本 | 既存増分CVA再利用、担保/IM/資本規約・比較・レビュー・採否 | [調査・候補工程](research/RB-H09/incremental_xva/README.md)保存・独立調査案レビュー承認。book前後/hedge bundle、VM/MPOR/非SIMM IM・FCA/FBA/MVA/KVA、selected IRS資本subset。same-set IM便益と別set対照を分離。正式設計・実装・pilot/mainは未実施 |
 

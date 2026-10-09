@@ -1,0 +1,9 @@
+{
+  "source_binding": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937",
+  "scope": "source-original payload provenance, no finance qualification",
+  "before": "7c93f2135ceaeeb0a96ce1b77656c406aea4872b74e021f93c62a9d53921455d",
+  "after_sorted_json_roundtrip": "febf201b7c38a71894119ca8dabdd30e750f986656359fd12d910f39411f1c23",
+  "numeric_arrays_equal": true,
+  "digest_equal": false,
+  "finding": "dict insertion order changes ordinal array bindings in payload_digest"
+}

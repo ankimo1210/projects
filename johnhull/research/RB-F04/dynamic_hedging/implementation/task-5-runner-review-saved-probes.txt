@@ -1,0 +1,58 @@
+from pathlib import Path
+import json,hashlib,copy,importlib,random,numpy as np
+R=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+W=R/".superpowers/sdd/2026-10-09-dynamic-cross-model-hedging"
+path=R/"johnhull/research/RB-F04/dynamic_hedging/run_reference.py"
+ns={"__file__":str(path),"__name__":"independent_runner_saved"}
+exec(compile(path.read_text(),str(path),"exec"),ns)
+artifact=R/"johnhull/research/RB-F04/dynamic_hedging/pilot/tiny/source-f96d768f5f47-n32-update1"
+bundle,receipt=ns["load_bundle"](artifact)
+guards=[]
+def forbidden(*a,**k):raise AssertionError("saved checker executed an excluded RNG/training/solver operation")
+def guard(obj,name):
+ if hasattr(obj,name):
+  guards.append((obj,name,getattr(obj,name)));setattr(obj,name,forbidden)
+for name in ["default_rng","seed","normal","uniform","standard_normal","rand","randn","random","random_sample","choice","randint"]:
+ guard(np.random,name)
+for name in ["seed","random","gauss","normalvariate","choice","randrange"]:guard(random,name)
+for name in ["fit_roster","fit_policy","heston_records","local_records"]:guard(ns["study"],name)
+surface_module=importlib.import_module("hullkit._dynamic_hedging_surfaces")
+conditional_module=importlib.import_module("hullkit._dynamic_hedging_conditional")
+policy_module=importlib.import_module("deep_hedge_price._dynamic_hedging_policy")
+for obj,names in [(surface_module,["build_call_cache","_calendar_pde","fourier_surface"]),(conditional_module,["teacher_primitives"]),(policy_module,["fit_policy"])]:
+ for name in names:guard(obj,name)
+rejected=[]
+try:
+ result=ns["check_bundle"](bundle) # exactly one complete full saved-boundary replay
+ assert result["integrity"]=="pass" and result["formal_pilot_qualification"]=="unknown"
+ assert len(bundle["fits"]["fits"])==12 and sum(len(x["cells"]) for x in bundle["evaluations"].values())==44
+ # Early boundary failures, before the teacher/market/full cash replay.
+ for label in ["erased fit","driver tamper","erased required expense"]:
+  altered=dict(bundle)
+  if label=="erased fit":altered["fits"]={"fits":[]}
+  elif label=="driver tamper":
+   altered["teacher_global_driver"]=bundle["teacher_global_driver"].copy()
+   altered["teacher_global_driver"][0,0,0]+=.01
+  else:altered["expenses"]=[x for x in bundle["expenses"] if x["id"]!="market:Heston"]
+  try:ns["check_bundle"](altered)
+  except ValueError as e:rejected.append({"name":label,"reason":str(e)})
+  else:raise AssertionError("early saved-boundary mutation not rejected: "+label)
+ # The metadata identity check alone cannot authenticate scaler provenance,
+ # prior optimizer history or cost measurements: explicitly source-owned limits.
+ copied=copy.deepcopy(bundle["fits"])
+ copied["fits"][0]["raw_fit"]["scaler"]["source"]="test_paths_only"
+ copied["fits"][0]["raw_fit"]["scaler"]["training_path_count"]=1
+ copied["fits"][0]["raw_fit"]["losses"]=[999.]
+ ns["_check_original_fits"](copied,32,1)
+ unverified=result["unverified"]
+ assert "train_only_scaler_and_training_data_origin" in unverified
+ assert "original_training_loss_update_and_cap_history" in unverified
+ assert "original_expense_timing_measurement" in unverified
+ assert "earlier_SDE_and_global_driver_generation" in unverified
+ arrays={};tree=ns["_encode_tree"](bundle["fits"],arrays)
+ restored=ns["_decode_tree"](json.loads(json.dumps(tree,sort_keys=True)),arrays,set())
+ assert ns["payload_digest"](bundle["fits"])==ns["payload_digest"](restored)
+finally:
+ for obj,name,old in reversed(guards):setattr(obj,name,old)
+out={"source_sha256":hashlib.sha256(path.read_bytes()).hexdigest(),"tests_sha256":hashlib.sha256((R/"deep_hedge_price/tests/test_dynamic_hedging_runner.py").read_bytes()).hexdigest(),"scope":"saved-only tiny boundary; one full checker pass, three early-rejection probes; formal pilot not accepted","artifact":str(artifact),"receipt":receipt,"guarded_operation_count":len(guards),"RNG_training_CF_PDE_earlier_SDE_generation_forbidden":True,"complete_saved_checks":1,"all_original_fit_attempts":12,"all_original_policy_cells":44,"market_original_n":{"Heston":bundle["datasets"]["Heston"]["original_n"],"local":bundle["datasets"]["local"]["original_n"]},"teacher_groups":{k:len(v["rows"]) for k,v in bundle["teachers"].items()},"source_files":len(bundle["source_identity"]["files"]),"full_result":result,"early_rejections":rejected,"metadata_only_limit_probe":{"scaler_source_and_training_path_count_changed":True,"prior_loss_history_changed":True,"raw_identity_check_accepts":True,"interpretation":"explicit unverified scope; not financial qualification or a full checker pass on altered data"},"all_twelve_actual_fit_payload_roundtrip_digest_stable":True}
+print(json.dumps(out,indent=2))

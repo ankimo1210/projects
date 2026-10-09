@@ -1,0 +1,151 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_main_rejects_same_identity_different_test_weights ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7141342d2240>
+
+    def test_main_rejects_same_identity_different_test_weights(monkeypatch):
+        row, losses = validation_row(n=2048)
+        closed = closed_fits_fixture()
+        receipts = {"validation": [], "fits": copy.deepcopy(closed["fits"]),
+>                   "closed_fits_sha256": runner.payload_digest(closed)}
+                                          ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'dynamic_research_runner' has no attribute 'payload_digest'
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:211: AttributeError
+___________ test_tiny_saved_checker_rejects_erased_twelve_fit_roster ___________
+
+    def test_tiny_saved_checker_rejects_erased_twelve_fit_roster():
+        bundle = runner.run_tiny(original_n=32, updates=0, train=False)
+        bundle["fits"]["fits"] = []
+        with pytest.raises(ValueError, match="twelve"):
+>           runner.check_bundle(bundle)
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:326: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+bundle = {'caches': {'heston': {'asian': {'block_means': array([[[[[1.29527859e+001, 1.29777644e+001, 1.31970472e+001],
+       ...': 'all_eleven_supplied_data_policy_attempts', 'wall_seconds': 0.003923963000033837}, 'generator': 'local', ...}}, ...}
+
+    def check_bundle(bundle):
+        """Replay tiny saved boundaries, without RNG/train/optimizer/CF/PDE solves."""
+        if bundle.get("kind") != "tiny":
+            raise ValueError("only explicitly scoped tiny bundles are supported here")
+        _same(source_identity(), bundle["source_identity"], "source_identity")
+        p, surface = bundle["parameters"], ConstantVarianceField()
+        n = bundle["candidate"]["training"]["original_n"]
+        if n != len(bundle["teacher_global_driver"]):
+            raise ValueError("teacher original N mismatch")
+        expense_check = protocol.validate_expenses(
+            bundle["expenses"], required_ids=required_tiny_expenses()
+        )
+        teacher_checks = {}
+        driver = np.asarray(bundle["teacher_global_driver"])
+        driver_id = hashlib.sha256(np.ascontiguousarray(driver).tobytes()).hexdigest()
+        for model in ["heston", "local"]:
+            records = bundle["teachers"][model]
+            for row in records["rows"]:
+                mapping = row["driver_mapping"]
+                expected_slice = driver[:, mapping["start_step"] : mapping["stop_step"]]
+                if mapping["aggregation_factor"] != 1:
+                    raise ValueError("tiny driver mapping cannot change its aggregation")
+                slice_id = hashlib.sha256(np.ascontiguousarray(expected_slice).tobytes()).hexdigest()
+                if (
+                    row["global_driver_id"] != driver_id
+                    or row["primitives"]["shared_driver_id"] != slice_id
+                    or mapping["slice_sha256"] != slice_id
+                ):
+                    raise ValueError("saved driver/slice provenance does not match original arrays")
+            rows = [{**row, "surface": surface} for row in records["rows"]]
+            cache = replay.rebuild_asian_cache(rows, p, records["axes"], model=model)["cache"]
+            saved = bundle["caches"][model]["asian"]
+            for key in ["f", "block_means", "support_mask", "threshold_nodes", "state_nodes"]:
+                _same(cache[key], saved[key], f"{model}.asian.{key}")
+            if model == "local":
+                _same(cache["t0_sheet"], saved["t0_sheet"], "local.t0_sheet")
+            teacher_checks[model] = {"original_n": n, "rows": len(records["rows"]), "integrity": "pass"}
+        checks = {}
+        for name in MODELS:
+            model, data = name.lower(), bundle["datasets"][name]
+            if data.get("original_n") != n or len(data["prices"]) != n or data["model"] != model:
+                raise ValueError("market original N and generator identity required")
+            market = replay.check_market(
+                data,
+                fixing_times=np.arange(1, 13) / 12,
+                call_cache=bundle["caches"][model]["call"],
+                generator=model,
+                latent_state=data["market"]["variance"] if model == "heston" else None,
+            )
+            risk = study.quote_risk_dataset(p, surface, data, bundle["caches"])
+            for valuation in ["heston", "local"]:
+                for key in [
+                    "state",
+                    "u1_target",
+                    "u2_target",
+                    "qualification",
+                    "arithmetic_valid",
+                    "price_covariance",
+                ]:
+                    _same(
+                        risk["models"][valuation][key],
+                        bundle["risks"][name]["models"][valuation][key],
+                        f"{name}.{valuation}.{key}",
+                    )
+            for universe in UNIVERSES:
+                identifier = f"selection:{name}:{universe}"
+                validation = bundle["validation"][identifier]
+                selected = study.select_validation(
+                    data,
+                    risk,
+                    generator=name,
+                    universe=universe,
+                    widths=bundle["candidate"]["hedging"]["band_width_candidates"],
+                )
+                for key in ["candidates", "selected_bands", "selected_baseline", "status"]:
+                    _same(selected[key], validation[key], f"{identifier}.{key}")
+                check_validation(
+                    validation,
+                    {key: row["loss"] for key, row in selected["rollouts"].items()},
+                    original_n=n,
+                    qualifications={
+                        key: row["qualified_path_mask"] for key, row in selected["rollouts"].items()
+                    },
+                )
+                expected = study.test_roster(
+                    data, risk, bundle["fits"], validation, generator=name, universe=universe
+                )
+                saved = bundle["evaluations"][f"{name}:{universe}"]
+                if len(saved["cells"]) != 11 or [c["id"] for c in saved["cells"]] != [
+                    c["id"] for c in expected["cells"]
+                ]:
+                    raise ValueError("all eleven original policy slots required")
+                for actual, wanted in zip(saved["cells"], expected["cells"], strict=True):
+                    if actual["original_n"] != n:
+                        raise ValueError("cell original N mismatch")
+                    result, recalculated = actual["result"], wanted["result"]
+                    for key in [
+                        "holdings",
+                        "raw_holdings",
+                        "cash",
+                        "costs",
+                        "loss",
+                        "discounted_pnl",
+                        "discounted_gain_pnl",
+                        "path_mask",
+                    ]:
+                        _same(result[key], recalculated[key], f"{actual['id']}.{key}")
+                    cash_record = {
+                        "holdings": result["holdings"],
+                        "raw_holdings": result["raw_holdings"],
+                        "universe": universe,
+                    }
+                    for key in ["cash", "costs", "pnl", "discounted_pnl", "discounted_gain_pnl"]:
+>                       cash_record[key] = result[key]
+                                           ^^^^^^^^^^^
+E                       KeyError: 'pnl'
+
+johnhull/research/RB-F04/dynamic_hedging/run_reference.py:804: KeyError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_rejects_same_identity_different_test_weights
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_tiny_saved_checker_rejects_erased_twelve_fit_roster
+2 failed, 15 deselected in 4.31s

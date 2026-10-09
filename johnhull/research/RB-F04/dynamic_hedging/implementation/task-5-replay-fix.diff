@@ -1,0 +1,211 @@
+--- a/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py
++++ b/deep_hedge_price/src/deep_hedge_price/_dynamic_hedging_replay.py
+@@ -11,13 +11,11 @@
+ import math
+ 
+ import numpy as np
+-
+ from hullkit._dynamic_hedging_conditional import primitive_labels
+ from hullkit._dynamic_hedging_core import asian_memory
+ from hullkit._dynamic_hedging_statistics import paired_statistics
+ from hullkit._dynamic_hedging_surfaces import build_asian_cache, evaluate_call
+ from hullkit._heston_local_surface import HestonParameters
+-
+ 
+ _RTOL = 2e-10
+ _ATOL = 2e-11
+@@ -243,11 +241,13 @@
+     aggregation_factor}, and surface for local. Calendar times are the uniform
+     global year grid sliced and aggregated by that mapping. The original slice
+     driver ID is retained separately from the declared shared global ID.
+-    Mapping checks do not authenticate earlier random values. Missing/failed
+-    nodes remain unknown; no RNG or simulation is invoked.
++    Original N and global step count are common to every node; per-date slice
++    boundaries and time aggregation may differ. Mapping checks do not
++    authenticate earlier random values. Missing/failed nodes remain unknown;
++    no RNG or simulation is invoked.
+     """
+     groups, bindings = [], []
+-    original_n, global_id = None, None
++    original_n, global_steps, global_id = None, None, None
+     for row in rows:
+         row_global = row["global_driver_id"]
+         if not row_global or (global_id is not None and row_global != global_id):
+@@ -271,8 +271,11 @@
+         _same(np.arange(a, b+1, factor)/steps, raw["calendar_times"], "driver_mapping.calendar")
+         if original_n is None:
+             original_n = mapping["original_n"]
++            global_steps = steps
+         elif original_n != mapping["original_n"]:
+             raise ValueError("original_n: same original driver rows required at every node")
++        elif global_steps != steps:
++            raise ValueError("driver_mapping.global_steps: one shared global grid length required")
+         evaluated = replay_teacher(raw, row["thresholds"], parameters, row.get("surface"))
+         # Preserve shared cluster curves, not every N x threshold sample at
+         # every Cartesian node. Primitive chunks remain the original evidence.
+@@ -316,6 +319,13 @@
+     }
+ 
+ 
++def _check_original_counts(record, n, name):
++    """Bind all supplied population declarations to the unsliced raw path axis."""
++    for key in ("original_n", "original_path_count"):
++        if key in record and _original(record[key], f"{name}.{key}") != n:
++            raise ValueError(f"{name}.{key}: declared original count differs from raw path axis")
++
++
+ def _market_arrays(dataset):
+     times = np.asarray(dataset["times"], float)
+     prices = np.asarray(dataset["prices"], float)
+@@ -324,6 +334,7 @@
+             or prices.ndim != 3 or prices.shape[0] < 1
+             or prices.shape[1:] != (len(times), 2)):
+         raise ValueError("times/prices: original-N two-asset absolute calendar required")
++    _check_original_counts(dataset, prices.shape[0], "dataset")
+     if not np.isfinite(dataset["rate"]):
+         raise ValueError("rate: finite discount convention required")
+     cf = np.asarray(dataset.get("cashflows", np.zeros_like(prices)), float)
+@@ -363,8 +374,6 @@
+     _same(np.arange(1, 13)/12, fixings, "fixing_times")
+     _same(1., times[-1], "times.expiry")
+     n, dates = prices.shape[:2]
+-    if "original_path_count" in dataset:
+-        _same(n, dataset["original_path_count"], "original_path_count")
+     memory = asian_memory(prices[..., 0], times, fixings)
+     _same(memory["A"], dataset["memory_sum"], "memory_sum")
+     counts = np.asarray(dataset["memory_count"])
+@@ -439,6 +448,7 @@
+     """
+     times, prices, cf = _market_arrays(dataset)
+     n, dates, _ = prices.shape
++    _check_original_counts(cell, n, "cell")
+     holds = np.asarray(cell["holdings"], float)
+     payoff = np.asarray(dataset["payoff"], float)
+     fee = np.asarray(dataset["cost_rates"], float)
+@@ -507,8 +517,6 @@
+     for key, value in recomputed.items():
+         if key in cell:
+             _same(value, cell[key], key)
+-    if "original_path_count" in cell:
+-        _same(n, cell["original_path_count"], "original_path_count")
+     return {
+         "integrity": "pass", "qualification": "verified" if mask.all() else "unknown",
+         "boundary": "saved_market_and_holdings_to_cash_and_discounted_gains",
+--- a/deep_hedge_price/tests/test_dynamic_hedging_replay.py
++++ b/deep_hedge_price/tests/test_dynamic_hedging_replay.py
+@@ -1,12 +1,11 @@
+ """Saved-only dynamic finance replay; raw fixtures and tamper boundaries."""
+ 
+-from copy import deepcopy
+ 
+ import numpy as np
+ import pytest
+-
+ from hullkit._dynamic_hedging_conditional import primitive_labels, teacher_primitives
+ from hullkit._heston_local_surface import HestonParameters, LocalVarianceGrid
++
+ from deep_hedge_price._dynamic_hedging_replay import (
+     check_cash,
+     check_market,
+@@ -570,3 +569,101 @@
+     saved["candidate_summary"]["es95_tail_count"] = 1
+     with pytest.raises(ValueError, match="es95_tail_count"):
+         check_statistics(base, candidate, indices, saved, numerical_envelope=envelope)
++
++
++@pytest.mark.parametrize("declaration", ["original_n", "original_path_count"])
++def test_cash_rejects_erased_dataset_original_paths(declaration):
++    data, cell = cash_fixture()
++    # The declared two-path population cannot become a complete one-path
++    # accounting result merely by removing a failed original row.
++    data[declaration] = 2
++    with pytest.raises(ValueError, match=declaration):
++        check_cash(data, cell)
++
++
++@pytest.mark.parametrize("declaration", ["original_n", "original_path_count"])
++def test_market_rejects_erased_dataset_original_paths(declaration):
++    data, cache, state = market_fixture()
++    data[declaration] = 64
++    with pytest.raises(ValueError, match=declaration):
++        check_market(data, fixing_times=np.arange(1, 13)/12,
++                     call_cache=cache, generator="heston", latent_state=state)
++
++
++@pytest.mark.parametrize("declaration", ["original_n", "original_path_count"])
++def test_cash_rejects_erased_cell_original_paths(declaration):
++    data, cell = cash_fixture()
++    cell[declaration] = 2
++    with pytest.raises(ValueError, match=declaration):
++        check_cash(data, cell)
++
++
++def test_cash_accepts_consistent_original_count_aliases():
++    data, cell = cash_fixture()
++    data.update(original_n=1, original_path_count=1)
++    cell.update(original_n=1, original_path_count=1)
++    out = check_cash(data, cell)
++    assert out["original_path_count"] == 1
++    assert out["recomputed"]["discounted_pnl"][0] == pytest.approx(
++        2.2171179961044647, abs=1e-12)
++
++
++def test_market_accepts_consistent_original_count_aliases():
++    data, cache, state = market_fixture()
++    data.update(original_n=32, original_path_count=32)
++    out = check_market(data, fixing_times=np.arange(1, 13)/12,
++                       call_cache=cache, generator="heston", latent_state=state)
++    assert out["original_path_count"] == 32
++    assert out["valid_path_count"] == 32
++
++
++def test_rebuild_rejects_conflicting_global_length_with_same_sliced_calendar():
++    rows = []
++    for i, state in enumerate([.01, .02, .04, .08]):
++        raw, p, _ = primitives(state=state)
++        ratio = 2 if i == 3 else 1
++        rows.append(dict(
++            primitives=raw, thresholds=np.array([0., .5, 1., 2.]),
++            date_index=0, global_driver_id="same-global-driver",
++            driver_mapping=dict(original_n=32, global_steps=768*ratio,
++                                start_step=704*ratio, stop_step=768*ratio,
++                                aggregation_factor=64*ratio)))
++    axes = dict(dates=np.array([11/12]), state=np.array([.01, .02, .04, .08]),
++                threshold=np.array([0., .5, 1., 2.]))
++    # Both maps give [11/12, 1], but one shared global array cannot have two
++    # lengths. Comparing only the derived restart calendar misses this tamper.
++    with pytest.raises(ValueError, match="global_steps"):
++        rebuild_asian_cache(rows, p, axes, model="heston")
++
++
++def test_rebuild_keeps_legitimate_per_date_slice_and_time_aggregation():
++    p = parameters()
++    rows = []
++    for j, date in enumerate([10/12, 11/12]):
++        for state in [.01, .02, .04, .08]:
++            if j == 0:
++                raw, _, _ = primitives(date=date, state=state)
++                mapping = dict(original_n=32, global_steps=768,
++                               start_step=640, stop_step=768,
++                               aggregation_factor=64)
++            else:
++                normals = np.zeros((32, 2, 2))
++                normals[:, :, 0] = np.linspace(-1.7, 1.7, 32)[:, None]
++                raw = teacher_primitives(
++                    "heston", p, normals,
++                    calendar_times=np.array([11/12, 23/24, 1.]),
++                    fixing_indices=np.array([2]), spot=100., state=state,
++                    memory_count=11, compact_status=True)
++                mapping = dict(original_n=32, global_steps=768,
++                               start_step=704, stop_step=768,
++                               aggregation_factor=32)
++            rows.append(dict(primitives=raw, thresholds=np.array([0., .5, 1., 2.]),
++                             date_index=j, global_driver_id="same-global-driver",
++                             driver_mapping=mapping))
++    axes = dict(dates=np.array([10/12, 11/12]), state=np.array([.01, .02, .04, .08]),
++                threshold=np.array([0., .5, 1., 2.]))
++    out = rebuild_asian_cache(rows, p, axes, model="heston")
++    assert out["original_group_count"] == 8
++    assert out["saved_group_count"] == 8
++    assert {x["driver_mapping"]["global_steps"] for x in out["driver_bindings"]} == {768}
++    assert {x["driver_mapping"]["aggregation_factor"] for x in out["driver_bindings"]} == {32, 64}

@@ -1,0 +1,157 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+___ test_initial_quote_boundary_recomputes_raw_probabilities_and_grid_prices ___
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ab1cedd0830>
+
+    def test_initial_quote_boundary_recomputes_raw_probabilities_and_grid_prices(evidence, monkeypatch):
+>       check = _module("check_initial_quotes.py")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'check_initial_quotes.py'
+
+    def _module(name):
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging" / name
+        if not path.exists():
+>           raise AssertionError("initial quote checker is not implemented")
+E           AssertionError: initial quote checker is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:14: AssertionError
+_ test_initial_quote_boundary_rejects_erased_or_changed_original_evidence[quote_count] _
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+target = 'quote_count'
+
+    @pytest.mark.parametrize("target", ["quote_count", "pde_grid", "cf_probability", "reported_errors"])
+    def test_initial_quote_boundary_rejects_erased_or_changed_original_evidence(evidence, target):
+>       check = _module("check_initial_quotes.py")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'check_initial_quotes.py'
+
+    def _module(name):
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging" / name
+        if not path.exists():
+>           raise AssertionError("initial quote checker is not implemented")
+E           AssertionError: initial quote checker is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:14: AssertionError
+_ test_initial_quote_boundary_rejects_erased_or_changed_original_evidence[pde_grid] _
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+target = 'pde_grid'
+
+    @pytest.mark.parametrize("target", ["quote_count", "pde_grid", "cf_probability", "reported_errors"])
+    def test_initial_quote_boundary_rejects_erased_or_changed_original_evidence(evidence, target):
+>       check = _module("check_initial_quotes.py")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'check_initial_quotes.py'
+
+    def _module(name):
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging" / name
+        if not path.exists():
+>           raise AssertionError("initial quote checker is not implemented")
+E           AssertionError: initial quote checker is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:14: AssertionError
+_ test_initial_quote_boundary_rejects_erased_or_changed_original_evidence[cf_probability] _
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+target = 'cf_probability'
+
+    @pytest.mark.parametrize("target", ["quote_count", "pde_grid", "cf_probability", "reported_errors"])
+    def test_initial_quote_boundary_rejects_erased_or_changed_original_evidence(evidence, target):
+>       check = _module("check_initial_quotes.py")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'check_initial_quotes.py'
+
+    def _module(name):
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging" / name
+        if not path.exists():
+>           raise AssertionError("initial quote checker is not implemented")
+E           AssertionError: initial quote checker is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:14: AssertionError
+_ test_initial_quote_boundary_rejects_erased_or_changed_original_evidence[reported_errors] _
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+target = 'reported_errors'
+
+    @pytest.mark.parametrize("target", ["quote_count", "pde_grid", "cf_probability", "reported_errors"])
+    def test_initial_quote_boundary_rejects_erased_or_changed_original_evidence(evidence, target):
+>       check = _module("check_initial_quotes.py")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'check_initial_quotes.py'
+
+    def _module(name):
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging" / name
+        if not path.exists():
+>           raise AssertionError("initial quote checker is not implemented")
+E           AssertionError: initial quote checker is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:14: AssertionError
+______ test_initial_quote_gate_keeps_all_37_when_absolute_accuracy_fails _______
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+
+    def test_initial_quote_gate_keeps_all_37_when_absolute_accuracy_fails(evidence):
+>       check = _module("check_initial_quotes.py")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'check_initial_quotes.py'
+
+    def _module(name):
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging" / name
+        if not path.exists():
+>           raise AssertionError("initial quote checker is not implemented")
+E           AssertionError: initial quote checker is not implemented
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:14: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_initial_quote_boundary_recomputes_raw_probabilities_and_grid_prices
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_initial_quote_boundary_rejects_erased_or_changed_original_evidence[quote_count]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_initial_quote_boundary_rejects_erased_or_changed_original_evidence[pde_grid]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_initial_quote_boundary_rejects_erased_or_changed_original_evidence[cf_probability]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_initial_quote_boundary_rejects_erased_or_changed_original_evidence[reported_errors]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_initial_quote_gate_keeps_all_37_when_absolute_accuracy_fails
+6 failed in 0.36s

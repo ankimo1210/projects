@@ -160,6 +160,7 @@ def teacher_primitives(
     state: float,
     memory_count: int,
     surface=None,
+    compact_status: bool = False,
 ) -> dict:
     """Simulate to the last fixing and retain its conditional/GBM primitives.
 
@@ -170,6 +171,8 @@ def teacher_primitives(
     fixed forecast multiplier. Local coefficients use absolute midpoints.
     ``aux_logG_prefix`` is a normalized log geometric mean excluding the
     last stock normal, which enters through ``aux_last_loading``.
+    With compact_status=True all path/step statuses use lossless uint8 codes
+    and local_step_status_labels; the legacy Unicode default is unchanged.
     """
     normals = np.asarray(normals, dtype=float)
     times = np.asarray(calendar_times, dtype=float)
@@ -216,7 +219,29 @@ def teacher_primitives(
     aux_log_sum = np.zeros(paths)
     path_mask = np.ones(paths, dtype=bool)
     reasons = np.full(paths, "", dtype="<U128")
-    step_status = np.full((paths, int(fixings[-1]) if fixings.size else 0), "", dtype="<U64")
+    status_shape = (paths, int(fixings[-1]) if fixings.size else 0)
+    step_status = (
+        np.zeros(status_shape, dtype=np.uint8)
+        if compact_status
+        else np.full(status_shape, "", dtype="<U64")
+    )
+    status_labels = [""]
+    status_codes = {"": 0}
+
+    def record_status(rows, step, values):
+        if not compact_status:
+            step_status[rows, step] = values
+            return
+        values = np.broadcast_to(np.asarray(values, dtype=str), (len(rows),))
+        for label in np.unique(values):
+            text = str(label)
+            if text not in status_codes:
+                if len(status_labels) >= 256:
+                    raise ValueError("compact step status supports at most 256 categories")
+                status_codes[text] = len(status_labels)
+                status_labels.append(text)
+            step_status[rows[values == label], step] = status_codes[text]
+
     control_status = "not_required_settled"
     aux_first_midpoint = np.nan
     control_variance = 0.0
@@ -261,11 +286,11 @@ def teacher_primitives(
                 surface, (times[step] + times[step + 1]) / 2, stock[active]
             )
             old_variance = state * base
-            step_status[active, step] = status
+            record_status(active, step, status)
         else:
             old_variance = variance[active].copy()
             supported = np.isfinite(old_variance) & (old_variance >= 0)
-            step_status[active, step] = "heston_left_variance"
+            record_status(active, step, "heston_left_variance")
         valid = finite_driver & supported
         failed = active[~valid]
         path_mask[failed] = False
@@ -347,6 +372,10 @@ def teacher_primitives(
         "primitive_status": np.where(path_mask, "ready", "invalid"),
         "failure_reasons": reasons,
         "local_step_status": step_status,
+        "local_step_status_encoding": "uint8_dictionary" if compact_status else "unicode",
+        "local_step_status_labels": np.asarray(status_labels, dtype="<U64")
+        if compact_status
+        else None,
         "analytic_conditional": bool(fixings.size and fixings[-1] == 1),
         "deterministic_model": bool(deterministic),
         "f_units": "normalized_undiscounted",

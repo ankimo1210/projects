@@ -1,0 +1,143 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+____________ test_saved_selected_calls_recompute_all18_without_rng _____________
+
+evidence = ({'original_states': 18, 'parameters': {'dividend_yield': 0.0, 'kappa': 2.0, 'rate': 0.03, 'rho': -0.7, ...}, 'rows': ...True,  True,  True],
+        [ True,  True,  True,  True,  True],
+        [ True,  True,  True,  True,  True]]]), ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b00b6495eb0>
+
+    def test_saved_selected_calls_recompute_all18_without_rng(evidence,monkeypatch):
+        monkeypatch.setattr(np.random,"default_rng",lambda *a,**k:(_ for _ in ()).throw(AssertionError("RNG")))
+>       result=load_checker().check_selected_calls(*evidence)
+               ^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_checker():
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py"
+        if not path.exists():
+>           raise AssertionError("selected call checker missing")
+E           AssertionError: selected call checker missing
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:14: AssertionError
+__ test_saved_selected_calls_reject_original_evidence_tampering[erase_state] ___
+
+evidence = ({'original_states': 18, 'parameters': {'dividend_yield': 0.0, 'kappa': 2.0, 'rate': 0.03, 'rho': -0.7, ...}, 'rows': ...True,  True,  True],
+        [ True,  True,  True,  True,  True],
+        [ True,  True,  True,  True,  True]]]), ...})
+target = 'erase_state'
+
+    @pytest.mark.parametrize("target",["erase_state","raw_cache","fit_status","base_error"])
+    def test_saved_selected_calls_reject_original_evidence_tampering(evidence,target):
+        metadata,arrays=copy.deepcopy(evidence)
+        if target=="erase_state":metadata["rows"].pop()
+        elif target=="raw_cache":arrays["heston.values"][:,1,:]+=.1
+        elif target=="fit_status":metadata["rows"][0]["models"]["heston"]["status"]="unknown"
+        else:metadata["rows"][-1]["models"]["local"]["base_price_error"]=1.
+        with pytest.raises(ValueError):
+>           load_checker().check_selected_calls(metadata,arrays)
+            ^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_checker():
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py"
+        if not path.exists():
+>           raise AssertionError("selected call checker missing")
+E           AssertionError: selected call checker missing
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:14: AssertionError
+___ test_saved_selected_calls_reject_original_evidence_tampering[raw_cache] ____
+
+evidence = ({'original_states': 18, 'parameters': {'dividend_yield': 0.0, 'kappa': 2.0, 'rate': 0.03, 'rho': -0.7, ...}, 'rows': ...True,  True,  True],
+        [ True,  True,  True,  True,  True],
+        [ True,  True,  True,  True,  True]]]), ...})
+target = 'raw_cache'
+
+    @pytest.mark.parametrize("target",["erase_state","raw_cache","fit_status","base_error"])
+    def test_saved_selected_calls_reject_original_evidence_tampering(evidence,target):
+        metadata,arrays=copy.deepcopy(evidence)
+        if target=="erase_state":metadata["rows"].pop()
+        elif target=="raw_cache":arrays["heston.values"][:,1,:]+=.1
+        elif target=="fit_status":metadata["rows"][0]["models"]["heston"]["status"]="unknown"
+        else:metadata["rows"][-1]["models"]["local"]["base_price_error"]=1.
+        with pytest.raises(ValueError):
+>           load_checker().check_selected_calls(metadata,arrays)
+            ^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_checker():
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py"
+        if not path.exists():
+>           raise AssertionError("selected call checker missing")
+E           AssertionError: selected call checker missing
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:14: AssertionError
+___ test_saved_selected_calls_reject_original_evidence_tampering[fit_status] ___
+
+evidence = ({'original_states': 18, 'parameters': {'dividend_yield': 0.0, 'kappa': 2.0, 'rate': 0.03, 'rho': -0.7, ...}, 'rows': ...True,  True,  True],
+        [ True,  True,  True,  True,  True],
+        [ True,  True,  True,  True,  True]]]), ...})
+target = 'fit_status'
+
+    @pytest.mark.parametrize("target",["erase_state","raw_cache","fit_status","base_error"])
+    def test_saved_selected_calls_reject_original_evidence_tampering(evidence,target):
+        metadata,arrays=copy.deepcopy(evidence)
+        if target=="erase_state":metadata["rows"].pop()
+        elif target=="raw_cache":arrays["heston.values"][:,1,:]+=.1
+        elif target=="fit_status":metadata["rows"][0]["models"]["heston"]["status"]="unknown"
+        else:metadata["rows"][-1]["models"]["local"]["base_price_error"]=1.
+        with pytest.raises(ValueError):
+>           load_checker().check_selected_calls(metadata,arrays)
+            ^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_checker():
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py"
+        if not path.exists():
+>           raise AssertionError("selected call checker missing")
+E           AssertionError: selected call checker missing
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:14: AssertionError
+___ test_saved_selected_calls_reject_original_evidence_tampering[base_error] ___
+
+evidence = ({'original_states': 18, 'parameters': {'dividend_yield': 0.0, 'kappa': 2.0, 'rate': 0.03, 'rho': -0.7, ...}, 'rows': ...True,  True,  True],
+        [ True,  True,  True,  True,  True],
+        [ True,  True,  True,  True,  True]]]), ...})
+target = 'base_error'
+
+    @pytest.mark.parametrize("target",["erase_state","raw_cache","fit_status","base_error"])
+    def test_saved_selected_calls_reject_original_evidence_tampering(evidence,target):
+        metadata,arrays=copy.deepcopy(evidence)
+        if target=="erase_state":metadata["rows"].pop()
+        elif target=="raw_cache":arrays["heston.values"][:,1,:]+=.1
+        elif target=="fit_status":metadata["rows"][0]["models"]["heston"]["status"]="unknown"
+        else:metadata["rows"][-1]["models"]["local"]["base_price_error"]=1.
+        with pytest.raises(ValueError):
+>           load_checker().check_selected_calls(metadata,arrays)
+            ^^^^^^^^^^^^^^
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def load_checker():
+        path = Path(__file__).resolve().parents[2] / "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py"
+        if not path.exists():
+>           raise AssertionError("selected call checker missing")
+E           AssertionError: selected call checker missing
+
+deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py:14: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py::test_saved_selected_calls_recompute_all18_without_rng
+FAILED deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py::test_saved_selected_calls_reject_original_evidence_tampering[erase_state]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py::test_saved_selected_calls_reject_original_evidence_tampering[raw_cache]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py::test_saved_selected_calls_reject_original_evidence_tampering[fit_status]
+FAILED deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py::test_saved_selected_calls_reject_original_evidence_tampering[base_error]
+5 failed in 0.72s

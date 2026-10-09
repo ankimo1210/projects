@@ -1,0 +1,59 @@
+{
+  "kind": "tiny-historical-checkpoint-recovery",
+  "date_jst": "2026-10-10",
+  "manifest_sha256": "65721ad96ea37eeda05c8abb6ee9487c4232b5b9d9c387f477f933a22d384589",
+  "results": [
+    {
+      "role": "primary",
+      "blob": {
+        "sha256": "0759202d8b85b2a03b38ed7a983c638af2b8839dcd8f3bc1cc8eb842714a9587",
+        "bytes": 48897658
+      },
+      "store_parent_wall_seconds": 0.5486115409999002,
+      "restore_parent_wall_seconds": 0.21953788799964968,
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "arrays.npz",
+            "sha256": "0759202d8b85b2a03b38ed7a983c638af2b8839dcd8f3bc1cc8eb842714a9587",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "semantic": {
+        "status": "not_repeated",
+        "scope": "exact historical bytes only; source c734 checker was executed before subsequent source revisions"
+      }
+    },
+    {
+      "role": "mirror",
+      "blob": {
+        "sha256": "0759202d8b85b2a03b38ed7a983c638af2b8839dcd8f3bc1cc8eb842714a9587",
+        "bytes": 48897658
+      },
+      "store_parent_wall_seconds": 1.0993506049999269,
+      "restore_parent_wall_seconds": 0.2160679120001987,
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "arrays.npz",
+            "sha256": "0759202d8b85b2a03b38ed7a983c638af2b8839dcd8f3bc1cc8eb842714a9587",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "semantic": {
+        "status": "not_repeated",
+        "scope": "exact historical bytes only; source c734 checker was executed before subsequent source revisions"
+      }
+    }
+  ],
+  "formal_pilot_qualification": "unknown",
+  "cost_scope": "store/restore/check subprocess measured separately; tiny immutable expenses not overwritten"
+}

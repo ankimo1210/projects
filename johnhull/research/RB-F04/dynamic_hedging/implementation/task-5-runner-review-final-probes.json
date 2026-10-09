@@ -1,0 +1,124 @@
+{
+  "source_sha256": "f96d768f5f4755d1495170b61f9e86e82413ee48498b30127d95050f77de94cd",
+  "tests_sha256": "4af2f331c8c7254afd2f0cad77338578d0e8d3ab4f88f7d964dec5bacd16606a",
+  "scope": "independent source orchestration only; synthetic raw gate receipts, no formal financial pilot/main acceptance",
+  "real_freeze_and_main_gate": true,
+  "actual_source_registry": true,
+  "raw_validation_per_selection": {
+    "original_n": 2048,
+    "candidate_count": 14,
+    "selection_count": 4
+  },
+  "checks": [
+    {
+      "name": "missing closed training weights",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "closed training fits must be fixed before test access"
+    },
+    {
+      "name": "prior payload digest mismatch",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "closed fits differ from the prior training selection receipt"
+    },
+    {
+      "name": "erased original fit",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "all twelve original fit attempts must be retained"
+    },
+    {
+      "name": "different actual source",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "main.source_identity: saved keyset mismatch"
+    },
+    {
+      "name": "invalid raw checkpoint seed",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot needs its own raw identity/checkpoint"
+    },
+    {
+      "name": "invalid raw checkpoint universe",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot needs its own raw identity/checkpoint"
+    },
+    {
+      "name": "invalid raw checkpoint training_generator",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot needs its own raw identity/checkpoint"
+    },
+    {
+      "name": "invalid raw checkpoint original_path_count",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot needs its own raw identity/checkpoint"
+    },
+    {
+      "name": "invalid raw checkpoint fit_id",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot needs its own raw identity/checkpoint"
+    },
+    {
+      "name": "invalid raw checkpoint checkpoint_id",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot needs its own raw identity/checkpoint"
+    },
+    {
+      "name": "invalid raw checkpoint requested_updates",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot needs its own raw identity/checkpoint"
+    },
+    {
+      "name": "invalid raw checkpoint updates",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot needs its own raw identity/checkpoint"
+    },
+    {
+      "name": "invalid raw checkpoint weights",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot needs full raw checkpoint weights"
+    },
+    {
+      "name": "invalid raw checkpoint scaler",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "completed fit slot has invalid raw checkpoint scaler"
+    },
+    {
+      "name": "raw validation unknown original path",
+      "rejected": true,
+      "test_opened": false,
+      "reason": "unknown validation path needs failed status/reason"
+    },
+    {
+      "name": "same ID test-supplied different weights",
+      "rejected": true,
+      "test_opened": true,
+      "reason": "test_artifact.closed_fits.fits[0].raw_fit.weights.w1: saved value mismatch"
+    },
+    {
+      "name": "test loader mutation cannot replace weights/band/candidate/frozenN/source/rawloss",
+      "evaluations": 36,
+      "fixed_weight": 0.0,
+      "fixed_band": "band:Heston:width0",
+      "original_n": 16384,
+      "qualification": "unknown"
+    },
+    {
+      "name": "sorted JSON numeric payload roundtrip provenance",
+      "before": "febf201b7c38a71894119ca8dabdd30e750f986656359fd12d910f39411f1c23",
+      "after": "febf201b7c38a71894119ca8dabdd30e750f986656359fd12d910f39411f1c23",
+      "equal": true
+    }
+  ]
+}

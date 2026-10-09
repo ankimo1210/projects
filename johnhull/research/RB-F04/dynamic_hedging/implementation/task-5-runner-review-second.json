@@ -1,0 +1,47 @@
+{
+  "schema": "independent-runner-source-review-second-v1",
+  "timestamp_utc": "2026-10-09T15:02:30.508903+00:00",
+  "bindings": {
+    "johnhull/research/RB-F04/dynamic_hedging/run_reference.py": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937",
+    "deep_hedge_price/tests/test_dynamic_hedging_runner.py": "cdd7583688cf65f4072e17f81369f1d5c2a65680b6d67203d2de6b8e8fca198b"
+  },
+  "tests": {
+    "result": "25 passed in 22.33s",
+    "log": "task-5-runner-review-tests.txt"
+  },
+  "counts": {
+    "Critical": 0,
+    "Important": 1,
+    "Minor": 0,
+    "unresolved": 1
+  },
+  "findings": [
+    {
+      "id": "RUN2",
+      "severity": "Important",
+      "file": "johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+      "lines": [
+        307,
+        321,
+        341,
+        351
+      ],
+      "title": "Validated band selections remain aliased across the test loader",
+      "evidence": {
+        "scope": "orchestration with synthetic bound financial gate, not real formal acceptance",
+        "real_protocol_gate": true,
+        "raw_validation_4x14_n": 2048,
+        "prior_Heston_U1_selected_band": "band:Heston:width0",
+        "post_loader_evaluation_Heston_U1_selected_bands": [
+          "band:Heston:width0.2"
+        ],
+        "main_qualification": "unknown",
+        "finding": "closed validation selection remains aliased across test loader"
+      },
+      "correction": "Before opening test data, detach the validated validation records and use only that fixed copy for every main evaluation."
+    }
+  ],
+  "previous_RUN1": "closed_fits preloader binding and complete raw metadata added; final independent regression probes pending",
+  "source_approved": false,
+  "scope": "Bounded source checkpoint, not formal pilot or main acceptance"
+}

@@ -1,0 +1,486 @@
+{
+  "date_jst": "2026-10-10",
+  "scope": "exact original review/run evidence; .py probes archived as text",
+  "files": [
+    {
+      "original": "task-5-checkpoint-3-cas-summary.json",
+      "archived": "task-5-checkpoint-3-cas-summary.json",
+      "sha256": "3bf60ca59fbc737a4d3807f9147a8ed36ad623b986dd219e4ce4d66ae5a70594",
+      "bytes": 816
+    },
+    {
+      "original": "task-5-checkpoint-3-final-run.json",
+      "archived": "task-5-checkpoint-3-final-run.json",
+      "sha256": "64f20dde5ea3ee2eb752e117c464ff0d534e26af1fd9da9bc816d61155a664cb",
+      "bytes": 7618
+    },
+    {
+      "original": "task-5-checkpoint-3-final-tests.txt",
+      "archived": "task-5-checkpoint-3-final-tests.txt",
+      "sha256": "5927b210efebf61e1553b73c0b0ef33cd026e43c8e13dc5024c6eb26175e10d4",
+      "bytes": 1744
+    },
+    {
+      "original": "task-5-checkpoint-3-run-initial.json",
+      "archived": "task-5-checkpoint-3-run-initial.json",
+      "sha256": "66897fd31458f4678665b4d16622669e78fe9f7804e8e0744cd5f6e17e2fb16f",
+      "bytes": 1965
+    },
+    {
+      "original": "task-5-checkpoint-3-tests.txt",
+      "archived": "task-5-checkpoint-3-tests.txt",
+      "sha256": "5b5f147b53b22ba7b727d42133adec2c5bd765bbe2f1f39073631acaa2a84e29",
+      "bytes": 40279
+    },
+    {
+      "original": "task-5-replay-rereview-probes.json",
+      "archived": "task-5-replay-rereview-probes.json",
+      "sha256": "9e23eb1e02252635e696d3a6af77518cb813848de56342df04cf2fbe1923b3fe",
+      "bytes": 1691
+    },
+    {
+      "original": "task-5-replay-rereview-probes.py",
+      "archived": "task-5-replay-rereview-probes.txt",
+      "sha256": "549c7db4363357127939940c1669d92ed0407fe79e36b2fda1c9e47a743c9714",
+      "bytes": 5493
+    },
+    {
+      "original": "task-5-replay-rereview-probes.stderr.txt",
+      "archived": "task-5-replay-rereview-probes.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "task-5-replay-rereview-tests.txt",
+      "archived": "task-5-replay-rereview-tests.txt",
+      "sha256": "b8e46d51a4213872a71d5205ac8f285f9e56eb4cba78f7c9388886e07ccd5666",
+      "bytes": 179
+    },
+    {
+      "original": "task-5-replay-rereview.json",
+      "archived": "task-5-replay-rereview.json",
+      "sha256": "04d6cc9725722f38bcea7d884a07ee05fad350a50ce5ddf65bccc1a55e77cf73",
+      "bytes": 2561
+    },
+    {
+      "original": "task-5-replay-rereview.md",
+      "archived": "task-5-replay-rereview.md",
+      "sha256": "a3678858322963b028f3a376a78fccec7e9d7dd753cbe0cc3b2362548b7129cb",
+      "bytes": 2251
+    },
+    {
+      "original": "task-5-runner-canonical-alias-red.txt",
+      "archived": "task-5-runner-canonical-alias-red.txt",
+      "sha256": "a199146948ad11baaef9c2e1fb2fc839aeca1bcce5d9494ad0d1d799746afda0",
+      "bytes": 3597
+    },
+    {
+      "original": "task-5-runner-cli-0.txt",
+      "archived": "task-5-runner-cli-0.txt",
+      "sha256": "745f732da5dd92e7df2bb347d35be7281ea556b12adb0ceea6d00630fca3027e",
+      "bytes": 18075
+    },
+    {
+      "original": "task-5-runner-cli-1.txt",
+      "archived": "task-5-runner-cli-1.txt",
+      "sha256": "1310477795de7a15ad08005cf1247b2b418aa00e119d76201ea36c625e382ca5",
+      "bytes": 16789
+    },
+    {
+      "original": "task-5-runner-cli-receipts.json",
+      "archived": "task-5-runner-cli-receipts.json",
+      "sha256": "4bcf3282f96e3100820f08f4bb1722395ce99057f00c3f0aa60cf368a8a8bb8f",
+      "bytes": 1071
+    },
+    {
+      "original": "task-5-runner-closed-fit-behavior-red.txt",
+      "archived": "task-5-runner-closed-fit-behavior-red.txt",
+      "sha256": "a1aeffa64b35e9c4e35b3cf944a696a56c672a3ca82aa8cbb30c195b18a62907",
+      "bytes": 1553
+    },
+    {
+      "original": "task-5-runner-closed-fit-red.txt",
+      "archived": "task-5-runner-closed-fit-red.txt",
+      "sha256": "a8b28af50c5dd225d8a50ed6ea1c926e7ad55408acd04a76c0da06baf4a3e735",
+      "bytes": 8228
+    },
+    {
+      "original": "task-5-runner-closed-fit-roundtrip-before-fix.json",
+      "archived": "task-5-runner-closed-fit-roundtrip-before-fix.json",
+      "sha256": "d2861593181eca669cb083847e1069af66a5076fa12df29d90f901ddeda96838",
+      "bytes": 415
+    },
+    {
+      "original": "task-5-runner-extra-green.txt",
+      "archived": "task-5-runner-extra-green.txt",
+      "sha256": "9a3a156b24ed5d33b93b1c4e2bfdc34a85e2f8f23684b12cabe5d2e78771c754",
+      "bytes": 113
+    },
+    {
+      "original": "task-5-runner-extra-red.txt",
+      "archived": "task-5-runner-extra-red.txt",
+      "sha256": "0036da4f0b48fa1b1b9bfa3e57c04defd4ea05ca5d30e1a9673c0db8822e51d2",
+      "bytes": 5006
+    },
+    {
+      "original": "task-5-runner-final-cli-0.txt",
+      "archived": "task-5-runner-final-cli-0.txt",
+      "sha256": "544a6db80e85b3b40b6a09230888de5b1b90decaa67576ba1c896275f3fbca37",
+      "bytes": 18079
+    },
+    {
+      "original": "task-5-runner-final-cli-1.txt",
+      "archived": "task-5-runner-final-cli-1.txt",
+      "sha256": "fbf21711ef3affd0eeca786f9b21e7eb5300a5dc5a81246424b74db4320a8f65",
+      "bytes": 16793
+    },
+    {
+      "original": "task-5-runner-final-cli-receipts.json",
+      "archived": "task-5-runner-final-cli-receipts.json",
+      "sha256": "fa6bef20b810b605e7f2642f4708f543a7eac7fd659587dd3bfa58ddfd6964c2",
+      "bytes": 1239
+    },
+    {
+      "original": "task-5-runner-final-green-receipt.json",
+      "archived": "task-5-runner-final-green-receipt.json",
+      "sha256": "94a7a248007d9e1494a3d0050637d604c2dc2acb500fd7c1a9a274a9b7b2bc80",
+      "bytes": 539
+    },
+    {
+      "original": "task-5-runner-final-green.txt",
+      "archived": "task-5-runner-final-green.txt",
+      "sha256": "e56ae40e41282b33409f5d81979b2debb9bc3abcc5fd4764ab0b6e410c3b65d1",
+      "bytes": 100
+    },
+    {
+      "original": "task-5-runner-final-ruff.json",
+      "archived": "task-5-runner-final-ruff.json",
+      "sha256": "d7babdbc4fa768490682c1f4ec95f2580c5b2292c836e0b2e30a3e05a21c0a0d",
+      "bytes": 1108
+    },
+    {
+      "original": "task-5-runner-first-green.txt",
+      "archived": "task-5-runner-first-green.txt",
+      "sha256": "bb7962d302c3ee447761ccddc4274a3a683c204ce64084713e6e404e1fa415a6",
+      "bytes": 11219
+    },
+    {
+      "original": "task-5-runner-green-2.txt",
+      "archived": "task-5-runner-green-2.txt",
+      "sha256": "0aff73cdb4ff3acf617b8e49a45fdf30c3919e61ee0795873aa0ff5448e0df5b",
+      "bytes": 3280
+    },
+    {
+      "original": "task-5-runner-green-3.txt",
+      "archived": "task-5-runner-green-3.txt",
+      "sha256": "014cef374d3fe0ff896127295add28e967153bdd3d608e6b8eed010e3795ee38",
+      "bytes": 3356
+    },
+    {
+      "original": "task-5-runner-green-final.txt",
+      "archived": "task-5-runner-green-final.txt",
+      "sha256": "45a73108b05273e55aaa1f163f1a4ee8944743e55344fafdd0b6a352c91cb069",
+      "bytes": 100
+    },
+    {
+      "original": "task-5-runner-nonblocked-green.txt",
+      "archived": "task-5-runner-nonblocked-green.txt",
+      "sha256": "39b26dc8d21de66b73a7f40795c9f6e503bfb18425255bf006fd15c086250649",
+      "bytes": 113
+    },
+    {
+      "original": "task-5-runner-origin-green.txt",
+      "archived": "task-5-runner-origin-green.txt",
+      "sha256": "ecc021679eeb6b44378063bb53ecbfc1b72dd944cf180e0f34c47d1cca97429e",
+      "bytes": 113
+    },
+    {
+      "original": "task-5-runner-origin-red.txt",
+      "archived": "task-5-runner-origin-red.txt",
+      "sha256": "97591cc1ac45cffbfd000787b30d00dbb21e976261f52906a05db55daad93582",
+      "bytes": 1268
+    },
+    {
+      "original": "task-5-runner-pilot-component-cli-receipt.json",
+      "archived": "task-5-runner-pilot-component-cli-receipt.json",
+      "sha256": "0f865f4a6962a4381590908ec9a471756cba2d502d19c9a6e4b9b8317b47e479",
+      "bytes": 492
+    },
+    {
+      "original": "task-5-runner-pilot-component-cli.txt",
+      "archived": "task-5-runner-pilot-component-cli.txt",
+      "sha256": "70e1b637e5d3197e52f6addf44abf0fa54a67f2489ac3a668faad5590e414d4b",
+      "bytes": 2598
+    },
+    {
+      "original": "task-5-runner-raw-checkpoint-red.txt",
+      "archived": "task-5-runner-raw-checkpoint-red.txt",
+      "sha256": "6faee70956d1b88747a127ace0aa620f2d432ac8d944e6df233c95efaed0bf4e",
+      "bytes": 113
+    },
+    {
+      "original": "task-5-runner-raw-checkpoint-specific-red.txt",
+      "archived": "task-5-runner-raw-checkpoint-specific-red.txt",
+      "sha256": "70fc9dd408a2c141c04a534afd2c87cd6cc8fbf7b5b221c183f4068a3867b798",
+      "bytes": 38638
+    },
+    {
+      "original": "task-5-runner-red.txt",
+      "archived": "task-5-runner-red.txt",
+      "sha256": "84745a7de36ca8a704c2e4300c24ceaf24c134fc6c9a3e3a8f26dbda67d4d70b",
+      "bytes": 897
+    },
+    {
+      "original": "task-5-runner-report-c734-original.json",
+      "archived": "task-5-runner-report-c734-original.json",
+      "sha256": "6a143ec1ff4316637ddac15b279125fb3c75b83821825e292be6f75156a24d3f",
+      "bytes": 7359
+    },
+    {
+      "original": "task-5-runner-report-c734-original.md",
+      "archived": "task-5-runner-report-c734-original.md",
+      "sha256": "55de08c1895b94da1925cd036badf416f122baf09027c3394b16f2f301ff0f50",
+      "bytes": 1815
+    },
+    {
+      "original": "task-5-runner-report.json",
+      "archived": "task-5-runner-report.json",
+      "sha256": "83b0d553d8c1c870e7bb4aac837c26f21d6a50405b7242aedac4cf15125d2ca1",
+      "bytes": 10450
+    },
+    {
+      "original": "task-5-runner-report.md",
+      "archived": "task-5-runner-report.md",
+      "sha256": "10b139fe76c1f864ed1c8b95efcd8cc4d439f728aaeb136ef079dd24f16fa273",
+      "bytes": 2134
+    },
+    {
+      "original": "task-5-runner-review-digest-order-original-probe-stderr.txt",
+      "archived": "task-5-runner-review-digest-order-original-probe-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "task-5-runner-review-digest-order-original-probe.json",
+      "archived": "task-5-runner-review-digest-order-original-probe.json",
+      "sha256": "e264d09735b259e850a7e4d3f3170b38b8d8b39764ac072f74364a2ef09fd4b2",
+      "bytes": 490
+    },
+    {
+      "original": "task-5-runner-review-digest-order-original-probe.py",
+      "archived": "task-5-runner-review-digest-order-original-probe.txt",
+      "sha256": "8dad3084d465654b614d6458db3898dba430587b08d74cc42ae10ad0fd89cfef",
+      "bytes": 1173
+    },
+    {
+      "original": "task-5-runner-review-final-probes-stderr.txt",
+      "archived": "task-5-runner-review-final-probes-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "task-5-runner-review-final-probes.json",
+      "archived": "task-5-runner-review-final-probes.json",
+      "sha256": "0d368a5644ca21ebf78043bea475982653cbf13e00da25de44189c5a707c9fe2",
+      "bytes": 4062
+    },
+    {
+      "original": "task-5-runner-review-final-probes.py",
+      "archived": "task-5-runner-review-final-probes.txt",
+      "sha256": "5bc64f9b8a65464e8b3573b7b47bbb0f1a0476eea12f4c6cb892b3ce591ce791",
+      "bytes": 6578
+    },
+    {
+      "original": "task-5-runner-review-final-source.py",
+      "archived": "task-5-runner-review-final-source.txt",
+      "sha256": "f96d768f5f4755d1495170b61f9e86e82413ee48498b30127d95050f77de94cd",
+      "bytes": 44619
+    },
+    {
+      "original": "task-5-runner-review-final-tests-receipt.json",
+      "archived": "task-5-runner-review-final-tests-receipt.json",
+      "sha256": "35556ca98fb40ba273701489e8186de459dc5cd094a68e57fc1c34e43edc8e6d",
+      "bytes": 178
+    },
+    {
+      "original": "task-5-runner-review-final-tests-source.py",
+      "archived": "task-5-runner-review-final-tests-source.txt",
+      "sha256": "4af2f331c8c7254afd2f0cad77338578d0e8d3ab4f88f7d964dec5bacd16606a",
+      "bytes": 16633
+    },
+    {
+      "original": "task-5-runner-review-final-tests.txt",
+      "archived": "task-5-runner-review-final-tests.txt",
+      "sha256": "8c4c5105059f40db4efa199b7e672c77419fd8c2064905a655fd6a6bf27ce5a6",
+      "bytes": 100
+    },
+    {
+      "original": "task-5-runner-review-first-probe.json",
+      "archived": "task-5-runner-review-first-probe.json",
+      "sha256": "2f10fdc5396bab3504b61616c9d2a6908f246ce88651db7e55f63d033d8c705d",
+      "bytes": 464
+    },
+    {
+      "original": "task-5-runner-review-first-probe.py",
+      "archived": "task-5-runner-review-first-probe.txt",
+      "sha256": "525c831464017cbb5e334d0965a8f0b59542b5cda1c338dfde077917c6b1e863",
+      "bytes": 2414
+    },
+    {
+      "original": "task-5-runner-review-first-probe.stderr.txt",
+      "archived": "task-5-runner-review-first-probe.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "task-5-runner-review-first-source.py",
+      "archived": "task-5-runner-review-first-source.txt",
+      "sha256": "7458819bb3f0864f2ced8ff5b3b969ac9e9158436fb8e5cdeed376b7f18e2816",
+      "bytes": 38315
+    },
+    {
+      "original": "task-5-runner-review-first-tests-source.py",
+      "archived": "task-5-runner-review-first-tests-source.txt",
+      "sha256": "bd7bdfc4f2022cec272a4fce4adc5ea6c0c21ce91efda6b298367295c65a833e",
+      "bytes": 10381
+    },
+    {
+      "original": "task-5-runner-review-first.json",
+      "archived": "task-5-runner-review-first.json",
+      "sha256": "d16c7f454082da89350867e0818bdf189f877b9a6caf230d6b39c2f39333473c",
+      "bytes": 2591
+    },
+    {
+      "original": "task-5-runner-review-first.md",
+      "archived": "task-5-runner-review-first.md",
+      "sha256": "5351333163ceeb038d8588df610ba75418a7df689c83703afa28eaaed3399542",
+      "bytes": 2121
+    },
+    {
+      "original": "task-5-runner-review-read-tiny.py",
+      "archived": "task-5-runner-review-read-tiny.txt",
+      "sha256": "e25fbeeccd62aaced9d2627c5759f4ee0a22346426495af459d1d1c044141944",
+      "bytes": 694
+    },
+    {
+      "original": "task-5-runner-review-saved-probes-stderr.txt",
+      "archived": "task-5-runner-review-saved-probes-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "task-5-runner-review-saved-probes.json",
+      "archived": "task-5-runner-review-saved-probes.json",
+      "sha256": "6575b40d7979e184fef6ce05c161036ce00bcfc5999d86a64817f0022b15e0d5",
+      "bytes": 19577
+    },
+    {
+      "original": "task-5-runner-review-saved-probes.py",
+      "archived": "task-5-runner-review-saved-probes.txt",
+      "sha256": "3f03d3af83bd00a672391a856fafefbc2f1b5b779737f76c0fc908e05b918202",
+      "bytes": 4691
+    },
+    {
+      "original": "task-5-runner-review-second-source.py",
+      "archived": "task-5-runner-review-second-source.txt",
+      "sha256": "c7347038a5741a8863f1bfffd58475fb6bd4cad8394020c9ab3f2908e5206937",
+      "bytes": 44454
+    },
+    {
+      "original": "task-5-runner-review-second-tests-source.py",
+      "archived": "task-5-runner-review-second-tests-source.txt",
+      "sha256": "cdd7583688cf65f4072e17f81369f1d5c2a65680b6d67203d2de6b8e8fca198b",
+      "bytes": 14476
+    },
+    {
+      "original": "task-5-runner-review-second.json",
+      "archived": "task-5-runner-review-second.json",
+      "sha256": "5dd8906bc1e8ba770dd5cac91a4f57d5a031e02fba2c1519b187f6ad448eee11",
+      "bytes": 1782
+    },
+    {
+      "original": "task-5-runner-review-second.md",
+      "archived": "task-5-runner-review-second.md",
+      "sha256": "24a16d5a651c536587ada96980acc873195e9fc8ed80ba4b9f207b7806f04744",
+      "bytes": 918
+    },
+    {
+      "original": "task-5-runner-review-selection-alias-probe-stderr.txt",
+      "archived": "task-5-runner-review-selection-alias-probe-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "original": "task-5-runner-review-selection-alias-probe.json",
+      "archived": "task-5-runner-review-selection-alias-probe.json",
+      "sha256": "89b01714aa584f82d392a2561fcd1f80a14e309b57b27ffd58f34ecfb6b0ec47",
+      "bytes": 416
+    },
+    {
+      "original": "task-5-runner-review-selection-alias-probe.py",
+      "archived": "task-5-runner-review-selection-alias-probe.txt",
+      "sha256": "091d5e668efca211a16dbfad973103f43f1c5243c188501d3e7d414c24950790",
+      "bytes": 3274
+    },
+    {
+      "original": "task-5-runner-review-tests.txt",
+      "archived": "task-5-runner-review-tests.txt",
+      "sha256": "e07099f4178342b8152e6aa45720cbc786e8278f5a96bd8f13cbc8ed6566e41d",
+      "bytes": 100
+    },
+    {
+      "original": "task-5-runner-review.json",
+      "archived": "task-5-runner-review.json",
+      "sha256": "6466a4ca9119ab6ad87bd1eb64fd8dc02181f4c8e826a587a3da259f412de96f",
+      "bytes": 9567
+    },
+    {
+      "original": "task-5-runner-review.md",
+      "archived": "task-5-runner-review.md",
+      "sha256": "ec903afc14674adf32b47e69fbd0deacd98f2e941d031461e0e6e2700f2852a0",
+      "bytes": 4668
+    },
+    {
+      "original": "task-5-runner-revision2-cli-receipt.json",
+      "archived": "task-5-runner-revision2-cli-receipt.json",
+      "sha256": "11676eabab9fbb58acacef602d07151eef0442b78787f81e68e88ed30bb24d10",
+      "bytes": 809
+    },
+    {
+      "original": "task-5-runner-revision2-cli.txt",
+      "archived": "task-5-runner-revision2-cli.txt",
+      "sha256": "f5c07c057d6648a28845dea00fb39098682e99c0c980a6f87ed940217a3c1d94",
+      "bytes": 18067
+    },
+    {
+      "original": "task-5-runner-revision2-green-receipt.json",
+      "archived": "task-5-runner-revision2-green-receipt.json",
+      "sha256": "31a2277768d101f1ac6573de1a9d1422157cb21347e29044d3b3aea4da801d88",
+      "bytes": 594
+    },
+    {
+      "original": "task-5-runner-revision2-green.txt",
+      "archived": "task-5-runner-revision2-green.txt",
+      "sha256": "618c8186c36215f260e470dd425246091d21d62cf4116963d339de0c07c1fd7c",
+      "bytes": 100
+    },
+    {
+      "original": "task-5-runner-revision2-ruff.json",
+      "archived": "task-5-runner-revision2-ruff.json",
+      "sha256": "8e161f399f3d288ab1d415c58e778bb95be599e7952c3fe993a24d0887f12947",
+      "bytes": 1130
+    },
+    {
+      "original": "task-5-runner-ruff.json",
+      "archived": "task-5-runner-ruff.json",
+      "sha256": "6503412c2b116ee91c6177fcbad18182973132dc6b2df763f25397560113fb3d",
+      "bytes": 559
+    },
+    {
+      "original": "task-5-runner-source-gate-red.txt",
+      "archived": "task-5-runner-source-gate-red.txt",
+      "sha256": "7ec03192776c886175f66d3a9566008c6e5f615babdf8a42ccd8ff0088de7c8c",
+      "bytes": 2755
+    }
+  ]
+}

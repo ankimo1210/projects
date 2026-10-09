@@ -1,0 +1,115 @@
+{
+  "kind": "task5-original-evidence-whitespace-check",
+  "date_jst": "2026-10-10",
+  "code_and_authored_docs": "PASS",
+  "exact_original_evidence_exceptions": [
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-calendar-cache-red.txt",
+      "original": "task-5-calendar-cache-red.txt",
+      "sha256": "aff359007bb3d33cd40e137e1f4cd750918e0051c3610bcf65f7dcb01cd3d38a",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-checkpoint-3-tests.txt",
+      "original": "task-5-checkpoint-3-tests.txt",
+      "sha256": "5b5f147b53b22ba7b727d42133adec2c5bd765bbe2f1f39073631acaa2a84e29",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-compact-status-fix.diff",
+      "original": "task-5-compact-status-fix.diff",
+      "sha256": "587e8a1e9bb9e3d9f94eca568aa4e98027214aa74ff0da563ffa843d5faa62ee",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-compact-status-red.txt",
+      "original": "task-5-compact-status-red.txt",
+      "sha256": "b58cfc0c12531bb35dbe0065f0cf0cd35498dea1a037472f0567652300d400df",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-initial-checker-order-red.txt",
+      "original": "task-5-initial-checker-order-red.txt",
+      "sha256": "89905034efbf7ff791e286435977ae3487edb9379a33b3654f6dbcea29a5d6f0",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-initial-checker-red.txt",
+      "original": "task-5-initial-checker-red.txt",
+      "sha256": "ba62129530c9265c2ab5e2483e8d42065006e73e0866b9e3960734c1d274bd75",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-replay-fix.diff",
+      "original": "task-5-replay-fix.diff",
+      "sha256": "f48c4dd6f09083132ebc978cddf71491d81ca793154a6c4067d46e1f6486d1ad",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-replay-inactive-fix.diff",
+      "original": "task-5-replay-inactive-fix.diff",
+      "sha256": "ea460bbacc220e86a8aaf6881b982a99f51b82e32d433c45121c3b691cf9bf0a",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-runner-canonical-alias-red.txt",
+      "original": "task-5-runner-canonical-alias-red.txt",
+      "sha256": "a199146948ad11baaef9c2e1fb2fc839aeca1bcce5d9494ad0d1d799746afda0",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-runner-closed-fit-red.txt",
+      "original": "task-5-runner-closed-fit-red.txt",
+      "sha256": "a8b28af50c5dd225d8a50ed6ea1c926e7ad55408acd04a76c0da06baf4a3e735",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-runner-extra-red.txt",
+      "original": "task-5-runner-extra-red.txt",
+      "sha256": "0036da4f0b48fa1b1b9bfa3e57c04defd4ea05ca5d30e1a9673c0db8822e51d2",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-runner-first-green.txt",
+      "original": "task-5-runner-first-green.txt",
+      "sha256": "bb7962d302c3ee447761ccddc4274a3a683c204ce64084713e6e404e1fa415a6",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-runner-green-2.txt",
+      "original": "task-5-runner-green-2.txt",
+      "sha256": "0aff73cdb4ff3acf617b8e49a45fdf30c3919e61ee0795873aa0ff5448e0df5b",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-runner-green-3.txt",
+      "original": "task-5-runner-green-3.txt",
+      "sha256": "014cef374d3fe0ff896127295add28e967153bdd3d608e6b8eed010e3795ee38",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-runner-raw-checkpoint-specific-red.txt",
+      "original": "task-5-runner-raw-checkpoint-specific-red.txt",
+      "sha256": "70fc9dd408a2c141c04a534afd2c87cd6cc8fbf7b5b221c183f4068a3867b798",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-runner-source-gate-red.txt",
+      "original": "task-5-runner-source-gate-red.txt",
+      "sha256": "7ec03192776c886175f66d3a9566008c6e5f615babdf8a42ccd8ff0088de7c8c",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-selected-checker-red.txt",
+      "original": "task-5-selected-checker-red.txt",
+      "sha256": "53a785b4af3864b4da91e0114a377330b8852a49522b2ea6651417a5515206c8",
+      "reason": "exact original diagnostic/diff bytes retained"
+    },
+    {
+      "path": "johnhull/research/RB-F04/dynamic_hedging/implementation/task-5-study-fix.diff",
+      "original": "task-5-study-fix.diff",
+      "sha256": "65c4094ab9f95e0ad21ff5e39691341a4666c6e8248ae317d958a1440d25f550",
+      "reason": "exact original diagnostic/diff bytes retained"
+    }
+  ]
+}

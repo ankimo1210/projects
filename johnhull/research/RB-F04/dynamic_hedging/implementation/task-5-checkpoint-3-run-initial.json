@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "-c",
+    "import sys, pathlib, hullkit, deep_hedge_price, pytest; root=pathlib.Path(sys.argv[1]); assert pathlib.Path(hullkit.__file__).is_relative_to(root); assert pathlib.Path(deep_hedge_price.__file__).is_relative_to(root); print(\"CHECKOUT\",hullkit.__file__,deep_hedge_price.__file__); raise SystemExit(pytest.main(sys.argv[2:]))",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap",
+    "-q",
+    "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_conditional.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_study.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_replay.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_runner.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_model_index.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/hullkit/tests/test_docstrings.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_model_index.py",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_docstrings.py"
+  ],
+  "exit_code": 1,
+  "wall_seconds": 38.68138914099973,
+  "child_cpu_seconds": null,
+  "scope": "changed financial modules / runner / checkers + both model-index/docstring guards; not full related3 suites"
+}

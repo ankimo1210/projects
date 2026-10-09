@@ -478,3 +478,89 @@ def test_local_control_recomputed_analytic_mean_agrees_with_independent_law():
             points=[-mean / sd],
         )[0]
         assert labels["aux_mean"][0] == pytest.approx(ref, abs=1e-10)
+
+
+@pytest.mark.parametrize("model", ["heston", "local"])
+def test_compact_status_preserves_teacher_finance_and_all_categories(model):
+    api = _api()
+    normals = np.random.default_rng(7391).standard_normal((48, 24, 2))
+    kwargs = dict(
+        calendar_times=np.linspace(0, 1, 25),
+        fixing_indices=np.arange(2, 25, 2),
+        spot=100.0,
+        state=0.04 if model == "heston" else 1.0,
+        memory_count=0,
+        surface=_Local() if model == "local" else None,
+    )
+    legacy = api.teacher_primitives(model, _parameters(), normals, **kwargs)
+    compact = api.teacher_primitives(model, _parameters(), normals, compact_status=True, **kwargs)
+    codes = compact["local_step_status"]
+    assert codes.dtype == np.uint8
+    assert codes.shape == legacy["local_step_status"].shape
+    assert np.array_equal(compact["local_step_status_labels"][codes], legacy["local_step_status"])
+    assert codes.nbytes == legacy["local_step_status"].size
+    assert compact["local_step_status_encoding"] == "uint8_dictionary"
+    for key in ("b", "c", "mu", "sigma", "last_z", "aux_logG_prefix", "last_left_variance"):
+        assert np.allclose(compact[key], legacy[key], rtol=1e-12, atol=1e-14, equal_nan=True)
+    reference = api.primitive_labels(legacy, np.array([0.0, 10.0, 12.0, 14.0]))
+    replay = api.primitive_labels(compact, np.array([0.0, 10.0, 12.0, 14.0]))
+    assert replay["original_path_count"] == reference["original_path_count"] == 48
+    assert np.allclose(replay["f_samples"], reference["f_samples"], rtol=1e-12, atol=1e-14)
+    assert np.allclose(replay["block_means"], reference["block_means"], rtol=1e-12, atol=1e-14)
+
+
+@pytest.mark.parametrize("model", ["heston", "local"])
+def test_compact_status_keeps_failure_and_unexecuted_step_coordinates(model):
+    api = _api()
+    normals = np.zeros((32, 12, 2))
+    normals[3, 4, 0] = np.nan
+    kwargs = dict(
+        calendar_times=np.linspace(0, 1, 13),
+        fixing_indices=np.arange(1, 13),
+        spot=100.0,
+        state=0.04 if model == "heston" else 1.0,
+        memory_count=0,
+        surface=_Local() if model == "local" else None,
+    )
+    legacy = api.teacher_primitives(model, _parameters(), normals, **kwargs)
+    compact = api.teacher_primitives(model, _parameters(), normals, compact_status=True, **kwargs)
+    decoded = compact["local_step_status_labels"][compact["local_step_status"]]
+    assert np.array_equal(decoded, legacy["local_step_status"])
+    assert np.all(decoded[3, 5:] == "")
+    assert np.array_equal(compact["path_mask"], legacy["path_mask"])
+    assert compact["failure_reasons"][3] == legacy["failure_reasons"][3] == "nonfinite_driver"
+    assert compact["original_path_count"] == 32
+    assert compact["local_step_status"].shape == (32, 12)
+
+
+def test_compact_status_never_allocates_unicode_path_step_cube(monkeypatch):
+    api = _api()
+    original_full = np.full
+    original_zeros = np.zeros
+    allocations = []
+
+    def guarded_full(shape, fill, *args, **kwargs):
+        if isinstance(shape, tuple) and len(shape) == 2 and shape[0] == 32:
+            allocations.append(np.dtype(kwargs.get("dtype", type(fill))))
+        return original_full(shape, fill, *args, **kwargs)
+
+    def guarded_zeros(shape, *args, **kwargs):
+        if isinstance(shape, tuple) and len(shape) == 2 and shape[0] == 32:
+            allocations.append(np.dtype(kwargs.get("dtype", float)))
+        return original_zeros(shape, *args, **kwargs)
+
+    monkeypatch.setattr(np, "full", guarded_full)
+    monkeypatch.setattr(np, "zeros", guarded_zeros)
+    got = api.teacher_primitives(
+        "heston",
+        _parameters(),
+        np.zeros((32, 24, 2)),
+        calendar_times=np.linspace(0, 1, 25),
+        fixing_indices=np.arange(2, 25, 2),
+        spot=100.0,
+        state=0.04,
+        memory_count=0,
+        compact_status=True,
+    )
+    assert got["local_step_status"].nbytes == 32 * 24
+    assert allocations and all(dtype.kind != "U" for dtype in allocations)

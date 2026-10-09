@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/home/kazumasa/projects/.venv/bin/python",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/run_reference.py",
+    "--phase",
+    "tiny",
+    "--output",
+    "/home/kazumasa/worktrees/johnhull-research-roadmap/johnhull/research/RB-F04/dynamic_hedging/pilot/tiny/source-f96d768f5f47-n32-update1",
+    "--original-n",
+    "32",
+    "--updates",
+    "1"
+  ],
+  "exit_code": 0,
+  "parent_wall_seconds": 6.51561912499983,
+  "child_cpu_seconds": 6.442526999999999,
+  "source_sha256": "f96d768f5f4755d1495170b61f9e86e82413ee48498b30127d95050f77de94cd",
+  "updated_at_utc": "2026-10-09T15:06:48.716169+00:00",
+  "semantic_check_scope": "in-memory saved boundary afterimmutable serialization; no reread here; rootwillcheckbothCAS-restored chunks"
+}

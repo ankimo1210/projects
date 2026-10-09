@@ -1,0 +1,132 @@
+{
+  "scope": "18-state call preflight raw caches only",
+  "results": [
+    {
+      "role": "primary",
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "before/reference.npz",
+            "sha256": "f3cdacfa19fb3f57d2d8e7d2ed9b9b59e04c090ce583268df305db01b484f68c",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "refined/reference.npz",
+            "sha256": "ed4f31d6de71562a75fd246be5ec4033e8180a12430c0237ad8f99b20aaddac2",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "wall_seconds": 0.09369704300002013,
+      "parent_cpu_seconds": 0.009145480999999997,
+      "semantic_check": "pass within the declared saved arithmetic boundary; formal pilot unknown",
+      "saved_arithmetic_checks": {
+        "before": {
+          "result": {
+            "boundary": "input Q / saved PDE nodes / saved cache nodes -> spline price, fits, derivatives and comparisons; earlier solvers not replayed",
+            "fit_unknown_counts": {
+              "heston": 1,
+              "local": 0
+            },
+            "formal_pilot_qualification": "unknown",
+            "heston_true_state_max_price_error": 7.920749047457543e-06,
+            "integrity": "pass",
+            "local_base_max_price_error": 0.0014499732926109843,
+            "local_base_price_gate": "fail",
+            "original_states": 18
+          },
+          "wall_seconds": 0.6090450530000453,
+          "child_cpu_seconds": null,
+          "checker_sha256": "681548eb4753946fe6c896a588b2314cb47e85736f347ca92ee2d2513a46f9a1"
+        },
+        "refined": {
+          "result": {
+            "boundary": "input Q / saved PDE nodes / saved cache nodes -> spline price, fits, derivatives and comparisons; earlier solvers not replayed",
+            "fit_unknown_counts": {
+              "heston": 1,
+              "local": 0
+            },
+            "formal_pilot_qualification": "unknown",
+            "heston_true_state_max_price_error": 7.920749047457543e-06,
+            "integrity": "pass",
+            "local_base_max_price_error": 0.0002912485278745436,
+            "local_base_price_gate": "pass",
+            "original_states": 18
+          },
+          "wall_seconds": 0.5930314820000149,
+          "child_cpu_seconds": null,
+          "checker_sha256": "681548eb4753946fe6c896a588b2314cb47e85736f347ca92ee2d2513a46f9a1"
+        }
+      }
+    },
+    {
+      "role": "mirror",
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "before/reference.npz",
+            "sha256": "f3cdacfa19fb3f57d2d8e7d2ed9b9b59e04c090ce583268df305db01b484f68c",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          },
+          {
+            "path": "refined/reference.npz",
+            "sha256": "ed4f31d6de71562a75fd246be5ec4033e8180a12430c0237ad8f99b20aaddac2",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "wall_seconds": 0.6747359220000817,
+      "parent_cpu_seconds": 0.011294711999999998,
+      "semantic_check": "pass within the declared saved arithmetic boundary; formal pilot unknown",
+      "saved_arithmetic_checks": {
+        "before": {
+          "result": {
+            "boundary": "input Q / saved PDE nodes / saved cache nodes -> spline price, fits, derivatives and comparisons; earlier solvers not replayed",
+            "fit_unknown_counts": {
+              "heston": 1,
+              "local": 0
+            },
+            "formal_pilot_qualification": "unknown",
+            "heston_true_state_max_price_error": 7.920749047457543e-06,
+            "integrity": "pass",
+            "local_base_max_price_error": 0.0014499732926109843,
+            "local_base_price_gate": "fail",
+            "original_states": 18
+          },
+          "wall_seconds": 0.5627337250000437,
+          "child_cpu_seconds": null,
+          "checker_sha256": "681548eb4753946fe6c896a588b2314cb47e85736f347ca92ee2d2513a46f9a1"
+        },
+        "refined": {
+          "result": {
+            "boundary": "input Q / saved PDE nodes / saved cache nodes -> spline price, fits, derivatives and comparisons; earlier solvers not replayed",
+            "fit_unknown_counts": {
+              "heston": 1,
+              "local": 0
+            },
+            "formal_pilot_qualification": "unknown",
+            "heston_true_state_max_price_error": 7.920749047457543e-06,
+            "integrity": "pass",
+            "local_base_max_price_error": 0.0002912485278745436,
+            "local_base_price_gate": "pass",
+            "original_states": 18
+          },
+          "wall_seconds": 0.6037333680001211,
+          "child_cpu_seconds": null,
+          "checker_sha256": "681548eb4753946fe6c896a588b2314cb47e85736f347ca92ee2d2513a46f9a1"
+        }
+      }
+    }
+  ],
+  "formal_pilot_qualification": "unknown"
+}

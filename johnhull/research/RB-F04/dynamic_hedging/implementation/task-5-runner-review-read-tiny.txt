@@ -1,0 +1,9 @@
+from pathlib import Path
+import json,numpy as np
+R=Path("/home/kazumasa/worktrees/johnhull-research-roadmap")
+ns={"__file__":str(R/"johnhull/research/RB-F04/dynamic_hedging/run_reference.py"),"__name__":"independent_read_tiny"}
+exec(compile(ns["__file__"] and Path(ns["__file__"]).read_text(),ns["__file__"],"exec"),ns)
+b,r=ns["load_bundle"](R/"johnhull/research/RB-F04/dynamic_hedging/pilot/tiny/source-c7347038a574-n32-u1")
+f=b["fits"]["fits"][0]
+out={"fit_keys":sorted(f),"raw_fit_keys":sorted(f["raw_fit"]),"expense_keys":sorted(b["expenses"][0]),"scaler":{k:np.asarray(v).shape if isinstance(v,np.ndarray) else v for k,v in f["raw_fit"]["scaler"].items()}}
+print(json.dumps(out,indent=2))

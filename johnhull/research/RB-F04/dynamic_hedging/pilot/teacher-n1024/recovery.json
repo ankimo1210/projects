@@ -1,0 +1,161 @@
+{
+  "kind": "teacher-n1024-checkpoint-recovery",
+  "date_jst": "2026-10-10",
+  "manifest_sha256": "c61747372c93252a972125a1b21d0147478c273ccd80408751a75ebb287501ec",
+  "results": [
+    {
+      "role": "primary",
+      "blob": {
+        "sha256": "6e1248871e594793bcf2297e4bf32c9fabe238dd4ecdfed2677b25cdbd544e65",
+        "bytes": 48764846
+      },
+      "store_parent_wall_seconds": 0.5283506979999402,
+      "restore_parent_wall_seconds": 0.21300389299995004,
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "reference.npz",
+            "sha256": "6e1248871e594793bcf2297e4bf32c9fabe238dd4ecdfed2677b25cdbd544e65",
+            "served_by": "primary",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "checker_routing": {
+        "original_sha256": "6bcdf86aab6c9c7975fd90bdaf0683c420c38dfa6f914b40f8abd8baab25ad79",
+        "executed_sha256": "46f5c504fbf252d8af32b25528dfe14152a26637e1d7be1c89ec8675db503f12",
+        "changes": [
+          "only saved input W directory",
+          "RNG forbidden guard"
+        ],
+        "probe_source_preserved": true
+      },
+      "semantic": {
+        "exit_code": 0,
+        "parent_wall_seconds": 10.87729004899984,
+        "child_cpu_seconds": 10.869971000000001,
+        "result": {
+          "scope": "saved arithmetic/provenance only; no RNG/SDE and no independent finance oracle",
+          "qualification": "unknown",
+          "current_binding_changes": {},
+          "raw_arrays_count": 9557,
+          "raw_array_bytes": 240626504,
+          "status": "PASS",
+          "original_slots": 36,
+          "computed_slots": 35,
+          "teacher_calls_replayed": 175,
+          "path_steps": 82247680,
+          "valid_original_path_counts": [
+            1024
+          ],
+          "underresolved_slots": [
+            "state09.heston",
+            "state09.local",
+            "state12.heston",
+            "state12.local",
+            "state15.local"
+          ],
+          "simultaneous_SE_pass_slots": [
+            "state13.heston",
+            "state13.local",
+            "state16.heston",
+            "state16.local",
+            "state17.heston",
+            "state17.local"
+          ],
+          "qualification_unknown_slots": 36,
+          "source_input_binding_count": 65,
+          "limitations": "Saved CE/control arithmetic and fixed selected-call IFT only; no solver/oracle/denominator/bias/interpolation certification, no formal-pilot approval",
+          "elapsed_saved_replay_wall_seconds": 10.219028788000287,
+          "preflight_json_sha256_before_summary": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d",
+          "preflight_npz_sha256": "6e1248871e594793bcf2297e4bf32c9fabe238dd4ecdfed2677b25cdbd544e65",
+          "preflight_script_sha256": "4b0a7a217d0af7cb5a73f505268f474e8f5a2aa4bef85ac5c3a6b7b65403a3c3"
+        },
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/checkpoint3-cas-teacher-n1024-primary/cas-saved-replay.py"
+        ]
+      }
+    },
+    {
+      "role": "mirror",
+      "blob": {
+        "sha256": "6e1248871e594793bcf2297e4bf32c9fabe238dd4ecdfed2677b25cdbd544e65",
+        "bytes": 48764846
+      },
+      "store_parent_wall_seconds": 0.9425320360001024,
+      "restore_parent_wall_seconds": 0.21681027000022368,
+      "restore": {
+        "status": "PASS",
+        "entries": [
+          {
+            "path": "reference.npz",
+            "sha256": "6e1248871e594793bcf2297e4bf32c9fabe238dd4ecdfed2677b25cdbd544e65",
+            "served_by": "mirror",
+            "action": "written",
+            "failures": []
+          }
+        ]
+      },
+      "checker_routing": {
+        "original_sha256": "6bcdf86aab6c9c7975fd90bdaf0683c420c38dfa6f914b40f8abd8baab25ad79",
+        "executed_sha256": "d768e0e713e077355870e69ba1bd8a00a26bd66510fec818924324c6fe4acab9",
+        "changes": [
+          "only saved input W directory",
+          "RNG forbidden guard"
+        ],
+        "probe_source_preserved": true
+      },
+      "semantic": {
+        "exit_code": 0,
+        "parent_wall_seconds": 10.846063706999757,
+        "child_cpu_seconds": 10.834939999999996,
+        "result": {
+          "scope": "saved arithmetic/provenance only; no RNG/SDE and no independent finance oracle",
+          "qualification": "unknown",
+          "current_binding_changes": {},
+          "raw_arrays_count": 9557,
+          "raw_array_bytes": 240626504,
+          "status": "PASS",
+          "original_slots": 36,
+          "computed_slots": 35,
+          "teacher_calls_replayed": 175,
+          "path_steps": 82247680,
+          "valid_original_path_counts": [
+            1024
+          ],
+          "underresolved_slots": [
+            "state09.heston",
+            "state09.local",
+            "state12.heston",
+            "state12.local",
+            "state15.local"
+          ],
+          "simultaneous_SE_pass_slots": [
+            "state13.heston",
+            "state13.local",
+            "state16.heston",
+            "state16.local",
+            "state17.heston",
+            "state17.local"
+          ],
+          "qualification_unknown_slots": 36,
+          "source_input_binding_count": 65,
+          "limitations": "Saved CE/control arithmetic and fixed selected-call IFT only; no solver/oracle/denominator/bias/interpolation certification, no formal-pilot approval",
+          "elapsed_saved_replay_wall_seconds": 10.203175014000408,
+          "preflight_json_sha256_before_summary": "50313a08abe3a4ce5abce65b909d44f7b33e7337a2725951b4294a788abc058d",
+          "preflight_npz_sha256": "6e1248871e594793bcf2297e4bf32c9fabe238dd4ecdfed2677b25cdbd544e65",
+          "preflight_script_sha256": "4b0a7a217d0af7cb5a73f505268f474e8f5a2aa4bef85ac5c3a6b7b65403a3c3"
+        },
+        "command": [
+          "/home/kazumasa/projects/.venv/bin/python",
+          "/home/kazumasa/worktrees/johnhull-research-roadmap/.superpowers/sdd/2026-10-09-dynamic-cross-model-hedging/checkpoint3-cas-teacher-n1024-mirror/cas-saved-replay.py"
+        ]
+      }
+    }
+  ],
+  "formal_pilot_qualification": "unknown",
+  "cost_scope": "store/restore/check subprocess measured separately; tiny immutable expenses not overwritten"
+}

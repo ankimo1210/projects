@@ -1,0 +1,94 @@
+{
+  "kind": "independent_initial_quote_call_saved_boundaries_rereview",
+  "reviewed_at": "2026-10-09T14:48:36.764365+00:00",
+  "scope": [
+    "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py",
+    "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py",
+    "deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py"
+  ],
+  "source_sha256": {
+    "johnhull/research/RB-F04/dynamic_hedging/check_initial_quotes.py": "7fe16943f2ead6dbe17a17e969930afde863681ed9eb24b9ea8b7b18c4a004d4",
+    "johnhull/research/RB-F04/dynamic_hedging/check_selected_calls.py": "681548eb4753946fe6c896a588b2314cb47e85736f347ca92ee2d2513a46f9a1",
+    "deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py": "1bc212184fe080f1074f37715f879b64adcd58a586ea52b77af0a2f8f30b3091",
+    "deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py": "f3b0363939ac00edd50c69c502c03db96b1b5099dffaf1d8280ffb88c25e4b0b",
+    "johnhull/hullkit/src/hullkit/_dynamic_hedging_surfaces.py": "fff3bc88d497210a846956d464317d5ddb00941a1e3ef25193f9cbaa26a8c406",
+    "johnhull/hullkit/tests/test_dynamic_hedging_surfaces.py": "55071a03a936b89a26a85bed5531f31a515d04d041491a3c737d28c2613da825"
+  },
+  "original_review": "task-5-initial-call-review.json",
+  "resolved_findings": [
+    {
+      "id": "I1",
+      "status": "resolved",
+      "evidence": "Deleting original pde_space4801.prices now raises missing original PDE attempt arrays; duplicate stage ID is rejected; all8 original stages survive actual and both CAS restored checks."
+    },
+    {
+      "id": "I2",
+      "status": "resolved",
+      "evidence": "Seven declared stage refinement vectors/maxima are recalculated from their two original37 saved price arrays; fake reported refinement12345 is rejected; independent difference arithmetic agrees by tolerance."
+    }
+  ],
+  "findings": [],
+  "counts": {
+    "Critical": 0,
+    "Important": 0,
+    "Minor": 0
+  },
+  "unresolved": 0,
+  "source_approved": true,
+  "approval_scope": "proceed with reviewed checker/surface sources within saved arithmetic and measured selected-price boundaries only",
+  "formal_pilot_qualified": false,
+  "validation": {
+    "changed_checker_tests": {
+      "command": [
+        "/home/kazumasa/projects/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "--confcutdir=/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py",
+        "/home/kazumasa/worktrees/johnhull-research-roadmap/deep_hedge_price/tests/test_dynamic_hedging_selected_calls.py"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 1.2115198190001593,
+      "output": "................                                                         [100%]\n16 passed in 0.81s\n"
+    },
+    "unchanged_surface_tests": "20 passed in 6.86s, prior same source/test SHA run",
+    "probe_exit_code": 0,
+    "actual_initial_arrays": 487,
+    "actual_initial_original_quotes": 37,
+    "actual_initial_original_PDE_stages": 8,
+    "actual_initial_refinement_pairs": 7,
+    "actual_selected_states_each": 18,
+    "actual_selected_heston_unknown_each": 1,
+    "actual_selected_before_price_gate": "fail",
+    "actual_selected_refined_price_gate": "pass",
+    "independent_CAS_restore_count": 6,
+    "restored_result_comparison": "numeric metrics compared with rtol2e-10/atol1e-10; schema/status/counts exact"
+  },
+  "limits": [
+    "Earlier CF/PDE/SDE solver work is not replayed. Gates compare saved integral/grid outputs with saved reference values; they are not uniform model accuracy or financial pilot approval.",
+    "Selected-call checker deliberately reuses reviewed interpolation/root helpers and labels itself arithmetic replay, not an independent root/interpolation algorithm. The original review additionally reconstructed all18 tensors using separate CubicSpline expressions and identified the same ill-conditioned Heston case.",
+    "Both before/refined preserve all18 states, one Heston unknown, unmeasured numerical-reference status and missing state-reference error; no favorable-only filter or invented Greek certification.",
+    "Source hashes/storage hashes establish provenance. Financial comparisons use numerical tolerances; no financial conclusion is drawn from matching digests.",
+    "Parent initial recovery and selected-call recovery were independently checked by standalone restores from each store; counts/results remain within declared boundaries and all formal pilot qualification remains unknown.",
+    "Reviewer-owned replay source and previously approved compact-status modification are outside this independent review.",
+    "No full suite or source/docs/Git mutation performed for this review."
+  ],
+  "artifacts": [
+    {
+      "path": "task-5-initial-call-rereview-tests.txt",
+      "sha256": "2250d88178b1ca437e6bd98d91c406390ad69cd7b44f8bdfa94643094cd4c7bb"
+    },
+    {
+      "path": "task-5-initial-call-rereview-probes.py",
+      "sha256": "037c28a34d13e0f765f58f03eafa951802d216548e1103a760b954f8ef7eaca3"
+    },
+    {
+      "path": "task-5-initial-call-rereview-probes.txt",
+      "sha256": "09aefb0407a7c6c58a7deff2a4022305f74e7e393daa8ec8f50f118e01fd96e7"
+    }
+  ]
+}

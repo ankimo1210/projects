@@ -1,0 +1,22 @@
+{
+  "initial_sha256": "fbb7b52fd07594a8892f62d177f85a9c4234dcc2233bd012606e34634f1a5017",
+  "reloaded_sha256": "1623ab16761c2627b0725486ac63d49d3d2614ede0e795c3c93877ffe2fc13e3",
+  "same": false,
+  "original_weights_order": [
+    "w1",
+    "b1",
+    "w2",
+    "b2",
+    "w3",
+    "b3"
+  ],
+  "reloaded_weights_order": [
+    "b1",
+    "b2",
+    "b3",
+    "w1",
+    "w2",
+    "w3"
+  ],
+  "numeric_arrays_same": true
+}

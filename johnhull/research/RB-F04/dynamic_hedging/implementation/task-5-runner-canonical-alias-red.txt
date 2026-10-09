@@ -1,0 +1,63 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__________ test_closed_fit_digest_survives_canonical_saved_roundtrip ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-kazumasa/pytest-3715/test_closed_fit_digest_survive0')
+
+    def test_closed_fit_digest_survives_canonical_saved_roundtrip(tmp_path):
+        closed = closed_fits_fixture()
+        expected = runner.payload_digest(closed)
+        runner.save_bundle(tmp_path/"closed", closed)
+        loaded, _ = runner.load_bundle(tmp_path/"closed")
+        runner._same(closed, loaded, "closed finance")
+>       assert runner.payload_digest(loaded) == expected
+E       AssertionError: assert '1623ab16761c...877ffe2fc13e3' == 'fbb7b52fd075...e34634f1a5017'
+E         
+E         - fbb7b52fd07594a8892f62d177f85a9c4234dcc2233bd012606e34634f1a5017
+E         + 1623ab16761c2627b0725486ac63d49d3d2614ede0e795c3c93877ffe2fc13e3
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:305: AssertionError
+_______ test_main_validation_selection_cannot_be_mutated_by_test_loader ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ba87f1ed6d0>
+
+    def test_main_validation_selection_cannot_be_mutated_by_test_loader(monkeypatch):
+        row, losses = validation_row(n=2048)
+        closed, source = closed_fits_fixture(), runner.source_identity()["protocol_source"]
+        receipts = {"validation": [], "fits": copy.deepcopy(closed["fits"]),
+                    "closed_fits_sha256": runner.payload_digest(closed)}
+        raw = {}
+        for g in ["Heston", "local"]:
+            for u in ["U1", "U2"]:
+                saved = copy.deepcopy(row)
+                saved.update(id=f"selection:{g}:{u}", generator=g, universe=u)
+                receipts["validation"].append(saved)
+                raw[saved["id"]] = copy.deepcopy(losses)
+        candidate = runner.candidate_protocol()
+        cases = [{"generator":g, "seed_slot":seed, "level":level,
+                  "dataset":{"original_n":8192}, "risk":{}}
+                 for g in ["Heston", "local"] for seed in range(3)
+                 for level in [192,384,768]]
+        def loader():
+            receipts["validation"][0]["selected_bands"]["Heston"] = "band:Heston:width0.2"
+            return {"test_cases": cases}
+        monkeypatch.setattr(runner.protocol, "assert_main_ready", lambda *a: None)
+        monkeypatch.setattr(runner.study, "test_roster",
+                            lambda data,risk,fits,validation,**kw:
+                            {"chosen":validation["selected_bands"]["Heston"]})
+        result = runner.run_main(
+            frozen={"fixture":True, "selection":{"test_n":8192}}, candidate=candidate,
+            source=source, selection_receipts=receipts, raw_validation=raw,
+            closed_fits=closed, main_test_loader=loader)
+>       assert result["evaluations"][0]["result"]["chosen"] == "band:Heston:width0"
+E       AssertionError: assert 'band:Heston:width0.2' == 'band:Heston:width0'
+E         
+E         - band:Heston:width0
+E         + band:Heston:width0.2
+E         ?                   ++
+
+deep_hedge_price/tests/test_dynamic_hedging_runner.py:336: AssertionError
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_closed_fit_digest_survives_canonical_saved_roundtrip
+FAILED deep_hedge_price/tests/test_dynamic_hedging_runner.py::test_main_validation_selection_cannot_be_mutated_by_test_loader
+2 failed, 25 deselected in 2.76s

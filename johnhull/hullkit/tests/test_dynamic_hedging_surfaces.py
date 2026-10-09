@@ -379,3 +379,27 @@ def test_independent_adaptive_integral_failure_keeps_receipt_and_is_unknown():
     )
     assert selected["status"] == "unknown"
     assert selected["integration_receipts"]
+
+
+def test_default_local_call_late_atm_meets_absolute_price_budget():
+    surface = LocalVarianceGrid(
+        np.array([1 / 4096, 1.25]), np.array([-20.0, 20.0]), np.full((2, 2), 0.04), P
+    )
+    date = 11 / 12
+    cache = build_call_cache(
+        P,
+        surface,
+        dates=[date],
+        spot_nodes=[80.0, 100.0, 110.0, 120.0],
+        state_nodes=[0.25, 0.5, 1.0, 2.0],
+        model="local",
+    )
+    remaining = 1.25 - date
+    sd = np.sqrt(0.04 * remaining)
+    d1 = (P.rate * remaining + sd**2 / 2) / sd
+    independent = 100.0 * ndtr(d1) - 100.0 * np.exp(-P.rate * remaining) * ndtr(d1 - sd)
+    measured = evaluate_call(cache, 0, 100.0, 1.0)
+    assert measured["value"] == pytest.approx(independent, abs=0.001)
+    # A finite solve alone does not measure actual-field derivative error.
+    assert cache["reference_status"] == "unmeasured"
+    assert np.isnan(cache["derivative_error"])

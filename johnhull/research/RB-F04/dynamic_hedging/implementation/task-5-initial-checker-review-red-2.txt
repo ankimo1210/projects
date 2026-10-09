@@ -1,0 +1,53 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___ test_measured_refinement_is_recomputed_from_both_original_price_vectors ____
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+
+    def test_measured_refinement_is_recomputed_from_both_original_price_vectors(evidence):
+        check = _module("check_initial_quotes.py")
+        metadata, original = copy.deepcopy(evidence)
+        stage = metadata["stages"][0]
+        arrays = {k.replace("pde.", "pde1201x960."): v.copy() for k, v in original.items()}
+        stage["id"] = "pde1201x960"
+        refined = copy.deepcopy(stage)
+        refined["id"] = "pde2401x1920"
+        metadata["stages"].append(refined)
+        for key, value in list(arrays.items()):
+            if key.startswith("pde1201x960."):
+                arrays[key.replace("pde1201x960.", "pde2401x1920.")] = value.copy()
+        arrays["pde2401x1920.refinement"] = np.zeros(37)
+        got = check.check_initial_quotes(metadata, arrays)
+>       assert got["refinements"]["pde2401x1920"]["max_difference"] == pytest.approx(0.0)
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'refinements'
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:172: KeyError
+______ test_a_surviving_candidate_cannot_hide_an_erased_original_attempt _______
+
+evidence = ({'cf_receipts': [{'strikes': [80.0, 90.0, 100.0, 110.0, 120.0], 'time': 0.25, 'upper250': {'integration_receipts': [[...0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04],
+       [0.04, 0.04, 0.04, 0.04]]), ...})
+
+    def test_a_surviving_candidate_cannot_hide_an_erased_original_attempt(evidence):
+        check = _module("check_initial_quotes.py")
+        metadata, arrays = copy.deepcopy(evidence)
+        second = copy.deepcopy(metadata["stages"][0])
+        second["id"] = "surviving"
+        metadata["stages"].append(second)
+        for key, value in list(arrays.items()):
+            if key.startswith("pde."):
+                arrays[key.replace("pde.", "surviving.")] = value.copy()
+        arrays.pop("pde.prices")
+>       with pytest.raises(ValueError, match=r"original|missing"):
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py:188: Failed
+=========================== short test summary info ============================
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_measured_refinement_is_recomputed_from_both_original_price_vectors
+FAILED deep_hedge_price/tests/test_dynamic_hedging_initial_quotes.py::test_a_surviving_candidate_cannot_hide_an_erased_original_attempt
+2 failed, 9 deselected in 0.42s
